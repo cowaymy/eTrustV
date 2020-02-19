@@ -45,6 +45,12 @@ public class AnalysisController {
 		return "sales/analysis/salesDropOut";
 	}
 	
+	@RequestMapping(value = "/salesAnalysis.do")
+	public String salesAnalysis() throws Exception{
+		
+		return "sales/analysis/salesAnalysis";
+	}
+	
 	@RequestMapping(value = "/maintanceSession")
 	public ResponseEntity<EgovMap> maintanceSession()throws Exception{
 		
