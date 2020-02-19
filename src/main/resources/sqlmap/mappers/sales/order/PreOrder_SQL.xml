@@ -26,15 +26,11 @@
              , T13.AREA
              , T13.SO_BRNCH_CODE
              , T12.AREA_ID
-             , T14.PV_MONTH
-             , T14.PV_YEAR
+             , T11.PV_MONTH
+             , T11.PV_YEAR
              , T14.PROMO_CODE
              , T14.PROMO_DESC
-             , T14.SALES_USER_ID
-             , T14.HP_NAME
-             , T14.ORG_CODE
-             , T14.GRP_CODE
-             , T14.DEPT_CODE
+             , T1.MEM_CODE HP_NAME
              , CASE WHEN T15.DOC_SO_ID IS NULL THEN 'N' ELSE 'Y' END DOC_SUBMIT
              , T15.SUBMIT_BRANCH
              , T15.BRANCH_LOCATION
@@ -51,7 +47,7 @@
 		 LEFT JOIN SAL0001D  T11 ON T1.SALES_ORD_ID = T11.SALES_ORD_ID
 		 LEFT JOIN SAL0023D T12 ON T12.CUST_ADD_ID = T1.INST_ADD_ID
          LEFT JOIN SYS0064M T13 ON T13.AREA_ID = T12.AREA_ID
-         LEFT JOIN REP0011S T14 ON T14.ORD_NO = T11.SALES_ORD_NO
+         LEFT JOIN SAL0017D T14 ON T14.PROMO_ID = T1.PROMO_ID
          LEFT JOIN ( SELECT
                             DOC.DOC_SO_ID ,BRNCH.CODE SUBMIT_BRANCH, BRNCH.NAME BRANCH_LOCATION
                           FROM ORG0010D DOC
