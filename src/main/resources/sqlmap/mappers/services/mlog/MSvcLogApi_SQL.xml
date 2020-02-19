@@ -1077,7 +1077,7 @@
          , TO_CHAR(REAL_BEFORE_PRODUCT_NAME) AS real_Before_Porduct_Name
          , TO_CHAR(REAL_BEFORE_PRODUCT_SERIAL_NO) AS real_Before_Product_Serial_No
          , TO_CHAR(PSI) AS psi
-         , TO_CHAR(PRODCAT) AS prodCat
+         , TO_CHAR(PRODCAT) AS prodcat
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -1568,7 +1568,7 @@
            TO_CHAR (CRT_DT) AS Create_Date,
            TO_CHAR(SERIAL_CHK) AS serial_Chk,
            TO_CHAR(PSI) AS psi,
-           TO_CHAR(PRODCAT) AS prodCat
+           TO_CHAR(PRODCAT) AS prodcat
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
   </select>
