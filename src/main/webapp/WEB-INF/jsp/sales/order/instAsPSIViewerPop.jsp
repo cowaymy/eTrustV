@@ -5,6 +5,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  08/02/2019  ONGHC  1.0.0       CREATE INSTALLATION/AS PSI VIEWER
+ 19/02/2019  ONGHC  1.0.1       ADD LMP COLUMN
  -->
 
 <script type="text/javaScript">
@@ -47,6 +48,11 @@
     }, {
       dataField : "psi",
       headerText : '<spring:message code="service.title.PSIRcd" />',
+      editable : false,
+      width : 130
+    }, {
+      dataField : "lmp",
+      headerText : '<spring:message code="service.title.lmp" />',
       editable : false,
       width : 130
     }, {
