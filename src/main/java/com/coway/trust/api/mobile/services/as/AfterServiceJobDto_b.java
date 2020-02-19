@@ -251,16 +251,16 @@ public class AfterServiceJobDto_b {
   private String totalAmount;
 
   @ApiModelProperty(value = "PSI")
-  private int psi;
+  private String psi;
 
   @ApiModelProperty(value = "PRODCAT")
   private int prodcat;
 
-  public int getPsi() {
+  public String getPsi() {
     return psi;
   }
 
-  public void setPsi(int psi) {
+  public void setPsi(String psi) {
     this.psi = psi;
   }
 
