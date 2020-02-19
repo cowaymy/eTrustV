@@ -67,7 +67,7 @@
 
 	      // VALIDATION - START
 	      // ORDER DATE
-	     if ($("#instcallcreateDate").val() == '') {
+/* 	     if ($("#instcallcreateDate").val() == '') {
 	    	  text = "<spring:message code='service.title.OrderDate' />";
 	    	  msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
 	    	    } else if ($("#instcallendDate").val() == '') {
@@ -91,7 +91,7 @@
 	         if (msg != '') {
 	             Common.alert(msg);
 	             return false;
-	           }
+	           } */
 
 	      // VALIDATION - END
 
@@ -99,41 +99,41 @@
 
 	      //ORDER NO
 	      if ($("#orderNoCallLog").val() != '' && $("#orderNoCallLog").val() != null) {
-	        whereSql += " AND A.ORD_NO IN ('" + $("#orderNoCallLog").val()
+	        whereSql += " AND SOM.SALES_ORD_NO IN ('" + $("#orderNoCallLog").val()
 	        		+ "') ";
 	      }
 
  	      //APPLICATION TYPE
 	      if ($("#listAppType").val() != '' && $("#listAppType").val() != null) {
-	          whereSql += " AND A.APP_TYPE_ID IN(" + $("#listAppType").val()
+	          whereSql += " AND SOM.APP_TYPE_ID IN(" + $("#listAppType").val()
 	              + ") ";
 	        }
 
 	      //ORDER DATE
 	      if ($("#instcallcreateDate").val() != '' && $("#instcallendDate").val() != '' && $("#instcallcreateDate").val() != null && $("#instcallendDate").val() != null) {
-	          whereSql += " AND (A.ORD_DT >= TO_DATE('" + $("#instcallcreateDate").val() + "' , 'DD/MM/YYYY') AND A.ORD_DT <= TO_DATE('" + $("#instcallendDate").val() + "', 'DD/MM/YYYY')) ";
+	          whereSql += " AND (SOM.SALES_DT >= TO_DATE('" + $("#instcallcreateDate").val() + "' , 'DD/MM/YYYY') AND SOM.SALES_DT <= TO_DATE('" + $("#instcallendDate").val() + "', 'DD/MM/YYYY')) ";
 	        }
 
 	      //CALL LOG DATE
           if ($("#instcallStrDate").val() != '' && $("#instcallEndDate").val() != '' && $("#instcallStrDate").val() != null && $("#instcallEndDate").val() != null) {
-              whereSql += " AND (A.CALL_DT >= TO_DATE('" + $("#instcallStrDate").val() + "' , 'DD/MM/YYYY') AND A.CALL_DT <= TO_DATE('" + $("#instcallEndDate").val() + "', 'DD/MM/YYYY')) ";
+              whereSql += " AND (D.CALL_DT >= TO_DATE('" + $("#instcallStrDate").val() + "' , 'DD/MM/YYYY') AND D.CALL_DT <= TO_DATE('" + $("#instcallEndDate").val() + "', 'DD/MM/YYYY')) ";
             }
 
 	      //CALL LOG TYPE
 	       if ($("#instcallLogType").val() != '' && $("#instcallLogType").val() != null) {
-	              whereSql += " AND A.TYPE_ID IN (" + $("#instcallLogType").val()
+	              whereSql += " AND C.TYPE_ID IN (" + $("#instcallLogType").val()
 	                  + ") ";
 	            }
 
 	      //CALL LOG STATUS
 	        if ($("#instcallLogStatus").val() != '' && $("#instcallLogStatus").val() != null) {
-                whereSql += " AND A.CALL_STUS_ID IN (" + $("#instcallLogStatus").val()
+                whereSql += " AND D.CALL_STUS_ID IN (" + $("#instcallLogStatus").val()
                     + ") ";
 	        }
 
 	      //INSTALL STATUS
 	        if ($("#instalcallLogStatus").val() != '' && $("#instalcallLogStatus").val() != null) {
-                whereSql += " AND A.INST_STUS_ID IN (" + $("#instalcallLogStatus").val()
+                whereSql += " AND B.STUS_CODE_ID IN (" + $("#instalcallLogStatus").val()
                     + ") ";
 	        }
 
@@ -145,13 +145,13 @@
 
 	      //FAIL REASON
 	          if ($("#ddlFailReason").val() != '' && $("#ddlFailReason").val() != null) {
-                  whereSql += " AND A.FAIL_ID  IN (" + $("#ddlFailReason").val()
+                  whereSql += " AND M.FAIL_ID  IN (" + $("#ddlFailReason").val()
                       + ") ";
               }
 
 	      //FEEDBACK CODE
 	           if ($("#fbFailReason").val() != '' && $("#fbFailReason").val() != null) {
-	                  whereSql += " AND A.CALL_FDBCK_ID  IN (" + $("#fbFailReason").val()
+	                  whereSql += " AND D.CALL_FDBCK_ID  IN (" + $("#fbFailReason").val()
 	                      + ") ";
 	              }
 
