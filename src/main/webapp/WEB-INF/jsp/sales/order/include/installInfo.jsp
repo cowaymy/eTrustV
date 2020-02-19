@@ -77,7 +77,7 @@
     </td>
 </tr>
 <tr>
-  <th scope="row"><spring:message code="service.title.PSIRcd" /></th>
+  <th scope="row"><spring:message code="service.title.PSILMPRcd" /></th>
   <td colspan="5">
     <ul class="btns">
       <li>
