@@ -256,14 +256,14 @@ public class AfterServiceJobDto {
   private int psi;
 
   @ApiModelProperty(value = "PRODCAT")
-  private int prodCat;
+  private int prodcat;
 
-  public int getProdCat() {
-    return prodCat;
+  public int getProdcat() {
+    return prodcat;
   }
 
-  public void setProdCat(int prodCat) {
-    this.prodCat = prodCat;
+  public void setProdcat(int prodcat) {
+    this.prodcat = prodcat;
   }
 
   public int getPsi() {
