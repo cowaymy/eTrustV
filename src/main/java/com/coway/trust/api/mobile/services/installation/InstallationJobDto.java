@@ -248,16 +248,16 @@ public class InstallationJobDto {
   private String psi;
 
   @ApiModelProperty(value = "PRODCAT")
-  private String prodCat;
+  private String prodcat;
 
   private String serialChk;
 
-  public String getProdCat() {
-    return prodCat;
+  public String getProdcat() {
+    return prodcat;
   }
 
-  public void setProdCat(String prodCat) {
-    this.prodCat = prodCat;
+  public void setProdcat(String prodcat) {
+    this.prodcat = prodcat;
   }
 
   public String getPsi() {
