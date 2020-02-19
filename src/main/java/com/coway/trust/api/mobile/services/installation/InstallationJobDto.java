@@ -247,7 +247,18 @@ public class InstallationJobDto {
   @ApiModelProperty(value = "psi")
   private String psi;
 
+  @ApiModelProperty(value = "prodCat")
+  private String prodCat;
+
   private String serialChk;
+
+  public String getProdCat() {
+    return prodCat;
+  }
+
+  public void setProdCat(String prodCat) {
+    this.prodCat = prodCat;
+  }
 
   public String getPsi() {
     return psi;
