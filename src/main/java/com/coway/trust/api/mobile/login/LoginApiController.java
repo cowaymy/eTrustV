@@ -35,6 +35,7 @@ import io.swagger.annotations.ApiOperation;
  *--------------------------------------------------------------------------------------------
  * 15/04/2019    ONGHC      1.0.1       - Add e-agreement Validation
  * 16/04/2019    ONGHC      1.0.2       - Amend error message
+ * 20/02/2020    ONGHC      1.0.3       - Amend meaningful error message
  *********************************************************************************************/
 
 @Api(value = "Login api", description = "Login api")
@@ -75,7 +76,8 @@ public class LoginApiController {
     LOGGER.debug(" LOGIN INFO : {} ", loginVO);
 
     if (loginVO == null || loginVO.getUserId() == 0) {
-      throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+      //throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+      throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized Access. Please verify your ID and password");
     } else {
       if (loginVO.getUserTypeId() == 2) {
         if (!(loginVO.getAgrmt()).equals("1") && !(loginVO.getAgrmtAppStat().equals("5"))) {
@@ -85,7 +87,7 @@ public class LoginApiController {
       }
 
       if( CommonUtils.isEmpty(loginVO.getMobileUseYn()) || loginVO.getMobileUseYn().equals("N") ){
-          throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized user.");
+          throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized Access. Entered ID are not applicable to acess mobile application, please contact respective support department.");
       }
 
       HttpSession session = sessionHandler.getCurrentSession();
