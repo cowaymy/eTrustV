@@ -265,7 +265,7 @@
       AUIGrid.setGridData(modRfrGridID, result);
     });
   }
-  
+
   function fn_isExistESalesNo() {
       var isExist = false, msg = "";
 
@@ -2980,7 +2980,7 @@
          type="text" title="" placeholder="Organization Code"
          class="readonly" readonly /></td>
        </tr>
-       <tr>
+      <!-- <tr>
         <th scope="row">SST Type<span
          class="must">*</span></th>
         <td><select id="modCorpCustType" name="corpCustType"
@@ -2989,7 +2989,7 @@
          class="must">*</span></th>
         <td><select id="modAgreementType" name="agreementType"
          class="w100p" disabled></select></td>
-       </tr>
+       </tr>-->
       </tbody>
      </table>
      <!-- table end -->
