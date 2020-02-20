@@ -77,7 +77,7 @@ public class LoginApiController {
 
     if (loginVO == null || loginVO.getUserId() == 0) {
       //throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
-      throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized Access. \nPlease verify your ID and password");
+      throw new AuthException(HttpStatus.UNAUTHORIZED, "Unauthorized Access. Invalid ID or password.");
     } else {
       if (loginVO.getUserTypeId() == 2) {
         if (!(loginVO.getAgrmt()).equals("1") && !(loginVO.getAgrmtAppStat().equals("5"))) {
