@@ -1470,9 +1470,9 @@ public class ReportBatchController {
     LOGGER.info("[END] Gen_AS_Raw_PassMth_Excel...");
   }
 
-  @RequestMapping(value = "/CSP_Raw_Data_Excel.do")
+  @RequestMapping(value = "/CSP_Raw_Data_Excel_2018.do")
   //@Scheduled(cron = "0 0 3 * * *")//Daily (3:00am)
-  public void CSP_Raw_Data_Excel() {
+  public void CSP_Raw_Data_Excel_2018() {
     LOGGER.info("[START] CSP_Raw_Data_Excel...");
     Map<String, Object> params = new HashMap<>();
     params.put(REPORT_FILE_NAME, "/visualcut/CSPRawData.rpt");// visualcut
@@ -1481,6 +1481,26 @@ public class ReportBatchController {
                                                                                   // name.
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put("V_TEMP", "TEMP");// parameter
+    params.put("V_YEAR", "2018");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "CSP" + File.separator + "CSP_Raw_Data" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] CSP_Raw_Data_Excel...");
+  }
+
+  @RequestMapping(value = "/CSP_Raw_Data_Excel_2019.do")
+  //@Scheduled(cron = "0 0 3 * * *")//Daily (3:00am)
+  public void CSP_Raw_Data_Excel_2019() {
+    LOGGER.info("[START] CSP_Raw_Data_Excel...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/CSPRawData.rpt");// visualcut
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put("V_YEAR", "2019");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "CSP" + File.separator + "CSP_Raw_Data" + CommonUtils.getNowDate() + ".xls");
 
@@ -1738,7 +1758,7 @@ public class ReportBatchController {
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] AutoDebitDuductionSummary...");
   }
-  
+
   @RequestMapping(value = "/RCM_Monthly.do")
   //@Scheduled(cron = "0 0 1 2 * ?")//Monthly (Day 2) (1:00am)
   public void rcmMonthly() {
@@ -1750,13 +1770,13 @@ public class ReportBatchController {
     params.put("V_TEMP", "TEMP");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "Rental Collection" + File.separator + "RCM_Monthly_" + CommonUtils.getNowDate() + ".xls");
-    
+
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] RCM_Monthly...");
   }
-  
+
   @RequestMapping(value = "/Monthly_Rental_Collection.do")
-  // @Scheduled(cron = "0 0 1 2 * ?")//Monthly (Day 2) (1:00am) 
+  // @Scheduled(cron = "0 0 1 2 * ?")//Monthly (Day 2) (1:00am)
   public void MonthlyRentalCollection() {
     LOGGER.info("[START] Monthly_Rental_Collection...");
     Map<String, Object> params = new HashMap<>();
@@ -1767,7 +1787,7 @@ public class ReportBatchController {
     params.put("V_TEMP", "TEMP");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "Rental Collection" + File.separator + "Monthly_Ren_Coll_" + CommonUtils.getNowDate() + ".pdf");
-    
+
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] Monthly_Rental_Collection...");
   }
@@ -1776,12 +1796,21 @@ public class ReportBatchController {
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
     checkArgument(params);
+
+    SimpleDateFormat fmt = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.getDefault(Locale.Category.FORMAT));
+    Calendar startTime = Calendar.getInstance();
+    Calendar endTime = null;
+
     String reportFile = (String) params.get(REPORT_FILE_NAME);
     ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+    String reportName = reportFilePath + reportFile;
+    String prodName = "view";
+    int maxLength = 0;
+    String msg = "Completed";
 
     try {
 
-      String reportName = reportFilePath + reportFile;
+      //String reportName = reportFilePath + reportFile;
       ReportClientDocument clientDoc = new ReportClientDocument();
 
       // Report can be opened from the relative location specified in the
@@ -1806,6 +1835,8 @@ public class ReportBatchController {
 
       Object reportSource = clientDoc.getReportSource();
 
+      params.put("repProdName", prodName);
+
       ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
       Fields fields = clientDoc.getDataDefinition().getParameterFields();
       ReportUtils.setReportParameter(params, paramController, fields);
@@ -1813,9 +1844,21 @@ public class ReportBatchController {
         this.viewHandle(request, response, viewType, clientDoc, ReportUtils.getCrystalReportViewer(reportSource),
             params);
       }
-    } catch (ReportSDKExceptionBase ex) {
+    } catch (Exception ex) {
       LOGGER.error(CommonUtils.printStackTraceToString(ex));
+      maxLength = CommonUtils.printStackTraceToString(ex).length() <= 4000 ? CommonUtils.printStackTraceToString(ex).length() : 4000;
+
+      msg = CommonUtils.printStackTraceToString(ex).substring(0, maxLength);
       throw new ApplicationException(ex);
+    } finally{
+      // Insert Log
+      endTime = Calendar.getInstance();
+      params.put("msg", msg);
+      params.put("startTime", fmt.format(startTime.getTime()));
+      params.put("endTime", fmt.format(endTime.getTime()));
+      params.put("userId", 349);
+
+      reportBatchService.insertLog(params);
     }
   }
 
