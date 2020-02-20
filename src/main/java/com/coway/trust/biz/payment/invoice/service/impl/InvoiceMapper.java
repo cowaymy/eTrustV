@@ -49,4 +49,6 @@ public interface InvoiceMapper {
 	 * @return
 	 */
 	int selectInvoiceDetailCount(Map<String, Object> params);
+
+  List<EgovMap> selecteStatementRawList(Map<String, Object> params);
 }

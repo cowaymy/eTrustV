@@ -109,5 +109,20 @@ public class InvoiceController {
 		return ResponseEntity.ok(result);
 	}
 	
+  @RequestMapping(value = "/initMonthlyEStatementRaw.do")
+  public String initMonthlyEStatementRaw(@RequestParam Map<String, Object> params, ModelMap model) {
+    return "payment/invoice/monthlyEStatementRawData";
+  }
+	
+  @RequestMapping(value = "/selecteStatementRawList.do")
+  public ResponseEntity<List<EgovMap>> selecteStatementRawList(@RequestParam Map<String, Object> params, ModelMap model) {
+    List<EgovMap> list = null;
+    
+    LOGGER.debug("selecteStatementRawList params : {}", params);
+    if (params.get("year") != null && !("".equals(String.valueOf(params.get("year")))) && params.get("month") != null && !("".equals(String.valueOf(params.get("month"))))) {
+      list = invoiceService.selecteStatementRawList(params);
+    }
+    return ResponseEntity.ok(list);
+  }
 
 }

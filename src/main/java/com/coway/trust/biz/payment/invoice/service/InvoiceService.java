@@ -41,4 +41,6 @@ public interface InvoiceService{
 	 */
 	void createTaxInvoice(Map<String, Object> params);
 
+  List<EgovMap> selecteStatementRawList(Map<String, Object> params);
+
 }

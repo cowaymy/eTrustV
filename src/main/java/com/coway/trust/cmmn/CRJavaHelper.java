@@ -757,8 +757,10 @@ public class CRJavaHelper {
 
 	public static ExportOptions getCSVExportOptions() {
 		CharacterSeparatedValuesExportFormatOptions csvOptions = new CharacterSeparatedValuesExportFormatOptions();
+		/* comment by Vannie 20200217. Is to export to CSV file but data is in excel data view (column).
 		csvOptions.setSeparator(",");
-		csvOptions.setDelimiter("\n");
+		csvOptions.setDelimiter("\n");*/
+		csvOptions.setReportSectionsOption(CharacterSeparatedValuesExportFormatOptions.ExportSectionsOption.exportIsolated);
 		ExportOptions exportOptions = new ExportOptions();
 		exportOptions.setExportFormatType(ReportExportFormat.characterSeparatedValues);
 		exportOptions.setFormatOptions(csvOptions);

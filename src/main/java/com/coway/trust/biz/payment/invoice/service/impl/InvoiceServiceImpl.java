@@ -64,4 +64,9 @@ public class InvoiceServiceImpl extends EgovAbstractServiceImpl implements Invoi
 		membershipMapper.createTaxInvoice(params);
 	}
 
+  @Override
+  public List<EgovMap> selecteStatementRawList(Map<String, Object> params) {
+    return invoiceMapper.selecteStatementRawList(params);
+  }
+
 }
