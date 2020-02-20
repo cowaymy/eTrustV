@@ -120,7 +120,7 @@
             }
 
 	      //CALL LOG TYPE
-	       if ($("#instcallLogType").val() != '' && $("#instcallLogType").val() != null) {
+ 	       if ($("#instcallLogType").val() != '' && $("#instcallLogType").val() != null) {
 	              whereSql += " AND C.TYPE_ID IN (" + $("#instcallLogType").val()
 	                  + ") ";
 	            }
@@ -166,6 +166,9 @@
 	      console.log(whereSql);
 	      console.log(whereSql2);
 
+	      var callLogType = $("#instcallLogType").val();
+
+	      $("#installationCallLogForm #V_CALLLOGTYPE").val(callLogType);
 	      $("#installationCallLogForm #V_WHERESQL").val(whereSql);
 	      $("#installationCallLogForm #V_WHERESQL2").val(whereSql2);
 	      $("#installationCallLogForm #V_ORDERBYSQL").val(orderBySql);
@@ -226,6 +229,7 @@
      <!-- search_table start -->
           <form method="post" id="installationCallLogForm"
       name="installationCallLogForm">
+      <input type="hidden" id="V_CALLLOGTYPE" name="V_CALLLOGTYPE" />
       <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" />
        <input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" />
         <input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" />
@@ -300,7 +304,12 @@
      <tr>
       <th scope="row"><spring:message
         code='service.title.CallLogType' /></th>
-      <td><select  class="multy_select w100p" multiple="multiple"
+      <td>
+               <select class="w100p" id="instcallLogType" name="instcallLogType">
+        <option value="257">New Installation Order</option>
+        <option value="258">Product Exchange</option>
+
+<%--        <select  class="multy_select w100p" multiple="multiple"
         id="instcallLogType" name="instcallLogType">
         <c:forEach var="list" items="${instcallLogTyp}" varStatus="status">
          <c:choose>
@@ -312,13 +321,15 @@
            </c:otherwise>
          </c:choose>
         </c:forEach>
-      </select></td>
+      </select> --%>
+      </td>
+
       <th scope="row"><spring:message
         code='service.title.CallLogStatus' /></th>
-      <td><select  class="multy_select w100p" multiple="multiple"
+      <td>
+    <select  class="multy_select w100p" multiple="multiple"
        id="instcallLogStatus" name="instcallLogStatus">
-
-        <c:forEach var="list" items="${instcallLogSta}" varStatus="status">
+ <c:forEach var="list" items="${instcallLogSta}" varStatus="status">
          <c:choose>
            <c:when test="${list.code=='1' || list.code=='19'}">
              <option value="${list.code}" selected>${list.codeName}</option>
@@ -328,7 +339,6 @@
            </c:otherwise>
          </c:choose>
         </c:forEach>
-
       </select></td>
 
      </tr>
