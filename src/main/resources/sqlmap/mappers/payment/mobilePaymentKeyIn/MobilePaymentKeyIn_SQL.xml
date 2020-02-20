@@ -112,7 +112,7 @@
                  AND Extent1.PAY_STUS_ID = #{payStusId}
              </if>
              <if test="memberCode != null and memberCode != '' ">
-                 AND Extent1.CRT_USER_ID = #{memberCode}
+                 AND T10.USER_NAME = #{memberCode}
              </if>
              <if test="serialNo != null and serialNo != '' ">
                  AND ( Extent1.SLIP_NO = #{serialNo} OR Extent1.CHEQUE_NO = #{serialNo} )
