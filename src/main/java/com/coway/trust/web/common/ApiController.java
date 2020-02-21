@@ -6,7 +6,6 @@ import static com.coway.trust.AppConstants.REPORT_DOWN_FILE_NAME;
 import static com.coway.trust.AppConstants.REPORT_FILE_NAME;
 import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 
@@ -27,10 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.ApiService;
@@ -48,7 +47,7 @@ import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-@Controller
+@RestController
 @RequestMapping(value = "/api")
 public class ApiController {
 
@@ -261,7 +260,11 @@ public class ApiController {
 
       params.put(REPORT_FILE_NAME, "/statement/TaxInvoice_ServiceContract_PDF_SST.rpt");
       params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+      params.put("V_TASKID",0);
+      params.put("V_REFMONTH",0);
+      params.put("V_REFYEAR",0);
       params.put("V_REFERENCEID", params.get("taxInvoiceId").toString()); // parameter
+      params.put("type","134");
       params.put("V_TYPE","134");
       params.put(AppConstants.REPORT_DOWN_FILE_NAME, "ServiceContractMembership_Invoice_PDF_" + CommonUtils.getNowDate() + ".pdf");
 
