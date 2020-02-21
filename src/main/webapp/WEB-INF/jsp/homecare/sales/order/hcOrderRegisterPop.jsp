@@ -504,7 +504,7 @@
 
     $(function() {
         $('#btnRltdNo').click(function() {
-            Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+            Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'Y'}, null, true);
         });
 
         $('#custBtn').click(function() {

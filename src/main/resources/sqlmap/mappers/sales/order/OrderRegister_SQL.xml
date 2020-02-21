@@ -2373,6 +2373,18 @@
 		    ON T4.CODE_ID = T1.APP_TYPE_ID
 		 WHERE T1.CUST_ID = #{custId}
 		   AND T1.STUS_CODE_ID = '4'
+		   <choose>
+		      <when test='isHomecare == "1" '>
+		      AND T3.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                          WHERE AA.CODE = BB.CODE
+                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
+		      </when>
+		      <otherwise>
+		      AND T3.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                          WHERE AA.CODE = BB.CODE
+                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
+		      </otherwise>
+		   </choose>
     </select>
 
   <select id="selectProductComponent" parameterType="Map" resultType="egovMap">

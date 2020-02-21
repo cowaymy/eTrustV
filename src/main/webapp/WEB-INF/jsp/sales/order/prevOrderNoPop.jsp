@@ -121,7 +121,7 @@
 
     //Get Contact by Ajax
     function fn_getPrevOrderNo(){
-        Common.ajax("GET", "/sales/order/selectPrevOrderNoList.do", {custId : '${custId}'}, function(result) {
+        Common.ajax("GET", "/sales/order/selectPrevOrderNoList.do", {custId : '${custId}', isHomecare : '${isHomecare}'}, function(result) {
             AUIGrid.setGridData(prevOrdNoGridID, result);
         });
     }

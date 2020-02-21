@@ -517,6 +517,7 @@ public class OrderRegisterController {
   public String prevOrderNoPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
     model.put("custId", params.get("custId"));
+    model.put("isHomecare", params.get("isHomecare") != null ? '1' : '0');
 
     return "sales/order/prevOrderNoPop";
   }
