@@ -1483,14 +1483,14 @@ public class ReportBatchController {
     params.put("V_TEMP", "TEMP");// parameter
     params.put("V_YEAR", "2018");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "CSP" + File.separator + "CSP_Raw_Data" + CommonUtils.getNowDate() + ".xls");
+        "CSP" + File.separator + "CSP_Raw_Data_2018_" + CommonUtils.getNowDate() + ".xls");
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] CSP_Raw_Data_Excel...");
   }
 
   @RequestMapping(value = "/CSP_Raw_Data_Excel_2019.do")
-  //@Scheduled(cron = "0 0 3 * * *")//Daily (3:00am)
+  //@Scheduled(cron = "0 30 3 * * *")//Daily (3:30am)
   public void CSP_Raw_Data_Excel_2019() {
     LOGGER.info("[START] CSP_Raw_Data_Excel...");
     Map<String, Object> params = new HashMap<>();
@@ -1502,7 +1502,26 @@ public class ReportBatchController {
     params.put("V_TEMP", "TEMP");// parameter
     params.put("V_YEAR", "2019");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "CSP" + File.separator + "CSP_Raw_Data" + CommonUtils.getNowDate() + ".xls");
+        "CSP" + File.separator + "CSP_Raw_Data_2019_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] CSP_Raw_Data_Excel...");
+  }
+
+  @RequestMapping(value = "/CSP_Raw_Data_Excel_2020.do")
+  //@Scheduled(cron = "0 0 4 * * *")//Daily (3:30am)
+  public void CSP_Raw_Data_Excel_2020() {
+    LOGGER.info("[START] CSP_Raw_Data_Excel...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/CSPRawData.rpt");// visualcut
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put("V_YEAR", "2020");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "CSP" + File.separator + "CSP_Raw_Data_2020_" + CommonUtils.getNowDate() + ".xls");
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] CSP_Raw_Data_Excel...");
@@ -1666,14 +1685,14 @@ public class ReportBatchController {
         "thomas.chin@coway.com.my",
         "khongboon.soo@coway.com.my",
         "rachel.wong@coway.com.my",
-        "jack@coway.com.my",
-        "jypark30@coway.co.kr",
+        "jack@coway.com.my"//,
+        /*"jypark30@coway.co.kr",
         "enough06@coway.co.kr",
         "rose3128@coway.co.kr",
         "jenux@coway.co.kr",
         "smhong@coway.co.kr",
         "yulyul@coway.co.kr",
-        "ikchoul85@coway.co.kr",
+        "ikchoul85@coway.co.kr",*/
       };
     String email = "";
     email += "Dear All,\r\n\r\n";
@@ -1688,7 +1707,7 @@ public class ReportBatchController {
                                                                                   // file
                                                                                   // name.
     params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
-    //params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
+    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
     params.put("v_Param", " ");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "CowayDailySalesStatusHP_Adv" + CommonUtils.getNowDate() + ".pdf");
@@ -1711,14 +1730,14 @@ public class ReportBatchController {
           "thomas.chin@coway.com.my",
           "khongboon.soo@coway.com.my",
           "rachel.wong@coway.com.my",
-          "jack@coway.com.my",
-          "jypark30@coway.co.kr",
+          "jack@coway.com.my"//,
+          /*"jypark30@coway.co.kr",
           "enough06@coway.co.kr",
           "rose3128@coway.co.kr",
           "jenux@coway.co.kr",
           "smhong@coway.co.kr",
           "yulyul@coway.co.kr",
-          "ikchoul85@coway.co.kr",
+          "ikchoul85@coway.co.kr",*/
         };
     String email = "";
     email += "Dear All,\r\n\r\n";
@@ -1732,8 +1751,7 @@ public class ReportBatchController {
                                                                                   // rpt
                                                                                   // file
                                                                                   // name.
-    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
-    //params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
+    params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
     params.put("v_Param", " ");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "CowayDailySalesStatusCody" + CommonUtils.getNowDate() + ".pdf");
@@ -1776,7 +1794,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/Monthly_Rental_Collection.do")
-  // @Scheduled(cron = "0 0 1 2 * ?")//Monthly (Day 2) (1:00am)
+  //@Scheduled(cron = "0 0 1 2 * ?")//Monthly (Day 2) (1:00am)
   public void MonthlyRentalCollection() {
     LOGGER.info("[START] Monthly_Rental_Collection...");
     Map<String, Object> params = new HashMap<>();
