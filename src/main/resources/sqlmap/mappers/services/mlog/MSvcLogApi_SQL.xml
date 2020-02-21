@@ -907,7 +907,7 @@
                    NVL (SAL0001D.SALES_ORD_NO, '') AS sales_Order_No,
                    NVL (SAL0001D.CUST_ID, '') AS customer_Id,
                    FN_GET_COMMCD (10, SAL0001D.APP_TYPE_ID) AS app_Type,
-                   NVL (TO_CHAR (SAL0001D.PROMO_ID), '') AS sales_Promotion,
+                   NVL (TO_CHAR (SAL0017D.PROMO_DESC), '') AS sales_Promotion,
                    NVL(TO_CHAR (SAL0001D.MTH_RENT_AMT), '0') AS monthly_Rental_Fees,
                    NVL (SAL0001D.TOT_AMT, '') AS registration_Fees,
                    NVL (SAL0022D.CUST_ACC_BANK_ID, '') AS bank_Code,
@@ -967,7 +967,8 @@
                   FROM SYS0064M
                   WHERE STATUS_ID = 1) SYS0064M,
                  SAL0233M,
-                 SVC0113D
+                 SVC0113D,
+                 SAL0017D
             WHERE SAL0046D.CT_ID = ORG0001D.MEM_ID
               AND ORG0005D.MEM_ID = ORG0001D.MEM_ID
               AND SAL0001D.MEM_ID = ORG1001V.MEM_ID
@@ -993,6 +994,7 @@
               AND SAL0046D.INSTALL_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1)
               AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
               AND SAL0046D.INSTALL_ENTRY_NO = SVC0113D.SVC_NO(+)
+              AND SAL0001D.PROMO_ID = SAL0017D.PROMO_ID(+)
               ) WHERE rnum = 1
     ]]>
     <!-- WHERE rnum = 1 -->
