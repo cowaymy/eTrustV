@@ -67,7 +67,7 @@
       fn_getErrMstList('${ORD_NO}');
 
       doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '', 'ddlFilterExchangeCode', 'S', ''); // FITLER EXCHANGE CODE
-      doGetCombo('/services/as/getBrnchId', '', '', 'branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
+      doGetCombo('/homecare/services/as/getBrnchId.do', '', '', 'branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
       //doGetCombo('/services/as/inHouseGetProductMasters.do', '', '', 'productGroup', 'S', ''); // IN HOUSE PRODUCT CODE
 
       // doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=166', '', '', 'ddlFailReason', 'S', '');

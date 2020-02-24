@@ -33,7 +33,7 @@
       createCFilterAUIGrid();
 
       doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '', 'ddlFilterExchangeCode', 'S', ''); // FILTER CHARGE EXCHANGE CODE
-      doGetCombo('/services/as/getBrnchId', '', '', 'branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
+      doGetCombo('/homecare/services/as/getBrnchId.do', '', '', 'branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
       //doGetCombo('/services/as/inHouseGetProductMasters.do', '', '', 'productGroup', 'S', ''); // IN HOUSE PRODUCT GROUP
 
       AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
