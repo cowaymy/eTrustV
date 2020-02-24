@@ -1504,7 +1504,7 @@ public class ClaimController {
     // claimService.insertClaimFileDownloadInfo(claimMap);
 
     // E-mail 전송하기
-    File file = new File(filePath + subPath + sFile);
+/*    File file = new File(filePath + subPath + sFile);
     claimMap.put("file", subPath + sFile);
 
     EmailVO email = new EmailVO();
@@ -1515,7 +1515,7 @@ public class ClaimController {
     email.setText(emailBody);
     email.addFile(file);
 
-    adaptorService.sendEmail(email, false);
+    adaptorService.sendEmail(email, false);*/
   }
 
   private ClaimFileMBBHandler getTextDownloadMBBHandler(String fileName, String[] columns, String[] titles, String path,
