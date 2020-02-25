@@ -103,4 +103,8 @@ public interface OrderListMapper {
 
   EgovMap selectDelvryNo(Map<String, Object> params);
 
+  List<EgovMap> selectCboPckLinkOrdSub(Map<String, Object> params);
+
+  List<EgovMap> selectCboPckLinkOrdSub2(Map<String, Object> params);
+
 }
