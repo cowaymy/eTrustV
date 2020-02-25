@@ -151,7 +151,7 @@
     doGetComboData('/sales/order/selectResnCodeList.do', {
       resnTypeId : '536',
       stusCodeId : '1'
-    }, '2275', 'cmbReason2', 'S', 'fn_removeOpt'); //Reason Code
+    }, '2301', 'cmbReason2', 'S', 'fn_removeOpt'); //Reason Code
   }
 
   function fn_removeOpt() {
