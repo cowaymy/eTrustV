@@ -1171,5 +1171,188 @@
     WHERE  X.REF_DOC_NO = #{refDocNo}
   </select>
 
+ <select id="selectCboPckLinkOrdSub" parameterType="Map" resultType="egovMap">
+    SELECT T.APP_TYPE_CODE
+         , T.APP_TYPE_NAME
+         , T.CRT_USER_ID
+         , T.CUST_IC
+         , T.CUST_NAME
+         , T.CUST_VA_NO
+         , T.DSC_BRNCH_ID
+         , T.KEYIN_BRNCH_ID
+         , T.ORD_ID
+         , T.ORD_NO
+         , T.ORD_STUS_CODE
+         , T.PO_NO
+         , T.PRODUCT_CODE
+         , T.PRODUCT_NAME
+         , T.REF_NO
+         , T.RENT_STUS
+         , T.SALESMAN_MEM_ID
+         , T.SALESMAN_CODE
+         , T.SALESMAN_MEM_TYPE_ID
+         , T.BILLING_GRP_ID
+         , T.MAIL_TEL_MOB
+         , T.MAIL_TEL_FAX
+         , T.MAIL_TEL_OFF
+         , T.MAIL_TEL_RES
+         , T.INST_TEL_FAX
+         , T.INST_TEL_MOB
+         , T.INST_TEL_OFF
+         , T.INST_TEL_RES
+         , T.SIRIM_NO
+         , T.SERIAL_NO
+         , T.PROMO_CODE
+         , T.PROMO_DESC
+         , T.RELATED_NO
+         , T.RELATED_ID
+         , 1 C1
+         , NVL(T.APP_TYPE_ID, 0) AS APP_TYPE_ID
+         , NVL(T.CUST_ID, 0) AS CUST_ID
+         , TO_CHAR(T.ORD_DT, 'DD/MM/YYYY') AS ORD_DT
+         , NVL(T.ORD_STUS_ID, 0) AS ORD_STUS_ID
+         , NVL(T.PRODUCT_ID, 0) AS PRODUCT_ID
+         , T.PV_MONTH
+         , T.PV_YEAR
+    FROM ( SELECT /*+ use_nl( V1.som V1.ir V1.ie V1.ei V1.i V1.sod V1.cp3 V1.cp2 V1.rs V1.c V1.u V1.mem V1.cd V1.stk V1.pm V1.S ) */
+                  V1.APP_TYPE_CODE
+                , V1.APP_TYPE_ID
+                , V1.APP_TYPE_NAME
+                , V1.CRT_USER_ID
+                , V1.CUST_IC
+                , V1.CUST_NAME
+                , V1.CUST_ID
+                , V1.CUST_VA_NO
+                , V1.DSC_BRNCH_ID
+                , V1.KEYIN_BRNCH_ID
+                , V1.ORD_DT
+                , V1.ORD_ID
+                , V1.ORD_NO
+                , V1.ORD_STUS_CODE
+                , V1.ORD_STUS_ID
+                , V1.PO_NO
+                , V1.PRODUCT_ID
+                , V1.PRODUCT_CODE
+                , V1.PRODUCT_NAME
+                , V1.REF_NO
+                , V1.RENT_STUS
+                , V1.SALESMAN_MEM_ID
+                , V1.SALESMAN_CODE
+                , V1.SALESMAN_MEM_TYPE_ID
+                , V1.BILLING_GRP_ID
+                , V1.MAIL_TEL_MOB
+                , V1.MAIL_TEL_FAX
+                , V1.MAIL_TEL_OFF
+                , V1.MAIL_TEL_RES
+                , V1.INST_TEL_FAX
+                , V1.INST_TEL_MOB
+                , V1.INST_TEL_OFF
+                , V1.INST_TEL_RES
+                , V1.SIRIM_NO
+                , V1.SERIAL_NO
+                , V1.ITM_PRC_ID
+                , V1.PV_MONTH
+                , V1.PV_YEAR
+                , V1.PROMO_CODE
+                , V1.PROMO_DESC
+                , V1.RELATED_NO
+                , V1.RELATED_ID
+           FROM SAL1013V  V1
+           WHERE 1 = 1 AND V1.ORD_ID = (SELECT PCKAGE_BINDING_NO FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo_1})
+    ) T
+    ORDER BY T.ORD_NO ASC
+  </select>
+
+  <select id="selectCboPckLinkOrdSub2" parameterType="Map" resultType="egovMap">
+    SELECT T.APP_TYPE_CODE
+         , T.APP_TYPE_NAME
+         , T.CRT_USER_ID
+         , T.CUST_IC
+         , T.CUST_NAME
+         , T.CUST_VA_NO
+         , T.DSC_BRNCH_ID
+         , T.KEYIN_BRNCH_ID
+         , T.ORD_ID
+         , T.ORD_NO
+         , T.ORD_STUS_CODE
+         , T.PO_NO
+         , T.PRODUCT_CODE
+         , T.PRODUCT_NAME
+         , T.REF_NO
+         , T.RENT_STUS
+         , T.SALESMAN_MEM_ID
+         , T.SALESMAN_CODE
+         , T.SALESMAN_MEM_TYPE_ID
+         , T.BILLING_GRP_ID
+         , T.MAIL_TEL_MOB
+         , T.MAIL_TEL_FAX
+         , T.MAIL_TEL_OFF
+         , T.MAIL_TEL_RES
+         , T.INST_TEL_FAX
+         , T.INST_TEL_MOB
+         , T.INST_TEL_OFF
+         , T.INST_TEL_RES
+         , T.SIRIM_NO
+         , T.SERIAL_NO
+         , T.PROMO_CODE
+         , T.PROMO_DESC
+         , T.RELATED_NO
+         , T.RELATED_ID
+         , 1 C1
+         , NVL(T.APP_TYPE_ID, 0) AS APP_TYPE_ID
+         , NVL(T.CUST_ID, 0) AS CUST_ID
+         , TO_CHAR(T.ORD_DT, 'DD/MM/YYYY') AS ORD_DT
+         , NVL(T.ORD_STUS_ID, 0) AS ORD_STUS_ID
+         , NVL(T.PRODUCT_ID, 0) AS PRODUCT_ID
+         , T.PV_MONTH
+         , T.PV_YEAR
+    FROM ( SELECT /*+ use_nl( V1.som V1.ir V1.ie V1.ei V1.i V1.sod V1.cp3 V1.cp2 V1.rs V1.c V1.u V1.mem V1.cd V1.stk V1.pm V1.S ) */
+                  V1.APP_TYPE_CODE
+                , V1.APP_TYPE_ID
+                , V1.APP_TYPE_NAME
+                , V1.CRT_USER_ID
+                , V1.CUST_IC
+                , V1.CUST_NAME
+                , V1.CUST_ID
+                , V1.CUST_VA_NO
+                , V1.DSC_BRNCH_ID
+                , V1.KEYIN_BRNCH_ID
+                , V1.ORD_DT
+                , V1.ORD_ID
+                , V1.ORD_NO
+                , V1.ORD_STUS_CODE
+                , V1.ORD_STUS_ID
+                , V1.PO_NO
+                , V1.PRODUCT_ID
+                , V1.PRODUCT_CODE
+                , V1.PRODUCT_NAME
+                , V1.REF_NO
+                , V1.RENT_STUS
+                , V1.SALESMAN_MEM_ID
+                , V1.SALESMAN_CODE
+                , V1.SALESMAN_MEM_TYPE_ID
+                , V1.BILLING_GRP_ID
+                , V1.MAIL_TEL_MOB
+                , V1.MAIL_TEL_FAX
+                , V1.MAIL_TEL_OFF
+                , V1.MAIL_TEL_RES
+                , V1.INST_TEL_FAX
+                , V1.INST_TEL_MOB
+                , V1.INST_TEL_OFF
+                , V1.INST_TEL_RES
+                , V1.SIRIM_NO
+                , V1.SERIAL_NO
+                , V1.ITM_PRC_ID
+                , V1.PV_MONTH
+                , V1.PV_YEAR
+                , V1.PROMO_CODE
+                , V1.PROMO_DESC
+                , V1.RELATED_NO
+                , V1.RELATED_ID
+           FROM SAL1013V  V1
+           WHERE 1 = 1 AND V1.ORD_ID IN (SELECT SALES_ORD_ID FROM SAL0001D WHERE PCKAGE_BINDING_NO = #{salesOrdId})
+    ) T
+    ORDER BY T.ORD_NO ASC
+  </select>
 
 </mapper>
