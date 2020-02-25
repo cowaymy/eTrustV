@@ -569,7 +569,17 @@ public class OrderListController {
 		return "sales/order/serialNoModifyPop";
 	}
 
+	@RequestMapping(value = "/selectCboPckLinkOrdSub", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCboPckLinkOrdSub(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+	   List<EgovMap> orderList = orderListService.selectCboPckLinkOrdSub(params);
+	  return ResponseEntity.ok(orderList);
+	}
 
+	@RequestMapping(value = "/selectCboPckLinkOrdSub2", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCboPckLinkOrdSub2(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+	  List<EgovMap> orderList = orderListService.selectCboPckLinkOrdSub2(params);
+	  return ResponseEntity.ok(orderList);
+	}
 
     // KR HAN : Save Serial No Modify
 //	@RequestMapping(value = "/saveSerialNoModify.do", method = RequestMethod.POST)
