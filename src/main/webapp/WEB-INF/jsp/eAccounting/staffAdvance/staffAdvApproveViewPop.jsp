@@ -12,7 +12,7 @@
 }
 </style>
 <script type="text/javascript">
-    console.log("webInvoiceApproveViewPop");
+    console.log("staffAdvanceApproveViewPop");
     var myGridID;
     var myGridData = $.parseJSON('${appvInfoAndItems}');
     var attachList = null;
@@ -32,7 +32,7 @@
         $("#viewAdvBankAccNo").text(myGridData[0].bankAccNo);
 
         if(myGridData[0].advType == 1) {
-            $("#trvAdv").css("display", "none");
+            //$("#trvAdv").css("display", "none");
             $("#advanceRefDiv").css("display", "none");
             //$("#advanceRefDiv").hide();
 
@@ -55,7 +55,8 @@
             }
 
             var trvTotAmt = (parseFloat(myGridData[0].accAmt.trim().replace(",", "")) + parseFloat(myGridData[0].milAmt.trim().replace(",", "")) + parseFloat(myGridData[0].tollAmt.trim().replace(",", "")) + parseFloat(myGridData[0].othAmt.trim().replace(",", ""))).toFixed(2);
-            $("#viewTrvTotAmt").text("RM" + trvTotAmt.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+            //$("#viewTrvTotAmt").text("RM" + trvTotAmt.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+            $("#viewTrvTotAmt").text("RM" + myGridData[0].clmAmt.trim())
             $("#viewTrvRefdDt").text(myGridData[0].advRefdDt);
 
         } else if(myGridData[0].advType == 2) {
@@ -267,7 +268,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Traveling Period</th>
+                            <th scope="row">Travel Period</th>
                             <td>
                                 <span id="viewTrvPeriod"></span>
                             </td>
@@ -341,7 +342,7 @@
                         </colgroup>
 
                         <tr>
-                            <th scope="row">Traveling Period</th>
+                            <th scope="row">Travel Period</th>
                             <td colspan="2">
                                 <span id="refTrvPeriod"></span>
                             </td>
@@ -359,7 +360,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row">Repayment Date</th>
+                            <th scope="row">Repayment Due Date</th>
                             <td colspan="2">
                                 <span id="refRepayDate"></span>
                             </td>
@@ -402,7 +403,7 @@
                         </td>
                     </tr>
                     <tr id="reqRefdDate">
-                        <th scope="row">Refund Date</th>
+                        <th scope="row">Repayment Due Date</th>
                         <td colspan="2">
                             <span id="viewTrvRefdDt"></span>
                         </td>

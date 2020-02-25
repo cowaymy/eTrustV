@@ -323,6 +323,8 @@ public class StaffAdvanceController {
             }
         }
 
+        LOGGER.debug("staffadvancecontroller :: saveAdvReq :: " + params);
+
         ReturnMessage message = new ReturnMessage();
         message.setCode(AppConstants.SUCCESS);
         message.setData(params);

@@ -68,9 +68,9 @@
     var advanceGridPros = {
         usePaging : true,
         pageRowCount : 40,
-        selectionMode : "multipleCells",
-        showRowCheckColumn : true,
-        showRowAllCheckBox : true
+        selectionMode : "singleCell",
+        showRowCheckColumn : false,
+        showRowAllCheckBox : false
     };
     // Main Menu Advance Listing Grid -- End
 
@@ -338,93 +338,93 @@
             } else if(advType == "3") {
                 console.log("Event Advance");
             }
-        });
 
-        if(appvStus == "T") {
-            console.log("request :: appvStus :: T");
+            if(appvStus == "T") {
+                console.log("request :: appvStus :: T");
 
-            var data = {
-                    clmNo : claimNo,
-                    advType : advType
-            };
+                var data = {
+                        clmNo : claimNo,
+                        advType : advType
+                };
 
-            console.log(data);
-            Common.ajax("GET", "/eAccounting/staffAdvance/getAdvClmInfo.do", data, function(results) {
-                console.log("getAdvClmInfo.do");
-                console.log(results);
+                console.log(data);
+                Common.ajax("GET", "/eAccounting/staffAdvance/getAdvClmInfo.do", data, function(results) {
+                    console.log("getAdvClmInfo.do");
+                    console.log(results);
 
-                $("#reqEditClmNo").show();
+                    $("#reqEditClmNo").show();
 
-                $("#createUserId").val(results.crtUserId);
-                $("#costCenterName").val(results.costCenterNm);
-                $("#bankId").val(results.bankCode);
-                $("#atchFileGrpId").val(results.fileAtchGrpId);
-                $("#clmNo").val(claimNo);
+                    $("#createUserId").val(results.crtUserId);
+                    $("#costCenterName").val(results.costCenterNm);
+                    $("#bankId").val(results.bankCode);
+                    $("#atchFileGrpId").val(results.fileAtchGrpId);
+                    $("#clmNo").val(claimNo);
 
-                $("#reqDraftClaimNo").text(claimNo);
-                $("#reqAdvType option[value=" + results.advType + "]").attr('selected', 'selected');
-                $("#reqAdvType").val(results.advType);
-                $("#reqAdvType").attr("readonly", true);
-                $("#keyDate").val(results.entryDt);
-                $("#costCenterCode").val(results.costCenter);
-                $("#createUsername").val(results.crtUserName);
-                $("#payeeCode").val(results.payee);
-                $("#payeeName").val(results.payeeName);
-                $("#bankName").val(results.bankName);
-                $("#bankAccNo").val(results.bankAccno);
+                    $("#reqDraftClaimNo").text(claimNo);
+                    $("#reqAdvType option[value=" + results.advType + "]").attr('selected', 'selected');
+                    $("#reqAdvType").val(results.advType);
+                    $("#reqAdvType").attr("readonly", true);
+                    $("#keyDate").val(results.entryDt);
+                    $("#costCenterCode").val(results.costCenter);
+                    $("#createUsername").val(results.crtUserName);
+                    $("#payeeCode").val(results.payee);
+                    $("#payeeName").val(results.payeeName);
+                    $("#bankName").val(results.bankName);
+                    $("#bankAccNo").val(results.bankAccno);
 
-                $("#locationFrom").val(results.advLocFr);
-                $("#locationTo").val(results.advLocTo);
-                $("#trvPeriodFr").val(results.advPrdFr);
-                $("#trvPeriodTo").val(results.advPrdTo);
-                $("#trvReqRem").val(results.advRem);
+                    $("#locationFrom").val(results.advLocFr);
+                    $("#locationTo").val(results.advLocTo);
+                    $("#trvPeriodFr").val(results.advPrdFr);
+                    $("#trvPeriodTo").val(results.advPrdTo);
+                    $("#trvReqRem").val(results.advRem);
 
-                $("#accmdtAmt").val(results.accAmt.toFixed(2));
-                $("#mileageAmt").val(results.milAmt.toFixed(2));
-                $("#mileage").val(results.milDist);
-                $("#tollAmt").val(results.tollAmt.toFixed(2));
-                $("#othTrsptAmt").val(results.othAmt.toFixed(2));
-                $("#trsptMode").val(results.othRem);
-                $("#reqTotAmt").val(parseFloat(results.accAmt) + parseFloat(results.milAmt) + parseFloat(results.tollAmt) + parseFloat(results.othAmt));
+                    $("#accmdtAmt").val(results.accAmt.toFixed(2));
+                    $("#mileageAmt").val(results.milAmt.toFixed(2));
+                    $("#mileage").val(results.milDist);
+                    $("#tollAmt").val(results.tollAmt.toFixed(2));
+                    $("#othTrsptAmt").val(results.othAmt.toFixed(2));
+                    $("#trsptMode").val(results.othRem);
+                    $("#reqTotAmt").val(parseFloat(results.accAmt) + parseFloat(results.milAmt) + parseFloat(results.tollAmt) + parseFloat(results.othAmt));
 
-                $("#fileSelector").html("");
-                $("#fileSelector").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='1'/></div>");
-                $(".input_text").val(results.atchFileName);
-                $(".input_text").dblclick(function() {
-                    var data = {
-                            atchFileGrpId : results.fileAtchGrpId,
-                            atchFileId : results.atchFileId
-                    };
+                    $("#fileSelector").html("");
+                    $("#fileSelector").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='1'/></div>");
+                    $(".input_text").val(results.atchFileName);
+                    $(".input_text").dblclick(function() {
+                        var data = {
+                                atchFileGrpId : results.fileAtchGrpId,
+                                atchFileId : results.atchFileId
+                        };
 
-                    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(flResult) {
-                        console.log(flResult);
-                        if(flResult.fileExtsn == "jpg" || flResult.fileExtsn == "png" || flResult.fileExtsn == "gif") {
-                            // TODO View
-                            var fileSubPath = result.fileSubPath;
-                            fileSubPath = fileSubPath.replace('\', '/'');
-                            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                        } else {
-                            var fileSubPath = flResult.fileSubPath;
-                            fileSubPath = fileSubPath.replace('\', '/'');
-                            console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
+                        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(flResult) {
+                            console.log(flResult);
+                            if(flResult.fileExtsn == "jpg" || flResult.fileExtsn == "png" || flResult.fileExtsn == "gif") {
+                                // TODO View
+                                var fileSubPath = result.fileSubPath;
+                                fileSubPath = fileSubPath.replace('\', '/'');
+                                console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                                window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                            } else {
+                                var fileSubPath = flResult.fileSubPath;
+                                fileSubPath = fileSubPath.replace('\', '/'');
+                                console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
+                                        + "&fileName=" + flResult.physiclFileName + "&orignlFileNm=" + flResult.atchFileName);
+                                window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
                                     + "&fileName=" + flResult.physiclFileName + "&orignlFileNm=" + flResult.atchFileName);
-                            window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
-                                + "&fileName=" + flResult.physiclFileName + "&orignlFileNm=" + flResult.atchFileName);
-                        }
+                            }
+                        });
                     });
+                    $("#refdDate").val(results.advRefdDt);
+
+                    /*
+                    $("#").val()
+                    $("#").val()
+                    $("#").val()
+                    $("#").val()*/
+
+                    fn_trvPeriod("F");
                 });
-                $("#refdDate").val(results.advRefdDt);
-
-                /*
-                $("#").val()
-                $("#").val()
-                $("#").val()
-                $("#").val()*/
-
-                fn_trvPeriod("F");
-            });
-        }
+            }
+        });
     }
 
     function fn_repaymentPop() {
@@ -434,6 +434,13 @@
         if(claimNo == null || claimNo == "") {
             Common.alert("No advance request claim selected for repayment.");
             return false;
+        }
+
+        if(claimNo.substring(0, 1) == "R") {
+            if(appvStus != "A") {
+                Common.alert("Selected Advance Request Claim No is not allowed for repayment!");
+                return false;
+            }
         }
 
         if(claimNo.substring(0, 1) == "A") {
@@ -736,7 +743,7 @@
 
             dateDiff = ((new Date(tDate - fDate))/1000/60/60/24) + 1;
 
-            if(dateDiff <= 0) {
+            if(dateDiff < 3) {
                 $("#trvPeriodFr").val("");
                 $("#trvPeriodTo").val("");
                 $("#daysCount").val("");
@@ -986,10 +993,10 @@
                    });
                } else if (mode == "D" && result1.message == "success") {
                    fn_alertClmNo(result1.data.clmNo);
+               } else {
+                   fn_closePop();
+                   fn_searchAdv();
                }
-
-               fn_closePop();
-               fn_searchAdv();
            });
         });
     }
@@ -999,15 +1006,17 @@
 
         $("#reqAdvType").attr("disabled", false);
 
+        /*
         if(appvStus == "T") {
             $("#clmNo").val(claimNo);
         }
+        */
 
         var data = $("#advReqForm").serializeJSON();
         var apprLineGrid = AUIGrid.getOrgGridData(approveLineGridID);
         data.apprLineGrid = apprLineGrid;
 
-        console.log("fn_submitReq :: " + data);
+        console.log(data);
 
         Common.ajax("POST", "/eAccounting/staffAdvance/submitAdvReq.do", data, function(result) {
             console.log(result);
@@ -1031,7 +1040,7 @@
            //Common.ajax("POST", "/eAccounting/staffAdvance/saveAdvReq.do", formData, function(result1) {
                console.log(result1);
 
-               $("#clmNo").val(result1.clmNo);
+               $("#clmNo").val(result1.data.clmNo);
 
                if(mode == "S") {
                    var length = AUIGrid.getGridData(approveLineGridID).length;
@@ -1057,10 +1066,10 @@
                            fn_submitReq();
                        }
                    });
+               } else {
+                   fn_closePop();
+                   fn_searchAdv();
                }
-
-               fn_closePop();
-               fn_searchAdv();
            });
         });
     }
@@ -1501,10 +1510,12 @@
                         <tr>
                             <th scope="row">Payee Code<span class="must">*</span></th>
                             <td>
-                                <input type="text" title="" placeholder="" class="" id="payeeCode" name="payeeCode" readonly/>
+                                <input type="text" title="" placeholder="" class="w100p" id="payeeCode" name="payeeCode" readonly/>
+                                <!--
                                 <a href="#" class="search_btn" id="reqPayee_search_btn">
                                     <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                                 </a>
+                                -->
                             </td>
                             <th scope="row">Payee Name</th>
                             <td>
@@ -1520,7 +1531,7 @@
                             <th scope="row">Bank Account</th>
                             <td>
                                 <input type="text" title="Bank Account No" placeholder="Bank Account No" class="w100p" id="bankAccNo" name="bankAccNo" maxlength="10"
-                                onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;"/>
+                                onKeypress="return event.charCode >= 48 && event.charCode <= 57"/>
                                 <!-- <input type="text" title="Bank Account No" placeholder="Bank Account No" class="w100p" id="bankAccNo" name="bankAccNo" value="${bankAccNo}" readonly/> -->
                             </td>
                         </tr>
