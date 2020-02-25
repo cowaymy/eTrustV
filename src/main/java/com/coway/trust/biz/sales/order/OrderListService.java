@@ -54,4 +54,8 @@ public interface OrderListService {
 
 	// KR HAN : Save Serial No Modify
 //	Map<String, Object> saveSerialNoModify(Map<String, Object> params);
+
+	List<EgovMap> selectCboPckLinkOrdSub(Map<String, Object> params);
+
+	List<EgovMap> selectCboPckLinkOrdSub2(Map<String, Object> params);
 }
