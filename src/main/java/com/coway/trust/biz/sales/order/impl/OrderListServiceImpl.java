@@ -483,4 +483,14 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
   public EgovMap selectOrderSerial(Map<String, Object> params) {
     return orderListMapper.selectOrderSerial(params);
   }
+
+  @Override
+  public List<EgovMap> selectCboPckLinkOrdSub(Map<String, Object> params) {
+    return orderListMapper.selectCboPckLinkOrdSub(params);
+  }
+
+  @Override
+  public List<EgovMap> selectCboPckLinkOrdSub2(Map<String, Object> params) {
+    return orderListMapper.selectCboPckLinkOrdSub2(params);
+  }
 }
