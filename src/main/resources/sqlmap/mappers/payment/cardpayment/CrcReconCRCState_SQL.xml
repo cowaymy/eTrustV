@@ -50,6 +50,9 @@
                     <if test="bankAcc != null and bankAcc != ''">
                     AND B.PAY_ITM_BANK_ACC_ID = #{bankAcc}
                     </if>
+                    AND (A.REV_STUS_ID IS NULL
+                           OR A.REV_STUS_ID <![CDATA[ <> ]]> 5
+                           ) <!-- ONGHC ADD FOR SKIP REVERSE AMOUNT -->
                 GROUP BY
                     A.GROUP_SEQ,
                     B.PAY_ITM_CC_NO,
@@ -85,6 +88,9 @@
                     <if test="bankAcc != null and bankAcc != ''">
                     AND B.PAY_ITM_BANK_ACC_ID = #{bankAcc}
                     </if>
+                    AND (A.REV_STUS_ID IS NULL
+                           OR A.REV_STUS_ID <![CDATA[ <> ]]> 5
+                    ) <!-- ONGHC ADD FOR SKIP REVERSE AMOUNT -->
                 GROUP BY
                     A.GROUP_SEQ,
                     B.PAY_ITM_CC_NO,
