@@ -34,6 +34,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2019. 10. 21.   KR-HAN        First creation
  * 2020. 02. 11    ONGHC         Add Payment Method ONL for saveMobilePaymentKeyInNormalPayment
  * 2020. 02. 12    ONGHC         Add Optional Value for Commission
+ * 2020. 02. 25    KR-HAN       Payment Error Edit ( WOR Error,  convert to integer error )
  *          </pre>
  */
 @Service("mobilePaymentKeyInService")
@@ -142,7 +143,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     Map<String, Object> formInfo = null;
     Map<String, Object> gridListMap = null;
 
-    Integer totPayAmt = 0;
+    Double totPayAmt = 0.00;
 
     int procSeq = 1;
     String allowance = "0";
@@ -486,7 +487,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     List<Object> formList = new ArrayList<Object>();
     Map<String, Object> formInfo = null;
     Map<String, Object> gridListMap = null;
-    Integer totPayAmt = 0;
+    Double totPayAmt = 0.00;  // 2020.02.24 : EDIT
     String allowance = "0";
 
     formInfo = new HashMap<String, Object>();
@@ -545,6 +546,9 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     } else {
       payType = "105";
     }
+
+    // 2020.02.24 : ADD ProcSeq
+    int iProcSeq = 1;
 
     for (int i = 0; i < gridList.size(); i++) {
       gridListMap = (Map<String, Object>) gridList.get(i);
@@ -616,6 +620,8 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
       Double totTargetAmt = 0.00;
 
+
+
       // 금액 다시 계산
       for (int j = 0; j < orderInfoRentalList.size(); j++) {
         // if( "1".equals(mstChkVal) ){
@@ -623,7 +629,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
           formMap = new HashMap<String, Object>();
 
-          formMap.put("procSeq", 1);
+          formMap.put("procSeq", iProcSeq);	// 2020.02.24 : ADD procSeq
           formMap.put("appType", "RENTAL");
           formMap.put("advMonth", (Integer) gridListMap.get("advMonth")); // 셋팅필요
           formMap.put("mstRpf", mstRpf);
@@ -700,7 +706,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
             formMap = new HashMap<String, Object>();
 
-            formMap.put("procSeq", 1);
+            formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
             formMap.put("appType", "RENTAL");
             formMap.put("advMonth", (Integer) gridListMap.get("advMonth")); // 셋팅필요
             formMap.put("mstRpf", mstRpf);
@@ -754,7 +760,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
           System.out.println("++++ gridListMap.toString() ::" + gridListMap.toString());
 
-          formMap.put("procSeq", 1);
+          formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
           formMap.put("appType", "RENTAL");
           formMap.put("advMonth", (Integer) gridListMap.get("advMonth"));
           formMap.put("mstRpf", mstRpf);
@@ -808,7 +814,10 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       // int key = Integer.parseInt(String.valueOf(tmpKey));
 
       // 합산 금액 셋팅
-      totPayAmt += (Integer) gridListMap.get("payAmt");
+      totPayAmt += (Double ) gridListMap.get("payAmt");   // 2020.02.24 : EDIT
+
+      iProcSeq = iProcSeq+1; // 2020.02.24 : ADD iProcSeq
+
     }
     // Map<String, Object> schParams = new HashMap<String, Object>();
     // schParams.put("fTrnscId", key);
@@ -854,11 +863,9 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     // User ID 세팅
     formInfo.put("userid", sUserId);
 
-    // System.out.println("++++ 3 formInfo.toString() ::" + formInfo.toString()
-    // );
-    // System.out.println("++++ 3-1 formList.toString() ::" +
-    // formList.toString() );
-    // System.out.println("++++ 5 key ::" + key );
+//     System.out.println("++++ 3 formInfo.toString() ::" + formInfo.toString());
+//     System.out.println("++++ 3-1 formList.toString() ::" + formList.toString() );
+//     System.out.println("++++ 5 key ::" + key );
 
     // =============================================================
 
@@ -875,7 +882,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       ticketParam.put("mobTicketNo", gridListMap.get("mobTicketNo"));
       mobileAppTicketApiCommonMapper.update(ticketParam);
     }
-    // Map<String, Object> resultList = null; // 테스트
+//     Map<String, Object> resultList = null; // 테스트
     Map<String, Object> resultList = commonPaymentService.saveNormalPayment(formInfo, formList, Integer.parseInt(key));
 
     // WOR 번호 조회
