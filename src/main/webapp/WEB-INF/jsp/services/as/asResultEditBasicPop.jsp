@@ -9,6 +9,7 @@
  26/04/2019  ONGHC  1.0.2          ADD RECALL STATUS
  17/09/2019  ONGHC  1.0.3          AMEND DEFECT DETAIL SECTION
  08/10/2019  ONGHC  1.0.4          AMEND SAVE FUNCTION TO ADD 1 PARAM AS_ENTRY_ID
+ 26/02/2020  ONGHC  1.0.5          AMEND FOR LPM
  -->
 
 <!-- AS ORDER > AS MANAGEMENT > EDIT BASIC AS ENTRY -->
@@ -104,6 +105,7 @@
     }
 
     $("#psiRcd").val(result[0].psi);
+    $("#lpmRcd").val(result[0].lpm);
 
     /*
     $("#ddlDSCCode").val( result[0].asBrnchId);
@@ -1398,8 +1400,8 @@ function SearchListAjax(obj){
         <tr>
          <th scope="row"><spring:message code='service.title.PSIRcd' /><span class="must" id="m15" style="display:none"> *</span></th>
          <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" disabled="disabled" onkeypress='validate(event)' </td>
-         <th scope="row"></th>
-         <td></td>
+         <th scope="row"><spring:message code='service.title.lmp' /><span class="must" id="m16" style="display:none"> *</span></th>
+         <td><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" disabled="disabled" onkeypress='validate(event)' </td>
         </tr>
 
         <tr>
