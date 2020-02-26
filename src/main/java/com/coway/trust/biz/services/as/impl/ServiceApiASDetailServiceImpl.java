@@ -39,6 +39,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * Date              Author         Description
  * -------------  -----------  -------------
  * 2019. 09. 20.   Jun             First creation
+ * 2020. 02. 26.   ONGHC        Amend asResultProc to add PSI and LPM
  */
 @Service("serviceApiASDetailService")
 public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl implements ServiceApiASDetailService {
@@ -434,6 +435,7 @@ public class ServiceApiASDetailServiceImpl extends EgovAbstractServiceImpl imple
 
         		params.put("AS_RESULT_REM", insApiresult.get("resultRemark"));
                 params.put("AS_PSI", insApiresult.get("psiRcd"));
+                params.put("AS_LPM", insApiresult.get("lpmRcd"));
 
         		if (insApiresult.get("inHouseRepairRemark") != null) {
         			params.put("IN_HUSE_REPAIR_REM", String.valueOf(insApiresult.get("inHouseRepairRemark")));
