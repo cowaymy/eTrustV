@@ -470,6 +470,7 @@
                                       street AS street,
                                       NVL(Serial_Chk, 'N') AS Serial_Chk,
                                       psi AS psi,
+                                      lpm AS lpm,
                                       prodCat AS prodCat
                               FROM (SELECT /*+ leading(SVC0001D) index( SVC0001D , SVC0001D_IDX12) */
                                            ROW_NUMBER () OVER (PARTITION BY sal0001d.sales_ord_no, svc0001d.as_no ORDER BY svc0004d.as_result_id DESC) rn,
@@ -558,6 +559,7 @@
                                            svc0001d.as_type_id,
                                            DBMS_LOB.SUBSTR(CCR0007D.CALL_REM, 4000, 1) AS instct,
                                            TO_CHAR(svc0004d.PSI) AS psi,
+                                           TO_CHAR(svc0004d.LPM) AS lpm,
                                            TO_CHAR(sys0026m.STK_CTGRY_ID) AS prodCat
                                     FROM sal0001d,
                                          sal0002d,
@@ -944,6 +946,7 @@
                    , SYS0026M.STK_CODE AS REAL_BEFORE_PRODUCT_CODE
                    , SYS0026M.STK_DESC AS REAL_BEFORE_PRODUCT_NAME
                    , TO_CHAR (SAL0047D.PSI) AS psi
+                   , TO_CHAR (SAL0047D.LPM) AS lpm
                    , TO_CHAR (SYS0026M.STK_CTGRY_ID) AS prodCat
             FROM SAL0046D,
                  ORG0001D,
@@ -1079,6 +1082,7 @@
          , TO_CHAR(REAL_BEFORE_PRODUCT_NAME) AS real_Before_Porduct_Name
          , TO_CHAR(REAL_BEFORE_PRODUCT_SERIAL_NO) AS real_Before_Product_Serial_No
          , TO_CHAR(PSI) AS psi
+         , TO_CHAR(LPM) AS lpm
          , TO_CHAR(PRODCAT) AS prodcat
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
@@ -1570,6 +1574,7 @@
            TO_CHAR (CRT_DT) AS Create_Date,
            TO_CHAR(SERIAL_CHK) AS serial_Chk,
            TO_CHAR(PSI) AS psi,
+           TO_CHAR(LPM) AS lpm,
            TO_CHAR(PRODCAT) AS prodcat
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
