@@ -10,6 +10,7 @@
  05/09/2019  ONGHC  1.0.4          REMOVE IN-HOUSE REPAIR SECTION
  17/09/2019  ONGHC  1.0.5          AMEND DEFECT DETAIL SECTION
  14/02/2020  ONGHC  1.0.6          AMEND FOR PSI
+ 26/02/2020  ONGHC  1.0.7          AMEND FOR LPM
  -->
 
 <!-- AS ORDER > AS MANAGEMENT > VIEW / ADD AS ENTRY -->
@@ -851,6 +852,7 @@
       $("#m13").hide();
       $("#m14").hide();
       $("#m15").hide();
+      $("#m16").hide();
       break;
     }
   }
@@ -964,6 +966,7 @@
     $("#m13").show();
     $("#m14").show();
     $("#m15").show();
+    $("#m16").show();
 
     $("#btnSaveDiv").attr("style", "display:inline");
     $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
@@ -1014,9 +1017,13 @@
     if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val()  == "400" || $('#PROD_CAT').val()  == "57" || $('#PROD_CAT').val()  == "56") {
       $("#m15").show();
       $("#psiRcd").attr("disabled", false);
+      $("#m16").show();
+      $("#lpmRcd").attr("disabled", false);
     } else {
       $("#m15").hide();
       $("#psiRcd").attr("disabled", true);
+      $("#m16").hide();
+      $("#lpmRcd").attr("disabled", true);
     }
   }
 
@@ -1035,6 +1042,7 @@
     $("#m12").hide();
     $("#m13").hide();
     $("#m15").hide();
+    $("#m16").hide();
 
     $("#iscommission").attr("disabled", false);
 
@@ -1044,10 +1052,12 @@
     $("#def_def").attr("disabled", "disabled");
     $("#solut_code").attr("disabled", "disabled");
     $('#psiRcd').attr("disabled", "disabled");
+    $('#lpmRcd').attr("disabled", "disabled");
 
     $("#dpSettleDate").val("");
     $("#tpSettleTime").val("");
     $("#psiRcd").val("");
+    $("#lpmRcd").val("");
 
     $( "#txtLabourch" ).prop( "checked", false );
 
@@ -1074,6 +1084,7 @@
     $("#m13").hide();
     $("#m14").show();
     $("#m15").hide();
+    $("#m16").hide();
 
     $("#def_type").attr("disabled", "disabled");
     $("#def_code").attr("disabled", "disabled");
@@ -1081,11 +1092,13 @@
     $("#def_def").attr("disabled", "disabled");
     $("#solut_code").attr("disabled", "disabled");
     $('#psiRcd').attr("disabled", "disabled");
+    $('#lpmRcd').attr("disabled", "disabled");
 
     $("#dpSettleDate").val("");
     $("#tpSettleTime").val("");
 
     $("#psiRcd").val("");
+    $("#lpmRcd").val("");
 
     $( "#txtLabourch" ).prop( "checked", false );
 
@@ -1268,6 +1281,7 @@
       AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
 
       AS_PSI : $('#psiRcd').val(),
+      AS_LPM : $('#lpmRcd').val(),
 
       // AS RECALL ENTRY
       AS_APP_DT : $("#appDate").val(),
@@ -1405,6 +1419,7 @@
     $("#txtRemark").attr("disabled", true);
     $("#iscommission").attr("disabled", true);
     $("#psiRcd").attr("disabled", true);
+    $("#lpmRcd").attr("disabled", true);
 
     $("#def_type").attr("disabled", true);
     $("#def_code").attr("disabled", true);
@@ -1550,6 +1565,11 @@
 
         if (FormUtil.checkReqValue($("#psiRcd"))) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
+
+        if (FormUtil.checkReqValue($("#lpmRcd"))) {
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
 
@@ -2419,8 +2439,8 @@
          <tr>
            <th scope="row"><spring:message code='service.title.PSIRcd' /><span class="must" id="m15" style="display:none"> *</span></th>
            <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" disabled="disabled" onkeypress='validate(event)' </td>
-          <th></th>
-          <td></td>
+           <th scope="row"><spring:message code='service.title.lmp' /><span class="must" id="m16" style="display:none"> *</span></th>
+           <td><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" disabled="disabled" onkeypress='validate(event)' </td>
          </tr>
         </tbody>
        </table>
