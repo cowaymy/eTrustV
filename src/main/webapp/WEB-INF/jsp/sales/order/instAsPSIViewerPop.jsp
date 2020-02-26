@@ -6,6 +6,7 @@
  ----------------------------------------------------------------
  08/02/2019  ONGHC  1.0.0       CREATE INSTALLATION/AS PSI VIEWER
  19/02/2019  ONGHC  1.0.1       ADD LMP COLUMN
+ 26/02/2019  ONGHC  1.0.2       ADD Additional COLUMN
  -->
 
 <script type="text/javaScript">
@@ -73,6 +74,31 @@
     }, {
       dataField : "ctNm",
       headerText : '<spring:message code="service.grid.CTName" />',
+      editable : false,
+      width : 130
+    }, {
+      dataField : "ctHp",
+      headerText : '<spring:message code="sal.text.ctHp" />',
+      editable : false,
+      width : 130
+    }, {
+      dataField : "instArea",
+      headerText : '<spring:message code="sal.title.area" />',
+      editable : false,
+      width : 130
+    }, {
+      dataField : "instCity",
+      headerText : '<spring:message code="sal.text.city" />',
+      editable : false,
+      width : 130
+    }, {
+      dataField : "instPstcde",
+      headerText : '<spring:message code="sys.title.post.code" />',
+      editable : false,
+      width : 130
+    }, {
+      dataField : "instState",
+      headerText : '<spring:message code="sal.text.state" />',
       editable : false,
       width : 130
     } ];
