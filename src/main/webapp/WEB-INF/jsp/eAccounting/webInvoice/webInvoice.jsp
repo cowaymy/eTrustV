@@ -497,6 +497,40 @@ function fn_checkEmpty() {
                     Common.alert('Please enter amount for detail line' + (i +1) + ".");
                     checkResult = false;
                     return checkResult;
+                } else {
+                    var availableVar = {
+                            costCentr : $("#newCostCenter").val(),
+                            stYearMonth : $("#keyDate").val().substring(3),
+                            stBudgetCode : AUIGrid.getCellValue(newGridID, i, "budgetCode"),
+                            stGlAccCode : AUIGrid.getCellValue(newGridID, i, "glAccCode")
+                        }
+
+                    var availableAmtCp = 0;
+                    Common.ajax("GET", "/eAccounting/webInvoice/checkBgtPlan.do", availableVar, function(result1) {
+                        console.log(result1.ctrlType);
+
+                        if(result1.ctrlType == "Y") {
+                            Common.ajax("GET", "/eAccounting/webInvoice/availableAmtCp.do", availableVar, function(result) {
+                                console.log("availableAmtCp");
+                                console.log(result.totalAvailable);
+
+                                var finAvailable = result.totalAvilableAdj - result.totalPending - result.totalUtilized;
+
+                                if(finAvailable < AUIGrid.getCellValue(newGridID, i, "totAmt")) {
+                                    Common.alert("Insufficient budget amount available for Budget Code : " + AUIGrid.getCellValue(newGridID, i, "budgetCode") + ", GL Code : " + AUIGrid.getCellValue(newGridID, i, "glAccCode") + ". ");
+                                    AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
+                                    AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
+
+                                    /*
+                                    var totAmt = fn_getTotalAmount();
+                                    $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
+                                    console.log(totAmt);
+                                    $("#totAmt").val(totAmt);
+                                    */
+                                }
+                            });
+                        }
+                    });
                 }
 	        }
 	    }
