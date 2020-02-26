@@ -89,6 +89,16 @@ public class AfterServiceResultForm {
 
   private String psiRcd;
 
+  private String lpmRcd;
+
+  public String getLpmRcd() {
+    return lpmRcd;
+  }
+
+  public void setLpmRcd(String lpmRcd) {
+    this.lpmRcd = lpmRcd;
+  }
+
   public String getPsiRcd() {
     return psiRcd;
   }
