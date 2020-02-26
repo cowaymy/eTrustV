@@ -253,6 +253,9 @@ public class AfterServiceJobDto_b {
   @ApiModelProperty(value = "PSI")
   private String psi;
 
+  @ApiModelProperty(value = "LPM")
+  private String lpm;
+
   @ApiModelProperty(value = "PRODCAT")
   private int prodcat;
 
@@ -262,6 +265,14 @@ public class AfterServiceJobDto_b {
 
   public void setPsi(String psi) {
     this.psi = psi;
+  }
+
+  public String getLpm() {
+    return lpm;
+  }
+
+  public void setLpm(String lpm) {
+    this.lpm = lpm;
   }
 
   public int getProdcat() {
