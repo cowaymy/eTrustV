@@ -12,6 +12,7 @@
  21/10/2019  ONGHC  1.0.6          ADD CHECKING FOR AS PAYMENT MAPPING
  19/11/2019  ONGHC  1.0.7          AMEND FOR ORDER MANAGEMENT VIEW ISSUE
  14/02/2020  ONGHC  1.0.8          AMEND FOR PSI
+ 26/02/2020  ONGHC  1.0.9          AMEND FOR LPM
  -->
 
 <!-- AS ORDER > AS MANAGEMENT > EDIT / VIEW AS ENTRY PLUG IN -->
@@ -249,6 +250,7 @@
      */
 
      $("#psiRcd").val(result[0].psi);
+     $("#lpmRcd").val(result[0].lpm);
 
     $("#ddlCTCode").val(result[0].c11);
     $("#ddlDSCCode").val(result[0].asBrnchId);
@@ -523,6 +525,7 @@
     }
 
     $("#psiRcd").val(asRslt.psi);
+    $("#lpmRcd").val(asRslt.lpm);
 
     $('#def_type').val(this.trim(asRslt.c16));
     $('#def_type_text').val(this.trim(asRslt.c17));
@@ -568,9 +571,13 @@
     if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val()  == "400" || $('#PROD_CAT').val()  == "57" || $('#PROD_CAT').val()  == "56") {
       $("#m15").show();
       $("#psiRcd").attr("disabled", false);
+      $("#m16").show();
+      $("#lpmRcd").attr("disabled", false);
     } else {
       $("#m15").hide();
       $("#psiRcd").attr("disabled", true);
+      $("#m16").hide();
+      $("#lpmRcd").attr("disabled", true);
     }
 
     // OPEN MANDATORY
@@ -601,6 +608,7 @@
       $('#txtRemark').attr("disabled", true);
       $("#iscommission").attr("disabled", true);
       $("#psiRcd").attr("disabled", true);
+      $("#lpmRcd").attr("disabled", true);
 
       $('#def_type').attr("disabled", true);
       $('#def_code').attr("disabled", true);
@@ -635,6 +643,7 @@
       $('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");
       $('#txtRemark').removeAttr("disabled").removeClass("readonly");
       $('#psiRcd').removeAttr("disabled").removeClass("readonly");
+      $('#lpmRcd').removeAttr("disabled").removeClass("readonly");
 
       //$('#iscommission').removeAttr("disabled").removeClass("readonly");
 
@@ -779,6 +788,7 @@
       $('#tpSettleTime').attr("disabled", true);
       $("#iscommission").attr("disabled", true);
       $("#psiRcd").attr("disabled", true);
+      $("#lpmRcd").attr("disabled", true);
 
       $("#appDate").attr("disabled", true);
       $("#CTSSessionCode").attr("disabled", true);
@@ -820,6 +830,7 @@
       $('#tpSettleTime').val("").attr("disabled", true);
       $("#iscommission").attr("disabled", true);
       $('#psiRcd').val("").attr("disabled", true);
+      $('#lpmRcd').val("").attr("disabled", true);
 
       $("#appDate").val("");
       $("#CTSSessionCode").val("");
@@ -1528,6 +1539,7 @@
       AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
 
       AS_PSI : $('#psiRcd').val(),
+      AS_LPM : $('#lpmRcd').val(),
 
       // AS RECALL ENTRY
       AS_APP_DT : $("#appDate").val(),
@@ -2278,8 +2290,8 @@ function SearchListAjax(obj){
       <tr>
        <th scope="row"><spring:message code='service.title.PSIRcd' /><span class="must" id="m15" style="display:none"> *</span></th>
        <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" disabled="disabled" onkeypress='validate(event)' </td>
-       <th scope="row"></th>
-       <td>
+       <th scope="row"><spring:message code='service.title.lmp' /><span class="must" id="m16" style="display:none"> *</span></th>
+       <td><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" disabled="disabled" onkeypress='validate(event)' </td>
        </td>
       </tr>
 
