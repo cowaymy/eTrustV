@@ -7,6 +7,7 @@
  25/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
  06/03/2019  ONGHC  1.0.1          Remove Installation Status Active
  24/10/2019  ONGHC  1.0.2          Amend Sirim and Serial no checking
+ 26/02/2020  ONGHC  1.0.3          Add PSI & LPM Field
  -->
 
 <script type="text/javaScript">
@@ -151,9 +152,13 @@
       if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
         $("#m8").show();
         $("#psiRcd").attr("disabled", false);
+        $("#m9").show();
+        $("#lpmRcd").attr("disabled", false);
       } else {
         $("#m8").hide();
         $("#psiRcd").attr("disabled", true);
+        $("#m9").hide();
+        $("#lpmRcd").attr("disabled", true);
       }
   });
 
@@ -184,6 +189,9 @@
         if ( $("#psiRcd").val() == "") {
          msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
         }
+        if ( $("#lpmRcd").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
+         }
       }
 
       if (msg != "") {
@@ -911,20 +919,24 @@
      </tr>
      <tr>
       <th scope="row"><spring:message code='service.title.CTCode' /><span name="m3" id="m3" class="must">*</span></th>
-      <td>
+      <td colspan="3">
         <input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>" placeholder="" class="readonly" style="width: 100%;" id="ctCode" readonly="readonly" name="ctCode" />
         <input type="hidden" title="" value="${installResult.ctId}" placeholder="" class="" style="width: 200px;" id="CTID" name="CTID" />
       </td>
+     </tr>
+     <tr>
       <th scope="row"><spring:message code='service.title.PSIRcd' /><span name="m8" id="m8" class="must">*</span></th>
       <td>
       <input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" onkeypress='validate(event)' />
       </td>
-        <!-- <p class="btn_sky"><a href="#">Search</a></p></td> -->
-       <%-- <th scope="row"><spring:message code='service.title.CTName'/></th>
-    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="ctName" name="ctName"/></td> --%>
+      <th scope="row"><spring:message code='service.title.lmp' /><span name="m9" id="m9" class="must">*</span></th>
+      <td>
+      <input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" onkeypress='validate(event)' />
+      </td>
      </tr>
     </tbody>
    </table>
+   <br/>
    <!-- table end -->
    <table class="type1" id="completedHide">
     <!-- table start -->
