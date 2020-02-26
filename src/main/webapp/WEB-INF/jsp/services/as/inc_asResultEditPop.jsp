@@ -1397,6 +1397,18 @@
           rtnValue = false;
         }
 
+        if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val()  == "400" || $('#PROD_CAT').val()  == "57" || $('#PROD_CAT').val()  == "56") {
+          if (FormUtil.checkReqValue($("#psiRcd"))) {
+              rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
+              rtnValue = false;
+            }
+
+            if (FormUtil.checkReqValue($("#lpmRcd"))) {
+              rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
+              rtnValue = false;
+            }
+        }
+
         // KR-OHK Serial Check
         if ($("#hidSerialRequireChkYn").val() == 'Y' && FormUtil.checkReqValue($("#stockSerialNo"))) {
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
