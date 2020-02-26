@@ -47,6 +47,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 18/07/2019    ONGHC      1.0.8       - Amend runInstSp
  * 18/10/2019    ONGHC      1.0.9       - Amend insertInstallationResult to Cater Mobile Product Exchange
  * 14/02/2020    ONGHC      1.0.10     - Amend Save_2 to add PSI information
+ * 26/02/2020    ONGHC      1.0.11     - Amend Save_2 to add LPM information
  *********************************************************************************************/
 
 @Service("installationResultListService")
@@ -2175,6 +2176,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("updator", sessionVO.getUserId());
     installResult.put("adjAmount", 0);
     installResult.put("psi", CommonUtils.nvl(params.get("psiRcd")).toString());
+    installResult.put("lpm", CommonUtils.nvl(params.get("lpmRcd")).toString());
 
     logger.debug("========================INSTALLATION RESULT PRM===========================");
     logger.debug("INSTALLATION RESULT : {}", installResult);
