@@ -86,6 +86,22 @@ var TODAY_DD      = "${toDay}";
         	Common.alert("<b>No request selected.</b>");
           return;
         }
+
+        // 2020.02.26 : Valid Add
+        var isValidReject = true;
+        $.each(selectedItems, function(idx, row){
+
+           if(row.item.payStusId != "1" ){
+               isValidReject = false;
+            }
+
+        });
+
+        if(!isValidReject){
+            Common.alert("<b>Check the Request Status value.</b>");
+            return false;
+        }
+
         var data = {};
         if(selectedItems.length > 0)
             data.all = selectedItems;
@@ -144,6 +160,21 @@ var TODAY_DD      = "${toDay}";
         if (selectedItems.length == 0){
             /* Common.alert("Please select a row."); */
             Common.alert("<b>No request selected.</b>");
+            return false;
+        }
+
+
+        var isValidReject = true;
+        $.each(selectedItems, function(idx, row){
+
+           if(row.item.payStusId != "1" ){
+               isValidReject = false;
+            }
+
+        });
+
+        if(!isValidReject){
+            Common.alert("<b>Check the Request Status value.</b>");
             return false;
         }
 
