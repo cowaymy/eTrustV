@@ -6,6 +6,7 @@
  ----------------------------------------------------------------
  24/10/2019  ONGHC  1.0.0          AMEND LAYOUT
  13/02/2020  ONGHC  1.0.1          ADD PSI FIELD
+ 26/02/2020  ONGHC  1.0.2          ADD LPM FIELD
  -->
 
 <script type="text/javaScript">
@@ -46,9 +47,13 @@
     if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
       $("#m4").show();
       $("#psiRcd").attr("disabled", false);
+      $("#m5").show();
+      $("#lpmRcd").attr("disabled", false);
     } else {
       $("#m4").hide();
       $("#psiRcd").attr("disabled", true);
+      $("#m5").hide();
+      $("#lpmRcd").attr("disabled", true);
     }
 
   });
@@ -246,6 +251,12 @@
        </td>
        <th scope="row"><spring:message code='service.title.PSIRcd' /><span class="must" id="m4"> *</span></th>
        <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" onkeypress='validate(event)' value="<c:out value="${installInfo.psi}"/>" /></td>
+      </tr>
+      <tr>
+       <th scope="row"><spring:message code='service.title.lmp' /><span class="must" id="m5"> *</span></th>
+       <td ><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" onkeypress='validate(event)' value="<c:out value="${installInfo.lpm}"/>" /></td>
+       <th scope="row"></th>
+       <td ></td>
       </tr>
       <tr>
        <th scope="row"><spring:message code='service.title.Remark' /></th>
