@@ -247,6 +247,9 @@ public class InstallationJobDto {
   @ApiModelProperty(value = "psi")
   private String psi;
 
+  @ApiModelProperty(value = "lpm")
+  private String lpm;
+
   @ApiModelProperty(value = "PRODCAT")
   private String prodcat;
 
@@ -266,6 +269,14 @@ public class InstallationJobDto {
 
   public void setPsi(String psi) {
     this.psi = psi;
+  }
+
+  public String getLpm() {
+    return lpm;
+  }
+
+  public void setLpm(String lpm) {
+    this.lpm = lpm;
   }
 
   public String getSerialChk() {
