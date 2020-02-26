@@ -1669,17 +1669,25 @@
                A.INSTALL_ENTRY_NO AS ID,
                A.INSTALL_ENTRY_NO AS RID,
                TO_CHAR(B.INSTALL_DT, 'DD/MM/YYYY') AS COMPLETE_DT,
-               NVL(TO_CHAR(B.PSI, '999.99'), '0.00') AS PSI,
-               0 AS LPM,
+               TRIM(NVL(TO_CHAR(B.PSI, '999'), '-')) AS PSI,
+               TRIM(NVL(TO_CHAR(B.LPM, '999'), '-')) AS LPM,
                E.CODE AS BR_CDE,
                E.NAME AS BR,
                D.MEM_CODE AS CT_CDE,
-               D.NAME AS CT_NM
+               D.NAME AS CT_NM,
+               D.TEL_MOBILE AS CT_HP,
+               UPPER(H.AREA) AS INST_AREA,
+               UPPER(H.CITY) AS INST_CITY,
+               H.POSTCODE AS INST_PSTCDE,
+               UPPER(H.STATE) AS INST_STATE
     FROM SAL0046D A
     JOIN SAL0047D B ON A.INSTALL_ENTRY_ID = B.ENTRY_ID
     JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
     JOIN ORG0001D D ON B.CT_ID = D.MEM_ID
     JOIN SYS0005M E ON D.BRNCH = E.BRNCH_ID
+    LEFT JOIN SAL0045D F ON C.SALES_ORD_ID = F.SALES_ORD_ID
+    LEFT JOIN SAL0023D G ON F.ADD_ID = G.CUST_ADD_ID
+    LEFT JOIN SYS0064M H ON G.AREA_ID = H.AREA_ID
     WHERE B.STUS_CODE_ID = 4
         AND C.SALES_ORD_NO = #{ordNo}
 
@@ -1690,17 +1698,25 @@
                A.AS_NO AS ID,
                B.AS_RESULT_NO AS RID,
                TO_CHAR(B.AS_SETL_DT, 'DD/MM/YYYY') AS COMPLETE_DT,
-               NVL(TO_CHAR(B.PSI, '999.99'), '0.00') AS PSI,
-               0 AS LPM,
+               TRIM(NVL(TO_CHAR(B.PSI, '999'), '-')) AS PSI,
+               TRIM(NVL(TO_CHAR(B.LPM, '999'), '-')) AS LPM,
                E.CODE AS BR_CDE,
                E.NAME AS BR,
                D.MEM_CODE AS CT_CDE,
-               D.NAME AS CT_NM
+               D.NAME AS CT_NM,
+               D.TEL_MOBILE AS CT_HP,
+               UPPER(H.AREA) AS INST_AREA,
+               UPPER(H.CITY) AS INST_CITY,
+               H.POSTCODE AS INST_PSTCDE,
+               UPPER(H.STATE) AS INST_STATE
     FROM SVC0001D A
     JOIN SVC0004D B ON A.AS_ID = B.AS_ENTRY_ID
     JOIN SAL0001D C ON A.AS_SO_ID = C.SALES_ORD_ID
     JOIN ORG0001D D ON B.AS_CT_ID = D.MEM_ID
     JOIN SYS0005M E ON D.BRNCH = E.BRNCH_ID
+    LEFT JOIN SAL0045D F ON C.SALES_ORD_ID = F.SALES_ORD_ID
+    LEFT JOIN SAL0023D G ON F.ADD_ID = G.CUST_ADD_ID
+    LEFT JOIN SYS0064M H ON G.AREA_ID = H.AREA_ID
     WHERE B.AS_RESULT_STUS_ID = 4
         AND B.AS_RESULT_TYPE_ID = '457'
         AND C.SALES_ORD_NO = #{ordNo}
