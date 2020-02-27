@@ -372,39 +372,101 @@ function setInputFile2(){//인풋파일 세팅하기
 }
 
 function fn_approveLinePop() {
+    console.log("fn_approveLinePop");
 	var checkResult = fn_checkEmpty();
-
+console.log("fn_approveLinePop :: checkResult :: " + checkResult);
     if(!checkResult){
         return false;
     }
 
-    var data = {
-            memAccId : $("#newMemAccId").val(),
-            invcNo : $("#invcNo").val()
-            //clmNo : $("#newClmNo").val()
-    }
+    var length = AUIGrid.getGridData(newGridID).length;
+    if(length > 0) {
+console.log("length > 0");
+        for(var i = 0; i < length; i++) {
+            var availableVar = {
+                    costCentr : $("#newCostCenter").val(),
+                    stYearMonth : $("#keyDate").val().substring(3),
+                    stBudgetCode : AUIGrid.getCellValue(newGridID, i, "budgetCode"),
+                    stGlAccCode : AUIGrid.getCellValue(newGridID, i, "glAccCode")
+                }
 
-    Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
-        console.log(result);
-        if(result.data && result.data != $("#newClmNo").val()) {
-            Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
-            return false;
-        } else {
-        	// 수정 후 temp save가 아닌 바로 submit
-            // 고려하여 update 후 approve
-            // file 업로드를 하지 않은 상태라면 atchFileGrpId가 없을 수 있다
-            if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
-            	console.log("fn_attachmentUpload Action");
-                fn_attachmentUpload("");
-            } else {
-            	console.log("fn_attachmentUpdate Action");
-                fn_attachmentUpdate("");
-            }
+            var availableAmtCp = 0;
+            Common.ajax("GET", "/eAccounting/webInvoice/checkBgtPlan.do", availableVar, function(result1) {
+                console.log(result1.ctrlType);
 
-            Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
+                if(result1.ctrlType == "Y") {
+                    Common.ajax("GET", "/eAccounting/webInvoice/availableAmtCp.do", availableVar, function(result) {
+                        console.log("availableAmtCp");
+                        console.log(result.totalAvailable);
+
+                        var finAvailable = result.totalAvilableAdj - result.totalPending - result.totalUtilized;
+
+                        if(finAvailable < AUIGrid.getCellValue(newGridID, i, "totAmt")) {
+                            Common.alert("Insufficient budget amount available for Budget Code : " + AUIGrid.getCellValue(newGridID, i, "budgetCode") + ", GL Code : " + AUIGrid.getCellValue(newGridID, i, "glAccCode") + ". ");
+                            AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
+                            AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
+
+                            return false;
+                        } else {
+                            var data = {
+                                    memAccId : $("#newMemAccId").val(),
+                                    invcNo : $("#invcNo").val()
+                                    //clmNo : $("#newClmNo").val()
+                            }
+
+                            Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+                                console.log(result);
+                                if(result.data && result.data != $("#newClmNo").val()) {
+                                    Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+                                    return false;
+                                } else {
+                                    // 수정 후 temp save가 아닌 바로 submit
+                                    // 고려하여 update 후 approve
+                                    // file 업로드를 하지 않은 상태라면 atchFileGrpId가 없을 수 있다
+                                    if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
+                                        console.log("fn_attachmentUpload Action");
+                                        fn_attachmentUpload("");
+                                    } else {
+                                        console.log("fn_attachmentUpdate Action");
+                                        fn_attachmentUpdate("");
+                                    }
+
+                                    Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    var data = {
+                            memAccId : $("#newMemAccId").val(),
+                            invcNo : $("#invcNo").val()
+                            //clmNo : $("#newClmNo").val()
+                    }
+
+                    Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+                        console.log(result);
+                        if(result.data && result.data != $("#newClmNo").val()) {
+                            Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+                            return false;
+                        } else {
+                            // 수정 후 temp save가 아닌 바로 submit
+                            // 고려하여 update 후 approve
+                            // file 업로드를 하지 않은 상태라면 atchFileGrpId가 없을 수 있다
+                            if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
+                                console.log("fn_attachmentUpload Action");
+                                fn_attachmentUpload("");
+                            } else {
+                                console.log("fn_attachmentUpdate Action");
+                                fn_attachmentUpdate("");
+                            }
+
+                            Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
+                        }
+                    });
+                }
+            });
         }
-    });
-
+    }
 }
 
 function fn_tempSave() {
