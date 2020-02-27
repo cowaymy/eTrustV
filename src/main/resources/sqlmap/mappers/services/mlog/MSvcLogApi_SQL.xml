@@ -3,7 +3,17 @@
 <mapper namespace="com.coway.trust.biz.services.mlog.impl.MSvcLogApiMapper">
 
   <select id="getHeartServiceJobList" parameterType="Map" resultType="egovMap">
-    <!-- A.warranty, -->
+    <!-- A.warranty,
+        /*SELECT C.SRV_SALES_ORD_ID,
+                      MAX (C.SRV_MEM_ID) AS SRV_MEM_ID
+           FROM SVC0008D A
+           INNER JOIN ORG0001D B ON A.CODY_ID = B.MEM_ID AND B.MEM_CODE = #{userId}
+           LEFT OUTER JOIN SAL0095D C ON A.SALES_ORD_ID = C.SRV_SALES_ORD_ID
+                                         AND SYSDATE BETWEEN C.SRV_START_DT AND C.SRV_EXPR_DT
+                                        AND C.SRV_STUS_CODE_ID = 4
+                    WHERE A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
+                      AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
+                    GROUP BY C.SRV_SALES_ORD_ID */ -->
     SELECT A.appointment_Date,
            A.service_No,
            A.job_Status,
@@ -247,17 +257,6 @@
                   FROM SAL0095D A
                   INNER JOIN
                   (
-
-                  /*SELECT C.SRV_SALES_ORD_ID,
-                           MAX (C.SRV_MEM_ID) AS SRV_MEM_ID
-                    FROM SVC0008D A
-                    INNER JOIN ORG0001D B ON A.CODY_ID = B.MEM_ID AND B.MEM_CODE = #{userId}
-                    LEFT OUTER JOIN SAL0095D C ON A.SALES_ORD_ID = C.SRV_SALES_ORD_ID
-                                         AND SYSDATE BETWEEN C.SRV_START_DT AND C.SRV_EXPR_DT
-                                        AND C.SRV_STUS_CODE_ID = 4
-                    WHERE A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
-                      AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
-                    GROUP BY C.SRV_SALES_ORD_ID*/
 
                     SELECT Z.SRV_SALES_ORD_ID,
                                Z.SRV_MEM_ID FROM ( SELECT
