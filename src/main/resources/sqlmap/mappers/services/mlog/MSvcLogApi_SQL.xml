@@ -246,8 +246,24 @@
                          A.SRV_SALES_ORD_ID
                   FROM SAL0095D A
                   INNER JOIN
-                  ( SELECT C.SRV_SALES_ORD_ID,
+                  (
+
+                  /*SELECT C.SRV_SALES_ORD_ID,
                            MAX (C.SRV_MEM_ID) AS SRV_MEM_ID
+                    FROM SVC0008D A
+                    INNER JOIN ORG0001D B ON A.CODY_ID = B.MEM_ID AND B.MEM_CODE = #{userId}
+                    LEFT OUTER JOIN SAL0095D C ON A.SALES_ORD_ID = C.SRV_SALES_ORD_ID
+                                         AND SYSDATE BETWEEN C.SRV_START_DT AND C.SRV_EXPR_DT
+                                        AND C.SRV_STUS_CODE_ID = 4
+                    WHERE A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
+                      AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
+                    GROUP BY C.SRV_SALES_ORD_ID*/
+
+                    SELECT Z.SRV_SALES_ORD_ID,
+                               Z.SRV_MEM_ID FROM ( SELECT
+                                                                RANK() OVER (PARTITION BY SRV_SALES_ORD_ID ORDER BY SRV_EXPR_DT DESC ) AS RANK_NUM,
+                                                                C.SRV_SALES_ORD_ID,
+                                                                C.SRV_MEM_ID
                     FROM SVC0008D A
                     INNER JOIN ORG0001D B ON A.CODY_ID = B.MEM_ID AND B.MEM_CODE = #{userId}
                     LEFT OUTER JOIN SAL0095D C ON A.SALES_ORD_ID = C.SRV_SALES_ORD_ID
@@ -255,8 +271,11 @@
                                         AND C.SRV_STUS_CODE_ID = 4
                     WHERE A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
                       AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
-                    GROUP BY C.SRV_SALES_ORD_ID) B
-                    ON A.SRV_SALES_ORD_ID = B.SRV_SALES_ORD_ID AND A.SRV_MEM_ID = B.SRV_MEM_ID) R,
+
+                    GROUP BY C.SRV_SALES_ORD_ID, C.SRV_MEM_ID, C.SRV_EXPR_DT
+                    ) Z WHERE Z.RANK_NUM = 1
+                   ) B ON A.SRV_SALES_ORD_ID = B.SRV_SALES_ORD_ID AND A.SRV_MEM_ID = B.SRV_MEM_ID
+                 ) R,
                  SAL0071D S,
                  SAL0017D T,
                  (SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID, SRV_SO_ID, FAUCET_EXCH FROM SAL0090D WHERE SRV_STUS_ID = 1 GROUP BY SRV_SO_ID, FAUCET_EXCH) U,
@@ -471,6 +490,7 @@
                                       street AS street,
                                       NVL(Serial_Chk, 'N') AS Serial_Chk,
                                       psi AS psi,
+                                      lpm AS lpm,
                                       prodCat AS prodCat
                               FROM (SELECT /*+ leading(SVC0001D) index( SVC0001D , SVC0001D_IDX12) */
                                            ROW_NUMBER () OVER (PARTITION BY sal0001d.sales_ord_no, svc0001d.as_no ORDER BY svc0004d.as_result_id DESC) rn,
@@ -559,6 +579,7 @@
                                            svc0001d.as_type_id,
                                            DBMS_LOB.SUBSTR(CCR0007D.CALL_REM, 4000, 1) AS instct,
                                            TO_CHAR(svc0004d.PSI) AS psi,
+                                           TO_CHAR(svc0004d.LPM) AS lpm,
                                            TO_CHAR(sys0026m.STK_CTGRY_ID) AS prodCat
                                     FROM sal0001d,
                                          sal0002d,
@@ -944,14 +965,15 @@
                    JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
                    JOIN SYS0026M C ON B.ITM_STK_ID = C.STK_ID
                    WHERE A.SALES_ORD_ID = SAL0001D.SALES_ORD_ID
-                     AND A.STUS_CODE_ID = '4'
-                     AND C.STK_CTGRY_ID IN (5706, 5707)
+                       AND A.STUS_CODE_ID = '4'
+                       AND C.STK_CTGRY_ID IN (5706, 5707)
 
                                                                                       ) > 0 THEN 'Y' ELSE 'N' END AS real_As_Exchange_Yn
                    , FN_GET_ORDER_SERIAL(SAL0001D.SALES_ORD_ID, NULL) AS real_Before_Product_Serial_No
                    , SYS0026M.STK_CODE AS REAL_BEFORE_PRODUCT_CODE
                    , SYS0026M.STK_DESC AS REAL_BEFORE_PRODUCT_NAME
                    , TO_CHAR (SAL0047D.PSI) AS psi
+                   , TO_CHAR (SAL0047D.LPM) AS lpm
                    , TO_CHAR (SYS0026M.STK_CTGRY_ID) AS prodCat
             FROM SAL0046D,
                  ORG0001D,
@@ -1005,12 +1027,13 @@
               AND SAL0001D.PROMO_ID = SAL0017D.PROMO_ID(+)
               ) WHERE rnum = 1
     ]]>
+
     <!-- WHERE rnum = 1
 
            SELECT COUNT(*) AS CNT
            FROM SAL0046D
            WHERE SALES_ORD_ID = SAL0001D.SALES_ORD_ID
-               AND STUS_CODE_ID = '4' -->
+           AND STUS_CODE_ID = '4' -->
   </select>
 
   <select id="getInstallationJobList_b" parameterType="Map" resultType="egovMap">
@@ -1092,6 +1115,7 @@
          , TO_CHAR(REAL_BEFORE_PRODUCT_NAME) AS real_Before_Porduct_Name
          , TO_CHAR(REAL_BEFORE_PRODUCT_SERIAL_NO) AS real_Before_Product_Serial_No
          , TO_CHAR(PSI) AS psi
+         , TO_CHAR(LPM) AS lpm
          , TO_CHAR(PRODCAT) AS prodcat
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
@@ -1583,6 +1607,7 @@
            TO_CHAR (CRT_DT) AS Create_Date,
            TO_CHAR(SERIAL_CHK) AS serial_Chk,
            TO_CHAR(PSI) AS psi,
+           TO_CHAR(LPM) AS lpm,
            TO_CHAR(PRODCAT) AS prodcat
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
