@@ -814,7 +814,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       // int key = Integer.parseInt(String.valueOf(tmpKey));
 
       // 합산 금액 셋팅
-      totPayAmt += (Double ) gridListMap.get("payAmt");   // 2020.02.24 : EDIT
+      totPayAmt += Double.parseDouble( String.valueOf( gridListMap.get("payAmt") ) ) ;   // 2020.02.27 : Double.parseDouble EDIT
 
       iProcSeq = iProcSeq+1; // 2020.02.24 : ADD iProcSeq
 
