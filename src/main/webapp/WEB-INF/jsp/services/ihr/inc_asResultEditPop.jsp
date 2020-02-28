@@ -8,6 +8,7 @@
  06/05/2019  ONGHC  1.0.2          Check Settle Date Only When Status Complete
  26/04/2019  ONGHC  1.0.3          ADD RECALL STATUS
  17/09/2019  ONGHC  1.0.4          AMEND DEFECT DETAIL SECTION
+ 28/02/2020  ONGHC  1.0.5          AMEND fn_loadDftCde
  -->
 
 <!-- AS ORDER > AS MANAGEMENT > EDIT / VIEW AS ENTRY PLUG IN -->
@@ -1984,6 +1985,42 @@
         $("#solut_code").val("");
         $("#solut_code_id").val("");
         $("#solut_code_text").val("");
+
+
+        var msg = "";
+
+        if (itm.id == "7059") {
+          if ($("#def_part_id").val() == "5299" || $("#def_part_id").val() == "5300" || $("#def_part_id").val() == "5301" || $("#def_part_id").val() == "5302" || $("#def_part_id").val() == "5321" || $("#def_part_id").val() == "5332") {
+              var text1 = "<spring:message code='service.text.defPrt' />";
+              var text2= $("#def_part_text").val();
+              var text3 = itm.descp;
+              var text4 = "<spring:message code='service.text.defTyp' />";
+              var text = text1 + ";" + text2 + ";" + text3;
+              msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+              $("#def_type").val("");
+              $("#def_type_id").val("");
+              $("#def_type_text").val("");
+          }
+
+          if ($("#def_def_id").val() == "6041" || $("#def_def_id").val() == "6042" || $("#def_def_id").val() == "6043" || $("#def_def_id").val() == "6044" || $("#def_def_id").val() == "6045" || $("#def_def_id").val() == "6046") {
+              var text1 = "<spring:message code='service.text.dtlDef' />";
+              var text2= $("#def_def_text").val();
+              var text3 = itm.descp;
+              var text4 = "<spring:message code='service.text.defTyp' />";
+              var text = text1 + ";" + text2 + ";" + text3;
+              msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+              $("#def_type").val("");
+              $("#def_type_id").val("");
+              $("#def_type_text").val("");
+          }
+
+          if (msg != ""){
+            Common.alert(msg);
+            return false;
+          }
+        }
       } else if (prgmCde == 'DC') {
         $("#def_code").val(itm.code);
         $("#def_code_id").val(itm.id);
@@ -1992,6 +2029,24 @@
         $("#def_part").val(itm.code);
         $("#def_part_id").val(itm.id);
         $("#def_part_text").val(itm.descp);
+
+        if (itm.id == "5299" || itm.id == "5300" || itm.id == "5301" || itm.id == "5302" || itm.id == "5321" || itm.id== "5332") {
+          if ($("#def_type_id").val() == "7059") {
+            var text1 = "<spring:message code='service.text.defTyp' />";
+            var text2= $("#def_type_text").val();
+            var text3 = itm.descp;
+            var text4 = "<spring:message code='service.text.defPrt' />";
+            var text = text1 + ";" + text2 + ";" + text3;
+            var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+            $("#def_part").val("");
+            $("#def_part_id").val("");
+            $("#def_part_text").val("");
+
+            Common.alert(msg);
+            return false;
+          }
+        }
       } else if (prgmCde == 'DD') {
         $("#def_def").val(itm.code);
         $("#def_def_id").val(itm.id);
@@ -2001,6 +2056,24 @@
         $("#def_code").val("");
         $("#def_code_id").val("");
         $("#def_code_text").val("");
+
+        if (itm.id == "6041" || itm.id == "6042" || itm.id == "6043" || itm.id== "6044" || itm.id == "6045" || itm.id == "6046") {
+          if ($("#def_type_id").val() == "7059") {
+           var text1 = "<spring:message code='service.text.defTyp' />";
+           var text2= $("#def_type_text").val();
+           var text3 = itm.descp;
+           var text4 = "<spring:message code='service.text.dtlDef' />";
+           var text = text1 + ";" + text2 + ";" + text3;
+           var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+           $("#def_def").val("");
+           $("#def_def_id").val("");
+           $("#def_def_text").val("");
+
+            Common.alert(msg);
+            return false;
+          }
+        }
       } else if (prgmCde == 'SC') {
         $("#solut_code").val(itm.code);
         $("#solut_code_id").val(itm.id);
