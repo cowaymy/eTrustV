@@ -872,7 +872,8 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     for (int i = 0; i < gridList.size(); i++) {
       gridListMap = (Map<String, Object>) gridList.get(i);
 
-      // 상태 변경
+      // Mobile Paymet Key-in Update
+      gridListMap.put("userId", sUserId); // 2020.02.28 : UPDATE USER ID ADD
       mobilePaymentKeyInMapper.updateMobilePaymentKeyInUpdate(gridListMap);
 
       // 티겟 상태 변경
