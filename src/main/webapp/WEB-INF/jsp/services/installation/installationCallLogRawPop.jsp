@@ -116,7 +116,7 @@
 
 	      //CALL LOG DATE
           if ($("#instcallStrDate").val() != '' && $("#instcallEndDate").val() != '' && $("#instcallStrDate").val() != null && $("#instcallEndDate").val() != null) {
-              whereSql += " AND (D.CALL_DT >= TO_DATE('" + $("#instcallStrDate").val() + "' , 'DD/MM/YYYY') AND D.CALL_DT <= TO_DATE('" + $("#instcallEndDate").val() + "', 'DD/MM/YYYY')) ";
+              whereSql += " AND (C.CRT_DT >= TO_DATE('" + $("#instcallStrDate").val() + "' , 'DD/MM/YYYY') AND C.CRT_DT <= TO_DATE('" + $("#instcallEndDate").val() + "', 'DD/MM/YYYY')) ";
             }
 
 	      //CALL LOG TYPE
