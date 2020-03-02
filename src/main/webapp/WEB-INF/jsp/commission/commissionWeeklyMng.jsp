@@ -8,50 +8,50 @@
 	function fn_multiCombo() {
 		$('#cmbCategory').change(function() {
 		}).multipleSelect({
-			selectAll : true, // 전체선택 
+			selectAll : true, // 전체선택
 			width : '100%'
 		});
 	}
-	
-	  
-	// Make AUIGrid 
+
+
+	// Make AUIGrid
 	var myGridID;
 
 	//Start AUIGrid
 	$(document).ready(function() {
-		
+
 		// AUIGrid 그리드를 생성합니다.
 
 		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"seq");
 
 		// cellClick event.
 		AUIGrid.bind(myGridID, "cellClick", function(event) {
-			console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");			
-		});		
-		
+			console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+		});
+
 		AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditingHandler);      // 에디팅 시작 이벤트 바인딩
 		AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditingHandler);        // 에디팅 정상 종료 이벤트 바인딩
 		AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditingHandler);    // 에디팅 취소 이벤트 바인딩
-		AUIGrid.bind(myGridID, "addRow", auiAddRowHandler);               // 행 추가 이벤트 바인딩 
-		AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);     // 행 삭제 이벤트 바인딩 
-		
+		AUIGrid.bind(myGridID, "addRow", auiAddRowHandler);               // 행 추가 이벤트 바인딩
+		AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);     // 행 삭제 이벤트 바인딩
+
 		//Rule Book Item search
-		$("#search").click(function(){	
-			
+		$("#search").click(function(){
+
 			var searchDt = $("#searchDt").val();
 			if(searchDt!=""){
 				 $("#year").val(searchDt.substring(3));
 				 $("#month").val(searchDt.substring(0,2));
-			}			
+			}
 			Common.ajax("GET", "/commission/system/selectWeeklyList", $("#searchForm").serialize(), function(result) {
 				console.log("성공.");
 				console.log("data : " + result);
 				AUIGrid.setGridData(myGridID, result);
 			});
 	   });
-		
+
 	    //아이템 grid 행 추가
-	    $("#addRow").click(function() {	
+	    $("#addRow").click(function() {
 	   	  var searchDt = $("#searchDt").val();
 	      var item = new Object();
 	      item.year = searchDt.substring(3);
@@ -59,19 +59,19 @@
 	      item.weeks = "";
 	      item.startDt = "";
 	      item.endDt = "";
-	      
-	      var month = 0; 
+
+	      var month = 0;
           var weekObj  = new Array();
           var week=0;
           var chkVal = -1;
-        
+
 	      for(var i=0;i< AUIGrid.getGridData(myGridID).length ;i++){
 	          month = AUIGrid.getCellValue(myGridID, i, 2);
 	          if(month == parseInt(item.month,10)){
-	        	  weekObj[i]  = AUIGrid.getCellValue(myGridID, i, 3); 
+	        	  weekObj[i]  = AUIGrid.getCellValue(myGridID, i, 3);
 	          }
-	      }	      
-	      
+	      }
+
 	      if(weekObj.length>=4){
 	    	  Common.alert("All Week has already been added.");
 	    	  return;
@@ -80,9 +80,9 @@
 	    	  var w2=$.inArray(2,weekObj);
 	    	  var w3=$.inArray(3,weekObj);
 	    	  var w4=$.inArray(4,weekObj);
-	    	  
+
 	    	  if(w1==chkVal){
-	              item.weeks=1; 
+	              item.weeks=1;
 	        }else if(w2==chkVal){
 	            item.weeks=2;
 	        }else if(w3==chkVal){
@@ -91,22 +91,22 @@
 	            item.weeks=4;
 	        }
 	      }
-	   
+
 	      // parameter
 	      // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
 	      // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
 	      AUIGrid.addRow(myGridID, item, "first");
 	    });
-	    
+
 	  //Weekly save
         $("#save").click(function() {
             if (validation()) {
                 Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData);
             }
         });
-	  
+
 	});//Ready
-	
+
 	 function fn_saveGridData(){
 	        Common.ajax("POST", "/commission/system/saveCommissionWeeklyGrid.do", GridCommon.getEditData(myGridID), function(result) {
 	            // 공통 메세지 영역에 메세지 표시.
@@ -121,7 +121,7 @@
 	            } catch (e) {
 	                console.log(e);
 	            }
-	            Common.alert("Fail : " + jqXHR.responseJSON.message);	          
+	            Common.alert("Fail : " + jqXHR.responseJSON.message);
 	        });
 	    }
 
@@ -129,29 +129,29 @@
 	function auiCellEditingHandler(event) {
 		var value = AUIGrid.getCellValue(myGridID, event.rowIndex, event.columnIndex);
 		if (event.type == "cellEditEnd") {
-			if (event.columnIndex == 1) {			    
+			if (event.columnIndex == 1) {
 			     if (value >= 10000 ) {
 			    	 AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex,"");
 			     }
-			}else  if (event.columnIndex == 2) {		        
+			}else  if (event.columnIndex == 2) {
 		        if (value > 12 ) {
 		        	 AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex,"");
 		        }
-		  }else  if (event.columnIndex == 3) {          
+		  }else  if (event.columnIndex == 3) {
             if (value > 4 ) {
            	  AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex,"");
             }
-     }else  if (event.columnIndex == 5) {           
-    	 var stVal =AUIGrid.getCellValue(myGridID, event.rowIndex, event.columnIndex-1);       
+     }else  if (event.columnIndex == 5) {
+    	 var stVal =AUIGrid.getCellValue(myGridID, event.rowIndex, event.columnIndex-1);
          if(parseInt(value.replace(/\//g,""))<=parseInt(stVal.replace(/\//g,""))){
            //Common.alert("Please enter a value greater than Start Date");
            Common.setMsg("<spring:message code='commission.alert.dateGreaterCheck'/>");
            AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex,"");
-         }    
-    }      
+         }
+    }
 		} else if (event.type == "cellEditBegin") {
-			 if (event.columnIndex == 5) {         
-				  var stVal =AUIGrid.getCellValue(myGridID, event.rowIndex, event.columnIndex-1);				
+			 if (event.columnIndex == 5) {
+				  var stVal =AUIGrid.getCellValue(myGridID, event.rowIndex, event.columnIndex-1);
 		           if (stVal == "" ) {
 		        	   Common.alert("<spring:message code='sys.common.alert.validation' arguments='START DATE' htmlEscape='false'/>");
 		             return false;
@@ -175,7 +175,7 @@
 	  }, {
 		dataField : "year",
 		headerText : "<spring:message code='commission.text.grid.year'/>",
-		dataType : "numeric",	
+		dataType : "numeric",
 		editRenderer : {
 			  type : "InputEditRenderer",
 			  showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -183,14 +183,14 @@
 			  allowPoint : false, // 소수점( . ) 도 허용할지 여부
 			  allowNegative : false, // 마이너스 부호(-) 허용 여부
 			  textAlign : "right", // 오른쪽 정렬로 입력되도록 설정
-			  autoThousandSeparator : false // 천단위 구분자 삽입 여부			 
+			  autoThousandSeparator : false // 천단위 구분자 삽입 여부
 			},
-		formatString : "###0",	
+		formatString : "###0",
 		width : "10%"
 	}, {
 		dataField : "month",
         headerText : "<spring:message code='commission.text.grid.month'/>",
-        dataType : "numeric", 
+        dataType : "numeric",
         editRenderer : {
             type : "InputEditRenderer",
             showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -198,13 +198,13 @@
             allowPoint : false, // 소수점( . ) 도 허용할지 여부
             allowNegative : false, // 마이너스 부호(-) 허용 여부
             textAlign : "right", // 오른쪽 정렬로 입력되도록 설정
-            autoThousandSeparator : false // 천단위 구분자 삽입 여부          
+            autoThousandSeparator : false // 천단위 구분자 삽입 여부
           },
         width : "10%"
 	}, {
 		dataField : "weeks",
         headerText : "<spring:message code='commission.text.grid.keeks'/>",
-        dataType : "numeric", 
+        dataType : "numeric",
         editRenderer : {
             type : "InputEditRenderer",
             showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -241,8 +241,23 @@
           showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
         },
         width : "10%"
-    }];
-	
+    },{
+        dataField : "crtUser",
+        headerText : "<spring:message code='sal.title.creator'/>",
+        width : 160,
+        visible : true
+      },{
+          dataField : "updUser",
+          headerText : "<spring:message code='sal.text.title.lastUpdator'/>",
+          width : 160,
+          visible : true
+        },{
+            dataField : "updDt",
+            headerText : "<spring:message code='pay.head.lastUpdate'/>",
+            width : 160,
+            visible : true
+          }];
+
 	/*  validation */
 	  function validation() {
 	    var result = true;
@@ -254,10 +269,10 @@
 	    }
 	    if(!validationCom(addList) || !validationCom(udtList)){
 	    	return false;
-	    }	   
+	    }
 	    return result;
 	  }
-	
+
 	function validationCom(list){
 		 var result = true;
 		 for (var i = 0; i < list.length; i++) {
@@ -265,7 +280,7 @@
 		        var month = list[i].month;
 		        var weeks = list[i].weeks;
 		        var startDt = list[i].startDt;
-		        var endDt = list[i].endDt; 
+		        var endDt = list[i].endDt;
 		        if (year == "") {
 		          result = false;
 		          Common.alert("<spring:message code='sys.common.alert.validation' arguments='YEAR' htmlEscape='false'/>");
@@ -290,6 +305,12 @@
 		      }
 		 return result;
 	}
+
+	  function fn_weeklyAchievementReport() {
+	        Common.popupDiv("/commission/system/commissionWeeklyMgmtRawPop.do", null, null,
+	            true, '');
+	      }
+
 </script>
 
 
@@ -311,7 +332,7 @@
 
 		<ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-				<li><p class="btn_blue"> 
+				<li><p class="btn_blue">
 						<a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a>
 					</p></li>
             </c:if>
@@ -330,12 +351,12 @@
 				<caption>search table</caption>
 				<colgroup>
 					<col style="width: 110px" />
-					<col style="width: *" />			
+					<col style="width: *" />
 				</colgroup>
 				<tbody>
 					<tr>
                         <th scope="row"><spring:message code='commission.text.search.monthYear'/></th>
-                        <td><input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width: 200px;" /></td>						
+                        <td><input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width: 200px;" /></td>
 					</tr>
 				</tbody>
 			</table>
@@ -343,6 +364,31 @@
 		</form>
 	</section>
 	<!-- search_table end -->
+
+        <aside class="link_btns_wrap">
+    <!-- link_btns_wrap start -->
+    <p class="show_btn">
+     <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a>
+    </p>
+    <dl class="link_list">
+     <dt><spring:message code='sales.Link'/></dt>
+     <dd>
+      <ul class="btns">
+         <li><p class="link_btn type2">
+               <a href="#" onclick="javascript:fn_weeklyAchievementReport()">Weekly Achievement Report</a>
+              </p>
+          </li>
+
+      </ul>
+      <p class="hide_btn">
+       <a href="#"><img
+        src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
+        alt="hide" /></a>
+      </p>
+     </dd>
+    </dl>
+   </aside>
+   <!-- link_btns_wrap end -->
 
 	<section class="search_result">
 	   <form id="callForm" action="" method="post">
@@ -355,10 +401,10 @@
 		                </p></li>
 		           <li><p class="btn_grid">
 	                    <a href="#" id="save"><spring:message code='sys.btn.save'/></a>
-	                </p></li>         
-                </c:if> 
+	                </p></li>
+                </c:if>
 			</ul>
-	
+
 			<article class="grid_wrap">
 				<!-- grid_wrap start -->
 				<div id="grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;"></div>
@@ -368,7 +414,6 @@
 	</section>
 	<!-- bottom_msg_box end -->
 	<!-- search_result end -->
-
 </section>
 <!-- content end -->
 
