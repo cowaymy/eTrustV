@@ -363,5 +363,10 @@ public class ApiController {
     }
   }
 
+  @RequestMapping(value = "/customer/tokenizationProcess.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> tokenizationProcess(HttpServletRequest request, @RequestParam Map<String, Object> params) {
+      EgovMap result = apiService.tokenizationProcess(request, params);
+      return ResponseEntity.ok(result);
+  }
 
 }

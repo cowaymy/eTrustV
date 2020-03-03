@@ -48,6 +48,7 @@ public interface ApiService {
 
   EgovMap verify(HttpServletRequest request, Map<String, Object> params);
 
+  EgovMap tokenizationProcess(HttpServletRequest request, Map<String, Object> params);
 
 
 

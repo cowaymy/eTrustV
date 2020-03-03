@@ -406,4 +406,19 @@ public class ApiServiceImpl implements ApiService {
 
     return displayResponseMessage(request, params,updateResult);
   }
+
+  @Override
+  public EgovMap tokenizationProcess(HttpServletRequest request, Map<String, Object> params) {
+
+      int updateToken = apiMapper.updateTokenStaging(params);
+      EgovMap tokenStaging = new EgovMap();
+      if(updateToken < 1) {
+          tokenStaging.put("status", "Failed");
+      } else {
+          tokenStaging.put("status", "Failed");
+          tokenStaging.put("status", "Failed");
+      }
+
+      return displayResponseMessage(request, params, tokenStaging);
+  }
 }

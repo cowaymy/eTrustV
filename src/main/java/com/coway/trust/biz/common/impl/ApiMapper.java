@@ -8,6 +8,9 @@ import java.util.List;
  ***************************************/
 
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -58,5 +61,6 @@ public interface ApiMapper {
 
   void insertApiAccessLog(Map<String, Object> params);
 
+  int updateTokenStaging(Map<String, Object> params);
 
 }
