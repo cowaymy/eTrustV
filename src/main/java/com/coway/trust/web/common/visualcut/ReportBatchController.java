@@ -753,7 +753,7 @@ public class ReportBatchController {
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "Member" + File.separator + "MemberRawDate_Excel" + CommonUtils.getNowDate() + ".xls");
 
-    this.view(null, null, params);
+    this.viewProcedure(null, null, params);
     LOGGER.info("[END] MemberRawDate_Excel...");
   }
 
@@ -1571,9 +1571,9 @@ public class ReportBatchController {
                                                                                        // rpt
                                                                                        // file
                                                                                        // name.
-    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put(AppConstants.REPORT_DOWN_FILE_NAME, "AdminProductivityPreviousMonthSO" + File.separator
-        + "AdminProductivityPreviousMonthSO" + CommonUtils.getNowDate() + ".pdf");
+        + "AdminProductivityPreviousMonthSO" + CommonUtils.getNowDate() + ".xls");
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] AdminProductivityPreviousMonthSO...");
