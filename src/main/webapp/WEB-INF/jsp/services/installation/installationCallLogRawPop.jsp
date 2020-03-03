@@ -111,12 +111,12 @@
 
 	      //ORDER DATE
 	      if ($("#instcallcreateDate").val() != '' && $("#instcallendDate").val() != '' && $("#instcallcreateDate").val() != null && $("#instcallendDate").val() != null) {
-	          whereSql += " AND (TO_CHAR(SOM.SALES_DT,'DD/MM/YYYY') >= '" + $("#instcallcreateDate").val() + "'  AND TO_CHAR(SOM.SALES_DT,'DD/MM/YYYY') <= '" + $("#instcallendDate").val() + "') ";
+	          whereSql += " AND (SOM.SALES_DT >= TO_DATE('" + $("#instcallcreateDate").val() + "' , 'DD/MM/YYYY')  AND SOM.SALES_DT <=  TO_DATE('" + $("#instcallendDate").val() + "' , 'DD/MM/YYYY')) ";
 	        }
 
 	      //CALL LOG DATE
           if ($("#instcallStrDate").val() != '' && $("#instcallEndDate").val() != '' && $("#instcallStrDate").val() != null && $("#instcallEndDate").val() != null) {
-              whereSql += " AND (TO_CHAR(C.CRT_DT,'DD/MM/YYYY') >= '" + $("#instcallStrDate").val() + "'  AND TO_CHAR(C.CRT_DT,'DD/MM/YYYY') <= '" + $("#instcallEndDate").val() + "') ";
+              whereSql += " AND (C.CRT_DT >=  TO_DATE('" + $("#instcallStrDate").val() + "','DD/MM/YYYY') AND C.CRT_DT <= TO_DATE('" + $("#instcallEndDate").val() + "','DD/MM/YYYY')) ";
             }
 
 	      //CALL LOG TYPE
@@ -330,14 +330,14 @@
     <select  class="multy_select w100p" multiple="multiple"
        id="instcallLogStatus" name="instcallLogStatus">
  <c:forEach var="list" items="${instcallLogSta}" varStatus="status">
-         <c:choose>
-           <c:when test="${list.code=='1' || list.code=='19'}">
+<%--          <c:choose>
+            <c:when test="${list.code=='1' || list.code=='19'}">
              <option value="${list.code}" selected>${list.codeName}</option>
            </c:when>
-           <c:otherwise>
+           <c:otherwise> --%>
              <option value="${list.code}">${list.codeName}</option>
-           </c:otherwise>
-         </c:choose>
+<%--             </c:otherwise>
+         </c:choose> --%>
         </c:forEach>
       </select></td>
 
@@ -347,14 +347,14 @@
           <th scope="row"><spring:message code='service.title.InstallStatus' /> <span name="instcallLogStatus" id="instcallLogStatus" ></span></th>
       <td><select  id="instalcallLogStatus" name="instalcallLogStatus" class="multy_select w100p" multiple="multiple">
         <c:forEach var="list" items="${instcallLogStatus }" varStatus="status">
-         <c:choose>
-          <c:when test="${list.codeId=='1'}">
+      <%--    <c:choose>
+           <c:when test="${list.codeId=='1'}">
             <option value="${list.codeId}" selected>${list.codeName}</option>
           </c:when>
-          <c:otherwise>
+          <c:otherwise> --%>
             <option value="${list.codeId}">${list.codeName}</option>
-          </c:otherwise>
-         </c:choose>
+       <%--    </c:otherwise>
+         </c:choose> --%>
         </c:forEach>
       </select></td>
 
