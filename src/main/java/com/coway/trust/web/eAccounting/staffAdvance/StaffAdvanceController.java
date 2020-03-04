@@ -590,6 +590,11 @@ public class StaffAdvanceController {
                 String appvPrcssResult = String.valueOf(info.get("appvStus"));
                 model.addAttribute("appvPrcssResult", appvPrcssResult);
             }
+
+            if("J".equals(info.get("appvStus"))) {
+                String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(info);
+                model.addAttribute("rejctResn", rejctResn);
+            }
         }
 
         if(!appvLineUserId.contains(memCode) && apprDtls != null) {

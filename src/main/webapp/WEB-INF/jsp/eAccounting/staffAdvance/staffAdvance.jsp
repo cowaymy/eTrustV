@@ -444,10 +444,12 @@
         }
 
         if(claimNo.substring(0, 1) == "A") {
+            /*
             if(appvStus == "T" && mode != "DRAFT") {
-                Common.alert("Selected Advance Request Claim No is not allowed for repayment!");
-                return false;
             }
+            */
+            Common.alert("Selected Advance Request Claim No is not allowed for repayment!");
+            return false;
         }
 
         if(repayStus == "3" || repayStus == "4" || repayStus == "5") {

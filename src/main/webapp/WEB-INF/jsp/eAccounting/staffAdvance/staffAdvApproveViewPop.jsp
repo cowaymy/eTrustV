@@ -412,6 +412,12 @@
                         <th scope="row"><spring:message code="approveView.approveStatus" /></th>
                         <td colspan="2" style="height:60px" id="viewAppvStus">${appvPrcssStus}</td>
                     </tr>
+                    <c:if test="${appvPrcssResult eq 'J'}">
+                    <tr>
+                        <th scope="row">Reject Reason</th>
+                        <td colspan="3">${rejctResn}</td>
+                    </tr>
+                    </c:if>
                 </table>
             </form>
         </section>
