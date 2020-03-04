@@ -229,12 +229,9 @@ public class ReportBatchController {
   //@Scheduled(cron = "0 0 5 * * *")//Daily (5:00am)
   public void rcmDaily2015S2_1() {
     LOGGER.info("[START] RCM_Daily_2015_S1_2...");
-    //
-    String startYear = String.valueOf(LocalDate.now().minusYears(1));
 
     Map<String, Object> params = new HashMap<>();
-    //params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_2015_S1_2.rpt");// visualcut
-    params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily.rpt");// visualcut
+    params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_2015_S1_2.rpt");// visualcut
                                                                        // rpt
                                                                        // file
                                                                        // name.
