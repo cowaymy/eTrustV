@@ -111,12 +111,12 @@
 
 	      //ORDER DATE
 	      if ($("#instcallcreateDate").val() != '' && $("#instcallendDate").val() != '' && $("#instcallcreateDate").val() != null && $("#instcallendDate").val() != null) {
-	          whereSql += " AND (SOM.SALES_DT >= TO_DATE('" + $("#instcallcreateDate").val() + "' , 'DD/MM/YYYY')  AND SOM.SALES_DT <=  TO_DATE('" + $("#instcallendDate").val() + "' , 'DD/MM/YYYY')) ";
+	          whereSql += " AND (TO_DATE(SOM.SALES_DT) >= TO_DATE('" + $("#instcallcreateDate").val() + "' , 'DD/MM/YYYY')  AND TO_DATE(SOM.SALES_DT) <=  TO_DATE('" + $("#instcallendDate").val() + "' , 'DD/MM/YYYY')) ";
 	        }
 
 	      //CALL LOG DATE
           if ($("#instcallStrDate").val() != '' && $("#instcallEndDate").val() != '' && $("#instcallStrDate").val() != null && $("#instcallEndDate").val() != null) {
-              whereSql += " AND (C.CRT_DT >=  TO_DATE('" + $("#instcallStrDate").val() + "','DD/MM/YYYY') AND C.CRT_DT <= TO_DATE('" + $("#instcallEndDate").val() + "','DD/MM/YYYY')) ";
+              whereSql2 += " AND (TO_DATE(B.CALL_FIRST_CRT_DT) >=  TO_DATE('" + $("#instcallStrDate").val() + "','DD/MM/YYYY') AND TO_DATE(B.CALL_FIRST_CRT_DT) <= TO_DATE('" + $("#instcallEndDate").val() + "','DD/MM/YYYY')) ";
             }
 
 	      //CALL LOG TYPE
