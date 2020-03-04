@@ -229,7 +229,6 @@ public class ReportBatchController {
   //@Scheduled(cron = "0 0 5 * * *")//Daily (5:00am)
   public void rcmDaily2015S2_1() {
     LOGGER.info("[START] RCM_Daily_2015_S1_2...");
-
     Map<String, Object> params = new HashMap<>();
     params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_2015_S1_2.rpt");// visualcut
                                                                        // rpt
@@ -249,9 +248,8 @@ public class ReportBatchController {
   public void rcmDaily2015S2_2() {
     LOGGER.info("[START] RCM_Daily_2015_S2_2...");
     // RCM report for YEAR 2019
-
-    String startYear = String.valueOf(LocalDate.now().minusYears(1).getYear());
-    String endYear = String.valueOf(LocalDate.now().minusYears(1).getYear());
+    String startYear = "2019";
+    String endYear = "2019";
 
     Map<String, Object> params = new HashMap<>();
     //params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_2015_S2_2.rpt");// visualcut
@@ -264,7 +262,7 @@ public class ReportBatchController {
     params.put("V_STARTYEAR", startYear);// parameter
     params.put("V_ENDYEAR", endYear);// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "RCM" + File.separator + "RCM_Daily_" + startYear + "_" + CommonUtils.getNowDate() + ".xls");
+        "RCM" + File.separator + "RCM_Daily_S3_2" + CommonUtils.getNowDate() + ".xls");
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] RCM_Daily_2015_S2_2...");
