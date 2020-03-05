@@ -580,8 +580,15 @@
     <td>
     <input type="text" title="" id="promoCode" name="promoCode" placeholder="Promotion Code" class="w100p" />
     </td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row"><spring:message code="sal.text.memtype" /></th>
+    <td>
+    <select class="w100p" id="memtype" name="memtype">
+        <option value="">Choose One</option>
+        <option value="2"><spring:message code="sal.text.cowayLady" /></option>
+        <option value="1"><spring:message code="sal.text.healthPlanner" /></option>
+        <option value="4"><spring:message code="sal.text.staff" /></option>
+    </select>
+    </td>
 </tr>
 <tr>
     <th scope="row" colspan="6" ><span class="must"> <spring:message code="sal.alert.msg.youMustKeyInatLeastOrdDateNetSales" /></span>  </th>

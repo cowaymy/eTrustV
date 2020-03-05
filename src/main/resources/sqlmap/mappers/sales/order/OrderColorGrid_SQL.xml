@@ -270,75 +270,9 @@
                             AND E1.INSTALL_STUS_ID = 1
                             AND E1.STUS_ID != 10
                         </if>
-           ) F1 <!-- JOIN ( SELECT vB.ORD_ID ,
-                              vB.ORD_NO ,
-                              vB.RENTAL_STUS ,
-                              vB.ORD_STUS_ID ,
-                              vB.ORD_STUS_CODE ,
-                              vB.ORD_STUS_NAME ,
-                              vB.ORD_DT ,
-                              vB.INSTLMT_PRIOD ,
-                              vB.ORD_AMT ,
-                              vB.ORD_MTH_RENTAL ,
-                              vB.ORD_PV ,
-                              vB.ORD_PV_MONTH ,
-                              vB.ORD_PV_YEAR ,
-                              vB.ORD_REF_NO ,
-                              vB.ORD_PO_NO ,
-                              vB.ORD_DEPT_CODE ,
-                              vB.ORD_GRP_CODE ,
-                              vB.ORD_ORG_CODE ,
-                              vB.ORD_CRT_USER_ID ,
-                              vB.ORD_CRT_DT ,
-                              vB.APP_TYPE_ID ,
-                              vB.APP_TYPE_CODE ,
-                              vB.APP_TYPE_DESC ,
-                              vB.STOCK_ID ,
-                              vB.STOCK_CODE ,
-                              vB.STOCK_DESC ,
-                              vB.CUST_ID ,
-                              vB.CUST_TYPE ,
-                              vB.CUST_NAME ,
-                              vB.CUST_NRIC ,
-                              vB.CUST_DOB ,
-                              vB.CUST_NATION ,
-                              vB.CUST_GENDER ,
-                              vB.CUST_RACE ,
-                              vB.CUST_EMAIL ,
-                              vB.CUST_VA_NO ,
-                              vB.CUST_PASSPORT_EXPR ,
-                              vB.CUST_VISA_EXPR ,
-                              vB.ORD_PROMO_ID ,
-                              vB.ORD_PROMO_CODE ,
-                              vB.ORD_PROMO_DESC ,
-                              vB.ORD_MEM_ID ,
-                              vB.ORD_MEM_CODE ,
-                              vB.ORD_MEM_NAME ,
-                              vB.ORD_MEM_NRIC ,
-                              vB.ORD_MEM_TYPE_ID ,
-                              vB.ORD_MEM_TYPE_CODE ,
-                              vB.ORD_MEM_TYPE_NAME ,
-                              vB.COOL_OFF_PRIOD ,
-                              vB.KEYIN_BRNCH_ID ,
-                              vB.KEYIN_BRNCH_CODE ,
-                              vB.KEYIN_BRNCH_NAME ,
-                              vB.ORD_REM ,
-                              vB.RENT_CHK_ID ,
-                              vB.ORD_HM_ID ,
-                              vB.ORD_SM_ID ,
-                              vB.ORD_GM_ID ,
-                              vB.ORD_ADDR_ID ,
-                              vB.ORD_CNTC_ID ,
-                              vB.ORD_PROMO_RELATED_NO ,
-                              vB.UPD_DT ,
-                              vB.UPD_USER_ID ,
-                              vB.JOM_PAY_REF ,
-                              vB.STK_CTGRY_ID ,
-                              vB.STK_CTGRY_NAME ,
-                              vB.CUST_TYPE_ID ,
-                              vB.CUST_BILL_ID ,
-                              vB.OBLIGT_YEAR
-                       FROM SAL1006V vB ) E4 ON E4.ORD_ID = F1.OrderID1  -->
+           ) F1 
+           LEFT JOIN ORG0001D MEM ON MEM.MEM_CODE = F1.MEM_CODE
+    			JOIN SYS0013M S13 ON S13.CODE_ID = MEM.MEM_TYPE AND CODE_MASTER_ID = 1
           WHERE 1 = 1
           <if test="orgCode != null and orgCode != ''">
             AND F1.ORG_CODE = UPPER(#{orgCode})
@@ -381,6 +315,9 @@
           </if>
           <if test="promoCode != null and promoCode != ''">
             AND F1.PROMO_CODE = UPPER(#{promoCode})
+          </if>
+           <if test="memtype != null and memtype != ''">
+            AND MEM_TYPE = #{memtype}
           </if>
     ) D1
     ORDER BY D1.ORD_ID DESC
