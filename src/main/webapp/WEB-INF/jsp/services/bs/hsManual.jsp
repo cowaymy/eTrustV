@@ -1268,6 +1268,10 @@ var TODAY_DD      = "${toDay}";
           });
 	    });
     }
+
+  function fn_HSRptCustSign() {
+    Common.popupDiv("/services/bs/report/hsReportCustSignPop.do", null, null, true, '');
+  }
 </script>
 <form id="popEditForm" method="post">
  <input type="hidden" name="schdulId" id="_schdulId" />
@@ -1505,6 +1509,14 @@ var TODAY_DD      = "${toDay}";
                    code='service.btn.MobileFailListHS' /></a>
               </p>
           </li>
+
+           <li>
+            <p class="link_btn type2">
+             <a href="#" onclick="fn_HSRptCustSign()">
+              <spring:message code='service.btn.hsRptCustSign' />
+             </a>
+            </p>
+           </li>
          </ul>
          <!--
            <ul class="btns">
