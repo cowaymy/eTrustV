@@ -467,15 +467,17 @@
         WHERE CP_ID = #{id}
     </update>
 
-    <insert id="updateTokenStaging" parameterType="Map">
+    <update id="updateTokenStaging" parameterType="Map">
         UPDATE SAL0257D_MCP
         SET
+            BIN = SUBSTR(#{maskedPan}, 1, 6),
+            CCLAST4 = SUBSTR(#{maskedPan}, 13, 4),
             TOKEN = #{token},
             RES_TEXT = #{token} || '' || #{refNo},
-            STATUS = 4,
+            STATUS = #{stusID},
             UPD_DT = SYSDATE
         WHERE TKN_ID = LTRIM(TO_NUMBER(SUBSTR(#{refNo}, 37, 10)))
         AND REF_NO = #{refNo}
-    </insert>
+    </update>
 
 </mapper>

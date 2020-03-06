@@ -10,6 +10,10 @@ console.log("tokenpoptest");
     doGetCombo('/common/selectCodeList.do', '21', '','_insCmbCreditCardType', 'S' , '');           // Add Card Type Combo Box
     doGetCombo('/common/selectCodeList.do', '115', '','_cmbCardType_', 'S' , '');           // Add Card Type Combo Box
 
+    $(document).ready(function() {
+       console.log("tokenCustomerCreditCardTest");
+    });
+
     $("#_expMonth_").blur(function() {
         var expMonth = $("#_expMonth_").val();
 
@@ -28,6 +32,68 @@ console.log("tokenpoptest");
         }
     });
 
+    function fn_tokenPop() {
+        console.log("tokenizationBtn :: click :: fn_tokenPop");
+
+        var tokenPop, tokenTick;
+        var refId = '000101147799000000000000000000000000';
+        Common.ajax("GET", "/sales/customer/getTknId.do", {refId : refId}, function(r1) {
+            if(r1.tknId != 0) {
+                // Requires further discuss with MC Payment if add another 10 space for token ID
+                // NRIC/Co. registration no (12) + CID (12) + CRC ID (12);
+                //refId = refId + r1.tknId;
+
+                //Common.ajax("POST", "/sales/customer/")
+
+                var option = {
+                        winName: "popup",
+                        isDuplicate: true, // 계속 팝업을 띄울지 여부.
+                        fullscreen: "no", // 전체 창. (yes/no)(default : no)
+                        location: "no", // 주소창이 활성화. (yes/no)(default : yes)
+                        menubar: "no", // 메뉴바 visible. (yes/no)(default : yes)
+                        titlebar: "yes", // 타이틀바. (yes/no)(default : yes)
+                        toolbar: "no", // 툴바. (yes/no)(default : yes)
+                        resizable: "yes", // 창 사이즈 변경. (yes/no)(default : yes)
+                        scrollbars: "yes", // 스크롤바. (yes/no)(default : yes)
+                        width: "750px", // 창 가로 크기
+                        height: "180px" // 창 세로 크기
+                    };
+
+                if (option.isDuplicate) {
+                    option.winName = option.winName + new Date();
+                }
+
+                var URL = "https://services.sandbox.mcpayment.net:8080/newCardForm?apiKey=AKIA5TZ_COWAY_YNAAZ6E&refNo=" + r1.tknRef;
+
+             // Calls MC Payment pop up
+                //tokenPop = window.open("https://services.sandbox.mcpayment.net:8080/newCardForm?apiKey=AKIA5TZ_COWAY_YNAAZ6E&refNo=32135" + refId);
+                tokenPop = window.open(URL, option.winName, "fullscreen="
+                        + option.fullscreen + ",location=" + option.location
+                        + ",menubar=" + option.menubar + ",titlebar=" + option.titlebar
+                        + ",toolbar=" + option.toolbar + ",resizable="
+                        + option.resizable + ",scrollbars=" + option.scrollbars
+                        + ",width=" + option.width + ",height=" + option.height);
+
+                // Set ticker to check if MC Payment pop up is still opened
+                tokenTick = setInterval(
+                    function() {
+                        if(tokenPop.closed) {
+                            console.log("tokenPop is closed!");
+                            clearInterval(tokenTick);
+
+                            // Retrieve token ID to be displayed in credit card number field
+                            Common.ajax("GET", "/sales/customer/getTokenNumber.do", {refId : r1.tknRef}, function(r2) {
+                                console.log(r2);
+                                /*if(r2 != null) {
+                                    $("#tknNo").val(r2.tokenNumber);
+                                }*/
+                            });
+                        }
+                    }, 500);
+            }
+        });
+    }
+
     // card number에 따라 card type 변경
     function fn_selectCreditCardType(){
         if($("#_cardNo_").val().substr(0,1) == '4'){
@@ -42,6 +108,8 @@ console.log("tokenpoptest");
     }
 
     function fn_addCreditCard(){
+
+        $("#oriCrcNo").val($("#_cardNo_").val());
 
         Common.ajax("GET", "/sales/customer/tokenPubKey.do", "", function(result) {
             var pub = "-----BEGIN PUBLIC KEY-----" + result.pubKey + "-----END PUBLIC KEY-----";
@@ -237,6 +305,20 @@ console.log("tokenpoptest");
                 </td>
             </tr>
             <tr>
+                <th scope="row"><spring:message code="sal.text.nameOnCard" /><span class="must">*</span></th>
+                <td colspan="3">
+                    <input type="text" title="" id="_nameCard_" name="nameCard" placeholder="Name On Card" class="w100p" />
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><spring:message code="sal.text.creditCardNo" /><span class="must">*</span></th>
+                <td colspan="3">
+                    <input class="" id="tknNo" name="tknNo" type="text" size="36" placeholder="Credit Card ID" maxlength="36" style="width:96%" readonly />
+                    <a href="javascript:fn_tokenPop();" class="search_btn" id="tokenizationBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                </td>
+            </tr>
+            <!--
+            <tr>
                 <th scope="row"><spring:message code="sal.text.creditCardNo" /><span class="must">*</span></th>
                 <td>
                     <input class="w100p" id="_cardNo_" type="text" size="20" data-encrypted-name="PAN" placeholder="Credit Card No" maxlength="16" onBlur="fn_selectCreditCardType()" required/>
@@ -256,6 +338,7 @@ console.log("tokenpoptest");
                     <input class="w100p" id="_expYear_" type="text" size="20" data-encrypted-name="EXPYEAR" placeholder="Expiry Year (YYYY)" min="4" maxlength="4" required/>
                 </td>
             </tr>
+             -->
             <tr>
                 <th scope="row"><spring:message code="sal.text.remark" /></th>
                 <td colspan="3">
@@ -318,6 +401,12 @@ console.log("tokenpoptest");
                 <th scope="row">merchantId</th>
                 <td>
                     <input type="text" class="w100p" id="merchantId" name="merchantId">
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">OriCrcNo</th>
+                <td colspan="3">
+                    <input type="text" class="w100p" id="oriCrcNo" name="oriCrcNo">
                 </td>
             </tr>
             <tr>

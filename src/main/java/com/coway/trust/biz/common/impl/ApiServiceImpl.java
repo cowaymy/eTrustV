@@ -140,6 +140,10 @@ public class ApiServiceImpl implements ApiService {
 
       response.put("response", params.get("respCde").toString() + " - " + params.get("respDesc").toString());
       if(custDetails != null) response.put("custDetails", custDetails);
+
+      if(pgmPath.contains("tokenizationProcess")) {
+          response.remove("custDetails");
+      }
     }
 
     return response;
@@ -410,15 +414,20 @@ public class ApiServiceImpl implements ApiService {
   @Override
   public EgovMap tokenizationProcess(HttpServletRequest request, Map<String, Object> params) {
 
-      int updateToken = apiMapper.updateTokenStaging(params);
-      EgovMap tokenStaging = new EgovMap();
-      if(updateToken < 1) {
-          tokenStaging.put("status", "Failed");
+      EgovMap result = new EgovMap();
+      if(params.containsKey("errMsg")) {
+          params.put("stusID", "21");
       } else {
-          tokenStaging.put("status", "Failed");
-          tokenStaging.put("status", "Failed");
+          params.put("stusID", "4");
       }
 
-      return displayResponseMessage(request, params, tokenStaging);
+      if(apiMapper.updateTokenStaging(params) != 1) {
+          result.put("status", "Failed");
+      } else {
+          result.put("status", "Success");
+      }
+
+      return displayResponseMessage(request, params, result);
   }
+
 }
