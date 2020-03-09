@@ -96,8 +96,8 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:1px solid #d3d9
 <caption>table</caption>
 <colgroup>
     <col style="width:5%" />
-    <col style="width:60%" />
-    <col style="width:35%" />
+    <col style="width:59%" />
+    <col style="width:36%" />
 </colgroup>
 <tbody>
 <c:forEach items="${title}" var="title">
@@ -119,7 +119,7 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:1px solid #d3d9
         <td>${ques.ques}</td>
         <c:choose>
             <c:when test = "${ques.inputType eq 'CHECKBOX'}">
-                <td><c:forEach var="score" begin="1" end = "5">
+                <td><c:forEach var="score" begin="1" end = "10">
                 <label><input type="radio" name="${ques.quesId}" value="${score}"/><span> ${score} </span></label>
                 </c:forEach></td>
              </c:when>
