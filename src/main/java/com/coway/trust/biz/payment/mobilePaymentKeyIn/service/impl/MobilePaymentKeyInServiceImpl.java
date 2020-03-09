@@ -29,12 +29,14 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @History
  *
  *          <pre>
- * Date            Author       Description
+ * Date               Author         Description
  * -------------  -----------  -------------
  * 2019. 10. 21.   KR-HAN        First creation
  * 2020. 02. 11    ONGHC         Add Payment Method ONL for saveMobilePaymentKeyInNormalPayment
  * 2020. 02. 12    ONGHC         Add Optional Value for Commission
- * 2020. 02. 25    KR-HAN       Payment Error Edit ( WOR Error,  convert to integer error )
+ * 2020. 02. 25    KR-HAN        Payment Error Edit ( WOR Error,  convert to integer error )
+ * 2020. 03. 09    ONGHC         Amend paidAmt's String value to integer
+ *                                         Add TR Ref.No and TR Issue Date
  *          </pre>
  */
 @Service("mobilePaymentKeyInService")
@@ -57,7 +59,6 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
   @Override
   public List<EgovMap> selectMobilePaymentKeyInList(Map<String, Object> params) {
-
     return mobilePaymentKeyInMapper.selectMobilePaymentKeyInList(params);
   }
 
@@ -65,10 +66,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
   public int saveMobilePaymentKeyInReject(Map<String, Object> param) throws Exception {
 
     int saveCnt = 0;
-
-    List<Object> gridList = (List<Object>) param.get(AppConstants.AUIGRID_ALL); // 그리드
-                                                                                // 데이터
-                                                                                // 가져오기
+    List<Object> gridList = (List<Object>) param.get(AppConstants.AUIGRID_ALL); // IMPORT GRID DATA
 
     Map<String, Object> saveParam = null;
 
@@ -82,11 +80,13 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       if (StringUtils.isEmpty(mobTicketNo)) {
         throw new ApplicationException(AppConstants.FAIL, "Please check the Request Number value.");
       }
+
       /*
        * if( StringUtils.isEmpty( param.get("reqStusId") )){ throw new
        * ApplicationException(AppConstants.FAIL,
        * "Please check the Request Status value."); }
        */
+
       if (StringUtils.isEmpty(param.get("userId"))) {
         throw new ApplicationException(AppConstants.FAIL, "Please check the User Id value.");
       }
@@ -104,7 +104,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
       saveCnt = mobilePaymentKeyInMapper.updateMobilePaymentKeyInReject(saveParam);
 
-      // 티겟 상태 변경
+      // 티겟 상태 변경  - CHANGE TARGET STATUS
       Map<String, Object> ticketParam = new HashMap<String, Object>();
       ticketParam.put("ticketStusId", 6);
       ticketParam.put("updUserId", param.get("userId"));
@@ -127,18 +127,9 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
    */
   @Override
   public List<EgovMap> saveMobilePaymentKeyInCard(Map<String, Object> params, String sUserId) {
-
-    //System.out.println("++++ params.toString() ::" + params.toString() );
-
-    List<Object> gridList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // 그리드
-                                                                                 // 데이터
-                                                                                 // 가져오기
-    List<Object> gridFormList = (List<Object>) params.get(AppConstants.AUIGRID_FORM); // 폼
-                                                                                      // 객체
-                                                                                      // 데이터
-                                                                                      // 가져오기
-
-    // List 셋팅 시작
+    List<Object> gridList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // GRID DATA IMPORT
+    List<Object> gridFormList = (List<Object>) params.get(AppConstants.AUIGRID_FORM); // FORM OBJECT DATA IMPORT
+    // LIST 셋팅 시작 - START SETTING
     List<Object> formList = new ArrayList<Object>();
     Map<String, Object> formInfo = null;
     Map<String, Object> gridListMap = null;
@@ -147,6 +138,8 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
     int procSeq = 1;
     String allowance = "0";
+    String trRefNo = "";
+    String trIssDt = "0";
 
     // ONGHC - MOVE TO TOP
     formInfo = new HashMap<String, Object>();
@@ -157,19 +150,32 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       }
     }
 
+    // ALLOWANCEE
     if (formInfo.get("allowance") != null) {
       allowance = "1";
     } else {
       allowance = "0";
     }
 
-    System.out.println("++++ allowance ::" + allowance );
+    // TR REF. NO.
+    if (formInfo.get("trRefNo2") != null) {
+      trRefNo = formInfo.get("trRefNo2").toString();
+    } else {
+      trRefNo = "";
+    }
+
+    // TR ISSUE DATE
+    if (formInfo.get("trIssDt2") != null) {
+      trIssDt = formInfo.get("trIssDt2").toString();
+    } else {
+      trIssDt = "";
+    }
 
     for (int i = 0; i < gridList.size(); i++) {
       gridListMap = (Map<String, Object>) gridList.get(i);
 
-      // 그리드 값 조회 후 다시 셋팅
-      // Payment - Order Info 조회 : order No로 Order ID 조회하기
+      // 그리드 값 조회 후 다시 셋팅 - LOOKUP GRID VALUES AND SET THEM UP AGAIN
+      // PAYMENT - ORDER INFO 조회 : ORDER NO로 ORDER ID 조회하기
       params.put("ordNo", gridListMap.get("salesOrdNo"));
       EgovMap resultMap = commonPaymentService.selectOrdIdByNo(params);
 
@@ -179,10 +185,10 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       params.put("orderId", salesOrdId);
       params.put("salesOrdId", salesOrdId);
 
-      // 주문 렌탈 정보 조회.
+      // 주문 렌탈 정보 조회. - ORDER RENTAL INFORMATION INQUIRY.
       List<EgovMap> orderInfoRentalList = commonPaymentService.selectOrderInfoRental(params); // targetRenMstGridID
 
-      // Payment - Bill Info Rental 조회
+      // PAYMENT - BILL INFO RENTAL 조회
       double rpf = (double) orderInfoRentalList.get(0).get("rpf");
       double rpfPaid = (double) orderInfoRentalList.get(0).get("rpfPaid");
 
@@ -193,7 +199,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       params.put("excludeRPF", excludeRPF);
       List<EgovMap> billInfoRentalList = commonPaymentService.selectBillInfoRental(params); // targetRenDetGridID
 
-      // checkOrderOutstanding 정보 조회
+      // checkOrderOutstanding 정보 조회 - INFORMATION LOOKUP
       EgovMap targetOutMstResult = commonPaymentService.checkOrderOutstanding(params); // targetOutMstGridID
 
       // if( "ROOT_1".equals(targetOutMstResult.get("rootState")) ){
@@ -227,7 +233,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
           formMap.put("procSeq", procSeq);
           formMap.put("appType", "RENTAL");
-          formMap.put("advMonth", (Integer) gridListMap.get("advMonth")); // 셋팅필요
+          formMap.put("advMonth", (Integer) gridListMap.get("advMonth")); // 셋팅필요 - SETTING REQUIRED
           formMap.put("mstRpf", mstRpf);
           formMap.put("mstRpfPaid", mstRpfPaid);
 
@@ -245,21 +251,21 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
           formMap.put("installment", 0);
           formMap.put("ordId", salesOrdId);
           formMap.put("ordNo", salesOrdNo);
-          formMap.put("paidAmt", "mstRpfPaid");
+          formMap.put("paidAmt", mstRpfPaid);
           formMap.put("targetAmt", mstRpf - mstRpfPaid);
           formMap.put("srvcContractID", 0);
           formMap.put("billAsId", 0);
           formMap.put("srvMemId", 0);
           // item. = $("#rentalkeyInTrNo").val() ;
-          formMap.put("trNo", ""); //
+          formMap.put("trNo", trRefNo); //
           // item. = $("#rentalkeyInTrIssueDate").val() ;
-          formMap.put("trDt", ""); //
+          formMap.put("trDt", trIssDt); //
           // item.collectorCode = $("#rentalkeyInCollMemNm").val()
           formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
           // item.collectorId = $("#rentalkeyInCollMemId").val() ;
           formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
           // item.allowComm = $("#rentalcashIsCommChk").val()
-          //formMap.put("allowComm", "1");
+          // formMap.put("allowComm", "1");
           formMap.put("allowComm", allowance);
 
           formList.add(formMap);
@@ -328,15 +334,15 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
             formMap.put("srvMemId", 0);
 
             // item. = $("#rentalkeyInTrNo").val() ;
-            formMap.put("trNo", ""); //
+            formMap.put("trNo", trRefNo); //
             // item. = $("#rentalkeyInTrIssueDate").val() ;
-            formMap.put("trDt", ""); //
+            formMap.put("trDt", trIssDt); //
             // item.collectorCode = $("#rentalkeyInCollMemNm").val()
             formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
             // item.collectorId = $("#rentalkeyInCollMemId").val() ;
             formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
             // item.allowComm = $("#rentalcashIsCommChk").val()
-            //formMap.put("allowComm", "");
+            // formMap.put("allowComm", "");
             formMap.put("allowComm", allowance);
 
             formList.add(formMap);
@@ -381,15 +387,15 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
           formMap.put("srvMemId", 0);
 
           // item. = $("#rentalkeyInTrNo").val() ;
-          formMap.put("trNo", ""); //
+          formMap.put("trNo", trRefNo); //
           // item. = $("#rentalkeyInTrIssueDate").val() ;
-          formMap.put("trDt", ""); //
+          formMap.put("trDt", trIssDt); //
           // item.collectorCode = $("#rentalkeyInCollMemNm").val()
           formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
           // item.collectorId = $("#rentalkeyInCollMemId").val() ;
           formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
           // item.allowComm = $("#rentalcashIsCommChk").val()
-          //formMap.put("allowComm", "");
+          // formMap.put("allowComm", "");
           formMap.put("allowComm", allowance);
 
           formList.add(formMap);
@@ -397,18 +403,18 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
         }
       }
 
-      //formInfo = new HashMap<String, Object>();
-      //if (gridFormList.size() > 0) {
-        //for (Object obj : gridFormList) {
-          //Map<String, Object> map = (Map<String, Object>) obj;
-          //formInfo.put((String) map.get("name"), map.get("value"));
-        //}
-      //}
+      // formInfo = new HashMap<String, Object>();
+      // if (gridFormList.size() > 0) {
+      // for (Object obj : gridFormList) {
+      // Map<String, Object> map = (Map<String, Object>) obj;
+      // formInfo.put((String) map.get("name"), map.get("value"));
+      // }
+      // }
 
-      // User ID 세팅
+      // USER ID 세팅
       formInfo.put("userid", sUserId);
 
-      // Credit Card일때
+      // CREDIT CARD일때
       if ("107".equals(String.valueOf(formInfo.get("keyInPayType")))) {
         formInfo.put("keyInIsOnline", "1299".equals(String.valueOf(formInfo.get("keyInCardMode"))) ? 0 : 1);
         formInfo.put("keyInIsLock", 0);
@@ -428,8 +434,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       formInfo.put("userId", sUserId);
 
       // 저장
-
-      //// System.out.println("++++ gridList ::" + gridList.toString() );
+      // System.out.println("++++ gridList ::" + gridList.toString() );
       // System.out.println("++++ formInfo ::" + formInfo.toString() );
       // System.out.println("++++ formList ::" + formList.toString() );
 
@@ -439,10 +444,10 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     for (int i = 0; i < gridList.size(); i++) {
       gridListMap = (Map<String, Object>) gridList.get(i);
 
-      // 상태 변경
+      // 상태 변경 - CHANGE STATUS
       mobilePaymentKeyInMapper.updateMobilePaymentKeyInUpdate(gridListMap);
 
-      // 티겟 상태 변경
+      // 티겟 상태 변경 - CHANGE TARGET STATUS
       Map<String, Object> ticketParam = new HashMap<String, Object>();
       ticketParam.put("ticketStusId", 5);
       ticketParam.put("updUserId", sUserId);
@@ -472,23 +477,17 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
    */
   @Override
   public Map<String, Object> saveMobilePaymentKeyInNormalPayment(Map<String, Object> params, String sUserId) {
+    List<Object> gridList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // GRID DATA IMPORT
+    List<Object> gridFormList = (List<Object>) params.get(AppConstants.AUIGRID_FORM); // FORM OBJECT DATA IMPORT
 
-     //System.out.println("++++ params.toString() ::" + params.toString() );
-
-    List<Object> gridList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // 그리드
-                                                                                 // 데이터
-                                                                                 // 가져오기
-    List<Object> gridFormList = (List<Object>) params.get(AppConstants.AUIGRID_FORM); // 폼
-                                                                                      // 객체
-                                                                                      // 데이터
-                                                                                      // 가져오기
-
-    // List 셋팅 시작
+    // List 셋팅 시작 - START SETTING
     List<Object> formList = new ArrayList<Object>();
     Map<String, Object> formInfo = null;
     Map<String, Object> gridListMap = null;
-    Double totPayAmt = 0.00;  // 2020.02.24 : EDIT
+    Double totPayAmt = 0.00; // 2020.02.24 : EDIT
     String allowance = "0";
+    String trRefNo = "";
+    String trIssDt = "";
 
     formInfo = new HashMap<String, Object>();
     if (gridFormList.size() > 0) {
@@ -505,14 +504,28 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       allowance = "0";
     }
 
-    // 금액 비교
-    // Transaction
+    // TR REF NO.
+    if (formInfo.get("trRefNo") != null) {
+      trRefNo = formInfo.get("trRefNo").toString();
+    } else {
+      trRefNo = "";
+    }
+
+    // TR ISSED DATE.
+    if (formInfo.get("trIssDt") != null) {
+      trIssDt = formInfo.get("trIssDt").toString();
+    } else {
+      trIssDt = "";
+    }
+
+    // 금액 비교 - COMPARISON OF AMOUNTS
+    // TRANSACTION
     String key = (String) params.get("key"); // BankStatement의 id값 가져오기
     Map<String, Object> schParams = new HashMap<String, Object>();
     schParams.put("fTrnscId", key);
     EgovMap selectBankStatementInfo = mobilePaymentKeyInMapper.selectBankStatementInfo(schParams);
 
-    if (selectBankStatementInfo == null ) {
+    if (selectBankStatementInfo == null) {
       throw new ApplicationException(AppConstants.FAIL, "Invalid Transaction ID.");
     }
 
@@ -558,7 +571,8 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       if ("5697".equals(String.valueOf(gridListMap.get("payMode")))) {
         payMode = "CHQ";
       } else {
-        if ("ONL".equals(paymentMode)) { // ONGHC - ADD FOR SOLVE ONL PAYMENT METHOD
+        if ("ONL".equals(paymentMode)) { // ONGHC - ADD FOR SOLVE ONL PAYMENT
+                                         // METHOD
           payMode = "ONL";
         } else {
           payMode = "CSH";
@@ -620,8 +634,6 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
       Double totTargetAmt = 0.00;
 
-
-
       // 금액 다시 계산
       for (int j = 0; j < orderInfoRentalList.size(); j++) {
         // if( "1".equals(mstChkVal) ){
@@ -629,7 +641,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
           formMap = new HashMap<String, Object>();
 
-          formMap.put("procSeq", iProcSeq);	// 2020.02.24 : ADD procSeq
+          formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
           formMap.put("appType", "RENTAL");
           formMap.put("advMonth", (Integer) gridListMap.get("advMonth")); // 셋팅필요
           formMap.put("mstRpf", mstRpf);
@@ -649,21 +661,21 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
           formMap.put("installment", 0);
           formMap.put("ordId", salesOrdId);
           formMap.put("ordNo", salesOrdNo);
-          formMap.put("paidAmt", "mstRpfPaid");
+          formMap.put("paidAmt", mstRpfPaid);
           formMap.put("targetAmt", mstRpf - mstRpfPaid);
           formMap.put("srvcContractID", 0);
           formMap.put("billAsId", 0);
           formMap.put("srvMemId", 0);
           // item. = $("#rentalkeyInTrNo").val() ;
-          formMap.put("trNo", ""); //
+          formMap.put("trNo", trRefNo); //
           // item. = $("#rentalkeyInTrIssueDate").val() ;
-          formMap.put("trDt", ""); //
+          formMap.put("trDt", trIssDt); //
           // item.collectorCode = $("#rentalkeyInCollMemNm").val()
           formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
           // item.collectorId = $("#rentalkeyInCollMemId").val() ;
           formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
           // item.allowComm = $("#rentalcashIsCommChk").val()
-          //formMap.put("allowComm", "1");
+          // formMap.put("allowComm", "1");
           formMap.put("allowComm", allowance);
 
           formList.add(formMap);
@@ -734,15 +746,15 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
             formMap.put("srvMemId", 0);
 
             // item. = $("#rentalkeyInTrNo").val() ;
-            formMap.put("trNo", ""); //
+            formMap.put("trNo", trRefNo); //
             // item. = $("#rentalkeyInTrIssueDate").val() ;
-            formMap.put("trDt", ""); //
+            formMap.put("trDt", trIssDt); //
             // item.collectorCode = $("#rentalkeyInCollMemNm").val()
             formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
             // item.collectorId = $("#rentalkeyInCollMemId").val() ;
             formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
             // item.allowComm = $("#rentalcashIsCommChk").val()
-            //formMap.put("allowComm", "");
+            // formMap.put("allowComm", "");
             formMap.put("allowComm", allowance);
 
             formList.add(formMap);
@@ -788,15 +800,15 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
           formMap.put("srvMemId", 0);
 
           // item. = $("#rentalkeyInTrNo").val() ;
-          formMap.put("trNo", ""); //
+          formMap.put("trNo", trRefNo); //
           // item. = $("#rentalkeyInTrIssueDate").val() ;
-          formMap.put("trDt", ""); //
+          formMap.put("trDt", trIssDt); //
           // item.collectorCode = $("#rentalkeyInCollMemNm").val()
           formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
           // item.collectorId = $("#rentalkeyInCollMemId").val() ;
           formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
           // item.allowComm = $("#rentalcashIsCommChk").val()
-          //formMap.put("allowComm", "");
+          // formMap.put("allowComm", "");
           formMap.put("allowComm", allowance);
 
           formList.add(formMap);
@@ -814,9 +826,12 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       // int key = Integer.parseInt(String.valueOf(tmpKey));
 
       // 합산 금액 셋팅
-      totPayAmt += Double.parseDouble( String.valueOf( gridListMap.get("payAmt") ) ) ;   // 2020.02.27 : Double.parseDouble EDIT
+      totPayAmt += Double.parseDouble(String.valueOf(gridListMap.get("payAmt"))); // 2020.02.27
+                                                                                  // :
+                                                                                  // Double.parseDouble
+                                                                                  // EDIT
 
-      iProcSeq = iProcSeq+1; // 2020.02.24 : ADD iProcSeq
+      iProcSeq = iProcSeq + 1; // 2020.02.24 : ADD iProcSeq
 
     }
     // Map<String, Object> schParams = new HashMap<String, Object>();
@@ -824,13 +839,13 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     // EgovMap selectBankStatementInfo =
     // mobilePaymentKeyInMapper.selectBankStatementInfo(schParams);
 
-    //formInfo = new HashMap<String, Object>();
-    //if (gridFormList.size() > 0) {
-    //  for (Object obj : gridFormList) {
-    //    Map<String, Object> map = (Map<String, Object>) obj;
-    //    formInfo.put((String) map.get("name"), map.get("value"));
-    //  }
-    //}
+    // formInfo = new HashMap<String, Object>();
+    // if (gridFormList.size() > 0) {
+    // for (Object obj : gridFormList) {
+    // Map<String, Object> map = (Map<String, Object>) obj;
+    // formInfo.put((String) map.get("name"), map.get("value"));
+    // }
+    // }
 
     if (formInfo.get("chargeAmount") == null || formInfo.get("chargeAmount").equals("")) {
       formInfo.put("chargeAmount", 0);
@@ -863,9 +878,11 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     // User ID 세팅
     formInfo.put("userid", sUserId);
 
-//     System.out.println("++++ 3 formInfo.toString() ::" + formInfo.toString());
-//     System.out.println("++++ 3-1 formList.toString() ::" + formList.toString() );
-//     System.out.println("++++ 5 key ::" + key );
+    // System.out.println("++++ 3 formInfo.toString() ::" +
+    // formInfo.toString());
+    // System.out.println("++++ 3-1 formList.toString() ::" +
+    // formList.toString() );
+    // System.out.println("++++ 5 key ::" + key );
 
     // =============================================================
 
@@ -883,7 +900,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       ticketParam.put("mobTicketNo", gridListMap.get("mobTicketNo"));
       mobileAppTicketApiCommonMapper.update(ticketParam);
     }
-//     Map<String, Object> resultList = null; // 테스트
+    // Map<String, Object> resultList = null; // 테스트
     Map<String, Object> resultList = commonPaymentService.saveNormalPayment(formInfo, formList, Integer.parseInt(key));
 
     // WOR 번호 조회
