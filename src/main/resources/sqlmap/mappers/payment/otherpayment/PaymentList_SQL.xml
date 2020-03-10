@@ -377,10 +377,6 @@
             DCF_REQ_ID = #{reqNo}
     </update>
 
-    <!--<update id="approvalDCF" statementType="CALLABLE" parameterType="Map">
-        {call SP_INST_PAYMENT_REVRS(#{reqNo},#{groupSeq},#{remark}, #{userId} )}
-    </update>-->
-
    <resultMap id="resultDCFMap" type="egovMap" />
   <select id="approvalDCF" statementType="CALLABLE"
     parameterType="Map">
