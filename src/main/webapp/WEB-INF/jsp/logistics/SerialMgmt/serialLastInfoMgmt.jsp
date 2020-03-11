@@ -312,6 +312,19 @@
     	};
 
     	myGridID = GridCommon.createAUIGrid("grid_main_list", columnLayout, "", gridOptions);
+
+    	/*AUIGrid.bind(myGridID, "cellEditBegin", function(event) {
+            if(event.dataField == "stusCode" || event.dataField == "lastLocCode" || event.dataField == "itmCode") {
+            	console.log("event.dataField: " + event.dataField);
+                // 추가된 행 아이템인지 조사하여 추가된 행인 경우만 에디팅 진입 허용
+                if(AUIGrid.isAddedById(event.pid, event.item.id)) {
+                    return true;
+                } else {
+                    return false; // false 반환하면 기본 행위 안함(즉, cellEditBegin 의 기본행위는 에디팅 진입임)
+                }
+            }
+            return true; // 다른 필드들은 편집 허용
+        });*/
     }
 
     function createAUIHistoryGrid() {
@@ -512,9 +525,19 @@
         var obj = $("#searchForm").serializeJSON();
         var gridData = GridCommon.getEditData(myGridID);
 
-        if(gridData.update.length == 0 && gridData.add.length==0) {
-        	Common.alert("No changes");
-        	return false;
+        if ($("#pageAuthEdit").val() == 'Y'){
+        	if(gridData.update.length == 0 && gridData.add.length==0) {
+                Common.alert("No changes");
+                return false;
+            }
+        } else {
+        	if(gridData.update.length > 0) {
+        		Common.alert("You have no authorization to edit.");
+                return false;
+        	} else {
+        		Common.alert("No changes");
+                return false;
+        	}
         }
 
         obj.gridData = gridData;
@@ -615,6 +638,8 @@
         <input type="hidden" id="svalue" name="svalue"/>
         <input type="hidden" id="sUrl" name="sUrl"  />
         <input type="hidden" id="sFlag" name="sFlag"  />
+        <input type="hidden" id="pageAuthEdit" value="${PAGE_AUTH.funcUserDefine1}"/>
+        <input type="hidden" id="pageAuthAdd" value="${PAGE_AUTH.funcChange}"/>
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
