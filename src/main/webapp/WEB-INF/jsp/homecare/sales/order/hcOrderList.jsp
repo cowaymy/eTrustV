@@ -183,6 +183,9 @@
         $('#btnSof').click(function() {
             Common.popupDiv("/sales/order/orderSOFListPop.do", null, null, true);
         });
+        $('#btnMSof').click(function() {
+            Common.popupDiv("/sales/order/orderMSOFListPop.do", null, null, true);
+        });
         $('#btnDdCrc').click(function() {
             Common.popupDiv("/sales/order/orderDDCRCListPop.do", null, null, true);
         });
@@ -635,7 +638,7 @@
                             <div class="date_set w100p">
                                 <!-- date_set start -->
                                 <p>
-                                    <input id="listOrdStartDt" name="ordStartDt" type="text" value="${fromDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+                                    <input id="listOrdStartDt" name="ordStartDt" type="text" value="${bfDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
                                 </p>
                                 <span>To</span>
                                 <p>
@@ -741,6 +744,12 @@
                         <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
                             <li><p class="link_btn">
                                     <a href="#" id="btnEKeyIn">eKey-In Listing</a>
+                                </p></li>
+                        </c:if>
+                         <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
+                            <li><p class="link_btn">
+                                    <a href="#" id="btnMSof"><spring:message
+                                            code='sales.btn.msof' /></a>
                                 </p></li>
                         </c:if>
                     </ul>

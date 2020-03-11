@@ -580,6 +580,12 @@ public class OrderListController {
 	  List<EgovMap> orderList = orderListService.selectCboPckLinkOrdSub2(params);
 	  return ResponseEntity.ok(orderList);
 	}
+	
+	@RequestMapping(value="/orderMSOFListPop.do")
+    public String orderMSOFListPop(){
+
+        return "sales/order/orderMSOFListPop";
+    }
 
     // KR HAN : Save Serial No Modify
 //	@RequestMapping(value = "/saveSerialNoModify.do", method = RequestMethod.POST)
