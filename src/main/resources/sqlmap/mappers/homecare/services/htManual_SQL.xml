@@ -526,6 +526,7 @@ FROM
                          , project2.crt_user_id
                          , Project2.APPTYPE
                          , Project2.SALES_PROD_SZ
+                         , Project2.APP_TYPE_ID
           FROM (SELECT
                        DISTINCT HS.NO AS NO
                               , HS.STUS_CODE_ID AS STUS_CODE_ID
@@ -535,6 +536,7 @@ FROM
                               , ST.CODE
                               , HR.NO AS RESULT
                               , SO.SRV_ORD_NO AS SALES_ORD_NO
+                              , SO.APP_TYPE_ID
                               , AP.CODE AS APPTYPE
                               , SO.SALES_PROD_SZ
                               , CU.NAME
@@ -602,6 +604,7 @@ FROM
                               , ST.CODE
                               , HR.NO AS RESULT
                               , SO.SRV_ORD_NO AS SALES_ORD_NO
+                              , SO.APP_TYPE_ID
                               , AP.CODE AS APPTYPE
                               , SO.SALES_PROD_SZ
                               , CU.NAME
@@ -707,6 +710,12 @@ FROM
                   AND Project2.CUST_ID  = #{txtCustomer}
                 </if>
 
+                <if test='arrAppType != null and arrAppType != ""'>
+                  AND Project2.APP_TYPE_ID IN
+                  <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+                </if>
 
 
         ) Project3
