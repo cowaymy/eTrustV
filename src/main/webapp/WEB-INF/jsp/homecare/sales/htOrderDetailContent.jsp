@@ -51,13 +51,13 @@
                     fn_selectPaymentList();
                 }
                 break;
-  /*         case 'transInfo' :
+            case 'transInfo' :
                 AUIGrid.resize(transGridID, 942, 380);
                 if(AUIGrid.getRowCount(transGridID) <= 0) {
                     fn_selectTransList();
                 }
                 break;
-            case 'autoDebitInfo' :
+                /*            case 'autoDebitInfo' :
                 AUIGrid.resize(autoDebitGridID, 942, 380);
                 if(AUIGrid.getRowCount(autoDebitGridID) <= 0) {
                     fn_selectAutoDebitList();
@@ -94,7 +94,7 @@
  <%--  <li><a id="aTabDS" href="#" onClick="javascript:chgTab('docInfo');"><spring:message code="sal.title.text.docuSubmission" /></a></li>
    <li><a href="#" onClick="javascript:chgTab('callLogInfo');"><spring:message code="sal.title.text.callLog" /></a></li>--%>
     <li><a href="#" onClick="javascript:chgTab('payInfo');"><spring:message code="sal.title.text.paymentListing" /></a></li>
-   <%-- <li><a href="#" onClick="javascript:chgTab('transInfo');"><spring:message code="sal.title.text.lastSixMonthTrnsaction" /></a></li>--%>
+    <li><a href="#" onClick="javascript:chgTab('transInfo');"><spring:message code="sal.title.text.lastSixMonthTrnsaction" /></a></li>
     <li><a href="#"><spring:message code="sal.title.text.ordConfiguration" /></a></li>
    <%-- <li><a href="#" onClick="javascript:chgTab('autoDebitInfo');"><spring:message code="sal.title.text.autoDebitResult" /></a></li>
  <li><a href="#" onClick="javascript:chgTab('ecashResult');"><spring:message code="sal.title.text.ecashRslt" /></a></li>
@@ -149,7 +149,7 @@
 <!------------------------------------------------------------------------------
     Last 6 Months Transaction
 ------------------------------------------------------------------------------->
-<%--<%@ include file="/WEB-INF/jsp/sales/order/include/last6Month.jsp" %>--%>
+<%@ include file="/WEB-INF/jsp/homecare/sales/include/htlast6Month.jsp" %>
 <!------------------------------------------------------------------------------
     Order Configuration
 ------------------------------------------------------------------------------->
