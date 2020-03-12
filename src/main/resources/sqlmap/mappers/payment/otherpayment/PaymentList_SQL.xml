@@ -17,7 +17,9 @@
             MAX(D.PAY_ITM_MODE_ID) AS PAY_ITM_MODE_ID,
             F.CODE_NAME AS PAY_ITM_MODE_NM,
             (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.CUST_ID ELSE I.CUST_ID END) AS CUST_ID,
-            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.SALES_ORD_NO ELSE I.SALES_ORD_NO END) AS SALES_ORD_NO,
+            --(CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.SALES_ORD_NO ELSE I.SALES_ORD_NO END) AS SALES_ORD_NO,
+            (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.SALES_ORD_NO
+            WHEN I.SALES_ORD_NO IS NOT NULL THEN I.SALES_ORD_NO ELSE I2.SRV_ORD_NO END) AS SALES_ORD_NO,
             MAX(D.PAY_ITM_REF_DT) AS PAY_ITM_REF_DT,
             C.OR_NO,
             J.CODE AS BRNCH_ID,
@@ -40,6 +42,7 @@
             LEFT JOIN SYS0038M G ON A.REV_STUS_ID = G.STUS_CODE_ID
             LEFT JOIN PAY0007D H ON C.BILL_ID = H.BILL_ID
             LEFT JOIN SAL0001D I ON H.BILL_SO_ID = I.SALES_ORD_ID
+            LEFT JOIN SAL0225D I2 ON H.BILL_SO_ID = I2.SRV_ORD_ID
             LEFT JOIN SYS0005M J ON C.BRNCH_ID = J.BRNCH_ID
         WHERE
             A.GROUP_SEQ IN (
@@ -52,9 +55,10 @@
                     LEFT JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
                     LEFT JOIN PAY0007D E ON B.BILL_ID = E.BILL_ID
                     LEFT JOIN SAL0001D F ON E.BILL_SO_ID = F.SALES_ORD_ID
+
                 WHERE 1=1
                     <if test="ordNo != '' ">
-                    AND (D.SALES_ORD_NO = #{ordNo} )
+                    AND (D.SALES_ORD_NO = #{ordNo})
                     </if>
                     <if test="tranDateFr != null and tranDateTo != null and tranDateFr != '' and tranDateTo != '' ">
                     AND C.PAY_ITM_REF_DT <![CDATA[   >= ]]> TO_DATE(#{tranDateFr},'DD/MM/YYYY')
@@ -77,9 +81,10 @@
 	                    LEFT JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
 	                    LEFT JOIN PAY0007D E ON B.BILL_ID = E.BILL_ID
 	                    LEFT JOIN SAL0001D F ON E.BILL_SO_ID = F.SALES_ORD_ID
+	                    LEFT JOIN SAL0225D F1 ON E.BILL_SO_ID = F1.SRV_ORD_ID
 	                WHERE 1=1
 	                    <if test="ordNo != '' ">
-	                    AND ( F.SALES_ORD_NO = #{ordNo})
+	                    AND ( F.SALES_ORD_NO = #{ordNo} OR  F1.SRV_ORD_NO = #{ordNo})
 	                    </if>
 	                    <if test="tranDateFr != null and tranDateTo != null and tranDateFr != '' and tranDateTo != '' ">
 	                    AND C.PAY_ITM_REF_DT <![CDATA[   >= ]]> TO_DATE(#{tranDateFr},'DD/MM/YYYY')
@@ -101,6 +106,7 @@
             E.CUST_ID,
             I.CUST_ID,
             I.SALES_ORD_NO,
+            I2.SRV_ORD_NO ,
             C.OR_NO,
             J.CODE,
             A.CRC_STATE_MAPPING_ID,
