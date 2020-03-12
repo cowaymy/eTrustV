@@ -675,6 +675,7 @@ var TODAY_DD      = "${toDay}";
     	    AUIGrid.setProp(myGridID, gridProsAssiin);
     	    createAssinAUIGrid(columnAssiinLayout);
 
+    	$('#cmblistAppType').multipleSelect("checkAll");
 
         doDefCombo(StatusTypeData, '', 'cmbStatusType', 'S', '');
 
@@ -954,7 +955,6 @@ var TODAY_DD      = "${toDay}";
 	    }
 	  }
 
-
 </script>
 <form id="popEditForm" method="post">
  <input type="hidden" name="schdulId" id="_schdulId" />
@@ -1096,6 +1096,7 @@ var TODAY_DD      = "${toDay}";
          <td><input id="txtCustomer" name="txtCustomer" type="text"
           title="" placeholder="Customer ID" class="w100p" /></td>
         </tr>
+
         <tr>
          <th scope="row">Care Service Order</th>
          <td><input id="txtSalesOrder" name="txtSalesOrder"
@@ -1105,8 +1106,17 @@ var TODAY_DD      = "${toDay}";
          <th scope="row">Dept. Code</th>
          <td><input id="deptCode" name="deptCode" type="text"
           title="" placeholder="Dept. Code" class="w100p" /></td>
-         <th scope="row"></th>
-         <td></td>
+
+
+         <th scope="row"><spring:message code='sales.AppType2'/></th>
+      <td><select class="multy_select w100p" multiple="multiple"
+       id="cmblistAppType" name="cmblistAppType">
+         <option value="3216">CS 1-Time</option>
+        <option value="3217">CS 1-Year</option>
+        <option value="5701">FT 1-Time</option>
+        <option value="5702">FT 1-Year</option>
+      </select></td>
+
         </tr>
        </tbody>
       </table>
