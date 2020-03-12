@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.homecare.sales.htOrderDetailService;
-import com.coway.trust.biz.services.bs.HsManualService;
+import com.coway.trust.biz.homecare.services.htManualService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -48,8 +48,8 @@ public class htOrderDetailController {
 	@Resource(name = "htOrderDetailService")
 	private htOrderDetailService htOrderDetailService;
 
-	@Resource(name = "hsManualService")
-	private HsManualService hsManualService;
+    @Resource(name = "htManualService")
+    private htManualService htManualService;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -215,17 +215,17 @@ public class htOrderDetailController {
 		logger.debug("params : {}", params);
 		logger.debug("===========================================>");
 
-		basicinfo = hsManualService.selectHsViewBasicInfo(params);
+		basicinfo = htManualService.selectHsViewBasicInfo(params);
 
-		List<EgovMap>  cmbCollectTypeComboList = hsManualService.cmbCollectTypeComboList(params);
-		List<EgovMap>  failReasonList = hsManualService.failReasonList(params);
+		List<EgovMap>  cmbCollectTypeComboList = htManualService.cmbCollectTypeComboList(params);
+		List<EgovMap>  failReasonList = htManualService.failReasonList(params);
 		model.addAttribute("basicinfo", basicinfo);
 		logger.debug("basicinfo : {}", basicinfo);
 		model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
 		model.addAttribute("failReasonList", failReasonList);
 		model.addAttribute("MOD", params.get("MOD"));
 
-		return "sales/order/include/hsEditPop";
+		return "homecare/sales/include/htEditPop";
 	}
 
 	@RequestMapping(value = "/htCvrgAreaList.do")
