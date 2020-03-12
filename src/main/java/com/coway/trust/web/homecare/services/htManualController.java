@@ -272,7 +272,11 @@ public class htManualController {
 		params.put("user_id", sessionVO.getUserId());
 		params.put("userType",  sessionVO.getUserTypeId());
 
+	      String[] arrAppType   = request.getParameterValues("cmblistAppType"); //Application Type
+	      if(arrAppType      != null && !CommonUtils.containsEmpty(arrAppType))      params.put("arrAppType", arrAppType);
+
 		logger.debug("userType :  " + sessionVO.getUserTypeId());
+		logger.debug("params :  " + params);
         // 조회.
 		List<EgovMap> hsAssiintList = htManualService.selectHsAssiinlList(params);
 
