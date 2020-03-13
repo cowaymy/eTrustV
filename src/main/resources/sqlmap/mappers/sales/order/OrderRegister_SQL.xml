@@ -958,6 +958,7 @@
 		WHERE SAL0248M.MONTH = EXTRACT(MONTH FROM ADD_MONTHS(SYSDATE, -1))
 		    AND SAL0248M.YEAR = EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE, -1))
 		    AND ORG0001D.MEM_CODE = #{memCode}
+		    AND ORG0001D.MEM_TYPE = '1'
     </select>
 
     <select id="selectMemberList" parameterType="Map" resultType="egovMap">
