@@ -506,7 +506,7 @@
     <select id="getMovQty" parameterType="Map" resultType="egovMap">
     /* [com.coway.trust.biz.logistics.adjustment.impl.StockAuditMapper.getMovQty] 20191018 - KR OHK */
     /* Edited by Hui Ding 2020-03-09 - bug solving. To return distincted wh_loc_desc list eg: CJ JB_A, SDS KL_A...*/
-        SELECT NVL(LISTAGG(C.WH_LOC_DESC, ',') WITHIN GROUP (ORDER BY C.WH_LOC_DESC), '') MOV_LOC
+        SELECT NVL(LISTAGG(WH_LOC_DESC, ',') WITHIN GROUP (ORDER BY WH_LOC_DESC), '') MOV_LOC
         FROM (SELECT C.WH_LOC_DESC WH_LOC_DESC
            FROM LOG0096D A
             LEFT OUTER JOIN (SELECT A.LOC_ID
