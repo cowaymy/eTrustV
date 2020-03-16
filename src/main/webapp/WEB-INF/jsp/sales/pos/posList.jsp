@@ -212,7 +212,7 @@ $(document).ready(function() { //***********************************************
         //TODO Check Auth == ASIS Token > TOBE
 
     	//Call controller
-    	var reversalForm = { posId : clickChk[0].item.posId };
+    	var reversalForm = { posId : clickChk[0].item.posId, ind : "1" };
     	Common.popupDiv("/sales/pos/posReversalPop.do", reversalForm , null , true , "_revDiv");
 
 	});
@@ -724,50 +724,50 @@ function fn_getStatusCode(grpCode){
 
 
 function fn_loadOrderSalesman(memId, memCode, isPop) {
+  Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
+    if(memInfo == null) {
+      Common.alert('<spring:message code="sal.alert.msg.memNotFound" />'+memCode+'</b>');
+      $("#salesmanPopCd").val('');
+      $("#hiddenSalesmanPopId").val('');
 
-    Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
+      //Clear Grid
+      fn_clearAllGrid();
+    } else {
+      // console.log("멤버정보 가꼬옴");
+      console.log(memInfo.memId);
+      if(isPop == 1){
+        $('#hiddenSalesmanPopId').val(memInfo.memId);
+        $('#salesmanPopCd').val(memInfo.memCode);
+        $('#salesmanPopCd').removeClass("readonly");
+        $('#salesmanPopNm').val(memInfo.name);
 
-        if(memInfo == null) {
-            Common.alert('<spring:message code="sal.alert.msg.memNotFound" />'+memCode+'</b>');
+        Common.ajax("GET", "/sales/pos/getMemCode", {memCode : memCode},function(result){
+
+        if(result != null){
+          //$("#_cmbWhBrnchIdPop").val(result.brnch);
+          //$("#_payBrnchCode").val(result.brnch);
+          //getLocIdByBrnchId(result.brnch);
+        } else {
+          Common.alert('<spring:message code="sal.alert.msg.memHasNoBrnch" />');
             $("#salesmanPopCd").val('');
             $("#hiddenSalesmanPopId").val('');
+            $('#salesmanPopNm').val('');
+            $("#_cmbWhBrnchIdPop").val('');
+            $("#cmbWhIdPop").val();
             //Clear Grid
             fn_clearAllGrid();
-        }
-        else {
-           // console.log("멤버정보 가꼬옴");
-        	if(isPop == 1){
-        	//	console.log("팝임");
-        	//	console.log("memInfo.memId : " + memInfo.memId);
-        		$('#hiddenSalesmanPopId').val(memInfo.memId);
-                $('#salesmanPopCd').val(memInfo.memCode);
-                $('#salesmanPopCd').removeClass("readonly");
-
-                 Common.ajax("GET", "/sales/pos/getMemCode", {memCode : memCode},function(result){
-
-                	if(result != null){
-                		//$("#_cmbWhBrnchIdPop").val(result.brnch);
-                		//$("#_payBrnchCode").val(result.brnch);
-                        //getLocIdByBrnchId(result.brnch);
-                	}else{
-                		Common.alert('<spring:message code="sal.alert.msg.memHasNoBrnch" />');
-                		$("#salesmanPopCd").val('');
-                        $("#hiddenSalesmanPopId").val('');
-                        $("#_cmbWhBrnchIdPop").val('');
-                        $("#cmbWhIdPop").val();
-                		//Clear Grid
-                        fn_clearAllGrid();
-                		return;
-                	}
-                 });
-        	}else{
-             //	console.log("리스트임");
-        		$('#hiddenSalesmanId').val(memInfo.memId);
-                $('#salesmanCd').val(memInfo.memCode);
-                $('#salesmanCd').removeClass("readonly");
-        	}
-        }
-    });
+            return;
+          }
+        });
+      } else {
+        //	console.log("리스트임");
+        $('#hiddenSalesmanId').val(memInfo.memId);
+        $('#salesmanCd').val(memInfo.memCode);
+        $('#salesmanCd').removeClass("readonly");
+        $('#salesmanPopNm').val(memInfo.name);
+      }
+    }
+  });
 }
 
 
@@ -782,6 +782,7 @@ function createAUIGrid(){
                             {dataField : "codeName1", headerText : '<spring:message code="sal.title.salesType" />', width : '8%' , editable : false},
                             {dataField : "taxInvcRefNo", headerText : '<spring:message code="sal.title.invoiceNo" />', width : '8%' , editable : false},
                             {dataField : "memoAdjRefNo", headerText : "Adjust. Note", width : '8%' , editable : false},
+                            {dataField : "revRmk", headerText : "Remark", width : '20%' , editable : false},
                             {dataField : "name", headerText : '<spring:message code="sal.text.custName" />', width : '18%' , editable : false},
                             {dataField : "brnchDesc", headerText : '<spring:message code="sal.text.branch" />', width : '8%' , style : 'left_style' , editable : false},
                             {dataField : "whLocDesc", headerText : '<spring:message code="sal.title.warehouse" />', width : '8%' , editable : false},
