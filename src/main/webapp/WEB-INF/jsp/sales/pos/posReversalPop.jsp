@@ -316,10 +316,8 @@ function fn_setPayGridData(){
 <input type="hidden" id="_rePosStusId" name="rePosStusId" value="${revDetailMap.stusId}">
 <input type="hidden" id="_rePosResnId" name="rePosResnId" value="${revDetailMap.posResnId}">
 <input type="hidden" id="_rePosBrnchId" name="rePosBrnchId" value="${revDetailMap.brnchId}">
-
-
-
 <input type="hidden" id="_rePosRcvDt" name="rePosRcvDt" > <!-- from Display  -->
+<input type="hidden" id="_reInd" name="reInd" value="${ind}">
 
 <!-- Price and Tax  -->
 <input type="hidden" id="_rePosTotAmt" name="rePosTotAmt" value="${revDetailMap.posTotAmt}">
