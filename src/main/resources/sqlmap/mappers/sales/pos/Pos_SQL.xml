@@ -98,7 +98,8 @@
                         CASE WHEN ( NOT ( ( Extent7.TAX_INVC_ID IS NULL ) AND ( Extent7.TAX_INVC_REF_NO IS NULL ) ) ) THEN Extent7.TAX_INVC_REF_NO ELSE '' END TAX_INVC_REF_NO,
                         extent10.MEMO_ADJ_REF_NO,
                         Extent1.BRNCH_ID,
-                        Extent9.CODE BRNCH_DESC
+                        Extent9.CODE BRNCH_DESC,
+                        UPPER(Extent1.POS_REM) REV_RMK
                 FROM SAL0057D Extent1
                         JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.POS_MODULE_TYPE_ID
                         JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.POS_TYPE_ID
