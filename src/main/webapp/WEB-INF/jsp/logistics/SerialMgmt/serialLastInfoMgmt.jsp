@@ -525,19 +525,36 @@
         var obj = $("#searchForm").serializeJSON();
         var gridData = GridCommon.getEditData(myGridID);
 
-        if ($("#pageAuthEdit").val() == 'Y'){
-        	if(gridData.update.length == 0 && gridData.add.length==0) {
-                Common.alert("No changes");
-                return false;
-            }
-        } else {
-        	if(gridData.update.length > 0) {
-        		Common.alert("You have no authorization to edit.");
-                return false;
-        	} else {
-        		Common.alert("No changes");
-                return false;
+        if ($("#pageAuthAdd").val() == 'Y'){ // add = Y
+        	if ($("#pageAuthEdit").val() == 'Y'){ // edit = Y
+        		if(gridData.add.length == 0 && gridData.update.length == 0){
+        			Common.alert("No changes");
+                    return false;
+        		}
+        	} else {// add = Y, edit = 'N'
+        		if (gridData.update.length > 0){
+        			Common.alert("You have no authorization to Edit.");
+                    return false;
+        		} else if (gridData.add.length == 0 && gridData.update.length == 0){
+        			Common.alert("No changes");
+                    return false;
+        		}
         	}
+        } else { // add = N
+        	if ($("#pageAuthEdit").val() == 'Y'){
+                if(gridData.add.length == 0 && gridData.update.length == 0){
+                    Common.alert("No changes");
+                    return false;
+                }
+            } else {// add = N, edit = 'N'
+                if (gridData.update.length > 0){
+                    Common.alert("You have no authorization to Edit.");
+                    return false;
+                } else if (gridData.add.length == 0 && gridData.update.length == 0){
+                    Common.alert("No changes");
+                    return false;
+                }
+            }
         }
 
         obj.gridData = gridData;
@@ -624,9 +641,7 @@
         <h2>Serial No. Last Info Management</h2>
 
         <ul class="right_btns">
-        <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-            <li><p class="btn_blue"><a id="btnSave">Save</a></p></li>
-        </c:if>
+        <li><p class="btn_blue"><a id="btnSave">Save</a></p></li>
         <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a id="btnSearch"><span class="search"></span>Search</a></p></li>
         </c:if>
