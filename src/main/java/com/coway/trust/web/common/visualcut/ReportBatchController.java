@@ -1336,6 +1336,24 @@ public class ReportBatchController {
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] NeoCallLog...");
   }
+  
+  @RequestMapping(value = "/MobileUsage.do")
+  //@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am)
+  public void MobileUsageReport() {
+    LOGGER.info("[START] MobileUsage...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/MobileUsage_Excel.rpt");// visualcut rpt
+                                                               // file name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Mobile Usage" + File.separator + "MobileUsage_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] MobileUsage...");
+  }
+  
+  
 
   @RequestMapping(value = "/dailyRentCollRtTrd.do")
   //@Scheduled(cron = "0 10 6 * * *")//Daily (06:10am)
