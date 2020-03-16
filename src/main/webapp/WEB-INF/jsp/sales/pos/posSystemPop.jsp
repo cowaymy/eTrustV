@@ -30,6 +30,14 @@ $(document).ready(function() {
     console.log('membrnch : [' + selVal+ ']');
     CommonCombo.make('_cmbWhBrnchIdPop', "/sales/pos/selectWhBrnchList", '' , selVal, '');
 
+    if (selVal != "") {
+        getLocIdByBrnchId(selVal);
+        $("#_payBrnchCode").val(selVal);
+
+        //Clear Grid
+        fn_clearAllGrid();
+    }
+
     //Payment
     CommonCombo.make('_payBrnchCode', "/sales/pos/getpayBranchList", '', selVal, '');
     //CommonCombo.make('_payBrnchCode', "/sales/pos/selectWhBrnchList", '' , selVal, '');
@@ -1044,7 +1052,7 @@ function fn_inputAmt(obj){
 
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
-<input type="hidden" id="_memBrnch" value="${memCodeMap.brnch}">
+<input type="hidden" id="_memBrnch" value="${userBr}">
 
 
 <header class="pop_header"><!-- pop_header start -->
@@ -1122,17 +1130,17 @@ function fn_inputAmt(obj){
     <th scope="row"><spring:message code="sal.text.memberCode" /></th>
     <td>
         <div class="search_100p"><!-- search_100p start -->
-	        <input id="salesmanPopCd" name="salesmanPopCd" type="text" title="" placeholder="" class="w100p"  value="${memCodeMap.memCode}"/>
-	        <input id="hiddenSalesmanPopId" name="salesmanPopId" type="hidden"  value="${memCodeMap.memId}"/>
-	        <a id="memBtnPop" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+          <input id="salesmanPopCd" name="salesmanPopCd" type="text" title="" placeholder="" class="w100p"  value="${memCodeMap.memCode}"/>
+          <input id="hiddenSalesmanPopId" name="salesmanPopId" type="hidden"  value="${memCodeMap.memId}"/>
+          <a id="memBtnPop" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         </div>
     </td>
-    <td></td>
+    <td><input id="salesmanPopNm" name="salesmanPopNm" type="text" title="" placeholder="" class="w100p"  value="${memCodeMap.memNm}" disabled="disabled"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.brnchWarehouse" /></th>
     <td><select  id="_cmbWhBrnchIdPop" name="cmbWhBrnchIdPop" class="w100p"></select></td>
-    <td style="padding-left:0"><input type="text" disabled="disabled" id="cmbWhIdPop"  value="${locMap.whLocDesc}"></td>
+    <td style="padding-left:0"><input type="text" disabled="disabled" id="cmbWhIdPop"  value="${locMap.whLocDesc}" class="w100p"></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.recvDate" /></th>
