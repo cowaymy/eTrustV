@@ -1336,9 +1336,9 @@ public class ReportBatchController {
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] NeoCallLog...");
   }
-  
+
   @RequestMapping(value = "/MobileUsage.do")
-  //@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am)
+  //@Scheduled(cron = "0 0 12 * * *")//Daily (12:00am)
   public void MobileUsageReport() {
     LOGGER.info("[START] MobileUsage...");
     Map<String, Object> params = new HashMap<>();
@@ -1352,8 +1352,8 @@ public class ReportBatchController {
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] MobileUsage...");
   }
-  
-  
+
+
 
   @RequestMapping(value = "/dailyRentCollRtTrd.do")
   //@Scheduled(cron = "0 10 6 * * *")//Daily (06:10am)
