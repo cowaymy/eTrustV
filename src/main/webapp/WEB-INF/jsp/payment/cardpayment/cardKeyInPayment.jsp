@@ -210,13 +210,13 @@ var targetOutSrvcMstColumnLayout = [
     { dataField:"quotId" ,headerText:"<spring:message code='pay.head.quotationId'/>" ,editable : false , width : 100, visible : false },
     { dataField:"cnvrMemId" ,headerText:"<spring:message code='pay.head.serviceMembershipId'/>" ,editable : false , width : 100, visible : false },
     { dataField:"ordId" ,headerText:"<spring:message code='pay.head.orderId'/>" ,editable : false , width : 100, visible : false },
-	{ dataField:"quotNo" ,headerText:"<spring:message code='pay.head.quotationNumber'/>" ,editable : false , width : 150},
+  { dataField:"quotNo" ,headerText:"<spring:message code='pay.head.quotationNumber'/>" ,editable : false , width : 150},
     { dataField:"ordNo" ,headerText:"<spring:message code='pay.head.orderNumber'/>" ,editable : false , width : 150 },
     { dataField:"custName" ,headerText:"<spring:message code='pay.head.customerName'/>" ,editable : false , width : 250},
-	{ dataField:"totAmt" ,headerText:"<spring:message code='pay.head.totalAmount'/>" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"},
-	{ dataField:"packageCharge" ,headerText:"<spring:message code='pay.head.packageAmount'/>" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"},
+  { dataField:"totAmt" ,headerText:"<spring:message code='pay.head.totalAmount'/>" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"},
+  { dataField:"packageCharge" ,headerText:"<spring:message code='pay.head.packageAmount'/>" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"},
     { dataField:"packagePaid" ,headerText:"<spring:message code='pay.head.packagePaid'/>" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"},
-	{ dataField:"filterCharge" ,headerText:"<spring:message code='pay.head.filterAmount'/>" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"},
+  { dataField:"filterCharge" ,headerText:"<spring:message code='pay.head.filterAmount'/>" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"},
     { dataField:"filterPaid" ,headerText:"<spring:message code='pay.head.filterPaid'/>" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"}
 ];
 
@@ -269,8 +269,6 @@ var targetFinalBillColumnLayout = [
 { dataField:"allowComm" ,headerText:"Commission" ,editable : false , width : 150}
 ];
 
-
-
 //Grid Properties 설정
 var gridPros = {
   headerHeight : 35,               // 기본 헤더 높이 지정
@@ -287,63 +285,63 @@ var targetGridPros = {
 };
 
 $(document).ready(function(){
-	targetRenMstGridID = GridCommon.createAUIGrid("target_rental_grid_wrap", targetRenMstColumnLayout,null,gridPros);
-	targetRenDetGridID = GridCommon.createAUIGrid("target_rentalD_grid_wrap", targetRenDetColumnLayout,null,gridPros);
-	targetOutMstGridID = GridCommon.createAUIGrid("target_out_grid_wrap", targetOutMstColumnLayout,null,gridPros);
-	targetSrvcMstGridID = GridCommon.createAUIGrid("target_srvc_grid_wrap", targetSrvcMstColumnLayout,null,gridPros);
-	targetSrvcDetGridID = GridCommon.createAUIGrid("target_srvcD_grid_wrap", targetSrvcDetColumnLayout,null,gridPros);
-	targetBillMstGridID = GridCommon.createAUIGrid("target_bill_grid_wrap", targetBillMstColumnLayout,null,gridPros);
-	targetOutSrvcMstGridID = GridCommon.createAUIGrid("target_outSrvc_grid_wrap", targetOutSrvcMstColumnLayout,null,gridPros);
-	targetFinalBillGridID = GridCommon.createAUIGrid("target_finalBill_grid_wrap", targetFinalBillColumnLayout,null,targetGridPros);
+  targetRenMstGridID = GridCommon.createAUIGrid("target_rental_grid_wrap", targetRenMstColumnLayout,null,gridPros);
+  targetRenDetGridID = GridCommon.createAUIGrid("target_rentalD_grid_wrap", targetRenDetColumnLayout,null,gridPros);
+  targetOutMstGridID = GridCommon.createAUIGrid("target_out_grid_wrap", targetOutMstColumnLayout,null,gridPros);
+  targetSrvcMstGridID = GridCommon.createAUIGrid("target_srvc_grid_wrap", targetSrvcMstColumnLayout,null,gridPros);
+  targetSrvcDetGridID = GridCommon.createAUIGrid("target_srvcD_grid_wrap", targetSrvcDetColumnLayout,null,gridPros);
+  targetBillMstGridID = GridCommon.createAUIGrid("target_bill_grid_wrap", targetBillMstColumnLayout,null,gridPros);
+  targetOutSrvcMstGridID = GridCommon.createAUIGrid("target_outSrvc_grid_wrap", targetOutSrvcMstColumnLayout,null,gridPros);
+  targetFinalBillGridID = GridCommon.createAUIGrid("target_finalBill_grid_wrap", targetFinalBillColumnLayout,null,targetGridPros);
     targetCareSrvcMstGridID = GridCommon.createAUIGrid("target_careSrvc_grid_wrap", targetCareSrvcMstColumnLayout,null,gridPros);
 
-	//Rental Billing Grid 에서 체크/체크 해제시
-	AUIGrid.bind(targetRenDetGridID, "cellClick", function( event ){
-		if(event.dataField == "btnCheck"){
+  //Rental Billing Grid 에서 체크/체크 해제시
+  AUIGrid.bind(targetRenDetGridID, "cellClick", function( event ){
+    if(event.dataField == "btnCheck"){
 
-			var chkVal = AUIGrid.getCellValue(targetRenDetGridID, event.rowIndex, "btnCheck");
+      var chkVal = AUIGrid.getCellValue(targetRenDetGridID, event.rowIndex, "btnCheck");
             var chkOrdNo = AUIGrid.getCellValue(targetRenDetGridID, event.rowIndex, "ordNo");
             var rowCnt = AUIGrid.getRowCount(targetRenMstGridID);
 
             if(chkVal == 1){
-	            if(rowCnt > 0){
-	                for(i = 0 ; i < rowCnt ; i++){
-	                    if(AUIGrid.getCellValue(targetRenMstGridID, i, "salesOrdNo") ==  chkOrdNo){
-	                        AUIGrid.setCellValue(targetRenMstGridID, i, "btnCheck", chkVal);
-	                    }
-	                }
-	            }
+              if(rowCnt > 0){
+                  for(i = 0 ; i < rowCnt ; i++){
+                      if(AUIGrid.getCellValue(targetRenMstGridID, i, "salesOrdNo") ==  chkOrdNo){
+                          AUIGrid.setCellValue(targetRenMstGridID, i, "btnCheck", chkVal);
+                      }
+                  }
+              }
             }
 
-			recalculateRentalTotalAmt();
-		}
-	});
+      recalculateRentalTotalAmt();
+    }
+  });
 
-	//Rental Order Info 선택시 해당 Billing 정보 bold 로 표시하기
-	AUIGrid.bind(targetRenMstGridID, "cellClick", function(event) {
-		if(event.dataField == "btnCheck"){
-			var chkVal = AUIGrid.getCellValue(targetRenMstGridID, event.rowIndex, "btnCheck");
-			var chkOrdNo = AUIGrid.getCellValue(targetRenMstGridID, event.rowIndex, "salesOrdNo");
-			var rowCnt = AUIGrid.getRowCount(targetRenDetGridID);
+  //Rental Order Info 선택시 해당 Billing 정보 bold 로 표시하기
+  AUIGrid.bind(targetRenMstGridID, "cellClick", function(event) {
+    if(event.dataField == "btnCheck"){
+      var chkVal = AUIGrid.getCellValue(targetRenMstGridID, event.rowIndex, "btnCheck");
+      var chkOrdNo = AUIGrid.getCellValue(targetRenMstGridID, event.rowIndex, "salesOrdNo");
+      var rowCnt = AUIGrid.getRowCount(targetRenDetGridID);
 
-			if(rowCnt > 0){
-		        for(i = 0 ; i < rowCnt ; i++){
-		        	if(AUIGrid.getCellValue(targetRenDetGridID, i, "ordNo") ==  chkOrdNo){
-		        		AUIGrid.setCellValue(targetRenDetGridID, i, "btnCheck", chkVal);
-		        	}
-		        }
-		    }
+      if(rowCnt > 0){
+            for(i = 0 ; i < rowCnt ; i++){
+              if(AUIGrid.getCellValue(targetRenDetGridID, i, "ordNo") ==  chkOrdNo){
+                AUIGrid.setCellValue(targetRenDetGridID, i, "btnCheck", chkVal);
+              }
+            }
+        }
 
             recalculateRentalTotalAmt();
         }else{
-        	rentalChangeRowStyleFunction(AUIGrid.getCellValue(targetRenMstGridID, event.rowIndex, "salesOrdNo"));
+          rentalChangeRowStyleFunction(AUIGrid.getCellValue(targetRenMstGridID, event.rowIndex, "salesOrdNo"));
         }
     });
 
     //Rental Membership Billing Grid 에서 체크/체크 해제시
     AUIGrid.bind(targetSrvcDetGridID, "cellClick", function( event ){
         if(event.dataField == "btnCheck"){
-        	var chkVal = AUIGrid.getCellValue(targetSrvcDetGridID, event.rowIndex, "btnCheck");
+          var chkVal = AUIGrid.getCellValue(targetSrvcDetGridID, event.rowIndex, "btnCheck");
             var srvCntrctRefNo = AUIGrid.getCellValue(targetSrvcDetGridID, event.rowIndex, "srvCntrctRefNo");
             var rowCnt = AUIGrid.getRowCount(targetSrvcMstGridID);
 
@@ -378,14 +376,14 @@ $(document).ready(function(){
 
             recalculateSrvcTotalAmt();
         }else{
-        	srvcChangeRowStyleFunction(AUIGrid.getCellValue(targetSrvcMstGridID, event.rowIndex, "srvCntrctRefNo"));
+          srvcChangeRowStyleFunction(AUIGrid.getCellValue(targetSrvcMstGridID, event.rowIndex, "srvCntrctRefNo"));
         }
     });
 
     //Bill Payment 체크박스 선택시 금액 계산
     AUIGrid.bind(targetBillMstGridID, "cellClick", function(event) {
         if(event.dataField == "btnCheck"){
-        	recalculateBillTotalAmt();
+          recalculateBillTotalAmt();
         }
     });
 
@@ -430,77 +428,77 @@ $(document).ready(function(){
 });
 
 function fn_loadCreditCard(crcId) {
-	Common.ajax("GET", "/sales/order/selectCustomerCreditCardDetailView.do", {getparam : crcId}, function(rsltInfo) {
-		if(rsltInfo != null) {
-			$("#keyCrcCardType").val(rsltInfo.cardTypeId);
-			$("#keyInCrcType").val(rsltInfo.custCrcTypeId);
+  Common.ajax("GET", "/sales/order/selectCustomerCreditCardDetailView.do", {getparam : crcId}, function(rsltInfo) {
+    if(rsltInfo != null) {
+      $("#keyCrcCardType").val(rsltInfo.cardTypeId);
+      $("#keyInCrcType").val(rsltInfo.custCrcTypeId);
 
-			var custCrcNo = rsltInfo.custOriCrcNo;
-			$("#keyInCardNo1").val(rsltInfo.custOriCrcNo.substring(0, 4));
-			$("#keyInCardNo2").val(rsltInfo.custOriCrcNo.substring(4, 8));
-			$("#keyInCardNo3").val(rsltInfo.custOriCrcNo.substring(8, 12));
-			$("#keyInCardNo4").val(rsltInfo.custOriCrcNo.substring(12));
-			$("#keyInHolderNm").val(rsltInfo.custCrcOwner);
-			$("#keyInExpiryMonth").val(rsltInfo.custCrcExpr.substring(0, 2));
-			$("#keyInExpiryYear").val(rsltInfo.custCrcExpr.substring(2));
-		}
-	});
+      var custCrcNo = rsltInfo.custOriCrcNo;
+      $("#keyInCardNo1").val(rsltInfo.custOriCrcNo.substring(0, 4));
+      $("#keyInCardNo2").val(rsltInfo.custOriCrcNo.substring(4, 8));
+      $("#keyInCardNo3").val(rsltInfo.custOriCrcNo.substring(8, 12));
+      $("#keyInCardNo4").val(rsltInfo.custOriCrcNo.substring(12));
+      $("#keyInHolderNm").val(rsltInfo.custCrcOwner);
+      $("#keyInExpiryMonth").val(rsltInfo.custCrcExpr.substring(0, 2));
+      $("#keyInExpiryYear").val(rsltInfo.custCrcExpr.substring(2));
+    }
+  });
 }
 
 function fn_chgAppType(){
-	 var appType = $("#appType").val();
-	 //div all hide
-	 $("#rentalSearch").hide();
-	 $("#outSearch").hide();
-	 $("#srvcSearch").hide();
-	 $("#billSearch").hide();
-	 $("#outSrvcSearch").hide();
-	 $("#careSrvcSearch").hide();
+   var appType = $("#appType").val();
+   //div all hide
+   $("#rentalSearch").hide();
+   $("#outSearch").hide();
+   $("#srvcSearch").hide();
+   $("#billSearch").hide();
+   $("#outSrvcSearch").hide();
+   $("#careSrvcSearch").hide();
 
-	 //Form 초기화
-	 $("#rentalSearchForm")[0].reset();
-	 $("#outSearchForm")[0].reset();
-	 $("#srvcSearchForm")[0].reset();
-	 $("#billSearchForm")[0].reset();
-	 $("#outSrvcSearchForm")[0].reset();
-	 $("#careSrvcSearchForm")[0].reset();
+   //Form 초기화
+   $("#rentalSearchForm")[0].reset();
+   $("#outSearchForm")[0].reset();
+   $("#srvcSearchForm")[0].reset();
+   $("#billSearchForm")[0].reset();
+   $("#outSrvcSearchForm")[0].reset();
+   $("#careSrvcSearchForm")[0].reset();
 
-	 //그리드 초기화
-	 resetRentalGrid();
-	 resetOutGrid();
-	 resetSrvcGrid();
-	 resetBillGrid();
-	 resetOutSrvcGrid();
-	 resetCareSrvcGrid();
-
-
-	 //금액 표시 초기화
-	 $("#rentalTotalAmtTxt").text("RM " + $.number(0,2));
-	 $("#outTotalAmtTxt").text("RM " + $.number(0,2));
-	 $("#srvcTotalAmtTxt").text("RM " + $.number(0,2));
-	 $("#billTotalAmtTxt").text("RM " + $.number(0,2));
- 	 $("#outSrvcTotalAmtTxt").text("RM " + $.number(0,2));
- 	 $("#careSrvcTotalAmtTxt").text("RM " + $.number(0,2));
+   //그리드 초기화
+   resetRentalGrid();
+   resetOutGrid();
+   resetSrvcGrid();
+   resetBillGrid();
+   resetOutSrvcGrid();
+   resetCareSrvcGrid();
 
 
-	 if(appType == 1 ){
-		 $("#rentalSearch").show();
-		 AUIGrid.resize(targetRenMstGridID);
-		 AUIGrid.resize(targetRenDetGridID);
+   //금액 표시 초기화
+   $("#rentalTotalAmtTxt").text("RM " + $.number(0,2));
+   $("#outTotalAmtTxt").text("RM " + $.number(0,2));
+   $("#srvcTotalAmtTxt").text("RM " + $.number(0,2));
+   $("#billTotalAmtTxt").text("RM " + $.number(0,2));
+    $("#outSrvcTotalAmtTxt").text("RM " + $.number(0,2));
+    $("#careSrvcTotalAmtTxt").text("RM " + $.number(0,2));
+
+
+   if(appType == 1 ){
+     $("#rentalSearch").show();
+     AUIGrid.resize(targetRenMstGridID);
+     AUIGrid.resize(targetRenDetGridID);
      }else if(appType == 2){
-    	 $("#outSearch").show();
-    	 AUIGrid.resize(targetOutMstGridID);
+       $("#outSearch").show();
+       AUIGrid.resize(targetOutMstGridID);
      }else if(appType == 3){
-    	 $("#srvcSearch").show();
-    	 AUIGrid.resize(targetSrvcMstGridID);
-    	 AUIGrid.resize(targetSrvcDetGridID);
-	 }else if(appType == 4){
-		 $("#billSearch").show();
+       $("#srvcSearch").show();
+       AUIGrid.resize(targetSrvcMstGridID);
+       AUIGrid.resize(targetSrvcDetGridID);
+   }else if(appType == 4){
+     $("#billSearch").show();
          AUIGrid.resize(targetBillMstGridID);
-	 }else if(appType == 5){
-		 $("#outSrvcSearch").show();
+   }else if(appType == 5){
+     $("#outSrvcSearch").show();
          AUIGrid.resize(targetOutSrvcMstGridID);
-	 }else if(appType == 6){
+   }else if(appType == 6){
          $("#careSrvcSearch").show();
          AUIGrid.resize(targetCareSrvcMstGridID);
      }
@@ -512,86 +510,86 @@ function fn_chgAppType(){
 //**************************************************
 //**************************************************
 function fn_ConfirmColl() {
-	
-	var appType = $("#appType").val();
-	var collmemcode = '';
-	
-	if (appType == "1"){
-		collmemcode = $("#rentalkeyInCollMemCd").val();
-	} else if (appType == "2"){
-		collmemcode = $("#outkeyInCollMemCd").val();
-	} else if(appType == "3") {
-		collmemcode = $("#srvckeyInCollMemCd").val();
-	} else if(appType == "4"){
-		collmemcode = $("#billkeyInCollMemCd").val();
-	} else if(appType == "5"){
-		collmemcode = $("#outSrvckeyInCollMemCd").val();
-	} else if(appType == "6"){
-		collmemcode = $("#careSrvckeyInCollMemCd").val();
-	}
-	
-	console.log("appType: " +appType + " collmemcode: "+collmemcode);
 
-	if (collmemcode == "") {
+  var appType = $("#appType").val();
+  var collmemcode = '';
 
-		Common.alert("Please Key-In Collector. ");
-		return;
-	}
+  if (appType == "1"){
+    collmemcode = $("#rentalkeyInCollMemCd").val();
+  } else if (appType == "2"){
+    collmemcode = $("#outkeyInCollMemCd").val();
+  } else if(appType == "3") {
+    collmemcode = $("#srvckeyInCollMemCd").val();
+  } else if(appType == "4"){
+    collmemcode = $("#billkeyInCollMemCd").val();
+  } else if(appType == "5"){
+    collmemcode = $("#outSrvckeyInCollMemCd").val();
+  } else if(appType == "6"){
+    collmemcode = $("#careSrvckeyInCollMemCd").val();
+  }
 
-	Common.ajax("GET", "/sales/membership/paymentColleConfirm", {
-		COLL_MEM_CODE : collmemcode
-	}, function(result) {
-		console.log(result);
+  console.log("appType: " +appType + " collmemcode: "+collmemcode);
 
-		if (result.length > 0) {
-			
-			if (appType == "1"){
-				$("#rentalkeyInCollMemCd").val(result[0].memCode);
-				$("#rentalkeyInCollMemNm").val(result[0].name);
-				$("#rentalkeyInCollMemId").val(result[0].memId);
-				
-			} else if (appType == "2"){
-				$("#outkeyInCollMemCd").val(result[0].memCode);
-				$("#outkeyInCollMemNm").val(result[0].name);
-				$("#outkeyInCollMemId").val(result[0].memId);
-			} else if(appType == "3"){
-				$("#srvckeyInCollMemCd").val(result[0].memCode);
-				$("#srvckeyInCollMemNm").val(result[0].name);
-				$("#srvckeyInCollMemId").val(result[0].memId);
-			} else if(appType == "4") {
-				$("#billkeyInCollMemCd").val(result[0].memCode);
-				$("#billkeyInCollMemNm").val(result[0].name);
-				$("#billkeyInCollMemId").val(result[0].memId);
-			} else if(appType == "5") {
-				$("#outSrvckeyInCollMemCd").val(result[0].memCode);
-				$("#outSrvckeyInCollMemNm").val(result[0].name);
-				$("#outSrvckeyInCollMemId").val(result[0].memId);
-			} else if(appType == "6"){
-				$("#careSrvckeyInCollMemCd").val(result[0].memCode);
-		    $("#careSrvckeyInCollMemNm").val(result[0].name);
-		    $("#careSrvckeyInCollMemId").val(result[0].memId);
-			}
-		}
-		else {
-			
-			if (appType == "1"){
-				$("#rentalkeyInCollMemNm").val("");
-			} else if (appType == "2"){
-				$("#outkeyInCollMemNm").val("");
-			} else if(appType == "3"){
-				$("#srvckeyInCollMemNm").val("");
-			} else if(appType == "4"){
-				$("#billkeyInCollMemNm").val("");
-			} else if(appType == "5"){
-				$("#outSrvckeyInCollMemNm").val("");
-			} else if(appType == "6"){
-				$("#careSrvckeyInCollMemNm").val("");
-			}
-			Common.alert(" <spring:message code="sal.alert.msg.unableToFind" /> [" +collmemcode + "] <spring:message code="sal.alert.msg.unableToFind2" />   ");
-			return;
-		}
+  if (collmemcode == "") {
 
-	});
+    Common.alert("Please Key-In Collector. ");
+    return;
+  }
+
+  Common.ajax("GET", "/sales/membership/paymentColleConfirm", {
+    COLL_MEM_CODE : collmemcode
+  }, function(result) {
+    console.log(result);
+
+    if (result.length > 0) {
+
+      if (appType == "1"){
+        $("#rentalkeyInCollMemCd").val(result[0].memCode);
+        $("#rentalkeyInCollMemNm").val(result[0].name);
+        $("#rentalkeyInCollMemId").val(result[0].memId);
+
+      } else if (appType == "2"){
+        $("#outkeyInCollMemCd").val(result[0].memCode);
+        $("#outkeyInCollMemNm").val(result[0].name);
+        $("#outkeyInCollMemId").val(result[0].memId);
+      } else if(appType == "3"){
+        $("#srvckeyInCollMemCd").val(result[0].memCode);
+        $("#srvckeyInCollMemNm").val(result[0].name);
+        $("#srvckeyInCollMemId").val(result[0].memId);
+      } else if(appType == "4") {
+        $("#billkeyInCollMemCd").val(result[0].memCode);
+        $("#billkeyInCollMemNm").val(result[0].name);
+        $("#billkeyInCollMemId").val(result[0].memId);
+      } else if(appType == "5") {
+        $("#outSrvckeyInCollMemCd").val(result[0].memCode);
+        $("#outSrvckeyInCollMemNm").val(result[0].name);
+        $("#outSrvckeyInCollMemId").val(result[0].memId);
+      } else if(appType == "6"){
+        $("#careSrvckeyInCollMemCd").val(result[0].memCode);
+        $("#careSrvckeyInCollMemNm").val(result[0].name);
+        $("#careSrvckeyInCollMemId").val(result[0].memId);
+      }
+    }
+    else {
+
+      if (appType == "1"){
+        $("#rentalkeyInCollMemNm").val("");
+      } else if (appType == "2"){
+        $("#outkeyInCollMemNm").val("");
+      } else if(appType == "3"){
+        $("#srvckeyInCollMemNm").val("");
+      } else if(appType == "4"){
+        $("#billkeyInCollMemNm").val("");
+      } else if(appType == "5"){
+        $("#outSrvckeyInCollMemNm").val("");
+      } else if(appType == "6"){
+        $("#careSrvckeyInCollMemNm").val("");
+      }
+      Common.alert(" <spring:message code="sal.alert.msg.unableToFind" /> [" +collmemcode + "] <spring:message code="sal.alert.msg.unableToFind2" />   ");
+      return;
+    }
+
+  });
 }
 
 //Collector 조회 팝업
@@ -601,9 +599,9 @@ function fn_searchUserIdPop() {
 
 //Collector 조회 팝업 결과값 세팅
 function fn_loadOrderSalesman(memId, memCode, memNm){
-	//$("#keyInCollMemId").val(memId);
-	//$("#keyInCollMemNm").val(memNm);
-	var appType = $("#appType").val();
+  //$("#keyInCollMemId").val(memId);
+  //$("#keyInCollMemNm").val(memNm);
+  var appType = $("#appType").val();
     //var memCode = memCode + " - " + memNm;
 
     if(appType == "1"){//Rental
@@ -647,7 +645,7 @@ function fn_changeCrcMode(){
         doGetCombo('/common/getAccountList.do', 'CRC2710' , ''   , 'keyInMerchantBank' , 'S', '');
 
     }else if(cardModeVal == 2712){      //MPOS IPP
-    	//IssuedBank 생성 : PBB, HLB, MBB, AMBank, HSBC, SCB, UOB
+      //IssuedBank 생성 : PBB, HLB, MBB, AMBank, HSBC, SCB, UOB
         doGetCombo('/common/getIssuedBankList.do', 'CRC2712' , ''   , 'keyInIssueBank' , 'S', '');
 
         //Merchant Bank 생성 : CIMB, PBB, HLB, MBB, AM BANK, HSBC, SCB, UOB
@@ -667,23 +665,23 @@ function fn_changeCrcMode(){
     }
 
     //Tenure Dialble 처리
-	$("#keyInTenure").attr("disabled", false);
-	$("#keyInTenure").val("");
+  $("#keyInTenure").attr("disabled", false);
+  $("#keyInTenure").val("");
 
     if(cardModeVal == 2708 || cardModeVal == 2709 || cardModeVal == 2711){
         $("#keyInTenure").attr("disabled", true);
     }else{
-    	$("#keyInTenure").attr("disabled", false);
+      $("#keyInTenure").attr("disabled", false);
     }
 }
 
 //Merchant Bank 변경시 Tenure 다시 세팅한다.
 function fn_changeMerchantBank(){
-	var keyInMerBank = $("#keyInMerchantBank").val();
+  var keyInMerBank = $("#keyInMerchantBank").val();
 
-	if(keyInMerBank == 102 || keyInMerBank == 104){        //HSBC OR CIMB
-		doDefCombo(tenureTypeData1, '' ,'keyInTenure', 'S', '');
-	}else if(keyInMerBank == 100 || keyInMerBank == 106 || keyInMerBank == 553){        // MBB OR AMB OR UOB
+  if(keyInMerBank == 102 || keyInMerBank == 104){        //HSBC OR CIMB
+    doDefCombo(tenureTypeData1, '' ,'keyInTenure', 'S', '');
+  }else if(keyInMerBank == 100 || keyInMerBank == 106 || keyInMerBank == 553){        // MBB OR AMB OR UOB
         doDefCombo(tenureTypeData2, '' ,'keyInTenure', 'S', '');
     }else if(keyInMerBank == 105){        //HLB
         doDefCombo(tenureTypeData3, '' ,'keyInTenure', 'S', '');
@@ -698,9 +696,9 @@ function fn_changeMerchantBank(){
 
 function savePayment(){
 
-	//Validation Start !!!!!!
-	//금액 체크
-	if(FormUtil.checkReqValue($("#keyInAmount")) ||$("#keyInAmount").val() <= 0 ){
+  //Validation Start !!!!!!
+  //금액 체크
+  if(FormUtil.checkReqValue($("#keyInAmount")) ||$("#keyInAmount").val() <= 0 ){
         Common.alert("<spring:message code='pay.alert.noAmount'/>");
         return;
     }
@@ -710,34 +708,34 @@ function savePayment(){
         return;
     }
 
-	//카드번호 체크
-	if(FormUtil.checkReqValue($("#keyInCardNo1")) ||
-			FormUtil.checkReqValue($("#keyInCardNo2")) ||
-			FormUtil.checkReqValue($("#keyInCardNo3"))	||
-			FormUtil.checkReqValue($("#keyInCardNo4"))){
+  //카드번호 체크
+  if(FormUtil.checkReqValue($("#keyInCardNo1")) ||
+      FormUtil.checkReqValue($("#keyInCardNo2")) ||
+      FormUtil.checkReqValue($("#keyInCardNo3"))  ||
+      FormUtil.checkReqValue($("#keyInCardNo4"))){
         Common.alert("<spring:message code='pay.head.noCrcNo'/>");
         return;
     }else{
-    	var cardNo1Size = $("#keyInCardNo1").val().length;
-    	var cardNo2Size = $("#keyInCardNo2").val().length;
-    	var cardNo3Size = $("#keyInCardNo3").val().length;
-    	var cardNo4Size = $("#keyInCardNo4").val().length;
-    	var cardNoAllSize = cardNo1Size  + cardNo2Size + cardNo3Size + cardNo4Size;
+      var cardNo1Size = $("#keyInCardNo1").val().length;
+      var cardNo2Size = $("#keyInCardNo2").val().length;
+      var cardNo3Size = $("#keyInCardNo3").val().length;
+      var cardNo4Size = $("#keyInCardNo4").val().length;
+      var cardNoAllSize = cardNo1Size  + cardNo2Size + cardNo3Size + cardNo4Size;
 
-    	if(cardNoAllSize != 16){
-    		Common.alert("<spring:message code='pay.alert.ivalidCrcNo'/>");
+      if(cardNoAllSize != 16){
+        Common.alert("<spring:message code='pay.alert.ivalidCrcNo'/>");
             return;
-    	}
+      }
     }
 
-	//Card Holder 체크
-	//금액 체크
+  //Card Holder 체크
+  //금액 체크
     //if(FormUtil.checkReqValue($("#keyInHolderNm"))){
     //    Common.alert("<spring:message code='pay.alert.noCrcHolderName'/>");
     //    return;
     //}
 
-	//카드 유효일자 체크
+  //카드 유효일자 체크
     if(FormUtil.checkReqValue($("#keyInExpiryMonth")) || FormUtil.checkReqValue($("#keyInExpiryYear"))){
         Common.alert("<spring:message code='pay.alert.noCrcExpiryDate'/>");
         return;
@@ -753,30 +751,30 @@ function savePayment(){
         }
 
         if(Number($("#keyInExpiryMonth").val()) > 12){
-        	Common.alert("<spring:message code='pay.alert.invalidCrcExpiryDate'/>");
+          Common.alert("<spring:message code='pay.alert.invalidCrcExpiryDate'/>");
             return;
         }
     }
 
-	//카드 브랜드 체크
+  //카드 브랜드 체크
     if(FormUtil.checkReqValue($("#keyInCrcType option:selected"))){
         Common.alert("<spring:message code='pay.alert.noCrcBrand'/>");
         return;
 
     }else{
-    	var crcType = $("#keyInCrcType").val();
-    	var cardNo1st1Val = $("#keyInCardNo1").val().substr(0,1);
-    	var cardNo1st2Val = $("#keyInCardNo1").val().substr(0,2);
-    	var cardNo1st4Val = $("#keyInCardNo1").val().substr(0,4);
+      var crcType = $("#keyInCrcType").val();
+      var cardNo1st1Val = $("#keyInCardNo1").val().substr(0,1);
+      var cardNo1st2Val = $("#keyInCardNo1").val().substr(0,2);
+      var cardNo1st4Val = $("#keyInCardNo1").val().substr(0,4);
 
-    	if(cardNo1st1Val == 4){
-    		if(crcType != 112){
-    			Common.alert("<spring:message code='pay.alert.invalidCrcType'/>");
+      if(cardNo1st1Val == 4){
+        if(crcType != 112){
+          Common.alert("<spring:message code='pay.alert.invalidCrcType'/>");
                 return;
-    		}
-    	}
+        }
+      }
 
-    	if((cardNo1st2Val >= 51 && cardNo1st2Val <= 55) || (cardNo1st4Val >= 2221 && cardNo1st4Val <= 2720)){
+      if((cardNo1st2Val >= 51 && cardNo1st2Val <= 55) || (cardNo1st4Val >= 2221 && cardNo1st4Val <= 2720)){
             if(crcType != 111){
                 Common.alert("<spring:message code='pay.alert.invalidCrcType'/>");
                 return;
@@ -784,7 +782,7 @@ function savePayment(){
         }
     }
 
-	//카드 모드 체크
+  //카드 모드 체크
     if(FormUtil.checkReqValue($("#keyInCardMode option:selected"))){
         Common.alert("<spring:message code='pay.alert.noCrcMode'/>");
         return;
@@ -796,7 +794,7 @@ function savePayment(){
         return;
     }else{
 
-    	var appValSize = $("#keyInApprovalNo").val().length;
+      var appValSize = $("#keyInApprovalNo").val().length;
 
         if(appValSize != 6){
             Common.alert("<spring:message code='pay.alert.invalidApprovalNoLength '/>");
@@ -841,26 +839,26 @@ function savePayment(){
     }
 
     if( FormUtil.byteLength($("#keyInRemark").val()) > 3000 ){
-    	Common.alert("<spring:message code='pay.alert.lessThan3000Bytes'/>");
-    	return;
+      Common.alert("<spring:message code='pay.alert.lessThan3000Bytes'/>");
+      return;
     }
 
     //Validation End !!!!!!
 
-	//param data array
-	var data = {};
+  //param data array
+  var data = {};
 
-	var gridList = AUIGrid.getGridData(targetFinalBillGridID);       //그리드 데이터
-	var formList = $("#paymentForm").serializeArray();       //폼 데이터
+  var gridList = AUIGrid.getGridData(targetFinalBillGridID);       //그리드 데이터
+  var formList = $("#paymentForm").serializeArray();       //폼 데이터
 
 
-	//array에 담기
-	if(gridList.length > 0) {
-		data.all = gridList;
-	}  else {
-		Common.alert("<spring:message code='pay.alert.noRowData'/>");
-		return;
-	}
+  //array에 담기
+  if(gridList.length > 0) {
+    data.all = gridList;
+  }  else {
+    Common.alert("<spring:message code='pay.alert.noRowData'/>");
+    return;
+  }
 
 
     if(formList.length > 0) data.form = formList;
@@ -869,19 +867,19 @@ function savePayment(){
     //Bill Payment : Order 정보 조회
     Common.ajax("POST", "/payment/common/savePayment.do", data, function(result) {
 
-    	var message = "<spring:message code='pay.alert.successProc'/>";
+      var message = "<spring:message code='pay.alert.successProc'/>";
 
-    	if(result != null && result.length > 0){
-    		for(i=0 ; i < result.length ; i++){
-    			message += "<font color='red'>" + result[i].orNo + " (Order No: " + result[i].salesOrdNo +  ")</font><br>";
-    		}
-    	}
+      if(result != null && result.length > 0){
+        for(i=0 ; i < result.length ; i++){
+          message += "<font color='red'>" + result[i].orNo + " (Order No: " + result[i].salesOrdNo +  ")</font><br>";
+        }
+      }
 
-    	fn_clearCrcDtls();
+      fn_clearCrcDtls();
 
-    	Common.alert(message, function(){
-    	      document.location.href = '/payment/initCardKeyInPayment.do';
-    	});
+      Common.alert(message, function(){
+            document.location.href = '/payment/initCardKeyInPayment.do';
+      });
 
     });
 }
@@ -894,7 +892,7 @@ function recalculatePaymentTotalAmt(){
 
   if(rowCnt > 0){
       for(var i = 0; i < rowCnt; i++){
-    	  totalAmt += AUIGrid.getCellValue(targetFinalBillGridID, i ,"targetAmt");
+        totalAmt += AUIGrid.getCellValue(targetFinalBillGridID, i ,"targetAmt");
       }
   }
 
@@ -904,21 +902,21 @@ function recalculatePaymentTotalAmt(){
 //카드번호 입력시 번호에 따라 Card Brand 선택
 function fn_changeCardNo1(){
 
-	var cardNo1Size = $("#keyInCardNo1").val().length;
+  var cardNo1Size = $("#keyInCardNo1").val().length;
 
-	if(cardNo1Size >= 4){
-		var cardNo1st1Val = $("#keyInCardNo1").val().substr(0,1);
+  if(cardNo1Size >= 4){
+    var cardNo1st1Val = $("#keyInCardNo1").val().substr(0,1);
         var cardNo1st2Val = $("#keyInCardNo1").val().substr(0,2);
         var cardNo1st4Val = $("#keyInCardNo1").val().substr(0,4);
 
         if(cardNo1st1Val == 4){
-        	$("#keyInCrcType").val(112);
+          $("#keyInCrcType").val(112);
         }
 
         if((cardNo1st2Val >= 51 && cardNo1st2Val <= 55) || (cardNo1st4Val >= 2221 && cardNo1st4Val <= 2720)){
-        	$("#keyInCrcType").val(111);
+          $("#keyInCrcType").val(111);
         }
-	}
+  }
 }
 
 
@@ -947,23 +945,23 @@ function removeFromFinal(){
 
 //Search Order confirm
 function fn_rentalConfirm(){
-	//Rental Grid Clear 처리
-	resetRentalGrid();
+  //Rental Grid Clear 처리
+  resetRentalGrid();
 
-	fn_clearCrcDtls();
+  fn_clearCrcDtls();
 
-	var ordNo = $("#rentalOrdNo").val();
+  var ordNo = $("#rentalOrdNo").val();
 
     if(ordNo != ''){
         //Order Basic 정보 조회
         Common.ajax("GET", "/payment/common/selectOrdIdByNo.do", {"ordNo" : ordNo}, function(result) {
             if(result != null && result.salesOrdId != ''){
-            	$("#rentalOrdId").val(result.salesOrdId);
+              $("#rentalOrdId").val(result.salesOrdId);
                 $("#rentalOrdNo").val(result.salesOrdNo);
                 $("#rentalBillGrpId").val(result.custBillId);
 
-            	//Order Info 및 Payment Info 조회
-            	fn_rentalOrderInfo();
+              //Order Info 및 Payment Info 조회
+              fn_rentalOrderInfo();
             }
         });
     }
@@ -972,8 +970,8 @@ function fn_rentalConfirm(){
 
 //Search Order 팝업
 function fn_rentalOrderSearchPop(){
-	resetRentalGrid();
-	fn_clearCrcDtls();
+  resetRentalGrid();
+  fn_clearCrcDtls();
     Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "RENTAL_PAYMENT", indicator : "SearchOrder"});
 }
 
@@ -1005,29 +1003,29 @@ function fn_clearCrcDtls() {
 
 //Rental Order Info 조회
 function fn_rentalOrderInfo(){
-	var data;
-	var megaDeal;
+  var data;
+  var megaDeal;
 
     if($("#isRentalBillGroup").is(":checked")){
-    	data = {"billGrpId" : $("#rentalBillGrpId").val() };
+      data = {"billGrpId" : $("#rentalBillGrpId").val() };
     }else{
-		data = {"orderId" : $("#rentalOrdId").val() };
-	}
+    data = {"orderId" : $("#rentalOrdId").val() };
+  }
 
-	//Order ID로 MegaDeal 여부를 조회한다.
-	megaDeal = {"orderId" : $("#rentalOrdId").val() };
-	Common.ajax("GET", "/payment/common/selectMegaDealByOrderId.do", megaDeal, function(result) {
+  //Order ID로 MegaDeal 여부를 조회한다.
+  megaDeal = {"orderId" : $("#rentalOrdId").val() };
+  Common.ajax("GET", "/payment/common/selectMegaDealByOrderId.do", megaDeal, function(result) {
 
         $("#rentalMegaDeal").val(result.megaDeal);
     });
 
 
-	//Rental : Order 정보 조회
-	Common.ajax("GET", "/payment/common/selectOrderInfoRental.do", data, function(result) {
-		//Rental : Order Info 세팅
-		AUIGrid.setGridData(targetRenMstGridID, result);
+  //Rental : Order 정보 조회
+  Common.ajax("GET", "/payment/common/selectOrderInfoRental.do", data, function(result) {
+    //Rental : Order Info 세팅
+    AUIGrid.setGridData(targetRenMstGridID, result);
 
-		//Rental : Billing Info 조회
+    //Rental : Billing Info 조회
         fn_rentalBillingInfoRental();
     });
 }
@@ -1048,7 +1046,7 @@ function fn_rentalBillingInfoRental(){
             var  excludeRPF = (rpf > 0 && rpfPaid >= rpf) ? "N" : "Y";
             if (rpf == 0) excludeRPF = "N";
 
-			console.log("excludeRPF : " + excludeRPF);
+      console.log("excludeRPF : " + excludeRPF);
 
             //Rental : Order 정보 조회
             Common.ajax("GET", "/payment/common/selectBillInfoRental.do", {orderId : salesOrdId, excludeRPF : excludeRPF}, function(result) {
@@ -1075,7 +1073,7 @@ function recalculateRentalTotalAmt(){
         if(mstRowCnt > 0){
             for(var i = 0; i < mstRowCnt; i++){
 
-            	mstBtnCheck = AUIGrid.getCellValue(targetRenMstGridID,i,"btnCheck");     //마스터 그리드에서 orderNo
+              mstBtnCheck = AUIGrid.getCellValue(targetRenMstGridID,i,"btnCheck");     //마스터 그리드에서 orderNo
                 mstOrdNo = AUIGrid.getCellValue(targetRenMstGridID,i,"salesOrdNo");     //마스터 그리드에서 orderNo
                 rpf = AUIGrid.getCellValue(targetRenMstGridID,i,"rpf");
                 rpfPaid = AUIGrid.getCellValue(targetRenMstGridID,i,"rpfPaid");
@@ -1088,16 +1086,16 @@ function recalculateRentalTotalAmt(){
                     if (rpf > rpfPaid) rpfTarget = rpf - rpfPaid;
 
                     if(balance >= 0){
-                    	   totalAmt += rpfTarget;
+                         totalAmt += rpfTarget;
 
-                    	    //상세 그리드에서  마스터 그리드의 orderNo와 동일한 orderNo row만 조회한다.
+                          //상세 그리드에서  마스터 그리드의 orderNo와 동일한 orderNo row만 조회한다.
                             var rows = AUIGrid.getRowsByValue(targetRenDetGridID, "ordNo", mstOrdNo);
 
                             for(var j = 0; j < rows.length; j++){
                                 var obj = rows[j];
 
                                 if(obj.btnCheck == 1){
-                                	totalAmt += obj.targetAmt;
+                                  totalAmt += obj.targetAmt;
                                 }
                            }
                      }
@@ -1119,41 +1117,41 @@ function rentalDiscountValue(){
     var advMonth = $("#rentalTxtAdvMonth").val();
     var rows = AUIGrid.getRowIndexesByValue(targetRenMstGridID, "salesOrdId", $("#rentalOrdId").val());
     var mthRentAmt = AUIGrid.getCellValue(targetRenMstGridID, rows, "mthRentAmt");
-	var megaDeal = $("#rentalMegaDeal").val();
+  var megaDeal = $("#rentalMegaDeal").val();
 
-	if(megaDeal == 0 ){
-	    if (advMonth >= 6 && advMonth < 12){
-	        discountValue = mthRentAmt * advMonth * 0.97;
-	        originalprice = mthRentAmt * advMonth;
-	        discountrate = 3;
-	    } else if (advMonth >= 12 && advMonth < 24) {
-	        discountValue = mthRentAmt * advMonth * 0.95;
-	        originalprice = mthRentAmt * advMonth;
-	        discountrate = 5;
-	    } else if (advMonth >= 24 && advMonth < 61) {
-	        discountValue = mthRentAmt * advMonth * 0.9;
-	        originalprice = mthRentAmt * advMonth;
-	        discountrate = 10;
-	    } else {
-	    	if(advMonth == 0) {
+  if(megaDeal == 0 ){
+      if (advMonth >= 6 && advMonth < 12){
+          discountValue = mthRentAmt * advMonth * 0.97;
+          originalprice = mthRentAmt * advMonth;
+          discountrate = 3;
+      } else if (advMonth >= 12 && advMonth < 24) {
+          discountValue = mthRentAmt * advMonth * 0.95;
+          originalprice = mthRentAmt * advMonth;
+          discountrate = 5;
+      } else if (advMonth >= 24 && advMonth < 61) {
+          discountValue = mthRentAmt * advMonth * 0.9;
+          originalprice = mthRentAmt * advMonth;
+          discountrate = 10;
+      } else {
+        if(advMonth == 0) {
                 discountValue = parseFloat($("#genAdvAmt").val());
                 originalprice = parseFloat($("#genAdvAmt").val());
             } else {
                 discountValue = mthRentAmt * advMonth;
                 originalprice = mthRentAmt * advMonth;
             }
-	        discountrate = 0;
-	    }
-	}else{
-		if(advMonth == 0) {
+          discountrate = 0;
+      }
+  }else{
+    if(advMonth == 0) {
             discountValue = parseFloat($("#genAdvAmt").val());
             originalprice = parseFloat($("#genAdvAmt").val());
         } else {
             discountValue = mthRentAmt * advMonth;
             originalprice = mthRentAmt * advMonth;
         }
-		discountrate = 0;
-	}
+    discountrate = 0;
+  }
 
     //선납금 할인을 적용한 금액 표시
     recalculateRentalTotalAmtWidthAdv(discountValue,originalprice,discountrate);
@@ -1168,52 +1166,52 @@ function recalculateRentalTotalAmtWidthAdv(discountValue, originalPrice, discoun
     if(mstRowCnt > 0){
         for(var i = 0; i < mstRowCnt; i++){
 
-        	mstBtnCheck = AUIGrid.getCellValue(targetRenMstGridID,i,"btnCheck");     //마스터 그리드에서 orderNo
+          mstBtnCheck = AUIGrid.getCellValue(targetRenMstGridID,i,"btnCheck");     //마스터 그리드에서 orderNo
             mstOrdNo = AUIGrid.getCellValue(targetRenMstGridID,i,"salesOrdNo");     //마스터 그리드에서 orderNo
             rpf = AUIGrid.getCellValue(targetRenMstGridID,i,"rpf");
             rpfPaid = AUIGrid.getCellValue(targetRenMstGridID,i,"rpfPaid");
             balance = AUIGrid.getCellValue(targetRenMstGridID,i,"balance");
 
             if(mstBtnCheck == 1){
-	            var rpfTarget = 0;
+              var rpfTarget = 0;
 
-	            if (rpf > rpfPaid) rpfTarget = rpf - rpfPaid;
+              if (rpf > rpfPaid) rpfTarget = rpf - rpfPaid;
 
-	            if(balance >= 0){
-	                tot += rpfTarget;
+              if(balance >= 0){
+                  tot += rpfTarget;
 
-	                //상세 그리드에서  마스터 그리드의 orderNo와 동일한 orderNo row만 조회한다.
-	                var rows = AUIGrid.getRowsByValue(targetRenDetGridID, "ordNo", mstOrdNo);
+                  //상세 그리드에서  마스터 그리드의 orderNo와 동일한 orderNo row만 조회한다.
+                  var rows = AUIGrid.getRowsByValue(targetRenDetGridID, "ordNo", mstOrdNo);
 
-	                for(var j = 0; j < rows.length; j++){
-	                    var obj = rows[j];
+                  for(var j = 0; j < rows.length; j++){
+                      var obj = rows[j];
 
-	                    if(obj.btnCheck == 1){
-	                        tot += obj.targetAmt;
-	                    }
-	                }
-	            }
+                      if(obj.btnCheck == 1){
+                          tot += obj.targetAmt;
+                      }
+                  }
+              }
             }
         }
     }
 
     var grandtotal = tot + discountValue;
     $("#rentalAdvAmt").val($.number(discountValue,2,'.',''));
-	var megaDeal = $("#rentalMegaDeal").val();
+  var megaDeal = $("#rentalMegaDeal").val();
 
-	if(megaDeal == 0 ){
-	    if (tot > 0) {
-	        $("#rentalTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
-	    } else {
-	        $("#rentalTotalAmtTxt").text("(RM " + $.number(originalPrice,2) + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
-	    }
-	}else{
-		if (tot > 0) {
-	        $("#rentalTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + ") = RM " + $.number(grandtotal,2));
-	    } else {
-	        $("#rentalTotalAmtTxt").text("(RM " + $.number(originalPrice,2) + ") = RM " + $.number(grandtotal,2));
-	    }
-	}
+  if(megaDeal == 0 ){
+      if (tot > 0) {
+          $("#rentalTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
+      } else {
+          $("#rentalTotalAmtTxt").text("(RM " + $.number(originalPrice,2) + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
+      }
+  }else{
+    if (tot > 0) {
+          $("#rentalTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + ") = RM " + $.number(grandtotal,2));
+      } else {
+          $("#rentalTotalAmtTxt").text("(RM " + $.number(originalPrice,2) + ") = RM " + $.number(grandtotal,2));
+      }
+  }
 
 }
 
@@ -1232,14 +1230,14 @@ function rentalChangeRowStyleFunction(srcOrdNo) {
 };
 
 function resetRentalGrid(){
-	AUIGrid.clearGridData(targetRenMstGridID);
+  AUIGrid.clearGridData(targetRenMstGridID);
     AUIGrid.clearGridData(targetRenDetGridID);
 }
 
 function rentalCheckBillGroup(){
-	if($("#rentalOrdNo").val() != ''){
-		fn_rentalConfirm();
-	}
+  if($("#rentalOrdNo").val() != ''){
+    fn_rentalConfirm();
+  }
 }
 
 //Advance Month 변경시 이벤트
@@ -1264,7 +1262,7 @@ function fn_rentalAdvMonth(){
 
     //Rental Adv Month가 0보다 크면 billing group 선택못합
     if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() >= 0){
-    	$("#genAdvAmt").focus();
+      $("#genAdvAmt").focus();
         /*$("#isRentalBillGroup").attr("checked", false);
         $("#isRentalBillGroup").attr("disabled", true);
 
@@ -1299,7 +1297,7 @@ function fn_checkAdvAmt() {
 function fn_rentalAdvMonthChangeTxt(){
   //Rental Membership Adv Month가 0보다 크면 billing group 선택못합
   if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() >= 0){
-	  $("#genAdvAmt").focus();
+    $("#genAdvAmt").focus();
       /*$("#isRentalBillGroup").attr("checked", false);
       $("#isRentalBillGroup").attr("disabled", true);
 
@@ -1315,21 +1313,21 @@ function fn_rentalAdvMonthChangeTxt(){
 
 
 function addRentalToFinal(){
-	var addedCount = 0;
+  var addedCount = 0;
 
-	if($("#rentalAdvMonthType").val() == 99 && $("#rentalTxtAdvMonth").val() == 0) {
-		if($("#genAdvAmt").val() <= 0 || $("#genAdvAmt").val() > 10000) {
-	        Common.alert("Amount must be greater than RM0.00 and lesser than RM10,000.00");
-	        return;
-	    }
-	}
+  if($("#rentalAdvMonthType").val() == 99 && $("#rentalTxtAdvMonth").val() == 0) {
+    if($("#genAdvAmt").val() <= 0 || $("#genAdvAmt").val() > 10000) {
+          Common.alert("Amount must be greater than RM0.00 and lesser than RM10,000.00");
+          return;
+      }
+  }
 
-	if(isDupRentalToFinal() > 0){
-    	Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
-		return;
-	}
+  if(isDupRentalToFinal() > 0){
+      Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
+    return;
+  }
 
-	if($("#rentalcashIsCommChk").is(":checked") == true){
+  if($("#rentalcashIsCommChk").is(":checked") == true){
         $("#rentalcashIsCommChk").val("1");
     }else{
         $("#rentalcashIsCommChk").val("0");
@@ -1343,7 +1341,7 @@ function addRentalToFinal(){
         for(i = 0 ; i < rowCnt ; i++){
 
             if(rowCnt < 2){
-            	var salesOrdId = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId");
+              var salesOrdId = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId");
                 Common.ajax("GET", "/payment/common/checkOrderOutstanding.do", {salesOrdId : salesOrdId}, function(RESULT) {
 
                     if(RESULT.rootState == 'ROOT_1') {
@@ -1362,8 +1360,8 @@ function addRentalToFinal(){
             var mstCustBillId = AUIGrid.getCellValue(targetRenMstGridID, i ,"custBillId");
 
             if(mstChkVal == 1){
-            	if(mstRpf - mstRpfPaid > 0){
-            		 var item = new Object();
+              if(mstRpf - mstRpfPaid > 0){
+                 var item = new Object();
 
                      item.procSeq = maxSeq;
                      item.appType = "RENTAL";
@@ -1389,7 +1387,7 @@ function addRentalToFinal(){
                      item.targetAmt   = mstRpf - mstRpfPaid;
                      item.srvcContractID   = 0;
                      item.billAsId    = 0;
-					 					 item.srvMemId	=0;
+                      item.srvMemId  =0;
                      item.trNo =  $("#rentalkeyInTrNo").val() ;
                      item.trDt =  $("#rentalkeyInTrIssueDate").val() ;
                      item.collectorCode =  $("#rentalkeyInCollMemCd").val() ;
@@ -1399,9 +1397,9 @@ function addRentalToFinal(){
                      AUIGrid.addRow(targetFinalBillGridID, item, "last");
                      addedCount++;
 
-            	}
+              }
 
-            	var detailRowCnt = AUIGrid.getRowCount(targetRenDetGridID);
+              var detailRowCnt = AUIGrid.getRowCount(targetRenDetGridID);
                 for(j = 0 ; j < detailRowCnt ; j++){
                     var detChkVal = AUIGrid.getCellValue(targetRenDetGridID, j ,"btnCheck");
                     var detSalesOrdNo = AUIGrid.getCellValue(targetRenDetGridID, j ,"ordNo");
@@ -1433,12 +1431,12 @@ function addRentalToFinal(){
                         item.targetAmt   = AUIGrid.getCellValue(targetRenDetGridID, j ,"targetAmt");
                         item.srvcContractID   = 0;
                         item.billAsId    = 0;
-												item.srvMemId	=0;
-	                      item.trNo =  $("#rentalkeyInTrNo").val() ;
-	                      item.trDt =  $("#rentalkeyInTrIssueDate").val() ;
-	                      item.collectorCode =  $("#rentalkeyInCollMemCd").val() ;
-	                      item.collectorId = $("#rentalkeyInCollMemId").val() ;
-	                      item.allowComm = $("#rentalcashIsCommChk").val() ;
+                        item.srvMemId  =0;
+                        item.trNo =  $("#rentalkeyInTrNo").val() ;
+                        item.trDt =  $("#rentalkeyInTrIssueDate").val() ;
+                        item.collectorCode =  $("#rentalkeyInCollMemCd").val() ;
+                        item.collectorId = $("#rentalkeyInCollMemId").val() ;
+                        item.allowComm = $("#rentalcashIsCommChk").val() ;
 
                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
                         addedCount++;
@@ -1473,7 +1471,7 @@ function addRentalToFinal(){
                     item.targetAmt   = $("#rentalAdvAmt").val();
                     item.srvcContractID   = 0;
                     item.billAsId    = 0;
-										item.srvMemId	=0;
+                    item.srvMemId  =0;
                     item.trNo =  $("#rentalkeyInTrNo").val() ;
                     item.trDt =  $("#rentalkeyInTrIssueDate").val() ;
                     item.collectorCode =  $("#rentalkeyInCollMemCd").val() ;
@@ -1489,7 +1487,7 @@ function addRentalToFinal(){
     }
 
     if(addedCount == 0){
-    	Common.alert("<spring:message code='pay.alert.selectBillingData'/>");
+      Common.alert("<spring:message code='pay.alert.selectBillingData'/>");
     }
     recalculatePaymentTotalAmt();
     $("#rentalkeyInTrNo").clearForm() ;
@@ -1502,8 +1500,8 @@ function addRentalToFinal(){
 // Add 할때 중복된 건이 있는지 체크한다.
 function isDupRentalToFinal(){
     var rowCnt = AUIGrid.getRowCount(targetRenMstGridID);
-	var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","RENTAL");
-	var dupCnt = 0;
+  var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","RENTAL");
+  var dupCnt = 0;
 
     if(rowCnt > 0){
         for(i = 0 ; i < rowCnt ; i++){
@@ -1514,62 +1512,62 @@ function isDupRentalToFinal(){
             var mstRpfPaid = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpfPaid");
 
             if(mstChkVal == 1){
-            	if(mstRpf - mstRpfPaid > 0){
-					if(addedRows.length > 0) {
-						for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
-							if (AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId") == addedRows[addedIdx].ordId && 161 == addedRows[addedIdx].billTypeId) {
-								dupCnt++;
-							}
-						}
-					}
-            	}
+              if(mstRpf - mstRpfPaid > 0){
+          if(addedRows.length > 0) {
+            for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+              if (AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId") == addedRows[addedIdx].ordId && 161 == addedRows[addedIdx].billTypeId) {
+                dupCnt++;
+              }
+            }
+          }
+              }
 
-            	var detailRowCnt = AUIGrid.getRowCount(targetRenDetGridID);
+              var detailRowCnt = AUIGrid.getRowCount(targetRenDetGridID);
                 for(j = 0 ; j < detailRowCnt ; j++){
                     var detChkVal = AUIGrid.getCellValue(targetRenDetGridID, j ,"btnCheck");
                     var detSalesOrdNo = AUIGrid.getCellValue(targetRenDetGridID, j ,"ordNo");
 
                     if(mstSalesOrdNo == detSalesOrdNo && detChkVal == 1){
 
-						if(addedRows.length > 0) {
-							for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+            if(addedRows.length > 0) {
+              for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
 
-								if (AUIGrid.getCellValue(targetRenMstGridID, j ,"salesOrdId") == addedRows[addedIdx].ordId &&
-									AUIGrid.getCellValue(targetRenDetGridID, j ,"installment") == addedRows[addedIdx].installment &&
-									AUIGrid.getCellValue(targetRenDetGridID, j ,"billTypeId") == addedRows[addedIdx].billTypeId) {
-									dupCnt++;
-								}
-							}
-						}
+                if (AUIGrid.getCellValue(targetRenMstGridID, j ,"salesOrdId") == addedRows[addedIdx].ordId &&
+                  AUIGrid.getCellValue(targetRenDetGridID, j ,"installment") == addedRows[addedIdx].installment &&
+                  AUIGrid.getCellValue(targetRenDetGridID, j ,"billTypeId") == addedRows[addedIdx].billTypeId) {
+                  dupCnt++;
+                }
+              }
+            }
                     }
                 }
 
                 //Advance Month
                 if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() >= 0){
-					if(addedRows.length > 0) {
-						for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
-							if (AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId") == addedRows[addedIdx].ordId && 1032 == addedRows[addedIdx].billTypeId) {
-								dupCnt++;
-							}
-						}
-					}
-				}
+          if(addedRows.length > 0) {
+            for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+              if (AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId") == addedRows[addedIdx].ordId && 1032 == addedRows[addedIdx].billTypeId) {
+                dupCnt++;
+              }
+            }
+          }
+        }
             }
         }
     }
 
-	return dupCnt;
+  return dupCnt;
 }
 
 function viewRentalLedger(){
-	if($("#rentalOrdId").val() != ''){
+  if($("#rentalOrdId").val() != ''){
 
-		$("#ledgerForm #ordId").val($("#rentalOrdId").val());
+    $("#ledgerForm #ordId").val($("#rentalOrdId").val());
         Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
 
     }else{
-    	Common.alert("<spring:message code='pay.head.SelectOrderInfoFirst'/>");
-    	return;
+      Common.alert("<spring:message code='pay.head.SelectOrderInfoFirst'/>");
+      return;
     }
 
 }
@@ -1602,7 +1600,7 @@ function fn_outConfirm(){
 
 //Search Order 팝업
 function fn_outOrderSearchPop(){
-	resetOutGrid();
+  resetOutGrid();
     Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "OUTRIGHT_PAYMENT", indicator : "SearchOrder"});
 }
 
@@ -1654,14 +1652,14 @@ function resetOutGrid(){
 
 
 function addOutToFinal(){
-	var addedCount = 0;
+  var addedCount = 0;
 
-	if(isDupOutToFinal() > 0){
-    	Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
-		return;
-	}
+  if(isDupOutToFinal() > 0){
+      Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
+    return;
+  }
 
-	if($("#outcashIsCommChk").is(":checked") == true){
+  if($("#outcashIsCommChk").is(":checked") == true){
         $("#outcashIsCommChk").val("1");
     }else{
         $("#outcashIsCommChk").val("0");
@@ -1673,7 +1671,7 @@ function addOutToFinal(){
     if(rowCnt > 0){
         for(i = 0 ; i < rowCnt ; i++){
 
-        	if(rowCnt < 2){
+          if(rowCnt < 2){
                 var salesOrdId = AUIGrid.getCellValue(targetOutMstGridID, i ,"salesOrdId");
                 Common.ajax("GET", "/payment/common/checkOrderOutstanding.do", {salesOrdId : salesOrdId}, function(RESULT) {
 
@@ -1684,51 +1682,51 @@ function addOutToFinal(){
                 });
             }
 
-        	var targetAmt = AUIGrid.getCellValue(targetOutMstGridID, i ,"balance");
+          var targetAmt = AUIGrid.getCellValue(targetOutMstGridID, i ,"balance");
 
-        	if(targetAmt > 0){
-	        	var item = new Object();
+          if(targetAmt > 0){
+            var item = new Object();
 
-	        	item.procSeq = maxSeq;
-	            item.appType = "OUT";
-	            item.advMonth = 0;
-	            item.mstRpf = 0;
-	            item.mstRpfPaid = 0;
+            item.procSeq = maxSeq;
+              item.appType = "OUT";
+              item.advMonth = 0;
+              item.mstRpf = 0;
+              item.mstRpfPaid = 0;
 
-	            item.assignAmt = 0;
-	            item.billAmt   = AUIGrid.getCellValue(targetOutMstGridID, i ,"productPrice");
-	            item.billDt   = "1900-01-01";
-	            item.billGrpId = 0;
-	            item.billId = 0;
-	            item.billNo = 0;
-	            item.billStatus = "";
-	            item.billTypeId = "";
-	            item.billTypeNm   = AUIGrid.getCellValue(targetOutMstGridID, i ,"appTypeNm");
-	            item.custNm   = AUIGrid.getCellValue(targetOutMstGridID, i ,"custNm");
-	            item.discountAmt = 0;
-	            item.installment  = 0;
-	            item.ordId = AUIGrid.getCellValue(targetOutMstGridID, i ,"salesOrdId");
-	            item.ordNo = AUIGrid.getCellValue(targetOutMstGridID, i ,"salesOrdNo");
-	            item.paidAmt     = AUIGrid.getCellValue(targetOutMstGridID, i ,"totalPaid");
-	            item.targetAmt   = AUIGrid.getCellValue(targetOutMstGridID, i ,"balance");
-	            item.srvcContractID   = 0;
-	            item.billAsId    = 0;
-							item.srvMemId	=0;
+              item.assignAmt = 0;
+              item.billAmt   = AUIGrid.getCellValue(targetOutMstGridID, i ,"productPrice");
+              item.billDt   = "1900-01-01";
+              item.billGrpId = 0;
+              item.billId = 0;
+              item.billNo = 0;
+              item.billStatus = "";
+              item.billTypeId = "";
+              item.billTypeNm   = AUIGrid.getCellValue(targetOutMstGridID, i ,"appTypeNm");
+              item.custNm   = AUIGrid.getCellValue(targetOutMstGridID, i ,"custNm");
+              item.discountAmt = 0;
+              item.installment  = 0;
+              item.ordId = AUIGrid.getCellValue(targetOutMstGridID, i ,"salesOrdId");
+              item.ordNo = AUIGrid.getCellValue(targetOutMstGridID, i ,"salesOrdNo");
+              item.paidAmt     = AUIGrid.getCellValue(targetOutMstGridID, i ,"totalPaid");
+              item.targetAmt   = AUIGrid.getCellValue(targetOutMstGridID, i ,"balance");
+              item.srvcContractID   = 0;
+              item.billAsId    = 0;
+              item.srvMemId  =0;
               item.trNo =  $("#outkeyInTrNo").val() ;
               item.trDt =  $("#outkeyInTrIssueDate").val() ;
               item.collectorCode = $("#outkeyInCollMemCd").val() ;
               item.collectorId = $("#outkeyInCollMemId").val() ;
               item.allowComm = $("#outcashIsCommChk").val() ;
 
-	            AUIGrid.addRow(targetFinalBillGridID, item, "last");
-	            addedCount++;
-        	}
+              AUIGrid.addRow(targetFinalBillGridID, item, "last");
+              addedCount++;
+          }
         }
     }
 
 
     if(addedCount == 0){
-    	Common.alert("<spring:message code='pay.alert.selectBillingData'/>");
+      Common.alert("<spring:message code='pay.alert.selectBillingData'/>");
     }
 
     recalculatePaymentTotalAmt();
@@ -1742,28 +1740,28 @@ function addOutToFinal(){
 // Add 할때 중복된 건이 있는지 체크한다.
 function isDupOutToFinal(){
     var rowCnt = AUIGrid.getRowCount(targetOutMstGridID);
-	var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","OUT");
-	var dupCnt = 0;
+  var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","OUT");
+  var dupCnt = 0;
 
-	if(rowCnt > 0){
+  if(rowCnt > 0){
         for(i = 0 ; i < rowCnt ; i++){
 
-        	var targetAmt = AUIGrid.getCellValue(targetOutMstGridID, i ,"balance");
+          var targetAmt = AUIGrid.getCellValue(targetOutMstGridID, i ,"balance");
 
-        	if(targetAmt > 0){
+          if(targetAmt > 0){
 
-				if(addedRows.length > 0) {
-					for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
-						if (AUIGrid.getCellValue(targetOutMstGridID, i ,"salesOrdId") == addedRows[addedIdx].ordId) {
-							dupCnt++;
-						}
-					}
-				}
-        	}
+        if(addedRows.length > 0) {
+          for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+            if (AUIGrid.getCellValue(targetOutMstGridID, i ,"salesOrdId") == addedRows[addedIdx].ordId) {
+              dupCnt++;
+            }
+          }
+        }
+          }
         }
     }
 
-	return dupCnt;
+  return dupCnt;
 }
 
 
@@ -1774,18 +1772,18 @@ function isDupOutToFinal(){
 //**************************************************
 //Search Order 팝업
 function fn_srvcOrderSearchPop(){
-	Common.popupDiv('/payment/common/initCommonServiceContractSearchPop.do', {callPrgm : "MEMBERSHIP_PAYMENT"}, null , true ,'_serviceContract');
+  Common.popupDiv('/payment/common/initCommonServiceContractSearchPop.do', {callPrgm : "MEMBERSHIP_PAYMENT"}, null , true ,'_serviceContract');
 }
 
 //Search Order 팝업에서 결과값 받기
 function fn_callBackSrvcOrderInfo(srvCntrctId, salesOrdId,srvCntrctRefNo,custBillId){
-	$('#srvcOrdId').val(salesOrdId);
-	$('#srvcId').val(srvCntrctId);
-	$('#srvcNo').val(srvCntrctRefNo);
-	$('#srvcCustBillId').val(custBillId);
+  $('#srvcOrdId').val(salesOrdId);
+  $('#srvcId').val(srvCntrctId);
+  $('#srvcNo').val(srvCntrctRefNo);
+  $('#srvcCustBillId').val(custBillId);
 
-	//팝업 숨기기 및 remove
-	$('#_serviceContract').hide();
+  //팝업 숨기기 및 remove
+  $('#_serviceContract').hide();
     $('#_serviceContract').remove();
 
     //Order Info 및 Payment Info 조회
@@ -1794,10 +1792,10 @@ function fn_callBackSrvcOrderInfo(srvCntrctId, salesOrdId,srvCntrctRefNo,custBil
 
 //Rental Mebership Order Info 조회
 function fn_srvcOrderInfo(){
-	//Rental Membership Grid Clear 처리
+  //Rental Membership Grid Clear 처리
     resetSrvcGrid();
 
-	var data;
+  var data;
 
     if($("#isSrvcBillGroup").is(":checked")){
         data = {"billGrpId" : $("#srvcCustBillId").val() };
@@ -1909,7 +1907,7 @@ function srvcChangeRowStyleFunction(srvCntrctRefNo) {
 
 function srvcCheckBillGroup(){
     if($("#srvcId").val() != ''){
-    	fn_srvcOrderInfo();
+      fn_srvcOrderInfo();
     }
 }
 
@@ -1929,33 +1927,33 @@ function fn_srvcAdvMonth(){
 
   //Rental Membership Adv Month가 0보다 크면 billing group 선택못합
   if($("#srvcTxtAdvMonth").val() != '' && $("#srvcTxtAdvMonth").val() > 0){
-	  $("#isSrvcBillGroup").attr("checked", false);
-	  $("#isSrvcBillGroup").attr("disabled", true);
+    $("#isSrvcBillGroup").attr("checked", false);
+    $("#isSrvcBillGroup").attr("disabled", true);
 
-	  if($("#srvcId").val() != ''){
-		  fn_srvcOrderInfo();
+    if($("#srvcId").val() != ''){
+      fn_srvcOrderInfo();
       }
   }else{
-	  $("#isSrvcBillGroup").attr("disabled", false);
-	  recalculateSrvcTotalAmt();
+    $("#isSrvcBillGroup").attr("disabled", false);
+    recalculateSrvcTotalAmt();
   }
 }
 
 
 //Advance Month 변경시 이벤트
 function fn_srvcAdvMonthChangeTxt(){
-	//Rental Membership Adv Month가 0보다 크면 billing group 선택못합
-	if($("#srvcTxtAdvMonth").val() != '' && $("#srvcTxtAdvMonth").val() > 0){
-		$("#isSrvcBillGroup").attr("checked", false);
-		$("#isSrvcBillGroup").attr("disabled", true);
+  //Rental Membership Adv Month가 0보다 크면 billing group 선택못합
+  if($("#srvcTxtAdvMonth").val() != '' && $("#srvcTxtAdvMonth").val() > 0){
+    $("#isSrvcBillGroup").attr("checked", false);
+    $("#isSrvcBillGroup").attr("disabled", true);
 
-		if($("#srvcId").val() != ''){
-			fn_srvcOrderInfo();
-		}
-	}else{
-	    $("#isSrvcBillGroup").attr("disabled", false);
-	    recalculateSrvcTotalAmt();
-	}
+    if($("#srvcId").val() != ''){
+      fn_srvcOrderInfo();
+    }
+  }else{
+      $("#isSrvcBillGroup").attr("disabled", false);
+      recalculateSrvcTotalAmt();
+  }
 }
 
 //Rental Membership Amount 선납금 할인율 적용
@@ -2008,14 +2006,14 @@ function recalculateSrvcTotalAmtWidthAdv(discountValue, originalPrice, discountr
                 filterChargePaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"filterChargesPaid");
 
                 if(filterCharge > filterChargePaid){
-                	tot += filterCharge - filterChargePaid;
+                  tot += filterCharge - filterChargePaid;
                 }
 
                 penaltyCharges = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyCharges");
                 penaltyChargesPaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyChargesPaid");
 
                 if(penaltyCharges > penaltyChargesPaid){
-                	tot += penaltyCharges - penaltyChargesPaid;
+                  tot += penaltyCharges - penaltyChargesPaid;
                 }
 
                 //상세 그리드에서  마스터 그리드의 orderNo와 동일한 orderNo row만 조회한다.
@@ -2024,7 +2022,7 @@ function recalculateSrvcTotalAmtWidthAdv(discountValue, originalPrice, discountr
                 for(var j = 0; j < rows.length; j++){
                     var obj = rows[j];
                     if(obj.btnCheck == 1){
-                    	tot += obj.targetAmt;
+                      tot += obj.targetAmt;
                     }
                 }
             }
@@ -2043,14 +2041,14 @@ function recalculateSrvcTotalAmtWidthAdv(discountValue, originalPrice, discountr
 }
 
 function addSrvcToFinal(){
-	var addedCount = 0;
+  var addedCount = 0;
 
-	if(isDupSrvcToFinal() > 0){
-    	Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
-		return;
-	}
+  if(isDupSrvcToFinal() > 0){
+      Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
+    return;
+  }
 
-	if($("#srvccashIsCommChk").is(":checked") == true){
+  if($("#srvccashIsCommChk").is(":checked") == true){
         $("#srvccashIsCommChk").val("1");
     }else{
         $("#srvccashIsCommChk").val("0");
@@ -2062,7 +2060,7 @@ function addSrvcToFinal(){
     if(rowCnt > 0){
         for(i = 0 ; i < rowCnt ; i++){
 
-        	if(rowCnt < 2){
+          if(rowCnt < 2){
                 var salesOrdId = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"salesOrdId");
                 Common.ajax("GET", "/payment/common/checkOrderOutstanding.do", {salesOrdId : salesOrdId}, function(RESULT) {
 
@@ -2110,7 +2108,7 @@ function addSrvcToFinal(){
                      item.targetAmt   = mstFilterCharges - mstFilterChargesPaid;
                      item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
                      item.billAsId    = 0;
-										 item.srvMemId	=0;
+                     item.srvMemId  =0;
                      item.trNo =  $("#srvckeyInTrNo").val() ;
                      item.trDt =  $("#srvckeyInTrIssueDate").val() ;
                      item.collectorCode = $("#srvckeyInCollMemCd").val() ;
@@ -2149,7 +2147,7 @@ function addSrvcToFinal(){
                     item.targetAmt   = mstPenaltyCharges - mstPenaltyChargesPaid;
                     item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
                     item.billAsId    = 0;
-										item.srvMemId	=0;
+                    item.srvMemId  =0;
                     item.trNo =  $("#srvckeyInTrNo").val() ;
                     item.trDt =  $("#srvckeyInTrIssueDate").val() ;
                     item.collectorCode = $("#srvckeyInCollMemCd").val() ;
@@ -2189,7 +2187,7 @@ function addSrvcToFinal(){
                     item.targetAmt   = $("#srvcAdvAmt").val();
                     item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
                     item.billAsId    = 0;
-										item.srvMemId	=0;
+                    item.srvMemId  =0;
                     item.trNo =  $("#srvckeyInTrNo").val() ;
                     item.trDt =  $("#srvckeyInTrIssueDate").val() ;
                     item.collectorCode = $("#srvckeyInCollMemCd").val() ;
@@ -2234,12 +2232,12 @@ function addSrvcToFinal(){
                         item.targetAmt   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"targetAmt");
                         item.srvcContractID   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrCntrctId");
                         item.billAsId    = 0;
-												item.srvMemId	=0;
-		                    item.trNo =  $("#srvckeyInTrNo").val() ;
-		                    item.trDt =  $("#srvckeyInTrIssueDate").val() ;
-		                    item.collectorCode = $("#srvckeyInCollMemCd").val() ;
-		                    item.collectorId = $("#srvckeyInCollMemId").val() ;
-		                    item.allowComm = $("#srvccashIsCommChk").val() ;
+                        item.srvMemId  =0;
+                        item.trNo =  $("#srvckeyInTrNo").val() ;
+                        item.trDt =  $("#srvckeyInTrIssueDate").val() ;
+                        item.collectorCode = $("#srvckeyInCollMemCd").val() ;
+                        item.collectorId = $("#srvckeyInCollMemId").val() ;
+                        item.allowComm = $("#srvccashIsCommChk").val() ;
 
                         AUIGrid.addRow(targetFinalBillGridID, item, "last");
 
@@ -2263,75 +2261,75 @@ function addSrvcToFinal(){
 
 // Add 할때 중복된 건이 있는지 체크한다.
 function isDupSrvcToFinal(){
-	var rowCnt = AUIGrid.getRowCount(targetSrvcMstGridID);
-	var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","MEMBERSHIP");
-	var dupCnt = 0;
+  var rowCnt = AUIGrid.getRowCount(targetSrvcMstGridID);
+  var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","MEMBERSHIP");
+  var dupCnt = 0;
 
-	if(rowCnt > 0){
-		for(i = 0 ; i < rowCnt ; i++){
+  if(rowCnt > 0){
+    for(i = 0 ; i < rowCnt ; i++){
 
-			var mstChkVal = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"btnCheck");
-			var mstSrvCntrctRefNo = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctRefNo");
-			var mstFilterCharges = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"filterCharges");
-			var mstFilterChargesPaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"filterChargesPaid");
-			var mstPenaltyCharges = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyCharges");
-			var mstPenaltyChargesPaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyChargesPaid");
+      var mstChkVal = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"btnCheck");
+      var mstSrvCntrctRefNo = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctRefNo");
+      var mstFilterCharges = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"filterCharges");
+      var mstFilterChargesPaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"filterChargesPaid");
+      var mstPenaltyCharges = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyCharges");
+      var mstPenaltyChargesPaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyChargesPaid");
 
-			if(mstChkVal == 1){
-				if(mstFilterCharges - mstFilterChargesPaid > 0){
+      if(mstChkVal == 1){
+        if(mstFilterCharges - mstFilterChargesPaid > 0){
 
-					if(addedRows.length > 0) {
-						for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
-							if (AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctOrdId") == addedRows[addedIdx].ordId && 1307 == addedRows[addedIdx].billTypeId) {
-								dupCnt++;
-							}
-						}
-					}
-				}
+          if(addedRows.length > 0) {
+            for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+              if (AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctOrdId") == addedRows[addedIdx].ordId && 1307 == addedRows[addedIdx].billTypeId) {
+                dupCnt++;
+              }
+            }
+          }
+        }
 
-				if(mstPenaltyCharges - mstPenaltyChargesPaid > 0){
-					if(addedRows.length > 0) {
-						for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
-							if (AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctOrdId") == addedRows[addedIdx].ordId && 1306 == addedRows[addedIdx].billTypeId) {
-								dupCnt++;
-							}
-						}
-					}
-				}
+        if(mstPenaltyCharges - mstPenaltyChargesPaid > 0){
+          if(addedRows.length > 0) {
+            for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+              if (AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctOrdId") == addedRows[addedIdx].ordId && 1306 == addedRows[addedIdx].billTypeId) {
+                dupCnt++;
+              }
+            }
+          }
+        }
 
-				//Advance Month
-				if($("#srvcTxtAdvMonth").val() != '' && $("#srvcTxtAdvMonth").val() > 0){
-					if(addedRows.length > 0) {
-						for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
-							if (AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctOrdId") == addedRows[addedIdx].ordId && 154 == addedRows[addedIdx].billTypeId) {
-								dupCnt++;
-							}
-						}
-					}
-				}
+        //Advance Month
+        if($("#srvcTxtAdvMonth").val() != '' && $("#srvcTxtAdvMonth").val() > 0){
+          if(addedRows.length > 0) {
+            for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+              if (AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctOrdId") == addedRows[addedIdx].ordId && 154 == addedRows[addedIdx].billTypeId) {
+                dupCnt++;
+              }
+            }
+          }
+        }
 
-				var detailRowCnt = AUIGrid.getRowCount(targetSrvcDetGridID);
-				for(j = 0 ; j < detailRowCnt ; j++){
-					var detChkVal = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"btnCheck");
-					var detSrvCntrctRefNo = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvCntrctRefNo");
+        var detailRowCnt = AUIGrid.getRowCount(targetSrvcDetGridID);
+        for(j = 0 ; j < detailRowCnt ; j++){
+          var detChkVal = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"btnCheck");
+          var detSrvCntrctRefNo = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvCntrctRefNo");
 
-					if(mstSrvCntrctRefNo == detSrvCntrctRefNo && detChkVal == 1){
-						if(addedRows.length > 0) {
-							for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
-								if (AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvCntrctOrdId") == addedRows[addedIdx].ordId &&
-										AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvPaySchdulNo") == addedRows[addedIdx].installment &&
-										AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrTypeId") == addedRows[addedIdx].billTypeId) {
-									dupCnt++;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+          if(mstSrvCntrctRefNo == detSrvCntrctRefNo && detChkVal == 1){
+            if(addedRows.length > 0) {
+              for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+                if (AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvCntrctOrdId") == addedRows[addedIdx].ordId &&
+                    AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvPaySchdulNo") == addedRows[addedIdx].installment &&
+                    AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrTypeId") == addedRows[addedIdx].billTypeId) {
+                  dupCnt++;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
-	return dupCnt;
+  return dupCnt;
 }
 
 
@@ -2353,52 +2351,60 @@ function viewSrvcLedger(){
 //**************************************************
 function fn_changeBillType(){
 
-	if($("#billType").val() == 1){
-        AUIGrid.hideColumnByDataField(targetBillMstGridID, "billMemNm" );
-        AUIGrid.hideColumnByDataField(targetBillMstGridID, "billMemCode" );
-        AUIGrid.showColumnByDataField(targetBillMstGridID, "custNm");
-        AUIGrid.showColumnByDataField(targetBillMstGridID, "nric");
+  if($("#billType").val() == 1 || $("#billType").val() == 3){
+    AUIGrid.hideColumnByDataField(targetBillMstGridID, "billMemNm" );
+    AUIGrid.hideColumnByDataField(targetBillMstGridID, "billMemCode" );
+    AUIGrid.showColumnByDataField(targetBillMstGridID, "custNm");
+    AUIGrid.showColumnByDataField(targetBillMstGridID, "nric");
 
-	}else{
-		AUIGrid.showColumnByDataField(targetBillMstGridID, "billMemNm" );
-        AUIGrid.showColumnByDataField(targetBillMstGridID, "billMemCode" );
-        AUIGrid.hideColumnByDataField(targetBillMstGridID, "custNm");
-        AUIGrid.hideColumnByDataField(targetBillMstGridID, "nric");
-	}
+    if ($("#billType").val() == 1) {
+      $("#bpa1").show();
+      $("#bpa2").hide();
+    } else {
+      $("#bpa1").hide();
+      $("#bpa2").show();
+    }
+  } else {
+    AUIGrid.showColumnByDataField(targetBillMstGridID, "billMemNm" );
+    AUIGrid.showColumnByDataField(targetBillMstGridID, "billMemCode" );
+    AUIGrid.hideColumnByDataField(targetBillMstGridID, "custNm");
+    AUIGrid.hideColumnByDataField(targetBillMstGridID, "nric");
+  }
+
+  // CLEAR SEARCH KEYWORD
+  $("#billSearchTxt").val("");
 }
 
-
 function fn_billOrderSearch(){
+  if(FormUtil.checkReqValue($("#billSearchTxt"))){
+    Common.alert("<spring:message code='pay.alert.searchKeywords'/>");
+    return;
+  }
 
-	if(FormUtil.checkReqValue($("#billSearchTxt"))){
-        Common.alert("<spring:message code='pay.alert.searchKeywords'/>");
-        return;
-    }
+  //Bill Payment : Order 정보 조회
+  Common.ajax("GET", "/payment/common/selectOrderInfoBillPayment.do", $("#billSearchForm").serialize(), function(result) {
+    //Bill Payment : Order Info 세팅
+    AUIGrid.setGridData(targetBillMstGridID, result);
 
-	//Bill Payment : Order 정보 조회
-    Common.ajax("GET", "/payment/common/selectOrderInfoBillPayment.do", $("#billSearchForm").serialize(), function(result) {
-        //Bill Payment : Order Info 세팅
-        AUIGrid.setGridData(targetBillMstGridID, result);
-
-      //총 금액 계산
-        recalculateBillTotalAmt();
-    });
+    //총 금액 계산
+    recalculateBillTotalAmt();
+  });
 }
 
 //Bill Payment Amount 계산
 function recalculateBillTotalAmt(){
-    var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);
-    var totalAmt = 0;
+  var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);
+  var totalAmt = 0;
 
-    if(rowCnt > 0){
-        for(var i = 0; i < rowCnt; i++){
-        	if(AUIGrid.getCellValue(targetBillMstGridID, i ,"btnCheck") == 1){
-        	    totalAmt += AUIGrid.getCellValue(targetBillMstGridID, i ,"billAmt") - AUIGrid.getCellValue(targetBillMstGridID, i ,"paidAmt");
-        	}
-        }
+  if(rowCnt > 0){
+    for(var i = 0; i < rowCnt; i++){
+      if(AUIGrid.getCellValue(targetBillMstGridID, i ,"btnCheck") == 1){
+        totalAmt += AUIGrid.getCellValue(targetBillMstGridID, i ,"billAmt") - AUIGrid.getCellValue(targetBillMstGridID, i ,"paidAmt");
+      }
     }
+  }
 
-    $("#billTotalAmtTxt").text("RM " + $.number(totalAmt,2));
+  $("#billTotalAmtTxt").text("RM " + $.number(totalAmt,2));
 }
 
 function resetBillGrid(){
@@ -2406,144 +2412,149 @@ function resetBillGrid(){
 }
 
 function addBillToFinal(){
-	var addedCount = 0;
-    var checkArray = AUIGrid.getItemsByValue(targetBillMstGridID,"btnCheck","1");
+  var addedCount = 0;
+  var msg = "";
+  var checkArray = AUIGrid.getItemsByValue(targetBillMstGridID,"btnCheck","1");
 
-    if($("#billcashIsCommChk").is(":checked") == true){
-        $("#billcashIsCommChk").val("1");
-    }else{
-        $("#billcashIsCommChk").val("0");
+  if($("#billcashIsCommChk").is(":checked") == true){
+    $("#billcashIsCommChk").val("1");
+  } else {
+    $("#billcashIsCommChk").val("0");
+  }
+
+  if(checkArray.length > 1){
+    Common.alert("<spring:message code='pay.alert.onlyOneBill'/>");
+    return;
+  } else {
+    if(isDupHPToFinal() > 0 || isDupASToFinal() > 0){
+      Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
+      return;
     }
 
-    if(checkArray.length > 1){
-        Common.alert("<spring:message code='pay.alert.onlyOneBill'/>");
-        return;
-    }else{
+    var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);
+    maxSeq = maxSeq + 1;
 
-		if(isDupHPToFinal() > 0 || isDupASToFinal() > 0){
-			Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
-			return;
-		}
+    if(rowCnt > 0){
+      for(i = 0 ; i < rowCnt ; i++){
+        if(rowCnt < 2){
+          var salesOrdId = AUIGrid.getCellValue(targetBillMstGridID, i ,"billSoId");
+          Common.ajax("GET", "/payment/common/checkOrderOutstanding.do", {salesOrdId : salesOrdId}, function(RESULT) {
 
-        var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);
-        maxSeq = maxSeq + 1;
-
-        if(rowCnt > 0){
-            for(i = 0 ; i < rowCnt ; i++){
-
-            	if(rowCnt < 2){
-                    var salesOrdId = AUIGrid.getCellValue(targetBillMstGridID, i ,"billSoId");
-                    Common.ajax("GET", "/payment/common/checkOrderOutstanding.do", {salesOrdId : salesOrdId}, function(RESULT) {
-
-                        if(RESULT.rootState == 'ROOT_1') {
-
-                            Common.alert('No Outstanding' + DEFAULT_DELIMITER + RESULT.msg);
-                        }
-                    });
-                }
-
-                if(AUIGrid.getCellValue(targetBillMstGridID, i ,"btnCheck") == 1){
-                    var targetAmt = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAmt") - AUIGrid.getCellValue(targetBillMstGridID, i ,"paidAmt");
-
-                    if(targetAmt > 0){
-                        var item = new Object();
-
-                        item.procSeq = maxSeq;
-                        item.appType = AUIGrid.getCellValue(targetBillMstGridID, i ,"appType");
-                        item.advMonth = 0;
-                        item.mstRpf = 0;
-                        item.mstRpfPaid = 0;
-
-                        item.assignAmt = 0;
-                        item.billAmt   = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAmt");
-                        item.billDt   = AUIGrid.getCellValue(targetBillMstGridID, i ,"billDt");
-                        item.billGrpId = 0;
-                        item.billId = AUIGrid.getCellValue(targetBillMstGridID, i ,"billId");
-                        item.billNo = AUIGrid.getCellValue(targetBillMstGridID, i ,"billNo");
-                        item.billStatus = AUIGrid.getCellValue(targetBillMstGridID, i ,"stusNm");
-                        item.billTypeId = AUIGrid.getCellValue(targetBillMstGridID, i ,"billTypeId");
-                        item.billTypeNm   = AUIGrid.getCellValue(targetBillMstGridID, i ,"billTypeNm");
-                        item.custNm   = AUIGrid.getCellValue(targetBillMstGridID, i ,"custNm");
-                        item.discountAmt = 0;
-                        item.installment  = 0;
-                        item.ordId = AUIGrid.getCellValue(targetBillMstGridID, i ,"billSoId");
-                        item.ordNo = AUIGrid.getCellValue(targetBillMstGridID, i ,"salesOrdNo");
-                        item.paidAmt     = AUIGrid.getCellValue(targetBillMstGridID, i ,"paidAmt");
-                        item.targetAmt   = targetAmt;
-                        item.srvcContractID   = 0;
-                        item.billAsId    = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAsId");
-												item.srvMemId	=0;
-                        item.trNo =  $("#billkeyInTrNo").val() ;
-                        item.trDt =  $("#billkeyInTrIssueDate").val() ;
-                        item.collectorCode = $("#billkeyInCollMemCd").val() ;
-                        item.collectorId = $("#billkeyInCollMemId").val() ;
-                        item.allowComm = $("#billcashIsCommChk").val() ;
-
-                        AUIGrid.addRow(targetFinalBillGridID, item, "last");
-                        addedCount++;
-                    }
-                }
+            if(RESULT.rootState == 'ROOT_1') {
+              //Common.alert('No Outstanding' + DEFAULT_DELIMITER + RESULT.msg);
+              msg = "No Outstanding" + DEFAULT_DELIMITER + RESULT.msg;
+            } else if(RESULT.rootState == 'ROOT_3') {
+              //Common.alert('Point of Sales' + DEFAULT_DELIMITER + RESULT.msg);
+              msg = "Point of Sales" + DEFAULT_DELIMITER + RESULT.msg
             }
+          });
         }
 
-        if(addedCount == 0){
-            Common.alert("<spring:message code='pay.alert.selectBillingData'/>");
-        }
+        if(AUIGrid.getCellValue(targetBillMstGridID, i ,"btnCheck") == 1){
+          var targetAmt = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAmt") - AUIGrid.getCellValue(targetBillMstGridID, i ,"paidAmt");
+          if(targetAmt > 0){
+            var item = new Object();
 
-        recalculatePaymentTotalAmt();
-        $("#billkeyInTrNo").clearForm() ;
-        $("#billkeyInTrIssueDate").clearForm() ;
+            item.procSeq = maxSeq;
+            item.appType = AUIGrid.getCellValue(targetBillMstGridID, i ,"appType");
+            item.advMonth = 0;
+            item.mstRpf = 0;
+            item.mstRpfPaid = 0;
+
+            item.assignAmt = 0;
+            item.billAmt   = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAmt");
+            item.billDt   = AUIGrid.getCellValue(targetBillMstGridID, i ,"billDt");
+            item.billGrpId = 0;
+            item.billId = AUIGrid.getCellValue(targetBillMstGridID, i ,"billId");
+            item.billNo = AUIGrid.getCellValue(targetBillMstGridID, i ,"billNo");
+            item.billStatus = AUIGrid.getCellValue(targetBillMstGridID, i ,"stusNm");
+            item.billTypeId = AUIGrid.getCellValue(targetBillMstGridID, i ,"billTypeId");
+            item.billTypeNm   = AUIGrid.getCellValue(targetBillMstGridID, i ,"billTypeNm");
+            item.custNm   = AUIGrid.getCellValue(targetBillMstGridID, i ,"custNm");
+            item.discountAmt = 0;
+            item.installment  = 0;
+            item.ordId = AUIGrid.getCellValue(targetBillMstGridID, i ,"billSoId");
+            item.ordNo = AUIGrid.getCellValue(targetBillMstGridID, i ,"salesOrdNo");
+            item.paidAmt     = AUIGrid.getCellValue(targetBillMstGridID, i ,"paidAmt");
+            item.targetAmt   = targetAmt;
+            item.srvcContractID   = 0;
+            item.billAsId    = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAsId");
+            item.srvMemId  =0;
+            item.trNo =  $("#billkeyInTrNo").val() ;
+            item.trDt =  $("#billkeyInTrIssueDate").val() ;
+            item.collectorCode = $("#billkeyInCollMemCd").val() ;
+            item.collectorId = $("#billkeyInCollMemId").val() ;
+            item.allowComm = $("#billcashIsCommChk").val() ;
+
+            AUIGrid.addRow(targetFinalBillGridID, item, "last");
+            addedCount++;
+          }
+        }
+      }
     }
+
+    if(addedCount == 0){
+      Common.alert("<spring:message code='pay.alert.selectBillingData'/>");
+    } else {
+      if (msg != "") {
+        Common.alert(msg);
+      }
+    }
+
+    recalculatePaymentTotalAmt();
+    $("#billkeyInTrNo").clearForm() ;
+    $("#billkeyInTrIssueDate").clearForm() ;
+  }
 }
 
 
 // Add 할때 중복된 건이 있는지 체크한다.
 function isDupASToFinal(){
-	var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);
-	var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","AS");
-	var dupCnt = 0;
+  var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);
+  var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","AS");
+  var dupCnt = 0;
 
 
-	if(rowCnt > 0){
-		for(i = 0 ; i < rowCnt ; i++){
-			if(AUIGrid.getCellValue(targetBillMstGridID, i ,"btnCheck") == 1){
-				if(addedRows.length > 0) {
-					for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
-						if (AUIGrid.getCellValue(targetBillMstGridID, i ,"billId") == addedRows[addedIdx].billId && AUIGrid.getCellValue(targetBillMstGridID, i ,"appType") == 'AS') {
-							dupCnt++;
-						}
-					}
-				}
-			}
-		}
-	}
-	return dupCnt;
+  if(rowCnt > 0){
+    for(i = 0 ; i < rowCnt ; i++){
+      if(AUIGrid.getCellValue(targetBillMstGridID, i ,"btnCheck") == 1){
+        if(addedRows.length > 0) {
+          for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+            if (AUIGrid.getCellValue(targetBillMstGridID, i ,"billId") == addedRows[addedIdx].billId && AUIGrid.getCellValue(targetBillMstGridID, i ,"appType") == 'AS') {
+              dupCnt++;
+            }
+          }
+        }
+      }
+    }
+  }
+  return dupCnt;
 }
 
 
 // Add 할때 중복된 건이 있는지 체크한다.
 function isDupHPToFinal(){
-	var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);
-	var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","HP");
-	var dupCnt = 0;
+  var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);
+  var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","HP");
+  var dupCnt = 0;
 
 
-	if(rowCnt > 0){
-		for(i = 0 ; i < rowCnt ; i++){
-			if(AUIGrid.getCellValue(targetBillMstGridID, i ,"btnCheck") == 1){
-				var targetAmt = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAmt") - AUIGrid.getCellValue(targetBillMstGridID, i ,"paidAmt");
+  if(rowCnt > 0){
+    for(i = 0 ; i < rowCnt ; i++){
+      if(AUIGrid.getCellValue(targetBillMstGridID, i ,"btnCheck") == 1){
+        var targetAmt = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAmt") - AUIGrid.getCellValue(targetBillMstGridID, i ,"paidAmt");
 
-				if(addedRows.length > 0) {
-					for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
-						if (AUIGrid.getCellValue(targetBillMstGridID, i ,"billId") == addedRows[addedIdx].billId && AUIGrid.getCellValue(targetBillMstGridID, i ,"appType") == 'HP') {
-							dupCnt++;
-						}
-					}
-				}
-			}
-		}
-	}
-	return dupCnt;
+        if(addedRows.length > 0) {
+          for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+            if (AUIGrid.getCellValue(targetBillMstGridID, i ,"billId") == addedRows[addedIdx].billId && AUIGrid.getCellValue(targetBillMstGridID, i ,"appType") == 'HP') {
+              dupCnt++;
+            }
+          }
+        }
+      }
+    }
+  }
+  return dupCnt;
 }
 
 //**************************************************
@@ -2594,7 +2605,7 @@ function recalculateOutSrvcTotalAmt(){
     if(rowCnt > 0){
         for(var i = 0; i < rowCnt; i++){
             totalAmt += (AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packageCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packagePaid"))
-				        +(AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterPaid"));
+                +(AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterPaid"));
         }
     }
 
@@ -2607,14 +2618,14 @@ function resetOutSrvcGrid(){
 
 
 function addOutSrvcToFinal(){
-	var addedCount = 0;
+  var addedCount = 0;
 
-	if(isDupOutSrvcToFinal() > 0){
-    	Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
-		return;
-	}
+  if(isDupOutSrvcToFinal() > 0){
+      Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
+    return;
+  }
 
-	if($("#outSrvccashIsCommChk").is(":checked") == true){
+  if($("#outSrvccashIsCommChk").is(":checked") == true){
         $("#outSrvccashIsCommChk").val("1");
     }else{
         $("#outSrvccashIsCommChk").val("0");
@@ -2627,7 +2638,7 @@ function addOutSrvcToFinal(){
     if(rowCnt > 0){
         for(i = 0 ; i < rowCnt ; i++){
 
-        	if(rowCnt < 2){
+          if(rowCnt < 2){
                 var salesOrdId = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordId");
                 Common.ajax("GET", "/payment/common/checkOrderOutstanding.do", {salesOrdId : salesOrdId}, function(RESULT) {
 
@@ -2638,89 +2649,89 @@ function addOutSrvcToFinal(){
                 });
             }
 
-			var packageAmt = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packageCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packagePaid");
+      var packageAmt = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packageCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packagePaid");
 
-        	if(packageAmt > 0){
-	        	var item = new Object();
-	        	item.procSeq = maxSeq;
-	            item.appType = "OUT_MEM";
-	            item.advMonth = 0;
-	            item.mstRpf = 0;
-	            item.mstRpfPaid = 0;
+          if(packageAmt > 0){
+            var item = new Object();
+            item.procSeq = maxSeq;
+              item.appType = "OUT_MEM";
+              item.advMonth = 0;
+              item.mstRpf = 0;
+              item.mstRpfPaid = 0;
 
-	            item.assignAmt = 0;
-	            item.billAmt   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packageCharge");
-	            item.billDt   = "1900-01-01";
-	            item.billGrpId = 0;
-	            item.billId = 0;
-	            item.billNo = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"quotNo");
-	            item.billStatus = "";
-	            item.billTypeId = 164;
-	            item.billTypeNm   = "Membership Package";
-	            item.custNm   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"custName");
-	            item.discountAmt = 0;
-	            item.installment  = 0;
-	            item.ordId = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordId");
-	            item.ordNo = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordNo");
-	            item.paidAmt     = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packagePaid");
-	            item.targetAmt   = packageAmt;
-	            item.srvcContractID   = 0;
-	            item.billAsId    = 0;
-							item.srvMemId	=AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cnvrMemId");
+              item.assignAmt = 0;
+              item.billAmt   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packageCharge");
+              item.billDt   = "1900-01-01";
+              item.billGrpId = 0;
+              item.billId = 0;
+              item.billNo = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"quotNo");
+              item.billStatus = "";
+              item.billTypeId = 164;
+              item.billTypeNm   = "Membership Package";
+              item.custNm   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"custName");
+              item.discountAmt = 0;
+              item.installment  = 0;
+              item.ordId = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordId");
+              item.ordNo = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordNo");
+              item.paidAmt     = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packagePaid");
+              item.targetAmt   = packageAmt;
+              item.srvcContractID   = 0;
+              item.billAsId    = 0;
+              item.srvMemId  =AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cnvrMemId");
               item.trNo =  $("#outSrvckeyInTrNo").val() ;
               item.trDt =  $("#outSrvckeyInTrIssueDate").val() ;
               item.collectorCode = $("#outSrvckeyInCollMemCd").val() ;
               item.collectorId = $("#outSrvckeyInCollMemId").val() ;
               item.allowComm = $("#outSrvccashIsCommChk").val() ;
 
-	            AUIGrid.addRow(targetFinalBillGridID, item, "last");
-	            addedCount++;
-        	}
+              AUIGrid.addRow(targetFinalBillGridID, item, "last");
+              addedCount++;
+          }
 
-			var filterAmt = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterPaid");
+      var filterAmt = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterPaid");
 
-        	if(filterAmt > 0){
-	        	var item = new Object();
-	        	item.procSeq = maxSeq;
-	            item.appType = "OUT_MEM";
-	            item.advMonth = 0;
-	            item.mstRpf = 0;
-	            item.mstRpfPaid = 0;
+          if(filterAmt > 0){
+            var item = new Object();
+            item.procSeq = maxSeq;
+              item.appType = "OUT_MEM";
+              item.advMonth = 0;
+              item.mstRpf = 0;
+              item.mstRpfPaid = 0;
 
-	            item.assignAmt = 0;
-	            item.billAmt   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterCharge");
-	            item.billDt   = "1900-01-01";
-	            item.billGrpId = 0;
-	            item.billId = 0;
-	            item.billNo = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"quotNo");
-	            item.billStatus = "";
-	            item.billTypeId = 542;
-	            item.billTypeNm   = "Filter (1st BS)";
-	            item.custNm   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"custName");
-	            item.discountAmt = 0;
-	            item.installment  = 0;
-	            item.ordId = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordId");
-	            item.ordNo = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordNo");
-	            item.paidAmt     = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterPaid");
-	            item.targetAmt   = filterAmt;
-	            item.srvcContractID   = 0;
-	            item.billAsId    = 0;
-							item.srvMemId	=AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cnvrMemId");
+              item.assignAmt = 0;
+              item.billAmt   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterCharge");
+              item.billDt   = "1900-01-01";
+              item.billGrpId = 0;
+              item.billId = 0;
+              item.billNo = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"quotNo");
+              item.billStatus = "";
+              item.billTypeId = 542;
+              item.billTypeNm   = "Filter (1st BS)";
+              item.custNm   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"custName");
+              item.discountAmt = 0;
+              item.installment  = 0;
+              item.ordId = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordId");
+              item.ordNo = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordNo");
+              item.paidAmt     = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterPaid");
+              item.targetAmt   = filterAmt;
+              item.srvcContractID   = 0;
+              item.billAsId    = 0;
+              item.srvMemId  =AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cnvrMemId");
               item.trNo =  $("#outSrvckeyInTrNo").val() ;
               item.trDt =  $("#outSrvckeyInTrIssueDate").val() ;
               item.collectorCode = $("#outSrvckeyInCollMemCd").val() ;
               item.collectorId = $("#outSrvckeyInCollMemId").val() ;
               item.allowComm = $("#outSrvccashIsCommChk").val() ;
 
-	            AUIGrid.addRow(targetFinalBillGridID, item, "last");
-	            addedCount++;
-        	}
+              AUIGrid.addRow(targetFinalBillGridID, item, "last");
+              addedCount++;
+          }
         }
     }
 
 
     if(addedCount == 0){
-    	Common.alert("<spring:message code='pay.alert.selectBillingData'/>");
+      Common.alert("<spring:message code='pay.alert.selectBillingData'/>");
     }
 
     recalculatePaymentTotalAmt();
@@ -2731,38 +2742,38 @@ function addOutSrvcToFinal(){
 // Add 할때 중복된 건이 있는지 체크한다.
 function isDupOutSrvcToFinal(){
     var rowCnt = AUIGrid.getRowCount(targetOutSrvcMstGridID);
-	var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","OUT_MEM");
-	var dupCnt = 0;
+  var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","OUT_MEM");
+  var dupCnt = 0;
 
     if(rowCnt > 0){
-		for(i = 0 ; i < rowCnt ; i++){
-			var packageAmt = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packageCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packagePaid");
+    for(i = 0 ; i < rowCnt ; i++){
+      var packageAmt = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packageCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packagePaid");
 
-			if(packageAmt > 0){
-				if(addedRows.length > 0) {
-					for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
-						if (AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"quotNo") == addedRows[addedIdx].billNo && 164 == addedRows[addedIdx].billTypeId) {
-							dupCnt++;
-						}
-					}
-				}
-			}
+      if(packageAmt > 0){
+        if(addedRows.length > 0) {
+          for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+            if (AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"quotNo") == addedRows[addedIdx].billNo && 164 == addedRows[addedIdx].billTypeId) {
+              dupCnt++;
+            }
+          }
+        }
+      }
 
-			var filterAmt = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterPaid");
+      var filterAmt = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterPaid");
 
-			if(filterAmt > 0){
-				if(addedRows.length > 0) {
-					for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
-						if (AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"quotNo") == addedRows[addedIdx].billNo && 542 == addedRows[addedIdx].billTypeId) {
-							dupCnt++;
-						}
-					}
-				}
-			}
-		}
+      if(filterAmt > 0){
+        if(addedRows.length > 0) {
+          for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+            if (AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"quotNo") == addedRows[addedIdx].billNo && 542 == addedRows[addedIdx].billTypeId) {
+              dupCnt++;
+            }
+          }
+        }
+      }
+    }
     }
 
-	return dupCnt;
+  return dupCnt;
 }
 
 //**************************************************
@@ -3050,51 +3061,51 @@ function isDupOutSrvcToFinal(){
     -->
     <!-- search_table start -->
     <section id="rentalSearch">
-	    <section class="search_table">
-	        <!-- search_table start -->
-	        <form id="rentalSearchForm" action="#" method="post">
-	            <input type="hidden" name="rentalOrdId" id="rentalOrdId" />
-	            <input type="hidden" name="rentalBillGrpId" id="rentalBillGrpId" />
-	            <input type="hidden" name="rentalAdvAmt" id="rentalAdvAmt" />
-	            <input type="hidden" name="rentalMegaDeal" id="rentalMegaDeal" />
+      <section class="search_table">
+          <!-- search_table start -->
+          <form id="rentalSearchForm" action="#" method="post">
+              <input type="hidden" name="rentalOrdId" id="rentalOrdId" />
+              <input type="hidden" name="rentalBillGrpId" id="rentalBillGrpId" />
+              <input type="hidden" name="rentalAdvAmt" id="rentalAdvAmt" />
+              <input type="hidden" name="rentalMegaDeal" id="rentalMegaDeal" />
 
-	            <table class="type1">
-	                <caption>table</caption>
-	                <colgroup>
-	                    <col style="width:180px" />
-	                    <col style="width:*" />
-	                </colgroup>
-	                <tbody>
-	                    <tr>
-	                        <th scope="row">Sales Order No.</th>
-	                        <td>
-	                            <input type="text" name="rentalOrdNo" id="rentalOrdNo" title="" placeholder="Order Number" class="" />
-	                                <p class="btn_sky">
-	                                    <a href="javascript:fn_rentalConfirm();" id="confirm"><spring:message code='pay.btn.confirm'/></a>
-	                                </p>
-	                                <p class="btn_sky">
-	                                    <a href="javascript:fn_rentalOrderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
-	                                </p>
-	                                <p class="btn_sky">
-	                                    <a href="javascript:viewRentalLedger();" id="viewLedger"><spring:message code='pay.btn.viewLedger'/></a>
-	                                </p>
-	                                <label><input type="checkbox" id="isRentalBillGroup" name="isRentalBillGroup" onClick="javascript:rentalCheckBillGroup();" /><span>include all orders' bills with same billing group </span></label>
-	                        </td>
-	                    </tr>
-	                    <tr>
-	                        <th scope="row">Advance Specification</th>
-	                        <td>
-	                            <select id="rentalAdvMonthType" name="rentalAdvMonthType" onchange="fn_rentalAdvMonth();">
-	                                <option value="0" selected="selected">Advance Selection</option>
-	                                <option value="99">Specific Advance</option>
-	                                <option value="12">1 Year</option>
-	                                <option value="24">2 Years</option>
-	                            </select>
-	                            <input type="text" id="rentalTxtAdvMonth" name="rentalTxtAdvMonth" title="Advance Month" size="3" maxlength="2" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' onblur="javascript:fn_rentalAdvMonthChangeTxt();"/>
-	                            <input type="text" id="genAdvAmt" name="genAdvAmt" title="General Advance Amount" size="15" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' />
-	                        </td>
-	                    </tr>
-	                    <tr>
+              <table class="type1">
+                  <caption>table</caption>
+                  <colgroup>
+                      <col style="width:180px" />
+                      <col style="width:*" />
+                  </colgroup>
+                  <tbody>
+                      <tr>
+                          <th scope="row">Sales Order No.</th>
+                          <td>
+                              <input type="text" name="rentalOrdNo" id="rentalOrdNo" title="" placeholder="Order Number" class="" />
+                                  <p class="btn_sky">
+                                      <a href="javascript:fn_rentalConfirm();" id="confirm"><spring:message code='pay.btn.confirm'/></a>
+                                  </p>
+                                  <p class="btn_sky">
+                                      <a href="javascript:fn_rentalOrderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
+                                  </p>
+                                  <p class="btn_sky">
+                                      <a href="javascript:viewRentalLedger();" id="viewLedger"><spring:message code='pay.btn.viewLedger'/></a>
+                                  </p>
+                                  <label><input type="checkbox" id="isRentalBillGroup" name="isRentalBillGroup" onClick="javascript:rentalCheckBillGroup();" /><span>include all orders' bills with same billing group </span></label>
+                          </td>
+                      </tr>
+                      <tr>
+                          <th scope="row">Advance Specification</th>
+                          <td>
+                              <select id="rentalAdvMonthType" name="rentalAdvMonthType" onchange="fn_rentalAdvMonth();">
+                                  <option value="0" selected="selected">Advance Selection</option>
+                                  <option value="99">Specific Advance</option>
+                                  <option value="12">1 Year</option>
+                                  <option value="24">2 Years</option>
+                              </select>
+                              <input type="text" id="rentalTxtAdvMonth" name="rentalTxtAdvMonth" title="Advance Month" size="3" maxlength="2" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' onblur="javascript:fn_rentalAdvMonthChangeTxt();"/>
+                              <input type="text" id="genAdvAmt" name="genAdvAmt" title="General Advance Amount" size="15" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' />
+                          </td>
+                      </tr>
+                      <tr>
                   <th scope="row">TR No.</th>
                         <td>
                             <input id="rentalkeyInTrNo" name="rentalkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
@@ -3113,9 +3124,9 @@ function isDupOutSrvcToFinal(){
                       <input id="rentalkeyInCollMemId" name="rentalkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
                       <input id="rentalkeyInCollMemCd" name="rentalkeyInCollMemCd" type="text" title="" placeholder="" />
                       <p class="btn_sky">
-												<a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
-											</p> 
-											<a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                        <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
+                      </p>
+                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
                           <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                       </a>
                       <input id="rentalkeyInCollMemNm" name="rentalkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
@@ -3128,33 +3139,33 @@ function isDupOutSrvcToFinal(){
                             <label><input type="checkbox" id="rentalcashIsCommChk" name="rentalcashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
                       </td>
              </tr>
-	                </tbody>
-	            </table>
-	            <!-- table end -->
-	        </form>
-	    </section>
-	    <!-- search_table end -->
+                  </tbody>
+              </table>
+              <!-- table end -->
+          </form>
+      </section>
+      <!-- search_table end -->
 
-	    <!-- grid_wrap start -->
-	    <article class="grid_wrap">
-	        <div id="target_rental_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
-	    </article>
-	    <!-- grid_wrap end -->
+      <!-- grid_wrap start -->
+      <article class="grid_wrap">
+          <div id="target_rental_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
+      </article>
+      <!-- grid_wrap end -->
 
-	    <ul class="right_btns">
-	       <li><p class="btn_grid"><a href="javascript:addRentalToFinal();"><spring:message code='pay.btn.add'/></a></p></li>
+      <ul class="right_btns">
+         <li><p class="btn_grid"><a href="javascript:addRentalToFinal();"><spring:message code='pay.btn.add'/></a></p></li>
         </ul>
 
-	    <!-- grid_wrap start -->
-	    <article class="grid_wrap mt10">
-	        <div id="target_rentalD_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
-	    </article>
-	    <!-- grid_wrap end -->
+      <!-- grid_wrap start -->
+      <article class="grid_wrap mt10">
+          <div id="target_rentalD_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
+      </article>
+      <!-- grid_wrap end -->
 
-	    <ul class="right_btns">
-	        <li><p class="amountTotalSttl">Amount Total (RPF + Rental Fee) :</p></li>
-	        <li><strong id="rentalTotalAmtTxt">RM 0.00</strong></li>
-	    </ul>
+      <ul class="right_btns">
+          <li><p class="amountTotalSttl">Amount Total (RPF + Rental Fee) :</p></li>
+          <li><strong id="rentalTotalAmtTxt">RM 0.00</strong></li>
+      </ul>
     </section>
     <!--
     ***************************************************************************************
@@ -3164,32 +3175,32 @@ function isDupOutSrvcToFinal(){
     ***************************************************************************************
     -->
     <section id="outSearch" style="display:none;">
-	    <!-- search_table start -->
-	    <section class="search_table">
-	        <!-- search_table start -->
-	        <form id="outSearchForm" action="#" method="post">
-	            <input type="hidden" name="outOrdId" id="outOrdId" />
+      <!-- search_table start -->
+      <section class="search_table">
+          <!-- search_table start -->
+          <form id="outSearchForm" action="#" method="post">
+              <input type="hidden" name="outOrdId" id="outOrdId" />
 
-	            <table class="type1">
-	                <caption>table</caption>
-	                <colgroup>
-	                    <col style="width:180px" />
-	                    <col style="width:*" />
-	                </colgroup>
-	                <tbody>
-	                    <tr>
-	                        <th scope="row">Sales Order No.</th>
-	                        <td>
-	                            <input type="text" name="outOrdNo" id="outOrdNo" title="" placeholder="Order Number" class="" />
-	                                <p class="btn_sky">
-	                                    <a href="javascript:fn_outConfirm();" id="confirm"><spring:message code='pay.btn.confirm'/></a>
-	                                </p>
-	                                <p class="btn_sky">
-	                                    <a href="javascript:fn_outOrderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
-	                                </p>
-	                        </td>
-	                    </tr>
-	                    <tr>
+              <table class="type1">
+                  <caption>table</caption>
+                  <colgroup>
+                      <col style="width:180px" />
+                      <col style="width:*" />
+                  </colgroup>
+                  <tbody>
+                      <tr>
+                          <th scope="row">Sales Order No.</th>
+                          <td>
+                              <input type="text" name="outOrdNo" id="outOrdNo" title="" placeholder="Order Number" class="" />
+                                  <p class="btn_sky">
+                                      <a href="javascript:fn_outConfirm();" id="confirm"><spring:message code='pay.btn.confirm'/></a>
+                                  </p>
+                                  <p class="btn_sky">
+                                      <a href="javascript:fn_outOrderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
+                                  </p>
+                          </td>
+                      </tr>
+                      <tr>
                         <th scope="row">TR No.</th>
                         <td>
                             <input id="outkeyInTrNo" name="outkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
@@ -3208,8 +3219,8 @@ function isDupOutSrvcToFinal(){
                       <input id="outkeyInCollMemId" name="outkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
                       <input id="outkeyInCollMemCd" name="outkeyInCollMemCd" type="text" title="" placeholder=""  />
                       <p class="btn_sky">
-												<a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
-											</p> 
+                        <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
+                      </p>
                       <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
                           <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                       </a>
@@ -3223,28 +3234,28 @@ function isDupOutSrvcToFinal(){
                             <label><input type="checkbox" id="outcashIsCommChk" name="outcashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
                       </td>
              </tr>
-	                </tbody>
-	            </table>
-	            <!-- table end -->
-	        </form>
-	    </section>
-	    <!-- search_table end -->
+                  </tbody>
+              </table>
+              <!-- table end -->
+          </form>
+      </section>
+      <!-- search_table end -->
 
-	    <ul class="right_btns">
+      <ul class="right_btns">
            <li><p class="btn_grid"><a href="javascript:addOutToFinal();"><spring:message code='pay.btn.add'/></a></p></li>
         </ul>
 
-	    <!-- grid_wrap start -->
-	    <article class="grid_wrap">
-	        <div id="target_out_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
-	    </article>
-	    <!-- grid_wrap end -->
+      <!-- grid_wrap start -->
+      <article class="grid_wrap">
+          <div id="target_out_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
+      </article>
+      <!-- grid_wrap end -->
 
 
-	    <ul class="right_btns">
-	        <li><p class="amountTotalSttl">Amount Total :</p></li>
-	        <li><strong id="outTotalAmtTxt">RM 0.00</strong></li>
-	    </ul>
+      <ul class="right_btns">
+          <li><p class="amountTotalSttl">Amount Total :</p></li>
+          <li><strong id="outTotalAmtTxt">RM 0.00</strong></li>
+      </ul>
     </section>
 
     <!--
@@ -3255,47 +3266,47 @@ function isDupOutSrvcToFinal(){
     ***************************************************************************************
     -->
     <section id="srvcSearch" style="display:none;">
-	    <!-- search_table start -->
-	    <section class="search_table">
-	        <!-- search_table start -->
-	        <form id="srvcSearchForm" action="#" method="post">
-	            <input type="hidden" name="srvcOrdId" id="srvcOrdId" />
-	            <input type="hidden" name="srvcId" id="srvcId" />
-	            <input type="hidden" name="srvcCustBillId" id="srvcCustBillId" />
-	            <input type="hidden" name="srvcAdvAmt" id="srvcAdvAmt" />
-	            <table class="type1">
-	                <caption>table</caption>
-	                <colgroup>
-	                    <col style="width:180px" />
-	                    <col style="width:*" />
-	                </colgroup>
-	                <tbody>
-	                    <tr>
-	                        <th scope="row">Rental Membership No.</th>
-	                        <td>
-	                            <input type="text" name="srvcNo" id="srvcNo" title="" placeholder="SCS No." class="readonly" readonly />
-	                                <p class="btn_sky">
-	                                    <a href="javascript:fn_srvcOrderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
-	                                </p>
-	                                <p class="btn_sky">
-	                                       <a href="javascript:viewSrvcLedger();" id="viewLedger"><spring:message code='pay.btn.viewLedger'/></a>
-	                                </p>
-	                                <label><input type="checkbox" id="isSrvcBillGroup" name="isSrvcBillGroup" onClick="javascript:srvcCheckBillGroup();" /><span>include all service contacts' bills with same billing group </span></label>
-	                        </td>
-	                    </tr>
-	                    <tr>
-	                        <th scope="row">Advance Specification</th>
-	                        <td>
-	                            <select id="srvcAdvMonthType" name="srvcAdvMonthType" onchange="fn_srvcAdvMonth();">
-	                                <option value="0" selected="selected">Advance Selection</option>
-	                                <option value="99">Specific Advance</option>
-	                                <option value="12">1 Year</option>
-	                                <option value="24">2 Years</option>
-	                            </select>
-	                            <input type="text" id="srvcTxtAdvMonth" name="srvcTxtAdvMonth" title="Rental Membership Advance Month" size="3" maxlength="2" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' onblur="javascript:fn_srvcAdvMonthChangeTxt();"/>
-	                        </td>
-	                    </tr>
-	                    <tr>
+      <!-- search_table start -->
+      <section class="search_table">
+          <!-- search_table start -->
+          <form id="srvcSearchForm" action="#" method="post">
+              <input type="hidden" name="srvcOrdId" id="srvcOrdId" />
+              <input type="hidden" name="srvcId" id="srvcId" />
+              <input type="hidden" name="srvcCustBillId" id="srvcCustBillId" />
+              <input type="hidden" name="srvcAdvAmt" id="srvcAdvAmt" />
+              <table class="type1">
+                  <caption>table</caption>
+                  <colgroup>
+                      <col style="width:180px" />
+                      <col style="width:*" />
+                  </colgroup>
+                  <tbody>
+                      <tr>
+                          <th scope="row">Rental Membership No.</th>
+                          <td>
+                              <input type="text" name="srvcNo" id="srvcNo" title="" placeholder="SCS No." class="readonly" readonly />
+                                  <p class="btn_sky">
+                                      <a href="javascript:fn_srvcOrderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
+                                  </p>
+                                  <p class="btn_sky">
+                                         <a href="javascript:viewSrvcLedger();" id="viewLedger"><spring:message code='pay.btn.viewLedger'/></a>
+                                  </p>
+                                  <label><input type="checkbox" id="isSrvcBillGroup" name="isSrvcBillGroup" onClick="javascript:srvcCheckBillGroup();" /><span>include all service contacts' bills with same billing group </span></label>
+                          </td>
+                      </tr>
+                      <tr>
+                          <th scope="row">Advance Specification</th>
+                          <td>
+                              <select id="srvcAdvMonthType" name="srvcAdvMonthType" onchange="fn_srvcAdvMonth();">
+                                  <option value="0" selected="selected">Advance Selection</option>
+                                  <option value="99">Specific Advance</option>
+                                  <option value="12">1 Year</option>
+                                  <option value="24">2 Years</option>
+                              </select>
+                              <input type="text" id="srvcTxtAdvMonth" name="srvcTxtAdvMonth" title="Rental Membership Advance Month" size="3" maxlength="2" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' onblur="javascript:fn_srvcAdvMonthChangeTxt();"/>
+                          </td>
+                      </tr>
+                      <tr>
                   <th scope="row">TR No.</th>
                         <td>
                             <input id="srvckeyInTrNo" name="srvckeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
@@ -3314,8 +3325,8 @@ function isDupOutSrvcToFinal(){
                       <input id="srvckeyInCollMemId" name="srvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
                       <input id="srvckeyInCollMemCd" name="srvckeyInCollMemCd" type="text" title="" placeholder=""  />
                       <p class="btn_sky">
-												<a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
-											</p> 
+                        <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
+                      </p>
                       <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
                           <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                       </a>
@@ -3329,39 +3340,39 @@ function isDupOutSrvcToFinal(){
                             <label><input type="checkbox" id="srvccashIsCommChk" name="srvccashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
                       </td>
              </tr>
-	                </tbody>
-	            </table>
-	            <!-- table end -->
-	        </form>
-	    </section>
-	    <!-- search_table end -->
+                  </tbody>
+              </table>
+              <!-- table end -->
+          </form>
+      </section>
+      <!-- search_table end -->
 
-	    <!-- grid_wrap start -->
-	    <article class="grid_wrap">
-	        <div id="target_srvc_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
-	    </article>
-	    <!-- grid_wrap end -->
+      <!-- grid_wrap start -->
+      <article class="grid_wrap">
+          <div id="target_srvc_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
+      </article>
+      <!-- grid_wrap end -->
 
-	    <ul class="right_btns">
+      <ul class="right_btns">
            <li><p class="btn_grid"><a href="javascript:addSrvcToFinal();"><spring:message code='pay.btn.add'/></a></p></li>
         </ul>
 
-	    <!-- grid_wrap start -->
-	    <article class="grid_wrap mt10">
-	        <div id="target_srvcD_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
-	    </article>
-	    <!-- grid_wrap end -->
+      <!-- grid_wrap start -->
+      <article class="grid_wrap mt10">
+          <div id="target_srvcD_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
+      </article>
+      <!-- grid_wrap end -->
 
-	    <ul class="right_btns">
-	        <li><p class="amountTotalSttl">Amount Total (1st BS + Rental Fee) :</p></li>
-	        <li><strong id="srvcTotalAmtTxt">RM 0.00</strong></li>
-	    </ul>
+      <ul class="right_btns">
+          <li><p class="amountTotalSttl">Amount Total (1st BS + Rental Fee) :</p></li>
+          <li><strong id="srvcTotalAmtTxt">RM 0.00</strong></li>
+      </ul>
     </section>
 
       <!--
     ***************************************************************************************
     ***************************************************************************************
-    *************                                          Bill Payment Area                                                             ****
+    *************                                      Bill Payment Area                                                      ****
     ***************************************************************************************
     ***************************************************************************************
     -->
@@ -3375,22 +3386,19 @@ function isDupOutSrvcToFinal(){
                     <colgroup>
                         <col style="width:180px" />
                         <col style="width:*" />
-                        <col style="width:280px" />
+                        <col style="width:300px" />
                         <col style="width:*" />
                     </colgroup>
                     <tbody>
                         <tr>
                             <th scope="row">Bill Type</th>
                             <td>
-                                <select id="billType" name="billType" onChange="javascript:fn_changeBillType();">
+                                <select id="billType" name="billType" onChange="fn_changeBillType();">
                                     <option value="1">AS</option>
-                                    <!--
-									Credit Card는 HP제외
-									<option value="2">HP</option>
-									-->
+                                    <option value="3">POS</option>
                                 </select>
                             </td>
-                            <th scope="row">Search Keywords(BillNo, OrderNo, HPCode)</th>
+                            <th scope="row"><span id="bpa1" name="bpa1">Search Keywords (Bill No, Order No, HP Code)</span><span id="bpa2" name="bpa2" style="display:none">Search Keywords (PSN No.)</span></th>
                             <td>
                                 <input type="text" name="billSearchTxt" id="billSearchTxt" title="" placeholder="" class="w100" />
                                 <p class="btn_sky">
@@ -3399,39 +3407,37 @@ function isDupOutSrvcToFinal(){
                             </td>
                         </tr>
                         <tr>
-                  <th scope="row">TR No.</th>
-                        <td>
+                        <th scope="row">TR No.</th>
+                        <td colspan="3">
                             <input id="billkeyInTrNo" name="billkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
                         </td>
-
-              </tr>
-                            <tr>
-                                <th scope="row">TR Issue Date</th>
-                        <td>
-                            <input id="billkeyInTrIssueDate" name="billkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
-                        </td>
                         </tr>
-              <tr>
-                  <th scope="row">Collector</th>
-                  <td>
-                      <input id="billkeyInCollMemId" name="billkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                      <input id="billkeyInCollMemCd" name="billkeyInCollMemCd" type="text" title="" placeholder=""  />
-                      <p class="btn_sky">
-												<a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
-											</p>
-                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
-                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-                      </a>
-                      <input id="billkeyInCollMemNm" name="billkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
-                  </td>
-
-              </tr>
-              <tr>
-                      <th scope="row">Commission</th>
-                      <td>
+                        <tr colspan="3">
+                          <th scope="row">TR Issue Date</th>
+                          <td colspan="3">
+                            <input id="billkeyInTrIssueDate" name="billkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Collector</th>
+                          <td colspan="3">
+                            <input id="billkeyInCollMemId" name="billkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
+                            <input id="billkeyInCollMemCd" name="billkeyInCollMemCd" type="text" title="" placeholder=""  />
+                            <p class="btn_sky">
+                              <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
+                            </p>
+                            <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                              <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                            </a>
+                            <input id="billkeyInCollMemNm" name="billkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Commission</th>
+                          <td colspan="3">
                             <label><input type="checkbox" id="billcashIsCommChk" name="billcashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
-                      </td>
-             </tr>
+                          </td>
+                        </tr>
                     </tbody>
                 </table>
                 <!-- table end -->
@@ -3455,7 +3461,6 @@ function isDupOutSrvcToFinal(){
         </ul>
     </section>
 
-
     <!--
     ***************************************************************************************
     ***************************************************************************************
@@ -3468,9 +3473,9 @@ function isDupOutSrvcToFinal(){
         <section class="search_table">
             <!-- search_table start -->
             <form id="outSrvcSearchForm" action="#" method="post">
-				<input type="hidden" name="outSrvcOrdId" id="outSrvcOrdId" />
-	            <input type="hidden" name="outSrvcQuotId" id="outSrvcQuotId" />
-	            <input type="hidden" name="outSrvcOrdNo" id="outSrvcOrdNo" />
+        <input type="hidden" name="outSrvcOrdId" id="outSrvcOrdId" />
+              <input type="hidden" name="outSrvcQuotId" id="outSrvcQuotId" />
+              <input type="hidden" name="outSrvcOrdNo" id="outSrvcOrdNo" />
                 <table class="type1">
                     <caption>table</caption>
                     <colgroup>
@@ -3508,8 +3513,8 @@ function isDupOutSrvcToFinal(){
                       <input id="outSrvckeyInCollMemId" name="outSrvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
                       <input id="outSrvckeyInCollMemCd" name="outSrvckeyInCollMemCd" type="text" title="" placeholder=""  />
                       <p class="btn_sky">
-												<a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
-											</p>
+                        <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
+                      </p>
                       <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
                           <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                       </a>
@@ -3594,8 +3599,8 @@ function isDupOutSrvcToFinal(){
                       <input id="careSrvckeyInCollMemId" name="careSrvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
                       <input id="careSrvckeyInCollMemCd" name="careSrvckeyInCollMemCd" type="text" title="" placeholder=""  />
                       <p class="btn_sky">
-												<a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
-											</p>
+                        <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
+                      </p>
                       <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
                           <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                       </a>
@@ -3651,20 +3656,20 @@ function isDupOutSrvcToFinal(){
     </aside>
     <!-- title_line end -->
 
-	<!-- grid_wrap start -->
-	<article class="grid_wrap mt10">
-	    <div id="target_finalBill_grid_wrap" style="width: 100%; height: 220px; margin: 0 auto;"></div>
-	</article>
-	<!-- grid_wrap end -->
+  <!-- grid_wrap start -->
+  <article class="grid_wrap mt10">
+      <div id="target_finalBill_grid_wrap" style="width: 100%; height: 220px; margin: 0 auto;"></div>
+  </article>
+  <!-- grid_wrap end -->
 
-	 <ul class="right_btns">
+   <ul class="right_btns">
             <li><p class="amountTotalSttl">Amount Total :</p></li>
             <li><strong id="paymentTotalAmtTxt">RM 0.00</strong></li>
         </ul>
 
-	<ul class="right_btns mt10">
-	   <li><p class="btn_grid"><a id="selCreditCardBtn" href="#">Select Customer Card</a></p></li>
-	   <li><p class="btn_grid"><a href="javascript:savePayment();"><spring:message code='sys.btn.save'/></a></p></li>
+  <ul class="right_btns mt10">
+     <li><p class="btn_grid"><a id="selCreditCardBtn" href="#">Select Customer Card</a></p></li>
+     <li><p class="btn_grid"><a href="javascript:savePayment();"><spring:message code='sys.btn.save'/></a></p></li>
     </ul>
 
     <!-- search_table start -->
@@ -3682,77 +3687,77 @@ function isDupOutSrvcToFinal(){
                     <col style="width:*" />
                 </colgroup>
                 <tbody>
-				    <tr>
-				        <th scope="row">Payment Type</th>
-				        <td>
-				            <select id="keyInPayType" name="keyInPayType">
-				                <option value="107">Credit Card</option>
-				            </select>
-				        </td>
-						<th scope="row">Amount<span class="must">*</span></th>
-				        <td>
-				            <input type="text" id="keyInAmount" name="keyInAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
-				        </td>
-						<!--
-				        <th scope="row">Ref No</th>
-				        <td>
-				            <input type="text" id="keyInRefNo" name="keyInRefNo" class="w100p" maxlength="30" />
-				        </td>
-						-->
-				    </tr>
-					<!--
-					<tr>
-				        <th scope="row">Ref No</th>
-				        <td>
-				            <input type="text" id="keyInRefNo" name="keyInRefNo" class="w100p" maxlength="30" />
-				        </td>
-				        <th scope="row">Bank Charge Amount</th>
-				        <td>
-				            <input type="text" id="keyInBankChrgAmount" name="keyInBankChrgAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
-				        </td>
-				    </tr>
-					-->
-				    <tr>
-				        <th scope="row">Card Type<span class="must">*</span></th>
-				        <td>
-				            <select id="keyCrcCardType" name="keyCrcCardType"  class="w100p">
-				                <option value="1241">Credit Card</option>
-				                <option value="1240">Debit Card</option>
-				            </select>
-				        </td>
-				        <th scope="row">Card Brand<span class="must">*</span></th>
-				        <td>
-				            <select id="keyInCrcType" name="keyInCrcType"  class="w100p"></select>
-				        </td>
-				    </tr>
-				    <tr>
-				        <th scope="row">Card Mode<span class="must">*</span></th>
-				        <td>
-				            <select id="keyInCardMode" name="keyInCardMode"  class="w100p" onChange="javascript:fn_changeCrcMode();">
-				            </select>
-				        </td>
-				        <th scope="row">Approval No.<span class="must">*</span></th>
-				        <td>
-				            <input type="text" id="keyInApprovalNo" name="keyInApprovalNo" class="w100p"  maxlength="6" />
-				        </td>
-				    </tr>
-				    <tr>
-				        <th scope="row">Card No<span class="must">*</span></th>
-				        <td>
-				            <p class="short"><input type="text" id="keyInCardNo1" name="keyInCardNo1" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onChange="javascript:fn_changeCardNo1();"/></p>
-				            <span>-</span>
-				            <p class="short"><input type="text" id="keyInCardNo2" name="keyInCardNo2" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
-				            <span>-</span>
-				            <p class="short"><input type="text" id="keyInCardNo3" name="keyInCardNo3" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
-							<span>-</span>
-				            <p class="short"><input type="text" id="keyInCardNo4" name="keyInCardNo4" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
-				        </td>
-				        <th scope="row">Credit Card Holder Name</th>
-				        <td>
-				            <input type="text" id="keyInHolderNm" name="keyInHolderNm" class="w100p"  />
-				        </td>
-				    </tr>
-				    <tr>
+            <tr>
+                <th scope="row">Payment Type</th>
+                <td>
+                    <select id="keyInPayType" name="keyInPayType">
+                        <option value="107">Credit Card</option>
+                    </select>
+                </td>
+            <th scope="row">Amount<span class="must">*</span></th>
+                <td>
+                    <input type="text" id="keyInAmount" name="keyInAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
+                </td>
+            <!--
+                <th scope="row">Ref No</th>
+                <td>
+                    <input type="text" id="keyInRefNo" name="keyInRefNo" class="w100p" maxlength="30" />
+                </td>
+            -->
+            </tr>
+          <!--
+          <tr>
+                <th scope="row">Ref No</th>
+                <td>
+                    <input type="text" id="keyInRefNo" name="keyInRefNo" class="w100p" maxlength="30" />
+                </td>
+                <th scope="row">Bank Charge Amount</th>
+                <td>
+                    <input type="text" id="keyInBankChrgAmount" name="keyInBankChrgAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
+                </td>
+            </tr>
+          -->
+            <tr>
+                <th scope="row">Card Type<span class="must">*</span></th>
+                <td>
+                    <select id="keyCrcCardType" name="keyCrcCardType"  class="w100p">
+                        <option value="1241">Credit Card</option>
+                        <option value="1240">Debit Card</option>
+                    </select>
+                </td>
+                <th scope="row">Card Brand<span class="must">*</span></th>
+                <td>
+                    <select id="keyInCrcType" name="keyInCrcType"  class="w100p"></select>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Card Mode<span class="must">*</span></th>
+                <td>
+                    <select id="keyInCardMode" name="keyInCardMode"  class="w100p" onChange="javascript:fn_changeCrcMode();">
+                    </select>
+                </td>
+                <th scope="row">Approval No.<span class="must">*</span></th>
+                <td>
+                    <input type="text" id="keyInApprovalNo" name="keyInApprovalNo" class="w100p"  maxlength="6" />
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Card No<span class="must">*</span></th>
+                <td>
+                    <p class="short"><input type="text" id="keyInCardNo1" name="keyInCardNo1" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onChange="javascript:fn_changeCardNo1();"/></p>
+                    <span>-</span>
+                    <p class="short"><input type="text" id="keyInCardNo2" name="keyInCardNo2" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+                    <span>-</span>
+                    <p class="short"><input type="text" id="keyInCardNo3" name="keyInCardNo3" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+              <span>-</span>
+                    <p class="short"><input type="text" id="keyInCardNo4" name="keyInCardNo4" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+                </td>
+                <th scope="row">Credit Card Holder Name</th>
+                <td>
+                    <input type="text" id="keyInHolderNm" name="keyInHolderNm" class="w100p"  />
+                </td>
+            </tr>
+            <tr>
                         <th scope="row">Issue Bank<span class="must">*</span></th>
                         <td>
                             <select id="keyInIssueBank" name="keyInIssueBank" class="w100p" ></select>
@@ -3762,72 +3767,72 @@ function isDupOutSrvcToFinal(){
                             <select id="keyInMerchantBank" name="keyInMerchantBank" class="w100p" onChange="javascript:fn_changeMerchantBank();"></select>
                         </td>
                     </tr>
-				    <tr>
-				        <th scope="row">Expiry Date(mm/yy)<span class="must">*</span></th>
-				        <td>
-				            <p class="short"><input type="text" id="keyInExpiryMonth" name="keyInExpiryMonth" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
-				            <span>/</span>
-				            <p class="short"><input type="text" id="keyInExpiryYear" name="keyInExpiryYear" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
-				        </td>
-				        <th scope="row">Tenure</th>
-				        <td>
-				            <select id="keyInTenure" name="keyInTenure"  class="w100p">
+            <tr>
+                <th scope="row">Expiry Date(mm/yy)<span class="must">*</span></th>
+                <td>
+                    <p class="short"><input type="text" id="keyInExpiryMonth" name="keyInExpiryMonth" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+                    <span>/</span>
+                    <p class="short"><input type="text" id="keyInExpiryYear" name="keyInExpiryYear" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+                </td>
+                <th scope="row">Tenure</th>
+                <td>
+                    <select id="keyInTenure" name="keyInTenure"  class="w100p">
                             </select>
-				        </td>
-				    </tr>
-				    <tr>
-				        <th scope="row">Transaction Date<span class="must">*</span></th>
-				        <td>
-				            <input id="keyInTrDate" name="keyInTrDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
-				        </td>
-						<!--
-				        <th scope="row">Running Number</th>
-				        <td>
-				            <input id="keyInRunNo" name="keyInRunNo" type="text" title="" placeholder="" class="w100p" maxlength="50" />
-				        </td>
-						-->
-						<th scope="row"></th>
-				        <td>
-				        </td>
-				    </tr>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Transaction Date<span class="must">*</span></th>
+                <td>
+                    <input id="keyInTrDate" name="keyInTrDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                </td>
+            <!--
+                <th scope="row">Running Number</th>
+                <td>
+                    <input id="keyInRunNo" name="keyInRunNo" type="text" title="" placeholder="" class="w100p" maxlength="50" />
+                </td>
+            -->
+            <th scope="row"></th>
+                <td>
+                </td>
+            </tr>
 
-				    <tr>
-				        <th scope="row">Remark</th>
-				        <td colspan="3">
-				            <textarea id="keyInRemark" name="keyInRemark"  cols="20" rows="5" placeholder=""></textarea>
-				        </td>
-				    </tr>
-				    <tr>
-				        <th scope="row">TR No.</th>
-				        <td>
-				            <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" disabled/>
-				        </td>
-				        <th scope="row">TR Issue Date</th>
-				        <td>
-				            <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p"  disabled/>
-				        </td>
-				    </tr>
-				    <tr>
-				        <th scope="row">Collector</th>
-				        <td>
-				            <input id="keyInCollMemId" name="keyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-				            <input id="keyInCollMemNm" name="keyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
-				            <!--<a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
-				                <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+            <tr>
+                <th scope="row">Remark</th>
+                <td colspan="3">
+                    <textarea id="keyInRemark" name="keyInRemark"  cols="20" rows="5" placeholder=""></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">TR No.</th>
+                <td>
+                    <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" disabled/>
+                </td>
+                <th scope="row">TR Issue Date</th>
+                <td>
+                    <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p"  disabled/>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Collector</th>
+                <td>
+                    <input id="keyInCollMemId" name="keyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
+                    <input id="keyInCollMemNm" name="keyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
+                    <!--<a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+                        <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                             </a>-->
-				        </td>
-				        <th scope="row">Pay Date<span class="must">*</span></th>
-				        <td>
-				            <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly value="${currentDay}"/>
-				        </td>
-				    </tr>
-					<tr>
-				        <th scope="row">Commission</th>
-				        <td colspan="3">
-							<label><input type="checkbox" id="keyInIsCommChk" name="keyInIsCommChk" value="1"  checked="checked" disabled/><span>Allow commssion for this payment</span></label>
-				        </td>
-				    </tr>
-				</tbody>
+                </td>
+                <th scope="row">Pay Date<span class="must">*</span></th>
+                <td>
+                    <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly value="${currentDay}"/>
+                </td>
+            </tr>
+          <tr>
+                <th scope="row">Commission</th>
+                <td colspan="3">
+              <label><input type="checkbox" id="keyInIsCommChk" name="keyInIsCommChk" value="1"  checked="checked" disabled/><span>Allow commssion for this payment</span></label>
+                </td>
+            </tr>
+        </tbody>
             </table>
             <!-- table end -->
         </form>
