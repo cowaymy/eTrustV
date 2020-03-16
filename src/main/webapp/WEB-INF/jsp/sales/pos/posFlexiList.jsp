@@ -39,7 +39,7 @@ $(document).ready(function() { //***********************************************
     CommonCombo.make('cmbPosTypeId', "/sales/pos/selectPosModuleCodeList", moduleParam , '', optionModule);
 
     //PosSystemTypeComboBox
-    var systemParam = {groupCode : 140 , codeIn : [5570]};
+    var systemParam = {groupCode : 140 , codeIn : [5570, 5794]};
 
     CommonCombo.make('cmbSalesTypeId', "/sales/pos/selectPosModuleCodeList", systemParam , '', optionSystem);
 
@@ -126,6 +126,61 @@ $(document).ready(function() { //***********************************************
         Common.popupDiv("/sales/pos/posFlexiSystemPop.do", '', null , true , '_insDiv');
     });
 
+    // POS REVERSAL
+    $("#_reversalBtn").click(function() {
+      var clickChk = AUIGrid.getSelectedItems(posGridID);
+      if(clickChk == null || clickChk.length <= 0 ){
+        Common.alert('<spring:message code="sal.alert.msg.noOrderSelected" />');
+        return;
+      }
+
+      if(clickChk[0].item.posTypeId == 1361 || clickChk[0].item.posTypeId == 5794){  // REVERSAL POS ARE PROHIBITED
+        Common.alert('<spring:message code="sal.alert.msg.posProhibit" />');
+        return;
+      }
+
+      // NO CHECKING FOR POS STATUS FOR REVERSAL -- TPY
+      /*
+      console.log("clickChk[0].item.stusId : " + clickChk[0].item.stusId);
+      if(clickChk[0].item.stusId != 4){
+        Common.alert('<spring:message code="sal.alert.msg.canNotbeReversalByCompl" />');
+            return;
+      }
+      */
+
+      // INVOICE CHECK
+      var reRefNo = clickChk[0].item.posNo;
+      var reObject = { reRefNo : reRefNo};
+      var chkRv = true;
+
+      Common.ajax("GET", "/sales/pos/chkReveralBeforeReversal", reObject, function(result) {
+        if(result != null){
+          chkRv = false;
+        }
+      }, null ,ajaxOtp);
+
+      if(chkRv == false){
+        Common.alert('<spring:message code="sal.alert.msg.posProhibit" />');
+        return;
+      }
+
+      var isPay = false;
+      var inPosNo = {};
+      Common.ajax("GET", "/sales/pos/isPaymentKnowOffByPOSNo", inPosNo, function(result) {
+            if(result == true){
+              isPay = true;
+            }
+        }, null ,ajaxOtp);
+
+      if(isPay == true){
+        Common.alert('<spring:message code="sal.alert.msg.paymentKnockOff" />');
+        return;
+      }
+
+      //Call controller
+      var reversalForm = { posId : clickChk[0].item.posId, ind : "2" };
+      Common.popupDiv("/sales/pos/posReversalPop.do", reversalForm , null , true , "_revDiv");
+    });
 
     $("#_convertBtn").click(function() {
 
@@ -344,6 +399,7 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
                 $('#hiddenSalesmanPopId').val(memInfo.memId);
                 $('#salesmanPopCd').val(memInfo.memCode);
                 $('#salesmanPopCd').removeClass("readonly");
+                $('#salesmanPopNm').val(memInfo.name);
 
                  Common.ajax("GET", "/sales/pos/getMemCode", {memCode : memCode},function(result){
 
@@ -367,6 +423,7 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
                 $('#hiddenSalesmanId').val(memInfo.memId);
                 $('#salesmanCd').val(memInfo.memCode);
                 $('#salesmanCd').removeClass("readonly");
+                $('#salesmanPopNm').val(memInfo.name);
             }
         }
     });
@@ -533,19 +590,22 @@ function fn_insTransactionLog(posNo, posTypeId){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>POS - Flexi Point</h2>
 <ul class="right_btns">
-    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+  <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="_systemBtn"><spring:message code="sal.title.text.posSystem" /></a></p></li>
-    </c:if>
-<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
- <li><p class="btn_blue"><a href="#" id="_convertBtn">Convert POS</a></p></li>
-    </c:if>
+  </c:if>
+  <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+    <li><p class="btn_blue"><a href="#" id="_reversalBtn"><spring:message code="sal.title.text.posReversal" /></a></p></li>
+  </c:if>
+  <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+    <li><p class="btn_blue"><a href="#" id="_convertBtn">Convert POS</a></p></li>
+  </c:if>
   <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
      <li><p class="btn_blue"><a href="#" id="_addItemBtn">Add POS Flexi Item</a></p></li>
-     </c:if>
-    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+  </c:if>
+  <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="_search"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
-    </c:if>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
+  </c:if>
+  <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
