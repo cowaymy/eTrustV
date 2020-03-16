@@ -6,6 +6,7 @@
  ----------------------------------------------------------------
  18/12/2019  ONGHC  1.0.0          Create AS Used Filter
  19/12/2019  ONGHC  1.0.1          Add AS Type Selection
+ 06/03/2020  ONGHC  1.0.2          Remove Branch Search
  -->
 
 <style type="text/css">
@@ -620,12 +621,12 @@
     if ($("#searchlocgb").val() == '' || $("#searchlocgb").val() == undefined) {
       Common.alert("<spring:message code='sys.msg.necessary' arguments='Location Type' htmlEscape='false'/>");
       return false;
-    } else if ($("#searchBranch").val() == '' || $("#searchBranch").val() == undefined) {
-      Common.alert("<spring:message code='sys.msg.necessary' arguments='Branch' htmlEscape='false'/>");
-      return false;
-    } else if ($("#searchLoc").val() == '' || $("#searchLoc").val() == undefined) {
-      Common.alert("<spring:message code='sys.msg.necessary' arguments='Location' htmlEscape='false'/>");
-      return false;
+    //} else if ($("#searchBranch").val() == '' || $("#searchBranch").val() == undefined) {
+    //  Common.alert("<spring:message code='sys.msg.necessary' arguments='Branch' htmlEscape='false'/>");
+    //  return false;
+    //} else if ($("#searchLoc").val() == '' || $("#searchLoc").val() == undefined) {
+      //Common.alert("<spring:message code='sys.msg.necessary' arguments='Location' htmlEscape='false'/>");
+      //return false;
     } else {
       return true;
     }
@@ -685,10 +686,10 @@
       <th scope="row"><spring:message code='log.label.lctTyp'/> <span class="must">*</span></th>
       <td><select class="w100p" id="searchlocgb" name="searchlocgb" disabled></select>
       </td>
-      <th scope="row"><spring:message code='log.head.branch'/> <span class="must">*</span></th>
+      <th scope="row"><spring:message code='log.head.branch'/></th>
       <td><select class="w100p" id="searchBranch"
        name="searchBranch"></select></td>
-      <th scope="row"><spring:message code='log.head.location'/> <span class="must">*</span></th>
+      <th scope="row"><spring:message code='log.head.location'/></th>
       <td>
        <select class="w100p" id="searchLoc" name="searchLoc"></select>
       </td>
