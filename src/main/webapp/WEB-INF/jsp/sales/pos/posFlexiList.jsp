@@ -232,6 +232,7 @@ $(document).ready(function() { //***********************************************
             //Ajax
             Common.ajax("GET", "/sales/pos/getPosDetailList", detailParam, function(result){
                 AUIGrid.setGridData(posItmDetailGridID, result);
+                AUIGrid.resize(posItmDetailGridID);
             });
 
         }
