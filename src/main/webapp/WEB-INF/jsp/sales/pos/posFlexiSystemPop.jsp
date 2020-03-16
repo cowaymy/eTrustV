@@ -766,7 +766,7 @@ function fn_inputAmt(obj){
 
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
-<input type="hidden" id="_memBrnch" value="${memCodeMap.brnch}">
+<input type="hidden" id="_memBrnch" value="${userBr}">
 
 
 <header class="pop_header"><!-- pop_header start -->
@@ -848,7 +848,7 @@ function fn_inputAmt(obj){
             <a id="memBtnPop" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         </div>
     </td>
-    <td></td>
+    <td><input id="salesmanPopNm" name="salesmanPopNm" type="text" title="" placeholder="" class="w100p"  value="${memCodeMap.memNm}" disabled="disabled"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.brnchWarehouse" /></th>
