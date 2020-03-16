@@ -223,9 +223,9 @@ $(document).ready(function() { //***********************************************
 
             //Mybatis Separate Param
             //1. Grid Display Control
-            $("#_itmDetailGridDiv").css("display" , "");
+            $("#_itmDetailflexGridDiv").css("display" , "");
             $("#_paymentDetailGridDiv").css("display" , "");
-            $("#_deducGridDiv").css("display", "none");
+            $("#_deducFlexGridDiv").css("display", "none");
 
             var detailParam = {rePosId : event.item.posId};
             var posParam = { billNo : event.item.posNo };
@@ -301,8 +301,8 @@ function fn_getDateGap(sdate, edate){
 
 function girdHide(){
     //Grid Hide
-    $("#_deducGridDiv").css("display" , "none");
-    $("#_itmDetailGridDiv").css("display" , "none");
+    $("#_deducFlexGridDiv").css("display" , "none");
+    $("#_itmDetailflexGridDiv").css("display" , "none");
 }
 
 function createPosItmDetailGrid(){
@@ -354,7 +354,7 @@ function createPosItmDetailGrid(){
             showRowNumColumn    : true
     };
 
-    posItmDetailGridID = GridCommon.createAUIGrid("#itm_detail_grid_wrap", posItmColumnLayout,'', itmGridPros);  // address list
+    posItmDetailGridID = GridCommon.createAUIGrid("#itm_detail_grid_wrap_flex", posItmColumnLayout,'', itmGridPros);  // address list
 }
 
 
@@ -724,7 +724,7 @@ function fn_insTransactionLog(posNo, posTypeId){
  <%--    <li><p class="btn_blue2 big"><a id="_headerSaveBtn"><spring:message code="sal.btn.save" /></a></p></li> --%>
 </ul>
 <!-- deduction Grid -->
-<div id="_deducGridDiv">
+<div id="_deducFlexGridDiv">
 <aside class="title_line"><!-- title_line start -->
 <h3><spring:message code="sal.title.text.deducMemList" /></h3>
 </aside><!-- title_line end -->
@@ -738,12 +738,12 @@ function fn_insTransactionLog(posNo, posTypeId){
 </ul>
 </div>
 <!--item Grid  -->
-<div id="_itmDetailGridDiv">
+<div id="_itmDetailflexGridDiv">
 <aside class="title_line"><!-- title_line start -->
 <h3><spring:message code="sal.title.itmList" /></h3>
 </aside><!-- title_line end -->
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="itm_detail_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
+<div id="itm_detail_grid_wrap_flex" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
