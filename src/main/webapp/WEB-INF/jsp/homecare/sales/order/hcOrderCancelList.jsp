@@ -325,7 +325,7 @@
     }
 
     function fn_productReturnRaw() {
-        Common.popupDiv("/sales/order/orderCancelProductReturnRawPop.do", null, null, true);
+        Common.popupDiv("/sales/order/orderCancelProductReturnRawPop.do", {"type" : "HC"}, null, true);
     }
 
     function fn_productReturnLogBookList() {
