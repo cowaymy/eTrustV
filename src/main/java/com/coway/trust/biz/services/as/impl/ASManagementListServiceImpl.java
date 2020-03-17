@@ -3304,6 +3304,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   }
 
   @Override
+  public EgovMap checkSpecialAgreement(Map<String, Object> params) {
+    // TODO Auto-generated method stub
+    return ASManagementListMapper.checkSpecialAgreement(params);
+  }
+
+  @Override
   public List<EgovMap> checkAOASRcdStat(Map<String, Object> params) {
     return ASManagementListMapper.checkAOASRcdStat(params);
   }
