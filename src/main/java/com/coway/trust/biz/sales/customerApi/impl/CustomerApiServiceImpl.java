@@ -261,7 +261,7 @@ public class CustomerApiServiceImpl extends EgovAbstractServiceImpl implements C
         customerMap.put("oldIc", param.getOldIc());
 
         int checkCnt = 0;
-        if (((param.getNric()).toUpperCase()).contains("TXT")) {
+        if (((param.getNric()).toUpperCase()).contains("TST")) {
           checkCnt = 0;
         } else {
           checkCnt = customerApiMapper.selectNricNoCheck(customerMap);
