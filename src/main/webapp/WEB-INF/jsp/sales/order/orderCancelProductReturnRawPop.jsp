@@ -72,6 +72,7 @@
     var runNo = 0;
     var where1 = "";
     var where2 = "";
+    var where3 = "";
 
     if (validate()) {
       //if (!($("#dpRequestDtFrom").val() == null || $("#dpRequestDtFrom").val().length == 0)) {
@@ -114,6 +115,14 @@
         where2 = where2 + " AND TO_CHAR(RR.STK_RETN_DT, 'YYYYMMDD') >= TO_CHAR(TO_DATE('" + $("#dpReturnDtFrom").val() + "', 'DD/MM/YYYY'), 'YYYYMMDD') AND TO_CHAR(RR.STK_RETN_DT, 'YYYYMMDD') <= TO_CHAR(TO_DATE('" + $("#dpReturnDtTo").val() + "', 'DD/MM/YYYY'), 'YYYYMMDD') ";
       }
 
+      if ($("#V_TYPE").val() != "") {
+        if ($("#V_TYPE").val() == "HA") {
+          where3 = "AND E.STK_CTGRY_ID NOT IN ('5706', '5707') ";
+        } else if ($("#V_TYPE").val() == "HC") {
+          where3 = "AND E.STK_CTGRY_ID IN ('5706', '5707') ";
+        }
+      }
+
       //$("#V_REQUESTDTFROM").val(from_req_dt);
       //$("#V_REQUESTDTTO").val(to_req_dt);
       //$("#V_RETURNDTFROM").val(from_ret_dt);
@@ -121,6 +130,7 @@
 
       $("#V_WHERE_1").val(where1);
       $("#V_WHERE_2").val(where2);
+      $("#V_WHERE_3").val(where3);
 
       $("#reportDownFileName").val("OrderCancellationProductReturnRawData_" + date + (new Date().getMonth() + 1) + new Date().getFullYear());
       $("#reportFileName").val("/sales/OrderCancellationProductReturnRawData_2.rpt");
@@ -283,6 +293,8 @@
     <input type="hidden" id="V_RETURNDTTO" name="TO_RET_DT" value="">
     <input type="hidden" id="V_WHERE_1" name="WHERE_1" value="">
     <input type="hidden" id="V_WHERE_2" name="WHERE_2" value="">
+    <input type="hidden" id="V_WHERE_3" name="WHERE_3" value="">
+    <input type="hidden" id="V_TYPE" name="V_TYPE" value="${type}">
    </form>
    <div></div>
    <ul class="center_btns">
