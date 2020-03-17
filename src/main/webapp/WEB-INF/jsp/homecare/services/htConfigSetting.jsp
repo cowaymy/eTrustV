@@ -108,6 +108,12 @@
 
          // 리스트 조회.
         function fn_getBasicListAjax() {
+
+        	 if($('#ManuaSalesOrder').val() == '' && $('#manualCustomer').val() == '' ){
+        		    Common.alert("<b>Please key in either Care Service Order or Customer ID for search.<b> ");
+                    return ;
+        	 }
+
                 Common.ajax("GET", "/homecare/services/selectHTBasicList.do", $("#searchForm").serialize(), function(result) {
                     console.log("성공.");
                     console.log("data : " + result);
