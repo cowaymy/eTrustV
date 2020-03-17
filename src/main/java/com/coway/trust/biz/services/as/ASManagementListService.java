@@ -153,6 +153,8 @@ public interface ASManagementListService {
 
   EgovMap checkWarrentyStatus(Map<String, Object> params);
 
+  EgovMap checkSpecialAgreement(Map<String, Object> params);
+
   List<EgovMap> checkAOASRcdStat(Map<String, Object> params);
 
   String getInHseLmtDy();
