@@ -2,91 +2,76 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper">
 
+  <select id="selectInvoiceList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      /* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.selectInvoiceList] 20190927 - KR JAEMAJEM */
+      SELECT  #{selectInvoiceType} AS SELECT_INVOICE_TYPE
+                , #{salesDt} AS TAX_INVC_REF_DT
+                , B.CODE_ID AS APP_TYPE_ID
+                , B.CODE_NAME AS APP_TYPE_ID_NAME
+                , C.CUST_ID AS CUST_ID
+                , C.NAME AS CUST_ID_NAME
+                , A.SALES_ORD_NO AS SALES_ORD_NO
+                , TO_CHAR(A.SALES_DT, 'DD/MM/YYYY') AS SALES_DT
+                , E.STK_CODE AS STK_CODE
+                , E.STK_DESC AS STK_DESC
+                , C.EMAIL AS EMAIL
+      FROM SAL0001D A
+      INNER JOIN SYS0013M B ON  B.CODE_ID = A.APP_TYPE_ID
+      INNER JOIN SAL0029D C ON  C.CUST_ID = A.CUST_ID
+      INNER JOIN SAL0002D D ON  D.SALES_ORD_ID = A.SALES_ORD_ID
+      INNER JOIN SYS0026M E ON  E.STK_ID = D.ITM_STK_ID
+      WHERE A.STUS_CODE_ID NOT IN (8, 10) --SYS0038M : 8(Inactive), 10(Cancelled)
+          AND EXISTS ( SELECT  1
+                              FROM PAY0016D PAY
+                              WHERE PAY.ACC_BILL_ORD_ID = A.SALES_ORD_ID
+                                  AND TO_CHAR(PAY.ACC_BILL_REF_DT, 'YYYYMM') = #{salesDt}
+                            )
+      ]]>
+      <choose>
+        <when test='selectType.equals("1")'>
+           AND A.SALES_ORD_NO = #{selectKeyword}
+        </when>
+        <when test='selectType.equals("2")'>
+          AND UPPER(C.NAME) LIKE UPPER(#{selectKeyword})||'%'
+        </when>
+      </choose>
+  </select>
 
-
-<select id="selectInvoiceList" parameterType="Map" resultType="egovMap">
-<![CDATA[
-/* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.selectInvoiceList] 20190927 - KR JAEMAJEM */
-SELECT  #{selectInvoiceType}                                                    AS SELECT_INVOICE_TYPE
-    ,   #{salesDt}                                                              AS TAX_INVC_REF_DT
-    ,   B.CODE_ID                                                               AS APP_TYPE_ID
-    ,   B.CODE_NAME                                                             AS APP_TYPE_ID_NAME
-    ,   C.CUST_ID                                                               AS CUST_ID
-    ,   C.NAME                                                                  AS CUST_ID_NAME
-    ,   A.SALES_ORD_NO                                                          AS SALES_ORD_NO
-    ,   TO_CHAR(A.SALES_DT, 'DD/MM/YYYY')                                       AS SALES_DT
-    ,   E.STK_CODE                                                              AS STK_CODE
-    ,   E.STK_DESC                                                              AS STK_DESC
-    ,   C.EMAIL                                                                 AS EMAIL
-FROM    SAL0001D A
-        INNER JOIN SYS0013M B
-            ON  B.CODE_ID = A.APP_TYPE_ID
-        INNER JOIN SAL0029D C
-            ON  C.CUST_ID = A.CUST_ID
-        INNER JOIN SAL0002D D
-            ON  D.SALES_ORD_ID = A.SALES_ORD_ID
-        INNER JOIN SYS0026M E
-            ON  E.STK_ID = D.ITM_STK_ID
-WHERE   A.STUS_CODE_ID NOT IN (8, 10)                                           --SYS0038M : 8(Inactive), 10(Cancelled)
-AND     EXISTS
-        (
-            SELECT  1
-            FROM    PAY0016D PAY
-            WHERE   PAY.ACC_BILL_ORD_ID = A.SALES_ORD_ID
-            AND     TO_CHAR(PAY.ACC_BILL_REF_DT, 'YYYYMM') = #{salesDt}
-        )
-]]>
-<choose>
-    <when test='selectType.equals("1")'>
-AND     A.SALES_ORD_NO = #{selectKeyword}
-    </when>
-    <when test='selectType.equals("2")'>
-AND     UPPER(C.NAME) LIKE UPPER(#{selectKeyword})||'%'
-    </when>
-</choose>
-</select>
-
-
-
-<select id="selectAdvanceInvoiceList" parameterType="Map" resultType="egovMap">
-<![CDATA[
-/* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.selectAdvanceInvoiceList] 20190927 - KR JAEMAJEM */
-SELECT  #{selectInvoiceType}                                                    AS SELECT_INVOICE_TYPE
-    ,   B.CODE_ID                                                               AS APP_TYPE_ID
-    ,   B.CODE_NAME                                                             AS APP_TYPE_ID_NAME
-    ,   C.CUST_ID                                                               AS CUST_ID
-    ,   C.NAME                                                                  AS CUST_ID_NAME
-    ,   A.SALES_ORD_NO                                                          AS SALES_ORD_NO
-    ,   TO_CHAR(A.SALES_DT, 'DD/MM/YYYY')                                       AS SALES_DT
-    ,   E.STK_CODE                                                              AS STK_CODE
-    ,   E.STK_DESC                                                              AS STK_DESC
-    ,   C.EMAIL                                                                 AS EMAIL
-    ,   A.MTH_RENT_AMT                                                          AS MTH_RENT_AMT
-    ,   C.TYPE_ID                                                               AS TYPE_ID
-FROM    SAL0001D A
-        INNER JOIN SYS0013M B
-            ON  B.CODE_ID = A.APP_TYPE_ID
-            AND B.CODE_MASTER_ID = 10
-            AND B.CODE IN ('REN')
-        INNER JOIN SAL0029D C
-            ON  C.CUST_ID = A.CUST_ID
-        INNER JOIN SAL0002D D
-            ON  D.SALES_ORD_ID = A.SALES_ORD_ID
-        INNER JOIN SYS0026M E
-            ON  E.STK_ID = D.ITM_STK_ID
-WHERE   A.STUS_CODE_ID NOT IN (8, 10)                                           --SYS0038M : 8(Inactive), 10(Cancelled)
-]]>
-<choose>
-    <when test='selectType.equals("1")'>
-AND     A.SALES_ORD_NO = #{selectKeyword}
-    </when>
-    <when test='selectType.equals("2")'>
-AND     UPPER(C.NAME) LIKE UPPER(#{selectKeyword})||'%'
-    </when>
-</choose>
-</select>
-
-
+  <select id="selectAdvanceInvoiceList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      /* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.selectAdvanceInvoiceList] 20190927 - KR JAEMAJEM */
+      SELECT #{selectInvoiceType} AS SELECT_INVOICE_TYPE
+             , B.CODE_ID AS APP_TYPE_ID
+             , B.CODE_NAME  AS APP_TYPE_ID_NAME
+             , C.CUST_ID AS CUST_ID
+             , C.NAME AS CUST_ID_NAME
+             , A.SALES_ORD_NO AS SALES_ORD_NO
+             , TO_CHAR(A.SALES_DT, 'DD/MM/YYYY') AS SALES_DT
+             , E.STK_CODE AS STK_CODE
+             , E.STK_DESC AS STK_DESC
+             , C.EMAIL AS EMAIL
+             , (A.MTH_RENT_AMT - NVL(F.REBATE_AMT_PER_INSTLMT, 0)) AS MTH_RENT_AMT
+             , C.TYPE_ID AS TYPE_ID
+      FROM SAL0001D A
+      INNER JOIN SYS0013M B ON B.CODE_ID = A.APP_TYPE_ID
+                                         AND B.CODE_MASTER_ID = 10
+                                         AND B.CODE IN ('REN')
+      INNER JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+      INNER JOIN SAL0002D D ON D.SALES_ORD_ID = A.SALES_ORD_ID
+      INNER JOIN SYS0026M E ON E.STK_ID = D.ITM_STK_ID
+      LEFT JOIN PAY0286D F ON F.ORD_ID = A.SALES_ORD_ID AND F.STUS_ID = 1
+      WHERE A.STUS_CODE_ID NOT IN (8, 10) --SYS0038M : 8(Inactive), 10(Cancelled)
+    ]]>
+    <choose>
+      <when test='selectType.equals("1")'>
+        AND A.SALES_ORD_NO = #{selectKeyword}
+      </when>
+      <when test='selectType.equals("2")'>
+        AND UPPER(C.NAME) LIKE UPPER(#{selectKeyword})||'%'
+      </when>
+    </choose>
+   </select>
 
 <select id="selectRequestInvoiceList" parameterType="Map" resultType="egovMap">
 <![CDATA[
