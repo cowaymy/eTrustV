@@ -1304,6 +1304,7 @@ public class ASManagementListController {
     EgovMap asReceiveInfo = ASManagementListService.checkASReceiveEntry(params);
     EgovMap hsInfo = ASManagementListService.checkHSStatus(params);
     EgovMap warrentyInfo = ASManagementListService.checkWarrentyStatus(params);
+    EgovMap specialAgreement = ASManagementListService.checkSpecialAgreement(params);
 
     if (asReceiveInfo != null) {
       if (asReceiveInfo.get("asStus") != null) {
@@ -1330,6 +1331,14 @@ public class ASManagementListController {
     } else {
       msg = msg + "";
     }
+
+    if(specialAgreement != null){
+      msg = msg + "* This order is under special agreement (Selayang Hospital). Kindly advise customer as per the terms of agreement for Selayang Hospital.<br />";
+
+    } else {
+      msg = msg + "";
+    }
+
 
     message.setMessage(msg);
     return ResponseEntity.ok(message);
