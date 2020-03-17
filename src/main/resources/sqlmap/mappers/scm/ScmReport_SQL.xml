@@ -212,7 +212,7 @@ SELECT A.YEAR, A.GBN, A.RN
  ORDER BY A.RN, A.GBN
 </select>
 <select id="selectBusinessPlanDetail" parameterType="Map" resultType="egovMap">
-SELECT #{planYear} AS YEAR FROM DUAL  CONNECT BY ROWNUM <![CDATA[ <= ]]> 20
+SELECT #{planYear} AS YEAR FROM DUAL CONNECT BY ROWNUM <![CDATA[ <= ]]> 20
 </select>
 <select id="selectBusinessPlanDetail1" parameterType="Map" resultType="egovMap">
 SELECT A.YEAR, A.GBN, A.RN
