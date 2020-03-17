@@ -1381,6 +1381,7 @@ FROM    SAL0029D A                                                              
 WHERE   UPPER(A.NRIC) =  UPPER(#{nric})
 AND     A.TYPE_ID = #{typeId}
 AND     A.STUS_CODE_ID != 8
+AND ROWNUM =1
 ]]>
 </select>
 
