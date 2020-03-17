@@ -379,7 +379,7 @@
   }
 
   function fn_productReturnRaw() {
-    Common.popupDiv("/sales/order/orderCancelProductReturnRawPop.do", null,
+    Common.popupDiv("/sales/order/orderCancelProductReturnRawPop.do", {"type" : "HA"},
         null, true);
   }
 
