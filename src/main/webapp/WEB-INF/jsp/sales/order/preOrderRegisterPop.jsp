@@ -1498,7 +1498,8 @@
 
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId, nric : nric}, function(result) {
             Common.removeLoader();
-            if(result != null && result.length == 1) {
+
+            if(result.length > 0 ) {
 
                 $('#scPreOrdArea').removeClass("blind");
 
@@ -1513,12 +1514,16 @@
                 var nowDt = new Date();
                 var nowDtY = nowDt.getFullYear();
 
-                if(dobY != 1900) {
-                    if((nowDtY - dobY) < 18) {
-                        Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Member must 18 years old and above.</b>");
-                        $('#scPreOrdArea').addClass("blind");
-                        return false;
-                    }
+                if(!nric.startsWith("TST")){
+
+	                if(dobY != 1900) {
+	                    if((nowDtY - dobY) < 18) {
+	                        Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Member must 18 years old and above.</b>");
+	                        $('#scPreOrdArea').addClass("blind");
+	                        return false;
+	                    }
+	                }
+
                 }
 
                 //
@@ -1658,7 +1663,10 @@
                 $("#instCountry").val(custInfo.country); //Country
 
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
-                $("#keyinBrnchId").val(custInfo.soBrnchId); //Posting Branch
+                if(MEM_TYPE = 2)
+                	$("#keyinBrnchId").val(custInfo.cdBrnchId); //Posting Branch
+                else
+                    $("#keyinBrnchId").val(custInfo.soBrnchId); //Posting Branch
 //              if(!$("#gstChk").is('[disabled]')) {
 
                     if(custInfo.gstChk == '1') {

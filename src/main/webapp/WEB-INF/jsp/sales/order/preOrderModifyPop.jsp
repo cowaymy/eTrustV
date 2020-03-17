@@ -1853,7 +1853,11 @@
                 $("#instCountry").val(custInfo.country); //Country
 
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
-                $("#keyinBrnchId").val(custInfo.soBrnchId); //Posting Branch
+                if(MEM_TYPE = 2)
+                    $("#keyinBrnchId").val(custInfo.cdBrnchId); //Posting Branch
+                else
+                    $("#keyinBrnchId").val(custInfo.soBrnchId); //Posting Branch
+
 //              if(!$("#gstChk").is('[disabled]')) {
 /*
                     if(custInfo.gstChk == '1') {

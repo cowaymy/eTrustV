@@ -309,7 +309,14 @@
             //$('input:radio[name="gender"][value="M"]').prop('checked', true);
             $("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
 
-            $("#_dob_").attr({'disabled' : true , 'class' : 'j_date3 w100p'});
+
+            if($("#_nric_").val().startsWith("TST")){
+            	$("#_dob_").attr({'disabled' : false , 'class' : 'j_date3 w100p'});
+            	$("#genderForm").removeAttr('disabled');
+                $("input:radio[name='gender']").attr("disabled" , false);
+                $('input:radio[name="gender"][value="M"]').prop('checked', true);
+            }
+
             $("#_nric_").attr({"disabled" : true , "class" : "w100p"});
         }else{
             $("#_oldNric_").val('');
@@ -319,14 +326,19 @@
             $("#_cmbNation_").val('');
             $("select[name=cmbNation]").addClass("w100p disabled");
             $("select[name=cmbNation]").attr('disabled', 'disabled');
-            $("#genderForm").attr('disabled',true);
-            $("input:radio[name='gender']:radio[value='M']").prop("checked", false);
-            $("input:radio[name='gender']:radio[value='F']").prop("checked", false);
-            $("input:radio[name='gender']").attr("disabled" , "disabled");
+
             $("#_cmbRace_").val('');
             $("#_cmbRace_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
-            $("#_dob_").val('');
-            $("#_dob_").attr({'disabled' : 'disabled' , 'class' : 'j_date3 w100p'});
+
+            if(MEM_TYPE = 2){
+            	$("#genderForm").attr('disabled',true);
+	            $("input:radio[name='gender']:radio[value='M']").prop("checked", false);
+	            $("input:radio[name='gender']:radio[value='F']").prop("checked", false);
+	            $("input:radio[name='gender']").attr("disabled" , "disabled");
+
+	            $("#_dob_").val('');
+	            $("#_dob_").attr({'disabled' : 'disabled' , 'class' : 'j_date3 w100p'});
+            }
         }
 
     }
