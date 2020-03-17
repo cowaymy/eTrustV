@@ -230,6 +230,7 @@ public class CustomerApiServiceImpl extends EgovAbstractServiceImpl implements C
         }
 
 
+
         /*SAL0029D --ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : Customer*/
         Map<String, Object> customerMap = new HashMap<String, Object>();
 //        customerMap.put("custId", );
@@ -259,11 +260,9 @@ public class CustomerApiServiceImpl extends EgovAbstractServiceImpl implements C
 //        customerMap.put("ficoScre", param.getFicoScre());
         customerMap.put("oldIc", param.getOldIc());
 
-        int type = loginVO.getUserTypeId();
         int checkCnt = 0;
-        if (type == 2) {
-          customerMap.put("nric", param.getNric() + "TT"); // CODY TEST
-          checkCnt= 0;
+        if (((param.getNric()).toUpperCase()).contains("TXT")) {
+          checkCnt = 0;
         } else {
           checkCnt = customerApiMapper.selectNricNoCheck(customerMap);
         }
