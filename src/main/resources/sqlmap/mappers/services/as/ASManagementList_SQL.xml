@@ -2631,6 +2631,19 @@
              ]]>
   </select>
 
+    <select id="checkSpecialAgreement" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    SELECT SOM.SALES_ORD_ID , SOM.SALES_ORD_NO , CUST.NAME
+    FROM
+    SAL0001D SOM
+    LEFT JOIN SAL0029D CUST ON SOM.CUST_ID = CUST.CUST_ID
+    WHERE
+    SOM.CUST_ID = 215362
+    AND SOM.STUS_CODE_ID = 4
+    AND SOM.SALES_ORD_NO =  #{salesOrderNo}
+   ]]>
+  </select>
+
   <select id="checkAOASRcdStat" parameterType="Map" resultType="egovMap">
     SELECT A.AS_SO_ID,
            B.NO,
