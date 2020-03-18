@@ -1853,7 +1853,7 @@
                 $("#instCountry").val(custInfo.country); //Country
 
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
-                if(MEM_TYPE = 2)
+                if(MEM_TYPE == 2)
                     $("#keyinBrnchId").val(custInfo.cdBrnchId); //Posting Branch
                 else
                     $("#keyinBrnchId").val(custInfo.soBrnchId); //Posting Branch
