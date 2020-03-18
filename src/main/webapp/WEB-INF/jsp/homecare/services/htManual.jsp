@@ -1115,6 +1115,9 @@ var TODAY_DD      = "${toDay}";
         <option value="3217">CS 1-Year</option>
         <option value="5701">FT 1-Time</option>
         <option value="5702">FT 1-Year</option>
+        <option value="66">Rental</option>
+        <option value="67">Outright</option>
+        <option value="68">Installment</option>
       </select></td>
 
         </tr>
