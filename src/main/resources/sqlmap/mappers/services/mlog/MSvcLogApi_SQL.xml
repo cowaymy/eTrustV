@@ -4491,7 +4491,8 @@
            TO_CHAR (NVL(A.warranty,0)) AS warranty,
            TO_CHAR (NVL(B.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding,
            homeCareOrderYn AS home_Care_Order_Yn,
-           NVL(SERIAL_CHK, 'N') AS SERIAL_CHK
+           NVL(SERIAL_CHK, 'N') AS SERIAL_CHK,
+           TO_CHAR (SALES_PROD_SZ) AS MATSIZE
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -4549,7 +4550,8 @@
                   srv_mem_cntrct_id,
                   warranty,
                   homeCareOrderYn,
-                  SERIAL_CHK
+                  SERIAL_CHK,
+                  SALES_PROD_SZ
            FROM ( SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
                                   A.STUS_CODE_ID AS job_Status,
@@ -4620,7 +4622,8 @@
                                    R.SRV_MEM_CNTRCT_ID,
                                    U.FAUCET_EXCH AS warranty,
                                    CASE WHEN SAL.SALES_ORD_NO IS NULL THEN 'N' ELSE 'Y' END AS homeCareOrderYn,
-                                   L.SERIAL_CHK
+                                   L.SERIAL_CHK,
+                                   C.SALES_PROD_SZ
                   FROM (SELECT A.*
                         FROM SVC0008D A,
                         ORG0001D B
