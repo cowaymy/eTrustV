@@ -9,754 +9,764 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "HeartServiceJobDto", description = "공통코드 Dto")
 public class CareServiceJobDto {
 
-	@ApiModelProperty(value = "주문번호")
-	private String salesOrderNo;
+  @ApiModelProperty(value = "주문번호")
+  private String salesOrderNo;
 
-	@ApiModelProperty(value = "EX_BS00000 / AS00000")
-	private String serviceNo;
+  @ApiModelProperty(value = "EX_BS00000 / AS00000")
+  private String serviceNo;
 
-	@ApiModelProperty(value = "고객명")
-	private String custName;
+  @ApiModelProperty(value = "고객명")
+  private String custName;
 
-	@ApiModelProperty(value = "AS / HS / INST / PR 구분값")
-	private String jobType;
+  @ApiModelProperty(value = "AS / HS / INST / PR 구분값")
+  private String jobType;
 
-	@ApiModelProperty(value = "ACT / COMPLETE / FAIL / CANCLE 구분")
-	private int jobStatus;
+  @ApiModelProperty(value = "ACT / COMPLETE / FAIL / CANCLE 구분")
+  private int jobStatus;
 
-	@ApiModelProperty(value = "작업 예정날짜")
-	private String appointmentDate;
+  @ApiModelProperty(value = "작업 예정날짜")
+  private String appointmentDate;
 
-	@ApiModelProperty(value = "작업 예정시간")
-	private String appointmentTime;
+  @ApiModelProperty(value = "작업 예정시간")
+  private String appointmentTime;
 
-	@ApiModelProperty(value = "오전/오후/저녁(신규)")
-	private String jobSession;
+  @ApiModelProperty(value = "오전/오후/저녁(신규)")
+  private String jobSession;
 
-	@ApiModelProperty(value = "체크인 날짜(YYYYMMDD)")
-	private String checkInDate;
+  @ApiModelProperty(value = "체크인 날짜(YYYYMMDD)")
+  private String checkInDate;
 
-	@ApiModelProperty(value = "체크인 시간(HHMM)")
-	private String checkInTime;
+  @ApiModelProperty(value = "체크인 시간(HHMM)")
+  private String checkInTime;
 
-	@ApiModelProperty(value = "체크인 GPS 값 (위도/경도값)")
-	private String checkInGps;
+  @ApiModelProperty(value = "체크인 GPS 값 (위도/경도값)")
+  private String checkInGps;
 
-	@ApiModelProperty(value = "일반/법인 고객 구분")
-	private int customerType;
+  @ApiModelProperty(value = "일반/법인 고객 구분")
+  private int customerType;
 
-	@ApiModelProperty(value = "고객 id_170911 추가 (묶음 결과등록시 필요)")
-	private int customerId;
+  @ApiModelProperty(value = "고객 id_170911 추가 (묶음 결과등록시 필요)")
+  private int customerId;
 
-	@ApiModelProperty(value = "작업 영역(State)_170906 추가")
-	private String serviceState;
+  @ApiModelProperty(value = "작업 영역(State)_170906 추가")
+  private String serviceState;
 
-	@ApiModelProperty(value = "작업예정일(년)_170908 추가")
-	private int planYear;
+  @ApiModelProperty(value = "작업예정일(년)_170908 추가")
+  private int planYear;
 
-	@ApiModelProperty(value = "작업예정일(월)_170908 추가")
-	private int planMonth;
+  @ApiModelProperty(value = "작업예정일(월)_170908 추가")
+  private int planMonth;
 
-	@ApiModelProperty(value = "고객 GPS 값 (위도/경도값)")
-	private String customerGps;
+  @ApiModelProperty(value = "고객 GPS 값 (위도/경도값)")
+  private String customerGps;
 
-	@ApiModelProperty(value = "설치주소(Magic Address 체계?)")
-	private String installAddress;
+  @ApiModelProperty(value = "설치주소(Magic Address 체계?)")
+  private String installAddress;
 
-	@ApiModelProperty(value = "우편번호")
-	private String postcode;
+  @ApiModelProperty(value = "우편번호")
+  private String postcode;
 
-	@ApiModelProperty(value = "핸드폰 번호")
-	private String handphoneTel;
+  @ApiModelProperty(value = "핸드폰 번호")
+  private String handphoneTel;
 
-	@ApiModelProperty(value = "집전화 번호")
-	private String homeTel;
+  @ApiModelProperty(value = "집전화 번호")
+  private String homeTel;
 
-	@ApiModelProperty(value = "회사 번호")
-	private String officeTel;
+  @ApiModelProperty(value = "회사 번호")
+  private String officeTel;
 
-	@ApiModelProperty(value = "메일 주소")
-	private String mailAddress;
+  @ApiModelProperty(value = "메일 주소")
+  private String mailAddress;
 
-	@ApiModelProperty(value = "고객 VA 번호_170914 추가")
-	private String customerVaNo;
+  @ApiModelProperty(value = "고객 VA 번호_170914 추가")
+  private String customerVaNo;
 
-	@ApiModelProperty(value = "고객 JomPay Reference 번호_170914 추가")
-	private String customerJomPayRefNo;
+  @ApiModelProperty(value = "고객 JomPay Reference 번호_170914 추가")
+  private String customerJomPayRefNo;
 
-	@ApiModelProperty(value = "제품 사진 url")
-	private String imageUrl;
+  @ApiModelProperty(value = "제품 사진 url")
+  private String imageUrl;
 
-	@ApiModelProperty(value = "제품명")
-	private String productName;
+  @ApiModelProperty(value = "제품명")
+  private String productName;
 
-	@ApiModelProperty(value = "제품코드")
-	private String productCode;
+  @ApiModelProperty(value = "제품코드")
+  private String productCode;
 
-	@ApiModelProperty(value = "application Type (Rental…)")
-	private int appType;
+  @ApiModelProperty(value = "application Type (Rental…)")
+  private int appType;
 
-	@ApiModelProperty(value = "")
-	private String instruction;
+  @ApiModelProperty(value = "")
+  private String instruction;
 
-	@ApiModelProperty(value = "")
-	private int salesPromotion;
+  @ApiModelProperty(value = "")
+  private int salesPromotion;
 
-	@ApiModelProperty(value = "")
-	private String contractDuration;
+  @ApiModelProperty(value = "")
+  private String contractDuration;
 
-	@ApiModelProperty(value = "")
-	private String monthlyRentalFees;
+  @ApiModelProperty(value = "")
+  private String monthlyRentalFees;
 
-	@ApiModelProperty(value = "")
-	private String registrationFees;
+  @ApiModelProperty(value = "")
+  private String registrationFees;
 
-	@ApiModelProperty(value = "결제 방식 - Code")
-	private String paymentMode;
+  @ApiModelProperty(value = "결제 방식 - Code")
+  private String paymentMode;
 
-	@ApiModelProperty(value = "결제 방식 - Name")
-	private String paymentModeName;
+  @ApiModelProperty(value = "결제 방식 - Name")
+  private String paymentModeName;
 
-	@ApiModelProperty(value = "결제 은행")
-	private int bankCode;
+  @ApiModelProperty(value = "결제 은행")
+  private int bankCode;
 
-	@ApiModelProperty(value = "결제 은행명")
-	private String bankName;
+  @ApiModelProperty(value = "결제 은행명")
+  private String bankName;
 
-	@ApiModelProperty(value = "결제 정보")
-	private String cardAccountNo;
+  @ApiModelProperty(value = "결제 정보")
+  private String cardAccountNo;
 
-	@ApiModelProperty(value = "outstanding 정보(OutstandingV.total)")
-	private String outstanding;
+  @ApiModelProperty(value = "outstanding 정보(OutstandingV.total)")
+  private String outstanding;
 
-	@ApiModelProperty(value = "sirim 코드")
-	private String sirimNo;
+  @ApiModelProperty(value = "sirim 코드")
+  private String sirimNo;
 
-	@ApiModelProperty(value = "serial 코드")
-	private String serialNo;
+  @ApiModelProperty(value = "serial 코드")
+  private String serialNo;
 
-	@ApiModelProperty(value = "WARRANTY (YYYYMMDD)")
-	private String warranty;
+  @ApiModelProperty(value = "WARRANTY (YYYYMMDD)")
+  private String warranty;
 
-	@ApiModelProperty(value = "멤버십 만료 기간(YYYYMMDD)")
-	private String MembershipContractExpiry;
+  @ApiModelProperty(value = "멤버십 만료 기간(YYYYMMDD)")
+  private String MembershipContractExpiry;
 
-	@ApiModelProperty(value = "렌탈 현황")
-	private String rentalStatus;
+  @ApiModelProperty(value = "렌탈 현황")
+  private String rentalStatus;
 
-	@ApiModelProperty(value = "")
-	private int dscCode;
+  @ApiModelProperty(value = "")
+  private int dscCode;
 
-	@ApiModelProperty(value = "마지막 결제일(YYYYMMDD)")
-	private String lastPaymentDate;
+  @ApiModelProperty(value = "마지막 결제일(YYYYMMDD)")
+  private String lastPaymentDate;
 
-	@ApiModelProperty(value = "하트 결과등록시 체크")
-	private String temperatureSetting;
+  @ApiModelProperty(value = "하트 결과등록시 체크")
+  private String temperatureSetting;
 
-	@ApiModelProperty(value = "remark")
-	private String resultRemark;
+  @ApiModelProperty(value = "remark")
+  private String resultRemark;
 
-	@ApiModelProperty(value = "서명한사람 코드(owner / father…)")
-	private String ownerCode;
+  @ApiModelProperty(value = "서명한사람 코드(owner / father…)")
+  private String ownerCode;
 
-	@ApiModelProperty(value = "별도의 코드로 관리안하면 필요없음.")
-	private String ownerCodeNm;
+  @ApiModelProperty(value = "별도의 코드로 관리안하면 필요없음.")
+  private String ownerCodeNm;
 
-	@ApiModelProperty(value = "고객명")
-	private String resultCustName;
+  @ApiModelProperty(value = "고객명")
+  private String resultCustName;
 
-	@ApiModelProperty(value = "nric 번호")
-	private String resultIcMobileNo;
+  @ApiModelProperty(value = "nric 번호")
+  private String resultIcMobileNo;
 
-	@ApiModelProperty(value = "고객메일주소")
-	private String resultReportEmailNo;
+  @ApiModelProperty(value = "고객메일주소")
+  private String resultReportEmailNo;
 
-	@ApiModelProperty(value = "신규 요건(default : 고객명)")
-	private String resultAcceptanceName;
+  @ApiModelProperty(value = "신규 요건(default : 고객명)")
+  private String resultAcceptanceName;
 
-	@ApiModelProperty(value = "")
-	private int rcCode;
+  @ApiModelProperty(value = "")
+  private int rcCode;
 
+  @ApiModelProperty(value = "실패 사유 코드")
+  private int failReasonCode;
 
-	@ApiModelProperty(value = "실패 사유 코드")
-	private int failReasonCode;
+  @ApiModelProperty(value = "실패 사유명")
+  private String failReasonName;
 
-	@ApiModelProperty(value = "실패 사유명")
-	private String failReasonName;
+  @ApiModelProperty(value = "설치자")
+  private String settledBy;
 
-	@ApiModelProperty(value = "설치자")
-	private String settledBy;
+  @ApiModelProperty(value = "설치날짜(YYYYMMDD)")
+  private String settledDate;
 
-	@ApiModelProperty(value = "설치날짜(YYYYMMDD)")
-	private String settledDate;
+  @ApiModelProperty(value = "설치시간(HHMMSS)")
+  private String settledTime;
 
-	@ApiModelProperty(value = "설치시간(HHMMSS)")
-	private String settledTime;
+  @ApiModelProperty(value = "")
+  private String renCollectionId;
 
-	@ApiModelProperty(value = "")
-	private String renCollectionId;
+  @ApiModelProperty(value = "bsr no")
+  private String bsrNo;
 
-	@ApiModelProperty(value = "bsr no")
-	private String bsrNo;
+  @ApiModelProperty(value = "다음 작업시간(HHMM)")
+  private String needFilter;
 
-	@ApiModelProperty(value = "다음 작업시간(HHMM)")
-	private String needFilter;
+  @ApiModelProperty(value = "다음 작업일자(YYYYMMDD)")
+  private String nextAppointmentDate;
 
-	@ApiModelProperty(value = "다음 작업일자(YYYYMMDD)")
-	private String nextAppointmentDate;
+  @ApiModelProperty(value = "필터교체대상 여부")
+  private String nextAppointmentTime;
 
-	@ApiModelProperty(value = "필터교체대상 여부")
-	private String nextAppointmentTime;
+  private String homeCareOrderYn;
 
-	private String homeCareOrderYn;
-	public String getHomeCareOrderYn() {
-		return homeCareOrderYn;
-	}
+  private String matsize;
 
-	public void setHomeCareOrderYn(String homeCareOrderYn) {
-		this.homeCareOrderYn = homeCareOrderYn;
-	}
+  public String getHomeCareOrderYn() {
+    return homeCareOrderYn;
+  }
 
-	private String serialChk;
-	public String getSerialChk() {
-		return serialChk;
-	}
-	public void setSerialChk(String serialChk) {
-		this.serialChk = serialChk;
-	}
+  public void setHomeCareOrderYn(String homeCareOrderYn) {
+    this.homeCareOrderYn = homeCareOrderYn;
+  }
 
-	public void setSalesOrderNo(String salesOrderNo) {
-		this.salesOrderNo = salesOrderNo;
-	}
+  private String serialChk;
 
-	public void setJobStatus(int jobStatus) {
-		this.jobStatus = jobStatus;
-	}
+  public String getSerialChk() {
+    return serialChk;
+  }
 
-	public void setCustomerType(int customerType) {
-		this.customerType = customerType;
-	}
+  public void setSerialChk(String serialChk) {
+    this.serialChk = serialChk;
+  }
 
-	public void setCustomerId(int customerId) {
-		this.customerId = customerId;
-	}
+  public void setSalesOrderNo(String salesOrderNo) {
+    this.salesOrderNo = salesOrderNo;
+  }
 
-	public void setPlanYear(int planYear) {
-		this.planYear = planYear;
-	}
+  public void setJobStatus(int jobStatus) {
+    this.jobStatus = jobStatus;
+  }
 
-	public void setPlanMonth(int planMonth) {
-		this.planMonth = planMonth;
-	}
+  public void setCustomerType(int customerType) {
+    this.customerType = customerType;
+  }
 
-	public void setFailReasonCode(int failReasonCode) {
-		this.failReasonCode = failReasonCode;
-	}
+  public void setCustomerId(int customerId) {
+    this.customerId = customerId;
+  }
 
-	public String getSalesOrderNo() {
-		return salesOrderNo;
-	}
+  public void setPlanYear(int planYear) {
+    this.planYear = planYear;
+  }
 
-	public int getJobStatus() {
-		return jobStatus;
-	}
+  public void setPlanMonth(int planMonth) {
+    this.planMonth = planMonth;
+  }
 
-	public int getCustomerType() {
-		return customerType;
-	}
+  public void setFailReasonCode(int failReasonCode) {
+    this.failReasonCode = failReasonCode;
+  }
 
-	public int getCustomerId() {
-		return customerId;
-	}
+  public String getSalesOrderNo() {
+    return salesOrderNo;
+  }
 
-	public int getPlanYear() {
-		return planYear;
-	}
+  public int getJobStatus() {
+    return jobStatus;
+  }
 
-	public int getPlanMonth() {
-		return planMonth;
-	}
+  public int getCustomerType() {
+    return customerType;
+  }
 
-	public String getAppointmentDate() {
-		return appointmentDate;
-	}
+  public int getCustomerId() {
+    return customerId;
+  }
 
-	public void setAppointmentDate(String appointmentDate) {
-		this.appointmentDate = appointmentDate;
-	}
+  public int getPlanYear() {
+    return planYear;
+  }
 
-	public String getAppointmentTime() {
-		return appointmentTime;
-	}
+  public int getPlanMonth() {
+    return planMonth;
+  }
 
-	public void setAppointmentTime(String appointmentTime) {
-		this.appointmentTime = appointmentTime;
-	}
+  public String getAppointmentDate() {
+    return appointmentDate;
+  }
 
-	public String getJobSession() {
-		return jobSession;
-	}
+  public void setAppointmentDate(String appointmentDate) {
+    this.appointmentDate = appointmentDate;
+  }
 
-	public void setJobSession(String jobSession) {
-		this.jobSession = jobSession;
-	}
+  public String getAppointmentTime() {
+    return appointmentTime;
+  }
 
-	public String getCheckInDate() {
-		return checkInDate;
-	}
+  public void setAppointmentTime(String appointmentTime) {
+    this.appointmentTime = appointmentTime;
+  }
 
-	public void setCheckInDate(String checkInDate) {
-		this.checkInDate = checkInDate;
-	}
+  public String getJobSession() {
+    return jobSession;
+  }
 
-	public String getCheckInTime() {
-		return checkInTime;
-	}
+  public void setJobSession(String jobSession) {
+    this.jobSession = jobSession;
+  }
 
-	public void setCheckInTime(String checkInTime) {
-		this.checkInTime = checkInTime;
-	}
+  public String getCheckInDate() {
+    return checkInDate;
+  }
 
-	public String getCheckInGps() {
-		return checkInGps;
-	}
+  public void setCheckInDate(String checkInDate) {
+    this.checkInDate = checkInDate;
+  }
 
-	public void setCheckInGps(String checkInGps) {
-		this.checkInGps = checkInGps;
-	}
+  public String getCheckInTime() {
+    return checkInTime;
+  }
 
+  public void setCheckInTime(String checkInTime) {
+    this.checkInTime = checkInTime;
+  }
 
-	public String getServiceState() {
-		return serviceState;
-	}
+  public String getCheckInGps() {
+    return checkInGps;
+  }
 
-	public void setServiceState(String serviceState) {
-		this.serviceState = serviceState;
-	}
+  public void setCheckInGps(String checkInGps) {
+    this.checkInGps = checkInGps;
+  }
 
-	public String getCustomerGps() {
-		return customerGps;
-	}
+  public String getServiceState() {
+    return serviceState;
+  }
 
-	public void setCustomerGps(String customerGps) {
-		this.customerGps = customerGps;
-	}
+  public void setServiceState(String serviceState) {
+    this.serviceState = serviceState;
+  }
 
-	public String getInstallAddress() {
-		return installAddress;
-	}
+  public String getCustomerGps() {
+    return customerGps;
+  }
 
-	public void setInstallAddress(String installAddress) {
-		this.installAddress = installAddress;
-	}
+  public void setCustomerGps(String customerGps) {
+    this.customerGps = customerGps;
+  }
 
-	public String getPostcode() {
-		return postcode;
-	}
+  public String getInstallAddress() {
+    return installAddress;
+  }
 
-	public void setPostcode(String postcode) {
-		this.postcode = postcode;
-	}
+  public void setInstallAddress(String installAddress) {
+    this.installAddress = installAddress;
+  }
 
-	public String getHandphoneTel() {
-		return handphoneTel;
-	}
+  public String getPostcode() {
+    return postcode;
+  }
 
-	public void setHandphoneTel(String handphoneTel) {
-		this.handphoneTel = handphoneTel;
-	}
+  public void setPostcode(String postcode) {
+    this.postcode = postcode;
+  }
 
-	public String getHomeTel() {
-		return homeTel;
-	}
+  public String getHandphoneTel() {
+    return handphoneTel;
+  }
 
-	public void setHomeTel(String homeTel) {
-		this.homeTel = homeTel;
-	}
+  public void setHandphoneTel(String handphoneTel) {
+    this.handphoneTel = handphoneTel;
+  }
 
-	public String getOfficeTel() {
-		return officeTel;
-	}
+  public String getHomeTel() {
+    return homeTel;
+  }
 
-	public void setOfficeTel(String officeTel) {
-		this.officeTel = officeTel;
-	}
+  public void setHomeTel(String homeTel) {
+    this.homeTel = homeTel;
+  }
 
-	public String getMailAddress() {
-		return mailAddress;
-	}
+  public String getOfficeTel() {
+    return officeTel;
+  }
 
-	public void setMailAddress(String mailAddress) {
-		this.mailAddress = mailAddress;
-	}
+  public void setOfficeTel(String officeTel) {
+    this.officeTel = officeTel;
+  }
 
-	public String getCustomerVaNo() {
-		return customerVaNo;
-	}
+  public String getMailAddress() {
+    return mailAddress;
+  }
 
-	public void setCustomerVaNo(String customerVaNo) {
-		this.customerVaNo = customerVaNo;
-	}
+  public void setMailAddress(String mailAddress) {
+    this.mailAddress = mailAddress;
+  }
 
-	public String getCustomerJomPayRefNo() {
-		return customerJomPayRefNo;
-	}
+  public String getCustomerVaNo() {
+    return customerVaNo;
+  }
 
-	public void setCustomerJomPayRefNo(String customerJomPayRefNo) {
-		this.customerJomPayRefNo = customerJomPayRefNo;
-	}
+  public void setCustomerVaNo(String customerVaNo) {
+    this.customerVaNo = customerVaNo;
+  }
 
-	public String getImageUrl() {
-		return imageUrl;
-	}
+  public String getCustomerJomPayRefNo() {
+    return customerJomPayRefNo;
+  }
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
+  public void setCustomerJomPayRefNo(String customerJomPayRefNo) {
+    this.customerJomPayRefNo = customerJomPayRefNo;
+  }
 
-	public String getProductName() {
-		return productName;
-	}
+  public String getImageUrl() {
+    return imageUrl;
+  }
 
-	public void setProductName(String productName) {
-		this.productName = productName;
-	}
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+  }
 
-	public String getProductCode() {
-		return productCode;
-	}
+  public String getProductName() {
+    return productName;
+  }
 
-	public void setProductCode(String productCode) {
-		this.productCode = productCode;
-	}
+  public void setProductName(String productName) {
+    this.productName = productName;
+  }
 
+  public String getProductCode() {
+    return productCode;
+  }
 
-	public String getInstruction() {
-		return instruction;
-	}
+  public void setProductCode(String productCode) {
+    this.productCode = productCode;
+  }
 
-	public void setInstruction(String instruction) {
-		this.instruction = instruction;
-	}
+  public String getInstruction() {
+    return instruction;
+  }
 
-	public String getContractDuration() {
-		return contractDuration;
-	}
+  public void setInstruction(String instruction) {
+    this.instruction = instruction;
+  }
 
-	public void setContractDuration(String contractDuration) {
-		this.contractDuration = contractDuration;
-	}
+  public String getContractDuration() {
+    return contractDuration;
+  }
 
-	public String getMonthlyRentalFees() {
-		return monthlyRentalFees;
-	}
+  public void setContractDuration(String contractDuration) {
+    this.contractDuration = contractDuration;
+  }
 
-	public void setMonthlyRentalFees(String monthlyRentalFees) {
-		this.monthlyRentalFees = monthlyRentalFees;
-	}
+  public String getMonthlyRentalFees() {
+    return monthlyRentalFees;
+  }
 
-	public String getRegistrationFees() {
-		return registrationFees;
-	}
+  public void setMonthlyRentalFees(String monthlyRentalFees) {
+    this.monthlyRentalFees = monthlyRentalFees;
+  }
 
-	public void setRegistrationFees(String registrationFees) {
-		this.registrationFees = registrationFees;
-	}
+  public String getRegistrationFees() {
+    return registrationFees;
+  }
 
-	public String getPaymentMode() {
-		return paymentMode;
-	}
+  public void setRegistrationFees(String registrationFees) {
+    this.registrationFees = registrationFees;
+  }
 
-	public void setPaymentMode(String paymentMode) {
-		this.paymentMode = paymentMode;
-	}
+  public String getPaymentMode() {
+    return paymentMode;
+  }
 
-	public String getPaymentModeName() {
-		return paymentModeName;
-	}
+  public void setPaymentMode(String paymentMode) {
+    this.paymentMode = paymentMode;
+  }
 
-	public void setPaymentModeName(String paymentModeName) {
-		this.paymentModeName = paymentModeName;
-	}
+  public String getPaymentModeName() {
+    return paymentModeName;
+  }
 
-	public String getBankName() {
-		return bankName;
-	}
+  public void setPaymentModeName(String paymentModeName) {
+    this.paymentModeName = paymentModeName;
+  }
 
-	public void setBankName(String bankName) {
-		this.bankName = bankName;
-	}
+  public String getBankName() {
+    return bankName;
+  }
 
-	public String getCardAccountNo() {
-		return cardAccountNo;
-	}
+  public void setBankName(String bankName) {
+    this.bankName = bankName;
+  }
 
-	public void setCardAccountNo(String cardAccountNo) {
-		this.cardAccountNo = cardAccountNo;
-	}
+  public String getCardAccountNo() {
+    return cardAccountNo;
+  }
 
-	public String getOutstanding() {
-		return outstanding;
-	}
+  public void setCardAccountNo(String cardAccountNo) {
+    this.cardAccountNo = cardAccountNo;
+  }
 
-	public void setOutstanding(String outstanding) {
-		this.outstanding = outstanding;
-	}
+  public String getOutstanding() {
+    return outstanding;
+  }
 
-	public String getSirimNo() {
-		return sirimNo;
-	}
+  public void setOutstanding(String outstanding) {
+    this.outstanding = outstanding;
+  }
 
-	public void setSirimNo(String sirimNo) {
-		this.sirimNo = sirimNo;
-	}
+  public String getSirimNo() {
+    return sirimNo;
+  }
 
-	public String getSerialNo() {
-		return serialNo;
-	}
+  public void setSirimNo(String sirimNo) {
+    this.sirimNo = sirimNo;
+  }
 
-	public void setSerialNo(String serialNo) {
-		this.serialNo = serialNo;
-	}
+  public String getSerialNo() {
+    return serialNo;
+  }
 
-	public String getWarranty() {
-		return warranty;
-	}
+  public void setSerialNo(String serialNo) {
+    this.serialNo = serialNo;
+  }
 
-	public void setWarranty(String warranty) {
-		this.warranty = warranty;
-	}
+  public String getWarranty() {
+    return warranty;
+  }
 
-	public String getMembershipContractExpiry() {
-		return MembershipContractExpiry;
-	}
+  public void setWarranty(String warranty) {
+    this.warranty = warranty;
+  }
 
-	public void setMembershipContractExpiry(String membershipContractExpiry) {
-		MembershipContractExpiry = membershipContractExpiry;
-	}
+  public String getMembershipContractExpiry() {
+    return MembershipContractExpiry;
+  }
 
-	public String getRentalStatus() {
-		return rentalStatus;
-	}
+  public void setMembershipContractExpiry(String membershipContractExpiry) {
+    MembershipContractExpiry = membershipContractExpiry;
+  }
 
-	public void setRentalStatus(String rentalStatus) {
-		this.rentalStatus = rentalStatus;
-	}
+  public String getRentalStatus() {
+    return rentalStatus;
+  }
 
-	public String getLastPaymentDate() {
-		return lastPaymentDate;
-	}
+  public void setRentalStatus(String rentalStatus) {
+    this.rentalStatus = rentalStatus;
+  }
 
-	public void setLastPaymentDate(String lastPaymentDate) {
-		this.lastPaymentDate = lastPaymentDate;
-	}
+  public String getLastPaymentDate() {
+    return lastPaymentDate;
+  }
 
-	public String getTemperatureSetting() {
-		return temperatureSetting;
-	}
+  public void setLastPaymentDate(String lastPaymentDate) {
+    this.lastPaymentDate = lastPaymentDate;
+  }
 
-	public void setTemperatureSetting(String temperatureSetting) {
-		this.temperatureSetting = temperatureSetting;
-	}
+  public String getTemperatureSetting() {
+    return temperatureSetting;
+  }
 
-	public String getResultRemark() {
-		return resultRemark;
-	}
+  public void setTemperatureSetting(String temperatureSetting) {
+    this.temperatureSetting = temperatureSetting;
+  }
 
-	public void setResultRemark(String resultRemark) {
-		this.resultRemark = resultRemark;
-	}
+  public String getResultRemark() {
+    return resultRemark;
+  }
 
-	public String getOwnerCode() {
-		return ownerCode;
-	}
+  public void setResultRemark(String resultRemark) {
+    this.resultRemark = resultRemark;
+  }
 
-	public void setOwnerCode(String ownerCode) {
-		this.ownerCode = ownerCode;
-	}
+  public String getOwnerCode() {
+    return ownerCode;
+  }
 
-	public String getOwnerCodeNm() {
-		return ownerCodeNm;
-	}
+  public void setOwnerCode(String ownerCode) {
+    this.ownerCode = ownerCode;
+  }
 
-	public void setOwnerCodeNm(String ownerCodeNm) {
-		this.ownerCodeNm = ownerCodeNm;
-	}
+  public String getOwnerCodeNm() {
+    return ownerCodeNm;
+  }
 
-	public String getResultCustName() {
-		return resultCustName;
-	}
+  public void setOwnerCodeNm(String ownerCodeNm) {
+    this.ownerCodeNm = ownerCodeNm;
+  }
 
-	public void setResultCustName(String resultCustName) {
-		this.resultCustName = resultCustName;
-	}
+  public String getResultCustName() {
+    return resultCustName;
+  }
 
-	public String getResultIcMobileNo() {
-		return resultIcMobileNo;
-	}
+  public void setResultCustName(String resultCustName) {
+    this.resultCustName = resultCustName;
+  }
 
-	public void setResultIcMobileNo(String resultIcMobileNo) {
-		this.resultIcMobileNo = resultIcMobileNo;
-	}
+  public String getResultIcMobileNo() {
+    return resultIcMobileNo;
+  }
 
-	public String getResultReportEmailNo() {
-		return resultReportEmailNo;
-	}
+  public void setResultIcMobileNo(String resultIcMobileNo) {
+    this.resultIcMobileNo = resultIcMobileNo;
+  }
 
-	public void setResultReportEmailNo(String resultReportEmailNo) {
-		this.resultReportEmailNo = resultReportEmailNo;
-	}
+  public String getResultReportEmailNo() {
+    return resultReportEmailNo;
+  }
 
-	public String getResultAcceptanceName() {
-		return resultAcceptanceName;
-	}
+  public void setResultReportEmailNo(String resultReportEmailNo) {
+    this.resultReportEmailNo = resultReportEmailNo;
+  }
 
-	public void setResultAcceptanceName(String resultAcceptanceName) {
-		this.resultAcceptanceName = resultAcceptanceName;
-	}
+  public String getResultAcceptanceName() {
+    return resultAcceptanceName;
+  }
 
-	public String getFailReasonName() {
-		return failReasonName;
-	}
+  public void setResultAcceptanceName(String resultAcceptanceName) {
+    this.resultAcceptanceName = resultAcceptanceName;
+  }
 
-	public void setFailReasonName(String failReasonName) {
-		this.failReasonName = failReasonName;
-	}
+  public String getFailReasonName() {
+    return failReasonName;
+  }
 
-	public String getSettledBy() {
-		return settledBy;
-	}
+  public void setFailReasonName(String failReasonName) {
+    this.failReasonName = failReasonName;
+  }
 
-	public void setSettledBy(String settledBy) {
-		this.settledBy = settledBy;
-	}
+  public String getSettledBy() {
+    return settledBy;
+  }
 
-	public String getSettledDate() {
-		return settledDate;
-	}
+  public void setSettledBy(String settledBy) {
+    this.settledBy = settledBy;
+  }
 
-	public void setSettledDate(String settledDate) {
-		this.settledDate = settledDate;
-	}
+  public String getSettledDate() {
+    return settledDate;
+  }
 
-	public String getSettledTime() {
-		return settledTime;
-	}
+  public void setSettledDate(String settledDate) {
+    this.settledDate = settledDate;
+  }
 
-	public void setSettledTime(String settledTime) {
-		this.settledTime = settledTime;
-	}
+  public String getSettledTime() {
+    return settledTime;
+  }
 
-	public String getRenCollectionId() {
-		return renCollectionId;
-	}
+  public void setSettledTime(String settledTime) {
+    this.settledTime = settledTime;
+  }
 
-	public void setRenCollectionId(String renCollectionId) {
-		this.renCollectionId = renCollectionId;
-	}
+  public String getRenCollectionId() {
+    return renCollectionId;
+  }
 
-	public String getBsrNo() {
-		return bsrNo;
-	}
+  public void setRenCollectionId(String renCollectionId) {
+    this.renCollectionId = renCollectionId;
+  }
 
-	public void setBsrNo(String bsrNo) {
-		this.bsrNo = bsrNo;
-	}
+  public String getBsrNo() {
+    return bsrNo;
+  }
 
-	public String getNeedFilter() {
-		return needFilter;
-	}
+  public void setBsrNo(String bsrNo) {
+    this.bsrNo = bsrNo;
+  }
 
-	public void setNeedFilter(String needFilter) {
-		this.needFilter = needFilter;
-	}
+  public String getNeedFilter() {
+    return needFilter;
+  }
 
-	public String getNextAppointmentDate() {
-		return nextAppointmentDate;
-	}
+  public void setNeedFilter(String needFilter) {
+    this.needFilter = needFilter;
+  }
 
-	public void setNextAppointmentDate(String nextAppointmentDate) {
-		this.nextAppointmentDate = nextAppointmentDate;
-	}
+  public String getNextAppointmentDate() {
+    return nextAppointmentDate;
+  }
 
-	public String getNextAppointmentTime() {
-		return nextAppointmentTime;
-	}
+  public void setNextAppointmentDate(String nextAppointmentDate) {
+    this.nextAppointmentDate = nextAppointmentDate;
+  }
 
-	public void setNextAppointmentTime(String nextAppointmentTime) {
-		this.nextAppointmentTime = nextAppointmentTime;
-	}
+  public String getNextAppointmentTime() {
+    return nextAppointmentTime;
+  }
 
+  public void setNextAppointmentTime(String nextAppointmentTime) {
+    this.nextAppointmentTime = nextAppointmentTime;
+  }
 
-	public static CareServiceJobDto create(EgovMap egvoMap) {
-		return BeanConverter.toBean(egvoMap, CareServiceJobDto.class);
-	}
+  public static CareServiceJobDto create(EgovMap egvoMap) {
+    return BeanConverter.toBean(egvoMap, CareServiceJobDto.class);
+  }
 
-	public String getServiceNo() {
-		return serviceNo;
-	}
-	public void setServiceNo(String serviceNo) {
-		this.serviceNo = serviceNo;
-	}
-	public String getCustName() {
-		return custName;
-	}
-	public void setCustName(String custName) {
-		this.custName = custName;
-	}
-	public String getJobType() {
-		return jobType;
-	}
-	public void setJobType(String jobType) {
-		this.jobType = jobType;
-	}
+  public String getServiceNo() {
+    return serviceNo;
+  }
 
+  public void setServiceNo(String serviceNo) {
+    this.serviceNo = serviceNo;
+  }
 
-	public int getAppType() {
-		return appType;
-	}
+  public String getCustName() {
+    return custName;
+  }
 
-	public void setAppType(int appType) {
-		this.appType = appType;
-	}
+  public void setCustName(String custName) {
+    this.custName = custName;
+  }
 
-	public int getSalesPromotion() {
-		return salesPromotion;
-	}
+  public String getJobType() {
+    return jobType;
+  }
 
-	public void setSalesPromotion(int salesPromotion) {
-		this.salesPromotion = salesPromotion;
-	}
+  public void setJobType(String jobType) {
+    this.jobType = jobType;
+  }
 
-	public int getBankCode() {
-		return bankCode;
-	}
+  public int getAppType() {
+    return appType;
+  }
 
-	public void setBankCode(int bankCode) {
-		this.bankCode = bankCode;
-	}
+  public void setAppType(int appType) {
+    this.appType = appType;
+  }
 
-	public int getDscCode() {
-		return dscCode;
-	}
+  public int getSalesPromotion() {
+    return salesPromotion;
+  }
 
-	public void setDscCode(int dscCode) {
-		this.dscCode = dscCode;
-	}
+  public void setSalesPromotion(int salesPromotion) {
+    this.salesPromotion = salesPromotion;
+  }
 
-	public int getRcCode() {
-		return rcCode;
-	}
+  public int getBankCode() {
+    return bankCode;
+  }
 
-	public void setRcCode(int rcCode) {
-		this.rcCode = rcCode;
-	}
+  public void setBankCode(int bankCode) {
+    this.bankCode = bankCode;
+  }
 
-	public int getFailReasonCode() {
-		return failReasonCode;
-	}
+  public int getDscCode() {
+    return dscCode;
+  }
 
+  public void setDscCode(int dscCode) {
+    this.dscCode = dscCode;
+  }
 
+  public int getRcCode() {
+    return rcCode;
+  }
 
+  public void setRcCode(int rcCode) {
+    this.rcCode = rcCode;
+  }
+
+  public int getFailReasonCode() {
+    return failReasonCode;
+  }
+
+  public String getMatsize() {
+    return matsize;
+  }
+
+  public void setMatsize(String matsize) {
+    this.matsize = matsize;
+  }
 
 }
