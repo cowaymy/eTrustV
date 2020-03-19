@@ -80,7 +80,7 @@ $(function() {
 	doGetComboAndGroup2("/scm/selectScmStockCodeForMulti.do", "", "", "scmStockCodeCbBox", "M", "");
 	$(".js-example-basic-multiple").select2();
 	console.log("today : " + gToday);
-	
+
 	gYear	= gToday.getFullYear();
 	gMonth	= gToday.getMonth() + 1;
 	gDay	= gToday.getDate();
@@ -140,16 +140,16 @@ function fnScmStockCbBox() {
 //	search
 function fnSearch() {
 	AUIGrid.clearGridData(myGridID);
-	
+
 	//	search parameters
 	var params	= {
 		scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects"),
 		scmStockCategoryCbBox : $("#scmStockCategoryCbBox").multipleSelect("getSelects"),
 		scmStockCodeCbBox : $("#scmStockCodeCbBox").val()
 	};
-	
+
 	params	= $.extend($("#MainForm").serializeJSON(), params);
-	
+
 	Common.ajax("POST"
 			, "/scm/selectScmMasterList.do"
 			, params
@@ -166,7 +166,7 @@ function fnSearch() {
 				} catch ( e ) {
 					console.log(e);
 				}
-				
+
 				Common.alert("Fail : " + jqXHR.responseJSON.message);
 			});
 }
@@ -177,14 +177,14 @@ function fnSave() {
 		fnSearchBtnList() ;
 		return	false;
 	}
-	
+
 	Common.ajax("POST"
 			, "/scm/saveScmMaster.do"
 			, GridCommon.getEditData(myGridID)
 			, function(result) {
 				Common.alert(result.data + "<spring:message code='sys.msg.savedCnt'/>");
 				fnSearch() ;
-				
+
 				console.log("Success : " + JSON.stringify(result));
 				console.log("data : " + result.data);
 			}
@@ -197,9 +197,9 @@ function fnSave() {
 				} catch ( e ) {
 					console.log(e);
 				}
-				
-				Common.alert("Fail : " + jqXHR.responseJSON.message);
-			
+
+				Common.alert("Fail message : " + jqXHR.responseJSON.message +" detailMessage : "  + jqXHR.responseJSON.detailMessage);
+
 			});
 }
 
@@ -209,7 +209,7 @@ function fnValidation() {
 	var addList	= AUIGrid.getAddedRowItems(myGridID);
 	var updList	= AUIGrid.getEditedRowItems(myGridID);
 	var delList	= AUIGrid.getRemovedItems(myGridID);
-	
+
 	if ( 0 == addList.length && 0 == updList.length && 0 == delList.length ) {
 		Common.alert("No Change");
 		return	false;
@@ -223,35 +223,35 @@ function isValidDate(param) {
 	var day		= Number(param.split("\/")[0]);
 	var month	= Number(param.split("\/")[1]);
 	var year	= Number(param.split("\/")[2]);
-	
+
 	if ( 1 > month || 12 < month ) {
 		console.log("error1");
 		return	succDate;
 	}
-	
+
 	var maxDaysInMonth	= [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 	var maxDay	= maxDaysInMonth[month-1];
-	
+
 	//	윤년 체크
 	if ( 2 == month && (0 == year%4 && 0 != year%100 || 0 == year%400) ) {
 		maxDay	= 29;
 	}
-	
+
 	if ( 0 >= day || maxDay < day ) {
 		console.log("error2");
 		return	succDate;
 	}
-	
+
 	if ( 1 == String(day).length ) {
 		day = "0" + day;
 	}
-	
+
 	if ( 1 == String(month).length ) {
 		month = "0" + month;
 	}
-	
+
 	succDate	= (day + "-" + month + "-" + year);
-	
+
 	return	succDate;
 }
 
@@ -260,7 +260,7 @@ function fnEventHandler(event) {
 		console.log("Click_에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
 	} else if ( "cellEditEnd" == event.type ) {
 		console.log("Click_에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-		
+
 		if ( "Start" == event.headerText ) {
 			if ( AUIGrid.formatDate(AUIGrid.getCellValue(myGridID, event.rowIndex, "endDt"), "yyyymmdd") < AUIGrid.formatDate(AUIGrid.getCellValue(myGridID, event.rowIndex, "startDt"), "yyyymmdd") ) {
 				Common.alert("<spring:message code='sys.msg.limitMore' arguments='START DATE ; END DATE.' htmlEscape='false' argumentSeparator=';'/>");
@@ -268,7 +268,7 @@ function fnEventHandler(event) {
 				return	false;
 			}
 		}
-		
+
 		if ( "End" == event.headerText ) {
 			if ( AUIGrid.formatDate(AUIGrid.getCellValue(myGridID, event.rowIndex, "endDt"), "yyyymmdd") < AUIGrid.formatDate(AUIGrid.getCellValue(myGridID, event.rowIndex, "startDt"), "yyyymmdd") ) {
 				Common.alert("<spring:message code='sys.msg.limitMore' arguments='START DATE ; END DATE.' htmlEscape='false' argumentSeparator=';'/>");
@@ -276,7 +276,7 @@ function fnEventHandler(event) {
 				return	false;
 			}
 		}
-		
+
 		if ( "klTarget" == event.dataField ) {
 			var items	= AUIGrid.getItemsByValue(myGridID, "klTarget", "1");
 			if ( gridDataLength != items.length ) {
@@ -398,7 +398,7 @@ function fnExcel(obj, fileName) {
 	if ( true == $(obj).parents().hasClass("btn_disabled") ) {
 		return	false;
 	}
-	
+
 	GridCommon.exportTo("#masterManagerDiv", "xlsx", fileName + "_" + getTimeStamp());
 }
 //	get timestamp
@@ -406,7 +406,7 @@ function getTimeStamp() {
 	function fnLeadingZeros(n, digits) {
 		var zero	= "";
 		n	= n.toString();
-		
+
 		if ( n.length < digits ) {
 			for (var i = 0 ; i < digits - n.length ; i++ ) {
 				zero	+= "0";
@@ -414,11 +414,11 @@ function getTimeStamp() {
 		}
 		return	zero + n;
 	}
-	
+
 	var d	= new Date();
 	var date	= fnLeadingZeros(d.getFullYear(), 4) + fnLeadingZeros(d.getMonth() + 1, 2) + fnLeadingZeros(d.getDate(), 2);
 	var time	= fnLeadingZeros(d.getHours(), 2) + fnLeadingZeros(d.getMinutes(), 2) + fnLeadingZeros(d.getSeconds(), 2);
-	
+
 	return	date + "_" + time;
 }
 
@@ -612,7 +612,7 @@ var masterManagerLayout	=
 								//	에디팅 유효성 검사
 								console.log("rowItem: " + JSON.stringify(rowItem));
 								console.log("rowItem.endDt: " + rowItem.endDt);
-								
+
 								var date, isValid	= true;
 								if ( isNaN(Number(newValue)) ) {
 									//	20160201 형태 또는 그냥 1, 2 로 입력한 경우는 허락함.
@@ -626,7 +626,7 @@ var masterManagerLayout	=
 										isValid	= true;
 									}
 								}
-								
+
 								//	리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
 								return { "validate" : isValid, "message"  : " Type In 'yyyymmdd' Input." };
 							}
@@ -661,7 +661,7 @@ var masterManagerLayout	=
 										isValid	= true;
 									}
 								}
-								
+
 								//	리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
 								return { "validate" : isValid, "message"  : " Type In 'yyyyMMdd' Input." };
 							}
@@ -685,7 +685,7 @@ var masterManagerLayout	=
 					{
 						//	Supply Plan Target
 						headerText : "<spring:message code='sys.scm.mastermanager.SupplyPlanTarget'/>",
-						
+
 						children :
 							[
 								{
@@ -892,10 +892,10 @@ $(document).ready(function() {
 		pageRowCount : 30,			//	한 화면에 출력되는 행 개수 30개로 지정
 		fixedColumnCount : 9,
 	};
-	
+
 	//	masterGrid 그리드를 생성합니다.
 	myGridID	= GridCommon.createAUIGrid("#masterManagerDiv", masterManagerLayout, "", masterManagerOptions);
-	
+
 	AUIGrid.bind(myGridID, "cellEditBegin", fnEventHandler);	//	에디팅 시작 이벤트 바인딩
 	AUIGrid.bind(myGridID, "cellEditEnd", fnEventHandler);		//	에디팅 정상 종료 이벤트 바인딩
 	AUIGrid.bind(myGridID, "cellEditCancel", fnEventHandler);	//	에디팅 취소 이벤트 바인딩
@@ -928,7 +928,7 @@ $(document).ready(function() {
 		<li>Sales</li>
 		<li>Order list</li>
 	</ul>
-	
+
 	<aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
 		<h2>SCM Master Management</h2>
@@ -936,7 +936,7 @@ $(document).ready(function() {
 			<li><p class="btn_blue"><a onclick="fnSearch();"><span class="search"></span>Search</a></p></li>
 		</ul>
 	</aside><!-- title_line end -->
-	
+
 	<section class="search_table"><!-- search_table start -->
 		<form id="MainForm" method="get" action="">
 			<table class="type1"><!-- table start -->

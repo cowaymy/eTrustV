@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.biz.scm.ScmCommonService;
 import com.coway.trust.biz.scm.ScmMasterManagementService;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.crystaldecisions.reports.common.value.StringValue;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -36,13 +37,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class ScmMasterManagementServiceImpl implements ScmMasterManagementService
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ScmMasterManagementServiceImpl.class);
-	
+
 	@Autowired
 	private ScmMasterManagementMapper scmMasterManagementMapper;
-	
+
 	@Autowired
 	private ScmCommonMapper scmCommonMapper;
-	
+
 	/*
 	 * SCM Master Manager
 	 */
@@ -57,8 +58,10 @@ public class ScmMasterManagementServiceImpl implements ScmMasterManagementServic
 		int cnt	= 0;
 		String startDt	= "";
 		String endDt		= "";
-		
+
 		for ( Object obj : params ) {
+			LOGGER.debug("saveScmMaster : {}", params.toString());
+
 			if ( null != ((Map<String, Object>) obj).get("startDt") && ! "".equals(((Map<String, Object>) obj).get("startDt").toString())) {
 				startDt	= ((Map<String, Object>) obj).get("startDt").toString();
 				LOGGER.debug("startDt : " + startDt);
@@ -86,13 +89,13 @@ public class ScmMasterManagementServiceImpl implements ScmMasterManagementServic
 			scmMasterManagementMapper.saveScmMaster((Map<String, Object>) obj);
 			cnt++;
 		}
-		
+
 		return	cnt;
 	}
 	//	save
 	@Override
 	public int saveScmMaster2(List<Object> params, SessionVO sessionVO) {
-		
+
 		int cnt	= 0;
 		int moq	= 0;
 		int leadTm	= 0;
@@ -100,47 +103,67 @@ public class ScmMasterManagementServiceImpl implements ScmMasterManagementServic
 		String cdc	= "";
 		String isTrget	= "";
 		Map<String, Object> map	= new HashMap<>();
-		
+
 		for ( Object obj : params ) {
 			LOGGER.debug("saveScmMaster2 : {}", params.toString());
 			//	Common
 			((Map<String, Object>) obj).put("stockId", ((Map<String, Object>) obj).get("stockId"));
 			((Map<String, Object>) obj).put("stockCode", ((Map<String, Object>) obj).get("stockCode"));
-			
+
 			//	KL
-			((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("klMoq").toString());
+			if(!CommonUtils.nvl(((Map<String, Object>) obj).get("klMoq")).isEmpty()){
+				((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("klMoq").toString());
+			}
+			if(!CommonUtils.nvl(((Map<String, Object>) obj).get("klTarget")).isEmpty()){
+				((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("klTarget"));
+			}
 			((Map<String, Object>) obj).put("cdc", "2010");
-			((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("klTarget"));
 			cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
-			
+
 			//	PN
-			((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("pnMoq"));
+			if(!CommonUtils.nvl(((Map<String, Object>) obj).get("pnMoq")).isEmpty()){
+				((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("pnMoq"));
+			}
+			if(!CommonUtils.nvl(((Map<String, Object>) obj).get("pnTarget")).isEmpty()){
+				((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("pnTarget"));
+			}
 			((Map<String, Object>) obj).put("cdc", "2020");
-			((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("pnTarget"));
 			cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
-			
+
 			//	JB
-			((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("jbMoq"));
+			if(!CommonUtils.nvl(((Map<String, Object>) obj).get("jbMoq")).isEmpty()){
+				((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("jbMoq"));
+			}
+			if(!CommonUtils.nvl(((Map<String, Object>) obj).get("jbTarget")).isEmpty()){
+				((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("jbTarget"));
+			}
 			((Map<String, Object>) obj).put("cdc", "2030");
-			((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("jbTarget"));
 			cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
-			
+
 			//	KK
-			((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("kkMoq"));
+			if(!CommonUtils.nvl(((Map<String, Object>) obj).get("kkMoq")).isEmpty()){
+				((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("kkMoq"));
+			}
+			if(!CommonUtils.nvl(((Map<String, Object>) obj).get("kkTarget")).isEmpty()){
+				((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("kkTarget"));
+			}
 			((Map<String, Object>) obj).put("cdc", "2040");
-			((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("kkTarget"));
 			cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
-			
+
 			//	KC
-			((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("kcMoq"));
+			if(!CommonUtils.nvl(((Map<String, Object>) obj).get("kcMoq")).isEmpty()){
+				((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("kcMoq"));
+			}
+			if(!CommonUtils.nvl(((Map<String, Object>) obj).get("kcTarget")).isEmpty()){
+				((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("kcTarget"));
+			}
 			((Map<String, Object>) obj).put("cdc", "2050");
-			((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("kcTarget"));
 			cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
 		}
-		
+
 		return	cnt;
 	}
-	
+
 	/*
 	 * CDC Warehouse Mapping
 	 */
@@ -153,33 +176,33 @@ public class ScmMasterManagementServiceImpl implements ScmMasterManagementServic
 	public List<EgovMap> selectCdcWhUnmappingList(Map<String, Object> params) {
 		return	scmMasterManagementMapper.selectCdcWhUnmappingList(params);
 	}
-	
+
 	//	save Unmap
 	@Override
 	public int insertCdcWhMapping(List<Object> insList, Integer crtUserId) {
 		int saveCnt	= 0;
-		
+
 		for ( Object obj : insList ) {
 			scmMasterManagementMapper.insertCdcWhMapping((Map<String, Object>) obj);
 			saveCnt++;
 		}
-		
+
 		return	saveCnt;
 	}
-	
+
 	//	save Map
 	@Override
 	public int deleteCdcWhMapping(List<Object> delList, Integer crtUserId) {
 		int saveCnt	= 0;
-		
+
 		for ( Object obj : delList ) {
 			scmMasterManagementMapper.deleteCdcWhMapping((Map<String, Object>) obj);
 			saveCnt++;
 		}
-		
+
 		return	saveCnt;
 	}
-	
+
 	/*
 	 * CDC Branch Mapping
 	 */
@@ -192,30 +215,30 @@ public class ScmMasterManagementServiceImpl implements ScmMasterManagementServic
 	public List<EgovMap> selectCdcBrUnmappingList(Map<String, Object> params) {
 		return	scmMasterManagementMapper.selectCdcBrUnmappingList(params);
 	}
-	
+
 	//	save Unmap
 	@Override
 	public int insertCdcBrMapping(List<Object> insList, Integer crtUserId) {
 		int saveCnt	= 0;
-		
+
 		for ( Object obj : insList ) {
 			scmMasterManagementMapper.insertCdcBrMapping((Map<String, Object>) obj);
 			saveCnt++;
 		}
-		
+
 		return	saveCnt;
 	}
-	
+
 	//	save Map
 	@Override
 	public int deleteCdcBrMapping(List<Object> delList, Integer crtUserId) {
 		int saveCnt	= 0;
-		
+
 		for ( Object obj : delList ) {
 			scmMasterManagementMapper.deleteCdcBrMapping((Map<String, Object>) obj);
 			saveCnt++;
 		}
-		
+
 		return	saveCnt;
 	}
 }

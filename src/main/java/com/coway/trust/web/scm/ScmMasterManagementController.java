@@ -92,9 +92,16 @@ public class ScmMasterManagementController {
 		LOGGER.debug("SCM0008M : " + totCnt + ", SCM0017M : " + saveCnt);
 
 		ReturnMessage message	= new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(totCnt);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		if((totCnt + saveCnt) < 0 ){
+			message.setMessage("Error when update the SCM Master Management Data.");
+		} else if ((totCnt + saveCnt) == 0 ){
+			message.setMessage("No data is being updated.");
+		} else {
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(totCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}
 
 		return	ResponseEntity.ok(message);
 	}
@@ -158,7 +165,7 @@ public class ScmMasterManagementController {
 
 		return	ResponseEntity.ok(message);
 	}
-	
+
 	/*
 	 * CDC Branch Mapping
 	 */
