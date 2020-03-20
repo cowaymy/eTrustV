@@ -15,12 +15,12 @@
 	var selectRowIdx;
 	var popupObj;
 
-    if(MEM_TYPE == '1') { //HP
+    if(MEM_TYPE == '1' || MEM_TYPE == '2' || MEM_TYPE == '7') { //HP
         CATE_ID = "29";
     }
-    else if(MEM_TYPE == '2') { //CODY
+/*     else if(MEM_TYPE == '2') { //CODY
         CATE_ID = "28";
-    }
+    } */
 
 
     $(document).ready(function(){
@@ -319,11 +319,11 @@
                     }
                 }
                 // 20190925 KR-OHK Moblie Popup Setting
-                if(Common.checkPlatformType() == "mobile") {
+                //if(Common.checkPlatformType() == "mobile") {
                     popupObj = Common.popupWin("frmNew", "/sales/order/preOrderRegisterPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
-                } else{
+                /* } else{
                     Common.popupDiv("/sales/order/preOrderRegisterPop.do", null, null, true, '_divPreOrdRegPop');
-                }
+                } */
             });
         });
         $('#_btnClear').click(function() {
