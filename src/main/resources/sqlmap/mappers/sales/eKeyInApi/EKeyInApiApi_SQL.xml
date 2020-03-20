@@ -828,45 +828,6 @@ AND     T1.PROMO_ITM_STUS_ID = 1
 </select>
 
 <select id="selectAnotherAddress" parameterType="Map" resultType="egovMap">
-<!-- <![CDATA[
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectAnotherAddress] 20191212 - KR JAEMAJEM */
-SELECT  A.ADDR_DTL                                                              AS ADDR_DTL
-    ,   A.STREET                                                                AS STREET
-    ,   B.AREA                                                                  AS AREA
-    ,   B.CITY                                                                  AS CITY
-    ,   B.POSTCODE                                                              AS POSTCODE
-    ,   B.STATE                                                                 AS STATE
-    ,   B.COUNTRY                                                               AS COUNTRY
-    ,   CASE WHEN C.CODE IS NOT NULL AND C.NAME IS NOT NULL THEN C.CODE ||' - '|| C.NAME
-                                                            ELSE NULL
-                                                            END                 AS DSC_BRNCH
-    ,   C.BRNCH_ID                                                              AS DSC_BRNCH_ID
-    ,   CASE WHEN D.CODE IS NOT NULL AND D.NAME IS NOT NULL THEN D.CODE ||' - '|| D.NAME
-                                                            ELSE NULL
-                                                            END                 AS POSTING_BRNCH
-    ,   D.BRNCH_ID                                                              AS POSTING_BRNCH_ID
-    ,   CASE WHEN E.CODE IS NOT NULL AND E.NAME IS NOT NULL THEN E.CODE ||' - '|| E.NAME
-                                                            ELSE NULL
-                                                            END                 AS HDC_BRNCH
-    ,   E.BRNCH_ID                                                              AS HDC_BRNCH_ID
-    ,   F.NAME                                                                  AS STUS_CODE_ID_NAME
-    ,   CASE    WHEN ( A.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(A.ADDR_DTL))
-                ELSE ''
-                END ||' '||NVL(A.STREET, '') ||' '|| B.AREA ||' '|| B.POSTCODE ||' '|| B.CITY ||' '|| B.STATE ||' '|| B.COUNTRY AS FULL_ADDR
-    ,   A.CUST_ADD_ID                                                           AS CUST_ADD_ID
-FROM    SAL0023D A                                                              -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : CustAddress
-        INNER JOIN SYS0064M B                                                   -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : Magic Address(GeoPC_Streets)
-            ON  A.AREA_ID = B.AREA_ID
-        LEFT OUTER JOIN SYS0005M C                                              --Branch Info master table
-            ON B.CT_BRNCH_CODE = C.CODE
-        LEFT OUTER JOIN SYS0005M D                                              --Branch Info master table
-            ON B.SO_BRNCH_CODE= D.CODE
-        LEFT OUTER JOIN SYS0005M E                                              --Branch Info master table
-            ON B.DT_BRNCH_CODE= E.CODE
-        INNER JOIN SYS0038M F
-            ON  A.STUS_CODE_ID = F.STUS_CODE_ID
-WHERE   A.CUST_ID = #{custId}                                                   -- ASIS_COLUMN : CustID
- -->
   <![CDATA[
   SELECT A.ADDR_DTL AS ADDR_DTL
            , A.STREET  AS STREET
@@ -895,20 +856,21 @@ WHERE   A.CUST_ID = #{custId}                                                   
   LEFT OUTER JOIN SYS0005M F    ON B.CODY_BRNCH_CODE= F.CODE
   INNER JOIN SYS0038M F ON  A.STUS_CODE_ID = F.STUS_CODE_ID
   WHERE   A.CUST_ID = #{custId}
-]]>
-<choose>
-        <when test='stusCodeId != null and stusCodeId != "" and stusCodeId > 0'>
-AND     A.STUS_CODE_ID = #{stusCodeId}
-        </when>
-        <otherwise>
-AND     A.STUS_CODE_ID IN (1, 9)                                                --SYS0038M : 1(Active), 9(Main)
-        </otherwise>
-</choose>
-<if test='custAddId != null and custAddId != "" and custAddId > 0'>
-AND     A.CUST_ADD_ID = #{custAddId}
-</if>
-ORDER BY    A.STUS_CODE_ID DESC
-        ,   A.CUST_ADD_ID DESC
+  ]]>
+
+  <choose>
+    <when test='stusCodeId != null and stusCodeId != "" and stusCodeId > 0'>
+      AND A.STUS_CODE_ID = #{stusCodeId}
+    </when>
+    <otherwise>
+      AND A.STUS_CODE_ID IN (1, 9)
+    </otherwise>
+  </choose>
+  <if test='custAddId != null and custAddId != "" and custAddId > 0'>
+    AND     A.CUST_ADD_ID = #{custAddId}
+  </if>
+  ORDER BY A.STUS_CODE_ID DESC
+               , A.CUST_ADD_ID DESC
 </select>
 
 
