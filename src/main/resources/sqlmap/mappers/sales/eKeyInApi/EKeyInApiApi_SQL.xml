@@ -1355,7 +1355,7 @@ FROM    SAL0029D A                                                              
         LEFT OUTER JOIN SYS0013M C
             ON  B.CUST_INITIAL = C.CODE_ID
         LEFT OUTER JOIN SYS0013M D
-            ON  A.NATION = D.CODE_ID
+            ON  A.NATION = D.CODE
             AND D.CODE_MASTER_ID = 338
             AND D.DISAB = 0
         LEFT OUTER JOIN SYS0013M E
