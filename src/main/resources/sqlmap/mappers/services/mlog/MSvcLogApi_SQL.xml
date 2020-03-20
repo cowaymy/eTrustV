@@ -386,6 +386,7 @@
           ,TO_CHAR(CRT_DT)                AS      Create_Date
           ,TO_CHAR(HOME_CARE_ORDER_YN) AS home_Care_Order_Yn
           , TO_CHAR(SERIAL_CHK) AS serial_Chk
+          , TO_CHAR(MATSIZE) AS matsize
     FROM SVC0101T
     WHERE MEM_CODE = #{userId}
   </select>
