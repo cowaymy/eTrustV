@@ -271,14 +271,14 @@
                 isValid = false;
                 msg += '* <spring:message code="sal.alert.msg.selOrdDt" /><br/>';
             }
-            else {
+        /*     else {
                 var diffDay = fn_diffDate($('#listOrdStartDt').val(), $('#listOrdEndDt').val());
 
                 if(diffDay > 31 || diffDay < 0) {
                     isValid = false;
                     msg += '* <spring:message code="sal.alert.msg.srchPeriodDt" />';
                 }
-            }
+            } */
         }
 
         if(!isValid) Common.alert('<spring:message code="sal.title.text.ordSrch" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
@@ -638,11 +638,13 @@
                             <div class="date_set w100p">
                                 <!-- date_set start -->
                                 <p>
-                                    <input id="listOrdStartDt" name="ordStartDt" type="text" value="${bfDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+                               <%--      <input id="listOrdStartDt" name="ordStartDt" type="text" value="${bfDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /> --%>
+                                        <input id="listOrdStartDt" name="ordStartDt" type="text" value="" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
                                 </p>
                                 <span>To</span>
                                 <p>
-                                    <input id="listOrdEndDt" name="ordEndDt" type="text" value="${toDay}" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" />
+                             <%--        <input id="listOrdEndDt" name="ordEndDt" type="text" value="${toDay}" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /> --%>
+                                    <input id="listOrdEndDt" name="ordEndDt" type="text" value="" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" />
                                 </p>
                             </div>
                             <!-- date_set end -->
