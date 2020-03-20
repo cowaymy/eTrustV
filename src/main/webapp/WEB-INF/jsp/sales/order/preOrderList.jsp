@@ -15,10 +15,10 @@
 	var selectRowIdx;
 	var popupObj;
 
-    if(MEM_TYPE == '1' || MEM_TYPE == '2' || MEM_TYPE == '7') { //HP
+/*     if(MEM_TYPE == '1') { //HP
         CATE_ID = "29";
     }
-/*     else if(MEM_TYPE == '2') { //CODY
+    else if(MEM_TYPE == '2') { //CODY
         CATE_ID = "28";
     } */
 
