@@ -1199,6 +1199,9 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         if (CommonUtils.isEmpty(param.getSofNo())) {
             throw new ApplicationException(AppConstants.FAIL, "sofNo value does not exist.");
         }
+        if (CommonUtils.isEmpty(param.getUserNm())) {
+          throw new ApplicationException(AppConstants.FAIL, "User Name value does not exist.");
+      }
 
         EKeyInApiDto rtn = new EKeyInApiDto();
 
