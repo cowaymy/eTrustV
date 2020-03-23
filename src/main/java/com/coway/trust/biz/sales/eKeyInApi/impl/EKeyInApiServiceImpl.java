@@ -56,6 +56,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * Date             Author          Description
  * -------------    -----------     -------------
  * 2019. 12. 09.    KR-JAEMJAEM:)   First creation
+ * 2020. 03. 23     MY-ONGHC    Amend saveTokenizationProcess
  *          </pre>
  */
 @Service("EKeyInApiService")
@@ -1083,8 +1084,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
             stus = "1";
 
             if (crcCheck.equals("0")) {
-                String custCrcExpr = Integer.toString(param.getCustCrcExprMM())
-                        + Integer.toString(param.getCustCrcExprYYYY()).substring(2);
+                //String custCrcExpr = Integer.toString(param.getCustCrcExprMM()) + Integer.toString(param.getCustCrcExprYYYY()).substring(2);
+                String custCrcExpr = param.getCustCrcExprMM()+ param.getCustCrcExprYYYY().substring(2); // ONGHC - 20200323
                 Map<String, Object> sal0028D = new HashMap<String, Object>();
 //                sal0028D.put("custCrcId", );
                 sal0028D.put("custId", param.getCustId());
