@@ -1089,7 +1089,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
                 Map<String, Object> sal0028D = new HashMap<String, Object>();
 //                sal0028D.put("custCrcId", );
                 sal0028D.put("custId", param.getCustId());
-                sal0028D.put("custCrcNo", crcNo);
+                sal0028D.put("custCrcNo", param.getCustOriCrcNo());
                 sal0028D.put("custOriCrcNo", crcNo);
                 sal0028D.put("custEncryptCrcNo", param.getCustOriCrcNo());
                 sal0028D.put("custCrcOwner", param.getCustCrcOwner());
