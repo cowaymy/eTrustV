@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiModel;
  * Date             Author          Description
  * -------------    -----------     -------------
  * 2019. 12. 09.    KR-JAEMJAEM:)   First creation
+ * 2020. 03. 23.    MY-ONGHC     Amend custCrcExprMM and custCrcExprYYYY from INT to STRING
  * </pre>
  */
 @ApiModel(value = "EKeyInApiDto", description = "EKeyInApiDto")
@@ -178,8 +179,8 @@ public class EKeyInApiDto{
     private String urlReq;
     private String merchantId;
     private String signature;
-    private int custCrcExprMM;
-    private int custCrcExprYYYY;
+    private String custCrcExprMM;
+    private String custCrcExprYYYY;
     private String custCrcRem;
     private String crcCheck;
     private String errorDesc;
@@ -1092,16 +1093,16 @@ public class EKeyInApiDto{
     public void setSignature(String signature) {
         this.signature = signature;
     }
-    public int getCustCrcExprMM() {
+    public String getCustCrcExprMM() {
         return custCrcExprMM;
     }
-    public void setCustCrcExprMM(int custCrcExprMM) {
+    public void setCustCrcExprMM(String custCrcExprMM) {
         this.custCrcExprMM = custCrcExprMM;
     }
-    public int getCustCrcExprYYYY() {
+    public String getCustCrcExprYYYY() {
         return custCrcExprYYYY;
     }
-    public void setCustCrcExprYYYY(int custCrcExprYYYY) {
+    public void setCustCrcExprYYYY(String custCrcExprYYYY) {
         this.custCrcExprYYYY = custCrcExprYYYY;
     }
     public String getCustCrcRem() {
