@@ -211,6 +211,8 @@ public class CareServiceJobDto {
 
   private String matsize;
 
+  private String hcSalesOrderNo;
+
   public String getHomeCareOrderYn() {
     return homeCareOrderYn;
   }
@@ -767,6 +769,14 @@ public class CareServiceJobDto {
 
   public void setMatsize(String matsize) {
     this.matsize = matsize;
+  }
+
+  public String getHcSalesOrderNo() {
+    return hcSalesOrderNo;
+  }
+
+  public void setHcSalesOrderNo(String hcSalesOrderNo) {
+    this.hcSalesOrderNo = hcSalesOrderNo;
   }
 
 }
