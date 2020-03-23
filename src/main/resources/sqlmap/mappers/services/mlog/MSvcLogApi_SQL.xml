@@ -387,7 +387,7 @@
           ,TO_CHAR(HOME_CARE_ORDER_YN) AS home_Care_Order_Yn
           , TO_CHAR(SERIAL_CHK) AS serial_Chk
           , TO_CHAR(MATSIZE) AS matsize
-          , TO_CHAR(HCSALESORDERNO) AS hcSalesOrderNo
+          , TO_CHAR(HCSALESORDERNO) AS HC_SALES_ORDER_NO
     FROM SVC0101T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -4495,7 +4495,7 @@
            homeCareOrderYn AS home_Care_Order_Yn,
            NVL(SERIAL_CHK, 'N') AS SERIAL_CHK,
            TO_CHAR (SALES_PROD_SZ) AS MATSIZE,
-           SALES_ORD_NO AS HCSALESORDERNO
+           SALES_ORD_NO AS HC_SALES_ORDER_NO
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
