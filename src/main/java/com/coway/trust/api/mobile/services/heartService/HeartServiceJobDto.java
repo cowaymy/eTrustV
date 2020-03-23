@@ -214,6 +214,8 @@ public class HeartServiceJobDto {
 
   private String matsize;
 
+  private String hcSalesOrderNo;
+
   public String getSerialChk() {
     return serialChk;
   }
@@ -768,6 +770,14 @@ public class HeartServiceJobDto {
 
   public void setMatsize(String matsize) {
     this.matsize = matsize;
+  }
+
+  public String getHcSalesOrderNo() {
+    return hcSalesOrderNo;
+  }
+
+  public void setHcSalesOrderNo(String hcSalesOrderNo) {
+    this.hcSalesOrderNo = hcSalesOrderNo;
   }
 
 }
