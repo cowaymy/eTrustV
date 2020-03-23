@@ -100,7 +100,7 @@ public class HeartServiceJobDto {
   private String instruction;
 
   @ApiModelProperty(value = "")
-  private int salesPromotion;
+  private String salesPromotion;
 
   @ApiModelProperty(value = "")
   private String contractDuration;
@@ -728,11 +728,11 @@ public class HeartServiceJobDto {
     this.appType = appType;
   }
 
-  public int getSalesPromotion() {
+  public String getSalesPromotion() {
     return salesPromotion;
   }
 
-  public void setSalesPromotion(int salesPromotion) {
+  public void setSalesPromotion(String salesPromotion) {
     this.salesPromotion = salesPromotion;
   }
 
