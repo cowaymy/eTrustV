@@ -4494,7 +4494,7 @@
            TO_CHAR (NVL(B.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding,
            homeCareOrderYn AS home_Care_Order_Yn,
            NVL(SERIAL_CHK, 'N') AS SERIAL_CHK,
-           TO_CHAR (SALES_PROD_SZ) AS MATSIZE
+           TO_CHAR (SALES_PROD_SZ) AS MATSIZE,
            SALES_ORD_NO AS HCSALESORDERNO
     FROM ( SELECT appointment_Date,
                   service_No,
