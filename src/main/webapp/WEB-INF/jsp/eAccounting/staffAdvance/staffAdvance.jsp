@@ -186,7 +186,7 @@
             console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
             console.log("CellDoubleClick clmNo : " + event.item.clmNo);
             console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
-            console.log("CellDoubleClick appvPrcssStusCode : " + event.item.appvPrcssStusCode);
+            console.log("CellDoubleClick appvPrcssStus : " + event.item.appvPrcssStus);
 
             if(event.item.appvPrcssStus == "T") {
                 mode = "DRAFT";

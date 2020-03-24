@@ -571,6 +571,8 @@ public class StaffAdvanceController {
 
         LOGGER.debug("params =====================================>>  " + params);
 
+        int rejctSeq = 0;
+
         EgovMap advType = staffAdvanceService.getAdvType(params);
         params.put("advType", advType.get("advType"));
 
@@ -586,14 +588,12 @@ public class StaffAdvanceController {
         for(int i = 0; i < appvLineInfo.size(); i++) {
             EgovMap info = appvLineInfo.get(i);
             appvLineUserId.add(info.get("appvLineUserId").toString());
-            if(memCode.equals(info.get("appvLineUserId"))) {
-                String appvPrcssResult = String.valueOf(info.get("appvStus"));
-                model.addAttribute("appvPrcssResult", appvPrcssResult);
-            }
+
+            String appvPrcssResult = String.valueOf(info.get("appvStus"));
+            model.addAttribute("appvPrcssResult", appvPrcssResult);
 
             if("J".equals(info.get("appvStus"))) {
-                String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(info);
-                model.addAttribute("rejctResn", rejctResn);
+                rejctSeq = Integer.parseInt(info.get("appvLineSeq").toString());
             }
         }
 
@@ -603,6 +603,14 @@ public class StaffAdvanceController {
 
         // TODO appvPrcssStus 생성
         String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
+
+        Map<String, Object> m1 = new HashMap<String, Object>();
+        m1.put("appvPrcssNo", params.get("appvPrcssNo"));
+        m1.put("appvLineSeq", rejctSeq);
+        if(rejctSeq != 0) {
+            String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(m1);
+            model.addAttribute("rejctResn", rejctResn);
+        }
 
         model.addAttribute("pageAuthFuncChange", params.get("pageAuthFuncChange"));
         model.addAttribute("appvPrcssStus", appvPrcssStus);

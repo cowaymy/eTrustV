@@ -183,10 +183,10 @@ public class WebInvoiceController {
 
 		// TODO appvPrcssStus 생성
 		String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
-		
+
 		// VANNIE ADD TO GET FILE GROUP ID, FILE ID AND FILE COUNT.
         List<EgovMap> atchFileData = webInvoiceService.selectAtchFileData(params);
-        
+
         if(atchFileData.isEmpty()){
           model.addAttribute("atchFileCnt", 0);
         } else {
@@ -196,23 +196,23 @@ public class WebInvoiceController {
 		model.addAttribute("pageAuthFuncChange", params.get("pageAuthFuncChange"));
 		model.addAttribute("appvPrcssStus", appvPrcssStus);
 		model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
-		
+
 		if(clmType.equalsIgnoreCase("R1")){
 		  return "eAccounting/webInvoice/webInvoiceApproveViewR1Pop";
 		} else {
 		  return "eAccounting/webInvoice/webInvoiceApproveViewPop";
 		}
 
-		
+
 	}
 
   @RequestMapping(value = "/webInvoiceRqstViewPop.do")
   public String webInvoiceRqstViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
-    
+
     LOGGER.debug("params =====================================>>  " + params);
-    
+
     String clmType = params.get("clmType").toString();
-    
+
     List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(params);
     for (int i = 0; i < appvLineInfo.size(); i++) {
       EgovMap info = appvLineInfo.get(i);
@@ -222,23 +222,23 @@ public class WebInvoiceController {
       }
     }
     List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(params);
-    
+
     // TODO appvPrcssStus 생성
     String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
-    
+
     // VANNIE ADD TO GET FILE GROUP ID, FILE ID AND FILE COUNT.
     List<EgovMap> atchFileData = webInvoiceService.selectAtchFileData(params);
-    
+
     if (atchFileData.isEmpty()) {
       model.addAttribute("atchFileCnt", 0);
     } else {
       model.addAttribute("atchFileCnt", atchFileData.get(0).get("fileCnt"));
     }
-    
+
     model.addAttribute("appvPrcssStus", appvPrcssStus);
     model.addAttribute("appvPrcssResult", appvInfoAndItems.get(0).get("appvPrcssStus"));
     model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
-    
+
     if (clmType.equalsIgnoreCase("R1")) {
       return "eAccounting/webInvoice/webInvoiceRequestViewR1Pop";
     } else {
@@ -964,13 +964,15 @@ public class WebInvoiceController {
 	                    appvLineUserId.add(hm.get("memCode").toString());
 	                }
 
+	                String finAppvLineUserId = appvLineUserId.get(appvLineUserId.size() - 1);
+
 	                params.put("clmType", params.get("clmNo").toString().substring(0, 2));
 	                EgovMap hm2 = webInvoiceService.getFinApprover(params);
 	                String memCode = hm2.get("apprMemCode").toString();
 	                LOGGER.debug("getFinApprover.memCode =====================================>>  " + memCode);
 
 	                memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
-	                if(!appvLineUserId.contains(memCode)) {
+	                if(!finAppvLineUserId.equals(memCode)) {
 	                    message.setCode(AppConstants.FAIL);
 	                    message.setData(params);
 	                    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));

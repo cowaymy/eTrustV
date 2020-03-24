@@ -122,6 +122,10 @@
 
             $("#finApprAct").show();
 
+            if(myGridData[0].appvPrcssStus == "A") {
+                $("#rejectReasonRow").css("display", "none");
+            }
+
             Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: myGridData[0].appvPrcssNo}, function(result) {
                 console.log(result);
 
@@ -412,12 +416,10 @@
                         <th scope="row"><spring:message code="approveView.approveStatus" /></th>
                         <td colspan="2" style="height:60px" id="viewAppvStus">${appvPrcssStus}</td>
                     </tr>
-                    <c:if test="${appvPrcssResult eq 'J'}">
-                    <tr>
+                    <tr id="rejectReasonRow">
                         <th scope="row">Reject Reason</th>
                         <td colspan="3">${rejctResn}</td>
                     </tr>
-                    </c:if>
                 </table>
             </form>
         </section>
