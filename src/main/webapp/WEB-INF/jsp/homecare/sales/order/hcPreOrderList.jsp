@@ -489,7 +489,7 @@
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<h2>eKey-in</h2>
+<h2>eKey-in (HC)</h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
        <li><p class="btn_blue"><a id="_btnConvOrder" href="#">Convert Order</a></p></li>
