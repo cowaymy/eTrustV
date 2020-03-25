@@ -109,123 +109,118 @@ ORDER BY    A.NAME ASC
 
 
 
-<select id="selecteKeyInDetail" parameterType="Map" resultType="egovMap">
-<![CDATA[
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selecteKeyInDetail] 20191212 - KR JAEMAJEM */
-SELECT  CASE WHEN   O.STK_CTGRY_ID IN ('5706', '5707')  THEN 'HC'               --SYS0013M : 5706(Mattress), 5707(Frame)
-                                                        ELSE NULL
-                                                        END                     AS HC_GU
-    ,   A.CUST_ID                                                               AS CUST_ID
-    ,   A.CUST_CNTC_ID                                                          AS CUST_CNTC_ID
-    ,   I.CUST_ADD_ID                                                           AS CUST_ADD_ID
-    ,   A.CUST_CRC_ID                                                           AS CUST_CRC_ID
-    ,   A.STUS_ID                                                               AS STUS_ID
-    ,   TO_CHAR(A.REQST_DT, 'YYYYMMDD')                                         AS REQST_DT
---CUSTOMER----------------------------------------------------------------------
-    ,   B.TYPE_ID                                                               AS TYPE_ID
-    ,   B.NRIC                                                                  AS NRIC
-    ,   A.SOF_NO                                                                AS SOF_NO
-    ,   D.CODE                                                                  AS INITIALS
-    ,   G.CODE_NAME                                                             AS COMPANY_TYPE
-    ,   CASE WHEN TO_CHAR(B.DOB, 'DD/MM/YYYY') = '01/01/1900'           THEN NULL
-                                                                        ELSE TO_CHAR(B.DOB, 'DD/MM/YYYY')
-                                                                        END     AS DOB
-    ,   B.NAME                                                                  AS CUST_NAME
-    ,   B.GENDER                                                                AS GENDER
-    ,   E.CODE_DESC                                                             AS NATION
-    ,   NVL2(F.CODE_ID, F.CODE_NAME, NULL)                                      AS RACE
-    ,   CASE WHEN TO_CHAR(B.PAS_SPORT_EXPR, 'DD/MM/YYYY') = '01/01/1900' THEN NULL
-                                                                         ELSE TO_CHAR(B.PAS_SPORT_EXPR, 'DD/MM/YYYY')
-                                                                         END    AS PAS_SPORT_EXPR
-    ,   CASE WHEN TO_CHAR(B.VISA_EXPR, 'DD/MM/YYYY') = '01/01/1900'      THEN NULL
-                                                                         ELSE TO_CHAR(B.VISA_EXPR, 'DD/MM/YYYY')
-                                                                         END    AS VISA_EXPR
---CONTACT-----------------------------------------------------------------------
-    ,   A.PRE_ORD_ID                                                            AS PRE_ORD_ID
-    ,   C.NAME                                                                  AS NAME
-    ,   C.TEL_M1                                                                AS TEL_M1
-    ,   C.TEL_R                                                                 AS TEL_R
-    ,   C.TEL_O                                                                 AS TEL_O
-    ,   C.TELF                                                                  AS TELF
-    ,   C.EMAIL                                                                 AS EMAIL
-    ,   C.EXT                                                                   AS EXT
---ORDER-------------------------------------------------------------------------
-    ,   CASE WHEN A.APP_TYPE_ID = 5764  THEN 66                                 --SYS0013M : 5764(Auxiliary), 66(Rental)
-                                        ELSE A.APP_TYPE_ID
-                                        END                                     AS APP_TYPE_ID
-    ,   A.SRV_PAC_ID                                                            AS SRV_PAC_ID
-    ,   A.ITM_STK_ID                                                            AS ITM_STK_ID
-    ,   A.PROMO_ID                                                              AS PROMO_ID
-    ,   A.TOT_AMT                                                               AS TOT_AMT
-    ,   A.MTH_RENT_AMT                                                          AS MTH_RENT_AMT
-    ,   A.TOT_PV                                                                AS TOT_PV
-    ,   REPLACE(REPLACE(A.INSTCT, CHR(10), '\n'), CHR(39), CHR(38)||CHR(35)||'39;') AS INSTCT
-    ,   TO_CHAR(A.PRE_DT, 'YYYY')                                               AS YYYY
-    ,   TO_CHAR(A.CRT_DT, 'MM')                                                 AS MM
-    ,   A.EMP_CHK                                                               AS EMP_CHK
-    ,   A.EX_TRADE                                                              AS EX_TRADE
-    ,   A.NOR_AMT                                                               AS NOR_AMT
-    ,   A.PRC_ID                                                                AS PRC_ID
-    ,   A.PRC_ID                                                                AS PRC_ID
-    ,   A.TOT_PV_GST                                                            AS TOT_PV_GST
---INSTALLATION------------------------------------------------------------------
-    ,   I.ADDR_DTL                                                              AS ADDR_DTL
-    ,   I.STREET                                                                AS STREET
-    ,   J.AREA                                                                  AS AREA
-    ,   J.CITY                                                                  AS CITY
-    ,   J.POSTCODE                                                              AS POSTCODE
-    ,   J.STATE                                                                 AS STATE
-    ,   J.COUNTRY                                                               AS COUNTRY
-    ,   K.CODE ||' - '|| K.NAME                                                 AS DSC_BRNCH
-    ,   K.BRNCH_ID                                                              AS DSC_BRNCH_ID
-    ,   L.CODE ||' - '|| L.NAME                                                 AS POSTING_BRNCH
-    ,   L.BRNCH_ID                                                              AS POSTING_BRNCH_ID
-    ,   M.CODE ||' - '|| M.NAME                                                 AS HDC_BRNCH
-    ,   M.BRNCH_ID                                                              AS HDC_BRNCH_ID
---PAYMENT-----------------------------------------------------------------------
-    ,   A.RENT_PAY_MODE_ID                                                      AS RENT_PAY_MODE_ID
-    ,   N.CUST_ORI_CRC_NO                                                       AS CUST_ORI_CRC_NO
-    ,   N.CUST_CRC_TYPE_ID                                                      AS CUST_CRC_TYPE_ID
-    ,   N.CUST_CRC_OWNER                                                        AS CUST_CRC_OWNER
-    ,   SUBSTR(N.CUST_CRC_EXPR, 1, 2)||'/'||SUBSTR(N.CUST_CRC_EXPR, 3)          AS CUST_CRC_EXPR
-    ,   N.CUST_CRC_BANK_ID                                                      AS CUST_CRC_BANK_ID
-    ,   N.CARD_TYPE_ID                                                          AS CARD_TYPE_ID
---Attachment--------------------------------------------------------------------
-    ,   A.ATCH_FILE_GRP_ID                                                      AS ATCH_FILE_GRP_ID
-FROM    SAL0213M A
-        INNER JOIN SAL0029D B                                                   -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : Customer
-            ON  A.CUST_ID = B.CUST_ID
-        LEFT OUTER JOIN SAL0027D C
-            ON  A.CUST_CNTC_ID = C.CUST_CNTC_ID
-        LEFT OUTER JOIN SYS0013M D
-            ON  C.CUST_INITIAL = D.CODE_ID
-        LEFT OUTER JOIN SYS0013M E
-            ON  B.NATION = E.CODE_ID
-            AND E.CODE_MASTER_ID = 338
-            AND E.DISAB = 0
-        LEFT OUTER JOIN SYS0013M F
-            ON  B.RACE_ID = F.CODE_ID
-            AND F.CODE_MASTER_ID = 2
-            AND F.DISAB = 0
-        LEFT OUTER JOIN SYS0013M G
-            ON  B.CORP_TYPE_ID = G.CODE_ID
-        INNER JOIN SAL0023D I                                                   -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : CustAddress
-            ON  A.INST_ADD_ID = I.CUST_ADD_ID
-        INNER JOIN SYS0064M J                                                   -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : Magic Address(GeoPC_Streets)
-            ON  I.AREA_ID = J.AREA_ID
-        LEFT OUTER JOIN SYS0005M K                                              --Branch Info master table
-            ON J.CT_BRNCH_CODE = K.CODE
-        LEFT OUTER JOIN SYS0005M L                                              --Branch Info master table
-            ON J.SO_BRNCH_CODE= L.CODE
-        LEFT OUTER JOIN SYS0005M M                                              --Branch Info master table
-            ON J.DT_BRNCH_CODE= M.CODE
-        INNER JOIN SAL0028D N
-            ON A.CUST_CRC_ID = N.CUST_CRC_ID
-        INNER JOIN SYS0026M O
-            ON  A.ITM_STK_ID = O.STK_ID
-WHERE   A.PRE_ORD_ID = #{preOrdId}
-]]>
-</select>
+  <select id="selecteKeyInDetail" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selecteKeyInDetail] 20191212 - KR JAEMAJEM */
+      SELECT CASE WHEN O.STK_CTGRY_ID IN ('5706', '5707') THEN 'HC'--SYS0013M : 5706(Mattress), 5707(Frame)
+                                                                                     ELSE NULL END AS HC_GU
+               , A.CUST_ID AS CUST_ID
+               , A.CUST_CNTC_ID AS CUST_CNTC_ID
+               , I.CUST_ADD_ID AS CUST_ADD_ID
+               , A.CUST_CRC_ID AS CUST_CRC_ID
+               , A.STUS_ID AS STUS_ID
+               , TO_CHAR(A.REQST_DT, 'YYYYMMDD') AS REQST_DT
+
+    --CUSTOMER----------------------------------------------------------------------
+               , B.TYPE_ID AS TYPE_ID
+               , B.NRIC AS NRIC
+               , A.SOF_NO AS SOF_NO
+               , D.CODE AS INITIALS
+               , G.CODE_NAME AS COMPANY_TYPE
+               , CASE WHEN TO_CHAR(B.DOB, 'DD/MM/YYYY') = '01/01/1900' THEN NULL
+                         ELSE TO_CHAR(B.DOB, 'DD/MM/YYYY') END AS DOB
+               , B.NAME AS CUST_NAME
+               , B.GENDER AS GENDER
+               , E.CODE_DESC AS NATION
+               , NVL2(F.CODE_ID, F.CODE_NAME, NULL) AS RACE
+               , CASE WHEN TO_CHAR(B.PAS_SPORT_EXPR, 'DD/MM/YYYY') = '01/01/1900' THEN NULL
+                         ELSE TO_CHAR(B.PAS_SPORT_EXPR, 'DD/MM/YYYY') END AS PAS_SPORT_EXPR
+               , CASE WHEN TO_CHAR(B.VISA_EXPR, 'DD/MM/YYYY') = '01/01/1900' THEN NULL
+                         ELSE TO_CHAR(B.VISA_EXPR, 'DD/MM/YYYY') END AS VISA_EXPR
+
+    --CONTACT-----------------------------------------------------------------------
+               , A.PRE_ORD_ID AS PRE_ORD_ID
+               , C.NAME AS NAME
+               , C.TEL_M1 AS TEL_M1
+               , C.TEL_R AS TEL_R
+               , C.TEL_O AS TEL_O
+               , C.TELF AS TELF
+               , C.EMAIL AS EMAIL
+               , C.EXT AS EXT
+
+     --ORDER-------------------------------------------------------------------------
+               , CASE WHEN A.APP_TYPE_ID = 5764  THEN 66 --SYS0013M : 5764(Auxiliary), 66(Rental)
+                          ELSE A.APP_TYPE_ID END AS APP_TYPE_ID
+               , A.SRV_PAC_ID AS SRV_PAC_ID
+               , A.ITM_STK_ID AS ITM_STK_ID
+               , A.PROMO_ID AS PROMO_ID
+               , A.TOT_AMT AS TOT_AMT
+               , A.MTH_RENT_AMT AS MTH_RENT_AMT
+               , A.TOT_PV AS TOT_PV
+               , REPLACE(REPLACE(A.INSTCT, CHR(10), '\n'), CHR(39), CHR(38)||CHR(35)||'39;') AS INSTCT
+               , TO_CHAR(A.PRE_DT, 'YYYY') AS YYYY
+               , TO_CHAR(A.CRT_DT, 'MM') AS MM
+               , A.EMP_CHK AS EMP_CHK
+               , A.EX_TRADE AS EX_TRADE
+               , A.NOR_AMT AS NOR_AMT
+               , A.PRC_ID AS PRC_ID
+               , A.PRC_ID AS PRC_ID
+               , A.TOT_PV_GST AS TOT_PV_GST
+
+     --INSTALLATION------------------------------------------------------------------
+               , I.ADDR_DTL AS ADDR_DTL
+               , I.STREET AS STREET
+               , J.AREA AS AREA
+               , J.CITY AS CITY
+               , J.POSTCODE AS POSTCODE
+               , J.STATE AS STATE
+               , J.COUNTRY AS COUNTRY
+               , K.CODE ||' - '|| K.NAME AS DSC_BRNCH
+               , K.BRNCH_ID AS DSC_BRNCH_ID
+
+               --, L.CODE ||' - '|| L.NAME AS POSTING_BRNCH
+               --, L.BRNCH_ID AS POSTING_BRNCH_ID
+               , (CASE WHEN Q.MEM_CODE LIKE 'CD%' OR Q.MEM_CODE LIKE 'HT%' THEN (CASE WHEN P.CODE IS NOT NULL AND P.NAME IS NOT NULL THEN P.CODE ||' - '|| P.NAME ELSE NULL END)
+                          ELSE (CASE WHEN L.CODE IS NOT NULL AND L.NAME IS NOT NULL THEN L.CODE ||' - '|| L.NAME ELSE NULL END) END) AS POSTING_BRNCH
+               , (CASE WHEN Q.MEM_CODE = 'CD%' OR Q.MEM_CODE LIKE 'HT%'  THEN P.BRNCH_ID ELSE L.BRNCH_ID END) AS POSTING_BRNCH_ID
+
+               , M.CODE ||' - '|| M.NAME AS HDC_BRNCH
+               , M.BRNCH_ID AS HDC_BRNCH_ID
+
+     --PAYMENT-----------------------------------------------------------------------
+               , A.RENT_PAY_MODE_ID AS RENT_PAY_MODE_ID
+               , N.CUST_ORI_CRC_NO AS CUST_ORI_CRC_NO
+               , N.CUST_CRC_TYPE_ID AS CUST_CRC_TYPE_ID
+               , N.CUST_CRC_OWNER AS CUST_CRC_OWNER
+               , SUBSTR(N.CUST_CRC_EXPR, 1, 2)||'/'||SUBSTR(N.CUST_CRC_EXPR, 3) AS CUST_CRC_EXPR
+               , N.CUST_CRC_BANK_ID AS CUST_CRC_BANK_ID
+               , N.CARD_TYPE_ID AS CARD_TYPE_ID
+
+     --Attachment--------------------------------------------------------------------
+               ,  A.ATCH_FILE_GRP_ID AS ATCH_FILE_GRP_ID
+      FROM SAL0213M A
+      INNER JOIN SAL0029D B ON  A.CUST_ID = B.CUST_ID
+      LEFT OUTER JOIN SAL0027D C ON  A.CUST_CNTC_ID = C.CUST_CNTC_ID
+      LEFT OUTER JOIN SYS0013M D ON  C.CUST_INITIAL = D.CODE_ID
+      LEFT OUTER JOIN SYS0013M E ON  B.NATION = E.CODE
+                                                AND E.CODE_MASTER_ID = 338
+                                                AND E.DISAB = 0
+      LEFT OUTER JOIN SYS0013M F ON  B.RACE_ID = F.CODE_ID
+                                                AND F.CODE_MASTER_ID = 2
+                                                AND F.DISAB = 0
+      LEFT OUTER JOIN SYS0013M G ON  B.CORP_TYPE_ID = G.CODE_ID
+      INNER JOIN SAL0023D I ON  A.INST_ADD_ID = I.CUST_ADD_ID
+      INNER JOIN SYS0064M J  ON I.AREA_ID = J.AREA_ID
+      LEFT OUTER JOIN SYS0005M K ON J.CT_BRNCH_CODE = K.CODE
+      LEFT OUTER JOIN SYS0005M L ON J.SO_BRNCH_CODE= L.CODE
+      LEFT OUTER JOIN SYS0005M M ON J.DT_BRNCH_CODE= M.CODE
+      LEFT OUTER JOIN SYS0005M P ON J.CODY_BRNCH_CODE= P.CODE
+      INNER JOIN SAL0028D N ON A.CUST_CRC_ID = N.CUST_CRC_ID
+      INNER JOIN SYS0026M O ON  A.ITM_STK_ID = O.STK_ID
+      LEFT JOIN ORG0001D Q ON A.CRT_USER_ID = Q.MEM_ID
+      WHERE   A.PRE_ORD_ID = #{preOrdId}
+    ]]>
+  </select>
 
 
 
