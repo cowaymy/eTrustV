@@ -1338,7 +1338,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/MobileUsage.do")
-  //@Scheduled(cron = "0 0 12 * * *")//Daily (12:00am)
+  //@Scheduled(cron = "0 0 9 * * *")//Daily (09:00am)
   public void MobileUsageReport() {
     LOGGER.info("[START] MobileUsage...");
     Map<String, Object> params = new HashMap<>();
@@ -1354,7 +1354,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/MobileUsageTesting.do")
-  //@Scheduled(cron = "0 0 12 * * *")//Daily (12:00am)
+  //@Scheduled(cron = "0 0 9 * * *")//Daily (09:00am)
   public void MobileUsageTestingReport() {
     LOGGER.info("[START] MobileUsageTesting...");
     Map<String, Object> params = new HashMap<>();
