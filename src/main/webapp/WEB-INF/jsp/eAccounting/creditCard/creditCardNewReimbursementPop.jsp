@@ -30,6 +30,14 @@ var callType = "${callType}";
 var keyValueList = $.parseJSON('${taxCodeList}');
 var selectRowIdx;
 var deleteRowIdx;
+
+var c1 = 0;
+var c2 = 0;
+var c3 = 0;
+var c4 = 0;
+var c5 = 0;
+var c6 = 0;
+
 //file action list
 var update = new Array();
 var remove = new Array();

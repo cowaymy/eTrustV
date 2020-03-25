@@ -521,15 +521,6 @@ $(document).ready(function () {
 
     fn_setEvent();
 
-    $("#newClmMonth").click(function() {gChgFlag = 1});
-    $("#invcDt").click(function() {gChgFlag = 1});
-    $("#invcNo").click(function() {gChgFlag = 1});
-    $("#sMemAccName").click(function() {gChgFlag = 1});
-    $("#utilNo").click(function() {gChgFlag = 1});
-    $("#bilPeriodF").click(function() {gChgFlag = 1});
-    $("#bilPeriodT").click(function() {gChgFlag = 1});
-    $("#expDesc").click(function() {gChgFlag = 1});
-
     $("#newClmMonth").change(function() {
     	if($("#newClmMonth").val() != $("#hNewClmMonth").val()) {
     		c1 = 1;
