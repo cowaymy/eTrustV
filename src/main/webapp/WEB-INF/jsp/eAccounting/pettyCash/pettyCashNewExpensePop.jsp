@@ -225,6 +225,7 @@ var myGridColumnLayout = [ {
     dataField : "expTypeName",
     headerText : '<spring:message code="pettyCashNewExp.expTypeBrName" />',
     style : "aui-grid-user-custom-left",
+    editable : false,
     colSpan : 2
 }, {
     dataField : "",
