@@ -468,7 +468,7 @@
       SELECT A.CUST_CNTC_ID AS CUST_CNTC_ID
                , A.CUST_ID AS CUST_ID
                , A.NAME AS NAME
-               , A.CUST_INITIALAS CUST_INITIAL
+               , A.CUST_INITIAL AS CUST_INITIAL
                , A.NRIC AS NRIC
                , A.POS AS POS
                , A.TEL_M1 AS TEL_M1
@@ -489,7 +489,8 @@
                , B.NAME AS STUS_CODE_ID_NAME
       FROM SAL0027D A
       INNER JOIN SYS0038M B ON  A.STUS_CODE_ID = B.STUS_CODE_ID
-      WHERE A.CUST_ID = #{custId}
+      WHERE A.STUS_CODE_ID = 9
+          AND A.CUST_ID = #{custId}
     ]]>
 
     <choose>
