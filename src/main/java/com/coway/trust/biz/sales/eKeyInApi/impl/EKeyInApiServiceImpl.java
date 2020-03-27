@@ -59,6 +59,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 03. 23     MY-ONGHC    Amend saveTokenizationProcess
  * 2020. 03. 26     MY-ONGHC    Amend selectOrderInfo's Promotion Listing
  *                                           Restructure Messy Code
+ * 2020. 03. 27     MY-ONGHC    Amend saveAddNewAddress to add userNm param
  *          </pre>
  */
 @Service("EKeyInApiService")
@@ -668,6 +669,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     sal0023d.put("areaId", param.getAreaId());
     sal0023d.put("addrDtl", param.getAddrDtl());
     sal0023d.put("street", param.getStreet());
+    sal0023d.put("userNm", param.getRegId());
+
     int saveCnt = eKeyInApiMapper.insertAddNewAddress(sal0023d);
     if (saveCnt != 1) {
       throw new ApplicationException(AppConstants.FAIL, "Address Exception.");
