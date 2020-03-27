@@ -120,6 +120,7 @@ var myDetailGridData = null;
   $(document).ready(function() {
 
     doDefCombo(StatusTypeData1, '' ,'cmbStatusType2', 'S', '');
+    console.log("SchdulId : "+$("#hidschdulId").val());
 
     selSchdulId = $("#hidschdulId").val(); // TypeId
     selSalesOrdId = $("#hidSalesOrdId").val(); // TypeId
@@ -249,7 +250,8 @@ var myDetailGridData = null;
       }
 
     }
-    Common.ajax("POST", "/homecare/services/UpdateHsResult2.do", $("#viewHSResultForm").serializeJSON(), function(result) {
+    Common.ajax("POST", "/homecare/services/UpdateHsResult2.do", $("#editHSResultForm").serializeJSON(), function(result) {
+
       Common.alert(result.message, fn_parentReload);
       $("#popClose").click();
     });
@@ -456,6 +458,7 @@ var myDetailGridData = null;
  <input type="text" value=""  id="cmbCollectType1" name="cmbCollectType1"/>
 
  </div>
+</form>
 </form>
 </section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
