@@ -37,6 +37,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 02. 25    KR-HAN        Payment Error Edit ( WOR Error,  convert to integer error )
  * 2020. 03. 09    ONGHC         Amend paidAmt's String value to integer
  *                                         Add TR Ref.No and TR Issue Date
+ * 2020. 03. 09    KR-HAN       RPF Error Edit                               
  *          </pre>
  */
 @Service("mobilePaymentKeyInService")
@@ -231,6 +232,17 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     	  if ((mstRpf - mstRpfPaid > 0) && StringUtils.isEmpty(gridListMap.get("advMonth")) ) {
               formMap = new HashMap<String, Object>();
 
+              String payAmt = String.valueOf(gridListMap.get("payAmt"));
+              Double payAmtDou = Double.valueOf(payAmt);
+              Double targetAmt = 0.0;
+
+              if( (mstRpf - mstRpfPaid) > payAmtDou )
+              {
+              	targetAmt = payAmtDou;
+              }else{
+              	targetAmt = mstRpf - mstRpfPaid;
+              }
+
               formMap.put("procSeq", procSeq);
               formMap.put("appType", "RENTAL");
               formMap.put("advMonth", (Integer) gridListMap.get("advMonth")); // 셋팅필요 - SETTING REQUIRED
@@ -252,7 +264,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
               formMap.put("ordId", salesOrdId);
               formMap.put("ordNo", salesOrdNo);
               formMap.put("paidAmt", mstRpfPaid);
-              formMap.put("targetAmt", mstRpf - mstRpfPaid);
+              formMap.put("targetAmt", targetAmt);
               formMap.put("srvcContractID", 0);
               formMap.put("billAsId", 0);
               formMap.put("srvMemId", 0);
@@ -639,6 +651,17 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
         // if( "1".equals(mstChkVal) ){
         if ((mstRpf - mstRpfPaid > 0) && StringUtils.isEmpty(gridListMap.get("advMonth")) ) {
 
+            String payAmt = String.valueOf(gridListMap.get("payAmt"));
+            Double payAmtDou = Double.valueOf(payAmt);
+            Double targetAmt = 0.0;
+
+            if( (mstRpf - mstRpfPaid) > payAmtDou )
+            {
+            	targetAmt = payAmtDou;
+            }else{
+            	targetAmt = mstRpf - mstRpfPaid;
+            }
+
           formMap = new HashMap<String, Object>();
 
           formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
@@ -662,7 +685,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
           formMap.put("ordId", salesOrdId);
           formMap.put("ordNo", salesOrdNo);
           formMap.put("paidAmt", mstRpfPaid);
-          formMap.put("targetAmt", mstRpf - mstRpfPaid);
+          formMap.put("targetAmt", payAmtDou);
           formMap.put("srvcContractID", 0);
           formMap.put("billAsId", 0);
           formMap.put("srvMemId", 0);
@@ -770,8 +793,6 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
             if (!StringUtils.isEmpty(gridListMap.get("advMonth"))) {
               formMap = new HashMap<String, Object>();
 
-              System.out.println("++++ gridListMap.toString() ::" + gridListMap.toString());
-
               formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
               formMap.put("appType", "RENTAL");
               formMap.put("advMonth", (Integer) gridListMap.get("advMonth"));
@@ -877,9 +898,9 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     // User ID 세팅
     formInfo.put("userid", sUserId);
 
-     System.out.println("++++ 3 formInfo.toString() ::" +     formInfo.toString());
-     System.out.println("++++ 3-1 formList.toString() ::" +     formList.toString() );
-     System.out.println("++++ 5 key ::" + key );
+//     System.out.println("++++ 3 formInfo.toString() ::" +     formInfo.toString());
+//     System.out.println("++++ 3-1 formList.toString() ::" +     formList.toString() );
+//     System.out.println("++++ 5 key ::" + key );
 
     // =============================================================
 
