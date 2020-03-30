@@ -60,7 +60,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 03. 26     MY-ONGHC    Amend selectOrderInfo's Promotion Listing
  *                                           Restructure Messy Code
  * 2020. 03. 27     MY-ONGHC    Amend saveAddNewAddress to add userNm param
- * 2020. 03. 30     MY-ONGHC    Amend selectExistSofNo to remove SOF checking
+ * 2020. 03. 30     MY-ONGHC    Amend selectExistSofNo and insertEkeyIn to remove SOF checking
  *          </pre>
  */
 @Service("EKeyInApiService")
@@ -1394,7 +1394,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         throw new ApplicationException(AppConstants.FAIL, "sofNo value does not exist.");
       }
       selectParam.setSofNo(param.getBasic().getSofNo());
-      int selectExistSofNo = eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(selectParam));
+      // int selectExistSofNo = eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(selectParam));
+      int selectExistSofNo = 0;
       if (selectExistSofNo != 0) {
         throw new ApplicationException(AppConstants.FAIL, "this Sales has posted, no amendment allow.");
       }
@@ -1410,7 +1411,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         throw new ApplicationException(AppConstants.FAIL, "sofNo value does not exist.");
       }
       selectParam.setSofNo(param.getMattress().getSofNo());
-      int selectExistSofNo = eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(selectParam));
+      // int selectExistSofNo = eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(selectParam));
+      int selectExistSofNo = 0;
       if (selectExistSofNo != 0) {
         throw new ApplicationException(AppConstants.FAIL, "this Sales has posted, no amendment allow.");
       }
