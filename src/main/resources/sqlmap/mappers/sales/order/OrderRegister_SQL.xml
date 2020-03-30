@@ -1149,6 +1149,7 @@
                   , AGREEMENT_TYPE
                   , PCKAGE_BINDING_NO
                   , BNDL_ID
+                  , PRE_ORD_ID
     ) VALUES ( #{salesOrdId}
              , #{salesOrdNo}
              , UPPER(#{refNo})
@@ -1210,6 +1211,7 @@
              , #{agreementType}
              , #{comboOrdBind}
              , #{bndlId}
+             , #{preOrdId}
      )
   </insert>
 

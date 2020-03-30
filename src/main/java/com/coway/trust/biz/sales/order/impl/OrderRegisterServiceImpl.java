@@ -1784,6 +1784,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
       salesOrderMVO.setSalesOrdNo(salesOrdNo);
 
+      if ("Y".equals(orderVO.getPreOrderYN()))
+        salesOrderMVO.setPreOrdId(orderVO.getPreOrdId());
+
       logger.info("!@#### GET NEW ORDER_NO  :" + salesOrdNo);
 
       regOrderVO.setSalesOrderMVO(salesOrderMVO);
