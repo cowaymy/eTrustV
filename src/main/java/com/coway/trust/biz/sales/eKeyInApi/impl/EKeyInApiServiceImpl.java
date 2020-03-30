@@ -60,6 +60,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 03. 26     MY-ONGHC    Amend selectOrderInfo's Promotion Listing
  *                                           Restructure Messy Code
  * 2020. 03. 27     MY-ONGHC    Amend saveAddNewAddress to add userNm param
+ * 2020. 03. 30     MY-ONGHC    Amend selectExistSofNo to remove SOF checking
  *          </pre>
  */
 @Service("EKeyInApiService")
@@ -1187,7 +1188,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
     EKeyInApiDto rtn = new EKeyInApiDto();
 
-    int selectExistSofNo = eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(param));
+    // int selectExistSofNo = eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(param));
+    int selectExistSofNo = 0;
     rtn.setCnt(selectExistSofNo);
 
     if (selectExistSofNo == 0) {
