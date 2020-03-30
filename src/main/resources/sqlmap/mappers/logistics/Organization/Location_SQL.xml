@@ -162,7 +162,7 @@
             <when test="whlocgb eq '03'.toString() or whlocgb eq '04'.toString() or whlocgb eq '09'.toString()">
                 , SL_PLANT              = #{rdccode}
              </when>
-              <when test="whlocgb eq '01'.toString() ">
+              <when test="whlocgb eq '01'.toString() or whlocgb eq '05'.toString() ">
                 , SL_PLANT              = #{slplant}
              </when>
              <otherwise>
