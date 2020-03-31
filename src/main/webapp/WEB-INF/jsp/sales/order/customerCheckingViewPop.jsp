@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javaScript" language="javascript">
 
 
@@ -14,7 +14,7 @@ $(document).ready(function(){
 
 
 </script>
-<div id="popup_wrap" class="popup_wrap size_big"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>I-Care Eligibility</h1>
