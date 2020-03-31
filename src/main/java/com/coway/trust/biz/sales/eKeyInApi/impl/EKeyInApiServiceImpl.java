@@ -61,6 +61,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *                                           Restructure Messy Code
  * 2020. 03. 27     MY-ONGHC    Amend saveAddNewAddress to add userNm param
  * 2020. 03. 30     MY-ONGHC    Amend selectExistSofNo and insertEkeyIn to remove SOF checking
+ * 2020. 03. 31     MY-ONGHC    Amend saveAddNewAddress and saveAddNewContact to check existing MAIN record exist before.
  *          </pre>
  */
 @Service("EKeyInApiService")
@@ -433,6 +434,15 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     sal0027d.put("ext", param.getExt());
     sal0027d.put("crtUserId", loginVO.getUserId());
     sal0027d.put("updUserId", loginVO.getUserId());
+
+    // CHECK ANY MAIN CONTACT EXIST BEFORE
+    int existCnt = eKeyInApiMapper.selectExistContact(sal0027d);
+    if (existCnt == 0) {
+      sal0027d.put("stat", '9');
+    } else {
+      sal0027d.put("stat", '1');
+    }
+
     int saveCnt = eKeyInApiMapper.insertAddNewContact(sal0027d);
     if (saveCnt != 1) {
       throw new ApplicationException(AppConstants.FAIL, "Contact Exception.");
@@ -671,6 +681,14 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     sal0023d.put("addrDtl", param.getAddrDtl());
     sal0023d.put("street", param.getStreet());
     sal0023d.put("userNm", param.getRegId());
+
+    // CHECK ANY MAIN ADDRESS EXIST BEFORE
+    int existCnt = eKeyInApiMapper.selectExistAddress(sal0023d);
+    if (existCnt == 0) {
+      sal0023d.put("stat", '9');
+    } else {
+      sal0023d.put("stat", '1');
+    }
 
     int saveCnt = eKeyInApiMapper.insertAddNewAddress(sal0023d);
     if (saveCnt != 1) {
