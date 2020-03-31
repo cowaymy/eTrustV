@@ -53,6 +53,8 @@
                    THEN Extent1.PRODUCT_ID
                  ELSE 0
             END C4
+            --, LOM.LOAN_ORD_NO LOAN_ORD_NO
+            --, LOM.LOAN_ORD_ID LOAN_ORD_ID
      FROM ( SELECT vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID
                    , vCallLogOrderCall.CALLTYPEID CALL_TYPE_ID
                    , vCallLogOrderCall.CALL_TYPE_CODE CALL_TYPE_CODE
@@ -102,11 +104,14 @@
            </if>
            WHERE vCallLogOrderCall.BNDL_ID IS NULL
             ) Extent1
+          --  LEFT JOIN SVC0113M LOM
+          --  ON LOM.SALES_ORD_ID = Extent1.SALES_ORD_ID
      WHERE  1=1
 
     <if test="orderNo != null and orderNo != '' ">
       AND (Extent1.SALES_ORD_NO = #{orderNo} )
     </if>
+    
     <if test="product != null and product != '' ">
       AND (Extent1.PRODUCT_ID = #{product} )
     </if>
@@ -625,8 +630,16 @@
                FROM SYS0028M A ,
                     SYS0005M T
                WHERE T.BRNCH_ID IN (A.WH_LOC_BRNCH_ID , A.WH_LOC_BRNCH_ID2 , A.WH_LOC_BRNCH_ID3)
-                 AND T.BRNCH_ID = #{dscBrnchId}
-                 AND WH_LOC_GB IN ('02','05')
+                AND T.BRNCH_ID = #{dscBrnchId}
+                 <choose>
+                    <when test="superCtInd != null and superCtInd != ''">
+                        AND WH_LOC_GB IN ('02','05', '07')
+                    </when>
+                    <otherwise>
+                        AND WH_LOC_GB IN ('02','05')
+                    </otherwise>
+                </choose>
+
                  <choose>
                    <when test="stock eq 'B'.toString()">
                      AND WH_LOC_STK_GRAD = 'B'
