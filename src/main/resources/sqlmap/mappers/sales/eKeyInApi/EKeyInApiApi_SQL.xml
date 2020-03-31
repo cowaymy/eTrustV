@@ -509,6 +509,14 @@
                  , A.CUST_CNTC_ID ASC
   </select>
 
+  <select id="selectExistContact" parameterType="Map" resultType="Integer">
+      /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectExistContact] 20200331 - MY ONGHC */
+      SELECT COUNT(CUST_ID) AS CNT
+      FROM SAL0027D
+      WHERE CUST_ID = #{custId}
+          AND STUS_CODE_ID = '9'
+  </select>
+
   <insert id="insertAddNewContact" parameterType="Map">
   <selectKey keyProperty="custCntcId" resultType="int" order="BEFORE">
     SELECT SAL0027D_CUST_CNTC_ID_SEQ.NEXTVAL AS custCntcId
@@ -557,7 +565,7 @@
     , #{gender}                                                                  -- ASIS_COLUMN : Gender
     , #{raceId}                                                                   -- ASIS_COLUMN : RaceID
     , #{email}                                                                    -- ASIS_COLUMN : Email
-    , 1                                                                               -- ASIS_COLUMN : StatusCodeID
+    , #{stat}                                                                      -- ASIS_COLUMN : StatusCodeID
     , SYSDATE                                                                    -- ASIS_COLUMN : Updated
     , #{updUserId}                                                             -- ASIS_COLUMN : Updator
     , NULL                                                                         -- ASIS_COLUMN : IDOld
@@ -752,10 +760,13 @@ AND     T1.PROMO_ITM_STUS_ID = 1
                , A.CUST_ADD_ID DESC
 </select>
 
-
-
-
-
+  <select id="selectExistAddress" parameterType="Map" resultType="Integer">
+      /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectExistContact] 20200331 - MY ONGHC */
+      SELECT COUNT(CUST_ID) AS CNT
+      FROM SAL0023D
+      WHERE CUST_ID = #{custId}
+          AND STUS_CODE_ID = '9'
+  </select>
 
 <insert id="insertAddNewAddress" parameterType="Map">
 <selectKey keyProperty="custAddId" resultType="int" order="BEFORE">
@@ -800,7 +811,7 @@ INTO    SAL0023D                                                                
     ,   NULL                                                                    -- ASIS_COLUMN : NRIC
     ,   NULL                                                                    -- ASIS_COLUMN : Tel
     ,   NULL                                                                    -- ASIS_COLUMN : Fax
-    ,   1                                                                       -- ASIS_COLUMN : StatusCodeID
+    ,   #{stat}                                                                 -- ASIS_COLUMN : StatusCodeID
     ,   #{rem}                                                                  -- ASIS_COLUMN : Remark
     ,   #{updUserId}                                                            -- ASIS_COLUMN : Updator
     ,   SYSDATE                                                                 -- ASIS_COLUMN : Updated
