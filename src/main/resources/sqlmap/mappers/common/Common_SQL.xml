@@ -1575,6 +1575,15 @@
                                             AND M1.STK_CTGRY_ID =T1.STK_CTGRY_ID
                         )
                    </when>
+                   <!-- specify loanable product type - by Hui Ding, 13-02-2020 -->
+                   <when test="selProdGubun !=null and selProdGubun == 'LOAN_PROD'">
+                            AND T1.STK_CTGRY_ID in (SELECT M1.STK_CTGRY_ID
+                            FROM SYS0026M M1
+                            WHERE M1.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                             WHERE AA.CODE = BB.CODE
+                                                             AND BB.DISB = 0
+                                                             AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'LOAN_PROD'))
+                   </when>
                </choose>
         )
         ORDER BY CODE_NAME ASC, STK_ID ASC
@@ -1841,6 +1850,15 @@
         SELECT CASE WHEN USER_TYPE_ID = '5758' THEN 'Y' ELSE 'N' END
           FROM SYS0047M
          WHERE USER_NAME = #{userId}
+    </select>
+
+     <!-- Added for Special delivery CT enhancement by Hui Ding, 31-03-2020 -->
+    <select id="selectSuperCtInd" resultType="egovMap">
+        SELECT CODE FROM SYS0094M WHERE IND = 'FLG_SPR_CT' AND DISB = 0
+    </select>
+
+    <select id="selectSuperCtCode" resultType="egovMap">
+        SELECT CODE FROM SYS0094M WHERE IND = 'SPR_CT_CD' AND DISB = 0
     </select>
 
 </mapper>
