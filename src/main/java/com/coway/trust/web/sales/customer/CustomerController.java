@@ -1887,6 +1887,11 @@ public class CustomerController {
 
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
     params.put("userId", sessionVO.getUserId());
+    params.put("custId", params.get("insCustId"));
+
+    int custAddrExist = customerService.selectCustomerAddressJsonList(params).size();
+
+    params.put("stusId", custAddrExist < 1 ? 9 : 1);
     int custAddId = customerService.insertCustomerAddressInfoAf(params);
 
     // 결과 만들기 예.
