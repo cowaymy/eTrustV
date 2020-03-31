@@ -260,6 +260,8 @@
             SELECT STUS_CODE_ID code,NAME CODE_NAME  FROM SYS0038M where STUS_CODE_ID in('1','3','8','10','51')
     </select>
 
-
+    <select id="selectBranchByWhLocId" parameterType="Map" resultType="egovMap">
+        SELECT WH_LOC_BRNCH_ID BRANCH_ID FROM SYS0028M WHERE WH_LOC_CODE = #{whLocCd}
+    </select>
 
 </mapper>
