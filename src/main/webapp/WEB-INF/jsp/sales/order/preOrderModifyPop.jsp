@@ -13,6 +13,7 @@
     var trFileId = 0;
     var otherFileId = 0;
     var otherFileId2 = 0;
+    var sofFileTncId = 0;
 
     var sofFileName = "";
     var nricFileName = "";
@@ -20,6 +21,7 @@
     var trFileName = "";
     var otherFileName = "";
     var otherFileName2 = "";
+    var sofFileTncName = "";
 
     $(document).ready(function(){
 
@@ -2039,6 +2041,11 @@
                             otherFileName2 = result[i].atchFileName;
                             $(".input_text[id='otherFileTxt2']").val(otherFileName2);
                             break;
+	                    case '7':
+	                    	sofFileTncId = result[i].atchFileId;
+                            sofFileTncName = result[i].atchFileName;
+                            $(".input_text[id='sofTncFileTxt']").val(sofFileTncName);
+                            break;
 	                     default:
 	                    	 Common.alert("no files");
 	                    }
@@ -2079,6 +2086,10 @@
             $("#otherFile2").val("");
             $(".input_text[name='otherFileTxt2']").val("");
             $('#otherFile2').change();
+        }else if(name == "TNC"){
+            $("#sofTncFile").val("");
+            $(".input_text[name='sofTncFileTxt']").val("");
+            $('#sofTncFile').change();
         }
     }
 
@@ -3027,6 +3038,18 @@
 		        <input type='text' class='input_text' readonly='readonly' id='sofFileTxt'/>
 		        <span class='label_text'><a href='#'>Upload</a></span>
 	        </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Sales Order Form's T&C (SOF T&C)</th>
+    <td>
+        <div class="auto_file2">
+            <input type="file" title="file add" id="sofTncFile" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' id='sofTncFileTxt'/>
+                <span class='label_text'><a href='#'>Upload</a></span>
+            </label>
         </div>
     </td>
 </tr>

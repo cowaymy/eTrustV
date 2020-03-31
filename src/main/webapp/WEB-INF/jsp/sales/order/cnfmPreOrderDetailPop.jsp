@@ -36,13 +36,14 @@
         if(myFileCaches[4] != null) $('#txtTrFileName_RW').text(myFileCaches[4].file.name);
         if(myFileCaches[5] != null) $('#txtOtherFileName_RW').text(myFileCaches[5].file.name);
         if(myFileCaches[6] != null) $('#txtOtherFileName2_RW').text(myFileCaches[6].file.name);
+        if(myFileCaches[7] != null) $('#txtSofTncFileName_RW').text(myFileCaches[7].file.name);
     }
 
   });
 
   $(function(){
     $('#btnConfirm_RW').click(function() {
-      if(fn_isExistESalesNo() == 'true') return false;
+      //if(fn_isExistESalesNo() == 'true') return false;
       fn_doSavePreOrder();
     });
   });
@@ -73,6 +74,9 @@
                           break;
                       case '6':
                           $(".input_text[id='txtOtherFileName_RW']").val(result[i].atchFileName);
+                          break;
+                      case '7':
+                          $(".input_text[id='txtSofTncFileName_RW']").val(result[i].atchFileName);
                           break;
                        default:
                            Common.alert("no files");
@@ -172,6 +176,11 @@
     <th scope="row">Sales Order Form (SOF)</th>
     <!-- <td><label><input type='text' class='input_text' readonly='readonly' id='txtSofFileName_RW'/></label></td> -->
     <td><span id="txtSofFileName_RW"></span></td>
+</tr>
+<tr>
+    <th scope="row">Sales Order Form's T&C (SOF T&C)</th>
+    <!-- <td><label><input type='text' class='input_text' readonly='readonly' id='txtSofFileName_RW'/></label></td> -->
+    <td><span id="txtSofTncFileName_RW"></span></td>
 </tr>
 <tr>
     <th scope="row">NRIC & Bank Card</th>

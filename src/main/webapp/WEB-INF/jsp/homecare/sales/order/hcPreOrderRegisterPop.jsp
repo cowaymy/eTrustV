@@ -648,6 +648,16 @@
                 myFileCaches[6] = {file:file};
             }
         });
+
+        $('#sofTncFile').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[7] != null){
+                delete myFileCaches[7];
+            }else if(file != null){
+                myFileCaches[7] = {file:file};
+            }
+            console.log(myFileCaches);
+        });
     });
 
     function fn_loadBankAccountPop(bankAccId) {
@@ -1687,6 +1697,10 @@
         } else if(name == "OTH2") {
             $("#otherFile2").val("");
             $('#otherFile2').change();
+
+        } else if(name == "TNC"){
+            $("#sofTncFile").val("");
+            $('#sofTncFile').change();
         }
     }
 
@@ -2759,6 +2773,19 @@
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
+            </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Sales Order Form's T&C (SOF T&C)</th>
+    <td>
+        <div class="auto_file2">
+            <input type="file" title="file add" id="sofTncFile" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("TNC")'>Remove</a></span>
             </label>
         </div>
     </td>
