@@ -21,9 +21,11 @@ public interface LocationMapper {
 	int locCreateSeq();
 
 	List<EgovMap> selectLocationCodeList(Map<String, Object> params);
-	
+
 	int selectLocationChk(String params);
-	
+
 	List<EgovMap> selectLocStatusList(Map<String, Object> params);
+
+	EgovMap selectBranchByWhLocId(Map<String, Object> params);
 
 }

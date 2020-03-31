@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.organization.organization.AllocationService;
 import com.coway.trust.biz.organization.organization.orgUts.VComparator;
 import com.coway.trust.util.CommonUtils;
@@ -26,6 +27,9 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 
 	@Resource(name = "allocationMapper")
 	private AllocationMapper allocationMapper;
+
+	  @Resource(name = "commonMapper")
+	  private CommonMapper commonMapper;
 
 	@Override
 	public List<EgovMap> selectList(Map<String, Object> params) {
@@ -264,6 +268,12 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 
 	@Override
 	public List<EgovMap>  getBaseList(Map<String, Object> params){
+
+		// Added for Special Delivery CT enhancement by Hui Ding, 31-03-2020
+		EgovMap superCT = commonMapper.selectSuperCtInd();
+		if (superCT != null){
+			params.put("superCT", "Y");
+		}
 
 		return allocationMapper.selectBaseList(params);
 	}

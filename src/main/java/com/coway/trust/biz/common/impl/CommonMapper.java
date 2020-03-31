@@ -245,4 +245,8 @@ public interface CommonMapper {
 	List<EgovMap> getHcHolidayList(Map<String, Object> params);
 
 	String getHomeCareGroupChkYn(Map<String, Object> params);
+
+	// Added for Special Delivery CT enhancement by Hui Ding, 31-03-2020
+	EgovMap selectSuperCtInd();
+	EgovMap selectSuperCtCode();
 }
