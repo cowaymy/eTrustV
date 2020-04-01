@@ -62,6 +62,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 03. 27     MY-ONGHC    Amend saveAddNewAddress to add userNm param
  * 2020. 03. 30     MY-ONGHC    Amend selectExistSofNo and insertEkeyIn to remove SOF checking
  * 2020. 03. 31     MY-ONGHC    Amend saveAddNewAddress and saveAddNewContact to check existing MAIN record exist before.
+ * 2020. 04. 01     MY-ONGHC    Amend selectOrderInfo to solve promotion issue
+ *
  *          </pre>
  */
 @Service("EKeyInApiService")
@@ -242,7 +244,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     param.setPromoId(selectData.getPromoId());
     param.setItmStkId(selectData.getItmStkId());
     param.setPromoDt(selectData.getReqstDt());
-    if (yyyy >= 2019 && mm >= 7) {
+    if ((yyyy == 2019 && mm >= 7) || (yyyy >= 2020)) {
       List<EgovMap> selectPromotionByAppTypeStockESales = selectPromotionByAppTypeStockESales(param);
       List<EKeyInApiDto> promotionList = selectPromotionByAppTypeStockESales.stream().map(r -> EKeyInApiDto.create(r))
           .collect(Collectors.toList());
@@ -1189,19 +1191,19 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   @Override
   public EKeyInApiDto selectExistSofNo(EKeyInApiForm param) throws Exception {
     if (null == param) {
-      throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Error Encounter. Please Contact System Administrator [selectExistSofNo : Param Missing]. ");
     }
     if (CommonUtils.isEmpty(param.getTypeId())) {
-      throw new ApplicationException(AppConstants.FAIL, "typeId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Error Encounter. Please Contact System Administrator [selectExistSofNo : Type ID Missing]. ");
     }
     if (CommonUtils.isEmpty(param.getNric())) {
-      throw new ApplicationException(AppConstants.FAIL, "nric value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Error Encounter. Please Contact System Administrator [selectExistSofNo : NRIC Missing]. ");
     }
     if (CommonUtils.isEmpty(param.getSofNo())) {
-      throw new ApplicationException(AppConstants.FAIL, "sofNo value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Error Encounter. Please Contact System Administrator [selectExistSofNo : SOF Missing]. ");
     }
     if (CommonUtils.isEmpty(param.getUserNm())) {
-      throw new ApplicationException(AppConstants.FAIL, "User Name value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Error Encounter. Please Contact System Administrator [selectExistSofNo : User Name Missing]. ");
     }
 
     EKeyInApiDto rtn = new EKeyInApiDto();
@@ -1219,7 +1221,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         param.setStusCodeId(9);
         List<EgovMap> selectAnotherContact = eKeyInApiMapper.selectAnotherContact(EKeyInApiForm.createMap(param));
         if (selectAnotherContact.size() > 1) {
-          throw new ApplicationException(AppConstants.FAIL, "Check customer information.");
+          throw new ApplicationException(AppConstants.FAIL, "Please Check on Customer's Contact Detail. MAIN Record found " + selectAnotherContact.size() + "");
         }
         if (selectAnotherContact.size() == 1) {
           rtn.setSelectAnotherContactMain(EKeyInApiDto.create(selectAnotherContact.get(0)));
@@ -1227,7 +1229,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
         List<EgovMap> selectAnotherAddress = eKeyInApiMapper.selectAnotherAddress(EKeyInApiForm.createMap(param));
         if (selectAnotherAddress.size() == 0) {
-          throw new ApplicationException(AppConstants.FAIL, "Check Address information.");
+          throw new ApplicationException(AppConstants.FAIL, "Please Check on Customer's Address Detail. MAIN Record found " + selectAnotherContact.size() + "");
         }
         // if( selectAnotherAddress.size() == 1 ){
         rtn.setSelectAnotherAddressMain(EKeyInApiDto.create(selectAnotherAddress.get(0)));
