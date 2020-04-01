@@ -56,8 +56,8 @@
       SELECT CODE_MASTER_ID AS CODE_MASTER_ID
                , CODE_ID AS CODE_ID
                , CODE AS CODE
-               , CODE_NAME AS CODE_NAME
-               , CODE_DESC AS CODE_DESC
+               , UPPER(CODE_NAME) AS CODE_NAME
+               , UPPER(CODE_DESC) AS CODE_DESC
       FROM SYS0013M
       WHERE CODE_MASTER_ID IN (8, 10, 19, 21, 115, 17, 2)
           AND DISAB = 0
@@ -74,7 +74,7 @@
       /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectBankList] 20191211 - KR JAEMAJEM */
       SELECT A.BANK_ID AS BANK_ID
                , A.CODE AS CODE
-               , A.CODE ||'-'|| A.NAME AS NAME
+               , UPPER(A.CODE ||'-'|| A.NAME) AS NAME
       FROM SYS0004M A
       WHERE STUS_CODE_ID = 1
       ORDER BY A.NAME ASC
@@ -96,15 +96,15 @@
     --CUSTOMER----------------------------------------------------------------------
                , B.TYPE_ID AS TYPE_ID
                , B.NRIC AS NRIC
-               , A.SOF_NO AS SOF_NO
-               , D.CODE AS INITIALS
+               , UPPER(A.SOF_NO) AS SOF_NO
+               , UPPER(D.CODE) AS INITIALS
                , G.CODE_NAME AS COMPANY_TYPE
                , CASE WHEN TO_CHAR(B.DOB, 'DD/MM/YYYY') = '01/01/1900' THEN NULL
                          ELSE TO_CHAR(B.DOB, 'DD/MM/YYYY') END AS DOB
-               , B.NAME AS CUST_NAME
+               , UPPER(B.NAME) AS CUST_NAME
                , B.GENDER AS GENDER
-               , E.CODE_DESC AS NATION
-               , NVL2(F.CODE_ID, F.CODE_NAME, NULL) AS RACE
+               , UPPER(E.CODE_DESC) AS NATION
+               , NVL2(F.CODE_ID, UPPER(F.CODE_NAME), NULL) AS RACE
                , CASE WHEN TO_CHAR(B.PAS_SPORT_EXPR, 'DD/MM/YYYY') = '01/01/1900' THEN NULL
                          ELSE TO_CHAR(B.PAS_SPORT_EXPR, 'DD/MM/YYYY') END AS PAS_SPORT_EXPR
                , CASE WHEN TO_CHAR(B.VISA_EXPR, 'DD/MM/YYYY') = '01/01/1900' THEN NULL
@@ -112,7 +112,7 @@
 
     --CONTACT-----------------------------------------------------------------------
                , A.PRE_ORD_ID AS PRE_ORD_ID
-               , C.NAME AS NAME
+               , UPPER(C.NAME) AS NAME
                , C.TEL_M1 AS TEL_M1
                , C.TEL_R AS TEL_R
                , C.TEL_O AS TEL_O
@@ -129,7 +129,7 @@
                , A.TOT_AMT AS TOT_AMT
                , A.MTH_RENT_AMT AS MTH_RENT_AMT
                , A.TOT_PV AS TOT_PV
-               , REPLACE(REPLACE(A.INSTCT, CHR(10), '\n'), CHR(39), CHR(38)||CHR(35)||'39;') AS INSTCT
+               , REPLACE(REPLACE(UPPER(A.INSTCT), CHR(10), '\n'), CHR(39), CHR(38)||CHR(35)||'39;') AS INSTCT
                , TO_CHAR(A.PRE_DT, 'YYYY') AS YYYY
                , TO_CHAR(A.CRT_DT, 'MM') AS MM
                , A.EMP_CHK AS EMP_CHK
@@ -140,33 +140,33 @@
                , A.TOT_PV_GST AS TOT_PV_GST
 
      --INSTALLATION------------------------------------------------------------------
-               , I.ADDR_DTL AS ADDR_DTL
-               , I.STREET AS STREET
-               , J.AREA AS AREA
-               , J.CITY AS CITY
+               , UPPER(I.ADDR_DTL) AS ADDR_DTL
+               , UPPER(I.STREET) AS STREET
+               , UPPER(J.AREA) AS AREA
+               , UPPER(J.CITY) AS CITY
                , J.POSTCODE AS POSTCODE
-               , J.STATE AS STATE
-               , J.COUNTRY AS COUNTRY
-               , K.CODE ||' - '|| K.NAME AS DSC_BRNCH
+               , UPPER(J.STATE) AS STATE
+               , UPPER(J.COUNTRY) AS COUNTRY
+               , UPPER(K.CODE ||' - '|| K.NAME) AS DSC_BRNCH
                , K.BRNCH_ID AS DSC_BRNCH_ID
 
                --, L.CODE ||' - '|| L.NAME AS POSTING_BRNCH
                --, L.BRNCH_ID AS POSTING_BRNCH_ID
-               , (CASE WHEN Q.USER_NAME LIKE 'CD%' THEN (CASE WHEN P.CODE IS NOT NULL AND P.NAME IS NOT NULL THEN P.CODE ||' - '|| P.NAME ELSE NULL END)
+               , UPPER((CASE WHEN Q.USER_NAME LIKE 'CD%' THEN (CASE WHEN P.CODE IS NOT NULL AND P.NAME IS NOT NULL THEN P.CODE ||' - '|| P.NAME ELSE NULL END)
                           WHEN Q.USER_NAME LIKE 'HT%' THEN (SELECT CODE ||' - '|| NAME FROM SYS0005M WHERE BRNCH_ID = '284')
-                          ELSE (CASE WHEN L.CODE IS NOT NULL AND L.NAME IS NOT NULL THEN L.CODE ||' - '|| L.NAME ELSE NULL END) END) AS POSTING_BRNCH
+                          ELSE (CASE WHEN L.CODE IS NOT NULL AND L.NAME IS NOT NULL THEN L.CODE ||' - '|| L.NAME ELSE NULL END) END)) AS POSTING_BRNCH
                , (CASE WHEN Q.USER_NAME LIKE 'CD%' THEN P.BRNCH_ID
                           WHEN Q.USER_NAME LIKE 'HT%' THEN 284
                           ELSE L.BRNCH_ID END) AS POSTING_BRNCH_ID
 
-               , M.CODE ||' - '|| M.NAME AS HDC_BRNCH
+               , UPPER(M.CODE ||' - '|| M.NAME) AS HDC_BRNCH
                , M.BRNCH_ID AS HDC_BRNCH_ID
 
      --PAYMENT-----------------------------------------------------------------------
                , A.RENT_PAY_MODE_ID AS RENT_PAY_MODE_ID
                , N.CUST_ORI_CRC_NO AS CUST_ORI_CRC_NO
                , N.CUST_CRC_TYPE_ID AS CUST_CRC_TYPE_ID
-               , N.CUST_CRC_OWNER AS CUST_CRC_OWNER
+               , UPPER(N.CUST_CRC_OWNER) AS CUST_CRC_OWNER
                , SUBSTR(N.CUST_CRC_EXPR, 1, 2)||'/'||SUBSTR(N.CUST_CRC_EXPR, 3) AS CUST_CRC_EXPR
                , N.CUST_CRC_BANK_ID AS CUST_CRC_BANK_ID
                , N.CARD_TYPE_ID AS CARD_TYPE_ID
@@ -260,8 +260,8 @@
       SELECT A.CODE_MASTER_ID AS CODE_MASTER_ID
                , A.CODE_ID AS CODE_ID
                , A.CODE AS CODE
-               , A.CODE_NAME AS CODE_NAME
-               , A.CODE_DESC AS CODE_DESC
+               , UPPER(A.CODE_NAME) AS CODE_NAME
+               , UPPER(A.CODE_DESC) AS CODE_DESC
       FROM SYS0013M A
       INNER JOIN SAL0081D B ON  A.CODE = B.SRV_CNTRCT_PAC_ID
                                         AND B.PAC_TYPE = 0
@@ -277,8 +277,8 @@
       SELECT A.CODE_MASTER_ID AS CODE_MASTER_ID
                , A.CODE_ID AS CODE_ID
                , A.CODE AS CODE
-               , A.CODE_NAME AS CODE_NAME
-               , A.CODE_DESC AS CODE_DESC
+               , UPPER(A.CODE_NAME) AS CODE_NAME
+               , UPPER(A.CODE_DESC) AS CODE_DESC
       FROM SYS0013M A
       INNER JOIN SAL0091M B ON A.CODE = B.SRV_MEM_PAC_ID
                                        AND B.PAC_TYPE = 0
@@ -292,7 +292,7 @@
     <![CDATA[
       /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selecteOrderProduct1] 20191210 - KR JAEMAJEM */
       SELECT DISTINCT A.STK_ID AS STK_ID
-                             , A.STK_CODE ||' - '||A.STK_DESC AS C1
+                             , UPPER(A.STK_CODE ||' - '||A.STK_DESC) AS C1
                              , CASE WHEN B.DISCONTINUE = '1' THEN C.CODE_NAME ||' ('||D.CODE_NAME||')'
                                        ELSE C.CODE_NAME END AS CODE_NAME
                              , B.DISCONTINUE AS DISCONTINUE
@@ -350,7 +350,7 @@
     <![CDATA[
        /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selecteOrderProduct2] 20191210 - KR JAEMAJEM */
        SELECT DISTINCT A.STK_ID                                                                AS STK_ID
-                              , A.STK_CODE ||' - '||A.STK_DESC                                          AS C1
+                              , UPPER(A.STK_CODE ||' - '||A.STK_DESC)                                          AS C1
                               , CASE WHEN B.DISCONTINUE = '1'   THEN C.CODE_NAME ||' ('||D.CODE_NAME||')'
                                         ELSE C.CODE_NAME END                                     AS CODE_NAME
                               , B.DISCONTINUE                                                           AS DISCONTINUE
@@ -378,7 +378,7 @@
     <![CDATA[
       /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectPromotionByAppTypeStockESales] 20191210 - KR JAEMAJEM */
       SELECT DISTINCT B.PROMO_ID AS PROMO_ID
-                             , B.PROMO_CODE || '-' || B.PROMO_DESC AS PROMO_DESC
+                             , UPPER(B.PROMO_CODE || '-' || B.PROMO_DESC) AS PROMO_DESC
                              , TO_CHAR(B.PROMO_DT_FROM, 'YYYYMMDD') AS PROMO_DT_FROM
       FROM SAL0018D A
       INNER JOIN SAL0017D B ON  B.PROMO_ID = A.PROMO_ID
@@ -423,7 +423,7 @@
     <![CDATA[
       /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectPromotionByAppTypeStock] 20191210 - KR JAEMAJEM */
       SELECT  DISTINCT B.PROMO_ID AS PROMO_ID
-                              , B.PROMO_CODE || '-' || B.PROMO_DESC AS PROMO_DESC
+                              , UPPER(B.PROMO_CODE || '-' || B.PROMO_DESC) AS PROMO_DESC
                               , TO_CHAR(B.PROMO_DT_FROM, 'YYYYMMDD') AS PROMO_DT_FROM
       FROM SAL0018D A
       INNER JOIN SAL0017D B ON  B.PROMO_ID = A.PROMO_ID
@@ -467,7 +467,7 @@
       /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectAnotherContact] 20191212 - KR JAEMAJEM */
       SELECT A.CUST_CNTC_ID AS CUST_CNTC_ID
                , A.CUST_ID AS CUST_ID
-               , A.NAME AS NAME
+               , UPPER(A.NAME) AS NAME
                , A.CUST_INITIAL AS CUST_INITIAL
                , A.NRIC AS NRIC
                , A.POS AS POS
@@ -486,7 +486,7 @@
                , A.DEPT AS DEPT
                , A.DCM AS DCM
                , A.EXT AS EXT
-               , B.NAME AS STUS_CODE_ID_NAME
+               , UPPER(B.NAME) AS STUS_CODE_ID_NAME
       FROM SAL0027D A
       INNER JOIN SYS0038M B ON  A.STUS_CODE_ID = B.STUS_CODE_ID
       WHERE A.CUST_ID = #{custId}
@@ -640,100 +640,74 @@
     ]]>
   </select>
 
+  <select id="selectProductPromotionPriceByPromoStockIDNew" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectProductPromotionPriceByPromoStockIDNew] 20191213 - KR JAEMAJEM */
+    SELECT T1.PROMO_ITM_ID                                                         AS PROMO_ITM_ID
+             , T1.PROMO_ID                                                             AS PROMO_ID
+             , T1.PROMO_ITM_STK_ID                                                     AS PROMO_ITM_STK_ID
+             , T2.STK_CODE                                                             AS STK_CODE
+             , T2.STK_DESC                                                             AS STK_DESC
+             , T1.PROMO_ITM_CUR_ID                                                     AS PROMO_ITM_CUR_ID
+             , NVL(T1.PROMO_ITM_PRC, 0)                                                AS PROMO_ITM_PRC
+             , NVL(T4.AMT, 0)                                                          AS AMT
+             , NVL(T4.PRC_RPF, 0)                                                      AS PRC_RPF
+             , NVL(T4.PRC_PV, 0)                                                       AS PRC_PV
+             , CASE WHEN T4.APP_TYPE_ID IN (67,68) THEN TRUNC( FLOOR( NVL(T4.AMT, 0) - DECODE(NVL(T3.PROMO_DISC_TYPE, 0), 0, NVL(T4.AMT, 0) * (NVL(T3.PROMO_PRC_PRCNT, 0) / 100), NVL(T3.PROMO_PRC_PRCNT, 0)) - NVL(T3.PROMO_ADD_DISC_PRC, 0)), -1)
+                       ELSE FLOOR( NVL(T4.AMT, 0) - DECODE(NVL(T3.PROMO_DISC_TYPE, 0), 0, NVL(T4.AMT, 0) * (NVL(T3.PROMO_PRC_PRCNT, 0) / 100), NVL(T3.PROMO_PRC_PRCNT, 0)) - NVL(T3.PROMO_ADD_DISC_PRC, 0))
+               END AS PROMO_AMT
+             , NVL(T4.PRC_RPF, 0) - NVL(T3.PROMO_RPF_DISC_AMT, 0)                      AS PROMO_PRC_RPF
+             , NVL(T1.PROMO_ITM_PV, 0)                                                 AS PROMO_ITM_PV
+             , NVL(T1.PROMO_ITM_PV_GST, 0)                                             AS PROMO_ITM_PV_GST
+             , NVL(T3.PROMO_APP_TYPE_ID, 0)                                            AS PROMO_APP_TYPE_ID
+    FROM SAL0018D T1
+    LEFT OUTER JOIN SYS0026M T2 ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+    LEFT OUTER JOIN SAL0017D T3 ON T1.PROMO_ID = T3.PROMO_ID
+    LEFT OUTER JOIN SAL0016M T4 ON T4.STK_ID = T1.PROMO_ITM_STK_ID
+                                               AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
+    WHERE T1.PROMO_ID = #{promoId}
+        AND T1.PROMO_ITM_STK_ID = #{itmStkId}
+        AND T4.MEM_PAC_ID = #{srvPacId}
+        AND T1.PROMO_ITM_STUS_ID = 1
+    ]]>
+  </select>
 
-
-
-
-
-<select id="selectProductPromotionPriceByPromoStockIDNew" parameterType="Map" resultType="egovMap">
-<![CDATA[
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectProductPromotionPriceByPromoStockIDNew] 20191213 - KR JAEMAJEM */
-SELECT  T1.PROMO_ITM_ID                                                         AS PROMO_ITM_ID
-    ,   T1.PROMO_ID                                                             AS PROMO_ID
-    ,   T1.PROMO_ITM_STK_ID                                                     AS PROMO_ITM_STK_ID
-    ,   T2.STK_CODE                                                             AS STK_CODE
-    ,   T2.STK_DESC                                                             AS STK_DESC
-    ,   T1.PROMO_ITM_CUR_ID                                                     AS PROMO_ITM_CUR_ID
-    ,   NVL(T1.PROMO_ITM_PRC, 0)                                                AS PROMO_ITM_PRC
-    ,   NVL(T4.AMT, 0)                                                          AS AMT
-    ,   NVL(T4.PRC_RPF, 0)                                                      AS PRC_RPF
-    ,   NVL(T4.PRC_PV, 0)                                                       AS PRC_PV
-    ,   CASE WHEN T4.APP_TYPE_ID IN (67,68) THEN TRUNC( FLOOR( NVL(T4.AMT, 0) - DECODE(NVL(T3.PROMO_DISC_TYPE, 0), 0, NVL(T4.AMT, 0) * (NVL(T3.PROMO_PRC_PRCNT, 0) / 100), NVL(T3.PROMO_PRC_PRCNT, 0)) - NVL(T3.PROMO_ADD_DISC_PRC, 0)), -1)
-                                            ELSE        FLOOR( NVL(T4.AMT, 0) - DECODE(NVL(T3.PROMO_DISC_TYPE, 0), 0, NVL(T4.AMT, 0) * (NVL(T3.PROMO_PRC_PRCNT, 0) / 100), NVL(T3.PROMO_PRC_PRCNT, 0)) - NVL(T3.PROMO_ADD_DISC_PRC, 0))
-                                            END                                 AS PROMO_AMT
-    ,   NVL(T4.PRC_RPF, 0) - NVL(T3.PROMO_RPF_DISC_AMT, 0)                      AS PROMO_PRC_RPF
-    ,   NVL(T1.PROMO_ITM_PV, 0)                                                 AS PROMO_ITM_PV
-    ,   NVL(T1.PROMO_ITM_PV_GST, 0)                                             AS PROMO_ITM_PV_GST
-    ,   NVL(T3.PROMO_APP_TYPE_ID, 0)                                            AS PROMO_APP_TYPE_ID
-FROM    SAL0018D T1
-        LEFT OUTER JOIN SYS0026M T2
-            ON  T1.PROMO_ITM_STK_ID = T2.STK_ID
-        LEFT OUTER JOIN SAL0017D T3
-            ON  T1.PROMO_ID = T3.PROMO_ID
-        LEFT OUTER JOIN SAL0016M T4
-            ON  T4.STK_ID = T1.PROMO_ITM_STK_ID
-            AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
-WHERE   T1.PROMO_ID = #{promoId}
-AND     T1.PROMO_ITM_STK_ID = #{itmStkId}
-AND     T4.MEM_PAC_ID = #{srvPacId}
-AND     T1.PROMO_ITM_STUS_ID = 1
-]]>
-</select>
-
-
-
-
-
-
-<select id="selectProductPromotionPriceByPromoStockID" parameterType="Map" resultType="egovMap">
-<![CDATA[
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectProductPromotionPriceByPromoStockID] 20191213 - KR JAEMAJEM */
---SELECT  T1.PROMO_ITM_ID
---    ,   T1.PROMO_ID
---    ,   T1.PROMO_ITM_STK_ID
---    ,   T1.PROMO_ITM_CUR_ID
---    ,   T1.PROMO_ITM_PRC
---    ,   T1.PROMO_ITM_PV
---    ,   T1.PROMO_ITM_STUS_ID
---    ,   T1.PROMO_ITM_UPD_USER_ID
---    ,   T1.PROMO_ITM_UPD_DT
---    ,   T1.PROMO_ITM_RENTAL
---    ,   T1.PROMO_ITM_RENT_PRIOD
---    ,   T1.PROMO_ITM_OBLIG_PRIOD
-
-SELECT  T1.PROMO_ITM_PRC
-    ,   T1.PROMO_ITM_PV
-    ,   T1.PROMO_ITM_RENTAL
-FROM    SAL0018D T1
-WHERE   T1.PROMO_ID = #{promoId}
-AND     T1.PROMO_ITM_STK_ID = #{itmStkId}
-AND     T1.PROMO_ITM_STUS_ID = 1
-]]>
-</select>
+  <select id="selectProductPromotionPriceByPromoStockID" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectProductPromotionPriceByPromoStockID] 20191213 - KR JAEMAJEM */
+    SELECT T1.PROMO_ITM_PRC
+             , T1.PROMO_ITM_PV
+            , T1.PROMO_ITM_RENTAL
+    FROM SAL0018D T1
+    WHERE T1.PROMO_ID = #{promoId}
+        AND T1.PROMO_ITM_STK_ID = #{itmStkId}
+        AND T1.PROMO_ITM_STUS_ID = 1
+    ]]>
+  </select>
 
 <select id="selectAnotherAddress" parameterType="Map" resultType="egovMap">
   <![CDATA[
-  SELECT A.ADDR_DTL AS ADDR_DTL
-           , A.STREET  AS STREET
-           , B.AREA  AS AREA
-           , B.CITY  AS CITY
-           , B.POSTCODE  AS POSTCODE
-           , B.STATE AS STATE
-           , B.COUNTRY  AS COUNTRY
-           , CASE WHEN C.CODE IS NOT NULL AND C.NAME IS NOT NULL THEN C.CODE ||' - '|| C.NAME ELSE NULL END  AS DSC_BRNCH
+  SELECT UPPER(A.ADDR_DTL) AS ADDR_DTL
+           , UPPER(A.STREET) AS STREET
+           , UPPER(B.AREA) AS AREA
+           , UPPER(B.CITY) AS CITY
+           , B.POSTCODE AS POSTCODE
+           , UPPER(B.STATE) AS STATE
+           , UPPER(B.COUNTRY) AS COUNTRY
+           , UPPER(CASE WHEN C.CODE IS NOT NULL AND C.NAME IS NOT NULL THEN C.CODE ||' - '|| C.NAME ELSE NULL END)  AS DSC_BRNCH
            , C.BRNCH_ID AS DSC_BRNCH_ID
-           , (CASE WHEN #{userNm} LIKE 'CD%' THEN (CASE WHEN F.CODE IS NOT NULL AND F.NAME IS NOT NULL THEN F.CODE ||' - '|| F.NAME ELSE NULL END)
+           , UPPER((CASE WHEN #{userNm} LIKE 'CD%' THEN (CASE WHEN F.CODE IS NOT NULL AND F.NAME IS NOT NULL THEN F.CODE ||' - '|| F.NAME ELSE NULL END)
                       WHEN #{userNm} LIKE 'HT%' THEN (SELECT CODE ||' - '|| NAME FROM SYS0005M WHERE BRNCH_ID = '284')
                       ELSE (CASE WHEN D.CODE IS NOT NULL AND D.NAME IS NOT NULL THEN D.CODE ||' - '|| D.NAME ELSE NULL END)
-              END) AS POSTING_BRNCH
+              END)) AS POSTING_BRNCH
            , (CASE WHEN #{userNm} LIKE 'CD%' THEN F.BRNCH_ID
                       WHEN #{userNm} LIKE 'HT%' THEN 284
                       ELSE D.BRNCH_ID END) AS POSTING_BRNCH_ID
-           , CASE WHEN E.CODE IS NOT NULL AND E.NAME IS NOT NULL THEN E.CODE ||' - '|| E.NAME ELSE NULL END  AS HDC_BRNCH
+           , UPPER(CASE WHEN E.CODE IS NOT NULL AND E.NAME IS NOT NULL THEN E.CODE ||' - '|| E.NAME ELSE NULL END)  AS HDC_BRNCH
            , E.BRNCH_ID  AS HDC_BRNCH_ID
-           , F.NAME  AS STUS_CODE_ID_NAME
-           , CASE WHEN ( A.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(A.ADDR_DTL)) ELSE ''
-             END ||' '||NVL(A.STREET, '') ||' '|| B.AREA ||' '|| B.POSTCODE ||' '|| B.CITY ||' '|| B.STATE ||' '|| B.COUNTRY AS FULL_ADDR
+           , UPPER(F.NAME)  AS STUS_CODE_ID_NAME
+           , UPPER(CASE WHEN ( A.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(A.ADDR_DTL)) ELSE ''
+             END ||' '||NVL(A.STREET, '') ||' '|| B.AREA ||' '|| B.POSTCODE ||' '|| B.CITY ||' '|| B.STATE ||' '|| B.COUNTRY) AS FULL_ADDR
            ,   A.CUST_ADD_ID AS CUST_ADD_ID
   FROM SAL0023D A
   INNER JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID
@@ -768,938 +742,731 @@ AND     T1.PROMO_ITM_STUS_ID = 1
           AND STUS_CODE_ID = '9'
   </select>
 
-<insert id="insertAddNewAddress" parameterType="Map">
-<selectKey keyProperty="custAddId" resultType="int" order="BEFORE">
-SELECT  SAL0023D_CUST_ADD_ID_SEQ.NEXTVAL AS custAddId
-FROM    DUAL
-</selectKey>
-<![CDATA[
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertAddNewAddress] 20191214 - KR JAEMAJEM */
-INSERT
-INTO    SAL0023D                                                                -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : CustAddress
-(
-        CUST_ADD_ID                                                             -- ASIS_COLUMN : CustAddID
-    ,   CUST_ID                                                                 -- ASIS_COLUMN : CustomerID
-    ,   NRIC                                                                    -- ASIS_COLUMN : NRIC
-    ,   TEL                                                                     -- ASIS_COLUMN : Tel
-    ,   FAX                                                                     -- ASIS_COLUMN : Fax
-    ,   STUS_CODE_ID                                                            -- ASIS_COLUMN : StatusCodeID
-    ,   REM                                                                     -- ASIS_COLUMN : Remark
-    ,   UPD_USER_ID                                                             -- ASIS_COLUMN : Updator
-    ,   UPD_DT                                                                  -- ASIS_COLUMN : Updated
-    ,   ID_OLD                                                                  -- ASIS_COLUMN : IDOld
-    ,   SO_ID                                                                   -- ASIS_COLUMN : SOID
-    ,   IDCM                                                                    -- ASIS_COLUMN : IDcm
-    ,   CRT_USER_ID                                                             -- ASIS_COLUMN : Creator
-    ,   CRT_DT                                                                  -- ASIS_COLUMN : Created
-    ,   AREA_ID                                                                 -- Area ID
-    ,   ADDR_DTL                                                                -- Address Detail
-    ,   STREET                                                                  -- Street
-    ,   ADD1                                                                    -- ASIS_COLUMN : Add1
-    ,   ADD2                                                                    -- ASIS_COLUMN : Add2
-    ,   ADD3                                                                    -- ASIS_COLUMN : Add3
-    ,   ADD4                                                                    -- ASIS_COLUMN : Add4
-    ,   POSTCODEID                                                              -- Post Code ID
-    ,   POSTCODE                                                                -- POSTCODE
-    ,   AREAID                                                                  -- Area ID
-    ,   AREA                                                                    -- ASIS_COLUMN : Area
-    ,   STATEID                                                                 -- State ID
-    ,   COUNTRYID                                                               -- Country Id
-)VALUES(
-        #{custAddId}                                                            -- ASIS_COLUMN : CustAddID
-    ,   #{custId}                                                               -- ASIS_COLUMN : CustomerID
-    ,   NULL                                                                    -- ASIS_COLUMN : NRIC
-    ,   NULL                                                                    -- ASIS_COLUMN : Tel
-    ,   NULL                                                                    -- ASIS_COLUMN : Fax
-    ,   #{stat}                                                                 -- ASIS_COLUMN : StatusCodeID
-    ,   #{rem}                                                                  -- ASIS_COLUMN : Remark
-    ,   #{updUserId}                                                            -- ASIS_COLUMN : Updator
-    ,   SYSDATE                                                                 -- ASIS_COLUMN : Updated
-    ,   NULL                                                                    -- ASIS_COLUMN : IDOld
-    ,   NULL                                                                    -- ASIS_COLUMN : SOID
-    ,   NULL                                                                    -- ASIS_COLUMN : IDcm
-    ,   #{crtUserId}                                                            -- ASIS_COLUMN : Creator
-    ,   SYSDATE                                                                 -- ASIS_COLUMN : Created
-    ,   #{areaId}                                                               -- Area ID
-    ,   #{addrDtl}                                                              -- Address Detail
-    ,   #{street}                                                               -- Street
-    ,   NULL                                                                    -- ASIS_COLUMN : Add1
-    ,   NULL                                                                    -- ASIS_COLUMN : Add2
-    ,   NULL                                                                    -- ASIS_COLUMN : Add3
-    ,   NULL                                                                    -- ASIS_COLUMN : Add4
-    ,   NULL                                                                    -- Post Code ID
-    ,   NULL                                                                    -- POSTCODE
-    ,   NULL                                                                    -- Area ID
-    ,   NULL                                                                    -- ASIS_COLUMN : Area
-    ,   NULL                                                                    -- State ID
-    ,   NULL                                                                    -- Country Id
-)
-]]>
-</insert>
+  <insert id="insertAddNewAddress" parameterType="Map">
+    <selectKey keyProperty="custAddId" resultType="int" order="BEFORE">
+      SELECT SAL0023D_CUST_ADD_ID_SEQ.NEXTVAL AS custAddId
+      FROM DUAL
+    </selectKey>
 
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertAddNewAddress] 20191214 - KR JAEMAJEM */
+    INSERT INTO SAL0023D ( CUST_ADD_ID
+                                      , CUST_ID
+                                      , NRIC
+                                      , TEL
+                                      , FAX
+                                      , STUS_CODE_ID
+                                      , REM
+                                      , UPD_USER_ID
+                                      , UPD_DT
+                                      , ID_OLD
+                                      , SO_ID
+                                      , IDCM
+                                      , CRT_USER_ID
+                                      , CRT_DT
+                                      , AREA_ID
+                                      , ADDR_DTL
+                                      , STREET
+                                      , ADD1
+                                      , ADD2
+                                      , ADD3
+                                      , ADD4
+                                      , POSTCODEID
+                                      , POSTCODE
+                                      , AREAID
+                                      , AREA
+                                      , STATEID
+                                      , COUNTRYID
+      ) VALUES ( #{custAddId}
+                    , #{custId}
+                    , NULL
+                    , NULL
+                    , NULL
+                    , #{stat}
+                    , #{rem}
+                    , #{updUserId}
+                    , SYSDATE
+                    , NULL
+                    , NULL
+                    , NULL
+                    , #{crtUserId}
+                    , SYSDATE
+                    , #{areaId}
+                    , #{addrDtl}
+                    , #{street}
+                    , NULL
+                    , NULL
+                    , NULL
+                    , NULL
+                    , NULL
+                    , NULL
+                    , NULL
+                    , NULL
+                    , NULL
+                    , NULL
+      )
+    ]]>
+  </insert>
 
+  <select id="selectAnotherCard" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectAnotherCard] 20191214 - KR JAEMAJEM */
+    SELECT A.CUST_ORI_CRC_NO AS CUST_ORI_CRC_NO
+             , A.CUST_CRC_TYPE_ID AS CUST_CRC_TYPE_ID
+             , UPPER(A.CUST_CRC_OWNER) AS CUST_CRC_OWNER
+             , SUBSTR(A.CUST_CRC_EXPR, 1, 2)||'/'||SUBSTR(A.CUST_CRC_EXPR, 3)  AS CUST_CRC_EXPR
+             , A.CUST_CRC_BANK_ID AS CUST_CRC_BANK_ID
+             , A.CARD_TYPE_ID AS CARD_TYPE_ID
+             , UPPER(B.CODE_NAME) AS CARD_TYPE_ID_NAME
+             , A.CUST_CRC_ID AS CUST_CRC_ID
+    FROM SAL0028D A
+    INNER JOIN SYS0013M B ON B.CODE_MASTER_ID = 115
+                                      AND A.CARD_TYPE_ID = B.CODE_ID
+    WHERE A.CUST_ID = #{custId}
+        AND A.CUST_CRC_STUS_ID != 8
+    ]]>
 
-
-
-
-<select id="selectAnotherCard" parameterType="Map" resultType="egovMap">
-<![CDATA[
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectAnotherCard] 20191214 - KR JAEMAJEM */
-SELECT  A.CUST_ORI_CRC_NO                                                       AS CUST_ORI_CRC_NO
-    ,   A.CUST_CRC_TYPE_ID                                                      AS CUST_CRC_TYPE_ID
-    ,   A.CUST_CRC_OWNER                                                        AS CUST_CRC_OWNER
-    ,   SUBSTR(A.CUST_CRC_EXPR, 1, 2)||'/'||SUBSTR(A.CUST_CRC_EXPR, 3)          AS CUST_CRC_EXPR
-    ,   A.CUST_CRC_BANK_ID                                                      AS CUST_CRC_BANK_ID
-    ,   A.CARD_TYPE_ID                                                          AS CARD_TYPE_ID
-    ,   B.CODE_NAME                                                             AS CARD_TYPE_ID_NAME
-    ,   A.CUST_CRC_ID                                                           AS CUST_CRC_ID
-FROM    SAL0028D A
-        INNER JOIN SYS0013M B
-            ON  B.CODE_MASTER_ID = 115
-            AND A.CARD_TYPE_ID = B.CODE_ID
-WHERE   A.CUST_ID = #{custId}
-AND     A.CUST_CRC_STUS_ID != 8                                                 --SYS0038M : 8(Inactive)
-]]>
-<if test='custCrcId != null and custCrcId != "" and custCrcId > 0'>
-AND     A.CUST_CRC_ID = #{custCrcId}
-</if>
-ORDER BY    A.CUST_CRC_STUS_ID DESC
-        ,   A.CUST_CRC_ID ASC
-</select>
-
-
-
-
-
-
-<select id="selectParamVal" resultType="egovMap">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectAnotherCard] 20191214 - KR JAEMAJEM */
-SELECT  PARAM_VAL                                                               AS PARAM_VAL
-FROM    SYS0098M
-WHERE   MODULE = 'GEN'
-AND     SUB_MODULE = 'TKNZ'
-AND     PARAM_CODE = 'TKNZ_PUB'
-</select>
-
-
-
-
-
-
-<select id="selectTokenID" resultType="Integer">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectTokenID] 20191215 - KR JAEMAJEM */
-SELECT  SAL0257D_ID_SEQ.NEXTVAL
-FROM    DUAL
-</select>
-
-
-
-
-
-
-<select id="selectTokenSettings" resultType="egovMap">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectTokenSettings] 20191215 - KR JAEMAJEM */
-SELECT  (SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'GEN' AND SUB_MODULE = 'TKNZ' AND PARAM_CODE = 'TKNZ_URL')           AS TKNZ_URL
-    ,   (SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'GEN' AND SUB_MODULE = 'TKNZ' AND PARAM_CODE = 'TKNZ_MERCHANT_ID')   AS TKNZ_MERCHANT_ID
-    ,   (SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'GEN' AND SUB_MODULE = 'TKNZ' AND PARAM_CODE = 'TKNZ_VERF_KEY')      AS TKNZ_VERF_KEY
-FROM    DUAL
-</select>
-
-
-
-
-
-
-<insert id="insertSAL0257D" parameterType="Map">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertSAL0257D] 20191214 - KR JAEMAJEM */
-INSERT
-INTO    SAL0257D
-(
-        TKN_ID
-    ,   REF_NO
-    <if test="etyPoint == 'EE'">
-    ,   CUST_CRC_ID
+    <if test='custCrcId != null and custCrcId != "" and custCrcId > 0'>
+      AND A.CUST_CRC_ID = #{custCrcId}
     </if>
-    ,   BILL_NM
-    ,   BIN
-    ,   CCLAST4
-    ,   EXP_MONTH
-    ,   EXP_YEAR
-    ,   TKN_TYPE
-    ,   TOKEN
-    ,   SIGNATURE_REQ
-    ,   SIGNATURE_RES
-    ,   RES_TEXT
-    ,   STATUS
-    ,   REMARK
-    ,   CRT_DT
-    ,   CRT_USER_ID
-    ,   UPD_DT
-    ,   UPD_USER_ID
-)VALUES(
-        #{tknId}
-    ,   #{refNo}
-    <if test="etyPoint == 'EE'">
-    ,   #{custCrcId}
+
+    ORDER BY A.CUST_CRC_STUS_ID DESC
+                 , A.CUST_CRC_ID ASC
+  </select>
+
+  <select id="selectParamVal" resultType="egovMap">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectAnotherCard] 20191214 - KR JAEMAJEM */
+    SELECT PARAM_VAL AS PARAM_VAL
+    FROM SYS0098M
+    WHERE MODULE = 'GEN'
+        AND SUB_MODULE = 'TKNZ'
+        AND PARAM_CODE = 'TKNZ_PUB'
+  </select>
+
+  <select id="selectTokenID" resultType="Integer">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectTokenID] 20191215 - KR JAEMAJEM */
+    SELECT SAL0257D_ID_SEQ.NEXTVAL
+    FROM DUAL
+  </select>
+
+  <select id="selectTokenSettings" resultType="egovMap">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectTokenSettings] 20191215 - KR JAEMAJEM */
+    SELECT (SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'GEN' AND SUB_MODULE = 'TKNZ' AND PARAM_CODE = 'TKNZ_URL') AS TKNZ_URL
+             , (SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'GEN' AND SUB_MODULE = 'TKNZ' AND PARAM_CODE = 'TKNZ_MERCHANT_ID') AS TKNZ_MERCHANT_ID
+             , (SELECT PARAM_VAL FROM SYS0098M WHERE MODULE = 'GEN' AND SUB_MODULE = 'TKNZ' AND PARAM_CODE = 'TKNZ_VERF_KEY') AS TKNZ_VERF_KEY
+    FROM DUAL
+  </select>
+
+  <insert id="insertSAL0257D" parameterType="Map">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertSAL0257D] 20191214 - KR JAEMAJEM */
+    INSERT INTO SAL0257D ( TKN_ID
+                                      , REF_NO
+                                      <if test="etyPoint == 'EE'">
+                                      , CUST_CRC_ID
+                                      </if>
+                                      , BILL_NM
+                                      , BIN
+                                      , CCLAST4
+                                      , EXP_MONTH
+                                      , EXP_YEAR
+                                      , TKN_TYPE
+                                      , TOKEN
+                                      , SIGNATURE_REQ
+                                      , SIGNATURE_RES
+                                      , RES_TEXT
+                                      , STATUS
+                                      , REMARK
+                                      , CRT_DT
+                                      , CRT_USER_ID
+                                      , UPD_DT
+                                      , UPD_USER_ID
+    ) VALUES ( #{tknId}
+                  , #{refNo}
+                  <if test="etyPoint == 'EE'">
+                  , #{custCrcId}
+                 </if>
+                  , #{billNm}
+                  , NULL
+                  , NULL
+                  , #{expMonth}
+                  , #{expYear}
+                  , 1
+                  , NULL
+                  , #{signatureReq}
+                  , NULL
+                  , NULL
+                  , 44
+                  , NULL
+                  , SYSDATE
+                  , #{crtUserId}
+                  , SYSDATE
+                  , #{updUserId}
+    )
+  </insert>
+
+  <update id="updateSAL0257D" parameterType="Map">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.updateSAL0257D] 20191214 - KR JAEMAJEM */
+    UPDATE  SAL0257D SET BIN = #{BIN}
+                                   , CCLAST4 = #{cclast4}
+                                   , TOKEN = #{token}
+                                   , SIGNATURE_RES = #{signature}
+                                   , RES_TEXT = #{resText}
+                                   , STATUS = #{stus}
+                                   , UPD_USER_ID = #{updUserId}
+                                   , UPD_DT = SYSDATE
+    WHERE TKN_ID = #{tknId}
+  </update>
+
+  <select id="selectCheckCRC1" parameterType="Map" resultType="Integer">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectCheckCRC1] 20191214 - KR JAEMAJEM */
+    SELECT COUNT(1) AS CNT
+    FROM SAL0028D A
+    INNER JOIN ( SELECT CUST_ORI_CRC_NO
+                                 , COUNT(1)
+                        FROM SAL0028D
+                        GROUP BY CUST_ORI_CRC_NO
+                     ) B ON A.CUST_ORI_CRC_NO = B.CUST_ORI_CRC_NO
+     WHERE A.CUST_ORI_CRC_NO LIKE #{cardNo}
+         AND A.CUST_CRC_TOKEN = #{token}
+         AND A.CUST_ID = #{custId}
+         AND A.CUST_CRC_STUS_ID = '1'
+  </select>
+
+  <select id="selectCheckCRC2" parameterType="Map" resultType="Integer">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectCheckCRC2] 20191214 - KR JAEMAJEM */
+    SELECT COUNT(DISTINCT(NRIC)) AS CNT
+    FROM  SAL0029D A
+    INNER JOIN ( SELECT A1.CUST_ID
+                                , A1.CUST_ORI_CRC_NO
+                                , B1.CNT
+                        FROM SAL0028D A1
+                        INNER JOIN ( SELECT CUST_ORI_CRC_NO
+                                                    , COUNT(*) CNT
+                                            FROM SAL0028D
+                                            GROUP BY CUST_ORI_CRC_NO
+                                         ) B1 ON A1.CUST_ORI_CRC_NO = B1.CUST_ORI_CRC_NO
+                        WHERE A1.CUST_ORI_CRC_NO LIKE #{cardNo}
+                            AND A1.CUST_CRC_TOKEN = #{token}
+
+                            <if test="custId != '' and custId != null">
+                              AND A1.CUST_ID = #{custId}
+                            </if>
+
+                            AND A1.CUST_CRC_STUS_ID = '1'
+    ) B ON A.CUST_ID = B.CUST_ID
+
+    <if test='step == "3" '>
+      WHERE A.NRIC = #{nric}
     </if>
-    ,   #{billNm}
-    ,   NULL
-    ,   NULL
-    ,   #{expMonth}
-    ,   #{expYear}
-    ,   1
-    ,   NULL
-    ,   #{signatureReq}
-    ,   NULL
-    ,   NULL
-    ,   44
-    ,   NULL
-    ,   SYSDATE
-    ,   #{crtUserId}
-    ,   SYSDATE
-    ,   #{updUserId}
+  </select>
+
+  <insert id="insertSAL0258D" parameterType="Map">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertSAL0258D] 20191214 - KR JAEMAJEM */
+    INSERT INTO SAL0258D ( TKN_ID
+                                      , ERROR_CDE
+                                      , ERROR_DESC
+                                      , REMARK
+                                      , CRT_DT
+                                      , CRT_USER_ID
+                                      , UPD_DT
+                                      , UPD_USER_ID
+    ) VALUES ( #{tknId}
+                  , #{error_code}
+                  , #{error_desc}
+                  , #{src}
+                  , SYSDATE
+                  , #{crtUserId}
+                  , SYSDATE
+                  , #{updUserId}
 )
 </insert>
 
+  <insert id="insertSAL0028D" parameterType="Map">
+    <selectKey keyProperty="custCrcId" resultType="int" order="BEFORE">
+      SELECT SAL0028D_CUST_CRC_ID_SEQ.NEXTVAL AS custCrcId
+      FROM DUAL
+    </selectKey>
 
-
-
-
-
-<update id="updateSAL0257D" parameterType="Map">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.updateSAL0257D] 20191214 - KR JAEMAJEM */
-UPDATE  SAL0257D
-SET     BIN = #{BIN}
-    ,   CCLAST4 = #{cclast4}
-    ,   TOKEN = #{token}
-    ,   SIGNATURE_RES = #{signature}
-    ,   RES_TEXT = #{resText}
-    ,   STATUS = #{stus}
-    ,   UPD_USER_ID = #{updUserId}
-    ,   UPD_DT = SYSDATE
-WHERE   TKN_ID = #{tknId}
-</update>
-
-
-
-
-
-
-<select id="selectCheckCRC1" parameterType="Map" resultType="Integer">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectCheckCRC1] 20191214 - KR JAEMAJEM */
-SELECT  COUNT(1)                                                                AS CNT
-FROM    SAL0028D A
-        INNER JOIN
-        (
-            SELECT  CUST_ORI_CRC_NO
-                ,   COUNT(1)
-            FROM    SAL0028D
-            GROUP BY CUST_ORI_CRC_NO
-        ) B
-        ON  A.CUST_ORI_CRC_NO = B.CUST_ORI_CRC_NO
-WHERE   A.CUST_ORI_CRC_NO LIKE #{cardNo}
-AND     A.CUST_CRC_TOKEN = #{token}
-AND     A.CUST_ID = #{custId}
-AND     A.CUST_CRC_STUS_ID = '1'
-</select>
-
-
-
-
-
-
-<select id="selectCheckCRC2" parameterType="Map" resultType="Integer">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectCheckCRC2] 20191214 - KR JAEMAJEM */
-SELECT  COUNT(DISTINCT(NRIC))                                                   AS CNT
-FROM     SAL0029D A
-        INNER JOIN
-        (
-        SELECT  A1.CUST_ID
-            ,   A1.CUST_ORI_CRC_NO
-            ,   B1.CNT
-        FROM    SAL0028D A1
-                INNER JOIN
-                (
-                    SELECT  CUST_ORI_CRC_NO
-                        ,   COUNT(*) CNT
-                    FROM    SAL0028D
-                    GROUP BY CUST_ORI_CRC_NO
-                ) B1
-                ON A1.CUST_ORI_CRC_NO = B1.CUST_ORI_CRC_NO
-        WHERE   A1.CUST_ORI_CRC_NO LIKE #{cardNo}
-        AND     A1.CUST_CRC_TOKEN = #{token}
-        <if test="custId != '' and custId != null">
-        AND     A1.CUST_ID = #{custId}
-        </if>
-        AND     A1.CUST_CRC_STUS_ID = '1'
-        ) B
-        ON A.CUST_ID = B.CUST_ID
-<if test='step == "3" '>
-WHERE   A.NRIC = #{nric}
-</if>
-</select>
-
-
-
-
-
-
-<insert id="insertSAL0258D" parameterType="Map">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertSAL0258D] 20191214 - KR JAEMAJEM */
-INSERT
-INTO    SAL0258D
-(
-        TKN_ID
-    ,   ERROR_CDE
-    ,   ERROR_DESC
-    ,   REMARK
-    ,   CRT_DT
-    ,   CRT_USER_ID
-    ,   UPD_DT
-    ,   UPD_USER_ID
-)VALUES(
-        #{tknId}
-    ,   #{error_code}
-    ,   #{error_desc}
-    ,   #{src}
-    ,   SYSDATE
-    ,   #{crtUserId}
-    ,   SYSDATE
-    ,   #{updUserId}
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertSAL0028D] 20191216 - KR JAEMAJEM */
+    INSERT INTO SAL0028D ( CUST_CRC_ID
+                                      , CUST_ID
+                                      , CUST_CRC_NO
+                                      , CUST_ORI_CRC_NO
+                                      , CUST_ENCRYPT_CRC_NO
+                                      , CUST_CRC_OWNER
+                                      , CUST_CRC_TYPE_ID
+                                      , CUST_CRC_BANK_ID
+                                      , CUST_CRC_STUS_ID
+                                      , CUST_CRC_REM
+                                      , CUST_CRC_UPD_USER_ID
+                                      , CUST_CRC_UPD_DT
+                                      , CUST_CRC_EXPR
+                                      , CUST_CRC_ID_OLD
+                                      , SO_ID
+                                      , CUST_CRC_IDCM
+                                      , CUST_CRC_CRT_USER_ID
+                                      , CUST_CRC_CRT_DT
+                                      , CARD_TYPE_ID
+                                      , CUST_CRC_TOKEN
+    ) VALUES ( #{custCrcId}
+                  , #{custId}
+                  , #{custCrcNo}
+                  , #{custOriCrcNo}
+                  , #{custEncryptCrcNo}
+                  , #{custCrcOwner}
+                  , #{custCrcTypeId}
+                  , #{custCrcBankId}
+                  , #{custCrcStusId}
+                  , #{custCrcRem}
+                  , #{custCrcUpdUserId}
+                  , SYSDATE
+                  , #{custCrcExpr}
+                  , #{custCrcIdOld}
+                  , #{soId}
+                  , #{custCrcIdcm}
+                  , #{custCrcCrtUserId}
+                  , SYSDATE
+                  , #{cardTypeId}
+                  , #{custCrcToken}
 )
 </insert>
 
-
-
-
-
-
-<insert id="insertSAL0028D" parameterType="Map">
-<selectKey keyProperty="custCrcId" resultType="int" order="BEFORE">
-SELECT  SAL0028D_CUST_CRC_ID_SEQ.NEXTVAL AS custCrcId
-FROM    DUAL
-</selectKey>
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertSAL0028D] 20191216 - KR JAEMAJEM */
-INSERT
-INTO    SAL0028D                                                                -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : CustCRC
-(
-        CUST_CRC_ID                                                             -- ASIS_COLUMN : CustCRCID
-    ,   CUST_ID                                                                 -- ASIS_COLUMN : CustID
-    ,   CUST_CRC_NO                                                             -- ASIS_COLUMN : CustCRCNo
-    ,   CUST_ORI_CRC_NO                                                         -- ASIS_COLUMN : CustOriCRCNo
-    ,   CUST_ENCRYPT_CRC_NO                                                     -- ASIS_COLUMN : CustEncryptedCRCNo
-    ,   CUST_CRC_OWNER                                                          -- ASIS_COLUMN : CustCRCOwner
-    ,   CUST_CRC_TYPE_ID                                                        -- ASIS_COLUMN : CustCRCTypeID
-    ,   CUST_CRC_BANK_ID                                                        -- ASIS_COLUMN : CustCRCBankID
-    ,   CUST_CRC_STUS_ID                                                        -- ASIS_COLUMN : CustCRCStatusID
-    ,   CUST_CRC_REM                                                            -- ASIS_COLUMN : CustCRCRemark
-    ,   CUST_CRC_UPD_USER_ID                                                    -- ASIS_COLUMN : CustCRCUpdateBy
-    ,   CUST_CRC_UPD_DT                                                         -- ASIS_COLUMN : CustCRCUpdateAt
-    ,   CUST_CRC_EXPR                                                           -- ASIS_COLUMN : CustCRCExpiry
-    ,   CUST_CRC_ID_OLD                                                         -- ASIS_COLUMN : CustCRCIDOld
-    ,   SO_ID                                                                   -- ASIS_COLUMN : SOID
-    ,   CUST_CRC_IDCM                                                           -- ASIS_COLUMN : CustCRCIDcm
-    ,   CUST_CRC_CRT_USER_ID                                                    -- ASIS_COLUMN : CustCRCCreateBy
-    ,   CUST_CRC_CRT_DT                                                         -- ASIS_COLUMN : CustCRCCreateAt
-    ,   CARD_TYPE_ID                                                            -- ASIS_COLUMN : CardTypeID
-    ,   CUST_CRC_TOKEN                                                          --
-)VALUES(
-        #{custCrcId}                                                            -- ASIS_COLUMN : CustCRCID
-    ,   #{custId}                                                               -- ASIS_COLUMN : CustID
-    ,   #{custCrcNo}                                                            -- ASIS_COLUMN : CustCRCNo
-    ,   #{custOriCrcNo}                                                         -- ASIS_COLUMN : CustOriCRCNo
-    ,   #{custEncryptCrcNo}                                                     -- ASIS_COLUMN : CustEncryptedCRCNo
-    ,   #{custCrcOwner}                                                         -- ASIS_COLUMN : CustCRCOwner
-    ,   #{custCrcTypeId}                                                        -- ASIS_COLUMN : CustCRCTypeID
-    ,   #{custCrcBankId}                                                        -- ASIS_COLUMN : CustCRCBankID
-    ,   #{custCrcStusId}                                                        -- ASIS_COLUMN : CustCRCStatusID
-    ,   #{custCrcRem}                                                           -- ASIS_COLUMN : CustCRCRemark
-    ,   #{custCrcUpdUserId}                                                     -- ASIS_COLUMN : CustCRCUpdateBy
-    ,   SYSDATE                                                                 -- ASIS_COLUMN : CustCRCUpdateAt
-    ,   #{custCrcExpr}                                                          -- ASIS_COLUMN : CustCRCExpiry
-    ,   #{custCrcIdOld}                                                         -- ASIS_COLUMN : CustCRCIDOld
-    ,   #{soId}                                                                 -- ASIS_COLUMN : SOID
-    ,   #{custCrcIdcm}                                                          -- ASIS_COLUMN : CustCRCIDcm
-    ,   #{custCrcCrtUserId}                                                     -- ASIS_COLUMN : CustCRCCreateBy
-    ,   SYSDATE                                                                 -- ASIS_COLUMN : CustCRCCreateAt
-    ,   #{cardTypeId}                                                           -- ASIS_COLUMN : CardTypeID
-    ,   #{custCrcToken}                                                         --
-)
-</insert>
-
-
-
-
-
-
-<update id="updateCustCrcIdSAL0257D" parameterType="Map">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.updateCustCrcIdSAL0257D] 20191216 - KR JAEMAJEM */
-UPDATE  SAL0257D
-SET     CUST_CRC_ID = #{custCrcId}
-    ,   UPD_USER_ID = #{updUserId}
-    ,   UPD_DT = SYSDATE
-WHERE   TKN_ID = #{tknId}
-</update>
-
-
-
-
-
-
-<select id="selectCreditCardIsExisting" parameterType="Map" resultType="Integer">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectCreditCardIsExisting] 20191216 - KR JAEMAJEM */
-SELECT  COUNT(1)
-FROM    SAL0028D A
-WHERE   CUST_ID = #{custId}
-AND     CUST_ORI_CRC_NO = #{custOriCrcNo}
-AND     CUST_CRC_STUS_ID != 8
-</select>
-
-
-
-
-
-
-<select id="selectCheckRc" parameterType="Map" resultType="egovMap">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectCheckRc] 20191216 - KR JAEMAJEM */
-SELECT  B.MEM_ID                                                                AS MEM_ID
-    ,   B.MEM_CODE                                                              AS MEM_CODE
-    ,   A.NAME                                                                  AS NAME
-    ,   B.TARGET_TOT                                                            AS TARGET_TOT
-    ,   B.COLLECT_TOT                                                           AS COLLECT_TOT
-    ,   B.RC_PRCT                                                               AS RC_PRCT
-    ,   NVL(C.CNT, 0)                                                           AS CNT
-FROM    ORG0001D A
-        LEFT JOIN SAL0248M B
-            ON A.MEM_CODE = B.MEM_CODE
-        LEFT JOIN
-        (
-            SELECT  MEM_ID
-                ,   COUNT(1) CNT
-            FROM    SAL0001D
-            WHERE   TO_CHAR(SALES_DT, 'YYYYMM') = TO_CHAR(SYSDATE, 'YYYYMM')
-            GROUP BY MEM_ID
-        ) C
-        ON A.MEM_ID = C.MEM_ID
-WHERE   B.MONTH = EXTRACT(MONTH FROM ADD_MONTHS(SYSDATE, -1))
-AND     B.YEAR = EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE, -1))
-AND     A.MEM_CODE =    (
-                            SELECT  HR_CODE
-                            FROM    SYS0047M
-                            WHERE   USER_ID = #{userId}
-                        )
-</select>
-
-
-
-
-
-
-<select id="selectExistSofNo" parameterType="Map" resultType="Integer">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectExistSofNo] 20191216 - KR JAEMAJEM */
-SELECT  SUM(CNT)                                                                AS CNT
-FROM
-(
-    SELECT  COUNT(1) CNT
-    FROM    SAL0213M
-    WHERE   SOF_NO = #{sofNo}
-    AND     STUS_ID NOT IN (10, 98)
-    UNION ALL
-    SELECT  COUNT(1) CNT
-    FROM    SAL0001D
-    WHERE   REF_NO = #{sofNo}
-    AND     STUS_CODE_ID != 8
-)
-</select>
-
-
-
-
-
-
-<select id="selectCustomerInfo" parameterType="Map" resultType="egovMap">
-<![CDATA[
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectCustomerInfo] 20191212 - KR JAEMAJEM */
-SELECT  A.TYPE_ID                                                               AS TYPE_ID
-    ,   A.NRIC                                                                  AS NRIC
-    ,   C.CODE                                                                  AS INITIALS
-    ,   F.CODE_NAME                                                             AS COMPANY_TYPE
-    ,   CASE WHEN TO_CHAR(A.DOB, 'DD/MM/YYYY') = '01/01/1900'           THEN NULL
-                                                                        ELSE TO_CHAR(A.DOB, 'DD/MM/YYYY')
-                                                                        END     AS DOB
-    ,   A.NAME                                                                  AS CUST_NAME
-    ,   A.GENDER                                                                AS GENDER
-    ,   D.CODE_DESC                                                             AS NATION
-    ,   NVL2(E.CODE_ID, E.CODE_NAME, NULL)                                      AS RACE
-    ,   CASE WHEN TO_CHAR(A.PAS_SPORT_EXPR, 'DD/MM/YYYY') = '01/01/1900' THEN NULL
-                                                                         ELSE TO_CHAR(A.PAS_SPORT_EXPR, 'DD/MM/YYYY')
-                                                                         END    AS PAS_SPORT_EXPR
-    ,   CASE WHEN TO_CHAR(A.VISA_EXPR, 'DD/MM/YYYY') = '01/01/1900'      THEN NULL
-                                                                         ELSE TO_CHAR(A.VISA_EXPR, 'DD/MM/YYYY')
-                                                                         END    AS VISA_EXPR
-    ,   A.CUST_ID                                                               AS CUST_ID
-FROM    SAL0029D A                                                              -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : Customer
-        LEFT OUTER JOIN SAL0027D B
-            ON  A.CUST_ID = B.CUST_ID
-            AND B.STUS_CODE_ID = 9
-        LEFT OUTER JOIN SYS0013M C
-            ON  B.CUST_INITIAL = C.CODE_ID
-        LEFT OUTER JOIN SYS0013M D
-            ON  A.NATION = D.CODE
-            AND D.CODE_MASTER_ID = 338
-            AND D.DISAB = 0
-        LEFT OUTER JOIN SYS0013M E
-            ON  A.RACE_ID = E.CODE_ID
-            AND E.CODE_MASTER_ID = 2
-            AND E.DISAB = 0
-        LEFT OUTER JOIN SYS0013M F
-            ON  A.CORP_TYPE_ID = F.CODE_ID
-WHERE   UPPER(A.NRIC) =  UPPER(#{nric})
-AND     A.TYPE_ID = #{typeId}
-AND     A.STUS_CODE_ID != 8
-AND ROWNUM =1
-]]>
-</select>
-
-
-
-
-
-<select id="selectFileGroupKey" resultType="int">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectFileGroupKey] 20191220 - KR JAEMAJEM */
-SELECT  SYS0070M_ATCH_FILE_GRP_ID_SEQ.NEXTVAL
-FROM    DUAL
-</select>
-
-
-
-
-
-
-<insert id="insertSYS0071D" parameterType="Map">
-<selectKey keyProperty="atchFileId" resultType="int" order="BEFORE">
-SELECT  SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL
-FROM    DUAL
-</selectKey>
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertSYS0071D] 20191220 - KR JAEMAJEM */
-INSERT
-INTO    SYS0071D                                                                --Attached File Table
-(
-        ATCH_FILE_ID                                                            --Attached File ID
-    ,   ATCH_FILE_NAME                                                          --Attached File Name
-    ,   FILE_SUB_PATH                                                           --Server Sub Path
-    ,   PHYSICL_FILE_NAME                                                       --Physical File Name
-    ,   FILE_EXTSN                                                              --파일확장자
-    ,   FILE_SIZE                                                               --File Size
-    ,   FILE_PASSWORD                                                           --파일비밀번호
-    ,   FILE_UNQ_KEY                                                            --
-    ,   FILE_KEY_SEQ                                                            --
-)VALUES(
-        #{atchFileId}                                                           --Attached File ID
-    ,   #{atchFileName}                                                         --Attached File Name
-    ,   #{fileSubPath}                                                          --Server Sub Path
-    ,   #{physiclFileName}                                                      --Physical File Name
-    ,   #{fileExtsn}                                                            --파일확장자
-    ,   #{fileSize}                                                             --File Size
-    ,   #{filePassword}                                                         --파일비밀번호
-    ,   #{fileUnqKey}                                                           --
-    ,   #{fileKeySeq}
-)
-</insert>
-
-
-
-
-
-
-<update id="updateSYS0071D" parameterType="Map">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.updateSYS0071D] 20191220 - KR JAEMAJEM */
-UPDATE  SYS0071D A                                                              --Attached File Table
-SET     A.ATCH_FILE_NAME = #{atchFileName}                                      --Attached File Name
-    ,   A.FILE_SUB_PATH = #{fileSubPath}                                        --Server Sub Path
-    ,   A.PHYSICL_FILE_NAME = #{physiclFileName}                                --Physical File Name
-    ,   A.FILE_EXTSN = #{fileExtsn}                                             --파일확장자
-    ,   A.FILE_SIZE = #{fileSize}                                               --File Size
-WHERE   A.ATCH_FILE_ID = #{atchFileId}                                          --Attached File ID
-</update>
-
-
-
-
-
-
-<update id="updateSYS0070M" parameterType="Map">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.updateSYS0070M] 20191220 - KR JAEMAJEM */
-UPDATE  SYS0070M A                                                              --Attached File Group Master Table
-SET     A.UPD_USER_ID = #{updUserId}                                            --Updator
-    ,   A.UPD_DT = SYSDATE                                                      --Updated
-WHERE   A.ATCH_FILE_GRP_ID = #{atchFileGrpId}                                   --Attached File Group ID
-AND     A.ATCH_FILE_ID = #{atchFileId}                                          --Attached File ID
-</update>
-
-
-
-
-
-
-<delete id="deleteSYS0071D" parameterType="Map">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.deleteSYS0071D] 20191220 - KR JAEMAJEM */
-DELETE
-FROM    SYS0071D A                                                              --Attached File Table
-WHERE   A.ATCH_FILE_ID = #{atchFileId}
-</delete>
-
-
-
-
-
-
-<delete id="deleteSYS0070M" parameterType="Map">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.deleteSYS0070M] 20191220 - KR JAEMAJEM */
-DELETE
-FROM    SYS0070M A                                                              --Attached File Group Master Table
-WHERE   A.ATCH_FILE_GRP_ID = #{atchFileGrpId}                                   --Attached File Group ID
-AND     A.ATCH_FILE_ID = #{atchFileId}                                          --Attached File ID
-</delete>
-
-
-
-
-
-
-<insert id="insertSYS0070M" parameterType="Map">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertSYS0070M] 20191220 - KR JAEMAJEM */
-INSERT
-INTO    SYS0070M                                                                --Attached File Group Master Table
-(
-        ATCH_FILE_GRP_ID                                                        --Attached File Group ID
-    ,   ATCH_FILE_ID                                                            --Attached File ID
-    ,   CHENAL_TYPE                                                             --Chenal(W:Web/M:Mobile/C:CallCenter)
-    ,   CRT_USER_ID                                                             --Creator
-    ,   CRT_DT                                                                  --Created
-    ,   UPD_USER_ID                                                             --Updator
-    ,   UPD_DT                                                                  --Updated
-)VALUES(
-        #{atchFileGrpId}                                                        --Attached File Group ID
-    ,   #{atchFileId}                                                           --Attached File ID
-    ,   #{chenalType}                                                           --Chenal(W:Web/M:Mobile/C:CallCenter)
-    ,   #{crtUserId}                                                            --Creator
-    ,   SYSDATE                                                                 --Created
-    ,   #{updUserId}                                                            --Updator
-    ,   SYSDATE                                                                 --Updated
-)
-</insert>
-
-
-
-
-
-
-<insert id="insertSAL0213M" parameterType="Map">
-<selectKey keyProperty="preOrdId" resultType="int" order="BEFORE">
-SELECT  SAL0213M_PRE_ORD_ID_SEQ.NEXTVAL                                         AS preOrdId
-FROM    DUAL
-</selectKey>
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertSAL0213M] 20191217 - KR JAEMAJEM */
-INSERT
-INTO    SAL0213M                                                                --Pre-Order_table
-(
-        PRE_ORD_ID                                                              --Pre Order ID
-    ,   REQST_DT                                                                --Request Date
-    ,   CHNNL                                                                   --Channel
-    ,   STUS_ID                                                                 --Status ID
-    ,   SOF_NO                                                                  --SOF Number
-    ,   CUST_PO_NO                                                              --Cust Po NUmber
-    ,   APP_TYPE_ID                                                             --App Type ID
-    ,   SRV_PAC_ID                                                              --Srv Pac ID
-    ,   INST_PRIOD                                                              --Transaction ID
-    ,   CUST_ID                                                                 --Customer ID
-    ,   EMP_CHK                                                                 --userId
-    ,   GST_CHK                                                                 --salesOrderNo
-    ,   EURC_CUST_RGS_NO                                                        --customerId
-    ,   ATCH_FILE_GRP_ID                                                        --Atache File Group ID
-    ,   CUST_CNTC_ID                                                            --defectCodeId
-    ,   KEYIN_BRNCH_ID                                                          --defectCodeId
-    ,   INST_ADD_ID                                                             --resultRemark
-    ,   DSC_BRNCH_ID                                                            --Dsc Branch ID
-    ,   PRE_DT                                                                  --Pre Date
-    ,   PRE_TM                                                                  --Pre Time
-    ,   INSTCT                                                                  --Instruction
-    ,   EX_TRADE                                                                --EX Trade
-    ,   ITM_STK_ID                                                              --Item Stock ID
-    ,   PROMO_ID                                                                --Prome ID
-    ,   MTH_RENT_AMT                                                            --Update Date
-    ,   PROMO_DISC_PERIOD_TP                                                    --Promo DISC Period TP
-    ,   PROMO_DISC_PERIOD                                                       --Promo DISC Period
-    ,   TOT_AMT                                                                 --Total Amount
-    ,   NOR_AMT                                                                 --Nor Amount Date
-    ,   NOR_RNT_FEE                                                             --Nor Rent Fee
-    ,   DISC_RNT_FEE                                                            --Disc Rent Fee
-    ,   TOT_PV                                                                  --Total Pv
-    ,   TOT_PV_GST                                                              --Total Pv Gst
-    ,   PRC_ID                                                                  --Prc ID
-    ,   MEM_CODE                                                                --Member Code
-    ,   ADV_BILL                                                                --Advance Bill
-    ,   CUST_CRC_ID                                                             --resultRemark
-    ,   BANK_ID                                                                 --Bank ID
-    ,   CUST_ACC_ID                                                             --Customer Acc ID
-    ,   IS_3RD_PARTY                                                            --IS 3RD Party
-    ,   RENT_PAY_CUST_ID                                                        --Rental Pay Customer Id
-    ,   RENT_PAY_MODE_ID                                                        --Rental Pay Mode Id
-    ,   CUST_BILL_ID                                                            --CustBillID
-    ,   CUST_BILL_CUST_ID                                                       --Customer Bill Cust ID
-    ,   CUST_BILL_CNT_ID                                                        --Customer Bill Count ID
-    ,   CUST_BILL_ADD_ID                                                        --Customer Bill Add ID
-    ,   CUST_BILL_REM                                                           --Customer Bill Remark
-    ,   CUST_BILL_EMAIL                                                         --Customer Bill Email
-    ,   CUST_BILL_IS_SMS                                                        --Customer Bill Is SMS
-    ,   CUST_BILL_IS_POST                                                       --Customer Bill Is Post
-    ,   CUST_BILL_EMAIL_ADD                                                     --Customer Bill Email Add
-    ,   CUST_BILL_IS_WEB_PORTAL                                                 --Customer Bill IS Web Portal
-    ,   CUST_BILL_WEB_PORTAL_URL                                                --Customer Bill Web Portal URL
-    ,   CUST_BILL_IS_SMS2                                                       --Customer Bill Is SMS2
-    ,   CUST_BILL_CUST_CARE_CNT_ID                                              --Customer Bill Cust Care Count ID
-    ,   REM1                                                                    --Remark1
-    ,   REM2                                                                    --Remark2
-    ,   CRT_USER_ID                                                             --Create User ID
-    ,   CRT_DT                                                                  --Create Date
-    ,   UPD_USER_ID                                                             --Update User ID
-    ,   UPD_DT                                                                  --Update Date
-    ,   SALES_ORD_ID                                                            --
-    ,   ON_HOLD                                                                 --
-    ,   CPNT_ID                                                                 --
-    ,   CORP_CUST_TYPE                                                          --
-    ,   AGREEMENT_TYPE                                                          --
-    ,   BNDL_ID                                                                 --Homecare Order seq
-)VALUES(
-        #{preOrdId}                                                             --Pre Order ID
-    ,   SYSDATE                                                                 --Request Date
-    ,   #{chnnl}                                                                --Channel
-    ,   #{stusId}                                                               --Status ID
-    ,   #{sofNo}                                                                --SOF Number
-    ,   #{custPoNo}                                                             --Cust Po NUmber
-    ,   #{appTypeId}                                                            --App Type ID
-    ,   #{srvPacId}                                                             --Srv Pac ID
-    ,   #{instPriod}                                                            --Transaction ID
-    ,   #{custId}                                                               --Customer ID
-    ,   #{empChk}                                                               --userId
-    ,   #{gstChk}                                                               --salesOrderNo
-    ,   #{eurcCustRgsNo}                                                        --customerId
-    ,   #{atchFileGrpId}                                                        --Atache File Group ID
-    ,   #{custCntcId}                                                           --defectCodeId
-    ,   #{keyinBrnchId}                                                         --defectCodeId
-    ,   #{instAddId}                                                            --resultRemark
-    ,   #{dscBrnchId}                                                           --Dsc Branch ID
-    ,   SYSDATE + 1                                                             --Pre Date
-    ,   #{preTm}                                                                --Pre Time
-    ,   #{instct}                                                               --Instruction
-    ,   #{exTrade}                                                              --EX Trade
-    ,   #{itmStkId}                                                             --Item Stock ID
-    ,   #{promoId}                                                              --Prome ID
-    ,   #{mthRentAmt}                                                           --Update Date
-    ,   #{promoDiscPeriodTp}                                                    --Promo DISC Period TP
-    ,   #{promoDiscPeriod}                                                      --Promo DISC Period
-    ,   #{totAmt}                                                               --Total Amount
-    ,   #{norAmt}                                                               --Nor Amount Date
-    ,   #{norRntFee}                                                            --Nor Rent Fee
-    ,   #{discRntFee}                                                           --Disc Rent Fee
-    ,   #{totPv}                                                                --Total Pv
-    ,   #{totPvGst}                                                             --Total Pv Gst
-    ,   #{prcId}                                                                --Prc ID
-    ,   #{memCode}                                                              --Member Code
-    ,   #{advBill}                                                              --Advance Bill
-    ,   #{custCrcId}                                                            --resultRemark
-    ,   #{bankId}                                                               --Bank ID
-    ,   #{custAccId}                                                            --Customer Acc ID
-    ,   #{is3rdParty}                                                           --IS 3RD Party
-    ,   #{rentPayCustId}                                                        --Rental Pay Customer Id
-    ,   #{rentPayModeId}                                                        --Rental Pay Mode Id
-    ,   #{custBillId}                                                           --CustBillID
-    ,   #{custBillCustId}                                                       --Customer Bill Cust ID
-    ,   #{custBillCntId}                                                        --Customer Bill Count ID
-    ,   #{custBillAddId}                                                        --Customer Bill Add ID
-    ,   #{custBillRem}                                                          --Customer Bill Remark
-    ,   #{custBillEmail}                                                        --Customer Bill Email
-    ,   #{custBillIsSms}                                                        --Customer Bill Is SMS
-    ,   #{custBillIsPost}                                                       --Customer Bill Is Post
-    ,   #{custBillEmailAdd}                                                     --Customer Bill Email Add
-    ,   #{custBillIsWebPortal}                                                  --Customer Bill IS Web Portal
-    ,   #{custBillWebPortalUrl}                                                 --Customer Bill Web Portal URL
-    ,   #{custBillIsSms2}                                                       --Customer Bill Is SMS2
-    ,   #{custBillCustCareCntId}                                                --Customer Bill Cust Care Count ID
-    ,   #{rem1}                                                                 --Remark1
-    ,   #{rem2}                                                                 --Remark2
-    ,   #{crtUserId}                                                            --Create User ID
-    ,   SYSDATE                                                                 --Create Date
-    ,   #{updUserId}                                                            --Update User ID
-    ,   SYSDATE                                                                 --Update Date
-    ,   #{salesOrdId}                                                           --
-    ,   #{onHold}                                                               --
-    ,   #{cpntId}                                                               --
-    ,   #{corpCustType}                                                         --
-    ,   #{agreementType}                                                        --
-    ,   #{bndlId}                                                               --Homecare Order seq
-)
-</insert>
-
-
-
-
-
-
-<insert id="insertHMC0011D" parameterType="Map">
-<selectKey keyProperty="ordSeqNo" resultType="int" order="BEFORE">
-SELECT  HMC0011D_SEQ.NEXTVAL                                                    AS ordSeqNo
-FROM    DUAL
-</selectKey>
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertHMC0011D] 20191218 - KR JAEMAJEM */
-INSERT
-INTO    HMC0011D                                                                --HomeCare Order No
-(
-        ORD_SEQ_NO                                                              --HC ORD Sequence
-    ,   CUST_ID                                                                 --Customer ID
-    ,   SALES_DT                                                                --Sales date
-    ,   MAT_ORD_NO                                                              --Mattress Order No
-    ,   FRA_ORD_NO                                                              --Frame Order No
-    ,   CRT_DT                                                                  --Create Date
-    ,   CRT_USER_ID                                                             --Create User Id
-    ,   UPD_DT                                                                  --Update Date
-    ,   UPD_USER_ID                                                             --Update User Id
-    ,   MAT_PRE_ORD_ID                                                          --eKeyin Mat ord_id
-    ,   FRA_PRE_ORD_ID                                                          --eKeyin Fra Ord_id
-    ,   STUS_ID                                                                 --eKeyin Status id
-    ,   BNDL_NO                                                                 --BNDL_NO
-    ,   SRV_ORD_ID                                                              --SAL0225D SRV_ORD_ID
-)VALUES(
-        #{ordSeqNo}                                                             --HC ORD Sequence
-    ,   #{custId}                                                               --Customer ID
-    ,   SYSDATE                                                                 --Sales date
-    ,   null                                                                    --Mattress Order No
-    ,   null                                                                    --Frame Order No
-    ,   SYSDATE                                                                 --Create Date
-    ,   #{crtUserId}                                                            --Create User Id
-    ,   SYSDATE                                                                 --Update Date
-    ,   #{updUserId}                                                            --Update User Id
-    ,   #{matPreOrdId}                                                          --eKeyin Mat ord_id
-    ,   #{fraPreOrdId}                                                          --eKeyin Fra Ord_id
-    ,   1                                                                       --eKeyin Status id
-    ,   'SB'||LPAD(#{ordSeqNo}, 8, '0')                                         --BNDL_NO
-    ,   NULL                                                                    --SAL0225D SRV_ORD_ID
-)
-</insert>
-
-
-
-
-
-
-<update id="updateBndlIdSAL0213M" parameterType="Map">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.updateBndlIdSAL0213M] 20191220 - KR JAEMAJEM */
-UPDATE  SAL0213M A                                                              -- Homecare Order seq
-SET     A.BNDL_ID = #{bndlId}                                                   -- Status ID
-WHERE   A.PRE_ORD_ID = #{preOrdId}                                              -- Pre Order ID
-AND     A.BNDL_ID IS NULL
-</update>
-
-
-
-
-
-
-<update id="updateSAL0213M" parameterType="Map">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.updateSAL0213M] 20191220 - KR JAEMAJEM */
-UPDATE  SAL0213M A                                                              --Pre-Order_table
-SET     A.STUS_ID = CASE    WHEN A.STUS_ID = 1  THEN 1                          --1(Active)
-                            WHEN A.STUS_ID = 21 THEN 104                        --21(Failed) 104(Processing)
-                                                ELSE 1                          --1(Active)
-                                                END
-    ,   A.SRV_PAC_ID = #{srvPacId}                                              -- Srv Pac ID
-    ,   A.CUST_CNTC_ID = #{custCntcId}                                          -- defectCodeId
-    ,   A.KEYIN_BRNCH_ID = #{keyinBrnchId}                                      -- defectCodeId
-    ,   A.INST_ADD_ID = #{instAddId}                                            -- resultRemark
-    ,   A.DSC_BRNCH_ID = #{dscBrnchId}                                          -- Dsc Branch ID
-    ,   A.INSTCT = #{instct}                                                    -- Instruction
-    ,   A.ITM_STK_ID = #{itmStkId}                                              -- Item Stock ID
-    ,   A.PROMO_ID = #{promoId}                                                 -- Prome ID
-    ,   A.MTH_RENT_AMT = #{mthRentAmt}                                          -- Update Date
-    ,   A.TOT_AMT = #{totAmt}                                                   -- Total Amount
-    ,   A.NOR_AMT = #{norAmt}                                                   -- Nor Amount Date
-    ,   A.DISC_RNT_FEE = #{discRntFee}                                          -- Disc Rent Fee
-    ,   A.TOT_PV = #{totPv}                                                     -- Total Pv
-    ,   A.TOT_PV_GST = #{totPvGst}                                              -- Total Pv Gst
-    ,   A.PRC_ID = #{prcId}                                                     -- Prc ID
-    ,   A.MEM_CODE = #{memCode}                                                 -- Member Code
-    ,   A.CUST_CRC_ID = #{custCrcId}                                            -- resultRemark
-    ,   A.BANK_ID = #{bankId}                                                   -- Bank ID
-    ,   A.RENT_PAY_MODE_ID = #{rentPayModeId}                                   -- Rental Pay Mode Id
-    ,   A.CUST_BILL_CNT_ID = #{custBillCntId}                                   -- Customer Bill Count ID
-    ,   A.CUST_BILL_ADD_ID = #{custBillAddId}                                   -- Customer Bill Add ID
-    ,   A.CUST_BILL_EMAIL = #{custBillEmail}                                    -- Customer Bill Email
-    ,   A.UPD_USER_ID = #{updUserId}                                            -- Update User ID
-    ,   A.UPD_DT = SYSDATE                                                      -- Update Date
-WHERE   A.PRE_ORD_ID = #{preOrdId}                                              -- Pre Order ID
-AND     A.STUS_ID IN (1, 21)                                                    -- SYS0038M : 1(ACT), 21(FAL)
-</update>
-
-
-
-
-
-
-<update id="updateHMC0011D" parameterType="Map">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.updateHMC0011D] 20191221 - KR JAEMAJEM */
-UPDATE  HMC0011D A                                                              --HomeCare Order No
-SET     A.UPD_DT = SYSDATE                                                      --Update Date
-    ,   A.UPD_USER_ID = #{updUserId}                                            --Update User Id
-    ,   A.STUS_ID = #{stusId}                                                   --eKeyin Status id
-WHERE   A.ORD_SEQ_NO = #{ordSeqNo}                                              --HC ORD Sequence
-AND     A.STUS_ID IN (1, 21)                                                    -- SYS0038M : 1(ACT), 21(FAL)
-</update>
-
-
-
-
-
-
-<update id="cancelSAL0213M" parameterType="Map">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.cancelSAL0213M] 20191221 - KR JAEMAJEM */
-UPDATE  SAL0213M A                                                              --Pre-Order_table
-SET     A.STUS_ID = 10                                                          -- Status ID-SYS0038M : 10(Cancelled)
-    ,   A.UPD_USER_ID = #{updUserId}                                            -- Update User ID
-    ,   A.UPD_DT = SYSDATE                                                      -- Update Date
-WHERE   A.PRE_ORD_ID = #{preOrdId}                                              -- Pre Order ID
-AND     A.STUS_ID IN (1, 21)                                                    -- SYS0038M : 1(ACT), 21(FAL)
-</update>
-
-
-
-
-
-
-<update id="cancelHMC0011D" parameterType="Map">
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.cancelHMC0011D] 20191221 - KR JAEMAJEM */
-UPDATE  HMC0011D A                                                              --HomeCare Order No
-SET     A.UPD_DT = SYSDATE                                                      --Update Date
-    ,   A.UPD_USER_ID = #{updUserId}                                            --Update User Id
-    ,   A.STUS_ID = 10                                                          --Status ID-SYS0038M : 10(Cancelled)
-WHERE   A.ORD_SEQ_NO = #{ordSeqNo}                                              --HC ORD Sequence
-AND     A.STUS_ID IN (1, 21)                                                    -- SYS0038M : 1(ACT), 21(FAL)
-</update>
-
-
-
-
-
-
-<select id="selectAttachmentImgFile" parameterType="Map" resultType="egovMap">
-<![CDATA[
-/* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectAttachmentImgFile] 20191227 - KR JAEMAJEM */
-SELECT  A.ATCH_FILE_ID                                                          AS ATCH_FILE_ID
-    ,   A.ATCH_FILE_NAME                                                        AS ATCH_FILE_NAME
-    ,   A.FILE_SUB_PATH                                                         AS FILE_SUB_PATH
-    ,   A.PHYSICL_FILE_NAME                                                     AS PHYSICL_FILE_NAME
-FROM    SYS0071D A                                                              --Attached File Table
-WHERE   A.ATCH_FILE_ID = #{atchFileId}                                          --Attached File ID
-]]>
-</select>
+  <update id="updateCustCrcIdSAL0257D" parameterType="Map">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.updateCustCrcIdSAL0257D] 20191216 - KR JAEMAJEM */
+    UPDATE SAL0257D SET CUST_CRC_ID = #{custCrcId}
+                                  , UPD_USER_ID = #{updUserId}
+                                  , UPD_DT = SYSDATE
+    WHERE TKN_ID = #{tknId}
+  </update>
+
+  <select id="selectCreditCardIsExisting" parameterType="Map" resultType="Integer">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectCreditCardIsExisting] 20191216 - KR JAEMAJEM */
+    SELECT COUNT(1)
+    FROM SAL0028D A
+    WHERE CUST_ID = #{custId}
+        AND CUST_ORI_CRC_NO = #{custOriCrcNo}
+        AND CUST_CRC_STUS_ID != 8
+  </select>
+
+  <select id="selectCheckRc" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectCheckRc] 20191216 - KR JAEMAJEM */
+    SELECT B.MEM_ID AS MEM_ID
+             , B.MEM_CODE AS MEM_CODE
+             , UPPER(A.NAME) AS NAME
+             , B.TARGET_TOT AS TARGET_TOT
+             , B.COLLECT_TOT AS COLLECT_TOT
+             , B.RC_PRCT AS RC_PRCT
+             , NVL(C.CNT, 0) AS CNT
+    FROM ORG0001D A
+    LEFT JOIN SAL0248M B ON A.MEM_CODE = B.MEM_CODE
+    LEFT JOIN ( SELECT MEM_ID
+                              , COUNT(1) CNT
+                     FROM SAL0001D
+                     WHERE TO_CHAR(SALES_DT, 'YYYYMM') = TO_CHAR(SYSDATE, 'YYYYMM')
+                     GROUP BY MEM_ID
+                   ) C ON A.MEM_ID = C.MEM_ID
+    WHERE B.MONTH = EXTRACT(MONTH FROM ADD_MONTHS(SYSDATE, -1))
+        AND B.YEAR = EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE, -1))
+        AND A.MEM_CODE = ( SELECT HR_CODE
+                                       FROM SYS0047M
+                                       WHERE USER_ID = #{userId}
+                                     )
+  </select>
+
+  <select id="selectExistSofNo" parameterType="Map" resultType="Integer">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectExistSofNo] 20191216 - KR JAEMAJEM */
+    SELECT SUM(CNT) AS CNT
+    FROM ( SELECT COUNT(1) CNT
+               FROM SAL0213M
+               WHERE SOF_NO = #{sofNo}
+                   AND STUS_ID NOT IN (10, 98)
+               UNION ALL
+               SELECT COUNT(1) CNT
+               FROM SAL0001D
+               WHERE REF_NO = #{sofNo}
+                   AND STUS_CODE_ID != 8
+    )
+  </select>
+
+  <select id="selectCustomerInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectCustomerInfo] 20191212 - KR JAEMAJEM */
+    SELECT A.TYPE_ID AS TYPE_ID
+             , A.NRIC AS NRIC
+             , UPPER(C.CODE) AS INITIALS
+             , F.CODE_NAME AS COMPANY_TYPE
+             , CASE WHEN TO_CHAR(A.DOB, 'DD/MM/YYYY') = '01/01/1900' THEN NULL
+                        ELSE TO_CHAR(A.DOB, 'DD/MM/YYYY') END AS DOB
+             , UPPER(A.NAME) AS CUST_NAME
+             , A.GENDER AS GENDER
+             , UPPER(D.CODE_DESC) AS NATION
+             , NVL2(E.CODE_ID, UPPER(E.CODE_NAME), NULL) AS RACE
+             , CASE WHEN TO_CHAR(A.PAS_SPORT_EXPR, 'DD/MM/YYYY') = '01/01/1900' THEN NULL
+                       ELSE TO_CHAR(A.PAS_SPORT_EXPR, 'DD/MM/YYYY') END AS PAS_SPORT_EXPR
+             , CASE WHEN TO_CHAR(A.VISA_EXPR, 'DD/MM/YYYY') = '01/01/1900'      THEN NULL
+                       ELSE TO_CHAR(A.VISA_EXPR, 'DD/MM/YYYY') END AS VISA_EXPR
+             , A.CUST_ID AS CUST_ID
+     FROM SAL0029D A
+     LEFT OUTER JOIN SAL0027D B ON A.CUST_ID = B.CUST_ID
+                                               AND B.STUS_CODE_ID = 9
+     LEFT OUTER JOIN SYS0013M C ON B.CUST_INITIAL = C.CODE_ID
+     LEFT OUTER JOIN SYS0013M D ON A.NATION = D.CODE
+                                               AND D.CODE_MASTER_ID = 338
+                                               AND D.DISAB = 0
+     LEFT OUTER JOIN SYS0013M E ON A.RACE_ID = E.CODE_ID
+                                              AND E.CODE_MASTER_ID = 2
+                                              AND E.DISAB = 0
+     LEFT OUTER JOIN SYS0013M F ON A.CORP_TYPE_ID = F.CODE_ID
+     WHERE UPPER(A.NRIC) =  UPPER(#{nric})
+         AND A.TYPE_ID = #{typeId}
+         AND A.STUS_CODE_ID != 8
+         AND ROWNUM =1
+    ]]>
+  </select>
+
+  <select id="selectFileGroupKey" resultType="int">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectFileGroupKey] 20191220 - KR JAEMAJEM */
+    SELECT SYS0070M_ATCH_FILE_GRP_ID_SEQ.NEXTVAL
+    FROM DUAL
+  </select>
+
+  <insert id="insertSYS0071D" parameterType="Map">
+    <selectKey keyProperty="atchFileId" resultType="int" order="BEFORE">
+      SELECT  SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL
+      FROM DUAL
+    </selectKey>
+
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertSYS0071D] 20191220 - KR JAEMAJEM */
+    INSERT INTO SYS0071D ( ATCH_FILE_ID                                                            --Attached File ID
+                                      , ATCH_FILE_NAME                                                        --Attached File Name
+                                      , FILE_SUB_PATH                                                          --Server Sub Path
+                                      , PHYSICL_FILE_NAME                                                   --Physical File Name
+                                      , FILE_EXTSN                                                               --파일확장자
+                                      , FILE_SIZE                                                                  --File Size
+                                      , FILE_PASSWORD                                                         --파일비밀번호
+                                      , FILE_UNQ_KEY                                                            --
+                                      , FILE_KEY_SEQ                                                            --
+    ) VALUES ( #{atchFileId}                                                                                 --Attached File ID
+                  , #{atchFileName}                                                                            --Attached File Name
+                  , #{fileSubPath}                                                                               --Server Sub Path
+                  , #{physiclFileName}                                                                        --Physical File Name
+                  , #{fileExtsn}                                                                                  --파일확장자
+                  , #{fileSize}                                                                                    --File Size
+                  , #{filePassword}                                                                            --파일비밀번호
+                  , #{fileUnqKey}
+                  , #{fileKeySeq}
+    )
+  </insert>
+
+  <update id="updateSYS0071D" parameterType="Map">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.updateSYS0071D] 20191220 - KR JAEMAJEM */
+    UPDATE SYS0071D A SET A.ATCH_FILE_NAME = #{atchFileName}
+                            , A.FILE_SUB_PATH = #{fileSubPath}
+                            , A.PHYSICL_FILE_NAME = #{physiclFileName}
+                            , A.FILE_EXTSN = #{fileExtsn}
+                            , A.FILE_SIZE = #{fileSize}
+    WHERE A.ATCH_FILE_ID = #{atchFileId}
+  </update>
+
+  <update id="updateSYS0070M" parameterType="Map">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.updateSYS0070M] 20191220 - KR JAEMAJEM */
+    UPDATE SYS0070M A SET A.UPD_USER_ID = #{updUserId}
+                                      , A.UPD_DT = SYSDATE
+    WHERE A.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+        AND A.ATCH_FILE_ID = #{atchFileId}
+  </update>
+
+  <delete id="deleteSYS0071D" parameterType="Map">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.deleteSYS0071D] 20191220 - KR JAEMAJEM */
+    DELETE FROM SYS0071D A
+    WHERE A.ATCH_FILE_ID = #{atchFileId}
+  </delete>
+
+  <delete id="deleteSYS0070M" parameterType="Map">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.deleteSYS0070M] 20191220 - KR JAEMAJEM */
+    DELETE FROM SYS0070M A
+    WHERE A.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+        AND A.ATCH_FILE_ID = #{atchFileId}
+  </delete>
+
+  <insert id="insertSYS0070M" parameterType="Map">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertSYS0070M] 20191220 - KR JAEMAJEM */
+    INSERT INTO SYS0070M (ATCH_FILE_GRP_ID
+                                     , ATCH_FILE_ID
+                                     , CHENAL_TYPE
+                                     , CRT_USER_ID
+                                     , CRT_DT
+                                     , UPD_USER_ID
+                                     , UPD_DT
+    ) VALUES ( #{atchFileGrpId}
+                  , #{atchFileId}
+                  , #{chenalType}
+                  , #{crtUserId}
+                  , SYSDATE
+                  , #{updUserId}
+                  , SYSDATE
+    )
+  </insert>
+
+  <insert id="insertSAL0213M" parameterType="Map">
+    <selectKey keyProperty="preOrdId" resultType="int" order="BEFORE">
+      SELECT SAL0213M_PRE_ORD_ID_SEQ.NEXTVAL                                         AS preOrdId
+      FROM DUAL
+    </selectKey>
+
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertSAL0213M] 20191217 - KR JAEMAJEM */
+    INSERT INTO SAL0213M ( PRE_ORD_ID
+                                      , REQST_DT
+                                      , CHNNL
+                                      , STUS_ID
+                                      , SOF_NO
+                                      , CUST_PO_NO
+                                      , APP_TYPE_ID
+                                      , SRV_PAC_ID
+                                      , INST_PRIOD
+                                      , CUST_ID
+                                      , EMP_CHK
+                                      , GST_CHK
+                                      , EURC_CUST_RGS_NO
+                                      , ATCH_FILE_GRP_ID
+                                      , CUST_CNTC_ID
+                                      , KEYIN_BRNCH_ID
+                                      , INST_ADD_ID
+                                      , DSC_BRNCH_ID
+                                      , PRE_DT
+                                      , PRE_TM
+                                      , INSTCT
+                                      , EX_TRADE
+                                      , ITM_STK_ID
+                                      , PROMO_ID
+                                      , MTH_RENT_AMT
+                                      , PROMO_DISC_PERIOD_TP
+                                      , PROMO_DISC_PERIOD
+                                      , TOT_AMT
+                                      , NOR_AMT
+                                      , NOR_RNT_FEE
+                                      , DISC_RNT_FEE
+                                      , TOT_PV
+                                      , TOT_PV_GST
+                                      , PRC_ID
+                                      , MEM_CODE
+                                      , ADV_BILL
+                                      , CUST_CRC_ID
+                                      , BANK_ID
+                                      , CUST_ACC_ID
+                                      , IS_3RD_PARTY
+                                      , RENT_PAY_CUST_ID
+                                      , RENT_PAY_MODE_ID
+                                      , CUST_BILL_ID
+                                      , CUST_BILL_CUST_ID
+                                      , CUST_BILL_CNT_ID
+                                      , CUST_BILL_ADD_ID
+                                      , CUST_BILL_REM
+                                      , CUST_BILL_EMAIL
+                                      , CUST_BILL_IS_SMS
+                                      , CUST_BILL_IS_POST
+                                      , CUST_BILL_EMAIL_ADD
+                                      , CUST_BILL_IS_WEB_PORTAL
+                                      , CUST_BILL_WEB_PORTAL_URL
+                                      , CUST_BILL_IS_SMS2
+                                      , CUST_BILL_CUST_CARE_CNT_ID
+                                      , REM1
+                                      , REM2
+                                      , CRT_USER_ID
+                                      , CRT_DT
+                                      , UPD_USER_ID
+                                      , UPD_DT
+                                      , SALES_ORD_ID
+                                      , ON_HOLD
+                                      , CPNT_ID
+                                      , CORP_CUST_TYPE
+                                      , AGREEMENT_TYPE
+                                      , BNDL_ID
+    ) VALUES ( #{preOrdId}
+                  , SYSDATE
+                  , #{chnnl}
+                  , #{stusId}
+                  , #{sofNo}
+                  , #{custPoNo}
+                  , #{appTypeId}
+                  , #{srvPacId}
+                  , #{instPriod}
+                  , #{custId}
+                  , #{empChk}
+                  , #{gstChk}
+                  , #{eurcCustRgsNo}
+                  , #{atchFileGrpId}
+                  , #{custCntcId}
+                  , #{keyinBrnchId}
+                  , #{instAddId}
+                  , #{dscBrnchId}
+                  , SYSDATE + 1
+                  , #{preTm}
+                  , #{instct}
+                  , #{exTrade}
+                  , #{itmStkId}
+                  , #{promoId}
+                  , #{mthRentAmt}
+                  , #{promoDiscPeriodTp}
+                  , #{promoDiscPeriod}
+                  , #{totAmt}
+                  , #{norAmt}
+                  , #{norRntFee}
+                  , #{discRntFee}
+                  , #{totPv}
+                  , #{totPvGst}
+                  , #{prcId}
+                  , #{memCode}
+                  , #{advBill}
+                  , #{custCrcId}
+                  , #{bankId}
+                  , #{custAccId}
+                  , #{is3rdParty}
+                  , #{rentPayCustId}
+                  , #{rentPayModeId}
+                  , #{custBillId}
+                  , #{custBillCustId}
+                  , #{custBillCntId}
+                  , #{custBillAddId}
+                  , #{custBillRem}
+                  , #{custBillEmail}
+                  , #{custBillIsSms}
+                  , #{custBillIsPost}
+                  , #{custBillEmailAdd}
+                  , #{custBillIsWebPortal}
+                  , #{custBillWebPortalUrl}
+                  , #{custBillIsSms2}
+                  , #{custBillCustCareCntId}
+                  , #{rem1}
+                  , #{rem2}
+                  , #{crtUserId}
+                  , SYSDATE
+                  , #{updUserId}
+                  , SYSDATE
+                  , #{salesOrdId}
+                  , #{onHold}
+                  , #{cpntId}
+                  , #{corpCustType}
+                  , #{agreementType}
+                  , #{bndlId}
+    )
+  </insert>
+
+  <insert id="insertHMC0011D" parameterType="Map">
+    <selectKey keyProperty="ordSeqNo" resultType="int" order="BEFORE">
+      SELECT HMC0011D_SEQ.NEXTVAL AS ordSeqNo
+      FROM DUAL
+    </selectKey>
+
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.insertHMC0011D] 20191218 - KR JAEMAJEM */
+    INSERT INTO  HMC0011D ( ORD_SEQ_NO
+                                        , CUST_ID
+                                        , SALES_DT
+                                        , MAT_ORD_NO
+                                        , FRA_ORD_NO
+                                        , CRT_DT
+                                        , CRT_USER_ID
+                                        , UPD_DT
+                                        , UPD_USER_ID
+                                        , MAT_PRE_ORD_ID
+                                        , FRA_PRE_ORD_ID
+                                        , STUS_ID
+                                        , BNDL_NO
+                                        , SRV_ORD_ID
+    ) VALUES ( #{ordSeqNo}
+                  , #{custId}
+                  , SYSDATE
+                  , null
+                  , null
+                  , SYSDATE
+                  , #{crtUserId}
+                  , SYSDATE
+                  , #{updUserId}
+                  , #{matPreOrdId}
+                  , #{fraPreOrdId}
+                  , 1
+                  , 'SB'||LPAD(#{ordSeqNo}, 8, '0')
+                  , NULL
+    )
+  </insert>
+
+  <update id="updateBndlIdSAL0213M" parameterType="Map">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.updateBndlIdSAL0213M] 20191220 - KR JAEMAJEM */
+    UPDATE  SAL0213M A SET A.BNDL_ID = #{bndlId}
+                              WHERE A.PRE_ORD_ID = #{preOrdId}
+                                  AND A.BNDL_ID IS NULL
+  </update>
+
+  <update id="updateSAL0213M" parameterType="Map">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.updateSAL0213M] 20191220 - KR JAEMAJEM */
+    UPDATE SAL0213M A
+    SET A.STUS_ID = CASE WHEN A.STUS_ID = 1 THEN 1
+                                     WHEN A.STUS_ID = 21 THEN 104
+                                     ELSE 1 END
+        , A.SRV_PAC_ID = #{srvPacId}
+        , A.CUST_CNTC_ID = #{custCntcId}
+        , A.KEYIN_BRNCH_ID = #{keyinBrnchId}
+        , A.INST_ADD_ID = #{instAddId}
+        , A.DSC_BRNCH_ID = #{dscBrnchId}
+        , A.INSTCT = #{instct}
+        , A.ITM_STK_ID = #{itmStkId}
+        , A.PROMO_ID = #{promoId}
+        , A.MTH_RENT_AMT = #{mthRentAmt}
+        , A.TOT_AMT = #{totAmt}
+        , A.NOR_AMT = #{norAmt}
+        , A.DISC_RNT_FEE = #{discRntFee}
+        , A.TOT_PV = #{totPv}
+        , A.TOT_PV_GST = #{totPvGst}
+        , A.PRC_ID = #{prcId}
+        , A.MEM_CODE = #{memCode}
+        , A.CUST_CRC_ID = #{custCrcId}
+        , A.BANK_ID = #{bankId}
+        , A.RENT_PAY_MODE_ID = #{rentPayModeId}
+        , A.CUST_BILL_CNT_ID = #{custBillCntId}
+        , A.CUST_BILL_ADD_ID = #{custBillAddId}
+        , A.CUST_BILL_EMAIL = #{custBillEmail}
+        , A.UPD_USER_ID = #{updUserId}
+        , A.UPD_DT = SYSDATE
+    WHERE A.PRE_ORD_ID = #{preOrdId}
+        AND A.STUS_ID IN (1, 21)
+  </update>
+
+  <update id="updateHMC0011D" parameterType="Map">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.updateHMC0011D] 20191221 - KR JAEMAJEM */
+    UPDATE HMC0011D A SET A.UPD_DT = SYSDATE
+                                      , A.UPD_USER_ID = #{updUserId}
+                                      , A.STUS_ID = #{stusId}
+    WHERE A.ORD_SEQ_NO = #{ordSeqNo}
+        AND A.STUS_ID IN (1, 21)
+  </update>
+
+  <update id="cancelSAL0213M" parameterType="Map">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.cancelSAL0213M] 20191221 - KR JAEMAJEM */
+    UPDATE  SAL0213M A SET A.STUS_ID = 10
+                                      , A.UPD_USER_ID = #{updUserId}
+                                      , A.UPD_DT = SYSDATE
+    WHERE A.PRE_ORD_ID = #{preOrdId}
+        AND A.STUS_ID IN (1, 21)
+  </update>
+
+  <update id="cancelHMC0011D" parameterType="Map">
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.cancelHMC0011D] 20191221 - KR JAEMAJEM */
+    UPDATE HMC0011D A SET A.UPD_DT = SYSDATE
+                                      , A.UPD_USER_ID = #{updUserId}
+                                      , A.STUS_ID = 10
+    WHERE A.ORD_SEQ_NO = #{ordSeqNo}
+        AND A.STUS_ID IN (1, 21)
+  </update>
+
+  <select id="selectAttachmentImgFile" parameterType="Map" resultType="egovMap">
+  <![CDATA[
+    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectAttachmentImgFile] 20191227 - KR JAEMAJEM */
+    SELECT A.ATCH_FILE_ID
+             , A.ATCH_FILE_NAME
+             , A.FILE_SUB_PATH
+             , A.PHYSICL_FILE_NAME
+    FROM SYS0071D A
+    WHERE A.ATCH_FILE_ID = #{atchFileId}
+  ]]>
+  </select>
 </mapper>
