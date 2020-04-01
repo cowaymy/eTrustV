@@ -37,7 +37,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 02. 25    KR-HAN        Payment Error Edit ( WOR Error,  convert to integer error )
  * 2020. 03. 09    ONGHC         Amend paidAmt's String value to integer
  *                                         Add TR Ref.No and TR Issue Date
- * 2020. 03. 09    KR-HAN       RPF Error Edit                               
+ * 2020. 03.        KR-HAN       RPF Error Edit
+ * 2020. 04. 01    KR-HAN       Payment Key-in Error Edit
  *          </pre>
  */
 @Service("mobilePaymentKeyInService")
@@ -301,7 +302,11 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
             if ((totTargetAmt + targetAmt) > payAmtDou) {
 
               if (detailRowCnt - 1 == j) {
-                targetAmt = payAmtDou;
+            	  if( totTargetAmt < 0 ){
+            		  targetAmt = payAmtDou;
+            	  }else{
+                	  targetAmt = payAmtDou - totTargetAmt;
+            	  }
               } else {
                 targetAmt = payAmtDou - totTargetAmt;
               }
@@ -722,13 +727,18 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
             if ((totTargetAmt + targetAmt) > payAmtDou) {
 
               if (detailRowCnt - 1 == j) {
-                targetAmt = payAmtDou;
+            	  if( totTargetAmt < 0 ){
+            		  targetAmt = payAmtDou;
+            	  }else{
+                	  targetAmt = payAmtDou - totTargetAmt;
+            	  }
+
               } else {
-                targetAmt = payAmtDou - totTargetAmt;
+            	  targetAmt = payAmtDou - totTargetAmt;
               }
 
             } else {
-              targetAmt = targetAmt;
+        		targetAmt = targetAmt;
             }
 
             totTargetAmt = totTargetAmt + targetAmt;
