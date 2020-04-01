@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.biz.common.impl.CommonMapper;
+import com.coway.trust.biz.logistics.organization.impl.LocationMapper;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.orderCall.OrderCallListService;
@@ -49,6 +51,12 @@ public class OrderCallListController {
 
   @Resource(name = "servicesLogisticsPFCService")
   private ServicesLogisticsPFCService servicesLogisticsPFCService;
+
+  @Resource(name = "commonMapper")
+  private CommonMapper commonMapper;
+
+  @Resource(name="locMapper")
+  private LocationMapper locationMapper;
 
   /**
    * Call Center - Order Call
@@ -104,7 +112,7 @@ public class OrderCallListController {
       HttpServletRequest request, ModelMap model) {
 
     logger.debug("============================/searchOrderCallList.do================================");
-    logger.debug("params : {}", params);
+    logger.debug("###params : {}", params);
     logger.debug("============================/searchOrderCallList.do================================");
 
     String[] appTypeList = request.getParameterValues("appType");
@@ -117,7 +125,8 @@ public class OrderCallListController {
     params.put("callLogStatusList", callLogStatusList);
     params.put("DSCCodeList", DSCCodeList);
 
-    List<EgovMap> orderCallList = orderCallListService.selectOrderCall(params);
+    List<EgovMap> orderCallList = null;
+    orderCallList = orderCallListService.selectOrderCall(params);
 
     return ResponseEntity.ok(orderCallList);
   }
@@ -139,6 +148,30 @@ public class OrderCallListController {
     logger.debug("=========================/addCallResultPop.do================================");
 
     EgovMap orderCall = orderCallListService.getOrderCall(params);
+
+    // Added for Special Delivery CT enhancement by Hui Ding, 31-03-2020
+ 	EgovMap superCtInd = commonMapper.selectSuperCtInd();
+
+ 	if (orderCall != null && superCtInd != null) {
+ 		orderCall.put("superCtInd", superCtInd.get("code").toString());
+ 		EgovMap superCtCdMap = commonMapper.selectSuperCtCode();
+ 		EgovMap branchMap = null;
+
+ 		if (superCtCdMap != null){
+ 			logger.info("###superCtCdMap: " + superCtCdMap);
+ 			String superCtCd = superCtCdMap.get("code").toString();
+ 			if (superCtCd != null){
+ 				logger.info("###Super CT Code: " + superCtCd);
+ 				Map<String, Object> tempMap = new HashMap<String, Object>();
+ 				tempMap.put("whLocCd", superCtCd);
+ 				branchMap = locationMapper.selectBranchByWhLocId(tempMap);
+ 				logger.info("###branchMap: " + branchMap.get("branchId").toString());
+
+ 				orderCall.put("dscBrnchId", branchMap.get("branchId"));
+ 			}
+ 		}
+ 	}
+
     EgovMap rdcincdc = orderCallListService.getRdcInCdc(orderCall);
     List<EgovMap> callStatus = orderCallListService.selectCallStatus();
     List<EgovMap> callLogSta = orderCallListService.selectCallLogSta();
@@ -352,7 +385,6 @@ public class OrderCallListController {
       throws Exception {
     EgovMap orderCall = orderCallListService.getOrderCall(params);
     List<EgovMap> callStatus = orderCallListService.selectCallStatus();
-
     EgovMap rdcincdc = orderCallListService.getRdcInCdc(orderCall);
 
     params.put("viewSort", "2");
@@ -396,7 +428,7 @@ public class OrderCallListController {
     rtnMap.put("rdcStock", rdcStock);
     rtnMap.put("rdcincdc", rdcincdc);
 
-    logger.debug("rtnMap : {}", rtnMap);
+    logger.debug("###rtnMap : {}", rtnMap);
 
     return ResponseEntity.ok(rtnMap);
   }
