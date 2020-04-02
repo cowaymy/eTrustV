@@ -79,7 +79,7 @@ public class MobileTicketDto {
   private Double curAmt;
 
   @ApiModelProperty(value = "rem")
-  private Double rem;
+  private String rem;
 
   public String getOrdNoOld() {
     return ordNoOld;
@@ -270,11 +270,11 @@ public class MobileTicketDto {
     return BeanConverter.toBean(egvoMap, MobileTicketDto.class);
   }
 
-  public Double getRem() {
+  public String getRem() {
     return rem;
   }
 
-  public void setRem(Double rem) {
+  public void setRem(String rem) {
     this.rem = rem;
   }
 
