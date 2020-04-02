@@ -14,7 +14,7 @@
             APPV_PRCSS_NO,
             APPV_DT,
             RQST_DT,
-            NVL(APPV_PRCSS_STUS, 'T') APPV_PRCSS_STUS,
+            APPV_PRCSS_STUS,
             CASE WHEN APPV_PRCSS_STUS = 'A' THEN 'Approved'
                  WHEN APPV_PRCSS_STUS = 'J' THEN 'Rejected'
                  WHEN APPV_PRCSS_STUS = 'R' THEN 'Submitted'
@@ -41,7 +41,7 @@
                 B.APPV_PRCSS_NO,
                 B.APPV_PRCSS_DT APPV_DT,
                 B.REQST_DT RQST_DT,
-                B.APPV_PRCSS_STUS,
+                NVL(B.APPV_PRCSS_STUS, 'T') APPV_PRCSS_STUS,
                 CASE WHEN A.ADV_TYPE = '1' OR A.ADV_TYPE = '3' THEN (
                     CASE WHEN A.APPV_PRCSS_NO IS NOT NULL THEN (
                         <![CDATA[
@@ -124,16 +124,17 @@
                     AND B.APPV_PRCSS_DT <= TO_DATE(#{appEndDt}, 'DD/MM/YYYY')
                 ]]>
             </if>
-            <if test="appvPrcssStus != null and appvPrcssStus != ''">
-                AND B.APPV_PRCSS_STUS IN
-                <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
-                    #{item}
-                </foreach>
-            </if>
         )
+        WHERE 1 = 1
         <if test="refundStus != null and refundStus != ''">
-            WHERE REPAY_STUS IN
+            AND REPAY_STUS IN
             <foreach item="item" collection="refundStus" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="appvPrcssStus != null and appvPrcssStus != ''">
+            AND APPV_PRCSS_STUS IN
+            <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
                 #{item}
             </foreach>
         </if>

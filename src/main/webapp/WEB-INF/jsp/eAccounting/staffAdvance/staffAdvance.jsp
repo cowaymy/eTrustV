@@ -62,7 +62,7 @@
         visible : false
     }, {
         dataField : "repayStusDesc",
-        headerText : "Refund Status"
+        headerText : "Repayment Status"
     }];
 
     var advanceGridPros = {
@@ -444,12 +444,10 @@
         }
 
         if(claimNo.substring(0, 1) == "A") {
-            /*
-            if(appvStus == "T" && mode != "DRAFT") {
+            if(appvStus != "T" && mode != "DRAFT") {
+                Common.alert("Selected Advance Request Claim No is not allowed for repayment!");
+                return false;
             }
-            */
-            Common.alert("Selected Advance Request Claim No is not allowed for repayment!");
-            return false;
         }
 
         if(repayStus == "3" || repayStus == "4" || repayStus == "5") {
@@ -1738,10 +1736,7 @@
                         <tr>
                             <th scope="row"><spring:message code="webInvoice.costCenter" /><span class="must">*</span></th>
                             <td>
-                                <input type="text" title="" placeholder="Cost Center Code" class="" id="refCostCenterCode" name="refCostCenterCode" value="${costCentr}" readonly />
-                                <a href="#" class="search_btn" id="reqCostCenter_search_btn">
-                                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-                                </a>
+                                <input type="text" title="" placeholder="Cost Center Code" class="w100p" id="refCostCenterCode" name="refCostCenterCode" value="${costCentr}" readonly />
                             </td>
                             <th scope="row">Create User ID</th>
                             <td>
@@ -1751,10 +1746,7 @@
                         <tr>
                             <th scope="row">Payee Code<span class="must">*</span></th>
                             <td>
-                                <input type="text" title="" placeholder="" class="" id="refPayeeCode" name="refPayeeCode" readonly/>
-                                <a href="#" class="search_btn" id="reqPayee_search_btn">
-                                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-                                </a>
+                                <input type="text" title="" placeholder="" class="w100p" id="refPayeeCode" name="refPayeeCode" readonly/>
                             </td>
                             <th scope="row">Payee Name</th>
                             <td>
