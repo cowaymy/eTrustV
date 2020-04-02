@@ -1847,7 +1847,7 @@
 		                    case '7':
 	                            sofFileTncId = result[i].atchFileId;
 	                            sofFileTncName = result[i].atchFileName;
-	                            $(".input_text[id='sofFileTncTxt']").val(sofFileTncName);
+	                            $(".input_text[id='sofTncFileTxt']").val(sofFileTncName);
 	                            break;
 
 		                     default:
