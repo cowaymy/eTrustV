@@ -1229,7 +1229,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
         List<EgovMap> selectAnotherAddress = eKeyInApiMapper.selectAnotherAddress(EKeyInApiForm.createMap(param));
         if (selectAnotherAddress.size() == 0) {
-          throw new ApplicationException(AppConstants.FAIL, "Please Check on Customer's Address Detail. MAIN Record found " + selectAnotherContact.size() + "");
+          throw new ApplicationException(AppConstants.FAIL, "Please Check on Customer's Address Detail. MAIN Record found " + selectAnotherAddress.size() + "");
         }
         // if( selectAnotherAddress.size() == 1 ){
         rtn.setSelectAnotherAddressMain(EKeyInApiDto.create(selectAnotherAddress.get(0)));
