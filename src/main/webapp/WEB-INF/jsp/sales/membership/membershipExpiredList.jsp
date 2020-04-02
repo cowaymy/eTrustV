@@ -21,6 +21,7 @@ var expiredPeriodData = [
               {"codeId": "6","codeName": "6"},
               {"codeId": "7","codeName": "7 above"}
               ];
+var today = '${today}'
 
 $(document).ready(function(){
 
@@ -34,9 +35,9 @@ $(document).ready(function(){
 
     if("${SESSION_INFO.memberLevel}" =="1"){
 
-        /* $("#orgCode").val("${orgCode}");
+        $("#orgCode").val("${orgCode}");
         $("#orgCode").attr("class", "w100p readonly");
-        $("#orgCode").attr("readonly", "readonly"); */
+        $("#orgCode").attr("readonly", "readonly");
 
         /* doDefCombo(expiredPeriodData, '7' ,'expiredPeriod', 'M', 'fn_multiCombo');
         $("#expiredPeriod").multipleSelect("disable"); */
@@ -148,6 +149,33 @@ $(document).ready(function(){
         });
 
     }
+
+    hideViewPopup=function(val){
+        $(val).hide();
+    }
+
+    function fn_openRawDataDownload(val){
+    	$('#rawData_wrap').show();
+
+    	if(val == "rejoinTarget" ){
+    		console.log("rejoinTarget");
+    		$("#rawDataHeader").text("Rejoin Target Raw Data");
+    		$("#rawDataForm #reportFileName").val("/sales/RejoinNetRaw.rpt");
+    		$("#rawDataForm #reportDownFileName").val("RejoinTargetRawData_" + today + ".xls");
+
+    	}else if(val == "rejoinNet" ){
+    		console.log("rejoinNet");
+    		$("#rawDataHeader").text("Rejoin Net Raw Data");
+            $("#rawDataForm #reportFileName").val("/sales/RejoinTargetRaw.rpt");
+            $("#rawDataForm #reportDownFileName").val("RejoinNetRawData_" + today + ".xls");
+        }
+
+    }
+
+    function fn_generate(){
+        var option = { isProcedure : true };
+        Common.report("rawDataForm", option);
+    }
 </script>
 
 <!-- content start -->
@@ -217,10 +245,31 @@ $(document).ready(function(){
     </section>
     <!-- search_table end -->
 
+    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+	<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+	<dl class="link_list">
+	  <dt>Link</dt>
+	  <dd>
+	  <ul class="btns">
+	    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+	    </c:if>
+	      <li><p class="link_btn">
+	           <a href="javascript:fn_openRawDataDownload('rejoinTarget');"><spring:message code='sales.btn.rejoinTarget'/></a>
+	      </p></li>
+	      <li><p class="link_btn">
+	           <a href="javascript:fn_openRawDataDownload('rejoinNet');"><spring:message code='sales.btn.rejoinNet'/></a>
+	      </p></li>
+
+	  </ul>
+	    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+	    </dd>
+	</dl>
+	</aside><!-- link_btns_wrap end -->
+
     <!-- link_btns_wrap end -->
     <ul class="right_btns">
         <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
-            <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a></p></li>
+            <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='sal.btn.generate'/></a></p></li>
         </c:if>
     </ul>
     <!-- search_result start -->
@@ -234,3 +283,51 @@ $(document).ready(function(){
 
 </section>
 <!-- content end -->
+
+<!-------------------------------------------------------------------------------------
+    POP-UP (RAWDATA)
+-------------------------------------------------------------------------------------->
+<div class="popup_wrap size_small" id="rawData_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="new_pop_header">
+        <h1 id="rawDataHeader"></h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#rawData_wrap')">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+
+    <!-- pop_body start -->
+    <form name="rawDataForm" id="rawDataForm"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName"  />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" />
+    <input type="hidden" id="viewType" name="viewType" value="EXCEL"/>
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:165px" />
+                    <col style="width:*" />
+                </colgroup>
+
+                <tbody>
+                    <tr>
+                        <th scope="row"><spring:message code='sal.title.date'/></th>
+                        <td colspan="3"><input type="text" id="V_GENDATE" name="V_GENDATE" title="Date" class="j_date2" value="${dt}" /></td>
+                    </tr>
+                   </tbody>
+            </table>
+        </section>
+        <!-- search_table end -->
+
+        <ul class="center_btns">
+            <li><p class="btn_blue2"><a href="javascript:fn_generate();"><spring:message code='sal.btn.generate'/></a></p></li>
+        </ul>
+    </section>
+    </form>
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->

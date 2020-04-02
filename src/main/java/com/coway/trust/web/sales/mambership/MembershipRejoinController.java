@@ -1,6 +1,9 @@
 package com.coway.trust.web.sales.mambership;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -59,6 +62,15 @@ public class  MembershipRejoinController {
 
 	@RequestMapping(value = "/membershipExpiredList.do")
     public String membershipExpiredList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+	  Date date = new Date();
+      SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+      String today = df.format(date);
+      String dt = CommonUtils.getCalMonth(-1);
+      dt = dt.substring(4,6) + "/" + dt.substring(0,4);
+
+      model.put("today", today);
+      model.put("dt", dt);
 
         if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
 
