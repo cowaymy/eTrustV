@@ -1775,7 +1775,7 @@
         switch(tabNm) {
             case 'ord' :
 
-                if(MEM_TYPE == '1' || MEM_TYPE == '2'){
+            	if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7" ){
                     $('#memBtn').addClass("blind");
                     $('#salesmanCd').prop("readonly",true).addClass("readonly");;
                     $('#salesmanCd').val("${SESSION_INFO.userName}");

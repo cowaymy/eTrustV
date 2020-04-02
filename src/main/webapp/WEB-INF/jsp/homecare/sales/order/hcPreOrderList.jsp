@@ -31,7 +31,7 @@
         createAUIGrid();
         createExcelAUIGrid();
 
-        if(MEM_TYPE == "1" || MEM_TYPE == "2" ) {
+        if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7" ){
             if("${SESSION_INFO.memberLevel}" =="1") {
                 $("#orgCode").val("${orgCode}");
                 $("#orgCode").attr("class", "w100p readonly");
@@ -300,7 +300,7 @@
         });
         $('#_btnFail').click(function() {
             if(fn_validStatus()){
-                if(MEM_TYPE == 1 || MEM_TYPE == 2){
+            	if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7" ){
                     $('#_action').val("10").attr('selected','selected');
                     $('#_action').attr('disabled','disabled').addClass("disabled");
                 }
@@ -494,10 +494,10 @@
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
        <li><p class="btn_blue"><a id="_btnConvOrder" href="#">Convert Order</a></p></li>
     </c:if>
-    <c:if test="${(PAGE_AUTH.funcUserDefine3 == 'Y' or ( (SESSION_INFO.userTypeId != '1') or (SESSION_INFO.memberLevel == '4' and SESSION_INFO.userTypeId == '1')))}">
+    <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li><p class="btn_blue"><a id="_btnFail" href="#">Update Status</a></p></li>
     </c:if>
-    <c:if test="${(PAGE_AUTH.funcUserDefine1 == 'Y' or ( (SESSION_INFO.userTypeId != '1') or (SESSION_INFO.memberLevel == '4' and SESSION_INFO.userTypeId == '1')))}">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
        <li><p class="btn_blue"><a id="_btnNew" href="#">NEW</a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
