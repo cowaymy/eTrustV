@@ -1855,7 +1855,6 @@
                 $("#instCountry").val(custInfo.country); //Country
 
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
-                console.log("WHAT IS "+ MEM_TYPE);
                 $("#keyinBrnchId").val('${preOrderInfo.keyinBrnchId}'); //Posting Branch
 
 //              if(!$("#gstChk").is('[disabled]')) {

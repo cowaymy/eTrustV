@@ -77,7 +77,7 @@ public class PreOrderController {
 	@RequestMapping(value = "/preOrderList.do")
 	public String preOrderList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 
-		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
 
 			params.put("userId", sessionVO.getUserId());
 			EgovMap result =  salesCommonService.getUserInfo(params);

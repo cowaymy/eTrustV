@@ -1694,7 +1694,7 @@
                 $("#instCountry").val(custInfo.country); //Country
 
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
-                $("#keyinBrnchId").val(custInfo.soBrnchId); //Posting Branch
+                $("#keyinBrnchId").val('${preOrderInfo.keyinBrnchId}'); //Posting Branch
             }
         });
     }

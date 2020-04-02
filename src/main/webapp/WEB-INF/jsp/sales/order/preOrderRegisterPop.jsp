@@ -1674,7 +1674,9 @@
 
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
                 if(MEM_TYPE == 2)
-                	$("#keyinBrnchId").val(custInfo.cdBrnchId); //Posting Branch
+                    $("#keyinBrnchId").val(custInfo.cdBrnchId); //Posting Branch
+                else if (MEM_TYPE == 7)
+                    $("#keyinBrnchId").val(284); //Posting Branch
                 else
                     $("#keyinBrnchId").val(custInfo.soBrnchId); //Posting Branch
 //              if(!$("#gstChk").is('[disabled]')) {

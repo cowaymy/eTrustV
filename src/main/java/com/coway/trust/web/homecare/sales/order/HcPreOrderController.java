@@ -71,7 +71,7 @@ public class HcPreOrderController {
     @RequestMapping(value = "/hcPreOrderList.do")
     public String hcPreOrderList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
 
-        if (sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2) {
+        if (sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7) {
 
             params.put("userId", sessionVO.getUserId());
             EgovMap result = salesCommonService.getUserInfo(params);
