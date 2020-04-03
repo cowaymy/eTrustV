@@ -63,6 +63,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 03. 30     MY-ONGHC    Amend selectExistSofNo and insertEkeyIn to remove SOF checking
  * 2020. 03. 31     MY-ONGHC    Amend saveAddNewAddress and saveAddNewContact to check existing MAIN record exist before.
  * 2020. 04. 01     MY-ONGHC    Amend selectOrderInfo to solve promotion issue
+ * 2020. 04. 03     MY-ONGHC    Amend selectItmStkChangeInfo
  *
  *          </pre>
  */
@@ -523,7 +524,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   public EKeyInApiDto selectItmStkChangeInfo(EKeyInApiForm param) throws Exception {
     EKeyInApiDto selectItmStkPrice = selectItmStkPrice(param);
 
-    List<EgovMap> promotionList = selectPromotionByAppTypeStock(param);
+    // List<EgovMap> promotionList = selectPromotionByAppTypeStock(param);
+    List<EgovMap> promotionList = selectPromotionByAppTypeStockESales(param);
     List<EKeyInApiDto> promotionListDto = promotionList.stream().map(r -> EKeyInApiDto.create(r))
         .collect(Collectors.toList());
     selectItmStkPrice.setPromotionList(promotionListDto);
