@@ -244,15 +244,13 @@ $(document).ready(function(){
         </form>
     </section>
     <!-- search_table end -->
-
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 	<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 	<dl class="link_list">
 	  <dt>Link</dt>
 	  <dd>
 	  <ul class="btns">
-	    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-	    </c:if>
 	      <li><p class="link_btn">
 	           <a href="javascript:fn_openRawDataDownload('rejoinTarget');"><spring:message code='sales.btn.rejoinTarget'/></a>
 	      </p></li>
@@ -265,7 +263,7 @@ $(document).ready(function(){
 	    </dd>
 	</dl>
 	</aside><!-- link_btns_wrap end -->
-
+</c:if>
     <!-- link_btns_wrap end -->
     <ul class="right_btns">
         <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
