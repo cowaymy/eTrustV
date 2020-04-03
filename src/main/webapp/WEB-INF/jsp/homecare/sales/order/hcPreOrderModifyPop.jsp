@@ -14,7 +14,7 @@
     var trFileId = 0;
     var otherFileId = 0;
     var otherFileId2 = 0;
-    var sofFileTncId = 0;
+    var sofTncFileId = 0;
 
     var sofFileName = "";
     var nricFileName = "";
@@ -22,7 +22,7 @@
     var trFileName = "";
     var otherFileName = "";
     var otherFileName2 = "";
-    var sofFileTncName = "";
+    var sofTncFileName = "";
 
     $(document).ready(function(){
         createAUIGridStk();
@@ -586,6 +586,18 @@
                 myFileCaches[6] = {file:file};
                 if(otherFileName2 != ""){
                     update.push(otherFileId2);
+                }
+            }
+        });
+
+        $('#sofTncFile').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null){
+                remove.push(sofTncFileId);
+            }else if(file.name != sofTncFileName){
+                myFileCaches[7] = {file:file};
+                if(otherFileName2 != ""){
+                    update.push(sofTncFileId);
                 }
             }
         });
@@ -1845,9 +1857,9 @@
 	                            break;
 
 		                    case '7':
-	                            sofFileTncId = result[i].atchFileId;
-	                            sofFileTncName = result[i].atchFileName;
-	                            $(".input_text[id='sofTncFileTxt']").val(sofFileTncName);
+	                            sofTncFileId = result[i].atchFileId;
+	                            sofTncFileName = result[i].atchFileName;
+	                            $(".input_text[id='sofTncFileTxt']").val(sofTncFileName);
 	                            break;
 
 		                     default:
@@ -2959,7 +2971,7 @@
 <tr>
     <th scope="row">Sales Order Form's T&C (SOF T&C)</th>
     <td>
-        <div class="auto_file2">
+        <div class="auto_file2 auto_file3">
             <input type="file" title="file add" id="sofTncFile" accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='sofTncFileTxt'/>
