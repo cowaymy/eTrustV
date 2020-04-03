@@ -239,8 +239,8 @@ public class HcPreOrderServiceImpl extends EgovAbstractServiceImpl implements Hc
     			preOrderVO.setNorAmt2(BigDecimal.ZERO);
     		}
 
-			preOrderVO.setStusId(SalesConstants.STATUS_ACTIVE);
-			preOrderVO.setChnnl(SalesConstants.PRE_ORDER_CHANNEL_WEB);
+			//preOrderVO.setStusId(SalesConstants.STATUS_ACTIVE);
+			//preOrderVO.setChnnl(SalesConstants.PRE_ORDER_CHANNEL_WEB);
 			preOrderVO.setPreTm(CommonUtils.convert24Tm(preOrderVO.getPreTm()));
 			preOrderVO.setCrtUserId(sessionVO.getUserId());
 			preOrderVO.setUpdUserId(sessionVO.getUserId());

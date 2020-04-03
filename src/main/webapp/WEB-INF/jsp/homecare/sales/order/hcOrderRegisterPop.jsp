@@ -1766,13 +1766,14 @@
             	if($("#ordProduct1 option:selected").index() > 0) {
                     if($("#ordPromo1 option:selected").index() <= 0) {
                         isValid = false;
-                        msg += "* Please select the promotion code.<br>";
+                        msg += "* Please select the matress promotion code.<br>";
                     }
                 }
-                if($("#ordProduct2 option:selected").index() > 0) {
+            	// If is MT Rental Starter 60 (SET) and promotion is null
+                if($("#ordProduct2 option:selected").index() > 0 && srvPacVal == 10) {
                     if($("#ordPromo2 option:selected").index() <= 0) {
                         isValid = false;
-                        msg += "* Please select the promotion code.<br>";
+                        msg += "* Please select the frame promotion code.<br>";
                     }
                 }
             }
@@ -1806,13 +1807,13 @@
             if($("#ordProduct1 option:selected").index() > 0) {
                 if($("#ordPromo1 option:selected").index() <= 0) {
                     isValid = false;
-                    msg += "* Please select the promotion code.<br>";
+                    msg += "* Please select the mattres promotion code.<br>";
                 }
             }
             if($("#ordProduct2 option:selected").index() > 0) {
                 if($("#ordPromo2 option:selected").index() <= 0) {
                     isValid = false;
-                    msg += "* Please select the promotion code.<br>";
+                    msg += "* Please select the frame promotion code.<br>";
                 }
             }
         }
