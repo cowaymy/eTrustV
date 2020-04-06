@@ -220,7 +220,8 @@ $(document).ready(function() {
 
 	fn_getMemInfo();
 
-    if($("#memberType").val() == "1" || $("#memberType").val() == "2803") {
+    //if($("#memberType").val() == "1" || $("#memberType").val() == "2803") {
+    if("${memType}" == "1" || "${memType}" == "2803") {
          doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
          doGetCombo('/organization/selectAccBank.do', '', '', 'issuedBank', 'S', '');
     }
