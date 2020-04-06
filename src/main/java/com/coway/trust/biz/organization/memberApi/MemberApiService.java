@@ -11,15 +11,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @Description : TO-DO Class Description
  *
  * @History
- * <pre>
+ *
+ *          <pre>
  * Date             Author          Description
  * -------------    -----------     -------------
  * 2019. 09. 09.    KR-JAEMJAEM:)   First creation
- * </pre>
+ * 2020. 04. 09.    MY-ONGHC         Restructure Messy Code
+ *          </pre>
  */
 public interface MemberApiService {
 
-
-
-	List<EgovMap> selectMemberList(MemberApiForm param) throws Exception;
+  List<EgovMap> selectMemberList(MemberApiForm param) throws Exception;
 }
