@@ -159,7 +159,8 @@
                CT_BRNCH_CODE,
                CT_SUB_GRP,
                SO_BRNCH_CODE,
-               HT_CODE
+               HT_CODE,
+               HT_BRNCH_CODE
           FROM ORG0019M
           WHERE REQST_NO=#{reqstNo}
 	</select>
@@ -235,6 +236,7 @@
         ,AREA_ID
         ,REQST_DT
         ,REQST_USER_ID
+        ,HT_BRNCH_CODE
         ,HT_CODE
         ,BRNCH_TYPE
         ,CNFM_STUS
@@ -245,6 +247,7 @@
             ,SYSDATE
             ,#{item.requester}
             ,#{item.branch}
+            ,#{item.extBranch}
             ,#{item.brnchId}
             ,'1'
             FROM DUAL
@@ -267,6 +270,7 @@
 
    <update id="updateSYS0064MHT" parameterType="Map">
        UPDATE SYS0064M SET
+       HT_BRNCH_CODE = #{htBrnchCode},
        HT_CODE = #{htCode}
        WHERE AREA_ID=#{areaId}
     </update>
