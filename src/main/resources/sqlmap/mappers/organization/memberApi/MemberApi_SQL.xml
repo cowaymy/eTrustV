@@ -39,7 +39,7 @@
                                         AND C.DEPT_CODE = ( SELECT B.DEPT_CODE
                                                                         FROM ORG0001D A
                                                                         JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
-                                                                        WHERE A.MEM_CODE = #{username})
+                                                                        WHERE A.MEM_CODE = #{userName})
       INNER JOIN ORG0012D D ON A.MEM_TYPE = D.MEM_TYPE_ID
                                         AND C.MEM_LVL = D.MEM_ORG_LVL
       INNER JOIN SYS0005M E ON  A.BRNCH = E.BRNCH_ID
