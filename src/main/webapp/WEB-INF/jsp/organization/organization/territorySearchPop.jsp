@@ -54,6 +54,10 @@ var columnLayout = [
         headerText : "SO Group",
         width: 120
     }, {
+        dataField : "htBrnchCode",
+        headerText : "HT Group",
+        width: 120
+    }, {
         dataField : "htCode",
         headerText : "HT Code",
         width: 120
@@ -83,6 +87,7 @@ $(document).ready(function () {
    	doGetCombo('/organization/territory/selectBranchCode.do', '42', '','codyBranch', 'S' , '');
    	doGetCombo('/organization/territory/selectBranchCode.do', '43', '','ctBranch', 'S' , '');
    	doGetCombo('/organization/territory/selectBranchCode.do', '45', '','soBranch', 'S' , '');
+   	doGetCombo('/organization/territory/selectBranchCode.do', '48', '','htBranch', 'S' , '');
 });
 
 function fn_searchCurrentTerritory() {
@@ -159,6 +164,16 @@ function fn_excelDown(){
         <select class="w100p"  id="ctBranch" name="ctBranch">
         </select>
     </td>
+    <th scope="row">HT Branch</th>
+    <td>
+        <select class="w100p"  id="htBranch" name="htBranch">
+        </select>
+    </td>
+</tr>
+<tr>
+
+    <th scope="row">HT Code</th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="htCode" name="htCode" /></td>
     <th scope="row">Status</th>
     <td><!-- <input type="text" title="" placeholder="" class="w100p" id="status" name="status" /> -->
         <select class="w100p"  id="status" name="status">
@@ -166,11 +181,10 @@ function fn_excelDown(){
            <option value="Active">Active</option>
            <option value="Complete">Complete</option>
         </select>
+    <th scope="row"></th>
     </td>
-</tr>
-<tr>
-    <th scope="row">HT Code</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="htCode" name="htCode" /></td>
+    <td>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -335,6 +335,9 @@
 		        <if test="htCode != null and htCode != ''">
             AND UPPER(A.HT_CODE) LIKE UPPER('%'||#{htCode}||'%')
         </if>
+        <if test="htBranch != null and htBranch != ''">
+            AND A.HT_BRNCH_CODE = #{htBranch}
+        </if>
 
     </select>
 
