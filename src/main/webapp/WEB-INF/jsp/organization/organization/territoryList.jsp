@@ -88,6 +88,7 @@ function createDetailAUIGrid() {
                             { dataField : "ctBrnchCode",         headerText  : "DSC",   width          : 120,     editable       : false  },
                             { dataField : "ctSubGrp",  headerText  : "CT Sub Group",   width          : 200,     editable       : false  },
                             { dataField : "soBrnchCode",  headerText  : "SO Group",   width          : 110,     editable       : false  },
+                            { dataField : "htBrnchCode",  headerText  : "HT Group",   width          : 110,     editable       : false  },
                             { dataField : "htCode",  headerText  : "HT Code",   width          : 110,     editable       : false  }
 
        ];

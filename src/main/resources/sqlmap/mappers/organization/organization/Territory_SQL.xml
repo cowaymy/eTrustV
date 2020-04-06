@@ -138,7 +138,8 @@
         CT_BRNCH_CODE CT_BRNCH_CODE,
        CT_SUB_GRP CT_SUB_GRP,
        SO_BRNCH_CODE,
-       HT_CODE
+       HT_CODE,
+       HT_BRNCH_CODE
         from SYS0064M
         where area_id in(select area_id from ORG0019M where reqst_no=#{reqstNo})
 	</select>
