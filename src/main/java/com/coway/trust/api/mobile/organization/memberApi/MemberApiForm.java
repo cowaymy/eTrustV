@@ -28,6 +28,7 @@ public class MemberApiForm {
     params.put("memType", vo.getMemType());
     params.put("selectDivision", vo.getSelectDivision());
     params.put("memId", vo.getMemId());
+    params.put("userName", vo.getUserName());
     return params;
   }
 
