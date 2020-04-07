@@ -3223,7 +3223,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		        ,MAIN_DEPT , SUB_DEPT
 		        ,SYSDATE JOIN_DT, AREA_ID, ADDR_DTL, STREET,
 		        #{branchId}
-		        ,'N'
+		        ,'Y'
 		from ORG0003D   d
 		where 1=1 and APLCTN_ID = #{MemberID}
     </insert>
