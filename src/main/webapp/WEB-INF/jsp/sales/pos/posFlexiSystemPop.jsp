@@ -29,6 +29,10 @@ $(document).ready(function() {
     var selVal = $("#_memBrnch").val().trim();
     console.log('membrnch : [' + selVal+ ']');
     CommonCombo.make('_cmbWhBrnchIdPop', "/sales/pos/selectWhSOBrnchList", '' , selVal, '');
+    if (selVal != "") {
+     getLocIdByBrnchId(selVal);
+      $("#_payBrnchCode").val(selVal);
+    }
 
     //Payment
     CommonCombo.make('_payBrnchCode', "/sales/pos/getpayBranchList", '', selVal, '');
@@ -853,7 +857,7 @@ function fn_inputAmt(obj){
 <tr>
     <th scope="row"><spring:message code="sal.title.text.brnchWarehouse" /></th>
     <td><select  id="_cmbWhBrnchIdPop" name="cmbWhBrnchIdPop" class="w100p"></select></td>
-    <td style="padding-left:0"><input type="text" disabled="disabled" id="cmbWhIdPop"  value="${locMap.whLocDesc}"></td>
+    <td style="padding-left:0"><input type="text" disabled="disabled" id="cmbWhIdPop" class="w100p" value="${locMap.whLocDesc}"></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.recvDate" /></th>
