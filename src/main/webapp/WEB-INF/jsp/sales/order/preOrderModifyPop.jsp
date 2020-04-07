@@ -665,7 +665,7 @@
                 remove.push(sofTncFileId);
             }else if(file.name != sofTncFileName){
                 myFileCaches[7] = {file:file};
-                if(otherFileName2 != ""){
+                if(sofTncFileName != ""){
                     update.push(sofTncFileId);
                 }
             }
