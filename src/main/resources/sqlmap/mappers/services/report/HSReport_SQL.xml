@@ -130,7 +130,8 @@
                                                  vmemberorg2.lvl2_up_id lvl2_up_id,
                                                  vmemberorg2.lvl1_up_id lvl1_up_id,
                                                  vmemberorg2.lvl0_up_id lvl0_up_id
-                                      rorg2
+                                      FROM
+                            org1001v vmemberorg2
                                       WHERE vmemberorg2.MEM_ID IN (SELECT MEM_ID FROM ORG0005D WHERE BRNCH_ID = 151)
                              ) Extent2   ON Extent2.MEM_ID = Extent1.CODY_ID
                              WHERE  ( Extent1.MONTH =  to_char(sysdate, 'mm' ) )
