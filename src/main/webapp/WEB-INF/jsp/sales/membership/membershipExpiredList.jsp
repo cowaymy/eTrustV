@@ -160,13 +160,13 @@ $(document).ready(function(){
     	if(val == "rejoinTarget" ){
     		console.log("rejoinTarget");
     		$("#rawDataHeader").text("Rejoin Target Raw Data");
-    		$("#rawDataForm #reportFileName").val("/sales/RejoinNetRaw.rpt");
+    		$("#rawDataForm #reportFileName").val("/sales/RejoinTargetRaw.rpt");
     		$("#rawDataForm #reportDownFileName").val("RejoinTargetRawData_" + today + ".xls");
 
     	}else if(val == "rejoinNet" ){
     		console.log("rejoinNet");
     		$("#rawDataHeader").text("Rejoin Net Raw Data");
-            $("#rawDataForm #reportFileName").val("/sales/RejoinTargetRaw.rpt");
+    		$("#rawDataForm #reportFileName").val("/sales/RejoinNetRaw.rpt");
             $("#rawDataForm #reportDownFileName").val("RejoinNetRawData_" + today + ".xls");
         }
 
