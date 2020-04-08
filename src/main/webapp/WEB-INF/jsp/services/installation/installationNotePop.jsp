@@ -62,10 +62,14 @@
       text = "<spring:message code='service.title.InstallStatus' />";
       msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
     }
-    // DSC BRANCH
-    if ($("#branch").val() == '') {
-      text = "<spring:message code='service.title.DSCBranch' />";
-      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+
+    // SKIP DSC CHECKING WHILE MCO
+    if("${SESSION_INFO.userName}" != "SHUIAN") {
+      // DSC BRANCH
+      if ($("#branch").val() == '') {
+        text = "<spring:message code='service.title.DSCBranch' />";
+        msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+      }
     }
     // SORT BY
     if ($("#sortType").val() == '') {
@@ -180,8 +184,10 @@
 
       if ($("#sortType").val() == "2") {
         orderBySql = "ORDER BY CTMEM.MEM_CODE ";
-      } else {
+       } else if ($("#sortType").val() == "1") {
         orderBySql = "ORDER BY MAIN.INSTALL_ENTRY_ID ";
+      } else {
+       orderBySql = "ORDER BY STK.STK_CODE ";
       }
 
       console.log(whereSeq);
@@ -368,6 +374,7 @@
         <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
         <option value="1">Installation Number</option>
         <option value="2" selected>CT Code</option>
+        <option value="3">Product</option>
       </select></td>
      </tr>
     </tbody>
