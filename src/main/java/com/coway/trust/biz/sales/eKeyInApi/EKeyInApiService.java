@@ -20,6 +20,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * -------------    -----------     -------------
  * 2019. 12. 09.    KR-JAEMJAEM:)   First creation
  * 2020. 04. 08.    MY-ONGHC         Add selectCpntLst to Retrieve Component List
+ *                                               Add selectPromoByCpntId
  *          </pre>
  */
 public interface EKeyInApiService {
@@ -83,4 +84,7 @@ public interface EKeyInApiService {
   EKeyInApiDto selectAttachmentImgFile(Map<String, Object> param) throws Exception;
 
   EKeyInApiDto selectCpntLst(EKeyInApiForm param) throws Exception;
+
+  EKeyInApiDto selectPromoByCpntId(EKeyInApiForm param) throws Exception;
+
 }
