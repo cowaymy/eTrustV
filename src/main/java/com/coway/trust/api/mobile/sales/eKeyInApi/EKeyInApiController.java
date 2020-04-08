@@ -421,6 +421,7 @@ public class EKeyInApiController {
   @ApiOperation(value = "selectPromoByCpntId", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/selectPromoByCpntId", method = RequestMethod.GET)
   public ResponseEntity<EKeyInApiDto> selectPromoByCpntId(@ModelAttribute EKeyInApiForm param) throws Exception {
+    LOGGER.debug("selectPromoByCpntId    값 : {}", param);
     return ResponseEntity.ok(eKeyInApiService.selectPromoByCpntId(param));
   }
 }
