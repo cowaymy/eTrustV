@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiModel;
  * -------------    -----------     -------------
  * 2019. 12. 09.    KR-JAEMJAEM:)   First creation
  * 2020. 03. 20.    MY-ONGHC         Add User Name
+ * 2020. 04. 08.    MY-ONGHC         Add cpntCode
  *          </pre>
  */
 @ApiModel(value = "EKeyInApiForm", description = "EKeyInApiForm")
@@ -55,6 +56,7 @@ public class EKeyInApiForm {
     params.put("gu", vo.getGu());
     params.put("stusCodeId", vo.getStusCodeId());
     params.put("userNm", vo.getUserNm());
+    params.put("cpntCode", vo.getCpntCode());
     return params;
   }
 
@@ -84,6 +86,7 @@ public class EKeyInApiForm {
   private String gu;
   private int stusCodeId;
   private String userNm;
+  private String cpntCode;
 
   public int getStusCodeId() {
     return stusCodeId;
@@ -291,6 +294,14 @@ public class EKeyInApiForm {
 
   public void setUserNm(String userNm) {
     this.userNm = userNm;
+  }
+
+  public String getCpntCode() {
+    return cpntCode;
+  }
+
+  public void setCpntCode(String cpntCode) {
+    this.cpntCode = cpntCode;
   }
 
 }
