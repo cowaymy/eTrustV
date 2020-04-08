@@ -2086,6 +2086,6 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
   @Override
   public List<EgovMap> selectCpntLst(EKeyInApiForm param) throws Exception {
-    return eKeyInApiMapper.selectCpntLst();
+    return eKeyInApiMapper.selectCpntLst(EKeyInApiForm.createMap(param));
   }
 }
