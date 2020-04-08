@@ -82,5 +82,5 @@ public interface EKeyInApiService {
 
   EKeyInApiDto selectAttachmentImgFile(Map<String, Object> param) throws Exception;
 
-  EKeyInApiDto selectCpntLst(EKeyInApiForm param) throws Exception;
+  List<EgovMap> selectCpntLst(EKeyInApiForm param) throws Exception;
 }
