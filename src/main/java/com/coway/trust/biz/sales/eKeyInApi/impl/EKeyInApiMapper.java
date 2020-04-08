@@ -131,5 +131,5 @@ public interface EKeyInApiMapper {
 
   EgovMap selectAttachmentImgFile(Map<String, Object> param);
 
-  List<EgovMap> selectCpntLst();
+  List<EgovMap> selectCpntLst(Map<String, Object> param);
 }
