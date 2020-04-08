@@ -1486,4 +1486,32 @@
       AND DISAB = 0
       AND TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(EFF_DT, 'DD/MM/YYYY') AND TO_DATE(EXP_DT, 'DD/MM/YYYY')
   </select>
+
+  <select id="selectPromoByCpntId" parameterType="Map" resultType="egovMap">
+    SELECT A.PROMO_ID CODE,
+           B.PROMO_CODE || '-' || PROMO_DESC CODE_NAME
+    FROM SAL0237M A
+    JOIN SAL0017D B ON A.PROMO_ID = B.PROMO_ID
+    WHERE B.E_SALES IN (1,2)
+      AND A.ITM_STK_ID = #{itmStkId}
+      AND A.APP_TYPE_ID = #{appTypeId}
+      AND A.ITM_CPNT_ID = #{cpntCode}
+      AND B.EMP_CHK = #{empChk}
+      AND B.EX_TRADE = #{exTrade}
+      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
+      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
+      union
+      SELECT A.PROMO_ID CODE,
+           B.PROMO_CODE || '-' || PROMO_DESC CODE_NAME
+    FROM SAL0237M A
+    JOIN SAL0017D B ON A.PROMO_ID = B.PROMO_ID
+    WHERE B.PROMO_ID = 31723
+      AND A.ITM_STK_ID = #{itmStkId}
+      AND A.APP_TYPE_ID = #{appTypeId}
+      AND A.ITM_CPNT_ID = #{cpntCode}
+      AND B.EMP_CHK = #{empChk}
+      AND B.EX_TRADE = #{exTrade}
+      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
+      AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
+  </select>
 </mapper>
