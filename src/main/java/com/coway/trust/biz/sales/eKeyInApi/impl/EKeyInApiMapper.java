@@ -17,6 +17,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * -------------    -----------     -------------
  * 2019. 12. 09.    KR-JAEMJAEM:)   First creation
  * 2020. 03. 31.    MY-ONGHC         Add selectExistAddress and selectExistAddress
+ * 2020. 04. 08.    MY-ONGHC         Add selectCpntLst to Retrieve Component List
  *          </pre>
  */
 @Mapper("EKeyInApiMapper")
@@ -129,4 +130,6 @@ public interface EKeyInApiMapper {
   int cancelHMC0011D(Map<String, Object> param);
 
   EgovMap selectAttachmentImgFile(Map<String, Object> param);
+
+  List<EgovMap> selectCpntLst();
 }
