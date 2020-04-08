@@ -65,7 +65,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 04. 01     MY-ONGHC    Amend selectOrderInfo to solve promotion issue
  * 2020. 04. 03     MY-ONGHC    Amend selectItmStkChangeInfo
  * 2020. 04. 08.    MY-ONGHC    Add selectCpntLst to Retrieve Component List
- *
+ *                                          Add selectPromoByCpntId
  *          </pre>
  */
 @Service("EKeyInApiService")
@@ -2089,6 +2089,14 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     EKeyInApiDto rtn = new EKeyInApiDto();
     List<EgovMap> selectCpntList = eKeyInApiMapper.selectCpntLst(EKeyInApiForm.createMap(param));
     rtn.setCpntList(selectCpntList);
+    return rtn;
+  }
+
+  @Override
+  public EKeyInApiDto selectPromoByCpntId(EKeyInApiForm param) throws Exception {
+    EKeyInApiDto rtn = new EKeyInApiDto();
+    List<EgovMap> selectPromoByCpntId = eKeyInApiMapper.selectPromoByCpntId(EKeyInApiForm.createMap(param));
+    rtn.setPromoByCpntIdList(selectPromoByCpntId);
     return rtn;
   }
 }
