@@ -224,6 +224,8 @@ public class EKeyInApiDto {
   private int ordSeqNo;
   private String promoDt;
   private String gu;
+  private String cpntCode;
+  private String cpntCodeName;
 
   public List<EKeyInApiDto> getCodeList() {
     return codeList;
@@ -1760,4 +1762,21 @@ public class EKeyInApiDto {
   public void setGu(String gu) {
     this.gu = gu;
   }
+
+  public String getCpntCode() {
+    return cpntCode;
+  }
+
+  public void setCpntCode(String cpntCode) {
+    this.cpntCode = cpntCode;
+  }
+
+  public String getCpntCodeName() {
+    return cpntCodeName;
+  }
+
+  public void setCpntCodeName(String cpntCodeName) {
+    this.cpntCodeName = cpntCodeName;
+  }
+
 }
