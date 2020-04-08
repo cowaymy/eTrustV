@@ -64,6 +64,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 03. 31     MY-ONGHC    Amend saveAddNewAddress and saveAddNewContact to check existing MAIN record exist before.
  * 2020. 04. 01     MY-ONGHC    Amend selectOrderInfo to solve promotion issue
  * 2020. 04. 03     MY-ONGHC    Amend selectItmStkChangeInfo
+ * 2020. 04. 08.    MY-ONGHC    Add selectCpntLst to Retrieve Component List
  *
  *          </pre>
  */
@@ -1193,24 +1194,30 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   @Override
   public EKeyInApiDto selectExistSofNo(EKeyInApiForm param) throws Exception {
     if (null == param) {
-      throw new ApplicationException(AppConstants.FAIL, "Error Encounter. Please Contact System Administrator [selectExistSofNo : Param Missing]. ");
+      throw new ApplicationException(AppConstants.FAIL,
+          "Error Encounter. Please Contact System Administrator [selectExistSofNo : Param Missing]. ");
     }
     if (CommonUtils.isEmpty(param.getTypeId())) {
-      throw new ApplicationException(AppConstants.FAIL, "Error Encounter. Please Contact System Administrator [selectExistSofNo : Type ID Missing]. ");
+      throw new ApplicationException(AppConstants.FAIL,
+          "Error Encounter. Please Contact System Administrator [selectExistSofNo : Type ID Missing]. ");
     }
     if (CommonUtils.isEmpty(param.getNric())) {
-      throw new ApplicationException(AppConstants.FAIL, "Error Encounter. Please Contact System Administrator [selectExistSofNo : NRIC Missing]. ");
+      throw new ApplicationException(AppConstants.FAIL,
+          "Error Encounter. Please Contact System Administrator [selectExistSofNo : NRIC Missing]. ");
     }
     if (CommonUtils.isEmpty(param.getSofNo())) {
-      throw new ApplicationException(AppConstants.FAIL, "Error Encounter. Please Contact System Administrator [selectExistSofNo : SOF Missing]. ");
+      throw new ApplicationException(AppConstants.FAIL,
+          "Error Encounter. Please Contact System Administrator [selectExistSofNo : SOF Missing]. ");
     }
     if (CommonUtils.isEmpty(param.getUserNm())) {
-      throw new ApplicationException(AppConstants.FAIL, "Error Encounter. Please Contact System Administrator [selectExistSofNo : User Name Missing]. ");
+      throw new ApplicationException(AppConstants.FAIL,
+          "Error Encounter. Please Contact System Administrator [selectExistSofNo : User Name Missing]. ");
     }
 
     EKeyInApiDto rtn = new EKeyInApiDto();
 
-    // int selectExistSofNo = eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(param));
+    // int selectExistSofNo =
+    // eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(param));
     int selectExistSofNo = 0;
     rtn.setCnt(selectExistSofNo);
 
@@ -1223,7 +1230,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         param.setStusCodeId(9);
         List<EgovMap> selectAnotherContact = eKeyInApiMapper.selectAnotherContact(EKeyInApiForm.createMap(param));
         if (selectAnotherContact.size() > 1) {
-          throw new ApplicationException(AppConstants.FAIL, "Please Check on Customer's Contact Detail. MAIN Record found " + selectAnotherContact.size() + "");
+          throw new ApplicationException(AppConstants.FAIL,
+              "Please Check on Customer's Contact Detail. MAIN Record found " + selectAnotherContact.size() + "");
         }
         if (selectAnotherContact.size() == 1) {
           rtn.setSelectAnotherContactMain(EKeyInApiDto.create(selectAnotherContact.get(0)));
@@ -1231,7 +1239,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
         List<EgovMap> selectAnotherAddress = eKeyInApiMapper.selectAnotherAddress(EKeyInApiForm.createMap(param));
         if (selectAnotherAddress.size() == 0) {
-          throw new ApplicationException(AppConstants.FAIL, "Please Check on Customer's Address Detail. MAIN Record found " + selectAnotherAddress.size() + "");
+          throw new ApplicationException(AppConstants.FAIL,
+              "Please Check on Customer's Address Detail. MAIN Record found " + selectAnotherAddress.size() + "");
         }
         // if( selectAnotherAddress.size() == 1 ){
         rtn.setSelectAnotherAddressMain(EKeyInApiDto.create(selectAnotherAddress.get(0)));
@@ -1416,7 +1425,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         throw new ApplicationException(AppConstants.FAIL, "sofNo value does not exist.");
       }
       selectParam.setSofNo(param.getBasic().getSofNo());
-      // int selectExistSofNo = eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(selectParam));
+      // int selectExistSofNo =
+      // eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(selectParam));
       int selectExistSofNo = 0;
       if (selectExistSofNo != 0) {
         throw new ApplicationException(AppConstants.FAIL, "this Sales has posted, no amendment allow.");
@@ -1433,7 +1443,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         throw new ApplicationException(AppConstants.FAIL, "sofNo value does not exist.");
       }
       selectParam.setSofNo(param.getMattress().getSofNo());
-      // int selectExistSofNo = eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(selectParam));
+      // int selectExistSofNo =
+      // eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(selectParam));
       int selectExistSofNo = 0;
       if (selectExistSofNo != 0) {
         throw new ApplicationException(AppConstants.FAIL, "this Sales has posted, no amendment allow.");
@@ -2071,5 +2082,10 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       throw new ApplicationException(AppConstants.FAIL, "Picture information is missing.");
     }
     return EKeyInApiDto.create(selectAttachmentImgFile);
+  }
+
+  @Override
+  public List<EgovMap> selectCpntLst(EKeyInApiForm param) throws Exception {
+    return eKeyInApiMapper.selectCpntLst();
   }
 }
