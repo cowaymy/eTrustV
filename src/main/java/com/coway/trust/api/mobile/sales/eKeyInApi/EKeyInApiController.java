@@ -54,6 +54,7 @@ import springfox.documentation.annotations.ApiIgnore;
  * -------------    -----------     -------------
  * 2019. 12. 09.    KR-JAEMJAEM:)   First creation
  * 2020. 04. 08.    MY-ONGHC         Add selectCpntLst to Retrieve Component List
+ *                                               Add selectPromoByCpntId
  *                              </pre>
  */
 @Api(value = "EKeyInListApiController", description = "EKeyInListApiController")
@@ -415,5 +416,11 @@ public class EKeyInApiController {
   @RequestMapping(value = "/selectCpntLst", method = RequestMethod.GET)
   public ResponseEntity<EKeyInApiDto> selectCpntLst(@ModelAttribute EKeyInApiForm param) throws Exception {
     return ResponseEntity.ok(eKeyInApiService.selectCpntLst(param));
+  }
+
+  @ApiOperation(value = "selectPromoByCpntId", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/selectPromoByCpntId", method = RequestMethod.GET)
+  public ResponseEntity<EKeyInApiDto> selectPromoByCpntId(@ModelAttribute EKeyInApiForm param) throws Exception {
+    return ResponseEntity.ok(eKeyInApiService.selectPromoByCpntId(param));
   }
 }
