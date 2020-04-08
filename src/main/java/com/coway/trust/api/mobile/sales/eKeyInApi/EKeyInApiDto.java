@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiModel;
  * 2019. 12. 09.    KR-JAEMJAEM:)   First creation
  * 2020. 03. 23.    MY-ONGHC         Amend custCrcExprMM and custCrcExprYYYY from INT to STRING
  * 2020. 04. 08.    MY-ONGHC         Add cpntList for component
+ *                                               Add promoByCpntIdList
  *          </pre>
  */
 @ApiModel(value = "EKeyInApiDto", description = "EKeyInApiDto")
@@ -38,6 +39,7 @@ public class EKeyInApiDto {
   private List<EKeyInApiDto> promotionList;
   private List<EKeyInApiDto> packTypeList;
   private List<EgovMap> cpntList;
+  private List<EgovMap> promoByCpntIdList;
   private EKeyInApiDto saveData;
   private EKeyInApiDto basic;
   private EKeyInApiDto homecare;
@@ -273,6 +275,14 @@ public class EKeyInApiDto {
 
   public void setCpntList(List<EgovMap> cpntList) {
     this.cpntList = cpntList;
+  }
+
+  public List<EgovMap> getPromoByCpntIdList() {
+    return promoByCpntIdList;
+  }
+
+  public void setPromoByCpntIdList(List<EgovMap> promoByCpntIdList) {
+    this.promoByCpntIdList = promoByCpntIdList;
   }
 
   public EKeyInApiDto getSaveData() {
