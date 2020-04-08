@@ -138,7 +138,7 @@
                , A.PRC_ID AS PRC_ID
                , A.PRC_ID AS PRC_ID
                , A.TOT_PV_GST AS TOT_PV_GST
-               , A.CPNT_ID AS CPNT_CODE
+               , TO_CHAR(A.CPNT_ID) AS CPNT_CODE
 
      --INSTALLATION------------------------------------------------------------------
                , UPPER(I.ADDR_DTL) AS ADDR_DTL
