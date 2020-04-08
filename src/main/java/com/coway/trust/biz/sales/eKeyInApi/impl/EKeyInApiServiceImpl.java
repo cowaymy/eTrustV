@@ -2085,7 +2085,10 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   }
 
   @Override
-  public List<EgovMap> selectCpntLst(EKeyInApiForm param) throws Exception {
-    return eKeyInApiMapper.selectCpntLst(EKeyInApiForm.createMap(param));
+  public EKeyInApiDto selectCpntLst(EKeyInApiForm param) throws Exception {
+    EKeyInApiDto rtn = new EKeyInApiDto();
+    List<EgovMap> selectCpntList = eKeyInApiMapper.selectCpntLst(EKeyInApiForm.createMap(param));
+    rtn.setCpntList(selectCpntList);
+    return rtn;
   }
 }
