@@ -37,7 +37,7 @@ public class EKeyInApiDto {
   private List<EKeyInApiDto> productList;
   private List<EKeyInApiDto> promotionList;
   private List<EKeyInApiDto> packTypeList;
-  private List<EKeyInApiDto> cpntList;
+  private List<EgovMap> cpntList;
   private EKeyInApiDto saveData;
   private EKeyInApiDto basic;
   private EKeyInApiDto homecare;
@@ -267,11 +267,11 @@ public class EKeyInApiDto {
     this.packTypeList = packTypeList;
   }
 
-  public List<EKeyInApiDto> getCpntList() {
+  public List<EgovMap> getCpntList() {
     return cpntList;
   }
 
-  public void setCpntList(List<EKeyInApiDto> cpntList) {
+  public void setCpntList(List<EgovMap> cpntList) {
     this.cpntList = cpntList;
   }
 
