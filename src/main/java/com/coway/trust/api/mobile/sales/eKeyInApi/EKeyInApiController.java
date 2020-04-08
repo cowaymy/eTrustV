@@ -413,7 +413,13 @@ public class EKeyInApiController {
 
   @ApiOperation(value = "selectCpntLst", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/selectCpntLst", method = RequestMethod.GET)
-  public ResponseEntity<EKeyInApiDto> selectCpntLst(@ModelAttribute EKeyInApiForm param) throws Exception {
-    return ResponseEntity.ok(eKeyInApiService.selectCpntLst(param));
+  public ResponseEntity<List<EKeyInApiDto>> selectCpntLst(@ModelAttribute EKeyInApiForm param) throws Exception {
+    List<EgovMap> selectCpntLst = eKeyInApiService.selectCpntLst(param);
+    if (LOGGER.isDebugEnabled()) {
+      for (int i = 0; i < selectCpntLst.size(); i++) {
+        LOGGER.debug("selectCpntLst    값 : {}", selectCpntLst.get(i));
+      }
+    }
+    return ResponseEntity.ok(selectCpntLst.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
   }
 }
