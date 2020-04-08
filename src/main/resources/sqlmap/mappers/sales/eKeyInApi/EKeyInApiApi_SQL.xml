@@ -1436,6 +1436,7 @@
         , A.CUST_BILL_EMAIL = #{custBillEmail}
         , A.UPD_USER_ID = #{updUserId}
         , A.UPD_DT = SYSDATE
+        , A.CPNT_ID = #{cpntId}
     WHERE A.PRE_ORD_ID = #{preOrdId}
         AND A.STUS_ID IN (1, 21)
   </update>
