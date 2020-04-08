@@ -1479,8 +1479,8 @@
   </select>
 
   <select id="selectCpntLst" parameterType="Map" resultType="egovMap">
-    SELECT TO_CHAR(ITM_CPNT_ID) CODE,
-               TO_CHAR(ITM_CPNT_NAME) CODE_NAME
+    SELECT TO_CHAR(ITM_CPNT_ID) CPNT_CODE,
+               TO_CHAR(ITM_CPNT_NAME) CPNT_CODE_NAME
     FROM SAL0223M
     WHERE ITM_STK_ID = #{itmStkId}
       AND DISAB = 0
