@@ -257,6 +257,11 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
           .collect(Collectors.toList());
       selectData.setPromotionList(promotionList);
     }
+
+    // COMPONENT LISTING
+    List<EgovMap> selectCpntList = eKeyInApiMapper.selectCpntLst(EKeyInApiForm.createMap(param));
+    selectData.setCpntList(selectCpntList);
+
     return selectData;
   }
 
