@@ -1992,7 +1992,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     // sal0213M.put("updDt", );
     // sal0213M.put("salesOrdId", null);
     // sal0213M.put("onHold", 0);
-    // sal0213M.put("cpntId", 0);
+     sal0213M.put("cpntId", param.getCpntCode());
     // sal0213M.put("corpCustType", 0);
     // sal0213M.put("agreementType", 0);
     // sal0213M.put("bndlId", null);
