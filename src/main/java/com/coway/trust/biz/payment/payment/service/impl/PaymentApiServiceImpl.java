@@ -38,7 +38,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * Date            Author       Description
  * -------------  -----------  -------------
  * 2019. 9. 30.   KR-HAN        First creation
- * 2020.2.6.       MY-ONGHC   Add E-Notification
+ * 2020. 2. 6.     MY-ONGHC   Add E-Notification
+ * 2020. 4. 9.     MY_ONGHC  Amend insertSalesNotification to Add Customer Name
  *          </pre>
  */
 @Service("paymentApiService")
@@ -409,12 +410,16 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
 
     int mobTicketNo = mobileAppTicketApiCommonService.saveMobileAppTicket(arrParams);
 
+    // GET CUSTOMER NAME
+    String custNm = mobileAppTicketApiCommonService.getCustNm(sParams);
+
     // 저장
     params.put("signImg", params.get("signData"));
     params.put("payStusId", '1');
     params.put("mobTicketNo", mobTicketNo);
     params.put("crtUserId", loginVO.getUserId());
     params.put("updUserId", loginVO.getUserId());
+    params.put("custNm", custNm);
 
     rtn = paymentApiMapper.insertSalesNotification(params);
 
