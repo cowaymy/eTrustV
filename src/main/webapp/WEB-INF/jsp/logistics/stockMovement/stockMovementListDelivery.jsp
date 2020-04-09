@@ -1012,39 +1012,40 @@
 
         if (checkedSmo.length > 10){
             Common.alert('Maximum 10 SMO records allowed.');
-            return false;
-        }
-
-        if (checkDelqty) {
-          var option = { content : str,
-                         isBig : true
-                       };
-                  Common.alertBase(option);
+            checkedSmo = [];
         } else {
-          if(serialRequireChkYn) { // KR-OHK Serial Require Check
 
-        	  fn_smoIssuePop();
-
-          } else {
-	        $("#giopenwindow").show();
-	        $("#giptdate").val("");
-	        $("#gipfdate").val("");
-	        $("#doctext").val("");
-	        doSysdate(0, 'giptdate');
-	        doSysdate(0, 'gipfdate');
-	        AUIGrid.clearGridData(serialGrid);
-	        AUIGrid.resize(serialGrid);
-	        if (serialchk) {
-	          //fn_itempopListSerial(checkedItems);
-	          fn_itempopList_T(checkedItems);
-	          $("#ascall").show();
-	          $("#serial_grid_wrap_div").show();
-	          AUIGrid.resize(serialGrid);
+	        if (checkDelqty) {
+	          var option = { content : str,
+	                         isBig : true
+	                       };
+	                  Common.alertBase(option);
 	        } else {
-	          $("#serial_grid_wrap_div").hide();
-	          $("#ascall").hide();
+	          if(serialRequireChkYn) { // KR-OHK Serial Require Check
+
+	        	  fn_smoIssuePop();
+
+	          } else {
+		        $("#giopenwindow").show();
+		        $("#giptdate").val("");
+		        $("#gipfdate").val("");
+		        $("#doctext").val("");
+		        doSysdate(0, 'giptdate');
+		        doSysdate(0, 'gipfdate');
+		        AUIGrid.clearGridData(serialGrid);
+		        AUIGrid.resize(serialGrid);
+		        if (serialchk) {
+		          //fn_itempopListSerial(checkedItems);
+		          fn_itempopList_T(checkedItems);
+		          $("#ascall").show();
+		          $("#serial_grid_wrap_div").show();
+		          AUIGrid.resize(serialGrid);
+		        } else {
+		          $("#serial_grid_wrap_div").hide();
+		          $("#ascall").hide();
+		        }
+	          }
 	        }
-          }
         }
       }
     });
