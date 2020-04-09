@@ -109,7 +109,7 @@
     $(function(){
         $('#btnConfirm').click(function() {
             if(!fn_validConfirm())  return false;
-            // if(fn_isExistESalesNo() == 'true') return false;
+            if(fn_isExistESalesNo() == 'true') return false;
 
             $('#nric').prop("readonly", true).addClass("readonly");
             $('#sofNo').prop("readonly", true).addClass("readonly");
@@ -121,7 +121,7 @@
         $('#nric').keydown(function (event) {
             if (event.which === 13) {
                 if(!fn_validConfirm())  return false;
-                // if(fn_isExistESalesNo() == 'true') return false;
+                if(fn_isExistESalesNo() == 'true') return false;
 
                 $('#nric').prop("readonly", true).addClass("readonly");
                 $('#sofNo').prop("readonly", true).addClass("readonly");
@@ -134,7 +134,7 @@
         $('#sofNo').keydown(function (event) {
             if (event.which === 13) {
                 if(!fn_validConfirm())  return false;
-                // if(fn_isExistESalesNo() == 'true') return false;
+                if(fn_isExistESalesNo() == 'true') return false;
 
                 $('#nric').prop("readonly", true).addClass("readonly");
                 $('#sofNo').prop("readonly", true).addClass("readonly");
@@ -495,7 +495,7 @@
                 return false;
             }
 
-			//if(fn_isExistESalesNo() == 'true') return false;
+			if(fn_isExistESalesNo() == 'true') return false;
 
 		    if($("#ordProduct1 option:selected").index() > 0 && $("#ordProduct2 option:selected").index() > 0) {
 	            // product size check

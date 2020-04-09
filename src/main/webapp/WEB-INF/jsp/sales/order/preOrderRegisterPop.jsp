@@ -117,7 +117,7 @@
         $('#btnConfirm').click(function() {
             if(!fn_validConfirm())  return false;
             //if(fn_isExistMember() == 'true') return false;
-            //if(fn_isExistESalesNo() == 'true') return false;
+            if(fn_isExistESalesNo() == 'true') return false;
 
             //encryptIc($('#nric').val());
             $('#nric').prop("readonly", true).addClass("readonly");
@@ -134,7 +134,7 @@
             if (event.which === 13) {
                 if(!fn_validConfirm())  return false;
                 //if(fn_isExistMember() == 'true') return false;
-                //if(fn_isExistESalesNo() == 'true') return false;
+                if(fn_isExistESalesNo() == 'true') return false;
 
                 /* $('#refereNo').val($('#sofNo').val().trim()) */
 
@@ -150,7 +150,7 @@
             if (event.which === 13) {
                 if(!fn_validConfirm())  return false;
                 //if(fn_isExistMember() == 'true') return false;
-                //if(fn_isExistESalesNo() == 'true') return false;
+                if(fn_isExistESalesNo() == 'true') return false;
 
                 $('#nric').prop("readonly", true).addClass("readonly");
                 $('#sofNo').prop("readonly", true).addClass("readonly");
@@ -540,7 +540,7 @@
                 return false;
             }
 
-			//if(fn_isExistESalesNo() == 'true') return false;
+			if(fn_isExistESalesNo() == 'true') return false;
 
             Common.popupDiv("/sales/order/cnfmPreOrderDetailPop.do", null, null, true, '_divPreOrderDetailPop');
             //fn_doSavePreOrder();
