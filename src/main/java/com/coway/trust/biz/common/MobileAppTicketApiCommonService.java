@@ -8,19 +8,19 @@ import java.util.Map;
  * @Description : TO-DO Class Description
  *
  * @History
- * <pre>
+ *
+ *          <pre>
  * Date            Author       Description
  * -------------  -----------  -------------
  * 2019. 10. 10.   KR-HAN        First creation
- * </pre>
+ * 2020. 04. 09.   MY-ONGHC   Add getCustNm
+ *          </pre>
  */
 public interface MobileAppTicketApiCommonService {
 
+  int saveMobileAppTicket(List<Map<String, Object>> params);
 
-	int saveMobileAppTicket(List<Map<String, Object>> params);
+  int updateMobileAppTicket(List<Map<String, Object>> params);
 
-
-    int updateMobileAppTicket(List<Map<String, Object>> params);
-
-
+  String getCustNm(Map<String, Object> params);
 }
