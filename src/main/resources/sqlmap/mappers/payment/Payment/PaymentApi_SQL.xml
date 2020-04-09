@@ -145,7 +145,7 @@
   </select>
 
   <select id="getSmsTemplate" parameterType="Map" resultType="String">
-    SELECT REPLACE(REPLACE((SELECT MESSAGE FROM SYS0052M WHERE ID = 'pay.msg.smseTRNo'),'{1}', #{payAmt}), '{2}', #{mobTicketNo})
+    SELECT REPLACE(REPLACE(REPLACE((SELECT MESSAGE FROM SYS0052M WHERE ID = 'pay.msg.smseTRNo'),'{1}', #{salesOrdNo}), '{2}', #{payAmt}), '{2}', #{mobTicketNo})
     FROM DUAL
   </select>
 
@@ -193,7 +193,7 @@
   </select>
 
   <select id="getEmailDetails" parameterType="Map" resultType="String">
-    SELECT REPLACE(REPLACE((SELECT MSG_EMAIL_DFN FROM SYS0043D WHERE MSG_ID = 11 AND MSG_TYPE_ID = 2001),'{1}', #{payAmt}), '{2}', #{mobTicketNo})
+    SELECT REPLACE(REPLACE(REPLACE(REPLACE((SELECT MSG_EMAIL_DFN FROM SYS0043D WHERE MSG_ID = 11 AND MSG_TYPE_ID = 2001),'{1}', #{custNm}), '{2}', #{payAmt}), '{3}', #{mobTicketNo}), '{4}', #{salesOrdNo})
     FROM DUAL
   </select>
 </mapper>
