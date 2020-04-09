@@ -974,6 +974,7 @@
         var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
         var str = "";
         var rowItem;
+        var checkedSmo = [];
 
         for (var i = 0, len = checkedItems.length; i < len; i++) {
           rowItem = checkedItems[i];
@@ -1002,6 +1003,16 @@
           if (rowItem.item.serialRequireChkYn == 'Y') {
         	serialRequireChkYn = true;
           }
+
+          // Added by Hui Ding to block SMO per DVR > 10
+          if (!checkedSmo.includes(rowItem.item.reqstno)){
+              checkedSmo.push(rowItem.item.reqstno);
+          }
+        }
+
+        if (checkedSmo.length > 10){
+            Common.alert('Maximum 10 SMO records allowed.');
+            return false;
         }
 
         if (checkDelqty) {
