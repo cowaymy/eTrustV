@@ -44,5 +44,6 @@
     FROM SAL0001D A
     JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
     WHERE A.SALES_ORD_NO = #{salesOrdNo}
+        AND B.STUS_CODE_ID = '1'
   </select>
 </mapper>
