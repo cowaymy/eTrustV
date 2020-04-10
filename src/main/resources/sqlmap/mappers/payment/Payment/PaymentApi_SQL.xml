@@ -113,9 +113,9 @@
                   ,#{payStusId}
                   ,#{payMode}
                   ,#{advMonth}
-                  ,#{advAmt}
-                  ,#{otstndAmt}
-                  ,#{payAmt}
+                  ,TO_NUMBER(#{advAmt}, '9,999,999.99')
+                  ,TO_NUMBER(#{otstndAmt}, '9,999,999.99')
+                  ,TO_NUMBER(#{payAmt}, '9,999,999.99')
                   ,#{uploadImg}
                   ,#{slipNo}
                   ,#{issuBankId}
