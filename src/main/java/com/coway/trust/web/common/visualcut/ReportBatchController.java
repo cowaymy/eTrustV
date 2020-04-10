@@ -752,6 +752,10 @@ public class ReportBatchController {
     LOGGER.info("[END] LCD_StockTransfer...");
   }
 
+  /*
+   * Split to rcmDailySimplified_1 and rcmDailySimplified_2
+   * Not Required to run
+   */
   @RequestMapping(value = "/RCM_Daily_Simplified.do")
   //@Scheduled(cron = "0 10 5 * * *")
   public void rcmDailySimplified() throws IOException {
@@ -764,6 +768,40 @@ public class ReportBatchController {
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "Simplified_RCM" + File.separator + "RCM_Daily_Simplified" + CommonUtils.getNowDate() + ".xls");
+
+    this.view(null, null, params);
+    LOGGER.info("[END] RCM_Daily_Simplified...");
+  }
+
+  @RequestMapping(value = "/RCM_Daily_Simplified_1.do")
+  //@Scheduled(cron = "0 10 5 * * *")
+  public void rcmDailySimplified_1() throws IOException {
+    LOGGER.info("[START] RCM_Daily_Simplified...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_Simplified_1.rpt");// visualcut
+                                                                        // rpt
+                                                                        // file
+                                                                        // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Simplified_RCM" + File.separator + "RCM_Daily_Simplified" + CommonUtils.getNowDate() + "_1.xls");
+
+    this.view(null, null, params);
+    LOGGER.info("[END] RCM_Daily_Simplified...");
+  }
+
+  @RequestMapping(value = "/RCM_Daily_Simplified_2.do")
+  //@Scheduled(cron = "0 40 5 * * *")
+  public void rcmDailySimplified_2() throws IOException {
+    LOGGER.info("[START] RCM_Daily_Simplified...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_Simplified_2.rpt");// visualcut
+                                                                        // rpt
+                                                                        // file
+                                                                        // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Simplified_RCM" + File.separator + "RCM_Daily_Simplified" + CommonUtils.getNowDate() + "_2.xls");
 
     this.view(null, null, params);
     LOGGER.info("[END] RCM_Daily_Simplified...");
