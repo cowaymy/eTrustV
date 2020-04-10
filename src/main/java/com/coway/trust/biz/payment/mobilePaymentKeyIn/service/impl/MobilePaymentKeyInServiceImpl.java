@@ -29,7 +29,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @History
  *
  *          <pre>
- * Date               Author         Description
+ * Date               Author          Description
  * -------------  -----------  -------------
  * 2019. 10. 21.   KR-HAN        First creation
  * 2020. 02. 11    ONGHC         Add Payment Method ONL for saveMobilePaymentKeyInNormalPayment
@@ -37,8 +37,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 02. 25    KR-HAN        Payment Error Edit ( WOR Error,  convert to integer error )
  * 2020. 03. 09    ONGHC         Amend paidAmt's String value to integer
  *                                         Add TR Ref.No and TR Issue Date
- * 2020. 03.        KR-HAN       RPF Error Edit
- * 2020. 04. 01    KR-HAN       Payment Key-in Error Edit
+ * 2020. 03.        KR-HAN        RPF Error Edit
+ * 2020. 04. 01    KR-HAN        Payment Key-in Error Edit
+ * 2020. 04. 10    ONGHC         Amend saveMobilePaymentKeyInNormalPayment to fixed payment amount comparison issue
  *          </pre>
  */
 @Service("mobilePaymentKeyInService")
@@ -543,24 +544,38 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     EgovMap selectBankStatementInfo = mobilePaymentKeyInMapper.selectBankStatementInfo(schParams);
 
     if (selectBankStatementInfo == null) {
-      throw new ApplicationException(AppConstants.FAIL, "Invalid Transaction ID.");
+      throw new ApplicationException(AppConstants.FAIL, "Transaction ID does not exist.");
     }
 
     String crdit = String.valueOf(selectBankStatementInfo.get("crdit"));
-    Double DoubleCrdit = Double.valueOf(crdit);
+    //Double DoubleCrdit = Double.valueOf(crdit);
+    BigDecimal DoubleCrdit = new BigDecimal(crdit);
 
     // 그리드 값 비교
-    Double tPayAmt = 0.00;
+    //Double tPayAmt = 0.00;
+    //for (int i = 0; i < gridList.size(); i++) {
+      //gridListMap = (Map<String, Object>) gridList.get(i);
+      //String payAmt = String.valueOf(gridListMap.get("payAmt"));
+      //System.out.println("++++ ::" + payAmt );
+      //Double payAmtDou = Double.valueOf(payAmt);
+      //System.out.println("++++ ::" + payAmtDou );
+
+      //tPayAmt += payAmtDou;
+    //}
+
+    BigDecimal tPayAmt = BigDecimal.ZERO;
     for (int i = 0; i < gridList.size(); i++) {
       gridListMap = (Map<String, Object>) gridList.get(i);
       String payAmt = String.valueOf(gridListMap.get("payAmt"));
-      Double payAmtDou = Double.valueOf(payAmt);
-
-      tPayAmt += payAmtDou;
+      BigDecimal payAmtDou = new BigDecimal(payAmt);
+      tPayAmt = tPayAmt.add(payAmtDou);
     }
 
-    if (!DoubleCrdit.equals(tPayAmt)) {
-      throw new ApplicationException(AppConstants.FAIL, "Check the Payment Amt");
+    //if (!DoubleCrdit.equals(tPayAmt)) {
+      //throw new ApplicationException(AppConstants.FAIL, "Check the Payment Amt");
+    //}
+    if (DoubleCrdit.compareTo(tPayAmt) != 0) {
+      throw new ApplicationException(AppConstants.FAIL, "Total selected payment amount does not match with transaction ID's amount provided.");
     }
 
     // Trnsc Id Payment ModegridListMap
