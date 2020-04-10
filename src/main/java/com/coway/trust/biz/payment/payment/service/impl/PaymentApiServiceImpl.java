@@ -1,6 +1,5 @@
 package com.coway.trust.biz.payment.payment.service.impl;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +40,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2019. 9. 30.   KR-HAN        First creation
  * 2020. 2. 6.     MY-ONGHC   Add E-Notification
  * 2020. 4. 9.     MY_ONGHC  Amend insertSalesNotification to Add Customer Name
- * 2020. 4. 10.   MY_ONGHC   Amend insertSalesNotification to convert amount without decimal
  *          </pre>
  */
 @Service("paymentApiService")
@@ -422,28 +420,6 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     params.put("crtUserId", loginVO.getUserId());
     params.put("updUserId", loginVO.getUserId());
     params.put("custNm", custNm);
-
-    // RESET OUTSTANDING TO WITHOUT COMMA
-    BigDecimal outstd = BigDecimal.ZERO;
-    if (!CommonUtils.nvl(params.get("otstndAmt")).equals("")) {
-      outstd = new BigDecimal(params.get("otstndAmt").toString());
-    }
-
-    // RESET PAY AMOUNT TO WITHOUT COMMA
-    BigDecimal payAmt = BigDecimal.ZERO;
-    if (!CommonUtils.nvl(params.get("payAmt")).equals("")) {
-      payAmt = new BigDecimal(params.get("payAmt").toString());
-    }
-
-    // RESET PAY ADV AMOUNT TO WITHOUT COMMA
-    BigDecimal advAmt = BigDecimal.ZERO;
-    if (!CommonUtils.nvl(params.get("advAmt")).equals("")) {
-      advAmt = new BigDecimal(params.get("advAmt").toString());
-    }
-
-    params.put("otstndAmt", outstd.toPlainString());
-    params.put("advAmt", advAmt.toPlainString());
-    params.put("payAmt", payAmt.toPlainString());
 
     rtn = paymentApiMapper.insertSalesNotification(params);
 
