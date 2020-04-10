@@ -66,6 +66,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 04. 03     MY-ONGHC    Amend selectItmStkChangeInfo
  * 2020. 04. 08.    MY-ONGHC    Add selectCpntLst to Retrieve Component List
  *                                          Add selectPromoByCpntId
+ * 2020. 04. 10     MY-ONGHC   Revert selectExistSofNo and insertEkeyIn to remove SOF checking
  *          </pre>
  */
 @Service("EKeyInApiService")
@@ -1221,9 +1222,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
     EKeyInApiDto rtn = new EKeyInApiDto();
 
-    // int selectExistSofNo =
-    // eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(param));
-    int selectExistSofNo = 0;
+    int selectExistSofNo = eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(param));
+    // int selectExistSofNo = 0;
     rtn.setCnt(selectExistSofNo);
 
     if (selectExistSofNo == 0) {
@@ -1430,9 +1430,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         throw new ApplicationException(AppConstants.FAIL, "sofNo value does not exist.");
       }
       selectParam.setSofNo(param.getBasic().getSofNo());
-      // int selectExistSofNo =
-      // eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(selectParam));
-      int selectExistSofNo = 0;
+      int selectExistSofNo = eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(selectParam));
+      // int selectExistSofNo = 0;
       if (selectExistSofNo != 0) {
         throw new ApplicationException(AppConstants.FAIL, "this Sales has posted, no amendment allow.");
       }
