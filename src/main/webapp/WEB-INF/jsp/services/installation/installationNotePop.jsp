@@ -184,10 +184,12 @@
 
       if ($("#sortType").val() == "2") {
         orderBySql = "ORDER BY CTMEM.MEM_CODE ";
-       } else if ($("#sortType").val() == "1") {
+      } else if ($("#sortType").val() == "1") {
         orderBySql = "ORDER BY MAIN.INSTALL_ENTRY_ID ";
-      } else {
-       orderBySql = "ORDER BY STK.STK_CODE ";
+      } else if ($("#sortType").val() == "3") {
+        orderBySql = "ORDER BY STK.STK_CODE ";
+      } else if ($("#sortType").val() == "4") {
+        orderBySql = "ORDER BY MAIN.SALES_ORD_NO ";
       }
 
       console.log(whereSeq);
@@ -375,6 +377,7 @@
         <option value="1">Installation Number</option>
         <option value="2" selected>CT Code</option>
         <option value="3">Product</option>
+        <option value="4">Sales Order Number</option>
       </select></td>
      </tr>
     </tbody>
