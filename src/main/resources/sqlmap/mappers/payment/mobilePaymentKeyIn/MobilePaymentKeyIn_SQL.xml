@@ -3,114 +3,118 @@
 <mapper namespace="com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper">
 
   <select id="selectMobilePaymentKeyInList" parameterType="Map" resultType="egovMap">
-    SELECT   /* [com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper.selectMobilePaymentKeyInList] 20191021 - KR HAN */
-               Extent5.MOB_TICKET_NO MOB_TICKET_NO,
-               Extent1.MOB_PAY_NO MOB_PAY_NO,
-               TO_CHAR(Extent1.CRT_DT, 'DD/MM/YYYY') CRT_DT,
-               Extent1.PAY_STUS_ID PAY_STUS_ID,
-               Extent4.NAME PAY_STUS_NM,
-               Extent1.PAY_MODE PAY_MODE,
-               Extent6.CODE_NAME PAY_MODE_NM,
-               Extent1.SALES_ORD_NO SALES_ORD_NO,
-               Extent3.NAME NAME,
-               Extent1.ADV_MONTH ADV_MONTH,
-               TO_CHAR(Extent1.ADV_AMT, 'FM9990.00' ) ADV_AMT,
-               TO_CHAR(Extent1.OTSTND_AMT, 'FM9990.00' ) OTSTND_AMT,
-               TO_CHAR(Extent1.PAY_AMT, 'FM9990.00' ) PAY_AMT,
-               Extent1.SLIP_NO SLIP_NO,
-               Extent1.CHEQUE_NO CHEQUE_NO,
-               Extent1.ISSU_BANK_ID ISSU_BANK_ID,
-               Extent6.NAME BANK_NM,
-               TO_CHAR( TO_DATE( Extent1.CHEQUE_DT, 'DD/MM/YYYY' ), 'DD/MM/YYYY') CHEQUE_DT,
-               Extent1.UPLOAD_IMG UPLOAD_IMG,
-               CASE WHEN Extent1.UPLOAD_IMG IS NOT NULL
-                 THEN 'DOWN'
-                 ELSE NULL END AS ATTCH_IMG_URL,
-               CASE WHEN Extent1.UPLOAD_IMG IS NOT NULL
-                 THEN F.FILE_SUB_PATH
-                 ELSE NULL END AS FILE_SUB_PATH,
-               Extent1.EMAIL_1 EMAIL_1,
-               Extent1.EMAIL_2 EMAIL_2,
-               Extent1.SMS_1 SMS_1,
-               Extent1.SMS_2 SMS_2,
-               Extent1.PAY_REM PAY_REM,
-               Extent5.CRT_USER_BRNCH CRT_USER_BRNCH,
-               T4.CODE CRT_USER_BRNCH_CD,
-               T4.NAME CRT_USER_BRNCH_NM,
-               Extent1.CRT_USER_ID CRT_USER_ID,
-               T10.USER_NAME CRT_USER_NM,
-               Extent1.UPD_USER_ID UPD_USER_ID,
-               T11.USER_NAME UPD_USER_NM,
-               TO_CHAR(Extent1.UPD_DT , 'DD-MM-YYYY HH24:MI:SS') UPD_DT,
-               Extent7.CUST_BILL_ID CUST_BILL_ID,
-               Extent2.SALES_ORD_ID  ORD_ID,
-               Extent7.CUST_BILL_GRP_NO BILL_NO,
-               <!--   Extent8.RENT_DOC_TYPE_ID AS BILL_TYPE_ID,
-               Extent9.CODE_NAME BILL_TYPE_NM,
-               Extent8.RENT_INST_NO INSTALLMENT,
-               Extent8.RENT_DT_TM , -->
-               Extent11.CNTRCT_RENTAL_STUS BILL_STATUS,
-               F.ATCH_FILE_NAME AS ATCH_FILE_NAME,
-               F.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME,
-               Extent2.PV_MONTH as PV_MTH,
-               Extent2.PV_YEAR as PV_YEAR,
-               T5.CODE AS APPTYP
-    FROM PAY0297D Extent1
-    LEFT JOIN SAL0001D Extent2 ON Extent1.SALES_ORD_NO = Extent2.SALES_ORD_NO
-    LEFT JOIN SAL0029D Extent3 ON Extent2.CUST_ID = Extent3.CUST_ID
-    LEFT JOIN SYS0038M Extent4 ON Extent1.PAY_STUS_ID = Extent4.STUS_CODE_ID
-    JOIN MOB0001D Extent5 ON Extent1.MOB_TICKET_NO = Extent5.MOB_TICKET_NO
-                                     AND Extent1.SALES_ORD_NO = Extent5.SALES_ORD_NO
-    LEFT JOIN SYS0004M Extent6 ON Extent1.ISSU_BANK_ID = Extent6.BANK_ID
-                                            AND Extent6.STUS_CODE_ID = '1'
-    JOIN SYS0013M Extent6 ON Extent1.PAY_MODE = Extent6.CODE_ID
-                                    AND Extent6.CODE_MASTER_ID = 439
-    JOIN SAL0024D Extent7 ON Extent2.CUST_BILL_ID = Extent7.CUST_BILL_ID
-    <!-- LEFT JOIN PAY0022D Extent8 ON Extent2.SALES_ORD_ID = Extent8.RENT_SO_ID
-          JOIN SYS0013M Extent9 ON Extent9.CODE_ID = Extent8.RENT_DOC_TYPE_ID -->
-    LEFT JOIN SAL0077D Extent10 ON Extent2.SALES_ORD_ID = Extent10.SRV_CNTRCT_ORD_ID
-    LEFT JOIN SAL0078D Extent11 ON Extent11.SRV_CNTRCT_ID = Extent10.SRV_CNTRCT_ID
-    LEFT OUTER JOIN SYS0070M E ON  E.CHENAL_TYPE = 'M'
-                                              AND E.ATCH_FILE_GRP_ID = Extent1.UPLOAD_IMG
-    LEFT OUTER JOIN SYS0071D F ON  F.ATCH_FILE_ID = E.ATCH_FILE_ID
-    LEFT JOIN SYS0047M T10 ON T10.USER_ID = Extent1.CRT_USER_ID
-    LEFT JOIN SYS0047M T11 ON T11.USER_ID = Extent1.UPD_USER_ID
-    INNER JOIN SYS0005M T4 ON T4.BRNCH_ID = Extent5.CRT_USER_BRNCH
-    LEFT JOIN SYS0013M T5 ON T5.CODE_ID = Extent2.APP_TYPE_ID AND T5.CODE_MASTER_ID = '10'
+    SELECT A.*,
+               B.S AS CRNT_LDG
+    FROM ( SELECT   /* [com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper.selectMobilePaymentKeyInList] 20191021 - KR HAN */
+                            Extent5.MOB_TICKET_NO MOB_TICKET_NO,
+                            Extent1.MOB_PAY_NO MOB_PAY_NO,
+                            TO_CHAR(Extent1.CRT_DT, 'DD/MM/YYYY') CRT_DT,
+                            Extent1.PAY_STUS_ID PAY_STUS_ID,
+                            Extent4.NAME PAY_STUS_NM,
+                            Extent1.PAY_MODE PAY_MODE,
+                            Extent6.CODE_NAME PAY_MODE_NM,
+                            Extent1.SALES_ORD_NO SALES_ORD_NO,
+                            Extent3.NAME NAME,
+                            Extent1.ADV_MONTH ADV_MONTH,
+                            TO_CHAR(Extent1.ADV_AMT, 'FM9990.00' ) ADV_AMT,
+                            TO_CHAR(Extent1.OTSTND_AMT, 'FM9990.00' ) OTSTND_AMT,
+                            TO_CHAR(Extent1.PAY_AMT, 'FM9990.00' ) PAY_AMT,
+                            Extent1.SLIP_NO SLIP_NO,
+                            Extent1.CHEQUE_NO CHEQUE_NO,
+                            Extent1.ISSU_BANK_ID ISSU_BANK_ID,
+                            Extent6.NAME BANK_NM,
+                            TO_CHAR( TO_DATE( Extent1.CHEQUE_DT, 'DD/MM/YYYY' ), 'DD/MM/YYYY') CHEQUE_DT,
+                            Extent1.UPLOAD_IMG UPLOAD_IMG,
+                            CASE WHEN Extent1.UPLOAD_IMG IS NOT NULL
+                              THEN 'DOWN'
+                              ELSE NULL END AS ATTCH_IMG_URL,
+                            CASE WHEN Extent1.UPLOAD_IMG IS NOT NULL
+                              THEN F.FILE_SUB_PATH
+                              ELSE NULL END AS FILE_SUB_PATH,
+                            Extent1.EMAIL_1 EMAIL_1,
+                            Extent1.EMAIL_2 EMAIL_2,
+                            Extent1.SMS_1 SMS_1,
+                            Extent1.SMS_2 SMS_2,
+                            Extent1.PAY_REM PAY_REM,
+                            Extent5.CRT_USER_BRNCH CRT_USER_BRNCH,
+                            T4.CODE CRT_USER_BRNCH_CD,
+                            T4.NAME CRT_USER_BRNCH_NM,
+                            Extent1.CRT_USER_ID CRT_USER_ID,
+                            T10.USER_NAME CRT_USER_NM,
+                            Extent1.UPD_USER_ID UPD_USER_ID,
+                            T11.USER_NAME UPD_USER_NM,
+                            TO_CHAR(Extent1.UPD_DT , 'DD-MM-YYYY HH24:MI:SS') UPD_DT,
+                            Extent7.CUST_BILL_ID CUST_BILL_ID,
+                            Extent2.SALES_ORD_ID  ORD_ID,
+                            Extent7.CUST_BILL_GRP_NO BILL_NO,
+                            <!--   Extent8.RENT_DOC_TYPE_ID AS BILL_TYPE_ID,
+                            Extent9.CODE_NAME BILL_TYPE_NM,
+                            Extent8.RENT_INST_NO INSTALLMENT,
+                            Extent8.RENT_DT_TM , -->
+                            Extent11.CNTRCT_RENTAL_STUS BILL_STATUS,
+                            F.ATCH_FILE_NAME AS ATCH_FILE_NAME,
+                            F.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME,
+                            Extent2.PV_MONTH as PV_MTH,
+                            Extent2.PV_YEAR as PV_YEAR,
+                            T5.CODE AS APPTYP
+               FROM PAY0297D Extent1
+               LEFT JOIN SAL0001D Extent2 ON Extent1.SALES_ORD_NO = Extent2.SALES_ORD_NO
+               LEFT JOIN SAL0029D Extent3 ON Extent2.CUST_ID = Extent3.CUST_ID
+               LEFT JOIN SYS0038M Extent4 ON Extent1.PAY_STUS_ID = Extent4.STUS_CODE_ID
+               JOIN MOB0001D Extent5 ON Extent1.MOB_TICKET_NO = Extent5.MOB_TICKET_NO
+                                                AND Extent1.SALES_ORD_NO = Extent5.SALES_ORD_NO
+               LEFT JOIN SYS0004M Extent6 ON Extent1.ISSU_BANK_ID = Extent6.BANK_ID
+                                                       AND Extent6.STUS_CODE_ID = '1'
+               JOIN SYS0013M Extent6 ON Extent1.PAY_MODE = Extent6.CODE_ID
+                                                          AND Extent6.CODE_MASTER_ID = 439
+               JOIN SAL0024D Extent7 ON Extent2.CUST_BILL_ID = Extent7.CUST_BILL_ID
+               <!-- LEFT JOIN PAY0022D Extent8 ON Extent2.SALES_ORD_ID = Extent8.RENT_SO_ID
+                      JOIN SYS0013M Extent9 ON Extent9.CODE_ID = Extent8.RENT_DOC_TYPE_ID -->
+               LEFT JOIN SAL0077D Extent10 ON Extent2.SALES_ORD_ID = Extent10.SRV_CNTRCT_ORD_ID
+               LEFT JOIN SAL0078D Extent11 ON Extent11.SRV_CNTRCT_ID = Extent10.SRV_CNTRCT_ID
+               LEFT OUTER JOIN SYS0070M E ON  E.CHENAL_TYPE = 'M'
+                                                AND E.ATCH_FILE_GRP_ID = Extent1.UPLOAD_IMG
+               LEFT OUTER JOIN SYS0071D F ON  F.ATCH_FILE_ID = E.ATCH_FILE_ID
+               LEFT JOIN SYS0047M T10 ON T10.USER_ID = Extent1.CRT_USER_ID
+               LEFT JOIN SYS0047M T11 ON T11.USER_ID = Extent1.UPD_USER_ID
+               INNER JOIN SYS0005M T4 ON T4.BRNCH_ID = Extent5.CRT_USER_BRNCH
+               LEFT JOIN SYS0013M T5 ON T5.CODE_ID = Extent2.APP_TYPE_ID AND T5.CODE_MASTER_ID = '10'
 
-    <where>
-      <if test="_reqstStartDt != null and _reqstStartDt != '' ">
-        AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{_reqstStartDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
-      </if>
-      <if test="_reqstEndDt != null and _reqstEndDt != '' ">
-        AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{_reqstEndDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
-      </if>
-      <if test="ticketNo != null and ticketNo != '' ">
-        AND Extent5.MOB_TICKET_NO = #{ticketNo}
-      </if>
-      <if test="orderNo != null and orderNo != '' ">
-        AND Extent1.SALES_ORD_NO = #{orderNo}
-      </if>
-      <if test="ticketStatus != null and ticketStatus != '' ">
-        AND Extent1.PAY_STUS_ID = #{ticketStatus}
-      </if>
-      <if test="branchCode != null and branchCode != '' ">
-        AND Extent5.CRT_USER_BRNCH = #{branchCode}
-      </if>
-      <if test="payStusId != null and payStusId != '' ">
-        AND Extent1.PAY_STUS_ID = #{payStusId}
-      </if>
-      <if test="memberCode != null and memberCode != '' ">
-       AND T10.USER_NAME = #{memberCode}
-      </if>
-      <if test="serialNo != null and serialNo != '' ">
-       AND ( Extent1.SLIP_NO = #{serialNo} OR Extent1.CHEQUE_NO = #{serialNo} )
-      </if>
-      <if test="payMode != null and payMode != '' ">
-       AND Extent1.PAY_MODE = #{payMode}
-      </if>
-    </where>
-    ORDER BY Extent5.MOB_TICKET_NO DESC
+               <where>
+                 <if test="_reqstStartDt != null and _reqstStartDt != '' ">
+                   AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{_reqstStartDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+                 </if>
+                 <if test="_reqstEndDt != null and _reqstEndDt != '' ">
+                   AND TO_CHAR (Extent1.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{_reqstEndDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+                 </if>
+                 <if test="ticketNo != null and ticketNo != '' ">
+                   AND Extent5.MOB_TICKET_NO = #{ticketNo}
+                 </if>
+                 <if test="orderNo != null and orderNo != '' ">
+                   AND Extent1.SALES_ORD_NO = #{orderNo}
+                 </if>
+                 <if test="ticketStatus != null and ticketStatus != '' ">
+                   AND Extent1.PAY_STUS_ID = #{ticketStatus}
+                 </if>
+                 <if test="branchCode != null and branchCode != '' ">
+                   AND Extent5.CRT_USER_BRNCH = #{branchCode}
+                 </if>
+                 <if test="payStusId != null and payStusId != '' ">
+                   AND Extent1.PAY_STUS_ID = #{payStusId}
+                 </if>
+                 <if test="memberCode != null and memberCode != '' ">
+                   AND T10.USER_NAME = #{memberCode}
+                 </if>
+                 <if test="serialNo != null and serialNo != '' ">
+                   AND ( Extent1.SLIP_NO = #{serialNo} OR Extent1.CHEQUE_NO = #{serialNo} )
+                 </if>
+                 <if test="payMode != null and payMode != '' ">
+                   AND Extent1.PAY_MODE = #{payMode}
+                 </if>
+               </where>
+
+    ) A LEFT JOIN (SELECT RENT_SO_ID, SUM(RENT_AMT) AS S FROM PAY0022D GROUP BY RENT_SO_ID) B ON B.RENT_SO_ID = A.ORD_ID
+    ORDER BY A.MOB_TICKET_NO DESC
   </select>
 
   <update id="updateMobilePaymentKeyInReject" parameterType="Map">
