@@ -643,6 +643,7 @@ SELECT B.PLAN_ID
      , B.M3_QTY
      , B.M4_QTY
   FROM SCM0008M A
+  LEFT JOIN SYS0026M S26 ON S26.STK_CODE = A.STOCK_CODE
   LEFT OUTER JOIN (
                    SELECT Z.PLAN_ID
                         , X.PLAN_DTL_ID
@@ -659,7 +660,7 @@ SELECT B.PLAN_ID
                       AND Z.PLAN_WEEK = #{planWeek}
                       AND Z.TEAM = #{team}
                    ) B ON (A.STOCK_CODE = B.STOCK_CODE)
- WHERE A.STUS_CODE_ID = 1
+ WHERE S26.STUS_CODE_ID = 1
    AND A.IS_TRGET = 1
    AND TO_CHAR(A.END_DT, 'YYYYMMDD') <![CDATA[ >= ]]> #{endDt}
  ORDER BY A.STOCK_CODE
