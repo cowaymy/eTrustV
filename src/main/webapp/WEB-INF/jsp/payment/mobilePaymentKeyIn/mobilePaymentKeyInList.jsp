@@ -10,6 +10,7 @@
  ----------------------------------------------------------------
  09/03/2020  ONGHC  1.0.0             Add TR Ref.No and TR Issue Date
                                                    Add Application Type, PV Month and Year to GridView.
+ 13/04/2020  ONGHC  1.0.1             Add Order Ledger Button and Highlighted no Outstanding Order
  -->
 
 <style type="text/css">
@@ -20,6 +21,11 @@
 /* 커스텀 칼럼 스타일 정의 */
 .aui-grid-user-custom-right {
     text-align:right;
+}
+.my-pink-style {
+    background:#FFA7A7;
+    font-weight:bold;
+    color:#22741C;
 }
 </style>
 
@@ -42,7 +48,7 @@
     // AUIGrid 그리드를 생성합니다.
     createAUIGrid();
 
-    AUIGrid.setSelectionMode(myGridID , "singleRow");
+    //AUIGrid.setSelectionMode(myGridID , "singleRow");
     //Search
     $("#_listSearchBtn").click(function() {
       //Validation
@@ -139,14 +145,46 @@
 */
   }
 
-  function fn_update(){
+  function fn_validateLdg(){
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
     if (selectedItems.length == 0){
-     /* Common.alert("Please select a row."); */
-      Common.alert("<b>No request selected.</b>");
+      /* Common.alert("Please select a row."); */
+      Common.alert("<spring:message code='service.msg.NoRcd' />");
       return false;
     }
+
+    var rowCnt = list.length;
+    var crntLdgStat = false;
+    if(rowCnt > 0){
+        for(i = 0 ; i < rowCnt ; i++){
+            var crntLdg = list[i].item.crntLdg;
+            var payStusId = list[i].item.payStusId;
+            var advAmt = list[i].item.advAmt;
+            if (!crntLdgStat) {
+              if (crntLdg == "0" && payStusId == "1" && advAmt == "") {
+                crntLdgStat = true;
+                break;
+              }
+            }
+        }
+    }
+
+    if (crntLdgStat) {
+        Common.confirm("<spring:message code='pay.msg.payMobNoOut' />",fn_update);
+    } else {
+    	fn_update();
+    }
+  }
+
+  function fn_update(){
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+   // if (selectedItems.length == 0){
+     /* Common.alert("Please select a row."); */
+      //Common.alert("<b>No request selected.</b>");
+      //return false;
+    //}
 
     var isValidReject = true;
     $.each(selectedItems, function(idx, row){
@@ -503,7 +541,7 @@
                              /* fixedColumnCount : 1, */
                             showStateColumn : false,
                             displayTreeOpen : true,
-                            selectionMode : "singleRow",
+                            //selectionMode : "singleRow",
                             headerHeight : 30,
                             // 그룹핑 패널 사용
                             useGroupingPanel : false,
@@ -535,6 +573,14 @@
   function fn_selectPstRequestDOListAjax() {
     Common.ajax("GET", "/mobilePaymentKeyIn/selectMobilePaymentKeyInJsonList.do", $("#searchForm").serialize(), function(result) {
       AUIGrid.setGridData(myGridID , result);
+
+      AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item) {
+          if(item.crntLdg == 0 && item.payStusId == "1" && item.advAmt == "") {
+            return "my-pink-style";
+          }
+       });
+
+       AUIGrid.update(myGridID);
     });
   }
 
@@ -1020,6 +1066,18 @@
        }
      }
   }
+
+  function fn_viewLdg() {
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+    if (selectedItems.length != 1) {
+      Common.alert("<spring:message code='sys.msg.oneRcdOnly'/>");
+      return;
+    }
+
+    var ordId = selectedItems[0].item.ordId;
+    $("#ordId").val(ordId);
+    Common.popupWin("frmLedger", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+  }
 </script>
 
 <section id="content"><!-- content start -->
@@ -1101,6 +1159,7 @@
   </form>
 </section><!-- search_table end -->
   <ul class="right_btns">
+  <li><p class="btn_grid"><a href="#" onClick="fn_viewLdg()"><spring:message code="sal.btn.ledger" /> </a></p></li>
     <li><p class="btn_grid"><a href="#" onClick="fn_update()"><spring:message code="pay.btn.update" /> </a></p></li>
     <li><p class="btn_grid"><a href="#" onClick="fn_reject()"><spring:message code="pay.btn.reject" /> </a></p></li>
     <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
@@ -1308,6 +1367,9 @@
        </c:if>
     </ul>
     </section>
+    <form id="frmLedger" name="frmLedger" action="#" method="post">
+      <input id="ordId" name="ordId" type="hidden" value="" />
+    </form>
 <!-- search_table end -->
   </div>
   <!-- popup_wrap end -->
