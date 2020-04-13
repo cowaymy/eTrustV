@@ -117,6 +117,7 @@
 
 
         if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J") {
+            $("#appvBtns").hide();
             $("#pApprove_btn").hide();
             $("#pReject_btn").hide();
 
@@ -424,13 +425,9 @@
             </form>
         </section>
 
-        <ul class="center_btns">
-            <c:if test="${pageAuthFuncChange eq 'Y'}">
-            <c:if test="${appvPrcssResult eq 'R'}">
+        <ul class="center_btns" id="appvBtns">
             <li><p class="btn_blue2"><a href="#" id="pApprove_btn"><spring:message code="invoiceApprove.title" /></a></p></li>
             <li><p class="btn_blue2"><a href="#" id="pReject_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>
-            </c:if>
-            </c:if>
         </ul>
 
     </section><!-- pop_body end -->
