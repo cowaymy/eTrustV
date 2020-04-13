@@ -10,6 +10,7 @@
 	var CATE_ID  = "14";
 	var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"}];
 	var actData= [{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancel"}];
+	var memTypeData = [{"codeId": "1","codeName": "HP"},{"codeId": "2","codeName": "Cody"},{"codeId": "4","codeName": "Staff"},{"codeId": "7","codeName": "HT"}];
 	var myFileCaches = {};
 	var recentGridItem = null;
 	var selectRowIdx;
@@ -102,6 +103,7 @@
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
         doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'EXHC'}, '', 'ordProudctList', 'S', 'fn_setOptGrpClass');
+        doDefCombo(memTypeData, '', 'memType', 'S', '');
 
 
         //excel Download
@@ -385,10 +387,10 @@
     	var isValid = true, msg = "";
 
     	if(FormUtil.isEmpty($('#_memCode').val())
-    			&& FormUtil.isEmpty($('#_appTypeId').val())
-    		    && FormUtil.isEmpty($('#_stusId').val())
-    		    && FormUtil.isEmpty($('#_brnchId').val())
-    		    && FormUtil.isEmpty($('#_typeId').val())
+    			//&& FormUtil.isEmpty($('#_appTypeId').val())
+    		    //&& FormUtil.isEmpty($('#_stusId').val())
+    		    //&& FormUtil.isEmpty($('#_brnchId').val())
+    		    //&& FormUtil.isEmpty($('#_typeId').val())
     		    && FormUtil.isEmpty($('#_nric').val())
     		    && FormUtil.isEmpty($('#_name').val())
     		    && (FormUtil.isEmpty($('#_reqstStartDt').val()) || FormUtil.isEmpty($('#_reqstEndDt').val()))
@@ -632,6 +634,10 @@
     <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  placeholder="Grp Code" class="w100p"/></td>
     <th scope="row">Dept Code</th>
     <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p"/></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.memtype" /></th>
+    <td><select id="memType" name="memType" class="w100p" ></select>
 </tr>
 <tr>
     <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyinsof'/></span></th>

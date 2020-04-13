@@ -113,6 +113,9 @@
            AND T4.STK_ID  = #{ordProudctList}
 
          </if>
+         <if test='memType != null and memType != ""'>
+            AND T7.USER_TYPE_ID = #{memType}
+         </if>
          ORDER BY T1.PRE_ORD_ID ASC
     </select>
 

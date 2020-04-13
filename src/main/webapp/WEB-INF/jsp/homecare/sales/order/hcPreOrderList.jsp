@@ -10,6 +10,7 @@
     var CATE_ID  = "14";
     var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "5764","codeName": "Auxiliary"}];
     var actData= [{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancel"}];
+    var memTypeData = [{"codeId": "1","codeName": "HP"},{"codeId": "2","codeName": "Cody"},{"codeId": "4","codeName": "Staff"},{"codeId": "7","codeName": "HT"}];
     var myFileCaches = {};
     var recentGridItem = null;
     var selectRowIdx;
@@ -96,6 +97,7 @@
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
         doDefCombo(branchCdList, '' ,'_brnchId', 'M', 'fn_multiCombo');
         doDefCombo(codeList_8, '' ,'_typeId', 'M', 'fn_multiCombo');
+        doDefCombo(memTypeData, '', 'memType', 'S', '');
 //         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
 //         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
 //         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
@@ -192,18 +194,18 @@
 
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            {headerText : "BNDL No.",             dataField : "bndlNo",         editable : false, width : 130}
-          , {headerText : "SOF No.",                dataField : "sofNo",           editable : false, width : 150}
-          , {headerText : "eKey-in Date",          dataField : "requestDt",      editable : false, width : 120}
-          , {headerText : "eKey-in Time",          dataField : "requestTm",    editable : false, width : 120}
-          , {headerText : "Product",                 dataField : "product",        editable : false, width : 300}
-          , {headerText : "Customer Name",     dataField : "custNm",         editable : false, width : 300}
-          , {headerText : "Creator",                  dataField : "crtName",       editable : false, width : 200}
-          , {headerText : "Status",                   dataField : "stusName",      editable : false, width : 120}
-          , {headerText : "Order Number",       dataField : "salesOrdNo",    editable : false, width : 150}
-          , {headerText : "Fail Reason Code",    dataField : "rem1",            editable : false,  width : 150}
-          , {headerText : "Fail Remark",            dataField : "rem2",            editable : false,  width : 150}
-          , {headerText : "Last Update At (By)", dataField : "lastUpd",         editable : false,  width : 300}
+            {headerText : "BNDL No.",             dataField : "bndlNo",         editable : false, width : '7%'}
+          , {headerText : "SOF No.",                dataField : "sofNo",           editable : false, width : '7%'}
+          , {headerText : "eKey-in Date",          dataField : "requestDt",      editable : false, width : '8%'}
+          , {headerText : "eKey-in Time",          dataField : "requestTm",    editable : false, width : '8%'}
+          , {headerText : "Product",                 dataField : "product",        editable : false, width : '8%'}
+          , {headerText : "Customer Name",     dataField : "custNm",         editable : false, width : '10%'}
+          , {headerText : "Creator",                  dataField : "crtName",       editable : false, width : '8%'}
+          , {headerText : "Status",                   dataField : "stusName",      editable : false, width : '8%'}
+          , {headerText : "Order Number",       dataField : "salesOrdNo",    editable : false, width : '10%'}
+          , {headerText : "Fail Reason Code",    dataField : "rem1",            editable : false,  width : '10%'}
+          , {headerText : "Fail Remark",            dataField : "rem2",            editable : false,  width : '15%'}
+          , {headerText : "Last Update At (By)", dataField : "lastUpd",         editable : false,  width : '18%'}
           , {headerText : "StatusId",                 dataField : "stusId",           visible  : false}
           , {headerText : "preOrdId",               dataField : "preOrdId",       visible  : false}
         ];
@@ -222,7 +224,7 @@
             wrapSelectionMove     : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn  : true,         //줄번호 칼럼 렌더러 출력
             noDataMessage          : "No order found.",
-            //wordWrap                  : true,
+            wordWrap                  : true,
             groupingMessage       : "Here groupping"
         };
 
@@ -347,9 +349,11 @@
     function fn_validSearchList() {
         var isValid = true, msg = "";
 
-        if(FormUtil.isEmpty($('#_memCode').val()) && FormUtil.isEmpty($('#_appTypeId').val())
-        	&& FormUtil.isEmpty($('#_stusId').val()) && FormUtil.isEmpty($('#_brnchId').val())
-            && FormUtil.isEmpty($('#_typeId').val()) && FormUtil.isEmpty($('#_nric').val())
+        if(FormUtil.isEmpty($('#_memCode').val())
+        	//&& FormUtil.isEmpty($('#_appTypeId').val())
+        	//&& FormUtil.isEmpty($('#_stusId').val()) && FormUtil.isEmpty($('#_brnchId').val())
+            //&& FormUtil.isEmpty($('#_typeId').val())
+            && FormUtil.isEmpty($('#_nric').val())
             && FormUtil.isEmpty($('#_name').val()) && (FormUtil.isEmpty($('#_reqstStartDt').val())
             || FormUtil.isEmpty($('#_reqstEndDt').val()))) {
 
@@ -361,6 +365,13 @@
             if(FormUtil.isEmpty($('#_sofNo').val())){
                 isValid = false;
                 msg += '<spring:message code="sal.alert.msg.selSofNo" /><br/>';
+            }
+        }
+
+        if(!FormUtil.isEmpty($('#_reqstStartTime').val()) || !FormUtil.isEmpty($('#_reqstEndTime').val())) {
+            if(FormUtil.isEmpty($('#_reqstStartDt').val()) || FormUtil.isEmpty($('#_reqstEndDt').val())) {
+                isValid = false;
+                msg += '* Please select Pre-Order Date first<br/>';
             }
         }
 
@@ -444,7 +455,7 @@
             selectAll: true, // 전체선택
             width: '100%'
         });
-        //$('#_stusId').multipleSelect("checkAll");
+        $('#_stusId').multipleSelect("checkAll");
 
         $('#_brnchId').change(function() {
             //console.log($(this).val());
@@ -452,7 +463,7 @@
             selectAll: true, // 전체선택
             width: '100%'
         });
-        //$('#_brnchId').multipleSelect("checkAll");
+        $('#_brnchId').multipleSelect("checkAll");
 
         $('#_typeId').change(function() {
             //console.log($(this).val());
@@ -460,7 +471,7 @@
             selectAll: true, // 전체선택
             width: '100%'
         });
-        //$('#_typeId').multipleSelect("checkAll");
+        $('#_typeId').multipleSelect("checkAll");
 
     }
 
@@ -534,9 +545,9 @@
     <th scope="row">Pre-Order date</th>
     <td>
        <div class="date_set w100p"><!-- date_set start -->
-        <p><input id="_reqstStartDt" name="_reqstStartDt" type="text" value="${fromDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+        <p><input id="_reqstStartDt" name="_reqstStartDt" type="text" <%-- value="${fromDay}" --%> title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
         <span>To</span>
-        <p><input id="_reqstEndDt" name="_reqstEndDt" type="text" value="${toDay}" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+        <p><input id="_reqstEndDt" name="_reqstEndDt" type="text" <%-- value="${toDay}" --%> title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
         </div><!-- date_set end -->
     </td>
 </tr>
@@ -567,8 +578,8 @@
 <tr>
     <th scope="row">Bundle Number</th>
     <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row"><spring:message code="sal.text.memtype" /></th>
+    <td><select id="memType" name="memType" class="w100p" ></select>
     <th scope="row"></th>
     <td></td>
 </tr>
