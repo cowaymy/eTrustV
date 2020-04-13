@@ -154,6 +154,7 @@
       return false;
     }
 
+    var list = AUIGrid.getCheckedRowItems(myGridID);
     var rowCnt = list.length;
     var crntLdgStat = false;
     if(rowCnt > 0){
@@ -162,7 +163,7 @@
             var payStusId = list[i].item.payStusId;
             var advAmt = list[i].item.advAmt;
             if (!crntLdgStat) {
-              if (crntLdg == "0" && payStusId == "1" && advAmt == "") {
+              if (crntLdg == "0" && payStusId == "1" && (advAmt == "" || typeof(advAmt) == "undefined")) {
                 crntLdgStat = true;
                 break;
               }
@@ -530,6 +531,9 @@
                                   }, {
                                      dataField : "payMode",
                                      visible : false
+                                  }, {
+                                      dataField : "crntLdg",
+                                      visible : false
                                   }
                                   ]
     // 그리드 속성 설정
@@ -575,7 +579,7 @@
       AUIGrid.setGridData(myGridID , result);
 
       AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item) {
-          if(item.crntLdg == 0 && item.payStusId == "1" && item.advAmt == "") {
+          if(item.crntLdg == 0 && item.payStusId == "1" && (item.advAmt == "" || typeof(item.advAmt) == "undefined")) {
             return "my-pink-style";
           }
        });
@@ -1160,7 +1164,7 @@
 </section><!-- search_table end -->
   <ul class="right_btns">
   <li><p class="btn_grid"><a href="#" onClick="fn_viewLdg()"><spring:message code="sal.btn.ledger" /> </a></p></li>
-    <li><p class="btn_grid"><a href="#" onClick="fn_update()"><spring:message code="pay.btn.update" /> </a></p></li>
+    <li><p class="btn_grid"><a href="#" onClick="fn_validateLdg()"><spring:message code="pay.btn.update" /> </a></p></li>
     <li><p class="btn_grid"><a href="#" onClick="fn_reject()"><spring:message code="pay.btn.reject" /> </a></p></li>
     <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
       <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code="pay.btn.exceldw" /></a></p></li>
