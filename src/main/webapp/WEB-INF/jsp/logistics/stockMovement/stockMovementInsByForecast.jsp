@@ -298,28 +298,18 @@
 				}
 			}
 			if (bool && f_validatation('save')) { //here to enable the select
-				$("#sttype").prop("disabled" , false);
-				$("#smtype").prop("disabled" , false);
-				var dat = GridCommon.getEditData(reqGrid);
-				dat.form = $("#headForm").serializeJSON();
-				Common.ajax("POST", "/logistics/stockMovement/StockMovementAddbyForecast.do", dat, function(result) {
-					if (result.code == '99') {
-						AUIGrid.clearGridData(reqGrid);
-						Common.alert(result.message, SearchListAjax);
-					}
-					else {
-						Common.alert("" + result.message + "</br> Created : " + result.data, locationList);
-						AUIGrid.resetUpdatedItems(reqGrid, "all");
-					}
 
-				}, function(jqXHR, textStatus, errorThrown) {
-					try {
-					}
-					catch (e) {
-					}
-					Common.alert("Fail : " + jqXHR.responseJSON.message);
-				});
-			}
+				// Added by Hui Ding for auto process GI
+                var selectedToLocation = $("#tlocation option:selected").html();
+
+                if (selectedToLocation.indexOf("CDB") > 0){
+                	$("#isCody").val('Y');
+                	Common.confirm("Assignment to CODY will auto complete with GI process.", fn_save, null);
+                } else {
+                	fn_save();
+                }
+               }
+
 		});
 		$("#smtype").change(function() {
 
@@ -383,12 +373,36 @@
 		});
 	});
 
+	function fn_save() {
+		$("#sttype").prop("disabled" , false);
+        $("#smtype").prop("disabled" , false);
+        var dat = GridCommon.getEditData(reqGrid);
+        dat.form = $("#headForm").serializeJSON();
+        Common.ajax("POST", "/logistics/stockMovement/StockMovementAddbyForecast.do", dat, function(result) {
+            if (result.code == '99') {
+                AUIGrid.clearGridData(reqGrid);
+                Common.alert(result.message, SearchListAjax);
+            }
+            else {
+                Common.alert("" + result.message + "</br>" + result.data, locationList);
+                AUIGrid.resetUpdatedItems(reqGrid, "all");
+            }
+
+        }, function(jqXHR, textStatus, errorThrown) {
+            try {
+            }
+            catch (e) {
+            }
+            Common.alert("Fail : " + jqXHR.responseJSON.message);
+        });
+	}
+
 	function fn_changeLocation() {
 		var paramdata = {
 			locgb : $("#movpath").val(),
 			endlikeValue : $("#locationType").val(),
 			grade : $("#locationType").val()
-		}; 
+		};
 		doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '', 'tlocation', 'S', '');
 		doDefCombo([], '', 'flocation', 'S', '');
 	}
@@ -605,8 +619,9 @@
 	<!-- search_table start -->
 	<section class="search_table">
 		<form id="headForm" name="headForm" method="post">
-			<input type='hidden' id='pridic' name='pridic' value='M' /> 
+			<input type='hidden' id='pridic' name='pridic' value='M' />
 			<input type='hidden' id='headtitle' name='headtitle' value='SMO' />
+			<input type="hidden" id="isCody" name="isCody" value="N"/>
 			<table class="type1">
 				<!-- table start -->
 				<caption>table</caption>
@@ -695,7 +710,7 @@
 	<section class="search_table">
 		<!-- search_table start -->
 		<form id="searchForm" name="searchForm">
-			<input type="hidden" id="slocation" name="slocation"> 
+			<input type="hidden" id="slocation" name="slocation">
 			<input type="hidden" id="cdlocation" name="cdlocation">
 
 			<table class="type1">
@@ -818,7 +833,7 @@
 	</section>
 	<!-- search_result end -->
 	<form id='popupForm'>
-		<input type="hidden" id="sUrl" name="sUrl"> 
+		<input type="hidden" id="sUrl" name="sUrl">
 		<input type="hidden" id="svalue" name="svalue">
 	</form>
 </section>

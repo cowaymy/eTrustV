@@ -1,6 +1,8 @@
 package com.coway.trust.biz.logistics.stockmovement.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +17,6 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.stockmovement.StockMovementService;
 import com.coway.trust.biz.logistics.stocktransfer.StockTransferService;
 import com.coway.trust.cmmn.exception.ApplicationException;
-import com.coway.trust.cmmn.exception.PreconditionException;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -879,6 +880,8 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
         insMap.put("tlocation", fMap.get("tlocation"));
         insMap.put("rqty", insMap.get("itmfcastqty"));
 
+        logger.info("###insMap: " + insMap.toString());
+
         int iCnt = stockMoveMapper.selectAvaliableStockQty(insMap);
         if (iCnt == 1) {
           return "";
@@ -904,7 +907,82 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 
     insertStockBooking(fMap);
 
-    return reqNo;
+    String mdnNo = "";
+    String dvrNo = "";
+
+    logger.info("###isCody: " + fMap.get("isCody"));
+
+    // Added for Direct GI after SMO key in enhancement by Hui Ding, 29-03-2020
+    if(fMap.get("isCody") != null && fMap.get("isCody").equals("Y")){
+        String deliSeq = stockMoveMapper.selectDeliveryStockMovementSeq();
+        String[] delvcd = { deliSeq };
+
+        Map<String, Object> insMapGi = null;
+
+        if (insList.size() > 0) {
+            for (int i = 0; i < insList.size(); i++) {
+
+            	int itmNo = i + 1;
+            	insMapGi = (Map<String, Object>) insList.get(i);
+
+            	insMapGi.put("delno", deliSeq);
+            	insMapGi.put("reqstno", reqNo);
+            	insMapGi.put("reqitmno", itmNo);
+            	insMapGi.put("indelyqty", insMapGi.get("itmfcastqty"));
+            	insMapGi.put("userId", params.get("userId"));
+
+            	stockMoveMapper.insertDeliveryStockMovementDetail(insMapGi);
+
+              }
+
+            insMapGi.put("ttype", fMap.get("sttype"));
+            insMapGi.put("mtype", fMap.get("smtype"));
+
+            stockMoveMapper.insertDeliveryStockMovement(insMapGi);
+        }
+
+        Map<String, Object> giMap = new HashMap<String, Object>();
+
+        giMap.put("parray", delvcd);
+        giMap.put("gtype", "GI");
+        giMap.put("userId", params.get("userId"));
+        giMap.put("prgnm", params.get("prgnm"));
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date currDate = new Date();
+        giMap.put("giptdate", formatter.format(currDate));
+
+        logger.info("###giMap content: " + giMap.toString());
+
+        stockMoveMapper.StockMovementIssue(giMap);
+
+        if (giMap.get("rdata") != null){
+        	String result = giMap.get("rdata").toString();
+        	logger.info("###giMap rdata: " + result);
+
+        	String returnValue[] = result.split("∈");
+            for (int i = 0; i < returnValue.length; i++) {
+              returnValue[i] = returnValue[i].replaceAll(" ", "");
+            }
+
+            if (returnValue[0].equals("000")){
+            	mdnNo = returnValue[1];
+            }
+
+        }
+        dvrNo = deliSeq;
+    }
+
+    String result = "SMO No: " + reqNo ;
+
+    if (mdnNo != null && !mdnNo.equals("")){
+    	result = result +"</br>MDN No: " + mdnNo;
+    }
+    if (dvrNo != null && !dvrNo.equals("")){
+    	result = result + "</br>DVR No: " + dvrNo;
+    }
+
+    return result;
 
   }
 
