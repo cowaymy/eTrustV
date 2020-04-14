@@ -12,31 +12,23 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @Description : TO-DO Class Description
  *
  * @History
- * <pre>
+ *
+ *          <pre>
  * Date             Author          Description
  * -------------    -----------     -------------
  * 2019. 09. 16.    KR-JAEMJAEM:)   First creation
- * </pre>
+ * 2020. 04. 14.    MY-ONGHC         Restructure Messy Code
+ *          </pre>
  */
 public interface CustomerApiService {
 
+  List<EgovMap> selectCustomerList(CustomerApiForm param) throws Exception;
 
+  EgovMap selectCustomerInfo(CustomerApiForm param) throws Exception;
 
-	List<EgovMap> selectCustomerList(CustomerApiForm param) throws Exception;
+  List<EgovMap> selectCustomerOrder(CustomerApiForm param) throws Exception;
 
+  CustomerApiDto selectCodeList() throws Exception;
 
-
-	EgovMap selectCustomerInfo(CustomerApiForm param) throws Exception;
-
-
-
-    List<EgovMap> selectCustomerOrder(CustomerApiForm param) throws Exception;
-
-
-
-    CustomerApiDto selectCodeList() throws Exception;
-
-
-
-    CustomerApiForm saveCustomer(CustomerApiForm param) throws Exception;
+  CustomerApiForm saveCustomer(CustomerApiForm param) throws Exception;
 }
