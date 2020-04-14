@@ -95,7 +95,7 @@
 
     --CUSTOMER----------------------------------------------------------------------
                , B.TYPE_ID AS TYPE_ID
-               , B.NRIC AS NRIC
+               , TRIM(B.NRIC) AS NRIC
                , UPPER(A.SOF_NO) AS SOF_NO
                , UPPER(D.CODE) AS INITIALS
                , G.CODE_NAME AS COMPANY_TYPE
@@ -474,7 +474,7 @@
                , A.CUST_ID AS CUST_ID
                , UPPER(A.NAME) AS NAME
                , A.CUST_INITIAL AS CUST_INITIAL
-               , A.NRIC AS NRIC
+               , TRIM(A.NRIC) AS NRIC
                , A.POS AS POS
                , A.TEL_M1 AS TEL_M1
                , A.TEL_M2 AS TEL_M2
@@ -965,7 +965,7 @@
     ) B ON A.CUST_ID = B.CUST_ID
 
     <if test='step == "3" '>
-      WHERE A.NRIC = #{nric}
+      WHERE TRIM(A.NRIC) = TRIM(#{nric})
     </if>
   </select>
 
@@ -1101,7 +1101,7 @@
     <![CDATA[
     /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectCustomerInfo] 20191212 - KR JAEMAJEM */
     SELECT A.TYPE_ID AS TYPE_ID
-             , A.NRIC AS NRIC
+             , TRIM(A.NRIC) AS NRIC
              , UPPER(C.CODE) AS INITIALS
              , F.CODE_NAME AS COMPANY_TYPE
              , CASE WHEN TO_CHAR(A.DOB, 'DD/MM/YYYY') = '01/01/1900' THEN NULL
@@ -1126,7 +1126,7 @@
                                               AND E.CODE_MASTER_ID = 2
                                               AND E.DISAB = 0
      LEFT OUTER JOIN SYS0013M F ON A.CORP_TYPE_ID = F.CODE_ID
-     WHERE UPPER(A.NRIC) =  UPPER(#{nric})
+     WHERE UPPER(TRIM(A.NRIC)) =  UPPER(TRIM(#{nric}))
          AND A.TYPE_ID = #{typeId}
          AND A.STUS_CODE_ID != 8
          AND ROWNUM =1
