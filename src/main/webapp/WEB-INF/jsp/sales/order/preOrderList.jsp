@@ -387,10 +387,10 @@
     	var isValid = true, msg = "";
 
     	if(FormUtil.isEmpty($('#_memCode').val())
-    			//&& FormUtil.isEmpty($('#_appTypeId').val())
-    		    //&& FormUtil.isEmpty($('#_stusId').val())
-    		    //&& FormUtil.isEmpty($('#_brnchId').val())
-    		    //&& FormUtil.isEmpty($('#_typeId').val())
+    			&& FormUtil.isEmpty($('#_appTypeId').val())
+    		    && FormUtil.isEmpty($('#_stusId').val())
+    		    && FormUtil.isEmpty($('#_brnchId').val())
+    		    && FormUtil.isEmpty($('#_typeId').val())
     		    && FormUtil.isEmpty($('#_nric').val())
     		    && FormUtil.isEmpty($('#_name').val())
     		    && (FormUtil.isEmpty($('#_reqstStartDt').val()) || FormUtil.isEmpty($('#_reqstEndDt').val()))
