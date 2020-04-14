@@ -11,52 +11,34 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @Description : TO-DO Class Description
  *
  * @History
- * <pre>
+ *
+ *          <pre>
  * Date             Author          Description
  * -------------    -----------     -------------
  * 2019. 09. 16.    KR-JAEMJAEM:)   First creation
- * </pre>
+ * 2020. 04. 14.    MY-ONGHC         Restructure Messy Code
+ *          </pre>
  */
 @Mapper("CustomerApiMapper")
 public interface CustomerApiMapper {
 
+  List<EgovMap> selectCustomerList(Map<String, Object> params);
 
+  EgovMap selectCustomerInfo(Map<String, Object> params);
 
-	List<EgovMap> selectCustomerList(Map<String, Object> params);
+  List<EgovMap> selectCustomerOrder(Map<String, Object> params);
 
+  List<EgovMap> selectCodeList();
 
+  int selectNricNoCheck(Map<String, Object> param);
 
-	EgovMap selectCustomerInfo(Map<String, Object> params);
+  int selectTelCheck(Map<String, Object> param);
 
+  int insertCustomer(Map<String, Object> param);
 
+  int insertCustAddress(Map<String, Object> param);
 
-    List<EgovMap> selectCustomerOrder(Map<String, Object> params);
+  int insertCustContact(Map<String, Object> param);
 
-
-
-    List<EgovMap> selectCodeList();
-
-
-
-    int selectNricNoCheck(Map<String, Object> param);
-
-
-
-    int selectTelCheck(Map<String, Object> param);
-
-
-
-    int insertCustomer(Map<String, Object> param);
-
-
-
-    int insertCustAddress(Map<String, Object> param);
-
-
-
-    int insertCustContact(Map<String, Object> param);
-
-
-
-    int insertCustCareContact(Map<String, Object> param);
+  int insertCustCareContact(Map<String, Object> param);
 }
