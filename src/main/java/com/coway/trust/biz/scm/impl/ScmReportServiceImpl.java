@@ -48,7 +48,7 @@ public class ScmReportServiceImpl implements ScmReportService {
 	private ScmCommonMapper scmCommonMapper;
 	@Autowired
 	private ScmReportMapper scmReportMapper;
-	
+
 	//	Business Plan Report
 	@Override
 	public List<EgovMap> selectPlanVer(Map<String, Object> params) {
@@ -68,33 +68,46 @@ public class ScmReportServiceImpl implements ScmReportService {
 	}
 	@Override
 	public int saveBusinessPlanAll(List<Map<String, Object>> allList, SessionVO sessionVO) {
-		
+
 		LOGGER.debug("saveBusinessPlanAll : {}", allList);
-		int cnt	= 0;
-		
-		Map<String, Object> delParam	= new HashMap<>();
+		int cnt = 0;
+		String mcol = "";
+
+		Map<String, Object> delParam = new HashMap<>();
 		delParam.put("year", allList.get(0).get("year"));
-		
+
 		try {
 			scmReportMapper.deleteBusinessPlan(delParam);
-			
-			for ( Map<String, Object> list : allList ) {
-				list.put("userId", sessionVO.getUserId());
-				scmReportMapper.insertBusinessPlan(list);
-				cnt++;
+
+			for (Map<String, Object> list : allList) {
+
+				if (!CommonUtils.nvl(((Map<String, Object>) list).get("stockCode")).isEmpty()) {
+					for (int i = 1; i < 13; i++) {
+						mcol = (i < 10) ? "m0" + i : "m" + String.valueOf(i);
+						if (!CommonUtils.nvl(((Map<String, Object>) list).get(mcol)).isEmpty()) {
+							if (((Map<String, Object>) list).get(mcol).toString().contains(",")) {
+								((Map<String, Object>) list).put(mcol,
+										((Map<String, Object>) list).get(mcol).toString().replaceAll(",", ""));
+							}
+						}
+					}
+					list.put("userId", sessionVO.getUserId());
+					scmReportMapper.insertBusinessPlan(list);
+					cnt++;
+				}
 			}
-		} catch ( Exception e ) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		return	cnt;
+
+		return cnt;
 	}
 	@Override
 	public int saveBusinessPlan(List<Map<String, Object>> updList, SessionVO sessionVO) {
-		
+
 		LOGGER.debug("saveBusinessPlanAll : {}", updList);
 		int cnt	= 0;
-		
+
 		try {
 			for ( Map<String, Object> list : updList ) {
 				list.put("userId", sessionVO.getUserId());
@@ -104,10 +117,10 @@ public class ScmReportServiceImpl implements ScmReportService {
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		
+
 		return	cnt;
 	}
-	
+
 	//	Sales Plan Accuracy
 	@Override
 	public List<EgovMap> selectSalesPlanAccuracyWeeklyDetailHeader(Map<String, Object> params) {
@@ -155,16 +168,16 @@ public class ScmReportServiceImpl implements ScmReportService {
 	}
 	@Override
 	public int saveSalesPlanAccuracyMaster(List<Map<String, Object>> updList, SessionVO sessionVO) {
-		
+
 		LOGGER.debug("saveSalesPlanAccuracyMaster : {}", updList);
-		
+
 		int thisWeekTh	= 0;
 		int saveCnt	= 0;
 		int weeklyVal	= 0;
-		
+
 		Map<String, Object> delParam	= new HashMap<>();
 		Map<String, Object> insParam	= new HashMap<>();
-		
+
 		try {
 			for ( Map<String, Object> list : updList ) {
 				//	Master 그리드의 row
@@ -173,7 +186,7 @@ public class ScmReportServiceImpl implements ScmReportService {
 				delParam.put("gbn", list.get("gbn"));
 				LOGGER.debug("saveSalesPlanAccuracyMaster delete : {}", delParam);
 				scmReportMapper.deleteSalesPlanAccuracyMaster(delParam);
-				
+
 				//	insert
 				for ( int i = 1 ; i < 17 ; i++ ) {
 					//	Master 그리드의 column
@@ -186,7 +199,7 @@ public class ScmReportServiceImpl implements ScmReportService {
 						scmReportMapper.insertSalesPlanAccuracyMaster(insParam);
 					}
 				}
-				
+
 				//	마스터 변경한 연도의 판매계획 정확도 재실행
 				scmReportMapper.executeSalesPlanAccuracy(delParam);
 				saveCnt++;
@@ -194,10 +207,10 @@ public class ScmReportServiceImpl implements ScmReportService {
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		
+
 		return	saveCnt;
 	}
-	
+
 	//	Ontime Delivery Report
 	@Override
 	public List<EgovMap> selectOntimeDeliverySummary(Map<String, Object> params) {
@@ -211,7 +224,7 @@ public class ScmReportServiceImpl implements ScmReportService {
 	public List<EgovMap> selectOntimeDeliveryPopup(Map<String, Object> params) {
 		return	scmReportMapper.selectOntimeDeliveryPopup(params);
 	}
-	
+
 	//	Inventory Report
 	@Override
 	public List<EgovMap> selectInventoryReportTotalHeader(Map<String, Object> params) {
@@ -241,7 +254,7 @@ public class ScmReportServiceImpl implements ScmReportService {
 	public void executeScmInventory(Map<String, Object> params) {
 		try {
 			scmReportMapper.executeScmInventory(params);
-			
+
 			if ( 0 < Integer.parseInt(params.get("staValue").toString()) ) {
 				LOGGER.debug("executeScmInventory.staValue : " + Integer.parseInt(params.get("staValue").toString()));
 				scmReportMapper.executeScmDaysInInventory(params);
@@ -257,7 +270,7 @@ public class ScmReportServiceImpl implements ScmReportService {
 			e.printStackTrace();
 		}
 	}
-	
+
 	//	Aging Report
 	@Override
 	public List<EgovMap> selectAgingInventoryHeader(Map<String, Object> params) {
