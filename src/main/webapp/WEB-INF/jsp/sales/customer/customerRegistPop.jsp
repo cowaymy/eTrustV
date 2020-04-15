@@ -72,6 +72,7 @@
             }
         });
 
+        $("#_nric_").keyup(function(){$(this).val($.trim($(this).val().toUpperCase()));});
     });
 
     function fn_initAddress(){

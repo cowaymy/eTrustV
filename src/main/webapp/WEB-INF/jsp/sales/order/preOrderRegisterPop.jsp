@@ -68,8 +68,17 @@
         //$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>Upload</a></span></label>");
 
         //UpperCase Field
-        $("#nric").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
-        $("#sofNo").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
+        // Function to Blocck from keyin special character
+        /* $('#nric').keypress(function (event) {
+		    var regex = new RegExp("^[a-zA-Z0-9]+$");
+		    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+		    if (!regex.test(key)) {
+		       event.preventDefault();
+		       return false;
+		    }
+		}); */
+        $("#nric").keyup(function(){$(this).val($.trim($(this).val().toUpperCase()));});
+        $("#sofNo").keyup(function(){$(this).val($(this).val().toUpperCase());});
 
         // 20190925 KR-OHK Moblie Popup Setting
         Common.setMobilePopup(true, false,'');

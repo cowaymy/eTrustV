@@ -69,8 +69,8 @@
         doGetComboSepa ('/homecare/selectHomecareBranchList.do', '',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 
         //UpperCase Field
-        $("#nric").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
-        $("#sofNo").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
+        $("#nric").keyup(function(){$(this).val($.trim($(this).val().toUpperCase()));});
+        $("#sofNo").keyup(function(){$(this).val($(this).val().toUpperCase());});
 
         // 20190925 KR-OHK Moblie Popup Setting
         Common.setMobilePopup(true, false,'');
