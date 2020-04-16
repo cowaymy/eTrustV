@@ -18,6 +18,7 @@
   var PV_MONTH = "${ordPvMonth}";
   var PV_YEAR = "${ordPvYear}";
   var CUST_TYPE_ID = "${typeId}";
+  var SOF_NO = "${orderDetail.basicInfo.ordRefNo}";
 
   var keyValueList = [];
 
@@ -295,7 +296,12 @@
     $('#btnSaveBasicInfo').click(function() {
       if (!fn_validBasicInfo())
         return false;
-      if(fn_isExistESalesNo() == 'true') return false;
+console.log("SOF" + SOF_NO);
+      if(SOF_NO != $('#modOrdRefNo').val()){
+    	  if(fn_isExistESalesNo() == 'true')
+    		  return false;
+      }
+
       fn_doSaveBasicInfo();
     });
     $('#btnSaveMailingAddress').click(function() {
@@ -680,7 +686,7 @@
                                   ordId : ORD_ID
                                 },
                                 function(result) {
-                                  if (result.stusCodeId != "4"
+                                   if (result.stusCodeId != "4"
                                       && result.modeId != "131") {
                                     Common
                                         .alert('Change paymode to CRC is not allowed due to installation is not complete');
@@ -703,17 +709,17 @@
                                 ordId : ORD_ID
                               },
                               function(result) {
-                                if (result.stusCodeId != "4"
+                               /*  if (result.stusCodeId != "4"
                                     && result.modeId != "131") {
                                   Common
                                       .alert('Change paymode to CRC is not allowed due to installation is not complete');
 
                                 } else {
-                                  $(
+ */                                  $(
                                       '#scPC_CrCard')
                                       .removeClass(
                                           "blind");
-                                }
+                               // }
                               });
                     }
                   } else if ($('#rentPayMode').val() == '132') {
