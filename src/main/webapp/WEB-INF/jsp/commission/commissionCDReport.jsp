@@ -332,7 +332,7 @@
 	                                <option value="3">Cody Comm Calculation</option>
 	                                <option value="4">Cody Manager Comm Calculation</option>
 	                                <option value="5">Hand Collection Data</option>
-	                                <option value="6">Cody Retation Report</option>
+	                                <option value="6">Cody Rentation Report</option>
 	                                <option value="7">Cody SHI Index Raw</option>
 	                                <option value="8">Cody Manager SHI Index Raw</option>
 	                                <option value="10">Cody MBO Raw</option>
