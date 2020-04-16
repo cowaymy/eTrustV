@@ -153,7 +153,7 @@
         $("#advList_btn").click(fn_searchAdv);
         $("#refund_btn").click(fn_repaymentPop);
 
-        $("#search_costCenter_btn").click();
+        $("#search_costCenter_btn").click(fn_costCenterSearchPop);
         $("#search_payee_btn").click(fn_popPayeeSearchPop);
 
         // Advance Request
@@ -236,6 +236,14 @@
             $("#costCenterCode").val($("#search_costCentr").val());
             $("#costCenterName").val($("#search_costCentrName").val());
         }
+    }
+
+    function fn_costCenterSearchPop() {
+        Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", null, null, true, "costCenterSearchPop");
+    }
+
+    function fn_setCostCenter() {
+        $("#listCostCenter").val($("#search_costCentr").val());
     }
 
     /******************************************
@@ -1786,7 +1794,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Repayment Date</th>
+                        <th scope="row">Repayment Due Date</th>
                         <td colspan="2">
                             <input type="text" title="Repayment Date" placeholder="Repayment Date" id="trvAdvRepayDate" name="trvAdvRepayDate" class="j_date" style="200px" />
                         </td>

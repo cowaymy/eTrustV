@@ -101,17 +101,17 @@
             </if>
             <if test="reqEndDt != null and reqEndDt != ''">
                 <![CDATA[
-                    AND B.REQST_DT <= TO_DATE(#{reqEndDt}, 'DD/MM/YYYY')
+                    AND B.REQST_DT < TO_DATE(#{reqEndDt}, 'DD/MM/YYYY') + 1
                 ]]>
             </if>
             <if test="clmNoStart != null and clmNoStart != ''">
                 <![CDATA[
-                    AND B.CLM_NO >= #{clmNoStart}
+                    AND A.CLM_NO >= #{clmNoStart}
                 ]]>
             </if>
             <if test="clmNoEnd != null and clmNoEnd != ''">
                 <![CDATA[
-                    AND B.CLM_NO <= #{clmNoEnd}
+                    AND A.CLM_NO <= #{clmNoEnd}
                 ]]>
             </if>
             <if test="appStartDt != null and appStartDt != ''">
