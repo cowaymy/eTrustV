@@ -25,10 +25,39 @@
         rdcStk = Number(0);
       }
 
-      if (rdcStk <= 0) {
-        // Common.alert("There is no available inventory in RDC to create installation order ");
-        msg += "* There is no available inventory in RDC to create installation order </br>";
-      }
+      // Added for Special Delivery CT enhancement 2 by Hui Ding, 2020-04-17
+      var superCtInd = $("#superCtInd").val();
+      var superCtCode = $("#superCtCode").val();
+      var seletedCtCode = $("#CTCode").val();
+
+      console.log("superCtInd: " + superCtInd);
+      console.log("superCtCode: " + superCtCode);
+
+      if (typeof superCtInd === 'undefined' || superCtInd == null){
+    	  if (rdcStk <= 0) {
+              // Common.alert("There is no available inventory in RDC to create installation order ");
+              msg += "* There is no available inventory in RDC to create installation order </br>";
+          }
+      } else {
+          var rdcSuperCtStk = $("#rdcSuperCt").text();
+          if (rdcSuperCtStk.trim() != '' || rdcSuperCtStk != null) {
+              rdcSuperCtStk = Number(rdcSuperCtStk);
+          } else {
+              rdcSuperCtStk = Number(0);
+          }
+
+          if (seletedCtCode != null && seletedCtCode == superCtCode){
+              if (rdcSuperCtStk <= 0) {
+                  // Common.alert("There is no available inventory in RDC to create installation order ");
+                  msg += "* There is no available inventory in Super CT RDC to create installation order </br>";
+                }
+          } else {
+              if (rdcStk <= 0) {
+                  // Common.alert("There is no available inventory in RDC to create installation order ");
+                  msg += "* There is no available inventory in RDC to create installation order </br>";
+              }
+          }
+        }
 
       //if ($("#rdc").text() == '' || $("#rdc").text() == "0" || $("#rdc").text() == " ") {
         // Common.alert("There is no available inventory in RDC to create installation order ");
@@ -62,7 +91,7 @@
 
   function fn_saveConfirm() {
     if (fn_saveValidation()) {
-      var msg = "";
+      var msg = "<b>Kindly confirm on stock quantity before saving!!!</b></br></br>";
 
       if ($("#callStatus").val() != "") {
         msg += "<spring:message code='service.title.CallLogStatus'/><b>" + " : " + $("#callStatus option:selected").text() + "</b></br>";
@@ -329,6 +358,8 @@
   }
 
 </script>
+<input type="hidden" id="superCtInd" value="${superCtInd}"/>
+<input type="hidden" id="superCtCode" value="${superCtCode}"/>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
  <header class="pop_header">
@@ -431,7 +462,7 @@
           <span id="cdc">0</span>
          </c:if> <c:if test="${orderRdcInCdc.rdc != orderRdcInCdc.cdc }">
           <span id="cdc"><c:out value="${orderRdcInCdc.caqty}" /></span>
-         </c:if> <!--
+         </c:if> </td> <!--
         <th scope="row"><spring:message code='service.title.RDCAvailableQty'/></th>
 
        <c:if test= "${rdcStock.availQty != null }" >
@@ -470,6 +501,25 @@
         </c:if>
         -->
        </tr>
+       <!-- Added for Special Delivery CT enhancement 2 by Hui Ding, 2020-04-17 -->
+       <c:if test="${superCtInd != null}">
+            <tr>
+                <th scope="row">Super CT RDC Qty</th>
+		        <td><span id="rdcSuperCt"><c:out
+		           value="${rdcincdcSuperCt.raqty}" /></span></td>
+		        <th scope="row">Super CT In-Transit Qty</th>
+		        <td><span id="rdcInCdcSuperCt"><c:out
+		           value="${rdcincdcSuperCt.rinqty}" /></span></td>
+		        <th scope="row">Super CT CDC Qty</th>
+		        <td>
+		          <c:if test="${rdcincdcSuperCt.rdc== rdcincdcSuperCt.cdc }">
+		          <span id="cdcSuperCt">0</span>
+		         </c:if> <c:if test="${rdcincdcSuperCt.rdc != rdcincdcSuperCt.cdc }">
+		          <span id="cdcSuperCt"><c:out value="${rdcincdcSuperCt.caqty}" /></span>
+		         </c:if>
+		        </td>
+            </tr>
+       </c:if>
       </tbody>
      </table>
      <!-- table end -->
