@@ -151,9 +151,18 @@ public class OrderCallListController {
 
     // Added for Special Delivery CT enhancement by Hui Ding, 31-03-2020
  	EgovMap superCtInd = commonMapper.selectSuperCtInd();
+ 	EgovMap superCtCode = commonMapper.selectSuperCtCode();
+ 	EgovMap superCtOrderCall = null;
 
- 	if (orderCall != null && superCtInd != null) {
- 		orderCall.put("superCtInd", superCtInd.get("code").toString());
+ 	if (orderCall != null && superCtInd != null && superCtCode !=null) {
+
+ 		model.addAttribute("superCtInd", superCtInd.get("code").toString());
+ 		model.addAttribute("superCtCode", superCtCode.get("code").toString());
+
+ 		superCtOrderCall = new EgovMap();
+ 		superCtOrderCall.put("superCtInd", superCtInd.get("code").toString());
+ 		superCtOrderCall.put("productCode", orderCall.get("productCode"));
+
  		EgovMap superCtCdMap = commonMapper.selectSuperCtCode();
  		EgovMap branchMap = null;
 
@@ -167,11 +176,15 @@ public class OrderCallListController {
  				branchMap = locationMapper.selectBranchByWhLocId(tempMap);
  				logger.info("###branchMap: " + branchMap.get("branchId").toString());
 
- 				orderCall.put("dscBrnchId", branchMap.get("branchId"));
+ 				superCtOrderCall.put("dscBrnchId", branchMap.get("branchId"));
  			}
  		}
  	}
 
+ 	EgovMap rdcincdcSuperCt = null;
+ 	if (superCtOrderCall != null) {
+ 		rdcincdcSuperCt = orderCallListService.getRdcInCdc(superCtOrderCall);
+ 	}
     EgovMap rdcincdc = orderCallListService.getRdcInCdc(orderCall);
     List<EgovMap> callStatus = orderCallListService.selectCallStatus();
     List<EgovMap> callLogSta = orderCallListService.selectCallLogSta();
@@ -195,6 +208,7 @@ public class OrderCallListController {
     model.addAttribute("callLogSta", callLogSta);
     model.addAttribute("orderDetail", orderDetail);
     model.addAttribute("orderRdcInCdc", rdcincdc);
+    model.addAttribute("rdcincdcSuperCt", rdcincdcSuperCt);
 
     return "services/orderCall/addCallLogResultPop";
   }
