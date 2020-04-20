@@ -874,7 +874,7 @@ function savePayment(){
       if(result != null && result.length > 0){
         for(i=0 ; i < result.length ; i++){
           orNo = result[i].orNo;
-          if ((typeof(result[i].salesOrdNo) != "undefined")) {
+          if ((typeof(result[i].salesOrdNo) == "undefined")) {
             orderNo = "-";
           } else {
             orderNo = result[i].salesOrdNo;
