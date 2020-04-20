@@ -868,10 +868,18 @@ function savePayment(){
     Common.ajax("POST", "/payment/common/savePayment.do", data, function(result) {
 
       var message = "<spring:message code='pay.alert.successProc'/>";
+      var orNo = "";
+      var orderNo = ""
 
       if(result != null && result.length > 0){
         for(i=0 ; i < result.length ; i++){
-          message += "<font color='red'>" + result[i].orNo + " (Order No: " + result[i].salesOrdNo +  ")</font><br>";
+          orNo = result[i].orNo;
+          if ((typeof(result[i].salesOrdNo) != "undefined")) {
+            orderNo = "-";
+          } else {
+            orderNo = result[i].salesOrdNo;
+          }
+          message += "<font color='red'>" + result[i].orNo + " (Order No: " + orderNo +  ")</font><br>";
         }
       }
 
@@ -2426,7 +2434,7 @@ function addBillToFinal(){
     Common.alert("<spring:message code='pay.alert.onlyOneBill'/>");
     return;
   } else {
-    if(isDupHPToFinal() > 0 || isDupASToFinal() > 0){
+    if(isDupHPToFinal() > 0 || isDupASToFinal() > 0 || isDupPOSToFinal() > 0){
       Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
       return;
     }
@@ -2547,6 +2555,29 @@ function isDupHPToFinal(){
         if(addedRows.length > 0) {
           for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
             if (AUIGrid.getCellValue(targetBillMstGridID, i ,"billId") == addedRows[addedIdx].billId && AUIGrid.getCellValue(targetBillMstGridID, i ,"appType") == 'HP') {
+              dupCnt++;
+            }
+          }
+        }
+      }
+    }
+  }
+  return dupCnt;
+}
+
+//Add 할때 중복된 건이 있는지 체크한다.
+function isDupPOSToFinal(){
+  var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);
+  var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","POS");
+  var dupCnt = 0;
+
+
+  if(rowCnt > 0){
+    for(i = 0 ; i < rowCnt ; i++){
+      if(AUIGrid.getCellValue(targetBillMstGridID, i ,"btnCheck") == 1){
+        if(addedRows.length > 0) {
+          for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+            if (AUIGrid.getCellValue(targetBillMstGridID, i ,"billId") == addedRows[addedIdx].billId && AUIGrid.getCellValue(targetBillMstGridID, i ,"appType") == 'POS') {
               dupCnt++;
             }
           }
