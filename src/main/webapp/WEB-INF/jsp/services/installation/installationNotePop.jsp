@@ -182,6 +182,10 @@
         whereSeq2 += "AND INSTALL.BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '" + $("#branch").val() + "' AND STUS_ID = 1) ";
       }
 
+      if ($("#postCode").val() != '' && $("#postCode").val() != null) {
+    	  whereSeq2 += "AND A.POSTCODE = '" + $("#postCode").val() + "' ";
+      }
+
       if ($("#sortType").val() == "2") {
         orderBySql = "ORDER BY CTMEM.MEM_CODE ";
       } else if ($("#sortType").val() == "1") {
@@ -371,8 +375,10 @@
        </td>
      </tr>
      <tr>
+     <th scope="row"><spring:message code='service.title.postCode' /></th>
+      <td><input type="text" title="" placeholder="<spring:message code='service.title.postCode' />" class="w100p" id="postCode" name="postCode" />
       <th scope="row"><spring:message code='service.title.SortBy' /> <span name="m5" id="m5" class="must">*</span></th>
-      <td colspan="3"><select id="sortType" name="sortType">
+      <td><select id="sortType" name="sortType">
         <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
         <option value="1">Installation Number</option>
         <option value="2" selected>CT Code</option>
