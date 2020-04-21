@@ -388,6 +388,9 @@
           , TO_CHAR(SERIAL_CHK) AS serial_Chk
           , TO_CHAR(MATSIZE) AS matsize
           , TO_CHAR(HCSALESORDERNO) AS HC_SALES_ORDER_NO
+          , TO_CHAR(HCREFNO) AS HC_REF_NO
+          , TO_CHAR(HCREFCAT) AS HC_REF_CAT
+          , TO_CHAR(HCREFPRD) AS HC_REF_PRD
     FROM SVC0101T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -4495,7 +4498,10 @@
            homeCareOrderYn AS home_Care_Order_Yn,
            NVL(SERIAL_CHK, 'N') AS SERIAL_CHK,
            TO_CHAR (SALES_PROD_SZ) AS MATSIZE,
-           SALES_ORD_NO AS HC_SALES_ORDER_NO
+           SALES_ORD_NO AS HC_SALES_ORDER_NO,
+           HC_REF_NO,
+           HC_REF_CAT,
+           HC_REF_PROD
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -4555,7 +4561,10 @@
                   homeCareOrderYn,
                   SERIAL_CHK,
                   SALES_PROD_SZ,
-                  SALES_ORD_NO
+                  SALES_ORD_NO,
+                  HC_REF_NO,
+                  HC_REF_CAT,
+                  HC_REF_PROD
            FROM ( SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
                                   A.STUS_CODE_ID AS job_Status,
@@ -4628,7 +4637,10 @@
                                    CASE WHEN SAL.SALES_ORD_NO IS NULL THEN 'N' ELSE 'Y' END AS homeCareOrderYn,
                                    L.SERIAL_CHK,
                                    C.SALES_PROD_SZ,
-                                   SAL.SALES_ORD_NO
+                                   SAL.SALES_ORD_NO,
+                                   Z.SALES_ORD_NO AS HC_REF_NO,
+                                   AC.CODE AS HC_REF_CAT,
+                                   AB.STK_DESC AS HC_REF_PROD
                   FROM (SELECT A.*
                         FROM SVC0008D A,
                         ORG0001D B
@@ -4704,8 +4716,12 @@
                  SAL0017D T,
                  (SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID, SRV_SO_ID, FAUCET_EXCH FROM SAL0090D WHERE SRV_STUS_ID = 1 GROUP BY SRV_SO_ID, FAUCET_EXCH) U,
                  SAL0028D W,
-                 SYS0013M X
-
+                 SYS0013M X,
+                 (SELECT SALES_ORD_ID, REM_STATUS  FROM SVC0113D WHERE STATUS = '4') Y,
+                 SAL0001D Z,
+                 SAL0002D AA,
+                 SYS0026M AB,
+                 (SELECT CODE_ID ,CODE FROM SYS0013M WHERE CODE_MASTER_ID = '11') AC
                  WHERE A.SCHDUL_ID = B.SCHDUL_ID(+)
                     AND A.SALES_ORD_ID = B.SALES_ORD_ID(+)
                     AND A.SALES_ORD_ID = C.SRV_ORD_ID
@@ -4736,6 +4752,12 @@
                     AND C.PROMO_ID = T.PROMO_ID(+)
                     AND C.SRV_ORD_ID = U.SRV_SO_ID
                     AND B.RESULT_IS_CURR(+) = 1
+
+                    AND C.REF_NO = Y.REM_STATUS(+)
+                    AND Y.SALES_ORD_ID = Z.SALES_ORD_ID(+)
+                    AND Z.SALES_ORD_ID = AA.SALES_ORD_ID(+)
+                    AND AA.ITM_STK_ID = AB.STK_ID(+)
+                    AND AB.STK_CTGRY_ID = AC.CODE_ID(+)
                   )AA ,( SELECT SRV_CONFIG_ID ,
                                 COUNT(*) FILT_CNT
                          FROM ( (SELECT *
