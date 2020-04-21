@@ -213,6 +213,12 @@ public class CareServiceJobDto {
 
   private String hcSalesOrderNo;
 
+  private String hcRefNo;
+
+  private String hcRefCat;
+
+  private String hcRefProd;
+
   public String getHomeCareOrderYn() {
     return homeCareOrderYn;
   }
@@ -777,6 +783,30 @@ public class CareServiceJobDto {
 
   public void setHcSalesOrderNo(String hcSalesOrderNo) {
     this.hcSalesOrderNo = hcSalesOrderNo;
+  }
+
+  public String getHcRefNo() {
+    return hcRefNo;
+  }
+
+  public void setHcRefNo(String hcRefNo) {
+    this.hcRefNo = hcRefNo;
+  }
+
+  public String getHcRefCat() {
+    return hcRefCat;
+  }
+
+  public void setHcRefCat(String hcRefCat) {
+    this.hcRefCat = hcRefCat;
+  }
+
+  public String getHcRefProd() {
+    return hcRefProd;
+  }
+
+  public void setHcRefProd(String hcRefProd) {
+    this.hcRefProd = hcRefProd;
   }
 
 }
