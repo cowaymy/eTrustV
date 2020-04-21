@@ -19,6 +19,7 @@
       doGetCombo('/common/selectCodeList.do', '10', '', 'appliType', 'M', 'fn_multiCombo');
       //doGetComboSepa("/common/selectBranchCodeList.do", 5, '-', '', 'branch', 'S', '');
       doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'branch', 'S', ''); // DSC BRANCH
+      CommonCombo.make('state', "/sales/customer/selectMagicAddressComboList", '' , '');
 
       $("#branch").change(
         function() {
@@ -182,8 +183,12 @@
         whereSeq2 += "AND INSTALL.BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '" + $("#branch").val() + "' AND STUS_ID = 1) ";
       }
 
-      if ($("#postCode").val() != '' && $("#postCode").val() != null) {
-    	  whereSeq2 += "AND A.POSTCODE = '" + $("#postCode").val() + "' ";
+      if ($("#city").val() != '' && $("#city").val() != null) {
+          whereSeq2 += "AND A.CITY = '" + $("#city").val() + "' ";
+      }
+
+      if ($("#postCd").val() != '' && $("#postCd").val() != null) {
+    	  whereSeq2 += "AND A.POSTCODE IN (" + $("#postCd").val() + ") ";
       }
 
       if ($("#sortType").val() == "2") {
@@ -194,6 +199,8 @@
         orderBySql = "ORDER BY STK.STK_CODE ";
       } else if ($("#sortType").val() == "4") {
         orderBySql = "ORDER BY MAIN.SALES_ORD_NO ";
+      } else if ($("#sortType").val() == "5") {
+        orderBySql = "ORDER BY A.POSTCODE ";
       }
 
       console.log(whereSeq);
@@ -239,6 +246,35 @@
     $("#viewType").val('');
 
     doGetCombo('/services/as/selectCTByDSC.do', '-', '', 'CTCode', 'M', 'fn_multiCombo');
+  }
+
+  function fn_selectState(selVal){
+	  if(!FormUtil.isEmpty(selVal)){
+          $("#city").attr({"disabled" : false  , "class" : "w100p"});
+
+          var cityJson = {state : selVal}; //Condition
+          CommonCombo.make('city', "/sales/customer/selectMagicAddressComboList", cityJson, '');
+      }else{
+    	  $('#city').val('');
+          $("#city").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+
+    	  $('#postCd').val('');
+    	  $("#postCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+      }
+  }
+
+  function fn_selectCity(selVal){
+	  if(!FormUtil.isEmpty(selVal)){
+           $("#postCd").attr({"disabled" : false  , "class" : "w100p"});
+
+          //Call ajax
+          var postCodeJson = {state : $("#state").val() , city : selVal}; //Condition
+          CommonCombo.make('postCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, '', {type: 'M'});
+      }else{
+    	  $('#postCd').val('');
+          $("#postCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+      }
+
   }
 
 </script>
@@ -367,16 +403,23 @@
         </p>
        </div>
       </td> -->
-
       <th scope="row"><spring:message code='service.grid.CTCode' /></th>
        <td>
         <select id="CTCode" name="CTCode" class="multy_select w100p" multiple="multiple">
         </select>
        </td>
      </tr>
+
+     <tr>
+          <th scope="row"><spring:message code="service.title.State" /></th>
+            <td><select class="w100p" id="state"  name="state" onchange="javascript : fn_selectState(this.value)" ></select></td>
+          <th scope="row"><spring:message code="sys.city" /></th>
+            <td><select class="w100p disabled" id="city"  name="city" disabled  onchange="javascript : fn_selectCity(this.value)"></select></td>
+      </tr>
+
      <tr>
      <th scope="row"><spring:message code='service.title.postCode' /></th>
-      <td><input type="text" title="" placeholder="<spring:message code='service.title.postCode' />" class="w100p" id="postCode" name="postCode" />
+      <td><select class="w100p disabled" id="postCd"  name="postCd" disabled></select></td>
       <th scope="row"><spring:message code='service.title.SortBy' /> <span name="m5" id="m5" class="must">*</span></th>
       <td><select id="sortType" name="sortType">
         <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
@@ -384,6 +427,7 @@
         <option value="2" selected>CT Code</option>
         <option value="3">Product</option>
         <option value="4">Sales Order Number</option>
+        <option value="5">Post Code</option>
       </select></td>
      </tr>
     </tbody>
