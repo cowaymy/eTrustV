@@ -5234,4 +5234,26 @@
         AND A.STUS_CODE_ID <![CDATA[ <> ]]> 1
     ORDER BY ORD_NO
   </select>
+
+  <select id="getOrdDetail" parameterType="Map" resultType="egovMap">
+    SELECT UPPER(TRIM(C.ADDR_DTL)) AS INST_ADDS1,
+               UPPER(TRIM(C.STREET)) AS INST_ADDS2,
+               UPPER(TRIM(D.AREA)) AS AREA,
+               TO_CHAR(D.POSTCODE) AS POST_CDE,
+               UPPER(TRIM(D.CITY)) AS CITY,
+               UPPER(TRIM(D.STATE)) AS STATE,
+               UPPER(TRIM(D.COUNTRY)) AS COUNTRY,
+               UPPER(TRIM(E.NAME)) AS CONT_PSN,
+               TO_CHAR(E.TEL_M1) AS HP_NO,
+               TO_CHAR(E.TEL_R) AS HM_NO,
+               TO_CHAR(E.TEL_O) AS OFF_NO,
+               TRIM(E.EMAIL) AS EMAIL
+    FROM SAL0001D A
+    JOIN SAL0045D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+    LEFT JOIN SAL0023D C ON C.CUST_ID = A.CUST_ID AND B.ADD_ID = C.CUST_ADD_ID
+    LEFT JOIN SYS0064M D ON D.AREA_ID = C.AREA_ID
+    LEFT JOIN SAL0027D E ON C.CUST_ID = A.CUST_ID AND E.CUST_CNTC_ID = B.CNT_ID
+    WHERE A.SALES_ORD_NO = #{ordNo};
+  </select>
+
 </mapper>
