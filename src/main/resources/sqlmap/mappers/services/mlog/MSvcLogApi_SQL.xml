@@ -5217,8 +5217,8 @@
                UPPER(G.CODE_DESC || '(' || G.CODE || ')') AS APP_TYP,
                UPPER(D.CODE_DESC || '(' || D.CODE || ')') AS PROD_CAT,
                UPPER(C.STK_DESC || '(' || C.STK_CODE || ')') AS PROD,
-               ABS(NVL(E.AMT, 0)) AS OUTSTD_AMT,
-               SIGN(NVL(E.AMT, 0)) AS SIGN_OUTSTD_AMT
+               TO_CHAR(ABS(NVL(E.AMT, 0))) AS OUTSTD_AMT,
+               TO_CHAR(SIGN(NVL(E.AMT, 0))) AS SIGN_OUTSTD_AMT
     FROM SAL0001D A
     JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
     LEFT JOIN SYS0026M C ON B.ITM_STK_ID = C.STK_ID AND C.STUS_CODE_ID = '1'
