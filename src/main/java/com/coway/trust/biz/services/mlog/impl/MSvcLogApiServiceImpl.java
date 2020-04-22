@@ -43,6 +43,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 29/07/2019    ONGHC      1.0.3       - Amend productReturnResult to Add Status Checking
  * 13/08/2019    ONGHC      1.0.4       - Add updFctExch
  * 27/11/2019    ONGHC      1.0.5       - Amend productReturnResult
+ * 22/04/2020    ONGHC      1.0.6       - Create getRelateOrdLst
  *********************************************************************************************/
 
 @Service("MSvcLogApiService")
@@ -961,9 +962,14 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
   /* Woongjin Jun */
 
   /* Woongjin Han */
-    @Override
-    public EgovMap getDelvryNo(Map<String, Object> params) {
-      return MSvcLogApiMapper.getDelvryNo(params);
-    }
+  @Override
+  public EgovMap getDelvryNo(Map<String, Object> params) {
+    return MSvcLogApiMapper.getDelvryNo(params);
+  }
   /* Woongjin Han */
+
+  @Override
+  public List<EgovMap> getRelateOrdLst(Map<String, Object> params) {
+    return MSvcLogApiMapper.getRelateOrdLst(params);
+  }
 }
