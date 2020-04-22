@@ -40,6 +40,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 03.        KR-HAN        RPF Error Edit
  * 2020. 04. 01    KR-HAN        Payment Key-in Error Edit
  * 2020. 04. 10    ONGHC         Amend saveMobilePaymentKeyInNormalPayment to fixed payment amount comparison issue
+ * 2020. 04. 22    KR-HAN        Payment Key-in - Calculation issue Edit
  *          </pre>
  */
 @Service("mobilePaymentKeyInService")
@@ -138,8 +139,8 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     Map<String, Object> gridListMap = null;
 
     Double totPayAmt = 0.00;
-
-    int procSeq = 1;
+    // 2020.02.24 : ADD ProcSeq
+    int iProcSeq = 1;
     String allowance = "0";
     String trRefNo = "";
     String trIssDt = "0";
@@ -230,9 +231,8 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       Double totTargetAmt = 0.00;
 
       for (int j = 0; j < orderInfoRentalList.size(); j++) {
-        // if( "1".equals(mstChkVal) ){
-    	  if ((mstRpf - mstRpfPaid > 0) && StringUtils.isEmpty(gridListMap.get("advMonth")) ) {
-              formMap = new HashMap<String, Object>();
+          // if( "1".equals(mstChkVal) ){
+          if ((mstRpf - mstRpfPaid > 0) && StringUtils.isEmpty(gridListMap.get("advMonth")) ) {
 
               String payAmt = String.valueOf(gridListMap.get("payAmt"));
               Double payAmtDou = Double.valueOf(payAmt);
@@ -245,112 +245,33 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
               	targetAmt = mstRpf - mstRpfPaid;
               }
 
-              formMap.put("procSeq", procSeq);
-              formMap.put("appType", "RENTAL");
-              formMap.put("advMonth", (Integer) gridListMap.get("advMonth")); // 셋팅필요 - SETTING REQUIRED
-              formMap.put("mstRpf", mstRpf);
-              formMap.put("mstRpfPaid", mstRpfPaid);
-
-              formMap.put("assignAmt", 0);
-              formMap.put("billAmt", mstRpf);
-              formMap.put("billDt", "1900-01-01");
-              formMap.put("billGrpId", mstCustBillId);
-              formMap.put("billId", 0);
-              formMap.put("billNo", "0");
-              formMap.put("billStatus", "");
-              formMap.put("billTypeId", 161);
-              formMap.put("billTypeNm", "RPF");
-              formMap.put("custNm", mstCustNm);
-              formMap.put("discountAmt", 0);
-              formMap.put("installment", 0);
-              formMap.put("ordId", salesOrdId);
-              formMap.put("ordNo", salesOrdNo);
-              formMap.put("paidAmt", mstRpfPaid);
-              formMap.put("targetAmt", targetAmt);
-              formMap.put("srvcContractID", 0);
-              formMap.put("billAsId", 0);
-              formMap.put("srvMemId", 0);
-              // item. = $("#rentalkeyInTrNo").val() ;
-              formMap.put("trNo", trRefNo); //
-              // item. = $("#rentalkeyInTrIssueDate").val() ;
-              formMap.put("trDt", trIssDt); //
-              // item.collectorCode = $("#rentalkeyInCollMemNm").val()
-              formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
-              // item.collectorId = $("#rentalkeyInCollMemId").val() ;
-              formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
-              // item.allowComm = $("#rentalcashIsCommChk").val()
-              // formMap.put("allowComm", "1");
-              formMap.put("allowComm", allowance);
-
-              formList.add(formMap);
-        }else{
-
-        int detailRowCnt = billInfoRentalList.size();
-
-        for (j = 0; j < detailRowCnt; j++) {
-          Map billInfoRentalMap = billInfoRentalList.get(j);
-          // String detChkVal = (String) billInfoRentalMap.get("btnCheck");
-          String detSalesOrdNo = (String) billInfoRentalMap.get("ordNo");
-
-          if (salesOrdNo.equals(detSalesOrdNo)) {
-
             formMap = new HashMap<String, Object>();
 
-            Double targetAmt = (Double) billInfoRentalMap.get("targetAmt");
-            String payAmt = String.valueOf(gridListMap.get("payAmt"));
-            Double payAmtDou = Double.valueOf(payAmt);
-
-            if ((totTargetAmt + targetAmt) > payAmtDou) {
-
-              if (detailRowCnt - 1 == j) {
-            	  if( totTargetAmt < 0 ){
-            		  targetAmt = payAmtDou;
-            	  }else{
-                	  targetAmt = payAmtDou - totTargetAmt;
-            	  }
-              } else {
-                targetAmt = payAmtDou - totTargetAmt;
-              }
-
-            } else {
-              targetAmt = targetAmt;
-            }
-
-            totTargetAmt = totTargetAmt + targetAmt;
-
-            if (totTargetAmt >= payAmtDou) {
-              if (!StringUtils.isEmpty(gridListMap.get("advMonth"))) {
-                break;
-              }
-            }
-
-            formMap.put("procSeq", procSeq);
+            formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
             formMap.put("appType", "RENTAL");
             formMap.put("advMonth", (Integer) gridListMap.get("advMonth")); // 셋팅필요
             formMap.put("mstRpf", mstRpf);
             formMap.put("mstRpfPaid", mstRpfPaid);
 
             formMap.put("assignAmt", 0);
-            formMap.put("billAmt", billInfoRentalMap.get("billAmt"));
-            formMap.put("billDt", billInfoRentalMap.get("billDt"));
-            formMap.put("billGrpId", billInfoRentalMap.get("billGrpId"));
-            formMap.put("billId", billInfoRentalMap.get("billId"));
-            formMap.put("billNo", billInfoRentalMap.get("billNo"));
-            formMap.put("billStatus", billInfoRentalMap.get("stusCode"));
-            formMap.put("billTypeId", billInfoRentalMap.get("billTypeId"));
-            formMap.put("billTypeNm", billInfoRentalMap.get("billTypeNm"));
-            formMap.put("custNm", billInfoRentalMap.get("custNm"));
+            formMap.put("billAmt", mstRpf);
+            formMap.put("billDt", "1900-01-01");
+            formMap.put("billGrpId", mstCustBillId);
+            formMap.put("billId", 0);
+            formMap.put("billNo", "0");
+            formMap.put("billStatus", "");
+            formMap.put("billTypeId", 161);
+            formMap.put("billTypeNm", "RPF");
+            formMap.put("custNm", mstCustNm);
             formMap.put("discountAmt", 0);
-            formMap.put("installment", billInfoRentalMap.get("installment"));
-            formMap.put("ordId", billInfoRentalMap.get("ordId"));
-            formMap.put("ordNo", billInfoRentalMap.get("ordNo"));
-            formMap.put("paidAmt", billInfoRentalMap.get("paidAmt"));
-            formMap.put("appType", "RENTAL");
-            formMap.put("targetAmt", targetAmt);
+            formMap.put("installment", 0);
+            formMap.put("ordId", salesOrdId);
+            formMap.put("ordNo", salesOrdNo);
+            formMap.put("paidAmt", mstRpfPaid);
+            formMap.put("targetAmt", payAmtDou);
             formMap.put("srvcContractID", 0);
             formMap.put("billAsId", 0);
             formMap.put("srvMemId", 0);
-
             // item. = $("#rentalkeyInTrNo").val() ;
             formMap.put("trNo", trRefNo); //
             // item. = $("#rentalkeyInTrIssueDate").val() ;
@@ -360,66 +281,171 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
             // item.collectorId = $("#rentalkeyInCollMemId").val() ;
             formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
             // item.allowComm = $("#rentalcashIsCommChk").val()
-            // formMap.put("allowComm", "");
+            // formMap.put("allowComm", "1");
             formMap.put("allowComm", allowance);
 
             formList.add(formMap);
+          }else{
+          	Double vAdvAmt = 0.00;
+          	Double vPayAmt = 0.00;
+          	if (!StringUtils.isEmpty(gridListMap.get("advMonth"))) {
+          		vAdvAmt = Double.valueOf( String.valueOf(gridListMap.get("advAmt")));
+          		vPayAmt = Double.valueOf( String.valueOf(gridListMap.get("payAmt")));
+          	}else{
 
-            if (totTargetAmt >= payAmtDou) {
-              break;
-            }
-          }
+          	}
+
+          	System.out.println("++++ ::" + ( vPayAmt -vAdvAmt ) );
+//          	 && StringUtils.isEmpty(gridListMap.get("advMonth"))
+          	if( ( vPayAmt -vAdvAmt  ) >= 0.00 )
+          	{
+
+                  int detailRowCnt = billInfoRentalList.size();
+
+                  for (j = 0; j < detailRowCnt; j++) {
+                    Map billInfoRentalMap = billInfoRentalList.get(j);
+                    // String detChkVal = (String) billInfoRentalMap.get("btnCheck");
+                    String detSalesOrdNo = (String) billInfoRentalMap.get("ordNo");
+
+                    if (salesOrdNo.equals(detSalesOrdNo)) {
+
+                      // ----------------------------------------------
+
+                      Double targetAmt = (Double) billInfoRentalMap.get("targetAmt");
+                      String payAmt = String.valueOf(gridListMap.get("payAmt"));
+                      Double payAmtDou = Double.valueOf(payAmt);
+
+                      if ((totTargetAmt + targetAmt) > payAmtDou) {
+
+                        if (detailRowCnt - 1 == j) {
+                      	  if( totTargetAmt < 0 ){
+                      		  targetAmt = payAmtDou;
+                      	  }else{
+                          	  targetAmt = payAmtDou - totTargetAmt;
+                      	  }
+
+                        } else {
+                      	  targetAmt = payAmtDou - totTargetAmt;
+                        }
+
+                      } else {
+                  		targetAmt = targetAmt;
+                      }
+
+                      totTargetAmt = totTargetAmt + targetAmt;
+
+                      if (totTargetAmt >= payAmtDou) {
+                        if (!StringUtils.isEmpty(gridListMap.get("advMonth"))) {
+                          break;
+                        }
+                      }
+
+                      formMap = new HashMap<String, Object>();
+
+                      formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
+                      formMap.put("appType", "RENTAL");
+                      formMap.put("advMonth", (Integer) gridListMap.get("advMonth")); // 셋팅필요
+                      formMap.put("mstRpf", mstRpf);
+                      formMap.put("mstRpfPaid", mstRpfPaid);
+
+                      formMap.put("assignAmt", 0);
+                      formMap.put("billAmt", billInfoRentalMap.get("billAmt"));
+                      formMap.put("billDt", billInfoRentalMap.get("billDt"));
+                      formMap.put("billGrpId", billInfoRentalMap.get("billGrpId"));
+                      formMap.put("billId", billInfoRentalMap.get("billId"));
+                      formMap.put("billNo", billInfoRentalMap.get("billNo"));
+                      formMap.put("billStatus", billInfoRentalMap.get("stusCode"));
+                      formMap.put("billTypeId", billInfoRentalMap.get("billTypeId"));
+                      formMap.put("billTypeNm", billInfoRentalMap.get("billTypeNm"));
+                      formMap.put("custNm", billInfoRentalMap.get("custNm"));
+                      formMap.put("discountAmt", 0);
+                      formMap.put("installment", billInfoRentalMap.get("installment"));
+                      formMap.put("ordId", billInfoRentalMap.get("ordId"));
+                      formMap.put("ordNo", billInfoRentalMap.get("ordNo"));
+                      formMap.put("paidAmt", billInfoRentalMap.get("paidAmt"));
+                      formMap.put("appType", "RENTAL");
+                      formMap.put("targetAmt", targetAmt);
+                      formMap.put("srvcContractID", 0);
+                      formMap.put("billAsId", 0);
+                      formMap.put("srvMemId", 0);
+
+                      // item. = $("#rentalkeyInTrNo").val() ;
+                      formMap.put("trNo", trRefNo); //
+                      // item. = $("#rentalkeyInTrIssueDate").val() ;
+                      formMap.put("trDt", trIssDt); //
+                      // item.collectorCode = $("#rentalkeyInCollMemNm").val()
+                      formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
+                      // item.collectorId = $("#rentalkeyInCollMemId").val() ;
+                      formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
+                      // item.allowComm = $("#rentalcashIsCommChk").val()
+                      // formMap.put("allowComm", "");
+                      formMap.put("allowComm", allowance);
+
+                      formList.add(formMap);
+
+                      if (totTargetAmt >= payAmtDou) {
+                        break;
+                      }
+                    }
+
+                  }
+          	}
+              // Advance Month
+              if (!StringUtils.isEmpty(gridListMap.get("advMonth"))) {
+                formMap = new HashMap<String, Object>();
+
+                if((vAdvAmt - totTargetAmt) < 0){
+
+              	  vAdvAmt = vAdvAmt;
+
+                }else{
+              	  vAdvAmt = vAdvAmt - totTargetAmt;
+                }
+
+                formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
+                formMap.put("appType", "RENTAL");
+                formMap.put("advMonth", (Integer) gridListMap.get("advMonth"));
+                formMap.put("mstRpf", mstRpf);
+                formMap.put("mstRpfPaid", mstRpfPaid);
+
+                formMap.put("assignAmt", 0);
+                formMap.put("billAmt", gridListMap.get("advAmt"));
+                formMap.put("billDt", "1900-01-01");
+                formMap.put("billGrpId", mstCustBillId);
+                formMap.put("billId", 0);
+                formMap.put("billNo", "0");
+                formMap.put("billStatus", "");
+                formMap.put("billTypeId", 1032);
+                formMap.put("billTypeNm", "General Advanced For Rental");
+                formMap.put("custNm", mstCustNm);
+                formMap.put("discountAmt", 0);
+                formMap.put("installment", 0);
+                formMap.put("ordId", salesOrdId);
+                formMap.put("ordNo", salesOrdNo);
+                formMap.put("paidAmt", 0);
+                formMap.put("appType", "RENTAL");
+                formMap.put("targetAmt", vAdvAmt);
+                formMap.put("srvcContractID", 0);
+                formMap.put("billAsId", 0);
+                formMap.put("srvMemId", 0);
+
+                // item. = $("#rentalkeyInTrNo").val() ;
+                formMap.put("trNo", trRefNo); //
+                // item. = $("#rentalkeyInTrIssueDate").val() ;
+                formMap.put("trDt", trIssDt); //
+                // item.collectorCode = $("#rentalkeyInCollMemNm").val()
+                formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
+                // item.collectorId = $("#rentalkeyInCollMemId").val() ;
+                formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
+                // item.allowComm = $("#rentalcashIsCommChk").val()
+                // formMap.put("allowComm", "");
+                formMap.put("allowComm", allowance);
+
+                formList.add(formMap);
+
+              }
+           }
         }
-
-            // Advance Month
-            // if( StringUtils.isEmpty(gridList.get("advMonth")) != "" &&
-            // (Integer)gridList.get("advMonth") >= 0){
-            if (!StringUtils.isEmpty(gridListMap.get("advMonth"))) {
-              formMap = new HashMap<String, Object>();
-
-              formMap.put("procSeq", procSeq);
-              formMap.put("appType", "RENTAL");
-              formMap.put("advMonth", (Integer) gridListMap.get("advMonth"));
-              formMap.put("mstRpf", mstRpf);
-              formMap.put("mstRpfPaid", mstRpfPaid);
-
-              formMap.put("assignAmt", 0);
-              formMap.put("billAmt", gridListMap.get("advAmt"));
-              formMap.put("billDt", "1900-01-01");
-              formMap.put("billGrpId", mstCustBillId);
-              formMap.put("billId", 0);
-              formMap.put("billNo", "0");
-              formMap.put("billStatus", "");
-              formMap.put("billTypeId", 1032);
-              formMap.put("billTypeNm", "General Advanced For Rental");
-              formMap.put("custNm", mstCustNm);
-              formMap.put("discountAmt", 0);
-              formMap.put("installment", 0);
-              formMap.put("ordId", salesOrdId);
-              formMap.put("ordNo", salesOrdNo);
-              formMap.put("paidAmt", 0);
-              formMap.put("appType", "RENTAL");
-              formMap.put("targetAmt", gridListMap.get("advAmt"));
-              formMap.put("srvcContractID", 0);
-              formMap.put("billAsId", 0);
-              formMap.put("srvMemId", 0);
-
-              // item. = $("#rentalkeyInTrNo").val() ;
-              formMap.put("trNo", trRefNo); //
-              // item. = $("#rentalkeyInTrIssueDate").val() ;
-              formMap.put("trDt", trIssDt); //
-              // item.collectorCode = $("#rentalkeyInCollMemNm").val()
-              formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
-              // item.collectorId = $("#rentalkeyInCollMemId").val() ;
-              formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
-              // item.allowComm = $("#rentalcashIsCommChk").val()
-              // formMap.put("allowComm", "");
-              formMap.put("allowComm", allowance);
-
-              formList.add(formMap);
-            }
-        }
-      }
 
       // formInfo = new HashMap<String, Object>();
       // if (gridFormList.size() > 0) {
@@ -456,7 +482,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       // System.out.println("++++ formInfo ::" + formInfo.toString() );
       // System.out.println("++++ formList ::" + formList.toString() );
 
-      procSeq++;
+      iProcSeq = iProcSeq + 1; // 2020.02.24 : ADD iProcSeq
     }
 
     for (int i = 0; i < gridList.size(); i++) {
@@ -723,100 +749,121 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
           formList.add(formMap);
         }else{
+        	Double vAdvAmt = 0.00;
+        	Double vPayAmt = 0.00;
+        	if (!StringUtils.isEmpty(gridListMap.get("advMonth"))) {
+        		vAdvAmt = Double.valueOf( String.valueOf(gridListMap.get("advAmt")));
+        		vPayAmt = Double.valueOf( String.valueOf(gridListMap.get("payAmt")));
+        	}else{
 
-        int detailRowCnt = billInfoRentalList.size();
+        	}
 
-        for (j = 0; j < detailRowCnt; j++) {
-          Map billInfoRentalMap = billInfoRentalList.get(j);
-          // String detChkVal = (String) billInfoRentalMap.get("btnCheck");
-          String detSalesOrdNo = (String) billInfoRentalMap.get("ordNo");
+        	System.out.println("++++ ::" + ( vPayAmt -vAdvAmt ) );
+//        	 && StringUtils.isEmpty(gridListMap.get("advMonth"))
+        	if( ( vPayAmt -vAdvAmt  ) >= 0.00 )
+        	{
 
-          if (salesOrdNo.equals(detSalesOrdNo)) {
+                int detailRowCnt = billInfoRentalList.size();
 
-            // ----------------------------------------------
+                for (j = 0; j < detailRowCnt; j++) {
+                  Map billInfoRentalMap = billInfoRentalList.get(j);
+                  // String detChkVal = (String) billInfoRentalMap.get("btnCheck");
+                  String detSalesOrdNo = (String) billInfoRentalMap.get("ordNo");
 
-            Double targetAmt = (Double) billInfoRentalMap.get("targetAmt");
-            String payAmt = String.valueOf(gridListMap.get("payAmt"));
-            Double payAmtDou = Double.valueOf(payAmt);
+                  if (salesOrdNo.equals(detSalesOrdNo)) {
 
-            if ((totTargetAmt + targetAmt) > payAmtDou) {
+                    // ----------------------------------------------
 
-              if (detailRowCnt - 1 == j) {
-            	  if( totTargetAmt < 0 ){
-            		  targetAmt = payAmtDou;
-            	  }else{
-                	  targetAmt = payAmtDou - totTargetAmt;
-            	  }
+                    Double targetAmt = (Double) billInfoRentalMap.get("targetAmt");
+                    String payAmt = String.valueOf(gridListMap.get("payAmt"));
+                    Double payAmtDou = Double.valueOf(payAmt);
 
-              } else {
-            	  targetAmt = payAmtDou - totTargetAmt;
-              }
+                    if ((totTargetAmt + targetAmt) > payAmtDou) {
 
-            } else {
-        		targetAmt = targetAmt;
-            }
+                      if (detailRowCnt - 1 == j) {
+                    	  if( totTargetAmt < 0 ){
+                    		  targetAmt = payAmtDou;
+                    	  }else{
+                        	  targetAmt = payAmtDou - totTargetAmt;
+                    	  }
 
-            totTargetAmt = totTargetAmt + targetAmt;
+                      } else {
+                    	  targetAmt = payAmtDou - totTargetAmt;
+                      }
 
-            if (totTargetAmt >= payAmtDou) {
-              if (!StringUtils.isEmpty(gridListMap.get("advMonth"))) {
-                break;
-              }
-            }
+                    } else {
+                		targetAmt = targetAmt;
+                    }
 
-            formMap = new HashMap<String, Object>();
+                    totTargetAmt = totTargetAmt + targetAmt;
 
-            formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
-            formMap.put("appType", "RENTAL");
-            formMap.put("advMonth", (Integer) gridListMap.get("advMonth")); // 셋팅필요
-            formMap.put("mstRpf", mstRpf);
-            formMap.put("mstRpfPaid", mstRpfPaid);
+                    if (totTargetAmt >= payAmtDou) {
+                      if (!StringUtils.isEmpty(gridListMap.get("advMonth"))) {
+                        break;
+                      }
+                    }
 
-            formMap.put("assignAmt", 0);
-            formMap.put("billAmt", billInfoRentalMap.get("billAmt"));
-            formMap.put("billDt", billInfoRentalMap.get("billDt"));
-            formMap.put("billGrpId", billInfoRentalMap.get("billGrpId"));
-            formMap.put("billId", billInfoRentalMap.get("billId"));
-            formMap.put("billNo", billInfoRentalMap.get("billNo"));
-            formMap.put("billStatus", billInfoRentalMap.get("stusCode"));
-            formMap.put("billTypeId", billInfoRentalMap.get("billTypeId"));
-            formMap.put("billTypeNm", billInfoRentalMap.get("billTypeNm"));
-            formMap.put("custNm", billInfoRentalMap.get("custNm"));
-            formMap.put("discountAmt", 0);
-            formMap.put("installment", billInfoRentalMap.get("installment"));
-            formMap.put("ordId", billInfoRentalMap.get("ordId"));
-            formMap.put("ordNo", billInfoRentalMap.get("ordNo"));
-            formMap.put("paidAmt", billInfoRentalMap.get("paidAmt"));
-            formMap.put("appType", "RENTAL");
-            formMap.put("targetAmt", targetAmt);
-            formMap.put("srvcContractID", 0);
-            formMap.put("billAsId", 0);
-            formMap.put("srvMemId", 0);
+                    formMap = new HashMap<String, Object>();
 
-            // item. = $("#rentalkeyInTrNo").val() ;
-            formMap.put("trNo", trRefNo); //
-            // item. = $("#rentalkeyInTrIssueDate").val() ;
-            formMap.put("trDt", trIssDt); //
-            // item.collectorCode = $("#rentalkeyInCollMemNm").val()
-            formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
-            // item.collectorId = $("#rentalkeyInCollMemId").val() ;
-            formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
-            // item.allowComm = $("#rentalcashIsCommChk").val()
-            // formMap.put("allowComm", "");
-            formMap.put("allowComm", allowance);
+                    formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
+                    formMap.put("appType", "RENTAL");
+                    formMap.put("advMonth", (Integer) gridListMap.get("advMonth")); // 셋팅필요
+                    formMap.put("mstRpf", mstRpf);
+                    formMap.put("mstRpfPaid", mstRpfPaid);
 
-            formList.add(formMap);
+                    formMap.put("assignAmt", 0);
+                    formMap.put("billAmt", billInfoRentalMap.get("billAmt"));
+                    formMap.put("billDt", billInfoRentalMap.get("billDt"));
+                    formMap.put("billGrpId", billInfoRentalMap.get("billGrpId"));
+                    formMap.put("billId", billInfoRentalMap.get("billId"));
+                    formMap.put("billNo", billInfoRentalMap.get("billNo"));
+                    formMap.put("billStatus", billInfoRentalMap.get("stusCode"));
+                    formMap.put("billTypeId", billInfoRentalMap.get("billTypeId"));
+                    formMap.put("billTypeNm", billInfoRentalMap.get("billTypeNm"));
+                    formMap.put("custNm", billInfoRentalMap.get("custNm"));
+                    formMap.put("discountAmt", 0);
+                    formMap.put("installment", billInfoRentalMap.get("installment"));
+                    formMap.put("ordId", billInfoRentalMap.get("ordId"));
+                    formMap.put("ordNo", billInfoRentalMap.get("ordNo"));
+                    formMap.put("paidAmt", billInfoRentalMap.get("paidAmt"));
+                    formMap.put("appType", "RENTAL");
+                    formMap.put("targetAmt", targetAmt);
+                    formMap.put("srvcContractID", 0);
+                    formMap.put("billAsId", 0);
+                    formMap.put("srvMemId", 0);
 
-            if (totTargetAmt >= payAmtDou) {
-              break;
-            }
-          }
+                    // item. = $("#rentalkeyInTrNo").val() ;
+                    formMap.put("trNo", trRefNo); //
+                    // item. = $("#rentalkeyInTrIssueDate").val() ;
+                    formMap.put("trDt", trIssDt); //
+                    // item.collectorCode = $("#rentalkeyInCollMemNm").val()
+                    formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
+                    // item.collectorId = $("#rentalkeyInCollMemId").val() ;
+                    formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
+                    // item.allowComm = $("#rentalcashIsCommChk").val()
+                    // formMap.put("allowComm", "");
+                    formMap.put("allowComm", allowance);
 
-        }
+                    formList.add(formMap);
 
+                    if (totTargetAmt >= payAmtDou) {
+                      break;
+                    }
+                  }
+
+                }
+        	}
             // Advance Month
             if (!StringUtils.isEmpty(gridListMap.get("advMonth"))) {
               formMap = new HashMap<String, Object>();
+
+              if((vAdvAmt - totTargetAmt) < 0){
+
+            	  vAdvAmt = vAdvAmt;
+
+              }else{
+            	  vAdvAmt = vAdvAmt - totTargetAmt;
+              }
 
               formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
               formMap.put("appType", "RENTAL");
@@ -840,7 +887,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
               formMap.put("ordNo", salesOrdNo);
               formMap.put("paidAmt", 0);
               formMap.put("appType", "RENTAL");
-              formMap.put("targetAmt", gridListMap.get("advAmt"));
+              formMap.put("targetAmt", vAdvAmt);
               formMap.put("srvcContractID", 0);
               formMap.put("billAsId", 0);
               formMap.put("srvMemId", 0);
