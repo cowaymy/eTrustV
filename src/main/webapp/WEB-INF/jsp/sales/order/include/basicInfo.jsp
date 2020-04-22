@@ -28,6 +28,14 @@
     <td>${orderDetail.basicInfo.ordStusName}</td>
 </tr>
 <tr>
+    <th scope="row"><spring:message code="sal.text.evoucher" /></th>
+    <td>${orderDetail.basicInfo.voucher}</td>
+    <th scope="row"></th>
+    <td></td>
+    <th scope="row"></th>
+    <td></td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>${orderDetail.basicInfo.appTypeDesc}</td>
     <th scope="row"><spring:message code="sal.text.refNo" /></th>
