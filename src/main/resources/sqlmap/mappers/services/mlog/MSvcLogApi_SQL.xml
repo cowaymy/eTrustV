@@ -5199,15 +5199,39 @@
 
   <select id="getBeforeProductSerialNo" parameterType="Map" resultType="String">
     SELECT FN_GET_ORDER_SERIAL(#{salesOrdId}, NULL) AS beforeProductSerialNo
-       FROM DUAL
+    FROM DUAL
   </select>
 
   <select id="getDelvryNo" parameterType="Map" resultType="egovMap">
-        SELECT    /* [com.coway.trust.biz.services.mlog.impl.MSvcLogApiMapper.getDelvryNo] KR_HAN */
-                      DISTINCT Y.DELVRY_NO DELVRY_NO
-        FROM      LOG0047M X
-                          INNER JOIN LOG0055D Y ON X.REQST_NO = Y.REQST_NO
-        WHERE     X.REF_DOC_NO = #{refDocNo}
+    SELECT /* [com.coway.trust.biz.services.mlog.impl.MSvcLogApiMapper.getDelvryNo] KR_HAN */
+               DISTINCT Y.DELVRY_NO DELVRY_NO
+    FROM LOG0047M X
+    INNER JOIN LOG0055D Y ON X.REQST_NO = Y.REQST_NO
+    WHERE X.REF_DOC_NO = #{refDocNo}
   </select>
 
+  <select id="getRelateOrdLst" parameterType="Map" resultType="egovMap">
+    SELECT A.SALES_ORD_NO ORD_NO,
+               UPPER(F.NAME || '(' || F.CODE || ')') AS ORD_STAT,
+               TO_CHAR(SALES_DT, 'DD/MM/YYYY') AS ORD_DT,
+               UPPER(G.CODE_DESC || '(' || G.CODE || ')') AS APP_TYP,
+               UPPER(D.CODE_DESC || '(' || D.CODE || ')') AS PROD_CAT,
+               UPPER(C.STK_DESC || '(' || C.STK_CODE || ')') AS PROD,
+               ABS(NVL(E.AMT, 0)) AS OUTSTD_AMT,
+               SIGN(NVL(E.AMT, 0)) AS SIGN_OUTSTD_AMT
+    FROM SAL0001D A
+    JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+    LEFT JOIN SYS0026M C ON B.ITM_STK_ID = C.STK_ID AND C.STUS_CODE_ID = '1'
+    LEFT JOIN SYS0013M D ON D.CODE_MASTER_ID = '11' AND D.DISAB = '0' AND C.STK_CTGRY_ID = D.CODE_ID
+    LEFT JOIN (SELECT RENT_SO_ID,
+                               SUM(RENT_AMT) AS AMT
+                    FROM PAY0022D
+                    WHERE RENT_SO_ID IN (SELECT SALES_ORD_ID FROM SAL0001D WHERE CUST_ID = #{custId})
+                    GROUP BY RENT_SO_ID) E ON A.SALES_ORD_ID = E.RENT_SO_ID
+    LEFT JOIN SYS0038M F ON A.STUS_CODE_ID = F.STUS_CODE_ID
+    LEFT JOIN SYS0013M G ON G.CODE_MASTER_ID = '10' AND G.DISAB = '0' AND A.APP_TYPE_ID = G.CODE_ID
+    WHERE A.CUST_ID = '#{custId}
+        AND A.STUS_CODE_ID <![CDATA[ <> ]]> 1
+    ORDER BY ORD_NO
+  </select>
 </mapper>
