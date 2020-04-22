@@ -114,6 +114,7 @@ import com.coway.trust.api.mobile.services.careService.CareServiceResultDto;
 import com.coway.trust.api.mobile.services.careService.CareServiceResultForm;
 import com.coway.trust.api.mobile.services.careService.RelateOrderListDto;
 import com.coway.trust.api.mobile.services.careService.RelateOrderListForm;
+import com.coway.trust.api.mobile.services.careService.SalesDetailDto;
 import com.coway.trust.api.mobile.services.dtAs.DtASFailJobRequestDto;
 import com.coway.trust.api.mobile.services.dtAs.DtASFailJobRequestForm;
 import com.coway.trust.api.mobile.services.dtAs.DtASReAppointmentRequestDto;
@@ -164,6 +165,7 @@ import com.coway.trust.api.mobile.services.dtProductRetrun.DtProductReturnResult
  * 18/10/2019    ONGHC      1.0.8       - Amend Installation for Product Exchange
  * 30/10/2019    ONGHC      1.0.9       - Amend Installation for add EXC_CT_ID as parameter
  * 22/04/2019    ONGHC      1.0.10      - Add function getRelateOrderInfo
+ * 23/04/2019    ONGHC      1.0.11      - Add function getOrdDetail
  *********************************************************************************************/
 
 @Api(value = "service api", description = "service api")
@@ -2644,6 +2646,15 @@ public class ServiceApiController {
 
     for (int i = 0; i < headerList.size(); i++) {
       hList = headerList.stream().map(r -> RelateOrderListDto.create(r)).collect(Collectors.toList());
+
+      for (int j = 0; j < hList.size(); j++) {
+        Map<String, Object> tmpMap = headerList.get(j);
+
+        List<EgovMap> ordDetail = MSvcLogApiService.getOrdDetail(tmpMap);
+
+        List<SalesDetailDto> ordDetailList = ordDetail.stream().map(r -> SalesDetailDto.create(r)).collect(Collectors.toList());
+        hList.get(j).setSalesDetail(ordDetailList);
+      }
     }
 
     return ResponseEntity.ok(hList);
