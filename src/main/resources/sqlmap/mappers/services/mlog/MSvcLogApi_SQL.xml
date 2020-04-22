@@ -5212,7 +5212,7 @@
 
   <select id="getRelateOrdLst" parameterType="Map" resultType="egovMap">
     SELECT A.SALES_ORD_NO ORD_NO,
-               UPPER(F.NAME || '(' || F.CODE || ')') AS ORD_STAT,
+               UPPER(F.CODE) AS ORD_STAT,
                TO_CHAR(SALES_DT, 'DD/MM/YYYY') AS ORD_DT,
                UPPER(G.CODE_DESC || '(' || G.CODE || ')') AS APP_TYP,
                UPPER(D.CODE_DESC || '(' || D.CODE || ')') AS PROD_CAT,
