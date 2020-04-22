@@ -44,6 +44,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 13/08/2019    ONGHC      1.0.4       - Add updFctExch
  * 27/11/2019    ONGHC      1.0.5       - Amend productReturnResult
  * 22/04/2020    ONGHC      1.0.6       - Create getRelateOrdLst
+ * 23/04/2019    ONGHC      1.0.7       - Add function getOrdDetail
  *********************************************************************************************/
 
 @Service("MSvcLogApiService")
@@ -971,5 +972,10 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
   @Override
   public List<EgovMap> getRelateOrdLst(Map<String, Object> params) {
     return MSvcLogApiMapper.getRelateOrdLst(params);
+  }
+
+  @Override
+  public List<EgovMap> getOrdDetail(Map<String, Object> params) {
+    return MSvcLogApiMapper.getOrdDetail(params);
   }
 }
