@@ -184,7 +184,18 @@
       }
 
       if ($("#city").val() != '' && $("#city").val() != null) {
-          whereSeq2 += "AND A.CITY = '" + $("#city").val() + "' ";
+    	  var cityLs = "";
+          var cityCode = $("#city").val();
+          if ($("#city").val() != '' && $("#city").val() != null) {
+            for (var a = 0; a < cityCode.length; a++) {
+              if (a == 0) {
+            	  cityLs += "'" + cityCode[a] + "'"
+              } else {
+            	  cityLs += ", '" + cityCode[a] + "'"
+              }
+            }
+            whereSeq2 += "AND A.CITY IN (" + cityLs + ") ";
+          }
       }
 
       if ($("#postCd").val() != '' && $("#postCd").val() != null) {
@@ -253,7 +264,7 @@
           $("#city").attr({"disabled" : false  , "class" : "w100p"});
 
           var cityJson = {state : selVal}; //Condition
-          CommonCombo.make('city', "/sales/customer/selectMagicAddressComboList", cityJson, '');
+          CommonCombo.make('city', "/sales/customer/selectMagicAddressComboList", cityJson, '',{type: 'M'});
       }else{
     	  $('#city').val('');
           $("#city").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
