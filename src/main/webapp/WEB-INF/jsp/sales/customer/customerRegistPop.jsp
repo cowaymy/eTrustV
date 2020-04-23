@@ -613,6 +613,11 @@
             return false;
         }
 
+        if($("#areaId").val() == ''){
+            Common.alert('Area not found. <br/> Please check with System Administrator.');
+            return false;
+        }
+
         console.log("11.  cust name check");
         if($("#_asCustName_").val() == ''){
             $("#_contactTab").click();

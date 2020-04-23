@@ -55,6 +55,12 @@
                   return ;
              }
 
+             if($("#areaId").val() == ''){
+                 Common.alert('Area not found. <br/> Please check with System Administrator.');
+                 return ;
+             }
+
+             console.log($("#insAddressForm").serializeJSON());
              fn_customerAddressInfoAddAjax();
 
          }) ;
