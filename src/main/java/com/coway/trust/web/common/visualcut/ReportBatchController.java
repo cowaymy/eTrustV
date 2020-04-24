@@ -1407,6 +1407,23 @@ public class ReportBatchController {
     LOGGER.info("[END] MobileUsageTesting...");
   }
 
+  /** Added for new RawData report - Mobile Usage Analyst by Hui Ding, 23-04-2020 **/
+  @RequestMapping(value = "/MobileUsageAnalysis.do")
+  //@Scheduled(cron = "0 0 9 * * *")//Daily (09:00am)
+  public void MobileUsageAnalysisReport() {
+    LOGGER.info("[START] MobileUsageAnalysis...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/MobileUsageAnalysis_Excel.rpt");// visualcut rpt
+                                                               // file name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Mobile Usage Analysis" + File.separator + "MobileUsageAnalysis_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] MobileUsageAnalysis...");
+  }
+  /** End for new RawData report - Mobile Usage Analyst by Hui Ding, 23-04-2020 **/
 
   @RequestMapping(value = "/dailyRentCollRtTrd.do")
   //@Scheduled(cron = "0 10 6 * * *")//Daily (06:10am)
