@@ -11,6 +11,7 @@
  09/03/2020  ONGHC  1.0.0             Add TR Ref.No and TR Issue Date
                                                    Add Application Type, PV Month and Year to GridView.
  13/04/2020  ONGHC  1.0.1             Add Order Ledger Button and Highlighted no Outstanding Order
+ 24/04/2020  ONGHC  1.0.2             Amend fn_validateLdg to change confirmation to alert
  -->
 
 <style type="text/css">
@@ -172,9 +173,11 @@
     }
 
     if (crntLdgStat) {
-        Common.confirm("<spring:message code='pay.msg.payMobNoOut' />",fn_update);
+        //Common.confirm("<spring:message code='pay.msg.payMobNoOut' />",fn_update);
+        Common.alert("<spring:message code='pay.msg.payMobNoOut' />");
+        return;
     } else {
-    	fn_update();
+      fn_update();
     }
   }
 
