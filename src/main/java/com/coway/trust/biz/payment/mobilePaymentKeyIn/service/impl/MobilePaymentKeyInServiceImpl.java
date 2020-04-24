@@ -752,8 +752,12 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
         	Double vAdvAmt = 0.00;
         	Double vPayAmt = 0.00;
         	if (!StringUtils.isEmpty(gridListMap.get("advMonth"))) {
-        		vAdvAmt = Double.valueOf( String.valueOf(gridListMap.get("advAmt")));
+        		if( !StringUtils.isEmpty( gridListMap.get("advAmt" ) ) ){
+        		vAdvAmt = Double.valueOf( String.valueOf(gridListMap.get("advAmt" )));
+        		}
+        		if( !StringUtils.isEmpty( gridListMap.get("advAmt" ) ) ){
         		vPayAmt = Double.valueOf( String.valueOf(gridListMap.get("payAmt")));
+        		}
         	}else{
 
         	}
