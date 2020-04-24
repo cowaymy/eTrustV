@@ -58,10 +58,86 @@ $(document).ready(function() {
     	fn_loadAtchment('${atchFileGrpId}');
     }
 
+    //fn_getMemInfo();
+
 
   /*   if('${atchFileGrpId}' != 0 || '${atchFileGrpId}' != null || '${atchFileGrpId}' != undefined ){
         fn_loadAtchment('${atchFileGrpId}');
     } */
+
+
+    var memID = $("#eHPMemberID").val();
+    Common.ajax("GET", "/organization/getEHPMemberListMemberView", {MemberID : memID}, function(result) {
+    	   if(result != null ){
+
+               console.log(result[0]);
+               $("#eHPmemberType option[value="+ result[0].aplicntType +"]").attr("selected", true);
+               fn_departmentCode(result[0].aplicntType);
+
+               $("#eHPmemberNm").val(result[0].aplicntName);
+               $("#eHPnric").val(result[0].aplicntNric);
+
+               if(result[0].aplicntGender=="F"){
+                   $("#eHPgender_f").prop("checked", true)
+               }
+               if(result[0].aplicntGender=="M"){
+                   $("#eHPgender_m").prop("checked", true)
+               }
+
+               $("#eHPemail").val(result[0].aplicntEmail);
+
+               $("#eHPmobileNo").val(result[0].aplicntTelMobile);
+
+               $("#eHPofficeNo").val(result[0].aplicntTelOffice);
+
+               $("#eHPresidenceNo").val(result[0].aplicntTelHuse);
+
+               $("#eHPsponsorCd").val(result[0].aplicntSponsCode);
+
+               $("#eHPsponsorNm").val(result[0].aplicntSponsNm);
+
+               $("#eHPsponsorNric").val(result[0].aplicntSponsNric);
+
+               $("#eHPmeetingPoint option[value="+ result[0].aplicntMeetpoint +"]").attr("selected", true);
+
+               $("#eHPissuedBank option[value="+ result[0].aplicntBankId +"]").attr("selected", true);
+
+               $("#eHPcollctionBrnch option[value='"+ result[0].aplicntColBrnch +"']").attr("selected", true);
+
+               $("#eHPmarrital option[value="+ result[0].aplicntMartl +"]").attr("selected", true);
+
+               $("#eHPcmbRace").val(result[0].aplicntRace);
+
+               $("#eHPbankAccNo").val(result[0].aplicntBankAccNo);
+
+               $("#eHPstatusID").val(result[0].stusId);
+
+               //$("#eHPmArea").val(data.area);
+               //$("#eHPmArea option[value='"+ data.area +"']").attr("selected", true);
+
+               //$("#eHPmPostCd").val(data.postcode);
+               //$("#eHPmPostCd option[value='"+ data.postcode +"']").attr("selected", true);
+
+               //$("#eHPmState").val(data.state);
+               //$("#eHPmState option[value='"+ data.state +"']").attr("selected", true);
+
+               //$("#eHPmCity").val(data.city);
+               //$("#eHPmCity option[value='"+ data.city +"']").attr("selected", true);
+
+
+               var marea = result[0].area;
+               var mcity = result[0].city;
+               var mpostcode = result[0].postcode;
+               var mstate = result[0].state;
+               var areaid = result[0].areaId
+               fn_addMaddr(marea, mcity, mpostcode, mstate, areaid);
+
+           }else{
+               console.log("ERROR - NULL VALUE");
+           }
+    });
+
+
 
     doGetCombo('/organization/selectBusinessType.do', '', '','eHPbusinessType', 'S' , '');
 
@@ -76,8 +152,6 @@ $(document).ready(function() {
         doGetComboAddr('/common/selectAddrSelCodeList.do', 'post' ,area ,'','eHPpostCode', 'S', '');
     });
 
-
-    fn_getMemInfo();
 
     $("#eHPsearchdepartment").change(function(){
         doGetCombo('/organization/selectSubDept.do',  $("#eHPsearchdepartment").val(), '','eHPinputSubDept', 'S' ,  '');
@@ -870,7 +944,7 @@ function fn_memberSave(){
               //eHPtraineeType1 : $("#eHPtraineeType1").val(),
               eHPissuedBank : $("#eHPissuedBank").val(),
               eHPbankAccNo : $("#eHPbankAccNo").val(),
-              eHPcollectionBrnch : $("#eHPcollctionBrnch").val().trim(),
+              eHPcollectionBrnch : $("#eHPcollctionBrnch").val(),
               //eHPcodyPaExpr : $("#eHPcodyPaExpr").val(),
               eHPstatusId : cnfmStatus ,
 
@@ -1056,7 +1130,7 @@ function fn_removeFile(name){
 <input type="hidden" id="eHPmemType" name="memType" value="${memType}">
 <input type="hidden"id="eHPMemberID" name="MemberID" value="${memberView.aplctnId}">
 <input type="hidden" value="<c:out value="${memberView.deptCode}"/> "  id="eHPdeptCd" name="deptCode"/>
-<input type="hidden" value="<c:out value="${memberView.collctBrnch}"/> "  id="eHPcollctionBrnch" name="collctBranch"/>
+<%-- <input type="hidden" value="<c:out value="${memberView.aplicntColBrnch}"/> "  id="eHPcollctionBrnch" name="collctBranch"/> --%>
 <input type="hidden" value="<c:out value="${memberView.aplicntGender}"/> "  id="eHPgender" name="gender"/>
 <input type="hidden" value="<c:out value="${memberView.memCode}"/> "  id="eHPmemCode" name="memCode"/>
 <input type="hidden" value="<c:out value="${memberView.cnfm}"/> "  id="eHPcnfm" name="eHPconfirmation"/>
