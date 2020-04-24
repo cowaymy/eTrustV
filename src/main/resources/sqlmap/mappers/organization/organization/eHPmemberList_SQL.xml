@@ -741,7 +741,7 @@
             A.APLICNT_BANK_ACC_NO ,
             A.APLICNT_SPONS_CODE ,
             A.APLICNT_MEETPOINT ,
-            A.COLLCT_BRNCH ,
+            A.COLLCT_BRNCH APLICNT_COL_BRNCH ,
             A.ATCH_FILE_GRP_ID ,
             B.AREA AREA,
             B.COUNTRY,
