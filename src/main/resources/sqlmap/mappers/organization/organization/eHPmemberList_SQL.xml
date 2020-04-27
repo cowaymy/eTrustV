@@ -380,8 +380,8 @@
                     Project1.CRT_USR_ID,
                     Project1.ATCH_FILE_GRP_ID ,
                     Project1.DEPT_CODE ,
-                    Project1.STUS_UPD_ID ,
-                    Project1.SEQ
+                    Project1.STUS_UPD_ID
+
             FROM ( SELECT Project1.C1 C1,
                      Project1.MEM_ID MEM_ID,
                      Project1.MEM_CODE MEM_CODE,
@@ -403,7 +403,6 @@
                     Project1.ATCH_FILE_GRP_ID,
                     Project1.DEPT_CODE ,
                     Project1.STUS_UPD_ID ,
-                    Project1.SEQ ,
                      row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
                      FROM ( SELECT
                    '' C1,
@@ -429,9 +428,7 @@
                     Extent18.USER_NAME CRT_USR_ID,
                     Extent1.ATCH_FILE_GRP_ID ,
                     Extent1.DEPT_CODE ,
-                    Extent19.USER_NAME STUS_UPD_ID ,
-                    Extent5.SEQ
-
+                    Extent19.USER_NAME STUS_UPD_ID
                     FROM   ORG0003D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT -----------------------*/
                     INNER JOIN SYS0013M Extent2 ON Extent1.APLICNT_type = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
                     INNER JOIN SYS0038M Extent3 ON Extent1.STUS_ID = Extent3.STUS_CODE_ID   /*StatusCode    eg.active, not active*/
@@ -502,7 +499,7 @@
                 )   Project1
             )  Project1
             WHERE Project1.row_number >  0
-            ORDER BY Project1.MEM_CODE ,Project1.SEQ ASC
+            ORDER BY Project1.MEM_CODE ASC
              ]]>
     </select>
 
@@ -749,10 +746,12 @@
             B.STATE,
             B.POSTCODE ,
              C.NAME NATION ,
-             A.CNFM
+             A.CNFM ,
+             D.SEQ
             FROM ORG0003D A
             LEFT JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID
             LEFT JOIN SYS0015M C ON A.APLICNT_NATION = C.CNTY_ID
+            LEFT JOIN ORG0031D D ON A.APLCTN_ID = D.MEM_ID
             WHERE 1=1
             AND     A.APLCTN_ID = #{MemberID}
 
@@ -820,7 +819,7 @@
         ORDER BY CODE
     </select>
 
-    <insert id="eHPmemberStatusUpdate" parameterType="Map">
+    <insert id="eHPmemberStatusInsert" parameterType="Map">
     INSERT INTO ORG0031D
     (
     SEQ ,
@@ -839,13 +838,13 @@
     VALUES
     (
     ORG0031D_SEQ.NEXTVAL,
-    #{eHPMemberID} ,
-    #{eHPmemType} ,
+    #{eHPMemberID},
+    #{eHPmemberType} ,
     #{eHPmemberNm} ,
-    #{eHPmemberNric} ,
+    #{eHPnric} ,
     #{eHPapplicationStatus} ,
-    #{eHPFailReasn} ,
-    #{eHPRemarkTxt},
+     #{eHPFailReasn} ,
+     #{eHPRemarkTxt} ,
     SYSDATE ,
     #{eHPCreator} ,
     SYSDATE ,
@@ -853,6 +852,19 @@
     )
 
     </insert>
+
+        <update id = "eHPmemberStatusUpdate" parameterType = "Map">
+    UPDATE ORG0031D
+    SET STUS_CODE_ID = #{eHPapplicationStatus} ,
+    UPD_USER_ID = #{eHPUpdator} ,
+    FAIL_RESN_ID = #{eHPFailReasn} ,
+    REM  = #{eHPRemarkTxt} ,
+    UPD_DT = SYSDATE
+    WHERE
+    MEM_ID = #{eHPMemberID}
+
+    </update>
+
 
     <update id = "eHPApplicantStatusUpdate" parameterType = "Map">
     UPDATE ORG0003D
