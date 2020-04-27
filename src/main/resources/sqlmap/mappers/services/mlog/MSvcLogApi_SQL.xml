@@ -3389,7 +3389,7 @@
                                    WHERE sales_ord_no = #{salesOrderNo})
   </update>
 
-  <update id="insertHsFailJobResult" parameterType="Map">
+  <update id="updateHsFailJobResult" parameterType="Map">
     UPDATE SVC0006D SET  FAIL_RESN_ID = #{failReasonCode},
                          RESULT_STUS_CODE_ID = '21',
                          RESULT_UPD_DT = sysdate,
@@ -3413,6 +3413,84 @@
                        WHERE 1=1
                          AND a.SCHDUL_ID = b.SCHDUL_ID)
   </update>
+
+  <insert id="insertHsFailJobResult" parameterType="Map">
+    INSERT INTO SVC0006D ( RESULT_ID,
+                                        NO,
+                                        TYPE_ID,
+                                        SCHDUL_ID,
+                                        SALES_ORD_ID,
+                                        CODY_ID,
+                                        SETL_DT,
+                                        RESULT_STUS_CODE_ID,
+                                        FAIL_RESN_ID,
+                                        REN_COLCT_ID,
+                                        WH_ID,
+                                        RESULT_REM,
+                                        RESULT_CRT_DT,
+                                        RESULT_CRT_USER_ID,
+                                        RESULT_UPD_DT,
+                                        RESULT_UPD_USER_ID,
+                                        RESULT_IS_SYNC,
+                                        RESULT_IS_EDIT,
+                                        RESULT_STOCK_USE,
+                                        RESULT_IS_CURR,
+                                        RESULT_MTCH_ID,
+                                        RESULT_IS_ADJ,
+                                        RESULT_ENTRY_POINT,
+                                        RESULT_MOBILE_ID,
+                                        TEMPERATE_SETNG,
+                                        NEXT_APPNT_DT,
+                                        NEXT_APPNT_TM,
+                                        OWNER_CODE,
+                                        RESULT_CUST_NAME,
+                                        RESULT_MOBILE_NO,
+                                        RESULT_RPT_EMAIL_NO,
+                                        RESULT_ACEPT_NAME,
+                                        SGN_DT,
+                                        TRNSC_ID
+    ) SELECT SVC0006D_RESULT_ID_SEQ.NEXTVAL,
+                 FN_GET_DOCNO(11),
+                 D.TYPE_ID,
+                 D.SCHDUL_ID,
+                 D.SALES_ORD_ID,
+                 D.CODY_ID,
+                 SYSDATE,
+                 '21',
+                 #{failReasonCode},
+                 0,
+                 0,
+                 NULL,
+                 SYSDATE,
+                 (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{userId}),
+                 SYSDATE,
+                 (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{userId}),
+                 0,
+                 0,
+                 0,
+                 1,
+                 0,
+                 0,
+                 NULL,
+                 NULL,
+                 NULL,
+                 NULL,
+                 NULL,
+                 NULL,
+                 NULL,
+                 NULL,
+                 NULL,
+                 NULL,
+                 NULL,
+                 NULL
+      FROM SVC0008D D
+      LEFT JOIN SVC0006D D6 ON D6.SCHDUL_ID = D.SCHDUL_ID
+      WHERE D6.SCHDUL_ID IS NULL
+          AND D.MONTH = TO_CHAR(SYSDATE, 'MM')
+          AND D.YEAR = TO_CHAR(SYSDATE, 'YYYY')
+          AND D.STUS_CODE_ID IN (21)
+          AND D.NO = #{serviceNo}
+  </insert>
 
   <update id="upDateHsFailJobResultM" parameterType="Map">
     UPDATE SVC0008D SET STUS_CODE_ID = '21',
