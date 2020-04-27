@@ -270,7 +270,7 @@ public class eHPmemberListController {
   @RequestMapping(value = "/selectEHPMemberListDetailPop.do")
   public String selectEHPMemberListDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-      logger.debug("params : {}", params);
+      logger.debug("selectEHPMemberListDetailPop - params : {}", params);
 
       params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
 
@@ -293,6 +293,7 @@ public class eHPmemberListController {
       model.addAttribute("ApplicantConfirm", ApplicantConfirm);
       model.addAttribute("memberView", selectMemberListView);
       model.addAttribute("issuedBank", selectIssuedBank);
+      model.addAttribute("atchFileGrpId",params.get("atchFileGrpId"));
 
       // 호출될 화면
       return "organization/organization/eHpMemberListDetailPop";
@@ -441,6 +442,7 @@ public class eHPmemberListController {
 
        memCode = eHPmemberListService.saveEHPMember(params, sessionVO );
 
+
        logger.debug("memCode : {}", memCode);
 
        ReturnMessage message = new ReturnMessage();
@@ -478,8 +480,6 @@ public class eHPmemberListController {
        params.put("updUserId", userId);
 
        eHPmemberListService.eHPMemberUpdate(params);
-
-
 
        // 결과 만들기.
        ReturnMessage message = new ReturnMessage();
@@ -525,7 +525,6 @@ public class eHPmemberListController {
      params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
      EgovMap selectMemberListView = null;
 
-       // NEED AMEND FOR EHP
        selectMemberListView = eHPmemberListService.selectEHPmemberListView(params);
 
        params.put("userId", sessionVO.getUserId());
@@ -555,10 +554,21 @@ public class eHPmemberListController {
        logger.debug("eHPmemberStatusUpdate - params : {}", params);
 
        String memCode = params.get("eHPmemberCode").toString();
+       String memberType = params.get("eHPmemType").toString();
+       String eHPnric = params.get("eHPmemberNric").toString();
        params.put("eHPCreator",sessionVO.getUserId());
        params.put("eHPUpdator",sessionVO.getUserId());
+       params.put("eHPmemberType", memberType);
+       params.put("eHPnric", eHPnric);
 
-       eHPmemberListService.eHPmemberStatusUpdate(params); // INSERT ORG0031D
+       String seq = params.get("eHPseq").toString();
+
+       if(seq == "" || seq == null){
+         eHPmemberListService.eHPmemberStatusInsert(params); // INSERT ORG0031D
+       }else{
+       eHPmemberListService.eHPmemberStatusUpdate(params); // UPDATE ORG0031D
+       }
+
        eHPmemberListService.eHPApplicantStatusUpdate(params); // UPDATE ORG0003D
 
        logger.debug("memCode : {}", memCode);
