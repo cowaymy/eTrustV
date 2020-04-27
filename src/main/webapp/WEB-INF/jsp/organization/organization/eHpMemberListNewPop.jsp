@@ -819,6 +819,11 @@ console.log("validation");
                 Common.alert("Please select reporting branch");
                 return false;
             }
+
+            if($('#eHPcollectionBrnch').val() == '') {
+                Common.alert("Please select Collection branch");
+                return false;
+            }
         }
 
         if($("#eHPmemberType").val() =='5'){
@@ -1281,7 +1286,7 @@ function fn_close() {
 <tr>
     <th scope="row">Member Type</th>
     <td>
-    <select class="w100p" id="eHPmemberType" name="memberType">
+    <select class="w100p" id="eHPmemberType" name="memberType" disabled="disabled">
         <option value="2803" selected>HP Applicant</option>
     </select>
     </td>
@@ -1329,10 +1334,10 @@ function fn_close() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Gender<span class="must">*</span></th>
+   <th scope="row">NRIC (New)<span class="must">*</span></th>
     <td>
-    <label><input type="radio" name="gender" id="eHPgender" value="M" /><span>Male</span></label>
-    <label><input type="radio" name="gender" id="eHPgender" value="F"/><span>Female</span></label>
+    <input type="text" title="" placeholder="NRIC (New)" id="eHPnric" name="nric" class="w100p"  maxlength="12" onKeyDown="checkNRICEnter()"
+        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
     <th scope="row">Date of Birth<span class="must">*</span></th>
     <td>
@@ -1357,10 +1362,10 @@ function fn_close() {
         </c:forEach>
     </select>
     </td>
-    <th scope="row">NRIC (New)<span class="must">*</span></th>
+        <th scope="row">Gender<span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder="NRIC (New)" id="eHPnric" name="nric" class="w100p"  maxlength="12" onKeyDown="checkNRICEnter()"
-        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
+    <label><input type="radio" name="gender" id="eHPgender" value="M" /><span>Male</span></label>
+    <label><input type="radio" name="gender" id="eHPgender" value="F"/><span>Female</span></label>
     </td>
     <th scope="row">Marital Status<span class="must">*</span></th>
     <td>
@@ -1599,7 +1604,7 @@ function fn_close() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Collection Branch</th>
+    <th scope="row">Collection Branch<span class="must">*</span></th>
 
       <td colspan="5">
        <select class="w100p" id="eHPcollectionBrnch" name="collectionBrnch">
