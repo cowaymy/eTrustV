@@ -3488,7 +3488,7 @@
       WHERE D6.SCHDUL_ID IS NULL
           AND D.MONTH = TO_CHAR(SYSDATE, 'MM')
           AND D.YEAR = TO_CHAR(SYSDATE, 'YYYY')
-          AND D.STUS_CODE_ID IN (21)
+          AND D.STUS_CODE_ID IN (1)
           AND D.NO = #{serviceNo}
   </insert>
 
