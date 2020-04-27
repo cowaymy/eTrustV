@@ -20,6 +20,7 @@ import io.swagger.annotations.ApiModelProperty;
  *--------------------------------------------------------------------------------------------
  * 10/04/2019    ONGHC      1.0.1       - Amend File Format
  * 13/08/2019    ONGHC      1.0.2       - Add Variable faucetExch
+ * 27/04/2020    ONGHC      1.0.3       - Add Variable failReason
  *********************************************************************************************/
 
 @ApiModel(value = "HeartServiceResultForm", description = "HeartServiceResultForm")
@@ -87,6 +88,8 @@ public class HeartServiceResultForm {
   private String homeCareOrderYn;
 
   private String serialRequireChkYn;
+
+  private String failReason;
 
   public String getCheckInDate() {
     return checkInDate;
@@ -284,14 +287,22 @@ public class HeartServiceResultForm {
   }
 
   public String getSerialRequireChkYn() {
-	return serialRequireChkYn;
-}
+    return serialRequireChkYn;
+  }
 
-public void setSerialRequireChkYn(String serialRequireChkYn) {
-	this.serialRequireChkYn = serialRequireChkYn;
-}
+  public String getFailReason() {
+    return failReason;
+  }
 
-public List<Map<String, Object>> createMaps(HeartServiceResultForm heartServiceResultForm) {
+  public void setFailReason(String failReason) {
+    this.failReason = failReason;
+  }
+
+  public void setSerialRequireChkYn(String serialRequireChkYn) {
+    this.serialRequireChkYn = serialRequireChkYn;
+  }
+
+  public List<Map<String, Object>> createMaps(HeartServiceResultForm heartServiceResultForm) {
 
     List<Map<String, Object>> list = new ArrayList<>();
 
