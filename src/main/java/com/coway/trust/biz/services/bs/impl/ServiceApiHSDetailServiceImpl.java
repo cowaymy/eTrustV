@@ -244,8 +244,8 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
   public ResponseEntity<HSFailJobRequestDto> hsFailJobRequestProc(Map<String, Object> params) throws Exception {
     String serviceNo = String.valueOf(params.get("serviceNo"));
 
-    MSvcLogApiService.upDateHsFailJobResultM(params);
     MSvcLogApiService.insertHsFailJobResult(params);
+    MSvcLogApiService.upDateHsFailJobResultM(params);
 
     return ResponseEntity.ok(HSFailJobRequestDto.create(serviceNo));
   }
