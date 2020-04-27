@@ -459,6 +459,10 @@ function fn_saveValidation(){
          Common.alert("NRIC should be in 12 digit");
          return false;
      }
+     if($("#eHPcollctionBrnch").val() == ''){
+         valid = false;
+         message += "* Please select collection branch.<br/>";
+     }
     //else
     //{
     //    if (this.IsExistingMember())
@@ -983,6 +987,7 @@ function fn_memberSave(){
     Common.ajax("POST", "/organization/eHPmemberUpdate",  jsonObj, function(result) {
     console.log("message : " + result.message );
     Common.alert(result.message,fn_close);
+    fn_parentReload();
 
     });
     $("#eHPmemberType").attr("disabled",true);
@@ -1108,6 +1113,91 @@ function fn_removeFile(name){
     }
 }
 
+function checkNRICEnter(){
+    if(event.keyCode == 13) {
+        checkNRIC();
+    }
+}
+
+
+function checkNRIC(){
+    var returnValue;
+
+    var jsonObj = { "nric" : $("#eHPnric").val() };
+
+    if ($("#eHPmemberType").val() == '2803' ) {
+        Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
+               console.log("data : " + result);
+               if (result.message != "pass") {
+                Common.alert(result.message);
+                $("#eHPnric").val('');
+                returnValue = false;
+                return false;
+               } else {    // 조건1 통과 -> 조건2 수행
+
+                Common.ajax("GET", "/organization/checkNRIC1.do", jsonObj, function(result) {
+                       console.log("data : " + result);
+                       if (result.message != "pass") {
+                           Common.alert(result.message);
+                           $("#eHPnric").val('');
+                           returnValue = false;
+                           return false;
+                       } else {    // 조건2 통과 -> 조건3 수행
+
+                        Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
+                               console.log("data : " + result);
+                               if (result.message != "pass") {
+                                   Common.alert(result.message);
+                                   $("#eHPnric").val('');
+                                   returnValue = false;
+                                   return false;
+                               } else {    // 조건3 통과 -> 끝
+                                //Common.alert("Available NRIC");
+                                autofilledbyNRIC();
+                                returnValue = true;
+                                   return true;
+                               }
+
+                           });
+                       }
+
+                });
+               }
+           });
+    } else {
+        autofilledbyNRIC();
+    }
+}
+
+function autofilledbyNRIC(){
+
+    //if ($("#memberType").val() == '4') {
+        var nric = $("#eHPnric").val().replace('-', '');
+        var autoGender = nric.substr(11,1);
+        //var autoDOB = nric.substr(0,6);
+        var autoDOB_year = nric.substr(0,2);
+        var autoDOB_month = nric.substr(2,2);
+        var autoDOB_date = nric.substr(4,2);
+
+        if (parseInt(autoGender)%2 == 0) {
+            $("input:radio[name='gender']:radio[value='F']").prop("checked", true);
+        } else {
+            $("input:radio[name='gender']:radio[value='M']").prop("checked", true);
+        }
+
+        if (parseInt(autoDOB_year) < 20) {
+            $("#eHPBirth").val(autoDOB_date+"/"+autoDOB_month+"/"+"20"+autoDOB_year);
+        } else {
+            $("#eHPBirth").val(autoDOB_date+"/"+autoDOB_month+"/"+"19"+autoDOB_year);
+        }
+    //}
+
+}
+
+function fn_parentReload() {
+	fn_memberListSearch(); //parent Method (Reload)
+  }
+
 
 </script>
 
@@ -1157,7 +1247,7 @@ function fn_removeFile(name){
 <tr>
     <th scope="row">Member Type</th>
     <td>
-    <select class="w100p" id="eHPmemberType" name="memberType">
+    <select class="w100p" id="eHPmemberType" name="memberType" disabled="disabled">
       <!--   <option value="1">Health Planner (HP)</option> -->
         <option value="2803">HP Applicant</option>
     </select>
@@ -1201,10 +1291,10 @@ function fn_removeFile(name){
     </td>
 </tr>
 <tr>
-    <th scope="row">Gender<span class="must">*</span></th>
+    <th scope="row">NRIC<span class="must">*</span></th>
     <td>
-    <label><input type="radio" name="gender" id="eHPgender_m" value="M" /><span>Male</span></label>
-    <label><input type="radio" name="gender" id="eHPgender_f" value="F"/><span>Female</span></label>
+        <input type="text" title="" placeholder="NRIC (New)" id="eHPnric" name="nric" class="w100p"  maxlength="12" onKeyDown="checkNRICEnter()"
+        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
     <th scope="row">Date of Birth<span class="must">*</span></th>
     <td>
@@ -1225,9 +1315,10 @@ function fn_removeFile(name){
     </select>
      -->
     </td>
-    <th scope="row">NRIC (New)<span class="must">*</span></th>
+        <th scope="row">Gender<span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder="NRIC (New)" id="eHPnric" name="nric" class="w100p" />
+    <label><input type="radio" name="gender" id="eHPgender_m" value="M" /><span>Male</span></label>
+    <label><input type="radio" name="gender" id="eHPgender_f" value="F"/><span>Female</span></label>
     </td>
     <th scope="row">Marital Status<span class="must">*</span></th>
     <td>
@@ -1471,7 +1562,7 @@ function fn_removeFile(name){
 </colgroup>
 <tbody>
 <tr>
-      <th scope="row">Collection Branch</th>
+      <th scope="row">Collection Branch<span class="must">*</span></th>
             <td colspan="5">
        <select class="w100p" id="eHPcollctionBrnch" name="collectionBrnch">
                 <option value="" selected>Select Branch</option>
@@ -1676,7 +1767,7 @@ function fn_removeFile(name){
     </td>
 </tr>
 <tr>
-    <th scope="row">Passport Photo</th>
+    <th scope="row">Passport Photo<span class="must">*</span></th>
     <td>
         <div class="auto_file2 auto_file3">
             <input type="file" title="file add" id="passportFile" accept="image/*"/>
