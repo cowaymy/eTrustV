@@ -21,6 +21,8 @@ public interface eHPmemberListService {
 
   String saveEHPMember(Map<String, Object> params, SessionVO sessionVO );
 
+  void eHPmemberStatusInsert(Map<String, Object> params);
+
   void eHPmemberStatusUpdate(Map<String, Object> params);
 
   void eHPApplicantStatusUpdate(Map<String, Object> params);
