@@ -28,6 +28,8 @@ public interface eHPmemberListMapper {
 
   String saveEHPMember(Map<String, Object> params) ;
 
+  void eHPmemberStatusInsert(Map<String, Object> params) ;
+
   void eHPmemberStatusUpdate(Map<String, Object> params) ;
 
   void eHPApplicantStatusUpdate(Map<String, Object> params) ;
