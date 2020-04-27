@@ -9,6 +9,24 @@ var myGridID3;
 var grpOrgList = new Array(); // Group Organization List
 var orgList = new Array(); // Organization List
 
+var myFileCaches = {};
+
+var nricFileId = 0;
+var statementFileId = 0;
+var passportFileId = 0;
+var paymentFileId = 0;
+var otherFileId = 0;
+var otherFileId2 = 0;
+
+var nricFileName = "";
+var statementFileName = "";
+var passportFileName = "";
+var paymentFileName = "";
+var otherFileName = "";
+var otherFileName2 = "";
+
+
+
 //Start AUIGrid
 $(document).ready(function() {
 
@@ -22,6 +40,12 @@ $(document).ready(function() {
     //fn_selectDocSubmission();
     fn_selectPaymentHistory();
     fn_selectRenewalHistory();
+
+    console.log("atchFileGrpId : " + '${atchFileGrpId}' );
+    var atchFileGrpIdTemp = '${atchFileGrpId}';
+    if(atchFileGrpIdTemp > 0){
+        fn_loadAtchment('${atchFileGrpId}');
+    }
 
     doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
 
@@ -600,6 +624,89 @@ function fn_winClose(){
 
     this.close();
 }
+
+function fn_loadAtchment(atchFileGrpId) {
+    Common.ajax("Get", "/organization/selectAttachList.do", {atchFileGrpId :atchFileGrpId} , function(result) {
+        console.log("selectAttachList : " + result);
+       if(result) {
+            if(result.length > 0) {
+                $("#attachTd").html("");
+                for ( var i = 0 ; i < result.length ; i++ ) {
+                    switch (result[i].fileKeySeq){
+                    case '1':
+                        nricFileId = result[i].atchFileId;
+                        nricFileName = result[i].atchFileName;
+                        $(".input_text[id='nricFileTxt']").val(nricFileName);
+                        break;
+                    case '2':
+                        statementFileId = result[i].atchFileId;
+                        statementFileName = result[i].atchFileName;
+                        $(".input_text[id='statementFileTxt']").val(statementFileName);
+                        break;
+                    case '3':
+                        passportFileId = result[i].atchFileId;
+                        passportFileName = result[i].atchFileName;
+                        $(".input_text[id='passportFileTxt']").val(passportFileName);
+                        break;
+                    case '4':
+                        paymentFileId = result[i].atchFileId;
+                        paymentFileName = result[i].atchFileName;
+                        $(".input_text[id='paymentFileTxt']").val(paymentFileName);
+                        break;
+                    case '5':
+                        otherFileId = result[i].atchFileId;
+                        otherFileName = result[i].atchFileName;
+                        $(".input_text[id='otherFileTxt']").val(otherFileName);
+                        break;
+                    case '6':
+                        otherFileId2 = result[i].atchFileId;
+                        otherFileName2 = result[i].atchFileName;
+                        $(".input_text[id='otherFileTxt2']").val(otherFileName2);
+                        break;
+
+                     default:
+                         Common.alert("no files");
+                    }
+                }
+
+                // 파일 다운
+                $(".input_text").dblclick(function() {
+                    var oriFileName = $(this).val();
+                    var fileGrpId;
+                    var fileId;
+                    for(var i = 0; i < result.length; i++) {
+                        if(result[i].atchFileName == oriFileName) {
+                            fileGrpId = result[i].atchFileGrpId;
+                            fileId = result[i].atchFileId;
+                        }
+                    }
+                    if(fileId != null) fn_atchViewDown(fileGrpId, fileId);
+                });
+            }
+        }
+   });
+}
+
+function fn_atchViewDown(fileGrpId, fileId) {
+    var data = {
+            atchFileGrpId : fileGrpId,
+            atchFileId : fileId
+    };
+    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+        console.log(result)
+        var fileSubPath = result.fileSubPath;
+        fileSubPath = fileSubPath.replace('\', '/'');
+
+        if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
+            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+        } else {
+            console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+            window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+        }
+    });
+}
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -621,6 +728,7 @@ function fn_winClose(){
  <input type="hidden" value="<c:out value="${memberView.memType}"/> "  id="memtype"/>
  <input type="hidden" value="<c:out value="${memberView.bank}"/> "  id="bank"/>
  <input type="hidden" value="<c:out value="${memberView.hsptlz}"/> "  id="hsptlz"/>
+ <input type="hidden" value="<c:out value="${atchFileGrpId}"/> "  id="atchFileGrpId"/>
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
     <li><a href="#" class="on">Basic Info</a></li>
@@ -630,6 +738,8 @@ function fn_winClose(){
     <li><a href="#"  >Member Payment History</a></li>
     <li><a href="#" >Promote/Demote History</a></li>
     <li id="hideContent" ><a href="#" >Pa Renewal History</a></li>
+    <li><a href="#" >Attachment</a></li>
+
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -1047,6 +1157,108 @@ function fn_winClose(){
 <div id="grid_wrap3" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Attachment</h2>
+</aside><!-- title_line end -->
+<form id="attachmentForm" name="attachmentForm" method="POST">
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:30%" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">NRIC<span class="must">*</span></th>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="nricFile" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text'  id='nricFileTxt' readonly="readonly"/>
+               <!--  <span class='label_text'><a href='#'>Upload</a></span> -->
+            </label>
+               <!--  <span class='label_text'><a href='#' onclick='fn_removeFile("NRIC")'>Remove</a></span> -->
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Bank Passbook/Statement Copy<span class="must">*</span></th>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="statementFile" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text'  id='statementFileTxt' readonly="readonly"/>
+          <!--       <span class='label_text'><a href='#'>Upload</a></span> -->
+            </label>
+            <!--     <span class='label_text'><a href='#' onclick='fn_removeFile("STAT")'>Remove</a></span> -->
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Passport Photo<span class="must">*</span></th>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="passportFile" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text' id='passportFileTxt' readonly="readonly"/>
+              <!--   <span class='label_text'><a href='#'>Upload</a></span> -->
+            </label>
+         <!--        <span class='label_text'><a href='#' onclick='fn_removeFile("PASS")'>Remove</a></span> -->
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Payment RM120</th>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="paymentFile" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text'   id='paymentFileTxt' readonly="readonly"/>
+              <!--   <span class='label_text'><a href='#'>Upload</a></span> -->
+            </label>
+               <!--  <span class='label_text'><a href='#' onclick='fn_removeFile("PAY")'>Remove</a></span> -->
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Declaration letter/Others form</th>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="otherFile" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text'  id='otherFileTxt' readonly="readonly"/>
+        <!--         <span class='label_text'><a href='#'>Upload</a></span> -->
+            </label>
+            <!--     <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span> -->
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Declaration letter/Others form 2</th>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="otherFile2" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text'  id='otherFileTxt2' readonly="readonly"/>
+               <!--  <span class='label_text'><a href='#'>Upload</a></span> -->
+            </label>
+           <!--   <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span> -->
+        </div>
+    </td>
+</tr>
+
+<tr>
+    <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
+</tr>
+</tbody>
+</table>
+
+</form>
 </article><!-- tap_area end -->
 
 </section><!-- tap_wrap end -->
