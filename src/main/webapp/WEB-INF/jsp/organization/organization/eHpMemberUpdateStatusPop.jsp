@@ -17,12 +17,14 @@ var jsonObj = {
 		eHPmemberNric : $("#eHPmemberNric").val(),
 		eHPapplicationStatus : $("#eHPapplicationStatus").val(),
 		eHPFailReasn : $("#eHPFailReasn").val(),
-		eHPRemarkTxt : $("#eHPRemarkTxt").val()
+		eHPRemarkTxt : $("#eHPRemarkTxt").val(),
+		eHPseq :$("#eHPseq").val()
 };
 console.log("-------------------------" + JSON.stringify(jsonObj));
     Common.ajax("POST", "/organization/eHPmemberStatusUpdate",  jsonObj, function(result) {
         console.log("message : " + result.message );
         Common.alert(result.message,fn_close);
+        fn_parentReload();
 
         });
 }
@@ -30,6 +32,10 @@ console.log("-------------------------" + JSON.stringify(jsonObj));
 function fn_close() {
     $("#popup_wrap").remove();
 }
+
+function fn_parentReload() {
+    fn_memberListSearch(); //parent Method (Reload)
+  }
 
 
 
@@ -53,6 +59,7 @@ function fn_close() {
 <input type="hidden"id="eHPUserDeptCode" name="UserDeptCode" value="${userDeptCode}">
 <input type="hidden"id="eHPUserMemType" name="UserMemType" value="${userMemType}">
 <input type="hidden" id="eHPcnfm" name="eHPconfirmation" value="${memberView.cnfm}">
+<input type="hidden" id="eHPseq" name="eHPseq" value="${memberView.seq}">
 
 
 <table class="type1"><!-- table start -->
