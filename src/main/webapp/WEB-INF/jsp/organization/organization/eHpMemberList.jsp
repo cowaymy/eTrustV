@@ -211,9 +211,12 @@ function fn_RejectHPMem(){
 
 function fn_clickHpStatusUpdate(){
 
-	if(statusName == "Approved" || statusName == "Rejected"){
-		Common.alert("Not allow to Update status for HP Applicant which already " + statusName );
-	}else{
+	if( statusName == "Approved" || statusName == "Rejected"){
+		Common.alert("Not allow to Update Status for HP Applicant with status " + statusName );
+	}else if(userType != "1" && statusName == "Pending" ){
+		Common.alert("Not allow to Update Status for HP Applicant with status " + statusName );
+	}
+	else{
         Common.popupDiv("/organization/eHpMemberUpdateStatusPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType  , "");
 	}
 }
@@ -229,7 +232,7 @@ $(document).ready(function() {
  // 셀 더블클릭 이벤트 바인딩
       AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
             //alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
-            Common.popupDiv("/organization/selectEHPMemberListDetailPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
+            Common.popupDiv("/organization/selectEHPMemberListDetailPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype")+"&atchFileGrpId="+AUIGrid.getCellValue(myGridID, event.rowIndex, "atchFileGrpId") , "");
         });
 
      AUIGrid.bind(myGridID, "cellClick", function(event) {
@@ -486,7 +489,7 @@ function fn_searchPosition(selectedData){
     <td>
 
     <!-- By KV start - when memtypecom selected item then go to fn_searchPosition function-->
-    <select class="w100p" id="eHPmemTypeCom" name="memTypeCom" onchange="fn_searchPosition(this.value)">
+    <select class="w100p" id="eHPmemTypeCom" name="memTypeCom" onchange="fn_searchPosition(this.value)" disabled="disabled">
         <!-- <option value="1" >HP </option> -->
         <option value="2803" selected>HP Applicant</option>
     </select>
