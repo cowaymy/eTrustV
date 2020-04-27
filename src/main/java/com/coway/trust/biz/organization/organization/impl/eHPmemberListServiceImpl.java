@@ -224,8 +224,8 @@ public class eHPmemberListServiceImpl extends EgovAbstractServiceImpl implements
               updateDocNoNumber("145");
           }
 
-          // insert HP applicant
-          eHPmemberListMapper.insertEHPMemApp(MemApp);
+          // HP applicant
+          eHPmemberListMapper.insertEHPMemApp(MemApp); // INSERT ORG0003D
           codeMap1.put("code", "memApp");
           appId = eHPmemberListMapper.selectMemberId(codeMap1);
 
@@ -255,10 +255,15 @@ public class eHPmemberListServiceImpl extends EgovAbstractServiceImpl implements
       }
 
 
-      public void eHPmemberStatusUpdate(Map<String, Object> params) {
-       eHPmemberListMapper.eHPmemberStatusUpdate(params);
+      public void eHPmemberStatusInsert(Map<String, Object> params) {
+       eHPmemberListMapper.eHPmemberStatusInsert(params);
 
     }
+
+      public void eHPmemberStatusUpdate(Map<String, Object> params) {
+        eHPmemberListMapper.eHPmemberStatusUpdate(params);
+
+     }
 
       public void eHPApplicantStatusUpdate(Map<String, Object> params) {
         eHPmemberListMapper.eHPApplicantStatusUpdate(params);
