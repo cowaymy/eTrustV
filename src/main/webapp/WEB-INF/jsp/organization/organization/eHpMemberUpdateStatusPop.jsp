@@ -6,8 +6,10 @@
 $(document).ready(function() {
 if($("#eHPUserMemType").val() == 1){
 	$("#eHPapplicationStatus").val() == 10;
+	   $("#eHPapplicationStatus option[value="+ 10 +"]").attr("selected", true);
 }else{
 	$("#eHPapplicationStatus").val() == 21;
+	$("#eHPapplicationStatus option[value="+ 21 +"]").attr("selected", true);
 	$("#eHPFailReasnLbl").append("<span class='must'>*</span>");
 }
 
