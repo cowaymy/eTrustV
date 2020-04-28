@@ -13,6 +13,8 @@ public class RentalCollectionByBSSearchVO {
 	private String cmbPaymode;
 	private String cmbBsMonth;
 	private String cmbDeductStus;
+	//Added by LaiKW - 20200427
+	private String memType;
 
 	public String getOrgCode() {
 		return orgCode;
@@ -74,6 +76,11 @@ public class RentalCollectionByBSSearchVO {
 	public void setCmbDeductStus(String cmbDeductStus) {
 		this.cmbDeductStus = cmbDeductStus;
 	}
-
+	public String getMemType() {
+        return memType;
+    }
+    public void setMemType(String memType) {
+        this.memType = memType;
+    }
 
 }

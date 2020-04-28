@@ -413,6 +413,9 @@
        <if test="memCode != '' ">
            AND MEM_CODE = #{memCode}
        </if>
+       <if test="memType != '' ">
+           AND MEM_TYPE = #{memType}
+       </if>
        ORDER BY S_ID
     </select>
 
@@ -1555,6 +1558,9 @@
        </if>
        <if test="renMem != '' ">
            AND A.REN_MEM LIKE '%' || #{renMem} || '%'
+       </if>
+       <if test="memType != '' ">
+           AND A.MEM_TYPE = #{memType}
        </if>
     </select>
 
