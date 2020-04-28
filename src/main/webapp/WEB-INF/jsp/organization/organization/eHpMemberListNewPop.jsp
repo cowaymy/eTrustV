@@ -65,7 +65,7 @@ function fn_memberSave(){
                     			  //eHPtraineeType1 : $("#eHPtraineeType1").val(),
                     			  eHPissuedBank : $("#eHPissuedBank").val(),
                     			  eHPbankAccNo : $("#eHPbankAccNo").val(),
-                    			  eHPcollectionBrnch : $("#eHPcollectionBrnch").val(),
+                    			  eHPcollectionBrnch : $("#eHPcollectionBranch").val(),
                     			  eHPcodyPaExpr : $("#eHPcodyPaExpr").val(),
                     			  eHPspouseCode : $("#eHPspouseCode").val(),
                     			  eHPspouseName : $("#eHPspouseName").val(),
@@ -789,7 +789,7 @@ console.log("validation");
         return false;
     }
 
-    if($("#eHPmemberType").val() == "2803" || $("#eHPmemberType").val() == "5") {
+    if($("#eHPmemberType").val() == "2803") {
         if($("#eHPmobileNo").val() == '') {
             Common.alert("Please key in Mobile No.");
             return false;
@@ -808,7 +808,6 @@ console.log("validation");
             }
         }
 
-        if($("#eHPmemberType").val() == "2803") {
             if($("#eHPemail").val() == '') {
                 Common.alert("Please key in Email Address");
                 return false;
@@ -820,24 +819,15 @@ console.log("validation");
                 return false;
             }
 
-            if($('#eHPcollectionBrnch').val() == '') {
+            console.log("Collection Branch : " + $("#eHPcollectionBranch").val());
+            if($("#eHPcollectionBranch").val() == '' ) {
                 Common.alert("Please select Collection branch");
                 return false;
             }
-        }
 
-        if($("#eHPmemberType").val() =='5'){
-            if($("#eHPtraineeType1").val() ==''){
-                   Common.alert("Please key in Trainee type");
-                   return false;
-            }
 
-            if($("#eHPcourse").val() == ''){
-                Common.alert("Please key  in Training Course");
-                return false;
-            }
-        }
     }
+
     return true;
 }
 
@@ -1240,11 +1230,6 @@ function fn_validFile() {
     return isValid;
 }
 
-function fn_close() {
-	  $("#popup_wrap").remove();
-  }
-
-
 
 </script>
 <form id="eHpForm">
@@ -1443,7 +1428,7 @@ function fn_close() {
         <select class="w100p" id="eHPmeetingPoint" name="meetingPoint"></select>
     </td>
 </tr>
-<tr>
+<%-- <tr>
     <th scope="row">e-Approval Status</th>
     <td colspan="5">
     <input type="text" id="eHPapprStusText" name="apprStusText" title="" placeholder="e-Approval Status" class="w100p" />
@@ -1527,12 +1512,12 @@ function fn_close() {
     <td colspan="2">
     <select class="w100p" id="eHPsearchSubDept" name="searchSubDept">
              <option value="">Choose One</option>
-       <%-- <c:forEach var="list" items="${subDeptList}" varStatus="status">
+       <c:forEach var="list" items="${subDeptList}" varStatus="status">
              <option value="${list.deptId}">${list.deptName} </option>
-        </c:forEach>  --%>
+        </c:forEach>
     </select>
     </td>
-</tr>
+</tr> --%>
 </tbody>
 </table><!-- table end -->
 
@@ -1564,11 +1549,11 @@ function fn_close() {
 </tbody>
 </table><!-- table end -->
 
-<aside class="title_line"><!-- title_line start -->
+<!-- <aside class="title_line">title_line start
 <h2>Language Proficiency</h2>
-</aside><!-- title_line end -->
+</aside>title_line end
 
-<table class="type1"><!-- table start -->
+<table class="type1">table start
 <caption>table</caption>
 <colgroup>
     <col style="width:150px" />
@@ -1590,7 +1575,7 @@ function fn_close() {
     </td>
 </tr>
 </tbody>
-</table><!-- table end -->
+</table>table end -->
 
 <aside class="title_line"><!-- title_line start -->
 <h2>Starter Kit & ID Tag</h2>
@@ -1607,7 +1592,7 @@ function fn_close() {
     <th scope="row">Collection Branch<span class="must">*</span></th>
 
       <td colspan="5">
-       <select class="w100p" id="eHPcollectionBrnch" name="collectionBrnch">
+       <select class="w100p" id="eHPcollectionBranch" name="collectionBranch">
                <option value="" selected>Select Branch</option>
         <c:forEach var="list" items="${SOBranch }" varStatus="status">
            <option value="${list.codeId}">${list.codeName}</option>
