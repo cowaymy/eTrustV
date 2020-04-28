@@ -1187,4 +1187,38 @@ public class SearchPaymentController {
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultList);
 	}
+
+	/**
+     * RentalCollectionByCS
+     * @param params
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/initRentalCollectionByCS.do")
+    public String initRentalCollectionByCS(@RequestParam Map<String, Object> params, ModelMap model) {
+        return "payment/payment/rentalCollectionByCS";
+    }
+
+    /**
+     * RentalCollectionByBS초기화 화면
+     * @param params
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/initRCByCSAgingMonth.do")
+    public String initRCByCSAgingMonth(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+        if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+
+            params.put("userId", sessionVO.getUserId());
+            EgovMap result =  salesCommonService.getUserInfo(params);
+
+            model.put("orgCode", result.get("orgCode"));
+            model.put("grpCode", result.get("grpCode"));
+            model.put("deptCode", result.get("deptCode"));
+            model.put("memCode", result.get("memCode"));
+        }
+
+        return "payment/payment/rentalCollectionByCSAgingMonth";
+    }
+
 }
