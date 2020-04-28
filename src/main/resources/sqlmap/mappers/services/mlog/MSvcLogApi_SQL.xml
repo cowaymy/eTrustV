@@ -4581,7 +4581,7 @@
            HC_REF_NO,
            HC_REF_CAT,
            HC_REF_PROD,
-           TO_CHAR A.SRV_PAC_ID) AS SRV_PAC_ID
+           TO_CHAR (A.SRV_PAC_ID) AS SRV_PAC_ID
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
