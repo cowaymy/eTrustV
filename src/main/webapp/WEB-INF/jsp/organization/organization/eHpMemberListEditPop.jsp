@@ -260,6 +260,7 @@ $(document).ready(function() {
 function fn_close(){
     $("#popup_wrap").remove();
 }
+
 function fn_saveConfirm(){
     if(fn_saveValidation()){
         Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
@@ -1395,7 +1396,7 @@ function fn_parentReload() {
         <select class="w100p" id="eHPmeetingPoint" name="meetingPoint"></select>
     </td>
 </tr>
-<tr>
+<%-- <tr>
     <th scope="row">e-Approval Status</th>
     <td colspan="5">
     <input type="text" title="" placeholder="e-Approval Status" class="w100p" />
@@ -1468,8 +1469,8 @@ function fn_parentReload() {
         </c:forEach>
     </select>
     </td>
-</tr>
-<tr>
+</tr> --%>
+<!-- <tr>
 <th scope="row">Businesses Type</th>
       <td>
          <select class="w100p" id="eHPbusinessType" name="businessType" disabled = "disabled">
@@ -1483,7 +1484,7 @@ function fn_parentReload() {
 
  <td>
  </td>
-</tr>
+</tr> -->
 <%-- <tr id="trMobileUseYn">
     <th scope="row">Mobile App</th>
     <td colspan="4">
@@ -1535,7 +1536,7 @@ function fn_parentReload() {
     <col style="width:*" />
 </colgroup>
 <tbody>
-<tr>
+<!-- <tr>
     <th scope="row">Education Level</th>
     <td>
     <select class="w100p" id="eHPeducationLvl" name="educationLvl">
@@ -1546,7 +1547,7 @@ function fn_parentReload() {
     <select class="w100p" id="eHPlanguage" name="language">
     </select>
     </td>
-</tr>
+</tr> -->
 </tbody>
 </table><!-- table end -->
 
@@ -1598,7 +1599,7 @@ function fn_parentReload() {
 
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_close()">CANCEL</a></p></li>
 </ul>
 
 </article><!-- tap_area end -->
@@ -1649,7 +1650,7 @@ function fn_parentReload() {
 
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_close()">CANCEL</a></p></li>
 </ul>
 
 </article><!-- tap_area end -->
@@ -1721,7 +1722,7 @@ function fn_parentReload() {
 
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_close()">CANCEL</a></p></li>
 </ul>
 </form>
 </article><!-- tap_area end -->
