@@ -913,7 +913,20 @@ public class ReportBatchController {
     LOGGER.info("[END] HTRawDate_Excel_S...");
   }
 
+  @RequestMapping(value = "/CSRaw.do")
+  //@Scheduled(cron = "0 24 8 * * MON,WED,FRI")
+  public void csRaw() throws IOException {
+    LOGGER.info("[START] csRaw...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/CSRaw.rpt");// visualcut rpt
+                                                                // file name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "BSRaw" + File.separator + "CSRaw_" + CommonUtils.getNowDate() + ".xls");
 
+    this.view(null, null, params);
+    LOGGER.info("[END] csRaw...");
+  }
 
   @RequestMapping(value = "/BSRawCurrent.do")
   //@Scheduled(cron = "0 24 8 * * MON,WED,FRI")
