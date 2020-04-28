@@ -219,6 +219,8 @@ public class CareServiceJobDto {
 
   private String hcRefProd;
 
+  private String srvPacId;
+
   public String getHomeCareOrderYn() {
     return homeCareOrderYn;
   }
@@ -807,6 +809,14 @@ public class CareServiceJobDto {
 
   public void setHcRefProd(String hcRefProd) {
     this.hcRefProd = hcRefProd;
+  }
+
+  public String getSrvPacId() {
+    return srvPacId;
+  }
+
+  public void setSrvPacId(String srvPacId) {
+    this.srvPacId = srvPacId;
   }
 
 }
