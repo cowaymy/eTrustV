@@ -391,6 +391,7 @@
           , TO_CHAR(HCREFNO) AS HC_REF_NO
           , TO_CHAR(HCREFCAT) AS HC_REF_CAT
           , TO_CHAR(HCREFPRD) AS HC_REF_PROD
+          , TO_CHAR(SRV_PAC_ID) AS SRV_PAC_ID
     FROM SVC0101T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -4579,7 +4580,8 @@
            SALES_ORD_NO AS HC_SALES_ORDER_NO,
            HC_REF_NO,
            HC_REF_CAT,
-           HC_REF_PROD
+           HC_REF_PROD,
+           A.SRV_PAC_ID
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -4642,7 +4644,8 @@
                   SALES_ORD_NO,
                   HC_REF_NO,
                   HC_REF_CAT,
-                  HC_REF_PROD
+                  HC_REF_PROD,
+                  SRV_PAC_ID
            FROM ( SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
                                   A.STUS_CODE_ID AS job_Status,
@@ -4718,7 +4721,8 @@
                                    SAL.SALES_ORD_NO,
                                    Z.SALES_ORD_NO AS HC_REF_NO,
                                    AC.CODE AS HC_REF_CAT,
-                                   AB.STK_DESC AS HC_REF_PROD
+                                   AB.STK_DESC AS HC_REF_PROD,
+                                   SAL.SRV_PAC_ID
                   FROM (SELECT A.*
                         FROM SVC0008D A,
                         ORG0001D B
