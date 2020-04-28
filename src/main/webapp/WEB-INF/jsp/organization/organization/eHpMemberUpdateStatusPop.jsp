@@ -4,6 +4,12 @@
 <script type="text/javaScript">
 
 $(document).ready(function() {
+if($("#eHPUserMemType").val() == 1){
+	$("#eHPapplicationStatus").val() == 10;
+}else{
+	$("#eHPapplicationStatus").val() == 21;
+	$("#eHPFailReasnLbl").append("<span class='must'>*</span>");
+}
 
 
 });
@@ -94,13 +100,13 @@ function fn_parentReload() {
 <tr>
  <th scope="row">Action<span class="must">*</span></th>
     <td colspan="2">
-    <select class="w100p" id= "eHPapplicationStatus">
+    <select class="w100p" id= "eHPapplicationStatus" disabled="disabled">
         <option value="21">Failed</option>
         <option value="10">Cancelled</option>
     </select>
 </tr>
 <tr>
-    <th scope="row" id = "eHPFailReasnLbl">Fail Reason<span class="must">*</span></th>
+    <th scope="row" id = "eHPFailReasnLbl">Fail Reason</th>
     <td>
     <label><input type="radio" name="eHPFailReasn" id="eHPFailReasn" value="2312" /><span>Incomplete document</span></label>
     <label><input type="radio" name="eHPFailReasn" id="eHPFailReasn" value="2313"/><span>Incorrect Key-In</span></label>
