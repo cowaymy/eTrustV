@@ -222,6 +222,8 @@ public class HeartServiceJobDto {
 
   private String hcRefProd;
 
+  private String srvPacId;
+
   public String getSerialChk() {
     return serialChk;
   }
@@ -808,6 +810,14 @@ public class HeartServiceJobDto {
 
   public void setHcRefProd(String hcRefProd) {
     this.hcRefProd = hcRefProd;
+  }
+
+  public String getSrvPacId() {
+    return srvPacId;
+  }
+
+  public void setSrvPacId(String srvPacId) {
+    this.srvPacId = srvPacId;
   }
 
 }
