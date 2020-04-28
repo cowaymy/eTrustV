@@ -211,7 +211,7 @@ function fn_RejectHPMem(){
 
 function fn_clickHpStatusUpdate(){
 
-	if( statusName == "Approved" || statusName == "Rejected"){
+	if( statusName == "Approved" || statusName == "Rejected" ||  statusName == "Cancelled"  || statusName == "Completed"   ){
 		Common.alert("Not allow to Update Status for HP Applicant with status " + statusName );
 	}else if(userType != "1" && statusName == "Pending" ){
 		Common.alert("Not allow to Update Status for HP Applicant with status " + statusName );
