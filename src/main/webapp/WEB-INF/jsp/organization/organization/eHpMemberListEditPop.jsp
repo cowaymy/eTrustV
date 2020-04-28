@@ -262,15 +262,9 @@ function fn_close(){
 }
 
 function fn_saveConfirm(){
+	 checkNRIC();
     if(fn_saveValidation()){
         Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
-        /*
-        Common.ajax("GET","/organization/memberListUpdate.do", $("#memberAddForm").serialize(), function(result){
-            console.log(result);
-            Common.alert("Member Save successfully.",fn_close);
-
-        });
-        */
 
     }
 }
@@ -440,6 +434,7 @@ function fn_saveValidation(){
         message += "* Please select equal or bigger than today date.<br />";
     }
     */
+
     if($("#eHPjoinDate").val() == ''){
         valid = false;
         message += "* Please select joined date.<br/>";
@@ -1115,7 +1110,7 @@ function fn_removeFile(name){
 }
 
 function checkNRICEnter(){
-    if(event.keyCode == 13) {
+    if(event.keyCode == 13 || event.keyCode == 9) {
         checkNRIC();
     }
 }
