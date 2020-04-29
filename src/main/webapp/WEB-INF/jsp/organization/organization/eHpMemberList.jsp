@@ -211,11 +211,12 @@ function fn_RejectHPMem(){
 
 function fn_clickHpStatusUpdate(){
 
-	if( statusName == "Approved" || statusName == "Rejected" ||  statusName == "Cancelled"  || statusName == "Completed"   ){
-		Common.alert("Not allow to Update Status for HP Applicant with status " + statusName );
-	}else if(userType != "1" && statusName == "Pending" ){
+	if( statusName == "Approved" || statusName == "Rejected" ||  statusName == "Cancelled"  || statusName == "Completed" || statusName == "Pending"  ){
 		Common.alert("Not allow to Update Status for HP Applicant with status " + statusName );
 	}
+/* 	else if(userType != "1" && statusName == "Pending" ){
+		Common.alert("Not allow to Update Status for HP Applicant with status " + statusName );
+	} */
 	else{
         Common.popupDiv("/organization/eHpMemberUpdateStatusPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType  , "");
 	}
@@ -401,9 +402,11 @@ function createAUIGrid() {
 
 
 function fn_memberEditPop(){
-
+    if( statusName == "Approved" ||statusName == "Cancelled"   ){
+        Common.alert("Not allow to Update Status for HP Applicant with status " + statusName );
+    }else{
          Common.popupDiv("/organization/eHpMemberListEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType + "&atchFileGrpId=" + atchFileGrpId , "");
-
+    }
        }
 
 function fn_searchPosition(selectedData){
@@ -443,7 +446,7 @@ function fn_searchPosition(selectedData){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>eHP Member</h2>
+<h2>eHP</h2>
 <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_memberListNew();">New</a></p></li>
@@ -507,7 +510,7 @@ function fn_searchPosition(selectedData){
     <input type="text" title="IC Number" placeholder="" class="w100p" id="eHPicNum" name="icNum" />
     </td>
 </tr>
-<tr>
+<%--<tr>
     <th scope="row">Date Of Birth</th>
     <td>
     <input type="text" title="Date Of Birth"  placeholder="DD/MM/YYYY"  class="j_date"  id="eHPbirth" name="birth"/>
@@ -539,15 +542,24 @@ function fn_searchPosition(selectedData){
         </c:forEach>
     </select>
     </td>
-</tr>
+</tr>--%>
 <tr>
+<th scope="row">Status</th>
+    <td>
+    <select class="w100p" id="eHPstatus" name="status">
+        <option value="" selected>Select Account</option>
+        <c:forEach var="list" items="${status }" varStatus="status">
+           <option value="${list.statuscodeid}">${list.name}</option>
+        </c:forEach>
+    </select>
+    </td>
+
     <th scope="row">Contact No</th>
     <td>
     <input type="text" title="Contact No" placeholder="" class="w100p" id="eHPcontact" name="contact"/>
     </td>
 
-    <%-- By KV start - Position Selection button --%>
-    <th scope="row">Position</th>
+<%--     <th scope="row">Position</th>
     <td>
     <select class="w100p" id="eHPposition" name="position">
         <option value="" selected>Select Account</option>
@@ -555,8 +567,8 @@ function fn_searchPosition(selectedData){
             <option value="${list.positionLevel}">${list.positionName}</option>
         </c:forEach>
     </select>
-    </td>
-    <%-- By KV end - Position Selection button --%>
+    </td> --%>
+
 
     <th scope="row">Collection Branch </th>
     <td>
@@ -572,7 +584,7 @@ function fn_searchPosition(selectedData){
     </td>
 </tr>
 <tr>
-    <th scope="row">Key-In User</th>
+<%--     <th scope="row">Key-In User</th>
     <td>
     <select class="w100p" id="eHPkeyUser" name="keyUser">
         <option value="" selected>Select Account</option>
@@ -589,7 +601,7 @@ function fn_searchPosition(selectedData){
            <option value="${list.branchid}">${list.c1}</option>
         </c:forEach>
     </select>
-    </td>
+    </td> --%>
     <th scope="row">Key-In Date</th>
     <td colspan="3">
 
