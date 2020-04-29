@@ -44,4 +44,6 @@ public interface eHPmemberListMapper {
 
   List<EgovMap>selectCollectBranch();
 
+  List<EgovMap> eHPselectStatus();
+
 }
