@@ -4,17 +4,37 @@
 <script type="text/javaScript">
 
 $(document).ready(function() {
+
 if($("#eHPUserMemType").val() == 1){
-	$("#eHPapplicationStatus").val() == 10;
+	   $("#eHPapplicationStatus").val() == 10;
 	   $("#eHPapplicationStatus option[value="+ 10 +"]").attr("selected", true);
+       $("#eHPFailReasnLbl").hide();
+       $("#eHPFailReasn").hide();
 }else{
-	$("#eHPapplicationStatus").val() == 21;
-	$("#eHPapplicationStatus option[value="+ 21 +"]").attr("selected", true);
-	$("#eHPFailReasnLbl").append("<span class='must'>*</span>");
+	$("#eHPapplicationStatus").attr('disabled',false);
+    $("#eHPFailReasnLbl").show();
+    $("#eHPFailReasn").show();
 }
 
 
 });
+
+$("#eHPapplicationStatus").change(function (){
+    if ($("#eHPapplicationStatus").val() == "10") {
+    	 $("#eHPFailReasnLbl").hide();
+         $("#eHPFailReasn").hide();
+        $('span', '#eHPFailReasnLbl').empty().remove();
+    } else {
+        $("#eHPFailReasnLbl").show();
+        $("#eHPFailReasn").show();
+        $("#eHPFailReasnLbl").append("<span class='must'>*</span>");
+
+    }
+
+});
+
+
+
 
 function fn_updateConfirm(){
 var jsonObj = {
@@ -52,7 +72,7 @@ function fn_parentReload() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>eHP Member List - Update Status</h1>
+<h1>eHP - Update Status</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -109,10 +129,17 @@ function fn_parentReload() {
 </tr>
 <tr>
     <th scope="row" id = "eHPFailReasnLbl">Fail Reason</th>
-    <td>
+    <td colspan="2">
+     <select class="w100p" id= "eHPFailReasn" >
+     <option value="0" selected>Choose One</option>
+        <option value="2312">Incomplete document</option>
+        <option value="2313">Incorrect Key-In</option>
+    </select>
+
+  <!--   <td>
     <label><input type="radio" name="eHPFailReasn" id="eHPFailReasn" value="2312" /><span>Incomplete document</span></label>
     <label><input type="radio" name="eHPFailReasn" id="eHPFailReasn" value="2313"/><span>Incorrect Key-In</span></label>
-    </td>
+    </td> -->
 </tr>
 <tr>
 <th scope="row" id = "eHPRemarkLbl">Remark</th>
