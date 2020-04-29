@@ -39,7 +39,16 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * Date             Author Description ------------- ----------- -------------
  * 2019. 09. 20. Jun       First creation
  * 2020. 04. 27. ONGHC AMEND hsFailJobRequestProc
+ * 2020.
  */
+
+/*********************************************************************************************
+ * DATE             PIC           VERSION  COMMENT
+ * -----------------------------------------------------------------------------
+ * 20/09/2019    JUN           1.0.1       - First creation
+ * 27/04/2020    ONGHC      1.0.2       - AMEND hsFailJobRequestProc
+ * 29/04/2020    ONGHC      1.0.3       - AMEND hsResultProc TO INSERT SVC0115D
+ *********************************************************************************************/
 @Service("serviceApiHSDetailService")
 public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl implements ServiceApiHSDetailService {
   private static final Logger logger = LoggerFactory.getLogger(ServiceApiHSDetailServiceImpl.class);
@@ -161,6 +170,7 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
 
             if ("Y".equals(String.valueOf(insApiresult.get("serialRequireChkYn")))) {
               params.put("scanSerial", String.valueOf(insApiresult.get("scanSerial")));
+              params.put("scanSerial2", String.valueOf(insApiresult.get("scanSerial2")));
               params.put("salesOrdId", String.valueOf(getHsBasic.get("salesOrdId")));
               params.put("reqstNo", String.valueOf(rtnValue.get("hsrNo")));
               params.put("delvryNo", null);
@@ -203,6 +213,9 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
               }
 
               logger.debug("### SP_SVC_LOGISTIC_REQUEST_SERIAL params  : " + spMap.toString());
+
+              // ONGHC - START INSERT SVC0115D FOR HC BARCODE MATCHING PURPOSE..
+              MSvcLogApiService.insertSVC0115D(params);
 
             } else {
               // SP_SVC_LOGISTIC_REQUEST COMMIT STRING DELETE
