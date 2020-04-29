@@ -20,6 +20,7 @@ import io.swagger.annotations.ApiModelProperty;
  *--------------------------------------------------------------------------------------------
  * 10/04/2019    ONGHC      1.0.1       - Amend File Format
  * 13/08/2019    ONGHC      1.0.2       - Add Variable faucetExch
+ * 29/04/2020    ONGHC      1.0.3       - Add Variable scanSerial2
  *********************************************************************************************/
 
 @ApiModel(value = "HeartServiceResultForm", description = "HeartServiceResultForm")
@@ -87,6 +88,8 @@ public class HeartServiceResultForm {
   private String homeCareOrderYn;
 
   private String serialRequireChkYn;
+
+  private String scanSerial2;
 
   public String getCheckInDate() {
     return checkInDate;
@@ -289,6 +292,14 @@ public class HeartServiceResultForm {
 
   public void setSerialRequireChkYn(String serialRequireChkYn) {
     this.serialRequireChkYn = serialRequireChkYn;
+  }
+
+  public String getScanSerial2() {
+    return scanSerial2;
+  }
+
+  public void setScanSerial2(String scanSerial2) {
+    this.scanSerial2 = scanSerial2;
   }
 
   public List<Map<String, Object>> createMaps(HeartServiceResultForm heartServiceResultForm) {
