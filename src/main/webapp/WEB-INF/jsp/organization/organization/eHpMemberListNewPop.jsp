@@ -1236,7 +1236,7 @@ function fn_validFile() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>eHP Member List - Add New Member</h1>
+<h1>eHP - Add New Member</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
