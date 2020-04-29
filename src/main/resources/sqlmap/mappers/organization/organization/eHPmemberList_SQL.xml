@@ -354,7 +354,7 @@
             ORDER BY Project1.MEM_CODE ASC
              ]]>
     </select>
-    <!-- By KV end - add Position query -->
+
 
 <!-- select EHP Applicant -->
 <select id="selectEHPApplicantList" parameterType="Map" resultType="egovMap">
@@ -449,7 +449,7 @@
                          <if test="eHPicNum != null and eHPicNum != ''">
                            AND  Extent1.APLICNT_NRIC LIKE   '%' || #{eHPicNum} || '%'
                          </if>
-                         <if test="eHPbirth != null and eHPbirth != ''">
+                       <!--   <if test="eHPbirth != null and eHPbirth != ''">
                            AND Extent1.APLICNT_DOB =  TO_DATE(#{eHPbirth}, 'DD/MM/YYYY')
                          </if>
                           <if test="eHPnation != null and eHPnation != ''">
@@ -457,13 +457,13 @@
                          </if>
                          <if test="eHPrace != null and eHPrace != ''">
                            AND Extent1.APLICNT_RACE =  #{eHPrace}
-                         </if>
+                         </if> -->
                          <if test="eHPstatus != null and eHPstatus != ''">
                            AND  Extent1.STUS_ID =  #{eHPstatus}
                          </if>
-                         <if test="eHPkeyUser != null and eHPkeyUser != ''">
+                        <!--  <if test="eHPkeyUser != null and eHPkeyUser != ''">
                            AND  Extent1.CRT_USER_ID =  #{eHPkeyUser}
-                         </if>
+                         </if> -->
                          <if test="eHPcreateDate != '' and eHPendDate == '' ">
                             <![CDATA[ AND  TO_DATE(TO_CHAR(Extent1.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(#{eHPcreateDate}, 'DD/MM/YYYY') ]]>
                          </if>
@@ -875,5 +875,20 @@
     APLCTN_ID = #{eHPMemberID}
 
     </update>
+
+        <select id="eHPselectStatus" parameterType="Map" resultType="egovMap">
+
+        SELECT
+        Distinct1.StatusCodeID StatusCodeID,
+        Distinct1.Code Code,
+        Distinct1.Name Name
+        FROM ( SELECT DISTINCT
+        STUS_CODE_ID STATUSCODEID,
+        CODE CODE,
+        NAME NAME
+        FROM  SYS0038M
+        WHERE STUS_CODE_ID IN (44,102,5,10,21)
+    )  Distinct1
+    </select>
 
     </mapper>
