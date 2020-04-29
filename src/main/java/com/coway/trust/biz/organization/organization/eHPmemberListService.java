@@ -35,4 +35,6 @@ public interface eHPmemberListService {
 
   List<EgovMap> selectCollectBranch();
 
+  List<EgovMap> eHPselectStatus();
+
 }
