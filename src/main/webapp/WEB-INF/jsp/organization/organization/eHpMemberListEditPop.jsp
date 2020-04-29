@@ -909,6 +909,13 @@ function fn_memberSave(){
         cnfmStatus = "44"; // Pending
     }
 
+    var gender = "";
+    if( $('input[name=gender]:checked', '#eHPmemberAddForm').val() == "M"){
+    	gender = "M";
+    }else if( $('input[name=gender]:checked', '#eHPmemberAddForm').val() == "F"){
+        gender = "F";
+    }
+
     var jsonObj =  {
              // ADDRESS
               eHPareaId : $("#eHPareaId").val(),
@@ -926,7 +933,8 @@ function fn_memberSave(){
 
               eHPmemberNm : $("#eHPmemberNm").val(),
               eHPjoinDate : $("#eHPjoinDate").val(),
-              eHPgender : $("#eHPgender").val().trim(),
+              //eHPgender : $("#eHPgender").val().trim(),
+              eHPgender : gender,
               eHPBirth : $("#eHPBirth").val(),
               eHPcmbRace : $("#eHPcmbRace").val(),
               eHPnational : $("#eHPnational").val(),
@@ -1200,7 +1208,7 @@ function fn_parentReload() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>eHP Member List - Edit Member</h1>
+<h1>eHP - Edit Member</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
