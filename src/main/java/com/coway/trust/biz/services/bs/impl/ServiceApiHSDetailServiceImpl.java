@@ -47,7 +47,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * -----------------------------------------------------------------------------
  * 20/09/2019    JUN           1.0.1       - First creation
  * 27/04/2020    ONGHC      1.0.2       - AMEND hsFailJobRequestProc
- * 29/04/2020    ONGHC      1.0.3       - AMEND hsResultProc TO INSERT SVC0115D
+ * 29/04/2020    ONGHC      1.0.3       - AMEND hsResultProc and htResultProc TO INSERT SVC0115D
  *********************************************************************************************/
 @Service("serviceApiHSDetailService")
 public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl implements ServiceApiHSDetailService {
@@ -349,6 +349,7 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
             // 홈케어 주문일 경우만 호출
             if ("Y".equals(String.valueOf(insApiresult.get("homeCareOrderYn")))) {
               params.put("scanSerial", String.valueOf(insApiresult.get("scanSerial")));
+              params.put("scanSerial2", String.valueOf(insApiresult.get("scanSerial2")));
               params.put("salesOrdId", String.valueOf(getHsBasic.get("salesOrdId")));
               params.put("reqstNo", String.valueOf(rtnValue.get("resultDocNo")));
               params.put("delvryNo", null);
@@ -367,6 +368,9 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
                 String errorMsg = "[API] " + params.get("pErrmsg");
                 throw new BizException("02", procTransactionId, procName, procKey, procMsg, errorMsg, null);
               }
+
+              // ONGHC - START INSERT SVC0115D FOR HC BARCODE MATCHING PURPOSE..
+              MSvcLogApiService.insertSVC0115D(params);
             }
           }
         } catch (Exception e) {
