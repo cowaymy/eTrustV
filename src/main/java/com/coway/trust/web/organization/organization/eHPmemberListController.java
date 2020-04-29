@@ -113,7 +113,7 @@ public class eHPmemberListController {
        params.put("groupCode", 45);
        params.put("separator", " - ");
        List<EgovMap> race = commonService.getDetailCommonCodeList(params);
-       List<EgovMap> status = memberListService.selectStatus();
+       List<EgovMap> status = eHPmemberListService.eHPselectStatus();
        List<EgovMap> userBranch = memberListService.selectUserBranch();
        List<EgovMap> SOBranch = commonService.selectBranchList(params);
        List<EgovMap> user = memberListService.selectUser();
