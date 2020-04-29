@@ -17,7 +17,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 29/07/2019    ONGHC      1.0.3       - Amend productReturnResult to Add Status Checking
  * 13/08/2019    ONGHC      1.0.4       - Add updFctExch
  * 22/04/2020    ONGHC      1.0.5       - Create getRelateOrdLst
- * 23/04/2019    ONGHC      1.0.6       - Add function getOrdDetail
+ * 23/04/2020    ONGHC      1.0.6       - Add function getOrdDetail
+ * 29/04/2020    ONGHC      1.0.7       - Add function insertSVC0115D
  *********************************************************************************************/
 
 public interface MSvcLogApiService {
@@ -227,4 +228,5 @@ public interface MSvcLogApiService {
 
   List<EgovMap> getOrdDetail(Map<String, Object> params);
 
+  void insertSVC0115D(Map<String, Object> params);
 }
