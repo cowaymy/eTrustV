@@ -1916,6 +1916,26 @@
         }
 
         var msg = "";
+        // CHECK COMBO PACKAGE
+        Common.ajaxSync("GET", "/sales/order/chkCboSal.do", {ORD_ID : ORD_ID, ORD_NO : ORD_NO},
+          function(result) {
+            if (result != null) {
+              if (result == 0) {
+                // IS SUB COMBO
+                // SHOULD CHANGE:-
+                // CHANGE PROMO CODE AND RENTAL PRICE REMAIN
+                msg += '<span style="color:red;font-weight: bold"><spring:message code="sales.msg.chkCboSalMsgAP" /></span><br/>';
+              } else if (result == 1) {
+                // IS MAIN COMBO
+                // SHOULD CHANGE:-
+                // CHANGE PROMO CODE AND CHANGE RENTAL PRICE
+                msg += '<span style="color:red;font-weight: bold"><spring:message code="sales.msg.chkCboSalMsgWP" /></span><br/>';
+              } else {
+                // BY PASS - DO NOTHING
+              }
+            }
+          });
+
         msg += '<spring:message code="sal.title.text.requestStage" /> : ' + RequestStage + '<br />';
         msg += '<spring:message code="sal.title.text.requestor" /> : '    + $('#cmbRequestor option:selected').text() + '<br />';
         msg += '<spring:message code="sal.title.text.reason" /> : '       + $('#cmbReason option:selected').text() + '<br />';
