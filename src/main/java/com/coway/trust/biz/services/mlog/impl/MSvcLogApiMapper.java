@@ -18,6 +18,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 27/11/2019    ONGHC      1.0.5       - Add Function
  * 22/04/2020    ONGHC      1.0.6       - Create getRelateOrdLst
  * 23/04/2019    ONGHC      1.0.7       - Add function getOrdDetail
+ * 29/04/2020    ONGHC      1.0.8       - Add function insertSVC0115D
  *********************************************************************************************/
 
 @Mapper("MSvcLogApiMapper")
@@ -290,4 +291,5 @@ public interface MSvcLogApiMapper {
 
   List<EgovMap> getOrdDetail(Map<String, Object> params);
 
+  void insertSVC0115D(Map<String, Object> params);
 }
