@@ -5338,4 +5338,30 @@
     WHERE A.SALES_ORD_NO = #{ordNo}
   </select>
 
+  <insert id="insertSVC0115D" parameterType="Map">
+    INSERT INTO SVC0115D ( ID
+                                      , SALES_ORD_ID
+                                      , BNDL_ID
+                                      , SRV_NO
+                                      , MAT_BC
+                                      , FRAME_BC
+                                      , DISB
+                                      , CRT_DT
+                                      , CRT_USR_ID
+                                      , UPD_DT
+                                      , UPD_USR_ID
+    ) VALUES ( SVC0115D_ID.NEXTVAL
+                  , #{salesOrdId}
+                  , (SELECT BNDL_ID FROM SAL00001D WHERE SALES_ORD_ID = #{salesOrdId})
+                  , #{reqstNo}
+                  , #{scanSerial}
+                  , #{scanSerial2}
+                  , 0
+                  , SYSDATE
+                  , #{userId}
+                  , SYSDATE
+                  , #{userId}
+    )
+  </insert>
+
 </mapper>
