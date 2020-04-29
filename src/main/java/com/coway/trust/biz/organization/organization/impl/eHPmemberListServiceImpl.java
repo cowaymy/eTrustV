@@ -270,4 +270,8 @@ public class eHPmemberListServiceImpl extends EgovAbstractServiceImpl implements
 
      }
 
+      public List<EgovMap> eHPselectStatus() {
+        return eHPmemberListMapper.eHPselectStatus();
+    }
+
 }
