@@ -12,6 +12,7 @@
                                                    Add Application Type, PV Month and Year to GridView.
  13/04/2020  ONGHC  1.0.1             Add Order Ledger Button and Highlighted no Outstanding Order
  24/04/2020  ONGHC  1.0.2             Amend fn_validateLdg to change confirmation to alert
+ 30/04/2020  ONGHC  1.0.3             Amend to Highlighted Advance Payment order
  -->
 
 <style type="text/css">
@@ -164,7 +165,7 @@
             var payStusId = list[i].item.payStusId;
             var advAmt = list[i].item.advAmt;
             if (!crntLdgStat) {
-              if (crntLdg == "0" && payStusId == "1" && (advAmt == "" || typeof(advAmt) == "undefined")) {
+              if (crntLdg <= 0 && payStusId == "1" && (advAmt == "" || typeof(advAmt) == "undefined")) {
                 crntLdgStat = true;
                 break;
               }
@@ -582,7 +583,7 @@
       AUIGrid.setGridData(myGridID , result);
 
       AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item) {
-          if(item.crntLdg == 0 && item.payStusId == "1" && (item.advAmt == "" || typeof(item.advAmt) == "undefined")) {
+          if(item.crntLdg <= 0 && item.payStusId == "1" && (item.advAmt == "" || typeof(item.advAmt) == "undefined")) {
             return "my-pink-style";
           }
        });
