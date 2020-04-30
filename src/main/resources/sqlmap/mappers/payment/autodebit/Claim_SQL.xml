@@ -748,11 +748,10 @@
 
     <choose>
       <when test='ctrlBankId == "19" '>
-        ,(CASE WHEN LENGTH(Extent1.BANK_DTL_CRC_EXPR) <![CDATA[   < ]]>
-        4 THEN '0000'
-        WHEN TO_DATE(Extent1.BANK_DTL_CRC_EXPR,'MMYY') <![CDATA[   > ]]>
-        SYSDATE THEN Extent1.BANK_DTL_CRC_EXPR
-        ELSE '0000' END) AS
+        ,(CASE WHEN LENGTH(Extent1.BANK_DTL_CRC_EXPR) <![CDATA[   < ]]> 4 THEN '0000'
+               WHEN Extent1.BANK_DTL_CRC_EXPR like '00%' THEN '0000'
+               WHEN TO_DATE(Extent1.BANK_DTL_CRC_EXPR,'MMYY') <![CDATA[   > ]]> SYSDATE THEN Extent1.BANK_DTL_CRC_EXPR
+               ELSE '0000' END) AS
         RENT_PAY_CRC_EXPR
       </when>
       <otherwise>
@@ -813,7 +812,7 @@
   <select id="createClaimCreditCard" statementType="CALLABLE"
     parameterType="Map">
     {
-    call SP_AUTO_DEBT_GENRT_CLM_CCD(#{new_claimType} ,
+    call SP_AUTO_DEBT_GENRT_CLM_CCD_2(#{new_claimType} ,
     #{new_merchantBank},
     #{new_cardType}, #{new_debitDate}, #{userId},
     #{new_issueBankId},#{mayBank},#{installMonth},
