@@ -851,6 +851,7 @@
                 return false;
             } else {
                 // Create row
+                AUIGrid.addRow(approveLineGridID, {memCode : "P0128", name : "TAN LEE JUN"}, "last");
                 fn_appvLineGridAddRow();
 
                 $("#appvLinePop").show();
@@ -1106,6 +1107,7 @@
 
                        if(v == "S") {
                            // Create row
+                           AUIGrid.addRow(approveLineGridID, {memCode : "P0128", name : "TAN LEE JUN"}, "last");
                            fn_appvLineGridAddRow();
 
                            $("#appvLinePop").show();
@@ -1132,6 +1134,7 @@
 
                         if(v == "S") {
                             // Create row
+                            AUIGrid.addRow(approveLineGridID, {memCode : "P0128", name : "TAN LEE JUN"}, "last");
                             fn_appvLineGridAddRow();
 
                             $("#appvLinePop").show();
@@ -1201,7 +1204,6 @@
     ********************************/
     function fn_appvLineGridAddRow() {
         AUIGrid.addRow(approveLineGridID, {}, "first");
-        AUIGrid.addRow(approveLineGridID, {memCode : "P0128", name : "TAN LEE JUN"}, "last");
     }
 
     function fn_appvLineGridDeleteRow() {
