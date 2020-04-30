@@ -303,10 +303,28 @@ public class ReportBatchController {
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put("V_TEMP", "TEMP");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "RCM" + File.separator + "RCM_Daily_Company" + CommonUtils.getNowDate() + ".xls");
+        "RCM_HT" + File.separator + "RCM_Daily_Company" + CommonUtils.getNowDate() + ".xls");
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] RCM_Daily_2015_Company...");
+  }
+
+  @RequestMapping(value = "/RCM_Daily_HTMattress.do")
+  //@Scheduled(cron = "0 0 5 * * *")//Daily (5:00am)
+  public void rcmDailyHtMattress() {
+    LOGGER.info("[START] RCM_Daily_HTMattress...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_HTMattress.rpt");// visualcut
+                                                                      // rpt
+                                                                      // file
+                                                                      // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "RCM" + File.separator + "RCM_Daily_HTMattress_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] RCM_Daily_HTMattress...");
   }
 
   @RequestMapping(value = "/ColorGrid_Simplification_2014_2015.do")
@@ -922,7 +940,7 @@ public class ReportBatchController {
                                                                 // file name.
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "BSRaw" + File.separator + "CSRaw_" + CommonUtils.getNowDate() + ".xls");
+        "CSRaw" + File.separator + "CSRaw_" + CommonUtils.getNowDate() + ".xls");
 
     this.view(null, null, params);
     LOGGER.info("[END] csRaw...");
