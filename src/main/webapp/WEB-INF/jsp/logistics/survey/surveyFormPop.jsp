@@ -104,7 +104,7 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:1px solid #d3d9
 <tr>
         <th scope="row" colspan="3"><br><b>${title.surveyMessage}</b><br/></th>
         <tr>
-    <!-- <th scope="row" colspan="3"><b>Score : 1 - Strongly Disagree | 2 - Disagree | 3 - Neutral | 4 - Agree | 5 - Strongly Agree</b></th> -->
+        <th scope="row" colspan="3"><b>Score : 1 - Not Very Likely | 2 - Not Likely | 3 - Normal | 4 - Likely | 5 -  Very Likely</b></th>
 </tr>
     <tr>
 
@@ -119,7 +119,7 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:1px solid #d3d9
         <td>${ques.ques}</td>
         <c:choose>
             <c:when test = "${ques.inputType eq 'CHECKBOX'}">
-                <td><c:forEach var="score" begin="1" end = "10">
+                <td><c:forEach var="score" begin="1" end = "5">
                 <label><input type="radio" name="${ques.quesId}" value="${score}"/><span> ${score} </span></label>
                 </c:forEach></td>
              </c:when>
