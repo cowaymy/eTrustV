@@ -4819,8 +4819,8 @@
                     AND K.ITM_STK_ID = L.STK_ID(+)
                     AND C.CUST_BILL_ID = M.CUST_BILL_ID(+)
 
-                    --AND C.SALES_ORD_ID = O.SALES_ORD_ID(+)
-                    --AND C.SALES_ORD_ID = O.CUST_ID(+)
+                    /*AND C.SALES_ORD_ID = O.SALES_ORD_ID(+)*/
+                    /*AND C.SALES_ORD_ID = O.CUST_ID(+)*/
                     AND R.SRV_SALES_ORD_ID = O.SALES_ORD_ID(+)
                     AND R.SRV_MEM_CNTRCT_ID = O.SVC_CNTRCT_ID(+)
                     AND O.CUST_CRC_ID = W.CUST_CRC_ID(+)
