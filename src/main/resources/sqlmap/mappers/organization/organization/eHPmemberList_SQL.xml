@@ -887,7 +887,7 @@
         CODE CODE,
         NAME NAME
         FROM  SYS0038M
-        WHERE STUS_CODE_ID IN (44,102,5,10,21)
+        WHERE STUS_CODE_ID IN (44,102,5,6,21)
     )  Distinct1
     </select>
 
