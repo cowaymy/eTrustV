@@ -1067,7 +1067,7 @@ function fn_loadAtchment(atchFileGrpId) {
    });
 }
 
-function fn_validFile() {
+/* function fn_validFile() {
     var isValid = true, msg = "";
 
     if(nricFileId == null) {
@@ -1087,7 +1087,44 @@ function fn_validFile() {
     if(!isValid) Common.alert("Save eHP - Edit Member" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
     return isValid;
+} */
+
+function fn_validFile() {
+    var isValid = true, msg = "";
+
+    if(FormUtil.isEmpty($('#nricFile').val().trim())) {
+        isValid = false;
+        msg += "* Please upload copy of NRIC<br>";
+    }
+    if(FormUtil.isEmpty($('#statementFile').val().trim())) {
+        isValid = false;
+        msg += "* Please upload copy of Bank Passport / Statement<br>";
+    }
+    if(FormUtil.isEmpty($('#passportFile').val().trim())) {
+        isValid = false;
+        msg += "* Please upload copy of Passport phoyo<br>";
+    }
+    if(nricFileId == null) {
+        isValid = false;
+        msg += "* Please upload copy of NRIC<br>";
+    }
+    if(statementFileId == null) {
+        isValid = false;
+        msg += "* Please upload copy of Bank Passport / Statement<br>";
+    }
+    if(passportFileId == null) {
+        isValid = false;
+        msg += "* Please upload copy of Passport photo<br>";
+    }
+
+    if(!isValid) Common.alert("Save eHP - Add New Member" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+    return isValid;
 }
+
+
+
+
 
 function fn_removeFile(name){
     if(name == "NRIC") {
