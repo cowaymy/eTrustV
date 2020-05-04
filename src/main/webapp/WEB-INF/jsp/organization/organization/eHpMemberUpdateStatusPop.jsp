@@ -5,7 +5,7 @@
 
 $(document).ready(function() {
 
-if($("#eHPUserMemType").val() == 1){
+/* if($("#eHPUserMemType").val() == 1){
 	   $("#eHPapplicationStatus").val() == 10;
 	   $("#eHPapplicationStatus option[value="+ 10 +"]").attr("selected", true);
        $("#eHPFailReasnLbl").hide();
@@ -30,7 +30,7 @@ $("#eHPapplicationStatus").change(function (){
         $("#eHPFailReasnLbl").append("<span class='must'>*</span>");
 
     }
-
+*/
 });
 
 
@@ -124,7 +124,7 @@ function fn_parentReload() {
     <td colspan="2">
     <select class="w100p" id= "eHPapplicationStatus" disabled="disabled">
         <option value="21">Failed</option>
-        <option value="10">Cancelled</option>
+        <!-- <option value="10">Cancelled</option> -->
     </select>
 </tr>
 <tr>
