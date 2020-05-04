@@ -4835,7 +4835,7 @@
                     AND C.SRV_ORD_ID = U.SRV_SO_ID
                     AND B.RESULT_IS_CURR(+) = 1
 
-                    AND C.SRV_ORD_ID = Y.REM_STATUS(+)
+                    AND TO_CHAR(C.SRV_ORD_ID) = Y.REM_STATUS(+)
                     AND Y.SALES_ORD_ID = Z.SALES_ORD_ID(+)
                     AND Z.SALES_ORD_ID = AA.SALES_ORD_ID(+)
                     AND AA.ITM_STK_ID = AB.STK_ID(+)
