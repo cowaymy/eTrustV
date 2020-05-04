@@ -402,7 +402,7 @@ function createAUIGrid() {
 
 
 function fn_memberEditPop(){
-    if( statusName == "Approved" ||statusName == "Cancelled"   ){
+    if( statusName == "Approved" ||statusName == "Cancelled" || statusName == "Ready"   ){
         Common.alert("Not allow to Update Status for HP Applicant with status " + statusName );
     }else{
          Common.popupDiv("/organization/eHpMemberListEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType + "&atchFileGrpId=" + atchFileGrpId , "");
