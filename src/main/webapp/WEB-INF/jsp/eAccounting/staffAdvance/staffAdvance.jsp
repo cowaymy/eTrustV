@@ -204,6 +204,11 @@
                 fn_requestPop(event.item.appvPrcssNo, clmType);
             }
         });
+
+        AUIGrid.bind(approveLineGridID, "cellClick", function( event ) {
+            console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+            selectRowIdx = event.rowIndex;
+        });
     });
 
     /************************************************
@@ -1035,6 +1040,7 @@
 
             $("#advType").val('');
             fn_closePop();
+            fn_alertClmNo(result.data.clmNo);
             fn_searchAdv();
         });
     }
