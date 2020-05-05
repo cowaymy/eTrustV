@@ -62,6 +62,7 @@ function selectAdjustmentDetailPop(adjId, invNo){
 	console.log('InvNo:'+invNo);
     //데이터 조회 (초기화면시 로딩시 조회)
     Common.ajax("GET", "/payment/selectAdjustmentDetailPop.do", {"adjId":adjId, "invNo":invNo}, function(result) {
+        console.log(result);
         if(result != 'undefined'){
 
             //Master데이터 출력
@@ -335,7 +336,7 @@ function fn_approve(process){
     Common.ajax("POST", "/payment/approvalAdjustment.do", param, function(result) {
         Common.alert("Invoice Adjustment successfully confirmed.<br />",function(){
         	fn_getAdjustmentListAjax();    //메인 페이지 조회
-        	$('#_adjustmentDetailPop').hide();
+        	$('#_adjustmentDetailPop').remove();
         });
 
     });
