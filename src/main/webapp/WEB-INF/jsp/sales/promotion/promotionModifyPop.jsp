@@ -19,6 +19,7 @@
         doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '${promoInfo.empChk}',               'empChk',               'S'); //EMP_CHK
         doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '${promoInfo.promoDiscType}',        'promoDiscType',        'S'); //Discount Type
       //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, ${promoInfo.promoFreesvcPeriodTp}, 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
+        doGetComboData('/common/selectCodeList.do', {groupCode :'451', orderValue:'CODE_ID'}, '${promoInfo.eSales}',        'eSales',        'S'); //Discount Type
 
       //doGetCombo('/sales/promotion/selectMembershipPkg.do', ${promoInfo.promoSrvMemPacId}, '9', 'promoSrvMemPacId', 'S'); //Common Code
         doGetComboCodeId('/sales/promotion/selectMembershipPkg.do', {promoAppTypeId : '${promoInfo.promoAppTypeId}'}, '${promoInfo.promoSrvMemPacId}', 'promoSrvMemPacId', 'S'); //Common Code
@@ -150,7 +151,8 @@
                 promoAddDiscPv          : $('#promoAddDiscPv').val().trim(),
                 exTrade                 : $('#exTrade').val(),
                 empChk                  : $('#empChk').val(),
-                megaDeal                : $('input:radio[name="megaDeal"]:checked').val()
+                megaDeal                : $('input:radio[name="megaDeal"]:checked').val(),
+                promoESales             :$('#eSales').val().trim(),
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -933,9 +935,14 @@
 </tr>
 <tr>
     <th scope="row">Mega Deal</th>
-    <td colspan=3>
+    <td>
         <input id="megaDealY" name="megaDeal" type="radio" value="1" /><span>Yes</span>
-        <input id="megaDealN" name="megaDeal" type="radio" value="0" /><span>No</span></td>
+        <input id="megaDealN" name="megaDeal" type="radio" value="0" /><span>No</span>
+    </td>
+    <th scope="row"><spring:message code='sales.promo.eSales'/><span class="must">*</span></th>
+    <td>
+        <select id="eSales" name="eSales" class="w100p"></select>
+    </td>
 </tr>
 <!--
 <tr>

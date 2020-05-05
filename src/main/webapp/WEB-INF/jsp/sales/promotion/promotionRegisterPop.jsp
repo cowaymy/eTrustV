@@ -19,6 +19,7 @@
         doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '0', 'empChk',               'S'); //EMP_CHK
         doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '', 'promoDiscType',        'S'); //Discount Type
       //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, '', 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
+        doGetComboData('/common/selectCodeList.do', {groupCode :'451', orderValue:'CODE_ID'}, '','eSales','S');
 
     });
 
@@ -104,14 +105,14 @@
                 promoAddDiscPv          : $('#promoAddDiscPv').val().trim(),
                 exTrade                 : $('#exTrade').val(),
                 empChk                  : $('#empChk').val(),
-                megaDeal                : $('input:radio[name="megaDeal"]:checked').val()
+                megaDeal                : $('input:radio[name="megaDeal"]:checked').val(),
+                promoESales             :$('#eSales').val().trim(),
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
         };
 
         Common.ajax("POST", "/sales/promotion/registerPromotion.do", promotionVO, function(result) {
-
             Common.alert("<spring:message code='sales.promo.msg5'/>" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
 
             fn_selectPromoListAjax();
@@ -819,9 +820,14 @@
 </tr>
 <tr>
     <th scope="row">Mega Deal</th>
-    <td colspan=3>
+    <td>
         <input id="megaDealY" name="megaDeal" type="radio" value="1" disabled/><span>Yes</span>
-        <input id="megaDealN" name="megaDeal" type="radio" value="0" disabled checked/><span>No</span></td>
+        <input id="megaDealN" name="megaDeal" type="radio" value="0" disabled checked/><span>No</span>
+    </td>
+    <th scope="row"><spring:message code='sales.promo.eSales'/><span class="must">*</span></th>
+    <td>
+        <select id="eSales" name="eSales" class="w100p"></select>
+    </td>
 </tr>
 <!--
 <tr>

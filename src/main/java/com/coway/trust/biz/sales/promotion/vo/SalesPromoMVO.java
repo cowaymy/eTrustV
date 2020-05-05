@@ -77,6 +77,8 @@ public class SalesPromoMVO implements Serializable {
 
 	private int b2b;
 
+	private int promoESales;
+
 	public int getPromoId() {
 		return promoId;
 	}
@@ -324,5 +326,13 @@ public class SalesPromoMVO implements Serializable {
 	public void setB2b(int b2b) {
 		this.b2b = b2b;
 	}
+
+	   public int getPromoESales() {
+	      return promoESales;
+	    }
+
+	    public void setPromoESales(int promoESales) {
+	      this.promoESales = promoESales;
+	    }
 
 }
