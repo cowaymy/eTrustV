@@ -161,11 +161,11 @@ function fn_report(type) {
     <select class="w100p" id="reportType" name="reportType">
         <option value="0">D_Ren_Sales_By_Category</option>
         <option value="1">D_Ren_Sales_By_Channel</option>
-        <option value="2">D_Ren_Sales_By_Category_Channel</option>
+        <!-- <option value="2">D_Ren_Sales_By_Category_Channel</option> -->
         <option value="3">D_Ren_Sales_Details</option>
         <option value="4">D_Out_Sales_By_Category</option>
         <option value="5">D_Out_Sales_By_Channel</option>
-        <option value="6">D_Out_Sales_By_Category_Channel</option>
+        <!-- <option value="6">D_Out_Sales_By_Category_Channel</option> -->
         <option value="7">D_Mem_Sales_By_Category</option>
         <option value="8">M_Ren_Sales_By_Category</option>
         <option value="9">M_Ren_Sales_By_Channel</option>
