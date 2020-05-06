@@ -1928,7 +1928,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/RCM_Monthly.do")
-  //@Scheduled(cron = "0 0 1 2 * ?")//Monthly (Day 2) (1:00am)
+  //@Scheduled(cron = "0 0 7 1 * ?")//Monthly (Day 1) (7:00am)
   public void rcmMonthly() {
     LOGGER.info("[START] RCM_Monthly...");
     Map<String, Object> params = new HashMap<>();
