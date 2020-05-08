@@ -41,6 +41,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 04. 01    KR-HAN        Payment Key-in Error Edit
  * 2020. 04. 10    ONGHC         Amend saveMobilePaymentKeyInNormalPayment to fixed payment amount comparison issue
  * 2020. 04. 22    KR-HAN        Payment Key-in - Calculation issue Edit
+ * 2020. 05. 08    ONGHC         Amend saveMobilePaymentKeyInNormalPayment to add chqNo to formInfo map.
  *          </pre>
  */
 @Service("mobilePaymentKeyInService")
@@ -962,6 +963,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     formInfo.put("keyInScrn", "NOR");
     formInfo.put("amount", totPayAmt);
     formInfo.put("slipNo", gridListMap.get("slipNo"));
+    formInfo.put("chqNo", gridListMap.get("chequeNo")); // ADD TO SET CHEQUE NO.
     formInfo.put("bankType", "2729");
     formInfo.put("keyInPayDate", gridListMap.get("crtDt"));
 
