@@ -13,7 +13,7 @@
        LEFT OUTER JOIN SAL0001D F ON F.SALES_ORD_ID = A.LAST_SALES_ORD_ID
        LEFT OUTER JOIN SYS0047M G ON G.USER_ID = A.CRT_USER_ID
        LEFT OUTER JOIN SYS0047M H ON H.USER_ID = A.UPD_USER_ID
-    WHERE 1 = 1
+    WHERE A.STUS_CODE <![CDATA[<>]]> 'N'
     <if test='serialNo != null and serialNo != ""'>
         AND A.SERIAL_NO = #{serialNo}
     </if>
@@ -87,7 +87,7 @@
 								 LEFT OUTER JOIN SAL0001D F ON F.SALES_ORD_ID = A.LAST_SALES_ORD_ID
 								 LEFT OUTER JOIN SYS0047M G ON G.USER_ID = A.CRT_USER_ID
 								 LEFT OUTER JOIN SYS0047M H ON H.USER_ID = A.UPD_USER_ID
-                              WHERE 1 = 1
+                              WHERE A.STUS_CODE <![CDATA[<>]]> 'N'
                               <if test='serialNo != null and serialNo != ""'>
                                   AND A.SERIAL_NO = #{serialNo}
                               </if>

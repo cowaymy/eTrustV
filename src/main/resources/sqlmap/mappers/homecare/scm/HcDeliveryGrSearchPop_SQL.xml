@@ -15,8 +15,8 @@
 		   AND DELVRY_STATUS = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '432' AND DISAB = '0' AND CODE = '20')
 		   AND A.USE_YN = 'Y'
 		   AND B.USE_YN = 'Y'
-		 <if test='sCdc != null and sCdc != ""'>
-		   AND B.CDC = #{sCdc}
+		 <if test='pCdc != null and pCdc != ""'>
+		   AND B.CDC = #{pCdc}
 		 </if>
 		 <if test="sMemAccId != null and sMemAccId !=''">
 		   AND B.MEM_ACC_ID = #{sMemAccId}

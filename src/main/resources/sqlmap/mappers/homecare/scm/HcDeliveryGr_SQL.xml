@@ -30,7 +30,7 @@
 		           AND A.PO_NO = C.PO_NO
 		           AND A.HMC_DELVRY_NO = C.HMC_DELVRY_NO
 		           AND A.USE_YN = 'Y'
-		           AND C.DELVRY_STATUS = '5652'
+		          -- AND C.DELVRY_STATUS = '5652'
 		           AND C.USE_YN = 'Y'
 		         <if test='sCdc != null and sCdc != ""'>
 		           AND A.CDC = #{sCdc}
@@ -77,6 +77,7 @@
 							     , B.STOCK_CODE
 							     , (SELECT STK_DESC FROM SYS0026M WHERE STK_ID = B.STOCK_ID AND STK_CODE = B.STOCK_CODE) AS STOCK_NAME
 							     , NVL(A.GR_YN, 'N') AS GR_YN
+							     , C.DELVRY_STATUS
 							     , CASE WHEN NVL(A.GR_YN, 'N') = 'N' THEN ( SELECT COUNT(1)
 		                                                                      FROM (
 																	                SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
@@ -103,7 +104,7 @@
 							   AND A.PO_NO = C.PO_NO
 							   AND A.HMC_DELVRY_NO = C.HMC_DELVRY_NO
 							   AND A.USE_YN = 'Y'
-							   AND C.DELVRY_STATUS = '5652'
+							   --AND C.DELVRY_STATUS = '5652'
 							   AND C.USE_YN = 'Y'
 							 <if test='sCdc != null and sCdc != ""'>
 					           AND A.CDC = #{sCdc}

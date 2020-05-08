@@ -69,6 +69,8 @@ $(document).ready(function(){
 				                	- ( js.String.naNcheck(item[i].rciptGrQty)
 				                		+ js.String.naNcheck(item[i].failGrQty));
 
+                	console.log("item[i].delvryQty: " + item[i].delvryQty);
+
                 	html += "<input type='hidden' name='hmcDelvryNo' value='"+item[i].hmcDelvryNo+"' />"
                 	      + "<input type='hidden' name='hmcDelvryNoDtlNo' value='"+item[i].hmcDelvryNoDtlNo+"' />"
                 	      + "<input type='hidden' name='poNo' value='"+item[i].poNo+"' />"
@@ -77,6 +79,7 @@ $(document).ready(function(){
                 	      + "<input type='hidden' name='stockCode' value='"+item[i].stockCode+"' />"
                 	      + "<input type='hidden' name='stkTypeId' value='"+item[i].stkTypeId+"' />"
                 	      + "<input type='hidden' name='bfTotQty' value='"+bfTotQty+"' />"
+                	      + "<input type='hidden' name='delvryQty' value='"+item[i].delvryQty+"' />"
                 		  + "<table class='type1'>"
                 		  + "<caption>table</caption>"
                 		  + "<colgroup>"
@@ -174,6 +177,13 @@ $(document).ready(function(){
             sumQty += Number(js.String.deletecomma(param.rciptTmQty)) + js.String.naNcheck(param.failTmQty);
             failQty += js.String.naNcheck(param.failTmQty);
 
+            console.log("param.stockCode: " + param.stockCode + " | sumQTY: " + sumQty + " | param.delvryQty: " + param.delvryQty);
+
+            if (sumQty != param.delvryQty){
+                Common.alert("In-tally Quantity for Item Code (<b>" + param.stockCode + "</b>) <br/>Doc Qty: <b>" + param.delvryQty + "</b><br/>QC Pass Qty: <b>" + param.rciptTmQty + "</b><br/>QC Fail Qty: <b>" + param.failTmQty + "</b>");
+                return false;
+            }
+
             item.push({"hmcGrNo":param.ingGrNo
                     , "cdc":param.grCdcId
                     , "hmcDelvryNo":param.hmcDelvryNo
@@ -192,12 +202,18 @@ $(document).ready(function(){
     		for (var i=0; i<count; i++) {
                 validQty = js.String.naNcheck(param.bfTotQty[i]) - Number(js.String.deletecomma(param.rciptTmQty[i])) - js.String.naNcheck(param.failTmQty[i]);
                 if(validQty < 0){
-                    Common.alert("Total quantity cannot be exceeded.");
+                    Common.alert("Exceeded Total Quantity.");
                     return false;
                 }
 
                 sumQty += Number(js.String.deletecomma(param.rciptTmQty[i])) + js.String.naNcheck(param.failTmQty[i]);
                 failQty += js.String.naNcheck(param.failTmQty[i]);
+                console.log("param.stockCode[i]: " + param.stockCode[i] + " | sumQTY: " + sumQty + " | param.delvryQty: " + param.delvryQty[i]);
+
+                if (sumQty != param.delvryQty[i]){
+                	Common.alert("In-tally Quantity for Item Code (<b>" + param.stockCode[i] + "</b>) <br/>Doc Qty: <b>" + param.delvryQty[i] + "</b><br/>QC Pass Qty: <b>" + param.rciptTmQty[i] + "</b><br/>QC Fail Qty: <b>" + param.failTmQty[i] + "</b>");
+                    return false;
+                }
 
                 item.push({"hmcGrNo":param.ingGrNo
                         , "cdc":param.grCdcId

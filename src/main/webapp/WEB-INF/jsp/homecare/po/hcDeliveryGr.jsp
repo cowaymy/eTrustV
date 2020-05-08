@@ -194,7 +194,7 @@ var taxObj = {};
         $("#btnGR").click(function(){
         	var chkList = AUIGrid.getCheckedRowItems(myGridID);
         	if (chkList.length == 0){
-                Common.alert("No Change");
+                Common.alert("Please select at least 1 record.");
                 return false;
             }
 
