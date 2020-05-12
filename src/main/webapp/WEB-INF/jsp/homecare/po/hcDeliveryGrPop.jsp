@@ -90,7 +90,7 @@ $(document).ready(function(){
                 		  + "<tbody>"
                 		    + "<tr>"
                 		      + "<th scope='row' class='al_center' style='height:35px'>"
-                		        + "Material / Doc Qty"
+                		        + "Material / Delivery Qty"
                 		      + "</th>"
                 		      + "<td class='al_right'>"
                 		        + item[i].stockName
@@ -99,7 +99,7 @@ $(document).ready(function(){
                 		        + js.String.addcomma(item[i].delvryQty)
                 		      + "</td>"
                 		    + "</tr>"
-                		    + "<tr style='height:35px'>"
+                		    /* + "<tr style='height:35px'>"
                 		      + "<th scope='row' class='al_center'>"
                 		        + "GR <br /> QC Pass / QC Fail"
                 		      + "</th>"
@@ -108,10 +108,11 @@ $(document).ready(function(){
                 		        + " / "
                 		        + js.String.addcomma(item[i].failGrQty)
                 		      + "</td>"
-                		    + "</tr>"
+                		    + "</tr>" */
                 		    + "<tr style='height:35px'>"
                 		      + "<th scope='row' class='al_center'>"
-                		        + "Before GR <br /> QC Pass / QC Fail"
+                		       // + "Before GR <br /> QC Pass / QC Fail"
+                		       + "GR <br /> QC Pass / QC Fail"
                 		      + "</th>"
                 		      + "<td class='al_right'>"
                 		        + "<span class='w100p'>"
@@ -180,7 +181,8 @@ $(document).ready(function(){
             console.log("param.stockCode: " + param.stockCode + " | sumQTY: " + sumQty + " | param.delvryQty: " + param.delvryQty);
 
             if (sumQty != param.delvryQty){
-                Common.alert("In-tally Quantity for Item Code (<b>" + param.stockCode + "</b>) <br/>Doc Qty: <b>" + param.delvryQty + "</b><br/>QC Pass Qty: <b>" + param.rciptTmQty + "</b><br/>QC Fail Qty: <b>" + param.failTmQty + "</b>");
+                Common.alert("<b><span style='color:red;'>FAILED!</span></b><br/>" +
+                		"In-tally Quantity for Item Code (<b>" + param.stockCode + "</b>) <br/>Delivery Qty: <b>" + param.delvryQty + "</b><br/>QC Pass Qty: <b>" + param.rciptTmQty + "</b><br/>QC Fail Qty: <b>" + param.failTmQty + "</b>");
                 return false;
             }
 
@@ -211,7 +213,8 @@ $(document).ready(function(){
                 console.log("param.stockCode[i]: " + param.stockCode[i] + " | sumQTY: " + sumQty + " | param.delvryQty: " + param.delvryQty[i]);
 
                 if (sumQty != param.delvryQty[i]){
-                	Common.alert("In-tally Quantity for Item Code (<b>" + param.stockCode[i] + "</b>) <br/>Doc Qty: <b>" + param.delvryQty[i] + "</b><br/>QC Pass Qty: <b>" + param.rciptTmQty[i] + "</b><br/>QC Fail Qty: <b>" + param.failTmQty[i] + "</b>");
+                	Common.alert("<b><span style='color:red;'>FAILED!</span></b><br/>" +
+                			"In-tally Quantity for Item Code (<b>" + param.stockCode[i] + "</b>) <br/>Delivery Qty: <b>" + param.delvryQty[i] + "</b><br/>QC Pass Qty: <b>" + param.rciptTmQty[i] + "</b><br/>QC Fail Qty: <b>" + param.failTmQty[i] + "</b>");
                     return false;
                 }
 
@@ -413,6 +416,9 @@ function fnOnfocus(obj){
 	    <li><p class="btn_blue"><a id="btnPopConfirm" href="#">Confirm</a></p></li>
 	    <li><p class="btn_blue"><a id="btnPopClear" href="#">Clear</a></p></li>
 	</ul>
+	<br/>
+	<b><span style="color:red;">*Remark:</span></b> <span style="color:red;">stock must be received in complete batch. Delivery quantity = GR quantity.</span>
+	<br/>
 	</aside><!-- title_line end -->
 	<form id="frmGrSearch" name="frmGrSearch" action="#" method="post">
 		<table class="type1">
