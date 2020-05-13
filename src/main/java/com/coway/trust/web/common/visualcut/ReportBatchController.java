@@ -962,7 +962,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/BSRawCurrent_S1.do")
-  //@Scheduled(cron = "0 24 8 * * MON,WED,FRI")
+  //@Scheduled(cron = "0 24 8 * * *")
   public void bsRawCurrentS1() throws IOException {
     LOGGER.info("[START] BSRawCurrent_S1...");
     Map<String, Object> params = new HashMap<>();
