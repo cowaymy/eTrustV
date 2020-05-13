@@ -31,6 +31,15 @@
 		              , IE.RCD_TMS
 		              , HMC.BNDL_NO
                       , SOM.APP_TYPE_ID
+                      , CN.TEL_M1
+                      , CN.TEL_O
+                      , CN.TEL_R
+                      , CUSTADD.ADDR_DTL
+                      , CUSTADD.STREET
+                      , MA.AREA
+                      , MA.CITY
+                      , MA.POSTCODE
+                      , MA.STATE
 		FROM SAL0001D som
 		JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
 		JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
@@ -48,6 +57,8 @@
 		LEFT JOIN org0001d ORG1 ON ORG1.MEM_ID = ir.CRT_USER_ID and ORG1.MEM_TYPE > 2
 		LEFT JOIN SYS0047M ORG2 ON ORG2.USER_ID = ir.CRT_USER_ID AND ORG2.USER_TYPE_ID > 2
 		LEFT JOIN HMC0011D HMC ON HMC.ORD_SEQ_NO = SOM.BNDL_ID
+		LEFT JOIN SAL0027D CN ON CN.CUST_CNTC_ID = SOM.CUST_CNT_ID
+		LEFT JOIN SYS0064M MA ON MA.AREA_ID = CUSTADD.AREA_ID
 
         WHERE STK.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
                                                    WHERE AA.CODE = BB.CODE

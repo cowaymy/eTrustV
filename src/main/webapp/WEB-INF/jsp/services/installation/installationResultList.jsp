@@ -193,7 +193,47 @@
       dataField : "rcdTms",
       headerText : "",
       width : 0
-    } ];
+    }, {
+      dataField : "lstUpd",
+      headerText : '<spring:message code="service.grid.UpdateBy" />',
+      width : 130
+    }, {
+      dataField : "telM1",
+      headerText : '<spring:message code="service.title.MobileNo" />',
+      width : 130
+    },{
+        dataField : "telO",
+        headerText : '<spring:message code="service.title.ResidenceNo" />',
+        width : 130
+    },{
+        dataField : "telR",
+        headerText : '<spring:message code="service.title.OfficeNo" />',
+        width : 130
+    },{
+        dataField : "addrDtl",
+        headerText : '<spring:message code="sal.text.addressDetail" />',
+        width : 200
+    },{
+        dataField : "street",
+        headerText : '<spring:message code="sal.text.street" />',
+        width : 200
+    },{
+        dataField : "area",
+        headerText : '<spring:message code="sys.area" />',
+        width : 200
+    },{
+        dataField : "city",
+        headerText : '<spring:message code="sys.city" />',
+        width : 130
+    },{
+        dataField : "postcode",
+        headerText : '<spring:message code="sys.postcode" />',
+        width : 130
+    },{
+        dataField : "state",
+        headerText : '<spring:message code="sys.state" />',
+        width : 130
+    }];
 
     var gridPros = {
       showRowCheckColumn : true,
