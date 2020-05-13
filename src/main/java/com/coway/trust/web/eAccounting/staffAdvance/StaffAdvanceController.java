@@ -615,6 +615,9 @@ public class StaffAdvanceController {
         model.addAttribute("pageAuthFuncChange", params.get("pageAuthFuncChange"));
         model.addAttribute("appvPrcssStus", appvPrcssStus);
         model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
+        if(params.containsKey("type")) {
+            model.addAttribute("type", params.get("type"));
+        }
 
         return "eAccounting/staffAdvance/staffAdvApproveViewPop";
     }

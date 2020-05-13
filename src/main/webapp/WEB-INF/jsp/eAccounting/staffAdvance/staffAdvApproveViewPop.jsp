@@ -134,6 +134,9 @@
             });
         } else {
             $("#finApprAct").hide();
+            if("${type}" == "view") {
+                $("#appvBtns").hide();
+            }
         }
     });
 

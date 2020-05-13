@@ -591,7 +591,8 @@
 
         var data = {
                 clmType : clmType,
-                appvPrcssNo : appvPrcssNo
+                appvPrcssNo : appvPrcssNo,
+                type : "view"
         };
 
         Common.popupDiv("/eAccounting/staffAdvance/staffAdvanceAppvViewPop.do", data, null, true, "webInvoiceAppvViewPop");
@@ -1171,6 +1172,7 @@
             $("#appvLinePop").hide();
 
             fn_closePop();
+            fn_alertClmNo(result.data.clmNo);
             fn_searchAdv();
         })
     }
