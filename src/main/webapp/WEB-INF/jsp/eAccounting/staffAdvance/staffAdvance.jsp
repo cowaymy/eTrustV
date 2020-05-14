@@ -862,6 +862,7 @@
 
                 $("#appvLinePop").show();
                 $("#requestAppvLine").show();
+                $("#repaymentAppvLine").hide();
                 AUIGrid.resize(approveLineGridID, 565, $(".approveLine_grid_wrap").innerHeight());
             }
         } else if(mode == "J") {
@@ -1117,6 +1118,7 @@
                            AUIGrid.addRow(approveLineGridID, {memCode : "P0128", name : "TAN LEE JUN"}, "last");
                            fn_appvLineGridAddRow();
 
+                           $("#requestAppvLine").hide();
                            $("#appvLinePop").show();
                            $("#repaymentAppvLine").show();
                            AUIGrid.resize(approveLineGridID, 565, $(".approveLine_grid_wrap").innerHeight());
@@ -1144,6 +1146,7 @@
                             AUIGrid.addRow(approveLineGridID, {memCode : "P0128", name : "TAN LEE JUN"}, "last");
                             fn_appvLineGridAddRow();
 
+                            $("#requestAppvLine").hide();
                             $("#appvLinePop").show();
                             $("#repaymentAppvLine").show();
                             AUIGrid.resize(approveLineGridID, 565, $(".approveLine_grid_wrap").innerHeight());
