@@ -1836,6 +1836,8 @@ public class ReportBatchController {
         "khongboon.soo@coway.com.my",
         "rachel.wong@coway.com.my",
         "jack@coway.com.my",
+        "<shawn.chow@coway.com.my>",
+        "<austin.chow@coway.com.my>",
         "<jypark30@coway.co.kr>",
         "<enough06@coway.co.kr>",
         "<rose3128@coway.co.kr>",
@@ -1856,7 +1858,7 @@ public class ReportBatchController {
                                                                                   // rpt
                                                                                   // file
                                                                                   // name.
-    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    //params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
     params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
     params.put("v_Param", " ");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
@@ -1881,6 +1883,8 @@ public class ReportBatchController {
           "khongboon.soo@coway.com.my",
           "rachel.wong@coway.com.my",
           "jack@coway.com.my",
+          "<shawn.chow@coway.com.my>",
+          "<austin.chow@coway.com.my>",
           "<jypark30@coway.co.kr>",
           "<enough06@coway.co.kr>",
           "<rose3128@coway.co.kr>",
