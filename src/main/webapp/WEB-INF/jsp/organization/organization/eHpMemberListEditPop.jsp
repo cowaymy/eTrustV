@@ -262,7 +262,7 @@ function fn_close(){
 }
 
 function fn_saveConfirm(){
-	 checkNRIC();
+	 //checkNRIC();
     if(fn_saveValidation()){
         Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
 
@@ -1092,17 +1092,17 @@ function fn_loadAtchment(atchFileGrpId) {
 function fn_validFile() {
     var isValid = true, msg = "";
 
-    if(FormUtil.isEmpty($('#nricFile').val().trim())) {
+    if(FormUtil.isEmpty($('#nricFileTxt').val().trim())) {
         isValid = false;
         msg += "* Please upload copy of NRIC<br>";
     }
-    if(FormUtil.isEmpty($('#statementFile').val().trim())) {
+    if(FormUtil.isEmpty($('#statementFileTxt').val().trim())) {
         isValid = false;
         msg += "* Please upload copy of Bank Passport / Statement<br>";
     }
-    if(FormUtil.isEmpty($('#passportFile').val().trim())) {
+    if(FormUtil.isEmpty($('#passportFileTxt').val().trim())) {
         isValid = false;
-        msg += "* Please upload copy of Passport phoyo<br>";
+        msg += "* Please upload copy of Passport photo<br>";
     }
     if(nricFileId == null) {
         isValid = false;
