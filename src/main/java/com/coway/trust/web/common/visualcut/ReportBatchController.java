@@ -1844,7 +1844,10 @@ public class ReportBatchController {
         "<jenux@coway.co.kr>",
         "<smhong@coway.co.kr>",
         "<yulyul@coway.co.kr>",
-        "<ikchoul85@coway.co.kr>"
+        "<ikchoul85@coway.co.kr>",
+        "<kangsh@coway.co.kr>",
+        "<hsjjang99@coway.co.kr>",
+        "<jun1853@coway.co.kr>"
       };
     String email = "";
     email += "Dear All,\r\n\r\n";
@@ -1891,7 +1894,10 @@ public class ReportBatchController {
           "<jenux@coway.co.kr>",
           "<smhong@coway.co.kr>",
           "<yulyul@coway.co.kr>",
-          "<ikchoul85@coway.co.kr>"
+          "<ikchoul85@coway.co.kr>",
+          "<kangsh@coway.co.kr>",
+          "<hsjjang99@coway.co.kr>",
+          "<jun1853@coway.co.kr>"
         };
     String email = "";
     email += "Dear All,\r\n\r\n";
