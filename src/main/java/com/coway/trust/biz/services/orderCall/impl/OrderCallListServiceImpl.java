@@ -706,4 +706,10 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	  return resultValue;
   }
 
+  @Override
+  public List<EgovMap> selectPromotionList() {
+    return orderCallListMapper.selectPromotionList();
+  }
+
+
 }
