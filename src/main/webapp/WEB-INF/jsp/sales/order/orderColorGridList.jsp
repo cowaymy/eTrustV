@@ -40,7 +40,7 @@
 
         $("#orgCode").val($("#orgCode").val().trim());
 
-        if($("#memType").val() == 1 || $("#memType").val() == 2){
+        if($("#memType").val() == 1 || $("#memType").val() == 2 || $("#memType").val() == 7){
         	if("${SESSION_INFO.memberLevel}" =="0"){
 
                 $("#memtype").val('${SESSION_INFO.userTypeId}');
@@ -593,6 +593,7 @@
         <option value="2"><spring:message code="sal.text.cowayLady" /></option>
         <option value="1"><spring:message code="sal.text.healthPlanner" /></option>
         <option value="4"><spring:message code="sal.text.staff" /></option>
+        <option value="7"><spring:message code="sal.text.homecareTechinician" /></option>
     </select>
     </td>
 </tr>
