@@ -71,5 +71,7 @@ public interface OrderCallListMapper {
 
   int installEntryIdSeq();
 
+  List<EgovMap> selectPromotionList();
+
 
 }
