@@ -2940,7 +2940,7 @@
 	          , #{gstChk}
 	          , #{srvPacId}
 	          , #{salesProdSz}
-	          , 'GOODNITE'
+	          , (SELECT CODE_NAME FROM SYS0094M WHERE IND = 'MATBSCBRD' AND CODE = 'PRMSRI' AND DISB = 0)
 	          , null
 	          , 1
 	     )
