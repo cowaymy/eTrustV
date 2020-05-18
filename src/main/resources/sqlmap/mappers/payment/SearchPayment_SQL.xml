@@ -1532,7 +1532,7 @@
        <if test="cmbOutstandMonth != '' and cmbOutstandMonth != 0">
            AND B.ACC_DEBT_SUB_CURR_OTSTND_AGING = #{cmbOutstandMonth}
        </if>
-       <if test="cmbOpeningAging != '' and cmbOpeningAging != 0">
+       <if test="cmbOpeningAging != ''>
            AND B.ACC_DEBT_SUB_OPNG_OTSTND_AGING = #{cmbOpeningAging}
        </if>
        <if test="cmbCustTypeId != '' ">
