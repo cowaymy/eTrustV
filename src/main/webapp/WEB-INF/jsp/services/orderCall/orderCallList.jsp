@@ -37,6 +37,10 @@
             doGetCombo('/callCenter/getstateList.do', '', '', 'ordStatus', 'S', '');
             // AREA CODE
             doDefCombo(emptyData, '', 'ordArea', 'S', '');
+            //PRODUCT
+              doGetComboOrder('/callCenter/selectProductList.do', '', 'CODE_ID', '', 'callLogProductList', 'M', 'fn_multiCombo'); //Common Code
+            // PROMOTION
+            doGetComboOrder('/callCenter/selectPromotionList.do', '', 'CODE_ID', '', 'callLogPromotionList', 'M', 'fn_multiCombo'); //Common Code
 
             $("#ordStatus").change(
               function() {
@@ -109,6 +113,19 @@
       selectAll : true, // 전체선택
       width : '100%'
     });
+
+    $('#callLogProductList').change(function() {
+    }).multipleSelect({
+      selectAll : true, // 전체선택
+      width : '100%'
+    });
+
+    $('#callLogPromotionList').change(function() {
+    }).multipleSelect({
+      selectAll : true, // 전체선택
+      width : '100%'
+    });
+
   }
 
   function fn_orderCallList() {
@@ -120,7 +137,7 @@
       }
     }
 
-    Common.ajax("GET", "/callCenter/searchOrderCallList.do", $("#orderCallSearchForm").serialize(), function(result) {
+    Common.ajax("GET", "/callCenter/searchOrderCallList.do", $("#instOrderCallSearchForm").serialize(), function(result) {
       AUIGrid.setGridData(myGridID, result);
     });
   }
@@ -204,6 +221,11 @@
       editable : false,
       width : 180
     }, {
+        dataField : "city",
+        headerText : 'City',
+        editable : false,
+        width : 180
+      }, {
       dataField : "area",
       headerText : '<spring:message code="service.grid.Area" />',
       editable : false,
@@ -282,8 +304,9 @@
     $("#endDate").val("");
     $("#ordStatus").val("");
     $("#ordArea").val("");
-    $("#product").val("");
-    $("#callLogStatus").val("");
+    $("#callLogProductList").val("");
+    $("#callLogPromotionList").val("");
+    $("#callLogType").val("");
     $("#callLogStatus").val("");
     $("#callStrDate").val("");
     $("#callEndDate").val("");
@@ -346,7 +369,7 @@
  <!-- title_line end -->
  <section class="search_table">
   <!-- search_table start -->
-  <form action="#" method="post" id="orderCallSearchForm">
+  <form action="#" method="post" id="instOrderCallSearchForm">
    <table class="type1">
     <!-- table start -->
     <caption>table</caption>
@@ -395,11 +418,11 @@
       <td><select class="w100p" id="ordArea" name="ordArea">
       </select></td>
       <th scope="row"><spring:message code='service.title.Product' /></th>
-      <td><select class="w100p" id="product" name="product">
-        <option value="">Choose One</option>
-        <c:forEach var="list" items="${productList}" varStatus="status">
+      <td><select class="multy_select w100p" multiple="multiple" id="callLogProductList" name="product">
+       <!--  <option value="">Choose One</option> -->
+       <%--  <c:forEach var="list" items="${productList}" varStatus="status">
          <option value="${list.stkId}">${list.c1}</option>
-        </c:forEach>
+        </c:forEach> --%>
       </select></td>
      </tr>
      <tr>
@@ -507,6 +530,17 @@
         <option value="1">Order Number</option>
         <option value="2">Customer Name</option> -->
       </select></td>
+     </tr>
+
+     <tr>
+      <th scope="row">Promotion Code</th>
+      <td><select class="multy_select w100p" multiple="multiple" id="callLogPromotionList" name="promotion">
+       <!--  <option value="">Choose One</option> -->
+     <%--    <c:forEach var="list" items="${promotionList}" varStatus="status">
+         <option value="${list.promoId}">${list.c1}</option>
+        </c:forEach> --%>
+      </select></td>
+
      </tr>
     </tbody>
    </table>
