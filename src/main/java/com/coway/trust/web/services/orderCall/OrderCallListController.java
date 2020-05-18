@@ -74,12 +74,14 @@ public class OrderCallListController {
     List<EgovMap> callLogTyp = orderCallListService.selectCallLogTyp();
     List<EgovMap> callLogSta = orderCallListService.selectCallLogSta();
     List<EgovMap> callLogSrt = orderCallListService.selectCallLogSrt();
+    List<EgovMap> promotionList = orderCallListService.selectPromotionList();
 
     model.addAttribute("callStatus", callStatus);
     model.addAttribute("productList", productList);
     model.addAttribute("callLogTyp", callLogTyp);
     model.addAttribute("callLogSta", callLogSta);
     model.addAttribute("callLogSrt", callLogSrt);
+    model.addAttribute("promotionList", promotionList);
 
     // 호출될 화면
     return "services/orderCall/orderCallList";
@@ -111,19 +113,21 @@ public class OrderCallListController {
   public ResponseEntity<List<EgovMap>> selectOrderCallListSearch(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
 
-    logger.debug("============================/searchOrderCallList.do================================");
-    logger.debug("###params : {}", params);
-    logger.debug("============================/searchOrderCallList.do================================");
-
     String[] appTypeList = request.getParameterValues("appType");
     String[] callLogTypeList = request.getParameterValues("callLogType");
     String[] callLogStatusList = request.getParameterValues("callLogStatus");
     String[] DSCCodeList = request.getParameterValues("DSCCode");
+    String[] productListSp = request.getParameterValues("product");
+    String[] promotionListSp = request.getParameterValues("promotion");
 
     params.put("appTypeList", appTypeList);
     params.put("callLogTypeList", callLogTypeList);
     params.put("callLogStatusList", callLogStatusList);
     params.put("DSCCodeList", DSCCodeList);
+    params.put("productListSp", productListSp);
+    params.put("promotionListSp", promotionListSp);
+
+    logger.debug("searchOrderCallList - params : {}", params);
 
     List<EgovMap> orderCallList = null;
     orderCallList = orderCallListService.selectOrderCall(params);
@@ -466,5 +470,21 @@ public class OrderCallListController {
     }
     return ResponseEntity.ok(message);
   }
+
+  @RequestMapping(value = "/selectProductList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectProductList(@RequestParam Map<String, Object> params) {
+
+      List<EgovMap> codeList = orderCallListService.selectProductList();
+      return ResponseEntity.ok(codeList);
+  }
+
+  @RequestMapping(value = "/selectPromotionList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectPromotionList(@RequestParam Map<String, Object> params) {
+
+      List<EgovMap> codeList = orderCallListService.selectPromotionList();
+      return ResponseEntity.ok(codeList);
+  }
+
+
 
 }
