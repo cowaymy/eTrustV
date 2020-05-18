@@ -20,6 +20,7 @@
           /* Extent1.INSTALL_STATE_ID INSTALL_STATE_ID ,*/
           , Extent1.INSTALL_AREA_NAME INSTALL_AREA_NAME
           , Extent1.STATE
+          , Extent1.CITY
           , Extent1.AREA
           , Extent1.CALL_LOG_DT CALL_LOG_DT
           , Extent1.DSC_BRNCH_ID DSC_BRNCH_ID
@@ -37,6 +38,7 @@
           , Extent1.RCD_TMS RCD_TMS
           , Extent1.POSTCODE POSTCODE
           , Extent1.DSC_CODE DSC_CODE
+          , Extent1.PROMO_ID
           , CASE WHEN ( Extent1.APP_TYPE_ID IS NOT NULL )
                    THEN Extent1.APP_TYPE_ID
                  ELSE 0
@@ -92,7 +94,9 @@
                    , vCallLogOrderCall.CALL_FDBCK_DESC CALL_FDBCK_DESC
                    , vCallLogOrderCall.RCD_TMS RCD_TMS
                    , vCallLogOrderCall.UPD_DT UPD_DT
+                   , vCallLogOrderCall.PROMO_ID
                    , area.state
+                   , area.city
                    , area.area
                    , area.postcode
                    , dsc.CODE DSC_CODE
@@ -111,10 +115,27 @@
     <if test="orderNo != null and orderNo != '' ">
       AND (Extent1.SALES_ORD_NO = #{orderNo} )
     </if>
-    
-    <if test="product != null and product != '' ">
+
+<!--     <if test="product != null and product != '' ">
       AND (Extent1.PRODUCT_ID = #{product} )
+    </if> -->
+
+      <if test="productListSp != null and productListSp != '' ">
+      AND Extent1.PRODUCT_ID IN
+      <foreach item="item" collection="productListSp" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
+
+         <if test="promotionListSp != null and promotionListSp != '' ">
+      AND Extent1.PROMO_ID IN
+      <foreach item="item" collection="promotionListSp" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
     <if test="custId != null and custId != '' ">
       AND (Extent1.CUST_ID = #{custId} )
     </if>
@@ -196,6 +217,7 @@
     <if test="sortBy != null and sortBy != '' and sortBy == 4 ">
       ORDER BY Extent1.UPD_DT ASC
     </if>
+
   </select>
 
   <select id="getOrderCall" parameterType="Map" resultType="egovMap">
@@ -705,12 +727,12 @@
   </select>
 
   <select id="selectProductList" parameterType="Map" resultType="egovMap">
-    SELECT STK_ID
+    SELECT STK_ID CODE_ID
          , C1
          , CODE_NAME
     FROM (SELECT DISTINCT T1.STK_ID
-                        , T1.STK_CODE ||' - '||T1.STK_DESC C1
-                        , T3.CODE_NAME
+                        , T1.STK_CODE ||' - '||T1.STK_DESC CODE_NAME
+                        , T3.CODE_NAME C1
           FROM SYS0026M T1,
                SYS0013M T3
           WHERE T1.STK_CTGRY_ID = T3.CODE_ID
@@ -964,5 +986,21 @@
       javaType="java.lang.String" />
   </resultMap>
   <!-- OTHER END -->
+
+
+
+   <select id="selectPromotionList" parameterType="Map" resultType="egovMap">
+    SELECT PROMO_ID CODE_ID
+         , C1
+         , CODE_NAME
+    FROM (SELECT PROMO_ID , PROMO_CODE || ' - ' ||  PROMO_DESC CODE_NAME , PROMO_DESC C1
+    FROM SAL0017D
+    WHERE
+    PROMO_STUS_ID = 1
+    AND CURRENT_TIMESTAMP BETWEEN PROMO_DT_FROM AND  PROMO_DT_END
+    AND PROMO_TYPE_ID = 2282
+)
+    ORDER BY C1 ASC
+  </select>
 
 </mapper>
