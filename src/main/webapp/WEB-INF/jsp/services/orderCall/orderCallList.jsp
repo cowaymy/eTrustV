@@ -534,7 +534,7 @@
 
      <tr>
       <th scope="row">Promotion Code</th>
-      <td><select class="multy_select w100p" multiple="multiple" id="callLogPromotionList" name="promotion">
+      <td colspan="5"><select class="multy_select w100p" multiple="multiple" id="callLogPromotionList" name="promotion">
        <!--  <option value="">Choose One</option> -->
      <%--    <c:forEach var="list" items="${promotionList}" varStatus="status">
          <option value="${list.promoId}">${list.c1}</option>
