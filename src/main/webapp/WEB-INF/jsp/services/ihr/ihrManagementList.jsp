@@ -7,6 +7,7 @@
  15/08/2019  ONGHC  1.0.0          CREATE IHR FUNCTION
  13/08/2019  ONGHC  1.0.1          CREATE FUNCTION FOR TRANSFER CT
  13/08/2019  ONGHC  1.0.2          AMEND TO ADD AUTHORITY TO MANAGER TO AMEND PASS 7 DAYS RECORD
+ 19/05/2020  ONGHC  1.0.3          Add Checking
  -->
 
 <script type="text/javaScript">
@@ -268,6 +269,17 @@
     var startDate = $('#createStrDate').val();
     var endDate = $('#createEndDate').val();
     var dt_range = $('#dt_range').val();
+    var br = $('#cmbbranchId').val();
+
+    if (startDate == "" || endDate == "") {
+        Common.alert("* <spring:message code='sys.msg.necessary' arguments='Request Date' htmlEscape='false'/> </br>");
+        return;
+    }
+
+    if (br == "") {
+        Common.alert("* <spring:message code='sys.msg.necessary' arguments='AS Branch' htmlEscape='false'/> </br>");
+        return;
+    }
 
     if (dt_range != "") {
       if (fn_getDateGap(startDate, endDate) > dt_range) {
