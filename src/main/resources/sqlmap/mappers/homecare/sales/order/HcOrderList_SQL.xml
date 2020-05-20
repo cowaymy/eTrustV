@@ -159,8 +159,11 @@
                         <if test='custIc != null and custIc != ""'>
                             AND V1.CUST_IC LIKE '%'||UPPER(#{custIc})||'%'
                         </if>
-                        <if test='productId != null and productId != ""'>
-                            AND V1.PRODUCT_ID = #{productId}
+                        <if test='"arrProd" != null and "arrProd" != ""'>
+                            AND V1.PRODUCT_ID IN
+                             <foreach item="item" collection="arrProd" index="index" open="(" separator="," close=")">
+                                 #{item}
+                             </foreach>
                         </if>
                         <if test='salesmanCode != null and salesmanCode != ""'>
                             AND V1.SALESMAN_CODE = UPPER(#{salesmanCode})
@@ -287,5 +290,28 @@
         WHERE B.SALES_ORD_ID = #{salesOrdId}
     </select>
 
+  <select id="selectProductCodeList" parameterType="Map" resultType="egovMap">
+    SELECT STK_ID AS CODE_ID
+             , STK_ID AS CODE
+             , C1 AS CODE_NAME
+    FROM ( SELECT DISTINCT T1.STK_ID
+                                      , T1.STK_CODE ||' - '||T1.STK_DESC C1
+                                      , T3.CODE_NAME
+               FROM SYS0026M T1
+                      , SYS0013M T3
+               WHERE T1.STK_CTGRY_ID = T3.CODE_ID
+                   AND 61 = T1.STK_TYPE_ID
+                   AND T1.STUS_CODE_ID = 1
+                   AND EXISTS (SELECT M1.STK_CTGRY_ID
+                                      FROM SYS0026M M1
+                                      WHERE M1.STK_CTGRY_ID IN (SELECT AA.CODE_ID
+                                                                                 FROM SYS0013M AA
+                                                                                        , SYS0094M BB
+                                                                                 WHERE AA.CODE = BB.CODE
+                                                                                     AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')
+                                          AND M1.STK_CTGRY_ID =T1.STK_CTGRY_ID
+                   )
+    ) ORDER BY CODE_NAME ASC, STK_ID ASC
+  </select>
 
 </mapper>
