@@ -10,39 +10,46 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @Description : TO-DO Class Description
  *
  * @History
- * <pre>
+ *
+ *          <pre>
  * Date            Author       Description
  * -------------  -----------  -------------
  * 2019. 10. 18.   KR-SH        First creation
- * </pre>
+ * 2020. 05. 20.   KR-ONGHC  Add selectProductCodeList
+ *          </pre>
  */
 public interface HcOrderListService {
 
-	/**
-	 * Search Homacare OrderList
-	 * @Author KR-SH
-	 * @Date 2019. 10. 24.
-	 * @param params
-	 * @return
-	 */
-	public List<EgovMap> selectHcOrderList(Map<String, Object> params);
+  /**
+   * Search Homacare OrderList
+   *
+   * @Author KR-SH
+   * @Date 2019. 10. 24.
+   * @param params
+   * @return
+   */
+  public List<EgovMap> selectHcOrderList(Map<String, Object> params);
 
-	/**
-	 * Search Homacare OrderInfo
-	 * @Author KR-SH
-	 * @Date 2019. 10. 24.
-	 * @param params
-	 * @return
-	 */
-	public EgovMap selectHcOrderInfo(Map<String, Object> params);
+  /**
+   * Search Homacare OrderInfo
+   *
+   * @Author KR-SH
+   * @Date 2019. 10. 24.
+   * @param params
+   * @return
+   */
+  public EgovMap selectHcOrderInfo(Map<String, Object> params);
 
-	/**
-	 * select Product Info
-	 * @Author KR-SH
-	 * @Date 2020. 1. 14.
-	 * @param salesOrdId
-	 * @return
-	 */
-	public EgovMap selectProductInfo(String salesOrdId);
+  /**
+   * select Product Info
+   *
+   * @Author KR-SH
+   * @Date 2020. 1. 14.
+   * @param salesOrdId
+   * @return
+   */
+  public EgovMap selectProductInfo(String salesOrdId);
+
+  public List<EgovMap> selectProductCodeList();
 
 }
