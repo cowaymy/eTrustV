@@ -34,6 +34,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * Date            Author       Description
  * -------------  -----------  -------------
  * 2019. 10. 17.   KR-SH        First creation
+ * 2020. 05. 20.   MY-ONGHC Pass Product Listing back to Browse Screen
  * </pre>
  */
 @Controller
@@ -84,6 +85,9 @@ public class HcOrderListController {
         params.put("parmDisab", 0);
         List<EgovMap> categoryCdList = commonService.selectStatusCategoryCodeList(params);
 
+        // Product
+        List<EgovMap> productList_1 = hcOrderListService.selectProductCodeList();
+
         model.put("bfDay", bfDay);
         model.put("toDay", toDay);
         model.put("fromDay", CommonUtils.getAddDay(toDay, -1, SalesConstants.DEFAULT_DATE_FORMAT1));
@@ -91,6 +95,7 @@ public class HcOrderListController {
         model.put("codeList_10", codeList_10);
         model.put("branchCdList_1", branchCdList_1);
         model.put("categoryCdList", categoryCdList);
+        model.put("productList_1", productList_1);
 
         return "homecare/sales/order/hcOrderList";
     }
@@ -113,6 +118,7 @@ public class HcOrderListController {
 		String[] arrKeyinBrnchId 	= request.getParameterValues("keyinBrnchId"); // Key-In Branch
 		String[] arrDscBrnchId 		= request.getParameterValues("dscBrnchId"); 	// DSC Branch
 		String[] arrRentStus 		= request.getParameterValues("rentStus"); 		// Rent Status
+		String[] arrProd     = request.getParameterValues("productId");       // Product list
 
 		if(StringUtils.isEmpty(params.get("ordStartDt"))) params.put("ordStartDt", "01/01/1900");
     	if(StringUtils.isEmpty(params.get("ordEndDt")))   params.put("ordEndDt",   "31/12/9999");
@@ -125,6 +131,7 @@ public class HcOrderListController {
 		if(arrKeyinBrnchId 	!= null && !CommonUtils.containsEmpty(arrKeyinBrnchId)) 	params.put("arrKeyinBrnchId", arrKeyinBrnchId);
 		if(arrDscBrnchId   	!= null && !CommonUtils.containsEmpty(arrDscBrnchId))    	params.put("arrDscBrnchId", arrDscBrnchId);
 		if(arrRentStus      	!= null && !CommonUtils.containsEmpty(arrRentStus))        	params.put("arrRentStus", arrRentStus);
+		if(arrProd        != null && !CommonUtils.containsEmpty(arrProd))         params.put("arrProd", arrProd);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(hcOrderListService.selectHcOrderList(params));
