@@ -2380,7 +2380,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
             msgT = "Unbill Amount Exist";
             msg = "This order come with un-bill amount. Contact CRT.";
             isInValid = "isInValid";
-          } else if (LastBillMth >= Integer.parseInt(obligtPriod.get("obligtPriod").toString())) {
+          } else if (LastBillMth > Integer.parseInt(obligtPriod.get("obligtPriod").toString())) {
             msgT = "Exceed 24 Billing Month";
             msg = "This order exceeded "+Integer.parseInt(obligtPriod.get("obligtPriod").toString())+"th billing month. Contact CRT.";
             isInValid = "isInValid";
