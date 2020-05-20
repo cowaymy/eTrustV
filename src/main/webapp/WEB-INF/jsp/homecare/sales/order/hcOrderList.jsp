@@ -29,6 +29,11 @@
     categoryCdList.push({codeId:"${obj.code}", codeName:"${obj.codeName}", code:"${obj.code}"});
     </c:forEach>
 
+    var productList = [];
+    <c:forEach var="obj" items="${productList_1}">
+    productList.push({codeId:"${obj.code}", codeName:"${obj.codeName}", code:"${obj.code}"});
+    </c:forEach>
+
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
@@ -53,7 +58,8 @@
             doDefCombo(codeList_10, '' ,'listAppType', 'M', 'fn_multiCombo2');
         }
 
-        doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'HC'}, '', 'listProductId', 'S', 'fn_setOptGrpClass');//product 생성 - Only Homecare
+        //doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'HC'}, '', 'listProductId', 'S', 'fn_setOptGrpClass');//product 생성 - Only Homecare
+        doDefCombo(productList, '' ,'listProductId', 'M', 'fn_multiCombo');
         doDefCombo(branchCdList_1, '' ,'listKeyinBrnchId', 'M', 'fn_multiCombo');
        // doDefCombo(branchCdList_5, '' ,'listDscBrnchId', 'M', 'fn_multiCombo');
         doDefCombo(categoryCdList, '' ,'listRentStus', 'M', 'fn_multiCombo');
@@ -399,6 +405,13 @@
             width: '100%'
         });
 //      $('#listRentStus').multipleSelect("checkAll");
+        $('#listProductId').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '100%'
+        });
+
     }
 
     function fn_multiCombo2(){
