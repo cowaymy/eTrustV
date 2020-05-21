@@ -4582,7 +4582,8 @@
            HC_REF_NO,
            HC_REF_CAT,
            HC_REF_PROD,
-           TO_CHAR (A.SRV_PAC_ID) AS SRV_PAC_ID
+           TO_CHAR (A.SRV_PAC_ID) AS SRV_PAC_ID,
+           TO_CHAR (A.DISINF_SRV) AS DISINF_SRV,
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -4646,7 +4647,8 @@
                   HC_REF_NO,
                   HC_REF_CAT,
                   HC_REF_PROD,
-                  SRV_PAC_ID
+                  SRV_PAC_ID,
+                  DISINF_SRV
            FROM ( SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
                                   A.STUS_CODE_ID AS job_Status,
@@ -4723,7 +4725,7 @@
                                    Z.SALES_ORD_NO AS HC_REF_NO,
                                    AC.CODE AS HC_REF_CAT,
                                    AB.STK_DESC AS HC_REF_PROD,
-                                   SAL.SRV_PAC_ID
+                                   SAL.SRV_PAC_ID,
                                    AD.DISINF_SRV AS DISINF_SRV
                   FROM (SELECT A.*
                         FROM SVC0008D A,
