@@ -302,11 +302,11 @@ var mSort = {};
         }
 
         $("#sMemAccId").val(vendorDs[0].codeId);                // 임시 처리 - 로그인 사용자의 vendor로 할 예정.
-        $("select[name=sMemAccId]").prop('disabled',true);      // 임시 처리
+      //  $("select[name=sMemAccId]").prop('disabled',true);      // 임시 처리
 
         // 조회버튼
         $("#btnSearch").click(function(){
-            if(js.String.isEmpty($("#sCdc").val())){
+            if(js.String.isEmpty($("#sCdc").val()) || js.String.isEmpty($("#sMemAccId").val())){
                 Common.alert("Please, check the mandatory value.");
                 return ;
             }

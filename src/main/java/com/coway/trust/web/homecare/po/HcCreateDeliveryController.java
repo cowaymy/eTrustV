@@ -33,6 +33,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.common.CommonController;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -48,6 +49,9 @@ public class HcCreateDeliveryController {
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+
+	@Autowired
+	private CommonController commonController;
 
 	@Autowired
 	private SessionHandler sessionHandler;
@@ -66,6 +70,7 @@ public class HcCreateDeliveryController {
 	@RequestMapping(value = "/hcCreateDelivery.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		String dateFormat = SalesConstants.DEFAULT_DATE_FORMAT1;
+		List<EgovMap> vendorList = null;
 
 		String toDay = CommonUtils.getFormattedString(dateFormat);
 		//String fourteenDtBf   = CommonUtils.getAddDay(toDay, -14, dateFormat);
@@ -76,8 +81,10 @@ public class HcCreateDeliveryController {
 
 		// CDC - HMC0003M
 		model.addAttribute("cdcList", hcPoIssueService.selectCdcList());
-		// Supplier : vendor
-		model.addAttribute("vendorList", hcPurchasePriceService.selectVendorList(null));
+
+		// Supplier : vendor // Edited for Vendor list special access by Hui Ding, 2020-05-20
+		vendorList = commonController.getVendorList(params);
+		model.addAttribute("vendorList", vendorList);
 
 		// Supplier
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();

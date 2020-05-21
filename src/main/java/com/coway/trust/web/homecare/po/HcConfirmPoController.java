@@ -31,6 +31,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.common.CommonController;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -49,6 +50,9 @@ public class HcConfirmPoController {
 
 	@Autowired
 	private SessionHandler sessionHandler;
+
+	@Autowired
+	private CommonController commonController;
 
 	@Resource(name = "hcConfirmPoService")
 	private HcConfirmPoService hcConfirmPoService;
@@ -74,7 +78,8 @@ public class HcConfirmPoController {
 		// CDC - HMC0003M
 		model.addAttribute("cdcList", hcPoIssueService.selectCdcList());
 		// Supplier : vendor
-		model.addAttribute("vendorList", hcPurchasePriceService.selectVendorList(null));
+		List<EgovMap>vendorList = commonController.getVendorList(params);
+		model.addAttribute("vendorList", vendorList);
 		// PO Type
 		model.addAttribute("poTypeList", hcPurchasePriceService.selectComonCodeList("428"));
 		// PO Status

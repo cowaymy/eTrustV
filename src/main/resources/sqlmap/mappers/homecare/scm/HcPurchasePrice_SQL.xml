@@ -19,9 +19,19 @@
 		     , MEM_ACC_ID ||' - '|| MEM_ACC_NAME AS CODE_NAMES
 		  FROM FCM0006M A
 		     , SYS0013M B
+		  <if test='isAdmin == "N"'>
+		      , SYS0103M C
+		  </if>
 		 WHERE A.MEM_ACC_ID = B.CODE
 		   and B.CODE_MASTER_ID = 445
 		   AND B.DISAB = 0
+
+		   <if test='isAdmin == "N"'>
+               and A.MEM_ACC_ID = C.VENDOR_CODE
+               and C.USER_ID = #{loginId}
+               and C.MENU_CODE = #{menuCode}
+               and C.DISAB = 0
+          </if>
     </select>
 
     <select id="selectHcPurchasePriceListCnt" parameterType="Map" resultType="int">

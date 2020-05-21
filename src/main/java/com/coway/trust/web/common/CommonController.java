@@ -20,6 +20,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -29,8 +30,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.common.MenuService;
+import com.coway.trust.biz.homecare.po.HcPurchasePriceService;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.exception.AuthException;
+import com.coway.trust.cmmn.model.PageAuthVO;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.DatabaseDrivenMessageSource;
+import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovResourceCloseHelper;
 import com.coway.trust.util.EgovWebUtil;
@@ -46,8 +53,18 @@ public class CommonController {
 	@Resource(name = "commonService")
 	private CommonService commonService;
 
+	@Resource(name = "hcPurchasePriceService")
+	private HcPurchasePriceService hcPurchasePriceService;
+
 	@Autowired
 	private DatabaseDrivenMessageSource dbMessageSource;
+
+	@Autowired
+	private SessionHandler sessionHandler;
+
+	@Autowired
+	private MenuService menuService;
+
 
 	@RequestMapping(value = "/selectCodeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params) {
@@ -375,5 +392,47 @@ public class CommonController {
 	public ResponseEntity<List<EgovMap>> getHcHolidayList(@RequestParam Map<String, Object> params) {
 		List<EgovMap> holidayList = commonService.getHcHolidayList(params);
 		return ResponseEntity.ok(holidayList);
+	}
+
+	/**
+	 * Get Vendor List
+	 * @Author Hui Ding
+	 * @Date 2020-05-18
+	 * @param params
+	 * @return
+	 */
+	public List<EgovMap> getVendorList(Map<String, Object> params) throws Exception{
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		List<EgovMap> vendorList = null;
+
+		if (sessionVO == null || sessionVO.getUserId() == 0) {
+	        throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+	      }
+
+		LOGGER.debug("###Login ID: " + sessionVO.getUserId());
+		LOGGER.debug("###Current Menu Path: " + params.get("CURRENT_MENU_PATH").toString());
+		params.put("userId", sessionVO.getUserId());
+		params.put("pgmPath", params.get("CURRENT_MENU_PATH").toString());
+
+		PageAuthVO pageAuth = menuService.getPageAuth(params);
+
+		if (pageAuth != null){
+			if (pageAuth.getFuncUserDefine3() != null && pageAuth.getFuncUserDefine3().equals("Y")){ // isAdmin
+				vendorList = hcPurchasePriceService.selectVendorList(null); // get all vendor list
+			} else {
+				LOGGER.debug("###access Admin no!");
+
+				// select only granted special access for vendors by user login.
+				Map<String, Object> vendorParams = new HashMap<String, Object>();
+				vendorParams.put("isAdmin", "N");
+				vendorParams.put("loginId", sessionVO.getUserId());
+				vendorParams.put("menuCode", params.get("CURRENT_MENU_CODE").toString());
+
+				vendorList = hcPurchasePriceService.selectVendorList(vendorParams);
+			}
+		}
+
+		return vendorList;
 	}
 }
