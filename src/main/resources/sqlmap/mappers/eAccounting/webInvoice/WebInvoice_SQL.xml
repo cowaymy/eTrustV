@@ -1297,7 +1297,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
        ,#{clamUn}
        ,#{costCentr}
        ,#{reqstRem}
-       
+
     )
 </insert>
 
@@ -1824,7 +1824,7 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
 </select>
 
 <insert id="insertAdvInterface" parameterType="Map">
-    INSERT INTO ITF0702M (
+    INSERT INTO ITF0701M (
         IF_KEY,
         SEQ,
         IF_TYPE,
@@ -1858,7 +1858,7 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
     ) VALUES (
         #{ifKey},
         '1',
-        '702',
+        '701',
         '10',
         #{rgstDt},
         #{rgstTm},
