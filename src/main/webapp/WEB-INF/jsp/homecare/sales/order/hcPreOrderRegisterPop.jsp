@@ -70,7 +70,7 @@
 
         //UpperCase Field
         $("#nric").keyup(function(){$(this).val($.trim($(this).val().toUpperCase()));});
-        $("#sofNo").keyup(function(){$(this).val($(this).val().toUpperCase());});
+        $("#sofNo").keyup(function(){$(this).val($.trim($(this).val().toUpperCase()));});
 
         // 20190925 KR-OHK Moblie Popup Setting
         Common.setMobilePopup(true, false,'');

@@ -78,7 +78,7 @@
 		    }
 		}); */
         $("#nric").keyup(function(){$(this).val($.trim($(this).val().toUpperCase()));});
-        $("#sofNo").keyup(function(){$(this).val($(this).val().toUpperCase());});
+        $("#sofNo").keyup(function(){$(this).val($.trim($(this).val().toUpperCase()));});
 
         // 20190925 KR-OHK Moblie Popup Setting
         Common.setMobilePopup(true, false,'');
@@ -1532,12 +1532,14 @@
                 var dobY = dob.split("/")[2];
                 var nowDt = new Date();
                 var nowDtY = nowDt.getFullYear();
-
+                console.log(nowDt + "," + nowDtY);
+                console.log(nowDtY - dobY);
                 if(!nric.startsWith("TST")){
 
 	                if(dobY != 1900) {
 	                    if((nowDtY - dobY) < 18) {
-	                        Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Member must 18 years old and above.</b>");
+
+	                        Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* b Member must 18 years old and above.</b>");
 	                        $('#scPreOrdArea').addClass("blind");
 	                        return false;
 	                    }
