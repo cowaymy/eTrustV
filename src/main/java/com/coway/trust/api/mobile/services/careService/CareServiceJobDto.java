@@ -221,6 +221,8 @@ public class CareServiceJobDto {
 
   private String srvPacId;
 
+  private String disinfSrv;
+
   public String getHomeCareOrderYn() {
     return homeCareOrderYn;
   }
@@ -817,6 +819,14 @@ public class CareServiceJobDto {
 
   public void setSrvPacId(String srvPacId) {
     this.srvPacId = srvPacId;
+  }
+
+  public String getDisinfSrv() {
+    return disinfSrv;
+  }
+
+  public void setDisinfSrv(String disinfSrv) {
+    this.disinfSrv = disinfSrv;
   }
 
 }
