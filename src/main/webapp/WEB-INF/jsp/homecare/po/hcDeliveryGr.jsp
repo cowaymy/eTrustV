@@ -156,7 +156,7 @@ var taxObj = {};
 
         // 조회버튼
 	    $("#btnSearch").click(function(){
-	        if(js.String.isEmpty($("#sCdc").val())){
+	        if(js.String.isEmpty($("#sCdc").val()) || js.String.isEmpty($("#sMemAccId").val())){
 			    Common.alert("Please, check the mandatory value.");
 			    return ;
 			}
