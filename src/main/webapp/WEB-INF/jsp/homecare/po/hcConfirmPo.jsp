@@ -294,7 +294,7 @@ var taxObj = {};
             	$("#sMemAcc").val("N");
             }
             $("#sMemAccId").val("${zMemAccId}");
-	        $("select[name=sMemAccId]").prop('disabled',true);
+	        //$("select[name=sMemAccId]").prop('disabled',true);
         </c:if>
 
         if( js.String.isEmpty($("#sPoDtFrom").val()) ){

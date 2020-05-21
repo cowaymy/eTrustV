@@ -374,12 +374,12 @@ var mSort = {};
 	            $("#sMemAcc").val("N");
 	        }
 	        $("#sMemAccId").val("${zMemAccId}");
-	        $("select[name=sMemAccId]").prop('disabled',true);
+	        //$("select[name=sMemAccId]").prop('disabled',true);
 	    </c:if>
 
 	    // 조회버튼
         $("#btnSearch").click(function(){
-            if(js.String.isEmpty($("#sCdc").val())){
+            if(js.String.isEmpty($("#sCdc").val()) || js.String.isEmpty($("#sMemAccId").val())){
                 Common.alert("Please, check the mandatory value.");
                 return ;
             }
