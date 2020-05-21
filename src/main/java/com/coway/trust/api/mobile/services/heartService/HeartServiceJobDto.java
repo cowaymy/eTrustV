@@ -224,6 +224,8 @@ public class HeartServiceJobDto {
 
   private String srvPacId;
 
+  private String disinfSrv;
+
   public String getSerialChk() {
     return serialChk;
   }
@@ -818,6 +820,14 @@ public class HeartServiceJobDto {
 
   public void setSrvPacId(String srvPacId) {
     this.srvPacId = srvPacId;
+  }
+
+  public String getDisinfSrv() {
+    return disinfSrv;
+  }
+
+  public void setDisinfSrv(String disinfSrv) {
+    this.disinfSrv = disinfSrv;
   }
 
 }
