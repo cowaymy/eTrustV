@@ -277,9 +277,7 @@ public class eHPmemberListController {
       EgovMap selectMemberListView = null;
 
       if ( params.get("MemberType").equals("2803")) {
-          selectMemberListView = memberListService.selectHPMemberListView(params);
-      }else {
-          selectMemberListView = memberListService.selectMemberListView(params);
+          selectMemberListView = eHPmemberListService.selectEHPMemberListView(params);
       }
       //EgovMap selectMemberListView = memberListService.selectMemberListView(params);
       List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
@@ -450,7 +448,7 @@ public class eHPmemberListController {
        if(memCode.equals("") && memCode.equals(null)){
            message.setMessage("fail saved");
        }else{
-           message.setMessage("Compelete to Create eHP Member Code : " +memCode);
+           message.setMessage("Complete to Create eHP Application Code : " +memCode);
        }
        logger.debug("message : {}", message);
 
@@ -486,7 +484,7 @@ public class eHPmemberListController {
        if (memCode.equals("") && memCode.equals(null)) {
            message.setMessage("fail saved");
        } else {
-           message.setMessage("Compelete to Edit a Member Code : " + memCode);
+           message.setMessage("Compelete to Edit eHP Application Code : " + memCode);
        }
        logger.debug("message : {}", message + memCode);
 
