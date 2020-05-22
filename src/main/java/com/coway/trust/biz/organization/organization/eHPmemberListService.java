@@ -37,4 +37,6 @@ public interface eHPmemberListService {
 
   List<EgovMap> eHPselectStatus();
 
+  EgovMap selectEHPMemberListView(Map<String, Object> params);
+
 }
