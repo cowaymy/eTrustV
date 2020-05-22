@@ -1009,6 +1009,12 @@ function fn_atchViewDown(fileGrpId, fileId) {
 
 </tr>
 <tr>
+      <th scope="row">Collection Branch</th>
+       <td colspan="3">
+        <span><c:out value="${memberView.collctBrnchDesc}"/></span>
+    </td>
+</tr>
+<tr>
 <th scope="row" class="hideContent">Cody PA Expired</th>
     <td class="hideContent">
     <span><span><c:out value="${PAExpired.agExprDt}"/></span></span>
