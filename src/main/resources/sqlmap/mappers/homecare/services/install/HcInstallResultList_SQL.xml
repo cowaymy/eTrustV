@@ -13,6 +13,7 @@
 		              , MEM.MEM_CODE
 		              , NVL2(STK.STK_DESC, '['||STK.STK_CODE||'] '||STK.STK_DESC, STK.STK_CODE) AS STK_DESC
 		              , SOM.CUST_ID
+		              , CUST.NAME AS CUST_NAME
 		              , MEM.NAME
 		              , CD2.CODE as APP_TYPE
 		              , ST.CODE CODE1
