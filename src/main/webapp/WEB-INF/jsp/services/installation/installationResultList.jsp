@@ -8,6 +8,7 @@
  05/03/2019  ONGHC  1.0.1          Remove selection mode as singleRow
  12/06/2019  ONGHC  1.0.2          Add Column Update By
  17/02/2020  THUNPY 1.0.3          Add Installation Call Log Raw button at Link
+ 22/05/2020  ONGHC  1.0.4          Add Customer Name to GridView
  -->
 
 <script type="text/javaScript">
@@ -130,6 +131,11 @@
     }, {
       dataField : "custId",
       headerText : '<spring:message code="service.grid.CustomerId" />',
+      editable : false,
+      width : 100
+    }, {
+      dataField : "custName",
+      headerText : '<spring:message code="service.title.CustomerName" />',
       editable : false,
       width : 100
     }, {
