@@ -274,4 +274,8 @@ public class eHPmemberListServiceImpl extends EgovAbstractServiceImpl implements
         return eHPmemberListMapper.eHPselectStatus();
     }
 
+      @Override
+      public EgovMap selectEHPMemberListView(Map<String, Object> params) {
+          return eHPmemberListMapper.getEHPMemberListView(params);
+      }
 }
