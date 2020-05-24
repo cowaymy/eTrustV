@@ -88,4 +88,6 @@ public interface OrderRegisterService {
 
   EgovMap getOrdInfo(Map<String, Object> params);
 
+  List<EgovMap> selectPrevMatOrderNoList(Map<String, Object> params);
+
 }

@@ -2231,4 +2231,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     EgovMap ordInfo = orderRegisterMapper.getOrdInfo(params);
     return ordInfo;
   }
+
+  @Override
+  public List<EgovMap> selectPrevMatOrderNoList(Map<String, Object> params) {
+    return orderRegisterMapper.selectPrevMatOrderNoList(params);
+  }
 }

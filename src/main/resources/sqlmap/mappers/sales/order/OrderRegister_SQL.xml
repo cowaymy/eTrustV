@@ -394,8 +394,8 @@
                   AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   AND T2.PROMO_TYPE_ID = 2282 <!-- Discount -->
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
-                  AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
-                  AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  --AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  --AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
                   AND T2.EMP_CHK = #{empChk}
                   AND T2.EX_TRADE = #{exTrade}
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
@@ -414,8 +414,8 @@
                   AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   AND T2.PROMO_TYPE_ID = 2282
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
-                  AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
-                  AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  --AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  --AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
                   AND T2.EMP_CHK = #{empChk}
                   AND T2.EX_TRADE = #{exTrade}
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
@@ -424,8 +424,8 @@
                    ON 2284 = #{appTypeId}
                   AND T3.SRV_CNTRCT_PAC_ID = T2.PROMO_SRV_MEM_PAC_ID
                   AND T3.SRV_CNTRCT_PAC_STUS_ID = '1'
-                  AND TO_CHAR(T3.SRV_CNTRCT_PAC_START_DT, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
-                  AND TO_CHAR(T3.SRV_CNTRCT_PAC_END_DT,   'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  --AND TO_CHAR(T3.SRV_CNTRCT_PAC_START_DT, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  --AND TO_CHAR(T3.SRV_CNTRCT_PAC_END_DT,   'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
                   AND T3.PAC_TYPE = '2'
                  LEFT OUTER
                  JOIN SAL0091M T4
@@ -585,7 +585,7 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.PROMO_ID = #{promoId}
-                  AND T2.E_SALES in (1,2)
+                  AND T2.E_SALES in (0,1,2)
                   OR T2.PROMO_ID = 31723
                 UNION
                SELECT DISTINCT T2.PROMO_ID PROMO_ID
@@ -621,7 +621,7 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.PROMO_ID = #{promoId}
-                  AND T2.E_SALES in (1,2)
+                  AND T2.E_SALES in (0,1,2)
                   OR T2.PROMO_ID = 31723
                   </if>
              ) T
@@ -2940,10 +2940,36 @@
 	          , #{gstChk}
 	          , #{srvPacId}
 	          , #{salesProdSz}
-	          , (SELECT CODE_NAME FROM SYS0094M WHERE IND = 'MATBSCBRD' AND CODE = 'PRMSRI' AND DISB = 0)
+	          , 'GOODNITE'
 	          , null
 	          , 1
 	     )
     </insert>
+
+    <select id="selectPrevMatOrderNoList" parameterType="Map" resultType="egovMap">
+        SELECT T1.SALES_ORD_NO
+             , T4.CODE_NAME AS APP_TYPE
+             , T3.STK_CODE
+             , T3.STK_DESC
+             , T1.BNDL_ID
+             , T1.SALES_ORD_ID
+             , T3.STK_ID
+          FROM SAL0001D T1
+          JOIN SAL0002D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+          JOIN SYS0026M T3 ON T3.STK_ID = T2.ITM_STK_ID
+          JOIN SYS0013M T4 ON T4.CODE_ID = T1.APP_TYPE_ID
+          JOIN HMC0011D T5 ON T5.ORD_SEQ_NO = T1.BNDL_ID AND T5.FRA_ORD_NO IS NULL
+         WHERE T3.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                                          WHERE AA.CODE = BB.CODE
+                                                              AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE'
+                                                              AND BB.CODE = 'MAT')
+            AND T1.SALES_DT <![CDATA[<]]>= (SELECT TO_DATE(CODE,'YYYY/MM/DD') FROM SYS0094M WHERE IND = 'MAT_ORD_DT' AND DISB = 0)
+          <if test='custId != null and custId !=0'>
+            AND T1.CUST_ID = #{custId}
+          </if>
+          <if test='appTypeId != null and appTypeId !=0'>
+            AND T1.APP_TYPE_ID = #{appTypeId}
+          </if>
+    </select>
 
 </mapper>

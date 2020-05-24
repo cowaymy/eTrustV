@@ -750,4 +750,20 @@ public class OrderRegisterController {
     return "sales/order/orderPromoPckUnlinkPop";
   }
 
+  @RequestMapping(value = "/prevMatOrderNoPop.do")
+  public String prevMatOrderNoPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    System.out.println("App Type ::" + params.get("appTypeId"));
+    model.put("custId", params.get("custId"));
+    model.put("isHomecare", params.get("isHomecare") != null ? '1' : '0');
+    model.put("appTypeId", params.get("appTypeId"));
+
+    return "sales/order/prevMatOrderNoPop";
+  }
+
+  @RequestMapping(value = "/selectPrevMatOrderNoList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectPrevMatOrderNoList(@RequestParam Map<String, Object> params) {
+    List<EgovMap> result = orderRegisterService.selectPrevMatOrderNoList(params);
+    return ResponseEntity.ok(result);
+  }
+
 }

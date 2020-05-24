@@ -137,6 +137,7 @@ function doGetComboAndGroup2(url, pdata , selCode, obj , type, callbackFn){
         url : getContextPath() + url,
         data : pdata,
         dataType : "json",
+        async : false,
         contentType : "application/json;charset=UTF-8",
         success : function(data) {
             var rData = data;
@@ -533,7 +534,7 @@ function doGetComboForStock(url, groupCd ,codevalue ,  selCode, obj , type, call
         complete: function(){
         }
     });
-} 
+}
 
 function doSysdate(v , obj){
 	$.ajax({
@@ -546,7 +547,7 @@ function doSysdate(v , obj){
         	$("#"+obj).val(data.date);
         },
         error: function(jqXHR, textStatus, errorThrown){
-        	
+
         },
         complete: function(){
         }

@@ -14,6 +14,7 @@
     var docDefaultChk = false;
     var GST_CHK = '';
     var GST_MANNUAL = 'N';
+    var MAT_TAG = 'N';
 
     var codeList_10 = [];
     <c:forEach var="obj" items="${codeList_10}">
@@ -614,6 +615,10 @@
             Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "ORD_REGISTER_SALE_ORD", indicator : "SearchTrialNo"});
         });
 
+        $('#btnMatRltdNo').click(function() {
+            Common.popupDiv("/sales/order/prevMatOrderNoPop.do", {custId : $('#hiddenCustId').val(),isHomecare : 'Y', appTypeId : $('#appType').val() }, null, true);
+        });
+
         $('[name="grpOpt"]').click(function() {
             fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
         });
@@ -993,6 +998,14 @@
                 // ONGHC - ADD
                 $('#ordProduct1').prop("disabled", true);
                 $('#ordProduct2').prop("disabled", true);
+            }
+
+            if($('#ordProduct1 option').length < 2 && $('#ordProduct2 option').length >= 2){
+            	$('#btnMatRltdNo').removeClass("blind");
+            	MAT_TAG = 'Y';
+            }else{
+            	$('#btnMatRltdNo').addClass("blind");
+            	MAT_TAG = 'N';
             }
         });
 
@@ -1486,7 +1499,6 @@
         } else if($('#rentPayMode').val() == '134') {
             vAdtPayMode = "FPX";
         }
-
         var orderVO = {
             custTypeId            : $('#typeId').val().trim(),
             raceId                  : $('#raceId').val().trim(),
@@ -1498,7 +1510,7 @@
             copyOrderBulkYN  : '${BULK_ORDER_YN}',
             copyOrderChgYn   : "${COPY_CHANGE_YN}",
             copyQty               : $('#hiddenCopyQty').val(),
-            ordSeqNo             : '${ordSeqNo}',
+            ordSeqNo             : '${ordSeqNo}' > 0 ? '${ordSeqNo}' : $('#matBndlId').val(),
 
             salesOrderMVO1 : {
                 advBill                    : $('input:radio[name="advPay"]:checked').val(),
@@ -1662,8 +1674,9 @@
             },
             docSubmissionVOList    : GridCommon.getEditData(docGridID)
         };
-
+        console.log(orderVO);
         Common.ajax("POST", "/homecare/sales/order/hcRegisterOrder.do", orderVO, function(result) {
+
             Common.alert('<spring:message code="sal.alert.msg.ordSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
 
         },  function(jqXHR, textStatus, errorThrown) {
@@ -1798,7 +1811,7 @@
             msg += '* <spring:message code="sal.alert.msg.plzSelPrd" /><br>';
         }
         // 프레임만 주문 불가.
-        if($("#ordProduct1 option:selected").index() <= 0 && $("#ordProduct2 option:selected").index() > 0) {
+        if($("#ordProduct1 option:selected").index() <= 0 && $("#ordProduct2 option:selected").index() > 0 && MAT_TAG == 'N') {
             isValid = false;
             msg += '* Only frames can not be ordered.<br>';
         }
@@ -1861,6 +1874,22 @@
                 isValid = false;
                 msg += '<spring:message code="sal.alert.msg.plzSelectSalesman" />';
             }
+        }
+
+        if(MAT_TAG == 'Y'){
+
+        	if(FormUtil.checkReqValue($("#matRelatedNo"))){
+        		isValid = false;
+                msg += '<spring:message code="sal.alert.msg.plzSelMattressOrd" />';
+        	}else{
+        		 Common.ajaxSync("GET", "/homecare/sales/order/checkProductSize.do", {product1 : $("#matStkId").val(), product2 : $("#ordProduct2 option:selected").val()}, function(result) {
+                     if(result.code != '00') {
+                    	 isValid = false;
+                    	 msg +=  '<spring:message code="sal.alert.msg.matSizeDiff" />';;
+                     }
+                 });
+        	}
+
         }
 
         if(!isValid) Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
@@ -2376,6 +2405,7 @@
         $('#ordPv').val('');
         $('#ordRentalFees').val('');
         $('#orgOrdRentalFees').val('');
+        $('#btnMatRltdNo').addClass('blind');
     }
 
     //ClearControl_RentPaySet_ThirdParty
@@ -2844,12 +2874,26 @@
 <tr>
     <th scope="row"><spring:message code="sal.title.text.instDuration" /><span class="must">*</span></th>
     <td><input id="installDur" name="installDur" type="text" placeholder="Installment Duration (1-36 Months)" class="w100p readonly" readonly/></td>
-    <th scope="row"><spring:message code="sal.text.ordDate" /><span class="must">*</span></th>
-    <td>${toDay}</td>
+    <th scope="row">Mattress Order<span class="must">*</span></th>
+    <td>
+        <span style="width:70%;">
+            <input id="matRelatedNo" name="matRelatedNo" type="text" placeholder="Mattress Order Number" class="w100p readonly" readonly />
+            <input id="matOrdId" name="matOrdId" type="text" hidden/>
+            <input id="matBndlId" name="matBndlId" type="text" hidden/>
+            <input id="matStkId" name="matStkId" type="text" hidden/>
+        </span>
+        <a id="btnMatRltdNo" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.refNo" /><span class="must">*</span></th>
     <td><input id="refereNo" name="refereNo" type="text" placeholder="" class="w100p" onblur="javascript:fn_checkEkeyinSof(this.value);"/></td>
+    <th scope="row"><spring:message code="sal.text.ordDate" /><span class="must">*</span></th>
+    <td>${toDay}</td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.poNo" /><span class="must">*</span></th>
+    <td><input id="poNo" name="poNo" type="text" placeholder="" class="w100p" /></td>
     <th scope="row"><spring:message code="sal.text.salManCode" /><span class="must">*</span></th>
     <td>
         <input id="salesmanCd" name="salesmanCd" type="text" placeholder="" class="" />
@@ -2858,8 +2902,8 @@
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.poNo" /><span class="must">*</span></th>
-    <td><input id="poNo" name="poNo" type="text" placeholder="" class="w100p" /></td>
+    <th scope="row"></th>
+    <td></td>
     <th scope="row"><spring:message code="sal.title.text.salesmanType" /></th>
     <td><input id="salesmanType" name="salesmanType" type="text" placeholder="Salesman Type" class="w100p readonly" readonly/>
         <input id="hiddenSalesmanTypeId" name="salesmanTypeId" type="hidden" /></td>

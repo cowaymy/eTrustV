@@ -201,4 +201,6 @@ public interface OrderRegisterMapper {
 
   public EgovMap getCtgryId(int ordId);
 
+  List<EgovMap> selectPrevMatOrderNoList(Map<String, Object> params);
+
 }
