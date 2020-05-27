@@ -224,7 +224,7 @@ public class HeartServiceJobDto {
 
   private String srvPacId;
 
-  private String disinfSrv;
+  private String disinfecServ;
 
   public String getSerialChk() {
     return serialChk;
@@ -822,12 +822,12 @@ public class HeartServiceJobDto {
     this.srvPacId = srvPacId;
   }
 
-  public String getDisinfSrv() {
-    return disinfSrv;
+  public String getDisinfecServ() {
+    return disinfecServ;
   }
 
-  public void setDisinfSrv(String disinfSrv) {
-    this.disinfSrv = disinfSrv;
+  public void setDisinfecServ(String disinfecServ) {
+    this.disinfecServ = disinfecServ;
   }
 
 }
