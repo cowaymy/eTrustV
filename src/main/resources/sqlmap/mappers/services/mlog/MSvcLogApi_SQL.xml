@@ -392,7 +392,7 @@
           , TO_CHAR(HCREFCAT) AS HC_REF_CAT
           , TO_CHAR(HCREFPRD) AS HC_REF_PROD
           , TO_CHAR(SRV_PAC_ID) AS SRV_PAC_ID
-          , TO_CHAR(DISINF_SRV) AS DISINF_SRV
+          , TO_CHAR(DISINF_SRV) AS DISINFEC_SERV
     FROM SVC0101T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -4583,7 +4583,7 @@
            HC_REF_CAT,
            HC_REF_PROD,
            TO_CHAR (A.SRV_PAC_ID) AS SRV_PAC_ID,
-           TO_CHAR (A.DISINF_SRV) AS DISINF_SRV
+           TO_CHAR (A.DISINF_SRV) AS DISINFEC_SERV
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
