@@ -22,6 +22,19 @@ function fn_memberSave(){
                 $("#memberType").attr("disabled",false);
                 var jsonObj =  GridCommon.getEditData(myGridID_Doc);
                 jsonObj.form = $("#memberAddForm").serializeJSON();
+
+                //ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
+                if($("#hsptlzCheck").is(":checked") == true){
+                    $.extend(jsonObj, {
+                        'hsptlz' : '1'
+                    });
+              }else{
+                    $.extend(jsonObj, {
+                        'hsptlz' : '0'
+                    });
+              }
+
+                console.log("-------------------------" + JSON.stringify(jsonObj));
                 Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
                 console.log("message : " + result.message );
                 Common.alert(result.message,fn_close);
@@ -168,6 +181,11 @@ $(document).ready(function() {
                      });
     }
     doGetCombo('/organization/selectBusinessType.do', '', '','businessType', 'S' , '');
+
+    //ADDED BY TOMMY 27/05/2020 ONLY ALLOW CODY AND HT FOR HOSPITALISATION CHECKBOX
+    if("${memType}" == "2" || "${memType}" == "7") {
+    	 $("#hsptlzCheck").attr({"disabled" : false });
+   }
 
     /*fill edit field*/
     /*
@@ -1456,7 +1474,9 @@ function checkBankAccNo() {
     </td>
   <th scope="row">Hospitalization</th>
 <td>
-    <span><input type="checkbox" id="hsptlzCheck" name="hsptlzCheck" disabled = "disabled"/></span>
+    <span><input type="checkbox" id="hsptlzCheck" name="hsptlzCheck" disabled = "disabled"
+    <c:if test="${memberView.hsptlz eq '1'}">checked</c:if>/>
+    </span>
  </td>
 
 
