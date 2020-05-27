@@ -4807,8 +4807,8 @@
                  SAL0001D Z,
                  SAL0002D AA,
                  SYS0026M AB,
-                 (SELECT CODE_ID ,CODE FROM SYS0013M WHERE CODE_MASTER_ID = '11') AC
-                 (SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID, SRV_SO_ID, DISINF_SRV FROM SAL0090D WHERE SRV_STUS_ID = 1 GROUP BY SRV_SO_ID, DISINF_SRV) AD,
+                 (SELECT CODE_ID ,CODE FROM SYS0013M WHERE CODE_MASTER_ID = '11') AC,
+                 (SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID, SRV_SO_ID AS SRV_SO_ID2, DISINF_SRV FROM SAL0090D WHERE SRV_STUS_ID = 1 GROUP BY SRV_SO_ID, DISINF_SRV) AD
                  WHERE A.SCHDUL_ID = B.SCHDUL_ID(+)
                     AND A.SALES_ORD_ID = B.SALES_ORD_ID(+)
                     AND A.SALES_ORD_ID = C.SRV_ORD_ID
@@ -4838,7 +4838,7 @@
                     AND C.SRV_ORD_ID = S.SALES_ORD_ID(+)
                     AND C.PROMO_ID = T.PROMO_ID(+)
                     AND C.SRV_ORD_ID = U.SRV_SO_ID
-                    AND C.SRV_ORD_ID = AD.SRV_SO_ID
+                    AND C.SRV_ORD_ID = AD.SRV_SO_ID2
                     AND B.RESULT_IS_CURR(+) = 1
 
                     AND TO_CHAR(C.SRV_ORD_ID) = Y.REM_STATUS(+)
