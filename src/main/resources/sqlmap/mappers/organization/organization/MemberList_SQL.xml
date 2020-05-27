@@ -3090,6 +3090,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               SPOUSE_NRIC = #{spouseNric},
               SPOUSE_OCPAT = #{spouseOcc},
               SPOUSE_TEL_CNTC = trim(#{spouseContat}),
+              HSPTLZ    = #{hsptlz},
               ]]>
             <if test="spouseDob != null and spouseDob != '' and spouseDob != '01/01/1900'" >
             SPOUSE_DOB = TO_DATE(#{spouseDob},'DD/MM/YYYY'),
