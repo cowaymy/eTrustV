@@ -931,6 +931,11 @@ public class MemberListController {
         logger.debug("gender : {}", formMap.get("gender"));
         logger.debug("update : {}", formMap.get("docType"));
         logger.debug("myGridID : {}", formMap.get("params"));
+        logger.debug("hsptlz : {}", params.get("hsptlz"));
+
+        // ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
+        formMap.put("hsptlz",  params.get("hsptlz"));
+
 
         String memCode = "";
         String memId = "";
