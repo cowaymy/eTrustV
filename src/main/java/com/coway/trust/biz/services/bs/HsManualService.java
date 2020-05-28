@@ -181,5 +181,6 @@ public interface HsManualService {
   Map<String, Object> addIHtResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws Exception;
   /* Woongjin Jun */
 
+  void updateDisinfecSrv(Map<String, Object> params);
 
 }
