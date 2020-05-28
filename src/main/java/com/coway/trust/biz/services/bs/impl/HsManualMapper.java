@@ -317,7 +317,7 @@ public interface HsManualMapper {
   //HS REVERSE OMBAK -- ADDED BY TPY - 18/06/2019
 
   EgovMap checkHsBillASInfo(Map<String, Object> params);
-  
+
   EgovMap checkHsBillASInfoPass(Map<String, Object> params);
 
   void updateHsResultMas(Map<String, Object> params);
@@ -335,5 +335,7 @@ public interface HsManualMapper {
   EgovMap checkOrderStatusInfo(Map<String, Object> params);
 
   List<EgovMap> getAppTypeList(Map<String, Object> params);
+
+  void updateDisinfecSrv(Map<String, Object> params);
 
 }
