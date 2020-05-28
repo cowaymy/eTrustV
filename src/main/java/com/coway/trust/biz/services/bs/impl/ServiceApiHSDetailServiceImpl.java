@@ -47,7 +47,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * -----------------------------------------------------------------------------
  * 20/09/2019    JUN           1.0.1       - First creation
  * 27/04/2020    ONGHC      1.0.2       - AMEND hsFailJobRequestProc
- * 29/04/2020    ONGHC      1.0.3       - AMEND hsResultProc and htResultProc TO INSERT SVC0115D
+ * 29/04/2020    ONGHC      1.0.3       - AMEND hsResultProc AND htResultProc TO INSERT SVC0115D
+ * 28/05/2020    ONGHC      1.0.4       - AMEND htResultProc TO ADD DISINFECTION SERVICE FEATURE
  *********************************************************************************************/
 @Service("serviceApiHSDetailService")
 public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl implements ServiceApiHSDetailService {
@@ -344,6 +345,10 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
 
           Map rtnValue = hsManualService.addIHtResult(params, paramsDetailList, sessionVO);
           logger.debug("### CS INSERT RESULT : " + rtnValue.toString());
+
+          if ("1".equals(String.valueOf(CommonUtils.nvl(insApiresult.get("disinfecServ"))))) {
+            hsManualService.updateDisinfecSrv(params);
+          }
 
           if (null != rtnValue) {
             // 홈케어 주문일 경우만 호출
