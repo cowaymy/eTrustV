@@ -5093,4 +5093,12 @@ SELECT DISTINCT A.ORD_ID FROM (
            ORDER BY Project1.CODE_NAME ASC
     </select>
 
+  <update id="updateDisinfecSrv" parameterType="Map" >
+    UPDATE SAL0090D SET DISINF_SRV = 1,
+                                    DISINF_SRV_DT = SYSDATE
+    WHERE SRV_SO_ID =#{hidSalesOrdId}
+    AND SRV_STUS_ID = 1
+    AND DISINF_SRV <![CDATA[ <> ]]> 1
+  </update>
+
 </mapper>
