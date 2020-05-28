@@ -1,21 +1,52 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
-<script type="text/javaScript" language="javascript">
+<script type="text/javaScript" >
+
+$(document).ready(function() {
+	 //$("#titleYear").hide();
+	 $("#accReportYear").hide();
+
+
+
+ 	  $("#reportType").change(function (){
+		  if($("#reportType").val() != "16"){
+			  console.log("reportType : " + $("#reportType").val() );
+			  //$("#titleYear").hide();
+			  $("#accReportYear").hide();
+			  $("#yyyymmDate").show();
+			  //$("#titleDate").show();
+
+
+		  }else{
+			  //$("#titleYear").show();
+		        $("#accReportYear").show();
+		        $("#yyyymmDate").hide();
+		        //$("#titleDate").hide();
+
+		  }
+
+	  });
+
+
+});
 
 function fn_report(type) {
 
+	if($("#reportType").val() != "16"){
     if($("#yyyymmDate").val() == null || $("#yyyymmDate").val() == ''){
         Common.alert('<spring:message code="sal.alert.msg.keyInDate" />');
         return;
     }
+	}
     var yyyymmDate = $("#dataForm #yyyymmDate").val();
     var month = Number(yyyymmDate.substring(0, 2));
     var year = Number(yyyymmDate.substring(3));
+    var year2 = $("#accReportYear").val();
 
 
 
-    $("#viewType").val('EXCEL');
+   // $("#viewType").val('EXCEL');
 
 
 
@@ -24,96 +55,118 @@ function fn_report(type) {
         $("#reportDownFileName").val("D_Ren_Sales_By_Category_" + $("#yyyymmDate").val());
         $("#Month").val(month);
         $("#Year").val(year);
+        $("#viewType").val('EXCEL');
     }
     else if(dataForm.reportType.value=="1"){
          $("#reportFileName").val('/sales/D_Ren_Sales_By_Channel.rpt');
          $("#reportDownFileName").val("D_Ren_Sales_By_Channel_" + $("#yyyymmDate").val());
          $("#Month").val(month);
          $("#Year").val(year);
+         $("#viewType").val('EXCEL');
      }
     else if(dataForm.reportType.value=="2"){
         $("#reportFileName").val('/sales/D_Ren_Sales_By_Category_Channel.rpt');
         $("#reportDownFileName").val("D_Ren_Sales_By_Category_Channel_" + $("#yyyymmDate").val());
         $("#Month").val(month);
         $("#Year").val(year);
+        $("#viewType").val('EXCEL');
     }
     else if(dataForm.reportType.value=="3"){
         $("#reportFileName").val('/sales/D_Ren_Sales_Details.rpt');
         $("#reportDownFileName").val("D_Ren_Sales_Details_" + $("#yyyymmDate").val());
         $("#Month").val(month);
         $("#Year").val(year);
+        $("#viewType").val('EXCEL');
     }
     else if(dataForm.reportType.value=="4"){
         $("#reportFileName").val('/sales/D_Out_Sales_By_Category.rpt');
         $("#reportDownFileName").val("D_Out_Sales_By_Category_" + $("#yyyymmDate").val());
         $("#Month").val(month);
         $("#Year").val(year);
+        $("#viewType").val('EXCEL');
     }
     else if(dataForm.reportType.value=="5"){
         $("#reportFileName").val('/sales/D_Out_Sales_By_Channel.rpt');
         $("#reportDownFileName").val("D_Out_Sales_By_Channel_" + $("#yyyymmDate").val());
         $("#Month").val(month);
         $("#Year").val(year);
+        $("#viewType").val('EXCEL');
     }
     else if(dataForm.reportType.value=="6"){
         $("#reportFileName").val('/sales/D_Out_Sales_By_Category_Channel.rpt');
         $("#reportDownFileName").val("D_Out_Sales_By_Category_Channel_" + $("#yyyymmDate").val());
         $("#Month").val(month);
         $("#Year").val(year);
+        $("#viewType").val('EXCEL');
     }
     else if(dataForm.reportType.value=="7"){
         $("#reportFileName").val('/sales/D_Mem_Sales_By_Category.rpt');
         $("#reportDownFileName").val("D_Mem_Sales_By_Category_" + $("#yyyymmDate").val());
         $("#Month").val(month);
         $("#Year").val(year);
+        $("#viewType").val('EXCEL');
     }
     else if(dataForm.reportType.value=="8"){
         $("#reportFileName").val('/sales/M_Ren_Sales_By_Category.rpt');
         $("#reportDownFileName").val("M_Ren_Sales_By_Category_" + $("#yyyymmDate").val());
         $("#Month").val(month);
         $("#Year").val(year);
+        $("#viewType").val('EXCEL');
     }
     else if(dataForm.reportType.value=="9"){
         $("#reportFileName").val('/sales/M_Ren_Sales_By_Channel.rpt');
         $("#reportDownFileName").val("M_Ren_Sales_By_Channel_" + $("#yyyymmDate").val());
         $("#Month").val(month);
         $("#Year").val(year);
+        $("#viewType").val('EXCEL');
     }
     else if(dataForm.reportType.value=="10"){
         $("#reportFileName").val('/sales/M_Ren_Sales_By_Category_Channel.rpt');
         $("#reportDownFileName").val("M_Ren_Sales_By_Category_Channel_" + $("#yyyymmDate").val());
         $("#Month").val(month);
         $("#Year").val(year);
+        $("#viewType").val('EXCEL');
     }
     else if(dataForm.reportType.value=="11"){
         $("#reportFileName").val('/sales/M_Ren_Sales_Details.rpt');
         $("#reportDownFileName").val("M_Ren_Sales_Details_" + $("#yyyymmDate").val());
         $("#Month").val(month);
         $("#Year").val(year);
+        $("#viewType").val('EXCEL');
     }
     else if(dataForm.reportType.value=="12"){
         $("#reportFileName").val('/sales/M_Out_Sales_By_Category.rpt');
         $("#reportDownFileName").val("M_Out_Sales_By_Category_" + $("#yyyymmDate").val());
         $("#Month").val(month);
         $("#Year").val(year);
+        $("#viewType").val('EXCEL');
     }
     else if(dataForm.reportType.value=="13"){
         $("#reportFileName").val('/sales/M_Out_Sales_By_Channel.rpt');
         $("#reportDownFileName").val("M_Out_Sales_By_Channel_" + $("#yyyymmDate").val());
         $("#Month").val(month);
         $("#Year").val(year);
+        $("#viewType").val('EXCEL');
     }
     else if(dataForm.reportType.value=="14"){
         $("#reportFileName").val('/sales/M_Out_Sales_By_Category_Channel.rpt');
         $("#reportDownFileName").val("M_Out_Sales_By_Category_Channel_" + $("#yyyymmDate").val());
         $("#Month").val(month);
         $("#Year").val(year);
+        $("#viewType").val('EXCEL');
     }
     else if(dataForm.reportType.value=="15"){
         $("#reportFileName").val('/sales/M_Mem_Sales_By_Category.rpt');
         $("#reportDownFileName").val("M_Mem_Sales_By_Category_" + $("#yyyymmDate").val());
         $("#Month").val(month);
         $("#Year").val(year);
+        $("#viewType").val('EXCEL');
+    }
+    else if(dataForm.reportType.value=="16"){
+        $("#reportFileName").val('/sales/Sales_Analysis_Process_PDF.rpt');
+        $("#reportDownFileName").val("Sales_Analysis_" + $("#accReportYear").val());
+        $("#v_Year").val(year2);
+        $("#viewType").val('PDF');
     }
 
 
@@ -147,6 +200,7 @@ function fn_report(type) {
     <input type="hidden" id="viewType" name="viewType" />
     <input type="hidden" id="Month" name="@Month" />
     <input type="hidden" id="Year" name="@Year" />
+    <input type="hidden" id="v_Year" name="v_Year" />
     <input type="hidden" id="reportDownFileName" name="reportDownFileName"  />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -175,13 +229,25 @@ function fn_report(type) {
         <option value="13">M_Out_Sales_By_Channel</option>
         <option value="14">M_Out_Sales_By_Category_Channel</option>
         <option value="15">M_Mem_Sales_By_Category</option>
+        <option value="16">Sales Analysis Report</option>
 
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.date" /></th>
+    <th scope="row" id = "titleDate"><spring:message code="sal.title.date" /></th>
     <td><input type="text" id="yyyymmDate" name="yyyymmDate"  placeholder="DD/MM/YYYY" class="j_date2 w100p" /></td>
+</tr>
+<tr>
+    <th scope="row" id = "titleYear">Year</th>
+    <td>
+    <select class="w100p" id="accReportYear" name="report">
+         <option value="2017">2017</option>
+        <option value="2018">2018</option>
+        <option value="2019">2019</option>
+        <option value="2020" selected>2020</option>
+    </select>
+    </td>
 </tr>
 
 </tbody>
@@ -197,7 +263,8 @@ function fn_report(type) {
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_report('EXCEL');"><spring:message code="sal.btn.genExcel" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_report('EXCEL');">Generate
+    </a></p></li>
 </ul>
 
 </section><!-- content end -->
