@@ -56,9 +56,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
   @Resource(name = "servicesLogisticsPFCMapper")
   private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
 
-	@Resource(name = "invoiceAdjMapper")
-	private InvoiceAdjMapper invoiceMapper;
-
+  @Resource(name = "invoiceAdjMapper")
+  private InvoiceAdjMapper invoiceMapper;
 
   @Autowired
   private MessageSourceAccessor messageSourceAccessor;
@@ -203,7 +202,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     return hsManualMapper.selectHsManualListPop(params);
   }
 
-  public Map<String, Object> insertHsResult(Map<String, Object> params, List<Object> docType , SessionVO sessionVO) {
+  public Map<String, Object> insertHsResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) {
 
     Boolean success = false;
 
@@ -343,7 +342,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     return nextDocNo;
   }
 
-  private Map<String, Object> SaveResult(boolean isfreepromo, Map<String, Object> params, List<Object> docType, SessionVO sessionVO) {
+  private Map<String, Object> SaveResult(boolean isfreepromo, Map<String, Object> params, List<Object> docType,
+      SessionVO sessionVO) {
 
     logger.debug("=========================SaveResult - START - ===============================");
 
@@ -355,7 +355,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     // EgovMap selectDetailList = hsManualMapper.selectDetailList(params);
     // EgovMap selectHSResultMList = hsManualMapper.selectHSResultMList(params);
     // EgovMap selectHSDocNoList = hsManualMapper.selectHSDocNoList(params);
-    // String resultNo = selectHSDocNoList.get("c2").toString()+selectHSDocNoList.get("c1").toString();
+    // String resultNo =
+    // selectHSDocNoList.get("c2").toString()+selectHSDocNoList.get("c1").toString();
 
     EgovMap insertHsResultfinal = new EgovMap();
     String LOG_SVC0008D_NO = "";
@@ -367,7 +368,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     } else {
       params.put("resultId", nextSeq);
 
-      // String nextDocNo = getNextDocNo(selectHSDocNoList.get("c2").toString(),selectHSDocNoList.get("c1").toString());
+      // String nextDocNo =
+      // getNextDocNo(selectHSDocNoList.get("c2").toString(),selectHSDocNoList.get("c1").toString());
       // logger.debug("nextDocNo : {}",nextDocNo);
       // EgovMap docNoM = new EgovMap();
       // docNoM.put("nextDocNo", nextDocNo);
@@ -399,11 +401,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       // insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
 
       /*
-       * if (status == 4) { // COMPLETED
-       *   insertHsResultfinal.put("failResnId", 0);
-       * } else if (status == 21 || status == 10) { // FAIL & CANCELLED
-       *   insertHsResultfinal.put("failResnId", params.get("failReason"));
-       * }
+       * if (status == 4) { // COMPLETED insertHsResultfinal.put("failResnId",
+       * 0); } else if (status == 21 || status == 10) { // FAIL & CANCELLED
+       * insertHsResultfinal.put("failResnId", params.get("failReason")); }
        */
 
       if (status == 4) { // COMPLETE
@@ -438,7 +438,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       insertHsResultfinal.put("sgnDt", params.get("sgnDt"));
 
       logger.debug("= INSERT SVC0006D START : {}", insertHsResultfinal);
-      hsManualMapper.insertHsResultfinal(insertHsResultfinal); // INSERT SVC0006D
+      hsManualMapper.insertHsResultfinal(insertHsResultfinal); // INSERT
+                                                               // SVC0006D
 
       List<EgovMap> qryUsedFilter = hsManualMapper.selectQryUsedFilter2(insertHsResultfinal);
 
@@ -484,12 +485,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
         /*
          * String filterLastserial = hsManualMapper.select0087DFilter(docSub);
          *
-         * if("".equals(filterLastserial)){
-         *   docSub.put("prvSerialNo", filterLastserial);
-         * }else {
-         *   docSub.put("lastSerialNo",
-         *   docSub.get("SerialNo"));
-         * }
+         * if("".equals(filterLastserial)){ docSub.put("prvSerialNo",
+         * filterLastserial); }else { docSub.put("lastSerialNo",
+         * docSub.get("SerialNo")); }
          *
          * docSub.put("settleDate", params.get("settleDate"));
          * docSub.put("hidCodyId", params.get("hidCodyId"));
@@ -515,12 +513,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
           }
 
           /*
-             if ("".equals(filterLastserial)) {
-               docSub.put("prvSerialNo", filterLastserial);
-             } else {
-               docSub.put("lastSerialNo", docSub.get("serialNo"));
-             }
-          */
+           * if ("".equals(filterLastserial)) { docSub.put("prvSerialNo",
+           * filterLastserial); } else { docSub.put("lastSerialNo",
+           * docSub.get("serialNo")); }
+           */
 
           docSub.put("prvSerialNo", CommonUtils.nvl(filterLastserial));
           docSub.put("lastSerialNo", CommonUtils.nvl(docSub.get("serialNo")));
@@ -538,7 +534,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       hsManualMapper.updateHs009d(params); // UPDATE SAL0090D
     }
 
-    EgovMap getHsResultMList = hsManualMapper.selectHSResultMList(params); // GET SVC0006D
+    EgovMap getHsResultMList = hsManualMapper.selectHSResultMList(params); // GET
+                                                                           // SVC0006D
     int scheduleCnt = hsManualMapper.selectHSScheduleMCnt(params);
 
     if (scheduleCnt > 0) {
@@ -618,24 +615,25 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       logger.debug("= HSCOM LOGISTICS CALL PARAM ===>" + logPram.toString());
 
       // KR-OHK Serial check add start
-      if("Y".equals(params.get("hidSerialRequireChkYn"))) {
-    	  servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_SERIAL(logPram);
+      if ("Y".equals(params.get("hidSerialRequireChkYn"))) {
+        servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_SERIAL(logPram);
       } else {
-    	  servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+        servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
       }
       logger.debug("= HSCOMCALL LOGISTICS CALL RESULT ===> {}", logPram);
 
-	  if(!"000".equals(logPram.get("p1"))) {
-		  throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + logPram.get("p1")+ ":" + "HS Result Error");
-	  }
-	  // KR-OHK Serial check add end
+      if (!"000".equals(logPram.get("p1"))) {
+        throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + logPram.get("p1") + ":" + "HS Result Error");
+      }
+      // KR-OHK Serial check add end
 
       logPram.put("P_RESULT_TYPE", "HS");
       logPram.put("P_RESULT_MSG", logPram.get("p1"));
     }
 
     /*
-     * else if(Integer.parseInt(params.get("cmbStatusType").toString()) == 21){ // Failed
+     * else if(Integer.parseInt(params.get("cmbStatusType").toString()) == 21){
+     * // Failed
      *
      * /////////////////////////물류 호출////////////////////// logPram =new
      * HashMap<String, Object>(); logPram.put("ORD_ID", LOG_SVC0008D_NO );
@@ -653,16 +651,17 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     Map<String, Object> resultValue = new HashMap<String, Object>();
     resultValue.put("resultId", params.get("hidSalesOrdCd"));
     resultValue.put("spMap", logPram);
-    resultValue.put("hsrNo", insertHsResultfinal.get("docNo")); // KR-OHK Serial Check add
+    resultValue.put("hsrNo", insertHsResultfinal.get("docNo")); // KR-OHK Serial
+                                                                // Check add
 
     if ("API".equals(CommonUtils.nvl(params.get("stage")).toString())) { // MOBILE
-      params.put("selSchdulId",CommonUtils.nvl(params.get("hidschdulId")).toString());
+      params.put("selSchdulId", CommonUtils.nvl(params.get("hidschdulId")).toString());
       EgovMap useFilterList = hsManualMapper.getBSFilterInfo(params);
 
-      // INSERT AS ENTRY FOR OMBAK  -- TPY
-      if(useFilterList != null){
+      // INSERT AS ENTRY FOR OMBAK -- TPY
+      if (useFilterList != null) {
         String stkId = useFilterList.get("stkId").toString();
-        if(stkId.equals("1428")){  // 1428 - MINERAL FILTER
+        if (stkId.equals("1428")) { // 1428 - MINERAL FILTER
           logger.debug("==================== saveASEntryResult [Start] ========================");
 
           params.put("userId", params.get("hidCodyId").toString());
@@ -676,7 +675,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
           params.put("amt", useFilterList.get("amt").toString());
           params.put("totalAmt", useFilterList.get("totalAmt").toString());
           params.put("no", useFilterList.get("no").toString());
-          logger.debug("saveASEntryResult params :"+ params.toString());
+          logger.debug("saveASEntryResult params :" + params.toString());
 
           Map<String, Object> sm = new HashMap<String, Object>();
           sm = this.saveASEntryResult(params);
@@ -688,7 +687,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
           // INSERT TAX INVOICE FOR OMBAK -- TPY
           logger.debug("==================== saveASTaxInvoice [Start] ========================");
-          logger.debug("saveASTaxInvoice params :"+ params.toString());
+          logger.debug("saveASTaxInvoice params :" + params.toString());
           Map<String, Object> pb = new HashMap<String, Object>();
           pb = this.saveASTaxInvoice(params);
 
@@ -894,7 +893,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       sal0090.put("faucetExch", hsBasicmap.get("faucetExch"));
       // sal0090.put("SrvUpdateAt", SYSDATE);
 
-      //hsManualMapper.updateHsSVC0006D(sal0090);
+      // hsManualMapper.updateHsSVC0006D(sal0090);
       cnt = hsManualMapper.updateHsConfigBasic(sal0090);
 
       // SrvConfigSetting --> Installation : 281
@@ -1152,7 +1151,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
   @Override
   @Transactional
-  public String UpdateIsReturn(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws ParseException {
+  public String UpdateIsReturn(Map<String, Object> params, List<Object> docType, SessionVO sessionVO)
+      throws ParseException {
     logger.debug("============================UpdateIsReturn - START =================================");
     for (int i = 0; i < docType.size(); i++) {
       Map<String, Object> docSub = (Map<String, Object>) docType.get(i);
@@ -1180,7 +1180,6 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     logger.debug("============================UpdateIsReturn - END =================================");
     return "";
   }
-
 
   @Override
   @Transactional
@@ -1706,20 +1705,22 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
   }
 
   /**
- * TO-DO HS Edit Save-Serial version = UpdateHsResult2 + UpdateIsReturn
- * @Author KR-MIN
- * @Date 2019. 12. 31.
- * @param params
- * @param docType
- * @param sessionVO
- * @return
- * @throws ParseException
- * @see com.coway.trust.biz.services.bs.HsManualService#UpdateHsResult2Serial(java.util.Map, java.util.List, com.coway.trust.cmmn.model.SessionVO)
- */
-@Override
+   * TO-DO HS Edit Save-Serial version = UpdateHsResult2 + UpdateIsReturn
+   *
+   * @Author KR-MIN
+   * @Date 2019. 12. 31.
+   * @param params
+   * @param docType
+   * @param sessionVO
+   * @return
+   * @throws ParseException
+   * @see com.coway.trust.biz.services.bs.HsManualService#UpdateHsResult2Serial(java.util.Map,
+   *      java.util.List, com.coway.trust.cmmn.model.SessionVO)
+   */
+  @Override
   @Transactional
-  public Map<String, Object> UpdateHsResult2Serial(Map<String, Object> params, List<Object> docType, SessionVO sessionVO, List<Object> updList)
-      throws ParseException {
+  public Map<String, Object> UpdateHsResult2Serial(Map<String, Object> params, List<Object> docType,
+      SessionVO sessionVO, List<Object> updList) throws ParseException {
 
     Map<String, Object> resultValue = new HashMap<String, Object>();
 
@@ -1855,28 +1856,28 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     logger.debug("qryBS_Rev : {}" + qryBS_Rev);
 
     if (qryBS_Rev != null) {
-    	// KR-OHK Barcode Save Rerverse Start
-        Map<String, Object> setmap= new HashMap();
-        setmap.put("serialNo", qryBS_Rev.get("lastSerialNo"));
-        setmap.put("salesOrdId", qryBS_Rev.get("salesOrdId"));
-        setmap.put("reqstNo", qryBS_Rev.get("no"));
-        setmap.put("callGbn", "HS_REVERSE");
-        setmap.put("mobileYn", "N");
-        setmap.put("userId", sessionVO.getUserId());
+      // KR-OHK Barcode Save Rerverse Start
+      Map<String, Object> setmap = new HashMap();
+      setmap.put("serialNo", qryBS_Rev.get("lastSerialNo"));
+      setmap.put("salesOrdId", qryBS_Rev.get("salesOrdId"));
+      setmap.put("reqstNo", qryBS_Rev.get("no"));
+      setmap.put("callGbn", "HS_REVERSE");
+      setmap.put("mobileYn", "N");
+      setmap.put("userId", sessionVO.getUserId());
 
-        servicesLogisticsPFCMapper.SP_SVC_BARCODE_SAVE(setmap);
+      servicesLogisticsPFCMapper.SP_SVC_BARCODE_SAVE(setmap);
 
-        String errCode = (String)setmap.get("pErrcode");
-        String errMsg = (String)setmap.get("pErrmsg");
+      String errCode = (String) setmap.get("pErrcode");
+      String errMsg = (String) setmap.get("pErrmsg");
 
-        logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE HS_REVERSE ERROR CODE : " + errCode);
-        logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE HS_REVERSE ERROR MSG: " + errMsg);
+      logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE HS_REVERSE ERROR CODE : " + errCode);
+      logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE HS_REVERSE ERROR MSG: " + errMsg);
 
-        // pErrcode : 000  = Success, others = Fail
-        if(!"000".equals(errCode)){
-            throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
-        }
-        // KR-OHK Barcode Save Rerverse End
+      // pErrcode : 000 = Success, others = Fail
+      if (!"000".equals(errCode)) {
+        throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+      }
+      // KR-OHK Barcode Save Rerverse End
 
       int BSResultM_resultID = hsManualMapper.getBSResultM_resultID();
       bsResultMas_Rev.put("ResultID", BSResultM_resultID); // sequence
@@ -1986,9 +1987,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
         servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE_SERIAL(logPram);
         logger.debug("ASManagementListServiceImpl.asResult_update  in  CENCAL 물류 차감 결과   ===>" + logPram.toString());
 
-        if(!"000".equals(logPram.get("p1"))) {
-    	    throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + logPram.get("p1")+ ":" + "AS EDIT Result Error");
-    	}
+        if (!"000".equals(logPram.get("p1"))) {
+          throw new ApplicationException(AppConstants.FAIL,
+              "[ERROR]" + logPram.get("p1") + ":" + "AS EDIT Result Error");
+        }
       }
 
       EgovMap qry_stkReqM = null;
@@ -2181,9 +2183,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
       logger.debug("HSCOMCALL 물류 호출 결과 ===> {}", logPram2);
 
-      if(!"000".equals(logPram2.get("p1"))) {
-		  throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + logPram2.get("p1")+ ":" + "HS Edit Result Error");
-	  }
+      if (!"000".equals(logPram2.get("p1"))) {
+        throw new ApplicationException(AppConstants.FAIL,
+            "[ERROR]" + logPram2.get("p1") + ":" + "HS Edit Result Error");
+      }
 
       hsManualMapper.updateQryConfig(bsResultMas);
       Map<String, Object> qryConfig = new HashMap<String, Object>();
@@ -2271,13 +2274,11 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
     }
 
-
     if (updList != null) {
-        UpdateIsReturn(params, updList, sessionVO);
-      }
+      UpdateIsReturn(params, updList, sessionVO);
+    }
 
-
- // KR-OHK Barcode Save Start
+    // KR-OHK Barcode Save Start
     Map<String, Object> setmapEdit = new HashMap();
     setmapEdit.put("serialNo", params.get("stockSerialNo"));
     setmapEdit.put("salesOrdId", params.get("hidSalesOrdId"));
@@ -2288,21 +2289,20 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
     servicesLogisticsPFCMapper.SP_SVC_BARCODE_SAVE(setmapEdit);
 
-    String errCodeEdit = (String)setmapEdit.get("pErrcode");
-    String errMsgEdit = (String)setmapEdit.get("pErrmsg");
+    String errCodeEdit = (String) setmapEdit.get("pErrcode");
+    String errMsgEdit = (String) setmapEdit.get("pErrmsg");
 
     logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE HS ERROR CODE : " + errCodeEdit);
     logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE HS ERROR MSG: " + errMsgEdit);
 
-    // pErrcode : 000  = Success, others = Fail
-    if(!"000".equals(errCodeEdit)){
-        throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCodeEdit + ":" + errMsgEdit);
+    // pErrcode : 000 = Success, others = Fail
+    if (!"000".equals(errCodeEdit)) {
+      throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCodeEdit + ":" + errMsgEdit);
     }
     // KR-OHK Barcode Save Start
 
     return resultValue;
   }
-
 
   @Override
   public int isHsAlreadyResult(Map<String, Object> params) {
@@ -2668,464 +2668,477 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     }
   }
 
-  public String reverseHSResult(Map<String, Object> params , SessionVO sessionVO) { // ADDED BY TPY - 18/06/2019
+  public String reverseHSResult(Map<String, Object> params, SessionVO sessionVO) { // ADDED
+                                                                                   // BY
+                                                                                   // TPY
+                                                                                   // -
+                                                                                   // 18/06/2019
 
-	  logger.debug("reverseHSResult - params : "+ params);
+    logger.debug("reverseHSResult - params : " + params);
 
-	  params.put("SalesOrderId",params.get("salesOrdId"));
-	  params.put("ScheduleID",params.get("schdulId"));
+    params.put("SalesOrderId", params.get("salesOrdId"));
+    params.put("ScheduleID", params.get("schdulId"));
 
-	  Map<String, Object> bsResultMas_Rev = new HashMap<String, Object>();
+    Map<String, Object> bsResultMas_Rev = new HashMap<String, Object>();
 
-	    int BS_RESULT = 11;
-	    bsResultMas_Rev.put("doctype", BS_RESULT);
+    int BS_RESULT = 11;
+    bsResultMas_Rev.put("doctype", BS_RESULT);
 
-	    String docNo = null;
-	    docNo = hsManualMapper.GetDocNo(bsResultMas_Rev);
-	    bsResultMas_Rev.put("docNo", docNo);
+    String docNo = null;
+    docNo = hsManualMapper.GetDocNo(bsResultMas_Rev);
+    bsResultMas_Rev.put("docNo", docNo);
 
-	    String BS_RESULT_BSR = "HSR";
+    String BS_RESULT_BSR = "HSR";
 
-	    String nextNo = getNextDocNo(BS_RESULT_BSR, docNo);
+    String nextNo = getNextDocNo(BS_RESULT_BSR, docNo);
 
-	    bsResultMas_Rev.put("ID_New", BS_RESULT);
-	    bsResultMas_Rev.put("nextDocNo_New", nextNo);
-	    hsManualMapper.updateQry_New(bsResultMas_Rev);
-	    // int docNo1 = hsManualMapper.GetDocNo1(bsResultMas_Rev);
+    bsResultMas_Rev.put("ID_New", BS_RESULT);
+    bsResultMas_Rev.put("nextDocNo_New", nextNo);
+    hsManualMapper.updateQry_New(bsResultMas_Rev);
+    // int docNo1 = hsManualMapper.GetDocNo1(bsResultMas_Rev);
 
-	    EgovMap qryBS_Rev = null;
-	    logger.debug("reverseHSResult - params : "+ params);
-	    qryBS_Rev = hsManualMapper.selectQryBS_Rev(params);
-	    logger.debug("qryBS_Rev : {}" + qryBS_Rev);
+    EgovMap qryBS_Rev = null;
+    logger.debug("reverseHSResult - params : " + params);
+    qryBS_Rev = hsManualMapper.selectQryBS_Rev(params);
+    logger.debug("qryBS_Rev : {}" + qryBS_Rev);
 
-	    if (qryBS_Rev != null) {
-	      int BSResultM_resultID = hsManualMapper.getBSResultM_resultID();
-	      bsResultMas_Rev.put("ResultID", BSResultM_resultID); // sequence
-	      bsResultMas_Rev.put("No", String.valueOf(docNo));
-	      bsResultMas_Rev.put("TypeID", String.valueOf("307"));
-	      bsResultMas_Rev.put("ScheduleID", String.valueOf(qryBS_Rev.get("schdulId")));
-	      bsResultMas_Rev.put("SalesOrderId", String.valueOf(qryBS_Rev.get("salesOrdId")));
-	      bsResultMas_Rev.put("CodyID", String.valueOf(qryBS_Rev.get("codyId")));
-	      bsResultMas_Rev.put("SettleDate", String.valueOf(qryBS_Rev.get("setlDt")));
-	      bsResultMas_Rev.put("ResultStatusCodeID", "12");// RESULT_STUS_CODE_ID -- 12 - REOPEN
-	      bsResultMas_Rev.put("FailReasonID", String.valueOf(qryBS_Rev.get("failResnId")));// FAIL_RESN_ID
-	      bsResultMas_Rev.put("RenCollectionID", String.valueOf(qryBS_Rev.get("renColctId")));// REN_COLCT_ID
-	      bsResultMas_Rev.put("WarehouseID", String.valueOf(qryBS_Rev.get("whId")));// WH_ID
-	      bsResultMas_Rev.put("ResultRemark", String.valueOf(qryBS_Rev.get("resultRem") + " HS Reversal - OMBAK"));// RESULT_REM
-	      // bsResultMas_Rev.put("ResultCreated", "sysdate");
-	      bsResultMas_Rev.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
-	      bsResultMas_Rev.put("ResultIsSync", String.valueOf(1));
-	      bsResultMas_Rev.put("ResultIsEdit", String.valueOf(0));
-	      bsResultMas_Rev.put("ResultStockUse", String.valueOf(qryBS_Rev.get("resultStockUse")));// RESULT_STOCK_USE
-	      bsResultMas_Rev.put("ResultIsCurrent", String.valueOf(1));
-	      bsResultMas_Rev.put("ResultMatchID", String.valueOf(qryBS_Rev.get("resultId")));// RESULT_ID
-	      bsResultMas_Rev.put("ResultIsAdjust", String.valueOf(1));
+    if (qryBS_Rev != null) {
+      int BSResultM_resultID = hsManualMapper.getBSResultM_resultID();
+      bsResultMas_Rev.put("ResultID", BSResultM_resultID); // sequence
+      bsResultMas_Rev.put("No", String.valueOf(docNo));
+      bsResultMas_Rev.put("TypeID", String.valueOf("307"));
+      bsResultMas_Rev.put("ScheduleID", String.valueOf(qryBS_Rev.get("schdulId")));
+      bsResultMas_Rev.put("SalesOrderId", String.valueOf(qryBS_Rev.get("salesOrdId")));
+      bsResultMas_Rev.put("CodyID", String.valueOf(qryBS_Rev.get("codyId")));
+      bsResultMas_Rev.put("SettleDate", String.valueOf(qryBS_Rev.get("setlDt")));
+      bsResultMas_Rev.put("ResultStatusCodeID", "12");// RESULT_STUS_CODE_ID --
+                                                      // 12 - REOPEN
+      bsResultMas_Rev.put("FailReasonID", String.valueOf(qryBS_Rev.get("failResnId")));// FAIL_RESN_ID
+      bsResultMas_Rev.put("RenCollectionID", String.valueOf(qryBS_Rev.get("renColctId")));// REN_COLCT_ID
+      bsResultMas_Rev.put("WarehouseID", String.valueOf(qryBS_Rev.get("whId")));// WH_ID
+      bsResultMas_Rev.put("ResultRemark", String.valueOf(qryBS_Rev.get("resultRem") + " HS Reversal - OMBAK"));// RESULT_REM
+      // bsResultMas_Rev.put("ResultCreated", "sysdate");
+      bsResultMas_Rev.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
+      bsResultMas_Rev.put("ResultIsSync", String.valueOf(1));
+      bsResultMas_Rev.put("ResultIsEdit", String.valueOf(0));
+      bsResultMas_Rev.put("ResultStockUse", String.valueOf(qryBS_Rev.get("resultStockUse")));// RESULT_STOCK_USE
+      bsResultMas_Rev.put("ResultIsCurrent", String.valueOf(1));
+      bsResultMas_Rev.put("ResultMatchID", String.valueOf(qryBS_Rev.get("resultId")));// RESULT_ID
+      bsResultMas_Rev.put("ResultIsAdjust", String.valueOf(1));
 
-	      int count = hsManualMapper.selectTotalFilter(bsResultMas_Rev);
-	      logger.debug("selectQryResultDet : {}" + bsResultMas_Rev);
-	      List<EgovMap> qryResultDet = hsManualMapper.selectQryResultDet(bsResultMas_Rev);
-	      List<EgovMap> qryUsedFilter;
-	      if (count == 0) {
-	        qryUsedFilter = hsManualMapper.selectQryUsedFilterNew(bsResultMas_Rev);
+      int count = hsManualMapper.selectTotalFilter(bsResultMas_Rev);
+      logger.debug("selectQryResultDet : {}" + bsResultMas_Rev);
+      List<EgovMap> qryResultDet = hsManualMapper.selectQryResultDet(bsResultMas_Rev);
+      List<EgovMap> qryUsedFilter;
+      if (count == 0) {
+        qryUsedFilter = hsManualMapper.selectQryUsedFilterNew(bsResultMas_Rev);
 
-	      } else {
-	        qryUsedFilter = hsManualMapper.selectQryUsedFilter(bsResultMas_Rev);
+      } else {
+        qryUsedFilter = hsManualMapper.selectQryUsedFilter(bsResultMas_Rev);
 
-	      }
-	      logger.debug("qryResultDet : {}" + qryResultDet);
-	      logger.debug("qryResultDet.size() : {}" + qryResultDet.size());
+      }
+      logger.debug("qryResultDet : {}" + qryResultDet);
+      logger.debug("qryResultDet.size() : {}" + qryResultDet.size());
 
-	      int checkInt = 0;
+      int checkInt = 0;
 
-	      // bsResultDet
-	      Map<String, Object> bsResultDet_Rev = null;
-	      Map<String, Object> usedFilter_Rev = null;
-	      for (int i = 0; i < qryResultDet.size(); i++) {
+      // bsResultDet
+      Map<String, Object> bsResultDet_Rev = null;
+      Map<String, Object> usedFilter_Rev = null;
+      for (int i = 0; i < qryResultDet.size(); i++) {
 
-	        bsResultDet_Rev = new HashMap<String, Object>();
-	        usedFilter_Rev = new HashMap<String, Object>();
-	        // bsResultDet_Rev.put("BSResultItemID", 0);
-	        bsResultDet_Rev.put("BSResultID", BSResultM_resultID);
-	        bsResultDet_Rev.put("BSResultPartID", String.valueOf(qryResultDet.get(i).get("bsResultPartId")));// BS_RESULT_PART_ID
-	        bsResultDet_Rev.put("BSResultPartDesc", CommonUtils.nvl(qryResultDet.get(i).get("bsResultPartDesc")));// BS_RESULT_PART_DESC
-	        if (String.valueOf(qryBS_Rev.get("resultId")) != null && String.valueOf(qryBS_Rev.get("resultId")) != "") {
-	          bsResultDet_Rev.put("BSResultPartQty", CommonUtils.intNvl(qryResultDet.get(i).get("bsResultPartQty")) * -1);// BS_RESULT_PART_QTY
-	          logger.debug("jinmu {}" + String.valueOf(qryBS_Rev.get("resultId")));
-	        } else {
-	          bsResultDet_Rev.put("BSResultPartQty", CommonUtils.intNvl(qryResultDet.get(i).get("bsResultPartQty")));
-	          logger.debug("jinmu111 {}" + String.valueOf(qryBS_Rev.get("resultId")));
-	        }
-	        bsResultDet_Rev.put("BSResultRemark", CommonUtils.nvl(qryResultDet.get(i).get("bsResultRem") + " HS Reversal - OMBAK"));// BS_RESULT_REM
-	        bsResultDet_Rev.put("BSResultCreateAt", "sysdate");// BS_RESULT_REM
-	        bsResultDet_Rev.put("BSResultCreateBy", String.valueOf(sessionVO.getUserId()));
-	        bsResultDet_Rev.put("BSResultFilterClaim", CommonUtils.intNvl(qryResultDet.get(i).get("bsResultFilterClm")));// BS_RESULT_FILTER_CLM
+        bsResultDet_Rev = new HashMap<String, Object>();
+        usedFilter_Rev = new HashMap<String, Object>();
+        // bsResultDet_Rev.put("BSResultItemID", 0);
+        bsResultDet_Rev.put("BSResultID", BSResultM_resultID);
+        bsResultDet_Rev.put("BSResultPartID", String.valueOf(qryResultDet.get(i).get("bsResultPartId")));// BS_RESULT_PART_ID
+        bsResultDet_Rev.put("BSResultPartDesc", CommonUtils.nvl(qryResultDet.get(i).get("bsResultPartDesc")));// BS_RESULT_PART_DESC
+        if (String.valueOf(qryBS_Rev.get("resultId")) != null && String.valueOf(qryBS_Rev.get("resultId")) != "") {
+          bsResultDet_Rev.put("BSResultPartQty", CommonUtils.intNvl(qryResultDet.get(i).get("bsResultPartQty")) * -1);// BS_RESULT_PART_QTY
+          logger.debug("jinmu {}" + String.valueOf(qryBS_Rev.get("resultId")));
+        } else {
+          bsResultDet_Rev.put("BSResultPartQty", CommonUtils.intNvl(qryResultDet.get(i).get("bsResultPartQty")));
+          logger.debug("jinmu111 {}" + String.valueOf(qryBS_Rev.get("resultId")));
+        }
+        bsResultDet_Rev.put("BSResultRemark",
+            CommonUtils.nvl(qryResultDet.get(i).get("bsResultRem") + " HS Reversal - OMBAK"));// BS_RESULT_REM
+        bsResultDet_Rev.put("BSResultCreateAt", "sysdate");// BS_RESULT_REM
+        bsResultDet_Rev.put("BSResultCreateBy", String.valueOf(sessionVO.getUserId()));
+        bsResultDet_Rev.put("BSResultFilterClaim", CommonUtils.intNvl(qryResultDet.get(i).get("bsResultFilterClm")));// BS_RESULT_FILTER_CLM
 
-	        usedFilter_Rev.put("HSNo", String.valueOf(qryUsedFilter.get(i).get("no")));
-	        usedFilter_Rev.put("CustId", CommonUtils.intNvl(qryUsedFilter.get(i).get("custId")));
-	        usedFilter_Rev.put("CreatedDt", String.valueOf(qryUsedFilter.get(i).get("resultCrtDt")));
-	        usedFilter_Rev.put("PartId", CommonUtils.intNvl(qryUsedFilter.get(i).get("bsResultPartId")));
-	        if (String.valueOf(qryBS_Rev.get("resultId")) != null && String.valueOf(qryBS_Rev.get("resultId")) != "") {
-	          usedFilter_Rev.put("PartQty", CommonUtils.intNvl(qryUsedFilter.get(i).get("bsResultPartQty")) * -1);// BS_RESULT_PART_QTY
+        usedFilter_Rev.put("HSNo", String.valueOf(qryUsedFilter.get(i).get("no")));
+        usedFilter_Rev.put("CustId", CommonUtils.intNvl(qryUsedFilter.get(i).get("custId")));
+        usedFilter_Rev.put("CreatedDt", String.valueOf(qryUsedFilter.get(i).get("resultCrtDt")));
+        usedFilter_Rev.put("PartId", CommonUtils.intNvl(qryUsedFilter.get(i).get("bsResultPartId")));
+        if (String.valueOf(qryBS_Rev.get("resultId")) != null && String.valueOf(qryBS_Rev.get("resultId")) != "") {
+          usedFilter_Rev.put("PartQty", CommonUtils.intNvl(qryUsedFilter.get(i).get("bsResultPartQty")) * -1);// BS_RESULT_PART_QTY
 
-	        } else {
-	          usedFilter_Rev.put("PartQty", CommonUtils.intNvl(qryUsedFilter.get(i).get("bsResultPartQty")));
+        } else {
+          usedFilter_Rev.put("PartQty", CommonUtils.intNvl(qryUsedFilter.get(i).get("bsResultPartQty")));
 
-	        }
-	        usedFilter_Rev.put("SerialNo", String.valueOf(qryUsedFilter.get(i).get("serialNo")));
-	        usedFilter_Rev.put("CodyId", CommonUtils.intNvl(qryUsedFilter.get(i).get("codyId")));
-	        usedFilter_Rev.put("ResultId", CommonUtils.intNvl(qryUsedFilter.get(i).get("resultId")));
-	        if (CommonUtils.intNvl(qryResultDet.get(i).get("bsResultPartQty")) > 0) {
-	          hsManualMapper.addbsResultDet_Rev(bsResultDet_Rev); // insert svc0007d
+        }
+        usedFilter_Rev.put("SerialNo", String.valueOf(qryUsedFilter.get(i).get("serialNo")));
+        usedFilter_Rev.put("CodyId", CommonUtils.intNvl(qryUsedFilter.get(i).get("codyId")));
+        usedFilter_Rev.put("ResultId", CommonUtils.intNvl(qryUsedFilter.get(i).get("resultId")));
+        if (CommonUtils.intNvl(qryResultDet.get(i).get("bsResultPartQty")) > 0) {
+          hsManualMapper.addbsResultDet_Rev(bsResultDet_Rev); // insert svc0007d
 
-	          hsManualMapper.addusedFilter_Rev(usedFilter_Rev); // insert log0082m
+          hsManualMapper.addusedFilter_Rev(usedFilter_Rev); // insert log0082m
 
-	          checkInt++;
-	          if (i == (qryResultDet.size() - 1)) { // 마지막일때 넘기기
+          checkInt++;
+          if (i == (qryResultDet.size() - 1)) { // 마지막일때 넘기기
 
-	          }
-	        }
-	      }
+          }
+        }
+      }
 
-	      if (checkInt > 0) {
-	        hsManualMapper.addbsResultMas_Rev(bsResultMas_Rev); // insert svc0006d
-	        logger.debug("reverse JM" + String.valueOf(bsResultDet_Rev.get("BSResultID")));
-	        // 물류 프로시져 호출
-	        Map<String, Object> logPram = null;
-	        logPram = new HashMap<String, Object>();
-	        logPram.put("ORD_ID", String.valueOf(bsResultDet_Rev.get("BSResultID")));
-	        logPram.put("RETYPE", "RETYPE");
-	        logPram.put("P_TYPE", "OD06");
-	        logPram.put("P_PRGNM", "HSCEN");
-	        logPram.put("USERID", String.valueOf(sessionVO.getUserId()));
+      if (checkInt > 0) {
+        hsManualMapper.addbsResultMas_Rev(bsResultMas_Rev); // insert svc0006d
+        logger.debug("reverse JM" + String.valueOf(bsResultDet_Rev.get("BSResultID")));
+        // 물류 프로시져 호출
+        Map<String, Object> logPram = null;
+        logPram = new HashMap<String, Object>();
+        logPram.put("ORD_ID", String.valueOf(bsResultDet_Rev.get("BSResultID")));
+        logPram.put("RETYPE", "RETYPE");
+        logPram.put("P_TYPE", "OD06");
+        logPram.put("P_PRGNM", "HSCEN");
+        logPram.put("USERID", String.valueOf(sessionVO.getUserId()));
 
-	        logger.debug("HS Reversal Start ===>" + logPram.toString());
+        logger.debug("HS Reversal Start ===>" + logPram.toString());
 
-	        // KR-OHK Serial check add start
-	        if("Y".equals(params.get("serialRequireChkYn"))) {
-	        	servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE_SERIAL(logPram);
-	        } else {
-	        	servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE(logPram);
-	        }
-	        logger.debug("HS Reversal End  ===>" + logPram.toString());
+        // KR-OHK Serial check add start
+        if ("Y".equals(params.get("serialRequireChkYn"))) {
+          servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE_SERIAL(logPram);
+        } else {
+          servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE(logPram);
+        }
+        logger.debug("HS Reversal End  ===>" + logPram.toString());
 
-	        if(!"000".equals(logPram.get("p1"))) {
-    		    throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + logPram.get("p1")+ ":" + "HS REVERSE Result Error");
-    		}
-    		// KR-OHK Serial check add end
-	      }
-	      Map<String, Object> bsResultMas = new HashMap<String, Object>();
-	      bsResultMas.put("ScheduleID", String.valueOf(qryBS_Rev.get("schdulId")));
-	      bsResultMas.put("CodyID", String.valueOf(qryBS_Rev.get("codyId")));
-	      bsResultMas.put("ResultStatusCodeID", "1");
+        if (!"000".equals(logPram.get("p1"))) {
+          throw new ApplicationException(AppConstants.FAIL,
+              "[ERROR]" + logPram.get("p1") + ":" + "HS REVERSE Result Error");
+        }
+        // KR-OHK Serial check add end
+      }
+      Map<String, Object> bsResultMas = new HashMap<String, Object>();
+      bsResultMas.put("ScheduleID", String.valueOf(qryBS_Rev.get("schdulId")));
+      bsResultMas.put("CodyID", String.valueOf(qryBS_Rev.get("codyId")));
+      bsResultMas.put("ResultStatusCodeID", "1");
 
-	      hsManualMapper.updateHsResultMas(bsResultMas_Rev); // update svc0006d
-	      hsManualMapper.updateQrySchedule(bsResultMas);// 업데이트 00008d
+      hsManualMapper.updateHsResultMas(bsResultMas_Rev); // update svc0006d
+      hsManualMapper.updateQrySchedule(bsResultMas);// 업데이트 00008d
 
-	    }
-	    return docNo;
+    }
+    return docNo;
   }
 
+  public String createCreditNote(Map<String, Object> params, SessionVO sessionVO) { // ADDED
+                                                                                    // BY
+                                                                                    // TPY
+                                                                                    // -
+                                                                                    // 18/06/2019
+    int memoAdjustmentId = invoiceMapper.getAdjustmentId();
+    String reportNo = commonMapper.selectDocNo("18");
+    String adjustmentNo = "";
+    adjustmentNo = commonMapper.selectDocNo("134");
 
+    Map<String, Object> masterParamMap = null;
+    masterParamMap = new HashMap<String, Object>();
 
-public String createCreditNote(Map<String, Object> params , SessionVO sessionVO) { // ADDED BY TPY - 18/06/2019
-		int memoAdjustmentId = invoiceMapper.getAdjustmentId();
-		String reportNo = commonMapper.selectDocNo("18");
-		String adjustmentNo = "";
-		adjustmentNo = commonMapper.selectDocNo("134");
+    // 마스터 정보 등록
+    masterParamMap.put("memoAdjustTypeID", 1293);
+    masterParamMap.put("memoAdjustInvoiceNo", params.get("memoAdjustInvoiceNo").toString());
+    masterParamMap.put("memoAdjustInvoiceTypeID", 128); // Coway Misc Invoice
+    masterParamMap.put("memoAdjustStatusID", 4);
+    masterParamMap.put("memoAdjustReasonID", 2038); // Invoice (Reversal)
+    masterParamMap.put("memoAdjustRemark", "HS REVERSAL - OMBAK");
+    masterParamMap.put("memoAdjustCreator", sessionVO.getUserId());
+    masterParamMap.put("batchId", 0);
+    masterParamMap.put("memoAdjustId", CommonUtils.intNvl(memoAdjustmentId));
+    masterParamMap.put("memoAdjustRefNo", adjustmentNo);
+    masterParamMap.put("memoAdjustReportNo", reportNo);
+    masterParamMap.put("memoAdjustTaxesAmount", 0);
+    masterParamMap.put("memoAdjustTotalAmount", params.get("memoAdjustTotalAmount").toString());
 
-		 Map<String, Object> masterParamMap = null;
-		 masterParamMap = new HashMap<String, Object>();
+    params.put("memoAdjustId", CommonUtils.intNvl(memoAdjustmentId));
 
-		//마스터 정보 등록
-		masterParamMap.put("memoAdjustTypeID", 1293);
-		masterParamMap.put("memoAdjustInvoiceNo", params.get("memoAdjustInvoiceNo").toString());
-		masterParamMap.put("memoAdjustInvoiceTypeID",128); // Coway Misc Invoice
-		masterParamMap.put("memoAdjustStatusID", 4);
-		masterParamMap.put("memoAdjustReasonID",2038); // Invoice (Reversal)
-		masterParamMap.put("memoAdjustRemark", "HS REVERSAL - OMBAK");
-		masterParamMap.put("memoAdjustCreator", sessionVO.getUserId());
-		masterParamMap.put("batchId", 0);
-		masterParamMap.put("memoAdjustId", CommonUtils.intNvl(memoAdjustmentId));
-		masterParamMap.put("memoAdjustRefNo", adjustmentNo);
-		masterParamMap.put("memoAdjustReportNo", reportNo);
-		masterParamMap.put("memoAdjustTaxesAmount", 0);
-		masterParamMap.put("memoAdjustTotalAmount", params.get("memoAdjustTotalAmount").toString());
+    logger.debug("Create Credit Note Start  ===>" + params);
 
-    	params.put("memoAdjustId", CommonUtils.intNvl(memoAdjustmentId));
+    invoiceMapper.saveNewAdjMaster(masterParamMap); // PAY0011D
 
-    	logger.debug("Create Credit Note Start  ===>" + params);
+    invoiceMapper.saveNewAdjDetail(params);// PAY0012D
 
-		invoiceMapper.saveNewAdjMaster(masterParamMap); //PAY0011D
+    invoiceMapper.saveNewAdjHist(masterParamMap); // PAY0122D
 
-    	invoiceMapper.saveNewAdjDetail(params);// PAY0012D
+    params.put("adjId", memoAdjustmentId);
 
-    	invoiceMapper.saveNewAdjHist(masterParamMap); //PAY0122D
+    int noteId = invoiceMapper.getNoteId();
+    EgovMap masterData = invoiceMapper.selectAdjMasterForApprovalMisc(params);
 
-    	params.put("adjId",memoAdjustmentId );
+    masterData.put("noteId", noteId);
+    masterData.put("noteTypeId", 1293); // Credit Note
+    masterData.put("userId", params.get("userId"));
 
-    	int noteId = invoiceMapper.getNoteId();
-		EgovMap masterData = invoiceMapper.selectAdjMasterForApprovalMisc(params);
+    // 마스터 정보 등록(PAY0027D)
+    invoiceMapper.insertAccTaxDebitCreditNote(masterData);
 
-		masterData.put("noteId", noteId);
-		masterData.put("noteTypeId",1293); // Credit Note
-		masterData.put("userId", params.get("userId"));
+    List<EgovMap> detailDataList = invoiceMapper.selectAdjDetailsForApprovalMisc(params);
+    HashMap<String, Object> ledgerMap = null;
 
-		//마스터 정보 등록(PAY0027D)
-		invoiceMapper.insertAccTaxDebitCreditNote(masterData);
+    for (EgovMap obj : detailDataList) {
+      // 상세 정보 등록(PAY0028D)
+      obj.put("noteId", noteId);
+      invoiceMapper.insertAccTaxDebitCreditNoteSub(obj);
 
-		List<EgovMap> detailDataList = invoiceMapper.selectAdjDetailsForApprovalMisc(params);
-		HashMap<String, Object> ledgerMap = null;
+      if ("459".equals(String.valueOf(obj.get("noteItmTypeId")))) { // AS Change
+                                                                    // Filter
+        // AS
+        ledgerMap = new HashMap<String, Object>();
+        ledgerMap.put("asDocNo", masterData.get("noteRefNo"));
+        ledgerMap.put("asLgDocTypeId", 155); // Credit Notes
+        ledgerMap.put("asLgAmt", Double.parseDouble(String.valueOf(obj.get("noteItmDueAmt"))) * -1.0);
+        ledgerMap.put("asSoNo", obj.get("noteItmOrdNo"));
+        ledgerMap.put("asSoId", obj.get("noteItmOrdId"));
+        ledgerMap.put("asResultNo", masterData.get("noteGrpNo"));
+        ledgerMap.put("asLgUpdUserId", sessionVO.getUserId());
+        ledgerMap.put("asLgDt", new Date());
+        ledgerMap.put("asLgUpdDt", new Date());
+        ledgerMap.put("asAdvPay", "0");
+        ledgerMap.put("r01", "0");
 
-		for (EgovMap obj : detailDataList) {
-			//상세 정보 등록(PAY0028D)
-			obj.put("noteId", noteId);
-			invoiceMapper.insertAccTaxDebitCreditNoteSub(obj);
+        // AS ledger 등록(PAY0006D)
+        hsManualMapper.insert_Pay0006d(ledgerMap);
 
-			if("459".equals(String.valueOf(obj.get("noteItmTypeId")))){ // AS Change Filter
-				//AS
-				ledgerMap = new HashMap<String, Object>();
-				ledgerMap.put("asDocNo", masterData.get("noteRefNo"));
-				ledgerMap.put("asLgDocTypeId", 155); // Credit Notes
-				ledgerMap.put("asLgAmt", Double.parseDouble(String.valueOf(obj.get("noteItmDueAmt")))  * -1.0  );
-				ledgerMap.put("asSoNo", obj.get("noteItmOrdNo"));
-				ledgerMap.put("asSoId", obj.get("noteItmOrdId"));
-				ledgerMap.put("asResultNo", masterData.get("noteGrpNo"));
-				ledgerMap.put("asLgUpdUserId", sessionVO.getUserId());
-				ledgerMap.put("asLgDt", new Date());
-				ledgerMap.put("asLgUpdDt", new Date());
-				ledgerMap.put("asAdvPay", "0");
-				ledgerMap.put("r01", "0");
+      }
+    }
+    logger.debug("Create Credit Note End  ===>" + params);
 
-				//AS ledger 등록(PAY0006D)
-				hsManualMapper.insert_Pay0006d(ledgerMap);
-
-			}
-		}
-		logger.debug("Create Credit Note End  ===>" + params);
-
-  return adjustmentNo + " / " + reportNo;
+    return adjustmentNo + " / " + reportNo;
   }
 
+  public String createASResults(Map<String, Object> params, SessionVO sessionVO) { // ADDED
+                                                                                   // BY
+                                                                                   // TPY
+                                                                                   // -
+                                                                                   // 18/06/2019
+    // AS RESULT -- SVC0004D
+    Map<String, Object> params2 = null;
+    params2 = new HashMap<String, Object>();
 
-  public String createASResults(Map<String, Object> params , SessionVO sessionVO) { // ADDED BY TPY - 18/06/2019
-	  // AS RESULT -- SVC0004D
-	    Map<String, Object> params2 = null;
-	    params2 = new HashMap<String, Object>();
+    params2.put("DOCNO", "21");
+    EgovMap seqMap2 = hsManualMapper.getResultASEntryId(params2);
+    EgovMap eMap2 = hsManualMapper.getASEntryDocNo(params2);
 
-	    params2.put("DOCNO", "21");
-	    EgovMap seqMap2 = hsManualMapper.getResultASEntryId(params2);
-	    EgovMap eMap2 = hsManualMapper.getASEntryDocNo(params2);
+    String AS_RESULT_NO = String.valueOf(eMap2.get("asno"));
+    String AS_RESULT_ID = String.valueOf(seqMap2.get("seq"));
 
-	    String AS_RESULT_NO = String.valueOf(eMap2.get("asno"));
-	    String AS_RESULT_ID = String.valueOf(seqMap2.get("seq"));
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
+    params2.put("AS_RESULT_ID", AS_RESULT_ID);
+    params2.put("AS_RESULT_NO", AS_RESULT_NO);
+    params2.put("AS_ENTRY_ID", params.get("asId").toString());
+    params2.put("AS_SO_ID", params.get("salesOrdId").toString());
+    params2.put("AS_CT_ID", "0");
+    params2.put("AS_SETL_DT", toDay);
+    params2.put("AS_SETL_TM", "0");
+    params2.put("AS_RESULT_STUS_ID", "4");
+    params2.put("AS_BRNCH_ID", "0");
+    params2.put("AS_RESULT_REM", "HS REVERSAL - OMBAK");
 
-	    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+    // params2.put("AS_RESULT_CRT_DT", "");
+    params2.put("updator", sessionVO.getUserId());
+    params2.put("AS_MALFUNC_ID", "9001700"); // GENERAL REQUEST
+    params2.put("AS_MALFUNC_RESN_ID", "5"); // AS DURING INSTALLATION
+    params2.put("AS_FILTER_AMT", CommonUtils.intNvl(params.get("invcItmChrg")) * -1);
+    params2.put("AS_TOT_AMT", CommonUtils.intNvl(params.get("invcItmChrg")) * -1);
+    params2.put("AS_RESULT_TYPE_ID", "457"); // AFTER SERVICE
+    params2.put("AS_RESULT_UPD_DT", "");
+    params2.put("AS_RESULT_UPD_USER_ID", "");
+    params2.put("AS_DEFECT_TYPE_ID", "1103"); // DT5 - SERVICE MAINTANENCE
+    params2.put("AS_DEFECT_ID", "662"); // I5 - OPERATING NORMALLY
+    params2.put("AS_DEFECT_PART_ID", "1253"); // AI17 - LEAD ADAPTOR
+    params2.put("AS_DEFECT_DTL_RESN_ID", "514"); // 11 - NO FILTER / PART CHANGE
+    params2.put("AS_SLUTN_RESN_ID", "439"); // A2 - UPGRADE : UF , BOOSTER PUMP
+                                            // , OPTIONAL
+    params2.put("AS_RESULT_IS_CURR", "1");
+    params2.put("AS_RESULT_MTCH_ID", "0");
+    params2.put("AS_RESULT_NO_ERR", "");
+    params2.put("AS_RESULT_MOBILE_ID", "");
+    params2.put("APPNT_DT", "");
+    params2.put("APPNT_TM", "");
+    params2.put("IN_HUSE_REPAIR_REM", "");
+    params2.put("IN_HUSE_REPAIR_REPLACE_YN", "");
+    params2.put("IN_HUSE_REPAIR_PROMIS_DT", "");
+    params2.put("IN_HUSE_REPAIR_GRP_CODE", "");
+    params2.put("IN_HUSE_REPAIR_PRODUCT_CODE", "");
+    params2.put("IN_HUSE_REPAIR_SERIAL_NO", "");
+    params2.put("RESULT_CUST_NAME", "");
+    params2.put("RESULT_MOBILE_NO", "");
+    params2.put("RESULT_REP_EMAIL_NO", "");
+    params2.put("RESULT_ACEPT_NAME", "");
+    params2.put("SGN_DT", "");
+    params2.put("TRNSC_ID", "");
+    params2.put("NO", "");
 
-	    params2.put("AS_RESULT_ID", AS_RESULT_ID);
-	    params2.put("AS_RESULT_NO", AS_RESULT_NO);
-	    params2.put("AS_ENTRY_ID", params.get("asId").toString());
-	    params2.put("AS_SO_ID", params.get("salesOrdId").toString());
-	    params2.put("AS_CT_ID", "0");
-	    params2.put("AS_SETL_DT", toDay);
-	    params2.put("AS_SETL_TM", "0");
-	    params2.put("AS_RESULT_STUS_ID", "4");
-	    params2.put("AS_BRNCH_ID", "0");
-	    params2.put("AS_RESULT_REM", "HS REVERSAL - OMBAK");
+    // AS FILTER USE -- SVC0005D
+    Map<String, Object> params3 = null;
+    params3 = new HashMap<String, Object>();
+    params3.put("AS_RESULT_ID", AS_RESULT_ID);
+    params3.put("ASR_ITM_PART_ID", params.get("bsResultPartId").toString());
+    params3.put("ASR_ITM_PART_DESC", params.get("invcItmDesc1").toString());
+    params3.put("ASR_ITM_PART_QTY", params.get("memoItemInvoiceItmQty").toString());
+    params3.put("ASR_ITM_PART_PRC", CommonUtils.intNvl(params.get("invcItmChrg")) * -1);
+    params3.put("ASR_ITM_CHRG_AMT", CommonUtils.intNvl(params.get("invcItmChrg")) * -1);
+    params3.put("ASR_ITM_REM", "HS REVERSAL - OMBAK");
+    params3.put("ASR_ITM_CRT_USER_ID", sessionVO.getUserId());
+    // params3.put("ASR_ITM_CRT_DT", "");
+    params3.put("ASR_ITM_EXCHG_ID", "0");
+    params3.put("ASR_ITM_CHRG_FOC", "0");
+    params3.put("ASR_ITM_CLM", "0");
+    params3.put("ASR_ITM_TAX_CODE_ID", "0");
+    params3.put("ASR_ITM_TXS_AMT", "0");
 
-	    // params2.put("AS_RESULT_CRT_DT", "");
-	    params2.put("updator", sessionVO.getUserId());
-	    params2.put("AS_MALFUNC_ID", "9001700"); // GENERAL REQUEST
-	    params2.put("AS_MALFUNC_RESN_ID", "5"); // AS DURING INSTALLATION
-	    params2.put("AS_FILTER_AMT", CommonUtils.intNvl(params.get("invcItmChrg")) * -1);
-	    params2.put("AS_TOT_AMT", CommonUtils.intNvl(params.get("invcItmChrg")) * -1) ;
-	    params2.put("AS_RESULT_TYPE_ID", "457"); // AFTER SERVICE
-	    params2.put("AS_RESULT_UPD_DT", "");
-	    params2.put("AS_RESULT_UPD_USER_ID", "");
-	    params2.put("AS_DEFECT_TYPE_ID", "1103"); // DT5 - SERVICE MAINTANENCE
-	    params2.put("AS_DEFECT_ID", "662"); // I5 - OPERATING NORMALLY
-	    params2.put("AS_DEFECT_PART_ID", "1253"); // AI17 - LEAD ADAPTOR
-	    params2.put("AS_DEFECT_DTL_RESN_ID", "514"); // 11 - NO FILTER / PART CHANGE
-	    params2.put("AS_SLUTN_RESN_ID", "439"); // A2 - UPGRADE : UF , BOOSTER PUMP
-	                                            // , OPTIONAL
-	    params2.put("AS_RESULT_IS_CURR", "1");
-	    params2.put("AS_RESULT_MTCH_ID", "0");
-	    params2.put("AS_RESULT_NO_ERR", "");
-	    params2.put("AS_RESULT_MOBILE_ID", "");
-	    params2.put("APPNT_DT", "");
-	    params2.put("APPNT_TM", "");
-	    params2.put("IN_HUSE_REPAIR_REM", "");
-	    params2.put("IN_HUSE_REPAIR_REPLACE_YN", "");
-	    params2.put("IN_HUSE_REPAIR_PROMIS_DT", "");
-	    params2.put("IN_HUSE_REPAIR_GRP_CODE", "");
-	    params2.put("IN_HUSE_REPAIR_PRODUCT_CODE", "");
-	    params2.put("IN_HUSE_REPAIR_SERIAL_NO", "");
-	    params2.put("RESULT_CUST_NAME", "");
-	    params2.put("RESULT_MOBILE_NO", "");
-	    params2.put("RESULT_REP_EMAIL_NO", "");
-	    params2.put("RESULT_ACEPT_NAME", "");
-	    params2.put("SGN_DT", "");
-	    params2.put("TRNSC_ID", "");
-	    params2.put("NO", "" );
+    // AS RESULT - SVC0004D WITH 0 AMOUNT
 
-	    // AS FILTER USE -- SVC0005D
-	    Map<String, Object> params3 = null;
-	    params3 = new HashMap<String, Object>();
-	    params3.put("AS_RESULT_ID", AS_RESULT_ID);
-	    params3.put("ASR_ITM_PART_ID", params.get("bsResultPartId").toString());
-	    params3.put("ASR_ITM_PART_DESC", params.get("invcItmDesc1").toString());
-	    params3.put("ASR_ITM_PART_QTY", params.get("memoItemInvoiceItmQty").toString());
-	    params3.put("ASR_ITM_PART_PRC", CommonUtils.intNvl(params.get("invcItmChrg")) * -1);
-	    params3.put("ASR_ITM_CHRG_AMT", CommonUtils.intNvl(params.get("invcItmChrg")) * -1);
-	    params3.put("ASR_ITM_REM", "HS REVERSAL - OMBAK");
-	    params3.put("ASR_ITM_CRT_USER_ID", sessionVO.getUserId());
-	    // params3.put("ASR_ITM_CRT_DT", "");
-	    params3.put("ASR_ITM_EXCHG_ID", "0");
-	    params3.put("ASR_ITM_CHRG_FOC", "0");
-	    params3.put("ASR_ITM_CLM", "0");
-	    params3.put("ASR_ITM_TAX_CODE_ID", "0");
-	    params3.put("ASR_ITM_TXS_AMT", "0");
+    // PAY0007D
+    Map<String, Object> param5 = null;
+    param5 = new HashMap<String, Object>();
+    param5.put("billTypeId", "238"); // AS BILL
+    param5.put("billSoId", params.get("salesOrdId").toString());
+    param5.put("billMemId", "0");
+    param5.put("billAsId", params.get("asId").toString());
+    param5.put("billPayTypeId", "");
+    param5.put("billNo", AS_RESULT_NO);
+    param5.put("billMemShipNo", "");
+    param5.put("billDt", new Date());
+    param5.put("billAmt", CommonUtils.intNvl(params.get("invcItmChrg")) * -1);
+    param5.put("billRem", "HS REVERSAL - OMBAK");
+    param5.put("billIsPaid", "1");
+    param5.put("billIsComm", "0");
+    param5.put("updUserId", sessionVO.getUserId());
+    param5.put("updDt", new Date());
+    param5.put("syncChk", "0");
+    param5.put("coursId", "0");
+    param5.put("stusId", "4");
 
-	    // AS RESULT - SVC0004D WITH 0 AMOUNT
+    hsManualMapper.insertSVC0004D(params2);
+    hsManualMapper.updateIsCurrent_SVC0004D(params2);
+    hsManualMapper.insertSVC0005D(params3);
+    hsManualMapper.insert_Pay0007d(param5);
 
-	    // PAY0007D
-	    Map<String, Object> param5 =null;
-	    param5 = new HashMap<String, Object>();
-	    param5.put("billTypeId", "238"); // AS BILL
-	    param5.put("billSoId", params.get("salesOrdId").toString());
-	    param5.put("billMemId", "0");
-	    param5.put("billAsId", params.get("asId").toString());
-	    param5.put("billPayTypeId", "");
-	    param5.put("billNo", AS_RESULT_NO);
-	    param5.put("billMemShipNo", "");
-	    param5.put("billDt", new Date());
-	    param5.put("billAmt", CommonUtils.intNvl(params.get("invcItmChrg")) * -1);
-	    param5.put("billRem", "HS REVERSAL - OMBAK");
-	    param5.put("billIsPaid", "1");
-	    param5.put("billIsComm", "0");
-	    param5.put("updUserId", sessionVO.getUserId());
-	    param5.put("updDt", new Date());
-	    param5.put("syncChk", "0");
-	    param5.put("coursId", "0");
-	    param5.put("stusId", "4");
-
-
-	    hsManualMapper.insertSVC0004D(params2);
-	    hsManualMapper.updateIsCurrent_SVC0004D(params2);
-	    hsManualMapper.insertSVC0005D(params3);
-	    hsManualMapper.insert_Pay0007d(param5);
-
-	    return AS_RESULT_NO;
+    return AS_RESULT_NO;
   }
 
+  public String createReverseASResults(Map<String, Object> params, SessionVO sessionVO) { // ADDED
+                                                                                          // BY
+                                                                                          // TPY
+                                                                                          // -
+                                                                                          // 18/06/2019
 
-  public String createReverseASResults(Map<String, Object> params , SessionVO sessionVO) { // ADDED BY TPY - 18/06/2019
+    Map<String, Object> params4 = null;
+    params4 = new HashMap<String, Object>();
 
-	  Map<String, Object> params4 = null;
-	    params4 = new HashMap<String, Object>();
+    params4.put("DOCNO", "21");
+    EgovMap seqMap3 = hsManualMapper.getResultASEntryId(params4);
+    EgovMap eMap3 = hsManualMapper.getASEntryDocNo(params4);
 
-	    params4.put("DOCNO", "21");
-	    EgovMap seqMap3 = hsManualMapper.getResultASEntryId(params4);
-	    EgovMap eMap3 = hsManualMapper.getASEntryDocNo(params4);
+    String AS_RESULT_NO2 = String.valueOf(eMap3.get("asno"));
+    String AS_RESULT_ID2 = String.valueOf(seqMap3.get("seq"));
 
-	    String AS_RESULT_NO2 = String.valueOf(eMap3.get("asno"));
-	    String AS_RESULT_ID2 = String.valueOf(seqMap3.get("seq"));
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
-	    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+    params4.put("AS_RESULT_ID", AS_RESULT_ID2);
+    params4.put("AS_RESULT_NO", AS_RESULT_NO2);
+    params4.put("AS_ENTRY_ID", params.get("asId").toString());
+    params4.put("AS_SO_ID", params.get("salesOrdId").toString());
+    params4.put("AS_CT_ID", "0");
+    params4.put("AS_SETL_DT", toDay);
+    params4.put("AS_SETL_TM", "0");
+    params4.put("AS_RESULT_STUS_ID", "4");
+    params4.put("AS_BRNCH_ID", "0");
+    params4.put("AS_RESULT_REM", "HS REVERSAL - OMBAK");
 
-	    params4.put("AS_RESULT_ID", AS_RESULT_ID2);
-	    params4.put("AS_RESULT_NO", AS_RESULT_NO2);
-	    params4.put("AS_ENTRY_ID", params.get("asId").toString());
-	    params4.put("AS_SO_ID", params.get("salesOrdId").toString());
-	    params4.put("AS_CT_ID", "0");
-	    params4.put("AS_SETL_DT", toDay);
-	    params4.put("AS_SETL_TM", "0");
-	    params4.put("AS_RESULT_STUS_ID", "4");
-	    params4.put("AS_BRNCH_ID", "0");
-	    params4.put("AS_RESULT_REM", "HS REVERSAL - OMBAK");
+    // params2.put("AS_RESULT_CRT_DT", "");
+    params4.put("updator", sessionVO.getUserId());
+    params4.put("AS_MALFUNC_ID", "9001700"); // GENERAL REQUEST
+    params4.put("AS_MALFUNC_RESN_ID", "5"); // AS DURING INSTALLATION
+    params4.put("AS_FILTER_AMT", "0");
+    params4.put("AS_TOT_AMT", "0");
+    params4.put("AS_RESULT_TYPE_ID", "457"); // AFTER SERVICE
+    params4.put("AS_RESULT_UPD_DT", "");
+    params4.put("AS_RESULT_UPD_USER_ID", "");
+    params4.put("AS_DEFECT_TYPE_ID", "1103"); // DT5 - SERVICE MAINTANENCE
+    params4.put("AS_DEFECT_ID", "662"); // I5 - OPERATING NORMALLY
+    params4.put("AS_DEFECT_PART_ID", "1253"); // AI17 - LEAD ADAPTOR
+    params4.put("AS_DEFECT_DTL_RESN_ID", "514"); // 11 - NO FILTER / PART CHANGE
+    params4.put("AS_SLUTN_RESN_ID", "439"); // A2 - UPGRADE : UF , BOOSTER PUMP
+                                            // , OPTIONAL
+    params4.put("AS_RESULT_IS_CURR", "1");
+    params4.put("AS_RESULT_MTCH_ID", "0");
+    params4.put("AS_RESULT_NO_ERR", "");
+    params4.put("AS_RESULT_MOBILE_ID", "");
+    params4.put("APPNT_DT", "");
+    params4.put("APPNT_TM", "");
+    params4.put("IN_HUSE_REPAIR_REM", "");
+    params4.put("IN_HUSE_REPAIR_REPLACE_YN", "");
+    params4.put("IN_HUSE_REPAIR_PROMIS_DT", "");
+    params4.put("IN_HUSE_REPAIR_GRP_CODE", "");
+    params4.put("IN_HUSE_REPAIR_PRODUCT_CODE", "");
+    params4.put("IN_HUSE_REPAIR_SERIAL_NO", "");
+    params4.put("RESULT_CUST_NAME", "");
+    params4.put("RESULT_MOBILE_NO", "");
+    params4.put("RESULT_REP_EMAIL_NO", "");
+    params4.put("RESULT_ACEPT_NAME", "");
+    params4.put("SGN_DT", "");
+    params4.put("TRNSC_ID", "");
+    params4.put("NO", "");
 
-	    // params2.put("AS_RESULT_CRT_DT", "");
-	    params4.put("updator", sessionVO.getUserId());
-	    params4.put("AS_MALFUNC_ID", "9001700"); // GENERAL REQUEST
-	    params4.put("AS_MALFUNC_RESN_ID", "5"); // AS DURING INSTALLATION
-	    params4.put("AS_FILTER_AMT", "0");
-	    params4.put("AS_TOT_AMT", "0") ;
-	    params4.put("AS_RESULT_TYPE_ID", "457"); // AFTER SERVICE
-	    params4.put("AS_RESULT_UPD_DT", "");
-	    params4.put("AS_RESULT_UPD_USER_ID", "");
-	    params4.put("AS_DEFECT_TYPE_ID", "1103"); // DT5 - SERVICE MAINTANENCE
-	    params4.put("AS_DEFECT_ID", "662"); // I5 - OPERATING NORMALLY
-	    params4.put("AS_DEFECT_PART_ID", "1253"); // AI17 - LEAD ADAPTOR
-	    params4.put("AS_DEFECT_DTL_RESN_ID", "514"); // 11 - NO FILTER / PART CHANGE
-	    params4.put("AS_SLUTN_RESN_ID", "439"); // A2 - UPGRADE : UF , BOOSTER PUMP
-	                                            // , OPTIONAL
-	    params4.put("AS_RESULT_IS_CURR", "1");
-	    params4.put("AS_RESULT_MTCH_ID", "0");
-	    params4.put("AS_RESULT_NO_ERR", "");
-	    params4.put("AS_RESULT_MOBILE_ID", "");
-	    params4.put("APPNT_DT", "");
-	    params4.put("APPNT_TM", "");
-	    params4.put("IN_HUSE_REPAIR_REM", "");
-	    params4.put("IN_HUSE_REPAIR_REPLACE_YN", "");
-	    params4.put("IN_HUSE_REPAIR_PROMIS_DT", "");
-	    params4.put("IN_HUSE_REPAIR_GRP_CODE", "");
-	    params4.put("IN_HUSE_REPAIR_PRODUCT_CODE", "");
-	    params4.put("IN_HUSE_REPAIR_SERIAL_NO", "");
-	    params4.put("RESULT_CUST_NAME", "");
-	    params4.put("RESULT_MOBILE_NO", "");
-	    params4.put("RESULT_REP_EMAIL_NO", "");
-	    params4.put("RESULT_ACEPT_NAME", "");
-	    params4.put("SGN_DT", "");
-	    params4.put("TRNSC_ID", "");
-	    params4.put("NO", "" );
+    hsManualMapper.insertSVC0004D(params4);
 
-	    hsManualMapper.insertSVC0004D(params4);
-
-	    return AS_RESULT_NO2;
+    return AS_RESULT_NO2;
   }
 
-  //CREATE HS ORDER POP UP NOTIFICATION -- TPY 24/06/2019
+  // CREATE HS ORDER POP UP NOTIFICATION -- TPY 24/06/2019
 
   public EgovMap checkWarrentyStatus(Map<String, Object> params) {
-	    // TODO Auto-generated method stub
-	    return hsManualMapper.checkWarrentyStatus(params);
-	  }
+    // TODO Auto-generated method stub
+    return hsManualMapper.checkWarrentyStatus(params);
+  }
 
   public EgovMap checkSvcMembershipInfo(Map<String, Object> params) {
-	    // TODO Auto-generated method stub
-	    return hsManualMapper.checkSvcMembershipInfo(params);
-	  }
+    // TODO Auto-generated method stub
+    return hsManualMapper.checkSvcMembershipInfo(params);
+  }
 
   public EgovMap checkRentalStatusInfo(Map<String, Object> params) {
-	    // TODO Auto-generated method stub
-	    return hsManualMapper.checkRentalStatusInfo(params);
-	  }
+    // TODO Auto-generated method stub
+    return hsManualMapper.checkRentalStatusInfo(params);
+  }
 
   public EgovMap checkOrderStatusInfo(Map<String, Object> params) {
-	    // TODO Auto-generated method stub
-	    return hsManualMapper.checkOrderStatusInfo(params);
-	  }
-
+    // TODO Auto-generated method stub
+    return hsManualMapper.checkOrderStatusInfo(params);
+  }
 
   @Override
   public List<EgovMap> getAppTypeList(Map<String, Object> params) {
-      return hsManualMapper.getAppTypeList(params);
+    return hsManualMapper.getAppTypeList(params);
   }
 
-  //KR-OHK SERIAL ADD
+  // KR-OHK SERIAL ADD
   @Override
   public String addIHsResultSerial(Map<String, Object> params, SessionVO sessionVO) {
-	String msg = "";
-	boolean success = false;
+    String msg = "";
+    boolean success = false;
 
-	Map<String, Object> resultValue = new HashMap<String, Object>();
+    Map<String, Object> resultValue = new HashMap<String, Object>();
 
-	Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-	List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
-	List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
-	List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+    Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+    List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+    List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+    List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 
-	logger.debug("insList : {}", insList);
+    logger.debug("insList : {}", insList);
 
     resultValue = this.SaveResult(true, formMap, insList, sessionVO);
 
@@ -3149,15 +3162,15 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
 
       servicesLogisticsPFCMapper.SP_SVC_LOGISTIC_REQUEST_SERIAL(spMap);
 
-      String errCode = (String)spMap.get("pErrcode");
-	  String errMsg = (String)spMap.get("pErrmsg");
+      String errCode = (String) spMap.get("pErrcode");
+      String errMsg = (String) spMap.get("pErrmsg");
 
       logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR CODE : " + errCode);
       logger.debug(">>>>>>>>>>>SP_SVC_LOGISTIC_REQUEST_SERIAL ERROR MSG: " + errMsg);
 
-      // pErrcode : 000  = Success, others = Fail
-      if(!"000".equals(errCode)){
-          throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+      // pErrcode : 000 = Success, others = Fail
+      if (!"000".equals(errCode)) {
+        throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
       }
 
     } else if (null != resultValue && (status == 21 || status == 10)) {
@@ -3225,25 +3238,25 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
 
     servicesLogisticsPFCMapper.SP_SVC_BARCODE_SAVE(setmapEdit);
 
-    String errCodeEdit = (String)setmapEdit.get("pErrcode");
-    String errMsgEdit = (String)setmapEdit.get("pErrmsg");
+    String errCodeEdit = (String) setmapEdit.get("pErrcode");
+    String errMsgEdit = (String) setmapEdit.get("pErrmsg");
 
     logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE HS ERROR CODE : " + errCodeEdit);
     logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE HS ERROR MSG: " + errMsgEdit);
 
-    // pErrcode : 000  = Success, others = Fail
-    if(!"000".equals(errCodeEdit)){
-        throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCodeEdit + ":" + errMsgEdit);
+    // pErrcode : 000 = Success, others = Fail
+    if (!"000".equals(errCodeEdit)) {
+      throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCodeEdit + ":" + errMsgEdit);
     }
     // KR-OHK Barcode Save Start
 
     return msg;
   }
 
-  //KR-OHK SERIAL ADD
+  // KR-OHK SERIAL ADD
   @Override
   public String hsReversalSerial(Map<String, Object> params, SessionVO sessionVO) {
-	String msg = "";
+    String msg = "";
     String msg2 = "";
 
     String hsResultNo = "";
@@ -3252,11 +3265,11 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
     String ReverseASResultNo = "";
 
     EgovMap stkInfo = this.checkHsBillASInfo(params); // CHECK HS /
-                                                                 // AS / BILL
-                                                                 // INFORMATION
-                                                                 // - ADDED BY
-                                                                 // TPY -
-                                                                 // 18/06/2019
+                                                      // AS / BILL
+                                                      // INFORMATION
+                                                      // - ADDED BY
+                                                      // TPY -
+                                                      // 18/06/2019
     logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ITM_STK_ID : " + stkInfo.get("itmStkId").toString());
     String stkItem = stkInfo.get("itmStkId").toString();
     if (stkItem.equals("1427")) { // OMBAK - STK ID // 1243 - DEV // 1427 - PRD
@@ -3304,7 +3317,7 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
           + stkInfo.get("no").toString() + msg2;
 
       // KR-OHK Barcode Save Start
-      Map<String, Object> setmap= new HashMap();
+      Map<String, Object> setmap = new HashMap();
       setmap.put("serialNo", stkInfo.get("lastSerialNo"));
       setmap.put("salesOrdId", stkInfo.get("salesOrdId"));
       setmap.put("reqstNo", stkInfo.get("hsrNo"));
@@ -3314,15 +3327,15 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
 
       servicesLogisticsPFCMapper.SP_SVC_BARCODE_SAVE(setmap);
 
-      String errCode = (String)setmap.get("pErrcode");
-      String errMsg = (String)setmap.get("pErrmsg");
+      String errCode = (String) setmap.get("pErrcode");
+      String errMsg = (String) setmap.get("pErrmsg");
 
       logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE HS_REVERSE ERROR CODE : " + errCode);
       logger.debug(">>>>>>>>>>>SP_SVC_BARCODE_SAVE HS_REVERSE ERROR MSG: " + errMsg);
 
-      // pErrcode : 000  = Success, others = Fail
-      if(!"000".equals(errCode)){
-          throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
+      // pErrcode : 000 = Success, others = Fail
+      if (!"000".equals(errCode)) {
+        throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
       }
       // KR-OHK Barcode Save Start
 
@@ -3331,138 +3344,140 @@ public String createCreditNote(Map<String, Object> params , SessionVO sessionVO)
       msg = "HS REVERSAL IS NOT ALLOWED FOR THIS HS.";
     }
 
-	return msg;
+    return msg;
   }
 
   /* Woongjin Jun */
   @Override
   @Transactional
-  public Map<String, Object> addIHtResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws Exception {
-	  return SaveCsResult(true, params, docType, sessionVO);
+  public Map<String, Object> addIHtResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO)
+      throws Exception {
+    return SaveCsResult(true, params, docType, sessionVO);
   }
 
-  private Map<String, Object> SaveCsResult(boolean isfreepromo, Map<String, Object> params, List<Object> docType, SessionVO sessionVO) {
-	  logger.debug("=========================SaveResult - START - ===============================");
+  private Map<String, Object> SaveCsResult(boolean isfreepromo, Map<String, Object> params, List<Object> docType,
+      SessionVO sessionVO) {
+    logger.debug("=========================SaveResult - START - ===============================");
 
-	  int schdulId = Integer.parseInt(params.get("hidschdulId").toString());
-	  String docNo = commonMapper.selectDocNo("11");
-	  int masterCnt = hsManualMapper.selectHSResultMCnt(params);
-	  int nextSeq = hsManualMapper.getNextSvc006dSeq();
+    int schdulId = Integer.parseInt(params.get("hidschdulId").toString());
+    String docNo = commonMapper.selectDocNo("11");
+    int masterCnt = hsManualMapper.selectHSResultMCnt(params);
+    int nextSeq = hsManualMapper.getNextSvc006dSeq();
 
-	  EgovMap insertHsResultfinal = new EgovMap();
-	  String LOG_SVC0008D_NO = "";
-	  LOG_SVC0008D_NO = (String) hsManualMapper.getSVC008D_NO(params);
+    EgovMap insertHsResultfinal = new EgovMap();
+    String LOG_SVC0008D_NO = "";
+    LOG_SVC0008D_NO = (String) hsManualMapper.getSVC008D_NO(params);
 
-	  if (masterCnt > 0) {
-		  params.put("resultId", nextSeq);
-	      hsManualMapper.insertHsResultCopy(params);
-	  }
-	  else {
-		  params.put("resultId", nextSeq);
+    if (masterCnt > 0) {
+      params.put("resultId", nextSeq);
+      hsManualMapper.insertHsResultCopy(params);
+    } else {
+      params.put("resultId", nextSeq);
 
-	      logger.debug("= Next Sequence : {}", nextSeq);
-	      logger.debug("= Param : {}", params);
+      logger.debug("= Next Sequence : {}", nextSeq);
+      logger.debug("= Param : {}", params);
 
-	      int status = 0;
-	      status = Integer.parseInt(params.get("cmbStatusType").toString());
+      int status = 0;
+      status = Integer.parseInt(params.get("cmbStatusType").toString());
 
-	      insertHsResultfinal.put("resultId", nextSeq);
-	      insertHsResultfinal.put("docNo", docNo);
-	      insertHsResultfinal.put("typeId", 306);
-	      insertHsResultfinal.put("schdulId", schdulId);
-	      insertHsResultfinal.put("salesOrdId", params.get("hidSalesOrdId"));
-	      insertHsResultfinal.put("codyId", params.get("hidCodyId"));
+      insertHsResultfinal.put("resultId", nextSeq);
+      insertHsResultfinal.put("docNo", docNo);
+      insertHsResultfinal.put("typeId", 306);
+      insertHsResultfinal.put("schdulId", schdulId);
+      insertHsResultfinal.put("salesOrdId", params.get("hidSalesOrdId"));
+      insertHsResultfinal.put("codyId", params.get("hidCodyId"));
 
-	      // SET DEFAULT AS 01/01/1900 IF SETTLE DATE ARE EMPTY
-	      if (params.get("settleDate") != null || params.get("settleDate") != "") {
-	    	  insertHsResultfinal.put("setlDt", String.valueOf(params.get("settleDate")));
-	      }
-	      else {
-	    	  insertHsResultfinal.put("setlDt", "01/01/1900");
-	      }
+      // SET DEFAULT AS 01/01/1900 IF SETTLE DATE ARE EMPTY
+      if (params.get("settleDate") != null || params.get("settleDate") != "") {
+        insertHsResultfinal.put("setlDt", String.valueOf(params.get("settleDate")));
+      } else {
+        insertHsResultfinal.put("setlDt", "01/01/1900");
+      }
 
-	      insertHsResultfinal.put("resultStusCodeId", params.get("cmbStatusType"));
-	      insertHsResultfinal.put("failResnId", params.get("failReason"));
+      insertHsResultfinal.put("resultStusCodeId", params.get("cmbStatusType"));
+      insertHsResultfinal.put("failResnId", params.get("failReason"));
 
-	      if (status == 4) { // COMPLETE
-	    	  insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
-	      }
-	      else if (status == 21 || status == 10) { // FAIL & CANCELLED
-	    	  insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
-	      }
+      if (status == 4) { // COMPLETE
+        insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
+      } else if (status == 21 || status == 10) { // FAIL & CANCELLED
+        insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
+      }
 
-	      insertHsResultfinal.put("whId", params.get("wareHouse"));
-	      insertHsResultfinal.put("resultRem", params.get("remark"));
-	      insertHsResultfinal.put("resultCrtUserId", sessionVO.getUserId());
-	      insertHsResultfinal.put("resultUpdUserId", sessionVO.getUserId());
+      insertHsResultfinal.put("whId", params.get("wareHouse"));
+      insertHsResultfinal.put("resultRem", params.get("remark"));
+      insertHsResultfinal.put("resultCrtUserId", sessionVO.getUserId());
+      insertHsResultfinal.put("resultUpdUserId", sessionVO.getUserId());
 
-	      insertHsResultfinal.put("resultIsSync", '0');
-	      insertHsResultfinal.put("resultIsEdit", '0');
-	      insertHsResultfinal.put("resultStockUse", '1');
-	      insertHsResultfinal.put("resultIsCurr", '1');
-	      insertHsResultfinal.put("resultMtchId", '0');
-	      insertHsResultfinal.put("resultIsAdj", '0');
+      insertHsResultfinal.put("resultIsSync", '0');
+      insertHsResultfinal.put("resultIsEdit", '0');
+      insertHsResultfinal.put("resultStockUse", '1');
+      insertHsResultfinal.put("resultIsCurr", '1');
+      insertHsResultfinal.put("resultMtchId", '0');
+      insertHsResultfinal.put("resultIsAdj", '0');
 
-	      // FOR MOBILE APPS DATA
-	      insertHsResultfinal.put("temperateSetng", params.get("temperateSetng"));
-	      insertHsResultfinal.put("nextAppntDt", params.get("nextAppntDt"));
-	      insertHsResultfinal.put("nextAppointmentTime", params.get("nextAppointmentTime"));
-	      insertHsResultfinal.put("ownerCode", params.get("ownerCode"));
-	      insertHsResultfinal.put("resultCustName", params.get("resultCustName"));
-	      insertHsResultfinal.put("resultMobileNo", params.get("resultMobileNo"));
-	      insertHsResultfinal.put("resultRptEmailNo", params.get("resultRptEmailNo"));
-	      insertHsResultfinal.put("resultAceptName", params.get("resultAceptName"));
-	      insertHsResultfinal.put("sgnDt", params.get("sgnDt"));
+      // FOR MOBILE APPS DATA
+      insertHsResultfinal.put("temperateSetng", params.get("temperateSetng"));
+      insertHsResultfinal.put("nextAppntDt", params.get("nextAppntDt"));
+      insertHsResultfinal.put("nextAppointmentTime", params.get("nextAppointmentTime"));
+      insertHsResultfinal.put("ownerCode", params.get("ownerCode"));
+      insertHsResultfinal.put("resultCustName", params.get("resultCustName"));
+      insertHsResultfinal.put("resultMobileNo", params.get("resultMobileNo"));
+      insertHsResultfinal.put("resultRptEmailNo", params.get("resultRptEmailNo"));
+      insertHsResultfinal.put("resultAceptName", params.get("resultAceptName"));
+      insertHsResultfinal.put("sgnDt", params.get("sgnDt"));
 
-	      logger.debug("= INSERT SVC0006D START : {}", insertHsResultfinal);
-	      hsManualMapper.insertHsResultfinal(insertHsResultfinal); // INSERT SVC0006D
+      logger.debug("= INSERT SVC0006D START : {}", insertHsResultfinal);
+      hsManualMapper.insertHsResultfinal(insertHsResultfinal); // INSERT
+                                                               // SVC0006D
 
-	      hsManualMapper.updateHs009d(params); // UPDATE SAL0090D
-	  }
+      hsManualMapper.updateHs009d(params); // UPDATE SAL0090D
+    }
 
-	  EgovMap getHsResultMList = hsManualMapper.selectHSResultMList(params); // GET SVC0006D
-	  int scheduleCnt = hsManualMapper.selectHSScheduleMCnt(params);
+    EgovMap getHsResultMList = hsManualMapper.selectHSResultMList(params); // GET
+                                                                           // SVC0006D
+    int scheduleCnt = hsManualMapper.selectHSScheduleMCnt(params);
 
-	  if (scheduleCnt > 0) {
-		  EgovMap insertHsScheduleM = new EgovMap();
+    if (scheduleCnt > 0) {
+      EgovMap insertHsScheduleM = new EgovMap();
 
-	      insertHsScheduleM.put("hidschdulId", params.get("hidschdulId"));
-	      insertHsScheduleM.put("resultStusCodeId", params.get("cmbStatusType"));
-	      insertHsScheduleM.put("actnMemId", getHsResultMList.get("codyId"));
+      insertHsScheduleM.put("hidschdulId", params.get("hidschdulId"));
+      insertHsScheduleM.put("resultStusCodeId", params.get("cmbStatusType"));
+      insertHsScheduleM.put("actnMemId", getHsResultMList.get("codyId"));
 
-	      hsManualMapper.updateHsScheduleM(insertHsScheduleM); // UPDATE SVC0008D
-	  }
+      hsManualMapper.updateHsScheduleM(insertHsScheduleM); // UPDATE SVC0008D
+    }
 
-	  EgovMap srvConfiguration = hsManualMapper.selectSrvConfiguration(params);
+    EgovMap srvConfiguration = hsManualMapper.selectSrvConfiguration(params);
 
-	  if (srvConfiguration.size() > 0) {
-		// COMPLETE
-		  if (getHsResultMList.get("resultStusCodeId").toString().equals("4")) {
-	        EgovMap insertHsSrvConfigM = new EgovMap();
-	        insertHsSrvConfigM.put("salesOrdId", getHsResultMList.get("salesOrdId"));
-	        insertHsSrvConfigM.put("srvRem", params.get("instruction"));
-	        insertHsSrvConfigM.put("srvPrevDt", params.get("settleDate"));
-	        insertHsSrvConfigM.put("srvBsWeek", params.get("srvBsWeek"));
+    if (srvConfiguration.size() > 0) {
+      // COMPLETE
+      if (getHsResultMList.get("resultStusCodeId").toString().equals("4")) {
+        EgovMap insertHsSrvConfigM = new EgovMap();
+        insertHsSrvConfigM.put("salesOrdId", getHsResultMList.get("salesOrdId"));
+        insertHsSrvConfigM.put("srvRem", params.get("instruction"));
+        insertHsSrvConfigM.put("srvPrevDt", params.get("settleDate"));
+        insertHsSrvConfigM.put("srvBsWeek", params.get("srvBsWeek"));
 
-	        EgovMap callMas = new EgovMap();
-	        callMas.put("hcsoid", getHsResultMList.get("salesOrdId"));
-	        callMas.put("hcTypeNo", params.get("hidSalesOrdCd"));
-	        callMas.put("crtUserId", sessionVO.getUserId());
-	        callMas.put("updUserId", sessionVO.getUserId());
+        EgovMap callMas = new EgovMap();
+        callMas.put("hcsoid", getHsResultMList.get("salesOrdId"));
+        callMas.put("hcTypeNo", params.get("hidSalesOrdCd"));
+        callMas.put("crtUserId", sessionVO.getUserId());
+        callMas.put("updUserId", sessionVO.getUserId());
 
-	        hsManualMapper.insertCcr0001d(callMas);
-	      }
-	  }
+        hsManualMapper.insertCcr0001d(callMas);
+      }
+    }
 
-	  Map<String, Object> resultValue = new HashMap<String, Object>();
-	  resultValue.put("resultId", params.get("hidSalesOrdCd"));
-	  resultValue.put("resultDocNo", docNo);
+    Map<String, Object> resultValue = new HashMap<String, Object>();
+    resultValue.put("resultId", params.get("hidSalesOrdCd"));
+    resultValue.put("resultDocNo", docNo);
 
-	  return resultValue;
-	}
+    return resultValue;
+  }
   /* Woongjin Jun */
 
+  @Override
+  public void updateDisinfecSrv(Map<String, Object> params) {
+    hsManualMapper.updateDisinfecSrv(params);
   }
-
-
-
+}
