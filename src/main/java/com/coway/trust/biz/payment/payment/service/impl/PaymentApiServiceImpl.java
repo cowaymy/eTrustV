@@ -40,6 +40,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2019. 9. 30.   KR-HAN        First creation
  * 2020. 2. 6.     MY-ONGHC   Add E-Notification
  * 2020. 4. 9.     MY_ONGHC  Amend insertSalesNotification to Add Customer Name
+ * 2020. 5. 29.   MY_ONGHC   Amend sendEmail function
  *          </pre>
  */
 @Service("paymentApiService")
@@ -499,18 +500,23 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     EmailVO email = new EmailVO();
     String emailTitle = paymentApiMapper.getEmailTitle(params);
     String emailDetails = paymentApiMapper.getEmailDetails(params);
-    String emailNo = "";
+    //String emailNo = "";
+    List<String> emailNo = new ArrayList<String>();
 
     if (!"".equals(CommonUtils.nvl(params.get("email1")))) {
-      emailNo = CommonUtils.nvl(params.get("email1"));
+      //emailNo = CommonUtils.nvl(params.get("email1"));
+      emailNo.add(CommonUtils.nvl(params.get("email1")));
     }
 
     if (!"".equals(CommonUtils.nvl(params.get("email2")))) {
-      if (!"".equals(CommonUtils.nvl(emailNo))) {
-        emailNo += "|!|" + CommonUtils.nvl(params.get("email2"));
-      } else {
-        emailNo = CommonUtils.nvl(params.get("email2"));
-      }
+      //if (!"".equals(CommonUtils.nvl(emailNo))) {
+        //emailNo += "|!|" + CommonUtils.nvl(params.get("email2"));
+        //emailNo.add(CommonUtils.nvl(params.get("email2")));
+      //} else {
+        //emailNo = CommonUtils.nvl(params.get("email2"));
+        //emailNo.add(CommonUtils.nvl(params.get("email2")));
+      //}
+      emailNo.add(CommonUtils.nvl(params.get("email2")));
     }
 
     email.setTo(emailNo);
