@@ -203,6 +203,7 @@ public class PaymentListingController {
                 payTypeList.add("104");
                 break;
             case "222":
+                payTypeList.add("222");
                 payTypeList.add("224");
                 payTypeList.add("225");
                 payTypeList.add("226");
@@ -228,6 +229,7 @@ public class PaymentListingController {
                 break;
             case "577":
                 payTypeList.add("577");
+                payTypeList.add("569");
                 break;
             case "101":
                 payTypeList.add("101");
