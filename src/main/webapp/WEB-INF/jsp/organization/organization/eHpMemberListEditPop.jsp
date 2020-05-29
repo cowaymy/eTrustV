@@ -902,8 +902,9 @@ function fn_memberSave(){
     $("#eHPmemberType").attr("disabled",false);
     //jsonObj.form = $("#eHPmemberAddForm").serializeJSON();
 
+    var cnfm = ${memberView.cnfm};
     var cnfmStatus = "";
-    if ($("eHPcnfm").val() == 1){
+    if (cnfm == 1){
         cnfmStatus = "102"; // Ready
     }else{
         cnfmStatus = "44"; // Pending
