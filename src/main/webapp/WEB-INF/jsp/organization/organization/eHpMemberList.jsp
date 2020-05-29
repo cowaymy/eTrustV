@@ -270,7 +270,12 @@ function createAUIGrid() {
             width : 0
         }, {
             dataField : "membercode",
-            headerText : "Member Code",
+            headerText : "Applicant Code",
+            editable : false,
+            width : 130
+        },{
+            dataField : "hpCode",
+            headerText : "HP Code",
             editable : false,
             width : 130
         }, {
@@ -497,7 +502,7 @@ function fn_searchPosition(selectedData){
         <option value="2803" selected>HP Applicant</option>
     </select>
     </td>
-    <th scope="row">Code</th>
+    <th scope="row">Applicant Code</th>
     <td>
     <input type="text" title="Code" placeholder="" class="w100p" id="eHPcode" name="code" />
     </td>
