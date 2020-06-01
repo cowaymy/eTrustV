@@ -278,6 +278,13 @@ function createAUIGrid() {
             headerText : "HP Code",
             editable : false,
             width : 130
+        },
+        {
+            dataField : "brnchCode",
+            headerText : "Collection Branch",
+            editable : false,
+            width : 130
+
         }, {
             dataField : "name",
             headerText : "Member Name",
@@ -366,13 +373,6 @@ function createAUIGrid() {
             editable : false,
             width : 130 ,
             visible : false
-        },
-        {
-            dataField : "brnchCode",
-            headerText : "Collection Branch",
-            editable : false,
-            width : 130
-
         },
         {
             dataField : "address",
