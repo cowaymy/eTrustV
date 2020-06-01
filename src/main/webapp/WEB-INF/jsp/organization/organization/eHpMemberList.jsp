@@ -283,7 +283,7 @@ function createAUIGrid() {
             dataField : "brnchCode",
             headerText : "Collection Branch",
             editable : false,
-            width : 130
+            width : 250
 
         }, {
             dataField : "name",
