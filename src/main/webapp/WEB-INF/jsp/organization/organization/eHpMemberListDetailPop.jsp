@@ -779,18 +779,13 @@ function fn_atchViewDown(fileGrpId, fileId) {
     </td>
 </tr>
 <tr>
-    <th scope="row">Member Code</th>
+    <th scope="row">Applicant Code</th>
     <td>
     <span><c:out value="${memberView.memCode}"/></span>
     </td>
-    <th scope="row">HP Type</th>
+    <th scope="row">HP Code</th>
     <td>
-      <c:if test = "${memberView.memType =='1'}">
-    <span><c:out value="${memberView.c59}"/></span>
-    </c:if>
-    <c:if test = "${memberView.memType =='2803'}">
-    <span><c:out value="${memberView.c59}"/></span>
-    </c:if>
+      <span><c:out value="${memberView.hpCode}"/></span>
     </td>
     <th scope="row">User Valid Date</th>
     <td>
