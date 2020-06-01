@@ -381,7 +381,10 @@
                     Project1.ATCH_FILE_GRP_ID ,
                     Project1.DEPT_CODE ,
                     Project1.STUS_UPD_ID,
-                    Project1.HP_CODE
+                    Project1.HP_CODE,
+                    Project1.BRNCH_CODE,
+                    Project1.APPROVED_BY,
+                    Project1.CRT_DT
 
             FROM ( SELECT Project1.C1 C1,
                      Project1.MEM_ID MEM_ID,
@@ -405,6 +408,9 @@
                     Project1.DEPT_CODE ,
                     Project1.STUS_UPD_ID ,
                     Project1.HP_CODE,
+                    Project1.BRNCH_CODE,
+                    Project1.APPROVED_BY,
+                    TO_CHAR(Project1.CRT_DT,'DD-MM-YYYY') CRT_DT ,
                      row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
                      FROM ( SELECT
                    '' C1,
@@ -431,7 +437,10 @@
                     Extent1.ATCH_FILE_GRP_ID ,
                     Extent1.DEPT_CODE ,
                     Extent19.USER_NAME STUS_UPD_ID,
-                    Extent20.MEM_CODE HP_CODE
+                    Extent20.MEM_CODE HP_CODE ,
+                    Extent21.CODE BRNCH_CODE ,
+                    Extent22.USER_NAME APPROVED_BY ,
+                    Extent20.CRT_DT
                     FROM   ORG0003D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT -----------------------*/
                     INNER JOIN SYS0013M Extent2 ON Extent1.APLICNT_type = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
                     INNER JOIN SYS0038M Extent3 ON Extent1.STUS_ID = Extent3.STUS_CODE_ID   /*StatusCode    eg.active, not active*/
@@ -441,6 +450,8 @@
                     LEFT JOIN SYS0047M Extent18 ON Extent1.CRT_USER_ID = Extent18.USER_ID
                     LEFT JOIN SYS0047M Extent19 ON Extent5.CRT_USER_ID = Extent19.USER_ID
                     LEFT JOIN ORG0001D Extent20 ON Extent20.APLICNT_ID = Extent1.APLCTN_ID
+                    LEFT JOIN SYS0005M Extent21 ON Extent1.COLLCT_BRNCH = Extent21.BRNCH_ID
+                    LEFT JOIN SYS0047M Extent22 ON Extent20.CRT_USER_ID = Extent22.USER_ID
                     ]]>
                         WHERE 1=1
                         AND Extent1.APLICNT_TYPE IN ('2803')
