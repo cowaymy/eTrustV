@@ -298,7 +298,8 @@ function createAUIGrid() {
             dataField : "crtUsrId",
             headerText : "Creator User ID",
             editable : false,
-            width : 130
+            width : 130,
+            visible : false
         }, {
             dataField : "testResult",
             headerText : "Test Result",
@@ -365,6 +366,13 @@ function createAUIGrid() {
             editable : false,
             width : 130 ,
             visible : false
+        },
+        {
+            dataField : "brnchCode",
+            headerText : "Collection Branch",
+            editable : false,
+            width : 130
+
         },
         {
             dataField : "address",
