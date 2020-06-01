@@ -438,7 +438,7 @@
                     Extent1.DEPT_CODE ,
                     Extent19.USER_NAME STUS_UPD_ID,
                     Extent20.MEM_CODE HP_CODE ,
-                    Extent21.CODE BRNCH_CODE ,
+                    Extent21.CODE || ' - ' || Extent21.NAME  BRNCH_CODE ,
                     Extent22.USER_NAME APPROVED_BY ,
                     Extent20.CRT_DT
                     FROM   ORG0003D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT -----------------------*/
@@ -997,7 +997,8 @@ SELECT Limit1.MEM_ID MEM_ID  ,
        (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course,
        Limit1.APLICNT_MEETPOINT,
        Limit1.COLLCT_BRNCH ,
-       Limit1.COLLCT_BRNCH_DESC
+       Limit1.COLLCT_BRNCH_DESC,
+       Limit1.HP_CODE
   FROM (
 SELECT Extent1.APLCTN_ID MEM_ID  ,
                 Extent1.APLICNT_CODE MEM_CODE  ,
@@ -1289,7 +1290,8 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 EXTENT1.SUB_DEPT,
                 EXTENT29.MEET_POINT_CODE || ' - ' || MEET_POINT_DESC APLICNT_MEETPOINT,
                 EXTENT1.COLLCT_BRNCH ,
-               EXTENT30.CODE || ' - ' || EXTENT30.NAME COLLCT_BRNCH_DESC
+               EXTENT30.CODE || ' - ' || EXTENT30.NAME COLLCT_BRNCH_DESC ,
+               Extent31.MEM_CODE HP_CODE
          FROM ORG0003D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.APLICNT_TYPE
@@ -1331,6 +1333,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 LEFT JOIN ORG0014D Extent28   ON Extent27.BANK_ID = Extent28.Bank_ID and 848 = Extent28.TYPE_ID and 1 = Extent28.STUS_CODE_ID
                 LEFT JOIN SYS0089M Extent29 ON Extent1.APLICNT_MEETPOINT = Extent29.MEET_POINT_ID
                 LEFT JOIN SYS0005M Extent30 ON Extent1.COLLCT_BRNCH = Extent30.BRNCH_ID
+                LEFT JOIN ORG0001D Extent31 ON Extent1.APLCTN_ID = Extent31.APLICNT_ID
           WHERE  Extent1.APLCTN_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
            ]]>
     </select>
