@@ -283,13 +283,13 @@ function createAUIGrid() {
             dataField : "brnchCode",
             headerText : "Collection Branch",
             editable : false,
-            width : 250
+            width : 180
 
         }, {
             dataField : "name",
             headerText : "Member Name",
             editable : false,
-            width : 130
+            width : 180
         }, {
             dataField : "nric",
             headerText : "Member NRIC",
@@ -329,7 +329,7 @@ function createAUIGrid() {
             dataField : "resnDesc",
             headerText : "Fail Reason Desc",
             editable : false,
-            width : 180
+            width : 150
 
         },{
             dataField : "rem",
