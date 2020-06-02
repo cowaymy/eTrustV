@@ -211,6 +211,7 @@ function fn_approve(){
 
         Common.confirm("<spring:message code='pay.confirm.approve'/>", function(){
             Common.ajaxSync("POST", "/payment/requestInvoice/saveRequestInvoiceArrpove.do", selectGrd[0].item, function(result) {
+            	console.log("fn_approve "+result);
                 if(result !=""  && null !=result ){
                     Common.alert("<spring:message code='pay.alert.approve'/>", function(){
                         fn_search(1);
