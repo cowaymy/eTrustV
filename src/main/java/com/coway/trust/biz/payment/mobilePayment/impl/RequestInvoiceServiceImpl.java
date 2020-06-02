@@ -203,12 +203,27 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
         ClientResponse response = webResource.accept("application/json").get(ClientResponse.class);
         String output = response.getEntity(String.class);
 
+        LOGGER.debug("================");
+        LOGGER.debug("smsUrl" +smsUrl);
+        LOGGER.debug("webResource "+webResource);
+        LOGGER.debug("response "+response);
+        LOGGER.debug("output "+output);
+        LOGGER.debug("================");
+
+
         ObjectMapper mapper = new ObjectMapper();
 
         Map<String, Object> resultMap = mapper.readValue(output, new TypeReference<Map<String, Object>>() {});
         String success = resultMap.get("success").toString();
         String errorCode = resultMap.get("error_code") != null ? resultMap.get("error_code").toString() : null ;
         String errorMessage = resultMap.get("error_message") != null ? resultMap.get("error_message").toString() : null;
+
+        LOGGER.debug("================");
+        LOGGER.debug("resultMap "+resultMap);
+        LOGGER.debug("success "+success);
+        LOGGER.debug("errorCode "+errorCode);
+        LOGGER.debug("errorMessage "+errorMessage);
+        LOGGER.debug("================");
 
         System.out.println("================");
         System.out.println(success);
