@@ -39,7 +39,7 @@ $(document).ready(function() {
 
     	if('${PAGE_AUTH.funcChange}' == 'Y'){
 
-    		if(event.item.stkCtgryId != 5707 && event.item.apptypeid !=5764){
+    		if(event.item.apptypeid !=5764){
 	    		if(event.item.ccpStusId == 1){
 	                $("#_ccpId").val(event.item.ccpId);
 	                $("#_salesOrdId").val(event.item.salesOrdId);
