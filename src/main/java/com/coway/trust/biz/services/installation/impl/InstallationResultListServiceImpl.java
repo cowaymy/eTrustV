@@ -48,6 +48,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 18/10/2019    ONGHC      1.0.9       - Amend insertInstallationResult to Cater Mobile Product Exchange
  * 14/02/2020    ONGHC      1.0.10     - Amend Save_2 to add PSI information
  * 26/02/2020    ONGHC      1.0.11     - Amend Save_2 to add LPM information
+ * 02/06/2020    ONGHC      1.0.12     - Amend runInstSp to add condition for SP_LOGISTIC_REQUEST return param
  *********************************************************************************************/
 
 @Service("installationResultListService")
@@ -1415,10 +1416,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     	  servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
       }
 
-	  if(!"000".equals(logPram.get("p1"))) {
-		  throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + logPram.get("p1")+ ":" + "INSTALLATION Result Error");
-	  }
-	  // KR-OHK Serial check add end
+    // if(!"000".equals(logPram.get("p1"))) {
+    if(logPram.get("p1") != null && !"000".equals(logPram.get("p1"))) {
+      throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + logPram.get("p1")+ ":" + "INSTALLATION Result Error");
+    }
+    // KR-OHK Serial check add end
 
       logPram.put("P_RESULT_TYPE", "IN");
       logPram.put("P_RESULT_MSG", logPram.get("p1"));
