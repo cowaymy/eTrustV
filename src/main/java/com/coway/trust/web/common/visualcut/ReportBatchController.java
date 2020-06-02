@@ -1954,7 +1954,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/Monthly_Rental_Collection.do")
-  //@Scheduled(cron = "0 0 1 2 * ?")//Monthly (Day 2) (1:00am)
+  //@Scheduled(cron = "0 0 8 1 * ?")//Monthly (Day 1) (8:00am)
   public void MonthlyRentalCollection() {
     LOGGER.info("[START] Monthly_Rental_Collection...");
     Map<String, Object> params = new HashMap<>();
