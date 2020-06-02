@@ -1824,31 +1824,29 @@ public class ReportBatchController {
   public void CowayDailySalesStatusHP_Adv() {
     LOGGER.info("[START] CowayDailySalesStatusHP_Adv...");
     Map<String, Object> params = new HashMap<>();
-    String[] address =
-      {
-        "kahkit.chew@coway.com.my",
-        "nicky.lam@coway.com.my",
-        "eddie.toh@coway.com.my",
-        "joanne.chin@coway.com.my",
-        "ivan.liew@coway.com.my",
-        "lyeim@coway.com.my",
-        "thomas.chin@coway.com.my",
-        "khongboon.soo@coway.com.my",
-        "rachel.wong@coway.com.my",
-        "jack@coway.com.my",
-        "<jypark30@coway.co.kr>",
-        "<enough06@coway.co.kr>",
-        "<rose3128@coway.co.kr>",
-        "<jenux@coway.co.kr>",
-        "<smhong@coway.co.kr>",
-        "<yulyul@coway.co.kr>",
-        "<ikchoul85@coway.co.kr>",
-        "shawn.chow@coway.com.my",
-        "austin@coway.com.my",
-        "<kangsh@coway.co.kr>",
-        "<hsjjang99@coway.co.kr>",
-        "<jun1853@coway.co.kr>"
-      };
+        String[] address ={"it-dept@coway.com.my",
+            "nicky.lam@coway.com.my",
+            "eddie.toh@coway.com.my",
+            "joanne.chin@coway.com.my",
+            "ivan.liew@coway.com.my",
+            "lyeim@coway.com.my",
+            "thomas.chin@coway.com.my",
+            "rachel.wong@coway.com.my",
+            "shawn.chow@coway.com.my",
+            "austin@coway.com.my",
+            /*
+            "<jypark30@coway.co.kr>",
+            "<enough06@coway.co.kr>",
+            "<rose3128@coway.co.kr>",
+            "<jenux@coway.co.kr>",
+            "<smhong@coway.co.kr>",
+            "<yulyul@coway.co.kr>",
+            "<ikchoul85@coway.co.kr>",
+            "<kangsh@coway.co.kr>",
+            "<hsjjang99@coway.co.kr>",
+            "<jun1853@coway.co.kr>"
+            */
+          };
     String email = "";
     email += "Dear All,\r\n\r\n";
     email += "Hereby is the Daily Accumulated Key-In Sales Analysis Report (HP) for your reference.\r\n\r\n";
@@ -1876,28 +1874,28 @@ public class ReportBatchController {
   public void CowayDailySalesStatusCody() {
     LOGGER.info("[START] CowayDailySalesStatusCody...");
     Map<String, Object> params = new HashMap<>();
-    String[] address ={"kahkit.chew@coway.com.my",
-          "nicky.lam@coway.com.my",
-          "eddie.toh@coway.com.my",
-          "joanne.chin@coway.com.my",
-          "ivan.liew@coway.com.my",
-          "lyeim@coway.com.my",
-          "thomas.chin@coway.com.my",
-          "khongboon.soo@coway.com.my",
-          "rachel.wong@coway.com.my",
-          "jack@coway.com.my",
-          "<jypark30@coway.co.kr>",
-          "<enough06@coway.co.kr>",
-          "<rose3128@coway.co.kr>",
-          "<jenux@coway.co.kr>",
-          "<smhong@coway.co.kr>",
-          "<yulyul@coway.co.kr>",
-          "<ikchoul85@coway.co.kr>",
-          "shawn.chow@coway.com.my",
-          "austin@coway.com.my",
-          "<kangsh@coway.co.kr>",
-          "<hsjjang99@coway.co.kr>",
-          "<jun1853@coway.co.kr>"
+    String[] address ={"it-dept@coway.com.my",
+        "nicky.lam@coway.com.my",
+        "eddie.toh@coway.com.my",
+        "joanne.chin@coway.com.my",
+        "ivan.liew@coway.com.my",
+        "lyeim@coway.com.my",
+        "thomas.chin@coway.com.my",
+        "rachel.wong@coway.com.my",
+        "shawn.chow@coway.com.my",
+        "austin@coway.com.my",
+        /*
+        "<jypark30@coway.co.kr>",
+        "<enough06@coway.co.kr>",
+        "<rose3128@coway.co.kr>",
+        "<jenux@coway.co.kr>",
+        "<smhong@coway.co.kr>",
+        "<yulyul@coway.co.kr>",
+        "<ikchoul85@coway.co.kr>",
+        "<kangsh@coway.co.kr>",
+        "<hsjjang99@coway.co.kr>",
+        "<jun1853@coway.co.kr>"
+        */
         };
     String email = "";
     email += "Dear All,\r\n\r\n";
@@ -1911,6 +1909,7 @@ public class ReportBatchController {
                                                                                   // rpt
                                                                                   // file
                                                                                   // name.
+    //params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
     params.put(REPORT_VIEW_TYPE, "MAIL_PDF"); // viewType
     params.put("v_Param", " ");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
