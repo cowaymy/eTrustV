@@ -58,8 +58,8 @@ public class CustomerCRCController {
     @RequestMapping(value = "/batchSFTP.do", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<ReturnMessage> batchSFTP(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) {
 
-        LOGGER.debug("Tokenization :: Batch SFTP :: Start");
-        LOGGER.debug("Tokenization :: Batch SFTP :: {}", params.toString());
+        LOGGER.error("DEBUG :: Tokenization :: Batch SFTP :: Start");
+        LOGGER.error("DEBUG :: Tokenization :: Batch SFTP :: {}", params.toString());
 
         params.put("fileDir", uploadDir);
         params.put("sftpHost", TOKEN_SFTP_HOST);

@@ -33,8 +33,8 @@ public class CustomerCRCServiceImpl extends EgovAbstractServiceImpl implements C
     private CustomerCRCMapper customerCRCMapper;
 
     public void createBatchCSV(Map<String, Object> params) {
-        LOGGER.debug("createBatchCSV :: start");
-        LOGGER.debug("createBatchCSV :: {}", params.toString());
+        LOGGER.error("DEBUG :: createBatchCSV :: start");
+        LOGGER.error("DEBUG :: createBatchCSV :: {}", params.toString());
 
         // ========================
         // Create CSV file :: Start
