@@ -26,7 +26,7 @@ import com.coway.trust.config.handler.SessionHandler;
 @RequestMapping(value = "/sales/CustomerCRCController")
 public class CustomerCRCController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerCRCController.class);
 
     @Value("${tokenization.mcp.sftp.host}")
     private String TOKEN_SFTP_HOST;
