@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.customer.impl.CustomerCRCMapper">
+
+    <select id="getCardDetails" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+        SELECT
+            LPAD(B.NRIC, 12, '0') || LPAD(B.CUST_ID, 12, '0') || LPAD(A.CUST_CRC_ID, 12, '0') REFNO,
+            A.CUST_CRC_NO,
+            A.CUST_CRC_EXPR
+        FROM SAL0028D A, SAL0029D B
+        WHERE A.CUST_ID = B.CUST_ID
+        AND A.CUST_CRC_ID IN (
+            SELECT
+                DISTINCT CUST_CRC_ID
+            FROM (
+                SELECT
+                    CUST_CRC_ID
+                FROM SAL0028D
+                WHERE SUBSTR(CUST_CRC_EXPR, 3) >= '20'
+                AND LENGTH(CUST_CRC_EXPR) = 4
+                AND CUST_CRC_EXPR IS NOT NULL
+                AND LENGTH(CUST_ORI_CRC_NO) = 16
+                AND CUST_CRC_ID NOT IN (
+                    SELECT
+                        DISTINCT CUST_CRC_ID
+                    FROM (
+                        SELECT
+                            CUST_CRC_ID
+                        FROM SAL0028D
+                        WHERE LENGTH(CUST_CRC_EXPR) = 4
+                        AND SUBSTR(CUST_CRC_EXPR, 3) < '20'
+                        AND CUST_CRC_EXPR IS NOT NULL
+                        AND CUST_CRC_ID NOT IN (
+                            SELECT
+                                CUST_CRC_ID
+                            FROM (
+                                SELECT
+                                *
+                                FROM SAL0028D
+                                WHERE (LENGTH(CUST_CRC_EXPR) <> 4
+                                AND CUST_CRC_EXPR IS NOT NULL)
+                                OR CUST_CRC_EXPR IS NULL
+                            )
+                            WHERE (LENGTH(CUST_ORI_CRC_NO) <> 16 OR CUST_ORI_CRC_NO IS NULL)
+                            OR LENGTH(CUST_ORI_CRC_NO) = 16
+                        )
+
+                        UNION ALL
+
+                        SELECT
+                            CUST_CRC_ID
+                        FROM SAL0028D
+                        WHERE LENGTH(CUST_ORI_CRC_NO) > 16
+                        AND CUST_CRC_EXPR IS NOT NULL
+                        AND LENGTH(CUST_CRC_EXPR) = 4
+                        AND CUST_CRC_ID NOT IN (
+                            SELECT
+                                CUST_CRC_ID
+                            FROM (
+                                SELECT
+                                    *
+                                FROM SAL0028D
+                                WHERE (LENGTH(CUST_CRC_EXPR) <> 4 AND CUST_CRC_EXPR IS NOT NULL)
+                                OR CUST_CRC_EXPR IS NULL
+                            )
+                            WHERE (LENGTH(CUST_ORI_CRC_NO) <> 16 OR CUST_ORI_CRC_NO IS NULL)
+                            OR LENGTH(CUST_ORI_CRC_NO) = 16
+                        )
+
+                        UNION ALL
+
+                        SELECT
+                            CUST_CRC_ID
+                        FROM (
+                            SELECT
+                                *
+                            FROM SAL0028D
+                            WHERE (LENGTH(CUST_CRC_EXPR) <> 4 AND CUST_CRC_EXPR IS NOT NULL)
+                            OR CUST_CRC_EXPR IS NULL
+                        )
+                        WHERE (LENGTH(CUST_ORI_CRC_NO) <> 16 OR CUST_ORI_CRC_NO IS NULL)
+                        OR LENGTH(CUST_ORI_CRC_NO) = 16
+                    )
+                )
+            )
+        )
+        AND LENGTH(CUST_CRC_NO) = 16
+        AND LENGTH(CUST_CRC_TOKEN) != 36
+        AND ROWNUM <= 10
+    ]]>
+    </select>
+
+</mapper>

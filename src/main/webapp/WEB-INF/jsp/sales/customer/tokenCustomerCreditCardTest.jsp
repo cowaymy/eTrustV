@@ -32,19 +32,36 @@ console.log("tokenpoptest");
         }
     });
 
+    $("#nric").blur(function() {
+        //refNo
+        if($("#nric").val().length != 12) {
+            Common.alert("nric length");
+            $("#nric").val("");
+            return false;
+        }
+
+        var d12 = "000000000000";
+        $("#refNo").val($("#nric").val() + d12 + d12);
+    });
+
     function fn_tokenPop() {
         console.log("tokenizationBtn :: click :: fn_tokenPop");
 
+        if($("#refNo").val() == "") {
+            Common.alert("refNo Empty");
+            return false;
+        }
+
         var tokenPop, tokenTick;
-        var refId = '000101147799000000000000000000000000';
+        //var refId = '000101147799000000000000000000000000';
+        var refId = $("#refNo").val();
         Common.ajax("GET", "/sales/customer/getTknId.do", {refId : refId}, function(r1) {
             if(r1.tknId != 0) {
                 // Requires further discuss with MC Payment if add another 10 space for token ID
                 // NRIC/Co. registration no (12) + CID (12) + CRC ID (12);
                 //refId = refId + r1.tknId;
 
-                //Common.ajax("POST", "/sales/customer/")
-
+                // Calls MC Payment pop up
                 var option = {
                         winName: "popup",
                         isDuplicate: true, // 계속 팝업을 띄울지 여부.
@@ -63,16 +80,19 @@ console.log("tokenpoptest");
                     option.winName = option.winName + new Date();
                 }
 
-                var URL = "https://services.sandbox.mcpayment.net:8080/newCardForm?apiKey=AKIA5TZ_COWAY_YNAAZ6E&refNo=" + r1.tknRef;
+                var URL = "https://services.mcpayment.net:8080/newCardForm?apiKey=3fdgsTZ_COWAY_dsaAZ6E&refNo=" + r1.tknRef;
 
-             // Calls MC Payment pop up
                 //tokenPop = window.open("https://services.sandbox.mcpayment.net:8080/newCardForm?apiKey=AKIA5TZ_COWAY_YNAAZ6E&refNo=32135" + refId);
-                tokenPop = window.open(URL, option.winName, "fullscreen="
-                        + option.fullscreen + ",location=" + option.location
-                        + ",menubar=" + option.menubar + ",titlebar=" + option.titlebar
-                        + ",toolbar=" + option.toolbar + ",resizable="
-                        + option.resizable + ",scrollbars=" + option.scrollbars
-                        + ",width=" + option.width + ",height=" + option.height);
+                tokenPop = window.open(URL, option.winName,
+                        "fullscreen=" + option.fullscreen +
+                        ",location=" + option.location +
+                        ",menubar=" + option.menubar +
+                        ",titlebar=" + option.titlebar +
+                        ",toolbar=" + option.toolbar +
+                        ",resizable=" + option.resizable +
+                        ",scrollbars=" + option.scrollbars +
+                        ",width=" + option.width +
+                        ",height=" + option.height);
 
                 // Set ticker to check if MC Payment pop up is still opened
                 tokenTick = setInterval(
@@ -84,9 +104,10 @@ console.log("tokenpoptest");
                             // Retrieve token ID to be displayed in credit card number field
                             Common.ajax("GET", "/sales/customer/getTokenNumber.do", {refId : r1.tknRef}, function(r2) {
                                 console.log(r2);
-                                /*if(r2 != null) {
-                                    $("#tknNo").val(r2.tokenNumber);
-                                }*/
+                                if(r2 != null) {
+                                    $("#crcNo").val(r2.data.bin + "******" + r2.data.cclast4);
+                                    $("#tknId").val(r2.data.tokenNumber);
+                                }
                             });
                         }
                     }, 500);
@@ -237,6 +258,14 @@ console.log("tokenpoptest");
             });
         });
     }
+
+    function fn_tknBatch() {
+        console.log("fn_tknBatch");
+        Common.ajax("GET", "/sales/CustomerCRCController/batchSFTP.do", "", function(result) {
+           console.log("batchSFTP");
+           console.log(result);
+        });
+    }
 </script>
 
 <style>
@@ -313,7 +342,7 @@ console.log("tokenpoptest");
             <tr>
                 <th scope="row"><spring:message code="sal.text.creditCardNo" /><span class="must">*</span></th>
                 <td colspan="3">
-                    <input class="" id="tknNo" name="tknNo" type="text" size="36" placeholder="Credit Card ID" maxlength="36" style="width:96%" readonly />
+                    <input class="" id="crcNo" name="tknNo" type="text" size="36" placeholder="Credit Card ID" maxlength="36" style="width:96%" readonly />
                     <a href="javascript:fn_tokenPop();" class="search_btn" id="tokenizationBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                 </td>
             </tr>
@@ -422,6 +451,7 @@ console.log("tokenpoptest");
     </form>
     <ul class="center_btns">
         <li><p class="btn_blue2 big"><a href="#" onclick="fn_addCreditCard()"><spring:message code="sal.btn.addCreditCard" /></a></p></li>
+        <li><p class="btn_blue2 big"><a href="#" onclick="fn_tknBatch()">Test Token Batch</a></p></li>
     </ul>
 </section><!-- pop_body end -->
 </div>
