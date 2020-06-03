@@ -112,8 +112,10 @@ public class CustomerCRCServiceImpl extends EgovAbstractServiceImpl implements C
 //        }
 
         File file = new File(fileDir + "/" + fileName);
+        LOGGER.error("createBatchCSV :: " + file.getAbsolutePath());
 
         boolean b1 = util.upload(sftpDir, file);
+        LOGGER.error(Boolean.toString(b1));
         if(!b1) {
             LOGGER.error("createBatchCSV :: SFTP Failed :: " + fileName);
         }
