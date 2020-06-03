@@ -394,8 +394,8 @@
                   AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   AND T2.PROMO_TYPE_ID = 2282 <!-- Discount -->
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
-                  --AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
-                  --AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
                   AND T2.EMP_CHK = #{empChk}
                   AND T2.EX_TRADE = #{exTrade}
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
@@ -414,8 +414,8 @@
                   AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   AND T2.PROMO_TYPE_ID = 2282
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
-                  --AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
-                  --AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
                   AND T2.EMP_CHK = #{empChk}
                   AND T2.EX_TRADE = #{exTrade}
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
@@ -424,8 +424,8 @@
                    ON 2284 = #{appTypeId}
                   AND T3.SRV_CNTRCT_PAC_ID = T2.PROMO_SRV_MEM_PAC_ID
                   AND T3.SRV_CNTRCT_PAC_STUS_ID = '1'
-                  --AND TO_CHAR(T3.SRV_CNTRCT_PAC_START_DT, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
-                  --AND TO_CHAR(T3.SRV_CNTRCT_PAC_END_DT,   'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND TO_CHAR(T3.SRV_CNTRCT_PAC_START_DT, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND TO_CHAR(T3.SRV_CNTRCT_PAC_END_DT,   'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
                   AND T3.PAC_TYPE = '2'
                  LEFT OUTER
                  JOIN SAL0091M T4
@@ -585,7 +585,7 @@
                 WHERE T1.PROMO_ITM_STK_ID = #{stkId}
                   AND T1.PROMO_ITM_STUS_ID = 1
                   AND T2.PROMO_ID = #{promoId}
-                  AND T2.E_SALES in (0,1,2)
+                  AND T2.E_SALES in (1,2)
                   OR T2.PROMO_ID = 31723
                 UNION
                SELECT DISTINCT T2.PROMO_ID PROMO_ID
@@ -2940,7 +2940,7 @@
 	          , #{gstChk}
 	          , #{srvPacId}
 	          , #{salesProdSz}
-	          , 'GOODNITE'
+	          , (SELECT CODE_NAME FROM SYS0094M WHERE IND = 'MATBSCBRD' AND CODE = 'PRMSRI' AND DISB = 0)
 	          , null
 	          , 1
 	     )
