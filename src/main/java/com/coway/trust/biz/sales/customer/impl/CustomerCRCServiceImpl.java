@@ -97,19 +97,19 @@ public class CustomerCRCServiceImpl extends EgovAbstractServiceImpl implements C
         sftpDir = params.get("sftpPath").toString();
 
         SFTPUtil util = new SFTPUtil();
-//        util.init(host, userName, password, Integer.parseInt(port));
+        util.init(host, userName, password, Integer.parseInt(port));
 
-        try {
-            JSch jsch = new JSch();
-            Session session = jsch.getSession(userName, host);
-            session.setPassword(password);
-            session.connect();
-
-            ChannelSftp sftpChannel = (ChannelSftp) session.openChannel("sftp");
-            sftpChannel.connect();
-        } catch(Exception ex) {
-            LOGGER.error(ex.toString());
-        }
+//        try {
+//            JSch jsch = new JSch();
+//            Session session = jsch.getSession(userName, host);
+//            session.setPassword(password);
+//            session.connect();
+//
+//            ChannelSftp sftpChannel = (ChannelSftp) session.openChannel("sftp");
+//            sftpChannel.connect();
+//        } catch(Exception ex) {
+//            LOGGER.error(ex.toString());
+//        }
 
         File file = new File(fileDir + "/" + fileName);
 
