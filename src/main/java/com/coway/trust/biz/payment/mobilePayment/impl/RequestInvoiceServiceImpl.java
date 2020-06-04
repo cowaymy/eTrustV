@@ -36,6 +36,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import org.apache.http.*;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -185,6 +189,55 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 		LOGGER.debug("selectInvoiceDetails : {}",selectInvoiceDetails);
 
+		String input = "{\n"
+				+ " \"invoiceId\": \"65101018\",\r\n"
+				+ " \"customerName\": \"OCBC BANK (MALAYSIA) BERHAD\",\r\n"
+				+ " \"customerEmail\": \"vannie.koh@coway.com.my\",\r\n"
+				+ " \"invoiceDate\": \"MAY 2020\",\r\n"
+				+ "	\"currentCharges\": \"RM 159.00\",\r\n"
+				+ " \"previousBalance\": \"RM0.00\",\r\n"
+				+ " \"outstanding\": \"RM 159.00\",\r\n"
+				+ " \"virtualAccount\": \"98 9920 0001 0735\",\r\n"
+				+ " \"invoiceNumber\": \"BR4137692522\",\r\n"
+				+ " \"billerCode\": \"9928\",\r\n"
+				+ " \"refNumber1\": \"36393064\",\r\n"
+				+ " \"refNumber2\": \"BR4137692522\",\r\n"
+				+ " \"cowayEmail\": \"billing@coway.com.my\""
+				+ " \n}";
+
+		LOGGER.debug("input " +input);
+
+
+		try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+
+			HttpPost request = new HttpPost("http://128.199.165.110:8080/invoice/email");
+            request.setHeader("x-token", "fGxqeS9pzR7duRBV7xpXSkFBPtQFKn");
+            request.setHeader("Content-Type", "application/json");
+
+            request.setEntity(new StringEntity(input));
+
+            HttpResponse response = client.execute(request);
+
+            LOGGER.debug("response ",response);
+
+            BufferedReader bufReader = new BufferedReader(new InputStreamReader(
+                    response.getEntity().getContent()));
+
+            StringBuilder builder = new StringBuilder();
+
+            String line;
+
+            while ((line = bufReader.readLine()) != null) {
+
+                builder.append(line);
+                builder.append(System.lineSeparator());
+            }
+
+            LOGGER.debug("builder " +builder);
+        }
+
+		/* below codes return HTTP ERROR CODE 403
+
 		try {
 
 	        URL url = new URL("http://128.199.165.110:8080/invoice/email&x-token=fGxqeS9pzR7duRBV7xpXSkFBPtQFKn");
@@ -241,7 +294,7 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 	        e.printStackTrace();
 
-	     }
+	     } */
 		return result;
 
     }
