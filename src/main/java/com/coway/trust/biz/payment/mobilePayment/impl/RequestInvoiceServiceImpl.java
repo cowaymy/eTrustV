@@ -35,6 +35,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import org.apache.http.*;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -186,12 +187,12 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 		try {
 
-	        URL url = new URL("http://128.199.165.110:8080/invoice/email");
+	        URL url = new URL("http://128.199.165.110:8080/invoice/email&x-token=fGxqeS9pzR7duRBV7xpXSkFBPtQFKn");
 	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 	        conn.setDoOutput(true);
 	        conn.setRequestMethod("POST");
 	        conn.setRequestProperty("Content-Type", "application/json");
-	        conn.setRequestProperty("x-token", "fGxqeS9pzR7duRBV7xpXSkFBPtQFKn");
+	        //conn.setRequestProperty("x-token", "fGxqeS9pzR7duRBV7xpXSkFBPtQFKn");
 
 	        LOGGER.debug("url " +url);
 	        LOGGER.debug("conn " +conn);
