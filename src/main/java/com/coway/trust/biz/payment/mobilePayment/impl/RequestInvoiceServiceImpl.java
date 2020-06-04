@@ -180,16 +180,16 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
         return saveCnt;
     }
 
-    private boolean sendMobileInvoiceRequest(Map<String, Object> param) throws JsonParseException, JsonMappingException, IOException {
-    	boolean result = false;
+	private boolean sendMobileInvoiceRequest(Map<String, Object> param) throws JsonParseException, JsonMappingException, IOException {
+		boolean result = false;
 
-    	LOGGER.debug("sendMobileInvoiceRequest : {}", param.toString());
+		LOGGER.debug("sendMobileInvoiceRequest : {}", param.toString());
 
-		List<EgovMap> selectInvoiceDetails	= requestInvoiceMapper.selectInvoiceDetails(param);
+		List<EgovMap> selectInvoiceDetails = requestInvoiceMapper.selectInvoiceDetails(param);
 
-		LOGGER.debug("selectInvoiceDetails : {}",selectInvoiceDetails);
+		LOGGER.debug("selectInvoiceDetails : {}", selectInvoiceDetails);
 
-		String input = "{\n"
+		String input = "[{\n"
 				+ " \"invoiceId\": \"65101018\",\r\n"
 				+ " \"customerName\": \"OCBC BANK (MALAYSIA) BERHAD\",\r\n"
 				+ " \"customerEmail\": \"vannie.koh@coway.com.my\",\r\n"
@@ -203,7 +203,7 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 				+ " \"refNumber1\": \"36393064\",\r\n"
 				+ " \"refNumber2\": \"BR4137692522\",\r\n"
 				+ " \"cowayEmail\": \"billing@coway.com.my\""
-				+ " \n}";
+				+ " \n}]";
 
 		LOGGER.debug("input " +input);
 
@@ -211,30 +211,36 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 		try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
 
 			HttpPost request = new HttpPost("http://128.199.165.110:8080/invoice/email");
-            request.setHeader("x-token", "fGxqeS9pzR7duRBV7xpXSkFBPtQFKn");
-            request.setHeader("Content-Type", "application/json");
+			request.setHeader("x-token", "fGxqeS9pzR7duRBV7xpXSkFBPtQFKn");
+			request.setHeader("Content-Type", "application/json");
 
-            request.setEntity(new StringEntity(input));
+			request.setEntity(new StringEntity(input));
 
-            HttpResponse response = client.execute(request);
+			HttpResponse response = client.execute(request);
 
-            LOGGER.debug("response ",response);
+			LOGGER.debug("client ", client);
+			LOGGER.debug("request ", request);
+			LOGGER.debug("response ", response);
 
-            BufferedReader bufReader = new BufferedReader(new InputStreamReader(
-                    response.getEntity().getContent()));
+			BufferedReader bufReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
-            StringBuilder builder = new StringBuilder();
+			StringBuilder builder = new StringBuilder();
 
-            String line;
+			String line;
 
-            while ((line = bufReader.readLine()) != null) {
+			while ((line = bufReader.readLine()) != null) {
 
-                builder.append(line);
-                builder.append(System.lineSeparator());
-            }
+				builder.append(line);
+				builder.append(System.lineSeparator());
+			}
 
-            LOGGER.debug("builder " +builder);
-        }
+			LOGGER.debug("builder " + builder);
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+
+		}
 
 		/* below codes return HTTP ERROR CODE 403
 
