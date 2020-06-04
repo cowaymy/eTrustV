@@ -28,7 +28,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -170,6 +176,70 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
     }
 
     private boolean sendMobileInvoiceRequest(Map<String, Object> param) throws JsonParseException, JsonMappingException, IOException {
+    	boolean result = false;
+
+    	LOGGER.debug("sendMobileInvoiceRequest : {}", param.toString());
+
+		List<EgovMap> selectInvoiceDetails	= requestInvoiceMapper.selectInvoiceDetails(param);
+
+		LOGGER.debug("selectInvoiceDetails : {}",selectInvoiceDetails);
+
+		try {
+
+	        URL url = new URL("http://128.199.165.110:8080/invoice/email?x-token=fGxqeS9pzR7duRBV7xpXSkFBPtQFKn");
+	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	        conn.setDoOutput(true);
+	        conn.setRequestMethod("POST");
+	        conn.setRequestProperty("Content-Type", "application/json");
+
+	        String input = "{\n" + "\"invoiceId\": 65101018,\r\n" +
+	                "    \"customerName\": \"OCBC BANK (MALAYSIA) BERHAD\",\r\n" +
+	                "    \"customerEmail\": \"vannie.koh@coway.com.my\",\r\n" +
+	                "    \"invoiceDate\": \"MAY 2020\",\r\n" +
+	                "	 \"currentCharges\": \"RM 159.00\",\r\n" +
+	                "    \"previousBalance\": \"RM0.00\",\r\n" +
+	                "    \"outstanding\": \"RM 159.00\",\r\n" +
+	                "    \"virtualAccount\": \"98 9920 0001 0735\",\r\n" +
+	                "    \"invoiceNumber\": \"BR4137692522\",\r\n" +
+	                "	 \"billerCode\": \"9928\",\r\n" +
+	                "    \"refNumber1\": \"36393064\",\r\n" +
+	                "    \"refNumber2\": \"BR4137692522\",\r\n" +
+	                "    \"cowayEmail\": \"billing@coway.com.my\"" + "\n}";
+
+	        LOGGER.debug("input "+input);
+
+	        OutputStream os = conn.getOutputStream();
+	        os.write(input.getBytes());
+	        os.flush();
+
+	        if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+	            throw new RuntimeException("Failed : HTTP error code : "
+	                + conn.getResponseCode());
+	        }
+
+	        BufferedReader br = new BufferedReader(new InputStreamReader(
+	                (conn.getInputStream())));
+
+	        String output;
+	        LOGGER.debug("Output from Server .... \n");
+	        while ((output = br.readLine()) != null) {
+	        	LOGGER.debug(output);
+	        }
+
+	        conn.disconnect();
+
+	      } catch (IOException e) {
+
+	        e.printStackTrace();
+
+	     }
+		return result;
+
+    }
+
+    /*
+
+    private boolean sendMobileInvoiceRequest(Map<String, Object> param) throws JsonParseException, JsonMappingException, IOException {
 		boolean result = false;
 
 		LOGGER.debug("sendMobileInvoiceRequest : {}", param.toString());
@@ -178,20 +248,19 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 		LOGGER.debug("selectInvoiceDetails : {}",selectInvoiceDetails);
 
-//        if (CommonUtils.isEmpty(bulkSmsVO.getMobile())) {
-//            throw new ApplicationException(AppConstants.FAIL, "required mobiles.....");
-//        }
+        if (CommonUtils.isEmpty(bulkSmsVO.getMobile())) {
+            throw new ApplicationException(AppConstants.FAIL, "required mobiles.....");
+        }
 
-        //SmsResult result = new SmsResult();
+        SmsResult result = new SmsResult();
         Map<String, String> reason = new HashMap<>();
-        //result.setReqCount(1);
+        result.setReqCount(1);
 
-        //String trId = UUIDGenerator.get();
-        //result.setMsgId(trId);
-        String smsUrl = "http://128.199.165.110:8080/invoice/email?x-token=fGxqeS9pzR7duRBV7xpXSkFBPtQFKn";
-		/*"http://" + giHost + giPath + "?user=" + giUserName + "&secret=" + giPassword
+        String trId = UUIDGenerator.get();
+        result.setMsgId(trId);
+        String smsUrl = http://" + giHost + giPath + "?user=" + giUserName + "&secret=" + giPassword
                 + "&phone_number=" + giCountryCode + bulkSmsVO.getMobile().trim()
-                + "&text=" + URLEncoder.encode(bulkSmsVO.getMessage(), "UTF-8");*/
+                + "&text=" + URLEncoder.encode(bulkSmsVO.getMessage(), "UTF-8");
         //http://47.254.203.181/api/send?user=gi_xHdw6&secret=VpHVSMLS1E4xa2vq7qtVYtb7XJIBDB&phone_number=6014225372&text=testing123
 
         int statusId;
@@ -204,7 +273,7 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
         String output = response.getEntity(String.class);
 
         LOGGER.debug("================");
-        LOGGER.debug("smsUrl" +smsUrl);
+        LOGGER.debug("smsUrl " +smsUrl);
         LOGGER.debug("webResource "+webResource);
         LOGGER.debug("response "+response);
         LOGGER.debug("output "+output);
@@ -250,5 +319,5 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
         //updateResult(bulkSmsVO.getSmsId(), statusId, retCode, body, trId);
         return result;
-    }
+    } */
 }
