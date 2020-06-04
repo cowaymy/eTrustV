@@ -192,25 +192,32 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 	        conn.setRequestMethod("POST");
 	        conn.setRequestProperty("Content-Type", "application/json");
 
-	        String input = "{\n" + "\"invoiceId\": 65101018,\r\n" +
-	                "    \"customerName\": \"OCBC BANK (MALAYSIA) BERHAD\",\r\n" +
-	                "    \"customerEmail\": \"vannie.koh@coway.com.my\",\r\n" +
-	                "    \"invoiceDate\": \"MAY 2020\",\r\n" +
-	                "	 \"currentCharges\": \"RM 159.00\",\r\n" +
-	                "    \"previousBalance\": \"RM0.00\",\r\n" +
-	                "    \"outstanding\": \"RM 159.00\",\r\n" +
-	                "    \"virtualAccount\": \"98 9920 0001 0735\",\r\n" +
-	                "    \"invoiceNumber\": \"BR4137692522\",\r\n" +
-	                "	 \"billerCode\": \"9928\",\r\n" +
-	                "    \"refNumber1\": \"36393064\",\r\n" +
-	                "    \"refNumber2\": \"BR4137692522\",\r\n" +
-	                "    \"cowayEmail\": \"billing@coway.com.my\"" + "\n}";
+	        LOGGER.debug("url ",url);
+	        LOGGER.debug("conn ",conn);
 
-	        LOGGER.debug("input "+input);
+			String input = "{\n"
+					+ " \"invoiceId\": \"65101018\",\r\n"
+					+ " \"customerName\": \"OCBC BANK (MALAYSIA) BERHAD\",\r\n"
+					+ " \"customerEmail\": \"vannie.koh@coway.com.my\",\r\n"
+					+ " \"invoiceDate\": \"MAY 2020\",\r\n"
+					+ "	\"currentCharges\": \"RM 159.00\",\r\n"
+					+ " \"previousBalance\": \"RM0.00\",\r\n"
+					+ " \"outstanding\": \"RM 159.00\",\r\n"
+					+ " \"virtualAccount\": \"98 9920 0001 0735\",\r\n"
+					+ " \"invoiceNumber\": \"BR4137692522\",\r\n"
+					+ " \"billerCode\": \"9928\",\r\n"
+					+ " \"refNumber1\": \"36393064\",\r\n"
+					+ " \"refNumber2\": \"BR4137692522\",\r\n"
+					+ " \"cowayEmail\": \"billing@coway.com.my\""
+					+ " \n}";
+
+	        LOGGER.debug("input " ,input);
 
 	        OutputStream os = conn.getOutputStream();
 	        os.write(input.getBytes());
 	        os.flush();
+
+	        LOGGER.debug("conn.getResponseCode() ", conn.getResponseCode());
 
 	        if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
 	            throw new RuntimeException("Failed : HTTP error code : "
