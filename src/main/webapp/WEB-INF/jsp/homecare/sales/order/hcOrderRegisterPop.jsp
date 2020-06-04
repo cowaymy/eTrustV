@@ -361,12 +361,12 @@
                     }
                 }
 
-                if(convToOrdYn != 'Y') {
+                //if(convToOrdYn != 'Y') {
                 	if(vCodeId == '3198') { // SOF Form, check default when it is not eKey-in
                 		AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
                 		if(docDefaultChk == false) docDefaultChk = true;
                 	}
-                }
+                //}
             } else {
                  docDefaultChk = false;
             }
@@ -1674,9 +1674,7 @@
             },
             docSubmissionVOList    : GridCommon.getEditData(docGridID)
         };
-        console.log(orderVO);
         Common.ajax("POST", "/homecare/sales/order/hcRegisterOrder.do", orderVO, function(result) {
-
             Common.alert('<spring:message code="sal.alert.msg.ordSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
 
         },  function(jqXHR, textStatus, errorThrown) {
