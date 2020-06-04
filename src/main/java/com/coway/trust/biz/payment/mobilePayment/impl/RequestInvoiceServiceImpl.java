@@ -186,11 +186,12 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 		try {
 
-	        URL url = new URL("http://128.199.165.110:8080/invoice/email?x-token=fGxqeS9pzR7duRBV7xpXSkFBPtQFKn");
+	        URL url = new URL("http://128.199.165.110:8080/invoice/email");
 	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 	        conn.setDoOutput(true);
 	        conn.setRequestMethod("POST");
 	        conn.setRequestProperty("Content-Type", "application/json");
+	        conn.setRequestProperty("x-token", "fGxqeS9pzR7duRBV7xpXSkFBPtQFKn");
 
 	        LOGGER.debug("url " +url);
 	        LOGGER.debug("conn " +conn);
