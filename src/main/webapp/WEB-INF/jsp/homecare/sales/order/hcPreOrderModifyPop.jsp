@@ -1570,7 +1570,7 @@
             $('#ordPv1').val('${preMatOrderInfo.totPv}');
             $('#ordPvGST1').val('${preMatOrderInfo.totPvGst}');
             $('#ordPriceId1').val('${preMatOrderInfo.prcId}');
-        //}
+        }
 
         // Set Frame Promotion
         if($("#ordProduct2 option:selected").index() > 0) {
