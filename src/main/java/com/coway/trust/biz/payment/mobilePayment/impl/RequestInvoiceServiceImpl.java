@@ -192,8 +192,8 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 	        conn.setRequestMethod("POST");
 	        conn.setRequestProperty("Content-Type", "application/json");
 
-	        LOGGER.debug("url ",url);
-	        LOGGER.debug("conn ",conn);
+	        LOGGER.debug("url " +url);
+	        LOGGER.debug("conn " +conn);
 
 			String input = "{\n"
 					+ " \"invoiceId\": \"65101018\",\r\n"
@@ -211,13 +211,13 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 					+ " \"cowayEmail\": \"billing@coway.com.my\""
 					+ " \n}";
 
-	        LOGGER.debug("input " ,input);
+	        LOGGER.debug("input " +input);
 
 	        OutputStream os = conn.getOutputStream();
 	        os.write(input.getBytes());
 	        os.flush();
 
-	        LOGGER.debug("conn.getResponseCode() ", conn.getResponseCode());
+	        LOGGER.debug("conn.getResponseCode() " +conn.getResponseCode());
 
 	        if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
 	            throw new RuntimeException("Failed : HTTP error code : "
