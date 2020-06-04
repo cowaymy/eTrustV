@@ -12,6 +12,7 @@
  14/02/2020  ONGHC  1.0.6          AMEND FOR PSI
  26/02/2020  ONGHC  1.0.7          AMEND FOR LPM
  28/02/2020  ONGHC  1.0.8          AMEND fn_loadDftCde
+ 04/06/2020  ONGHC  1.0.9          AMEND fn_loadDftCde
  -->
 
 <!-- AS ORDER > AS MANAGEMENT > VIEW / ADD AS ENTRY -->
@@ -2067,6 +2068,40 @@
             return false;
           }
         }
+
+        if (itm.id == "7072") {
+          if ($("#def_part_id").val() == "5299" || $("#def_part_id").val() == "5300" || $("#def_part_id").val() == "5301" || $("#def_part_id").val() == "5302" || $("#def_part_id").val() == "5321" || $("#def_part_id").val() == "5332") {
+            var text1 = "<spring:message code='service.text.defPrt' />";
+            var text2= $("#def_part_text").val();
+            var text3 = itm.descp;
+            var text4 = "<spring:message code='service.text.defTyp' />";
+            var text = text1 + ";" + text2 + ";" + text3;
+            msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+            $("#def_type").val("");
+            $("#def_type_id").val("");
+            $("#def_type_text").val("");
+          }
+
+          if ($("#def_def_id").val() == "6041" || $("#def_def_id").val() == "6042" || $("#def_def_id").val() == "6043" || $("#def_def_id").val() == "6044" || $("#def_def_id").val() == "6045" || $("#def_def_id").val() == "6046" ||
+              $("#def_def_id").val() == "6008" || $("#def_def_id").val() == "6015" || $("#def_def_id").val() == "6023" || $("#def_def_id").val() == "6031") {
+              var text1 = "<spring:message code='service.text.dtlDef' />";
+              var text2= $("#def_def_text").val();
+              var text3 = itm.descp;
+              var text4 = "<spring:message code='service.text.defTyp' />";
+              var text = text1 + ";" + text2 + ";" + text3;
+              msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+              $("#def_type").val("");
+              $("#def_type_id").val("");
+              $("#def_type_text").val("");
+          }
+
+          if (msg != ""){
+            Common.alert(msg);
+            return false;
+          }
+        }
       } else if (prgmCde == 'DC') {
         $("#def_code").val(itm.code);
         $("#def_code_id").val(itm.id);
@@ -2092,6 +2127,22 @@
               Common.alert(msg);
               return false;
           }
+
+          if ($("#def_type_id").val() == "7072") {
+            var text1 = "<spring:message code='service.text.defTyp' />";
+            var text2= $("#def_type_text").val();
+            var text3 = itm.descp;
+            var text4 = "<spring:message code='service.text.defPrt' />";
+            var text = text1 + ";" + text2 + ";" + text3;
+            var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+            $("#def_part").val("");
+            $("#def_part_id").val("");
+            $("#def_part_text").val("");
+
+            Common.alert(msg);
+            return false;
+          }
         }
       } else if (prgmCde == 'DD') {
         $("#def_def").val(itm.code);
@@ -2104,22 +2155,41 @@
         $("#def_code_text").val("");
 
         if (itm.id == "6041" || itm.id == "6042" || itm.id == "6043" || itm.id== "6044" || itm.id == "6045" || itm.id == "6046") {
-            if ($("#def_type_id").val() == "7059") {
-                var text1 = "<spring:message code='service.text.defTyp' />";
-                var text2= $("#def_type_text").val();
-                var text3 = itm.descp;
-                var text4 = "<spring:message code='service.text.dtlDef' />";
-                var text = text1 + ";" + text2 + ";" + text3;
-                var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+          if ($("#def_type_id").val() == "7059") {
+            var text1 = "<spring:message code='service.text.defTyp' />";
+            var text2= $("#def_type_text").val();
+            var text3 = itm.descp;
+            var text4 = "<spring:message code='service.text.dtlDef' />";
+            var text = text1 + ";" + text2 + ";" + text3;
+            var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
 
-                $("#def_def").val("");
-                $("#def_def_id").val("");
-                $("#def_def_text").val("");
+            $("#def_def").val("");
+            $("#def_def_id").val("");
+            $("#def_def_text").val("");
 
-                Common.alert(msg);
-                return false;
-            }
+            Common.alert(msg);
+            return false;
           }
+        }
+
+        if (itm.id == "6041" || itm.id == "6042" || itm.id == "6043" || itm.id== "6044" || itm.id == "6045" || itm.id == "6046" ||
+            itm.id == "6008" || itm.id== "6015" || itm.id == "6023" || itm.id == "6031") {
+            if ($("#def_type_id").val() == "7072") {
+             var text1 = "<spring:message code='service.text.defTyp' />";
+             var text2= $("#def_type_text").val();
+             var text3 = itm.descp;
+             var text4 = "<spring:message code='service.text.dtlDef' />";
+             var text = text1 + ";" + text2 + ";" + text3;
+             var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+             $("#def_def").val("");
+             $("#def_def_id").val("");
+             $("#def_def_text").val("");
+
+              Common.alert(msg);
+              return false;
+            }
+        }
       } else if (prgmCde == 'SC') {
         $("#solut_code").val(itm.code);
         $("#solut_code_id").val(itm.id);
