@@ -283,32 +283,36 @@
 		$('#save').click(function() {
 			var items = GridCommon.getEditData(reqGrid);
 			var bool = true;
-			for (var i = 0; i < items.add.length; i++) {
-				console.log(items.add[i].itmtype);
-				if (items.add[i].itmtype == 'Stock') {
-					Common.alert('Stock is not allow to Request.');
-					bool = false;
-					break;
-				}
+			if (items.add.length > 0){
+				for (var i = 0; i < items.add.length; i++) {
+					console.log(items.add[i].itmtype);
+					if (items.add[i].itmtype == 'Stock') {
+						Common.alert('Stock is not allow to Request.');
+						bool = false;
+						break;
+					}
 
-				if (items.add[i].itmfcastqty == 0) {
-					Common.alert('Please enter the Request Forecast Qty.');
-					bool = false;
-					break;
+					if (items.add[i].itmfcastqty == 0) {
+						Common.alert('Please enter the Request Forecast Qty.');
+						bool = false;
+						break;
+					}
 				}
+				if (bool && f_validatation('save')) { //here to enable the select
+
+					// Added by Hui Ding for auto process GI
+	                var selectedToLocation = $("#tlocation option:selected").html();
+
+	                if (selectedToLocation.indexOf("CDB") > 0){
+	                	$("#isCody").val('Y');
+	                	Common.confirm("Assignment to CODY will auto complete with GI process.", fn_save, null);
+	                } else {
+	                	fn_save();
+	                }
+	               }
+			} else {
+				Common.alert('Please select filter to be assigned.');
 			}
-			if (bool && f_validatation('save')) { //here to enable the select
-
-				// Added by Hui Ding for auto process GI
-                var selectedToLocation = $("#tlocation option:selected").html();
-
-                if (selectedToLocation.indexOf("CDB") > 0){
-                	$("#isCody").val('Y');
-                	Common.confirm("Assignment to CODY will auto complete with GI process.", fn_save, null);
-                } else {
-                	fn_save();
-                }
-               }
 
 		});
 		$("#smtype").change(function() {
