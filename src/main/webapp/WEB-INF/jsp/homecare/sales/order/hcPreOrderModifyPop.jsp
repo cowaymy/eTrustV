@@ -1550,7 +1550,7 @@
         $('#ordPromo1, #ordPromo2').removeAttr("disabled");
 
         // Set Mattress Promotion
-        if($("#ordProduct1 option:selected").index() <= 0) {
+        if($("#ordProduct1 option:selected").index() > 0) {
             doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${preOrderInfo.appTypeId}'
                 , stkId:'${preMatOrderInfo.itmStkId}'
                 , empChk:'${preMatOrderInfo.empChk}'
@@ -1570,10 +1570,10 @@
             $('#ordPv1').val('${preMatOrderInfo.totPv}');
             $('#ordPvGST1').val('${preMatOrderInfo.totPvGst}');
             $('#ordPriceId1').val('${preMatOrderInfo.prcId}');
-        }
+        //}
 
         // Set Frame Promotion
-        if($("#ordProduct2 option:selected").index() <= 0) {
+        if($("#ordProduct2 option:selected").index() > 0) {
             doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:'${preOrderInfo.appTypeId}'
                 , stkId:'${preFrmOrderInfo.itmStkId}'
                 , empChk:'${preFrmOrderInfo.empChk}'
