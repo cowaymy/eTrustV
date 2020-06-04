@@ -1104,7 +1104,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         // sal0028D.put("custCrcId", );
         sal0028D.put("custId", param.getCustId());
         sal0028D.put("custCrcNo", param.getCustOriCrcNo());
-        sal0028D.put("custOriCrcNo", crcNo);
+        sal0028D.put("custOriCrcNo", param.getCustOriCrcNo());
         sal0028D.put("custEncryptCrcNo", param.getCustOriCrcNo());
         sal0028D.put("custCrcOwner", param.getCustCrcOwner());
         sal0028D.put("custCrcTypeId", param.getCustCrcTypeId());
@@ -1120,7 +1120,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         sal0028D.put("custCrcCrtUserId", loginVO.getUserId());
         // sal0028D.put("custCrcCrtDt", );
         sal0028D.put("cardTypeId", param.getCardTypeId());
-        sal0028D.put("custCrcToken", retResult.get("token").toString());
+        sal0028D.put("custCrcToken", "");
         saveCnt = eKeyInApiMapper.insertSAL0028D(sal0028D);
         if (saveCnt != 1) {
           throw new ApplicationException(AppConstants.FAIL, "Card Exception.");
