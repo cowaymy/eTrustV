@@ -37,6 +37,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import org.apache.http.*;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -97,6 +98,7 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
     @Override
 	public int saveRequestInvoiceArrpove(Map<String, Object> param, int userId) throws Exception {
     	boolean apiresult = false;
+    	int saveCnt = 0 ;
 
 		param.put("userId", userId);
 		if (StringUtils.isEmpty(param.get("reqInvcNo"))) {
@@ -114,29 +116,33 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 		LOGGER.debug("saveRequestInvoiceArrpove : {}", param.toString());
 
-		int saveCnt = requestInvoiceMapper.saveRequestInvoiceArrpove(param);
-		if (saveCnt == 0) {
-			throw new ApplicationException(AppConstants.FAIL, "Failed to save.");
-		}
-
-		List<Map<String, Object>> arrParams = new ArrayList<Map<String, Object>>();
-		Map<String, Object> sParams = new HashMap<String, Object>();
-		sParams.put("mobTicketNo", param.get("mobTicketNo"));
-		sParams.put("ticketStusId", "5");
-		sParams.put("userId", userId);
-		arrParams.add(sParams);
-		saveCnt = mobileAppTicketApiCommonService.updateMobileAppTicket(arrParams);
-		if (saveCnt == 0) {
-			throw new ApplicationException(AppConstants.FAIL, "Failed to update.");
-		}
-
-		LOGGER.debug("param.get(taxInvcId)" + (param.get("taxInvcId") != null));
-
 		if (param.get("taxInvcId") != null) {
 			LOGGER.debug("param.get(taxInvcId) != null ");
 			apiresult = sendMobileInvoiceRequest(param);
 		}
 		LOGGER.debug("apiresult "+apiresult);
+
+		if (apiresult) {
+			saveCnt = requestInvoiceMapper.saveRequestInvoiceArrpove(param);
+			if (saveCnt == 0) {
+				throw new ApplicationException(AppConstants.FAIL, "Failed to save Request Invoive.");
+			}
+
+			List<Map<String, Object>> arrParams = new ArrayList<Map<String, Object>>();
+			Map<String, Object> sParams = new HashMap<String, Object>();
+			sParams.put("mobTicketNo", param.get("mobTicketNo"));
+			sParams.put("ticketStusId", "5");
+			sParams.put("userId", userId);
+			arrParams.add(sParams);
+
+			saveCnt = mobileAppTicketApiCommonService.updateMobileAppTicket(arrParams);
+			if (saveCnt == 0) {
+				throw new ApplicationException(AppConstants.FAIL, "Failed to update Mobile App Ticket.");
+			}
+		} else {
+			saveCnt = 0;
+			throw new ApplicationException(AppConstants.FAIL, "Failed to send Mobile Invoice Request.");
+		}
 
 		return saveCnt;
 	}
@@ -189,11 +195,11 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 		LOGGER.debug("selectInvoiceDetails : {}", selectInvoiceDetails);
 
-		String input = "[{\n"
+		String payload = "data=[{\n"
 				+ " \"invoiceId\": \"65101018\",\r\n"
 				+ " \"customerName\": \"OCBC BANK (MALAYSIA) BERHAD\",\r\n"
 				+ " \"customerEmail\": \"vannie.koh@coway.com.my\",\r\n"
-				+ " \"invoiceDate\": \"MAY 2020\",\r\n"
+				+ " \"invoiceDate\": \"MAY-20\",\r\n"
 				+ "	\"currentCharges\": \"RM 159.00\",\r\n"
 				+ " \"previousBalance\": \"RM0.00\",\r\n"
 				+ " \"outstanding\": \"RM 159.00\",\r\n"
@@ -205,7 +211,11 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 				+ " \"cowayEmail\": \"billing@coway.com.my\""
 				+ " \n}]";
 
-		LOGGER.debug("input " +input);
+		LOGGER.debug("payload " +payload);
+
+		StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_FORM_URLENCODED);
+
+		LOGGER.debug("entity " +entity);
 
 
 		try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
@@ -214,7 +224,7 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 			request.setHeader("x-token", "fGxqeS9pzR7duRBV7xpXSkFBPtQFKn");
 			request.setHeader("Content-Type", "application/json");
 
-			request.setEntity(new StringEntity(input));
+			request.setEntity(entity);
 
 			HttpResponse response = client.execute(request);
 
@@ -304,88 +314,4 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 		return result;
 
     }
-
-    /*
-
-    private boolean sendMobileInvoiceRequest(Map<String, Object> param) throws JsonParseException, JsonMappingException, IOException {
-		boolean result = false;
-
-		LOGGER.debug("sendMobileInvoiceRequest : {}", param.toString());
-
-		List<EgovMap> selectInvoiceDetails	= requestInvoiceMapper.selectInvoiceDetails(param);
-
-		LOGGER.debug("selectInvoiceDetails : {}",selectInvoiceDetails);
-
-        if (CommonUtils.isEmpty(bulkSmsVO.getMobile())) {
-            throw new ApplicationException(AppConstants.FAIL, "required mobiles.....");
-        }
-
-        SmsResult result = new SmsResult();
-        Map<String, String> reason = new HashMap<>();
-        result.setReqCount(1);
-
-        String trId = UUIDGenerator.get();
-        result.setMsgId(trId);
-        String smsUrl = http://" + giHost + giPath + "?user=" + giUserName + "&secret=" + giPassword
-                + "&phone_number=" + giCountryCode + bulkSmsVO.getMobile().trim()
-                + "&text=" + URLEncoder.encode(bulkSmsVO.getMessage(), "UTF-8");
-        //http://47.254.203.181/api/send?user=gi_xHdw6&secret=VpHVSMLS1E4xa2vq7qtVYtb7XJIBDB&phone_number=6014225372&text=testing123
-
-        int statusId;
-        String body = null;
-        String retCode = null;
-
-        Client client = Client.create();
-        WebResource webResource = client.resource(smsUrl);
-        ClientResponse response = webResource.accept("application/json").get(ClientResponse.class);
-        String output = response.getEntity(String.class);
-
-        LOGGER.debug("================");
-        LOGGER.debug("smsUrl " +smsUrl);
-        LOGGER.debug("webResource "+webResource);
-        LOGGER.debug("response "+response);
-        LOGGER.debug("output "+output);
-        LOGGER.debug("================");
-
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        Map<String, Object> resultMap = mapper.readValue(output, new TypeReference<Map<String, Object>>() {});
-        String success = resultMap.get("success").toString();
-        String errorCode = resultMap.get("error_code") != null ? resultMap.get("error_code").toString() : null ;
-        String errorMessage = resultMap.get("error_message") != null ? resultMap.get("error_message").toString() : null;
-
-        LOGGER.debug("================");
-        LOGGER.debug("resultMap "+resultMap);
-        LOGGER.debug("success "+success);
-        LOGGER.debug("errorCode "+errorCode);
-        LOGGER.debug("errorMessage "+errorMessage);
-        LOGGER.debug("================");
-
-        System.out.println("================");
-        System.out.println(success);
-        System.out.println(errorCode);
-        System.out.println(errorMessage);
-        System.out.println("================");
-
-        if(success.equals("true")){
-			result = true;
-          //retCode = String.valueOf(response.getStatus());
-          //body = "success";
-          //statusId = 4;
-          //result.setSuccessCount(result.getSuccessCount() + 1);
-        }else{
-			result = false;
-          //retCode = errorCode;
-          //body = errorMessage;
-          //statusId = 21;
-          //result.setFailCount(result.getFailCount() + 1);
-          //reason.clear();
-          //reason.put(bulkSmsVO.getMobile(), errorMessage);
-          //result.addFailReason(reason);
-        }
-
-        //updateResult(bulkSmsVO.getSmsId(), statusId, retCode, body, trId);
-        return result;
-    } */
 }
