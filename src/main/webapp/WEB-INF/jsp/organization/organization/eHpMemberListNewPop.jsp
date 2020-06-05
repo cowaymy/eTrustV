@@ -23,6 +23,15 @@ function fn_memberSave(){
                 $("#eHPtraineeType").val(($("#eHPtraineeType1").value));
                 $("#eHPsubDept").val(($("#eHPsearchSubDept").value));
 
+
+
+                var gender = "";
+                if( $('input[name=gender]:checked', '#eHPmemberAddForm').val() == "M"){
+                    gender = "M";
+                }else if( $('input[name=gender]:checked', '#eHPmemberAddForm').val() == "F"){
+                    gender = "F";
+                }
+
                 var formData = new FormData();
                 $.each(myFileCaches, function(n, v) {
                     console.log("n : " + n + " v.file : " + v.file);
@@ -47,7 +56,8 @@ function fn_memberSave(){
                     			  eHPmemberType : $("#eHPmemberType").val(),
                     			  eHPmemberNm : $("#eHPmemberNm").val(),
                     			  eHPjoinDate : $("#eHPjoinDate").val(),
-                    			  eHPgender : $("#eHPgender").val(),
+                    			  //eHPgender : $("#eHPgender").val(),
+                    			  eHPgender : gender,
                     			  eHPBirth : $("#eHPBirth").val(),
                     			  eHPcmbRace : $("#eHPcmbRace").val(),
                     			  eHPnational : $("#eHPnational").val(),
