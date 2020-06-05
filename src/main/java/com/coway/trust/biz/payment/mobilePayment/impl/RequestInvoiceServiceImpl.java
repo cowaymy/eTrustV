@@ -213,7 +213,7 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 		LOGGER.debug("payload " +payload);
 
-		StringEntity entity = new StringEntity(payload, ContentType.APPLICATION_FORM_URLENCODED);
+		StringEntity entity = new StringEntity(payload, "UTF-8");
 
 		LOGGER.debug("entity " +entity);
 
