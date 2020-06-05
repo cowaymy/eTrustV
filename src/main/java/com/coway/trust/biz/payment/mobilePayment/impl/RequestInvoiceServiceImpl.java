@@ -213,7 +213,7 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 		LOGGER.debug("payload " +payload);
 
-		StringEntity entity = new StringEntity(payload, "UTF-8");
+		StringEntity entity = new StringEntity(payload);
 
 		LOGGER.debug("entity " +entity);
 
@@ -222,7 +222,7 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 			HttpPost request = new HttpPost("http://128.199.165.110:8080/invoice/email");
 			request.setHeader("x-token", "fGxqeS9pzR7duRBV7xpXSkFBPtQFKn");
-			request.setHeader("Content-Type", "application/json");
+			//request.setHeader("Content-Type", "application/json");
 
 			request.setEntity(entity);
 
