@@ -224,31 +224,29 @@ AND     A.REQ_STUS_ID = 1                                                       
 <![CDATA[
 /* [com.coway.trust.biz.payment.mobilePayment.impl.RequestInvoiceMapper.selectInvoiceDetails] 20200529 - Vannie */
 SELECT DISTINCT
-    P301.TAX_INVC_ID  AS INVC_ID
-    , TAX_INVC_CUST_NAME AS CUST_NAME
-    , 'vannie.koh@coway.com.my' AS CUST_EMAIL
---     , CASE WHEN P301.EMAIL2 IS NOT NULL THEN
---        CASE WHEN P301.EMAIL2 <> P301.EMAIL THEN P301.EMAIL || '; ' || P301.EMAIL2
---            ELSE P301.EMAIL END
---        ELSE P301.EMAIL END AS CUST_EMAIL
-    , TO_CHAR(TO_DATE(TAX_INVC_CRT_DT, 'DD/MM/YYYY'), 'MON')  || ' ' || EXTRACT (YEAR FROM TAX_INVC_CRT_DT) AS INVC_DATE
-        , TO_CHAR(TAX_INVC_CHRG, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS CURR_CHARG
-        , TO_CHAR(TAX_INVC_OVERDU, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS PREV_BAL
-        , TO_CHAR(TAX_INVC_AMT_DUE, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS TOT_OUT
-    , TAX_INVC_CUST_VA_NO AS VIRTUAL_ACC
-    , R99.TAX_INVC_REF_NO AS INVC_NO
-    , '9928' AS BILL_CODE
-    , TAX_INVC_BILL_PAY_REF_NO1 AS REF_NO_1
-    , R99.TAX_INVC_REF_NO AS REF_NO_2
---    , 'billing@coway.com.my' AS COWAY_EMAIL
+    P301.TAX_INVC_ID  AS invoiceId
+    , TAX_INVC_CUST_NAME AS customerName
+     , CASE WHEN P301.EMAIL2 IS NOT NULL THEN
+        CASE WHEN P301.EMAIL2 <![CDATA[<>]]> P301.EMAIL THEN P301.EMAIL || '; ' || P301.EMAIL2
+            ELSE P301.EMAIL END
+        ELSE P301.EMAIL END AS customerEmail
+    , TO_CHAR(TO_DATE(TAX_INVC_CRT_DT, 'DD/MM/YYYY'), 'MON')  || ' ' || EXTRACT (YEAR FROM TAX_INVC_CRT_DT) AS invoiceDate
+        , TO_CHAR(TAX_INVC_CHRG, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS currentCharges
+        , TO_CHAR(TAX_INVC_OVERDU, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS previousBalance
+        , TO_CHAR(TAX_INVC_AMT_DUE, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS outstanding
+    , TAX_INVC_CUST_VA_NO AS virtualAccount
+    , R99.TAX_INVC_REF_NO AS invoiceNumber
+    , '9928' AS billerCode
+    , TAX_INVC_BILL_PAY_REF_NO1 AS refNumber1
+    , R99.TAX_INVC_REF_NO AS refNumber2
+    , 'billing@coway.com.my' AS cowayEmail
     FROM PAY0301D P301
     JOIN REP0099D R99 ON R99.TAX_INVC_ID = P301.TAX_INVC_ID
     WHERE
-    EXTRACT (YEAR FROM TAX_INVC_CRT_DT) = '2020'
-    AND EXTRACT (MONTH FROM TAX_INVC_CRT_DT) = '5'
-    AND P301.TAX_INVC_ID = #{taxInvcId}
+    P301.TAX_INVC_ID = #{taxInvcId}
+    --AND EXTRACT (YEAR FROM TAX_INVC_CRT_DT) = '2020'
+    --AND EXTRACT (MONTH FROM TAX_INVC_CRT_DT) = '5'
    ORDER BY P301.TAX_INVC_ID
-]]>
 </select>
 
 </mapper>
