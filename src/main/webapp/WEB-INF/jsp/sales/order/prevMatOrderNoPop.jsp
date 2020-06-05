@@ -10,7 +10,7 @@
         fn_getMatPrevOrderNo();
 
         AUIGrid.bind(prevOrdNoGridID, "cellDoubleClick", function(event) {
-        	var stus = AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "stus");
+        	var stus = AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "stusCodeId");
         	if(stus == 4){
 	            $('#matRelatedNo').val(AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"));
 	            $('#matOrdId').val(AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdId"));
@@ -35,6 +35,7 @@
           , { headerText : "Order Id",     dataField : "salesOrdId" , visible  : false}
           , { headerText : "Bundle Id",     dataField : "bndlId" , visible  : false}
           , { headerText : "Stock Id",     dataField : "stkId" , visible  : false}
+          , { headerText : "Status", dataField : "stusCodeId", visible  : false }
             ];
 
         var gridPros = {

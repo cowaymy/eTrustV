@@ -2955,6 +2955,7 @@
              , T1.SALES_ORD_ID
              , T3.STK_ID
              , T6.NAME STUS
+             , T1.STUS_CODE_ID STUS_CODE_ID
           FROM SAL0001D T1
           JOIN SAL0002D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
           JOIN SYS0026M T3 ON T3.STK_ID = T2.ITM_STK_ID
