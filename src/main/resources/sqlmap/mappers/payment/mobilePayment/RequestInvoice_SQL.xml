@@ -221,8 +221,7 @@ AND     A.REQ_STUS_ID = 1                                                       
 </update>
 
 <select id="selectInvoiceDetails" parameterType="Map" resultType="egovMap">
-<![CDATA[
-/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestInvoiceMapper.selectInvoiceDetails] 20200529 - Vannie */
+
 SELECT DISTINCT
     P301.TAX_INVC_ID  AS invoiceId
     , TAX_INVC_CUST_NAME AS customerName
