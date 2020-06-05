@@ -888,6 +888,8 @@ function fn_rentalOrderInfo(){
 
         $("#rentalMegaDeal").val(result.megaDeal);
         $("#rentalCnvrScheme").val(result.cnvrSchemeId);
+        $("#rentalAdvDisc").val(result.advDisc); // ADDED BY TOMMY 20200605
+
     });
 
     //Rental : Order 정보 조회
@@ -987,8 +989,9 @@ function rentalDiscountValue(){
     var mthRentAmt = AUIGrid.getCellValue(targetRenMstGridID, rows, "mthRentAmt");
 	var megaDeal = $("#rentalMegaDeal").val();
 	var cnvrScheme = $("#rentalCnvrScheme").val();
+	var advDisc = $("#rentalAdvDisc").val();
 
-	if(megaDeal == 0 && cnvrScheme == 0){
+	if(megaDeal == 0 && cnvrScheme == 0 && advDisc == 1 ){
 		if (advMonth >= 6 && advMonth < 12){
 			discountValue = mthRentAmt * advMonth * 0.97;
 			originalprice = mthRentAmt * advMonth;
@@ -2971,7 +2974,7 @@ $.fn.clearForm = function() {
                 <input type="hidden" name="rentalAdvAmt" id="rentalAdvAmt" />
 	            <input type="hidden" name="rentalMegaDeal" id="rentalMegaDeal" />
 	            <input type="hidden" name="rentalCnvrScheme" id="rentalCnvrScheme" />
-
+                <input type="hidden" name="rentalAdvDisc" id="rentalAdvDisc" />
                 <table class="type1">
                     <caption>table</caption>
                     <colgroup>
