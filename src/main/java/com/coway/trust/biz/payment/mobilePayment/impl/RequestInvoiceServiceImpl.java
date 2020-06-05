@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.poi.util.StringUtil;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -194,6 +195,36 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 		List<EgovMap> selectInvoiceDetails = requestInvoiceMapper.selectInvoiceDetails(param);
 
 		LOGGER.debug("selectInvoiceDetails : {}", selectInvoiceDetails);
+		Map<String, Object> loadData = new HashMap<String, Object>();
+
+		loadData.put("invoiceId", selectInvoiceDetails.get(0));
+		loadData.put("customerName", selectInvoiceDetails.get(1));
+		loadData.put("customerEmail", selectInvoiceDetails.get(2));
+		loadData.put("invoiceDate", selectInvoiceDetails.get(3));
+		loadData.put("currentCharges", selectInvoiceDetails.get(4));
+		loadData.put("previousBalance", selectInvoiceDetails.get(5));
+		loadData.put("outstanding", selectInvoiceDetails.get(6));
+		loadData.put("virtualAccount", selectInvoiceDetails.get(7));
+		loadData.put("invoiceNumber", selectInvoiceDetails.get(8));
+		loadData.put("billerCode", selectInvoiceDetails.get(9));
+		loadData.put("refNumber1", selectInvoiceDetails.get(10));
+		loadData.put("refNumber2", selectInvoiceDetails.get(11));
+		loadData.put("cowayEmail", selectInvoiceDetails.get(12));
+
+		LOGGER.debug("loadData " +loadData);
+		
+		
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("abc", "123456");
+		map.put("def", "hmm");
+		list.add(map);
+
+		JSONArray jsonArray = new JSONArray();
+		jsonArray.put(list);
+		
+		LOGGER.debug("jsonArray " +jsonArray);
+
 
 		String payload = "data=[{\n"
 				+ " \"invoiceId\": \"65101018\",\r\n"
