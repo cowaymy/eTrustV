@@ -10,11 +10,16 @@
         fn_getMatPrevOrderNo();
 
         AUIGrid.bind(prevOrdNoGridID, "cellDoubleClick", function(event) {
-            $('#matRelatedNo').val(AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"));
-            $('#matOrdId').val(AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdId"));
-            $('#matBndlId').val(AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "bndlId"));
-            $('#matStkId').val(AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "stkId"));
-            $('#btnPrevMatOrderNo').click();
+        	var stus = AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "stus");
+        	if(stus == 4){
+	            $('#matRelatedNo').val(AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdNo"));
+	            $('#matOrdId').val(AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "salesOrdId"));
+	            $('#matBndlId').val(AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "bndlId"));
+	            $('#matStkId').val(AUIGrid.getCellValue(prevOrdNoGridID , event.rowIndex , "stkId"));
+	            $('#btnPrevMatOrderNo').click();
+        	}else{
+        		Common.alert('Previous Mattress Order' + DEFAULT_DELIMITER +"Only Order with Completed Status is allowed to select");
+        	}
         });
 
     });
@@ -25,6 +30,7 @@
             { headerText : "Order No",     dataField : "salesOrdNo", width : 120 }
           , { headerText : "App Type",     dataField : "appType",    width : 120 }
           , { headerText : "Product Code", dataField : "stkCode",    width : 120 }
+          , { headerText : "Status", dataField : "stus",    width : 120 }
           , { headerText : "Product Name", dataField : "stkDesc"}
           , { headerText : "Order Id",     dataField : "salesOrdId" , visible  : false}
           , { headerText : "Bundle Id",     dataField : "bndlId" , visible  : false}
