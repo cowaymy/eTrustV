@@ -517,6 +517,8 @@ public interface CustomerMapper {
    */
   void insertCustomerCardAddAf(Map<String, Object> params) throws Exception;
 
+  int getCustCrcId();
+
   /**
    * Get Customer Detail Main Address
    *
@@ -596,6 +598,8 @@ public interface CustomerMapper {
 
   void insertTokenLogging(Map<String, Object> params);
 
+  void insertMCPLogging(Map<String, Object> params); // To remove/append changes to insertTokenLogging
+
   EgovMap getTokenSettings();
 
   void updateTokenLogging(Map<String, Object> params);
@@ -604,7 +608,13 @@ public interface CustomerMapper {
 
   EgovMap getPubKey();
 
-  void tokenCrcUpdate(Map<String, Object> params);
+  void tokenCrcUpdate(CustomerCVO customerCVOMap);
+
+  void tokenCrcUpdate1(Map<String, Object> params);
 
   String getCustNric(Map<String, Object> params);
+
+  EgovMap getTokenNumber(Map<String, Object> params);
+
+  void updateTokenStagingF(Map<String, Object> params);
 }

@@ -571,6 +571,8 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     for (CustomerCVO customerCVO : customerCardVOList) {
       LOGGER.debug("##### Impl >> getCreditCardNo :" + customerCVO.getCreditCardNo());
       customerMapper.insertCreditCardInfo(customerCVO);
+
+      customerMapper.tokenCrcUpdate(customerCVO);
     }
 
   }
@@ -617,9 +619,11 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
   @Override
   public int insertCreditCardInfo2(Map<String, Object> params, SessionVO sessionVO) {
 
+    /*
     String expDate = (String) params.get("expDate");
 
     expDate = expDate.substring(0, 2) + expDate.substring(5, 7);
+    */
 
     CustCrcVO custCrcVO = new CustCrcVO();
 
@@ -633,8 +637,8 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     custCrcVO.setCustCrcStusId(1);
     custCrcVO.setCustCrcRem((String) params.get("cardRem"));
     custCrcVO.setCustCrcUpdUserId(sessionVO.getUserId());
-    custCrcVO.setCustCrcExpr(expDate);
-    custCrcVO.setCrcToken((String) params.get("token"));
+    custCrcVO.setCustCrcExpr("");
+    custCrcVO.setCrcToken((String) params.get("tknId"));
     ;
     custCrcVO.setCustCrcIdOld(0);
     custCrcVO.setSoId(0);
@@ -712,6 +716,10 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 
     customerMapper.insertCustomerCardAddAf(params);
   }
+
+  public int getCustCrcId() {
+      return customerMapper.getCustCrcId();
+  };
 
   /**
    * Get Customer Detail Main Address
@@ -899,6 +907,11 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
   }
 
   @Override
+  public void insertMCPLogging(Map<String, Object> params) {
+      customerMapper.insertMCPLogging(params);
+  }
+
+  @Override
   public EgovMap getTokenSettings() {
       return customerMapper.getTokenSettings();
   }
@@ -919,11 +932,21 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
   }
 
   @Override
-  public void tokenCrcUpdate(Map<String, Object> params) {
-      customerMapper.tokenCrcUpdate(params);
+  public void tokenCrcUpdate1(Map<String, Object> params) {
+      customerMapper.tokenCrcUpdate1(params);
   }
 
   public String getCustNric(Map<String, Object> params) {
       return customerMapper.getCustNric(params);
+  }
+
+  @Override
+  public EgovMap getTokenNumber(Map<String, Object> params) {
+      return customerMapper.getTokenNumber(params);
+  }
+
+  @Override
+  public void updateTokenStagingF(Map<String, Object> params) {
+      customerMapper.updateTokenStagingF(params);
   }
 }

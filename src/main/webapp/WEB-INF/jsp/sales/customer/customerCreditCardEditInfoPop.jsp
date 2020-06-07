@@ -64,64 +64,12 @@
 	    		Common.alert("* <spring:message code='sal.alert.msg.pleaseKeyInCreditCardNum' />");
                 return;
 	    	}else{// not null and not empty
-
-	    		// number Check
-	    	    if(FormUtil.checkNum($("#custOriCrcNo"))){
-	    	    	Common.alert("* <spring:message code='sal.alert.msg.invalidCreditCardNum' />.");
-	                return;
-	    	    }
-
 	    	    //digit 16
 	    	    if(16 != $("#custOriCrcNo").val().length){
 	    	    	Common.alert("* <spring:message code='sal.alert.msg.creditCardNumMustIn16Digits' />.");
                     return;
 	    	    }
 	    	}
-
-	    	var expMonth = $("#_expMonth_").val();
-            var expYear = $("#_expYear_").val();
-
-	    	//Exp Date
-	    	if(expMonth == ""){
-                Common.alert("Please key in expiry month.");
-                return false;
-            } else {
-                if(expMonth.length < 2) {
-                    $("#_expMonth_").val("0" + expMonth);
-                    $("#hExpMonth").val("0" + expMonth);
-                } else {
-                    if(parseInt(expMonth) > 12) {
-                        Common.alert("Please key in expiry month.");
-                        $("#_expMonth_").val("");
-                        return false;
-                    } else {
-                        $("#hExpMonth").val(expMonth);
-                    }
-                }
-            }
-
-            if(expYear == ""){
-                Common.alert("Please key in expiry year.");
-                return false;
-            } else {
-                $("#hExpYear").val(expYear);
-            }
-
-	    	if(expMonth != "" && expYear != "") {
-                var cMonYear = new Date();
-                cMonYear.setMonth(cMonYear.getMonth() + 3);
-
-                var iMonYear = new Date(expYear + "/" + expMonth + "/" + 01);
-
-                if(cMonYear > iMonYear) {
-                    Common.alert("Invalid credit card expiry date!");
-                    $("#_expMonth_").val("");
-                    $("#_expYear_").val("")
-                    $("#hExpMonth").val("");;
-                    $("#hExpYear").val("");
-                    return false;
-                }
-            }
 
 	    	//Name On Card (Card Owner)
 	    	if("" == $("#nameCard").val() || null == $("#nameCard").val()){
@@ -134,14 +82,18 @@
             	if( regExp.test($("#nameCard").val()) == false ){
             		 Common.alert("* <spring:message code='sal.alert.NameOnCardCannotContainOfSpecChr' />.");
                      return;
-            	} else {
-            		$("#custCrcOwner").val($("#nameCard").val());
             	}
             }
 
 	    	//Card Type
 	    	if("" == $("#cmbCardTypeId").val() || null == $("#cmbCardTypeId").val()){
                 Common.alert("* <spring:message code='sal.alert.pleaseSelectTheCardType' />.");
+                return;
+            }
+
+	    	//Token ID
+            if("" == $("tknId").val() || null == $("#tknId").val()) {
+                Common.alert("Credit card has not been encrypted!");
                 return;
             }
 
@@ -153,24 +105,6 @@
 	    $("#_delBtn").click(function() {
             Common.confirm("<spring:message code='sal.alert.msg.areYouSureWantToDelCreditCard' />", fn_deleteCardAjax);
         });
-
-	    $("#_expMonth_").blur(function() {
-	        var expMonth = $("#_expMonth_").val();
-
-	        if(expMonth.length == "") {
-	            Common.alert("Please key in expiry month.");
-	            return false;
-	        } else {
-	            if(expMonth.length < 2) {
-	                $("#_expMonth_").val("0" + expMonth);
-	                $("#hExpMonth").val("0" + expMonth);
-	            } else {
-	                if(parseInt(expMonth) > 12) {
-	                    Common.alert("Please rekey expiry month");
-	                }
-	            }
-	        }
-	    });
 
 	});// document Ready Func End
 
@@ -217,6 +151,12 @@
 
 		 $("#oriCustCrcNo").val($("#custOriCrcNo").val());
 
+		 Common.ajax("GET", "/sales/customer/updateCustomerCardInfoAf.do", $("#updForm").serialize(), function(result) {
+             Common.alert(result.message, fn_parentReload);
+         });
+         $("#_cardPopCloseBtn").click();
+
+         /*
 		 Common.ajax("GET", "/sales/customer/tokenPubKey.do", "", function(result) {
 	            var pub = "-----BEGIN PUBLIC KEY-----" + result.pubKey + "-----END PUBLIC KEY-----";
 	            var molpay = MOLPAY.encrypt( pub );
@@ -259,6 +199,7 @@
 	                }
 	            });
 		 });
+		 */
 
 		 /*
 		 if("${detailcard.custOriCrcNo}" != $("#custOriCrcNo").val().trim()) {
@@ -340,20 +281,92 @@
 		}
 	}
 
-	function fn_exprMth(exprMth){
-        if(exprMth.length == "") {
-            Common.alert("Please key in expiry month.");
-            return false;
-        } else {
-            if(exprMth.length < 2) {
-                $("#_expMonth_").val("0" + exprMth);
-            } else {
-                if(parseInt(exprMth) > 12) {
-                    Common.alert("Please rekey expiry month");
-                }
-            }
+	function fn_padding(value, length, prefix) {
+        var newVal = "";
+        var pLength = length - value.length;
+
+        for(var x = 0; x < pLength; x++) {
+            newVal += prefix;
         }
-	}
+        return newVal + value;
+    }
+
+    function fn_tokenPop() {
+        console.log("tokenizationBtn :: click :: fn_tokenPop");
+
+        var refId;
+
+        if($("#nric").val() == "") {
+            Common.alert("Please key in NRIC");
+            return false;
+        }
+
+        var tokenPop, tokenTick;
+        var nric = fn_padding($("#nric").val(), 12, "0");
+        var custId = fn_padding($("#custId").val(), 12, "0");
+        var crcId = fn_padding($("#custCrcId").val(), 12, "0");
+        //refId = (nric.length < 12 ? pad("0" + nric, 12) : nric) + (custId.length < 12 ? pad("0" + custId, 12) : nric) + crcId;
+        refId = nric + custId + crcId;
+
+        Common.ajax("GET", "/sales/customer/getTknId.do", {refId : refId}, function(r1) {
+            if(r1.tknId != 0) {
+                $("#refNo").val(r1.tknRef);
+
+                // Calls MC Payment pop up
+                var option = {
+                        winName: "popup",
+                        isDuplicate: true, // 계속 팝업을 띄울지 여부.
+                        fullscreen: "no", // 전체 창. (yes/no)(default : no)
+                        location: "no", // 주소창이 활성화. (yes/no)(default : yes)
+                        menubar: "no", // 메뉴바 visible. (yes/no)(default : yes)
+                        titlebar: "yes", // 타이틀바. (yes/no)(default : yes)
+                        toolbar: "no", // 툴바. (yes/no)(default : yes)
+                        resizable: "yes", // 창 사이즈 변경. (yes/no)(default : yes)
+                        scrollbars: "yes", // 스크롤바. (yes/no)(default : yes)
+                        width: "750px", // 창 가로 크기
+                        height: "180px" // 창 세로 크기
+                    };
+
+                if (option.isDuplicate) {
+                    option.winName = option.winName + new Date();
+                }
+
+                var URL = "https://services.sandbox.mcpayment.net:8080/newCardForm?apiKey=AKIA5TZ_COWAY_YNAAZ6E&refNo=" + r1.tknRef; // MCP UAT Tokenization URL
+                //var URL = "https://services.mcpayment.net:8080/newCardForm?apiKey=3fdgsTZ_COWAY_dsaAZ6E&refNo=" + r1.tknRef;
+
+                tokenPop = window.open(URL, option.winName,
+                        "fullscreen=" + option.fullscreen +
+                        ",location=" + option.location +
+                        ",menubar=" + option.menubar +
+                        ",titlebar=" + option.titlebar +
+                        ",toolbar=" + option.toolbar +
+                        ",resizable=" + option.resizable +
+                        ",scrollbars=" + option.scrollbars +
+                        ",width=" + option.width +
+                        ",height=" + option.height);
+
+                // Set ticker to check if MC Payment pop up is still opened
+                tokenTick = setInterval(
+                    function() {
+                        if(tokenPop.closed) {
+                            console.log("tokenPop is closed!");
+                            clearInterval(tokenTick);
+
+                            // Retrieve token ID to be displayed in credit card number field
+                            Common.ajax("GET", "/sales/customer/getTokenNumber.do", {refId : r1.tknRef}, function(r2) {
+                                console.log(r2);
+                                if(r2 != null) {
+                                    $("#custOriCrcNo").val(r2.data.bin + "******" + r2.data.cclast4);
+                                    $("#tknId").val(r2.data.token);
+
+                                    fn_cardNoChangeFunc($("#custOriCrcNo").val());
+                                }
+                            });
+                        }
+                    }, 500);
+            }
+        });
+    }
 
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -386,7 +399,6 @@
             <input type="hidden" id="hExpMonth" name="hExpMonth">
             <input type="hidden" id="hExpYear" name="hExpYear">
 
-            <input type="hidden" id="custCrcOwner" name="custCrcOwner">
             <input type="hidden" id="custCrcExpr" name="custCrcExpr">
             <input type="hidden" id="custCrcNoMask" name="custCrcNoMask">
 
@@ -419,26 +431,16 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><spring:message code="sal.text.creditCardNo" /><span class="must">*</span></th>
-                        <!-- <td><input type="text" title="" placeholder="Account Number" class="w100p"  value="${detailcard.custOriCrcNo}" name="custOriCrcNo" onchange="javascript : fn_cardNoChangeFunc(this.value)" id="custOriCrcNo" maxlength="16"/></td>  -->
-                        <td>
-                            <input type="text" class="w100p" id="custOriCrcNo" data-encrypted-name="PAN" placeholder="Account Number" maxlength="16" onchange="javascript : fn_cardNoChangeFunc(this.value)" value="${detailcard.custOriCrcNo}" required/>
-                        </td>
-                        <!-- <th scope="row"><spring:message code="sal.text.expiryDate" /><span class="must">*</span></th>
-                        <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date2 w100p"  readonly="readonly" id="expDate" name="custCrcExpr"/></td> -->
                         <th scope="row"><spring:message code="sal.text.nameOnCard" /><span class="must">*</span></th>
-                        <td>
-                            <input type="text" title="" placeholder="" class="w100p"  value="${detailcard.custCrcOwner}" maxlength="70" name="nameCard" id="nameCard" />
+                        <td colspan="3">
+                            <input type="text" title="" id="nameCard" name="nameCard" placeholder="Name On Card" class="w100p" />
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Expiry Month<span class="must">*</span></th>
-                        <td>
-                            <input class="w100p" id="_expMonth_" type="text" size="20" data-encrypted-name="EXPMONTH" placeholder="Expiry Month (MM)" maxlength="2" required/>
-                        </td>
-                        <th scope="row">Expiry Year<span class="must">*</span></th>
-                        <td>
-                            <input class="w100p" id="_expYear_" type="text" size="20" data-encrypted-name="EXPYEAR" placeholder="Expiry Year (YYYY)" min="4" maxlength="4" required/>
+                        <th scope="row"><spring:message code="sal.text.creditCardNo" /><span class="must">*</span></th>
+                        <td colspan="3">
+                            <input class="" id="custOriCrcNo" name="custOriCrcNo" type="text" size="36" placeholder="Credit Card No" maxlength="36" style="width:96%" readonly />
+                            <a href="javascript:fn_tokenPop();" class="search_btn" id="tokenizationBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>
                     <tr>

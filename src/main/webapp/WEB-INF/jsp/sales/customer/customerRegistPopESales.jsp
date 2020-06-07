@@ -226,6 +226,14 @@
                 dataField : "cardRem",
                 headerText : '<spring:message code="sal.title.remark" />',
                 editable : true
+            }, {
+                dataField : "encryptCardNo",
+                editable : false,
+                visible : false
+            }, {
+                dataField : "tokenRefNo",
+                editable : false,
+                visible : false
             }];
 
         // bank account
@@ -686,11 +694,12 @@
         $("#_asEmail_").val($("#email").val());
     }
 
-    function fn_addCreditCardInfo(ccType,iBank,cardNo,expDate,nameCard,cType,cardRem){
+    function fn_addCreditCardInfo(ccType,iBank,cardNo,expDate,nameCard,cType,cardRem, crcToken, encCrcNo, refNo){
 
+        console.log("mcpTkns :: fn_addCreditCardInfo");
         var item = new Object();
 
-        if(ccType != "" && iBank != "" && cardNo != "" && expDate != "" && nameCard != "" && cType != ""){
+        if(ccType != "" && iBank != "" && cardNo != "" && expDate != "" && nameCard != "" && cType != "" && crcToken != "" && refNo != ""){
             item.crcType = ccType;
             item.bank = iBank;
             item.creditCardNo = cardNo;
@@ -698,6 +707,9 @@
             item.nmCard = nameCard;
             item.cardType = cType;
             item.cardRem = cardRem;
+            item.crcToken = crcToken;
+            item.encCrcNo = "";
+            item.tokenRefNo = refNo;
             AUIGrid.addRow(myGridID, item, "last");
         }
     }

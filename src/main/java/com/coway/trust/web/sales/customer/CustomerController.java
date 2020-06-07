@@ -188,6 +188,7 @@ public class CustomerController {
 
     List<EgovMap> bankList = customerService.selectIssueBank(params);
     model.addAttribute("bankList", bankList);
+    model.addAttribute("nric", params.get("nric"));
 
     return "sales/customer/customerCreditCardeSalesPop";
   }
@@ -264,11 +265,14 @@ public class CustomerController {
   public ResponseEntity<ReturnMessage> insertCreditCardInfo2(@RequestBody Map<String, Object> params, ModelMap model,
       SessionVO sessionVO) throws ParseException {
 
-      params.put("cardNo", params.get("custCrcNoMask"));
+      LOGGER.debug("params :: " + params);
+
+//      params.put("cardNo", params.get("custCrcNoMask"));
 
       int custCrcId = customerService.insertCreditCardInfo2(params, sessionVO);
 
-      customerService.tokenCrcUpdate(params);
+      params.put("custCrcId", custCrcId);
+      customerService.tokenCrcUpdate1(params);
 
       // 결과 만들기
       ReturnMessage message = new ReturnMessage();
@@ -773,6 +777,7 @@ public class CustomerController {
 
     // insert Credit Card Info
     if (addList != null) {
+        String tokenRefNo = "";
       // int getCustCrcIdSeq = customerService.getCustCrcIdSeq();
       addList.forEach(form -> {
         CustomerCVO customerCVO = new CustomerCVO();
@@ -790,7 +795,10 @@ public class CustomerController {
         customerCVO.setCrcUpdId(sessionVo.getUserId()); // 임시
         customerCVO.setCrcCrtId(sessionVo.getUserId()); // 임시
         customerCVO.setCrcToken(form.getCrcToken());    // LaiKW 2019-08-01 Tokenization
+        customerCVO.setTokenRefNo(form.getTokenRefNo());// LaiKW 2020-03-10 Tokenization
 
+        /*
+        // Commented on 09/03/2020 - LaiKW - MC Payment PCI DSS Compliance enhancement.
         String cardExpiry = form.getCardExpiry();
         if (cardExpiry != null) {
           cardExpiry = cardExpiry.substring(0, 2) + cardExpiry.substring(5, 7);
@@ -798,6 +806,7 @@ public class CustomerController {
           cardExpiry = null;
         }
         customerCVO.setCardExpiry(cardExpiry);
+        */
         customerCVO.setCrcIdOld(0); // 고정
         customerCVO.setSoId(0); // 고정
         customerCVO.setCrcIdcm(0); // 고정
@@ -809,10 +818,12 @@ public class CustomerController {
       customerService.insertCreditCardInfo(customerCardVOList);
       LOGGER.info("추가 : {}", addList.toString());
 
+      /*
       Map<String, Object> tokenCrcParam = new HashMap<>();
       tokenCrcParam.put("custId", customerId);
       tokenCrcParam.put("userId", sessionVo.getUserId());
-      customerService.tokenCrcUpdate(tokenCrcParam);
+      tokenCrcParam.put("customerCardVOList", customerCardVOList);
+      customerService.tokenCrcUpdate(tokenCrcParam);*/
     }
 
     // insert Bank Account Info
@@ -1639,6 +1650,9 @@ public class CustomerController {
 
     // service
     customerService.updateCustomerCardInfoAf(params);
+
+    customerService.tokenCrcUpdate1(params);
+
     // 결과 만들기 예.
     ReturnMessage message = new ReturnMessage();
     message.setCode(AppConstants.SUCCESS);
@@ -1999,11 +2013,16 @@ public class CustomerController {
   public ResponseEntity<ReturnMessage> insertCustomerCardAddAf(@RequestParam Map<String, Object> params, ModelMap model)
       throws Exception {
 
+      LOGGER.debug("insertCustomerCardAddAf.do");
+      LOGGER.info("Params :: " + params.toString());
+
     SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
     params.put("userId", sessionVO.getUserId());
-    customerService.insertCustomerCardAddAf(params);
+    int custCrcId = customerService.getCustCrcId();
+    params.put("custCrcId", custCrcId);
 
-	customerService.tokenCrcUpdate(params);
+    customerService.insertCustomerCardAddAf(params);
+	customerService.tokenCrcUpdate1(params);
 
     // 결과 만들기 예.
     ReturnMessage message = new ReturnMessage();
@@ -2582,7 +2601,7 @@ public class CustomerController {
       SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
       params.put("userId", sessionVO.getUserId());
 
-      customerService.tokenCrcUpdate(params);
+//      customerService.tokenCrcUpdate(params);
 
       ReturnMessage message = new ReturnMessage();
       message.setCode(AppConstants.SUCCESS);
@@ -2607,7 +2626,43 @@ public class CustomerController {
       model.addAttribute("nric", params.get("nric"));
 
       return "sales/customer/tokenCustomerCreditCardTest";
-      //return "sales/customer/customerCreditCardPop";
-      //return "sales/customer/customerCreditCardPop2";
     }
+
+  @RequestMapping(value = "/getTknId.do", method = RequestMethod.GET)
+  public ResponseEntity<Map<String, Object>> getTknId(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model)throws Exception {
+      LOGGER.debug("/getTknId.do");
+      LOGGER.debug("params :: " + params);
+
+      int tknId = 0;
+      Map<String, Object> result = new HashMap();
+
+      tknId = (Integer) customerService.getTokenID();
+      result.put("tknId", tknId);
+      result.put("tknRef", params.get("refId") + StringUtils.leftPad(Integer.toString(tknId), 10, "0"));
+      LOGGER.debug("getTknID.do :: TknRef");
+
+      customerService.insertTokenLogging(result);
+
+      return ResponseEntity.ok(result);
+  }
+
+  @RequestMapping(value = "/getTokenNumber.do", method = RequestMethod.GET)
+  public ResponseEntity<ReturnMessage> getTokenNumber(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model)throws Exception {
+      LOGGER.debug("getTokenNumber.do");
+      LOGGER.debug("params :: " + params);
+
+      //Map<String, Object> result = new HashMap();
+      Map<String, Object> result = customerService.getTokenNumber(params);
+
+      if(result == null) {
+          customerService.updateTokenStagingF(params);
+      }
+
+      ReturnMessage message = new ReturnMessage();
+      message.setCode(AppConstants.SUCCESS);
+      message.setData(result);
+      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+      return ResponseEntity.ok(message);
+  }
 }

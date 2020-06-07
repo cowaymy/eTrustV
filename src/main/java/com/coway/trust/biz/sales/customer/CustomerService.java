@@ -470,6 +470,8 @@ public interface CustomerService {
    */
   void insertCustomerCardAddAf(Map<String, Object> params) throws Exception;
 
+  int getCustCrcId();
+
   /**
    * Get Customer Detail Main Address
    *
@@ -558,6 +560,8 @@ public interface CustomerService {
 
   void insertTokenLogging(Map<String, Object> params);
 
+  void insertMCPLogging(Map<String, Object> params); // To remove/append changes to insertTokenLogging
+
   EgovMap getTokenSettings();
 
   void updateTokenLogging(Map<String, Object> params);
@@ -566,7 +570,11 @@ public interface CustomerService {
 
   EgovMap getPubKey();
 
-  void tokenCrcUpdate(Map<String, Object> params);
+  void tokenCrcUpdate1(Map<String, Object> params);
 
   String getCustNric(Map<String, Object> params);
+
+  EgovMap getTokenNumber(Map<String, Object> params);
+
+  void updateTokenStagingF(Map<String, Object> params);
 }

@@ -38,6 +38,19 @@
         });
     });
 
+    function fn_cardNoChangeFunc() {
+        var vCardNo = $('#cardNo').val();
+        if(vCardNo.indexOf('5') == 0) {
+            $('#cmbCreditCardType').val('111');
+        }
+        else if(vCardNo.indexOf('4') == 0) {
+            $('#cmbCreditCardType').val('112');
+        }
+        else {
+            $('#cmbCreditCardType').val('');
+        }
+    }
+
     function fn_validCreditCard() {
         var isValid = true, msg = "";
 
@@ -62,6 +75,7 @@
                 isValid = false;
                 msg += "* <spring:message code='sal.alert.msg.creditCardNumMustIn16Digits' /><br/>";
             }
+            /*
             else {
                 if(FormUtil.checkNum($('#cardNo'))) {
                     isValid = false;
@@ -94,17 +108,7 @@
                     }
                 }
             }
-        }
-
-        if(FormUtil.isEmpty($('#expDate').val())) {
-            isValid = false;
-            msg += "<spring:message code='sal.alert.msg.pleaseSelectCreditCardExpDate' />";
-        } else {
-            var expDate = $("#expDate").val();
-            $("#expMonth").val(expDate.substring(0, 2));
-            $("#expYear").val(expDate.substring(3));
-            $("#hExpMonth").val(expDate.substring(0, 2));
-            $("#hExpYear").val(expDate.substring(3));
+            */
         }
 
         if(FormUtil.isEmpty($('#nameOnCard').val())) {
@@ -128,6 +132,12 @@
         if($("#cmbCardType").val() <= 0) {
             isValid = false;
             msg += "<spring:message code='sal.alert.pleaseSelectTheCardType' />";
+        }
+
+        //Token ID
+        if("" == $("tknId").val() || null == $("#tknId").val()) {
+            isValid = false;
+            msg += "Credit card has not been encrypted";
         }
 
         if(!isValid) {
@@ -157,6 +167,25 @@
 
         $("#oriCustCrcNo").val($("#cardNo").val());
 
+        Common.ajax("POST", "/sales/customer/insertCreditCardInfo2.do", $('#frmCrCard').serializeJSON(), function(result) {
+
+            Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+                if('${callPrgm}' == 'ORD_REGISTER_PAYM_CRC' || '${callPrgm}' == 'PRE_ORD') {
+                    fn_loadCreditCard2(result.data);
+                    $('#addCrcCloseBtn').click();
+                }
+
+            }, function(jqXHR, textStatus, errorThrown) {
+                try {
+                    Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save credit card. Please try again later.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                }
+                catch(e) {
+                    console.log(e);
+                }
+            }
+        );
+
+        /*
         Common.ajax("GET", "/sales/customer/tokenPubKey.do", "", function(result) {;
             var pub = "-----BEGIN PUBLIC KEY-----" + result.pubKey + "-----END PUBLIC KEY-----";
             var molpay = MOLPAY.encrypt( pub );
@@ -214,6 +243,93 @@
                 }
             });
      });
+     */
+    }
+
+    function fn_padding(value, length, prefix) {
+        var newVal = "";
+        var pLength = length - value.length;
+
+        for(var x = 0; x < pLength; x++) {
+            newVal += prefix;
+        }
+        return newVal + value;
+    }
+
+    function fn_tokenPop() {
+        console.log("tokenizationBtn :: click :: fn_tokenPop");
+
+        var refId;
+
+        if($("#nric").val() == "") {
+            Common.alert("Please key in NRIC");
+            return false;
+        }
+
+        var tokenPop, tokenTick;
+        var nric = fn_padding($("#nric").val(), 12, "0");
+        var custId = fn_padding($("#custId").val(), 12, "0");
+        var crcId = "000000000000";
+        refId = nric + custId + crcId;
+
+        Common.ajax("GET", "/sales/customer/getTknId.do", {refId : refId}, function(r1) {
+            if(r1.tknId != 0) {
+                $("#refNo").val(r1.tknRef);
+
+                // Calls MC Payment pop up
+                var option = {
+                        winName: "popup",
+                        isDuplicate: true, // 계속 팝업을 띄울지 여부.
+                        fullscreen: "no", // 전체 창. (yes/no)(default : no)
+                        location: "no", // 주소창이 활성화. (yes/no)(default : yes)
+                        menubar: "no", // 메뉴바 visible. (yes/no)(default : yes)
+                        titlebar: "yes", // 타이틀바. (yes/no)(default : yes)
+                        toolbar: "no", // 툴바. (yes/no)(default : yes)
+                        resizable: "yes", // 창 사이즈 변경. (yes/no)(default : yes)
+                        scrollbars: "yes", // 스크롤바. (yes/no)(default : yes)
+                        width: "750px", // 창 가로 크기
+                        height: "180px" // 창 세로 크기
+                    };
+
+                if (option.isDuplicate) {
+                    option.winName = option.winName + new Date();
+                }
+
+                var URL = "https://services.sandbox.mcpayment.net:8080/newCardForm?apiKey=AKIA5TZ_COWAY_YNAAZ6E&refNo=" + r1.tknRef; // MCP UAT Tokenization URL
+                //var URL = "https://services.mcpayment.net:8080/newCardForm?apiKey=3fdgsTZ_COWAY_dsaAZ6E&refNo=" + r1.tknRef;
+
+                tokenPop = window.open(URL, option.winName,
+                        "fullscreen=" + option.fullscreen +
+                        ",location=" + option.location +
+                        ",menubar=" + option.menubar +
+                        ",titlebar=" + option.titlebar +
+                        ",toolbar=" + option.toolbar +
+                        ",resizable=" + option.resizable +
+                        ",scrollbars=" + option.scrollbars +
+                        ",width=" + option.width +
+                        ",height=" + option.height);
+
+                // Set ticker to check if MC Payment pop up is still opened
+                tokenTick = setInterval(
+                    function() {
+                        if(tokenPop.closed) {
+                            console.log("tokenPop is closed!");
+                            clearInterval(tokenTick);
+
+                            // Retrieve token ID to be displayed in credit card number field
+                            Common.ajax("GET", "/sales/customer/getTokenNumber.do", {refId : r1.tknRef}, function(r2) {
+                                console.log(r2);
+                                if(r2 != null) {
+                                    $("#cardNo").val(r2.data.bin + "******" + r2.data.cclast4);
+                                    $("#tknId").val(r2.data.token);
+
+                                    fn_cardNoChangeFunc();
+                                }
+                            });
+                        }
+                    }, 500);
+            }
+        });
     }
 </script>
 
@@ -257,11 +373,20 @@
 </colgroup>
 <tbody>
 <tr>
+    <th scope="row"><spring:message code="sal.text.creditCardNo" /><span class="must">*</span></th>
+    <td>
+        <input class="" id="cardNo" name="cardNo" type="text" size="36" placeholder="Credit Card No" maxlength="36" style="width:95%" readonly />
+        <a href="javascript:fn_tokenPop();" class="search_btn" id="tokenizationBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    </td>
+</tr>
+<!--
+<tr>
     <th scope="row"><spring:message code="sal.text.creditCardNo2" /><span class="must">*</span></th>
     <td>
         <input type="text" class="w100p" id="cardNo" data-encrypted-name="PAN" placeholder="Credit Card Number" maxlength="16" required/>
     </td>
 </tr>
+-->
 <tr>
 	<th scope="row"><spring:message code="sal.text.type2" /><span class="must">*</span></th>
 	<td>
@@ -272,12 +397,6 @@
     <th scope="row"><spring:message code="sal.text.nameOnCard2" /><span class="must">***</span></th>
     <td>
         <input id="nameOnCard" name="nameOnCard" type="text" title="" placeholder="Name On Card" class="w100p" />
-    </td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="sal.text.expiryDate2" /><span class="must">*</span></th>
-    <td>
-        <input id="expDate" name="expDate" type="text" title="Create start Date" placeholder="MM/YYYY" class="j_date2" />
     </td>
 </tr>
 <tr>
