@@ -468,7 +468,7 @@
     </update>
 
     <update id="updateTokenStaging" parameterType="Map">
-        UPDATE SAL0257D_MCP
+        UPDATE SAL0257D
         SET
             BIN = SUBSTR(#{maskedPan}, 1, 6),
             CCLAST4 = SUBSTR(#{maskedPan}, 13, 4),
