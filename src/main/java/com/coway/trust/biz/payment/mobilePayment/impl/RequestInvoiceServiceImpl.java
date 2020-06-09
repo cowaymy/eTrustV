@@ -201,7 +201,7 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 		JSONObject jsonObj = new JSONObject();
 		JSONArray jarray = new JSONArray();
 
-		jarray.put(new JSONObject("data").put("invoiceId", "65101018")
+		jarray.put(new JSONObject().put("invoiceId", "65101018")
 				.put("customerName","OCBC BANK (MALAYSIA) BERHAD")
 				.put("customerEmail", "vannie.koh@coway.com.my")
 				.put("invoiceDate", "MAY-20")
@@ -239,7 +239,7 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 		LOGGER.debug("payload " +payload);*/
 
-		StringEntity entity = new StringEntity(jarray.toString());
+		StringEntity entity = new StringEntity(jsonObj.toString());
 
 		LOGGER.debug("entity " +entity);
 
