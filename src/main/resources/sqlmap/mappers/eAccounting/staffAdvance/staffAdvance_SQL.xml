@@ -124,6 +124,9 @@
                     AND B.APPV_PRCSS_DT <= TO_DATE(#{appEndDt}, 'DD/MM/YYYY')
                 ]]>
             </if>
+            <if test="userId != null and userId != ''">
+                AND A.CRT_USER_ID = #{userId}
+            </if>
         )
         WHERE 1 = 1
         <if test="refundStus != null and refundStus != ''">
