@@ -180,9 +180,10 @@ public class CreditCardFileMBBHandler extends BasicTextDownloadHandler implement
         }
 		//bTransNo 		= StringUtils.leftPad(String.valueOf(dataRow.get("rnum")), 6, "0");
 		bTransCode 	= StringUtils.rightPad("40", 2, " ");
-		bAccNo 			= StringUtils.rightPad(String.valueOf(dataRow.get("bankDtlCrcNo")), 19, " ");
+//		bAccNo 			= StringUtils.rightPad(String.valueOf(dataRow.get("bankDtlCrcNo")), 19, " "); // To comment for MCP
+		bAccNo            = StringUtils.rightPad(String.valueOf(dataRow.get("bankDtlCrcNo")), 36, " "); // To uncomment for MCP
 		//bAmount 		= StringUtils.rightPad(String.valueOf("1"), 13, " ");
-		bExpiredDt 		= StringUtils.rightPad(String.valueOf(crcExpiry ), 4, " ");
+//		bExpiredDt 		= StringUtils.rightPad(String.valueOf(crcExpiry ), 4, " ");
 		bPosEntry 		= StringUtils.rightPad(String.valueOf("01"), 2, " ");
 		bApprovalCode= StringUtils.rightPad("", 6, " ");
 		bResponseCode= StringUtils.rightPad("", 2, " ");
@@ -202,7 +203,7 @@ public class CreditCardFileMBBHandler extends BasicTextDownloadHandler implement
 
 
 		iTotalAmt = iTotalAmt + sLimit;
-		ihashtot3 = ihashtot3 + sLimit + Long.parseLong(bAccNo.trim());
+//		ihashtot3 = ihashtot3 + sLimit + Long.parseLong(bAccNo.trim());
 		iTotalCnt++;
 		bTransNo 		= StringUtils.leftPad(String.valueOf(iTotalCnt), 6, "0");
 		bAmount = StringUtils.leftPad(String.valueOf(sLimit), 13, "0");

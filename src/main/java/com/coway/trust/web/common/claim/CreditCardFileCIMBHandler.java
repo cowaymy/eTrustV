@@ -71,7 +71,10 @@ public class CreditCardFileCIMBHandler extends BasicTextDownloadHandler implemen
 		serviceCode = dataRow.get("cntrctNOrdNo") == null ? "0000" : String.valueOf(dataRow.get("cntrctNOrdNo")).trim();
 		remarks = String.valueOf(dataRow.get("bankDtlGrpId"));
 
-		stext = crcOwner + "," + crcNo + "," + crcExpiry + ",$" + amount + "," + serviceCode + "," + remarks;
+//		stext = crcOwner + "," + crcNo + "," + crcExpiry + ",$" + amount + "," + serviceCode + "," + remarks;
+
+		// 2020-03-19 - LaiKW - MC Payment Tokenization Format
+        stext = crcOwner + "," + crcNo + ",$" + amount + "," + serviceCode + "," + remarks;
 
 		out.write(stext);
 		out.newLine();
