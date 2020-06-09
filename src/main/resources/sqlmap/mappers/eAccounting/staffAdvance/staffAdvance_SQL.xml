@@ -124,8 +124,8 @@
                     AND B.APPV_PRCSS_DT <= TO_DATE(#{appEndDt}, 'DD/MM/YYYY')
                 ]]>
             </if>
-            <if test="userId != null and userId != ''">
-                AND A.CRT_USER_ID = #{userId}
+            <if test="loginUserId != null and loginUserId != ''">
+                AND A.CRT_USER_ID = #{loginUserId}
             </if>
         )
         WHERE 1 = 1
