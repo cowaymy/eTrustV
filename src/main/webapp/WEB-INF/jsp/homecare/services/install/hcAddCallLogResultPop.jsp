@@ -103,7 +103,7 @@
 			}
 
             if(anoOrdNo != '') {
-                if('${hcOrder.anoOrdAppType}' != 66 && '${hcOrder.anoOrdCtgryCd}' != 'FRM'){
+                if('${hcOrder.anoOrdAppType}' == '5764' && '${hcOrder.anoOrdCtgryCd}' == 'FRM'){
                 	Common.confirm(msg + _addCllMsg, fn_addCallSave);
                 }else{
                 	$("#anoOrdNo").val("");
