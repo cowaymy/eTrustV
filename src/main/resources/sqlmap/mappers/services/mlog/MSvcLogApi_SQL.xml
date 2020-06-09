@@ -936,6 +936,7 @@
                    NVL (SAL0001D.CUST_ID, '') AS customer_Id,
                    FN_GET_COMMCD (10, SAL0001D.APP_TYPE_ID) AS app_Type,
                    NVL (TO_CHAR (SAL0017D.PROMO_DESC), '') AS sales_Promotion,
+                   NVL (TO_CHAR (SAL0017D.PROMO_ID), '') AS sales_Promotion_Cde,
                    NVL(TO_CHAR (SAL0001D.MTH_RENT_AMT), '0') AS monthly_Rental_Fees,
                    NVL (SAL0001D.TOT_AMT, '') AS registration_Fees,
                    NVL (SAL0022D.CUST_ACC_BANK_ID, '') AS bank_Code,
@@ -1123,6 +1124,7 @@
          , TO_CHAR(PSI) AS psi
          , TO_CHAR(LPM) AS lpm
          , TO_CHAR(PRODCAT) AS prodcat
+         , TO_CHAR(SALES_PROMT_CDE) AS sales_Promotion_Cde
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
