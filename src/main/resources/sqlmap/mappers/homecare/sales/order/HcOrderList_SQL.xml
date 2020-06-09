@@ -232,7 +232,8 @@
                  , (SELECT SAL1.SALES_ORD_ID FROM SAL0001D SAL1 WHERE SAL1.SALES_ORD_NO = A.ANO_ORD_NO) AS ANO_ORD_ID
                  , (SELECT SYS2.CODE FROM SYS0026M SYS1, SYS0013M SYS2
                    WHERE SYS1.STK_CTGRY_ID = SYS2.CODE_ID AND SYS1.STK_ID = A.PRODUCT_CODE) AS ORD_CTGRY_CD
-
+                 , B.ANO_ORD_APP_TYPE
+                 , b.ANO_ORD_CTGRY_CD
          FROM (
                 SELECT H1.ORD_SEQ_NO
 		                 , H1.CUST_ID
@@ -272,6 +273,13 @@
                        </otherwise>
 	           </choose>
         ) A
+        LEFT JOIN (
+            SELECT S.SALES_ORD_ID ANO_ORD_ID, S.SALES_ORD_NO ANO_ORD_NO, S.APP_TYPE_ID ANO_ORD_APP_TYPE, SC.CODE ANO_ORD_CTGRY_CD
+            FROM SAL0001D S
+            JOIN SAL0002D D ON D.SALES_ORD_ID = S.SALES_ORD_ID
+            JOIN SYS0026M STK ON STK.STK_ID = D.ITM_STK_ID
+            JOIN SYS0013M SC ON SC.CODE_ID = STK.STK_CTGRY_ID
+        ) B ON B.ANO_ORD_NO = A.ANO_ORD_NO
     </select>
 
     <!-- Select Product Info -->

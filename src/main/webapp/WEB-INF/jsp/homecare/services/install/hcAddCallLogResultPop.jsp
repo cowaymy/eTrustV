@@ -103,7 +103,12 @@
 			}
 
             if(anoOrdNo != '') {
-            	Common.confirm(msg + _addCllMsg, fn_addCallSave);
+                if('${hcOrder.anoOrdAppType}' != 66 && '${hcOrder.anoOrdCtgryCd}' != 'FRM'){
+                	Common.confirm(msg + _addCllMsg, fn_addCallSave);
+                }else{
+                	$("#anoOrdNo").val("");
+                	Common.confirm(msg + "<spring:message code='sys.common.alert.save'/>", fn_addCallSave);
+                }
             } else {
             	Common.confirm(msg + "<spring:message code='sys.common.alert.save'/>", fn_addCallSave);
             }
