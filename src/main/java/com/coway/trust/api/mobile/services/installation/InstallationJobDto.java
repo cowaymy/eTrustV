@@ -255,6 +255,8 @@ public class InstallationJobDto {
 
   private String serialChk;
 
+  private String salesPromotionCde;
+
   public String getProdcat() {
     return prodcat;
   }
@@ -971,6 +973,14 @@ public class InstallationJobDto {
 
   public void setFraProductName(String fraProductName) {
     this.fraProductName = fraProductName;
+  }
+
+  public String getSalesPromotionCde() {
+    return salesPromotionCde;
+  }
+
+  public void setSalesPromotionCde(String salesPromotionCde) {
+    this.salesPromotionCde = salesPromotionCde;
   }
 
   public static InstallationJobDto create(EgovMap egvoMap) {
