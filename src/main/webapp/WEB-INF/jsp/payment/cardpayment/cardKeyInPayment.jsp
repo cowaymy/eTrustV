@@ -1126,8 +1126,9 @@ function rentalDiscountValue(){
     var rows = AUIGrid.getRowIndexesByValue(targetRenMstGridID, "salesOrdId", $("#rentalOrdId").val());
     var mthRentAmt = AUIGrid.getCellValue(targetRenMstGridID, rows, "mthRentAmt");
   var megaDeal = $("#rentalMegaDeal").val();
+  var advDisc = $("#rentalAdvDisc").val();
 
-  if(megaDeal == 0 ){
+  if(megaDeal == 0  && advDisc == 1 ){
       if (advMonth >= 6 && advMonth < 12){
           discountValue = mthRentAmt * advMonth * 0.97;
           originalprice = mthRentAmt * advMonth;
