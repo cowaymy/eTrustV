@@ -201,7 +201,7 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 		JSONObject jsonObj = new JSONObject();
 		JSONArray jarray = new JSONArray();
 
-		jarray.put(new JSONObject().put("invoiceId", "65101018")
+		jarray.put(new JSONObject("data").put("invoiceId", "65101018")
 				.put("customerName","OCBC BANK (MALAYSIA) BERHAD")
 				.put("customerEmail", "vannie.koh@coway.com.my")
 				.put("invoiceDate", "MAY-20")
@@ -218,6 +218,8 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 		jsonObj.put("data", jarray);
 
 		LOGGER.debug("jsonObj " +jsonObj.toString());
+
+		LOGGER.debug("jarray " +jarray.toString());
 
 		/*String payload = "data=[{\n"
 				+ " \"invoiceId\": \"65101018\",\r\n"
@@ -245,7 +247,6 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 		try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
 
 			HttpPost request = new HttpPost("http://128.199.165.110:8080/invoice/email");
-//			request.setHeader("Content-Type", "application/json");
 			request.setHeader("Content-Type", "application/json; charset=utf8");
 			request.setHeader("x-token", "fGxqeS9pzR7duRBV7xpXSkFBPtQFKn");
 
