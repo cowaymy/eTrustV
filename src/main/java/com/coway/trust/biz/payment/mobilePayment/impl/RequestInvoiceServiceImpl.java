@@ -9,6 +9,8 @@ import javax.annotation.Resource;
 
 import org.apache.poi.util.StringUtil;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -187,7 +189,7 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
         return saveCnt;
     }
 
-	private boolean sendMobileInvoiceRequest(Map<String, Object> param) throws JsonParseException, JsonMappingException, IOException {
+	private boolean sendMobileInvoiceRequest(Map<String, Object> param) throws JsonParseException, JsonMappingException, IOException, JSONException {
 		boolean result = false;
 
 		LOGGER.debug("sendMobileInvoiceRequest : {}", param.toString());
@@ -196,19 +198,28 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 		LOGGER.debug("selectInvoiceDetails : {}", selectInvoiceDetails);
 
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("abc", "123456");
-		map.put("def", "hmm");
-		list.add(map);
+		JSONObject jsonObj = new JSONObject();
+		JSONArray jarray = new JSONArray();
 
-		JSONArray jsonArray = new JSONArray();
-		jsonArray.put(list);
+		jarray.put(new JSONObject().put("invoiceId", "65101018")
+				.put("customerName","OCBC BANK (MALAYSIA) BERHAD")
+				.put("customerEmail", "vannie.koh@coway.com.my")
+				.put("invoiceDate", "MAY-20")
+				.put("currentCharges", "RM 159.00")
+				.put("previousBalance", "RM0.00")
+				.put("outstanding", "RM 159.00")
+				.put("virtualAccount", "98 9920 0001 0735")
+				.put("invoiceNumber", "BR4137692522")
+				.put("billerCode", "9928")
+				.put("refNumber1", "36393064")
+				.put("refNumbe2", "BR4137692522")
+				.put("cowayEmail", "billing@coway.com.my"));
 
-		LOGGER.debug("jsonArray " +jsonArray);
+		jsonObj.put("data", jarray);
 
+		LOGGER.debug("jsonObj " +jsonObj.toString());
 
-		String payload = "data=[{\n"
+		/*String payload = "data=[{\n"
 				+ " \"invoiceId\": \"65101018\",\r\n"
 				+ " \"customerName\": \"OCBC BANK (MALAYSIA) BERHAD\",\r\n"
 				+ " \"customerEmail\": \"vannie.koh@coway.com.my\",\r\n"
@@ -224,9 +235,9 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 				+ " \"cowayEmail\": \"billing@coway.com.my\""
 				+ " \n}]";
 
-		LOGGER.debug("payload " +payload);
+		LOGGER.debug("payload " +payload);*/
 
-		StringEntity entity = new StringEntity(payload);
+		StringEntity entity = new StringEntity(jsonObj.toString());
 
 		LOGGER.debug("entity " +entity);
 
