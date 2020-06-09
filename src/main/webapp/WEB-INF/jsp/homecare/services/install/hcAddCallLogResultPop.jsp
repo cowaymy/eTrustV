@@ -426,7 +426,7 @@
 		        <col style="width: *" />
 	        </colgroup>
         <tbody>
-            <tr>
+            <%-- <tr>
                 <th scope="row"><spring:message code='service.title.verify' /></th>
                 <td>
                 <c:choose>
@@ -438,7 +438,7 @@
                     </c:otherwise>
                  </c:choose>
                  </td>
-            </tr>
+            </tr> --%>
 	        <tr>
 	            <th scope="row"><spring:message code='service.title.VerificationRemark' /></th>
 	            <td><textarea cols="20" rows="5" id="veriremark" name="veriremark" >${orderDetail.installationInfo.vrifyRem}</textarea></td>
