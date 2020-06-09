@@ -70,7 +70,10 @@ public class ECashGrpDeductionFileCIMBHandler extends BasicTextDownloadHandler i
 		salesOrdNo = "0000";
 		remarks = String.valueOf(dataRow.get("fileBatchGrpId"));
 
-		stext = crcOwner + "," + crcNo + "," + crcExpiry + ",$" + amount + "," + salesOrdNo + "," + remarks;
+		//stext = crcOwner + "," + crcNo + "," + crcExpiry + ",$" + amount + "," + salesOrdNo + "," + remarks;
+
+		// 2020-03-19 - LaiKW - MC Payment Tokenization Format
+		stext = crcOwner + "," + crcNo + ",$" + amount + "," + salesOrdNo + "," + remarks;
 
 		out.write(stext);
 		out.newLine();
