@@ -13,6 +13,7 @@
  13/04/2020  ONGHC  1.0.1             Add Order Ledger Button and Highlighted no Outstanding Order
  24/04/2020  ONGHC  1.0.2             Amend fn_validateLdg to change confirmation to alert
  30/04/2020  ONGHC  1.0.3             Amend to Highlighted Advance Payment order
+ 09/06/2020  FANNIE   1.0.4             Amend to hide the order ledger, update and reject with authorization
  -->
 
 <style type="text/css">
@@ -1167,9 +1168,15 @@
   </form>
 </section><!-- search_table end -->
   <ul class="right_btns">
-  <li><p class="btn_grid"><a href="#" onClick="fn_viewLdg()"><spring:message code="sal.btn.ledger" /> </a></p></li>
-    <li><p class="btn_grid"><a href="#" onClick="fn_validateLdg()"><spring:message code="pay.btn.update" /> </a></p></li>
-    <li><p class="btn_grid"><a href="#" onClick="fn_reject()"><spring:message code="pay.btn.reject" /> </a></p></li>
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+       <li><p class="btn_grid"><a href="#" onClick="fn_viewLdg()"><spring:message code="sal.btn.ledger" /> </a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+        <li><p class="btn_grid"><a href="#" onClick="fn_validateLdg()"><spring:message code="pay.btn.update" /> </a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+        <li><p class="btn_grid"><a href="#" onClick="fn_reject()"><spring:message code="pay.btn.reject" /> </a></p></li>
+    </c:if>
     <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
       <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code="pay.btn.exceldw" /></a></p></li>
      </c:if>
