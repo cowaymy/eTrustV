@@ -245,8 +245,8 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 		try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
 
 			HttpPost request = new HttpPost("http://128.199.165.110:8080/invoice/email");
-			request.setHeader("Content-Type", "application/json");
-//			request.setHeader("Content-Type", "application/json; charset=utf8");
+//			request.setHeader("Content-Type", "application/json");
+			request.setHeader("Content-Type", "application/json; charset=utf8");
 			request.setHeader("x-token", "fGxqeS9pzR7duRBV7xpXSkFBPtQFKn");
 
 			request.setEntity(entity);
