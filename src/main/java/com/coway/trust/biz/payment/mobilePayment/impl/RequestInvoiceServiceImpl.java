@@ -198,9 +198,6 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 		LOGGER.debug("selectInvoiceDetails : {}", selectInvoiceDetails);
 
-		 JSONObject data = getJsonObjectFromMap(selectInvoiceDetails);
-		 LOGGER.debug("data " +data.toString());
-
 		JSONObject jsonObj = new JSONObject();
 		JSONArray jarray = new JSONArray();
 
@@ -224,8 +221,7 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 		LOGGER.debug("jarray " +jarray.toString());
 
-		/*String payload = "data=[{\n"
-				+ " \"invoiceId\": \"65101018\",\r\n"
+		String data = "{\"invoiceId\": \"65101018\",\r\n"
 				+ " \"customerName\": \"OCBC BANK (MALAYSIA) BERHAD\",\r\n"
 				+ " \"customerEmail\": \"vannie.koh@coway.com.my\",\r\n"
 				+ " \"invoiceDate\": \"MAY-20\",\r\n"
@@ -238,11 +234,11 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 				+ " \"refNumber1\": \"36393064\",\r\n"
 				+ " \"refNumber2\": \"BR4137692522\",\r\n"
 				+ " \"cowayEmail\": \"billing@coway.com.my\""
-				+ " \n}]";
+				+ " \n}";
 
-		LOGGER.debug("payload " +payload);*/
+		LOGGER.debug("data " +data);
 
-		StringEntity entity = new StringEntity(data.toString());
+		StringEntity entity = new StringEntity(data);
 
 		LOGGER.debug("entity " +entity);
 
