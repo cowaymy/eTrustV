@@ -110,7 +110,8 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 			BigDecimal norAmt1 = salesOrderMVO1.getNorAmt(); // mattress NOR_AMT
 			norAmt1 = norAmt1 == null ? BigDecimal.ZERO : norAmt1;
 
-			BigDecimal norAmt2 = salesOrderMVO2.getNorAmt(); // frame NOR_AMT
+			//BigDecimal norAmt2 = salesOrderMVO2.getNorAmt(); // frame NOR_AMT
+			BigDecimal norAmt2 = salesOrderMVO2.getTotAmt(); // frame NOR_AMT
 			norAmt2 = norAmt2 == null ? BigDecimal.ZERO : norAmt2;
 
 			// mattress order NOR_AMT + frame order NOR_AMT
