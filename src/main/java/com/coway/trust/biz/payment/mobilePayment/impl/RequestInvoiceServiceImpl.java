@@ -198,6 +198,9 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 		LOGGER.debug("selectInvoiceDetails : {}", selectInvoiceDetails);
 
+		 JSONObject data = getJsonObjectFromMap(selectInvoiceDetails);
+		 LOGGER.debug("data " +data.toString());
+
 		JSONObject jsonObj = new JSONObject();
 		JSONArray jarray = new JSONArray();
 
@@ -239,7 +242,7 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 		LOGGER.debug("payload " +payload);*/
 
-		StringEntity entity = new StringEntity(jsonObj.toString());
+		StringEntity entity = new StringEntity(data.toString());
 
 		LOGGER.debug("entity " +entity);
 
@@ -340,4 +343,11 @@ public class RequestInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 		return result;
 
     }
+
+
+
+	private JSONObject getJsonObjectFromMap(List<EgovMap> selectInvoiceDetails) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
