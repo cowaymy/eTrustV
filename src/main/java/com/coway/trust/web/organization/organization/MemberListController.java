@@ -1337,7 +1337,7 @@ public class MemberListController {
 	 */
 
 	@RequestMapping(value = "/memberListBranchEditPop.do")
-	public String memberListBranchEditPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String memberListBranchEditPop(@RequestParam Map<String, Object> params, ModelMap model , SessionVO sessionVO) {
 
 		List<EgovMap> branch = memberListService.branch();
 		logger.debug("branchList : {}", branch);
@@ -1371,6 +1371,9 @@ public class MemberListController {
 		}
     		List<EgovMap> subDeptList = memberListService.getSubDeptList(params) ;
     		logger.debug("subDeptList : {}", subDeptList);
+
+    	      // 2020-02-04 - LaiKW - Added to block CDB Sales admin to self change branch
+            model.addAttribute("userRoleId", sessionVO.getRoleId());
 
 		model.addAttribute("PAExpired", PAExpired);
 		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
