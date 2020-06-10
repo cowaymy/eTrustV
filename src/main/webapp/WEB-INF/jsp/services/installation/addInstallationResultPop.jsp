@@ -8,7 +8,7 @@
  06/03/2019  ONGHC  1.0.1          Remove Installation Status Active
  24/10/2019  ONGHC  1.0.2          Amend Sirim and Serial no checking
  26/02/2020  ONGHC  1.0.3          Add PSI & LPM Field
- 10/06/2020  ONGHC  1.0.4          Add PSI & LPM Field onblur Checking 
+ 10/06/2020  ONGHC  1.0.4          Add PSI & LPM Field onblur Checking
  -->
 
 <script type="text/javaScript">
@@ -346,7 +346,7 @@
          var key = theEvent.keyCode || theEvent.which;
          key = String.fromCharCode(key);
      }
-     var regex = /[0-9]|\./;
+     var regex = /[0-9]/;
      if( !regex.test(key) ) {
        theEvent.returnValue = false;
        if(theEvent.preventDefault) theEvent.preventDefault();
