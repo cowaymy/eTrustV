@@ -8,6 +8,7 @@
  06/03/2019  ONGHC  1.0.1          Remove Installation Status Active
  24/10/2019  ONGHC  1.0.2          Amend Sirim and Serial no checking
  26/02/2020  ONGHC  1.0.3          Add PSI & LPM Field
+ 10/06/2020  ONGHC  1.0.4          Add PSI & LPM Field onblur Checking 
  -->
 
 <script type="text/javaScript">
@@ -350,6 +351,13 @@
        theEvent.returnValue = false;
        if(theEvent.preventDefault) theEvent.preventDefault();
      }
+   }
+
+   function validate2(a) {
+    var regex = /^\d+$/;
+    if (!regex.test(a.value)) {
+      a.value = "";
+    }
    }
 
 </script>
@@ -927,11 +935,11 @@
      <tr>
       <th scope="row"><spring:message code='service.title.PSIRcd' /><span name="m8" id="m8" class="must">*</span></th>
       <td>
-      <input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" onkeypress='validate(event)' />
+      <input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" onkeypress='validate(event)' onblur='validate2(this);' />
       </td>
       <th scope="row"><spring:message code='service.title.lmp' /><span name="m9" id="m9" class="must">*</span></th>
       <td>
-      <input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" onkeypress='validate(event)' />
+      <input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" onkeypress='validate(event)' onblur='validate2(this);' />
       </td>
      </tr>
     </tbody>
