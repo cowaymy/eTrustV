@@ -7,6 +7,7 @@
  24/10/2019  ONGHC  1.0.0          AMEND LAYOUT
  13/02/2020  ONGHC  1.0.1          ADD PSI FIELD
  26/02/2020  ONGHC  1.0.2          ADD LPM FIELD
+ 10/06/2020  ONGHC  1.0.3          Add PSI & LPM Field onblur Checking
  -->
 
 <script type="text/javaScript">
@@ -59,21 +60,21 @@
   });
 
   function validate(evt) {
-       var theEvent = evt || window.event;
+    var theEvent = evt || window.event;
 
-       // Handle paste
-       if (theEvent.type === 'paste') {
-           key = event.clipboardData.getData('text/plain');
-       } else {
-       // Handle key press
-           var key = theEvent.keyCode || theEvent.which;
-         key = String.fromCharCode(key);
-     }
-     var regex = /[0-9]|\./;
-     if( !regex.test(key) ) {
-       theEvent.returnValue = false;
-       if(theEvent.preventDefault) theEvent.preventDefault();
-     }
+    // Handle paste
+    if (theEvent.type === 'paste') {
+      key = event.clipboardData.getData('text/plain');
+    } else {
+      // Handle key press
+      var key = theEvent.keyCode || theEvent.which;
+      key = String.fromCharCode(key);
+    }
+    var regex = /[0-9]/;
+    if( !regex.test(key) ) {
+      theEvent.returnValue = false;
+      if(theEvent.preventDefault) theEvent.preventDefault();
+    }
   }
 
   function fn_saveInstall() {
@@ -137,6 +138,14 @@
           //console.log("serialNo : " + dataRow.serialNo);
       });
   }
+
+  function validate2(a) {
+    var regex = /^\d+$/;
+    if (!regex.test(a.value)) {
+      a.value = "";
+    }
+   }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
@@ -250,11 +259,11 @@
           value="<c:out value="${installInfo.installDt}" />" />
        </td>
        <th scope="row"><spring:message code='service.title.PSIRcd' /><span class="must" id="m4"> *</span></th>
-       <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" onkeypress='validate(event)' value="<c:out value="${installInfo.psi}"/>" /></td>
+       <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" onkeypress='validate(event)' onblur="validate2(this)" value="<c:out value="${installInfo.psi}"/>" /></td>
       </tr>
       <tr>
        <th scope="row"><spring:message code='service.title.lmp' /><span class="must" id="m5"> *</span></th>
-       <td ><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" onkeypress='validate(event)' value="<c:out value="${installInfo.lpm}"/>" /></td>
+       <td ><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" onkeypress='validate(event)' onblur="validate2(this)" value="<c:out value="${installInfo.lpm}"/>" /></td>
        <th scope="row"></th>
        <td ></td>
       </tr>
