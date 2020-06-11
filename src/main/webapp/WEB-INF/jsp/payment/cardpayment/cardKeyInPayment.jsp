@@ -1025,6 +1025,7 @@ function fn_rentalOrderInfo(){
   Common.ajax("GET", "/payment/common/selectMegaDealByOrderId.do", megaDeal, function(result) {
 
         $("#rentalMegaDeal").val(result.megaDeal);
+        $("#rentalAdvDisc").val(result.advDisc); // ADDED BY TOMMY 20200605
     });
 
 
@@ -1127,6 +1128,7 @@ function rentalDiscountValue(){
     var mthRentAmt = AUIGrid.getCellValue(targetRenMstGridID, rows, "mthRentAmt");
   var megaDeal = $("#rentalMegaDeal").val();
   var advDisc = $("#rentalAdvDisc").val();
+
 
   if(megaDeal == 0  && advDisc == 1 ){
       if (advMonth >= 6 && advMonth < 12){
@@ -3100,6 +3102,7 @@ function isDupOutSrvcToFinal(){
               <input type="hidden" name="rentalBillGrpId" id="rentalBillGrpId" />
               <input type="hidden" name="rentalAdvAmt" id="rentalAdvAmt" />
               <input type="hidden" name="rentalMegaDeal" id="rentalMegaDeal" />
+              <input type="hidden" name="rentalAdvDisc" id="rentalAdvDisc" />
 
               <table class="type1">
                   <caption>table</caption>
