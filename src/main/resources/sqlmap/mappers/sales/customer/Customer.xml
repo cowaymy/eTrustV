@@ -2737,7 +2737,8 @@
     ON (A.TOKEN = SRC.CUST_CRC_TOKEN AND A.BIN = SRC.BIN AND A.CCLAST4 = SRC.CCLAST4 AND A.REF_NO = #{tokenRefNo})
     WHEN MATCHED THEN UPDATE
         SET A.CUST_CRC_ID = SRC.CUST_CRC_ID,
-              A.UPD_DT = SYSDATE
+            A.CUST_CRC_EXPR = '',
+            A.UPD_DT = SYSDATE
   </update>
 
     <update id="tokenCrcUpdate1" parameterType="Map">
@@ -2756,7 +2757,8 @@
     ON (A.TOKEN = SRC.CUST_CRC_TOKEN AND A.BIN = SRC.BIN AND A.CCLAST4 = SRC.CCLAST4 AND A.REF_NO = #{refNo})
     WHEN MATCHED THEN UPDATE
         SET A.CUST_CRC_ID = SRC.CUST_CRC_ID,
-              A.UPD_DT = SYSDATE
+            A.CUST_CRC_EXPR = '',
+            A.UPD_DT = SYSDATE
   </update>
 
   <select id="selectCodeList" parameterType="Map" resultType="egovMap">
