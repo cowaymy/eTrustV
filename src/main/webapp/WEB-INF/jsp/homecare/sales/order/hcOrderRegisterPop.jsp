@@ -346,7 +346,7 @@
 
                 if(vAppType == '66' && vCustType == '964') {
                     if(vNational == 'MALAYSIA') {
-                        if(vCodeId == '250' || vCodeId == '1244' || vCodeId == '271') {
+                        if(vCodeId == '250' || vCodeId == '1244' /* || vCodeId == '271' */) {
                             AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
 
                             if(docDefaultChk == false) docDefaultChk = true;
