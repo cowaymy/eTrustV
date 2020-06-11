@@ -222,12 +222,19 @@
 
     <select id="selectFrmOrdNo" parameterType="Map" resultType="egovMap">
     /*[com.coway.trust.biz.homecare.services.install.impl.HcInstallResultListMapper.selectFrmOrdNo]*/
-        SELECT DECODE(#{salesOrdNo}, B.FRA_ORD_NO, B.MAT_ORD_NO, B.MAT_ORD_NO, B.FRA_ORD_NO) AS SALES_ORD_NO
+        <!-- SELECT DECODE(#{salesOrdNo}, B.FRA_ORD_NO, B.MAT_ORD_NO, B.MAT_ORD_NO, B.FRA_ORD_NO) AS SALES_ORD_NO
 		  FROM SAL0001D a
 		     , HMC0011D B
 		 WHERE A.BNDL_ID IS NOT NULL
 		   AND A.BNDL_ID = B.ORD_SEQ_NO
-		   AND A.SALES_ORD_NO = #{salesOrdNo}
+		   AND A.SALES_ORD_NO = #{salesOrdNo} -->
+
+	SELECT B.FRA_ORD_NO AS SALES_ORD_NO
+          FROM SAL0001D a
+             , HMC0011D B
+         WHERE A.BNDL_ID IS NOT NULL
+           AND A.BNDL_ID = B.ORD_SEQ_NO
+           AND b.mat_ord_no =#{salesOrdNo}
     </select>
 
     <select id="selectFrmInstNO" parameterType="Map" resultType="egovMap">
