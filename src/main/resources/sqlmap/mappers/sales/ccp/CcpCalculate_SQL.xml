@@ -92,7 +92,9 @@ ORDER BY Project1.CODE_NAME ASC
 			       Filter1.PVYEAR   ,
 			       Filter1.TYPEID   ,
 			       Filter1.BNDL_NO,
-			       Filter1.APP_TYPE
+			       Filter1.APP_TYPE ,
+			       Filter1.CHS_STUS ,
+			       Filter1.CHS_RSN
 			FROM ( SELECT Extent1.CCP_ID   ,
 			          Extent1.CCP_SCHEME_TYPE_ID   ,
 			          Extent1.CCP_TYPE_ID   ,
@@ -131,7 +133,9 @@ ORDER BY Project1.CODE_NAME ASC
 			          Extent3.PV_YEAR PVYEAR,
 			          Extent9.TYPE_ID TYPEID,
 			          Extent13.BNDL_NO,
-			          Extent14.CODE_NAME APP_TYPE
+			          Extent14.CODE_NAME APP_TYPE ,
+			          Extent15.CHS_STUS ,
+			          Extent15.CHS_RSN
 			       FROM SAL0102D Extent1
 			          JOIN ( SELECT Extent2.CCP_SALES_ORD_ID K1  ,
 			                        MAX(Extent2.CCP_ID)  A1
@@ -151,6 +155,9 @@ ORDER BY Project1.CODE_NAME ASC
 			          LEFT JOIN SYS0038M Extent12   ON Extent1.CCP_RJ_STUS_ID = Extent12.STUS_CODE_ID
 			          LEFT JOIN HMC0011D Extent13   ON Extent13.ORD_SEQ_NO = Extent3.BNDL_ID
 			          LEFT JOIN SYS0013M Extent14   ON Extent14.CODE_ID = Extent3.APP_TYPE_ID
+			          LEFT JOIN SAL0262D Extent15 ON Extent3.CUST_ID = Extent15.CUST_ID
+			          AND Extent15.CHS_MONTH = EXTRACT(MONTH FROM SYSDATE)
+			          AND Extent15.CHS_YEAR = EXTRACT(YEAR FROM SYSDATE)
 			          <!-- WHERE   1 = Extent1.CCP_STUS_ID -->
 
 			          <!-- ## RENTAL  ONLY ## -->
@@ -760,7 +767,9 @@ SELECT Extent1.CCP_ID   ,
        CASE WHEN ( Extent4.SCRE_CTGRY_DESC IS NULL ) THEN '' ELSE Extent4.SCRE_CTGRY_DESC END SCRE_CTGRY_DESC ,
        CASE WHEN ( Extent1.CCP_FICO IS NULL ) THEN 0 ELSE Extent1.CCP_FICO END CCP_FICO,
        NVL(Extent1.CCP_RJ_STUS_ID , 0) CCP_RJ_STUS_ID,
-       CASE WHEN  (1 = Extent7.CTOS_BANKRUPT) THEN 1 ELSE 0 END CTOS_BANKRUPT
+       CASE WHEN  (1 = Extent7.CTOS_BANKRUPT) THEN 1 ELSE 0 END CTOS_BANKRUPT ,
+       Extent9.CHS_STUS ,
+       Extent9.CHS_RSN
   FROM SAL0102D Extent1
          LEFT JOIN SYS0038M Extent2   ON Extent1.CCP_STUS_ID = Extent2.STUS_CODE_ID
          LEFT JOIN SYS0032M Extent3   ON Extent1.CCP_RESN_ID = Extent3.RESN_ID
@@ -769,6 +778,9 @@ SELECT Extent1.CCP_ID   ,
          LEFT JOIN SAL0001D Extent6   ON Extent1.CCP_SALES_ORD_ID = Extent6.SALES_ORD_ID
          LEFT JOIN SAL0107D Extent7   ON Extent6.SALES_ORD_NO = Extent7.ORD_NO
          LEFT JOIN SAL0074D Extent8   ON Extent8.SALES_ORD_ID = Extent6.SALES_ORD_ID
+         LEFT JOIN SAL0262D Extent9   ON Extent6.CUST_ID = Extent9.CUST_ID
+         AND Extent9.CHS_MONTH = EXTRACT(MONTH FROM SYSDATE)
+         AND Extent9.CHS_YEAR = EXTRACT(YEAR FROM SYSDATE)
 <![CDATA[
  WHERE  Extent1.CCP_ID = #{ccpId}
  AND ROWNUM <= 1
