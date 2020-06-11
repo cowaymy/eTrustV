@@ -1578,6 +1578,14 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
       if("Y".equals(CommonUtils.nvl(orderVO.getHcSetOrdYn()))) {   // homecare order (Mattress + Frame)
     	  mthRentAmt = salesOrderMVO.getMthRentAmt();
+      }else{
+        logger.debug("@#### totAmt    :" + totAmt);
+        logger.debug("@#### mthRentAmt:" + mthRentAmt);
+        logger.debug("@#### totPv     :" + totPv);
+
+        salesOrderMVO.setTotAmt(totAmt);
+        salesOrderMVO.setMthRentAmt(mthRentAmt);
+        salesOrderMVO.setDscntAmt(mthRentAmt);
       }
 
       // [07/11/2018]ONGHC - REMOVE TO SOLVE PV ISSUE
@@ -1597,14 +1605,6 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       // BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10));
       // }
       // }
-
-      logger.debug("@#### totAmt    :" + totAmt);
-      logger.debug("@#### mthRentAmt:" + mthRentAmt);
-      logger.debug("@#### totPv     :" + totPv);
-
-      salesOrderMVO.setTotAmt(totAmt);
-      salesOrderMVO.setMthRentAmt(mthRentAmt);
-      salesOrderMVO.setDscntAmt(mthRentAmt);
     }
     // ------------------------------------------------------------------------------
     // END

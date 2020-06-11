@@ -77,8 +77,6 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		SalesOrderMVO salesOrderMVO2 = null;
 		String hcSetOrdYn = "N";
 
-		//int prevMattressBndlId = orderVO.getHcPrevMattressOrderVO().getMatBndlId();
-
 		int custId = CommonUtils.intNvl(salesOrderMVO1.getCustId());     // Cust Id
 		int matStkId = CommonUtils.intNvl(orderVO.getSalesOrderDVO1().getItmStkId());
 		int fraStkId = CommonUtils.intNvl(orderVO.getSalesOrderDVO2().getItmStkId());
@@ -106,6 +104,8 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 			// frame order (mth_rent_amt, def_rent_amt) = 0
 			salesOrderMVO2.setMthRentAmt(BigDecimal.ZERO);
 			salesOrderMVO2.setDefRentAmt(BigDecimal.ZERO);
+			salesOrderMVO2.setTotAmt(BigDecimal.ZERO);
+			salesOrderMVO2.setTotPv(BigDecimal.ZERO);
 
 			BigDecimal norAmt1 = salesOrderMVO1.getNorAmt(); // mattress NOR_AMT
 			norAmt1 = norAmt1 == null ? BigDecimal.ZERO : norAmt1;
