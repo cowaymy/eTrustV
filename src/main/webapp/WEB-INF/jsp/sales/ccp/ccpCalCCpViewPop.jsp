@@ -596,7 +596,11 @@ function chgTab(tabNm) {
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.ficoScore" /></th>
-    <td colspan="5"><span>${ccpInfoMap.ccpFico}</span></td>
+    <td><span>${ccpInfoMap.ccpFico}</span></td>
+    <th scope="row">CHS Status</th>
+    <td><span>${ccpInfoMap.chsStus}</span></td>
+    <th scope="row">CHS Reason</th>
+    <td><span>${ccpInfoMap.chsRsn}</span></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.ccpFeedbackCode" /></th>
