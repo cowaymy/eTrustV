@@ -117,7 +117,10 @@
         	if(fn_validSearchList()) fn_selectListAjax();
         });
         $('#btnClear').click(function() {
-        	$('#listSearchForm').clearForm();
+          //  alert();
+        	location.reload();
+        	//alert();
+        	//$('#listSearchForm').clearForm();
         });
         $('#btnVaLetter').click(function() {
 
