@@ -45,6 +45,7 @@
                              ]]>
                           </if>
 
+ORDER BY A.CHS_BATCH_ID DESC
     </select>
 
 
