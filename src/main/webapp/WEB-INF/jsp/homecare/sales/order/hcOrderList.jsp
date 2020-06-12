@@ -92,6 +92,7 @@
 
     function fn_copyChangeOrderPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+        console.log(selIdx);
         if(selIdx > -1) {
             var memCode = AUIGrid.getCellValue(listMyGridID, selIdx, "salesmanCode");
             Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode}, function(memRc) {
@@ -99,12 +100,12 @@
                     if(memRc.rcPrct < 30) {
                         fn_clearOrderSalesman();
                         Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%");
-                    } else {
-                    	Common.popupDiv("/homecare/sales/order/copyChangeHcOrder.do", { ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo") }, null , true);
+                        return false;
                     }
-                } else {
-                	Common.alert('<spring:message code="sal.alert.msg.preOrdMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noPreOrdSel" /></b>');
-                }
+            	}
+
+            	Common.popupDiv("/homecare/sales/order/copyChangeHcOrder.do", { ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo") }, null , true);
+
             });
         } else {
             Common.alert('<spring:message code="sal.alert.msg.preOrdMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noPreOrdSel" /></b>');
