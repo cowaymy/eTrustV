@@ -428,7 +428,7 @@ function fn_addRow() {
 	if(AUIGrid.getRowCount(newGridID) > 0) {
 		console.log("clamUn" + AUIGrid.getCellValue(newGridID, 0, "clamUn"));
 		//AUIGrid.addRow(newGridID, {clamUn:AUIGrid.getCellValue(newGridID, 0, "clamUn"),cur:"MYR",netAmt:0,taxAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
-		AUIGrid.addRow(newGridID, {clamUn:AUIGrid.getCellValue(newGridID, 0, "clamUn"),taxCode:"OP (Purchase(0%):Out of scope)",cur:"MYR",totAmt:0}, "last");
+		AUIGrid.addRow(newGridID, {clamUn:AUIGrid.getCellValue(newGridID, 0, "clamUn"),taxCode:"OP (Purchase(0%):Out of scope)",cur:AUIGrid.getCellValue(newGridID, 0, "cur"),totAmt:0}, "last");
 	} else {
 		Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"J1"}, function(result) {
 	        console.log(result);
@@ -705,7 +705,41 @@ function fn_setNewGridEvent() {
 		                AUIGrid.setCellValue(newGridID, event.rowIndex, "taxRate", result.taxRate);
 		            });
 		        }
+
+		        if(event.dataField == "cur") {
+		            console.log("currency change");
+
+		            var fCur = AUIGrid.getCellValue(newGridID, 0, "cur");
+
+		            if(event.rowIndex != 0) {
+		                if(AUIGrid.getRowCount(newGridID) > 1) {
+	                        var cCur = AUIGrid.getCellValue(newGridID, event.rowIndex, "cur");
+
+	                        if(cCur != fCur) {
+	                            Common.alert("Different currency selected!");
+	                            AUIGrid.setCellValue(newGridID, event.rowIndex, "cur", fCur);
+	                        }
+	                    }
+		            } else {
+		                for(var i = 1; i < AUIGrid.getRowCount(newGridID); i++) {
+		                    AUIGrid.setCellValue(newGridID, i, "cur", fCur);
+		                }
+		            }
+		        }
 		  });
+
+	AUIGrid.bind(newGridID, "selectionChange", function(event) {
+	    if(event.dataField == "cur") {
+	        if(AUIGrid.getRowCount(newGridID > 1)) {
+	            var fCur = AUIGrid.getCellValue(newGridID, 0, "cur");
+	            var cCur = AUIGrid.getCellValue(newGridID, event.rowIndex, "cur");
+
+	            if(cCur != fCur) {
+	                Common.alert("Different currency selected.");
+	            }
+	        }
+	    }
+	});
 }
 
 function fn_getTotTaxAmt(rowIndex) {

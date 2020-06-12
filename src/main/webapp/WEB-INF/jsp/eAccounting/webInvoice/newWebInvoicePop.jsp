@@ -30,6 +30,8 @@ var keyValueList = $.parseJSON('${taxCodeList}');
 var update = new Array();
 var remove = new Array();
 var attachList;
+var currList = ["MYR", "USD"];
+
 var myColumnLayout = [ {
     dataField : "clamUn",
     editable : false,
@@ -108,7 +110,10 @@ var myColumnLayout = [ {
 }, */{
     dataField : "cur",
     headerText : '<spring:message code="newWebInvoice.cur" />',
-    editable : false
+    renderer : {
+        type : "DropDownListRenderer",
+        list : currList
+    }
 }, /*{
     dataField : "netAmt",
     headerText : '<spring:message code="newWebInvoice.netAmount" />',
@@ -174,7 +179,10 @@ var myColumnLayout = [ {
     dataField : "expDesc",
     headerText : '<spring:message code="newWebInvoice.description" />',
     style : "aui-grid-user-custom-left",
-    width : 200
+    width : 200,
+    editRenderer : {
+        maxlength: 100
+    }
 }, {
     dataField : "yN",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -475,7 +483,7 @@ function fn_updateWebInvoiceInfo(st) {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.remark" /></th>
-	<td colspan="3"><textarea cols="20" rows="5" id="invcRem" name="invcRem" placeholder="Enter up to 200 characters"></textarea></td>
+	<td colspan="3"><textarea cols="20" rows="5" id="invcRem" name="invcRem" maxlength="200" placeholder="Enter up to 200 characters"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->

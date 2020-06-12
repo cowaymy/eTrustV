@@ -28,6 +28,7 @@ var callType = "${callType}";
 var removeOriFileName = new Array();
 var keyValueList = $.parseJSON('${taxCodeList}');
 var gridDataList = new Array();
+var currList = ["MYR", "USD"];
 <c:forEach var="data" items="${gridDataList}">
 var obj = {
 		clmSeq : "${data.clmSeq}"
@@ -139,7 +140,10 @@ var myColumnLayout = [ {
 }, {
     dataField : "cur",
     headerText : '<spring:message code="newWebInvoice.cur" />',
-    editable : false
+    renderer : {
+        type : "DropDownListRenderer",
+        list : currList
+    }
 }, /*{
     dataField : "netAmt",
     headerText : '<spring:message code="newWebInvoice.netAmount" />',
