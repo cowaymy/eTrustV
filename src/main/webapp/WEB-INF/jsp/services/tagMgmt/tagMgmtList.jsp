@@ -353,13 +353,13 @@
        <div class="date_set w100p">
         <!-- date_set start -->
         <p>
-         <input type="text" title="Create start Date"
+         <input type="text" title="Create start Date" value="${bfDay}"
           placeholder="DD/MM/YYYY" class="j_date w100p" id="regStartDt"
           name="regStartDt" />
         </p>
         <span>To</span>
         <p>
-         <input type="text" title="Create end Date"
+         <input type="text" title="Create end Date" value="${toDay}"
           placeholder="DD/MM/YYYY" class="j_date w100p" id="regEndDt"
           name="regEndDt" />
         </p>
