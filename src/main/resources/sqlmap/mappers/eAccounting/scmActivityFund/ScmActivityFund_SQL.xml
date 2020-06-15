@@ -399,6 +399,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,CRT_USER_ID
        ,UPD_DT
        ,UPD_USER_ID
+       ,INVC_CUR
     )
     values
     (
@@ -430,6 +431,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,#{userId}
        ,SYSDATE
        ,#{userId}
+       ,'CUR'
     )
 </insert>
 
