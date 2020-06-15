@@ -549,6 +549,7 @@ SELECT   T.CLM_NO
        ,EXP_DESC = REGEXP_REPLACE(#{expDesc}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
+       ,INVC_CUR = #{cur}
     WHERE CLM_NO = #{clmNo}
     AND CLM_SEQ = #{clmSeq}
 </update>
