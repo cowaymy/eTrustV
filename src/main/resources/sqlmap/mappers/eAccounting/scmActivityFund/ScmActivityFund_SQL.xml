@@ -431,7 +431,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,#{userId}
        ,SYSDATE
        ,#{userId}
-       ,'CUR'
+       ,#{cur}
     )
 </insert>
 
