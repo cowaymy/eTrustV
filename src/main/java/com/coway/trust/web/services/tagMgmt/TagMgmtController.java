@@ -33,6 +33,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
+import com.coway.trust.web.sales.SalesConstants;
 import com.coway.trust.web.services.servicePlanning.MileageCalculationController;
 
 
@@ -68,6 +69,12 @@ public class TagMgmtController {
     model.addAttribute("params", params);
 
     List<EgovMap> tMgntStat = tagMgmtService.getTagMgntStat(params);
+    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3,
+        SalesConstants.DEFAULT_DATE_FORMAT1);
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+    model.put("bfDay", bfDay);
+    model.put("toDay", toDay);
 
     model.addAttribute("tMgntStat", tMgntStat);
 
