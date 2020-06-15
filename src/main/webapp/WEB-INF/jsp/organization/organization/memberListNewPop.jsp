@@ -635,7 +635,13 @@ console.log("ready");
             console.log("5");
             console.log("bankaccno :: " + $("#bankAccNo").val());
             if($("#bankAccNo").val() != "-"){
-                checkBankAccNo();
+            	if(isNaN($("#bankAccNo").val())){  // validation the value of bank account number is numeric
+            		Common.alert("Bank account number must be numeric.");
+                    $("#bankAccNo").val("");
+                    return false;
+            	}else{
+            	     checkBankAccNo();
+            	}
             }
          }
      });
@@ -879,10 +885,13 @@ console.log("validation");
         Common.alert("Please select the issued bank");
         return false;
     }
+
 	if($("#bankAccNo").val() == ''){
         Common.alert("Please key in the bank account no");
         return false;
     }
+
+
 	//type 별로 다르게 해야됨
 	if($("#deptCd").val() == ''){
         Common.alert("Please select the department code");
@@ -1274,10 +1283,16 @@ function checkBankAccNoEnter() {
             fmtNumber("#bankAccNo"); // 2018-06-21 - LaiKW - Added removal of special characters from bank account number
             checkBankAccNo();
          } else if($("#memberType").val() == "5") {
-            console.log("bankaccno :: " + $("#bankAccNo").val());
-            if($("#bankAccNo").val() != "-"){
-                checkBankAccNo();
-            }
+        	 console.log("bankaccno :: " + $("#bankAccNo").val());
+             if($("#bankAccNo").val() != "-"){
+            	 if(isNaN($("#bankAccNo").val())){  // validation the value of bank account number is numeric
+                     Common.alert("Bank account number must be numeric.");
+                     $("#bankAccNo").val("");
+                     return false;
+                 }else{
+                      checkBankAccNo();
+                 }
+             }
          }
 	}
 }
@@ -1298,7 +1313,6 @@ function checkBankAccNo() {
                 $("#bankAccNo").val("");
                 return false;
             } else if(resultM.message == "S") {
-
                 Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
                     console.log(result);
                     if(result.cnt1 == "0" && result.cnt2 == "0") {
@@ -1313,17 +1327,17 @@ function checkBankAccNo() {
             }
         });
     } else {
-        Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
-            console.log(result);
-            if(result.cnt1 == "0" && result.cnt2 == "0") {
-                return true;
-            } else {
-                Common.alert("Bank account number has been registered.");
-                //$("#issuedBank").val("");
-                $("#bankAccNo").val("");
-                return false;
-            }
-        });
+	        Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
+	            console.log(result);
+	            if(result.cnt1 == "0" && result.cnt2 == "0") {
+	                return true;
+	            } else {
+	                Common.alert("Bank account number has been registered.");
+	                //$("#issuedBank").val("");
+	                $("#bankAccNo").val("");
+	                return false;
+	            }
+	        });
     }
 }
 

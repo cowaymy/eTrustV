@@ -263,7 +263,13 @@ $(document).ready(function() {
            console.log("5");
            console.log("bankaccno :: " + $("#bankAccNo").val());
            if($("#bankAccNo").val() != "-"){
-               checkBankAccNo();
+               if(isNaN($("#bankAccNo").val())){  // validation the value of bank account number is numeric
+                   Common.alert("Bank account number must be numeric.");
+                  $("#bankAccNo").val("");
+                   return false;
+               }else{
+            	    checkBankAccNo();
+               }
            }
         }
     });
@@ -1074,7 +1080,13 @@ function checkBankAccNoEnter() {
          } else if($("#memberType").val() == "5") {
             console.log("bankaccno :: " + $("#bankAccNo").val());
             if($("#bankAccNo").val() != "-"){
-                checkBankAccNo();
+            	if(isNaN($("#bankAccNo").val())){  // validation the value of bank account number is numeric
+            	     Common.alert("Bank account number must be numeric.");
+            	     $("#bankAccNo").val("");
+            	      return false;
+                }else{
+                	   checkBankAccNo();
+                }
             }
          }
     }
