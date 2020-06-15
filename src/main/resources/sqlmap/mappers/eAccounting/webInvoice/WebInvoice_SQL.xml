@@ -1568,7 +1568,8 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         CRT_DT,
         CRT_USER_ID,
         UPD_DT,
-        UPD_USER_ID
+        UPD_USER_ID,
+        INVC_CUR
     )
     SELECT
         #{newClmNo},
@@ -1590,7 +1591,8 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         SYSDATE,
         #{userId},
         SYSDATE,
-        #{userId}
+        #{userId},
+        INVC_CUR
     FROM FCM0003D
     WHERE CLM_NO = #{clmNo}
 </insert>
