@@ -1,5 +1,26 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<style type="text/css">
+
+/* 커스텀 행 스타일 */
+.my-yellow-style {
+    background:#FFE400;
+    font-weight:bold;
+    color:#22741C;
+}
+
+.my-pink-style {
+    background:#FFA7A7;
+    font-weight:bold;
+    color:#22741C;
+}
+
+.my-green-style {
+    background:#86E57F;
+    font-weight:bold;
+    color:#22741C;
+}
+</style>
 <script type="text/javascript">
 
 var optionUnit = { isShowChoose: false};
@@ -32,6 +53,20 @@ $(document).ready(function() {
     $("#_btnClose").click(function() {
     	window.close();
 	});
+
+    var chsStatus = '${ccpInfoMap.chsStus}';
+    var chsRsn = '${ccpInfoMap.chsRsn}';
+    if(chsStatus = "YELLOW") {
+    	$('#chs_stus').append("<span class='red_text'>"+chsStatus+"</span>");
+    	$('#chs_rsn').append("<span class='red_text'>"+chsRsn+"</span>");
+    }else if (chsStatus = "GREEN") {
+    	$('#chs_stus').append("<span class='black_text''>"+chsStatus+"</span>");
+    	$('#chs_rsn').append("<span class='black_text'>"+chsRsn+"</span>");
+    }else{
+        $('#chs_stus').append("<span class='black_text''>"+chsStatus+"</span>");
+        $('#chs_rsn').append("<span class='black_text'>"+chsRsn+"</span>");
+    }
+
 
     //Init
     var mst = getMstId();
@@ -1017,9 +1052,13 @@ function chgTab(tabNm) {
     <th scope="row"><spring:message code="sal.title.text.ficoScore" /></th>
     <td><span><input type="text" id="_ficoScore" name="ficoScore" value="${ccpInfoMap.ccpFico}" disabled="disabled" maxlength="10"></span></td>
         <th scope="row">CHS Status</th>
-    <td><span>${ccpInfoMap.chsStus}</span></td>
+    <td id="chs_stus">
+<%--     <span>${ccpInfoMap.chsStus}</span> --%>
+    </td>
     <th scope="row">CHS Reason</th>
-    <td><span>${ccpInfoMap.chsRsn}</span></td>
+    <td id="chs_rsn">
+<%--     <span>${ccpInfoMap.chsRsn}</span> --%>
+    </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.ccpFeedbackCode" /></th>
