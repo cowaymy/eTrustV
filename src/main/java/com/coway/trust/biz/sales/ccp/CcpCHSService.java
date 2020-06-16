@@ -9,7 +9,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface  CcpCHSService {
 
-  int saveExcelUpload(Map<String, Object> master, List<Map<String, Object>> detailList);
+  int saveCsvUpload(Map<String, Object> master, List<Map<String, Object>> detailList );
 
   List<EgovMap> selectCcpCHSMstList(Map<String, Object> params);
 
