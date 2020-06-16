@@ -1020,8 +1020,9 @@
                           JOIN SYS0013M T3
                             ON T3.CODE_ID = T1.MEM_TYPE
                            AND T3.CODE_MASTER_ID = 1
-		                 WHERE 8 != T1.STUS
+		                 WHERE 1=1
 		                 <if test='stus != null and stus > 0'>
+                       AND 8 != T1.STUS
 		                   AND T1.STUS = #{stus}
 		                 </if>
                          <if test='memType != null and memType > 0'>
