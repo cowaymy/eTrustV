@@ -83,7 +83,7 @@
     Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {
       memId : memId,
       memCode : memCode,
-      stus : 1
+      stus : ""
     }, function(memInfo) {
 
       if (memInfo == null) {
