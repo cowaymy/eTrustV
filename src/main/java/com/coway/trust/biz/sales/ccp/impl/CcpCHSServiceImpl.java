@@ -42,22 +42,36 @@ public class CcpCHSServiceImpl extends EgovAbstractServiceImpl implements CcpCHS
 
 
     @Override
-    public int saveExcelUpload(Map<String, Object> master, List<Map<String, Object>> detailList) {
+    public int saveCsvUpload(Map<String, Object> master, List<Map<String, Object>> detailList) {
         // TODO Auto-generated method stub
         int mastetSeq = ccpCHSMapper.selectNextBatchId();
         master.put("chsBatchId", mastetSeq);
-        int mResult = ccpCHSMapper.insertCustHealthScoreMst(master);
+        int mResult = ccpCHSMapper.insertCustHealthScoreMst(master); // INSERT INTO SAL0263D
 
-        if(mResult > 0 && detailList.size() > 0){
-            for(int i=0 ; i < detailList.size() ; i++){
-                int detailSeq = ccpCHSMapper.selectNextDetId();
-                detailList.get(i).put("chsDtlId", detailSeq);
-                detailList.get(i).put("chsBatchId", mastetSeq);
-                ccpCHSMapper.insertCustHealthScoreDtl(detailList.get(i));
+        int size = 1000;
+        int page = detailList.size() / size;
+        int start;
+        int end;
+
+        Map<String, Object> chslist = new HashMap<>();
+        chslist.put("chsBatchId", mastetSeq);
+        for (int i = 0; i <= page; i++) {
+            start = i * size;
+            end = size;
+
+            if(i == page){
+                end = detailList.size();
             }
-            //CALL PROCEDURE
-            ccpCHSMapper.callBatchCHSUpdScore(master);
+
+            chslist.put("list",
+                detailList.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+            ccpCHSMapper.insertCustHealthScoreDtl(chslist); // INSERT INTO SAL0264D
         }
+
+        //CALL PROCEDURE
+        ccpCHSMapper.callBatchCHSUpdScore(master); // MERGE INTO SAL0262D
+
+
         return mastetSeq;
     }
 
