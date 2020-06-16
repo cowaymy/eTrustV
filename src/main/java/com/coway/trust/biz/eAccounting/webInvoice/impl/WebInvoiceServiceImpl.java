@@ -373,7 +373,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				} else if("R2".equals(clmType) || "A1".equals(clmType)) {
 				    List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAdvInfoAndItems(invoAppvInfo);
 				    for(int j = 0; j < appvInfoAndItems.size(); j++) {
-                        String ifKey = webInvoiceMapper.selectNextAppvIfKey();
+                        String ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
                         Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
                         invoAppvItems.put("ifKey", ifKey);
                         invoAppvItems.put("userId", params.get("userId"));
