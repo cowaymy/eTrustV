@@ -79,7 +79,6 @@
 
     console.log('fn_loadOrderSalesman memId:' + memId);
     console.log('fn_loadOrderSalesman memCd:' + memCode);
-
     Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {
       memId : memId,
       memCode : memCode,
