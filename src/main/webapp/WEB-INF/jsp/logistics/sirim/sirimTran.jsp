@@ -440,11 +440,19 @@ var updcolumn    = [{dataField: "rnum",headerText :"<spring:message code='log.he
         try{
 	        var ssirim = $("#nsirimfr").val();
 	        var tsirim = $("#nsirimto").val();
-	        tsirim = (Number(ssirim) + (Number($("#nqty").val()) - 1)).toString();
-	        for (var i = 0 ; i < ssirim.length - tsirim.length ; i++){
+	        var num = (Number(ssirim) + (Number($("#nqty").val()) - 1)).toString();
+
+	        // Editted to resolve to sirim not in 7 digit format issue. By Hui Ding, 2020-06-16
+	        /*for (var i = 0 ; i < ssirim.length - tsirim.length ; i++){
 	            tsirim = '0'+tsirim;
-	        }
+	        } */
+
+	        const length_required = 7;
+	        tsirim = "0".repeat(length_required - String(num).length) + num;
+
 	        $("#nsirimto").val(tsirim);
+
+	        console.log("to Sirim: " + tsirim);
 	    }catch (e) {
 	    	Common.alert('System Error.\n Try Again please.');
 	    	return false;
