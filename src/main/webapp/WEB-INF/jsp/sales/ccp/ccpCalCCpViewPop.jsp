@@ -19,6 +19,19 @@ $(document).ready(function() {
     $("#_btnClose").click(function() {
     	window.close();
     });
+
+    var chsRsn = '${ccpInfoMap.chsRsn}';
+    if(chsStatus = "YELLOW") {
+        $('#chs_stus').append("<span class='red_text'>"+chsStatus+"</span>");
+        $('#chs_rsn').append("<span class='red_text'>"+chsRsn+"</span>");
+    }else if (chsStatus = "GREEN") {
+        $('#chs_stus').append("<span class='black_text''>"+chsStatus+"</span>");
+        $('#chs_rsn').append("<span class='black_text'>"+chsRsn+"</span>");
+    }else{
+        $('#chs_stus').append("<span class='black_text''>"+chsStatus+"</span>");
+        $('#chs_rsn').append("<span class='black_text'>"+chsRsn+"</span>");
+    }
+
     //Init
     var mst = getMstId();
 
@@ -597,10 +610,14 @@ function chgTab(tabNm) {
 <tr>
     <th scope="row"><spring:message code="sal.title.text.ficoScore" /></th>
     <td><span>${ccpInfoMap.ccpFico}</span></td>
-    <th scope="row">CHS Status</th>
-    <td><span>${ccpInfoMap.chsStus}</span></td>
+           <th scope="row">CHS Status</th>
+    <td id="chs_stus">
+  <%--   <span>${ccpInfoMap.chsStus}</span> --%>
+    </td>
     <th scope="row">CHS Reason</th>
-    <td><span>${ccpInfoMap.chsRsn}</span></td>
+    <td id="chs_rsn">
+  <%--   <span>${ccpInfoMap.chsRsn}</span> --%>
+    </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.ccpFeedbackCode" /></th>
