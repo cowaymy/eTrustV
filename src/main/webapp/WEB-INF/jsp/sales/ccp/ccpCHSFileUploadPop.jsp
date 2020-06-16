@@ -93,7 +93,7 @@ $(document).ready(function(){
             </tr>
 
             <tr>
-    <th scope="row" colspan="6" ><span class="must">* Only accept CSV format. </span> </th>
+    <th scope="row" colspan="6" ><span class="must">* Only accept CSV format. Max file size only 20MB. </span> </th>
 </tr>
 </tbody>
 </table><!-- table end -->
