@@ -3,6 +3,7 @@
  */
 package com.coway.trust.web.sales.order;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
@@ -24,9 +25,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.exception.BizException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -101,7 +105,48 @@ public class OrderListController {
 		logger.debug("!@###### custIc : "+params.get("custIc"));
 		logger.debug("!@##############################################################################");
 
-		List<EgovMap> orderList = orderListService.selectOrderList(params);
+
+		List<EgovMap> orderList =null;
+
+		/*****************************************
+		 *
+		 *****************************************/
+		logger.debug("vaNo,{}", StringUtils.isEmpty(params.get("vaNo")));
+		logger.debug("listContactNo,{}", StringUtils.isEmpty(params.get("contactNo")));
+		logger.debug("listCustIc,{}", StringUtils.isEmpty(params.get("custIc")));
+		logger.debug("listCustName,{}", StringUtils.isEmpty(params.get("custName")));
+		logger.debug("listCrtUserId,{}", StringUtils.isEmpty(params.get("crtUserId")));
+
+		//if  Customer  (NRIC / VANo / ContactNo/ NAME / CrtUserId )   not empty
+		if( ! StringUtils.isEmpty(params.get("vaNo"))
+					 ||! StringUtils.isEmpty(params.get("contactNo"))
+					 ||! StringUtils.isEmpty(params.get("custIc"))
+					 ||! StringUtils.isEmpty(params.get("custName"))
+					 ||! StringUtils.isEmpty(params.get("crtUserId"))
+					 ||! StringUtils.isEmpty(params.get("refNo"))
+					 ||! StringUtils.isEmpty(params.get("poNo"))){
+
+			String[] arrayCustId =null;
+
+			try{
+				 arrayCustId =this.getExtCustIdList(params);
+				 params.put("arrayCustId", arrayCustId);
+
+				 if(null !=arrayCustId  || arrayCustId.length>0){
+					 orderList = orderListService.selectOrderList(params);
+				 }
+
+			}catch (NullPointerException  nex){
+				throw new ApplicationException(AppConstants.FAIL, "no data found");
+
+			}catch(Exception  e){
+				throw new ApplicationException(AppConstants.FAIL, "Please key in the correct data");
+			}
+
+		}else{
+			orderList = orderListService.selectOrderList(params);
+		}
+
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(orderList);
@@ -580,7 +625,7 @@ public class OrderListController {
 	  List<EgovMap> orderList = orderListService.selectCboPckLinkOrdSub2(params);
 	  return ResponseEntity.ok(orderList);
 	}
-	
+
 	@RequestMapping(value="/orderMSOFListPop.do")
     public String orderMSOFListPop(){
 
@@ -611,5 +656,44 @@ public class OrderListController {
 //	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 //		return ResponseEntity.ok(message);
 //	}
+
+
+
+
+
+	/*****************************************
+	 *
+	 *
+	 * vaNo   listContactNo  listCustIc  listCustName  listCustId listCrtUserId
+	 * @return  sal0029d.CUST_ID
+	 */
+   public  String[]  getExtCustIdList( Map<String, Object> params ) throws Exception  {
+
+	   	String[]  arrayCustId =null;
+
+		logger.debug("getExtCustIdList in ......");
+		logger.debug("params {}",params);
+
+
+	   //get Cust_ID for sal0029d
+		List<EgovMap> custIdList = null;
+		custIdList = orderListService.getCustIdOfOrderList(params);
+
+		if( null != custIdList  && custIdList.size() >0){
+			//init
+			arrayCustId = new String[custIdList.size()];
+
+			for (int i=0;i<custIdList.size(); i++){
+				EgovMap am=(EgovMap)custIdList.get(i);
+				arrayCustId[i]=  ((BigDecimal) am.get("custId")).toString();
+			}
+		}
+
+		logger.debug("custIdList {}" ,custIdList);
+		logger.debug("getExtCustIdList  end ......");
+		return arrayCustId;
+   }
+
+
 
 }

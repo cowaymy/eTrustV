@@ -58,4 +58,11 @@ public interface OrderListService {
 	List<EgovMap> selectCboPckLinkOrdSub(Map<String, Object> params);
 
 	List<EgovMap> selectCboPckLinkOrdSub2(Map<String, Object> params);
+
+
+	//add by leo.ham
+	List<EgovMap> getCustIdOfOrderList(Map<String, Object> params);
+
+
+
 }

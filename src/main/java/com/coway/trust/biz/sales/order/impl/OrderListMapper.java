@@ -107,4 +107,8 @@ public interface OrderListMapper {
 
   List<EgovMap> selectCboPckLinkOrdSub2(Map<String, Object> params);
 
+
+  List<EgovMap> getCustIdOfOrderList(Map<String, Object> params);
+
+
 }
