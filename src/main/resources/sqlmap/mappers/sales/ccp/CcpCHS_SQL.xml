@@ -104,7 +104,8 @@ ORDER BY A.CHS_BATCH_ID DESC
         ,CRT_DT
         ,UPD_USER_ID
         ,UPD_DT
-        ) VALUES (
+        )
+   <!--      VALUES (
             #{chsDtlId}
             ,#{chsBatchId}
             ,#{custId}
@@ -116,8 +117,25 @@ ORDER BY A.CHS_BATCH_ID DESC
             ,SYSDATE
             ,#{updUserId}
             ,SYSDATE
-     )
+     ) -->
 
+SELECT SAL0264D_SEQ.NEXTVAL , chsBatchId , custId , month , year , chsStatus , chsRsn , crtUserId , crtDt , updUserId , updDt FROM (
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT
+
+            #{chsBatchId} chsBatchId
+            ,#{item.custId} custId
+            ,#{item.month} month
+            ,#{item.year} year
+            ,#{item.chsStatus} chsStatus
+            ,#{item.chsRsn} chsRsn
+            ,#{item.crtUserId} crtUserId
+            ,SYSDATE crtDt
+            ,#{item.updUserId} updUserId
+            ,SYSDATE updDt
+            FROM DUAL
+        </foreach>
+)
     </insert>
 
     <select id="selectCHSDetailInfo" parameterType="Map" resultType="egovMap">
@@ -142,7 +160,9 @@ ORDER BY A.CHS_BATCH_ID DESC
   AND B.CHS_YEAR NOT IN  ('YYYY')
   AND
   A.CHS_BATCH_ID = #{chsBatchId}
-
+  <![CDATA[
+AND ROWNUM <= 20000
+ ]]>
     </select>
 
        <select id="selectCHSMasterInfo" parameterType="Map" resultType="egovMap">
