@@ -340,9 +340,10 @@
 
         for(var i = 0; i < AUIGrid.getRowCount(docGridID) ; i++) {
             AUIGrid.setCellValue(docGridID, i, "chkfield", 0);
+            var vCodeId = AUIGrid.getCellValue(docGridID, i, "codeId");
 
             if(doCheck == true) {
-                var vCodeId = AUIGrid.getCellValue(docGridID, i, "codeId");
+
 
                 if(vAppType == '66' && vCustType == '964') {
                     if(vNational == 'MALAYSIA') {
@@ -368,7 +369,10 @@
                 	}
                 //}
             } else {
-                 docDefaultChk = false;
+            	if(vCodeId == '3198') { // SOF Form, check default when it is not eKey-in
+                    AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
+                    if(docDefaultChk == false) docDefaultChk = true;
+                }
             }
         }
     }
