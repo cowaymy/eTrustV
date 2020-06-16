@@ -35,6 +35,7 @@ import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.config.excel.ExcelReadComponent;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.EgovFormBasedFileUtil;
@@ -66,6 +67,9 @@ public class CcpCHSController {
   @Autowired
   private ExcelReadComponent excelReadComponent;
 
+  @Autowired
+  private CsvReadComponent csvReadComponent;
+
   @Value("${web.resource.upload.file}")
   private String uploadDir;
 
@@ -84,12 +88,12 @@ public class CcpCHSController {
       return "sales/ccp/ccpCHSFileUploadPop";
   }
 
-  @RequestMapping(value = "/excelUpload", method = RequestMethod.POST)
-  public ResponseEntity readExcel(MultipartHttpServletRequest request,SessionVO sessionVO) throws IOException, InvalidFormatException {
-   ReturnMessage message = new ReturnMessage();
+  @RequestMapping(value = "/csvUpload", method = RequestMethod.POST)
+  public ResponseEntity readFile(MultipartHttpServletRequest request,SessionVO sessionVO) throws IOException, InvalidFormatException {
+       ReturnMessage message = new ReturnMessage();
       Map<String, MultipartFile> fileMap = request.getFileMap();
-      MultipartFile multipartFile = fileMap.get("excelFile");
-      List<CHSRawDataVO> vos = excelReadComponent.readExcelToList(multipartFile, CHSRawDataVO::create);
+      MultipartFile multipartFile = fileMap.get("csvFile");
+      List<CHSRawDataVO> vos = csvReadComponent.readCsvToList(multipartFile, true, CHSRawDataVO::create);
 
       List<Map<String, Object>> detailList = new ArrayList<Map<String, Object>>();
       for (CHSRawDataVO vo : vos) {
@@ -117,8 +121,7 @@ public class CcpCHSController {
       master.put("chsTotSuccess", 0);
       master.put("chsTotFail", 0);
 
-
-      int result = ccpCHSService.saveExcelUpload(master, detailList);
+      int result = ccpCHSService.saveCsvUpload(master, detailList);
       if(result > 0){
           //File file = new File("C:\\COWAY_PROJECT\\CommissionDeduction_BatchFiles\\"+multipartFile.getOriginalFilename());
           //multipartFile.transferTo(file);
