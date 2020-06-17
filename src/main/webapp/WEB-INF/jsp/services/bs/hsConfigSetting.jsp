@@ -272,9 +272,14 @@
                 <dt>Link</dt>
                 <dd>
                 <ul class="btns">
+                 <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
                     <li><p class="link_btn"> <a href="javascript:fn_basicInfo()" id="basicInfo">HS Basic Info</a> </p></li>
-                    <li><p class="link_btn"><a href="javascript:fn_filterSetInfo()" id="filterSet">HS Filter Maintenance</a></p></li>
                         <li><p class="link_btn"> <a href="javascript:fn_exchgBodyAmbientAssy()" id="exchgBodyAmbientAssy">Exchange Body Ambient Assy Report</a> </p></li>
+                </c:if>
+                <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
+                <li><p class="link_btn"><a href="javascript:fn_filterSetInfo()" id="filterSet">HS Filter Maintenance</a></p></li>
+                </c:if>
+
                 </ul>
                 <ul class="btns">
                 </ul>
