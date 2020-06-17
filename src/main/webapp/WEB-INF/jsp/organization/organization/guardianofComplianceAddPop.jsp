@@ -109,8 +109,9 @@
 
   function fn_selectMemInfo() {
     var strMemberId = $('#reqstMemId').val();
+    alert(strMemberId);
 
-    if (FormUtil.isNotEmpty(strMemberId) && strMemberId > 0) {
+    if (FormUtil.isNotEmpty(strMemberId) || strMemberId > 0) {
       fn_loadMember(strMemberId);
     } else {
       Common.alert('<b>Invalid Member Code.</b>');
@@ -142,7 +143,8 @@
   function fn_loadMember(memId) {
     //  $("#searchOrderId").val(orderId);
     Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {
-      memCode : memId
+      memCode : memId,
+      stus : ""
     }, function(memInfo) {
 
       if (memInfo == null) {
@@ -301,7 +303,7 @@
             <tr>
               <th scope="row">Involved Person Code</th>
               <td colspan="3">
-                <input id="reqstMemId" name="reqstMemId" type="text" title="" placeholder="Involved Person Code" class="" /><a class="search_btn" id="memBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                <input id="reqstMemId" name="reqstMemId" type="text" title="" placeholder="Involved Person Code" class="readonly" /><a class="search_btn" id="memBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
               </td>
               <th scope="row">Action</th>
               <td colspan="3">
