@@ -13,7 +13,8 @@
  13/04/2020  ONGHC  1.0.1             Add Order Ledger Button and Highlighted no Outstanding Order
  24/04/2020  ONGHC  1.0.2             Amend fn_validateLdg to change confirmation to alert
  30/04/2020  ONGHC  1.0.3             Amend to Highlighted Advance Payment order
- 09/06/2020  FANNIE   1.0.4             Amend to hide the order ledger, update and reject with authorization
+ 09/06/2020  FANNIE  1.0.4             Amend to hide the order ledger, update and reject with authorization
+ 17/06/2020  ONGHC  1.0.5             Amend Credit Card No. Auto Tab Feature.
  -->
 
 <style type="text/css">
@@ -1087,6 +1088,17 @@
     $("#ordId").val(ordId);
     Common.popupWin("frmLedger", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
   }
+
+  function nextTab (a, e) {
+    if (e.keyCode!=8) {
+      if (a.value.length == a.size) {
+        var no = parseInt(a.name.substring(a.name.length - 1, a.name.length)) + 1;;
+        var name = a.name.substring(0, a.name.length - 1);
+        $("#" + a.name.substring(0, a.name.length - 1) + no).focus();
+      }
+    }
+  }
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -1311,13 +1323,13 @@
                     <tr>
                         <th scope="row">Card No<span class="must">*</span></th>
                         <td>
-                            <p class="short"><input type="text" id="keyInCardNo1" name="keyInCardNo1" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onChange="javascript:fn_changeCardNo1();"/></p>
+                            <p class="short"><input type="text" id="keyInCardNo1" name="keyInCardNo1" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);'  onChange="javascript:fn_changeCardNo1();"/></p>
                             <span>-</span>
-                            <p class="short"><input type="text" id="keyInCardNo2" name="keyInCardNo2" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+                            <p class="short"><input type="text" id="keyInCardNo2" name="keyInCardNo2" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);'/></p>
                             <span>-</span>
-                            <p class="short"><input type="text" id="keyInCardNo3" name="keyInCardNo3" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+                            <p class="short"><input type="text" id="keyInCardNo3" name="keyInCardNo3" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);'/></p>
                             <span>-</span>
-                            <p class="short"><input type="text" id="keyInCardNo4" name="keyInCardNo4" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+                            <p class="short"><input type="text" id="keyInCardNo4" name="keyInCardNo4" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);'/></p>
                         </td>
                         <th scope="row">Approval No.<span class="must">*</span></th>
                         <td>
