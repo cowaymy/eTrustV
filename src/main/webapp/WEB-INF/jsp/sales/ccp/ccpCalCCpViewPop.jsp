@@ -20,11 +20,14 @@ $(document).ready(function() {
     	window.close();
     });
 
+    var chsStatus = '${ccpInfoMap.chsStus}';
     var chsRsn = '${ccpInfoMap.chsRsn}';
-    if(chsStatus = "YELLOW") {
+     console.log("chsStatus : "+ chsStatus);
+     console.log("chsRsn : "+ chsRsn);
+     if(chsStatus == "YELLOW") {
         $('#chs_stus').append("<span class='red_text'>"+chsStatus+"</span>");
         $('#chs_rsn').append("<span class='red_text'>"+chsRsn+"</span>");
-    }else if (chsStatus = "GREEN") {
+    }else if (chsStatus == "GREEN") {
         $('#chs_stus').append("<span class='black_text''>"+chsStatus+"</span>");
         $('#chs_rsn').append("<span class='black_text'>"+chsRsn+"</span>");
     }else{
@@ -612,11 +615,11 @@ function chgTab(tabNm) {
     <td><span>${ccpInfoMap.ccpFico}</span></td>
            <th scope="row">CHS Status</th>
     <td id="chs_stus">
-  <%--   <span>${ccpInfoMap.chsStus}</span> --%>
+ <%--   <span>${ccpInfoMap.chsStus}</span> --%>
     </td>
     <th scope="row">CHS Reason</th>
     <td id="chs_rsn">
-  <%--   <span>${ccpInfoMap.chsRsn}</span> --%>
+ <%--   <span>${ccpInfoMap.chsRsn}</span> --%>
     </td>
 </tr>
 <tr>
