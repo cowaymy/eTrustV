@@ -393,7 +393,7 @@
                      Project1.NAME NAME,
                      Project1.NRIC NRIC,
                      Project1.STUS STUS,
-                    TO_CHAR(Project1.UPD_DT,'DD-MM-YYYY') UPD_DT,
+                    TO_CHAR(Project1.UPD_DT,'DD-MM-YYYY HH:MI AM') UPD_DT,
                      Project1.CODE_NAME CODE_NAME,
                      Project1.status_name,
                      Project1.position_name,

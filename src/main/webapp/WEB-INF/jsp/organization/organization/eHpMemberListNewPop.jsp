@@ -1201,14 +1201,12 @@ function checkBankAccNo() {
         });
     }
 }
-/*
+
+
 function fn_removeFile(name){
     if(name == "PAY") {
          $("#paymentFile").val("");
          $('#paymentFile').change();
-    }else if(name == "PASS"){
-        $("#passportFile").val("");
-        $('#passportFile').change();
     }else if(name == "OTH"){
         $("#otherFile").val("");
         $('#otherFile').change();
@@ -1216,7 +1214,7 @@ function fn_removeFile(name){
         $("#otherFile2").val("");
         $('#otherFile2').change();
     }
-} */
+}
 
 function fn_validFile() {
     var isValid = true, msg = "";
@@ -1814,7 +1812,6 @@ function fn_validFile() {
             <label>
             <input type='text' class='input_text'  />
             <span class='label_text'><a href='#'>Upload</a></span>
-           <!--  <span class='label_text'><a href='#' onclick='fn_removeFile("PASS")'>Remove</a></span> -->
             </label>
         </div>
     </td>
@@ -1828,8 +1825,8 @@ function fn_validFile() {
             <label>
                 <input type='text' class='input_text'  />
                 <span class='label_text'><a href='#'>Upload</a></span>
-              <!--   <span class='label_text'><a href='#' onclick='fn_removeFile("PAY")'>Remove</a></span> -->
             </label>
+            <span class='label_text'><a href='#' onclick='fn_removeFile("PAY")'>Remove</a></span>
         </div>
     </td>
 </tr>
@@ -1841,7 +1838,8 @@ function fn_validFile() {
             <label>
                 <input type='text' class='input_text'  />
                 <span class='label_text'><a href='#'>Upload</a></span>
-              <!--   <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span> -->
+                </label>
+              <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span>
             </label>
         </div>
     </td>
@@ -1854,7 +1852,8 @@ function fn_validFile() {
             <label>
                 <input type='text' class='input_text'  />
                 <span class='label_text'><a href='#'>Upload</a></span>
-              <!--   <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span> -->
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
             </label>
         </div>
     </td>

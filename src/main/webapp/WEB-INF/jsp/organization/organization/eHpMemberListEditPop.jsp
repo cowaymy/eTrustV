@@ -1130,27 +1130,27 @@ function fn_validFile() {
 function fn_removeFile(name){
     if(name == "NRIC") {
          $("#nricFile").val("");
-         $(".input_text[name='nricFileTxt']").val("");
+         //$(".input_text[name='nricFileTxt']").val("");
          $('#nricFile').change();
     }else if(name == "STAT"){
         $("#statementFile").val("");
-        $(".input_text[name='statementFileTxt']").val("");
+        //$(".input_text[name='statementFileTxt']").val("");
         $('#statementFile').change();
     }else if(name == "PASS"){
         $("#passportFile").val("");
-        $(".input_text[name='passportFileTxt']").val("");
+        //$(".input_text[name='passportFileTxt']").val("");
         $('#passportFile').change();
     }else if(name == "PAY"){
         $("#paymentFile").val("");
-        $(".input_text[name='paymentFileTxt']").val("");
+        //$(".input_text[name='paymentFileTxt']").val("");
         $('#paymentFile').change();
     }else if(name == "OTH"){
         $("#otherFile").val("");
-        $(".input_text[name='otherFileTxt']").val("");
+        //$(".input_text[name='otherFileTxt']").val("");
         $('#otherFile').change();
     }else if(name == "OTH2"){
         $("#otherFile2").val("");
-        $(".input_text[name='otherFileTxt2']").val("");
+        //$(".input_text[name='otherFileTxt2']").val("");
         $('#otherFile2').change();
     }
 }
@@ -1830,7 +1830,7 @@ function fn_parentReload() {
                 <input type='text' class='input_text'   id='paymentFileTxt'/>
                 <span class='label_text'><a href='#'>Upload</a></span>
             </label>
-               <!--  <span class='label_text'><a href='#' onclick='fn_removeFile("PAY")'>Remove</a></span> -->
+                <span class='label_text'><a href='#' onclick='fn_removeFile("PAY")'>Remove</a></span>
         </div>
     </td>
 </tr>
@@ -1843,7 +1843,7 @@ function fn_parentReload() {
                 <input type='text' class='input_text'  id='otherFileTxt'/>
                 <span class='label_text'><a href='#'>Upload</a></span>
             </label>
-            <!--     <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span> -->
+                 <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span>
         </div>
     </td>
 </tr>
@@ -1856,7 +1856,7 @@ function fn_parentReload() {
                 <input type='text' class='input_text'  id='otherFileTxt2'/>
                 <span class='label_text'><a href='#'>Upload</a></span>
             </label>
-           <!--   <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span> -->
+              <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
         </div>
     </td>
 </tr>
