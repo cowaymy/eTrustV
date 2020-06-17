@@ -1,18 +1,18 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <style type="text/css">
-.my-custom-up div{
-    color:#FF0000;
+.my-custom-up div {
+  color: #FF0000;
 }
 
 /* 커스텀 행 스타일 */
 .my-row-style {
-    background:#EFEFEF;
-    font-weight:bold;
-    color:#22741C;
+  background: #EFEFEF;
+  font-weight: bold;
+  color: #22741C;
 }
 </style>
 <script type="text/javaScript">
@@ -3044,702 +3044,609 @@ function isDupOutSrvcToFinal(){
         });
     };
 
+    function nextTab (a, e) {
+      if (e.keyCode!=8) {
+        if (a.value.length == a.size) {
+          var no = parseInt(a.name.substring(a.name.length - 1, a.name.length)) + 1;;
+          var name = a.name.substring(0, a.name.length - 1);
+          $("#" + a.name.substring(0, a.name.length - 1) + no).focus();
+        }
+      }
+    }
+
 </script>
-
 <section id="content">
-    <ul class="path">
-        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    </ul>
-
-    <!-- title_line start -->
-    <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
-        <h2>Credit Card Key-In</h2>
-    </aside>
-    <!-- title_line end -->
-
+  <ul class="path">
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+  </ul>
+  <!-- title_line start -->
+  <aside class="title_line">
+    <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu' /></a></p>
+    <h2>Credit Card Key-In</h2>
+  </aside>
+  <!-- title_line end -->
+  <!-- search_table start -->
+  <section class="search_table">
     <!-- search_table start -->
-    <section class="search_table">
-        <!-- search_table start -->
-        <table class="type1">
-            <caption>table</caption>
-            <colgroup>
-                <col style="width:180px" />
-                <col style="width:*" />
-            </colgroup>
-            <tbody>
-                <tr>
-                    <th scope="row">Application Type</th>
-                    <td>
-                        <select id="appType" name="appType" onChange="javascript:fn_chgAppType();">
-                            <option value="1">Rental</option>
-                            <option value="2">Outright</option>
-                            <option value="3">Rental Membership</option>
-                            <option value="4">Bill Payment</option>
-                            <option value="5">Outright Membership</option>
-                            <option value="6">Care Service</option>
-                        </select>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <!-- table end -->
-    </section>
-
-    <!--
+    <table class="type1">
+      <caption>table</caption>
+      <colgroup>
+        <col style="width: 180px" />
+        <col style="width: *" />
+      </colgroup>
+      <tbody>
+        <tr>
+          <th scope="row">Application Type</th>
+          <td>
+            <select id="appType" name="appType" onChange="javascript:fn_chgAppType();">
+              <option value="1">Rental</option>
+              <option value="2">Outright</option>
+              <option value="3">Rental Membership</option>
+              <option value="4">Bill Payment</option>
+              <option value="5">Outright Membership</option>
+              <option value="6">Care Service</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- table end -->
+  </section>
+  <!--
     ***************************************************************************************
     ***************************************************************************************
     *************                                          Rental Search Area                                                           ****
     ***************************************************************************************
     ***************************************************************************************
     -->
-    <!-- search_table start -->
-    <section id="rentalSearch">
-      <section class="search_table">
-          <!-- search_table start -->
-          <form id="rentalSearchForm" action="#" method="post">
-              <input type="hidden" name="rentalOrdId" id="rentalOrdId" />
-              <input type="hidden" name="rentalBillGrpId" id="rentalBillGrpId" />
-              <input type="hidden" name="rentalAdvAmt" id="rentalAdvAmt" />
-              <input type="hidden" name="rentalMegaDeal" id="rentalMegaDeal" />
-              <input type="hidden" name="rentalAdvDisc" id="rentalAdvDisc" />
-
-              <table class="type1">
-                  <caption>table</caption>
-                  <colgroup>
-                      <col style="width:180px" />
-                      <col style="width:*" />
-                  </colgroup>
-                  <tbody>
-                      <tr>
-                          <th scope="row">Sales Order No.</th>
-                          <td>
-                              <input type="text" name="rentalOrdNo" id="rentalOrdNo" title="" placeholder="Order Number" class="" />
-                                  <p class="btn_sky">
-                                      <a href="javascript:fn_rentalConfirm();" id="confirm"><spring:message code='pay.btn.confirm'/></a>
-                                  </p>
-                                  <p class="btn_sky">
-                                      <a href="javascript:fn_rentalOrderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
-                                  </p>
-                                  <p class="btn_sky">
-                                      <a href="javascript:viewRentalLedger();" id="viewLedger"><spring:message code='pay.btn.viewLedger'/></a>
-                                  </p>
-                                  <label><input type="checkbox" id="isRentalBillGroup" name="isRentalBillGroup" onClick="javascript:rentalCheckBillGroup();" /><span>include all orders' bills with same billing group </span></label>
-                          </td>
-                      </tr>
-                      <tr>
-                          <th scope="row">Advance Specification</th>
-                          <td>
-                              <select id="rentalAdvMonthType" name="rentalAdvMonthType" onchange="fn_rentalAdvMonth();">
-                                  <option value="0" selected="selected">Advance Selection</option>
-                                  <option value="99">Specific Advance</option>
-                                  <option value="12">1 Year</option>
-                                  <option value="24">2 Years</option>
-                              </select>
-                              <input type="text" id="rentalTxtAdvMonth" name="rentalTxtAdvMonth" title="Advance Month" size="3" maxlength="2" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' onblur="javascript:fn_rentalAdvMonthChangeTxt();"/>
-                              <input type="text" id="genAdvAmt" name="genAdvAmt" title="General Advance Amount" size="15" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' />
-                          </td>
-                      </tr>
-                      <tr>
-                  <th scope="row">TR No.</th>
-                        <td>
-                            <input id="rentalkeyInTrNo" name="rentalkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
-                        </td>
-
-              </tr>
-                            <tr>
-                                <th scope="row">TR Issue Date</th>
-                        <td>
-                            <input id="rentalkeyInTrIssueDate" name="rentalkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
-                        </td>
-                        </tr>
-              <tr>
-                  <th scope="row">Collector</th>
-                  <td>
-                      <input id="rentalkeyInCollMemId" name="rentalkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                      <input id="rentalkeyInCollMemCd" name="rentalkeyInCollMemCd" type="text" title="" placeholder="" />
-                      <p class="btn_sky">
-                        <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
-                      </p>
-                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
-                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-                      </a>
-                      <input id="rentalkeyInCollMemNm" name="rentalkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
-                  </td>
-
-              </tr>
-              <tr>
-                      <th scope="row">Commission</th>
-                      <td>
-                            <label><input type="checkbox" id="rentalcashIsCommChk" name="rentalcashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
-                      </td>
-             </tr>
-                  </tbody>
-              </table>
-              <!-- table end -->
-          </form>
-      </section>
-      <!-- search_table end -->
-
-      <!-- grid_wrap start -->
-      <article class="grid_wrap">
-          <div id="target_rental_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
-      </article>
-      <!-- grid_wrap end -->
-
-      <ul class="right_btns">
-         <li><p class="btn_grid"><a href="javascript:addRentalToFinal();"><spring:message code='pay.btn.add'/></a></p></li>
-        </ul>
-
-      <!-- grid_wrap start -->
-      <article class="grid_wrap mt10">
-          <div id="target_rentalD_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
-      </article>
-      <!-- grid_wrap end -->
-
-      <ul class="right_btns">
-          <li><p class="amountTotalSttl">Amount Total (RPF + Rental Fee) :</p></li>
-          <li><strong id="rentalTotalAmtTxt">RM 0.00</strong></li>
-      </ul>
+  <!-- search_table start -->
+  <section id="rentalSearch">
+    <section class="search_table">
+      <!-- search_table start -->
+      <form id="rentalSearchForm" action="#" method="post">
+        <input type="hidden" name="rentalOrdId" id="rentalOrdId" /> <input type="hidden" name="rentalBillGrpId" id="rentalBillGrpId" /> <input type="hidden" name="rentalAdvAmt" id="rentalAdvAmt" /> <input type="hidden" name="rentalMegaDeal" id="rentalMegaDeal" /> <input type="hidden" name="rentalAdvDisc" id="rentalAdvDisc" />
+        <table class="type1">
+          <caption>table</caption>
+          <colgroup>
+            <col style="width: 180px" />
+            <col style="width: *" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <th scope="row">Sales Order No.</th>
+              <td>
+                <input type="text" name="rentalOrdNo" id="rentalOrdNo" title="" placeholder="Order Number" class="" />
+                <p class="btn_sky"><a href="javascript:fn_rentalConfirm();" id="confirm"><spring:message code='pay.btn.confirm' /></a></p>
+                <p class="btn_sky"><a href="javascript:fn_rentalOrderSearchPop();" id="search"><spring:message code='sys.btn.search' /></a></p>
+                <p class="btn_sky"><a href="javascript:viewRentalLedger();" id="viewLedger"><spring:message code='pay.btn.viewLedger' /></a></p> <label><input type="checkbox" id="isRentalBillGroup" name="isRentalBillGroup" onClick="javascript:rentalCheckBillGroup();" /><span>include all orders' bills with same billing group </span></label>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Advance Specification</th>
+              <td>
+                <select id="rentalAdvMonthType" name="rentalAdvMonthType" onchange="fn_rentalAdvMonth();">
+                  <option value="0" selected="selected">Advance Selection</option>
+                  <option value="99">Specific Advance</option>
+                  <option value="12">1 Year</option>
+                  <option value="24">2 Years</option>
+                </select>
+                <input type="text" id="rentalTxtAdvMonth" name="rentalTxtAdvMonth" title="Advance Month" size="3" maxlength="2" class="wAuto ml5 readonly" readonly onkeydown='return FormUtil.onlyNumber(event)' onblur="javascript:fn_rentalAdvMonthChangeTxt();" /> <input type="text" id="genAdvAmt" name="genAdvAmt" title="General Advance Amount" size="15" class="wAuto ml5 readonly" readonly onkeydown='return FormUtil.onlyNumber(event)' />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">TR No.</th>
+              <td>
+                <input id="rentalkeyInTrNo" name="rentalkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">TR Issue Date</th>
+              <td>
+                <input id="rentalkeyInTrIssueDate" name="rentalkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date" />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Collector</th>
+              <td>
+                <input id="rentalkeyInCollMemId" name="rentalkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly /> <input id="rentalkeyInCollMemCd" name="rentalkeyInCollMemCd" type="text" title="" placeholder="" />
+                <p class="btn_sky"><a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a></p> <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn"> <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                </a> <input id="rentalkeyInCollMemNm" name="rentalkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Commission</th>
+              <td>
+                <label><input type="checkbox" id="rentalcashIsCommChk" name="rentalcashIsCommChk" value="1" checked="checked" /><span>Allow commssion for this payment</span></label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- table end -->
+      </form>
     </section>
-    <!--
+    <!-- search_table end -->
+    <!-- grid_wrap start -->
+    <article class="grid_wrap">
+      <div id="target_rental_grid_wrap" style="width: 100%;
+  height: 210px;
+  margin: 0 auto;"></div>
+    </article>
+    <!-- grid_wrap end -->
+    <ul class="right_btns">
+      <li><p class="btn_grid"><a href="javascript:addRentalToFinal();"><spring:message code='pay.btn.add' /></a></p></li>
+    </ul>
+    <!-- grid_wrap start -->
+    <article class="grid_wrap mt10">
+      <div id="target_rentalD_grid_wrap" style="width: 100%;
+  height: 210px;
+  margin: 0 auto;"></div>
+    </article>
+    <!-- grid_wrap end -->
+    <ul class="right_btns">
+      <li><p class="amountTotalSttl">Amount Total (RPF + Rental Fee) :</p></li>
+      <li><strong id="rentalTotalAmtTxt">RM 0.00</strong></li>
+    </ul>
+  </section>
+  <!--
     ***************************************************************************************
     ***************************************************************************************
     *************                                          Outright Search Area                                                         ****
     ***************************************************************************************
     ***************************************************************************************
     -->
-    <section id="outSearch" style="display:none;">
+  <section id="outSearch" style="display: none;">
+    <!-- search_table start -->
+    <section class="search_table">
       <!-- search_table start -->
-      <section class="search_table">
-          <!-- search_table start -->
-          <form id="outSearchForm" action="#" method="post">
-              <input type="hidden" name="outOrdId" id="outOrdId" />
-
-              <table class="type1">
-                  <caption>table</caption>
-                  <colgroup>
-                      <col style="width:180px" />
-                      <col style="width:*" />
-                  </colgroup>
-                  <tbody>
-                      <tr>
-                          <th scope="row">Sales Order No.</th>
-                          <td>
-                              <input type="text" name="outOrdNo" id="outOrdNo" title="" placeholder="Order Number" class="" />
-                                  <p class="btn_sky">
-                                      <a href="javascript:fn_outConfirm();" id="confirm"><spring:message code='pay.btn.confirm'/></a>
-                                  </p>
-                                  <p class="btn_sky">
-                                      <a href="javascript:fn_outOrderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
-                                  </p>
-                          </td>
-                      </tr>
-                      <tr>
-                        <th scope="row">TR No.</th>
-                        <td>
-                            <input id="outkeyInTrNo" name="outkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
-                        </td>
-
-              </tr>
-                            <tr>
-                                <th scope="row">TR Issue Date</th>
-                        <td>
-                            <input id="outkeyInTrIssueDate" name="outkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
-                        </td>
-                        </tr>
-              <tr>
-                  <th scope="row">Collector</th>
-                  <td>
-                      <input id="outkeyInCollMemId" name="outkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                      <input id="outkeyInCollMemCd" name="outkeyInCollMemCd" type="text" title="" placeholder=""  />
-                      <p class="btn_sky">
-                        <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
-                      </p>
-                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
-                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-                      </a>
-                      <input id="outkeyInCollMemNm" name="outkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
-                  </td>
-
-              </tr>
-              <tr>
-                      <th scope="row">Commission</th>
-                      <td>
-                            <label><input type="checkbox" id="outcashIsCommChk" name="outcashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
-                      </td>
-             </tr>
-                  </tbody>
-              </table>
-              <!-- table end -->
-          </form>
-      </section>
-      <!-- search_table end -->
-
-      <ul class="right_btns">
-           <li><p class="btn_grid"><a href="javascript:addOutToFinal();"><spring:message code='pay.btn.add'/></a></p></li>
-        </ul>
-
-      <!-- grid_wrap start -->
-      <article class="grid_wrap">
-          <div id="target_out_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
-      </article>
-      <!-- grid_wrap end -->
-
-
-      <ul class="right_btns">
-          <li><p class="amountTotalSttl">Amount Total :</p></li>
-          <li><strong id="outTotalAmtTxt">RM 0.00</strong></li>
-      </ul>
+      <form id="outSearchForm" action="#" method="post">
+        <input type="hidden" name="outOrdId" id="outOrdId" />
+        <table class="type1">
+          <caption>table</caption>
+          <colgroup>
+            <col style="width: 180px" />
+            <col style="width: *" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <th scope="row">Sales Order No.</th>
+              <td>
+                <input type="text" name="outOrdNo" id="outOrdNo" title="" placeholder="Order Number" class="" />
+                <p class="btn_sky"><a href="javascript:fn_outConfirm();" id="confirm"><spring:message code='pay.btn.confirm' /></a></p>
+                <p class="btn_sky"><a href="javascript:fn_outOrderSearchPop();" id="search"><spring:message code='sys.btn.search' /></a></p>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">TR No.</th>
+              <td>
+                <input id="outkeyInTrNo" name="outkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">TR Issue Date</th>
+              <td>
+                <input id="outkeyInTrIssueDate" name="outkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date" />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Collector</th>
+              <td>
+                <input id="outkeyInCollMemId" name="outkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly /> <input id="outkeyInCollMemCd" name="outkeyInCollMemCd" type="text" title="" placeholder="" />
+                <p class="btn_sky"><a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a></p> <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn"> <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                </a> <input id="outkeyInCollMemNm" name="outkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Commission</th>
+              <td>
+                <label><input type="checkbox" id="outcashIsCommChk" name="outcashIsCommChk" value="1" checked="checked" /><span>Allow commssion for this payment</span></label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- table end -->
+      </form>
     </section>
-
-    <!--
+    <!-- search_table end -->
+    <ul class="right_btns">
+      <li><p class="btn_grid"><a href="javascript:addOutToFinal();"><spring:message code='pay.btn.add' /></a></p></li>
+    </ul>
+    <!-- grid_wrap start -->
+    <article class="grid_wrap">
+      <div id="target_out_grid_wrap" style="width: 100%;
+  height: 210px;
+  margin: 0 auto;"></div>
+    </article>
+    <!-- grid_wrap end -->
+    <ul class="right_btns">
+      <li><p class="amountTotalSttl">Amount Total :</p></li>
+      <li><strong id="outTotalAmtTxt">RM 0.00</strong></li>
+    </ul>
+  </section>
+  <!--
     ***************************************************************************************
     ***************************************************************************************
     *************                                          Rental Membership Area                                                     ****
     ***************************************************************************************
     ***************************************************************************************
     -->
-    <section id="srvcSearch" style="display:none;">
+  <section id="srvcSearch" style="display: none;">
+    <!-- search_table start -->
+    <section class="search_table">
       <!-- search_table start -->
-      <section class="search_table">
-          <!-- search_table start -->
-          <form id="srvcSearchForm" action="#" method="post">
-              <input type="hidden" name="srvcOrdId" id="srvcOrdId" />
-              <input type="hidden" name="srvcId" id="srvcId" />
-              <input type="hidden" name="srvcCustBillId" id="srvcCustBillId" />
-              <input type="hidden" name="srvcAdvAmt" id="srvcAdvAmt" />
-              <table class="type1">
-                  <caption>table</caption>
-                  <colgroup>
-                      <col style="width:180px" />
-                      <col style="width:*" />
-                  </colgroup>
-                  <tbody>
-                      <tr>
-                          <th scope="row">Rental Membership No.</th>
-                          <td>
-                              <input type="text" name="srvcNo" id="srvcNo" title="" placeholder="SCS No." class="readonly" readonly />
-                                  <p class="btn_sky">
-                                      <a href="javascript:fn_srvcOrderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
-                                  </p>
-                                  <p class="btn_sky">
-                                         <a href="javascript:viewSrvcLedger();" id="viewLedger"><spring:message code='pay.btn.viewLedger'/></a>
-                                  </p>
-                                  <label><input type="checkbox" id="isSrvcBillGroup" name="isSrvcBillGroup" onClick="javascript:srvcCheckBillGroup();" /><span>include all service contacts' bills with same billing group </span></label>
-                          </td>
-                      </tr>
-                      <tr>
-                          <th scope="row">Advance Specification</th>
-                          <td>
-                              <select id="srvcAdvMonthType" name="srvcAdvMonthType" onchange="fn_srvcAdvMonth();">
-                                  <option value="0" selected="selected">Advance Selection</option>
-                                  <option value="99">Specific Advance</option>
-                                  <option value="12">1 Year</option>
-                                  <option value="24">2 Years</option>
-                              </select>
-                              <input type="text" id="srvcTxtAdvMonth" name="srvcTxtAdvMonth" title="Rental Membership Advance Month" size="3" maxlength="2" class="wAuto ml5 readonly"  readonly onkeydown='return FormUtil.onlyNumber(event)' onblur="javascript:fn_srvcAdvMonthChangeTxt();"/>
-                          </td>
-                      </tr>
-                      <tr>
-                  <th scope="row">TR No.</th>
-                        <td>
-                            <input id="srvckeyInTrNo" name="srvckeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
-                        </td>
-
-              </tr>
-                            <tr>
-                                <th scope="row">TR Issue Date</th>
-                        <td>
-                            <input id="srvckeyInTrIssueDate" name="srvckeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
-                        </td>
-                        </tr>
-              <tr>
-                  <th scope="row">Collector</th>
-                  <td>
-                      <input id="srvckeyInCollMemId" name="srvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                      <input id="srvckeyInCollMemCd" name="srvckeyInCollMemCd" type="text" title="" placeholder=""  />
-                      <p class="btn_sky">
-                        <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
-                      </p>
-                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
-                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-                      </a>
-                      <input id="srvckeyInCollMemNm" name="srvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
-                  </td>
-
-              </tr>
-              <tr>
-                      <th scope="row">Commission</th>
-                      <td>
-                            <label><input type="checkbox" id="srvccashIsCommChk" name="srvccashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
-                      </td>
-             </tr>
-                  </tbody>
-              </table>
-              <!-- table end -->
-          </form>
-      </section>
-      <!-- search_table end -->
-
-      <!-- grid_wrap start -->
-      <article class="grid_wrap">
-          <div id="target_srvc_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
-      </article>
-      <!-- grid_wrap end -->
-
-      <ul class="right_btns">
-           <li><p class="btn_grid"><a href="javascript:addSrvcToFinal();"><spring:message code='pay.btn.add'/></a></p></li>
-        </ul>
-
-      <!-- grid_wrap start -->
-      <article class="grid_wrap mt10">
-          <div id="target_srvcD_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
-      </article>
-      <!-- grid_wrap end -->
-
-      <ul class="right_btns">
-          <li><p class="amountTotalSttl">Amount Total (1st BS + Rental Fee) :</p></li>
-          <li><strong id="srvcTotalAmtTxt">RM 0.00</strong></li>
-      </ul>
+      <form id="srvcSearchForm" action="#" method="post">
+        <input type="hidden" name="srvcOrdId" id="srvcOrdId" /> <input type="hidden" name="srvcId" id="srvcId" /> <input type="hidden" name="srvcCustBillId" id="srvcCustBillId" /> <input type="hidden" name="srvcAdvAmt" id="srvcAdvAmt" />
+        <table class="type1">
+          <caption>table</caption>
+          <colgroup>
+            <col style="width: 180px" />
+            <col style="width: *" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <th scope="row">Rental Membership No.</th>
+              <td>
+                <input type="text" name="srvcNo" id="srvcNo" title="" placeholder="SCS No." class="readonly" readonly />
+                <p class="btn_sky"><a href="javascript:fn_srvcOrderSearchPop();" id="search"><spring:message code='sys.btn.search' /></a></p>
+                <p class="btn_sky"><a href="javascript:viewSrvcLedger();" id="viewLedger"><spring:message code='pay.btn.viewLedger' /></a></p> <label><input type="checkbox" id="isSrvcBillGroup" name="isSrvcBillGroup" onClick="javascript:srvcCheckBillGroup();" /><span>include all service contacts' bills with same billing group </span></label>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Advance Specification</th>
+              <td>
+                <select id="srvcAdvMonthType" name="srvcAdvMonthType" onchange="fn_srvcAdvMonth();">
+                  <option value="0" selected="selected">Advance Selection</option>
+                  <option value="99">Specific Advance</option>
+                  <option value="12">1 Year</option>
+                  <option value="24">2 Years</option>
+                </select>
+                <input type="text" id="srvcTxtAdvMonth" name="srvcTxtAdvMonth" title="Rental Membership Advance Month" size="3" maxlength="2" class="wAuto ml5 readonly" readonly onkeydown='return FormUtil.onlyNumber(event)' onblur="javascript:fn_srvcAdvMonthChangeTxt();" />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">TR No.</th>
+              <td>
+                <input id="srvckeyInTrNo" name="srvckeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">TR Issue Date</th>
+              <td>
+                <input id="srvckeyInTrIssueDate" name="srvckeyInTrIssueDate" type="text" title="" placeholder="" class="j_date" />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Collector</th>
+              <td>
+                <input id="srvckeyInCollMemId" name="srvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly /> <input id="srvckeyInCollMemCd" name="srvckeyInCollMemCd" type="text" title="" placeholder="" />
+                <p class="btn_sky"><a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a></p> <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn"> <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                </a> <input id="srvckeyInCollMemNm" name="srvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Commission</th>
+              <td>
+                <label><input type="checkbox" id="srvccashIsCommChk" name="srvccashIsCommChk" value="1" checked="checked" /><span>Allow commssion for this payment</span></label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- table end -->
+      </form>
     </section>
-
-      <!--
+    <!-- search_table end -->
+    <!-- grid_wrap start -->
+    <article class="grid_wrap">
+      <div id="target_srvc_grid_wrap" style="width: 100%;
+  height: 210px;
+  margin: 0 auto;"></div>
+    </article>
+    <!-- grid_wrap end -->
+    <ul class="right_btns">
+      <li><p class="btn_grid"><a href="javascript:addSrvcToFinal();"><spring:message code='pay.btn.add' /></a></p></li>
+    </ul>
+    <!-- grid_wrap start -->
+    <article class="grid_wrap mt10">
+      <div id="target_srvcD_grid_wrap" style="width: 100%;
+  height: 210px;
+  margin: 0 auto;"></div>
+    </article>
+    <!-- grid_wrap end -->
+    <ul class="right_btns">
+      <li><p class="amountTotalSttl">Amount Total (1st BS + Rental Fee) :</p></li>
+      <li><strong id="srvcTotalAmtTxt">RM 0.00</strong></li>
+    </ul>
+  </section>
+  <!--
     ***************************************************************************************
     ***************************************************************************************
     *************                                      Bill Payment Area                                                      ****
     ***************************************************************************************
     ***************************************************************************************
     -->
-    <section id="billSearch" style="display:none;">
-        <!-- search_table start -->
-        <section class="search_table">
-            <!-- search_table start -->
-            <form id="billSearchForm" action="#" method="post">
-                <table class="type1">
-                    <caption>table</caption>
-                    <colgroup>
-                        <col style="width:180px" />
-                        <col style="width:*" />
-                        <col style="width:300px" />
-                        <col style="width:*" />
-                    </colgroup>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Bill Type</th>
-                            <td>
-                                <select id="billType" name="billType" onChange="fn_changeBillType();">
-                                    <option value="1">AS</option>
-                                    <option value="3">POS</option>
-                                </select>
-                            </td>
-                            <th scope="row"><span id="bpa1" name="bpa1">Search Keywords (Bill No, Order No, HP Code)</span><span id="bpa2" name="bpa2" style="display:none">Search Keywords (PSN No.)</span></th>
-                            <td>
-                                <input type="text" name="billSearchTxt" id="billSearchTxt" title="" placeholder="" class="w100" />
-                                <p class="btn_sky">
-                                    <a href="javascript:fn_billOrderSearch();" id="search"><spring:message code='sys.btn.search'/></a>
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                        <th scope="row">TR No.</th>
-                        <td colspan="3">
-                            <input id="billkeyInTrNo" name="billkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
-                        </td>
-                        </tr>
-                        <tr colspan="3">
-                          <th scope="row">TR Issue Date</th>
-                          <td colspan="3">
-                            <input id="billkeyInTrIssueDate" name="billkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Collector</th>
-                          <td colspan="3">
-                            <input id="billkeyInCollMemId" name="billkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                            <input id="billkeyInCollMemCd" name="billkeyInCollMemCd" type="text" title="" placeholder=""  />
-                            <p class="btn_sky">
-                              <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
-                            </p>
-                            <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
-                              <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-                            </a>
-                            <input id="billkeyInCollMemNm" name="billkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Commission</th>
-                          <td colspan="3">
-                            <label><input type="checkbox" id="billcashIsCommChk" name="billcashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
-                          </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!-- table end -->
-            </form>
-        </section>
-        <!-- search_table end -->
-
-        <ul class="right_btns">
-           <li><p class="btn_grid"><a href="javascript:addBillToFinal();"><spring:message code='pay.btn.add'/></a></p></li>
-        </ul>
-
-        <!-- grid_wrap start -->
-        <article class="grid_wrap">
-            <div id="target_bill_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
-        </article>
-        <!-- grid_wrap end -->
-
-        <ul class="right_btns">
-            <li><p class="amountTotalSttl">Bill Amount Total :</p></li>
-            <li><strong id="billTotalAmtTxt">RM 0.00</strong></li>
-        </ul>
+  <section id="billSearch" style="display: none;">
+    <!-- search_table start -->
+    <section class="search_table">
+      <!-- search_table start -->
+      <form id="billSearchForm" action="#" method="post">
+        <table class="type1">
+          <caption>table</caption>
+          <colgroup>
+            <col style="width: 180px" />
+            <col style="width: *" />
+            <col style="width: 300px" />
+            <col style="width: *" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <th scope="row">Bill Type</th>
+              <td>
+                <select id="billType" name="billType" onChange="fn_changeBillType();">
+                  <option value="1">AS</option>
+                  <option value="3">POS</option>
+                </select>
+              </td>
+              <th scope="row"><span id="bpa1" name="bpa1">Search Keywords (Bill No, Order No, HP Code)</span><span id="bpa2" name="bpa2" style="display: none">Search Keywords (PSN No.)</span></th>
+              <td>
+                <input type="text" name="billSearchTxt" id="billSearchTxt" title="" placeholder="" class="w100" />
+                <p class="btn_sky"><a href="javascript:fn_billOrderSearch();" id="search"><spring:message code='sys.btn.search' /></a></p>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">TR No.</th>
+              <td colspan="3">
+                <input id="billkeyInTrNo" name="billkeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
+              </td>
+            </tr>
+            <tr colspan="3">
+              <th scope="row">TR Issue Date</th>
+              <td colspan="3">
+                <input id="billkeyInTrIssueDate" name="billkeyInTrIssueDate" type="text" title="" placeholder="" class="j_date" />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Collector</th>
+              <td colspan="3">
+                <input id="billkeyInCollMemId" name="billkeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly /> <input id="billkeyInCollMemCd" name="billkeyInCollMemCd" type="text" title="" placeholder="" />
+                <p class="btn_sky"><a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a></p> <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn"> <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                </a> <input id="billkeyInCollMemNm" name="billkeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Commission</th>
+              <td colspan="3">
+                <label><input type="checkbox" id="billcashIsCommChk" name="billcashIsCommChk" value="1" checked="checked" /><span>Allow commssion for this payment</span></label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- table end -->
+      </form>
     </section>
-
-    <!--
+    <!-- search_table end -->
+    <ul class="right_btns">
+      <li><p class="btn_grid"><a href="javascript:addBillToFinal();"><spring:message code='pay.btn.add' /></a></p></li>
+    </ul>
+    <!-- grid_wrap start -->
+    <article class="grid_wrap">
+      <div id="target_bill_grid_wrap" style="width: 100%;
+  height: 210px;
+  margin: 0 auto;"></div>
+    </article>
+    <!-- grid_wrap end -->
+    <ul class="right_btns">
+      <li><p class="amountTotalSttl">Bill Amount Total :</p></li>
+      <li><strong id="billTotalAmtTxt">RM 0.00</strong></li>
+    </ul>
+  </section>
+  <!--
     ***************************************************************************************
     ***************************************************************************************
     *************                                          Outright Membership Payment Area                                      ****
     ***************************************************************************************
     ***************************************************************************************
     -->
-    <section id="outSrvcSearch" style="display:none;">
-        <!-- search_table start -->
-        <section class="search_table">
-            <!-- search_table start -->
-            <form id="outSrvcSearchForm" action="#" method="post">
-        <input type="hidden" name="outSrvcOrdId" id="outSrvcOrdId" />
-              <input type="hidden" name="outSrvcQuotId" id="outSrvcQuotId" />
-              <input type="hidden" name="outSrvcOrdNo" id="outSrvcOrdNo" />
-                <table class="type1">
-                    <caption>table</caption>
-                    <colgroup>
-                        <col style="width:180px" />
-                        <col style="width:*" />
-                        <col style="width:280px" />
-                        <col style="width:*" />
-                    </colgroup>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Quotation No</th>
-                            <td>
-                                <input type="text" name="outSrvcQuotNo" id="outSrvcQuotNo" title="" placeholder="Quotation Number" class="readonly" readonly />
-                                    <p class="btn_sky">
-                                        <a href="javascript:fn_quotationSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
-                                    </p>
-                            </td>
-                        </tr>
-                        <tr>
-                  <th scope="row">TR No.</th>
-                        <td>
-                            <input id="outSrvckeyInTrNo" name="outSrvckeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
-                        </td>
-
-              </tr>
-              <tr>
-                                <th scope="row">TR Issue Date</th>
-                        <td>
-                            <input id="outSrvckeyInTrIssueDate" name="outSrvckeyInTrIssueDate" type="text" title="" placeholder="" class="j_date"  />
-                        </td>
-                        </tr>
-              <tr>
-                  <th scope="row">Collector</th>
-                  <td>
-                      <input id="outSrvckeyInCollMemId" name="outSrvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                      <input id="outSrvckeyInCollMemCd" name="outSrvckeyInCollMemCd" type="text" title="" placeholder=""  />
-                      <p class="btn_sky">
-                        <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
-                      </p>
-                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
-                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-                      </a>
-                      <input id="outSrvckeyInCollMemNm" name="outSrvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
-                  </td>
-
-              </tr>
-              <tr>
-                      <th scope="row">Commission</th>
-                      <td>
-                            <label><input type="checkbox" id="outSrvccashIsCommChk" name="outSrvccashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
-                      </td>
-             </tr>
-
-
-                    </tbody>
-                </table>
-                <!-- table end -->
-            </form>
-        </section>
-        <!-- search_table end -->
-
-        <ul class="right_btns">
-           <li><p class="btn_grid"><a href="javascript:addOutSrvcToFinal();"><spring:message code='pay.btn.add'/></a></p></li>
-        </ul>
-
-        <!-- grid_wrap start -->
-        <article class="grid_wrap">
-            <div id="target_outSrvc_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
-        </article>
-        <!-- grid_wrap end -->
-
-        <ul class="right_btns">
-            <li><p class="amountTotalSttl">Amount Total :</p></li>
-            <li><strong id="outSrvcTotalAmtTxt">RM 0.00</strong></li>
-        </ul>
+  <section id="outSrvcSearch" style="display: none;">
+    <!-- search_table start -->
+    <section class="search_table">
+      <!-- search_table start -->
+      <form id="outSrvcSearchForm" action="#" method="post">
+        <input type="hidden" name="outSrvcOrdId" id="outSrvcOrdId" /> <input type="hidden" name="outSrvcQuotId" id="outSrvcQuotId" /> <input type="hidden" name="outSrvcOrdNo" id="outSrvcOrdNo" />
+        <table class="type1">
+          <caption>table</caption>
+          <colgroup>
+            <col style="width: 180px" />
+            <col style="width: *" />
+            <col style="width: 280px" />
+            <col style="width: *" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <th scope="row">Quotation No</th>
+              <td>
+                <input type="text" name="outSrvcQuotNo" id="outSrvcQuotNo" title="" placeholder="Quotation Number" class="readonly" readonly />
+                <p class="btn_sky"><a href="javascript:fn_quotationSearchPop();" id="search"><spring:message code='sys.btn.search' /></a></p>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">TR No.</th>
+              <td>
+                <input id="outSrvckeyInTrNo" name="outSrvckeyInTrNo" type="text" title="" placeholder="" class="" maxlength="10" />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">TR Issue Date</th>
+              <td>
+                <input id="outSrvckeyInTrIssueDate" name="outSrvckeyInTrIssueDate" type="text" title="" placeholder="" class="j_date" />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Collector</th>
+              <td>
+                <input id="outSrvckeyInCollMemId" name="outSrvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly /> <input id="outSrvckeyInCollMemCd" name="outSrvckeyInCollMemCd" type="text" title="" placeholder="" />
+                <p class="btn_sky"><a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a></p> <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn"> <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                </a> <input id="outSrvckeyInCollMemNm" name="outSrvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Commission</th>
+              <td>
+                <label><input type="checkbox" id="outSrvccashIsCommChk" name="outSrvccashIsCommChk" value="1" checked="checked" /><span>Allow commssion for this payment</span></label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- table end -->
+      </form>
     </section>
-
-     <!--
+    <!-- search_table end -->
+    <ul class="right_btns">
+      <li><p class="btn_grid"><a href="javascript:addOutSrvcToFinal();"><spring:message code='pay.btn.add' /></a></p></li>
+    </ul>
+    <!-- grid_wrap start -->
+    <article class="grid_wrap">
+      <div id="target_outSrvc_grid_wrap" style="width: 100%;
+  height: 210px;
+  margin: 0 auto;"></div>
+    </article>
+    <!-- grid_wrap end -->
+    <ul class="right_btns">
+      <li><p class="amountTotalSttl">Amount Total :</p></li>
+      <li><strong id="outSrvcTotalAmtTxt">RM 0.00</strong></li>
+    </ul>
+  </section>
+  <!--
     ***************************************************************************************
     ***************************************************************************************
     *************                                          Care Services Search Area                                                         ****
     ***************************************************************************************
     ***************************************************************************************
     -->
-    <section id="careSrvcSearch" style="display:none;">
-        <!-- search_table start -->
-        <section class="search_table">
-            <!-- search_table start -->
-            <form id="careSrvcSearchForm" action="#" method="post">
-                <input type="hidden" name="careSrvcOrdId" id="careSrvcOrdId" />
-
-                <table class="type1">
-                    <caption>table</caption>
-                    <colgroup>
-                        <col style="width:180px" />
-                        <col style="width:*" />
-                    </colgroup>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Service Order No.</th>
-                            <td>
-                                <input type="text" name="careSrvcOrdNo" id="careSrvcOrdNo" title="" placeholder="Order Number" class="" />
-                                   <%--  <p class="btn_sky">
+  <section id="careSrvcSearch" style="display: none;">
+    <!-- search_table start -->
+    <section class="search_table">
+      <!-- search_table start -->
+      <form id="careSrvcSearchForm" action="#" method="post">
+        <input type="hidden" name="careSrvcOrdId" id="careSrvcOrdId" />
+        <table class="type1">
+          <caption>table</caption>
+          <colgroup>
+            <col style="width: 180px" />
+            <col style="width: *" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <th scope="row">Service Order No.</th>
+              <td>
+                <input type="text" name="careSrvcOrdNo" id="careSrvcOrdNo" title="" placeholder="Order Number" class="" />
+                <%--  <p class="btn_sky">
                                         <a href="javascript:fn_outConfirm();" id="confirm"><spring:message code='pay.btn.confirm'/></a>
                                     </p> --%>
-                                    <p class="btn_sky">
-                                        <a href="javascript:fn_careSrvcOrderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
-                                    </p>
-                            </td>
-                        </tr>
-                        <tr>
-                  <th scope="row">TR No.</th>
-                        <td>
-                            <input id="careSrvckeyInTrNo" name="careSrvckeyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
-                        </td>
-
-              </tr>
-              <tr>
-                  <th scope="row">Collector</th>
-                  <td>
-                      <input id="careSrvckeyInCollMemId" name="careSrvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                      <input id="careSrvckeyInCollMemCd" name="careSrvckeyInCollMemCd" type="text" title="" placeholder=""  />
-                      <p class="btn_sky">
-                        <a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a>
-                      </p>
-                      <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
-                          <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
-                      </a>
-                      <input id="careSrvckeyInCollMemNm" name="careSrvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
-                  </td>
-
-              </tr>
-              <tr>
-                      <th scope="row">Commission</th>
-                      <td>
-                            <label><input type="checkbox" id="careSrvccashIsCommChk" name="careSrvccashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
-                      </td>
-             </tr>
-                    </tbody>
-                </table>
-                <!-- table end -->
-            </form>
-        </section>
-        <!-- search_table end -->
-
-        <ul class="right_btns">
-           <li><p class="btn_grid"><a href="javascript:addCareSrvcToFinal();"><spring:message code='pay.btn.add'/></a></p></li>
-        </ul>
-
-        <!-- grid_wrap start -->
-        <article class="grid_wrap">
-            <div id="target_careSrvc_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
-        </article>
-        <!-- grid_wrap end -->
-
-
-        <ul class="right_btns">
-            <li><p class="amountTotalSttl">Amount Total :</p></li>
-            <li><strong id="careSrvcTotalAmtTxt">RM 0.00</strong></li>
-        </ul>
+                <p class="btn_sky"><a href="javascript:fn_careSrvcOrderSearchPop();" id="search"><spring:message code='sys.btn.search' /></a></p>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">TR No.</th>
+              <td>
+                <input id="careSrvckeyInTrNo" name="careSrvckeyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Collector</th>
+              <td>
+                <input id="careSrvckeyInCollMemId" name="careSrvckeyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly /> <input id="careSrvckeyInCollMemCd" name="careSrvckeyInCollMemCd" type="text" title="" placeholder="" />
+                <p class="btn_sky"><a href="javascript:fn_ConfirmColl();" id="confirm"><spring:message code='sys.btn.confirm' /></a></p> <a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn"> <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                </a> <input id="careSrvckeyInCollMemNm" name="careSrvckeyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Commission</th>
+              <td>
+                <label><input type="checkbox" id="careSrvccashIsCommChk" name="careSrvccashIsCommChk" value="1" checked="checked" /><span>Allow commssion for this payment</span></label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- table end -->
+      </form>
     </section>
-
-
-
-    <!--
+    <!-- search_table end -->
+    <ul class="right_btns">
+      <li><p class="btn_grid"><a href="javascript:addCareSrvcToFinal();"><spring:message code='pay.btn.add' /></a></p></li>
+    </ul>
+    <!-- grid_wrap start -->
+    <article class="grid_wrap">
+      <div id="target_careSrvc_grid_wrap" style="width: 100%;
+  height: 210px;
+  margin: 0 auto;"></div>
+    </article>
+    <!-- grid_wrap end -->
+    <ul class="right_btns">
+      <li><p class="amountTotalSttl">Amount Total :</p></li>
+      <li><strong id="careSrvcTotalAmtTxt">RM 0.00</strong></li>
+    </ul>
+  </section>
+  <!--
     ***************************************************************************************
     ***************************************************************************************
     *************                                          Key In  Area                                                                    ****
     ***************************************************************************************
     ***************************************************************************************
     -->
-    <!-- title_line start -->
-    <aside class="title_line">
-        <h3 class="pt0">Payment Key-In</h3>
-        <ul class="right_btns mt10">
-           <li><p class="btn_grid"><a href="javascript:removeFromFinal();"><spring:message code='pay.btn.del'/></a></p></li>
-        </ul>
-    </aside>
-    <!-- title_line end -->
-
+  <!-- title_line start -->
+  <aside class="title_line">
+    <h3 class="pt0">Payment Key-In</h3>
+    <ul class="right_btns mt10">
+      <li><p class="btn_grid"><a href="javascript:removeFromFinal();"><spring:message code='pay.btn.del' /></a></p></li>
+    </ul>
+  </aside>
+  <!-- title_line end -->
   <!-- grid_wrap start -->
   <article class="grid_wrap mt10">
-      <div id="target_finalBill_grid_wrap" style="width: 100%; height: 220px; margin: 0 auto;"></div>
+    <div id="target_finalBill_grid_wrap" style="width: 100%;
+  height: 220px;
+  margin: 0 auto;"></div>
   </article>
   <!-- grid_wrap end -->
-
-   <ul class="right_btns">
-            <li><p class="amountTotalSttl">Amount Total :</p></li>
-            <li><strong id="paymentTotalAmtTxt">RM 0.00</strong></li>
-        </ul>
-
+  <ul class="right_btns">
+    <li><p class="amountTotalSttl">Amount Total :</p></li>
+    <li><strong id="paymentTotalAmtTxt">RM 0.00</strong></li>
+  </ul>
   <ul class="right_btns mt10">
-     <li><p class="btn_grid"><a id="selCreditCardBtn" href="#">Select Customer Card</a></p></li>
-     <li><p class="btn_grid"><a href="javascript:savePayment();"><spring:message code='sys.btn.save'/></a></p></li>
-    </ul>
-
+    <li><p class="btn_grid"><a id="selCreditCardBtn" href="#">Select Customer Card</a></p></li>
+    <li><p class="btn_grid"><a href="javascript:savePayment();"><spring:message code='sys.btn.save' /></a></p></li>
+  </ul>
+  <!-- search_table start -->
+  <section class="search_table mt10">
     <!-- search_table start -->
-    <section class="search_table mt10">
-        <!-- search_table start -->
-        <form id="paymentForm" action="#" method="post">
-            <input type="hidden" name="keyInPayRoute" id="keyInPayRoute" value="WEB" />
-            <input type="hidden" name="keyInScrn" id="keyInScrn" value="CRC" />
-            <table class="type1">
-                <caption>table</caption>
-                <colgroup>
-                    <col style="width:180px" />
-                    <col style="width:*" />
-                    <col style="width:180px" />
-                    <col style="width:*" />
-                </colgroup>
-                <tbody>
-            <tr>
-                <th scope="row">Payment Type</th>
-                <td>
-                    <select id="keyInPayType" name="keyInPayType">
-                        <option value="107">Credit Card</option>
-                    </select>
-                </td>
+    <form id="paymentForm" action="#" method="post">
+      <input type="hidden" name="keyInPayRoute" id="keyInPayRoute" value="WEB" /> <input type="hidden" name="keyInScrn" id="keyInScrn" value="CRC" />
+      <table class="type1">
+        <caption>table</caption>
+        <colgroup>
+          <col style="width: 180px" />
+          <col style="width: *" />
+          <col style="width: 180px" />
+          <col style="width: *" />
+        </colgroup>
+        <tbody>
+          <tr>
+            <th scope="row">Payment Type</th>
+            <td>
+              <select id="keyInPayType" name="keyInPayType">
+                <option value="107">Credit Card</option>
+              </select>
+            </td>
             <th scope="row">Amount<span class="must">*</span></th>
-                <td>
-                    <input type="text" id="keyInAmount" name="keyInAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
-                </td>
+            <td>
+              <input type="text" id="keyInAmount" name="keyInAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
+            </td>
             <!--
                 <th scope="row">Ref No</th>
                 <td>
                     <input type="text" id="keyInRefNo" name="keyInRefNo" class="w100p" maxlength="30" />
                 </td>
             -->
-            </tr>
+          </tr>
           <!--
           <tr>
                 <th scope="row">Ref No</th>
@@ -3752,74 +3659,70 @@ function isDupOutSrvcToFinal(){
                 </td>
             </tr>
           -->
-            <tr>
-                <th scope="row">Card Type<span class="must">*</span></th>
-                <td>
-                    <select id="keyCrcCardType" name="keyCrcCardType"  class="w100p">
-                        <option value="1241">Credit Card</option>
-                        <option value="1240">Debit Card</option>
-                    </select>
-                </td>
-                <th scope="row">Card Brand<span class="must">*</span></th>
-                <td>
-                    <select id="keyInCrcType" name="keyInCrcType"  class="w100p"></select>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Card Mode<span class="must">*</span></th>
-                <td>
-                    <select id="keyInCardMode" name="keyInCardMode"  class="w100p" onChange="javascript:fn_changeCrcMode();">
-                    </select>
-                </td>
-                <th scope="row">Approval No.<span class="must">*</span></th>
-                <td>
-                    <input type="text" id="keyInApprovalNo" name="keyInApprovalNo" class="w100p"  maxlength="6" />
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Card No<span class="must">*</span></th>
-                <td>
-                    <p class="short"><input type="text" id="keyInCardNo1" name="keyInCardNo1" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onChange="javascript:fn_changeCardNo1();"/></p>
-                    <span>-</span>
-                    <p class="short"><input type="text" id="keyInCardNo2" name="keyInCardNo2" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
-                    <span>-</span>
-                    <p class="short"><input type="text" id="keyInCardNo3" name="keyInCardNo3" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
-              <span>-</span>
-                    <p class="short"><input type="text" id="keyInCardNo4" name="keyInCardNo4" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
-                </td>
-                <th scope="row">Credit Card Holder Name</th>
-                <td>
-                    <input type="text" id="keyInHolderNm" name="keyInHolderNm" class="w100p"  />
-                </td>
-            </tr>
-            <tr>
-                        <th scope="row">Issue Bank<span class="must">*</span></th>
-                        <td>
-                            <select id="keyInIssueBank" name="keyInIssueBank" class="w100p" ></select>
-                        </td>
-                        <th scope="row">Merchant Bank<span class="must">*</span></th>
-                        <td>
-                            <select id="keyInMerchantBank" name="keyInMerchantBank" class="w100p" onChange="javascript:fn_changeMerchantBank();"></select>
-                        </td>
-                    </tr>
-            <tr>
-                <th scope="row">Expiry Date(mm/yy)<span class="must">*</span></th>
-                <td>
-                    <p class="short"><input type="text" id="keyInExpiryMonth" name="keyInExpiryMonth" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
-                    <span>/</span>
-                    <p class="short"><input type="text" id="keyInExpiryYear" name="keyInExpiryYear" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
-                </td>
-                <th scope="row">Tenure</th>
-                <td>
-                    <select id="keyInTenure" name="keyInTenure"  class="w100p">
-                            </select>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Transaction Date<span class="must">*</span></th>
-                <td>
-                    <input id="keyInTrDate" name="keyInTrDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
-                </td>
+          <tr>
+            <th scope="row">Card Type<span class="must">*</span></th>
+            <td>
+              <select id="keyCrcCardType" name="keyCrcCardType" class="w100p">
+                <option value="1241">Credit Card</option>
+                <option value="1240">Debit Card</option>
+              </select>
+            </td>
+            <th scope="row">Card Brand<span class="must">*</span></th>
+            <td>
+              <select id="keyInCrcType" name="keyInCrcType" class="w100p"></select>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Card Mode<span class="must">*</span></th>
+            <td>
+              <select id="keyInCardMode" name="keyInCardMode" class="w100p" onChange="javascript:fn_changeCrcMode();">
+              </select>
+            </td>
+            <th scope="row">Approval No.<span class="must">*</span></th>
+            <td>
+              <input type="text" id="keyInApprovalNo" name="keyInApprovalNo" class="w100p" maxlength="6" />
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Card No<span class="must">*</span></th>
+            <td>
+              <p class="short"><input type="text" id="keyInCardNo1" name="keyInCardNo1" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);' onChange="javascript:fn_changeCardNo1();" /></p> <span>-</span>
+              <p class="short"><input type="text" id="keyInCardNo2" name="keyInCardNo2" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);'/></p> <span>-</span>
+              <p class="short"><input type="text" id="keyInCardNo3" name="keyInCardNo3" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);'/></p> <span>-</span>
+              <p class="short"><input type="text" id="keyInCardNo4" name="keyInCardNo4" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+            </td>
+            <th scope="row">Credit Card Holder Name</th>
+            <td>
+              <input type="text" id="keyInHolderNm" name="keyInHolderNm" class="w100p" />
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Issue Bank<span class="must">*</span></th>
+            <td>
+              <select id="keyInIssueBank" name="keyInIssueBank" class="w100p"></select>
+            </td>
+            <th scope="row">Merchant Bank<span class="must">*</span></th>
+            <td>
+              <select id="keyInMerchantBank" name="keyInMerchantBank" class="w100p" onChange="javascript:fn_changeMerchantBank();"></select>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Expiry Date(mm/yy)<span class="must">*</span></th>
+            <td>
+              <p class="short"><input type="text" id="keyInExpiryMonth" name="keyInExpiryMonth" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p> <span>/</span>
+              <p class="short"><input type="text" id="keyInExpiryYear" name="keyInExpiryYear" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+            </td>
+            <th scope="row">Tenure</th>
+            <td>
+              <select id="keyInTenure" name="keyInTenure" class="w100p">
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Transaction Date<span class="must">*</span></th>
+            <td>
+              <input id="keyInTrDate" name="keyInTrDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+            </td>
             <!--
                 <th scope="row">Running Number</th>
                 <td>
@@ -3827,56 +3730,51 @@ function isDupOutSrvcToFinal(){
                 </td>
             -->
             <th scope="row"></th>
-                <td>
-                </td>
-            </tr>
-
-            <tr>
-                <th scope="row">Remark</th>
-                <td colspan="3">
-                    <textarea id="keyInRemark" name="keyInRemark"  cols="20" rows="5" placeholder=""></textarea>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">TR No.</th>
-                <td>
-                    <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" disabled/>
-                </td>
-                <th scope="row">TR Issue Date</th>
-                <td>
-                    <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p"  disabled/>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Collector</th>
-                <td>
-                    <input id="keyInCollMemId" name="keyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly  />
-                    <input id="keyInCollMemNm" name="keyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly  />
-                    <!--<a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">Remark</th>
+            <td colspan="3">
+              <textarea id="keyInRemark" name="keyInRemark" cols="20" rows="5" placeholder=""></textarea>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">TR No.</th>
+            <td>
+              <input id="keyInTrNo" name="keyInTrNo" type="text" title="" placeholder="" class="w100p" maxlength="10" disabled />
+            </td>
+            <th scope="row">TR Issue Date</th>
+            <td>
+              <input id="keyInTrIssueDate" name="keyInTrIssueDate" type="text" title="" placeholder="" class="j_date w100p" disabled />
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Collector</th>
+            <td>
+              <input id="keyInCollMemId" name="keyInCollMemId" type="hidden" title="" placeholder="" class="readonly" readonly /> <input id="keyInCollMemNm" name="keyInCollMemNm" type="text" title="" placeholder="" class="readonly" readonly />
+              <!--<a id="btnSalesmanPop" href="javascript:fn_searchUserIdPop();" class="search_btn">
                         <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                             </a>-->
-                </td>
-                <th scope="row">Pay Date<span class="must">*</span></th>
-                <td>
-                    <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly value="${currentDay}"/>
-                </td>
-            </tr>
+            </td>
+            <th scope="row">Pay Date<span class="must">*</span></th>
+            <td>
+              <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly value="${currentDay}" />
+            </td>
+          </tr>
           <tr>
-                <th scope="row">Commission</th>
-                <td colspan="3">
-              <label><input type="checkbox" id="keyInIsCommChk" name="keyInIsCommChk" value="1"  checked="checked" disabled/><span>Allow commssion for this payment</span></label>
-                </td>
-            </tr>
+            <th scope="row">Commission</th>
+            <td colspan="3">
+              <label><input type="checkbox" id="keyInIsCommChk" name="keyInIsCommChk" value="1" checked="checked" disabled /><span>Allow commssion for this payment</span></label>
+            </td>
+          </tr>
         </tbody>
-            </table>
-            <!-- table end -->
-        </form>
-    </section>
-<!-- search_table end -->
-
+      </table>
+      <!-- table end -->
+    </form>
+  </section>
+  <!-- search_table end -->
 </section>
 <!-- content end -->
-
 <form id="ledgerForm" action="#" method="post">
-    <input type="hidden" id="ordId" name="ordId" />
+  <input type="hidden" id="ordId" name="ordId" />
 </form>
