@@ -153,6 +153,35 @@ $(document).ready(function(){
         $("#btnPopSerialClear").parent().removeClass("btn_disabled");
         $("#sTable").html("");
         $('#deliveryArea').addClass("blind");
+
+        // Added to remove temporary scanned serial when "Clear" or "Close" button is clicked.
+        /* if(js.String.isEmpty($("#ingGrNo").val())){
+            // do nothing
+        } else { // if ingGrNo is not null
+        	Common
+            .confirm(
+                "Upon clearing, all scanned serial no. will be deleted.</br>Are you confirm to clear?",
+                function(){
+                    Common.ajax("POST", "/homecare/po/hcDeliveryGr/clearIngSerialNo.do"
+                            , {"hmcGrNo":$("#ingGrNo").val()}
+                            , function(result){
+                                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+                             }
+                            , function(jqXHR, textStatus, errorThrown){
+                                try{
+                                    console.log("Fail Status : " + jqXHR.status);
+                                    console.log("code : "        + jqXHR.responseJSON.code);
+                                    console.log("message : "     + jqXHR.responseJSON.message);
+                                    console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+                                }catch (e){
+                                    console.log(e);
+                                }
+                                Common.alert("Fail : " + jqXHR.responseJSON.message);
+                    });
+
+                }
+        );
+        } */
     });
 
     $("#btnPopGr").click(function(){
@@ -252,6 +281,19 @@ $(document).ready(function(){
 	            	}
 	            }
         );
+
+
+        // close the page
+        if(Common.checkPlatformType() == "mobile") {
+            if( typeof(opener.fn_PopClose) != "undefined" ){
+                opener.fn_PopClose();
+            }else{
+                window.close();
+            }
+        } else {
+            //$("#btnSearch").click();
+            $('#_divDeliveryGrPop').remove();
+        }
 
     });
 
@@ -359,18 +401,60 @@ function fn_serialYnChk(ch){
 
 function fn_closeGrPop(){
 
-	// Moblie Popup Setting
-    if(Common.checkPlatformType() == "mobile") {
-        if( typeof(opener.fn_PopClose) != "undefined" ){
-        	opener.fn_PopClose();
-        }else{
-        	window.close();
-        }
-    } else {
-        $("#btnSearch").click();
-        $('#_divDeliveryGrPop').remove();
-    }
+	console.log("1");
+	// Added to remove temporary scanned serial when "Clear" or "Close" button is clicked.
 
+	var ingGrNo = $("#ingGrNo").val();
+	console.log("ingGrNo: " + ingGrNo);
+
+    if(js.String.isEmpty($("#ingGrNo").val())){
+    	// Moblie Popup Setting
+        if(Common.checkPlatformType() == "mobile") {
+            if( typeof(opener.fn_PopClose) != "undefined" ){
+                opener.fn_PopClose();
+            }else{
+                window.close();
+            }
+        } else {
+            //$("#btnSearch").click();
+            $('#_divDeliveryGrPop').remove();
+        }
+    } else { // if ingGrNo is not null
+    	console.log("2");
+    	Common
+	        .confirm(
+	            "Upon closing, all temporary scanned serial no. will be removed (If Any).</br>Are you confirm to close?",
+	            function(){
+	            	Common.ajax("POST", "/homecare/po/hcDeliveryGr/clearIngSerialNo.do"
+                            , {"hmcGrNo": ingGrNo}
+                            , function(result){
+	                            //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+	                            // Moblie Popup Setting
+							    if(Common.checkPlatformType() == "mobile") {
+							        if( typeof(opener.fn_PopClose) != "undefined" ){
+							            opener.fn_PopClose();
+							        }else{
+							            window.close();
+							        }
+							    } else {
+							        //$("#btnSearch").click();
+							        $('#_divDeliveryGrPop').remove();
+							    }
+	                         }
+	                        , function(jqXHR, textStatus, errorThrown){
+	                            try{
+	                                console.log("Fail Status : " + jqXHR.status);
+	                                console.log("code : "        + jqXHR.responseJSON.code);
+	                                console.log("message : "     + jqXHR.responseJSON.message);
+	                                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	                            }catch (e){
+	                                console.log(e);
+	                            }
+	                            Common.alert("Fail : " + jqXHR.responseJSON.message);
+	                });
+	            }
+	    );
+    }
 }
 
 function fn_PopSerialClose() {

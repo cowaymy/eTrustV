@@ -368,4 +368,10 @@
                     , #{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=RETURNDATA})
          }
     </select>
+
+    <select id="selectScanByPassItm" parameterType="Map" resultType="egovMap">
+    /* Added to select by pass-able column checking for serial scanning. By Hui Ding 15-06-2020 */
+        SELECT CODE FROM SYS0094M WHERE IND = #{ind} AND DISB = #{disb}
+
+    </select>
 </mapper>

@@ -50,4 +50,7 @@ public interface SerialMgmtNewMapper{
 
 	// Other GI/GR Logistic barcode delete
 	public EgovMap callOgOiDeleteBarcodeScan(Map<String, Object> param) throws Exception;
+
+	// Added to select by pass-able column checking for serial scanning. By Hui Ding 15-06-2020
+	public List<EgovMap> selectScanByPassItm(Map<String, Object> param) throws Exception;
 }
