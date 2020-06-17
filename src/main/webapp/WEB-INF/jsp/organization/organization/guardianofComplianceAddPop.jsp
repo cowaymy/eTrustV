@@ -299,7 +299,7 @@
             <tr>
               <th scope="row">Involved Person Code</th>
               <td colspan="3">
-                <input id="reqstMemId" name="reqstMemId" type="text" title="" placeholder="Involved Person Code" class="readonly" /><a class="search_btn" id="memBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                <input id="reqstMemId" name="reqstMemId" type="text" title="" placeholder="Involved Person Code" class="" /><a class="search_btn" id="memBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
               </td>
               <th scope="row">Action</th>
               <td colspan="3">
