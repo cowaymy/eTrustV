@@ -58,10 +58,7 @@
     Common.ajax("GET", "/organization/compliance/selectOrderJsonList", {
       ordNo : ordNo
     }, function(result) {
-      console.log(result);
-
       if (result != null && result.length == 1) {
-
         var orderInfo = result[0];
 
         $("#searchOrderId").val(orderInfo.ordId);
@@ -109,7 +106,6 @@
 
   function fn_selectMemInfo() {
     var strMemberId = $('#reqstMemId').val();
-    alert(strMemberId);
 
     if (FormUtil.isNotEmpty(strMemberId) || strMemberId > 0) {
       fn_loadMember(strMemberId);
