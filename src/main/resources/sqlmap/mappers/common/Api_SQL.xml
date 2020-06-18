@@ -475,7 +475,9 @@
             TOKEN = #{token},
             RES_TEXT = #{token} || '' || #{refNo},
             STATUS = #{stusID},
-            UPD_DT = SYSDATE
+            UPD_DT = SYSDATE,
+            EXP_MONTH = #{expMonth},
+            EXP_YEAR = #{expYear}
         WHERE TKN_ID = LTRIM(TO_NUMBER(SUBSTR(#{refNo}, 37, 10)))
         AND REF_NO = #{refNo}
     </update>
