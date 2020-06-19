@@ -15,6 +15,7 @@
  30/04/2020  ONGHC  1.0.3             Amend to Highlighted Advance Payment order
  09/06/2020  FANNIE  1.0.4             Amend to hide the order ledger, update and reject with authorization
  17/06/2020  ONGHC  1.0.5             Amend Credit Card No. Auto Tab Feature.
+ 19/06/2020  FARUQ   1.0.6             Amend Branch Code to Multiple Selection
  -->
 
 <style type="text/css">
@@ -581,6 +582,7 @@
 
   // 리스트 조회.
   function fn_selectPstRequestDOListAjax() {
+	console.log($("#searchForm").serialize());
     Common.ajax("GET", "/mobilePaymentKeyIn/selectMobilePaymentKeyInJsonList.do", $("#searchForm").serialize(), function(result) {
       AUIGrid.setGridData(myGridID , result);
 
@@ -1154,10 +1156,17 @@
     <td>
       <select  id="ticketStatus" name="ticketStatus" class="w100p"></select>
     </td>
+
+
     <th scope="row"><spring:message code="pay.title.branchCode" /></th>
     <td>
-      <input type="text" title="Branch Code" id="branchCode" name="branchCode" placeholder="Branch Code" class="w100p" />
-    </td>
+    <select class="multy_select w100p" id="branchCode" name="branchCode" multiple="multiple">
+        <c:forEach var="list" items="${userBranch}" varStatus="status">
+           <option value="${list.branchid}">${list.c1}</option>
+        </c:forEach>
+    </select>
+       </td>
+
     <th scope="row"><spring:message code="pay.title.memberCode" /></th>
       <td>
         <input type="text" title="Member Code" id="memberCode" name="memberCode" placeholder="Member Code" class="w100p" />
