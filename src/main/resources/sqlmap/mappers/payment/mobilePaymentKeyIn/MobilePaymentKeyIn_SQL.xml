@@ -97,7 +97,10 @@
                    AND Extent1.PAY_STUS_ID = #{ticketStatus}
                  </if>
                  <if test="branchCode != null and branchCode != '' ">
-                   AND Extent5.CRT_USER_BRNCH = #{branchCode}
+                    AND Extent5.CRT_USER_BRNCH IN
+                    <foreach item="item" collection="branchCode" index="index" open="(" separator="," close=")">
+                      #{item}
+                     </foreach>
                  </if>
                  <if test="payStusId != null and payStusId != '' ">
                    AND Extent1.PAY_STUS_ID = #{payStusId}
