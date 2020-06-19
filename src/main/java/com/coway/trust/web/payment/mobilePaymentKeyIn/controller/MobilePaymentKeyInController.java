@@ -1,8 +1,5 @@
 package com.coway.trust.web.payment.mobilePaymentKeyIn.controller;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.payment.common.service.CommonPaymentService;
 import com.coway.trust.biz.payment.mobilePaymentKeyIn.service.MobilePaymentKeyInService;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -40,6 +38,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * Date            Author       Description
  * -------------  -----------  -------------
  * 2019. 10. 21.   KR-HAN        First creation
+ * 2020. 06. 19.   FARUQ         Amend Branch Code to Multiple Selection
  * </pre>
  */
 @Controller
@@ -47,6 +46,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class MobilePaymentKeyInController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MobilePaymentKeyInController.class);
+
+	@Resource(name = "memberListService")
+	private MemberListService memberListService;
 
 	@Resource(name = "mobilePaymentKeyInService")
 	private MobilePaymentKeyInService mobilePaymentKeyInService;
@@ -70,9 +72,11 @@ public class MobilePaymentKeyInController {
 
 		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
 		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+		List<EgovMap> userBranch = memberListService.selectUserBranch();
 
 		model.put("bfDay", bfDay);
 		model.put("toDay", toDay);
+		model.addAttribute("userBranch", userBranch);
 
 		return "payment/mobilePaymentKeyIn/mobilePaymentKeyInList";
 	}
@@ -90,8 +94,22 @@ public class MobilePaymentKeyInController {
       public ResponseEntity<List<EgovMap>> selectMobilePaymentKeyInJsonList(@RequestParam Map<String, Object> params,
     	HttpServletRequest request, ModelMap model) {
     	List<EgovMap> mobilePaymentKeyInJsonList = null;
+
+    	/*
+    	String[] branchCode = request.getParameterValues("branchCode");
+    	params.put("branchCode", branchCode);
+    	*/
+
+    	LOGGER.debug(">>>>" + params.toString());
+
+    	String[] branchCode = request.getParameterValues("branchCode");
+    	params.put("branchCode", branchCode);
+
+    	LOGGER.debug(params.toString());
+
     	LOGGER.info("##### selectMobilePaymentKeyInJsonList START #####");
-        mobilePaymentKeyInJsonList = mobilePaymentKeyInService.selectMobilePaymentKeyInList(params);
+    	//List<EgovMap> mobilePaymentKeyInJsonList = null;
+    	mobilePaymentKeyInJsonList = mobilePaymentKeyInService.selectMobilePaymentKeyInList(params);
 
         // 데이터 리턴.
         return ResponseEntity.ok(mobilePaymentKeyInJsonList);
