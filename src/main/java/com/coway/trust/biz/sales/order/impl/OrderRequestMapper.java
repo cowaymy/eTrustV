@@ -41,6 +41,14 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @author Yunseok_Jang
  *
  */
+
+
+/******************************************************************
+ * DATE              PIC            VERSION        COMMENT
+ *--------------------------------------------------------------------------------------------
+ * 23/04/2020    ONGHC          1.0.1           - Add checkDefectByReason
+ ******************************************************************/
+
 @Mapper("orderRequestMapper")
 public interface OrderRequestMapper {
 
@@ -237,5 +245,6 @@ public interface OrderRequestMapper {
 
   int chkSalStat(Map<String, Object> params);
 
+  int checkDefectByReason(Map<String, Object> params);
 
 }
