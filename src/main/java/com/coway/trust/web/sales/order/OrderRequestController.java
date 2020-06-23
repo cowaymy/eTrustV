@@ -34,6 +34,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @author Yunseok_Jang
  *
  */
+
+/******************************************************************
+ * DATE              PIC            VERSION        COMMENT
+ *--------------------------------------------------------------------------------------------
+ * 23/04/2020    ONGHC          1.0.1           - Add checkDefectByReason
+ ******************************************************************/
+
 @Controller
 @RequestMapping(value = "/sales/order")
 public class OrderRequestController {
@@ -277,6 +284,15 @@ public class OrderRequestController {
     logger.debug("= PARAMS = " + params.toString());
     logger.debug("=============================chkSalStat=====================================");
     Integer stat = orderRequestService.chkSalStat(params);
+    return ResponseEntity.ok(stat);
+  }
+
+  @RequestMapping(value = "/checkDefectByReason.do", method = RequestMethod.GET)
+  public ResponseEntity<Integer> checkDefectByReason(@RequestParam Map<String, Object> params) {
+    logger.debug("=============================checkDefectByReason=====================================");
+    logger.debug("= PARAMS = " + params.toString());
+    logger.debug("=============================checkDefectByReason=====================================");
+    Integer stat = orderRequestService.checkDefectByReason(params);
     return ResponseEntity.ok(stat);
   }
 }
