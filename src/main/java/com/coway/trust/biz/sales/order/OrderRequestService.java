@@ -15,6 +15,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @author Yunseok_Jang
  *
  */
+
+/******************************************************************
+ * DATE              PIC            VERSION        COMMENT
+ *--------------------------------------------------------------------------------------------
+ * 23/04/2020    ONGHC          1.0.1           - Add checkDefectByReason
+ ******************************************************************/
+
 public interface OrderRequestService {
 
   List<EgovMap> selectResnCodeList(Map<String, Object> params);
@@ -71,5 +78,6 @@ public interface OrderRequestService {
 
   Integer chkSalStat(Map<String, Object> params);
 
+  Integer checkDefectByReason(Map<String, Object> params);
 
 }
