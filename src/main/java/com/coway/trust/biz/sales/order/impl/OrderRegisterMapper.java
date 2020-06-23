@@ -38,6 +38,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @author Yunseok_Jang
  *
  */
+
+/******************************************************************
+ * DATE              PIC            VERSION        COMMENT
+ *--------------------------------------------------------------------------------------------
+ * 23/04/2020    ONGHC          1.0.1           - Add insertPexDefectEntry
+ ******************************************************************/
+
 @Mapper("orderRegisterMapper")
 public interface OrderRegisterMapper {
 
@@ -202,5 +209,7 @@ public interface OrderRegisterMapper {
   public EgovMap getCtgryId(int ordId);
 
   List<EgovMap> selectPrevMatOrderNoList(Map<String, Object> params);
+
+  void insertPexDefectEntry(Map<String, Object> params);
 
 }
