@@ -87,4 +87,6 @@ public interface EKeyInApiService {
 
   EKeyInApiDto selectPromoByCpntId(EKeyInApiForm param) throws Exception;
 
+  EKeyInApiDto getTokenId(EKeyInApiDto param) throws Exception;
+
 }

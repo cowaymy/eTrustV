@@ -2103,4 +2103,47 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     rtn.setPromoByCpntIdList(selectPromoByCpntId);
     return rtn;
   }
+
+  @Override
+  public EKeyInApiDto getTokenId(EKeyInApiDto param) throws Exception {
+      Map<String, Object> loginInfoMap = new HashMap<String, Object>();
+      loginInfoMap.put("_USER_ID", param.getRegId());
+      LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
+      if (null == loginVO || CommonUtils.isEmpty(loginVO.getUserId())) {
+        throw new ApplicationException(AppConstants.FAIL, "UserID is null.");
+      }
+
+      int tknId = eKeyInApiMapper.selectTokenID();
+      if (CommonUtils.isEmpty(tknId) || tknId <= 0) {
+        throw new ApplicationException(AppConstants.FAIL, "TokenID is null.");
+      }
+
+      String r1 = "";
+      String r2 = "";
+      String r3 = "";
+      if (param.getNric().length() < 12) {
+        r1 = StringUtils.leftPad(param.getNric(), 12, "0");
+      } else {
+        r1 = param.getNric().substring(param.getNric().length() - 12);
+      }
+
+      if (Integer.toString(param.getCustId()).length() < 10) {
+          r2 = StringUtils.leftPad(Integer.toString(param.getCustId()), 12, "0");
+          r3 = StringUtils.leftPad("", 12, "0");
+      }
+
+      String refNo = r1 + r2 + r3;
+
+      Map<String, Object> sal0257D = new HashMap<String, Object>();
+      sal0257D.put("tknId", tknId);
+      sal0257D.put("refNo", refNo);
+      sal0257D.put("crtUserId", loginVO.getUserId());
+      sal0257D.put("updUserId", loginVO.getUserId());
+
+      EKeyInApiDto rtn = new EKeyInApiDto();
+      rtn.setTknId(tknId);
+      rtn.setRefNo(refNo);
+
+      return rtn;
+  }
 }

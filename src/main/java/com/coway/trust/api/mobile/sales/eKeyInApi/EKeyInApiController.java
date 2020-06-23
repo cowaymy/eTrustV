@@ -424,4 +424,10 @@ public class EKeyInApiController {
     LOGGER.debug("selectPromoByCpntId    값 : {}", param);
     return ResponseEntity.ok(eKeyInApiService.selectPromoByCpntId(param));
   }
+
+  @ApiOperation(value = "getTokenId", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/getTokenId", method = RequestMethod.POST)
+  public ResponseEntity<EKeyInApiDto> getTokenId(@RequestBody EKeyInApiDto param) throws Exception {
+    return ResponseEntity.ok(eKeyInApiService.getTokenId(param));
+  }
 }
