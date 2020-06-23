@@ -567,7 +567,6 @@
     headerText : "<spring:message code='log.head.status'/>",
     width : "30%",
     height : 30,
-    visible : false
   }, {
     dataField : "scanno",
     headerText : "<spring:message code='log.head.serial'/>",
@@ -1004,14 +1003,14 @@
         	serialRequireChkYn = true;
           }
 
-          // Added by Hui Ding to block SMO per DVR > 10
+          // Added by Hui Ding to block SMO per DVR > 5
           if (!checkedSmo.includes(rowItem.item.reqstno)){
               checkedSmo.push(rowItem.item.reqstno);
           }
         }
 
-        if (checkedSmo.length > 10){
-            Common.alert('Maximum 10 SMO records allowed.');
+        if (checkedSmo.length > 5){
+            Common.alert('Maximum 5 SMO records allowed.');
             checkedSmo = [];
         } else {
 
@@ -1693,7 +1692,7 @@
       <a id="download"><spring:message code='sys.btn.excel.dw' /></a>
      </p></li>
    </c:if>
-   <li><p class="btn_grid"><a id="delivery">DELIVERY</a></p></li>
+  <li><p class="btn_grid"><a id="delivery">DELIVERY</a></p></li>
   </ul>
   <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="main_grid_wrap" class="autoGridHeight"></div>

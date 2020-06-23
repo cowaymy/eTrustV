@@ -370,12 +370,27 @@ $(function(){
         	Common.alert('No data selected.');
             return false;
         }else{
+        	var checkedSmo = [];
+
         	for (var i = 0 ; i < checkedItems.length ; i++){
         		if(checkedItems[i].grcmplt == 'Y'){
         			Common.alert('Already processed.');
         			return false;
         			break;
         		}
+
+       			// Added by Hui Ding to block SMO per DVR > 5
+       			var currSmo = checkedItems[i].reqstno;
+       			var currDelvryNo = checkedItems[i].delyno;
+       	          if (!checkedSmo.includes(currSmo)){
+       	        	  if (checkedSmo.length <= 5){
+       	               checkedSmo.push(currSmo);
+       	        	  } else {
+       	        		  Common.alert('Exceeded maximum limit of SMO to be received. <br/>Maximum SMO# limit = 5.');
+       	        		  AUIGrid.addUncheckedRowsByValue(listGrid, "delyno", currDelvryNo);
+       	        		  return false;
+       	        	  }
+       	          }
 
         		// KR-OHK Serial Require Check
                 if (checkedItems[i].serialRequireChkYn == 'Y') {
