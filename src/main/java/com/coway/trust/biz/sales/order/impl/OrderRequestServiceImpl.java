@@ -50,6 +50,7 @@ import com.coway.trust.biz.sales.order.vo.SrvConfigPeriodVO;
 import com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO;
 import com.coway.trust.biz.sales.order.vo.StkReturnEntryVO;
 import com.coway.trust.biz.services.installation.impl.InstallationResultListMapper;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
@@ -57,6 +58,12 @@ import com.coway.trust.web.common.DocTypeConstants;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+/******************************************************************
+ * DATE              PIC            VERSION        COMMENT
+ *--------------------------------------------------------------------------------------------
+ * 23/04/2020    ONGHC          1.0.1           - Add PEX DEFECT ENTRY
+ ******************************************************************/
 
 @Service("orderRequestService")
 public class OrderRequestServiceImpl implements OrderRequestService {
@@ -1748,6 +1755,30 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     salesOrderLogVO.setRefId(callEntryMasterVO.getCallEntryId());
     orderRegisterMapper.insertSalesOrderLog(salesOrderLogVO);
 
+    // ONGHC - ADD PEX DEFECT INFO
+    logger.debug("=======================================================");
+    logger.debug("= " + params.toString());
+    logger.debug("=======================================================");
+
+    if (orderRequestMapper.checkDefectByReason(params) > 0) {
+      logger.debug("= INSERT PEX DEFECT ENTRY = START =");
+      if ("".equals(CommonUtils.nvl(params.get("def_part_id")))) {
+        throw new ApplicationException(AppConstants.FAIL, "[ERROR] DEFECT PART IS REQUIRED.");
+      }
+      if ("".equals(CommonUtils.nvl(params.get("def_def_id")))) {
+        throw new ApplicationException(AppConstants.FAIL, "[ERROR] AS PROBLEM SYMPTOM LARGE IS REQUIRED.");
+      }
+      if ("".equals(CommonUtils.nvl(params.get("def_code_id")))) {
+        throw new ApplicationException(AppConstants.FAIL, "[ERROR] AS PROBLEM SYMPTOM SMALL IS REQUIRED.");
+      }
+
+      params.put("soExchgId", orderExchangeMasterVO.getSoExchgId());
+      params.put("userId", sessionVO.getUserId());
+      orderRegisterMapper.insertPexDefectEntry(params);
+
+      logger.debug("= INSERT PEX DEFECT ENTRY = END =");
+    }
+
     String msg = "Order Number : " + (String) somMap.get("salesOrdNo")
         + "<br/>Product exchange request successfully saved.";
 
@@ -2617,4 +2648,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     return orderRequestMapper.chkSalStat(params);
   }
 
+  @Override
+  public Integer checkDefectByReason(Map<String, Object> params) {
+    return orderRequestMapper.checkDefectByReason(params);
+  }
 }
