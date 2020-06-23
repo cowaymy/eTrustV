@@ -2077,4 +2077,12 @@
                             WHERE PCKAGE_BINDING_NO = #{salesOrdId})
   </update>
 
+  <select id="checkDefectByReason" parameterType="Map" resultType="integer">
+    SELECT COUNT(CODE) AS COUNT
+    FROM SYS0094M
+    WHERE IND = 'PEXDFTRSN'
+        AND DISB = 0
+        AND CODE = #{cmbReason}
+  </select>
+
 </mapper>
