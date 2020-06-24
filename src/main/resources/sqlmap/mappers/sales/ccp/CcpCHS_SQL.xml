@@ -149,7 +149,7 @@ SELECT SAL0264D_SEQ.NEXTVAL , chsBatchId , custId , month , year , chsStatus , c
     B.CHS_STUS ,
     B.CHS_RSN ,
     C.NAME STUS_NAME ,
-    D.NAME CUST_NAME
+       REGEXP_REPLACE(D.NAME, '[^0-9A-Za-z]', ' ') CUST_NAME
   FROM
   SAL0263D A
   JOIN SAL0264D B ON A.CHS_BATCH_ID = B.CHS_BATCH_ID
