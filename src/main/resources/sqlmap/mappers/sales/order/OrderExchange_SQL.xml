@@ -226,138 +226,148 @@
                     </if>
     </select>
 
-    <select id="exchangeInfoProduct" parameterType="Map" resultType="egovMap">
-        SELECT Extent1.SO_EXCHG_ID ,
-			       Extent1.SO_ID SO_ID ,
-			       Extent1.SO_EXCHG_TYPE_ID ,
-			       Extent1.SO_EXCHG_STUS_ID ,
-			       Extent1.SO_EXCHG_RESN_ID ,
-			       Extent1.SO_CUR_STUS_ID ,
-			       Extent1.INSTALL_ENTRY_ID ,
-			       Extent1.SO_EXCHG_OLD_APP_TYPE_ID ,
-			       Extent1.SO_EXCHG_NW_APP_TYPE_ID ,
-			       Extent1.SO_EXCHG_OLD_STK_ID ,
-			       Extent1.SO_EXCHG_NW_STK_ID ,
-			       Extent1.SO_EXCHG_OLD_PRC_ID ,
-			       Extent1.SO_EXCHG_NW_PRC_ID ,
-			       Extent1.SO_EXCHG_OLD_PRC ,
-			       Extent1.SO_EXCHG_NW_PRC ,
-			       Extent1.SO_EXCHG_OLD_PV ,
-			       Extent1.SO_EXCHG_NW_PV ,
-			       Extent1.SO_EXCHG_CRT_DT,
-			       Extent1.SO_EXCHG_CRT_USER_ID  ,
-			       Extent1.SO_EXCHG_UPD_DT  ,
-			       Extent1.SO_EXCHG_UPD_USER_ID  ,
-			       Extent1.SO_EXCHG_OLD_SRV_CONFIG_ID   ,
-			       Extent1.SO_EXCHG_NW_SRV_CONFIG_ID   ,
-			       Extent1.SO_EXCHG_OLD_CALL_ENTRY_ID   ,
-			       Extent1.SO_EXCHG_NW_CALL_ENTRY_ID   ,
-			       Extent1.SO_EXCHG_STK_RET_MOV_ID   ,
-			       Extent1.SO_EXCHG_OLD_DEF_RENT_AMT   ,
-			       Extent1.SO_EXCHG_NW_DEF_RENT_AMT   ,
-			       Extent1.SO_EXCHG_UNDER_FREE_AS_ID   ,
-			       Extent1.SO_EXCHG_OLD_CUST_ID   ,
-			       Extent1.SO_EXCHG_NW_CUST_ID   ,
-			       Extent2.SALES_ORD_NO   ,
-			       Extent2.APP_TYPE_ID   ,
-			       Extent3.CUST_ID   ,
-			       Extent3.NAME   ,
-			       Extent3.NRIC   ,
-			       Extent4.NAME NAME1  ,
-			       Extent5.CODE CODE  ,
-			       Extent5.NAME NAME2  ,
-			       Extent6.CODE CODE1  ,
-			       Extent6.CODE_NAME   ,
-			       Extent16.NAME NAME3  ,
-			       Extent17.NAME NAME4  ,
-			       CASE
-			            WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME
-			       ELSE ''
-			          END SO_EXCHG_CRT_USER_NAME  ,
-			       CASE
-			            WHEN ( Extent7.RESN_ID IS NOT NULL ) THEN Extent7.CODE
-			       ELSE ''
-			          END SO_EXCHG_RESN_ID_CODE  ,
-			       CASE
-			            WHEN ( Extent7.RESN_ID IS NOT NULL ) THEN Extent7.RESN_DESC
-			       ELSE ''
-			          END RESN_DESC  ,
-			       CASE
-			            WHEN ( Extent10.CODE_ID IS NOT NULL ) THEN Extent10.CODE_NAME
-			       ELSE ''
-			          END SO_EXCHG_NW_APP_TYPE_CODE_NAME  ,
-			       CASE
-			            WHEN ( Extent11.STK_ID IS NOT NULL ) THEN Extent11.STK_CODE
-			       ELSE ''
-			          END SO_EXCHG_NW_STK_CODE  ,
-			       CASE
-			            WHEN ( Extent11.STK_ID IS NOT NULL ) THEN Extent11.STK_DESC
-			       ELSE ''
-			          END SO_EXCHG_NW_STK_DESC  ,
-			       CASE
-			            WHEN ( Extent12.PROMO_ID IS NOT NULL ) THEN Extent12.PROMO_CODE
-			       ELSE ''
-			          END SO_EXCHG_NW_PROMO_CODE  ,
-			       CASE
-			            WHEN ( Extent12.PROMO_ID IS NOT NULL ) THEN Extent12.PROMO_DESC
-			       ELSE ''
-			          END SO_EXCHG_NW_PROMO_DESC  ,
-			       CASE
-			            WHEN ( Extent13.CODE_ID IS NOT NULL ) THEN Extent13.CODE_NAME
-			       ELSE ''
-			          END EXCHG_OLD_APP_TYPE_CODE_NAME  ,
-			       CASE
-			            WHEN ( Extent14.STK_ID IS NOT NULL ) THEN Extent14.STK_CODE
-			       ELSE ''
-			          END SO_EXCHG_OLD_STK_CODE  ,
-			       CASE
-			            WHEN ( Extent14.STK_ID IS NOT NULL ) THEN Extent14.STK_DESC
-			       ELSE ''
-			          END SO_EXCHG_OLD_STK_DESC  ,
-			       CASE
-			            WHEN ( Extent15.PROMO_ID IS NOT NULL ) THEN Extent15.PROMO_CODE
-			       ELSE ''
-			          END SO_EXCHG_OLD_PROMO_CODE  ,
-			       CASE
-			            WHEN ( Extent15.PROMO_ID IS NOT NULL ) THEN Extent15.PROMO_DESC
-			       ELSE ''
-			          END SO_EXCHG_OLD_PROMO_DESC  ,
-			       Extent2.SALES_DT,
-			       CASE
-			            WHEN ( Extent1.SO_EXCHG_REM IS NOT NULL ) THEN Extent1.SO_EXCHG_REM
-			       ELSE ''
-			          END SO_EXCHG_REM  ,
-			       CASE
-			            WHEN ( Extent9.USER_ID IS NOT NULL ) THEN Extent9.USER_NAME
-			       ELSE ''
-			          END UPD_USER_NAME  ,
-			       CASE
-			            WHEN ( Extent1.SO_EXCHG_FORM_NO IS NOT NULL ) THEN Extent1.SO_EXCHG_FORM_NO
-			       ELSE '-'
-			          END SO_EXCHG_FORM_NO
-			  FROM SAL0004D Extent1
-			         JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SO_ID
-			         JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
-			         JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = Extent1.SO_CUR_STUS_ID
-			         JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent1.SO_EXCHG_STUS_ID
-			         JOIN SYS0013M Extent6   ON Extent6.CODE_ID = Extent1.SO_EXCHG_TYPE_ID
-			         LEFT JOIN SYS0032M Extent7   ON Extent7.RESN_ID = Extent1.SO_EXCHG_RESN_ID
-			         LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent1.SO_EXCHG_CRT_USER_ID
-			         LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent1.SO_EXCHG_UPD_USER_ID
-			         LEFT JOIN SYS0013M Extent10   ON Extent10.CODE_ID = Extent1.SO_EXCHG_NW_APP_TYPE_ID
-			         LEFT JOIN SYS0026M Extent11   ON Extent11.STK_ID = Extent1.SO_EXCHG_NW_STK_ID
-			         LEFT JOIN SAL0017D Extent12   ON Extent12.PROMO_ID = Extent1.SO_EXCHG_NW_PROMO_ID
-			         LEFT JOIN SYS0013M Extent13   ON Extent13.CODE_ID = Extent1.SO_EXCHG_OLD_APP_TYPE_ID
-			         LEFT JOIN SYS0026M Extent14   ON Extent14.STK_ID = Extent1.SO_EXCHG_OLD_STK_ID
-			         LEFT JOIN SAL0017D Extent15   ON Extent15.PROMO_ID = Extent1.SO_EXCHG_OLD_PROMO_ID
-			         LEFT JOIN SAL0029D Extent16   ON Extent16.CUST_ID = Extent1.SO_EXCHG_OLD_CUST_ID
-			         LEFT JOIN SAL0029D Extent17   ON Extent17.CUST_ID = Extent1.SO_EXCHG_NW_CUST_ID
-			 <![CDATA[
-		 WHERE 0 <> Extent1.SO_EXCHG_STUS_ID
-             AND 8 <> Extent1.SO_EXCHG_STUS_ID
-             ]]>
-             AND Extent1.SO_EXCHG_ID = #{soExchgId}
+  <select id="exchangeInfoProduct" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.SO_EXCHG_ID ,
+               Extent1.SO_ID SO_ID ,
+               Extent1.SO_EXCHG_TYPE_ID ,
+               Extent1.SO_EXCHG_STUS_ID ,
+               Extent1.SO_EXCHG_RESN_ID ,
+               Extent1.SO_CUR_STUS_ID ,
+               Extent1.INSTALL_ENTRY_ID ,
+               Extent1.SO_EXCHG_OLD_APP_TYPE_ID ,
+               Extent1.SO_EXCHG_NW_APP_TYPE_ID ,
+               Extent1.SO_EXCHG_OLD_STK_ID ,
+               Extent1.SO_EXCHG_NW_STK_ID ,
+               Extent1.SO_EXCHG_OLD_PRC_ID ,
+               Extent1.SO_EXCHG_NW_PRC_ID ,
+               Extent1.SO_EXCHG_OLD_PRC ,
+               Extent1.SO_EXCHG_NW_PRC ,
+               Extent1.SO_EXCHG_OLD_PV ,
+               Extent1.SO_EXCHG_NW_PV ,
+               Extent1.SO_EXCHG_CRT_DT,
+               Extent1.SO_EXCHG_CRT_USER_ID  ,
+               Extent1.SO_EXCHG_UPD_DT  ,
+               Extent1.SO_EXCHG_UPD_USER_ID  ,
+               Extent1.SO_EXCHG_OLD_SRV_CONFIG_ID   ,
+               Extent1.SO_EXCHG_NW_SRV_CONFIG_ID   ,
+               Extent1.SO_EXCHG_OLD_CALL_ENTRY_ID   ,
+               Extent1.SO_EXCHG_NW_CALL_ENTRY_ID   ,
+               Extent1.SO_EXCHG_STK_RET_MOV_ID   ,
+               Extent1.SO_EXCHG_OLD_DEF_RENT_AMT   ,
+               Extent1.SO_EXCHG_NW_DEF_RENT_AMT   ,
+               Extent1.SO_EXCHG_UNDER_FREE_AS_ID   ,
+               Extent1.SO_EXCHG_OLD_CUST_ID   ,
+               Extent1.SO_EXCHG_NW_CUST_ID   ,
+               Extent2.SALES_ORD_NO   ,
+               Extent2.APP_TYPE_ID   ,
+               Extent3.CUST_ID   ,
+               Extent3.NAME   ,
+               Extent3.NRIC   ,
+               Extent4.NAME NAME1  ,
+               Extent5.CODE CODE  ,
+               Extent5.NAME NAME2  ,
+               Extent6.CODE CODE1  ,
+               Extent6.CODE_NAME   ,
+               Extent16.NAME NAME3  ,
+               Extent17.NAME NAME4  ,
+               CASE
+                    WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME
+               ELSE ''
+                  END SO_EXCHG_CRT_USER_NAME  ,
+               CASE
+                    WHEN ( Extent7.RESN_ID IS NOT NULL ) THEN Extent7.CODE
+               ELSE ''
+                  END SO_EXCHG_RESN_ID_CODE  ,
+               CASE
+                    WHEN ( Extent7.RESN_ID IS NOT NULL ) THEN UPPER(Extent7.RESN_DESC)
+               ELSE ''
+                  END RESN_DESC  ,
+               CASE
+                    WHEN ( Extent10.CODE_ID IS NOT NULL ) THEN Extent10.CODE_NAME
+               ELSE ''
+                  END SO_EXCHG_NW_APP_TYPE_CODE_NAME  ,
+               CASE
+                    WHEN ( Extent11.STK_ID IS NOT NULL ) THEN Extent11.STK_CODE
+               ELSE ''
+                  END SO_EXCHG_NW_STK_CODE  ,
+               CASE
+                    WHEN ( Extent11.STK_ID IS NOT NULL ) THEN Extent11.STK_DESC
+               ELSE ''
+                  END SO_EXCHG_NW_STK_DESC  ,
+               CASE
+                    WHEN ( Extent12.PROMO_ID IS NOT NULL ) THEN Extent12.PROMO_CODE
+               ELSE ''
+                  END SO_EXCHG_NW_PROMO_CODE  ,
+               CASE
+                    WHEN ( Extent12.PROMO_ID IS NOT NULL ) THEN Extent12.PROMO_DESC
+               ELSE ''
+                  END SO_EXCHG_NW_PROMO_DESC  ,
+               CASE
+                    WHEN ( Extent13.CODE_ID IS NOT NULL ) THEN Extent13.CODE_NAME
+               ELSE ''
+                  END EXCHG_OLD_APP_TYPE_CODE_NAME  ,
+               CASE
+                    WHEN ( Extent14.STK_ID IS NOT NULL ) THEN Extent14.STK_CODE
+               ELSE ''
+                  END SO_EXCHG_OLD_STK_CODE  ,
+               CASE
+                    WHEN ( Extent14.STK_ID IS NOT NULL ) THEN Extent14.STK_DESC
+               ELSE ''
+                  END SO_EXCHG_OLD_STK_DESC  ,
+               CASE
+                    WHEN ( Extent15.PROMO_ID IS NOT NULL ) THEN Extent15.PROMO_CODE
+               ELSE ''
+                  END SO_EXCHG_OLD_PROMO_CODE  ,
+               CASE
+                    WHEN ( Extent15.PROMO_ID IS NOT NULL ) THEN Extent15.PROMO_DESC
+               ELSE ''
+                  END SO_EXCHG_OLD_PROMO_DESC  ,
+               Extent2.SALES_DT,
+               CASE
+                    WHEN ( Extent1.SO_EXCHG_REM IS NOT NULL ) THEN Extent1.SO_EXCHG_REM
+               ELSE ''
+                  END SO_EXCHG_REM  ,
+               CASE
+                    WHEN ( Extent9.USER_ID IS NOT NULL ) THEN Extent9.USER_NAME
+               ELSE ''
+                  END UPD_USER_NAME  ,
+               CASE
+                    WHEN ( Extent1.SO_EXCHG_FORM_NO IS NOT NULL ) THEN Extent1.SO_EXCHG_FORM_NO
+               ELSE '-'
+                  END SO_EXCHG_FORM_NO,
+               Extent19.DEFECT_DESC AS PEX_DEFECT_PART_SMALL,
+               Extent19.DEFECT_RMK AS PEX_DEFECT_PART_LARGE,
+               Extent20.DEFECT_DESC AS PEX_PROB_SYMP_LARGE,
+               Extent21.DEFECT_DESC AS PEX_PROB_SYMP_SMALL
+    FROM SAL0004D Extent1
+    JOIN SAL0001D Extent2 ON Extent2.SALES_ORD_ID = Extent1.SO_ID
+    JOIN SAL0029D Extent3 ON Extent3.CUST_ID = Extent2.CUST_ID
+    JOIN SYS0038M Extent4 ON Extent4.STUS_CODE_ID = Extent1.SO_CUR_STUS_ID
+    JOIN SYS0038M Extent5 ON Extent5.STUS_CODE_ID = Extent1.SO_EXCHG_STUS_ID
+    JOIN SYS0013M Extent6 ON Extent6.CODE_ID = Extent1.SO_EXCHG_TYPE_ID
+    LEFT JOIN SYS0032M Extent7 ON Extent7.RESN_ID = Extent1.SO_EXCHG_RESN_ID
+    LEFT JOIN SYS0047M Extent8 ON Extent8.USER_ID = Extent1.SO_EXCHG_CRT_USER_ID
+    LEFT JOIN SYS0047M Extent9 ON Extent9.USER_ID = Extent1.SO_EXCHG_UPD_USER_ID
+    LEFT JOIN SYS0013M Extent10 ON Extent10.CODE_ID = Extent1.SO_EXCHG_NW_APP_TYPE_ID
+    LEFT JOIN SYS0026M Extent11 ON Extent11.STK_ID = Extent1.SO_EXCHG_NW_STK_ID
+    LEFT JOIN SAL0017D Extent12 ON Extent12.PROMO_ID = Extent1.SO_EXCHG_NW_PROMO_ID
+    LEFT JOIN SYS0013M Extent13 ON Extent13.CODE_ID = Extent1.SO_EXCHG_OLD_APP_TYPE_ID
+    LEFT JOIN SYS0026M Extent14 ON Extent14.STK_ID = Extent1.SO_EXCHG_OLD_STK_ID
+    LEFT JOIN SAL0017D Extent15 ON Extent15.PROMO_ID = Extent1.SO_EXCHG_OLD_PROMO_ID
+    LEFT JOIN SAL0029D Extent16 ON Extent16.CUST_ID = Extent1.SO_EXCHG_OLD_CUST_ID
+    LEFT JOIN SAL0029D Extent17 ON Extent17.CUST_ID = Extent1.SO_EXCHG_NW_CUST_ID
+    LEFT JOIN SYS0013M Extent22 ON Extent22.CODE_MASTER_ID = '11' AND Extent22.CODE_ID = Extent14.STK_CTGRY_ID
+    LEFT JOIN SAL0265D Extent18 ON Extent18.SO_EXCHG_ID = Extent1.SO_EXCHG_ID
+    LEFT JOIN SYS0100M Extent19 ON Extent19.DEFECT_ID = Extent18.PEX_DEFECT_PART_ID AND Extent19.DEFECT_TYP = 'DP' AND Extent19.PROD_CAT IN ('*', Extent22.CODE)
+    LEFT JOIN SYS0100M Extent20 ON Extent20.DEFECT_ID = Extent18.PEX_DEFECT_DTL_RESN_ID AND Extent20.DEFECT_TYP = 'DD' AND Extent20.PROD_CAT IN ('*', Extent22.CODE)
+    LEFT JOIN SYS0100M Extent21 ON Extent21.DEFECT_ID = Extent18.PEX_DEFECT_ID AND Extent21.DEFECT_TYP = 'DC' AND Extent21.PROD_CAT IN ('*', Extent22.CODE)
 
+    <![CDATA[
+      WHERE 0 <> Extent1.SO_EXCHG_STUS_ID
+          AND 8 <> Extent1.SO_EXCHG_STUS_ID
+    ]]>
+
+    AND Extent1.SO_EXCHG_ID = #{soExchgId}
     </select>
 
     <select id="exchangeInfoOwnershipFr" parameterType="Map" resultType="egovMap">
