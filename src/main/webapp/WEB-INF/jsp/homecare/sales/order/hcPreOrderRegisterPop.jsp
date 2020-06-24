@@ -753,7 +753,7 @@
         var isExist = false;
         var msg = "";
 
-        Common.ajaxSync("GET", "/sales/order/selectExistSofNo.do", $("#frmCustSearch").serialize(), function(rsltInfo) {
+        Common.ajaxSync("GET", "/sales/order/selectExistSofNo.do", {selType : $('#selType').val() , sofNo : $('#sofNo').val().trim() }, function(rsltInfo) {
             if(rsltInfo != null) {
                 isExist = rsltInfo.isExist;
             }

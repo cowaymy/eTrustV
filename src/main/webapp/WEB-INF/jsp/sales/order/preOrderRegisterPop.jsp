@@ -791,7 +791,8 @@
     function fn_isExistESalesNo() {
         var isExist = false, msg = "";
 
-        Common.ajaxSync("GET", "/sales/order/selectExistSofNo.do", $("#frmCustSearch").serialize(), function(rsltInfo) {
+        Common.ajaxSync("GET", "/sales/order/selectExistSofNo.do", {selType : $('#selType').val() , sofNo : $('#sofNo').val().trim() }, function(rsltInfo) {
+
             if(rsltInfo != null) {
                 isExist = rsltInfo.isExist;
             }
