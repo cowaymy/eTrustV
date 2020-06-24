@@ -102,7 +102,7 @@ function fn_closePop() {
     <td>${chsBatchInfo.chsBatchId}</td>
     <th scope="row">Batch Status</th>
     <td>${chsBatchInfo.stusName}</td>
-      <th scope="row">Total Item  (Including Header)</th>
+      <th scope="row">Total Item</th>
     <td>${chsBatchInfo.chsTotItm}</td>
 </tr>
 
