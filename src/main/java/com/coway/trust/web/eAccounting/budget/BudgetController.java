@@ -344,6 +344,10 @@ public class BudgetController {
 		    }
 		}
 
+		if(sessionVO.getUserId() == 16003) {
+            params.put("costCentr2", "A1801");
+        }
+
 		if(params.containsKey("stYearMonth") && params.containsKey("edYearMonth")) {
 		    String yyyyMM = "";
 
@@ -889,6 +893,10 @@ public class BudgetController {
                     params.put("costCentr", permissions.get("costCenter"));
                 }
             }
+        }
+
+        if(sessionVO.getUserId() == 16003) {
+            params.put("costCentr2", "A1801");
         }
 
 		LOGGER.debug("params =====================================>>  " + params);
