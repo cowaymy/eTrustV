@@ -394,6 +394,7 @@ public class OrderCancelController {
   //public String orderCancelProductReturnRawPop() {
   public String orderCancelProductReturnRawPop(@RequestParam Map<String, Object> params, ModelMap model) {
     model.addAttribute("type", params.get("type"));
+    model.addAttribute("ind", params.get("ind"));
     return "sales/order/orderCancelProductReturnRawPop";
   }
 
