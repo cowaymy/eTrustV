@@ -231,6 +231,7 @@ $(document).ready(function(){
     	}else{
 
     		for (var i=0; i<count; i++) {
+    			sumQty = 0;
                 validQty = js.String.naNcheck(param.bfTotQty[i]) - Number(js.String.deletecomma(param.rciptTmQty[i])) - js.String.naNcheck(param.failTmQty[i]);
                 if(validQty < 0){
                     Common.alert("Exceeded Total Quantity.");
