@@ -427,11 +427,11 @@ function fn_PopClose() {
   <section class="search_result"><!-- search_result start -->
 	<aside class="title_line"><!-- title_line start -->
         <h3>List</h3>
-        <ul class="right_btns">
+        <%-- <ul class="right_btns">
            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                <li><p class="btn_grid"><a id="btnGR">GR Complete</a></p></li>
            </c:if>
-        </ul>
+        </ul> --%>
 	</aside><!-- title_line end -->
 	<!-- grid_wrap start -->
 	<article class="grid_wrap">
