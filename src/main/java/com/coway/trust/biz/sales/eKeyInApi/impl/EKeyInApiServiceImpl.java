@@ -2132,7 +2132,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
           r3 = StringUtils.leftPad("", 12, "0");
       }
 
-      String refNo = r1 + r2 + r3;
+      String refNo = r1 + r2 + r3 + tknId;
 
       Map<String, Object> sal0257D = new HashMap<String, Object>();
       sal0257D.put("tknId", tknId);
