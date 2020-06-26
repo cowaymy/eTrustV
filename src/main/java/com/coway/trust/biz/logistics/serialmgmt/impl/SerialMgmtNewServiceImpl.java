@@ -119,6 +119,7 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 				mainMap.put("uom", itemmap.get("uom"));
 			}
 
+			if (!byPassCrDateCheck){
     			month = crDate.substring(2, 3);
 
     			logger.info("crDate: " + crDate);
@@ -139,7 +140,6 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
         			break;
     			}
 
-    		if (!byPassCrDateCheck){
     			sDate = crDate.substring(0, 2) + month + crDate.substring(3, 5);
     			if(!validationDate(sDate)){
     				mainMap.put("stockName", "Serial No. (Invalid)");
@@ -256,18 +256,52 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 	public List<Object> saveLogisticBarcode(Map<String, ArrayList<Object>> params, SessionVO sessionVO) throws Exception{
 		List<Object> mainList = (List<Object>)params.get("barList");
 
+		// Added for by pass crDate checking by specific stock code. By Hui Ding, 12-06-2020
+		boolean byPassCrDateCheck = false;
+
 		String crDate = "";
 		String month = "";
 		String sDate = "";
 
 		String vIoType = "";
 		String vToLocId = "";
+
+		// Added for by pass crDate checking by specific stock code. By Hui Ding, 12-06-2020
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("ind", "SE_SCAN_BP");
+		param.put("disb", 0);
+		List<EgovMap> byPassItmList = serialMgmtNewMapper.selectScanByPassItm(param);
+
 		Map<String, Object> mainMap = null;
 		for (Object obj : mainList) {
 			mainMap = (Map<String, Object>) obj;
 			mainMap.put("crtUserId", sessionVO.getUserId());
 			mainMap.put("updUserId", sessionVO.getUserId());
 			mainMap.put("boxno", mainMap.get("barcode"));
+
+			EgovMap itemmap = serialMgmtNewMapper.selectItemSerch(mainMap);
+			if(itemmap == null || itemmap.size() == 0){
+				mainMap.put("stockName", "Serial No. (Invalid Item)");
+				mainMap.put("status", 0);
+				continue;
+			}else{
+
+				if (byPassItmList != null && byPassItmList.size() > 0) {
+					for (EgovMap byPassItm: byPassItmList){
+						logger.info("### byPassItm: " + byPassItm.toString());
+						if ((byPassItm.get("code").toString()).equals((itemmap.get("stkCode").toString()))){
+							byPassCrDateCheck = true;
+							logger.info("### Bypass: " + byPassCrDateCheck);
+							break;
+						}
+					}
+				}
+
+				mainMap.put("stockId", itemmap.get("stkId"));
+				mainMap.put("stockCode", itemmap.get("stkCode"));
+				mainMap.put("stockName", itemmap.get("stkDesc"));
+				mainMap.put("uom", itemmap.get("uom"));
+			}
 
 			// 날짜형식이 맞는지 체크.
 			crDate = (String)mainMap.get("crDate");
@@ -277,39 +311,30 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 				continue;
 			}
 
-			month = crDate.substring(2, 3);
+			if (!byPassCrDateCheck){
+    			month = crDate.substring(2, 3);
 
-			switch(month){
-    			case "A":
-    				month = "10";
-    				break;
-    			case "B":
-    				month = "11";
-    				break;
-    			case "C":
-    				month = "12";
-    				break;
-    			default:
-    				month = "0"+month;
-    			break;
-			}
-			sDate = crDate.substring(0, 2) + month + crDate.substring(3, 5);
-			if(!validationDate(sDate)){
-				mainMap.put("stockName", "Serial No. (Invalid)");
-				mainMap.put("status", 0);
-				continue;
-			}
+    			switch(month){
+        			case "A":
+        				month = "10";
+        				break;
+        			case "B":
+        				month = "11";
+        				break;
+        			case "C":
+        				month = "12";
+        				break;
+        			default:
+        				month = "0"+month;
+        			break;
+    			}
 
-			EgovMap itemmap = serialMgmtNewMapper.selectItemSerch(mainMap);
-			if(itemmap == null || itemmap.size() == 0){
-				mainMap.put("stockName", "Serial No. (Invalid Item)");
-				mainMap.put("status", 0);
-				continue;
-			}else{
-				mainMap.put("stockId", itemmap.get("stkId"));
-				mainMap.put("stockCode", itemmap.get("stkCode"));
-				mainMap.put("stockName", itemmap.get("stkDesc"));
-				mainMap.put("uom", itemmap.get("uom"));
+    			sDate = crDate.substring(0, 2) + month + crDate.substring(3, 5);
+    			if(!validationDate(sDate)){
+    				mainMap.put("stockName", "Serial No. (Invalid)");
+    				mainMap.put("status", 0);
+    				continue;
+    			}
 			}
 
 			serialMgmtNewMapper.callBarcodeScan(mainMap);
