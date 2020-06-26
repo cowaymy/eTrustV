@@ -80,10 +80,18 @@
                                                 where
                                                 aa.SVC_ORD_ID =  SM.SVC_ORD_ID ))SM
                                                 on (SM.SEQ = l82.SEQ)
-       JOIN (select WW.RESULT_ID, sum(WW.qty) from LOG0082M WW
+      <!--  JOIN (select WW.RESULT_ID, sum(WW.qty) from LOG0082M WW
        group by WW.RESULT_ID
-       having sum(WW.qty)<![CDATA[<>]]>  0)QQ on (QQ.RESULT_ID = SM.RESULT_ID)
+       having sum(WW.qty)<![CDATA[<>]]>  0)QQ on (QQ.RESULT_ID = SM.RESULT_ID) -->
        where 1=1
+       AND EXISTS  (   <!--   by leo.ham 26-06-2020  -->
+             select
+                    WW.RESULT_ID, sum(WW.qty)
+                from LOG0082M WW
+                  WHERE RESULT_ID = SM.RESULT_ID
+                group by WW.RESULT_ID having sum(WW.qty) <![CDATA[<>]]>  0
+        )
+
 	   <if test="searchOder != null and searchOder !=''">
            AND l82.SVC_ORD_ID = #{searchOder}
        </if>
