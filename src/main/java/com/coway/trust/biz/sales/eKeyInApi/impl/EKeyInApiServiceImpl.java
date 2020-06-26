@@ -2139,11 +2139,31 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       sal0257D.put("refNo", refNo);
       sal0257D.put("crtUserId", loginVO.getUserId());
       sal0257D.put("updUserId", loginVO.getUserId());
+      int saveCnt = eKeyInApiMapper.insertSAL0257D(sal0257D);
+      if (saveCnt != 1) {
+        throw new ApplicationException(AppConstants.FAIL, "Card Exception.");
+      }
 
       EKeyInApiDto rtn = new EKeyInApiDto();
       rtn.setTknId(tknId);
       rtn.setRefNo(refNo);
 
       return rtn;
+  }
+
+  @Override
+  public EKeyInApiDto getTokenNumber(EKeyInApiDto param) throws Exception {
+      Map<String, Object> params = new HashMap<String, Object>();
+      params.put("refNo", param.getRefNo());
+      EKeyInApiDto tokenInfo = EKeyInApiDto.create(eKeyInApiMapper.getTokenInfo(params));
+      if(CommonUtils.isEmpty(tokenInfo.getToken())) {
+          int stagingUpdate = eKeyInApiMapper.updateStagingF(params);
+          if(stagingUpdate != 1) {
+              throw new ApplicationException(AppConstants.FAIL, "Obtain Card Info Exception");
+          }
+          throw new ApplicationException(AppConstants.FAIL, "tokenInfo value does not exist.");
+      }
+
+      return tokenInfo;
   }
 }

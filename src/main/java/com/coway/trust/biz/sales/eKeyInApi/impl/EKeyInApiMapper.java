@@ -135,4 +135,8 @@ public interface EKeyInApiMapper {
   List<EgovMap> selectCpntLst(Map<String, Object> param);
 
   List<EgovMap> selectPromoByCpntId(Map<String, Object> param);
+
+  EgovMap getTokenInfo(Map<String, Object> param);
+
+  int updateStagingF(Map<String, Object> param);
 }

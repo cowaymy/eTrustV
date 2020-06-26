@@ -430,4 +430,10 @@ public class EKeyInApiController {
   public ResponseEntity<EKeyInApiDto> getTokenId(@RequestBody EKeyInApiDto param) throws Exception {
     return ResponseEntity.ok(eKeyInApiService.getTokenId(param));
   }
+
+  @ApiOperation(value = "getTokenNumber", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/getTokenNumber", method = RequestMethod.POST)
+  public ResponseEntity<EKeyInApiDto> getTokenNumber(@RequestBody EKeyInApiDto param) throws Exception {
+    return ResponseEntity.ok(eKeyInApiService.getTokenNumber(param));
+  }
 }
