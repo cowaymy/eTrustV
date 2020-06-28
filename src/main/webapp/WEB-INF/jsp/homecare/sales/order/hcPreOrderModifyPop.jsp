@@ -454,6 +454,10 @@
         });
 
         $('#btnSave').click(function() {
+
+        	var preOrdId = $('#frmPreOrdReg #hiddenPreOrdId').val();
+            var rcdTms   = $('#hiddenRcdTms').val();
+
             if(!fn_validCustomer()) {
                 $('#aTabCS').click();
                 return false;
@@ -474,7 +478,7 @@
                 return false;
             }
 
-            if(!fn_validRcdTms()) {
+            if(!fn_validRcdTms(preOrdId,rcdTms,'#popup_wrap')) {
                 $('#aTabBD').click();
                 return false;
             }
@@ -1929,7 +1933,7 @@
         return isValid;
     }
 
-    function fn_validRcdTms() {
+   /*  function fn_validRcdTms() {
         var isValid = true, msg = "";
 
         Common.ajaxSync("GET", "/sales/order/selRcdTms.do", $("#frmPreOrdReg").serialize(), function(result) {
@@ -1943,7 +1947,7 @@
 
         return isValid;
 
-    }
+    } */
 
 </script>
 

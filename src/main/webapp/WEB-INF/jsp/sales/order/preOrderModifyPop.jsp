@@ -487,6 +487,9 @@
         });
         $('#btnSave').click(function() {
 
+        	var preOrdId = $('#frmPreOrdReg #hiddenPreOrdId').val();
+        	var rcdTms   = $('#hiddenRcdTms').val();
+
             if(!fn_validCustomer()) {
                 $('#aTabCS').click();
                 return false;
@@ -507,7 +510,7 @@
                 return false;
             }
 
-            if(!fn_validRcdTms()) {
+            if(!fn_validRcdTms(preOrdId,rcdTms,'#popup_wrap')) {
                 $('#aTabBD').click();
                 return false;
             }
@@ -2120,23 +2123,6 @@
 
         return isValid;
     }
-
-    function fn_validRcdTms() {
-        var isValid = true, msg = "";
-
-        Common.ajaxSync("GET", "/sales/order/selRcdTms.do", $("#frmPreOrdReg").serialize(), function(result) {
-            if(result.code == "99"){
-                isValid = false;
-                msg = result.message;
-            }
-        });
-
-        if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
-
-        return isValid;
-
-    }
-
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->

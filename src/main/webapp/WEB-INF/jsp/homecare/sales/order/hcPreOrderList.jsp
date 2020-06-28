@@ -153,10 +153,14 @@
         var name = $('#_action option:selected').text();
         var sof = $('#hiddenSof').val();
 
+        var preOrdId = $('#hiddenPreOrdId').val();
+        var rcdTms = AUIGrid.getCellValue(listGridID, selectRowIdx, "updDt");
+
         if(action == "" ){
             Common.alert("Please select action");
             return;
         }
+
         if(action == 21 && ($('input[name=cmbFailCode]:checked').val() == null || $('#_rem_').val() == null) ){
             Common.alert("Please select Reason Code and key in Remark");
             return;
@@ -171,16 +175,20 @@
         };
 
         Common.confirm("Confirm to " + name + " SOF : " + sof  + " ? " , function(){
-            Common.ajax("POST", "/homecare/sales/order/updateHcPreOrderStatus.do", failUpdOrd, function(result) {
-                Common.alert("Order Failed" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closeFailedStusPop);
-            },
-            function(jqXHR, textStatus, errorThrown) {
-                try {
-                    Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
-                } catch (e) {
-                    console.log(e);
-                }
-            });
+        	if(!fn_validRcdTms(preOrdId, rcdTms, '#updFail_wrap')){
+        		return;
+        	}else{
+        		Common.ajax("POST", "/homecare/sales/order/updateHcPreOrderStatus.do", failUpdOrd, function(result) {
+                    Common.alert("Order Failed" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closeFailedStusPop);
+                },
+                function(jqXHR, textStatus, errorThrown) {
+                    try {
+                        Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
+                    } catch (e) {
+                        console.log(e);
+                    }
+                });
+        	}
         });
     }
 
@@ -208,6 +216,7 @@
           , {headerText : "Last Update At (By)", dataField : "lastUpd",         editable : false,  width : '18%'}
           , {headerText : "StatusId",                 dataField : "stusId",           visible  : false}
           , {headerText : "preOrdId",               dataField : "preOrdId",       visible  : false}
+          , {headerText : "updDt",                  dataField : "updDt",   visible : false}
         ];
 
         //그리드 속성 설정
@@ -490,6 +499,32 @@
             }
         });
     };
+
+    function fn_validRcdTms(preOrdId, rcdTms, wrapVal) {
+        console.log(preOrdId);
+        console.log(rcdTms);
+        var isValid = true, msg = "";
+
+        var param = {
+                preOrdId : preOrdId
+            ,   rcdTms   : rcdTms
+        };
+
+        console.log(param);
+
+        Common.ajaxSync("GET", "/sales/order/selRcdTms.do", param, function(result) {
+            if(result.code == "99"){
+                isValid = false;
+                msg = result.message;
+            }
+        });
+
+        if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>", function(){
+        	hideViewPopup($(wrapVal));
+        	fn_getPreOrderList();
+        });
+        return isValid;
+    }
 </script>
 
 <section id="content"><!-- content start -->

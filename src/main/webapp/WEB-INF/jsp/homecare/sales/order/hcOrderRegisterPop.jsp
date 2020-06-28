@@ -9,6 +9,8 @@
     var convToOrdYn  = "${CONV_TO_ORD_YN}";
     var copyChangeYn = "${COPY_CHANGE_YN}";
     var bulkOrderYn  = "${BULK_ORDER_YN}";
+    var preOrdId = '${matPreOrdId}';
+    var rcdTms  = "${preOrderInfo.updDt}";
 
     var docGridID;
     var docDefaultChk = false;
@@ -371,7 +373,7 @@
             } else {
             	if(vCodeId == '3198') { // SOF Form, check default when it is not eKey-in
                     AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
-                    if(docDefaultChk == false) docDefaultChk = true;
+                    //if(docDefaultChk == false) docDefaultChk = true;
                 }
             }
         }
@@ -1292,32 +1294,58 @@
         }
 
         if(convToOrdYn == 'Y') {// if it is eKeyin order
-           if($('#custCntcTelM').val() != null && $('#srvCntcTelM').val() != null ) {
-               var contactNumber = {
-                     contactNumber       : $('#custCntcTelM').val()
-                   , residenceNumber    : $('#custCntcTelR').val()
-                   , officeNumber          : $('#custCntcTelO').val()
-                   , faxNumber             : $('#custCntcTelF').val()
-                   , asContactNumber    : $('#srvCntcTelM').val()
-                   , asResidenceNumber : $('#srvCntcTelR').val()
-                   , asOfficeNumber       : $('#srvCntcTelO').val()
-                   , asFaxNumber          : $('#srvCntcTelF').val()
-               };
+        	Common.ajax("GET", "/sales/order/selRcdTms.do", {preOrdId : preOrdId, rcdTms : rcdTms}, function(result) {
+                if(result.code == "99"){
+                    Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_orderRegPopClose());
+                    return;
+                }else{
+                    if($('#custCntcTelM').val() != null && $('#srvCntcTelM').val() != null ){
 
-               Common.ajax("GET", "/sales/customer/existingHPCodyMobile", contactNumber , function(result) {
-                   if(result != null) {
-                       Common.confirm("<spring:message code='sal.alert.msg.existingHPCodyMobileForSales' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />", function() {
-                           if(docSelCnt <= 0) {
-                               Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
-                           } else {
-                               fn_popOrderDetail();
-                           }
-                       });
-                    } else {
-                        fn_popOrderDetail();
+                        var contactNumber = {
+                                  contactNumber       : $('#custCntcTelM').val()
+                                , residenceNumber    : $('#custCntcTelR').val()
+                                , officeNumber          : $('#custCntcTelO').val()
+                                , faxNumber             : $('#custCntcTelF').val()
+                                , asContactNumber    : $('#srvCntcTelM').val()
+                                , asResidenceNumber : $('#srvCntcTelR').val()
+                                , asOfficeNumber       : $('#srvCntcTelO').val()
+                                , asFaxNumber          : $('#srvCntcTelF').val()
+                        };
+
+                        Common.ajax("GET", "/sales/customer/existingHPCodyMobile", contactNumber , function(result) {
+                            if(result != null){
+                                Common.confirm("<spring:message code='sal.alert.msg.existingHPCodyMobileForSales' arguments = '" + result.fullName + " ; " + result.memCode+"' htmlEscape='false' argumentSeparator=';' />",
+                                function(){
+                                    if(docSelCnt <= 0){
+                                        Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
+                                    }else{
+                                        if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
+                                            console.log('!@#### ordSaveBtn click START 11111');
+                                            $('#txtOldOrderID').val();
+                                            $('#relatedNo').val();
+                                            Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val()}, null, true);
+                                        }
+                                        else{
+                                        Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+                                        }
+                                        }
+                                });
+                            }
+                             else{
+                                 if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
+                                     console.log('!@#### ordSaveBtn click START 11111');
+                                     $('#txtOldOrderID').val();
+                                     $('#relatedNo').val();
+                                     Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val()}, null, true);
+                                 }
+                                 else{
+                                 Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+                                 }
+                             }
+                        });
                     }
-               });
-           }
+                }
+            });
         } else {
             if(!isValid) {
                 Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + msg, fn_hiddenSave);
