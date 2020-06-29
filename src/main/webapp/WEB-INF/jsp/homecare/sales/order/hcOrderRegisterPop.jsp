@@ -1570,8 +1570,8 @@
                 salesHmId                : $('#departMemId').val().trim(),
                 salesOrdIdOld           : $('#txtOldOrderID').val(),
                 salesSmId                 : $('#grpMemId').val().trim(),
-                totAmt                     : parseFloat($('#ordPrice1').val().trim()) + parseFloat($('#ordPrice2').val().trim()),
-                totPv                       : parseFloat($('#ordPv1').val().trim()) + parseFloat($('#ordPv2').val().trim()),
+                totAmt                     : parseFloat(js.String.naNcheck($('#ordPrice1').val().trim())) + js.String.naNcheck(parseFloat($('#ordPrice2').val().trim())),
+                totPv                       : parseFloat(js.String.naNcheck($('#ordPv1').val().trim())) + js.String.naNcheck(parseFloat($('#ordPv2').val().trim())),
                 empChk                   : $('#empChk').val(),
                 exTrade                   : $('#exTrade').val(),
                 ecash                      : vECash,
@@ -1707,7 +1707,7 @@
             docSubmissionVOList    : GridCommon.getEditData(docGridID)
         };
 console.log(orderVO);
-        Common.ajax("POST", "/homecare/sales/order/hcRegisterOrder.do", orderVO, function(result) {
+        /* Common.ajax("POST", "/homecare/sales/order/hcRegisterOrder.do", orderVO, function(result) {
             Common.alert('<spring:message code="sal.alert.msg.ordSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
 
         },  function(jqXHR, textStatus, errorThrown) {
@@ -1717,7 +1717,7 @@ console.log(orderVO);
                 console.log(e);
             }
             alert("Fail : " + jqXHR.responseJSON.message);
-        });
+        }); */
     }
 
     function fn_orderRegPopClose() {
