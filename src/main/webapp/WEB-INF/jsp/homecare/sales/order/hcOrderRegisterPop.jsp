@@ -1707,7 +1707,7 @@
             docSubmissionVOList    : GridCommon.getEditData(docGridID)
         };
 console.log(orderVO);
-        /* Common.ajax("POST", "/homecare/sales/order/hcRegisterOrder.do", orderVO, function(result) {
+        Common.ajax("POST", "/homecare/sales/order/hcRegisterOrder.do", orderVO, function(result) {
             Common.alert('<spring:message code="sal.alert.msg.ordSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
 
         },  function(jqXHR, textStatus, errorThrown) {
@@ -1717,7 +1717,7 @@ console.log(orderVO);
                 console.log(e);
             }
             alert("Fail : " + jqXHR.responseJSON.message);
-        }); */
+        });
     }
 
     function fn_orderRegPopClose() {
