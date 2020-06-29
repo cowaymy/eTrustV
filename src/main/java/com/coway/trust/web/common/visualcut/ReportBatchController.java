@@ -81,6 +81,10 @@ public class ReportBatchController {
   @Autowired
   private ReportBatchService reportBatchService;
 
+
+
+
+
   @RequestMapping(value = "/SQLColorGrid_NoRental-Out-Ins_Excel.do")
   //@Scheduled(cron = "0 0 4 * * *") //Daily (4:00am) // sample :
   // http://fmaker7.tistory.com/163
@@ -1935,6 +1939,97 @@ public class ReportBatchController {
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] AutoDebitDuductionSummary...");
   }
+
+  @RequestMapping(value = "/FilterStockLogHSRuturnUsedFilterData.do")
+  //@Scheduled(cron = "0 0 10 ? * MON")//10:00 a.m. every monday of the month
+ public void FilterStockLogHSRuturnUsedFilterData() {
+   LOGGER.info("[START] FilterStockLogHSRuturnUsedFilterData...");
+   Map<String, Object> params = new HashMap<>();
+   params.put(REPORT_FILE_NAME, "/visualcut/FilterStockLogHSRuturnUsedFilterData.rpt");// visualcut
+                                                                                 // rpt
+                                                                                 // file
+                                                                                 // name.
+   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+   params.put("V_TEMP", "TEMP");// parameter
+   params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+       "Monthly HS and Filter Raw Data" + File.separator + "FilterStockLogHSRuturnUsedFilterData" + CommonUtils.getNowDate() + ".xls");
+
+   this.viewProcedure(null, null, params);
+   LOGGER.info("[END] FilterStockLogHSRuturnUsedFilterData...");
+ }
+
+  @RequestMapping(value = "/FilterStockLogRawDataReq.do")
+  //@Scheduled(cron = "0 0 10 ? * MON")//10:00 a.m. every monday of the month
+ public void FilterStockLogRawDataReq() {
+   LOGGER.info("[START] FilterStockLogRawDataReq...");
+   Map<String, Object> params = new HashMap<>();
+   params.put(REPORT_FILE_NAME, "/visualcut/FilterStockLogRawDataReq.rpt");// visualcut
+                                                                                 // rpt
+                                                                                 // file
+                                                                                 // name.
+   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+   params.put("V_TEMP", "TEMP");// parameter
+   params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+       "Monthly HS and Filter Raw Data" + File.separator + "FilterStockLogRawDataReq" + CommonUtils.getNowDate() + ".xls");
+
+   this.viewProcedure(null, null, params);
+   LOGGER.info("[END] FilterStockLogRawDataReq...");
+ }
+
+  @RequestMapping(value = "/FilterStockNewMemRawDataReq.do")
+  //@Scheduled(cron = "0 0 10 1 * *")//1st of the Month 10:00a.m.
+ public void FilterStockNewMemRawDataReq() {
+   LOGGER.info("[START] FilterStockNewMemRawDataReq...");
+   Map<String, Object> params = new HashMap<>();
+   params.put(REPORT_FILE_NAME, "/visualcut/FilterStockNewMemRawDataReq.rpt");// visualcut
+                                                                                 // rpt
+                                                                                 // file
+                                                                                 // name.
+   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+   params.put("V_TEMP", "TEMP");// parameter
+   params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+       "Monthly HS and Filter Raw Data" + File.separator + "FilterStockNewMemRawDataReq" + CommonUtils.getNowDate() + ".xls");
+
+   this.viewProcedure(null, null, params);
+   LOGGER.info("[END] FilterStockNewMemRawDataReq...");
+ }
+
+
+  @RequestMapping(value = "/HSCompletedFilterRawData.do")
+//@Scheduled(cron = "0 0 10 1 * *")//1st of the Month 10:00a.m.
+ public void HSCompletedFilterRawData() {
+   LOGGER.info("[START] HSCompletedFilterRawData...");
+   Map<String, Object> params = new HashMap<>();
+   params.put(REPORT_FILE_NAME, "/visualcut/HSCompletedFilterRawData.rpt");// visualcut
+                                                                                 // rpt
+                                                                                 // file
+                                                                                 // name.
+   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+   params.put("V_TEMP", "TEMP");// parameter
+   params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+       "Monthly HS and Filter Raw Data" + File.separator + "HSCompletedFilterRawData" + CommonUtils.getNowDate() + ".xls");
+
+   this.viewProcedure(null, null, params);
+   LOGGER.info("[END] HSCompletedFilterRawData...");
+ }
+
+  @RequestMapping(value = "/HSFilterForecastRawData.do")
+  //@Scheduled(cron = "0 0 10 5 * *")//5th of the Month 10:00a.m.
+ public void HSFilterForecastRawData() {
+   LOGGER.info("[START] HSFilterForecastRawData...");
+   Map<String, Object> params = new HashMap<>();
+   params.put(REPORT_FILE_NAME, "/visualcut/HSFilterForecastRawData.rpt");// visualcut
+                                                                                 // rpt
+                                                                                 // file
+                                                                                 // name.
+   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+   params.put("V_TEMP", "TEMP");// parameter
+   params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+       "Monthly HS and Filter Raw Data" + File.separator + "HSFilterForecastRawData" + CommonUtils.getNowDate() + ".xls");
+
+   this.viewProcedure(null, null, params);
+   LOGGER.info("[END] HSFilterForecastRawData...");
+ }
 
   @RequestMapping(value = "/RCM_Monthly.do")
   //@Scheduled(cron = "0 0 7 1 * ?")//Monthly (Day 1) (7:00am)
