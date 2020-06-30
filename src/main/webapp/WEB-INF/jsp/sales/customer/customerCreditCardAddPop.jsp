@@ -88,40 +88,7 @@
                 isValid = false;
                 msg += "* <spring:message code='sal.alert.msg.creditCardNumMustIn16Digits' /><br/>";
             }
-            /*
-            else {
-                if(FormUtil.checkNum($("#cardNo"))) {
-                    isValid = false;
-                    msg += "<spring:message code='sal.alert.msg.invalidCreditCardNum' />";
-                }
-                else {
-                    var isExistCrc = fn_existCrcNo('${custId}', $("#cardNo").val().trim());
 
-                    if(isExistCrc) {
-                        isValid = false;
-                        msg += "<spring:message code='sal.alert.msg.creditCardIsExisting' />";
-                    }
-                    else {
-                        if($("#cmbCreditCardType option:selected").index() > 0) {
-                            if($("#cmbCreditCardType").val() == '111') {
-                                //MASTER
-                                if($('#cardNo').val().trim().substring(0, 1) != "5") {
-                                    isValid = false;
-                                    msg += "<spring:message code='sal.alert.msg.invalidCreditCardNum' />";
-                                }
-                            }
-                            else if($("#cmbCreditCardType").val() == '112') {
-                                //VISA
-                                if($('#cardNo').val().trim().substring(0, 1) != "4") {
-                                    isValid = false;
-                                    msg += "<spring:message code='sal.alert.msg.invalidCreditCardNum' />";
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            */
         }
 
         if($("#cmbCardType option:selected").index() <= 0) {
@@ -175,66 +142,6 @@
                 }
             }
         );
-
-        /*
-        Common.ajax("GET", "/sales/customer/tokenPubKey.do", "", function(result) {;
-            var pub = "-----BEGIN PUBLIC KEY-----" + result.pubKey + "-----END PUBLIC KEY-----";
-            var molpay = MOLPAY.encrypt( pub );
-
-            form = document.getElementById('frmCrCard');
-            molpay.encryptForm(form);
-            var form = $("#frmCrCard").serialize();
-
-            $.ajax({
-                url : "/sales/customer/tokenLogging.do",
-                data : form,
-                success : function(tlResult) {
-                    if(result.tknId != 0) {
-                        $("#tknId").val(tlResult.tknId);
-                        $("#refNo").val(tlResult.refNo);
-                        $("#urlReq").val(tlResult.urlReq);
-                        $("#merchantId").val(tlResult.merchantId);
-                        $("#signature").val(tlResult.signature);
-
-                        Common.ajax("GET", "/sales/customer/tokenizationProcess.do", $("#frmCrCard").serialize(), function(tResult) {
-                            if(tResult.stus == "1" && tResult.crcCheck == "0") {
-                                console.log("order edit new :: " + tResult.token);
-                                $("#custCrcExpr").val($("#_expMonth_").val() + $("#_expYear_").val().substring(2));
-                                $("#custCrcNoMask").val(tResult.crcNo);
-                                $("#token").val(tResult.token);
-
-                                Common.ajax("POST", "/sales/customer/insertCreditCardInfo2.do", $('#frmCrCard').serializeJSON(), function(result) {
-
-                                    Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
-
-                                    if('${callPrgm}' == 'ORD_REGISTER_PAYM_CRC' || '${callPrgm}' == 'PRE_ORD') {
-                                        fn_loadCreditCard2(result.data);
-                                        $('#addCrcCloseBtn').click();
-                                    }
-
-                                }, function(jqXHR, textStatus, errorThrown) {
-                                    try {
-                                         Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save credit card. Please try again later.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                                    }
-                                    catch(e) {
-                                        console.log(e);
-                                    }
-                                }
-                            );
-
-                                $("#addCrcCloseBtn").click();
-                            } else {
-                                Common.alert(tResult.errorDesc);
-                            }
-                        });
-                    } else {
-                        console.log("tknId 0");
-                        Common.alert("Tokenization error!");
-                    }
-                }
-            });
-     });
-        */
     }
 
     function fn_padding(value, length, prefix) {
@@ -286,8 +193,8 @@
                     option.winName = option.winName + new Date();
                 }
 
-                //var URL = "https://services.sandbox.mcpayment.net:8080/newCardForm?apiKey=AKIA5TZ_COWAY_YNAAZ6E&refNo=" + r1.tknRef; // MCP UAT Tokenization URL
-                var URL = "https://services.mcpayment.net:8080/newCardForm?apiKey=3fdgsTZ_COWAY_dsaAZ6E&refNo=" + r1.tknRef;
+                var URL = "https://services.sandbox.mcpayment.net:8080/newCardForm?apiKey=AKIA5TZ_COWAY_YNAAZ6E&refNo=" + r1.tknRef; // MCP UAT Tokenization URL
+                //var URL = "https://services.mcpayment.net:8080/newCardForm?apiKey=3fdgsTZ_COWAY_dsaAZ6E&refNo=" + r1.tknRef;
 
                 tokenPop = window.open(URL, option.winName,
                         "fullscreen=" + option.fullscreen +
@@ -313,6 +220,7 @@
                                 if(r2 != null) {
                                     $("#cardNo").val(r2.data.bin + "******" + r2.data.cclast4);
                                     $("#tknId").val(r2.data.token);
+                                    $("#cardExpr").val(r2.data.expr);
 
                                     fn_cardNoChangeFunc();
                                 }
@@ -390,9 +298,13 @@
                     </tr>
                     <tr>
                         <th scope="row"><spring:message code="sal.text.creditCardNo" /><span class="must">*</span></th>
-                        <td colspan="3">
-                            <input class="" id="cardNo" name="cardNo" type="text" size="36" placeholder="Credit Card No" maxlength="36" style="width:96%" readonly />
+                        <td>
+                            <input class="" id="cardNo" name="cardNo" type="text" size="36" placeholder="Credit Card No" maxlength="36" style="width:90%" readonly />
                             <a href="javascript:fn_tokenPop();" class="search_btn" id="tokenizationBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                        </td>
+                        <th scope="row"><spring:message code="sal.text.expiryDate" /><span class="must">*</span></th>
+                        <td>
+                            <input type="text" title="" id="cardExpr" name="cardExpr" placeholder="Expiry" class="w100p" readonly />
                         </td>
                     </tr>
                     <tr>

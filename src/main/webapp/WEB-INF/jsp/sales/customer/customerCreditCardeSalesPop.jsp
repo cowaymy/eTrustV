@@ -121,8 +121,8 @@
                     option.winName = option.winName + new Date();
                 }
 
-                //var URL = "https://services.sandbox.mcpayment.net:8080/newCardForm?apiKey=AKIA5TZ_COWAY_YNAAZ6E&refNo=" + r1.tknRef; // MCP UAT Tokenization URL
-                var URL = "https://services.mcpayment.net:8080/newCardForm?apiKey=3fdgsTZ_COWAY_dsaAZ6E&refNo=" + r1.tknRef;
+                var URL = "https://services.sandbox.mcpayment.net:8080/newCardForm?apiKey=AKIA5TZ_COWAY_YNAAZ6E&refNo=" + r1.tknRef; // MCP UAT Tokenization URL
+                //var URL = "https://services.mcpayment.net:8080/newCardForm?apiKey=3fdgsTZ_COWAY_dsaAZ6E&refNo=" + r1.tknRef;
 
                 tokenPop = window.open(URL, option.winName,
                         "fullscreen=" + option.fullscreen +
@@ -148,6 +148,7 @@
                                 if(r2 != null) {
                                     $("#_cardNo_").val(r2.data.bin + "******" + r2.data.cclast4);
                                     $("#tknId").val(r2.data.token);
+                                    $("#cardExpr").val(r2.data.expr);
 
                                     fn_selectCreditCardType();
                                 }
@@ -193,6 +194,12 @@
                 <td>
 	                <input class="" id="_cardNo_" name="_cardNo_" type="text" size="36" placeholder="Credit Card No" maxlength="36" style="width:96%" readonly />
 	                <a href="javascript:fn_tokenPop();" class="search_btn" id="tokenizationBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><spring:message code="sal.text.expiryDate" /><span class="must">*</span></th>
+                <td>
+                    <input class="" id="cardExpr" name="cardExpr" type="text" size="36" placeholder="Credit Card Expiry" maxlength="4" readonly />
                 </td>
             </tr>
             <tr>

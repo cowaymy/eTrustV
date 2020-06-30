@@ -807,6 +807,7 @@ public class CustomerController {
         }
         customerCVO.setCardExpiry(cardExpiry);
         */
+        customerCVO.setCardExpiry(form.getCardExpiry());
         customerCVO.setCrcIdOld(0); // 고정
         customerCVO.setSoId(0); // 고정
         customerCVO.setCrcIdcm(0); // 고정

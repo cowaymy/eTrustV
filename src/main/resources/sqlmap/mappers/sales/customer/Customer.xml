@@ -1648,7 +1648,7 @@
     #{cardRem},
     #{crcUpdId},
     SYSDATE,
-    '',
+    #{cardExpiry},
     #{crcIdOld},
     #{soId},
     #{crcIdcm},
@@ -1699,7 +1699,7 @@
     , #{custCrcRem}
     , #{custCrcUpdUserId}
     , SYSDATE
-    , ''
+    , #{custCrcExpr}
     , #{custCrcIdOld}
     , #{soId}
     , #{custCrcIdcm}
@@ -1950,7 +1950,7 @@
     CUST_ORI_CRC_NO = #{custOriCrcNo},
     CUST_CRC_OWNER = #{nameCard},
     CARD_TYPE_ID = #{cardTypeId},
-    CUST_CRC_EXPR = '',
+    CUST_CRC_EXPR = #{cardExpr},
     CUST_CRC_REM = #{custCrcRem},
     CUST_CRC_TOKEN = #{tknId}
     WHERE
@@ -2227,7 +2227,7 @@
     #{custCrcRem},
     #{userId} , <!-- SESSION -->
     SYSDATE,
-    #{custCrcExpr},
+    #{cardExpr},
     0 ,
     0 ,
     0 ,
@@ -2847,7 +2847,8 @@
           BIN,
           CCLAST4,
           TOKEN,
-          STATUS
+          STATUS,
+          EXP_MONTH || SUBSTR(EXP_YEAR, -2) EXPR
       FROM SAL0257D
       WHERE TKN_ID = LTRIM(TO_NUMBER(SUBSTR(#{refId}, 37, 10)))
         AND REF_NO = #{refId}
