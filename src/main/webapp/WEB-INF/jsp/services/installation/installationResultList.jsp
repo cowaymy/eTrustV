@@ -9,6 +9,7 @@
  12/06/2019  ONGHC  1.0.2          Add Column Update By
  17/02/2020  THUNPY 1.0.3          Add Installation Call Log Raw button at Link
  22/05/2020  ONGHC  1.0.4          Add Customer Name to GridView
+ 01/07/2020  ONGHC  1.0.5          Add Installation Job Transfer Failure Listing
  -->
 
 <script type="text/javaScript">
@@ -372,9 +373,14 @@
         true, '');
   }
   function fn_installCallLogRaw() {
-	    Common.popupDiv("/services/installationCallLogRawPop.do", null, null,
-	        true, '');
-	  }
+    Common.popupDiv("/services/installationCallLogRawPop.do", null, null,
+        true, '');
+  }
+
+  function fn_InstJobTransLst() {
+    Common.popupDiv("/services/installationJobTransListPop.do", null, null,
+        true, '');
+  }
 
   function fn_editInstallation() {//active 일때만 열림
 
@@ -663,15 +669,12 @@
       <ul class="btns">
        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li><p class="link_btn">
-          <a href="javascript:fn_addInstallation()" id="addInstallation"><spring:message
-            code='service.btn.AddInstallationResult' /></a>
+          <a href="javascript:fn_addInstallation()" id="addInstallation"><spring:message code='service.btn.AddInstallationResult' /></a>
          </p></li>
        </c:if>
        <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
         <li><p class="link_btn">
-          <a href="javascript:fn_editInstallation()"
-           id="editInstallation"><spring:message
-            code='service.btn.EditInstallationResult' /></a>
+          <a href="javascript:fn_editInstallation()" id="editInstallation"><spring:message code='service.btn.EditInstallationResult' /></a>
          </p></li>
        </c:if>
        <!--  <li><p class="link_btn"><a href="#">Edit Installation Result</a></p></li>
@@ -732,6 +735,9 @@
                    code='service.btn.MobileFailListInst' /></a>
               </p></li>
           </c:if>
+          <li><p class="link_btn type2">
+          <a href="#" onclick="fn_InstJobTransLst()"><spring:message code='service.btn.instJobTrans' /></a>
+         </p></li>
        </ul>
       <p class="hide_btn">
        <a href="#"><img
