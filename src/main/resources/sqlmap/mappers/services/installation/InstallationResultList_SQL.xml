@@ -2964,6 +2964,7 @@
           ELSE 'N'
           END AS SERIAL_CHK
          ,S28.SERIAL_REQUIRE_CHK_YN
+         , A.RCD_TMS
     FROM SAL0046D A ,
          SAL0001D B ,
          SAL0029D C ,
@@ -2996,6 +2997,18 @@
     FROM SAL0046D
     WHERE INSTALL_ENTRY_NO = #{installEntryNo}
   </select>
+
+  <select id="checkRcdTms" parameterType="Map" resultType="int">
+    SELECT COUNT(INSTALL_ENTRY_ID)
+    FROM SAL0046D
+    WHERE INSTALL_ENTRY_NO = #{installEntryNo}
+        AND RCD_TMS = #{rcdTms}
+  </select>
+
+  <update id="updRcdTms" parameterType="Map">
+    UPDATE SAL0046D SET RCD_TMS = TO_CHAR(SYSTIMESTAMP,'ddmmyyyyHH24miss')
+    WHERE INSTALL_ENTRY_NO = #{installEntryNo}
+  </update>
 
   <select id="selectInstallationNoteListing" parameterType="Map"
     resultType="egovMap" statementType="CALLABLE">
@@ -4473,6 +4486,29 @@
                       , UPD_DT = SYSDATE
                       , UPD_USER_ID = #{updator}
     WHERE INSTALL_ENTRY_No = #{installEntryNo}
+  </insert>
+
+  <insert id="insertTransLog" parameterType="Map">
+    <selectKey keyProperty="seq" resultType="Integer" order="BEFORE">
+      SELECT SAL0266D_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO SAL0266D ( SEQ
+                                      , IND
+                                      , KEY_ID
+                                      , FROM_CTID
+                                      , TO_CTID
+                                      , MESSAGE
+                                      , CRT_BY
+                                      , UPD_BY
+    ) VALUES ( #{seq}
+                  , 1
+                  , #{installEntryNo}
+                  , #{prevCt_view}
+                  , #{newCt}
+                  , #{msg}
+                  , #{updator}
+                  , #{updator}
+    )
   </insert>
 
   <!-- INSERT END -->
