@@ -1520,11 +1520,10 @@
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
   </select>
 
-  <select id="getTokenInfo" resultType="egovMap">
+  <select id="getTokenInfo" parameterType="Map" resultType="egovMap">
     SELECT BIN || '******' || CCLAST4 CUST_ORI_CRC_NO,
            TOKEN,
-           EXP_MONTH CUST_CRC_EXPR_MM,
-           SUBSTR(EXP_YEAR, -2) CUST_CRC_EXPR_YYYY
+           EXP_MONTH || SUBSTR(EXP_YEAR, -2) CUST_CRC_EXPR
       FROM SAL0257D
      WHERE TKN_ID = LTRIM(TO_NUMBER(SUBSTR(#{refNo}, 37, 10)))
        AND REF_NO = #{refNo}
