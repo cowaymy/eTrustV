@@ -49,6 +49,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 14/02/2020    ONGHC      1.0.10     - Amend Save_2 to add PSI information
  * 26/02/2020    ONGHC      1.0.11     - Amend Save_2 to add LPM information
  * 02/06/2020    ONGHC      1.0.12     - Amend runInstSp to add condition for SP_LOGISTIC_REQUEST return param
+ * 01/07/2020    ONGHC      1.0.13     - Amend updateAssignCTSerial and updateAssignCT
  *********************************************************************************************/
 
 @Service("installationResultListService")
@@ -2975,73 +2976,99 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   @Override
   public Map<String, Object> updateAssignCT(Map<String, Object> params) {
     List<EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
-    Map<String, Object> resultValue = new HashMap<String, Object>();
-    int rtnValue = 0;
-    int successCnt = 0;
-    int failCnt = 0;
     List<String> successList = new ArrayList<String>();
     List<String> failList = new ArrayList<String>();
 
-    if (updateItemList.size() > 0) {
+    Map<String, Object> resultValue = new HashMap<String, Object>();
 
+    int rtnValue = 0;
+    int successCnt = 0;
+    int failCnt = 0;
+
+    if (updateItemList.size() > 0) {
+      logger.debug("=======================updateAssignCT - START===========================");
       for (int i = 0; i < updateItemList.size(); i++) {
         Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
-        logger.debug("updateMap : {}", updateMap);
 
-        // 180312 select now assigned CT (previous)
-        // Compare View & DB
+        logger.debug(" ITEM (" + i + ")" + updateMap.toString());
+
         String prevCt_db = installationResultListMapper.selectPrevAssignCt(updateMap);
         String prevCt_view = String.valueOf(updateMap.get("ctId"));
         String newCt = String.valueOf(updateMap.get("insstallCtId"));
 
-        // Only do when View & DB matching
-        if (prevCt_db.equals(prevCt_view)) {
+        updateMap.put("updator", params.get("updator"));
+        updateMap.put("newCt", newCt);
+        updateMap.put("prevCt_view", prevCt_view);
 
-          // Can't transfer to myself
+        if (prevCt_db.equals(prevCt_view)) {
           if (newCt.equals(prevCt_view)) {
             failCnt++;
             failList.add(updateMap.get("installEntryNo").toString());
-            logger.debug("Fail Reason >> Transfer to myself : " + newCt + " / " + prevCt_view);
+            logger.debug("FAIL TO TRANSFER DUE TO TRANSFER TO SAME PERSON  : " + newCt + " / " + prevCt_view);
+
+            // INSERT INSTALLATION TRANSFER LOG
+            updateMap.put("msg", "FAIL TO TRANSFER DUE TO TRANSFER TO SAME PERSON");
+            servicesLogisticsPFCService.insertTransLog(updateMap);
           } else {
-            // Transfer 실행 여부 제어 로직 추가 (프로시저 호출)
-            // 프로시저 호출하여 그 결과에 따라 updateAssignCT 실행
-            // Transfer 불가능한 경우, 메시지창을 띄워 알려줌
-            String procResult;
-            ///////////////////////// 물류 호출//////////////////////
-            Map<String, Object> transProc = null;
-            transProc = new HashMap<String, Object>();
-            transProc.put("SVONO", updateMap.get("installEntryNo"));
-            // transProc.put("F_CT", prevCt );
-            transProc.put("F_CT", prevCt_view); // updateMap.get("ctId")
-            transProc.put("T_CT", updateMap.get("insstallCtId"));
-            transProc.put("P_PRGNM", "TRNSFR");
-            transProc.put("P_USER", "9999999999");
+            // CHECK RCD_TMS
+            int count = installationResultListMapper.checkRcdTms(updateMap);
 
-            logger.debug("Transfer 물류 호출 PRAM ===> " + transProc.toString());
-            servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_TRANS(transProc);
-            procResult = transProc.get("p1").toString().substring(0, 3);
-            logger.debug("Transfer 물류 호출 결과 ===> " + procResult);
-            ///////////////////////// 물류 호출 END //////////////////////
+            if (count == 1) { // MATCHED RECORD TIMESTAMP
+              // UPDATE RCD_TMS
+              servicesLogisticsPFCService.updRcdTms(updateMap);
+              // Transfer 실행 여부 제어 로직 추가 (프로시저 호출)
+              // 프로시저 호출하여 그 결과에 따라 updateAssignCT 실행
+              // Transfer 불가능한 경우, 메시지창을 띄워 알려줌
+              String procResult;
+              ///////////////////////// 물류 호출//////////////////////
+              Map<String, Object> transProc = null;
+              transProc = new HashMap<String, Object>();
+              transProc.put("SVONO", updateMap.get("installEntryNo"));
+              // transProc.put("F_CT", prevCt );
+              transProc.put("F_CT", prevCt_view); // updateMap.get("ctId")
+              transProc.put("T_CT", updateMap.get("insstallCtId"));
+              transProc.put("P_PRGNM", "TRNSFR");
+              transProc.put("P_USER", updateMap.get("updator"));
 
-            if (procResult.equals("000")) {
-              rtnValue = installationResultListMapper.updateAssignCT(updateMap);
-              successCnt += rtnValue;
-              successList.add(updateMap.get("installEntryNo").toString());
+              logger.debug("Transfer 물류 호출 PRAM ===> " + transProc.toString());
+              servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_TRANS(transProc);
+              procResult = transProc.get("p1").toString().substring(0, 3);
+              logger.debug("Transfer 물류 호출 결과 ===> " + procResult);
+              ///////////////////////// 물류 호출 END //////////////////////
+
+              if (procResult.equals("000")) {
+                rtnValue = installationResultListMapper.updateAssignCT(updateMap);
+                successCnt += rtnValue;
+                successList.add(updateMap.get("installEntryNo").toString());
+              } else {
+                failCnt++;
+                failList.add(updateMap.get("installEntryNo").toString());
+
+                updateMap.put("msg", "FAIL TO TRANSFER. PLEASE CHECK STOCK RELATED INFORMATION [" + procResult + "]");
+                servicesLogisticsPFCService.insertTransLog(updateMap);
+              }
             } else {
               failCnt++;
               failList.add(updateMap.get("installEntryNo").toString());
+              logger.debug("FAIL TO TRANSFER DUE TO SELECTED ORDER TRANSFER BEFORE : " );
+
+              // INSERT INSTALLATION TRANSFER LOG
+              updateMap.put("msg", "FAIL TO TRANSFER DUE TO INSTALLATION HAD BEEN UPDATED BY OTHER USER");
+              servicesLogisticsPFCService.insertTransLog(updateMap);
             }
           }
-
         } else {
-
           failCnt++;
           failList.add(updateMap.get("installEntryNo").toString());
           logger.debug("Fail Reason >> View & DB CT info not matching : " + prevCt_db + " / " + prevCt_view);
 
+          updateMap.put("newCt", prevCt_view);
+          updateMap.put("prevCt_view", prevCt_db);
+          updateMap.put("msg", "FAIL TO TRANSFER DUE TO SELECTED JOB CT NOT SAME WITH ACTUAL JOB CT");
+          servicesLogisticsPFCService.insertTransLog(updateMap);
         }
-
       }
+      logger.debug("=======================updateAssignCT - END===========================");
     }
     resultValue.put("successCnt", successCnt);
     resultValue.put("successList", successList);
@@ -3361,93 +3388,120 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   @Override
   public Map<String, Object> updateAssignCTSerial(Map<String, Object> params) {
     List<EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
-    Map<String, Object> resultValue = new HashMap<String, Object>();
-    int rtnValue = 0;
-    int successCnt = 0;
-    int failCnt = 0;
     List<String> successList = new ArrayList<String>();
     List<String> failList = new ArrayList<String>();
 
-    if (updateItemList.size() > 0) {
+    Map<String, Object> resultValue = new HashMap<String, Object>();
 
+    int rtnValue = 0;
+    int successCnt = 0;
+    int failCnt = 0;
+
+    if (updateItemList.size() > 0) {
+      logger.debug("=======================updateAssignCTSerial - START===========================");
       for (int i = 0; i < updateItemList.size(); i++) {
         Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
-        logger.debug("updateMap : {}", updateMap);
 
-        // 180312 select now assigned CT (previous)
-        // Compare View & DB
+        logger.debug(" ITEM (" + i + ")" + updateMap.toString());
+
         String prevCt_db = installationResultListMapper.selectPrevAssignCt(updateMap);
         String prevCt_view = String.valueOf(updateMap.get("ctId"));
         String newCt = String.valueOf(updateMap.get("insstallCtId"));
 
-        // Only do when View & DB matching
-        if (prevCt_db.equals(prevCt_view)) {
+        updateMap.put("updator", params.get("updator"));
+        updateMap.put("newCt", newCt);
+        updateMap.put("prevCt_view", prevCt_view);
 
-          // Can't transfer to myself
+        if (prevCt_db.equals(prevCt_view)) { // ACTUAL CT IS MATCHED WITH SELECTED JOB CT
           if (newCt.equals(prevCt_view)) {
             failCnt++;
             failList.add(updateMap.get("installEntryNo").toString());
-            logger.debug("Fail Reason >> Transfer to myself : " + newCt + " / " + prevCt_view);
+            logger.debug("FAIL TO TRANSFER DUE TO TRANSFER TO SAME PERSON  : " + newCt + " / " + prevCt_view);
+
+            // INSERT INSTALLATION TRANSFER LOG
+            updateMap.put("msg", "FAIL TO TRANSFER DUE TO TRANSFER TO SAME PERSON");
+            servicesLogisticsPFCService.insertTransLog(updateMap);
           } else {
-            // Transfer 실행 여부 제어 로직 추가 (프로시저 호출)
-            // 프로시저 호출하여 그 결과에 따라 updateAssignCT 실행
-            // Transfer 불가능한 경우, 메시지창을 띄워 알려줌
-            String procResult;
-            ///////////////////////// 물류 호출//////////////////////
-            Map<String, Object> transProc = null;
-            transProc = new HashMap<String, Object>();
-            transProc.put("SVONO", updateMap.get("installEntryNo"));
-            // transProc.put("F_CT", prevCt );
-            transProc.put("F_CT", prevCt_view); // updateMap.get("ctId")
-            transProc.put("T_CT", updateMap.get("insstallCtId"));
-            transProc.put("P_PRGNM", "TRNSFR");
-            transProc.put("P_SERIAL_NO", updateMap.get("serialNo"));
-            transProc.put("P_USER", "9999999999");
+            // CHECK RCD_TMS
+            int count = installationResultListMapper.checkRcdTms(updateMap);
 
-            logger.debug("Transfer 물류 호출 PRAM ===> " + transProc.toString());
+            if (count == 1) { // MATCHED RECORD TIMESTAMP
+              // UPDATE RCD_TMS
+              servicesLogisticsPFCService.updRcdTms(updateMap);
 
-            if("Y".equals(updateMap.get("serialChk")) && "Y".equals(updateMap.get("serialRequireChkYn"))) {
+              // Transfer 실행 여부 제어 로직 추가 (프로시저 호출)
+              // 프로시저 호출하여 그 결과에 따라 updateAssignCT 실행
+              // Transfer 불가능한 경우, 메시지창을 띄워 알려줌
+              String procResult;
+              ///////////////////////// 물류 호출//////////////////////
+              Map<String, Object> transProc = null;
+              transProc = new HashMap<String, Object>();
+              transProc.put("SVONO", updateMap.get("installEntryNo"));
+              // transProc.put("F_CT", prevCt );
+              transProc.put("F_CT", prevCt_view); // updateMap.get("ctId")
+              transProc.put("T_CT", updateMap.get("insstallCtId"));
+              transProc.put("P_PRGNM", "TRNSFR");
+              transProc.put("P_SERIAL_NO", updateMap.get("serialNo"));
+              transProc.put("P_USER", updateMap.get("updator")); //
 
-            	String delvryGrCmpltYn = installationResultListMapper.selectDelvryGrCmpltYn(updateMap);
+              logger.debug("Transfer 물류 호출 PRAM ===> " + transProc.toString());
 
-            	if("N".equals(delvryGrCmpltYn)) {
-            		throw new ApplicationException(AppConstants.FAIL, "NOT RECEIPT DATA [ INS Number ::" + updateMap.get("installEntryNo") +" ]");
-            	}
+              if("Y".equals(updateMap.get("serialChk")) && "Y".equals(updateMap.get("serialRequireChkYn"))) {
 
-            	servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_TRANS_SERIAL(transProc);
-            } else {
-            	servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_TRANS(transProc);
-            }
+                String delvryGrCmpltYn = installationResultListMapper.selectDelvryGrCmpltYn(updateMap);
 
-            procResult = transProc.get("p1").toString().substring(0, 3);
-            String procResultMsg = transProc.get("p1").toString().substring(4);
+                if("N".equals(delvryGrCmpltYn)) {
+                  throw new ApplicationException(AppConstants.FAIL, "NOT RECEIPT DATA [ INS Number ::" + updateMap.get("installEntryNo") +" ]");
+                }
 
-            logger.debug("Transfer 물류 호출 결과 ===> " + procResult + ":" + procResultMsg);
-            ///////////////////////// 물류 호출 END //////////////////////
+                servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_TRANS_SERIAL(transProc);
+              } else {
+                servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_TRANS(transProc);
+              }
 
-            if (!procResult.equals("000")) {
-            	throw new ApplicationException(AppConstants.FAIL, "ERROR Code::" + procResult + "<br />ERROR Msg::" + procResultMsg + "<br />INS Number :: " + updateMap.get("installEntryNo"));
-            }
+              logger.debug("Transfer 물류 호출 PRAM ===> " + transProc.toString());
 
-            if (procResult.equals("000")) {
-              updateMap.put("updator", params.get("updator"));
-              rtnValue = installationResultListMapper.updateAssignCT(updateMap);
-              successCnt += rtnValue;
-              successList.add(updateMap.get("installEntryNo").toString());
+              procResult = transProc.get("p1").toString().substring(0, 3);
+              String procResultMsg = transProc.get("p1").toString().substring(4);
+
+              logger.debug("Transfer 물류 호출 결과 ===> " + procResult + ":" + procResultMsg);
+              ///////////////////////// 물류 호출 END //////////////////////
+
+              if (!procResult.equals("000")) {
+                throw new ApplicationException(AppConstants.FAIL, "ERROR Code::" + procResult + "<br />ERROR Msg::" + procResultMsg + "<br />INS Number :: " + updateMap.get("installEntryNo"));
+              }
+
+              if (procResult.equals("000")) {
+                updateMap.put("updator", params.get("updator"));
+                rtnValue = installationResultListMapper.updateAssignCT(updateMap);
+                successCnt += rtnValue;
+                successList.add(updateMap.get("installEntryNo").toString());
+              } else {
+                failCnt++;
+                failList.add(updateMap.get("installEntryNo").toString());
+              }
             } else {
               failCnt++;
               failList.add(updateMap.get("installEntryNo").toString());
+              logger.debug("FAIL TO TRANSFER DUE TO SELECTED ORDER TRANSFER BEFORE : " );
+
+              // INSERT INSTALLATION TRANSFER LOG
+              updateMap.put("msg", "FAIL TO TRANSFER DUE TO INSTALLATION HAD BEEN UPDATED BY OTHER USER");
+              servicesLogisticsPFCService.insertTransLog(updateMap);
             }
           }
         } else {
-
           failCnt++;
           failList.add(updateMap.get("installEntryNo").toString());
           logger.debug("Fail Reason >> View & DB CT info not matching : " + prevCt_db + " / " + prevCt_view);
 
+          updateMap.put("newCt", prevCt_view);
+          updateMap.put("prevCt_view", prevCt_db);
+          updateMap.put("msg", "FAIL TO TRANSFER DUE TO SELECTED JOB CT NOT SAME WITH ACTUAL JOB CT");
+          servicesLogisticsPFCService.insertTransLog(updateMap);
         }
-
       }
+      logger.debug("=======================updateAssignCTSerial===========================");
     }
     resultValue.put("successCnt", successCnt);
     resultValue.put("successList", successList);
