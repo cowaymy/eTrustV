@@ -2190,7 +2190,7 @@ logger.debug("param :: " + param.toString());
           sal0028D.put("custCrcNo", sal0257Dtoken.get("custOriCrcNo"));
           sal0028D.put("custOriCrcNo", sal0257Dtoken.get("custOriCrcNo"));
 //          sal0028D.put("custEncryptCrcNo", sal0257Dtoken.get("custOriCrcNo"));
-          sal0028D.put("custEncryptCrcNo", sal0257Dtoken.get("token"));
+          sal0028D.put("custEncryptCrcNo", "");
           sal0028D.put("custCrcOwner", param.getCustCrcOwner());
           if(sal0257Dtoken.get("custOriCrcNo").toString().substring(0, 1) == "4") {
               sal0028D.put("custCrcTypeId", "112");
