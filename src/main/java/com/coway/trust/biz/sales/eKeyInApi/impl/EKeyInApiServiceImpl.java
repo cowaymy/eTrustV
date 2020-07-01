@@ -2182,7 +2182,9 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
           if (null == loginVO || CommonUtils.isEmpty(loginVO.getUserId())) {
             throw new ApplicationException(AppConstants.FAIL, "UserID is null.");
           }
-
+logger.debug("===== sal0028d :: map =====");
+logger.debug("param :: " + sal0257Dtoken.toString());
+logger.debug("param :: " + param.toString());
           Map<String, Object> sal0028D = new HashMap<String, Object>();
           sal0028D.put("custId", param.getCustId());
           sal0028D.put("custCrcNo", sal0257Dtoken.get("custOriCrcNo"));
@@ -2206,7 +2208,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
           sal0028D.put("custCrcCrtUserId", loginVO.getUserId());
           sal0028D.put("cardTypeId", param.getCardTypeId());
           sal0028D.put("custCrcToken", sal0257Dtoken.get("token"));
-
+logger.debug("===== sal0028d :: insert =====");
           saveCnt = eKeyInApiMapper.insertSAL0028D(sal0028D);
           if(saveCnt != 1) {
               throw new ApplicationException(AppConstants.FAIL, "Card Exception.");
