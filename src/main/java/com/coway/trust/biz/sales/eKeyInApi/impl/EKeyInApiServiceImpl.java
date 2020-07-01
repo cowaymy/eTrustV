@@ -2163,8 +2163,10 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       Map<String, Object> params = new HashMap<String, Object>();
       params.put("refNo", param.getRefNo());
 
-      Map<String, Object> sal0257Dtoken = new HashMap<String, Object>();
-      sal0257Dtoken = eKeyInApiMapper.getTokenInfo(params);
+//      Map<String, Object> sal0257Dtoken = new HashMap<String, Object>();
+//      sal0257Dtoken = eKeyInApiMapper.getTokenInfo(params);
+
+      EKeyInApiDto sal0257Dtoken = EKeyInApiDto.create(eKeyInApiMapper.getTokenInfo(params));
 
       if(CommonUtils.isEmpty(sal0257Dtoken)) {
           stus = "21";
@@ -2187,27 +2189,27 @@ logger.debug("param :: " + sal0257Dtoken.toString());
 logger.debug("param :: " + param.toString());
           Map<String, Object> sal0028D = new HashMap<String, Object>();
           sal0028D.put("custId", param.getCustId());
-          sal0028D.put("custCrcNo", sal0257Dtoken.get("custOriCrcNo"));
-          sal0028D.put("custOriCrcNo", sal0257Dtoken.get("custOriCrcNo"));
+          sal0028D.put("custCrcNo", sal0257Dtoken.getCustOriCrcNo());
+          sal0028D.put("custOriCrcNo", sal0257Dtoken.getCustOriCrcNo());
 //          sal0028D.put("custEncryptCrcNo", sal0257Dtoken.get("custOriCrcNo"));
           sal0028D.put("custEncryptCrcNo", "");
           sal0028D.put("custCrcOwner", param.getCustCrcOwner());
-          if(sal0257Dtoken.get("custOriCrcNo").toString().substring(0, 1) == "4") {
+          if(sal0257Dtoken.getCustOriCrcNo().toString().substring(0, 1) == "4") {
               sal0028D.put("custCrcTypeId", "112");
-          } else if(sal0257Dtoken.get("custOriCrcNo").toString().substring(0, 1) == "5") {
+          } else if(sal0257Dtoken.getCustOriCrcNo().toString().substring(0, 1) == "5") {
               sal0028D.put("custCrcTypeId", "111");
           }
           sal0028D.put("custCrcBankId", param.getCustCrcBankId());
           sal0028D.put("custCrcStusId", 1);
           sal0028D.put("custCrcRem", param.getCustCrcRem());
-          sal0028D.put("custCrcExpr", sal0257Dtoken.get("custCrcExprMm").toString() + sal0257Dtoken.get("custCrcExprYyyy").toString());
+          sal0028D.put("custCrcExpr", sal0257Dtoken.getCustCrcExprMM().toString() + sal0257Dtoken.getCustCrcExprYYYY().toString());
           sal0028D.put("custCrcIdOld", 0);
           sal0028D.put("soId", 0);
           sal0028D.put("custCrcIdcm", 0);
           sal0028D.put("custCrcUpdUserId", loginVO.getUserId());
           sal0028D.put("custCrcCrtUserId", loginVO.getUserId());
           sal0028D.put("cardTypeId", param.getCardTypeId());
-          sal0028D.put("custCrcToken", sal0257Dtoken.get("token"));
+          sal0028D.put("custCrcToken", sal0257Dtoken.getToken());
 logger.debug("===== sal0028d :: insert =====");
           saveCnt = eKeyInApiMapper.insertSAL0028D(sal0028D);
           if(saveCnt != 1) {
