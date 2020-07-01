@@ -40,7 +40,8 @@
 			       Project1.REQUESTSTATUSID REQUESTSTATUSID  ,
 			       Project1.NAME1 NAME1  ,
 			       Project1.REQUESTCREATEAT REQUESTCREATEAT  ,
-			       Project1.USER_NAME USER_NAME
+			       Project1.USER_NAME USER_NAME ,
+			       Project1.STATE STATE
 			  FROM ( SELECT Filter1.REQUESTID REQUESTID  ,
 			                Filter1.REQUESTCATEGORY REQUESTCATEGORY  ,
 			                Filter1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
@@ -57,7 +58,8 @@
 			                Filter1.MEM_CODE MEM_CODE  ,
 			                Filter1.RESN_DESC RESN_DESC  ,
 			                Filter1.NAME2 NAME1  ,
-			                Extent8.USER_NAME USER_NAME
+			                Extent8.USER_NAME USER_NAME ,
+			                Filter1.STATE STATE
 			         FROM ( SELECT Extent1.REQST_ID REQUESTID  ,
 					                       Extent1.REQST_CTGRY REQUESTCATEGORY  ,
 					                       Extent1.REQST_CTGRY_SUB REQUESTCATEGORY_SUB  ,
@@ -74,7 +76,8 @@
 					                       Extent3.NAME NAME1  ,
 					                       Extent4.MEM_CODE MEM_CODE  ,
 					                       Extent6.RESN_DESC RESN_DESC  ,
-					                       Extent7.NAME NAME2
+					                       Extent7.NAME NAME2 ,
+					                       Extent9.STATE STATE
 				                FROM MSC0043M Extent1
 				                       LEFT JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.REQST_ORD_ID
 				                       LEFT JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
@@ -82,6 +85,8 @@
 				                       LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent4.MEM_TYPE
 				                       LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = Extent1.REQST_CTGRY
 				                       LEFT JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent1.REQST_STUS_ID
+				                       LEFT JOIN SAL0023D Extent8 ON Extent8.CUST_ID = Extent3.CUST_ID
+                                       LEFT JOIN SYS0064M Extent9 ON Extent9.AREA_ID = Extent8.AREA_ID
 				                WHERE 1=1
                     ]]>
                       <if test="caseCategoryList != null and caseCategoryList != '' ">
@@ -158,7 +163,8 @@
                    Project1.REQUESTSTATUSID REQUESTSTATUSID  ,
                    Project1.NAME1 NAME1  ,
                    Project1.REQUESTCREATEAT REQUESTCREATEAT  ,
-                   Project1.USER_NAME USER_NAME
+                   Project1.USER_NAME USER_NAME,
+                   Project1.STATE STATE
               FROM ( SELECT Filter1.REQUESTID REQUESTID  ,
                             Filter1.REQUESTCATEGORY REQUESTCATEGORY  ,
                             Filter1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
@@ -175,7 +181,8 @@
                             Filter1.MEM_CODE MEM_CODE  ,
                             Filter1.RESN_DESC RESN_DESC  ,
                             Filter1.NAME2 NAME1  ,
-                            Extent8.USER_NAME USER_NAME
+                            Extent8.USER_NAME USER_NAME ,
+                            Filter1.STATE STATE
                      FROM ( SELECT Extent1.REQST_ID REQUESTID  ,
                                            Extent1.REQST_CTGRY REQUESTCATEGORY  ,
                                            Extent1.REQST_CTGRY_SUB REQUESTCATEGORY_SUB  ,
@@ -192,7 +199,8 @@
                                            Extent3.NAME NAME1  ,
                                            Extent4.MEM_CODE MEM_CODE  ,
                                            Extent6.RESN_DESC RESN_DESC  ,
-                                           Extent7.NAME NAME2
+                                           Extent7.NAME NAME2 ,
+                                           Extent9.STATE STATE
                                 FROM MSC0043M Extent1
                                        LEFT JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.REQST_ORD_ID
                                        LEFT JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
@@ -200,6 +208,9 @@
                                        LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent4.MEM_TYPE
                                        LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = Extent1.REQST_CTGRY
                                        LEFT JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent1.REQST_STUS_ID
+                                       LEFT JOIN SAL0023D Extent8 ON Extent8.CUST_ID = Extent3.CUST_ID
+                                       LEFT JOIN SYS0064M Extent9 ON Extent9.AREA_ID = Extent8.AREA_ID
+
                                 WHERE 1=1
                     ]]>
                       <if test="caseCategoryList != null and caseCategoryList != '' ">
@@ -263,9 +274,6 @@
 						AND ROWNUM = 1
 		 </select>
 
-
-
-
 		 <select id="selectGuardianofComplianceInfo" parameterType="Map" resultType="egovMap">
 			SELECT Extent1.REQST_ID REQST_ID,
 			           Extent1.REQST_NO REQST_NO,
@@ -303,11 +311,10 @@
 			  LEFT JOIN SYS0038M Extent8 ON Extent8.STUS_CODE_ID = Extent1.REQST_STUS_ID
 			  LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent1.REQST_CRT_USER_ID
               LEFT JOIN SYS0047M Extent10   ON Extent10.USER_ID = Extent1.REQST_UPD_USER_ID
-
+              
 			 WHERE 1 = 1
 			   AND Extent1.REQST_ID  = #{reqstId}
 		</select>
-
 
 		<select id="selectGuardianRemark" parameterType="Map" resultType="egovMap">
             SELECT Extent1.RESPNS_ID RESPNS_ID  ,
