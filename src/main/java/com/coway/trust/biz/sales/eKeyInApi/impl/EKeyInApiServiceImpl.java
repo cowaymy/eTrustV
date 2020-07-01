@@ -2187,7 +2187,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
           sal0028D.put("custId", param.getCustId());
           sal0028D.put("custCrcNo", sal0257Dtoken.get("custOriCrcNo"));
           sal0028D.put("custOriCrcNo", sal0257Dtoken.get("custOriCrcNo"));
-          sal0028D.put("custEncryptCrcNo", sal0257Dtoken.get("custOriCrcNo"));
+//          sal0028D.put("custEncryptCrcNo", sal0257Dtoken.get("custOriCrcNo"));
+          sal0028D.put("custEncryptCrcNo", sal0257Dtoken.get("token"));
           sal0028D.put("custCrcOwner", param.getCustCrcOwner());
           if(sal0257Dtoken.get("custOriCrcNo").toString().substring(0, 1) == "4") {
               sal0028D.put("custCrcTypeId", "112");
