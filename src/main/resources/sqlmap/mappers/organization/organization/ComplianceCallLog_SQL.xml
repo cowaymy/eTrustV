@@ -15,7 +15,7 @@
 		       Project1.NAME NAME  ,
 		       Project1.C1 C1  ,
 		       Project1.USER_ID USER_ID  ,
-		       Project1.USER_NAME USER_NAME  
+		       Project1.USER_NAME USER_NAME
 		  FROM ( SELECT Project1.CMPLNC_ID CMPLNC_ID  ,
 		                Project1.CMPLNC_NO CMPLNC_NO  ,
 		                Project1.MEM_ID MEM_ID  ,
@@ -27,7 +27,7 @@
 		                Project1.USER_ID USER_ID  ,
 		                Project1.USER_NAME USER_NAME  ,
 		                Project1.C1 C1  ,
-		                ROW_NUMBER() OVER ( ORDER BY Project1.CMPLNC_ID ASC  ) ROW_NUMBER  
+		                ROW_NUMBER() OVER ( ORDER BY Project1.CMPLNC_ID ASC  ) ROW_NUMBER
 		         FROM ( SELECT Extent1.CMPLNC_ID CMPLNC_ID  ,
 		                       Extent1.CMPLNC_NO CMPLNC_NO  ,
 		                       Extent1.MEM_ID MEM_ID  ,
@@ -38,11 +38,11 @@
 		                       Extent5.NAME NAME  ,
 		                       Extent6.USER_ID USER_ID  ,
 		                       Extent6.USER_NAME USER_NAME  ,
-		                       GroupBy1.A2 C1  
+		                       GroupBy1.A2 C1
 		                FROM MSC0005D Extent1
 		                       JOIN ( SELECT Extent2.CMPLNC_ID K1  ,
 		                                     MAX(Extent2.CMPLNC_PERSON_IN_CHRG)  A1  ,
-		                                     MIN(Extent2.CMPLNC_RCIV_DT)  A2  
+		                                     MIN(Extent2.CMPLNC_RCIV_DT)  A2
 		                              FROM MSC0007D Extent2
 		                                GROUP BY Extent2.CMPLNC_ID ) GroupBy1   ON GroupBy1.K1 = Extent1.CMPLNC_ID
 		                       LEFT JOIN ORG0001D Extent3   ON Extent3.MEM_ID = Extent1.MEM_ID
@@ -79,46 +79,46 @@
 			  ORDER BY Project1.CMPLNC_ID ASC
 			   ]]>
 		</select>
-		
+
 		<select id="getMemberDetail" parameterType="Map" resultType="egovMap">
 		<![CDATA[
 		      SELECT Limit1.MEM_ID MEM_ID  ,
 				       Limit1.ORG_CODE ORG_CODE  ,
-				       CASE 
+				       CASE
 				            WHEN ( Limit1.MEMBERID1 IS NOT NULL ) THEN Limit1.MEMBERCODE1
 				       ELSE ''
 				          END C1  ,
-				       CASE 
+				       CASE
 				            WHEN ( Limit1.MEMBERID1 IS NOT NULL ) THEN Limit1.NAME1
 				       ELSE ''
 				          END C2  ,
-				       CASE 
+				       CASE
 				            WHEN ( Limit1.TELMOBILE1 IS NOT NULL ) THEN Limit1.TELMOBILE1
 				       ELSE ''
 				          END C3  ,
 				       Limit1.GRP_CODE GRP_CODE  ,
-				       CASE 
+				       CASE
 				            WHEN ( Limit1.MEMBERID2 IS NOT NULL ) THEN Limit1.MEMBERCODE2
 				       ELSE ''
 				          END C4  ,
-				       CASE 
+				       CASE
 				            WHEN ( Limit1.MEMBERID2 IS NOT NULL ) THEN Limit1.NAME2
 				       ELSE ''
 				          END C5  ,
-				       CASE 
+				       CASE
 				            WHEN ( Limit1.MEMBERID2 IS NOT NULL ) THEN Limit1.TELMOBILE2
 				       ELSE ''
 				          END C6  ,
 				       Limit1.DEPT_CODE DEPT_CODE  ,
-				       CASE 
+				       CASE
 				            WHEN ( Limit1.MEMBERID3 IS NOT NULL ) THEN Limit1.MEMBERCODE3
 				       ELSE ''
 				          END C7  ,
-				       CASE 
+				       CASE
 				            WHEN ( Limit1.MEMBERID3 IS NOT NULL ) THEN Limit1.NAME3
 				       ELSE ''
 				          END C8  ,
-				       CASE 
+				       CASE
 				            WHEN ( Limit1.TELMOBILE3 IS NOT NULL ) THEN Limit1.TELMOBILE3
 				       ELSE ''
 				          END C9  ,
@@ -128,7 +128,7 @@
 				       Limit1.TEL_HUSE TEL_HUSE  ,
 				       Limit1.NRIC NRIC  ,
 				       Limit1.TEL_OFFICE TEL_OFFICE  ,
-				       Limit1.MEM_TYPE MEM_TYPE  
+				       Limit1.MEM_TYPE MEM_TYPE
 				  FROM ( SELECT Extent1.DEPT_CODE DEPT_CODE  ,
 				                Extent1.GRP_CODE GRP_CODE  ,
 				                Extent1.ORG_CODE ORG_CODE  ,
@@ -151,7 +151,7 @@
 				                Extent5.MEM_ID MEMBERID3  ,
 				                Extent5.MEM_CODE MEMBERCODE3  ,
 				                Extent5.NAME NAME3  ,
-				                Extent5.TEL_MOBILE TELMOBILE3  
+				                Extent5.TEL_MOBILE TELMOBILE3
 				         FROM ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
 				                       vMemberOrg.MEM_CODE MEM_CODE  ,
 				                       vMemberOrg.MEM_LVL MEM_LVL  ,
@@ -163,13 +163,13 @@
 				                       vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
 				                       vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
 				                       vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
-				                       vMemberOrg.LVL0_UP_ID LVL0_UP_ID  
+				                       vMemberOrg.LVL0_UP_ID LVL0_UP_ID
 				                FROM ORG1001V vMemberOrg ) Extent1
 				                JOIN ORG0001D Extent2   ON Extent2.MEM_ID = Extent1.MEM_ID
 				                LEFT JOIN ORG0001D Extent3   ON Extent3.MEM_ID = Extent1.LVL1_UP_ID
 				                LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.LVL2_UP_ID
 				                LEFT JOIN ORG0001D Extent5   ON Extent5.MEM_ID = Extent1.LVL3_UP_ID
-				          WHERE  Extent1.MEM_ID = #{memberCode} AND ROWNUM <= 1 ) Limit1 
+				          WHERE  Extent1.MEM_ID = #{memberCode} AND ROWNUM <= 1 ) Limit1
 		         ]]>
 		</select>
 		<insert id="insertCom" parameterType="Map">
@@ -196,7 +196,7 @@
          , #{complianceUpdateBy}
          )
   </insert>
-    <insert id="insertComSub" parameterType="Map">   
+    <insert id="insertComSub" parameterType="Map">
 		  INSERT INTO MSC0007D (
 		    CMPLNC_ITM_ID
 		  , CMPLNC_ID
@@ -219,7 +219,7 @@
 		  , CMPLNC_PERSON_IN_CHRG
 		  , CMPLNC_ATCH_FILE_GRP_ID
 		   )
-		  VALUES ( 
+		  VALUES (
 		    MSC0007D_CMPLNC_ITM_ID_SEQ.NEXTVAL
 		  , #{complianceId}
 		  , #{complianceSOID}
@@ -254,8 +254,8 @@
     </insert>
     <select id="selectCheckOrder" parameterType="Map" resultType="egovMap">
     <![CDATA[
-        SELECT Limit1.CMPLNC_NO CMPLNC_NO  
-		  FROM ( SELECT Extent3.CMPLNC_NO CMPLNC_NO  
+        SELECT Limit1.CMPLNC_NO CMPLNC_NO
+		  FROM ( SELECT Extent3.CMPLNC_NO CMPLNC_NO
 		         FROM SAL0001D Extent1
 		                JOIN MSC0006D Extent2   ON Extent2.CMPLNC_SO_ID = Extent1.SALES_ORD_ID
 		                JOIN MSC0005D Extent3   ON Extent3.CMPLNC_ID = Extent2.CMPLNC_ID
@@ -273,7 +273,7 @@
 			       Limit1.NAME NAME  ,
 			       Limit1.NAME1 NAME1  ,
 			       Limit1.NRIC NRIC  ,
-			       Limit1.MEM_ID MEM_ID  
+			       Limit1.MEM_ID MEM_ID
 			  FROM ( SELECT Extent1.SALES_ORD_ID SALES_ORD_ID  ,
 			                Extent1.SALES_ORD_NO SALES_ORD_NO  ,
 			                Extent1.SALES_DT SALES_DT  ,
@@ -282,7 +282,7 @@
 			                Extent4.CODE_NAME CODE_NAME  ,
 			                Extent5.NAME NAME  ,
 			                Extent6.NAME NAME1  ,
-			                Extent6.NRIC NRIC  
+			                Extent6.NRIC NRIC
 			         FROM SAL0001D Extent1
 			                JOIN SAL0002D Extent2   ON Extent2.SALES_ORD_ID = Extent1.SALES_ORD_ID
 			                JOIN SYS0026M Extent3   ON Extent3.STK_ID = Extent2.ITM_STK_ID
@@ -296,7 +296,7 @@
     <select id="selectComplianceId" parameterType="Map" resultType="Integer">
             SELECT MAX(CMPLNC_ID) FROM MSC0005D
     </select>
-    
+
     <insert id="insertComplianceOrder" parameterType="Map">
     INSERT INTO MSC0006D (
         CMPLNC_ITM_ID
@@ -323,7 +323,7 @@
 				       Extent1.CMPLNC_CRT_DT CMPLNC_CRT_DT  ,
 				       Extent1.CMPLNC_CRT_USER_ID CMPLNC_CRT_USER_ID  ,
 				       Extent1.CMPLNC_UPD_DT CMPLNC_UPD_DT  ,
-				       Extent1.CMPLNC_UPD_USER_ID CMPLNC_UPD_USER_ID  
+				       Extent1.CMPLNC_UPD_USER_ID CMPLNC_UPD_USER_ID
 				  FROM MSC0005D Extent1
 				 WHERE  Extent1.CMPLNC_ID = #{complianceId} AND ROWNUM <= 1
 	   ]]>
@@ -338,7 +338,7 @@
 				       Extent6.NAME NAME  ,
 				       Extent7.NAME NAME1  ,
 				       Extent7.NRIC NRIC  ,
-				       Extent2.MEM_ID MEM_ID  
+				       Extent2.MEM_ID MEM_ID
 				  FROM MSC0006D Extent1
 				         JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.CMPLNC_SO_ID
 				         JOIN SAL0002D Extent3   ON Extent3.SALES_ORD_ID = Extent2.SALES_ORD_ID
@@ -348,7 +348,7 @@
 				         JOIN SAL0029D Extent7   ON Extent7.CUST_ID = Extent2.CUST_ID
 				 WHERE  ( 1 = Extent1.CMPLNC_STUS_ID )
 				          AND ( Extent1.CMPLNC_ID = #{complianceId} )
-            
+
      </select>
      <select id="selectComplianceRemark" parameterType="Map" resultType="egovMap">
             SELECT Extent1.CMPLNC_ID CMPLNC_ID  ,
@@ -359,7 +359,7 @@
 				       Extent1.CMPLNC_REM CMPLNC_REM  ,
 				       Extent5.USER_NAME USER_NAME  ,
 				       TO_CHAR(Extent1.CMPLNC_CRT_DT,'yyyy-MM-dd') C1  ,
-				       CASE 
+				       CASE
 				            WHEN ( 1 = Extent1.CMPLNC_HAS_ATTACH ) THEN 'YES'
 				       ELSE 'NO'
 				          END C2  ,
@@ -371,7 +371,7 @@
 				         LEFT JOIN SYS0032M Extent4   ON Extent4.RESN_ID = Extent1.CMPLNC_FOLW_UP_ID
 				         JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CMPLNC_CRT_USER_ID
 				 WHERE  Extent1.CMPLNC_ID = #{complianceId}
-            
+
      </select>
      <select id="selectOrder" parameterType="Map" resultType="egovMap">
      <![CDATA[
@@ -379,7 +379,7 @@
 				       Extent1.CMPLNC_ID CMPLNC_ID  ,
 				       Extent1.CMPLNC_SO_ID CMPLNC_SO_ID  ,
 				       Extent1.CMPLNC_STUS_ID CMPLNC_STUS_ID  ,
-				       Extent1.CMPLNC_REM CMPLNC_REM  
+				       Extent1.CMPLNC_REM CMPLNC_REM
 				  FROM MSC0006D Extent1
 				 WHERE  ( Extent1.CMPLNC_ID = #{complianceId} )
 				          AND ( Extent1.CMPLNC_SO_ID = #{orderNo} )
@@ -420,7 +420,7 @@
                 , CMPLNC_CRT_USER_ID
                 , CMPLNC_PERSON_IN_CHRG
                  )
-            VALUES ( 
+            VALUES (
 	             MSC0007D_CMPLNC_ITM_ID_SEQ.NEXTVAL
 	            , 0
 	            , #{complianceSOID}
@@ -443,35 +443,45 @@
 	             )
      </insert>
      <select id="selectAttachDownload" parameterType="Map" resultType="egovMap">
-        SELECT * 
+        SELECT *
 		FROM SYS0070M A LEFT JOIN SYS0071D B ON A.ATCH_FILE_ID = B.ATCH_FILE_ID
 		WHERE ATCH_FILE_GRP_ID = #{cmplncAtchFileGrpId}
      </select>
      <select id="selectComplianceSOID" parameterType="Map" resultType="egovMap">
      <![CDATA[
-            SELECT Filter3.CMPLNC_SO_ID CMPLNC_SO_ID  
-					  FROM ( SELECT Extent1.CMPLNC_SO_ID CMPLNC_SO_ID  
+            SELECT Filter3.CMPLNC_SO_ID CMPLNC_SO_ID
+					  FROM ( SELECT Extent1.CMPLNC_SO_ID CMPLNC_SO_ID
 					         FROM MSC0006D Extent1
-					                LEFT JOIN ( SELECT Extent2.CMPLNC_ID CMPLNC_ID  
+					                LEFT JOIN ( SELECT Extent2.CMPLNC_ID CMPLNC_ID
 					                            FROM MSC0006D Extent2
 					                             WHERE  ( Extent2.CMPLNC_SO_ID =#{orderId} )
 					                                      AND ( 1 = Extent2.CMPLNC_STUS_ID ) AND ROWNUM <= 1 ) Project1   ON 1 = 1
-					                LEFT JOIN ( SELECT Extent3.CMPLNC_ID CMPLNC_ID  
+					                LEFT JOIN ( SELECT Extent3.CMPLNC_ID CMPLNC_ID
 					                            FROM MSC0006D Extent3
 					                             WHERE  ( Extent3.CMPLNC_SO_ID = #{orderId} )
 					                                      AND ( 1 = Extent3.CMPLNC_STUS_ID ) AND ROWNUM <= 1 ) Project2   ON 1 = 1
 					          WHERE  ( 1 = Extent1.CMPLNC_STUS_ID )
-					                   AND ( Extent1.CMPLNC_ID = (CASE 
+					                   AND ( Extent1.CMPLNC_ID = (CASE
 					                                                      WHEN ( Project1.CMPLNC_ID IS NULL ) THEN 0
 					                 ELSE Project2.CMPLNC_ID
 					                    END) ) ) Filter3
 					         JOIN ( SELECT Extent4.SALES_ORD_ID SALESORDERID1  ,
-					                       Limit3.CUST_ID CUSTOMERID1  
+					                       Limit3.CUST_ID CUSTOMERID1
 					                FROM SAL0001D Extent4
-					                       JOIN ( SELECT Extent5.CUST_ID CUST_ID  
+					                       JOIN ( SELECT Extent5.CUST_ID CUST_ID
 					                              FROM SAL0001D Extent5
 					                               WHERE  Extent5.SALES_ORD_ID = #{orderId} AND ROWNUM <= 1 ) Limit3   ON Extent4.CUST_ID = Limit3.CUST_ID ) Join3   ON Join3.SALESORDERID1 = Filter3.CMPLNC_SO_ID
 					 WHERE  Filter3.CMPLNC_SO_ID <> #{orderId}
 					 ]]>
+     </select>
+
+      <select id="getPicList" parameterType="Map" resultType="egovMap">
+                    select
+                     PIC_USER_ID STK_ID
+                    ,PIC_NAME C1
+                    ,CASE WHEN IS_AVAL = 1 then 'Available Officer' else 'Unavailable Officer' end CODE_NAME
+                    from SAL0267D
+                    where STUS_ID = '1'
+                    order by IS_AVAL desc , PIC_NAME
      </select>
 </mapper>

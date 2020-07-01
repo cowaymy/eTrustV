@@ -11,161 +11,163 @@ $(document).ready(function(){
     fn_orderDetailCompliance();
     fn_complianceRemarkGrid()
     fn_complianceRemark();
-    
+
        doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : 1388, inputId : 1, separator : '-'}, '', 'comfup', 'S'); //Reason Code
        doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : 1389, inputId : 1, separator : '-'}, '', 'caseCategory', 'S'); //Reason Code
        doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : 1391, inputId : 1, separator : '-'}, '', 'finalAction', 'S'); //Reason Code
        doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : 1390, inputId : 1, separator : '-'}, '', 'docType', 'S'); //Reason Code
-       
+
+       doGetComboAndGroup2('/organization/compliance/getPicList.do', {}, '', 'cmdchangePerson', 'S', 'fn_setOptGrpClass');//product 생성
+
        AUIGrid.bind(myGridID_order, "removeRow", auiRemoveRowHandler);
-       
-       
+
+
        AUIGrid.bind(myGridID_order, "cellClick", function(event) {
     	   orderNo =  AUIGrid.getCellValue(myGridID_order, event.rowIndex, "salesOrdNo");
        });
-       
-       
-       $("#cmbCaseStatus").change(function(){ 
+
+
+       $("#cmbCaseStatus").change(function(){
     	   //class="disabled" disabled="disabled"
     	   if($("#cmbCaseStatus").val() == '36' ){
-    		   
+
     		   $("#comfup").val("");
-    		   
+
     		   $("select[name=action]").removeAttr("disabled");
                $("select[name=action]").removeClass("w100p disabled");
                $("select[name=action]").addClass("w100p");
-               
+
                $("select[name=comfup]").attr('disabled', 'disabled');
                $("select[name=comfup]").addClass("disabled");
-               
+
                $("select[name=caseCategory]").attr('disabled', 'disabled');
                $("select[name=caseCategory]").addClass("disabled");
-               
+
                $("select[name=docType]").attr('disabled', 'disabled');
                $("select[name=docType]").addClass("disabled");
-               
+
                $("input[name=recevCaseDt]").attr('disabled', 'disabled');
                $("input[name=recevCaseDt]").addClass("disabled");
-               
+
                $("input[name=recevCloDt]").removeAttr("disabled");
                $("input[name=recevCloDt]").removeClass("j_date disabled");
                $("input[name=recevCloDt]").addClass("j_date");
-               
+
                $("select[name=finding]").removeAttr("disabled");
                $("select[name=finding]").removeClass("w100p disabled");
                $("select[name=finding]").addClass("w100p");
-               
+
                $("input[name=collAmount]").removeAttr("readonly");
                $("input[name=collAmount]").removeClass("readonly");
                $("input[name=collAmount]").addClass("w100p");
-               
+
                $("select[name=finalAction]").removeAttr("disabled");
                $("select[name=finalAction]").removeClass("w100p disabled");
                $("select[name=finalAction]").addClass("w100p");
-               
-               
+
+
     	   }
-    	   
+
     	   if($("#cmbCaseStatus").val() == '10' ){
                $("#comfup").val("");
-               
+
                $("select[name=comfup]").attr('disabled', 'disabled');
                $("select[name=comfup]").addClass("disabled");
-               
+
                $("select[name=action]").attr('disabled', 'disabled');
                $("select[name=action]").addClass("disabled");
-               
+
                $("input[name=recevCaseDt]").attr('disabled', 'disabled');
                $("input[name=recevCaseDt]").addClass("disabled");
-               
+
                $("input[name=recevCloDt]").attr('disabled', 'disabled');
                $("input[name=recevCloDt]").addClass("disabled");
-               
+
                $("select[name=caseCategory]").attr('disabled', 'disabled');
                $("select[name=caseCategory]").addClass("disabled");
-               
+
                $("select[name=docType]").attr('disabled', 'disabled');
                $("select[name=docType]").addClass("disabled");
-               
+
                $("select[name=finding]").attr('disabled', 'disabled');
                $("select[name=finding]").addClass("disabled");
-               
+
                $("input[name=collAmount]").attr('disabled', 'disabled');
                $("input[name=collAmount]").addClass("disabled");
-               
+
                $("select[name=finalAction]").attr('disabled', 'disabled');
                $("select[name=finalAction]").addClass("disabled");
 
            }
-    	   
+
     	   if($("#cmbCaseStatus").val() == '60' ){
                $("#comfup").val("");
-               
+
                $("select[name=comfup]").removeAttr("disabled");
                $("select[name=comfup]").removeClass("w100p disabled");
                $("select[name=comfup]").addClass("w100p");
-               
+
                $("select[name=action]").removeAttr("disabled");
                $("select[name=action]").removeClass("w100p disabled");
                $("select[name=action]").addClass("w100p");
 
                $("input[name=recevCaseDt]").attr('disabled', 'disabled');
                $("input[name=recevCaseDt]").addClass("disabled");
-               
+
                $("input[name=recevCloDt]").attr('disabled', 'disabled');
                $("input[name=recevCloDt]").addClass("disabled");
-               
+
                $("select[name=caseCategory]").attr('disabled', 'disabled');
                $("select[name=caseCategory]").addClass("disabled");
-               
+
                $("select[name=docType]").attr('disabled', 'disabled');
                $("select[name=docType]").addClass("disabled");
-               
+
                $("select[name=finding]").attr('disabled', 'disabled');
                $("select[name=finding]").addClass("disabled");
-               
+
                $("input[name=collAmount]").attr('disabled', 'disabled');
                $("input[name=collAmount]").addClass("disabled");
-               
+
                $("select[name=finalAction]").attr('disabled', 'disabled');
                $("select[name=finalAction]").addClass("disabled");
 
-           } 
-    	   
+           }
+
     	   if($("#cmbCaseStatus").val() == '87' ){
     		   $("#hiddenBtn").show();
                $("#comfup").val("");
-               
+
                $("select[name=comfup]").attr('disabled', 'disabled');
                $("select[name=comfup]").addClass("disabled");
-               
+
                $("select[name=action]").attr('disabled', 'disabled');
                $("select[name=action]").addClass("disabled");
-               
+
                $("input[name=recevCaseDt]").attr('disabled', 'disabled');
                $("input[name=recevCaseDt]").addClass("disabled");
-               
+
                $("input[name=recevCloDt]").attr('disabled', 'disabled');
                $("input[name=recevCloDt]").addClass("disabled");
-               
+
                $("select[name=caseCategory]").attr('disabled', 'disabled');
                $("select[name=caseCategory]").addClass("disabled");
-               
+
                $("select[name=docType]").attr('disabled', 'disabled');
                $("select[name=docType]").addClass("disabled");
-               
+
                $("select[name=finding]").attr('disabled', 'disabled');
                $("select[name=finding]").addClass("disabled");
-               
+
                $("input[name=collAmount]").attr('disabled', 'disabled');
                $("input[name=collAmount]").addClass("disabled");
-               
+
                $("select[name=finalAction]").attr('disabled', 'disabled');
                $("select[name=finalAction]").addClass("disabled");
 
-           }  
+           }
        });
-       
+
        /* $("#caseCategory").change(function(){
            if($("#caseCategory").val() == '2144' ){
                $("select[name=docType]").removeAttr("disabled");
@@ -176,16 +178,20 @@ $(document).ready(function(){
                  $("select[name=docType]").attr('disabled', 'disabled');
                  $("select[name=docType]").addClass("disabled");
                  //$("select[name=docType]").addClass("w100p");
-            }   
+            }
        }); */
 });
+
+function fn_setOptGrpClass() {
+    $("optgroup").attr("class" , "optgroup_text")
+}
 
 function fn_searchMember(){
     Common.popupDiv("/common/memberPop.do", null, null , true , '');
 }
 
 function fn_loadOrderSalesman(memId, memCode) {
-    
+
     $("#memberCode").val(memCode);
     $("#memberId").val(memId);
     console.log(' memId:'+memId);
@@ -193,7 +199,7 @@ function fn_loadOrderSalesman(memId, memCode) {
     $("#tabDetail").show();
     $(".btnHid").hide();
     $("#reselectBtn").show();
-    
+
     if(memCode.substring())
     fn_searchMemberDetail(memCode);
 }
@@ -255,9 +261,9 @@ function fn_registerOrderGrid() {
               type : "ButtonRenderer",
               labelText : "Remove",
               onclick : function(rowIndex, columnIndex, value, item) {
-            	  
+
             	  orderNo =  AUIGrid.getCellValue(myGridID_order, rowIndex , "salesOrdId");
-            	    
+
             	    AUIGrid.removeRow(myGridID_order, "selectedIndex");
             	    AUIGrid.removeSoftRows(myGridID_order);
 
@@ -269,10 +275,10 @@ function fn_registerOrderGrid() {
             	        }else{
             	            Common.alert("Fail to remove this order, please try agian");
             	        }
-            	        
+
             	    });
                   }
-        }  
+        }
     }, {
         dataField : "",
         headerText : "",
@@ -281,66 +287,66 @@ function fn_registerOrderGrid() {
               type : "ButtonRenderer",
               labelText : "▶",
               onclick : function(rowIndex, columnIndex, value, item) {
-                  
+
                   var salesOrdId = AUIGrid.getCellValue(myGridID_order, rowIndex, "salesOrdId");
-                  Common.popupDiv("/organization/compliance/complianceOrderFullDetailPop.do?salesOrderId="+salesOrdId ,null, null , true , ''); 
+                  Common.popupDiv("/organization/compliance/complianceOrderFullDetailPop.do?salesOrderId="+salesOrdId ,null, null , true , '');
                   }
-        }      
+        }
  }];
      // 그리드 속성 설정
     var gridPros = {
-        
+
              usePaging           : true,         //페이징 사용
-             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-             editable            : false,            
-             fixedColumnCount    : 1,            
-             showStateColumn     : false,             
-             displayTreeOpen     : false,            
-             selectionMode       : "singleRow",  //"multipleCells",            
-             headerHeight        : 30,       
+             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+             editable            : false,
+             fixedColumnCount    : 1,
+             showStateColumn     : false,
+             displayTreeOpen     : false,
+             selectionMode       : "singleRow",  //"multipleCells",
+             headerHeight        : 30,
              useGroupingPanel    : false,        //그룹핑 패널 사용
              skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
              wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
 
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID_order = AUIGrid.create("#grid_wrap_register", columnLayout, gridPros);
 }
 
 var gridPros = {
-    
-    // 페이징 사용       
+
+    // 페이징 사용
     usePaging : true,
-    
+
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
-    
+
     editable : true,
-    
+
     fixedColumnCount : 1,
-    
-    showStateColumn : true, 
-    
+
+    showStateColumn : true,
+
     displayTreeOpen : true,
-    
+
     selectionMode : "singleRow",
-    
+
     headerHeight : 30,
-    
+
     // 그룹핑 패널 사용
     useGroupingPanel : true,
-    
+
     // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
     skipReadonlyColumns : true,
-    
+
     // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
     wrapSelectionMove : true,
-    
+
     // 줄번호 칼럼 렌더러 출력
     showRowNumColumn : false
-    
+
 };
 
 
@@ -385,76 +391,76 @@ function fn_complianceRemarkGrid() {
  }];
      // 그리드 속성 설정
     var gridPros = {
-        
+
              usePaging           : true,         //페이징 사용
-             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-             editable            : false,            
-                     
-             showStateColumn     : false,             
-             displayTreeOpen     : false,            
-             selectionMode       : "singleRow",  //"multipleCells",            
-             headerHeight        : 30,       
+             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+             editable            : false,
+
+             showStateColumn     : false,
+             displayTreeOpen     : false,
+             selectionMode       : "singleRow",  //"multipleCells",
+             headerHeight        : 30,
              useGroupingPanel    : false,        //그룹핑 패널 사용
              skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
              wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력  
-          // 워드랩 적용 
+             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+          // 워드랩 적용
              wordWrap : true
 
 
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID_remark = AUIGrid.create("#grid_wrap_remark", columnLayout, gridPros);
 }
 
 var gridPros = {
-    
-    // 페이징 사용       
+
+    // 페이징 사용
     usePaging : true,
-    
+
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
-    
+
     editable : true,
-    
+
     fixedColumnCount : 1,
-    
-    showStateColumn : true, 
-    
+
+    showStateColumn : true,
+
     displayTreeOpen : true,
-    
+
     selectionMode : "singleRow",
-    
+
     headerHeight : 30,
-    
+
     // 그룹핑 패널 사용
     useGroupingPanel : true,
-    
+
     // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
     skipReadonlyColumns : true,
-    
+
     // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
     wrapSelectionMove : true,
-    
+
     // 줄번호 칼럼 렌더러 출력
     showRowNumColumn : false
-    
+
 };
 
 function fn_orderDetailCompliance(){
 	 Common.ajax("GET", "/organization/compliance/orderDetailComplianceId.do", {complianceId : "${complianceValue.cmplncId }"}, function(result) {
          console.log("성공.");
          AUIGrid.setGridData(myGridID_order, result);
-         
-     }); 
+
+     });
 }
 function fn_complianceRemark(){
     Common.ajax("GET", "/organization/compliance/complianceRemark.do", {complianceId : "${complianceValue.cmplncId }"}, function(result) {
         console.log("성공.");
         AUIGrid.setGridData(myGridID_remark, result);
-        
-    }); 
+
+    });
 }
 
 
@@ -491,7 +497,7 @@ function fn_validation(){
             return false;
         }
 	}
-	
+
 	if($("#changePerson").val() == ""){
 		Common.alert("<spring:message code='sys.common.alert.validation' arguments='person in charge' htmlEscape='false'/>");
         return false;
@@ -512,7 +518,7 @@ function fn_save(){
             }else{
             	Common.alert("Compliance call Log saved Fail.<br />");
             }
-        }); 
+        });
     }
 }
 
@@ -521,8 +527,8 @@ function fn_resize(){
 }
 
 function removeRow(){
-	
-	
+
+
 }
 
 function fn_uploadfile(){
@@ -539,19 +545,19 @@ function fn_clear(){
 
 function fn_newOrder(){
     var success = true;
-    
+
     if($("#orderNo").val() == ""){
         Common.alert("<spring:message code='sys.common.alert.validation' arguments='Order No' htmlEscape='false'/>");
         return false;
     }
-    
+
     if(AUIGrid.getGridData(myGridID_order).length > 0){
-    	
+
     }else{
-		   
+
 		    Common.ajax("GET", "/organization/compliance/getCheckOrderNo.do", {orderNo : $("#orderNo").val()}, function(result) {
 		        console.log("성공.");
-		     
+
 		        if(result != null){
 		            success = false;
 		            Common.alert("Order No already in Case [" + $("#orderNo").val() + "], please use other order no..");
@@ -562,16 +568,16 @@ function fn_newOrder(){
 		               AUIGrid.setGridData(myGridID_order, result);
 		           });
 		       }
-		       
+
 		       if(success){
 		    	   var jsonObj={};
 		    	   jsonObj.all =  AUIGrid.getGridData(myGridID_order);
 		           $("#cmplncOrdId").val("${complianceValue.cmplncId }");
 		           jsonObj.form =  $("#orderSearch").serializeArray(); ;
 		           Common.ajax("POST", "/organization/compliance/saveComplianceOrderDetail.do", jsonObj, function(result) {
-		               
+
 		           });
-		       } 
+		       }
     }
 }
 </script>
@@ -729,14 +735,15 @@ function fn_newOrder(){
 <tr>
     <th scope="row">Person In Charge</th>
     <td colspan="3">
-    <select class="w100p"  id="changePerson" name="changePerson">
+        <select id="cmdchangePerson" name="changePerson" class="w100p"></select>
+  <!--   <select class="w100p"  id="changePerson" name="changePerson">
         <option value="18522">NICKY</option>
         <option value="32807">EUGENE</option>
         <option value="34026">OOI BENG EAN</option>
         <option value="56056">WONG WENG KIT</option>
         <option value="57202">KATE</option>
         <option value="59697">PAVITRA</option>
-    </select>
+    </select> -->
     </td>
     <th scope="row"></th>
     <td colspan="3">
