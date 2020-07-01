@@ -2184,6 +2184,15 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
           if (null == loginVO || CommonUtils.isEmpty(loginVO.getUserId())) {
             throw new ApplicationException(AppConstants.FAIL, "UserID is null.");
           }
+
+          String maskPan = sal0257Dtoken.getCustOriCrcNo();
+          String custCrcTypeId = "0";
+          if(maskPan.startsWith("4")) {
+              custCrcTypeId = "112";
+          } else if(maskPan.startsWith("5")) {
+              custCrcTypeId = "111";
+          }
+
 logger.debug("===== sal0028d :: map =====");
 logger.debug("param :: " + sal0257Dtoken.toString());
 logger.debug("param :: " + param.toString());
@@ -2194,11 +2203,7 @@ logger.debug("param :: " + param.toString());
 //          sal0028D.put("custEncryptCrcNo", sal0257Dtoken.get("custOriCrcNo"));
           sal0028D.put("custEncryptCrcNo", "");
           sal0028D.put("custCrcOwner", param.getCustCrcOwner());
-          if(sal0257Dtoken.getCustOriCrcNo().toString().substring(0, 1) == "4") {
-              sal0028D.put("custCrcTypeId", "112");
-          } else if(sal0257Dtoken.getCustOriCrcNo().toString().substring(0, 1) == "5") {
-              sal0028D.put("custCrcTypeId", "111");
-          }
+          sal0028D.put("custCrcTypeId", custCrcTypeId);
           sal0028D.put("custCrcBankId", param.getCustCrcBankId());
           sal0028D.put("custCrcStusId", 1);
           sal0028D.put("custCrcRem", param.getCustCrcRem());
