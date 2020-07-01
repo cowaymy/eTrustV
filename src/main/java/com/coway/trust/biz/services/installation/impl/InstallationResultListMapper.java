@@ -15,6 +15,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 27/03/2019    ONGHC      1.0.4       - Create insertExchangeResult and updateExchangeEntry_2
  * 29/04/2019    ONGHC      1.0.5       - Create chkExgRsnCde
  * 18/07/2019    ONGHC      1.0.6       - Create updateExchangeEntryCt
+ * 01/07/2020    ONGHC      1.0.7       - Create checkRcdTms, updRcdTms, insertTransLog
  *********************************************************************************************/
 
 @Mapper("installationResultListMapper")
@@ -273,4 +274,11 @@ public interface InstallationResultListMapper {
   String selectDelvryGrCmpltYn(Map<String, Object> params);
 
   void insertSVC0113D(Map<String, Object> params);
+
+  int checkRcdTms(Map<String, Object> params);
+
+  void updRcdTms(Map<String, Object> params);
+
+  void insertTransLog(Map<String, Object> params);
+
 }
