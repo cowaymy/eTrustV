@@ -36,18 +36,19 @@ import com.coway.trust.biz.services.orderCall.OrderCallListService;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /*********************************************************************************************
- * DATE          PIC        VERSION     COMMENT
- *--------------------------------------------------------------------------------------------
- * 31/01/2019    ONGHC      1.0.1       - Restructure File
- * 05/03/2019    ONGHC      1.0.2       - To Show Error Code for SP
- * 06/03/2019    ONGHC      1.0.3       - Create getSalStat
- * 18/03/2019    ONGHC      1.0.4       - Remove runInstSp 3rd Part
- * 22/03/2019    ONGHC      1.0.5       - Add Checking on SP_LOGISTIC_REQUEST's Data
- * 09/04/2019    ONGHC      1.0.6       - Amend installationNotePop to add param
- * 24/04/2019    ONGHC      1.0.7       - Amend insertInstallationResult_2 to accept 741 code
- * 22/07/2019    ONGHC      1.0.8       - Amend insertInstallationResult_2 add installation stock checking
- * 14/02/2020    ONGHC      1.0.9       - Amend editInstallationPopup
- * 17/02/2020    THUNPY     1.0.10     - Add installationCallLogRawPop
+ * DATE            PIC      VERSION    COMMENT
+ * -----------------------------------------------------------------------------
+ * 31/01/2019   ONGHC   1.0.1       - Restructure File
+ * 05/03/2019   ONGHC   1.0.2       - To Show Error Code for SP
+ * 06/03/2019   ONGHC   1.0.3       - Create getSalStat
+ * 18/03/2019   ONGHC   1.0.4       - Remove runInstSp 3rd Part
+ * 22/03/2019   ONGHC   1.0.5       - Add Checking on SP_LOGISTIC_REQUEST's Data
+ * 09/04/2019   ONGHC   1.0.6       - Amend installationNotePop to add param
+ * 24/04/2019   ONGHC   1.0.7       - Amend insertInstallationResult_2 to accept 741 code
+ * 22/07/2019   ONGHC   1.0.8       - Amend insertInstallationResult_2 add installation stock checking
+ * 14/02/2020   ONGHC   1.0.9       - Amend editInstallationPopup
+ * 17/02/2020   THUNPY  1.0.10     - Add installationCallLogRawPop
+ * 01/07/2020   ONGHC   1.0.11     - Amend assignCtOrderListSaveSerial and assignCtOrderListSave
  *********************************************************************************************/
 
 @Controller
@@ -144,8 +145,7 @@ public class InstallationResultListController {
     String[] typeList = request.getParameterValues("type");
     String[] appTypeList = request.getParameterValues("appType");
     /* KV- DSC Code */
-    String[] dscCodeList = request
-        .getParameterValues("dscCode"); /* dscCode- kv testing */
+    String[] dscCodeList = request.getParameterValues("dscCode"); /* dscCode- kv testing */
 
     String product = "";
     if (!"".equals(params.get("product"))) {
@@ -249,7 +249,8 @@ public class InstallationResultListController {
    * @throws Exception
    */
   @RequestMapping(value = "/addInstallationPopup.do")
-  public String addInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+  public String addInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
+      throws Exception {
     /*
      * INSTALL STATUS: 1 ACTIVE 4 COMPLETED 21 FAILED
      */
@@ -680,10 +681,10 @@ public class InstallationResultListController {
 
       logger.debug("LOC. INFO. : {}" + locInfo);
 
-      if(locInfo == null) {
+      if (locInfo == null) {
         message.setMessage("Fail to update result. [CT lack of stock]");
       } else {
-        if(Integer.parseInt(locInfo.get("availQty").toString()) < 1){
+        if (Integer.parseInt(locInfo.get("availQty").toString()) < 1) {
           message.setMessage("Fail to update result. [CT lack of stock]");
         } else {
           EgovMap validMap = installationResultListService.validationInstallationResult(params);
@@ -699,9 +700,11 @@ public class InstallationResultListController {
           if (null != resultValue) {
             HashMap spMap = (HashMap) resultValue.get("spMap");
             logger.debug("spMap :" + spMap.toString());
-            if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"741".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
+            if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))
+                && !"741".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
               resultValue.put("logerr", "Y");
-              message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS1): " + spMap.get("P_RESULT_MSG").toString());
+              message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS1): "
+                  + spMap.get("P_RESULT_MSG").toString());
             } else { // SUCCESS
               if ("000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) {
                 servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
@@ -720,24 +723,31 @@ public class InstallationResultListController {
                       if (null != resultValue) {
                         spMap = (HashMap) resultValue.get("spMap");
                         logger.debug("spMap :" + spMap.toString());
-                        if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG"))) && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
+                        if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))
+                            && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
                           resultValue.put("logerr", "Y");
-                          message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS2): " + spMap.get("P_RESULT_MSG").toString());
+                          message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS2): "
+                              + spMap.get("P_RESULT_MSG").toString());
                         } else {
                           servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 
-                          //resultValue = installationResultListService.runInstSp(params, sessionVO, "3");
+                          // resultValue =
+                          // installationResultListService.runInstSp(params,
+                          // sessionVO, "3");
 
-                          //if (null != resultValue) {
-                            //spMap = (HashMap) resultValue.get("spMap");
-                            //logger.debug("spMap :" + spMap.toString());
-                            //if (!"000".equals(spMap.get("P_RESULT_MSG"))) { // FAIL
-                              //resultValue.put("logerr", "Y");
-                              //message.setMessage("Error Encounter. Please Contact Administrator. Error Code(INS3): " + spMap.get("P_RESULT_MSG").toString());
-                           //} else {
-                             //servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-                            //}
-                          //}
+                          // if (null != resultValue) {
+                          // spMap = (HashMap) resultValue.get("spMap");
+                          // logger.debug("spMap :" + spMap.toString());
+                          // if (!"000".equals(spMap.get("P_RESULT_MSG"))) { //
+                          // FAIL
+                          // resultValue.put("logerr", "Y");
+                          // message.setMessage("Error Encounter. Please Contact
+                          // Administrator. Error Code(INS3): " +
+                          // spMap.get("P_RESULT_MSG").toString());
+                          // } else {
+                          // servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+                          // }
+                          // }
                         }
                       }
                     }
@@ -750,17 +760,21 @@ public class InstallationResultListController {
               message.setCode("1");
               message.setData("Y");
               if (Integer.parseInt(params.get("installStatus").toString()) == 21) {
-                message.setMessage("Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to " + resultValue.get("value") + ". Please proceed to Calllog function.");
+                message
+                    .setMessage("Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to "
+                        + resultValue.get("value") + ". Please proceed to Calllog function.");
               } else {
                 message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
-                message.setMessage("Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to " + resultValue.get("value") + ".");
+                message.setMessage("Installation No. (" + resultValue.get("installEntryNo")
+                    + ") successfully updated to " + resultValue.get("value") + ".");
               }
             }
           }
         }
       }
     } else {
-      message.setMessage("Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+      message.setMessage(
+          "Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
       message.setCode("99");
     }
 
@@ -770,22 +784,24 @@ public class InstallationResultListController {
   @RequestMapping(value = "/assignCTTransferPop.do")
   public String assignCTTransferPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-    logger.debug("in  assignCTTransferPop ");
-    logger.debug("			pram set  log");
-    logger.debug("					" + params.toString());
-    logger.debug("			pram set end  ");
+    logger.debug("=====================assignCTTransferPop=======================");
+    logger.debug(" PARAM :: " + params.toString());
+    logger.debug("=====================assignCTTransferPop=======================");
 
     model.addAttribute("serialList", installationResultListService.selectCtSerialNoList(params));
+    model.addAttribute("rcdTms", CommonUtils.nvl(params.get("rcdTms")));
 
-    // 호출될 화면
     return "services/installation/assignCTTransferPop";
   }
 
   @RequestMapping(value = "/assignCtList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> assignCtList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-    logger.debug("in  assignCtList.....");
-    logger.debug("params : {}", params.toString());
+
+    logger.debug("=====================assignCtList=======================");
+    logger.debug(" PARAM :: " + params.toString());
+    logger.debug("=====================assignCtList=======================");
+
     // BRNCH_ID
     List<EgovMap> list = installationResultListService.assignCtList(params);
 
@@ -796,8 +812,9 @@ public class InstallationResultListController {
   public ResponseEntity<List<EgovMap>> assignCtOrderList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
 
-    logger.debug("in  assignCtOrderList.....");
-    logger.debug("params : {}", params.toString());
+    logger.debug("=====================assignCtOrderList=======================");
+    logger.debug(" PARAM :: ", params.toString());
+    logger.debug("=====================assignCtOrderList=======================");
 
     String vAsNo = (String) params.get("installNo");
     String[] asNo = null;
@@ -816,19 +833,18 @@ public class InstallationResultListController {
   public ResponseEntity<ReturnMessage> assignCtOrderListSave(@RequestBody Map<String, Object> params, Model model,
       HttpServletRequest request, SessionVO sessionVO) {
 
-    logger.debug("in  assignCtOrderListSave ");
-    logger.debug("			pram set  log");
-    logger.debug("					" + params.toString());
-    logger.debug("			pram set end  ");
+    logger.debug("==================assignCtOrderListSave==========================");
+    logger.debug(" PARAM :: " + params.toString());
 
     params.put("updator", sessionVO.getUserId());
     List<EgovMap> update = (List<EgovMap>) params.get("update");
-    logger.debug("asResultM ===>" + update.toString());
+
+    logger.debug(" UPDATE RESULT :: " + update.toString());
 
     Map<String, Object> returnValue = new HashMap<String, Object>();
     returnValue = installationResultListService.updateAssignCT(params);
 
-    logger.debug("rtnValue ===> " + returnValue);
+    logger.debug(" RETURN RESULT :: " + returnValue);
 
     String content = "";
     String successCon = "";
@@ -861,7 +877,7 @@ public class InstallationResultListController {
       }
       failCon = failCon.substring(0, failCon.length() - 2);
       content += failCon;
-      content += "<br/>Can't transfer CT to the Installation order";
+      content += "<br/>Can't transfer CT to the Installation order. <br/>Please refer to job transfer failure report.";
     }
 
     ReturnMessage message = new ReturnMessage();
@@ -877,6 +893,8 @@ public class InstallationResultListController {
      */
 
     logger.debug("message : {}", message);
+    logger.debug("==================assignCtOrderListSave==========================");
+
     return ResponseEntity.ok(message);
 
   }
@@ -1030,7 +1048,8 @@ public class InstallationResultListController {
    * @throws Exception
    */
   @RequestMapping(value = "/editInstallationPopup.do")
-  public String editInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model , SessionVO sessionVO) throws Exception {
+  public String editInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
+      throws Exception {
 
     EgovMap installInfo = installationResultListService.selectInstallInfo(params);
     model.addAttribute("installInfo", installInfo);
@@ -1082,10 +1101,10 @@ public class InstallationResultListController {
     EgovMap isPossibleMonth = installationResultListService.checkMonthInstallDate(params);
 
     if (isPossibleMonth != null) {
-    	message.setCode(AppConstants.SUCCESS);
+      message.setCode(AppConstants.SUCCESS);
     } else {
-    	message.setCode(AppConstants.FAIL);
-    	message.setMessage("Please choose this month only");
+      message.setCode(AppConstants.FAIL);
+      message.setMessage("Please choose this month only");
     }
 
     return ResponseEntity.ok(message);
@@ -1098,7 +1117,8 @@ public class InstallationResultListController {
   }
 
   @RequestMapping(value = "/selRcdTms.do", method = RequestMethod.POST)
-  public ResponseEntity<ReturnMessage> chkRcdTms(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+  public ResponseEntity<ReturnMessage> chkRcdTms(@RequestBody Map<String, Object> params, ModelMap model,
+      SessionVO sessionVO) {
     ReturnMessage message = new ReturnMessage();
 
     logger.debug("==================/selRcdTms.do=======================");
@@ -1111,143 +1131,150 @@ public class InstallationResultListController {
       message.setMessage("OK");
       message.setCode("1");
     } else {
-      message.setMessage("Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+      message.setMessage(
+          "Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
       message.setCode("99");
     }
     return ResponseEntity.ok(message);
   }
 
-  //KR-OHK add serial add
+  // KR-OHK add serial add
   @RequestMapping(value = "/selectCtSerialNoList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectCtSerialNoList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
-	  logger.debug("==================/selectCtSerialNoList.do=======================");
-	  logger.debug("params : {}", params);
-	  logger.debug("==================/selectCtSerialNoList.do=======================");
+    logger.debug("==================/selectCtSerialNoList.do=======================");
+    logger.debug("params : {}", params);
+    logger.debug("==================/selectCtSerialNoList.do=======================");
 
-      List<EgovMap> list = installationResultListService.selectCtSerialNoList(params);
+    List<EgovMap> list = installationResultListService.selectCtSerialNoList(params);
 
-      return ResponseEntity.ok(list);
+    return ResponseEntity.ok(list);
   }
 
-  //KR-OHK add serial add
- @RequestMapping(value = "/addInstallationSerial.do", method = RequestMethod.POST)
- public ResponseEntity<ReturnMessage> addInstallationSerial(@RequestBody Map<String, Object> params,
-     SessionVO sessionVO) throws ParseException {
-   ReturnMessage message = new ReturnMessage();
+  // KR-OHK add serial add
+  @RequestMapping(value = "/addInstallationSerial.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> addInstallationSerial(@RequestBody Map<String, Object> params,
+      SessionVO sessionVO) throws ParseException {
+    ReturnMessage message = new ReturnMessage();
 
-   logger.debug("==========================/addInstallationSerial.do=================================");
-   logger.debug("params : {}", params);
-   logger.debug("==========================/addInstallationSerial.do=================================");
+    logger.debug("==========================/addInstallationSerial.do=================================");
+    logger.debug("params : {}", params);
+    logger.debug("==========================/addInstallationSerial.do=================================");
 
-   message = installationResultListService.insertInstallationResultSerial(params, sessionVO);
+    message = installationResultListService.insertInstallationResultSerial(params, sessionVO);
 
-   return ResponseEntity.ok(message);
- }
+    return ResponseEntity.ok(message);
+  }
 
- //KR-OHK add serial add
- @RequestMapping(value = "/editInstallationSerial.do", method = RequestMethod.POST)
- public ResponseEntity<ReturnMessage> editInstallationSerial(@RequestBody Map<String, Object> params,
-     SessionVO sessionVO) throws ParseException {
-   ReturnMessage message = new ReturnMessage();
-   int resultValue = 0;
+  // KR-OHK add serial add
+  @RequestMapping(value = "/editInstallationSerial.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> editInstallationSerial(@RequestBody Map<String, Object> params,
+      SessionVO sessionVO) throws ParseException {
+    ReturnMessage message = new ReturnMessage();
+    int resultValue = 0;
 
-   int userId = sessionVO.getUserId();
-   params.put("user_id", userId);
-   logger.debug("params : {}", params);
+    int userId = sessionVO.getUserId();
+    params.put("user_id", userId);
+    logger.debug("params : {}", params);
 
-   resultValue = installationResultListService.editInstallationResultSerial(params, sessionVO);
-   if (resultValue > 0) {
-     message.setMessage("Installation result successfully updated.");
-   } else {
-     message.setMessage("Failed to update installation result. Please try again later.");
-   }
+    resultValue = installationResultListService.editInstallationResultSerial(params, sessionVO);
+    if (resultValue > 0) {
+      message.setMessage("Installation result successfully updated.");
+    } else {
+      message.setMessage("Failed to update installation result. Please try again later.");
+    }
 
-   return ResponseEntity.ok(message);
- }
+    return ResponseEntity.ok(message);
+  }
 
- //KR-OHK add serial add
- @RequestMapping(value = "/assignCtOrderListSaveSerial.do", method = RequestMethod.POST)
- public ResponseEntity<ReturnMessage> assignCtOrderListSaveSerial(@RequestBody Map<String, Object> params, Model model,
-     HttpServletRequest request, SessionVO sessionVO) {
+  // KR-OHK add serial add
+  @RequestMapping(value = "/assignCtOrderListSaveSerial.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> assignCtOrderListSaveSerial(@RequestBody Map<String, Object> params, Model model,
+      HttpServletRequest request, SessionVO sessionVO) {
 
-   logger.debug("in  assignCtOrderListSave ");
-   logger.debug("			pram set  log");
-   logger.debug("					" + params.toString());
-   logger.debug("			pram set end  ");
+    logger.debug("==================assignCtOrderListSaveSerial==========================");
+    logger.debug(" PARAM :: " + params.toString());
+    logger.debug("==================assignCtOrderListSaveSerial==========================");
 
-   params.put("updator", sessionVO.getUserId());
-   List<EgovMap> update = (List<EgovMap>) params.get("update");
-   logger.debug("asResultM ===>" + update.toString());
+    params.put("updator", sessionVO.getUserId());
 
-   Map<String, Object> returnValue = new HashMap<String, Object>();
-   returnValue = installationResultListService.updateAssignCTSerial(params);
+    List<EgovMap> update = (List<EgovMap>) params.get("update");
+    logger.debug(" RESULT :: " + update.toString());
 
-   logger.debug("rtnValue ===> " + returnValue);
+    Map<String, Object> returnValue = new HashMap<String, Object>();
+    returnValue = installationResultListService.updateAssignCTSerial(params);
 
-   String content = "";
-   String successCon = "";
-   String failCon = "";
+    logger.debug(" SP RESULT :: " + returnValue);
 
-   int successCnt = 0;
-   int failCnt = 0;
-   successCnt = Integer.parseInt(returnValue.get("successCnt").toString());
-   failCnt = Integer.parseInt(returnValue.get("failCnt").toString());
-   content = "[ Complete Count : " + successCnt + ", Fail Count : " + failCnt + " ]";
+    String content = "";
+    String successCon = "";
+    String failCon = "";
 
-   List<String> successList = new ArrayList<String>();
-   List<String> failList = new ArrayList<String>();
-   successList = (List<String>) returnValue.get("successList");
-   failList = (List<String>) returnValue.get("failList");
+    int successCnt = 0;
+    int failCnt = 0;
 
-   if (successCnt > 0) {
-     content += "<br/>Complete INS Number : ";
-     for (int i = 0; i < successCnt; i++) {
-       successCon += successList.get(i) + ", ";
-     }
-     successCon = successCon.substring(0, successCon.length() - 2);
-     content += successCon;
-   }
+    successCnt = Integer.parseInt(returnValue.get("successCnt").toString());
+    failCnt = Integer.parseInt(returnValue.get("failCnt").toString());
+    content = "[ Total Complete CT's Job Transfer : " + successCnt + ", Total Fail CT's Job Transfer : " + failCnt + " ]";
 
-   if (failCnt > 0) {
-     content += "<br/>Fail INS Number : ";
-     for (int i = 0; i < failCnt; i++) {
-       failCon += failList.get(i) + ", ";
-     }
-     failCon = failCon.substring(0, failCon.length() - 2);
-     content += failCon;
-     content += "<br/>Can't transfer CT to the Installation order";
-   }
+    List<String> successList = new ArrayList<String>();
+    List<String> failList = new ArrayList<String>();
 
-   ReturnMessage message = new ReturnMessage();
-   message.setCode(AppConstants.SUCCESS);
-   message.setData(99);
-   message.setMessage(content);
+    successList = (List<String>) returnValue.get("successList");
+    failList = (List<String>) returnValue.get("failList");
 
-   /*
-    * if (rtnValue == -1) { message.setCode(AppConstants.FAIL);
-    * message.setMessage("Can't transfer CT to the Installation order"); } else
-    * { message.setCode(AppConstants.SUCCESS); message.setData(99);
-    * message.setMessage(""); }
-    */
+    if (successCnt > 0) {
+      content += "<br/>Complete INS Number : ";
+      for (int i = 0; i < successCnt; i++) {
+        successCon += successList.get(i) + ", ";
+      }
+      successCon = successCon.substring(0, successCon.length() - 2);
+      content += successCon;
+    }
 
-   logger.debug("message : {}", message);
-   return ResponseEntity.ok(message);
+    if (failCnt > 0) {
+      content += "<br/>Fail INS Number : ";
+      for (int i = 0; i < failCnt; i++) {
+        failCon += failList.get(i) + ", ";
+      }
+      failCon = failCon.substring(0, failCon.length() - 2);
+      content += failCon;
+      content += "<br/>Can't transfer CT to the Installation order.<br/> Please refer to job transfer failure report.";
+    }
 
- }
+    ReturnMessage message = new ReturnMessage();
+    message.setCode(AppConstants.SUCCESS);
+    message.setData(99);
+    message.setMessage(content);
 
- @RequestMapping(value = "/installationCallLogRawPop.do")
- public String installationCallLogRawPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    /*
+     * if (rtnValue == -1) { message.setCode(AppConstants.FAIL);
+     * message.setMessage("Can't transfer CT to the Installation order"); } else
+     * { message.setCode(AppConstants.SUCCESS); message.setData(99);
+     * message.setMessage(""); }
+     */
 
-   List<EgovMap> instcallLogTyp = orderCallListService.selectCallLogTyp();
-   List<EgovMap> instcallLogSta = orderCallListService.selectCallLogSta();
-   List<EgovMap> instcallLogStatus = installationResultListService.selectInstallStatus();
+    logger.debug("message : {}", message);
+    return ResponseEntity.ok(message);
 
+  }
 
-   model.addAttribute("instcallLogTyp", instcallLogTyp);
-   model.addAttribute("instcallLogSta", instcallLogSta);
-   model.addAttribute("instcallLogStatus", instcallLogStatus);
-   return "services/installation/installationCallLogRawPop";
- }
+  @RequestMapping(value = "/installationCallLogRawPop.do")
+  public String installationCallLogRawPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+    List<EgovMap> instcallLogTyp = orderCallListService.selectCallLogTyp();
+    List<EgovMap> instcallLogSta = orderCallListService.selectCallLogSta();
+    List<EgovMap> instcallLogStatus = installationResultListService.selectInstallStatus();
+
+    model.addAttribute("instcallLogTyp", instcallLogTyp);
+    model.addAttribute("instcallLogSta", instcallLogSta);
+    model.addAttribute("instcallLogStatus", instcallLogStatus);
+    return "services/installation/installationCallLogRawPop";
+  }
+
+  @RequestMapping(value = "/installationJobTransListPop.do")
+  public String installationJobTransListPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    return "services/installation/installationJobTransListPop";
+  }
 
 }
