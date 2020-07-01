@@ -2202,7 +2202,7 @@ logger.debug("param :: " + param.toString());
           sal0028D.put("custCrcBankId", param.getCustCrcBankId());
           sal0028D.put("custCrcStusId", 1);
           sal0028D.put("custCrcRem", param.getCustCrcRem());
-          sal0028D.put("custCrcExpr", sal0257Dtoken.getCustCrcExprMM().toString() + sal0257Dtoken.getCustCrcExprYYYY().toString());
+          sal0028D.put("custCrcExpr", sal0257Dtoken.getCustCrcExpr());
           sal0028D.put("custCrcIdOld", 0);
           sal0028D.put("soId", 0);
           sal0028D.put("custCrcIdcm", 0);
