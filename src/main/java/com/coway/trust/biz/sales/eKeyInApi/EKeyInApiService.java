@@ -89,6 +89,6 @@ public interface EKeyInApiService {
 
   EKeyInApiDto getTokenId(EKeyInApiDto param) throws Exception;
 
-  EKeyInApiDto getTokenNumber(EKeyInApiDto param) throws Exception;
+  EKeyInApiDto saveTokenNumber(EKeyInApiDto param) throws Exception;
 
 }

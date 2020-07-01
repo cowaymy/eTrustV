@@ -831,9 +831,12 @@
     FROM SAL0028D A
     INNER JOIN SYS0013M B ON B.CODE_MASTER_ID = 115
                                       AND A.CARD_TYPE_ID = B.CODE_ID
-    WHERE A.CUST_ID = #{custId}
-        AND A.CUST_CRC_STUS_ID != 8
     ]]>
+    WHERE A.CUST_ID = #{custId}
+        <if test='step == "3" '>
+            AND A.CUST_CRC_ID = TRIM(#{custCrcId})
+        </if>
+        AND A.CUST_CRC_STUS_ID != 8
 
     <if test='custCrcId != null and custCrcId != "" and custCrcId > 0'>
       AND A.CUST_CRC_ID = #{custCrcId}
@@ -1045,7 +1048,7 @@
     UPDATE SAL0257D SET CUST_CRC_ID = #{custCrcId}
                                   , UPD_USER_ID = #{updUserId}
                                   , UPD_DT = SYSDATE
-    WHERE TKN_ID = #{tknId}
+    WHERE TKN_ID = LTRIM(TO_NUMBER(SUBSTR(#{refNo}, 37, 10)))
   </update>
 
   <select id="selectCreditCardIsExisting" parameterType="Map" resultType="Integer">

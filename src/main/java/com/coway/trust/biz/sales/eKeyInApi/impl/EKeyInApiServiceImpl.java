@@ -2152,18 +2152,92 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   }
 
   @Override
-  public EKeyInApiDto getTokenNumber(EKeyInApiDto param) throws Exception {
+  public EKeyInApiDto saveTokenNumber(EKeyInApiDto param) throws Exception {
+      int saveCnt = 0;
+      String crcCheck = "";
+      String stus = "1";
+      String errorDesc = "";
+
+      EKeyInApiDto rtnDto = new EKeyInApiDto();
+
       Map<String, Object> params = new HashMap<String, Object>();
       params.put("refNo", param.getRefNo());
-      EKeyInApiDto tokenInfo = EKeyInApiDto.create(eKeyInApiMapper.getTokenInfo(params));
-      if(CommonUtils.isEmpty(tokenInfo.getToken())) {
-          int stagingUpdate = eKeyInApiMapper.updateStagingF(params);
-          if(stagingUpdate != 1) {
-              throw new ApplicationException(AppConstants.FAIL, "Obtain Card Info Exception");
+
+      Map<String, Object> sal0257Dtoken = new HashMap<String, Object>();
+      sal0257Dtoken = eKeyInApiMapper.getTokenInfo(params);
+
+      if(CommonUtils.isEmpty(sal0257Dtoken)) {
+          stus = "21";
+          saveCnt = eKeyInApiMapper.updateStagingF(params);
+          if(saveCnt != 1) {
+              throw new ApplicationException(AppConstants.FAIL, " Update Card Info Exception");
           }
           throw new ApplicationException(AppConstants.FAIL, "tokenInfo value does not exist.");
+      } else {
+          stus = "0";
+
+          Map<String, Object> loginInfoMap = new HashMap<String, Object>();
+          loginInfoMap.put("_USER_ID", param.getRegId());
+          LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
+          if (null == loginVO || CommonUtils.isEmpty(loginVO.getUserId())) {
+            throw new ApplicationException(AppConstants.FAIL, "UserID is null.");
+          }
+
+          Map<String, Object> sal0028D = new HashMap<String, Object>();
+          sal0028D.put("custId", param.getCustId());
+          sal0028D.put("custCrcNo", sal0257Dtoken.get("custOriCrcNo"));
+          sal0028D.put("custOriCrcNo", sal0257Dtoken.get("custOriCrcNo"));
+          sal0028D.put("custEncryptCrcNo", sal0257Dtoken.get("custOriCrcNo"));
+          sal0028D.put("custCrcOwner", param.getCustCrcOwner());
+          if(sal0257Dtoken.get("custOriCrcNo").toString().substring(0, 1) == "4") {
+              sal0028D.put("custCrcTypeId", "112");
+          } else if(sal0257Dtoken.get("custOriCrcNo").toString().substring(0, 1) == "5") {
+              sal0028D.put("custCrcTypeId", "111");
+          }
+          sal0028D.put("custCrcBankId", param.getCustCrcBankId());
+          sal0028D.put("custCrcStusId", 1);
+          sal0028D.put("custCrcRem", param.getCustCrcRem());
+          sal0028D.put("custCrcExpr", sal0257Dtoken.get("custCrcExprMm").toString() + sal0257Dtoken.get("custCrcExprYyyy").toString());
+          sal0028D.put("custCrcIdOld", 0);
+          sal0028D.put("soId", 0);
+          sal0028D.put("custCrcIdcm", 0);
+          sal0028D.put("custCrcUpdUserId", loginVO.getUserId());
+          sal0028D.put("custCrcCrtUserId", loginVO.getUserId());
+          sal0028D.put("cardTypeId", param.getCardTypeId());
+          sal0028D.put("custCrcToken", sal0257Dtoken.get("token"));
+
+          saveCnt = eKeyInApiMapper.insertSAL0028D(sal0028D);
+          if(saveCnt != 1) {
+              throw new ApplicationException(AppConstants.FAIL, "Card Exception.");
+          }
+
+          if(CommonUtils.isEmpty(sal0028D.get("custCrcId"))) {
+              throw new ApplicationException(AppConstants.FAIL, "custCrcId value does not exist.");
+          }
+
+          params.put("custCrcId", sal0028D.get("custCrcId"));
+          saveCnt = eKeyInApiMapper.updateCustCrcIdSAL0257D(params);
+          if(saveCnt != 1) {
+              throw new ApplicationException(AppConstants.FAIL, "Card Exception.");
+          }
+
+          EKeyInApiForm selectParam = new EKeyInApiForm();
+          selectParam.setCustId(param.getCustId());
+          selectParam.setCustCrcId(Integer.parseInt(sal0028D.get("custCrcId").toString()));
+          List<EgovMap> selectAnotherCard = eKeyInApiMapper.selectAnotherCard(EKeyInApiForm.createMap(selectParam));
+          List<EKeyInApiDto> selectAnotherCardList = selectAnotherCard.stream().map(r -> EKeyInApiDto.create(r))
+              .collect(Collectors.toList());
+          if (selectAnotherCardList.size() != 1) {
+            throw new ApplicationException(AppConstants.FAIL, "Error");
+          }
+          for (EKeyInApiDto data : selectAnotherCardList) {
+            data.setCustOriCrcNo(CommonUtils.getMaskCreditCardNo(StringUtils.trim(data.getCustOriCrcNo()), "*", 4));
+          }
+          rtnDto = selectAnotherCardList.get(0);
+
       }
 
-      return tokenInfo;
+      rtnDto.setStus(stus);
+      return rtnDto;
   }
 }
