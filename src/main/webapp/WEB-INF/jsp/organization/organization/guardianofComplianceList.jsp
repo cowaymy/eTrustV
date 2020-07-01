@@ -31,19 +31,26 @@ function ComplianceListGrid() {
         headerText : "Request Status",
         editable : false,
         width : 150
-    },
-
-    {
+    }, {
         dataField : "requestcreateat",
         headerText : "Request Date",
         editable : false,
         width : 150,
         dataType : "date",
         formatString : "dd/mm/yyyy"
-    },
-    {
+    },{
         dataField : "salesOrdNo",
         headerText : "Order No",
+        editable : false,
+        width : 200
+    }, {
+        dataField : "memCode",
+        headerText : "Person Involved",
+        editable : false,
+        width : 200
+    }, {
+        dataField : "state",
+        headerText : "Installation State",
         editable : false,
         width : 200
     }, {
@@ -98,17 +105,17 @@ function ComplianceListGrid() {
 
 function fn_complianceSearch(){
 	 if("${PAGE_AUTH.funcUserDefine1}" !='Y'){
-	Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceListCodyHP.do", $("#complianceSearch").serialize(), function(result) {
-        console.log("성공.");
+	 Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceListCodyHP.do", $("#complianceSearch").serialize(), function(result) {
+       	console.log("성공.");
         console.log("data : " + JSON.stringify(result));
         AUIGrid.setGridData(myGridID, result);
     });
 }
 	 else{
-		 Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceList.do", $("#complianceSearch").serialize(), function(result) {
-		        console.log("성공.");
-		        console.log("data : " + JSON.stringify(result));
-		        AUIGrid.setGridData(myGridID, result);
+	 Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceList.do", $("#complianceSearch").serialize(), function(result) {
+		console.log("성공.");
+		console.log("data : " + JSON.stringify(result));
+		AUIGrid.setGridData(myGridID, result);
 		    });
 		 }
 	 }
