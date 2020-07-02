@@ -1941,7 +1941,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/FilterStockLogHSRuturnUsedFilterData.do")
-  //@Scheduled(cron = "0 0 10 ? * MON")//10:00 a.m. every monday of the month
+  //@Scheduled(cron = "0 0 5 ? * MON")//5:00 a.m. every monday of the month
  public void FilterStockLogHSRuturnUsedFilterData() {
    LOGGER.info("[START] FilterStockLogHSRuturnUsedFilterData...");
    Map<String, Object> params = new HashMap<>();
@@ -1959,7 +1959,7 @@ public class ReportBatchController {
  }
 
   @RequestMapping(value = "/FilterStockLogRawDataReq.do")
-  //@Scheduled(cron = "0 0 10 ? * MON")//10:00 a.m. every monday of the month
+  //@Scheduled(cron = "0 0 5 ? * MON")//5:00 a.m. every monday of the month
  public void FilterStockLogRawDataReq() {
    LOGGER.info("[START] FilterStockLogRawDataReq...");
    Map<String, Object> params = new HashMap<>();
@@ -1977,7 +1977,7 @@ public class ReportBatchController {
  }
 
   @RequestMapping(value = "/FilterStockNewMemRawDataReq.do")
-  //@Scheduled(cron = "0 0 10 1 * *")//1st of the Month 10:00a.m.
+  //@Scheduled(cron = "0 0 5 1 * *")//1st of the Month 5:00a.m.
  public void FilterStockNewMemRawDataReq() {
    LOGGER.info("[START] FilterStockNewMemRawDataReq...");
    Map<String, Object> params = new HashMap<>();
@@ -1996,7 +1996,7 @@ public class ReportBatchController {
 
 
   @RequestMapping(value = "/HSCompletedFilterRawData.do")
-//@Scheduled(cron = "0 0 10 1 * *")//1st of the Month 10:00a.m.
+//@Scheduled(cron = "0 0 5 1 * *")//1st of the Month 5:00a.m.
  public void HSCompletedFilterRawData() {
    LOGGER.info("[START] HSCompletedFilterRawData...");
    Map<String, Object> params = new HashMap<>();
@@ -2014,7 +2014,7 @@ public class ReportBatchController {
  }
 
   @RequestMapping(value = "/HSFilterForecastRawData.do")
-  //@Scheduled(cron = "0 0 10 5 * *")//5th of the Month 10:00a.m.
+  //@Scheduled(cron = "0 0 5 5 * *")//5th of the Month 5:00a.m.
  public void HSFilterForecastRawData() {
    LOGGER.info("[START] HSFilterForecastRawData...");
    Map<String, Object> params = new HashMap<>();
