@@ -168,6 +168,11 @@
                 return false;
             }
 
+            if (returnSearchUserInfo.userSecQuesAns != $("#securityAnswerTxt").val()) {
+                Common.alert("<spring:message code='sys.login.securityAnswer.Incorrect'/>");
+                return false;
+            }
+
             gVarForm = "#findIpPopUpForm";
         }
 
