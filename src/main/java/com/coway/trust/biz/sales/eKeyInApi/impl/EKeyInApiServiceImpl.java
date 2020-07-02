@@ -2243,13 +2243,13 @@ logger.debug("===== sal0028d :: insert =====");
 //          for (EKeyInApiDto data : selectAnotherCardList) {
 //            data.setCustOriCrcNo(CommonUtils.getMaskCreditCardNo(StringUtils.trim(data.getCustOriCrcNo()), "*", 4));
 //          }
-          rtnDto = selectAnotherCardList.get(0);
+          param = selectAnotherCardList.get(0);
 logger.debug("===== rtnDto =====");
 logger.debug(rtnDto.toString());
 logger.debug("EKeyInApiServiceImpl :: return :: saveTokenNumber");
 //      }
 
-      rtnDto.setStus(stus);
-      return null;
+param.setStus(stus);
+      return param;
   }
 }
