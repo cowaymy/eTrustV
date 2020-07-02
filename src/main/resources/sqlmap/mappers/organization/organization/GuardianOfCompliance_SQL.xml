@@ -85,7 +85,7 @@
 				                       LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent4.MEM_TYPE
 				                       LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = Extent1.REQST_CTGRY
 				                       LEFT JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent1.REQST_STUS_ID
-				                       LEFT JOIN SAL0023D Extent8 ON Extent8.CUST_ID = Extent3.CUST_ID
+				                       LEFT JOIN SAL0023D Extent8 ON Extent8.CUST_ADD_ID = Extent3.CUST_ID
                                        LEFT JOIN SYS0064M Extent9 ON Extent9.AREA_ID = Extent8.AREA_ID
 				                WHERE 1=1
                     ]]>
@@ -208,7 +208,7 @@
                                        LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent4.MEM_TYPE
                                        LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = Extent1.REQST_CTGRY
                                        LEFT JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent1.REQST_STUS_ID
-                                       LEFT JOIN SAL0023D Extent8 ON Extent8.CUST_ID = Extent3.CUST_ID
+                                       LEFT JOIN SAL0023D Extent8 ON Extent8.CUST_ADD_ID = Extent3.CUST_ID
                                        LEFT JOIN SYS0064M Extent9 ON Extent9.AREA_ID = Extent8.AREA_ID
 
                                 WHERE 1=1
@@ -311,7 +311,7 @@
 			  LEFT JOIN SYS0038M Extent8 ON Extent8.STUS_CODE_ID = Extent1.REQST_STUS_ID
 			  LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent1.REQST_CRT_USER_ID
               LEFT JOIN SYS0047M Extent10   ON Extent10.USER_ID = Extent1.REQST_UPD_USER_ID
-              
+
 			 WHERE 1 = 1
 			   AND Extent1.REQST_ID  = #{reqstId}
 		</select>
