@@ -2,21 +2,23 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
-$(document).ready(function() { 
+$(document).ready(function() {
 	ComplianceListGrid();
+
+	doGetComboAndGroup2('/organization/compliance/getPicList.do', {}, '', 'userId', 'S', 'fn_setOptGrpClass');//product 생성
 
 	AUIGrid.bind(myGridID_compliance, "cellDoubleClick", function(event) {
 		var complianceId = AUIGrid.getCellValue(myGridID_compliance, event.rowIndex, "cmplncId");
 		 Common.popupDiv("/organization/compliance/complianceViewPop.do?complianceId="+complianceId,"");
      });
-	
+
 	AUIGrid.bind(myGridID_compliance, "cellClick", function(event) {
        complianceIdValue = AUIGrid.getCellValue(myGridID_compliance, event.rowIndex, "cmplncId");
        memberId = AUIGrid.getCellValue(myGridID_compliance, event.rowIndex, "memId");
        statusId = AUIGrid.getCellValue(myGridID_compliance, event.rowIndex, "cmplncStusId");
         console.log("memberId " + memberId);
      });
-	
+
 });
 var myGridID_compliance;
 function ComplianceListGrid() {
@@ -51,7 +53,7 @@ function ComplianceListGrid() {
         headerText : "Received Date",
         editable : false,
         width : 200,
-        dataType : "date", 
+        dataType : "date",
         formatString : "dd/mm/yyyy"
     }, {
         dataField : "userName",
@@ -97,12 +99,16 @@ function ComplianceListGrid() {
 
 	        // 줄번호 칼럼 렌더러 출력
 	        showRowNumColumn : true
-	        
+
    };
 
 
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID_compliance = AUIGrid.create("#grid_wrap_complianceList", columnLayout, gridPros);
+}
+
+function fn_setOptGrpClass() {
+    $("optgroup").attr("class" , "optgroup_text")
 }
 
 function fn_complianceSearch(){
@@ -131,7 +137,7 @@ $.fn.clearForm = function() {
         }else if (tag === 'select'){
             this.selectedIndex = -1;
         }
-        AUIGrid.clearGridData(myGridID_compliance); 
+        AUIGrid.clearGridData(myGridID_compliance);
     });
 };
 
@@ -166,7 +172,7 @@ function fn_reOpenPop(){
 <h2>Compliance Call Log</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_reOpenPop()"><span class="reOpen"></span>Re-Open</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_maintance()"><span class="Maintence"></span>Maintence</a></p></li> 
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_maintance()"><span class="Maintence"></span>Maintence</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceNew()"><span class="new"></span>New</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceSearch()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#complianceSearch').clearForm();"><span class="clear"></span>Clear</a></p></li>
@@ -223,7 +229,8 @@ function fn_reOpenPop(){
     </td>
     <th scope="row">Person In Charge</th>
     <td>
-    <select class="w100p"  id="userId" name="userId">
+    <select id="userId" name="userId" class="w100p"></select>
+   <!--  <select class="w100p"  id="userId" name="userId">
         <option value="">Person In Charge</option>
         <option value="18522">NICKY</option>
         <option value="32807">EUGENE</option>
@@ -231,7 +238,7 @@ function fn_reOpenPop(){
         <option value="56056">WONG WENG KIT</option>
         <option value="57202">KATE</option>
         <option value="59697">PAVITRA</option>
-    </select>
+    </select> -->
     </td>
 </tr>
 </tbody>
