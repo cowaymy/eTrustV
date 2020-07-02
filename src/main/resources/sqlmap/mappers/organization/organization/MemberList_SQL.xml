@@ -245,7 +245,7 @@
                         FROM ORG0001D Extent4,
                         ORG0005D Extent7
 
-                         WHERE 1=1
+                         WHERE 1=1 AND Extent4.MEM_ID = Extent7.MEM_ID
                          ]]>
                          <if test="memTypeCom != null and memTypeCom != ''">
                            AND  Extent4.MEM_TYPE =  #{memTypeCom}
@@ -285,7 +285,6 @@
                             AND (( Extent4.TEL_HUSE LIKE '%' || #{contact}|| '%' ) OR ( Extent4.TEL_OFFICE LIKE '%' || #{contact}|| '%' ) OR ( Extent4.TEL_MOBILE LIKE '%' || #{contact}|| '%' ) ) AND ( Extent4.TEL_MOBILE = #{contact} OR Extent4.TEL_HUSE = #{contact} OR Extent4.TEL_OFFICE = #{contact})
                          </if>
 
-                         /* By KV - Position */
                          <if test="position != null and position != ' ' ">
                             AND Extent7.MEM_LVL= #{position}
                          </if>
