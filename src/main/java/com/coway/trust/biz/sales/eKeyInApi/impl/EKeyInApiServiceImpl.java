@@ -2168,14 +2168,14 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
       EKeyInApiDto sal0257Dtoken = EKeyInApiDto.create(eKeyInApiMapper.getTokenInfo(params));
 
-      if(CommonUtils.isEmpty(sal0257Dtoken)) {
-          stus = "21";
-          saveCnt = eKeyInApiMapper.updateStagingF(params);
-          if(saveCnt != 1) {
-              throw new ApplicationException(AppConstants.FAIL, " Update Card Info Exception");
-          }
-          throw new ApplicationException(AppConstants.FAIL, "tokenInfo value does not exist.");
-      } else {
+//      if(CommonUtils.isEmpty(sal0257Dtoken)) {
+//          stus = "21";
+//          saveCnt = eKeyInApiMapper.updateStagingF(params);
+//          if(saveCnt != 1) {
+//              throw new ApplicationException(AppConstants.FAIL, " Update Card Info Exception");
+//          }
+//          throw new ApplicationException(AppConstants.FAIL, "tokenInfo value does not exist.");
+//      } else {
           stus = "0";
 
           Map<String, Object> loginInfoMap = new HashMap<String, Object>();
@@ -2240,12 +2240,14 @@ logger.debug("===== sal0028d :: insert =====");
           if (selectAnotherCardList.size() != 1) {
             throw new ApplicationException(AppConstants.FAIL, "Error");
           }
-          for (EKeyInApiDto data : selectAnotherCardList) {
-            data.setCustOriCrcNo(CommonUtils.getMaskCreditCardNo(StringUtils.trim(data.getCustOriCrcNo()), "*", 4));
-          }
+//          for (EKeyInApiDto data : selectAnotherCardList) {
+//            data.setCustOriCrcNo(CommonUtils.getMaskCreditCardNo(StringUtils.trim(data.getCustOriCrcNo()), "*", 4));
+//          }
           rtnDto = selectAnotherCardList.get(0);
-
-      }
+logger.debug("===== rtnDto =====");
+logger.debug(rtnDto.toString());
+logger.debug("EKeyInApiServiceImpl :: return :: saveTokenNumber");
+//      }
 
       rtnDto.setStus(stus);
       return rtnDto;
