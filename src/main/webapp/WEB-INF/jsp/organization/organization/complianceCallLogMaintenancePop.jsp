@@ -675,6 +675,7 @@ function fn_newOrder(){
     <select class="w100p" id="cmbCaseStatus" name="caseStatus">
         <option value="60">In Progress</option>
         <option value="87">Add New Attachment</option>
+        <option value="108">Closed 2</option>
         <option value="36">Closed</option>
         <option value="10">Cancel</option>
     </select>

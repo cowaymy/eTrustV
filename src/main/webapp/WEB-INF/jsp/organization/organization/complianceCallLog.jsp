@@ -204,6 +204,7 @@ function fn_reOpenPop(){
     <select class="multy_select w100p" multiple="multiple" id="caseStatus" name="caseStatus">
         <option value="1" selected>Active</option>
         <option value="60" selected>In Progress</option>
+        <option value="108" selected>Closed 2</option>
         <option value="36">Closed</option>
         <option value="10">Cancel</option>
     </select>
