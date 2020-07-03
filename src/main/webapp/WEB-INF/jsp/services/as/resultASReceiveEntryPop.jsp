@@ -1187,17 +1187,28 @@
 
   function fn_checkASReceiveEntryPop() {
     if('${IND}' == "0") { // REQUEST COME FROM TRUST CENTER
-      var msg = fn_checkASReceiveEntry();
-      if (msg == "") {
-      } else {
-        msg += '<br/> Do you want to proceed ? <br/>';
-        Common.confirm('AS Received Entry Confirmation - [TrustCenter]'
-                        + DEFAULT_DELIMITER
-                        + "<b>" + msg
-                        + "</b>",
-                        "",
-                        fn_selfClose);
-      }
+        Common.ajax("GET", "/services/as/searchOrderNo", { orderNo :  '${orderDetail.basicInfo.ordNo}' },
+                function(result) {
+                  if (result == null) {
+                    Common.alert("<spring:message code='service.msg.asOrdNtFound' />");
+                    $("#Panel_AS").attr("style", "display:none");
+                    return;
+                  }else{
+                        var msg = fn_checkASReceiveEntry();
+                        if (msg == "") {
+                        } else {
+                          msg += '<br/> Do you want to proceed ? <br/>';
+                          Common.confirm('AS Received Entry Confirmation - [TrustCenter]'
+                                          + DEFAULT_DELIMITER
+                                          + "<b>" + msg
+                                          + "</b>",
+                                          "",
+                                          fn_selfClose);
+                        }
+                  }
+
+      });
+
       $("#checkComm").attr("readonly", true);
     }
   }
@@ -1213,28 +1224,28 @@
     }
 
   function fn_checkASInstallationArea(){
-	    var salesOrdNo =  "${orderDetail.basicInfo.ordNo}";
-	    console.log("salesOrdNo : " + salesOrdNo);
-	  Common.ajax("GET", "/services/as/selectCustInstAddJsonInfo.do", {salesOrderNo :  salesOrdNo }, function(custInfo) {
+        var salesOrdNo =  "${orderDetail.basicInfo.ordNo}";
+        console.log("salesOrdNo : " + salesOrdNo);
+      Common.ajax("GET", "/services/as/selectCustInstAddJsonInfo.do", {salesOrderNo :  salesOrdNo }, function(custInfo) {
           if(custInfo != null) {
               if(custInfo.areaId != undefined){
                   console.log("custInfo.areaId : "+custInfo.areaId);
                   if("DM" == custInfo.areaId.substring(0,2)) {
-                	  $("#AsAppInfo").hide();
+                      $("#AsAppInfo").hide();
                       Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />'
                               ,
                               fn_selfClose);
                       return false;
                   }else if (custInfo.area == null && custInfo.area == "" && custInfo.area == undefined){
-                	  $("#AsAppInfo").hide();
-                	  Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />'
+                      $("#AsAppInfo").hide();
+                      Common.alert('<spring:message code="sal.alert.msg.invalidAddr" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.oldAddrNewAddr" />'
                               ,
                               fn_selfClose);
                       return false;
                   }
 
               }else{
-            	  $("#AsAppInfo").hide();
+                  $("#AsAppInfo").hide();
                    Common.alert('<spring:message code="sal.alert.msg.invalidMagicAddress"/>',fn_selfClose);
                   return false;
               }
