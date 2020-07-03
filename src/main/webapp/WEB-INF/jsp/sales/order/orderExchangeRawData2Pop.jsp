@@ -14,11 +14,15 @@
     var whereSQL = "";
 
     if (!($("#dpReqDateFrom").val() == null || $("#dpReqDateFrom").val().length == 0)) {
-      whereSQL += " AND A.SO_EXCHG_CRT_DT >= TO_DATE('" + $("#dpReqDateFrom").val() + "', 'dd/MM/YY') ";
+      var from = $("#dpReqDateFrom").val().substring(6, ($("#dpReqDateFrom").val()).length) + $("#dpReqDateFrom").val().substring(3, 5) + $("#dpReqDateFrom").val().substring(0, 2);
+
+      whereSQL += " AND A.SO_EXCHG_CRT_DT >= TO_DATE('" +from + "', 'YYYYMMDD') ";
     }
 
     if (!($("#dpReqDateTo").val() == null || $("#dpReqDateTo").val().length == 0)) {
-      whereSQL += " AND A.SO_EXCHG_CRT_DT <= TO_DATE('" + $("#dpReqDateTo").val() + "', 'dd/MM/YY') ";
+      var to = $("#dpReqDateTo").val().substring(6, ($("#dpReqDateTo").val()).length) + $("#dpReqDateTo").val().substring(3, 5) + $("#dpReqDateTo").val().substring(0, 2);
+
+      whereSQL += " AND A.SO_EXCHG_CRT_DT<= TO_DATE('" + to + "', 'YYYYMMDD') + 1";
     }
 
     $("#viewType").val("EXCEL");
