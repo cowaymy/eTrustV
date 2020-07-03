@@ -18,7 +18,7 @@
     }
 
     if (!($("#dpReqDateTo").val() == null || $("#dpReqDateTo").val().length == 0)) {
-      whereSQL += " AND A.SO_EXCHG_CRT_DT < TO_DATE('" + $("#dpReqDateTo").val() + "', 'dd/MM/YY') ";
+      whereSQL += " AND A.SO_EXCHG_CRT_DT <= TO_DATE('" + $("#dpReqDateTo").val() + "', 'dd/MM/YY') ";
     }
 
     $("#viewType").val("EXCEL");
