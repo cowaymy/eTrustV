@@ -918,6 +918,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     if (null == param) {
       throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getTknId())) {
       throw new ApplicationException(AppConstants.FAIL, "tknId value does not exist.");
     }
@@ -2228,6 +2229,7 @@ logger.debug("===== sal0028d :: insert =====");
           params.put("custCrcId", sal0028D.get("custCrcId"));
           saveCnt = eKeyInApiMapper.updateCustCrcIdSAL0257D(params);
           if(saveCnt != 1) {
+              logger.error("updateCustCrcIdSAL0257D :: failed");
               throw new ApplicationException(AppConstants.FAIL, "Card Exception.");
           }
 
@@ -2238,6 +2240,7 @@ logger.debug("===== sal0028d :: insert =====");
           List<EKeyInApiDto> selectAnotherCardList = selectAnotherCard.stream().map(r -> EKeyInApiDto.create(r))
               .collect(Collectors.toList());
           if (selectAnotherCardList.size() != 1) {
+            logger.error("selectAnotherCard :: failed");
             throw new ApplicationException(AppConstants.FAIL, "Error");
           }
 //          for (EKeyInApiDto data : selectAnotherCardList) {
