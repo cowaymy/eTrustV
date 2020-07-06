@@ -9,16 +9,42 @@
  -->
 
 <script type="text/javaScript">
+var userType = '${SESSION_INFO.userTypeId}';
 
   $(document)
       .ready(
           function() {
 
-              $("#cmbDeptCode").attr('disabled',true);
+        	  if(userType == 1){
+
+        	   if ("${SESSION_INFO.memberLevel}" == "1") {
+
+        		   $("#wsReportType").val(5); // WS Achievement - GM
+
+        	        } else if ("${SESSION_INFO.memberLevel}" == "2") {
+
+        	        	$("#wsReportType").val(4); // WS Achievement - SM
+
+        	        } else if ("${SESSION_INFO.memberLevel}" == "3") {
+
+        	        	$("#wsReportType").val(3); // WS Achievement - HM
+
+        	        }
+
+        	      doGetCombo('/commission/system/selectHPDeptCodeListByCode', '${memCode}', '', 'cmbDeptCode', 'S', '');
+        	      $("#wsReportType").attr('disabled',true);
+                 // $("#cmbDeptCode").attr('disabled',true);
+        	  }else{
+
+        		  $("#cmbDeptCode").attr('disabled',true);
+
+        	  }
+
 
               $("#wsReportType").change(
                       function() {
-                    	 var reportType =  $("#wsReportType").val();
+
+                    	  var reportType =  $("#wsReportType").val();
 
                     	 if(reportType == 3){
                     		$("#cmbDeptCode").attr('disabled',false);
@@ -32,7 +58,7 @@
                              $("#cmbDeptCode").attr('disabled',false);
                              doGetCombo('/commission/system/selectHPDeptCodeListByLv', 1, '', 'cmbDeptCode', 'S', ''); // GM DEPT CODE
                          }
-                    	 else{
+                    	 else if(reportType == 2 ){
                     		 $("#cmbDeptCode").attr('disabled',true);
 
                     	 }
