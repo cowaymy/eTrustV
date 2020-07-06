@@ -2194,9 +2194,17 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
               custCrcTypeId = "111";
           }
 
-logger.debug("===== sal0028d :: map =====");
-logger.debug("param :: " + sal0257Dtoken.toString());
-logger.debug("param :: " + param.toString());
+logger.debug("===== sal0028d :: mapping :: start =====");
+logger.debug("sal0257Dtoken :: param :: getCustOriCrcNo :: " + sal0257Dtoken.getCustOriCrcNo());
+logger.debug("sal0257Dtoken :: param :: getCustCrcExpr :: " + sal0257Dtoken.getCustCrcExpr());
+logger.debug("sal0257Dtoken :: param :: getToken :: " + sal0257Dtoken.getToken());
+logger.debug("param :: getCustId :: " + param.getCustId());
+logger.debug("param :: getCustCrcOwner :: " + param.getCustCrcOwner());
+logger.debug("param :: getCustCrcBankId :: " + param.getCustCrcBankId());
+logger.debug("param :: getCustCrcRem :: " + param.getCustCrcRem());
+logger.debug("param :: getCardTypeId :: " + param.getCardTypeId());
+logger.debug("===== sal0028d :: mapping :: end =====");
+
           Map<String, Object> sal0028D = new HashMap<String, Object>();
           sal0028D.put("custId", param.getCustId());
           sal0028D.put("custCrcNo", sal0257Dtoken.getCustOriCrcNo());
@@ -2219,10 +2227,12 @@ logger.debug("param :: " + param.toString());
 logger.debug("===== sal0028d :: insert =====");
           saveCnt = eKeyInApiMapper.insertSAL0028D(sal0028D);
           if(saveCnt != 1) {
+              logger.error("===== insertSAL0028D :: fail =====");
               throw new ApplicationException(AppConstants.FAIL, "Card Exception.");
           }
 
           if(CommonUtils.isEmpty(sal0028D.get("custCrcId"))) {
+              logger.error("===== custCrcId value does not exist. =====");
               throw new ApplicationException(AppConstants.FAIL, "custCrcId value does not exist.");
           }
 
@@ -2240,13 +2250,14 @@ logger.debug("===== sal0028d :: insert =====");
           List<EKeyInApiDto> selectAnotherCardList = selectAnotherCard.stream().map(r -> EKeyInApiDto.create(r))
               .collect(Collectors.toList());
           if (selectAnotherCardList.size() != 1) {
-            logger.error("selectAnotherCard :: failed");
             throw new ApplicationException(AppConstants.FAIL, "Error");
           }
-//          for (EKeyInApiDto data : selectAnotherCardList) {
-//            data.setCustOriCrcNo(CommonUtils.getMaskCreditCardNo(StringUtils.trim(data.getCustOriCrcNo()), "*", 4));
-//          }
-          param = selectAnotherCardList.get(0);
+          for (EKeyInApiDto data : selectAnotherCardList) {
+            data.setCustOriCrcNo(CommonUtils.getMaskCreditCardNo(StringUtils.trim(data.getCustOriCrcNo()), "*", 4));
+          }
+          rtnDto = selectAnotherCardList.get(0);
+
+//          param = selectAnotherCardList.get(0);
 logger.debug("===== rtnDto =====");
 logger.debug(rtnDto.toString());
 logger.debug("EKeyInApiServiceImpl :: return :: saveTokenNumber");
