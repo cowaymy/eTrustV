@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.commission.system.CommissionSystemService;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
@@ -48,6 +49,9 @@ public class CommissionSystemController {
 	@Resource(name = "commissionSystemService")
 	private CommissionSystemService commissionSystemService;
 
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
+
 	@Value("${app.name}")
 	private String appName;
 
@@ -57,6 +61,9 @@ public class CommissionSystemController {
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+
+	   @Autowired
+	    private SessionHandler sessionHandler;
 
 	/**
 	 * Call commission rule book management Page
@@ -639,6 +646,18 @@ public class CommissionSystemController {
 	 public String commissionWeeklyMgmtRawPop(@RequestParam Map<String, Object> params, ModelMap model) {
 	   String dt = CommonUtils.getNowDate().substring(0, 6);
        dt = dt.substring(4) + "/" + dt.substring(0, 4);
+       SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+       params.put("userId", sessionVO.getUserId());
+
+       if( sessionVO.getUserTypeId() == 1){
+           EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+           model.put("memType", getUserInfo.get("memType"));
+           model.put("orgCode", getUserInfo.get("orgCode"));
+           model.put("grpCode", getUserInfo.get("grpCode"));
+           model.put("deptCode", getUserInfo.get("deptCode"));
+           model.put("memCode", getUserInfo.get("memCode"));
+           logger.info("memType ##### " + getUserInfo.get("memType"));
+       }
 
        model.addAttribute("searchWSDt", dt);
 
@@ -648,9 +667,19 @@ public class CommissionSystemController {
 	  @RequestMapping(value = "/selectHPDeptCodeListByLv", method = RequestMethod.GET)
 	    public ResponseEntity<List<EgovMap>> selectHPDeptCodeListByLv( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 
+	    logger.debug("selectHPDeptCodeListByLv - params : " + params);
 	        List<EgovMap>selectHMDeptCodeList = commissionSystemService.selectHPDeptCodeListByLv(params);
 
 	        return ResponseEntity.ok(selectHMDeptCodeList);
 	    }
+
+	   @RequestMapping(value = "/selectHPDeptCodeListByCode", method = RequestMethod.GET)
+       public ResponseEntity<List<EgovMap>> selectHPDeptCodeListByCode( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+
+       logger.debug("selectHPDeptCodeListByCode - params : " + params);
+           List<EgovMap>selectHMDeptCodeList = commissionSystemService.selectHPDeptCodeListByCode(params);
+
+           return ResponseEntity.ok(selectHMDeptCodeList);
+       }
 
 }
