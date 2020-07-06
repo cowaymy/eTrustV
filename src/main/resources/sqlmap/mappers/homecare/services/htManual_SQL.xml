@@ -22,7 +22,7 @@
                 from SYS0005M s005m
                         ,SYS0013M s0013m
                 where s005m.type_id = s0013m.code_id
-                   and s005m.type_id in (42)
+                   and s005m.type_id in (42,48)
                  <choose>
                          <when test="memberLevel == 1">
                              AND S005M.CODE IN (
@@ -53,7 +53,7 @@
                 SELECT s005m.brnch_id AS code_id,
                        s005m.code || '-' || s005m.NAME AS code_name
                   FROM sys0005m s005m, sys0013m s0013m
-                 WHERE s005m.type_id = s0013m.code_id AND s005m.type_id IN (42)
+                 WHERE s005m.type_id = s0013m.code_id AND s005m.type_id IN (42,48)
                 UNION ALL
                 SELECT s005m.brnch_id AS code_id,
                        s005m.code || '-' || s005m.NAME AS code_name
@@ -70,7 +70,7 @@
             SELECT S005M.BRNCH_ID AS CODE_ID
                      , S005M.CODE || '-' || S005M.NAME AS CODE_NAME
             FROM SYS0005M S005M
-            WHERE S005M.TYPE_ID IN (42)
+            WHERE S005M.TYPE_ID IN (42,48)
                             UNION ALL
                 SELECT s005m.brnch_id AS code_id,
                        s005m.code || '-' || s005m.NAME AS code_name
