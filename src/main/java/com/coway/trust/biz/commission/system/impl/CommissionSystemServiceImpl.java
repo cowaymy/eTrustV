@@ -695,4 +695,11 @@ public class CommissionSystemServiceImpl extends EgovAbstractServiceImpl impleme
 	        return commissionSystemMapper.selectHPDeptCodeListByLv(params);
 	    }
 
+       @Override
+       public List<EgovMap> selectHPDeptCodeListByCode(Map<String, Object> params) {
+
+           return commissionSystemMapper.selectHPDeptCodeListByCode(params);
+       }
+
+
 }
