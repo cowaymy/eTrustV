@@ -736,14 +736,17 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
   @Override
   public EKeyInApiDto selectNewCardInfo() throws Exception {
-    EKeyInApiDto selectNewCardInfo = EKeyInApiDto.create(eKeyInApiMapper.selectParamVal());
+    /*
+      EKeyInApiDto selectNewCardInfo = EKeyInApiDto.create(eKeyInApiMapper.selectParamVal());
 
     if (CommonUtils.isEmpty(selectNewCardInfo.getParamVal())) {
       throw new ApplicationException(AppConstants.FAIL, "paramVal value does not exist.");
     }
     selectNewCardInfo
-        .setParamVal("-----BEGIN PUBLIC KEY-----" + selectNewCardInfo.getParamVal() + "-----END PUBLIC KEY-----");
+        .setParamVal("-----BEGIN PUBLIC KEY-----" + selectNewCardInfo.getParamVal() + "-----END PUBLIC KEY-----");*/
 
+
+    EKeyInApiDto selectNewCardInfo = new EKeyInApiDto();
     List<EgovMap> selectBankList = eKeyInApiMapper.selectBankList();
     selectNewCardInfo
         .setBankList(selectBankList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList()));
@@ -2263,7 +2266,9 @@ logger.debug(rtnDto.toString());
 logger.debug("EKeyInApiServiceImpl :: return :: saveTokenNumber");
 //      }
 
-param.setStus(stus);
-      return param;
+rtnDto.setStus(stus);
+rtnDto.setCrcCheck(crcCheck);
+rtnDto.setErrorDesc(errorDesc);
+      return rtnDto;
   }
 }
