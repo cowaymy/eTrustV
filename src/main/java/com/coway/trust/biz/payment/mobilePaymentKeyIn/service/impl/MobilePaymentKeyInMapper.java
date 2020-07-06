@@ -23,11 +23,13 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("mobilePaymentKeyInMapper")
 public interface MobilePaymentKeyInMapper {
 
-	List<EgovMap> selectMobilePaymentKeyInList(Map<String, Object> params);
+  List<EgovMap> selectMobilePaymentKeyInList(Map<String, Object> params);
 
-	int updateMobilePaymentKeyInReject(Map<String, Object> params);
+  int updateMobilePaymentKeyInReject(Map<String, Object> params);
 
-	int updateMobilePaymentKeyInUpdate(Map<String, Object> params);
+  int updateMobilePaymentKeyInUpdate(Map<String, Object> params);
 
-	EgovMap selectBankStatementInfo(Map<String, Object> params);
+  EgovMap selectBankStatementInfo(Map<String, Object> params);
+
+  EgovMap selectMemDetails(String userId);
 }
