@@ -16,6 +16,8 @@
  09/06/2020  FANNIE  1.0.4             Amend to hide the order ledger, update and reject with authorization
  17/06/2020  ONGHC  1.0.5             Amend Credit Card No. Auto Tab Feature.
  19/06/2020  FARUQ   1.0.6             Amend Branch Code to Multiple Selection
+ 06/07/2020  ONGHC  1.0.7             Add Extra Search Criteria for Organization, Group and Department Code
+
  -->
 
 <style type="text/css">
@@ -1183,6 +1185,23 @@
       </td>
       <th scope="row"></th>
       <td></td>
+  </tr>
+  <tr>
+    <th scope="row"><spring:message code="sal.text.orgCode" /></th>
+      <td>
+        <input type="text" title="<spring:message code="sal.text.orgCode" />" id="orgCode" name="orgCode"  class="w100p" disabled value="${memDetail.orgcde}" />
+        <input type="hidden" title="" id="hidOrgCode" name="hidOrgCode"  class="w100p" value="${memDetail.orgcde}" />
+      </td>
+      <th scope="row"><spring:message code="sal.text.grpCode" /></th>
+      <td>
+        <input type="text" title="<spring:message code="sal.text.orgCode" />" id="grpCode" name="grpCode"  class="w100p" disabled value="${memDetail.grpcde}" />
+        <input type="hidden" title="" id="hidGrpCode" name="hidGrpCode"  class="w100p" value="${memDetail.grpcde}" />
+      </td>
+      <th scope="row"><spring:message code="sal.text.detpCode" /></th>
+      <td>
+        <input type="text" title="<spring:message code="sal.text.detpCode" />" id="deptCode" name="deptCode"  class="w100p" disabled value="${memDetail.deptcde}" />
+        <input type="hidden" title="" id="hidDeptCode" name="hidDeptCode"  class="w100p" value="${memDetail.deptcde}" />
+      </td>
   </tr>
   </tbody>
   </table><!-- table end -->
