@@ -18,6 +18,7 @@ import com.coway.trust.biz.payment.common.service.impl.CommonPaymentMapper;
 import com.coway.trust.biz.payment.mobilePaymentKeyIn.service.MobilePaymentKeyInService;
 import com.coway.trust.biz.sales.mambership.MembershipPaymentService;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -43,6 +44,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 04. 22    KR-HAN        Payment Key-in - Calculation issue Edit
  * 2020. 05. 08    ONGHC         Amend saveMobilePaymentKeyInNormalPayment to add chqNo to formInfo map.
  * 2020. 06. 30    KR-HAN        Mobile payment key in Issue_29.05.2020 ( difference calculation error )
+ * 2020. 07. 06    ONGHC        Add selectMemDetails
+ * selectMemDetails
  *          </pre>
  */
 @Service("mobilePaymentKeyInService")
@@ -1024,4 +1027,10 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     // WOR 번호 조회
     return resultList;
   }
+
+  @Override
+  public EgovMap selectMemDetails(SessionVO sessionVO) {
+    return mobilePaymentKeyInMapper.selectMemDetails(sessionVO.getUserName());
+  }
+
 }
