@@ -1,10 +1,27 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script  type="text/javascript">
+var sessionAuthUserTypeId = '${SESSION_INFO.userTypeId}';  //cody / hp
+var sessionAuthUserName = '${SESSION_INFO.userName}';// cody user name
 
 var trBookGridID;
 
 $(document).ready(function(){
+
+	 if(sessionAuthUserTypeId == '2'){ //  cody
+		 $("#trBookHolder").prop('readonly', true);
+		 $("#trBookHolder").val(sessionAuthUserName);
+		 $("#trHolderType :selected").text("Member");
+		 $("#trHolderType").prop("disabled", true);
+		 $("#trHolderType").addClass("disabled");
+
+	 }else {  // normal user
+		 $("#trBookHolder").prop('readonly', false);
+		 $("#trBookHolder").val("");
+
+         $("#trHolderType").prop("disabled", false);
+         $("#trHolderType").removeClass("disabled");
+    }
 
     creatGrid();
 
@@ -19,7 +36,6 @@ $(document).ready(function(){
     });
 
 });
-
 
 function creatGrid(){
 
