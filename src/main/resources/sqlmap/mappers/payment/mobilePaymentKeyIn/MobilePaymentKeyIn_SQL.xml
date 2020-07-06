@@ -117,6 +117,19 @@
                </where>
 
     ) A LEFT JOIN (SELECT RENT_SO_ID, SUM(RENT_AMT) AS S FROM PAY0022D GROUP BY RENT_SO_ID) B ON B.RENT_SO_ID = A.ORD_ID
+    LEFT JOIN ORG0001D C ON A.CRT_USER_NM = C.MEM_CODE
+    LEFT JOIN ORG0005D D ON C.MEM_ID = D.MEM_ID
+      <where>
+        <if test="hidOrgCode != null and hidOrgCode != '' ">
+          AND D.LAST_ORG_CODE = TO_CHAR(#{hidOrgCode})
+        </if>
+        <if test="hidGrpCode != null and hidGrpCode != '' ">
+          AND D.LAST_GRP_CODE = #{hidGrpCode}
+        </if>
+        <if test="hidDeptCode != null and hidDeptCode != '' ">
+          AND D.LAST_DEPT_CODE = #{hidDeptCode}
+        </if>
+     </where>
     ORDER BY A.MOB_TICKET_NO DESC
   </select>
 
@@ -170,4 +183,16 @@
     WHERE A.F_TRNSC_REM IN ('ONL','CSH','CHQ')
         AND A.F_TRNSC_ID = #{fTrnscId}
   </select>
+
+  <select id="selectMemDetails" parameterType="Map" resultType="egovMap">
+    SELECT NVL(TRIM(LAST_ORG_CODE),'') AS ORGCDE,
+               NVL(TRIM(LAST_GRP_CODE),'') AS GRPCDE,
+               NVL(TRIM(LAST_DEPT_CODE),'') AS DEPTCDE
+    FROM ORG0005D
+    WHERE MEM_ID = (SELECT MEM_ID
+                               FROM ORG0001D
+                               WHERE MEM_CODE = #{userId})
+  </select>
+
+
 </mapper>
