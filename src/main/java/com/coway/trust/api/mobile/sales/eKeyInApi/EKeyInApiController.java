@@ -437,8 +437,7 @@ public class EKeyInApiController {
   @RequestMapping(value = "/saveTokenNumber", method = RequestMethod.POST)
   public ResponseEntity<EKeyInApiDto> saveTokenNumber(@RequestBody EKeyInApiDto param) throws Exception {
     EKeyInApiDto rtn = eKeyInApiService.saveTokenNumber(param);
-    LOGGER.debug("controller.saveTokenNumber :: rtn :: token :: " + rtn.getToken());
-    LOGGER.debug("controller.saveTokenNumber :: rtn :: token :: " + rtn.getStus());
+    LOGGER.debug("controller.saveTokenNumber :: rtn :: token :: " + rtn.getCustOriCrcNo());
     return ResponseEntity.ok(rtn);
   }
 }

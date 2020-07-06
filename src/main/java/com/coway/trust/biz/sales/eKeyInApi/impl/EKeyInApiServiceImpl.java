@@ -2162,8 +2162,6 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       String stus = "1";
       String errorDesc = "";
 
-      EKeyInApiDto rtnDto = new EKeyInApiDto();
-
       Map<String, Object> params = new HashMap<String, Object>();
       params.put("refNo", param.getRefNo());
 
@@ -2191,10 +2189,13 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
           String maskPan = sal0257Dtoken.getCustOriCrcNo();
           String custCrcTypeId = "0";
+          String custCrcTypeName = "";
           if(maskPan.startsWith("4")) {
               custCrcTypeId = "112";
+              custCrcTypeName = "Visa Card";
           } else if(maskPan.startsWith("5")) {
               custCrcTypeId = "111";
+              custCrcTypeName = "Master Card";
           }
 
 logger.debug("===== sal0028d :: mapping :: start =====");
@@ -2246,6 +2247,7 @@ logger.debug("===== sal0028d :: insert =====");
               throw new ApplicationException(AppConstants.FAIL, "Card Exception.");
           }
 
+          /*
           EKeyInApiForm selectParam = new EKeyInApiForm();
           selectParam.setCustId(param.getCustId());
           selectParam.setCustCrcId(Integer.parseInt(sal0028D.get("custCrcId").toString()));
@@ -2259,6 +2261,17 @@ logger.debug("===== sal0028d :: insert =====");
             data.setCustOriCrcNo(CommonUtils.getMaskCreditCardNo(StringUtils.trim(data.getCustOriCrcNo()), "*", 4));
           }
           rtnDto = selectAnotherCardList.get(0);
+          */
+
+          EKeyInApiDto rtnDto = new EKeyInApiDto();
+          rtnDto.setCustOriCrcNo(sal0257Dtoken.getCustOriCrcNo());
+          rtnDto.setCustCrcTypeId(Integer.parseInt(custCrcTypeId));
+          rtnDto.setCustCrcOwner(param.getCustCrcOwner());
+          rtnDto.setCustCrcExpr(sal0257Dtoken.getCustCrcExpr());
+          rtnDto.setCustCrcBankId(param.getCustCrcBankId());
+          rtnDto.setCardTypeId(param.getCardTypeId());
+          rtnDto.setCardTypeIdName(custCrcTypeName);
+          rtnDto.setCustCrcId(Integer.parseInt(sal0028D.get("custCrcId").toString()));
 
 //          param = selectAnotherCardList.get(0);
 logger.debug("===== rtnDto =====");
@@ -2266,9 +2279,6 @@ logger.debug(rtnDto.toString());
 logger.debug("EKeyInApiServiceImpl :: return :: saveTokenNumber");
 //      }
 
-rtnDto.setStus(stus);
-rtnDto.setCrcCheck(crcCheck);
-rtnDto.setErrorDesc(errorDesc);
       return rtnDto;
   }
 }
