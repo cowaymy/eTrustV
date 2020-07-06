@@ -1051,4 +1051,16 @@
     ORDER BY B.DEPT_CODE
     </select>
 
+
+      <select id="selectHPDeptCodeListByCode"  parameterType="Map" resultType="egovMap">
+      SELECT B.DEPT_CODE CODE_ID ,
+      B.DEPT_CODE || ' - ' || A.NAME CODE_NAME
+      FROM ORG0001D A
+    LEFT JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
+    WHERE A.MEM_TYPE = 1
+    AND A.MEM_CODE = #{groupCode}
+    AND B.ORG_STUS_CODE_ID = 1
+    ORDER BY B.DEPT_CODE
+    </select>
+
 </mapper>
