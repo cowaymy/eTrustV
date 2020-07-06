@@ -323,4 +323,6 @@ public interface CommissionSystemMapper {
 
     List<EgovMap> selectHPDeptCodeListByLv(Map<String, Object> params);
 
+    List<EgovMap> selectHPDeptCodeListByCode(Map<String, Object> params);
+
 }
