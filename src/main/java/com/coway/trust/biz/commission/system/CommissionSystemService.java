@@ -192,4 +192,6 @@ public interface CommissionSystemService
     void versionItemInsert(Map<String, Object> map,List<Object>list);
 
     List<EgovMap> selectHPDeptCodeListByLv(Map<String, Object> params);
+
+    List<EgovMap> selectHPDeptCodeListByCode(Map<String, Object> params);
 }
