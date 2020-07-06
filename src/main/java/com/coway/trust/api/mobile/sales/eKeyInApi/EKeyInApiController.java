@@ -434,6 +434,9 @@ public class EKeyInApiController {
   @ApiOperation(value = "saveTokenNumber", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/saveTokenNumber", method = RequestMethod.POST)
   public ResponseEntity<EKeyInApiDto> saveTokenNumber(@RequestBody EKeyInApiDto param) throws Exception {
-    return ResponseEntity.ok(eKeyInApiService.saveTokenNumber(param));
+    EKeyInApiDto rtn = eKeyInApiService.saveTokenNumber(param);
+    LOGGER.debug("controller.saveTokenNumber :: rtn :: token :: " + rtn.getToken());
+    LOGGER.debug("controller.saveTokenNumber :: rtn :: token :: " + rtn.getStus());
+    return ResponseEntity.ok(rtn);
   }
 }
