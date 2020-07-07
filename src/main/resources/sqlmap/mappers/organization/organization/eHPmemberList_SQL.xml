@@ -369,6 +369,7 @@
             Project1.status_name,
             Project1.UPD_DT Updated,
             Project1.STUS Status,
+            to_char(to_date(Project1.EXTEND1_CDATE), 'dd-mm-yyyy HH:MI AM') KeyInDate, /*webster lee 07072020 -added new column call key-in-At -----------------------*/
             Project1.position_name,
             Project1.brnch_id,
             Project1.ct_sub_grp,
@@ -410,6 +411,7 @@
                     Project1.HP_CODE,
                     Project1.BRNCH_CODE,
                     Project1.APPROVED_BY,
+                    Project1.EXTEND1_CDATE, /*webster lee 07072020 - added new column call key-in-At -----------------------*/
                     TO_CHAR(Project1.CRT_DT,'DD-MM-YYYY') CRT_DT ,
                      row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
                      FROM ( SELECT
@@ -440,7 +442,8 @@
                     Extent20.MEM_CODE HP_CODE ,
                     Extent21.CODE || ' - ' || Extent21.NAME  BRNCH_CODE ,
                     Extent22.USER_NAME APPROVED_BY ,
-                    Extent20.CRT_DT
+                    Extent20.CRT_DT,
+                    Extent1.CRT_DT EXTEND1_CDATE /*webster lee 07072020 - added new column call key-in-At -----------------------*/
                     FROM   ORG0003D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT -----------------------*/
                     INNER JOIN SYS0013M Extent2 ON Extent1.APLICNT_type = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
                     INNER JOIN SYS0038M Extent3 ON Extent1.STUS_ID = Extent3.STUS_CODE_ID   /*StatusCode    eg.active, not active*/
@@ -510,6 +513,14 @@
                                 AND Extent4.LAST_ORG_CODE = #{orgCodeHd}
                             </if>
                          </if>
+                         <!--websterLee 7/7/2020 - add new filter called approved date-->
+                         <if test = 'eHApprovedDateFrom !="" and eHApprovedDateFrom !=null' >
+                             <if test = 'eHApprovedDateTo !="" and eHApprovedDateTo !=null '>
+	                             <![CDATA[ AND  TO_DATE(TO_CHAR(Extent20.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(#{eHApprovedDateFrom}, 'DD/MM/YYYY') ]]>
+	                              <![CDATA[ AND  TO_DATE(TO_CHAR(Extent20.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') <= TO_DATE(#{eHApprovedDateTo}, 'DD/MM/YYYY') +1 ]]>
+                             </if>
+                         </if >
+
                   <![CDATA[
                 )   Project1
             )  Project1

@@ -31,7 +31,9 @@ function fn_memberListSearch(){
     			   eHPkeyUser : $("#eHPkeyUser").val(),
     			   eHPkeyBranch : $("#eHPkeyBranch").val(),
     			   eHPcreateDate : $("#eHPcreateDate").val(),
-    			   eHPendDate : $("#eHPendDate").val()
+    			   eHPendDate : $("#eHPendDate").val(),
+    			   eHApprovedDateFrom : $("#eHApprovedDateFrom").val(), //Webster Lee 0/07/2020 -->
+    			   eHApprovedDateTo : $("#eHApprovedDateTo").val()  // Webster Lee 0/07/2020 -->
     }
     console.log("-------------------------" + JSON.stringify(jsonObj));
     Common.ajax("GET", "/organization/eHpMemberListSearch", jsonObj, function(result) {
@@ -259,9 +261,11 @@ $(document).ready(function() {
 function createAUIGrid() {
         //AUIGrid 칼럼 설정
         var columnLayout = [ {
+        //hide column
             dataField : "codename",
             headerText : "Type Name",
             editable : true,
+            visible : false,
             width : 130
         }, {
             dataField : "memberid",
@@ -273,6 +277,11 @@ function createAUIGrid() {
             headerText : "Applicant Code",
             editable : false,
             width : 130
+        },{ //Webster Lee 0/07/2020 add new
+            dataField : "keyindate",
+            headerText : "Key-In-At",
+            editable : false,
+            width : 180
         },{
             dataField : "hpCode",
             headerText : "HP Code",
@@ -296,7 +305,19 @@ function createAUIGrid() {
             editable : false,
             style : "my-column",
             width : 130
-        }, {
+        }, {//Webster Lee 0/07/2020 change column position
+            dataField : "resnDesc",
+            headerText : "Fail Reason Desc",
+            editable : false,
+            width : 150
+
+        },{
+            dataField : "rem",
+            headerText : "Fail Remark",
+            editable : false,
+            width : 180
+
+        },{
             dataField : "statusName",
             headerText : "Status",
             editable : false,
@@ -326,18 +347,6 @@ function createAUIGrid() {
             width : 130
 
         },{
-            dataField : "resnDesc",
-            headerText : "Fail Reason Desc",
-            editable : false,
-            width : 150
-
-        },{
-            dataField : "rem",
-            headerText : "Fail Remark",
-            editable : false,
-            width : 180
-
-        },{
             dataField : "stusUpdId",
             headerText : "Update Status By",
             editable : false,
@@ -359,6 +368,7 @@ function createAUIGrid() {
             dataField : "approvedBy",
             headerText : "Approved by",
             editable : false,
+            visible:false,
             width : 130
         },
         {
@@ -623,8 +633,21 @@ function fn_searchPosition(selectedData){
     <span>To</span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date"  id="eHPendDate" name="endDate"/></p>
     </div><!-- date_set end -->
-
     </td>
+    <%--Webster Lee 0/07/2020 : add new filter -- --%>
+     <th scope="row">Approve Date</th>
+    <td colspan="3">
+
+    <div class="date_set"><!-- date_set start -->
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="eHApprovedDateFrom" name="createDate" /></p>
+    <span>To</span>
+    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date"  id="eHApprovedDateTo" name="endDate"/></p>
+    </div><!-- date_set end -->
+    </td>
+
+
+
+
 </tr>
 </tbody>
 </table><!-- table end -->

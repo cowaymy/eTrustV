@@ -1323,9 +1323,10 @@ function fn_parentReload() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Member Name<span class="must">*</span></th>
+    <!--webster lee 7/7/2020 - disabled input text -->
+    <th scope="row">Member Name</th>
     <td colspan="3">
-    <input type="text" title="" id="eHPmemberNm" name="memberNm" placeholder="Member Name" class="w100p"  value="<c:out value="${memberView.aplicntName}"/>"/>
+    <input type="text" title="" id="eHPmemberNm" name="memberNm" placeholder="Member Name" class="w100p"  value="<c:out value="${memberView.aplicntName}"/>" disabled="disabled" />
     </td>
     <th scope="row">Joined Date<span class="must">*</span></th>
     <td>
@@ -1333,10 +1334,11 @@ function fn_parentReload() {
     </td>
 </tr>
 <tr>
-    <th scope="row">NRIC<span class="must">*</span></th>
+    <!--webster lee 7/7/2020 - disabled input text-->
+    <th scope="row">NRIC</th>
     <td>
         <input type="text" title="" placeholder="NRIC (New)" id="eHPnric" name="nric" class="w100p"  maxlength="12" onKeyDown="checkNRICEnter()"
-        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
+        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;" disabled="disabled"/>
     </td>
     <th scope="row">Date of Birth<span class="must">*</span></th>
     <td>
