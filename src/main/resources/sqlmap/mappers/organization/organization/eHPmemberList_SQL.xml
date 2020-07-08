@@ -1349,4 +1349,25 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
            ]]>
     </select>
 
+
+    <select id="getDetailCommonCodeList" parameterType="Map" resultType="egovMap">
+             SELECT
+                  CODE_ID detailCodeId,
+                  CODE_MASTER_ID,
+                  CODE detailCode,
+                  CODE_NAME detailCodeName,
+                  DBMS_LOB.SUBSTR (CODE_DESC, 4000) detailCodeDesc,
+                  CASE WHEN (CRT_DT IS NOT NULL) THEN  TO_CHAR(CRT_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS CRT_DT,
+                  CASE WHEN (CRT_USER_ID IS NOT NULL) THEN CRT_USER_ID ELSE 0 END AS CRT_USER_ID,
+                  DECODE(CASE WHEN (DISAB IS NOT NULL) THEN DISAB ELSE 0 END , 0,'N',1,'Y','N')  AS detailDisabled,
+                  CASE WHEN (UPD_DT IS NOT NULL) THEN  TO_CHAR(UPD_DT,'DD-MON-YYYY HH24:MI:SS') ELSE TO_CHAR(TO_DATE('19000101','YYYY-MM-DD'),'DD-MON-YYYY HH24:MI:SS') END AS UPD_DT,
+                  CASE WHEN (UPD_USER_ID IS NOT NULL) THEN UPD_USER_ID ELSE 0 END AS UPD_USER_ID
+                  FROM SYS0013M
+            WHERE CODE_MASTER_ID = #{mstCdId}
+
+                    AND DISAB = 0
+
+            ORDER BY CODE ASC
+    </select>
+
     </mapper>
