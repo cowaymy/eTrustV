@@ -23,6 +23,8 @@
     var otherFileName2 = "";
     var sofTncFileName = "";
 
+    var salesManType = "";
+
     $(document).ready(function(){
 
         createAUIGridStk();
@@ -1303,7 +1305,7 @@
         $('#salesmanCd').val('');
         $('#salesmanNm').val('');
 
-        Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
+        Common.ajaxSync("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
         	console.log('fn_loadOrderSalesman memId:'+memInfo);
             if(memInfo == null) {
                 Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
@@ -1311,6 +1313,7 @@
             else {
                 $('#salesmanCd').val(memInfo.memCode);
                 $('#salesmanNm').val(memInfo.name);
+                salesManType = memInfo.memType;
             }
         });
     }
@@ -1870,7 +1873,12 @@
                 $("#instCountry").val(custInfo.country); //Country
 
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
-                $("#keyinBrnchId").val('${preOrderInfo.keyinBrnchId}'); //Posting Branch
+
+                if(salesManType = 2)
+                    $("#keyinBrnchId").val(custInfo.cdBrnchId); //Posting Branch
+                else
+                    $("#keyinBrnchId").val(custInfo.soBrnchId); //Posting Branch
+                //$("#keyinBrnchId").val('${preOrderInfo.keyinBrnchId}'); //Posting Branch
 
 //              if(!$("#gstChk").is('[disabled]')) {
 /*
