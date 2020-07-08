@@ -154,7 +154,9 @@
             project1.branch,
             project1.CRT_DT,
             project1.ADDRESS,
-            project1.GRP_CODE
+            project1.GRP_CODE,
+             project1.PV_MONTH || ' / ' ||
+             project1.PV_YEAR  AS LAST_ACT_DT
 
             FROM ( SELECT Project1.C1 C1,
                      Project1.MEM_ID MEM_ID,
@@ -178,6 +180,8 @@
                     TO_CHAR(Project1.CRT_DT,'DD-MM-YYYY') CRT_DT,
                     project1.ADDRESS,
                     project1.GRP_CODE,
+                    project1.PV_MONTH ,
+                    project1.PV_YEAR ,
 
                      row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
 
@@ -223,7 +227,9 @@
                             Extent1.POSTCODE || ' ' ||Extent15.AREA_NAME || ', ' || Extent14.NAME || ', ' || Extent13.NAME
                         END
                     as ADDRESS,
-                    Extent12.GRP_CODE
+                    Extent12.GRP_CODE ,
+                    B.PV_MONTH ,
+                    B.PV_YEAR
 
                     FROM   ORG0001D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT*/
                     INNER JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
@@ -239,6 +245,13 @@
                     LEFT JOIN SYS0015M Extent13 ON Extent1.COUNTRY = Extent13.CNTY_ID
                     LEFT JOIN SYS0035M Extent14 ON Extent1.STATE = Extent14.STATE_ID
                     LEFT JOIN SYS0039M Extent15 ON Extent1.STATE = Extent15.AREA_STATE_ID AND Extent1.AREA = Extent15.AREA_ID
+
+                    LEFT JOIN (SELECT * FROM (
+                    SELECT B.* , ROW_NUMBER() OVER (PARTITION BY MEM_ID ORDER BY SALES_ORD_ID DESC) ITM_ROWS
+                    FROM SAL0001D B
+                    WHERE B.PV_YEAR <> 0 AND B.PV_MONTH <> 0 AND B.STUS_CODE_ID = 4 )
+                    WHERE ITM_ROWS = 1
+                    )B ON Extent1.MEM_ID = B.MEM_ID
 
                     CROSS JOIN  (SELECT
                         COUNT(1) A1
