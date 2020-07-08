@@ -115,6 +115,7 @@ var discountLayout = [
 
     function fn_addNewEntry(){
     	var salesOrdId = $('#salesOrdId').val().trim();
+        console.log("Sales order id :: " + salesOrdId);
 
     	if(FormUtil.isEmpty(salesOrdId)){
     		Common.alert("<spring:message code='pay.alert.selectOrderFirst'/>");
@@ -124,12 +125,29 @@ var discountLayout = [
     		Common.ajax("GET","/payment/selectSalesOrderMById.do", {"salesOrdId" : salesOrdId}, function(result){
 
                 console.log(result);
+                var gstOrdRebate = {
+                		gstRebateId: result.data.conversionSchemeId.gstRebateId,
+                		rebateStatusId:  result.data.conversionSchemeId.rebatestusid,
+                		rebateAmtPerInstlmt: result.data.conversionSchemeId.rebateAmtPerInstlmt,
+                		rebateStartInstlmt: result.data.conversionSchemeId.rebateStartInstlmt,
+                		rebateEndInstlmt: result.data.conversionSchemeId.rebateEndInstlmt,
+                }
+
                 if(result.data.conversionSchemeId.cnvrSchemeId == 0){
+                	//Verify the order under GST rebate
+                    if(gstOrdRebate.gstRebateId != null){
+                    	if(gstOrdRebate.rebateStatusId != '8'){
+                    		   $('#gstRebateRemarksMsg').show();
+                    		   $('#gstRebateRemarksMsg').text("* This order is entitle GST rebate amount RM " +gstOrdRebate.rebateAmtPerInstlmt+" Start "+gstOrdRebate.rebateStartInstlmt +" ~ " + gstOrdRebate.rebateEndInstlmt +" period");
+                    	}
+                    }else{
+                    	$('#gstRebateRemarksMsg').hide();
+                        $('#gstRebateRemarksMsg').text("");
+                    }
 
                 	$('#addNewEntryPop').show();
 
                 }else{
-
                 	Common.alert("<spring:message code='pay.alert.meagaNotAllow'/>");
                 }
             });
@@ -347,6 +365,8 @@ var discountLayout = [
 			                    <col style="width:165px" />
 			                    <col style="width:*" />
 			                </colgroup>
+			                <span id="gstRebateRemarksMsg" style="color:#ff0000;" ></span>
+			                <br/>
 			                <tbody>
 			                    <tr>
 			                        <th scope="row">Discount Type</th>

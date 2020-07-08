@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.billing.service.impl.DiscountMgmtMapper">
-    
+
     <select id="selectBasicInfo" parameterType="Map" resultType="egovMap">
-       SELECT 
+       SELECT
 		       Extent1.ORD_ID ORD_ID  ,
 		       Extent1.ORD_NO ORD_NO  ,
 		       Extent1.RENTAL_STUS RENTAL_STUS  ,
@@ -71,7 +71,7 @@
 		       Extent1.STK_CTGRY_NAME STK_CTGRY_NAME  ,
 		       Extent1.CUST_TYPE_ID CUST_TYPE_ID  ,
 		       Extent1.CUST_BILL_ID CUST_BILL_ID  ,
-		       Extent1.OBLIGT_YEAR OBLIGT_YEAR  
+		       Extent1.OBLIGT_YEAR OBLIGT_YEAR
 		  FROM ( SELECT vOrderBasicInfo.ORD_ID ORD_ID  ,
 		                vOrderBasicInfo.ORD_NO ORD_NO  ,
 		                vOrderBasicInfo.RENTAL_STUS RENTAL_STUS  ,
@@ -139,14 +139,15 @@
 		                vOrderBasicInfo.STK_CTGRY_NAME STK_CTGRY_NAME  ,
 		                vOrderBasicInfo.CUST_TYPE_ID CUST_TYPE_ID  ,
 		                vOrderBasicInfo.CUST_BILL_ID CUST_BILL_ID  ,
-		                vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR  
+		                vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR
 		         FROM SAL1006V vOrderBasicInfo ) Extent1
-		 WHERE  Extent1.ORD_ID = #{salesOrdId} 
+		 WHERE  Extent1.ORD_ID = #{salesOrdId}
 		 AND ROWNUM <![CDATA[<= ]]>  1
     </select>
-    
+
     <select id="selectSalesOrderMById" parameterType="Map" resultType="egovMap">
-       SELECT 
+
+       SELECT
 		       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
 		       Extent1.SALES_ORD_NO SALES_ORD_NO  ,
 		       Extent1.REF_NO REF_NO  ,
@@ -192,17 +193,25 @@
 		       Extent1.REF_DOC_ID REF_DOC_ID  ,
 		       <!-- Extent1.RENT_PROMO_ID RENT_PROMO_ID  , -->
 		       Extent2.MEM_CODE MEM_CODE  ,
-		       CASE 
+		       CASE
 		            WHEN ( Extent1.CNVR_SCHEME_ID IS NULL ) THEN 0
 		       ELSE Extent1.CNVR_SCHEME_ID
-		          END CNVR_SCHEME_ID  
+		          END CNVR_SCHEME_ID,
+		       Extent3.GST_REBATE_ID GST_REBATE_ID,
+               Extent3.REBATE_AMT_PER_INSTLMT REBATE_AMT_PER_INSTLMT,
+               Extent3.REBATE_START_INSTLMT REBATE_START_INSTLMT,
+               Extent3.REBATE_END_INSTLMT REBATE_END_INSTLMT,
+               Extent3.STUS_ID REBATESTUSID
 		  FROM SAL0001D Extent1
-		         LEFT JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
+		       LEFT JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
+		       LEFT JOIN PAY0286D Extent3 ON Extent1.SALES_ORD_ID = Extent3.ORD_ID
 		 WHERE  Extent1.SALES_ORD_ID = #{salesOrdId}
+		 AND (Extent3.STUS_ID <![CDATA[ <> ]]> '8' OR Extent3.STUS_ID IS NULL)
+
     </select>
-    
+
     <select id="selectDiscountList" parameterType="Map" resultType="egovMap">
-       SELECT 
+       SELECT
 	       Extent1.DSCNT_ENTRY_ID DSCNT_ENTRY_ID  ,
 	       Extent1.ORD_ID ORD_ID  ,
 	       Extent5.SALES_ORD_NO SALES_ORD_NO  ,
@@ -233,56 +242,56 @@
 	         LEFT JOIN SAL0077D Extent8   ON Extent1.CNTRCT_ID = Extent8.SRV_CNTRCT_ID
 	   WHERE  Extent1.ORD_ID = #{salesOrdId}
     </select>
-    
+
     <select id="selectContractServiceId" parameterType="Map" resultType="java.lang.String">
         <![CDATA[
-       SELECT GroupBy1.A1 C1  
-            FROM ( SELECT COUNT(1)  A1  
+       SELECT GroupBy1.A1 C1
+            FROM ( SELECT COUNT(1)  A1
 		         FROM SAL0077D Extent1
 		          WHERE  ( Extent1.SRV_CNTRCT_ORD_ID = #{salesOrdId} )
 		          AND ( 4 = Extent1.SRV_CNTRCT_STUS_ID )
 		          AND ( 0 <> Extent1.SRV_CNTRCT_NET_MONTH )
 		          AND ( 0 <> Extent1.SRV_CNTRCT_NET_YEAR ) ) GroupBy1
-		]]>                   
+		]]>
     </select>
-    
+
     <insert id="saveAddDiscount" parameterType="Map">
         INSERT INTO PAY0054D
 		(
 		DSCNT_ENTRY_ID,
-		ORD_ID, 
-		DC_TYPE, 
-		DC_AMT_PER_INSTLMT, 
-		DC_START_INSTLMT, 
-		DC_END_INSTLMT, 
-		REM, 
-		CRT_DT, 
-		CRT_USER_ID, 
-		UPD_DT, 
-		UPD_USER_ID, 
-		DC_STUS_ID, 
+		ORD_ID,
+		DC_TYPE,
+		DC_AMT_PER_INSTLMT,
+		DC_START_INSTLMT,
+		DC_END_INSTLMT,
+		REM,
+		CRT_DT,
+		CRT_USER_ID,
+		UPD_DT,
+		UPD_USER_ID,
+		DC_STUS_ID,
 		CNTRCT_ID )
-		VALUES 
+		VALUES
 		(
 		PAY0054D_SEQ.NEXTVAL,
-		#{salesOrdId}, 
-		#{discountType}, 
-		#{discountAmount}, 
-		#{startPeriod}, 
-		#{endPeriod}, 
+		#{salesOrdId},
+		#{discountType},
+		#{discountAmount},
+		#{startPeriod},
+		#{endPeriod},
 		#{remarks},
 		SYSDATE,
-		#{userId}, 
-		SYSDATE, 
-		#{userId}, 
-		#{dcStatusId}, 
+		#{userId},
+		SYSDATE,
+		#{userId},
+		#{dcStatusId},
 		#{contractId}
 		)
     </insert>
-    
+
     <select id="selectDiscountEntries" parameterType="Map" resultType="egovMap">
         <![CDATA[
-       SELECT 
+       SELECT
 	       Extent1.DSCNT_ENTRY_ID DSCNT_ENTRY_ID  ,
 	       Extent1.ORD_ID ORD_ID  ,
 	       Extent1.DC_TYPE DC_TYPE  ,
@@ -295,17 +304,17 @@
 	       Extent1.UPD_DT UPD_DT  ,
 	       Extent1.UPD_USER_ID UPD_USER_ID  ,
 	       Extent1.DC_STUS_ID DC_STUS_ID  ,
-	       Extent1.CNTRCT_ID CNTRCT_ID  
+	       Extent1.CNTRCT_ID CNTRCT_ID
         FROM PAY0054D Extent1
-        WHERE  Extent1.DSCNT_ENTRY_ID = #{dscntEntryId} 
-        AND ROWNUM <= 1 
-        ]]>               
+        WHERE  Extent1.DSCNT_ENTRY_ID = #{dscntEntryId}
+        AND ROWNUM <= 1
+        ]]>
     </select>
-    
+
     <update id="updDiscountEntry" parameterType="Map">
         UPDATE PAY0054D
         SET DC_STUS_ID = '8'
         WHERE  DSCNT_ENTRY_ID = #{dscntEntryId}
     </update>
-    
+
 </mapper>
