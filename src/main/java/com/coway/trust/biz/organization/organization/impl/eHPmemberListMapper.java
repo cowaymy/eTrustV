@@ -48,5 +48,7 @@ public interface eHPmemberListMapper {
 
   EgovMap getEHPMemberListView(Map<String, Object> params);
 
+  List<EgovMap> getDetailCommonCodeList(Map<String, Object> params);
+
 
 }
