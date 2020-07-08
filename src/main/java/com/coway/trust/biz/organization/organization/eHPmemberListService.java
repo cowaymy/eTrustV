@@ -39,4 +39,6 @@ public interface eHPmemberListService {
 
   EgovMap selectEHPMemberListView(Map<String, Object> params);
 
+  List<EgovMap> getDetailCommonCodeList(Map<String, Object> params);
+
 }
