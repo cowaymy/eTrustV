@@ -426,6 +426,12 @@ function createAUIGrid() {
             editable : false,
             width : 130
 
+        }, {
+            dataField : "lastActDt",
+            headerText : "Last Active Date",
+            editable : false,
+            width : 130
+
         },
         /*BY KV Position*/
         {
