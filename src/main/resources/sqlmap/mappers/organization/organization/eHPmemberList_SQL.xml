@@ -369,7 +369,7 @@
             Project1.status_name,
             Project1.UPD_DT Updated,
             Project1.STUS Status,
-            to_char(to_date(Project1.EXTEND1_CDATE), 'dd-mm-yyyy HH:MI AM') KeyInDate, /*webster lee 07072020 -added new column call key-in-At -----------------------*/
+            Project1.EXTEND1_CDATE KeyInDate, /*webster lee 07072020 -added new column call key-in-At -----------------------*/
             Project1.position_name,
             Project1.brnch_id,
             Project1.ct_sub_grp,
@@ -443,7 +443,7 @@
                     Extent21.CODE || ' - ' || Extent21.NAME  BRNCH_CODE ,
                     Extent22.USER_NAME APPROVED_BY ,
                     Extent20.CRT_DT,
-                    Extent1.CRT_DT EXTEND1_CDATE /*webster lee 07072020 - added new column call key-in-At -----------------------*/
+                    TO_CHAR(Extent1.CRT_DT,'DD-MM-YYYY HH:MI AM') EXTEND1_CDATE /*webster lee 07072020 - added new column call key-in-At -----------------------*/
                     FROM   ORG0003D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT -----------------------*/
                     INNER JOIN SYS0013M Extent2 ON Extent1.APLICNT_type = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
                     INNER JOIN SYS0038M Extent3 ON Extent1.STUS_ID = Extent3.STUS_CODE_ID   /*StatusCode    eg.active, not active*/
@@ -1348,8 +1348,8 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
           WHERE  Extent1.APLCTN_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
            ]]>
     </select>
-
-
+    
+    
     <select id="getDetailCommonCodeList" parameterType="Map" resultType="egovMap">
              SELECT
                   CODE_ID detailCodeId,
@@ -1368,6 +1368,6 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                     AND DISAB = 0
 
             ORDER BY CODE ASC
-    </select>
+    </select>    
 
     </mapper>
