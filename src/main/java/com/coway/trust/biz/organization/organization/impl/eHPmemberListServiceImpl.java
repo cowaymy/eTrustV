@@ -278,4 +278,10 @@ public class eHPmemberListServiceImpl extends EgovAbstractServiceImpl implements
       public EgovMap selectEHPMemberListView(Map<String, Object> params) {
           return eHPmemberListMapper.getEHPMemberListView(params);
       }
+
+      @Override
+      public List<EgovMap> getDetailCommonCodeList(Map<String, Object> params) {
+          return eHPmemberListMapper.getDetailCommonCodeList(params);
+      }
+
 }
