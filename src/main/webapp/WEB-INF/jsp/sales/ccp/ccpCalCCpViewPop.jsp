@@ -185,7 +185,10 @@ function setSMSMessage(){
     var ccpStatus = $("#_statusEdit").val() == '1' ? "Pending" : "Approved";
     var webSite = salesmanMemTypeID == '1'?  "hp.coway.com.my" : "cody.coway.com.my";
 
-    var message = "Order : " + ordNo + "\n" + "Name : " + custName + "\n" + "CCPstatus : " + ccpStatus + "\n" + "Remark :" + "\n" + webSite;
+    //var message = "Order : " + ordNo + "\n" + "Name : " + custName + "\n" + "CCPstatus : " + ccpStatus + "\n" + "Remark :" + "\n" + webSite;
+
+    //REMOVE WEBSITE - REQUESTED BY NURL - CPD DEPARTMENT 20200707 - [SYSTEM CHANGE REQUISITION]
+    var message = "Order : " + ordNo + "\n" + "Name : " + custName + "\n" + "CCPstatus : " + ccpStatus + "\n" + "Remark :" + "\n";
 
     $("#_updSmsMsg").val(message);
 
