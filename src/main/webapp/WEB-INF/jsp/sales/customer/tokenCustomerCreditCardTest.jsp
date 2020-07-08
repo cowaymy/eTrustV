@@ -5,6 +5,7 @@
 <script src="https://www.onlinepayment.com.my/MOLPay/API/cse/checkout_dev.js"></script>
 <script type="text/javaScript">
 
+console.log("teststeest");
 console.log("tokenpoptest");
 
     doGetCombo('/common/selectCodeList.do', '21', '','_insCmbCreditCardType', 'S' , '');           // Add Card Type Combo Box
