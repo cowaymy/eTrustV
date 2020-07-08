@@ -2235,6 +2235,12 @@
                   AND TO_CHAR(T2.DISCONTINUE) = T5.CODE
                   AND T5.CODE_MASTER_ID = '381'
                   AND T1.STUS_CODE_ID = 1
+
+
+                   <if test='alwSale != null and alwSale == 1'>
+                   AND t1.ALLOW_SALES = 1
+                  </if>
+
                   AND T1.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
                                                                WHERE AA.CODE = BB.CODE
                                                                   AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
@@ -2260,6 +2266,13 @@
                   AND TO_CHAR(T2.DISCONTINUE) = T5.CODE
                   AND T5.CODE_MASTER_ID = '381'
                    AND T1.STUS_CODE_ID = 1
+
+                   <if test='alwSale != null and alwSale == 1'>
+                   AND t1.ALLOW_SALES = 1
+                  </if>
+
+
+
                    AND T1.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
                                                                WHERE AA.CODE = BB.CODE
                                                                   AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
