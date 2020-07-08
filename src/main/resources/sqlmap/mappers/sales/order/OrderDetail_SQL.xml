@@ -106,9 +106,10 @@
         , V1.BNDL_ID
         , V8.VOUCHER
         <!-- Added for e-voucher redemption display. By Hui Ding, 08-07-2020 -->
-        , V8.REDEMPTION
-        , V8.REDEMPT_MTH
-        , V8.REDEMPT_YEAR
+        , V8.REDEEM_HS
+        , V8.REDEEM_MTH
+        , V8.REDEEM_YEAR
+        , V8.REDEEM_WARRANTY
         FROM SAL1006V V1
         LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
         LEFT JOIN SAL0029D V3 ON V3.CUST_ID = V1.CUST_ID

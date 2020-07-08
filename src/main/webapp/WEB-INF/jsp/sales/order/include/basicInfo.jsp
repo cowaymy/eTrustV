@@ -30,25 +30,28 @@
 <tr>
     <th scope="row"><spring:message code="sal.text.evoucher" /></th>
     <td>${orderDetail.basicInfo.voucher}</td>
-    <th scope="row"><spring:message code="sal.text.evoucher.redemption"/></th>
+    <th scope="row"><spring:message code="sal.text.evoucher.hs"/></th>
     <td>
         <c:choose>
-	        <c:when test="${orderDetail.basicInfo.redemption != 0}">
+	        <c:when test="${orderDetail.basicInfo.redeemHs != 0}">
 	            <input type="checkbox" onClick="return false" checked/>
+	            <c:if test="${orderDetail.basicInfo.redeemMth != 0 && orderDetail.basicInfo.redeemYear != 0}">
+	                   <span>&nbsp;(${orderDetail.basicInfo.redeemMth}-${orderDetail.basicInfo.redeemYear})</span>
+	            </c:if>
 	        </c:when>
 		    <c:otherwise>
-		       <input type="checkbox" onClick="return false"/>
+		       <input type="checkbox" disabled/>
 		    </c:otherwise>
 		</c:choose>
     </td>
-    <th scope="row"><spring:message code="sal.text.evoucher.hs.month"/></th>
+    <th scope="row"><spring:message code="sal.text.evoucher.ext.warr"/></th>
     <td>
         <c:choose>
-	        <c:when test="${orderDetail.basicInfo.redemptMth != 0 && orderDetail.basicInfo.redemptYear != 0}">
-	            <span>${orderDetail.basicInfo.redemptMth}-${orderDetail.basicInfo.redemptYear}</span>
+	        <c:when test="${orderDetail.basicInfo.redeemWarranty != 0}">
+	               <input type="checkbox" onClick="return false" checked/>
 	        </c:when>
 	        <c:otherwise>
-               <span></span>
+               <input type="checkbox" disabled/>
             </c:otherwise>
 	    </c:choose>
     </td>
