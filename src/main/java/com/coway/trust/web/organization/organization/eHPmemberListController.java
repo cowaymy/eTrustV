@@ -109,7 +109,6 @@ public class eHPmemberListController {
 
        List<EgovMap> memberType = commonService.selectCodeList(params);
        params.put("mstCdId",2);
-       params.put("dtailDisabled",0);
        params.put("groupCode", 45);
        params.put("separator", " - ");
        List<EgovMap> race = commonService.getDetailCommonCodeList(params);
@@ -148,7 +147,8 @@ public class eHPmemberListController {
    public String selectEHPMemberListNewPop(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 
        params.put("mstCdId",2);
-       List<EgovMap> race = commonService.getDetailCommonCodeList(params);
+       List<EgovMap> race = eHPmemberListService.getDetailCommonCodeList(params);
+       logger.debug("eHP params : " + params);
        params.put("mstCdId",4);
        List<EgovMap> marrital = commonService.getDetailCommonCodeList(params);
        List<EgovMap> nationality = memberListService.nationality();
