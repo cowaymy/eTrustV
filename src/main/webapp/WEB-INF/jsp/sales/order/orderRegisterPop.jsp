@@ -15,6 +15,7 @@
     var docDefaultChk = false;
     var GST_CHK = '';
     var GST_MANNUAL = 'N';
+    var alwSale = 1 ;
 
     $(document).ready(function(){
 console.log("orderRegisterPop.jsp");
@@ -1066,7 +1067,7 @@ console.log("orderRegisterPop.jsp");
                 $('#ordProudct').removeAttr("disabled");
                 //doGetProductCombo('/sales/order/selectProductCodeList.do',  stkType, '', 'ordProudct', 'S', ''); //Product Code
 
-                doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
+                doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(),alwSale:alwSale}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
             } else {
                 // ONGHC - ADD
                 $('#ordProudct').prop("disabled", true);
@@ -2648,12 +2649,12 @@ console.log("vBindingNo" + vBindingNo);
     }
 
     function fn_setDefaultSrvPacId() {
-        if($('#srvPacId option').size() >= 2) {
+        if($('#srvPacId option').size() >= 2 ) {
             $('#srvPacId option:eq(1)').attr('selected', 'selected');
 
             var stkType = $("#appType").val() == '66' ? '1' : '2';
 
-            doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
+            doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(),alwSale:alwSale }, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
         }
     }
 
@@ -2720,6 +2721,8 @@ console.log("vBindingNo" + vBindingNo);
     var cpntId = $("#compType").val();
     var empInd = $("#empChk").val();
     var exTrade = $("#exTrade").val();
+
+
 
     doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade }, '', 'ordPromo', 'S', '');
   }

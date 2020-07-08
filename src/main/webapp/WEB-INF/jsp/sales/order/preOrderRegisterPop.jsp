@@ -22,6 +22,7 @@
     var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"}];
     var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
     var atchFileGrpId = 0;
+    var alwSale = 1;
 
     var codeList_19 = [];
     <c:forEach var="obj" items="${codeList_19}">
@@ -388,7 +389,7 @@
                 var stkType = $("#appType").val() == '66' ? '1' : '2';
               //doGetProductCombo('/sales/order/selectProductCodeList.do',  stkType, '', 'ordProudct', 'S', ''); //Product Code
 
-                doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
+                doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(),alwSale:alwSale}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
             }
         });
 
@@ -1419,7 +1420,7 @@
 
             var stkType = $("#appType").val() == '66' ? '1' : '2';
 
-            doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
+            doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(),alwSale:alwSale}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
         //}
     }
 
