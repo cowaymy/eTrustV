@@ -30,10 +30,28 @@
 <tr>
     <th scope="row"><spring:message code="sal.text.evoucher" /></th>
     <td>${orderDetail.basicInfo.voucher}</td>
-    <th scope="row"></th>
-    <td></td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row"><spring:message code="sal.text.evoucher.redemption"/></th>
+    <td>
+        <c:choose>
+	        <c:when test="${orderDetail.basicInfo.redemption != 0}">
+	            <input type="checkbox" onClick="return false" checked/>
+	        </c:when>
+		    <c:otherwise>
+		       <input type="checkbox" onClick="return false"/>
+		    </c:otherwise>
+		</c:choose>
+    </td>
+    <th scope="row"><spring:message code="sal.text.evoucher.hs.month"/></th>
+    <td>
+        <c:choose>
+	        <c:when test="${orderDetail.basicInfo.redemptMth != 0 && orderDetail.basicInfo.redemptYear != 0}">
+	            <span>${orderDetail.basicInfo.redemptMth}-${orderDetail.basicInfo.redemptYear}</span>
+	        </c:when>
+	        <c:otherwise>
+               <span></span>
+            </c:otherwise>
+	    </c:choose>
+    </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.appType" /></th>
