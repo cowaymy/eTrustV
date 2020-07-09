@@ -304,7 +304,8 @@
                            Extent5.GST_CHK,
                            Extent6.BRNCH_ID,
                            Extent7.BRNCH_ID SO_BRNCH_ID,
-                           Extent8.BRNCH_ID CD_BRNCH_ID
+                           Extent8.BRNCH_ID CD_BRNCH_ID,
+                           Extent9.BRNCH_ID HT_BRNCH_ID
                     FROM SAL0023D Extent1
                            JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
                            LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
@@ -318,8 +319,9 @@
                         LEFT JOIN SYS0005M Extent6 ON Extent5.CT_BRNCH_CODE = Extent6.CODE
                     </otherwise>
                 </choose>
-                           LEFT JOIN SYS0005M Extent7   ON Extent5.SO_BRNCH_CODE = Extent7.CODE
+                           LEFT JOIN SYS0005M Extent7   ON Extent5.SO_BRNCH_CODE     = Extent7.CODE
                            LEFT JOIN SYS0005M Extent8   ON Extent5.CODY_BRNCH_CODE = Extent8.CODE
+                           LEFT JOIN SYS0005M Extent9   ON Extent5.HT_BRNCH_CODE      = Extent9.CODE
     <![CDATA[
                     WHERE
                          8 <> Extent1.STUS_CODE_ID

@@ -1713,8 +1713,10 @@
                 $("#instCountry").val(custInfo.country); //Country
 
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
-                if(salesManType == 2 || salesManType == 7)
+                if(salesManType == 2)
                     $("#keyinBrnchId").val(custInfo.cdBrnchId); //Posting Branch
+                else if(salesManType == 7)
+                    $("#keyinBrnchId").val(custInfo.htBrnchId); //Posting Branch
                 else
                     $("#keyinBrnchId").val(custInfo.soBrnchId); //Posting Branch
             }
