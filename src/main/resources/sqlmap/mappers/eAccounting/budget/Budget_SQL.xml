@@ -338,11 +338,11 @@ WHEN NOT MATCHED THEN
      AND A.BUDGET_CODE = C.BUDGET_CODE
      AND A.GL_ACC_CODE = C.GL_ACC_CODE
     WHERE A.BUDGET_PLAN_YEAR =#{budgetPlanYear}
-    <if test="costCentr != null and costCentr != '' " >
+    <if test="(costCentr != null and costCentr != '') and (costCentr2 == null and costCentr2 == '') " >
         AND A.COST_CENTR = #{costCentr}
     </if>
     <if test="costCentr2 != null and costCentr2 != '' " >
-        OR A.COST_CENTR = #{costCentr2}
+        AND A.COST_CENTR in (#{costCentr}, #{costCentr2})
     </if>
     <if test="stCostCentr != null and stCostCentr != '' " >
         <if test="edCostCentr != null and edCostCentr != '' ">
@@ -702,11 +702,19 @@ WHERE 1=1
        <if test="stYearMonth != null and stYearMonth != ''">
            AND BUDGET_ADJ_YEAR || TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') BETWEEN #{stYearMonth} AND #{edYearMonth}
        </if>
+       <!--
        <if test="costCentr != null and costCentr != ''">
            AND B.COST_CENTR    = #{costCentr}
        </if>
        <if test="costCentr2 != null and costCentr2 != '' " >
            OR B.COST_CENTR = #{costCentr2}
+       </if>
+       -->
+       <if test="(costCentr != null and costCentr != '') and (costCentr2 == null and costCentr2 == '') " >
+           AND B.COST_CENTR = #{costCentr}
+       </if>
+       <if test="costCentr2 != null and costCentr2 != '' " >
+           AND B.COST_CENTR in (#{costCentr}, #{costCentr2})
        </if>
        <if test="budgetCode != null and budgetCode != ''">
            AND B.BUDGET_CODE  = #{budgetCode}
@@ -1175,11 +1183,19 @@ WHERE 1=1
                 AND A.BUDGET_CODE  = C.BUDGET_CODE
                 AND A.GL_ACC_CODE  = C.GL_ACC_CODE
             WHERE 1=1
+            <!--
             <if test="costCentr != null and costCentr != '' " >
                 AND A.COST_CENTR = #{costCentr}
             </if>
             <if test="costCentr2 != null and costCentr2 != '' " >
                 OR A.COST_CENTR = #{costCentr2}
+            </if>
+            -->
+            <if test="(costCentr != null and costCentr != '') and (costCentr2 == null and costCentr2 == '') " >
+                 AND A.COST_CENTR = #{costCentr}
+            </if>
+            <if test="costCentr2 != null and costCentr2 != '' " >
+                AND A.COST_CENTR in (#{costCentr}, #{costCentr2})
             </if>
             <if test="stYearMonth != null and stYearMonth != '' " >
                 <if test="edYearMonth != null and edYearMonth != '' ">
