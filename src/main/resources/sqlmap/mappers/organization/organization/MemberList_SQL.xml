@@ -155,8 +155,7 @@
             project1.CRT_DT,
             project1.ADDRESS,
             project1.GRP_CODE,
-             project1.PV_MONTH || ' / ' ||
-             project1.PV_YEAR  AS LAST_ACT_DT
+             project1.PV_YEAR   || ' / ' ||  TO_CHAR(project1.PV_MONTH,'00') AS LAST_ACT_DT
 
             FROM ( SELECT Project1.C1 C1,
                      Project1.MEM_ID MEM_ID,
