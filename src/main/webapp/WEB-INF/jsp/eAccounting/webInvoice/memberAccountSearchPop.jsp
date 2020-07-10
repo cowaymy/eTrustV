@@ -40,7 +40,7 @@ var supplierColumnLayout = [ {
 
 //그리드 속성 설정
 var supplierGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -53,7 +53,7 @@ var supplierGridID;
 
 $(document).ready(function () {
 	supplierGridID = AUIGrid.create("#supplier_grid_wrap", supplierColumnLayout, supplierGridPros);
-	
+
 	AUIGrid.bind(supplierGridID, "cellDoubleClick", function( event ) {
 		$("#search_memAccId").val(event.item.memAccId);
         $("#search_memAccName").val(event.item.memAccName);
@@ -61,7 +61,7 @@ $(document).ready(function () {
         $("#search_bankCode").val(event.item.bankCode)
         $("#search_bankName").val(event.item.bankName)
         $("#search_bankAccNo").val(event.item.bankAccNo)
-        
+
         if("${pop}" == "pop") {
         	fn_setPopSupplier();
         } else if("${pop}" == "sPop") {
@@ -69,11 +69,26 @@ $(document).ready(function () {
         } else {
         	fn_setSupplier();
         }
-        
+
         $("#supplierSearchPop").remove();
   });
-	
+
 	//$("#accGrp").multipleSelect("checkAll");
+
+	if("${accGrp}" == "VM11") {
+	    $("#accGrp option[value=VM10]").remove();
+	    $("#accGrp option[value=VM07]").remove();
+	    $("#accGrp option[value=VM08]").remove();
+	    $("#accGrp option[value=VM09]").remove();
+	}
+
+	if("${accGrp}" == "VM10") {
+	    if("${entry}" != "appv") {
+	        $("#accGrp option[value=VM11]").remove();
+	        $("#accGrp option[value=VM02]").remove();
+	        $("#accGrp option[value=VM03]").remove();
+	    }
+	}
 });
 
 function fn_selectMember() {
@@ -127,6 +142,8 @@ function fn_selectMember() {
         <option value="VM08" <c:if test="${accGrp eq 'VM08'}">selected</c:if>><spring:message code="memAcc.ct" /></option>
         <option value="VM09" <c:if test="${accGrp eq 'VM09'}">selected</c:if>><spring:message code="memAcc.smGm" /></option>
         <option value="VM10" <c:if test="${accGrp eq 'VM10'}">selected</c:if>><spring:message code="memAcc.staff" /></option>
+        <option value="VM02">Coway_Supplier_Foreign</option>
+        <option value="VM03">Coway_Supplier_Foreign(Related Company)</option>
     </select>
 	</td>
 </tr>

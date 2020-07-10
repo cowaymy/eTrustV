@@ -90,6 +90,7 @@ public class WebInvoiceController {
 
 		model.addAttribute("pop", params.get("pop"));
 		model.addAttribute("accGrp", params.get("accGrp"));
+		model.addAttribute("entry", params.get("entry"));
 		return "eAccounting/webInvoice/memberAccountSearchPop";
 	}
 
