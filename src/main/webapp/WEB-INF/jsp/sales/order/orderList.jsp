@@ -551,7 +551,7 @@
 </form>
 <!-- report Form -->
 <form id="dataForm">
-    <input type="hidden" id="fileName" name="reportFileName" value="/sales/CustVALetter.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="fileName" name="reportFileName" value="/sales/CustVALetter_V2.rpt" /><!-- Report Name  --><!-- V2 Report  created by Webster Lee 10072020 -->
     <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
     <input type="hidden" id="downFileName" name="reportDownFileName" value="" /> <!-- Download Name -->
 
