@@ -525,7 +525,9 @@ function fn_excelDown(){
 
 </section><!-- search_table end -->
 <ul class="right_btns">
+  <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
     <li><p class="btn_grid"><a href="javascript:void(0);" onclick="fn_excelDown()">Generate</a></p></li>
+     </c:if>
 </ul>
 <section class="search_result"><!-- search_result start -->
 
