@@ -1878,6 +1878,8 @@
                     $("#keyinBrnchId").val(custInfo.cdBrnchId); //Posting Branch
                 else if(salesManType == 7)
                 	$("#keyinBrnchId").val(custInfo.htBrnchId); //Posting Branch
+                else if('${preOrderInfo.stusId}' == 4 || '${preOrderInfo.stusId}' == 10 )
+                    $("#keyinBrnchId").val('${preOrderInfo.keyinBrnchId}'); //Posting Branch
                 else
                     $("#keyinBrnchId").val(custInfo.soBrnchId); //Posting Branch
 
