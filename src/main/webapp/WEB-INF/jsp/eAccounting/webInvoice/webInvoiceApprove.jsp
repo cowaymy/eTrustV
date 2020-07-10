@@ -312,7 +312,7 @@ function fn_setToDay() {
 }
 
 function fn_supplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {accGrp:"VM10"}, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {accGrp:"VM10", entry:"appv"}, null, true, "supplierSearchPop");
 }
 
 function fn_costCenterSearchPop() {
