@@ -1359,6 +1359,10 @@
                  AND STUS_ID = 1
                  AND TYPE_ID IN (45)
               </when>
+              <when test='groupCode == "48"'>
+                 AND STUS_ID = 1
+                 AND TYPE_ID IN (42,48)
+              </when>
                <when test='groupCode == "5758"'>
                  AND STUS_ID = 1
                  AND TYPE_ID IN (5754)

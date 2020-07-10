@@ -354,7 +354,7 @@ function fn_departmentCode(value){
                          }
                      });
                } else if( traineeType == '7'){ // HOMECARE -- ADDED BY TOMMY
-                    doGetComboSepa("/common/selectBranchCodeList.do",'4' , '-',''   , 'branch' , 'S', '');
+                    doGetComboSepa("/common/selectBranchCodeList.do",'48' , '-',''   , 'branch' , 'S', '');
 
                    $("#branch").change(function(){
                        var jsonObj = {
