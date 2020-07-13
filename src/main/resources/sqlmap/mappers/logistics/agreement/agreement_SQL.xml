@@ -13,6 +13,7 @@
             B.ORGCODE orgCode,
             E.ROLE_DESC userRole,
             F.NAME status,
+            NVL(TO_CHAR( G.CNFM_DT, 'DD/MM/YYYY'), '-') cnfmDt,
             NVL(TO_CHAR(A.PROMO_DT, 'DD/MM/YYYY'), '-') promoDt,
             CASE WHEN A.MEM_TYPE = '2' THEN TO_CHAR(G.CNFM_DT, 'DD/MM/YYYY') END AS CD_CNFM_DT,
             TO_CHAR(A.JOIN_DT, 'DD/MM/YYYY') JOIN_DT,
@@ -80,6 +81,7 @@
                 B.LAST_ORG_CODE ORGCDE,
                 B.MEM_LVL MEMLVL,
                 A.STUS,
+                C.CNFM_DT CNFMDT,
                 CASE
                     WHEN A.MEM_TYPE = '1' AND B.MEM_LVL = 4 THEN (
                         CASE
@@ -96,6 +98,9 @@
                     ELSE '2017'
                 END AS CNFMDT,
                 CASE WHEN A.MEM_TYPE = '2' THEN TO_CHAR(C.CNFM_DT, 'DD/MM/YYYY') END AS CD_CNFM_DT,
+                NVL(TO_CHAR(A.PROMO_DT, 'DD/MM/YYYY'), '-') PROMO_DT,
+                TO_CHAR(A.JOIN_DT, 'DD/MM/YYYY') JOIN_DT,
+                CASE WHEN A.MEM_TYPE = '7' THEN TO_CHAR(C.CNFM_DT, 'DD/MM/YYYY') END AS CD_CNFM_DT,
                 NVL(TO_CHAR(A.PROMO_DT, 'DD/MM/YYYY'), '-') PROMO_DT,
                 TO_CHAR(A.JOIN_DT, 'DD/MM/YYYY') JOIN_DT
             FROM ORG0001D A
@@ -184,6 +189,20 @@
             SELECT
                 '2017' CODE_ID,
                 '2017 - 5.0 Version' CODE_NAME
+            FROM DUAL
+
+            /* to re-enable when new version is ready
+            UNION ALL
+
+            SELECT
+                '2018' CODE_ID,
+                '2018 - XXXX' CODE_NAME
+            FROM DUAL*/
+        </if>
+        <if test="groupCode == 7 ">
+            SELECT
+                '2020' CODE_ID,
+                '2020 - 1.0 Version' CODE_NAME
             FROM DUAL
 
             /* to re-enable when new version is ready
