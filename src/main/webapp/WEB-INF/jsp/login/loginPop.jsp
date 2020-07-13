@@ -53,6 +53,11 @@ console.log("loginPop.jsp");
         $("#agreementRejectBtn").attr("hidden", true);
     }
 
+    if(userType == "7") {
+        $("#agreementLogoutBtn").attr("hidden", false);
+        $("#agreementRejectBtn").attr("hidden", true);
+    }
+
 });
 
 function fn_cont() {
@@ -90,8 +95,9 @@ function fn_AcceptAgreement() {
                     successMsg = "Please print the agreement copy for your own record."
                 } else if(userType == "2") {
                     successMsg = "Thank you for signing up as Coway Malaysia Lady(Cody). <br /><br />";// +
+                }else if(userType == "7") {
+                    successMsg = "Thank you for signing up as Coway Malaysia Home Technician (HT). <br /><br />";// +
                 }
-
                 // Redirect to login page
                 if($("#loginForm #surveyStus").val() <= 0 && $("#loginForm surveyTypeId").val() > 0){
                     $('#popForm').hide();
