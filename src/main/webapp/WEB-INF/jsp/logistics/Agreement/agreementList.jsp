@@ -17,7 +17,6 @@ $(document).ready(function() {
     doGetCombo('/logistics/agreement/getMemStatus', null, '' ,'memStusCmb' , 'S');
 
     console.log($("#userRole").val());
-
     if($("#userRole").val() == 97 || $("#userRole").val() == 98 || $("#userRole").val() == 99 || $("#userRole").val() == 100 || // SO Branch
             $("#userRole").val() == 103 || $("#userRole").val() == 104 || $("#userRole").val() == 105 || // DST Support
             $("#userRole").val() == 128 || $("#userRole").val() == 129 || $("#userRole").val() == 130 || // Administrator
@@ -26,6 +25,8 @@ $(document).ready(function() {
             $("#userRole").val() == 177 || $("#userRole").val() == 179 || $("#userRole").val() == 180 || // Cody Support
             $("#userRole").val() == 200 || $("#userRole").val() == 252 || $("#userRole").val() == 253 || // Cody Planning
             $("#userRole").val() == 250 || $("#userRole").val() == 256 || // Cody Branch
+            $("#userRole").val() == 348 || $("#userRole").val() == 349 || $("#userRole").val() == 350|| $("#userRole").val() == 351 || // HT Manager
+            $("#userRole").val() == 352 || // HT
             $("#userRole").val() == 335 || $("#userRole").val() == 336 || $("#userRole").val() == 337 ) // Sales Care
     {
 
@@ -73,6 +74,60 @@ $(document).ready(function() {
                 $("#selectBranch").attr("disabled", true);
             }
         }
+        //////////////////////////////////HT///////////////////////////////////////////
+        else if(
+        		$("#userRole").val() == 348 || $("#userRole").val() == 349 || $("#userRole").val() == 350||
+        		$("#userRole").val() == 351 || // HT Manager
+                $("#userRole").val() == 352 //HT
+                ){
+            var brnch = "${branch}";
+
+            var today = new Date();
+            var date = today.getDate() +'/'+ (today.getMonth()+1)+'/'+today.getFullYear();
+
+            dt =date.split("/");
+            var todayDate = ('0' + dt[0]).slice(-2)  + '/' +  ('0'+dt[1]).slice(-2)  + '/'+   dt[2].slice(-4);
+
+             $("#startDt").val(todayDate);
+            $('#selectBranch option[value="' + brnch +'"] ').attr("selected", true);
+            $('#selectBranch').attr("disabled", true);
+
+            $('#memTypeCom option[value="7"] ').attr("selected", true);
+            $('#memTypeCom').attr("disabled", true);
+
+            doGetCombo('/logistics/agreement/getAgreementVersion', '7', '' ,'agreementVersion' , 'S');
+
+            if($("#userRole").val() == 349){
+            $('#memLevelCom option[value="1"] ').attr("selected", true);
+            $("#memLevelCom").attr("disabled", true);
+            }else if($("#userRole").val() == 350){
+            $('#memLevelCom option[value="2"] ').attr("selected", true);
+            $("#memLevelCom").attr("disabled", true);
+            }else if($("#userRole").val() == 351){
+                $('#memLevelCom option[value="3"] ').attr("selected", true);
+                $("#memLevelCom").attr("disabled", true);
+                }else if($("#userRole").val() == 352){
+                    $('#memLevelCom option[value="4"] ').attr("selected", true);
+                    $("#memLevelCom").attr("disabled", true);
+                    }
+
+          $("#agreementVersion").attr("disabled", true);
+
+          $("#code").val("${memCode}").attr("disabled", true);
+
+          Common.ajax("GET", "/logistics/agreement/getMemberInfo", {memID : "${memCode}", memType : memType}, function(result) {
+
+              $("#name").val(result.name).attr("disabled", true);
+              $("#icNum").val(result.nric).attr("disabled", true);
+              $("#deptCode").val(result.deptCode).attr("disabled", true);
+              $("#grpCode").val(result.grpCode).attr("disabled", true);
+              $("#memStusCmb option[value='" + result.stus + "']").attr("selected", true);
+              $("#memLevelCom option[value='" + result.memLvl + "']").attr("selected", true);
+              $("#joinDt").val(result.joinDt);
+              $("#cnfmDt").val(result.cnfmDt);
+          });
+
+        }
 
         createAUIGrid();
         AUIGrid.setSelectionMode(myGridID, "singleRow");
@@ -85,24 +140,25 @@ $(document).ready(function() {
     	});
 
     } else {
-
         $("#versionLbl").attr("hidden", true);
         $("#versionCol").attr("hidden", true);
         $("#agreementVersion").attr("hidden", true);
 
         var memType = "${memType}";
 
-        //doGetCombo('/logistics/agreement/getMemLevel', memType, '' ,'memLevelCom' , 'S');
         doGetCombo('/logistics/agreement/getAgreementVersion', memType, '' ,'agreementVersion' , 'S');
 
-        if(memType == 1 || memType == 2) {
+        if(memType == 1 || memType == 2 || memType ==7) {
             $("#memTypeCom > option[value='" + memType +"']").attr("selected", true);
         }
 
         $("#code").val("${memCode}");
+        console.log("here is result");
+        console.log("#code");
 
         Common.ajax("GET", "/logistics/agreement/getMemberInfo", {memID : "${memCode}", memType : memType}, function(result) {
-            console.log(result);
+
+        	console.log(result);
 
             $("#name").val(result.name);
             $("#icNum").val(result.nric);
@@ -148,10 +204,12 @@ $(document).ready(function() {
         $("#grid_wrap_memList").attr("hidden", true);
     }
 
-    /*$("#startDt").blur(function() {
-        console.log($("#startDt").val());
-    });*/
     $("#startDt").on("change", function() {
+
+        if($("#memTypeCom").val() == 7){
+        	   console.log("type 7 here");
+
+        }else{
         console.log($("#startDt").val());
 
         var day = $("#startDt").val().substring(0, 2);
@@ -184,6 +242,7 @@ $(document).ready(function() {
         }
 
         $("#endDt").val(expDay + "/" + expMth + "/" + year);
+    }
     });
 });
 
@@ -213,6 +272,7 @@ function fn_onChgMemType() {
 
         $("#memLevelCom").attr("disabled", true);
         $("#agreementVersion").attr("disabled", true);
+
     }
 
 }
@@ -423,6 +483,192 @@ function fn_downloadAgreement() {
             Common.alert("Agreement not agreed!");
         }
     }
+
+    ///////////HTTTTTT????????????????????
+    else if($("#memTypeCom").val() == "7") {
+        // HT Download
+
+        var obj = {
+                    code : $("#code").val(),
+                    name : $("#name").val(),
+                    icNum : $("#icNum").val(),
+                    memTypeCom : $("#memTypeCom").val(),
+                    memLevelCom : $("#memLevelCom").val(),
+                    memStusCmb : $("#memStusCmb").val(),
+                    deptCode : $("#deptCode").val(),
+                    grpCode : $("#grpCode").val(),
+                    orgCode : $("#orgCode").val(),
+                    selectBranch : $("#selectBranch").val()
+                };
+
+                Common.ajax("GET", "/logistics/agreement/memberList", obj, function(result) {
+
+                    console.log(result);
+                    //console.log("result of cnfmdt "+result[0].cnfmdt);
+
+                    var cnfm = result[0].cnfmdt;
+                    var memLvl =  $("#memLevelCom").val();
+
+                    if(agmtStus != "0") {
+                        var gridObj = AUIGrid.getSelectedItems(myGridID);
+                        $("#joinDt").val(gridObj[0].item.joinDt);
+                        $("#mem").val(gridObj[0].item.memcode);
+
+                        var dd, mm, yyyy;
+
+                        var dt = $("#startDt").val().split("/");
+                        var selStartDt = new Date(dt[2] + "-" + dt[1] + "-" + dt[0]);
+                        console.log("selStartDt  "+selStartDt);
+
+                        dt = cnfm.split("/");
+                        var cnfmDt = new Date(dt[2] + "-" + dt[1] + "-" + dt[0]);
+                        //console.log("dt is "+ dt);
+
+                        dt = $("#joinDt").val().split("/");
+                        var joinDt = new Date(dt[2] + "-" + dt[1] + "-" + dt[0]);
+                        console.log("joinDt  "+joinDt);
+
+                        var newJoinDt = new Date(dt[2] + "/" + dt[1] + "/" + dt[0]);
+                        //console.log("newJoinDt "+newJoinDt);
+
+                        var renewCnfm = new Date(cnfmDt),
+                        rmonth = '' + (renewCnfm.getMonth()+1),
+                        rday = '' + renewCnfm.getDate(),
+                        ryear = renewCnfm.getFullYear();
+
+                        var newJoinDtStringFormat = new Date(newJoinDt),
+                        month = '' + (newJoinDtStringFormat.getMonth()+1),
+                        day = '' + newJoinDtStringFormat.getDate(),
+                        year = newJoinDtStringFormat.getFullYear();
+
+                        if (month.length < 2)
+                            month = '0' + month;
+                        if (day.length < 2)
+                            day = '0' + day;
+
+                        var renewal =  [ryear, month, day].join('-');
+
+                        renewal = new Date(renewal);
+                        renewal.setFullYear(renewal.getFullYear() + 1);
+                        console.log("var cnfm "+cnfmDt);
+                        console.log("renewal  "+renewal);
+
+                        dd = joinDt.getDate();
+                        mm = joinDt.getMonth() + 1;
+                        yyyy = joinDt.getFullYear();
+                        pyyyy = joinDt.getFullYear() +1;
+
+                        joinDtPlusOneYear = pyyyy + "-" + mm + "-" + dd;
+                        joinDtPlusOneYear = new Date(joinDtPlusOneYear);
+
+                        if(cnfmDt == "1900-01-01") {
+                            Common.alert("Agreement not accepted.");
+                            return false;
+                        } else {
+                            console.log("join plus one here " + joinDtPlusOneYear);
+
+                            if((selStartDt <= joinDt && selStartDt <= cnfmDt && selStartDt < renewal)
+                            ) {
+                                //selection date is very old
+                                //return first
+                                dd = selStartDt.getDate();
+                                mm = selStartDt.getMonth() + 1;
+                                yyyy = selStartDt.getFullYear();
+                                yyyy = selStartDt.getFullYear();
+
+                                selStartDt = yyyy + "-" + mm + "-" + dd;
+
+                                $("#v_firstAndPast").val("Y");
+                                $("#v_contractStartDt").val(selStartDt);
+                                $("#v_currentSts").val("N");
+                                console.log("1.1 first agreement and not current agreement");
+
+                            }else if(selStartDt >= joinDt && selStartDt <= cnfmDt  && selStartDt < renewal && selStartDt <=joinDtPlusOneYear
+                            ) {
+                                //previous signed agreement but first
+                                dd = selStartDt.getDate();
+                                mm = selStartDt.getMonth() + 1;
+                                yyyy = selStartDt.getFullYear();
+                                selStartDt = yyyy + "-" + mm + "-" + dd;
+                                $("#v_contractStartDt").val(selStartDt);
+                                $("#v_currentSts").val("N");
+                                $("#v_firstAndPast").val("Y1");
+                                console.log("2z. previous signed agreement but first");
+                            }else if(selStartDt > joinDt && selStartDt < cnfmDt  && selStartDt < renewal) {
+                                //previous signed agreement
+                                dd = selStartDt.getDate();
+                                mm = selStartDt.getMonth() + 1;
+                                yyyy = selStartDt.getFullYear();
+                                selStartDt = yyyy + "-" + mm + "-" + dd;
+                                $("#v_contractStartDt").val(selStartDt);
+                                $("#v_currentSts").val("N");
+                                $("#v_firstAndPast").val("N");
+                                console.log("2. previous signed agreement");
+                            } else if(selStartDt >= joinDt && selStartDt < joinDtPlusOneYear && selStartDt < renewal){
+                        		 //first and current agreement
+                        		 dd = cnfmDt.getDate();
+                                 mm = cnfmDt.getMonth() + 1;
+                                 yyyy = cnfmDt.getFullYear();
+                                 cnfmDt = yyyy + "-" + mm + "-" + dd;
+                                $("#v_contractStartDt").val(cnfmDt);
+                                $("#v_currentSts").val("Y");
+                                $("#v_firstAndPast").val("N");
+                                 console.log("1.1a first agreement and current agreement");
+                                 }else if((selStartDt > joinDt && selStartDt >= cnfmDt && selStartDt < renewal) ||//user search current signed agreement
+                            		     (selStartDt > joinDt && selStartDt > cnfmDt && selStartDt > renewal)   //user search beyond current (return current)
+                            		     ) {
+
+                            	dd = cnfmDt.getDate();
+                                mm = cnfmDt.getMonth() + 1;
+                                yyyy = cnfmDt.getFullYear();
+                                cnfmDt = yyyy + "-" + mm + "-" + dd;
+                                $("#v_contractStartDt").val(cnfmDt);
+                                $("#v_currentSts").val("Y");
+                                $("#v_firstAndPast").val("N");
+                                console.log("3. current signed agreement");
+                            }else {
+                            	console.log("4. nothing");
+                            }
+                        }
+
+                        console.log("v start date early  "+$("#v_contractStartDt").val());
+
+                        dt =$("#v_contractStartDt").val().split("-");
+                        console.log("v start date 2  "+dt);
+
+
+                         var MyDateString =
+                        	 ('0' + dt[2]).slice(-2)+ '/' +
+                        	 ('0'+dt[1]).slice(-2) + '/'+
+                             dt[0].slice(-4);
+
+                        console.log("v_contractStartDt :: " + $("#v_contractStartDt").val());
+
+                        $("#v_contractStartDt").val(MyDateString);
+                        console.log("v_contractStartDt :: " + $("#v_contractStartDt").val());
+
+
+                        console.log("v_currentSts :: " + $("#v_currentSts").val());
+
+                        if(memLvl == "4") {
+                            console.log("memLvl up :: " + memLvl);
+                            $("#reportFileName").val("/organization/agreement/HTAgreement_2020v1.rpt");
+                            $("#reportDownFileName").val("HTAgreement_" + code);
+                        } else {
+
+                            console.log("memLvl down :: " +memLvl);
+                            $("#reportFileName").val("/organization/agreement/HTMAgreement_2020v1.rpt");
+                            $("#reportDownFileName").val("HTMAgreement_" + code);
+                        }
+
+                        Common.report("agreementReport", option);
+
+                        console.log($("#reportFileName").val());
+                    } else {
+                        Common.alert("Agreement not agreed!");
+                    }
+                });
+    }
 }
 
 function createAUIGrid() {
@@ -514,142 +760,161 @@ function createAUIGrid() {
 
 <!-- --------------------------------------DESIGN------------------------------------------------ -->
 
-<section id="content"><!-- content start -->
-<ul class="path">
-    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>e-Agreement</li>
-</ul>
+<section id="content">
+	<!-- content start -->
+	<ul class="path">
+		<li><img
+			src="${pageContext.request.contextPath}/resources/images/common/path_home.gif"
+			alt="Home" /></li>
+		<li>e-Agreement</li>
+	</ul>
 
-<aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>e-Agreement</h2>
-<ul class="right_btns">
-    <li><p class="btn_blue"><a href="javascript:fn_searchMember();"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="javascript:fn_downloadAgreement();">Download</a></p></li>
+	<aside class="title_line">
+		<!-- title_line start -->
+		<p class="fav">
+			<a href="#" class="click_add_on">My menu</a>
+		</p>
+		<h2>e-Agreement</h2>
+		<ul class="right_btns">
+			<li><p class="btn_blue">
+					<a href="javascript:fn_searchMember();"><span class="search"></span>Search</a>
+				</p></li>
+			<li><p class="btn_blue">
+					<a href="javascript:fn_downloadAgreement();">Download</a>
+				</p></li>
 
-    <!-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+			<!-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="btn_blue"><a href="javascript:fn_searchMember();"><span class="search"></span>Search</a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
         <li><p class="btn_blue"><a href="javascript:fn_downloadAgreement();">Download</a></p></li>
     </c:if> -->
-</ul>
-</aside><!-- title_line end -->
+		</ul>
+	</aside>
+	<!-- title_line end -->
 
-<input type="hidden" id="userRole" name="userRole" value="${userRole} " />
-<input type="hidden" id="userAgreement" name="userAgreement" />
+	<input type="hidden" id="userRole" name="userRole" value="${userRole} " />
+	<input type="hidden" id="userAgreement" name="userAgreement" />
 
-<form id="agreementReport" name="agreementReport">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
-    <input type="hidden" id="viewType" name="viewType" value="PDF" />
-    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+	<form id="agreementReport" name="agreementReport">
+		<input type="hidden" id="reportFileName" name="reportFileName"
+			value="" /> <input type="hidden" id="viewType" name="viewType"
+			value="PDF" /> <input type="hidden" id="reportDownFileName"
+			name="reportDownFileName" value="" /> <input type="hidden"
+			id="v_memCode" name="v_memCode" value="" /> <input type="hidden"
+			id="v_contractStartDt" name="v_contractStartDt" value="" /> <input
+			type="hidden" id="v_contractEndDt" name="v_contractEndDt" value="" />
+		<input type="hidden" id="v_currentSts" name="v_currentSts" value="" />
+		<input type="hidden" id="v_firstAndPast" name="v_firstAndPast"
+			value="" />
+	</form>
 
-    <input type="hidden" id="v_memCode" name="v_memCode" value="" />
-    <input type="hidden" id="v_contractStartDt" name="v_contractStartDt" value="" />
-    <input type="hidden" id="v_contractEndDt" name="v_contractEndDt" value="" />
-</form>
+	<section class="search_table">
+		<!-- search_table start -->
+		<form action="#" id="searchForm" method="post">
 
-<section class="search_table"><!-- search_table start -->
-<form action="#" id="searchForm" method="post">
+			<input type="hidden" id="promoDt" name="promoDt" value="" /> <input
+				type="hidden" id="joinDt" name="joinDt" /> <input type="hidden"
+				id="cnfmDt" name="cnfmDt" />
 
-<input type="hidden" id="promoDt" name="promoDt" value="" />
-<input type="hidden" id="joinDt" name="joinDt" />
-<input type="hidden" id="cnfmDt" name="cnfmDt" />
+			<table class="type1">
+				<!-- table start -->
+				<caption>table</caption>
+				<colgroup>
+					<col style="width: 150px" />
+					<col style="width: *" />
+					<col style="width: 150px" />
+					<col style="width: *" />
+					<col style="width: 150px" />
+					<col style="width: *" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<th scope="row">Code</th>
+						<td><input type="text" title="Code" placeholder=""
+							class="w100p" id="code" name="code" /></td>
+						<th scope="row">Name</th>
+						<td><input type="text" title="Name" placeholder=""
+							class="w100p" id="name" name="name" /></td>
+						<th scope="row">IC Number</th>
+						<td><input type="text" title="IC Number" placeholder=""
+							class="w100p" id="icNum" name="icNum" /></td>
+					</tr>
+					<tr>
+						<th scope="row">Member Type<span class="must">*</span></th>
+						<td><select class="w100p" id="memTypeCom" name="memTypeCom"
+							onChange="javascript : fn_onChgMemType()">
+								<option value="" selected>Select Account</option>
+								<option value="1">Health Planner</option>
+								<option value="2">Cody</option>
+								<option value="7">Homecare Technician</option>
+						</select></td>
+						<th scope="row">Member Level</th>
+						<td><select class="w100p" id="memLevelCom" name="memLevelCom">
+								<option value="">Choose One</option>
+								<c:forEach var="list" items="${memLevel}" varStatus="status">
+									<option value="${list.codeId}">${list.codeName}</option>
+								</c:forEach>
+						</select></td>
+						<th scope="row">Status</th>
+						<td><select class="w100p" id="memStusCmb" name="memStusCmb"></select>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Department Code</th>
+						<td><input type="text" class="w100p" id="deptCode"
+							name="deptCode" value="${deptCode}" /></td>
+						<th scope="row">Group Code</th>
+						<td><input type="text" class="w100p" id="grpCode"
+							name="grpCode" value="${grpCode}" /></td>
+						<th scope="row">Organization Code</th>
+						<td><input type="text" class="w100p" id="orgCode"
+							name="orgCode" value="${orgCode}" /></td>
+					</tr>
+					<tr>
+						<th scope="row" id="selectBranchLbl">Branch</th>
+						<td id="selectBranchCol">
+							<!-- <span><c:out value="${memberView.c4} - ${memberView.c5} " /></span>-->
+							<select class="w100p" id="selectBranch" name="selectBranch">
+								<option value="0">Choose One</option>
+								<c:forEach var="list" items="${branchList}" varStatus="status">
+									<option value="${list.brnchId}">${list.branchCode}-
+										${list.branchName}</option>
+								</c:forEach>
+						</select>
+						</td>
+						<th scope="row">Contract Period</th>
+						<td>
+							<div class="date_set w100p">
+								<!-- date_set start -->
+								<p>
+									<input type="text" title="Contract Start Date"
+										placeholder="DD/MM/YYYY" class="j_date" id="startDt"
+										name="startDt" />
+								</p>
+								<span><spring:message code="webInvoice.to" /></span>
+								<p>
+									<input type="text" title="Contract End Date"
+										placeholder="DD/MM/YYYY" class="j_date" id="endDt"
+										name="endDt" disabled />
+								</p>
+							</div> <!-- date_set end -->
+						</td>
+						<th scope="row" id="versionLbl">Version</th>
+						<td id="versionCol">
+							<!-- Version option value to be added into SQL  --> <select
+							class="w100p" id="agreementVersion" name="agreementVersion"></select>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- table end -->
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:150px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Code</th>
-    <td>
-    <input type="text" title="Code" placeholder="" class="w100p" id="code" name="code" />
-    </td>
-    <th scope="row">Name</th>
-    <td>
-    <input type="text" title="Name" placeholder="" class="w100p" id="name" name="name" />
-    </td>
-    <th scope="row">IC Number</th>
-    <td>
-    <input type="text" title="IC Number" placeholder="" class="w100p" id="icNum" name="icNum" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Member Type<span class="must">*</span></th>
-    <td>
-        <select class="w100p" id="memTypeCom" name="memTypeCom" onChange="javascript : fn_onChgMemType()">
-            <option value="" selected>Select Account</option>
-            <option value="1">Health Planner</option>
-            <option value="2">Cody</option>
-        </select>
-    </td>
-    <th scope="row">Member Level</th>
-    <td>
-        <select class="w100p"  id="memLevelCom" name="memLevelCom" >
-            <option value="">Choose One</option>
-                <c:forEach var="list" items="${memLevel}" varStatus="status">
-                    <option value="${list.codeId}">${list.codeName}</option>
-                </c:forEach>
-        </select>
-    </td>
-    <th scope="row">Status</th>
-    <td>
-        <select class="w100p" id="memStusCmb" name="memStusCmb"></select>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Department Code</th>
-    <td>
-        <input type="text" class="w100p" id="deptCode" name="deptCode" value="${deptCode}" />
-    </td>
-    <th scope="row">Group Code</th>
-    <td>
-        <input type="text" class="w100p" id="grpCode" name="grpCode" value="${grpCode}" />
-    </td>
-    <th scope="row">Organization Code</th>
-    <td>
-        <input type="text" class="w100p" id="orgCode" name="orgCode" value="${orgCode}" />
-    </td>
-</tr>
-<tr>
-    <th scope="row" id="selectBranchLbl">Branch</th>
-    <td id="selectBranchCol">
-     <!-- <span><c:out value="${memberView.c4} - ${memberView.c5} " /></span>-->
-     <select class="w100p"  id="selectBranch" name="selectBranch" >
-        <option value="0">Choose One</option>
-        <c:forEach var="list" items="${branchList}" varStatus="status">
-           <option value="${list.brnchId}">${list.branchCode} - ${list.branchName}</option>
-        </c:forEach>
-    </select>
-    </td>
-    <th scope="row">Contract Period</th>
-    <td>
-        <div class="date_set w100p"><!-- date_set start -->
-            <p><input type="text" title="Contract Start Date" placeholder="DD/MM/YYYY" class="j_date" id="startDt" name="startDt"/></p>
-            <span><spring:message code="webInvoice.to" /></span>
-            <p><input type="text" title="Contract End Date" placeholder="DD/MM/YYYY" class="j_date" id="endDt" name="endDt" disabled/></p>
-        </div><!-- date_set end -->
-    </td>
-    <th scope="row" id="versionLbl">Version</th>
-    <td  id="versionCol">
-        <!-- Version option value to be added into SQL  -->
-        <select class="w100p" id="agreementVersion" name="agreementVersion"></select>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
+		</form>
+	</section>
+	<!-- search_table end -->
 
-</form>
-</section><!-- search_table end -->
-
-<!--
+	<!--
 <article class="link_btns_wrap">
     <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
     <dl class="link_list">
@@ -664,26 +929,31 @@ function createAUIGrid() {
 </article>
 -->
 
-<article class="grid_wrap">
-    <!-- grid_wrap start -->
-    <div id="grid_wrap_memList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
-</article><!-- grid_wrap end -->
+	<article class="grid_wrap">
+		<!-- grid_wrap start -->
+		<div id="grid_wrap_memList"
+			style="width: 100%;
+  height: 500px;
+  margin: 0 auto;"></div>
+	</article>
+	<!-- grid_wrap end -->
 
-<input type="hidden" id="userRole" name="userRole" value="${userRole} " />
+	<input type="hidden" id="userRole" name="userRole" value="${userRole} " />
 
-<form id="agreementReport" name="agreementReport" style="display:none">
-    <input id="reportFileName" name="reportFileName" value="/organization/HPAgreement.rpt" />
-    <input id="viewType" name="viewType" value="PDF" />
-    <input id="reportDownFileName" name="reportDownFileName" />
+	<form id="agreementReport" name="agreementReport" style="display: none">
+		<input id="reportFileName" name="reportFileName"
+			value="/organization/HPAgreement.rpt" /> <input id="viewType"
+			name="viewType" value="PDF" /> <input id="reportDownFileName"
+			name="reportDownFileName" /> <input id="v_memCode" name="v_memCode"
+			value="" />
+	</form>
 
-    <input id="v_memCode" name="v_memCode" value="" />
-</form>
+	<form id="applicantValidateForm" method="post">
+		<div style="display: none">
+			<input type="text" name="aplcntCode" id="aplcntCode" /> <input
+				type="text" name="aplcntNRIC" id="aplcntNRIC" />
+		</div>
+	</form>
 
-<form id="applicantValidateForm" method="post">
-    <div style="display:none">
-        <input type="text" name="aplcntCode"  id="aplcntCode"/>
-        <input type="text" name="aplcntNRIC"  id="aplcntNRIC"/>
-    </div>
-</form>
-
-</section><!-- content end -->
+</section>
+<!-- content end -->
