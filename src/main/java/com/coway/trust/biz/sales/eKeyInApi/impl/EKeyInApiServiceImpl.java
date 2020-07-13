@@ -2162,22 +2162,27 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       String stus = "1";
       String errorDesc = "";
 
+      EKeyInApiDto rtnDto = new EKeyInApiDto();
+
       Map<String, Object> params = new HashMap<String, Object>();
       params.put("refNo", param.getRefNo());
+
+      logger.debug(param.getRefNo());
 
 //      Map<String, Object> sal0257Dtoken = new HashMap<String, Object>();
 //      sal0257Dtoken = eKeyInApiMapper.getTokenInfo(params);
 
       EKeyInApiDto sal0257Dtoken = EKeyInApiDto.create(eKeyInApiMapper.getTokenInfo(params));
 
-//      if(CommonUtils.isEmpty(sal0257Dtoken)) {
-//          stus = "21";
-//          saveCnt = eKeyInApiMapper.updateStagingF(params);
-//          if(saveCnt != 1) {
-//              throw new ApplicationException(AppConstants.FAIL, " Update Card Info Exception");
-//          }
-//          throw new ApplicationException(AppConstants.FAIL, "tokenInfo value does not exist.");
-//      } else {
+      if(CommonUtils.isEmpty(sal0257Dtoken)) {
+          logger.debug("sal0257Dtoken is null");
+          stus = "21";
+          saveCnt = eKeyInApiMapper.updateStagingF(params);
+          if(saveCnt != 1) {
+              throw new ApplicationException(AppConstants.FAIL, " Update Card Info Exception");
+          }
+          throw new ApplicationException(AppConstants.FAIL, "tokenInfo value does not exist.");
+      } else {
           stus = "0";
 
           Map<String, Object> loginInfoMap = new HashMap<String, Object>();
@@ -2213,7 +2218,6 @@ logger.debug("===== sal0028d :: mapping :: end =====");
           sal0028D.put("custId", param.getCustId());
           sal0028D.put("custCrcNo", sal0257Dtoken.getCustOriCrcNo());
           sal0028D.put("custOriCrcNo", sal0257Dtoken.getCustOriCrcNo());
-//          sal0028D.put("custEncryptCrcNo", sal0257Dtoken.get("custOriCrcNo"));
           sal0028D.put("custEncryptCrcNo", "");
           sal0028D.put("custCrcOwner", param.getCustCrcOwner());
           sal0028D.put("custCrcTypeId", custCrcTypeId);
@@ -2263,7 +2267,6 @@ logger.debug("===== sal0028d :: insert =====");
           rtnDto = selectAnotherCardList.get(0);
           */
 
-          EKeyInApiDto rtnDto = new EKeyInApiDto();
           rtnDto.setCustOriCrcNo(sal0257Dtoken.getCustOriCrcNo());
           rtnDto.setCustCrcTypeId(Integer.parseInt(custCrcTypeId));
           rtnDto.setCustCrcOwner(param.getCustCrcOwner());
@@ -2277,7 +2280,7 @@ logger.debug("===== sal0028d :: insert =====");
 logger.debug("===== rtnDto =====");
 logger.debug(rtnDto.toString());
 logger.debug("EKeyInApiServiceImpl :: return :: saveTokenNumber");
-//      }
+      }
 
       return rtnDto;
   }
