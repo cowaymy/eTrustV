@@ -316,6 +316,7 @@
             A.POP_ACK1,
             A.POP_ACK2,
             A.POP_ACK3,
+            A.CRT_DT,
             NVL(B.POP_EXCEPTION_MEMROLE_CNT, 0) POP_EXCEPTION_MEMROLE_CNT,
             NVL(C.POP_EXCEPTION_USER_CNT, 0) POP_EXCEPTION_USER_CNT
         FROM SYS0091M A
