@@ -397,6 +397,7 @@
 					AND LG43M.BOM = LG44D.BOM
 					AND LG44D.BOM_COMPNT = SY26M.STK_CODE
 					AND SY26M.STK_TYPE_ID=SY13M .CODE_ID
+					AND NVL(LG44D.DEL_INDICT, 'N') <> 'Y'
 			 ]]>
 			   <if test="grid !=null and grid == 'spare'">
 			   AND SY26M.STK_TYPE_ID=63
@@ -504,7 +505,15 @@
 			 where PRC_ID      =  (SELECT PRC_ID FROM SAL0016M
 		                            WHERE STK_ID = #{stockid}
 		                              AND APP_TYPE_ID = #{apptypeid}
-		                              AND MEM_PAC_ID  = #{srvpacid})
+		                              <choose>
+                                            <when test="srvpacid !=null and srvpacid != ''">
+                                                 AND MEM_PAC_ID  = #{srvpacid}
+                                            </when>
+                                            <otherwise>
+                                                 AND MEM_PAC_ID  = 0
+                                            </otherwise>
+                                      </choose>
+		                            )
         </update>
 
         <select id="srvMembershipList" parameterType="Map" resultType="egovMap">
@@ -714,7 +723,15 @@
                                                                 FROM SAL0016M
                                                                 WHERE STK_ID = #{stockid}
                                                                 AND APP_TYPE_ID = #{apptypeid}
-                                                                AND MEM_PAC_ID  = #{srvpacid})
+                                                             <choose>
+                                                                   <when test="srvpacid !=null and srvpacid != ''">
+                                                                        AND MEM_PAC_ID  = #{srvpacid}
+                                                                   </when>
+                                                                   <otherwise>
+                                                                        AND MEM_PAC_ID  = 0
+                                                                   </otherwise>
+                                                             </choose>
+                                                                )
          </insert>
          <select id="selectStockCommisionSetting" parameterType="Map" resultType="egovMap">
          <![CDATA[
