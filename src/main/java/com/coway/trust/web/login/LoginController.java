@@ -129,9 +129,9 @@ public class LoginController {
 
 	// UserSetting Popup
 	@RequestMapping(value = "/userSettingPop.do")
-	public String userSettingPop(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+	public String userSettingPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		model.addAttribute("userSettingFlag", sessionVO);
-		LOGGER.debug("userSettingPop: {} ,getUserId: {}", params.toString(),sessionVO.getUserId());
+		LOGGER.debug("userSettingPop: {} ,getUserId: {}", params.toString(), sessionVO.getUserId());
 		return "/login/userSettingPop";
 	}
 
@@ -187,8 +187,8 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = "/updateUserInfoSetting.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updateUserSetting(@RequestBody Map<String, Object> params,	SessionVO sessionVO)
-	{
+	public ResponseEntity<ReturnMessage> updateUserSetting(@RequestBody Map<String, Object> params,
+			SessionVO sessionVO) {
 		LOGGER.debug("updateUserInfoSetting: " + params.toString());
 
 		int cnt = loginService.updateUserSetting(params, sessionVO.getUserId());
@@ -204,248 +204,319 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = "/selectSecureResnList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectSecureResnList(@RequestParam Map<String, Object> params, ModelMap model)
-	{
+	public ResponseEntity<List<EgovMap>> selectSecureResnList(@RequestParam Map<String, Object> params,
+			ModelMap model) {
 		LOGGER.debug("selectSecureResnList : {}", params.toString());
 
 		List<EgovMap> selectSecureResnList = loginService.selectSecureResnList(params);
 		return ResponseEntity.ok(selectSecureResnList);
 	}
 
-	@RequestMapping(value="/myInfo.do", method = RequestMethod.GET)
-	public String myInfo(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO){
+	@RequestMapping(value = "/myInfo.do", method = RequestMethod.GET)
+	public String myInfo(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		model.addAttribute("userSettingFlag", sessionVO);
-		LOGGER.debug("userSettingPop: {} ,getUserId: {}", params.toString(),sessionVO.getUserId());
+		LOGGER.debug("userSettingPop: {} ,getUserId: {}", params.toString(), sessionVO.getUserId());
 		return "/login/myInfo";
-
 
 	}
 
-    // 2018-07-19 - LaiKW - HP Pop up
-    @RequestMapping(value = "/loginPop.do")
-    public String loginPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	// 2018-07-19 - LaiKW - HP Pop up
+	@RequestMapping(value = "/loginPop.do")
+	public String loginPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-    	LOGGER.debug("==================== loginPop.do ====================");
+		LOGGER.debug("==================== loginPop.do ====================");
 
-    	LOGGER.debug("params : {}", params);
-        model.put("loginUserId", (String) params.get("loginUserId"));
-        model.put("os", (String) params.get("os"));
-        model.put("browser", (String) params.get("browser"));
-        model.put("userId", (String) params.get("userId"));
-        model.put("password", (String) params.get("password"));
-        model.put("userType", (String) params.get("loginUserType"));
-        model.put("pdfNm", params.get("loginPdf"));
-        model.put("popType", params.get("popType"));
-        model.put("popAck1", params.get("popAck1"));
-        model.put("popAck2", params.get("popAck2"));
-        model.put("popRejectFlg", params.get("popRejectFlg"));
-        model.put("verName", params.get("verName"));
-        model.put("verNRIC", params.get("verNRIC"));
-        model.put("verBankAccNo", params.get("verBankAccNo"));
-        model.put("verBankName", params.get("verBankName"));
+		LOGGER.debug("params : {}", params);
+		model.put("loginUserId", (String) params.get("loginUserId"));
+		model.put("os", (String) params.get("os"));
+		model.put("browser", (String) params.get("browser"));
+		model.put("userId", (String) params.get("userId"));
+		model.put("password", (String) params.get("password"));
+		model.put("userType", (String) params.get("loginUserType"));
+		model.put("pdfNm", params.get("loginPdf"));
+		model.put("popType", params.get("popType"));
+		model.put("popAck1", params.get("popAck1"));
+		model.put("popAck2", params.get("popAck2"));
+		model.put("popRejectFlg", params.get("popRejectFlg"));
+		model.put("verName", params.get("verName"));
+		model.put("verNRIC", params.get("verNRIC"));
+		model.put("verBankAccNo", params.get("verBankAccNo"));
+		model.put("verBankName", params.get("verBankName"));
 
-        return "/login/loginPop";
-    }
+		return "/login/loginPop";
+	}
 
-    @RequestMapping(value="/getLoginDtls.do", method = RequestMethod.GET)
-    public ResponseEntity<Map> getLoginDtls(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+	@RequestMapping(value = "/getLoginDtls.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> getLoginDtls(@RequestParam Map<String, Object> params, HttpServletRequest request,
+			ModelMap model, SessionVO sessionVO) {
 
-        LOGGER.debug("==================== getLoginDtls ====================");
+		LOGGER.debug("==================== getLoginDtls ====================");
 
-        //Map<String, Object> popInfo = new HashMap();
+		// Map<String, Object> popInfo = new HashMap();
 
-        params.put("userTypeId", sessionVO.getUserTypeId());
-        params.put("userId", sessionVO.getUserId());
+		params.put("userTypeId", sessionVO.getUserTypeId());
+		params.put("userId", sessionVO.getUserId());
 
-        EgovMap item1 = new EgovMap();
-        item1 = (EgovMap) loginService.getDtls(params);
-        params.put("roleType", item1.get("roleType"));
+		EgovMap item1 = new EgovMap();
+		item1 = (EgovMap) loginService.getDtls(params);
+		params.put("roleType", item1.get("roleType"));
 
-        return ResponseEntity.ok(params);
-    }
+		return ResponseEntity.ok(params);
+	}
 
-    @RequestMapping(value = "/loginPopCheck", method = RequestMethod.GET)
-    public ResponseEntity<Map> cdEagmt1(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+	@RequestMapping(value = "/loginPopCheck", method = RequestMethod.GET)
+	public ResponseEntity<Map> cdEagmt1(@RequestParam Map<String, Object> params, HttpServletRequest request,
+			ModelMap model, SessionVO sessionVO) throws ParseException {
 
-        LOGGER.debug("==================== loginPopCheck ====================");
+		LOGGER.debug("==================== loginPopCheck ====================");
 
-        LOGGER.debug("params : {}", params);
-        model.put("loginUserId", (String) params.get("loginUserId"));
-        model.put("os", (String) params.get("os"));
-        model.put("browser", (String) params.get("browser"));
-        model.put("userId", (String) params.get("userId"));
-        model.put("password", (String) params.get("password"));
-        model.put("userType", (String) params.get("loginUserType"));
+		LOGGER.debug("params : {}", params);
+		model.put("loginUserId", (String) params.get("loginUserId"));
+		model.put("os", (String) params.get("os"));
+		model.put("browser", (String) params.get("browser"));
+		model.put("userId", (String) params.get("userId"));
+		model.put("password", (String) params.get("password"));
+		model.put("userType", (String) params.get("loginUserType"));
 
-        params.put("userId", sessionVO.getUserId());
+		params.put("userId", sessionVO.getUserId());
 
-        // Get User type, role/contract type, agreement status (if applicable)
-        EgovMap item1 = new EgovMap();
-        item1 = (EgovMap) loginService.getDtls(params);
+		// Get User type, role/contract type, agreement status (if applicable)
+		EgovMap item1 = new EgovMap();
+		item1 = (EgovMap) loginService.getDtls(params);
 
-        Map<String, Object> popInfo = new HashMap();
+		LOGGER.debug("============ ITEMS1 =============" + item1);
 
-        String userTypeId = params.get("userTypeId").toString();
-        while(userTypeId.length() < 4) {
-            userTypeId = "0" + userTypeId;
-            LOGGER.debug("userTypeId :: " + userTypeId);
-        }
+		Map<String, Object> popInfo = new HashMap();
 
-        params.put("userTypeId", userTypeId);
-        params.put("roleType", item1.get("roleType"));
+		String userTypeId = params.get("userTypeId").toString();
+		while (userTypeId.length() < 4) {
+			userTypeId = "0" + userTypeId;
+			LOGGER.debug("userTypeId :: " + userTypeId);
+		}
 
-        String retMsg = "";
+		params.put("userTypeId", userTypeId);
+		params.put("roleType", item1.get("roleType"));
+		params.put("roleId", item1.get("roleType"));
 
-        // If ORG0003D not empty/null = agreement exist
-        if(item1 != null) {
-            if(item1.containsKey("stusId")) {
-                String stusId = item1.get("stusId").toString();
-                String cnfm = item1.get("cnfm").toString();
-                String cnfmDt = item1.get("cnfmDt").toString().substring(0, 10);
+		LOGGER.debug("============roleType=============" + item1.get("roleType"));
+		String retMsg = "";
 
-                popInfo.put("verName", item1.get("name"));
-                popInfo.put("verNRIC", item1.get("nric"));
-                popInfo.put("verBankAccNo", item1.get("bankAccNo"));
-                popInfo.put("verBankName", item1.get("bankName"));
+		// If ORG0003D not empty/null = agreement exist
+		if (item1 != null) {
+			LOGGER.debug("============ AGREEMENT EXIST =============");
+			if (item1.containsKey("stusId")) {
+				String stusId = item1.get("stusId").toString();
+				String cnfm = item1.get("cnfm").toString();
+				String cnfmDt = item1.get("cnfmDt").toString().substring(0, 10);
 
-                // Pending
-                if("44".equals(stusId) && "0".equals(cnfm) && "1900-01-01".equals(cnfmDt)) {
-                    params.put("roleId", item1.get("roleType"));
-                    params.put("popType", "A");
-                }
-                // Accepted
-                else if("5".equals(stusId) && "1".equals(cnfm) && !"1900-01-01".equals(cnfmDt)) {
-                    // HP Renewal
-                    if("0001".equals(userTypeId) && !"115".equals(item1.get("roleType"))) {
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				popInfo.put("verName", item1.get("name"));
+				popInfo.put("verNRIC", item1.get("nric"));
+				popInfo.put("verBankAccNo", item1.get("bankAccNo"));
+				popInfo.put("verBankName", item1.get("bankName"));
 
-                        Date currDate = new Date(); // Current Date
-                        Date janRe = null; // January Renewal
-                        Date julRe = null; // July Renewal
-                        Date cnfmDate = null; // Agreement Confirmation Date
+				// Pending
+				if ("44".equals(stusId) && "0".equals(cnfm) && "1900-01-01".equals(cnfmDt)) {
+					LOGGER.debug("============ PENDING =============");
+					params.put("roleId", item1.get("roleType"));
+					params.put("popType", "A");
+				}
+				// Accepted
+				else if ("5".equals(stusId) && "1".equals(cnfm) && !"1900-01-01".equals(cnfmDt)) {
 
-                        Calendar cal = Calendar.getInstance();
+					LOGGER.debug("============ ACCEPTED =============");
+					// HP Renewal
+					if ("0001".equals(userTypeId) && !"115".equals(item1.get("roleType"))) {
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-                        cal.setTime(currDate);
-                        int cYear = cal.get(Calendar.YEAR);
-                        int cMth = cal.get(Calendar.MONTH);
-                        if(cMth < 7) {
-                            cMth = 1;
-                        } else {
-                            cMth = 2;
-                        }
+						Date currDate = new Date(); // Current Date
+						Date janRe = null; // January Renewal
+						Date julRe = null; // July Renewal
+						Date cnfmDate = null; // Agreement Confirmation Date
 
-                        try {
-                            janRe = sdf.parse(Integer.toString(cYear) + "-01-01");
-                            julRe = sdf.parse(Integer.toString(cYear) + "-07-01");
-                            cnfmDate = sdf.parse(cnfmDt);
+						Calendar cal = Calendar.getInstance();
 
-                            switch(cMth) {
-                                case 1:
-                                    if(cnfmDate.compareTo(janRe) < 0) {
-                                        params.put("roleId", item1.get("roleType"));
-                                        params.put("popType", "A");
-                                    } else {
-                                        params.put("popType", "M");
-                                    }
-                                    break;
-                                case 2:
-                                    if(cnfmDate.compareTo(julRe) < 0) {
-                                        params.put("roleId", item1.get("roleType"));
-                                        params.put("popType", "A");
-                                    } else {
-                                        params.put("popType", "M");
-                                    }
-                                    break;
-                                default:
-                                    params.put("popType", "M");
-                                    break;
-                            }
-                        } catch (Exception e) {
-                            LOGGER.error(e.toString());
-                        }
-                    }
-                    // Cody agreement renewal
-                    else if("0002".equals(userTypeId) && "121".equals(item1.get("roleType"))) {
-                        params.put("roleId", "121");
-                        try {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						cal.setTime(currDate);
+						int cYear = cal.get(Calendar.YEAR);
+						int cMth = cal.get(Calendar.MONTH);
+						if (cMth < 7) {
+							cMth = 1;
+						} else {
+							cMth = 2;
+						}
 
-                            Date currRenewalDt = null;
-                            Date joinDt = sdf.parse(item1.get("joinDt").toString().substring(0, 10));
-                            Date cnfmDate = sdf.parse(cnfmDt);
+						try {
+							janRe = sdf.parse(Integer.toString(cYear) + "-01-01");
+							julRe = sdf.parse(Integer.toString(cYear) + "-07-01");
+							cnfmDate = sdf.parse(cnfmDt);
 
-                            Date currDate = new Date(); // Current Date
-                            Calendar cal = Calendar.getInstance();
-                            cal.setTime(currDate);
+							switch (cMth) {
+							case 1:
+								if (cnfmDate.compareTo(janRe) < 0) {
+									params.put("roleId", item1.get("roleType"));
+									params.put("popType", "A");
+								} else {
+									params.put("popType", "M");
+								}
+								break;
+							case 2:
+								if (cnfmDate.compareTo(julRe) < 0) {
+									params.put("roleId", item1.get("roleType"));
+									params.put("popType", "A");
+								} else {
+									params.put("popType", "M");
+								}
+								break;
+							default:
+								params.put("popType", "M");
+								break;
+							}
+						} catch (Exception e) {
+							LOGGER.error(e.toString());
+						}
+					}
+					// Cody agreement renewal
+					else if ("0002".equals(userTypeId) && "121".equals(item1.get("roleType"))) {
+						params.put("roleId", "121");
+						try {
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-                            currRenewalDt = sdf.parse(Integer.toString(cal.get(Calendar.YEAR)) + "-04-01");
+							Date currRenewalDt = null;
+							Date joinDt = sdf.parse(item1.get("joinDt").toString().substring(0, 10));
+							Date cnfmDate = sdf.parse(cnfmDt);
 
-//                            if(currDate.compareTo(currRenewalDt) < 0 )
-                            if(cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) < 0 && currDate.compareTo(currRenewalDt) >= 0 ) {
-                                params.put("popType", "A");
-                            } else if(cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) >= 0) {
-                                params.put("popType", "M");
-                            } else {
-                                params.put("popType", "-");
-                            }
-                        } catch(Exception e) {
-                            LOGGER.error(e.toString());
-                        }
-                    }
-                    // Other than HP user type
-                    else {
-                        params.put("popType", "M");
-                    }
-                }
-                // Rejected
-                else if("6".equals(stusId) && "0".equals(cnfm) && !"1900-01-01".equals(cnfmDt)) {
-                    params.put("popType", "-");
-                    retMsg = "Application has been rejected.";
-                } else {
-                    params.put("popType", "-");
-                }
-            }
-        }
+							Date currDate = new Date(); // Current Date
+							Calendar cal = Calendar.getInstance();
+							cal.setTime(currDate);
 
-        // Get pop up file name, pop exception members/roles
-        EgovMap item2 = new EgovMap();
-        item2 = (EgovMap) loginService.getPopDtls(params);
+							currRenewalDt = sdf.parse(Integer.toString(cal.get(Calendar.YEAR)) + "-04-01");
 
-        // Get Pop up configuration
-        if(item2 != null) {
-            // Pop up configuration exist - get configurations
-            if(item2.containsKey("popNewFlNm")) {
-                popInfo.put("popFlName", item2.get("popNewFlNm"));
-                popInfo.put("popExceptionMemroleCnt", item2.get("popExceptionMemroleCnt"));
-                popInfo.put("popExceptionUserCnt", item2.get("popExceptionUserCnt"));
-                popInfo.put("popType", item2.get("popType"));
-                popInfo.put("popRejectFlg", item2.get("popRejectFlg"));
-                popInfo.put("popAck1", item2.get("popAck1"));
-                popInfo.put("popAck2", item2.get("popAck2"));
-                popInfo.put("popAck3", item2.get("popAck3"));
-            } else {
-                popInfo.put("popFlName", "-");
-                popInfo.put("popExceptionMemroleCnt", "0");
-                popInfo.put("popExceptionUserCnt", "0");
-            }
-        } else {
-            // Pop up configuration does not exist > Exception default to 1 to by pass pop up window
-            popInfo.put("popExceptionMemroleCnt", "1");
-        }
+							// if(currDate.compareTo(currRenewalDt) < 0 )
+							if (cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) < 0
+									&& currDate.compareTo(currRenewalDt) >= 0) {
+								params.put("popType", "A");
+							} else if (cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) >= 0) {
+								params.put("popType", "M");
+							} else {
+								params.put("popType", "-");
+							}
+						} catch (Exception e) {
+							LOGGER.error(e.toString());
+						}
+					}
 
-        params.put("inWeb","0");
-        int surveyTypeId = surveyService.isSurveyRequired(params,sessionVO);
-        if(surveyTypeId != 0){
-          params.put("surveyTypeId",surveyTypeId);
-        }
-        int verifySurveyStus  = surveyService.verifyStatus(params, sessionVO);
+					// HT agreement renewal
+					else if (
 
-        popInfo.put("surveyTypeId", surveyTypeId);
-        popInfo.put("verifySurveyStus", verifySurveyStus);
-        popInfo.put("retMsg", retMsg);
+					("0007".equals(userTypeId) && (("348".equals(item1.get("roleType")))
+							|| ("349".equals(item1.get("roleType"))) || ("350".equals(item1.get("roleType")))
+							|| ("351".equals(item1.get("roleType"))) || ("352".equals(item1.get("roleType")))))
+					) {
+						// 0007=HT, roletype121=level of position
+						LOGGER.debug("===========HT agreement renewal============");
+						LOGGER.debug("===========roleType============" + item1.get("roleType"));
 
-        return ResponseEntity.ok(popInfo);
-    }
+						LOGGER.debug("============ ACCEPTED =============");
+						params.put("popType", null);
+						EgovMap aggrementCrtDt = new EgovMap();
+						aggrementCrtDt = (EgovMap) loginService.getPopDtls(params);
+						LOGGER.debug("============ aggrementCrtDt =============" + aggrementCrtDt);
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						Date agreeCrtDt = sdf.parse(aggrementCrtDt.get("crtDt").toString().substring(0, 10));
+						LOGGER.debug("============ agreeCrtDt =============" + agreeCrtDt);
+
+						// here start the validation
+						params.put("roleId", "356");
+						try {
+							Date joinDt = sdf.parse(item1.get("joinDt").toString().substring(0, 10));
+							LOGGER.debug("===========joinDT============" + joinDt);
+							Date cnfmDate = sdf.parse(cnfmDt);
+							LOGGER.debug("===========cnfmDate data type============" + cnfmDate.getClass().getName());
+
+							Date currDate = new Date(); // Current Date
+							Calendar cal = Calendar.getInstance();
+							cal.setTime(currDate);
+
+							Calendar c = Calendar.getInstance();
+							c.setTime(joinDt);
+							c.add(Calendar.YEAR, 1);
+							Date currRenewalDt = new Date();
+							currRenewalDt = c.getTime();
+
+							if (cnfmDate.compareTo(agreeCrtDt) < 0 && joinDt.compareTo(agreeCrtDt) < 0
+									&& currDate.compareTo(agreeCrtDt) >= 0) {
+								LOGGER.debug("===========AAAAAAAAAAAAAA============");
+								params.put("popType", "A");
+							}
+
+							// if(currDate.compareTo(currRenewalDt) < 0 )
+							else if (cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) < 0
+									&& currDate.compareTo(currRenewalDt) >= 0) {
+								LOGGER.debug("===========BBBBBBBBBBBBBBBBBB============");
+								params.put("popType", "A");
+							} else if (cnfmDate.compareTo(currRenewalDt) < 0 && joinDt.compareTo(currRenewalDt) >= 0) {
+								params.put("popType", "M");
+							} else {
+								params.put("popType", "-");
+							}
+						} catch (Exception e) {
+							LOGGER.error(e.toString());
+						}
+					}
+					// HT agreement renewal end
+
+					// Other than HP user type
+					else {
+						params.put("popType", "M");
+					}
+				}
+				// Rejected
+				else if ("6".equals(stusId) && "0".equals(cnfm) && !"1900-01-01".equals(cnfmDt)) {
+					params.put("popType", "-");
+					retMsg = "Application has been rejected.";
+				} else {
+					params.put("popType", "-");
+				}
+			}
+		}
+
+		// Get pop up file name, pop exception members/roles
+		EgovMap item2 = new EgovMap();
+		item2 = (EgovMap) loginService.getPopDtls(params);
+
+		// Get Pop up configuration
+		if (item2 != null) {
+			// Pop up configuration exist - get configurations
+			if (item2.containsKey("popNewFlNm")) {
+				popInfo.put("popFlName", item2.get("popNewFlNm"));
+				popInfo.put("popExceptionMemroleCnt", item2.get("popExceptionMemroleCnt"));
+				popInfo.put("popExceptionUserCnt", item2.get("popExceptionUserCnt"));
+				popInfo.put("popType", item2.get("popType"));
+				popInfo.put("popRejectFlg", item2.get("popRejectFlg"));
+				popInfo.put("popAck1", item2.get("popAck1"));
+				popInfo.put("popAck2", item2.get("popAck2"));
+				popInfo.put("popAck3", item2.get("popAck3"));
+			} else {
+				popInfo.put("popFlName", "-");
+				popInfo.put("popExceptionMemroleCnt", "0");
+				popInfo.put("popExceptionUserCnt", "0");
+			}
+		} else {
+			// Pop up configuration does not exist > Exception default to 1 to by pass pop up window
+			popInfo.put("popExceptionMemroleCnt", "1");
+		}
+
+		params.put("inWeb", "0");
+		int surveyTypeId = surveyService.isSurveyRequired(params, sessionVO);
+		if (surveyTypeId != 0) {
+			params.put("surveyTypeId", surveyTypeId);
+		}
+		int verifySurveyStus = surveyService.verifyStatus(params, sessionVO);
+
+		popInfo.put("surveyTypeId", surveyTypeId);
+		popInfo.put("verifySurveyStus", verifySurveyStus);
+		popInfo.put("retMsg", retMsg);
+
+		return ResponseEntity.ok(popInfo);
+	}
 
 }
