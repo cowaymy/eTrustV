@@ -44,6 +44,7 @@ public class AgreementController {
         params.put("userId", sessionVO.getUserId());
         EgovMap userRole = memberListService.getUserRole(params);
 
+
         List<EgovMap> branch = agreementService.branch();
 
         String strUserRole = userRole.get("roleid").toString();
@@ -59,6 +60,9 @@ public class AgreementController {
                 "250".equals(strUserRole) || "256".equals(strUserRole) ||  // Cody Branch)
                 "117".equals(strUserRole) || "118".equals(strUserRole) || "119".equals(strUserRole) || "120".equals(strUserRole) || "121".equals(strUserRole)) { // Cody
             params.put("userTypeId", "2");
+        }else if("348".equals(strUserRole) || "349".equals(strUserRole) || "350".equals(strUserRole) || "351".equals(strUserRole) || // HT Manager
+                "352".equals(strUserRole) ) { // HT
+            params.put("userTypeId", "7");
         }
 
         List<EgovMap> memLevel = agreementService.getMemLevel(params);
@@ -68,6 +72,10 @@ public class AgreementController {
         model.addAttribute("memCode", sessionVO.getUserName());
         model.addAttribute("branchList", branch);
         model.addAttribute("memLevel", memLevel);
+        logger.debug("=================================== :: " + userRole.toString());
+        model.addAttribute("userName", userRole.get("username"));
+        model.addAttribute("userFullName", userRole.get("userfullname"));
+        model.addAttribute("userNric", userRole.get("usernric"));
 
         EgovMap item = new EgovMap();
         item = (EgovMap) agreementService.getBranchCd(params);
@@ -116,7 +124,7 @@ public class AgreementController {
     public ResponseEntity<List<EgovMap>> memberList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
         logger.debug("==================== memberList ====================");
-        logger.debug("params :: {}", params);
+        logger.debug("params of memberList :: {}", params);
 
         List<EgovMap> memberList = agreementService.memberList(params);
 
@@ -131,6 +139,7 @@ public class AgreementController {
         logger.debug("params {}", params);
 
         List<EgovMap> codeList = agreementService.getMemStatus(params);
+        logger.debug("params {}", params);
         return ResponseEntity.ok(codeList);
     }
 
