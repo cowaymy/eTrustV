@@ -17,6 +17,8 @@ $(document).ready(function() {
     doGetCombo('/logistics/agreement/getMemStatus', null, '' ,'memStusCmb' , 'S');
 
     console.log($("#userRole").val());
+    console.log("here");
+
     if($("#userRole").val() == 97 || $("#userRole").val() == 98 || $("#userRole").val() == 99 || $("#userRole").val() == 100 || // SO Branch
             $("#userRole").val() == 103 || $("#userRole").val() == 104 || $("#userRole").val() == 105 || // DST Support
             $("#userRole").val() == 128 || $("#userRole").val() == 129 || $("#userRole").val() == 130 || // Administrator
@@ -210,6 +212,9 @@ $(document).ready(function() {
         	   console.log("type 7 here");
 
         }else{
+        console.log("start date down");
+        console.log($("#memTypeCom").val());
+        console.log($('#memTypeCom'));
         console.log($("#startDt").val());
 
         var day = $("#startDt").val().substring(0, 2);
@@ -484,10 +489,8 @@ function fn_downloadAgreement() {
         }
     }
 
-    ///////////HTTTTTT????????????????????
     else if($("#memTypeCom").val() == "7") {
         // HT Download
-
         var obj = {
                     code : $("#code").val(),
                     name : $("#name").val(),
@@ -504,8 +507,6 @@ function fn_downloadAgreement() {
                 Common.ajax("GET", "/logistics/agreement/memberList", obj, function(result) {
 
                     console.log(result);
-                    //console.log("result of cnfmdt "+result[0].cnfmdt);
-
                     var cnfm = result[0].cnfmdt;
                     var memLvl =  $("#memLevelCom").val();
 
@@ -576,7 +577,7 @@ function fn_downloadAgreement() {
                                 yyyy = selStartDt.getFullYear();
                                 yyyy = selStartDt.getFullYear();
 
-                                selStartDt = yyyy + "-" + mm + "-" + dd;
+                                selStartDt = yyyy + mm + dd;
 
                                 $("#v_firstAndPast").val("Y");
                                 $("#v_contractStartDt").val(selStartDt);
@@ -589,7 +590,7 @@ function fn_downloadAgreement() {
                                 dd = selStartDt.getDate();
                                 mm = selStartDt.getMonth() + 1;
                                 yyyy = selStartDt.getFullYear();
-                                selStartDt = yyyy + "-" + mm + "-" + dd;
+                                selStartDt = yyyy + mm +  dd;
                                 $("#v_contractStartDt").val(selStartDt);
                                 $("#v_currentSts").val("N");
                                 $("#v_firstAndPast").val("Y1");
@@ -599,7 +600,7 @@ function fn_downloadAgreement() {
                                 dd = selStartDt.getDate();
                                 mm = selStartDt.getMonth() + 1;
                                 yyyy = selStartDt.getFullYear();
-                                selStartDt = yyyy + "-" + mm + "-" + dd;
+                                selStartDt = yyyy  + mm + dd;
                                 $("#v_contractStartDt").val(selStartDt);
                                 $("#v_currentSts").val("N");
                                 $("#v_firstAndPast").val("N");
@@ -609,7 +610,7 @@ function fn_downloadAgreement() {
                         		 dd = cnfmDt.getDate();
                                  mm = cnfmDt.getMonth() + 1;
                                  yyyy = cnfmDt.getFullYear();
-                                 cnfmDt = yyyy + "-" + mm + "-" + dd;
+                                 cnfmDt = yyyy + mm +  dd;
                                 $("#v_contractStartDt").val(cnfmDt);
                                 $("#v_currentSts").val("Y");
                                 $("#v_firstAndPast").val("N");
@@ -621,7 +622,7 @@ function fn_downloadAgreement() {
                             	dd = cnfmDt.getDate();
                                 mm = cnfmDt.getMonth() + 1;
                                 yyyy = cnfmDt.getFullYear();
-                                cnfmDt = yyyy + "-" + mm + "-" + dd;
+                                cnfmDt = yyyy +  mm + dd;
                                 $("#v_contractStartDt").val(cnfmDt);
                                 $("#v_currentSts").val("Y");
                                 $("#v_firstAndPast").val("N");
