@@ -76,7 +76,7 @@ $(document).ready(function() {
                 $("#selectBranch").attr("disabled", true);
             }
         }
-        //////////////////////////////////HT///////////////////////////////////////////
+        //HT
         else if(
         		$("#userRole").val() == 348 || $("#userRole").val() == 349 || $("#userRole").val() == 350||
         		$("#userRole").val() == 351 || // HT Manager
@@ -279,7 +279,6 @@ function fn_onChgMemType() {
         $("#agreementVersion").attr("disabled", true);
 
     }
-
 }
 
 function fn_searchMember() {
@@ -288,7 +287,6 @@ function fn_searchMember() {
         Common.alert("Please select one member type.");
         return false;
     }
-
     var obj = {
         code : $("#code").val(),
         name : $("#name").val(),
@@ -531,14 +529,11 @@ function fn_downloadAgreement() {
 
                         dt = cnfm.split("/");
                         var cnfmDt = new Date(dt[2] + "-" + dt[1] + "-" + dt[0]);
-                        //console.log("dt is "+ dt);
 
                         dt = $("#joinDt").val().split("/");
                         var joinDt = new Date(dt[2] + "-" + dt[1] + "-" + dt[0]);
-                        console.log("joinDt  "+joinDt);
 
                         var newJoinDt = new Date(dt[2] + "/" + dt[1] + "/" + dt[0]);
-                        //console.log("newJoinDt "+newJoinDt);
 
                         var renewCnfm = new Date(cnfmDt),
                         rmonth = '' + (renewCnfm.getMonth()+1),
@@ -559,8 +554,6 @@ function fn_downloadAgreement() {
 
                         renewal = new Date(renewal);
                         renewal.setFullYear(renewal.getFullYear() + 1);
-                        console.log("var cnfm "+cnfmDt);
-                        console.log("renewal  "+renewal);
 
                         dd = joinDt.getDate();
                         mm = joinDt.getMonth() + 1;
@@ -574,8 +567,6 @@ function fn_downloadAgreement() {
                             Common.alert("Agreement not accepted.");
                             return false;
                         } else {
-                            console.log("join plus one here " + joinDtPlusOneYear);
-
                             if(selStartDt >= joinDt && selStartDt < joinDtPlusOneYear && selStartDt < renewal && cnfmDt <= joinDtPlusOneYear){
                         		 //first and current agreement
                         		 dd = cnfmDt.getDate();
@@ -595,7 +586,7 @@ function fn_downloadAgreement() {
                                 cnfmDt = yyyy + "-" + mm + "-" + dd;
                                 $("#v_contractStartDt").val(cnfmDt);
                                 $("#v_currentSts").val("Y");
-                                console.log("3. current signed agreement");
+                                console.log("2. current signed agreement");
                             }
                             else if(selStartDt < joinDt && selStartDt <= cnfmDt && selStartDt < renewal){
                             	//selection date is before joining date
@@ -649,18 +640,12 @@ function fn_downloadAgreement() {
                             }
                         }
 
-                        console.log("v start date early  "+$("#v_contractStartDt").val());
-
                         dt =$("#v_contractStartDt").val().split("-");
-                        console.log("v start date 2  "+dt);
-
 
                          var MyDateString =
                         	 dt[0].slice(-4) +
                         	 ('0' + dt[1]).slice(-2)+
                         	 ('0'+dt[2]).slice(-2);
-
-                        console.log("v_contractStartDt :: " + $("#v_contractStartDt").val());
 
                         $("#v_contractStartDt").val(MyDateString);
                         console.log("v_contractStartDt new format :: " + $("#v_contractStartDt").val());
