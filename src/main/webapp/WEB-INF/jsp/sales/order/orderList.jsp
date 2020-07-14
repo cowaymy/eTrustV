@@ -145,6 +145,30 @@
             fn_letter_report();
 
         });
+        // Webster Lee 13/07/2020 : added new report format
+        $('#btnVaLetter2').click(function() {
+
+            $("#dataForm3").show();
+            //Param Set
+            var gridObj = AUIGrid.getSelectedItems(listMyGridID);
+
+            if(gridObj == null || gridObj.length <= 0 ){
+                Common.alert('* <spring:message code="sal.alert.msg.noOrdSel" />');
+                return;
+            }
+
+            var custID = gridObj[0].item.custId;
+            $("#_repCustId_V2").val(custID);
+
+            var date = new Date().getDate();
+            if(date.toString().length == 1){
+                date = "0" + date;
+            }
+            $("#downFileName_V2").val("CustomerVALetter_"+custID+"_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+
+            fn_letter_report_V2();
+
+        });
         $('#btnExport').click(function() {
 
         	var grdLength = "0";
@@ -261,7 +285,13 @@
         };
         Common.report("dataForm", option);
     }
-
+    // webster lee 13072020 :added new Version 2 report format
+    function fn_letter_report_V2() {
+        var option = {
+            isProcedure : false
+        };
+        Common.report("dataForm3", option);
+    }
     function fn_validSearchList() {
         var isValid = true, msg = "";
 
@@ -551,7 +581,7 @@
 </form>
 <!-- report Form -->
 <form id="dataForm">
-    <input type="hidden" id="fileName" name="reportFileName" value="/sales/CustVALetter_V2.rpt" /><!-- Report Name  --><!-- V2 Report  created by Webster Lee 10072020 -->
+    <input type="hidden" id="fileName" name="reportFileName" value="/sales/CustVALetter.rpt" /><!-- Report Name  --><!-- V2 Report  created by Webster Lee 10072020 -->
     <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
     <input type="hidden" id="downFileName" name="reportDownFileName" value="" /> <!-- Download Name -->
 
@@ -567,6 +597,15 @@
 
     <!-- params -->
     <input type="hidden" id="_orderID" name="@OrderID" />
+</form>
+<!-- V2 Report  created by Webster Lee 13072020 -->
+<form id="dataForm3">
+    <input type="hidden" id="fileName" name="reportFileName" value="/sales/CustVALetter_V2.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <input type="hidden" id="downFileName_V2" name="reportDownFileName" value="" /> <!-- Download Name -->
+
+    <!-- params -->
+    <input type="hidden" id="_repCustId_V2" name="@CustID" />
 </form>
 
 
@@ -725,6 +764,7 @@
   <ul class="btns">
     <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
       <li><p class="link_btn"><a href="#" id="btnVaLetter"><spring:message code='sales.btn.custVALetter'/></a></p></li>
+       <li><p class="link_btn"><a href="#" id="btnVaLetter2">Customer VA Letter version 2</a></p></li> <!-- Webster Lee 13072020 : added new Version 2 report format -->
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
       <li><p class="link_btn"><a href="#" id="btnExport"><spring:message code='sales.btn.exptSrchList'/></a></p></li>
