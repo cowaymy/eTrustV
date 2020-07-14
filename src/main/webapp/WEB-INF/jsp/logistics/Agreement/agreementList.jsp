@@ -313,6 +313,13 @@ function fn_searchMember() {
 
 function fn_downloadAgreement() {
 
+    var selIdx = AUIGrid.getSelectedIndex(myGridID)[0];
+
+    if(selIdx < 0) {
+    	Common.alert('<spring:message code="sys.msg.oneRcdOnly" />');
+    	return;
+    }
+
     var version = $("#agreementVersion").val();
     console.log(version);
 
@@ -507,6 +514,7 @@ function fn_downloadAgreement() {
                 Common.ajax("GET", "/logistics/agreement/memberList", obj, function(result) {
 
                     console.log(result);
+                    //console.log("result of cnfmdt "+result[0].cnfmdt);
                     var cnfm = result[0].cnfmdt;
                     var memLvl =  $("#memLevelCom").val();
 
@@ -519,7 +527,7 @@ function fn_downloadAgreement() {
 
                         var dt = $("#startDt").val().split("/");
                         var selStartDt = new Date(dt[2] + "-" + dt[1] + "-" + dt[0]);
-                        console.log("selStartDt  "+selStartDt);
+                        console.log("SELSTARTDT  "+selStartDt);
 
                         dt = cnfm.split("/");
                         var cnfmDt = new Date(dt[2] + "-" + dt[1] + "-" + dt[0]);
@@ -568,67 +576,76 @@ function fn_downloadAgreement() {
                         } else {
                             console.log("join plus one here " + joinDtPlusOneYear);
 
-                            if((selStartDt <= joinDt && selStartDt <= cnfmDt && selStartDt < renewal)
-                            ) {
-                                //selection date is very old
-                                //return first
-                                dd = selStartDt.getDate();
-                                mm = selStartDt.getMonth() + 1;
-                                yyyy = selStartDt.getFullYear();
-                                yyyy = selStartDt.getFullYear();
-
-                                selStartDt = yyyy + mm + dd;
-
-                                $("#v_firstAndPast").val("Y");
-                                $("#v_contractStartDt").val(selStartDt);
-                                $("#v_currentSts").val("N");
-                                console.log("1.1 first agreement and not current agreement");
-
-                            }else if(selStartDt >= joinDt && selStartDt <= cnfmDt  && selStartDt < renewal && selStartDt <=joinDtPlusOneYear
-                            ) {
-                                //previous signed agreement but first
-                                dd = selStartDt.getDate();
-                                mm = selStartDt.getMonth() + 1;
-                                yyyy = selStartDt.getFullYear();
-                                selStartDt = yyyy + mm +  dd;
-                                $("#v_contractStartDt").val(selStartDt);
-                                $("#v_currentSts").val("N");
-                                $("#v_firstAndPast").val("Y1");
-                                console.log("2z. previous signed agreement but first");
-                            }else if(selStartDt > joinDt && selStartDt < cnfmDt  && selStartDt < renewal) {
-                                //previous signed agreement
-                                dd = selStartDt.getDate();
-                                mm = selStartDt.getMonth() + 1;
-                                yyyy = selStartDt.getFullYear();
-                                selStartDt = yyyy  + mm + dd;
-                                $("#v_contractStartDt").val(selStartDt);
-                                $("#v_currentSts").val("N");
-                                $("#v_firstAndPast").val("N");
-                                console.log("2. previous signed agreement");
-                            } else if(selStartDt >= joinDt && selStartDt < joinDtPlusOneYear && selStartDt < renewal){
+                            if(selStartDt >= joinDt && selStartDt < joinDtPlusOneYear && selStartDt < renewal && cnfmDt <= joinDtPlusOneYear){
                         		 //first and current agreement
                         		 dd = cnfmDt.getDate();
                                  mm = cnfmDt.getMonth() + 1;
                                  yyyy = cnfmDt.getFullYear();
-                                 cnfmDt = yyyy + mm +  dd;
+                                 cnfmDt = yyyy + "-" + mm + "-" + dd;
                                 $("#v_contractStartDt").val(cnfmDt);
                                 $("#v_currentSts").val("Y");
-                                $("#v_firstAndPast").val("N");
-                                 console.log("1.1a first agreement and current agreement");
-                                 }else if((selStartDt > joinDt && selStartDt >= cnfmDt && selStartDt < renewal) ||//user search current signed agreement
-                            		     (selStartDt > joinDt && selStartDt > cnfmDt && selStartDt > renewal)   //user search beyond current (return current)
-                            		     ) {
-
+                                 console.log("1. first agreement and current agreement");
+                                 }
+                            else if((selStartDt > joinDt && selStartDt >= cnfmDt && selStartDt < renewal) ||//user search current signed agreement
+                                		    (selStartDt > joinDt && selStartDt > cnfmDt && selStartDt > renewal)   //user search beyond current (return current)
+                                		    ) {
                             	dd = cnfmDt.getDate();
                                 mm = cnfmDt.getMonth() + 1;
                                 yyyy = cnfmDt.getFullYear();
-                                cnfmDt = yyyy +  mm + dd;
+                                cnfmDt = yyyy + "-" + mm + "-" + dd;
                                 $("#v_contractStartDt").val(cnfmDt);
                                 $("#v_currentSts").val("Y");
-                                $("#v_firstAndPast").val("N");
                                 console.log("3. current signed agreement");
-                            }else {
-                            	console.log("4. nothing");
+                            }
+                            else if(selStartDt < joinDt && selStartDt <= cnfmDt && selStartDt < renewal){
+                            	//selection date is before joining date
+                            	dd = joinDt.getDate();
+                                mm = joinDt.getMonth() + 1;
+                                yyyy = joinDt.getFullYear();
+                                joinDt = yyyy + "-" + mm + "-" + dd;
+                                $("#v_contractStartDt").val(joinDt);
+                                $("#v_currentSts").val("N");
+                            }
+                            else{
+                                //pass agreement
+                                dd = selStartDt.getDate();
+                                mm = selStartDt.getMonth() + 1;
+                                yyyy = selStartDt.getFullYear();
+                                yyyy = selStartDt.getFullYear();
+
+                                jdd = joinDt.getDate();
+                                jmm = joinDt.getMonth() + 1;
+                                jyyyy = joinDt.getFullYear();
+                                jyyyy = joinDt.getFullYear();
+
+                                selStartDt = yyyy + "-" + mm + "-" + dd;
+                                selStartDt = new Date(selStartDt);
+                                var newJoinDtCheck = yyyy + "-" + jmm + "-" + jdd;
+                                newJoinDtCheck =  [yyyy, jmm, jdd].join('-');
+                                newJoinDtCheck = new Date(newJoinDtCheck);
+                                newJoinDtCheck.setFullYear(newJoinDtCheck.getFullYear());
+
+                               if(selStartDt < newJoinDtCheck){
+                                   newJoinDtCheck = new Date(newJoinDtCheck);
+                                   newJoinDtCheck.setFullYear(newJoinDtCheck.getFullYear()-1);
+                                   console.log("newJoinDtCheck if "+ newJoinDtCheck);
+
+                                   dd = newJoinDtCheck.getDate();
+                                   mm = newJoinDtCheck.getMonth() + 1;
+                                   yyyy = newJoinDtCheck.getFullYear();
+                                   selStartDt = yyyy + "-" + mm + "-" + dd;
+                                   $("#v_contractStartDt").val(selStartDt);
+                                   $("#v_currentSts").val("N");
+                                }else{
+                                    console.log("newJoinDtCheck2 else "+ newJoinDtCheck);
+                                    dd = newJoinDtCheck.getDate();
+                                    mm = newJoinDtCheck.getMonth() + 1;
+                                    yyyy = newJoinDtCheck.getFullYear();
+                                    selStartDt = yyyy + "-" + mm + "-" + dd;
+
+                                    $("#v_contractStartDt").val(selStartDt);
+                                    $("#v_currentSts").val("N");
+                                }
                             }
                         }
 
@@ -639,16 +656,14 @@ function fn_downloadAgreement() {
 
 
                          var MyDateString =
-                        	 ('0' + dt[2]).slice(-2)+ '/' +
-                        	 ('0'+dt[1]).slice(-2) + '/'+
-                             dt[0].slice(-4);
+                        	 dt[0].slice(-4) +
+                        	 ('0' + dt[1]).slice(-2)+
+                        	 ('0'+dt[2]).slice(-2);
 
                         console.log("v_contractStartDt :: " + $("#v_contractStartDt").val());
 
                         $("#v_contractStartDt").val(MyDateString);
-                        console.log("v_contractStartDt :: " + $("#v_contractStartDt").val());
-
-
+                        console.log("v_contractStartDt new format :: " + $("#v_contractStartDt").val());
                         console.log("v_currentSts :: " + $("#v_currentSts").val());
 
                         if(memLvl == "4") {
@@ -656,14 +671,11 @@ function fn_downloadAgreement() {
                             $("#reportFileName").val("/organization/agreement/HTAgreement_2020v1.rpt");
                             $("#reportDownFileName").val("HTAgreement_" + code);
                         } else {
-
                             console.log("memLvl down :: " +memLvl);
                             $("#reportFileName").val("/organization/agreement/HTMAgreement_2020v1.rpt");
                             $("#reportDownFileName").val("HTMAgreement_" + code);
                         }
-
                         Common.report("agreementReport", option);
-
                         console.log($("#reportFileName").val());
                     } else {
                         Common.alert("Agreement not agreed!");
@@ -806,8 +818,6 @@ function createAUIGrid() {
 			id="v_contractStartDt" name="v_contractStartDt" value="" /> <input
 			type="hidden" id="v_contractEndDt" name="v_contractEndDt" value="" />
 		<input type="hidden" id="v_currentSts" name="v_currentSts" value="" />
-		<input type="hidden" id="v_firstAndPast" name="v_firstAndPast"
-			value="" />
 	</form>
 
 	<section class="search_table">
