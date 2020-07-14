@@ -121,10 +121,12 @@ public class ReportController {
           + this.getRList().contains(reportFile));
       LOGGER.debug(" open reportUserName]" + reportUserName + "]reportPassword[" + reportPassword + "]");
 
+      /*
       if (this.getRList().contains(reportFile)) {
         reportUserName = "GBSLCVAPL1";
         reportPassword = "GBSLCVD#2017#";
       }
+      */
 
       LOGGER.debug(" close  reportUserName]" + reportUserName + "]reportPassword[" + reportPassword + "]");
 
