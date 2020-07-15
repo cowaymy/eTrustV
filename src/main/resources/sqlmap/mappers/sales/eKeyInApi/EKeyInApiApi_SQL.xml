@@ -933,12 +933,12 @@
      SELECT COUNT(1) AS CNT
      FROM SAL0028D
      WHERE CUST_CRC_TOKEN = #{token}
-     AND A.CUST_CRC_STUS_ID = 1
+     AND CUST_CRC_STUS_ID = 1
   </select>
 
   <select id="selectCheckCRC2" parameterType="Map" resultType="Integer">
     SELECT COUNT(1) AS CNT
-    FROM SAL0029D A
+    FROM SAL0029D
     JOIN (
         SELECT DISTINCT CUST_ID CUST_ID
         FROM SAL0028D
@@ -947,7 +947,7 @@
     ) SAL0028D
     ON SAL0029D.CUST_ID = SAL0028D.CUST_ID
     <if test='step == "3" '>
-      WHERE TRIM(A.NRIC) = TRIM(#{nric})
+      WHERE TRIM(SAL0029D.NRIC) = TRIM(#{nric})
     </if>
   </select>
 
