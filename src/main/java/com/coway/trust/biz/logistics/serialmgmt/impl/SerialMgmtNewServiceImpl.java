@@ -53,10 +53,15 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 		// Added for by pass crDate checking by specific stock code. By Hui Ding, 12-06-2020
 		boolean byPassCrDateCheck = false;
 
-		// Supplier code List.
+		logger.info("###params : " + params.toString());
+
+		/*// Supplier code List.
 		Map<String, Object> gMap = new HashMap<String, Object>();
 		gMap.put("groupCode", "449");
-		List<EgovMap> supplierList = commonService.selectCodeList(gMap);
+		gMap.put("codeName", params.get("vendorId"));
+		List<EgovMap> supplierList = commonService.selectCodeList(gMap);*/
+
+		logger.info("#####Vendor: " + params.get("vendorId"));
 
 		String supplierCode = "";
 		String crDate = "";
@@ -75,10 +80,17 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 
 
 		for (Object obj : mainList) {
+
 			mainMap = (Map<String, Object>) obj;
 			mainMap.put("crtUserId", sessionVO.getUserId());
 			mainMap.put("updUserId", sessionVO.getUserId());
 			mainMap.put("boxno", mainMap.get("barcode"));
+
+			// Supplier code List.
+			Map<String, Object> gMap = new HashMap<String, Object>();
+			gMap.put("groupCode", "449");
+			gMap.put("codeName", mainMap.get("vendorId"));
+			List<EgovMap> supplierList = commonService.selectCodeList(gMap);
 
 			// check supplierCode.
 			supplierCode = ((String)mainMap.get("barcode")).substring(0, 3);
