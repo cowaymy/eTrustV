@@ -117,9 +117,14 @@ $(document).ready(function(){
     doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'stoLocgrade', 'A','');
 
     doGetCombo('/common/selectCodeList.do', '15', '', 'smattype', 'M' ,'f_multiCombos');
-    doGetCombo('/common/selectCodeList.do', '11', '', 'smatcate', 'M' ,'f_multiCombos');
 
     doDefCombo(amdata, 'M' ,'sam', 'S', '');
+
+     if(window.location.href.indexOf("htMaterialdocIns.do")>0){
+       	doGetCombo('/common/selectHCMaterialCtgryList.do', '11', '', 'smatcate', 'M' ,'f_multiCombos');
+    }else{
+    	doGetCombo('/common/selectCodeList.do', '11', '', 'smatcate', 'M' ,'f_multiCombos');
+    }
 
 //     CommonCombo.make("sfrLoctype", "/common/selectCodeList.do", { groupCode : 339 , orderValue : 'CODE'}, "", {
 //         id: "code",

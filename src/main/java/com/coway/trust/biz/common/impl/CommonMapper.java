@@ -25,6 +25,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface CommonMapper {
 	List<EgovMap> selectCodeList(Map<String, Object> params);
 
+	 // Homecare material category list in MDN
+	List<EgovMap> selectHCMaterialCtgryList(Map<String, Object> params);
+
 	List<EgovMap> selectCommonCodes(Map<String, Object> params);
 	List<EgovMap> selectAllCommonCodes(Map<String, Object> params);
 	List<EgovMap> selectCommonCodesPage(Map<String, Object> params);

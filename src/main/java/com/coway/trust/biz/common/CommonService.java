@@ -404,4 +404,7 @@ public interface CommonService {
 	 * @return
 	 */
 	List<EgovMap> getHcHolidayList(Map<String, Object> params);
+
+	 // Homecare material category list in MDN
+	List<EgovMap> selectHCMaterialCtgryList(Map<String, Object> params);
 }

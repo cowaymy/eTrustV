@@ -75,6 +75,15 @@ public class CommonController {
 		return ResponseEntity.ok(codeList);
 	}
 
+	@RequestMapping(value = "/selectHCMaterialCtgryList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHCMaterialCtgryList(@RequestParam Map<String, Object> params) {
+		// Homecare material category list in MDN
+		LOGGER.debug("groupCode : {}", params);
+
+		List<EgovMap> codeList = commonService.selectHCMaterialCtgryList(params);
+		return ResponseEntity.ok(codeList);
+	}
+
 	@RequestMapping(value = "/main.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "common/main";

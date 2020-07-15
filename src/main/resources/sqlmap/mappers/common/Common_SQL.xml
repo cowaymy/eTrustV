@@ -879,7 +879,20 @@
         </choose>
     </select>
 
-
+    <select id="selectHCMaterialCtgryList" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+        SELECT S13M.CODE_ID CODE_ID,
+               S13M.CODE_MASTER_ID CODE_MASTER_ID,
+               S94M.CODE CODE,
+               S94M.CODE_NAME CODE_NAME
+        FROM SYS0013M S13M
+        LEFT JOIN SYS0094M S94M ON S94M.CODE = S13M.CODE
+        WHERE S13M.DISAB = S94M.DISB AND S94M.IND= 'HOMECARE'
+      ]]>
+     <if test="groupCode != null and groupCode !=''">
+         AND CODE_MASTER_ID = #{groupCode}
+      </if>
+    </select>
 
     <select id="codeNameById" parameterType="java.lang.Integer" resultType="java.lang.String">
        SELECT CODE_NAME

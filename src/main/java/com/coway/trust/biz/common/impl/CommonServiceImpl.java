@@ -53,6 +53,12 @@ public class CommonServiceImpl implements CommonService {
 	}
 
 	@Override
+	public List<EgovMap> selectHCMaterialCtgryList(Map<String, Object> params) {
+		 // Homecare material category list in MDN
+		return commonMapper.selectHCMaterialCtgryList(params);
+	}
+
+	@Override
 	public List<EgovMap> getCommonCodes(Map<String, Object> params) {
 		return commonMapper.selectCommonCodes(params);
 	}
@@ -1757,5 +1763,4 @@ public class CommonServiceImpl implements CommonService {
 	public List<EgovMap> getHcHolidayList(Map<String, Object> params) {
 		return commonMapper.getHcHolidayList(params);
 	}
-
 }

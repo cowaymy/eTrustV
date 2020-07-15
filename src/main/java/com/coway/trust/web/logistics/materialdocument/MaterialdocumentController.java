@@ -154,4 +154,14 @@ public class MaterialdocumentController {
 		return ResponseEntity.ok(map);
 	}
 
+	 // Homecare - Material Documents List
+	@RequestMapping(value = "/htMaterialdocIns.do")
+	public String htMaterialdocIns(Model model, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		return "logistics/MaterialDocument/materialDocumentList";
+	}
+
+
+
 }
