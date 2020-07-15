@@ -275,6 +275,19 @@ function fn_officialReceiptReport(){
         Common.alert("<spring:message code='pay.alert.noPay'/>");
    }
 }
+//webster lee 15072020: new report format version 2
+function fn_officialReceiptReport_V2(){
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+
+    if (selectedItem[0] > -1){
+        var orNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "orNo");
+        $("#reportPDFForm_V2 #v_ORNo").val(orNo);
+        Common.report("reportPDFForm_V2");
+
+    }else{
+        Common.alert("<spring:message code='pay.alert.noPay'/>");
+   }
+}
 </script>
 
 <!-- content start -->
@@ -290,6 +303,7 @@ function fn_officialReceiptReport(){
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_officialReceiptReport();"><spring:message code='pay.btn.officialReceipt'/></a></p></li>
+             <li><p class="btn_blue"><a href="javascript:fn_officialReceiptReport_V2();">Officient Receipt Ver. 2</a></p></li>
             </c:if>
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax(1);"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
@@ -469,6 +483,12 @@ function fn_officialReceiptReport(){
 <!-- content end -->
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="/payment/PaymentReceipt_New.rpt" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="v_ORNo" name="v_ORNo" />
+</form>
+<!-- Webster Lee 15072020:new report format version 2 -->
+<form name="reportPDFForm_V2" id="reportPDFForm_V2"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/payment/PaymentReceipt_New_V2.rpt" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="v_ORNo" name="v_ORNo" />
 </form>
