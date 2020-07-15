@@ -118,13 +118,13 @@
 			                    <choose>
 			                        <when test='item.field == "cdc"'>CDC <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
 			                        <when test='item.field == "cdcName"'>CDC_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
-			                        <when test='item.field == "poNo"'>A.PO_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
-			                        <when test='item.field == "poTyCd"'>A.PO_TY_CD <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+			                        <when test='item.field == "poNo"'>X.PO_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+			                        <when test='item.field == "poTyCd"'>X.PO_TY_CD <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
 			                        <when test='item.field == "poTyName"'>PO_TY_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
-			                        <when test='item.field == "poStsCd"'>A.PO_STS_CD <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+			                        <when test='item.field == "poStsCd"'>X.PO_STS_CD <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
 			                        <when test='item.field == "poStsCode"'>PO_STS_CODE <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
 			                        <when test='item.field == "poStsName"'>PO_STS_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
-                                    <when test='item.field == "suppStsCd"'>A.SUPP_STS_CD <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "suppStsCd"'>X.SUPP_STS_CD <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
                                     <when test='item.field == "suppStsCode"'>SUPP_STS_CODE <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
                                     <when test='item.field == "suppStsName"'>SUPP_STS_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
 			                        <when test='item.field == "memAccId"'>MEM_ACC_ID <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
@@ -133,7 +133,7 @@
 			                        <when test='item.field == "cdcDueDt"'>CDC_DUE_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
 			                        <when test='item.field == "address"'>ADDRESS <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
 			                        <when test='item.field == "tel"'>B.TEL <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
-			                        <when test='item.field == "rm"'>A.RM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+			                        <when test='item.field == "rm"'>X.RM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
 			                        <when test='item.field == "planYn"'>PLAN_YN <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
 			                        <otherwise>
 			                            PO_NO DESC

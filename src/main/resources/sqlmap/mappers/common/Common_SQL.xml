@@ -863,6 +863,10 @@
                                     CONNECT BY REGEXP_SUBSTR (#{codeIn}, '[^,]+', 1, LEVEL) IS NOT NULL)
         </if>
 
+        <if test="codeName != null and codeName !=''">
+            AND CODE_NAME = #{codeName}
+        </if>
+
 
 
         <choose>

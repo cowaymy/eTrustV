@@ -47,6 +47,8 @@ var grInfoLayout = [
             , formatString:"dd/mm/yyyy"     // 실제 데이터 형식을 어떻게 표시할지 지정
         }
         , {dataField:"poNo", headerText:"PO No", width:150}
+        , {dataField:"vendor", headerText:"Supplier", width:200}
+        , {dataField:"vendorId", headerText:"Supplier", width:200, visible:false}
 ];
 
 var grInfoPros = {

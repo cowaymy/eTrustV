@@ -69,7 +69,7 @@ $(document).ready(function(){
 				                	- ( js.String.naNcheck(item[i].rciptGrQty)
 				                		+ js.String.naNcheck(item[i].failGrQty));
 
-                	console.log("item[i].delvryQty: " + item[i].delvryQty);
+                	//console.log("item[i].delvryQty: " + item[i].delvryQty);
 
                 	html += "<input type='hidden' name='hmcDelvryNo' value='"+item[i].hmcDelvryNo+"' />"
                 	      + "<input type='hidden' name='hmcDelvryNoDtlNo' value='"+item[i].hmcDelvryNoDtlNo+"' />"
@@ -207,7 +207,7 @@ $(document).ready(function(){
             sumQty += Number(js.String.deletecomma(param.rciptTmQty)) + js.String.naNcheck(param.failTmQty);
             failQty += js.String.naNcheck(param.failTmQty);
 
-            console.log("param.stockCode: " + param.stockCode + " | sumQTY: " + sumQty + " | param.delvryQty: " + param.delvryQty);
+            //console.log("param.stockCode: " + param.stockCode + " | sumQTY: " + sumQty + " | param.delvryQty: " + param.delvryQty);
 
             if (sumQty != param.delvryQty){
                 Common.alert("<b><span style='color:red;'>FAILED!</span></b><br/>" +
@@ -240,7 +240,7 @@ $(document).ready(function(){
 
                 sumQty += Number(js.String.deletecomma(param.rciptTmQty[i])) + js.String.naNcheck(param.failTmQty[i]);
                 failQty += js.String.naNcheck(param.failTmQty[i]);
-                console.log("param.stockCode[i]: " + param.stockCode[i] + " | sumQTY: " + sumQty + " | param.delvryQty: " + param.delvryQty[i]);
+                //console.log("param.stockCode[i]: " + param.stockCode[i] + " | sumQTY: " + sumQty + " | param.delvryQty: " + param.delvryQty[i]);
 
                 if (sumQty != param.delvryQty[i]){
                 	Common.alert("<b><span style='color:red;'>FAILED!</span></b><br/>" +
@@ -269,6 +269,20 @@ $(document).ready(function(){
             return false;
     	}
 
+	    /* var conf = confirm("Are you confirm to GR?");
+
+	    if (conf){
+             if(failQty > 0){
+                 Common.confirm("QC Fail Qty will not be GR. Please Check again.", function(){
+                     fn_deliveryGr(item);
+                 });
+             }else{
+                 fn_deliveryGr(item);
+             }
+	    } else {
+	    	fn_closeGrPop()
+	    } */
+
         Common
 	        .confirm(
 	            "Do you want to GR?",
@@ -280,21 +294,11 @@ $(document).ready(function(){
 	            	}else{
 	            		fn_deliveryGr(item);
 	            	}
+	            },
+	            function(){
+	            	fn_closeGrPop();
 	            }
         );
-
-
-        // close the page
-        if(Common.checkPlatformType() == "mobile") {
-            if( typeof(opener.fn_PopClose) != "undefined" ){
-                opener.fn_PopClose();
-            }else{
-                window.close();
-            }
-        } else {
-            //$("#btnSearch").click();
-            $('#_divDeliveryGrPop').remove();
-        }
 
     });
 
@@ -394,6 +398,19 @@ function fn_deliveryGr(item){
                 }
                 Common.alert("Fail : " + jqXHR.responseJSON.message);
     });
+
+ // close the page
+    if(Common.checkPlatformType() == "mobile") {
+       if( typeof(opener.fn_PopClose) != "undefined" ){
+           opener.fn_PopClose();
+       }else{
+           window.close();
+       }
+   } else {
+       //$("#btnSearch").click();
+       $('#_divDeliveryGrPop').remove();
+   }
+
 }
 
 function fn_serialYnChk(ch){
@@ -402,11 +419,11 @@ function fn_serialYnChk(ch){
 
 function fn_closeGrPop(){
 
-	console.log("1");
+	//console.log("1");
 	// Added to remove temporary scanned serial when "Close" button is clicked.
 
 	var ingGrNo = $("#ingGrNo").val();
-	console.log("ingGrNo: " + ingGrNo);
+	//console.log("ingGrNo: " + ingGrNo);
 
     if(js.String.isEmpty($("#ingGrNo").val())){
     	// Moblie Popup Setting
@@ -421,7 +438,7 @@ function fn_closeGrPop(){
             $('#_divDeliveryGrPop').remove();
         }
     } else { // if ingGrNo is not null
-    	console.log("2");
+    	//console.log("2");
     	Common.alert("Upon closing, all temporary scanned serial no. will be removed (If Any).");
 
 	    Common.ajax("POST", "/homecare/po/hcDeliveryGr/clearIngSerialNo.do"
@@ -466,7 +483,12 @@ function fn_PopSerialClose() {
 function fn_SearchPopClose(item){
 	if(item != null){
 	    $("#sDeliveryPopNo").val(item.hmcDelvryNo);
+	    $("#vendorId").val(item.vendorId);
+	    $("#vendor").val(item.vendor);
 	    $("#btnPopConfirm").click();
+
+	    //console.log("vendorId: " + $("#vendorId").val());
+	   //console.log("sDeliveryPopNo: " + $("#sDeliveryPopNo").val());
 	}
 }
 
@@ -502,6 +524,9 @@ function fnOnfocus(obj){
 	<br/>
 	</aside><!-- title_line end -->
 	<form id="frmGrSearch" name="frmGrSearch" action="#" method="post">
+	       <input type="hidden" id="vendorId" name="vendorId"/>
+	       <input type="hidden" id="vendor" name="vendor"/>
+
 		<table class="type1">
 			<caption>table</caption>
 			<colgroup>
@@ -516,7 +541,6 @@ function fnOnfocus(obj){
 				            <input type="text" id="sDeliveryPopNo" name="sDeliveryPopNo" placeholder="" style="width:86%; min-width:150px;"  value="" onfocus="fnOnfocus(this);"'/>
                             <a id="btnGrSearch"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search"/></a>
                         </p>
-
 				    </td>
 				</tr>
 			</tbody>
@@ -534,6 +558,7 @@ function fnOnfocus(obj){
 		    <form id="frmDeliveryGr" name="frmDeliveryGr" action="#" method="post">
 		    <input id="ingGrNo" name="ingGrNo"   type="hidden"/>
             <input id="grCdcId" name="grCdcId"   type="hidden"/>
+
 
 			<aside class="title_line">
 			  <h3>Delivery List</h3>

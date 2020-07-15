@@ -180,12 +180,14 @@ $(document).ready(function(){
         $("#fromLocCode").val("");
         $("#toLocCode").val("${url.grCdcId}");
         $("#ioType").val("I");
+        $("#sVendorName").val($("#vendor").val());
     }else{
         $("#sDocNo").val($("#ingGrNo").val());
         $("#transaction").val("HP");
         $("#fromLocCode").val("");
         $("#toLocCode").val($("#grCdcId").val());
         $("#ioType").val("I");
+        $("#sVendorName").val($("#vendor").val());
     }
 
     $("#btnScanAllDel").click(function(){
@@ -307,6 +309,7 @@ $(function(){
 
 function fn_splitBarcode(){
 
+	console.log("scan serial vendor: " + $("#vendorId").val());
     if($("#txtBarcode").val() != null || js.String.strNvl($("#txtBarcode").val()) != ""){
         var BarCodeArray = $("#txtBarcode").val().toUpperCase().match(/.{1,18}/g);
 
@@ -366,6 +369,7 @@ function fn_splitBarcode(){
                            , "toLocCode":$("#toLocCode").val()
                            , "ioType":$("#ioType").val()
                            , "transactionType":$("#transaction").val()
+                           , "vendorId":$("#vendorId").val()
                          });
         }
 
@@ -451,11 +455,16 @@ function fn_scanClosePop(){
                 <th scope="row">GR No</th>
                 <td colspan="3" >
                     <input type="text" id="sDocNo" name="sDocNo" placeholder="" class="w100p readonly" style="min-width:150px" readonly value=""'/>
-
                      <input type="hidden" id="transaction" />
                      <input type="hidden" id="toLocCode" />
                      <input type="hidden" id="fromLocCode" />
                      <input type="hidden" id="ioType" />
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Vendor</th>
+                <td colspan="3" >
+                    <input type="text" id="sVendorName" name="sVendorName" class="w100p readonly" style="min-width:150px" readonly value=""/>
                 </td>
             </tr>
         </tbody>
