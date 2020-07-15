@@ -517,7 +517,7 @@
                          <if test = 'eHApprovedDateFrom !="" and eHApprovedDateFrom !=null' >
                              <if test = 'eHApprovedDateTo !="" and eHApprovedDateTo !=null '>
 	                             <![CDATA[ AND  TO_DATE(TO_CHAR(Extent20.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(#{eHApprovedDateFrom}, 'DD/MM/YYYY') ]]>
-	                              <![CDATA[ AND  TO_DATE(TO_CHAR(Extent20.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') <= TO_DATE(#{eHApprovedDateTo}, 'DD/MM/YYYY') +1 ]]>
+	                              <![CDATA[ AND  TO_DATE(TO_CHAR(Extent20.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') <= TO_DATE(#{eHApprovedDateTo}, 'DD/MM/YYYY')  ]]>
                              </if>
                          </if >
 
@@ -1348,8 +1348,8 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
           WHERE  Extent1.APLCTN_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
            ]]>
     </select>
-    
-    
+
+
     <select id="getDetailCommonCodeList" parameterType="Map" resultType="egovMap">
              SELECT
                   CODE_ID detailCodeId,
@@ -1368,6 +1368,6 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                     AND DISAB = 0
 
             ORDER BY CODE ASC
-    </select>    
+    </select>
 
     </mapper>
