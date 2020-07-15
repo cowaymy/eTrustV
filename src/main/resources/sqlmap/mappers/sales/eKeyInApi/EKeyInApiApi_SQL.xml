@@ -930,43 +930,22 @@
   </update>
 
   <select id="selectCheckCRC1" parameterType="Map" resultType="Integer">
-    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectCheckCRC1] 20191214 - KR JAEMAJEM */
-    SELECT COUNT(1) AS CNT
-    FROM SAL0028D A
-    INNER JOIN ( SELECT CUST_ORI_CRC_NO
-                                 , COUNT(1)
-                        FROM SAL0028D
-                        GROUP BY CUST_ORI_CRC_NO
-                     ) B ON A.CUST_ORI_CRC_NO = B.CUST_ORI_CRC_NO
-     WHERE A.CUST_ORI_CRC_NO LIKE #{cardNo}
-         AND A.CUST_CRC_TOKEN = #{token}
-         AND A.CUST_ID = #{custId}
-         AND A.CUST_CRC_STUS_ID = '1'
+     SELECT COUNT(1) AS CNT
+     FROM SAL0028D
+     WHERE CUST_CRC_TOKEN = #{token}
+     AND A.CUST_CRC_STUS_ID = 1
   </select>
 
   <select id="selectCheckCRC2" parameterType="Map" resultType="Integer">
-    /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectCheckCRC2] 20191214 - KR JAEMAJEM */
-    SELECT COUNT(DISTINCT(NRIC)) AS CNT
-    FROM  SAL0029D A
-    INNER JOIN ( SELECT A1.CUST_ID
-                                , A1.CUST_ORI_CRC_NO
-                                , B1.CNT
-                        FROM SAL0028D A1
-                        INNER JOIN ( SELECT CUST_ORI_CRC_NO
-                                                    , COUNT(*) CNT
-                                            FROM SAL0028D
-                                            GROUP BY CUST_ORI_CRC_NO
-                                         ) B1 ON A1.CUST_ORI_CRC_NO = B1.CUST_ORI_CRC_NO
-                        WHERE A1.CUST_ORI_CRC_NO LIKE #{cardNo}
-                            AND A1.CUST_CRC_TOKEN = #{token}
-
-                            <if test="custId != '' and custId != null">
-                              AND A1.CUST_ID = #{custId}
-                            </if>
-
-                            AND A1.CUST_CRC_STUS_ID = '1'
-    ) B ON A.CUST_ID = B.CUST_ID
-
+    SELECT COUNT(1) AS CNT
+    FROM SAL0029D A
+    JOIN (
+        SELECT DISTINCT CUST_ID CUST_ID
+        FROM SAL0028D
+        WHERE CUST_CRC_TOKEN = #{token}
+        AND CUST_CRC_STUS_ID = 1
+    ) SAL0028D
+    ON SAL0029D.CUST_ID = SAL0028D.CUST_ID
     <if test='step == "3" '>
       WHERE TRIM(A.NRIC) = TRIM(#{nric})
     </if>
@@ -1527,6 +1506,7 @@
       FROM SAL0257D
      WHERE TKN_ID = LTRIM(TO_NUMBER(SUBSTR(#{refNo}, 37, 10)))
        AND REF_NO = #{refNo}
+       AND TOKEN IS NOT NULL
   </select>
 
   <update id="updateStagingF" parameterType="Map">
