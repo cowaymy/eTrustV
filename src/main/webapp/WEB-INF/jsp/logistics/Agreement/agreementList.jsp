@@ -27,6 +27,7 @@ $(document).ready(function() {
             $("#userRole").val() == 177 || $("#userRole").val() == 179 || $("#userRole").val() == 180 || // Cody Support
             $("#userRole").val() == 200 || $("#userRole").val() == 252 || $("#userRole").val() == 253 || // Cody Planning
             $("#userRole").val() == 250 || $("#userRole").val() == 256 || // Cody Branch
+            $("#userRole").val() == 339 || $("#userRole").val() == 341 || $("#userRole").val() == 343 || // HT Leader
             $("#userRole").val() == 348 || $("#userRole").val() == 349 || $("#userRole").val() == 350|| $("#userRole").val() == 351 || // HT Manager
             $("#userRole").val() == 352 || // HT
             $("#userRole").val() == 335 || $("#userRole").val() == 336 || $("#userRole").val() == 337 ) // Sales Care
@@ -78,6 +79,7 @@ $(document).ready(function() {
         }
         //HT
         else if(
+        		//$("#userRole").val() == 339 || $("#userRole").val() == 341 || $("#userRole").val() == 343|| //HT Leader
         		$("#userRole").val() == 348 || $("#userRole").val() == 349 || $("#userRole").val() == 350||
         		$("#userRole").val() == 351 || // HT Manager
                 $("#userRole").val() == 352 //HT
@@ -330,7 +332,9 @@ function fn_downloadAgreement() {
     if($("#userRole").val() == 97 || $("#userRole").val() == 98 || $("#userRole").val() == 99 || $("#userRole").val() == 100 || // SO Branch
             $("#userRole").val() == 103 || $("#userRole").val() == 104 || $("#userRole").val() == 105 || // DST Support
             $("#userRole").val() == 128 || $("#userRole").val() == 129 || $("#userRole").val() == 130 || // Administrator
-            $("#userRole").val() == 166 || $("#userRole").val() == 167 || $("#userRole").val() == 261) {
+            $("#userRole").val() == 166 || $("#userRole").val() == 167 || $("#userRole").val() == 261 ||
+            $("#userRole").val() == 339 || $("#userRole").val() == 341 || $("#userRole").val() == 343  // HT Leader
+            ){
 
         code = memberid;
         $("#v_memCode").val(memberid);
