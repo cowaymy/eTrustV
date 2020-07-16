@@ -1377,7 +1377,7 @@
              )
            </if>
            <if test='vaNo != null and vaNo != ""'>
-             AND T.CUST_VA_NO = UPPER(#{vaNo})
+             AND REPLACE(T.CUST_VA_NO,' ')= REPLACE(UPPER(#{vaNo}),' ')
            </if>
 
            <if test='crtUserId != null and crtUserId != ""'>
