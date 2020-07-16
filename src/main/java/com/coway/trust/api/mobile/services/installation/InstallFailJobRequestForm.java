@@ -48,6 +48,8 @@ public class InstallFailJobRequestForm {
 
   private String failLocCde;
 
+  private String nxtCallDate;
+
   private String remark;
 
   public String getSerialNo() {
@@ -152,6 +154,14 @@ public class InstallFailJobRequestForm {
 
   public void setFailLocCde(String failLocCde) {
     this.failLocCde = failLocCde;
+  }
+
+  public String getNxtCallDate() {
+    return nxtCallDate;
+  }
+
+  public void setNxtCallDate(String nxtCallDate) {
+    this.nxtCallDate = nxtCallDate;
   }
 
   public String getRemark() {
