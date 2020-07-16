@@ -33,9 +33,9 @@
     <th scope="row"><spring:message code="sal.text.evoucher.hs"/></th>
     <td>
         <c:choose>
-	        <c:when test="${orderDetail.basicInfo.redeemHs != 0}">
+	        <c:when test="${orderDetail.basicInfo.redeemHs > 0}">
 	            <input type="checkbox" onClick="return false" checked/>
-	            <c:if test="${orderDetail.basicInfo.redeemMth != 0 && orderDetail.basicInfo.redeemYear != 0}">
+	            <c:if test="${orderDetail.basicInfo.redeemMth > 0 && orderDetail.basicInfo.redeemYear > 0}">
 	                   <span>&nbsp;(${orderDetail.basicInfo.redeemMth}-${orderDetail.basicInfo.redeemYear})</span>
 	            </c:if>
 	        </c:when>
@@ -47,7 +47,7 @@
     <th scope="row"><spring:message code="sal.text.evoucher.ext.warr"/></th>
     <td>
         <c:choose>
-	        <c:when test="${orderDetail.basicInfo.redeemWarranty != 0}">
+	        <c:when test="${orderDetail.basicInfo.redeemWarranty > 0}">
 	               <input type="checkbox" onClick="return false" checked/>
 	        </c:when>
 	        <c:otherwise>
