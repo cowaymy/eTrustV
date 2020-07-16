@@ -2180,6 +2180,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("adjAmount", 0);
     installResult.put("psi", CommonUtils.nvl(params.get("psiRcd")).toString());
     installResult.put("lpm", CommonUtils.nvl(params.get("lpmRcd")).toString());
+    installResult.put("volt", CommonUtils.nvl(params.get("volt")).toString());
+    installResult.put("tds", CommonUtils.nvl(params.get("tds")).toString());
+    installResult.put("roomTemp", CommonUtils.nvl(params.get("roomTemp")).toString());
+    installResult.put("waterSourceTemp", CommonUtils.nvl(params.get("waterSourceTemp")).toString());
+    installResult.put("adptUsed", CommonUtils.nvl(params.get("adptUsed")).toString());
 
     logger.debug("========================INSTALLATION RESULT PRM===========================");
     logger.debug("INSTALLATION RESULT : {}", installResult);
