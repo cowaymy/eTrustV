@@ -3127,6 +3127,11 @@
                   , Extent8.WH_LOC_ID CT_WH_LOC_ID
                   , Extent3.PSI PSI
                   , Extent3.LPM LPM
+                  , Extent3.VOLT VOLT
+                  , Extent3.TDS TDS
+                  , Extent3.ROOM_TEMP ROOM_TEMP
+                  , Extent3.WATER_SRC_TEMP WATER_SRC_TEMP
+                  , Extent3.ADPT_USED ADPT_USED
          FROM SAL0046D Extent1
          JOIN SYS0026M Extent2 ON Extent2.STK_ID = Extent1.INSTALL_STK_ID
          JOIN SAL0047D Extent3 ON Extent3.ENTRY_ID = Extent1.INSTALL_ENTRY_ID
@@ -3496,6 +3501,11 @@
                         , MOBILE_ID
                         , PSI
                         , LPM
+                        ,VOLT
+                        ,TDS
+                        ,ROOM_TEMP
+                        ,WATER_SRC_TEMP
+                        ,ADPT_USED
     ) VALUES (SAL0047D_RESULT_ID_SEQ.NEXTVAL
             , #{entryId}
             , #{statusCodeId}
@@ -3520,6 +3530,11 @@
             , NULL
             , #{psi}
             , #{lpm}
+            , #{volt}
+            , #{tds}
+            , #{roomTemp}
+            , #{waterSourceTemp}
+            , #{adptUsed}
     )
   </insert>
 
@@ -4650,6 +4665,11 @@
                       , INSTALL_DT = to_date( #{installdt} , 'DD/MM/YYYY' )
                       , PSI = #{psiRcd}
                       , LPM = #{lpmRcd}
+                      ,VOLT = #{Volt}
+                      ,TDS  = #{TDS}
+                      ,ROOM_TEMP = #{RoomTemp}
+                      ,WATER_SRC_TEMP = #{WaterSourceTemp}
+                      ,ADPT_USED = #{adptUsed}
     WHERE ( RESULT_ID = #{resultId} )
   </update>
 
