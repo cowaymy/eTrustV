@@ -360,7 +360,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       params.put("CTID", String.valueOf(userId));
       params.put("installDate", "");
       params.put("updator", String.valueOf(userId));
-      params.put("nextCallDate", todayPlusOne);
+      params.put("nextCallDate", String.valueOf(params.get("nxtCallDate")) != "" ? String.valueOf(params.get("nxtCallDate")) : todayPlusOne);
       params.put("refNo1", "0");
       params.put("refNo2", "0");
       params.put("codeId", String.valueOf(installResult.get("typeId")));
@@ -372,10 +372,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       params.put("tds", String.valueOf(params.get("tds")));
       params.put("roomTemp", String.valueOf(params.get("roomTemp")));
       params.put("waterSourceTemp", String.valueOf(params.get("waterSourceTemp")));
-
-      // FORM REMARK
-      String remark = "";
-      params.put("remark", String.valueOf(remark));
+      params.put("remark", String.valueOf(params.get("remark")));
 
       if (orderInfo != null) {
         params.put("hidOutright_Price", CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
