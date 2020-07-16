@@ -11,98 +11,171 @@ import com.coway.trust.util.BeanConverter;
 
 import io.swagger.annotations.ApiModelProperty;
 
+/*********************************************************************************************
+ * DATE          PIC        VERSION     COMMENT
+ *--------------------------------------------------------------------------------------------
+ * 16/07/2020    ONGHC      1.0.1       - CREATE EXTRA GETTER & SETTER
+ *********************************************************************************************/
+
 public class InstallFailJobRequestForm {
 
-	@ApiModelProperty(value = "사용자 ID (예_CT123456)")
-	private String userId;
+  @ApiModelProperty(value = "사용자 ID (예_CT123456)")
+  private String userId;
 
-	@ApiModelProperty(value = "주문번호")
-	private String salesOrderNo;
+  @ApiModelProperty(value = "주문번호")
+  private String salesOrderNo;
 
-	@ApiModelProperty(value = "EX_BS00000 / AS00000")
-	private String serviceNo;
+  @ApiModelProperty(value = "EX_BS00000 / AS00000")
+  private String serviceNo;
 
-	private String failReasonCode;
+  private String failReasonCode;
 
+  private String serialNo;
 
-	private String serialNo;
+  private String scanSerial;
 
-	private String scanSerial;
+  private String volt;
 
+  private String psiRcd;
 
+  private String lpmRcd;
 
+  private String tds;
 
-	public String getSerialNo() {
-		return serialNo;
-	}
+  private String roomTemp;
 
-	public void setSerialNo(String serialNo) {
-		this.serialNo = serialNo;
-	}
+  private String waterSourceTemp;
 
-	public String getFailReasonCode() {
-		return failReasonCode;
-	}
+  private String failLocCde;
 
-	public void setFailReasonCode(String failReasonCode) {
-		this.failReasonCode = failReasonCode;
-	}
+  private String remark;
 
+  public String getSerialNo() {
+    return serialNo;
+  }
 
-	public String getUserId() {
-		return userId;
-	}
+  public void setSerialNo(String serialNo) {
+    this.serialNo = serialNo;
+  }
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+  public String getFailReasonCode() {
+    return failReasonCode;
+  }
 
-	public String getSalesOrderNo() {
-		return salesOrderNo;
-	}
+  public void setFailReasonCode(String failReasonCode) {
+    this.failReasonCode = failReasonCode;
+  }
 
-	public void setSalesOrderNo(String salesOrderNo) {
-		this.salesOrderNo = salesOrderNo;
-	}
+  public String getUserId() {
+    return userId;
+  }
 
-	public String getServiceNo() {
-		return serviceNo;
-	}
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
 
-	public void setServiceNo(String serviceNo) {
-		this.serviceNo = serviceNo;
-	}
+  public String getSalesOrderNo() {
+    return salesOrderNo;
+  }
 
-	public String getScanSerial() {
-		return scanSerial;
-	}
+  public void setSalesOrderNo(String salesOrderNo) {
+    this.salesOrderNo = salesOrderNo;
+  }
 
-	public void setScanSerial(String scanSerial) {
-		this.scanSerial = scanSerial;
-	}
+  public String getServiceNo() {
+    return serviceNo;
+  }
 
+  public void setServiceNo(String serviceNo) {
+    this.serviceNo = serviceNo;
+  }
 
+  public String getScanSerial() {
+    return scanSerial;
+  }
 
+  public void setScanSerial(String scanSerial) {
+    this.scanSerial = scanSerial;
+  }
 
+  public String getVolt() {
+    return volt;
+  }
 
+  public void setVolt(String volt) {
+    this.volt = volt;
+  }
 
+  public String getPsiRcd() {
+    return psiRcd;
+  }
 
-	public static Map<String, Object> createMaps(InstallFailJobRequestForm installFailJobRequestForm) {
+  public void setPsiRcd(String psiRcd) {
+    this.psiRcd = psiRcd;
+  }
 
-		List<Map<String, Object>> list = new ArrayList<>();
+  public String getLpmRcd() {
+    return lpmRcd;
+  }
 
-			Map<String, Object> map=null;
+  public void setLpmRcd(String lpmRcd) {
+    this.lpmRcd = lpmRcd;
+  }
 
+  public String getTds() {
+    return tds;
+  }
 
-//				map = BeanConverter.toMap(pRReAppointmentRequestForm, "signData", "partList");
-//				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
+  public void setTds(String tds) {
+    this.tds = tds;
+  }
 
+  public String getRoomTemp() {
+    return roomTemp;
+  }
 
-			map = BeanConverter.toMap(installFailJobRequestForm);
+  public void setRoomTemp(String roomTemp) {
+    this.roomTemp = roomTemp;
+  }
 
-//				list.add(map);
+  public String getWaterSourceTemp() {
+    return waterSourceTemp;
+  }
 
-				return map;
-	}
+  public void setWaterSourceTemp(String waterSourceTemp) {
+    this.waterSourceTemp = waterSourceTemp;
+  }
+
+  public String getFailLocCde() {
+    return failLocCde;
+  }
+
+  public void setFailLocCde(String failLocCde) {
+    this.failLocCde = failLocCde;
+  }
+
+  public String getRemark() {
+    return remark;
+  }
+
+  public void setRemark(String remark) {
+    this.remark = remark;
+  }
+
+  public static Map<String, Object> createMaps(InstallFailJobRequestForm installFailJobRequestForm) {
+
+    List<Map<String, Object>> list = new ArrayList<>();
+
+    Map<String, Object> map = null;
+
+    // map = BeanConverter.toMap(pRReAppointmentRequestForm, "signData", "partList");
+    // map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
+
+    map = BeanConverter.toMap(installFailJobRequestForm);
+
+    // list.add(map);
+
+    return map;
+  }
 
 }
