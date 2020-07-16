@@ -5,7 +5,7 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
-	Common.ajaxSync("GET", "/common/userManagement/selectUserList.do", {userId : '${SESSION_INFO.userId}' }, function(result) {
+	Common.ajaxSync("GET", "/common/userManagement/selectUserList.do", {userIdForEdit : '${SESSION_INFO.userId}' }, function(result) {
 		if(result != null && result.length == 1) {
 			$('#userSettingForm #eMail').val(result[0].userEmail);
 			$('#userSettingForm #mobileNo').val(result[0].userMobileNo);
@@ -13,7 +13,7 @@ $(document).ready(function(){
 			$('#userSettingForm #userWorkNo').val(result[0].userWorkNo);
 			$('#userSettingForm #nricNo').val(result[0].userNric);
 		}else {
-            Common.lert('Error. Please contact IT department');
+            Common.alert('Error. Please contact IT department');
         }
 	});
 
