@@ -3259,12 +3259,26 @@
                          ,SVC_NO
                          ,FAIL_RESN_CODE
                          ,TRAN_STUS_CD
+                         ,FAIL_LOC_ID
+                         ,VOLT
+                         ,PSI
+                         ,LPM
+                         ,TDS
+                         ,ROOM_TEMP
+                         ,WATER_SRC_TEMP
     ) VALUES (#{resultSeq}
             , #{userId}
             , #{salesOrderNo}
             , #{serviceNo}
             , #{failReasonCode}
             , 'N'
+            , #{failLocCde}
+            , #{volt}
+            , #{psiRcd}
+            , #{lpmRcd}
+            , #{tds}
+            , #{roomTemp}
+            , #{waterSourceTemp}
     )
   </insert>
 
