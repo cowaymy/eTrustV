@@ -13,7 +13,12 @@
     </select>
     <select id="selectStockTransferMainList" parameterType="Map" resultType="egovMap">
         select ROWNUM rnum , l47.REQST_STUS     status
-            ,(case when l48.FINAL_CMPLT = 'Y' then 'Complete' else 'Open' end) staname
+            -- ,(case when l48.FINAL_CMPLT = 'Y' then 'Complete' else 'Open' end) staname
+                , (case l47.REQST_STUS
+                        when 'O' then 'Open'
+                        when 'P' then 'Pending'
+                        when 'C' then 'Completed'
+                    end) staname
 		     <!-- , reqs.code_name     staname -->
 		     , l47.reqst_no       reqstno
 		     , l48.reqst_no_itm   reqitmno
@@ -367,6 +372,7 @@
              , l47.REF_DOC_NO docno
              , NVL(S28C.SERIAL_REQUIRE_CHK_YN, 'N') AS RCV_SERIAL_REQUIRE_CHK_YN
              , NVL(s28q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQ_YN
+             , l54.RCD_TMS
           from log0047m l47
              , log0048d l48
              , log0054m l54
@@ -768,5 +774,18 @@
                ORDER BY l54.DELVRY_NO DESC
            ) T
     </select>
+
+    <!-- Added for resolving duplicate issue. By Hui Ding, 2020-07-17 -->
+    <select id="checkRcdTms" parameterType="Map" resultType="int">
+	    SELECT COUNT(DELVRY_NO)
+	    FROM LOG0054M
+	    WHERE DELVRY_NO = #{delvryNo}
+	        AND RCD_TMS = #{rcdTms}
+	  </select>
+
+	  <update id="updRcdTms" parameterType="Map">
+	    UPDATE LOG0054M SET RCD_TMS = TO_CHAR(SYSTIMESTAMP,'ddmmyyyyHH24miss')
+	    WHERE DELVRY_NO = #{delvryNo}
+	  </update>
 
 </mapper>

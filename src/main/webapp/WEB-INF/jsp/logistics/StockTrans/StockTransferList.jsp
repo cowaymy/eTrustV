@@ -248,20 +248,21 @@ $(function(){
             Common.alert("No data selected.");
             return;
         }else{
+        	console.log("status: " + selectedItem[0].item.status);
              if(selectedItem[0].item.status != 'O'){
-                 Common.alert("No Delete STO No.");
+                 Common.alert('Only "Open" status STO allow for deletion. ');
              }else{
             	 var deliverychk;
             	 var reqstono=selectedItem[0].item.reqstno;
             	 //fn_selectdelivery(reqstono);
             	 if(fn_selectdelivery(reqstono)){
-            		Common.alert("No Delete STO No.");
+            		Common.alert("STO has issued delivery. No deletion allowed.");
             		return false;
             	 }else{
             		 Common.confirm("<spring:message code='sys.common.alert.delete'/></br> "+reqstono,fn_delete);
 
             	 }
-                 //fn_deleteAjax(reqsmono);
+                 //fn_deleteAjax(reqstono);
              }
         }
     });
@@ -385,7 +386,7 @@ function f_getTtype(g , v){
 function fn_delete(){
     var selectedItem = AUIGrid.getSelectedItems(listGrid);
     var reqstono=selectedItem[0].item.reqstno;
-    //alert("reqsmono ???  "+reqsmono);
+    console.log("reqstono ???  "+reqstono);
     fn_deleteAjax(reqstono)
 
 }

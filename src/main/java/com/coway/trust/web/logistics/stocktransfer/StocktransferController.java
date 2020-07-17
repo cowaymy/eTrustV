@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.logistics.stockmovement.StockMovementService;
 import com.coway.trust.biz.logistics.stocktransfer.StockTransferService;
 import com.coway.trust.cmmn.exception.PreconditionException;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -52,6 +53,9 @@ public class StocktransferController {
 
 	@Resource(name = "stocktranService")
 	private StockTransferService stock;
+
+	@Resource(name = "stockMovementService")
+	private StockMovementService stockMovementService;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -647,7 +651,14 @@ public class StocktransferController {
 	public ResponseEntity<ReturnMessage> deleteStoNo(@RequestParam Map<String, Object> params,
 			Model model) {
 
-		stock.deleteStoNo(params);
+		if (!params.isEmpty()){
+			//stock.deleteStoNo(params);
+			logger.info("###params: " + params.toString());
+			params.put("reqsmono", params.get("reqstono"));
+
+    		// share using method to delete SMO.
+    		stockMovementService.deleteSmoNo(params);
+		}
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
