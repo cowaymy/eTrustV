@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.otherpayment.service.impl.JompayRtnMapper">
+
+  <select id="selectJompayRtnList" parameterType="Map" resultType="egovMap">
+    SELECT
+      EXTENT1.FILE_ID,
+      EXTENT1.FILE_NAME,
+      EXTENT1.TOTAL_RECORD,
+      EXTENT2.NAME STUS,
+      TO_CHAR(EXTENT1.CRT_DT,'DD/MM/YYYY') CRT_DT,
+      EXTENT1.TOT_SUCCES,
+      EXTENT1.TOT_FAIL
+    FROM PAY0302D EXTENT1
+    JOIN SYS0038M EXTENT2 ON EXTENT2.STUS_CODE_ID = EXTENT1.STUS
+    WHERE 1 = 1
+    <if test="fileId != null and fileId != '' ">
+      AND EXTENT1.FILE_ID = #{fileId}
+    </if>
+    <if test="createDt1 != null and createDt1 != '' ">
+      AND TO_CHAR(EXTENT1.CRT_DT,'DD/MM/YYYY') <![CDATA[>= ]]> #{createDt1}
+    </if>
+    <if test="createDt2 != null and createDt2 != '' ">
+      AND TO_CHAR(EXTENT1.CRT_DT,'DD/MM/YYYY') <![CDATA[<= ]]> #{createDt2}
+    </if>
+
+    ORDER BY FILE_ID DESC
+
+  </select>
+
+  <select id="selectJompayRtnDetailsList" parameterType="Map" resultType="egovMap">
+    SELECT
+      D.FILE_ID
+      , D.CUST_BILL_REF1
+      , D.CUST_BILL_REF2
+      , TO_CHAR(D.AMOUNT/ 100,'99,999.00') AMOUNT
+      , TO_CHAR(D.TRANS_DT,'DD/MM/YYYY') TRANS_DT
+      , D.SLIP_NO
+      , S.NAME STATUS
+      , D.REM
+    FROM PAY0303D D
+    JOIN SYS0038M S ON S.STUS_CODE_ID = D.STUS
+    WHERE FILE_ID = #{fileId}
+        <if test="status == 4">
+            AND D.STUS = 4
+        </if>
+        <if test="status == 6">
+            AND D.STUS <![CDATA[<> ]]> 4
+        </if>
+
+
+    ORDER BY D.FILE_ITM_ID
+
+  </select>
+
+</mapper>
