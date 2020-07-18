@@ -455,9 +455,9 @@
                     TAX_INVC_TXS,
                     TAX_INVC_AMT_DUE
                  ) = (
-                         SELECT TO_NUMBER (INVC_ITM_CHRG +   round(#{V_INVC_ITM_CHRG},2)       )      TAX_INVC_CHRG ,
-                                    TO_NUMBER (INVC_ITM_GST_TXS + round(#{V_INVC_ITM_GST_TXS} ,2) ) TAX_INVC_TXS ,
-                                    TO_NUMBER (INVC_ITM_AMT_DUE +round(#{V_INVC_ITM_AMT_DUE} ,2)  ) TAX_INVC_AMT_DUE
+                         SELECT TO_NUMBER (NVL(INVC_ITM_CHRG,0) +   round(#{V_INVC_ITM_CHRG},2)       )      TAX_INVC_CHRG ,
+                                    TO_NUMBER (NVL(INVC_ITM_GST_TXS,0) + round(#{V_INVC_ITM_GST_TXS} ,2) ) TAX_INVC_TXS ,
+                                    TO_NUMBER (NVL(INVC_ITM_AMT_DUE,0) +round(#{V_INVC_ITM_AMT_DUE} ,2)  ) TAX_INVC_AMT_DUE
                            FROM(
                                  SELECT    sum(INVC_ITM_GST_TXS)    AS INVC_ITM_GST_TXS  ,
                                                sum(INVC_ITM_CHRG)         AS INVC_ITM_CHRG,
