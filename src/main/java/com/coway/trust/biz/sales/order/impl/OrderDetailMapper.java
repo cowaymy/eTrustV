@@ -34,7 +34,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *
  *          수정일          수정자           수정내용
  *  ----------------    ------------    ---------------------------
- *   2014.01.24        표준프레임워크센터          최초 생성
+ *   2014.01.24      표준프레임워크센터          최초 생성
+ *   2020.07.20      ONGHC           Add getInstImgByInst
  *
  *      </pre>
  */
@@ -100,6 +101,8 @@ public interface OrderDetailMapper {
   List<EgovMap> selectASInfoList(Map<String, Object> params); // Last 6 Months Transaction
 
   List<EgovMap> getInstImg(Map<String, Object> params);
+
+  List<EgovMap> getInstImgByInst(Map<String, Object> params);
 
   List<EgovMap> selectGSTRebateList(Map<String, Object> params);
 
