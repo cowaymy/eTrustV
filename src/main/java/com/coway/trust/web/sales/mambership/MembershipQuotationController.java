@@ -362,6 +362,22 @@ public class  MembershipQuotationController {
 
 		return ResponseEntity.ok(map);
 	}
+	//webster lee 17072020 : added a validation for outright membership ledger
+	@RequestMapping(value = "/getOutrightMemLedge" ,method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> getOutrightMemLedge(@RequestParam Map<String, Object> params, ModelMap model,
+			HttpServletRequest request) {
+
+		logger.debug("in  getOutrightMemLedge ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		EgovMap  map =  membershipQuotationService.getOutrightMemLedge(params);
+		if(null !=map ){
+			logger.debug("		====>			" + map.toString());
+		}
+		return ResponseEntity.ok(map);
+	}
 
 
 
@@ -499,23 +515,23 @@ public class  MembershipQuotationController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 
   @RequestMapping(value = "/getMaxPeriodEarlyBirdPromo")
   public ResponseEntity<Map> getMaxPeriodEarlyBirdPromo(@RequestParam Map<String, Object> params, Model model)
       throws Exception {
-    
+
     EgovMap getMaxPeriodEarlyBirdPromo = null;
-    
+
     logger.debug("getMaxPeriodEarlyBirdPromo prams: " + params.toString());
-    
+
     getMaxPeriodEarlyBirdPromo = membershipQuotationService.getMaxPeriodEarlyBirdPromo(params);
-    
+
     logger.debug("getMaxPeriodEarlyBirdPromo: " + getMaxPeriodEarlyBirdPromo);
-    
+
     Map<String, Object> map = new HashMap();
     map.put("getMaxPeriodEarlyBirdPromo", getMaxPeriodEarlyBirdPromo);
-    
+
     return ResponseEntity.ok(map);
   }
 

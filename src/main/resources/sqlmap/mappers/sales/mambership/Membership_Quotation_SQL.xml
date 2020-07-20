@@ -774,7 +774,20 @@
          ]]>
       </select>
 
+        <!-- webster lee -->
 
+	    <select id="getOutrightMemLedge"   parameterType="Map"  resultType="egovMap">
+	       <![CDATA[
+
+		          select SUM(b.SRV_MEM_AMT) AS AMT
+		              from PAY0024D b
+		              join SAL0095D a  on a.SRV_MEM_ID = b.SRV_MEM_ID
+		          where
+		              a.SRV_SALES_ORD_ID = #{ORD_ID}
+
+
+	         ]]>
+	      </select>
 
        <select id="mActiveQuoOrder" parameterType="Map" resultType="egovMap">
                  <![CDATA[
@@ -1339,7 +1352,7 @@
                 SELECT FN_GET_DOCNO(#{DOCNO})  docno  FROM DUAL
         ]]>
      </select>
-     
+
      <select id="getMaxPeriodEarlyBirdPromo" parameterType="Map" resultType="egovMap">
 					select to_char(add_months( to_date( #{MBSH_EXP_DT},'yyyymm'), -3 ),'MM-dd-yyyy') strPrmoDt from dual
 		 </select>

@@ -345,7 +345,7 @@ $(document).ready(function(){
 
 	}
 
-	
+
 	/*fn_getMaxPeriodEarlyBirdPromo*/
 	function fn_getMaxPeriodEarlyBirdPromo(old_result) {
 
@@ -412,9 +412,9 @@ $(document).ready(function(){
 	}
 
 	function setPackgCombo() {
-		doGetCombo('/sales/membership/getSrvMemCode?SALES_ORD_ID=' + $("#ORD_ID").val(), '', defaultcTPackage, 'cTPackage', 'S', ''); 
+		doGetCombo('/sales/membership/getSrvMemCode?SALES_ORD_ID=' + $("#ORD_ID").val(), '', defaultcTPackage, 'cTPackage', 'S', '');
 		fn_cTPackage_onchangeEvt();
-		
+
 	}
 
 	function fn_cTPackage_onchangeEvt() {
@@ -611,7 +611,7 @@ $(document).ready(function(){
 				$("#hiddentxtBSFreq").val(result.packageInfo.srvMemItmPriod);
 
 				$("#hiddenNomalPrice").val(pacPrice);
-				
+
 				$("#srvMemPacId").val(result.packageInfo.srvMemPacId);
 
 				if ($("#eurCertYn").val() == "N") {
@@ -1195,7 +1195,34 @@ $(document).ready(function(){
 							if (result.ordTotOtstnd > 0) {
 								rtnMsg += "* This order has outstanding. Membership purchase is disallowed.<br />";
 								rtnValue = false;
+							} else{
+										 //webster lee 20072020:Added new validation
+						                Common.ajaxSync("GET", "/sales/membership/getOutrightMemLedge", $("#getDataForm").serialize(), function(result1) {
+						                	console.log("==========4===");
+					                        console.log(result1);
+
+						                	if (result1.amt > 0 || result1.amt< 0) {
+
+						                            rtnMsg +=  "This order has outstanding.<br />";
+						                            rtnValue = false;
+						                    }
+
+						                }, function(jqXHR, textStatus, errorThrown) {
+						                    try {
+						                        console.log("status : " + jqXHR.status);
+						                        console.log("code : " + jqXHR.responseJSON.code);
+						                        console.log("message : " + jqXHR.responseJSON.message);
+						                        console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+						                    }
+						                    catch (e) {
+						                        console.log(e);
+						                    }
+
+						                    rtnMsg += jqXHR.responseJSON.message;
+						                    rtnValue = false;
+						                });
 							}
+
 						}
 
 					}, function(jqXHR, textStatus, errorThrown) {
@@ -1221,9 +1248,9 @@ $(document).ready(function(){
 			}
 		}
 
-		if (rtnValue == false) {
-			Common.alert("<spring:message code="sal.alert.title.rentalOrderValidation" />" + DEFAULT_DELIMITER + rtnMsg);
-		}
+	    if (rtnValue == false) {
+	        Common.alert("<spring:message code="sal.alert.title.rentalOrderValidation" />" + DEFAULT_DELIMITER + rtnMsg);
+	    }
 
 		return rtnValue;
 	}

@@ -28,7 +28,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @since 2014.01.24
  * @version 1.0
  * @see
- * 
+ *
  *      <pre>
  *  == 개정이력(Modification Information) ==
  *
@@ -40,51 +40,53 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 @Mapper("membershipQuotationMapper")
 public interface MembershipQuotationMapper {
-  
+
   List<EgovMap> quotationList(Map<String, Object> params);
-  
+
   List<EgovMap> newOListuotationList(Map<String, Object> params);
-  
+
   EgovMap newGetExpDate(Map<String, Object> params);
-  
+
   List<EgovMap> getSrvMemCode(Map<String, Object> params);
-  
+
   EgovMap mPackageInfo(Map<String, Object> params);
-  
+
   List<EgovMap> getPromotionCode(Map<String, Object> params);
-  
+
   EgovMap getFilterCharge(Map<String, Object> params);
-  
+
   List<EgovMap> getFilterPromotionCode(Map<String, Object> params);
-  
+
   List<EgovMap> getPromoPricePercent(Map<String, Object> params);
-  
+
   List<EgovMap> getOrderCurrentBillMonth(Map<String, Object> params);
-  
+
   List<EgovMap> getFilterChargeList(Map<String, Object> params);
-  
+
   List<EgovMap> getFilterChargeListSum(Map<String, Object> params);
-  
+
   EgovMap getOderOutsInfo(Map<String, Object> params);
-  
+
+  EgovMap getOutrightMemLedge(Map<String, Object> params);
+
   EgovMap getFilterPromotionAmt(Map<String, Object> params);
-  
+
   void insertQuotationInfo(Map<String, Object> params);
-  
+
   EgovMap getMembershipFilterChargeList(Map<String, Object> params);
-  
+
   void insertSrvMembershipQuot_Filter(Map<String, Object> params);
-  
+
   EgovMap getSAL0093D_SEQ(Map<String, Object> params);
-  
+
   List<EgovMap> mActiveQuoOrder(Map<String, Object> params);
-  
+
   List<EgovMap> selectSrchMembershipQuotationPop(Map<String, Object> params);
-  
+
   EgovMap getEntryDocNo(Map<String, Object> params);
-  
+
   void update_SAL0093D_Stus(Map<String, Object> params);
-  
+
   EgovMap getMaxPeriodEarlyBirdPromo(Map<String, Object> params);
-  
+
 }
