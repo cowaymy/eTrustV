@@ -293,6 +293,7 @@
                                                                    AND TO_NUMBER(T7.ROS_YEAR) = TO_NUMBER(TO_CHAR(T1.CALL_CRT_DT,'YYYY'))
                         LEFT OUTER JOIN SYS0047M T8 ON T8.USER_ID = T7.ROS_CALLER_USER_ID
                         LEFT JOIN SAL0046D T9 ON T9.SALES_ORD_ID = T2.SALES_ORD_ID AND T9.CALL_ENTRY_ID = T2.CALL_ENTRY_ID AND T9.STUS_CODE_ID = 21
+                        LEFT JOIN SYS0038M T10 ON T10.STUS_CODE_ID = T9.STUS_CODE_ID
 
                         WHERE 8 != T1.CALL_STUS_ID
                             AND T2.SALES_ORD_ID = #{salesOrderId}
