@@ -2064,6 +2064,44 @@ public class ReportBatchController {
     LOGGER.info("[END] Monthly_Rental_Collection...");
   }
 
+// Accumulated Operating Lease Details Other Raw Report - Added by TPY 20/07/2020 requested by Finance Department
+  @RequestMapping(value = "/RentalOptLeaseDetailsOthRaw_Excel.do")
+  //@Scheduled(cron = " 0 0 6 1 * ?")//Monthly (Day 1) 6:00am
+  public void RentalOptLeaseDetailsOthRaw() {
+    LOGGER.info("[START] RentalOptLeaseDetailsOthRaw_Excel...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/RentalOptLeaseDetailsOthRaw_Excel.rpt");// visualcut
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Rental Details Others Raw" + File.separator + "RentalOptLeaseDetailsOthRaw_" + CommonUtils.getNowDate() + ".xls");
+
+        this.viewProcedure(null, null, params);
+        LOGGER.info("[END] RentalOptLeaseDetailsOthRaw_Excel...");
+  }
+
+// Accumulated Finance Lease Details Other Raw Report - Added by TPY 20/07/2020 requested by Finance Department
+  @RequestMapping(value = "/RentalFinLeaseDetailsOthRaw_Excel.do")
+  //@Scheduled(cron = " 0 0 6 1 * ?")//Monthly (Day 1) 6:00am
+  public void RentalFinLeaseDetailsOthRaw() {
+    LOGGER.info("[START] RentalFinLeaseDetailsOthRaw_Excel...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/RentalFinLeaseDetailsOthRaw_Excel.rpt");// visualcut
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Rental Details Others Raw" + File.separator + "RentalFinLeaseDetailsOthRaw_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] RentalFinLeaseDetailsOthRaw_Excel...");
+  }
+
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
