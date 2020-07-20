@@ -31,7 +31,8 @@ var subGrid;
 var mdcGrid;
 var myGridID;
 var detailGridID;
-
+//Homecare - logistics flags
+var isHomeCare = false;
 
 // AUIGrid 칼럼 설정                                                                            visible : false
 var columnLayout = [{dataField: "matrlNo",headerText :"<spring:message code='log.head.matcode'/>"                ,width:120    ,height:30 , visible:true},
@@ -120,11 +121,16 @@ $(document).ready(function(){
 
     doDefCombo(amdata, 'M' ,'sam', 'S', '');
 
-     if(window.location.href.indexOf("htMaterialdocIns.do")>0){
+     if(window.location.href.indexOf("htMaterialdocIns.do")>0){ //Homecare - logistics page
+    	 isHomeCare = true;
        	doGetCombo('/common/selectHCMaterialCtgryList.do', '11', '', 'smatcate', 'M' ,'f_multiCombos');
     }else{
+    	 isHomeCare = false;
     	doGetCombo('/common/selectCodeList.do', '11', '', 'smatcate', 'M' ,'f_multiCombos');
     }
+
+
+     console.log("****sIsHomeCare:: "+ $("#sIsHomeCare").val());
 
 //     CommonCombo.make("sfrLoctype", "/common/selectCodeList.do", { groupCode : 339 , orderValue : 'CODE'}, "", {
 //         id: "code",
@@ -373,6 +379,12 @@ function f_multiCombos() {
 	}
 
 	function SearchListAjax() {
+		//Homecare - logistics page
+   	    if(isHomeCare){
+		  $("#sIsHomeCare").val("true");
+	    }else{
+		  $("#sIsHomeCare").val("false");
+	    }
 
 		AUIGrid.setGridData(detailGridID, []);
 
@@ -448,6 +460,7 @@ function f_multiCombos() {
         <input type="hidden" id="sUrl"   name="sUrl"  />
         <input type="hidden" id="stype"  name="stype" />
         <input type="hidden" name="rStcode" id="rStcode" />
+        <input type="hidden" id="sIsHomeCare" name="sIsHomeCare" />
         <table summary="search table" class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>

@@ -67,7 +67,10 @@
         , (select * from sys0013m where code_master_id = 306) tt
         , (select * from sys0013m where code_master_id = 308) mt
         , (select * from sys0013m where code_master_id = 42) ut
-<!--         , sal0046d s46
+        <if test="isHomeCare=='true'">
+           ,(SELECT S13M.*, S94M.IND FROM SYS0013M S13M LEFT JOIN SYS0094M S94M ON S94M.CODE = S13M.CODE WHERE S94M.IND= 'HOMECARE') hc
+        </if>
+<!--   , sal0046d s46
         , sal0001d s1 -->
         where 1 = 1
         and l60.matrl_no = s26.STK_CODE(+)
@@ -78,6 +81,9 @@
         AND l60.storg_loc = f28.wh_loc_id(+)
       <!--   AND l60.SALES_ORD_NO = s46.INSTALL_ENTRY_NO (+)
         AND s46.SALES_ORD_ID = s1.SALES_ORD_ID (+) -->
+        <if test="isHomeCare=='true'">
+             AND s26.STK_CTGRY_ID = hc.CODE_ID
+        </if>
         <if test="matdoc !=null and matdoc !=''">
             and l59.matrl_doc_no like  #{matdoc} ||'%'
         </if>

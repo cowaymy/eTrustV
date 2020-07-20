@@ -67,9 +67,11 @@ public class MaterialdocumentController {
 	@RequestMapping(value = "/MaterialDocSearchList.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> MaterialDocSearchList(@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model) throws Exception {
+
 		String[] trantype = request.getParameterValues("searchTrcType");
 		String[] movetype = request.getParameterValues("searchMoveType");
 		String searchMaterialDoc = request.getParameter("searchMaterialDoc");
+		String isHomeCare = request.getParameter("sIsHomeCare"); //Homecare - logistics page
 		String posdatefr = request.getParameter("PostingDt1");
 		String posdateto = request.getParameter("PostingDt2");
 		String crtdatefr = request.getParameter("CreateDt1");
@@ -95,6 +97,7 @@ public class MaterialdocumentController {
 		logger.debug("mainloc trim@@@@@@@ : {}", mainloc);
 
 		Map<String, Object> pmap = new HashMap();
+		pmap.put("isHomeCare", isHomeCare); //Homecare - logistics page
 		pmap.put("trantype", trantype);
 		pmap.put("movetype", movetype);
 		pmap.put("matdoc", searchMaterialDoc);
