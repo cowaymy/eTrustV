@@ -397,13 +397,13 @@
             <tr>
                 <th scope="row" ><spring:message code="sal.text.addressDetail" /><span class="must">*</span></th>
                 <td>
-                <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p"  />
+                <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p" maxlength="100" />
                 </td>
             </tr>
             <tr>
                 <th scope="row" ><spring:message code="sal.text.street" /></th>
                 <td>
-                <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p"  />
+                <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p" maxlength="100" />
                 </td>
             </tr>
             <tr>
