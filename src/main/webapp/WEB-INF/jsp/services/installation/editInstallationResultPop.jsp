@@ -57,6 +57,7 @@
       $("#lpmRcd").attr("disabled", true);
     }
 
+    doGetCombo('/services/adapterList.do', '', '${installInfo.adptUsed}','adptUsed', 'S' , '');
   });
 
   function validate(evt) {
@@ -76,6 +77,73 @@
       if(theEvent.preventDefault) theEvent.preventDefault();
     }
   }
+
+  function validateDecimal(evt) {
+	     var theEvent = evt || window.event;
+
+	     // Handle paste
+	     if (theEvent.type === 'paste') {
+	         key = event.clipboardData.getData('text/plain');
+	     } else {
+	     // Handle key press
+	         var key = theEvent.keyCode || theEvent.which;
+	         key = String.fromCharCode(key);
+	     }
+	     var regex = /[0-9.]/;
+	     if( !regex.test(key) ) {
+	       theEvent.returnValue = false;
+	       if(theEvent.preventDefault) theEvent.preventDefault();
+	     }
+	   }
+
+
+	   function validate2(a) {
+	    var regex = /^\d+$/;
+	    if (!regex.test(a.value)) {
+	      a.value = "";
+	    }
+	   }
+
+	   function validateFloatKeyPress(el, evt) {
+	        var charCode = (evt.which) ? evt.which : event.keyCode;
+	        var number = el.value.split('.');
+
+	        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+	            return false;
+	        }
+
+	        if(number.length>1 && charCode == 46){
+	             return false;
+	        }
+	        var caratPos = getSelectionStart(el);
+	        var dotPos = el.value.indexOf(".");
+	        if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+	            return false;
+	        }
+	        return true;
+	    }
+
+	    function getSelectionStart(o) {
+	        if (o.createTextRange) {
+	            var r = document.selection.createRange().duplicate()
+	            r.moveEnd('character', o.value.length)
+	            if (r.text == '') return o.value.length
+	            return o.value.lastIndexOf(r.text)
+	        } else return o.selectionStart
+	    }
+
+	    function validate3(a) {
+	           if(Math.floor(a.value)==0){
+	               a.value = "";
+	          }
+	           if(a.value=='.'){
+	               a.value = "";
+	          }
+	            var regex = /^[\d.]+$/;
+	            if (!regex.test(a.value)) {
+	              a.value = "";
+	            }
+	    }
 
   function fn_saveInstall() {
     if (fn_validate()) {
@@ -138,13 +206,6 @@
           //console.log("serialNo : " + dataRow.serialNo);
       });
   }
-
-  function validate2(a) {
-    var regex = /^\d+$/;
-    if (!regex.test(a.value)) {
-      a.value = "";
-    }
-   }
 
 </script>
 <div id="popup_wrap" class="popup_wrap">
@@ -264,9 +325,27 @@
       <tr>
        <th scope="row"><spring:message code='service.title.lmp' /><span class="must" id="m5"> *</span></th>
        <td ><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" onkeypress='validate(event)' onblur="validate2(this)" value="<c:out value="${installInfo.lpm}"/>" /></td>
-       <th scope="row"></th>
-       <td ></td>
+       <th scope="row"><spring:message code='service.title.Volt' /><span class="must" id="m4"> *</span></th>
+       <td><input type="text" title="" placeholder="<spring:message code='service.title.Volt' />" class="w100p" id="Volt" name="Volt" onkeypress='validate(event)' onblur="validate2(this)" value="<c:out value="${installInfo.volt}"/>" /></td>
       </tr>
+      <tr>
+       <th scope="row"><spring:message code='service.title.TDS' /><span class="must" id="m5"> *</span></th>
+       <td ><input type="text" title="" placeholder="<spring:message code='service.title.TDS' />" class="w100p" id="TDS" name="TDS" onkeypress='validate(event)' onblur="validate2(this)" value="<c:out value="${installInfo.tds}"/>" /></td>
+       <th scope="row"><spring:message code='service.title.RoomTemp' /><span class="must" id="m4"> *</span></th>
+       <td><input type="text" title="" placeholder="<spring:message code='service.title.RoomTemp' />" class="w100p" id="RoomTemp" name="RoomTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur="validate3(this)" value="<c:out value="${installInfo.roomTemp}"/>" /></td>
+      </tr>
+      <tr>
+       <th scope="row"><spring:message code='service.title.WaterSourceTemp' /><span class="must" id="m5"> *</span></th>
+       <td ><input type="text" title="" placeholder="<spring:message code='service.title.WaterSourceTemp' />" class="w100p" id="WaterSourceTemp" name="WaterSourceTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur="validate3(this)" value="<c:out value="${installInfo.adptUsed}"/>" /></td>
+
+       <th scope="row"><spring:message
+        code='service.title.adptUsed' /><span name="m14" id="m14" class="must">*</span></th>
+      <td><select class="w100p" id="adptUsed"
+       name="adptUsed">
+       <c:forEach var="list" items="${adapterUsed}" varStatus="status">
+            <option value="${list.codeId}" selected>${list.codeName}</option>
+        </c:forEach>
+      </select></tr>
       <tr>
        <th scope="row"><spring:message code='service.title.Remark' /></th>
        <td colspan="3">
