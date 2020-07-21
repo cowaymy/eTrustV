@@ -24,6 +24,10 @@ public interface InstallationResultListService {
 
   List<EgovMap> selectInstallStatus();
 
+  List<EgovMap> adapterUsed();
+
+  List<EgovMap> failParent();
+
   List<EgovMap> selectDscCode();
 
   List<EgovMap> installationResultList(Map<String, Object> params);
@@ -115,6 +119,8 @@ public interface InstallationResultListService {
   int chkExgRsnCde(Map<String, Object> params);
 
   List<EgovMap> selectCtSerialNoList(Map<String, Object> params);
+
+  List<EgovMap> selectFailChild(Map<String, Object> params);
 
   ReturnMessage insertInstallationResultSerial(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
 
