@@ -62,6 +62,31 @@
     ]]>
   </select>
 
+  <select id="adapterUsed" parameterType="Map" resultType="egovMap">
+
+    <![CDATA[
+      SELECT Extent1.CODE_ID CODE_ID
+           , Extent1.CODE CODE
+           , Extent1.CODE_NAME CODE_NAME
+      FROM SYS0013M Extent1
+      WHERE CODE_MASTER_ID = 452 AND DISAB = 0
+      ORDER BY CODE_ID
+    ]]>
+  </select>
+
+  <select id="failParent" parameterType="Map" resultType="egovMap">
+
+    <![CDATA[
+      SELECT Extent1.DEFECT_ID DEFECT_ID
+           , Extent1.DEFECT_CODE DEFECT_CODE
+           , Extent1.DEFECT_DESC DEFECT_DESC
+           , Extent1.DEFECT_STATUS DEFECT_STATUS
+      FROM SYS0100M Extent1
+      WHERE DEFECT_TYP = 'IF' AND DEFECT_STATUS = 1
+      ORDER BY DEFECT_ID
+    ]]>
+  </select>
+
   <select id="selectDscCode" parameterType="Map" resultType="egovMap">
     <![CDATA[
        SELECT Extent1.BRNCH_ID BRNCH_ID
@@ -3092,6 +3117,11 @@
            , CT_WH_LOC_ID
            , PSI PSI
            , LPM LPM
+           , VOLT VOLT
+           , TDS TDS
+           , ROOM_TEMP ROOM_TEMP
+           , WATER_SRC_TEMP WATER_SRC_TEMP
+           , ADPT_USED ADPT_USED
       FROM ( SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID
                   , Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO
                   , Extent1.INSTALL_STK_ID INSTALL_STK_ID
@@ -3506,6 +3536,7 @@
                         ,ROOM_TEMP
                         ,WATER_SRC_TEMP
                         ,ADPT_USED
+                        ,FAIL_LOC
     ) VALUES (SAL0047D_RESULT_ID_SEQ.NEXTVAL
             , #{entryId}
             , #{statusCodeId}
@@ -3535,6 +3566,7 @@
             , #{roomTemp}
             , #{waterSourceTemp}
             , #{adptUsed}
+            , #{failLct}
     )
   </insert>
 
@@ -4715,6 +4747,25 @@
       AND A.ITM_CODE = #{stkCode}
       AND A.STUS_CODE = 'I'
    ORDER BY A.SERIAL_NO
+  </select>
+
+  <select id="selectFailChild" parameterType="Map" resultType="egovMap">
+    SELECT EXTENT1.DEFECT_ID AS CODE_ID
+             , EXTENT1.DEFECT_CODE || ' - ' || EXTENT1.DEFECT_DESC AS CODE_NAME
+    FROM SYS0100M EXTENT1
+    WHERE 1=1
+        AND DEFECT_STATUS =1
+
+    <choose>
+      <when test=' groupCode == 8000 '>
+        AND DEFECT_TYP = 'IFA'
+      </when>
+      <otherwise>
+        AND DEFECT_TYP = 'IFB'
+      </otherwise>
+    </choose>
+
+    ORDER BY DEFECT_CODE
   </select>
 
  <select id="selectDelvryGrCmpltYn" parameterType="Map" resultType="String">
