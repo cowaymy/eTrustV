@@ -3537,6 +3537,7 @@
                         ,WATER_SRC_TEMP
                         ,ADPT_USED
                         ,FAIL_LOC
+                        ,FAIL_DEPT_CHK
     ) VALUES (SAL0047D_RESULT_ID_SEQ.NEXTVAL
             , #{entryId}
             , #{statusCodeId}
@@ -3567,6 +3568,7 @@
             , #{waterSourceTemp}
             , #{adptUsed}
             , #{failLct}
+            , #{failDeptChk}
     )
   </insert>
 
