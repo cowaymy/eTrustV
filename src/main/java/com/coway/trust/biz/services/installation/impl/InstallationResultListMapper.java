@@ -281,4 +281,10 @@ public interface InstallationResultListMapper {
 
   void insertTransLog(Map<String, Object> params);
 
+  List<EgovMap> adapterUsed();
+
+  List<EgovMap> failParent();
+
+  List<EgovMap> selectFailChild(Map<String, Object> params);
+
 }
