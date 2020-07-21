@@ -68,7 +68,7 @@
         , (select * from sys0013m where code_master_id = 308) mt
         , (select * from sys0013m where code_master_id = 42) ut
         <if test="isHomeCare=='true'">
-           ,(SELECT S13M.*, S94M.IND FROM SYS0013M S13M LEFT JOIN SYS0094M S94M ON S94M.CODE = S13M.CODE WHERE S94M.IND= 'HOMECARE') hc
+           ,(SELECT S13M.CODE_ID FROM SYS0013M S13M JOIN SYS0094M S94M ON S94M.CODE = S13M.CODE WHERE S94M.IND= 'HOMECARE') hc
         </if>
 <!--   , sal0046d s46
         , sal0001d s1 -->

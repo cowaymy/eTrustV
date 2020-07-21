@@ -129,9 +129,6 @@ $(document).ready(function(){
     	doGetCombo('/common/selectCodeList.do', '11', '', 'smatcate', 'M' ,'f_multiCombos');
     }
 
-
-     console.log("****sIsHomeCare:: "+ $("#sIsHomeCare").val());
-
 //     CommonCombo.make("sfrLoctype", "/common/selectCodeList.do", { groupCode : 339 , orderValue : 'CODE'}, "", {
 //         id: "code",
 //         name: "codeName",
