@@ -2196,6 +2196,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("adptUsed", CommonUtils.nvl(params.get("adptUsed")).toString());
     installResult.put("failId", CommonUtils.nvl(params.get("failParent")).toString());
     installResult.put("failLct", CommonUtils.nvl(params.get("failChild")).toString());
+    installResult.put("failDeptChk", CommonUtils.nvl(params.get("failDeptChk")).toString());
 
     logger.debug("========================INSTALLATION RESULT PRM===========================");
     logger.debug("INSTALLATION RESULT : {}", installResult);
