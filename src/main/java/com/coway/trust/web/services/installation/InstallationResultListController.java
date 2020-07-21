@@ -263,6 +263,8 @@ public class InstallationResultListController {
     params.put("reasonTypeId", 172);
 
     List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
+    List<EgovMap> adapterUsed = installationResultListService.adapterUsed();
+    List<EgovMap> failParent = installationResultListService.failParent();
     List<EgovMap> failReason = installationResultListService.selectFailReason(params);
     EgovMap callType = installationResultListService.selectCallType(params); // CALL
                                                                              // LOG
@@ -353,7 +355,9 @@ public class InstallationResultListController {
     logger.debug("hpMember : {}", hpMember);
     logger.debug("callType : {}", callType);
     logger.debug("failReason : {}", failReason);
+    logger.debug("failParent : {}", failParent);
     logger.debug("installStatus : {}", installStatus);
+    logger.debug("adapterUsed : {}", adapterUsed);
     logger.debug("stock : {}", stock);
     logger.debug("sirimLoc : {}", sirimLoc);
     logger.debug("promotionView : {}", promotionView);
@@ -371,6 +375,8 @@ public class InstallationResultListController {
     model.addAttribute("callType", callType);
     model.addAttribute("failReason", failReason);
     model.addAttribute("installStatus", installStatus);
+    model.addAttribute("adapterUsed", adapterUsed);
+    model.addAttribute("failParent", failParent);
     model.addAttribute("stock", stock);
     model.addAttribute("sirimLoc", sirimLoc);
     model.addAttribute("CheckCurrentPromo", CheckCurrentPromo);
@@ -808,6 +814,19 @@ public class InstallationResultListController {
     return ResponseEntity.ok(list);
   }
 
+  @RequestMapping(value = "/adapterList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> adapterList(@RequestParam Map<String, Object> params,
+		  HttpServletRequest request, ModelMap model) {
+
+	  logger.debug("=====================assignCtList=======================");
+	  logger.debug(" PARAM :: " + params.toString());
+	  logger.debug("=====================assignCtList=======================");
+	  List<EgovMap> adapterUsed = installationResultListService.adapterUsed();
+
+	  return ResponseEntity.ok(adapterUsed);
+  }
+
+
   @RequestMapping(value = "/assignCtOrderList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> assignCtOrderList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
@@ -1053,6 +1072,7 @@ public class InstallationResultListController {
 
     EgovMap installInfo = installationResultListService.selectInstallInfo(params);
     model.addAttribute("installInfo", installInfo);
+    logger.debug("param param param "+installInfo);
 
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
     model.put("orderDetail", orderDetail);
@@ -1150,6 +1170,18 @@ public class InstallationResultListController {
 
     return ResponseEntity.ok(list);
   }
+
+	@RequestMapping(value = "/selectFailChild.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>>selectFailChild (@RequestParam Map<String, Object> params, ModelMap model){
+		logger.debug("selectFailChild params : {}", params);
+		List<EgovMap> selectFailChild = installationResultListService.selectFailChild(params);
+
+	    logger.debug("==========================/selectFailChild.do=================================");
+	    logger.debug("selectFailChild params : {}", selectFailChild);
+	    logger.debug("==========================/selectFailChild.do=================================");
+
+		return ResponseEntity.ok(selectFailChild);
+	}
 
   // KR-OHK add serial add
   @RequestMapping(value = "/addInstallationSerial.do", method = RequestMethod.POST)
