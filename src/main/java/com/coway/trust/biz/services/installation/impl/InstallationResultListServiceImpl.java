@@ -93,6 +93,16 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     return installationResultListMapper.selectInstallStatus();
   }
 
+  @Override
+  public List<EgovMap> failParent() {
+	  return installationResultListMapper.failParent();
+  }
+
+  @Override
+  public List<EgovMap> adapterUsed() {
+	  return installationResultListMapper.adapterUsed();
+  }
+
   /* KV- DSC Code */
   @Override
   public List<EgovMap> selectDscCode() {
@@ -2168,7 +2178,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("created", new Date());
     installResult.put("sirimNo", sirimNo);
     installResult.put("serialNo", serialNo);
-    installResult.put("failId", failId);
     installResult.put("nextCallDate", nextCallDate);
     installResult.put("allowComm", allowComm == true ? "1" : "0");
     installResult.put("inTradeIn", inTradeIn == true ? "1" : "0");
@@ -2185,6 +2194,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("roomTemp", CommonUtils.nvl(params.get("roomTemp")).toString());
     installResult.put("waterSourceTemp", CommonUtils.nvl(params.get("waterSourceTemp")).toString());
     installResult.put("adptUsed", CommonUtils.nvl(params.get("adptUsed")).toString());
+    installResult.put("failId", CommonUtils.nvl(params.get("failParent")).toString());
+    installResult.put("failLct", CommonUtils.nvl(params.get("failChild")).toString());
 
     logger.debug("========================INSTALLATION RESULT PRM===========================");
     logger.debug("INSTALLATION RESULT : {}", installResult);
@@ -3185,6 +3196,10 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   @Override
   public List<EgovMap> selectCtSerialNoList(Map<String, Object> params) {
     return installationResultListMapper.selectCtSerialNoList(params);
+  }
+
+  public List<EgovMap> selectFailChild(Map<String, Object> params) {
+		return installationResultListMapper.selectFailChild(params);
   }
 
   @Override
