@@ -809,6 +809,8 @@ var serialGubun = "1";
    <input type="hidden" value="${frameInfo.serialChk}" id="hidFrmSerialChkYn" name="hidFrmSerialChkYn" />
    <input type="hidden" value="${frameInfo.salesOrdId}" id="hidFrmOrdId" name="hidFrmOrdId" />
    <input type="hidden" value="${frameInfo.salesOrdNo}" id="hidFrmOrdNo" name="hidFrmOrdNo" />
+    <input type="hidden" value="" id="failDeptChk" name="failDeptChk" />
+
 
    <table class="type1 mb1m">
     <!-- table start -->
@@ -976,6 +978,13 @@ var serialGubun = "1";
       <th scope="row"><spring:message code='service.title.NextCallDate' /><span name="m7" id="m7" class="must">*</span></th>
       <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc w100p" id="nextCallDate" name="nextCallDate" /></td>
      </tr>
+     <tr>
+      <td colspan="4">
+         <label><span>Fail BEFORE Depart from Warehouse ? </span></label>
+    <label><input type="radio" id="failDeptChk1" name="failDeptChk" value="Y"  /><span><spring:message code="sal.title.text.yes" /></span></label>
+    <label><input type="radio" id="failDeptChk2" name="failDeptChk" value="N"/><span><spring:message code="sal.title.text.no" /></span></label>
+    </td>
+</tr>
     </tbody>
    </table>
    <!-- table end -->
