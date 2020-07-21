@@ -80,6 +80,8 @@
         } else {
           $("#addInstallForm #m6").hide();
           $("#addInstallForm #m7").hide();
+          $("#addInstallForm #m15").hide();
+          $("#addInstallForm #m16").hide();
         }
 
       $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
@@ -130,6 +132,8 @@
 
             $("#addInstallForm #m6").show();
             $("#addInstallForm #m7").show();
+            $("#addInstallForm #m15").show();
+            $("#addInstallForm #m16").show();
           }
 
           $("#addInstallForm #installDate").val("");
@@ -151,15 +155,50 @@
       // 58 - BIDET
       // 400 - POE
       if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
-        $("#m8").show();
-        $("#psiRcd").attr("disabled", false);
-        $("#m9").show();
-        $("#lpmRcd").attr("disabled", false);
+        if ("${orderInfo.stkCtgryId}" != "54") {
+          $("#m8").show();
+          $("#psiRcd").attr("disabled", false);
+          $("#m9").show();
+          $("#lpmRcd").attr("disabled", false);
+          $("#m10").hide();
+          $("#Volt").attr("disabled", true);
+          $("#m11").hide();
+          $("#TDS").attr("disabled", true);
+          $("#m12").hide();
+          $("#RoomTemp").attr("disabled", true);
+          $("#m13").hide();
+          $("#WaterSourceTemp").attr("disabled", true);
+          $("#m14").hide();
+          $("#adptUsed").attr("disabled", true);
+        } else {
+          $("#m8").show();
+          $("#psiRcd").attr("disabled", false);
+          $("#m9").show();
+          $("#lpmRcd").attr("disabled", false);
+          $("#m10").show();
+          $("#Volt").attr("disabled", false);
+          $("#m11").show();
+          $("#TDS").attr("disabled", false);
+          $("#m12").show();
+          $("#RoomTemp").attr("disabled", false);
+          $("#m13").show();
+          $("#WaterSourceTemp").attr("disabled", false);
+          $("#m14").show();
+          $("#adptUsed").attr("disabled", false);
+        }
       } else {
         $("#m8").hide();
         $("#psiRcd").attr("disabled", true);
         $("#m9").hide();
         $("#lpmRcd").attr("disabled", true);
+        $("#m10").show();
+        $("#Volt").attr("disabled", true);
+        $("#m11").show();
+        $("#TDS").attr("disabled", true);
+        $("#m12").show();
+        $("#RoomTemp").attr("disabled", true);
+        $("#m13").show();
+        $("#WaterSourceTemp").attr("disabled", true);
       }
   });
 
@@ -188,11 +227,25 @@
       // PSI CHECKING
       if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
         if ( $("#psiRcd").val() == "") {
-         msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
         }
         if ( $("#lpmRcd").val() == "") {
           msg += "* <spring:message code='sys.msg.invalid' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
-         }
+        }
+        if ("${orderInfo.stkCtgryId}" == "54") {
+    	  if ( $("#volt").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Voltage' htmlEscape='false'/> </br>";
+          }
+          if ( $("#tds").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Total Dissolved Solid (TDS)' htmlEscape='false'/> </br>";
+          }
+    	  if ( $("#roomTemp").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Room Temperature' htmlEscape='false'/> </br>";
+          }
+          if ( $("#adptUsed").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Adapter Used' htmlEscape='false'/> </br>";
+          }
+        }
       }
 
       if (msg != "") {
@@ -202,7 +255,11 @@
     }
 
     if ($("#addInstallForm #installStatus").val() == 21) { // FAILED
-      if ($("#failReason").val() == 0) {
+      if ($("#failParent").val() == 0) {
+        msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Reason' htmlEscape='false'/> </br>";
+      }
+
+      if ($("#failChild").val() == 0) {
         msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Reason' htmlEscape='false'/> </br>";
       }
 
@@ -319,8 +376,6 @@
 
 
    function fn_serialSearchPop(){
-
-
 	   $("#pLocationType").val('${installResult.whLocGb}');
 	   $('#pLocationCode').val('${installResult.ctWhLocId}');
 	   $("#pItemCodeOrName").val('${orderDetail.basicInfo.stockCode}');
@@ -353,12 +408,78 @@
      }
    }
 
+   function validateDecimal(evt) {
+     var theEvent = evt || window.event;
+
+     // Handle paste
+     if (theEvent.type === 'paste') {
+         key = event.clipboardData.getData('text/plain');
+     } else {
+     // Handle key press
+         var key = theEvent.keyCode || theEvent.which;
+         key = String.fromCharCode(key);
+     }
+     var regex = /[0-9.]/;
+     if( !regex.test(key) ) {
+       theEvent.returnValue = false;
+       if(theEvent.preventDefault) theEvent.preventDefault();
+     }
+   }
+
+
    function validate2(a) {
     var regex = /^\d+$/;
     if (!regex.test(a.value)) {
       a.value = "";
     }
    }
+
+   function validateFloatKeyPress(el, evt) {
+     var charCode = (evt.which) ? evt.which : event.keyCode;
+       var number = el.value.split('.');
+       if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+	     return false;
+	   }
+	   if(number.length>1 && charCode == 46){
+	     return false;
+	   }
+	   var caratPos = getSelectionStart(el);
+	   var dotPos = el.value.indexOf(".");
+	   if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+	     return false;
+	   }
+	   return true;
+	 }
+
+	function getSelectionStart(o) {
+      if (o.createTextRange) {
+	        var r = document.selection.createRange().duplicate()
+	        r.moveEnd('character', o.value.length)
+	        if (r.text == '') return o.value.length
+	        return o.value.lastIndexOf(r.text)
+	    } else return o.selectionStart
+	}
+
+	function validate3(a) {
+           if(Math.floor(a.value)==0){
+               a.value = "";
+          }
+           if(a.value=='.'){
+               a.value = "";
+          }
+	        var regex = /^[\d.]+$/;
+	        if (!regex.test(a.value)) {
+	          a.value = "";
+	        }
+	}
+
+	function fn_openFailChild(selectedData){
+	    console.log("here is value "+ selectedData);
+	      if(selectedData == "8000" || selectedData == "8100"){
+	           $("#failChild").attr("disabled",false);
+	           doGetCombo('/services/selectFailChild.do', selectedData, '','failChild', 'S' , '');
+	       }
+	}
 
 </script>
 <div id="popup_wrap" class="popup_wrap">
@@ -942,6 +1063,37 @@
       <input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" onkeypress='validate(event)' onblur='validate2(this);' />
       </td>
      </tr>
+     <tr>
+      <th scope="row"><spring:message code='service.title.Volt' /><span name="m10" id="m10" class="must">*</span></th>
+      <td>
+      <input type="text" title="" placeholder="<spring:message code='service.title.Volt' />" class="w100p" id="volt" name="volt" onkeypress='validate(event)' onblur='validate2(this);' />
+      </td>
+      <th scope="row"><spring:message code='service.title.TDS' /><span name="m11" id="m11" class="must">*</span></th>
+      <td>
+      <input type="text" title="" placeholder="<spring:message code='service.title.TDS' />" class="w100p" id="tds" name="tds" onkeypress='validate(event)' onblur='validate2(this);' />
+      </td>
+     </tr>
+     <tr>
+      <th scope="row"><spring:message code='service.title.RoomTemp' /><span name="m12" id="m12" class="must">*</span></th>
+      <td>
+      <input type="text" title="" placeholder="<spring:message code='service.title.RoomTemp' />" class="w100p" id="roomTemp" name="roomTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' />
+      </td>
+      <th scope="row"><spring:message code='service.title.WaterSourceTemp' /><span name="m13" id="m13" class="must">*</span></th>
+      <td>
+      <input type="text" title="" placeholder="<spring:message code='service.title.WaterSourceTemp' />" class="w100p" id="waterSourceTemp" name="waterSourceTemp"  onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' />
+      </td>
+     </tr>
+      <tr>
+      <th scope="row"><spring:message code='service.title.adptUsed' /><span name="m14" id="m14" class="must">*</span></th>
+      <td colspan = '3'>
+        <select class="w100p" id="adptUsed" name="adptUsed">
+          <option value="" selected>Select Reason</option>
+          <c:forEach var="list" items="${adapterUsed}" varStatus="status">
+            <option value="${list.codeId}" select>${list.codeName}</option>
+          </c:forEach>
+        </select>
+      </td>
+     </tr>
     </tbody>
    </table>
    <br/>
@@ -965,7 +1117,7 @@
       <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.SIRIMNo' />" class="w100p"
        id="sirimNo" name="sirimNo" /></td>
       <th scope="row"><spring:message code='service.title.SerialNo' /><span name="m5" id="m5" class="must">*</span></th>
-      <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.SerialNo' />" class="w50p"
+      <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.SerialNo' />" class="w100p"
        id="serialNo" name="serialNo" />
        <c:if test="${installResult.serialRequireChkYn == 'Y' }">
        <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop()" ><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
@@ -980,6 +1132,7 @@
       <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(2)" class="w100p"
        id="refNo2" name="refNo2" /></td>
      </tr>
+
      <tr>
       <td colspan="8"><label><input type="checkbox"
         id="checkCommission" name="checkCommission" /><span><spring:message
@@ -1037,19 +1190,31 @@ Name: ${hpMember.name1}</textarea></td>
     </colgroup>
     <tbody>
      <tr>
-      <th scope="row"><spring:message
-        code='service.title.FailedReason' /><span name="m6" id="m6" class="must">*</span></th>
-      <td><select class="w100p" id="failReason" name="failReason">
-        <option value="0">Failed Reason</option>
-        <c:forEach var="list" items="${failReason }" varStatus="status">
-         <option value="${list.resnId}">${list.c1}</option>
+      <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m15" id="m15"class="must">*</span></th>
+      <td><select class="w100p" id="failParent"
+       name="failParent"   onchange="fn_openFailChild(this.value)">
+       <option value="" selected>Select Reason</option>
+       <c:forEach var="list" items="${failParent}" varStatus="status">
+            <option value="${list.defectId}">${list.defectDesc}</option>
         </c:forEach>
-      </select></td>
-      <th scope="row"><spring:message
-        code='service.title.NextCallDate' /><span name="m7" id="m7" class="must">*</span></th>
+      </select>
+      <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m16" id="m16" class="must">*</span></th>
+          <td>
+    <select class="w100p" id="failChild" name="failChild">
+        <option value="" selected>Select Reason</option>
+        <c:forEach var="list" items="${failChild}" varStatus="status">
+            <option value="${list.defectId}">${list.defectDesc}</option>
+        </c:forEach>
+    </select>
+    </td>
+     </tr>
+     <tr>
+      <th scope="row"><spring:message code='service.title.NextCallDate' /><span name="m7" id="m7" class="must">*</span></th>
       <td><input type="text" title="Create start Date"
        placeholder="DD/MM/YYYY" class="j_date w100p" id="nextCallDate"
        name="nextCallDate" /></td>
+      <th scope="row"></th>
+      <td></td>
      </tr>
     </tbody>
    </table>
