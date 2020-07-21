@@ -72,6 +72,12 @@ public class InstallationResultForm {
   private String psiRcd;
   private String lpmRcd;
 
+  private String volt;
+  private String tds;
+  private String roomTemp;
+  private String waterSourceTemp;
+  private String adptUsed;
+
   public String getLpmRcd() {
     return lpmRcd;
   }
@@ -86,6 +92,46 @@ public class InstallationResultForm {
 
   public void setPsiRcd(String psiRcd) {
     this.psiRcd = psiRcd;
+  }
+
+  public String getVolt() {
+    return volt;
+  }
+
+  public void setVolt(String volt) {
+    this.volt = volt;
+  }
+
+  public String getTds() {
+    return tds;
+  }
+
+  public void setTds(String tds) {
+    this.tds = tds;
+  }
+
+  public String getRoomTemp() {
+    return roomTemp;
+  }
+
+  public void setRoomTemp(String roomTemp) {
+    this.roomTemp = roomTemp;
+  }
+
+  public String getWaterSourceTemp() {
+    return waterSourceTemp;
+  }
+
+  public void setWaterSourceTemp(String waterSourceTemp) {
+    this.waterSourceTemp = waterSourceTemp;
+  }
+
+  public String getAdptUsed() {
+    return adptUsed;
+  }
+
+  public void setAdptUsed(String adptUsed) {
+    this.adptUsed = adptUsed;
   }
 
   public String getSerialRequireChkYn() {
