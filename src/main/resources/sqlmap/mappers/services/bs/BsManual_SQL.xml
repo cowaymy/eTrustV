@@ -3261,10 +3261,12 @@ FROM (SELECT MEM_CODE, NAME, 1 AS QUERYNO
 
                      </update>
 
-  <resultMap id="resultSFilterUseHistorycallMap" type="egovMap" />
+  <resultMap id="resultSFilterUseHistory" type="egovMap">
+  </resultMap>
+
   <select id="selecthSFilterUseHistorycall"  statementType="CALLABLE" parameterType="Map" >
     {
-      call SP_GET_ORD_FLT_USE_HIST(#{OrderID}, #{SrvFilterStkId}, #{cv_1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultSFilterUseHistorycallMap})
+      call SP_GET_ORD_FLT_USE_HIST(#{OrderID}, #{SrvFilterStkId}, #{cv_1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultSFilterUseHistory})
     }
   </select>
 
