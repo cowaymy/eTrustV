@@ -104,6 +104,7 @@ $(function(){
 
 	$("#grid_wrap1").hide();
 	$("#grid_wrap2").hide();
+	 var userId = '${SESSION_INFO.userId}' ;
 
  $('#spublic').change(function() {
 	 var div= $('#spublic').val();
@@ -113,14 +114,13 @@ $(function(){
          Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
          return false;
 	 }else if (div == "Rental Details Others Raw"){
-		 if("${SESSION_INFO.userId}" != "281" ||
-				 "${SESSION_INFO.userId}" != "16178" ||
-				 "${SESSION_INFO.userId}" != "109446" ||
-				 "${SESSION_INFO.userId}" != "13938" ||
-				 "${SESSION_INFO.userId}" != "36538" ||
-				 "${SESSION_INFO.userId}" != "16927" ||
-				 "${SESSION_INFO.userId}" != "67605"
-				 ){
+		  if(userId != "281" &&
+                  userId != "16178" &&
+                  userId != "109446" &&
+                  userId != "13938" &&
+                  userId != "36538" &&
+                  userId != "16927" &&
+                  userId != "67605" ){
 		 var msg = "Sorry. You have no access rights to download this file.";
          Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
          return false;
@@ -140,13 +140,13 @@ $(function(){
 	         Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
 	         return false;
 	     }else if (div == "Rental Details Others Raw"){
-	         if("${SESSION_INFO.userId}" != "281" ||
-	                 "${SESSION_INFO.userId}" != "16178" ||
-	                 "${SESSION_INFO.userId}" != "109446" ||
-	                 "${SESSION_INFO.userId}" != "13938" ||
-	                 "${SESSION_INFO.userId}" != "36538" ||
-	                 "${SESSION_INFO.userId}" != "16927" ||
-	                 "${SESSION_INFO.userId}" != "67605" ){
+	         if(userId != "281" &&
+	        		 userId != "16178" &&
+	        		 userId != "109446" &&
+	        		 userId != "13938" &&
+	        		 userId != "36538" &&
+	        		 userId != "16927" &&
+	        		 userId != "67605" ){
 	         var msg = "Sorry. You have no access rights to download this file.";
 	         Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
 	         return false;
