@@ -3,19 +3,19 @@
 
 <script type="text/javaScript">
 $(document).ready(function() {
-    //doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : 1389, inputId : 1, separator : '-'}, '', 'caseCategory', 'S'); //Reason Code
 
 	ComplianceListGrid();
+	ExcelListGrid();
 
     AUIGrid.bind(myGridID, "cellClick", function(event) {
 	    requestid = AUIGrid.getCellValue(myGridID, event.rowIndex, "requestid");
 	});
 
 });
-var myGridID;
+var myGridID,excelGridID;
 function ComplianceListGrid() {
     //AUIGrid 칼럼 설정
-    var columnLayout = [ {
+    var columnLayout = [{
         dataField : "requestid",
         headerText : "No",
         editable : false,
@@ -25,6 +25,7 @@ function ComplianceListGrid() {
         dataField : "userName",
         headerText : "Requestor",
         editable : false,
+        visible : true,
         width : 150
     }, {
         dataField : "name1",
@@ -43,17 +44,18 @@ function ComplianceListGrid() {
         headerText : "Order No",
         editable : false,
         width : 200
-    }, {
+    },  {
         dataField : "memCode",
         headerText : "Person Involved",
         editable : false,
-        width : 200
+        width : 150,
+        visible : true
     }, {
         dataField : "state",
         headerText : "Installation State",
         editable : false,
         width : 200
-    }, {
+    },{
         dataField : "requestcategory",
         headerText : "Case Category",
         editable : false,
@@ -65,9 +67,43 @@ function ComplianceListGrid() {
         width : 150,
         dataType : "date",
         formatString : "dd/mm/yyyy"
+    },
+    /////////////////////////// ADDITIONAL FIELD ////////////////////////////// ALEX-21072020
+   /*  {
+        dataField : "memCode",
+        headerText : "Person Involved",
+        editable : false,
+        width : 150,
+        visible : true
+    },  */{
+        dataField : "requestcontent",
+        headerText : "Feedback Content",
+        editable : false,
+        width : 150,
+        visible : false
+    }, /* {
+        dataField : "userName",
+        headerText : "Responded by",
+        editable : false,
+        width : 150,
+        visible : false
+    }, */ {
+        dataField : "respnsUpdated",
+        headerText : "Responded at",
+        editable : false,
+        width : 150,
+        dataType : "date",
+        formatString : "dd/mm/yyyy",
+        visible : false
+    }, {
+        dataField : "respnsMsg",
+        headerText : "Remark",
+        editable : false,
+        width : 150,
+        visible : false
     }
+    /////////////////////////// ADDITIONAL FIELD //////////////////////////////
     ];
-
 
 
     // 그리드 속성 설정
@@ -94,21 +130,146 @@ function ComplianceListGrid() {
 	        wrapSelectionMove : true,
 
 	        // 줄번호 칼럼 렌더러 출력
-	        showRowNumColumn : true
+	        showRowNumColumn : true,
+
+	        exportURL : "/common/exportGrid.do"
 
    };
 
-
-    //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID = AUIGrid.create("#grid_wrap_complianceList", columnLayout, gridPros);
+}
+
+function ExcelListGrid() {
+    //AUIGrid 칼럼 설정
+    var columnLayout = [ /* {
+        dataField : "requestid",
+        headerText : "No",
+        editable : false,
+        visible : false,
+        width : 100
+    }, */ {
+        dataField : "userName",
+        headerText : "Requestor",
+        editable : false,
+        visible : true,
+        width : 150
+    }, {
+        dataField : "name1",
+        headerText : "Request Status",
+        editable : false,
+        width : 150
+    },
+    {
+        dataField : "requestcreateat",
+        headerText : "Request Date",
+        editable : false,
+        width : 150,
+        dataType : "date",
+        formatString : "dd/mm/yyyy"
+    },
+    {
+        dataField : "salesOrdNo",
+        headerText : "Order No",
+        editable : false,
+        width : 200
+    }, {
+        dataField : "memCode",
+        headerText : "Person Involved",
+        editable : false,
+        width : 150
+    }, {
+        dataField : "state",
+        headerText : "Installation State",
+        editable : false,
+        width : 200
+    }, {
+        dataField : "requestcategory",
+        headerText : "Case Category",
+        editable : false,
+        width : 200
+    }, {
+        dataField : "requestrefdate",
+        headerText : "Complaint Date",
+        editable : false,
+        width : 150,
+        dataType : "date",
+        formatString : "dd/mm/yyyy"
+    },
+    /////////////////////////// ADDITIONAL FIELD ////////////////////////////// ALEX-21072020
+    /* {
+        dataField : "memCode",
+        headerText : "Person Involved",
+        editable : false,
+        width : 150
+    },  */{
+        dataField : "requestcontent",
+        headerText : "Feedback Content",
+        editable : false,
+        width : 350
+    }, {
+        dataField : "userName",
+        headerText : "Responded by",
+        editable : false,
+        width : 150
+    }, {
+        dataField : "respnsUpdated",
+        headerText : "Responded at",
+        editable : false,
+        width : 150,
+        dataType : "date",
+        formatString : "dd/mm/yyyy"
+    }, {
+        dataField : "respnsMsg",
+        headerText : "Remark",
+        editable : false,
+        width : 350,
+        style : "aui-grid-user-custom-left"
+    }
+    /////////////////////////// ADDITIONAL FIELD //////////////////////////////
+    ];
+
+
+
+    // 그리드 속성 설정
+   var gridPros = {
+
+            // 페이징 사용
+            usePaging : true,
+
+            // 한 화면에 출력되는 행 개수 20(기본값:20)
+            pageRowCount : 20,
+
+            editable : true,
+
+            displayTreeOpen : true,
+
+            selectionMode : "singleRow",
+
+            headerHeight : 30,
+
+            // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            skipReadonlyColumns : true,
+
+            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            wrapSelectionMove : true,
+
+            // 줄번호 칼럼 렌더러 출력
+            showRowNumColumn : true,
+
+            exportURL : "/common/exportGrid.do",
+
+   };
+
+    excelGridID = AUIGrid.create("#grid_wrap_excelList", columnLayout, gridPros);
 }
 
 function fn_complianceSearch(){
 	 if("${PAGE_AUTH.funcUserDefine1}" !='Y'){
 	 Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceListCodyHP.do", $("#complianceSearch").serialize(), function(result) {
        	console.log("성공.");
-        console.log("data : " + JSON.stringify(result));
+        //console.log("data : " + JSON.stringify(result));
         AUIGrid.setGridData(myGridID, result);
+
     });
 }
 	 else{
@@ -116,6 +277,7 @@ function fn_complianceSearch(){
 		console.log("성공.");
 		console.log("data : " + JSON.stringify(result));
 		AUIGrid.setGridData(myGridID, result);
+		        AUIGrid.setGridData(excelGridID, result);
 		    });
 		 }
 	 }
@@ -168,7 +330,17 @@ function fn_complianceViewLimit() {
 
 $(function() {
 $("#download").click(function() {
-    GridCommon.exportTo("grid_wrap_complianceList", 'xlsx', "Guardian of Coway List")
+    //GridCommon.exportTo("grid_wrap_complianceList", 'xlsx', "Guardian of Coway List")
+	 var excelProps = {
+                fileName     : "Guardian of Coway List",
+
+                columnSizeOfDataField : {
+                    "requestrefdate" : 2000,
+                    "memCode" : 2000
+                },
+            };
+
+	AUIGrid.exportToXlsx(excelGridID, excelProps);
 });
 });
 </script>
@@ -278,6 +450,7 @@ $("#download").click(function() {
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="grid_wrap_complianceList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+<div id="grid_wrap_excelList" style="width: 100%; height: 500px; margin: 0 auto;display:none;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

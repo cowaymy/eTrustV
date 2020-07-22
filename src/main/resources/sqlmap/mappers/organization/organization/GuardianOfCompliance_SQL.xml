@@ -41,7 +41,11 @@
 			       Project1.NAME1 NAME1  ,
 			       Project1.REQUESTCREATEAT REQUESTCREATEAT  ,
 			       Project1.USER_NAME USER_NAME ,
-			       Project1.STATE STATE
+					Project1.STATE STATE ,
+
+			       Project1.RESPNS_UPDATED ,
+                   Project1.RESPNS_MSG
+
 			  FROM ( SELECT Filter1.REQUESTID REQUESTID  ,
 			                Filter1.REQUESTCATEGORY REQUESTCATEGORY  ,
 			                Filter1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
@@ -59,7 +63,12 @@
 			                Filter1.RESN_DESC RESN_DESC  ,
 			                Filter1.NAME2 NAME1  ,
 			                Extent8.USER_NAME USER_NAME ,
-			                Filter1.STATE STATE
+			                Filter1.STATE STATE ,
+
+			                Filter1.RESPNS_UPDATED ,
+                            Filter1.RESPNS_MSG
+
+
 			         FROM ( SELECT Extent1.REQST_ID REQUESTID  ,
 					                       Extent1.REQST_CTGRY REQUESTCATEGORY  ,
 					                       Extent1.REQST_CTGRY_SUB REQUESTCATEGORY_SUB  ,
@@ -76,8 +85,14 @@
 					                       Extent3.NAME NAME1  ,
 					                       Extent4.MEM_CODE MEM_CODE  ,
 					                       Extent6.RESN_DESC RESN_DESC  ,
+
 					                       Extent7.NAME NAME2 ,
-					                       Extent9.STATE STATE
+					                       Extent10.STATE STATE ,
+
+
+					                       Extent9.RESPNS_UPDATED ,
+                                           Extent9.RESPNS_MSG
+
 				                FROM MSC0043M Extent1
 				                       LEFT JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.REQST_ORD_ID
 				                       LEFT JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
@@ -85,8 +100,20 @@
 				                       LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent4.MEM_TYPE
 				                       LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = Extent1.REQST_CTGRY
 				                       LEFT JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent1.REQST_STUS_ID
+
 				                       LEFT JOIN SAL0023D Extent8 ON Extent8.CUST_ADD_ID = Extent3.CUST_ID
-                                       LEFT JOIN SYS0064M Extent9 ON Extent9.AREA_ID = Extent8.AREA_ID
+                                       LEFT JOIN SYS0064M Extent10 ON Extent10.AREA_ID = Extent8.AREA_ID
+
+
+                                       LEFT JOIN MSC0044M Extent9   ON Extent9.PAPARAZ_REQST_ID = Extent1.REQST_ID
+                                       AND Extent9.RESPNS_ID in 
+                                       (
+                                         SELECT MAX(a.RESPNS_ID)
+                                         from MSC0044M a , MSC0043M b
+                                         where a.PAPARAZ_REQST_ID = b.REQST_ID
+                                         group by a.PAPARAZ_REQST_ID
+                                         )
+
 				                WHERE 1=1
                     ]]>
                       <if test="caseCategoryList != null and caseCategoryList != '' ">
@@ -163,8 +190,10 @@
                    Project1.REQUESTSTATUSID REQUESTSTATUSID  ,
                    Project1.NAME1 NAME1  ,
                    Project1.REQUESTCREATEAT REQUESTCREATEAT  ,
+
                    Project1.USER_NAME USER_NAME,
-                   Project1.STATE STATE
+                  Project1.STATE STATE
+
               FROM ( SELECT Filter1.REQUESTID REQUESTID  ,
                             Filter1.REQUESTCATEGORY REQUESTCATEGORY  ,
                             Filter1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
@@ -199,8 +228,11 @@
                                            Extent3.NAME NAME1  ,
                                            Extent4.MEM_CODE MEM_CODE  ,
                                            Extent6.RESN_DESC RESN_DESC  ,
-                                           Extent7.NAME NAME2 ,
+
+                                           Extent7.NAME NAME2,
                                            Extent9.STATE STATE
+
+
                                 FROM MSC0043M Extent1
                                        LEFT JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.REQST_ORD_ID
                                        LEFT JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
@@ -208,6 +240,7 @@
                                        LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent4.MEM_TYPE
                                        LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = Extent1.REQST_CTGRY
                                        LEFT JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent1.REQST_STUS_ID
+
                                        LEFT JOIN SAL0023D Extent8 ON Extent8.CUST_ADD_ID = Extent3.CUST_ID
                                        LEFT JOIN SYS0064M Extent9 ON Extent9.AREA_ID = Extent8.AREA_ID
 
@@ -335,6 +368,7 @@
                          LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.RESPNS_CREATOR
                          LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.RESPNS_UPDATOR
                  WHERE  Extent1.PAPARAZ_REQST_ID = #{reqstId}
+                  order by Extent1.RESPNS_ID
 
      </select>
 
