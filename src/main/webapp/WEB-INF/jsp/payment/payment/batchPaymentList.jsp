@@ -26,7 +26,7 @@ var selectedGridValue;
 var gridPros = {
         // 편집 가능 여부 (기본값 : false)
         editable : false,
-        
+
         // 상태 칼럼 사용
         showStateColumn : false,
         selectionMode       : "singleRow"
@@ -35,10 +35,10 @@ var gridPros = {
 var gridPros2 = {
         // 편집 가능 여부 (기본값 : false)
         editable : false,
-        
+
         // 상태 칼럼 사용
         showStateColumn : false,
-        
+
         // row Styling 함수
         rowStyleFunction : function(rowIndex, item) {
             if(item.validStusId == "21") {
@@ -49,23 +49,23 @@ var gridPros2 = {
 };
 
 $(document).ready(function(){
-    
-    
+
+
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-	
+
 	// Master Grid 셀 클릭시 이벤트
-    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+    AUIGrid.bind(myGridID, "cellClick", function( event ){
         selectedGridValue = event.rowIndex;
-    });  
-	
+    });
+
 	$("#payMode").multipleSelect("checkAll");
 	$("#confirmStatus").multipleSelect("setSelects", [44]);
 	$("#batchStatus").multipleSelect("setSelects", [1]);
-    
+
 });
 
 // AUIGrid 칼럼 설정
-var columnLayout = [ 
+var columnLayout = [
     {
         dataField : "batchId",
         headerText : "<spring:message code='pay.head.batchId'/>",
@@ -120,7 +120,7 @@ var columnLayout = [
 
 
 //AUIGrid 칼럼 설정
-var batchInfoLayout = [ 
+var batchInfoLayout = [
     {
         dataField : "code",
         headerText : "<spring:message code='pay.head.validStatus'/>",
@@ -186,18 +186,18 @@ var batchInfoLayout = [
         headerText : "<spring:message code='pay.head.bankChargeAcc'/>",
         editable : false
     }];
-    
+
     //AUIGrid 칼럼 설정
-    var batchListLayout = [ 
+    var batchListLayout = [
         { dataField:"history" ,
            width: 30,
-           headerText:" ", 
-           renderer : 
+           headerText:" ",
+           renderer :
            {
               type : "IconRenderer",
               iconTableRef :  {
                   "default" : "${pageContext.request.contextPath}/resources/images/common/icon_gabage_s.png"// default
-              },         
+              },
               iconWidth : 16,
               iconHeight : 16,
               onclick : function(rowIndex, columnIndex, value, item) {
@@ -271,7 +271,7 @@ var batchInfoLayout = [
             headerText : "<spring:message code='pay.head.bankChargeAcc'/>",
             editable : false
         }];
-    
+
 
     // ajax list 조회.
     function searchList(){
@@ -280,24 +280,24 @@ var batchInfoLayout = [
     		AUIGrid.setGridData(myGridID, result);
     	});
     }
-    
+
     function fn_viewBatchPopup(){
-    	
+
     	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-        
+
         if (selectedItem[0] > -1){
-        	
+
         	var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
-        	
+
         	Common.ajax("GET","/payment/selectBatchInfo.do",{"batchId":batchId}, function(result){
         		$('#view_popup_wrap').show();
                 console.log(result);
-                
+
                 var confAt = result.batchPaymentView.cnfmDt;
                 var confAtArray = confAt.split('-');
                 var cnvrAt = result.batchPaymentView.cnvrDt;
                 var cnvrAtArray = cnvrAt.split('-');
-                
+
                 $('#txtBatchId').text(result.batchPaymentView.batchId);
                 $('#txtBatchStatus').text(result.batchPaymentView.name);
                 $('#txtConfirmStatus').text(result.batchPaymentView.name1);
@@ -305,44 +305,44 @@ var batchInfoLayout = [
                 $('#txtUploadBy').text(result.batchPaymentView.userName);
                 $('#txtUploadAt').text(result.batchPaymentView.crtDt);
                 $('#txtConfirmBy').text(result.batchPaymentView.c1);
-                
+
                 if(confAtArray[2].substr(0,4) > 1900){
                 	$('#txtConfirmAt').text(result.batchPaymentView.cnfmDt);
                 }else{
                 	$('#txtConfirmAt').text("");
                 }
-                
+
                 if(cnvrAtArray[2].substr(0,4) > 1900){
                 	$('#txtConvertAt').text(result.batchPaymentView.cnvrDt);
                 }else{
                 	$('#txtConvertAt').text("");
                 }
-                
-                
+
+
                 //TOTAL
                 $('#totalAmount').text(result.totalValidAmt.sysAmt);
                 $('#totalItem').text(result.totalItem);
                 $('#totalValid').text(result.totalValidAmt.c1);
                 $('#totalInvalid').text((result.totalItem) - (result.totalValidAmt.c1));
-                
+
                 AUIGrid.destroy(batchInfoGridID);
                 batchInfoGridID = GridCommon.createAUIGrid("view_grid_wrap", batchInfoLayout,null,gridPros2);
                 AUIGrid.setGridData(batchInfoGridID, result.batchPaymentDetList);
                 AUIGrid.resize(batchInfoGridID,942, 280);
             });
-        	
+
         }else{
             Common.alert('No batch selected. ');
         }
     }
-    
+
     function fn_batchPayItemList(validStatusId, gubun){
     	var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
-        
+
     	Common.ajax("GET","/payment/selectBatchPayItemList.do",{"batchId":batchId, "validStatusId" : validStatusId}, function(result){
-    		
+
     	    if(gubun == "V"){//VIEW
-                
+
     	    	if(validStatusId == "4"){
                     $('#itemGubun').text("Valid Items");
                 }else if(validStatusId == "21"){
@@ -350,14 +350,14 @@ var batchInfoLayout = [
                 }else{
                     $('#itemGubun').text("All Items");
                 }
-    	    	
+
                 AUIGrid.destroy(batchInfoGridID);
                 batchInfoGridID = GridCommon.createAUIGrid("view_grid_wrap", batchInfoLayout,null,gridPros2);
                 AUIGrid.setGridData(batchInfoGridID, result.batchPaymentDetList);
                 AUIGrid.resize(batchInfoGridID,942, 280);
-                
+
             }else if(gubun == "C"){//CONFIRM
-                
+
             	if(validStatusId == "4"){
                     $('#itemGubun_conf').text("Valid Items");
                 }else if(validStatusId == "21"){
@@ -365,7 +365,7 @@ var batchInfoLayout = [
                 }else{
                     $('#itemGubun_conf').text("All Items");
                 }
-            	
+
                 AUIGrid.destroy(batchConfGridID);
                 batchConfGridID = GridCommon.createAUIGrid("conf_grid_wrap", batchListLayout,null,gridPros2);
                 AUIGrid.setGridData(batchConfGridID, result.batchPaymentDetList);
@@ -373,32 +373,32 @@ var batchInfoLayout = [
             }
     	});
     }
-    
+
     function fn_confirmBatchPopup(){
-        
+
         var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-        
+
         if (selectedItem[0] > -1){
             var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
             var cnfmStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "cnfmStusId");
             var batchStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchStusId");
-            
+
             if(batchStusId == "1"){
-            	
+
             	if(cnfmStusId == "77"){
             		$('#btnConf').hide();
             	}else{
             		$('#btnConf').show();
             	}
-            	
+
                 Common.ajax("GET","/payment/selectBatchInfo.do",{"batchId":batchId}, function(result){
                 	$('#conf_popup_wrap').show();
-                    
+
                     var confAt = result.batchPaymentView.cnfmDt;
                     var confAtArray = confAt.split('-');
                     var cnvrAt = result.batchPaymentView.cnvrDt;
                     var cnvrAtArray = cnvrAt.split('-');
-                    
+
                     $('#txtBatchId_conf').text(result.batchPaymentView.batchId);
                     $('#txtBatchStatus_conf').text(result.batchPaymentView.name);
                     $('#txtConfirmStatus_conf').text(result.batchPaymentView.name1);
@@ -407,61 +407,61 @@ var batchInfoLayout = [
                     $('#txtUploadAt_conf').text(result.batchPaymentView.crtDt);
                     $('#txtConfirmBy_conf').text(result.batchPaymentView.c1);
                     $('#txtConvertBy_conf').text(result.batchPaymentView.c2);
-                    
-                    
+
+
                     if(confAtArray[2].substr(0,4) > 1900){
                     	$('#txtConfirmAt_conf').text(result.batchPaymentView.cnfmDt);
                     }else{
                     	$('#txtConfirmAt_conf').text("");
                     }
-                    
+
                     if(cnvrAtArray[2].substr(0,4) > 1900){
                     	$('#txtConvertAt_conf').text(result.batchPaymentView.cnvrDt);
                     }else{
                     	$('#txtConvertAt_conf').text("");
                     }
-                    
+
                     //TOTAL
                     $('#totalAmount_conf').text(result.totalValidAmt.sysAmt);
                     $('#totalItem_conf').text(result.totalItem);
                     $('#totalValid_conf').text(result.totalValidAmt.c1);
                     $('#totalInvalid_conf').text((result.totalItem) - (result.totalValidAmt.c1));
-                    
+
                     AUIGrid.destroy(batchConfGridID);
                     batchConfGridID = GridCommon.createAUIGrid("conf_grid_wrap", batchListLayout,null,gridPros2);
                     AUIGrid.setGridData(batchConfGridID, result.batchPaymentDetList);
                     AUIGrid.resize(batchConfGridID,942, 280);
                 });
-            	
+
             }else{
             	Common.alert("<spring:message code='pay.alert.isNotBatch' arguments='"+batchId+"' htmlEscape='false'/>");
             }
-            
+
         }else{
             Common.alert("<spring:message code='pay.alert.noBatchSelected'/>");
         }
     }
-    
+
     function fn_removeItem(detId){
     	Common.ajax("GET","/payment/updRemoveItem.do",{"detId":detId}, function(result){
     		fn_confirmBatchPopup();
     		Common.alert(result.message);
     	});
     }
-    
+
     function fn_confirmBatch(){
-    	
+
     	Common.confirm("<spring:message code='pay.alert.confPayBatch'/>",function (){
     		var totalInvalid = $('#totalInvalid_conf').text();
     		var totalValid = $('#totalValid_conf').text();
     		var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
-    		
+
     		if(totalInvalid > 0){
     			Common.alert("<spring:message code='pay.alert.invalidItemExist'/>");
     			return;
     		}else{
     			if(totalValid > 0){
-    				
+
     				Common.ajax("GET","/payment/saveConfirmBatch.do", {"batchId" : batchId}, function(result){
     	                console.log(result);
     	                fn_confirmBatchPopup();
@@ -469,7 +469,7 @@ var batchInfoLayout = [
     	                $('#btnDeactivate').hide();
     	                Common.alert(result.message);
     	            });
-    				
+
     			}else{
     				Common.alert("<spring:message code='pay.alert.noValidItemFound'/>");
                     return;
@@ -477,7 +477,7 @@ var batchInfoLayout = [
     		}
         });
     }
-    
+
     function fn_deactivateBatch(){
         Common.confirm("<spring:message code='pay.alert.wantToConfirmPayBatch'/>",function (){
         	var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
@@ -489,45 +489,45 @@ var batchInfoLayout = [
             });
         });
     }
-    
+
     function fn_uploadPopup(){
     	$('#upload_popup_wrap').show();
     }
-    
+
     function fn_uploadFile(){
-    	
+
         var formData = new FormData();
         var payModeId = $("#paymentMode option:selected").val();
-        
+
         if(payModeId == ""){
         	Common.alert("<spring:message code='pay.alert.selectPayMode'/>");
         	return;
         }
-        
+
         formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
         formData.append("payModeId", payModeId);
-        
+
         if($("#jomPay").is(":checked")) formData.append("jomPay","1");
         else  formData.append("jomPay","");
-        
+
         Common.ajaxFile("/payment/csvFileUpload.do", formData, function(result){
             $('#paymentMode option[value=""]').attr('selected', 'selected');
 
             Common.alert(result.message);
         });
     }
-    
+
     function onlyNumber(obj) {
         $(obj).keyup(function(){
              $(this).val($(this).val().replace(/[^0-9]/g,""));
-        }); 
+        });
     }
-    
+
     function fn_hideViewPop(val){
     	$(val).hide();
-    	
+
     	if("#conf_popup_wrap" == val){
-    		
+
     		$('#txtBatchId_conf').text("");
             $('#txtBatchStatus_conf').text("");
             $('#txtConfirmStatus_conf').text("");
@@ -542,11 +542,11 @@ var batchInfoLayout = [
             $('#totalItem_conf').text("");
             $('#totalValid_conf').text("");
             $('#totalInvalid_conf').text("");
-            
+
             $("#paymentInfo_conf").trigger("click");
-    		
+
     	}else if("#view_popup_wrap" == val){
-    		
+
     		$('#txtBatchId').text("");
             $('#txtBatchStatus').text("");
             $('#txtConfirmStatus').text("");
@@ -561,10 +561,10 @@ var batchInfoLayout = [
             $('#totalItem').text("");
             $('#totalValid').text("");
             $('#totalInvalid').text("");
-            
+
             $("#panymentInfo").trigger("click");
     	}
-    	
+
     	searchList();
     }
     function fn_clear(){
@@ -616,6 +616,7 @@ var batchInfoLayout = [
 						        <option value="105">Cash (CSH)</option>
 						        <option value="106">Cheque (CHQ)</option>
 						        <option value="108">Online Payment(ONL)</option>
+						        <option value="107">Credit Card (CRC)</option>
 						    </select>
 					    </td>
 					    <th scope="row">Create Date</th>
@@ -938,11 +939,12 @@ var batchInfoLayout = [
 					        <option value="105">Cash (CSH)</option>
 					        <option value="106">Cheque (CHQ)</option>
 					        <option value="108">Online Payment (ONL)</option>
+					        <option value="107">Credit Card (CRC)</option>
 					    </select>
 					    </td>
-					    
+
 					       <th scope="row">JomPay</th>
-	                       <td>  
+	                       <td>
 	                            <input type='checkbox' id ='jomPay' name='jomPay' value='1'>
 	                       </td>
                     </tr>

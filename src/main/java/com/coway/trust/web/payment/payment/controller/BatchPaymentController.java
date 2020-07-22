@@ -31,20 +31,20 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/payment")
 public class BatchPaymentController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(BatchPaymentController.class);
-	
+
 	@Resource(name = "batchPaymentService")
 	private BatchPaymentService batchPaymentService;
-	
+
 	@Autowired
 	private CsvReadComponent csvReadComponent;
-	
+
 	/******************************************************
-	 *  Batch Payment List 
-	 *****************************************************/	
+	 *  Batch Payment List
+	 *****************************************************/
 	/**
-	 *  Batch Payment List 초기화 화면 
+	 *  Batch Payment List 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -53,10 +53,10 @@ public class BatchPaymentController {
 	public String initDailyCollection(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/payment/batchPaymentList";
 	}
-	
+
 	/**
 	 * selectBatchList 조회
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
@@ -67,13 +67,13 @@ public class BatchPaymentController {
 		String[] confirmStatus = request.getParameterValues("confirmStatus");
 		String[] batchStatus = request.getParameterValues("batchStatus");
 		List<String> confirmStatusList = new ArrayList<String>();
-		
+
 		if(confirmStatus.length > 0){
 			for(int i=0 ; i < confirmStatus.length; i++){
 				confirmStatusList.add(confirmStatus[i].toString());
 			}
 		}
-		
+
 		if(batchStatus.length > 0){
 			for(int i=0 ; i < batchStatus.length; i++){
 				if(batchStatus[i].toString().equals("8")){
@@ -81,48 +81,48 @@ public class BatchPaymentController {
 				}
 			}
 		}
-		
+
 		params.put("payMode", payMode);
 		params.put("confirmStatus", confirmStatusList);
 		params.put("batchStatus", batchStatus);
 		List<EgovMap> batchList = batchPaymentService.selectBatchList(params);
-		
+
 		return ResponseEntity.ok(batchList);
 	}
-	
+
 	/**
 	 * selectBatchDetailInfo 조회
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/selectBatchInfo", method = RequestMethod.GET)
 	public ResponseEntity<Map> selectBatchInfo(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		//DETAIL INFO
 		EgovMap batchPaymentView = batchPaymentService.selectBatchPaymentView(params);
-		
+
 		//DETAIL LIST
 		List<EgovMap> batchPaymentDetList = batchPaymentService.selectBatchPaymentDetList(params);
-		
+
 		//TOTAL VALID AMT
 		EgovMap  totalValidAmt = batchPaymentService.selectTotalValidAmt(params);
-		
+
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("batchPaymentView", batchPaymentView);
 		resultMap.put("batchPaymentDetList", batchPaymentDetList);
 		resultMap.put("totalItem", batchPaymentDetList.size());
 		resultMap.put("totalValidAmt", totalValidAmt);
-		
-        
+
+
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultMap);
 	}
-	
+
 	/**
 	 * selectBatchPayItemList 조회
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
@@ -131,17 +131,17 @@ public class BatchPaymentController {
 	public ResponseEntity<Map> selectBatchPayItemList(@RequestParam Map<String, Object> params, ModelMap model) {
 		//DETAIL LIST
 		List<EgovMap> batchPaymentDetList = batchPaymentService.selectBatchPaymentDetList(params);
-		
+
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("batchPaymentDetList", batchPaymentDetList);
-        
+
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultMap);
 	}
-	
+
 	/**
 	 * updRemoveItem
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
@@ -151,14 +151,14 @@ public class BatchPaymentController {
 		ReturnMessage message = new ReturnMessage();
 		int userId = sessionVO.getUserId();
 		params.put("userId", userId);
-		
+
 		EgovMap  paymentDs = batchPaymentService.selectBatchPaymentDs(params);
 		int result = 0;
-		
+
 		if(paymentDs != null){
 			result = batchPaymentService.updRemoveItem(params);
 		}
-		
+
 		if(result > 0){
 			message.setMessage("Payment item has been removed.");
 			message.setCode(AppConstants.SUCCESS);
@@ -166,13 +166,13 @@ public class BatchPaymentController {
 			message.setMessage("Failed to remove payment item. Please try again later.");
 			message.setCode(AppConstants.FAIL);
 		}
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	/**
 	 * saveItemConfirm
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
@@ -183,7 +183,7 @@ public class BatchPaymentController {
 		int userId = sessionVO.getUserId();
 		params.put("userId", userId);
 		int result = batchPaymentService.saveConfirmBatch(params);
-		
+
 		if(result > 0){
 			message.setMessage("Batch payment has been confirmed.");
 			message.setCode(AppConstants.SUCCESS);
@@ -191,13 +191,13 @@ public class BatchPaymentController {
 			message.setMessage("Failed to confirm this batch payment. Please try again later.");
 			message.setCode(AppConstants.FAIL);
 		}
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	/**
 	 * saveDeactivateBatch
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
@@ -207,16 +207,16 @@ public class BatchPaymentController {
 		ReturnMessage message = new ReturnMessage();
 		int userId = sessionVO.getUserId();
 		params.put("userId", userId);
-		
+
 		EgovMap  paymentMs = batchPaymentService.selectBatchPaymentMs(params);
 		int result = 0;
-		
+
 		if(paymentMs != null){
 			if(String.valueOf(paymentMs.get("batchStusId")).equals("1")){
 				result = batchPaymentService.saveDeactivateBatch(params);
 			}
 		}
-		
+
 		if(result > 0){
 			message.setMessage("Batch payment has been deactivated.");
 			message.setCode(AppConstants.SUCCESS);
@@ -224,10 +224,10 @@ public class BatchPaymentController {
 			message.setMessage("Failed to deactivate this batch payment. Please try again later.");
 			message.setCode(AppConstants.FAIL);
 		}
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	/**
 	 * CSV 파일 저장
 	 * @param searchVO
@@ -238,15 +238,22 @@ public class BatchPaymentController {
 	@RequestMapping(value = "/csvFileUpload.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> csvFileUpload(MultipartHttpServletRequest request, SessionVO sessionVO) throws IOException, InvalidFormatException {
 		ReturnMessage message = new ReturnMessage();
+
+		String payModeId = request.getParameter("payModeId");
+		String payItmCardModeId = "";
+		if("107".equals(payModeId)) {
+		    payItmCardModeId = "6161";
+		}
+
 		Map<String, MultipartFile> fileMap = request.getFileMap();
 		MultipartFile multipartFile = fileMap.get("csvFile");
 		List<BatchPaymentVO> vos = csvReadComponent.readCsvToList(multipartFile, true, BatchPaymentVO::create);
 
 		List<Map<String, Object>> detailList = new ArrayList<Map<String, Object>>();
 		for (BatchPaymentVO vo : vos) {
-			
+
 			HashMap<String, Object> hm = new HashMap<String, Object>();
-			
+
 			hm.put("disabled", 0);
 			hm.put("creator", sessionVO.getUserId());
 			hm.put("updator", sessionVO.getUserId());
@@ -275,22 +282,25 @@ public class BatchPaymentController {
 			hm.put("sysBCAmt", 0);
 			hm.put("sysBCAccId", 0);
 			hm.put("userRemark", vo.getUserRemark().trim());
-			
+			hm.put("cardNo", vo.getCardNo());
+			hm.put("cardModeId", payItmCardModeId);
+			hm.put("approvalCode", vo.getApprovalCode());
+
 			if(!vo.getTrDate().trim().equals("")){
 				hm.put("userTrDate", vo.getTrDate().trim());
 			}else{
 				hm.put("userTrDate", "1900/01/01");
 			}
-			
+
 			hm.put("userCollectorCode", vo.getCollectorCode().trim());
 			hm.put("sysCollectorId", 0);
-			
+
 			if(!vo.getPaymentType().trim().equals("")){
 				hm.put("paymentType", vo.getPaymentType().trim());
 			}else{
 				hm.put("paymentType", "");
 			}
-			
+
 			hm.put("PaymentTypeId", 0);
 			if(!vo.getAdvanceMonth().trim().equals("")){
 				hm.put("advanceMonth", vo.getAdvanceMonth().trim());
@@ -301,8 +311,7 @@ public class BatchPaymentController {
 		}
 
 		Map<String, Object> master = new HashMap<String, Object>();
-		String payModeId = request.getParameter("payModeId");
-		
+
 		master.put("payModeId", payModeId);
 		master.put("batchStatusId", 1);
 		master.put("confirmStatusId", 44);
@@ -316,23 +325,23 @@ public class BatchPaymentController {
 		master.put("paymentRemark", "");
 		master.put("paymentCustType", 1368);
 		master.put("jomPay", request.getParameter("jomPay"));
-		
-		
-		
-		
+
+
+
+
 		int result = batchPaymentService.saveBatchPaymentUpload(master, detailList);
 		if(result > 0){
     		//File file = new File("C:\\COWAY_PROJECT\\CommissionDeduction_BatchFiles\\"+multipartFile.getOriginalFilename());
     		//multipartFile.transferTo(file);
-    		
+
     		message.setMessage("Batch payment item(s) successfully uploaded.<br />Batch ID : "+result);
 		}else{
 			message.setMessage("Failed to upload batch payment item(s). Please try again later.");
 		}
-		
+
 
 		return ResponseEntity.ok(message);
 	}
-	
-	
+
+
 }

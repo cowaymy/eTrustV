@@ -23,8 +23,10 @@ public class BatchPaymentVO {
 	private String paymentType;
 	private String advanceMonth;
 	private String userRemark;
-	
-	
+	private String cardNo;
+	private String approvalCode;
+
+
 	public static BatchPaymentVO create(CSVRecord CSVRecord) {
 		BatchPaymentVO vo = new BatchPaymentVO();
 		vo.setOrderNo(CSVRecord.get(0));
@@ -46,10 +48,12 @@ public class BatchPaymentVO {
 		vo.setPaymentType(CSVRecord.get(16));
 		vo.setAdvanceMonth(CSVRecord.get(17));
 		vo.setUserRemark(CSVRecord.get(18));
-		
+		vo.setCardNo(CSVRecord.get(19));
+		vo.setApprovalCode(CSVRecord.get(20));
+
 		return vo;
 	}
-	
+
 	public String getTrDate() {
 		return trDate;
 	}
@@ -194,14 +198,28 @@ public class BatchPaymentVO {
 		this.bankChargeAcc = bankChargeAcc;
 	}
 
-  public String getUserRemark() {
-    return userRemark;
-  }
-  
-  public void setUserRemark(String userRemark) {
-    this.userRemark = userRemark;
-  }
+    public String getUserRemark() {
+        return userRemark;
+    }
 
-	
-	
+    public void setUserRemark(String userRemark) {
+        this.userRemark = userRemark;
+    }
+
+    public String getCardNo() {
+        return cardNo;
+    }
+
+    public void setCardNo(String cardNo) {
+        this.cardNo = cardNo;
+    }
+
+    public String getApprovalCode() {
+        return approvalCode;
+    }
+
+    public void setApprovalCode(String approvalCode) {
+        this.approvalCode = approvalCode;
+    }
+
 }
