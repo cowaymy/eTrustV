@@ -2276,10 +2276,6 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
           }
       }
 
-logger.error(stus);
-logger.error(crcCheck);
-logger.error(errorDesc);
-
       rtnDto.setStus(stus);
       rtnDto.setCrcCheck(crcCheck);
       rtnDto.setErrorDesc(errorDesc);
