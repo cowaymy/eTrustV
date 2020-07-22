@@ -97,6 +97,12 @@
                 return;
             }
 
+            var isExistCrc = fn_existCrcNo('${custId}', $("#tknId").val().trim());
+            if(isExistCrc) {
+                Common.alert("<spring:message code='sal.alert.msg.creditCardIsExisting' />");
+                return;
+            }
+
 	    	/* Update  */
 	    	fn_customerCardInfoUpdateAjax();
 
@@ -156,70 +162,12 @@
          });
          $("#_cardPopCloseBtn").click();
 
-         /*
-		 Common.ajax("GET", "/sales/customer/tokenPubKey.do", "", function(result) {
-	            var pub = "-----BEGIN PUBLIC KEY-----" + result.pubKey + "-----END PUBLIC KEY-----";
-	            var molpay = MOLPAY.encrypt( pub );
-
-
-	            form = document.getElementById('updForm');
-	            molpay.encryptForm(form);
-	            var form = $("#updForm").serialize();
-
-	            $.ajax({
-	                url : "/sales/customer/tokenLogging.do",
-	                data : form,
-	                success : function(tlResult) {
-	                    if(result.tknId != 0) {
-	                        $("#tknId").val(tlResult.tknId);
-	                        $("#refNo").val(tlResult.refNo);
-	                        $("#urlReq").val(tlResult.urlReq);
-	                        $("#merchantId").val(tlResult.merchantId);
-	                        $("#signature").val(tlResult.signature);
-
-	                        Common.ajax("GET", "/sales/customer/tokenizationProcess.do", $("#updForm").serialize(), function(tResult) {
-	                        	if(tResult.stus == "1" && tResult.crcCheck == "0") {
-	                            	console.log("edit :: " + tResult.crcNo);
-	                                $("#custCrcExpr").val($("#_expMonth_").val() + $("#_expYear_").val().substring(2));
-	                                $("#custCrcNoMask").val(tResult.crcNo);
-	                                $("#token").val(tResult.token);
-
-	                                Common.ajax("GET", "/sales/customer/updateCustomerCardInfoAf.do", $("#updForm").serialize(), function(uResult) {
-	                                    Common.alert(uResult.message, fn_parentReload);
-	                                });
-	                                $("#_cardPopCloseBtn").click();
-	                            } else {
-	                                Common.alert(tResult.errorDesc);
-	                            }
-	                        });
-	                    } else {
-	                        console.log("tknId 0");
-	                        Common.alert("Tokenization error!");
-	                    }
-	                }
-	            });
-		 });
-		 */
-
-		 /*
-		 if("${detailcard.custOriCrcNo}" != $("#custOriCrcNo").val().trim()) {
-			 isExistCrc = fn_existCrcNo('${custId}', $("#custOriCrcNo").val().trim());
-		 }
-
-		 if(isExistCrc) {
-			 isValid = false;
-			 Common.alert("<b>WARNING!</b></br>This Bank card number is used by another customer.</br>Please inform respective HP/Cody.");
-		 } else {
-			Common.ajax("GET", "/sales/customer/updateCustomerCardInfoAf.do", $("#updForm").serialize(), function(result) {
-		            Common.alert(result.message, fn_parentReload);
-		        });
-		 }*/
     }
 
     function fn_existCrcNo(CustID, CrcNo, IssueBankID){
         var isExist = false;
 
-        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : CustID, custOriCrcNo : CrcNo}, function(rsltInfo) {
+        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : CustID, custCrcToken : CrcNo}, function(rsltInfo) {
             if(rsltInfo != null) {
                 console.log('rsltInfo.length:'+rsltInfo.length);
                 isExist = rsltInfo.length == 0 ? false : true;
@@ -323,8 +271,8 @@
                         toolbar: "no", // 툴바. (yes/no)(default : yes)
                         resizable: "yes", // 창 사이즈 변경. (yes/no)(default : yes)
                         scrollbars: "yes", // 스크롤바. (yes/no)(default : yes)
-                        width: "750px", // 창 가로 크기
-                        height: "180px" // 창 세로 크기
+                        width: "768px", // 창 가로 크기
+                        height: "250px" // 창 세로 크기
                     };
 
                 if (option.isDuplicate) {

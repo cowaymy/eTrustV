@@ -855,6 +855,9 @@
       OR UPPER(Extent2.NAME) LIKE '%' || UPPER(#{searchWord}) || '%'
       OR UPPER(Extent6.CODE_NAME) LIKE '%' || UPPER(#{searchWord}) || '%')
     </if>
+    <if test='custCrcToken != null and custCrcToken != "" '>
+      AND Extent1.CUST_CRC_TOKEN = #{custCrcToken}
+    </if>
     ) Project1
     ) Project1
     ORDER BY Project1.CUST_CRC_ID ASC

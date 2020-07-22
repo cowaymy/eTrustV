@@ -67,19 +67,29 @@
             return false;
         }
 
-        Common.ajax("GET", "/sales/customer/checkCrc.do", checkCrc, function(result) {
-            console.log(result);
+        var isExistCrc = fn_existCrcNo('', $("#tknId").val().trim());
+        if(isExistCrc) {
+            Common.alert("<spring:message code='sal.alert.msg.creditCardIsExisting' />");
+            return false;
+        }
 
-            if(result != "0") {
-                Common.alert("<b>WARNING!</b></br>This Bank card number is used by another customer.");
-            } else {
-                //insert
-                fn_addCreditCardInfo(ccType, iBank, cardNo, '-', nameCard, cType, bankRem, tknId, encCrcNo, refNo);
-                //close
-                $("#_cardPopCloseBtn").click();
-            }
-        });
+        fn_addCreditCardInfo(ccType, iBank, cardNo, '-', nameCard, cType, bankRem, tknId, encCrcNo, refNo);
+        $("#_cardPopCloseBtn").click();
+
 	}
+
+	function fn_existCrcNo(CustID, CrcNo, IssueBankID){
+        var isExist = false;
+
+        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : CustID, custCrcToken : CrcNo}, function(rsltInfo) {
+            if(rsltInfo != null) {
+                console.log('rsltInfo.length:'+rsltInfo.length);
+                isExist = rsltInfo.length == 0 ? false : true;
+            }
+        }, null, {async : false});
+        console.log('isExist ggg:'+isExist);
+        return isExist;
+    }
 
 	function fn_tokenPop() {
         console.log("tokenizationBtn :: click :: fn_tokenPop");
@@ -113,8 +123,8 @@
                         toolbar: "no", // 툴바. (yes/no)(default : yes)
                         resizable: "yes", // 창 사이즈 변경. (yes/no)(default : yes)
                         scrollbars: "yes", // 스크롤바. (yes/no)(default : yes)
-                        width: "750px", // 창 가로 크기
-                        height: "180px" // 창 세로 크기
+                        width: "768px", // 창 가로 크기
+                        height: "250px" // 창 세로 크기
                     };
 
                 if (option.isDuplicate) {

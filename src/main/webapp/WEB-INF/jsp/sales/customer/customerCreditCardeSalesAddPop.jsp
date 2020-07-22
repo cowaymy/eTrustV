@@ -75,40 +75,6 @@
                 isValid = false;
                 msg += "* <spring:message code='sal.alert.msg.creditCardNumMustIn16Digits' /><br/>";
             }
-            /*
-            else {
-                if(FormUtil.checkNum($('#cardNo'))) {
-                    isValid = false;
-                    msg += "<spring:message code='sal.alert.msg.invalidCreditCardNum' />";
-                }
-                else {
-                    var isExistCrc = fn_existCrcNo('${custId}', $('#cardNo').val().trim());
-
-                    if(isExistCrc) {
-                        isValid = false;
-                        msg += "<spring:message code='sal.alert.msg.creditCardIsExisting' />";
-                    }
-                    else {
-                        if($("#cmbCreditCardType option:selected").index() > 0) {
-                            if($("#cmbCreditCardType").val() == '111') {
-                                //MASTER
-                                if($('#cardNo').val().trim().substring(0, 1) != "5") {
-                                    isValid = false;
-                                    msg += "<spring:message code='sal.alert.msg.invalidCreditCardNum' />";
-                                }
-                            }
-                            else if($("#cmbCreditCardType").val() == '112') {
-                                //VISA
-                                if($('#cardNo').val().trim().substring(0, 1) != "4") {
-                                    isValid = false;
-                                    msg += "<spring:message code='sal.alert.msg.invalidCreditCardNum' />";
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            */
         }
 
         if(FormUtil.isEmpty($('#nameOnCard').val())) {
@@ -124,11 +90,6 @@
             }
         }
 
-        /* if($("#cmbCardType option:selected").index() <= 0) {
-            isValid = false;
-            msg += "<spring:message code='sal.alert.pleaseSelectTheCardType' />";
-        } */
-
         if($("#cmbCardType").val() <= 0) {
             isValid = false;
             msg += "<spring:message code='sal.alert.pleaseSelectTheCardType' />";
@@ -138,6 +99,12 @@
         if("" == $("tknId").val() || null == $("#tknId").val()) {
             isValid = false;
             msg += "Credit card has not been encrypted";
+        }
+
+        var isExistCrc = fn_existCrcNo($("#custId").val(), $("#tknId").val().trim());
+        if(isExistCrc) {
+            isValid = false;
+            msg += "<spring:message code='sal.alert.msg.creditCardIsExisting' />";
         }
 
         if(!isValid) {
@@ -151,7 +118,7 @@
     function fn_existCrcNo(CustID, CrcNo, IssueBankID){
         var isExist = false;
 
-        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : CustID, custOriCrcNo : CrcNo}, function(rsltInfo) {
+        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : CustID, custCrcToken : CrcNo}, function(rsltInfo) {
             if(rsltInfo != null) {
                 console.log('rsltInfo.length:'+rsltInfo.length);
                 isExist = rsltInfo.length == 0 ? false : true;
@@ -184,66 +151,6 @@
                 }
             }
         );
-
-        /*
-        Common.ajax("GET", "/sales/customer/tokenPubKey.do", "", function(result) {;
-            var pub = "-----BEGIN PUBLIC KEY-----" + result.pubKey + "-----END PUBLIC KEY-----";
-            var molpay = MOLPAY.encrypt( pub );
-
-            form = document.getElementById('frmCrCard');
-            molpay.encryptForm(form);
-            var form = $("#frmCrCard").serialize();
-
-            $.ajax({
-                url : "/sales/customer/tokenLogging.do",
-                data : form,
-                success : function(tlResult) {
-                    if(result.tknId != 0) {
-                        $("#tknId").val(tlResult.tknId);
-                        $("#refNo").val(tlResult.refNo);
-                        $("#urlReq").val(tlResult.urlReq);
-                        $("#merchantId").val(tlResult.merchantId);
-                        $("#signature").val(tlResult.signature);
-
-                        Common.ajax("GET", "/sales/customer/tokenizationProcess.do", $("#frmCrCard").serialize(), function(tResult) {
-                        	if(tResult.stus == "1" && tResult.crcCheck == "0") {
-                                console.log("order edit new :: " + tResult.token);
-                                $("#custCrcExpr").val($("#expMonth").val() + $("#expYear").val().substring(2));
-                                $("#custCrcNoMask").val(tResult.crcNo);
-                                $("#token").val(tResult.token);
-
-                                Common.ajax("POST", "/sales/customer/insertCreditCardInfo2.do", $('#frmCrCard').serializeJSON(), function(result) {
-
-                                    Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
-
-                                    if('${callPrgm}' == 'ORD_REGISTER_PAYM_CRC' || '${callPrgm}' == 'PRE_ORD') {
-                                        fn_loadCreditCard2(result.data);
-                                        $('#addCrcCloseBtn').click();
-                                    }
-
-                                }, function(jqXHR, textStatus, errorThrown) {
-                                    try {
-                                         Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save credit card. Please try again later.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                                    }
-                                    catch(e) {
-                                        console.log(e);
-                                    }
-                                }
-                            );
-
-                                $("#addCrcCloseBtn").click();
-                            } else {
-                                Common.alert(tResult.errorDesc);
-                            }
-                        });
-                    } else {
-                        console.log("tknId 0");
-                        Common.alert("Tokenization error!");
-                    }
-                }
-            });
-     });
-     */
     }
 
     function fn_padding(value, length, prefix) {
@@ -287,8 +194,8 @@
                         toolbar: "no", // 툴바. (yes/no)(default : yes)
                         resizable: "yes", // 창 사이즈 변경. (yes/no)(default : yes)
                         scrollbars: "yes", // 스크롤바. (yes/no)(default : yes)
-                        width: "750px", // 창 가로 크기
-                        height: "180px" // 창 세로 크기
+                        width: "768px", // 창 가로 크기
+                        height: "250px" // 창 세로 크기
                     };
 
                 if (option.isDuplicate) {
