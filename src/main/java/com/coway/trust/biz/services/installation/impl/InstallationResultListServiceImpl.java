@@ -2200,10 +2200,10 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("roomTemp", CommonUtils.nvl(params.get("roomTemp")).toString());
     installResult.put("waterSourceTemp", CommonUtils.nvl(params.get("waterSourceTemp")).toString());
     installResult.put("adptUsed", CommonUtils.nvl(params.get("adptUsed")).toString());
-    installResult.put("failId", CommonUtils.nvl(params.get("failParent")).toString());
-    installResult.put("failLct", CommonUtils.nvl(params.get("failChild")).toString());
-    installResult.put("instChklstCheckBox", ("on".equals(CommonUtils.nvl(params.get("instChklstCheckBox")).toString())) ? "N" : "Y");
-    installResult.put("failDeptChk", ("on".equals(CommonUtils.nvl(params.get("failDeptChk")).toString())) ? "N" : "Y");
+    installResult.put("failId", CommonUtils.nvl(params.get("failChild")).toString());
+    installResult.put("failLct", CommonUtils.nvl(params.get("failParent")).toString());
+    installResult.put("instChklstCheckBox", (!"on".equals(CommonUtils.nvl(params.get("instChklstCheckBox")).toString())) ? "Y" : "N");
+    installResult.put("failDeptChk", (!"on".equals(CommonUtils.nvl(params.get("failDeptChk")).toString())) ? "Y" : "N");
 
     logger.debug("========================INSTALLATION RESULT PRM===========================");
     logger.debug("INSTALLATION RESULT : {}", installResult);
