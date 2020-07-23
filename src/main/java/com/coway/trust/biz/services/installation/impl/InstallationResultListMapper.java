@@ -283,7 +283,11 @@ public interface InstallationResultListMapper {
 
   List<EgovMap> adapterUsed();
 
+  List<EgovMap> viewChkLst();
+
   List<EgovMap> failParent();
+
+  List<EgovMap> instChkLst();
 
   List<EgovMap> selectFailChild(Map<String, Object> params);
 
