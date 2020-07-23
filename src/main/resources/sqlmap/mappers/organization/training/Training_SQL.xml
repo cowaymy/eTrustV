@@ -149,7 +149,7 @@ SELECT Extent1.STUS_CODE_ID  ,
        Extent1.CODE CODE  ,
        Extent1.NAME NAME
   FROM SYS0038M Extent1
- WHERE  Extent1.STUS_CODE_ID IN ( 1,4,3 )
+ WHERE  Extent1.STUS_CODE_ID IN ( 1,4,3, 8 )
   ORDER BY Extent1.NAME ASC
 </select>
 
