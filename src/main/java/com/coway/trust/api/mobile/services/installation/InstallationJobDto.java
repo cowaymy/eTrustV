@@ -257,6 +257,66 @@ public class InstallationJobDto {
 
   private String salesPromotionCde;
 
+  private String voltage;
+
+  private String tds;
+
+  private String roomTemp;
+
+  private String waterSrcTemp;
+
+  private String adptUsed;
+
+  private String instChkLst;
+
+  public String getVoltage() {
+    return voltage;
+  }
+
+  public void setVoltage(String voltage) {
+    this.voltage = voltage;
+  }
+
+  public String getTds() {
+    return tds;
+  }
+
+  public void setTds(String tds) {
+    this.tds = tds;
+  }
+
+  public String getRoomTemp() {
+    return roomTemp;
+  }
+
+  public void setRoomTemp(String roomTemp) {
+    this.roomTemp = roomTemp;
+  }
+
+  public String getWaterSrcTemp() {
+    return waterSrcTemp;
+  }
+
+  public void setWaterSrcTemp(String waterSrcTemp) {
+    this.waterSrcTemp = waterSrcTemp;
+  }
+
+  public String getAdptUsed() {
+    return adptUsed;
+  }
+
+  public void setAdptUsed(String adptUsed) {
+    this.adptUsed = adptUsed;
+  }
+
+  public String getInstChkLst() {
+    return instChkLst;
+  }
+
+  public void setInstChkLst(String instChkLst) {
+    this.instChkLst = instChkLst;
+  }
+
   public String getProdcat() {
     return prodcat;
   }
