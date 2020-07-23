@@ -373,6 +373,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       params.put("roomTemp", String.valueOf(params.get("roomTemp")));
       params.put("waterSourceTemp", String.valueOf(params.get("waterSourceTemp")));
       params.put("remark", String.valueOf(params.get("remark")));
+      params.put("failLct", String.valueOf(params.get("failLocCde")));
+      params.put("failDeptChk", String.valueOf(params.get("failBfDepWH")));
 
       if (orderInfo != null) {
         params.put("hidOutright_Price", CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
