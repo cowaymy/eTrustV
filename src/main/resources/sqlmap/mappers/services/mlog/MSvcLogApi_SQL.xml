@@ -984,10 +984,10 @@
                    , TO_CHAR (SYS0026M.STK_CTGRY_ID) AS prodCat
                    , TO_CHAR (SAL0047D.VOLT) AS voltage
                    , TO_CHAR (SAL0047D.TDS) AS tds
-                   , TO_CHAR (SAL0047D.ROOM_TEMP) AS roomTemp
-                   , TO_CHAR (SAL0047D.WATER_SRC_TEMP) AS waterSrcTemp
-                   , TO_CHAR (SAL0047D.ADPT_USED) AS adptUsed
-                   , TO_CHAR (SAL0047D.INST_CHKLST) AS instChkLst
+                   , TO_CHAR (SAL0047D.ROOM_TEMP) AS room_Temp
+                   , TO_CHAR (SAL0047D.WATER_SRC_TEMP) AS water_Src_Temp
+                   , TO_CHAR (SAL0047D.ADPT_USED) AS adpt_Used
+                   , TO_CHAR (SAL0047D.INST_CHKLST) AS inst_Chk_Lst
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
@@ -1133,10 +1133,10 @@
          , TO_CHAR(SALES_PROMT_CDE) AS sales_Promotion_Cde
          , TO_CHAR(VOLT) AS voltage
          , TO_CHAR(TDS) AS tds
-         , TO_CHAR(ROOM_TEMP) AS roomTemp
-         , TO_CHAR(WATER_SRC_TEMP) AS waterSrcTemp
-         , TO_CHAR(ADPT_USED) AS adptUsed
-         , TO_CHAR(INST_CHKLST) AS instChkLst
+         , TO_CHAR(ROOM_TEMP) AS room_Temp
+         , TO_CHAR(WATER_SRC_TEMP) AS water_Src_Temp
+         , TO_CHAR(ADPT_USED) AS adpt_Used
+         , TO_CHAR(INST_CHKLST) AS inst_Chk_Lst
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
