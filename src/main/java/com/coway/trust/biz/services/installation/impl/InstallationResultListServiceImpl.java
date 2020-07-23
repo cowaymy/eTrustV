@@ -103,6 +103,12 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 	  return installationResultListMapper.adapterUsed();
   }
 
+  @Override
+  public List<EgovMap> instChkLst() {
+	  return installationResultListMapper.instChkLst();
+  }
+
+
   /* KV- DSC Code */
   @Override
   public List<EgovMap> selectDscCode() {
@@ -2196,7 +2202,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("adptUsed", CommonUtils.nvl(params.get("adptUsed")).toString());
     installResult.put("failId", CommonUtils.nvl(params.get("failParent")).toString());
     installResult.put("failLct", CommonUtils.nvl(params.get("failChild")).toString());
-    installResult.put("failDeptChk", CommonUtils.nvl(params.get("failDeptChk")).toString());
+    installResult.put("instChklstCheckBox", params.get("instChklstCheckBox") == "on" ? "N" : "Y");
+    installResult.put("failDeptChk", params.get("failDeptChk") == "on" ? "N" : "Y");
 
     logger.debug("========================INSTALLATION RESULT PRM===========================");
     logger.debug("INSTALLATION RESULT : {}", installResult);
