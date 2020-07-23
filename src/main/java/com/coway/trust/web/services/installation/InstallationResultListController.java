@@ -826,6 +826,18 @@ public class InstallationResultListController {
 	  return ResponseEntity.ok(adapterUsed);
   }
 
+  @RequestMapping(value = "/instChkLst.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> instChkLst(@RequestParam Map<String, Object> params,
+		  HttpServletRequest request, ModelMap model) {
+
+	  List<EgovMap> instChkLst = installationResultListService.instChkLst();
+
+	  logger.debug("=====================instChkLst=======================");
+	  logger.debug(" instChkLst :: " + instChkLst);
+	  logger.debug("=====================instChkLst=======================");
+	  return ResponseEntity.ok(instChkLst);
+  }
+
 
   @RequestMapping(value = "/assignCtOrderList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> assignCtOrderList(@RequestParam Map<String, Object> params,
