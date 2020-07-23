@@ -1385,7 +1385,7 @@
                  AND TYPE_ID IN (5754)
               </when>
               <otherwise>
-                 AND STUS_ID = 1
+                 <!-- AND STUS_ID = 1 -->
               </otherwise>
           </choose>
         <choose>
