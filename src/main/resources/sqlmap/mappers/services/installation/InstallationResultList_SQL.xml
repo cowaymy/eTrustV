@@ -87,6 +87,19 @@
     ]]>
   </select>
 
+  <select id="instChkLst" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT ROWNUM AS ROW_NUMBER
+               , Extent1.CODE_ID CODE_ID
+               , Extent1.CODE_NAME CODE_NAME
+               , Extent1.CODE_DESC CODE_DESC
+               , Extent1.DISAB DISAB
+      FROM SYS0013M Extent1
+      WHERE CODE_MASTER_ID = '453' AND DISAB = 0
+      ORDER BY CODE_ID
+    ]]>
+  </select>
+
   <select id="selectDscCode" parameterType="Map" resultType="egovMap">
     <![CDATA[
        SELECT Extent1.BRNCH_ID BRNCH_ID
@@ -3537,6 +3550,7 @@
                         ,WATER_SRC_TEMP
                         ,ADPT_USED
                         ,FAIL_LOC
+                        ,INST_CHKLST
                         ,FAIL_DEPT_CHK
     ) VALUES (SAL0047D_RESULT_ID_SEQ.NEXTVAL
             , #{entryId}
@@ -3568,6 +3582,7 @@
             , #{waterSourceTemp}
             , #{adptUsed}
             , #{failLct}
+            , #{instChklstCheckBox}
             , #{failDeptChk}
     )
   </insert>
