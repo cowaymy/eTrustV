@@ -52,6 +52,8 @@ public class InstallFailJobRequestForm {
 
   private String remark;
 
+  private String failBfDepWH;
+
   public String getSerialNo() {
     return serialNo;
   }
@@ -170,6 +172,14 @@ public class InstallFailJobRequestForm {
 
   public void setRemark(String remark) {
     this.remark = remark;
+  }
+
+  public String getFailBfDepWH() {
+    return failBfDepWH;
+  }
+
+  public void setFailBfDepWH(String failBfDepWH) {
+    this.failBfDepWH = failBfDepWH;
   }
 
   public static Map<String, Object> createMaps(InstallFailJobRequestForm installFailJobRequestForm) {
