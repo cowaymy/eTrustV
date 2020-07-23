@@ -26,6 +26,8 @@ public interface InstallationResultListService {
 
   List<EgovMap> adapterUsed();
 
+  List<EgovMap> instChkLst();
+
   List<EgovMap> failParent();
 
   List<EgovMap> selectDscCode();
