@@ -77,6 +77,7 @@ public class InstallationResultForm {
   private String roomTemp;
   private String waterSourceTemp;
   private String adptUsed;
+  private String instChkLst;
 
   public String getLpmRcd() {
     return lpmRcd;
@@ -132,6 +133,14 @@ public class InstallationResultForm {
 
   public void setAdptUsed(String adptUsed) {
     this.adptUsed = adptUsed;
+  }
+
+  public String getInstChkLst() {
+    return instChkLst;
+  }
+
+  public void setInstChkLst(String instChkLst) {
+    this.instChkLst = instChkLst;
   }
 
   public String getSerialRequireChkYn() {
