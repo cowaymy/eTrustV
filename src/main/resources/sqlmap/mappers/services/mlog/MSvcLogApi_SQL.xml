@@ -982,6 +982,12 @@
                    , TO_CHAR (SAL0047D.PSI) AS psi
                    , TO_CHAR (SAL0047D.LPM) AS lpm
                    , TO_CHAR (SYS0026M.STK_CTGRY_ID) AS prodCat
+                   , TO_CHAR (SAL0047D.VOLT) AS voltage
+                   , TO_CHAR (SAL0047D.TDS) AS tds
+                   , TO_CHAR (SAL0047D.ROOM_TEMP) AS roomTemp
+                   , TO_CHAR (SAL0047D.WATER_SRC_TEMP) AS waterSrcTemp
+                   , TO_CHAR (SAL0047D.ADPT_USED) AS adptUsed
+                   , TO_CHAR (SAL0047D.INST_CHKLST) AS instChkLst
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
@@ -1125,6 +1131,12 @@
          , TO_CHAR(LPM) AS lpm
          , TO_CHAR(PRODCAT) AS prodcat
          , TO_CHAR(SALES_PROMT_CDE) AS sales_Promotion_Cde
+         , TO_CHAR(VOLT) AS voltage
+         , TO_CHAR(TDS) AS tds
+         , TO_CHAR(ROOM_TEMP) AS roomTemp
+         , TO_CHAR(WATER_SRC_TEMP) AS waterSrcTemp
+         , TO_CHAR(ADPT_USED) AS adptUsed
+         , TO_CHAR(INST_CHKLST) AS instChkLst
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
