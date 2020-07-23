@@ -145,10 +145,10 @@ public class InterfaceCIMBApiController {
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMdd");
 		String dt = format1.format(today);
 
-		String temRootPath =  WAS_ENCRYPT_TEMP_ROOTPATH + dt + "/";
-		String encryptRootPath =  WAS_ENCRYPT_ROOTPATH + dt + "/";
-//		String temRootPath = "C:/Users/HQIT-HUIDING/Desktop/CIMBTEST/" + dt + "/";
-//		String encryptRootPath = "C:/Users/HQIT-HUIDING/Desktop/CIMBTEST/" + dt + "/";
+//		String temRootPath =  WAS_ENCRYPT_TEMP_ROOTPATH + dt + "/";
+//		String encryptRootPath =  WAS_ENCRYPT_ROOTPATH + dt + "/";
+		String temRootPath = "C:/Users/HQIT-HUIDING/Desktop/CIMBTEST/" + dt + "/";
+		String encryptRootPath = "C:/Users/HQIT-HUIDING/Desktop/CIMBTEST/" + dt + "/";
 
 		String pFileName = (String)params.get("fileName");
 
@@ -255,8 +255,8 @@ public class InterfaceCIMBApiController {
 
 			    if(rtn == 0){	// success encrypt
     			    LOGGER.debug("4-1. Send file to cimb ftp Start.");
-    			    LOGGER.debug("4-1(TEMP). Skip send file to cimb (UAT).");
-    				/*// 3. Send file to cimb ftp
+    			   // LOGGER.debug("4-1(TEMP). Skip send file to cimb (UAT).");
+    				// 3. Send file to cimb ftp
     			    File fileEncrypt = new File(encryptFilePath);
     			    LOGGER.debug(">>>fileEncrypt.getPath : " + fileEncrypt.getPath());
     				boolean bl3 = sendFileToCIMBFtps(new File[]{fileEncrypt});
@@ -269,7 +269,7 @@ public class InterfaceCIMBApiController {
     					dto.setMessage("Error send file to CIMB.");
     					return ResponseEntity.ok(dto);
     				}
-    				LOGGER.debug("4-2. Send file to cimb ftp End.");*/
+    				LOGGER.debug("4-2. Send file to cimb ftp End.");
 			    } else{
 		    		dto.setCode("4002");
 					dto.setMessage("Encrypt file rtn is not 0.[" + rtn + "]");
