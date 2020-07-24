@@ -13,89 +13,83 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class PRFailJobRequestForm {
 
-	@ApiModelProperty(value = "사용자 ID (예_CT123456)")
-	private String userId;
+  @ApiModelProperty(value = "사용자 ID (예_CT123456)")
+  private String userId;
 
-	@ApiModelProperty(value = "주문번호")
-	private String salesOrderNo;
+  @ApiModelProperty(value = "주문번호")
+  private String salesOrderNo;
 
-	@ApiModelProperty(value = "EX_BS00000 / AS00000")
-	private String serviceNo;
+  @ApiModelProperty(value = "EX_BS00000 / AS00000")
+  private String serviceNo;
 
-	private String failReasonCode;
+  private String failReasonCode;
 
+  private String transactionId;
 
+  private String failDeptChk;
 
+  public String getTransactionId() {
+    return transactionId;
+  }
 
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
 
+  public String getUserId() {
+    return userId;
+  }
 
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
 
+  public String getSalesOrderNo() {
+    return salesOrderNo;
+  }
 
-	private String transactionId;
+  public void setSalesOrderNo(String salesOrderNo) {
+    this.salesOrderNo = salesOrderNo;
+  }
 
-	
-	public String getTransactionId() {
-		return transactionId;
-	}
+  public String getServiceNo() {
+    return serviceNo;
+  }
 
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
-	}
+  public void setServiceNo(String serviceNo) {
+    this.serviceNo = serviceNo;
+  }
 
-	public String getUserId() {
-		return userId;
-	}
+  public String getFailReasonCode() {
+    return failReasonCode;
+  }
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+  public void setFailReasonCode(String failReasonCode) {
+    this.failReasonCode = failReasonCode;
+  }
 
-	public String getSalesOrderNo() {
-		return salesOrderNo;
-	}
+  public String getFailDeptChk() {
+    return failDeptChk;
+  }
 
-	public void setSalesOrderNo(String salesOrderNo) {
-		this.salesOrderNo = salesOrderNo;
-	}
+  public void setFailDeptChk(String failDeptChk) {
+    this.failDeptChk = failDeptChk;
+  }
 
-	public String getServiceNo() {
-		return serviceNo;
-	}
+  public static Map<String, Object> createMaps(PRFailJobRequestForm pRFailJobRequestForm) {
 
-	public void setServiceNo(String serviceNo) {
-		this.serviceNo = serviceNo;
-	}
+    List<Map<String, Object>> list = new ArrayList<>();
 
+    Map<String, Object> map = null;
 
-	
+    // map = BeanConverter.toMap(pRReAppointmentRequestForm, "signData", "partList");
+    // map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
 
+    map = BeanConverter.toMap(pRFailJobRequestForm);
 
-	public String getFailReasonCode() {
-		return failReasonCode;
-	}
+    // list.add(map);
 
-	public void setFailReasonCode(String failReasonCode) {
-		this.failReasonCode = failReasonCode;
-	}
+    return map;
+  }
 
-	
-	
-	
-	public static Map<String, Object> createMaps(PRFailJobRequestForm pRFailJobRequestForm) {
-		
-		List<Map<String, Object>> list = new ArrayList<>();
-
-			Map<String, Object> map=null;
-			
-			
-//				map = BeanConverter.toMap(pRReAppointmentRequestForm, "signData", "partList");
-//				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
-
-			map = BeanConverter.toMap(pRFailJobRequestForm);
-
-//				list.add(map);
-				
-				return map;
-	}
-	
 }
