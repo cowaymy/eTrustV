@@ -2596,11 +2596,13 @@
       LEFT JOIN SYS0038M S1 ON S1.STUS_CODE_ID = asm.AS_STUS_ID
       WHERE asm.AS_ID IN (SELECT MAX(AS_ID)
                           FROM SVC0001D
-                          WHERE AS_SO_ID IN ( SELECT SALES_ORD_ID
+                          WHERE
+                          AS_STUS_ID IN (1 , 19) AND
+                          AS_SO_ID IN ( SELECT SALES_ORD_ID
                                               FROM SAL0001D
                                               WHERE SALES_ORD_NO = #{salesOrderNo})
-                                                AND EXTRACT(MONTH FROM AS_REQST_DT) = EXTRACT(MONTH FROM SYSDATE)
-                                                AND EXTRACT(YEAR FROM AS_REQST_DT) = EXTRACT(YEAR FROM SYSDATE)
+                                                --AND EXTRACT(MONTH FROM AS_REQST_DT) = EXTRACT(MONTH FROM SYSDATE)
+                                                --AND EXTRACT(YEAR FROM AS_REQST_DT) = EXTRACT(YEAR FROM SYSDATE)
                                                 GROUP BY AS_SO_ID)
 
     ]]>
