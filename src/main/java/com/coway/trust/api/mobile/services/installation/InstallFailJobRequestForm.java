@@ -54,6 +54,16 @@ public class InstallFailJobRequestForm {
 
   private String failBfDepWH;
 
+  private String failDeptChk;
+
+  public String getFailDeptChk() {
+    return failDeptChk;
+  }
+
+  public void setFailDeptChk(String failDeptChk) {
+    this.failDeptChk = failDeptChk;
+  }
+
   public String getSerialNo() {
     return serialNo;
   }
