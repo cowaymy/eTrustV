@@ -347,7 +347,7 @@
               </td>
               <th scope="row"><spring:message code='service.title.WaterSourceTemp' /><span class="must" id="m5"> *</span></th>
               <td>
-                <input type="text" title="" placeholder="<spring:message code='service.title.WaterSourceTemp' />" class="w100p" id="WaterSourceTemp" name="WaterSourceTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur="validate3(this)" value="<c:out value="${installInfo.adptUsed}"/>" />
+                <input type="text" title="" placeholder="<spring:message code='service.title.WaterSourceTemp' />" class="w100p" id="WaterSourceTemp" name="WaterSourceTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur="validate3(this)" value="<c:out value="${installInfo.waterSrcTemp}"/>" />
               </td>
             </tr>
             <tr>
