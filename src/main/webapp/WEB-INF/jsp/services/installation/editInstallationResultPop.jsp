@@ -362,9 +362,7 @@
             <tr>
               <th scope="row"><spring:message code='service.title.Remark' /></th>
               <td colspan="3">
-                <textarea id="remark" name="remark" cols="5" rows="5" style="width: 100%; height: 100px">
-         <c:out value="${installInfo.rem}" />
-        </textarea>
+                <textarea id="remark" name="remark" cols="5" rows="5" style="width: 100%; height: 100px"><c:out value="${installInfo.rem}" /></textarea>
               </td>
             </tr>
             <tr>
