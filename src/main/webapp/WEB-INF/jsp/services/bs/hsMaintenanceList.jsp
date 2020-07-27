@@ -200,11 +200,11 @@ var TODAY_DD      = "${toDay}";
            width : 120
         },
 
-       /* {
+        {
            dataField : "addrDtl",
            headerText : "Installation Full Address",
            width : 300
-        }, */
+        },
 
 ////////////////ADDITIONAL FIELD////////////////////
 
