@@ -71,8 +71,8 @@
 		    project2.serial_require_chk_yn,
 		    project2.install_dt,
 		    project2.state,
-		    project2.area
-		   -- project2.addr_dtl
+		    project2.area,
+		    project2.addr_dtl
 		FROM
 		    (
 		        SELECT DISTINCT
