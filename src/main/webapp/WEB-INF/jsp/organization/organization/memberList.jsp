@@ -872,7 +872,9 @@ $(function() {
         <dt><spring:message code="sal.title.text.link" /></dt>
         <dd>
         <ul class="btns">
-            <li><p class="link_btn"><a href="#" id="hpYSListingBtn">HP Raw Listing</a></p></li>
+            <c:if test="${PAGE_AUTH.funcUserDefine11 == 'Y'}">
+                <li><p class="link_btn"><a href="#" id="hpYSListingBtn">HP Raw Listing</a></p></li>
+            </c:if>
             <c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
                 <li><p class="link_btn"><a href="#" id="getHpApplicantURL">HP Applicant e-Agreement URL</a></li>
             </c:if>
