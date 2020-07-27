@@ -2202,8 +2202,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("adptUsed", CommonUtils.nvl(params.get("adptUsed")).toString());
     installResult.put("failId", CommonUtils.nvl(params.get("failChild")).toString());
     installResult.put("failLct", CommonUtils.nvl(params.get("failParent")).toString());
-    installResult.put("instChklstCheckBox", (!"on".equals(CommonUtils.nvl(params.get("instChklstCheckBox")).toString())) ? "Y" : "N");
-    installResult.put("failDeptChk", (!"on".equals(CommonUtils.nvl(params.get("failDeptChk")).toString())) ? "Y" : "N");
+    installResult.put("instChklstCheckBox", ("Y".equals(CommonUtils.nvl(params.get("instChklstCheckBox")).toString())) ? "Y" : "N");
+    installResult.put("failDeptChk", ("Y".equals(CommonUtils.nvl(params.get("failDeptChk")).toString())) ? "Y" : "N");
 
     logger.debug("========================INSTALLATION RESULT PRM===========================");
     logger.debug("INSTALLATION RESULT : {}", installResult);
