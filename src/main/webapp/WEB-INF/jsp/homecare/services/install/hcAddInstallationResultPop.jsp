@@ -979,11 +979,6 @@ var serialGubun = "1";
       <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_dateHc w100p" id="nextCallDate" name="nextCallDate" /></td>
      </tr>
      <tr>
-      <td colspan="4">
-         <label><span>Fail BEFORE Depart from Warehouse ? </span></label>
-    <label><input type="radio" id="failDeptChk1" name="failDeptChk" value="Y"  /><span><spring:message code="sal.title.text.yes" /></span></label>
-    <label><input type="radio" id="failDeptChk2" name="failDeptChk" value="N"/><span><spring:message code="sal.title.text.no" /></span></label>
-    </td>
 </tr>
     </tbody>
    </table>
@@ -995,11 +990,15 @@ var serialGubun = "1";
      <col style="width: 110px" />
      <col style="width: *" />
     </colgroup>
-    <tbody>
+<tbody>
      <tr>
-      <th scope="row"><spring:message code='service.title.Remark' /></th>
-      <td><input type="text" title="" placeholder="<spring:message code='service.title.Remark' />" class="w100p"
-       id="remark" name="remark" /></td>
+       <th scope="row" ><spring:message code='service.title.Remark' /></th>
+       <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.Remark' />" class="w100p"
+        id="remark" name="remark" /></td>
+     </tr>
+     <tr>
+       <td colspan="4"><label><input type="checkbox" id="failDeptChk" name="failDeptChk" /><span id="failDeptChkDesc" name="failDeptChkDesc"><spring:message code='sys.btn.failBfrDepartFromWarehouse' /> </span></label> </td>
+     </td>
      </tr>
     </tbody>
    </table>
