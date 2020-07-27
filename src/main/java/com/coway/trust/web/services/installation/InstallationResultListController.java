@@ -36,19 +36,7 @@ import com.coway.trust.biz.services.orderCall.OrderCallListService;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /*********************************************************************************************
- * DATE            PIC      VERSION    COMMENT
- * -----------------------------------------------------------------------------
- * 31/01/2019   ONGHC   1.0.1       - Restructure File
- * 05/03/2019   ONGHC   1.0.2       - To Show Error Code for SP
- * 06/03/2019   ONGHC   1.0.3       - Create getSalStat
- * 18/03/2019   ONGHC   1.0.4       - Remove runInstSp 3rd Part
- * 22/03/2019   ONGHC   1.0.5       - Add Checking on SP_LOGISTIC_REQUEST's Data
- * 09/04/2019   ONGHC   1.0.6       - Amend installationNotePop to add param
- * 24/04/2019   ONGHC   1.0.7       - Amend insertInstallationResult_2 to accept 741 code
- * 22/07/2019   ONGHC   1.0.8       - Amend insertInstallationResult_2 add installation stock checking
- * 14/02/2020   ONGHC   1.0.9       - Amend editInstallationPopup
- * 17/02/2020   THUNPY  1.0.10     - Add installationCallLogRawPop
- * 01/07/2020   ONGHC   1.0.11     - Amend assignCtOrderListSaveSerial and assignCtOrderListSave
+ * DATE PIC VERSION COMMENT ----------------------------------------------------------------------------- 31/01/2019 ONGHC 1.0.1 - Restructure File 05/03/2019 ONGHC 1.0.2 - To Show Error Code for SP 06/03/2019 ONGHC 1.0.3 - Create getSalStat 18/03/2019 ONGHC 1.0.4 - Remove runInstSp 3rd Part 22/03/2019 ONGHC 1.0.5 - Add Checking on SP_LOGISTIC_REQUEST's Data 09/04/2019 ONGHC 1.0.6 - Amend installationNotePop to add param 24/04/2019 ONGHC 1.0.7 - Amend insertInstallationResult_2 to accept 741 code 22/07/2019 ONGHC 1.0.8 - Amend insertInstallationResult_2 add installation stock checking 14/02/2020 ONGHC 1.0.9 - Amend editInstallationPopup 17/02/2020 THUNPY 1.0.10 - Add installationCallLogRawPop 01/07/2020 ONGHC 1.0.11 - Amend assignCtOrderListSaveSerial and assignCtOrderListSave
  *********************************************************************************************/
 
 @Controller
@@ -815,29 +803,28 @@ public class InstallationResultListController {
   }
 
   @RequestMapping(value = "/adapterList.do", method = RequestMethod.GET)
-  public ResponseEntity<List<EgovMap>> adapterList(@RequestParam Map<String, Object> params,
-		  HttpServletRequest request, ModelMap model) {
+  public ResponseEntity<List<EgovMap>> adapterList(@RequestParam Map<String, Object> params, HttpServletRequest request,
+      ModelMap model) {
 
-	  logger.debug("=====================assignCtList=======================");
-	  logger.debug(" PARAM :: " + params.toString());
-	  logger.debug("=====================assignCtList=======================");
-	  List<EgovMap> adapterUsed = installationResultListService.adapterUsed();
+    logger.debug("=====================assignCtList=======================");
+    logger.debug(" PARAM :: " + params.toString());
+    logger.debug("=====================assignCtList=======================");
+    List<EgovMap> adapterUsed = installationResultListService.adapterUsed();
 
-	  return ResponseEntity.ok(adapterUsed);
+    return ResponseEntity.ok(adapterUsed);
   }
 
   @RequestMapping(value = "/instChkLst.do", method = RequestMethod.GET)
-  public ResponseEntity<List<EgovMap>> instChkLst(@RequestParam Map<String, Object> params,
-		  HttpServletRequest request, ModelMap model) {
+  public ResponseEntity<List<EgovMap>> instChkLst(@RequestParam Map<String, Object> params, HttpServletRequest request,
+      ModelMap model) {
 
-	  List<EgovMap> instChkLst = installationResultListService.instChkLst();
+    List<EgovMap> instChkLst = installationResultListService.instChkLst();
 
-	  logger.debug("=====================instChkLst=======================");
-	  logger.debug(" instChkLst :: " + instChkLst);
-	  logger.debug("=====================instChkLst=======================");
-	  return ResponseEntity.ok(instChkLst);
+    logger.debug("=====================instChkLst=======================");
+    logger.debug(" instChkLst :: " + instChkLst);
+    logger.debug("=====================instChkLst=======================");
+    return ResponseEntity.ok(instChkLst);
   }
-
 
   @RequestMapping(value = "/assignCtOrderList.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> assignCtOrderList(@RequestParam Map<String, Object> params,
@@ -917,10 +904,7 @@ public class InstallationResultListController {
     message.setMessage(content);
 
     /*
-     * if (rtnValue == -1) { message.setCode(AppConstants.FAIL);
-     * message.setMessage("Can't transfer CT to the Installation order"); } else
-     * { message.setCode(AppConstants.SUCCESS); message.setData(99);
-     * message.setMessage(""); }
+     * if (rtnValue == -1) { message.setCode(AppConstants.FAIL); message.setMessage("Can't transfer CT to the Installation order"); } else { message.setCode(AppConstants.SUCCESS); message.setData(99); message.setMessage(""); }
      */
 
     logger.debug("message : {}", message);
@@ -1084,7 +1068,7 @@ public class InstallationResultListController {
 
     EgovMap installInfo = installationResultListService.selectInstallInfo(params);
     model.addAttribute("installInfo", installInfo);
-    logger.debug("param param param "+installInfo);
+    logger.debug("param param param " + installInfo);
 
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
     model.put("orderDetail", orderDetail);
@@ -1183,17 +1167,17 @@ public class InstallationResultListController {
     return ResponseEntity.ok(list);
   }
 
-	@RequestMapping(value = "/selectFailChild.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>>selectFailChild (@RequestParam Map<String, Object> params, ModelMap model){
-		logger.debug("selectFailChild params : {}", params);
-		List<EgovMap> selectFailChild = installationResultListService.selectFailChild(params);
+  @RequestMapping(value = "/selectFailChild.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectFailChild(@RequestParam Map<String, Object> params, ModelMap model) {
+    logger.debug("selectFailChild params : {}", params);
+    List<EgovMap> selectFailChild = installationResultListService.selectFailChild(params);
 
-	    logger.debug("==========================/selectFailChild.do=================================");
-	    logger.debug("selectFailChild params : {}", selectFailChild);
-	    logger.debug("==========================/selectFailChild.do=================================");
+    logger.debug("==========================/selectFailChild.do=================================");
+    logger.debug("selectFailChild params : {}", selectFailChild);
+    logger.debug("==========================/selectFailChild.do=================================");
 
-		return ResponseEntity.ok(selectFailChild);
-	}
+    return ResponseEntity.ok(selectFailChild);
+  }
 
   // KR-OHK add serial add
   @RequestMapping(value = "/addInstallationSerial.do", method = RequestMethod.POST)
@@ -1259,7 +1243,8 @@ public class InstallationResultListController {
 
     successCnt = Integer.parseInt(returnValue.get("successCnt").toString());
     failCnt = Integer.parseInt(returnValue.get("failCnt").toString());
-    content = "[ Total Complete CT's Job Transfer : " + successCnt + ", Total Fail CT's Job Transfer : " + failCnt + " ]";
+    content = "[ Total Complete CT's Job Transfer : " + successCnt + ", Total Fail CT's Job Transfer : " + failCnt
+        + " ]";
 
     List<String> successList = new ArrayList<String>();
     List<String> failList = new ArrayList<String>();
@@ -1292,10 +1277,7 @@ public class InstallationResultListController {
     message.setMessage(content);
 
     /*
-     * if (rtnValue == -1) { message.setCode(AppConstants.FAIL);
-     * message.setMessage("Can't transfer CT to the Installation order"); } else
-     * { message.setCode(AppConstants.SUCCESS); message.setData(99);
-     * message.setMessage(""); }
+     * if (rtnValue == -1) { message.setCode(AppConstants.FAIL); message.setMessage("Can't transfer CT to the Installation order"); } else { message.setCode(AppConstants.SUCCESS); message.setData(99); message.setMessage(""); }
      */
 
     logger.debug("message : {}", message);
