@@ -707,7 +707,7 @@ entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                         , project2.INSTALL_DT
                         , project2.STATE
                         , project2.AREA
-                        , project2.ADDR_DTL
+                        , project2.addr_dtl ||', '|| project2.street ||', '|| project2.area ||', '|| project2.postcode ||' '|| project2.city ||', '|| project2.state addr_dtl
 
           FROM (SELECT  DISTINCT hs.no AS no
                               , hs.stus_code_id AS stus_code_id
@@ -724,6 +724,8 @@ entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                               , ac.mem_code AS action_cody
                               , mg.state
                               , mg.area
+                              , mg.city
+                              , mg.postcode
                               , cu.cust_id AS cust_id
                               , STUS.CODE AS cody_status_nm
                               , br.brnch_id AS brnch_id
@@ -735,6 +737,7 @@ entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                               , CASE WHEN HS.CRT_USER_ID = '1111' THEN '' ELSE USR.USER_NAME END AS CRT_USER_ID
                               , LOC.SERIAL_REQUIRE_CHK_YN
                               , ad.ADDR_DTL
+                              , ad.street
                               , DECODE (ir2.install_dt,NULL, '01/01/1900', TO_CHAR (ir2.install_dt, 'DD/MM/YYYY')) install_dt
 
                 FROM SAL0001D sal01

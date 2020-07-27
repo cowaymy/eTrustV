@@ -72,7 +72,7 @@
 		    project2.install_dt,
 		    project2.state,
 		    project2.area,
-		    project2.addr_dtl
+		    project2.addr_dtl ||', '|| project2.street ||', '|| project2.area ||', '|| project2.postcode ||' '|| project2.city ||', '|| project2.state addr_dtl
 		FROM
 		    (
 		        SELECT DISTINCT
@@ -92,6 +92,8 @@
 		            cd.mem_id,
 		            mg.state,
 		            mg.area,
+		            mg.city,
+                    mg.postcode,
 		            cu.cust_id AS cust_id,
 		            stus.code AS cody_status_nm,
 		            br.brnch_id AS brnch_id,
@@ -107,6 +109,7 @@
 		            AS crt_user_id,
 		            loc.serial_require_chk_yn,
 		            ad.addr_dtl,
+                    ad.street,
 		            DECODE(
 		                ir2.install_dt,
 		                NULL,
@@ -156,7 +159,7 @@
                       </when>
                       <otherwise>
                         <if test="txtSalesOrder != null and txtSalesOrder != ''">
-                          ( SO.SALES_ORD_NO = #{txtSalesOrder})
+                         AND ( SO.SALES_ORD_NO = #{txtSalesOrder})
                         </if>
                       </otherwise>
                     </choose>
