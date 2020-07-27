@@ -9,6 +9,7 @@
  26/02/2020  ONGHC  1.0.3          Add PSI & LPM Field
  10/06/2020  ONGHC  1.0.4          Add PSI & LPM Field onblur Checking
  22/07/2020  FARUQ   1.0.5         Add volt, TDS, roomTemp, WaterSoruceTemp, failParent, failChild, instChkLst
+ 27/07/2020  FARUQ   1.0.6         Amend Current Feature
  -->
 <script type="text/javaScript">
   $(document).ready(
@@ -90,9 +91,11 @@
           $("#addInstallForm #m13").hide();
           $("#addInstallForm #m14").hide();
           $("#addInstallForm #m17").hide();
-          $("#addInstallForm #grid_wrap_instChk_view").hide();
-          $("#addInstallForm #instChklstCheckBox").hide();
-          $("#addInstallForm #instChklstDesc").hide();
+          if ("${orderInfo.stkCtgryId}" == "54") {
+            $("#addInstallForm #grid_wrap_instChk_view").hide();
+            $("#addInstallForm #instChklstCheckBox").hide();
+            $("#addInstallForm #instChklstDesc").hide();
+          }
         } else {
             $("#addInstallForm #m8").show();
             $("#addInstallForm #m9").show();
@@ -166,9 +169,11 @@
             $("#addInstallForm #m4").show();
             $("#addInstallForm #m5").show();
             $("#addInstallForm #m17").show();
-            $("#addInstallForm #grid_wrap_instChk_view").show();
-            $("#addInstallForm #instChklstCheckBox").show();
-            $("#addInstallForm #instChklstDesc").show();
+            if ("${orderInfo.stkCtgryId}" == "54") {
+              $("#addInstallForm #grid_wrap_instChk_view").show();
+              $("#addInstallForm #instChklstCheckBox").show();
+              $("#addInstallForm #instChklstDesc").show();
+            }
             $("#nextCallDate").val("");
 
           } else {
@@ -186,9 +191,11 @@
             $("#addInstallForm #m13").hide();
             $("#addInstallForm #m14").hide();
             $("#addInstallForm #m17").hide();
-            $("#addInstallForm #grid_wrap_instChk_view").hide();
-            $("#addInstallForm #instChklstCheckBox").hide();
-            $("#addInstallForm #instChklstDesc").hide();
+            if ("${orderInfo.stkCtgryId}" == "54") {
+              $("#addInstallForm #grid_wrap_instChk_view").hide();
+              $("#addInstallForm #instChklstCheckBox").hide();
+              $("#addInstallForm #instChklstDesc").hide();
+            }
 
             $("#addInstallForm #m6").show();
             $("#addInstallForm #m7").show();
@@ -247,13 +254,13 @@
           $("#m9").show();
           $("#lpmRcd").attr("disabled", false);
           $("#m10").hide();
-          $("#Volt").attr("disabled", true);
+          $("#volt").attr("disabled", true);
           $("#m11").hide();
-          $("#TDS").attr("disabled", true);
+          $("#tds").attr("disabled", true);
           $("#m12").hide();
-          $("#RoomTemp").attr("disabled", true);
+          $("#roomTemp").attr("disabled", true);
           $("#m13").hide();
-          $("#WaterSourceTemp").attr("disabled", true);
+          $("#waterSourceTemp").attr("disabled", true);
           $("#m14").hide();
           $("#adptUsed").attr("disabled", true);
         } else {
@@ -262,13 +269,13 @@
           $("#m9").show();
           $("#lpmRcd").attr("disabled", false);
           $("#m10").show();
-          $("#Volt").attr("disabled", false);
+          $("#volt").attr("disabled", false);
           $("#m11").show();
-          $("#TDS").attr("disabled", false);
+          $("#tds").attr("disabled", false);
           $("#m12").show();
-          $("#RoomTemp").attr("disabled", false);
+          $("#roomTemp").attr("disabled", false);
           $("#m13").show();
-          $("#WaterSourceTemp").attr("disabled", false);
+          $("#waterSourceTemp").attr("disabled", false);
           $("#m14").show();
           $("#adptUsed").attr("disabled", false);
         }
@@ -278,13 +285,15 @@
         $("#m9").hide();
         $("#lpmRcd").attr("disabled", true);
         $("#m10").show();
-        $("#Volt").attr("disabled", true);
+        $("#volt").attr("disabled", true);
         $("#m11").show();
-        $("#TDS").attr("disabled", true);
+        $("#tds").attr("disabled", true);
         $("#m12").show();
-        $("#RoomTemp").attr("disabled", true);
+        $("#roomTemp").attr("disabled", true);
         $("#m13").show();
-        $("#WaterSourceTemp").attr("disabled", true);
+        $("#waterSourceTemp").attr("disabled", true);
+        $("#m14").hide();
+        $("#adptUsed").attr("disabled", true);
       }
       if ("${orderInfo.stkCtgryId}" == "55"){
           notMandatoryForAP();
@@ -670,9 +679,7 @@
       <spring:message code='service.title.AddInstallationResult' />
     </h1>
     <ul class="right_opt">
-      <li><p class="btn_blue2">
-          <a href="#"><spring:message code='expense.CLOSE' /></a>
-        </p></li>
+      <li><p class="btn_blue2"><a href="#"><spring:message code='expense.CLOSE' /></a></p></li>
     </ul>
   </header>
   <!-- pop_header end -->
@@ -724,67 +731,103 @@
           <tbody>
             <tr>
               <th scope="row"><spring:message code='service.title.Type' /></th>
-              <td><span><c:out value="${installResult.codename1}" /></span></td>
+              <td>
+                <span><c:out value="${installResult.codename1}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.InstallNo' /></th>
-              <td><span><c:out value="${installResult.installEntryNo}" /></span></td>
+              <td>
+                <span><c:out value="${installResult.installEntryNo}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.OrderNo' /></th>
-              <td><span><c:out value="${installResult.salesOrdNo}" /></span></td>
+              <td>
+                <span><c:out value="${installResult.salesOrdNo}" /></span>
+              </td>
             </tr>
             <tr>
               <th scope="row"><spring:message code='service.title.RefNo' /></th>
-              <td><span><c:out value="${installResult.refNo}" /></span></td>
+              <td>
+                <span><c:out value="${installResult.refNo}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.OrderDate' /></th>
-              <td><span><c:out value="${installResult.salesDt}" /></span></td>
+              <td>
+                <span><c:out value="${installResult.salesDt}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.ApplicationType' /></th>
               <c:if test="${installResult.codeid1  == '257' }">
-                <td><span><c:out value="${orderInfo.codeName}" /></span></td>
+                <td>
+                  <span><c:out value="${orderInfo.codeName}" /></span>
+                </td>
               </c:if>
               <c:if test="${installResult.codeid1  == '258' }">
-                <td><span><c:out value="${orderInfo.c5}" /></span></td>
+                <td>
+                  <span><c:out value="${orderInfo.c5}" /></span>
+                </td>
               </c:if>
             </tr>
             <tr>
               <th scope="row"><spring:message code='service.title.Remark' /></th>
-              <td colspan="5"><span><c:out value="${orderInfo.rem}" /></span></td>
+              <td colspan="5">
+                <span><c:out value="${orderInfo.rem}" /></span>
+              </td>
             </tr>
             <tr>
               <th scope="row"><spring:message code='service.title.LastUpdatedBy' /></th>
-              <td><span><c:out value="${installResult.userName}" /></span></td>
+              <td>
+                <span><c:out value="${installResult.userName}" /></span>
+              </td>
               <th scope="row">Product</th>
               <c:if test="${installResult.codeid1  == '257' }">
-                <td><span><c:out value="${orderInfo.stkCode} - ${orderInfo.stkDesc} " /></span></td>
+                <td>
+                  <span><c:out value="${orderInfo.stkCode} - ${orderInfo.stkDesc} " /></span>
+                </td>
               </c:if>
               <c:if test="${installResult.codeid1  == '258' }">
-                <td><span><c:out value="${orderInfo.c6} - ${orderInfo.c7} " /></span></td>
+                <td>
+                  <span><c:out value="${orderInfo.c6} - ${orderInfo.c7} " /></span>
+                </td>
               </c:if>
               <th scope="row"><spring:message code='service.title.Promotion' /></th>
               <c:if test="${installResult.codeid1  == '257' }">
-                <td><span><c:out value="${orderInfo.c3} - ${orderInfo.c4} " /></span></td>
+                <td>
+                  <span><c:out value="${orderInfo.c3} - ${orderInfo.c4} " /></span>
+                </td>
               </c:if>
               <c:if test="${installResult.codeid1  == '258' }">
-                <td><span><c:out value="${orderInfo.c9} - ${orderInfo.c10} " /></span></td>
+                <td>
+                  <span><c:out value="${orderInfo.c9} - ${orderInfo.c10} " /></span>
+                </td>
               </c:if>
             </tr>
             <tr>
               <th scope="row"><spring:message code='service.title.Price' /></th>
               <c:if test="${installResult.codeid1  == '257' }">
-                <td><span><c:out value="${orderInfo.c5}" /></span></td>
+                <td>
+                  <span><c:out value="${orderInfo.c5}" /></span>
+                </td>
               </c:if>
               <c:if test="${installResult.codeid1  == '258' }">
-                <td><span><c:out value="${orderInfo.c12}" /></span></td>
+                <td>
+                  <span><c:out value="${orderInfo.c12}" /></span>
+                </td>
               </c:if>
               <th scope="row"><spring:message code='service.title.PV' /></th>
               <c:if test="${installResult.codeid1  == '257' }">
-                <td><span><c:out value="${orderInfo.c6}" /></span></td>
+                <td>
+                  <span><c:out value="${orderInfo.c6}" /></span>
+                </td>
               </c:if>
               <c:if test="${installResult.codeid1  == '258' }">
-                <td><span><c:out value="${orderInfo.c13}" /></span></td>
+                <td>
+                  <span><c:out value="${orderInfo.c13}" /></span>
+                </td>
               </c:if>
               <th scope="row">Grade</th>
-              <td><span> <c:if test="${installResult.grade == null}">A</c:if> <c:if test="${installResult.grade != null}">
+              <td>
+                <span> <c:if test="${installResult.grade == null}">A</c:if> <c:if test="${installResult.grade != null}">
                     <c:out value="${installResult.grade}" />
                   </c:if>
-              </span></td>
+                </span>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -814,40 +857,66 @@
           <tbody>
             <tr>
               <th scope="row"><spring:message code='service.title.CustomerName' /></th>
-              <td><span><c:out value="${customerInfo.name}" /></span></td>
+              <td>
+                <span><c:out value="${customerInfo.name}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.CustomerNRIC' /></th>
-              <td><span><c:out value="${customerInfo.nric}" /></span></td>
+              <td>
+                <span><c:out value="${customerInfo.nric}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.Gender' /></th>
-              <td><span><c:out value="${customerInfo.gender}" /></span></td>
+              <td>
+                <span><c:out value="${customerInfo.gender}" /></span>
+              </td>
             </tr>
             <tr>
               <th scope="row" rowspan="4"><spring:message code='service.title.MailingAddress' /></th>
-              <td colspan="5"><span></span></td>
+              <td colspan="5">
+                <span></span>
+              </td>
             </tr>
             <tr>
-              <td colspan="5"><span></span></td>
+              <td colspan="5">
+                <span></span>
+              </td>
             </tr>
             <tr>
-              <td colspan="5"><span></span></td>
+              <td colspan="5">
+                <span></span>
+              </td>
             </tr>
             <tr>
-              <td colspan="5"><span></span></td>
+              <td colspan="5">
+                <span></span>
+              </td>
             </tr>
             <tr>
               <th scope="row"><spring:message code='service.title.ContactPerson' /></th>
-              <td><span><c:out value="${customerContractInfo.name}" /></span></td>
+              <td>
+                <span><c:out value="${customerContractInfo.name}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.Gender' /></th>
-              <td><span><c:out value="${customerContractInfo.gender}" /></span></td>
+              <td>
+                <span><c:out value="${customerContractInfo.gender}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.ResidenceNo' /></th>
-              <td><span><c:out value="${customerContractInfo.telR}" /></span></td>
+              <td>
+                <span><c:out value="${customerContractInfo.telR}" /></span>
+              </td>
             </tr>
             <tr>
               <th scope="row"><spring:message code='service.title.MobileNo' /></th>
-              <td><span><c:out value="${customerContractInfo.telM1}" /></span></td>
+              <td>
+                <span><c:out value="${customerContractInfo.telM1}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.OfficeNo' /></th>
-              <td><span><c:out value="${customerContractInfo.telO}" /></span></td>
+              <td>
+                <span><c:out value="${customerContractInfo.telO}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.OfficeNo' /></th>
-              <td><span><c:out value="${customerContractInfo.telF}" /></span></td>
+              <td>
+                <span><c:out value="${customerContractInfo.telF}" /></span>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -877,26 +946,40 @@
           <tbody>
             <tr>
               <th scope="row"><spring:message code='service.title.RequestInstallDate' /></th>
-              <td><span><c:out value="${installResult.c1}" /></span></td>
+              <td>
+                <span><c:out value="${installResult.c1}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.AssignedCT' /></th>
-              <td colspan="3"><span><c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}" /></span></td>
+              <td colspan="3">
+                <span><c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}" /></span>
+              </td>
             </tr>
             <tr>
               <th scope="row" rowspan="4"><spring:message code='service.title.InstallationAddress' /></th>
-              <td colspan="5"><span><c:out value="${installation.address}" /></span></td>
+              <td colspan="5">
+                <span><c:out value="${installation.address}" /></span>
+              </td>
             </tr>
             <tr>
-              <td colspan="5"><span>${installResult.city}</span></td>
+              <td colspan="5">
+                <span>${installResult.city}</span>
+              </td>
             </tr>
             <tr>
-              <td colspan="5"><span>${installResult.area}</span></td>
+              <td colspan="5">
+                <span>${installResult.area}</span>
+              </td>
             </tr>
             <tr>
-              <td colspan="5"><span>${installResult.country}</span></td>
+              <td colspan="5">
+                <span>${installResult.country}</span>
+              </td>
             </tr>
             <tr>
               <th scope="row"><spring:message code='service.title.SpecialInstruction' /></th>
-              <td><span><c:out value="${installation.instct}" /> </span></td>
+              <td>
+                <span><c:out value="${installation.instct}" /> </span>
+              </td>
               <th scope="row"><spring:message code='service.title.PreferredDate' /></th>
               <td></td>
               <th scope="row"><spring:message code='service.title.PreferredTime' /></th>
@@ -926,19 +1009,29 @@
           <tbody>
             <tr>
               <th scope="row"><spring:message code='service.title.Name' /></th>
-              <td><span><c:out value="${installationContract.name}" /></span></td>
+              <td>
+                <span><c:out value="${installationContract.name}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.Gender' /></th>
               <td></td>
               <th scope="row"><spring:message code='service.title.ResidenceNo' /></th>
-              <td><span><c:out value="${installationContract.telR}" /></span></td>
+              <td>
+                <span><c:out value="${installationContract.telR}" /></span>
+              </td>
             </tr>
             <tr>
               <th scope="row"><spring:message code='service.title.MobileNo' /></th>
-              <td><span><c:out value="${installationContract.telM1}" /></span></td>
+              <td>
+                <span><c:out value="${installationContract.telM1}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.OfficeNo' /></th>
-              <td><span><c:out value="${installationContract.telO}" /></span></td>
+              <td>
+                <span><c:out value="${installationContract.telO}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.FaxNo' /></th>
-              <td><span><c:out value="${installationContract.telF}" /></span></td>
+              <td>
+                <span><c:out value="${installationContract.telF}" /></span>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -968,27 +1061,45 @@
           <tbody>
             <tr>
               <th scope="row"><spring:message code='service.title.HP_CodyCode' /></th>
-              <td><span><c:out value="${hpMember.memCode}" /></span></td>
+              <td>
+                <span><c:out value="${hpMember.memCode}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.HP_CodyName' /></th>
-              <td><span><c:out value="${hpMember.name1}" /></span></td>
+              <td>
+                <span><c:out value="${hpMember.name1}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.HP_CodyNRIC' /></th>
-              <td><span><c:out value="${hpMember.nric}" /></span></td>
+              <td>
+                <span><c:out value="${hpMember.nric}" /></span>
+              </td>
             </tr>
             <tr>
               <th scope="row"><spring:message code='service.title.MobileNo' /></th>
-              <td><span><c:out value="${hpMember.telMobile}" /></span></td>
+              <td>
+                <span><c:out value="${hpMember.telMobile}" /></span>
+              </td>
               <th scope="row"><spring:message code='sales.HouseNo' /></th>
-              <td><span><c:out value="${hpMember.telHuse}" /></span></td>
+              <td>
+                <span><c:out value="${hpMember.telHuse}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.OfficeNo' /></th>
-              <td><span><c:out value="${hpMember.telOffice}" /></span></td>
+              <td>
+                <span><c:out value="${hpMember.telOffice}" /></span>
+              </td>
             </tr>
             <tr>
               <th scope="row"><spring:message code='service.title.DepartmentCode' /></th>
-              <td><span><c:out value="${salseOrder.deptCode}" /></span></td>
+              <td>
+                <span><c:out value="${salseOrder.deptCode}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.GroupCode' /></th>
-              <td><span><c:out value="${salseOrder.grpCode}" /></span></td>
+              <td>
+                <span><c:out value="${salseOrder.grpCode}" /></span>
+              </td>
               <th scope="row"><spring:message code='service.title.OrganizationCode' /></th>
-              <td><span><c:out value="${salseOrder.orgCode}" /></span></td>
+              <td>
+                <span><c:out value="${salseOrder.orgCode}" /></span>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -1049,7 +1160,8 @@
         <tbody>
           <tr>
             <th scope="row"><spring:message code='service.title.InstallStatust' /><span name="m1" id="m1" class="must">*</span></th>
-            <td><select class="w100p" id="installStatus" name="installStatus">
+            <td>
+              <select class="w100p" id="installStatus" name="installStatus">
                 <c:forEach var="list" items="${installStatus}" varStatus="status">
                   <c:choose>
                     <c:when test="${list.codeId=='4'}">
@@ -1062,40 +1174,58 @@
                     </c:otherwise>
                   </c:choose>
                 </c:forEach>
-            </select>
+              </select>
             <th scope="row"><spring:message code='service.title.ActualInstalledDate' /><span name="m2" id="m2" class="must">*</span></th>
-            <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="installDate" name="installDate" /></td>
+            <td>
+              <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="installDate" name="installDate" />
+            </td>
           </tr>
           <tr>
             <th scope="row"><spring:message code='service.title.CTCode' /><span name="m3" id="m3" class="must">*</span></th>
-            <td colspan="3"><input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>" placeholder="" class="readonly" style="width: 100%;" id="ctCode" readonly="readonly" name="ctCode" /> <input type="hidden" title="" value="${installResult.ctId}" placeholder="" class="" style="width: 200px;" id="CTID" name="CTID" /></td>
+            <td colspan="3">
+              <input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>" placeholder="" class="readonly" style="width: 100%;" id="ctCode" readonly="readonly" name="ctCode" /> <input type="hidden" title="" value="${installResult.ctId}" placeholder="" class="" style="width: 200px;" id="CTID" name="CTID" />
+            </td>
           </tr>
           <tr>
             <th scope="row"><spring:message code='service.title.PSIRcd' /><span name="m8" id="m8" class="must">*</span></th>
-            <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" onkeypress='validate(event)' onblur='validate2(this);' /></td>
+            <td>
+              <input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" onkeypress='validate(event)' onblur='validate2(this);' />
+            </td>
             <th scope="row"><spring:message code='service.title.lmp' /><span name="m9" id="m9" class="must">*</span></th>
-            <td><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" onkeypress='validate(event)' onblur='validate2(this);' /></td>
+            <td>
+              <input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" onkeypress='validate(event)' onblur='validate2(this);' />
+            </td>
           </tr>
           <tr>
             <th scope="row"><spring:message code='service.title.Volt' /><span name="m10" id="m10" class="must">*</span></th>
-            <td><input type="text" title="" placeholder="<spring:message code='service.title.Volt' />" class="w100p" id="volt" name="volt" onkeypress='validate(event)' onblur='validate2(this);' /></td>
+            <td>
+              <input type="text" title="" placeholder="<spring:message code='service.title.Volt' />" class="w100p" id="volt" name="volt" onkeypress='validate(event)' onblur='validate2(this);' />
+            </td>
             <th scope="row"><spring:message code='service.title.TDS' /><span name="m11" id="m11" class="must">*</span></th>
-            <td><input type="text" title="" placeholder="<spring:message code='service.title.TDS' />" class="w100p" id="tds" name="tds" onkeypress='validate(event)' onblur='validate2(this);' /></td>
+            <td>
+              <input type="text" title="" placeholder="<spring:message code='service.title.TDS' />" class="w100p" id="tds" name="tds" onkeypress='validate(event)' onblur='validate2(this);' />
+            </td>
           </tr>
           <tr>
             <th scope="row"><spring:message code='service.title.RoomTemp' /><span name="m12" id="m12" class="must">*</span></th>
-            <td><input type="text" title="" placeholder="<spring:message code='service.title.RoomTemp' />" class="w100p" id="roomTemp" name="roomTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' /></td>
+            <td>
+              <input type="text" title="" placeholder="<spring:message code='service.title.RoomTemp' />" class="w100p" id="roomTemp" name="roomTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' />
+            </td>
             <th scope="row"><spring:message code='service.title.WaterSourceTemp' /><span name="m13" id="m13" class="must">*</span></th>
-            <td><input type="text" title="" placeholder="<spring:message code='service.title.WaterSourceTemp' />" class="w100p" id="waterSourceTemp" name="waterSourceTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' /></td>
+            <td>
+              <input type="text" title="" placeholder="<spring:message code='service.title.WaterSourceTemp' />" class="w100p" id="waterSourceTemp" name="waterSourceTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' />
+            </td>
           </tr>
           <tr>
             <th scope="row"><spring:message code='service.title.adptUsed' /><span name="m14" id="m14" class="must">*</span></th>
-            <td colspan='3'><select class="w100p" id="adptUsed" name="adptUsed">
-                <option value="" selected>Select Reason</option>
+            <td colspan='3'>
+              <select class="w100p" id="adptUsed" name="adptUsed">
+                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                 <c:forEach var="list" items="${adapterUsed}" varStatus="status">
                   <option value="${list.codeId}" select>${list.codeName}</option>
                 </c:forEach>
-            </select></td>
+              </select>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -1117,20 +1247,31 @@
         <tbody>
           <tr>
             <th scope="row"><spring:message code='service.title.SIRIMNo' /><span name="m4" id="m4" class="must">*</span></th>
-            <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.SIRIMNo' />" class="w100p" id="sirimNo" name="sirimNo" /></td>
+            <td colspan="3">
+              <input type="text" title="" placeholder="<spring:message code='service.title.SIRIMNo' />" class="w100p" id="sirimNo" name="sirimNo" />
+            </td>
             <th scope="row"><spring:message code='service.title.SerialNo' /><span name="m5" id="m5" class="must">*</span></th>
-            <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.SerialNo' />" class="w100p" id="serialNo" name="serialNo" /> <c:if test="${installResult.serialRequireChkYn == 'Y' }">
+            <td colspan="3">
+              <input type="text" title="" placeholder="<spring:message code='service.title.SerialNo' />" class="w100p" id="serialNo" name="serialNo" />
+              <c:if test="${installResult.serialRequireChkYn == 'Y' }">
                 <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop()"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-              </c:if></td>
+              </c:if>
+            </td>
           </tr>
           <tr>
             <th scope="row"><spring:message code='service.title.RefNo' />(1)</th>
-            <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(1)" class="w100p" id="refNo1" name="refNo1" /></td>
+            <td colspan="3">
+              <input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(1)" class="w100p" id="refNo1" name="refNo1" />
+            </td>
             <th scope="row"><spring:message code='service.title.RefNo' />(2)</th>
-            <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(2)" class="w100p" id="refNo2" name="refNo2" /></td>
+            <td colspan="3">
+              <input type="text" title="" placeholder="<spring:message code='service.title.RefNo' />(2)" class="w100p" id="refNo2" name="refNo2" />
+            </td>
           </tr>
           <tr>
-            <td colspan="8"><label><input type="checkbox" id="checkCommission" name="checkCommission" /><span><spring:message code='service.btn.AllowCommission' /> ?</span></label> <label><input type="checkbox" id="checkTrade" name="checkTrade" /><span><spring:message code='service.btn.IsTradeIn' /> ?</span></label> <label><input type="checkbox" id="checkSms" name="checkSms" /><span><spring:message code='service.btn.RequireSMS' /> ?</span></label></td>
+            <td colspan="8">
+              <label><input type="checkbox" id="checkCommission" name="checkCommission" /><span><spring:message code='service.btn.AllowCommission' /> ?</span></label> <label><input type="checkbox" id="checkTrade" name="checkTrade" /><span><spring:message code='service.btn.IsTradeIn' /> ?</span></label> <label><input type="checkbox" id="checkSms" name="checkSms" /><span><spring:message code='service.btn.RequireSMS' /> ?</span></label>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -1143,13 +1284,13 @@
       <!-- title_line end -->
       <article class="grid_wrap">
         <!-- grid_wrap start -->
-        <div id="grid_wrap_instChk_view" style="width: 100%;
-  height: 170px;
-  margin: 90 auto;"></div>
+        <div id="grid_wrap_instChk_view" style="width: 100%; height: 170px; margin: 90 auto;"></div>
       </article>
       <!-- grid_wrap end -->
       <tr>
-        <td colspan="8"><label><input type="checkbox" id="instChklstCheckBox" name="instChklstCheckBox" value="Y" /><span id="instChklstDesc" name="instChklstDesc"><spring:message code='service.btn.instChklst' /> </span></label></td>
+        <td colspan="8">
+          <label><input type="checkbox" id="instChklstCheckBox" name="instChklstCheckBox" value="Y" /><span id="instChklstDesc" name="instChklstDesc"><spring:message code='service.btn.instChklst' /> </span></label>
+        </td>
       </tr>
       <!-- table end -->
       <aside class="title_line" id="completedHide1">
@@ -1168,17 +1309,23 @@
         </colgroup>
         <tbody>
           <tr>
-            <td colspan="2"><label><input type="checkbox" id="checkSend" name="checkSend" /><span><spring:message code='service.title.SendSMSToSalesPerson' /></span></label></td>
+            <td colspan="2">
+              <label><input type="checkbox" id="checkSend" name="checkSend" /><span><spring:message code='service.title.SendSMSToSalesPerson' /></span></label>
+            </td>
           </tr>
           <tr>
             <th scope="row" rowspan="2"><spring:message code='service.title.Message' /></th>
-            <td><textarea cols="20" rows="5" readonly="readonly" class="readonly" id="msg" name="msg">RM0.00 COWAY DSC
+            <td>
+              <textarea cols="20" rows="5" readonly="readonly" class="readonly" id="msg" name="msg">RM0.00 COWAY DSC
 Install Status: Completed
 Order No: ${installResult.salesOrdNo}
-Name: ${hpMember.name1}</textarea></td>
+Name: ${hpMember.name1}</textarea>
+            </td>
           </tr>
           <tr>
-            <td><input type="text" title="" placeholder="" class="w100p" value="Remark:" id="msgRemark" name="msgRemark" /></td>
+            <td>
+              <input type="text" title="" placeholder="" class="w100p" value="Remark:" id="msgRemark" name="msgRemark" />
+            </td>
           </tr>
         </tbody>
       </table>
@@ -1195,23 +1342,29 @@ Name: ${hpMember.name1}</textarea></td>
         <tbody>
           <tr>
             <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m15" id="m15" class="must">*</span></th>
-            <td><select class="w100p" id="failParent" name="failParent" onchange="fn_openFailChild(this.value)">
-                <option value="0" selected>Select Reason</option>
+            <td>
+              <select class="w100p" id="failParent" name="failParent" onchange="fn_openFailChild(this.value)">
+                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                 <c:forEach var="list" items="${failParent}" varStatus="status">
                   <option value="${list.defectId}">${list.defectDesc}</option>
-                </c:forEach></td>
+                </c:forEach>
+            </td>
             </select>
             <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m16" id="m16" class="must">*</span></th>
-            <td><select class="w100p" id="failChild" name="failChild">
-                <option value="0" selected>Select Reason</option>
+            <td>
+              <select class="w100p" id="failChild" name="failChild">
+                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                 <c:forEach var="list" items="${failChild}" varStatus="status">
                   <option value="${list.defectId}">${list.defectDesc}</option>
                 </c:forEach>
-            </select></td>
+              </select>
+            </td>
           </tr>
           <tr>
             <th scope="row"><spring:message code='service.title.NextCallDate' /><span name="m7" id="m7" class="must">*</span></th>
-            <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="nextCallDate" name="nextCallDate" /></td>
+            <td>
+              <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="nextCallDate" name="nextCallDate" />
+            </td>
             <th scope="row"></th>
             <td></td>
           </tr>
@@ -1228,10 +1381,14 @@ Name: ${hpMember.name1}</textarea></td>
         <tbody>
           <tr>
             <th scope="row"><spring:message code='service.title.Remark' /></th>
-            <td colspan="3"><input type="text" title="" placeholder="<spring:message code='service.title.Remark' />" class="w100p" id="remark" name="remark" /></td>
+            <td colspan="3">
+              <input type="text" title="" placeholder="<spring:message code='service.title.Remark' />" class="w100p" id="remark" name="remark" />
+            </td>
           </tr>
           <tr>
-            <td colspan="4"><label><input type="checkbox" id="failDeptChk" name="failDeptChk" value="Y" /><span id="failDeptChkDesc" name="failDeptChkDesc"><spring:message code='sys.btn.failBfrDepartFromWarehouse' /> </span></label></td>
+            <td colspan="4">
+              <label><input type="checkbox" id="failDeptChk" name="failDeptChk" value="Y" /><span id="failDeptChkDesc" name="failDeptChkDesc"><spring:message code='sys.btn.failBfrDepartFromWarehouse' /> </span></label>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -1239,9 +1396,7 @@ Name: ${hpMember.name1}</textarea></td>
     </form>
     <div id='sav_div'>
       <ul class="center_btns">
-        <li><p class="btn_blue2">
-            <a href="#" onclick="fn_saveInstall()"><spring:message code='service.btn.SaveInstallationResult' /></a>
-          </p></li>
+        <li><p class="btn_blue2"><a href="#" onclick="fn_saveInstall()"><spring:message code='service.btn.SaveInstallationResult' /></a></p></li>
       </ul>
     </div>
   </section>
