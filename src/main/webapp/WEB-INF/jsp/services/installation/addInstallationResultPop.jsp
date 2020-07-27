@@ -173,6 +173,10 @@
               $("#addInstallForm #grid_wrap_instChk_view").show();
               $("#addInstallForm #instChklstCheckBox").show();
               $("#addInstallForm #instChklstDesc").show();
+            } else {
+              $("#addInstallForm #grid_wrap_instChk_view").hide();
+              $("#addInstallForm #instChklstCheckBox").hide();
+              $("#addInstallForm #instChklstDesc").hide();
             }
             $("#nextCallDate").val("");
 
@@ -192,6 +196,10 @@
             $("#addInstallForm #m14").hide();
             $("#addInstallForm #m17").hide();
             if ("${orderInfo.stkCtgryId}" == "54") {
+              $("#addInstallForm #grid_wrap_instChk_view").show();
+              $("#addInstallForm #instChklstCheckBox").show();
+              $("#addInstallForm #instChklstDesc").show();
+            } else {
               $("#addInstallForm #grid_wrap_instChk_view").hide();
               $("#addInstallForm #instChklstCheckBox").hide();
               $("#addInstallForm #instChklstDesc").hide();
@@ -237,8 +245,8 @@
           $("#addInstallForm #instChklstCheckBox").prop("checked", false);
           $("#addInstallForm #failDeptChk").prop("checked", false);
           $("#addInstallForm #msgRemark").val("Remark:");
-          $("#addInstallForm #failParent").val("0");
-          $("#addInstallForm #failChild").val("0");
+          $("#addInstallForm #failParent").val("");
+          $("#addInstallForm #failChild").val("");
           $("#addInstallForm #remark").val("");
         });
 
@@ -371,10 +379,10 @@
     }
 
     if ($("#addInstallForm #installStatus").val() == 21) { // FAILED
-        if ($("#failParent").val() == 0) {
+        if ($("#failParent").val() == '') {
           msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Reason' htmlEscape='false'/> </br>";
         }
-        if ($("#failChild").val() == 0) {
+        if ($("#failChild").val() == '') {
           msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Reason' htmlEscape='false'/> </br>";
         }
         if ($("#nextCallDate").val() == '') {
