@@ -77,45 +77,55 @@
       }
 
       if ($("#addInstallForm #installStatus").val() != "4") {
-          $("#addInstallForm #failDeptChk").show();
-          $("#addInstallForm #failDeptChkDesc").show();
+        $("#addInstallForm #failDeptChk").show();
+        $("#addInstallForm #failDeptChkDesc").show();
 
-          $("#addInstallForm #m2").hide();
-          $("#addInstallForm #m4").hide();
-          $("#addInstallForm #m5").hide();
-          $("#addInstallForm #m8").hide();
-          $("#addInstallForm #m9").hide();
-          $("#addInstallForm #m10").hide();
-          $("#addInstallForm #m11").hide();
-          $("#addInstallForm #m12").hide();
-          $("#addInstallForm #m13").hide();
-          $("#addInstallForm #m14").hide();
-          $("#addInstallForm #m17").hide();
-          if ("${orderInfo.stkCtgryId}" != "54") {
-            $("#addInstallForm #grid_wrap_instChk_view").hide();
-            $("#addInstallForm #instChklstCheckBox").hide();
-            $("#addInstallForm #instChklstDesc").hide();
-          } else {
-            $("#addInstallForm #grid_wrap_instChk_view").show();
-            $("#addInstallForm #instChklstCheckBox").show();
-            $("#addInstallForm #instChklstDesc").show();
-          }
+        $("#addInstallForm #m2").hide();
+        $("#addInstallForm #m4").hide();
+        $("#addInstallForm #m5").hide();
+        $("#addInstallForm #m8").hide();
+        $("#addInstallForm #m9").hide();
+        $("#addInstallForm #m10").hide();
+        $("#addInstallForm #m11").hide();
+        $("#addInstallForm #m12").hide();
+        $("#addInstallForm #m13").hide();
+        $("#addInstallForm #m14").hide();
+        $("#addInstallForm #m17").hide();
+        if ("${orderInfo.stkCtgryId}" != "54") {
+          $("#addInstallForm #grid_wrap_instChk_view").hide();
+          $("#addInstallForm #instChklstCheckBox").hide();
+          $("#addInstallForm #instChklstDesc").hide();
         } else {
-            $("#addInstallForm #m8").show();
-            $("#addInstallForm #m9").show();
-            $("#addInstallForm #m10").show();
-            $("#addInstallForm #m11").show();
-            $("#addInstallForm #m12").show();
-            $("#addInstallForm #m13").show();
-            $("#addInstallForm #m14").show();
-
-          $("#addInstallForm #m6").hide();
-          $("#addInstallForm #m7").hide();
-          $("#addInstallForm #m15").hide();
-          $("#addInstallForm #m16").hide();
-          $("#addInstallForm #failDeptChk").hide();
-          $("#addInstallForm #failDeptChkDesc").hide();
+          $("#addInstallForm #grid_wrap_instChk_view").show();
+          $("#addInstallForm #instChklstCheckBox").show();
+          $("#addInstallForm #instChklstDesc").show();
         }
+      } else {
+        $("#addInstallForm #m8").show();
+        $("#addInstallForm #m9").show();
+        $("#addInstallForm #m10").show();
+        $("#addInstallForm #m11").show();
+        $("#addInstallForm #m12").show();
+        $("#addInstallForm #m13").show();
+        $("#addInstallForm #m14").show();
+
+        $("#addInstallForm #m6").hide();
+        $("#addInstallForm #m7").hide();
+        $("#addInstallForm #m15").hide();
+        $("#addInstallForm #m16").hide();
+        $("#addInstallForm #failDeptChk").hide();
+        $("#addInstallForm #failDeptChkDesc").hide();
+
+        if ("${orderInfo.stkCtgryId}" != "54") {
+          $("#addInstallForm #grid_wrap_instChk_view").hide();
+          $("#addInstallForm #instChklstCheckBox").hide();
+          $("#addInstallForm #instChklstDesc").hide();
+        } else {
+          $("#addInstallForm #grid_wrap_instChk_view").show();
+          $("#addInstallForm #instChklstCheckBox").show();
+          $("#addInstallForm #instChklstDesc").show();
+        }
+      }
 
       $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
       $("#checkCommission").prop("checked", true);
@@ -1296,12 +1306,14 @@
       <!-- title_line end -->
       <article class="grid_wrap">
         <!-- grid_wrap start -->
-        <div id="grid_wrap_instChk_view" style="width: 100%; height: 170px; margin: 90 auto;" class="hide"></div>
+        <div id="grid_wrap_instChk_view" style="width: 100%;
+  height: 170px;
+  margin: 90 auto;" class="hide"></div>
       </article>
       <!-- grid_wrap end -->
       <tr>
         <td colspan="8">
-          <label><input type="checkbox" id="instChklstCheckBox" name="instChklstCheckBox" value="Y"  class="hide"/><span id="instChklstDesc" name="instChklstDesc" class="hide"><spring:message code='service.btn.instChklst' /> </span></label>
+          <label><input type="checkbox" id="instChklstCheckBox" name="instChklstCheckBox" value="Y" class="hide" /><span id="instChklstDesc" name="instChklstDesc" class="hide"><spring:message code='service.btn.instChklst' /> </span></label>
         </td>
       </tr>
       <!-- table end -->
