@@ -145,10 +145,10 @@ public class InterfaceCIMBApiController {
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMdd");
 		String dt = format1.format(today);
 
-//		String temRootPath =  WAS_ENCRYPT_TEMP_ROOTPATH + dt + "/";
-//		String encryptRootPath =  WAS_ENCRYPT_ROOTPATH + dt + "/";
-		String temRootPath = "C:/Users/HQIT-HUIDING/Desktop/CIMBTEST/" + dt + "/";
-		String encryptRootPath = "C:/Users/HQIT-HUIDING/Desktop/CIMBTEST/" + dt + "/";
+		String temRootPath =  WAS_ENCRYPT_TEMP_ROOTPATH + dt + "/";
+		String encryptRootPath =  WAS_ENCRYPT_ROOTPATH + dt + "/";
+//		String temRootPath = "C:/Users/HQIT-HUIDING/Desktop/CIMBTEST/" + dt + "/";
+//		String encryptRootPath = "C:/Users/HQIT-HUIDING/Desktop/CIMBTEST/" + dt + "/";
 
 		String pFileName = (String)params.get("fileName");
 
@@ -333,7 +333,7 @@ public class InterfaceCIMBApiController {
 		// download
 		for (String downloadFileName : fileNameList) {
 
-			LOGGER.debug(">>> downloadFileName :" + downloadFileName);
+			LOGGER.debug(">>> downloadFileName :" + dir + downloadFileName);
 
 			String path = rootPath + downloadFileName;
 			boolean bl = util.download(dir, downloadFileName, path);
