@@ -2207,15 +2207,18 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
           // Count if token exist
           int step1 = (Integer) eKeyInApiMapper.selectCheckCRC1(checkCrc);
+          logger.debug("step1 :: " + Integer.toString(step1));
           if(step1 > 0) {
               // Count distinct NRIC
               int step2 = (Integer) eKeyInApiMapper.selectCheckCRC2(checkCrc);
+              logger.debug("step2 :: " + Integer.toString(step2));
               if(step2 >= 1) {
                   crcCheck = "2";
                   checkCrc.put("step", "3");
                   checkCrc.put("nric", param.getNric());
                   // Count distinct NRIC by registered CID's NRIC
                   int step3 = (Integer) eKeyInApiMapper.selectCheckCRC2(checkCrc);
+                  logger.debug("step3 :: " + Integer.toString(step3));
                   if(step3 == 1) {
                       errorDesc = "This bank card has been registered under current customer.</br>Please select registered card.";
                   } else {
@@ -2226,6 +2229,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
               crcCheck = "0";
           }
 
+          logger.debug("crcCheck :: " + crcCheck);
           // If card/token not duplicated
           if(crcCheck == "0") {
               Map<String, Object> sal0028D = new HashMap<String, Object>();
@@ -2258,6 +2262,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
                   throw new ApplicationException(AppConstants.FAIL, "custCrcId value does not exist.");
               }
 
+              params.put("updUserId", loginVO.getUserId());
               params.put("custCrcId", sal0028D.get("custCrcId"));
               saveCnt = eKeyInApiMapper.updateCustCrcIdSAL0257D(params);
               if(saveCnt != 1) {
@@ -2275,6 +2280,11 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
               rtnDto.setCustCrcId(Integer.parseInt(sal0028D.get("custCrcId").toString()));
           }
       }
+
+logger.debug("=== rtnDto :: start ===");
+logger.debug("stus :: " + stus);
+logger.debug("crcCheck :: " + crcCheck);
+logger.debug("=== rtnDto :: end ===");
 
       rtnDto.setStus(stus);
       rtnDto.setCrcCheck(crcCheck);
