@@ -37,9 +37,15 @@ function fn_ValidationCheck(){
 
 $(document).ready(function(){
     doDefCombo(memberTypeData, '' ,'memberType', 'S', '');
+    $('#transferDate').attr("disabled", true);
 
     $("#memberType").change(function(){
     	doGetCombo('/organization/selectMemberLevel.do', $("#memberType").val() , ''   , 'memberLvl' , 'S', '');
+    	if($("#memberType").val() != "") {
+    	    $('#transferDate').attr("disabled", false);
+    	} else {
+    	    $('#transferDate').attr("disabled", true);
+    	}
     });
     $("#memberLvl").change(function(){
     	var jsonObj = {
@@ -101,6 +107,24 @@ $(document).ready(function(){
       e.preventDefault();
   });
 
+  $('#transferDate').change(function(e) {
+      if($("#memberType").val() == "2") {
+          var today = new Date();
+          var dd = today.getDate();
+          var mm = today.getMonth() + 1;
+          var yyyy = today.getFullYear();
+
+          if(dd > 15) {
+              var newMM = (mm + 1);
+              if(newMM < 10) {
+                  newMM = "0" + newMM;
+              }
+              var newDate = "01/" + newMM + "/" + yyyy;
+              console.log(newDate);
+              $("#transferDate").val(newDate);
+          }
+      }
+  });
 
 
 
