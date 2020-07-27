@@ -91,10 +91,14 @@
           $("#addInstallForm #m13").hide();
           $("#addInstallForm #m14").hide();
           $("#addInstallForm #m17").hide();
-          if ("${orderInfo.stkCtgryId}" == "54") {
+          if ("${orderInfo.stkCtgryId}" != "54") {
             $("#addInstallForm #grid_wrap_instChk_view").hide();
             $("#addInstallForm #instChklstCheckBox").hide();
             $("#addInstallForm #instChklstDesc").hide();
+          } else {
+            $("#addInstallForm #grid_wrap_instChk_view").show();
+            $("#addInstallForm #instChklstCheckBox").show();
+            $("#addInstallForm #instChklstDesc").show();
           }
         } else {
             $("#addInstallForm #m8").show();
@@ -1292,12 +1296,12 @@
       <!-- title_line end -->
       <article class="grid_wrap">
         <!-- grid_wrap start -->
-        <div id="grid_wrap_instChk_view" style="width: 100%; height: 170px; margin: 90 auto;"></div>
+        <div id="grid_wrap_instChk_view" style="width: 100%; height: 170px; margin: 90 auto;" class="hide"></div>
       </article>
       <!-- grid_wrap end -->
       <tr>
         <td colspan="8">
-          <label><input type="checkbox" id="instChklstCheckBox" name="instChklstCheckBox" value="Y" /><span id="instChklstDesc" name="instChklstDesc"><spring:message code='service.btn.instChklst' /> </span></label>
+          <label><input type="checkbox" id="instChklstCheckBox" name="instChklstCheckBox" value="Y"  class="hide"/><span id="instChklstDesc" name="instChklstDesc" class="hide"><spring:message code='service.btn.instChklst' /> </span></label>
         </td>
       </tr>
       <!-- table end -->
