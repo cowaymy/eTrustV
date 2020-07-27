@@ -429,7 +429,6 @@ public class EKeyInApiController {
   @RequestMapping(value = "/getTokenId", method = RequestMethod.POST)
   public ResponseEntity<EKeyInApiDto> getTokenId(@RequestBody EKeyInApiDto param) throws Exception {
     EKeyInApiDto rtn = eKeyInApiService.getTokenId(param);
-    LOGGER.debug("controller.getTokenId :: refNo :: " + rtn.getRefNo());
     return ResponseEntity.ok(rtn);
   }
 
@@ -437,9 +436,6 @@ public class EKeyInApiController {
   @RequestMapping(value = "/saveTokenNumber", method = RequestMethod.POST)
   public ResponseEntity<EKeyInApiDto> saveTokenNumber(@RequestBody EKeyInApiDto param) throws Exception {
     EKeyInApiDto rtn = eKeyInApiService.saveTokenNumber(param);
-    LOGGER.debug("controller.saveTokenNumber :: rtn :: getCustOriCrcNo :: " + rtn.getCustOriCrcNo());
-    LOGGER.debug("controller.saveTokenNumber :: rtn :: getStus :: " + rtn.getStus());
-    LOGGER.debug("controller.saveTokenNumber :: rtn :: getCrcCheck :: " + rtn.getCrcCheck());
     return ResponseEntity.ok(rtn);
   }
 }

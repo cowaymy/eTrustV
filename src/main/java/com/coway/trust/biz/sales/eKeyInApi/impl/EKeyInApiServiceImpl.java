@@ -2159,7 +2159,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   public EKeyInApiDto saveTokenNumber(EKeyInApiDto param) throws Exception {
       int saveCnt = 0;
       String crcCheck = "";
-      String stus = "1";
+//      String stus = "1";
       String errorDesc = "";
 
       EKeyInApiDto rtnDto = new EKeyInApiDto();
@@ -2173,7 +2173,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       if(CommonUtils.isEmpty(sal0257Dtoken)) {
           // Token does not exist
           logger.debug("sal0257Dtoken is null");
-          stus = "21";
+//          stus = "21";
           saveCnt = eKeyInApiMapper.updateStagingF(params);
           if(saveCnt != 1) {
               throw new ApplicationException(AppConstants.FAIL, " Update Card Info Exception");
@@ -2181,8 +2181,6 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
           throw new ApplicationException(AppConstants.FAIL, "tokenInfo value does not exist.");
       } else {
           // Token Exist
-          stus = "0";
-
           Map<String, Object> loginInfoMap = new HashMap<String, Object>();
           loginInfoMap.put("_USER_ID", param.getRegId());
           LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
@@ -2221,8 +2219,10 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
                   logger.debug("step3 :: " + Integer.toString(step3));
                   if(step3 == 1) {
                       errorDesc = "This bank card has been registered under current customer.</br>Please select registered card.";
+//                      stus = "0";
                   } else {
                       errorDesc = "This bank card is used by another customer.";
+//                      stus = "0";
                   }
               }
           } else {
@@ -2281,12 +2281,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
           }
       }
 
-logger.debug("=== rtnDto :: start ===");
-logger.debug("stus :: " + stus);
-logger.debug("crcCheck :: " + crcCheck);
-logger.debug("=== rtnDto :: end ===");
-
-      rtnDto.setStus(stus);
+//      rtnDto.setStus(stus);
       rtnDto.setCrcCheck(crcCheck);
       rtnDto.setErrorDesc(errorDesc);
 
