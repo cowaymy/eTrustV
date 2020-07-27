@@ -47,6 +47,11 @@
       editable : false,
       width : 130
     }, {
+      dataField : "volt",
+      headerText : '<spring:message code="service.title.Volt" />',
+      editable : false,
+      width : 130
+    }, {
       dataField : "psi",
       headerText : '<spring:message code="service.title.PSIRcd" />',
       editable : false,
@@ -54,6 +59,26 @@
     }, {
       dataField : "lpm",
       headerText : '<spring:message code="service.title.lmp" />',
+      editable : false,
+      width : 130
+    }, {
+      dataField : "tds",
+      headerText : '<spring:message code="service.title.TDS" />',
+      editable : false,
+      width : 130
+    }, {
+      dataField : "roomTemp",
+      headerText : '<spring:message code="service.title.RoomTemp" />',
+      editable : false,
+      width : 130
+    }, {
+      dataField : "waterSourceTemp",
+      headerText : '<spring:message code="service.title.WaterSourceTemp" />',
+      editable : false,
+      width : 130
+    }, {
+      dataField : "adptUsed",
+      headerText : '<spring:message code="service.title.adptUsed" />',
       editable : false,
       width : 130
     }, {
