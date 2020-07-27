@@ -109,6 +109,26 @@ $(document).ready(function() {
 	   }
 	});
 
+    $("#dtProDemote").change(function() {
+        console.log("ProDemote Change");
+        if("${memberView.memType}" == "2") {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1;
+            var yyyy = today.getFullYear();
+
+            if(dd > 15) {
+                var newMM = (mm + 1);
+                if(newMM < 10) {
+                    newMM = "0" + newMM;
+                }
+                var newDate = "01/" + newMM + "/" + yyyy;
+                console.log(newDate);
+                $("#dtProDemote").val(newDate);
+            }
+        }
+    });
+
 });
 function createAUIGrid4() {
     //AUIGrid 칼럼 설정
@@ -578,22 +598,32 @@ function fn_tabSize(){
 }
 
 function fn_requestTermiReSave(val){
-	if(val == '1'){//Request Terminate/Resign
-	    Common.ajax("POST", "/organization/terminateResignSave.do",  $("#requestTermiReForm").serializeJSON(), function(result) {
-		console.log("성공.");
-		console.log("data : " + result);
-		Common.alert(result.message,fn_winClose);
+    if(val == '1'){
+        // Request Terminate/Resign
+        Common.ajax("POST", "/organization/terminateResignSave.do",  $("#requestTermiReForm").serializeJSON(), function(result) {
+            console.log("성공.");
+            console.log("data : " + result);
+            Common.alert(result.message,fn_winClose);
+        });
 
-	});
+    } else {
+        // Request Promote/Demote
+        if(FormUtil.isEmpty($("#dtProDemote").val())) {
+            Common.alert("Promote/Demote Date Required.");
+            return false;
+        } else {
+            if($("#memtype").val() == "2") {
 
-	}else{//Request Promote/Demote
-		   Common.ajax("POST", "/organization/terminateResignSave.do",  $("#requestProDeForm").serializeJSON(), function(result) {
-	        console.log("성공.");
-	        console.log("data : " + result);
-	        Common.alert(result.message,fn_winClose);
-	    });
-	}
-		//성공했으면.... 팝업 띄워주고.... 인설트한 내용들.... 비활성화....
+            }
+        }
+
+
+        Common.ajax("POST", "/organization/terminateResignSave.do",  $("#requestProDeForm").serializeJSON(), function(result) {
+            console.log("성공.");
+            console.log("data : " + result);
+            Common.alert(result.message,fn_winClose);
+        });
+    }
 }
 
 function fn_winClose(){
