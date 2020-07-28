@@ -10,6 +10,7 @@
 
 var advKeyInGridId;
 var bankStmtGridId;
+var jompayAutoMatchGridId;
 
 var selectedGridValue;
 
@@ -32,6 +33,12 @@ var gridPros1 = {
     headerHeight : 35,              // 기본 헤더 높이 지정
     showStateColumn : false         // 상태 칼럼 사용
 };
+
+var gridPros3 = {
+	    editable : false,               // 편집 가능 여부 (기본값 : false)
+	    headerHeight : 35,              // 기본 헤더 높이 지정
+	    showStateColumn : false         // 상태 칼럼 사용
+	};
 
 var advKeyInLayout = [
 	{dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGroupNo'/>",width : 90 , editable : false},
@@ -67,6 +74,25 @@ var bankStmtLayout = [
     {dataField : "fTrnscRefVaNo",headerText : "<spring:message code='pay.head.vaNumber'/>", editable : false}
 ];
 
+var jompayMatchLayout = [
+     {dataField : "fileId",headerText : "File Id",width : '5%' , editable : false},
+     {dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGroupNo'/>",width : '10%' , editable : false},
+     {dataField : "payItmModeNm",headerText : "<spring:message code='pay.head.paymentMode'/>",width : '10%' , editable : false},
+     {dataField : "payItmRefDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : '13%' , editable : false},
+     {dataField : "payItmBankAccNm",headerText : "<spring:message code='pay.head.bankAccount'/>",width : '10%', editable : false},
+     {dataField : "payItmBankInSlipNo",headerText : "<spring:message code='pay.head.slipNo'/>",width : '10%' , editable : false},
+     {dataField : "refDtl",headerText : "<spring:message code='pay.head.refDetailsJompayRef'/>",width : '10%' , editable : false},
+     {dataField : "totAmt",headerText : "<spring:message code='pay.head.amount'/>",width : '7%' , editable : false, dataType:"numeric", formatString : "###0.00" },
+     {dataField : "bankChgAmt",headerText : "<spring:message code='pay.head.bankCharge'/>",width : '7%' , editable : false, dataType:"numeric", formatString : "###0.00" },
+
+     {dataField : "fTrnscId",headerText : "<spring:message code='pay.head.tranxId'/>",width : '10%' , editable : false},
+     {dataField : "bankName",headerText : "<spring:message code='pay.head.bank'/>",width : '13%' , editable : false},
+     {dataField : "bankAccName",headerText : "<spring:message code='pay.head.bankAccount'/>",width : '13%', editable : false},
+     {dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.bankAccount'/>",width : '10%' , editable : false},
+     {dataField : "fTrnscRef4",headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>",width : '10%' , editable : false},
+     {dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.credit'/>" , width : '7%' , editable : false, dataType:"numeric", formatString : "###0.00" },
+];
+
 
 $(document).ready(function(){
 
@@ -79,6 +105,8 @@ $(document).ready(function(){
 
     advKeyInGridId = GridCommon.createAUIGrid("adv_keyin_grid_wrap", advKeyInLayout,"",gridPros1);
     bankStmtGridId = GridCommon.createAUIGrid("bank_stmt_grid_wrap", bankStmtLayout,"",gridPros2);
+    jompayAutoMatchGridId = GridCommon.createAUIGrid("jompay_grid_wrap", jompayMatchLayout,"",gridPros3);
+    AUIGrid.resize(jompayAutoMatchGridId,1120, 480);
 
 	// 셀 더블클릭 이벤트 바인딩 : 상세 팝업
 	AUIGrid.bind(advKeyInGridId, "cellDoubleClick", function(event) {
@@ -392,6 +420,49 @@ function fn_saveDebtor(){
 	});
 }
 
+function fn_jompayAutoMap(){
+    $('#jompay_wrap').show();
+}
+
+function fn_searchJompayAutoMappingList(){
+
+	if(FormUtil.checkReqValue($("#fileId"))){
+		Common.alert("<spring:message code='sys.msg.necessary' arguments='File ID' htmlEscape='false'/>");
+        return;
+    }
+
+    if(FormUtil.checkReqValue($("#jompayTransDateFr")) || FormUtil.checkReqValue($("#jompayTransDateTo"))){
+        Common.alert("<spring:message code='pay.alert.inputTransactionDate'/>");
+        return;
+    }
+
+    Common.ajax("GET","/payment/selectJompayMatchList.do", $("#jompayForm").serializeJSON(), function(result){
+        AUIGrid.setGridData(jompayAutoMatchGridId, result);
+    });
+}
+
+function fn_saveJompayAutoMap(){
+	if(AUIGrid.getGridData(jompayAutoMatchGridId).length > 0){
+		Common.confirm("<spring:message code='pay.alert.wantToSave'/>",function (){
+	        Common.ajax("POST", "/payment/saveJompayAutoMap.do", $("#jompayForm").serializeJSON(), function(result) {
+	            Common.alert("<spring:message code='pay.alert.mappingSuccess'/>");
+	        });
+	    });
+	}else{
+		Common.alert("Please match with a File ID and Transaction Date");
+	}
+}
+
+hideViewPopup=function(val){
+    $(val).hide();
+}
+
+hideAutoMatchViewPopup=function(){
+	$('#jompay_wrap').hide();
+	$("#jompayForm")[0].reset();
+	AUIGrid.clearGridData(jompayAutoMatchGridId);
+}
+
 
 </script>
 <section id="content"><!-- content start -->
@@ -487,6 +558,7 @@ function fn_saveDebtor(){
                     <li><p class="link_btn"><a href="javascript:fn_requestDCFPop();"><spring:message code='pay.btn.reverse'/></a></p></li>
                     <li><p class="link_btn"><a href="javascript:fn_debtor();"><spring:message code='pay.btn.debtor'/></a></p></li>
                     <li><p class="link_btn"><a href="javascript:fn_mapping();"><spring:message code='pay.btn.match'/></a></p></li>
+                    <li><p class="link_btn"><a href="javascript:fn_jompayAutoMap();"><spring:message code='pay.btn.jompayAutoMatch'/></a></p></li>
                 </ul>
                 <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
             </dd>
@@ -624,6 +696,64 @@ function fn_saveDebtor(){
         <ul class="center_btns" >
             <li><p class="btn_blue2"><a href="javascript:fn_saveDebtor();"><spring:message code='sys.btn.save'/></a></p></li>
         </ul>
+    </section>
+    </form>
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->
+
+<!---------------------------------------------------------------
+    POP-UP (JomPAY Auto Mapping)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap size_big" id="jompay_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="pop_header">
+        <h1>Jompay Auto Mapping RTN</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="javascript:fn_saveJompayAutoMap();"><spring:message code='pay.btn.match'/></a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_searchJompayAutoMappingList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideAutoMatchViewPopup()"><spring:message code='sys.btn.close'/></a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+
+    <!-- pop_body start -->
+    <form name="jompayForm" id="jompayForm"  method="post">
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:200px" />
+                    <col style="width:*" />
+                    <col style="width:200px" />
+                    <col style="width:*" />
+                </colgroup>
+
+                <tbody>
+                    <tr>
+                        <th scope="row">File ID</th>
+                        <td><input type="text" id="fileId" name="fileId"  class="w100p"/></td>
+                        <th scope="row">Transaction Date</th>
+                        <td>
+                            <div class="date_set w100p">
+                            <p><input type="text" id="jompayTransDateFr" name="jompayTransDateFr" title="Transaction Start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            <span>To</span>
+                            <p><input type="text" id="jompayTransDateTo" name="jompayTransDateTo" title="Transaction End Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            </div>
+                         </td>
+                    </tr>
+                    <tr>
+                      <td colspan='4'>
+                          <div id="jompay_grid_wrap" style="width: 100%; height: 480px; margin: 0 auto;"></div>
+                      </td>
+                    </tr>
+                   </tbody>
+            </table>
+        </section>
     </section>
     </form>
     <!-- pop_body end -->

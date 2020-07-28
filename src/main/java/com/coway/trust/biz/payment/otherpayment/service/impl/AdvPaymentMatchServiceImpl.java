@@ -17,48 +17,48 @@ public class AdvPaymentMatchServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Resource(name = "advPaymentMatchMapper")
 	private AdvPaymentMatchMapper advPaymentMatchMapper;
-	
+
 	@Resource(name = "paymentListMapper")
 	private PaymentListMapper paymentListMapper;
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(AdvPaymentMatchServiceImpl.class);
 
 	@Override
 	public List<EgovMap> selectAdvKeyInList(Map<String, Object> params) {
 		return advPaymentMatchMapper.selectAdvKeyInList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectBankStateMatchList(Map<String, Object> params) {
 		return advPaymentMatchMapper.selectBankStateMatchList(params);
 	}
-	
+
 	/**
-	 * Advance Payment Matching - Mapping 처리 
+	 * Advance Payment Matching - Mapping 처리
 	 * @param params
 	 * @param model
 	 * @return
-	 */		
+	 */
 	@Override
 	@Transactional
 	public void saveAdvPaymentMapping(Map<String, Object> params) {
-		
+
 		//Group Payment Mapping처리
 		advPaymentMatchMapper.mappingAdvGroupPayment(params);
-		
+
 		//Bank Statement Mapping 처리
 		advPaymentMatchMapper.mappingBankStatementAdv(params);
-		
-		//Interface 테이블 처리 - Bank Statement Bank Charge 
+
+		//Interface 테이블 처리 - Bank Statement Bank Charge
 		List<EgovMap> returnList = advPaymentMatchMapper.selectMappedData(params);
-		
-		
+
+
 		if(returnList != null && returnList.size() > 0){
 			for(int i = 0 ; i < returnList.size(); i++){
-				
+
 				EgovMap ifMap  = (EgovMap) returnList.get(i);
-				
-				
+
+
 				//variance
 				ifMap.put("variance", params.get("variance"));
 				ifMap.put("userId", params.get("userId"));
@@ -66,57 +66,57 @@ public class AdvPaymentMatchServiceImpl extends EgovAbstractServiceImpl implemen
 			}
 		}
 	}
-	
+
 	 /**
-	 * Advance Payment Matching - Reverse 처리 
+	 * Advance Payment Matching - Reverse 처리
 	 * @param params
 	 * @param model
 	 * @return
-	 */	
+	 */
 	@Override
 	public EgovMap requestDCFWithAppv(Map<String, Object> params) {
-		
+
 		EgovMap returnMap = new EgovMap();
-		
+
 		//DCF Request 등록
 		paymentListMapper.requestDCF(params);
-		
+
 		//Group Payment 정보 수정
 		params.put("revStusId", "1");
 		paymentListMapper.updateGroupPaymentRevStatus(params);
-		
-		
+
+
 		//Approval DCF 처리 프로시저 호출
 		params.put("reqNo", params.get("dcfReqId"));
 		paymentListMapper.approvalDCF(params);
-		
+
 		returnMap.put("returnKey", params.get("dcfReqId"));
-		
-		return returnMap;	
-		
+
+		return returnMap;
+
 	}
-	
+
 	 /**
-	 * Advance Payment Matching - Debtor 처리 
+	 * Advance Payment Matching - Debtor 처리
 	 * @param params
 	 * @param model
 	 * @return
-	 */		
+	 */
 	@Override
 	@Transactional
 	public void saveAdvPaymentDebtor(Map<String, Object> params) {
-		
-		//Group Payment Mapping처리		
-		advPaymentMatchMapper.mappingAdvGroupPayment(params);		
-		
+
+		//Group Payment Mapping처리
+		advPaymentMatchMapper.mappingAdvGroupPayment(params);
+
 		//Interface 테이블 처리 - Bank Statement Bank Charge
-		List<EgovMap> returnList = advPaymentMatchMapper.selectMappedData(params);		
-		
+		List<EgovMap> returnList = advPaymentMatchMapper.selectMappedData(params);
+
 		if(returnList != null && returnList.size() > 0){
 			for(int i = 0 ; i < returnList.size(); i++){
-				
-				EgovMap ifMap  = (EgovMap) returnList.get(i);				
-				
+
+				EgovMap ifMap  = (EgovMap) returnList.get(i);
+
 				//variance
 				ifMap.put("variance", params.get("variance"));
 				ifMap.put("userId", params.get("userId"));
@@ -124,5 +124,15 @@ public class AdvPaymentMatchServiceImpl extends EgovAbstractServiceImpl implemen
 			}
 		}
 	}
-	
+
+	 @Override
+	  public List<EgovMap> selectJompayMatchList(Map<String, Object> params) {
+	    return advPaymentMatchMapper.selectJompayMatchList(params);
+	  }
+
+  @Override
+  public EgovMap saveJompayPaymentMapping(Map<String, Object> params) {
+    return advPaymentMatchMapper.saveJompayPaymentMapping(params);
+  }
+
 }

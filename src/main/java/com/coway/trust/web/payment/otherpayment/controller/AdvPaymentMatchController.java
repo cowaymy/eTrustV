@@ -1,5 +1,6 @@
 package com.coway.trust.web.payment.otherpayment.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -188,5 +189,25 @@ public class AdvPaymentMatchController {
 		return ResponseEntity.ok(message);
 
 	}
+
+	 @RequestMapping(value = "/selectJompayMatchList.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectJompayMatchList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	    List<EgovMap> keyInList = advPaymentMatchService.selectJompayMatchList(params);
+
+	    return ResponseEntity.ok(keyInList);
+	  }
+
+	 @RequestMapping(value = "/saveJompayAutoMap.do", method = RequestMethod.POST)
+	  public ResponseEntity<EgovMap> saveJompayAutoMap(@RequestBody Map<String, Object> params, SessionVO sessionVO) {
+
+	    LOGGER.debug("params : {} ", params.get("fileId"));
+
+	    params.put("userId", sessionVO.getUserId());
+	    EgovMap keyInList = advPaymentMatchService.saveJompayPaymentMapping(params);
+
+	    return ResponseEntity.ok(keyInList);
+
+	  }
 
 }
