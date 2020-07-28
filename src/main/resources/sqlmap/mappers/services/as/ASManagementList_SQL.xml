@@ -229,17 +229,17 @@
           </if>
 
           <if test=" registerDtFrm  != null  and registerDtFrm !=''  ">
-            <![CDATA[ AND ( TO_DATE( E.AS_CRT_DT,'dd/mm/yyyy')  >= TO_DATE( #{registerDtFrm},'dd/mm/yyyy') )]]>
+            <![CDATA[ AND ( TO_CHAR(TO_DATE( E.AS_CRT_DT,'dd/mm/yyyy'), 'YYYYMMDD')  >= TO_CHAR(TO_DATE( #{registerDtFrm},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
           </if>
           <if test="registerDtTo != null   and registerDtTo != '' ">
-            <![CDATA[ AND ( TO_DATE( E.AS_CRT_DT,'dd/mm/yyyy')  <= TO_DATE( #{registerDtTo},'dd/mm/yyyy') )]]>
+            <![CDATA[ AND ( TO_CHAR(TO_DATE( E.AS_CRT_DT,'dd/mm/yyyy'), 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{registerDtTo},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
           </if>
 
           <if test=" settleDtFrm  != null  and settleDtFrm !=''  ">
-            <![CDATA[ AND ( E.AS_SETL_DT >= TO_DATE(#{settleDtFrm} ,'dd/mm/yyyy'))  ]]>
+            <![CDATA[ AND ( TO_CHAR(TO_DATE( E.AS_SETL_DT,'dd/mm/yyyy'), 'YYYYMMDD')  >= TO_CHAR(TO_DATE( #{settleDtFrm},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
           </if>
           <if test="settleDtTo != null   and settleDtTo != '' ">
-            <![CDATA[ AND ( E.AS_SETL_DT <= TO_DATE( #{settleDtTo},'dd/mm/yyyy') )]]>
+            <![CDATA[ AND ( TO_CHAR(TO_DATE( E.AS_SETL_DT,'dd/mm/yyyy'), 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{settleDtTo},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
           </if>
 
           <if test="asNum != null and asNum != '' ">
