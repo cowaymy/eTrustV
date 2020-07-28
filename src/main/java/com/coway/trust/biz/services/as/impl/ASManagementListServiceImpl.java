@@ -3350,6 +3350,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   }
 
   @Override
+  public List<EgovMap> asProd() {
+    return ASManagementListMapper.asProd();
+  }
+
+  @Override
   public List<EgovMap> selectAsCrtStat() {
     return ASManagementListMapper.selectAsCrtStat();
   }
