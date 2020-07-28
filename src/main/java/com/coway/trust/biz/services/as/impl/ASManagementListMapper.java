@@ -324,6 +324,8 @@ public interface ASManagementListMapper {
 
   List<EgovMap> selectAsStat();
 
+  List<EgovMap> asProd();
+
   List<EgovMap> selectAsCrtStat();
 
   List<EgovMap> selectTimePick();
