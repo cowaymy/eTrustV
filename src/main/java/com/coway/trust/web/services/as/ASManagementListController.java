@@ -84,17 +84,18 @@ public class ASManagementListController {
 
     List<EgovMap> asTyp = ASManagementListService.selectAsTyp();
     List<EgovMap> asStat = ASManagementListService.selectAsStat();
+    List<EgovMap> asProduct = ASManagementListService.asProd();
 
     model.put("DT_RANGE", CommonUtils.nvl(range));
     model.put("asTyp", asTyp);
     model.put("asStat", asStat);
+    model.put("asProduct", asProduct);
 
     String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
     String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
     model.put("bfDay", bfDay);
     model.put("toDay", toDay);
-
     return "services/as/ASManagementList";
   }
 
@@ -153,18 +154,19 @@ public class ASManagementListController {
   public ResponseEntity<List<EgovMap>> selectASManagementList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {
     logger.debug("===========================/searchASManagementList.do===============================");
-    logger.debug("== params " + params.toString());
+    logger.debug("== params heres" + params.toString());
 
     String[] asTypeList = request.getParameterValues("asType");
+    String[] asProductList = request.getParameterValues("asProduct");
     String[] asStatusList = request.getParameterValues("asStatus");
+    String[] cmbbranchIdList = request.getParameterValues("cmbbranchId");
 
-    String cmbbranchId = request.getParameter("cmbbranchId");
-    String cmbctId = request.getParameter("cmbctId");
+    //String cmbctId = request.getParameter("cmbctId");
 
     params.put("asTypeList", asTypeList);
     params.put("asStatusList", asStatusList);
-    params.put("cmbbranchId", cmbbranchId);
-    params.put("cmbctId", cmbctId);
+    params.put("cmbbranchIdList", cmbbranchIdList);
+    params.put("asProductList", asProductList);
 
     List<EgovMap> ASMList = ASManagementListService.selectASManagementList(params);
 
