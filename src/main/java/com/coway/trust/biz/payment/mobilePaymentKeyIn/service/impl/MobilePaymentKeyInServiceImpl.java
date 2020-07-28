@@ -45,7 +45,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 05. 08    ONGHC         Amend saveMobilePaymentKeyInNormalPayment to add chqNo to formInfo map.
  * 2020. 06. 30    KR-HAN        Mobile payment key in Issue_29.05.2020 ( difference calculation error )
  * 2020. 07. 06    ONGHC        Add selectMemDetails
- * selectMemDetails
+ * 2020. 07. 28    ONGHC        Revert 2020. 06. 30 Deployment.
  *          </pre>
  */
 @Service("mobilePaymentKeyInService")
@@ -300,7 +300,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
           	}
 
-//          	System.out.println("++++ ::" + ( vPayAmt -vAdvAmt ) );
+          	System.out.println("++++ ::" + ( vPayAmt -vAdvAmt ) );
 //          	 && StringUtils.isEmpty(gridListMap.get("advMonth"))
           	if( ( vPayAmt -vAdvAmt  ) >= 0.00 )
           	{
@@ -335,12 +335,6 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
                       } else {
                   		targetAmt = targetAmt;
-
-                  		if (detailRowCnt - 1 == j) { // 마지막 데이타의 targetAmt 일 경우 AdvAmt금액 이 존재하는 경우 차액 계산하는 로직 추가
-                	    	if( totTargetAmt + targetAmt + vAdvAmt > payAmtDou ){
-                	    		targetAmt = targetAmt - (  ( totTargetAmt + targetAmt + vAdvAmt ) - payAmtDou );
-                	    	}
-                	    }
                       }
 
                       totTargetAmt = totTargetAmt + targetAmt;
@@ -405,13 +399,13 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
               if (!StringUtils.isEmpty(gridListMap.get("advMonth"))) {
                 formMap = new HashMap<String, Object>();
 
-//                if((vAdvAmt - totTargetAmt) < 0){
-//
-//              	  vAdvAmt = vAdvAmt;
-//
-//                }else{
-//              	  vAdvAmt = vAdvAmt - totTargetAmt;
-//                }
+                if((vAdvAmt - totTargetAmt) < 0){
+
+              	  vAdvAmt = vAdvAmt;
+
+                }else{
+              	  vAdvAmt = vAdvAmt - totTargetAmt;
+                }
 
                 formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
                 formMap.put("appType", "RENTAL");
@@ -489,9 +483,9 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       formInfo.put("userId", sUserId);
 
       // 저장
-//       System.out.println("++++ gridList ::" + gridList.toString() );
-//       System.out.println("++++ formInfo ::" + formInfo.toString() );
-//       System.out.println("++++ formList ::" + formList.toString() );
+      // System.out.println("++++ gridList ::" + gridList.toString() );
+      // System.out.println("++++ formInfo ::" + formInfo.toString() );
+      // System.out.println("++++ formList ::" + formList.toString() );
 
       iProcSeq = iProcSeq + 1; // 2020.02.24 : ADD iProcSeq
     }
@@ -679,7 +673,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       List<EgovMap> billInfoRentalList = commonPaymentService.selectBillInfoRental(params); // targetRenDetGridID
 
       // checkOrderOutstanding 정보 조회
-//      EgovMap targetOutMstResult = commonPaymentService.checkOrderOutstanding(params); // targetOutMstGridID
+      EgovMap targetOutMstResult = commonPaymentService.checkOrderOutstanding(params); // targetOutMstGridID
 
       // if( "ROOT_1".equals(targetOutMstResult.get("rootState")) ){
       // System.out.println("++ No Outstanding" +
@@ -691,14 +685,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       // Colle 정보 조회
       params.put("COLL_MEM_CODE", gridListMap.get("crtUserNm"));
       List<EgovMap> paymentColleConfirm = membershipPaymentService.paymentColleConfirm(params);
-      String sMemCode = "";
-      BigDecimal sMemId = null;
-      if( paymentColleConfirm.size() > 0 ){
-    	  EgovMap paymentColleConfirmMap = paymentColleConfirm.get(0);
-    	  sMemCode = (String) paymentColleConfirmMap.get("memCode");
-    	  sMemId = (BigDecimal) paymentColleConfirmMap.get("memId");
-      }
-
+      EgovMap paymentColleConfirmMap = paymentColleConfirm.get(0);
 
       Double mstRpf = (Double) orderInfoRentalList.get(0).get("rpf");
       Double mstRpfPaid = (Double) orderInfoRentalList.get(0).get("rpfPaid");
@@ -758,9 +745,9 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
           // item. = $("#rentalkeyInTrIssueDate").val() ;
           formMap.put("trDt", trIssDt); //
           // item.collectorCode = $("#rentalkeyInCollMemNm").val()
-          formMap.put("collectorCode", sMemCode);
+          formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
           // item.collectorId = $("#rentalkeyInCollMemId").val() ;
-          formMap.put("collectorId", sMemId);
+          formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
           // item.allowComm = $("#rentalcashIsCommChk").val()
           // formMap.put("allowComm", "1");
           formMap.put("allowComm", allowance);
@@ -773,13 +760,14 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
         		if( !StringUtils.isEmpty( gridListMap.get("advAmt" ) ) ){
         		vAdvAmt = Double.valueOf( String.valueOf(gridListMap.get("advAmt" )));
         		}
-        		if( !StringUtils.isEmpty( gridListMap.get("payAmt" ) ) ){
+        		if( !StringUtils.isEmpty( gridListMap.get("advAmt" ) ) ){
         		vPayAmt = Double.valueOf( String.valueOf(gridListMap.get("payAmt")));
         		}
         	}else{
 
         	}
 
+        	System.out.println("++++ ::" + ( vPayAmt -vAdvAmt ) );
 //        	 && StringUtils.isEmpty(gridListMap.get("advMonth"))
         	if( ( vPayAmt -vAdvAmt  ) >= 0.00 )
         	{
@@ -790,8 +778,6 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
                   Map billInfoRentalMap = billInfoRentalList.get(j);
                   // String detChkVal = (String) billInfoRentalMap.get("btnCheck");
                   String detSalesOrdNo = (String) billInfoRentalMap.get("ordNo");
-
-//                  System.out.println("++++ detSalesOrdNo ::" + detSalesOrdNo );
 
                   if (salesOrdNo.equals(detSalesOrdNo)) {
 
@@ -816,12 +802,6 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
                     } else {
                 		targetAmt = targetAmt;
-
-            			// targetAmt과 일 경우 AdvAmt금액 이 존재하는 경우 차액 계산하는 로직 추가
-            	    	if( totTargetAmt + targetAmt + vAdvAmt > payAmtDou ){
-            	    		targetAmt = targetAmt - (  ( totTargetAmt + targetAmt + vAdvAmt ) - payAmtDou );
-            	    	}
-
                     }
 
                     totTargetAmt = totTargetAmt + targetAmt;
@@ -866,9 +846,9 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
                     // item. = $("#rentalkeyInTrIssueDate").val() ;
                     formMap.put("trDt", trIssDt); //
                     // item.collectorCode = $("#rentalkeyInCollMemNm").val()
-                    formMap.put("collectorCode", sMemCode);
+                    formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
                     // item.collectorId = $("#rentalkeyInCollMemId").val() ;
-                    formMap.put("collectorId", sMemId);
+                    formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
                     // item.allowComm = $("#rentalcashIsCommChk").val()
                     // formMap.put("allowComm", "");
                     formMap.put("allowComm", allowance);
@@ -886,13 +866,13 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
             if (!StringUtils.isEmpty(gridListMap.get("advMonth"))) {
               formMap = new HashMap<String, Object>();
 
-//              if((vAdvAmt - totTargetAmt) < 0){
-//
-//            	  vAdvAmt = vAdvAmt;
-//
-//              }else{
-//            	  vAdvAmt = vAdvAmt ;
-//              }
+              if((vAdvAmt - totTargetAmt) < 0){
+
+            	  vAdvAmt = vAdvAmt;
+
+              }else{
+            	  vAdvAmt = vAdvAmt - totTargetAmt;
+              }
 
               formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
               formMap.put("appType", "RENTAL");
@@ -926,9 +906,9 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
               // item. = $("#rentalkeyInTrIssueDate").val() ;
               formMap.put("trDt", trIssDt); //
               // item.collectorCode = $("#rentalkeyInCollMemNm").val()
-              formMap.put("collectorCode", sMemCode);
+              formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
               // item.collectorId = $("#rentalkeyInCollMemId").val() ;
-              formMap.put("collectorId", sMemId);
+              formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
               // item.allowComm = $("#rentalcashIsCommChk").val()
               // formMap.put("allowComm", "");
               formMap.put("allowComm", allowance);
@@ -1020,9 +1000,8 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       ticketParam.put("mobTicketNo", gridListMap.get("mobTicketNo"));
       mobileAppTicketApiCommonMapper.update(ticketParam);
     }
-
 //     Map<String, Object> resultList = null; // 테스트
-     	Map<String, Object> resultList = commonPaymentService.saveNormalPayment(formInfo, formList, Integer.parseInt(key));
+    Map<String, Object> resultList = commonPaymentService.saveNormalPayment(formInfo, formList, Integer.parseInt(key));
 
     // WOR 번호 조회
     return resultList;
@@ -1032,5 +1011,4 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
   public EgovMap selectMemDetails(SessionVO sessionVO) {
     return mobilePaymentKeyInMapper.selectMemDetails(sessionVO.getUserName());
   }
-
 }
