@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * The persistent class for the SAL0020D database table.
- * 
+ *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SalesReqCancelVO implements Serializable {
@@ -77,6 +77,10 @@ public class SalesReqCancelVO implements Serializable {
 	private String soReqAccName;
 
 	private String soReqAttach;
+
+	 private String atchFileGrpId;
+
+
 
 	public int getSoReqId() {
 		return soReqId;
@@ -333,5 +337,13 @@ public class SalesReqCancelVO implements Serializable {
 	public void setSoReqAttach(String soReqAttach) {
 		this.soReqAttach = soReqAttach;
 	}
+
+  public String getAtchFileGrpId() {
+    return atchFileGrpId;
+  }
+
+  public void setAtchFileGrpId(String atchFileGrpId) {
+    this.atchFileGrpId = atchFileGrpId;
+  }
 
 }
