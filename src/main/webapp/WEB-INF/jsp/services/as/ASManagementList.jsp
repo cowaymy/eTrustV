@@ -41,7 +41,7 @@
   $(document).ready(
       function() {
         asManagementGrid();
-        doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'cmbbranchId', 'S', ''); // DSC BRANCH
+        doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'cmbbranchId', 'M', 'f_multiCombo'); // DSC BRANCH
 
         $("#cmbbranchId").change(function() { doGetCombo('/services/as/selectCTByDSC.do', $("#cmbbranchId").val(), '', 'cmbctId', 'S', ''); }); // INCHARGE CT
 
@@ -99,6 +99,11 @@
           width : 100
         },
         {
+          dataField : "stkDesc",
+          headerText : "<spring:message code='service.grid.Product'/>",
+          width : 200
+        },
+        {
           dataField : "asNo",
           headerText : "<spring:message code='service.grid.ASNo'/>",
           editable : false,
@@ -109,6 +114,14 @@
           headerText : "<spring:message code='service.grid.Status'/>",
           editable : false,
           width : 80
+        },
+        {
+          dataField : "asCrtDt",
+          headerText : "<spring:message code='service.grid.registerDt'/>",
+          editable : false,
+          width : 150,
+          dataType : "date",
+          formatString : "dd/mm/yyyy"
         },
         {
           dataField : "salesOrdNo",
@@ -943,6 +956,17 @@
     return gap;
   }
 
+  function f_multiCombo() {
+    $(function() {
+        $('#cmbbranchId').change(function() {
+
+        }).multipleSelect({
+            selectAll : true, // 전체선택
+            width : '80%'
+        });
+    });
+}
+
 </script>
 <section id="content">
  <!-- content start -->
@@ -1085,12 +1109,10 @@
      </tr>
      <tr>
       <th scope="row"><spring:message code='service.title.ASBrch'/></th>
-      <td><select id="cmbbranchId" name="cmbbranchId" class="w100p">
-      </select></td>
+      <td><select class="multy_select w100p" multiple="multiple" id="cmbbranchId" name="cmbbranchId"></select></td>
       <th scope="row"><spring:message code='service.grid.CTCode'/></th>
-      <td><select id="cmbctId" name="cmbctId" class="w100p">
-        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
-      </select></td>
+      <td><input type="text" title="" placeholder="<spring:message code='service.grid.CTCode'/>"
+       class="w100p" id="cmbctId" name="cmbctId" /></td>
       <th scope="row"><spring:message code='service.title.AppointmentDate'/></th>
       <td>
        <div class="date_set w100p">
@@ -1110,11 +1132,53 @@
      </tr>
      <tr>
       <th scope="row"><spring:message code='service.grid.CustomerName'/></th>
-      <td colspan="3">
+      <td>
         <input type="text" title="" placeholder="<spring:message code='service.grid.CustomerName'/>" class="w100p" id="custName" name="custName" /></td>
+      <th scope="row"><spring:message code='service.grid.Product'/></th>
+      <td><select class="multy_select w100p" multiple="multiple" id="asProduct" name="asProduct">
+        <c:forEach var="list" items="${asProduct}" varStatus="status">
+          <option value="${list.stkId}">${list.stkDesc}</option>
+        </c:forEach>
+      </select></td>
       <th scope="row"><spring:message code='service.title.NRIC_CompanyNo'/></th>
       <td>
         <input type="text" title="" placeholder="<spring:message code='service.title.NRIC_CompanyNo'/>" class="w100p" id="nricNum" name="nricNum" /></td>
+     </tr>
+    <tr>
+      <th scope="row"><spring:message code='service.grid.registerDt'/></th>
+      <td>
+       <div class="date_set w100p">
+        <p>
+         <input type="text" title="Create start Date"
+          placeholder="DD/MM/YYYY" class="j_date" id="registerDtFrm"
+          name="registerDtFrm" />
+        </p>
+        <span><spring:message code='pay.text.to'/></span>
+        <p>
+         <input type="text" title="Create end Date"
+          placeholder="DD/MM/YYYY" class="j_date" id="registerDtTo"
+          name="registerDtTo" />
+        </p>
+       </div>
+      </td>
+      <th scope="row"><spring:message code='service.grid.SettleDate'/></th>
+      <td>
+       <div class="date_set w100p">
+        <p>
+         <input type="text" title="Create start Date"
+          placeholder="DD/MM/YYYY" class="j_date" id="settleDtFrm"
+          name="settleDtFrm" />
+        </p>
+        <span><spring:message code='pay.text.to'/></span>
+        <p>
+         <input type="text" title="Create end Date"
+          placeholder="DD/MM/YYYY" class="j_date" id="settleDtTo"
+          name="settleDtTo" />
+        </p>
+       </div>
+      </td>
+      <th scope="row"></th>
+      <td></td>
      </tr>
     </tbody>
    </table>
