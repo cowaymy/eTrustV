@@ -669,14 +669,14 @@ AND SAL023.CUST_ADD_ID = INS.ADD_ID
 
   <select id="selectHsAssiinlList" parameterType="Map" resultType="egovMap">
 
-WITH entry_info_max AS (SELECT  sales_ord_id, install_entry_id,INSTALL_RESULT_ID
+<!-- WITH entry_info_max AS (SELECT  sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                         FROM (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID,
                         RANK () OVER ( PARTITION BY sales_ord_id
                         ORDER BY install_entry_id DESC) RANK
                         FROM sal0046d
                         WHERE stus_code_id = 4)
-                        WHERE RANK = 1),
-entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
+                        WHERE RANK = 1), -->
+WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                         FROM (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID,
                         RANK () OVER (PARTITION BY sales_ord_id
                         ORDER BY install_entry_id ASC) RANK
@@ -704,7 +704,7 @@ entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                         , project2.dept_code
                         , project2.crt_user_id
                         , project2.SERIAL_REQUIRE_CHK_YN
-                        , project2.PV_MONTH || '/' || project2.PV_YEAR AS INSTALL_DT
+                        , TO_CHAR(project2.INSTALL_DT, 'DD/MM/YYYY') AS INSTALL_DT
                         , project2.STATE
                         , project2.AREA
                         , project2.addr_dtl ||', '|| project2.street ||', '|| project2.area ||', '|| project2.postcode ||' '|| project2.city ||', '|| project2.state addr_dtl
@@ -738,7 +738,8 @@ entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                               , LOC.SERIAL_REQUIRE_CHK_YN
                               , ad.ADDR_DTL
                               , ad.street
-                              , DECODE (ir2.install_dt,NULL, '01/01/1900', TO_CHAR (ir2.install_dt, 'DD/MM/YYYY')) install_dt
+                            <!--   , DECODE (ir2.install_dt,NULL, '01/01/1900', TO_CHAR (ir2.install_dt, 'DD/MM/YYYY')) install_dt -->
+                              , d47.install_dt
                               , SO.PV_MONTH
                               , SO.PV_YEAR
 
@@ -760,9 +761,10 @@ entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                 LEFT JOIN ORG0005D og ON og.MEM_ID = CD.MEM_ID
                 LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
                 LEFT JOIN SYS0028M LOC ON LOC.WH_LOC_CODE = cd.MEM_CODE
-                LEFT JOIN entry_info_max eimax ON eimax.sales_ord_id = so.sales_ord_id
-                LEFT JOIN sal0047d ir2  ON ir2.entry_id = eimax.install_entry_id and ir2.result_id = eimax.INSTALL_RESULT_ID AND ir2.stus_code_id = 4
+              <!--   LEFT JOIN entry_info_max eimax ON eimax.sales_ord_id = so.sales_ord_id
+                LEFT JOIN sal0047d ir2  ON ir2.entry_id = eimax.install_entry_id and ir2.result_id = eimax.INSTALL_RESULT_ID AND ir2.stus_code_id = 4 -->
                 LEFT JOIN entry_info_min eimin ON eimin.sales_ord_id = so.sales_ord_id
+                LEFT JOIN SAL0047d d47 ON d47.ENTRY_ID = eimin.INSTALL_ENTRY_ID
                 WHERE
 
                 <if test="myBSMonth != null and myBSMonth != ''">
@@ -816,11 +818,13 @@ entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                 </if>
 
                 <if test="myInstallMonth != null and myInstallMonth != ''">
-                  AND SO.PV_MONTH = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
+                  <!-- AND SO.PV_MONTH = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM') -->
+                   AND EXTRACT(MONTH FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
                 </if>
 
                 <if test="myInstallMonth != null and myInstallMonth != ''">
-                  AND SO.PV_YEAR = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
+                  <!-- AND SO.PV_YEAR = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY') -->
+                  AND EXTRACT(YEAR FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
                 </if>
 
                 <if test="cmbStatusType != null and cmbStatusType != ''">
