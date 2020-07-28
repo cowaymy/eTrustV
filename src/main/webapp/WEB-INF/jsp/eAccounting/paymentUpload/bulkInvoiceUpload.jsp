@@ -725,7 +725,7 @@
     }
 
     function fn_supplierSearchPop() {
-        Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {accGrp:"VM10"}, null, true, "supplierSearchPop");
+        Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {accGrp:"VM11"}, null, true, "supplierSearchPop");
     }
 
     function fn_setSupplier() {
