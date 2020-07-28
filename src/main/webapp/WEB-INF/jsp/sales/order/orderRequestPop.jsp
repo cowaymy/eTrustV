@@ -3391,7 +3391,7 @@
                     <th scope="row">Attachment</th>
                     <td >
                     <div class="auto_file2">
-                    <input type="file" title="file add" id="attchmentFile" accept=".rar, .zip"/>
+                    <input type="file" title="file add" id="attchmentFile" accept=".zip"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
