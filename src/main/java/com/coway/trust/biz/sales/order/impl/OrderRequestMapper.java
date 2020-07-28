@@ -247,4 +247,9 @@ public interface OrderRequestMapper {
 
   int checkDefectByReason(Map<String, Object> params);
 
+  int selectNextFileId();
+
+  void insertFileDetail(Map<String, Object> flInfo);
+
+
 }
