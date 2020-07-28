@@ -95,6 +95,7 @@ function fn_openReport(){
 	    branchid = Number($("#branchCmb option:selected").val());
         var cmid = 0;
         cmid = Number($("#CMGroup option:selected").val());
+        var codyId = $("#codyList").val();
 
         /* Added for HS Count Forecast Listing Enhancement. Hui Ding 2020-07-28 */
         if (cmid == '' && codyId == null || cmid == '' && codyId == '') {
