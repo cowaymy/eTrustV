@@ -3,30 +3,45 @@
  */
 package com.coway.trust.web.sales.order;
 
+import java.io.File;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.sales.order.OrderReqApplication;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderLedgerService;
 import com.coway.trust.biz.sales.order.OrderRequestService;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -58,6 +73,14 @@ public class OrderRequestController {
 
   @Autowired
   private MessageSourceAccessor messageAccessor;
+
+  @Value("${web.resource.upload.file}")
+  private String uploadDir;
+
+  @Autowired
+  private OrderReqApplication orderReqApplication;
+
+
 
   @RequestMapping(value = "/orderRequestPop.do")
   public String orderRequestPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
@@ -294,5 +317,46 @@ public class OrderRequestController {
     logger.debug("=============================checkDefectByReason=====================================");
     Integer stat = orderRequestService.checkDefectByReason(params);
     return ResponseEntity.ok(stat);
+  }
+
+
+  @RequestMapping(value = "/attachmentFileUpload.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> attachFileUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+
+      String err = "";
+      String code = "";
+      List<String> seqs = new ArrayList<>();
+
+      try{
+           Set set = request.getFileMap().entrySet();
+           Iterator i = set.iterator();
+
+           while(i.hasNext()) {
+               Map.Entry me = (Map.Entry)i.next();
+               String key = (String)me.getKey();
+               seqs.add(key);
+           }
+
+      List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "sales" + File.separator + "Attachment", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+
+      logger.debug("list.size : {}", list.size());
+
+      params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+      orderReqApplication.insertOrderCancelAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs);
+
+      params.put("attachFiles", list);
+      code = AppConstants.SUCCESS;
+      }catch(ApplicationException e){
+          err = e.getMessage();
+          code = AppConstants.FAIL;
+      }
+
+      ReturnMessage message = new ReturnMessage();
+      message.setCode(code);
+      message.setData(params);
+      message.setMessage(err);
+
+      return ResponseEntity.ok(message);
   }
 }
