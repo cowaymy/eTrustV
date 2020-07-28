@@ -29,6 +29,9 @@
   var txtPrice_uc_Value = "${orderDetail.basicInfo.ordAmt}";
   var txtPV_uc_Value = "${orderDetail.basicInfo.ordPv}";
 
+  var myFileCaches = {};
+  var atchFileGrpId = 0;
+
   var filterGridID;
   var globalCmbFlg = 0; // VARIABLE FOR COMBO PACKAGE PROMOTION FLAG. 0 > NOT COMBO PROMO. 1 > IS COMBO PROMO.
 
@@ -1549,7 +1552,8 @@
               fn_selfClose);
           return false;
         }
-        if (todayYY >= 2018) {
+ // TEMP DISABLE DATE CHECKING FOR TESTING PURPOSE - TPY [20200728]
+/*         if (todayYY >= 2018) {
           if (todayDD == 26 || todayDD == 27 || todayDD == 1
               || todayDD == 2) {
             var msg = '<spring:message code="sal.msg.chkCancDate" />';
@@ -1559,7 +1563,7 @@
                     + "</b>", fn_selfClose);
             return false;
           }
-        }
+        } */
       } else {
         var msg = "Sorry. You have no access rights to request order cancellation.";
         Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>"
@@ -2368,9 +2372,52 @@
     $('#cmbPromotion').prop("disabled", true);
   }
 
+  $(function(){
+	  $('#attchmentFile').change(function(evt) {
+	      var file = evt.target.files[0];
+	      if(file == null && myFileCaches[1] != null){
+	          delete myFileCaches[1];
+	      }else if(file != null){
+	          myFileCaches[1] = {file:file};
+	      }
+	      console.log(myFileCaches);
+	  });
+	  });
+
   function fn_doSaveReqCanc() {
-    Common.ajax("POST", "/sales/order/requestCancelOrder.do", $(
-        '#frmReqCanc').serializeJSON(), function(result) {
+
+      var formData = new FormData();
+      $.each(myFileCaches, function(n, v) {
+          console.log("n : " + n + " v.file : " + v.file);
+          formData.append(n, v.file);
+      });
+
+
+      Common.ajaxFile("/sales/order/attachmentFileUpload.do", formData, function(result) {
+          if(result != 0 && result.code == 00){
+              atchFileGrpId = result.data.fileGroupKey;
+               console.log("atchFileGrpId :: " + atchFileGrpId);
+                var jsonObj =  {
+                		  salesOrdId : '${orderDetail.basicInfo.ordId}',
+                		  cmbRequestor : $("#cmbRequestor").val(),
+                		  dpCallLogDate : $("#dpCallLogDate").val(),
+                		  cmbReason : $("#cmbReason").val(),
+                		  dpReturnDate : $("#dpReturnDate").val(),
+                		  txtRemark : $("#txtRemark").val(),
+                		  txtTotalUseMth : $("#txtTotalUseMth").val(),
+                		  txtObPeriod : $("#txtObPeriod").val(),
+                		  txtRentalFees : $("#txtRentalFees").val(),
+                		  txtPenaltyCharge : $("#txtPenaltyCharge").val(),
+                		  txtPenaltyAdj : $("#txtPenaltyAdj").val(),
+                		  txtCurrentOutstanding : $("#txtCurrentOutstanding").val(),
+                		  spTotalAmount : $("#spTotalAmount").val(),
+                		  atchFileGrpId : atchFileGrpId
+
+                };
+
+                console.log("-------------------------" + JSON.stringify(jsonObj));
+    //Common.ajax("POST", "/sales/order/requestCancelOrder.do", $('#frmReqCanc').serializeJSON(), function(result) {
+    	Common.ajax("POST", "/sales/order/requestCancelOrder.do", jsonObj, function(result) {
 
       Common.alert('<spring:message code="sal.alert.msg.cancReqSum" />'
           + DEFAULT_DELIMITER + "<b>" + result.message + "</b>",
@@ -2384,7 +2431,13 @@
       } catch (e) {
       }
     });
-  }
+          }else{
+              Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+          }
+      },function(result){
+          Common.alert("Upload Failed. Please check with System Administrator.");
+      });
+      }
 
   function fn_doSaveReqOwnt() {
     Common.ajax("POST", "/sales/order/requestOwnershipTransfer.do", $(
@@ -3224,6 +3277,7 @@
     return rslt;
   }
 
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->
@@ -3268,7 +3322,7 @@
                                          Order Detail Page Include START
       *****************************************************************************
     -->
-    <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
+   <%--  <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%> --%>
     <!--
       ****************************************************************************
                                          Order Detail Page Include END
@@ -3333,6 +3387,20 @@
                         <textarea id="txtRemark" name="txtRemark" cols="20" rows="5"></textarea>
                       </td>
                     </tr>
+                    <tr>
+                    <th scope="row">Attachment</th>
+                    <td >
+                    <div class="auto_file2">
+                    <input type="file" title="file add" id="attchmentFile" accept=".rar, .zip"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+            </label>
+        </div>
+    </td>
+</tr>
+
+
                   </tbody>
                 </table>
               </dd>
