@@ -303,7 +303,7 @@ function fn_officialReceiptReport_V2(){
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_officialReceiptReport();"><spring:message code='pay.btn.officialReceipt'/></a></p></li>
-             <li><p class="btn_blue"><a href="javascript:fn_officialReceiptReport_V2();">Officient Receipt Ver. 2</a></p></li>
+             <li><p class="btn_blue"><a href="javascript:fn_officialReceiptReport_V2();">Official Receipt Ver. 2</a></p></li>
             </c:if>
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax(1);"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
