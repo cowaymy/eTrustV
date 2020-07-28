@@ -32,7 +32,7 @@ public class HSReportController {
 
   @Resource(name = "hsManualService")
   private HsManualService hsManualService;
-  
+
   @RequestMapping(value = "/hsCountForecastListingPop.do")
   public String hsCountForecastListingPop(@RequestParam Map<String, Object> params, ModelMap model) {
     // 호출될 화면
@@ -95,10 +95,10 @@ public class HSReportController {
 	  params.put("memberLevel", sessionVO.getMemberLevel());
 	  params.put("userName", sessionVO.getUserName());
 	  params.put("userType", sessionVO.getUserTypeId());
-	  
+
 	  List<EgovMap> branchList = hsManualService.selectBranchList(params);
 	    model.addAttribute("branchList", branchList);
-	    
+
 	    model.addAttribute("userName", sessionVO.getUserName());
 
 	    model.addAttribute("memberLevel", sessionVO.getMemberLevel());
@@ -253,6 +253,14 @@ public class HSReportController {
     return ResponseEntity.ok(safetyLevelList);
   }
 
+  @RequestMapping(value = "/safetyLevelQtyList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> safetyLevelQtyList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+    List<EgovMap> safetyLevelQtyList = HSReportService.safetyLevelQtyList(params);
+    logger.debug("safetyLeveltyQtyList {}", safetyLevelQtyList);
+    return ResponseEntity.ok(safetyLevelQtyList);
+  }
+
   @RequestMapping(value = "/hsReportCustSignPop.do")
   public String hsReportCustSignPop(@RequestParam Map<String, Object> params, ModelMap model) {
     return "services/bs/hsReportCustSignPop";
@@ -273,7 +281,7 @@ public class HSReportController {
     logger.debug("selectCodyList2 {}", selectCodyList2);
     return ResponseEntity.ok(selectCodyList2);
   }
-  
+
   @RequestMapping(value = "/getCdUpMem.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getCdUpMem(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 	    params.put("memLevl", sessionVO.getMemberLevel());
@@ -283,7 +291,7 @@ public class HSReportController {
     logger.debug("selectCodyList2 {}", getCdUpMem);
     return ResponseEntity.ok(getCdUpMem);
   }
-  
+
   @RequestMapping(value = "/selectCodyBranch.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectCodyBranch(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 	    params.put("memLevl", sessionVO.getMemberLevel());
@@ -293,5 +301,5 @@ public class HSReportController {
     logger.debug("selectCodyBranch {}", selectCodyBranch);
     return ResponseEntity.ok(selectCodyBranch);
   }
-  
+
 }

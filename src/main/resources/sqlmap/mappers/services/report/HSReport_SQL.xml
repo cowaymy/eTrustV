@@ -465,6 +465,14 @@
     WHERE CODE_MASTER_ID = 444
   </select>
 
+  <!-- Added for HS Count Forecast Listing Enhancement. Hui Ding 2020-07-28 -->
+  <select id="safetyLevelQtyList" parameterType="Map" resultType="egovMap">
+    SELECT CODE CODE_ID,
+               CODE_NAME
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = 454
+  </select>
+
   <select id="getCodyList2" parameterType="Map" resultType="egovMap">
     SELECT A.MEM_ID as CODE_ID
              , A.MEM_CODE   || '-' || a.NAME  as CODE_NAME

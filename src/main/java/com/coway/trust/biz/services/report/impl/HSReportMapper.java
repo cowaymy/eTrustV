@@ -41,4 +41,7 @@ public interface HSReportMapper {
 
   List<EgovMap> selectHSReportCustSign(Map<String, Object> params);
 
+  // Added for HS Count Forecast Listing Enhancement. Hui Ding 2020-07-28
+  List<EgovMap> safetyLevelQtyList(Map<String, Object> params);
+
 }

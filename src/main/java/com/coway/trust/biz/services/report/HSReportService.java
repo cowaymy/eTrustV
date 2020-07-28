@@ -38,4 +38,6 @@ public interface HSReportService {
   List<EgovMap> selectCodyBranch(Map<String, Object> params);
 
   List<EgovMap> selectHSReportCustSign(Map<String, Object> params);
+
+  List<EgovMap> safetyLevelQtyList(Map<String, Object> params);
 }

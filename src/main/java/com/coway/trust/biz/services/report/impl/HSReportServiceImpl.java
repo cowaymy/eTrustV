@@ -86,6 +86,11 @@ public class HSReportServiceImpl extends EgovAbstractServiceImpl implements HSRe
   }
 
   @Override
+  public List<EgovMap> safetyLevelQtyList(Map<String, Object> params){
+	  return HSReportMapper.safetyLevelQtyList(params);
+  }
+
+  @Override
   public List<EgovMap> getCodyList2(Map<String, Object> params) {
     // TODO Auto-generated method stub
     return HSReportMapper.getCodyList2(params);
