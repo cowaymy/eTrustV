@@ -704,7 +704,7 @@ entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                         , project2.dept_code
                         , project2.crt_user_id
                         , project2.SERIAL_REQUIRE_CHK_YN
-                        , project2.INSTALL_DT
+                        , project2.PV_MONTH || '/' || project2.PV_YEAR AS INSTALL_DT
                         , project2.STATE
                         , project2.AREA
                         , project2.addr_dtl ||', '|| project2.street ||', '|| project2.area ||', '|| project2.postcode ||' '|| project2.city ||', '|| project2.state addr_dtl
@@ -739,6 +739,8 @@ entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                               , ad.ADDR_DTL
                               , ad.street
                               , DECODE (ir2.install_dt,NULL, '01/01/1900', TO_CHAR (ir2.install_dt, 'DD/MM/YYYY')) install_dt
+                              , SO.PV_MONTH
+                              , SO.PV_YEAR
 
                 FROM SAL0001D sal01
                 INNER JOIN SAL0090D sal09 ON sal09.SRV_SO_ID = sal01.SALES_ORD_ID
