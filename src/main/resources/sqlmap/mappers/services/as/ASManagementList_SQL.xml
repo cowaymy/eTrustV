@@ -40,6 +40,8 @@
            NVL(MEM_CODE, '-') MEM_CODE,
            S.RCD_TMS,
            S.AS_SETL_DT,
+           S.STK_DESC,
+           S.AS_CRT_DT,
            S.AS_RESULT_CRT_DT,
            S.CMS AS CMS,
            S.AS_RESULT_CRT_USER_ID,
@@ -91,6 +93,8 @@
                            E.MEM_CODE,
                            E.RCD_TMS,
                            E.AS_SETL_DT,
+                           E.STK_DESC,
+                           E.AS_CRT_DT,
                            E.AS_RESULT_CRT_DT,
                            E.CMS,
                            E.AS_RESULT_CRT_USER_ID,
@@ -127,7 +131,9 @@
                          CASE WHEN Extent7.AS_CMMS IS NULL THEN Extent1.AS_ALLOW_COMM
                          ELSE Extent7.AS_CMMS END AS CMS,
                          Extent7.USER_NAME AS AS_RESULT_CRT_USER_ID,
-                         Extent1.NO AS HSR_NO
+                         Extent1.NO AS HSR_NO,
+                         Extent1.AS_CRT_DT,
+                         Extent11.STK_CODE || ' - ' || STK_DESC AS STK_DESC
                   FROM SVC0001D Extent1
                   JOIN SYS0013M Extent2 ON Extent1.AS_TYPE_ID = Extent2.CODE_ID
                   JOIN SYS0038M Extent3 ON Extent1.AS_STUS_ID = Extent3.STUS_CODE_ID
@@ -164,10 +170,11 @@
                                      FROM SVC0004D A
                                      LEFT JOIN SYS0047M B on A.AS_RESULT_CRT_USER_ID = B.USER_ID
                                      WHERE ( 1 = as_result_is_curr ) ) WHERE ranking = 1
-                  ) Extent7
-                  ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
-                 AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
-                 AND ( 1 = Extent7.AS_RESULT_IS_CURR )
+                  ) Extent7 ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
+                              AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
+                              AND ( 1 = Extent7.AS_RESULT_IS_CURR )
+                 JOIN SAL0002D Extent10 ON Extent4.SALES_ORD_ID = Extent10.SALES_ORD_ID
+                 LEFT JOIN SYS0026M Extent11 ON Extent10.ITM_STK_ID = Extent11.STK_ID
                  WHERE ( 8 <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
                    AND Extent4.BNDL_ID IS NULL       -- homecare Remove(except)
                  <if test="asStatusList != null and asStatusList != '' ">
@@ -184,13 +191,24 @@
                    </foreach>
                  </if>
 
-                 <if test="cmbbranchId != null and cmbbranchId != '' ">
-                   AND Extent9.CODE IN #{cmbbranchId}
+                 <if test="cmbbranchIdList != null and cmbbranchIdList != '' ">
+                   AND Extent9.CODE IN
+                   <foreach item="item" collection="cmbbranchIdList" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
                  </if>
 
                  <if test="cmbctId != null and cmbctId != '' ">
-                   AND Extent8.MEM_CODE IN #{cmbctId}
+                   AND (Extent8.MEM_CODE LIKE '%'|| #{cmbctId} || '%')
                  </if>
+
+                 <if test="asProductList != null and asProductList != '' ">
+                   AND Extent11.STK_ID IN
+                   <foreach item="item" collection="asProductList" index="index" open="(" separator="," close=")">
+                     #{item}
+                   </foreach>
+                 </if>
+
 
           ) E LEFT JOIN SYS0047M Extent8 ON E.AS_CRT_USER_ID = Extent8.USER_ID
 
@@ -208,6 +226,20 @@
           </if>
           <if test="appDtTo != null   and appDtTo != '' ">
             <![CDATA[ AND ( E.AS_APPNT_DT <= TO_DATE( #{appDtTo},'dd/mm/yyyy') )]]>
+          </if>
+
+          <if test=" registerDtFrm  != null  and registerDtFrm !=''  ">
+            <![CDATA[ AND ( TO_DATE( E.AS_CRT_DT,'dd/mm/yyyy')  >= TO_DATE( #{registerDtFrm},'dd/mm/yyyy') )]]>
+          </if>
+          <if test="registerDtTo != null   and registerDtTo != '' ">
+            <![CDATA[ AND ( TO_DATE( E.AS_CRT_DT,'dd/mm/yyyy')  <= TO_DATE( #{registerDtTo},'dd/mm/yyyy') )]]>
+          </if>
+
+          <if test=" settleDtFrm  != null  and settleDtFrm !=''  ">
+            <![CDATA[ AND ( E.AS_SETL_DT >= TO_DATE(#{settleDtFrm} ,'dd/mm/yyyy'))  ]]>
+          </if>
+          <if test="settleDtTo != null   and settleDtTo != '' ">
+            <![CDATA[ AND ( E.AS_SETL_DT <= TO_DATE( #{settleDtTo},'dd/mm/yyyy') )]]>
           </if>
 
           <if test="asNum != null and asNum != '' ">
@@ -2716,6 +2748,15 @@
     WHERE CODE_MASTER_ID = '58'
       AND DISAB = 0
     ORDER BY CODE_ID
+  </select>
+
+  <select id="asProd"  parameterType="Map" resultType="egovMap">
+    SELECT STK_ID AS STK_ID,
+           STK_CODE || ' - ' || STK_DESC AS STK_DESC
+    FROM SYS0026M
+    WHERE STK_TYPE_ID = '61'
+      AND STUS_CODE_ID NOT IN (8, 7)
+    ORDER BY STK_CODE
   </select>
 
   <select id="selectAsStat"  parameterType="Map" resultType="egovMap">
