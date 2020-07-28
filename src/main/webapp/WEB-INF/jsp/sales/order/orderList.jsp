@@ -14,11 +14,11 @@
     };
 
     $(document).ready(function(){
+
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         if("${SESSION_INFO.userTypeId}" == "2" ){
-
-            if("${SESSION_INFO.memberLevel}" =="3" || "${SESSION_INFO.memberLevel}" =="4"){
+           if("${SESSION_INFO.memberLevel}" =="3" || "${SESSION_INFO.memberLevel}" =="4"){
             	$("#btnReq").hide();
             }
         }
@@ -653,11 +653,13 @@
 <tr>
 	<th scope="row"><spring:message code='sales.ordStus'/></th>
 	<td>
-	<select id="listOrdStusId" name="ordStusId" class="multy_select w100p" multiple="multiple">
-		<option value="1">Active</option>
-		<option value="4">Completed</option>
-		<option value="10">Cancelled</option>
-	</select>
+	    <select id="listOrdStusId" name="ordStusId" class="multy_select w100p" multiple="multiple">
+              <c:if test="${SESSION_INFO.userTypeId != '2'}">
+                    <option value="1">Active</option>
+               </c:if>
+               <option value="4">Completed</option>
+               <option value="10">Cancelled</option>
+        </select>
 	</td>
 	<th scope="row"><spring:message code='sales.keyInBranch'/></th>
 	<td>
