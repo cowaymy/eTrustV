@@ -171,6 +171,8 @@ public interface ASManagementListService {
 
   List<EgovMap> selectAsStat();
 
+  List<EgovMap> asProd();
+
   List<EgovMap> selectAsCrtStat();
 
   List<EgovMap> selectTimePick();
