@@ -133,6 +133,7 @@
     , SO_REQ_ISS_BANK
     , SO_REQ_ACC_NAME
     , SO_REQ_ATTACH
+    , ATCH_FILE_GRP_ID
     )
     VALUES
     ( #{soReqId}
@@ -167,6 +168,7 @@
     , #{soReqIssBank}
     , #{soReqAccName}
     , #{soReqAttach}
+    ,#{atchFileGrpId}
     )
   </insert>
 
@@ -2084,5 +2086,33 @@
         AND DISB = 0
         AND CODE = #{cmbReason}
   </select>
+
+   <select id="selectNextFileId" resultType="int">
+        SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
+    </select>
+
+    <insert id="insertFileDetail" parameterType="Map">
+        INSERT INTO SYS0071D (
+        ATCH_FILE_ID
+        , ATCH_FILE_NAME
+        , FILE_SUB_PATH
+        , PHYSICL_FILE_NAME
+        , FILE_EXTSN
+        , FILE_SIZE
+        , FILE_PASSWORD
+        , FILE_UNQ_KEY
+        , FILE_KEY_SEQ
+        )VALUES (
+        #{atchFileId}
+        ,#{atchFileName}
+        ,#{fileSubPath}
+        ,#{physiclFileName}
+        ,#{fileExtsn}
+        ,#{fileSize}
+        ,#{filePassword}
+        ,#{fileUnqKey}
+        ,#{fileKeySeq}
+        )
+    </insert>
 
 </mapper>
