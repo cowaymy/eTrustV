@@ -90,44 +90,68 @@ function fn_openReport(){
             day = "0"+date.getDate();
         }
 	    var tmpforecastMonth = $("#forecastMonth").val();
-	    var forecastMonth =tmpforecastMonth.substring(3,7)+"-"+tmpforecastMonth.substring(0,2)+"-01";
+	    var forecastDt =tmpforecastMonth.substring(3,7)+"-"+tmpforecastMonth.substring(0,2)+"-01";
 	    var branchid = 0;
 	    branchid = Number($("#branchCmb option:selected").val());
         var cmid = 0;
         cmid = Number($("#CMGroup option:selected").val());
         var codyId = $("#codyList").val();
+        var safetyLv = $("#safetyLv").val();
+
+        console.log("V_FORECASTDATE: " + forecastDt);
+        console.log("V_BRANCHID: " + branchid);
+        console.log("V_MEMBERID: " + codyId);
+        console.log("V_CMID: " + cmid);
+        console.log("V_SAFETYLVL: " + safetyLv);
 
         /* Added for HS Count Forecast Listing Enhancement. Hui Ding 2020-07-28 */
-        if (cmid == '' && codyId == null || cmid == '' && codyId == '') {
-            cmid = 0;
-            console.log("BSCountForecast_Branch");
-            $("#reportForm #reportFileName").val('/services/BSCountForecastByBranch.rpt');
-            $("#reportForm #reportDownFileName").val("BSCountForecastByBranch_"+day+month+date.getFullYear());
-            $("#reportForm #V_FORECASTDATE").val(forecastDt);
-            $("#reportForm #V_BRANCHID").val(branchId);
-            $("#reportForm #V_CMID").val(cmid);
+        if (branchid == null || branchid == '' || branchid == 0){
+        	console.log("BSCountForecast_AllBranches");
+        	if (safetyLv == '' || safetyLv == null) {
+        		safetyLv = 0;
+        	}
 
-        }
-        else if (cmid > 0 && codyId == 0) {
-            console.log("BSCountForecast_CMGroup");
-            $("#reportForm #reportFileName").val('/services/BSCountForecastByCMGroup.rpt');
-            $("#reportForm #reportDownFileName").val("BSCountForecastByCMGroup_"+day+month+date.getFullYear());
+        	$("#reportForm #reportFileName").val('/services/BSCountForecast_AllBranches.rpt');
+            $("#reportForm #reportDownFileName").val("BSCountForecastAllBranches_"+day+month+date.getFullYear());
             $("#reportForm #V_FORECASTDATE").val(forecastDt);
-            $("#reportForm #V_BRANCHID").val(branchId);
-            $("#reportForm #V_CMID").val(cmid);
-        }
-        else if (cmid > 0 && codyId > 0) {
-            console.log("BSCountForecast_Cody");
-            $("#reportForm #reportFileName").val('/services/BSCountForecast_Cody.rpt');
-            $("#reportForm #reportDownFileName").val("BSCountForecastByCody_"+day+month+date.getFullYear());
-            $("#reportForm #V_FORECASTDATE").val(forecastDt);
-            $("#reportForm #V_BRANCHID").val(branchId);
-            $("#reportForm #V_MEMBERID").val(codyId);
-            $("#reportForm #V_MEMBERLVL").val(4);
+            $("#reportForm #V_SAFETYLVL").val(safetyLv);
+        } else {
+	        if (cmid == '' && codyId == null || cmid == '' && codyId == '') {
+	            cmid = 0;
+	            console.log("BSCountForecast_Branch");
+	            $("#reportForm #reportFileName").val('/services/BSCountForecastByBranch.rpt');
+	            $("#reportForm #reportDownFileName").val("BSCountForecastByBranch_"+day+month+date.getFullYear());
+	            $("#reportForm #V_FORECASTDATE").val(forecastDt);
+	            $("#reportForm #V_BRANCHID").val(branchid);
+	            $("#reportForm #V_CMID").val(cmid);
+
+	        }
+	        else if (cmid > 0 && codyId == 0) {
+	            console.log("BSCountForecast_CMGroup");
+	            $("#reportForm #reportFileName").val('/services/BSCountForecastByCMGroup.rpt');
+	            $("#reportForm #reportDownFileName").val("BSCountForecastByCMGroup_"+day+month+date.getFullYear());
+	            $("#reportForm #V_FORECASTDATE").val(forecastDt);
+	            $("#reportForm #V_BRANCHID").val(branchid);
+	            $("#reportForm #V_CMID").val(cmid);
+	        }
+	        else if (cmid > 0 && codyId > 0) {
+	            console.log("BSCountForecast_Cody");
+
+	            $("#reportForm #reportFileName").val('/services/BSCountForecast_Cody.rpt');
+	            $("#reportForm #reportDownFileName").val("BSCountForecastByCody_"+day+month+date.getFullYear());
+	            $("#reportForm #V_FORECASTDATE").val(forecastDt);
+	            $("#reportForm #V_BRANCHID").val(branchid);
+	            $("#reportForm #V_MEMBERID").val(codyId);
+	            $("#reportForm #V_CMID").val(cmid);
+	            $("#reportForm #V_MEMBERLVL").val(4);
+
+
+	            console.log("V_MEMBERLVL: " + 4);
+	        }
         }
 
         if ($("#exportType").val() == "PDF") {
-            $("#hsFilterForm #viewType").val("PDF");
+            $("#reportForm #viewType").val("PDF");
             var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
             };
@@ -188,6 +212,7 @@ function fn_clear(){
 	$("#CMGroup").val('');
 	$("#codyList").val('');
 	$("#forecastMonth").val('');
+	$("#safetyLv").val('');
 }
 
  /* Added for HS Count Forecast Listing Enhancement. Hui Ding 2020-07-28 */
@@ -229,7 +254,10 @@ function fn_setDefaultBranch() {
 <form action="#" id="reportForm">
 <input type="hidden" id="V_FORECASTDATE" name="V_FORECASTDATE" />
 <input type="hidden" id="V_BRANCHID" name="V_BRANCHID" />
+<input type="hidden" id="V_MEMBERID" name="V_MEMBERID" />
+<input type="hidden" id="V_MEMBERLVL" name="V_MEMBERLVL" />
 <input type="hidden" id="V_CMID" name="V_CMID" />
+<input type="hidden" id="V_SAFETYLVL" name="V_SAFETYLVL" />
 <!--reportFileName,  viewType 모든 레포트 필수값 -->
 <input type="hidden" id="reportFileName" name="reportFileName" />
 <input type="hidden" id="viewType" name="viewType" />
