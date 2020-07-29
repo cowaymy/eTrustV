@@ -1552,8 +1552,7 @@
               fn_selfClose);
           return false;
         }
- // TEMP DISABLE DATE CHECKING FOR TESTING PURPOSE - TPY [20200728]
-/*         if (todayYY >= 2018) {
+        if (todayYY >= 2018) {
           if (todayDD == 26 || todayDD == 27 || todayDD == 1
               || todayDD == 2) {
             var msg = '<spring:message code="sal.msg.chkCancDate" />';
@@ -1563,7 +1562,7 @@
                     + "</b>", fn_selfClose);
             return false;
           }
-        } */
+        }
       } else {
         var msg = "Sorry. You have no access rights to request order cancellation.";
         Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>"
@@ -3277,7 +3276,6 @@
     return rslt;
   }
 
-
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->
@@ -3322,7 +3320,7 @@
                                          Order Detail Page Include START
       *****************************************************************************
     -->
-   <%--  <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%> --%>
+    <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
     <!--
       ****************************************************************************
                                          Order Detail Page Include END
