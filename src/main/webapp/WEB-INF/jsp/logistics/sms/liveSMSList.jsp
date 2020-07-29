@@ -346,7 +346,7 @@ var columnLayout = [
 <tr>
     <th scope="row">Message</th>
     <td>
-        <textarea cols="20" rows="5" id="msg" name="msg" placeholder=""></textarea>
+        <textarea cols="20" rows="5" id="msg" name="msg" placeholder="" maxlength="155"></textarea>
     </td>
 </tr>
 <tr>
