@@ -422,10 +422,7 @@
               msg += "* <spring:message code='sys.msg.invalid' arguments='Room Temperature' htmlEscape='false'/> </br>";
             }
             if ( $("#waterSourceTemp").val() == "") {
-                msg += "* <spring:message code='sys.msg.invalid' arguments='Water Source Temperature' htmlEscape='false'/> </br>";
-              }
-            if ( $("#adptUsed").val() == "") {
-              msg += "* <spring:message code='sys.msg.invalid' arguments='Adapter Used' htmlEscape='false'/> </br>";
+              msg += "* <spring:message code='sys.msg.invalid' arguments='Water Source Temperature' htmlEscape='false'/> </br>";
             }
           }
         }
@@ -524,28 +521,28 @@
   }
 
   function createInstallationChkViewAUIGrid() {
-	    var columnLayout = [  {
-	      dataField : "codeDesc",
-	      //headerText : "Status",
-	      headerText : '<spring:message code="service.grid.chkLst" />',
-	      editable : false,
-	      width : 870
-	    } ];
+    var columnLayout = [  {
+      dataField : "codeDesc",
+      //headerText : "Status",
+      headerText : '<spring:message code="service.grid.chkLst" />',
+      editable : false,
+      width : 870
+    } ];
 
-	    var gridPros = {
-	      //usePaging : true,
-	      pageRowCount : 20,
-	      editable : true,
-	      //showStateColumn : true,
-	      displayTreeOpen : true,
-	      headerHeight : 30,
-	      skipReadonlyColumns : true,
-	      wrapSelectionMove : true,
-	      showRowNumColumn : true,
-	      height : 165
-	    };
-	     instChkLst_view = AUIGrid.create("#grid_wrap_instChk_view", columnLayout, gridPros);
-	  }
+    var gridPros = {
+      //usePaging : true,
+      pageRowCount : 20,
+      editable : true,
+      //showStateColumn : true,
+      displayTreeOpen : true,
+      headerHeight : 30,
+      skipReadonlyColumns : true,
+      wrapSelectionMove : true,
+      showRowNumColumn : true,
+      height : 165
+    };
+     instChkLst_view = AUIGrid.create("#grid_wrap_instChk_view", columnLayout, gridPros);
+  }
 
   var gridPros = {
     usePaging : true,
@@ -561,7 +558,6 @@
     wrapSelectionMove : true,
     showRowNumColumn : false
   };
-
 
   function fn_serialSearchPop(){
     $("#pLocationType").val('${installResult.whLocGb}');
@@ -653,11 +649,11 @@
   }
 
   function validate3(a) {
-    if(Math.floor(a.value)==0){
-      a.value = "";
-    }
+    //if(Math.floor(a.value)==0){
+    //  a.value = "0";
+    //}
     if(a.value=='.'){
-    a.value = "";
+      a.value = "";
     }
     var regex = /^[\d.]+$/;
     if (!regex.test(a.value)) {
@@ -674,7 +670,7 @@
         $("#addInstallForm #m11").show();
         $("#addInstallForm #m12").show();
         $("#addInstallForm #m13").show();
-        $("#addInstallForm #m14").show();
+        $("#addInstallForm #m14").hide();
       }
     }
     else{
