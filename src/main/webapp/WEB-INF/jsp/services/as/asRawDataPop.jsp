@@ -275,6 +275,7 @@
           $("#reportForm1 #V_ORDERBYSQL").val(" ");
           $("#reportForm1 #V_FULLSQL").val(" ");
           $("#reportForm1 #V_WHERESQL").val(whereSql);
+          console.log("V_WHERESQL " + toString($("#reportForm1 #V_WHERESQL").val()));
           $("#reportForm1 #reportFileName").val('/services/ASRawDataSprPrtKOR.rpt');
           $("#reportForm1 #viewType").val("EXCEL");
           $("#reportForm1 #reportDownFileName").val("ASRawDataSprPrtKOR_" + day + month + date.getFullYear());
