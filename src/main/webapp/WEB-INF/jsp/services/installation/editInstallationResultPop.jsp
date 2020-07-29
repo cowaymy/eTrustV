@@ -78,71 +78,70 @@
   }
 
   function validateDecimal(evt) {
-	     var theEvent = evt || window.event;
+     var theEvent = evt || window.event;
 
-	     // Handle paste
-	     if (theEvent.type === 'paste') {
-	         key = event.clipboardData.getData('text/plain');
-	     } else {
-	     // Handle key press
-	         var key = theEvent.keyCode || theEvent.which;
-	         key = String.fromCharCode(key);
-	     }
-	     var regex = /[0-9.]/;
-	     if( !regex.test(key) ) {
-	       theEvent.returnValue = false;
-	       if(theEvent.preventDefault) theEvent.preventDefault();
-	     }
-	   }
+     // Handle paste
+     if (theEvent.type === 'paste') {
+         key = event.clipboardData.getData('text/plain');
+     } else {
+     // Handle key press
+         var key = theEvent.keyCode || theEvent.which;
+         key = String.fromCharCode(key);
+     }
+     var regex = /[0-9.]/;
+     if( !regex.test(key) ) {
+       theEvent.returnValue = false;
+       if(theEvent.preventDefault) theEvent.preventDefault();
+     }
+   }
 
+   function validate2(a) {
+    var regex = /^\d+$/;
+    if (!regex.test(a.value)) {
+      a.value = "";
+    }
+   }
 
-	   function validate2(a) {
-	    var regex = /^\d+$/;
-	    if (!regex.test(a.value)) {
-	      a.value = "";
-	    }
-	   }
+   function validateFloatKeyPress(el, evt) {
+      var charCode = (evt.which) ? evt.which : event.keyCode;
+      var number = el.value.split('.');
 
-	   function validateFloatKeyPress(el, evt) {
-	        var charCode = (evt.which) ? evt.which : event.keyCode;
-	        var number = el.value.split('.');
+      if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+      }
 
-	        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
-	            return false;
-	        }
+      if(number.length>1 && charCode == 46){
+        return false;
+      }
+      var caratPos = getSelectionStart(el);
+      var dotPos = el.value.indexOf(".");
+      if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+        return false;
+      }
+      return true;
+  }
 
-	        if(number.length>1 && charCode == 46){
-	             return false;
-	        }
-	        var caratPos = getSelectionStart(el);
-	        var dotPos = el.value.indexOf(".");
-	        if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
-	            return false;
-	        }
-	        return true;
-	    }
+  function getSelectionStart(o) {
+    if (o.createTextRange) {
+      var r = document.selection.createRange().duplicate()
+      r.moveEnd('character', o.value.length)
+      if (r.text == '') return o.value.length
+        return o.value.lastIndexOf(r.text)
+     } else return o.selectionStart
+  }
 
-	    function getSelectionStart(o) {
-	        if (o.createTextRange) {
-	            var r = document.selection.createRange().duplicate()
-	            r.moveEnd('character', o.value.length)
-	            if (r.text == '') return o.value.length
-	            return o.value.lastIndexOf(r.text)
-	        } else return o.selectionStart
-	    }
-
-	    function validate3(a) {
-	           if(Math.floor(a.value)==0){
-	               a.value = "";
-	          }
-	           if(a.value=='.'){
-	               a.value = "";
-	          }
-	            var regex = /^[\d.]+$/;
-	            if (!regex.test(a.value)) {
-	              a.value = "";
-	            }
-	    }
+  function validate3(a) {
+    // if(Math.floor(a.value)==0){
+    //     a.value = "";
+    //}
+    if(a.value=='.'){
+     a.value = "";
+    }
+    var regex = /^[\d.]+$/;
+      if (!regex.test(a.value)) {
+        a.value = "";
+      }
+  }
 
   function fn_saveInstall() {
     if (fn_validate()) {
@@ -242,7 +241,7 @@
       <form id="frmSearchSerial" name="frmSearchSerial" method="post">
         <input id="pGubun" name="pGubun" type="hidden" value="RADIO" /> <input id="pFixdYn" name="pFixdYn" type="hidden" value="N" /> <input id="pLocationType" name="pLocationType" type="hidden" value="" /> <input id="pLocationCode" name="pLocationCode" type="hidden" value="" /> <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" /> <input id="pStatus" name="pStatus" type="hidden" value="" /> <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
       </form>
-      <br/>
+      <br />
       <form action="#" id="editInstallForm" method="post">
         <input type="hidden" value="<c:out value="${installInfo.resultId}"/>" id="resultId" name="resultId" /> <input type="hidden" value="<c:out value="${installInfo.installEntryId}"/>" id="entryId" name="entryId" /> <input type="hidden" value="<c:out value="${installInfo.serialRequireChkYn}"/>" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" /> <input type="hidden" value="<c:out value="${installInfo.c14}"/>" id="hidInstallEntryNo" name="hidInstallEntryNo" /> <input type="hidden" value="<c:out value="${orderDetail.basicInfo.ordId}"/>" id="hidSalesOrderId" name="hidSalesOrderId" /> <input type="hidden" value="<c:out value="${installInfo.serialNo}"/>" id="hidSerialNo" name="hidSerialNo" />
         <table class="type1 mb1m">
@@ -316,10 +315,8 @@
                 <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" title="Create start Date" placeholder="DD/MM/YYYY" id="installdt" name="installdt" value="<c:out value="${installInfo.installDt}" />" />
               </td>
               <th scope="row"></th>
-              <td>
-              </td>
+              <td></td>
             </tr>
-
             <tr>
               <th scope="row"><spring:message code='service.title.PSIRcd' /><span class="must" id="m4"> *</span></th>
               <td>
@@ -362,7 +359,8 @@
             <tr>
               <th scope="row"><spring:message code='service.title.Remark' /></th>
               <td colspan="3">
-                <textarea id="remark" name="remark" cols="5" rows="5" style="width: 100%; height: 100px"><c:out value="${installInfo.rem}" /></textarea>
+                <textarea id="remark" name="remark" cols="5" rows="5" style="width: 100%;
+  height: 100px"><c:out value="${installInfo.rem}" /></textarea>
               </td>
             </tr>
             <tr>
