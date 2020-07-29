@@ -767,15 +767,43 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                 LEFT JOIN SAL0047d d47 ON d47.ENTRY_ID = eimin.INSTALL_ENTRY_ID
                 WHERE
 
-                <if test="myInstallMonth != null and myInstallMonth != ''">
-                   EXTRACT(MONTH FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
-                   AND EXTRACT(YEAR FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
-                </if>
+                <choose>
+                     <when test="myInstallMonth != ''  and myBSMonth != ''">
+                            <if test="myInstallMonth != null and myInstallMonth != ''">
+                          EXTRACT(MONTH FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
+                          AND EXTRACT(YEAR FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
+                            </if>
+                            <if test="myBSMonth != null and myBSMonth != ''">
+                          AND HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
+                          AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
+                            </if>
+                     </when>
 
-                <if test="myBSMonth != null and myBSMonth != ''">
+                     <otherwise>
+                        <choose>
+                      <when test="myInstallMonth != ''">
+                        <if test="myInstallMonth != null and myInstallMonth != ''">
+                            EXTRACT(MONTH FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
+                          AND EXTRACT(YEAR FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
+                        </if>
+                      </when>
+
+                      <otherwise>
+                        <if test="myBSMonth != null and myBSMonth != ''">
+                             HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
+                            AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
+                        </if>
+                      </otherwise>
+
+                    </choose>
+                </otherwise>
+             </choose>
+
+
+<!--                 <if test="myBSMonth != null and myBSMonth != ''">
                   AND HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
                   AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
-                </if>
+                </if> -->
 
                  <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
                       AND HS.NO = #{txtHsOrderNo}

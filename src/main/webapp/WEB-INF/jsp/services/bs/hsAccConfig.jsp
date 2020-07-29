@@ -291,10 +291,11 @@ var TODAY_DD      = "${toDay}";
     var radioVal = $("input:radio[name='searchDivCd']:checked").val();
 
     if (radioVal == 1) { //HS NO CREATE BEFORE
-      // HS PRERIOD ARE OPTIONAL IF SALES ORDER OR HS ORDER PROVIDED
+      // HS PRERIOD ARE OPTIONAL IF SALES ORDER OR HS ORDER PROVIDED  myBSMonth
        if ($("#myInstallMonth").val() == "") {
-        if ($("#txtSalesOrder").val() == "" && $("#txtHsOrderNo").val() == "") {
-          Common.alert("Install Month or HS Order or Sales Order are required.");
+        /* if ($("#txtSalesOrder").val() == "" && $("#txtHsOrderNo").val() == "") { */
+        	if ($("#myBSMonth").val() == "" && $("#txtHsOrderNo").val() == "") {
+          Common.alert("Install Month or HS Period or HS Order are required.");
           return false;
         }
       }
@@ -382,10 +383,14 @@ var TODAY_DD      = "${toDay}";
     } else if (checkedItems.length >= 2) {
       //Common.alert('Only availbale to entry a result with single HS order');
       return;
-    } else if (checkedItems[0]["code"] != "ACT") {
+    }
+
+/*     else if (checkedItems[0]["code"] != "ACT") {
       Common.alert('Only availbale to entry a result<br/>for the HS order status in Active');
       return;
-    } else {
+    }  */
+
+    else {
       var str = "";
       var custStr = "";
       var rowItem;
@@ -404,10 +409,10 @@ var TODAY_DD      = "${toDay}";
         schdulId = rowItem.schdulId;
         salesOrdId = rowItem.salesOrdId;
 
-        if (hsStuscd == 4) {
+      /*   if (hsStuscd == 4) {
           Common.alert("already has result. Result entry is disallowed.");
           return;
-        }
+        } */
       }
     }
 
@@ -1032,10 +1037,12 @@ var TODAY_DD      = "${toDay}";
         } else if (radioVal == 2) {
              Common.alert('Not allow to Assign HT in Manual CS');
               return;
-        } else if (checkedItems[0]["code"] != "ACT") {
+        }
+        /*  else if (checkedItems[0]["code"] != "ACT") {
           Common.alert('Only allow to entry a result<br/>for the CS Order status in Active');
           return;
-        } else {
+        }  */
+        else {
           var str = "";
           var custStr = "";
           var rowItem;
@@ -1061,10 +1068,10 @@ var TODAY_DD      = "${toDay}";
                   schdulId +=",";
                 }
 
-              if (hsStuscd == 4) {
+              /*   if (hsStuscd == 4) {
                 Common.alert("CS result already COM. Assign HT Member is disallowed.");
                 return;
-              }
+              } */
             }
           }
         /* Common.popupDiv("/homecare/services/htConfigBasicMultiplePop.do?isPop=true&schdulId="+ schdulId + "&salesOrdId="+saleOrdList  +"&indicator=1", null, null , true , '_ConfigBasicPop'); */
