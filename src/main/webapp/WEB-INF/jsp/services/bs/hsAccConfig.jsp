@@ -292,9 +292,9 @@ var TODAY_DD      = "${toDay}";
 
     if (radioVal == 1) { //HS NO CREATE BEFORE
       // HS PRERIOD ARE OPTIONAL IF SALES ORDER OR HS ORDER PROVIDED
-      if ($("#myBSMonth").val() == "") {
+       if ($("#myInstallMonth").val() == "") {
         if ($("#txtSalesOrder").val() == "" && $("#txtHsOrderNo").val() == "") {
-          Common.alert("HS Period or HS Order or Sales Order are required.");
+          Common.alert("Install Month or HS Order or Sales Order are required.");
           return false;
         }
       }
