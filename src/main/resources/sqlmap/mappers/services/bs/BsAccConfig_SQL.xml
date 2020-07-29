@@ -767,47 +767,23 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                 LEFT JOIN SAL0047d d47 ON d47.ENTRY_ID = eimin.INSTALL_ENTRY_ID
                 WHERE
 
+                <if test="myInstallMonth != null and myInstallMonth != ''">
+                   EXTRACT(MONTH FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
+                   AND EXTRACT(YEAR FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
+                </if>
+
                 <if test="myBSMonth != null and myBSMonth != ''">
-                  HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
+                  AND HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
                   AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
                 </if>
 
-                <choose>
-                  <when test="myBSMonth != ''">
-                    <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
+                 <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
                       AND HS.NO = #{txtHsOrderNo}
-                    </if>
-                  </when>
-                  <otherwise>
-                    <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
-                      HS.NO = #{txtHsOrderNo}
-                    </if>
-                  </otherwise>
-                </choose>
+                 </if>
 
-                <choose>
-                  <when test="myBSMonth != ''">
-                    <if test="txtSalesOrder != null and txtSalesOrder != ''">
-                      AND ( SO.SALES_ORD_NO = #{txtSalesOrder})
-                    </if>
-                  </when>
-                  <otherwise>
-
-                    <choose>
-                      <when test="txtHsOrderNo != ''">
-                        <if test="txtSalesOrder != null and txtSalesOrder != ''">
-                          AND ( SO.SALES_ORD_NO = #{txtSalesOrder})
-                        </if>
-                      </when>
-                      <otherwise>
-                        <if test="txtSalesOrder != null and txtSalesOrder != ''">
-                          ( SO.SALES_ORD_NO = #{txtSalesOrder})
-                        </if>
-                      </otherwise>
-                    </choose>
-
-                  </otherwise>
-                </choose>
+                 <if test="txtSalesOrder != null and txtSalesOrder != ''">
+                      AND  SO.SALES_ORD_NO = #{txtSalesOrder}
+                 </if>
 
                 <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
                   AND CD.MEM_CODE = #{txtAssigncodyCode}
@@ -815,16 +791,6 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
 
                 <if test="txtComcodyCode != null and txtComcodyCode != ''">
                   AND AC.MEM_CODE = #{txtComcodyCode}
-                </if>
-
-                <if test="myInstallMonth != null and myInstallMonth != ''">
-                  <!-- AND SO.PV_MONTH = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM') -->
-                   AND EXTRACT(MONTH FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
-                </if>
-
-                <if test="myInstallMonth != null and myInstallMonth != ''">
-                  <!-- AND SO.PV_YEAR = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY') -->
-                  AND EXTRACT(YEAR FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
                 </if>
 
                 <if test="cmbStatusType != null and cmbStatusType != ''">
@@ -857,10 +823,6 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
 
                  <if test="myInstallArea != null and myInstallArea != ''">
                   AND MG.AREA = #{myInstallArea}
-                </if>
-
-                <if test="myInstallState != null and myInstallState != ''">
-                  AND MG.STATE = #{myInstallState}
                 </if>
 
                 <![CDATA[ AND ROWNUM <= 20000 ]]>
