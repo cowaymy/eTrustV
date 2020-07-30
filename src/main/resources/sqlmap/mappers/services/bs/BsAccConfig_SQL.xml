@@ -858,9 +858,9 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                   AND MG.AREA = #{myInstallArea}
                 </if>
 
-                <![CDATA[ AND ROWNUM <= 20000 ]]>
-
           )Project2
+
+           <![CDATA[ WHERE ROWNUM <= 20000 ]]>
 
           </select>
 
