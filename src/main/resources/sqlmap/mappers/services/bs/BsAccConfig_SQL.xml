@@ -756,7 +756,7 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                 INNER JOIN SAL0029D cu ON cu.cust_id = so.cust_id
                 LEFT JOIN ORG0001D cd ON cd.mem_id = sal09.SRV_CODY_ID
                 LEFT JOIN SYS0038M STUS ON STUS.stus_code_id = cd.stus
-                LEFT JOIN ORG0001D ac ON ac.mem_id = hs.CODY_ID
+                LEFT JOIN ORG0001D ac ON ac.mem_id = sal09.SRV_CODY_ID
                 LEFT JOIN SYS0005M br ON br.brnch_id = ac.brnch
                 LEFT JOIN ORG0005D og ON og.MEM_ID = CD.MEM_ID
                 LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
@@ -830,11 +830,16 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                 </if>
 
                 <if test="cmdBranchCode != null and cmdBranchCode != ''">
-                  AND ( br.BRNCH_id = #{cmdBranchCode})
+                AND mg.CODY_BRNCH_CODE in ( select br.CODE from SYS0005M br where br.BRNCH_id = #{cmdBranchCode})
+              <!--     AND ( br.BRNCH_id = #{cmdBranchCode}) -->
                 </if>
 
                 <if test="cmdCdManager != null and cmdCdManager != ''">
-                  AND OG.DEPT_CODE = (SELECT DEPT_CODE FROM ORG0005D WHERE MEM_ID = #{cmdCdManager} )
+
+                AND mg.CODY_MANGR_USER_ID = (SELECT DEPT_CODE FROM ORG0005D WHERE MEM_ID = #{cmdCdManager})
+
+<!--                 AND ac.mem_id = #{cmdCdManager}
+                AND OG.DEPT_CODE = (SELECT DEPT_CODE FROM ORG0005D WHERE MEM_ID = #{cmdCdManager} ) -->
                 </if>
 
                 <if test="deptCode != null and deptCode != ''">
