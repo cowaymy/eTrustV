@@ -209,11 +209,13 @@ var batchInfoLayout = [
         },{
             dataField : "code",
             headerText : "<spring:message code='pay.head.validStatus'/>",
-            editable : false
+            editable : false,
+            width : 100
         }, {
             dataField : "validRem",
             headerText : "<spring:message code='pay.head.validRemark'/>",
-            editable : false
+            editable : false,
+            width : 100
         }, {
             dataField : "userOrdNo",
             headerText : "<spring:message code='pay.head.orderNo'/>",
@@ -245,7 +247,8 @@ var batchInfoLayout = [
         }, {
             dataField : "userRunNo",
             headerText : "<spring:message code='pay.head.runningNo'/>",
-            editable : false
+            editable : false,
+            width : 120
         },{
             dataField : "userEftNo",
             headerText : "<spring:message code='pay.head.eftNo'/>",
@@ -253,15 +256,18 @@ var batchInfoLayout = [
         },{
             dataField : "userRefDtMonth",
             headerText : "<spring:message code='pay.head.refDateMonth'/>",
-            editable : false
+            editable : false,
+            width : 100
         },{
             dataField : "userRefDtDay",
             headerText : "<spring:message code='pay.head.refDateDay'/>",
-            editable : false
+            editable : false,
+            width : 120
         },{
             dataField : "userRefDtYear",
             headerText : "<spring:message code='pay.head.refDateYear'/>",
-            editable : false
+            editable : false,
+            width : 130
         },{
             dataField : "userBcAmt",
             headerText : "<spring:message code='pay.head.bankChargeAmt'/>",
@@ -270,6 +276,16 @@ var batchInfoLayout = [
             dataField : "userBcAcc",
             headerText : "<spring:message code='pay.head.bankChargeAcc'/>",
             editable : false
+        },{
+            dataField : "cardNo",
+            headerText : "Credit Card No",
+            editable : false,
+            width : 150
+        },{
+            dataField : "approvalCode",
+            headerText : "Approval Code",
+            editable : false,
+            width : 120
         }];
 
 
@@ -795,7 +811,7 @@ var batchInfoLayout = [
 </div>
 <!-- popup_wrap end -->
 <!-- popup_wrap start -->
-<div id="conf_popup_wrap" class="popup_wrap" style="display:none;">
+<div id="conf_popup_wrap" class="popup_wrap size_big" style="display:none;">
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>Batch Payment Confirmation</h1>
 		<ul class="right_opt">

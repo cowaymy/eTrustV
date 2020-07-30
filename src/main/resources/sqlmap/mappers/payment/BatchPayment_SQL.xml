@@ -222,7 +222,9 @@
 		       Project1.CODE CODE  ,
 		       Project1.VALID_STUS_ID VALID_STUS_ID  ,
 		       Project1.USER_TR_DT USER_TR_DT  ,
-		       Project1.USER_CLCTR_CODE USER_CLCTR_CODE
+		       Project1.USER_CLCTR_CODE USER_CLCTR_CODE,
+		       Project1.CARD_NO,
+               Project1.APPROVAL_CODE
 		  FROM ( SELECT Project1.DET_ID DET_ID  ,
 		                Project1.BATCH_ID BATCH_ID  ,
 		                Project1.DISAB DISAB  ,
@@ -246,7 +248,9 @@
 		                Project1.USER_TR_DT USER_TR_DT  ,
 		                Project1.USER_CLCTR_CODE USER_CLCTR_CODE  ,
 		                Project1.CODE CODE  ,
-		                ROW_NUMBER() OVER ( ORDER BY Project1.DET_ID ASC  ) ROW_NUMBER
+		                ROW_NUMBER() OVER ( ORDER BY Project1.DET_ID ASC  ) ROW_NUMBER,
+		                Project1.CARD_NO,
+                        Project1.APPROVAL_CODE
 		         FROM ( SELECT Extent1.DET_ID DET_ID  ,
 		                       Extent1.BATCH_ID BATCH_ID  ,
 		                       Extent1.DISAB DISAB  ,
@@ -269,7 +273,9 @@
 		                       Extent1.SYS_AMT SYS_AMT  ,
 		                       Extent1.USER_TR_DT USER_TR_DT  ,
 		                       Extent1.USER_CLCTR_CODE USER_CLCTR_CODE  ,
-		                       Extent2.CODE CODE
+		                       Extent2.CODE CODE,
+		                       Extent1.CARD_NO,
+		                       Extent1.APPROVAL_CODE
 		                FROM PAY0043D Extent1
 		                       JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.VALID_STUS_ID
 		                 WHERE  Extent1.BATCH_ID = #{batchId}
