@@ -1855,8 +1855,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     salesReqCancelVO.setSoReqNo(reqNo);
 
     // Added for File Attachment Group ID - TPY [20200728]
-    logger.debug("atchFileGrpId : " + params.get("atchFileGrpId"));
-    salesReqCancelVO.setAtchFileGrpId(params.get("atchFileGrpId").toString());
+    //logger.debug("atchFileGrpId : " + params.get("atchFileGrpId"));
+    salesReqCancelVO.setAtchFileGrpId(CommonUtils.nvl(params.get("atchFileGrpId")));
     // if(LatestOrderCallEntryID == 0) salesReqCancelVO.setSoReqStusId(32);
 
     logger.debug("= REQUEST CANCELLATION VO : " + salesReqCancelVO);
