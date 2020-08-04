@@ -39,7 +39,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * DATE          PIC        VERSION     COMMENT
  *--------------------------------------------------------------------------------------------
  * 17/09/2019    JUN           1.0.1       - Jun First creation
- * 16/07/2020    ONGHC      1.0.2       - Amend installFailJobRequestProc
+ * 16/07/2020    ONGHC      1.0.2       - Amend  installFailJobRequestProc
  *********************************************************************************************/
 
 @Service("serviceApiInstallationDetailService")
