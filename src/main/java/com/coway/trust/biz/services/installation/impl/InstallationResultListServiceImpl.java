@@ -49,7 +49,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 14/02/2020    ONGHC      1.0.10     - Amend Save_2 to add PSI information
  * 26/02/2020    ONGHC      1.0.11     - Amend Save_2 to add LPM information
  * 02/06/2020    ONGHC      1.0.12     - Amend runInstSp to add condition for SP_LOGISTIC_REQUEST return param
- * 01/07/2020    ONGHC      1.0.13     - Amend updateAssignCTSerial and updateAssignCT
+ * 01/07/2020    ONGHC      1.0.13     - Amend updateAssignCTSerial and  updateAssignCT
  *********************************************************************************************/
 
 @Service("installationResultListService")
