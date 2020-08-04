@@ -429,7 +429,7 @@ public class InstallationJobDto {
     return custName;
   }
 
-  public void setCustName(String custName) {
+  public void setCustName(String  custName) {
     this.custName = custName;
   }
 
