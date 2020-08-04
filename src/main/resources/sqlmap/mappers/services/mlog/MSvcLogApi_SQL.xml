@@ -900,7 +900,7 @@
   <select id="getInstallationJobList" parameterType="Map" resultType="egovMap">
     <![CDATA[
       SELECT *
-      FROM (SELECT ROW_NUMBER () OVER (PARTITION BY SAL0001D.SALES_ORD_NO ORDER BY SAL0095D.SRV_EXPR_DT, SAL0046D.INSTALL_ENTRY_NO DESC) rnum,
+      FROM (SELECT ROW_NUMBER () OVER (PARTITION BY SAL0001D.SALES_ORD_NO ORDER BY SAL0095D.SRV_EXPR_DT, SAL0046D.INSTALL_ENTRY_NO DESC)  rnum,
                    SAL0046D.INSTALL_ENTRY_NO AS service_No,
                    SAL0046D.STUS_CODE_ID AS job_Status,
                    NVL (TO_CHAR (SAL0046D.APPNT_DT, 'YYYYMMDD'), '') AS appointment_Date,
