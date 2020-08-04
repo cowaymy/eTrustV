@@ -3520,7 +3520,7 @@
   <!-- INSERT START -->
 
   <insert id="insertInstallResult" parameterType="Map">
-    INSERT INTO SAL0047D (RESULT_ID
+    INSERT INTO SAL0047D ( RESULT_ID
                         , ENTRY_ID
                         , STUS_CODE_ID
                         , CT_ID
