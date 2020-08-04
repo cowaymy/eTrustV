@@ -106,6 +106,17 @@ public class HsAccConfigServiceImpl extends EgovAbstractServiceImpl implements H
 	    return cnt;
 	 }
 
+	 @Override
+	  public void updateHsAccConfigBasicMultiple1_5 (Map<String, Object> params, SessionVO sessionVO) {
+	    // TODO Auto-generated method stub
+	    int cnt = 0;
+
+	    params.put("updUserId", sessionVO.getUserId());
+	    hsAccConfigMapper.updateHSAccConfigBasicMultiple1_5(params);
+/*	    hsAccConfigMapper.updateAssignHTMultiple(params);*/
+
+	 }
+
   @Override
 	public List<EgovMap> getDeptTreeList(Map<String, Object> params) {
 

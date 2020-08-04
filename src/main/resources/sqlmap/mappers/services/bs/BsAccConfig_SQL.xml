@@ -667,6 +667,26 @@ AND SAL023.CUST_ADD_ID = INS.ADD_ID
                      </update>
 
 
+
+                     <update id="updateHSAccConfigBasicMultiple1_5" parameterType="Map" >
+                       UPDATE SVC0008D
+                           SET CODY_ID = #{memCode},
+                               REM = #{remark},
+                               UPD_USER_ID = #{updUserId},
+                               UPD_DT = SYSDATE
+                         WHERE   STUS_CODE_ID = 1
+                         AND SALES_ORD_ID IN
+                         <foreach item="item" collection="salesOrdListSp" index="index" open="(" separator="," close=")">
+                          #{item}
+                           </foreach>
+                           AND SCHDUL_ID IN
+                            <foreach item="item1" collection="schdulListSp" index="index" open="(" separator="," close=")">
+                          #{item1}
+                           </foreach>
+
+                     </update>
+
+
   <select id="selectHsAssiinlList" parameterType="Map" resultType="egovMap">
 
 <!-- WITH entry_info_max AS (SELECT  sales_ord_id, install_entry_id,INSTALL_RESULT_ID

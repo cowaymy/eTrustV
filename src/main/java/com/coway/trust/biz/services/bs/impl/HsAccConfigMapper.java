@@ -13,6 +13,8 @@ public interface HsAccConfigMapper {
 
 	int updateHSAccConfigBasicMultiple(Map<String, Object> params);
 
+	void updateHSAccConfigBasicMultiple1_5(Map<String, Object> params);
+
 	List<EgovMap> getDeptTreeList(Map<String, Object> params);
 
 	List<EgovMap> getGroupTreeList(Map<String, Object> params);

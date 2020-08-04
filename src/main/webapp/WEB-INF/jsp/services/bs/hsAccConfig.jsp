@@ -5,7 +5,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript" language="javascript">
-var TODAY_DD      = "${toDay}";
+ var TODAY_DD      = "${toDay}";
 
   var StatusTypeData = [ {
     "codeId" : "1",
@@ -1027,14 +1027,27 @@ var TODAY_DD      = "${toDay}";
   }
 
   function fn_htMultipleChange(){
-      var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+       var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
        var radioVal = $("input:radio[name='searchDivCd']:checked").val();
 
+       var todayDD = Number(TODAY_DD.substr(0, 2));
 
-        if (checkedItems.length <= 0) {
-          Common.alert('No data selected.');
-          return;
-        } else if (radioVal == 2) {
+        if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 5 ))  {
+        	Common.alert('Either no data selected OR today date, ' + todayDD + ' is restricted for assign CT members');
+           return;
+        }
+
+        /////////////////////////////////////////////////////// RESTRICTION /////////////////////////////////////////////////
+
+/*         if (todayDD == 4) {
+            var msg = '<spring:message code="sal.msg.chkCancDate" />';
+            Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />');
+            return false;
+          } */
+
+        ////////////////////////////////////////////////////////  RESTRICTION /////////////////////////////////////////////////
+
+        else if (radioVal == 2) {
              Common.alert('Not allow to Assign HT in Manual CS');
               return;
         }
@@ -1074,8 +1087,11 @@ var TODAY_DD      = "${toDay}";
               } */
             }
           }
+
+        console.log('schdulId ::' + schdulId);
+        console.log('TODAY_DD ::' + TODAY_DD);
         /* Common.popupDiv("/homecare/services/htConfigBasicMultiplePop.do?isPop=true&schdulId="+ schdulId + "&salesOrdId="+saleOrdList  +"&indicator=1", null, null , true , '_ConfigBasicPop'); */
-                  Common.popupDiv("/homecare/services/hsAccConfigBasicMultiplePop.do?isPop=true&schdulId="+ schdulId + "&salesOrdId="+saleOrdList  +"&indicator=1", null, null , true , '_ConfigBasicPop');
+                  Common.popupDiv("/homecare/services/hsAccConfigBasicMultiplePop.do?isPop=true&schdulId="+ schdulId  +"&TODAY_DD="+TODAY_DD + "&salesOrdId="+saleOrdList +"&indicator=1", null, null , true , '_ConfigBasicPop');
   }//hsAccConfigBasicMultiplePop.jsp
 
 
@@ -1157,6 +1173,8 @@ var TODAY_DD      = "${toDay}";
 
 </script>
 <form id="popEditForm" method="post">
+ <input type="hidden" name="TODAY_DD" id="TODAY_DD" />
+
  <input type="hidden" name="schdulId" id="_schdulId" />
  <!-- schdulId  -->
  <input type="hidden" name="salesOrdId" id="_salesOrdId" />

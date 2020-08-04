@@ -12,6 +12,8 @@ public interface HsAccConfigService {
 
  int updateHsAccConfigBasicMultiple(Map<String, Object> params, SessionVO sessionVO);
 
+ void updateHsAccConfigBasicMultiple1_5(Map<String, Object> params, SessionVO sessionVO);
+
   List<EgovMap> getDeptTreeList(Map<String, Object> params);
 
 	List<EgovMap> getGroupTreeList(Map<String, Object> params);

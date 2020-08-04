@@ -5,6 +5,7 @@
 var userId = '${SESSION_INFO.userId}';
 var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
 var memberTypeData = 2;
+
 /* var memberTypeData = [{"codeId": "2","codeName": "Coway Lady"}]; */
 
         $(document).ready(function() {
@@ -129,11 +130,15 @@ var memberTypeData = 2;
 
         function  fn_doSaveBasicInfo(){
 
+         	var todayDD = (TODAY_DD.substr(0, 2));
+            	console.log("this is today date" + todayDD );
+
         var  saveForm ={
-                "cmbServiceMem":                  $('#cmbCodeLadyCode').val() ,
-                "remark":                              $('#entry_remark').val() ,
+                "cmbServiceMem":                    $('#cmbCodeLadyCode').val() ,
+                "remark":                                $('#entry_remark').val() ,
                 "salesOrderId":                        $('#salesOrderId').val(),
-                "schdulId" :                               $('#schdulId').val()
+                "schdulId" :                             $('#schdulId').val(),
+                "TODAY_DD" :                         todayDD
         }
 
             Common.ajax("POST", "/services/hs/saveHsConfigBasicMultiple.do", saveForm, function(result) {
@@ -171,6 +176,7 @@ var memberTypeData = 2;
 
  <form id="cForm" method="post"  name='cForm'>
 <%-- <input id="salesOrderId" name="salesOrderId" type="hidden" value="${basicInfo.ordId}"/> --%>
+<input type="hidden" name="TODAY_DD" id="TODAY_DD" value="${TODAY_DD}"/>
 <input type="hidden" name="salesOrderId"  id="salesOrderId" value="${SALEORD_ID}"/>
 <input type="hidden" name="custId" id="schdulId" value="${SCHDUL_ID}"/>
 <input type="hidden" name="ind" id="ind" value="${IND}"/>

@@ -1241,14 +1241,25 @@ public class HsAccConfigController {
     }
 
     params.put("memCode", (String) params.get("cmbServiceMem"));
+    /*params.put("TODAY_DD", (String) params.get("TODAY_DD"));*/
 
     logger.debug("saveHsConfigBasicMultiple - params : {}", params);
 
     // UPDATE SAL0090D - SRV_MEM_ID
     // UPDATE SVC0008D - MEM_ID
+
     int resultValue = hsAccConfigService.updateHsAccConfigBasicMultiple(params, sessionVO);
 
-    // int resultValue = 0;
+    logger.debug("check 000:: " + params.get("TODAY_DD"));
+
+    if (params.get("TODAY_DD").equals("01") || params.get("TODAY_DD").equals("02") || params.get("TODAY_DD").equals("03") || params.get("TODAY_DD").equals("04") || params.get("TODAY_DD").equals("05")){
+
+  	 hsAccConfigService.updateHsAccConfigBasicMultiple1_5(params, sessionVO);
+
+    logger.debug("check 111 :: " + params.get("TODAY_DD"));
+
+    }
+
 
     if (resultValue > 0) {
       message.setCode(AppConstants.SUCCESS);
