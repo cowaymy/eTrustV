@@ -114,7 +114,7 @@ $(document).ready(function(){
           var mm = today.getMonth() + 1;
           var yyyy = today.getFullYear();
 
-          if(dd > 15) {
+          if(dd > 5) {
               var newMM = (mm + 1);
               if(newMM < 10) {
                   newMM = "0" + newMM;
