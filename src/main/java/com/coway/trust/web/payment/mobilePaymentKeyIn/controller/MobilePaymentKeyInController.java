@@ -78,13 +78,14 @@ public class MobilePaymentKeyInController {
     List<EgovMap> userBranch = memberListService.selectUserBranch();
 
     EgovMap memDetail = mobilePaymentKeyInService.selectMemDetails(sessionVO);
-
     model.put("bfDay", bfDay);
     model.put("toDay", toDay);
     model.addAttribute("userBranch", userBranch);
     model.addAttribute("memDetail", memDetail);
+    model.addAttribute("memLevel", sessionVO.getMemberLevel());
+    model.addAttribute("memCode", sessionVO.getUserName());
 
-    return "payment/mobilePaymentKeyIn/mobilePaymentKeyInList";
+        return "payment/mobilePaymentKeyIn/mobilePaymentKeyInList";
   }
 
   /**
