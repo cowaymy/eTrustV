@@ -837,6 +837,7 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
 
           formList.add(formMap);
 
+          vPayAmt = vPayAmt.subtract(targetAmtRPF);
           totRemainAmt = totRemainAmt.subtract(targetAmtRPF);
 
           LOGGER.debug("======== RPF FORM LIST : " + formList.toString());
