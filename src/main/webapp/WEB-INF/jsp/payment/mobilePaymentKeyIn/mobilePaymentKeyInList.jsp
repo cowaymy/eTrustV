@@ -71,11 +71,24 @@
         */
       }
       fn_selectPstRequestDOListAjax();
-    });
+    }
+
+    );
 
     //Basic Auth (update Btn)
     if('${PAGE_AUTH.funcUserDefine2}' == 'Y'){
       basicAuth = true;
+    }
+
+    var memLevel = "${memLevel}";
+
+    if(memLevel == 4){
+      $("#searchForm #memberCode").val("${memCode}");
+      $("#searchForm #memberCode").prop("readonly", true);
+    }
+    else{
+      $("#searchForm #memberCode").val("");
+      $("#searchForm #memberCode").prop("readonly", false);
     }
   });
 
@@ -1168,10 +1181,9 @@
         </c:forEach>
     </select>
        </td>
-
     <th scope="row"><spring:message code="pay.title.memberCode" /></th>
       <td>
-        <input type="text" title="Member Code" id="memberCode" name="memberCode" placeholder="Member Code" class="w100p" />
+        <input type="text" title="<spring:message code="pay.title.memberCode" />" id="memberCode" name="memberCode"  class="w100p"  value="" />
       </td>
   </tr>
   <tr>
