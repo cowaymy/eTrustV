@@ -50,6 +50,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 26/02/2020    ONGHC      1.0.11     - Amend Save_2 to add LPM information
  * 02/06/2020    ONGHC      1.0.12     - Amend runInstSp to add condition for SP_LOGISTIC_REQUEST return param
  * 01/07/2020    ONGHC      1.0.13     - Amend updateAssignCTSerial and  updateAssignCT
+ * 01/07/2020    ONGHC      1.0.13     - Amend Save_2
  *********************************************************************************************/
 
 @Service("installationResultListService")
@@ -2200,8 +2201,13 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("roomTemp", CommonUtils.nvl(params.get("roomTemp")).toString());
     installResult.put("waterSourceTemp", CommonUtils.nvl(params.get("waterSourceTemp")).toString());
     installResult.put("adptUsed", CommonUtils.nvl(params.get("adptUsed")).toString());
-    installResult.put("failId", CommonUtils.nvl(params.get("failChild")).toString());
-    installResult.put("failLct", CommonUtils.nvl(params.get("failParent")).toString());
+
+    //installResult.put("failId", CommonUtils.nvl(params.get("failChild")).toString());
+    //installResult.put("failLct", CommonUtils.nvl(params.get("failParent")).toString());
+
+    installResult.put("failId", CommonUtils.nvl(params.get("failReasonCode")).toString());
+    installResult.put("failLct", CommonUtils.nvl(params.get("failLocCde")).toString());
+
     installResult.put("instChklstCheckBox", ("Y".equals(CommonUtils.nvl(params.get("instChklstCheckBox")).toString())) ? "Y" : "N");
     installResult.put("failDeptChk", ("Y".equals(CommonUtils.nvl(params.get("failDeptChk")).toString())) ? "Y" : "N");
 
