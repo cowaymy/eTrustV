@@ -259,8 +259,8 @@
           $("#addInstallForm #instChklstCheckBox").prop("checked", false);
           $("#addInstallForm #failDeptChk").prop("checked", false);
           $("#addInstallForm #msgRemark").val("Remark:");
-          $("#addInstallForm #failParent").val("");
-          $("#addInstallForm #failChild").val("");
+          $("#addInstallForm #failLocCde").val("");
+          $("#addInstallForm #failReasonCode").val("");
           $("#addInstallForm #remark").val("");
         });
 
@@ -337,7 +337,7 @@
     var msg = "";
 
     if ($("#addInstallForm #installStatus").val() == 4) { // COMPLETED
-      if ($("#failParent").val() != 0 || $("#failChild").val() != 0 || $("#nextCallDate").val() != "") {
+      if ($("#failLocCde").val() != 0 || $("#failReasonCode").val() != 0 || $("#nextCallDate").val() != "") {
         Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
         return;
       }
@@ -393,10 +393,10 @@
     }
 
     if ($("#addInstallForm #installStatus").val() == 21) { // FAILED
-        if ($("#failParent").val() == '') {
+        if ($("#failLocCde").val() == '') {
           msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Reason' htmlEscape='false'/> </br>";
         }
-        if ($("#failChild").val() == '') {
+        if ($("#failReasonCode").val() == '') {
           msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Reason' htmlEscape='false'/> </br>";
         }
         if ($("#nextCallDate").val() == '') {
@@ -404,7 +404,7 @@
         }
 
         // 8000 - Fail at Location
-        if ($("#failParent").val() == 8000 &&("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")) {
+        if ($("#failLocCde").val() == 8000 &&("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")) {
           if ( $("#psiRcd").val() == "") {
             msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
           }
@@ -683,8 +683,8 @@
       $("#addInstallForm #m14").hide();
     }
     if(selectedData == "8000" || selectedData == "8100"){
-    $("#failChild").attr("disabled",false);
-    doGetCombo('/services/selectFailChild.do', selectedData, '','failChild', 'S' , '');
+    $("#failReasonCode").attr("disabled",false);
+    doGetCombo('/services/selectFailChild.do', selectedData, '','failReasonCode', 'S' , '');
     }
   }
 
@@ -1363,7 +1363,7 @@ Name: ${hpMember.name1}</textarea>
           <tr>
             <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m15" id="m15" class="must">*</span></th>
             <td>
-              <select class="w100p" id="failParent" name="failParent" onchange="fn_openFailChild(this.value)">
+              <select class="w100p" id="failLocCde" name="failLocCde" onchange="fn_openFailChild(this.value)">
                 <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                 <c:forEach var="list" items="${failParent}" varStatus="status">
                   <option value="${list.defectId}">${list.defectDesc}</option>
@@ -1372,7 +1372,7 @@ Name: ${hpMember.name1}</textarea>
             </select>
             <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m16" id="m16" class="must">*</span></th>
             <td>
-              <select class="w100p" id="failChild" name="failChild">
+              <select class="w100p" id="failReasonCode" name="failReasonCode">
                 <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                 <c:forEach var="list" items="${failChild}" varStatus="status">
                   <option value="${list.defectId}">${list.defectDesc}</option>
