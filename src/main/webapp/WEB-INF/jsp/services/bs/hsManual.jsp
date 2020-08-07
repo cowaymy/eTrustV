@@ -1337,6 +1337,8 @@ var TODAY_DD      = "${toDay}";
         id="hsReversal">HS Reversal</a>
       </p></li>
       </c:if>
+
+      <!-- Edited to split out functional access control. By Hui Ding, 2020-08-06 -->
       <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
      <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_codyChangeHQ();"
@@ -1346,6 +1348,9 @@ var TODAY_DD      = "${toDay}";
        <a href="#" onclick="javascript:fn_codyChange();" id="codyChange">Assign
         Cody Transfer</a>
       </p></li>
+      </c:if>
+
+      <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
      <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_getHSAddListAjax();"
         id="addResult">Add HS Result</a>
@@ -1354,12 +1359,16 @@ var TODAY_DD      = "${toDay}";
        <a id="hSConfiguration" name="hSConfiguration">Create HS
         Order</a>
       </p></li>
+      </c:if>
+
+      <c:if test="${PAGE_AUTH.funcView == 'Y'}">
      <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_getBSListAjax();"><span
         class="search"></span>
        <spring:message code='sys.btn.search' /></a>
       </p></li>
-    </c:if>
+      </c:if>
+
    </ul>
    <!--조회조건 추가  -->
    <!--
