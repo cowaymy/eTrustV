@@ -10,6 +10,22 @@ WITH VIEW_COUNT AS
         (SELECT  /* use_nl( SAL1058V.M SAL1058V.D) */  COUNT(1)
          FROM SAL1058V) NEO_SALES ,/*(rental) (66)*/
 
+         (SELECT COUNT(A.SALES_ORD_ID)
+            FROM SAL0001D A, SAL0002D B
+           WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+             AND B.ITM_STK_ID = 1735
+             AND A.SALES_DT BETWEEN (
+                   SELECT CASE WHEN START_DT IS NULL THEN TO_DATE(TO_CHAR(SYSDATE, 'YYYYMM'), 'YYYYMM') ELSE START_DT END
+                     FROM REP0110T
+                    WHERE SYSDATE BETWEEN START_DT AND END_DT
+                 )
+               AND (
+                   SELECT CASE WHEN END_DT IS NULL THEN LAST_DAY(SYSDATE) ELSE END_DT END
+                     FROM REP0110T
+                    WHERE SYSDATE BETWEEN START_DT AND END_DT
+                 )
+         ) KECIL,
+
         (SELECT  /*+ index(salesorderm_idx13) */  COUNT(SALES_ORD_ID)
          FROM SAL0001D
          WHERE PV_YEAR = (SELECT EXTRACT(YEAR FROM SYSDATE) FROM DUAL)
@@ -53,6 +69,7 @@ FROM DUAL )
 
 SELECT
        NEO_SALES ,
+       KECIL ,
        SALES ,
        RENTAL ,
        OUT_RIGHT ,
