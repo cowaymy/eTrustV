@@ -53,6 +53,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 07. 06    ONGHC        Add selectMemDetails
  * 2020. 07. 28    ONGHC        Revert 2020. 06. 30 Deployment.
  * 2020. 08. 05    ONGHC        Restructure saveMobilePaymentKeyInNormalPayment & saveMobilePaymentKeyInCard
+ * 2020. 08. 09    ONGHC        Amend saveMobilePaymentKeyInCard
  *          </pre>
  */
 @Service("mobilePaymentKeyInService")
@@ -442,6 +443,8 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
           LOGGER.debug("= PROCESSING SEQ : " + iProcSeq);
           LOGGER.debug("= ORDER NO : " + salesOrdNo);
           LOGGER.debug("= TARGET AMOUNT : " + vAdvAmt.toPlainString());
+
+          formMap = new HashMap<String, Object>();
 
           formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
           formMap.put("appType", "RENTAL");
