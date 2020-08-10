@@ -1304,6 +1304,7 @@ public class ASManagementListController {
     String msg = "";
     ReturnMessage message = new ReturnMessage();
     EgovMap asReceiveInfo = ASManagementListService.checkASReceiveEntry(params);
+    EgovMap asReceiveCom = ASManagementListService.checkASCom(params);
     EgovMap hsInfo = ASManagementListService.checkHSStatus(params);
     EgovMap warrentyInfo = ASManagementListService.checkWarrentyStatus(params);
     EgovMap specialAgreement = ASManagementListService.checkSpecialAgreement(params);
@@ -1311,6 +1312,16 @@ public class ASManagementListController {
     if (asReceiveInfo != null) {
       if (asReceiveInfo.get("asStus") != null) {
         msg = msg + "* This order AS is under " + asReceiveInfo.get("asStusDesc") + " status.<br />";
+      } else {
+        msg = msg + "";
+      }
+    } else {
+      msg = msg + "";
+    }
+
+    if (asReceiveCom != null) {
+      if (asReceiveCom.get("asStus") != null) {
+        msg = msg + "* This order AS is under " + asReceiveCom.get("asStusDesc") + " status in current Month.<br />";
       } else {
         msg = msg + "";
       }
