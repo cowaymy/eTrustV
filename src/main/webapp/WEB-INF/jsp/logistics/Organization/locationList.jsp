@@ -98,7 +98,9 @@ var columnLayout = [{dataField: "locid",headerText :"<spring:message code='log.h
 							{dataField: "serialpdchk",headerText :"Serial Check – Stock"  ,width:150   ,height:30 , visible:true},
                             {dataField: "serialftchk",headerText :"Serial Check – Filter"  ,width:150   ,height:30 , visible:true},
                             {dataField: "serialptchk",headerText :"Serial Check – Spare Part"  ,width:180   ,height:30 , visible:true},
-                            {dataField: "serialRequireChkYn",headerText :"Serial Required Check Y/N"  ,width:10   ,height:30 , visible:false}
+                            {dataField: "serialRequireChkYn",headerText :"Serial Required Check Y/N"  ,width:10   ,height:30 , visible:false},
+                            {dataField: "haChk",headerText :"Home Appliance"  ,width:180   ,height:30 , visible:true},
+                            {dataField: "hcChk",headerText :"Home Care"  ,width:180   ,height:30 , visible:true}
                        ];
 
 var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.head.stkid'/>"             ,width:   "12%"    ,height:30 , visible:false},
@@ -256,7 +258,6 @@ $(document).ready(function(){
                 $("#slplant").val(rdcCode);
         	}
         });
-
     });
 
     function fn_modyWare(rowid){
@@ -325,6 +326,19 @@ $(document).ready(function(){
     	} else {
     		$("input:radio[name='serialRequireChkYn']:radio[value='N']").prop("checked", true);
     	}
+
+    	// Added for Flagging CDC to be used in Homecare or Home Appliance platform. By Hui Ding, 2020-08-07
+    	if (AUIGrid.getCellValue(myGridID, rowid, 'haChk') == "Y"){
+    		$("#haChk").prop("checked" , true);
+    	} else{
+            $("#haChk").prop("checked" , false);
+        }
+
+    	if (AUIGrid.getCellValue(myGridID, rowid, 'hcChk') == "Y"){
+            $("#hcChk").prop("checked" , true);
+        } else{
+            $("#hcChk").prop("checked" , false);
+        }
 
     	/*
     	doGetComboData('/common/selectStockLocationList.do', { locgb : '01'}, AUIGrid.getCellValue(myGridID ,rowid,'cdccode'),'mcdccode', 'S' , '');
@@ -418,6 +432,8 @@ $(document).ready(function(){
 	   var addrDtl;
 
 	   var locType;
+	   var hcChk;
+	   var haChk;
 
 	   if (action == "i"){
 		   warecd = $("#inwarecd").val().trim();
@@ -435,6 +451,8 @@ $(document).ready(function(){
 		   area = $("#iareaId").val().trim();
 		   locType = $("#ilocationtype").val().trim();
 		   addrDtl = $("#iaddrdtl").val().trim();
+		   hcChk = $("#ihcChk").is(":checked");
+		   haChk = $("#ihaChk").is(":checked");
 
 		   fn_locchk(warecd);
 
@@ -461,6 +479,8 @@ $(document).ready(function(){
            area = $("#mareaId").val().trim();
            locType = $("#locationtype").val().trim();
            addrDtl = $("#maddr1").val().trim();
+           hcChk = $("#hcChk").is(":checked");
+           haChk = $("#haChk").is(":checked");
 
            if ($("#plant").val() == null || $("#plant").val() == undefined || $("#plant").val() == ""){
                Common.alert("Please enter Plant in ECC.");
@@ -491,12 +511,23 @@ $(document).ready(function(){
      }else if(isNaN(contact1) || isNaN(contact2) ){
            Common.alert('Contact number is invalid. Please key in only number in contact field.');
            return false;
-     } else if (locType != null && locType != "" && (locType == '01' || locType == '02')) {
+     } else if (locType != null && locType != "") {
+    	 if (locType == '01' || locType == '02') {
     	   if ((country == null || country == "") || (city == null || city == "") || (state == null || state == "") ||
     			  (postcode == null || postcode == "") || (area == null || area == "") || (addrDtl == null || addrDtl == "")){
     		   Common.alert('Please complete the address.');
     		   return false;
     	   }
+    	 } else if (locType == '05') { // CDC&RDC type
+    		 console.log("hcChk: " + hcChk  + " \nhaChk: " + haChk);
+
+    		 console.log("hcChk value : " +  $("#hcChk").val()  + " \nhaChk value: " + $("#haChk").val());
+
+    		  if (hcChk == false && haChk == false){
+    			  Common.alert('Please select Business Type for CDC&RDC type of location.');
+                  return false;
+    		  }
+    	 }
 
      } else {
     	 if((warebranch1 == null || warebranch1 == "") && (warebranch2 == null || warebranch2 == "") && (warebranch3 == null || warebranch3 == "")){
@@ -536,6 +567,10 @@ $(document).ready(function(){
         if ($("#pdchk").is(":checked")) item.serialpdchk = 'Y';else item.serialpdchk = '';
         if ($("#ftchk").is(":checked")) item.serialftchk = 'Y';else item.serialftchk = '';
         if ($("#ptchk").is(":checked")) item.serialptchk = 'Y';else item.serialptchk = '';
+
+        // Added for Flagging CDC to be used in Homecare or Home Appliance platform. By Hui Ding, 2020-08-07
+        if ($("#haChk").is(":checked")) item.haChk = 'Y';else item.haChk = '';
+        if ($("#hcChk").is(":checked")) item.hcChk = 'Y';else item.hcChk = '';
 
         item.cdccode = $("#mcdccode").val();
         item.rdccode = $("#mrdccode").val();
@@ -659,7 +694,7 @@ $(document).ready(function(){
     		 $("#"+take+"plant").attr("disabled"   , true);
     		 $("#"+take+"slplant").attr("disabled" , true);
 
-    		 // Added for auto pollulating slPlant value when location type onchance. By Hui Ding, 17/9/2019
+    		 // Added for auto populating slPlant value when location type onchange. By Hui Ding, 17/9/2019
     		 $("#"+take+"slplant").val(rdcSlPlant);
 
          }else if($("#"+id).val() == '04'){
@@ -667,14 +702,14 @@ $(document).ready(function(){
              $("#"+take+"plant").attr("disabled"   , true);
              $("#"+take+"slplant").attr("disabled" , true);
 
-             // Added for auto pollulating slPlant value when location type onchance. By Hui Ding, 17/9/2019
+             // Added for auto populating slPlant value when location type onchange. By Hui Ding, 17/9/2019
              $("#"+take+"slplant").val(rdcSlPlant);
          }else if($("#"+id).val() == '09'){ // KR-OHK DT add
 	         $("#"+take+"plant").val('8000');
 	         $("#"+take+"plant").attr("disabled"   , true);
 	         $("#"+take+"slplant").attr("disabled" , true);
 
-	         // Added for auto pollulating slPlant value when location type onchance. By Hui Ding, 17/9/2019
+	         // Added for auto populating slPlant value when location type onchange. By Hui Ding, 17/9/2019
 	         $("#"+take+"slplant").val(rdcSlPlant);
 	     }else{
         	 $("#"+take+"plant").attr("disabled"   , false);
@@ -891,6 +926,19 @@ $(document).ready(function(){
         <input type="text" title="" id="slplant" name="slplant" placeholder="" class="w100p" />
     </td>
 </tr>
+
+<!-- Added for Flagging CDC to be used in Homecare or Home Appliance platform. By Hui Ding, 2020-08-07 -->
+<tr>
+    <th scope="row">Business Type</th>
+    <td >
+        <label><input type="checkbox" id="hcChk" name="hcChk"/><span>Home Care</span></label>
+        <label><input type="checkbox" id="haChk" name="hcChk"/><span>Home Appliance </span></label>
+    </td>
+    <th scope="row">&nbsp;</th>
+    <td></td>
+</tr>
+<!-- End of amendment Flagging CDC to be used in Homecare or Home Appliance platform. By Hui Ding, 2020-08-07 -->
+
 <tr>
     <th scope="row">CDC CODE</th>
     <td colspan='3'>
@@ -1027,6 +1075,19 @@ $(document).ready(function(){
         <label><input type="radio" id="iserialRequireChkYn" name="iserialRequireChkYn" value="N" checked/><span>N</span></label>
     </td>
 </tr>
+
+<!-- Added for Flagging CDC to be used in Homecare or Home Appliance platform. By Hui Ding, 2020-08-07 -->
+<tr>
+    <th scope="row">Business Type</th>
+    <td >
+        <label><input type="checkbox" id="ihcChk" name="ihcChk"/><span>Home Care</span></label>
+        <label><input type="checkbox" id="ihaChk" name="ihcChk"/><span>Home Appliance </span></label>
+    </td>
+    <th scope="row">&nbsp;</th>
+    <td></td>
+</tr>
+<!-- End of amendment Flagging CDC to be used in Homecare or Home Appliance platform. By Hui Ding, 2020-08-07 -->
+
 <tr>
     <th scope="row">CDC CODE</th>
     <td colspan='3'>

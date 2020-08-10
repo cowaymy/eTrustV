@@ -55,7 +55,9 @@
 		         s38m.name statnm,
 		         s47m.user_name,
 		         s28m.REM,
-		         s28m.SERIAL_REQUIRE_CHK_YN
+		         s28m.SERIAL_REQUIRE_CHK_YN,
+		         s28m.HA_CHK,
+		         s28m.HC_CHK
 		    FROM SYS0028M s28m,
 		         SYS0064M s64m,
 		         (SELECT s05m.brnch_id,
@@ -158,6 +160,8 @@
             , REM                   = #{rem}
             , SERIAL_REQUIRE_CHK_YN = #{serialRequireChkYn}
             , WH_LOC_UPD_USER_ID    = #{up_user_id}
+            , HA_CHK                = #{haChk}
+            , HC_CHK                = #{hcChk}
              <choose>
             <when test="whlocgb eq '03'.toString() or whlocgb eq '04'.toString() or whlocgb eq '09'.toString()">
                 , SL_PLANT              = #{rdccode}
@@ -177,10 +181,11 @@
 
     <insert id="insertLocationInfo" parameterType="Map">
 	     INSERT INTO SYS0028M(
-	       WH_LOC_ID, WH_LOC_CODE, WH_LOC_DESC, WH_LOC_TEL1, WH_LOC_TEL2    , CDC_CODE, RDC_CODE, WH_LOC_BRNCH_ID, WH_LOC_TYPE_ID, WH_LOC_STK_GRAD, WH_LOC_STUS_ID, WH_LOC_UPD_USER_ID, WH_LOC_UPD_DT, CODE2, DESC2, WH_LOC_IS_SYNC, WH_LOC_MOBILE, AREA_ID, ADDR_DTL, STREET, WH_LOC_BRNCH_ID2, WH_LOC_BRNCH_ID3, WH_LOC_GB, SERIAL_PD_CHK, SERIAL_FT_CHK, SERIAL_PT_CHK , PLANT , SL_PLANT, REM, SERIAL_REQUIRE_CHK_YN
+	       WH_LOC_ID, WH_LOC_CODE, WH_LOC_DESC, WH_LOC_TEL1, WH_LOC_TEL2    , CDC_CODE, RDC_CODE, WH_LOC_BRNCH_ID, WH_LOC_TYPE_ID, WH_LOC_STK_GRAD, WH_LOC_STUS_ID, WH_LOC_UPD_USER_ID, WH_LOC_UPD_DT, CODE2, DESC2, WH_LOC_IS_SYNC, WH_LOC_MOBILE, AREA_ID, ADDR_DTL, STREET, WH_LOC_BRNCH_ID2, WH_LOC_BRNCH_ID3, WH_LOC_GB, SERIAL_PD_CHK, SERIAL_FT_CHK, SERIAL_PT_CHK , PLANT , SL_PLANT, REM, SERIAL_REQUIRE_CHK_YN,
+	       HA_CHK, HC_CHK
 	     )
 	    VALUES (
-	     #{inlocid} ,#{inwarecd} ,#{inwarenm},#{incontact1},#{incontact2} ,#{cdccode},#{rdccode}, #{branch1},#{intype_id}  , #{ingrad}      , #{instus_id}  , #{inup_user_id}   , SYSDATE      ,#{incode2} , #{indesc2},#{inis_sync}  , #{inmobile}  , #{areaid}, #{addrdtl} , #{street} , #{branch2},#{branch3},#{locationtype} , #{pdchk} , #{ftchk}, #{ptchk} , #{plant} , #{slplant}, #{rem}, #{serialRequireChkYn}
+	     #{inlocid} ,#{inwarecd} ,#{inwarenm},#{incontact1},#{incontact2} ,#{cdccode},#{rdccode}, #{branch1},#{intype_id}  , #{ingrad}      , #{instus_id}  , #{inup_user_id}   , SYSDATE      ,#{incode2} , #{indesc2},#{inis_sync}  , #{inmobile}  , #{areaid}, #{addrdtl} , #{street} , #{branch2},#{branch3},#{locationtype} , #{pdchk} , #{ftchk}, #{ptchk} , #{plant} , #{slplant}, #{rem}, #{serialRequireChkYn}, #{haChk}, #{hcChk}
 	    )
     </insert>
     <delete id="deleteLocationInfo" parameterType="Map">

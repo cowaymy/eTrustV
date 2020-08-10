@@ -144,7 +144,6 @@ public class LocationController {
 		updateMap.put("up_mobile", up_mobile);
 		updateMap.put("up_user_id", loginId);
 
-
 		logger.debug("locstus    값 : {}", params.get("locstus"));
 
 
@@ -201,6 +200,20 @@ public class LocationController {
 		String slplant         = (String) params.get("islplant");
 		String irem          = (String) params.get("irem");
 
+		// Added for Flagging CDC to be used in Homecare or Home Appliance platform. By Hui Ding, 2020-08-07
+		String haChk		= (String) params.get("ihaChk");
+		String hcChk		= (String) params.get("ihcChk");
+
+		if (haChk != null && "on".equals(haChk)){
+			haChk = "Y";
+    	}
+    	if (hcChk != null  && "on".equals(hcChk)){
+    		hcChk = "Y";
+    	}
+
+    	logger.info("###haChk: " + haChk);
+		logger.info("###hcChk: " + hcChk);
+
 		String iserialRequireChkYn  = (String) params.get("iserialRequireChkYn"); // 20191122 KR-OHK Serial Required Check Y/N Add
 
 		if (ipdchk != null && "on".equals(ipdchk)){
@@ -250,6 +263,10 @@ public class LocationController {
 		insmap.put("rem"         , irem);
 
 		insmap.put("serialRequireChkYn"         , iserialRequireChkYn);
+
+		// Added for Flagging CDC to be used in Homecare or Home Appliance platform. By Hui Ding, 2020-08-07
+		insmap.put("haChk"       , haChk);
+		insmap.put("hcChk"       , hcChk);
 
 		int inlocid =loc.insertLocationInfo(insmap);
 		//System.out.println("inlocid 값!!!  : " + inlocid);

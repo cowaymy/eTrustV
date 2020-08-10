@@ -14,7 +14,10 @@
 		  FROM SYS0028M A
 		     , SYS0064M B
 		 WHERE A.AREA_ID = B.AREA_ID(+)
-		   AND A.WH_LOC_CODE IN ('3010', '3020', '3030')
+		   --AND A.WH_LOC_CODE IN ('3010', '3020', '3030')
+		   AND A.HC_CHK = 'Y'
+		   AND A.WH_LOC_STUS_ID = '1'
+		   order by A.WH_LOC_CODE
     </select>
 
     <select id="selectHcPoIssueMainListCnt" parameterType="Map" resultType="int">

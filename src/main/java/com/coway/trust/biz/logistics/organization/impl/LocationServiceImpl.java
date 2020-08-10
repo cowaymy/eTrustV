@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 /**
  * @author methree
@@ -57,9 +57,9 @@ public class LocationServiceImpl extends EgovAbstractServiceImpl implements Loca
 
 		// TODO Auto-generated method stub
 		locMapper.insertLocationInfo(params);
-		
+
 		return inlocid;
-		
+
 	}
 
 	@Override
@@ -73,13 +73,13 @@ public class LocationServiceImpl extends EgovAbstractServiceImpl implements Loca
 		// TODO Auto-generated method stub
 		return locMapper.selectLocationCodeList(params);
 	}
-	
+
 	@Override
 	public int selectLocationChk(String params) {
 		// TODO Auto-generated method stub
 		return locMapper.selectLocationChk(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectLocStatusList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
