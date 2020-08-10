@@ -247,7 +247,7 @@ public class ReplenishmentController {
 
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
 		logger.debug("insList {}", insList);
-
+		
 		Map<String, Object> param = new HashMap();
 		param.put("add", insList);
 		param.put("userId", loginId);

@@ -588,6 +588,17 @@
             AUIGrid.bind(listGrid, "ready", function(event) {
             });
             //SearchListAjax();
+
+
+            /* sro update  add by leo */
+            if ( '${searchVal.streq}' !=""){
+            	$("#streq").val('${searchVal.streq}');
+            	$("#crtsdt").val('${searchVal.crtsdt}');
+
+            	SearchListAjax();
+            }
+
+
           });
   function f_change() {
     paramdata = {

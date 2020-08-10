@@ -48,7 +48,7 @@
 
 var listGrid;
 var subGrid;
-
+var detailList;
 
 var groupList = [" ", "A", "B", "C" ];
 
@@ -85,6 +85,7 @@ var rescolumnLayout=[
 			                            }
 			                     },
 			                     {dataField: "srostacd",headerText :"<spring:message code='log.head.status'/>",width:100    ,height:30                },
+			                     {dataField: "sromsg",headerText :"Remark",width:250    ,height:30                },
 			                     {dataField: "sromatdocno",headerText :"Mat. Doc. No ",width:150    ,height:30                },
 			                     {dataField: "srofrwlcd",headerText :"From Location <br> code"                  ,width:120    ,height:30                },
 			                     {dataField: "srofrwldesc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:150    ,height:30                },
@@ -100,14 +101,16 @@ var reqcolumnLayout=[
 			                     {dataField: "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
 			                     {dataField: "srono",headerText :"SRO No."           ,width:200    ,height:30                },
 			                     {dataField: "sroitmstatecd",headerText :"<spring:message code='log.head.status'/>",width:80    ,height:30   ,editable : false                },
+                                 {dataField: "srotype",headerText :"SRO Type"           ,  width:120    ,height:30           },
 			                     {dataField: "srostkcode",headerText :"Mat.Code"                  ,width:80    ,height:30             ,editable : false   },
 			                     {dataField: "stkdesc",headerText :"Mat.Name"                      ,width:220    ,height:30             ,editable : false   },
-                                 {dataField: "srofravlqty",headerText :"(Fr) Old</br>Available Qty"         ,width:120    ,height:30            ,editable : false  },
-                                 {dataField: "srosupqty",headerText :"Supply Qty"                  ,width:120    ,height:30         ,editable : false },
-                                 {dataField: "sroconqty",headerText :"Confirm </br>Supply Qty"       ,width:120    ,height:30         ,editable : false },
-                                 {dataField: "srofulqty" ,headerText :"Unfulfilled </br>Qty"               ,width:120    ,height:30   ,style  :"my-inactive-style"              ,editable : false},
-                                 {dataField: "requestqty" ,headerText :"Request Qty"               ,width:120    ,height:30   ,style  :"my-inactive-style"       ,editable : true     },
-                                 {dataField: "srofrnowavlqty" ,headerText :"(Fr)Currently</br> Available Qty" ,width:120    ,height:30   ,style  :"my-inactive-style"   ,editable : false},
+                              //   {dataField: "srofravlqty",headerText :"(Fr) Old</br>Available Qty"         ,width:120    ,height:30            ,editable : false  },
+                                 {dataField: "srosupqty",headerText :"Supply Qty"                  ,width:120    ,height:30         ,editable : false  ,dataType : "numeric"  },
+                                 {dataField: "sroconqty",headerText :"Confirm </br>Supply Qty"       ,width:120    ,height:30     ,style  :"my-inactive-style"       ,editable : false,dataType : "numeric"  },
+                                 {dataField: "srofulqty" ,headerText :"Unfulfilled </br>Qty"               ,width:120    ,height:30             ,editable : false,dataType : "numeric" },
+                                 {dataField: "srofravailqty" ,headerText :"(Fr)Current Available </br>Qty"               ,width:120    ,height:30             ,editable : false,dataType : "numeric" },
+                                 {dataField: "requestqty" ,headerText :"Request Qty"               ,width:120    ,height:30   ,editable : true  ,dataType : "numeric"    },
+                            //     {dataField: "srofrnowavlqty" ,headerText :"(Fr)Currently</br> Available Qty" ,width:120    ,height:30   ,style  :"my-inactive-style"   ,editable : false},
                                  {dataField: "generate", headerText :"Generate" ,width:120 , editable : false,  styleFunction : cellStyleFunction,
 
                                 	 renderer : {
@@ -141,18 +144,32 @@ var reqcolumnLayout=[
                                         }
                                 	 }
                                  },
-			                     {dataField: "srotoavlqty",headerText :"(To)Available </br>Qty"                  ,width:120    ,height:30              ,editable : false ,visible:false },
-			                     {dataField: "srobasqty",headerText :"(To)Basic </br>Qty"                  ,width:120    ,height:30              ,editable : false  },
-			                     {dataField: "srorordpot",headerText :"(To)ReOrder</br> Ponit"                  ,width:120    ,height:30               ,editable : false },
-                                 {dataField: "sroaddpot",headerText :"(To)additional</br> Point"                  ,width:120    ,height:30               ,editable : false },
-                                 {dataField: "sroitmlev",headerText :"item idex"                  ,width:120    ,height:30               ,editable : false  ,visible:false},
-                                 {dataField: "srorefsrono",headerText :"Ref.SRO No"                  ,width:120    ,height:30               ,editable : false },
-                                 {dataField: "srotype",headerText :"SRO Type"           ,  width:120    ,height:30           },
+			                     {dataField: "srorefsrono",headerText :"Ref.SRO No"                  ,width:120    ,height:30               ,editable : false },
+			                     {dataField: "sroitmresultmsg",headerText :"Result Massage"                  ,width:270    ,height:30               ,editable : false },
                                  {dataField: "crtdt",headerText :"Create Date"       , dataType : "date",           width:120    ,height:30     ,    formatString : "dd/mm/yyyy"     },
+
+                                 {dataField: "srobasqty",headerText :"(To)Basic </br>Qty"                  ,width:120    ,height:30              ,editable : false ,visible:false },
+                                 {dataField: "srorordpot",headerText :"(To)ReOrder</br> Ponit"                  ,width:120    ,height:30               ,editable : false ,visible:false},
+                                 {dataField: "sroaddpot",headerText :"(To)additional</br> Point"                  ,width:120    ,height:30               ,editable : false ,visible:false},
+                                 {dataField: "sroitmlev",headerText :"item idex"                  ,width:120    ,height:30               ,editable : false  ,visible:false},
 
                      ];
 
 
+
+					var detailLayout=[
+													{dataField: "srostkcode",headerText :"Mat.Code"                  ,width:120    ,height:30               ,editable : false  },
+													{dataField: "stkdesc",headerText :"Mat.Name"                  ,width:120    ,height:30               ,editable : false   },
+													{dataField: "srobasqty",headerText :"Basic Qty"                  ,width:120    ,height:30               ,editable : false  ,dataType : "numeric"  },
+													{dataField: "sroreordpot",headerText :"ReOder <br>Point(%)"                  ,width:120    ,height:30               ,editable : false  ,dataType : "numeric" },
+													{dataField: "sroreordrangeqty",headerText :"ReOder Range Qty <br> (Basic Qty / (100/ReOrder Point ) )"                  ,width:270    ,height:30        ,dataType : "numeric"        ,editable : false ,visible:false },
+													{dataField: "srotoavailqty",headerText :"To Ware House <br> Available Qty"                                            ,width:250    ,height:30         ,dataType : "numeric"       ,editable : false },
+                                                    {dataField: "srofravlqty",headerText :"Fr Ware House <br> Available Qty"                                            ,width:250    ,height:30         ,dataType : "numeric"       ,editable : false },
+													{dataField: "srominnumqty",headerText :"Minimum Qty <br> (Basic Qty - ReOrder Range Qty)"                  ,width:250    ,height:30           ,dataType : "numeric"     ,editable : false },
+	                                                {dataField: "sroautoreplenqty",headerText :"Auto Replenishment Qty <br> (Basic Qty -Current Available Qty)"                  ,width:270    ,height:30,  style  :"my-inactive-style"            ,dataType : "numeric"      ,editable : false },
+
+
+					]
 
 $(document).ready(function(){
 
@@ -185,22 +202,37 @@ $(document).ready(function(){
 
             // 계층 구조에서 내 부모 행의 treeIdField 참고 필드명
             treeIdRefField : "srorefsrono",
-            copySingleCellOnRowMode:true
+            copySingleCellOnRowMode:true,
+
+            // 고정칼럼 카운트 지정
+            fixedColumnCount : 3
     };
 
 
 
    var dProps = {
-		   showStateColumn : true,
+		    showStateColumn : true,
 		    rowHeight : 30,
 		    headerHeight : 40,
 		    showRowCheckColumn : false,
 		    enableSorting :true,
 		    editable:true,
-		    copySingleCellOnRowMode:true
+		    copySingleCellOnRowMode:true,
+		    // 고정칼럼 카운트 지정
+            fixedColumnCount : 5
    };
 
-
+   var detailProps = {
+           showStateColumn : false,
+           rowHeight : 30,
+           headerHeight : 40,
+           showRowCheckColumn : false,
+           enableSorting :false,
+           editable:false,
+           copySingleCellOnRowMode:true,
+           // 고정칼럼 카운트 지정
+           fixedColumnCount : 2
+  };
 
 
 	//var resop = {rowIdField : "rnum", showRowCheckColumn : false ,usePaging : true,useGroupingPanel : false , Editable:false};
@@ -211,6 +243,9 @@ $(document).ready(function(){
     subGrid  = AUIGrid.create("#sub_grid_wrap", reqcolumnLayout ,dProps);
 
 
+    detailList = AUIGrid.create("#detail_grid_wrap", detailLayout ,detailProps);
+
+
 
    AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
     	if(event.dataField  =="sroreqno" ){
@@ -218,6 +253,18 @@ $(document).ready(function(){
     		$('#tabitem').click();
     	}
     });
+
+
+   AUIGrid.bind(subGrid, "cellDoubleClick", function(event){
+
+	   $("#gropenwindow").show();
+       AUIGrid.resize(detailList);
+       fn_setPopDetailData();
+
+   });
+
+
+
 
 
 
@@ -369,6 +416,28 @@ function fn_setDefaultSelection() {
 }
 
 
+
+function fn_setPopDetailData() {
+	  var selectedRows = AUIGrid.getSelectedRows(subGrid);
+	  console.log(selectedRows)
+
+      AUIGrid.clearGridData(detailList);
+
+	 var rangeqty =  (selectedRows[0].srobasqty / (100/selectedRows[0].srorordpot  ) );
+     var item = { "srostkcode" :selectedRows[0].srostkcode ,
+                       "stkdesc":selectedRows[0].stkdesc ,
+                       "srobasqty" :  selectedRows[0].srobasqty,
+                       "sroreordpot" : selectedRows[0].srorordpot ,
+                       "sroreordrangeqty" : rangeqty  ,
+                       "srotoavailqty" : selectedRows[0].srotoavlqty ,
+                       "srofravlqty" : selectedRows[0].srofravlqty ,
+                       "srominnumqty" : selectedRows[0].srobasqty  -  rangeqty   ,
+                       "sroautoreplenqty" : selectedRows[0].sroconqty
+                      };
+	 AUIGrid.addRow(detailList, item, 0); // rowIndex 5 에 1행 추가
+
+}
+
 </script>
 
 
@@ -496,6 +565,24 @@ function fn_setDefaultSelection() {
     </section><!-- tap_wrap end -->
 
 
+
+
+<div class="popup_wrap" id="gropenwindow" style="display:none ;height:340px; " ><!-- popup_wrap start -->
+        <header class="pop_header"><!-- pop_header start -->
+            <h1 id="dataTitle">Auto Replenishment Detail Data</h1>
+            <ul class="right_opt">
+                <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+            </ul>
+        </header><!-- pop_header end -->
+
+            <section class="pop_body"><!-- pop_body start -->
+	       		<article class="grid_wrap mt10"><!-- grid_wrap start -->
+			     <div id="detail_grid_wrap" style="width:100%; height:240px; margin:0 auto;"></div>
+			</article><!-- grid_wrap end -->
+
+
+        </section>
+    </div>
 
 </section>
 

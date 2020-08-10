@@ -189,8 +189,8 @@ public class SROServiceImpl extends EgovAbstractServiceImpl implements SROServic
     		for (Object sList : stoBasicDataList){
     			Map<String, Object> map = (Map<String, Object>) sList;
 
-    	    	fMap.put("tlocation",map.get("tlocation"));
-    	    	fMap.put("flocation", map.get("flocation"));
+    	    	fMap.put("tlocation",map.get("flocation"));
+    	    	fMap.put("flocation", map.get("tlocation"));
 
     	    	//fMap.put("tlocation",map.get("tlocation"));
     	    	//fMap.put("flocation", map.get("flocation"));
