@@ -4205,8 +4205,11 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
      <update id="updateHpApprovalReject" parameterType="Map">
 
-		update org0003d
-		set STUS_ID = 6
+		UPDATE ORG0003D
+		SET STUS_ID = 6 ,
+		UPD_DT = SYSDATE ,
+		REM = 'HP REJECT' ,
+		UPD_USER_ID = #{UpdUserId}
 		where APLCTN_ID = #{memberId}
 
      </update>
