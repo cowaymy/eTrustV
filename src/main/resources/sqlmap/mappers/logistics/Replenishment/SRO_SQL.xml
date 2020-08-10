@@ -330,7 +330,7 @@ FROM (
 			    ,srorefsrono
 			    ,srotype
 			    ,sroitmresultmsg
-			    ,(GBSLCVD.FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) -sroconqty) as srofravailqty
+			    ,(FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) -sroconqty) as srofravailqty
 			    ,crtuserid
 			    ,crtdt
 		from(
