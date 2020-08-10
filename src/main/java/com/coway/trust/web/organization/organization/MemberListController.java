@@ -1503,8 +1503,10 @@ public class MemberListController {
 	}
 
 	@RequestMapping(value = "/hpMemReject.do", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> rejectHPApproval(@RequestParam Map<String, Object> params, Model model){
+	public ResponseEntity<ReturnMessage> rejectHPApproval(@RequestParam Map<String, Object> params, SessionVO sessionVO , Model model){
 		ReturnMessage message = new ReturnMessage();
+		int userId = sessionVO.getUserId();
+		params.put("UpdUserId",userId);
 		logger.debug("params {}", params);
 		boolean isHPApprovalReject = memberListService.updateHpApprovalReject(params);
 
