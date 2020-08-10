@@ -249,7 +249,8 @@ FROM (
 	            SRO_RESUT_MSG AS sromsg ,
 	            SRO_REF_SRO_NO AS srorefsrono,
 	            CRT_DT AS crtdt,
-	            ROW_NUMBER() OVER (PARTITION BY SRO_REF_SRO_NO ORDER BY  CRT_DT ASC  ,   SRO_NO)  osroNo
+	            ROW_NUMBER() OVER (PARTITION BY SRO_REF_SRO_NO ORDER BY  CRT_DT ASC  ,   SRO_NO)  osroNo,
+	            SRO_RESUT_MSG AS sroresutmsg
 	    FROM  GBSLCVD.LOG0111D
 	  WHERE 1=1
 	    <if test="statecd != null and statecd !=''">
@@ -280,15 +281,45 @@ FROM (
 
    <select id="sroMgmtDetailList" parameterType="Map" resultType="egovMap">
    <![CDATA[
-		  SELECT
+
+       select  srono
+                ,srostkcode
+                ,sroitmlev
+                ,decode (sroitmstatecd, 'A', 'Active' ,'C' ,'Complete') sroitmstatecd
+                ,sroconqty
+                ,srosupqty
+                ,srofulqty
+                ,case when   (sroitmstatecd ='A') then
+                         case when  (srofravailqty > 0) then  srofravailqty else 0 end
+                  else 0
+                 end  as requestqty
+                ,srotoavlqty
+                ,srobasqty
+                ,srorordpot
+                ,sroaddpot
+                ,srofravlqty
+                ,stkdesc
+                ,srofrnowavlqty
+                ,case when   (sroitmstatecd ='A') then
+                         case when  ( srofravailqty > 0) then   'generate'  else '' end
+                  else ''
+                 end generate
+                ,srorefsrono
+                ,srotype
+                ,sroitmresultmsg
+                ,srofravailqty
+                ,crtuserid
+                ,crtdt
+      from(
+   	  SELECT
 			    srono
 			    ,srostkcode
 			    ,sroitmlev
-			    ,decode (sroitmstatecd, 'A', 'Active' ,'C' ,'Complete') sroitmstatecd
+			    ,sroitmstatecd
 			    ,sroconqty
 			    ,srosupqty
 			    ,srofulqty
-			    ,CASE   WHEN (srofulqty >0 AND srofrnowavlqty >0 ) THEN  srofulqty  ELSE 0  END   requestqty
+			  /* ,CASE   WHEN (srofulqty >0 AND srofrnowavlqty >0 ) THEN  srofulqty  ELSE 0  END   requestqty */
 			    ,srotoavlqty
 			    ,srobasqty
 			    ,srorordpot
@@ -296,9 +327,10 @@ FROM (
 			    ,srofravlqty
 			    ,stkdesc
 			    ,srofrnowavlqty
-			    ,CASE   WHEN (srofulqty >0 AND srofrnowavlqty >0 ) THEN 'generate'  ELSE ''  END generate
 			    ,srorefsrono
 			    ,srotype
+			    ,sroitmresultmsg
+			    ,(GBSLCVD.FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) -sroconqty) as srofravailqty
 			    ,crtuserid
 			    ,crtdt
 		from(
@@ -345,12 +377,15 @@ FROM (
 				                                                            AND l56.stk_code = L112.SRO_STK_CODE
 				                                                            AND s28.WH_LOC_CODE  =L111.SRO_FR_WH_LOC_CODE
 				      ),0) AS  srofrnowavlqty
+				    ,L112.SRO_ITM_RESULT_MSG   AS sroitmresultmsg
+				    ,L111.SRO_FR_WH_LOC_CODE  AS srofrwhloccode
 		    FROM GBSLCVD.LOG0112D L112 , SYS0026M s26  , GBSLCVD.LOG0111D L111
 		 WHERE L112.SRO_NO =#{srono}
 		  AND  L112.SRO_NO =L111.SRO_NO
 		  AND  L112.SRO_STK_CODE  = s26.STK_CODE
 		  AND  L112.SRO_STK_CODE  = s26.STK_CODE
 		)
+	)
 		  ]]>
     </select>
 
