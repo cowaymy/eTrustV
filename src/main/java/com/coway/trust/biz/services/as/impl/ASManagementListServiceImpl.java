@@ -3293,6 +3293,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     return ASManagementListMapper.checkASReceiveEntry(params);
   }
 
+  public EgovMap checkASCom(Map<String, Object> params) {
+    // TODO Auto-generated method stub
+    return ASManagementListMapper.checkASCom(params);
+  }
+
   public EgovMap checkHSStatus(Map<String, Object> params) {
     // TODO Auto-generated method stub
     return ASManagementListMapper.checkHSStatus(params);
