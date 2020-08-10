@@ -1143,4 +1143,157 @@
               ROWNUM = 1
     </select>
 
+    <insert id="insertReqEditOrdInfo" parameterType="Map" >
+        INSERT INTO SAL0269D (
+            RQST_ID ,
+            SALES_ORD_ID ,
+            RQST_TYPE_ID ,
+            RQST_DATA_FR ,
+            RQST_DATA_TO ,
+            RQST_REM ,
+            STUS_CODE_ID ,
+            REM ,
+            CRT_USER_ID ,
+            CRT_DT ,
+            UPD_USER_ID ,
+            UPD_DT
+        )VALUES (
+            SAL0269D_RQST_ID_SEQ.NEXTVAL ,
+            #{salesOrdId} ,
+            #{rqstTypeId} ,
+            #{rqstDataFr} ,
+            #{rqstDataTo} ,
+            #{rqstRem} ,
+            #{stus} ,
+            NULL ,
+            #{userId} ,
+            SYSDATE ,
+            #{userId} ,
+            SYSDATE
+        )
+
+    </insert>
+
+   <select id="selectRequestApprovalList" parameterType="Map" resultType="egovMap">
+        SELECT
+
+          RQST.RQST_ID,
+          SOM.SALES_ORD_ID SALES_ORD_ID,
+          SOM.SALES_ORD_NO SALES_ORD_NO,
+          RQST.STUS_CODE_ID STUS_CODE_ID,
+          STUS_CODE.NAME STUS,
+          APP_TYPE.CODE_NAME APP_TYPE,
+          CUST.NAME CUST_NAME,
+          CUST.NRIC NRIC,
+          INST_STUS.NAME INST_STUS,
+          RQST.RQST_TYPE_ID TYPE_ID,
+          RQST_TYPE.CODE_NAME RQST_TYPE,
+          RQST.RQST_REM RQST_REM,
+          BRNCH.NAME DSC,
+          CRT.USER_NAME CRT_USER,
+          TO_CHAR(RQST.CRT_DT,'DD/MM/YYYY HH24:MI:SS') CRT_DT,
+          UPD.USER_NAME UPD_USER,
+          TO_CHAR(RQST.UPD_DT,'DD/MM/YYYY HH24:MI:SS') UPD_DT,
+          RQST.RQST_DATA_FR,
+          RQST.RQST_DATA_TO
+
+      FROM SAL0269D RQST
+      JOIN SAL0001D SOM ON SOM.SALES_ORD_ID = RQST.SALES_ORD_ID
+      JOIN SAL0045D INST ON INST.SALES_ORD_ID = SOM.SALES_ORD_ID
+      JOIN SYS0013M RQST_TYPE ON RQST_TYPE.CODE_ID = RQST.RQST_TYPE_ID
+      JOIN SYS0013M APP_TYPE ON APP_TYPE.CODE_ID = SOM.APP_TYPE_ID
+      JOIN SYS0038M STUS_CODE ON STUS_CODE.STUS_CODE_ID = RQST.STUS_CODE_ID
+      JOIN SAL0029D CUST ON CUST.CUST_ID = SOM.CUST_ID
+      JOIN SYS0047M CRT ON CRT.USER_ID = RQST.CRT_USER_ID
+      JOIN SYS0047M UPD ON UPD.USER_ID = RQST.UPD_USER_ID
+      JOIN SYS0005M BRNCH ON BRNCH.BRNCH_ID = CRT.USER_BRNCH_ID
+      JOIN SYS0038M INST_STUS ON INST_STUS.STUS_CODE_ID = (CASE WHEN SOM.STUS_CODE_ID = 1 THEN 24 ELSE 25 END)
+
+      WHERE 1=1
+      <if test = "rqstId != null and rqstId != '' ">
+        AND RQST.RQST_ID = #{rqstId}
+      </if>
+      <if test = "ordNo != null and ordNo != '' ">
+        AND SOM.SALES_ORD_NO = #{ordNo}
+      </if>
+      <if test = "startCrtDt != null and startCrtDt != '' ">
+        AND RQST.CRT_DT <![CDATA[ >= ]]> TO_DATE(#{startCrtDt},'DD/MM/YYYY')
+      </if>
+      <if test = "endCrtDt != null and endCrtDt != '' ">
+        AND RQST.CRT_DT <![CDATA[ <= ]]> TO_DATE(#{endCrtDt},'DD/MM/YYYY')
+      </if>
+      <if test = "crtUserId != null and crtUserId != '' ">
+        AND UPPER(CRT.USER_NAME) LIKE UPPER('%' || #{crtUserId} || '%')
+      </if>
+      <if test = "custId != null and custId != '' ">
+        AND CUST.CUST_ID = #{custId}
+      </if>
+      <if test = "custName != null and custName != '' ">
+        AND UPPER(CUST.NAME) LIKE UPPER('%' || #{custName} || '%')
+      </if>
+      <if test = "custIc != null and custIc != '' ">
+        AND UPPER(CUST.NRIC) LIKE UPPER('%' || #{custIc} || '%')
+      </if>
+      <if test="typeIdList != null and typeIdList != ''">
+        AND SOM.APP_TYPE_ID IN
+        <foreach item="item" collection="typeIdList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+      </if>
+      <if test="reqStageList != null and reqStageList != ''">
+        AND INST_STUS.STUS_CODE_ID IN
+        <foreach item="item" collection="reqStageList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+      </if>
+      <if test="branchList != null and branchList != ''">
+        AND INST.BRNCH_ID IN
+          <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+            #{item}
+          </foreach>
+      </if>
+      <if test="reqStusList != null and reqStusList != ''">
+        AND RQST.STUS_CODE_ID IN
+        <foreach item="item" collection="reqStusList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+      </if>
+      ORDER BY RQST_ID DESC
+   </select>
+
+   <update id="updateApprStus" parameterType="Map">
+        UPDATE SAL0269D
+        SET STUS_CODE_ID = #{reqStusId},
+              REM = #{rem},
+              UPD_DT = SYSDATE,
+              UPD_USER_ID = #{updator}
+        WHERE RQST_ID = #{rqstId}
+  </update>
+
+  <update id="updSAL0001D_instAddr" parameterType="Map">
+    UPDATE SAL0001D
+    SET CUST_ADD_ID = #{custAddrId},
+        UPD_DT =  SYSDATE,
+        UPD_USER_ID = #{updator}
+    WHERE SALES_ORD_ID = #{salesOrdId}
+  </update>
+
+  <update id="updSAL0045D_instAddr" parameterType="Map">
+    UPDATE SAL0045D
+    SET ADD_ID = #{custAddrId},
+        BRNCH_ID = #{dscBrnchId},
+        UPD_DT = SYSDATE,
+        UPD_USER_ID = #{updator}
+    WHERE SALES_ORD_ID = #{salesOrdId}
+  </update>
+
+  <update id="updSAL0001D_custCntc" parameterType="Map">
+    UPDATE SAL0001D
+    SET CUST_CNT_ID = #{custCntcId},
+        UPD_DT = SYSDATE,
+        UPD_USER_ID = #{updator}
+    WHERE SALES_ORD_ID = #{salesOrdId}
+  </update>
+
+
 </mapper>

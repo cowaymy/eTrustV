@@ -92,7 +92,6 @@ public class eRequestCancellationServiceImpl extends EgovAbstractServiceImpl imp
   public EgovMap selectOrderBasicInfo(Map<String, Object> params, SessionVO sessionVO) throws Exception {
 
     EgovMap orderDetail = new EgovMap();
-
     // Basic Info
     EgovMap basicInfo = eRequestCancellationMapper.selectBasicInfo(params);
     EgovMap logView = eRequestCancellationMapper.selectLatestOrderLogByOrderID(params);
@@ -977,6 +976,45 @@ public class eRequestCancellationServiceImpl extends EgovAbstractServiceImpl imp
   public EgovMap cancelReqInfo(Map<String, Object> params) {
 
     return eRequestCancellationMapper.cancelReqInfo(params);
+  }
+
+  @Override
+  public void insertReqEditOrdInfo(Map<String, Object> params) {
+    eRequestCancellationMapper.insertReqEditOrdInfo(params);
+  }
+
+  @Override
+  public List<EgovMap> selectRequestApprovalList(Map<String, Object> params) {
+    return eRequestCancellationMapper.selectRequestApprovalList(params);
+  }
+
+  @Override
+  public int saveApprCnct(Map<String, Object> params) {
+
+    int ordUpd = 0;
+
+    int updStus = eRequestCancellationMapper.updateApprStus(params);
+
+    if(params.get("reqStusId").equals("5") && updStus > 0)
+      ordUpd  = eRequestCancellationMapper.updSAL0001D_custCntc(params);
+
+    return ordUpd;
+  }
+
+  @Override
+  public int saveApprInstAddr(Map<String, Object> params) {
+
+    int ordUpd = 0;
+    int instUpd = 0;
+
+    int updStus = eRequestCancellationMapper.updateApprStus(params);
+
+    if(params.get("reqStusId").equals("5") && updStus > 0){
+      ordUpd  = eRequestCancellationMapper.updSAL0001D_instAddr(params);
+      instUpd  = eRequestCancellationMapper.updSAL0045D_instAddr(params);
+    }
+
+    return ordUpd;
   }
 
 }

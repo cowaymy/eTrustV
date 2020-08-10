@@ -67,7 +67,17 @@ public interface eRequestCancellationMapper {
 
 	void updateCcpStatus(Map<String, Object> params); // CCP
 
+	void insertReqEditOrdInfo(Map<String, Object> params);
 
+	List<EgovMap> selectRequestApprovalList(Map<String, Object> params);
+	
+	int updateApprStus(Map<String, Object> params);
+	
+	int updSAL0001D_instAddr(Map<String, Object> params);
+	
+	int updSAL0045D_instAddr(Map<String, Object> params);
+	
+	int updSAL0001D_custCntc(Map<String, Object> params);
 
 
 }

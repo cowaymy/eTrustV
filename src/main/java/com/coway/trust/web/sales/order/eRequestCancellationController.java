@@ -225,8 +225,94 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
 
 	@RequestMapping(value="/eRequestRawDataPop.do")
 	public String orderCancelRequestRawDataPop(){
-
 		return "sales/order/eRequestRawDataPop";
 	}
+
+	@RequestMapping(value="/eReqEditOrdInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> eReqEditOrdInfo(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
+
+	  params.put("stus", 1);
+	  params.put("userId", sessionVO.getUserId());
+
+	  logger.debug("params : {} ", params);
+
+	  eRequestCancellationService.insertReqEditOrdInfo(params);
+
+        if(params.get("auxOrdId") != ""){
+             params.put("salesOrdId",params.get("auxOrdId"));
+             eRequestCancellationService.insertReqEditOrdInfo(params);
+        }
+
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+
+        return ResponseEntity.ok(message);
+   }
+
+	 @RequestMapping(value="/eRequestApproval.do")
+	  public String eRequestApproval(){
+	    return "sales/order/eRequestApproval";
+	  }
+
+   @RequestMapping(value="/selectRequestApprovalList.do", method = RequestMethod.GET)
+   public ResponseEntity<List<EgovMap>> selectRequestApprovalList(@RequestParam Map<String, Object> params,HttpServletRequest request){
+
+     String[] appTypeId = request.getParameterValues("cmbAppTypeId");
+     String[] reqStageId = request.getParameterValues("reqStageId");
+     String[] dscBranchId = request.getParameterValues("cmbDscBranchId");
+     String[] reqStusId = request.getParameterValues("reqStusId");
+
+     params.put("typeIdList", appTypeId);
+     params.put("reqStageList", reqStageId);
+     params.put("branchList", dscBranchId);
+     params.put("reqStusList", reqStusId);
+
+     List<EgovMap> list = eRequestCancellationService.selectRequestApprovalList(params);
+
+     return ResponseEntity.ok(list);
+   }
+
+   @RequestMapping(value="/eRequestApprovalPop.do")
+   public String eRequestApprovalPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
+
+     System.out.println(params);
+
+     EgovMap orderDetail = eRequestCancellationService.selectOrderBasicInfo(params, sessionVO);
+
+     EgovMap eRequestDetail = eRequestCancellationService.selectRequestApprovalList(params).get(0);
+
+     System.out.println(eRequestDetail);
+
+     model.put("orderDetail", orderDetail);
+     model.put("eRequestDetail", eRequestDetail);
+
+     return "sales/order/eRequestApprovalPop";
+   }
+
+   @RequestMapping(value="/saveApprovalCnct.do",method = RequestMethod.POST)
+   public ResponseEntity<ReturnMessage> saveApprovalCnct(@RequestBody Map<String, Object>params, SessionVO sessionVO) throws Exception {
+     System.out.println(params);
+     params.put("updator",sessionVO.getUserId());
+
+     int updOrd = eRequestCancellationService.saveApprCnct(params);
+
+     ReturnMessage message = new ReturnMessage();
+     message.setCode(AppConstants.SUCCESS);
+
+     return ResponseEntity.ok(message);
+   }
+
+   @RequestMapping(value="/saveApprovalInstAddr.do",method = RequestMethod.POST)
+   public ResponseEntity<ReturnMessage> saveApprovalInstAddr(@RequestBody Map<String, Object>params, SessionVO sessionVO) throws Exception {
+     System.out.println(params);
+     params.put("updator",sessionVO.getUserId());
+
+     int updOrd = eRequestCancellationService.saveApprInstAddr(params);
+
+     ReturnMessage message = new ReturnMessage();
+     message.setCode(AppConstants.SUCCESS);
+
+     return ResponseEntity.ok(message);
+   }
 
 }

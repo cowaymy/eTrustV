@@ -26,4 +26,12 @@ public interface  eRequestCancellationService {
 
 	EgovMap cancelReqInfo(Map<String, Object> params);
 
+	void insertReqEditOrdInfo(Map<String, Object> params);
+
+  List<EgovMap> selectRequestApprovalList(Map<String, Object> params);
+
+  int saveApprCnct(Map<String, Object> params);
+
+  int saveApprInstAddr(Map<String, Object> params);
+
 }

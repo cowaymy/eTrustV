@@ -89,6 +89,10 @@
         doGetComboData('/status/selectStatusCategoryCdList.do', { selCategoryId : 5, parmDisab : 0 }, '', 'listRentStus', 'M', 'fn_multiCombo');
   });
 
+  function fn_setOptGrpClass() {
+      $("optgroup").attr("class" , "optgroup_text");
+  }
+
   function fn_setDetail(gridID, rowIdx) {
     //(_url, _jsonObj, _callback, _isManualClose, _divId, _initFunc)
     Common.popupDiv("/sales/order/eRequestCancellationDetailPop.do", { salesOrderId : AUIGrid.getCellValue(gridID, rowIdx, "ordId") }, null, true, "_divIdOrdDtl");
@@ -258,6 +262,7 @@
 
   function fn_orderRequestPop() {
     var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+    var ordNo = AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo");
     var appType = AUIGrid.getCellValue(listMyGridID, selIdx, "appTypeCode");
     var ordStaCde = AUIGrid.getCellValue(listMyGridID, selIdx, "ordStusCode");
 
@@ -267,7 +272,13 @@
       } else if (ordStaCde == 'CAN') {
         Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>Cancelled order is not allowed to do cancellation.</b>");
       } else {
-        Common.popupDiv("/sales/order/eRequestCancellationPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null, true);
+    	  Common.ajax("GET", "/sales/order/selectRequestApprovalList.do", {ordNo : ordNo, reqStusId : 1}, function(result) {
+              if(result.length > 0){
+            	  Common.alert("<spring:message code='sal.alert.msg.existERequest'/>");
+              }else{
+            	  Common.popupDiv("/sales/order/eRequestCancellationPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null, true);
+              }
+          });
       }
     } else {
       Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');

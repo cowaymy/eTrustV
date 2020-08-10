@@ -36,11 +36,13 @@
   var BANK_ACC_NO = "${orderDetail.rentPaySetInf.rentPayAccNo}";
   var MONTH_REN_FEE = "${orderDetail.basicInfo.mthRentalFees}";
 
+  var CUST_ADDR_ID = "${orderDetail.basicInfo.ordAddrId}";
+  var CUST_CNCT_ID = "${orderDetail.basicInfo.ordCntcId}";
+
   var _cancleMsg = "Another order :  " + AUX_ORD_NO + "<br/>is also canceled together.<br/><br/>";
   var filterGridID;
 
   $(document).ready(function() {
-    //doGetComboData('/common/selectCodeList.do', {groupCode :'348'}, 'CANC', 'ordReqType', 'S'); //Order Edit Type
 
     if (FormUtil.isNotEmpty(TAB_NM)) {
       <c:if test="${callCenterYn != 'Y'}">
@@ -49,6 +51,9 @@
       </c:if>
       fn_changeTab(TAB_NM);
     }
+
+    doGetCombo('/common/selectCodeList.do', '455', '', 'ordReqType', 'S'); //Order Edit Type
+    doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'modDscBrnchId', 'S'); //Branch Code
   });
 
   $(function() {
@@ -77,19 +82,17 @@
       if (fn_validReqCanc())
         fn_clickBtnReqCancelOrder();
     });
+
+    $('#btnReqCntc').click(function() {
+        //if (fn_validReqCanc())
+          fn_doSaveReqCnct();
+      });
+
+    $('#btnReqInstAddr').click(function() {
+        //if (fn_validReqCanc())
+          fn_doSaveReqInstAddr();
+      });
   });
-
-  function fn_getLoginInfo() {
-    var userId = 0;
-
-    Common.ajaxSync("GET", "/sales/order/loginUserId.do", '', function( rsltInfo) {
-      if (rsltInfo != null) {
-        userId = rsltInfo.userId;
-      }
-    });
-
-    return userId;
-  }
 
   function fn_getCheckAccessRight(userId, moduleUnitId) {
     var result = false;
@@ -98,7 +101,6 @@
      if(rsltInfo != null) {
      result = true;
      }
-     console.log('fn_getLoginInfo result:'+result);
      });
      */
     return true;
@@ -106,61 +108,61 @@
 
   function fn_changeTab(tabNm) {
 
-    var userid = fn_getLoginInfo();
+    var userid = '${SESSION_INFO.userId}';
     var todayDD = Number(TODAY_DD.substr(0, 2));
     var todayYY = Number(TODAY_DD.substr(6, 4));
 
-    if (tabNm == 'CANC') {
+    var vTit = '<spring:message code="sal.page.title.ordReq" />';
 
+    if($("#ordReqType option:selected").index() > 0) {
+     vTit += ' - '+$('#ordReqType option:selected').text();
+     }
+
+    $('#hTitle').text(vTit);
+
+    if (tabNm == 5968) {
       if (fn_getCheckAccessRight(userid, 9)) {
-
-        //if(ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
         if (ORD_STUS_ID != '1' || APP_TYPE_ID == '5764') { // block if Order status is not active
           var msg = "Order " + ORD_NO + " is under " + ORD_STUS_NAME + " status. <br/>Order cancellation request is disallowed.";
-          //msg = '<spring:message code="sal.msg.underOrdCanc" arguments="'+ORD_NO+';'+ORD_STUS_CODE+'" argumentSeparator=";"/>';
           Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
           return false;
         }
 
-        if (todayYY >= 2018) {
-          if (todayDD == 26 || todayDD == 27 || todayDD == 1 || todayDD == 2) { // Block if date on 26 / 27 / 1 / 2 of the month
-            var msg = '<spring:message code="sal.msg.chkCancDate" />';
+        if (todayDD == 26 || todayDD == 27 || todayDD == 1 || todayDD == 2) { // Block if date on 26 / 27 / 1 / 2 of the month
+          var msg = '<spring:message code="sal.msg.chkCancDate" />';
             Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
             return false;
           }
-        }
+
+        $('#scCN').removeClass("blind");
+        $('#aTabMI').click();
+
+        fn_loadOrderInfoCanc();
+
+        fn_isLockOrder(tabNm);
       } else {
         var msg = "Sorry. You have no access rights to request order cancellation.";
         Common.alert("No Access Rights" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
         return false;
       }
+    }else{
+    	$('#scCN').addClass("blind");
     }
 
-    var vTit = '<spring:message code="sal.page.title.ordReq" />';
-
-    /* if($("#ordReqType option:selected").index() > 0) {
-     vTit += ' - '+$('#ordReqType option:selected').text();
-     } */
-
-    if ($("#ordReqType").val() != "") {
-      vTit += ' - ' + 'Cancellation';
+    if(tabNm == 5969){
+    	$('#scCP').removeClass("blind");
+    	$('#aTabIns').click();
+    	fn_isLockOrder(tabNm);
+    }else{
+    	$('#scCP').addClass("blind");
     }
 
-    $('#hTitle').text(vTit);
-
-    if (tabNm == 'CANC') {
-      $('#scCN').removeClass("blind");
-      $('#aTabMI').click();
-
-      fn_loadListCanc();
-
-      fn_loadOrderInfoCanc();
-
-      fn_isLockOrder(tabNm);
-
-    } else {
-      $('#scCN').addClass("blind");
-
+    if(tabNm == 5970){
+    	$('#scIN').removeClass("blind");
+    	$('#aTabIns').click();
+    	fn_isLockOrder(tabNm);
+    }else{
+    	$('#scIN').addClass("blind");
     }
 
   }
@@ -169,40 +171,78 @@
     var isLock = false;
     var msg = "";
     var ORD_ID = '${orderDetail.logView.salesOrdId}';
-    if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2) || "${orderDetail.logView.prgrsId}" == 1) {
 
-      if ("${orderDetail.logView.prgrsId}" == 1) {
-        Common.ajaxSync("GET", "/sales/order/checkeRequestAutoDebitDeduction.do", { salesOrdId : ORD_ID },
-          function(rsltInfo) {
-            //Valid eCash Floating Stus - 1
-            if (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
-             isLock = true;
-             msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + 'Order cancellation request is disallowed.<br />';
-           }
-         });
-      } else {
-        isLock = true;
-        msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'Order cancellation request is disallowed.<br />';
+    if(tabNm == 5968){
+      if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2) || "${orderDetail.logView.prgrsId}" == 1) {
+
+  	      if ("${orderDetail.logView.prgrsId}" == 1) {
+  	        Common.ajaxSync("GET", "/sales/order/checkeRequestAutoDebitDeduction.do", { salesOrdId : ORD_ID },
+  	          function(rsltInfo) {
+  	            //Valid eCash Floating Stus - 1
+  	            if (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
+  	             isLock = true;
+  	             msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + 'Order cancellation request is disallowed.<br />';
+  	           }
+  	         });
+  	      } else {
+  	        isLock = true;
+  	        msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'Order cancellation request is disallowed.<br />';
+  	      }
+  	    }
+
+      //Valid OCR Status - (CallLog Type - 257, Stus - 20, InstallResult Stus - Active )
+      Common.ajaxSync("GET", "/sales/order/validRequestOCRStus.do", { salesOrdId : ORD_ID },
+        function(result) {
+          if (result.callLogResult == 1) {
+            isLock = true;
+            msg = 'Order ' + ORD_NO + ' is under ready installation status.<br />' + 'Order cancellation request is disallowed.<br/>' + ' Kindly refer CSS Dept via <br /><u>helpme.css@coway.com.my</u> for help.<br />';
+          }
+        });
+
+      }else if(tabNm == 5969){
+    	  /* if(ORD_STUS_ID == '10'){
+    		  isLock = true;
+    		  msg = 'Order cancelled';
+    	  }else if(RENTAL_STUS != 'REG' || RENTAL_STUS != 'ACT'){
+    		  isLock = true;
+    		  msg = 'Order not REG';
+    	  } */
+
+      }else if(tabNm == 5970){
+
+    	  /* if(ORD_STUS_ID == '10'){
+              isLock = true;
+              msg = 'Order cancelled';
+          }else if(ORD_STUS_ID == '4' && RENTAL_STUS != 'ACT'){
+              isLock = true;
+              msg = 'Order not REG';
+          }else if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2) || "${orderDetail.logView.prgrsId}" == 1) {
+              if ("${orderDetail.logView.prgrsId}" == 1) {
+                Common.ajaxSync("GET", "/sales/order/checkeRequestAutoDebitDeduction.do", { salesOrdId : ORD_ID },
+                  function(rsltInfo) {
+                    if (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
+                     isLock = true;
+                     msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + 'e-Request is disallowed.<br />';
+                   }
+                 });
+              } else {
+                isLock = true;
+                msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'e-Request is disallowed.<br />';
+              }
+            } */
+
       }
-    }
-
-    //Valid OCR Status - (CallLog Type - 257, Stus - 20, InstallResult Stus - Active )
-    Common.ajaxSync("GET", "/sales/order/validRequestOCRStus.do", { salesOrdId : ORD_ID },
-      function(result) {
-        if (result.callLogResult == 1) {
-          isLock = true;
-          msg = 'Order ' + ORD_NO + ' is under ready installation status.<br />' + 'Order cancellation request is disallowed.<br/>' + ' Kindly refer CSS Dept via <br /><u>helpme.css@coway.com.my</u> for help.<br />';
-        }
-      });
 
     if (isLock) {
-      if (tabNm == 'CANC') {
-        //msg += '<spring:message code="sal.alert.msg.cancDisallowed" />.<br />' ;
+      if (tabNm == 5968) {
         fn_disableControlCanc();
+      }else if (tabNm == 5969) {
+    	  fn_disableControlCnt();
+      }else if (tabNm == 5970) {
+    	  fn_disableControlIns();
       }
 
-      Common.alert('<spring:message code="sal.alert.msg.ordLock" />'
-          + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+      Common.alert('<spring:message code="sal.alert.msg.ordLock" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
     }
     return isLock;
   }
@@ -217,6 +257,13 @@
 
     $('#btnReqCancOrder').addClass("blind");
   }
+  function fn_disableControlIns() {
+	  $('#scIN').addClass("blind");
+  }
+  function fn_disableControlCnt() {
+	  $('#scCP').addClass("blind");
+  }
+
 
   function fn_loadOrderInfoCanc() {
     if (ORD_STUS_ID == '4') {
@@ -437,17 +484,65 @@
     }
   }
 
+
   function fn_doSaveReqCanc() {
-    Common.ajax("POST", "/sales/order/eRequestCancelOrder.do", $('#frmReqCanc').serializeJSON(), function(result) {
+    Common.ajax("POST", "/sales/order/eReqEditOrdInfo.do", $('#frmReqCanc').serializeJSON(), function(result) {
       Common.alert('<spring:message code="sal.alert.msg.cancReqSum" />' + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_selfClose);
     }, function(jqXHR, textStatus, errorThrown) {
       try {
-        // Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
         Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
       } catch (e) {
         console.log(e);
       }
     });
+  }
+
+  function fn_doSaveReqCnct() {
+	   var data = {
+			    salesOrdId : ORD_ID,
+			    auxOrdId : AUX_ORD_ID,
+			    rqstTypeId : $("#ordReqType").val(),
+			    rqstDataFr : CUST_CNCT_ID,
+			    rqstDataTo : $("#modCustCntcId").val(),
+			    rqstRem     : $("#modRemCntc").val()
+	      };
+
+	   var data2 = $("#frmInstInfo").serializeJSON();
+
+	   console.log(data);
+
+	   Common.ajax("POST", "/sales/order/eReqEditOrdInfo.do", data, function(result) {
+	      Common.alert('<spring:message code="sal.alert.msg.cancReqSum" />' + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_selfClose);
+	    }, function(jqXHR, textStatus, errorThrown) {
+	      try {
+	        Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
+	      } catch (e) {
+	        console.log(e);
+	      }
+	    });
+	}
+
+  function fn_doSaveReqInstAddr() {
+	    var data = {
+                salesOrdId : ORD_ID,
+                auxOrdId : AUX_ORD_ID,
+                rqstTypeId : $("#ordReqType").val(),
+                rqstDataFr : CUST_ADDR_ID,
+                rqstDataTo : $("#modInstCustAddId").val(),
+                rqstRem     : $("#modRemInstAddr").val(),
+         };
+
+	  console.log(data);
+
+	  Common.ajax("POST", "/sales/order/eReqEditOrdInfo.do", data , function(result) {
+        Common.alert('<spring:message code="sal.alert.msg.cancReqSum" />' + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_selfClose);
+      }, function(jqXHR, textStatus, errorThrown) {
+        try {
+          Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
+        } catch (e) {
+          console.log(e);
+        }
+      });
   }
 
   function fn_validReqCanc() {
@@ -480,33 +575,64 @@
     return isValid;
   }
 
-  function fn_loadListCanc() {
-    /* doGetComboOrder('/common/selectCodeList.do', '52',  'CODE_ID',  '526', 'cmbRequestor', 'S', ''); //Common Code
-     doGetComboData('/sales/order/selectResnCodeList.do', {resnTypeId : '536', stusCodeId:'1'}, '1998', 'cmbReason', 'S', 'fn_removeOpt'); //Reason Code
-     $("#dpCallLogDate").val((new Date().getDate()+1) +"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
-     $("#txtRemark").val("CANCEL & REFUND"); */
-  }
-
-  function fn_removeOpt() {
-    $('#cmbReason').find("option").each(
-        function() {
-          if ($(this).val() == '1638' || $(this).val() == '1979' || $(this).val() == '1980' || $(this).val() == '1994') {
-            $(this).remove();
-          }
-    });
-  }
-
   function fn_selfClose() {
     $('#btnCloseReq').click();
   }
 
   function fn_reloadPage() {
-    Common.popupDiv("/sales/order/eRequestCancellationPop.do", {
-      salesOrderId : ORD_ID,
-      ordReqType : $('#ordReqType').val()
-    }, null, true);
+    Common.popupDiv("/sales/order/eRequestCancellationPop.do", { salesOrderId : ORD_ID, ordReqType : $('#ordReqType').val() }, null, true);
     $('#btnCloseReq').click();
   }
+
+  function fn_loadInstallAddrInfoNew(custAddId) {
+	    Common.ajax("GET", "/sales/order/selectInstallAddrInfo.do", {
+	      custAddId : custAddId
+	    }, function(addrInfo) {
+
+	      if (addrInfo != null) {
+	        $("#modInstAddrDtl").text(addrInfo.addrDtl);
+	        $("#modInstStreet").text(addrInfo.street);
+	        $("#modInstArea").text(addrInfo.area);
+	        $("#modInstCity").text(addrInfo.city);
+	        $("#modInstPostCd").text(addrInfo.postcode);
+	        $("#modInstState").text(addrInfo.city);
+	        $("#modInstCnty").text(addrInfo.country);
+
+	        $("#modInstAreaId").val(addrInfo.areaId);
+	        $("#modInstCustAddId").val(addrInfo.custAddId);
+	        $("#modDscBrnchId").val(addrInfo.brnchId); //DSC Branch
+	      }
+	    });
+	  }
+
+  function fn_loadCntcPerson(custCntcId) {
+	Common.ajax("GET","/sales/order/selectCustCntcJsonInfo.do",{custCntcId : custCntcId},function(custCntcInfo) {
+		if (custCntcInfo != null) {
+			var vInit = FormUtil.isEmpty(custCntcInfo.code) ? "" : custCntcInfo.code;
+
+			$("#modCntcPersonNew").text(vInit + ' ' + custCntcInfo.name1);
+			$("#modCntcMobNoNew").text(custCntcInfo.telM1);
+			$("#modCntcResNoNew").text(custCntcInfo.telR);
+			$("#modCntcOffNoNew").text(custCntcInfo.telO);
+			$("#modCntcFaxNoNew").text(custCntcInfo.telf);
+			$("#modCustCntcId").val(custCntcInfo.custCntcId);
+		}
+		});
+	}
+
+    $('#btnInstNewAddr').click(function() {
+        Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : CUST_ID,callParam : "ORD_MODIFY_INST_ADR"}, null, true);
+      });
+      $('#btnInstSelAddr').click(function() {
+        Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : CUST_ID,callPrgm : "ORD_MODIFY_INST_ADR"}, null, true);
+      });
+
+    $('#btnNewCntc').click(function() {
+      Common.popupDiv("/sales/customer/updateCustomerNewContactPop.do", {custId : CUST_ID,callParam : "ORD_MODIFY_CNTC_OWN"}, null, true);
+      });
+    $('#btnSelCntc').click(function() {
+      Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : CUST_ID,callPrgm : "ORD_MODIFY_CNTC_OWN"}, null, true);
+    });
 
 </script>
 <div id="popup_wrap" class="popup_wrap">
@@ -516,8 +642,7 @@
     </h1>
     <ul class="right_opt">
       <li><p class="btn_blue2">
-          <a id="btnCloseReq" href="#">
-            <spring:message code="sal.btn.close" /></a>
+          <a id="btnCloseReq" href="#"> <spring:message code="sal.btn.close" /></a>
         </p></li>
     </ul>
   </header>
@@ -533,12 +658,9 @@
           <tbody>
             <tr>
               <th scope="row"><spring:message code="sal.text.editType" /></th>
-              <td><select id="ordReqType" class="mr5">
-                  <option value="CANC">Cancellation</option>
-              </select>
+              <td><select id="ordReqType" class="mr5"></select>
                 <p class="btn_sky">
-                  <a id="btnEditType" href="#">
-                   <spring:message code="sal.btn.confirm" /></a>
+                  <a id="btnEditType" href="#"> <spring:message code="sal.btn.confirm" /></a>
                 </p></td>
             </tr>
           </tbody>
@@ -561,45 +683,7 @@
       </aside>
       <section class="search_table">
         <form id="frmReqCanc" action="#" method="post">
-          <input name="salesOrdId" type="hidden" value="${orderDetail.basicInfo.ordId}" />
-          <input name="auxOrdId" type="hidden" value="${orderDetail.basicInfo.auxSalesOrdId}" />
-          <input name="auxAppType" type="hidden" value="${orderDetail.basicInfo.auxAppType}" />
-          <%-- <table class="type1">
-                   <caption>table</caption>
-                   <colgroup>
-                       <col style="width:180px" />
-                       <col style="width:*" />
-                       <col style="width:180px" />
-                       <col style="width:*" />
-                   </colgroup>
-                   <tbody>
-                   <tr>
-                       <th scope="row"><spring:message code="sal.text.requestor" /><span class="must">*</span></th>
-                       <td>
-                         <select id="cmbRequestor" name="cmbRequestor" class="w100p " ></select>
-                       </td>
-                       <th scope="row"><spring:message code="sal.text.callLogDate" /><span class="must">*</span></th>
-                       <td>
-                         <input id="dpCallLogDate" name="dpCallLogDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p " >
-                       </td>
-                   </tr>
-                   <tr>
-                       <th scope="row"><spring:message code="sal.text.reason" /><span class="must">*</span></th>
-                       <td>
-                         <select id="cmbReason" name="cmbReason" class="w100p " ></select>
-                       </td>
-                       <th scope="row"><spring:message code="sal.alert.msg.prefRtrnDt" /><span id="spPrfRtnDt" class="must blind">*</span></th>
-                       <td>
-                         <input id="dpReturnDate" name="dpReturnDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" disabled/>
-                       </td>
-                   </tr>
-                   <tr>
-                       <th scope="row"><spring:message code="sal.text.ocrRem" /><span class="must">*</span></th>
-                       <td colspan="3"><textarea id="txtRemark" name="txtRemark" cols="20" rows="5" ></textarea></td>
-                   </tr>
-                   </tbody>
-                   </table> --%>
-
+          <input name="salesOrdId" type="hidden" value="${orderDetail.basicInfo.ordId}" /> <input name="auxOrdId" type="hidden" value="${orderDetail.basicInfo.auxSalesOrdId}" /> <input name="auxAppType" type="hidden" value="${orderDetail.basicInfo.auxAppType}" />
           <!------------------------------------------------------------------------------
              Outstanding & Penalty Info Edit START
            ------------------------------------------------------------------------------->
@@ -625,37 +709,23 @@
                 <tr>
                   <td colspan="4"></td>
                   <th scope="row"><spring:message code="sales.totAmt_RM" /></th>
-                  <td class="bg-black"><span id="spTotalAmount"></span>
-                    <input id="txtTotalAmount" name="txtTotalAmount" type="hidden" value="0" />
-                  </td>
+                  <td class="bg-black"><span id="spTotalAmount"></span> <input id="txtTotalAmount" name="txtTotalAmount" type="hidden" value="0" /></td>
                 </tr>
                 <tr>
                   <th scope="row"><spring:message code="sales.TotalUsedMonth" /></th>
-                  <td>
-                    <input id="txtTotalUseMth" name="txtTotalUseMth" type="text" class="w100p readonly" value="0" readonly>
-                  </td>
+                  <td><input id="txtTotalUseMth" name="txtTotalUseMth" type="text" class="w100p readonly" value="0" readonly></td>
                   <th scope="row"><spring:message code="sal.text.obligationPeriod" /></th>
-                  <td>
-                    <input id="txtObPeriod" name="txtObPeriod" type="text" class="w100p readonly" value="24" readonly>
-                  </td>
+                  <td><input id="txtObPeriod" name="txtObPeriod" type="text" class="w100p readonly" value="24" readonly></td>
                   <th scope="row"><spring:message code="sal.title.text.rentalFees" /></th>
-                  <td>
-                    <input id="txtRentalFees" name="txtRentalFees" type="text" value="0" class="w100p readonly" readonly>
-                  </td>
+                  <td><input id="txtRentalFees" name="txtRentalFees" type="text" value="0" class="w100p readonly" readonly></td>
                 </tr>
                 <tr>
                   <th scope="row"><spring:message code="sales.PenaltyCharge" /></th>
-                  <td>
-                    <input id="txtPenaltyCharge" name="txtPenaltyCharge" type="text" class="w100p readonly" value="0" readonly>
-                  </td>
+                  <td><input id="txtPenaltyCharge" name="txtPenaltyCharge" type="text" class="w100p readonly" value="0" readonly></td>
                   <th scope="row"><spring:message code="sal.text.penaltyAdjustment" /><span class="must">*</span></th>
-                  <td>
-                    <input id="txtPenaltyAdj" name="txtPenaltyAdj" type="text" value="0" title="" placeholder="Penalty Adjustment" class="w100p" />
-                  </td>
+                  <td><input id="txtPenaltyAdj" name="txtPenaltyAdj" type="text" value="0" title="" placeholder="Penalty Adjustment" class="w100p" /></td>
                   <th scope="row"><spring:message code="sal.text.currOutstnd" /></th>
-                  <td>
-                    <input id="txtCurrentOutstanding" name="txtCurrentOutstanding" type="text" value="0" class="w100p readonly" readonly>
-                  </td>
+                  <td><input id="txtCurrentOutstanding" name="txtCurrentOutstanding" type="text" value="0" class="w100p readonly" readonly></td>
                 </tr>
               </tbody>
             </table>
@@ -674,5 +744,178 @@
     <!------------------------------------------------------------------------------
     Order Cancellation Request END
     ------------------------------------------------------------------------------->
+    <!------------------------------------------------------------------------------
+    Contact Person Edit START
+------------------------------------------------------------------------------->
+    <section id="scCP" class="blind">
+      <!-- title_line end -->
+      <aside class="title_line">
+        <h3>
+          <spring:message code="sal.page.title.custContact" />
+        </h3>
+      </aside>
+      <ul class="right_btns mb10">
+        <li><p class="btn_grid">
+            <a id="btnNewCntc" href="#"><spring:message code="sal.btn.addNewContact" /></a>
+          </p></li>
+        <li><p class="btn_grid">
+            <a id="btnSelCntc" href="#"><spring:message code="sal.title.text.selContactPerson" /></a>
+          </p></li>
+      </ul>
+      <section class="search_table">
+        <!-- search_table start -->
+        <form id="frmCntcPer" method="post">
+          <input name="salesOrdId" type="hidden" value="${salesOrderId}" />
+          <input id="modCustId2" name="custId" type="hidden" />
+          <input id="modCustCntcId" name="custCntcId" type="hidden" />
+          <table class="type1">
+            <!-- table start -->
+            <caption>table</caption>
+            <colgroup>
+              <col style="width: 150px" />
+              <col style="width: *" />
+              <col style="width: 180px" />
+              <col style="width: *" />
+            </colgroup>
+          </table>
+          <!-- table end -->
+          <aside class="title_line">
+            <!-- title_line start -->
+            <h2>
+              <spring:message code="sal.btn.newContactPerson" />
+            </h2>
+          </aside>
+          <!-- title_line end -->
+          <table class="type1">
+            <!-- table start -->
+            <caption>table</caption>
+            <colgroup>
+              <col style="width: 150px" />
+              <col style="width: *" />
+              <col style="width: 180px" />
+              <col style="width: *" />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th scope="row"><spring:message code="sal.text.contactPerson" /></th>
+                <td colspan="3"><span id="modCntcPersonNew"></td>
+              </tr>
+              <tr>
+                <th scope="row"><spring:message code="sal.title.text.mobNumber" /></th>
+                <td><span id="modCntcMobNoNew"></span></td>
+                <th scope="row"><spring:message code="sal.title.text.officeNumber" /></th>
+                <td><span id="modCntcOffNoNew"></span></td>
+              </tr>
+              <tr>
+                <th scope="row"><spring:message code="sal.title.text.residenceNumber" /></th>
+                <td><span id="modCntcResNoNew"></span></td>
+                <th scope="row"><spring:message code="sal.title.text.faxNumber" /></th>
+                <td><span id="modCntcFaxNoNew"></span></td>
+              </tr>
+              <tr>
+                <th scope="row"><spring:message code="sal.title.text.reasonUpdate" /></th>
+                <td colspan="3"><textarea id="modRemCntc" name="modRemCntc" cols="20" rows="5"></textarea></td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- table end -->
+          <!-- </form> -->
+      </section>
+      <!-- search_table end -->
+      <ul class="center_btns">
+        <li><p class="btn_blue2 big">
+            <a id="btnReqCntc" href="#"><spring:message code="sal.btn.save" /></a>
+          </p></li>
+      </ul>
+    </section>
+    <!------------------------------------------------------------------------------
+    Contact Person Edit END
+------------------------------------------------------------------------------->
+    <!------------------------------------------------------------------------------
+    Installation Edit START
+------------------------------------------------------------------------------->
+    <section id="scIN" class="blind">
+      <aside class="title_line">
+        <!-- title_line start -->
+        <h3>
+          <spring:message code="sal.text.instAddr" />
+        </h3>
+      </aside>
+      <!-- title_line end -->
+      <ul class="right_btns mb10">
+        <li><p class="btn_grid">
+            <a id="btnInstNewAddr" href="#"><spring:message code="sal.btn.addNewAddr" /></a>
+          </p></li>
+        <li><p class="btn_grid">
+            <a id="btnInstSelAddr" href="#"><spring:message code="sal.title.text.seMailAddr" /></a>
+          </p></li>
+      </ul>
+      <section class="search_table">
+        <!-- search_table start -->
+        <form id="frmInstInfo" method="post">
+          <input name="salesOrdId" type="hidden" value="${salesOrderId}" />
+          <input name="salesOrdNo" type="hidden" value="${salesOrderNo}" />
+          <!-- Install Address Info                                                    -->
+          <input id="modInstCustAddId" name="custAddId" type="hidden" />
+          <input id="modInstAreaId" name="areaId" type="hidden" />
+          <!-- Install Contact Info                                                    -->
+          <input id="modInstCustCntcId" name="custCntcId" type="hidden" />
+          <table class="type1">
+            <!-- table start -->
+            <caption>table</caption>
+            <colgroup>
+              <col style="width: 150px" />
+              <col style="width: *" />
+              <col style="width: 150px" />
+              <col style="width: *" />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th scope="row"><spring:message code="sal.text.addressDetail" /></th>
+                <td colspan="3"><span id="modInstAddrDtl"></span></td>
+              </tr>
+              <tr>
+                <th scope="row"><spring:message code="sal.text.street" /></th>
+                <td colspan="3"><span id="modInstStreet"></span></td>
+              </tr>
+              <tr>
+                <th scope="row"><spring:message code="sal.text.area" /></th>
+                <td colspan="3" id="modInstArea"><span></span></td>
+              </tr>
+              <tr>
+                <th scope="row"><spring:message code="sal.text.city" /></th>
+                <td><span id="modInstCity"></span></td>
+                <th scope="row"><spring:message code="sal.text.postCode" /></th>
+                <td><span id="modInstPostCd"></span></td>
+              </tr>
+              <tr>
+                <th scope="row"><spring:message code="sal.text.state" /></th>
+                <td><span id="modInstState"></span></td>
+                <th scope="row"><spring:message code="sal.text.country" /></th>
+                <td><span id="modInstCnty"></span></td>
+              </tr>
+              <tr>
+                  <th scope="row"><spring:message code="sal.title.text.dscBrnch" /></th>
+                  <td colspan="3"><select id="modDscBrnchId" name="modDscBrnchId" class="w50p" disabled></select></td>
+              </tr>
+              <tr>
+                   <th scope="row"><spring:message code="sal.title.text.reasonUpdate" /></th>
+                   <td colspan="3"><textarea id="modRemInstAddr" name="modRemInstAddr" cols="20" rows="5"></textarea></td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- table end -->
+        </form>
+      </section>
+      <!-- search_table end -->
+      <ul class="center_btns">
+        <li><p class="btn_blue2">
+            <a id="btnReqInstAddr" href="#"><spring:message code="sal.btn.save" /></a>
+          </p></li>
+      </ul>
+    </section>
+    <!------------------------------------------------------------------------------
+    Installation Edit END
+------------------------------------------------------------------------------->
   </section>
 </div>
