@@ -162,7 +162,7 @@ public class InstallationResultListController {
    * @throws Exception
    */
   @RequestMapping(value = "/installationResultDetailPop.do")
-  public String installationResultDetail(@RequestParam Map<String, Object> params, ModelMap model) {
+  public String installationResultDetail(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)  throws Exception {
     EgovMap callType = installationResultListService.selectCallType(params);
     EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
     EgovMap orderInfo = null;
@@ -205,6 +205,9 @@ public class InstallationResultListController {
     model.addAttribute("salseOrder", salseOrder);
     model.addAttribute("hpMember", hpMember);
     model.addAttribute("callType", callType);
+
+    EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+    model.put("orderDetail", orderDetail);
 
     // 호출될 화면
     return "services/installation/installationResultDetailPop";

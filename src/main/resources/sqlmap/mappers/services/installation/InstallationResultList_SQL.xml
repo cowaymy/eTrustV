@@ -147,6 +147,9 @@
                     , MA.CITY
                     , MA.POSTCODE
                     , MA.STATE
+                    , CASE WHEN IR.ALLOW_COMM IS NOT NULL
+                           THEN IR.ALLOW_COMM
+                           ELSE 0 END AS ALLOW_COMMISION
       FROM SAL0001D som
       JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
       JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID

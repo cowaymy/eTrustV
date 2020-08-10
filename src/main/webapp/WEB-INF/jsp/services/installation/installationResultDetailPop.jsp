@@ -4,7 +4,8 @@
 <!--
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
- 08/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
+ 08/02/2019  ONGHC  1.0.0       RE-STRUCTURE JSP.
+ 07/08/2020  FANNIE  1.0.1       Add Order View Tab
  -->
 
 <script type="text/javaScript">
@@ -128,13 +129,11 @@
   <section class="tap_wrap">
    <!-- tap_wrap start -->
    <ul class="tap_type1">
-    <li><a href="#" class="on"><spring:message
-       code='sales.tap.order' /></a></li>
-    <li><a href="#"><spring:message
-       code='sales.tap.customerInfo' /></a></li>
-    <li><a href="#"><spring:message
-       code='sales.tap.installationInfo' /></a></li>
+    <li><a href="#" class="on"><spring:message code='sales.tap.order' /></a></li>
+    <li><a href="#"><spring:message code='sales.tap.customerInfo' /></a></li>
+    <li><a href="#"><spring:message code='sales.tap.installationInfo' /></a></li>
     <li><a href="#"><spring:message code='sales.tap.HPInfo' /></a></li>
+    <li><a href="#"><spring:message code='sales.tap.orderView' /></a></li>
    </ul>
    <article class="tap_area">
     <!-- tap_area start -->
@@ -145,9 +144,7 @@
      </h2>
     </aside>
     <!-- title_line end -->
-    <input type="hidden"
-     value="<c:out value="${installResult.installEntryId}"/>"
-     id="installEntryId" />
+    <input type="hidden" value="<c:out value="${installResult.installEntryId}"/>" id="installEntryId" />
     <table class="type1">
      <!-- table start -->
      <caption>table</caption>
@@ -519,6 +516,11 @@
     </table>
     <!-- table end -->
    </article>
+   <!-- Order View Start -->
+   <article class="tap_area">
+       <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
+   </article>
+   <!-- Order View End -->
    <!-- tap_area end -->
   </section>
   <!-- tap_wrap end -->

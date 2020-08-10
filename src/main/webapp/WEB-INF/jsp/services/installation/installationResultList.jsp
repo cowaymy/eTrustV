@@ -10,6 +10,7 @@
  17/02/2020  THUNPY 1.0.3          Add Installation Call Log Raw button at Link
  22/05/2020  ONGHC  1.0.4          Add Customer Name to GridView
  01/07/2020  ONGHC  1.0.5          Add Installation Job Transfer Failure Listing
+ 07/08/2020  FANNIE  1.0.6          Add Allow Commision columns in listing
  -->
 
 <script type="text/javaScript">
@@ -23,7 +24,7 @@
     AUIGrid.bind(myGridID, "cellDoubleClick",
     function(event) {
       var statusCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "code1");
-      Common.popupDiv("/services/installationResultDetailPop.do?isPop=true&installEntryId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId") + "&codeId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1"));
+      Common.popupDiv("/services/installationResultDetailPop.do?isPop=true&installEntryId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId") + "&codeId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1")  + "&salesOrderId=" +  AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId"));
     });
 
     AUIGrid.bind(myGridID, "cellClick",
@@ -170,6 +171,11 @@
       dataField : "code1",
       headerText : '<spring:message code="service.grid.Status" />',
       width : 80
+    },
+    {
+    	dataField:"allowCommision",
+    	headerText:'Allow Commision',
+    	width: 150
     },
     {
         dataField : "serialRequireChkYn",
