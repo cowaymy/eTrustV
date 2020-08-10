@@ -17,7 +17,7 @@ $(document).ready(function(){
     if('${detailList}'=='' || '${detailList}' == null){
     }else{
     	detailList = JSON.parse('${detailList}');
-       	console.log(detailList);
+    	console.log(detailList);
     }
 
     //AUIGrid 그리드를 생성합니다.
@@ -26,8 +26,10 @@ $(document).ready(function(){
 
 function creatDetailGrid(){
     var trDColLayout = [
-         {dataField : "trReciptNo", headerText : "<spring:message code="sal.title.bookNo" />", width : 150      },
-         {dataField : "itmStusCode", headerText : "<spring:message code="sal.title.status" />", width : 150       },
+        {dataField : "trReciptNo", headerText : "TR Number", width : 150      },
+        {dataField : "itmStusCode", headerText : "TR Number Status (Match/Active)", width : 250       },
+         /* {dataField : "trReciptNo", headerText : "<spring:message code="sal.title.bookNo" />", width : 150      },
+         {dataField : "itmStusCode", headerText : "<spring:message code="sal.title.status" />", width : 150       }, */
          {dataField : "itmUpdBy", headerText : "<spring:message code="sal.title.updateBy" />", width : 150        },
          {dataField : "itmUpdDt", headerText : "<spring:message code="sal.title.updateDate" />", width : 150        }
          ];
