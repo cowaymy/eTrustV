@@ -294,6 +294,8 @@ public interface ASManagementListMapper {
   // AS RECEIVED ENTRY POP UP NOTIFICATION -- TPY
   EgovMap checkASReceiveEntry(Map<String, Object> params);
 
+  EgovMap checkASCom(Map<String, Object> params);
+
   EgovMap checkHSStatus(Map<String, Object> params);
 
   EgovMap checkWarrentyStatus(Map<String, Object> params);
