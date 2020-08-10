@@ -98,6 +98,7 @@
         doDefCombo(branchCdList, '' ,'_brnchId', 'M', 'fn_multiCombo');
         doDefCombo(codeList_8, '' ,'_typeId', 'M', 'fn_multiCombo');
         doDefCombo(memTypeData, '', 'memType', 'S', '');
+        doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'HC'}, '', 'ordProudctList', 'S', 'fn_setOptGrpClass');
 //         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
 //         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
 //         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
@@ -121,6 +122,10 @@
 
     function fn_setDetail(gridID, rowIdx){
         Common.popupDiv("/homecare/sales/order/hcPreOrderModifyPop.do", { preOrdId : AUIGrid.getCellValue(gridID, rowIdx, "preOrdId") }, null, true, "_divPreOrdModPop");
+    }
+
+    function fn_setOptGrpClass() {
+        $("optgroup").attr("class" , "optgroup_text")
     }
 
     function fn_validStatus() {
@@ -601,6 +606,20 @@
     <td><select id="_typeId" name="_typeId" class="multy_select w100p" multiple="multiple"></select></td>
     <th scope="row">Customer Name</th>
     <td><input id="_name" name="_name" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Order No.</th>
+    <td><input id="_ordNo" name="_ordNo" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Time</th>
+    <td>
+       <div class="date_set w100p">
+        <p><input id="_reqstStartTime" name="_reqstStartTime" type="text" value="" title="" placeholder="" class="w100p" maxlength = "4" min = "0000" max = "2300" pattern="\d{4}"  /></p>
+        <span>To</span>
+        <p><input id="_reqstEndTime" name="_reqstEndTime" type="text" value="" title="" placeholder="" class="w100p" maxlength = "4" min = "0000" max = "2300" pattern="\d{4}" /></p>
+        </div>
+    </td>
+    <th scope="row"><spring:message code="sal.text.product" /></th>
+    <td><select id="ordProudctList" name="ordProudctList" class="w100p" ></select>
 </tr>
 <tr>
     <th scope="row">Org Code</th>
