@@ -144,7 +144,7 @@ function fn_approve(process){
     Common.ajax("POST", "/payment/approvalBatchAdjustment.do", data, function(result) {
         Common.alert("<spring:message code='pay.alert.invoiceAdjSuccess'/>",function(){
         	fn_getAdjustmentListAjax();    //메인 페이지 조회
-        	$('#_approvalBatchPop').hide();
+        	$('#_approvalBatchPop').remove();
         });
 
     });
