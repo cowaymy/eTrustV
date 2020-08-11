@@ -114,7 +114,7 @@
             AND T9.DEPT_CODE = #{deptCode}
         </if>
         <if test="_ordNo != '' ">
-           AND T16.SALES_ORD_NO = #{_ordNo}
+           AND T11.SALES_ORD_NO = #{_ordNo}
          </if>
          <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != "" and _reqstStartTime != null and _reqstStartTime != "" and _reqstEndTime != null and _reqstEndTime != ""'>
            AND T1.REQST_DT BETWEEN TO_DATE(#{_reqstStartDt} || #{_reqstStartTime}, 'dd/mm/yyyy hh24:mi')  AND TO_DATE(#{_reqstEndDt} || #{_reqstEndTime}, 'dd/mm/yyyy hh24:mi')
