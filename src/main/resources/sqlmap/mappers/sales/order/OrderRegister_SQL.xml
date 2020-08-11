@@ -2270,12 +2270,9 @@
                    <if test='alwSale != null and alwSale == 1'>
                    AND t1.ALLOW_SALES = 1
                   </if>
-
-
-
-                   AND T1.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
-                                                               WHERE AA.CODE = BB.CODE
-                                                                  AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */
+                  <!-- AND T1.STK_CTGRY_ID NOT IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                        WHERE AA.CODE = BB.CODE
+                        AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE')      /* STKCATEGORYID_HOMECARE */ -->
             </if>
              )
          ORDER BY DISCONTINUE, CODE_NAME ASC, STK_ID ASC
