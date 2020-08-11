@@ -950,6 +950,21 @@ public class ReportBatchController {
     LOGGER.info("[END] csRaw...");
   }
 
+  @RequestMapping(value = "/CSRawPastMonth.do")
+  //@Scheduled(cron = "0 24 8 * * MON,WED,FRI")
+  public void CSRawPastMonth() throws IOException {
+    LOGGER.info("[START] csRawPastMonth...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/CSRawPastMonth.rpt");// visualcut rpt
+                                                                // file name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "CSRaw" + File.separator + "CSRawPastMonth_" + CommonUtils.getNowDate() + ".xls");
+
+    this.view(null, null, params);
+    LOGGER.info("[END] csRawPastMonth...");
+  }
+
   @RequestMapping(value = "/BSRawCurrent.do")
   //@Scheduled(cron = "0 24 8 * * MON,WED,FRI")
   public void bsRawCurrent() throws IOException {
