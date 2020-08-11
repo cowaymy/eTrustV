@@ -54,6 +54,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 07. 28    ONGHC        Revert 2020. 06. 30 Deployment.
  * 2020. 08. 05    ONGHC        Restructure saveMobilePaymentKeyInNormalPayment & saveMobilePaymentKeyInCard
  * 2020. 08. 09    ONGHC        Amend saveMobilePaymentKeyInCard
+ * 2020. 08. 11    ONGHC        Amend saveMobilePaymentKeyInNormalPayment
  *          </pre>
  */
 @Service("mobilePaymentKeyInService")
@@ -583,21 +584,21 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
     LOGGER.debug("= FORM LIST PART 1 : " + formInfo.toString());
 
     // ALLOWANCE
-    if ("".equals(CommonUtils.nvl(formInfo.get("allowance")))) {
+    if (!"".equals(CommonUtils.nvl(formInfo.get("allowance")))) {
       allowance = "1";
     } else {
       allowance = "0";
     }
 
     // TR REF NO.
-    if ("".equals(CommonUtils.nvl(formInfo.get("trRefNo")))) {
+    if (!"".equals(CommonUtils.nvl(formInfo.get("trRefNo")))) {
       trRefNo = formInfo.get("trRefNo").toString();
     } else {
       trRefNo = "";
     }
 
     // TR ISSED DATE.
-    if ("".equals(CommonUtils.nvl(formInfo.get("trIssDt")))) {
+    if (!"".equals(CommonUtils.nvl(formInfo.get("trIssDt")))) {
       trIssDt = formInfo.get("trIssDt").toString();
     } else {
       trIssDt = "";
