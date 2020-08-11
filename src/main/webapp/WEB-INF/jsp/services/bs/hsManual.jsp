@@ -1355,6 +1355,10 @@ var TODAY_DD      = "${toDay}";
        <a href="#" onclick="javascript:fn_getHSAddListAjax();"
         id="addResult">Add HS Result</a>
       </p></li>
+      </c:if>
+
+        <!-- Edited by Tommy 20200811-->
+       <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
      <li><p class="btn_blue">
        <a id="hSConfiguration" name="hSConfiguration">Create HS
         Order</a>
