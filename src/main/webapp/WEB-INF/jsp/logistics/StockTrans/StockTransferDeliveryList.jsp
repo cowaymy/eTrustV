@@ -101,6 +101,8 @@ var rescolumnLayout=[{dataField: "rnum",headerText :"<spring:message code='log.h
                      {dataField: "grcmplt",headerText :"GR Complt."                   ,width:120    ,height:30 , visible:true},
                      {dataField: "serialchk",headerText :"<spring:message code='log.head.serialcheck'/>" ,width:130, height:30 , visible:true},
                      {dataField: "rcvSerialRequireChkYn", headerText :"Serial Required Check Y/N", width:90, height:30, visible:true}
+                     // Added for avoiding double process (duplicate GI/GR) issue. By Hui Ding, 2020-07-17
+                     //{dataField: "rcdTms", headerText:"Record Timestamp", width:150, visible:true}
                      ];
 
 var serialcolumn       =[{dataField:    "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:  "20%"       ,height:30 },
@@ -986,9 +988,9 @@ function fn_scanSearchList(item){
             <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
                 <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
             </c:if>
-            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+            <%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <li><p class="btn_grid"><a id="deliverydelete">Delete Delivery</a></p></li>
-            </c:if>
+            </c:if> --%>
             <li><p class="btn_grid"><a id="gissueNew">Good Issue</a></p></li>
             <li style="display:none;"><p class="btn_grid"><a id="gissue">Good Issue-Old</a></p></li>
             <li><p class="btn_grid"><a id="gcissue">Issue Cancel</a></p></li>
