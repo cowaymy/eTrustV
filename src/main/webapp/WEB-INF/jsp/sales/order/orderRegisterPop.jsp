@@ -1066,7 +1066,6 @@ console.log("orderRegisterPop.jsp");
                 // ONGHC - ADD
                 $('#ordProudct').removeAttr("disabled");
                 //doGetProductCombo('/sales/order/selectProductCodeList.do',  stkType, '', 'ordProudct', 'S', ''); //Product Code
-
                 doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val(),alwSale:alwSale}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
             } else {
                 // ONGHC - ADD
@@ -1145,7 +1144,7 @@ console.log("orderRegisterPop.jsp");
             var rentPayModeVal = $("#rentPayMode").val();
 
             if(rentPayModeIdx > 0) {
-                if(rentPayModeVal == '133' || rentPayModeVal == '134') {
+                if(rentPayModeVal == '133' || rentPayModeVal == '134' || rentPayModeVal == '135') {
 
 //                  Common.alert('<b>Currently we are not provide ['+rentPayModeVal+'] service.</b>');
                     Common.alert('<spring:message code="sal.alert.msg.notProvideSvc" arguments="'+rentPayModeVal+'"/>');
