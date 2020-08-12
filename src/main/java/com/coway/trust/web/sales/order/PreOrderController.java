@@ -92,6 +92,7 @@ public class PreOrderController {
 
 		model.put("toDay", toDay);
 		model.put("isAdmin", "true");
+		model.addAttribute("userRoleId", sessionVO.getRoleId());
 
 		return "sales/order/preOrderList";
 	}
