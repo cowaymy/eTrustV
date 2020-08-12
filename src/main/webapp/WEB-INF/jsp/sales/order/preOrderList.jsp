@@ -395,6 +395,12 @@
     function fn_validSearchList() {
     	var isValid = true, msg = "";
 
+        if('${userRoleId}' == 51) { // BLOCK CARE LINE AGENT WHEN CLICK SEARCH BUTTON - TPY 20200812
+        	  isValid = false;
+              msg += '* Unable to search due to no access right.<br/>';
+        }
+
+
     	if(FormUtil.isEmpty($('#_memCode').val())
     			&& FormUtil.isEmpty($('#_appTypeId').val())
     		    && FormUtil.isEmpty($('#_stusId').val())
