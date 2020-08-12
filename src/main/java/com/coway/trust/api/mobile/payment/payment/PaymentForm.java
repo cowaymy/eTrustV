@@ -144,7 +144,7 @@ public class PaymentForm {
   }
 
   public String getUploadImg2() {
-    return uploadImg1;
+    return uploadImg2;
   }
 
   public void setUploadImg2(String uploadImg2) {
