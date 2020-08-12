@@ -129,12 +129,17 @@
   <section class="tap_wrap">
    <!-- tap_wrap start -->
    <ul class="tap_type1">
-    <li><a href="#" class="on"><spring:message code='sales.tap.order' /></a></li>
+    <li><a href="#" class="on"><spring:message code='sales.tap.orderView' /></a></li>
+    <li><a href="#" ><spring:message code='sales.tap.order' /></a></li>
     <li><a href="#"><spring:message code='sales.tap.customerInfo' /></a></li>
     <li><a href="#"><spring:message code='sales.tap.installationInfo' /></a></li>
     <li><a href="#"><spring:message code='sales.tap.HPInfo' /></a></li>
-    <li><a href="#"><spring:message code='sales.tap.orderView' /></a></li>
    </ul>
+   <!-- Order View Start -->
+   <article class="tap_area">
+       <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
+   </article>
+   <!-- Order View End -->
    <article class="tap_area">
     <!-- tap_area start -->
     <aside class="title_line">
@@ -516,11 +521,6 @@
     </table>
     <!-- table end -->
    </article>
-   <!-- Order View Start -->
-   <article class="tap_area">
-       <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
-   </article>
-   <!-- Order View End -->
    <!-- tap_area end -->
   </section>
   <!-- tap_wrap end -->
