@@ -93,6 +93,9 @@
                           , OTSTND_AMT
                           , PAY_AMT
                           , UPLOAD_IMG
+                          , UPLOAD_IMG2
+                          , UPLOAD_IMG3
+                          , UPLOAD_IMG4
                           , SLIP_NO
                           , ISSU_BANK_ID
                           , CHEQUE_DT
@@ -116,7 +119,10 @@
                   ,TO_NUMBER(#{advAmt}, '9999999.99')
                   ,TO_NUMBER(#{otstndAmt}, '9999999.99')
                   ,TO_NUMBER(#{payAmt}, '9999999.99')
-                  ,#{uploadImg}
+                  ,#{uploadImg1}
+                  ,#{uploadImg2}
+                  ,#{uploadImg3}
+                  ,#{uploadImg4}
                   ,#{slipNo}
                   ,#{issuBankId}
                   ,#{chequeDt}
