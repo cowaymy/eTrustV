@@ -2331,7 +2331,7 @@
 		    <th scope="row">Application Type | Jenis Permohonan<span class="must">*</span></th>
 		    <td>
 		    <p><select id="appType" name="appType" class="w100p"></select></p>
-		    <p><select id="srvPacId" name="srvPacId" class="w100p"></select></p>
+		    <p><select id="srvPacId" name="srvPacId" class="w100p" disabled></select></p>
 		    </td>
 		</tr>
     </tbody>
