@@ -168,7 +168,17 @@ function fn_report(type) {
         $("#v_Year").val(year2);
         $("#viewType").val('PDF');
     }
+    else if(dataForm.reportType.value=="17"){
+    	var month1 = yyyymmDate.substring(0, 2);
+        var mthYear = year + '/' + month1;
 
+        console.log("update date :: " + mthYear);
+
+        $("#reportFileName").val('/sales/Net_Sales_Daily_Report.rpt');
+        $("#reportDownFileName").val("Net_Sales_Daily_Report_" + $("#yyyymmDate").val());
+        $("#V_DATE").val(mthYear);
+        $("#viewType").val('EXCEL');
+    }
 
 
     var option = {
@@ -201,6 +211,7 @@ function fn_report(type) {
     <input type="hidden" id="Month" name="@Month" />
     <input type="hidden" id="Year" name="@Year" />
     <input type="hidden" id="v_Year" name="v_Year" />
+    <input type="hidden" id="V_DATE" name="V_DATE" />
     <input type="hidden" id="reportDownFileName" name="reportDownFileName"  />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -230,7 +241,7 @@ function fn_report(type) {
         <option value="14">M_Out_Sales_By_Category_Channel</option>
         <option value="15">M_Mem_Sales_By_Category</option>
         <option value="16">Sales Analysis Report</option>
-
+        <option value="17">Net Sales Daily Report</option>
     </select>
     </td>
 </tr>
