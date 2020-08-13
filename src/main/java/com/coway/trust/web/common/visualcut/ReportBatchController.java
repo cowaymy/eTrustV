@@ -1820,6 +1820,24 @@ public class ReportBatchController {
     LOGGER.info("[END] SQLColorGrid_NoRental-Out-Ins_Excel...");
   }
 
+  @RequestMapping(value = "/dailyDeductionRaw.do")
+  //@Scheduled(cron = "0 20 5 * * *")//Daily (5:20am)
+  public void dailyDeductionRaw() {
+    LOGGER.info("[START] dailyDeductionRaw...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/Daily_Deduction_Raw.rpt");// visualcut
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "CCP" + File.separator + "Daily_Deduction_Raw" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] dailyDeductionRaw...");
+  }
+  
   @RequestMapping(value = "/ColorGrid_Daily_2020_Jan_Dec_S.do")
   //@Scheduled(cron = "0 20 5 * * *")//Daily (5:20am)
   public void colorGridDaily2020JanDecS() {
