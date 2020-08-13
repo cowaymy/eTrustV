@@ -172,8 +172,6 @@ function fn_report(type) {
     	var month1 = yyyymmDate.substring(0, 2);
         var mthYear = year + '/' + month1;
 
-        console.log("update date :: " + mthYear);
-
         $("#reportFileName").val('/sales/Net_Sales_Daily_Report.rpt');
         $("#reportDownFileName").val("Net_Sales_Daily_Report_" + $("#yyyymmDate").val());
         $("#V_DATE").val(mthYear);
