@@ -3,6 +3,7 @@
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  20/07/2020  ONGHC  1.0.1       Add Installation Status and Installation Fail Image
+ 11/08/2020  HDTEOH 1.0.2       Add call log feedback code, INS feedback code and creator branch
  -->
 
 <script type="text/javaScript" language="javascript">
@@ -33,6 +34,10 @@
           dataField : "stusName",
           width : 120
         }, {
+            headerText : '<spring:message code="sal.title.text.callLogFeedback" />',
+            dataField : "clFb",
+            width : 120
+        }, {
           headerText : '<spring:message code="sal.title.amount" />',
           dataField : "callRosAmt",
           width : 70
@@ -49,18 +54,26 @@
           dataField : "callCrtUserName",
           width : 80
         }, {
+            headerText : '<spring:message code="sal.title.text.crtBranch" />',
+            dataField : "callCrtBranch",
+            width : 80
+        }, {
           headerText : '<spring:message code="sal.text.createDate" />',
           dataField : "callCrtDt",
           width : 130
-        }, {
-          headerText : '<spring:message code="service.title.InstallationStatus" />',
-          dataField : "insStat",
-          width : 120
         }, {
           headerText : '<spring:message code="service.title.InstallationNo" />',
           dataField : "insNo",
           width : 130,
           visible : true
+        }, {
+            headerText : '<spring:message code="service.title.InstallationStatus" />',
+            dataField : "insStat",
+            width : 120
+        }, {
+            headerText : '<spring:message code="sal.title.text.insFeedback" />',
+            dataField : "insFb",
+            width : 120
         }, {
           //headerText : '<spring:message code="sal.text.createDate" />',
           //dataField : "insNo",

@@ -255,10 +255,17 @@
              , CALL_TM
              , INS_NO
              , INS_STAT
+             , INS_FB
+             , CL_FB
+             , (select code || ' ' || name from SYS0005M where brnch_id in (NVL(( SELECT BRNCH FROM
+                    (SELECT RANK() OVER (ORDER BY RUN_DT DESC) my_rank, MEM_CODE, BRNCH,MH.RUN_DT from org0030D MH
+                ) WHERE RUN_DT = AAA.CALL_CRT_DT_2 AND MY_RANK = 1 AND MEM_CODE = AAA.MEM_CODE
+                                            ) , CURR_BRNCH) )) CALL_CRT_BRANCH
              FROM ( SELECT T2.SALES_ORD_ID
                                  , T2.CALL_ENTRY_ID
                                  , T1.CALL_RESULT_ID
                                  , T1.CALL_ROS_AMT
+                                 , T1.CALL_CRT_DT CALL_CRT_DT_2
                                  , TO_CHAR(T1.CALL_CRT_DT, 'yyyy-MM-dd hh24:mi') CALL_CRT_DT
                                  , T1.CALL_CRT_USER_ID
                                  , T1.CALL_REM
@@ -282,18 +289,27 @@
                                  , TO_CHAR(T1.CALL_CRT_DT, 'hh24:mi:ss') CALL_TM
                                  , TO_CHAR(T9.INSTALL_ENTRY_NO) INS_NO
                                  , TO_CHAR(T10.CODE) INS_STAT
+                                 , NVL(M.BRNCH,0) BRANCH
+                                 , FC.DEFECT_CODE || '-' || FC.DEFECT_DESC INS_FB
+                                 , T11.CODE || '-' || T11.RESN_DESC CL_FB
+                                 , M.MEM_CODE
+                                 , M.BRNCH CURR_BRNCH
                         FROM CCR0007D T1
                         INNER JOIN CCR0006D T2 ON T2.CALL_ENTRY_ID = T1.CALL_ENTRY_ID
                         INNER JOIN SYS0013M T3 ON T3.CODE_ID = T2.TYPE_ID
                         LEFT OUTER JOIN SYS0038M T4 ON T4.STUS_CODE_ID = T1.CALL_STUS_ID
                         LEFT OUTER JOIN SYS0032M T5 ON (T5.RESN_ID = T1.CALL_FDBCK_ID) AND (439 = T5.RESN_TYPE_ID)
                         LEFT OUTER JOIN SYS0047M T6 ON T6.USER_ID = T1.CALL_CRT_USER_ID
+                        LEFT JOIN ORG0001D M ON M.MEM_CODE = T6.HR_CODE
                         LEFT OUTER JOIN MSC0013D T7 ON (T7.SALES_ORD_ID = T2.SALES_ORD_ID)
                                                                    AND TO_NUMBER(T7.ROS_MONTH) = TO_NUMBER(TO_CHAR(T1.CALL_CRT_DT,'MM'))
                                                                    AND TO_NUMBER(T7.ROS_YEAR) = TO_NUMBER(TO_CHAR(T1.CALL_CRT_DT,'YYYY'))
                         LEFT OUTER JOIN SYS0047M T8 ON T8.USER_ID = T7.ROS_CALLER_USER_ID
                         LEFT JOIN SAL0046D T9 ON T9.SALES_ORD_ID = T2.SALES_ORD_ID AND T9.CALL_ENTRY_ID = T2.CALL_ENTRY_ID AND T9.STUS_CODE_ID = 21
+                        LEFT JOIN SAL0047D I ON T9.INSTALL_ENTRY_ID = I.ENTRY_ID
+                        LEFT JOIN SYS0100M FC ON I.FAIL_ID = FC.DEFECT_ID and I.FAIL_LOC = FC.DEFECT_GRP
                         LEFT JOIN SYS0038M T10 ON T10.STUS_CODE_ID = T9.STUS_CODE_ID
+                        LEFT JOIN SYS0032M T11 ON T1.CALL_FDBCK_ID = T11.RESN_ID
 
                         WHERE 8 != T1.CALL_STUS_ID
                             AND T2.SALES_ORD_ID = #{salesOrderId}
@@ -309,7 +325,7 @@
                             ORDER BY T1.CALL_RESULT_ID DESC
                           </otherwise>
                         </choose>
-             )
+             ) AAA
 
     <if test="viewSort != null and viewSoft != '' ">
       WHERE ROWNUM <![CDATA[ <= ]]> 1
