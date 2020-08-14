@@ -31,6 +31,31 @@
                             CASE WHEN Extent1.UPLOAD_IMG IS NOT NULL
                               THEN F.FILE_SUB_PATH
                               ELSE NULL END AS FILE_SUB_PATH,
+
+                            Extent1.UPLOAD_IMG2 UPLOAD_IMG2,
+                            CASE WHEN Extent1.UPLOAD_IMG2 IS NOT NULL
+                              THEN 'DOWN'
+                              ELSE NULL END AS ATTCH_IMG_URL2,
+                            CASE WHEN Extent1.UPLOAD_IMG2 IS NOT NULL
+                              THEN H.FILE_SUB_PATH
+                              ELSE NULL END AS FILE_SUB_PATH2,
+
+                            Extent1.UPLOAD_IMG3 UPLOAD_IMG3,
+                            CASE WHEN Extent1.UPLOAD_IMG3 IS NOT NULL
+                              THEN 'DOWN'
+                              ELSE NULL END AS ATTCH_IMG_URL3,
+                            CASE WHEN Extent1.UPLOAD_IMG3 IS NOT NULL
+                              THEN J.FILE_SUB_PATH
+                              ELSE NULL END AS FILE_SUB_PATH3,
+
+                            Extent1.UPLOAD_IMG4 UPLOAD_IMG4,
+                            CASE WHEN Extent1.UPLOAD_IMG4 IS NOT NULL
+                              THEN 'DOWN'
+                              ELSE NULL END AS ATTCH_IMG_URL4,
+                            CASE WHEN Extent1.UPLOAD_IMG4 IS NOT NULL
+                              THEN L.FILE_SUB_PATH
+                              ELSE NULL END AS FILE_SUB_PATH4,
+
                             Extent1.EMAIL_1 EMAIL_1,
                             Extent1.EMAIL_2 EMAIL_2,
                             Extent1.SMS_1 SMS_1,
@@ -54,6 +79,12 @@
                             Extent11.CNTRCT_RENTAL_STUS BILL_STATUS,
                             F.ATCH_FILE_NAME AS ATCH_FILE_NAME,
                             F.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME,
+                            H.ATCH_FILE_NAME AS ATCH_FILE_NAME2,
+                            H.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME2,
+                            J.ATCH_FILE_NAME AS ATCH_FILE_NAME3,
+                            J.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME3,
+                            L.ATCH_FILE_NAME AS ATCH_FILE_NAME4,
+                            L.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME4,
                             Extent2.PV_MONTH as PV_MTH,
                             Extent2.PV_YEAR as PV_YEAR,
                             T5.CODE AS APPTYP
@@ -74,6 +105,20 @@
                LEFT JOIN SAL0078D Extent11 ON Extent11.SRV_CNTRCT_ID = Extent10.SRV_CNTRCT_ID
                LEFT OUTER JOIN SYS0070M E ON  E.CHENAL_TYPE = 'M'
                                                 AND E.ATCH_FILE_GRP_ID = Extent1.UPLOAD_IMG
+
+               LEFT OUTER JOIN SYS0070M G ON  G.CHENAL_TYPE = 'M'
+                                                AND G.ATCH_FILE_GRP_ID = Extent1.UPLOAD_IMG2
+               LEFT OUTER JOIN SYS0071D H ON  H.ATCH_FILE_ID = G.ATCH_FILE_ID
+
+               LEFT OUTER JOIN SYS0070M I ON  I.CHENAL_TYPE = 'M'
+                                                AND I.ATCH_FILE_GRP_ID = Extent1.UPLOAD_IMG3
+               LEFT OUTER JOIN SYS0071D J ON  J.ATCH_FILE_ID = I.ATCH_FILE_ID
+
+               LEFT OUTER JOIN SYS0070M K ON  K.CHENAL_TYPE = 'M'
+                                                AND K.ATCH_FILE_GRP_ID = Extent1.UPLOAD_IMG4
+               LEFT OUTER JOIN SYS0071D L ON  L.ATCH_FILE_ID = K.ATCH_FILE_ID
+
+
                LEFT OUTER JOIN SYS0071D F ON  F.ATCH_FILE_ID = E.ATCH_FILE_ID
                LEFT JOIN SYS0047M T10 ON T10.USER_ID = Extent1.CRT_USER_ID
                LEFT JOIN SYS0047M T11 ON T11.USER_ID = Extent1.UPD_USER_ID
