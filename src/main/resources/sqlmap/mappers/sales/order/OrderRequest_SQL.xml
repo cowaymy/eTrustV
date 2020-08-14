@@ -1506,7 +1506,7 @@
       AND T1.RENT_INST_NO > 0
     ORDER BY T1.RENT_DT_TM DESC , T1.RENT_INST_NO DESC
     ) T
-    WHERE T.RENT_DOC_NO NOT IN ('BR5700020689') AND  ROWNUM &lt;= 1
+    WHERE ROWNUM &lt;= 1
   </select>
 
   <select id="selectInstallResultsBySalesOrderID" parameterType="Map" resultType="egovMap">
