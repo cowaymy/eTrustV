@@ -160,7 +160,7 @@ public class SROServiceImpl extends EgovAbstractServiceImpl implements SROServic
 		if(r12>0){
 			 int  upr12 =  replenishment.updateLOG0112D(params);
 
-			 				   replenishment.updateStateLOG0112D(params);
+			 				  //replenishment.updateStateLOG0112D(params);
 
 			 				   params.put("reqno", stoNo);
 			 				   replenishment.updateReqNoLOG0111D(params);
