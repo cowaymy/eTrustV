@@ -457,13 +457,14 @@
                                   }, {
                                      dataField : "uploadImg",
                                      /* headerText : '<spring:message code=" " />', */
-                                     headerText : 'Attachment',
+                                     headerText : 'Transaction Slip',
                                      width : 120,
-                                     editable : false
+                                     editable : false,
+                                     visible : false
                                   }, {
                                     dataField : "attchImgUrl",
-                                    width:100,
-                                    headerText : "<spring:message code='pay.head.attachment'/>",
+                                    width:120,
+                                    headerText : 'Transaction Slip',
                                     renderer : { type : "ImageRenderer",
                                                      width : 20,
                                                      height : 20,
@@ -472,6 +473,60 @@
                                                      }
                                     }
                                   }, {
+                                      dataField : "uploadImg2",
+                                      /* headerText : '<spring:message code=" " />', */
+                                      headerText : 'Submission Checlist',
+                                      width : 120,
+                                      editable : false,
+                                      visible : false
+                                   }, {
+                                     dataField : "attchImgUrl2",
+                                     width:140,
+                                     headerText : 'Submission Checlist',
+                                     renderer : { type : "ImageRenderer",
+                                                      width : 20,
+                                                      height : 20,
+                                                      imgTableRef : {
+                                                        "DOWN": "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+                                                      }
+                                     }
+                                   }, {
+                                       dataField : "uploadImg3",
+                                       /* headerText : '<spring:message code=" " />', */
+                                       headerText : 'Other Attachment 1 (Chq Image)',
+                                       width : 120,
+                                       editable : false,
+                                       visible : false
+                                    }, {
+                                      dataField : "attchImgUrl3",
+                                      width:140,
+                                      headerText : 'Other Attachment 1 (Chq Image)',
+                                      renderer : { type : "ImageRenderer",
+                                                       width : 20,
+                                                       height : 20,
+                                                       imgTableRef : {
+                                                         "DOWN": "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+                                                       }
+                                      }
+                                    }, {
+                                        dataField : "uploadImg4",
+                                        /* headerText : '<spring:message code=" " />', */
+                                        headerText : 'Other Attachment 2',
+                                        width : 120,
+                                        editable : false,
+                                        visible : false
+                                     }, {
+                                       dataField : "attchImgUrl4",
+                                       width:140,
+                                       headerText : 'Other Attachment 2',
+                                       renderer : { type : "ImageRenderer",
+                                                        width : 20,
+                                                        height : 20,
+                                                        imgTableRef : {
+                                                          "DOWN": "${pageContext.request.contextPath}/resources/AUIGrid/images/arrow-down-black-icon.png"
+                                                        }
+                                       }
+                                     }, {
                                      dataField : "email1",
                                      headerText : '<spring:message code="pay.head.email" />',
                                      width : 180,
@@ -591,7 +646,28 @@
             window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath + "&fileName=" + rowVal.physiclFileName + "&orignlFileNm=" + rowVal.atchFileName);
           }
         }
-      }
+      }else if( event.dataField == "attchImgUrl2" ){
+          if( FormUtil.isEmpty(event.value) == false){
+              var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
+              if( FormUtil.isEmpty(rowVal.atchFileName) == false && FormUtil.isEmpty(rowVal.physiclFileName2) == false){
+                window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath2 + "&fileName=" + rowVal.physiclFileName2 + "&orignlFileNm=" + rowVal.atchFileName2);
+              }
+            }
+          }else if( event.dataField == "attchImgUrl3" ){
+              if( FormUtil.isEmpty(event.value) == false){
+                  var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
+                  if( FormUtil.isEmpty(rowVal.atchFileName) == false && FormUtil.isEmpty(rowVal.physiclFileName3) == false){
+                    window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath3 + "&fileName=" + rowVal.physiclFileName3 + "&orignlFileNm=" + rowVal.atchFileName3);
+                  }
+                }
+              }else if( event.dataField == "attchImgUrl4" ){
+                  if( FormUtil.isEmpty(event.value) == false){
+                      var rowVal = AUIGrid.getItemByRowIndex(myGridID, event.rowIndex);
+                      if( FormUtil.isEmpty(rowVal.atchFileName) == false && FormUtil.isEmpty(rowVal.physiclFileName4) == false){
+                        window.open("/file/fileDownWasMobile.do?subPath=" + rowVal.fileSubPath4 + "&fileName=" + rowVal.physiclFileName4 + "&orignlFileNm=" + rowVal.atchFileName4);
+                      }
+                    }
+                  }
     });
   }
 
