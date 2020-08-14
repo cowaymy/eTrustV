@@ -390,6 +390,10 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
   @Override
   public int insertSalesNotification(PaymentForm paymentForm) throws Exception {
 
+    logger.debug("============================================ ");
+    logger.debug("= PAYMENT FORM = " + paymentForm.toString());
+    logger.debug("============================================ ");
+
     int rtn = 0;
 
     Map<String, Object> params = PaymentForm.createMap(paymentForm);
