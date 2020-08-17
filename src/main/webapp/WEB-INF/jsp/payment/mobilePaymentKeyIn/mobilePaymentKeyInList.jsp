@@ -17,7 +17,7 @@
  17/06/2020  ONGHC  1.0.5             Amend Credit Card No. Auto Tab Feature.
  19/06/2020  FARUQ   1.0.6             Amend Branch Code to Multiple Selection
  06/07/2020  ONGHC  1.0.7             Add Extra Search Criteria for Organization, Group and Department Code
-
+ 17/08/2020  ONGHC  1.0.8             Add Transaction Slip, Submission Checklist, Other 1 and Other 2 attachment
  -->
 
 <style type="text/css">
@@ -457,14 +457,14 @@
                                   }, {
                                      dataField : "uploadImg",
                                      /* headerText : '<spring:message code=" " />', */
-                                     headerText : 'Transaction Slip',
+                                     headerText : '<spring:message code="pay.title.trnSlip" />',
                                      width : 120,
                                      editable : false,
                                      visible : false
                                   }, {
                                     dataField : "attchImgUrl",
                                     width:120,
-                                    headerText : 'Transaction Slip',
+                                    headerText : '<spring:message code="pay.title.trnSlip" />',
                                     renderer : { type : "ImageRenderer",
                                                      width : 20,
                                                      height : 20,
@@ -475,14 +475,14 @@
                                   }, {
                                       dataField : "uploadImg2",
                                       /* headerText : '<spring:message code=" " />', */
-                                      headerText : 'Submission Checlist',
+                                      headerText : '<spring:message code="pay.title.submChkLst" />',
                                       width : 120,
                                       editable : false,
                                       visible : false
                                    }, {
                                      dataField : "attchImgUrl2",
                                      width:140,
-                                     headerText : 'Submission Checlist',
+                                     headerText : '<spring:message code="pay.title.submChkLst" />',
                                      renderer : { type : "ImageRenderer",
                                                       width : 20,
                                                       height : 20,
@@ -493,14 +493,14 @@
                                    }, {
                                        dataField : "uploadImg3",
                                        /* headerText : '<spring:message code=" " />', */
-                                       headerText : 'Other Attachment 1 (Chq Image)',
+                                       headerText : '<spring:message code="pay.title.oth1" />',
                                        width : 120,
                                        editable : false,
                                        visible : false
                                     }, {
                                       dataField : "attchImgUrl3",
                                       width:140,
-                                      headerText : 'Other Attachment 1 (Chq Image)',
+                                      headerText : '<spring:message code="pay.title.oth1" />',
                                       renderer : { type : "ImageRenderer",
                                                        width : 20,
                                                        height : 20,
@@ -511,14 +511,14 @@
                                     }, {
                                         dataField : "uploadImg4",
                                         /* headerText : '<spring:message code=" " />', */
-                                        headerText : 'Other Attachment 2',
+                                        headerText : '<spring:message code="pay.title.oth2" />',
                                         width : 120,
                                         editable : false,
                                         visible : false
                                      }, {
                                        dataField : "attchImgUrl4",
                                        width:140,
-                                       headerText : 'Other Attachment 2',
+                                       headerText : '<spring:message code="pay.title.oth2" />',
                                        renderer : { type : "ImageRenderer",
                                                         width : 20,
                                                         height : 20,
