@@ -35,11 +35,7 @@
   function fn_cancelReq() {
 
     var msg = "";
-    msg += '<spring:message code="sal.alert.msg.ordNumberCol" />' + $
-    {
-      exchangeDetailInfo.salesOrdNo
-    }
-    +"<br>";
+    msg += '<spring:message code="sal.alert.msg.ordNumberCol" />'  + ${exchangeDetailInfo.salesOrdNo}+"<br>";
     //    	msg += "Exchange Type : " + ${exchangeDetailInfo.codeName } + "<br />";
     //    	msg += "Request Date : " + ${exchangeDetailInfo.soExchgCrtDt } + "<br />";
     //    	msg += "Request By : " + ${exchangeDetailInfo.soExchgCrtUserName } + "<br />";
