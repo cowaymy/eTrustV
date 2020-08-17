@@ -210,9 +210,9 @@
             $("#addInstallForm #m14").hide();
             $("#addInstallForm #m17").hide();
             if ("${orderInfo.stkCtgryId}" == "54") {
-              $("#addInstallForm #grid_wrap_instChk_view").show();
-              $("#addInstallForm #instChklstCheckBox").show();
-              $("#addInstallForm #instChklstDesc").show();
+              $("#addInstallForm #grid_wrap_instChk_view").hide();
+              $("#addInstallForm #instChklstCheckBox").hide();
+              $("#addInstallForm #instChklstDesc").hide();
             } else {
               $("#addInstallForm #grid_wrap_instChk_view").hide();
               $("#addInstallForm #instChklstCheckBox").hide();
