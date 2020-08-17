@@ -23,15 +23,16 @@
 		<ul class="left_opt">
         <li><a href="javascript:void(0);"><span id="header_refresh"><img src="${pageContext.request.contextPath}/resources/images/common/icon_refresh.png" alt="Refresh" /></span></a></li>
         <!--  <li>Neo(Key-in): <a href="javascript:void(0);"><span id="header_neo">-</span></a></li> -->
-        <li>Kecil : <a href="javascript:void(0);"><span id="header_kecil">-</span></a></li>
-        <li>Sales(Key In): <a href="javascript:void(0);"><span id="header_sales">-</span></a></li>
+        <!-- <li>Kecil : <a href="javascript:void(0);"><span id="header_kecil">-</span></a></li> -->
+        <!-- <li>Sales(Key In): <a href="javascript:void(0);"><span id="header_sales">-</span></a></li> -->
         <!--   <li>Net Qty[<a href="javascript:void(0);"><span id="header_netQty"></span></a></li> -->
-        <li>Net Qty [Outright : <a href="javascript:void(0);"><span id="header_outRight">-</span></a></li>
-        <li>Instalment: <a href="javascript:void(0);"><span id="header_installment">-</span></a></li>
-        <li>Rental: <a href="javascript:void(0);"><span id="header_rental">-</span></a></li>
-        <li>Total: <a href="javascript:void(0);"><span id="header_total">-</span></a>]</li>
-        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-        <li><span >Accumulated Account:</span> <a href="javascript:void(0);"><span class="red_text" id="header_acc_act_account">-</span></a></li>
+        <!-- <li>Net Qty [Outright : <a href="javascript:void(0);"><span id="header_outRight">-</span></a></li> -->
+        <!-- <li>Instalment: <a href="javascript:void(0);"><span id="header_installment">-</span></a></li> -->
+        <!-- <li>Rental: <a href="javascript:void(0);"><span id="header_rental">-</span></a></li> -->
+        <!-- <li>Total: <a href="javascript:void(0);"><span id="header_total">-</span></a>]</li> -->
+        <!-- <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+        <!-- <li><span >Accumulated Account:</span> <a href="javascript:void(0);"><span class="red_text" id="header_acc_act_account">-</span></a></li> -->
+        <li><span>WP Sales Key In </span><img id="header_wpFigure" src="${pageContext.request.contextPath}/resources/images/common/icon_grid_detail.png" /></a></li>
         <li><span >Notification:</span> <a href="${pageContext.request.contextPath}/notice/notification.do"><span id="header_notification">-</span></a></li>
         </ul>
 		</c:otherwise>
@@ -74,6 +75,10 @@
 		}else{
             fn_selectDailyCount();
 		}
+
+        $("#header_wpFigure").on("click", function() {
+            Common.popupDiv("/chart/wpSalesFigurePop.do", null, null, true, "wpSalesFigurePop");
+        });
 
 /*
         $("#header_neo").on("click", function(){

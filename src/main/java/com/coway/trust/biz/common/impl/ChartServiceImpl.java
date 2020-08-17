@@ -27,4 +27,14 @@ public class ChartServiceImpl implements ChartService {
 		chartMapper.selectNetSalesChart(params);
 		return (List<EgovMap>) params.get("chartData");
 	}
+
+	@Override
+    public List<EgovMap> getSalesMonth(Map<String, Object> params) {
+        return chartMapper.getSalesMonth(params);
+    }
+
+	@Override
+	public List<EgovMap> getWpSales(Map<String, Object> params) {
+        return chartMapper.getWpSales(params);
+    }
 }

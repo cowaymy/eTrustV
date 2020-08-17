@@ -15,4 +15,33 @@
         }
     </select>
 
+    <select id="getSalesMonth" parameterType="Map" resultType="egovMap">
+        SELECT
+               CASE WHEN YEAR IS NULL AND MONTH IS NULL THEN TO_CHAR(SYSDATE, 'YYYY-MM') ELSE YEAR || '-' || (
+                   CASE WHEN LENGTH(MONTH) = 1 THEN '0' || MONTH ELSE TO_CHAR(MONTH) END
+               )
+               END AS SALES_MTH
+          FROM REP0110T
+         WHERE SYSDATE BETWEEN START_DT AND END_DT
+    </select>
+
+    <select id="getWpSales" parameterType="Map" resultType="egovMap">
+        SELECT C.STK_DESC PRODUCT, COUNT(A.SALES_ORD_ID) SALES_CNT
+          FROM SAL0001D A, SAL0002D B, SYS0026M C
+         WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+           AND B.ITM_STK_ID = C.STK_ID
+           AND C.STK_CTGRY_ID = 54
+           AND A.SALES_DT BETWEEN (
+               SELECT CASE WHEN START_DT IS NULL THEN TO_DATE(TO_CHAR(SYSDATE, 'YYYYMM'), 'YYYYMM') ELSE START_DT END
+                 FROM REP0110T
+                WHERE SYSDATE BETWEEN START_DT AND END_DT
+               )
+           AND (
+               SELECT CASE WHEN END_DT IS NULL THEN LAST_DAY(SYSDATE) ELSE END_DT END
+                 FROM REP0110T
+                WHERE SYSDATE BETWEEN START_DT AND END_DT
+               )
+      GROUP BY C.STK_DESC
+    </select>
+
 </mapper>

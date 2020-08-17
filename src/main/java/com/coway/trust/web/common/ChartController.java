@@ -61,4 +61,21 @@ public class ChartController {
 		return ResponseEntity.ok(list);
 	}
 
+	@RequestMapping(value = "/wpSalesFigurePop.do")
+    public String wpSalesFigurePop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+        LOGGER.debug("wpSalesFigurePop");
+        return "chart/wpSalesFigurePop";
+    }
+
+	@RequestMapping(value = "/getSalesMonth.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getSalesMonth(@RequestParam Map<String, Object> params, SessionVO sessionVO) {
+	    List<EgovMap> salesMonth = chartService.getSalesMonth(params);
+	    return ResponseEntity.ok(salesMonth);
+	}
+
+    @RequestMapping(value = "/getWpSales.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> getWpSales(@RequestParam Map<String, Object> params, SessionVO sessionVO) {
+        List<EgovMap> wpSales = chartService.getWpSales(params);
+        return ResponseEntity.ok(wpSales);
+    }
 }
