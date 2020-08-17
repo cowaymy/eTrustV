@@ -24,6 +24,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface InvoiceMapper {
 	/**
 	 * Invoice List 조회
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -31,6 +32,7 @@ public interface InvoiceMapper {
 
 	/**
 	 * Invoice Master 조회
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -38,6 +40,7 @@ public interface InvoiceMapper {
 
 	/**
 	 * Invoice Detail 조회
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -45,10 +48,19 @@ public interface InvoiceMapper {
 
 	/**
 	 * Invoice Detai 전체 건수 조회
+	 *
 	 * @param params
 	 * @return
 	 */
 	int selectInvoiceDetailCount(Map<String, Object> params);
 
-  List<EgovMap> selecteStatementRawList(Map<String, Object> params);
+	List<EgovMap> selecteStatementRawList(Map<String, Object> params);
+
+	EgovMap getUploadSeq();
+
+	void insertBulkInvc(Map<String, Object> params);
+
+	List<EgovMap> selectUploadResultList(Map<String, Object> params);
+
+	List<EgovMap> selecteStatementRawListbyBatch(Map<String, Object> params);
 }

@@ -3,6 +3,8 @@ package com.coway.trust.biz.payment.invoice.service.impl;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.payment.billing.service.impl.SrvMembershipBillingMapper;
@@ -12,7 +14,6 @@ import com.coway.trust.config.datasource.DataSourceType;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
-
 
 /**
  * @Class Name : EgovSampleServiceImpl.java
@@ -33,7 +34,7 @@ public class InvoiceServiceImpl extends EgovAbstractServiceImpl implements Invoi
 
 	@Resource(name = "invoiceMapper")
 	private InvoiceMapper invoiceMapper;
-	
+
 	@Resource(name = "srvMembershipBillingMapper")
 	private SrvMembershipBillingMapper membershipMapper;
 
@@ -52,7 +53,7 @@ public class InvoiceServiceImpl extends EgovAbstractServiceImpl implements Invoi
 	public List<EgovMap> selectInvoiceDetail(Map<String, Object> params) {
 		return invoiceMapper.selectInvoiceDetail(params);
 	}
-	
+
 	@Override
 	public int selectInvoiceDetailCount(Map<String, Object> params) {
 		return invoiceMapper.selectInvoiceDetailCount(params);
@@ -64,9 +65,29 @@ public class InvoiceServiceImpl extends EgovAbstractServiceImpl implements Invoi
 		membershipMapper.createTaxInvoice(params);
 	}
 
-  @Override
-  public List<EgovMap> selecteStatementRawList(Map<String, Object> params) {
-    return invoiceMapper.selecteStatementRawList(params);
-  }
+	@Override
+	public List<EgovMap> selecteStatementRawList(Map<String, Object> params) {
+		return invoiceMapper.selecteStatementRawList(params);
+	}
+
+	@Override
+	public EgovMap getUploadSeq() {
+		return invoiceMapper.getUploadSeq();
+	}
+
+	@Override
+	public void insertBulkInvc(Map<String, Object> params) {
+		invoiceMapper.insertBulkInvc(params);
+	}
+
+	@Override
+    public List<EgovMap> selectUploadResultList( Map<String, Object> params) {
+        return invoiceMapper.selectUploadResultList(params);
+    }
+
+	@Override
+	public List<EgovMap> selecteStatementRawListbyBatch(Map<String, Object> params) {
+		return invoiceMapper.selecteStatementRawListbyBatch(params);
+	}
 
 }
