@@ -40,6 +40,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  *--------------------------------------------------------------------------------------------
  * 17/09/2019    JUN           1.0.1       - Jun First creation
  * 16/07/2020    ONGHC      1.0.2       - Amend  installFailJobRequestProc
+ * 17/08/2020    FARUQ      1.0.3       - Get the product name when fail on mobile site
  *********************************************************************************************/
 
 @Service("serviceApiInstallationDetailService")
@@ -357,6 +358,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
       params.put("hiddeninstallEntryNo", String.valueOf(installResult.get("installEntryNo")));
       params.put("hidTradeLedger_InstallNo", String.valueOf(installResult.get("installEntryNo")));
       params.put("hidCallType", String.valueOf(installResult.get("typeId")));
+      params.put("hidDocId", String.valueOf(installResult.get("docId")));
       params.put("CTID", String.valueOf(userId));
       params.put("installDate", "");
       params.put("updator", String.valueOf(userId));
