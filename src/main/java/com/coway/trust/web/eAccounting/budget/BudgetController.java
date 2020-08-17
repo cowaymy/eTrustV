@@ -609,7 +609,7 @@ public class BudgetController {
 
 		LOGGER.debug("params =====================================>>  " + params);
 
-		params.put("month", Integer.toString(Integer.parseInt(params.get("sendYearMonth").toString().substring(0, 2))));
+		params.put("month", params.get("sendYearMonth").toString().substring(0, 2));
 		params.put("year", params.get("sendYearMonth").toString().substring(3));
 		params.put("budgetPlanMonth", params.get("sendYearMonth").toString().substring(0, 2));
 		params.put("budgetPlanYear", params.get("sendYearMonth").toString().substring(3));
