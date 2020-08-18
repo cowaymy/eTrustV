@@ -28,14 +28,12 @@
                 dataField : "salesCnt",
                 headerText : "Sales Key In",
                 dataType : "numeric",
-                width : 100,
-                style : "aui-grid-user-custom-right"
+                width : 100
             }, {
                 dataField : "netCnt",
                 headerText : "Net Sales",
                 dataType : "numeric",
-                width : 100,
-                style : "aui-grid-user-custom-right"
+                width : 100
             }
         ];
 
@@ -86,6 +84,14 @@
         <article class="grid_wrap" id="wpSalesGrid" style="height:350px"><!-- grid_wrap start -->
         </article><!-- grid_wrap end -->
     </section><!-- pop_body end -->
+
+    <!--
+    <div>
+        <span class="must">
+            ** Net Sales amount may be more due to previous months' pending order
+        </span>
+    </div>
+     -->
 
 </div>
 <!-- popup_wrap end -->
