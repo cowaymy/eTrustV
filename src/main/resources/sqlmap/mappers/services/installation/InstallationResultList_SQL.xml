@@ -4596,7 +4596,11 @@
                       , INSTALL_RESULT_ID = #{installResultId}
                       , UPD_DT = SYSDATE
                       , UPD_USER_ID = #{creator}
-                      , INSTALL_DT = TO_DATE(#{installDate},'DD-MM-YYYY')
+
+   <if test="installDate != null and installDate != ''">
+      , INSTALL_DT = TO_DATE(#{installDate},'DD-MM-YYYY')
+   </if>
+
     WHERE INSTALL_ENTRY_ID = #{installEntryId}
       AND SALES_ORD_ID = #{salesOrdId}
   </update>
