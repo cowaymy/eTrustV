@@ -998,7 +998,7 @@ public class eRequestCancellationServiceImpl extends EgovAbstractServiceImpl imp
     if(params.get("reqStusId").equals("5") && updStus > 0)
       ordUpd  = eRequestCancellationMapper.updSAL0001D_custCntc(params);
 
-    return ordUpd;
+    return updStus;
   }
 
   @Override
@@ -1014,7 +1014,7 @@ public class eRequestCancellationServiceImpl extends EgovAbstractServiceImpl imp
       instUpd  = eRequestCancellationMapper.updSAL0045D_instAddr(params);
     }
 
-    return ordUpd;
+    return updStus;
   }
 
 }

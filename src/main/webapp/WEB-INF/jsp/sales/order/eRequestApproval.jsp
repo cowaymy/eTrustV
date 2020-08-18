@@ -15,9 +15,13 @@
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-        	$("#rqstId").val(event.item.rqstId);
-        	$("#salesOrderId").val(event.item.salesOrdId);
-          Common.popupDiv("/sales/order/eRequestApprovalPop.do", $("#detailForm").serializeJSON());
+        	if (event.item.appType == 'Auxiliary') {
+                Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>Auxiliary type is not allowed to do eRequest approval.</b>");
+            } else {
+                	$("#rqstId").val(event.item.rqstId);
+                	$("#salesOrderId").val(event.item.salesOrdId);
+                  Common.popupDiv("/sales/order/eRequestApprovalPop.do", $("#detailForm").serializeJSON());
+            }
         });
       });
 
@@ -33,11 +37,12 @@
         , { dataField : "nric", headerText : "<spring:message code='sal.title.text.nricCompNo' />", width : '10%', editable : false }
         , { dataField : "instStus", headerText : "<spring:message code='sal.title.text.requestStage' />", width : '7%', editable : false }
         , { dataField : "rqstType", headerText : "<spring:message code='log.label.rqstTyp' />",width : '7%', editable : false }
-        , { dataField : "rqstRem", headerText : "<spring:message code='sal.title.remark' />", editable : false}
+        , { dataField : "rqstRem", headerText : "<spring:message code='sal.title.text.reqstRem' />", editable : false}
         , { dataField : "crtUser", headerText : "<spring:message code='sal.title.created' />",width : '7%',editable : false }
         , { dataField : "crtDt", headerText : "<spring:message code='sal.title.crtDate' />",width : '7%',editable : false }
         , { dataField : "updUser", headerText : "<spring:message code='sal.title.updateBy' />",width : '7%',editable : false }
         , { dataField : "updDt", headerText : "<spring:message code='sal.title.updateDate' />",width : '7%',editable : false }
+        , { dataField : "rem", headerText : "<spring:message code='sal.title.remark' />", editable : false}
         , { dataField : 'dsc', headerText : 'DSC', width : 100, editable : false }
         , { dataField : 'rqstDataFr', headerText : 'Request Data From', width : 100, visible : false, editable : false }
         , { dataField : 'rqstDataTo', headerText : 'Request Data To', width : 100, visible : false, editable : false }
@@ -56,8 +61,7 @@
   }
 
   // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-  doGetCombo('/common/selectCodeList.do', '10', '', 'cmbAppTypeId', 'M',
-      'f_multiCombo'); // Application Type Combo Box
+  doGetCombo('/common/selectCodeList.do', '10', '', 'cmbAppTypeId', 'M','f_multiCombo'); // Application Type Combo Box
 
   // 조회조건 combo box
   function f_multiCombo() {

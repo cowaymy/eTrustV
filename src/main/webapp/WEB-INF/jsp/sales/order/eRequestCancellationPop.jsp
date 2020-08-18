@@ -40,6 +40,7 @@
   var CUST_CNCT_ID = "${orderDetail.basicInfo.ordCntcId}";
 
   var _cancleMsg = "Another order :  " + AUX_ORD_NO + "<br/>is also canceled together.<br/><br/>";
+  var _requestMsg = "Another order :  " + AUX_ORD_NO + "<br/>is also requested together.<br/><br/>";
   var filterGridID;
 
   $(document).ready(function() {
@@ -149,7 +150,7 @@
     	$('#scCN').addClass("blind");
     }
 
-    if(tabNm == 5969){
+    if(tabNm == 5969){ // Contact Number
     	$('#scCP').removeClass("blind");
     	$('#aTabIns').click();
     	fn_isLockOrder(tabNm);
@@ -157,7 +158,7 @@
     	$('#scCP').addClass("blind");
     }
 
-    if(tabNm == 5970){
+    if(tabNm == 5970){ // Installation Address
     	$('#scIN').removeClass("blind");
     	$('#aTabIns').click();
     	fn_isLockOrder(tabNm);
@@ -200,22 +201,42 @@
         });
 
       }else if(tabNm == 5969){
-    	  /* if(ORD_STUS_ID == '10'){
+    	   if(ORD_STUS_ID == '10'){
     		  isLock = true;
-    		  msg = 'Order cancelled';
-    	  }else if(RENTAL_STUS != 'REG' || RENTAL_STUS != 'ACT'){
+    		  msg = 'Cancelled order is not allowed to do eRequest.<br/>';
+
+    	  }else if(RENTAL_STUS == 'INV' || RENTAL_STUS == 'SUS' || RENTAL_STUS == 'WOF'  || RENTAL_STUS == 'TER'){
     		  isLock = true;
-    		  msg = 'Order not REG';
-    	  } */
+    		  msg = 'Only order with [REG] rental status is allowed to perform eRequest.<br/>';
+
+    	  }else if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2) || "${orderDetail.logView.prgrsId}" == 1) {
+              if ("${orderDetail.logView.prgrsId}" == 1) {
+               Common.ajaxSync("GET", "/sales/order/checkeRequestAutoDebitDeduction.do", { salesOrdId : ORD_ID },
+                 function(rsltInfo) {
+                   if (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
+                    isLock = true;
+                    msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + 'e-Request is disallowed.<br />';
+                  }
+                });
+             } else {
+               isLock = true;
+               msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'e-Request is disallowed.<br />';
+             }
+           }
 
       }else if(tabNm == 5970){
 
-    	  /* if(ORD_STUS_ID == '10'){
+    	  if(ORD_STUS_ID == '10'){
               isLock = true;
-              msg = 'Order cancelled';
-          }else if(ORD_STUS_ID == '4' && RENTAL_STUS != 'ACT'){
+              msg = 'Cancelled order is not allowed to do eRequest.<br/>';
+
+    	  }else if(RENTAL_STUS == 'INV' || RENTAL_STUS == 'SUS' || RENTAL_STUS == 'WOF'  || RENTAL_STUS == 'TER'){
               isLock = true;
-              msg = 'Order not REG';
+              msg = 'Only order with [REG] rental status is allowed to perform eRequest.<br/>';
+
+          }else if(EX_TRADE == 1){
+        	  isLock = true;
+              msg = 'Ex-trade order is not allowed to do eRequest.<>';
           }else if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2) || "${orderDetail.logView.prgrsId}" == 1) {
               if ("${orderDetail.logView.prgrsId}" == 1) {
                 Common.ajaxSync("GET", "/sales/order/checkeRequestAutoDebitDeduction.do", { salesOrdId : ORD_ID },
@@ -229,7 +250,7 @@
                 isLock = true;
                 msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'e-Request is disallowed.<br />';
               }
-            } */
+            }
 
       }
 
@@ -498,6 +519,15 @@
   }
 
   function fn_doSaveReqCnct() {
+
+	  if($("#modCustCntcId").val() == ""){
+          Common.alert("Please select a contact<br/>");
+          return;
+      }else if($("#modCustCntcId").val() == CUST_CNCT_ID){
+          Common.alert("Same contact selected<br/>");
+          return;
+      }
+
 	   var data = {
 			    salesOrdId : ORD_ID,
 			    auxOrdId : AUX_ORD_ID,
@@ -507,12 +537,13 @@
 			    rqstRem     : $("#modRemCntc").val()
 	      };
 
-	   var data2 = $("#frmInstInfo").serializeJSON();
-
-	   console.log(data);
-
 	   Common.ajax("POST", "/sales/order/eReqEditOrdInfo.do", data, function(result) {
-	      Common.alert('<spring:message code="sal.alert.msg.cancReqSum" />' + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_selfClose);
+		   if (AUX_ORD_NO != "") {
+			   Common.alert('<spring:message code="sal.alert.msg.eReqSum" />' + DEFAULT_DELIMITER + _requestMsg + "<b>" + "e-Request saved." + "</b>", fn_selfClose);
+		   }else{
+			   Common.alert('<spring:message code="sal.alert.msg.eReqSum" />' + DEFAULT_DELIMITER + "<b>" + "e-Request saved." + "</b>", fn_selfClose);
+		   }
+
 	    }, function(jqXHR, textStatus, errorThrown) {
 	      try {
 	        Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");
@@ -523,6 +554,15 @@
 	}
 
   function fn_doSaveReqInstAddr() {
+
+	  if($("#modInstCustAddId").val() == ""){
+		  Common.alert("Please select a address.<br/>");
+		  return;
+	  }else if($("#modInstCustAddId").val() == CUST_ADDR_ID){
+          Common.alert("Same address selected, please select another.<br/>");
+          return;
+      }
+
 	    var data = {
                 salesOrdId : ORD_ID,
                 auxOrdId : AUX_ORD_ID,
@@ -532,10 +572,12 @@
                 rqstRem     : $("#modRemInstAddr").val(),
          };
 
-	  console.log(data);
-
-	  Common.ajax("POST", "/sales/order/eReqEditOrdInfo.do", data , function(result) {
-        Common.alert('<spring:message code="sal.alert.msg.cancReqSum" />' + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_selfClose);
+	   Common.ajax("POST", "/sales/order/eReqEditOrdInfo.do", data , function(result) {
+		   if (AUX_ORD_NO != "") {
+               Common.alert('<spring:message code="sal.alert.msg.eReqSum" />' + DEFAULT_DELIMITER + _requestMsg + "<b>" + "e-Request saved." + "</b>", fn_selfClose);
+           }else{
+        	   Common.alert('<spring:message code="sal.alert.msg.eReqSum" />' + DEFAULT_DELIMITER + "<b>" + "e-Request saved." + "</b>", fn_selfClose);
+           }
       }, function(jqXHR, textStatus, errorThrown) {
         try {
           Common.alert("Data Preparation Failed" + DEFAULT_DELIMITER + "<b>Saving data prepration failed.</b>");

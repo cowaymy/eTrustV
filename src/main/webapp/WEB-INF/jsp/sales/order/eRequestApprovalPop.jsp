@@ -11,12 +11,13 @@
   var stusId = "${eRequestDetail.stusCodeId}";
   var rqstDataFr = "${eRequestDetail.rqstDataFr}";
   var rqstDataTo = "${eRequestDetail.rqstDataTo}";
+  var rqstDataRem = "${eRequestDetail.rqstRem}";
 
-  var _cancleMsg = "Another order :  " + AUX_ORD_NO + "<br/>is also canceled together.<br/><br/>";
+  var _approvalMsg = "Another order :  " + AUX_ORD_NO + "<br/>is also approved together.<br/><br/>";
   var filterGridID;
 
   $(document).ready(function() {
-console.log(rqstId);
+
     if (FormUtil.isNotEmpty(TAB_NM)) {
       fn_changeTab(TAB_NM);
     }
@@ -45,10 +46,10 @@ console.log(rqstId);
     			console.log($('#frmCnctAppr').serializeJSON());
     			if(request[0].stus == "Active"){
     				Common.ajax("POST","/sales/order/saveApprovalCnct.do",$('#frmCnctAppr').serializeJSON(),function(result) {
-    				    if(result > 0)
-    						Common.alert("success");
-    					else
-    						Common.alert("failed");
+                        if(result.code == "00")
+                            Common.alert("eRequest approval saved<br>",fn_selfClose());
+                        else
+                            Common.alert("Failed to save.<br>",fn_selfClose());
     				});
     			}else{
     				Common.alert("Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
@@ -63,10 +64,10 @@ console.log(rqstId);
     			console.log($('#frmInstAddrAppr').serializeJSON());
     			if(request[0].stus == "Active"){
     				Common.ajax("POST","/sales/order/saveApprovalInstAddr.do",$('#frmInstAddrAppr').serializeJSON(),function(result) {
-    					if(result > 0)
-                            Common.alert("success");
+    					if(result.code == "00")
+    						Common.alert("eRequest approval saved<br>",fn_selfClose());
                         else
-                            Common.alert("failed");
+                            Common.alert("Failed to save.<br>",fn_selfClose());
     				});
     			}else{
     				Common.alert("Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
@@ -91,6 +92,11 @@ console.log(rqstId);
     	fn_loadCntcPerson(rqstDataFr,rqstDataTo);
     	$('#scCP').removeClass("blind");
     	$('#aTabIns').click();
+
+    	if(stusId != 1){
+    		$('#frmCnctAppr').find("input,textarea,button,select").attr("disabled",true);
+    		$("#btnSaveCnct").hide();
+    	}
     }else{
     	$('#scCP').addClass("blind");
     }
@@ -99,6 +105,11 @@ console.log(rqstId);
     	fn_loadInstallAddrInfoNew(rqstDataFr,rqstDataTo);
     	$('#scIN').removeClass("blind");
     	$('#aTabIns').click();
+
+    	if(stusId != 1){
+    		$('#frmInstAddrAppr').find("input,textarea,button,select").attr("disabled",true);
+            $("#btnSaveInstAddr").hide();
+        }
     }else{
     	$('#scIN').addClass("blind");
     }
@@ -106,8 +117,8 @@ console.log(rqstId);
   }
 
   function fn_selfClose() {
+	  $('#btnCloseReq').click();
 	  fn_requestApprovalListAjax();
-    $('#btnCloseReq').click();
   }
 
   function fn_loadInstallAddrInfoNew(custAddIdOld,custAddIdNew) {
@@ -264,6 +275,10 @@ console.log(rqstId);
                 <th scope="row"><spring:message code="sal.title.text.faxNumber" /></th>
                 <td><span id="modCntcFaxNoNew"></span></td>
              </tr>
+             <tr>
+              <th scope="row"><spring:message code="sal.text.remark" /></th>
+              <td colspan="3">${eRequestDetail.rqstRem}</td>
+        </tr>
         </tbody>
         </table><!-- table end -->
 
@@ -273,9 +288,11 @@ console.log(rqstId);
     <dd>
     <section class="search_table">
       <form id="frmCnctAppr" action="#" method="post">
-      <input id="rqstId" name="rqstId" type="hidden" value="${rqstId}" />
+      <input id="rqstId" name="rqstId" type="hidden" value="${eRequestDetail.rqstId}" />
       <input id="salesOrdId" name="salesOrdId" type="hidden" value="${orderDetail.basicInfo.ordId}" />
-      <input id="custCntcId" name="custCntcId" type="hidden" value="${rqstDataTo}" />
+      <input id="custCntcId" name="custCntcId" type="hidden" value="${eRequestDetail.rqstDataTo}" />
+      <input id="auxRqstId" name="auxRqstId" type="hidden" value="${eRequestAux.rqstId}" />
+      <input id="auxOrdId" name="auxOrdId" type="hidden" value="${eRequestAux.salesOrdId}" />
           <table class="type1">
           <caption>table</caption>
           <colgroup>
@@ -294,7 +311,7 @@ console.log(rqstId);
           </tr>
           <tr>
               <th scope="row"><spring:message code="sal.text.remark" /></th>
-              <td><textarea id="rem" name="rem" cols="20" rows="5"></textarea></td>
+              <td><textarea id="rem" name="rem" cols="20" rows="5">${eRequestDetail.rem}</textarea></td>
            </tr>
            </tbody>
            </table>
@@ -393,6 +410,10 @@ console.log(rqstId);
             <th scope="row"><spring:message code="sal.text.country" /></th>
             <td ><span id="modInstCntyNew"></span></td>
         </tr>
+        <tr>
+              <th scope="row"><spring:message code="sal.text.remark" /></th>
+              <td colspan="5">${eRequestDetail.rqstRem}</td>
+        </tr>
     </tbody>
     </table><!-- table end -->
 
@@ -402,10 +423,12 @@ console.log(rqstId);
     <dd>
     <section class="search_table">
       <form id="frmInstAddrAppr" action="#" method="post">
-        <input id = "rqstId" name="rqstId" type="hidden" value="${rqstId}" />
+        <input id="rqstId" name="rqstId" type="hidden" value="${eRequestDetail.rqstId}" />
         <input id="salesOrdId" name="salesOrdId" type="hidden" value="${orderDetail.basicInfo.ordId}" />
-        <input id = "custAddrId" name="custAddrId" type="hidden" value="${rqstDataTo}" />
-        <input id = "dscBrnchId" name="dscBrnchId" type="hidden"/>
+        <input id="custAddrId" name="custAddrId" type="hidden" value="${eRequestDetail.rqstDataTo}" />
+        <input id="auxRqstId" name="auxRqstId" type="hidden" value="${eRequestAux.rqstId}" />
+        <input id="auxOrdId" name="auxOrdId" type="hidden" value="${eRequestAux.salesOrdId}" />
+        <input id="dscBrnchId" name="dscBrnchId" type="hidden"/>
           <table class="type1">
           <caption>table</caption>
           <colgroup>
@@ -424,7 +447,7 @@ console.log(rqstId);
           </tr>
           <tr>
               <th scope="row"><spring:message code="sal.text.remark" /></th>
-              <td><textarea id="rem" name="rem" cols="20" rows="5"></textarea></td>
+              <td><textarea id="rem" name="rem" cols="20" rows="5">${eRequestDetail.rem}</textarea></td>
            </tr>
            </tbody>
            </table>

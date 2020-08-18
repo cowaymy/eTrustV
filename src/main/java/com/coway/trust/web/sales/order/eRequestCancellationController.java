@@ -274,17 +274,29 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
 
    @RequestMapping(value="/eRequestApprovalPop.do")
    public String eRequestApprovalPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
-
-     System.out.println(params);
-
      EgovMap orderDetail = eRequestCancellationService.selectOrderBasicInfo(params, sessionVO);
 
      EgovMap eRequestDetail = eRequestCancellationService.selectRequestApprovalList(params).get(0);
+     EgovMap eRequestAux = null;
 
-     System.out.println(eRequestDetail);
+     String auxSalesOrdId = (((EgovMap)orderDetail.get("basicInfo")).get("auxSalesOrdId") != null) ? ((EgovMap)orderDetail.get("basicInfo")).get("auxSalesOrdId").toString() : null;
+
+     if(auxSalesOrdId != null){
+
+       Map<String, Object> paramsAux = new HashMap<>();
+       String[] reqStusId = {"1"};
+
+       paramsAux.put("salesOrdId", auxSalesOrdId);
+       paramsAux.put("reqStusList", reqStusId);
+
+       eRequestAux = eRequestCancellationService.selectRequestApprovalList(paramsAux).get(0);
+     }
 
      model.put("orderDetail", orderDetail);
      model.put("eRequestDetail", eRequestDetail);
+     model.put("eRequestAux", eRequestAux);
+
+     System.out.println(model.get("eRequestAux").toString());
 
      return "sales/order/eRequestApprovalPop";
    }
@@ -296,8 +308,18 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
 
      int updOrd = eRequestCancellationService.saveApprCnct(params);
 
+     if(params.get("auxRqstId") != ""){
+       params.put("rqstId",params.get("auxRqstId"));
+       params.put("salesOrdId",params.get("auxOrdId"));
+       eRequestCancellationService.saveApprCnct(params);
+     }
+
      ReturnMessage message = new ReturnMessage();
-     message.setCode(AppConstants.SUCCESS);
+
+     if(updOrd > 0)
+       message.setCode(AppConstants.SUCCESS);
+     else
+       message.setCode(AppConstants.FAIL);
 
      return ResponseEntity.ok(message);
    }
@@ -309,8 +331,18 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
 
      int updOrd = eRequestCancellationService.saveApprInstAddr(params);
 
+     if(params.get("auxRqstId") != ""){
+       params.put("rqstId",params.get("auxRqstId"));
+       params.put("salesOrdId",params.get("auxOrdId"));
+       eRequestCancellationService.saveApprInstAddr(params);
+     }
+
      ReturnMessage message = new ReturnMessage();
-     message.setCode(AppConstants.SUCCESS);
+
+     if(updOrd > 0)
+       message.setCode(AppConstants.SUCCESS);
+     else
+       message.setCode(AppConstants.FAIL);
 
      return ResponseEntity.ok(message);
    }

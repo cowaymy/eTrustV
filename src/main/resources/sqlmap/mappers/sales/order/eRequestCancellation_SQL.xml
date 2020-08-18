@@ -1189,6 +1189,7 @@
           RQST.RQST_TYPE_ID TYPE_ID,
           RQST_TYPE.CODE_NAME RQST_TYPE,
           RQST.RQST_REM RQST_REM,
+          RQST.REM REM,
           BRNCH.NAME DSC,
           CRT.USER_NAME CRT_USER,
           TO_CHAR(RQST.CRT_DT,'DD/MM/YYYY HH24:MI:SS') CRT_DT,
@@ -1215,6 +1216,9 @@
       </if>
       <if test = "ordNo != null and ordNo != '' ">
         AND SOM.SALES_ORD_NO = #{ordNo}
+      </if>
+      <if test = "salesOrdId != null and salesOrdId != '' ">
+        AND SOM.SALES_ORD_ID = #{salesOrdId}
       </if>
       <if test = "startCrtDt != null and startCrtDt != '' ">
         AND RQST.CRT_DT <![CDATA[ >= ]]> TO_DATE(#{startCrtDt},'DD/MM/YYYY')
