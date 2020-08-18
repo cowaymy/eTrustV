@@ -30,6 +30,12 @@
                 dataType : "numeric",
                 width : 100,
                 style : "aui-grid-user-custom-right"
+            }, {
+                dataField : "netCnt",
+                headerText : "Net Sales",
+                dataType : "numeric",
+                width : 100,
+                style : "aui-grid-user-custom-right"
             }
         ];
 
@@ -59,7 +65,7 @@
 <style>
 .popup_wrap{position:absolute; top:20px; left:50%; z-index:1001; margin-left:-477px; width:950px; background:#fff; border:1px solid #ccc;}
 .popup_wrap:after{content:""; display:block; position:fixed; top:0; left:0; z-index:-1; width:100%; height:100%;  background:rgba(0,0,0,0.6);}
-.popup_wrap.size_small{width:400px!important; margin-left:-250px!important; height:400px}
+.popup_wrap.size_small{width:500px!important; margin-left:-250px!important; height:400px}
 
 .pop_body{height: 370px; padding:10px; background:#fff; overflow-y:auto;}
 
