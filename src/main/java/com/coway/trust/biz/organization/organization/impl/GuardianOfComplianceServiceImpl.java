@@ -66,10 +66,11 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
 		guardianOfComplianceMapper.updateDocNo(caseNo);
 
 		params.put("guardianNo",guardianNo);
-		params.put("guardianCaseCategory",params.get("caseCategory") != null && params.get("caseCategory") !=""  ? Integer.parseInt(params.get("caseCategory").toString()) : 0 );
+		params.put("guardianCaseCategory",params.get("caseCategory1") != null && params.get("caseCategory1") !=""  ? Integer.parseInt(params.get("caseCategory1").toString()) : 0 );
 		params.put("guardianCaseDetail",params.get("docType") != null && params.get("docType") !=""  ? Integer.parseInt(params.get("docType").toString()) : 0 );
 		params.put("complaintDate", params.get("reqstRefDt").toString());
-		params.put("orderId", Integer.parseInt(params.get("searchOrderId").toString()));
+		/*params.put("orderId", Integer.parseInt(params.get("searchOrderId").toString()));*/
+		params.put("orderId", params.get("searchOrderId") != null && params.get("searchOrderId") !=""  ?  Integer.parseInt(params.get("searchOrderId").toString()) : 0 );
 		params.put("memberId", Integer.parseInt(params.get("memberId").toString()));
 		params.put("ActionId", params.get("action") != null && params.get("action") !=""  ? Integer.parseInt(params.get("action").toString()) : 0 );
 		params.put("complaintRemark", params.get("complianceRem").toString());
