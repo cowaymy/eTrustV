@@ -156,11 +156,11 @@
   }
 
   function fn_validation() {
-    if ($("#caseCategory").val() == "" || $("#caseCategory").val() == '1') {
+    if ($("#caseCategory1").val() == "" || $("#caseCategory1").val() == '1') {
       Common.alert("Please select a case category");
       return false;
     }
-    if ($("#caseCategory").val() == '2144') {
+    if ($("#caseCategory1").val() == '2144') {
       if ($("#docType").val() == "" || $("#docType").val() == '1' || $("#docType").val() == null) {
         Common.alert("Please select a types of documents");
         return false;
@@ -170,7 +170,9 @@
       Common.alert("Please select a complaint date");
       return false;
     }
-    if ($("#orderId").val() == "") {
+    if($("#orderId").val() == "" && $("#caseCategory1").val() != '2157'){
+    	console.log ( 'caseCategory1  :: ' + $("#caseCategory1").val() )
+        console.log ( 'docType  :: ' + $("#docType").val() )
       Common.alert("Please key in Order No");
       return false;
     }
@@ -261,7 +263,7 @@
             <tr>
               <th scope="row">Case Category</th>
               <td colspan="3">
-                <select class="w100p" id="caseCategory" name="caseCategory" onchange="fn_caseChange(this.value);">
+                <select class="w100p" id="caseCategory1" name="caseCategory1" onchange="fn_caseChange(this.value);">
                   <c:forEach var="list" items="${caseCategoryCodeList}" varStatus="status">
                     <option value="${list.codeId}">${list.codeName }</option>
                   </c:forEach>
