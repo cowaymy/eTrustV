@@ -5,10 +5,11 @@
   <select id="selecteKeyInList" parameterType="Map" resultType="egovMap">
     <![CDATA[
       /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selecteKeyInList] 20191209 - KR JAEMAJEM */
-      SELECT A.CUST_ID                                                               AS CUST_ID
-               , B.NAME                                                                  AS CUST_NAME
-               , CASE WHEN C.STK_CTGRY_ID IN ('5706', '5707')  THEN 'HC' --SYS0013M : 5706(Mattress), 5707(Frame)
-                         ELSE NULL END AS HC_GU
+      SELECT A.CUST_ID AS CUST_ID
+               , B.NAME AS CUST_NAME
+               , CASE WHEN C.STK_CTGRY_ID IN ('5706', '5707')
+                   THEN 'HC' --SYS0013M : 5706(Mattress), 5707(Frame)
+                   ELSE NULL END AS HC_GU
                , A.SOF_NO AS SOF_NO
                , TO_CHAR(A.REQST_DT, 'DD/MM/YYYY') AS REQST_DT
                , A.STUS_ID AS STUS_ID
@@ -19,13 +20,13 @@
                , A.PRE_ORD_ID AS PRE_ORD_ID
       FROM SAL0213M A
       INNER JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
-                                AND B.TYPE_ID IN ('964', '965') --SYS0013M : 964(Individual), 965(Company)
+                               AND B.TYPE_ID IN ('964', '965') --SYS0013M : 964(Individual), 965(Company)
       INNER JOIN SYS0026M C ON A.ITM_STK_ID = C.STK_ID
       INNER JOIN SYS0038M D ON A.STUS_ID = D.STUS_CODE_ID
                                         AND D.STUS_CODE_ID IN (1, 4, 10, 21, 104) --1(Active), 4(Completed), 10(Cancelled), 21(Failed), 104(Processing)
       INNER JOIN SYS0005M E ON A.KEYIN_BRNCH_ID = E.BRNCH_ID
-                                AND E.STUS_ID = 1
-      WHERE A.APP_TYPE_ID IN ('66', '67', '68', '5764')                             --SYS0013M : 66(Rental), 67(Outright), 68(Instalment), 5764(Auxiliary)
+                                       AND E.STUS_ID = 1
+      WHERE A.APP_TYPE_ID IN ('66', '67', '68', '5764')  --SYS0013M : 66(Rental), 67(Outright), 68(Instalment), 5764(Auxiliary)
           AND A.MEM_CODE = ( SELECT A.HR_CODE
                                          FROM SYS0047M A
                                          WHERE A.USER_NAME = #{regId}
@@ -43,11 +44,20 @@
         </when>
 
         <when test='selectType.equals("2") and selectKeyword != null and selectKeyword != ""'>
-          AND UPPER(B.NAME) LIKE '%'||#{selectKeyword}||'%'
+          AND UPPER(B.NAME) LIKE UPPER('%'||#{selectKeyword}||'%')
+        </when>
+
+        <when test='selectType.equals("3") and selectKeyword != null and selectKeyword != ""'>
+          AND UPPER(B.NRIC) LIKE UPPER('%'||#{selectKeyword}||'%')
+        </when>
+
+        <when test='selectType.equals("4") and selectKeyword != null and selectKeyword != ""'>
+          AND UPPER(A.STUS_ID) = #{selectKeyword}
         </when>
       </choose>
     </if>
-    ORDER BY    A.PRE_ORD_ID DESC
+
+    ORDER BY A.PRE_ORD_ID DESC
   </select>
 
   <select id="selectCodeList" resultType="egovMap">
