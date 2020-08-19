@@ -67,6 +67,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 04. 08.    MY-ONGHC    Add selectCpntLst to Retrieve Component List
  *                                          Add selectPromoByCpntId
  * 2020. 04. 10     MY-ONGHC   Revert selectExistSofNo and insertEkeyIn to remove SOF checking
+ * 2020. 08. 19     MY-ONGHC   Amend insertEkeyIn to Support Multiple Payment Method
  *          </pre>
  */
 @Service("EKeyInApiService")
@@ -1553,17 +1554,19 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     if (CommonUtils.isEmpty(param.getDscBrnchId()) || param.getDscBrnchId() <= 0) {
       throw new ApplicationException(AppConstants.FAIL, "dscBrnchId value does not exist.");
     }
-    if (CommonUtils.isEmpty(param.getCustCrcId()) || param.getCustCrcId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "custCrcId value does not exist.");
+    if (CommonUtils.isEmpty(param.getRentPayModeId()) || param.getRentPayModeId() <= 0) {
+      throw new ApplicationException(AppConstants.FAIL, "rentPayModeId value does not exist.");
     }
-    if (CommonUtils.isEmpty(param.getBankId()) || param.getBankId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "bankId value does not exist.");
+    if ("131".equals(CommonUtils.isEmpty(param.getRentPayModeId()))) { // ONLY CREDIT CARD
+      if (CommonUtils.isEmpty(param.getCustCrcId()) || param.getCustCrcId() <= 0) {
+        throw new ApplicationException(AppConstants.FAIL, "custCrcId value does not exist.");
+      }
+      if (CommonUtils.isEmpty(param.getBankId()) || param.getBankId() <= 0) {
+        throw new ApplicationException(AppConstants.FAIL, "bankId value does not exist.");
+      }
     }
     if (CommonUtils.isEmpty(param.getRentPayCustId()) || param.getRentPayCustId() <= 0) {
       throw new ApplicationException(AppConstants.FAIL, "rentPayCustId value does not exist.");
-    }
-    if (CommonUtils.isEmpty(param.getRentPayModeId()) || param.getRentPayModeId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "rentPayModeId value does not exist.");
     }
     if (CommonUtils.isEmpty(param.getCustBillCustId()) || param.getCustBillCustId() <= 0) {
       throw new ApplicationException(AppConstants.FAIL, "custBillCustId value does not exist.");
