@@ -1413,66 +1413,81 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   @Override
   public EKeyInApiDto insertEkeyIn(EKeyInApiDto param) throws Exception {
     if (null == param.getSaveData()) {
-      throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Parameter set are empty.");
     }
+
     param = param.getSaveData();
 
     if (CommonUtils.isEmpty(param.getRegId())) {
-      throw new ApplicationException(AppConstants.FAIL, "regId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Register ID are empty.");
     }
+
     Map<String, Object> loginInfoMap = new HashMap<String, Object>();
     loginInfoMap.put("_USER_ID", param.getRegId());
     LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
+
     if (null == loginVO || CommonUtils.isEmpty(loginVO.getUserId())) {
-      throw new ApplicationException(AppConstants.FAIL, "UserID is null.");
+      throw new ApplicationException(AppConstants.FAIL, "User ID are empty.");
     }
+
     EKeyInApiForm selectParam = new EKeyInApiForm();
-    if (CommonUtils.isEmpty(param.getOrderType())) { // Basic
-      if (CommonUtils.isEmpty(param.getBasic())) {
-        throw new ApplicationException(AppConstants.FAIL, "Basic order value does not exist.");
+    if (CommonUtils.isEmpty(param.getOrderType())) { // HOME APPLIANCE
+      if (CommonUtils.isEmpty(param.getBasic())) { // CHECK BASIC ORDER DETAILS
+        throw new ApplicationException(AppConstants.FAIL, "Basic order record are empty.");
       }
-      if (CommonUtils.isEmpty(param.getBasic().getSofNo())) {
-        throw new ApplicationException(AppConstants.FAIL, "sofNo value does not exist.");
+
+      if (CommonUtils.isEmpty(param.getBasic().getSofNo())) { // CHECK SOF NO VALUE
+        throw new ApplicationException(AppConstants.FAIL, "SOF no. does not exist.");
       }
+
       selectParam.setSofNo(param.getBasic().getSofNo());
+
+      // VALIDATE SOF ALREADY USED BEFORE
       int selectExistSofNo = eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(selectParam));
       // int selectExistSofNo = 0;
       if (selectExistSofNo != 0) {
-        throw new ApplicationException(AppConstants.FAIL, "this Sales has posted, no amendment allow.");
+        throw new ApplicationException(AppConstants.FAIL, "Entered SOF No. had been used, please try other SOF No.");
       }
+
       param.getBasic().setCrtUserId(loginVO.getUserId());
       param.getBasic().setUpdUserId(loginVO.getUserId());
       param.getBasic().setRegId(param.getRegId());
-      insertEkeyInSal0213M(param.getBasic()); // ★☆★☆INSERT SAL0213M
-    } else { // Homecare
+
+      // INSERT SAL0213M
+      this.insertEkeyInSal0213M(param.getBasic());
+
+    } else { // HOMECARE
       if (CommonUtils.isEmpty(param.getMattress())) {
-        throw new ApplicationException(AppConstants.FAIL, "Basic order value does not exist.");
+        throw new ApplicationException(AppConstants.FAIL, "Basic order record are empty.");
       }
+
       if (CommonUtils.isEmpty(param.getMattress().getSofNo())) {
-        throw new ApplicationException(AppConstants.FAIL, "sofNo value does not exist.");
+        throw new ApplicationException(AppConstants.FAIL, "SOF no. does not exist.");
       }
+
       selectParam.setSofNo(param.getMattress().getSofNo());
-      // int selectExistSofNo =
-      // eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(selectParam));
-      int selectExistSofNo = 0;
+
+      int selectExistSofNo = eKeyInApiMapper.selectExistSofNo(EKeyInApiForm.createMap(selectParam));
+      // int selectExistSofNo = 0;
       if (selectExistSofNo != 0) {
-        throw new ApplicationException(AppConstants.FAIL, "this Sales has posted, no amendment allow.");
+        throw new ApplicationException(AppConstants.FAIL, "Entered SOF No. had been used, please try other SOF No.");
       }
 
       param.getMattress().setCrtUserId(loginVO.getUserId());
       param.getMattress().setUpdUserId(loginVO.getUserId());
       param.getMattress().setRegId(param.getRegId());
-      int mattressPreOrdId = insertEkeyInSal0213M(param.getMattress()); // ★☆★☆INSERT
-                                                                        // SAL0213M
+
+      // INSERT SAL0213M
+      int mattressPreOrdId = insertEkeyInSal0213M(param.getMattress());
       int framePreOrdId = 0;
 
-      if (CommonUtils.isNotEmpty(param.getFrame())) {
+      if (CommonUtils.isNotEmpty(param.getFrame())) { // FRAME
         param.getFrame().setAppTypeId(5764); // SYS0013M : 5764(Auxiliary)
         param.getFrame().setCrtUserId(loginVO.getUserId());
         param.getFrame().setUpdUserId(loginVO.getUserId());
         param.getFrame().setRegId(param.getRegId());
-        framePreOrdId = insertEkeyInSal0213M(param.getFrame()); // ★☆★☆INSERT
-                                                                // SAL0213M
+        // INSERT SAL0213D FOR FRAME
+        framePreOrdId = insertEkeyInSal0213M(param.getFrame());
       }
 
       Map<String, Object> hmc0011D = new HashMap<String, Object>();
@@ -1490,30 +1505,36 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       hmc0011D.put("stusId", 1);
       // hmc0011D.put("bndlNo", );
       // hmc0011D.put("srvOrdId", );
-      int saveCnt = eKeyInApiMapper.insertHMC0011D(hmc0011D); // ★☆★☆INSERT
-                                                              // HMC0011D
+
+      // INSERT HMC0011D
+      int saveCnt = eKeyInApiMapper.insertHMC0011D(hmc0011D);
       if (saveCnt == 0) {
         throw new ApplicationException(AppConstants.FAIL, "Insert Exception.");
       }
+
       if (CommonUtils.isEmpty(hmc0011D.get("ordSeqNo"))) {
         throw new ApplicationException(AppConstants.FAIL, "ordSeqNo value does not exist.");
       }
 
+      // UPDATE BNDL_ID FOR MATTRESS
       Map<String, Object> updateBndl = new HashMap<String, Object>();
       updateBndl.put("preOrdId", mattressPreOrdId);
       updateBndl.put("bndlId", hmc0011D.get("ordSeqNo"));
-      saveCnt = eKeyInApiMapper.updateBndlIdSAL0213M(updateBndl); // ★☆★☆UPDATE
-                                                                  // SAL0213M
+      // UPDATE SAL0213M
+      saveCnt = eKeyInApiMapper.updateBndlIdSAL0213M(updateBndl);
+
       if (saveCnt == 0) {
         throw new ApplicationException(AppConstants.FAIL, "Update Exception.");
       }
 
+      // UPDATE BNDL_ID FOR FRAME
       if (CommonUtils.isNotEmpty(framePreOrdId) && framePreOrdId != 0) {
         updateBndl = new HashMap<String, Object>();
         updateBndl.put("preOrdId", framePreOrdId);
         updateBndl.put("bndlId", hmc0011D.get("ordSeqNo"));
-        saveCnt = eKeyInApiMapper.updateBndlIdSAL0213M(updateBndl); // ★☆★☆UPDATE
-                                                                    // SAL0213M
+        // UPDATE SAL0213M
+        saveCnt = eKeyInApiMapper.updateBndlIdSAL0213M(updateBndl);
+
         if (saveCnt == 0) {
           throw new ApplicationException(AppConstants.FAIL, "Update Exception.");
         }
@@ -1523,92 +1544,120 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
   };
 
   public int insertEkeyInSal0213M(EKeyInApiDto param) {
+    logger.debug("====================================================");
+    logger.debug("= PARAM = " + param.toString());
+    logger.debug("====================================================");
+
     if (CommonUtils.isEmpty(param.getRegId())) {
-      throw new ApplicationException(AppConstants.FAIL, "regId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Register ID does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getSofNo())) {
-      throw new ApplicationException(AppConstants.FAIL, "sofNo value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "SOF No. does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getAppTypeId()) || param.getAppTypeId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "appTypeId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Application Type does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getSrvPacId()) || param.getSrvPacId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "srvPacId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Service Package does not exist.");
     }
+
     // if( CommonUtils.isEmpty(param.getInstct()) ){
     // throw new ApplicationException(AppConstants.FAIL, "instct value does not
     // exist.");
     // }
+
     if (CommonUtils.isEmpty(param.getCustId()) || param.getCustId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "custId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Customer ID does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getCustCntcId()) || param.getCustCntcId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "custCntcId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Customer Contact ID does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getKeyinBrnchId()) || param.getKeyinBrnchId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "keyinBrnchId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Key-in Branch does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getInstAddId()) || param.getInstAddId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "instAddId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Installation Address does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getDscBrnchId()) || param.getDscBrnchId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "dscBrnchId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "DSC Branch does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getRentPayModeId()) || param.getRentPayModeId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "rentPayModeId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Payment Mode does not exist.");
     }
+
     if ("131".equals(CommonUtils.isEmpty(param.getRentPayModeId()))) { // ONLY CREDIT CARD
       if (CommonUtils.isEmpty(param.getCustCrcId()) || param.getCustCrcId() <= 0) {
-        throw new ApplicationException(AppConstants.FAIL, "custCrcId value does not exist.");
+        throw new ApplicationException(AppConstants.FAIL, "Customer Credit Card ID does not exist.");
       }
       if (CommonUtils.isEmpty(param.getBankId()) || param.getBankId() <= 0) {
-        throw new ApplicationException(AppConstants.FAIL, "bankId value does not exist.");
+        throw new ApplicationException(AppConstants.FAIL, "Credit Card Bank ID does not exist.");
       }
     }
+
     if (CommonUtils.isEmpty(param.getRentPayCustId()) || param.getRentPayCustId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "rentPayCustId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Rental Payment Customer ID does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getCustBillCustId()) || param.getCustBillCustId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "custBillCustId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Customer Bill ID does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getCustBillCntId()) || param.getCustBillCntId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "custBillCntId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Customer Bill Contact ID does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getCustBillAddId()) || param.getCustBillAddId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "custBillAddId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Customer Bill Addess ID does not exist.");
     }
+
     if (param.getTypeId() == 965 && CommonUtils.isEmpty(param.getCustBillEmail())) {
-      throw new ApplicationException(AppConstants.FAIL, "custBillEmail value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Customer Bill Email does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getItmStkId()) || param.getItmStkId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "itmStkId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Stock ID does not exist.");
     }
     if (CommonUtils.isEmpty(param.getPromoId()) || param.getPromoId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "promoId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Promotion ID does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getMthRentAmt())) {
-      throw new ApplicationException(AppConstants.FAIL, "mthRentAmt value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Monthly Rental Amount does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getTotAmt())) {
-      throw new ApplicationException(AppConstants.FAIL, "totAmt value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Total Amount does not exist.");
     }
     if (CommonUtils.isEmpty(param.getNorAmt())) {
-      throw new ApplicationException(AppConstants.FAIL, "norAmt value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Nor. Amount does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getDiscRntFee())) {
-      throw new ApplicationException(AppConstants.FAIL, "discRntFee value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Discount Rental Fee value does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getTotPv())) {
-      throw new ApplicationException(AppConstants.FAIL, "totPv value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Total PV does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getTotPvGst())) {
-      throw new ApplicationException(AppConstants.FAIL, "totPvGst value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Total PV GST does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getPrcId()) || param.getPrcId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "prcId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Price ID does not exist.");
     }
+
     if (CommonUtils.isEmpty(param.getAtchFileGrpId()) || param.getAtchFileGrpId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "atchFileGrpId value does not exist.");
+      throw new ApplicationException(AppConstants.FAIL, "Attachment does not exist.");
     }
 
     Map<String, Object> sal0213M = new HashMap<String, Object>();
@@ -1679,6 +1728,11 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     sal0213M.put("corpCustType", 0);
     sal0213M.put("agreementType", 0);
     sal0213M.put("bndlId", null);
+
+    logger.debug("====================================================");
+    logger.debug("= PARAM FOR SAL0213M = " + sal0213M.toString());
+    logger.debug("====================================================");
+
     int saveCnt = eKeyInApiMapper.insertSAL0213M(sal0213M);
     if (saveCnt == 0) {
       throw new ApplicationException(AppConstants.FAIL, "Insert Exception.");
