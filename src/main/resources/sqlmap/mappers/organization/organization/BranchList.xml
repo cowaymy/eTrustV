@@ -455,17 +455,17 @@
    <select id="getBranchAddrDetail" parameterType="Map" resultType="egovMap">
         SELECT * FROM SYS0064M WHERE AREA_ID = #{c1}
     </select>
-    
+
    <select id="selectBranchCdInfo" parameterType="Map" resultType="egovMap">
 		SELECT    (SELECT CODE
 		             FROM SYS0013M
 		            WHERE DISAB = 0 AND CODE_MASTER_ID = 45 AND CODE_ID = #{branchCd})
 		       || '-'
-		       || LPAD(NVL(NUM,'01'),2,0) AS BRACH_CD
-		  FROM (SELECT MAX 
+		       || NUM <!-- LPAD(NVL(NUM,'01'),2,0) --> AS BRACH_CD
+		  FROM (SELECT MAX
 		            ( CASE WHEN LENGTH(CODE) = 6 THEN SUBSTR( CODE, 5)
 		                   WHEN LENGTH(CODE) = 5 THEN SUBSTR( CODE, 4)
-		              END      
+		              END
 		            ) +1   NUM
 		          FROM SYS0005M
 		         WHERE 1 = 1
@@ -475,6 +475,6 @@
 		                       WHERE DISAB = 0
 		                         AND CODE_MASTER_ID = 45
 		                         AND CODE_ID = #{branchCd} )
-		                  || '%')	                  
-    </select>    
+		                  || '%')
+    </select>
 </mapper>
