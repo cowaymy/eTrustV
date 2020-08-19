@@ -1998,7 +1998,7 @@
                 break;
             case 'pay' :
                 if($('#appType').val() == '66'){
-                    $('#rentPayMode').val('131')
+                    //$('#rentPayMode').val('131')
                     $('#rentPayMode').change();
                     $('#rentPayMode').prop("disabled", true);
                     $('#thrdParty').prop("disabled", true);
