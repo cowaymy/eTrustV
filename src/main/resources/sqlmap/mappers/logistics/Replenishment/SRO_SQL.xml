@@ -201,7 +201,7 @@
 																	                              )
 																	                        )
 														),0) +#{requestqty})                                                              AS SRO_ITM_REPL_FUL_QTY
-			            , (GBSLCVD.FN_GET_AVAILABLE_QTY(AA.SRO_STK_CODE,BB.SRO_FR_WH_LOC_CODE ) + #{requestqty})      AS   SRO_MAK_FR_AVL_QTY   /* 먼저 LOG0075M에 등록처리 됨 으로 확정수량 + 해야 한다.  */
+			            , (FN_GET_AVAILABLE_QTY(AA.SRO_STK_CODE,BB.SRO_FR_WH_LOC_CODE ) + #{requestqty})      AS   SRO_MAK_FR_AVL_QTY   /* 먼저 LOG0075M에 등록처리 됨 으로 확정수량 + 해야 한다.  */
 			            , CC.SRO_ITM_BAS_QTY    /* SRO_MAK_BAS_QTY*/
 			            , CC.SRO_ITM_RORD_POT   /* SRO_MAK_RORD_POT*/
 			            , CC.SRO_ITM_ADD_POT    /* SRO_MAK_ADD_POT*/
@@ -318,8 +318,8 @@ FROM (
 			    ,srorefsrono
 			    ,srotype
 			    ,sroitmresultmsg
-			    ,(GBSLCVD.FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) -sroconqty) as srofravailqty
-			    ,(GBSLCVD.FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) ) as srofravailqtyorg
+			    ,(FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) -sroconqty) as srofravailqty
+			    ,(FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) ) as srofravailqtyorg
 			    ,crtuserid
 			    ,crtdt
 		from(
