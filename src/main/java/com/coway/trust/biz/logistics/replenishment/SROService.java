@@ -17,10 +17,17 @@ public interface SROService {
 
 	void  saveSroItemMgnt(Map<String, ArrayList<Object>> params, SessionVO sessionVO);
 
+	void  deleteUpdateLOG0112D(List <EgovMap>params, SessionVO sessionVO);
+
+
+
+
+
 	List<EgovMap> sroMgmtList(Map<String, Object> params);
 
 	List<EgovMap> sroMgmtDetailList(Map<String, Object> params);
 
+	List<EgovMap> sroMgmtDetailListPopUp(Map<String, Object> params);
 
 	String  saveSroMgmt(Map<String,Object > params, SessionVO sessionVO);
 

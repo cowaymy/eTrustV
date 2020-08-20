@@ -3,40 +3,40 @@
 
 
 <style type="text/css">
-.pnum {
-    font-weight:bold;
+/* 엑스트라 체크박스 사용자 선택 못하는 표시 스타일 */
+.disable-check-style {
+    color:#d3825c;
 }
-
-/* 커스텀 스타일 */
-.left {
-    text-align:left;
-}
-
-/* 그리드 오버 시 행 선택자 만들기 */
-.aui-grid-body-panel table tr:hover {
-    background:#D9E5FF;
-    color:#000;
-}
-.aui-grid-main-panel .aui-grid-body-panel table tr td:hover {
-    background:transparent;
-    color:#000;
-}
-
 .my-inactive-style {
     background:#efcefc;
+   /* text-align:right;*/
+
+}
+.my-column-style3 {
+    color:#0000ff;
 }
 
-
-/* 커스텀 칼럼 스타일 정의*/
-.myLinkStyle {
-    text-decoration: underline;
-    color:#4374D9;
+.my_div {
+    display:inline-block;
+    margin-top:7px;
+    color:#0000ff;
 }
 
-
-/* 커스컴 disable 스타일*/
-.mycustom-disable-color {
-    color : #4374D9;
+.my_div_text_box {
+    display: inline-block;
+    border: 1px solid #aaa;
+    text-align: left;
+    width: 140px;
+    padding: 4px;
+}
+.my_div_btn {
+    color: #fff !important;
+    background-color: #2a2d33;
+    font-weight: bold;
+    margin: 2px 4px;
+    padding : 2px 4px;
+    line-height:2em;
+    cursor: pointer;
 }
 
 </style>
@@ -55,22 +55,7 @@ var groupList = [" ", "A", "B", "C" ];
 
 var rescolumnLayout=[
 
-			                     {dataField: "srono",headerText :"SRO No."           ,width:230    ,height:30           ,
-			                    	 editRenderer : {
-			                    	     type : "InputEditRenderer",
-
-			                    	     // ID는 고유값만 가능하도록 에디팅 유효성 검사
-			                    	     validator : function(oldValue, newValue, rowItem, dataField) {
-			                    	         if(oldValue != newValue) {
-			                    	             // dataField 에서 newValue 값이 유일한 값인지 조사
-			                    	             var isValid = AUIGrid.isUniqueValue(listGrid, dataField, newValue);
-
-			                    	             // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-			                    	             return { "validate" : isValid, "message"  : newValue + " 값은 고유값이 아닙니다. 다른 값을 입력해 주십시오." };
-			                    	         }
-			                    	     }
-			                    	 }
-			                     },
+			                     {dataField: "srono",headerText :"SRO No."           ,width:230    ,height:30     },
 			                     {dataField: "sroreqno",headerText :"Ref.No(STO/SMO)",width:150    ,height:30,
 
 			                    	    style : "myLinkStyle",
@@ -93,7 +78,6 @@ var rescolumnLayout=[
 			                     {dataField: "srotowldesc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:150    ,height:30                },
 			                     {dataField: "srorefsrono",headerText :"Ref.SRO No."                  ,width:150    ,height:30                },
                                  {dataField: "srotype",headerText :"SRO Type"           ,  width:120    ,height:30           },
-
 			                     {dataField: "srocrtdt",headerText :"Create Date"       , dataType : "date",           width:120    ,height:30     ,    formatString : "dd/mm/yyyy"           }
 			                  ];
 
@@ -106,70 +90,111 @@ var reqcolumnLayout=[
 			                     {dataField: "stkdesc",headerText :"Mat.Name"                      ,width:220    ,height:30             ,editable : false   },
                               //   {dataField: "srofravlqty",headerText :"(Fr) Old</br>Available Qty"         ,width:120    ,height:30            ,editable : false  },
                                  {dataField: "srosupqty",headerText :"Supply Qty"                  ,width:120    ,height:30         ,editable : false  ,dataType : "numeric"  },
-                                 {dataField: "sroconqty",headerText :"Confirm </br>Supply Qty"       ,width:120    ,height:30     ,style  :"my-inactive-style"       ,editable : false,dataType : "numeric"  },
-                                 {dataField: "srofulqty" ,headerText :"Unfulfilled </br>Qty"               ,width:120    ,height:30             ,editable : false,dataType : "numeric" },
-                                 {dataField: "srofravailqty" ,headerText :"(Fr)Current Available </br>Qty"               ,width:120    ,height:30             ,editable : false,dataType : "numeric" },
+                                 {dataField: "sroconqty",headerText :"Confirm </br>Supply Qty"       ,width:120    ,height:30 ,style  :"my-inactive-style"        ,editable : false,dataType : "numeric"  },
+                                 {dataField: "srofulqty" ,headerText :"Unfulfilled </br>Qty"               ,width:120    ,height:30             ,editable : false,dataType : "numeric"   },
+                                 {dataField: "srofravailqtyorg" ,headerText :"(Fr)Current Available </br>Qty"         ,       width:120    ,height:30       ,     editable : false,formatString : "#,###,###",
+
+                                	 renderer : { // HTML 템플릿 렌더러 사용
+                                         type : "TemplateRenderer"
+                                     },
+                                     // dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
+                                     labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
+
+                                        // if(!value)  return "";
+                                         var template = '<div class="my_div" >';
+                                         // 이름이 "Anna" 또는 "Emma" 인 경우 체크 설정하기
+                                         if(item.srofravailqtyorg   > 0 ) {
+                                        	       template += '<span style="text-align:right; color:red;"   >'
+                                                   template += "("+ AUIGrid.formatNumber(item.sroconqty,"#,##0") +") </span>  / " ;
+
+                                         }
+
+
+                                         template += '<span style=" text-align:right; vertical-align: middle;height: 0px;">'
+                                         template += AUIGrid.formatNumber( (item.srofravailqtyorg ),"#,##0");
+
+                                         template += '</span></div>';
+                                         return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
+                                     }
+
+
+                                 },
                                  {dataField: "requestqty" ,headerText :"Request Qty"               ,width:120    ,height:30   ,editable : true  ,dataType : "numeric"    },
                             //     {dataField: "srofrnowavlqty" ,headerText :"(Fr)Currently</br> Available Qty" ,width:120    ,height:30   ,style  :"my-inactive-style"   ,editable : false},
-                                 {dataField: "generate", headerText :"Generate" ,width:120 , editable : false,  styleFunction : cellStyleFunction,
+                                 {dataField: "generate", headerText :"Generate" ,width:120 , editable : false,
+	                                	renderer : { // HTML 템플릿 렌더러 사용
+	                                         type : "TemplateRenderer"
+	                                   },
+                                	   labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
 
-                                	 renderer : {
-                                		 type : "IconRenderer",
-                                         iconWidth : 30,
-                                         iconHeight : 30,
-                                         iconFunction : function(rowIndex, columnIndex, value, item) {
-                                        	   var icon = "${pageContext.request.contextPath}/resources/AUIGrid/images/flat_orange_circle.png";
-
-                                        	   if(item.generate =="generate"){
-	                                        		   icon ="${pageContext.request.contextPath}/resources/AUIGrid/images/flat_blue_circle.png";
-                                        	   }else{
-                                        	   }
-                                        	   // 로직 처리
-                                        	   return icon;
-                                        },
-                                        onclick : function(rowIndex, columnIndex, value, item) {
-
-                                        	   if(item.sroitmlev > 1){
-
-                                        		   Common.alert("상위 SRO에서 처리 가능합니다. <br>  상위 SRO NO: "+item.srorefsrono);
-                                        		   return ;
-                                        	   }
-
-                                        	   if(item.generate =="generate"){
-                                        	        Common.confirm("Do you want to generate ?",fn_doGgenerate);
-                                        	   }else {
-                                        		  Common.alert("Available quantity is insufficient");
-                                        		   return ;
-                                        	   }
-                                        }
-                                	 }
+                                		   var template="";
+                                		    if(item.generate =="generate"){
+                                		    	 template += '<div class="my_div">';
+                                                 template += '<span class="my_div_btn" onclick="javascript:fn_generateClick();"> Generate </span>';
+                                                 template += '</div>';
+                                		    }
+                                		    return template; // HTML 형식의 스트링
+                                		}
                                  },
 			                     {dataField: "srorefsrono",headerText :"Ref.SRO No"                  ,width:120    ,height:30               ,editable : false },
 			                     {dataField: "sroitmresultmsg",headerText :"Result Massage"                  ,width:270    ,height:30               ,editable : false },
                                  {dataField: "crtdt",headerText :"Create Date"       , dataType : "date",           width:120    ,height:30     ,    formatString : "dd/mm/yyyy"     },
-
                                  {dataField: "srobasqty",headerText :"(To)Basic </br>Qty"                  ,width:120    ,height:30              ,editable : false ,visible:false },
                                  {dataField: "srorordpot",headerText :"(To)ReOrder</br> Ponit"                  ,width:120    ,height:30               ,editable : false ,visible:false},
                                  {dataField: "sroaddpot",headerText :"(To)additional</br> Point"                  ,width:120    ,height:30               ,editable : false ,visible:false},
                                  {dataField: "sroitmlev",headerText :"item idex"                  ,width:120    ,height:30               ,editable : false  ,visible:false},
+                                 {dataField: "srofravailqtyorg",headerText :"srofravailqtyorg"                  ,width:120    ,height:30               ,editable : false  ,visible:false},
+
 
                      ];
 
 
 
 					var detailLayout=[
+					                                {dataField: "srono",headerText :"SRO No."           ,width:120    ,height:30                },
 													{dataField: "srostkcode",headerText :"Mat.Code"                  ,width:120    ,height:30               ,editable : false  },
-													{dataField: "stkdesc",headerText :"Mat.Name"                  ,width:120    ,height:30               ,editable : false   },
-													{dataField: "srobasqty",headerText :"Basic Qty"                  ,width:120    ,height:30               ,editable : false  ,dataType : "numeric"  },
-													{dataField: "sroreordpot",headerText :"ReOder <br>Point(%)"                  ,width:120    ,height:30               ,editable : false  ,dataType : "numeric" },
-													{dataField: "sroreordrangeqty",headerText :"ReOder Range Qty <br> (Basic Qty / (100/ReOrder Point ) )"                  ,width:270    ,height:30        ,dataType : "numeric"        ,editable : false ,visible:false },
-													{dataField: "srotoavailqty",headerText :"To Ware House <br> Available Qty"                                            ,width:250    ,height:30         ,dataType : "numeric"       ,editable : false },
-                                                    {dataField: "srofravlqty",headerText :"Fr Ware House <br> Available Qty"                                            ,width:250    ,height:30         ,dataType : "numeric"       ,editable : false },
-													{dataField: "srominnumqty",headerText :"Minimum Qty <br> (Basic Qty - ReOrder Range Qty)"                  ,width:250    ,height:30           ,dataType : "numeric"     ,editable : false },
-	                                                {dataField: "sroautoreplenqty",headerText :"Auto Replenishment Qty <br> (Basic Qty -Current Available Qty)"                  ,width:270    ,height:30,  style  :"my-inactive-style"            ,dataType : "numeric"      ,editable : false },
+													{dataField: "stkdesc",headerText :"Mat.Name"                  ,width:170    ,height:30               ,editable : false   },
+					                                {dataField: "srosupqty",headerText :"Supply Qty"                  ,width:120    ,height:30         ,editable : false  ,dataType : "numeric" },
+													{dataField: "sroitmstatecd",headerText :"<spring:message code='log.head.status'/>",width:80    ,height:30   ,editable : false                },
+					                                {dataField: "srorefsrono",headerText :"Ref.SRO No"                  ,width:120    ,height:30               ,editable : false },
+					                                {dataField: "srobasqty",headerText :"Basic Qty"                  ,width:120    ,height:30               ,editable : false  ,dataType : "numeric"  },
+													{dataField: "sroreordpot",headerText :"ReOder <br>Point(%)"                  ,width:100    ,height:30               ,editable : false  ,dataType : "numeric" },
+													{dataField: "sroreordrangeqty",headerText :"ReOder Range Qty <br> (Basic Qty / (100/ReOrder Point ) )"                  ,width:200    ,height:30        ,dataType : "numeric"        ,editable : false  },
+                                                    {dataField: "srominnumqty",headerText :"Minimum Qty <br> (Basic Qty - ReOrder Range Qty)"                  ,width:250    ,height:30           ,dataType : "numeric"     ,editable : false },
+                                                    {dataField: "srotoavailqty",headerText :"To Ware House <br> Available Qty"                                            ,width:120    ,height:30         ,dataType : "numeric"       ,editable : false },
+													{dataField: "srofravlqty",headerText :"Fr Ware House <br> Available Qty"                                            ,width:120    ,height:30         ,dataType : "numeric"       ,editable : false },
+	                                                {dataField: "sroautoreplenqty",headerText :"Auto Replenishment <br> Qty"                  ,width:120    ,height:30,  style  :"my-inactive-style"            ,dataType : "numeric"      ,editable : false },
+	                                                {dataField: "sroitmresultmsg",headerText :"Result Massage"                  ,width:270    ,height:30               ,editable : false },
+	                                                {dataField: "crtdt",headerText :"Create Date"       , dataType : "date",           width:120    ,height:30     ,    formatString : "dd/mm/yyyy"     },
 
 
 					]
+
+					var footerLayout = [
+												{  labelText : "∑",
+												    positionField : "#base"
+												  }
+												, {
+                                                    dataField : "srofravlqty",
+                                                    positionField : "srofravlqty",
+                                                    operation : "SUM",
+                                                    formatString : "#,##0",
+                                                    colSpan : 8
+                                                }
+												, {
+                                                    dataField : "srotoavailqty",
+                                                    positionField : "srotoavailqty",
+                                                    operation : "SUM",
+                                                    formatString : "#,##0"
+                                                }
+											   , {
+												    dataField : "sroautoreplenqty",
+												    positionField : "sroautoreplenqty",
+												    operation : "SUM",
+												    formatString : "#,##0"
+												}
+					 ]
+
 
 $(document).ready(function(){
 
@@ -203,7 +228,6 @@ $(document).ready(function(){
             // 계층 구조에서 내 부모 행의 treeIdField 참고 필드명
             treeIdRefField : "srorefsrono",
             copySingleCellOnRowMode:true,
-
             // 고정칼럼 카운트 지정
             fixedColumnCount : 3
     };
@@ -212,12 +236,34 @@ $(document).ready(function(){
 
    var dProps = {
 		    showStateColumn : true,
+            selectionMode : "singleRow",
+            useContextMenu : true,
 		    rowHeight : 30,
 		    headerHeight : 40,
-		    showRowCheckColumn : false,
 		    enableSorting :true,
 		    editable:true,
 		    copySingleCellOnRowMode:true,
+            showRowCheckColumn : true,
+            displayTreeOpen : true,
+            independentAllCheckBox : true,
+
+            // 이 함수는 사용자가 체크박스를 클릭 할 때 1번 호출됩니다.
+            rowCheckableFunction : function(rowIndex, isChecked, item) {
+                if(item.srofulqty <=0  || item.sroitmstatecd =='Complete' ) {
+                	  Common.alert("Don't  delete the sro data. ");
+                	 return false;
+                }
+                return true;
+            },
+
+            rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
+                if(item.srofulqty <=0  || item.sroitmstatecd =='Complete' ) { // 제품이 LG G3 인 경우 체크박스 disabeld 처리함
+                    return false; // false 반환하면 disabled 처리됨
+                }
+                return true;
+            },
+
+
 		    // 고정칼럼 카운트 지정
             fixedColumnCount : 5
    };
@@ -230,8 +276,9 @@ $(document).ready(function(){
            enableSorting :false,
            editable:false,
            copySingleCellOnRowMode:true,
+           showFooter :true,
            // 고정칼럼 카운트 지정
-           fixedColumnCount : 2
+           fixedColumnCount : 4
   };
 
 
@@ -242,8 +289,9 @@ $(document).ready(function(){
     listGrid   = GridCommon.createAUIGrid("#main_grid_wrap", rescolumnLayout, '',auiGridProps);
     subGrid  = AUIGrid.create("#sub_grid_wrap", reqcolumnLayout ,dProps);
 
-
     detailList = AUIGrid.create("#detail_grid_wrap", detailLayout ,detailProps);
+
+    AUIGrid.setFooter(detailList, footerLayout);
 
 
 
@@ -255,17 +303,46 @@ $(document).ready(function(){
     });
 
 
-   AUIGrid.bind(subGrid, "cellDoubleClick", function(event){
+
+    // 체크박스 클린 이벤트 바인딩
+    AUIGrid.bind(subGrid, "rowCheckClick", function( event ) {
+         // alert("rowIndex : " + event.rowIndex + ", id : " + event.item.id + ", name : " + event.item.name + ", checked : " + event.checked);
+    });
+
+     // 전체 체크박스 클릭 이벤트 바인딩
+    AUIGrid.bind(subGrid, "rowAllChkClick", function( event ) {
+
+	    	if(event.checked) {
+	            // name 의 값들 얻기
+	            var uniqueValues = AUIGrid.getColumnValues(event.pid, "srofulqty");
+
+
+	            console.log("==================>");
+	            console.log(uniqueValues);
+	            console.log(event);
+
+	            for ( a in uniqueValues ){
+	                if (a = 0){
+	                	uniqueValues.splice(a,1);
+	                }
+	            }
+	            // Anna 제거하기
+	            //uniqueValues.splice(uniqueValues.indexOf("Anna"),1);
+	           AUIGrid.setCheckedRowsByValue(event.pid, "srofulqty", uniqueValues);
+	        } else {
+	            AUIGrid.setCheckedRowsByValue(event.pid, "srofulqty", []);
+	        }
+    });
+
+
+
+    AUIGrid.bind(subGrid, "cellDoubleClick", function(event){
 
 	   $("#gropenwindow").show();
        AUIGrid.resize(detailList);
        fn_setPopDetailData();
 
-   });
-
-
-
-
+    });
 
 
    AUIGrid.bind(subGrid, "cellEditEnd", function( event ) {
@@ -277,20 +354,6 @@ $(document).ready(function(){
         }
    });
 
-   AUIGrid.bind(subGrid, "cellClick", function( event ) {
-		   if(event.dataField =="generate"){
-	           if(event.item.sroitmlev > 1){
-	               Common.alert("상위 SRO에서 처리 가능합니다. <br>  상위 SRO NO: "+event.item.srorefsrono);
-	               return ;
-	           }
-	           if(event.item.generate =="generate"){
-	                Common.confirm("Do you want to generate ?",fn_doGgenerate);
-	           }else {
-	              Common.alert("Available quantity is insufficient");
-	               return ;
-	           }
-		   }
-	});
 
 });
 
@@ -310,27 +373,18 @@ fn_doPopup = function(item){
 
 
 
-/**셀스타일 함수 정의*/
-function cellStyleFunction( rowIndex, columnIndex, value, headerText, item, dataField) {
 
-    //console.log(item)
-    if(item.generate =="generate"){
-    	return "mycustom-disable-color";
-    }
-
-    return null;
-};
 
 
 //리스트 조회.
 fn_getDataListAjax  = function () {
+    AUIGrid.clearGridData(subGrid);
 
-  Common.ajax("GET", "/logistics/sro/sroMgmtList.do", $("#searchForm").serialize(), function(result) {
-   //  console.log("성공.");
-     //console.log("data : " + result);
-   // console.log(result);
-     AUIGrid.setGridData(listGrid, result);
- });
+    //$('#tabitem').click();
+
+    Common.ajax("GET", "/logistics/sro/sroMgmtList.do", $("#searchForm").serialize(), function(result) {
+         AUIGrid.setGridData(listGrid, result);
+     });
 }
 
 
@@ -366,7 +420,7 @@ $(function(){
 
      $('#search').click(function() {
           if(fn_validation()) {
-              fn_getDataListAjax();
+        	  fn_getDataListAjax();
           }
       });
 
@@ -377,6 +431,16 @@ $(function(){
      $('#tabitem').click(function() {
           fn_getDataItemListAjax();
      });
+
+     $('#delete').click(function() {
+         fn_doDelete();
+     });
+
+     $('#download').click(function() {
+
+     });
+
+
 
 });
 
@@ -418,23 +482,47 @@ function fn_setDefaultSelection() {
 
 
 function fn_setPopDetailData() {
-	  var selectedRows = AUIGrid.getSelectedRows(subGrid);
-	  console.log(selectedRows)
 
-      AUIGrid.clearGridData(detailList);
 
-	 var rangeqty =  (selectedRows[0].srobasqty / (100/selectedRows[0].srorordpot  ) );
-     var item = { "srostkcode" :selectedRows[0].srostkcode ,
-                       "stkdesc":selectedRows[0].stkdesc ,
-                       "srobasqty" :  selectedRows[0].srobasqty,
-                       "sroreordpot" : selectedRows[0].srorordpot ,
-                       "sroreordrangeqty" : rangeqty  ,
-                       "srotoavailqty" : selectedRows[0].srotoavlqty ,
-                       "srofravlqty" : selectedRows[0].srofravlqty ,
-                       "srominnumqty" : selectedRows[0].srobasqty  -  rangeqty   ,
-                       "sroautoreplenqty" : selectedRows[0].sroconqty
-                      };
-	 AUIGrid.addRow(detailList, item, 0); // rowIndex 5 에 1행 추가
+		var selectedItems = AUIGrid.getSelectedItems(subGrid)
+	    var p={ srono: selectedItems[0].item.srono,srostkcode:selectedItems[0].item.srostkcode };
+
+
+	    Common.ajax("GET", "/logistics/sro/sroMgmtDetailListPopUp.do", p,  function(result) {
+		    	       AUIGrid.setGridData(detailList, result);
+		});
+}
+
+
+
+function fn_generateClick(){
+    Common.confirm("Do you want to generate ?", fn_doGgenerate);
+}
+
+
+function fn_doDelete(){
+
+
+	var checkedItems = AUIGrid.getCheckedRowItems(subGrid);
+
+	var  deleteForm = {
+		        "remove" : checkedItems
+	}
+
+	console.log(deleteForm);
+
+	if(checkedItems.length <= 0) {
+        Common.alert("no selected item.");
+        return;
+    }
+
+    Common.ajax("POST", "/logistics/sro/deleteSroMgmt.do",deleteForm, function(result) {
+     //  console.log("성공.");
+       //console.log("data : " + result);
+       console.log(result);
+       //AUIGrid.setGridData(subGrid, result);
+    });
+
 
 }
 
@@ -556,7 +644,9 @@ function fn_setPopDetailData() {
         <article class="tap_area"><!-- tap_area start -->
 
          <ul class="right_btns">
-        </ul>
+                <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+                <li><p class="btn_grid"><a id="delete">Delete</a></p></li>
+         </ul>
             <article class="grid_wrap"><!-- grid_wrap start -->
                  <div id="sub_grid_wrap"  class="mt10" style="height:450px"></div>
             </article><!-- grid_wrap end -->
@@ -567,22 +657,45 @@ function fn_setPopDetailData() {
 
 
 
-<div class="popup_wrap" id="gropenwindow" style="display:none ;height:340px; " ><!-- popup_wrap start -->
+<div class="popup_wrap" id="gropenwindow" style="display:none ;height:450px; " ><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->
-            <h1 id="dataTitle">Auto Replenishment Detail Data</h1>
+            <h1 id="dataTitle">Auto Replenishment Detail DataList</h1>
             <ul class="right_opt">
                 <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
             </ul>
         </header><!-- pop_header end -->
 
             <section class="pop_body"><!-- pop_body start -->
-	       		<article class="grid_wrap mt10"><!-- grid_wrap start -->
-			     <div id="detail_grid_wrap" style="width:100%; height:240px; margin:0 auto;"></div>
+
+
+
+					<section class="search_table"><!-- search_table start -->
+
+					        <table summary="search table" class="type1"><!-- table start -->
+					            <caption>search table</caption>
+					            <colgroup>
+					                <col style="width:*" />
+					            </colgroup>
+					            <tbody>
+					                <tr>
+					                    <th scope="row" style="text-align:right;"> <b>Supply Qty :</b>   </th>
+					                       <td scope="row" style="text-align:right;">
+                                                <span  style="color:red;"> Minimum Qty  > To Ware House Qty  :   (Basic Qty -  To Ware House Qty  )</span>
+						                  </td>
+					                </tr>
+					            </tbody>
+					        </table><!-- table end -->
+
+					    </section><!-- search_table end -->
+
+
+
+
+	       		<article class="grid_wrap "><!-- grid_wrap start -->
+			     <div id="detail_grid_wrap" style="width:100%; height:100%;"></div>
 			</article><!-- grid_wrap end -->
-
-
         </section>
-    </div>
+</div>
 
 </section>
 

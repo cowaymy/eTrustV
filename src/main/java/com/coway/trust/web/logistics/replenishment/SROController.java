@@ -5,6 +5,7 @@ package com.coway.trust.web.logistics.replenishment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -144,6 +145,40 @@ public class SROController {
 	}
 
 
+
+
+	@RequestMapping(value = "/deleteSroMgmt.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage>  deleteSroMgmt(@RequestBody Map<String, Object>params, HttpServletRequest request,SessionVO sessionVO, ModelMap model) throws Exception {
+
+		logger.debug(":: {}", params.toString());
+
+	    List<EgovMap> remove = (List<EgovMap>) params.get("remove");
+
+		logger.debug(":: {}", remove.toString());
+
+		srosver.deleteUpdateLOG0112D(remove,sessionVO);
+
+
+
+//
+//
+//		logger.debug("reqNo!!!!! : {}", reqNo);
+
+		ReturnMessage message = new ReturnMessage();
+//
+//		if (reqNo != null && !"".equals(reqNo)){
+//		// 결과 만들기 예.
+//		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+//		}else{
+//			message.setCode(AppConstants.FAIL);
+//			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+//		}
+//		message.setData(reqNo);
+		return ResponseEntity.ok(message);
+	}
+
+
 	@RequestMapping(value = "/sroMgmtList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>>  sroMgmtList(@RequestParam Map<String, Object>params, HttpServletRequest request,SessionVO sessionVO, ModelMap model) throws Exception {
 
@@ -206,5 +241,17 @@ public class SROController {
 
     	return ResponseEntity.ok(list);
 	}
+
+
+	@RequestMapping(value = "/sroMgmtDetailListPopUp.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>>  sroMgmtDetailListPopUp(@RequestParam Map<String, Object>params, HttpServletRequest request,SessionVO sessionVO, ModelMap model) throws Exception {
+
+		logger.debug(":: {}", params);
+		List<EgovMap> list = srosver.sroMgmtDetailListPopUp(params);
+
+    	return ResponseEntity.ok(list);
+	}
+
+
 
 }

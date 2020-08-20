@@ -145,6 +145,7 @@
                             ,SRO_STATE_CD
                             ,SRO_REF_SRO_NO
                             ,SRO_TYPE
+                            ,SRO_RESUT_MSG
                             ,CRT_USER_ID
                             ,CRT_DT
 
@@ -157,6 +158,7 @@
                     ,'A'
                     ,#{srono}
                     ,SRO_TYPE
+                    ,'Generation Complete'
                     ,#{updUserId}
                     ,SYSDATE
                 FROM GBSLCVD.LOG0111D  WHERE SRO_NO =#{srono}
@@ -177,6 +179,7 @@
 			            ,SRO_MAK_BAS_QTY
 			            ,SRO_MAK_RORD_POT
 			            ,SRO_MAK_ADD_POT
+			            , SRO_ITM_RESULT_MSG
 			            ,CRT_USER_ID
 			            ,CRT_DT
 			)
@@ -184,41 +187,26 @@
 			            #{newsrono}                                                                                                      AS SRO_NO
 			            ,AA.SRO_STK_CODE                                                                                             AS SRO_STK_CODE
 			            ,(SELECT  NVL(MAX(SRO_ITM_REPL_CON_LEV),0)+1   FROM GBSLCVD.LOG0112d  WHERE sro_no  = #{srono}  AND SRO_STK_CODE =#{srostkcode})
-			            ,CASE
-			                 WHEN ((SRO_ITM_REPL_CON_QTY + #{requestqty}) =SRO_ITM_REPL_SUP_QTY )
-			                 THEN 'C'  ELSE 'A'
-			              END                                                                                                                 AS SRO_ITM_STATE_CD
-			            , (SRO_ITM_REPL_CON_QTY + #{requestqty})                                                          AS SRO_ITM_REPL_CON_QTY
-			            , SRO_ITM_REPL_SUP_QTY                                                                                    AS SRO_ITM_REPL_SUP_QTY
-			            , SRO_ITM_REPL_SUP_QTY -(SRO_ITM_REPL_CON_QTY + #{requestqty})                      AS SRO_ITM_REPL_FUL_QTY
-			            , NVL((SELECT (l56.qty - nvl(l75.bookqty , 0)) AS qty
-			                  FROM log0056m l56 , sys0026m s26 , sys0028m s28 ,(
-			                                                                        SELECT loc_id , itm_code , sum(nvl(reqst_qty , 0)) - sum(nvl(mov_qty , 0)) AS bookqty
-			                                                                        FROM log0075m
-			                                                                        WHERE nvl(final_cmplt , 'N') <> 'Y'
-			                                                                            AND reqst_no IN (
-			                                                                            SELECT
-			                                                                                reqst_no
-			                                                                            FROM
-			                                                                                log0047m
-			                                                                            WHERE
-			                                                                                NVL (REQST_DEL, 'N') <> 'Y')
-			                                                                        GROUP BY
-			                                                                            loc_id , itm_code
-			                                                                        ) l75
-			                                                                    WHERE
-			                                                                        1 = 1
-			                                                                        AND l56.stk_code = l75.itm_code(+)
-			                                                                        AND l56.loc_id = l75.loc_id(+)
-			                                                                        AND l56.loc_id = s28.wh_loc_id
-			                                                                        AND l56.stk_code = s26.stk_code
-			                                                                        AND s26.STUS_CODE_ID = 1
-			                                                                        AND l56.stk_code = AA.SRO_STK_CODE
-			                                                                        AND s28.WH_LOC_CODE  =BB.SRO_FR_WH_LOC_CODE ),0) AS  SRO_MAK_TO_AVL_QTY
-			             , CC.SRO_ITM_BAS_QTY    /* SRO_MAK_BAS_QTY*/
-			             , CC.SRO_ITM_RORD_POT   /* SRO_MAK_RORD_POT*/
-			             , CC.SRO_ITM_ADD_POT    /* SRO_MAK_ADD_POT*/
-			             , #{updUserId}
+				        ,'C'
+			            , #{requestqty}                                                                                                   AS SRO_ITM_REPL_CON_QTY
+			            , SRO_ITM_REPL_SUP_QTY                                                                                     AS SRO_ITM_REPL_SUP_QTY
+			            , (SRO_ITM_REPL_SUP_QTY - NVL((SELECT SUM(SRO_ITM_REPL_CON_QTY)
+																	        FROM GBSLCVD.LOG0112D
+																	     WHERE SRO_STK_CODE =#{srostkcode}
+																	        AND SRO_NO IN (
+																	                        SELECT SRO_NO
+																	                        FROM GBSLCVD.LOG0111d
+																	                        WHERE (SRO_NO = #{srono}
+																	                                        OR SRO_REF_SRO_NO = (   SELECT  SRO_REF_SRO_NO  FROM    GBSLCVD.LOG0111d    WHERE   SRO_NO = #{srono})
+																	                              )
+																	                        )
+														),0) +#{requestqty})                                                              AS SRO_ITM_REPL_FUL_QTY
+			            , (GBSLCVD.FN_GET_AVAILABLE_QTY(AA.SRO_STK_CODE,BB.SRO_FR_WH_LOC_CODE ) + #{requestqty})      AS   SRO_MAK_FR_AVL_QTY   /* 먼저 LOG0075M에 등록처리 됨 으로 확정수량 + 해야 한다.  */
+			            , CC.SRO_ITM_BAS_QTY    /* SRO_MAK_BAS_QTY*/
+			            , CC.SRO_ITM_RORD_POT   /* SRO_MAK_RORD_POT*/
+			            , CC.SRO_ITM_ADD_POT    /* SRO_MAK_ADD_POT*/
+			            , 'Generation Complete'
+			            , #{updUserId}
 			             , SYSDATE
 			        FROM GBSLCVD.LOG0112D  AA ,  GBSLCVD.LOG0111D BB , GBSLCVD.LOG0110M CC
 			    WHERE AA.SRO_NO  =BB.SRO_NO
@@ -288,9 +276,9 @@ FROM (
                 ,decode (sroitmstatecd, 'A', 'Active' ,'C' ,'Complete') sroitmstatecd
                 ,sroconqty
                 ,srosupqty
-                ,srofulqty
+                ,case when   (srofulqty >0 ) then srofulqty  else 0    end as srofulqty
                 ,case when   (sroitmstatecd ='A') then
-                         case when  (srofravailqty > 0) then  srofravailqty else 0 end
+                         case when  (srofravailqtyorg > 0) then  srofravailqtyorg else 0 end
                   else 0
                  end  as requestqty
                 ,srotoavlqty
@@ -301,13 +289,14 @@ FROM (
                 ,stkdesc
                 ,srofrnowavlqty
                 ,case when   (sroitmstatecd ='A') then
-                         case when  ( srofravailqty > 0) then   'generate'  else '' end
+                         case when  ( srofravailqtyorg > 0) then   'generate'  else '' end
                   else ''
                  end generate
                 ,srorefsrono
                 ,srotype
                 ,sroitmresultmsg
                 ,srofravailqty
+                ,srofravailqtyorg
                 ,crtuserid
                 ,crtdt
       from(
@@ -318,8 +307,7 @@ FROM (
 			    ,sroitmstatecd
 			    ,sroconqty
 			    ,srosupqty
-			    ,srofulqty
-			  /* ,CASE   WHEN (srofulqty >0 AND srofrnowavlqty >0 ) THEN  srofulqty  ELSE 0  END   requestqty */
+			    ,srosupqty - sroconqty AS srofulqty
 			    ,srotoavlqty
 			    ,srobasqty
 			    ,srorordpot
@@ -330,7 +318,8 @@ FROM (
 			    ,srorefsrono
 			    ,srotype
 			    ,sroitmresultmsg
-			    ,(FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) -sroconqty) as srofravailqty
+			    ,(GBSLCVD.FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) -sroconqty) as srofravailqty
+			    ,(GBSLCVD.FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) ) as srofravailqtyorg
 			    ,crtuserid
 			    ,crtdt
 		from(
@@ -339,10 +328,30 @@ FROM (
 				    ,L112.SRO_STK_CODE                AS srostkcode
 				    ,L112.SRO_ITM_REPL_CON_LEV    AS sroitmlev
 				    ,L112.SRO_ITM_STATE_CD          AS sroitmstatecd
-				    ,L112.SRO_ITM_REPL_CON_QTY   AS sroconqty
+				    ,NVL((SELECT SUM(SRO_ITM_REPL_CON_QTY)
+                                                                            FROM GBSLCVD.LOG0112D
+                                                                         WHERE SRO_STK_CODE = L112.SRO_STK_CODE
+                                                                            AND SRO_NO IN (
+                                                                                            SELECT SRO_NO
+                                                                                            FROM GBSLCVD.LOG0111d
+                                                                                            WHERE (SRO_NO = #{srono}
+                                                                                                            OR SRO_REF_SRO_NO = (   SELECT  SRO_REF_SRO_NO  FROM    GBSLCVD.LOG0111d    WHERE   SRO_NO = #{srono})
+                                                                                                  )
+                                                                                            )
+                                                        ),0)		AS sroconqty
 				    ,L112.SRO_ITM_REPL_SUP_QTY    AS srosupqty
-				    ,L112.SRO_ITM_REPL_FUL_QTY    AS srofulqty
-				    ,L112.SRO_MAK_TO_AVL_QTY      AS srotoavlqty
+				    ,L112.SRO_ITM_REPL_FUL_QTY     AS srofulqty
+				    ,NVL((SELECT SUM(SRO_MAK_TO_AVL_QTY)
+                                                                            FROM GBSLCVD.LOG0112D
+                                                                         WHERE SRO_STK_CODE = L112.SRO_STK_CODE
+                                                                            AND SRO_NO IN (
+                                                                                            SELECT SRO_NO
+                                                                                            FROM GBSLCVD.LOG0111d
+                                                                                            WHERE (SRO_NO = #{srono}
+                                                                                                            OR SRO_REF_SRO_NO = (   SELECT  SRO_REF_SRO_NO  FROM    GBSLCVD.LOG0111d    WHERE   SRO_NO = #{srono})
+                                                                                                  )
+                                                                                            )
+                      ),0)    AS srotoavlqty
 				    ,L112.SRO_MAK_BAS_QTY          AS srobasqty
 				    ,L112.SRO_MAK_RORD_POT        AS srorordpot
 				    ,L112.SRO_MAK_ADD_POT          AS sroaddpot
@@ -390,6 +399,30 @@ FROM (
     </select>
 
 
+   <select id="sroMgmtDetailListPopUp" parameterType="Map" resultType="egovMap">
+		SELECT
+     		    A.SRO_NO AS srono ,
+			    C.STK_CODE AS srostkcode ,
+			    C.STK_DESC AS stkdesc ,
+			    decode (SRO_ITM_STATE_CD, 'A', 'Active' , 'C' , 'Complete') AS sroitmstatecd ,
+			    SRO_CRT_DT AS crtdt ,
+			    nvl(SRO_REQST_NO,0) AS srorefsrono ,
+			    nvl(SRO_MAK_BAS_QTY,0) AS srobasqty ,
+			    nvl(SRO_MAK_RORD_POT,0) AS sroreordpot ,
+			    nvl(SRO_MAK_BAS_QTY,0)/ (100/nvl(SRO_MAK_RORD_POT,0))  sroreordrangeqty,
+			    nvl(SRO_MAK_BAS_QTY,0)-(nvl(SRO_MAK_BAS_QTY,0)/ (100/nvl(SRO_MAK_RORD_POT,0)))   srominnumqty,
+			    nvl(SRO_MAK_TO_AVL_QTY,0) AS srotoavailqty ,
+			    nvl(SRO_MAK_FR_AVL_QTY,0) AS srofravlqty ,
+			    nvl(SRO_ITM_REPL_CON_QTY,0) AS sroautoreplenqty ,
+			    SRO_ITM_RESULT_MSG AS sroitmresultmsg,
+			    nvl(SRO_ITM_REPL_SUP_QTY,0)    AS srosupqty
+		   FROM  GBSLCVD.LOG0111D A , GBSLCVD.LOG0112D B ,SYS0026M C
+		WHERE A.SRO_NO =B.SRO_NO
+		 AND  B.SRO_STK_CODE  = C.STK_CODE
+		 AND (A.SRO_NO =  #{srono} OR  SRO_REF_SRO_NO = ( SELECT  C.SRO_REF_SRO_NO  FROM    GBSLCVD.LOG0111d C   WHERE   C.SRO_NO = #{srono}) )
+		 AND B.SRO_STK_CODE  = #{srostkcode}
+		 ORDER BY A.SRO_NO DESC
+   </select>
 
     <select id="selectSroMgmtDetailState" parameterType="Map" resultType="egovMap" >
 
@@ -410,7 +443,7 @@ FROM (
 			     (
 			        SELECT
 			             X.SRO_ITM_REPL_CON_QTY
-			            ,X.SRO_ITM_REPL_FUL_QTY
+			            ,X.SRO_ITM_REPL_FUL_QTY -                         X.SRO_ITM_REPL_CON_QTY
 			            ,CASE   WHEN (X.SRO_ITM_REPL_CON_QTY  = X.SRO_ITM_REPL_SUP_QTY) THEN 'C'  ELSE 'A'  END
 			            ,SYSDATE
 			            ,#{updUserId}
@@ -449,6 +482,17 @@ FROM (
 	       ,UPD_USER_ID       =#{updUserId}
 	       ,UPD_DT               =SYSDATE
 	    WHERE SRO_NO        = #{newsrono}
+    </update>
+
+
+     <update id="deleteUpdateLOG0112D">
+		UPDATE  GBSLCVD.LOG0112D
+		 SET SRO_ITM_STATE_CD ='C'
+		      ,SRO_ITM_RESULT_MSG  ='it was terminated by manual'
+		      ,UPD_DT  =sysdate
+		      ,UPD_USER_ID      =#{updUserId}
+		WHERE SRO_NO          =#{srono}
+		 AND SRO_STK_CODE   =#{srostkcode}
     </update>
 
 

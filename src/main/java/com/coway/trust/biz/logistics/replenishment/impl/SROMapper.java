@@ -17,6 +17,9 @@ public interface SROMapper {
 
 	List<EgovMap> sroMgmtDetailList(Map<String, Object> params);
 
+	List<EgovMap> sroMgmtDetailListPopUp(Map<String, Object> params);
+
+
 	int  insertLOG0111D(Map<String, Object> params);
 
 	int  insertLOG0112D(Map<String, Object> params);
@@ -35,7 +38,7 @@ public interface SROMapper {
 
 	int updateReqNoLOG0111D (Map<String, Object> params);
 
-
+	int deleteUpdateLOG0112D (Map<String, Object> params);
 
 
 

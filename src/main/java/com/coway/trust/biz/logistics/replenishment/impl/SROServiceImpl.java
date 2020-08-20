@@ -64,6 +64,17 @@ public class SROServiceImpl extends EgovAbstractServiceImpl implements SROServic
 	}
 
 
+	@Override
+	public List<EgovMap> sroMgmtDetailListPopUp(Map<String, Object> params) {
+
+		if(CommonUtils.isEmpty(params.get("srono"))) {
+			throw new ApplicationException(AppConstants.FAIL, "SRO No is 	Required. ");
+		}
+
+		return replenishment.sroMgmtDetailListPopUp(params);
+	}
+
+
 
 
 	@Override
@@ -100,6 +111,9 @@ public class SROServiceImpl extends EgovAbstractServiceImpl implements SROServic
     			}
     		}
 	}
+
+
+
 
 
 
@@ -158,7 +172,7 @@ public class SROServiceImpl extends EgovAbstractServiceImpl implements SROServic
 
 		//update  LOG0112D
 		if(r12>0){
-			 int  upr12 =  replenishment.updateLOG0112D(params);
+			// int  upr12 =  replenishment.updateLOG0112D(params);
 
 			 				  //replenishment.updateStateLOG0112D(params);
 
@@ -170,6 +184,33 @@ public class SROServiceImpl extends EgovAbstractServiceImpl implements SROServic
 		return stoNo;
 	}
 
+
+	@Override
+	public void deleteUpdateLOG0112D(List <EgovMap>params, SessionVO sessionVO) {
+		// TODO Auto-generated method stub
+
+
+		int loginId = 0;
+		if(sessionVO != null){
+			loginId = sessionVO.getUserId();
+		}
+
+		if(  null != params ){
+			if(params.size() >0){
+
+				for (Object list : params){
+
+					Map<String, Object> map = (Map<String, Object>) list;
+
+        			logger.debug(map.get("item").toString());
+        			map.put("updUserId", loginId);
+        			replenishment.deleteUpdateLOG0112D((Map)map.get("item"));
+
+				}
+			}
+		}
+
+	}
 
 
 	public  String   callStocktransferAdd (Map<String, Object>  obj   ,SessionVO sessionVO){
@@ -200,11 +241,11 @@ public class SROServiceImpl extends EgovAbstractServiceImpl implements SROServic
 
 
 
-    	    	fMap.put("reqcrtdate", map.get("reqcrtdate"));
-    	    	fMap.put("dochdertxt",map.get("dochdertxt") );
+    	    	fMap.put("reqcrtdate" ,map.get("reqcrtdate"));
+    	    	fMap.put("dochdertxt" ,map.get("dochdertxt") );
     	    	fMap.put("sttype", map.get("sttype"));	     //US
     	    	fMap.put("smtype", map.get("smtype"));   // "US03"
-    	    	fMap.put("pridic", map.get("M"));				 //M
+    	    	fMap.put("pridic", map.get("pridic"));		//M
 
     	    	fMap.put("userId", sessionVO.getUserId());
 
@@ -266,7 +307,7 @@ public class SROServiceImpl extends EgovAbstractServiceImpl implements SROServic
     	    	fMap.put("dochdertxt",map.get("dochdertxt") );
     	    	fMap.put("sttype", map.get("sttype"));	     //US
     	    	fMap.put("smtype", map.get("smtype"));   // "US03"
-    	    	fMap.put("pridic", map.get("M"));				 //M
+    	    	fMap.put("pridic", map.get("pridic"));		 //M
     	      	fMap.put("movpath", map.get("movpath"));
     	      	fMap.put("docdate", map.get("docdate"));
     	    	fMap.put("userId", sessionVO.getUserId());
@@ -294,5 +335,7 @@ public class SROServiceImpl extends EgovAbstractServiceImpl implements SROServic
 
 		return stoNo;
 	}
+
+
 
 }
