@@ -32,59 +32,60 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("cashMatchingApiService")
 public class CashMatchingApiServiceImpl extends EgovAbstractServiceImpl implements CashMatchingApiService {
 
-	@Resource(name = "cashMatchingMapper")
-	private CashMatchingMapper cashMatchingMapper;
+  @Resource(name = "cashMatchingMapper")
+  private CashMatchingMapper cashMatchingMapper;
 
-	@Autowired
-	private LoginMapper loginMapper;
+  @Autowired
+  private LoginMapper loginMapper;
 
-	private static final Logger logger = LoggerFactory.getLogger(CashMatchingApiServiceImpl.class);
+  private static final Logger logger = LoggerFactory.getLogger(CashMatchingApiServiceImpl.class);
 
-	/**
-	 * TO-DO Description
-	 * @Author KR-HAN
-	 * @Date 2019. 10. 19.
-	 * @param params
-	 * @return
-	 * @see com.coway.trust.biz.payment.payment.service.CashMatchingApiService#selectCashMatching(java.util.Map)
-	 */
-	public List<EgovMap> selectCashMatching(Map<String, Object> params) {
+  /**
+   * TO-DO Description
+   *
+   * @Author KR-HAN
+   * @Date 2019. 10. 19.
+   * @param params
+   * @return
+   * @see com.coway.trust.biz.payment.payment.service.CashMatchingApiService#selectCashMatching(java.util.Map)
+   */
+  public List<EgovMap> selectCashMatching(Map<String, Object> params) {
 
-    	params.put("_USER_ID", params.get("userId") );
-		LoginVO loginVO = loginMapper.selectLoginInfoById(params);
-		params.put("userId",  loginVO.getUserId());
+    params.put("_USER_ID", params.get("userId"));
+    LoginVO loginVO = loginMapper.selectLoginInfoById(params);
+    params.put("userId", loginVO.getUserId());
 
-		return cashMatchingMapper.selectCashMatching(params);
-	}
+    return cashMatchingMapper.selectCashMatching(params);
+  }
 
-	/**
-	 * TO-DO Description
-	 * @Author KR-HAN
-	 * @Date 2019. 10. 19.
-	 * @param cashMatchingForm
-	 * @return
-	 * @throws Exception
-	 * @see com.coway.trust.biz.payment.payment.service.CashMatchingApiService#saveCashMatching(java.util.List)
-	 */
-	@Override
-	public int 	saveCashMatching(List<CashMatchingForm> cashMatchingForm) throws Exception {
+  /**
+   * TO-DO Description
+   *
+   * @Author KR-HAN
+   * @Date 2019. 10. 19.
+   * @param cashMatchingForm
+   * @return
+   * @throws Exception
+   * @see com.coway.trust.biz.payment.payment.service.CashMatchingApiService#saveCashMatching(java.util.List)
+   */
+  @Override
+  public int saveCashMatching(List<CashMatchingForm> cashMatchingForm) throws Exception {
 
-		int rtn = 0;
-		CashMatchingForm cashMatching = new CashMatchingForm();
+    int rtn = 0;
+    CashMatchingForm cashMatching = new CashMatchingForm();
 
-        for (CashMatchingForm cashMatchingSer : cashMatchingForm) {
+    for (CashMatchingForm cashMatchingSer : cashMatchingForm) {
 
-        	Map<String, Object> params =  cashMatching.createMap(cashMatchingSer);
+      Map<String, Object> params = cashMatching.createMap(cashMatchingSer);
 
-        	params.put("_USER_ID", params.get("userId") );
+      params.put("_USER_ID", params.get("userId"));
 
-    		LoginVO loginVO = loginMapper.selectLoginInfoById(params);
+      LoginVO loginVO = loginMapper.selectLoginInfoById(params);
 
-    		params.put("updUserId",  loginVO.getUserId());
-    		cashMatchingMapper.updateCashMatching(params);
-        }
+      params.put("updUserId", loginVO.getUserId());
+      cashMatchingMapper.updateCashMatching(params);
+    }
 
-
-		return rtn;
-	}
+    return rtn;
+  }
 }
