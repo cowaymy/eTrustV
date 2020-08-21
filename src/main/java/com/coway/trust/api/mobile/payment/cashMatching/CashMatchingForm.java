@@ -16,101 +16,134 @@ import io.swagger.annotations.ApiModelProperty;
  * Date            Author       Description
  * -------------  -----------  -------------
  * 2019. 10. 19.   KR-HAN        First creation
+ * 2020. 08. 21.   MY-ONGHC    Add additional attachment
  * </pre>
  */
 @ApiModel(value = "CashMatchingForm", description = "CashMatching Form")
 public class CashMatchingForm {
 
-	@ApiModelProperty(value = "fromDate", example = "1")
-	private String fromDate;
+  @ApiModelProperty(value = "fromDate", example = "1")
+  private String fromDate;
 
-	@ApiModelProperty(value = "toDate", example = "1")
-	private String toDate;
+  @ApiModelProperty(value = "toDate", example = "1")
+  private String toDate;
 
-	@ApiModelProperty(value = "userId", example = "1")
-	private String userId;
+  @ApiModelProperty(value = "userId", example = "1")
+  private String userId;
 
-	@ApiModelProperty(value = "mobPayNo", example = "1")
-	private String mobPayNo;
+  @ApiModelProperty(value = "mobPayNo", example = "1")
+  private String mobPayNo;
 
-	@ApiModelProperty(value = "salesOrdNo", example = "1")
-	private String salesOrdNo;
+  @ApiModelProperty(value = "salesOrdNo", example = "1")
+  private String salesOrdNo;
 
-	@ApiModelProperty(value = "slipNo", example = "1")
-	private String slipNo;
+  @ApiModelProperty(value = "slipNo", example = "1")
+  private String slipNo;
 
-	@ApiModelProperty(value = "salesOrdNo", example = "1")
-	private String uploadImg;
+  @ApiModelProperty(value = "uploadImg1", example = "1")
+  private String uploadImg1;
 
-	public String getUserId() {
-		return userId;
-	}
+  @ApiModelProperty(value = "uploadImg2", example = "1")
+  private String uploadImg2;
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+  @ApiModelProperty(value = "uploadImg3", example = "1")
+  private String uploadImg3;
 
-	public String getFromDate() {
-		return fromDate;
-	}
+  @ApiModelProperty(value = "uploadImg4", example = "1")
+  private String uploadImg4;
 
-	public void setFromDate(String fromDate) {
-		this.fromDate = fromDate;
-	}
+  public String getUserId() {
+    return userId;
+  }
 
-	public String getToDate() {
-		return toDate;
-	}
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
 
-	public void setToDate(String toDate) {
-		this.toDate = toDate;
-	}
+  public String getFromDate() {
+    return fromDate;
+  }
 
+  public void setFromDate(String fromDate) {
+    this.fromDate = fromDate;
+  }
 
-	public String getMobPayNo() {
-		return mobPayNo;
-	}
+  public String getToDate() {
+    return toDate;
+  }
 
-	public void setMobPayNo(String mobPayNo) {
-		this.mobPayNo = mobPayNo;
-	}
+  public void setToDate(String toDate) {
+    this.toDate = toDate;
+  }
 
-	public String getSalesOrdNo() {
-		return salesOrdNo;
-	}
+  public String getMobPayNo() {
+    return mobPayNo;
+  }
 
-	public void setSalesOrdNo(String salesOrdNo) {
-		this.salesOrdNo = salesOrdNo;
-	}
+  public void setMobPayNo(String mobPayNo) {
+    this.mobPayNo = mobPayNo;
+  }
 
-	public String getSlipNo() {
-		return slipNo;
-	}
+  public String getSalesOrdNo() {
+    return salesOrdNo;
+  }
 
-	public void setSlipNo(String slipNo) {
-		this.slipNo = slipNo;
-	}
+  public void setSalesOrdNo(String salesOrdNo) {
+    this.salesOrdNo = salesOrdNo;
+  }
 
-	public String getUploadImg() {
-		return uploadImg;
-	}
+  public String getSlipNo() {
+    return slipNo;
+  }
 
-	public void setUploadImg(String uploadImg) {
-		this.uploadImg = uploadImg;
-	}
+  public void setSlipNo(String slipNo) {
+    this.slipNo = slipNo;
+  }
 
-	public static Map<String, Object> createMap(CashMatchingForm cashMatchingForm){
-		Map<String, Object> params = new HashMap<>();
+  public String getUploadImg1() {
+    return uploadImg1;
+  }
 
-		params.put("fromDate",   		cashMatchingForm.getFromDate());
-		params.put("toDate",   			cashMatchingForm.getToDate());
-		params.put("userId",   			cashMatchingForm.getUserId());
-		params.put("mobPayNo",   			cashMatchingForm.getMobPayNo());
-		params.put("salesOrdNo",   			cashMatchingForm.getSalesOrdNo());
-		params.put("slipNo",   			cashMatchingForm.getSlipNo());
-		params.put("uploadImg",   			cashMatchingForm.getUploadImg());
+  public void setUploadImg1(String uploadImg1) {
+    this.uploadImg1 = uploadImg1;
+  }
 
-		return params;
-	}
+  public String getUploadImg2() {
+    return uploadImg2;
+  }
+
+  public void setUploadImg2(String uploadImg2) {
+    this.uploadImg2 = uploadImg2;
+  }
+
+  public String getUploadImg3() {
+    return uploadImg3;
+  }
+
+  public void setUploadImg3(String uploadImg3) {
+    this.uploadImg3 = uploadImg3;
+  }
+
+  public String getUploadImg4() {
+    return uploadImg4;
+  }
+
+  public void setUploadImg4(String uploadImg4) {
+    this.uploadImg4 = uploadImg4;
+  }
+
+  public static Map<String, Object> createMap(CashMatchingForm cashMatchingForm) {
+    Map<String, Object> params = new HashMap<>();
+
+    params.put("fromDate", cashMatchingForm.getFromDate());
+    params.put("toDate", cashMatchingForm.getToDate());
+    params.put("userId", cashMatchingForm.getUserId());
+    params.put("mobPayNo", cashMatchingForm.getMobPayNo());
+    params.put("salesOrdNo", cashMatchingForm.getSalesOrdNo());
+    params.put("slipNo", cashMatchingForm.getSlipNo());
+    params.put("uploadImg1", cashMatchingForm.getUploadImg1());
+
+    return params;
+  }
 
 }
