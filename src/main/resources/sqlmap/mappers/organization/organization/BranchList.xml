@@ -463,18 +463,20 @@
 		       || '-'
 		       || NUM <!-- LPAD(NVL(NUM,'01'),2,0) --> AS BRACH_CD
 		  FROM (SELECT MAX
-		            ( CASE WHEN LENGTH(CODE) = 6 THEN SUBSTR( CODE, 5)
+		            ( CASE WHEN LENGTH(CODE) <![CDATA[>=]]> 6 THEN SUBSTR( CODE, 5)
 		                   WHEN LENGTH(CODE) = 5 THEN SUBSTR( CODE, 4)
 		              END
 		            ) +1   NUM
 		          FROM SYS0005M
-		         WHERE 1 = 1
+		          WHERE BRNCH_ID IN (
+		          SELECT MAX(BRNCH_ID) AS BRNCH_ID FROM SYS0005M
+		          WHERE 1 = 1
 		           AND CODE LIKE
 		                     (SELECT CODE
 		                        FROM SYS0013M
 		                       WHERE DISAB = 0
 		                         AND CODE_MASTER_ID = 45
 		                         AND CODE_ID = #{branchCd} )
-		                  || '%')
+		                  || '%'))
     </select>
 </mapper>
