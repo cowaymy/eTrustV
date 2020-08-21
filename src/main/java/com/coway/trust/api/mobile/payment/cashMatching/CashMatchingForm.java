@@ -142,6 +142,9 @@ public class CashMatchingForm {
     params.put("salesOrdNo", cashMatchingForm.getSalesOrdNo());
     params.put("slipNo", cashMatchingForm.getSlipNo());
     params.put("uploadImg1", cashMatchingForm.getUploadImg1());
+    params.put("uploadImg2", cashMatchingForm.getUploadImg2());
+    params.put("uploadImg3", cashMatchingForm.getUploadImg3());
+    params.put("uploadImg4", cashMatchingForm.getUploadImg4());
 
     return params;
   }
