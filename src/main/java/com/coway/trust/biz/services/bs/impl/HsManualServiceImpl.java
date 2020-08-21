@@ -437,9 +437,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       insertHsResultfinal.put("resultAceptName", params.get("resultAceptName"));
       insertHsResultfinal.put("sgnDt", params.get("sgnDt"));
 
+      insertHsResultfinal.put("instChklstCheckBox", params.get("instChklstCheckBox"));
+
       logger.debug("= INSERT SVC0006D START : {}", insertHsResultfinal);
-      hsManualMapper.insertHsResultfinal(insertHsResultfinal); // INSERT
-                                                               // SVC0006D
+      hsManualMapper.insertHsResultfinal(insertHsResultfinal); // INSERT  SVC0006D
 
       List<EgovMap> qryUsedFilter = hsManualMapper.selectQryUsedFilter2(insertHsResultfinal);
 
@@ -1289,6 +1290,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     bsResultMas.put("ResultMatchID", String.valueOf(0));
     bsResultMas.put("ResultIsAdjust", String.valueOf(1));
     bsResultMas.put("bsPreferWeek", String.valueOf(params.get("srvBsWeek")));
+    bsResultMas.put("instChklstCheckBox", params.get("instChklstCheckBox"));
 
     Map<String, Object> bsResultMas_Rev = new HashMap<String, Object>();
 
@@ -1341,6 +1343,11 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       bsResultMas_Rev.put("ResultIsCurrent", String.valueOf(1));
       bsResultMas_Rev.put("ResultMatchID", String.valueOf(qryBS_Rev.get("resultId")));// RESULT_ID
       bsResultMas_Rev.put("ResultIsAdjust", String.valueOf(1));
+
+      if(qryBS_Rev.get("instChklstCheckBox") != null)
+         bsResultMas_Rev.put("instChklstCheckBox", qryBS_Rev.get("instChklstCheckBox"));
+      else
+    	 bsResultMas_Rev.put("instChklstCheckBox", params.get("instChklstCheckBox"));
 
       int count = hsManualMapper.selectTotalFilter(bsResultMas_Rev);
       logger.debug("selectQryResultDet : {}" + bsResultMas_Rev);
@@ -3479,5 +3486,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
   @Override
   public void updateDisinfecSrv(Map<String, Object> params) {
     hsManualMapper.updateDisinfecSrv(params);
+  }
+
+  @Override
+  public List<EgovMap> instChkLst() {
+	  return hsManualMapper.instChkLst();
   }
 }

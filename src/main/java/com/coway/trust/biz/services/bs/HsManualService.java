@@ -183,4 +183,6 @@ public interface HsManualService {
 
   void updateDisinfecSrv(Map<String, Object> params);
 
+  List<EgovMap> instChkLst();
+
 }

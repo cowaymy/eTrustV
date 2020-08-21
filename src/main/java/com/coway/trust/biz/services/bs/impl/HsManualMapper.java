@@ -338,4 +338,6 @@ public interface HsManualMapper {
 
   void updateDisinfecSrv(Map<String, Object> params);
 
+  List<EgovMap> instChkLst();
+
 }

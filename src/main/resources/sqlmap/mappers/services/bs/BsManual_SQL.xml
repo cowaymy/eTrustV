@@ -1531,7 +1531,8 @@ WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SVC0008D
                                    RESULT_MOBILE_NO,
                                    RESULT_RPT_EMAIL_NO,
                                    RESULT_ACEPT_NAME,
-                                   SGN_DT
+                                   SGN_DT,
+                                   HS_CHKLIST
     ) VALUES ( #{resultId},
                #{docNo},
                #{typeId},
@@ -1562,7 +1563,8 @@ WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SVC0008D
                #{resultMobileNo},
                #{resultRptEmailNo},
                #{resultAceptName},
-               #{sgnDt}
+               #{sgnDt},
+               #{instChklstCheckBox}
     )
   </insert>
 
@@ -1968,7 +1970,8 @@ WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SVC0008D
                            Limit1.next_svc_area next_svc_area,
                            Limit1.distance distance,
                            Limit1.CANC_REQ_NO,
-                           Limit1.INSTCT
+                           Limit1.INSTCT,
+                           Limit1.HS_CHKLIST HS_CHKLIST
                       FROM ( SELECT Extent1.SCHDUL_ID SCHDUL_ID  ,
                                     Extent1.NO NO  ,
                                     Extent1.MONTH MONTH  ,
@@ -1999,7 +2002,8 @@ WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SVC0008D
                                     Extent1.CANC_REQ_NO,
                                     <!--  Extent10.INSTCT -->
                                     <!-- [19-09-2018] GET INSTUCTION FROM SAL0090D RATHER THAN FROM SAL0045D  -->
-                                    Extent8.SRV_REM AS INSTCT
+                                    Extent8.SRV_REM AS INSTCT,
+                                    Extent11.HS_CHKLIST HS_CHKLIST
                              FROM SVC0008D Extent1
                                     JOIN SYS0013M Extent2   ON Extent1.TYPE_ID = Extent2.CODE_ID
                                     JOIN  SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
@@ -3312,7 +3316,8 @@ SELECT NO,
        NVL (RESULT_REM, 0) AS RESULT_REM,
        RESULT_STOCK_USE,
        NVL (RESULT_ID, 0) AS RESULT_ID,
-       FN_GET_ORDER_SERIAL(SALES_ORD_ID, NULL) LAST_SERIAL_NO
+       FN_GET_ORDER_SERIAL(SALES_ORD_ID, NULL) LAST_SERIAL_NO,
+       HS_CHKLIST
   FROM (SELECT ROW_NUMBER ()
                OVER (PARTITION BY SCHDUL_ID, SALES_ORD_ID ORDER BY NO DESC)
                   RNN,
@@ -3327,7 +3332,8 @@ SELECT NO,
                NVL (WH_ID, 0) AS WH_ID,
                NVL (RESULT_REM, 0) AS RESULT_REM,
                RESULT_STOCK_USE,
-               NVL (RESULT_ID, 0) AS RESULT_ID
+               NVL (RESULT_ID, 0) AS RESULT_ID,
+               HS_CHKLIST
           FROM SVC0006D
          WHERE SCHDUL_ID = #{ScheduleID} AND SALES_ORD_ID = #{SalesOrderId})
  WHERE RNN = 1
@@ -3355,7 +3361,8 @@ SELECT NO,
                 RESULT_STOCK_USE,
                 RESULT_IS_CURR,
                 RESULT_MTCH_ID,
-                RESULT_IS_ADJ
+                RESULT_IS_ADJ,
+                HS_CHKLIST
                 )
                 values
                 (
@@ -3379,6 +3386,7 @@ SELECT NO,
                 ,#{ResultIsCurrent}
                 ,#{ResultMatchID}
                 ,#{ResultIsAdjust}
+                ,#{instChklstCheckBox}
                 )
           </insert>
 
@@ -3647,6 +3655,7 @@ SELECT NO,
             ,RESULT_IS_CURR
             ,RESULT_MTCH_ID
             ,RESULT_IS_ADJ
+            ,HS_CHKLIST
             )
             values
             (
@@ -3672,21 +3681,23 @@ SELECT NO,
             ,#{ResultIsCurrent}
             ,#{ResultMatchID}
             ,#{ResultIsAdjust}
+            ,#{instChklstCheckBox}
             )
           </insert>
 
           <update id="updatebsResultMas" parameterType="Map">
             UPDATE SVC0006D
-SET SETL_DT = TO_DATE( NVL(#{SettleDate},'01/01/1900'), 'DD/MM/YYYY'),
-    RESULT_STUS_CODE_ID = #{ResultStatusCodeID},
-    FAIL_RESN_ID = NVL(#{FailReasonID},'0'),
-    REN_COLCT_ID = #{RenCollectionID},
-    RESULT_REM = #{ResultRemark},
-    RESULT_STOCK_USE = #{ResultStockUse},
-    RESULT_UPD_DT = SYSDATE,
-    RESULT_UPD_USER_ID = #{ResultCreator}
-WHERE SCHDUL_ID = #{ScheduleID}
-AND RESULT_IS_CURR = 1
+			SET SETL_DT = TO_DATE( NVL(#{SettleDate},'01/01/1900'), 'DD/MM/YYYY'),
+			    RESULT_STUS_CODE_ID = #{ResultStatusCodeID},
+			    FAIL_RESN_ID = NVL(#{FailReasonID},'0'),
+			    REN_COLCT_ID = #{RenCollectionID},
+			    RESULT_REM = #{ResultRemark},
+			    RESULT_STOCK_USE = #{ResultStockUse},
+			    RESULT_UPD_DT = SYSDATE,
+			    RESULT_UPD_USER_ID = #{ResultCreator},
+			    HS_CHKLIST = #{instChklstCheckBox}
+			WHERE SCHDUL_ID = #{ScheduleID}
+			AND RESULT_IS_CURR = 1
           </update>
 
           <update id="updateQrySchedule" parameterType="Map">
@@ -5102,5 +5113,18 @@ SELECT DISTINCT A.ORD_ID FROM (
     AND SRV_STUS_ID = 1
     AND DISINF_SRV <![CDATA[ <> ]]> 1
   </update>
+
+  <select id="instChkLst" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT ROWNUM AS ROW_NUMBER
+               , Extent1.CODE_ID CODE_ID
+               , Extent1.CODE_NAME CODE_NAME
+               , Extent1.CODE_DESC CODE_DESC
+               , Extent1.DISAB DISAB
+      FROM SYS0013M Extent1
+      WHERE CODE_MASTER_ID = '453' AND DISAB = 0
+      ORDER BY CODE_ID
+    ]]>
+  </select>
 
 </mapper>
