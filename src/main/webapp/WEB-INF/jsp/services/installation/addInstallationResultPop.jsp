@@ -9,7 +9,7 @@
  26/02/2020  ONGHC  1.0.3          Add PSI & LPM Field
  10/06/2020  ONGHC  1.0.4          Add PSI & LPM Field onblur Checking
  22/07/2020  FARUQ   1.0.5         Add volt, TDS, roomTemp, WaterSoruceTemp, failParent, failChild, instChkLst
- 27/07/2020  FARUQ   1.0.6         Amend Current Feature
+ 27/07/2020  FARUQ   1.0.6         Change the label for Failed Reason to Failed Location
  -->
 <script type="text/javaScript">
   $(document).ready(
@@ -394,7 +394,7 @@
 
     if ($("#addInstallForm #installStatus").val() == 21) { // FAILED
         if ($("#failLocCde").val() == '') {
-          msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Reason' htmlEscape='false'/> </br>";
+          msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Location' htmlEscape='false'/> </br>";
         }
         if ($("#failReasonCode").val() == '') {
           msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Reason' htmlEscape='false'/> </br>";
@@ -1361,7 +1361,7 @@ Name: ${hpMember.name1}</textarea>
         </colgroup>
         <tbody>
           <tr>
-            <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m15" id="m15" class="must">*</span></th>
+            <th scope="row"><spring:message code='service.title.FailedLocation' /><span name="m15" id="m15" class="must">*</span></th>
             <td>
               <select class="w100p" id="failLocCde" name="failLocCde" onchange="fn_openFailChild(this.value)">
                 <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
