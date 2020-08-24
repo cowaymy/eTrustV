@@ -4,26 +4,117 @@
 <!--
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
- 08/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
+ 08/02/2019  ONGHC  1.0.0      RE-STRUCTURE JSP.
+ 18/08/2020  FARUQ  1.0.1       remove installation status active & add psi, lpm, volt, tds, room temp, water source temp, failParent, failChild, instChkLst
+
  -->
 
 <script type="text/javaScript">
   $(document).ready(
     function() {
-      $("#status").change(function() {
-        $("#installDate").val("");
-        $("#sirimNo").val("");
-        $("#serialNo").val("");
-        $("#refNo1").val("");
-        $("#refNo2").val("");
-        $("#checkCommission").prop("checked", false);
-        $("#checkTrade").prop("checked", false);
-        $("#checkSms").prop("checked", false);
-        $("#msgRemark").val("");
-        $("#failReason").val("0");
-        $("#nextCallDate").val("");
-        $("#remark").val("");
-      });
+      var instChkLst_view;
+      createInstallationChkViewAUIGrid();
+      fn_viewInstallationChkViewSearch();
+
+      $("#addInstallForm #installStatus").change(
+        function() {
+          if ($("#addInstallForm #installStatus").val() == 4) {
+            notMandatoryForAP();
+            $("#addInstallForm #checkCommission").prop("checked", true);
+
+            $("#addInstallForm #m6").hide();
+            $("#addInstallForm #m7").hide();
+            $("#addInstallForm #m15").hide();
+            $("#addInstallForm #m16").hide();
+            $("#addInstallForm #failDeptChk").hide();
+            $("#addInstallForm #failDeptChkDesc").hide();
+
+            $("#addInstallForm #m2").show();
+            $("#addInstallForm #m4").show();
+            $("#addInstallForm #m5").show();
+
+            if ("${orderInfo.stkCtgryId}" == "54") {
+              $("#addInstallForm #m17").show();
+              $("#addInstallForm #grid_wrap_instChk_view").show();
+              $("#addInstallForm #instChklstCheckBox").show();
+              $("#addInstallForm #instChklstDesc").show();
+            } else {
+              $("#addInstallForm #m17").hide();
+              $("#addInstallForm #grid_wrap_instChk_view").hide();
+              $("#addInstallForm #instChklstCheckBox").hide();
+              $("#addInstallForm #instChklstDesc").hide();
+            }
+            $("#nextCallDate").val("");
+
+          } else {
+            notMandatoryForAP()
+            $("#addInstallForm #checkCommission").prop("checked", false);
+
+            $("#addInstallForm #m2").hide();
+            $("#addInstallForm #m4").hide();
+            $("#addInstallForm #m5").hide();
+            $("#addInstallForm #m8").hide();
+            $("#addInstallForm #m9").hide();
+            $("#addInstallForm #m10").hide();
+            $("#addInstallForm #m11").hide();
+            $("#addInstallForm #m12").hide();
+            $("#addInstallForm #m13").hide();
+            $("#addInstallForm #m14").hide();
+            $("#addInstallForm #m17").hide();
+            if ("${orderInfo.stkCtgryId}" == "54") {
+              $("#addInstallForm #grid_wrap_instChk_view").hide();
+              $("#addInstallForm #instChklstCheckBox").hide();
+              $("#addInstallForm #instChklstDesc").hide();
+            } else {
+              $("#addInstallForm #grid_wrap_instChk_view").hide();
+              $("#addInstallForm #instChklstCheckBox").hide();
+              $("#addInstallForm #instChklstDesc").hide();
+            }
+
+            $("#addInstallForm #m6").show();
+            $("#addInstallForm #m7").show();
+            $("#addInstallForm #m15").show();
+            $("#addInstallForm #m16").show();
+            $("#addInstallForm #failDeptChk").show();
+            $("#addInstallForm #failDeptChkDesc").show();
+
+            var currDt = new Date(),
+            month = '' + (currDt.getMonth()+1),
+            day = '' + (currDt.getDate()+1),
+            year = currDt.getFullYear();
+
+            if (month.length < 2)
+                month = '0' + month;
+            if (day.length < 2)
+                day = '0' + day;
+            var currentDate =  [day, month, year].join('/');
+            $("#nextCallDate").val(currentDate);
+          }
+
+          $("#addInstallForm #installDate").val("");
+
+          $("#addInstallForm #psiRcd").val("");
+          $("#addInstallForm #lpmRcd").val("");
+          $("#addInstallForm #volt").val("");
+          $("#addInstallForm #tds").val("");
+          $("#addInstallForm #roomTemp").val("");
+          $("#addInstallForm #waterSourceTemp").val("");
+          $("#addInstallForm #adptUsed").val("");
+
+          $("#addInstallForm #sirimNo").val("");
+          $("#addInstallForm #serialNo").val("");
+          $("#addInstallForm #serialNo").val("");
+          $("#addInstallForm #refNo1").val("");
+          $("#addInstallForm #refNo2").val("");
+          $("#addInstallForm #checkTrade").prop("checked", false);
+          $("#addInstallForm #checkSms").prop("checked", false);
+          $("#addInstallForm #instChklstCheckBox").prop("checked", false);
+          $("#addInstallForm #failDeptChk").prop("checked", false);
+          $("#addInstallForm #msgRemark").val("Remark:");
+          $("#addInstallForm #failLocCde").val("");
+          $("#addInstallForm #failReasonCode").val("");
+          $("#addInstallForm #remark").val("");
+        });
 
       var callType = "${callType.typeId}";
 
@@ -83,62 +174,269 @@
       }
 
       if ($("#addInstallForm #installStatus").val() != "4") {
+        $("#addInstallForm #failDeptChk").show();
+        $("#addInstallForm #failDeptChkDesc").show();
+
         $("#addInstallForm #m2").hide();
         $("#addInstallForm #m4").hide();
         $("#addInstallForm #m5").hide();
+        $("#addInstallForm #m8").hide();
+        $("#addInstallForm #m9").hide();
+        $("#addInstallForm #m10").hide();
+        $("#addInstallForm #m11").hide();
+        $("#addInstallForm #m12").hide();
+        $("#addInstallForm #m13").hide();
+        $("#addInstallForm #m14").hide();
+        if ("${orderInfo.stkCtgryId}" != "54") {
+          $("#addInstallForm #m17").hide();
+          $("#addInstallForm #grid_wrap_instChk_view").hide();
+          $("#addInstallForm #instChklstCheckBox").hide();
+          $("#addInstallForm #instChklstDesc").hide();
+        } else {
+          $("#addInstallForm #m17").show();
+          $("#addInstallForm #grid_wrap_instChk_view").show();
+          $("#addInstallForm #instChklstCheckBox").show();
+          $("#addInstallForm #instChklstDesc").show();
+        }
       } else {
+        $("#addInstallForm #m8").show();
+        $("#addInstallForm #m9").show();
+        $("#addInstallForm #m10").show();
+        $("#addInstallForm #m11").show();
+        $("#addInstallForm #m12").show();
+        $("#addInstallForm #m13").show();
+        $("#addInstallForm #m14").show();
+
         $("#addInstallForm #m6").hide();
         $("#addInstallForm #m7").hide();
+        $("#addInstallForm #m15").hide();
+        $("#addInstallForm #m16").hide();
+        $("#addInstallForm #failDeptChk").hide();
+        $("#addInstallForm #failDeptChkDesc").hide();
+
+        if ("${orderInfo.stkCtgryId}" != "54") {
+          $("#addInstallForm #m17").hide();
+          $("#addInstallForm #grid_wrap_instChk_view").hide();
+          $("#addInstallForm #instChklstCheckBox").hide();
+          $("#addInstallForm #instChklstDesc").hide();
+        } else {
+          $("#addInstallForm #m17").show();
+          $("#addInstallForm #grid_wrap_instChk_view").show();
+          $("#addInstallForm #instChklstCheckBox").show();
+          $("#addInstallForm #instChklstDesc").show();
+        }
       }
 
       $("#hiddenCustomerType").val("${customerContractInfo.typeId}");
-      /*
-        ("#hiddenPostCode").val("${customerAddress.typeId}");
-        ("#hiddenStateName").val("${customerAddress.typeId}");
-        ("#hiddenCountryName").val("${customerAddress.typeId}");
-      */
       $("#checkCommission").prop("checked", true);
       $("#addInstallForm #installStatus").change(
+          function() {
+            if ($("#addInstallForm #installStatus").val() == 4) {
+              $("#checkCommission").prop("checked", true);
+            }
+            else {
+              var currDt = new Date(),
+              month = '' + (currDt.getMonth()+1),
+              day = '' + (currDt.getDate()+1),
+              year = currDt.getFullYear();
+
+              if (month.length < 2){
+                  month = '0' + month;
+              }
+              if (day.length < 2){
+                  day = '0' + day;
+              }
+
+              var currentDate =  [day, month, year].join('/');
+              $("#nextCallDate").val(currentDate);
+              $("#checkCommission").prop("checked", false);
+            }
+      });
+
+      $("#installDate").change(
         function() {
-          if ($("#addInstallForm #installStatus").val() == 4) {
-            $("#addInstallForm #checkCommission").prop("checked", true);
+          var checkMon = $("#installDate").val();
 
-            $("#addInstallForm #m6").hide();
-            $("#addInstallForm #m7").hide();
+          Common.ajax("GET", "/services/checkMonth.do?intallDate="+ checkMon, ' ',
+            function(result) {
+              if (result.message == "Please choose this month only") {
+                Common.alert(result.message);
+                $("#installDate").val('');
+              }
+            });
+       });$("#addInstallForm #installStatus").change(
+         function() {
+           if ($("#addInstallForm #installStatus").val() == 4) {
+             notMandatoryForAP();
+             $("#addInstallForm #checkCommission").prop("checked", true);
 
-            $("#addInstallForm #m2").show();
-            $("#addInstallForm #m4").show();
-            $("#addInstallForm #m5").show();
+             $("#addInstallForm #m6").hide();
+             $("#addInstallForm #m7").hide();
+             $("#addInstallForm #m15").hide();
+             $("#addInstallForm #m16").hide();
+             $("#addInstallForm #failDeptChk").hide();
+             $("#addInstallForm #failDeptChkDesc").hide();
 
-          } else {
-            $("#addInstallForm #checkCommission").prop("checked", false);
+             $("#addInstallForm #m2").show();
+             $("#addInstallForm #m4").show();
+             $("#addInstallForm #m5").show();
 
-            $("#addInstallForm #m2").hide();
-            $("#addInstallForm #m4").hide();
-            $("#addInstallForm #m5").hide();
+             if ("${orderInfo.stkCtgryId}" == "54") {
+               $("#addInstallForm #m17").show();
+               $("#addInstallForm #grid_wrap_instChk_view").show();
+               $("#addInstallForm #instChklstCheckBox").show();
+               $("#addInstallForm #instChklstDesc").show();
+             } else {
+               $("#addInstallForm #m17").hide();
+               $("#addInstallForm #grid_wrap_instChk_view").hide();
+               $("#addInstallForm #instChklstCheckBox").hide();
+               $("#addInstallForm #instChklstDesc").hide();
+             }
+             $("#nextCallDate").val("");
 
-            $("#addInstallForm #m6").show();
-            $("#addInstallForm #m7").show();
-          }
+           } else {
+             notMandatoryForAP()
+             $("#addInstallForm #checkCommission").prop("checked", false);
 
-          $("#addInstallForm #installDate").val("");
-          $("#addInstallForm #sirimNo").val("");
-          $("#addInstallForm #serialNo").val("");
-          $("#addInstallForm #refNo1").val("");
-          $("#addInstallForm #refNo2").val("");
-          $("#addInstallForm #checkTrade").prop("checked", false);
-          $("#addInstallForm #checkSms").prop("checked", false);
-          $("#addInstallForm #msgRemark").val("Remark:");
-          $("#addInstallForm #failReason").val("0");
-          $("#addInstallForm #nextCallDate").val("");
-          $("#addInstallForm #remark").val("");
-        });
+             $("#addInstallForm #m2").hide();
+             $("#addInstallForm #m4").hide();
+             $("#addInstallForm #m5").hide();
+             $("#addInstallForm #m8").hide();
+             $("#addInstallForm #m9").hide();
+             $("#addInstallForm #m10").hide();
+             $("#addInstallForm #m11").hide();
+             $("#addInstallForm #m12").hide();
+             $("#addInstallForm #m13").hide();
+             $("#addInstallForm #m14").hide();
+
+             if ("${orderInfo.stkCtgryId}" == "54") {
+               $("#addInstallForm #m17").hide();
+               $("#addInstallForm #grid_wrap_instChk_view").hide();
+               $("#addInstallForm #instChklstCheckBox").hide();
+               $("#addInstallForm #instChklstDesc").hide();
+             } else {
+               $("#addInstallForm #m17").hide();
+               $("#addInstallForm #grid_wrap_instChk_view").hide();
+               $("#addInstallForm #instChklstCheckBox").hide();
+               $("#addInstallForm #instChklstDesc").hide();
+             }
+
+             $("#addInstallForm #m6").show();
+             $("#addInstallForm #m7").show();
+             $("#addInstallForm #m15").show();
+             $("#addInstallForm #m16").show();
+             $("#addInstallForm #failDeptChk").show();
+             $("#addInstallForm #failDeptChkDesc").show();
+
+             var currDt = new Date(),
+             month = '' + (currDt.getMonth()+1),
+             day = '' + (currDt.getDate()+1),
+             year = currDt.getFullYear();
+
+             if (month.length < 2)
+                 month = '0' + month;
+             if (day.length < 2)
+                 day = '0' + day;
+             var currentDate =  [day, month, year].join('/');
+             $("#nextCallDate").val(currentDate);
+           }
+
+           $("#addInstallForm #installDate").val("");
+
+           $("#addInstallForm #psiRcd").val("");
+           $("#addInstallForm #lpmRcd").val("");
+           $("#addInstallForm #volt").val("");
+           $("#addInstallForm #tds").val("");
+           $("#addInstallForm #roomTemp").val("");
+           $("#addInstallForm #waterSourceTemp").val("");
+           $("#addInstallForm #adptUsed").val("");
+
+           $("#addInstallForm #sirimNo").val("");
+           $("#addInstallForm #serialNo").val("");
+           $("#addInstallForm #serialNo").val("");
+           $("#addInstallForm #refNo1").val("");
+           $("#addInstallForm #refNo2").val("");
+           $("#addInstallForm #checkTrade").prop("checked", false);
+           $("#addInstallForm #checkSms").prop("checked", false);
+           $("#addInstallForm #instChklstCheckBox").prop("checked", false);
+           $("#addInstallForm #failDeptChk").prop("checked", false);
+           $("#addInstallForm #msgRemark").val("Remark:");
+           $("#addInstallForm #failLocCde").val("");
+           $("#addInstallForm #failReasonCode").val("");
+           $("#addInstallForm #remark").val("");
+         });
 
         // KR-OHK Serial Check
         if( $("#hidSerialRequireChkYn").val() == 'Y' ) {
         	$("#btnSerialEdit").attr("style", "");
         }
+
+        // 54 - WP
+        // 57 - SOFTENER
+        // 58 - BIDET
+        // 400 - POE
+        if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
+          if ("${orderInfo.stkCtgryId}" != "54") {
+            $("#m8").show();
+            $("#psiRcd").attr("disabled", false);
+            $("#m9").show();
+            $("#lpmRcd").attr("disabled", false);
+            $("#m10").hide();
+            $("#volt").attr("disabled", true);
+            $("#m11").hide();
+            $("#tds").attr("disabled", true);
+            $("#m12").hide();
+            $("#roomTemp").attr("disabled", true);
+            $("#m13").hide();
+            $("#waterSourceTemp").attr("disabled", true);
+            $("#m14").hide();
+            $("#adptUsed").attr("disabled", true);
+          } else {
+            $("#m8").show();
+            $("#psiRcd").attr("disabled", false);
+            $("#m9").show();
+            $("#lpmRcd").attr("disabled", false);
+            $("#m10").show();
+            $("#volt").attr("disabled", false);
+            $("#m11").show();
+            $("#tds").attr("disabled", false);
+            $("#m12").show();
+            $("#roomTemp").attr("disabled", false);
+            $("#m13").show();
+            $("#waterSourceTemp").attr("disabled", false);
+            $("#m14").show();
+            $("#adptUsed").attr("disabled", false);
+          }
+        } else {
+          $("#m8").hide();
+          $("#psiRcd").attr("disabled", true);
+          $("#m9").hide();
+          $("#lpmRcd").attr("disabled", true);
+          $("#m10").show();
+          $("#volt").attr("disabled", true);
+          $("#m11").show();
+          $("#tds").attr("disabled", true);
+          $("#m12").show();
+          $("#roomTemp").attr("disabled", true);
+          $("#m13").show();
+          $("#waterSourceTemp").attr("disabled", true);
+          $("#m14").hide();
+          $("#adptUsed").attr("disabled", true);
+        }
+        if ("${orderInfo.stkCtgryId}" == "55"){
+            notMandatoryForAP();
+        }
   });
+
+  function notMandatoryForAP(){
+    $("#addInstallForm #m8").hide();
+    $("#addInstallForm #m9").hide();
+    $("#addInstallForm #m10").hide();
+    $("#addInstallForm #m11").hide();
+    $("#addInstallForm #m12").hide();
+    $("#addInstallForm #m13").hide();
+    $("#addInstallForm #m14").hide();
+}
 
   function fn_installProductExchangeSave() {
     Common.ajax("POST", "/services/saveInstallationProductExchange.do", $("#insertPopupForm").serializeJSON(), function(result) {
@@ -148,8 +446,9 @@
 
   function fn_saveInstall() {
     var msg = "";
+
     if ($("#addInstallForm #installStatus").val() == 4) { // COMPLETED
-      if ($("#failReason").val() != 0 || $("#nextCallDate").val() != '') {
+      if ($("#failLocCde").val() != 0 || $("#failReasonCode").val() != 0 || $("#nextCallDate").val() != "") {
         Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
         return;
       }
@@ -157,11 +456,45 @@
       if ($("#addInstallForm #installDate").val() == '') {
         msg += "* <spring:message code='sys.msg.necessary' arguments='Actual Install Date' htmlEscape='false'/> </br>";
       }
-      if ($("#addInstallForm #sirimNo").val() == '') {
+      if ($("#addInstallForm #sirimNo").val().trim() == '' || ("#addInstallForm #sirimNo") == null) {
         msg += "* <spring:message code='sys.msg.necessary' arguments='SIRIM No' htmlEscape='false'/> </br>";
       }
-      if ($("#addInstallForm #serialNo").val() == '') {
+      if ($("#addInstallForm #serialNo").val().trim() == '' || ("#addInstallForm #serialNo") == null) {
         msg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
+      } else {
+        if ($("#addInstallForm #serialNo").val().trim().length < 9) {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Serial No' htmlEscape='false'/> </br>";
+        }
+      }
+
+      // PSI CHECKING
+      if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
+        if ( $("#psiRcd").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
+        }
+        if ( $("#lpmRcd").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
+        }
+        if ("${orderInfo.stkCtgryId}" == "54") {
+    	  if ( $("#volt").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Voltage' htmlEscape='false'/> </br>";
+          }
+          if ( $("#tds").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Total Dissolved Solid (TDS)' htmlEscape='false'/> </br>";
+          }
+         if ( $("#roomTemp").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Room Temperature' htmlEscape='false'/> </br>";
+          }
+         if ( $("#waterSourceTemp").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Water Source Temperature' htmlEscape='false'/> </br>";
+          }
+          if ( $("#adptUsed").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Adapter Used' htmlEscape='false'/> </br>";
+          }
+          if (!$("#instChklstCheckBox").prop('checked')) {
+            msg += "* <spring:message code='sys.msg.tickCheckBox' arguments='Installation Checklist' htmlEscape='false'/> </br>";
+          }
+        }
       }
 
       if (msg != "") {
@@ -171,13 +504,39 @@
     }
 
     if ($("#addInstallForm #installStatus").val() == 21) { // FAILED
-      if ($("#failReason").val() == 0) {
-        msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Reason' htmlEscape='false'/> </br>";
-      }
+        if ($("#failLocCde").val() == '') {
+          msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Location' htmlEscape='false'/> </br>";
+        }
+        if ($("#failReasonCode").val() == '') {
+          msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Reason' htmlEscape='false'/> </br>";
+        }
+        if ($("#nextCallDate").val() == '') {
+          msg += "* <spring:message code='sys.msg.necessary' arguments='Next Call Date' htmlEscape='false'/> </br>";
+        }
 
-      if ($("#nextCallDate").val() == '') {
-        msg += "* <spring:message code='sys.msg.necessary' arguments='Next Call Date' htmlEscape='false'/> </br>";
-      }
+        // 8000 - Fail at Location
+        if ($("#failLocCde").val() == 8000 &&("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")) {
+          if ( $("#psiRcd").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
+          }
+          if ( $("#lpmRcd").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
+          }
+          if ("${orderInfo.stkCtgryId}" == "54") {
+            if ( $("#volt").val() == "") {
+              msg += "* <spring:message code='sys.msg.invalid' arguments='Voltage' htmlEscape='false'/> </br>";
+            }
+            if ( $("#tds").val() == "") {
+              msg += "* <spring:message code='sys.msg.invalid' arguments='Total Dissolved Solid (TDS)' htmlEscape='false'/> </br>";
+            }
+            if ( $("#roomTemp").val() == "") {
+              msg += "* <spring:message code='sys.msg.invalid' arguments='Room Temperature' htmlEscape='false'/> </br>";
+            }
+            if ( $("#waterSourceTemp").val() == "") {
+              msg += "* <spring:message code='sys.msg.invalid' arguments='Water Source Temperature' htmlEscape='false'/> </br>";
+            }
+          }
+        }
 
       if (msg != "") {
         Common.alert(msg);
@@ -189,22 +548,48 @@
     var url = "";
 
     if ($("#hidSerialRequireChkYn").val() == 'Y') {
-        url = "/services/addInstallationSerial.do";
+    	url = "/services/addInstallationSerial.do";
     } else {
-        url = "/services/addInstallation_2.do";
+    	url = "/services/addInstallation_2.do";
     }
 
-    // Common.ajax("POST", "/services/addInstallation.do",
-    Common.ajax("POST", url,
-        $("#addInstallForm").serializeJSON(), function(result) {
-          Common.alert(result.message, fn_saveDetailclose);
+    Common.ajax("POST", url, $("#addInstallForm").serializeJSON(),
+      function(result) {
+        Common.alert(result.message, fn_saveDetailclose);
+        $("#popup_wrap").remove();
+        fn_installationListSearch();
+      });
+  }
 
-          $("#popup_wrap").remove();
-          fn_installationListSearch();
-          /* if (result.code == 'Y') {
-              $("#popup_wrap").remove();
-              fn_installationListSearch();
-          } */
+  function createInstallationChkViewAUIGrid() {
+    var columnLayout = [  {
+      dataField : "codeDesc",
+      //headerText : "Status",
+      headerText : '<spring:message code="service.grid.chkLst" />',
+      editable : false,
+      width : 870
+    } ];
+
+    var gridPros = {
+      //usePaging : true,
+      pageRowCount : 20,
+      editable : true,
+      //showStateColumn : true,
+      displayTreeOpen : true,
+      headerHeight : 30,
+      skipReadonlyColumns : true,
+      wrapSelectionMove : true,
+      showRowNumColumn : true,
+      height : 165
+    };
+     instChkLst_view = AUIGrid.create("#grid_wrap_instChk_view", columnLayout, gridPros);
+  }
+
+  function fn_viewInstallationChkViewSearch() {
+
+    Common.ajax("GET", "/services/instChkLst.do", "",
+        function(result) {
+          AUIGrid.setGridData( instChkLst_view, result);
         });
   }
 
@@ -264,6 +649,122 @@
           $("#addInstallForm #serialNo").val(dataRow.serialNo);
           //console.log("serialNo : " + dataRow.serialNo);
       });
+  }
+
+  function validate(evt) {
+    var theEvent = evt || window.event;
+
+     // Handle paste
+    if (theEvent.type === 'paste') {
+      key = event.clipboardData.getData('text/plain');
+    }
+    else {
+       // Handle key press
+      var key = theEvent.keyCode || theEvent.which;
+      key = String.fromCharCode(key);
+    }
+    var regex = /[0-9]/;
+    if( !regex.test(key) ) {
+      theEvent.returnValue = false;
+      if(theEvent.preventDefault) theEvent.preventDefault();
+    }
+  }
+
+  function validateDecimal(evt) {
+    var theEvent = evt || window.event;
+
+    // Handle paste
+    if (theEvent.type === 'paste') {
+       key = event.clipboardData.getData('text/plain');
+     }
+    else {
+      // Handle key press
+      var key = theEvent.keyCode || theEvent.which;
+      key = String.fromCharCode(key);
+    }
+    var regex = /[0-9.]/;
+    if( !regex.test(key) ) {
+      theEvent.returnValue = false;
+      if(theEvent.preventDefault) theEvent.preventDefault();
+      }
+    }
+
+  function validate2(a) {
+    var regex = /^\d+$/;
+    if (!regex.test(a.value)) {
+    a.value = "";
+    }
+  }
+
+  function validateFloatKeyPress(el, evt) {
+    var charCode = (evt.which) ? evt.which : event.keyCode;
+    var number = el.value.split('.');
+    if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    if(number.length>1 && charCode == 46){
+     return false;
+    }
+    var caratPos = getSelectionStart(el);
+    var dotPos = el.value.indexOf(".");
+    if( caratPos > dotPos && dotPos>-1 && (number[1].length > 1)){
+      return false;
+    }
+  return true;
+  }
+
+  function getSelectionStart(o) {
+    if (o.createTextRange) {
+      var r = document.selection.createRange().duplicate()
+      r.moveEnd('character', o.value.length)
+      if (r.text == '') {
+        return o.value.length
+      }
+      return o.value.lastIndexOf(r.text)
+    }
+    else{
+      return o.selectionStart
+    }
+  }
+
+  function validate3(a) {
+    //if(Math.floor(a.value)==0){
+    //  a.value = "0";
+    //}
+    if(a.value=='.'){
+      a.value = "";
+    }
+    var regex = /^[\d.]+$/;
+    if (!regex.test(a.value)) {
+    a.value = "";
+    }
+  }
+
+  function fn_openFailChild(selectedData){
+    if(selectedData == "8000"&&("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")) {
+      $("#addInstallForm #m8").show();
+      $("#addInstallForm #m9").show();
+      if("${orderInfo.stkCtgryId}" == "54") {
+        $("#addInstallForm #m10").show();
+        $("#addInstallForm #m11").show();
+        $("#addInstallForm #m12").show();
+        $("#addInstallForm #m13").show();
+        $("#addInstallForm #m14").hide();
+      }
+    }
+    else{
+      $("#addInstallForm #m8").hide();
+      $("#addInstallForm #m9").hide();
+      $("#addInstallForm #m10").hide();
+      $("#addInstallForm #m11").hide();
+      $("#addInstallForm #m12").hide();
+      $("#addInstallForm #m13").hide();
+      $("#addInstallForm #m14").hide();
+    }
+    if(selectedData == "8000" || selectedData == "8100"){
+    $("#failReasonCode").attr("disabled",false);
+    doGetCombo('/services/selectFailChild.do', selectedData, '','failReasonCode', 'S' , '');
+    }
   }
 </script>
 <div id="popup_wrap" class="popup_wrap">
@@ -1435,9 +1936,18 @@
         code='service.title.InstallStatust' /><span name="m1" id="m1" class="must">*</span></th>
       <td><select class="w100p" id="installStatus"
        name="installStatus">
-        <c:forEach var="list" items="${installStatus }" varStatus="status">
-           <option value="${list.codeId}">${list.codeName}</option>
-        </c:forEach>
+                <c:forEach var="list" items="${installStatus}" varStatus="status">
+                  <c:choose>
+                    <c:when test="${list.codeId=='4'}">
+                      <option value="${list.codeId}" selected>${list.codeName}</option>
+                    </c:when>
+                    <c:when test="${list.codeId=='1'}">
+                    </c:when>
+                    <c:otherwise>
+                      <option value="${list.codeId}">${list.codeName}</option>
+                    </c:otherwise>
+                  </c:choose>
+                </c:forEach>
       </select></td>
       <th scope="row"><spring:message
         code='service.title.ActualInstalledDate' /><span name="m2" id="m2" class="must">*</span></th>
@@ -1458,8 +1968,50 @@
                 class="readonly w100p" readonly="readonly" id="ctName"
                 name="ctName" /></td> --%>
      </tr>
+     <tr>
+            <th scope="row"><spring:message code='service.title.PSIRcd' /><span name="m8" id="m8" class="must">*</span></th>
+            <td>
+              <input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" onkeypress='validate(event)' onblur='validate2(this);' />
+            </td>
+            <th scope="row"><spring:message code='service.title.lmp' /><span name="m9" id="m9" class="must">*</span></th>
+            <td>
+              <input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" onkeypress='validate(event)' onblur='validate2(this);' />
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='service.title.Volt' /><span name="m10" id="m10" class="must">*</span></th>
+            <td>
+              <input type="text" title="" placeholder="<spring:message code='service.title.Volt' />" class="w100p" id="volt" name="volt" onkeypress='validate(event)' onblur='validate2(this);' />
+            </td>
+            <th scope="row"><spring:message code='service.title.TDS' /><span name="m11" id="m11" class="must">*</span></th>
+            <td>
+              <input type="text" title="" placeholder="<spring:message code='service.title.TDS' />" class="w100p" id="tds" name="tds" onkeypress='validate(event)' onblur='validate2(this);' />
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='service.title.RoomTemp' /><span name="m12" id="m12" class="must">*</span></th>
+            <td>
+              <input type="text" title="" placeholder="<spring:message code='service.title.RoomTemp' />" class="w100p" id="roomTemp" name="roomTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' />
+            </td>
+            <th scope="row"><spring:message code='service.title.WaterSourceTemp' /><span name="m13" id="m13" class="must">*</span></th>
+            <td>
+              <input type="text" title="" placeholder="<spring:message code='service.title.WaterSourceTemp' />" class="w100p" id="waterSourceTemp" name="waterSourceTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' />
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='service.title.adptUsed' /><span name="m14" id="m14" class="must">*</span></th>
+            <td colspan='3'>
+              <select class="w100p" id="adptUsed" name="adptUsed">
+                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+                <c:forEach var="list" items="${adapterUsed}" varStatus="status">
+                  <option value="${list.codeId}" select>${list.codeName}</option>
+                </c:forEach>
+              </select>
+            </td>
+          </tr>
     </tbody>
    </table>
+   <br/>
    <!-- table end -->
    <table class="type1" id="completedHide">
     <!-- table start -->
@@ -1506,6 +2058,25 @@
      </tr>
     </tbody>
    </table>
+   <aside class="title_line mt30">
+        <!-- title_line start -->
+        <h2 id="m17" name="m17">
+          <spring:message code='service.text.instChkLst' />
+        </h2>
+      </aside>
+      <!-- title_line end -->
+      <article class="grid_wrap">
+        <!-- grid_wrap start -->
+        <div id="grid_wrap_instChk_view" style="width: 100%;
+  height: 170px;
+  margin: 90 auto;" class="hide"></div>
+      </article>
+      <!-- grid_wrap end -->
+      <tr>
+        <td colspan="8">
+          <label><input type="checkbox" id="instChklstCheckBox" name="instChklstCheckBox" value="Y" class="hide" /><span id="instChklstDesc" name="instChklstDesc" class="hide"><spring:message code='service.btn.instChklst' /> </span></label>
+        </td>
+      </tr>
    <!-- table end -->
    <aside class="title_line" id="completedHide1">
     <!-- title_line start -->
@@ -1550,23 +2121,36 @@ Name: ${orderInfo.name2}</textarea></td>
      <col style="width: 110px" />
      <col style="width: *" />
     </colgroup>
-    <tbody>
-     <tr>
-      <th scope="row"><spring:message
-        code='service.title.FailedReason' /><span name="m6" id="m6" class="must">*</span></th>
-      <td><select class="w100p" id="failReason" name="failReason">
-        <option value="0">Failed Reason</option>
-        <c:forEach var="list" items="${failReason }" varStatus="status">
-         <option value="${list.resnId}">${list.c1}</option>
-        </c:forEach>
-      </select></td>
-      <th scope="row"><spring:message
-        code='service.title.NextCallDate' /><span name="m7" id="m7" class="must">*</span></th>
-      <td><input type="text" title="Create start Date"
-       placeholder="DD/MM/YYYY" class="j_date w100p" id="nextCallDate"
-       name="nextCallDate" /></td>
-     </tr>
-    </tbody>
+        <tbody>
+          <tr>
+            <th scope="row"><spring:message code='service.title.FailedLocation' /><span name="m15" id="m15" class="must">*</span></th>
+            <td>
+              <select class="w100p" id="failLocCde" name="failLocCde" onchange="fn_openFailChild(this.value)">
+                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+                <c:forEach var="list" items="${failParent}" varStatus="status">
+                  <option value="${list.defectId}">${list.defectDesc}</option>
+                </c:forEach>
+            </td>
+            </select>
+            <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m16" id="m16" class="must">*</span></th>
+            <td>
+              <select class="w100p" id="failReasonCode" name="failReasonCode">
+                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+                <c:forEach var="list" items="${failChild}" varStatus="status">
+                  <option value="${list.defectId}">${list.defectDesc}</option>
+                </c:forEach>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row"><spring:message code='service.title.NextCallDate' /><span name="m7" id="m7" class="must">*</span></th>
+            <td>
+              <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="nextCallDate" name="nextCallDate" />
+            </td>
+            <th scope="row"></th>
+            <td></td>
+          </tr>
+        </tbody>
    </table>
    <!-- table end -->
    <table class="type1">
