@@ -61,6 +61,17 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     return customerMapper.selectCustomerViewBasicInfo(params);
   }
 
+  //////////////////////////////////////////////////  CHECK_EXIST_NRIC  ///////////////////////////////////////////////////
+
+  public EgovMap checkNricExist(Map<String, Object> params) throws Exception {
+
+	    EgovMap outMap = customerMapper.selectNricExist(params);
+
+	    return outMap;
+	  }
+
+  //////////////////////////////////////////////////  CHECK_EXIST_NRIC  ///////////////////////////////////////////////////
+
   /**
    * 상세화면 조회한다. (Main Address)
    *
