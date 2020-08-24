@@ -633,6 +633,25 @@
     ]]>
   </select>
 
+  <select id="selectItmStkPrice2" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectItmStkPrice] 20191213 - KR JAEMAJEM */
+      SELECT NVL(B.PRC_ID, 0) AS PRC_ID
+               , NVL(B.PRC_RPF, 0) AS PRC_RPF
+               , NVL(B.AMT, 0) AS AMT
+               , NVL(B.PRC_PV, 0) AS PRC_PV
+               , DECODE(B.APP_TYPE_ID, 66, B.AMT, 0) AS MONTHLY_RENTAL
+               , NVL(B.TRADE_IN_PV, 0) AS TRADE_IN_PV
+               , NVL(B.PRC_COSTING, 0) AS PRC_COSTING
+      FROM SYS0026M A
+      LEFT JOIN SAL0016M B ON  B.STK_ID = A.STK_ID
+                                      AND B.APP_TYPE_ID = #{appTypeId}
+                                      AND B.MEM_PAC_ID = 0
+      WHERE A.STK_ID = #{itmStkId}
+          AND A.STK_TYPE_ID = 61
+    ]]>
+  </select>
+
   <select id="selectPromoDesc" parameterType="int" resultType="egovMap">
     <![CDATA[
     /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectPromoDesc] 20191213 - KR JAEMAJEM */
