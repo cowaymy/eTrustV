@@ -6,6 +6,42 @@
     parameterType="Map" resultMap="clobMap"> 와 같이 resultMap="clobMap" 을 사용해야
     함. -->
 
+    <select id="selectNricExist" parameterType="Map" resultType="egovMap">
+        SELECT T1.CUST_ID
+             , T1.NAME
+             , T1.NRIC
+             , T1.NATION
+             , T1.DOB
+             , T1.GENDER
+             , T1.RACE_ID
+             , T1.EMAIL
+             , T1.REM
+             , T1.STUS_CODE_ID
+             , T1.UPD_USER_ID
+             , T1.UPD_DT
+             , T1.REN_GRP
+             , T1.PST_TERMS
+             , T1.ID_OLD
+             , T1.CRT_USER_ID
+             , T1.CRT_DT
+             , T1.TYPE_ID
+             , T1.PAS_SPORT_EXPR
+             , T1.VISA_EXPR
+             , T1.CUST_VA_NO
+             , T1.CORP_TYPE_ID
+             , T1.GST_RGIST_NO
+          FROM SAL0029D T1
+         WHERE 1 = 1
+
+         <if test='basicNric != null and basicNric !=0 and basicNric !=""'>
+           AND T1.NRIC = #{basicNric}
+           AND T1.NRIC not in (#{basicNricOld})
+         </if>
+
+    </select>
+
+
+
   <select id="selectCustomerList" parameterType="Map" resultType="egovMap">
         <![CDATA[
         SELECT
@@ -1603,6 +1639,7 @@
     SET
     UPD_DT = SYSDATE,
     UPD_USER_ID = #{userId},
+    NRIC = #{basicNric},
     NAME = #{basicName} ,
     PAS_SPORT_EXPR =TO_DATE(#{basicPasSportExpr}, 'DD/MM/YYYY'),
     VISA_EXPR = TO_DATE(#{basicVisaExpr}, 'DD/MM/YYYY'),
@@ -1618,6 +1655,10 @@
       CORP_TYPE_ID = #{basicCmbCorpTypeId}
     </if>
     WHERE CUST_ID = #{basicCustId}
+
+    <if test='basicNricOld != null and basicNricOld !=""'>
+    and NRIC = #{basicNricOld}
+    </if>
   </update>
 
   <insert id="insertCreditCardInfo">
