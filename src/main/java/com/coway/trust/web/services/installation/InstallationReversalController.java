@@ -730,6 +730,8 @@ public class InstallationReversalController {
 			EgovMap  orderExchangeTypeByInstallEntryID = installationReversalService.GetOrderExchangeTypeByInstallEntryID(params);
 			String hidPEAfterInstall = null;
 			returnMap.put("spanInstallationType",orderExchangeTypeByInstallEntryID.get("soCurStusId"));
+			params.put("docId",orderExchangeTypeByInstallEntryID.get("docId"));
+
 			if(Integer.parseInt(orderExchangeTypeByInstallEntryID.get("soCurStusId").toString())==25 || Integer.parseInt(orderExchangeTypeByInstallEntryID.get("soCurStusId").toString())==26){
 				logger.debug("-------------13---------------");
 				hidPEAfterInstall = "1";
@@ -1221,19 +1223,13 @@ public class InstallationReversalController {
 	    		srvConfigFilter.put("userId",userId);
 
 	    		installationReversalService.updateSrvConfigFilter(srvConfigFilter);
-
-
 	    		Map<String,Object> happyCallM = new HashMap();
 	    		happyCallM.put("HCID", hcID);
 	    		happyCallM.put("HCStatusID", 8);
 	    		happyCallM.put("HCRemark", "INSTALLATION RESULT REVERSAL");
 	    		happyCallM.put("userId", userId);
-
 	    		installationReversalService.updateHappyCallM(happyCallM);
-
-
 	    		EgovMap  rv = installationReversalService.getRequiredView2(params);
-
 	    		Map<String,Object> salesOrderM = new HashMap();
 	    		salesOrderM.put("SalesOrderID", salesOrderID);
 	    		//salesOrderM.put("StatusCodeID", 1);
@@ -1251,7 +1247,6 @@ public class InstallationReversalController {
 
 	    		installationReversalService.updateSalesOrderM2(salesOrderM);
 
-
 	    		Map<String,Object> salesOrderD = new HashMap();
 	    		salesOrderD.put("ItemStkID", rv.get("soExchgOldStkId"));
 	    		salesOrderD.put("ItemPriceID", rv.get("soExchgOldPrcId"));
@@ -1260,7 +1255,6 @@ public class InstallationReversalController {
 	    		salesOrderD.put("userId", userId);
 
 	    		installationReversalService.updateSalesOrderD2(salesOrderD);
-
 	    		installationReversalService.updateInstallation(params);
 
 	    		Map<String,Object> callEntry = new HashMap();
@@ -1268,14 +1262,13 @@ public class InstallationReversalController {
 	    		callEntry.put("TypeID", 258);
 	    		callEntry.put("StatusCodeID", 1);
 	    		callEntry.put("ResultID", 0);
-	    		callEntry.put("DocID", salesOrderID);
+	    		callEntry.put("DocID", params.get("docId"));
 	    		callEntry.put("userId", userId);
 	    		callEntry.put("CallDate", nextCallDate);
 	    		callEntry.put("IsWaitForCancel", 1);
 	    		callEntry.put("OriCallDate", nextCallDate);
 
 	    		installationReversalService.addCallEntry(callEntry);
-
 
 	    		int  CallEntryId = installationReversalService.getCallEntry(params);
 
@@ -1297,7 +1290,6 @@ public class InstallationReversalController {
 
 	    		installationReversalService.addCallResult(callResult);
 
-
 	    		Map<String,Object> salesorderLog = new HashMap();
 	    		salesorderLog.put("SalesOrderID", salesOrderID);
 	    		salesorderLog.put("ProgressID", 3);
@@ -1316,14 +1308,11 @@ public class InstallationReversalController {
 	                int adjCrAccID = 0;
 
 
-
 	                params.put("TotalAmt", rv.get("totAmt"));
-
 	    			if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
 	            		adjTypeSetID = 7;
 	                    adjDrAccID = 171;
 	                    adjCrAccID = 43;
-
 
 	            	}else if (Integer.parseInt(params.get("applicationTypeID").toString()) == 67)
 	                {
@@ -1340,15 +1329,11 @@ public class InstallationReversalController {
 	            	params.put("adjTypeSetID", adjTypeSetID);
 	                params.put("adjDrAccID", adjDrAccID);
 	                params.put("adjCrAccID", adjCrAccID);
-
-	                SimpleDateFormat format = new SimpleDateFormat("YYYY-MMM-DD");
-
+	                SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 	                String esalesDt = params.get("esalesDt").toString();
-
 	                Date salesdate = null;
 	                Date mthapril = null;
-
-	                mthapril =  format.parse("2015-APR-01");
+	                mthapril =  format.parse("2015/04/01");
 	                salesdate = format.parse(esalesDt);
 
 	                if (salesdate.compareTo(mthapril)<0){
