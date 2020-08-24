@@ -2,7 +2,9 @@ package com.coway.trust.web.services.installation;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,12 +125,19 @@ public class InstallationResultListController {
    * @param request
    * @param model
    * @return
+   * @throws ParseException
    * @throws Exception
    */
   @RequestMapping(value = "/installationListSearch.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> selectInstallationListSearch(@RequestParam Map<String, Object> params,
-      HttpServletRequest request, ModelMap model) {
+      HttpServletRequest request, ModelMap model) throws ParseException {
 
+    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+    Date mthapril = null;
+    //logger.debug("-------------10 salesdate---------------" + salesdate);
+    mthapril =  format.parse("01-04-2015");
+    logger.debug("-------------11 mthapril new---------------" + mthapril);
+    //dadu hati
     String[] installStatusList = request.getParameterValues("installStatus");
     String[] typeList = request.getParameterValues("type");
     String[] appTypeList = request.getParameterValues("appType");
@@ -403,9 +412,12 @@ public class InstallationResultListController {
     model.addAttribute("orderDetail", orderDetail);
 
     List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
+    List<EgovMap> adapterUsed = installationResultListService.adapterUsed();
+    List<EgovMap> failParent = installationResultListService.failParent();
+    List<EgovMap> failReason = installationResultListService.selectFailReason(params);
     params.put("ststusCodeId", 1);
     params.put("reasonTypeId", 172);
-    List<EgovMap> failReason = installationResultListService.selectFailReason(params);
+   // List<EgovMap> failReason = installationResultListService.selectFailReason(params);
     EgovMap callType = installationResultListService.selectCallType(params);
     EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
     EgovMap stock = installationResultListService.getStockInCTIDByInstallEntryIDForInstallationView(installResult);
@@ -516,6 +528,8 @@ public class InstallationResultListController {
     model.addAttribute("callType", callType);
     model.addAttribute("failReason", failReason);
     model.addAttribute("installStatus", installStatus);
+    model.addAttribute("adapterUsed", adapterUsed);
+    model.addAttribute("failParent", failParent);
     model.addAttribute("stock", stock);
     model.addAttribute("sirimLoc", sirimLoc);
     model.addAttribute("CheckCurrentPromo", CheckCurrentPromo);
