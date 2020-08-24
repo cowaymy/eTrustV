@@ -662,13 +662,9 @@ AND ROWNUM                    <= 1
 
     <select id="getDOCNumberOnlyNumber" parameterType="Map" resultType="String">
     <![CDATA[
-        SELECT DOC_RESULT
-      FROM (
-    select DOC_NO_PREFIX || DOC_NO_ID DOC_RESULT
-      from SYS0022C
-     where DOC_NO = '23'
-     )
-     WHERE ROWNUM = 1
+        SELECT  FN_GET_DOCNO(23)
+      FROM
+      DUAL
     ]]>
     </select>
 
@@ -1463,7 +1459,7 @@ AND ROWNUM                    <= 1
 		  from SAL0004D
 		      ,SAL0001D
 		 where sal0004d.SO_ID = sal0001d.SALES_ORD_ID
-		   and SO_EXCHG_ID = #{esalesOrdId}
+		   and SO_EXCHG_ID = #{docId}
     ]]>
     </select>
 
@@ -1475,7 +1471,7 @@ AND ROWNUM                    <= 1
 		      ,UPD_USER_ID = #{userId}
 		      ,PV_MONTH = #{PVMonth}
 		      ,PV_YEAR = #{PVYear}
-		      ,TAX_AMT = #{TotalAmt}
+		      ,TOT_AMT = #{TotalAmt}
 		      ,PROMO_ID = #{PromoID}
 		      ,TOT_PV = #{TotalPV}
 		      ,MTH_RENT_AMT = #{MthRentAmt}
@@ -1490,7 +1486,7 @@ AND ROWNUM                    <= 1
 		   set ITM_STK_ID = case when #{ItemStkID} is null then ITM_STK_ID else #{ItemStkID} end
 		      ,ITM_PRC_ID = case when #{ItemPriceID} is null then ITM_PRC_ID else #{ItemPriceID} end
 		      ,ITM_PRC = case when #{ItemPrice} is null then ITM_PRC else #{ItemPrice} end
-		      ,ITM_PV = case when #{ItemPV} is null then UPD_DT else #{ItemPV} end
+		      ,ITM_PV = case when #{ItemPV} is null then ITM_PV else #{ItemPV} end
 		      ,UPD_DT = sysdate
 		      ,UPD_USER_ID = #{userId}
 		 where sales_ord_id = #{esalesOrdId}
