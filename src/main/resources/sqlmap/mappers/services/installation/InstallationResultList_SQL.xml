@@ -4721,10 +4721,10 @@
                       , INSTALL_DT = to_date( #{installdt} , 'DD/MM/YYYY' )
                       , PSI = #{psiRcd}
                       , LPM = #{lpmRcd}
-                      ,VOLT = #{Volt}
-                      ,TDS  = #{TDS}
-                      ,ROOM_TEMP = #{RoomTemp}
-                      ,WATER_SRC_TEMP = #{WaterSourceTemp}
+                      ,VOLT = #{volt}
+                      ,TDS  = #{tds}
+                      ,ROOM_TEMP = #{roomTemp}
+                      ,WATER_SRC_TEMP = #{waterSourceTemp}
                       ,ADPT_USED = #{adptUsed}
     WHERE ( RESULT_ID = #{resultId} )
   </update>
