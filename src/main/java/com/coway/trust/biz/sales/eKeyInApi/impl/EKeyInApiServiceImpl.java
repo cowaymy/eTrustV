@@ -514,7 +514,14 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       throw new ApplicationException(AppConstants.FAIL, "srvPacId value does not exist.");
     }
 
-    EgovMap selectItmStkPrice = eKeyInApiMapper.selectItmStkPrice(EKeyInApiForm.createMap(param));
+    //EgovMap selectItmStkPrice = eKeyInApiMapper.selectItmStkPrice(EKeyInApiForm.createMap(param));
+    EgovMap selectItmStkPrice = null;
+
+    if ("66".equals(CommonUtils.nvl(param.getAppTypeId()))) { // FOR RENTAL
+      selectItmStkPrice = eKeyInApiMapper.selectItmStkPrice(EKeyInApiForm.createMap(param));
+    } else { // FOR OUTRIGHT AND INSTALLMENT
+      selectItmStkPrice = eKeyInApiMapper.selectItmStkPrice2(EKeyInApiForm.createMap(param));
+    }
     if (MapUtils.isEmpty(selectItmStkPrice)) {
       throw new ApplicationException(AppConstants.FAIL, "No price information.");
     }
