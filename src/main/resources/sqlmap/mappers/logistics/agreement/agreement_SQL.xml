@@ -5,106 +5,154 @@
     <select id="memberList" parameterType="Map" resultType="EgovMap">
         SELECT
             A.MEM_CODE memCode,
-            A.MEM_TYPE memType,
+            H.CODE_NAME memType,
+            D.MEM_ORG_DESC orgDesc,
             A.FULL_NAME name,
             A.NRIC nric,
-            B.DEPTCODE deptCode,
-            B.GRPCODE grpCode,
-            B.ORGCODE orgCode,
-            E.ROLE_DESC userRole,
-            F.NAME status,
-            NVL(TO_CHAR(A.PROMO_DT, 'DD/MM/YYYY'), '-') promoDt,
-            CASE WHEN A.MEM_TYPE = '2' THEN TO_CHAR(G.CNFM_DT, 'DD/MM/YYYY') END AS CD_CNFM_DT,
-            TO_CHAR(A.JOIN_DT, 'DD/MM/YYYY') JOIN_DT,
-            G.CNFM AGMT_STUS
+            NVL(B.LAST_DEPT_CODE, ' ') deptCode,
+            NVL(B.LAST_GRP_CODE, ' ') grpCode,
+            NVL(B.LAST_ORG_CODE, ' ') orgCode,
+            F.NAME MEMBERSTUS,
+            G.NAME USERSTUS,
+            CASE WHEN C.CNFM = 1 THEN 'Signed' ELSE 'Unsigned' END CNFMSTUS,
+            TO_CHAR(C.CNFM_DT, 'DD/MM/YYYY') CNFMDT,
+            TO_CHAR(A.JOIN_DT, 'DD/MM/YYYY') JOINDT,
+            CASE WHEN J.PROMO_TYPE_ID in ('747','748') THEN TO_CHAR(A.PROMO_DT, 'DD/MM/YYYY') ELSE '-' END PROMODT,
+            I.VERSION_ID VERSIONID,
+            I.FILE_NAME RPTFLNM
         FROM ORG0001D A
-        INNER JOIN (
-            SELECT
-                B1.MEM_ID,
-                CASE WHEN B1.DEPT_CODE = '' THEN B1.LAST_DEPT_CODE ELSE B1.DEPT_CODE END AS DEPTCODE,
-                B1.LAST_GRP_CODE GRPCODE,
-                B1.LAST_ORG_CODE ORGCODE,
-                B1.MEM_LVL MEMLVL
-                FROM ORG0005D B1
-        ) B
+        JOIN ORG0005D B
             ON B.MEM_ID = A.MEM_ID
-        INNER JOIN SYS0047M C
-            ON C.USER_NAME = A.MEM_CODE
-        INNER JOIN SYS0045M D
-            ON D.USER_ID = C.USER_ID
-        INNER JOIN SYS0044M E
-            ON E.ROLE_ID = D.ROLE_ID
-        INNER JOIN SYS0038M F
-            ON F.STUS_CODE_ID = C.USER_STUS_ID
-        LEFT JOIN ORG0003D G
-            ON A.APLICNT_ID = G.APLCTN_ID
-        WHERE
-            A.MEM_TYPE = #{memTypeCom}
-            <if test="code !=null and code !=''">
-                AND A.MEM_CODE LIKE '%' || #{code} || '%'
-            </if>
-            <if test="name !=null and name !=''">
-                AND A.FULL_NAME LIKE '%' || #{name} || '%'
-            </if>
-            <if test="icNum !=null and icNum !=''">
-                AND A.NRIC LIKE '%' || #{icNum} || '%'
-            </if>
-            <if test="deptCode !=null and deptCode !=''">
-                AND B.DEPTCODE LIKE '%' || #{deptCode} || '%'
-            </if>
-            <if test="grpCode !=null and grpCode !=''">
-                AND B.GRPCODE LIKE '%' || #{grpCode} || '%'
-            </if>
-            <if test="orgCode !=null and orgCode !=''">
-                AND B.ORGCODE LIKE '%' || #{orgCode} || '%'
-            </if>
-            <if test="memStusCmb != null and memStusCmb !='' ">
-                AND C.USER_STUS_ID = #{memStusCmb}
-            </if>
-            <if test="memLevelCom != null and memLevelCom !='' ">
-                AND B.MEMLVL = #{memLevelCom}
-            </if>
-            <if test="selectBranch != 0 ">
-                AND A.BRNCH = #{selectBranch}
-            </if>
-        ORDER BY B.ORGCODE, B.GRPCODE, B.DEPTCODE, B.MEMLVL, C.USER_STUS_ID, A.MEM_CODE
+        JOIN ORG0003D C
+            ON A.APLICNT_ID = C.APLCTN_ID
+        JOIN ORG0012D D
+            ON A.MEM_TYPE = D.MEM_TYPE_ID
+            AND B.MEM_LVL = D.MEM_ORG_LVL
+        JOIN SYS0047M E
+            ON A.MEM_CODE = E.HR_CODE
+        /* Member Status */
+        JOIN SYS0038M F
+            ON A.STUS = F.STUS_CODE_ID
+        /* User Status */
+        JOIN SYS0038M G
+            ON E.USER_STUS_ID = G.STUS_CODE_ID
+        /* Member Type Description */
+        JOIN SYS0013M H
+            ON A.MEM_TYPE = H.CODE_ID
+            AND H.CODE_MASTER_ID = 1
+        /* Agreement Version */
+        JOIN SYS0104M I
+            ON A.MEM_TYPE = I.MEM_TYPE
+            AND B.MEM_LVL = I.MEM_LVL
+            <![CDATA[
+            AND TO_DATE(TO_CHAR(C.CNFM_DT, 'YYYYMMDD'), 'YYYYMMDD') >= I.VALID_START_DT
+            AND TO_DATE(TO_CHAR(C.CNFM_DT, 'YYYYMMDD'), 'YYYYMMDD') <= I.VALID_END_DT
+            ]]>
+        LEFT JOIN (
+                SELECT *
+                FROM ORG0007D
+                WHERE PROMO_ID IN (
+                    SELECT MAX(PROMO_ID) PROMO_ID
+                    FROM ORG0007D
+                    WHERE PROMO_TYPE_ID in ('747','748')
+                    GROUP BY MEM_ID
+                )
+            ) J
+            ON A.MEM_ID = J.MEM_ID
+        WHERE A.MEM_TYPE = #{memTypeCom}
+        <if test="code != null and code != ''">
+            AND A.MEM_CODE = #{code}
+        </if>
+        <if test="icNum != null and icNum != ''">
+            AND A.NRIC = #{icNum}
+        </if>
+        <if test="memStusCmb != null and memStusCmb != ''">
+            AND A.STUS = #{memStusCmb}
+        </if>
+        <if test="name != null and name != ''">
+            AND A.FULL_NAME LIKE '%' || #{name} || '%'
+        </if>
+        <if test="deptCode != null and deptCode != ''">
+            AND B.LAST_DEPT_CODE = #{deptCode}
+        </if>
+        <if test="grpCode != null and grpCode != ''">
+            AND B.LAST_GRP_CODE = #{grpCode}
+        </if>
+        <if test="orgCode != null and orgCode != ''">
+            AND B.LAST_ORG_CODE = #{orgCode}
+        </if>
+        <if test="selectBranch != 0 and selectBranch != null and selectBranch != ''">
+            AND A.BRNCH = #{selectBranch}
+        </if>
+        <if test="memLevelCom != null and memLevelCom != '' ">
+            AND B.MEM_LVL = #{memLevelCom}
+        </if>
     </select>
 
-    <select id="getMemberInfo" parameterType="Map" resultType="EgovMap">
-        <![CDATA[
+    <select id="prevAgreement" parameterType="Map" resultType="EgovMap">
+        SELECT
+            A.MEM_CODE,
+            A.NAME,
+            A.NRIC,
+            A.MEM_TYPE,
+            D.ROLE_ID,
+            TO_CHAR(E.CNFM_DT, 'DD-MON-YYYY') CNFM_DT,
+            F.VERSION_ID,
+            F.FILE_NAME
+        FROM ORG0001D A
+        JOIN ORG0005D B
+            ON A.MEM_ID = B.MEM_ID
+        JOIN SYS0047M C
+            ON A.MEM_CODE = C.HR_CODE
+        JOIN SYS0045M D
+            ON C.USER_ID = D.USER_ID
+        JOIN (
             SELECT
-                A.FULL_NAME NAME,
-                A.NRIC NRIC,
-                CASE WHEN B.DEPT_CODE = '' THEN B.LAST_DEPT_CODE ELSE B.DEPT_CODE END DEPTCDE,
-                B.LAST_GRP_CODE GRPCDE,
-                B.LAST_ORG_CODE ORGCDE,
-                B.MEM_LVL MEMLVL,
-                A.STUS,
-                CASE
-                    WHEN A.MEM_TYPE = '1' AND B.MEM_LVL = 4 THEN (
-                        CASE
-                            WHEN C.UPD_DT <= TO_DATE('2017/05/01', 'YYYY/MM/DD') THEN '201604'
-                            WHEN C.UPD_DT >= TO_DATE('2017/05/02', 'YYYY/MM/DD') AND C.UPD_DT < TO_DATE('2018/05/01', 'YYYY/MM/DD') THEN '201704'
-                            WHEN C.UPD_DT >= TO_DATE('2018/05/01', 'YYYY/MM/DD') AND C.UPD_DT < TO_DATE('2018/06/09', 'YYYY/MM/DD') THEN '201805'
-                            WHEN C.UPD_DT >= TO_DATE('2018/06/09', 'YYYY/MM/DD') THEN '201806'
-                        END)
-                    WHEN A.MEM_TYPE = '1' AND B.MEM_LVL < 4 THEN (
-                        CASE
-                            WHEN C.UPD_DT <= TO_DATE('2019/08/01', 'YYYY/MM/DD') THEN '20180704'
-                            ELSE '201908'
-                        END)
-                    ELSE '2017'
-                END AS CNFMDT,
-                CASE WHEN A.MEM_TYPE = '2' THEN TO_CHAR(C.CNFM_DT, 'DD/MM/YYYY') END AS CD_CNFM_DT,
-                NVL(TO_CHAR(A.PROMO_DT, 'DD/MM/YYYY'), '-') PROMO_DT,
-                TO_CHAR(A.JOIN_DT, 'DD/MM/YYYY') JOIN_DT
-            FROM ORG0001D A
-            INNER JOIN ORG0005D B
-                ON A.MEM_ID = B.MEM_ID
-            LEFT JOIN ORG0003D C
-                ON A.APLICNT_ID = C.APLCTN_ID
-            WHERE A.MEM_CODE = #{memID}
-        ]]>
+                E1.APLICNT_ID,
+                NVL(E3.CNFM, E2.CNFM) CNFM,
+                NVL(E3.CNFM_DT, E2.CNFM_DT) CNFM_DT,
+                CASE WHEN E1.MEM_TYPE = 1 THEN NVL(E3.CNTRCT_TYPE, E2.CNTRCT_TYPE) ELSE ' ' END CNTRCT_TYPE
+            FROM ORG0001D E1
+            JOIN ORG0003D E2
+            ON E1.APLICNT_ID = E2.APLCTN_ID
+            LEFT JOIN (
+                SELECT
+                    E3A.APLCTN_ID,
+                    CNFM,
+                    CNFM_DT,
+                    CNTRCT_TYPE
+                FROM ORG0027D E3A
+                JOIN (
+                    SELECT MIN(HIST_APLCTN_ID) HIST_APLCTN_ID, APLCTN_ID
+                    FROM ORG0027D
+                    WHERE CNFM = 1
+                    <![CDATA[
+                    AND TO_CHAR(CNFM_DT, 'YYYYMMDD') >= #{startDt}
+                    AND TO_CHAR(CNFM_DT, 'YYYYMMDD') <= #{endDt}
+                    ]]>
+                    GROUP BY APLCTN_ID
+                ) E3B
+                ON E3A.HIST_APLCTN_ID = E3B.HIST_APLCTN_ID
+                GROUP BY
+                    E3A.APLCTN_ID,
+                    CNFM,
+                    CNFM_DT,
+                    CNTRCT_TYPE
+            ) E3
+            ON E1.APLICNT_ID = E3.APLCTN_ID
+        ) E
+            ON A.APLICNT_ID = E.APLICNT_ID
+            /* AND (CASE WHEN A.MEM_TYPE = 1 THEN TO_CHAR(D.ROLE_ID) ELSE ' ' END) = E.CNTRCT_TYPE */
+            <![CDATA[
+            AND TO_CHAR(E.CNFM_DT, 'YYYYMMDD') >= #{startDt}
+            AND TO_CHAR(E.CNFM_DT, 'YYYYMMDD') <= #{endDt}
+        JOIN SYS0104M F
+            ON A.MEM_TYPE = F.MEM_TYPE
+            AND B.MEM_LVL = F.MEM_LVL
+            AND TO_DATE(TO_CHAR(E.CNFM_DT, 'YYYYMMDD'), 'YYYYMMDD') >= F.VALID_START_DT
+            AND TO_DATE(TO_CHAR(E.CNFM_DT, 'YYYYMMDD'), 'YYYYMMDD') <= F.VALID_END_DT
+            ]]>
+        WHERE A.MEM_CODE = #{memCode}
     </select>
 
     <select id="getMemHPpayment" parameterType="Map" resultType="EgovMap">
@@ -196,7 +244,7 @@
         </if>
         <if test="groupCode == 7 ">
             SELECT
-                '2020' CODE_ID,
+                '2020v1' CODE_ID,
                 '2020 - 1.0 Version' CODE_NAME
             FROM DUAL
 

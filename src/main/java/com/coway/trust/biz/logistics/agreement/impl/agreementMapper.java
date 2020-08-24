@@ -9,7 +9,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("agreementMapper")
 public interface agreementMapper {
 
-    EgovMap getMemberInfo(Map<String, Object> params);
+    EgovMap prevAgreement(Map<String, Object> params);
 
     EgovMap getMemHPpayment(Map<String, Object> params);
 

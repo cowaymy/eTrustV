@@ -20,8 +20,8 @@ public class agreementServImpl extends EgovAbstractServiceImpl implements agreem
     private agreementMapper agreementMapper;
 
     @Override
-    public EgovMap getMemberInfo(Map<String, Object> params) {
-        return agreementMapper.getMemberInfo(params);
+    public EgovMap prevAgreement(Map<String, Object> params) {
+        return agreementMapper.prevAgreement(params);
     }
 
     @Override

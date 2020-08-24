@@ -52,17 +52,24 @@ public class AgreementController {
 
         if("97".equals(strUserRole) || "98".equals(strUserRole) || "99".equals(strUserRole) || "100".equals(strUserRole) || // SO Branch
            "103".equals(strUserRole) || "104".equals(strUserRole) || "105".equals(strUserRole) || // DST Support
-           "111".equals(strUserRole) || "112".equals(strUserRole) || "113".equals(strUserRole) || "114".equals(strUserRole) || "115".equals(strUserRole)) { // HP
+           "111".equals(strUserRole) || "112".equals(strUserRole) || "113".equals(strUserRole) || "114".equals(strUserRole) || "115".equals(strUserRole) || // HP, HM, SM, GM
+           "166".equals(strUserRole) || "167".equals(strUserRole) || "261".equals(strUserRole) || // DST Planning
+           "335".equals(strUserRole) || "336".equals(strUserRole) || "337".equals(strUserRole) // Sales Care
+        ) { // HP
             params.put("userTypeId", "1");
 
         } else if("177".equals(strUserRole) || "179".equals(strUserRole) || "180".equals(strUserRole) || // Cody Support
                 "200".equals(strUserRole) || "252".equals(strUserRole) || "253".equals(strUserRole) || // Cody Planning
-                "250".equals(strUserRole) || "256".equals(strUserRole) ||  // Cody Branch)
-                "117".equals(strUserRole) || "118".equals(strUserRole) || "119".equals(strUserRole) || "120".equals(strUserRole) || "121".equals(strUserRole)) { // Cody
+                "250".equals(strUserRole) || "256".equals(strUserRole) ||  // Cody Branch
+                "117".equals(strUserRole) || "118".equals(strUserRole) || "119".equals(strUserRole) || "120".equals(strUserRole) || "121".equals(strUserRole) // Cody Org
+        ) { // CD
             params.put("userTypeId", "2");
-        }else if("348".equals(strUserRole) || "349".equals(strUserRole) || "350".equals(strUserRole) || "351".equals(strUserRole) || // HT Manager
-                "352".equals(strUserRole) ) { // HT
+
+        }else if("339".equals(strUserRole) || "343".equals(strUserRole) || "344".equals(strUserRole) || // Home Care
+                "348".equals(strUserRole) || "349".equals(strUserRole) || "350".equals(strUserRole) || "351".equals(strUserRole) || "352".equals(strUserRole) // HT Org
+        ) { // HT
             params.put("userTypeId", "7");
+
         }
 
         List<EgovMap> memLevel = agreementService.getMemLevel(params);
@@ -94,28 +101,20 @@ public class AgreementController {
 
         logger.debug("==================== getMemberInfo ====================");
 
-        EgovMap item = new EgovMap();
-        item = (EgovMap) agreementService.getMemberInfo(params);
-
         Map<String, Object> memInfo = new HashMap();
-        memInfo.put("name", item.get("name"));
-        memInfo.put("nric", item.get("nric"));
-        memInfo.put("deptCode", item.get("deptcde"));
-        memInfo.put("grpCode", item.get("grpcde"));
-        memInfo.put("orgCode", item.get("orgcde"));
-        memInfo.put("memLvl", item.get("memlvl"));
-        memInfo.put("stus", item.get("stus"));
-        memInfo.put("signDt", item.get("cnfmdt"));
-        memInfo.put("promoDt", item.get("promoDt"));
-        memInfo.put("cnfmDt", item.get("cdCnfmDt"));
-        memInfo.put("joinDt", item.get("joinDt"));
-
-        // getMemHPpayment
-        if("1".equals(params.get("memType"))) {
-            EgovMap item2 = new EgovMap();
-            item2 = (EgovMap) agreementService.getMemHPpayment(params);
-            memInfo.put("version", item2.get("version"));
-        }
+        List<EgovMap> memberList = agreementService.memberList(params);
+        memInfo.put("name", memberList.get(0).get("name"));
+        memInfo.put("nric", memberList.get(0).get("nric"));
+        memInfo.put("deptCode", memberList.get(0).get("deptcode"));
+        memInfo.put("grpCode", memberList.get(0).get("grpcode"));
+        memInfo.put("orgCode", memberList.get(0).get("orgcode"));
+        memInfo.put("memLvl", memberList.get(0).get("memlvl"));
+        memInfo.put("stus", memberList.get(0).get("stus"));
+        memInfo.put("promoDt", memberList.get(0).get("promodt"));
+        memInfo.put("cnfmDt", memberList.get(0).get("cnfmdt"));
+        memInfo.put("joinDt", memberList.get(0).get("joindt"));
+        memInfo.put("versionid", memberList.get(0).get("versionid"));
+        memInfo.put("rptflnm", memberList.get(0).get("rptflnm"));
 
         return ResponseEntity.ok(memInfo);
     }
@@ -193,5 +192,22 @@ public class AgreementController {
         memInfo.put("signdt", item.get("signdt"));
 
         return ResponseEntity.ok(memInfo);
+    }
+
+    @RequestMapping(value = "/agreement/prevAgreement.do", method = RequestMethod.GET)
+    public ResponseEntity<Map> prevAgreement(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+        logger.debug("==================== prevAgreement ====================");
+        logger.debug("params {}", params);
+
+        Map<String, Object> agreementInfo = new HashMap();
+
+        EgovMap item = new EgovMap();
+        item = (EgovMap) agreementService.prevAgreement(params);
+        agreementInfo.put("cnfmDt", item.get("cnfmDt"));
+        agreementInfo.put("version", item.get("versionId"));
+        agreementInfo.put("rptFileNm", item.get("fileName"));
+
+        return ResponseEntity.ok(agreementInfo);
     }
 }
