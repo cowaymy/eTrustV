@@ -58,6 +58,8 @@ public interface EKeyInApiMapper {
 
   EgovMap selectItmStkPrice(Map<String, Object> param);
 
+  EgovMap selectItmStkPrice2(Map<String, Object> param);
+
   EgovMap selectPromoDesc(int promoId);
 
   EgovMap selectProductPromotionPriceByPromoStockIDNewCorp(Map<String, Object> param);
