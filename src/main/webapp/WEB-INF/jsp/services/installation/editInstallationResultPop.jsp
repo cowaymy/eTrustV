@@ -8,6 +8,7 @@
  26/02/2020  ONGHC  1.0.2          ADD LPM FIELD
  10/06/2020  ONGHC  1.0.3          Add PSI & LPM Field onblur Checking
  27/07/2020  ONGHC  1.0.4          Amend Design
+ 28/08/2020  FARUQ   1.0.5         Remove installation status active, add psi,lpm, volt, tds, room temp, water source temp, failParent, failChild, instChkLst
  -->
 <script type="text/javaScript">
   $(document).ready(
@@ -28,6 +29,8 @@
       $("#reqsms").prop("checked", true);
     }
 
+    doGetCombo('/services/adapterList.do', '', '${installInfo.adptUsed}','adptUsed', 'S' , '');
+
     $("#installdt").change( function() {
       var checkMon = $("#installdt").val();
 
@@ -39,25 +42,73 @@
       });
     });
 
-    // ONGHC - 20200221 ADD FOR PSI
+ // ONGHC - 20200221 ADD FOR PSI
     // 54 - WP
     // 57 - SOFTENER
     // 58 - BIDET
     // 400 - POE
     if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
-      $("#m4").show();
-      $("#psiRcd").attr("disabled", false);
-      $("#m5").show();
-      $("#lpmRcd").attr("disabled", false);
+      if ("${orderInfo.stkCtgryId}" != "54") {
+        $("#editInstallForm #m4").show();
+        $("#psiRcd").attr("disabled", false);
+        $("#m5").show();
+        $("#lpmRcd").attr("disabled", false);
+        $("#m6").hide();
+        $("#volt").attr("disabled", true);
+        $("#m7").hide();
+        $("#tds").attr("disabled", true);
+        $("#m8").hide();
+        $("#roomTemp").attr("disabled", true);
+        $("#m9").hide();
+        $("#waterSourceTemp").attr("disabled", true);
+        $("#m10").hide();
+        $("#adptUsed").attr("disabled", true);
+      } else {
+        $("#editInstallForm #m4").show();
+        $("#editInstallForm #psiRcd").attr("disabled", false);
+        $("#editInstallForm #m5").show();
+        $("#editInstallForm #lpmRcd").attr("disabled", false);
+        $("#editInstallForm #m6").show();
+        $("#editInstallForm #volt").attr("disabled", false);
+        $("#editInstallForm #m7").show();
+        $("#editInstallForm #tds").attr("disabled", false);
+        $("#editInstallForm #m8").show();
+        $("#editInstallForm #roomTemp").attr("disabled", false);
+        $("#editInstallForm #m9").show();
+        $("#editInstallForm #waterSourceTemp").attr("disabled", false);
+        $("#editInstallForm #m10").show();
+        $("#editInstallForm #adptUsed").attr("disabled", false);
+      }
     } else {
-      $("#m4").hide();
-      $("#psiRcd").attr("disabled", true);
-      $("#m5").hide();
-      $("#lpmRcd").attr("disabled", true);
+      $("#editInstallForm #m4").hide();
+      $("#editInstallForm #psiRcd").attr("disabled", true);
+      $("#editInstallForm #m5").hide();
+      $("#editInstallForm #lpmRcd").attr("disabled", true);
+      $("#editInstallForm #m6").show();
+      $("#editInstallForm #volt").attr("disabled", true);
+      $("#editInstallForm #m7").show();
+      $("#editInstallForm #tds").attr("disabled", true);
+      $("#editInstallForm #m8").show();
+      $("#editInstallForm #roomTemp").attr("disabled", true);
+      $("#editInstallForm #m9").show();
+      $("#editInstallForm #waterSourceTemp").attr("disabled", true);
+      $("#editInstallForm #m10").hide();
+      $("#editInstallForm #adptUsed").attr("disabled", true);
     }
+    if ("${orderInfo.stkCtgryId}" == "55"){
+        notMandatoryForAP();
+    }
+});
 
-    doGetCombo('/services/adapterList.do', '', '${installInfo.adptUsed}','adptUsed', 'S' , '');
-  });
+function notMandatoryForAP(){
+    $("#editInstallForm #m4").hide();
+    $("#editInstallForm #m5").hide();
+    $("#editInstallForm #m6").hide();
+    $("#editInstallForm #m7").hide();
+    $("#editInstallForm #m8").hide();
+    $("#editInstallForm #m9").hide();
+    $("#editInstallForm #m10").hide();
+}
 
   function validate(evt) {
     var theEvent = evt || window.event;
@@ -144,6 +195,7 @@
   }
 
   function fn_saveInstall() {
+
     if (fn_validate()) {
 
         // KR-OHK Serial Check add
@@ -178,6 +230,33 @@
     } else {
       if ($("#editInstallForm #serialNo").val().trim().length < 9) {
         msg += "* <spring:message code='sys.msg.invalid' arguments='Serial No' htmlEscape='false'/> </br>";
+      }
+    }
+
+ // PSI CHECKING
+    if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
+      if ( $("#psiRcd").val() == "") {
+        msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
+      }
+      if ( $("#lpmRcd").val() == "") {
+        msg += "* <spring:message code='sys.msg.invalid' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
+      }
+      if ("${orderInfo.stkCtgryId}" == "54") {
+  	  if ( $("#volt").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Voltage' htmlEscape='false'/> </br>";
+        }
+        if ( $("#tds").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Total Dissolved Solid (TDS)' htmlEscape='false'/> </br>";
+        }
+       if ( $("#roomTemp").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Room Temperature' htmlEscape='false'/> </br>";
+        }
+       if ( $("#waterSourceTemp").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Water Source Temperature' htmlEscape='false'/> </br>";
+        }
+        if ( $("#adptUsed").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Adapter Used' htmlEscape='false'/> </br>";
+        }
       }
     }
 
@@ -328,27 +407,27 @@
               </td>
             </tr>
             <tr>
-              <th scope="row"><spring:message code='service.title.Volt' /><span class="must" id="m4"> *</span></th>
+              <th scope="row"><spring:message code='service.title.Volt' /><span class="must" id="m6"> *</span></th>
               <td>
-                <input type="text" title="" placeholder="<spring:message code='service.title.Volt' />" class="w100p" id="Volt" name="Volt" onkeypress='validate(event)' onblur="validate2(this)" value="<c:out value="${installInfo.volt}"/>" />
+                <input type="text" title="" placeholder="<spring:message code='service.title.Volt' />" class="w100p" id="volt" name="volt" onkeypress='validate(event)' onblur="validate2(this)" value="<c:out value="${installInfo.volt}"/>" />
               </td>
-              <th scope="row"><spring:message code='service.title.TDS' /><span class="must" id="m5"> *</span></th>
+              <th scope="row"><spring:message code='service.title.TDS' /><span class="must" id="m7"> *</span></th>
               <td>
-                <input type="text" title="" placeholder="<spring:message code='service.title.TDS' />" class="w100p" id="TDS" name="TDS" onkeypress='validate(event)' onblur="validate2(this)" value="<c:out value="${installInfo.tds}"/>" />
-              </td>
-            </tr>
-            <tr>
-              <th scope="row"><spring:message code='service.title.RoomTemp' /><span class="must" id="m4"> *</span></th>
-              <td>
-                <input type="text" title="" placeholder="<spring:message code='service.title.RoomTemp' />" class="w100p" id="RoomTemp" name="RoomTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur="validate3(this)" value="<c:out value="${installInfo.roomTemp}"/>" />
-              </td>
-              <th scope="row"><spring:message code='service.title.WaterSourceTemp' /><span class="must" id="m5"> *</span></th>
-              <td>
-                <input type="text" title="" placeholder="<spring:message code='service.title.WaterSourceTemp' />" class="w100p" id="WaterSourceTemp" name="WaterSourceTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur="validate3(this)" value="<c:out value="${installInfo.waterSrcTemp}"/>" />
+                <input type="text" title="" placeholder="<spring:message code='service.title.TDS' />" class="w100p" id="tds" name="tds" onkeypress='validate(event)' onblur="validate2(this)" value="<c:out value="${installInfo.tds}"/>" />
               </td>
             </tr>
             <tr>
-              <th scope="row"><spring:message code='service.title.adptUsed' /><span name="m14" id="m14" class="must">*</span></th>
+              <th scope="row"><spring:message code='service.title.RoomTemp' /><span class="must" id="m8"> *</span></th>
+              <td>
+                <input type="text" title="" placeholder="<spring:message code='service.title.RoomTemp' />" class="w100p" id="roomTemp" name="roomTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur="validate3(this)" value="<c:out value="${installInfo.roomTemp}"/>" />
+              </td>
+              <th scope="row"><spring:message code='service.title.WaterSourceTemp' /><span class="must" id="m9"> *</span></th>
+              <td>
+                <input type="text" title="" placeholder="<spring:message code='service.title.WaterSourceTemp' />" class="w100p" id="waterSourceTemp" name="waterSourceTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur="validate3(this)" value="<c:out value="${installInfo.waterSrcTemp}"/>" />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.title.adptUsed' /><span name="m10" id="m10" class="must">*</span></th>
               <td colspan="3">
                 <select class="w100p" id="adptUsed" name="adptUsed">
                   <c:forEach var="list" items="${adapterUsed}" varStatus="status">
