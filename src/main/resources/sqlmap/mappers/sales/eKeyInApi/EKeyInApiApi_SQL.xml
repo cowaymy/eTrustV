@@ -364,11 +364,12 @@
   <select id="selecteOrderProduct2" parameterType="Map" resultType="egovMap">
     <![CDATA[
        /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selecteOrderProduct2] 20191210 - KR JAEMAJEM */
-       SELECT DISTINCT A.STK_ID                                                                AS STK_ID
-                              , UPPER(A.STK_CODE ||' - '||A.STK_DESC)                                          AS C1
-                              , CASE WHEN B.DISCONTINUE = '1'   THEN C.CODE_NAME ||' ('||D.CODE_NAME||')'
-                                        ELSE C.CODE_NAME END                                     AS CODE_NAME
-                              , B.DISCONTINUE                                                           AS DISCONTINUE
+       SELECT DISTINCT A.STK_ID AS STK_ID
+                              , UPPER(A.STK_CODE ||' - '||A.STK_DESC) AS C1
+                              , CASE WHEN B.DISCONTINUE = '1'
+                                        THEN C.CODE_NAME ||' ('||D.CODE_NAME||')'
+                                        ELSE C.CODE_NAME END AS CODE_NAME
+                              , B.DISCONTINUE AS DISCONTINUE
        FROM SYS0026M A
        INNER JOIN SAL0092M B ON A.STK_ID = B.SRV_MEM_ITM_STK_ID
                                         AND B.SRV_MEM_ITM_STUS_ID = 1
@@ -380,9 +381,29 @@
            AND A.STUS_CODE_ID = 1
     ]]>
 
-    <if test='stkCtgryId != null and stkCtgryId != "" and stkCtgryId > 0'>
-      AND A.STK_CTGRY_ID = #{stkCtgryId}
-    </if>
+    <choose>
+      <when test='stkCtgryId != null and stkCtgryId != "" and stkCtgryId > 0'>
+        AND EXISTS ( SELECT 1
+                            FROM SYS0094M EX1
+                            WHERE EX1.IND = 'HOMECARE'
+                                AND C.CODE = EX1.CODE
+
+                            <if test='stkCtgryId == 5706'>
+                              AND EX1.CODE = 'MAT'
+                            </if>
+                            <if test='stkCtgryId == 5707'>
+                              AND EX1.CODE = 'FRM'
+                            </if>
+        )
+      </when>
+      <otherwise>
+        AND NOT EXISTS ( SELECT 1
+                                   FROM SYS0094M EX1
+                                   WHERE EX1.IND = 'HOMECARE'
+                                       AND C.CODE = EX1.CODE
+        )
+      </otherwise>
+    </choose>
 
     ORDER BY DISCONTINUE ASC
                  , CODE_NAME ASC
