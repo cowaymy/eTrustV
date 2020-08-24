@@ -81,6 +81,17 @@ public class CustomerController {
     return ResponseEntity.ok(bankList);
   }
 
+  //////////////////////////////////////////////////  CHECK_EXIST_NRIC  ///////////////////////////////////////////////////
+
+    @RequestMapping(value = "/checkNricExist.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> checkNricExist(@RequestParam Map<String, Object> params, ModelMap model)
+        throws Exception {
+
+      EgovMap resultMap = customerService.checkNricExist(params);
+
+      return ResponseEntity.ok(resultMap);
+  }
+  //////////////////////////////////////////////////  CHECK_EXIST_NRIC  ///////////////////////////////////////////////////
   /**
    * Customer List 초기화 화면
    *
