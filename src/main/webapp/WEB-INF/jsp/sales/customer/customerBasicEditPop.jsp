@@ -41,7 +41,7 @@ $(document).ready(function(){
     if(selCodeCustId == '964'){
         $("#basicCmbCustTypeId").attr("disabled" , "disabled");
         $("#basicCmbCorpTypeId").attr({"class" : "disabled w100p" , "disabled" : "disabled"});
-        $("#basicNric").attr({"class":"readonly w100p","readonly" : "readonly"});
+       // $("#basicNric").attr({"class":"readonly w100p","readonly" : "readonly"});
         $("input[name='basicGender']").attr("disabled" , false);
         $("#basicCmdRaceTypeId").attr("disabled" , false);
         $("#basicCmdNationTypeId").attr("disabled" , "disabled");
@@ -93,6 +93,63 @@ $(document).ready(function(){
                     return;
                  }
             }
+          //basicNric
+            if('' == $("#basicNric").val() ||  null == $("#basicNric").val()){
+
+            	Common.alert("<spring:message code='sal.alert.msg.plzKeyInCustNricComNo' />");
+                return;
+                }
+                else {
+
+
+             //    var CUST_NRIC =	$('#basicNric').val().trim();
+               	var existNric = fn_validNricExist();
+               	var ic = $('#basicNric').val().trim();
+               	var lastDigit = parseInt(ic.charAt(ic.length - 1));
+               	var genderCode = $('#basicGender').val().trim();
+                var msg = "";
+                var isValid = true;
+                var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/);
+
+                console.log('existNric:' + existNric);
+                console.log('lastDigit:' + lastDigit);
+                console.log('GenderCode:' + genderCode);
+                console.log('isValid:' + isValid);
+                console.log('ic_NO update to :' + ic);
+
+
+               if (pattern.test(ic)) {
+            	   isValid = false;
+                	Common.alert("Please ensure NRIC does not contains special characters");
+                	return ;
+                }
+
+               if (existNric != 0  ) {
+                 isValid = false;
+                 Common.alert("This NRIC already exist");
+                    return ;
+               }
+
+                if ( genderCode == "F") {
+                   if (lastDigit % 2 != 0) {
+                    isValid = false;
+                    console.log('msg:: Gender not match with NRIC');
+                    Common.alert("<spring:message code='sal.msg.invalidNric' />");
+                        return;
+               }
+                    } else {
+                      if (lastDigit % 2 == 0) {
+                        isValid = false;
+                      console.log('msg:: Gender not match with NRIC');
+                     Common.alert("<spring:message code='sal.msg.invalidNric' />");
+                     return;
+
+                      }
+                    }
+
+                 //sys0052M
+
+            }
         }
 
         /*********** company ***********/
@@ -117,6 +174,7 @@ $(document).ready(function(){
                  }
             }
         }
+
 
         //update
         fn_getCustomerBasicAjax();
@@ -151,6 +209,83 @@ $(document).ready(function(){
     function fn_closeFunc(){
         $("#_selectParam").val(1);
     }
+
+    /////////////////////////////////////////////  NRIC validation ///////////////////////////////////////////////////////
+    function fn_validNric() {
+        var isValid = true, msg = "";
+
+        if (FormUtil.isEmpty($('#basicNric').val().trim())) {
+          isValid = false;
+          msg += '<spring:message code="sal.alert.msg.plzKeyInCustNricComNo" />';
+        } else {
+
+          var existNric = fn_validNricExist();
+
+          console.log('existNric:' + existNric);
+
+          if (existNric > 0) {
+            isValid = false;
+            msg += '<spring:message code="sal.alert.msg.existingCustId" />'
+                + existNric;
+
+          } else {
+            if ($('#modCustType').val().trim() == '964') {
+              var ic = $('#modCustNric').val().trim();
+              var lastDigit = parseInt(ic.charAt(ic.length - 1));
+
+              if (lastDigit != null) {
+                if ($('#modCustGender').val() == "F") {
+                  if (lastDigit % 2 != 0) {
+                    isValid = false;
+                    msg += '<spring:message code="sal.alert.msg.invalidNric" />';
+                  }
+                } else {
+                  if (lastDigit % 2 == 0) {
+                    isValid = false;
+                    msg += '<spring:message code="sal.alert.msg.invalidNric" />';
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        if (!isValid)
+          Common
+              .alert('<spring:message code="sal.alert.msg.saveValidation" />'
+                  + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+
+        console.log('msg:' + msg);
+        console.log('isValid:' + isValid);
+
+        return isValid;
+      }
+
+    function fn_validNricExist() {
+
+    	var CUST_NRIC = $('#basicNric').val().trim();
+        var exCustNric = 0;
+
+        Common.ajax("GET", "/sales/customer/checkNricExist.do", $('#updForm')
+.serializeJSON(), function(result) {
+
+
+          if (result != null) {
+
+            exCustNric = result.nric;
+            console.log('result.nric:' + exCustNric);
+
+          }
+
+        }, null, {
+          async : false
+        });
+
+        return exCustNric;
+      }
+
+/////////////////////////////////////////////  NRIC validation ///////////////////////////////////////////////////////
+
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <!-- getParams  -->
@@ -392,6 +527,7 @@ $(document).ready(function(){
 <form id="updForm"><!-- form start -->
 <input type="hidden" value="${result.custId}" name="basicCustId">
 <input type="hidden" value="${result.typeId }" name="basicTypeId">
+<input type="hidden" value="${result.nric}" name="basicNricOld">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -412,7 +548,7 @@ $(document).ready(function(){
     <td><select name="basicCmbCorpTypeId" id="basicCmbCorpTypeId" class="disabled w100p" ></select></td>
     <th scope="row"><spring:message code="sal.text.nricCompanyNo" /><span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder=""   value="${result.nric}" id="basicNric"/>
+    <input type="text" title="" placeholder=""   value="${result.nric}"  name = "basicNric" id="basicNric"/>
     </td>
 </tr>
 <tr>
@@ -438,8 +574,8 @@ $(document).ready(function(){
 <tr>
     <th scope="row"><spring:message code="sal.text.gender" /> <span class="brown_text">#</span></th>
     <td>
-    <label><input type="radio" name="basicGender"  <c:if test="${result.gender ne 'F'}">checked</c:if>  value="M"/><span>Male</span></label>
-    <label><input type="radio" name="basicGender"  <c:if test="${result.gender eq 'F'}">checked</c:if> value="F" /><span>Female</span></label>
+    <label><input type="radio" id="basicGender" name="basicGender"  <c:if test="${result.gender ne 'F'}">checked</c:if>  value="M"/><span>Male</span></label>
+    <label><input type="radio" id="basicGender" name="basicGender"  <c:if test="${result.gender eq 'F'}">checked</c:if> value="F" /><span>Female</span></label>
     </td>
     <th scope="row"><spring:message code="sal.text.visaExpire" /></th>
     <td>
