@@ -980,6 +980,7 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 			EgovMap  orderExchangeTypeByInstallEntryID = GetOrderExchangeTypeByInstallEntryID(params);
 			String hidPEAfterInstall = null;
 			returnMap.put("spanInstallationType",orderExchangeTypeByInstallEntryID.get("soCurStusId"));
+	    params.put("docId",orderExchangeTypeByInstallEntryID.get("docId"));
 			if(Integer.parseInt(orderExchangeTypeByInstallEntryID.get("soCurStusId").toString())==25 || Integer.parseInt(orderExchangeTypeByInstallEntryID.get("soCurStusId").toString())==26){
 				logger.debug("-------------13---------------");
 				hidPEAfterInstall = "1";
@@ -1587,18 +1588,18 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 	                    adjCrAccID = 38;
 	                }
 
-	            	params.put("adjTypeSetID", adjTypeSetID);
+	                params.put("adjTypeSetID", adjTypeSetID);
 	                params.put("adjDrAccID", adjDrAccID);
 	                params.put("adjCrAccID", adjCrAccID);
 
-	                SimpleDateFormat format = new SimpleDateFormat("YYYY-MMM-DD");
+	                SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 
 	                String esalesDt = params.get("esalesDt").toString();
 
 	                Date salesdate = null;
 	                Date mthapril = null;
 
-	                mthapril =  format.parse("2015-APR-01");
+	                mthapril =  format.parse("2015/04/01");
 	                salesdate = format.parse(esalesDt);
 
 	                if (salesdate.compareTo(mthapril)<0){
