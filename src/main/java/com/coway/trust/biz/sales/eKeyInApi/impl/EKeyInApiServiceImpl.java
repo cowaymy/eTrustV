@@ -119,11 +119,9 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     if (CommonUtils.isEmpty(param.getPreOrdId()) || param.getPreOrdId() <= 0) {
       throw new ApplicationException(AppConstants.FAIL, " Pre Order ID value does not exist.");
     }
-    EKeyInApiDto selecteKeyInDetail = EKeyInApiDto
-        .create(eKeyInApiMapper.selecteKeyInDetail(EKeyInApiForm.createMap(param)));
+    EKeyInApiDto selecteKeyInDetail = EKeyInApiDto.create(eKeyInApiMapper.selecteKeyInDetail(EKeyInApiForm.createMap(param)));
 
-    selecteKeyInDetail.setCustOriCrcNo(
-        CommonUtils.getMaskCreditCardNo(StringUtils.trim(selecteKeyInDetail.getCustOriCrcNo()), "*", 4));
+    selecteKeyInDetail.setCustOriCrcNo(CommonUtils.getMaskCreditCardNo(StringUtils.trim(selecteKeyInDetail.getCustOriCrcNo()), "*", 4));
     List<EgovMap> selectBankList = selectBankList();
     List<EKeyInApiDto> bankList = selectBankList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
     selecteKeyInDetail.setBankList(bankList);
@@ -134,16 +132,15 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     selecteKeyInDetail.setPromotionList(selectOrderInfo.getPromotionList());
 
     if (CommonUtils.isNotEmpty(selecteKeyInDetail.getHcGu()) && selecteKeyInDetail.getHcGu().equals("HC")) {
-      List<EgovMap> selecteKeyInDetailOrderHomecare = eKeyInApiMapper
-          .selecteKeyInDetailOrderHomecare(EKeyInApiForm.createMap(param));
-      List<EKeyInApiDto> homecareList = selecteKeyInDetailOrderHomecare.stream().map(r -> EKeyInApiDto.create(r))
-          .collect(Collectors.toList());
+      List<EgovMap> selecteKeyInDetailOrderHomecare = eKeyInApiMapper.selecteKeyInDetailOrderHomecare(EKeyInApiForm.createMap(param));
+      List<EKeyInApiDto> homecareList = selecteKeyInDetailOrderHomecare.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
       if (homecareList.size() != 1) {
         throw new ApplicationException(AppConstants.FAIL, " HomeCare information is missing.");
       }
 
       int mattressItmStkId = 0;
       int frameItmStkId = 0;
+      int masterAppTyp = 0;
       for (EKeyInApiDto listData : homecareList) {
         if (CommonUtils.isNotEmpty(listData.getMatPreOrdId())) {
           param.setPreOrdId(listData.getMatPreOrdId());
@@ -161,6 +158,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
             selecteKeyInDetail.setMattress(mattress);
 
             mattressItmStkId = mattress.getItmStkId();
+
+            masterAppTyp = mattress.getAppTypeId();
           }
         }
 
@@ -173,7 +172,11 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
             frameItmStkId = frame.getItmStkId();
             frame.setStkCtgryId(5707);
             frame.setItmStkId(mattressItmStkId); // mattress itmStkId -> frame
-                                                 // itmStkId select
+                                                                  // itmStkId select
+
+            if (masterAppTyp != 0) {
+              frame.setAppTypeId(masterAppTyp);
+            }
 
             EKeyInApiDto selectOrderInfoFrame = selectOrderInfo(frame);
             frame.setPackTypeList(selectOrderInfoFrame.getPackTypeList());
@@ -204,8 +207,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     EKeyInApiForm param = new EKeyInApiForm();
     if (selectData.getAppTypeId() == 66) {
       List<EgovMap> selecteOrderPackType1 = selecteOrderPackType1();
-      List<EKeyInApiDto> packTypeList = selecteOrderPackType1.stream().map(r -> EKeyInApiDto.create(r))
-          .collect(Collectors.toList());
+      List<EKeyInApiDto> packTypeList = selecteOrderPackType1.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
       selectData.setPackTypeList(packTypeList);
 
       param.setSrvCntrctPacId(selectData.getSrvPacId());
