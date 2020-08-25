@@ -477,25 +477,23 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     List<EgovMap> selectMattressProductList = null;
     List<EgovMap> selectFrameProductList = null;
 
-    if (param.getAppTypeId() == 66) {
+    if (param.getAppTypeId() == 66) { // FOR RENTAL
       param.setStkCtgryId(5706);
       selectMattressProductList = selecteOrderProduct1(param);
 
       param.setStkCtgryId(5707);
       selectFrameProductList = selecteOrderProduct1(param);
-    } else {
+    } else { // FOR OUTRIGHT AND INSTALLMENT
       param.setStkCtgryId(5706);
       selectMattressProductList = selecteOrderProduct2(param);
 
       param.setStkCtgryId(5707);
       selectFrameProductList = selecteOrderProduct2(param);
     }
-    List<EKeyInApiDto> mattressProductList = selectMattressProductList.stream().map(r -> EKeyInApiDto.create(r))
-        .collect(Collectors.toList());
+    List<EKeyInApiDto> mattressProductList = selectMattressProductList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
     rtn.setMattressProductList(mattressProductList);
 
-    List<EKeyInApiDto> frameProductList = selectFrameProductList.stream().map(r -> EKeyInApiDto.create(r))
-        .collect(Collectors.toList());
+    List<EKeyInApiDto> frameProductList = selectFrameProductList.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
     rtn.setFrameProductList(frameProductList);
     return rtn;
   }
@@ -545,16 +543,20 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
         .collect(Collectors.toList());
     selectItmStkPrice.setPromotionList(promotionListDto);
 
-    if (CommonUtils.isNotEmpty(param.getGu()) && param.getGu().equals("MATTRESS")) {// mattress
-                                                                                    // product
-                                                                                    // select
+    if (CommonUtils.isNotEmpty(param.getGu()) && param.getGu().equals("MATTRESS")) {
       param.setStkCtgryId(5707);
       param.setGu("MATTRESS");
       param.setSrvCntrctPacId(param.getSrvPacId());
-      List<EgovMap> selecteOrderProduct1 = selecteOrderProduct1(param);
+      List<EgovMap> selecteOrderProduct1 = null;
+
+      if (!"66".equals(CommonUtils.nvl(param.getAppTypeId()))) {
+        selecteOrderProduct1 = selecteOrderProduct2(param);
+      } else {
+        selecteOrderProduct1 = selecteOrderProduct1(param);
+      }
+
       if (selecteOrderProduct1.size() != 0) {
-        List<EKeyInApiDto> selectFrameProductList = selecteOrderProduct1.stream().map(r -> EKeyInApiDto.create(r))
-            .collect(Collectors.toList());
+        List<EKeyInApiDto> selectFrameProductList = selecteOrderProduct1.stream().map(r -> EKeyInApiDto.create(r)).collect(Collectors.toList());
         selectItmStkPrice.setFrameProductList(selectFrameProductList);
       }
     }
@@ -586,6 +588,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     // BigDecimal normalRentalFees = BigDecimal.ZERO;
 
     Map<String, Object> createParam = EKeyInApiForm.createMap(param);
+
     EgovMap priceInfo = null;
     if (isNew == 1) {
       if (param.getSrvPacId() == 4) {
@@ -595,8 +598,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       }
 
       if (null != priceInfo) {
-        if (SalesConstants.PROMO_APP_TYPE_CODE_ID_REN == Integer
-            .parseInt(String.valueOf((BigDecimal) priceInfo.get("promoAppTypeId")))) { // Rental
+        if (SalesConstants.PROMO_APP_TYPE_CODE_ID_REN == Integer.parseInt(String.valueOf((BigDecimal) priceInfo.get("promoAppTypeId")))) { // Rental
           orderPricePromo = (BigDecimal) priceInfo.get("promoPrcRpf");
           orderRentalFeesPromo = (BigDecimal) priceInfo.get("promoAmt");
           orderPVPromo = (BigDecimal) priceInfo.get("promoItmPv");
