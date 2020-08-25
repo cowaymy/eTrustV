@@ -1598,7 +1598,8 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       throw new ApplicationException(AppConstants.FAIL, "DSC Branch does not exist.");
     }
 
-    if (!"67".equals(CommonUtils.nvl(param.getAppTypeId())) && !"68".equals(CommonUtils.nvl(param.getAppTypeId()))) { // OUTRIGHT AND INSTALLMENT SKIP PAYMENT
+    // OUTRIGHT, INSTALLMENT & AUXILIARY SKIP PAYMENT
+    if (!"67".equals(CommonUtils.nvl(param.getAppTypeId())) && !"68".equals(CommonUtils.nvl(param.getAppTypeId())) && !"5764".equals(CommonUtils.nvl(param.getAppTypeId()))) {
       if (CommonUtils.isEmpty(param.getRentPayModeId()) || param.getRentPayModeId() <= 0) {
         throw new ApplicationException(AppConstants.FAIL, "Payment Mode does not exist.");
       }
