@@ -240,6 +240,30 @@
         dataField : "ctHpNo",
         headerText : "CT HP No",
         width : 100
+    },{
+        dataField : "custName",
+        headerText : "Customer Name",
+        width : 100
+    },{
+        dataField : "area",
+        headerText : "Area",
+        width : 100
+    },{
+        dataField : "city",
+        headerText : "City",
+        width : 100
+    },{
+        dataField : "postcode",
+        headerText : "Postcode",
+        width : 100
+    },{
+        dataField : "state",
+        headerText : "State",
+        width : 100
+    },{
+        dataField : "areaId",
+        headerText : "Area ID",
+        width : 100
     }
     ];
 
