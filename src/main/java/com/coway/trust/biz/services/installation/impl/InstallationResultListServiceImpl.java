@@ -3545,4 +3545,21 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     logger.debug("resultValue : {}", resultValue);
     return resultValue;
   }
+
+  @Override
+  public List<EgovMap> waterEnvironmentList(Map<String, Object> params) {
+    List<EgovMap> waterEnvironmentList = null;
+    logger.debug("params : {}", params);
+
+    waterEnvironmentList = installationResultListMapper.waterEnvironmentList(params);
+
+    return waterEnvironmentList;
+  }
+
+   @Override
+  public List<EgovMap> getProductListwithCategory(Map<String, Object> params) {
+    // TODO ProductCodeList 호출시 error남
+    return installationResultListMapper.getProductListwithCategory(params);
+  }
+
 }
