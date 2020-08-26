@@ -850,8 +850,8 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                 </if>
 
                 <if test="cmdBranchCode != null and cmdBranchCode != ''">
-                AND mg.CODY_BRNCH_CODE in ( select br.CODE from SYS0005M br where br.BRNCH_id = #{cmdBranchCode})
-              <!--     AND ( br.BRNCH_id = #{cmdBranchCode}) -->
+                <!-- AND mg.CODY_BRNCH_CODE in ( select br.CODE from SYS0005M br where br.BRNCH_id = #{cmdBranchCode}) -->
+                   AND ( br.BRNCH_id = #{cmdBranchCode})
                 </if>
 
                 <if test="cmdCdManager != null and cmdCdManager != ''">
