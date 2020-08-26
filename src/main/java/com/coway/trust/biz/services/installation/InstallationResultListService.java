@@ -130,4 +130,8 @@ public interface InstallationResultListService {
 
   Map<String, Object> updateAssignCTSerial(Map<String, Object> params);
 
+  List<EgovMap> waterEnvironmentList(Map<String, Object> params);
+
+  List<EgovMap> getProductListwithCategory(Map<String, Object> params);
+
 }
