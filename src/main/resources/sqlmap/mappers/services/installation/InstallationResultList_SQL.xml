@@ -4844,4 +4844,389 @@
     )
   </insert>
 
+
+  <select id="getProductListwithCategory" parameterType="Map" resultType="egovMap">
+   SELECT STK_ID
+         , STK_CODE CODE_ID
+         , STK_CODE || ' - ' || STK_DESC CODE_NAME
+    FROM SYS0026M
+    WHERE STK_TYPE_ID = '61'
+      AND STUS_CODE_ID = '1'
+      AND STK_CTGRY_ID = #{groupCode}
+    ORDER BY STK_CODE
+           , STK_DESC
+  </select>
+
+ <select id="waterEnvironmentList" parameterType="Map" resultType="egovMap">
+
+SELECT
+RESULT_TYPE ,
+SALES_ORD_ID ,
+SALES_ORD_NO ,
+TYPE_CODE ,
+TYPE_NO ,
+APP_TYPE_ID ,
+APP_TYPE ,
+STK_CTGRY_ID ,
+PROD_CAT ,
+STK_ID ,
+PRODUCT ,
+SERIAL_NO ,
+SIRIM_NO ,
+STUS_ID ,
+STATUS ,
+RESULT_NO ,
+NVL(TO_CHAR (APPT_DT,'DD-MM-YYYY'),'-') APPT_DT ,
+NVL(TO_CHAR(COM_DT,'DD-MM-YYYY'),'-') COM_DT ,
+NVL(TO_CHAR(RESULT_KEY_DT,'DD-MM-YYYY'),'-') RESULT_KEY_DT ,
+FAIL_LOC ,
+FAIL_ID ,
+FAIL_TYPE ,
+FAIL_FEEDBACK ,
+NVL(VOLT,'0') VOLT ,
+NVL(PSI,'0') PSI ,
+NVL(LPM,'0') LPM ,
+NVL(BOOST_PUMP,'0') BOOST_PUMP ,
+NVL(AFTER_PSI,'0') AFTER_PSI ,
+NVL(AFTER_LPM,'0') AFTER_LPM ,
+NVL(TDS,'0') TDS ,
+NVL(ROOM_TEMP,'0') ROOM_TEMP ,
+NVL(WATER_SRC_TEMP,'0') WATER_SRC_TEMP,
+ADPT_CODE ,
+NVL(ADPT_USED,'-') ADPT_USED ,
+SUM_TOTAL_PIC ,
+BRNCH_ID ,
+DSC_BRNCH_CODE ,
+CT_CODE ,
+CT_NAME ,
+CT_HP_NO ,
+CUST_ID ,
+CUST_NAME ,
+CUST_TEL ,
+STATE ,
+CITY ,
+AREA_ID ,
+AREA
+FROM (
+
+SELECT 'AS' RESULT_TYPE ,
+C.SALES_ORD_ID ,
+C.SALES_ORD_NO ,
+A.AS_TYPE_ID TYPE_CODE ,
+E.CODE TYPE_NO,
+C.APP_TYPE_ID ,
+F.CODE APP_TYPE ,
+G.STK_CTGRY_ID ,
+K.CODE PROD_CAT ,
+G.STK_ID ,
+G.STK_CODE || ' - ' || G.STK_DESC AS PRODUCT ,
+'-' SERIAL_NO ,
+'-' SIRIM_NO ,
+A.AS_STUS_ID STUS_ID ,
+H.CODE STATUS ,
+B.AS_RESULT_NO RESULT_NO ,
+A.AS_APPNT_DT APPT_DT ,
+B.AS_SETL_DT COM_DT ,
+B.AS_RESULT_CRT_DT RESULT_KEY_DT ,
+0 FAIL_LOC ,
+0 FAIL_ID  ,
+'-' FAIL_TYPE ,
+'-' FAIL_FEEDBACK ,
+0 VOLT ,
+B.PSI ,
+B.LPM ,
+0 BOOST_PUMP ,
+0 AFTER_PSI ,
+0 AFTER_LPM ,
+0 TDS ,
+0 ROOM_TEMP ,
+0 WATER_SRC_TEMP ,
+'0' ADPT_CODE ,
+'-' ADPT_USED ,
+0 SUM_TOTAL_PIC ,
+A.AS_BRNCH_ID BRNCH_ID ,
+ NVL(P.CODE, '-') DSC_BRNCH_CODE,
+ J.MEM_CODE CT_CODE ,
+ J.NAME CT_NAME ,
+ J.TEL_MOBILE CT_HP_NO ,
+ C.CUST_ID ,
+ L.NAME CUST_NAME ,
+ NVL(O.TEL_M1,'-') CUST_TEL ,
+ N.AREA_ID ,
+ N.STATE ,
+ N.AREA ,
+ N.CITY
+FROM
+SVC0001D A
+LEFT JOIN SVC0004D B ON A.AS_ID = B.AS_ENTRY_ID AND B.AS_RESULT_TYPE_ID = 457 AND B.AS_RESULT_STUS_ID NOT IN (19) AND B.AS_RESULT_IS_CURR = 1
+LEFT JOIN SAL0001D C ON A.AS_SO_ID = C.SALES_ORD_ID
+LEFT JOIN SAL0002D D ON C.SALES_ORD_ID = D.SALES_ORD_ID
+LEFT JOIN SYS0013M E ON A.AS_TYPE_ID = E.CODE_ID
+LEFT JOIN SYS0013M F ON C.APP_TYPE_ID = F.CODE_ID
+LEFT JOIN SYS0026M G ON D.ITM_STK_ID = G.STK_ID
+LEFT JOIN SYS0038M H ON A.AS_STUS_ID = H.STUS_CODE_ID
+LEFT JOIN ORG0001D J ON A.AS_MEM_ID = J.MEM_ID
+LEFT JOIN SYS0013M K ON G.STK_CTGRY_ID = K.CODE_ID
+LEFT JOIN SAL0029D L ON C.CUST_ID = L.CUST_ID AND L.STUS_CODE_ID = 1
+LEFT JOIN SAL0023D M ON C.CUST_ADD_ID = M.CUST_ADD_ID AND M.STUS_CODE_ID = 9
+LEFT JOIN SYS0064M N ON M.AREA_ID = N.AREA_ID
+LEFT JOIN SAL0027D O ON C.CUST_CNT_ID = O.CUST_CNTC_ID AND O.STUS_CODE_ID = 9
+LEFT JOIN SYS0005M P ON A.AS_BRNCH_ID = P.BRNCH_ID
+
+WHERE C.BNDL_ID IS NULL
+AND E.CODE IN ('AAS','MAS')
+AND H.CODE IN ('COM','FAL','CAN')
+
+    <if test="resultStartDate != '' and resultEndDate != '' and resultStartDate != null and resultEndDate != null ">
+      <![CDATA[  AND B.AS_RESULT_CRT_DT  between TO_DATE(#{resultStartDate}, 'DD/MM/YYYY') and  TO_DATE(#{resultEndDate}, 'DD/MM/YYYY') ]]>
+    </if>
+
+    <if test="appointmentStartDate != '' and appointmentEndDate != '' and appointmentStartDate !=  null and appointmentEndDate != null "  >
+      <![CDATA[  AND A.AS_APPNT_DT  between TO_DATE(#{appointmentStartDate}, 'DD/MM/YYYY') and  TO_DATE(#{appointmentEndDate}, 'DD/MM/YYYY') ]]>
+    </if>
+
+
+    <if test="comStartDate != '' and comEndDate != '' and comStartDate != null and comEndDate != null ">
+      <![CDATA[  AND B.AS_SETL_DT   between TO_DATE(#{comStartDate}, 'DD/MM/YYYY') and  TO_DATE(#{comEndDate}, 'DD/MM/YYYY') ]]>
+    </if>
+
+UNION ALL
+
+
+SELECT
+
+'INS' RESULT_TYPE ,
+D.SALES_ORD_ID ,
+D.SALES_ORD_NO ,
+F.TYPE_ID TYPE_CODE,
+G.CODE TYPE_NO,
+D.APP_TYPE_ID ,
+H.CODE APP_TYPE ,
+I.STK_CTGRY_ID ,
+L.CODE PROD_CAT ,
+I.STK_ID ,
+I.STK_CODE || ' - ' || I.STK_DESC AS PRODUCT ,
+NVL(C.SERIAL_NO,'-') SERIAL_NO ,
+NVL(C.SIRIM_NO,'-') SIRIM_NO ,
+B.STUS_CODE_ID STUS_ID,
+J.CODE STATUS ,
+B.INSTALL_ENTRY_NO RESULT_NO ,
+B.APPNT_DT APPT_DT ,
+C.INSTALL_DT COM_DT ,
+C.CRT_DT RESULT_KEY_DT ,
+C.FAIL_LOC ,
+C.FAIL_ID  ,
+NVL(N.DEFECT_DESC,'-') FAIL_TYPE ,
+NVL(O.DEFECT_CODE || ' - ' || O.DEFECT_DESC , '-') FAIL_FEEDBACK ,
+C.VOLT ,
+C.PSI ,
+C.LPM ,
+0 BOOST_PUMP ,
+0 AFTER_PSI ,
+0 AFTER_LPM ,
+C.TDS ,
+C.ROOM_TEMP ,
+C.WATER_SRC_TEMP ,
+C.ADPT_USED ADPT_CODE ,
+P.CODE_NAME ADPT_USED ,
+NVL(V.CNT, 0) AS SUM_TOTAL_PIC ,
+A.BRNCH_ID ,
+NVL(U.CODE, '-') DSC_BRNCH_CODE,
+K.MEM_CODE CT_CODE ,
+K.NAME CT_NAME ,
+K.TEL_MOBILE CT_HP_NO ,
+D.CUST_ID ,
+Q.NAME CUST_NAME ,
+ NVL( T.TEL_M1,'-') CUST_TEL ,
+ S.AREA_ID ,
+ S.STATE ,
+ S.AREA ,
+ S.CITY
+FROM SAL0045D A
+LEFT JOIN SAL0046D B ON A.SALES_ORD_ID = B.SALES_ORD_ID AND B.CALL_ENTRY_ID NOT IN (0)
+LEFT JOIN SAL0047D C ON B.INSTALL_ENTRY_ID = C.ENTRY_ID
+LEFT JOIN SAL0001D D ON A.SALES_ORD_ID = D.SALES_ORD_ID
+LEFT JOIN SAL0002D E ON D.SALES_ORD_ID = E.SALES_ORD_ID
+LEFT JOIN CCR0006D F ON A.SALES_ORD_ID = F.SALES_ORD_ID AND B.CALL_ENTRY_ID = F.CALL_ENTRY_ID
+LEFT JOIN SYS0013M G ON F.TYPE_ID = G.CODE_ID
+LEFT JOIN SYS0013M H ON D.APP_TYPE_ID = H.CODE_ID
+LEFT JOIN SYS0026M I ON E.ITM_STK_ID = I.STK_ID
+LEFT JOIN SYS0038M J ON B.STUS_CODE_ID = J.STUS_CODE_ID
+LEFT JOIN ORG0001D K ON C.CT_ID = K.MEM_ID
+LEFT JOIN SYS0013M L ON I.STK_CTGRY_ID = L.CODE_ID
+LEFT JOIN SYS0100M N ON C.FAIL_LOC = N.DEFECT_GRP AND N.DEFECT_TYP = 'IF'
+LEFT JOIN SYS0100M O ON C.FAIL_LOC = O.DEFECT_GRP AND C.FAIL_ID = O.DEFECT_ID
+LEFT JOIN SYS0013M P ON C.ADPT_USED = P.CODE_ID
+LEFT JOIN SAL0029D Q ON D.CUST_ID = Q.CUST_ID AND Q.STUS_CODE_ID = 1
+LEFT JOIN SAL0023D R ON D.CUST_ADD_ID = R.CUST_ADD_ID AND R.STUS_CODE_ID = 9
+LEFT JOIN SYS0064M S ON R.AREA_ID = S.AREA_ID
+LEFT JOIN SAL0027D T ON D.CUST_CNT_ID = T.CUST_CNTC_ID AND T.STUS_CODE_ID = 9
+LEFT JOIN SYS0005M U ON A.BRNCH_ID = U.BRNCH_ID
+LEFT JOIN (SELECT COUNT(Z.NO) AS CNT, NO
+  FROM (SELECT SUBSTR(ATCH_FILE_NAME, (INSTR(ATCH_FILE_NAME, '_', 1, 2) + 1), ((INSTR(ATCH_FILE_NAME, '_', 1, 3)-1) - INSTR(ATCH_FILE_NAME, '_', 1, 2))) AS NO
+        FROM SYS0071D
+        WHERE FILE_SUB_PATH = 'service/mobile/installation') Z WHERE NO IS NOT NULL
+  GROUP BY NO) V ON TO_CHAR(V.NO) = TO_CHAR(B.INSTALL_ENTRY_NO)
+
+WHERE D.BNDL_ID IS NULL
+AND G.CODE IN ('PEX', 'NEW')
+AND J.CODE IN ('COM','FAL','CAN')
+
+    <if test="resultStartDate != '' and resultEndDate != '' and resultStartDate != null and resultEndDate != null ">
+      <![CDATA[  AND C.CRT_DT  between TO_DATE(#{resultStartDate}, 'DD/MM/YYYY') and  TO_DATE(#{resultEndDate}, 'DD/MM/YYYY') ]]>
+    </if>
+
+    <if test="appointmentStartDate != '' and appointmentEndDate != '' and appointmentStartDate !=  null and appointmentEndDate != null "  >
+      <![CDATA[  AND B.APPNT_DT  between TO_DATE(#{appointmentStartDate}, 'DD/MM/YYYY') and  TO_DATE(#{appointmentEndDate}, 'DD/MM/YYYY') ]]>
+    </if>
+
+
+    <if test="comStartDate != '' and comEndDate != '' and comStartDate != null and comEndDate != null ">
+      <![CDATA[  AND C.INSTALL_DT   between TO_DATE(#{comStartDate}, 'DD/MM/YYYY') and  TO_DATE(#{comEndDate}, 'DD/MM/YYYY') ]]>
+    </if>
+
+) WHERE 1=1
+
+
+    <if test="resultTypeList != null and resultTypeList != '' ">
+      AND RESULT_TYPE IN
+      <foreach item="item" collection="resultTypeList" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+ <if test="orderNo != null and orderNo != ''">
+      AND SALES_ORD_NO = #{orderNo}
+    </if>
+<if test="resultNo != null and resultNo != ''">
+      AND RESULT_NO = #{resultNo}
+    </if>
+
+  <if test="typeCodeList != null and typeCodeList != '' ">
+      AND TYPE_CODE IN
+      <foreach item="item" collection="typeCodeList" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+      <if test="resultStatusList != null and resultStatusList != '' ">
+      AND STUS_ID IN
+      <foreach item="item" collection="resultStatusList" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+
+ <if test="resultfailLocCde != null and resultfailLocCde != ''">
+      AND FAIL_LOC = #{resultfailLocCde}
+    </if>
+
+          <if test="resultfailChildCodeList != null and resultfailChildCodeList != '' ">
+      AND FAIL_ID IN
+      <foreach item="item" collection="resultfailChildCodeList" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+          <if test="resultAppTypeList != null and resultAppTypeList != '' ">
+      AND APP_TYPE_ID IN
+      <foreach item="item" collection="resultAppTypeList" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+ <if test="serialNo != null and serialNo != ''">
+      AND SERIAL_NO = #{serialNo}
+    </if>
+
+ <if test="sirimNo != null and sirimNo != ''">
+      AND SIRIM_NO = #{sirimNo}
+    </if>
+
+     <if test="ctCode != null and ctCode != ''">
+      AND CT_CODE = #{ctCode}
+    </if>
+
+        <if test="custHpNo != null and custHpNo != ''">
+      AND CUST_TEL= #{custHpNo}
+    </if>
+
+         <if test="cmbCategory != null and cmbCategory != ''">
+      AND PROD_CAT = #{cmbCategory}
+    </if>
+
+          <if test="cmbProductList != null and cmbProductList != '' ">
+      AND STK_ID IN
+      <foreach item="item" collection="cmbProductList" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+              <if test="DSCCodeList != null and DSCCodeList != '' ">
+      AND BRNCH_ID  IN
+      <foreach item="item" collection="DSCCodeList" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+           <if test="adptCodeList != null and adptCodeList != '' ">
+      AND ADPT_CODE  IN
+      <foreach item="item" collection="adptCodeList" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+       <if test="voltageFrom != '' and voltageTo != '' and voltageFrom != null and voltageTo != null ">
+      <![CDATA[  AND VOLT between #{voltageFrom} and #{voltageTo}]]>
+    </if>
+
+        <if test="psiFrom != '' and psiTo != '' and psiFrom != null and psiTo != null ">
+      <![CDATA[  AND PSI between #{psiFrom} and #{psiTo}]]>
+    </if>
+
+          <if test="lpmFrom != '' and lpmTo != '' and lpmFrom != null and lpmTo != null ">
+      <![CDATA[  AND LPM between #{lpmFrom} and #{lpmTo}]]>
+    </if>
+
+              <if test="tdsFrom != '' and tdsTo != '' and tdsFrom != null and tdsTo != null ">
+      <![CDATA[  AND TDS between #{tdsFrom} and #{tdsTo}]]>
+    </if>
+
+                  <if test="roomTempFrom != '' and roomTempTo != '' and roomTempFrom != null and roomTempTo != null ">
+      <![CDATA[  AND ROOM_TEMP between #{roomTempFrom} and #{roomTempTo}]]>
+    </if>
+
+                     <if test="waterSrcTempFrom != '' and waterSrcTempTo != '' and waterSrcTempFrom != null and waterSrcTempTo != null ">
+      <![CDATA[  AND WATER_SRC_TEMP between #{waterSrcTempFrom} and #{waterSrcTempTo}]]>
+    </if>
+
+                     <if test="afterPsiFrom != '' and afterPsiTo != '' and afterPsiFrom != null and afterPsiTo != null ">
+      <![CDATA[  AND AFTER_PSI between #{afterPsiFrom} and #{afterPsiTo}]]>
+    </if>
+
+         <if test="resultState != null and resultState != ''">
+      AND STATE = #{resultState}
+    </if>
+
+              <if test="resultCityList != null and resultCityList != '' ">
+      AND CITY  IN
+      <foreach item="item" collection="resultCityList" index="index"
+        open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
+    <if test="resultArea != null and resultArea!= ''">
+      AND AREA LIKE  '%'|| #{resultArea} ||'%'
+    </if>
+
+</select>
 </mapper>
