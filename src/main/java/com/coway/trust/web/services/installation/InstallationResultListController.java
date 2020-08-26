@@ -1320,4 +1320,57 @@ public class InstallationResultListController {
     return "services/installation/installationJobTransListPop";
   }
 
+  @RequestMapping(value = "/waterEnvironmentList.do")
+  public String waterEnvironmentList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
+      throws Exception {
+
+    List<EgovMap> appTypeList = installationResultListService.selectApplicationType();
+    List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
+    List<EgovMap> dscCodeList = installationResultListService.selectDscCode();
+    List<EgovMap> failParent = installationResultListService.failParent();
+
+
+    model.addAttribute("resultAppTypeList", appTypeList);
+    model.addAttribute("resultStatus", installStatus);
+    model.addAttribute("resultDscCodeList", dscCodeList);
+    model.addAttribute("failParent", failParent);
+
+    return "services/installation/waterEnvironmentList";
+  }
+
+  @RequestMapping(value = "/waterEnvironmentListSearch.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> waterEnvironmentListSearch(@RequestParam Map<String, Object> params,
+      HttpServletRequest request, ModelMap model) throws ParseException {
+
+    String[] resultTypeList = request.getParameterValues("resultType");
+    String[] typeCodeList = request.getParameterValues("typeCode");
+    String[] resultStatusList = request.getParameterValues("resultStatus");
+    String[] resultAppTypeList = request.getParameterValues("resultAppType");
+    String[] resultfailChildCodeList = request.getParameterValues("resultfailChildCode");
+    String[] cmbProductList = request.getParameterValues("cmbProductList");
+    String[] DSCCodeList = request.getParameterValues("DSCCodeList");
+    String[] adptCodeList = request.getParameterValues("adptCode");
+    String[] resultCityList = request.getParameterValues("resultCity");
+
+    params.put("resultTypeList", resultTypeList);
+    params.put("typeCodeList", typeCodeList);
+    params.put("resultStatusList", resultStatusList);
+    params.put("resultAppTypeList", resultAppTypeList);
+    params.put("resultfailChildCodeList", resultfailChildCodeList);
+    params.put("cmbProductList", cmbProductList);
+    params.put("DSCCodeList", DSCCodeList);
+    params.put("adptCodeList", adptCodeList);
+    params.put("resultCityList", resultCityList);
+
+    List<EgovMap> waterEnvironmentList = installationResultListService.waterEnvironmentList(params);
+   /* logger.debug("waterEnvironmentList : {}", waterEnvironmentList);*/
+    return ResponseEntity.ok(waterEnvironmentList);
+  }
+
+  @RequestMapping(value = "/getProductListwithCategory.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getProductListwithCategory(@RequestParam Map<String, Object> params) {
+    List<EgovMap> codeList = installationResultListService.getProductListwithCategory(params);
+    return ResponseEntity.ok(codeList);
+  }
+
 }
