@@ -1792,8 +1792,9 @@ public class OrderRequestServiceImpl implements OrderRequestService {
   @Override
   public ReturnMessage requestCancelOrder(Map<String, Object> params, SessionVO sessionVO) throws Exception {
 
-    EgovMap somMap = orderRegisterMapper.selectSalesOrderM(params);
+	EgovMap somMap = orderRegisterMapper.selectSalesOrderM(params);
     EgovMap sodMap = orderRequestMapper.selectSalesOrderD(params);
+    ReturnMessage message = new ReturnMessage();
 
     logger.debug("==========================requestCancelOrder===============================");
     logger.debug("= PARAM {} ", params);
@@ -1864,84 +1865,99 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     logger.debug("= CALL ENTRY RESULT VO : " + callResultVO);
     logger.debug("= CANCELLATION RESULT VO : " + cancCallResultVO);
 
-    orderRequestMapper.insertSalesReqCancel(salesReqCancelVO);
+    int countRecord = orderRequestMapper.validOCRStus3(params);
 
-    // Added eCash validation - Kit - 2018/03/15
-    // if(LatestOrderCallEntryID != 0){
+    //Prevent the duplicate insert the sales request cancel to SAL0020D table
+    if (countRecord > 0) {
+    	 logger.debug("countRecord>> " + countRecord);
+    	 String salesOrdNo = CommonUtils.nvl(somMap.get("salesOrdNo"));
+    	 String msg = "Order Number : " + salesOrdNo
+    			    +"<br/>This order is under progress [ Call for Cancel ].<br />"
+    		        +"<br/>OCR is not allowed due to cancellation status still [ACTIVE]<br/>";
 
-    // PREVIOUS CALL LOG
-    if (stusCodeId == SalesConstants.STATUS_ACTIVE) {
-      EgovMap ccleMap = orderRequestMapper.selectCallEntryByEntryId(params);
+    	 message.setCode(AppConstants.FAIL);
+    	 message.setMessage(msg);
 
-      if (LatestOrderCallEntryID != 0) {
-        cancCallResultVO.setCallEntryId(LatestOrderCallEntryID);
-        cancCallResultVO.setCallEntryId(CommonUtils.intNvl(String.valueOf((BigDecimal) ccleMap.get("callEntryId"))));
-        orderRegisterMapper.insertCallResult(cancCallResultVO);
+   }else{
+        orderRequestMapper.insertSalesReqCancel(salesReqCancelVO);
 
-        ccleMap.put("stusCodeId", cancCallResultVO.getCallStusId());
-        ccleMap.put("resultId", cancCallResultVO.getCallResultId());
-        ccleMap.put("updUserId", cancCallResultVO.getCallCrtUserId());
+        // Added eCash validation - Kit - 2018/03/15
+        // if(LatestOrderCallEntryID != 0){
 
-        orderRequestMapper.updateCallEntry2(ccleMap);
-      } else {
-        //
-        cancCallResultVO.setCallEntryId(LatestOrderCallEntryID);
-        orderRegisterMapper.insertCallResult(cancCallResultVO);
-      }
+        // PREVIOUS CALL LOG
+        if (stusCodeId == SalesConstants.STATUS_ACTIVE) {
+          EgovMap ccleMap = orderRequestMapper.selectCallEntryByEntryId(params);
+
+          if (LatestOrderCallEntryID != 0) {
+            cancCallResultVO.setCallEntryId(LatestOrderCallEntryID);
+            cancCallResultVO.setCallEntryId(CommonUtils.intNvl(String.valueOf((BigDecimal) ccleMap.get("callEntryId"))));
+            orderRegisterMapper.insertCallResult(cancCallResultVO);
+
+            ccleMap.put("stusCodeId", cancCallResultVO.getCallStusId());
+            ccleMap.put("resultId", cancCallResultVO.getCallResultId());
+            ccleMap.put("updUserId", cancCallResultVO.getCallCrtUserId());
+
+            orderRequestMapper.updateCallEntry2(ccleMap);
+          } else {
+            //
+            cancCallResultVO.setCallEntryId(LatestOrderCallEntryID);
+            orderRegisterMapper.insertCallResult(cancCallResultVO);
+          }
+        }
+
+        // CANCELLATION CALL LOG
+        callEntryMasterVO.setDocId(salesReqCancelVO.getSoReqId());
+        orderRegisterMapper.insertCallEntry(callEntryMasterVO);
+        callResultVO.setCallEntryId(callEntryMasterVO.getCallEntryId());
+        orderRegisterMapper.insertCallResult(callResultVO);
+
+        Map<String, Object> tempMap = new HashMap<String, Object>();
+
+        tempMap.put("soReqSeq", salesReqCancelVO.getSoReqId());
+        tempMap.put("updCallEntryId", callResultVO.getCallEntryId());
+
+        ccpCalculateMapper.updateOrderRequest(tempMap);
+
+        callEntryMasterVO.setResultId(callResultVO.getCallResultId());
+
+        orderRequestMapper.updateCallEntry(callEntryMasterVO);
+
+        // RENTAL SCHEME
+        if (appTypeId == 66) {
+          EgovMap stsMap = ccpCalculateMapper.rentalSchemeStatusByOrdId(params);
+
+          if (stsMap != null) {
+            logger.debug("= RENTAL STATUS : " + stsMap);
+
+            stsMap.put("stusCodeId", "RET");
+            stsMap.put("isSync", SalesConstants.IS_FALSE);
+            stsMap.put("salesOrdId", params.get("salesOrdId"));
+
+            orderRequestMapper.updateRentalScheme(stsMap);
+          }
+        }
+
+        // INSERT ORDER LOG >> CANCELLATION CALL LOG
+        SalesOrderLogVO salesOrderLogVO = new SalesOrderLogVO();
+
+        this.preprocSalesOrderLog(salesOrderLogVO, params, sessionVO, SalesConstants.ORDER_REQ_TYPE_CD_CANC);
+        salesOrderLogVO.setRefId(callEntryMasterVO.getCallEntryId());
+        logger.debug("= SALES ORDER LOG : " + salesOrderLogVO);
+        orderRegisterMapper.insertSalesOrderLog(salesOrderLogVO);
+
+
+        String salesOrdNo = CommonUtils.nvl(somMap.get("salesOrdNo"));
+        String msg = "Order Number : " + salesOrdNo
+            + "<br/>Order cancellation request successfully saved.<br/>" + "Request Number : " + reqNo + "<br/>";
+
+        // KR-SH return Add map - Order and Request Number
+        params.put("rtnOrderNo", salesOrdNo);
+        params.put("rtnReqNo", reqNo);
+
+
+        message.setCode(AppConstants.SUCCESS);
+        message.setMessage(msg);
     }
-
-    // CANCELLATION CALL LOG
-    callEntryMasterVO.setDocId(salesReqCancelVO.getSoReqId());
-    orderRegisterMapper.insertCallEntry(callEntryMasterVO);
-    callResultVO.setCallEntryId(callEntryMasterVO.getCallEntryId());
-    orderRegisterMapper.insertCallResult(callResultVO);
-
-    Map<String, Object> tempMap = new HashMap<String, Object>();
-
-    tempMap.put("soReqSeq", salesReqCancelVO.getSoReqId());
-    tempMap.put("updCallEntryId", callResultVO.getCallEntryId());
-
-    ccpCalculateMapper.updateOrderRequest(tempMap);
-
-    callEntryMasterVO.setResultId(callResultVO.getCallResultId());
-
-    orderRequestMapper.updateCallEntry(callEntryMasterVO);
-
-    // RENTAL SCHEME
-    if (appTypeId == 66) {
-      EgovMap stsMap = ccpCalculateMapper.rentalSchemeStatusByOrdId(params);
-
-      if (stsMap != null) {
-        logger.debug("= RENTAL STATUS : " + stsMap);
-
-        stsMap.put("stusCodeId", "RET");
-        stsMap.put("isSync", SalesConstants.IS_FALSE);
-        stsMap.put("salesOrdId", params.get("salesOrdId"));
-
-        orderRequestMapper.updateRentalScheme(stsMap);
-      }
-    }
-
-    // INSERT ORDER LOG >> CANCELLATION CALL LOG
-    SalesOrderLogVO salesOrderLogVO = new SalesOrderLogVO();
-
-    this.preprocSalesOrderLog(salesOrderLogVO, params, sessionVO, SalesConstants.ORDER_REQ_TYPE_CD_CANC);
-    salesOrderLogVO.setRefId(callEntryMasterVO.getCallEntryId());
-    logger.debug("= SALES ORDER LOG : " + salesOrderLogVO);
-    orderRegisterMapper.insertSalesOrderLog(salesOrderLogVO);
-
-    String salesOrdNo = CommonUtils.nvl(somMap.get("salesOrdNo"));
-    String msg = "Order Number : " + salesOrdNo
-        + "<br/>Order cancellation request successfully saved.<br/>" + "Request Number : " + reqNo + "<br/>";
-
-    // KR-SH return Add map - Order and Request Number
-    params.put("rtnOrderNo", salesOrdNo);
-    params.put("rtnReqNo", reqNo);
-
-    ReturnMessage message = new ReturnMessage();
-    message.setCode(AppConstants.SUCCESS);
-    message.setMessage(msg);
-
     return message;
   }
 
@@ -2597,10 +2613,12 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 
     int callLogResult = orderRequestMapper.validOCRStus3(params);
 
+
     if (callLogResult > 0) {
       result.put("callLogResult", 1);
       result.put("msg", "OCR is not allowed due to Cancellation Status still [ACTIVE]");
     }
+    logger.debug("Result >> {} " + result);
 
     return result;
   }
