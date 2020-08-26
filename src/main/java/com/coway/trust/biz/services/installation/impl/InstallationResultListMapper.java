@@ -291,4 +291,8 @@ public interface InstallationResultListMapper {
 
   List<EgovMap> selectFailChild(Map<String, Object> params);
 
+  List<EgovMap> waterEnvironmentList(Map<String, Object> params);
+
+  List<EgovMap> getProductListwithCategory(Map<String, Object> params);
+
 }
