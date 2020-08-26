@@ -1906,7 +1906,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
 
   public int updateEkeyInSal0213M(EKeyInApiDto param) {
     logger.debug("====================================================");
-    logger.debug("= PARAM = " + param.toString());
+    logger.debug("= PARAM = " + param.getAppTypeId());
     logger.debug("====================================================");
 
     if (CommonUtils.isEmpty(param.getPreOrdId())) {
