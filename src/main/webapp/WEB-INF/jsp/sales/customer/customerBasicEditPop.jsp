@@ -109,7 +109,7 @@ $(document).ready(function(){
                	var genderCode = $('#basicGender').val().trim();
                 var msg = "";
                 var isValid = true;
-                var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/);
+                var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}.|\\":<>\?]/);
 
                 console.log('existNric:' + existNric);
                 console.log('lastDigit:' + lastDigit);
