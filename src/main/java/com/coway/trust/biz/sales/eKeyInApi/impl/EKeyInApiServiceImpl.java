@@ -155,6 +155,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
             mattress.setProductList(selectOrderInfoMattress.getProductList());
             mattress.setPromotionList(selectOrderInfoMattress.getPromotionList());
             mattress.setMatPreOrdId(mattress.getPreOrdId());
+
             selecteKeyInDetail.setMattress(mattress);
 
             mattressItmStkId = mattress.getItmStkId();
@@ -1955,17 +1956,19 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       throw new ApplicationException(AppConstants.FAIL, "DSC Branch does not exist.");
     }
 
-    if (CommonUtils.isEmpty(param.getRentPayModeId()) || param.getRentPayModeId() <= 0) {
-      throw new ApplicationException(AppConstants.FAIL, "Payment Mode does not exist.");
-    }
-
-    if ("131".equals(CommonUtils.isEmpty(param.getRentPayModeId()))) { // ONLY CREDIT CARD
-      if (CommonUtils.isEmpty(param.getCustCrcId()) || param.getCustCrcId() <= 0) {
-        throw new ApplicationException(AppConstants.FAIL, "Customer Credit Card ID does not exist.");
+    if (!"67".equals(CommonUtils.nvl(param.getAppTypeId())) && !"68".equals(CommonUtils.nvl(param.getAppTypeId())) && !"5764".equals(CommonUtils.nvl(param.getAppTypeId()))) {
+      if (CommonUtils.isEmpty(param.getRentPayModeId()) || param.getRentPayModeId() <= 0) {
+        throw new ApplicationException(AppConstants.FAIL, "Payment Mode does not exist.");
       }
 
-      if (CommonUtils.isEmpty(param.getBankId()) || param.getBankId() <= 0) {
-        throw new ApplicationException(AppConstants.FAIL, "Credit Card Bank ID does not exist.");
+      if ("131".equals(CommonUtils.isEmpty(param.getRentPayModeId()))) { // ONLY CREDIT CARD
+        if (CommonUtils.isEmpty(param.getCustCrcId()) || param.getCustCrcId() <= 0) {
+          throw new ApplicationException(AppConstants.FAIL, "Customer Credit Card ID does not exist.");
+        }
+
+        if (CommonUtils.isEmpty(param.getBankId()) || param.getBankId() <= 0) {
+          throw new ApplicationException(AppConstants.FAIL, "Credit Card Bank ID does not exist.");
+        }
       }
     }
 
