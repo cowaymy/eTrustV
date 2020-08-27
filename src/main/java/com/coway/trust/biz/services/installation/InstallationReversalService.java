@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface InstallationReversalService {
@@ -141,5 +143,7 @@ public interface InstallationReversalService {
 	void addAccRentLedger(Map<String, Object> params);
 
 	void saveResavalSerial(Map<String, Object> params) throws ParseException;
+
+  void saveResaval2(SessionVO sessionVO, Map<String, Object> params);
 
 }
