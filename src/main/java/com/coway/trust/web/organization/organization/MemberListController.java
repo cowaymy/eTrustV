@@ -962,10 +962,52 @@ public class MemberListController {
         int resultUpc4 = 0;
         int resultUpc5 = 0;
         int resultUpc6 = 0;
-        if (!formMap.get("memberType").toString().equals("2803")) {// hp가아닐때
+
+        int u1 = 0; // Branch update
+        int u2 = 0; // Organization update
+        int u3 = 0; // Member update
+        int u4 = 0; // Applicant update
+        int u5 = 0; // Training course
+        int u6 = 0; // Service capacity
+
+        // Not HP Applicant
+        // hp가아닐때
+        if (!formMap.get("memberType").toString().equals("2803")) {
+            /*
+            if(formMap.containsKey("selectBranchUpd")) {
+                u1 = memberListService.memberListUpdate_SYS47(formMap);
+                u2 = memberListService.memberListUpdate_ORG05(formMap);
+            }
+
+            u3 = memberListService.memberListUpdate_ORG01(formMap);
+            u4 = memberListService.memberListUpdate_ORG03(formMap);
+
+            if(formMap.get("memberType").toString().equals("5")) {
+                EgovMap trainingItem = memberListService.selectMemCourse(formMap);
+
+                if(!trainingItem.isEmpty()) {
+                    formMap.put("coursItmId", trainingItem.get("coursItmId"));
+                    u5 = memberListService.memberListUpdate_MSC09(formMap);
+                }
+            }
+
+            if(formMap.get("memberType").toString().equals("7")) {
+                u6 = memberListService.memberListUpdate_ORG15(formMap);
+            }
+
+            logger.debug("Non-HP Update :: Branch :: u1 = " + Integer.toString(u1) + ", u2 = " + Integer.toString(u2));
+            logger.debug("Non-HP Update :: Member :: u3 = " + Integer.toString(u3));
+            logger.debug("Non-HP Update :: Applicant :: u4 = " + Integer.toString(u4));
+            logger.debug("Non-HP Update :: Course :: u5 = " + Integer.toString(u5));
+            logger.debug("Non-HP Update :: Service capacity :: u6 = " + Integer.toString(u6));
+            */
+
+            // Branch info update (SYS0047M, ORG0005D)
             resultUpc1 = memberListService.memberListUpdate_user(formMap);
             resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
+            // Member info update (ORG0001D)
             resultUpc3 = memberListService.memberListUpdate_member(formMap);
+            // Member name update (Merge ORG0003D)
             resultUpc6 = memberListService.updateMemberName(formMap);
             if (formMap.get("memberType").toString().equals("2")) {
                 memberListService.memberCodyPaUpdate(formMap);
@@ -987,6 +1029,10 @@ public class MemberListController {
                 memberListService.updateMeetpoint(formMap);
             }
 
+            if(memType.trim().equals("7")) {
+                memberListService.memberListUpdate_memorg3(formMap);
+            }
+
             /*if(memType.trim().equals("2")) {
                 // Update ORG0003D CD agreement details
                 memberListService.updateAplctDtls(formMap);
@@ -997,6 +1043,7 @@ public class MemberListController {
         }
 
         else {
+//            u3 = memberListService.memberListUpdate_ORG03(formMap);
             resultUpc5 = memberListService.hpMemberUpdate(formMap);
 
         }
