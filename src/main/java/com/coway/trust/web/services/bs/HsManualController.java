@@ -1337,13 +1337,13 @@ public class HsManualController {
     return ResponseEntity.ok(message);
   }
 
-  @RequestMapping(value = "/instChkLst.do", method = RequestMethod.GET)
+/*  @RequestMapping(value = "/instChkLst.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> instChkLst(@RequestParam Map<String, Object> params, HttpServletRequest request,
       ModelMap model) {
 
     List<EgovMap> instChkLst = hsManualService.instChkLst();
 
     return ResponseEntity.ok(instChkLst);
-  }
+  }*/
 
 }
