@@ -56,18 +56,41 @@ var groupList = [" ", "A", "B", "C" ];
 var rescolumnLayout=[
 
 			                     {dataField: "srono",headerText :"SRO No."           ,width:230    ,height:30     },
-			                     {dataField: "sroreqno",headerText :"Ref.No(STO/SMO)",width:150    ,height:30,
+			                     {dataField: "reqstus",headerText :"reqstus"           ,width:230    ,height:30 ,visible:false    },
 
-			                    	    style : "myLinkStyle",
-			                            // LinkRenderer 를 활용하여 javascript 함수 호출로 사용하고자 하는 경우
-			                            renderer : {
-			                                type : "LinkRenderer",
-			                                baseUrl : "javascript", // 자바스크립 함수 호출로 사용하고자 하는 경우에 baseUrl 에 "javascript" 로 설정
-			                                // baseUrl 에 javascript 로 설정한 경우, 링크 클릭 시 callback 호출됨.
-			                                jsCallback : function(rowIndex, columnIndex, value, item) {
-			                                	fn_doPopup (item);
-			                                }
-			                            }
+			                     {dataField: "sroreqno",headerText :"Ref.No(STO/SMO)",width:170    ,height:30,
+
+			                    	 renderer : { // HTML 템플릿 렌더러 사용
+                                         type : "TemplateRenderer"
+                                     },
+                                     // dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
+                                     labelFunction : function (rowIndex, columnIndex, value, headerText,    item ) { // HTML 템플릿 작성
+
+                                    	 //console.log(item);
+                                        // if(!value)  return "";
+                                         var template = '<div class="my_div" >';
+
+                                         if( null != item.sroreqno){
+
+                                        	 var  po = {sroreqno:item.sroreqno, srotype:item.srotype };
+
+                                        	 var a  = item.sroreqno;
+                                        	 var b  = item.srotype;
+                                             template += '<span  onclick="javascript:fn_doPopup( \' '+a +' \'  ,  \' '+b+'  \');">' + item.sroreqno ;
+
+
+                                        	 template += '<span style="text-align:right; color:red;">'
+
+                                        	 if(item.reqstdelyn =='Y'){
+                                        		 template +=  "(Deleted) </span> </span> " ;
+                                        	 }else{
+                                        		 template +=  "("+ item.reqstus+") </span> </span> " ;
+                                        	 }
+	                                     }
+                                         template += '</div>';
+
+                                         return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
+                                     }
 			                     },
 			                     {dataField: "srostacd",headerText :"<spring:message code='log.head.status'/>",width:100    ,height:30                },
 			                     {dataField: "sromsg",headerText :"Remark",width:250    ,height:30                },
@@ -82,7 +105,7 @@ var rescolumnLayout=[
 			                  ];
 
 var reqcolumnLayout=[
-			                     {dataField: "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
+			                     {dataField: "rowno",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
 			                     {dataField: "srono",headerText :"SRO No."           ,width:200    ,height:30                },
 			                     {dataField: "sroitmstatecd",headerText :"<spring:message code='log.head.status'/>",width:80    ,height:30   ,editable : false                },
                                  {dataField: "srotype",headerText :"SRO Type"           ,  width:120    ,height:30           },
@@ -107,6 +130,11 @@ var reqcolumnLayout=[
                                         	       template += '<span style="text-align:right; color:red;"   >'
                                                    template += "("+ AUIGrid.formatNumber(item.sroconqty,"#,##0") +") </span>  / " ;
 
+                                         }else{
+                                        	    if ( item.sroconqty >0 ){
+                                                       template += '<span style="text-align:right; color:red;"   >'
+                                                        template += "("+ AUIGrid.formatNumber(item.sroconqty,"#,##0") +") </span>  / " ;
+                                        	    }
                                          }
 
 
@@ -144,6 +172,7 @@ var reqcolumnLayout=[
                                  {dataField: "sroaddpot",headerText :"(To)additional</br> Point"                  ,width:120    ,height:30               ,editable : false ,visible:false},
                                  {dataField: "sroitmlev",headerText :"item idex"                  ,width:120    ,height:30               ,editable : false  ,visible:false},
                                  {dataField: "srofravailqtyorg",headerText :"srofravailqtyorg"                  ,width:120    ,height:30               ,editable : false  ,visible:false},
+                                 {dataField: "srocalautoreplenqty",headerText :"srocalautoreplenqty"                  ,width:120    ,height:30               ,editable : false  ,visible:false},
 
 
                      ];
@@ -152,20 +181,25 @@ var reqcolumnLayout=[
 
 					var detailLayout=[
 					                                {dataField: "srono",headerText :"SRO No."           ,width:120    ,height:30                },
-													{dataField: "srostkcode",headerText :"Mat.Code"                  ,width:120    ,height:30               ,editable : false  },
+													{dataField: "srostkcode",headerText :"Mat.Code"                  ,width:80    ,height:30               ,editable : false  },
 													{dataField: "stkdesc",headerText :"Mat.Name"                  ,width:170    ,height:30               ,editable : false   },
-					                                {dataField: "srosupqty",headerText :"Supply Qty"                  ,width:120    ,height:30         ,editable : false  ,dataType : "numeric" },
+					                                {dataField: "srosupqty",headerText :"Supply Qty"                  ,width:80    ,height:30         ,editable : false  ,dataType : "numeric" },
 													{dataField: "sroitmstatecd",headerText :"<spring:message code='log.head.status'/>",width:80    ,height:30   ,editable : false                },
 					                                {dataField: "srorefsrono",headerText :"Ref.SRO No"                  ,width:120    ,height:30               ,editable : false },
 					                                {dataField: "srobasqty",headerText :"Basic Qty"                  ,width:120    ,height:30               ,editable : false  ,dataType : "numeric"  },
 													{dataField: "sroreordpot",headerText :"ReOder <br>Point(%)"                  ,width:100    ,height:30               ,editable : false  ,dataType : "numeric" },
-													{dataField: "sroreordrangeqty",headerText :"ReOder Range Qty <br> (Basic Qty / (100/ReOrder Point ) )"                  ,width:200    ,height:30        ,dataType : "numeric"        ,editable : false  },
-                                                    {dataField: "srominnumqty",headerText :"Minimum Qty <br> (Basic Qty - ReOrder Range Qty)"                  ,width:250    ,height:30           ,dataType : "numeric"     ,editable : false },
+													{dataField: "sroreordrangeqty",headerText :"ReOder Range Qty <br> (Basic Qty / (100/ReOrder Point ) )"                  ,width:120    ,height:30        ,dataType : "numeric"        ,editable : false  },
+                                                    {dataField: "srominnumqty",headerText :"Minimum Qty <br> (Basic Qty - ReOrder Range Qty)"                  ,width:120    ,height:30           ,dataType : "numeric"     ,editable : false },
                                                     {dataField: "srotoavailqty",headerText :"To Ware House <br> Available Qty"                                            ,width:120    ,height:30         ,dataType : "numeric"       ,editable : false },
 													{dataField: "srofravlqty",headerText :"Fr Ware House <br> Available Qty"                                            ,width:120    ,height:30         ,dataType : "numeric"       ,editable : false },
 	                                                {dataField: "sroautoreplenqty",headerText :"Auto Replenishment <br> Qty"                  ,width:120    ,height:30,  style  :"my-inactive-style"            ,dataType : "numeric"      ,editable : false },
-	                                                {dataField: "sroitmresultmsg",headerText :"Result Massage"                  ,width:270    ,height:30               ,editable : false },
+	                                                {dataField: "srocenautoreplenqty",headerText :"Auto Replenishment <br> Cencal Qty"                  ,width:120    ,height:30,  style  :"my-inactive-style"            ,dataType : "numeric"      ,editable : false },
+
 	                                                {dataField: "crtdt",headerText :"Create Date"       , dataType : "date",           width:120    ,height:30     ,    formatString : "dd/mm/yyyy"     },
+	                                                {dataField: "sroitmresultmsg",headerText :"Result Massage"                  ,width:270    ,height:30               ,editable : false },
+	                                                {dataField: "reqstdel",headerText :"reqstdel"                  ,width:50    ,height:30               ,editable : false  ,visible:false},
+
+
 
 
 					]
@@ -235,6 +269,7 @@ $(document).ready(function(){
 
 
    var dProps = {
+	        rowIdField : "rowno",
 		    showStateColumn : true,
             selectionMode : "singleRow",
             useContextMenu : true,
@@ -249,7 +284,7 @@ $(document).ready(function(){
 
             // 이 함수는 사용자가 체크박스를 클릭 할 때 1번 호출됩니다.
             rowCheckableFunction : function(rowIndex, isChecked, item) {
-                if(item.srofulqty <=0  || item.sroitmstatecd =='Complete' ) {
+                if(item.srofulqty <=0  || item.sroitmstatecd =='Complete' || item.sroitmstatecd =='Terminated' ) {
                 	  Common.alert("Don't  delete the sro data. ");
                 	 return false;
                 }
@@ -257,7 +292,7 @@ $(document).ready(function(){
             },
 
             rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
-                if(item.srofulqty <=0  || item.sroitmstatecd =='Complete' ) { // 제품이 LG G3 인 경우 체크박스 disabeld 처리함
+                if(item.srofulqty <=0  || item.sroitmstatecd =='Complete'  || item.sroitmstatecd =='Terminated'  ) { // 제품이 LG G3 인 경우 체크박스 disabeld 처리함
                     return false; // false 반환하면 disabled 처리됨
                 }
                 return true;
@@ -269,16 +304,13 @@ $(document).ready(function(){
    };
 
    var detailProps = {
-           showStateColumn : false,
+		   selectionMode : "singleRow",
            rowHeight : 30,
            headerHeight : 40,
-           showRowCheckColumn : false,
-           enableSorting :false,
            editable:false,
            copySingleCellOnRowMode:true,
-           showFooter :true,
            // 고정칼럼 카운트 지정
-           fixedColumnCount : 4
+           fixedColumnCount : 5
   };
 
 
@@ -289,7 +321,7 @@ $(document).ready(function(){
     listGrid   = GridCommon.createAUIGrid("#main_grid_wrap", rescolumnLayout, '',auiGridProps);
     subGrid  = AUIGrid.create("#sub_grid_wrap", reqcolumnLayout ,dProps);
 
-    detailList = AUIGrid.create("#detail_grid_wrap", detailLayout ,detailProps);
+    detailList = GridCommon.createAUIGrid("#detail_grid_wrap", detailLayout ,'',detailProps);
 
     AUIGrid.setFooter(detailList, footerLayout);
 
@@ -312,24 +344,20 @@ $(document).ready(function(){
      // 전체 체크박스 클릭 이벤트 바인딩
     AUIGrid.bind(subGrid, "rowAllChkClick", function( event ) {
 
-	    	if(event.checked) {
+    		if(event.checked) {
 	            // name 의 값들 얻기
-	            var uniqueValues = AUIGrid.getColumnValues(event.pid, "srofulqty");
+	            var  gridRows = AUIGrid.getGridData(event.pid);
+	            var rowIdField = AUIGrid.getProp(event.pid, "rowIdField");
+	            var items = [];
+                    gridRows.forEach(function(v, n ,item) {
+                    	 if(v.sroitmstatecd ='Active' && v.srofulqty >0 ){
+                             items.push(v.rowno);
+                    	 }
+	                });
+                 //console.log(items);
+                 AUIGrid.setCheckedRowsByIds(event.pid, items);
 
-
-	            console.log("==================>");
-	            console.log(uniqueValues);
-	            console.log(event);
-
-	            for ( a in uniqueValues ){
-	                if (a = 0){
-	                	uniqueValues.splice(a,1);
-	                }
-	            }
-	            // Anna 제거하기
-	            //uniqueValues.splice(uniqueValues.indexOf("Anna"),1);
-	           AUIGrid.setCheckedRowsByValue(event.pid, "srofulqty", uniqueValues);
-	        } else {
+    		} else {
 	            AUIGrid.setCheckedRowsByValue(event.pid, "srofulqty", []);
 	        }
     });
@@ -359,13 +387,14 @@ $(document).ready(function(){
 
 
 
-fn_doPopup = function(item){
+ function fn_doPopup (sroreqno ,srotype ){
 
-	if(item.sroreqno ==null) return ;
-    if(item.srotype =="STO"){
-           var  popupObj = Common.popupWin("popSTO", "/logistics/stocktransfer/StocktransferList.do?streq="+item.sroreqno , {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
-    }else if(item.srotype =="SMO"){
-           var  popupObj = Common.popupWin("popSMO", "/logistics/stockMovement/StockMovementList.do?streq="+item.sroreqno, {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+	if(sroreqno.trim() ==null) return ;
+
+    if(srotype.trim()  =="STO"){
+    	var  popupObj = Common.popupWin("popSTO", "/logistics/stocktransfer/StocktransferList.do?streq="+sroreqno.trim() , {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+    }else if( srotype =="SMO"){
+    	var  popupObj = Common.popupWin("popSMO", "/logistics/stockMovement/StockMovementList.do?streq="+sroreqno.trim(), {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
     }
 }
 
@@ -407,7 +436,7 @@ fn_doGgenerate =function (){
 
 	Common.ajax("GET", "/logistics/sro/saveSroMgmt.do", selectedItems[0].item, function(result) {
 
-	    console.log(result);
+	   // console.log(result);
 	    Common.alert("generate is  success </br> "+"Ref No["+result.data+"]");
 
 	    fn_getDataItemListAjax();
@@ -419,6 +448,12 @@ fn_doGgenerate =function (){
 $(function(){
 
      $('#search').click(function() {
+
+    	 // $('#tabitem').removeClass("on");
+    	 // $('#tabmst').attr("class","on");
+
+    	  $('#tabmst').click();
+
           if(fn_validation()) {
         	  fn_getDataListAjax();
           }
@@ -436,10 +471,13 @@ $(function(){
          fn_doDelete();
      });
 
-     $('#download').click(function() {
-
+     $('#download_main').click(function() {
+    	 fn_gridExport('main_grid');
      });
 
+     $('#download_sub').click(function() {
+    	 fn_gridExport('sub_grid');
+     });
 
 
 });
@@ -450,16 +488,16 @@ $(function(){
 fn_getDataItemListAjax  = function () {
 
 	var selectedItems = AUIGrid.getSelectedItems(listGrid)
-    var p={ srono: selectedItems[0].item.srono};
 
-	Common.ajax("GET", "/logistics/sro/sroMgmtDetailList.do",p, function(result) {
-	 //  console.log("성공.");
-	   //console.log("data : " + result);
-	   console.log(result);
-	   AUIGrid.setGridData(subGrid, result);
-	});
-
-
+	if( selectedItems != "undefined"){
+    		var p={ srono: selectedItems[0].item.srono};
+	        Common.ajax("GET", "/logistics/sro/sroMgmtDetailList.do",p, function(result) {
+	         //  console.log("성공.");
+	           //console.log("data : " + result);
+	         //  console.log(result);
+	           AUIGrid.setGridData(subGrid, result);
+	        });
+	}
 }
 
 
@@ -509,7 +547,7 @@ function fn_doDelete(){
 		        "remove" : checkedItems
 	}
 
-	console.log(deleteForm);
+	//console.log(deleteForm);
 
 	if(checkedItems.length <= 0) {
         Common.alert("no selected item.");
@@ -519,11 +557,20 @@ function fn_doDelete(){
     Common.ajax("POST", "/logistics/sro/deleteSroMgmt.do",deleteForm, function(result) {
      //  console.log("성공.");
        //console.log("data : " + result);
-       console.log(result);
+       //console.log(result);
        //AUIGrid.setGridData(subGrid, result);
     });
 
 
+}
+
+fn_gridExport =function (type){
+
+	if(type == 'main_grid'){
+        GridCommon.exportTo("main_grid_wrap", "xlsx", "sro_list_excel");
+    }else if (type == 'sub_grid'){
+        GridCommon.exportTo("sub_grid_wrap", "xlsx", "sro_item_excel");
+    }
 }
 
 </script>
@@ -612,11 +659,11 @@ function fn_doDelete(){
 			    </select></td>
 			    <th scope="row">From Location</th>
 			    <td >
-			    <select class="w100p" id="tlocation" name="tlocation"></select>
+			    <select class="w100p" id="flocation" name="flocation"></select>
 			    </td>
 			    <th scope="row">To Location</th>
 			    <td >
-			    <select class="w100p" id="flocation" name="flocation"></select>
+			    <select class="w100p" id="tlocation" name="tlocation"></select>
 			    </td>
 			</tr>
 
@@ -630,11 +677,18 @@ function fn_doDelete(){
 
       <section class="tap_wrap"><!-- tap_wrap start -->
         <ul class="tap_type1">
-            <li><a href="#" class="on">SRO MasterList</a></li>
+            <li><a href="#" id ="tabmst"class="on">SRO MasterList</a></li>
             <li><a href="#"  id="tabitem">SRO Master ItemList</a></li>
         </ul>
 
+
+
         <article class="tap_area"><!-- tap_area start -->
+
+          <ul class="right_btns">
+                <li><p class="btn_grid"><a id="download_main" ><spring:message code='sys.btn.excel.dw' /></a></p></li>
+         </ul>
+
             <article class="grid_wrap"><!-- grid_wrap start -->
                   <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
             </article><!-- grid_wrap end -->
@@ -644,7 +698,7 @@ function fn_doDelete(){
         <article class="tap_area"><!-- tap_area start -->
 
          <ul class="right_btns">
-                <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+                <li><p class="btn_grid"><a id="download_sub" ><spring:message code='sys.btn.excel.dw' /></a></p></li>
                 <li><p class="btn_grid"><a id="delete">Delete</a></p></li>
          </ul>
             <article class="grid_wrap"><!-- grid_wrap start -->
@@ -657,7 +711,7 @@ function fn_doDelete(){
 
 
 
-<div class="popup_wrap" id="gropenwindow" style="display:none ;height:450px; " ><!-- popup_wrap start -->
+<div class="popup_wrap" id="gropenwindow" style="display:none ;height:550px; " ><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->
             <h1 id="dataTitle">Auto Replenishment Detail DataList</h1>
             <ul class="right_opt">
@@ -692,7 +746,7 @@ function fn_doDelete(){
 
 
 	       		<article class="grid_wrap "><!-- grid_wrap start -->
-			     <div id="detail_grid_wrap" style="width:100%; height:100%;"></div>
+			     <div id="detail_grid_wrap" style="width:100%; height:550px;"></div>
 			</article><!-- grid_wrap end -->
         </section>
 </div>

@@ -214,6 +214,8 @@ public class SROController {
         				newMap.put("crtdt", map.get("crtdt"));
         				newMap.put("osrono", map.get("osrono"));
         				newMap.put("srotype", map.get("srotype"));
+        				newMap.put("reqstus", map.get("reqstus"));
+        				newMap.put("reqstdelyn", map.get("reqstdelyn"));
 
 
         				rList.add(newMap);
