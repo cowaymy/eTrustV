@@ -896,8 +896,11 @@ function SearchListAjax(obj){
     <th scope="row" style="width: 186px; ">Settle Date</th>
     <td>
         <%-- <span><c:out value="${basicinfo.setlDt}"/></span> --%>
-        <input type="text" title="Settle Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="settleDt" name="settleDt" value="${basicinfo.setlDt}" readonly="true"/>
-    </td>
+<%--         <input type="text" title="Settle Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="settleDt" name="settleDt" value="${basicinfo.setlDt}" readonly="true"/>
+ --%>
+         <input type="text" title="Settle Date" placeholder="DD/MM/YYYY" id="settleDt" name="settleDt" value="${basicinfo.setlDt}" class="readonly" readonly/>
+
+ </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code='service.title.SerialNo' /><span class="must">*</span></th>
