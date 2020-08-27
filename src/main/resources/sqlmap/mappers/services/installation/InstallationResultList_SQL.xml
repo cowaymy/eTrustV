@@ -4870,6 +4870,7 @@ APP_TYPE ,
 STK_CTGRY_ID ,
 PROD_CAT ,
 STK_ID ,
+STK_CODE ,
 PRODUCT ,
 SERIAL_NO ,
 SIRIM_NO ,
@@ -4920,6 +4921,7 @@ F.CODE APP_TYPE ,
 G.STK_CTGRY_ID ,
 K.CODE PROD_CAT ,
 G.STK_ID ,
+G.STK_CODE ,
 G.STK_CODE || ' - ' || G.STK_DESC AS PRODUCT ,
 '-' SERIAL_NO ,
 '-' SIRIM_NO ,
@@ -5008,6 +5010,7 @@ H.CODE APP_TYPE ,
 I.STK_CTGRY_ID ,
 L.CODE PROD_CAT ,
 I.STK_ID ,
+I.STK_CODE ,
 I.STK_CODE || ' - ' || I.STK_DESC AS PRODUCT ,
 NVL(C.SERIAL_NO,'-') SERIAL_NO ,
 NVL(C.SIRIM_NO,'-') SIRIM_NO ,
@@ -5161,11 +5164,11 @@ AND J.CODE IN ('COM','FAL','CAN')
     </if>
 
          <if test="cmbCategory != null and cmbCategory != ''">
-      AND PROD_CAT = #{cmbCategory}
+      AND STK_CTGRY_ID = #{cmbCategory}
     </if>
 
           <if test="cmbProductList != null and cmbProductList != '' ">
-      AND STK_ID IN
+      AND STK_CODE IN
       <foreach item="item" collection="cmbProductList" index="index"
         open="(" separator="," close=")">
         #{item}
