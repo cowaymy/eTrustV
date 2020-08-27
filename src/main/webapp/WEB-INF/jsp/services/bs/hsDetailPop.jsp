@@ -694,7 +694,11 @@ function fnSerialSearchResult(data) {
     </select>
     </td>
     <th scope="row" style="width: 119px; ">Settle Date</th>
-    <td><input type="text" id ="settleDate" name = "settleDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" readonly="true" /></td>
+    <td>
+<!--      <input type="text" id ="settleDate" name = "settleDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  readonly="true"/>
+  -->      <input type="text" id ="settleDate" name = "settleDate" value="${toDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="readonly" readonly />
+
+    </td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code='service.title.SerialNo' /><span class="must">*</span></th>
