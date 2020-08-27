@@ -17,6 +17,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.installation.InstallationReversalService;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.services.installation.InstallationReversalController;
 
@@ -366,7 +367,1494 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 		installationReversalMapper.addAccRentLedger(params);
 	}
 
+  @Override
+  public void saveResaval2(SessionVO sessionVO, Map<String, Object> params) {
+
+    EgovMap returnMap = new EgovMap();
+    int userId = sessionVO.getUserId();
+    params.put("userId", userId);
+
+    String defaultDate = "1900-01-01";
+    //Map<String, Object> formData = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+    //formData.put("user_id", userId);
+
+    int callTypeId = CommonUtils.intNvl(Integer.parseInt(params.get("callTypeId").toString())); //ccr0006d.type_id
+    int result = 0 ;
+
+  /*  By KV - this is wrong - int installResultID = CommonUtils.intNvl(Integer.parseInt(params.get("einstallEntryId").toString()));*/
+    int installEntryID = CommonUtils.intNvl(Integer.parseInt(params.get("einstallEntryId").toString()));
+    String installEntryNo = CommonUtils.nvl(params.get("einstallEntryNo").toString());
+    String installDate = CommonUtils.nvl(params.get("instalStrlDate").toString());
+    String nextCallDate = CommonUtils.nvl(params.get("nextCallStrlDate").toString());
+
+    logger.debug("-----------------------installDate-------------------------");;
+    logger.debug(installDate);;
+
+    String remark = params.get("reverseReasonText").toString();
+    logger.debug(remark);;
+
+    String failReason =params.get("failReason").toString();
+    logger.debug(failReason);;
+
+    String ctID = params.get("ectid").toString();
+    logger.debug(ctID);;
+
+    int applicationTypeID = Integer.parseInt(params.get("applicationTypeID").toString());
+    System.out.println(applicationTypeID);;
+
+    int salesOrderID = Integer.parseInt(params.get("esalesOrdId").toString());
+    System.out.println(salesOrderID);;
+
+    String salesDt = params.get("esalesDt").toString();
+    logger.debug(salesDt);;
+
+    int defaultPacID=0;
+    if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
+      defaultPacID=4;
+    }else if(Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68 || Integer.parseInt(params.get("applicationTypeID").toString())==142){
+      defaultPacID=3;
+    }else if(Integer.parseInt(params.get("applicationTypeID").toString())==144){
+      defaultPacID=10;
+    }else{
+      defaultPacID=2;
+    }
+    params.put("defaultPacID",defaultPacID);
+
+    int memID = 0;
+    String memid = null;
+    memid= getMemIDBySalesOrderIDAndPacID(params);
+    if(memid !=null)
+    memID = Integer.parseInt(memid);
+    params.put("memID",memID);
+
+    int configID = -1;
+    String configid = null;
+    configid = getLatestConfigIDBySalesOrderID(params);
+    if(configid!=null)
+    configID = Integer.parseInt(configid);
+    params.put("configID",configID);
+
+    int hcID = 0;
+    String hcid = null;
+    hcid = getHCIDBySalesOrderID(params);
+    if(hcid!=null)
+    hcID = Integer.parseInt(hcid);
+    params.put("hcID",hcID);
+
+    int inChargeCTWHID = 0;
+    if(params.get("inChargeCTWHID") !=null)
+    inChargeCTWHID = Integer.parseInt(params.get("inChargeCTWHID").toString());
+
+    int retWarehouseID;
+    String warehouseGrade;
+
+    int productID = 0;
+    if(params.get("eProductID") !=null)
+    productID = Integer.parseInt(params.get("eProductID").toString());
+
+
+    String customerName = "";
+    if(params.get("eCustomerName")!=null)
+    customerName = params.get("eCustomerName").toString();
+
+    String installNo = "";
+    if(params.get("einstallEntryNo")!=null)
+    installNo = params.get("einstallEntryNo").toString();
+
+    EgovMap  installresults = getInstallResults(params);
+    //logger.debug("installresults {} :" ,installresults);
+    Map<String, Object> InstallresultReverse = new HashMap();
+    InstallresultReverse.put("InstallResultID", installresults.get("resultId"));
+//    InstallresultReverse.put("InstallEntryID", installresults.get("entryId"));
+    InstallresultReverse.put("InstallEntryID", installEntryID);
+//    InstallresultReverse.put("InstallStatusID", installresults.get("stusCodeId"));
+    InstallresultReverse.put("InstallStatusID", "21");
+//    InstallresultReverse.put("InstallCTID", installresults.get("ctId"));
+    InstallresultReverse.put("InstallCTID",ctID );
+//    InstallresultReverse.put("InstallDate", installresults.get("installDt"));
+    InstallresultReverse.put("InstallDate", installDate);
+//    InstallresultReverse.put("InstallRemark", installresults.get("rem"));
+    InstallresultReverse.put("InstallRemark", remark);
+//    InstallresultReverse.put("GLPost", installresults.get("glPost"));
+    InstallresultReverse.put("GLPost", 0);
+//    InstallresultReverse.put("InstallCreateBy", installresults.get("crtUserId"));
+    InstallresultReverse.put("InstallCreateBy", 0);
+//    InstallresultReverse.put("InstallCreateAt", installresults.get("crtDt"));
+//    InstallresultReverse.put("InstallSirimNo", installresults.get("sirimNo"));
+    InstallresultReverse.put("InstallSirimNo", "");
+//    InstallresultReverse.put("InstallSerialNo", installresults.get("serialNo"));
+    InstallresultReverse.put("InstallSerialNo", "");
+//    InstallresultReverse.put("InstallFailID", installresults.get("fail_id"));
+    InstallresultReverse.put("InstallFailID", failReason);
+//    InstallresultReverse.put("InstallNextCallDate", installresults.get("nextCallDt"));   //nextCallDate
+    InstallresultReverse.put("InstallNextCallDate", nextCallDate);
+//    InstallresultReverse.put("InstallAllowComm", installresults.get("allowComm"));
+    InstallresultReverse.put("InstallAllowComm", 1);
+//    InstallresultReverse.put("InstallIsTradeIn", installresults.get("isTradeIn"));
+    InstallresultReverse.put("InstallIsTradeIn", 1);
+//    InstallresultReverse.put("InstallRequireSMS", installresults.get("requireSms"));
+    InstallresultReverse.put("InstallRequireSMS", 1);
+//    InstallresultReverse.put("InstallDocRefNo1", installresults.get("docRefNo1"));
+    InstallresultReverse.put("InstallDocRefNo1", "");
+//    InstallresultReverse.put("InstallDocRefNo2", installresults.get("docRefNo2"));
+    InstallresultReverse.put("InstallDocRefNo2", "");
+    InstallresultReverse.put("InstallUpdateAt", installresults.get("updDt"));
+//    InstallresultReverse.put("InstallUpdateBy", installresults.get("updUserId"));
+    InstallresultReverse.put("InstallUpdateBy", userId);
+//    InstallresultReverse.put("InstallAdjAmount", installresults.get("adjAmt"));
+    InstallresultReverse.put("InstallAdjAmount", 0);
+    InstallresultReverse.put("einstallEntryId", params.get("einstallEntryId"));
+
+    /*BY KV - add resultId */
+    params.put("InstallResultID", installresults.get("resultId"));
+
+    if(callTypeId == 257){ //ccr0006d.type_id = 257
+      //result = installationReversalService.saveReverseNewInstallationResult(params);
+
+
+        updateInstallresult(params);
+        addInstallresultReverse(InstallresultReverse);
+        updateInstallEntry(params);
+
+        Map<String, Object> srvMembershipSale = new HashMap();
+        srvMembershipSale.put("SrvMemID", memID);
+        srvMembershipSale.put("SrvStatusCodeID", '8');
+        srvMembershipSale.put("userId", userId);
+
+        updateSrvMembershipSale(srvMembershipSale);
+
+
+        Map<String, Object> srvConfiguration = new HashMap();
+        srvConfiguration.put("SrvConfigID", configID);
+        srvConfiguration.put("SrvStatusID", 8);
+        srvConfiguration.put("SrvRemark", "INSTALLATION RESULT REVERSAL");
+        srvConfiguration.put("userId", userId);
+
+        updateSrvConfiguration(srvConfiguration);
+
+
+        Map<String,Object> srvConfigSetting = new HashMap();
+        srvConfigSetting.put("SrvConfigID", configID);
+        srvConfigSetting.put("SrvSettStatusID", 8);
+        srvConfigSetting.put("SrvSettRemark", "INSTALLATION RESULT REVERSAL");
+
+        updateSrvConfigSetting(srvConfigSetting);
+
+
+        Map<String,Object> srvConfigPeriod = new HashMap();
+        srvConfigPeriod.put("SrvConfigID", configID);
+        srvConfigPeriod.put("SrvPrdStatusID", 8);
+        srvConfigPeriod.put("SrvPrdRemark", "INSTALLATION RESULT REVERSAL");
+        srvConfigPeriod.put("userId", userId);
+
+        updateSrvConfigPeriod(srvConfigPeriod);
+
+        Map<String,Object> srvConfigFilter = new HashMap();
+        srvConfigFilter.put("SrvConfigID",configID);
+        srvConfigFilter.put("SrvFilterStatusID",8);
+        srvConfigFilter.put("SrvFilterRemark","INSTALLATION RESULT REVERSAL");
+        srvConfigFilter.put("userId",userId);
+
+        updateSrvConfigFilter(srvConfigFilter);
+
+
+        Map<String,Object> happyCallM = new HashMap();
+        happyCallM.put("HCID", hcID);
+        happyCallM.put("HCStatusID", 8);
+        happyCallM.put("HCRemark", "INSTALLATION RESULT REVERSAL");
+        happyCallM.put("userId", userId);
+
+        updateHappyCallM(happyCallM);
+
+
+        Map<String,Object> salesOrderM = new HashMap();
+        salesOrderM.put("SalesOrderID", salesOrderID);
+        salesOrderM.put("StatusCodeID", 1);
+        salesOrderM.put("SyncCheck", 1);
+        salesOrderM.put("userId", userId);
+        salesOrderM.put("PVMonth", 0);
+        salesOrderM.put("PVYear", 0);
+        salesOrderM.put("AppTypeID", applicationTypeID);
+        salesOrderM.put("SalesDate", salesDt);
+
+        updateSalesOrderM(salesOrderM);
+
+
+        Map<String,Object> installation = new HashMap();
+        installation.put("SalesOrderID", salesOrderID);
+        installation.put("IsTradeIn", 1);
+        installation.put("userId", userId);
+
+        updateInstallation(installation);
+
+        Map<String,Object> callEntry = new HashMap();
+        callEntry.put("SalesOrderID", salesOrderID);
+        callEntry.put("TypeID", 257);
+        callEntry.put("StatusCodeID", 1);
+        callEntry.put("ResultID", 0);
+        callEntry.put("DocID", salesOrderID);
+        callEntry.put("userId", userId);
+        callEntry.put("CallDate", nextCallDate);
+        callEntry.put("IsWaitForCancel", 1);
+        callEntry.put("OriCallDate", nextCallDate);
+
+        addCallEntry(callEntry);
+
+        int  CallEntryId = getCallEntry(params);
+
+        Map<String,Object> callResult = new HashMap();
+        //callResult.put("CallResultID", 0);
+        callResult.put("CallEntryID", CallEntryId);
+        callResult.put("CallStatusID", 1);
+        callResult.put("CallCallDate", defaultDate);
+        callResult.put("CallActionDate", defaultDate);
+        callResult.put("CallFeedBackID", 0);
+        callResult.put("CallCTID", 0);
+        callResult.put("CallRemark", remark);
+        callResult.put("userId", userId);
+        callResult.put("CallCreateByDept", 0);
+        callResult.put("CallHCID", 0);
+        callResult.put("CallROSAmt", 0);
+        callResult.put("CallSMS", 0);
+        callResult.put("CallSMSRemark", "");
+
+        addCallResult(callResult);
+
+
+        Map<String,Object> salesorderLog = new HashMap();
+        salesorderLog.put("SalesOrderID", salesOrderID);
+        salesorderLog.put("ProgressID", 2);
+        salesorderLog.put("RefID", 0);
+        salesorderLog.put("IsLock", 0); //true
+        salesorderLog.put("userId", userId);
+        salesorderLog.put("CallEntryId", CallEntryId);
+
+        addSalesorderLog(salesorderLog);
+
+
+         // Logistics Reversal Process Begin -- Added By Adrian, 17/01/2019
+          Map<String, Object>  logPram = null ;
+
+            logPram =new HashMap<String, Object>();
+              logPram.put("ORD_ID", installEntryNo);
+              logPram.put("RETYPE", "SVO");
+              logPram.put("P_TYPE", "OD02");
+              logPram.put("P_PRGNM", "INSCAN");
+              logPram.put("USERID", sessionVO.getUserId());
+
+
+              SP_LOGISTIC_REQUEST(logPram);
+             // Logistics Reversal Process End
+
+
+
+
+        String rentDateTime = "2017-02-01";
+            params.put("rentDateTime", rentDateTime);
+
+            EgovMap  rv = getRequiredView(params);
+
+            params.put("TotalAmt", rv.get("totAmt"));
+
+        int adjTypeSetID = 0;
+            int adjDrAccID = 0;
+            int adjCrAccID = 0;
+
+            if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68){
+
+              if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
+                adjTypeSetID = 7;
+                    adjDrAccID = 171;
+                    adjCrAccID = 43;
+
+
+              }else if (Integer.parseInt(params.get("applicationTypeID").toString()) == 67)
+                {
+                    adjTypeSetID = 8;
+                    adjDrAccID = 166;
+                    adjCrAccID = 38;
+                }else
+                {
+                    adjTypeSetID = 9;
+                    adjDrAccID = 166;
+                    adjCrAccID = 38;
+                }
+
+              params.put("adjTypeSetID", adjTypeSetID);
+                params.put("adjDrAccID", adjDrAccID);
+                params.put("adjCrAccID", adjCrAccID);
+
+                SimpleDateFormat format = new SimpleDateFormat("YYYY-MMM-DD");
+                SimpleDateFormat format2 = new SimpleDateFormat("YY/MM/DD");
+
+                String esalesDt = params.get("esalesDt").toString();
+
+                Date salesdate = null;
+                Date mthapril = null;
+
+                try {
+                  mthapril =  format.parse("2015-APR-01");
+                } catch (ParseException e) {
+                  // TODO Auto-generated catch block
+                  e.printStackTrace();
+                }
+                try {
+                  salesdate = format2.parse(esalesDt);
+                } catch (ParseException e) {
+                  // TODO Auto-generated catch block
+                  e.printStackTrace();
+                }
+                System.out.println(salesdate);
+
+                if (salesdate.compareTo(mthapril)<0){
+                  String adJEntryReportNo = null;
+                  params.put("docno",18);
+                  adJEntryReportNo =  getDOCNumber(params);
+                  params.put("adJEntryReportNo", adJEntryReportNo);
+                  String adjEntryNoteNo = null;
+                  params.put("docno",15);
+                  adjEntryNoteNo =  getDOCNumber(params);
+                  params.put("adjEntryNoteNo", adjEntryNoteNo);
+
+                  params.put("docNoId",18);
+                   updateDOCNumber(params);
+                  params.put("docNoId",15);
+                   updateDOCNumber(params);
+
+
+                 //   installationReversalService.addAccAdjTransEntry(params);
+                    int adjEntryId =  selectLastadjEntryId();
+
+                    params.put("adjEntryId",adjEntryId);
+                    //installationReversalService.addAccAdjTransResult(params);
+                    /*
+                    String trxNo = installationReversalService.getDOCNumberOnlyNumber();
+                    params.put("trxNo", trxNo);
+                    */
+
+                    /*
+                    Map<String,Object> accTRXPlus = new HashMap();
+                    accTRXPlus.put("TRXItemNo", 1);
+                    accTRXPlus.put("TRXGLAccID", adjDrAccID);
+                    accTRXPlus.put("TRXGLDept", "");
+                    accTRXPlus.put("TRXProject", "");
+                    accTRXPlus.put("TRXFinYear", 0);
+                    accTRXPlus.put("TRXPeriod", 0);
+                    accTRXPlus.put("TRXSourceTypeID", 391);
+                    accTRXPlus.put("TRXDocTypeID", 155);
+                    accTRXPlus.put("TRXCustBillID", 0);
+                    accTRXPlus.put("TRXChequeNo", "");
+                    accTRXPlus.put("TRXCRCardSlip", "");
+                    accTRXPlus.put("TRXBisNo", "");
+                    accTRXPlus.put("TRXReconDate", defaultDate);
+                    accTRXPlus.put("TRXRemark", params.get("eCustomerName"));
+                    accTRXPlus.put("TRXCurrID", "RM");
+                    accTRXPlus.put("TRXCurrRate", 1);
+                    accTRXPlus.put("TRXAmount", Integer.parseInt(rv.get("totAmt").toString()));
+                    accTRXPlus.put("TRXAmountRM", Integer.parseInt(rv.get("totAmt").toString()));
+                    accTRXPlus.put("TRXIsSynch", 1);
+
+                    int trxNo = Integer.parseInt(installationReversalService.getDOCNumberOnlyNumber().toString());
+                    accTRXPlus.put("TRXNo", trxNo);
+                    accTRXPlus.put("TRXDocNo", adjEntryNoteNo);
+
+                    installationReversalService.addAccTRXes(accTRXPlus);
+
+
+                    Map<String,Object> accTRXMinus = new HashMap();
+                    accTRXMinus.put("TRXItemNo", 2);
+                    accTRXMinus.put("TRXGLAccID", adjDrAccID);
+                    accTRXMinus.put("TRXGLDept", "");
+                    accTRXMinus.put("TRXProject", "");
+                    accTRXMinus.put("TRXFinYear", 0);
+                    accTRXMinus.put("TRXPeriod", 0);
+                    accTRXMinus.put("TRXSourceTypeID", 391);
+                    accTRXMinus.put("TRXDocTypeID", 155);
+                    accTRXMinus.put("TRXCustBillID", 0);
+                    accTRXMinus.put("TRXChequeNo", "");
+                    accTRXMinus.put("TRXCRCardSlip", "");
+                    accTRXMinus.put("TRXBisNo", "");
+                    accTRXMinus.put("TRXReconDate", defaultDate);
+                    accTRXMinus.put("TRXRemark", params.get("eCustomerName"));
+                    accTRXMinus.put("TRXCurrID", "RM");
+                    accTRXMinus.put("TRXCurrRate", 1);
+                    accTRXMinus.put("TRXAmount", Integer.parseInt(rv.get("totAmt").toString())*-1);
+                    accTRXMinus.put("TRXAmountRM", Integer.parseInt(rv.get("totAmt").toString())*-1);
+                    accTRXMinus.put("TRXIsSynch", 1);
+
+                    installationReversalService.addAccTRXes(accTRXMinus);
+
+                    */
+                    if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
+                      EgovMap  qryPreBill =  getQryPreBill(params);
+//                      params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+//                      params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+//                      params.put("Updator",qryPreBill.get("uptUserId"));;
+//                      params.put("AccBillID",qryPreBill.get("accBillId"));;
+
+                      if(qryPreBill !=null){
+                        params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+                          params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+                          params.put("Updator",qryPreBill.get("uptUserId"));;
+                          params.put("AccBillID",qryPreBill.get("accBillId"));;
+
+                        String VoidNo = null;
+                        params.put("docno",112);
+                        VoidNo =  getDOCNumber(params);
+                        params.put("VoidNo", VoidNo);
+                        params.put("docNoId",112);
+                           updateDOCNumber(params);
+
+                         // installationReversalService.addAccOrderVoid_Invoice(params);
+
+                         // installationReversalService.addAccOrderVoid_Invoice_Sub(params);
+
+                          //installationReversalService.updateAccOrderBill(params);
+                      }
+                    /*
+                  Map<String,Object> accTradeLedger = new HashMap();
+                  accTradeLedger.put("TradeSOID", salesOrderID);
+                  accTradeLedger.put("TradeDocTypeID", salesOrderID);
+                  accTradeLedger.put("TradeAmount", Integer.parseInt(rv.get("totAmt").toString())*-1);
+                  accTradeLedger.put("TradeInstNo", 0);
+                  accTradeLedger.put("TradeBatchNo", "0");
+                  accTradeLedger.put("TradeIsSync", 1);
+                  accTradeLedger.put("userId", userId);
+
+                  installationReversalService.addAccTradeLedger(accTradeLedger);
+                  */
+
+                  Map<String,Object> accRentLedger = new HashMap();
+                  accRentLedger.put("RentSOID", salesOrderID);
+                  accRentLedger.put("RentDocTypeID", 155);
+                  accRentLedger.put("RentAmount", Integer.parseInt(rv.get("totAmt").toString())*-1);
+                 // installationReversalService.addAccRentLedger(params);
+
+                   updateRentalScheme(params);
+
+                   updateRentalScheme(params);
+
+
+                    }else{
+                      EgovMap  qryPreBill =  getQryPreBill_out(params);
+//                      params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+//                      params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+//                      params.put("Updator",qryPreBill.get("uptUserId"));;
+//                      params.put("AccBillID",qryPreBill.get("accBillId"));;
+
+                      if(qryPreBill !=null){
+                        params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+                          params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+                          params.put("Updator",qryPreBill.get("uptUserId"));;
+                          params.put("AccBillID",qryPreBill.get("accBillId"));;
+
+                        String VoidNo = null;
+                        params.put("docno",112);
+                        VoidNo =  getDOCNumber(params);
+                        params.put("VoidNo", VoidNo);
+                        params.put("docNoId",112);
+                           updateDOCNumber(params);
+
+                          //installationReversalService.addAccOrderVoid_Invoice(params);
+
+                          int AccInvVoidID =  getAccInvVoidID();
+                          params.put("AccInvVoidID",AccInvVoidID);
+
+                          //installationReversalService.addAccOrderVoid_Invoice_Sub(params);
+
+                          //installationReversalService.updateAccOrderBill(params);
+                      }
+
+                     // installationReversalService.addAccTradeLedger(params);
+
+                    }
+                }else{
+                  if(Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68){
+
+                    List<EgovMap> QryOutSList =  getQryOutS(params);
+                    if(QryOutSList.size()>0){
+
+                      for(int i = 0 ; i<QryOutSList.size() ; i++){
+                        params.put("TaxInvoiceID",QryOutSList.get(i).get("taxInvcId"));
+                        params.put("InvoiceItemGSTTaxes",QryOutSList.get(i).get("invcItmGstTxs"));
+                        params.put("InvoiceItemAmountDue",QryOutSList.get(i).get("invcItmAmtDue"));
+                        params.put("InvocieItemID",QryOutSList.get(i).get("invcItmId"));
+                        params.put("InvoiceItemGSTRate",QryOutSList.get(i).get("invcItmGstRate"));
+                        params.put("InvoiceItemRentalFee",QryOutSList.get(i).get("invcItmRentalFee"));
+                        params.put("InvoiceItemOrderNo",QryOutSList.get(i).get("invcItmOrdNo"));
+                        params.put("InvoiceItemProductModel",QryOutSList.get(i).get("invcItmProductModel"));
+                        params.put("InvoiceItemProductSerialNo",QryOutSList.get(i).get("invcItmProductSerialNo"));
+
+                        //,d.INVC_ITM_PRODUCT_MODEL,INVC_ITM_PRODUCT_SERIAL_NO
+
+
+                        EgovMap  qryAccBill =  getQryAccBill(params);
+                        params.put("AccBillID",qryAccBill.get("accBillId"));
+                        params.put("TaxInvoiceRefNo",qryAccBill.get("taxInvcRefNo"));
+                        params.put("TaxInvoiceRefDate",qryAccBill.get("taxInvcRefDt"));
+                        params.put("TaxInvoiceCustName",qryAccBill.get("taxInvcCustName"));
+                        params.put("TaxInvoiceContactPerson",qryAccBill.get("taxInvcCntcPerson"));
+
+                        params.put("TaxInvoiceAddress1",qryAccBill.get("taxInvcAddr1"));
+                        params.put("TaxInvoiceAddress2",qryAccBill.get("taxInvcAddr2"));
+                        params.put("TaxInvoiceAddress3",qryAccBill.get("taxInvcAddr3"));
+                        params.put("TaxInvoiceAddress4",qryAccBill.get("taxInvcAddr4"));
+                        params.put("TaxInvoicePostCode",qryAccBill.get("taxInvcPostCode"));
+                        params.put("TaxInvoiceStateName",qryAccBill.get("taxInvcStateName"));
+                        params.put("TaxInvoiceCountry",qryAccBill.get("taxInvcCnty"));
+
+                        params.put("TaxInvoiceAmountDue",qryAccBill.get("taxInvcAmtDue"));
+
+                        //TaxInvoiceCountry
+                        //TAX_INVC_CNTY
+
+                        // updateAccOrderBill2(params); pay
+
+                        String cnno = null;
+                        params.put("docno",134);
+                        cnno =  getDOCNumber(params);
+                        params.put("cnno", cnno);
+                        params.put("adjEntryNoteNo", cnno);
+                        params.put("docNoId",134);
+                         updateDOCNumber_8Digit(params);
+
+                        String adJEntryReportNo = null;
+                        params.put("docno",18);
+                        adJEntryReportNo =  getDOCNumber(params);
+                        params.put("adJEntryReportNo", adJEntryReportNo);
+                        params.put("docNoId",18);
+                         updateDOCNumber(params);
+
+                      //   addAccInvAdjr(params);
+
+                        int MemoAdjustID =  getMemoAdjustID();
+                        params.put("MemoAdjustID", MemoAdjustID);
+
+                        String AccBillTaxCodeID = null;
+                        AccBillTaxCodeID =  getAccBillTaxCodeID(params);
+                        params.put("AccBillTaxCodeID", AccBillTaxCodeID);
+
+                        int crid = 0;
+                                int drid = 0;
+                                int conv = Integer.parseInt(qryAccBill.get("accBillAcctCnvr").toString());
+                                    //ACC_BILL_ACCT_CNVR;
+
+                                if (conv == 0)
+                                {
+                                    crid = 38;
+                                    drid = 535;
+                                }
+                                else
+                                {
+                                    crid = 38;
+                                    drid = 166;
+                                }
+
+                                params.put("crid",crid);
+                                params.put("drid",drid);
+
+                               //  addAccInvoiceAdjustment_Sub(params);
+
+                              //   addAccTaxDebitCreditNote(params);
+
+                                int NoteID =  getNoteID();
+                                params.put("NoteID",NoteID);
+
+                              //   addAccTaxDebitCreditNote_Sub(params);
+
+                                String  VoidNo = null;
+                                params.put("docno",112);
+                                VoidNo =  getDOCNumber(params);
+                                params.put("VoidNo", VoidNo);
+                                params.put("docNoId",112);
+                               updateDOCNumber(params);
+
+
+                              params.put("Updator",userId);
+                              // addAccOrderVoid_Invoice(params);
+                              params.put("adjEntryId",MemoAdjustID);
+                              params.put("TotalAmt",qryAccBill.get("taxInvcAmtDue"));
+
+                              //installationReversalService.addAccOrderVoid_Invoice_Sub(params);
+
+                              //installationReversalService.addAccTradeLedger(params);
+
+                      }
+                    }
+                  }
+                }
+            }
+    }else{
+      EgovMap  orderExchangeTypeByInstallEntryID =  GetOrderExchangeTypeByInstallEntryID(params);
+      String hidPEAfterInstall = null;
+      returnMap.put("spanInstallationType",orderExchangeTypeByInstallEntryID.get("soCurStusId"));
+      params.put("docId",orderExchangeTypeByInstallEntryID.get("docId"));
+
+      if(Integer.parseInt(orderExchangeTypeByInstallEntryID.get("soCurStusId").toString())==25 || Integer.parseInt(orderExchangeTypeByInstallEntryID.get("soCurStusId").toString())==26){
+
+        hidPEAfterInstall = "1";
+
+         updateInstallresult(params);
+         addInstallresultReverse(InstallresultReverse);
+         updateSalesOrderExchange(params);
+         updateInstallEntry(params);
+
+        Map<String, Object> srvConfiguration = new HashMap();
+          srvConfiguration.put("SrvConfigID", configID);
+          srvConfiguration.put("SrvStatusID", 8);
+          srvConfiguration.put("SrvRemark", "INSTALLATION RESULT REVERSAL");
+          srvConfiguration.put("userId", userId);
+
+           updateSrvConfiguration(srvConfiguration);
+
+
+          Map<String,Object> srvConfigSetting = new HashMap();
+          srvConfigSetting.put("SrvConfigID", configID);
+          srvConfigSetting.put("SrvSettStatusID", 8);
+          srvConfigSetting.put("SrvSettRemark", "INSTALLATION RESULT REVERSAL");
+
+           updateSrvConfigSetting(srvConfigSetting);
+
+
+          Map<String,Object> srvConfigPeriod = new HashMap();
+          srvConfigPeriod.put("SrvConfigID", configID);
+          srvConfigPeriod.put("SrvPrdStatusID", 8);
+          srvConfigPeriod.put("SrvPrdRemark", "INSTALLATION RESULT REVERSAL");
+          srvConfigPeriod.put("userId", userId);
+
+           updateSrvConfigPeriod(srvConfigPeriod);
+
+
+          Map<String,Object> srvConfigFilter = new HashMap();
+          srvConfigFilter.put("SrvConfigID",configID);
+          srvConfigFilter.put("SrvFilterStatusID",8);
+          srvConfigFilter.put("SrvFilterRemark","INSTALLATION RESULT REVERSAL");
+          srvConfigFilter.put("userId",userId);
+
+           updateSrvConfigFilter(srvConfigFilter);
+
+           updateSrvConfigurations(params);
+
+           updateSrvConfigSetting2(params);
+
+           updateSrvConfigPeriod2(params);
+
+           updateSrvConfigFilter2(params);
+
+
+          Map<String,Object> happyCallM = new HashMap();
+          happyCallM.put("HCID", hcID);
+          happyCallM.put("HCStatusID", 8);
+          happyCallM.put("HCRemark", "INSTALLATION RESULT REVERSAL");
+          happyCallM.put("userId", userId);
+
+           updateHappyCallM(happyCallM);
+
+          EgovMap  rv =  getRequiredView2(params);
+
+          Map<String,Object> salesOrderM = new HashMap();
+          salesOrderM.put("SalesOrderID", salesOrderID);
+          //salesOrderM.put("StatusCodeID", 1);
+          salesOrderM.put("SyncCheck", 1);
+          salesOrderM.put("userId", userId);
+          salesOrderM.put("PVMonth", 0);
+          salesOrderM.put("PVYear", 0);
+          salesOrderM.put("TotalAmt", rv.get("soExchgOldPrc"));
+          salesOrderM.put("PromoID", rv.get("soExchgOldPromoId"));
+          salesOrderM.put("TotalPV", rv.get("soExchgOldPv"));
+          salesOrderM.put("MthRentAmt", rv.get("soExchgOldRentAmt"));
+          salesOrderM.put("DefRentAmt", rv.get("soExchgOldRentAmt"));
+          salesOrderM.put("AppTypeID", applicationTypeID);
+          salesOrderM.put("SalesDate", salesDt);
+
+           updateSalesOrderM2(salesOrderM);
+
+
+          Map<String,Object> salesOrderD = new HashMap();
+          salesOrderD.put("ItemStkID", rv.get("soExchgOldStkId"));
+          salesOrderD.put("ItemPriceID", rv.get("soExchgOldPrcId"));
+          salesOrderD.put("ItemPrice", rv.get("soExchgOldPrc"));
+          salesOrderD.put("ItemPV", rv.get("soExchgOldPv"));
+          salesOrderD.put("userId", userId);
+
+           updateSalesOrderD2(salesOrderD);
+
+           updateInstallation(params);
+
+          Map<String,Object> callEntry = new HashMap();
+          callEntry.put("SalesOrderID", salesOrderID);
+          callEntry.put("TypeID", 258);
+          callEntry.put("StatusCodeID", 1);
+          callEntry.put("ResultID", 0);
+          callEntry.put("DocID", salesOrderID);
+          callEntry.put("userId", userId);
+          callEntry.put("CallDate", nextCallDate);
+          callEntry.put("IsWaitForCancel", 1);
+          callEntry.put("OriCallDate", nextCallDate);
+
+           addCallEntry(callEntry);
+
+          int  CallEntryId =  getCallEntry(params);
+
+          Map<String,Object> callResult = new HashMap();
+          //callResult.put("CallResultID", 0);
+          callResult.put("CallEntryID", CallEntryId);
+          callResult.put("CallStatusID", 1);
+          callResult.put("CallCallDate", defaultDate);
+          callResult.put("CallActionDate", defaultDate);
+          callResult.put("CallFeedBackID", 0);
+          callResult.put("CallCTID", 0);
+          callResult.put("CallRemark", remark);
+          callResult.put("userId", userId);
+          callResult.put("CallCreateByDept", 0);
+          callResult.put("CallHCID", 0);
+          callResult.put("CallROSAmt", 0);
+          callResult.put("CallSMS", 0);
+          callResult.put("CallSMSRemark", "");
+
+           addCallResult(callResult);
+
+
+          Map<String,Object> salesorderLog = new HashMap();
+          salesorderLog.put("SalesOrderID", salesOrderID);
+          salesorderLog.put("ProgressID", 2);
+          salesorderLog.put("RefID", 0);
+          salesorderLog.put("IsLock", 0); //true
+          salesorderLog.put("userId", userId);
+          salesorderLog.put("CallEntryId", CallEntryId);
+
+           addSalesorderLog(salesorderLog);
+
+
+          if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68){
+
+            int adjTypeSetID = 0;
+                  int adjDrAccID = 0;
+                  int adjCrAccID = 0;
+
+
+
+                  params.put("TotalAmt", rv.get("totAmt"));
+
+            if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
+
+                  adjTypeSetID = 7;
+                      adjDrAccID = 171;
+                      adjCrAccID = 43;
+
+
+                }else if (Integer.parseInt(params.get("applicationTypeID").toString()) == 67)
+                  {
+                      adjTypeSetID = 8;
+                      adjDrAccID = 166;
+                      adjCrAccID = 38;
+                  }else
+                  {
+                      adjTypeSetID = 9;
+                      adjDrAccID = 166;
+                      adjCrAccID = 38;
+                  }
+
+                params.put("adjTypeSetID", adjTypeSetID);
+                  params.put("adjDrAccID", adjDrAccID);
+                  params.put("adjCrAccID", adjCrAccID);
+
+                  SimpleDateFormat format = new SimpleDateFormat("YYYY-MMM-DD");
+
+                  String esalesDt = params.get("esalesDt").toString();
+
+                  Date salesdate = null;
+                  Date mthapril = null;
+
+                  try {
+                    mthapril =  format.parse("2015-APR-01");
+                  } catch (ParseException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                  }
+                  try {
+                    salesdate = format.parse(esalesDt);
+                  } catch (ParseException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                  }
+                  System.out.println(salesdate);
+
+                  if (salesdate.compareTo(mthapril)<0){
+                    String adJEntryReportNo = null;
+                    params.put("docno",18);
+                    adJEntryReportNo =  getDOCNumber(params);
+                    params.put("adJEntryReportNo", adJEntryReportNo);
+                    String adjEntryNoteNo = null;
+                    params.put("docno",15);
+                    adjEntryNoteNo =  getDOCNumber(params);
+                    params.put("adjEntryNoteNo", adjEntryNoteNo);
+
+                    params.put("docNoId",18);
+                     updateDOCNumber(params);
+                    params.put("docNoId",15);
+                     updateDOCNumber(params);
+
+                    //EgovMap  rv2 =  getRequiredView(params);
+
+                      //params.put("TotalAmt", rv2.get("totAmt"));
+
+
+                    //   addAccAdjTransEntry(params);
+                      int adjEntryId =  selectLastadjEntryId();
+
+                      params.put("adjEntryId",adjEntryId);
+                     //  addAccAdjTransResult(params);
+
+                      Map<String,Object> accTRXPlus = new HashMap();
+                      accTRXPlus.put("TRXItemNo", 1);
+                      accTRXPlus.put("TRXGLAccID", adjDrAccID);
+                      accTRXPlus.put("TRXGLDept", "");
+                      accTRXPlus.put("TRXProject", "");
+                      accTRXPlus.put("TRXFinYear", 0);
+                      accTRXPlus.put("TRXPeriod", 0);
+                      accTRXPlus.put("TRXSourceTypeID", 391);
+                      accTRXPlus.put("TRXDocTypeID", 155);
+                      accTRXPlus.put("TRXCustBillID", 0);
+                      accTRXPlus.put("TRXChequeNo", "");
+                      accTRXPlus.put("TRXCRCardSlip", "");
+                      accTRXPlus.put("TRXBisNo", "");
+                      accTRXPlus.put("TRXReconDate", defaultDate);
+                      accTRXPlus.put("TRXRemark", params.get("eCustomerName"));
+                      accTRXPlus.put("TRXCurrID", "RM");
+                      accTRXPlus.put("TRXCurrRate", 1);
+                      accTRXPlus.put("TRXAmount", Integer.parseInt(rv.get("soExchgNwPrc").toString()));
+                      accTRXPlus.put("TRXAmountRM", Integer.parseInt(rv.get("soExchgNwPrc").toString()));
+                      accTRXPlus.put("TRXIsSynch", 1);
+
+                      int trxNo = Integer.parseInt( getDOCNumberOnlyNumber().toString());
+                      accTRXPlus.put("TRXNo", trxNo);
+                      accTRXPlus.put("TRXDocNo", adjEntryNoteNo);
+
+                      // addAccTRXes(accTRXPlus);
+
+
+                      Map<String,Object> accTRXMinus = new HashMap();
+                      accTRXMinus.put("TRXItemNo", 2);
+                      accTRXMinus.put("TRXGLAccID", adjDrAccID);
+                      accTRXMinus.put("TRXGLDept", "");
+                      accTRXMinus.put("TRXProject", "");
+                      accTRXMinus.put("TRXFinYear", 0);
+                      accTRXMinus.put("TRXPeriod", 0);
+                      accTRXMinus.put("TRXSourceTypeID", 391);
+                      accTRXMinus.put("TRXDocTypeID", 155);
+                      accTRXMinus.put("TRXCustBillID", 0);
+                      accTRXMinus.put("TRXChequeNo", "");
+                      accTRXMinus.put("TRXCRCardSlip", "");
+                      accTRXMinus.put("TRXBisNo", "");
+                      accTRXMinus.put("TRXReconDate", defaultDate);
+                      accTRXMinus.put("TRXRemark", params.get("eCustomerName"));
+                      accTRXMinus.put("TRXCurrID", "RM");
+                      accTRXMinus.put("TRXCurrRate", 1);
+                      accTRXMinus.put("TRXAmount", Integer.parseInt(rv.get("soExchgNwPrc").toString())*-1);
+                      accTRXMinus.put("TRXAmountRM", Integer.parseInt(rv.get("soExchgNwPrc").toString())*-1);
+                      accTRXMinus.put("TRXIsSynch", 1);
+
+                    //   addAccTRXes(accTRXMinus);
+
+
+                      if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
+                        EgovMap  qryPreBill =  getQryPreBill(params);
+//                        params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+//                        params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+//                        params.put("Updator",qryPreBill.get("uptUserId"));;
+//                        params.put("AccBillID",qryPreBill.get("accBillId"));;
+
+                        if(qryPreBill !=null){
+                          params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+                          params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+                          params.put("Updator",qryPreBill.get("uptUserId"));;
+                          params.put("AccBillID",qryPreBill.get("accBillId"));;
+
+                          String VoidNo = null;
+                          params.put("docno",112);
+                          VoidNo =  getDOCNumber(params);
+                          params.put("VoidNo", VoidNo);
+                          params.put("docNoId",112);
+                             updateDOCNumber(params);
+
+                           // installationReversalService.addAccOrderVoid_Invoice(params);
+
+                            int AccInvVoidID =  getAccInvVoidID();
+                            params.put("AccInvVoidID",AccInvVoidID);
+
+                          //  installationReversalService.addAccOrderVoid_Invoice_Sub(params);
+
+                           // installationReversalService.updateAccOrderBill(params);
+                        }
+
+                        Map<String,Object> accRentLedger = new HashMap();
+                          accRentLedger.put("RentSOID", salesOrderID);
+                          accRentLedger.put("RentDocTypeID", 155);
+                          accRentLedger.put("RentAmount", Integer.parseInt(rv.get("soExchgNwPrc").toString())*-1);
+                         //  addAccRentLedger(params);
+
+                        // addAccTradeLedger(params);
+
+                        // updateRentalScheme(params);
+
+                      }else{
+                        EgovMap  qryPreBill =  getQryPreBill_out(params);
+//                        params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+//                        params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+//                        params.put("Updator",qryPreBill.get("uptUserId"));;
+//                        params.put("AccBillID",qryPreBill.get("accBillId"));;
+
+                        if(qryPreBill !=null){
+                          params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+                          params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+                          params.put("Updator",qryPreBill.get("uptUserId"));;
+                          params.put("AccBillID",qryPreBill.get("accBillId"));;
+
+                          String VoidNo = null;
+                          params.put("docno",112);
+                          VoidNo =  getDOCNumber(params);
+                          params.put("VoidNo", VoidNo);
+                          params.put("docNoId",112);
+                             updateDOCNumber(params);
+
+                           //  addAccOrderVoid_Invoice(params);
+
+                            int AccInvVoidID =  getAccInvVoidID();
+                            params.put("AccInvVoidID",AccInvVoidID);
+
+                           //  addAccOrderVoid_Invoice_Sub(params);
+
+                         //    updateAccOrderBill(params);
+                        }
+                          /*
+                          Map<String,Object> accRentLedger = new HashMap();
+                          accRentLedger.put("RentSOID", salesOrderID);
+                          accRentLedger.put("RentDocTypeID", 155);
+                          accRentLedger.put("RentAmount", Integer.parseInt(rv.get("soExchgNwPrc").toString())*-1);
+                           addAccRentLedger(params);
+                          */
+                         //  addAccTradeLedger(params);
+                          // updateRentalScheme(params);
+                      }
+                  }else{
+                    if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
+                    }else if(Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==67){
+
+                      List<EgovMap> QryOutSList =  getQryOutS(params);
+                      if(QryOutSList.size()>0){
+
+                        EgovMap  qryAccBill =  getQryAccBill(params);
+                        params.put("AccBillID",qryAccBill.get("accBillId"));
+                        params.put("TaxInvoiceRefNo",qryAccBill.get("taxInvcRefNo"));
+                        params.put("TaxInvoiceRefDate",qryAccBill.get("taxInvcRefDt"));
+                        params.put("TaxInvoiceCustName",qryAccBill.get("taxInvcCustName"));
+                        params.put("TaxInvoiceContactPerson",qryAccBill.get("taxInvcCntcPerson"));
+
+                        params.put("TaxInvoiceAddress1",qryAccBill.get("taxInvcAddr1"));
+                        params.put("TaxInvoiceAddress2",qryAccBill.get("taxInvcAddr2"));
+                        params.put("TaxInvoiceAddress3",qryAccBill.get("taxInvcAddr3"));
+                        params.put("TaxInvoiceAddress4",qryAccBill.get("taxInvcAddr4"));
+                        params.put("TaxInvoicePostCode",qryAccBill.get("taxInvcPostCode"));
+                        params.put("TaxInvoiceStateName",qryAccBill.get("taxInvcStateName"));
+                        params.put("TaxInvoiceCountry",qryAccBill.get("taxInvcCnty"));
+
+                        params.put("TaxInvoiceAmountDue",qryAccBill.get("taxInvcAmtDue"));
+
+                      //   updateAccOrderBill2(params);
+
+                        String cnno = null;
+                        params.put("docno",134);
+                        cnno =  getDOCNumber(params);
+                        params.put("cnno", cnno);
+                        params.put("adjEntryNoteNo", cnno);
+                        params.put("docNoId",134);
+                         updateDOCNumber_8Digit(params);
+
+                        String adJEntryReportNo = null;
+                        params.put("docno",18);
+                        adJEntryReportNo =  getDOCNumber(params);
+                        params.put("adJEntryReportNo", adJEntryReportNo);
+                        params.put("docNoId",18);
+                         updateDOCNumber(params);
+
+                        // addAccInvAdjr(params);
+
+                        int MemoAdjustID =  getMemoAdjustID();
+                        params.put("MemoAdjustID", MemoAdjustID);
+
+                        String AccBillTaxCodeID = null;
+                        AccBillTaxCodeID =  getAccBillTaxCodeID(params);
+                        params.put("AccBillTaxCodeID", AccBillTaxCodeID);
+
+                        int crid = 0;
+                                int drid = 0;
+                                int conv = Integer.parseInt(qryAccBill.get("accBillAcctCnvr").toString());
+                                    //ACC_BILL_ACCT_CNVR;
+
+                                if (conv == 0)
+                                {
+                                    crid = 38;
+                                    drid = 535;
+                                }
+                                else
+                                {
+                                    crid = 38;
+                                    drid = 166;
+                                }
+
+                                params.put("crid",crid);
+                                params.put("drid",drid);
+
+                            //     addAccInvoiceAdjustment_Sub(params);
+
+                               //  addAccTaxDebitCreditNote(params);
+
+                                int NoteID =  getNoteID();
+                                params.put("NoteID",NoteID);
+
+                              //   addAccTaxDebitCreditNote_Sub(params);
+
+                                String  VoidNo = null;
+                                params.put("docno",112);
+                                VoidNo =  getDOCNumber(params);
+                                params.put("VoidNo", VoidNo);
+                                params.put("docNoId",112);
+                               updateDOCNumber(params);
+
+                            //   addAccOrderVoid_Invoice(params);
+                              params.put("adjEntryId",MemoAdjustID);
+                              params.put("TotalAmt",qryAccBill.get("taxInvcAmtDue"));
+
+                            //   addAccOrderVoid_Invoice_Sub(params);
+                            //   addAccTradeLedger(params);
+
+                              // updateAccOrderBill(params);
+                      }
+                    }
+                  }
+          }
+      }else{
+        hidPEAfterInstall = "0";
+
+         updateInstallresult(params);
+         addInstallresultReverse(InstallresultReverse);
+         updateSalesOrderExchange(params);
+         updateInstallEntry(params);
+
+        Map<String, Object> srvMembershipSale = new HashMap();
+          srvMembershipSale.put("SrvMemID", memID);
+          srvMembershipSale.put("SrvStatusCodeID", '8');
+          srvMembershipSale.put("userId", userId);
+
+           updateSrvMembershipSale2(srvMembershipSale);
+
+
+          Map<String, Object> srvConfiguration = new HashMap();
+          srvConfiguration.put("SrvConfigID", configID);
+          srvConfiguration.put("SrvStatusID", 8);
+          srvConfiguration.put("SrvRemark", "INSTALLATION RESULT REVERSAL");
+          srvConfiguration.put("userId", userId);
+
+           updateSrvConfiguration(srvConfiguration);
+
+
+          Map<String,Object> srvConfigSetting = new HashMap();
+          srvConfigSetting.put("SrvConfigID", configID);
+          srvConfigSetting.put("SrvSettStatusID", 8);
+          srvConfigSetting.put("SrvSettRemark", "INSTALLATION RESULT REVERSAL");
+
+           updateSrvConfigSetting(srvConfigSetting);
+
+
+          Map<String,Object> srvConfigPeriod = new HashMap();
+          srvConfigPeriod.put("SrvConfigID", configID);
+          srvConfigPeriod.put("SrvPrdStatusID", 8);
+          srvConfigPeriod.put("SrvPrdRemark", "INSTALLATION RESULT REVERSAL");
+          srvConfigPeriod.put("userId", userId);
+
+           updateSrvConfigPeriod(srvConfigPeriod);
+
+
+          Map<String,Object> srvConfigFilter = new HashMap();
+          srvConfigFilter.put("SrvConfigID",configID);
+          srvConfigFilter.put("SrvFilterStatusID",8);
+          srvConfigFilter.put("SrvFilterRemark","INSTALLATION RESULT REVERSAL");
+          srvConfigFilter.put("userId",userId);
+
+           updateSrvConfigFilter(srvConfigFilter);
+          Map<String,Object> happyCallM = new HashMap();
+          happyCallM.put("HCID", hcID);
+          happyCallM.put("HCStatusID", 8);
+          happyCallM.put("HCRemark", "INSTALLATION RESULT REVERSAL");
+          happyCallM.put("userId", userId);
+           updateHappyCallM(happyCallM);
+          EgovMap  rv =  getRequiredView2(params);
+          Map<String,Object> salesOrderM = new HashMap();
+          salesOrderM.put("SalesOrderID", salesOrderID);
+          //salesOrderM.put("StatusCodeID", 1);
+          salesOrderM.put("SyncCheck", 1);
+          salesOrderM.put("userId", userId);
+          salesOrderM.put("PVMonth", 0);
+          salesOrderM.put("PVYear", 0);
+          salesOrderM.put("TotalAmt", rv.get("soExchgOldPrc"));
+          salesOrderM.put("PromoID", rv.get("soExchgOldPromoId"));
+          salesOrderM.put("TotalPV", rv.get("soExchgOldPv"));
+          salesOrderM.put("MthRentAmt", rv.get("soExchgOldRentAmt"));
+          salesOrderM.put("DefRentAmt", rv.get("soExchgOldRentAmt"));
+          salesOrderM.put("AppTypeID", applicationTypeID);
+          salesOrderM.put("SalesDate", salesDt);
+
+           updateSalesOrderM2(salesOrderM);
+
+          Map<String,Object> salesOrderD = new HashMap();
+          salesOrderD.put("ItemStkID", rv.get("soExchgOldStkId"));
+          salesOrderD.put("ItemPriceID", rv.get("soExchgOldPrcId"));
+          salesOrderD.put("ItemPrice", rv.get("soExchgOldPrc"));
+          salesOrderD.put("ItemPV", rv.get("soExchgOldPv"));
+          salesOrderD.put("userId", userId);
+
+           updateSalesOrderD2(salesOrderD);
+           updateInstallation(params);
+
+          Map<String,Object> callEntry = new HashMap();
+          callEntry.put("SalesOrderID", salesOrderID);
+          callEntry.put("TypeID", 258);
+          callEntry.put("StatusCodeID", 1);
+          callEntry.put("ResultID", 0);
+          callEntry.put("DocID", params.get("docId"));
+          callEntry.put("userId", userId);
+          callEntry.put("CallDate", nextCallDate);
+          callEntry.put("IsWaitForCancel", 1);
+          callEntry.put("OriCallDate", nextCallDate);
+
+           addCallEntry(callEntry);
+
+          int  CallEntryId =  getCallEntry(params);
+
+          Map<String,Object> callResult = new HashMap();
+          //callResult.put("CallResultID", 0);
+          callResult.put("CallEntryID", CallEntryId);
+          callResult.put("CallStatusID", 1);
+          callResult.put("CallCallDate", defaultDate);
+          callResult.put("CallActionDate", defaultDate);
+          callResult.put("CallFeedBackID", 0);
+          callResult.put("CallCTID", 0);
+          callResult.put("CallRemark", remark);
+          callResult.put("userId", userId);
+          callResult.put("CallCreateByDept", 0);
+          callResult.put("CallHCID", 0);
+          callResult.put("CallROSAmt", 0);
+          callResult.put("CallSMS", 0);
+          callResult.put("CallSMSRemark", "");
+
+           addCallResult(callResult);
+
+          Map<String,Object> salesorderLog = new HashMap();
+          salesorderLog.put("SalesOrderID", salesOrderID);
+          salesorderLog.put("ProgressID", 3);
+          salesorderLog.put("RefID", 0);
+          salesorderLog.put("IsLock", 0); //true
+          salesorderLog.put("userId", userId);
+          salesorderLog.put("CallEntryId", CallEntryId);
+
+           addSalesorderLog(salesorderLog);
+
+
+          if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68){
+
+            int adjTypeSetID = 0;
+                  int adjDrAccID = 0;
+                  int adjCrAccID = 0;
+
+
+                  params.put("TotalAmt", rv.get("totAmt"));
+            if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
+                  adjTypeSetID = 7;
+                      adjDrAccID = 171;
+                      adjCrAccID = 43;
+
+                }else if (Integer.parseInt(params.get("applicationTypeID").toString()) == 67)
+                  {
+                      adjTypeSetID = 8;
+                      adjDrAccID = 166;
+                      adjCrAccID = 38;
+                  }else
+                  {
+                      adjTypeSetID = 9;
+                      adjDrAccID = 166;
+                      adjCrAccID = 38;
+                  }
+
+                params.put("adjTypeSetID", adjTypeSetID);
+                  params.put("adjDrAccID", adjDrAccID);
+                  params.put("adjCrAccID", adjCrAccID);
+                  SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+                  String esalesDt = params.get("esalesDt").toString();
+                  Date salesdate = null;
+                  Date mthapril = null;
+                  try {
+                    mthapril =  format.parse("2015/04/01");
+                  } catch (ParseException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                  }
+                  try {
+                    salesdate = format.parse(esalesDt);
+                  } catch (ParseException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                  }
+
+                  if (salesdate.compareTo(mthapril)<0){
+                    String adJEntryReportNo = null;
+                    params.put("docno",18);
+                    adJEntryReportNo =  getDOCNumber(params);
+                    params.put("adJEntryReportNo", adJEntryReportNo);
+                    String adjEntryNoteNo = null;
+                    params.put("docno",15);
+                    adjEntryNoteNo =  getDOCNumber(params);
+                    params.put("adjEntryNoteNo", adjEntryNoteNo);
+
+                    params.put("docNoId",18);
+                     updateDOCNumber(params);
+                    params.put("docNoId",15);
+                     updateDOCNumber(params);
+
+                    // addAccAdjTransEntry(params);
+                      int adjEntryId =  selectLastadjEntryId();
+
+                      params.put("adjEntryId",adjEntryId);
+                      // addAccAdjTransResult(params);
+
+                      Map<String,Object> accTRXPlus = new HashMap();
+                      accTRXPlus.put("TRXItemNo", 1);
+                      accTRXPlus.put("TRXGLAccID", adjDrAccID);
+                      accTRXPlus.put("TRXGLDept", "");
+                      accTRXPlus.put("TRXProject", "");
+                      accTRXPlus.put("TRXFinYear", 0);
+                      accTRXPlus.put("TRXPeriod", 0);
+                      accTRXPlus.put("TRXSourceTypeID", 391);
+                      accTRXPlus.put("TRXDocTypeID", 155);
+                      accTRXPlus.put("TRXCustBillID", 0);
+                      accTRXPlus.put("TRXChequeNo", "");
+                      accTRXPlus.put("TRXCRCardSlip", "");
+                      accTRXPlus.put("TRXBisNo", "");
+                      accTRXPlus.put("TRXReconDate", defaultDate);
+                      accTRXPlus.put("TRXRemark", params.get("eCustomerName"));
+                      accTRXPlus.put("TRXCurrID", "RM");
+                      accTRXPlus.put("TRXCurrRate", 1);
+                      accTRXPlus.put("TRXAmount", Integer.parseInt(rv.get("soExchgNwPrc").toString()));
+                      accTRXPlus.put("TRXAmountRM", Integer.parseInt(rv.get("soExchgNwPrc").toString()));
+                      accTRXPlus.put("TRXIsSynch", 1);
+
+                      int trxNo = Integer.parseInt( getDOCNumberOnlyNumber().toString());
+                      accTRXPlus.put("TRXNo", trxNo);
+                      accTRXPlus.put("TRXDocNo", adjEntryNoteNo);
+
+                     //  addAccTRXes(accTRXPlus);
+
+
+                      Map<String,Object> accTRXMinus = new HashMap();
+                      accTRXMinus.put("TRXItemNo", 2);
+                      accTRXMinus.put("TRXGLAccID", adjDrAccID);
+                      accTRXMinus.put("TRXGLDept", "");
+                      accTRXMinus.put("TRXProject", "");
+                      accTRXMinus.put("TRXFinYear", 0);
+                      accTRXMinus.put("TRXPeriod", 0);
+                      accTRXMinus.put("TRXSourceTypeID", 391);
+                      accTRXMinus.put("TRXDocTypeID", 155);
+                      accTRXMinus.put("TRXCustBillID", 0);
+                      accTRXMinus.put("TRXChequeNo", "");
+                      accTRXMinus.put("TRXCRCardSlip", "");
+                      accTRXMinus.put("TRXBisNo", "");
+                      accTRXMinus.put("TRXReconDate", defaultDate);
+                      accTRXMinus.put("TRXRemark", params.get("eCustomerName"));
+                      accTRXMinus.put("TRXCurrID", "RM");
+                      accTRXMinus.put("TRXCurrRate", 1);
+                      accTRXMinus.put("TRXAmount", Integer.parseInt(rv.get("soExchgNwPrc").toString())*-1);
+                      accTRXMinus.put("TRXAmountRM", Integer.parseInt(rv.get("soExchgNwPrc").toString())*-1);
+                      accTRXMinus.put("TRXIsSynch", 1);
+
+                  //     addAccTRXes(accTRXMinus);
+
+                      if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
+
+                        EgovMap  qryPreBill =  getQryPreBill(params);
+//                        params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+//                        params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+//                        params.put("Updator",qryPreBill.get("uptUserId"));;
+//                        params.put("AccBillID",qryPreBill.get("accBillId"));;
+
+                        if(qryPreBill !=null){
+                          params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+                          params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+                          params.put("Updator",qryPreBill.get("uptUserId"));;
+                          params.put("AccBillID",qryPreBill.get("accBillId"));;
+
+                          String VoidNo = null;
+                          params.put("docno",112);
+                          VoidNo =  getDOCNumber(params);
+                          params.put("VoidNo", VoidNo);
+                          params.put("docNoId",112);
+                             updateDOCNumber(params);
+
+                            // addAccOrderVoid_Invoice(params);
+
+                            int AccInvVoidID =  getAccInvVoidID();
+                            params.put("AccInvVoidID",AccInvVoidID);
+
+                            // addAccOrderVoid_Invoice_Sub(params);
+
+                            // updateAccOrderBill(params);
+                        }
+
+                        Map<String,Object> accRentLedger = new HashMap();
+                          accRentLedger.put("RentSOID", salesOrderID);
+                          accRentLedger.put("RentDocTypeID", 155);
+                          accRentLedger.put("RentAmount", Integer.parseInt(rv.get("soExchgNwPrc").toString())*-1);
+                          // addAccRentLedger(params);
+
+                           updateRentalScheme(params);
+                      }else{
+                        EgovMap  qryPreBill =  getQryPreBill_out(params);
+//                        params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+//                        params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+//                        params.put("Updator",qryPreBill.get("uptUserId"));;
+//                        params.put("AccBillID",qryPreBill.get("accBillId"));;
+
+                        if(qryPreBill !=null){
+                          params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+                          params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+                          params.put("Updator",qryPreBill.get("uptUserId"));;
+                          params.put("AccBillID",qryPreBill.get("accBillId"));;
+
+                          String VoidNo = null;
+                          params.put("docno",112);
+                          VoidNo =  getDOCNumber(params);
+                          params.put("VoidNo", VoidNo);
+                          params.put("docNoId",112);
+                             updateDOCNumber(params);
+
+                           //  addAccOrderVoid_Invoice(params);
+
+                            int AccInvVoidID =  getAccInvVoidID();
+                            params.put("AccInvVoidID",AccInvVoidID);
+
+                           //  addAccOrderVoid_Invoice_Sub(params);
+
+                           //  updateAccOrderBill(params);
+                        }
+                        Map<String,Object> accRentLedger = new HashMap();
+                          accRentLedger.put("RentSOID", salesOrderID);
+                          accRentLedger.put("RentDocTypeID", 155);
+                          accRentLedger.put("RentAmount", Integer.parseInt(rv.get("soExchgNwPrc").toString())*-1);
+                          // addAccRentLedger(params);
+                      }
+                  }else{
+                    if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
+                    }else if(Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==67){
+
+                      List<EgovMap> QryOutSList =  getQryOutS(params);
+                      if(QryOutSList.size()>0){
+                        EgovMap  qryAccBill =  getQryAccBill(params);
+                        params.put("AccBillID",qryAccBill.get("accBillId"));
+                        params.put("TaxInvoiceRefNo",qryAccBill.get("taxInvcRefNo"));
+                        params.put("TaxInvoiceRefDate",qryAccBill.get("taxInvcRefDt"));
+                        params.put("TaxInvoiceCustName",qryAccBill.get("taxInvcCustName"));
+                        params.put("TaxInvoiceContactPerson",qryAccBill.get("taxInvcCntcPerson"));
+
+                        params.put("TaxInvoiceAddress1",qryAccBill.get("taxInvcAddr1"));
+                        params.put("TaxInvoiceAddress2",qryAccBill.get("taxInvcAddr2"));
+                        params.put("TaxInvoiceAddress3",qryAccBill.get("taxInvcAddr3"));
+                        params.put("TaxInvoiceAddress4",qryAccBill.get("taxInvcAddr4"));
+                        params.put("TaxInvoicePostCode",qryAccBill.get("taxInvcPostCode"));
+                        params.put("TaxInvoiceStateName",qryAccBill.get("taxInvcStateName"));
+                        params.put("TaxInvoiceCountry",qryAccBill.get("taxInvcCnty"));
+
+                        params.put("TaxInvoiceAmountDue",qryAccBill.get("taxInvcAmtDue"));
+
+                        // updateAccOrderBill2(params);
+
+                        String cnno = null;
+                        params.put("docno",134);
+                        cnno =  getDOCNumber(params);
+                        params.put("cnno", cnno);
+                        params.put("adjEntryNoteNo", cnno);
+                        params.put("docNoId",134);
+                         updateDOCNumber_8Digit(params);
+
+                        String adJEntryReportNo = null;
+                        params.put("docno",18);
+                        adJEntryReportNo =  getDOCNumber(params);
+                        params.put("adJEntryReportNo", adJEntryReportNo);
+                        params.put("docNoId",18);
+                         updateDOCNumber(params);
+
+                        // addAccInvAdjr(params);
+
+                        int MemoAdjustID =  getMemoAdjustID();
+                        params.put("MemoAdjustID", MemoAdjustID);
+
+                        String AccBillTaxCodeID = null;
+                        AccBillTaxCodeID =  getAccBillTaxCodeID(params);
+                        params.put("AccBillTaxCodeID", AccBillTaxCodeID);
+
+                        int crid = 0;
+                                int drid = 0;
+                                int conv = Integer.parseInt(qryAccBill.get("accBillAcctCnvr").toString());
+                                    //ACC_BILL_ACCT_CNVR;
+
+                                if (conv == 0)
+                                {
+                                    crid = 38;
+                                    drid = 535;
+                                }
+                                else
+                                {
+                                    crid = 38;
+                                    drid = 166;
+                                }
+
+                                params.put("crid",crid);
+                                params.put("drid",drid);
+
+                                // addAccInvoiceAdjustment_Sub(params);
+
+                               //  addAccTaxDebitCreditNote(params);
+
+                                int NoteID =  getNoteID();
+                                params.put("NoteID",NoteID);
+
+                               //  addAccTaxDebitCreditNote_Sub(params);
+
+                                String  VoidNo = null;
+                                params.put("docno",112);
+                                VoidNo =  getDOCNumber(params);
+                                params.put("VoidNo", VoidNo);
+                                params.put("docNoId",112);
+                               updateDOCNumber(params);
+
+                              // addAccOrderVoid_Invoice(params);
+                              params.put("adjEntryId",MemoAdjustID);
+                              params.put("TotalAmt",qryAccBill.get("taxInvcAmtDue"));
+
+                            //   addAccOrderVoid_Invoice_Sub(params);
+
+                              // addAccTradeLedger(params);
+
+                      }
+                    }
+                  }
+          }
+      }
+
+
+    }
+	}
+
 	public void saveResavalSerial(Map<String, Object> params) throws ParseException {
+	  logger.debug("---------save Resaval Serial Implementation-------------------");
 		EgovMap returnMap = new EgovMap();
 
 		String defaultDate = "1900-01-01";
@@ -1878,4 +3366,6 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 		}
 		// KR-OHK Barcode Save Start
 	}
+
+
 }
