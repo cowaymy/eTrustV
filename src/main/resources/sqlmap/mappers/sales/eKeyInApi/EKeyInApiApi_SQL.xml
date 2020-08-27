@@ -645,7 +645,18 @@
                , NVL(B.PRC_COSTING, 0) AS PRC_COSTING
       FROM SYS0026M A
       LEFT JOIN SAL0016M B ON  B.STK_ID = A.STK_ID
-                                      AND B.APP_TYPE_ID = #{appTypeId}
+    ]]>
+
+    <choose>
+      <when test='appTypeId == 68'>
+        AND B.APP_TYPE_ID = 67
+      </when>
+      <otherwise>
+        AND B.APP_TYPE_ID = #{appTypeId}
+      </otherwise>
+    </choose>
+
+    <![CDATA[
                                       AND B.MEM_PAC_ID = 0
       WHERE A.STK_ID = #{itmStkId}
           AND A.STK_TYPE_ID = 61
