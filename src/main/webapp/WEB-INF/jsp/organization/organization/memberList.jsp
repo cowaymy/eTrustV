@@ -403,13 +403,13 @@ function createAUIGrid() {
             headerText : "Member Name",
             editable : false,
             width : 130
-        }, {
+        }, /*{
             dataField : "nric",
             headerText : "Member NRIC",
             editable : false,
             style : "my-column",
             width : 130
-        }, {
+        },*/ {
             dataField : "statusName",
             headerText : "Status",
             editable : false,
@@ -685,9 +685,11 @@ $(function() {
 <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_memberEditPop()">Member Edit</a></p></li>
 </c:if>
+<!--
 <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_branchEditPop()">Branch Edit</a></p></li>
 </c:if>
+ -->
 <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_requestVacationPop()">Request Vacation </a></p></li>
 </c:if>
