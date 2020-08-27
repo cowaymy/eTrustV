@@ -344,6 +344,9 @@ public class HsManualController {
     List<EgovMap> failReasonList = hsManualService.failReasonList(params);
     // List<EgovMap> serMemList = hsManualService.serMemList(params);
 
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+    model.put("toDay", toDay);
+
     logger.debug(" params : ", params);
     logger.debug("hsDefaultInfo : {}", hsDefaultInfo);
 
