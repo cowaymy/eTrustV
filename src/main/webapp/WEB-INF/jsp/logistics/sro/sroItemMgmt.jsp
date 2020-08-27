@@ -67,7 +67,7 @@ var columnLayout = [
                     {dataField: "basicqty",headerText :"Basic Qty"          ,width:120   ,height:30 , visible:true, editable : true},
                     {dataField: "reoderpoint",headerText :"ReOrderPoint"          ,width:140   ,height:30 , visible:true ,editable : true},
                     {dataField: "additional",headerText :"Additional"          ,width:120   ,height:30 , visible:true,editable : true},
-                    {dataField: "loclevl",headerText :"Location Level"  ,width:120   ,height:30 , visible:true ,
+                    {dataField: "loclevl",headerText :"Location Level"  ,width:120   ,height:30 , visible:false ,
                         editRenderer : {
                             type : "ComboBoxRenderer",
                             showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
