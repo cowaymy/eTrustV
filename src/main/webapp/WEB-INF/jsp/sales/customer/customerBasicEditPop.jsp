@@ -130,7 +130,7 @@ $(document).ready(function(){
                     return ;
                }
 
-                if ( genderCode == "F") {
+                /* if ( genderCode == "F") {
                    if (lastDigit % 2 != 0) {
                     isValid = false;
                     console.log('msg:: Gender not match with NRIC');
@@ -145,7 +145,7 @@ $(document).ready(function(){
                      return;
 
                       }
-                    }
+                    } */
 
                  //sys0052M
 
