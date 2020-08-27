@@ -305,8 +305,11 @@
      function fn_waterEnvironmentListSearch(){
 
     	    if ($("#orderNo").val() == "") {
-    	        if ($("#appointmentStartDate").val() == "" || $("#appointmentEndDate").val() == "") {
-    	          Common.alert("Order No or Appointment Date are compulsory option to search");
+    	        if (($("#appointmentStartDate").val() == "" || $("#appointmentEndDate").val() == "") &&
+    	        		($("#resultStartDate").val() == "" || $("#resultEndDate").val() == "") &&
+    	        		($("#comStartDate").val() == "" || $("#comEndDate").val() == "")
+    	        ) {
+    	          Common.alert("Order No or either Appointment Date / Key In Date / Complete Date are compulsory option to search");
     	          return;
     	        }
     	      }
@@ -412,7 +415,7 @@
         </c:forEach>
       </select></td>
 
-       <th scope="row">Result Key In Date</th>
+       <th scope="row">Result Key In Date<span class="must">*</span></th>
       <td>
        <div class="date_set w100p">
         <!-- date_set start -->
@@ -461,7 +464,7 @@
        <!-- date_set end -->
       </td>
 
-      <th scope="row">Complete / Settle Date</th>
+      <th scope="row">Complete / Settle Date<span class="must">*</span></th>
       <td>
        <div class="date_set w100p">
         <!-- date_set start -->
