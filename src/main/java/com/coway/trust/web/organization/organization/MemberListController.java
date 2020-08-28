@@ -1248,6 +1248,7 @@ public class MemberListController {
 			    logger.debug("resignDt : " + resignDt);
 
 			    // 2019-02-12 - LaiKW - Amend checking for 6 months resignation allow rejoin
+			    // 2020-08-38 - LaiKW - Amend checking for 3 months resignation allow rejoin
 	            try{
 	                String strDt = CommonUtils.getNowDate().substring(0,6) + "01";
 
@@ -1255,7 +1256,7 @@ public class MemberListController {
 	                Date cDt = new SimpleDateFormat("yyyyMMdd").parse(strDt);
 	                Calendar cCal = Calendar.getInstance();
 	                cCal.setTime(cDt);
-	                cCal.add(Calendar.MONTH, -6);
+	                cCal.add(Calendar.MONTH, -3);
 
 	                logger.debug("M-6 :: " + new SimpleDateFormat("dd-MMM-yyyy").format(cCal.getTime()));
 
@@ -1266,7 +1267,7 @@ public class MemberListController {
 	                logger.debug("Resign :: " + new SimpleDateFormat("dd-MMM-yyyy").format(rCal.getTime()));
 
 	                if(rCal.before(cCal)) {
-	                    // Resignation Date is before 6 months before current date
+	                    // Resignation Date is before 3 months before current date
 	                    resignDtFlg = "Y";
 	                }
 	            } catch(Exception ex) {
@@ -1277,7 +1278,7 @@ public class MemberListController {
 	            if(resignDtFlg.equals("Y")) {
                     message.setMessage("pass");
                 } else {
-                    message.setMessage("This member resigned less than 6 months.");
+                    message.setMessage("This member resigned less than 3 months.");
                 }
 			} else {
 			    message.setMessage("This member is of active/terminate status.");
