@@ -4,7 +4,7 @@
 <%@ include file="/WEB-INF/jsp/sales/order/copyChangeOrderInc.jsp" %>
 
 <script type="text/javaScript" language="javascript">
-
+ 
     doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', ''); //Common Code
     doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
     doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
