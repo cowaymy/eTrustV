@@ -382,6 +382,9 @@ public class HsManualController {
     List<EgovMap> failReasonList = hsManualService.failReasonList(params);
     // List<EgovMap> serMemList = hsManualService.serMemList(params);
 
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+    model.put("toDay", toDay);
+
     model.addAttribute("basicinfo", basicinfo);
     logger.debug("basicinfo : {}", basicinfo);
     model.addAttribute("orderDetail", orderDetail);
