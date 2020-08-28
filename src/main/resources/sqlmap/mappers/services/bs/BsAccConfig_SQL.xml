@@ -856,10 +856,11 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
 
                 <if test="cmdCdManager != null and cmdCdManager != ''">
 
-                AND mg.CODY_MANGR_USER_ID = (SELECT DEPT_CODE FROM ORG0005D WHERE MEM_ID = #{cmdCdManager})
+ <!--               AND mg.CODY_MANGR_USER_ID = (SELECT DEPT_CODE FROM ORG0005D WHERE MEM_ID = #{cmdCdManager})  XXX -->
 
-<!--                 AND ac.mem_id = #{cmdCdManager}
-                AND OG.DEPT_CODE = (SELECT DEPT_CODE FROM ORG0005D WHERE MEM_ID = #{cmdCdManager} ) -->
+<!--                 AND ac.mem_id = #{cmdCdManager} -->
+                AND OG.DEPT_CODE = (SELECT DEPT_CODE FROM ORG0005D WHERE MEM_ID = #{cmdCdManager} )
+
                 </if>
 
                 <if test="deptCode != null and deptCode != ''">
