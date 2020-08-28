@@ -8,83 +8,54 @@
 
 
     <select id="sroItemMgntList" parameterType="Map" resultType="egovMap">
-		SELECT
-		     loccd,
-		     locdesc,
-		     (SELECT SRO_ITM_BAS_QTY  FROM GBSLCVD.LOG0110M WHERE SRO_WH_LOC_CODE   = loccd  AND SRO_STK_CODE =matcd) basicqty ,
-		     (SELECT SRO_ITM_RORD_POT FROM GBSLCVD.LOG0110M WHERE SRO_WH_LOC_CODE  = loccd  AND SRO_STK_CODE =matcd) reoderpoint ,
-		     (SELECT SRO_ITM_ADD_POT    FROM GBSLCVD.LOG0110M WHERE SRO_WH_LOC_CODE = loccd  AND SRO_STK_CODE =matcd) additional ,
-		     (SELECT SRO_LOC_LEVEL  FROM GBSLCVD.LOG0110M WHERE SRO_WH_LOC_CODE  = loccd  AND SRO_STK_CODE =matcd) loclevl ,
-		     matname ,
-		     matcd
-		FROM (
-		        SELECT
-		             nvl(loccd    ,(SELECT WH_LOC_CODE  FROM  SYS0028M WHERE  WH_LOC_ID =  #{tlocation}))  loccd,
-		             nvl(locdesc ,(SELECT WH_LOC_DESC  FROM  SYS0028M WHERE  WH_LOC_ID =  #{tlocation}))  locdesc,
-		             matname ,
-		             matcd
-		        FROM (
-		            SELECT
-		                rs28.WH_LOC_CODE AS loccd ,
-		                rs28.WH_LOC_DESC AS locdesc ,
-		                rs28.WH_LOC_STK_GRAD ,
-		                rs28.WH_LOC_GB,
-		                s26.STK_DESC AS matname ,
-		                s26.STK_CODE AS matcd
-		            FROM
-		                SYS0026M s26, (
-		                    SELECT
-		                        s28.WH_LOC_ID ,
-		                        s28.WH_LOC_CODE ,
-		                        s28.WH_LOC_DESC ,
-		                        s28.WH_LOC_STK_GRAD ,
-		                        s28.WH_LOC_GB ,
-		                        l110.SRO_STK_CODE ,
-		                        l110.SRO_ITM_BAS_QTY ,
-		                        l110.SRO_ITM_RORD_POT ,
-		                        l110.SRO_ITM_ADD_POT ,
-		                        l110.SRO_LOC_LEVEL
-		                    FROM
-		                        SYS0028M s28 , GBSLCVD.LOG0110M l110
-		                    WHERE
-		                        s28.WH_LOC_CODE = l110.SRO_WH_LOC_CODE(+)
-		                      <if test="tlocation != null and tlocation !=''">
-				                 AND  s28.WH_LOC_ID    = #{tlocation}
-				           </if>
-				           <if test="locgrad != null and locgrad !=''">
-				                AND  s28.WH_LOC_STK_GRAD = #{locgrad}
-				           </if>
+                      SELECT
+                           s28.WH_LOC_ID ,
+                           s28.WH_LOC_CODE  as loccd ,
+                           s28.WH_LOC_DESC  as locdesc ,
+                           s28.WH_LOC_STK_GRAD ,
+                           s28.WH_LOC_GB ,
+                           l56.STK_CODE   as matcd,
+                           s26.STK_DESC  as matname ,
+                           nvl(( SELECT SRO_ITM_BAS_QTY FROM  GBSLCVD.LOG0110M WHERE SRO_STK_CODE = s26.STK_CODE   AND  SRO_WH_LOC_CODE  =s28.WH_LOC_CODE ) ,0)  as basicqty,
+                           nvl(( SELECT SRO_ITM_RORD_POT FROM  GBSLCVD.LOG0110M WHERE SRO_STK_CODE = s26.STK_CODE   AND  SRO_WH_LOC_CODE  =s28.WH_LOC_CODE ),0) as reoderpoint,
+                           nvl(( SELECT SRO_ITM_ADD_POT FROM  GBSLCVD.LOG0110M WHERE SRO_STK_CODE = s26.STK_CODE   AND  SRO_WH_LOC_CODE  =s28.WH_LOC_CODE ),0)   as additional
+                       FROM  log0056m l56
+                            , SYS0028M s28
+                            , SYS0026M s26
+                      WHERE l56.LOC_ID  = s28.WH_LOC_ID
+                        AND  l56.STK_CODE =s26.STK_CODE
+                        AND s26.STUS_CODE_ID = 1
+                        <if test="tlocation != null and tlocation !=''">
+                                 AND  s28.WH_LOC_ID    = #{tlocation}
+                        </if>
+                        <if test="locgrad != null and locgrad !=''">
+                                AND  s28.WH_LOC_STK_GRAD = #{locgrad}
+                        </if>
+                          <if test="loctypes != null and loctypes !=''">
+                                AND  s28.WH_LOC_GB  IN
+                                <foreach item="item" collection="loctypes" index="index" open="(" separator="," close=")">
+                                 #{item}
+                                </foreach>
+                           </if>
 
-				           <if test="loctypes != null and loctypes !=''">
-				                AND  s28.WH_LOC_GB  IN
-				                <foreach item="item" collection="loctypes" index="index" open="(" separator="," close=")">
-				                 #{item}
-				                </foreach>
-				           </if>
-		                )rs28
-		            WHERE
-		                s26.STK_CODE = rs28.SRO_STK_CODE(+)
-		                AND s26.STUS_CODE_ID = 1
-		            <if test="materialCode != null and materialCode !=''">
-		                  AND  s26.STK_CODE =#{materialCode}
-		           </if>
+                         <if test="materialCode != null and materialCode !=''">
+                              AND  s26.STK_CODE =#{materialCode}
+                        </if>
 
-		           <if test="cTypes != null and cTypes !=''">
-		                AND  s26.STK_TYPE_ID  IN
-		                <foreach item="item" collection="cTypes" index="index" open="(" separator="," close=")">
-		                 #{item}
-		                </foreach>
-		           </if>
+                         <if test="cTypes != null and cTypes !=''">
+                                AND  s26.STK_TYPE_ID  IN
+	                        <foreach item="item" collection="cTypes" index="index" open="(" separator="," close=")">
+	                         #{item}
+	                        </foreach>
+                        </if>
 
-		            <if test="catetypes != null and catetypes !=''">
-		                AND  s26.STK_CTGRY_ID  IN
-		                <foreach item="item" collection="catetypes" index="index" open="(" separator="," close=")">
-		                 #{item}
-		                </foreach>
-		           </if>
-             )
-		)
-
+                        <if test="catetypes != null and catetypes !=''">
+	                        AND  s26.STK_CTGRY_ID  IN
+	                        <foreach item="item" collection="catetypes" index="index" open="(" separator="," close=")">
+	                         #{item}
+	                        </foreach>
+                        </if>
+                        ORDER BY WH_LOC_CODE asc
     </select>
 
 
