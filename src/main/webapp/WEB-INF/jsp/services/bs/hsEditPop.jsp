@@ -443,7 +443,7 @@ var myDetailGridData = null;
 
     // HS Result Information > HS Status 값에 따라 다른 정보 입력 가능 여부 설정
     if ($("#cmbStatusType2").val() == 4) {    // Completed
-      $("input[name='settleDt']").attr('disabled', false);
+      $("input[name='settleDt']").attr('disabled', true);
       $("select[name='failReason'] option").remove();
       //doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
       //$("select[name=cmbCollectType]").attr('disabled', false);
@@ -454,7 +454,7 @@ var myDetailGridData = null;
           $("#grid_wrap_instChk_view").show();
           $("#instChklstCheckBox").show();
           $("#instChklstDesc").show();
- 
+
          if('${basicinfo.hsChklist}'=='Y'){
         	  $("#instChklstCheckBox").prop("checked", true);
          }
@@ -492,7 +492,8 @@ var myDetailGridData = null;
        $("#instChklstCheckBox").prop("checked", false); */
 
        if ($("#cmbStatusType2").val() == 4) {    // Completed
-         $("input[name='settleDt']").attr('disabled', false);
+    	   $('#settleDt').val('${toDay}');
+         $("input[name='settleDt']").attr('disabled', true);
          $("select[name='failReason'] option").remove();
          //doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
          //$("select[name=cmbCollectType]").attr('disabled', false);
