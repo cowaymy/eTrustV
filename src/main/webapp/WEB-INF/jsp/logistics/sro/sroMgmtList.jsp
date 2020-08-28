@@ -92,7 +92,7 @@ var rescolumnLayout=[
                                          return template; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
                                      }
 			                     },
-			                     {dataField: "srostacd",headerText :"<spring:message code='log.head.status'/>",width:100    ,height:30                },
+			                     {dataField: "srostacd",headerText :"<spring:message code='log.head.status'/>",width:100    ,height:30      ,visible:false           },
 			                     {dataField: "sromsg",headerText :"Remark",width:250    ,height:30                },
 			                     {dataField: "sromatdocno",headerText :"Mat. Doc. No ",width:150    ,height:30                },
 			                     {dataField: "srofrwlcd",headerText :"From Location <br> code"                  ,width:120    ,height:30                },
@@ -156,7 +156,8 @@ var reqcolumnLayout=[
                                 	   labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
 
                                 		   var template="";
-                                		    if(item.generate =="generate"){
+                                		    if(item.generate =="generate"   &&  item.srosupqty >0){
+
                                 		    	 template += '<div class="my_div">';
                                                  template += '<span class="my_div_btn" onclick="javascript:fn_generateClick();"> Generate </span>';
                                                  template += '</div>';
