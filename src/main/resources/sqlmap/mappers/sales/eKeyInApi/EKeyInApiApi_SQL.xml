@@ -173,6 +173,15 @@
                , UPPER(M.CODE ||' - '|| M.NAME) AS HDC_BRNCH
                , M.BRNCH_ID AS HDC_BRNCH_ID
 
+     --BILLING------------------------------------------------------------------
+               , UPPER(R.ADDR_DTL) AS ADDR_DTL_BILLING
+               , UPPER(R.STREET) AS STREET_BILLING
+               , UPPER(S.AREA) AS AREA_BILLING
+               , UPPER(S.CITY) AS CITY_BILLING
+               , S.POSTCODE AS POSTCODE_BILLING
+               , UPPER(S.STATE) AS STATE_BILLING
+               , UPPER(S.COUNTRY) AS COUNTRY_BILLING
+
      --PAYMENT-----------------------------------------------------------------------
                , A.RENT_PAY_MODE_ID AS RENT_PAY_MODE_ID
                , N.CUST_ORI_CRC_NO AS CUST_ORI_CRC_NO
@@ -208,6 +217,8 @@
       LEFT JOIN SAL0028D N ON A.CUST_CRC_ID = N.CUST_CRC_ID
       INNER JOIN SYS0026M O ON  A.ITM_STK_ID = O.STK_ID
       LEFT JOIN SYS0047M Q ON A.CRT_USER_ID = Q.USER_ID
+      INNER JOIN SAL0023D R ON  A.CUST_BILL_ADD_ID = R.CUST_ADD_ID
+      INNER JOIN SYS0064M S  ON R.AREA_ID = S.AREA_ID
       WHERE   A.PRE_ORD_ID = #{preOrdId}
     ]]>
   </select>
