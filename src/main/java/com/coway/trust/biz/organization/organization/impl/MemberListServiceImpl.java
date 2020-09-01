@@ -1307,8 +1307,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         			member.put("updated", new Date());
         			member.put("updator", userId);
         			member.put("status", Integer.parseInt(params.get("action").toString()) == 757 ? 3:51);
-        			member.put("termDate", Integer.parseInt(params.get("action").toString()) == 757 ? params.get("dtT/R").toString() : "01/01/1900" );
-        			member.put("resignDate", Integer.parseInt(params.get("action").toString()) == 758 ? params.get("dtT/R").toString() : "01/01/1900" );
+        			member.put("termDate", Integer.parseInt(params.get("action").toString()) == 757 ? params.get("dtTerRes").toString() : "01/01/1900" );
+        			member.put("resignDate", Integer.parseInt(params.get("action").toString()) == 758 ? params.get("dtTerRes").toString() : "01/01/1900" );
 
         			logger.debug("member : {}",member);
 
@@ -1341,7 +1341,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         			promoEntry.put("lastOrgCode", memberView.get("c43"));
         			promoEntry.put("PRmemId",0);
         			promoEntry.put("branchId",null);
-        			promoEntry.put("evtApplyDt", params.get("dtT/R"));
+        			promoEntry.put("evtApplyDt", params.get("dtTerRes"));
         			logger.debug("promoEntry : {}",promoEntry);
 
         			EgovMap selectMember = memberListMapper.selectMember(member);
@@ -2478,5 +2478,40 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public void updateAplctDtls(Map<String, Object> params) {
 	    memberListMapper.updateAplctDtls(params);
 	}*/
+/*
+	@Override
+	public int memberListUpdate_SYS47(Map<String, Object> params) {
+	    return memberListMapper.memberListUpdate_SYS47(params);
+	}
 
+	@Override
+	public int memberListUpdate_ORG05(Map<String, Object> params) {
+	    return memberListMapper.memberListUpdate_ORG05(params);
+	}
+
+	@Override
+	public int memberListUpdate_ORG01(Map<String, Object> params) {
+	    return memberListMapper.memberListUpdate_ORG01(params);
+	}
+
+	@Override
+	public int memberListUpdate_ORG03(Map<String, Object> params) {
+	    return memberListMapper.memberListUpdate_ORG03(params);
+	}
+
+	@Override
+	public int memberListUpdate_MSC09(Map<String, Object> params) {
+	    return memberListMapper.memberListUpdate_MSC09(params);
+	}
+
+	@Override
+	public int memberListUpdate_ORG15(Map<String, Object> params) {
+	    return memberListMapper.memberListUpdate_ORG15(params);
+	}
+
+	@Override
+	public EgovMap selectMemCourse(Map<String, Object> params) {
+	    return memberListMapper.selectMemCourse(params);
+	}
+*/
 }

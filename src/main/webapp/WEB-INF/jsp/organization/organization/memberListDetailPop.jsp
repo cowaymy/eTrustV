@@ -11,7 +11,7 @@ var orgList = new Array(); // Organization List
 
 //Start AUIGrid
 $(document).ready(function() {
-
+console.log("ter-res-pro-dem pop");
     // AUIGrid 그리드를 생성합니다.
     createAUIGrid4();
     createAUIGrid1();
@@ -109,6 +109,33 @@ $(document).ready(function() {
 	   }
 	});
 
+    $("#dtTerRes").change(function() {
+        console.log("TermRes Change");
+        if("${memberView.memType}" == "2") {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1;
+            var yyyy = today.getFullYear();
+
+            if(dd > 5) {
+                var newMM = (mm + 1);
+                if(newMM < 10) {
+                    newMM = "0" + newMM;
+                }
+                var newDate = "01/" + newMM + "/" + yyyy;
+                console.log(newDate);
+                $("#dtTerRes").val(newDate);
+            } else {
+                var sDD = $("#dtTerRes").val().substring(0, 2);
+
+                if(sDD > 5) {
+                    Common.alert("Only till 5th is allowed.")
+                    $("#dtTerRes").val("");
+                }
+            }
+        }
+    });
+
     $("#dtProDemote").change(function() {
         console.log("ProDemote Change");
         if("${memberView.memType}" == "2") {
@@ -125,6 +152,13 @@ $(document).ready(function() {
                 var newDate = "01/" + newMM + "/" + yyyy;
                 console.log(newDate);
                 $("#dtProDemote").val(newDate);
+            } else {
+                var sDD = $("#dtProDemote").val().substring(0, 2);
+
+                if(sDD > 5) {
+                    Common.alert("Only till 5th is allowed.")
+                    $("#dtProDemote").val("");
+                }
             }
         }
     });
@@ -1195,7 +1229,7 @@ function fn_winClose(){
     </td>
     <th scope="row">Terminate/Resign Date</th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dtT/R" name="dtT/R"/>
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dtTerRes" name="dtTerRes"/>
     </td>
 </tr>
 <tr>

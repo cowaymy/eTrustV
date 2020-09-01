@@ -122,6 +122,13 @@ $(document).ready(function(){
               var newDate = "01/" + newMM + "/" + yyyy;
               console.log(newDate);
               $("#transferDate").val(newDate);
+          } else {
+              var sDD = $("#transferDate").val().substring(0, 2);
+
+              if(sDD > 5) {
+                  Common.alert("Only till 5th is allowed.")
+                  $("#transferDate").val("");
+              }
           }
       }
   });

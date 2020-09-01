@@ -4193,14 +4193,15 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         ]]> -->
           MERGE INTO ORG0002D
 		  USING DUAL
-		    ON (MEM_ID = #{MemberID} AND AG_STUS_ID = '1')
+		  ON (MEM_ID = #{MemberID} AND AG_STUS_ID = '1')
 		  WHEN MATCHED THEN
-		    UPDATE SET AG_EXPR_DT = TO_DATE(#{codyPaExpr}, 'DD/MM/YYYY')
-		               , AG_UPD_USER_ID = #{user_id}
-		               , AG_UPD_DT = SYSDATE
+		  UPDATE
+		  SET AG_EXPR_DT = TO_DATE(#{codyPaExpr}, 'DD/MM/YYYY')
+		    , AG_UPD_USER_ID = #{user_id}
+		    , AG_UPD_DT = SYSDATE
 		  WHEN NOT MATCHED THEN
-		    INSERT (AG_ID, MEM_ID, AG_TYPE_ID, AG_STUS_ID, AG_START_DT, AG_EXPR_DT, AG_CRT_USER_ID, AG_CRT_DT, AG_UPD_USER_ID, AG_UPD_DT)
-		    VALUES (ORG0002D_AG_ID_SEQ.NEXTVAL, #{MemberID}, '1416', '1', SYSDATE, TO_DATE(#{codyPaExpr}, 'DD/MM/YYYY'), #{user_id}, SYSDATE, #{user_id}, SYSDATE)
+		  INSERT (AG_ID, MEM_ID, AG_TYPE_ID, AG_STUS_ID, AG_START_DT, AG_EXPR_DT, AG_CRT_USER_ID, AG_CRT_DT, AG_UPD_USER_ID, AG_UPD_DT)
+		  VALUES (ORG0002D_AG_ID_SEQ.NEXTVAL, #{MemberID}, '1416', '1', SYSDATE, TO_DATE(#{codyPaExpr}, 'DD/MM/YYYY'), #{user_id}, SYSDATE, #{user_id}, SYSDATE)
        </update>
 
      <update id="updateHpApprovalReject" parameterType="Map">
@@ -4857,25 +4858,21 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </update>
 
     <select id="selectMemberTypeHP" parameterType="Map" resultType="egovMap">
-                SELECT CODE_ID CODE_ID  ,
-                           CODE_NAME CODE_NAME
-                           FROM SYS0013M
-                           WHERE  CODE_MASTER_ID = 1
-                           AND CODE_ID = 1
-                  ORDER BY CODE_ID ASC
+        SELECT CODE_ID CODE_ID  ,
+               CODE_NAME CODE_NAME
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = 1
+          AND CODE_ID = 1
+        ORDER BY CODE_ID ASC
+    </select>
 
 
-          </select>
-
-
-       <select id="selectApprovalBranch" parameterType="Map" resultType="egovMap">
-                SELECT BRNCH_ID CODE_ID  ,
-                           CODE || '-' || NAME CODE_NAME
-                           FROM SYS0005M
-                           WHERE  TYPE_ID = 45
-                  ORDER BY CODE ASC
-
-
-          </select>
+    <select id="selectApprovalBranch" parameterType="Map" resultType="egovMap">
+        SELECT BRNCH_ID CODE_ID  ,
+               CODE || '-' || NAME CODE_NAME
+        FROM SYS0005M
+        WHERE TYPE_ID = 45
+        ORDER BY CODE ASC
+    </select>
 
 </mapper>
