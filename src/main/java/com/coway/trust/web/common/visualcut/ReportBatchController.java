@@ -2116,7 +2116,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/Monthly_Rental_Collection_HA.do")
-  //@Scheduled(cron = "0 0 8 1 * ?")//Monthly (Day 1) (8:00am)
+  //@Scheduled(cron = "0 5 8 1 * ?")//Monthly (Day 1) (8:05am)
   public void MonthlyRentalCollectionHA() {
     LOGGER.info("[START] Monthly_Rental_Collection...");
     Map<String, Object> params = new HashMap<>();
@@ -2133,7 +2133,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/Monthly_Rental_Collection_HC.do")
-  //@Scheduled(cron = "0 0 8 1 * ?")//Monthly (Day 1) (8:00am)
+  //@Scheduled(cron = "0 10 8 1 * ?")//Monthly (Day 1) (8:10am)
   public void MonthlyRentalCollectionHC() {
     LOGGER.info("[START] Monthly_Rental_Collection...");
     Map<String, Object> params = new HashMap<>();
