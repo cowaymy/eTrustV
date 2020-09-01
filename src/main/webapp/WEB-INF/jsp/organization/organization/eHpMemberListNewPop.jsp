@@ -1717,7 +1717,7 @@ function fn_validFile() {
             <tr>
                 <th scope="row" >Address Detail<span class="must">*</span></th>
                 <td colspan="3">
-                <input type="text" title="" id="eHPaddrDtl" name="addrDtl" placeholder="Detail Address" class="w100p"  />
+                <input type="text" title="" id="eHPaddrDtl" name="addrDtl" placeholder="Detail Address" class="w100p"  maxlength="50"/>
                 </td>
             </tr>
             <tr>
