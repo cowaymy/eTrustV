@@ -785,36 +785,34 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                 LEFT JOIN sal0047d ir2  ON ir2.entry_id = eimax.install_entry_id and ir2.result_id = eimax.INSTALL_RESULT_ID AND ir2.stus_code_id = 4 -->
                 LEFT JOIN entry_info_min eimin ON eimin.sales_ord_id = so.sales_ord_id
                 LEFT JOIN SAL0047d d47 ON d47.ENTRY_ID = eimin.INSTALL_ENTRY_ID
-                WHERE
-
+                WHERE 1=1
                 <choose>
                      <when test="myInstallMonth != ''  and myBSMonth != ''">
                             <if test="myInstallMonth != null and myInstallMonth != ''">
-                          EXTRACT(MONTH FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
-                          AND EXTRACT(YEAR FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
+                                 AND EXTRACT(MONTH FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
+                                 AND EXTRACT(YEAR FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
                             </if>
                             <if test="myBSMonth != null and myBSMonth != ''">
-                          AND HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
-                          AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
+                                AND HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
+                                AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
                             </if>
                      </when>
 
                      <otherwise>
                         <choose>
-                      <when test="myInstallMonth != ''">
-                        <if test="myInstallMonth != null and myInstallMonth != ''">
-                            EXTRACT(MONTH FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
-                          AND EXTRACT(YEAR FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
-                        </if>
-                      </when>
+                        <when test="myInstallMonth != ''">
+                            <if test="myInstallMonth != null and myInstallMonth != ''">
+                                AND EXTRACT(MONTH FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
+                                AND EXTRACT(YEAR FROM d47.INSTALL_DT) = TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
+                            </if>
+                         </when>
 
                       <otherwise>
                         <if test="myBSMonth != null and myBSMonth != ''">
-                             HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
-                            AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
+                             AND HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
+                             AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
                         </if>
                       </otherwise>
-
                     </choose>
                 </otherwise>
              </choose>
@@ -824,11 +822,9 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                   AND HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
                   AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
                 </if> -->
-
                  <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
-                      AND HS.NO = #{txtHsOrderNo}
+                     AND HS.NO = #{txtHsOrderNo}
                  </if>
-
                  <if test="txtSalesOrder != null and txtSalesOrder != ''">
                       AND  SO.SALES_ORD_NO = #{txtSalesOrder}
                  </if>
