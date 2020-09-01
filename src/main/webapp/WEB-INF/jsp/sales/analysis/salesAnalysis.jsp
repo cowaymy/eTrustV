@@ -169,12 +169,10 @@ function fn_report(type) {
         $("#viewType").val('PDF');
     }
     else if(dataForm.reportType.value=="17"){
-    	var month1 = yyyymmDate.substring(0, 2);
-        var mthYear = year + '/' + month1;
-
         $("#reportFileName").val('/sales/Net_Sales_Daily_Report.rpt');
         $("#reportDownFileName").val("Net_Sales_Daily_Report_" + $("#yyyymmDate").val());
-        $("#V_DATE").val(mthYear);
+        $("#NSD_MONTH").val(month);
+        $("#NSD_YEAR").val(year);
         $("#viewType").val('EXCEL');
     }
 
@@ -206,10 +204,11 @@ function fn_report(type) {
 <form id="dataForm" method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" />
     <input type="hidden" id="viewType" name="viewType" />
+    <input type="hidden" id="NSD_MONTH" name="NSD_MONTH" />
+    <input type="hidden" id="NSD_YEAR" name="NSD_YEAR" />
     <input type="hidden" id="Month" name="@Month" />
     <input type="hidden" id="Year" name="@Year" />
     <input type="hidden" id="v_Year" name="v_Year" />
-    <input type="hidden" id="V_DATE" name="V_DATE" />
     <input type="hidden" id="reportDownFileName" name="reportDownFileName"  />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
