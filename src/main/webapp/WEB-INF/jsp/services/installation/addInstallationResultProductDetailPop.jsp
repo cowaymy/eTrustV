@@ -468,7 +468,8 @@
       }
 
       // PSI CHECKING
-      if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
+      if ( ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")
+    		  && !("${installResult.installStkId}" == 1735) ) {
         if ( $("#psiRcd").val() == "") {
           msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
         }
@@ -497,6 +498,9 @@
         }
       }
 
+      if("${installResult.installStkId}" == 1735){
+          msg = validationForKecik();
+      }
       if (msg != "") {
         Common.alert(msg);
         return;
@@ -559,6 +563,44 @@
         $("#popup_wrap").remove();
         fn_installationListSearch();
       });
+  }
+
+  function validationForKecik(){
+      var msg = "";
+
+      if ( !($("#psiRcd").val() >=7 && $("#psiRcd").val() <=120) ) {
+          msg += "* <spring:message code='sys.msg.range' arguments='Water Pressure (PSI),7,120' htmlEscape='false'/> </br>";
+        }
+      if ( $("#lpmRcd").val() <= 0 ) {
+          msg += "* <spring:message code='sys.msg.mustMore' arguments='Liter Per Minute(LPM),0' htmlEscape='false'/> </br>";
+        }
+      if ( !($("#volt").val() >=200 && $("#volt").val() <=264) ) {
+          msg += "* <spring:message code='sys.msg.range' arguments='Voltage,200,264' htmlEscape='false'/> </br>";
+        }
+      if ( $("#tds").val() ==0 ) {
+          msg += "* <spring:message code='sys.msg.mustMore' arguments='Total Dissolved Solid (TDS),0' htmlEscape='false'/> </br>";
+        }
+      else if ( !($("#tds").val() >0 && $("#tds").val() <=300) ) {
+            msg += "* <spring:message code='sys.msg.limitMore' arguments='Total Dissolved Solid (TDS),300' htmlEscape='false'/> </br>";
+        }
+      if ( $("#roomTemp").val() ==0 ) {
+          msg += "* <spring:message code='sys.msg.mustMore' arguments='Room Temperature,0' htmlEscape='false'/> </br>";
+        }
+      else if ( !($("#roomTemp").val() >0 && $("#roomTemp").val() <=40) ) {
+          msg += "* <spring:message code='sys.msg.limitMore' arguments='Room Temperature,40' htmlEscape='false'/> </br>";
+      }
+      if ( !($("#waterSourceTemp").val() >=5 && $("#waterSourceTemp").val() <=35) ) {
+          msg += "* <spring:message code='sys.msg.range' arguments='Water Source Temperature,5,35' htmlEscape='false'/> </br>";
+        }
+
+      if ( $("#adptUsed").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Adapter Used' htmlEscape='false'/> </br>";
+        }
+        if (!$("#instChklstCheckBox").prop('checked')) {
+          msg += "* <spring:message code='sys.msg.tickCheckBox' arguments='Installation Checklist' htmlEscape='false'/> </br>";
+        }
+
+      return msg;
   }
 
   function createInstallationChkViewAUIGrid() {
@@ -1810,8 +1852,8 @@
   </aside>
   <!-- title_line end -->
   <form action="#" id="addInstallForm" method="post">
-   <input type="hidden"
-    value="<c:out value="${installResult.installEntryId}"/>"
+   <input type="hidden" name="hidStkId" id=hidStkId" value="${installResult.installStkId}">
+   <input type="hidden" value="<c:out value="${installResult.installEntryId}"/>"
     id="installEntryId" name="installEntryId" /> <input type="hidden"
     value="${callType.typeId}" id="hidCallType" name="hidCallType" /> <input
     type="hidden" value="${installResult.installEntryId}"
