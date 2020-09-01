@@ -234,14 +234,15 @@ function notMandatoryForAP(){
     }
 
  // PSI CHECKING
-    if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
+    if ( ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")
+    		&& !($("#editInstallForm #hidStkId").val()  == 1735)) {
       if ( $("#psiRcd").val() == "") {
         msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
       }
       if ( $("#lpmRcd").val() == "") {
         msg += "* <spring:message code='sys.msg.invalid' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
       }
-      if ("${orderInfo.stkCtgryId}" == "54") {
+      if ("${orderInfo.stkCtgryId}" == "54" ){
   	  if ( $("#volt").val() == "") {
           msg += "* <spring:message code='sys.msg.invalid' arguments='Voltage' htmlEscape='false'/> </br>";
         }
@@ -260,6 +261,10 @@ function notMandatoryForAP(){
       }
     }
 
+    if($("#editInstallForm #hidStkId").val() == 1735){
+        msg = validationForKecik();
+    }
+
     if (msg != "") {
       Common.alert(msg);
       return false;
@@ -267,7 +272,39 @@ function notMandatoryForAP(){
     return true;
   }
 
+  function validationForKecik(){
+      var msg = "";
 
+      if ( !($("#psiRcd").val() >=7 && $("#psiRcd").val() <=120) ) {
+          msg += "* <spring:message code='sys.msg.range' arguments='Water Pressure (PSI),7,120' htmlEscape='false'/> </br>";
+        }
+      if ( $("#lpmRcd").val() <= 0 ) {
+          msg += "* <spring:message code='sys.msg.mustMore' arguments='Liter Per Minute(LPM),0' htmlEscape='false'/> </br>";
+        }
+      if ( !($("#volt").val() >=200 && $("#volt").val() <=264) ) {
+          msg += "* <spring:message code='sys.msg.range' arguments='Voltage,200,264' htmlEscape='false'/> </br>";
+        }
+      if ( $("#tds").val() ==0 ) {
+          msg += "* <spring:message code='sys.msg.mustMore' arguments='Total Dissolved Solid (TDS),0' htmlEscape='false'/> </br>";
+        }
+      else if ( !($("#tds").val() >0 && $("#tds").val() <=300) ) {
+            msg += "* <spring:message code='sys.msg.limitMore' arguments='Total Dissolved Solid (TDS),300' htmlEscape='false'/> </br>";
+        }
+      if ( $("#roomTemp").val() ==0 ) {
+          msg += "* <spring:message code='sys.msg.mustMore' arguments='Room Temperature,0' htmlEscape='false'/> </br>";
+        }
+      else if ( !($("#roomTemp").val() >0 && $("#roomTemp").val() <=40) ) {
+          msg += "* <spring:message code='sys.msg.limitMore' arguments='Room Temperature,40' htmlEscape='false'/> </br>";
+      }
+      if ( !($("#waterSourceTemp").val() >=5 && $("#waterSourceTemp").val() <=35) ) {
+          msg += "* <spring:message code='sys.msg.range' arguments='Water Source Temperature,5,35' htmlEscape='false'/> </br>";
+        }
+
+      if ( $("#adptUsed").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Adapter Used' htmlEscape='false'/> </br>";
+        }
+      return msg;
+  }
   function fn_serialSearchPop(){
 
 	  $("#pLocationType").val('${installInfo.whLocGb}');
@@ -322,7 +359,7 @@ function notMandatoryForAP(){
       </form>
       <br />
       <form action="#" id="editInstallForm" method="post">
-        <input type="hidden" value="<c:out value="${installInfo.resultId}"/>" id="resultId" name="resultId" /> <input type="hidden" value="<c:out value="${installInfo.installEntryId}"/>" id="entryId" name="entryId" /> <input type="hidden" value="<c:out value="${installInfo.serialRequireChkYn}"/>" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" /> <input type="hidden" value="<c:out value="${installInfo.c14}"/>" id="hidInstallEntryNo" name="hidInstallEntryNo" /> <input type="hidden" value="<c:out value="${orderDetail.basicInfo.ordId}"/>" id="hidSalesOrderId" name="hidSalesOrderId" /> <input type="hidden" value="<c:out value="${installInfo.serialNo}"/>" id="hidSerialNo" name="hidSerialNo" />
+        <input type="hidden" name="hidStkId" id="hidStkId" value="${installInfo.installStkId}"><input type="hidden" value="<c:out value="${installInfo.resultId}"/>" id="resultId" name="resultId" /> <input type="hidden" value="<c:out value="${installInfo.installEntryId}"/>" id="entryId" name="entryId" /> <input type="hidden" value="<c:out value="${installInfo.serialRequireChkYn}"/>" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" /> <input type="hidden" value="<c:out value="${installInfo.c14}"/>" id="hidInstallEntryNo" name="hidInstallEntryNo" /> <input type="hidden" value="<c:out value="${orderDetail.basicInfo.ordId}"/>" id="hidSalesOrderId" name="hidSalesOrderId" /> <input type="hidden" value="<c:out value="${installInfo.serialNo}"/>" id="hidSerialNo" name="hidSerialNo" />
         <table class="type1 mb1m">
           <!-- table start -->
           <caption>table</caption>
