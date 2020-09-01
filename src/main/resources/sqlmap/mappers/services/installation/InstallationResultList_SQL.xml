@@ -3138,10 +3138,12 @@
            , ROOM_TEMP ROOM_TEMP
            , WATER_SRC_TEMP WATER_SRC_TEMP
            , ADPT_USED ADPT_USED
+           , STK_ID STK_ID
       FROM ( SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID
                   , Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO
                   , Extent1.INSTALL_STK_ID INSTALL_STK_ID
                   , Extent2.IS_SIRIM IS_SIRIM
+                  , Extent2.STK_ID STK_ID
                   , Extent3.RESULT_ID RESULT_ID
                   , Extent3.STUS_CODE_ID STUS_CODE_ID
                   , Extent3.CT_ID CT_ID
