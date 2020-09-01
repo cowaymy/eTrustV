@@ -64,6 +64,7 @@ $(document).ready(function(){
                 var isSerialCheck = false;
                 var html = "";
                 for(var i in item){
+                	console.log("item[i].serialChk : " + item[i].serialChk );
                 	if(item[i].serialChk == "Y"){ isSerialCheck = true; }
                 	var bfTotQty = js.String.naNcheck(item[i].delvryQty)
 				                	- ( js.String.naNcheck(item[i].rciptGrQty)
@@ -288,10 +289,12 @@ $(document).ready(function(){
 	            "Do you want to GR?",
 	            function(){
 	            	if(failQty > 0){
+	            		alert("with fail qty.");
 	            		Common.confirm("QC Fail Qty will not be GR. Please Check again.", function(){
 	            			fn_deliveryGr(item);
 	            		});
 	            	}else{
+	            		alert("no fail qty, proceed GR");
 	            		fn_deliveryGr(item);
 	            	}
 	            },
@@ -378,6 +381,7 @@ $(document).ready(function(){
 });
 
 function fn_deliveryGr(item){
+	alert("fn_deliveryGr: "  + item);
     Common.ajax("POST", "/homecare/po/hcDeliveryGr/multiHcDeliveryGr.do"
             , {"grData":item}
             , function(result){
