@@ -22,6 +22,7 @@ import io.swagger.annotations.ApiModel;
  * 2020. 03. 23.    MY-ONGHC         Amend custCrcExprMM and custCrcExprYYYY from INT to STRING
  * 2020. 04. 08.    MY-ONGHC         Add cpntList for component
  *                                               Add promoByCpntIdList
+ * 2020. 09. 01.    MY-ONGHC         Add Billing Address Getter and Setter
  *          </pre>
  */
 @ApiModel(value = "EKeyInApiDto", description = "EKeyInApiDto")
@@ -112,6 +113,13 @@ public class EKeyInApiDto {
   private String postcode;
   private String state;
   private String country;
+  private String addrDtlBilling;
+  private String streetBilling;
+  private String areaBilling;
+  private String cityBilling;
+  private String postcodeBilling;
+  private String stateBilling;
+  private String countryBilling;
   private String dscBrnch;
   private String postingBrnch;
   private String hdcBrnch;
@@ -859,6 +867,62 @@ public class EKeyInApiDto {
 
   public void setCountry(String country) {
     this.country = country;
+  }
+
+  public String getAddrDtlBilling() {
+    return addrDtlBilling;
+  }
+
+  public void setAddrDtlBilling(String addrDtlBilling) {
+    this.addrDtlBilling = addrDtlBilling;
+  }
+
+  public String getStreetBilling() {
+    return streetBilling;
+  }
+
+  public void setStreetBilling(String streetBilling) {
+    this.streetBilling = streetBilling;
+  }
+
+  public String getAreaBilling() {
+    return areaBilling;
+  }
+
+  public void setAreaBilling(String areaBilling) {
+    this.areaBilling = areaBilling;
+  }
+
+  public String getCityBilling() {
+    return cityBilling;
+  }
+
+  public void setCityBilling(String cityBilling) {
+    this.cityBilling = cityBilling;
+  }
+
+  public String getPostcodeBilling() {
+    return postcodeBilling;
+  }
+
+  public void setPostcodeBilling(String postcodeBilling) {
+    this.postcodeBilling = postcodeBilling;
+  }
+
+  public String getStateBilling() {
+    return stateBilling;
+  }
+
+  public void setStateBilling(String stateBilling) {
+    this.stateBilling = stateBilling;
+  }
+
+  public String getCountryBilling() {
+    return countryBilling;
+  }
+
+  public void setCountryBilling(String countryBilling) {
+    this.countryBilling = countryBilling;
   }
 
   public String getDscBrnch() {
