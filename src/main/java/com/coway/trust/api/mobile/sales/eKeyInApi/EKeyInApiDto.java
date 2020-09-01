@@ -169,6 +169,7 @@ public class EKeyInApiDto {
   private BigDecimal promoItmPvGst;
   private int promoAppTypeId;
   private int custAddId;
+  private int custAddBillingId;
   private String fullAddr;
   private String areaId;
   private String rem;
@@ -1315,6 +1316,14 @@ public class EKeyInApiDto {
 
   public void setCustAddId(int custAddId) {
     this.custAddId = custAddId;
+  }
+
+  public int getCustAddBillingId() {
+    return custAddBillingId;
+  }
+
+  public void setCustAddBillingId(int custAddBillingId) {
+    this.custAddBillingId = custAddBillingId;
   }
 
   public String getFullAddr() {
