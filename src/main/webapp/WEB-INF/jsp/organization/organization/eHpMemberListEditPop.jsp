@@ -1725,7 +1725,7 @@ function fn_parentReload() {
             <tr>
                 <th scope="row" >Address Detail<span class="must">*</span></th>
                 <td colspan="3">
-                <input type="text" title="" id="eHPaddrDtl" name="addrDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.addrDtl}"/>" />
+                <input type="text" title="" id="eHPaddrDtl" name="addrDtl" placeholder="Detail Address" class="w100p" maxlength="50" value="<c:out value="${memberView.addrDtl}"/>" />
                 </td>
             </tr>
             <tr>
