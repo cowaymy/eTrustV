@@ -710,7 +710,7 @@ WHERE 1=1
            OR B.COST_CENTR = #{costCentr2}
        </if>
        -->
-       <if test="(costCentr != null and costCentr != '') and (costCentr2 == null and costCentr2 == '') " >
+       <if test="costCentr != null and costCentr != '' and (costCentr2 == null or costCentr2 == '') " >
            AND B.COST_CENTR = #{costCentr}
        </if>
        <if test="costCentr2 != null and costCentr2 != '' " >
