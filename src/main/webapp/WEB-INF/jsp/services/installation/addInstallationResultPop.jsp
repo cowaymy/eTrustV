@@ -10,6 +10,7 @@
  10/06/2020  ONGHC  1.0.4          Add PSI & LPM Field onblur Checking
  22/07/2020  FARUQ   1.0.5         Add volt, TDS, roomTemp, WaterSoruceTemp, failParent, failChild, instChkLst
  27/07/2020  FARUQ   1.0.6         Change the label for Failed Reason to Failed Location
+ 28/08/2020  FARUQ   1.0.7         Add validation feature for Kecik
  -->
 <script type="text/javaScript">
   $(document).ready(
@@ -336,7 +337,8 @@
   function fn_saveInstall() {
     var msg = "";
 
-    if ($("#addInstallForm #installStatus").val() == 4) { // COMPLETED
+    if ($("#addInstallForm #installStatus").val() == 4) {
+    	// COMPLETED
       if ($("#failLocCde").val() != 0 || $("#failReasonCode").val() != 0 || $("#nextCallDate").val() != "") {
         Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
         return;
@@ -357,7 +359,8 @@
       }
 
       // PSI CHECKING
-      if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
+      if ( ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")
+    		  && !("${installResult.installStkId}" == 1735) ) {
         if ( $("#psiRcd").val() == "") {
           msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
         }
@@ -384,6 +387,10 @@
             msg += "* <spring:message code='sys.msg.tickCheckBox' arguments='Installation Checklist' htmlEscape='false'/> </br>";
           }
         }
+      }
+
+      if("${installResult.installStkId}" == 1735){
+              msg = validationForKecik();
       }
 
       if (msg != "") {
@@ -472,6 +479,44 @@
           AUIGrid.setGridData( instChkLst_view, result);
         });
   }
+
+   function validationForKecik(){
+	   var msg = "";
+
+       if ( !($("#psiRcd").val() >=7 && $("#psiRcd").val() <=120) ) {
+           msg += "* <spring:message code='sys.msg.range' arguments='Water Pressure (PSI),7,120' htmlEscape='false'/> </br>";
+         }
+       if ( $("#lpmRcd").val() <= 0 ) {
+           msg += "* <spring:message code='sys.msg.mustMore' arguments='Liter Per Minute(LPM),0' htmlEscape='false'/> </br>";
+         }
+       if ( !($("#volt").val() >=200 && $("#volt").val() <=264) ) {
+           msg += "* <spring:message code='sys.msg.range' arguments='Voltage,200,264' htmlEscape='false'/> </br>";
+         }
+       if ( $("#tds").val() ==0 ) {
+           msg += "* <spring:message code='sys.msg.mustMore' arguments='Total Dissolved Solid (TDS),0' htmlEscape='false'/> </br>";
+         }
+       else if ( !($("#tds").val() >0 && $("#tds").val() <=300) ) {
+             msg += "* <spring:message code='sys.msg.limitMore' arguments='Total Dissolved Solid (TDS),300' htmlEscape='false'/> </br>";
+         }
+       if ( $("#roomTemp").val() ==0 ) {
+           msg += "* <spring:message code='sys.msg.mustMore' arguments='Room Temperature,0' htmlEscape='false'/> </br>";
+         }
+       else if ( !($("#roomTemp").val() >0 && $("#roomTemp").val() <=40) ) {
+           msg += "* <spring:message code='sys.msg.limitMore' arguments='Room Temperature,40' htmlEscape='false'/> </br>";
+       }
+       if ( !($("#waterSourceTemp").val() >=5 && $("#waterSourceTemp").val() <=35) ) {
+           msg += "* <spring:message code='sys.msg.range' arguments='Water Source Temperature,5,35' htmlEscape='false'/> </br>";
+         }
+
+       if ( $("#adptUsed").val() == "") {
+           msg += "* <spring:message code='sys.msg.invalid' arguments='Adapter Used' htmlEscape='false'/> </br>";
+         }
+         if (!$("#instChklstCheckBox").prop('checked')) {
+           msg += "* <spring:message code='sys.msg.tickCheckBox' arguments='Installation Checklist' htmlEscape='false'/> </br>";
+         }
+
+	   return msg;
+   }
 
   function createInstallationViewAUIGrid() {
     var columnLayout = [ {
@@ -1151,7 +1196,7 @@
       <input id="pGubun" name="pGubun" type="hidden" value="RADIO" /> <input id="pFixdYn" name="pFixdYn" type="hidden" value="N" /> <input id="pLocationType" name="pLocationType" type="hidden" value="" /> <input id="pLocationCode" name="pLocationCode" type="hidden" value="" /> <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" /> <input id="pStatus" name="pStatus" type="hidden" value="" /> <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
     </form>
     <form action="#" id="addInstallForm" method="post">
-      <input type="hidden" value="<c:out value="${installResult.installEntryId}"/>" id="installEntryId" name="installEntryId" /> <input type="hidden" value="${callType.typeId}" id="hidCallType" name="hidCallType" /> <input type="hidden" value="${installResult.installEntryId}" id="hidEntryId" name="hidEntryId" /> <input type="hidden" value="${installResult.custId}" id="hidCustomerId" name="hidCustomerId" /> <input type="hidden" value="${installResult.salesOrdId}" id="hidSalesOrderId" name="hidSalesOrderId" /> <input type="hidden" value="${installResult.sirimNo}" id="hidSirimNo" name="hidSirimNo" /> <input type="hidden" value="${installResult.serialNo}" id="hidSerialNo" name="hidSerialNo" /> <input type="hidden" value="${installResult.isSirim}" id="hidStockIsSirim" name="hidStockIsSirim" /> <input type="hidden" value="${installResult.stkGrad}" id="hidStockGrade" name="hidStockGrade" /> <input type="hidden" value="${installResult.stkCtgryId}" id="hidSirimTypeId"
+      <input type="hidden" name="hidStkId" id=hidStkId" value="${installResult.installStkId}"><input type="hidden" value="<c:out value="${installResult.installEntryId}"/>" id="installEntryId" name="installEntryId" /> <input type="hidden" value="${callType.typeId}" id="hidCallType" name="hidCallType" /> <input type="hidden" value="${installResult.installEntryId}" id="hidEntryId" name="hidEntryId" /> <input type="hidden" value="${installResult.custId}" id="hidCustomerId" name="hidCustomerId" /> <input type="hidden" value="${installResult.salesOrdId}" id="hidSalesOrderId" name="hidSalesOrderId" /> <input type="hidden" value="${installResult.sirimNo}" id="hidSirimNo" name="hidSirimNo" /> <input type="hidden" value="${installResult.serialNo}" id="hidSerialNo" name="hidSerialNo" /> <input type="hidden" value="${installResult.isSirim}" id="hidStockIsSirim" name="hidStockIsSirim" /> <input type="hidden" value="${installResult.stkGrad}" id="hidStockGrade" name="hidStockGrade" /> <input type="hidden" value="${installResult.stkCtgryId}" id="hidSirimTypeId"
         name="hidSirimTypeId"
       /> <input type="hidden" value="${installResult.codeId}" id="hidAppTypeId" name="hidAppTypeId" /> <input type="hidden" value="${installResult.installStkId}" id="hidProductId" name="hidProductId" /> <input type="hidden" value="${installResult.custAddId}" id="hidCustAddressId" name="hidCustAddressId" /> <input type="hidden" value="${installResult.custCntId}" id="hidCustContactId" name="hidCustContactId" /> <input type="hidden" value="${installResult.custBillId}" id="hiddenBillId" name="hiddenBillId" /> <input type="hidden" value="${installResult.codeName}" id="hiddenCustomerPayMode" name="hiddenCustomerPayMode" /> <input type="hidden" value="${installResult.installEntryNo}" id="hiddeninstallEntryNo" name="hiddeninstallEntryNo" /> <input type="hidden" value="" id="hidActualCTMemCode" name="hidActualCTMemCode" /> <input type="hidden" value="" id="hidActualCTId" name="hidActualCTId" /> <input type="hidden" value="${sirimLoc.whLocCode}" id="hidSirimLoc" name="hidSirimLoc" />
       <input type="hidden" value="" id="hidCategoryId" name="hidCategoryId" /> <input type="hidden" value="" id="hidPromotionId" name="hidPromotionId" /> <input type="hidden" value="" id="hidPriceId" name="hidPriceId" /> <input type="hidden" value="" id="hiddenOriPriceId" name="hiddenOriPriceId" /> <input type="hidden" value="${orderInfo.c5}" id="hiddenOriPrice" name="hiddenOriPrice" /> <input type="hidden" value="" id="hiddenOriPV" name="hiddenOriPV" /> <input type="hidden" value="" id="hiddenCatogory" name="hiddenCatogory" /> <input type="hidden" value="" id="hiddenProductItem" name="hiddenProductItem" /> <input type="hidden" value="" id="hidPERentAmt" name="hidPERentAmt" /> <input type="hidden" value="" id="hidPEDefRentAmt" name="hidPEDefRentAmt" /> <input type="hidden" value="" id="hidInstallStatusCodeId" name="hidInstallStatusCodeId" /> <input type="hidden" value="" id="hidPEPreviousStatus" name="hidPEPreviousStatus" /> <input type="hidden" value="" id="hidDocId"
