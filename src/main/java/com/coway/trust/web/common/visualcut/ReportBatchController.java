@@ -2115,6 +2115,40 @@ public class ReportBatchController {
     LOGGER.info("[END] Monthly_Rental_Collection...");
   }
 
+  @RequestMapping(value = "/Monthly_Rental_Collection_HA.do")
+  //@Scheduled(cron = "0 0 8 1 * ?")//Monthly (Day 1) (8:00am)
+  public void MonthlyRentalCollectionHA() {
+    LOGGER.info("[START] Monthly_Rental_Collection...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/MonthlyRentalCollection_HA.rpt");// visualcut
+                                                                           // rpt
+                                                                           // file name.
+    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Rental Collection" + File.separator + "Monthly_Ren_Coll_HA_" + CommonUtils.getNowDate() + ".pdf");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] Monthly_Rental_Collection HA...");
+  }
+
+  @RequestMapping(value = "/Monthly_Rental_Collection_HC.do")
+  //@Scheduled(cron = "0 0 8 1 * ?")//Monthly (Day 1) (8:00am)
+  public void MonthlyRentalCollectionHC() {
+    LOGGER.info("[START] Monthly_Rental_Collection...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/MonthlyRentalCollection_HC.rpt");// visualcut
+                                                                           // rpt
+                                                                           // file name.
+    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Rental Collection" + File.separator + "Monthly_Ren_Coll_HC_" + CommonUtils.getNowDate() + ".pdf");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] Monthly_Rental_Collection HC...");
+  }
+
 // Accumulated Operating Lease Details Other Raw Report - Added by TPY 20/07/2020 requested by Finance Department
   @RequestMapping(value = "/RentalOptLeaseDetailsOthRaw_Excel.do")
   //@Scheduled(cron = " 0 0 6 1 * ?")//Monthly (Day 1) 6:00am
