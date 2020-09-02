@@ -268,9 +268,9 @@
 
     if (selIdx > -1) {
       if (appType == 'AUX') {
-        Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>Auxiliary type is not allowed to do cancellation.</b>");
+        Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>Auxiliary type is not allowed to do eRequest.</b>");
       } else if (ordStaCde == 'CAN') {
-        Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>Cancelled order is not allowed to do cancellation.</b>");
+        Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>Cancelled order is not allowed to do eRequest.</b>");
       } else {
     	  Common.ajax("GET", "/sales/order/selectRequestApprovalList.do", {ordNo : ordNo, reqStusId : 1}, function(result) {
               if(result.length > 0){

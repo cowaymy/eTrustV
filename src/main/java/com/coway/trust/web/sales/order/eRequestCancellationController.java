@@ -250,7 +250,25 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
    }
 
 	 @RequestMapping(value="/eRequestApproval.do")
-	  public String eRequestApproval(){
+	  public String eRequestApproval(@RequestParam Map<String, Object> params, ModelMap model){
+	    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+	    params.put("userId", sessionVO.getUserId());
+
+	    if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+	      EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+	      model.put("memType", getUserInfo.get("memType"));
+	      model.put("orgCode", getUserInfo.get("orgCode"));
+	      model.put("grpCode", getUserInfo.get("grpCode"));
+	      model.put("deptCode", getUserInfo.get("deptCode"));
+	      model.put("memCode", getUserInfo.get("memCode"));
+	    }
+
+	    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+	    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+	    model.put("bfDay", bfDay);
+	    model.put("toDay", toDay);
+
 	    return "sales/order/eRequestApproval";
 	  }
 
@@ -289,14 +307,12 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
        paramsAux.put("salesOrdId", auxSalesOrdId);
        paramsAux.put("reqStusList", reqStusId);
 
-       eRequestAux = eRequestCancellationService.selectRequestApprovalList(paramsAux).get(0);
+       eRequestAux = (eRequestCancellationService.selectRequestApprovalList(paramsAux).size() > 0) ? eRequestCancellationService.selectRequestApprovalList(paramsAux).get(0) : null;
      }
 
      model.put("orderDetail", orderDetail);
      model.put("eRequestDetail", eRequestDetail);
      model.put("eRequestAux", eRequestAux);
-
-     System.out.println(model.get("eRequestAux").toString());
 
      return "sales/order/eRequestApprovalPop";
    }
@@ -305,6 +321,7 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
    public ResponseEntity<ReturnMessage> saveApprovalCnct(@RequestBody Map<String, Object>params, SessionVO sessionVO) throws Exception {
      System.out.println(params);
      params.put("updator",sessionVO.getUserId());
+     params.put("rem",params.get("modRemCntc"));
 
      int updOrd = eRequestCancellationService.saveApprCnct(params);
 
@@ -326,8 +343,9 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
 
    @RequestMapping(value="/saveApprovalInstAddr.do",method = RequestMethod.POST)
    public ResponseEntity<ReturnMessage> saveApprovalInstAddr(@RequestBody Map<String, Object>params, SessionVO sessionVO) throws Exception {
-     System.out.println(params);
      params.put("updator",sessionVO.getUserId());
+     params.put("rem",params.get("modRemInstAddr"));
+
 
      int updOrd = eRequestCancellationService.saveApprInstAddr(params);
 

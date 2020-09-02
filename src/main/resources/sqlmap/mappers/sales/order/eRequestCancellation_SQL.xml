@@ -1190,7 +1190,9 @@
           RQST_TYPE.CODE_NAME RQST_TYPE,
           RQST.RQST_REM RQST_REM,
           RQST.REM REM,
-          BRNCH.NAME DSC,
+          CASE WHEN RQST.RQST_TYPE_ID = 5970 THEN TO_BRNCH.NAME
+                   ELSE BRNCH.NAME
+          END DSC,
           CRT.USER_NAME CRT_USER,
           TO_CHAR(RQST.CRT_DT,'DD/MM/YYYY HH24:MI:SS') CRT_DT,
           UPD.USER_NAME UPD_USER,
@@ -1207,8 +1209,12 @@
       JOIN SAL0029D CUST ON CUST.CUST_ID = SOM.CUST_ID
       JOIN SYS0047M CRT ON CRT.USER_ID = RQST.CRT_USER_ID
       JOIN SYS0047M UPD ON UPD.USER_ID = RQST.UPD_USER_ID
-      JOIN SYS0005M BRNCH ON BRNCH.BRNCH_ID = CRT.USER_BRNCH_ID
+      LEFT JOIN SYS0005M BRNCH ON BRNCH.BRNCH_ID = INST.BRNCH_ID
+      LEFT JOIN SAL0023D TO_ADDR ON TO_ADDR.CUST_ADD_ID = RQST.RQST_DATA_TO
+      LEFT JOIN SYS0064M TO_AREA ON TO_AREA.AREA_ID = TO_ADDR.AREA_ID
+      LEFT JOIN SYS0005M TO_BRNCH ON TO_BRNCH.CODE = TO_AREA.CT_BRNCH_CODE
       JOIN SYS0038M INST_STUS ON INST_STUS.STUS_CODE_ID = (CASE WHEN SOM.STUS_CODE_ID = 1 THEN 24 ELSE 25 END)
+      LEFT JOIN ORG1001V ORG ON ORG.MEM_CODE = CRT.USER_NAME
 
       WHERE 1=1
       <if test = "rqstId != null and rqstId != '' ">
@@ -1261,6 +1267,18 @@
         <foreach item="item" collection="reqStusList" index="index" open="(" separator="," close=")">
           #{item}
         </foreach>
+      </if>
+      <if test = "typeId != null and typeId != '' ">
+        AND RQST.RQST_TYPE_ID = #{typeId}
+      </if>
+      <if test="orgCode != null and orgCode != ''">
+        AND UPPER(ORG.ORG_CODE) = UPPER(#{orgCode})
+      </if>
+      <if test="grpCode != null and grpCode != ''">
+        AND UPPER(ORG.GRP_CODE) = UPPER(#{grpCode})
+      </if>
+      <if test="deptCode != null and deptCode != ''">
+        AND UPPER(ORG.DEPT_CODE) = UPPER(#{deptCode})
       </if>
       ORDER BY RQST_ID DESC
    </select>

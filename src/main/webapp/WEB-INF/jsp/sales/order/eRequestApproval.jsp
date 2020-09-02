@@ -9,6 +9,51 @@
   $(document).ready(
       function() {
 
+    	  if ("${SESSION_INFO.memberLevel}" == "1") {
+
+              $("#orgCode").val("${orgCode}");
+              $("#orgCode").attr("class", "w100p readonly");
+              $("#orgCode").attr("readonly", "readonly");
+
+            } else if ("${SESSION_INFO.memberLevel}" == "2") {
+
+              $("#orgCode").val("${orgCode}");
+              $("#orgCode").attr("class", "w100p readonly");
+              $("#orgCode").attr("readonly", "readonly");
+
+              $("#grpCode").val("${grpCode}");
+              $("#grpCode").attr("class", "w100p readonly");
+              $("#grpCode").attr("readonly", "readonly");
+
+            } else if ("${SESSION_INFO.memberLevel}" == "3") {
+
+              $("#orgCode").val("${orgCode}");
+              $("#orgCode").attr("class", "w100p readonly");
+              $("#orgCode").attr("readonly", "readonly");
+
+              $("#grpCode").val("${grpCode}");
+              $("#grpCode").attr("class", "w100p readonly");
+              $("#grpCode").attr("readonly", "readonly");
+
+              $("#deptCode").val("${deptCode}");
+              $("#deptCode").attr("class", "w100p readonly");
+              $("#deptCode").attr("readonly", "readonly");
+
+            } else if ("${SESSION_INFO.memberLevel}" == "4") {
+
+              $("#orgCode").val("${orgCode}");
+              $("#orgCode").attr("class", "w100p readonly");
+              $("#orgCode").attr("readonly", "readonly");
+
+              $("#grpCode").val("${grpCode}");
+              $("#grpCode").attr("class", "w100p readonly");
+              $("#grpCode").attr("readonly", "readonly");
+
+              $("#deptCode").val("${deptCode}");
+              $("#deptCode").attr("class", "w100p readonly");
+              $("#deptCode").attr("readonly", "readonly");
+            }
+
         createAUIGrid();
 
         doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'cmbDscBranchId', 'M', 'f_multiCombo'); //Branch Code
@@ -214,6 +259,20 @@
       <th scope="row"></th>
         <td></td>
      </tr>
+     <tr>
+       <th scope="row"><spring:message code="sal.title.text.orgCode" /></th>
+         <td>
+       <input type="text" title="" id="orgCode" name="orgCode" value="${orgCode}" placeholder="Organization Code" class="w100p" />
+         </td>
+       <th scope="row"><spring:message code="sal.title.text.groupCode" /></th>
+         <td>
+            <input type="text" title="" id="grpCode" name="grpCode" placeholder="Group Code" class="w100p" />
+        </td>
+       <th scope="row"><spring:message code="sal.title.text.deptCode" /></th>
+         <td>
+            <input type="text" title="" id="deptCode" name="deptCode" placeholder="Department Code" class="w100p" />
+         </td>
+      </tr>
     </tbody>
    </table>
    <!-- table end -->

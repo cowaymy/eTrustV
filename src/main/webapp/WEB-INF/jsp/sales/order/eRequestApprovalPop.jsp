@@ -41,6 +41,12 @@
       });
 
     $('#btnSaveCnct').click(function(){
+
+    	if($("#modRemCntc").val() == ""){
+            Common.alert("Please fill in update reason<br/>");
+            return;
+        }
+
     	Common.confirm("<spring:message code="sys.common.alert.save" />",function(){
     		Common.ajax("GET", "/sales/order/selectRequestApprovalList.do", {rqstId : rqstId}, function(request) {
     			console.log($('#frmCnctAppr').serializeJSON());
@@ -59,9 +65,13 @@
     });
 
     $('#btnSaveInstAddr').click(function(){
+    	if($("#modRemInstAddr").val() == ""){
+            Common.alert("Please fill in update reason<br/>");
+            return;
+        }
+
     	Common.confirm("<spring:message code="sys.common.alert.save" />",function(){
     		Common.ajax("GET", "/sales/order/selectRequestApprovalList.do", {rqstId : rqstId}, function(request) {
-    			console.log($('#frmInstAddrAppr').serializeJSON());
     			if(request[0].stus == "Active"){
     				Common.ajax("POST","/sales/order/saveApprovalInstAddr.do",$('#frmInstAddrAppr').serializeJSON(),function(result) {
     					if(result.code == "00")
@@ -310,8 +320,8 @@
               </td>
           </tr>
           <tr>
-              <th scope="row"><spring:message code="sal.text.remark" /></th>
-              <td><textarea id="rem" name="rem" cols="20" rows="5">${eRequestDetail.rem}</textarea></td>
+              <th scope="row"><spring:message code="sal.text.remark" /><span class="must">*</span></th>
+              <td><textarea id="modRemCntc" name="modRemCntc" cols="20" rows="5">${eRequestDetail.rem}</textarea></td>
            </tr>
            </tbody>
            </table>
@@ -446,8 +456,8 @@
               </td>
           </tr>
           <tr>
-              <th scope="row"><spring:message code="sal.text.remark" /></th>
-              <td><textarea id="rem" name="rem" cols="20" rows="5">${eRequestDetail.rem}</textarea></td>
+              <th scope="row"><spring:message code="sal.text.remark" /><span class="must">*</span></th>
+              <td><textarea id="modRemInstAddr" name="modRemInstAddr" cols="20" rows="5">${eRequestDetail.rem}</textarea></td>
            </tr>
            </tbody>
            </table>

@@ -215,13 +215,21 @@
                  function(rsltInfo) {
                    if (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
                     isLock = true;
-                    msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + 'e-Request is disallowed.<br />';
+                    msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + 'eRequest is disallowed.<br />';
                   }
                 });
              } else {
                isLock = true;
-               msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'e-Request is disallowed.<br />';
+               msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'eRequest is disallowed.<br />';
              }
+         /*   }else{
+        	   Common.ajax("GET", "/sales/order/selectRequestApprovalList.do", {salesOrdId : salesOrdId, stusId : [1], typeId : tabNm}, function(result) {
+        		    if(result.size > 0){
+        		        Common.alert("Cannot!");
+        		    }
+        	   });
+         }
+        	   */
            }
 
       }else if(tabNm == 5970){
@@ -234,21 +242,21 @@
               isLock = true;
               msg = 'Only order with [REG] rental status is allowed to perform eRequest.<br/>';
 
-          }else if(EX_TRADE == 1){
+          }else if(EX_TRADE == 1 && ORD_STUS_ID != 4){
         	  isLock = true;
-              msg = 'Ex-trade order is not allowed to do eRequest.<>';
+              msg = 'Ex-trade order is not allowed to do eRequest.<br/>';
           }else if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2) || "${orderDetail.logView.prgrsId}" == 1) {
               if ("${orderDetail.logView.prgrsId}" == 1) {
                 Common.ajaxSync("GET", "/sales/order/checkeRequestAutoDebitDeduction.do", { salesOrdId : ORD_ID },
                   function(rsltInfo) {
                     if (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
                      isLock = true;
-                     msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + 'e-Request is disallowed.<br />';
+                     msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + 'eRequest is disallowed.<br />';
                    }
                  });
               } else {
                 isLock = true;
-                msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'e-Request is disallowed.<br />';
+                msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'eRequest is disallowed.<br />';
               }
             }
 
@@ -528,6 +536,11 @@
           return;
       }
 
+	  if($("#modRemCntc").val() == ""){
+		  Common.alert("Please fill in update reason<br/>");
+          return;
+	  }
+
 	   var data = {
 			    salesOrdId : ORD_ID,
 			    auxOrdId : AUX_ORD_ID,
@@ -539,9 +552,9 @@
 
 	   Common.ajax("POST", "/sales/order/eReqEditOrdInfo.do", data, function(result) {
 		   if (AUX_ORD_NO != "") {
-			   Common.alert('<spring:message code="sal.alert.msg.eReqSum" />' + DEFAULT_DELIMITER + _requestMsg + "<b>" + "e-Request saved." + "</b>", fn_selfClose);
+			   Common.alert('<spring:message code="sal.alert.msg.eReqSum" />' + DEFAULT_DELIMITER + _requestMsg + "<b>" + "eRequest saved." + "</b>", fn_selfClose);
 		   }else{
-			   Common.alert('<spring:message code="sal.alert.msg.eReqSum" />' + DEFAULT_DELIMITER + "<b>" + "e-Request saved." + "</b>", fn_selfClose);
+			   Common.alert('<spring:message code="sal.alert.msg.eReqSum" />' + DEFAULT_DELIMITER + "<b>" + "eRequest saved." + "</b>", fn_selfClose);
 		   }
 
 	    }, function(jqXHR, textStatus, errorThrown) {
@@ -563,6 +576,11 @@
           return;
       }
 
+	  if($("#modRemInstAddr").val() == ""){
+          Common.alert("Please fill in update reason<br/>");
+          return;
+      }
+
 	    var data = {
                 salesOrdId : ORD_ID,
                 auxOrdId : AUX_ORD_ID,
@@ -574,9 +592,9 @@
 
 	   Common.ajax("POST", "/sales/order/eReqEditOrdInfo.do", data , function(result) {
 		   if (AUX_ORD_NO != "") {
-               Common.alert('<spring:message code="sal.alert.msg.eReqSum" />' + DEFAULT_DELIMITER + _requestMsg + "<b>" + "e-Request saved." + "</b>", fn_selfClose);
+               Common.alert('<spring:message code="sal.alert.msg.eReqSum" />' + DEFAULT_DELIMITER + _requestMsg + "<b>" + "eRequest saved." + "</b>", fn_selfClose);
            }else{
-        	   Common.alert('<spring:message code="sal.alert.msg.eReqSum" />' + DEFAULT_DELIMITER + "<b>" + "e-Request saved." + "</b>", fn_selfClose);
+        	   Common.alert('<spring:message code="sal.alert.msg.eReqSum" />' + DEFAULT_DELIMITER + "<b>" + "eRequest saved." + "</b>", fn_selfClose);
            }
       }, function(jqXHR, textStatus, errorThrown) {
         try {
@@ -855,7 +873,7 @@
                 <td><span id="modCntcFaxNoNew"></span></td>
               </tr>
               <tr>
-                <th scope="row"><spring:message code="sal.title.text.reasonUpdate" /></th>
+                <th scope="row"><spring:message code="sal.title.text.reasonUpdate" /><span class="must">*</span></th>
                 <td colspan="3"><textarea id="modRemCntc" name="modRemCntc" cols="20" rows="5"></textarea></td>
               </tr>
             </tbody>
@@ -889,7 +907,7 @@
             <a id="btnInstNewAddr" href="#"><spring:message code="sal.btn.addNewAddr" /></a>
           </p></li>
         <li><p class="btn_grid">
-            <a id="btnInstSelAddr" href="#"><spring:message code="sal.title.text.seMailAddr" /></a>
+            <a id="btnInstSelAddr" href="#"><spring:message code="sal.title.text.selectAnotherAddress" /></a>
           </p></li>
       </ul>
       <section class="search_table">
@@ -941,7 +959,7 @@
                   <td colspan="3"><select id="modDscBrnchId" name="modDscBrnchId" class="w50p" disabled></select></td>
               </tr>
               <tr>
-                   <th scope="row"><spring:message code="sal.title.text.reasonUpdate" /></th>
+                   <th scope="row"><spring:message code="sal.title.text.reasonUpdate" /><span class="must">*</span></th>
                    <td colspan="3"><textarea id="modRemInstAddr" name="modRemInstAddr" cols="20" rows="5"></textarea></td>
               </tr>
             </tbody>
