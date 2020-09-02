@@ -113,6 +113,8 @@ var reqcolumnLayout=[
 			                     {dataField: "stkdesc",headerText :"Mat.Name"                      ,width:220    ,height:30             ,editable : false   },
                               //   {dataField: "srofravlqty",headerText :"(Fr) Old</br>Available Qty"         ,width:120    ,height:30            ,editable : false  },
                                  {dataField: "srosupqty",headerText :"Supply Qty"                  ,width:120    ,height:30         ,editable : false  ,dataType : "numeric"  },
+                                 {dataField: "srodivsupqty",headerText :"Avg.FillQty"                  ,width:120    ,height:30               ,editable : false  ,visible:true},
+
                                  {dataField: "sroconqty",headerText :"Confirm </br>Supply Qty"       ,width:120    ,height:30 ,style  :"my-inactive-style"        ,editable : false,dataType : "numeric"  },
                                  {dataField: "srofulqty" ,headerText :"Unfulfilled </br>Qty"               ,width:120    ,height:30             ,editable : false,dataType : "numeric"   },
                                  {dataField: "srofravailqtyorg" ,headerText :"(Fr)Current Available </br>Qty"         ,       width:120    ,height:30       ,     editable : false,formatString : "#,###,###",
@@ -174,9 +176,7 @@ var reqcolumnLayout=[
                                  {dataField: "sroitmlev",headerText :"item idex"                  ,width:120    ,height:30               ,editable : false  ,visible:false},
                                  {dataField: "srofravailqtyorg",headerText :"srofravailqtyorg"                  ,width:120    ,height:30               ,editable : false  ,visible:false},
                                  {dataField: "srocalautoreplenqty",headerText :"srocalautoreplenqty"                  ,width:120    ,height:30               ,editable : false  ,visible:false},
-
-
-                     ];
+                             ];
 
 
 
@@ -184,7 +184,10 @@ var reqcolumnLayout=[
 					                                {dataField: "srono",headerText :"SRO No."           ,width:120    ,height:30                },
 													{dataField: "srostkcode",headerText :"Mat.Code"                  ,width:80    ,height:30               ,editable : false  },
 													{dataField: "stkdesc",headerText :"Mat.Name"                  ,width:170    ,height:30               ,editable : false   },
-					                                {dataField: "srosupqty",headerText :"Supply Qty"                  ,width:80    ,height:30         ,editable : false  ,dataType : "numeric" },
+					                                {dataField: "srosupqty",headerText :"Supply Qty"                  ,width:100    ,height:30         ,editable : false  ,dataType : "numeric" },
+					                                {dataField: "srodivsupqty",headerText :"Avg.FillQty"                  ,width:120    ,height:30               ,editable : false  ,visible:true},
+                                                    {dataField: "srodivtolcnt",headerText :"Target Count"                  ,width:120    ,height:30               ,editable : false  ,visible:true},
+
 													{dataField: "sroitmstatecd",headerText :"<spring:message code='log.head.status'/>",width:80    ,height:30   ,editable : false                },
 					                                {dataField: "srorefsrono",headerText :"Ref.SRO No"                  ,width:120    ,height:30               ,editable : false },
 					                                {dataField: "srobasqty",headerText :"Basic Qty"                  ,width:120    ,height:30               ,editable : false  ,dataType : "numeric"  },
@@ -310,6 +313,8 @@ $(document).ready(function(){
            headerHeight : 40,
            editable:false,
            copySingleCellOnRowMode:true,
+           showFooter : true,
+
            // 고정칼럼 카운트 지정
            fixedColumnCount : 5
   };
@@ -729,13 +734,14 @@ fn_gridExport =function (type){
 					        <table summary="search table" class="type1"><!-- table start -->
 					            <caption>search table</caption>
 					            <colgroup>
+					                <col style="width:200px" />
 					                <col style="width:*" />
 					            </colgroup>
 					            <tbody>
 					                <tr>
 					                    <th scope="row" style="text-align:right;"> <b>Supply Qty :</b>   </th>
 					                       <td scope="row" style="text-align:right;">
-                                                <span  style="color:red;"> Minimum Qty  > To Ware House Qty  :   (Basic Qty -  To Ware House Qty  )</span>
+                                                <span  style="color:red;"> (Minimum Qty  > To Ware House Qty  :   (Basic Qty -  To Ware House Qty  ) ) / target count</span>
 						                  </td>
 					                </tr>
 					            </tbody>
