@@ -145,6 +145,7 @@
 			            ,SRO_ITM_STATE_CD
 			            ,SRO_ITM_REPL_CON_QTY
 			            ,SRO_ITM_REPL_SUP_QTY
+			            ,SRO_ITM_REPL_DIV_SUP_QTY
 			            ,SRO_ITM_REPL_FUL_QTY
 			            ,SRO_MAK_FR_AVL_QTY
 			            ,SRO_MAK_BAS_QTY
@@ -160,7 +161,8 @@
 			            ,(SELECT  NVL(MAX(SRO_ITM_REPL_CON_LEV),0)+1   FROM GBSLCVD.LOG0112d  WHERE sro_no  = #{srono}  AND SRO_STK_CODE =#{srostkcode})
 				        ,'C'
 			            , #{requestqty}                                                                                                   AS SRO_ITM_REPL_CON_QTY
-			            , SRO_ITM_REPL_SUP_QTY                                                                                     AS SRO_ITM_REPL_SUP_QTY
+			            , SRO_ITM_REPL_SUP_QTY
+			            , SRO_ITM_REPL_SUP_QTY                                                                                    AS SRO_ITM_REPL_DIV_SUP_QTY
 			            , (SRO_ITM_REPL_SUP_QTY - NVL((SELECT SUM(SRO_ITM_REPL_CON_QTY)
 																	        FROM GBSLCVD.LOG0112D
 																	     WHERE SRO_STK_CODE =#{srostkcode}
@@ -275,6 +277,7 @@ FROM (
                 ,crtdt
                 ,reqstdel
                 ,srocalautoreplenqty
+                ,srodivsupqty
       from(
    	  SELECT
 			    srono
@@ -299,6 +302,7 @@ FROM (
 			    ,crtuserid
 			    ,crtdt
 			    ,srocalautoreplenqty
+			    ,srodivsupqty
 			    ,reqstdel
 		from(
 		      SELECT
@@ -320,6 +324,7 @@ FROM (
 					                                       )
 					                            )
 					  ),0)AS sroconqty
+					,L112.SRO_ITM_REPL_DIV_SUP_QTY   AS srodivsupqty
 				    ,L112.SRO_ITM_REPL_SUP_QTY    AS srosupqty
 				    ,L112.SRO_ITM_REPL_FUL_QTY     AS srofulqty
 				    ,NVL((SELECT SUM(SRO_MAK_TO_AVL_QTY)
@@ -398,10 +403,12 @@ FROM (
 			    nvl(SRO_MAK_TO_AVL_QTY,0) AS srotoavailqty ,
 			    nvl(SRO_MAK_FR_AVL_QTY,0) AS srofravlqty ,
 			    nvl(SRO_ITM_REPL_SUP_QTY,0)    AS srosupqty,
-			    CASE WHEN D.REQST_DEL ='Y' THEN 'STO has been deleted.' ELSE   SRO_ITM_RESULT_MSG    END  sroitmresultmsg,
+			    nvl(SRO_ITM_REPL_DIV_SUP_QTY,0)    AS srodivsupqty,
+                CASE WHEN D.REQST_DEL ='Y' THEN 'STO has been deleted.' ELSE   SRO_ITM_RESULT_MSG    END  sroitmresultmsg,
 			    CASE WHEN D.REQST_DEL ='Y'  THEN  0 ELSE  nvl(SRO_ITM_REPL_CON_QTY ,0)  END  sroautoreplenqty ,
 			    CASE WHEN D.REQST_DEL ='Y'  THEN  nvl(SRO_ITM_REPL_CON_QTY *-1,0) ELSE  0  END  srocenautoreplenqty ,
-			    D.REQST_DEL  reqstdel
+			    D.REQST_DEL  reqstdel,
+			     nvl(SRO_ITM_REPL_DIV_TOL_CNT,0) AS srodivtolcnt
 		   FROM  GBSLCVD.LOG0111D A , GBSLCVD.LOG0112D B ,SYS0026M C , LOG0047M D
 		WHERE A.SRO_NO =B.SRO_NO
 		 AND  B.SRO_STK_CODE  = C.STK_CODE
