@@ -1731,7 +1731,7 @@ function fn_parentReload() {
             <tr>
                 <th scope="row" >Street</th>
                 <td colspan="3">
-                <input type="text" title="" id="eHPstreetDtl" name="streetDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.street}"/>" />
+                <input type="text" title="" id="eHPstreetDtl" name="streetDtl" placeholder="Detail Address" class="w100p" maxlength="50" value="<c:out value="${memberView.street}"/>" />
                 </td>
             </tr>
             <tr>
