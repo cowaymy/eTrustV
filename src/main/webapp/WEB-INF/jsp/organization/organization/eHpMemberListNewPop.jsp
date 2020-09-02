@@ -1723,7 +1723,7 @@ function fn_validFile() {
             <tr>
                 <th scope="row" >Street</th>
                 <td colspan="3">
-                <input type="text" title="" id="eHPstreetDtl" name="streetDtl" placeholder="Street" class="w100p"  />
+                <input type="text" title="" id="eHPstreetDtl" name="streetDtl" placeholder="Street" class="w100p"  maxlength="50"/>
                 </td>
             </tr>
             <tr>
