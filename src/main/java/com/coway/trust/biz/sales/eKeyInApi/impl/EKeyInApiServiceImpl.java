@@ -552,6 +552,7 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
       param.setSrvCntrctPacId(param.getSrvPacId());
       List<EgovMap> selecteOrderProduct1 = null;
 
+      logger.debug("==============" + CommonUtils.nvl(param.getAppTypeId()));
       if ("66".equals(CommonUtils.nvl(param.getAppTypeId()))) {
         selecteOrderProduct1 = selecteOrderProduct1(param);
       } else {
