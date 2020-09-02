@@ -299,7 +299,8 @@
 									    { value: $("#txtCodyStatus option:selected").val() },
 									    { value: $("#cmbStatusType option:selected").val() },
 									    { value: $("#cmdBranchCode option:selected").val() },
-									    { value: $("#cmdCdManager option:selected").val() }									 ];
+									    { value: $("#cmdCdManager option:selected").val() }
+									 ];
 
 	    for( var i = 0; i < validationField.length; ++i ) {
 	    	if(validationField[i].value != "" && validationField[i].value != null){
