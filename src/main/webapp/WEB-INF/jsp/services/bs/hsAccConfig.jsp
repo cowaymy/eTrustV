@@ -291,28 +291,34 @@
     var radioVal = $("input:radio[name='searchDivCd']:checked").val();
 
     if (radioVal == 1) { //HS NO CREATE BEFORE
-      // HS Period,Sales Order,HS Order, Install Month and Assign Cody are optional
-      // IF Cody Branch or Cody Manager or Cody Status or HS Status or Dept Code or Install Area or Install State are provided
 
-	    var validationField = [
-	    { value: $("#myInstallArea").val() },
-	    { value: $("#deptCode").val() },
-	    { value: $("#myInstallState").val() },
-	    { value: $("#txtCodyStatus option:selected").val() },
-	    { value: $("#cmbStatusType option:selected").val() },
-	    { value: $("#cmdBranchCode option:selected").val() },
-	    { value: $("#cmdCdManager option:selected").val() },
-	    ];
+	   var validationField = [
+									    { value: $("#myInstallArea").val() },
+									    { value: $("#deptCode").val() },
+									    { value: $("#myInstallState").val() },
+									    { value: $("#txtCodyStatus option:selected").val() },
+									    { value: $("#cmbStatusType option:selected").val() },
+									    { value: $("#cmdBranchCode option:selected").val() },
+									    { value: $("#cmdCdManager option:selected").val() }									 ];
 
 	    for( var i = 0; i < validationField.length; ++i ) {
 	    	if(validationField[i].value != "" && validationField[i].value != null){
+	    		// HS Period,Sales Order,HS Order, Install Month and Assign Cody are optional
+                // IF Cody Branch or Cody Manager or Cody Status or HS Status or Dept Code or Install Area or Install State are provided
+
 	    		 if($("#myInstallMonth").val() == "" && $("#txtSalesOrder").val() == "" && $("#txtHsOrderNo").val() == "" && $("#myBSMonth").val() == ""  && $("#txtAssigncodyCode").val() == "" ){
 	    			 Common.alert("Install Month or HS Period or HS Order or Sales Order or Assign Cody are required.");
 	                 return false;
 	    		 }
+	    	}else{
+	    		// all fields are empty
+
+	    		if($("#myInstallMonth").val() == "" && $("#txtSalesOrder").val() == "" && $("#txtHsOrderNo").val() == "" && $("#myBSMonth").val() == ""  && $("#txtAssigncodyCode").val() == "" ){
+                    Common.alert("Install Month or HS Period or HS Order or Sales Order or Assign Cody are required.");
+                    return false;
+                }
 	    	}
 	    }
-
 
       if ($("#userType").val() != "4" && $("#userType").val() != "6") {
         if ($("#cmdBranchCode").val() == ''
