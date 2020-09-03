@@ -98,6 +98,7 @@ var scanLayout = [
                                         , "toLocCode":$("#toLocCode").val()
                                         , "ioType":$("#ioType").val()
                                         , "transactionType":$("#transaction").val()}
+                                        //, "vendor":$("#vendor").val()}
                           );
 
                           Common.ajax("POST", "/logistics/serialMgmtNew/deleteHPSerial.do"
@@ -180,7 +181,9 @@ $(document).ready(function(){
         $("#fromLocCode").val("");
         $("#toLocCode").val("${url.grCdcId}");
         $("#ioType").val("I");
-        $("#sVendorName").val($("#vendor").val());
+        $("#sVendorName").val("${url.vendor}");
+        $("#vendorId").val("${url.vendorId}");
+
     }else{
         $("#sDocNo").val($("#ingGrNo").val());
         $("#transaction").val("HP");
@@ -188,6 +191,8 @@ $(document).ready(function(){
         $("#toLocCode").val($("#grCdcId").val());
         $("#ioType").val("I");
         $("#sVendorName").val($("#vendor").val());
+
+        //alert("vendor name: " + $("#sVendorName").val());
     }
 
     $("#btnScanAllDel").click(function(){
@@ -309,7 +314,6 @@ $(function(){
 
 function fn_splitBarcode(){
 
-	console.log("scan serial vendor: " + $("#vendorId").val());
     if($("#txtBarcode").val() != null || js.String.strNvl($("#txtBarcode").val()) != ""){
         var BarCodeArray = $("#txtBarcode").val().toUpperCase().match(/.{1,18}/g);
 
@@ -465,6 +469,7 @@ function fn_scanClosePop(){
                 <th scope="row">Vendor</th>
                 <td colspan="3" >
                     <input type="text" id="sVendorName" name="sVendorName" class="w100p readonly" style="min-width:150px" readonly value=""/>
+                    <input type="hidden" id="vendorId"/>
                 </td>
             </tr>
         </tbody>

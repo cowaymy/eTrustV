@@ -590,7 +590,7 @@ var taxObj = {};
                 Common.alert('No data selected.');
                 return false;
             }else if(items.length == 1 ) {
-            	if( Number(items[0].item.poStsCode) == 30 ){
+            	if( Number(items[0].item.poStsCode) == 30 || Number(items[0].item.poStsCode) == 90){
 	                $("#V_PO_NO").val(items[0].item.poNo);
 	                Common.report("printForm");
             	}else{

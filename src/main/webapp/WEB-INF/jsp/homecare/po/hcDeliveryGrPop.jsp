@@ -289,12 +289,10 @@ $(document).ready(function(){
 	            "Do you want to GR?",
 	            function(){
 	            	if(failQty > 0){
-	            		alert("with fail qty.");
 	            		Common.confirm("QC Fail Qty will not be GR. Please Check again.", function(){
 	            			fn_deliveryGr(item);
 	            		});
 	            	}else{
-	            		alert("no fail qty, proceed GR");
 	            		fn_deliveryGr(item);
 	            	}
 	            },
@@ -310,8 +308,11 @@ $(document).ready(function(){
             return false;
         }
 
+
+
         if(Common.checkPlatformType() == "mobile") {
-            popupObj = Common.popupWin("frmDeliveryGr", "/logistics/serialMgmtNew/serialScanInPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+            popupObj = Common.popupWin("frmDeliveryGr", "/logistics/serialMgmtNew/serialScanInPop.do?vendor="+$("#vendor").val() + "&vendorId=" + $("#vendorId").val() ,
+            		   {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
         } else{
             Common.popupDiv("/logistics/serialMgmtNew/serialScanInPop.do", null, null, true, '_serialScanPop');
         }
@@ -381,7 +382,6 @@ $(document).ready(function(){
 });
 
 function fn_deliveryGr(item){
-	alert("fn_deliveryGr: "  + item);
     Common.ajax("POST", "/homecare/po/hcDeliveryGr/multiHcDeliveryGr.do"
             , {"grData":item}
             , function(result){
@@ -562,7 +562,8 @@ function fnOnfocus(obj){
 		    <form id="frmDeliveryGr" name="frmDeliveryGr" action="#" method="post">
 		    <input id="ingGrNo" name="ingGrNo"   type="hidden"/>
             <input id="grCdcId" name="grCdcId"   type="hidden"/>
-
+            <input type="hidden" id="vendorId" name="vendorId"/>
+            <input type="hidden" id="vendor" name="vendor"/>
 
 			<aside class="title_line">
 			  <h3>Delivery List</h3>
