@@ -304,6 +304,12 @@
 
      function fn_waterEnvironmentListSearch(){
 
+    	 if($("#resultType").val() == "" ){
+    		  Common.alert("Please choose Result Type.");
+              return;
+    	 }
+
+
     	    if ($("#orderNo").val() == "") {
     	        if (($("#appointmentStartDate").val() == "" || $("#appointmentEndDate").val() == "") &&
     	        		($("#resultStartDate").val() == "" || $("#resultEndDate").val() == "") &&
@@ -382,9 +388,11 @@
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Result Type</th>
+        <th scope="row">Result Type<span class="must">*</span></th>
     <td>
-        <select id="resultType" name="resultType" class="multy_select w100p" multiple="multiple" >
+        <!-- <select id="resultType" name="resultType" class="multy_select w100p" multiple="multiple" > -->
+        <select id="resultType" name="resultType" class="w100p" >
+        <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                <option value="INS">Installation</option>
                <option value="AS">After Service</option>
         </select>
