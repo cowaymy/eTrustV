@@ -5113,7 +5113,7 @@ AND J.CODE IN ('COM','FAL','CAN')
     </if>
 
   <if test="typeCodeList != null and typeCodeList != '' ">
-      AND TYPE_CODE IN
+      AND TYPE_NO IN
       <foreach item="item" collection="typeCodeList" index="index"
         open="(" separator="," close=")">
         #{item}
