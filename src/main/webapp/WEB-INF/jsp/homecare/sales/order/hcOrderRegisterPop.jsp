@@ -2199,9 +2199,9 @@ console.log(orderVO);
 
         Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode}, function(memRc) {
             if(memRc != null) {
-                if(memRc.rcPrct < 30) {
+                if(memRc.rcPrct < 50) {
                     fn_clearOrderSalesman();
-                    Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to RC below 30%.");
+                    Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to RC below 50%.");
 
                     return false;
                 }

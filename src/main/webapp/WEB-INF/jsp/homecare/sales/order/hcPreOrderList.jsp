@@ -293,7 +293,7 @@
     $(function(){
         $('#_btnNew').click(function() {
             Common.ajax("GET", "/sales/order/checkRC.do", "", function(memRc){
-                if(memRc !=  null && (memRc.rcPrct < 30)) {
+                if(memRc !=  null && (memRc.rcPrct < 50)) {
                     Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%.");
                 } else {
                      // 20190925 KR-OHK Moblie Popup Setting
@@ -423,8 +423,8 @@
                 var memCode = AUIGrid.getCellValue(listGridID, selIdx, "crtName");
 
                 Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode}, function(memRc) {
-                    if(memRc !=  null && (memRc.rcPrct < 30)) {
-                        Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%.");
+                    if(memRc !=  null && (memRc.rcPrct < 50)) {
+                        Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 50%.");
                     } else {
                         Common.popupDiv("/homecare/sales/order/convertToHcOrderPop.do", { preOrdId : AUIGrid.getCellValue(listGridID, selIdx, "preOrdId") }, null , true);
                     }

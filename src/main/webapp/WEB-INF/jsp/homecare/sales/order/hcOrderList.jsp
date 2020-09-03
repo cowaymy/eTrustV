@@ -97,9 +97,9 @@
             var memCode = AUIGrid.getCellValue(listMyGridID, selIdx, "salesmanCode");
             Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode}, function(memRc) {
             	if(memRc != null) {
-                    if(memRc.rcPrct < 30) {
+                    if(memRc.rcPrct < 50) {
                         fn_clearOrderSalesman();
-                        Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%");
+                        Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 50%");
                         return false;
                     }
             	}
