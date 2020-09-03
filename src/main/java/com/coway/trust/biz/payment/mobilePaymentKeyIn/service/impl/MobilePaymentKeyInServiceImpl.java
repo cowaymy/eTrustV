@@ -55,6 +55,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 08. 05    ONGHC        Restructure saveMobilePaymentKeyInNormalPayment & saveMobilePaymentKeyInCard
  * 2020. 08. 09    ONGHC        Amend saveMobilePaymentKeyInCard
  * 2020. 08. 11    ONGHC        Amend saveMobilePaymentKeyInNormalPayment
+ * 2020. 09. 03    ONGHC        Amend to cater RPF amount
  *          </pre>
  */
 @Service("mobilePaymentKeyInService")
@@ -297,61 +298,69 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
         BigDecimal vPayAmt = new BigDecimal( "".equals(CommonUtils.nvl((gridListMap.get("payAmt")))) ? "0" : String.valueOf(gridListMap.get("payAmt")) ); // PAYMENT AMOUNT BUCKET
         totRemainAmt = totRemainAmt.subtract(vAdvAmt); // TAKE OUT ADVANCE PAYMENT FROM REMAINING FIRST
 
-        if (((mstRpf.subtract(mstRpfPaid)).compareTo(BigDecimal.ZERO) > 0)) { // IF HAVE REMAINING RPF
-          LOGGER.debug("======== RPF PROCESSING - START ========");
-          BigDecimal payAmt = new BigDecimal( "".equals(CommonUtils.nvl((gridListMap.get("payAmt")))) ? "0" : String.valueOf(gridListMap.get("payAmt")) );
-          BigDecimal targetAmtRPF = BigDecimal.ZERO;
+        if (totRemainAmt.compareTo(BigDecimal.ZERO) > 0) {
+          if (((mstRpf.subtract(mstRpfPaid)).compareTo(BigDecimal.ZERO) > 0)) { // IF HAVE REMAINING RPF
+            LOGGER.debug("======== RPF PROCESSING - START ========");
+            BigDecimal payAmt = new BigDecimal( "".equals(CommonUtils.nvl((gridListMap.get("payAmt")))) ? "0" : String.valueOf(gridListMap.get("payAmt")) );
+            BigDecimal targetAmtRPF = BigDecimal.ZERO;
 
-          LOGGER.debug("= PAYMENT AMOUNT : " + payAmt.toPlainString());
-          LOGGER.debug("= PAYMENT TARGET RPF : " + targetAmtRPF.toPlainString());
+            LOGGER.debug("= PAYMENT AMOUNT : " + payAmt.toPlainString());
+            LOGGER.debug("= PAYMENT TARGET RPF : " + targetAmtRPF.toPlainString());
 
-          if ((mstRpf.subtract(mstRpfPaid)).compareTo(payAmt) > 0) {
-            targetAmtRPF = payAmt; // IF REMAINING RPF MORE THAN PAYMENT AMOUNT DIRECT USE PAYMENT AMOUNT
-          } else {
-            targetAmtRPF = mstRpf.subtract(mstRpfPaid); // ELSE JUST POST
+            if ((mstRpf.subtract(mstRpfPaid)).compareTo(payAmt) > 0) {
+              targetAmtRPF = payAmt; // IF REMAINING RPF MORE THAN PAYMENT AMOUNT DIRECT USE PAYMENT AMOUNT
+            } else {
+              targetAmtRPF = mstRpf.subtract(mstRpfPaid); // ELSE JUST POST
+            }
+
+            formMap = new HashMap<String, Object>();
+
+            formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
+            formMap.put("appType", "RENTAL");
+            formMap.put("advMonth", (Integer) gridListMap.get("advMonth")); // 셋팅필요
+            formMap.put("mstRpf", mstRpf);
+            formMap.put("mstRpfPaid", mstRpfPaid);
+
+            formMap.put("assignAmt", 0);
+            formMap.put("billAmt", mstRpf);
+            formMap.put("billDt", "1900-01-01");
+            formMap.put("billGrpId", mstCustBillId);
+            formMap.put("billId", 0);
+            formMap.put("billNo", "0");
+            formMap.put("billStatus", "");
+            formMap.put("billTypeId", 161);
+            formMap.put("billTypeNm", "RPF");
+            formMap.put("custNm", mstCustNm);
+            formMap.put("discountAmt", 0);
+            formMap.put("installment", 0);
+            formMap.put("ordId", salesOrdId);
+            formMap.put("ordNo", salesOrdNo);
+            formMap.put("paidAmt", mstRpfPaid);
+            //formMap.put("targetAmt", payAmtDou);
+            formMap.put("targetAmt", targetAmtRPF);
+            formMap.put("srvcContractID", 0);
+            formMap.put("billAsId", 0);
+            formMap.put("srvMemId", 0);
+            // item. = $("#rentalkeyInTrNo").val() ;
+            formMap.put("trNo", trRefNo); //
+            // item. = $("#rentalkeyInTrIssueDate").val() ;
+            formMap.put("trDt", trIssDt); //
+            // item.collectorCode = $("#rentalkeyInCollMemNm").val()
+            formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
+            // item.collectorId = $("#rentalkeyInCollMemId").val() ;
+            formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
+            // item.allowComm = $("#rentalcashIsCommChk").val()
+            // formMap.put("allowComm", "1");
+            formMap.put("allowComm", allowance);
+
+            formList.add(formMap);
+
+            vPayAmt = vPayAmt.subtract(targetAmtRPF);
+            totRemainAmt = totRemainAmt.subtract(targetAmtRPF);
+
+            LOGGER.debug("======== RPF FORM LIST : " + formList.toString());
+            LOGGER.debug("======== RPF PROCESSING - END ========");
           }
-
-          formMap = new HashMap<String, Object>();
-
-          formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
-          formMap.put("appType", "RENTAL");
-          formMap.put("advMonth", (Integer) gridListMap.get("advMonth")); // 셋팅필요
-          formMap.put("mstRpf", mstRpf);
-          formMap.put("mstRpfPaid", mstRpfPaid);
-
-          formMap.put("assignAmt", 0);
-          formMap.put("billAmt", mstRpf);
-          formMap.put("billDt", "1900-01-01");
-          formMap.put("billGrpId", mstCustBillId);
-          formMap.put("billId", 0);
-          formMap.put("billNo", "0");
-          formMap.put("billStatus", "");
-          formMap.put("billTypeId", 161);
-          formMap.put("billTypeNm", "RPF");
-          formMap.put("custNm", mstCustNm);
-          formMap.put("discountAmt", 0);
-          formMap.put("installment", 0);
-          formMap.put("ordId", salesOrdId);
-          formMap.put("ordNo", salesOrdNo);
-          formMap.put("paidAmt", mstRpfPaid);
-          //formMap.put("targetAmt", payAmtDou);
-          formMap.put("targetAmt", targetAmtRPF);
-          formMap.put("srvcContractID", 0);
-          formMap.put("billAsId", 0);
-          formMap.put("srvMemId", 0);
-          // item. = $("#rentalkeyInTrNo").val() ;
-          formMap.put("trNo", trRefNo); //
-          // item. = $("#rentalkeyInTrIssueDate").val() ;
-          formMap.put("trDt", trIssDt); //
-          // item.collectorCode = $("#rentalkeyInCollMemNm").val()
-          formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
-          // item.collectorId = $("#rentalkeyInCollMemId").val() ;
-          formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
-          // item.allowComm = $("#rentalcashIsCommChk").val()
-          // formMap.put("allowComm", "1");
-          formMap.put("allowComm", allowance);
-
-          formList.add(formMap);
         }
 
         // NO RPF TO PROCESS
@@ -800,66 +809,68 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
         BigDecimal vPayAmt = new BigDecimal( "".equals(CommonUtils.nvl((gridListMap.get("payAmt")))) ? "0" : String.valueOf(gridListMap.get("payAmt")) ); // PAYMENT AMOUNT BUCKET
         totRemainAmt = totRemainAmt.subtract(vAdvAmt); // TAKE OUT ADVANCE PAYMENT FROM REMAINING FIRST
 
-        if (((mstRpf.subtract(mstRpfPaid)).compareTo(BigDecimal.ZERO) > 0)) { // IF HAVE REMAINING RPF
-          LOGGER.debug("======== RPF PROCESSING - START ========");
-          BigDecimal payAmt = new BigDecimal( "".equals(CommonUtils.nvl((gridListMap.get("payAmt")))) ? "0" : String.valueOf(gridListMap.get("payAmt")) );
-          BigDecimal targetAmtRPF = BigDecimal.ZERO;
+        if (totRemainAmt.compareTo(BigDecimal.ZERO) > 0) {
+          if (((mstRpf.subtract(mstRpfPaid)).compareTo(BigDecimal.ZERO) > 0)) { // IF HAVE REMAINING RPF
+            LOGGER.debug("======== RPF PROCESSING - START ========");
+            BigDecimal payAmt = new BigDecimal( "".equals(CommonUtils.nvl((gridListMap.get("payAmt")))) ? "0" : String.valueOf(gridListMap.get("payAmt")) );
+            BigDecimal targetAmtRPF = BigDecimal.ZERO;
 
-          LOGGER.debug("= PAYMENT AMOUNT : " + payAmt.toPlainString());
-          LOGGER.debug("= PAYMENT TARGET RPF : " + targetAmtRPF.toPlainString());
+            LOGGER.debug("= PAYMENT AMOUNT : " + payAmt.toPlainString());
+            LOGGER.debug("= PAYMENT TARGET RPF : " + targetAmtRPF.toPlainString());
 
-          if ((mstRpf.subtract(mstRpfPaid)).compareTo(payAmt) > 0) {
-            targetAmtRPF = payAmt; // IF REMAINING RPF MORE THAN PAYMENT AMOUNT DIRECT USE PAYMENT AMOUNT
-          } else {
-            targetAmtRPF = mstRpf.subtract(mstRpfPaid); // ELSE JUST POST
+            if ((mstRpf.subtract(mstRpfPaid)).compareTo(payAmt) > 0) {
+              targetAmtRPF = payAmt; // IF REMAINING RPF MORE THAN PAYMENT AMOUNT DIRECT USE PAYMENT AMOUNT
+            } else {
+              targetAmtRPF = mstRpf.subtract(mstRpfPaid); // ELSE JUST POST
+            }
+
+            formMap = new HashMap<String, Object>();
+
+            formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
+            formMap.put("appType", "RENTAL");
+            formMap.put("advMonth", (Integer) gridListMap.get("advMonth")); // 셋팅필요
+            formMap.put("mstRpf", mstRpf);
+            formMap.put("mstRpfPaid", mstRpfPaid);
+            formMap.put("assignAmt", 0);
+            formMap.put("billAmt", mstRpf);
+            formMap.put("billDt", "1900-01-01");
+            formMap.put("billGrpId", mstCustBillId);
+            formMap.put("billId", 0);
+            formMap.put("billNo", "0");
+            formMap.put("billStatus", "");
+            formMap.put("billTypeId", 161);
+            formMap.put("billTypeNm", "RPF");
+            formMap.put("custNm", mstCustNm);
+            formMap.put("discountAmt", 0);
+            formMap.put("installment", 0);
+            formMap.put("ordId", salesOrdId);
+            formMap.put("ordNo", salesOrdNo);
+            formMap.put("paidAmt", mstRpfPaid);
+            //formMap.put("targetAmt", payAmtDou);
+            formMap.put("targetAmt", targetAmtRPF);
+            formMap.put("srvcContractID", 0);
+            formMap.put("billAsId", 0);
+            formMap.put("srvMemId", 0);
+            // item. = $("#rentalkeyInTrNo").val() ;
+            formMap.put("trNo", trRefNo); //
+            // item. = $("#rentalkeyInTrIssueDate").val() ;
+            formMap.put("trDt", trIssDt); //
+            // item.collectorCode = $("#rentalkeyInCollMemNm").val()
+            formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
+            // item.collectorId = $("#rentalkeyInCollMemId").val() ;
+            formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
+            // item.allowComm = $("#rentalcashIsCommChk").val()
+            // formMap.put("allowComm", "1");
+            formMap.put("allowComm", allowance);
+
+            formList.add(formMap);
+
+            vPayAmt = vPayAmt.subtract(targetAmtRPF);
+            totRemainAmt = totRemainAmt.subtract(targetAmtRPF);
+
+            LOGGER.debug("======== RPF FORM LIST : " + formList.toString());
+            LOGGER.debug("======== RPF PROCESSING - END ========");
           }
-
-          formMap = new HashMap<String, Object>();
-
-          formMap.put("procSeq", iProcSeq); // 2020.02.24 : ADD procSeq
-          formMap.put("appType", "RENTAL");
-          formMap.put("advMonth", (Integer) gridListMap.get("advMonth")); // 셋팅필요
-          formMap.put("mstRpf", mstRpf);
-          formMap.put("mstRpfPaid", mstRpfPaid);
-          formMap.put("assignAmt", 0);
-          formMap.put("billAmt", mstRpf);
-          formMap.put("billDt", "1900-01-01");
-          formMap.put("billGrpId", mstCustBillId);
-          formMap.put("billId", 0);
-          formMap.put("billNo", "0");
-          formMap.put("billStatus", "");
-          formMap.put("billTypeId", 161);
-          formMap.put("billTypeNm", "RPF");
-          formMap.put("custNm", mstCustNm);
-          formMap.put("discountAmt", 0);
-          formMap.put("installment", 0);
-          formMap.put("ordId", salesOrdId);
-          formMap.put("ordNo", salesOrdNo);
-          formMap.put("paidAmt", mstRpfPaid);
-          //formMap.put("targetAmt", payAmtDou);
-          formMap.put("targetAmt", targetAmtRPF);
-          formMap.put("srvcContractID", 0);
-          formMap.put("billAsId", 0);
-          formMap.put("srvMemId", 0);
-          // item. = $("#rentalkeyInTrNo").val() ;
-          formMap.put("trNo", trRefNo); //
-          // item. = $("#rentalkeyInTrIssueDate").val() ;
-          formMap.put("trDt", trIssDt); //
-          // item.collectorCode = $("#rentalkeyInCollMemNm").val()
-          formMap.put("collectorCode", paymentColleConfirmMap.get("memCode"));
-          // item.collectorId = $("#rentalkeyInCollMemId").val() ;
-          formMap.put("collectorId", paymentColleConfirmMap.get("memId"));
-          // item.allowComm = $("#rentalcashIsCommChk").val()
-          // formMap.put("allowComm", "1");
-          formMap.put("allowComm", allowance);
-
-          formList.add(formMap);
-
-          vPayAmt = vPayAmt.subtract(targetAmtRPF);
-          totRemainAmt = totRemainAmt.subtract(targetAmtRPF);
-
-          LOGGER.debug("======== RPF FORM LIST : " + formList.toString());
-          LOGGER.debug("======== RPF PROCESSING - END ========");
         }
 
         // NO RPF TO PROCESS
