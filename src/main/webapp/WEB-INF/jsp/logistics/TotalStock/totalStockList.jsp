@@ -125,10 +125,10 @@ $(document).ready(function(){
     doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
     doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos');
     doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
-    doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'searchlocgrade', 'A','');
+    doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, 'A', 'searchlocgrade', 'S','');
 
     doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
-
+    doGetComboData('/logistics/totalstock/selectCDCList.do', '', '','searchCDC', 'S' , '');
 
     //
 
@@ -181,14 +181,11 @@ $(function(){
         }
     });
     $('#clear').click(function() {
-        //$('#searchlocgb').val('');
         $('#searchMatCode').val('');
         $('#searchMatName').val('');
-        //$('#searchCtgry').val('');
-        //$('#searchType').val('');
-          doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
-            doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos');
-            doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
+        doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
+        doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos');
+        doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
     });
 
     $('#searchMatName').keypress(function(event) {
@@ -213,17 +210,27 @@ $(function(){
         }
 
         var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
-        doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
+        doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'S','');
     });
 
     $("#download").click(function() {
         GridCommon.exportTo("main_grid_wrap", 'xlsx', "Total Stcok List");
     });
     $("#searchBranch").change(function(){
-        //doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
-        doGetComboData('/logistics/totalstock/selectCDCList.do', { groupCode : $("#searchBranch").val()}, '','searchCDC', 'S' , '');
+        if(($('#searchlocgb').val() == "04") && ($('#searchBranch').val() != "")){
+        	console.log("choose cody and branch is selected.");
+        	var paramdata = {
+        			searchBranch : $("#searchBranch").val(),
+                    locgb : 'CT'
+                };
+            doGetComboData('/common/selectStockLocationList.do', paramdata , '', 'searchLoc', 'S','');
+        }
     });
 });
+
+function fn_PdfReport() {
+    Common.popupDiv("/logistics/totalstock/totalStockPdfPop.do", null, null, true, '');
+  }
 
 function SearchSessionAjax() {
     var url = "/logistics/totalstock/SearchSessionInfo.do";
@@ -244,7 +251,7 @@ function SearchListAjax() {
     });
 }
 
-function f_validatation(v){
+function f_validatation(){
 
              if ($("#searchlocgb").val() == null || $("#searchlocgb").val() == undefined || $("#searchlocgb").val() == ""){
                  Common.alert("Please Select Location Type.");
@@ -270,11 +277,12 @@ function f_multiCombo() {
                             locgbparam = locgbparam +"∈"+searchlocgb[i];
                         }
                     }
-
-                    var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
-                    doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
+                    var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val(),
+                    		searchBranch: ($('#searchBranch').val()!="" ? $('#searchBranch').val() : "" )}
+                    doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'S','');
               }
-        }).multipleSelect({
+        })
+         .multipleSelect({
             selectAll : true
         });
     });
@@ -285,10 +293,12 @@ function f_multiComboType() {
         }).multipleSelect({
             selectAll : true
         });  /* .multipleSelect("checkAll"); */
+        /*
         $('#searchLoc').change(function() {
         }).multipleSelect({
             selectAll : true
         });
+        */
     });
 }
 function f_multiCombos() {
@@ -422,6 +432,30 @@ function fnSerialSearchResult(data) {
 
             </tbody>
         </table><!-- table end -->
+        <aside class="link_btns_wrap">
+    <!-- link_btns_wrap start -->
+    <p class="show_btn">
+     <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a>
+    </p>
+    <dl class="link_list">
+     <dt><spring:message code='sales.Link'/></dt>
+     <dd>
+      <ul class="btns">
+      </ul>
+      <ul class="btns">
+        <li><p class="link_btn type2">
+          <a href="#" onclick="fn_PdfReport()">Total Stock Report (PDF)</a>
+         </p></li>
+      </ul>
+      <p class="hide_btn">
+       <a href="#"><img
+        src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
+        alt="hide" /></a>
+      </p>
+     </dd>
+    </dl>
+   </aside>
+   <!-- link_btns_wrap end -->
     </form>
     <form id="frmSearchSerial" name="frmSearchSerial" method="post">
         <input id="pGubun" name="pGubun" type="hidden" value="SEARCH" />

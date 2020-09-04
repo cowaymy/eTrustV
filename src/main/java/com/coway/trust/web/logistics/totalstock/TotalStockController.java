@@ -44,13 +44,13 @@ public class TotalStockController {
 
 	@Autowired
 	private SessionHandler sessionHandler;
-	
+
 	@RequestMapping(value = "/TotalStock.do")
 	public String totalstock(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		return "logistics/TotalStock/totalStockList";
 	}
-	
+
 	@RequestMapping(value = "/SearchSessionInfo.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> SearchSessionInfo(@RequestParam Map<String, Object> params, Model model)
 			throws Exception {
@@ -58,7 +58,7 @@ public class TotalStockController {
 		String  UserName;
 		String  UserCode;
 		int BranchId = sessionVO.getUserBranchId();
-		
+
 		if (sessionVO == null) {
 			UserName = "ham";
 		} else {
@@ -70,41 +70,41 @@ public class TotalStockController {
 			UserCode = "T010";
 			//UserCode = sessionVO.getCode();
 		}
-		
+
 //		logger.debug("UserName    값 : {}", UserName);
 //		logger.debug("UserCode    값 : {}", UserCode);
 //		logger.debug("branch_id 값 : ", BranchId);
-		
+
 		Map<String, Object> map = new HashMap();
 		map.put("UserName", UserName);
 		map.put("UserCode", UserCode);
 
 		return ResponseEntity.ok(map);
 	}
-	
-	
-	
+
+
+
 //	@RequestMapping(value = "/totStockSearchList.do", method = RequestMethod.POST)
 //	public ResponseEntity<Map> totStockSearchList(@RequestBody Map<String, Object> params, Model model, HttpServletRequest request,
 //			HttpServletResponse response)
 //			throws Exception {
-	
+
 	@RequestMapping(value = "/totStockSearchList.do", method = RequestMethod.GET)
 		public ResponseEntity<Map> PosItemList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+
 		String searchMatCode = request.getParameter("searchMatCode");
 		String[] searchType = request.getParameterValues("searchType");
 		String[] searchCtgry = request.getParameterValues("searchCtgry");
 		String[] searchlocgb = request.getParameterValues("searchlocgb");
 		String[] searchLoc = request.getParameterValues("searchLoc");
-		String searchlocgrade = request.getParameter("searchlocgrade");		
+		String searchlocgrade = request.getParameter("searchlocgrade");
 		String searchBranch = request.getParameter("searchBranch");
 		String searchCDC = request.getParameter("searchCDC");
-		
+
 		String sstocknm = request.getParameter("searchMatName");
 
 		Map<String, Object> smap = new HashMap();
-		
+
 		smap.put("searchMatCode", searchMatCode);
 		smap.put("searchLoc", searchLoc);
 		smap.put("searchType", searchType);
@@ -114,29 +114,35 @@ public class TotalStockController {
 		smap.put("sstocknm", sstocknm);
 		smap.put("searchBranch", searchBranch);
 		smap.put("searchCDC", searchCDC);
-		
+
 
 		List<EgovMap> list = TotalStockService.totStockSearchList(smap);
-		
+
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
 
 		return ResponseEntity.ok(map);
 	}
-	
+
 	@RequestMapping(value = "/selectTotalBranchList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selecttotalBranchList(@RequestParam Map<String, Object> params) {
 		List<EgovMap> codeList = TotalStockService.selectBranchList(params);
 		return ResponseEntity.ok(codeList);
 	}
-	
+
 	@RequestMapping(value = "/selectCDCList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCDCList(@RequestParam Map<String, Object> params) {
-		
+
 		//logger.debug("searchBranch@@@@@: {}", params.get("searchBranch"));
-		
+
 		List<EgovMap> codeList = TotalStockService.selectCDCList(params);
 		return ResponseEntity.ok(codeList);
 	}
-	
+
+	@RequestMapping(value = "/totalStockPdfPop.do")
+	public String totalStockPdfPop(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		return "logistics/TotalStock/totalStockPdfPop";
+	}
+
 }

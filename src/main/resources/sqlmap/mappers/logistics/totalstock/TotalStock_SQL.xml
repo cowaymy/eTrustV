@@ -92,7 +92,7 @@
         </if>
 
         <if test="searchCDC != null and searchCDC !=''">
-          AND S28.WH_LOC_CODE = #{searchCDC}
+          AND S28.CDC_CODE = #{searchCDC}
         </if>
 
         <!-- AND L56.LOC_ID = #{LocCode} -->
@@ -104,12 +104,13 @@
 </select>
 
 <select id="selectCDCList" parameterType="Map" resultType="egovMap">
- select WH_LOC_CODE code, wh_LOC_DESC CODE_NAME  from sys0028m where wh_loc_gb in ('01' , '05')
-  <choose>
-   <when test="groupCode != null and groupCode !=''">
-   and #{groupCode} in (wh_loc_brnch_id , wh_loc_brnch_id2 , wh_loc_brnch_id3)
-   </when>
-   </choose>
+ SELECT WH_LOC_CODE CODE , WH_LOC_CODE || ' - ' ||WH_LOC_DESC CODE_NAME
+FROM SYS0028M S28M
+WHERE 1 = 1
+AND S28M.WH_LOC_STUS_ID = 1
+AND S28M.WH_LOC_STK_GRAD = 'A'
+AND S28M.WH_LOC_GB IN ('01', '05')
+ORDER BY WH_LOC_CODE
 </select>
 
 
