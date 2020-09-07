@@ -500,7 +500,7 @@
       }
 
       //stkId for kecil = 1735, petit = 298 (for testing in developmennt)
-      if("${installResult.installStkId}" == 298){
+      if("${installResult.installStkId}" == 1735){
               msg += validationForKecikWhenCompleted();
       }
 
@@ -525,7 +525,7 @@
         if ($("#failLocCde").val() == 8000 &&("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")) {
 
           //stkId for kecil = 1735, petit = 298
-          if("${installResult.installStkId}" == 298){
+          if("${installResult.installStkId}" == 1735){
             msg += validationForKecikWhenFail();
           }
 
