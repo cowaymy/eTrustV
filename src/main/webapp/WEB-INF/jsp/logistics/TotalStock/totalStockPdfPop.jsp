@@ -7,7 +7,25 @@ $(document).ready(function() {
     doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'locgrade', 'A','');
 
     $("#loctype").change(function(){
-        doGetComboData("/common/selectStockLocationList.do",{locgb : $("#loctype").val()},''   , 'location' , 'S', '');
+    	if($("#loctype").val() == "02"){
+    		 $("#Branch").attr("disabled", true);
+    		 doGetComboData("/common/selectStockLocationList.do",{locgb : $("#loctype").val()},''   , 'location' , 'S', '');
+    	} else {
+    		$("#Branch").attr("disabled", false);
+    		doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'Branch', 'S','');
+    	}
+
+    });
+
+    $("#Branch").change(function(){
+        if(($('#loctype').val() == "04") && ($('#Branch').val() != "")){
+            console.log("choose cody and branch is selected.");
+            var paramdata = {
+                    searchBranch : $("#Branch").val(),
+                    locgb : 'CT'
+                };
+            doGetComboData('/common/selectStockLocationList.do', paramdata , '', 'location', 'S','');
+        }
     });
 
 });
@@ -110,6 +128,14 @@ function fn_validation(){
     </td>
 </tr>
 
+<tr>
+    <th scope="row">Branch</th>
+    <td>
+    <select id="Branch" name="Branch">
+    <option value="">Choose One</option>
+    </select>
+    </td>
+</tr>
 <tr>
     <th scope="row">Location</th>
     <td>
