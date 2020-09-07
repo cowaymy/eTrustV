@@ -297,7 +297,7 @@ $(document).ready(function(){
 	            	}
 	            },
 	            function(){
-	            	fn_closeGrPop();
+	            	  // do nothing.
 	            }
         );
 
