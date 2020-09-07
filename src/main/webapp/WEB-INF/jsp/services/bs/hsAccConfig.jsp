@@ -1053,7 +1053,7 @@
 
        var todayDD = Number(TODAY_DD.substr(0, 2));
 
-        if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 5 ))  {
+        if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 9 ))  {
         	Common.alert('Either no data selected OR today date, ' + todayDD + ' is restricted for assign CT members');
            return;
         }
@@ -1095,7 +1095,6 @@
               saleOrdList += rowItem.salesOrdId;
               custId = rowItem.custId;
               brnchId = rowItem.brnchId;
-              codyMangrUserId = rowItem.c5 ;
 
               if (i != len - 1) {
                   saleOrdList += ",";
