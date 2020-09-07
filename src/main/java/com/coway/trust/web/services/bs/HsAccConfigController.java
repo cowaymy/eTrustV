@@ -1240,6 +1240,8 @@ public class HsAccConfigController {
       params.put("schdulListSp", spl);
     }
 
+    logger.debug("schdulId...11:: " + params.get("schdulId"));
+
     params.put("memCode", (String) params.get("cmbServiceMem"));
     /*params.put("TODAY_DD", (String) params.get("TODAY_DD"));*/
 
@@ -1252,7 +1254,7 @@ public class HsAccConfigController {
 
     logger.debug("check 000:: " + params.get("TODAY_DD"));
 
-    if (params.get("TODAY_DD").equals("01") || params.get("TODAY_DD").equals("02") || params.get("TODAY_DD").equals("03") || params.get("TODAY_DD").equals("04") || params.get("TODAY_DD").equals("05")){
+    if (params.get("TODAY_DD").equals("01") || params.get("TODAY_DD").equals("02") || params.get("TODAY_DD").equals("03") || params.get("TODAY_DD").equals("04") || params.get("TODAY_DD").equals("05") || params.get("TODAY_DD").equals("06") || params.get("TODAY_DD").equals("07") || params.get("TODAY_DD").equals("08")){
 
   	 hsAccConfigService.updateHsAccConfigBasicMultiple1_5(params, sessionVO);
 
