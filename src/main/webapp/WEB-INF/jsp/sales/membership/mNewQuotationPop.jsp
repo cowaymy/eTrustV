@@ -314,7 +314,7 @@ $(document).ready(function(){
 
 	/*newGetExpDate*/
 	function fn_newGetExpDate(old_result) {
-		Common.ajax("GET", "/sales/membership/newGetExpDate", $("#getDataForm").serialize(), function(result) {
+		Common.ajaxSync("GET", "/sales/membership/newGetExpDate", $("#getDataForm").serialize(), function(result) {
 			console.log(result);
 
 			if (result.expDate.expint <= 0) {
