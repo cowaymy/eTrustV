@@ -39,8 +39,9 @@
         });
 
         $("#orgCode").val($("#orgCode").val().trim());
+        $("#memType").val('${SESSION_INFO.userTypeId}');
 
-        if($("#memType").val() == 1 || $("#memType").val() == 2 || $("#memType").val() == 7){
+         if($("#memType").val() == 1 || $("#memType").val() == 2 || $("#memType").val() == 7){
         	if("${SESSION_INFO.memberLevel}" =="0"){
 
                 $("#memtype").val('${SESSION_INFO.userTypeId}');
@@ -94,6 +95,12 @@
                 $("#memCode").val("${memCode}");
                 $("#memCode").attr("class", "w100p readonly");
                 $("#memCode").attr("readonly", "readonly");
+
+                if($("#memType").val() == 7){
+	                $("#salesmanCode").val('${SESSION_INFO.userName}');
+	                $("#salesmanCode").attr("class", "w100p readonly");
+	                $("#salesmanCode").attr("readonly", "readonly");
+                }
             }
         }
 
