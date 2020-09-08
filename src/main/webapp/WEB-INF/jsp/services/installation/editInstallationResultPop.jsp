@@ -195,7 +195,6 @@ function notMandatoryForAP(){
   }
 
   function fn_saveInstall() {
-
     if (fn_validate()) {
 
         // KR-OHK Serial Check add
@@ -233,6 +232,7 @@ function notMandatoryForAP(){
       }
     }
 
+  //stkId for kecil = 1735, petit = 298 (for testing in developmennt)
  // PSI CHECKING
     if ( ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")
     		&& !($("#editInstallForm #hidStkId").val()  == 1735)) {
@@ -261,8 +261,9 @@ function notMandatoryForAP(){
       }
     }
 
+  //stkId for kecil = 1735, petit = 298 (for testing in developmennt)
     if($("#editInstallForm #hidStkId").val() == 1735){
-        msg = validationForKecik();
+        msg += validationForKecik();
     }
 
     if (msg != "") {
@@ -278,9 +279,9 @@ function notMandatoryForAP(){
       if ( !($("#psiRcd").val() >=7 && $("#psiRcd").val() <=120) ) {
           msg += "* <spring:message code='sys.msg.range' arguments='Water Pressure (PSI),7,120' htmlEscape='false'/> </br>";
         }
-      if ( $("#lpmRcd").val() <= 0 ) {
-          msg += "* <spring:message code='sys.msg.mustMore' arguments='Liter Per Minute(LPM),0' htmlEscape='false'/> </br>";
-        }
+      if (!($("#lpmRcd").val() >= 4 && $("#lpmRcd").val() <= 63)) {
+        msg += "* <spring:message code='sys.msg.range' arguments='Liter Per Minute(LPM),4,63' htmlEscape='false'/> </br>";
+      }
       if ( !($("#volt").val() >=200 && $("#volt").val() <=264) ) {
           msg += "* <spring:message code='sys.msg.range' arguments='Voltage,200,264' htmlEscape='false'/> </br>";
         }
@@ -290,11 +291,8 @@ function notMandatoryForAP(){
       else if ( !($("#tds").val() >0 && $("#tds").val() <=300) ) {
             msg += "* <spring:message code='sys.msg.limitMore' arguments='Total Dissolved Solid (TDS),300' htmlEscape='false'/> </br>";
         }
-      if ( $("#roomTemp").val() ==0 ) {
-          msg += "* <spring:message code='sys.msg.mustMore' arguments='Room Temperature,0' htmlEscape='false'/> </br>";
-        }
-      else if ( !($("#roomTemp").val() >0 && $("#roomTemp").val() <=40) ) {
-          msg += "* <spring:message code='sys.msg.limitMore' arguments='Room Temperature,40' htmlEscape='false'/> </br>";
+      if (!($("#roomTemp").val() >= 4 && $("#roomTemp").val() <= 40)) {
+        msg += "* <spring:message code='sys.msg.range' arguments='Room Temperature,4,40' htmlEscape='false'/> </br>";
       }
       if ( !($("#waterSourceTemp").val() >=5 && $("#waterSourceTemp").val() <=35) ) {
           msg += "* <spring:message code='sys.msg.range' arguments='Water Source Temperature,5,35' htmlEscape='false'/> </br>";
