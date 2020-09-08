@@ -94,8 +94,7 @@
         <if test="searchCDC != null and searchCDC !=''">
           AND S28.CDC_CODE = #{searchCDC}
         </if>
-
-        <!-- AND L56.LOC_ID = #{LocCode} -->
+        ORDER BY S28.WH_LOC_CODE
 </select>
 
 <select id="selectBranchList" parameterType="Map" resultType="egovMap">

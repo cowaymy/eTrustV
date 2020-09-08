@@ -210,7 +210,7 @@ $(function(){
         }
 
         var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
-        doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'S','');
+        doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
     });
 
     $("#download").click(function() {
@@ -223,7 +223,7 @@ $(function(){
         			searchBranch : $("#searchBranch").val(),
                     locgb : 'CT'
                 };
-            doGetComboData('/common/selectStockLocationList.do', paramdata , '', 'searchLoc', 'S','');
+            doGetComboData('/common/selectStockLocationList.do', paramdata , '', 'searchLoc', 'M','f_multiComboType');
         }
     });
 });
@@ -279,7 +279,7 @@ function f_multiCombo() {
                     }
                     var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val(),
                     		searchBranch: ($('#searchBranch').val()!="" ? $('#searchBranch').val() : "" )}
-                    doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'S','');
+                    doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
               }
         })
          .multipleSelect({
@@ -293,12 +293,12 @@ function f_multiComboType() {
         }).multipleSelect({
             selectAll : true
         });  /* .multipleSelect("checkAll"); */
-        /*
+
         $('#searchLoc').change(function() {
         }).multipleSelect({
             selectAll : true
         });
-        */
+
     });
 }
 function f_multiCombos() {
@@ -411,7 +411,7 @@ function fnSerialSearchResult(data) {
                    </td>
                    <th scope="row">Location</th>
                    <td>
-                        <select class="w100p" id="searchLoc" name="searchLoc"><option value="">Choose One</option></select>
+                        <select class="w100p" id="searchLoc" name="searchLoc" class="multy_select w100p"multiple="multiple"></select>
                    </td>
                 </tr>
                 <tr>
