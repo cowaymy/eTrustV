@@ -6,7 +6,8 @@
  ----------------------------------------------------------------
  08/02/2019  ONGHC  1.0.0      RE-STRUCTURE JSP.
  18/08/2020  FARUQ  1.0.1       remove installation status active & add psi, lpm, volt, tds, room temp, water source temp, failParent, failChild, instChkLst
-
+ 28/08/2020  FARUQ  1.0.2       Add validation feature for Kecik when completed
+ 07/09/2020  FARUQ  1.0.3       Add validation feature for Kecik when failed
  -->
 
 <script type="text/javaScript">
@@ -526,9 +527,9 @@
         if ($("#failLocCde").val() == 8000 &&("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")) {
 
           //stkId for kecil = 1735, petit = 298
-          /* if("${installResult.installStkId}" == 1735){
+           if("${installResult.installStkId}" == 1735){
             msg += validationForKecikWhenFail();
-          } */
+          }
 
           if ( $("#psiRcd").val() == "") {
             msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
@@ -610,7 +611,7 @@
     return msg;
   }
 
-  /* function validationForKecikWhenFail(){
+  function validationForKecikWhenFail(){
     var msg = "";
 
     if( $("#failReasonCode").val() == 8002 || $("#failReasonCode").val() == 250 || $("#failReasonCode").val() == 1790 || $("#failReasonCode").val() == 8011) {
@@ -667,7 +668,7 @@
     }
 
     return msg;
-  } */
+  }
 
   function createInstallationChkViewAUIGrid() {
     var columnLayout = [  {
