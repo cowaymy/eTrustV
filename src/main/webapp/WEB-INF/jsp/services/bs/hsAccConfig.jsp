@@ -1050,12 +1050,48 @@
   function fn_htMultipleChange(){
        var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
        var radioVal = $("input:radio[name='searchDivCd']:checked").val();
-
        var todayDD = Number(TODAY_DD.substr(0, 2));
+
+       var str = "";
+       var custStr = "";
+       var rowItem;
+       var brnchId = "";
+       var saleOrdList = "";
+       var list = "";
+       var brnchCnt = "";
+       var schdulId = "";
+
+
+
+       for (var i = 0, len = checkedItems.length; i < len; i++) {
+           rowItem = checkedItems[i];
+           hsStuscd = rowItem.stusCodeId;
+           schdulId += rowItem.schdulId;
+           saleOrdList += rowItem.salesOrdId;
+           custId = rowItem.custId;
+           brnchId = rowItem.brnchId;
+
+           if (i != len - 1) {
+               saleOrdList += ",";
+               schdulId +=",";
+             }
+
+         }
+
+       console.log ("todayDD is 123...:" + todayDD)
+       console.log ("schdulId is 123...:" + schdulId)
+
 
         if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 9 ))  {
         	Common.alert('Either no data selected OR today date, ' + todayDD + ' is restricted for assign CT members');
            return;
+        }
+
+          if (  todayDD >= 1  &&  todayDD <= 8 )  {
+        	   if (schdulId.includes (undefined)){
+        		    Common.alert("Please ensure a valid HS Period being selected during 1st to 8th of the month");
+        		    return;
+        		    }
         }
 
         /////////////////////////////////////////////////////// RESTRICTION /////////////////////////////////////////////////
@@ -1100,16 +1136,13 @@
                   saleOrdList += ",";
                   schdulId +=",";
                 }
-
-              /*   if (hsStuscd == 4) {
-                Common.alert("CS result already COM. Assign HT Member is disallowed.");
-                return;
-              } */
             }
           }
 
-        console.log('schdulId ::' + schdulId);
-        console.log('TODAY_DD ::' + TODAY_DD);
+        console.log('schdulId Test..::' + schdulId);
+        console.log('todayDD Test..::' + TODAY_DD);
+
+
         /* Common.popupDiv("/homecare/services/htConfigBasicMultiplePop.do?isPop=true&schdulId="+ schdulId + "&salesOrdId="+saleOrdList  +"&indicator=1", null, null , true , '_ConfigBasicPop'); */
                   Common.popupDiv("/homecare/services/hsAccConfigBasicMultiplePop.do?isPop=true&schdulId="+ schdulId  +"&TODAY_DD="+TODAY_DD + "&salesOrdId="+saleOrdList +"&indicator=1", null, null , true , '_ConfigBasicPop');
   }//hsAccConfigBasicMultiplePop.jsp
