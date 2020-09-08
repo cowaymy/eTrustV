@@ -17,9 +17,9 @@ function fn_memberListSearch(){
     selRowIndex = null;
     /* if ($("#memTypeCom").val() == '5' ) {
         AUIGrid.showColumnByDataField(myGridID, "testResult");
-        AUIGrid.setColumnProp( myGridID, 6, { width : 130, visible : true } );
+        AUIGrid.setColumnProp( myGridID, 5, { width : 130, visible : true } );
     } else {
-        AUIGrid.setColumnProp( myGridID, 6, { width : 0, visible : false } );
+        AUIGrid.setColumnProp( myGridID, 5, { width : 0, visible : false } );
     } */
 
     Common.ajax("GET", "/organization/memberListSearch", $("#searchForm").serialize(), function(result) {
@@ -37,9 +37,9 @@ function fn_memberListSearch(){
 
         if (isTrainee != 0) {
             AUIGrid.showColumnByDataField(myGridID, "testResult");
-            AUIGrid.setColumnProp( myGridID, 6, { width : 130, visible : true } );
+            AUIGrid.setColumnProp( myGridID, 5, { width : 130, visible : true } );
         } else {
-            AUIGrid.setColumnProp( myGridID, 6, { width : 0, visible : false } );
+            AUIGrid.setColumnProp( myGridID, 5, { width : 0, visible : false } );
         }
 
         AUIGrid.setGridData(myGridID, result);
@@ -425,7 +425,6 @@ function createAUIGrid() {
             headerText : "Last Update",
             editable : false,
             width : 130
-
         }, {
             dataField : "lastActDt",
             headerText : "Last Active Date",
