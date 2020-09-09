@@ -22,6 +22,15 @@
       fn_changeTab(TAB_NM);
     }
     doGetCombo('/common/selectCodeList.do', '455', TAB_NM, 'ordReqType', 'S'); //Order Edit Type
+
+    if('${SESSION_INFO.userTypeId}' == 1 || '${SESSION_INFO.userTypeId}' == 2 || '${SESSION_INFO.userTypeId}' == 7){
+    	$('#frmCnctAppr').find("input,textarea,button,select").attr("disabled",true);
+    	$('#frmCnctAppr').hide();
+        $("#btnSaveCnct").hide();
+        $('#frmInstAddrAppr').hide();
+        $("#btnSaveInstAddr").hide();
+
+    }
   });
 
   $(function() {

@@ -1280,6 +1280,14 @@
       <if test="deptCode != null and deptCode != ''">
         AND UPPER(ORG.DEPT_CODE) = UPPER(#{deptCode})
       </if>
+      <choose>
+        <when test = "isHomecare != null and isHomecare != ''">
+            AND SOM.BNDL_ID > 0
+        </when>
+        <otherwise>
+            AND (SOM.BNDL_ID = 0 OR SOM.BNDL_ID IS NULL)
+        </otherwise>
+      </choose>
       ORDER BY RQST_ID DESC
    </select>
 

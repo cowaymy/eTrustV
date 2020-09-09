@@ -272,13 +272,7 @@
       } else if (ordStaCde == 'CAN') {
         Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>Cancelled order is not allowed to do eRequest.</b>");
       } else {
-    	  Common.ajax("GET", "/sales/order/selectRequestApprovalList.do", {ordNo : ordNo, reqStusId : 1}, function(result) {
-              if(result.length > 0){
-            	  Common.alert("<spring:message code='sal.alert.msg.existERequest'/>");
-              }else{
-            	  Common.popupDiv("/sales/order/eRequestCancellationPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null, true);
-              }
-          });
+         Common.popupDiv("/sales/order/eRequestCancellationPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null, true);
       }
     } else {
       Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');

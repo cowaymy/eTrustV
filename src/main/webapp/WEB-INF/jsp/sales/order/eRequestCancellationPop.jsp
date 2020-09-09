@@ -183,11 +183,11 @@
   	            if (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
   	             isLock = true;
   	             msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + 'Order cancellation request is disallowed.<br />';
+  	           } else {
+  	             isLock = true;
+  	             msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'Order cancellation request is disallowed.<br />';
   	           }
   	         });
-  	      } else {
-  	        isLock = true;
-  	        msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'Order cancellation request is disallowed.<br />';
   	      }
   	    }
 
@@ -216,20 +216,12 @@
                    if (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
                     isLock = true;
                     msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + 'eRequest is disallowed.<br />';
+                  } else {
+                      isLock = true;
+                      msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'eRequest is disallowed.<br />';
                   }
                 });
-             } else {
-               isLock = true;
-               msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'eRequest is disallowed.<br />';
              }
-         /*   }else{
-        	   Common.ajax("GET", "/sales/order/selectRequestApprovalList.do", {salesOrdId : salesOrdId, stusId : [1], typeId : tabNm}, function(result) {
-        		    if(result.size > 0){
-        		        Common.alert("Cannot!");
-        		    }
-        	   });
-         }
-        	   */
            }
 
       }else if(tabNm == 5970){
@@ -242,9 +234,9 @@
               isLock = true;
               msg = 'Only order with [REG] rental status is allowed to perform eRequest.<br/>';
 
-          }else if(EX_TRADE == 1 && ORD_STUS_ID != 4){
+          }else if(EX_TRADE > 0 && ORD_STUS_ID != 4){
         	  isLock = true;
-              msg = 'Ex-trade order is not allowed to do eRequest.<br/>';
+              msg = 'Ex-trade/i-Care order (Before Install) is not allowed to do eRequest.<br/>';
           }else if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2) || "${orderDetail.logView.prgrsId}" == 1) {
               if ("${orderDetail.logView.prgrsId}" == 1) {
                 Common.ajaxSync("GET", "/sales/order/checkeRequestAutoDebitDeduction.do", { salesOrdId : ORD_ID },
@@ -252,15 +244,21 @@
                     if (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
                      isLock = true;
                      msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + 'eRequest is disallowed.<br />';
-                   }
+                   } else {
+                       isLock = true;
+                       msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'eRequest is disallowed.<br />';
+                     }
                  });
-              } else {
-                isLock = true;
-                msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'eRequest is disallowed.<br />';
               }
             }
-
       }
+
+    Common.ajaxSync("GET", "/sales/order/selectRequestApprovalList.do", {salesOrdId : ORD_ID, typeId : tabNm, reqStusId : 1}, function(result) {
+        if(result.length > 0){
+            isLock = true;
+            msg = "<spring:message code='sal.alert.msg.existERequest'/>";
+        }
+    });
 
     if (isLock) {
       if (tabNm == 5968) {

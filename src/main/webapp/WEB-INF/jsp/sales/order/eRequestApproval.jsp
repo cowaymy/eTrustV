@@ -8,6 +8,9 @@
 
   $(document).ready(
       function() {
+    	  if ("${SESSION_INFO.roleId}" == "297") {
+    		  $("#isHomecare").val("1");
+    	  }
 
     	  if ("${SESSION_INFO.memberLevel}" == "1") {
 
@@ -56,7 +59,7 @@
 
         createAUIGrid();
 
-        doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'cmbDscBranchId', 'M', 'f_multiCombo'); //Branch Code
+        doGetComboSepa('/common/selectBranchCodeList.do', '3', ' - ', '${SESSION_INFO.userBranchId}', 'cmbDscBranchId', 'M', 'f_multiCombo'); //Branch Code
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
@@ -124,6 +127,8 @@
         selectAll : true,
         width : '100%'
       });
+      //$('#cmbDscBranchId').multipleSelect("checkAll");
+      $("#cmbDscBranchId").multipleSelect("disable");
     });
   }
 
@@ -196,6 +201,7 @@
 
   </form>
   <form id="searchForm" name="searchForm" method="post">
+    <input type="hidden" id="isHomecare" name="isHomecare">
    <table class="type1">
     <!-- table start -->
     <caption>table</caption>
