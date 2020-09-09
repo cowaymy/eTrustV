@@ -46,34 +46,35 @@
         /* atchFileGrpId */
         var attachList = $("#atchFileGrpId").val();
         console.log(attachList);
-        Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId :attachList} , function(result) {
-             console.log(result);
-        if(result) {
-             if(result.length > 0) {
-                 $("#attachTd").html("");
-                 for(var i = 0; i < result.length; i++) {
-                     var atchTdId = "atchId" + (i+1);
-                     $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='w100p input_text' readonly='readonly' name='" + atchTdId + "'/></div>");
-                     $(".input_text[name='" + atchTdId + "']").val(result[i].atchFileName);
-                 }
+        if(attachList != "" || attachList != "0") {
+            Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId :attachList} , function(result) {
+                console.log(result);
+	            if(result) {
+	                if(result.length > 0) {
+	                    $("#attachTd").html("");
+	                    for(var i = 0; i < result.length; i++) {
+	                        var atchTdId = "atchId" + (i+1);
+	                        $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='w100p input_text' readonly='readonly' name='" + atchTdId + "'/></div>");
+	                        $(".input_text[name='" + atchTdId + "']").val(result[i].atchFileName);
+	                    }
 
-                 // 파일 다운
-                 $(".input_text").dblclick(function() {
-                     var oriFileName = $(this).val();
-                     var fileGrpId;
-                     var fileId;
-                     for(var i = 0; i < result.length; i++) {
-                         if(result[i].atchFileName == oriFileName) {
-                             fileGrpId = result[i].atchFileGrpId;
-                             fileId = result[i].atchFileId;
-                         }
-                     }
-                     fn_atchViewDown(fileGrpId, fileId);
-                 });
-             }
-         }
-
-        });
+	                    // 파일 다운
+	                    $(".input_text").dblclick(function() {
+	                        var oriFileName = $(this).val();
+	                        var fileGrpId;
+	                        var fileId;
+	                        for(var i = 0; i < result.length; i++) {
+	                            if(result[i].atchFileName == oriFileName) {
+	                                fileGrpId = result[i].atchFileGrpId;
+	                                fileId = result[i].atchFileId;
+	                            }
+	                        }
+	                        fn_atchViewDown(fileGrpId, fileId);
+	                    });
+	                }
+	            }
+           });
+        }
     });
 
     function createAUIGrid() {

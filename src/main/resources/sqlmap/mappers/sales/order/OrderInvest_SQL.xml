@@ -133,7 +133,7 @@
 			       Extent1.INV_REQ_UPD_USER_ID ,
 			       Extent1.INV_REQ_REM ,
 			       Extent1.INV_REQ_USER_ID_AUTO ,
-			       Extent1.INV_REQ_HAS_ATTACH ,
+			       CASE WHEN Extent1.INV_REQ_HAS_ATTACH = 0 THEN '' ELSE TO_CHAR(Extent1.INV_REQ_HAS_ATTACH) END INV_REQ_HAS_ATTACH,
 			       Extent1.INV_REQ_ATTACH_FILE
 			  FROM SAL0050D Extent1
 			         LEFT JOIN SAL0001D Extent2   ON Extent1.SO_ID = Extent2.SALES_ORD_ID
