@@ -2,6 +2,9 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript" language="javascript">
 var TODAY_DD      = "${toDay}";
+var BEFORE_DD = "${bfDay}";
+var blockDtFrom = "${hsBlockDtFrom}";
+var blockDtTo = "${hsBlockDtTo}";
 
   var StatusTypeData = [ {
     "codeId" : "1",
@@ -362,6 +365,23 @@ var TODAY_DD      = "${toDay}";
   function fn_codyChangeHQ() {
     $("#_openGb").val("codyChange");
 
+    var todayDD = Number(TODAY_DD.substr(0, 2));
+    var todayYY = Number(TODAY_DD.substr(6, 4));
+
+    var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
+    var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
+
+    console.log("todayDD: " + todayDD);
+    console.log("blockDtFrom : " + blockDtFrom);
+    console.log("blockDtTo : " + blockDtTo);
+
+     if(todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
+         var msg = "Not allow to Assign CODY Transfer within period " + strBlockDtFrom + " to " + strBlockDtTo;
+         Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+         return;
+     }
+
+
     var radioVal = $("input:radio[name='searchDivCd']:checked").val();
     if (radioVal == '2') {
       Common.alert("'Assign Cody Transfer' is not allow in Manual HS");
@@ -423,9 +443,6 @@ var TODAY_DD      = "${toDay}";
           .confirmCustomizingButton(
               "Do you want to transfer an assign cody<br>with this CM group?",
               "Yes", "No", fn_originBrnchAssign, fn_selectBrnchCM);
-
-
-
 
 
       function fn_originBrnchAssign() {
@@ -557,9 +574,6 @@ var TODAY_DD      = "${toDay}";
     }
   }
 
-
-
-
   function fn_createHSOrderChecking(salesOrdNo){
         Common.ajaxSync("GET", "/services/bs/createHSOrderChecking.do", { salesOrderNo : salesOrdNo
         }, function(result) {
@@ -567,134 +581,6 @@ var TODAY_DD      = "${toDay}";
         });
         return msg;
   }
-
-  $(function() {
-    $("#hSConfiguration")
-        .click(
-            function() {
-              $("#_openGb").val("hsConfig");
-
-              var checkedItems = AUIGrid
-                  .getCheckedRowItemsAll(myGridID);
-
-             var radioVal = $("input:radio[name='searchDivCd']:checked").val();
-              var todayDD = Number(TODAY_DD.substr(0, 2));
-              var todayYY = Number(TODAY_DD.substr(6, 4));
-
-
-              if (radioVal == 2) {
-                  if(todayYY >= 2018) {
-                      if(todayDD > 22) { // Block if date > 22th of the month
-                          var msg = 'Disallow Create HS Order After 22nd of the Month.';
-                          Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
-                          return;
-                      }
-                  }
-              }
-
-
-              if (checkedItems.length <= 0) {
-                Common.alert('No data selected.');
-                return false;
-              } else {
-                var str = "";
-                var custStr = "";
-                var rowItem;
-                var brnchId = "";
-                var saleOrdList = "";
-                var list = "";
-                var brnchCnt = 0;
-                var ctBrnchCodeOld = "";
-                var saleOrd = {
-                  salesOrdNo : ""
-                };
-
-                for (var i = 0, len = checkedItems.length; i < len; i++) {
-                  rowItem = checkedItems[i];
-                  saleOrdList += rowItem.salesOrdNo;
-
-                  var hsStutus = rowItem.code;
-                  if (hsStutus == "COM") {
-                    Common.alert("<b>  do no has result COM..");
-                    return;
-                  }
-
-                  if (i != len - 1) {
-                    saleOrdList += ",";
-                  }
-
-                  if (i != 0) {
-                    if (ctBrnchCodeOld != rowItem.codyBrnchCode) {
-                      brnchCnt += 1;
-                    }
-                  }
-
-                  ctBrnchCodeOld = rowItem.codyBrnchCode;
-
-                  if (i == 0) {
-                    brnchId = rowItem.brnchId;
-                  }
-                }
-
-                if (brnchCnt > 0) {
-                  Common.alert("Not Available to Create HS Order With Several CDB in Single Time.");
-                  return;
-                }
-
-                var jsonObj = {
-                  "SaleOrdList" : saleOrdList,
-                  "BrnchId" : brnchId,
-                  "ManualCustId" : $("#manualCustomer").val(),
-                  "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val()
-                };
-
-                var msg = fn_createHSOrderChecking(saleOrdList);
-
-                Common
-                    .ajax(
-                        "GET",
-                        "/services/bs/selectHsOrderInMonth.do?saleOrdList="
-                            + saleOrdList
-                            + "&ManuaMyBSMonth="
-                            + $("#ManuaMyBSMonth").val(),
-                        "",
-                        function(result) {
-                          console.log ('BS Month : ' +$("#ManuaMyBSMonth").val());
-                          if (result.message == "success") {
-                            Common.alert("There is already exist for HS order for this month");
-                            return;
-                          } else {
-
-                              if(msg == ""){
-                                  Common
-                                  .popupDiv("/services/bs/selectHSConfigListPop.do?isPop=true&JsonObj="
-                                      + jsonObj
-                                      + "&CheckedItems="
-                                      + saleOrdList
-                                      + "&BrnchId="
-                                      + brnchId
-                                      + "&ManuaMyBSMonth="
-                                      + $(
-                                          "#ManuaMyBSMonth")
-                                          .val());
-                              }
-                              else{
-
-                              msg += '<br/> Do you want to proceed ? <br/>';
-
-                              Common.confirm('Create HS Order Confirmation'
-                                               + DEFAULT_DELIMITER
-                                               + "<b>" + msg
-                                               + "</b>",
-                                               fn_selectHSConfigListPop(jsonObj, saleOrdList, brnchId) ,
-                                           fn_selfClose);
-                          }
-                          }
-                        });
-              }
-            });
-  });
-
 
   function fn_selectHSConfigListPop(jsonObj, saleOrdList, brnchId) {
 
@@ -1038,61 +924,6 @@ var TODAY_DD      = "${toDay}";
   function fn_parentReload() {
       fn_getBSListAjax(); //parent Method (Reload)
   }
-
-
-    /* function fn_hsReversal(i){
-    // ADDED BY TPY - 18/06/2019
-    // AMEND BY OHC - 20/01/2020 - TO ADD FOR REVERSAL PASS MONTH HS
-      var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
-
-        if (checkedItems.length <= 0) {
-          Common.alert('No data selected.');
-          return;
-        } else if (checkedItems.length >= 2) {
-          Common.alert('Only available to reverse with single HS order');
-          return;
-        } else if (checkedItems[0]["code"] != "COM") {
-          Common.alert('Only available to reverse for the HS order with COM status');
-          return;
-        } else {
-
-          var rowItem ;
-          var salesOrdId = "";
-          var schdulId = "";
-          var serialRequireChkYn = "";
-
-          for (var i = 0, len = checkedItems.length; i < len; i++) {
-              rowItem = checkedItems[i];
-              schdulId = rowItem.schdulId;
-              salesOrdId = rowItem.salesOrdId;
-              serialRequireChkYn = rowItem.serialRequireChkYn;
-            }
-          }
-
-          // KR-OHK Serial Check add
-          var url = "";
-          if (serialRequireChkYn == 'Y') {
-            url = "/services/bs/hsReversalSerial.do";
-          } else {
-            url = "/services/bs/hsReversal.do";
-          }
-
-          Common.confirm("Are you sure want to reverse this HS ?", function() {
-              console.log("schdulId :: " + schdulId + "  salesOrdId :: " + salesOrdId + "  revInd :: " + i);
-            Common.ajax("GET", url,  {schdulId : schdulId , salesOrdId : salesOrdId, serialRequireChkYn : serialRequireChkYn, revInd : i } , function(result) {
-            if(result == null || result == "") {
-                 Common.alert("HS Reverse Failed.");
-                   return;
-            }else{
-                 Common.alert(result.message, fn_parentReload);
-            }
-          });
-        });
-    } */
-
-/*   function fn_HSRptCustSign() {
-    Common.popupDiv("/services/bs/report/hsReportCustSignPop.do", null, null, true, '');
-  } */
 
 </script>
 <form id="popEditForm" method="post">

@@ -3,6 +3,7 @@
  */
 package com.coway.trust.web.services.bs;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,12 +22,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.services.bs.HsAccConfigService;
 import com.coway.trust.biz.services.bs.HsMaintenanceService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
+import com.crystaldecisions.jakarta.poi.util.StringUtil;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -47,9 +50,15 @@ public class HsMaintenanceController {
 	@Resource(name = "hsMaintenanceService")
 	private HsMaintenanceService hsMaintenanceService;
 
+	@Resource(name = "commonService")
+	private CommonService commonService;
+
 
 	@RequestMapping(value="/initHsMaintenanceList.do")
 	public String initHsMaintenanceList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO){
+
+		String dayFrom = "26"; // default 26-{month-1}
+		String dayTo = "05"; // default 5-{month}
 
 		logger.debug("getUserBranchId : {}", sessionVO.getUserBranchId());
 
@@ -74,8 +83,34 @@ public class HsMaintenanceController {
 	        SalesConstants.DEFAULT_DATE_FORMAT1);
 	    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
+	    /* Added for blocking HS maintenance update between specified period by Hui Ding, 2020-09-09 **/
+	    logger.info("###bfDay: " + bfDay);
+	    logger.info("###toDay: " + toDay);
+
+	    Map<String, Object> blockParams = new HashMap<String, Object>();
+	    blockParams.put("groupCode", 456);
+	   // blockParams.put("codeIn", "DAY_FROM");
+
+	    List<EgovMap> blockDtList = commonService.selectCodeList(blockParams);
+	    if (blockDtList != null && !blockDtList.isEmpty()){
+	    	for (int i = 0; i < blockDtList.size(); i++){
+	    		EgovMap blockDt = blockDtList.get(i);
+	    		if (blockDt.get("code")!= null ){
+	    			if (blockDt.get("code").toString().equalsIgnoreCase("DAY_FROM")){
+	    				dayFrom = blockDt.get("codeName").toString();
+	    			} else {
+	    				dayTo = blockDt.get("codeName").toString();
+	    			}
+	    		}
+	    	}
+	    }
+
+	    model.put("hsBlockDtFrom", dayFrom);
+	    model.put("hsBlockDtTo", dayTo);
+	    /* Ended for blocking HS maintenance update between specified period by Hui Ding, 2020-09-09 **/
 	    model.put("bfDay", bfDay);
 	    model.put("toDay", toDay);
+
 
 	    return "services/bs/hsMaintenanceList";
 
