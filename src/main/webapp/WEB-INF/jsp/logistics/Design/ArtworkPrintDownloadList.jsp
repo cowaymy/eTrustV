@@ -101,12 +101,13 @@ $(function(){
                 </tr>
                 <tr>
                     <td>Banner</td>
-                    <td></td>
+                    <td>Card</td>
                 </tr>
                 <tr>
                   <%--   <td width="313px"><img ID="RadImageTile3" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/images/Artwork/Banner-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
                     <td width="313px"><img ID="RadImageTile4" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/images/Artwork/Bunting-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>                     --%>
                     <td width="313px"><img ID="RadImageTile3" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/WebShare/Artwork/Banner-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
+                    <td width="313px"><img ID="RadImageTile5" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/WebShare/Artwork/Thank-You-Card-Mockup-eTrust.png" style="top: 1px; left: 0px; width: 380px; height: 190px" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
                     <td></td>
                 </tr>
                 <tr>
@@ -118,7 +119,11 @@ $(function(){
                         <br />
                         <br />
                     </td>
-                    <td></td>
+                    <td>
+                        <a href="https://drive.google.com/drive/folders/1Y9kL3gn86IehPbz4sQeia40PceaU7qs3?usp=sharing" target="_blank"><font class="tblFontCongf">Thank You Card</font></a>
+                        <br />
+                        <br />
+                    </td>
                 </tr>
             </tbody>
          </table>
