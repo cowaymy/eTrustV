@@ -39,7 +39,7 @@
         });
 
         $("#orgCode").val($("#orgCode").val().trim());
-        $("#memType").val('${SESSION_INFO.userTypeId}');
+        $("#memType").val('${SESSION_INFO.userTypeId}'); // check the member type for access user
 
          if($("#memType").val() == 1 || $("#memType").val() == 2 || $("#memType").val() == 7){
         	if("${SESSION_INFO.memberLevel}" =="0"){
@@ -65,7 +65,7 @@
                 $("#grpCode").attr("readonly", "readonly");
 
             }else if("${SESSION_INFO.memberLevel}" =="3"){
-
+                console.log("Member Level >> " + "${SESSION_INFO.memberLevel}");
                 $("#orgCode").val("${orgCode}".trim());
                 $("#orgCode").attr("class", "w100p readonly");
                 $("#orgCode").attr("readonly", "readonly");
@@ -77,6 +77,12 @@
                 $("#deptCode").val("${deptCode}");
                 $("#deptCode").attr("class", "w100p readonly");
                 $("#deptCode").attr("readonly", "readonly");
+
+                if($("#memType").val() == "7"){ //HTM
+                   $("#memtype option[Value='"+'${SESSION_INFO.userTypeId}'+"']").attr("selected", true);
+                   $("#memtype").attr("class", "w100p readonly");
+                   $('#memtype').attr('disabled','disabled').addClass("disabled");
+                }
 
             }else if("${SESSION_INFO.memberLevel}" =="4"){
 
@@ -96,17 +102,20 @@
                 $("#memCode").attr("class", "w100p readonly");
                 $("#memCode").attr("readonly", "readonly");
 
-                if($("#memType").val() == 7){
+                if($("#memType").val() == "7"){  // HT
 	                $("#salesmanCode").val('${SESSION_INFO.userName}');
 	                $("#salesmanCode").attr("class", "w100p readonly");
 	                $("#salesmanCode").attr("readonly", "readonly");
+
+	                $("#memtype option[Value='"+'${SESSION_INFO.userTypeId}'+"']").attr("selected", true);
+	                $("#memtype").attr("class", "w100p readonly");
+	                $('#memtype').attr('disabled','disabled').addClass("disabled");
                 }
             }
         }
 
         CommonCombo.make('cmbAppType', '/common/selectCodeList.do', {groupCode : 10} , '', {type: 'M'});
         doGetComboWh('/sales/order/colorGridProductList.do', '', '', 'cmbProduct', '', '');
-
     });
 
 	function createAUIGrid() {
@@ -286,6 +295,8 @@
 	        }
         }
 
+
+
        /* if( $("#createStDate").val()  !=""  &&   $("#createEnDate").val()  !=""  ){
 
             var startDate = $('#createStDate').val();
@@ -324,8 +335,16 @@
         }
 
            */
-           if(isValid == true){
-	        Common.ajax("GET", "/sales/order/orderColorGridJsonList", $("#searchForm").serialize(), function(result) {
+          if(isValid == true){
+        	var param =  $("#searchForm").serialize();
+            var htMemberType = $('#memtype').find('option:selected').val();
+        	if('${SESSION_INFO.memberLevel}' =="3" || '${SESSION_INFO.memberLevel}' =="4"){
+        		 if(htMemberType == "7"){ // HTM & HT
+           			    param += "&memtype="+htMemberType;
+        		 }
+        	}
+
+	       	Common.ajax("GET", "/sales/order/orderColorGridJsonList", param, function(result) {
 	            AUIGrid.setGridData(myGridID, result);
 
 	            AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item) {
@@ -476,7 +495,9 @@
             }else if (type === 'checkbox' || type === 'radio'){
                 this.checked = false;
             }else if (tag === 'select'){
-                this.selectedIndex = -1;
+            	if($("#memType").val() != "7"){ //check not HT level
+            		 this.selectedIndex = 0;
+            	}
             }
         });
     };
