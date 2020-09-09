@@ -5,7 +5,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <style>
-/* 드랍 리스트 왼쪽 정렬 재정의*/                      
+/* 드랍 리스트 왼쪽 정렬 재정의*/
 .aui-grid-drop-list-ul {
     list-style:none;
     margin:0;
@@ -35,9 +35,9 @@
 </style>
 
     <script type="text/javaScript" language="javascript">
-    
+
     var ctm;
-    
+
         // AUIGrid 생성 후 반환 ID
        var myGridID;
            var option = {
@@ -46,21 +46,21 @@
        };
             var  branchList =[];
             var  ctCodeList = [];
-    
+
             function createAUIGrid(){
 		        // AUIGrid 칼럼 설정
 		        var columnLayout = [ {
-		        
+
 			        dataField : "promoId",
 			        headerText : "Branch",
 			        width : 120
 		        }];
-		        
-		     
+
+
 
 			// AUIGrid 칼럼 설정
 			var columnLayout = [
-			       
+
 					{
 					    dataField : "code",
 					    headerText : "Branch",
@@ -101,8 +101,8 @@
 			                headerText : "CT1",
 			                width: 0
 			        }, {
-            	
-            	
+
+
 			        headerText : "Morning",
 			        children : [
 			            {
@@ -142,7 +142,7 @@
 			            {
 			                    dataField: "evngSesionAs",
 			                    headerText: "AS",
-			                    width:60 
+			                    width:60
 			            }, {
 			                    dataField: "evngSesionIns",
 			                    headerText: "INS",
@@ -158,46 +158,46 @@
 
 
 
-            
+
             // 그리드 속성 설정
             var gridPros = {
-                
-                // 페이징 사용       
+
+                // 페이징 사용
                 usePaging : true,
-                
+
                 // 한 화면에 출력되는 행 개수 20(기본값:20)
                 pageRowCount : 20,
-                
+
                 //editable : true,
-                
+
                 displayTreeOpen : true,
-                
-                
+
+
                 headerHeight : 30,
-                
+
                 // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                 skipReadonlyColumns : true,
-                
+
                 // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
                 wrapSelectionMove : true,
-                
+
                 // 줄번호 칼럼 렌더러 출력
                 showRowNumColumn : true,
-                
+
                 showStateColumn : false
-        
+
             };
 
               //myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
-                 
+
               // Create AUIGrid
               myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, "memCode", gridPros);
-              
-              AUIGrid.bind(myGridID, "cellEditBegin", function (event){
-            	  
+
+              /* AUIGrid.bind(myGridID, "cellEditBegin", function (event){
+
             	  var ctm_row = -1;
             	  if( ctm ) {
-            		  if ( AUIGrid.getRowIndexesByValue(myGridID, "memCode", ctm) != null 
+            		  if ( AUIGrid.getRowIndexesByValue(myGridID, "memCode", ctm) != null
             				  && AUIGrid.getRowIndexesByValue(myGridID, "memCode", ctm) != ""
             				  && AUIGrid.getRowIndexesByValue(myGridID, "memCode", ctm) >= 0 ) {
             			  ctm_row = AUIGrid.getRowIndexesByValue(myGridID, "memCode", ctm);
@@ -205,17 +205,17 @@
             			  ctm_row = -1;
             		  }
             	  }
-            	  
+
             	  if (event.rowIndex == ctm_row) {
             		  return false;
            		  }else{
                       return true;
                   }
-              });
-                 
+              }); */
+
     }
-    
-    
+
+
      // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
     $(document).ready(function(){
        // AUIGrid 그리드를 생성합니다.
@@ -223,31 +223,31 @@
         AUIGrid.setSelectionMode(myGridID, "singleRow");
         fn_getCtCodeSearch1();
         //fn_getCtCodeSearch('');
-        
+
 	    $("#cmbbranchId").change(function (){
-	        
+
 	        doGetCombo('/organization/seleCtCodeSearch2.do',  $("#cmbbranchId").val(), '','cmbctId', 'S' ,  '');
 	    });
-    
+
      // 에디팅 정상 종료, 취소 이벤트 바인딩
         AUIGrid.bind(myGridID, ["cellEditEnd", "cellEditCancel"], auiCellEditingHandler);
     });
-     
+
     // 편집 핸들러
     function auiCellEditingHandler(event) {
        //document.getElementById("ellapse").innerHTML = event.type  + ": ( " + event.rowIndex  + ", " + event.columnIndex + ") : " + event.value;
-        
+
          var item = new Object();
 	        item.codeId="";
 	        item.memId="";
-	        
+
         if(event.columnIndex  ==0){
         	fn_getCtCodeSearch(event.value);
             AUIGrid.setCellValue(myGridID, event.rowIndex , "codeId", event.value);
             AUIGrid.setCellValue(myGridID, event.rowIndex , "memId", "");
-            
+
         }
-        
+
         if(event.columnIndex  ==1){
         	  AUIGrid.setCellValue(myGridID, event.rowIndex , "memId", event.value);
         	  if(event.value == '0'){
@@ -255,24 +255,24 @@
         	  }
         	  //fn_getCtCodeSearch(AUIGrid.getCellValue(myGridID, event.rowIndex ,0));
          }
-        console.log(event);
+        //console.log(event);
     };
 
 
     // 리스트 조회.
-		function fn_getSsCapacityBrListAjax() {        
+		function fn_getSsCapacityBrListAjax() {
 		    Common.ajax("GET", "/organization/selectSsCapacityCtList", $("#searchForm").serialize(), function(result1) {
-		        
-		        console.log("성공(GridResult).");
-		        console.log("data : " + result1);
+
+		        //console.log("성공(GridResult).");
+		        //console.log("data : " + result1);
 		        AUIGrid.setGridData(myGridID, result1);
-		    
+
 		        ctm = "";
 			    Common.ajax("GET", "/organization/selectSsCapacityCTM", $("#searchForm").serialize(), function(result2) {
-	                
-		                console.log("성공(CTM).");
+
+		                //console.log("성공(CTM).");
 		                //console.log("CTM : " + result2[0].ctm);
-		                
+
 		                if (result2.length > 1) {
 		                	Common.alert("There are several CTM in the branch.<br/>Can't collect capacity to CTM from CT.");
 		                } else if (result2.length == 0) {
@@ -280,28 +280,28 @@
 		                } else {
 		                	ctm = result2[0]["ctmCode"];
 		                }
-		                
+
 		                for( i in result2){
-		                    console.log(result2[i]);
+		                    //console.log(result2[i]);
 		                    //console.log("CTM : " + result2[i]["ctmCode"]);
 		                }
 	            });
 		    });
 		}
 		var bobj = new Object();
-		
+
 		function addRow() {
-			
+
 			if($("#cmbbranchId").val() == ''){
                 Common.alert("Please Select Branch Type");
                 return false;
             }
-			
+
 			if($("#cmbctId").val() == ''){
                 Common.alert("Please Select CT Code");
                 return false;
             }
-			
+
 	         var item = new Object();
 	         item.brnchId1="";
 	         item.ctId1="";
@@ -316,9 +316,9 @@
 	         item.evngSesionAs="";
 	         item.evngSesionIns="";
 	         item.evngSesionRtn="";
-	         
+
 	         //fn_getCtCodeSearch1();
-	         
+
 	         bobj = new Object();
 	         if($("#cmbbranchId option:selected").val() == ''){
 	        	 //fn_getCtCodeSearch1();
@@ -331,62 +331,62 @@
 	            	 item.ctId1 =  $("#cmbctId option:selected").val();
 	            	 item.memId =  $("#cmbctId option:selected").val();
 	             }
-		        
-	        } 
-	         
+
+	        }
+
 	         AUIGrid.addRow(myGridID, item, "first");
 	     }
-    
+
     function fn_save(){
-    	
+
     	Common.ajax("POST", "/organization/saveCapacity.do", GridCommon.getEditData(myGridID), function(result) {
-            console.log("성공.");
-            console.log("data : " + result);
+            //console.log("성공.");
+            //console.log("data : " + result);
             fn_getSsCapacityBrListAjax();
         });
     }
-    
+
     function removeRow(){
     	 var selectedItems = AUIGrid.getSelectedItems(myGridID);
-         
+
          if(selectedItems.length <= 0 ){
                Common.alert("There Are No selected Items.");
                return ;
          }
-         
+
         AUIGrid.removeRow(myGridID, "selectedIndex");
         AUIGrid.removeSoftRows(myGridID);
     }
-    
+
     function fn_excelDown(){
         // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
         GridCommon.exportTo("grid_wrap", "xlsx", "CT Session Capacity");
     }
-    
+
     function fn_getCtCodeSearch(_brnch){
         Common.ajax("GET", "/organization/seleCtCodeSearch.do",{brnch:_brnch}, function(result) {
         	ctCodeList = result;
         }, null, {async : false});
     }
-    
+
     function fn_getCtCodeSearch1(){
         Common.ajax("GET", "/organization/seleBranchCodeSearch.do",{groupCode:'43'}, function(result) {
         	for( i in result){
-        	    console.log(result[i]);
+        	    //console.log(result[i]);
         		branchList.push(result[i]);
         	}
         }, null, {async : false});
     }
-    
+
     // 엑셀 업로드
     function fn_uploadFile() {
         var formData = new FormData();
-          console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
+          //console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
           formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
-          
+
         Common.ajaxFile("/organization/excel/saveCapacityByExcel.do"
                   , formData
-                  , function (result) 
+                  , function (result)
                    {
                         //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
                         if(result.code == "99"){
@@ -424,13 +424,13 @@
     <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".xlsx"/>
     </div><!-- auto_file end -->
     </li>
-</c:if>    
+</c:if>
 <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a onclick="javascript:fn_uploadFile()">UPLOAD</a></p></li>
-</c:if>    
+</c:if>
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getSsCapacityBrListAjax();"><span class="search"></span>Search</a></p></li>
-</c:if>    
+</c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -525,11 +525,11 @@
 <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
     <li><p class="btn_grid"><a href="#" onclick="fn_excelDown()">TEMPLATE</a></p></li>
-</c:if>    
+</c:if>
     <!-- <li><p class="btn_grid"><a href="#" onclick="removeRow()">DEL</a></p></li> -->
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">    
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_grid"><a href="#" onclick="fn_save()">SAVE</a></p></li>
-</c:if>    
+</c:if>
     <!-- <li><p class="btn_grid"><a href="#" onclick="addRow()">ADD</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
@@ -542,4 +542,3 @@
 
 </section><!-- content end -->
 
-    

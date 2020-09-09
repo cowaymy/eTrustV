@@ -28,38 +28,38 @@ import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-@Controller 
+@Controller
 @RequestMapping(value = "/organization")
 public class SessionCapacityListController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(MemberRawDataController.class);
-	
+
 	@Resource(name = "orderCancelService")
 	private OrderCancelService orderCancelService;
-	
+
 	@Resource(name = "sessionCapacityListService")
 	private SessionCapacityListService sessionCapacityListService;
-	
+
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
-	
-	
+
+
+
 	@RequestMapping(value = "/initSessionCapacityList.do")
 	public String initSessionCapacityList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		List<EgovMap> dscBranchList =   sessionCapacityListService.seleBranchCodeSearch(params);
 		params.put("groupCode", 43);
-		
+
 		logger.debug("dscBranchList : {}", dscBranchList);
 		model.addAttribute("dscBranchList", dscBranchList);
 		return "organization/organization/sessionCapacityList";
 	}
 
-	
 
-	
+
+
 	@RequestMapping(value = "/initSessionCapacityCtList.do")
 	public String initSessionCapacityCtList(@RequestParam Map<String, Object> params, ModelMap model) {
 
@@ -68,47 +68,47 @@ public class SessionCapacityListController {
 
 		return "organization/organization/sessionCapacityCtList";
 	}
-	
-	
-	
+
+
+
 	@RequestMapping(value = "/selectSsCapacityBrList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectSsCapacityBrList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
+
 		List<EgovMap> ssCapacityBrList = null;
 		String[] branchList = request.getParameterValues("cmbbranchId");
 		params.put("branchList",branchList); // ct/br gb
         // 조회.
-		ssCapacityBrList = sessionCapacityListService.selectSsCapacityBrList(params); 
+		ssCapacityBrList = sessionCapacityListService.selectSsCapacityBrList(params);
 		params.put("brGb", "br"); // ct/br gb
 
 		return ResponseEntity.ok(ssCapacityBrList);
 	}
-	
-	
+
+
 	@RequestMapping(value = "/selectSsCapacityCtList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectSsCapacityCtList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
+
 		List<EgovMap> ssCapacityCtList = null;
-		
+
         // 조회.
-		ssCapacityCtList = sessionCapacityListService.selectSsCapacityBrList(params);        
+		ssCapacityCtList = sessionCapacityListService.selectSsCapacityBrList(params);
 
 		return ResponseEntity.ok(ssCapacityCtList);
-	}	
-	
+	}
+
 	@RequestMapping(value = "/selectSsCapacityCTM", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectSsCapacityCTM(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
+
 		List<EgovMap> ssCapacityCTM = null;
-		
+
         // 조회.
-		ssCapacityCTM = sessionCapacityListService.selectSsCapacityCTM(params);        
+		ssCapacityCTM = sessionCapacityListService.selectSsCapacityCTM(params);
 
 		return ResponseEntity.ok(ssCapacityCTM);
-	}	
-	
-	
-	
+	}
+
+
+
 	/**
 	 * Map을 이용한 Grid 편집 데이터 저장/수정/삭제 데이터 처리 샘플.
 	 *
@@ -126,8 +126,8 @@ public class SessionCapacityListController {
 		List<Object> removeList = params.get(AppConstants.AUIGRID_REMOVE); // 제거 리스트 얻기
 
         // 저장.
-		//sessionCapacityListService.saveSsCapacityBrList(params);  
-		
+		//sessionCapacityListService.saveSsCapacityBrList(params);
+
 		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
 		if (updateList.size() > 0) {
 			Map hm = null;
@@ -152,8 +152,8 @@ public class SessionCapacityListController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
-	}	
-	
+	}
+
 	/**
 	 * Search rule book management list
 	 *
@@ -169,24 +169,24 @@ public class SessionCapacityListController {
 		boolean updateSuccess = false;
 		boolean delSuccess = false;
 		EgovMap rtm = new EgovMap();
-		
+
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE);  // Get grid DeleteList
-		
+
 		logger.debug("addList {}", addList);
 //		if(addList != null){
 //			sessionCapacityListService.insertCapacity(addList,sessionVO);
 //		}
 		if(udtList != null){
 			sessionCapacityListService.updateCapacity(udtList,sessionVO);
-			sessionCapacityListService.updateCTMCapacity(udtList,sessionVO);
+			//sessionCapacityListService.updateCTMCapacity(udtList,sessionVO);
 			sessionCapacityListService.deleteCapacity(udtList,sessionVO);
 		}
 //		if(delList != null){
 //			sessionCapacityListService.deleteCapacity(delList,sessionVO);
 //		}
-		
+
 //		if(addSuccess){
 //			message.setMessage("Save Success CT Session Capacity");
 //		}else{
@@ -204,40 +204,40 @@ public class SessionCapacityListController {
 //		}
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/seleCtCodeSearch.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> seleCtCodeSearch(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
 		List<EgovMap> ssCapacityCtList = null;
-		
+
         // 조회.
-		ssCapacityCtList = sessionCapacityListService.seleCtCodeSearch(params);        
+		ssCapacityCtList = sessionCapacityListService.seleCtCodeSearch(params);
 		logger.debug("ssCapacityCtList {}", ssCapacityCtList);
 
 		return ResponseEntity.ok(ssCapacityCtList);
-	}	
-	
+	}
+
 	@RequestMapping(value = "/seleCtCodeSearch2.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> seleCtCodeSearch2(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
 		List<EgovMap> ssCapacityCtList2 = null;
-		
+
         // 조회.
-		ssCapacityCtList2 = sessionCapacityListService.seleCtCodeSearch2(params);        
+		ssCapacityCtList2 = sessionCapacityListService.seleCtCodeSearch2(params);
 		logger.debug("ssCapacityCtList {}", ssCapacityCtList2);
 
 		return ResponseEntity.ok(ssCapacityCtList2);
-	}	
-	
+	}
+
 	@RequestMapping(value = "/seleBranchCodeSearch.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> seleBranchCodeSearch(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
+
 		List<EgovMap> ssCapacityCtList = null;
-		
+
         // 조회.
-		ssCapacityCtList = sessionCapacityListService.seleBranchCodeSearch(params);        
+		ssCapacityCtList = sessionCapacityListService.seleBranchCodeSearch(params);
 
 		return ResponseEntity.ok(ssCapacityCtList);
-	}	
-	
+	}
+
 }
