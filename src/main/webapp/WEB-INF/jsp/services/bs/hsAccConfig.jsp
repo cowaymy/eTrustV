@@ -1082,14 +1082,14 @@
        console.log ("schdulId is 123...:" + schdulId)
 
 
-        if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 9 ))  {
+        if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 5 ))  {
         	Common.alert('Either no data selected OR today date, ' + todayDD + ' is restricted for assign CT members');
            return;
         }
 
-          if (  todayDD >= 1  &&  todayDD <= 8 )  {
+          if (  todayDD >= 1  &&  todayDD <= 5 )  {
         	   if (schdulId.includes (undefined)){
-        		    Common.alert("Please ensure a valid HS Period being selected during 1st to 8th of the month");
+        		    Common.alert("Please ensure a valid HS Period being selected during 1st to 5th of the month");
         		    return;
         		    }
         }
