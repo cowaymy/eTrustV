@@ -39,7 +39,6 @@
         });
 
         $("#orgCode").val($("#orgCode").val().trim());
-        $("#memType").val('${SESSION_INFO.userTypeId}'); // check the member type for access user
 
          if($("#memType").val() == 1 || $("#memType").val() == 2 || $("#memType").val() == 7){
         	if("${SESSION_INFO.memberLevel}" =="0"){
@@ -65,7 +64,6 @@
                 $("#grpCode").attr("readonly", "readonly");
 
             }else if("${SESSION_INFO.memberLevel}" =="3"){
-                console.log("Member Level >> " + "${SESSION_INFO.memberLevel}");
                 $("#orgCode").val("${orgCode}".trim());
                 $("#orgCode").attr("class", "w100p readonly");
                 $("#orgCode").attr("readonly", "readonly");
@@ -79,7 +77,7 @@
                 $("#deptCode").attr("readonly", "readonly");
 
                 if($("#memType").val() == "7"){ //HTM
-                   $("#memtype option[Value='"+'${SESSION_INFO.userTypeId}'+"']").attr("selected", true);
+                   $("#memtype option[Value='"+$("#memType").val()+"']").attr("selected", true);
                    $("#memtype").attr("class", "w100p readonly");
                    $('#memtype').attr('disabled','disabled').addClass("disabled");
                 }
@@ -107,7 +105,7 @@
 	                $("#salesmanCode").attr("class", "w100p readonly");
 	                $("#salesmanCode").attr("readonly", "readonly");
 
-	                $("#memtype option[Value='"+'${SESSION_INFO.userTypeId}'+"']").attr("selected", true);
+	                $("#memtype option[Value='"+$("#memType").val()+"']").attr("selected", true);
 	                $("#memtype").attr("class", "w100p readonly");
 	                $('#memtype').attr('disabled','disabled').addClass("disabled");
                 }

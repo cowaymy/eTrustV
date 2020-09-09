@@ -47,7 +47,7 @@ public class OrderColorGridController {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		params.put("userId", sessionVO.getUserId());
 
-		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
 			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
 			model.put("memType", getUserInfo.get("memType"));
 			model.put("orgCode", getUserInfo.get("orgCode"));
@@ -65,6 +65,7 @@ public class OrderColorGridController {
 
 		logger.info("##################### params #####" +params.toString());
 		logger.info("##################### cmbCondition #####" +params.get("cmbCondition"));
+        logger.info("member type:: " + params.get("memtype"));
 
 		String[] cmbAppTypeList = request.getParameterValues("cmbAppType");
 		params.put("cmbAppTypeList", cmbAppTypeList);
