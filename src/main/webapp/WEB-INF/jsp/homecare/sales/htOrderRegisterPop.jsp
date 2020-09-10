@@ -22,11 +22,21 @@
         fn_selectDocSubmissionList();
 
         //doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', ''); //Common Code
+
+        if(ROLE_ID == "341" || ROLE_ID == "342" || ROLE_ID == "343" || ROLE_ID == "344" || ROLE_ID == "130"){
         CommonCombo.make("appType", "/homecare/sales/selectCodeList.do", {groupCode : '10', codeIn : 'CS1T,CS1Y,FT1T,FT1Y'}, "", {
             id: "codeId",
             name: "codeName",
             type:"S"
         });
+        }else{
+        	  CommonCombo.make("appType", "/homecare/sales/selectCodeList.do", {groupCode : '10', codeIn : 'CS1T,CS1Y'}, "", {
+                  id: "codeId",
+                  name: "codeName",
+                  type:"S"
+        	  });
+        }
+
 
         //doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
