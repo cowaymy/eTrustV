@@ -46,9 +46,13 @@ var TODAY_DD      = "${toDay}";
 	    width : 120
 	  }, {
 	    dataField : "salesOrdNo",
-	    headerText : "Care Service Order",
+	    headerText : "Sales Order No",
 	    width : 120
 	  }, {
+	        dataField : "ccsOrdNo",
+	        headerText : "Care Service Order",
+	        width : 120
+	      }, {
 	    dataField : "hsDate",
 	    headerText : "CS Date",
 	    width : 120,
@@ -363,6 +367,7 @@ var TODAY_DD      = "${toDay}";
 	            ManuaSalesOrder : $("#ManuaSalesOrder").val(),
 	            ManuaMyBSMonth : $("#ManuaMyBSMonth").val(),
 	            ManualCustomer : $("#manualCustomer").val(),
+	            ManuaSalesOrderNo : $("#manuaOrderNo").val(),
 	            cmdBranchCode1 : HsCdBranch,
 	            cmdCdManager1 : memId
 	          }, function(result) {
@@ -562,6 +567,7 @@ var TODAY_DD      = "${toDay}";
 	                var rowItem;
 	                var brnchId = "";
 	                var saleOrdList = "";
+	                var saleOrdIdList = "";
 	                var list = "";
 	                var brnchCnt = 0;
 	                var ctBrnchCodeOld = "";
@@ -572,6 +578,7 @@ var TODAY_DD      = "${toDay}";
 	                for (var i = 0, len = checkedItems.length; i < len; i++) {
 	                  rowItem = checkedItems[i];
 	                  saleOrdList += rowItem.salesOrdNo;
+	                  saleOrdIdList += rowItem.salesOrdId;
 	                  var brnchId = rowItem.brnchId;
                       var custStr = rowItem.custId;
                       var hsStatus = rowItem.code;
@@ -585,6 +592,10 @@ var TODAY_DD      = "${toDay}";
 	                  if (i != len - 1) {
 	                    saleOrdList += ",";
 	                  }
+
+	                  if (i != len - 1) {
+	                        saleOrdIdList += ",";
+	                      }
 
 	                  if (i != 0) {
 	                    if (ctBrnchCodeOld != rowItem.htBrnchCode) {
@@ -607,6 +618,7 @@ var TODAY_DD      = "${toDay}";
 
 	                var jsonObj = {
 	                  "SaleOrdList" : saleOrdList,
+	                  "SaleOrdIdList" : saleOrdIdList,
 	                  "BrnchId" : brnchId,
 	                  "ManualCustId" : custStr,
 	                  "ManuaMyBSMonth" :  $.datepicker.formatDate('mm/yy', new Date())
@@ -618,7 +630,9 @@ var TODAY_DD      = "${toDay}";
 	                        "/homecare/services/selectHsOrderInMonth.do?saleOrdList="
 	                            + saleOrdList
 	                            + "&ManuaMyBSMonth="
-	                            + $.datepicker.formatDate('mm/yy', new Date()),
+	                            + $.datepicker.formatDate('mm/yy', new Date())
+	                            + "&saleOrdIdList="
+	                            + saleOrdIdList,
 	                        "",
 	                        function(result) {
 	                          console.log ('BS Month : ' +  $.datepicker.formatDate('mm/yy', new Date()));
@@ -647,8 +661,8 @@ var TODAY_DD      = "${toDay}";
 	                              Common
 	                              .ajax(
 	                                  "GET",
-	                                  "/homecare/services/selectTotalCS.do?saleOrdList="
-	                                      + saleOrdList
+	                                  "/homecare/services/selectTotalCS.do?saleOrdIdList="
+	                                      + saleOrdIdList
 	                                      + "&ManuaMyBSMonth="
 	                                      + $.datepicker.formatDate('mm/yy', new Date()),
 	                                  "",
@@ -913,6 +927,7 @@ var TODAY_DD      = "${toDay}";
 	      $("#ManuaSalesOrder").val('');
 	      //$("#ManuaMyBSMonth").val('');
 	      $("#manualCustomer").val('');
+	      $("#manuaOrderNo").val('');
 
 	      //fn_checkboxChangeHandler();
 	      fn_destroyGridM();
@@ -1203,7 +1218,7 @@ var TODAY_DD      = "${toDay}";
        </colgroup>
        <tbody>
         <tr>
-         <th scope="row">Sales Order</th>
+         <th scope="row">Care Service Order</th>
          <td><input id="ManuaSalesOrder" name="ManuaSalesOrder"
           type="text" title="" placeholder="CS Order" class="w100p" />
          </td>
@@ -1221,6 +1236,11 @@ var TODAY_DD      = "${toDay}";
          </td>
         </tr>
         <tr>
+        <th scope="row">Sales Order No</th>
+         <td><input id="manuaOrderNo" name="manuaOrderNo"
+          type="text" title="" placeholder="Sales Order" class="w100p" />
+         </td>
+
          <th scope="row">Branch<span class="must">*</span></th>
          <td><select id="cmdBranchCode1" name="cmdBranchCode1"
           class="w100p">
@@ -1231,7 +1251,7 @@ var TODAY_DD      = "${toDay}";
            </c:forEach>
          </select></td>
          <th scope="row">HT Manager</th>
-         <td colspan="3"><select id="cmdCdManager1"
+         <td ><select id="cmdCdManager1"
           name="cmdCdManager1" class=""></select></td>
         </tr>
        </tbody>
