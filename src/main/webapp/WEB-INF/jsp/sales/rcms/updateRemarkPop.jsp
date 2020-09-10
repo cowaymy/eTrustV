@@ -29,7 +29,7 @@ function fn_selectAjax() {
 	     $("#prevAgentId").val(result.data.agentId);
 	     $("#custId").val(result.data.custId);
 
-	     CommonCombo.make("rosCaller2", "/sales/rcms/selectRosCaller", {userId : '${SESSION_INFO.userName}'}, currAgentId,  {id:"agentId", name:"agentName", isShowChoose: true });
+	     CommonCombo.make("rosCaller2", "/sales/rcms/selectRosCaller", {userId : '${SESSION_INFO.userName}', stus : 1}, currAgentId,  {id:"agentId", name:"agentName", isShowChoose: true });
 
 	     if(result.data.sensitiveFg == "1"){
              $("#sensitiveFg").val(result.data.sensitiveFg);

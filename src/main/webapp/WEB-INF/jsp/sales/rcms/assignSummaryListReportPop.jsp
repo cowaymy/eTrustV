@@ -10,9 +10,9 @@ $(document).ready(function() {
     //Rental Status
     CommonCombo.make('_rentalStusType', "/status/selectStatusCategoryCdList.do", {selCategoryId : 26} , 'INV|!|SUS', {id: "code", name: "codeName", isShowChoose: false,isCheckAll : false,type : 'M'});
     //Agent Type
-    CommonCombo.make("_agentType", "/sales/rcms/selectAgentTypeList", {codeMasterId : '329'}, '',  {isShowChoose: false});
+    CommonCombo.make("_agentType", "/sales/rcms/selectAgentTypeList", {codeMasterId : '329'}, '',  {isShowChoose: false, type: "M"});
     //Customer Type
-    CommonCombo.make("_customerType", "/common/selectCodeList.do", {groupCode : '8'}, '', {chooseMessage: "Choose one"});
+    CommonCombo.make("_customerType", "/common/selectCodeList.do", {groupCode : '8'}, '', {type : "M"});
     //Company Type
     CommonCombo.make("_companyType", "/common/selectCodeList.do", {groupCode : '95'}, null, {isShowChoose: false , isCheckAll : false, type: "M"});
 
@@ -52,7 +52,19 @@ function fn_genReport(){
 
   //Validation
     if($("#_customerType").val() != null || $("#_customerType").val() != ''){
-    	whereSql += " AND  EXTENT6.TYPE_ID = " + $("#_customerType").val();
+    	//whereSql += " AND  EXTENT6.TYPE_ID = " + $("#_customerType").val();
+    	whereSql += " AND  EXTENT6.TYPE_ID IN (";
+    	$('#_customerType :selected').each(function(i, mul){
+            if(runNo > 0){
+                whereSql += ",'"+$(mul).val()+"'";
+            }else{
+                whereSql += "'"+$(mul).val()+"'";
+            }
+            runNo += 1;
+        });
+    	 whereSql += ") ";
+
+         runNo = 0;
     }
 console.log($("#_companyType").val());
     if($("#_companyType").val()  != null){

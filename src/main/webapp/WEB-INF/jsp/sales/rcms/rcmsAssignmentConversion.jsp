@@ -113,11 +113,8 @@ function createGrid(){
              };
 
         assignGrid = GridCommon.createAUIGrid("#assignGrid", assignColLayout, "", assignOptions);
-        assignConvertItemId = GridCommon.createAUIGrid("#assignConvertItem_grid_wrap", assignConvertItemColumnLayout,"",assignOptions);
+        assignConvertItemId = GridCommon.createAUIGrid("#assignConvertItem_grid_wrap", assignConvertItemColumnLayout,"","");
         excelGrid = GridCommon.createAUIGrid("#excelGrid", excelColLayout, "", assignOptions);
-
-        $("#view_wrap").hide();
-        $("#report_wrap").hide();
 
         // Master Grid 셀 클릭시 이벤트
         AUIGrid.bind(assignGrid, "cellClick", function( event ){
@@ -131,6 +128,7 @@ function createGrid(){
         	 Common.ajax("GET", "/sales/rcms/selectAssignConversionItemList.", {"batchId":rcBatchId}, function(result) {
         		 AUIGrid.setGridData(assignConvertItemId, result);
         		 AUIGrid.setGridData(excelGrid, result);
+        		 AUIGrid.resize(assignConvertItemId,945, $(".grid_wrap").innerHeight());
                  $("#view_wrap").show();
         	 });
          });
@@ -283,7 +281,7 @@ hideViewPopup=function(val){
     POP-UP (VIEW CONVERSION)
 -------------------------------------------------------------------------------------->
 <!-- popup_wrap start -->
-<div class="popup_wrap" id="view_wrap">
+<div class="popup_wrap" id="view_wrap" style="display:none">
     <!-- pop_header start -->
     <header class="pop_header" id="pop_header">
         <h1><spring:message code="sal.text.title.rcmsConvertItm"/></h1>
@@ -326,7 +324,7 @@ hideViewPopup=function(val){
     POP-UP (RAW DATA)
 -------------------------------------------------------------------------------------->
 <!-- popup_wrap start -->
-<div class="popup_wrap size_small" id="report_wrap">
+<div class="popup_wrap size_small" id="report_wrap" style="display:none">
     <!-- pop_header start -->
     <header class="pop_header" id="pop_header">
         <h1><spring:message code="sal.title.text.rcmsCnvrFailRaw"/></h1>
