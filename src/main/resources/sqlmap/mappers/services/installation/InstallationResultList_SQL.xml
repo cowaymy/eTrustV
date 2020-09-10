@@ -4985,16 +4985,19 @@ AND E.CODE IN ('AAS','MAS')
 AND H.CODE IN ('COM','FAL','CAN')
 
     <if test="resultStartDate != '' and resultEndDate != '' and resultStartDate != null and resultEndDate != null ">
-      <![CDATA[  AND B.AS_RESULT_CRT_DT  between TO_DATE(#{resultStartDate}, 'DD/MM/YYYY') and  TO_DATE(#{resultEndDate}, 'DD/MM/YYYY') ]]>
+      <![CDATA[  AND B.AS_RESULT_CRT_DT  >= TO_DATE(#{resultStartDate}, 'DD/MM/YYYY') AND
+      B.AS_RESULT_CRT_DT  <= TO_DATE(#{resultEndDate}, 'DD/MM/YYYY') ]]>
     </if>
 
     <if test="appointmentStartDate != '' and appointmentEndDate != '' and appointmentStartDate !=  null and appointmentEndDate != null "  >
-      <![CDATA[  AND A.AS_APPNT_DT  between TO_DATE(#{appointmentStartDate}, 'DD/MM/YYYY') and  TO_DATE(#{appointmentEndDate}, 'DD/MM/YYYY') ]]>
+      <![CDATA[  AND A.AS_APPNT_DT  >= TO_DATE(#{appointmentStartDate}, 'DD/MM/YYYY') AND
+      A.AS_APPNT_DT  <= TO_DATE(#{appointmentEndDate}, 'DD/MM/YYYY') ]]>
     </if>
 
 
     <if test="comStartDate != '' and comEndDate != '' and comStartDate != null and comEndDate != null ">
-      <![CDATA[  AND B.AS_SETL_DT   between TO_DATE(#{comStartDate}, 'DD/MM/YYYY') and  TO_DATE(#{comEndDate}, 'DD/MM/YYYY') ]]>
+      <![CDATA[  AND B.AS_SETL_DT   >= TO_DATE(#{comStartDate}, 'DD/MM/YYYY') AND
+       B.AS_SETL_DT <= TO_DATE(#{comEndDate}, 'DD/MM/YYYY') ]]>
     </if>
 
 UNION ALL
@@ -5082,16 +5085,19 @@ AND G.CODE IN ('PEX', 'NEW')
 AND J.CODE IN ('COM','FAL','CAN')
 
     <if test="resultStartDate != '' and resultEndDate != '' and resultStartDate != null and resultEndDate != null ">
-      <![CDATA[  AND C.CRT_DT  between TO_DATE(#{resultStartDate}, 'DD/MM/YYYY') and  TO_DATE(#{resultEndDate}, 'DD/MM/YYYY') ]]>
+      <![CDATA[  AND C.CRT_DT  >= TO_DATE(#{resultStartDate}, 'DD/MM/YYYY') AND
+      C.CRT_DT <= TO_DATE(#{resultEndDate}, 'DD/MM/YYYY') ]]>
     </if>
 
     <if test="appointmentStartDate != '' and appointmentEndDate != '' and appointmentStartDate !=  null and appointmentEndDate != null "  >
-      <![CDATA[  AND B.APPNT_DT  between TO_DATE(#{appointmentStartDate}, 'DD/MM/YYYY') and  TO_DATE(#{appointmentEndDate}, 'DD/MM/YYYY') ]]>
+      <![CDATA[  AND B.APPNT_DT  >= TO_DATE(#{appointmentStartDate}, 'DD/MM/YYYY') AND
+      B.APPNT_DT <= TO_DATE(#{appointmentEndDate}, 'DD/MM/YYYY') ]]>
     </if>
 
 
     <if test="comStartDate != '' and comEndDate != '' and comStartDate != null and comEndDate != null ">
-      <![CDATA[  AND C.INSTALL_DT   between TO_DATE(#{comStartDate}, 'DD/MM/YYYY') and  TO_DATE(#{comEndDate}, 'DD/MM/YYYY') ]]>
+      <![CDATA[  AND C.INSTALL_DT   >= TO_DATE(#{comStartDate}, 'DD/MM/YYYY') AND
+      C.INSTALL_DT <= TO_DATE(#{comEndDate}, 'DD/MM/YYYY') ]]>
     </if>
 
 ) WHERE 1=1
