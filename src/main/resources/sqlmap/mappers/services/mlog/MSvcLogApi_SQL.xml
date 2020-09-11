@@ -70,7 +70,8 @@
            A.need_Filter,
            TO_CHAR (NVL(A.warranty,0)) AS warranty,
            TO_CHAR (NVL(B.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding,
-           A.SERIAL_CHK
+           A.SERIAL_CHK,
+           A.HS_CHK_LST
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -127,7 +128,8 @@
                   CASE WHEN FILT_CNT <![CDATA[ > ]]> 0 THEN '1' ELSE '0' END need_Filter,
                   srv_mem_cntrct_id,
                   warranty,
-                  SERIAL_CHK
+                  SERIAL_CHK,
+                  HS_CHKLIST AS HS_CHK_LST
            FROM ( SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
                                   A.STUS_CODE_ID AS job_Status,
@@ -197,7 +199,8 @@
                                    /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'FULL_ADDR')  install_Address */
                                    R.SRV_MEM_CNTRCT_ID,
                                    U.FAUCET_EXCH AS warranty,
-                                   NVL(L.SERIAL_CHK, 'N') AS SERIAL_CHK
+                                   NVL(L.SERIAL_CHK, 'N') AS SERIAL_CHK,
+                                   B.HS_CHKLIST
                   FROM (SELECT A.*
                         FROM SVC0008D A,
                         ORG0001D B
@@ -393,6 +396,7 @@
           , TO_CHAR(HCREFPRD) AS HC_REF_PROD
           , TO_CHAR(SRV_PAC_ID) AS SRV_PAC_ID
           , TO_CHAR(DISINF_SRV) AS DISINFEC_SERV
+          , TO_CHAR(HS_CHK_LST) AS HS_CHK_LST
     FROM SVC0101T
     WHERE MEM_CODE = #{userId}
   </select>
