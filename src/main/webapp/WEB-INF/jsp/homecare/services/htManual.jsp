@@ -577,7 +577,7 @@ var TODAY_DD      = "${toDay}";
 
 	                for (var i = 0, len = checkedItems.length; i < len; i++) {
 	                  rowItem = checkedItems[i];
-	                  saleOrdList += rowItem.salesOrdNo;
+	                  saleOrdList += rowItem.ccsOrdNo;
 	                  saleOrdIdList += rowItem.salesOrdId;
 	                  var brnchId = rowItem.brnchId;
                       var custStr = rowItem.custId;
@@ -656,7 +656,10 @@ var TODAY_DD      = "${toDay}";
                                       + "&BrnchId="
                                       + brnchId
                                       + "&ManuaMyBSMonth="
-                                      +  $.datepicker.formatDate('mm/yy', new Date()));
+                                      +  $.datepicker.formatDate('mm/yy', new Date())
+                                      + "&SalesOrderNo="
+                                      +  saleOrdList
+                                  );
 
 	                              Common
 	                              .ajax(
