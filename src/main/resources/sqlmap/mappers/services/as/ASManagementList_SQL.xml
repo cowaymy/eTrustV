@@ -1711,7 +1711,7 @@
             C.NAME BRANCH_NAME,
             A.STUS CT_STUS,
             A.NAME CT_NAME,
-            D.CT_SUB_GRP,
+            D.CT_SUB_GRP
         FROM ORG0001D A, ORG0005D B, SYS0005M C, SYS0064M D, SVC0054M E
         WHERE A.MEM_ID = B.MEM_ID
         AND A.BRNCH = C.BRNCH_ID
