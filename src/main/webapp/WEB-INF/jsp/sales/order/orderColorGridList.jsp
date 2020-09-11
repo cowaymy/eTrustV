@@ -114,7 +114,30 @@
 
         CommonCombo.make('cmbAppType', '/common/selectCodeList.do', {groupCode : 10} , '', {type: 'M'});
         doGetComboWh('/sales/order/colorGridProductList.do', '', '', 'cmbProduct', '', '');
+        doGetCombo('/common/selectCodeList.do', '8', '','cmbCustomerType', 'M' , 'f_multiCombo');            // Customer Type Combo Box
+        doGetCombo('/common/selectCodeList.do', '95', '','cmbCorpTypeId', 'M' , 'f_multiCombo');     // Company Type Combo Box
+        //CommonCombo.make('cmbCustomerType', '/common/selectCodeList.do', {groupCode : 8} , '', {type: 'M'});
+        //CommonCombo.make('cmbCorpTypeId', '/common/selectCodeList.do', {groupCode : 95} , '', {type: 'M'});
     });
+
+	// 조회조건 combo box
+    function f_multiCombo(){
+        $(function() {
+            $('#cmbCustomerType').change(function() {
+
+            }).multipleSelect({
+                selectAll: true, // 전체선택
+                width: '80%'
+            });
+            $('#cmbCorpTypeId').change(function() {
+
+            }).multipleSelect({
+                selectAll: true, // 전체선택
+                width: '80%'
+            });
+
+        });
+    }
 
 	function createAUIGrid() {
         // AUIGrid 칼럼 설정
@@ -492,11 +515,15 @@
             	}
             }else if (type === 'checkbox' || type === 'radio'){
                 this.checked = false;
+
             }else if (tag === 'select'){
             	if($("#memType").val() != "7"){ //check not HT level
             		 this.selectedIndex = 0;
             	}
             }
+            $("#cmbAppType").multipleSelect("uncheckAll");
+            $("#cmbCustomerType").multipleSelect("uncheckAll");
+            $("#cmbCorpTypeId").multipleSelect("uncheckAll");
         });
     };
 </script>
@@ -622,6 +649,18 @@
         <option value="7"><spring:message code="sal.text.homecareTechinician" /></option>
     </select>
     </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.custType" /></th>
+    <td>
+    <select class="multy_select w100p" id="cmbCustomerType" name="cmbCustomerType" multiple="multiple">
+    </select>
+    </td>
+    <th scope="row"><spring:message code="sal.title.text.companyType" /></th>
+     <td>
+       <select id="cmbCorpTypeId" name="cmbCorpTypeId" class="multy_select w100p" multiple="multiple">
+        </select>
+     </td>
 </tr>
 <tr>
     <th scope="row" colspan="6" ><span class="must"> <spring:message code="sal.alert.msg.youMustKeyInatLeastOrdDateNetSales" /></span>  </th>

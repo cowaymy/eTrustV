@@ -270,9 +270,10 @@
                             AND E1.INSTALL_STUS_ID = 1
                             AND E1.STUS_ID != 10
                         </if>
-           ) F1 
+           ) F1
            LEFT JOIN ORG0001D MEM ON MEM.MEM_CODE = F1.MEM_CODE
-    			JOIN SYS0013M S13 ON S13.CODE_ID = MEM.MEM_TYPE AND CODE_MASTER_ID = 1
+    	   JOIN SYS0013M S13 ON S13.CODE_ID = MEM.MEM_TYPE AND CODE_MASTER_ID = 1
+    	   JOIN SAL0029D S29 ON S29.NRIC = F1.CUST_IC
           WHERE 1 = 1
           <if test="orgCode != null and orgCode != ''">
             AND F1.ORG_CODE = UPPER(#{orgCode})
@@ -318,6 +319,28 @@
           </if>
            <if test="memtype != null and memtype != ''">
             AND MEM_TYPE = #{memtype}
+          </if>
+          <if test="cmbCustomerType != null and cmbCustomerType != ''">
+              AND S29.TYPE_ID IN
+              <foreach item="item" collection="cmbCustomerType" index="index" open="(" separator="," close=")">
+                    #{item}
+              </foreach>
+          </if>
+          <if test="cmbCorpTypeId != null and cmbCorpTypeId != ''">
+              AND S29.CORP_TYPE_ID IN
+              <choose>
+              <when test="Individual !=null and Individual !=''">
+                  <foreach item="item" collection="cmbCorpTypeId" index="index" open="(" separator="," close=" ">
+                      #{item}
+                  </foreach>
+                   ,0)
+              </when>
+              <otherwise>
+	              <foreach item="item" collection="cmbCorpTypeId" index="index" open="(" separator="," close=")">
+	                  #{item}
+	             </foreach>
+              </otherwise>
+             </choose>
           </if>
     ) D1
     ORDER BY D1.ORD_ID DESC

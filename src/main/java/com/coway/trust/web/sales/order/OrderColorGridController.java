@@ -1,5 +1,6 @@
 package com.coway.trust.web.sales.order;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -65,10 +66,29 @@ public class OrderColorGridController {
 
 		logger.info("##################### params #####" +params.toString());
 		logger.info("##################### cmbCondition #####" +params.get("cmbCondition"));
-        logger.info("member type:: " + params.get("memtype"));
 
 		String[] cmbAppTypeList = request.getParameterValues("cmbAppType");
+		String[] cmbCustomerType = request.getParameterValues("cmbCustomerType"); // Customer Type
+        String[] cmbCorpTypeId = request.getParameterValues("cmbCorpTypeId"); // Company Type
+
+        logger.info("Customer type:: " + Arrays.toString(cmbCustomerType));
+        logger.info("Company type:: " + Arrays.toString(cmbCorpTypeId));
+
+        if(cmbCustomerType!= null){
+            for(int i = 0; i < cmbCustomerType.length; i++){
+            	int tmp = Integer.parseInt(cmbCustomerType[i].toString());
+
+            	if(tmp == 964){
+            	 	params.put("Individual","individual");
+            	}
+             }
+            params.put("cmbCustomerType", cmbCustomerType);
+        }else{
+        	params.put("cmbCustomerType", "");
+        }
+
 		params.put("cmbAppTypeList", cmbAppTypeList);
+		params.put("cmbCorpTypeId", cmbCorpTypeId);
 
 		List<EgovMap> colorGridList = orderColorGridService.colorGridList(params);
 
