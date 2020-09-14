@@ -682,6 +682,7 @@ AND SAL023.CUST_ADD_ID = INS.ADD_ID
                         , project2.dept_code
                         , project2.crt_user_id
                         , project2.SERIAL_REQUIRE_CHK_YN
+                        , project2.STK_ID
           FROM (SELECT /*+ use_hash(br, hs) index(ad, SAL0023D_IDX5) */
                        DISTINCT hs.no AS no
                               , hs.stus_code_id AS stus_code_id
@@ -708,8 +709,10 @@ AND SAL023.CUST_ADD_ID = INS.ADD_ID
                               , og.dept_code
                               , CASE WHEN HS.CRT_USER_ID = '1111' THEN '' ELSE USR.USER_NAME END AS CRT_USER_ID
                               , LOC.SERIAL_REQUIRE_CHK_YN
+                              , SOD.ITM_STK_ID STK_ID
                 FROM SVC0008D hs
                 INNER JOIN SAL0001D so ON so.sales_ord_id = hs.sales_ord_id and so.bndl_id is null
+                LEFT JOIN SAL0002D SOD ON so.SALES_ORD_ID = SOD.SALES_ORD_ID
                 INNER JOIN SAL0045D ins ON ins.sales_ord_id = hs.sales_ord_id
                 INNER JOIN SAL0023D ad ON ad.cust_add_id = ins.add_id
                 INNER JOIN SYS0064M mg ON mg.area_id = ad.area_id
