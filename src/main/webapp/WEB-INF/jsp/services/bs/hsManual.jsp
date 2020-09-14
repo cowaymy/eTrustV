@@ -220,6 +220,12 @@ var TODAY_DD      = "${toDay}";
           headerText : "serialRequireChkYn",
           width : 0}
       , {
+          dataField : "stkId",
+          headerText : "stockId",
+          width : 0,
+          visible : false
+      }
+      ,  {
         dataField : "undefined",
         headerText : "Edit",
         width : 170,
@@ -233,6 +239,12 @@ var TODAY_DD      = "${toDay}";
                   .alert('Not able to EDIT for the HS order status in Active.');
               return false;
             }
+
+            if (item.stkId == "1427") {
+                Common
+                    .alert('Unable to EDIT selected HS order (Ombak) . Kindly use HS Reverse.');
+                return false;
+              }
 
             $("#_schdulId").val(item.schdulId);
             $("#_salesOrdId").val(item.salesOrdId);
