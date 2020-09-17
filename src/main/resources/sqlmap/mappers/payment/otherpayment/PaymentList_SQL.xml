@@ -225,7 +225,7 @@
             LEFT JOIN SAL0001D I ON H.BILL_SO_ID = I.SALES_ORD_ID
         WHERE
             A.GROUP_SEQ = #{groupSeq}
-
+            AND NVL(A.FT_STUS_ID, '0') <![CDATA[   <> ]]> '5'
         GROUP BY
             A.GROUP_SEQ,
             A.LDGR_TYPE,
