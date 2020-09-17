@@ -170,72 +170,72 @@
         whereSql += " AND AE.AS_NO =  '" + asNumber + "' ";
       }
 
-      if($("#cmbctId2 option:selected").index() > 0 ){
-      if (ctCode.length > 0) {
-        for (var a = 0; a < ctCode.length; a++) {
-          if (a == 0) {
-            ctCodeLst += "'" + ctCode[a] + "'"
-          } else {
-            ctCodeLst += ", '" + ctCode[a] + "'"
-          }
-        }
-        whereSql += " AND AE.AS_MEM_ID IN (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE IN ("
-            + ctCodeLst + ")) ";
-      }
-    }
 
-      if ($("#cmbbranchId2").val() != '') {
-        whereSql += " AND AE.AS_BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '"
-            + dscBranchCode + "' AND TYPE_ID = 43 AND STUS_ID = 1 ) ";
-      }
+	if (ctCode.length > 0) {
+				for (var a = 0; a < ctCode.length; a++) {
+					if (a == 0) {
+						ctCodeLst += "'" + ctCode[a] + "'"
+					} else {
+						ctCodeLst += ", '" + ctCode[a] + "'"
+					}
+				}
+				whereSql += " AND AE.AS_MEM_ID IN (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE IN ("
+						+ ctCodeLst + ")) ";
+			}
 
-      // homecare Remove(except)
-      whereSql += " AND AF.BNDL_ID IS NULL ";
+			if ($("#cmbbranchId2").val() != '') {
+				whereSql += " AND AE.AS_BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '"
+						+ dscBranchCode
+						+ "' AND TYPE_ID = 43 AND STUS_ID = 1 ) ";
+			}
 
-      var date = new Date();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      if (date.getDate() < 10) {
-        day = "0" + date.getDate();
-      }
+			// homecare Remove(except)
+			whereSql += " AND AF.BNDL_ID IS NULL ";
 
-      $("#reportFormASR #V_FSONO1").val(fSONO1);
-      $("#reportFormASR #V_FSONO2").val(fSONO2);
-      $("#reportFormASR #V_FMEMCTID1").val(fMemCTID1);
-      $("#reportFormASR #V_FMEMCTID2").val(fMemCTID2);
-      $("#reportFormASR #V_ORDERBY").val(orderBy);
-      $("#reportFormASR #V_DSCBRANCH").val(dscBranch);
-      $("#reportFormASR #V_WHERESQL").val(whereSql);
-      $("#reportFormASR #reportFileName").val('/services/ASReport.rpt');
-      $("#reportFormASR #viewType").val("PDF");
-      $("#reportFormASR #reportDownFileName").val(
-          "ASReport_" + day + month + date.getFullYear());
+			var date = new Date();
+			var month = date.getMonth() + 1;
+			var day = date.getDate();
+			if (date.getDate() < 10) {
+				day = "0" + date.getDate();
+			}
 
-      var option = {
-        isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-      };
+			$("#reportFormASR #V_FSONO1").val(fSONO1);
+			$("#reportFormASR #V_FSONO2").val(fSONO2);
+			$("#reportFormASR #V_FMEMCTID1").val(fMemCTID1);
+			$("#reportFormASR #V_FMEMCTID2").val(fMemCTID2);
+			$("#reportFormASR #V_ORDERBY").val(orderBy);
+			$("#reportFormASR #V_DSCBRANCH").val(dscBranch);
+			$("#reportFormASR #V_WHERESQL").val(whereSql);
+			$("#reportFormASR #reportFileName").val('/services/ASReport.rpt');
+			$("#reportFormASR #viewType").val("PDF");
+			$("#reportFormASR #reportDownFileName").val(
+					"ASReport_" + day + month + date.getFullYear());
 
-      Common.report("reportFormASR", option);
-    }
-  }
+			var option = {
+				isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+			};
 
-  $.fn.clearForm = function() {
-    return this.each(function() {
-      var type = this.type, tag = this.tagName.toLowerCase();
-      if (tag === 'form') {
-        return $(':input', this).clearForm();
-      }
+			Common.report("reportFormASR", option);
+		}
+	}
 
-      if (type === 'text' || type === 'password' || type === 'hidden'
-          || tag === 'textarea') {
-        this.value = '';
-      } else if (type === 'checkbox' || type === 'radio') {
-        this.checked = false;
-      } else if (tag === 'select') {
-        this.selectedIndex = 0;
-      }
-    });
-  };
+	$.fn.clearForm = function() {
+		return this.each(function() {
+			var type = this.type, tag = this.tagName.toLowerCase();
+			if (tag === 'form') {
+				return $(':input', this).clearForm();
+			}
+
+			if (type === 'text' || type === 'password' || type === 'hidden'
+					|| tag === 'textarea') {
+				this.value = '';
+			} else if (type === 'checkbox' || type === 'radio') {
+				this.checked = false;
+			} else if (tag === 'select') {
+				this.selectedIndex = 0;
+			}
+		});
+	};
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
