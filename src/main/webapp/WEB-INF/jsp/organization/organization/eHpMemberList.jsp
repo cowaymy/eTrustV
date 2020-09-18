@@ -91,7 +91,7 @@ function fn_clickHpApproval(){
 
 function fn_clickHpReject(){
     Common.confirm("Do you want to reject the HP? <br/> Member Code :  "+membercode+"  <br/> Name :"+ memberName , function() {
-        if(statusName == "Pending" || statusName == "Failed" || statusNAme == "Ready") {
+        if(statusName == "Pending" || statusName == "Failed" || statusName == "Ready") {
             fn_RejectHPMem();
 
         } else {
