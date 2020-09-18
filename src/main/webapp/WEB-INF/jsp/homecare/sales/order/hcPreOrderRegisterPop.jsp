@@ -900,7 +900,12 @@
 
         if($("#ordProduct1 option:selected").index() <= 0 && $("#ordProduct2 option:selected").index() <= 0) {
             isValid = false;
-            msg += "* Please select a product.<br>";
+            msg += "* Please select mattress.<br>";
+        }
+
+        if($('#ordProduct2 option').length >= 2 && $("#ordProduct2 option:selected").index() <= 0){
+        	isValid = false;
+            msg += "* Please select frame.<br>";
         }
 
         // 프레임만 주문 불가.
@@ -909,17 +914,19 @@
             msg += '* Only frames can not be ordered.<br>';
         }
 
+
+
         if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68' || appTypeVal == '1412') {
 	        if($("#ordProduct1 option:selected").index() > 0) {
 	        	if($("#ordPromo1 option:selected").index() <= 0) {
 	                isValid = false;
-	                msg += "* Please select the promotion code.<br>";
+	                msg += "* Please select mattress promotion code.<br>";
 	            }
 	        }
 	        if($("#ordProduct2 option:selected").index() > 0) {
                 if($("#ordPromo2 option:selected").index() <= 0) {
                     isValid = false;
-                    msg += "* Please select the promotion code.<br>";
+                    msg += "* Please select frame promotion code.<br>";
                 }
             }
         }
