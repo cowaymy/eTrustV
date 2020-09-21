@@ -676,7 +676,15 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.memtype" /></th>
-    <td><select id="memType" name="memType" class="w100p" ></select>
+    <td><select id="memType" name="memType" class="w100p" ></select></td>
+    <th scope="row">Entry Point</th>
+    <td>
+        <select id="entryPoint" name="entryPoint" class="w100p" >
+            <option value="">Choose One</option>
+            <option value="0">Web</option>
+            <option value="1">Mobile Apps</option>
+        </select>
+    </td>
 </tr>
 <tr>
     <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyinsof'/></span></th>

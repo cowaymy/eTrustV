@@ -117,6 +117,9 @@
          <if test='memType != null and memType != ""'>
             AND T7.USER_TYPE_ID = #{memType}
          </if>
+         <if test='entryPoint != null and entryPoint != ""'>
+            AND T1.CHNNL = #{entryPoint}
+         </if>
          ORDER BY T1.PRE_ORD_ID ASC
     </select>
 
