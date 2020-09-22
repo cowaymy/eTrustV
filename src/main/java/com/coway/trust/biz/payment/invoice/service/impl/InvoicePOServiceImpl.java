@@ -63,4 +63,14 @@ public class InvoicePOServiceImpl extends EgovAbstractServiceImpl implements Inv
 		invoicePOMapper.insertInvoicStatement(params);
 	}
 
+	@Override
+	public List<EgovMap> selectInvoiceStatementStart(Map<String, Object> params) {
+	    return invoicePOMapper.selectInvoiceStatementStart(params);
+	}
+
+	@Override
+	public List<EgovMap> selectInvoiceStatementEnd(Map<String, Object> params) {
+	    return invoicePOMapper.selectInvoiceStatementEnd(params);
+	}
+
 }
