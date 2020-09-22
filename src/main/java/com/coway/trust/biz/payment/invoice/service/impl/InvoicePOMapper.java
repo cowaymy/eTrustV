@@ -60,4 +60,9 @@ public interface InvoicePOMapper {
 	 */
 	void insertInvoicStatement(Map<String, Object> params);
 
+    List<EgovMap>selectInvoiceStatementStart(Map<String, Object> params);
+
+    List<EgovMap>selectInvoiceStatementEnd(Map<String, Object> params);
+
+
 }
