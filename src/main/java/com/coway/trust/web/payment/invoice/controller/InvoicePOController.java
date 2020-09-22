@@ -104,10 +104,19 @@ public class InvoicePOController {
 
 		LOGGER.debug("params : {}", params);
 
-		List<EgovMap> result = invoicePOService.selectInvoiceStatementByOrdId(params);
-		if(result.size() > 0){
+		//List<EgovMap> result = invoicePOService.selectInvoiceStatementByOrdId(params);
+		List<EgovMap> resultStart = invoicePOService.selectInvoiceStatementStart(params);
+		List<EgovMap> resultEnd = invoicePOService.selectInvoiceStatementEnd(params);
+
+	/*	if(result.size() > 0){
 			message = "Invalid Period Range";
-		}
+		}else*/
+
+	if(resultStart.size() > 0){
+          message = "Invalid Start Period Range";
+      }else if(resultEnd.size() > 0){
+        message = "Invalid End Period Range";
+       }
 		msg.setMessage(message);
 		return ResponseEntity.ok(msg);
 	}
