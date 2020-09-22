@@ -17,7 +17,8 @@ var myDetailGridData = null;
       Collection Code */
 
   //installation checklist- order stock category
-   //var stkCtgry;
+   var stkCtgry;
+  var stkId1;
 
   // AUIGrid 생성 후 반환 ID
   var myDetailGridID;
@@ -339,7 +340,7 @@ var myDetailGridData = null;
     myDetailGridID3 = GridCommon.createAUIGrid("fiter_grid_wrap", fitercolumnLayout, '',gridPros);
   }
 
-  /*function createInstallationChkViewAUIGrid() {
+  function createInstallationChkViewAUIGrid() {
       var columnLayout = [  {
         dataField : "codeDesc",
         //headerText : "Status",
@@ -361,7 +362,7 @@ var myDetailGridData = null;
         height : 165
       };
        instChkLst_view = AUIGrid.create("#grid_wrap_instChk_view", columnLayout, gridPros);
-    }*/
+    }
 
   $(document).ready(function() {
     // var mthYr = "${basicinfo.monthy}";
@@ -385,10 +386,10 @@ var myDetailGridData = null;
     createAUIGrid();
     createAUIGrid2();
     createAUIGrid3();
-    //createInstallationChkViewAUIGrid();
+    createInstallationChkViewAUIGrid();
 
     fn_getHsViewfilterInfoAjax();
-    //fn_viewInstallationChkViewSearch();
+    fn_viewInstallationChkViewSearch();
 
  // KR-OHK Serial Check
     if( $("#hidSerialRequireChkYn").val() == 'Y' ) {
@@ -434,12 +435,17 @@ var myDetailGridData = null;
     }
 
     //Installation checklist - stock category
- /*    stkCtgry = "${orderDetail.basicInfo.stkCtgryId}";
+     stkCtgry = "${orderDetail.basicInfo.stkCtgryId}";
+     stkId1 = "${orderDetail.basicInfo.stockId}";
+
+     console.log("editstkCtgry...::" + stkCtgry);
+     console.log("editstkId1...::" + stkId1);
+
     $("#txtInstChkLst").hide();
     $("#grid_wrap_instChk_view").hide();
     $("#instChklstCheckBox").hide();
     $("#instChklstDesc").hide();
-    $("#instChklstCheckBox").prop("checked", false); */
+    $("#instChklstCheckBox").prop("checked", false);
 
     // HS Result Information > HS Status 값에 따라 다른 정보 입력 가능 여부 설정
     if ($("#cmbStatusType2").val() == 4) {    // Completed
@@ -449,7 +455,8 @@ var myDetailGridData = null;
       //$("select[name=cmbCollectType]").attr('disabled', false);
 
       //Installation checklist
-     /*  if(stkCtgry == 54){
+       if(stkCtgry == 54){
+    	   if (stkId1 == 1735) {
     	  $("#txtInstChkLst").show();
           $("#grid_wrap_instChk_view").show();
           $("#instChklstCheckBox").show();
@@ -461,7 +468,8 @@ var myDetailGridData = null;
          else {
         	 $("#instChklstCheckBox").prop("checked", false);
          }
-      } */
+    	   }
+      }
    } else if ($("#cmbStatusType2").val() == 21) {    // Failed
         //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
         //doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
@@ -485,11 +493,11 @@ var myDetailGridData = null;
        AUIGrid.updateAllToValue(myDetailGridID, "serialNo", '');
 
        //Installation checklist
-     /*   $("#txtInstChkLst").hide();
+        $("#txtInstChkLst").hide();
        $("#grid_wrap_instChk_view").hide();
        $("#instChklstCheckBox").hide();
        $("#instChklstDesc").hide();
-       $("#instChklstCheckBox").prop("checked", false); */
+       $("#instChklstCheckBox").prop("checked", false);
 
        if ($("#cmbStatusType2").val() == 4) {    // Completed
     	   $('#settleDt').val('${toDay}');
@@ -499,12 +507,14 @@ var myDetailGridData = null;
          //$("select[name=cmbCollectType]").attr('disabled', false);
 
          //Installation checklist
-        /*  if(stkCtgry == 54){
+          if(stkCtgry == 54){
+        	  if(stkId1 == 1735){
         	 $("#txtInstChkLst").show();
              $("#grid_wrap_instChk_view").show();
              $("#instChklstCheckBox").show();
              $("#instChklstDesc").show();
-         } */
+        	  }
+         }
        } else if ($("#cmbStatusType2").val() == 21) {    // Failed
          //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
          doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
@@ -564,13 +574,13 @@ var myDetailGridData = null;
   }
 
   //Installation checklist
-/*   function fn_viewInstallationChkViewSearch() {
+   function fn_viewInstallationChkViewSearch() {
       Common.ajax("GET", "/services/bs/instChkLst.do", "",
           function(result) {
             AUIGrid.setGridData(instChkLst_view, result);
           });
  }
- */
+
   function fn_UpdateHsResult(){
     if($("#cmbStatusType2").val() == null || $("#cmbStatusType2").val() == '' ) {
       Common.alert("Please Select 'HS Status' ");
@@ -588,12 +598,14 @@ var myDetailGridData = null;
       }
 
       //Installation checklist
-    /*   if(stkCtgry == 54){
+       if(stkCtgry == 54){
+    	   if(stkId1 == 1735){
         if (!$("#instChklstCheckBox").prop('checked')) {
            Common.alert("* <spring:message code='sys.msg.tickCheckBox' arguments='Installation Checklist' htmlEscape='false'/>");
            return false;
          }
-      } */
+    	   }
+      }
     } else if ($("#cmbStatusType2").val() == 21) {    // Failed
       if ($("#failReason").val() == '' || $("#failReason").val() == null) {
         Common.alert("Please Select 'Fail Reason'.");
@@ -671,7 +683,7 @@ var myDetailGridData = null;
     form.cmbStatusType2 = cmbStatusType2;
 
     //Installation checklist
-    //form.instChklstCheckBox = $("#instChklstCheckBox").val();
+    form.instChklstCheckBox = $("#instChklstCheckBox").val();
 
     jsonObj.form = form;
     console.log("fn_UpdateHsResult :: jsonObj :: " + jsonObj);
@@ -978,20 +990,20 @@ function SearchListAjax(obj){
 </tbody>
 </table><!-- table end -->
 <!-- Installation Checklist -->
-<!--<aside class="title_line">
+<aside class="title_line">
     <h2 id="txtInstChkLst" name="txtInstChkLst">
       <spring:message code='service.text.instChkLst' />
     </h2>
 </aside>
  <article class="grid_wrap">
-      <div id="grid_wrap_instChk_view" style="width: 100%; height: 170px; margin: 90 auto;" class="hide"></div>
+<!--       <div id="grid_wrap_instChk_view" style="width: 100%; height: 170px; margin: 90 auto;" class="hide"></div> -->
        <div id="grid_wrap_instChk_view" style="width: 100%; height: 170px; margin: 90 auto;" ></div>
-</article> -->
-<%-- <tr>
+</article>
+ <tr>
   <td colspan="8">
     <label><input type="checkbox" id="instChklstCheckBox" name="instChklstCheckBox" value="Y" class="hide" /><span id="instChklstDesc" name="instChklstDesc" class="hide"><spring:message code='service.btn.instChklst' /> </span></label>
   </td>
-</tr> --%>
+</tr>
 
 <aside class="title_line"><!-- title_line start -->
 <h2>Filter Information</h2>

@@ -18,7 +18,8 @@
   var myDetailGridID;
 
   //installation checklist- order stock category
-  //var stkCtgry;
+  var stkCtgry;
+  var stkId1;
 
   var option = {
     width : "1000px", // 창 가로 크기
@@ -151,6 +152,8 @@
         var ct = selectedItems[0].item.c5;
         var sk = event.item.stkId;
 
+        var stkId1 = event.item.stkId;
+
         var  availQty =isstckOk(ct ,sk);
 
         if(availQty == 0) {
@@ -223,7 +226,7 @@
 	 });
 	 return availQty;
   }
-/*
+
   function createInstallationChkViewAUIGrid() {
       var columnLayout = [  {
         dataField : "codeDesc",
@@ -246,7 +249,7 @@
         height : 165
       };
        instChkLst_view = AUIGrid.create("#grid_wrap_instChk_view", columnLayout, gridPros);
-    } */
+    }
 
   $(document).ready(function() {
 
@@ -255,25 +258,28 @@
     fn_getOrderDetailListAjax();
 
     createAUIGrid();
-    //createInstallationChkViewAUIGrid();
+    createInstallationChkViewAUIGrid();
     fn_getHsFilterListAjax();
-    //fn_viewInstallationChkViewSearch();
+    fn_viewInstallationChkViewSearch();
 
     $("#txtInstChkLst").hide();
     $("#grid_wrap_instChk_view").hide();
     $("#instChklstCheckBox").hide();
     $("#instChklstDesc").hide();
 
+
     if ($("#cmbStatusType1").val() == 4) {    // Completed
     	$("input[name='settleDate']").attr('disabled', false);
         $("select[name='failReason'] option").remove();
 
-      /*   if(stkCtgry == 54){
+         if(stkCtgry == 54){
+        	 if(stkId1 == 1735){
 	        $("#txtInstChkLst").show();
 	        $("#grid_wrap_instChk_view").show();
 	        $("#instChklstCheckBox").show();
 	        $("#instChklstDesc").show();
-        } */
+	        }
+        	}
   }
 
     //AUIGrid.setGridData(myGridID, "hsFilterList");
@@ -286,23 +292,25 @@
       AUIGrid.updateAllToValue(myDetailGridID, "name", '');
       AUIGrid.updateAllToValue(myDetailGridID, "serialNo", '');
 
-/*       $("#txtInstChkLst").hide();
+       $("#txtInstChkLst").hide();
       $("#grid_wrap_instChk_view").hide();
       $("#instChklstCheckBox").hide();
       $("#instChklstDesc").hide();
-      $("#instChklstCheckBox").prop("checked", false); */
+      $("#instChklstCheckBox").prop("checked", false);
 
       if ($("#cmbStatusType1").val() == 4) {    // Completed
           $("input[name='settleDate']").attr('disabled', false);
           $("select[name='failReason'] option").remove();
           //doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
           //$("select[name=cmbCollectType]").attr('disabled', false);
-       /*    if(stkCtgry == 54){
+           if(stkCtgry == 54){
+        	    if (stkId1 == 1735 ){
               $("#txtInstChkLst").show();
               $("#grid_wrap_instChk_view").show();
               $("#instChklstCheckBox").show();
               $("#instChklstDesc").show();
-          } */
+        	    }
+          }
       } else if ($("#cmbStatusType1").val() == 21) {    // Failed
           //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
           doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
@@ -328,12 +336,12 @@
 
   });
 
-/*    function fn_viewInstallationChkViewSearch() {
+    function fn_viewInstallationChkViewSearch() {
 	   Common.ajax("GET", "/services/bs/instChkLst.do", "",
 	        function(result) {
 	          AUIGrid.setGridData(instChkLst_view, result);
 	        });
-   } */
+   }
 
   function fn_getHsFilterListAjax(){
     Common.ajax("GET", "/services/bs/SelectHsFilterList.do",{salesOrderId : '${hsDefaultInfo.salesOrdId}'}, function(result) {
@@ -350,7 +358,11 @@
       console.log("fn_getOrderDetailListAjax data :: " + result);
 
       //Installation Checklist - Get the stock category id
-      //stkCtgry = "${orderDetail.basicInfo.stkCtgryId}";
+      stkCtgry = "${orderDetail.basicInfo.stkCtgryId}";
+      stkId1 = "${orderDetail.basicInfo.stockId}";
+      console.log ("prod_code :::" + stkId1);
+      console.log ("stkCtgry :::" + stkCtgry);
+
     });
   }
 
@@ -386,12 +398,14 @@
       }
 
      //Installation checklist
-/*        if(stkCtgry == 54){
+        if(stkCtgry == 54){
+        	if(stkId1 == 1735 ){
          if (!$("#instChklstCheckBox").prop('checked')) {
             Common.alert("* <spring:message code='sys.msg.tickCheckBox' arguments='Installation Checklist' htmlEscape='false'/>");
             return false;
-          }
-       } */
+            }
+        	}
+       }
 
     } else if ($("#cmbStatusType1").val() == 21) {    // Failed
       if ($("#failReason").val() == '' || $("#failReason").val() == null) {
@@ -764,22 +778,23 @@ function fnSerialSearchResult(data) {
     </td>
 </tr>
 </tbody>
-</table><!-- table end -->
-<!-- Installation Checklist -->
-<!-- <aside class="title_line">
+</table>
+<!-- table end -->
+ <!-- Installation Checklist  -->
+ <aside class="title_line">
     <h2 id="txtInstChkLst" name="txtInstChkLst">
       <spring:message code='service.text.instChkLst' />
     </h2>
 </aside>
 <article class="grid_wrap">
-      <div id="grid_wrap_instChk_view" style="width: 100%; height: 170px; margin: 90 auto;" class="hide"></div>
+    <!--  <div id="grid_wrap_instChk_view" style="width: 100%; height: 170px; margin: 90 auto;" class="hide"></div>  -->
        <div id="grid_wrap_instChk_view" style="width: 100%; height: 170px; margin: 90 auto;" ></div>
-</article> -->
-<%-- <tr>
+</article>
+ <tr>
   <td colspan="8">
     <label><input type="checkbox" id="instChklstCheckBox" name="instChklstCheckBox" value="Y" class="hide" /><span id="instChklstDesc" name="instChklstDesc" class="hide"><spring:message code='service.btn.instChklst' /> </span></label>
   </td>
-</tr> --%>
+</tr>
 
 <aside class="title_line"><!-- title_line start -->
 <h2>Filter Information</h2>
