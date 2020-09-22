@@ -360,4 +360,44 @@
 			  0
 			)
 	</insert>
+
+    <select id="selectInvoiceStatementStart" parameterType="Map" resultType="egovMap">
+       SELECT Extent1.ID ID  ,
+           Extent1.PO_ORD_ID PO_ORD_ID  ,
+           Extent1.PO_REF_NO PO_REF_NO  ,
+           Extent1.PO_START_INSTLMT PO_START_INSTLMT  ,
+           Extent1.PO_END_INSTLMT PO_END_INSTLMT  ,
+           Extent1.PO_REM PO_REM  ,
+           Extent1.PO_STUS_ID PO_STUS_ID  ,
+           Extent1.PO_CRT_USER_ID PO_CRT_USER_ID  ,
+           Extent1.PO_CRT_DT PO_CRT_DT  ,
+           Extent1.PO_UPD_USER_ID PO_UPD_USER_ID  ,
+           Extent1.PO_UPD_DT PO_UPD_DT  ,
+           Extent1.PO_CNTRCT_ID PO_CNTRCT_ID
+      FROM PAY0015D Extent1
+     WHERE  ( Extent1.PO_ORD_ID = #{orderId} )
+              AND ( 1 = Extent1.PO_STUS_ID )
+              AND ( TO_NUMBER(Extent1.PO_START_INSTLMT) <![CDATA[<=]]> #{startPeriod} )
+              AND ( TO_NUMBER(Extent1.PO_END_INSTLMT) <![CDATA[>=]]> #{startPeriod} )
+    </select>
+
+        <select id="selectInvoiceStatementEnd" parameterType="Map" resultType="egovMap">
+       SELECT Extent1.ID ID  ,
+           Extent1.PO_ORD_ID PO_ORD_ID  ,
+           Extent1.PO_REF_NO PO_REF_NO  ,
+           Extent1.PO_START_INSTLMT PO_START_INSTLMT  ,
+           Extent1.PO_END_INSTLMT PO_END_INSTLMT  ,
+           Extent1.PO_REM PO_REM  ,
+           Extent1.PO_STUS_ID PO_STUS_ID  ,
+           Extent1.PO_CRT_USER_ID PO_CRT_USER_ID  ,
+           Extent1.PO_CRT_DT PO_CRT_DT  ,
+           Extent1.PO_UPD_USER_ID PO_UPD_USER_ID  ,
+           Extent1.PO_UPD_DT PO_UPD_DT  ,
+           Extent1.PO_CNTRCT_ID PO_CNTRCT_ID
+      FROM PAY0015D Extent1
+     WHERE  ( Extent1.PO_ORD_ID = #{orderId} )
+              AND ( 1 = Extent1.PO_STUS_ID )
+              AND ( TO_NUMBER(Extent1.PO_START_INSTLMT) <![CDATA[<=]]> #{endPeriod} )
+              AND ( TO_NUMBER(Extent1.PO_END_INSTLMT) <![CDATA[>=]]> #{endPeriod} )
+    </select>
 </mapper>
