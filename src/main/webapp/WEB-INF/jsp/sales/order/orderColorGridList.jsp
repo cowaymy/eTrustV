@@ -526,6 +526,37 @@
             $("#cmbCorpTypeId").multipleSelect("uncheckAll");
         });
     };
+
+    $(function(){
+    	$('#btnTermNConditionsLetter').click(function() {
+    		$("#dataForm").show();
+            //Param Set
+            var gridObj = AUIGrid.getSelectedItems(myGridID);
+
+            if(gridObj == null || gridObj.length <= 0 ){
+                Common.alert('* <spring:message code="sal.alert.msg.noOrdSel" />');
+                return;
+            }
+
+            var orderID = gridObj[0].item.ordId;
+            $("#_repSalesOrderId").val(orderID);
+
+            var date = new Date().getDate();
+            if(date.toString().length == 1){
+                date = "0" + date;
+            }
+            $("#downFileName").val("CowayTermsNConditionLetter_"+orderID+"_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+
+            fn_letter_report();
+    	});
+    });
+
+    function fn_letter_report() {
+        var option = {
+            isProcedure : false
+        };
+        Common.report("dataForm", option);
+    }
 </script>
 
 <section id="content"><!-- content start -->
@@ -543,7 +574,14 @@
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
-
+<!-- report Form -->
+<form id="dataForm">
+    <input type="hidden" id="fileName" name="reportFileName" value="/sales/TermNConditionsLetter.rpt" /><!-- Report Name  --><!-- V2 Report  created by Webster Lee 10072020 -->
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <input type="hidden" id="downFileName" name="reportDownFileName" value="" /> <!-- Download Name -->
+    <!-- params -->
+    <input type="hidden" id="_repSalesOrderId" name="@salesOrderId" />
+</form>
 
 <section class="search_table"><!-- search_table start -->
 <form id="searchForm" name="searchForm" method="post">
@@ -667,13 +705,24 @@
 </tr>
 </tbody>
 </table><!-- table end -->
+</form>
+<p></p>
+<ul class="left_btns">
+    <li><span class="green_text"><spring:message code="sal.combo.text.netSales" /></span></li>
+    <li><span class="pink_text"><spring:message code="sal.combo.text.cancel" /></span></li>
+    <li><span class="yellow_text"><spring:message code="sal.text.completeWithUnit" /></span></li>
+    <li><span class="black_text"><spring:message code="sal.combo.text.active" /></span></li>
+</ul>
 
-<aside class="link_btns_wrap"><!-- link_btns_wrap start --
-<p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
     <dd>
-    <ul class="btns">
+     <ul class="btns">
+       <li><p class="link_btn"><a href="#" id="btnTermNConditionsLetter"><spring:message code='sales.btn.TermNConditionsLetter'/></a></p></li>
+     </ul>
+ <!--   <ul class="btns">
         <li><p class="link_btn"><a href="#">menu1</a></p></li>
         <li><p class="link_btn"><a href="#">menu2</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
@@ -692,21 +741,13 @@
         <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-    </ul>
-    <p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
+    </ul> -->
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
-</aside> link_btns_wrap end -->
+</aside> <!-- link_btns_wrap end  -->
 
-</form>
 </section><!-- search_table end -->
-
-<ul class="left_btns">
-    <li><span class="green_text"><spring:message code="sal.combo.text.netSales" /></span></li>
-    <li><span class="pink_text"><spring:message code="sal.combo.text.cancel" /></span></li>
-    <li><span class="yellow_text"><spring:message code="sal.text.completeWithUnit" /></span></li>
-    <li><span class="black_text"><spring:message code="sal.combo.text.active" /></span></li>
-</ul>
 
 <section class="search_result"><!-- search_result start -->
 <!--
