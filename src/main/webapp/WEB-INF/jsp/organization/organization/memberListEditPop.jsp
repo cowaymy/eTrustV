@@ -2,47 +2,48 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
+console.log("memberListEditPop");
+
 var optionState = {chooseMessage: " 1.States "};
 var optionCity = {chooseMessage: "2. City"};
 var optionPostCode = {chooseMessage: "3. Post Code"};
 var optionArea = {chooseMessage: "4. Area"};
 
+//var jsonObj1;
+
 var myGridID_Doc;
 function fn_memberSave(){
 
-                $("#memberType").attr("disabled",false);
-                $("#joinDate").attr("disabled",false);
-                $("#nric").attr("disabled",false);
-	            $("#streetDtl1").val(insAddressForm.streetDtl.value);
-	            $("#addrDtl1").val(insAddressForm.addrDtl.value);
-	            $("#searchSt1").val(insAddressForm.searchSt.value);
-                $("#traineeType").val(($("#traineeType").value));
-                $("#spouseDob").val($.trim($("#spouseDob").val()));
+    $("#memberType").attr("disabled",false);
+    $("#joinDate").attr("disabled",false);
+    $("#nric").attr("disabled",false);
+    $("#streetDtl1").val(insAddressForm.streetDtl.value);
+    $("#addrDtl1").val(insAddressForm.addrDtl.value);
+    $("#searchSt1").val(insAddressForm.searchSt.value);
+    $("#traineeType").val(($("#traineeType").value));
+    $("#spouseDob").val($.trim($("#spouseDob").val()));
 
-                $("#memberType").attr("disabled",false);
-                var jsonObj =  GridCommon.getEditData(myGridID_Doc);
-                jsonObj.form = $("#memberAddForm").serializeJSON();
+    $("#memberType").attr("disabled",false);
+    var jsonObj =  GridCommon.getEditData(myGridID_Doc);
+    // jsonObj.form = $("#memberAddForm").serializeJSON();
+    jsonObj.form = $("#memberUpdForm").serializeJSON();
 
-                //ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
-                if($("#hsptlzCheck").is(":checked") == true){
-                    $.extend(jsonObj, {
-                        'hsptlz' : '1'
-                    });
-              }else{
-                    $.extend(jsonObj, {
-                        'hsptlz' : '0'
-                    });
-              }
+    //ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
+    if($("#hsptlzCheck").is(":checked") == true){
+        $.extend(jsonObj, {'hsptlz' : '1'});
+    }else{
+        $.extend(jsonObj, {'hsptlz' : '0'});
+    }
 
-                console.log("-------------------------" + JSON.stringify(jsonObj));
-                Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
-                console.log("message : " + result.message );
-                Common.alert(result.message,fn_close);
+    console.log("-------------------------" + JSON.stringify(jsonObj));
+    Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
+        console.log("message : " + result.message );
+        Common.alert(result.message,fn_close);
+    });
 
-				});
-                $("#memberType").attr("disabled",true);
-                $("#joinDate").attr("disabled",true);
-                $("#nric").attr("disabled",true);
+    $("#memberType").attr("disabled",true);
+    $("#joinDate").attr("disabled",true);
+    $("#nric").attr("disabled",true);
 }
 
 function fn_close(){
@@ -62,10 +63,10 @@ function fn_saveConfirm(){
     }
 }
 function fn_docSubmission(){
-	   	$("#memberType").attr("disabled",false);
-	   	var docMemId=$("#MemberID").val();
-	    Common.ajax("GET", "/organization/selectHpDocSubmission?memberID=" + docMemId,  $("#memType").serialize(), function(result) {
-		console.log("성공.");
+    $("#memberType").attr("disabled",false);
+    var docMemId=$("#MemberID").val();
+    Common.ajax("GET", "/organization/selectHpDocSubmission?memberID=" + docMemId,  $("#memType").serialize(), function(result) {
+        console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID_Doc, result);
         AUIGrid.resize(myGridID_Doc,1000,400);
@@ -152,10 +153,6 @@ $("#cmbRace").load(function() {
 
 $(document).ready(function() {
 
-	//doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
-
-    //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','national', 'S', '');
-
     doGetCombo('/sales/customer/getNationList', '338' , '' ,'country' , 'S');
     doGetCombo('/sales/customer/getNationList', '338' , '' ,'national' , 'S');
     doGetCombo('/common/selectCodeList.do', '2', '','cmbRace', 'S' , '');
@@ -165,21 +162,22 @@ $(document).ready(function() {
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '')
 
     if($("#traineeType").val() == "2" || $("#traineeType").val() == "3"){
-     var groupCode  = {groupCode : $("#traineeType").val()};
-                   Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
+        var groupCode  = {groupCode : $("#traineeType").val()};
+        Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
 
-                        $("#course").find('option').each(function() {
-                            $(this).remove();
-                        });
-                         console.log("-------------------------" + JSON.stringify(result));
-                         if (result!= null) {
-                         $("#course").append("<option value=''>Choose One</option>");
-                            for( var i=0; i< result.length; i++) {
-                             $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
-                            }
-                         }
-                     });
+            $("#course").find('option').each(function() {
+                $(this).remove();
+            });
+            console.log("-------------------------" + JSON.stringify(result));
+            if (result!= null) {
+                $("#course").append("<option value=''>Choose One</option>");
+                for( var i=0; i< result.length; i++) {
+                    $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
+                }
+            }
+        });
     }
+
     doGetCombo('/organization/selectBusinessType.do', '', '','businessType', 'S' , '');
 
     //ADDED BY TOMMY 27/05/2020 ONLY ALLOW CODY AND HT FOR HOSPITALISATION CHECKBOX
@@ -187,58 +185,33 @@ $(document).ready(function() {
     	 $("#hsptlzCheck").attr({"disabled" : false });
    }
 
-    /*fill edit field*/
-    /*
-    var memberType = "${memberView.memType}";
-    var gender = "${memberView.gender}";
-
-    $("#memberType option[value="+ memberType +"]").attr("selected", true);
-
-    var race_no = "${memberView.c61}";
-    alert(race_no);
-    $("#cmbRace option[value="+ race_no +"]").attr("selected", true);
-
-    if(gender=="F"){
-        $("#gender_f").prop("checked", true)
-    }
-    if(gender=="M"){
-        $("#gender_m").prop("checked", true)
-    }
-    */
-    //var race = "${memberView.c40}";
-    //var race_no = "${memberView.c61}";
-    //$("#cmbRace option[value="+ String(race_no) +"]").attr("selected", true);
-    //$("#cmbRace option:contains("+race+")").attr('selected',true);
-    //$("#cmbRace").val(race_no).attr("selected", true);
-    /**/
-
-    /*
-    $("#deptCd").change(function (){
-    	doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
-    });
-    */
-
 	createAUIGridDoc();
 	fn_docSubmission();
+
 	//fn_departmentCode();
+
+	/*
 	$("#state").change(function (){
 		var state = $("#state").val();
 		doGetComboAddr('/common/selectAddrSelCodeList.do', 'area' ,state ,'area', 'S', '');
+
+		$("#stateUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='stateUpd' id='stateUpd'>");
+        $("#stateUpd").val($("#state").val());
 	});
+
 	$("#area").change(function (){
         var area = $("#area").val();
         doGetComboAddr('/common/selectAddrSelCodeList.do', 'post' ,area ,'','postCode', 'S', '');
+
+        $("#areaUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='area' id='area'>");
+        $("#areaUpd").val($("#area").val());
     });
-
-	/* $("#memberType").change(function (){
-        var memberType = $("#memberType").val();
-        //fn_departmentCode(memberType);
-     }); */
-
+	*/
 
 	fn_getMemInfo();
 
-    //if($("#memberType").val() == "1" || $("#memberType").val() == "2803") {
     if("${memType}" == "1" || "${memType}" == "2803") {
          doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
          doGetCombo('/organization/selectAccBank.do', '', '', 'issuedBank', 'S', '');
@@ -248,11 +221,7 @@ $(document).ready(function() {
         doGetCombo('/organization/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  '');
     });
 
-    if ($("#joinDate").val() == "") {
-    	$("#joinDate").attr("disabled", false);
-    } else {
-    	$("#joinDate").attr("disabled", true);
-    }
+    $("#joinDate").attr("disabled", true);
 
     $('#bankAccNo').blur(function() {
         if($("#memberType").val() != "5") {
@@ -265,7 +234,7 @@ $(document).ready(function() {
            if($("#bankAccNo").val() != "-"){
                if(isNaN($("#bankAccNo").val())){  // validation the value of bank account number is numeric
                    Common.alert("Bank account number must be numeric.");
-                  $("#bankAccNo").val("");
+                   $("#bankAccNo").val("");
                    return false;
                }else{
             	    checkBankAccNo();
@@ -278,6 +247,210 @@ $(document).ready(function() {
     if('${userRoleId}' == 256) {
         $("#selectBranch").attr("disabled", true);
     }
+
+    // Basic Info Tab on change append - start
+    $("#memberNm").change(function() {
+        $("#memberNmUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='memberNmUpd' id='memberNmUpd'>");
+        $("#memberNmUpd").val($("#memberNm").val());
+    });
+
+    $("#cmbRace").change(function() {
+        $("#cmbRaceUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='cmbRaceUpd' id='cmbRaceUpd'>");
+        $("#cmbRaceUpd").val($("#cmbRace").val());
+    });
+
+    $('#marrital').change(function() {
+        $("#marritalUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='marritalUpd' id='marritalUpd'>");
+        $("#marritalUpd").val($("#marrital").val());
+    });
+
+    $('#email').change(function() {
+        $("#emailUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='emailUpd' id='emailUpd'>");
+        $("#emailUpd").val($("#email").val());
+    });
+
+    //
+    $('#mobileNo').change(function() {
+        $("#mobileNoUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='mobileNoUpd' id='mobileNoUpd'>");
+        $("#mobileNoUpd").val($("#mobileNo").val());
+    });
+
+    $('#officeNo').change(function() {
+        $("#officeNoUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='officeNoUpd' id='officeNoUpd'>");
+        $("#officeNoUpd").val($("#officeNo").val());
+    });
+
+    $('#residenceNo').change(function() {
+        $("#residenceNoUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='residenceNoUpd' id='emailUpd'>");
+        $("#residenceNoUpd").val($("#residenceNo").val());
+    });
+    //
+
+    //
+    $('#selectBranch').change(function() {
+        $("#selectBranchUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='selectBranchUpd' id='selectBranchUpd'>");
+        $("#selectBranchUpd").val($("#selectBranch").val());
+    });
+
+    $('#transportCd').change(function() {
+        $("#transportCdUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='transportCdUpd' id='transportCdUpd'>");
+        $("#transportCdUpd").val($("#transportCd").val());
+    });
+    //
+
+    //
+    $('#meetingPoint').change(function() {
+        $("#meetingPointUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='meetingPointUpd' id='meetingPointUpd'>");
+        $("#meetingPointUpd").val($("#meetingPoint").val());
+    });
+    //
+
+    //
+    $('#religion').change(function() {
+        $("#religionUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='religionUpd' id='religionUpd'>");
+        $("#religionUpd").val($("#religion").val());
+    });
+    //
+
+    //
+    $('#course').change(function() {
+        $("#courseUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='courseUpd' id='courseUpd'>");
+        $("#courseUpd").val($("#course").val());
+    });
+    //
+
+    //
+    $('#searchdepartment').change(function() {
+        $("#searchdepartmentUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='searchdepartmentUpd' id='searchdepartmentUpd'>");
+        $("#searchdepartmentUpd").val($("#searchdepartment").val());
+    });
+
+    $('#inputSubDept').change(function() {
+        $("#inputSubDeptUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='inputSubDeptUpd' id='inputSubDeptUpd'>");
+        $("#inputSubDeptUpd").val($("#inputSubDept").val());
+    });
+    //
+
+    //
+    $('#trMobileUseYn').change(function() {
+        $("#trMobileUseYnUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='trMobileUseYnUpd' id='trMobileUseYnUpd'>");
+        $("#trMobileUseYnUpd").val($("#trMobileUseYn").val());
+    });
+    //
+
+    //
+    $('#issuedBank').change(function() {
+        $("#issuedBankUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='issuedBankUpd' id='issuedBankUpd'>");
+        $("#issuedBankUpd").val($("#issuedBank").val());
+    });
+
+    $('#bankAccNo').change(function() {
+        $("#bankAccNoUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='bankAccNoUpd' id='bankAccNoUpd'>");
+        $("#bankAccNoUpd").val($("#bankAccNo").val());
+    });
+    //
+
+    //
+    $('#educationLvl').change(function() {
+        $("#educationLvlUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='educationLvlUpd' id='educationLvlUpd'>");
+        $("#educationLvlUpd").val($("#educationLvl").val());
+    });
+
+    $('#language').change(function() {
+        $("#languageUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='languageUpd' id='languageUpd'>");
+        $("#languageUpd").val($("#language").val());
+    });
+    //
+
+    $('#trNo').change(function() {
+        $("#trNoUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='trNoUpd' id='trNoUpd'>");
+        $("#trNoUpd").val($("#trNo").val());
+    });
+
+    $('#codyPaExpr').change(function() {
+        $("#codyPaExprUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='codyPaExprUpd' id='codyPaExprUpd'>");
+        $("#codyPaExprUpd").val($("#codyPaExpr").val());
+    });
+    // Basic Info Tab on change append - end
+
+    // Spouse Tab on change append - start
+    $('#spouseCode').change(function() {
+        $("#spouseCodeUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='spouseCodeUpd' id='spouseCodeUpd'>");
+        $("#spouseCodeUpd").val($("#spouseCode").val());
+    });
+
+    $('#spouseName').change(function() {
+        $("#spouseNameUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='spouseNameUpd' id='spouseNameUpd'>");
+        $("#spouseNameUpd").val($("#spouseName").val());
+    });
+
+    $('#spouseNric').change(function() {
+        $("#spouseNricUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='spouseNricUpd' id='spouseNricUpd'>");
+        $("#spouseNricUpd").val($("#spouseNric").val());
+    });
+
+    $('#spouseOcc').change(function() {
+        $("#spouseOccUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='spouseOccUpd' id='spouseOccUpd'>");
+        $("#spouseOccUpd").val($("#spouseOcc").val());
+    });
+
+    $('#spouseDob').change(function() {
+        $("#spouseDobUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='spouseDobUpd' id='spouseDobUpd'>");
+        $("#spouseDobUpd").val($("#spouseDob").val());
+    });
+
+    $('#spouseContat').change(function() {
+        $("#spouseContatUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='spouseContatUpd' id='spouseContatUpd'>");
+        $("#spouseContatUpd").val($("#spouseContat").val());
+    });
+    // Spouse Tab on change append - end
+
+    // Address Tab on change append - start
+    $('#areaId').change(function() {
+        $("#areaIdUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='areaIdUpd' id='areaIdUpd'>");
+        $("#areaIdUpd").val($("#areaId").val());
+    });
+
+    $('#addrDtl').change(function() {
+        $("#addrDtlUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='addrDtlUpd' id='addrDtlUpd'>");
+        $("#addrDtlUpd").val($("#addrDtl").val());
+    });
+
+    $('#streetDtl').change(function() {
+        $("#streetDtlUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='streetDtlUpd' id='streetDtlUpd'>");
+        $("#streetDtlUpd").val($("#streetDtl").val());
+    });
+    // AddressTab on change append - end
 });
 
 
@@ -300,115 +473,101 @@ function fn_getMemInfo(){
 
 function fn_setMemInfo(data){
 	console.log("fn_setMemInfo");
+
+	// Not HP
 	if(data.isHP == "NO"){
 		$("#memberType option[value="+ data.memType +"]").attr("selected", true);
 		console.log("1 : " +data.memType);
 		fn_departmentCode(data.memType);
 
+		var jsonObj =  GridCommon.getEditData(myGridID_Doc);
 
+		if(data.gender=="F"){
+	        $("#gender_f").prop("checked", true)
+	    }
+	    if(data.gender=="M"){
+	        $("#gender_m").prop("checked", true)
+	    }
 
-	/* var memType = "${memberView.memType}";
-    alert("memType : " + memType);
-    $("#memberType option:eq("+memType+")").attr("selected", true);
-    $("#memberType").attr("disabled", true); */
+	    $("#cmbRace option[value="+ data.c61 +"]").attr("selected", true);
 
-	var jsonObj =  GridCommon.getEditData(myGridID_Doc);
-    //doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
-    //doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
+	    $("#nric").val(data.nric);
 
+	    $("#fullName").val(data.c65);
 
-	if(data.gender=="F"){
-        $("#gender_f").prop("checked", true)
-    }
-    if(data.gender=="M"){
-        $("#gender_m").prop("checked", true)
-    }
+	    $("#marrital option[value="+ data.c27 +"]").attr("selected", true);
 
-    $("#cmbRace option[value="+ data.c61 +"]").attr("selected", true);
+	    $("#email").val(data.email);
 
+	    $("#mobileNo").val(data.telMobile);
 
-    //$("#national option[value="+ data.c35 +"]").attr("selected", true);
+	    $("#officeNo").val(data.telOffice);
 
-    $("#nric").val(data.nric);
+	    $("#residenceNo").val(data.telHuse);
 
-    $("#fullName").val(data.c65);
+	    $("#sponsorCd").val(data.c51);
 
-    $("#marrital option[value="+ data.c27 +"]").attr("selected", true);
+	    $("#sponsorNm").val(data.c52);
 
-    $("#email").val(data.email);
+	    $("#sponsorNric").val(data.c53);
+	    //alert(data.c68);
+	    $("#searchSt").val(data.area);
 
-    $("#mobileNo").val(data.telMobile);
+	    $("#areaId").val(data.areaId);
 
-    $("#officeNo").val(data.telOffice);
+	    if(data.areaId!=null&&jQuery.trim(data.areaId).length>0){
+	    	Common.ajax("GET", "/organization/selectAreaInfo.do", {areaId : data.areaId}, function(result) {
 
-    $("#residenceNo").val(data.telHuse);
+	            fn_addMaddr(result.area, result.city, result.postcode, result.state, result.areaId, result.iso);
 
-    $("#sponsorCd").val(data.c51);
+	       });
+	    }
 
-    $("#sponsorNm").val(data.c52);
+	    /*
+	    if(data.c4!=null&&jQuery.trim(data.c4).length>0){
+	        $("#branch option[value="+ data.c4 +"]").attr("selected", true);
+	    }
+	    */
+	    if(data.c41!=null&&jQuery.trim(data.c41).length>0){
+	        $("#deptCd option[value="+ data.c41 +"]").attr("selected", true);
+	    }
 
-    $("#sponsorNric").val(data.c53);
-    //alert(data.c68);
-    $("#searchSt").val(data.area);
+	    if(data.c62!=null&&jQuery.trim(data.c62).length>0){
+	        //$("#transportCd option[value="+ data.c62 +"]").attr("selected", true);
+	        doGetCombo('/common/selectCodeList.do', '7', data.c62,'transportCd', 'S' , '');
+	    }
 
-    $("#areaId").val(data.areaId);
+	    if(data.bank!=null&&jQuery.trim(data.bank).length>0){
+	        $("#issuedBank option[value="+ data.bank +"]").attr("selected", true);
+	    }
 
-    if(data.areaId!=null&&jQuery.trim(data.areaId).length>0){
-    	Common.ajax("GET", "/organization/selectAreaInfo.do", {areaId : data.areaId}, function(result) {
+	    $("#bankAccNo").val(data.bankAccNo);
 
-            fn_addMaddr(result.area, result.city, result.postcode, result.state, result.areaId, result.iso);
+	    if(data.c8!=null&&jQuery.trim(data.c8).length>0){
+	        $("#educationLvl option[value="+ data.c8 +"]").attr("selected", true);
+	    }
 
-       });
-    }
+	    if(data.c10!=null&&jQuery.trim(data.c10).length>0){
+	        $("#language option[value="+ data.c10 +"]").attr("selected", true);
+	    }
 
-    /*
-    if(data.c4!=null&&jQuery.trim(data.c4).length>0){
-        $("#branch option[value="+ data.c4 +"]").attr("selected", true);
-    }
-    */
-    if(data.c41!=null&&jQuery.trim(data.c41).length>0){
-        $("#deptCd option[value="+ data.c41 +"]").attr("selected", true);
-    }
+	    if(data.religion!=null&&jQuery.trim(data.religion).length>0){
+	        $("#religion option[value="+ data.religion +"]").attr("selected", true);
+	    }
 
-    if(data.c62!=null&&jQuery.trim(data.c62).length>0){
-        //$("#transportCd option[value="+ data.c62 +"]").attr("selected", true);
-        doGetCombo('/common/selectCodeList.do', '7', data.c62,'transportCd', 'S' , '');
-    }
+	    $("#trNo").val(data.trNo);
 
-    if(data.bank!=null&&jQuery.trim(data.bank).length>0){
-        $("#issuedBank option[value="+ data.bank +"]").attr("selected", true);
-    }
+	    $("#userId").val(data.c64);
 
-    $("#bankAccNo").val(data.bankAccNo);
+	    $("#searchdepartment option[value='"+ data.mainDept +"']").attr("selected", true);
 
-    if(data.c8!=null&&jQuery.trim(data.c8).length>0){
-        $("#educationLvl option[value="+ data.c8 +"]").attr("selected", true);
-    }
+	    $("#inputSubDept option[value='"+ data.subDept +"']").attr("selected", true);
 
-    if(data.c10!=null&&jQuery.trim(data.c10).length>0){
-        $("#language option[value="+ data.c10 +"]").attr("selected", true);
-    }
+	    $("#course option[value='"+ data.course +"']").attr("selected", true);
 
-    if(data.religion!=null&&jQuery.trim(data.religion).length>0){
-        $("#religion option[value="+ data.religion +"]").attr("selected", true);
-    }
+	    $("#selectBranch option[value='"+ data.c3 +"']").attr("selected", true);
 
-    $("#trNo").val(data.trNo);
-
-    $("#userId").val(data.c64);
-
-
-
-
-    $("#searchdepartment option[value='"+ data.mainDept +"']").attr("selected", true);
-
-    $("#inputSubDept option[value='"+ data.subDept +"']").attr("selected", true);
-
-    $("#course option[value='"+ data.course +"']").attr("selected", true);
-
-    $("#selectBranch option[value='"+ data.c3 +"']").attr("selected", true);
-
-    $("#meetingPoint option[value=" + data.meetpointId +"]").attr("selected", true);
+	    $("#meetingPoint option[value=" + data.meetpointId +"]").attr("selected", true);
 
     }
 	else{
@@ -448,10 +607,7 @@ function fn_setMemInfo(data){
 
 	}
 
-
-
     //doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
-
 
 }
 
@@ -558,35 +714,18 @@ function createAUIGridDoc() {
 
 var gridPros = {
 
-    // 페이징 사용
-    usePaging : true,
-
-    // 한 화면에 출력되는 행 개수 20(기본값:20)
-    pageRowCount : 20,
-
+    usePaging : true, // 페이징 사용
+    pageRowCount : 20, // 한 화면에 출력되는 행 개수 20(기본값:20)
     editable : true,
-
     fixedColumnCount : 1,
-
     showStateColumn : true,
-
     displayTreeOpen : true,
-
     selectionMode : "singleRow",
-
     headerHeight : 30,
-
-    // 그룹핑 패널 사용
-    useGroupingPanel : true,
-
-    // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-    skipReadonlyColumns : true,
-
-    // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-    wrapSelectionMove : true,
-
-    // 줄번호 칼럼 렌더러 출력
-    showRowNumColumn : false,
+    useGroupingPanel : true, // 그룹핑 패널 사용
+    skipReadonlyColumns : true, // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+    wrapSelectionMove : true, // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+    showRowNumColumn : false, // 줄번호 칼럼 렌더러 출력
 
 };
 
@@ -888,6 +1027,11 @@ function fn_saveValidation(){
             valid = false;
             message = "Cody agreement PA date are compulsory";
         }
+
+        if($("#selectBranch").val() == "" || $("#selectBranch").val() == "0") {
+            valid = false;
+            message = "Branch selection is compulsory";
+        }
     }
     //endregion
     //Display Message
@@ -1149,6 +1293,8 @@ function checkBankAccNo() {
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
+<form action="#" id="memberUpdForm" method="post"></form>
+
 <form action="#" id="memberAddForm" method="post">
 <input type="hidden" id="areaId" name="areaId" value="${memberView.areaId}">
 <input type="hidden" id="searchSt1" name="searchSt1">
@@ -1182,16 +1328,17 @@ function checkBankAccNo() {
 <tr>
     <th scope="row">Member Type</th>
     <td>
-    <select class="w100p" id="memberType" name="memberType">
-        <option value="1">Health Planner (HP)</option>
-        <option value="2">Coway Lady (Cody)</option>
-        <option value="3">Coway Technician (CT)</option>
-        <option value="4">Coway Staff (Staff)</option>
-        <option value="5">Trainee</option>
-        <option value="2803">HP Applicant</option>
-           <option value="7">Homecare Technician (HT)</option>
+        <select class="w100p" id="memberType" name="memberType">
+            <option value="1">Health Planner (HP)</option>
+            <option value="2">Coway Lady (Cody)</option>
+            <option value="3">Coway Technician (CT)</option>
+            <option value="4">Coway Staff (Staff)</option>
+            <option value="5">Trainee</option>
+            <option value="2803">HP Applicant</option>
+            <option value="7">Homecare Technician (HT)</option>
             <option value="5758">Homecare Delivery Technician (DT)</option>
-    </select>
+            <option value="6171">Temporary Staff Code</option>
+        </select>
     </td>
 </tr>
 </tbody>
@@ -1234,8 +1381,8 @@ function checkBankAccNo() {
 <tr>
     <th scope="row">Gender<span class="must">*</span></th>
     <td>
-    <label><input type="radio" name="gender" id="gender_m" value="M" /><span>Male</span></label>
-    <label><input type="radio" name="gender" id="gender_f" value="F"/><span>Female</span></label>
+    <label><input type="radio" name="gender" id="gender_m" value="M" disabled="true" /><span>Male</span></label>
+    <label><input type="radio" name="gender" id="gender_f" value="F" disabled="true" /><span>Female</span></label>
     </td>
     <th scope="row">Date of Birth<span class="must">*</span></th>
     <td>

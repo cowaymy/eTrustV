@@ -973,7 +973,6 @@ public class MemberListController {
         // Not HP Applicant
         // hp가아닐때
         if (!formMap.get("memberType").toString().equals("2803")) {
-            /*
             if(formMap.containsKey("selectBranchUpd")) {
                 u1 = memberListService.memberListUpdate_SYS47(formMap);
                 u2 = memberListService.memberListUpdate_ORG05(formMap);
@@ -1000,8 +999,8 @@ public class MemberListController {
             logger.debug("Non-HP Update :: Applicant :: u4 = " + Integer.toString(u4));
             logger.debug("Non-HP Update :: Course :: u5 = " + Integer.toString(u5));
             logger.debug("Non-HP Update :: Service capacity :: u6 = " + Integer.toString(u6));
-            */
 
+/*
             // Branch info update (SYS0047M, ORG0005D)
             resultUpc1 = memberListService.memberListUpdate_user(formMap);
             resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
@@ -1032,6 +1031,7 @@ public class MemberListController {
             if(memType.trim().equals("7")) {
                 memberListService.memberListUpdate_memorg3(formMap);
             }
+*/
 
             /*if(memType.trim().equals("2")) {
                 // Update ORG0003D CD agreement details

@@ -300,4 +300,13 @@ public interface MemberListMapper {
 	List<EgovMap> selectAccBank(Map<String, Object> params);
 
 	//void updateAplctDtls(Map<String, Object> params);
+
+	int memberListUpdate_SYS47(Map<String, Object> params);
+	int memberListUpdate_ORG05(Map<String, Object> params);
+	int memberListUpdate_ORG01(Map<String, Object> params);
+	int memberListUpdate_ORG03(Map<String, Object> params);
+	int memberListUpdate_MSC09(Map<String, Object> params);
+	int memberListUpdate_ORG15(Map<String, Object> params);
+
+	EgovMap selectMemCourse(Map<String, Object> params);
 }

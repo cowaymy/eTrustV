@@ -4875,4 +4875,221 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         ORDER BY CODE ASC
     </select>
 
+    <update id="memberListUpdate_SYS47" parameterType="Map">
+		UPDATE SYS0047M
+		SET USER_UPD_USER_ID = #{user_id}
+		  , USER_UPD_DT = SYSDATE
+		  , USER_BRNCH_ID = #{selectBranchUpd}
+		WHERE HR_CODE = (
+		    SELECT MEM_CODE
+		    FROM ORG0001D
+		    WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
+		)
+	</update>
+
+	<update id="memberListUpdate_ORG05" parameterType="Map">
+		UPDATE ORG0005D
+		SET ORG_UPD_USER_ID = #{user_id}
+		  , ORG_UPD_DT = SYSDATE
+		  , BRNCH_ID = #{selectBranchUpd}
+		WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
+	</update>
+
+	<update id="memberListUpdate_ORG01" parameterType="Map">
+		UPDATE ORG0001D
+		SET UPD_USER_ID = #{user_id}
+		  , UPD_DT = SYSDATE
+		<if test="memberNmUpd != null and memberNmUpd != '' ">
+		  , NAME = #{memberNmUpd},
+		  , FULL_NAME = #{memberNmUpd}
+		</if>
+		<if test="cmbRaceUpd != null and cmbRaceUpd != '' ">
+		  , RACE = #{cmbRaceUpd}
+		</if>
+		<if test="marritalUpd != null and marritalUpd != '' ">
+		  , MARTL = #{marritalUpd}
+		</if>
+		<if test="officeNoUpd != null and officeNoUpd != '' ">
+		  , TEL_OFFICE = #{officeNoUpd}
+		</if>
+		<if test="residenceNoUpd != null and residenceNoUpd != '' ">
+		  , TEL_HUSE = #{residenceNoUpd}
+		</if>
+		<if test="mobileNoUpd != null and mobileNoUpd != '' ">
+		  , TEL_MOBILE = #{mobileNoUpd}
+		</if>
+		<if test="emailUpd != null and emailUpd != '' ">
+		  , EMAIL = #{emailUpd}
+		</if>
+		<if test="spouseCodeUpd != null and spouseCodeUpd != '' ">
+		  , SPUSE_CODE = #{spouseCodeUpd}
+		</if>
+		<if test="spouseNameUpd != null and spouseNameUpd != '' ">
+		  , SPOUSE_NAME = #{spouseNameUpd}
+		</if>
+		<if test="spouseNricUpd != null and spouseNricUpd != '' ">
+		  , SPOUSE_NRIC = #{spouseNricUpd}
+		</if>
+		<if test="spouseOccUpd != null and spouseOccUpd != '' ">
+		  , SPOUSE_OCPAT = #{spouseOccUpd}
+		</if>
+		<if test="spouseContatUpd != null and spouseContatUpd != '' ">
+		  , SPOUSE_TEL_CNTC = #{spouseContatUpd}
+		</if>
+		<if test="spouseDobUpd != null and spouseDobUpd != '' ">
+		  , SPOUSE_DOB = #{spouseDobUpd}
+		</if>
+		<if test="educationLvlUpd != null and educationLvlUpd != '' ">
+		  , EDC_LEV = #{educationLvlUpd}
+		</if>
+		<if test="languageUpd != null and languageUpd != '' ">
+		  , LANG = #{languageUpd}
+		</if>
+		<if test="issuedBankUpd != null and issuedBankUpd != '' ">
+		  , BANK = #{issuedBankUpd}
+		</if>
+		<if test="bankAccNoUpd != null and bankAccNoUpd != '' ">
+		  , BANK_ACC_NO = #{bankAccNoUpd}
+		</if>
+		<if test="selectBranchUpd != null and selectBranchUpd != '' ">
+		  , BRNCH = #{selectBranchUpd}
+		</if>
+		<if test="transportCdUpd != null and transportCdUpd != '' ">
+		  , TRNSPRT = #{transportCdUpd}
+		</if>
+		<if test="trNoUpd != null and trNoUpd != '' ">
+		  , TR_NO = #{trNoUpd}
+		</if>
+		<if test="hsptlzCheck != null and hsptlzCheck != '' ">
+		  , HSPTLZ = #{hsptlzCheck}
+		</if>
+		<if test="areaIdUpd != null and areaIdUpd != '' ">
+		  , AREA_ID = #{areaIdUpd}
+		</if>
+		<if test="addrDtlUpd != null and addrDtlUpd != '' ">
+		  , ADDR_DTL = #{addrDtlUpd}
+		</if>
+		<if test="streetDtlUpd != null and streetDtlUpd != '' ">
+		  , STREET = #{streetDtlUpd}
+		</if>
+		<if test="searchdepartmentUpd != null and searchdepartmentUpd != '' ">
+		  , MAIN_DEPT = #{searchdepartmentUpd}
+		</if>
+		<if test="inputSubDeptUpd != null and inputSubDeptUpd != '' ">
+		  , SUB_DEPT = #{inputSubDeptUpd}
+		</if>
+		<if test="religionUpd != null and religionUpd != '' ">
+		  , RELIGION = #{religionUpd}
+		</if>
+		<if test="trMobileUseYnUpd != null and trMobileUseYnUpd != '' ">
+		  , MOBILE_USE_YN = #{trMobileUseYnUpd}
+		</if>
+		WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
+	</update>
+
+	<update id="memberListUpdate_ORG03" parameterType="Map">
+		UPDATE ORG0003D
+		SET UPD_USER_ID = #{user_id}
+		  , UPD_DT = SYSDATE
+		<if test="memberNmUpd != null and memberNmUpd != '' ">
+		  , APLICNT_NAME = #{memberNmUpd},
+		  , APLICNT_FULL_NAME = #{memberNmUpd}
+		</if>
+		<if test="cmbRaceUpd != null and cmbRaceUpd != '' ">
+		  , APLICNT_RACE = #{cmbRaceUpd}
+		</if>
+		<if test="marritalUpd != null and marritalUpd != '' ">
+		  , APLICNT_MARTL = #{marritalUpd}
+		</if>
+		<if test="officeNoUpd != null and officeNoUpd != '' ">
+		  , APLICNT_TEL_OFFICE = #{officeNoUpd}
+		</if>
+		<if test="residenceNoUpd != null and residenceNoUpd != '' ">
+		  , APLICNT_TEL_HUSE = #{residenceNoUpd}
+		</if>
+		<if test="mobileNoUpd != null and mobileNoUpd != '' ">
+		  , APLICNT_TEL_MOBILE = #{mobileNoUpd}
+		</if>
+		<if test="emailUpd != null and emailUpd != '' ">
+		  , APLICNT_EMAIL = #{emailUpd}
+		</if>
+		<if test="spouseCodeUpd != null and spouseCodeUpd != '' ">
+		  , APLICNT_SPUSE_CODE = #{spouseCodeUpd}
+		</if>
+		<if test="spouseNameUpd != null and spouseNameUpd != '' ">
+		  , APLICNT_SPOUSE_NAME = #{spouseNameUpd}
+		</if>
+		<if test="spouseNricUpd != null and spouseNricUpd != '' ">
+		  , APLICNT_SPOUSE_NRIC = #{spouseNricUpd}
+		</if>
+		<if test="spouseOccUpd != null and spouseOccUpd != '' ">
+		  , APLICNT_SPOUSE_OCPAT = #{spouseOccUpd}
+		</if>
+		<if test="spouseContatUpd != null and spouseContatUpd != '' ">
+		  , APLICNT_SPOUSE_TEL_CNTC = #{spouseContatUpd}
+		</if>
+		<if test="spouseDobUpd != null and spouseDobUpd != '' ">
+		  , APLICNT_SPOUSE_DOB = #{spouseDobUpd}
+		</if>
+		<if test="educationLvlUpd != null and educationLvlUpd != '' ">
+		  , APLICNT_EDC_LEV = #{educationLvlUpd}
+		</if>
+		<if test="languageUpd != null and languageUpd != '' ">
+		  , APLICNT_LANG = #{languageUpd}
+		</if>
+		<if test="issuedBankUpd != null and issuedBankUpd != '' ">
+		  , APLICNT_BANK_ID = #{issuedBankUpd}
+		</if>
+		<if test="bankAccNoUpd != null and bankAccNoUpd != '' ">
+		  , APLICNT_BANK_ACC_NO = #{bankAccNoUpd}
+		</if>
+		<if test="transportCdUpd != null and transportCdUpd != '' ">
+		  , APLICNT_TRNSPRT = #{transportCdUpd}
+		</if>
+		<if test="areaIdUpd != null and areaIdUpd != '' ">
+		  , AREA_ID = #{areaIdUpd}
+		</if>
+		<if test="addrDtlUpd != null and addrDtlUpd != '' ">
+		  , ADDR_DTL = #{addrDtlUpd}
+		</if>
+		<if test="streetDtlUpd != null and streetDtlUpd != '' ">
+		  , STREET = #{streetDtlUpd}
+		</if>
+		<if test="searchdepartmentUpd != null and searchdepartmentUpd != '' ">
+		  , MAIN_DEPT = #{searchdepartmentUpd}
+		</if>
+		<if test="inputSubDeptUpd != null and inputSubDeptUpd != '' ">
+		  , SUB_DEPT = #{inputSubDeptUpd}
+		</if>
+		<if test="meetingPointUpd != null and meetingPointUpd != '' ">
+		  , APLICNT_MEETPOINT = #{meetingPointUpd}
+		</if>
+		WHERE APLCTN_ID = (
+		    SELECT APLICNT_ID
+		    FROM ORG0001D
+		    WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
+		)
+	</update>
+
+	<select id="selectMemCourse" parameterType="Map" resultType="egovMap">
+		SELECT
+		    COURS_ITM_ID,
+		    COURS_ID,
+		    COURS_TEST_RESULT,
+		    COURS_MEM_STUS_ID
+		FROM MSC0009D
+		WHERE COURS_MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
+		AND COURS_MEM_STUS_ID = 1
+		AND COURS_TEST_RESULT IS NULL
+	</select>
+
+	<update id="memberListUpdate_MSC09" parameterType="Map">
+		UPDATE MSC0009D
+		SET COURS_D_UPD_USER_ID = #{user_id}
+		  , COURS_D_UPD_DT = SYSDATE
+		  , COURS_ID = #{courseUpd}
+		WHERE COURS_MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
+		AND COURS_ITM_ID = #{coursItmId}
+	</update>
+
 </mapper>

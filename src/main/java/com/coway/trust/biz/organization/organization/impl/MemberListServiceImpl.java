@@ -2478,7 +2478,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public void updateAplctDtls(Map<String, Object> params) {
 	    memberListMapper.updateAplctDtls(params);
 	}*/
-/*
+
 	@Override
 	public int memberListUpdate_SYS47(Map<String, Object> params) {
 	    return memberListMapper.memberListUpdate_SYS47(params);
@@ -2513,5 +2513,4 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public EgovMap selectMemCourse(Map<String, Object> params) {
 	    return memberListMapper.selectMemCourse(params);
 	}
-*/
 }
