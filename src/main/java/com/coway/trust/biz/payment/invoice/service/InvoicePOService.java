@@ -44,4 +44,10 @@ public interface InvoicePOService{
 	 */
 	void insertInvoicStatement(Map<String, Object> params);
 
+	List<EgovMap>selectInvoiceStatementStart(Map<String, Object> params);
+
+	List<EgovMap>selectInvoiceStatementEnd(Map<String, Object> params);
+
+
+
 }
