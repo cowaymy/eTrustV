@@ -7,9 +7,9 @@ var selectedEntryId;
 
 $(document).ready(function(){
    // myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-   myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros); 
-   AUIGrid.setSelectionMode(myGridID, "singleRow");  
-    
+   myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+   AUIGrid.setSelectionMode(myGridID, "singleRow");
+
  // 에디팅 시작 이벤트 바인딩
    /*  AUIGrid.bind(myGridID, ["cellEditBegin"], function(event) {
        if(event.item.name1 == 'Inactive'){
@@ -18,7 +18,7 @@ $(document).ready(function(){
     	   Common.confirm("Are you sure you want to disable the selected Invoice P/O #? Once disabled, can not restore.", fn_doDisable);
        }
     }); */
-    
+
     $("#startPeriod").keyup(function() {
         var str = $("#startPeriod").val();
         var pattern_eng = /[A-za-z]/g;
@@ -27,7 +27,7 @@ $(document).ready(function(){
              $("#startPeriod").val(str.replace(/[^0-9]/g, ""));
          }
    });
-    
+
     $("#endPeriod").keyup(function() {
         var str = $("#endPeriod").val();
         var pattern_eng = /[A-za-z]/g;
@@ -36,12 +36,12 @@ $(document).ready(function(){
              $("#endPeriod").val(str.replace(/[^0-9]/g, ""));
          }
    });
-    
+
     $("#startPeriod").change(function(e){
     	if($(this).val() < 1 ) $("#startPeriod").val(1);
     	else if($(this).val() > 60) $("#startPeriod").val(60);
     });
-    
+
     $("#endPeriod").change(function(e){
         if($(this).val() < 1 ) $("#endPeriod").val(1);
         else if($(this).val() > 60) $("#endPeriod").val(60);
@@ -67,7 +67,7 @@ var columnLayout=[
     {dataField:"poRefNo", headerText:"<spring:message code='pay.head.poReference'/>"},
     {dataField:"period", headerText:"<spring:message code='pay.head.period'/>"},
     {dataField:"userName", headerText:"<spring:message code='pay.head.createdBy'/>"},
-    {dataField:"poCrtDt", headerText:"<spring:message code='pay.head.createdAt'/>", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}, 
+    {dataField:"poCrtDt", headerText:"<spring:message code='pay.head.createdAt'/>", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
     {dataField:"username1", headerText:"<spring:message code='pay.head.updatedBy'/>"},
     {dataField:"poUpdDt", headerText:"<spring:message code='pay.head.lastUpdate'/>", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
     {dataField:"name1", headerText:"<spring:message code='pay.head.status'/>"},
@@ -84,9 +84,9 @@ var columnLayout=[
     				console.log("entryId : " +item.id);
                     selectedEntryId = item.id;
     				Common.confirm("<spring:message code='pay.alert.invoiceDisable'/>", fn_doDisable);
-    				
+
     			}
-    		} 
+    		}
     	}
     }
 ];
@@ -119,9 +119,9 @@ function fn_loadOrderPO(orderId){
         $("#orderNo").val(result.ordNo);
         $("#custName").val(result.custName);
         selectedEntryId = undefined;
-        
+
     });
-	
+
 	Common.ajax("GET", "/payment/selectOrderDataByOrderId.do", {"orderId" : orderId}, function(result) {
 		 AUIGrid.setGridData(myGridID, result);
     });
@@ -156,7 +156,7 @@ function fn_doSave(){
 		var endPeriod=$("#endPeriod").val();
 		console.log("orderId :" + orderId +", startPeriod : " + startPeriod +", endPeriod : " + endPeriod);
 		console.log("curdate : " + $.datepicker.formatDate($.datepicker.ATOM, new Date()));
-		Common.ajax("GET", "/payment/selectInvoiceStatement.do", {"orderId" : orderId, "startPeriod" : startPeriod}, function(result) {
+		Common.ajax("GET", "/payment/selectInvoiceStatement.do", {"orderId" : orderId, "startPeriod" : startPeriod , "endPeriod" : endPeriod }, function(result) {
 		    if(result.message != ''){
 		    	Common.alert(result.message);
 		    }else{
@@ -169,7 +169,7 @@ function fn_doSave(){
 		    			return;
 		    		}
 		    	}
-		    	
+
 		    	var poNo = $("#referenceNo").val();
 		    	if(poNo == undefined || poNo == '' ){
 		    		Common.alert("<spring:message code='pay.alert.requiredPONo'/>");
@@ -178,7 +178,7 @@ function fn_doSave(){
 		    		Common.alert("<spring:message code='pay.alert.not20Char'/>");
 		    		return;
 		    	}
-		    	
+
 		    	var po = {
 		    			"poOrderId" : orderId,
 		    			"poReferenceNo" : $("#referenceNo").val(),
@@ -187,7 +187,7 @@ function fn_doSave(){
 		    			"poRemark" : $("#remark").val(),
 		    			"poStatusId" : 1
 		    	};
-		    	
+
 		    	Common.ajax("GET", "/payment/insertInvoiceStatement.do", po, function(result) {
 		    		console.log(result);
 		    		fn_loadOrderPO(result.poOrderId);
@@ -196,7 +196,7 @@ function fn_doSave(){
 		    fn_hidePopup();
 	    });
 	}
-		
+
 }
 </script>
 
@@ -205,16 +205,16 @@ function fn_doSave(){
    <ul class="path">
        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
    </ul>
-  
+
    <!-- title_line start -->
    <aside class="title_line">
        <p class="fav"><a href="javascript:;" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
-       <h2>Invoice/Statement Purchase Order</h2>   
+       <h2>Invoice/Statement Purchase Order</h2>
        <ul class="right_btns">
            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
            <li><p class="btn_blue"><a href="javascript:fn_orderInfo();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
            </c:if>
-       </ul>    
+       </ul>
    </aside>
    <!-- title_line end -->
 
@@ -265,7 +265,7 @@ function fn_doSave(){
     </section>
 
     <!-- search_result start -->
-    <section class="search_result">     
+    <section class="search_result">
   <!-- grid_wrap start -->
   <article id="grid_wrap" class="grid_wrap"></article>
   <!-- grid_wrap end -->
