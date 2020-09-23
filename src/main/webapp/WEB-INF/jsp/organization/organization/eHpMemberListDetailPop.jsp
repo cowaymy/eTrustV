@@ -546,7 +546,7 @@ var gridPros = {
 function fn_selectPaymentHistory(){
 
     var jsonObj = {
-            MemberID : $("#memberid").val(),
+            MemberID : $("#hpid").val(),
             MemberType : $("#memtype").val()
 
     };
@@ -564,7 +564,7 @@ function fn_selectPaymentHistory(){
 function fn_selectRenewalHistory(){
 
     var jsonObj = {
-            MemberID : $("#memberid").val(),
+            MemberID : $("#hpid").val(),
             MemberType : $("#memtype").val()
 
     };
@@ -582,7 +582,7 @@ function fn_selectRenewalHistory(){
 function fn_selectPromote(){
 
     var jsonObj = {
-            MemberID : $("#memberid").val(),
+            MemberID : $("#hpid").val(),
             MemberType : $("#memtype").val()
 
     };
@@ -725,6 +725,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
 </aside><!-- title_line end -->
  <input type="hidden" value="<c:out value="${codeValue}"/>" id="codeValue"/>
  <input type="hidden" value="<c:out value="${memberView.memId}"/>" id="memberid"/>
+  <input type="hidden" value="<c:out value="${memberView.hpId}"/>" id="hpid"/>
  <input type="hidden" value="<c:out value="${memberView.memType}"/> "  id="memtype"/>
  <input type="hidden" value="<c:out value="${memberView.bank}"/> "  id="bank"/>
  <input type="hidden" value="<c:out value="${memberView.hsptlz}"/> "  id="hsptlz"/>
