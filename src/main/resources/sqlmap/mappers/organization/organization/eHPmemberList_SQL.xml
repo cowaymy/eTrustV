@@ -1019,7 +1019,8 @@ SELECT Limit1.MEM_ID MEM_ID  ,
        Limit1.APLICNT_MEETPOINT,
        Limit1.COLLCT_BRNCH ,
        Limit1.COLLCT_BRNCH_DESC,
-       Limit1.HP_CODE
+       Limit1.HP_CODE ,
+       Limit1.HP_ID
   FROM (
 SELECT Extent1.APLCTN_ID MEM_ID  ,
                 Extent1.APLICNT_CODE MEM_CODE  ,
@@ -1312,10 +1313,12 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 EXTENT29.MEET_POINT_CODE || ' - ' || MEET_POINT_DESC APLICNT_MEETPOINT,
                 EXTENT1.COLLCT_BRNCH ,
                EXTENT30.CODE || ' - ' || EXTENT30.NAME COLLCT_BRNCH_DESC ,
-               Extent31.MEM_CODE HP_CODE
+               Extent31.MEM_CODE HP_CODE ,
+               Extent31.MEM_ID HP_ID
          FROM ORG0003D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.APLICNT_TYPE
+                LEFT JOIN ORG0001D Extent31 ON Extent1.APLCTN_ID = Extent31.APLICNT_ID
         LEFT JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
                                    vMemberOrg.MEM_CODE MEM_CODE  ,
                                    vMemberOrg.MEM_LVL MEM_LVL  ,
@@ -1328,7 +1331,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                                    vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
                                    vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
                                    vMemberOrg.LVL0_UP_ID LVL0_UP_ID
-                            FROM ORG1001V vMemberOrg  ) Extent4   ON Extent4.MEM_ID = Extent1.APLCTN_ID
+                            FROM ORG1001V vMemberOrg  ) Extent4   ON Extent4.MEM_ID = Extent31.MEM_ID
                 LEFT JOIN ORG0012D Extent5   ON ( Extent5.MEM_ORG_LVL = Extent4.MEM_LVL )
                 AND ( Extent5.MEM_TYPE_ID = Extent1.APLICNT_TYPE )
 --                LEFT JOIN SYS0005M Extent10   ON Extent10.BRNCH_ID = UTILS.CONVERT_TO_NUMBER(Extent1.BRNCH,99999.99)
@@ -1354,7 +1357,6 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 LEFT JOIN ORG0014D Extent28   ON Extent27.BANK_ID = Extent28.Bank_ID and 848 = Extent28.TYPE_ID and 1 = Extent28.STUS_CODE_ID
                 LEFT JOIN SYS0089M Extent29 ON Extent1.APLICNT_MEETPOINT = Extent29.MEET_POINT_ID
                 LEFT JOIN SYS0005M Extent30 ON Extent1.COLLCT_BRNCH = Extent30.BRNCH_ID
-                LEFT JOIN ORG0001D Extent31 ON Extent1.APLCTN_ID = Extent31.APLICNT_ID
           WHERE  Extent1.APLCTN_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
            ]]>
     </select>
