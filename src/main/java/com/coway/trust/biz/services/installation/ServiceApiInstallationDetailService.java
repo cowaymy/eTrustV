@@ -11,6 +11,7 @@ import com.coway.trust.api.mobile.services.installation.InstallationResultDto;
  * @ClassName : ServiceApiInstallationDetailService.java
  * @Description : Mobile Installation Data Save
  *
+ *
  * @History Date Author Description ------------- ----------- ------------- 2019. 09. 17. Jun First creation
  */
 public interface ServiceApiInstallationDetailService {
