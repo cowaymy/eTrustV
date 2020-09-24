@@ -16,6 +16,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 29/04/2019    ONGHC      1.0.5       - Create chkExgRsnCde
  * 18/07/2019    ONGHC      1.0.6       - Create updateExchangeEntryCt
  * 01/07/2020    ONGHC      1.0.7       - Create checkRcdTms, updRcdTms, insertTransLog
+ *
  *********************************************************************************************/
 
 @Mapper("installationResultListMapper")
