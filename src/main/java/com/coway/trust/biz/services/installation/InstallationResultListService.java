@@ -11,6 +11,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /*********************************************************************************************
  * DATE PIC VERSION COMMENT -------------------------------------------------------------------------------------------- 31/01/2019 ONGHC 1.0.1 - Restructure File 06/03/2019 ONGHC 1.0.2 - Create getSalStat 29/04/2019 ONGHC 1.0.3 - Create chkExgRsnCde
+ *
  *********************************************************************************************/
 
 public interface InstallationResultListService {
