@@ -167,9 +167,24 @@
 
         if(document.viewForm.attachInvest.value != ""){
             var formData = Common.getFormData("viewForm");
-            Common.ajaxFile("/sales/order/investFileUpload.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
+            Common.ajaxFile("/sales/order/investFileUpload.do", formData
+            , function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
             	$("#atchFileGrpId").val(result.atchFileGrpId);
-            });
+            }
+            , function(jqXHR, textStatus, errorThrown){
+                try {
+                    console.log("Fail Status : " + jqXHR.status);
+                    console.log("code : "        + jqXHR.responseJSON.code);
+                    console.log("message : "     + jqXHR.responseJSON.message);
+                    console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+              }
+              catch (e)
+              {
+                console.log(e);
+              }
+              Common.alert("Failed to Upload. Please try again later.");
+             }
+             ,{async: true});
         }
 
         setTimeout(function(){
