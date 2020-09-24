@@ -60,7 +60,7 @@ public class HsManualController {
     params.put("userName", sessionVO.getUserName());
     params.put("userType", sessionVO.getUserTypeId());
 
-    // params.put("userType", "3");
+    // params.put("userType123", "3");
 
     logger.debug("=======================================================================================");
     logger.debug("============== initHsManualList params{} ", params);
