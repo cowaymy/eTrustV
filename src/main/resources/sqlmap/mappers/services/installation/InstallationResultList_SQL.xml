@@ -6,6 +6,7 @@
 
   <select id="selectInstallationType" parameterType="Map" resultType="egovMap">
     <![CDATA[
+
       SELECT CODE AS CODE_ID
            , CODE_NAME AS CODE_NAME
       FROM SYS0094M
@@ -3191,7 +3192,7 @@
 
   <select id="getOrderByInstallEntryID" parameterType="Map"
     resultType="egovMap">
-    
+
     <![CDATA[
       SELECT *
       FROM SAL0046D I
