@@ -14,6 +14,7 @@ import com.coway.trust.api.mobile.services.installation.InstallationResultForm;
  * @Description : Mobile Installation Data Save
  *
  * @History Date Author Description ------------- ----------- ------------- 2019. 09. 17. Jun First creation
+ * 
  */
 public interface ServiceApiInstallationService {
   ResponseEntity<InstallationResultDto> installationResult(List<InstallationResultForm> installationResultForms)
