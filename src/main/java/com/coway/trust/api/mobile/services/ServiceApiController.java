@@ -166,6 +166,7 @@ import com.coway.trust.api.mobile.services.dtProductRetrun.DtProductReturnResult
  * 30/10/2019    ONGHC      1.0.9       - Amend Installation for add EXC_CT_ID as parameter
  * 22/04/2019    ONGHC      1.0.10      - Add function getRelateOrderInfo
  * 23/04/2019    ONGHC      1.0.11      - Add function getOrdDetail
+ * 24/09/2020    FARUQ       1.0.12      - Missing product name when fail (mobile site only)
  *********************************************************************************************/
 
 @Api(value = "service api", description = "service api")
