@@ -35,6 +35,7 @@
   var ISSUE_BANK = "${orderDetail.rentPaySetInf.rentPayIssBank}";
   var BANK_ACC_NO = "${orderDetail.rentPaySetInf.rentPayAccNo}";
   var MONTH_REN_FEE = "${orderDetail.basicInfo.mthRentalFees}";
+  var BNDL_ID = "${orderDetail.basicInfo.bndlId}";
 
   var CUST_ADDR_ID = "${orderDetail.basicInfo.ordAddrId}";
   var CUST_CNCT_ID = "${orderDetail.basicInfo.ordCntcId}";
@@ -54,7 +55,8 @@
     }
 
     doGetCombo('/common/selectCodeList.do', '455', '', 'ordReqType', 'S'); //Order Edit Type
-    doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'modDscBrnchId', 'S'); //Branch Code
+    doGetComboSepa('/common/selectBranchCodeList.do', '1', ' - ', '', 'modDscBrnchId', 'S'); //Branch Code
+
   });
 
   $(function() {
@@ -658,7 +660,14 @@
 
 	        $("#modInstAreaId").val(addrInfo.areaId);
 	        $("#modInstCustAddId").val(addrInfo.custAddId);
-	        $("#modDscBrnchId").val(addrInfo.brnchId); //DSC Branch
+
+	        if(BNDL_ID > 0){
+	        	$("#modDscBrnchId").val(addrInfo.htBrnchId); //DSC Branch
+	        }
+	        else{
+	        	$("#modDscBrnchId").val(addrInfo.brnchId); //DSC Branch
+	        }
+
 	      }
 	    });
 	  }

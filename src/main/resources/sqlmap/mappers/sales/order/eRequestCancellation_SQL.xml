@@ -1280,14 +1280,12 @@
       <if test="deptCode != null and deptCode != ''">
         AND UPPER(ORG.DEPT_CODE) = UPPER(#{deptCode})
       </if>
-      <choose>
-        <when test = "isHomecare != null and isHomecare != ''">
-            AND SOM.BNDL_ID > 0
-        </when>
-        <otherwise>
-            AND (SOM.BNDL_ID = 0 OR SOM.BNDL_ID IS NULL)
-        </otherwise>
-      </choose>
+      <if test="isHomecare == '1'">
+        AND SOM.BNDL_ID > 0
+      </if>
+      <if test="isHomecare == '0'">
+        AND (SOM.BNDL_ID = 0 OR SOM.BNDL_ID IS NULL)
+      </if>
       ORDER BY RQST_ID DESC
    </select>
 
@@ -1308,11 +1306,19 @@
     WHERE SALES_ORD_ID = #{salesOrdId}
   </update>
 
-  <update id="updSAL0045D_instAddr" parameterType="Map">
+  <update id="updSAL0045D" parameterType="Map">
     UPDATE SAL0045D
-    SET ADD_ID = #{custAddrId},
-        BRNCH_ID = #{dscBrnchId},
+    SET
         UPD_DT = SYSDATE,
+
+        <if test="custAddrId != null and custAddrId != ' ' ">
+            ADD_ID = #{custAddrId},
+            BRNCH_ID = #{dscBrnchId},
+        </if>
+        <if test="custCntcId != null and custCntcId != ' ' ">
+            CNT_ID = #{custCntcId},
+        </if>
+
         UPD_USER_ID = #{updator}
     WHERE SALES_ORD_ID = #{salesOrdId}
   </update>

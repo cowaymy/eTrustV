@@ -10,6 +10,8 @@
       function() {
     	  if ("${SESSION_INFO.roleId}" == "297") {
     		  $("#isHomecare").val("1");
+    	  }else if ("${SESSION_INFO.memberLevel}" < 0){
+    		  $("#isHomecare").val("0");
     	  }
 
     	  if ("${SESSION_INFO.memberLevel}" == "1") {
