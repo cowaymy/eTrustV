@@ -35,6 +35,7 @@ import org.springframework.beans.BeanUtils;
  * @ClassName : ServiceApiInstallationServiceImpl.java
  * @Description : Mobile Installation Data Save
  *
+ *
  * @History Date Author Description ------------- ----------- ------------- 2019. 09. 17. Jun First creation
  */
 @Service("serviceApiInstallationService")
