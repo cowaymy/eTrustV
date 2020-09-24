@@ -34,6 +34,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @ClassName : ServiceApiInstallationDetailServiceImpl.java
  * @Description : Mobile Installation Data Save
  *
+ *
  * @History Date Author Description /********************************************************************************************* DATE PIC VERSION COMMENT -------------------------------------------------------------------------------------------- 17/09/2019 JUN 1.0.1 - Jun First creation 16/07/2020 ONGHC 1.0.2 - Amend installFailJobRequestProc 17/08/2020 FARUQ 1.0.3 - Get the product name when fail on mobile site
  *********************************************************************************************/
 
