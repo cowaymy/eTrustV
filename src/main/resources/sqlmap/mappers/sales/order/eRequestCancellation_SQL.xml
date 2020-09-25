@@ -1257,10 +1257,23 @@
         </foreach>
       </if>
       <if test="branchList != null and branchList != ''">
-        AND INST.BRNCH_ID IN
+        AND
+         (
+
+         INST.BRNCH_ID IN
           <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
             #{item}
           </foreach>
+
+         OR
+
+         TO_BRNCH.BRNCH_ID IN
+         <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+            #{item}
+          </foreach>
+
+         )
+
       </if>
       <if test="reqStusList != null and reqStusList != ''">
         AND RQST.STUS_CODE_ID IN
