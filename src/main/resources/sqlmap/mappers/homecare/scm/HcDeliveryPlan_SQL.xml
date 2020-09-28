@@ -85,7 +85,8 @@
 		                              FROM SYS0028M A
 		                                 , SYS0064M B
 		                             WHERE A.AREA_ID = B.AREA_ID(+)
-		                               AND A.WH_LOC_CODE IN ('3010', '3020', '3030')
+		                               --AND A.WH_LOC_CODE IN ('3010', '3020', '3030')
+		                               AND A.HC_CHK = 'Y'
 		                           ) B  -- CDC MASTER
 							 WHERE A.CDC = B.CDC (+)
 							   AND A.SUPP_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '438' AND CODE = '20')
