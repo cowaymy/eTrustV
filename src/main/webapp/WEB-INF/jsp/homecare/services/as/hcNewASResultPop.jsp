@@ -1131,10 +1131,13 @@
     $('#tpSettleTime').removeAttr("disabled").removeClass("readonly");
     $('#ddlDSCCode').removeAttr("disabled").removeClass("readonly");
     $('#ddlCTCode').removeAttr("disabled").removeClass("readonly");
+    $('#ddlCTCodeText').removeAttr("disabled").removeClass("readonly");// Enable the DT Code field for HTM to edit it.
     $('#ddlErrorCode').removeAttr("disabled").removeClass("readonly");
     $('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");
     $('#txtRemark').removeAttr("disabled").removeClass("readonly");
     $('#iscommission').removeAttr("disabled").removeClass("readonly");
+    $('#isTransferToDT').removeAttr("disabled").removeClass("readonly");
+
     //$('#def_type').removeAttr("disabled").removeClass("readonly");
     //$('#def_code').removeAttr("disabled").removeClass("readonly");
     //$('#def_part').removeAttr("disabled").removeClass("readonly");
@@ -1257,10 +1260,12 @@
     $('#ddlDSCCode').attr("disabled", true);
     $('#ddlErrorCode').attr("disabled", true);
     $('#ddlCTCode').attr("disabled", true);
+    $('#ddlCTCodeText').attr("disabled", true);
     $('#ddlErrorDesc').attr("disabled", true);
     $('#ddlWarehouse').attr("disabled", true);
     $('#txtRemark').attr("disabled", true);
     $("#iscommission").attr("disabled", true);
+    $("#isTransferToDT").attr("disabled", true);
 
     // AS CHARGES FEES
     fn_clearPanelField_ASChargesFees();
@@ -1406,6 +1411,7 @@
       AS_RESULT_REM : $('#txtRemark').val(),
       AS_MALFUNC_ID : $('#ddlErrorCode').val(),
       AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
+      AS_TRANSFER_TO_DT : $("#isTransferToDT").prop("checked") ? '1' : '0',
 
       // AS RECALL ENTRY
       AS_APP_DT : $("#appDate").val(),
@@ -1517,9 +1523,11 @@
     $("#ddlErrorCode").attr("disabled", true);
     $("#ddlErrorDesc").attr("disabled", true);
     $("#ddlCTCode").attr("disabled", true);
+    $('#ddlCTCodeText').attr("disabled", true);
     $("#ddlWarehouse").attr("disabled", true);
     $("#txtRemark").attr("disabled", true);
     $("#iscommission").attr("disabled", true);
+    $("#isTransferToDT").attr("disabled", true);
 
     $("#def_type").attr("disabled", true);
     $("#def_code").attr("disabled", true);
@@ -2565,6 +2573,14 @@ function fnSerialSearchResult(data) {
                <a href="#none" onClick="fn_serialModifyPop()">EDIT</a>
             </p>
           </td>
+         </tr>
+         <tr>
+             <th scope="row"><spring:message code='home.text.TransferToDT' /></th>
+             <td>
+                   <label><input type="checkbox" disabled="disabled" id='isTransferToDT' name='isTransferToDT' /><span><spring:message code='home.text.TransferToDT' /></span></label>
+             </td>
+             <td></td>
+             <td></td>
          </tr>
         </tbody>
        </table>

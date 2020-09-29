@@ -3110,7 +3110,8 @@
                            SGN_DT,
                            TRNSC_ID,
                            PSI,
-                           LPM
+                           LPM,
+                           AS_TRANSFER_TO_DT
     ) VALUES ( #{AS_RESULT_ID},
                #{AS_RESULT_NO},
                #{AS_ENTRY_ID},
@@ -3168,7 +3169,8 @@
                #{SGN_DT},
                #{TRNSC_ID},
                #{AS_PSI},
-               #{AS_LPM}
+               #{AS_LPM},
+               NVL(#{AS_TRANSFER_TO_DT},0)
     )
   </insert>
 

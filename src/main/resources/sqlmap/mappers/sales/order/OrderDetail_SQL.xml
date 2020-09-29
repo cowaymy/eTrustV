@@ -561,6 +561,7 @@
                , T4.ORG_CODE ORG_CODE
                , T5.MEM_ID MEM_ID1
                , T5.MEM_CODE MEM_CODE1
+               , T5.BRNCH BRANCH_CODE
                , T5.NAME NAME1
                , T5.TEL_MOBILE TEL_MOBILE1
                , T7.MEM_ID MEM_ID2

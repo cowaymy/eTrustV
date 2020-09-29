@@ -597,16 +597,17 @@
 
     <select id="getBrnchId" parameterType="Map" resultType="egovMap">
     /* [com.coway.trust.biz.homecare.services.as.impl.HcASManagementListMapper.getBrnchId] - KR.JIN */
-	    SELECT CODE_ID
-	         , CODE_NAME
-	      FROM ( SELECT BRNCH_ID AS CODE_ID
-	                  , CODE ||'-'||NAME AS CODE_NAME
-	               FROM SYS0005M
-	              WHERE STUS_ID = 1
-	                AND TYPE_ID = (SELECT CODE_ID FROM SYS0013M
-                                    WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE = 'HDC')
-	              ORDER BY BRNCH_ID ASC
-	    ) A ORDER BY CODE_NAME ASC
+
+      SELECT CODE_ID
+             , CODE_NAME
+          FROM ( SELECT BRNCH_ID AS CODE_ID
+                      , CODE ||'-'||NAME AS CODE_NAME
+                   FROM SYS0005M
+                  WHERE STUS_ID = 1
+                    AND TYPE_ID IN (SELECT CODE_ID FROM SYS0013M
+                                    WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE IN ('HDC','HT','CDB'))
+                  ORDER BY BRNCH_ID ASC
+        ) A ORDER BY CODE_NAME ASC
     </select>
 
 	<select id="assignCtList" parameterType="Map" resultType="egovMap">

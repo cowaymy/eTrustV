@@ -85,7 +85,12 @@
   }
 
   function fn_brCde_SetVal() {
-    $("#branchDSC").val(asBrCde);
+	  asBrCde = '${orderDetail.codyInfo.branchCode}' ;
+
+	  if(asBrCde == null || asBrCde == ""){
+		  asBrCde = "284";  // set to default HDSC Branch => "HCB-01- HT BRANCH - ARA DAMANSARA" when HTM branch is empty
+	  }
+      $("#branchDSC").val(asBrCde);
   }
 
   function fn_setComboBox1() {
@@ -94,6 +99,7 @@
 
   function fn_setComboBox2() {
     doGetCombo('/homecare/services/as/getBrnchId.do', '', '', 'branchDSC', 'S', 'fn_brCde_SetVal');
+
   }
 
   function fn_setEditValue() {
@@ -1387,8 +1393,7 @@
         <tr>
          <th scope="row"><spring:message code='home.lbl.hdcBranch' /><span class="must">*</span></th>
          <td colspan="3">
-          <select class="w100p" id="branchDSC" name="branchDSC" class="" disabled="disabled">
-           </select>
+            <select class="w100p" id="branchDSC" name="branchDSC" class="" disabled="disabled"></select>
          </td>
          <th scope="row"><spring:message code='home.lbl.dTGroup' /></th>
          <td>
