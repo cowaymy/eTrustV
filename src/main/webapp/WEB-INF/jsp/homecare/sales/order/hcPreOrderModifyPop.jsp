@@ -13,6 +13,8 @@
   var otherFileId = 0;
   var otherFileId2 = 0;
   var sofTncFileId = 0;
+  var msofFileId = 0;
+  var msofTncFileId = 0;
 
   var sofFileName = "";
   var nricFileName = "";
@@ -21,6 +23,8 @@
   var otherFileName = "";
   var otherFileName2 = "";
   var sofTncFileName = "";
+  var msofFileName = "";
+  var msofTncFileName = "";
 
   var salesManType = "";
 
@@ -687,6 +691,31 @@
         }
       }
     });
+
+    $('#msofFile').change( function(evt) {
+        var file = evt.target.files[0];
+        if(file == null){
+            remove.push(msofFileId);
+        }else if(file.name != msofFileName){
+             myFileCaches[8] = {file:file};
+             if(msofFileName != ""){
+                 update.push(msofFileId);
+             }
+         }
+    });
+
+    $('#msofTncFile').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null){
+            remove.push(msofTncFileId);
+        }else if(file.name != msofTncFileName){
+            myFileCaches[9] = {file:file};
+            if(msofTncFileName != ""){
+                update.push(msofTncFileId);
+            }
+        }
+    });
+
   });
 
   function fn_loadBankAccountPop(bankAccId) {
@@ -2046,6 +2075,18 @@
               $(".input_text[id='sofTncFileTxt']").val(sofTncFileName);
               break;
 
+            case '8':
+                msofFileId = result[i].atchFileId;
+                msofFileName = result[i].atchFileName;
+                $(".input_text[id='msofFileTxt']").val(msofFileName);
+                break;
+
+            case '9':
+                msofTncFileId = result[i].atchFileId;
+                msofTncFileName = result[i].atchFileName;
+                $(".input_text[id='msofTncFileTxt']").val(msofTncFileName);
+                break;
+
             default:
               Common.alert("no files");
             }
@@ -2095,6 +2136,16 @@
       $("#sofTncFile").val("");
       $(".input_text[name='sofTncFileTxt']").val("");
       $('#sofTncFile').change();
+
+    }else if(name == "MSOF") {
+        $("#msofFile").val("");
+        $(".input_text[name='msofFileTxt']").val("");
+        $('#msofFile').change();
+
+    }else if(name == "MSOFTNC") {
+        $("#msofTncFile").val("");
+        $(".input_text[name='msofTncFileTxt']").val("");
+        $('#msofTncFile').change();
     }
   }
 
@@ -2115,7 +2166,7 @@
     return isValid;
   }
 
-  /*  function fn_validRcdTms() {
+    function fn_validRcdTms() {
        var isValid = true, msg = "";
 
        Common.ajaxSync("GET", "/sales/order/selRcdTms.do", $("#frmPreOrdReg").serialize(), function(result) {
@@ -2129,7 +2180,7 @@
 
        return isValid;
 
-   } */
+   }
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->
@@ -3356,6 +3407,35 @@
                   </div>
                 </td>
               </tr>
+
+              <tr>
+                <th scope="row">Mattress Sales Order Form (MSOF)</th>
+                <td>
+                    <div class='auto_file2 auto_file3'>
+                        <input type='file' title='file add'  id='msofFile' accept='image/*''/>
+                        <label>
+                            <input type='text' class='input_text' readonly='readonly' id='msofFileTxt'/>
+                            <span class='label_text'><a href='#'>Upload</a></span>
+                        </label>
+                        <span class='label_text'><a href='#' onclick='fn_removeFile("MSOF")'>Remove</a></span>
+                    </div>
+              </td>
+            </tr>
+
+            <tr>
+                <th scope="row">Mattress Sales Order Form's T&C (MSOF T&C)</th>
+                <td>
+                    <div class="auto_file2 auto_file3">
+                        <input type="file" title="file add" id="msofTncFile" accept="image/*"/>
+                        <label>
+                            <input type='text' class='input_text' readonly='readonly' id='msofTncFileTxt'/>
+                            <span class='label_text'><a href='#'>Upload</a></span>
+                        </label>
+                        <span class='label_text'><a href='#' onclick='fn_removeFile("MSOFTNC")'>Remove</a></span>
+                    </div>
+                </td>
+            </tr>
+
               <tr>
                 <td colspan=2>
                   <span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span>
