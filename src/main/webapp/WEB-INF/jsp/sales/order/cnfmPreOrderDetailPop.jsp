@@ -37,6 +37,8 @@
         if(myFileCaches[5] != null) $('#txtOtherFileName_RW').text(myFileCaches[5].file.name);
         if(myFileCaches[6] != null) $('#txtOtherFileName2_RW').text(myFileCaches[6].file.name);
         if(myFileCaches[7] != null) $('#txtSofTncFileName_RW').text(myFileCaches[7].file.name);
+        if(myFileCaches[8] != null) $('#txtMSofFileName_RW').text(myFileCaches[8].file.name);
+        if(myFileCaches[9] != null) $('#txtMSofTncFileName_RW').text(myFileCaches[9].file.name);
     }
 
   });
@@ -77,6 +79,12 @@
                           break;
                       case '7':
                           $(".input_text[id='txtSofTncFileName_RW']").val(result[i].atchFileName);
+                          break;
+                      case '8':
+                          $(".input_text[id='txtMSofFileName_RW").val(result[i].atchFileName);
+                          break;
+                      case '9':
+                          $(".input_text[id='txtMSofTncFileName_RW").val(result[i].atchFileName);
                           break;
                        default:
                            Common.alert("no files");
@@ -206,6 +214,16 @@
     <th scope="row">Declaration letter/Others form</th>
     <td><span id="txtOtherFileName2_RW"></span></td>
 </tr>
+
+<tr>
+   <th scope="row">Mattress Sales Order Form (MSOF)</th>
+   <td><span id="txtMSofFileName_RW"></span></td>
+ </tr>
+<tr>
+   <th scope="row">Mattress Sales Order Form's T&C (MSOF T&C)</th>
+   <td><span id="txtMSofTncFileName_RW"></span></td>
+</tr>
+
 </tbody>
 </table><!-- table end -->
 

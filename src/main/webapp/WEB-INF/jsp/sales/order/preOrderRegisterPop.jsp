@@ -691,6 +691,26 @@
             }
             console.log(myFileCaches);
         });
+
+        $('#msofFile').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[8] != null){
+                delete myFileCaches[8];
+            }else if(file != null){
+                myFileCaches[8] = {file:file};
+            }
+            console.log(myFileCaches);
+        });
+
+        $('#msofTncFile').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[9] != null){
+                delete myFileCaches[9];
+            }else if(file != null){
+                myFileCaches[9] = {file:file};
+            }
+            console.log(myFileCaches);
+        });
     });
 
     function fn_loadBankAccountPop(bankAccId) {
@@ -1855,6 +1875,12 @@
         }else if(name == "TNC"){
             $("#sofTncFile").val("");
             $('#sofTncFile').change();
+        }else if(name == "MSOF"){
+            $("#msofFile").val("");
+            $('#msofFile').change();
+        }else if(name == "MSOFTNC"){
+            $("#msofTncFile").val("");
+            $('#msofTncFile').change();
         }
     }
 
@@ -2913,6 +2939,33 @@
                 <input type='text' class='input_text' readonly='readonly' />
                 <span class='label_text'><a href='#'>Upload</a></span>
                 <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
+            </label>
+        </div>
+    </td>
+</tr>
+
+<tr>
+    <th scope="row">Mattress Sales Order Form (MSOF)</th>
+    <td>
+        <div class="auto_file2">
+            <input type="file" title="file add" id="msofFile" accept="image/*" />
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("MSOF")'>Remove</a></span>
+            </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Mattress Sales Order Form's T&C (MSOF T&C)</th>
+    <td>
+        <div class="auto_file2">
+            <input type="file" title="file add" id="msofTncFile" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("MSOFTNC")'>Remove</a></span>
             </label>
         </div>
     </td>
