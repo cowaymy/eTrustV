@@ -242,7 +242,7 @@ public class BatchPaymentController {
 		String payModeId = request.getParameter("payModeId");
 		String payItmCardModeId = "";
 		if("107".equals(payModeId)) {
-		    payItmCardModeId = "6161";
+		    payItmCardModeId = "6166";
 		}
 
 		Map<String, MultipartFile> fileMap = request.getFileMap();
