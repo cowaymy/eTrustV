@@ -115,7 +115,7 @@
 
     // 리스트 조회.
     function fn_selectDocSubmissionList() {
-        Common.ajax("GET", "/sales/order/selectDocSubmissionList.do", {typeCodeId : '248'}, function(result) {
+        Common.ajaxSync("GET", "/sales/order/selectDocSubmissionList.do", {typeCodeId : '248'}, function(result) {
             AUIGrid.setGridData(docGridID, result);
         });
     }
@@ -1688,7 +1688,7 @@
             docSubmissionVOList    : GridCommon.getEditData(docGridID)
         };
 console.log(orderVO);
-        Common.ajax("POST", "/homecare/sales/order/hcRegisterOrder.do", orderVO, function(result) {
+        /* Common.ajax("POST", "/homecare/sales/order/hcRegisterOrder.do", orderVO, function(result) {
             Common.alert('<spring:message code="sal.alert.msg.ordSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
 
         },  function(jqXHR, textStatus, errorThrown) {
@@ -1698,7 +1698,7 @@ console.log(orderVO);
                 console.log(e);
             }
             alert("Fail : " + jqXHR.responseJSON.message);
-        });
+        }); */
     }
 
     function fn_orderRegPopClose() {

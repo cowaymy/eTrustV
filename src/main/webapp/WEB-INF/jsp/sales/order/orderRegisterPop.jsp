@@ -100,7 +100,7 @@
 
     // 리스트 조회.
     function fn_selectDocSubmissionList() {
-        Common.ajax("GET", "/sales/order/selectDocSubmissionList.do", {typeCodeId : '248'}, function(result) {
+        Common.ajaxSync("GET", "/sales/order/selectDocSubmissionList.do", {typeCodeId : '248'}, function(result) {
             AUIGrid.setGridData(docGridID, result);
         });
     }
@@ -421,8 +421,10 @@
             }
             else {
                  //docDefaultChk = false;
+
                  if(vCodeId == '3198'){ // SOF Form, check default when it is not eKey-in
                      AUIGrid.setCellValue(docGridID, i, "chkfield", 1);
+                     console.log(vCodeId);
                      //if(docDefaultChk == false) docDefaultChk = true;
                  }
             }
