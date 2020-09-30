@@ -519,4 +519,49 @@ public class LoginController {
 		return ResponseEntity.ok(popInfo);
 	}
 
+	@RequestMapping(value = "/loginNoticePopCheck", method = RequestMethod.GET)
+	public ResponseEntity<Map> loginNoticePopCheck(@RequestParam Map<String, Object> params, HttpServletRequest request,
+			ModelMap model, SessionVO sessionVO) throws ParseException {
+
+		Map<String, Object> popNoticeInfo = new HashMap();
+
+		params.put("userTypeId", "0000"); // universal member type
+
+		EgovMap noticePopItem = new EgovMap();
+		noticePopItem = loginService.getCowayNoticePopDtls(params);
+
+		if (noticePopItem != null && !noticePopItem.isEmpty()){
+
+    		if (noticePopItem.containsKey("popNewFlNm")) {
+    			popNoticeInfo.put("retMsg", "");
+    			popNoticeInfo.put("popFlName", noticePopItem.get("popNewFlNm"));
+    		} else {
+    			popNoticeInfo.put("retMsg", "No Notice.");
+    			popNoticeInfo.put("popFlName", "-");
+    		}
+		} else {
+			popNoticeInfo.put("retMsg", "No Notice.");
+		}
+
+		return ResponseEntity.ok(popNoticeInfo);
+	}
+
+	@RequestMapping(value = "/loginNoticePop.do")
+	public String loginNoticePop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		LOGGER.debug("params : {}", params);
+		model.put("loginUserId", (String) params.get("loginUserId"));
+		model.put("os", (String) params.get("os"));
+		model.put("browser", (String) params.get("browser"));
+		model.put("userId", (String) params.get("userId"));
+		model.put("password", (String) params.get("password"));
+		model.put("userType", (String) params.get("loginUserType"));
+		model.put("pdfNm", params.get("loginPdf"));
+		model.put("popType", params.get("popType"));
+
+		model.put("inQueue", params.get("inQueue"));
+
+		return "/login/loginNoticePop";
+	}
+
 }

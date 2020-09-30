@@ -172,4 +172,9 @@ public class LoginServiceImpl implements LoginService {
     public EgovMap getPopDtls(Map<String, Object> params) {
         return loginMapper.getPopDtls(params);
     }
+
+	@Override
+	public EgovMap getCowayNoticePopDtls(Map<String, Object> params){
+		return loginMapper.getCowayNoticePopDtls(params);
+	}
 }

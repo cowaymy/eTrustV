@@ -349,4 +349,19 @@
         </if>
         AND POP_FLG = 'A'
     </select>
+
+    <select id="getCowayNoticePopDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            POP_NEW_FL_NM,
+            POP_ORI_FL_NM,
+            POP_TYPE
+        FROM SYS0091M
+		WHERE POP_MEM_TYPE = #{userTypeId}
+			AND POP_TYPE = 'N'
+			AND POP_FLG = 'A'
+			AND TO_CHAR(VALID_FR, 'YYYYMMDD') <![CDATA[<=]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+			AND TO_CHAR(VALID_TO, 'YYYYMMDD') <![CDATA[>=]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+			AND ROWNUM = 1
+		ORDER BY CRT_DT DESC
+    </select>
 </mapper>

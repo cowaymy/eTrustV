@@ -263,23 +263,43 @@
 
                     // HP, Cody, CT, Staff, Admin
                     if(result.data.userIsPartTime != "1" && result.data.userIsExternal != "1"){
-                        Common.ajax("GET", "/login/loginPopCheck", {userId : userId, userTypeId : result.data.userTypeId}, function(aResult) {
-                            console.log("aResult :: " + aResult);
 
+                    	var noticePopResult = null;
+                    	var aResult = null;
+                    	var inQueue = 0;
+
+                    	// Added for displaying important Notice by Management to all HP, Cody, CT, Staff, Admin. By Hui Ding, 2020-09-28
+                        Common.ajaxSync("GET", "/login/loginNoticePopCheck", {userId : userId, userTypeId : result.data.userTypeId}, function(noticePop) {
+                        	noticePopResult = noticePop;
+                        	console.log("noticePop");
+                        });
+
+	                    Common.ajaxSync("GET", "/login/loginPopCheck", {userId : userId, userTypeId : result.data.userTypeId}, function(aResultSet) {
+                            aResult = aResultSet;
+                            console.log("aResultSet");
+                        });
+                        //fn_goMain();
+
+                        if (aResult != null){
+                        	console.log("aResult :: " + aResult);
                             $("#loginUserType").val(result.data.userTypeId);
 
                             if(aResult.retMsg == "") {
                                 if((aResult.popExceptionMemroleCnt > 0 || aResult.popExceptionUserCnt > 0)
-                                	&& (aResult.surveyTypeId <= 0 || aResult.verifySurveyStus >= 1)){
-                                    fn_goMain();
+                                    && (aResult.surveyTypeId <= 0 || aResult.verifySurveyStus >= 1)){
+                                	if (noticePopResult == null){
+                                		  fn_goMain();
+                                	}
                                 }
                                 else if ( (aResult.popExceptionMemroleCnt > 0 || aResult.popExceptionUserCnt > 0)
-                                		&& (aResult.surveyTypeId > 0 && aResult.verifySurveyStus <= 0) ){
-                                	console.log("aResult.surveyTypeId ::" + aResult.surveyTypeId + ".  aResult.verifySurveyStus ::" +  aResult.verifySurveyStus );
-                                	$("#loginForm surveyTypeId").val(aResult.surveyTypeId);
+                                        && (aResult.surveyTypeId > 0 && aResult.verifySurveyStus <= 0) ){
+                                    console.log("aResult.surveyTypeId ::" + aResult.surveyTypeId + ".  aResult.verifySurveyStus ::" +  aResult.verifySurveyStus );
+                                    $("#loginForm surveyTypeId").val(aResult.surveyTypeId);
                                     fn_goSurveyForm(aResult.surveyTypeId);
+                                    inQueue = 1;
                                 }
                                 else {
+                                	inQueue = 1;
                                     $("#loginPdf").val(aResult.popFlName);
                                     $("#popType").val(aResult.popType);
                                     $("#popAck1").val(aResult.popAck1);
@@ -292,12 +312,27 @@
                                     $("#verBankAccNo").val(aResult.verBankAccNo);
                                     $("#verBankName").val(aResult.verBankName);
                                     Common.popupDiv("/login/loginPop.do", $("#loginForm").serializeJSON(), null, false, '_loginPop');
-                            	}
+                                }
                             } else {
                                 Common.alert(aResult.retMsg);
                             }
-                        });
-                        //fn_goMain();
+                        }
+
+                        if (noticePopResult != null && noticePopResult != ""){
+                            if (noticePopResult.retMsg == "") {
+                                $("#loginPdf").val(noticePopResult.popFlName);
+                                $("#popType").val(noticePopResult.popType);
+                                Common.popupDiv("/login/loginNoticePop.do?inQueue=" + inQueue, $("#loginForm").serializeJSON(), null, false, '_loginNoticePop');
+                            } else if (noticePopResult.retMsg == "No Notice."){
+                            	if (inQueue != 1){
+                            	    fn_goMain();
+                            	} else {
+                            		//console.log(noticePopResult.retMsg);
+                            	}
+                            } else {
+                            	console.log(noticePopResult.retMsg);
+                            }
+                       }
                     }
                     // External
                     else {
@@ -407,6 +442,12 @@
 
             });
     }
+
+      /*  function fn_cont() {
+           /* window.open('','_parent','');
+           window.close();
+    	   $("#btnClose").click();
+   } */
 
 </script>
 
