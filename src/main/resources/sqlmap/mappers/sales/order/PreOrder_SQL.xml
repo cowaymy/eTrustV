@@ -498,7 +498,8 @@
     <select id="selRcdTms" parameterType="Map" resultType="int">
       SELECT COUNT(*) COUNT
         FROM SAL0213M
-      WHERE PRE_ORD_ID = #{preOrdId} AND UPD_DT = TO_DATE(SUBSTR(#{rcdTms},1,19), 'YYYY-MM-DD HH24:MI:SS')
+      WHERE PRE_ORD_ID = #{preOrdId}
+       AND TO_CHAR(UPD_DT,'YYYYMMDDHH24MISS') = TO_CHAR(TO_DATE(SUBSTR(#{rcdTms},1,19), 'YYYY-MM-DD HH24:MI:SS'),'YYYYMMDDHH24MISS')
     </select>
 
     <update id="updateKeyinSOF" parameterType="Map">
