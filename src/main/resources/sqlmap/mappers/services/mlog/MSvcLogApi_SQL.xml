@@ -71,7 +71,10 @@
            TO_CHAR (NVL(A.warranty,0)) AS warranty,
            TO_CHAR (NVL(B.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding,
            A.SERIAL_CHK,
-           A.HS_CHK_LST
+           A.HS_CHK_LST,
+           A.VOUCHER ,
+           A.REDEEM_DT,
+           A.REDEEM_WARRANTY
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -129,7 +132,10 @@
                   srv_mem_cntrct_id,
                   warranty,
                   SERIAL_CHK,
-                  HS_CHKLIST AS HS_CHK_LST
+                  HS_CHKLIST AS HS_CHK_LST,
+                  VOUCHER ,
+                  REDEEM_DT,
+                  REDEEM_WARRANTY
            FROM ( SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
                                   A.STUS_CODE_ID AS job_Status,
@@ -201,6 +207,10 @@
                                    U.FAUCET_EXCH AS warranty,
                                    NVL(L.SERIAL_CHK, 'N') AS SERIAL_CHK,
                                    B.HS_CHKLIST
+                                   NVL(Z.VOUCHER, '') AS VOUCHER,
+                                    CASE WHEN Y.REDEEM_HS = 0 OR Y.REDEEM_HS = '0' OR Y.REDEEM_HS = '' THEN ''
+                                    ELSE TO_CHAR(Y.REDEEM_MTH || '-' || Y.REDEEM_YEAR) END AS REDEEM_DT,
+                                    TO_CHAR(Y.REDEEM_WARRANTY) AS REDEEM_WARRANTY
                   FROM (SELECT A.*
                         FROM SVC0008D A,
                         ORG0001D B
@@ -282,7 +292,8 @@
                  SAL0017D T,
                  (SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID, SRV_SO_ID, FAUCET_EXCH FROM SAL0090D WHERE SRV_STUS_ID = 1 GROUP BY SRV_SO_ID, FAUCET_EXCH) U,
                  SAL0028D W,
-                 SYS0013M X
+                 SYS0013M X ,
+                 SAL0261D Y
 
                  WHERE A.SCHDUL_ID = B.SCHDUL_ID(+)
                     AND A.SALES_ORD_ID = B.SALES_ORD_ID(+)
