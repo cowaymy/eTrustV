@@ -180,9 +180,9 @@
         };
 
         Common.confirm("Confirm to " + name + " SOF : " + sof  + " ? " , function(){
-        	if(!fn_validRcdTms(preOrdId, rcdTms, '#updFail_wrap')){
+        	/* if(!fn_validRcdTms(preOrdId, rcdTms, '#updFail_wrap')){
         		return;
-        	}else{
+        	}else{ */
         		Common.ajax("POST", "/homecare/sales/order/updateHcPreOrderStatus.do", failUpdOrd, function(result) {
                     Common.alert("Order Failed" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closeFailedStusPop);
                 },
@@ -193,7 +193,7 @@
                         console.log(e);
                     }
                 });
-        	}
+        	//}
         });
     }
 

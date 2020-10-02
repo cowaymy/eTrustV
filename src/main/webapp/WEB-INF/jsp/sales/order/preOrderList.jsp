@@ -184,9 +184,9 @@
     	};
 
     	Common.confirm("Confirm to " + name + " SOF : " + sof  + " ? " , function(){
-    		if(!fn_validRcdTms(preOrdId, rcdTms, '#updFail_wrap')){
+    		/* if(!fn_validRcdTms(preOrdId, rcdTms, '#updFail_wrap')){
                 return;
-            }else{
+            }else{ */
                 Common.ajax("POST", "/sales/order/updateFailPreOrderStatus.do", failUpdOrd, function(result) {
                     Common.alert("Order Failed" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closeFailedStusPop);
                 },
@@ -198,7 +198,7 @@
                         console.log(e);
                     }
                 });
-            }
+            //}
 
     	});
     }
@@ -558,6 +558,8 @@
             ,   rcdTms   : rcdTms
         };
 
+        console.log("preOrdId::"+ preOrdId);
+        console.log("rcdTms::"+rcdTms);
         console.log(param);
 
         Common.ajaxSync("GET", "/sales/order/selRcdTms.do", param, function(result) {
