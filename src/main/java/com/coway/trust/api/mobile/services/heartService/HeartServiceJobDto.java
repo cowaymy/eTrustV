@@ -227,8 +227,15 @@ public class HeartServiceJobDto {
   private String disinfecServ;
 
   private String hsChkLst;
-  
-  public String getSerialChk() {
+
+  private String voucher;
+
+  private String redeemDt;
+
+  private String redeemWarranty;
+
+
+public String getSerialChk() {
     return serialChk;
   }
 
@@ -838,6 +845,30 @@ public class HeartServiceJobDto {
 
 public void setHsChkLst(String hsChkLst) {
 	this.hsChkLst = hsChkLst;
+}
+
+public String getVoucher() {
+	return voucher;
+}
+
+public void setVoucher(String voucher) {
+	this.voucher = voucher;
+}
+
+public String getRedeemDt() {
+	return redeemDt;
+}
+
+public void setRedeemDt(String redeemDt) {
+	this.redeemDt = redeemDt;
+}
+
+public String getRedeemWarranty() {
+	return redeemWarranty;
+}
+
+public void setRedeemWarranty(String redeemWarranty) {
+	this.redeemWarranty = redeemWarranty;
 }
 
 }
