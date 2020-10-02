@@ -323,6 +323,7 @@
                     AND C.PROMO_ID = T.PROMO_ID(+)
                     AND C.SALES_ORD_ID = U.SRV_SO_ID
                     AND B.RESULT_IS_CURR(+) = 1
+                    AND C.SALES_ORD_ID = Y.SALES_ORD_ID(+)
                   )AA ,( SELECT SRV_CONFIG_ID ,
                                 COUNT(*) FILT_CNT
                          FROM ( (SELECT *
