@@ -1392,6 +1392,8 @@
 
         if(convToOrdYn == 'Y'){// if it is eKeyin order
 
+        	console.log("preOrdId::"+ preOrdId);
+            console.log("rcdTms::"+rcdTms);
         	Common.ajax("GET", "/sales/order/selRcdTms.do", {preOrdId : preOrdId, rcdTms : rcdTms}, function(result) {
 	            if(result.code == "99"){
 	            	Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_orderRegPopClose());
@@ -2721,10 +2723,11 @@ console.log("vBindingNo" + vBindingNo);
     var cpntId = $("#compType").val();
     var empInd = $("#empChk").val();
     var exTrade = $("#exTrade").val();
+    var srvPacId = $("#srvPacId").val();
 
 
 
-    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade }, '', 'ordPromo', 'S', '');
+    doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId }, '', 'ordPromo', 'S', '');
   }
 
   function fn_setBindComboOrd(ordNo, ordId) {
