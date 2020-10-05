@@ -29,7 +29,7 @@ console.log("loginPop.jsp");
 
     $("#agreementLogoutBtn").attr("hidden", true);
 
-    if("${popType}" == "M" || "${popType}" == "N") {
+    if("${popType}" == "M") {
         $("#memoButton").attr("hidden", false);
         $("#agreementButton").attr("hidden", true);
 
