@@ -8,7 +8,7 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /*********************************************************************************************
- * DATE PIC VERSION COMMENT -------------------------------------------------------------------------------------------- 01/04/2019 ONGHC 1.0.1 - Restructure File 08/05/2019 ONGHC 1.0.2 - Add getFltNm 26/07/2019 ONGHC 1.0.3 - Add Recall Status 05/09/2019 ONGHC 1.0.4 - Create Function for In-House Repair 17/09/2019 ONGHC 1.0.5 - Create getDftTyp 21/10/2019 ONGHC 1.0.6 - Amend chkPmtMap and Un-map Payment Function 17/12/2019 ONGHC 1.0.7 - Add AS Used Filter Feature
+ * DATE PIC VERSION COMMENT -------------------------------------------------------------------------------------------- 01/04/2019 ONGHC 1.0.1 - Restructure File 08/05/2019 ONGHC 1.0.2 - Add getFltNm 26/07/2019 ONGHC 1.0.3 - Add Recall Status 05/09/2019 ONGHC 1.0.4 - Create Function for In-House Repair 17/09/2019 ONGHC 1.0.5 - Create getDftTyp 21/10/2019 ONGHC 1.0.6 - Amend chkPmtMap and Un-map Payment Function 17/12/2019 ONGHC 1.0.7 - Add AS Used Filter Feature 05/10/2020 FARUQ 1.0.8 - -Add getAsDefectEntry
  *********************************************************************************************/
 
 @Mapper("ASManagementListMapper")
