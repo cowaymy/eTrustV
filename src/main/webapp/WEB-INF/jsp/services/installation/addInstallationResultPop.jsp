@@ -12,6 +12,7 @@
  27/07/2020  FARUQ   1.0.6         Change the label for Failed Reason to Failed Location
  28/08/2020  FARUQ   1.0.7         Add validation feature for Kecik when completed
  07/09/2020  FARUQ   1.0.8         Add validation feature for Kecik when failed
+ 05/10/2020  FARUQ   1.0.9         Amend the default next call date when failed
  -->
 <script type="text/javaScript">
   $(document).ready(function() {
@@ -135,9 +136,12 @@
               $("#checkCommission").prop("checked", true);
             }
             else {
-              var currDt = new Date(),
+              var currDtt = new Date();
+              currDtt.setDate(currDtt.getDate()+1);
+
+              var currDt = new Date(currDtt),
               month = '' + (currDt.getMonth()+1),
-              day = '' + (currDt.getDate()+1),
+              day = '' + (currDt.getDate()),
               year = currDt.getFullYear();
 
               if (month.length < 2){
@@ -226,11 +230,13 @@
             $("#addInstallForm #failDeptChk").show();
             $("#addInstallForm #failDeptChkDesc").show();
 
-            var currDt = new Date(),
-            month = '' + (currDt.getMonth()+1),
-            day = '' + (currDt.getDate()+1),
-            year = currDt.getFullYear();
+            var currDtt = new Date();
+            currDtt.setDate(currDtt.getDate()+1);
 
+            var currDt = new Date(currDtt),
+            month = '' + (currDt.getMonth()+1),
+            day = '' + (currDt.getDate()),
+            year = currDt.getFullYear();
             if (month.length < 2)
                 month = '0' + month;
             if (day.length < 2)
@@ -809,7 +815,9 @@
       <spring:message code='service.title.AddInstallationResult' />
     </h1>
     <ul class="right_opt">
-      <li><p class="btn_blue2"><a href="#"><spring:message code='expense.CLOSE' /></a></p></li>
+      <li><p class="btn_blue2">
+          <a href="#"><spring:message code='expense.CLOSE' /></a>
+        </p></li>
     </ul>
   </header>
   <!-- pop_header end -->
@@ -1199,7 +1207,7 @@
                     </c:otherwise>
                   </c:choose>
                 </c:forEach>
-              </select>
+            </select>
             <th scope="row"><spring:message code='service.title.ActualInstalledDate' /><span name="m2" id="m2" class="must">*</span></th>
             <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="installDate" name="installDate" /></td>
           </tr>
@@ -1232,7 +1240,7 @@
                 <c:forEach var="list" items="${adapterUsed}" varStatus="status">
                   <option value="${list.codeId}" select>${list.codeName}</option>
                 </c:forEach>
-              </select></td>
+            </select></td>
           </tr>
         </tbody>
       </table>
@@ -1344,7 +1352,7 @@ Name: ${hpMember.name1}</textarea></td>
                 <c:forEach var="list" items="${failChild}" varStatus="status">
                   <option value="${list.defectId}">${list.defectDesc}</option>
                 </c:forEach>
-              </select></td>
+            </select></td>
           </tr>
           <tr>
             <th scope="row"><spring:message code='service.title.NextCallDate' /><span name="m7" id="m7" class="must">*</span></th>
@@ -1376,7 +1384,9 @@ Name: ${hpMember.name1}</textarea></td>
     </form>
     <div id='sav_div'>
       <ul class="center_btns">
-        <li><p class="btn_blue2"><a href="#" onclick="fn_saveInstall()"><spring:message code='service.btn.SaveInstallationResult' /></a></p></li>
+        <li><p class="btn_blue2">
+            <a href="#" onclick="fn_saveInstall()"><spring:message code='service.btn.SaveInstallationResult' /></a>
+          </p></li>
       </ul>
     </div>
   </section>
