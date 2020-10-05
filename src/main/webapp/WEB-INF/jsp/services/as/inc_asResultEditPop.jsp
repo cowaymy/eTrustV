@@ -1,6 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-
 <!--
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
@@ -15,8 +14,8 @@
  26/02/2020  ONGHC  1.0.9          AMEND FOR LPM
  28/02/2020  ONGHC  1.0.10        AMEND fn_loadDftCde
  04/06/2020  ONGHC  1.0.11        AMEND fn_loadDftCde
+ 30/09/2020 FARUQ   1.0.12         Default value for DP,DD,DC,DT,SC when certain err description
  -->
-
 <!-- AS ORDER > AS MANAGEMENT > EDIT / VIEW AS ENTRY PLUG IN -->
 <script type="text/javascript">
   var myFltGrd10;
@@ -28,109 +27,111 @@
   var asRslt;
   var ops;
 
-  $(document).ready(
-    function() {
-      createCFilterAUIGrid();
+  $(document).ready(function() {
+    createCFilterAUIGrid();
 
-      doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '', 'ddlFilterExchangeCode', 'S', ''); // FILTER CHARGE EXCHANGE CODE
-      doGetCombo('/services/as/getBrnchId', '', '', 'branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
-      doGetCombo('/services/as/inHouseGetProductMasters.do', '', '', 'productGroup', 'S', ''); // IN HOUSE PRODUCT GROUP
+    doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '', 'ddlFilterExchangeCode', 'S', ''); // FILTER CHARGE EXCHANGE CODE
+    doGetCombo('/services/as/getBrnchId', '', '', 'branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
+    doGetCombo('/services/as/inHouseGetProductMasters.do', '', '', 'productGroup', 'S', ''); // IN HOUSE PRODUCT GROUP
 
-      AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
-      AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
+    AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
+    AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
 
-      var isF = true;
-      AUIGrid.bind(myFltGrd10, "rowStateCellClick", function(event) {
-        if (event.marker == "added") {
-          /*if (event.item.filterType == "CHG") {
-            var fChage = Number($("#txtFilterCharge").val());
-            var totchrge = Number($("#txtTotalCharge").val());
+    var isF = true;
+    AUIGrid.bind(myFltGrd10, "rowStateCellClick", function(event) {
+      if (event.marker == "added") {
+        /*if (event.item.filterType == "CHG") {
+          var fChage = Number($("#txtFilterCharge").val());
+          var totchrge = Number($("#txtTotalCharge").val());
 
-            $("#txtFilterCharge").val(fChage - Number(event.item.filterTotal));
-            $("#txtTotalCharge").val(totchrge - Number(event.item.filterTotal));
-          }*/
-        } else if (event.marker == "removed") {
-          if (event.item.filterType == "CHG") {
-            var fChage = Number($("#txtFilterCharge").val());
-            var totchrge = Number($("#txtTotalCharge").val());
+          $("#txtFilterCharge").val(fChage - Number(event.item.filterTotal));
+          $("#txtTotalCharge").val(totchrge - Number(event.item.filterTotal));
+        }*/
+      } else if (event.marker == "removed") {
+        if (event.item.filterType == "CHG") {
+          var fChage = Number($("#txtFilterCharge").val());
+          var totchrge = Number($("#txtTotalCharge").val());
 
-            fChage = (fChage + Number(event.item.filterTotal)).toFixed(2);
-            totchrge = (totchrge + Number(event.item.filterTotal)).toFixed(2);
+          fChage = (fChage + Number(event.item.filterTotal)).toFixed(2);
+          totchrge = (totchrge + Number(event.item.filterTotal)).toFixed(2);
 
-            $("#txtFilterCharge").val(fChage);
-            $("#txtTotalCharge").val(totchrge);
-          }
-        } else if (event.marker == "added-edited") {
+          $("#txtFilterCharge").val(fChage);
+          $("#txtTotalCharge").val(totchrge);
         }
-      });
-
+      } else if (event.marker == "added-edited") {
+      }
     });
+    setTimeout(function() {
+      fn_errDescCheck(0)
+    }, 1000);
+  });
 
   function trim(text) {
     return String(text).replace(/^\s+|\s+$/g, '');
   }
 
   function createCFilterAUIGrid() {
-    var clayout = [ {
-      dataField : "filterType",
-      headerText : "<spring:message code='service.grid.ASNo'/>",
-      editable : false
-    }, {
-      dataField : "filterDesc",
-      headerText : "<spring:message code='service.grid.ASFltDesc'/>",
-      width : 200
-    }, {
-      dataField : "filterExCode",
-      headerText : "<spring:message code='service.grid.ASFltCde'/>",
-      width : 80
-    }, {
-      dataField : "filterQty",
-      headerText : "<spring:message code='service.grid.Quantity'/>",
-      width : 80
-    }, {
-      dataField : "filterPrice",
-      headerText : "<spring:message code='service.title.Price'/>",
-      width : 80,
-      dataType : "number",
-      formatString : "#,000.00",
-      editable : false
-    }, {
-      dataField : "filterTotal",
-      headerText : "<spring:message code='sal.title.total'/>",
-      width : 80,
-      dataType : "number",
-      formatString : "#,000.00",
-      editable : false
-    }, {
-      dataField : "filterRemark",
-      headerText : "<spring:message code='service.title.Remark'/>",
-      width : 200,
-      editable : false
-    }, {
-      dataField : "srvFilterLastSerial",
-      headerText : "<spring:message code='service.title.SerialNo'/>",
-      editable : false,
-      width : 200,
-      editable : true
-    }, {
-      dataField : "undefined",
-      headerText : " ",
-      width : 110,
-      renderer : {
-        type : "ButtonRenderer",
-        labelText : "Remove",
-        onclick : function(rowIndex, columnIndex, value, item) {
-          AUIGrid.removeRow(myFltGrd10, rowIndex);
-          AUIGrid.removeSoftRows(myFltGrd10); //completed remove from AUIGrid cyc
-        }
-      }
-    }, {
-      dataField : "filterId",
-      headerText : "filterId",
-      width : 150,
-      editable : false,
-      visible : false
-    }];
+    var clayout = [
+        {
+          dataField : "filterType",
+          headerText : "<spring:message code='service.grid.ASNo'/>",
+          editable : false
+        }, {
+          dataField : "filterDesc",
+          headerText : "<spring:message code='service.grid.ASFltDesc'/>",
+          width : 200
+        }, {
+          dataField : "filterExCode",
+          headerText : "<spring:message code='service.grid.ASFltCde'/>",
+          width : 80
+        }, {
+          dataField : "filterQty",
+          headerText : "<spring:message code='service.grid.Quantity'/>",
+          width : 80
+        }, {
+          dataField : "filterPrice",
+          headerText : "<spring:message code='service.title.Price'/>",
+          width : 80,
+          dataType : "number",
+          formatString : "#,000.00",
+          editable : false
+        }, {
+          dataField : "filterTotal",
+          headerText : "<spring:message code='sal.title.total'/>",
+          width : 80,
+          dataType : "number",
+          formatString : "#,000.00",
+          editable : false
+        }, {
+          dataField : "filterRemark",
+          headerText : "<spring:message code='service.title.Remark'/>",
+          width : 200,
+          editable : false
+        }, {
+          dataField : "srvFilterLastSerial",
+          headerText : "<spring:message code='service.title.SerialNo'/>",
+          editable : false,
+          width : 200,
+          editable : true
+        }, {
+          dataField : "undefined",
+          headerText : " ",
+          width : 110,
+          renderer : {
+            type : "ButtonRenderer",
+            labelText : "Remove",
+            onclick : function(rowIndex, columnIndex, value, item) {
+              AUIGrid.removeRow(myFltGrd10, rowIndex);
+              AUIGrid.removeSoftRows(myFltGrd10); //completed remove from AUIGrid cyc
+            }
+          }
+        }, {
+          dataField : "filterId",
+          headerText : "filterId",
+          width : 150,
+          editable : false,
+          visible : false
+        }];
 
     var gridPros2 = {
       usePaging : true,
@@ -166,7 +167,7 @@
   // RE-INSERT BACK VALUE
   function fn_setErrCde() {
     $("#ddlErrorCode").val(errCde);
-    fn_errMst_SelectedIndexChanged();
+    fn_errMst_SelectedIndexChanged(0);
   }
 
   function fn_callback_ddlErrorDesc() {
@@ -187,30 +188,121 @@
     doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO=' + _ordNo, '', errCde, 'ddlErrorCode', 'S', 'fn_setErrCde');
   }
 
-  function fn_errMst_SelectedIndexChanged() {
-    $("#ddlErrorDesc option").remove();
-    if ($("#ddlErrorCode").val() != "" || $("#ddlErrorCode").val() != null) {
-      errCde = $("#ddlErrorCode").val();
-    } else {
-      if (errCde == "" || errCde == null) {
+  function fn_errMst_SelectedIndexChanged(ind) {
+
+    var indicator = ind;
+
+    if (indicator == 0) {
+      $("#ddlErrorDesc option").remove();
+      if ($("#ddlErrorCode").val() != "" || $("#ddlErrorCode").val() != null) {
         errCde = $("#ddlErrorCode").val();
+      } else {
+        if (errCde == "" || errCde == null) {
+          errCde = $("#ddlErrorCode").val();
+        }
       }
+      doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE=' + errCde, '', '', 'ddlErrorDesc', 'S', 'fn_callback_ddlErrorDesc');
+      setTimeout(function() {
+        fn_errDescCheck(0)
+      }, 1000);
+    } else {
+      $("#ddlErrorDesc option").remove();
+      doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE=' + $("#ddlErrorCode").val(), '', '', 'ddlErrorDesc', 'S', '');
+
     }
-    doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE=' + errCde, '', '', 'ddlErrorDesc', 'S', 'fn_callback_ddlErrorDesc');
   }
 
+  function fn_errDescCheck(ind) {
+    //(_method, _url, _jsonObj, _callback, _errcallback, _options, _header)
+    var indicator = ind;
+    var jsonObj = {
+      errCd : $("#ddlErrorCode").val(),
+      errDesc : $("#ddlErrorDesc").val()
+    };
+    Common.ajax("GET", "/services/as/getAsDefectEntry.do", jsonObj, function(result) {
+      if (result) {
+        if (result.length > 0) {
+          fn_asDefectEntryHideSearch(result);
+        } else {
+          fn_asDefectEntryNormal(indicator);
+        }
+      }
+    });
+  }
+
+  function fn_asDefectEntryHideSearch(result) {
+    //DP DEFETC PART
+    $("#def_part").val(result[0].defectCode);
+    $("#def_part_id").val(result[0].defectId);
+    $("#def_part_text").val(result[0].defectDesc);
+    $("#DP").hide();
+    //DD AS PROBLEM SYMPTOM LARGE
+    $("#def_def").val(result[1].defectCode);
+    $("#def_def_id").val(result[1].defectId);
+    $("#def_def_text").val(result[1].defectDesc);
+    $("#DD").hide();
+    //DC AS PROBLEM SYMPTOM SMALL
+    $("#def_code").val(result[2].defectCode);
+    $("#def_code_id").val(result[2].defectId);
+    $("#def_code_text").val(result[2].defectDesc);
+    $("#DC").hide();
+    //DT AS SOLUTION LARGE
+    $("#def_type").val(result[3].defectCode);
+    $("#def_type_id").val(result[3].defectId);
+    $("#def_type_text").val(result[3].defectDesc);
+    $("#DT").hide();
+    //SC AS SOLUTION SMALL
+    $("#solut_code").val(result[4].defectCode);
+    $("#solut_code_id").val(result[4].defectId);
+    $("#solut_code_text").val(result[4].defectDesc);
+    $("#SC").hide();
+  }
+
+  function fn_asDefectEntryNormal(indicator) {
+
+    if (indicator == 1) {
+      //DP DEFETC PART
+      $("#def_part").val("");
+      $("#def_part_id").val("");
+      $("#def_part_text").val("");
+      $("#DP").show();
+      //DD AS PROBLEM SYMPTOM LARGE
+      $("#def_def").val("");
+      $("#def_def_id").val("");
+      $("#def_def_text").val("");
+      $("#DD").show();
+      //DC AS PROBLEM SYMPTOM SMALL
+      $("#def_code").val("");
+      $("#def_code_id").val("");
+      $("#def_code_text").val("");
+      $("#DC").show();
+      //DT AS SOLUTION LARGE
+      $("#def_type").val("");
+      $("#def_type_id").val("");
+      $("#def_type_text").val("");
+      $("#DT").show();
+      //SC AS SOLUTION SMALL
+      $("#solut_code").val("");
+      $("#solut_code_id").val("");
+      $("#solut_code_text").val("");
+      $("#SC").show();
+    } else {
+    }
+  }
   // GET FILTER INFO.
   function fn_getASRulstEditFilterInfo() {
-    Common.ajax("GET", "/services/as/getASRulstEditFilterInfo", { AS_RESULT_NO : $('#asData_AS_RESULT_NO').val() },
-      function(result) {
-        AUIGrid.setGridData(myFltGrd10, result);
-      });
+    Common.ajax("GET", "/services/as/getASRulstEditFilterInfo", {
+      AS_RESULT_NO : $('#asData_AS_RESULT_NO').val()
+    }, function(result) {
+      AUIGrid.setGridData(myFltGrd10, result);
+    });
   }
 
   // GET AS RESULT INFO
   function fn_getASRulstSVC0004DInfo() {
-    Common.ajax("GET", "/services/as/getASRulstSVC0004DInfo", { AS_RESULT_NO : $('#asData_AS_RESULT_NO').val() },
-    function(result) {
+    Common.ajax("GET", "/services/as/getASRulstSVC0004DInfo", {
+      AS_RESULT_NO : $('#asData_AS_RESULT_NO').val()
+    }, function(result) {
       if (result != "") {
         // SUCCESS
         fn_setSVC0004dInfo(result);
@@ -251,8 +343,8 @@
     $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
      */
 
-     $("#psiRcd").val(result[0].psi);
-     $("#lpmRcd").val(result[0].lpm);
+    $("#psiRcd").val(result[0].psi);
+    $("#lpmRcd").val(result[0].lpm);
 
     $("#ddlCTCode").val(result[0].c11);
     $("#ddlDSCCode").val(result[0].asBrnchId);
@@ -321,7 +413,7 @@
 
     $('#txtFilterCharge').val(tFilterAmt.toFixed(2));
 
-     // IN HOUSE REPAIR
+    // IN HOUSE REPAIR
     /* if (result[0].inHuseRepairReplaceYn == "1") {
       $("input:radio[name='replacement']:radio[value='1']").attr('checked', true); // 원하는 값(Y)을 체크
       fn_replacement('1');
@@ -393,7 +485,7 @@
           }
         }*/
       } else {
-        $("#" + _tobj + "_text").val( "* No such detail of defect found.");
+        $("#" + _tobj + "_text").val("* No such detail of defect found.");
         /* $("#promisedDate").val("").attr("disabled", "disabled");
         $("#productGroup").val("").attr("disabled", "disabled");
         $("#productCode").val("").attr("disabled", "disabled");
@@ -407,19 +499,21 @@
   }
 
   function fn_HasFilterUnclaim() {
-    Common.ajax("GET", "/services/as/getTotalUnclaimItem", { asResultId : $('#asData_AS_RESULT_ID').val(), type : "AS" },
-            function(result) {
-              if (result.filter != null) {
-                var isSomeFileter = true;
-                if (Number(result.filter.qtyUse) > Number(result.filter.qtyClm))
-                  isSomeFileter = true;
+    Common.ajax("GET", "/services/as/getTotalUnclaimItem", {
+      asResultId : $('#asData_AS_RESULT_ID').val(),
+      type : "AS"
+    }, function(result) {
+      if (result.filter != null) {
+        var isSomeFileter = true;
+        if (Number(result.filter.qtyUse) > Number(result.filter.qtyClm))
+          isSomeFileter = true;
 
-                if (isSomeFileter) {
-                  Common.alert("Filter Unclaim" + DEFAULT_DELIMITER + "<b>Some filter(s) are unclaim.<br />Please claim all the filter before you edit this result.</b>");
-                  $("#btnSaveDiv").attr("style", "display:none");
-                }
-              }
-            });
+        if (isSomeFileter) {
+          Common.alert("Filter Unclaim" + DEFAULT_DELIMITER + "<b>Some filter(s) are unclaim.<br />Please claim all the filter before you edit this result.</b>");
+          $("#btnSaveDiv").attr("style", "display:none");
+        }
+      }
+    });
   }
 
   function fn_ddlStatus_SelectedIndexChanged() {
@@ -433,7 +527,7 @@
       $("#ddlFailReason").attr("disabled", true);
     }
 
-    if (typeof myGridID !== 'undefined' ) {
+    if (typeof myGridID !== 'undefined') {
       var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
       $("#ddlCTCode").val(selectedItems[0].item.asMemId);
       $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
@@ -549,13 +643,13 @@
     $('#solut_code_text').val(this.trim(asRslt.c26));
     $('#solut_code_id').val(this.trim(asRslt.c24));
 
-     if (asRslt.asWorkmnsh > 0) {
-       $("#txtLabourch").prop("checked", true);
-       $('#cmbLabourChargeAmt').val(asRslt.asWorkmnsh);
-     } else {
-       $("#txtLabourch").prop("checked", false);
-       $('#cmbLabourChargeAmt').val("");
-     }
+    if (asRslt.asWorkmnsh > 0) {
+      $("#txtLabourch").prop("checked", true);
+      $('#cmbLabourChargeAmt').val(asRslt.asWorkmnsh);
+    } else {
+      $("#txtLabourch").prop("checked", false);
+      $('#cmbLabourChargeAmt').val("");
+    }
 
     $("#appDate").val("");
     $("#CTSSessionCode").val("");
@@ -570,7 +664,7 @@
     // 57 - SOFTENER
     // 58 - BIDET
     // 400 - POE
-    if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val()  == "400" || $('#PROD_CAT').val()  == "57" || $('#PROD_CAT').val()  == "56") {
+    if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400" || $('#PROD_CAT').val() == "57" || $('#PROD_CAT').val() == "56") {
       $("#m15").show();
       $("#psiRcd").attr("disabled", false);
       $("#m16").show();
@@ -661,7 +755,6 @@
       //$("#txtLabourCharge").attr("disabled", false);
       $("#txtLabourch").attr("disabled", false);
 
-
       if (asRslt.asWorkmnsh > 0) {
         $("#cmbLabourChargeAmt").attr("disabled", false);
       } else {
@@ -688,8 +781,8 @@
       }
 
       //if (asDataInfo[0].asStusId != 1) {
-        //Common.alert("AS Not Active" + DEFAULT_DELIMITER + "<b>AS is no longer active. Result key-in is disallowed.</b>");
-        //$("#btnSaveDiv").attr("style", "display:none");
+      //Common.alert("AS Not Active" + DEFAULT_DELIMITER + "<b>AS is no longer active. Result key-in is disallowed.</b>");
+      //$("#btnSaveDiv").attr("style", "display:none");
       //}
 
       $("#mInH3").show();
@@ -732,7 +825,6 @@
       $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
       //$('#txtRemark').removeAttr("disabled").removeClass("readonly");
 
-
       $('#iscommission').attr("disabled", false);
 
       $('#appDate').removeAttr("disabled").removeClass("readonly");
@@ -746,7 +838,7 @@
   }
 
   function fn_getRclData() {
-  Common.ajax("GET", "/services/as/getASRclInfo.do", $("#resultASForm").serialize(), function(result) {
+    Common.ajax("GET", "/services/as/getASRclInfo.do", $("#resultASForm").serialize(), function(result) {
       if (result.length != 0) {
         if (result[0].appDt != null) {
           $("#appDate").val(result[0].appDt);
@@ -990,18 +1082,18 @@
 
   function fn_LabourCharge_CheckedChanged(_obj) {
     if (_obj.checked) {
-        $("#fcm1").show();
-        $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");
-        $("#cmbLabourChargeAmt").val("");
-        $("#txtLabourCharge").val("0.00");
-      } else {
-        $("#fcm1").hide();
-        $("#cmbLabourChargeAmt").val("");
-        $("#cmbLabourChargeAmt").attr("disabled", true);
-        $("#txtLabourCharge").val("0.00");
-      }
+      $("#fcm1").show();
+      $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");
+      $("#cmbLabourChargeAmt").val("");
+      $("#txtLabourCharge").val("0.00");
+    } else {
+      $("#fcm1").hide();
+      $("#cmbLabourChargeAmt").val("");
+      $("#cmbLabourChargeAmt").attr("disabled", true);
+      $("#txtLabourCharge").val("0.00");
+    }
 
-      fn_calculateTotalCharges();
+    fn_calculateTotalCharges();
   }
 
   function fn_calculateTotalCharges() {
@@ -1081,7 +1173,7 @@
     }
     if (FormUtil.checkReqValue($("#ddlFilterPayType option:selected"))) {
       text = "<spring:message code='service.text.asPmtTyp'/>";
-     msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
     }
     if (FormUtil.checkReqValue($("#ddlFilterExchangeCode option:selected"))) {
       text = "<spring:message code='service.text.asExcRsn'/>";
@@ -1095,7 +1187,7 @@
       }
     }
 
-    if (msg != ""){
+    if (msg != "") {
       Common.alert(msg);
       return false;
     }
@@ -1119,15 +1211,15 @@
       }
 
       // KR-OHK Serial Check
-       if($("#hidSerialRequireChkYn").val()  == 'Y' && $("#hidSerialChk").val() == 'Y' && $("#ddlFilterQty").val() > 1) {
-          Common.alert("For serial check items, only quantity 1 can be entered.");
-          $("#ddlFilterQty").val("1");
-          return false;
+      if ($("#hidSerialRequireChkYn").val() == 'Y' && $("#hidSerialChk").val() == 'Y' && $("#ddlFilterQty").val() > 1) {
+        Common.alert("For serial check items, only quantity 1 can be entered.");
+        $("#ddlFilterQty").val("1");
+        return false;
       }
-      if($("#hidSerialRequireChkYn").val()  == 'Y' && $("#hidSerialChk").val() == 'Y' && FormUtil.isEmpty($("#ddSrvFilterLastSerial").val())) {
-          var arg = "<spring:message code='service.title.SerialNo'/>";
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ arg +"'/>");
-          return false;
+      if ($("#hidSerialRequireChkYn").val() == 'Y' && $("#hidSerialChk").val() == 'Y' && FormUtil.isEmpty($("#ddSrvFilterLastSerial").val())) {
+        var arg = "<spring:message code='service.title.SerialNo'/>";
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ arg +"'/>");
+        return false;
       }
 
       return true;
@@ -1141,10 +1233,10 @@
       CT_CODE : ct,
       STK_CODE : sk
     }, function(result) {
-    	// KR-OHK Serial Check
-        $("#hidSerialChk").val(result.serialChk);
+      // KR-OHK Serial Check
+      $("#hidSerialChk").val(result.serialChk);
 
-    	availQty = result.availQty;
+      availQty = result.availQty;
     });
 
     return availQty;
@@ -1178,7 +1270,7 @@
 
       if (chargePrice == 0) {
         Common.alert("<spring:message code='service.msg.stkNoPrice'/>");
-        return ;
+        return;
       }
     }
 
@@ -1301,18 +1393,18 @@
     }
 
     if (FormUtil.checkReqValue($("#def_part_id"))) {
-        rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Defect Part' htmlEscape='false'/> </br>";
-        rtnValue = false;
+      rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Defect Part' htmlEscape='false'/> </br>";
+      rtnValue = false;
     }
 
     if (FormUtil.checkReqValue($("#def_def"))) {
-        rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Detail of Defect' htmlEscape='false'/> </br>";
-        rtnValue = false;
+      rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Detail of Defect' htmlEscape='false'/> </br>";
+      rtnValue = false;
     }
 
     if (FormUtil.checkReqValue($("#solut_code_id"))) {
-        rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Solution Code' htmlEscape='false'/> </br>";
-        rtnValue = false;
+      rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Solution Code' htmlEscape='false'/> </br>";
+      rtnValue = false;
     }
 
     /*if ($("#solut_code_id").val() == "454") { // RETURN PRODUCT BACK TO FACTORY
@@ -1399,16 +1491,16 @@
           rtnValue = false;
         }
 
-        if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val()  == "400" || $('#PROD_CAT').val()  == "57" || $('#PROD_CAT').val()  == "56") {
+        if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400" || $('#PROD_CAT').val() == "57" || $('#PROD_CAT').val() == "56") {
           if (FormUtil.checkReqValue($("#psiRcd"))) {
-              rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
-              rtnValue = false;
-            }
+            rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
+            rtnValue = false;
+          }
 
-            if (FormUtil.checkReqValue($("#lpmRcd"))) {
-              rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
-              rtnValue = false;
-            }
+          if (FormUtil.checkReqValue($("#lpmRcd"))) {
+            rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
+            rtnValue = false;
+          }
         }
 
         // KR-OHK Serial Check
@@ -1504,16 +1596,16 @@
 
   function fn_chkPmtMap() {
     Common.ajax("POST", "/services/as/chkPmtMap.do", {
-        AS_ENTRY_ID : asDataInfo[0].asId,
-        AS_RESULT_NO : $('#asData_AS_RESULT_NO').val(),
-      }, function(result) {
-        if (result.code == "99") {
-          // PAYMENT MAPPED
-          Common.confirm("<spring:message code='service.msg.confirmPmtMap'/>", fn_setSaveFormData);
-        } else {
-          fn_setSaveFormData();
-        }
-      });
+      AS_ENTRY_ID : asDataInfo[0].asId,
+      AS_RESULT_NO : $('#asData_AS_RESULT_NO').val(),
+    }, function(result) {
+      if (result.code == "99") {
+        // PAYMENT MAPPED
+        Common.confirm("<spring:message code='service.msg.confirmPmtMap'/>", fn_setSaveFormData);
+      } else {
+        fn_setSaveFormData();
+      }
+    });
   }
 
   function fn_setSaveFormData() {
@@ -1633,13 +1725,12 @@
         "remove" : removedRowItems
       }
 
-      Common.ajax("POST", "/services/inhouse/save.do", saveForm,
-        function(result) {
-          if (result.asNo != "") {
-            Common.alert("<spring:message code='service.msg.updSucc'/>");
-            fn_DisablePageControl();
-          }
-        });
+      Common.ajax("POST", "/services/inhouse/save.do", saveForm, function(result) {
+        if (result.asNo != "") {
+          Common.alert("<spring:message code='service.msg.updSucc'/>");
+          fn_DisablePageControl();
+        }
+      });
     } else {
       if ($("#requestMod").val() == "NEW") {
         saveForm = {
@@ -1649,13 +1740,12 @@
           "remove" : removedRowItems
         }
 
-        Common.ajax("POST", "/services/as/newResultAdd.do", saveForm,
-          function(result) {
-            if (result.asNo != "") {
-              Common.alert("<spring:message code='service.msg.updSucc'/>");
-              fn_DisablePageControl();
-            }
-          });
+        Common.ajax("POST", "/services/as/newResultAdd.do", saveForm, function(result) {
+          if (result.asNo != "") {
+            Common.alert("<spring:message code='service.msg.updSucc'/>");
+            fn_DisablePageControl();
+          }
+        });
 
       } else if ($("#requestMod").val() == "RESULTEDIT") {
         if (addedRowItems != "" || removedRowItems != "") {
@@ -1678,26 +1768,25 @@
         // KR-OHK Serial Check add
         var url = "";
         if ($("#hidSerialRequireChkYn").val() == 'Y') {
-        	url = "/services/as/newResultUpdateSerial.do";
+          url = "/services/as/newResultUpdateSerial.do";
         } else {
-        	url = "/services/as/newResultUpdate_1.do";
+          url = "/services/as/newResultUpdate_1.do";
         }
 
-        Common.ajax("POST", url, saveForm,
-          function(result) {
-            if (result.data != "") {
-              $("#newResultNo").html("<B>" + result.data + "</B>");
-              Common.alert("<spring:message code='service.msg.updSucc'/>");
-              //fn_DisablePageControl();
-              fn_asResult_viewPageContral();
-              $("#btnSaveDiv").attr("style", "display:none");
-            }
+        Common.ajax("POST", url, saveForm, function(result) {
+          if (result.data != "") {
+            $("#newResultNo").html("<B>" + result.data + "</B>");
+            Common.alert("<spring:message code='service.msg.updSucc'/>");
+            //fn_DisablePageControl();
+            fn_asResult_viewPageContral();
+            $("#btnSaveDiv").attr("style", "display:none");
+          }
 
-            try {
-              fn_searchASManagement();
-               $("#_newASResultDiv1").remove();
-            } catch (e) {
-            }
+          try {
+            fn_searchASManagement();
+            $("#_newASResultDiv1").remove();
+          } catch (e) {
+          }
         });
 
       }
@@ -1750,8 +1839,7 @@
     $('#ddlFilterCode').removeAttr("disabled").removeClass("readonly");
     $('#ddlFilterQty').removeAttr("disabled").removeClass("readonly");
     $('#ddlFilterPayType').removeAttr("disabled").removeClass("readonly");
-    $('#ddlFilterExchangeCode').removeAttr("disabled").removeClass(
-        "readonly");
+    $('#ddlFilterExchangeCode').removeAttr("disabled").removeClass("readonly");
     $('#txtFilterRemark').removeAttr("disabled").removeClass("readonly");
 
     fn_clearPanelField_ASChargesFees();
@@ -1767,8 +1855,7 @@
   }
 
   function fn_asResult_viewPageContral() {
-    $("#asResultForm").find("input, textarea, button, select").attr(
-        "disabled", true);
+    $("#asResultForm").find("input, textarea, button, select").attr("disabled", true);
   }
 
   function fn_setASDataInit(ops) {
@@ -1843,9 +1930,9 @@
       $("#mInH1").hide();
       $("#mInH2").hide();
       $("#mInH3").hide();
-      $("#productGroup").attr('disabled','disabled');
-      $("#productCode").attr('disabled','disabled');
-      $("#serialNo").attr('disabled','disabled');
+      $("#productGroup").attr('disabled', 'disabled');
+      $("#productCode").attr('disabled', 'disabled');
+      $("#serialNo").attr('disabled', 'disabled');
 
       $("#productGroup").val("");
       $("#productCode").val("");
@@ -1869,7 +1956,7 @@
     }
   }
 
-  function fn_secChk(obj){
+  function fn_secChk(obj) {
     if (obj.id == "recall_dt") {
       if ($("#ddlStatus").val() != '19') {
         Common.alert("This section only applicable for <b>Recall</b> status");
@@ -2018,30 +2105,35 @@
     }
   }
 
-  function fn_dftTyp(dftTyp){
-      var ddCde = "";
-      var dtCde = "";
-      if (dftTyp == "DC") {
-        if ($("#def_def_id").val() == "" || $("#def_def_id").val() == null) {
-          var text = "<spring:message code='service.text.dtlDef' />";
-          var msg = "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
-          Common.alert(msg);
-          return false;
-        } else {
-          ddCde = $("#def_def_id").val();
-        }
-      }else if (dftTyp == "SC"){
-          if ($("#def_type_id").val() == "" || $("#def_type_id").val() == null) {
-              var text = "<spring:message code='service.text.defTyp' />";
-              var msg = "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
-              Common.alert(msg);
-              return false;
-            } else {
-              dtCde = $("#def_type_id").val();
-            }
-  }
-      Common.popupDiv("/services/as/dftTypPop.do", {callPrgm : dftTyp, prodCde : $("#PROD_CDE").val(), ddCde: ddCde , dtCde : dtCde}, null, true);
+  function fn_dftTyp(dftTyp) {
+    var ddCde = "";
+    var dtCde = "";
+    if (dftTyp == "DC") {
+      if ($("#def_def_id").val() == "" || $("#def_def_id").val() == null) {
+        var text = "<spring:message code='service.text.dtlDef' />";
+        var msg = "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
+        Common.alert(msg);
+        return false;
+      } else {
+        ddCde = $("#def_def_id").val();
+      }
+    } else if (dftTyp == "SC") {
+      if ($("#def_type_id").val() == "" || $("#def_type_id").val() == null) {
+        var text = "<spring:message code='service.text.defTyp' />";
+        var msg = "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
+        Common.alert(msg);
+        return false;
+      } else {
+        dtCde = $("#def_type_id").val();
+      }
     }
+    Common.popupDiv("/services/as/dftTypPop.do", {
+      callPrgm : dftTyp,
+      prodCde : $("#PROD_CDE").val(),
+      ddCde : ddCde,
+      dtCde : dtCde
+    }, null, true);
+  }
 
   function fn_loadDftCde(itm, prgmCde) {
     if (itm != null) {
@@ -2059,70 +2151,69 @@
 
         if (itm.id == "7059") {
           if ($("#def_part_id").val() == "5299" || $("#def_part_id").val() == "5300" || $("#def_part_id").val() == "5301" || $("#def_part_id").val() == "5302" || $("#def_part_id").val() == "5321" || $("#def_part_id").val() == "5332") {
-              var text1 = "<spring:message code='service.text.defPrt' />";
-              var text2= $("#def_part_text").val();
-              var text3 = itm.descp;
-              var text4 = "<spring:message code='service.text.defTyp' />";
-              var text = text1 + ";" + text2 + ";" + text3;
-              msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+            var text1 = "<spring:message code='service.text.defPrt' />";
+            var text2 = $("#def_part_text").val();
+            var text3 = itm.descp;
+            var text4 = "<spring:message code='service.text.defTyp' />";
+            var text = text1 + ";" + text2 + ";" + text3;
+            msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
 
-              $("#def_type").val("");
-              $("#def_type_id").val("");
-              $("#def_type_text").val("");
+            $("#def_type").val("");
+            $("#def_type_id").val("");
+            $("#def_type_text").val("");
           }
 
-          if ($("#def_def_id").val() == "6041" || $("#def_def_id").val() == "6042" || $("#def_def_id").val() == "6043" || $("#def_def_id").val() == "6044" || $("#def_def_id").val() == "6045" || $("#def_def_id").val() == "6046" ) {
-              var text1 = "<spring:message code='service.text.dtlDef' />";
-              var text2= $("#def_def_text").val();
-              var text3 = itm.descp;
-              var text4 = "<spring:message code='service.text.defTyp' />";
-              var text = text1 + ";" + text2 + ";" + text3;
-              msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+          if ($("#def_def_id").val() == "6041" || $("#def_def_id").val() == "6042" || $("#def_def_id").val() == "6043" || $("#def_def_id").val() == "6044" || $("#def_def_id").val() == "6045" || $("#def_def_id").val() == "6046") {
+            var text1 = "<spring:message code='service.text.dtlDef' />";
+            var text2 = $("#def_def_text").val();
+            var text3 = itm.descp;
+            var text4 = "<spring:message code='service.text.defTyp' />";
+            var text = text1 + ";" + text2 + ";" + text3;
+            msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
 
-              $("#def_type").val("");
-              $("#def_type_id").val("");
-              $("#def_type_text").val("");
+            $("#def_type").val("");
+            $("#def_type_id").val("");
+            $("#def_type_text").val("");
           }
 
-          if (msg != ""){
+          if (msg != "") {
             Common.alert(msg);
             return false;
           }
         }
 
         if (itm.id == "7072") {
-            if ($("#def_part_id").val() == "5299" || $("#def_part_id").val() == "5300" || $("#def_part_id").val() == "5301" || $("#def_part_id").val() == "5302" || $("#def_part_id").val() == "5321" || $("#def_part_id").val() == "5332") {
-                var text1 = "<spring:message code='service.text.defPrt' />";
-                var text2= $("#def_part_text").val();
-                var text3 = itm.descp;
-                var text4 = "<spring:message code='service.text.defTyp' />";
-                var text = text1 + ";" + text2 + ";" + text3;
-                msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+          if ($("#def_part_id").val() == "5299" || $("#def_part_id").val() == "5300" || $("#def_part_id").val() == "5301" || $("#def_part_id").val() == "5302" || $("#def_part_id").val() == "5321" || $("#def_part_id").val() == "5332") {
+            var text1 = "<spring:message code='service.text.defPrt' />";
+            var text2 = $("#def_part_text").val();
+            var text3 = itm.descp;
+            var text4 = "<spring:message code='service.text.defTyp' />";
+            var text = text1 + ";" + text2 + ";" + text3;
+            msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
 
-                $("#def_type").val("");
-                $("#def_type_id").val("");
-                $("#def_type_text").val("");
-            }
-
-            if ($("#def_def_id").val() == "6041" || $("#def_def_id").val() == "6042" || $("#def_def_id").val() == "6043" || $("#def_def_id").val() == "6044" || $("#def_def_id").val() == "6045" || $("#def_def_id").val() == "6046" ||
-               $("#def_def_id").val() == "6008" || $("#def_def_id").val() == "6015" || $("#def_def_id").val() == "6023" || $("#def_def_id").val() == "6031") {
-                var text1 = "<spring:message code='service.text.dtlDef' />";
-                var text2= $("#def_def_text").val();
-                var text3 = itm.descp;
-                var text4 = "<spring:message code='service.text.defTyp' />";
-                var text = text1 + ";" + text2 + ";" + text3;
-                msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
-
-                $("#def_type").val("");
-                $("#def_type_id").val("");
-                $("#def_type_text").val("");
-            }
-
-            if (msg != ""){
-              Common.alert(msg);
-              return false;
-            }
+            $("#def_type").val("");
+            $("#def_type_id").val("");
+            $("#def_type_text").val("");
           }
+
+          if ($("#def_def_id").val() == "6041" || $("#def_def_id").val() == "6042" || $("#def_def_id").val() == "6043" || $("#def_def_id").val() == "6044" || $("#def_def_id").val() == "6045" || $("#def_def_id").val() == "6046" || $("#def_def_id").val() == "6008" || $("#def_def_id").val() == "6015" || $("#def_def_id").val() == "6023" || $("#def_def_id").val() == "6031") {
+            var text1 = "<spring:message code='service.text.dtlDef' />";
+            var text2 = $("#def_def_text").val();
+            var text3 = itm.descp;
+            var text4 = "<spring:message code='service.text.defTyp' />";
+            var text = text1 + ";" + text2 + ";" + text3;
+            msg += "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+            $("#def_type").val("");
+            $("#def_type_id").val("");
+            $("#def_type_text").val("");
+          }
+
+          if (msg != "") {
+            Common.alert(msg);
+            return false;
+          }
+        }
       } else if (prgmCde == 'DC') {
         $("#def_code").val(itm.code);
         $("#def_code_id").val(itm.id);
@@ -2132,10 +2223,10 @@
         $("#def_part_id").val(itm.id);
         $("#def_part_text").val(itm.descp);
 
-        if (itm.id == "5299" || itm.id == "5300" || itm.id == "5301" || itm.id == "5302" || itm.id == "5321" || itm.id== "5332") {
+        if (itm.id == "5299" || itm.id == "5300" || itm.id == "5301" || itm.id == "5302" || itm.id == "5321" || itm.id == "5332") {
           if ($("#def_type_id").val() == "7059") {
             var text1 = "<spring:message code='service.text.defTyp' />";
-            var text2= $("#def_type_text").val();
+            var text2 = $("#def_type_text").val();
             var text3 = itm.descp;
             var text4 = "<spring:message code='service.text.defPrt' />";
             var text = text1 + ";" + text2 + ";" + text3;
@@ -2151,7 +2242,7 @@
 
           if ($("#def_type_id").val() == "7072") {
             var text1 = "<spring:message code='service.text.defTyp' />";
-            var text2= $("#def_type_text").val();
+            var text2 = $("#def_type_text").val();
             var text3 = itm.descp;
             var text4 = "<spring:message code='service.text.defPrt' />";
             var text = text1 + ";" + text2 + ";" + text3;
@@ -2175,37 +2266,36 @@
         $("#def_code_id").val("");
         $("#def_code_text").val("");
 
-        if (itm.id == "6041" || itm.id == "6042" || itm.id == "6043" || itm.id== "6044" || itm.id == "6045" || itm.id == "6046") {
+        if (itm.id == "6041" || itm.id == "6042" || itm.id == "6043" || itm.id == "6044" || itm.id == "6045" || itm.id == "6046") {
           if ($("#def_type_id").val() == "7059") {
-           var text1 = "<spring:message code='service.text.defTyp' />";
-           var text2= $("#def_type_text").val();
-           var text3 = itm.descp;
-           var text4 = "<spring:message code='service.text.dtlDef' />";
-           var text = text1 + ";" + text2 + ";" + text3;
-           var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+            var text1 = "<spring:message code='service.text.defTyp' />";
+            var text2 = $("#def_type_text").val();
+            var text3 = itm.descp;
+            var text4 = "<spring:message code='service.text.dtlDef' />";
+            var text = text1 + ";" + text2 + ";" + text3;
+            var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
 
-           $("#def_def").val("");
-           $("#def_def_id").val("");
-           $("#def_def_text").val("");
+            $("#def_def").val("");
+            $("#def_def_id").val("");
+            $("#def_def_text").val("");
 
             Common.alert(msg);
             return false;
           }
         }
 
-        if (itm.id == "6041" || itm.id == "6042" || itm.id == "6043" || itm.id== "6044" || itm.id == "6045" || itm.id == "6046" ||
-            itm.id == "6008" || itm.id== "6015" || itm.id == "6023" || itm.id == "6031") {
+        if (itm.id == "6041" || itm.id == "6042" || itm.id == "6043" || itm.id == "6044" || itm.id == "6045" || itm.id == "6046" || itm.id == "6008" || itm.id == "6015" || itm.id == "6023" || itm.id == "6031") {
           if ($("#def_type_id").val() == "7072") {
-           var text1 = "<spring:message code='service.text.defTyp' />";
-           var text2= $("#def_type_text").val();
-           var text3 = itm.descp;
-           var text4 = "<spring:message code='service.text.dtlDef' />";
-           var text = text1 + ";" + text2 + ";" + text3;
-           var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+            var text1 = "<spring:message code='service.text.defTyp' />";
+            var text2 = $("#def_type_text").val();
+            var text3 = itm.descp;
+            var text4 = "<spring:message code='service.text.dtlDef' />";
+            var text = text1 + ";" + text2 + ";" + text3;
+            var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
 
-           $("#def_def").val("");
-           $("#def_def_id").val("");
-           $("#def_def_text").val("");
+            $("#def_def").val("");
+            $("#def_def_id").val("");
+            $("#def_def_text").val("");
 
             Common.alert(msg);
             return false;
@@ -2221,478 +2311,377 @@
 
   setPopData();
 
-  function fn_serialModifyPop(){
-      $("#serialNoChangeForm #pSerialNo").val( $("#stockSerialNo").val() ); // Serial No
-      $("#serialNoChangeForm #pSalesOrdId").val( $("#ORD_ID").val() ); // 주문 ID
-      $("#serialNoChangeForm #pSalesOrdNo").val( $("#ORD_NO").val() ); // 주문 번호
-      $("#serialNoChangeForm #pRefDocNo").val( $("#AS_NO").val() ); //
-     // $("#serialNoModifyForm #pItmCode").val( $("#stkCode").val()  ); // 제품 ID
-      $("#serialNoChangeForm #pCallGbn").val( "AS_EDIT" );
-      $("#serialNoChangeForm #pMobileYn").val( "N"  );
+  function fn_serialModifyPop() {
+    $("#serialNoChangeForm #pSerialNo").val($("#stockSerialNo").val()); // Serial No
+    $("#serialNoChangeForm #pSalesOrdId").val($("#ORD_ID").val()); // 주문 ID
+    $("#serialNoChangeForm #pSalesOrdNo").val($("#ORD_NO").val()); // 주문 번호
+    $("#serialNoChangeForm #pRefDocNo").val($("#AS_NO").val()); //
+    // $("#serialNoModifyForm #pItmCode").val( $("#stkCode").val()  ); // 제품 ID
+    $("#serialNoChangeForm #pCallGbn").val("AS_EDIT");
+    $("#serialNoChangeForm #pMobileYn").val("N");
 
-      if(Common.checkPlatformType() == "mobile") {
-          popupObj = Common.popupWin("serialNoChangeForm", "/logistics/serialChange/serialNoChangePop.do", {width : "1000px", height : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
-      } else{
-          Common.popupDiv("/logistics/serialChange/serialNoChangePop.do", $("#serialNoChangeForm").serializeJSON(), null, true, '_serialNoChangePop');
-      }
+    if (Common.checkPlatformType() == "mobile") {
+      popupObj = Common.popupWin("serialNoChangeForm", "/logistics/serialChange/serialNoChangePop.do", {
+        width : "1000px",
+        height : "1000px",
+        height : "720",
+        resizable : "no",
+        scrollbars : "yes"
+      });
+    } else {
+      Common.popupDiv("/logistics/serialChange/serialNoChangePop.do", $("#serialNoChangeForm").serializeJSON(), null, true, '_serialNoChangePop');
+    }
   }
 
-  function fn_PopSerialChangeClose(obj){
+  function fn_PopSerialChangeClose(obj) {
 
-      console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
+    //console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
 
-      $("#stockSerialNo").val(obj.asIsSerialNo);
-      $("#hidStockSerialNo").val(obj.beforeSerialNo);
+    $("#stockSerialNo").val(obj.asIsSerialNo);
+    $("#hidStockSerialNo").val(obj.beforeSerialNo);
 
-      if(popupObj!=null) popupObj.close();
-      //fn_viewInstallResultSearch(); //조회
+    if (popupObj != null)
+      popupObj.close();
+    //fn_viewInstallResultSearch(); //조회
   }
 
-//팝업에서 호출하는 조회 함수
-function SearchListAjax(obj){
+  //팝업에서 호출하는 조회 함수
+  function SearchListAjax(obj) {
 
-    console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
+    //console.log("++++ obj.asIsSerialNo ::" + obj.asIsSerialNo +", obj.beforeSerialNo ::"+ obj.beforeSerialNo);
 
     $("#stockSerialNo").val(obj.asIsSerialNo);
     $("#hidStockSerialNo").val(obj.beforeSerialNo);
 
     //fn_viewInstallResultSearch(); //조회
-}
+  }
 
-  function fn_serialSearchPop(){
-      var filterCodeVal = $("#ddlFilterCode option:selected").val();
-      var filterCodeText = $("#ddlFilterCode option:selected").text();
-      filterCodeText = filterCodeText.substr(0, filterCodeText.indexOf(" "))
+  function fn_serialSearchPop() {
+    var filterCodeVal = $("#ddlFilterCode option:selected").val();
+    var filterCodeText = $("#ddlFilterCode option:selected").text();
+    filterCodeText = filterCodeText.substr(0, filterCodeText.indexOf(" "))
 
-      $("#pItemCodeOrName").val(filterCodeText);
+    $("#pItemCodeOrName").val(filterCodeText);
 
-      if (FormUtil.isEmpty(filterCodeVal)) {
-          var text = "<spring:message code='service.grid.FilterCode'/>";
-          var rtnMsg = "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
-          Common.alert(rtnMsg);
-          return false;
-      }
+    if (FormUtil.isEmpty(filterCodeVal)) {
+      var text = "<spring:message code='service.grid.FilterCode'/>";
+      var rtnMsg = "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+      Common.alert(rtnMsg);
+      return false;
+    }
 
-      Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {width : "1000px", height : "580", resizable: "no", scrollbars: "no"});
+    Common.popupWin("frmSearchSerial", "/logistics/SerialMgmt/serialSearchPop.do", {
+      width : "1000px",
+      height : "580",
+      resizable : "no",
+      scrollbars : "no"
+    });
   }
 
   function fnSerialSearchResult(data) {
-      data.forEach(function(dataRow) {
-          $("#ddSrvFilterLastSerial").val(dataRow.serialNo);
-          //console.log("serialNo : " + dataRow.serialNo);
-      });
+    data.forEach(function(dataRow) {
+      $("#ddSrvFilterLastSerial").val(dataRow.serialNo);
+      //console.log("serialNo : " + dataRow.serialNo);
+    });
   }
 </script>
 <form id="serialNoChangeForm" name="serialNoChangeForm" method="POST">
-    <input type="hidden" name="pSerialNo" id="pSerialNo"/>
-    <input type="hidden" name="pSalesOrdId"  id="pSalesOrdId"/>
-    <input type="hidden" name="pSalesOrdNo"  id="pSalesOrdNo"/>
-    <input type="hidden" name="pRefDocNo" id="pRefDocNo"/>
-    <input type="hidden" name="pItmCode" id="pItmCode"/>
-    <input type="hidden" name="pCallGbn" id="pCallGbn"/>
-    <input type="hidden" name="pMobileYn" id="pMobileYn"/>
-  </form>
+  <input type="hidden" name="pSerialNo" id="pSerialNo" /> <input type="hidden" name="pSalesOrdId" id="pSalesOrdId" /> <input type="hidden" name="pSalesOrdNo" id="pSalesOrdNo" /> <input type="hidden" name="pRefDocNo" id="pRefDocNo" /> <input type="hidden" name="pItmCode" id="pItmCode" /> <input type="hidden" name="pCallGbn" id="pCallGbn" /> <input type="hidden" name="pMobileYn" id="pMobileYn" />
+</form>
 <form id="frmSearchSerial" name="frmSearchSerial" method="post">
-     <input id="pGubun" name="pGubun" type="hidden" value="RADIO" />
-     <input id="pFixdYn" name="pFixdYn" type="hidden" value="N" />
-     <input id="pLocationType" name="pLocationType" type="hidden" value="" />
-     <input id="pLocationCode" name="pLocationCode" type="hidden" value="" />
-     <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" />
-     <input id="pStatus" name="pStatus" type="hidden" value="" />
-     <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
+  <input id="pGubun" name="pGubun" type="hidden" value="RADIO" /> <input id="pFixdYn" name="pFixdYn" type="hidden" value="N" /> <input id="pLocationType" name="pLocationType" type="hidden" value="" /> <input id="pLocationCode" name="pLocationCode" type="hidden" value="" /> <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" /> <input id="pStatus" name="pStatus" type="hidden" value="" /> <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
 </form>
 <form id="asDataForm" method="post">
- <div style='display: none'>
-  <input type="text" id='asData_AS_ID' name='asData_AS_ID' />
-  <input type="text" id='asData_AS_SO_ID' name='asData_AS_SO_ID' />
-  <input type="text" id='asData_AS_ORD_NO' name='asData_AS_ORD_NO' />
-  <input type="text" id='asData_AS_RESULT_ID' name='asData_AS_RESULT_ID' />
-  <input type="text" id='asData_AS_RESULT_NO' name='asData_AS_RESULT_NO' />
-  <input type="text" id='requestMod' name='requestMod' />
- </div>
+  <div style='display: none'>
+    <input type="text" id='asData_AS_ID' name='asData_AS_ID' /> <input type="text" id='asData_AS_SO_ID' name='asData_AS_SO_ID' /> <input type="text" id='asData_AS_ORD_NO' name='asData_AS_ORD_NO' /> <input type="text" id='asData_AS_RESULT_ID' name='asData_AS_RESULT_ID' /> <input type="text" id='asData_AS_RESULT_NO' name='asData_AS_RESULT_NO' /> <input type="text" id='requestMod' name='requestMod' />
+  </div>
 </form>
 <form id="asResultForm" method="post">
-   <input type="hidden" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
-   <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
-   <input type="hidden" id='hidSerialChk' name='hidSerialChk' />
- <article class="acodi_wrap">
-  <!-- acodi_wrap start -->
-  <dl>
-   <dt class="click_add_on on">
-    <a href="#"><spring:message code='service.title.asRstDtl' /></a>
-   </dt>
-   <dd>
-    <table class="type1">
-     <!-- table start -->
-     <caption>table</caption>
-     <colgroup>
-       <col style="width: 160px" />
-       <col style="width: *" />
-       <col style="width: 110px" />
-       <col style="width: *" />
-     </colgroup>
-     <tbody>
-      <tr>
-       <th scope="row"><!--<spring:message code='service.grid.ResultNo' /> --></th>
-       <td colspan="3">
-        <div id='newRno' style='display: none'>
-         <span id='newResultNo'> </span>
-        </div>
-        <span id='reminder' style="color:red;font-style:italic;display:none"><spring:message code='service.alert.msg.AsEditPrdChk' /></span>
-       </td>
-      </tr>
-      <tr>
-       <th scope="row"><spring:message code='service.grid.ResultNo' /></th>
-       <td><input type="text" title="" placeholder="" class="w100p" id='txtResultNo' name='txtResultNo' disabled /></td>
-       <th scope="row"><spring:message code='sys.title.status'/><span id='m1' name='m1' class="must">*</span>
-       </th>
-       <td><select class="w100p" id="ddlStatus" name="ddlStatus" onChange="fn_ddlStatus_SelectedIndexChanged()">
-         <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
-         <c:forEach var="list" items="${asCrtStat}" varStatus="status">
-           <c:choose>
-           <c:when test="${list.codeId=='1'}">
-             <!-- <option value="${list.codeId}">${list.codeName}</option>  -->
-           </c:when>
-           <c:otherwise>
-             <option value="${list.codeId}">${list.codeName}</option>
-           </c:otherwise>
-         </c:choose>
-         </c:forEach>
-       </select></td>
-      </tr>
-      <tr>
-       <th scope="row"><spring:message code='service.grid.SettleDate' /><span id='m2' name='m2' class="must" style="display:none">*</span>
-       </th>
-       <td><input type="text" title="Create start Date" id='dpSettleDate' name='dpSettleDate' placeholder="DD/MM/YYYY" class="readonly j_date" disabled="disabled" /></td>
-       <th scope="row"><spring:message code='service.grid.FailReason' /><span id='m3' name='m3' class="must" style="display:none">*</span></th>
-       <td>
-         <select id='ddlFailReason' name='ddlFailReason' disabled="disabled"  class="w100p">
-           <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
-         </select>
-       </td>
-      </tr>
-      <tr>
-       <th scope="row"><spring:message code='service.grid.SettleTm' /><span id='m4' name='m4' class="must" style="display:none">*</span>
-       </th>
-       <td>
-        <div class="time_picker">
-         <input type="text" title="" placeholder="" id='tpSettleTime' name='tpSettleTime' class="readonly time_date" disabled="disabled" />
-         <ul>
-          <li><spring:message code='service.text.timePick' /></li>
-          <c:forEach var="list" items="${timePick}" varStatus="status">
-            <li><a href="#">${list.codeName}</a></li>
-          </c:forEach>
-         </ul>
-        </div>
-        <!-- time_picker end -->
-       </td>
-       <th scope="row"><spring:message code='service.title.DSCCode' /><span id='m5' name='m5' class="must" style="display:none">*</span>
-       </th>
-       <td>
-         <input type="hidden" title="" placeholder="" class="" id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}' />
-         <input type="text" title="" placeholder="" class="readonly w100p" id='ddlDSCCodeText' name='ddlDSCCodeText' value='${BRANCH_NAME}'/>
-       </td>
-      </tr>
-      <tr>
-       <th scope="row"><spring:message code='service.grid.ErrCde' /><span id='m6' name='m6' class="must" style="display:none">*</span>
-       </th>
-       <td>
-         <select disabled="disabled" id='ddlErrorCode' name='ddlErrorCode' onChange="fn_errMst_SelectedIndexChanged()" class="w100p"></select>
-       </td>
-       <th scope="row"><spring:message code='service.grid.CTCode' /><span id='m7' name='m7' class="must" style="display:none">*</span>
-       </th>
-       <td>
-         <input type="hidden" title="" placeholder="ddlCTCode" class="" id='ddlCTCode' name='ddlCTCode' />
-         <input type="text" title="" placeholder="" class="readonly w100p" id='ddlCTCodeText' name='ddlCTCodeText'/>
-         <!--
+  <input type="hidden" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" /> <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' /> <input type="hidden" id='hidSerialChk' name='hidSerialChk' />
+  <article class="acodi_wrap">
+    <!-- acodi_wrap start -->
+    <dl>
+      <dt class="click_add_on on">
+        <a href="#"><spring:message code='service.title.asRstDtl' /></a>
+      </dt>
+      <dd>
+        <table class="type1">
+          <!-- table start -->
+          <caption>table</caption>
+          <colgroup>
+            <col style="width: 160px" />
+            <col style="width: *" />
+            <col style="width: 110px" />
+            <col style="width: *" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <th scope="row">
+                <!--<spring:message code='service.grid.ResultNo' /> -->
+              </th>
+              <td colspan="3">
+                <div id='newRno' style='display: none'>
+                  <span id='newResultNo'> </span>
+                </div> <span id='reminder' style="color: red;
+  font-style: italic;
+  display: none"><spring:message code='service.alert.msg.AsEditPrdChk' /></span>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.grid.ResultNo' /></th>
+              <td><input type="text" title="" placeholder="" class="w100p" id='txtResultNo' name='txtResultNo' disabled /></td>
+              <th scope="row"><spring:message code='sys.title.status' /><span id='m1' name='m1' class="must">*</span></th>
+              <td><select class="w100p" id="ddlStatus" name="ddlStatus" onChange="fn_ddlStatus_SelectedIndexChanged()">
+                  <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+                  <c:forEach var="list" items="${asCrtStat}" varStatus="status">
+                    <c:choose>
+                      <c:when test="${list.codeId=='1'}">
+                        <!-- <option value="${list.codeId}">${list.codeName}</option>  -->
+                      </c:when>
+                      <c:otherwise>
+                        <option value="${list.codeId}">${list.codeName}</option>
+                      </c:otherwise>
+                    </c:choose>
+                  </c:forEach>
+              </select></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.grid.SettleDate' /><span id='m2' name='m2' class="must" style="display: none">*</span></th>
+              <td><input type="text" title="Create start Date" id='dpSettleDate' name='dpSettleDate' placeholder="DD/MM/YYYY" class="readonly j_date" disabled="disabled" /></td>
+              <th scope="row"><spring:message code='service.grid.FailReason' /><span id='m3' name='m3' class="must" style="display: none">*</span></th>
+              <td><select id='ddlFailReason' name='ddlFailReason' disabled="disabled" class="w100p">
+                  <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+              </select></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.grid.SettleTm' /><span id='m4' name='m4' class="must" style="display: none">*</span></th>
+              <td>
+                <div class="time_picker">
+                  <input type="text" title="" placeholder="" id='tpSettleTime' name='tpSettleTime' class="readonly time_date" disabled="disabled" />
+                  <ul>
+                    <li><spring:message code='service.text.timePick' /></li>
+                    <c:forEach var="list" items="${timePick}" varStatus="status">
+                      <li><a href="#">${list.codeName}</a></li>
+                    </c:forEach>
+                  </ul>
+                </div> <!-- time_picker end -->
+              </td>
+              <th scope="row"><spring:message code='service.title.DSCCode' /><span id='m5' name='m5' class="must" style="display: none">*</span></th>
+              <td><input type="hidden" title="" placeholder="" class="" id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}' /> <input type="text" title="" placeholder="" class="readonly w100p" id='ddlDSCCodeText' name='ddlDSCCodeText' value='${BRANCH_NAME}' /></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.grid.ErrCde' /><span id='m6' name='m6' class="must" style="display: none">*</span></th>
+              <td><select disabled="disabled" id='ddlErrorCode' name='ddlErrorCode' onChange="fn_errMst_SelectedIndexChanged(1)" class="w100p"></select></td>
+              <th scope="row"><spring:message code='service.grid.CTCode' /><span id='m7' name='m7' class="must" style="display: none">*</span></th>
+              <td><input type="hidden" title="" placeholder="ddlCTCode" class="" id='ddlCTCode' name='ddlCTCode' /> <input type="text" title="" placeholder="" class="readonly w100p" id='ddlCTCodeText' name='ddlCTCodeText' /> <!--
            <input type="hidden" title="" placeholder="ddlCTCode" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
            <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
-         -->
-       </td>
-      </tr>
-      <tr>
-       <th scope="row"><spring:message code='service.grid.ErrDesc' /><span id='m8' name='m8' class="must" style="display:none">*</span>
-       </th>
-       <td>
-         <select id='ddlErrorDesc' name='ddlErrorDesc'  class="w100p"></select>
-       </td>
-       <th scope="row"><spring:message code='sal.title.warehouse' /></th>
-       <td>
-         <select class="disabled w100p" disabled="disabled" id='ddlWarehouse' name='ddlWarehouse'>
-           <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
-         </select>
-       </td>
-      </tr>
-      <tr>
-       <th scope="row"><spring:message code='service.title.Remark' /><span id='m14' name='m14' class="must">*</span></th>
-       <td colspan="3">
-         <textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id='txtRemark' name='txtRemark'></textarea></td>
-      </tr>
-      <tr>
-       <th scope="row"><spring:message code='sal.text.commission' /></th>
-       <td>
-         <label>
-           <input type="checkbox" disabled="disabled" id='iscommission' name='iscommission' />
-           <span><spring:message code='sal.text.commissionApplied' /></span></label></td>
-       <th scope="row"><spring:message code='service.title.SerialNo' /><span class="must">*</span></th>
-       <td>
-           <input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.lastSerialNo}" class="readonly" readonly/>
-            <p class="btn_grid" style="display:none" id="btnSerialEdit"><a id="serialEdit" href="#" onClick="fn_serialModifyPop()">EDIT</a></p>
-       </td>
-      </tr>
-
-      <tr>
-       <th scope="row"><spring:message code='service.title.PSIRcd' /><span class="must" id="m15" style="display:none"> *</span></th>
-       <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" disabled="disabled" onkeypress='validate(event)' </td>
-       <th scope="row"><spring:message code='service.title.lmp' /><span class="must" id="m16" style="display:none"> *</span></th>
-       <td><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" disabled="disabled" onkeypress='validate(event)' </td>
-       </td>
-      </tr>
-
-      <tr>
-       <th scope="row"><spring:message code='service.grid.CrtBy' /></th>
-       <td>
-         <input type="text" title="" placeholder="<spring:message code='service.grid.CrtBy' />" class="disabled w100p" disabled="disabled" id='creator' name='creator'/>
-       </td>
-       <th scope="row"><spring:message code='service.grid.CrtDt' /><span class="must">*</span></th>
-       <td>
-         <input type="text" title="" placeholder="<spring:message code='service.grid.CrtDt' />" class="disabled w100p" disabled="disabled" id='creatorat' name='creatorat'/>
-       </td>
-      </tr>
-     </tbody>
-    </table>
-    <!-- table end -->
-   </dd>
-
-   <dt class="click_add_on" id='recall_dt' onclick="fn_secChk(this);">
-     <a href="#"><spring:message code='service.title.asCallLog' /></a>
-   </dt>
-   <dd id='recall_div' style="display: none">
-     <table class="type1">
-      <caption>table</caption>
-      <colgroup>
-       <col style="width: 140px" />
-       <col style="width: *" />
-       <col style="width: 140px" />
-       <col style="width: *" />
-      </colgroup>
-      <tbody>
-       <tr>
-         <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
-         <td>
-          <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " readonly="readonly" id="appDate" name="appDate" onChange="fn_chkDt2(this);"/>
-         </td>
-         <th scope="row"><spring:message code='service.title.AppointmentSessione' /><span class="must">*</span></th>
-         <td>
-           <input type="text" title="" placeholder="<spring:message code='service.title.AppointmentDate' />" id="CTSSessionCode" name="CTSSessionCode" class="readonly w100p" readonly="readonly" />
-         </td>
-       </tr>
-       <tr>
-         <th scope="row"><spring:message code='service.title.DSCBranch' /><span class="must">*</span></th>
-         <td>
-           <select class="w100p" id="branchDSC" name="branchDSC" class="" disabled="disabled"></select>
-         </td>
-         <th scope="row"><spring:message code='service.grid.AssignCT' /><span class="must">*</span></th>
-         <td>
-           <input type="text" title="" placeholder="<spring:message code='service.grid.AssignCT' />" id="CTCode" name="CTCode" class="readonly w100p" readonly="readonly" onchange="fn_changeCTCode(this)" />
-         </td>
-       </tr>
-       <tr>
-         <th scope="row"><spring:message code='service.title.CTGroup' /></th>
-         <td colspan="3">
-           <input type="text" title="<spring:message code='service.title.CTGroup' />" placeholder="<spring:message code='service.title.CTGroup' />" class="w100p" id="CTGroup" name="CTGroup" />
-         </td>
-       </tr>
-       <tr>
-         <th scope="row"><spring:message code='service.grid.Remark' /><span class="must">*</span></th>
-         <td colspan="3">
-           <textarea id='callRem' name='callRem' rows='5' placeholder="<spring:message code='service.title.Remark' />" class="w100p"></textarea>
-         </td>
-       </tr>
-
-      </tbody>
-     </table>
-     <!-- table end -->
-    </dd>
-
-
-   <dt class="click_add_on" id='defEvt_dt' onclick="fn_secChk(this);">
-    <a href="#"><spring:message code='service.title.asDefEnt' /></a>
-   </dt>
-   <dd id='defEvt_div' style="display: none">
-    <table class="type1">
-     <!-- table start -->
-     <caption>table</caption>
-     <colgroup>
-      <col style="width: 140px" />
-      <col style="width: *" />
-     </colgroup>
-     <tbody>
-      <tr>
-        <th scope="row"><spring:message code='service.text.defPrt' /><span id='m11' name='m11' class="must" style="display:none">*</span></th>
-        <td>
-          <input type="text" title="" placeholder="" disabled="disabled" id='def_part' name='def_part' class="" onblur="fn_getASReasonCode2(this, 'def_part' ,'305')" onkeyup="this.value = this.value.toUpperCase();"/>
-          <a class="search_btn" id="DP" name="DP" onclick="fn_dftTyp('DP')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-          <input type="hidden" title="" placeholder="" id='def_part_id' name='def_part_id' class="" />
-          <input type="text" title="" placeholder="" id='def_part_text' name='def_part_text' class="" disabled style="width:60%;"/>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row"><spring:message code='service.text.dtlDef' /><span id='m12' name='m12' class="must" style="display:none">*</span></th>
-        <td>
-          <input type="text" title="" placeholder="" disabled="disabled" id='def_def' name='def_def' class="" onblur="fn_getASReasonCode2(this, 'def_def'  ,'304')" onkeyup="this.value = this.value.toUpperCase();"/>
-          <a class="search_btn" id="DD" name="DD" onclick="fn_dftTyp('DD')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-          <input type="hidden" title="" placeholder="" id='def_def_id' name='def_def_id' class="" />
-          <input type="text" title="" placeholder="" id='def_def_text' name='def_def_text' class="" disabled style="width:60%;"/>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row"><spring:message code='service.text.defCde' /><span id='m10' name='m10' class="must" style="display:none">*</span></th>
-        <td>
-          <input type="text" title="" placeholder="" disabled="disabled" id='def_code' name='def_code' class="" onblur="fn_getASReasonCode2(this, 'def_code', '303')" onkeyup="this.value = this.value.toUpperCase();"/>
-          <a class="search_btn" id="DC" name="DC" onclick="fn_dftTyp('DC')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-          <input type="hidden" title="" placeholder="" id='def_code_id' name='def_code_id' class="" />
-          <input type="text" title="" placeholder="" id='def_code_text' name='def_code_text' class="" disabled style="width:60%;"/>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row"><spring:message code='service.text.defTyp' /><span id='m9' name='m9' class="must" style="display:none">*</span></th>
-        <td>
-          <input type="text" title="" id='def_type' name='def_type' placeholder="" disabled="disabled"  class="" onblur="fn_getASReasonCode2(this, 'def_type' ,'387')" onkeyup="this.value = this.value.toUpperCase();"/>
-          <a class="search_btn" id="DT" name="DT" onclick="fn_dftTyp('DT')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-          <input type="hidden" title="" id='def_type_id' name='def_type_id' placeholder="" class="" />
-          <input type="text" title="" placeholder="" id='def_type_text' name='def_type_text' class="" disabled style="width:60%;"/>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row"><spring:message code='service.text.sltCde' /><span id='m13' name='m13' class="must" style="display:none">*</span></th>
-        <td>
-          <input type="text" title="" placeholder="" class="" disabled="disabled" id='solut_code' name='solut_code' onblur="fn_getASReasonCode2(this, 'solut_code'  ,'337')" onkeyup="this.value = this.value.toUpperCase();"/>
-          <a class="search_btn" id="SC" name="SC" onclick="fn_dftTyp('SC')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-          <input type="hidden" title="" placeholder="" class="" id='solut_code_id' name='solut_code_id' />
-          <input type="text" title="" placeholder="" class="" id='solut_code_text' name='solut_code_text' disabled style="width:60%;"/>
-        </td>
-      </tr>
-     </tbody>
-    </table>
-    <!-- table end -->
-   </dd>
-
-   <dt class="click_add_on" id='chrFee_dt' onclick="fn_secChk(this);">
-    <a href="#"><spring:message code='service.title.asPrtChr' /></a>
-   </dt>
-   <dd id='chrFee_div' style="display: none">
-    <table class="type1">
-     <!-- table start -->
-     <caption>table</caption>
-     <colgroup>
-      <col style="width: 170px" />
-      <col style="width: *" />
-      <col style="width: 140px" />
-      <col style="width: *" />
-     </colgroup>
-     <tbody>
-      <tr>
-       <th scope="row"><spring:message code='service.text.asLbrChr' /></th>
-       <td>
-         <label>
-           <input type="checkbox" id='txtLabourch' name='txtLabourch' onChange="fn_LabourCharge_CheckedChanged(this)" disabled />
-         </label>
-       </td>
-       <th scope="row"><spring:message code='service.text.asLbrChr' /></th>
-       <td>
-         <input type="text" id='txtLabourCharge' name='txtLabourCharge' value='0.00' class='readonly' readonly/></td>
-      </tr>
-      <tr>
-       <th scope="row"><spring:message code='service.text.asLbrChr' /> (RM) <span id="fcm1" name="fcm1" class="must" style="display:none">*</span></th>
-       <td>
-         <select id='cmbLabourChargeAmt' name='cmbLabourChargeAmt' onChange="fn_cmbLabourChargeAmt_SelectedIndexChanged()" disabled>
-           <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
-           <c:forEach var="list" items="${lbrFeeChr}" varStatus="status">
-             <option value="${list.codeId}">${list.codeName}</option>
-           </c:forEach>
-         </select>
-       </td>
-       <th scope="row"><spring:message code='service.text.asfltChr' /></th>
-       <td>
-         <input type="text" id='txtFilterCharge' name='txtFilterCharge' value='0.00' class='readonly' readonly/></td>
-      </tr>
-      <tr>
-       <th scope="row"></th>
-       <td></td>
-       <th scope="row"><b><spring:message code='service.text.asTtlChr' /></b></th>
-       <td>
-         <input type="text" id='txtTotalCharge' name='txtTotalCharge' value='0.00' class='readonly' readonly/></td>
-      </tr>
-      <tr>
-       <th scope="row"><spring:message code='service.grid.FilterCode' /><span id="fcm2" name="fcm2" class="must" style="display:none">*</span></th>
-       <td>
-         <select id='ddlFilterCode' name='ddlFilterCode' onChange="fn_setMand(this);fn_onChangeddlFilterCode()"></select>
-       </td>
-       <th scope="row"><spring:message code='service.grid.Quantity' /><span id="fcm3" name="fcm3" class="must" style="display:none">*</span></th>
-       <td>
-         <select id='ddlFilterQty' name='ddlFilterQty'>
-         <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
-          <c:forEach var="list" items="${fltQty}" varStatus="status">
-            <option value="${list.codeId}">${list.codeName}</option>
-          </c:forEach>
-         </select>
-       </td>
-      </tr>
-      <tr>
-       <th scope="row"><spring:message code='service.text.asPmtTyp' /><span id="fcm4" name="fcm4" class="must" style="display:none">*</span></th>
-       <td>
-         <select id='ddlFilterPayType' name='ddlFilterPayType' onChange="fn_cmbPaymentType()">
-           <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
-           <c:forEach var="list" items="${fltPmtTyp}" varStatus="status">
-             <option value="${list.codeId}">${list.codeName}</option>
-           </c:forEach>
-         </select>
-       </td>
-       <th scope="row"><spring:message code='service.text.asExcRsn' /><span id="fcm5" name="fcm5" class="must" style="display:none">*</span></th>
-       <td>
-         <select id='ddlFilterExchangeCode' name='ddlFilterExchangeCode'></select>
-       </td>
-      </tr>
-      <tr>
-        <th scope="row"><spring:message code='service.title.SerialNo' /></th>
-        <td colspan="3">
-          <input type="text" id='ddSrvFilterLastSerial' name='ddSrvFilterLastSerial' />
-          <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop()" style="display:none"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-        </td>
-      </tr>
-      <tr>
-       <th scope="row"><spring:message code='service.title.Remark' /></th>
-       <td colspan="3">
-         <textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id='txtFilterRemark' name='txtFilterRemark'></textarea>
-       </td>
-      </tr>
-      <td colspan="4">
-        <span style="color:red;font-style: italic;"><spring:message code='service.msg.msgFltTtlAmt' /></span>
-      </td>
-     </tbody>
-    </table>
-    <!-- table end -->
-    <div id='addDiv'>
-    <ul class="center_btns">
-     <li><p class="btn_blue2">
-       <a href="#" onclick="fn_filterAdd()"><spring:message code='sys.btn.add' /></a>
-      </p></li>
-     <li><p class="btn_blue2">
-       <a href="#" onclick="fn_clearPanelField_ASChargesFees()"><spring:message code='sys.btn.clear' /></a>
-      </p></li>
-    </ul>
-    </div>
-    <article class="grid_wrap">
-     <!-- grid_wrap start -->
-     <div id="asfilter_grid_wrap"
-      style="width: 100%; height: 220px; margin: 0 auto;"></div>
-    </article>
-    <!-- grid_wrap end -->
-   </dd>
-
-   <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
-   <!-- <dt class="click_add_on" id='inHouse_dt' onclick="fn_secChk(this);">
+         --></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.grid.ErrDesc' /><span id='m8' name='m8' class="must" style="display: none">*</span></th>
+              <td><select id='ddlErrorDesc' name='ddlErrorDesc' class="w100p" onChange="fn_errDescCheck(1)"></select></td>
+              <th scope="row"><spring:message code='sal.title.warehouse' /></th>
+              <td><select class="disabled w100p" disabled="disabled" id='ddlWarehouse' name='ddlWarehouse'>
+                  <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+              </select></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.title.Remark' /><span id='m14' name='m14' class="must">*</span></th>
+              <td colspan="3"><textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id='txtRemark' name='txtRemark'></textarea></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='sal.text.commission' /></th>
+              <td><label> <input type="checkbox" disabled="disabled" id='iscommission' name='iscommission' /> <span><spring:message code='sal.text.commissionApplied' /></span></label></td>
+              <th scope="row"><spring:message code='service.title.SerialNo' /><span class="must">*</span></th>
+              <td><input type="text" id='stockSerialNo' name='stockSerialNo' value="${orderDetail.basicInfo.lastSerialNo}" class="readonly" readonly />
+                <p class="btn_grid" style="display: none" id="btnSerialEdit">
+                  <a id="serialEdit" href="#" onClick="fn_serialModifyPop()">EDIT</a>
+                </p></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.title.PSIRcd' /><span class="must" id="m15" style="display: none"> *</span></th>
+              <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" disabled="disabled" onkeypress='validate(event)'</td>
+              <th scope="row"><spring:message code='service.title.lmp' /><span class="must" id="m16" style="display: none"> *</span></th>
+              <td><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" disabled="disabled" onkeypress='validate(event)'</td>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.grid.CrtBy' /></th>
+              <td><input type="text" title="" placeholder="<spring:message code='service.grid.CrtBy' />" class="disabled w100p" disabled="disabled" id='creator' name='creator' /></td>
+              <th scope="row"><spring:message code='service.grid.CrtDt' /><span class="must">*</span></th>
+              <td><input type="text" title="" placeholder="<spring:message code='service.grid.CrtDt' />" class="disabled w100p" disabled="disabled" id='creatorat' name='creatorat' /></td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- table end -->
+      </dd>
+      <dt class="click_add_on" id='recall_dt' onclick="fn_secChk(this);">
+        <a href="#"><spring:message code='service.title.asCallLog' /></a>
+      </dt>
+      <dd id='recall_div' style="display: none">
+        <table class="type1">
+          <caption>table</caption>
+          <colgroup>
+            <col style="width: 140px" />
+            <col style="width: *" />
+            <col style="width: 140px" />
+            <col style="width: *" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <th scope="row"><spring:message code='service.title.AppointmentDate' /><span class="must">*</span></th>
+              <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " readonly="readonly" id="appDate" name="appDate" onChange="fn_chkDt2(this);" /></td>
+              <th scope="row"><spring:message code='service.title.AppointmentSessione' /><span class="must">*</span></th>
+              <td><input type="text" title="" placeholder="<spring:message code='service.title.AppointmentDate' />" id="CTSSessionCode" name="CTSSessionCode" class="readonly w100p" readonly="readonly" /></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.title.DSCBranch' /><span class="must">*</span></th>
+              <td><select class="w100p" id="branchDSC" name="branchDSC" class="" disabled="disabled"></select></td>
+              <th scope="row"><spring:message code='service.grid.AssignCT' /><span class="must">*</span></th>
+              <td><input type="text" title="" placeholder="<spring:message code='service.grid.AssignCT' />" id="CTCode" name="CTCode" class="readonly w100p" readonly="readonly" onchange="fn_changeCTCode(this)" /></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.title.CTGroup' /></th>
+              <td colspan="3"><input type="text" title="<spring:message code='service.title.CTGroup' />" placeholder="<spring:message code='service.title.CTGroup' />" class="w100p" id="CTGroup" name="CTGroup" /></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.grid.Remark' /><span class="must">*</span></th>
+              <td colspan="3"><textarea id='callRem' name='callRem' rows='5' placeholder="<spring:message code='service.title.Remark' />" class="w100p"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- table end -->
+      </dd>
+      <dt class="click_add_on" id='defEvt_dt' onclick="fn_secChk(this);">
+        <a href="#"><spring:message code='service.title.asDefEnt' /></a>
+      </dt>
+      <dd id='defEvt_div' style="display: none">
+        <table class="type1">
+          <!-- table start -->
+          <caption>table</caption>
+          <colgroup>
+            <col style="width: 140px" />
+            <col style="width: *" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <th scope="row"><spring:message code='service.text.defPrt' /><span id='m11' name='m11' class="must" style="display: none">*</span></th>
+              <td><input type="text" title="" placeholder="" disabled="disabled" id='def_part' name='def_part' class="" onblur="fn_getASReasonCode2(this, 'def_part' ,'305')" onkeyup="this.value = this.value.toUpperCase();" /> <a class="search_btn" id="DP" name="DP" onclick="fn_dftTyp('DP')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> <input type="hidden" title="" placeholder="" id='def_part_id' name='def_part_id' class="" /> <input type="text" title="" placeholder="" id='def_part_text' name='def_part_text' class="" disabled style="width: 60%;" /></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.text.dtlDef' /><span id='m12' name='m12' class="must" style="display: none">*</span></th>
+              <td><input type="text" title="" placeholder="" disabled="disabled" id='def_def' name='def_def' class="" onblur="fn_getASReasonCode2(this, 'def_def'  ,'304')" onkeyup="this.value = this.value.toUpperCase();" /> <a class="search_btn" id="DD" name="DD" onclick="fn_dftTyp('DD')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> <input type="hidden" title="" placeholder="" id='def_def_id' name='def_def_id' class="" /> <input type="text" title="" placeholder="" id='def_def_text' name='def_def_text' class="" disabled style="width: 60%;" /></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.text.defCde' /><span id='m10' name='m10' class="must" style="display: none">*</span></th>
+              <td><input type="text" title="" placeholder="" disabled="disabled" id='def_code' name='def_code' class="" onblur="fn_getASReasonCode2(this, 'def_code', '303')" onkeyup="this.value = this.value.toUpperCase();" /> <a class="search_btn" id="DC" name="DC" onclick="fn_dftTyp('DC')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> <input type="hidden" title="" placeholder="" id='def_code_id' name='def_code_id' class="" /> <input type="text" title="" placeholder="" id='def_code_text' name='def_code_text' class="" disabled style="width: 60%;" /></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.text.defTyp' /><span id='m9' name='m9' class="must" style="display: none">*</span></th>
+              <td><input type="text" title="" id='def_type' name='def_type' placeholder="" disabled="disabled" class="" onblur="fn_getASReasonCode2(this, 'def_type' ,'387')" onkeyup="this.value = this.value.toUpperCase();" /> <a class="search_btn" id="DT" name="DT" onclick="fn_dftTyp('DT')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> <input type="hidden" title="" id='def_type_id' name='def_type_id' placeholder="" class="" /> <input type="text" title="" placeholder="" id='def_type_text' name='def_type_text' class="" disabled style="width: 60%;" /></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.text.sltCde' /><span id='m13' name='m13' class="must" style="display: none">*</span></th>
+              <td><input type="text" title="" placeholder="" class="" disabled="disabled" id='solut_code' name='solut_code' onblur="fn_getASReasonCode2(this, 'solut_code'  ,'337')" onkeyup="this.value = this.value.toUpperCase();" /> <a class="search_btn" id="SC" name="SC" onclick="fn_dftTyp('SC')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a> <input type="hidden" title="" placeholder="" class="" id='solut_code_id' name='solut_code_id' /> <input type="text" title="" placeholder="" class="" id='solut_code_text' name='solut_code_text' disabled style="width: 60%;" /></td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- table end -->
+      </dd>
+      <dt class="click_add_on" id='chrFee_dt' onclick="fn_secChk(this);">
+        <a href="#"><spring:message code='service.title.asPrtChr' /></a>
+      </dt>
+      <dd id='chrFee_div' style="display: none">
+        <table class="type1">
+          <!-- table start -->
+          <caption>table</caption>
+          <colgroup>
+            <col style="width: 170px" />
+            <col style="width: *" />
+            <col style="width: 140px" />
+            <col style="width: *" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <th scope="row"><spring:message code='service.text.asLbrChr' /></th>
+              <td><label> <input type="checkbox" id='txtLabourch' name='txtLabourch' onChange="fn_LabourCharge_CheckedChanged(this)" disabled />
+              </label></td>
+              <th scope="row"><spring:message code='service.text.asLbrChr' /></th>
+              <td><input type="text" id='txtLabourCharge' name='txtLabourCharge' value='0.00' class='readonly' readonly /></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.text.asLbrChr' /> (RM) <span id="fcm1" name="fcm1" class="must" style="display: none">*</span></th>
+              <td><select id='cmbLabourChargeAmt' name='cmbLabourChargeAmt' onChange="fn_cmbLabourChargeAmt_SelectedIndexChanged()" disabled>
+                  <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+                  <c:forEach var="list" items="${lbrFeeChr}" varStatus="status">
+                    <option value="${list.codeId}">${list.codeName}</option>
+                  </c:forEach>
+              </select></td>
+              <th scope="row"><spring:message code='service.text.asfltChr' /></th>
+              <td><input type="text" id='txtFilterCharge' name='txtFilterCharge' value='0.00' class='readonly' readonly /></td>
+            </tr>
+            <tr>
+              <th scope="row"></th>
+              <td></td>
+              <th scope="row"><b><spring:message code='service.text.asTtlChr' /></b></th>
+              <td><input type="text" id='txtTotalCharge' name='txtTotalCharge' value='0.00' class='readonly' readonly /></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.grid.FilterCode' /><span id="fcm2" name="fcm2" class="must" style="display: none">*</span></th>
+              <td><select id='ddlFilterCode' name='ddlFilterCode' onChange="fn_setMand(this);fn_onChangeddlFilterCode()"></select></td>
+              <th scope="row"><spring:message code='service.grid.Quantity' /><span id="fcm3" name="fcm3" class="must" style="display: none">*</span></th>
+              <td><select id='ddlFilterQty' name='ddlFilterQty'>
+                  <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+                  <c:forEach var="list" items="${fltQty}" varStatus="status">
+                    <option value="${list.codeId}">${list.codeName}</option>
+                  </c:forEach>
+              </select></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.text.asPmtTyp' /><span id="fcm4" name="fcm4" class="must" style="display: none">*</span></th>
+              <td><select id='ddlFilterPayType' name='ddlFilterPayType' onChange="fn_cmbPaymentType()">
+                  <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+                  <c:forEach var="list" items="${fltPmtTyp}" varStatus="status">
+                    <option value="${list.codeId}">${list.codeName}</option>
+                  </c:forEach>
+              </select></td>
+              <th scope="row"><spring:message code='service.text.asExcRsn' /><span id="fcm5" name="fcm5" class="must" style="display: none">*</span></th>
+              <td><select id='ddlFilterExchangeCode' name='ddlFilterExchangeCode'></select></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.title.SerialNo' /></th>
+              <td colspan="3"><input type="text" id='ddSrvFilterLastSerial' name='ddSrvFilterLastSerial' /> <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop()" style="display: none"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+            </tr>
+            <tr>
+              <th scope="row"><spring:message code='service.title.Remark' /></th>
+              <td colspan="3"><textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id='txtFilterRemark' name='txtFilterRemark'></textarea></td>
+            </tr>
+            <td colspan="4"><span style="color: red;
+  font-style: italic;"><spring:message code='service.msg.msgFltTtlAmt' /></span></td>
+          </tbody>
+        </table>
+        <!-- table end -->
+        <div id='addDiv'>
+          <ul class="center_btns">
+            <li><p class="btn_blue2">
+                <a href="#" onclick="fn_filterAdd()"><spring:message code='sys.btn.add' /></a>
+              </p></li>
+            <li><p class="btn_blue2">
+                <a href="#" onclick="fn_clearPanelField_ASChargesFees()"><spring:message code='sys.btn.clear' /></a>
+              </p></li>
+          </ul>
+        </div>
+        <article class="grid_wrap">
+          <!-- grid_wrap start -->
+          <div id="asfilter_grid_wrap" style="width: 100%;
+  height: 220px;
+  margin: 0 auto;"></div>
+        </article>
+        <!-- grid_wrap end -->
+      </dd>
+      <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
+      <!-- <dt class="click_add_on" id='inHouse_dt' onclick="fn_secChk(this);">
     <a href="#">In-House Repair Entry</a>
    </dt>
    <dd id='inHouseRepair_div' style="display: none">
@@ -2738,10 +2727,10 @@ function SearchListAjax(obj){
      </tbody>
     </table>
    </dd> -->
-   <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
-  </dl>
- </article>
- <!-- acodi_wrap end -->
+      <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
+    </dl>
+  </article>
+  <!-- acodi_wrap end -->
 </form>
 <script type="text/javascript">
 
