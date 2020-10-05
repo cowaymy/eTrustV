@@ -280,6 +280,8 @@ public class LoginController {
 
 		params.put("userId", sessionVO.getUserId());
 
+		int noticeExist = loginService.checkNotice();
+
 		// Get User type, role/contract type, agreement status (if applicable)
 		EgovMap item1 = new EgovMap();
 		item1 = (EgovMap) loginService.getDtls(params);
@@ -405,18 +407,19 @@ public class LoginController {
 					}
 
 					// HT agreement renewal
-					else if (
-
-					("0007".equals(userTypeId) && (("348".equals(item1.get("roleType")))
+					else if ("0007".equals(userTypeId)
+					        /*("0007".equals(userTypeId) && (("348".equals(item1.get("roleType")))
 							|| ("349".equals(item1.get("roleType"))) || ("350".equals(item1.get("roleType")))
 							|| ("351".equals(item1.get("roleType"))) || ("352".equals(item1.get("roleType")))))
+							*/
 					) {
 						// 0007=HT, roletype121=level of position
 						LOGGER.debug("===========HT agreement renewal============");
 						LOGGER.debug("===========roleType============" + item1.get("roleType"));
 
 						LOGGER.debug("============ ACCEPTED =============");
-						params.put("popType", null);
+						params.put("popType", "A");
+						params.put("roleId", item1.get("roleType"));
 						EgovMap aggrementCrtDt = new EgovMap();
 						aggrementCrtDt = (EgovMap) loginService.getPopDtls(params);
 						LOGGER.debug("============ aggrementCrtDt =============" + aggrementCrtDt);
@@ -480,6 +483,16 @@ public class LoginController {
 		}
 
 		// Get pop up file name, pop exception members/roles
+		int memLvl = 0;
+		if(item1.containsKey("memLvl")) {
+		    memLvl = Integer.parseInt(item1.get("memLvl").toString());
+		}
+		if("4".equals(item1.get("userTypeId").toString()) || "3".equals(item1.get("userTypeId").toString())) {
+		    params.put("popType", "N");
+		} else if((!"A".equals(params.get("popType").toString()) && noticeExist != 0) || ("2".equals(item1.get("userTypeId").toString()) && memLvl < 4)) {
+		    params.put("popType", "N");
+		}
+
 		EgovMap item2 = new EgovMap();
 		item2 = (EgovMap) loginService.getPopDtls(params);
 

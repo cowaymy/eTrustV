@@ -269,10 +269,12 @@
                     	var inQueue = 0;
 
                     	// Added for displaying important Notice by Management to all HP, Cody, CT, Staff, Admin. By Hui Ding, 2020-09-28
+                    	/*
                         Common.ajaxSync("GET", "/login/loginNoticePopCheck", {userId : userId, userTypeId : result.data.userTypeId}, function(noticePop) {
                         	noticePopResult = noticePop;
                         	console.log("noticePop");
                         });
+                    	*/
 
 	                    Common.ajaxSync("GET", "/login/loginPopCheck", {userId : userId, userTypeId : result.data.userTypeId}, function(aResultSet) {
                             aResult = aResultSet;
@@ -318,6 +320,7 @@
                             }
                         }
 
+                        /*
                         if (noticePopResult != null && noticePopResult != ""){
                             if (noticePopResult.retMsg == "") {
                                 $("#loginPdf").val(noticePopResult.popFlName);
@@ -332,7 +335,8 @@
                             } else {
                             	console.log(noticePopResult.retMsg);
                             }
-                       }
+                        }
+                        */
                     }
                     // External
                     else {

@@ -287,7 +287,8 @@
             C.NAME,
             C.NRIC,
             E.NAME BANK_NAME,
-            C.BANK_ACC_NO
+            C.BANK_ACC_NO,
+            F.MEM_LVL
         FROM SYS0047M A
         INNER JOIN SYS0045M B
             ON A.USER_ID = B.USER_ID and B.STUS_ID NOT IN ('8')
@@ -304,6 +305,8 @@
             ON C.APLICNT_ID = D.APLCTN_ID
         LEFT JOIN SYS0004M E
             ON NVL(C.BANK, D.APLICNT_BANK_ID) = E.BANK_ID
+        LEFT JOIN ORG0005D F
+            ON C.MEM_ID = F.MEM_ID
         WHERE A.USER_ID = #{userId}
     </select>
 
@@ -338,16 +341,34 @@
             GROUP BY POP_ID
         ) C
             ON A.POP_ID = C.POP_ID
-        WHERE SUBSTR(A.POP_MEM_TYPE, 1, 4) = #{userTypeId}
-        <if test="userTypeId != '0004' ">
-            <if test="roleId != null and roleId != ''">
-                AND SUBSTR(A.POP_MEM_TYPE, 6, 3) = #{roleType}
+        WHERE 1=1
+        <if test='popType != "N" '>
+            AND SUBSTR(A.POP_MEM_TYPE, 1, 4) = #{userTypeId}
+            <if test='userTypeId != "0004" and popType == "A" '>
+                <if test='roleId != null and roleId != "" '>
+                    AND SUBSTR(A.POP_MEM_TYPE, 6, 3) = #{roleType}
+                </if>
+            </if>
+            <if test='popType != null and popType != "" '>
+                AND POP_TYPE = #{popType}
             </if>
         </if>
-        <if test="popType != null and popType != ''">
-            AND POP_TYPE = #{popType}
+        <if test='popType == "N" '>
+            AND POP_TYPE = 'N'
+            AND VALID_FR <![CDATA[<=]]> SYSDATE
+            AND VALID_TO <![CDATA[>=]]> SYSDATE
         </if>
         AND POP_FLG = 'A'
+    </select>
+
+    <select id="checkNotice" parameterType="Map" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM SYS0091M
+        WHERE POP_TYPE = 'N'
+        AND POP_FLG = 'A'
+        AND VALID_FR <![CDATA[<=]]> SYSDATE
+        AND VALID_TO <![CDATA[>=]]> SYSDATE
     </select>
 
     <select id="getCowayNoticePopDtls" parameterType="Map" resultType="egovMap">
