@@ -935,7 +935,8 @@ public class MemberListController {
 
         // ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
         formMap.put("hsptlz",  params.get("hsptlz"));
-
+        formMap.put("memberType", formMap.get("memberTypeUpd"));
+        formMap.put("MemberID", formMap.get("MemberIDUpd"));
 
         String memCode = "";
         String memId = "";
@@ -950,9 +951,9 @@ public class MemberListController {
 
         // update
 
-        memCode = (String) formMap.get("memCode");
-        memId = (String) formMap.get("MemberID");
-        memberType = (String) formMap.get("memberType");
+        memCode = (String) formMap.get("memberCodeUpd");
+        memId = (String) formMap.get("MemberIDUpd");
+        memberType = (String) formMap.get("memberTypeUpd");
         // doc 공통업데이트
         memberListService.updateDocSub(updList, memId, userId, memberType);
 
