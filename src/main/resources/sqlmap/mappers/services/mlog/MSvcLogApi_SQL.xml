@@ -206,7 +206,7 @@
                                    R.SRV_MEM_CNTRCT_ID,
                                    U.FAUCET_EXCH AS warranty,
                                    NVL(L.SERIAL_CHK, 'N') AS SERIAL_CHK,
-                                   B.HS_CHKLIST
+                                   B.HS_CHKLIST,
                                    NVL(Y.VOUCHER, '') AS VOUCHER,
                                     CASE WHEN Y.REDEEM_HS = 0 OR Y.REDEEM_HS = '0' OR Y.REDEEM_HS = '' THEN ''
                                     ELSE TO_CHAR(Y.REDEEM_MTH || '-' || Y.REDEEM_YEAR) END AS REDEEM_DT,
