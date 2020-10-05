@@ -35,6 +35,8 @@ function fn_memberSave(){
         $.extend(jsonObj, {'hsptlz' : '0'});
     }
 
+    $.extend(jsonObj, {'memberType' : $("#memberType").val()});
+
     console.log("-------------------------" + JSON.stringify(jsonObj));
     Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
         console.log("message : " + result.message );
@@ -77,9 +79,11 @@ function fn_docSubmission(){
 function fn_departmentCode(value){
 	console.log("fn_departmentCode");
 	if($("#memberType").val() != 2){
-	        $("#hideContent").hide();
+	        $("#hideContent").hide()
+	        $("#hideContentTitle").hide()
 	    }else{
 	    	$("#hideContent").show();
+	    	$("#hideContentTitle").show()
 	    }
 	var action = value;
 	switch(action){
@@ -182,11 +186,31 @@ $(document).ready(function() {
 
     //ADDED BY TOMMY 27/05/2020 ONLY ALLOW CODY AND HT FOR HOSPITALISATION CHECKBOX
     if("${memType}" == "2" || "${memType}" == "7") {
-    	 $("#hsptlzCheck").attr({"disabled" : false });
-   }
+        $("#hsptlzCheck").attr({"disabled" : false });
+        $("#staffCodeRow").hide();
+
+    } else if("${memType}" == "4" || "${memType}" == "6171") {
+        $("#staffCodeRow").show();
+
+    } else {
+        $("#staffCodeRow").hide();
+    }
 
 	createAUIGridDoc();
 	fn_docSubmission();
+
+	$("#convStaff").change(function() {
+	    if($("#convStaff").is(":checked")) {
+	        $("#convStaffFlgUpd").remove();
+	        $("#memberUpdForm").append("<input type='hidden' name='convStaffFlgUpd' id='convStaffFlgUpd'>");
+	        $("#convStaffFlgUpd").val("Y");
+
+	        //memberCode
+	        $("#memberCodeUpd").remove();
+            $("#memberUpdForm").append("<input type='hidden' name='memberCodeUpd' id='memberCodeUpd'>");
+            $("#memberCodeUpd").val($("#memberCode").val());
+	    }
+	});
 
 	//fn_departmentCode();
 
@@ -249,6 +273,12 @@ $(document).ready(function() {
     }
 
     // Basic Info Tab on change append - start
+    if($("#memberCodeUpd").length == 0) {
+        $("#memberCodeUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='memberCodeUpd' id='memberCodeUpd'>");
+        $("#memberCodeUpd").val($("#memCode").val());
+    }
+
     $("#memberNm").change(function() {
         $("#memberNmUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='memberNmUpd' id='memberNmUpd'>");
@@ -744,6 +774,14 @@ function fn_saveValidation(){
         message += "* Please select equal or bigger than today date.<br />";
     }
 	*/
+	$("#memberTypeUpd").remove();
+    $("#memberUpdForm").append("<input type='hidden' name='memberTypeUpd' id='memberTypeUpd'>");
+    $("#memberTypeUpd").val($("#memberType").val());
+
+    $("#MemberIDUpd").remove();
+    $("#memberUpdForm").append("<input type='hidden' name='MemberIDUpd' id='MemberIDUpd'>");
+    $("#MemberIDUpd").val($("#MemberID").val());
+
 	if($("#joinDate").val() == ''){
         valid = false;
         message += "* Please select joined date.<br/>";
@@ -1368,6 +1406,16 @@ function checkBankAccNo() {
     <col style="width:*" />
 </colgroup>
 <tbody>
+<tr id="staffCodeRow">
+    <th scope="row">Member Code</th>
+    <td colspan="3">
+        <input type="text" title="" id="memberCode" placeHolder="Member Code" class="w100p" value="<c:out value="${memberView.memCode}"/>" />
+    </td>
+    <th scope="row">Convert Staff</th>
+    <td>
+        <input type="checkbox" id="convStaff" name="convStaff" />
+    </td>
+</tr>
 <tr>
     <th scope="row">Member Name<span class="must">*</span></th>
     <td colspan="3">
@@ -1631,12 +1679,12 @@ function checkBankAccNo() {
          <select class="w100p" id="businessType" name="businessType">
     </select>
     </td>
-  <th scope="row">Hospitalization</th>
-<td>
-    <span><input type="checkbox" id="hsptlzCheck" name="hsptlzCheck" disabled = "disabled"
-    <c:if test="${memberView.hsptlz eq '1'}">checked</c:if>/>
-    </span>
- </td>
+    <th scope="row">Hospitalization</th>
+    <td>
+        <span><input type="checkbox" id="hsptlzCheck" name="hsptlzCheck" disabled = "disabled"
+            <c:if test="${memberView.hsptlz eq '1'}">checked</c:if>/>
+        </span>
+    </td>
 
 
  <td>
@@ -1728,7 +1776,7 @@ function checkBankAccNo() {
 </tbody>
 </table><!-- table end -->
 
-<aside class="title_line" ><!-- title_line start -->
+<aside class="title_line" id="hideContentTitle"><!-- title_line start -->
 <h2>Agreement</h2>
 </aside><!-- title_line end -->
 
