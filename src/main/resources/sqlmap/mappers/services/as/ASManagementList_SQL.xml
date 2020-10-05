@@ -274,6 +274,31 @@
 
   </select>
 
+  <select id="getAsDefectEntry" parameterType="Map" resultType="egovMap">
+    SELECT B.DEFECT_ID,
+      B.DEFECT_CODE,
+      B.DEFECT_DESC,
+      B.DEFECT_TYP
+
+    FROM SVC0117M A
+    JOIN SYS0100M B ON A.DEFECT_TYP = B.DEFECT_TYP AND A.DEFECT_ID = B.DEFECT_ID AND B.DEFECT_STATUS = 1
+    AND SYSDATE BETWEEN B.EFF_DT AND B.EXP_DT
+    WHERE SYSDATE BETWEEN A.EFF_DT AND A.EXP_DT AND A.STATUS = 1
+    AND A.ERR_CDE = #{errCd}
+    AND A.ERR_DESC = #{errDesc}
+
+
+    AND B.DEFECT_TYP in ('DP', 'DD', 'DC', 'DT', 'SC')
+    ORDER BY
+    CASE B.DEFECT_TYP
+        WHEN 'DP' THEN 1
+        WHEN 'DD' THEN 2
+        WHEN 'DC' THEN 3
+        WHEN 'DT' THEN 4
+        ELSE 5
+        END
+
+  </select>
   <select id="selectASManagementList2" parameterType="Map" resultType="egovMap">
     <![CDATA[ SELECT D.CODE,
                      C.AS_NO,
