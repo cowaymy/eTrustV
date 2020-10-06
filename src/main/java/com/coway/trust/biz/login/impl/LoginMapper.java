@@ -47,4 +47,6 @@ public interface LoginMapper {
 	EgovMap getPopDtls(Map<String, Object> params);
 
 	EgovMap getCowayNoticePopDtls(Map<String, Object> params);
+
+	int checkNotice();
 }

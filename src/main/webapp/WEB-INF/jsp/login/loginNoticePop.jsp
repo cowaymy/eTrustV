@@ -144,3 +144,6 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:none; border-le
 		        <li><p class="btn_blue2"><a href="javascript:fn_cont('${inQueue }');" id="btnClose">Close</a></p></li>
 		    </ul>
 		</form>
+		</section>
+	</section>
+</div>

@@ -29,12 +29,15 @@ console.log("loginPop.jsp");
 
     $("#agreementLogoutBtn").attr("hidden", true);
 
-    if("${popType}" == "M") {
+    // Memo or Notice
+    if("${popType}" == "M" || "${popType}" == "N") {
         $("#memoButton").attr("hidden", false);
         $("#agreementButton").attr("hidden", true);
 
         $("#acknowledgement").attr("hidden", true);
+        $("#PDF").css("height", "600px");
     }
+    // Organization's Agreement
     if("${popType}" == "A") {
         $("#agreementButton").attr("hidden", false);
         $("#memoButton").attr("hidden", true);
