@@ -2723,7 +2723,7 @@ console.log("vBindingNo" + vBindingNo);
     var cpntId = $("#compType").val();
     var empInd = $("#empChk").val();
     var exTrade = $("#exTrade").val();
-    var srvPacId = $("#srvPacId").val();
+    var srvPacId = appTyp != 66 ? '' : $("#srvPacId").val();
 
 
 

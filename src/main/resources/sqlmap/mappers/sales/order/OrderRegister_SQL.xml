@@ -2415,9 +2415,11 @@
       AND A.ITM_CPNT_ID = #{cpntId}
       AND B.EMP_CHK = #{empInd}
       AND B.EX_TRADE = #{exTrade}
-      AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(B.PROMO_DT_FROM, 'DD/MM/YYYY') AND TO_DATE(B.PROMO_DT_END, 'DD/MM/YYYY'))
       AND (TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(A.EFF_DT, 'DD/MM/YYYY') AND TO_DATE(A.EXP_DT, 'DD/MM/YYYY'))
+      <if test="srvPacId != null and srvPacId != ''">
+        AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
+      </if>
     </select>
 
     <select id="selectPromoBsdCpntESales" parameterType="Map" resultType="egovMap">
