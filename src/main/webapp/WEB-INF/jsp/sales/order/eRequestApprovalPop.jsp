@@ -24,11 +24,18 @@
     doGetCombo('/common/selectCodeList.do', '455', TAB_NM, 'ordReqType', 'S'); //Order Edit Type
 
     if('${SESSION_INFO.userTypeId}' == 1 || '${SESSION_INFO.userTypeId}' == 2 || '${SESSION_INFO.userTypeId}' == 7){
-    	$('#frmCnctAppr').find("input,textarea,button,select").attr("disabled",true);
-    	$('#frmCnctAppr').hide();
-        $("#btnSaveCnct").hide();
-        $('#frmInstAddrAppr').hide();
-        $("#btnSaveInstAddr").hide();
+    	if ("${SESSION_INFO.memberLevel}" == "4") {
+    		$('#frmCnctAppr').find("input,textarea,button,select").attr("disabled",true);
+            $('#frmCnctAppr').hide();
+            $("#btnSaveCnct").hide();
+            $('#frmInstAddrAppr').hide();
+            $("#btnSaveInstAddr").hide();
+    	}else if ("${SESSION_INFO.memberLevel}" < "4" && stusId == 1){
+    		$("#frmCnctAppr #reqStusId").attr("disabled",true);
+    		$("#frmCnctAppr #reqStusId option[value='5']").remove();
+    		$("#frmInstAddrAppr #reqStusId").attr("disabled",true);
+            $("#frmInstAddrAppr #reqStusId option[value='5']").remove();
+    	}
 
     }
   });
