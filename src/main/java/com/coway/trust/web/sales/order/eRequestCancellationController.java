@@ -293,7 +293,7 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
    @RequestMapping(value="/eRequestApprovalPop.do")
    public String eRequestApprovalPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
      EgovMap orderDetail = eRequestCancellationService.selectOrderBasicInfo(params, sessionVO);
-
+     
      EgovMap eRequestDetail = eRequestCancellationService.selectRequestApprovalList(params).get(0);
      EgovMap eRequestAux = null;
 
@@ -306,6 +306,7 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
 
        paramsAux.put("salesOrdId", auxSalesOrdId);
        paramsAux.put("reqStusList", reqStusId);
+       paramsAux.put("typeId", params.get("typeId"));
 
        eRequestAux = (eRequestCancellationService.selectRequestApprovalList(paramsAux).size() > 0) ? eRequestCancellationService.selectRequestApprovalList(paramsAux).get(0) : null;
      }

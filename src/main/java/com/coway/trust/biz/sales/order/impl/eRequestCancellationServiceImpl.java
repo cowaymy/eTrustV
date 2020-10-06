@@ -992,12 +992,14 @@ public class eRequestCancellationServiceImpl extends EgovAbstractServiceImpl imp
   public int saveApprCnct(Map<String, Object> params) {
 
     int ordUpd = 0;
+    int instUpd = 0;
 
     int updStus = eRequestCancellationMapper.updateApprStus(params);
 
-    if(params.get("reqStusId").equals("5") && updStus > 0)
-      ordUpd  = eRequestCancellationMapper.updSAL0001D_custCntc(params);
-
+    if(params.get("reqStusId").equals("5") && updStus > 0){
+      //ordUpd  = eRequestCancellationMapper.updSAL0001D_custCntc(params);
+      instUpd  = eRequestCancellationMapper.updSAL0045D(params);
+    }
     return updStus;
   }
 
@@ -1011,7 +1013,7 @@ public class eRequestCancellationServiceImpl extends EgovAbstractServiceImpl imp
 
     if(params.get("reqStusId").equals("5") && updStus > 0){
       ordUpd  = eRequestCancellationMapper.updSAL0001D_instAddr(params);
-      instUpd  = eRequestCancellationMapper.updSAL0045D_instAddr(params);
+      instUpd  = eRequestCancellationMapper.updSAL0045D(params);
     }
 
     return updStus;

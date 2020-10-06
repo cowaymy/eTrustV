@@ -70,6 +70,7 @@
             } else {
                 	$("#rqstId").val(event.item.rqstId);
                 	$("#salesOrderId").val(event.item.salesOrdId);
+                	$("#typeId").val(event.item.typeId);
                   Common.popupDiv("/sales/order/eRequestApprovalPop.do", $("#detailForm").serializeJSON());
             }
         });
@@ -200,6 +201,7 @@
   <form id="detailForm" name="detailForm" method="post">
    <input type="hidden" id="rqstId" name="rqstId">
    <input type="hidden" id="salesOrderId" name="salesOrderId">
+   <input type="hidden" id="typeId" name="typeId">
 
   </form>
   <form id="searchForm" name="searchForm" method="post">
