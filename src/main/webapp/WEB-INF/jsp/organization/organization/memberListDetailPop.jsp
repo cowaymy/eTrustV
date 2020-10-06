@@ -835,7 +835,7 @@ function fn_winClose(){
 <tr>
     <th scope="row">Sponsor's Code</th>
     <td>
-    <span><c:out value="${memberView.c51}"/></span>
+    <span><c:out value="${memberView.c51}"/> <c:if test="${memberView.noTbb eq '1'}">No TBB (Discontinue)</c:if></span>
     </td>
     <th scope="row">Sponsor's Name</th>
     <td>

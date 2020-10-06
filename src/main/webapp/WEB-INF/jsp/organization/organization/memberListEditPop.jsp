@@ -188,12 +188,18 @@ $(document).ready(function() {
     if("${memType}" == "2" || "${memType}" == "7") {
         $("#hsptlzCheck").attr({"disabled" : false });
         $("#staffCodeRow").hide();
+        $("#hpNoTBB").hide();
 
     } else if("${memType}" == "4" || "${memType}" == "6171") {
         $("#staffCodeRow").show();
+        $("#hpNoTBB").hide();
+
+    } else if("${memType}" == "1") {
+        $("#hpNoTBB").show();
 
     } else {
         $("#staffCodeRow").hide();
+        $("#hpNoTBB").hide();
     }
 
 	createAUIGridDoc();
@@ -209,6 +215,18 @@ $(document).ready(function() {
 	        $("#memberCodeUpd").remove();
             $("#memberUpdForm").append("<input type='hidden' name='memberCodeUpd' id='memberCodeUpd'>");
             $("#memberCodeUpd").val($("#memberCode").val());
+	    }
+	});
+
+	$("#noTBBChkbox").change(function() {
+	    if($("#noTBBChkbox").is(":checked")) {
+	        $("#noTBBChkboxUpd").remove();
+            $("#memberUpdForm").append("<input type='hidden' name='noTBBChkboxUpd' id='noTBBChkboxUpd'>");
+            $("#noTBBChkboxUpd").val("1");
+	    } else {
+	        $("#noTBBChkboxUpd").remove();
+            $("#memberUpdForm").append("<input type='hidden' name='noTBBChkboxUpd' id='noTBBChkboxUpd'>");
+            $("#noTBBChkboxUpd").val("0");
 	    }
 	});
 
@@ -1393,7 +1411,11 @@ function checkBankAccNo() {
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Basic Information</h2>
+    <h2>Basic Information</h2>
+    <div id="hpNoTBB" class="right_chk">
+        <label for="noTBB">No TBB</label>
+        <input type="checkbox" id="noTBBChkbox" name="noTBBChkbox" <c:if test="${memberView.noTbb eq '1'}">checked</c:if>>
+    </div>
 </aside><!-- title_line end -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>

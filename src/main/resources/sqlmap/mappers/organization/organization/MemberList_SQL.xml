@@ -607,7 +607,8 @@
       Limit1.BANK_NAME,
        (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course,
        Limit1.APLICNT_MEETPOINT,
-       Limit1.MOBILE_USE_YN
+       Limit1.MOBILE_USE_YN,
+       Limit1.NO_TBB
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -950,7 +951,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 EXTENT1.SUB_DEPT,
                 BANK.NAME AS BANK_NAME,
                 EXTENT29.MEET_POINT_CODE || ' - ' || MEET_POINT_DESC APLICNT_MEETPOINT,
-                Extent1.MOBILE_USE_YN
+                Extent1.MOBILE_USE_YN,
+                Extent1.NO_TBB
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
@@ -4899,6 +4901,12 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		UPDATE ORG0001D
 		SET UPD_USER_ID = #{user_id}
 		  , UPD_DT = SYSDATE
+		<if test="convStaffFlgUpd != null and convStaffFlgUpd != '' ">
+		  , MEM_TYPE = '4'
+		  <if test="memberCodeUpd != null and memberCodeUpd != ''">
+		    , MEM_CODE = #{memberCodeUpd}
+		  </if>
+		</if>
 		<if test="memberNmUpd != null and memberNmUpd != '' ">
 		  , NAME = #{memberNmUpd},
 		  , FULL_NAME = #{memberNmUpd}
@@ -4984,6 +4992,9 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		<if test="trMobileUseYnUpd != null and trMobileUseYnUpd != '' ">
 		  , MOBILE_USE_YN = #{trMobileUseYnUpd}
 		</if>
+		<if test="noTBBChkboxUpd != null and noTBBChkboxUpd != '' ">
+          , NO_TBB = #{noTBBChkboxUpd}
+        </if>
 		WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
 	</update>
 
