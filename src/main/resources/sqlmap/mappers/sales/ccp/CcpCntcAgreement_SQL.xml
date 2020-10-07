@@ -863,7 +863,8 @@
 				       Project1.GOV_AG_LAST_SEND_DT   ,
 				       Project1.GOV_AG_LAST_RCIV_DT   ,
 				       Project1.CORP_CUST_TYPE,
-				       Project1.AGREEMENT_TYPE
+				       Project1.AGREEMENT_TYPE,
+				       Project1.ERL_TER_NON_CRISIS ERL_TER_NON_CRISIS_CHK
 				  FROM ( SELECT Filter1.GOV_AG_ID   ,
 				                Filter1.GOV_AG_SALES_ORD_ID   ,
 				                Filter1.GOV_AG_BATCH_NO   ,
@@ -885,7 +886,8 @@
 				                Filter1.GOV_AG_PRGRS_NAME   ,
 				                Extent11.GOV_AG_ROLE_DESC   ,
 				                Filter1.CORP_CUST_TYPE,
-				                Filter1.AGREEMENT_TYPE
+				                Filter1.AGREEMENT_TYPE,
+				                Filter1.ERL_TER_NON_CRISIS
 				         FROM ( SELECT Extent1.GOV_AG_ID   ,
 				                       Extent1.GOV_AG_SALES_ORD_ID   ,
 				                       Extent1.GOV_AG_BATCH_NO   ,
@@ -907,7 +909,8 @@
 				                       Extent8.GOV_AG_PRGRS_NAME   ,
 				                       Extent10.GOV_AG_ROLE_ID   ,
 				                       Extent12.CODE_NAME CORP_CUST_TYPE,
-				                       Extent13.CODE_NAME AGREEMENT_TYPE
+				                       Extent13.CODE_NAME AGREEMENT_TYPE,
+				                       Extent1.ERL_TER_NON_CRISIS
 				                FROM SAL0033D Extent1
 				                       LEFT JOIN SYS0013M Extent2   ON Extent1.GOV_AG_TYPE_ID = Extent2.CODE_ID
 				                       LEFT JOIN ORG0001D Extent3   ON Extent1.GOV_AG_MEM_ID = Extent3.MEM_ID
@@ -1459,6 +1462,7 @@ SET RESULT_ID = #{resultId},
 			             GOV_AG_START_DT = TO_DATE(#{updPeriodStart}, 'DD/MM/YYYY'),
 			             GOV_AG_END_DT = TO_DATE(#{updPeriodEnd}, 'DD/MM/YYYY'),
 			       </if>
+			       ERL_TER_NON_CRISIS = #{erlTerNonCrisisChk},
 			       GOV_AG_UPD_DT = SYSDATE
 			 WHERE   GOV_AG_ID = #{updAgrId}
 </update>

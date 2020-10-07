@@ -32,6 +32,9 @@
 
         doGetCombo("/sales/ccp/getMessageStatusCode.do", $("#_prgId").val() , '', '_msgStatus', 'S', '' );
 
+        console.log("_prgId : " + $("#_prgId").val());
+        console.log("_UpdPrgId : " + $("#_updPrgId").val());
+
 
         //Agreement Result Display
         fn_hideAgrResult();
@@ -76,7 +79,40 @@
 
         });
 
+        //preset Notification Period by Hui Ding, 2020-09-18
+        var min = 0;
+        var max = 6;
+        var optionName = " Months";
+        var select = document.getElementById('_notificationMonth');
+
+	    for (var i = min; i<=max; i++){
+	        var opt = document.createElement('option');
+	        opt.value = i;
+	        opt.innerHTML = i + optionName;
+	        select.appendChild(opt);
+	    }
+
+	    document.getElementById('_notificationMonth').value = select;
+
+	    // add early termination non crisis flag - only available at Agreement Verifying stage by Hui Ding, 2020-09-21
+	    if ($("#_updErlTerNonCrisisChk").val() == '1'){
+            $("#_erlTerNonCrisisChk").prop("checked" , true);
+        } else{
+            $("#_erlTerNonCrisisChk").prop("checked" , false);
+        }
+
     }); // Document Ready End
+
+    $(function(){
+    	$("#_erlTerNonCrisisChk").change(function(){
+    		var prevChk = $("#_updErlTerNonCrisisChk").val() == 1? true:  false;
+
+            if ($("#_prgId").val() != '8'){
+            	Common.alert("[Early Termination Non Crisis] flag only allow to be edited at [Agreement Verifying] stage.");
+            	$("#_erlTerNonCrisisChk").prop("checked" , prevChk);
+            }
+        });
+    });
 
 
     function fn_fileUpload(){
@@ -444,6 +480,18 @@
             return "edit-column";
         }
     }
+
+   /*  function fn_blockUncheck () {
+
+    	if ($("#_prgId").val() != 8){
+    		Common.alert("[Early Termination Non Crisis] flag only allow to be edited at [Agreement Verifying] stage.");
+    		$("#_erlTerNonCrisisChk").attr("disabled" , true);
+    		return false;
+    	} else {
+    		return true;
+    	}
+
+    } */
 </script>
 
 
@@ -452,6 +500,7 @@
 <input type="hidden" id="_prgId" value="${infoMap.govAgPrgrsId}">
 <input type="hidden" id="_govAgStusId" value="${infoMap.govAgStusId}">
 <input type="hidden" id="_editDocNo" value="${infoMap.govAgBatchNo}">
+<input type="hidden" id = "_updErlTerNonCrisisChk" value="${infoMap.erlTerNonCrisisChk}">
  <form  id="_searchForm">
     <input type="hidden" name="govAgId" value="${infoMap.govAgId}" id="_secGovAgId">
 </form>
@@ -576,6 +625,7 @@
 <input type="hidden" name="updPrgId" id="_updPrgId" value="${infoMap.govAgPrgrsId}">
 <input type="hidden" name="hiddenUpdMsgStatus" id="_hiddenUpdMsgStatus">
 <input type="hidden" name="pudAgrNo" id="_pudAgrNo" value="${infoMap.govAgBatchNo}">
+<%-- <input type="hidden" id = "_updErlTerNonCrisisChk" value="${infoMap.erlTerNonCrisisChk}"> --%>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -609,51 +659,30 @@
     </select>
     </p>
     <p>
-    <select class="w100p" id="_notificationMonth" name="updNotificationMonth">
-        <option value="0" selected="selected">0 Days</option>
-        <option value="1">1 Days</option>
-        <option value="2">2 Days</option>
-        <option value="3">3 Days</option>
-        <option value="4">4 Days</option>
-        <option value="5">5 Days</option>
-        <option value="6">6 Days</option>
-        <option value="7">7 Days</option>
-        <option value="8">8 Days</option>
-        <option value="9">9 Days</option>
-        <option value="10">10 Days</option>
-        <option value="11">11 Days</option>
-        <option value="12">12 Days</option>
-        <option value="13">13 Days</option>
-        <option value="14">14 Days</option>
-        <option value="15">15 Days</option>
-        <option value="16">16 Days</option>
-        <option value="17">17 Days</option>
-        <option value="18">18 Days</option>
-        <option value="19">19 Days</option>
-        <option value="20">20 Days</option>
-        <option value="21">21 Days</option>
-        <option value="22">22 Days</option>
-        <option value="23">23 Days</option>
-        <option value="24">24 Days</option>
-        <option value="25">25 Days</option>
-        <option value="26">26 Days</option>
-        <option value="27">27 Days</option>
-        <option value="28">28 Days</option>
-        <option value="29">29 Days</option>
-        <option value="30">30 Days</option>
-    </select>
+    <select class="w100p" id="_notificationMonth" name="updNotificationMonth"></select>
     </p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.agrPrd" /></th>
-    <td colspan="3">
+    <td>
     <div class="date_set"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_agrPeriodStart" name="updPeriodStart"/></p>
     <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" readonly="readonly" id="_agrPeriodEnd" name="updPeriodEnd"/></p>
     </div><!-- date_set end -->
+    </td>
+    <th scope="row">Early TER Non N/Crisis</th>
+    <td>
+        <c:choose>
+            <c:when test="${infoMap.govAgPrgrsId == 8 }">
+                <input type="checkbox" id="_erlTerNonCrisisChk" name="erlTerNonCrisisChk"/>
+            </c:when>
+            <c:otherwise>
+                <input type="checkbox" id="_erlTerNonCrisisChk" name="erlTerNonCrisisChk"/>
+            </c:otherwise>
+        </c:choose>
     </td>
 </tr>
 <tr>
