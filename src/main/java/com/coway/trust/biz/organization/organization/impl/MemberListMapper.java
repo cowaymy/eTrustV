@@ -301,6 +301,7 @@ public interface MemberListMapper {
 
 	//void updateAplctDtls(Map<String, Object> params);
 
+	// LaiKW - Comment starts here
 	int memberListUpdate_SYS47(Map<String, Object> params);
 	int memberListUpdate_ORG05(Map<String, Object> params);
 	int memberListUpdate_ORG01(Map<String, Object> params);
@@ -309,4 +310,7 @@ public interface MemberListMapper {
 	int memberListUpdate_ORG15(Map<String, Object> params);
 
 	EgovMap selectMemCourse(Map<String, Object> params);
+
+	int checkMemCode(Map<String, Object> params);
+	// LaiKW - Comment ends here
 }

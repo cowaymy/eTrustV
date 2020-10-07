@@ -17,10 +17,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.organization.organization.vo.DocSubmissionVO;
 import com.coway.trust.biz.organization.organization.vo.MemberListVO;
 import com.coway.trust.cmmn.model.GridDataSet;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.organization.organization.MemberListController;
@@ -2479,6 +2481,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    memberListMapper.updateAplctDtls(params);
 	}*/
 
+	// LaiKW - Comment starts here
 	@Override
 	public int memberListUpdate_SYS47(Map<String, Object> params) {
 	    return memberListMapper.memberListUpdate_SYS47(params);
@@ -2513,4 +2516,21 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public EgovMap selectMemCourse(Map<String, Object> params) {
 	    return memberListMapper.selectMemCourse(params);
 	}
+
+	@Override
+	public ReturnMessage checkMemCode(Map<String, Object> params) {
+	    ReturnMessage message = new ReturnMessage();
+	    logger.debug("params : {}", params);
+
+	    int exist =  memberListMapper.checkMemCode(params);
+
+	    if(exist > 0) {
+	        message.setCode(AppConstants.FAIL);
+	    } else {
+	        message.setCode(AppConstants.SUCCESS);
+	    }
+
+	    return message;
+	}
+	// LaiKW - Comment end here
 }

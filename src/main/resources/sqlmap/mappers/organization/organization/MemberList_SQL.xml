@@ -3076,7 +3076,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               NAME = #{memberNm},
               FULL_NAME = #{memberNm},
               DOB = TO_DATE(#{Birth},'DD-MM-YYYY'),
-              GENDER = #{gender},
+              GENDER = TRIM(#{gender}),
               RACE=TO_NUMBER(TRIM(#{cmbRace})),
               MARTL = TO_NUMBER(TRIM(#{marrital})),
               NATION = TO_NUMBER(TRIM(#{national})),
@@ -4877,6 +4877,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         ORDER BY CODE ASC
     </select>
 
+<!-- LaiKW - Comment starts here -->
     <update id="memberListUpdate_SYS47" parameterType="Map">
 		UPDATE SYS0047M
 		SET USER_UPD_USER_ID = #{user_id}
@@ -5103,4 +5104,15 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		AND COURS_ITM_ID = #{coursItmId}
 	</update>
 
+    <select id="checkMemCode" parameterType="Map" resultType="int">
+        SELECT COUNT(*) EXIST
+		FROM ORG0001D
+		WHERE EXISTS (
+		    SELECT *
+		    FROM SYS0047M
+		    WHERE ORG0001D.MEM_CODE = SYS0047M.USER_NAME
+		)
+		AND ORG0001D.MEM_CODE = #{username}
+    </select>
+<!-- LaiKW - Comment ends here -->
 </mapper>

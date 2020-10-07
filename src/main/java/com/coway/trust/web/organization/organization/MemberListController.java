@@ -935,8 +935,12 @@ public class MemberListController {
 
         // ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
         formMap.put("hsptlz",  params.get("hsptlz"));
+        // LaiKW - Comment starts here
+        /*
         formMap.put("memberType", formMap.get("memberTypeUpd"));
         formMap.put("MemberID", formMap.get("MemberIDUpd"));
+        */
+        // LaiKW - Comment ends here
 
         String memCode = "";
         String memId = "";
@@ -951,9 +955,17 @@ public class MemberListController {
 
         // update
 
+		memCode = (String) formMap.get("memCode");
+        memId = (String) formMap.get("MemberID");
+        memberType = (String) formMap.get("memberType");
+
+		// LaiKW - Comment starts here
+        /*
         memCode = (String) formMap.get("memberCodeUpd");
         memId = (String) formMap.get("MemberIDUpd");
         memberType = (String) formMap.get("memberTypeUpd");
+        */
+        // LaiKW - Comment ends here
         // doc 공통업데이트
         memberListService.updateDocSub(updList, memId, userId, memberType);
 
@@ -974,6 +986,8 @@ public class MemberListController {
         // Not HP Applicant
         // hp가아닐때
         if (!formMap.get("memberType").toString().equals("2803")) {
+            // LaiKW - Comment from here (New)
+            /*
             if(formMap.containsKey("selectBranchUpd")) {
                 u1 = memberListService.memberListUpdate_SYS47(formMap);
                 u2 = memberListService.memberListUpdate_ORG05(formMap);
@@ -1000,8 +1014,10 @@ public class MemberListController {
             logger.debug("Non-HP Update :: Applicant :: u4 = " + Integer.toString(u4));
             logger.debug("Non-HP Update :: Course :: u5 = " + Integer.toString(u5));
             logger.debug("Non-HP Update :: Service capacity :: u6 = " + Integer.toString(u6));
+            */
+            // LaiKW - Comment ends here (New)
 
-/*
+            // LaiKW - Comment starts here (Old)
             // Branch info update (SYS0047M, ORG0005D)
             resultUpc1 = memberListService.memberListUpdate_user(formMap);
             resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
@@ -1032,7 +1048,7 @@ public class MemberListController {
             if(memType.trim().equals("7")) {
                 memberListService.memberListUpdate_memorg3(formMap);
             }
-*/
+            // LaiKW - Comment ends here (Old)
 
             /*if(memType.trim().equals("2")) {
                 // Update ORG0003D CD agreement details
@@ -2004,6 +2020,12 @@ logger.debug("params : {}", params);
 	    EgovMap aplctnDtls = memberListService.getApplicantDetails(params);
 
 	    return ResponseEntity.ok(aplctnDtls);
+	}
+
+	@RequestMapping(value = "/checkMemCode.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> checkMemCode(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+	    ReturnMessage message = memberListService.checkMemCode(params);
+	    return ResponseEntity.ok(message);
 	}
 
 }

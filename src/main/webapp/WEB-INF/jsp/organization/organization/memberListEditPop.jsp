@@ -25,8 +25,8 @@ function fn_memberSave(){
 
     $("#memberType").attr("disabled",false);
     var jsonObj =  GridCommon.getEditData(myGridID_Doc);
-    // jsonObj.form = $("#memberAddForm").serializeJSON();
-    jsonObj.form = $("#memberUpdForm").serializeJSON();
+    jsonObj.form = $("#memberAddForm").serializeJSON();
+    // jsonObj.form = $("#memberUpdForm").serializeJSON();
 
     //ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
     if($("#hsptlzCheck").is(":checked") == true){
@@ -191,10 +191,12 @@ $(document).ready(function() {
         $("#hpNoTBB").hide();
 
     } else if("${memType}" == "4" || "${memType}" == "6171") {
-        $("#staffCodeRow").show();
+        //$("#staffCodeRow").show();
+        $("#staffCodeRow").hide();
         $("#hpNoTBB").hide();
 
     } else if("${memType}" == "1") {
+        $("#staffCodeRow").hide();
         $("#hpNoTBB").show();
 
     } else {
@@ -207,15 +209,40 @@ $(document).ready(function() {
 
 	$("#convStaff").change(function() {
 	    if($("#convStaff").is(":checked")) {
-	        $("#convStaffFlgUpd").remove();
-	        $("#memberUpdForm").append("<input type='hidden' name='convStaffFlgUpd' id='convStaffFlgUpd'>");
-	        $("#convStaffFlgUpd").val("Y");
+	        console.log("convStaff");
 
-	        //memberCode
-	        $("#memberCodeUpd").remove();
-            $("#memberUpdForm").append("<input type='hidden' name='memberCodeUpd' id='memberCodeUpd'>");
-            $("#memberCodeUpd").val($("#memberCode").val());
+	        Common.ajax("GET", "/organization/checkMemCode.do", {username : $("#memberCode").val()}, function(result) {
+	            if(result.code != 99) {
+	                $("#convStaffFlgUpd").remove();
+	                $("#memberUpdForm").append("<input type='hidden' name='convStaffFlgUpd' id='convStaffFlgUpd'>");
+	                $("#convStaffFlgUpd").val("Y");
+
+	                $("#memberCodeUpd").remove();
+	                $("#memberUpdForm").append("<input type='hidden' name='memberCodeUpd' id='memberCodeUpd'>");
+	                $("#memberCodeUpd").val($("#memberCode").val());
+
+	                $("#usernameUpd").remove();
+                    $("#memberUpdForm").append("<input type='hidden' name='usernameUpd' id='usernameUpd'>");
+                    $("#usernameUpd").val($("#memberCode").val());
+	            } else {
+	                $("#memberCodeUpd").remove();
+	                $("#convStaff").prop('checked', false);
+
+	                Common.alert("Please check member code.");
+	                return false;
+	            }
+	        });
 	    }
+	});
+
+	$("#memberCode").change(function() {
+	    Common.ajax("GET", "/organization/checkMemCode.do", {username : $("#memberCode").val()}, function(result) {
+	        if(result.code != 99) {
+	            $("#memberCodeUpd").remove();
+                $("#memberUpdForm").append("<input type='hidden' name='memberCodeUpd' id='memberCodeUpd'>");
+                $("#memberCodeUpd").val($("#memberCode").val());
+	        }
+	    });
 	});
 
 	$("#noTBBChkbox").change(function() {

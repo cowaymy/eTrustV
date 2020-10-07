@@ -8,6 +8,7 @@ import java.util.Map;
 import com.coway.trust.biz.organization.organization.vo.MemberListVO;
 import com.coway.trust.biz.sales.order.vo.DocSubmissionVO;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -202,6 +203,7 @@ public interface MemberListService {
 
 	//void updateAplctDtls(Map<String, Object> params);
 
+	// LaiKW - Comment starts here
 	int memberListUpdate_SYS47(Map<String, Object> params);
 	int memberListUpdate_ORG05(Map<String, Object> params);
 	int memberListUpdate_ORG01(Map<String, Object> params);
@@ -210,4 +212,7 @@ public interface MemberListService {
 	int memberListUpdate_ORG15(Map<String, Object> params);
 
 	EgovMap selectMemCourse(Map<String, Object> params);
+
+	ReturnMessage checkMemCode(Map<String, Object> params);
+	// LaiKW - Comment ends here
 }
