@@ -6,50 +6,50 @@
     var agmHistoryGridID; //AGM History Summary
     var billingGroupLatestSummaryGridID; //Billing Group Latest Summary
     var agreementGridID;
-    
+
     //AgreementList
     var agreementList;
-    
+
     var rentalGridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 5,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
-            fixedColumnCount    : 0,            
-            showStateColumn     : true,             
-            displayTreeOpen     : false,            
-  //          selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 5,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 0,
+            showStateColumn     : true,
+            displayTreeOpen     : false,
+  //          selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn    : true
         };
     $(document).ready(function(){
-    	
+
     	//Agreement List
     	if('${agreList}'=='' || '${agreList}' == null){
         }else{
-            agreementList = JSON.parse('${agreList}');           
+            agreementList = JSON.parse('${agreList}');
         }
-    	
+
     	//AUIGrid 그리드를 생성합니다.
         billingGroupLatestSummaryGrid();
         createAUIGrid_agreement();
-        
+
     });
-    
+
     function billingGroupLatestSummaryGrid() {
-        
+
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : '<spring:message code="sal.title.text.mainOrder" />',          dataField : "isMain",      width : '10%' , 
-               renderer : 
+            { headerText : '<spring:message code="sal.title.text.mainOrder" />',          dataField : "isMain",      width : '10%' ,
+               renderer :
 		            {  type : "CheckBoxEditRenderer",
 		                showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
 		                editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
 		                checkValue : 1, // true, false 인 경우가 기본
 		                unCheckValue : 0
-		            } 
+		            }
             }
           , { headerText : '<spring:message code="sal.text.customerId" />',      dataField : "custId",        width : '15%' }
           , { headerText : '<spring:message code="sal.text.ordNo" />',  dataField : "salesOrdNo", width : '20%' }
@@ -60,15 +60,15 @@
           ];
 
         billingGroupLatestSummaryGridID = GridCommon.createAUIGrid("grid_billing_summ_wrap", columnLayout, "", rentalGridPros);
-        
+
         //Set Grid
         Common.ajax("GET","/payment/selectBillGroup.do", {orderNo:'${ordNo}'}, function(result){
-            AUIGrid.setGridData(billingGroupLatestSummaryGridID, result.data.selectGroupList); 
+            AUIGrid.setGridData(billingGroupLatestSummaryGridID, result.data.selectGroupList);
         });
-        
+
     }
 
-    
+
     function createAUIGrid_agreement(){
         //AUIGrid 칼럼 설정
         var agreLayout = [
@@ -80,24 +80,25 @@
          ,{   dataField : "govAgEndDt",  headerText : '<spring:message code="sal.title.text.expiredDate" />',     width : '10%'  }
         ];
         agreementGridID = GridCommon.createAUIGrid("grid_amg_history_wrap", agreLayout, "", rentalGridPros);
-     
+
+        AUIGrid.setGridData(agreementGridID, agreementList);
 	     //Set Grid
-	     if(agreementList != '' ){
+	     /* if(agreementList != '' ){
 	         AUIGrid.setGridData(agreementGridID, agreementList);
 	     } else{
 	         $("#_agreDiv").hide();
-	     }
+	     } */
      }
-    
+
     // 리스트 조회.
 //    function fn_selectRosSummList(){
     	/*  Common.ajax("GET", "/sales/order/selectDiscountJsonList.do", {salesOrderId : '${orderDetail.basicInfo.ordId}'}, function(result) {
             AUIGrid.setGridData(discountGridID, result);
         }); */
   //  }
-    
+
  //   function fn_selectBillingSummList(){
-    	
+
  //   }
 </script>
 <article class="tap_area"><!-- tap_area start -->
@@ -151,7 +152,7 @@
     <td><span>${billMonthMap.rentInstNo}</span></td>
 </tr>
 </tbody>
-</table>   
+</table>
 
 <aside class="title_line"><!-- title_line start -->
 <h3><spring:message code="sal.title.text.agmHistorySummary" /></h3>

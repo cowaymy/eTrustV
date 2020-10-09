@@ -24,7 +24,7 @@
 
   margin-bottom: 10px;
     top: 130%;
-    left: -50%;    
+    left: -50%;
     padding: 7px 12px;
     position: absolute;
     width: auto;
@@ -47,36 +47,36 @@ var smsGridID;
 var optionComboReason = {
         type: "S",
         chooseMessage: '<spring:message code="sal.combo.choose.msg.noReasonCode" />',
-        isShowChoose: true  
+        isShowChoose: true
 };
 
 var optionComboFeedback = {
         type: "S",
         chooseMessage: '<spring:message code="sal.combo.choose.msg.noFeedbackCode" />',
-        isShowChoose: true  
+        isShowChoose: true
 };
 
 var optionComboStatus = {
         type: "S",
         chooseMessage: '<spring:message code="sal.combo.choose.msg.noRosStus" />',
-        isShowChoose: true  
+        isShowChoose: true
 };
 
 
 $(document).ready(function() {/////////////////////////////////////////////////////////////////////////////// Doc Ready Func Start
-	
+
     console.log("ordID : " + '${ordId}');
     console.log("billID : " + '${custBillId}');
-	
+
 	createSMSGrid();
 	//Init
 	CommonCombo.make("_mainReason", "/sales/rcms/getReasonCodeList", {typeId : '1175' , stusCodeId : '1'}, '', optionComboReason);  //Reason Code
 	CommonCombo.make("_rosStatus", "/common/selectCodeList.do", {groupCode : '391'}, '', optionComboStatus);  //Reason Code
 	//doGetCombo('/common/selectCodeList.do', '8', '','cmbTypeId', 'M' , 'f_multiCombo');            // Customer Type Combo Box
-	
+
 	//Change Reason Func
 	$("#_mainReason").change(function() {
-		
+
 		if($(this).val() == null || $(this).val() == ''){
 			$("#_feedback").val('');
 			$("#_feedback").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
@@ -85,18 +85,18 @@ $(document).ready(function() {//////////////////////////////////////////////////
 			CommonCombo.make("_feedback", "/sales/rcms/getFeedbackCodeList", {resnId : $(this).val()}, '', optionComboFeedback);
 		}
 	});
-	
+
 	//Save
 	$("#_rosCallSaveBtn").click(function() {
-		
+
 		if(fn_validation() == true){
-		
+
 			if($("#_groupRemSync").is(":checked") == true ){
-				
+
 				var rtnList;
-				
+
 				rtnList = fn_chkROSCallLogBillGroupOrderCount();
-				 
+
 				if(rtnList.length > 1){
 					Common.confirm('<spring:message code="sal.title.text.tot" />' + rtnList.length + '<spring:message code="sal.alert.msg.areUsureWantToUpdate" />', fn_save);
 				}else{
@@ -108,7 +108,7 @@ $(document).ready(function() {//////////////////////////////////////////////////
 		}else{
 			console.log("validation false....");
 		}
-		
+
 	});
 });////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Doc Ready Func End
 
@@ -119,23 +119,23 @@ function fn_save(){
 	}else{
 		$("#_chkGrp").val("0");
 	}
-	
+
 	if($("#_smsChk").is(":checked") == true ){
 		$("#_chkSmS").val("1");
 	}else{
 		$("#_chkSmS").val("0");
 	}
-	
+
 	var resultStr = fn_makeTime($("#_reCallYMD").val() , $("#_reCallTime").val());
 	$("#_reCallDate").val(resultStr);
-	
+
 	 Common.ajax("POST", "/sales/rcms/insertNewRosCall", $("#_insForm").serializeJSON() , function(result) {
-		
+
 		 console.log("result.isResult : " + result.isResult);
 		 console.log("result.chkSms : " + result.chkSms);
 		 console.log("result.total : " + result.total);
 		 console.log("result.success : " + result.success);
-		 
+
 		if(result != null){
 			if(result.isResult == true){
 				if(result.chkSms > 0){
@@ -155,7 +155,7 @@ function fn_save(){
 				Common.alert('<spring:message code="sal.alert.msg.failToSaveRosRemTryAgain" />');
 			}
 		}else{
-			Common.alert('<spring:message code="sal.alert.msg.failToPrepareSaveData" />');	
+			Common.alert('<spring:message code="sal.alert.msg.failToPrepareSaveData" />');
 		}
 	});
 }
@@ -166,55 +166,55 @@ function fn_reloadPage(){
 }
 
 function fn_validation(){
-	
+
 	//1. Action
 	if($("#_action").val() == null || $("#_action").val() == ''){
 		Common.alert('<spring:message code="sal.alert.msg.plzSelTheAction" />');
 		return false;
 	}
-	
+
 	//2. Main Reason
 	if($("#_mainReason").val() == null || $("#_mainReason").val() == ''){
 		Common.alert('<spring:message code="sal.alert.msg.selTheMainReason" />');
 		return false;
 	}
-	
+
 	//3.Feedback
 	if($("#_feedback").val() == null || $("#_feedback").val() == ''){
 		Common.alert('<spring:message code="sal.alert.msg.selTheFeedbackCode" />');
 		return false;
 	}
-	
+
 	//4. Collect Amt
 	if($("#_collectAmt").val() == null || $("#_collectAmt").val() == ''){
 		Common.alert('<spring:message code="sal.alert.msg.plzKeyInAmount" />');
 		return false;
 	}
-	
+
 	//5. Amt Check
 /* 	if(Number($("#_collectAmt").val()) < 0){
 		Common.alert("* Collection amount must be larger than 0.<br />");
         return false;
 	} */
-	
+
 	//6. Remark
     if($("#_rosRem").val() == null || $("#_rosRem").val() == ''){
         Common.alert('<spring:message code="sal.alert.msg.plzKeyInRosRemark" />');
         return false;
     }
-	 
+
 	//7.SMS
     if($("#_smsChk").is(":checked") == true ){
-    	
+
     	if($("#_smsRem").val() == null || $("#_smsRem").val() == '' ){
     		 Common.alert('<spring:message code="sal.alert.msg.plzKeyIntheSmsRem" />');
     	        return false;
     	}
-    	
+
     	var orderNo = '${ordNo}';
     	var feedbackStr = '';
     	feedbackStr =  $("#_feedback option:selected").text().trim();
-    	
+
     	var fullSMS = '';
     	fullSMS = orderNo + ' ' + feedbackStr + $("#_smsRem").val().trim();
     	console.log("fullSMS : " + fullSMS);
@@ -226,13 +226,13 @@ function fn_validation(){
     	}
     	$("#_fullSms").val(fullSMS);
     }
-	
+
 	return true;
 }
 
 
 function fn_chkROSCallLogBillGroupOrderCount(){
-	
+
 	var ajaxOpt = {async: false};
 	var resultList;
 	Common.ajax("GET", "/sales/rcms/selectROSCallLogBillGroupOrderCnt", {custBillId : '${custBillId}'}, function(result) {
@@ -242,48 +242,48 @@ function fn_chkROSCallLogBillGroupOrderCount(){
 			Common.alert("Server Error. Please try again.");
 		}
 	},'', ajaxOpt);
-	
+
 	return resultList;
 }
 
 function createSMSGrid(){
-	
+
 	var smsLayout = [
 	                  {   dataField : "code",     headerText : '<spring:message code="sal.title.type" />',     width :'10%' }
 	                 ,{   dataField : "rem",  headerText : '<spring:message code="sal.text.remark" />',         width : '65%' }
 	                 ,{   dataField : "userName",    headerText : '<spring:message code="sal.text.creator" />',        width : '15%' }
-	                 ,{   dataField : "callCrtDt", headerText : '<spring:message code="sal.text.createDate" />',   width : '10%' }	                 
+	                 ,{   dataField : "callCrtDt", headerText : '<spring:message code="sal.text.createDate" />',   width : '10%' }
 	                ];
-	
-	
+
+
 	var smsGridPros = {
 	        usePaging           : true,         //페이징 사용
-	        pageRowCount        : 5,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-	        editable            : false,            
-	        fixedColumnCount    : 0,            
-	        showStateColumn     : true,             
-	        displayTreeOpen     : false,            
-	//        selectionMode       : "singleRow",  //"multipleCells",            
-	        headerHeight        : 30,       
+	        pageRowCount        : 5,           //한 화면에 출력되는 행 개수 20(기본값:20)
+	        editable            : false,
+	        fixedColumnCount    : 0,
+	        showStateColumn     : true,
+	        displayTreeOpen     : false,
+	//        selectionMode       : "singleRow",  //"multipleCells",
+	        headerHeight        : 30,
 	        useGroupingPanel    : false,        //그룹핑 패널 사용
 	        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 	        showRowNumColumn    : true
 	    };
-	
+
 	smsGridID = GridCommon.createAUIGrid("grid_sms_ticket_wrap", smsLayout, "", smsGridPros);
-	
+
 	//Set Grid
-	
+
 	if('${ordId}' != null){
 		Common.ajax("GET", "/sales/rcms/selectROSSMSCodyTicketLogList", {ordId : '${ordId}'}, function(result){
 			AUIGrid.setGridData(smsGridID, result);
-	    });	
+	    });
 	}
 }
 
-function fn_chkDate(inputDate){
-	
+function fn_chkDate(id,inputDate){
+
     var d = new Date();
     var keyinArr;
     keyinArr = inputDate.split('/');
@@ -296,6 +296,12 @@ function fn_chkDate(inputDate){
     	$("#_ptpDate").val('');
     	$("#_ptpDate").focus();
     }
+
+    if(gap < 0 ) {
+        $("#"+id).val('');
+        $("#"+id).focus();
+    	Common.alert('<spring:message code="sal.alert.msg.previousDtNtAllowed" />');
+    }
 }
 
 /*** Input Number Only ***/
@@ -303,7 +309,7 @@ var prev = "";
 var regexp = /^\d*(\.\d{0,2})?$/;
 
 function fn_inputAmt(obj){
-    
+
     if(obj.value.search(regexp) == -1){
         obj.value = prev;
     }else{
@@ -311,9 +317,9 @@ function fn_inputAmt(obj){
     }
 }
 /*** ************* ***/
- 
+
  function fn_chkMaxAmtCheck(value){
-	
+
 	if(value > 10000){
 		$("#_collectAmt").val("10000");
 	}else if(value < 0){
@@ -322,22 +328,22 @@ function fn_inputAmt(obj){
 		$("#_collectAmt").val(value);
 	}
 }
- 
+
  function fn_editRentPaySetting() {
-	
+
 	//DIV --Grid ID Dup...
 	//Common.popupDiv("/sales/rcms/orderModifyPop.do", {salesOrderId : '${ordId}' , ordEditType : 'PAY'}, null, true);
-	
-	
+
+
 	//Window
 	var winPopOpt = {width: "1000px",  height: "500px" };
 	Common.popupWin("_winPopForm", "/sales/rcms/orderModifyPop.do", winPopOpt);''
-	
+
 }
- 
+
  function  isValidMobileNo(inputContact){
-	    
-	 
+
+
 	    if(isNaN(inputContact) == true){
 	    	return false;
 	    }
@@ -353,19 +359,19 @@ function fn_inputAmt(obj){
 	        inputContact.substr(0 , 3) != '016' &&
 	        inputContact.substr(0 , 3) != '017' &&
 	        inputContact.substr(0 , 3) != '018' &&
-	        inputContact.substr(0 , 3) != '019' 
+	        inputContact.substr(0 , 3) != '019'
 	      ){
 	    	return false;
 	    }
 	    return true;
 }
- 
+
 function fn_chkValidNumber(){
-	
+
 	if($("#_smsChk").is(":checked") == true){
-		
+
 		if($("#_salesManMemCode").val() != null && $("#_salesManMemCode").val() != ''){
-			
+
 			if(isValidMobileNo($("#_salesManMemTelMobile").val().trim()) == true){
 				//Valid Success
 		        $("#_smsRem").attr({"class" : "" , "disabled" : false});
@@ -376,7 +382,7 @@ function fn_chkValidNumber(){
 	            Common.alert('<spring:message code="sal.alert.msg.invalidCodyMobNum" />');
 			}
 		}else{
-			$('#_smsChk').attr('checked', false); 
+			$('#_smsChk').attr('checked', false);
 			$("#_smsRem").val('');
 	        $("#_smsRem").attr({"class" : "disabled" , "disabled" : "disabled"});
 			Common.alert('<spring:message code="sal.alert.msg.noInchargeCodyFoundOrder" />');
@@ -385,43 +391,43 @@ function fn_chkValidNumber(){
 		$("#_smsRem").val('');
 		$("#_smsRem").attr({"class" : "disabled" , "disabled" : "disabled"});
 	}
-} 
+}
 
 function fn_invoice(){
-	
+
 	Common.popupDiv("/payment/initTaxInvoiceRentalPop.do", '', null, true);
-	
+
 }
 
 function fn_makeTime(ymd , time){
-	
+
 	console.log("input ymd : " + ymd);
 	console.log("input time : " + time);
-	
+
 	var rtnDate = "";
 	var ap = '';
 	var tempTime;
-	
+
 	if(ymd != null && ymd != ''){
-		
+
 		if(time != null && time != ''){
-			
+
 			tempTime = Number(time.substr(0, 2));
 			ap = time.substr(6,8);
-			
+
 			console.log("tempTime : " + tempTime);
 			console.log("ap : " + ap);
-			
+
 			if(ap == 'PM'){
 				tempTime += 12;
 			}
-			
+
 			rtnDate =   ymd + ' ' + tempTime +':00:00';
 	    }else{
 	    	rtnDate =   ymd + ' ' +'00:00:00';
 	    }
 	}
-	
+
 	console.log("rtnDate  :  " + rtnDate);
 	return rtnDate;
 }
@@ -434,11 +440,11 @@ function fn_makeTime(ymd , time){
 </form>
 
 <c:set var="tooltipResult" value="MemberCode:${salesManMap.memCode }
-Member Name : ${salesManMap.name }              
+Member Name : ${salesManMap.name }
 Member NRIC : ${salesManMap.nric }
 Mobile No : ${salesManMap.telMobile}
  " />
-    
+
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
@@ -462,7 +468,7 @@ Mobile No : ${salesManMap.telMobile}
 <aside class="title_line"><!-- title_line start -->
 <h3><spring:message code="sal.title.text.orderFullDetails" /></h3>
 </aside><!-- title_line end -->
-<section class="tap_wrap mt0"><!-- tap_wrap start --> 
+<section class="tap_wrap mt0"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
     <li><a href="#" class="on"><spring:message code="sal.tap.title.basicInfo" /></a></li>
     <li><a href="#"><spring:message code="sal.title.text.hpCody" /></a></li>
@@ -559,7 +565,7 @@ Mobile No : ${salesManMap.telMobile}
     Rental Full Details
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/rcms/include/rentalFullDetails.jsp" %>
-</section><!-- tap_wrap end --> 
+</section><!-- tap_wrap end -->
 <aside class="title_line"><!-- title_line start -->
 <h3><spring:message code="sal.title.text.newRosRemark" /></h3>
 </aside><!-- title_line end -->
@@ -572,7 +578,7 @@ Mobile No : ${salesManMap.telMobile}
 
 <form id="_insForm">
 <input type="hidden" name="orderId" value="${ordId}">
-<input type="hidden" name="custBillId" value="${custBillId}"> 
+<input type="hidden" name="custBillId" value="${custBillId}">
 <input type="hidden" id="_chkGrp" name="chkGrp"> <!-- check Group  -->
 <input type="hidden" id="_chkSmS" name="chkSmS"> <!-- check SMS  -->
 <input type="hidden" id="_reCallDate" name="reCallDate">
@@ -644,7 +650,7 @@ Mobile No : ${salesManMap.telMobile}
     <tbody>
     <tr>
         <th scope="row"><spring:message code="sal.title.text.reCallDate" /></th>
-        <td colspan="3"><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="_reCallYMD" name="reCallDtYmd"/></td>
+        <td colspan="3"><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="_reCallYMD" name="reCallDtYmd" onchange="javascript : fn_chkDate(this.id,this.value)"/></td>
     </tr>
     <tr>
         <th scope="row"><spring:message code="sal.title.text.reCallTime" /></th>
@@ -689,7 +695,7 @@ Mobile No : ${salesManMap.telMobile}
     </tr>
     <tr>
         <th scope="row"><spring:message code="sal.title.text.ptpDate" /></th>
-        <td colspan="3"><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  onchange="javascript : fn_chkDate(this.value)" id="_ptpDate" readonly="readonly" name="ptpDate"/></td>
+        <td colspan="3"><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  onchange="javascript : fn_chkDate(this.id,this.value)" id="_ptpDate" readonly="readonly" name="ptpDate"/></td>
     </tr>
     <tr>
         <th scope="row"><spring:message code="sal.title.text.smsRemark" /><span class="must">**</span></th>
@@ -697,7 +703,7 @@ Mobile No : ${salesManMap.telMobile}
             <textarea id="_smsRem" name="smsRem" class="disabled" disabled="disabled"></textarea>
         </td>
     </tr>
-    
+
     </tbody>
     </table><!-- table end -->
 </div>

@@ -191,14 +191,9 @@ function createGrid(){
         assignGrid = GridCommon.createAUIGrid("#assignGrid", assignColLayout, "", assignOptions);
         excelGrid = GridCommon.createAUIGrid("#excelGrid", excelColLayout, "", assignOptions);
 
-      /*   // 셀 더블클릭 이벤트 바인딩
          AUIGrid.bind(assignGrid, "cellDoubleClick", function(event){
-
-              $("#trnsitId").val(AUIGrid.getCellValue(recvGridID , event.rowIndex , "trnsitId"));
-
-              Common.popupDiv("/sales/trBookRecv/trBookRecvViewPop.do",$("#listSForm").serializeJSON(), null, true, "trBookRecvViewPop");
-
-         });*/
+        	 viewRentalLedger();
+         });
 
          //셀 클릭 이벤트 바인딩
          AUIGrid.bind(assignGrid, "cellClick", function(event){
@@ -376,7 +371,6 @@ function fn_invoicePop() {
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
         <li><p class="btn_blue"><a href="#" onClick="fn_invoicePop()"><spring:message code="sal.btn.taxInvoice" /></a></p></li>
-        <li><p class="btn_blue"><a href="#" onClick="viewRentalLedger()"><span class="search"></span><spring:message code='pay.btn.viewLedger'/></a></p></li>
         <li><p class="btn_blue"><a href="#" id="btnSearch" onclick="javascript:fn_selectListAjax();"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
         <li><p class="btn_blue"><a href="#" id="btnClear" onclick="javascript:fn_clear();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
     </c:if>

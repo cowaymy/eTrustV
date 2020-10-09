@@ -34,6 +34,11 @@ $(document).ready(function() {//////////////////////////////////////////////////
 	createRosCallGrid();
 
 	CommonCombo.make("_appType", "/sales/rcms/getAppTypeList", {codeMasterId : '10'}, "66|!|1412", optionModule);
+	doGetCombo('/common/selectCodeList.do', '95', '','cmbCorpTypeId', 'M' , 'f_multiCombo');     // Company Type Combo Box
+	doGetComboAndGroup2('/common/selectProductCodeList.do', {selProdGubun: 'EXHC'}, '', 'listProductId', 'S', 'fn_setOptGrpClass');//product 생성
+	CommonCombo.make("mainReason", "/sales/rcms/getReasonCodeList", {typeId : '1175' , stusCodeId : '1'},  '', {type: "S"});  //Reason Code
+	CommonCombo.make("rosStatus", "/common/selectCodeList.do", {groupCode : '391'}, '', {type: "S"});  //Reason Code
+	CommonCombo.make("rosCallerType", "/sales/rcms/selectAgentTypeList", {codeMasterId : '329'}, '',  { type: "S"});
 
 
 	//Search
@@ -44,7 +49,35 @@ $(document).ready(function() {//////////////////////////////////////////////////
 			AUIGrid.setGridData(rosGridID, result);
 		});
 	});
+
+	$("#rosCallerType").change(function(){
+		CommonCombo.make("rosCaller", "/sales/rcms/selectRosCaller", {stus:'1',agentType: this.value} ,'',  {id:'agentId', name:"agentName", isShowChoose: false,isCheckAll : false , type: "M"});
+	});
+
+	AUIGrid.bind(rosGridID, "cellDoubleClick", function(event){
+		if('${PAGE_AUTH.funcUserDefine1}' == 'Y'){
+			fn_newROSCall();
+		}else{
+			Common.alert("Access Deny");
+		}
+
+	});
+
+	$('#excelDown').click(function() {
+	    GridCommon.exportTo("rosCall_grid_wrap", 'xlsx', "ROS Call Log");
+	 });
 });////////////////////////////////////////////////////////////////////////////////////////////////// Document Ready Func End
+
+function f_multiCombo(){
+    $(function() {
+        $('#cmbCorpTypeId').change(function() {
+
+        }).multipleSelect({
+            selectAll: true, // 전체선택
+            width: '80%'
+        });
+    });
+}
 
 function chgGridTab(tabNm) {
     switch(tabNm) {
@@ -116,14 +149,21 @@ function fn_orderUloadBatch(){
 function createRosCallGrid(){
 	 var rosColumnLayout =  [
 	                            {dataField : "ordNo", headerText : '<spring:message code="sal.text.ordNo" />', width : '10%' , editable : false},
-	                            {dataField : "ordDt", headerText : '<spring:message code="sal.text.ordDate" />', width : '10%', editable : false},
+	                            {dataField : "firstInstallDt", headerText : '<spring:message code="sal.text.insDate" />', width : '10%', editable : false},
+	                            {dataField : "ordStusName", headerText : '<spring:message code="sal.text.orderStatus" />', width : '10%' , editable : false},
 	                            {dataField : "appTypeCode", headerText : '<spring:message code="sal.title.text.appType" />', width : '10%' , editable : false},
 	                            {dataField : "stockDesc", headerText : '<spring:message code="sal.title.text.product" />', width : '20%' , editable : false},
 	                            {dataField : "custName", headerText : '<spring:message code="sal.text.custName" />', width : '20%' , editable : false},
-	                            {dataField : "custNric", headerText : '<spring:message code="sal.title.text.nricCompNo" />', width : '20%' , editable : false},
+	                            {dataField : "custId", headerText : '<spring:message code="sal.text.customerId" />', width : '15%' , editable : false},
+	                            {dataField : "custType", headerText : '<spring:message code="sal.text.custType" />', width : '20%' , editable : false},
 	                            {dataField : "rentalStus", headerText : '<spring:message code="sal.text.rentalStatus" />', width : '10%' , editable : false},
+	                            {dataField : "currMthAging", headerText : '<spring:message code="sal.title.msg.currAgingMonth" />', width : '15%' , editable : false},
+	                            {dataField : "currentOs", headerText : '<spring:message code="sal.text.currOutstnd" />', width : '15%' , editable : false},
+	                            {dataField : "rosCaller", headerText : '<spring:message code="sal.title.text.rosCaller" />', width : '20%' , editable : false},
+	                            {dataField : "rosMainReason", headerText : '<spring:message code="sal.title.text.mainReason"/>', width : '20%' , editable : false},
+	                            {dataField : "paymode", headerText : '<spring:message code="sal.title.paymode" />', width : '15%' , editable : false},
+	                            {dataField : "etr", headerText : '<spring:message code="sal.title.text.etr" />', width : '5%' , editable : false},
 	                            {dataField : "ordId", visible : false},
-	                            {dataField : "custId", visible : false},
 	                            {dataField : "custBillId", visible : false}
 	                           ];
 
@@ -196,6 +236,14 @@ $.fn.clearForm = function() {
 function fn_feedbackList(){
 	Common.popupDiv("/sales/rcms/feedbackPop.do", null ,  null , true, '_feedbackPop');
 }
+
+function fn_setOptGrpClass() {
+    $("optgroup").attr("class" , "optgroup_text");
+}
+
+function fn_alert() {
+	Common.alert("Under Development");
+}
 </script>
 
 
@@ -211,9 +259,9 @@ function fn_feedbackList(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2><spring:message code="sal.title.text.rosCallLog" /></h2>
 <ul class="right_btns">
-    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a onclick="javascript:fn_newROSCall()"><span ></span><spring:message code="sal.title.text.newRosCall" /></a></p></li>
-    </c:if>
+    </c:if> --%>
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a onclick="javascript:fn_chargeOrderBillingType()"><span ></span><spring:message code="sal.title.text.chargeOrderBillingType" /></a></p></li>
     </c:if>
@@ -245,11 +293,11 @@ function fn_feedbackList(){
 <tr>
     <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td>
-    <input type="text" title="" placeholder="Order No" class="w100p" id="_ordNo" name="ordNo"/>
+        <input type="text" title="" placeholder="Order No" class="w100p" id="_ordNo" name="ordNo"/>
     </td>
     <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>
-    <select class="multy_select w100p" multiple="multiple" id="_appType" name="appType"></select>
+        <select class="multy_select w100p" multiple="multiple" id="_appType" name="appType"></select>
     </td>
     <th scope="row"><spring:message code="sal.text.rentalStatus" /></th>
     <td>
@@ -268,16 +316,80 @@ function fn_feedbackList(){
 <tr>
     <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td>
-    <input type="text" title="" placeholder="Customer ID (Number Only)" class="w100p" id="_custId" name="custId" />
+        <input type="text" title="" placeholder="Customer ID (Number Only)" class="w100p" id="_custId" name="custId" />
     </td>
     <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td>
-    <input type="text" title="" placeholder="Customer Name" class="w100p" id="_custName" name="custName"/>
+        <input type="text" title="" placeholder="Customer Name" class="w100p" id="_custName" name="custName"/>
     </td>
     <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
     <td>
-    <input type="text" title="" placeholder="NRIC/Company Number" class="w100p" id="_custNric" name="custNric" />
+        <input type="text" title="" placeholder="NRIC/Company Number" class="w100p" id="_custNric" name="custNric" />
     </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='sales.poNum'/></th>
+    <td>
+        <input id="listPoNo" name="poNo" type="text" title="PO No" placeholder="<spring:message code='sales.poNum'/>" class="w100p" />
+    </td>
+    <th scope="row"><spring:message code="sal.title.text.companyType" /></th>
+    <td>
+        <select id="cmbCorpTypeId" name="cmbCorpTypeId" class="multy_select w100p" multiple="multiple"></select>
+    </td>
+    <th scope="row"><spring:message code='sales.ContactNo'/></th>
+    <td>
+    <input id="listContactNo" name="contactNo" type="text" title="Contact No" placeholder="<spring:message code='sales.ContactNo'/>" class="w100p" />
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='sales.prod'/></th>
+    <td>
+        <select id="listProductId" name="productId" class="w100p"></select>
+    </td>
+    <th scope="row"><spring:message code='sales.SeriacNo'/></th>
+    <td>
+        <input id="listSerialNo" name="serialNo" type="text" title="Serial Number" placeholder="<spring:message code='sales.SeriacNo'/>" class="w100p" />
+    </td>
+    <th scope="row"><spring:message code='sales.vaNum'/></th>
+    <td>
+        <input id="listVaNo" name="vaNo" type="text" title="VA Number" placeholder="<spring:message code='sales.vaNum'/>" class="w100p" />
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.title.text.agentType" /></th>
+        <td>
+        <select class="w100p" id="rosCallerType" name="rosCallerType"></select>
+        </td>
+     <th scope="row"><spring:message code='sal.title.text.reCallDate'/></th>
+        <td>
+            <div class="date_set w100p"><!-- date_set start -->
+                <p><input id="listRclStartDt" name="rclStartDt" type="text" value="" title="Recall start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+            <span>To</span>
+                <p><input id="listRclEndDt" name="rclEndDt" type="text" value="" title="Recall end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+            </div><!-- date_set end -->
+        </td>
+     <th scope="row"><spring:message code="sal.title.text.mainReason" /></th>
+        <td>
+            <select class="w100p" id="mainReason" name="mainReason"></select>
+        </td>
+</tr>
+<tr>
+     <th scope="row"><spring:message code="sal.title.text.rosCaller" /></th>
+         <td>
+             <select id="rosCaller" name="rosCaller" class="multy_select w100p" multiple="multiple"></select>
+         </td>
+     <th scope="row"><spring:message code='sal.title.text.ptpDate'/></th>
+         <td>
+         <div class="date_set w100p"><!-- date_set start -->
+             <p><input id="listPtpStartDt" name="ptpStartDt" type="text" value="" title="PTP start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                 <span>To</span>
+             <p><input id="listPtpEndDt" name="ptpEndDt" type="text" value="" title="PTP end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+          </div><!-- date_set end -->
+         </td>
+     <th scope="row"><spring:message code="sal.title.text.rosStus" /></th>
+         <td>
+             <select class="w100p" id="rosStatus" name="rosStatus"></select>
+         </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -289,6 +401,8 @@ function fn_feedbackList(){
     <dd>
     <ul class="btns">
         <li><p class="link_btn"><a onclick="javascript:fn_feedbackList()"><spring:message code="sal.title.text.feedbackList" /></a></p></li>
+        <li><p class="link_btn"><a onclick="javascript:fn_alert()">VVIP Customer Info</a></p></li>
+        <li><p class="link_btn"><a onclick="javascript:fn_alert()">ROS Summary Report</a></p></li>
         <%-- <li><p class="link_btn"><a href="${pageContext.request.contextPath}/payment/initInvoiceIssue.do">Invoice</a></p></li>  --%>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
@@ -300,6 +414,12 @@ function fn_feedbackList(){
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
+<ul class="right_btns mt10">
+    <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+    </c:if>
+        <li><p class="btn_grid"><a href="#" id="excelDown"><spring:message code="sal.title.text.download" /></a></p></li>
+
+</ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="rosCall_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
