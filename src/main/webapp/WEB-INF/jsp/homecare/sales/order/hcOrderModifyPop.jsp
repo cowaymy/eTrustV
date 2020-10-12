@@ -2587,7 +2587,7 @@
 		        norAmt : $('#orgOrdPrice').val().trim()
 		    };
         }
-
+console.log(salesOrderMVO);
 	    Common.ajax("POST", "/homecare/sales/order/updateHcPromoPriceInfo.do", salesOrderMVO, function(result) {
 	        Common.alert('<spring:message code="sal.alert.msg.updSummary" />' + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_reloadPage);
 
@@ -3802,7 +3802,7 @@
        <td>
         <input id="ordPv" name="ordPv" type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
         <input id="ordPvGST" name="ordPvGST" type="hidden" />
-        <input id="orgOrdPrice" name="orgOrdPrice" type="hidden" />
+        <input id="orgOrdPrice" name="orgOrdPrice" type="hidden" value="0"/>
        </td>
        <th scope="row"><spring:message code="sal.title.text.rentFeeRm" /></th>
        <td>
