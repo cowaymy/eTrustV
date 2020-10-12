@@ -158,7 +158,7 @@
                                   G.cust_id AS customer_Id,
                                   G.CUST_VA_NO AS customer_Va_No,
                                   H.BRNCH_ID AS dsc_Code,
-                                  H.INSTCT AS instruction,
+                                  U.SRV_REM AS instruction,
                                   J.SIRIM_NO AS sirim_No,
                                   J.SERIAL_NO AS serial_No,
                                   J.RESULT_CUST_NAME AS result_Cust_Name,
@@ -290,7 +290,7 @@
                  ) R,
                  SAL0071D S,
                  SAL0017D T,
-                 (SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID, SRV_SO_ID, FAUCET_EXCH FROM SAL0090D WHERE SRV_STUS_ID = 1 GROUP BY SRV_SO_ID, FAUCET_EXCH) U,
+                 (SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID, SRV_SO_ID, FAUCET_EXCH, SRV_REM FROM SAL0090D WHERE SRV_STUS_ID = 1 GROUP BY SRV_SO_ID, FAUCET_EXCH, SRV_REM) U,
                  SAL0028D W,
                  SYS0013M X ,
                  SAL0261D Y
