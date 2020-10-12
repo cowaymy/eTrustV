@@ -129,6 +129,14 @@ public class UserManagementController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/getDeptList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getDeptList(@RequestParam Map<String, Object> params, ModelMap model) {
+	    return ResponseEntity.ok(userManagementsService.getDeptList(params));
+	}
 
-
+	@RequestMapping(value = "/checkUserNric.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> checkUserNric(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+	    ReturnMessage message = userManagementsService.checkUserNric(params);
+	    return ResponseEntity.ok(message);
+	}
 }

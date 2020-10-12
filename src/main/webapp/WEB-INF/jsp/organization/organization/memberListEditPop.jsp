@@ -24,9 +24,13 @@ function fn_memberSave(){
     $("#spouseDob").val($.trim($("#spouseDob").val()));
 
     $("#memberType").attr("disabled",false);
-    var jsonObj =  GridCommon.getEditData(myGridID_Doc);
-    jsonObj.form = $("#memberAddForm").serializeJSON();
-    // jsonObj.form = $("#memberUpdForm").serializeJSON();
+    var jsonObj = GridCommon.getEditData(myGridID_Doc);;
+
+    if($("#memberType").val() != "4" && $("#memberType").val() != "6171") {
+        jsonObj = GridCommon.getEditData(myGridID_Doc);
+    }
+    // jsonObj.form = $("#memberAddForm").serializeJSON();
+    jsonObj.form = $("#memberUpdForm").serializeJSON();
 
     //ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
     if($("#hsptlzCheck").is(":checked") == true){
@@ -40,7 +44,7 @@ function fn_memberSave(){
     console.log("-------------------------" + JSON.stringify(jsonObj));
     Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
         console.log("message : " + result.message );
-        Common.alert(result.message,fn_close);
+        Common.alert(result.message, fn_close);
     });
 
     $("#memberType").attr("disabled",true);
@@ -184,28 +188,63 @@ $(document).ready(function() {
 
     doGetCombo('/organization/selectBusinessType.do', '', '','businessType', 'S' , '');
 
-    //ADDED BY TOMMY 27/05/2020 ONLY ALLOW CODY AND HT FOR HOSPITALISATION CHECKBOX
+    createAUIGridDoc();
+    fn_getMemInfo();
+
+    // ADDED BY TOMMY 27/05/2020 ONLY ALLOW CODY AND HT FOR HOSPITALISATION CHECKBOX
+    // 20201007 - LaiKW - Added No TBB for HP
+    // 20201008 - LaiKW - Amended to cater editing of temporary staff codes details
+    $("#editRow1").hide();
+    $("#hpNoTBB").hide();
+
     if("${memType}" == "2" || "${memType}" == "7") {
         $("#hsptlzCheck").attr({"disabled" : false });
-        $("#staffCodeRow").hide();
-        $("#hpNoTBB").hide();
 
     } else if("${memType}" == "4" || "${memType}" == "6171") {
-        //$("#staffCodeRow").show();
-        $("#staffCodeRow").hide();
-        $("#hpNoTBB").hide();
+        // AUIGrid.destroy(myGridID_Doc);
+
+        // Remove Tabs
+        $("#spouseInfoTab").remove();
+        $("#spouseInfoDisplay").remove();
+        $("#documentSubTab").remove();
+        $("#documentSubDisplay").remove();
+
+        // Hide "Basic Info" not required fields
+        $("#selectBranchCol").attr('colspan', 5);
+        $("#deptCodeLbl").remove();
+        $("#deptCode").remove();
+        $("#transportCodeLbl").remove();
+        $("#transportCd").remove();
+        $("#transportCdCol").remove();
+        $("#subDeptLbl").remove();
+        $("#subDeptLblCol").remove();
+        $("#searchdepartmentcol").attr('colspan', 5);
+
+        if("${memType}" == "6171") {
+            $("#editRow1").show();
+        }
+
+        $("#editRow1_7").remove();
+        $("#editRow1_9").remove();
+        $("#editRow1_10").remove();
+        $("#editRow1_11").remove();
+        $("#editRow1_12").remove();
+        $("#editRow1_13").remove();
+        $("#editRow1_15").remove();
+        $("#trMobileUseYn").remove();
+
+        $("#languageTitle").remove();
+        $("#languageTable").remove();
+        $("#trConsignTitle").remove();
+        $("#trConsignTable").remove();
 
     } else if("${memType}" == "1") {
-        $("#staffCodeRow").hide();
         $("#hpNoTBB").show();
-
-    } else {
-        $("#staffCodeRow").hide();
-        $("#hpNoTBB").hide();
     }
 
-	createAUIGridDoc();
-	fn_docSubmission();
+    if("${memType}" != "4" && "${memType}" != "6171") {
+        fn_docSubmission();
+    }
 
 	$("#convStaff").change(function() {
 	    if($("#convStaff").is(":checked")) {
@@ -256,30 +295,6 @@ $(document).ready(function() {
             $("#noTBBChkboxUpd").val("0");
 	    }
 	});
-
-	//fn_departmentCode();
-
-	/*
-	$("#state").change(function (){
-		var state = $("#state").val();
-		doGetComboAddr('/common/selectAddrSelCodeList.do', 'area' ,state ,'area', 'S', '');
-
-		$("#stateUpd").remove();
-        $("#memberUpdForm").append("<input type='hidden' name='stateUpd' id='stateUpd'>");
-        $("#stateUpd").val($("#state").val());
-	});
-
-	$("#area").change(function (){
-        var area = $("#area").val();
-        doGetComboAddr('/common/selectAddrSelCodeList.do', 'post' ,area ,'','postCode', 'S', '');
-
-        $("#areaUpd").remove();
-        $("#memberUpdForm").append("<input type='hidden' name='area' id='area'>");
-        $("#areaUpd").val($("#area").val());
-    });
-	*/
-
-	fn_getMemInfo();
 
     if("${memType}" == "1" || "${memType}" == "2803") {
          doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
@@ -373,6 +388,17 @@ $(document).ready(function() {
         $("#selectBranchUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='selectBranchUpd' id='selectBranchUpd'>");
         $("#selectBranchUpd").val($("#selectBranch").val());
+
+        $("#searchdepartment").empty();
+        Common.ajax("GET", "/common/userManagement/getDeptList.do", "branchId=" + $("#selectBranch").val(), function(bData, textStatus, jqXHR) {
+            $("#searchdepartment").append("<option value=''>Choose One</option>");
+
+            for(var i = 0; i < bData.length; i++) {
+                $("#searchdepartment").append("<option value='"+bData[i].codeId+"'>"+bData[i].codeName+"</option>");
+            }
+        }, function(jqXHR, textStatus, errorThrown){ // Error
+            alert("Fail : " + jqXHR.responseJSON.message);
+        })
     });
 
     $('#transportCd').change(function() {
@@ -413,11 +439,13 @@ $(document).ready(function() {
         $("#searchdepartmentUpd").val($("#searchdepartment").val());
     });
 
+    /*
     $('#inputSubDept').change(function() {
         $("#inputSubDeptUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='inputSubDeptUpd' id='inputSubDeptUpd'>");
         $("#inputSubDeptUpd").val($("#inputSubDept").val());
     });
+    */
     //
 
     //
@@ -555,7 +583,10 @@ function fn_setMemInfo(data){
 		console.log("1 : " +data.memType);
 		fn_departmentCode(data.memType);
 
-		var jsonObj =  GridCommon.getEditData(myGridID_Doc);
+		var jsonObj;
+		if(data.memType != "4" && data.memType != "6171") {
+		    jsonObj = GridCommon.getEditData(myGridID_Doc);
+		}
 
 		if(data.gender=="F"){
 	        $("#gender_f").prop("checked", true)
@@ -634,13 +665,37 @@ function fn_setMemInfo(data){
 
 	    $("#userId").val(data.c64);
 
-	    $("#searchdepartment option[value='"+ data.mainDept +"']").attr("selected", true);
+	    //$("#searchdepartment option[value='"+ data.mainDept +"']").attr("selected", true);
 
-	    $("#inputSubDept option[value='"+ data.subDept +"']").attr("selected", true);
+	    //$("#inputSubDept option[value='"+ data.subDept +"']").attr("selected", true);
 
 	    $("#course option[value='"+ data.course +"']").attr("selected", true);
 
 	    $("#selectBranch option[value='"+ data.c3 +"']").attr("selected", true);
+
+	    // If member type = staff/temporary staff code
+	    if("${memType}" == "4" || "${memType}" == "6171") {
+	        $("#searchdepartment").empty();
+	        $("#searchdepartmentLbl").append("<span class='must'>*</span>");
+
+	        $("#inputSubDept").empty();
+	        $("#inputSubDept").remove();
+
+	        Common.ajax("GET", "/common/userManagement/getDeptList.do", "branchId=" + data.c3, function(bData, textStatus, jqXHR) {
+	            $("#searchdepartment").append("<option value=''>Choose One</option>");
+	            console.log("getDeptList");
+
+	            for(var i = 0; i < bData.length; i++) {
+	                if(data.deptId == bData[i].codeId) {
+	                    $("#searchdepartment").append("<option value='"+bData[i].codeId+"' selected>" + bData[i].codeName + "</option>");
+	                } else {
+	                    $("#searchdepartment").append("<option value='"+bData[i].codeId+"'>" + bData[i].codeName + "</option>");
+	                }
+	            }
+	        }, function(jqXHR, textStatus, errorThrown) { // Error
+	            alert("Fail : " + jqXHR.responseJSON.message);
+	        });
+	    }
 
 	    $("#meetingPoint option[value=" + data.meetpointId +"]").attr("selected", true);
 
@@ -1103,10 +1158,8 @@ function fn_saveValidation(){
     //endregion
 
     //region Check Cody PA Date  codyPaExpr
-    if (action == "2") //cyc 01/03/2017
-    {
-    	if ((jQuery.trim($("#codyPaExpr").val())).length<0)
-        {
+    if(action == "2") { //cyc 01/03/2017
+    	if((jQuery.trim($("#codyPaExpr").val())).length<0) {
             valid = false;
             message = "Cody agreement PA date are compulsory";
         }
@@ -1117,6 +1170,23 @@ function fn_saveValidation(){
         }
     }
     //endregion
+
+    if(action == "4" || action == "6171") {
+        if(action == "6171") {
+            if($("#convStaff").is(":checked")) {
+                if($("#memberCode").val() == "") {
+                    valid = false;
+                    message = "Staff code is required"
+                }
+            }
+        }
+
+        if($("#searchdepartment").val() == "") {
+            valid = false;
+            message = "Main department is required";
+        }
+    }
+
     //Display Message
     if (!valid)
     {
@@ -1158,6 +1228,14 @@ function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
         CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
 
         $("#areaId").val(areaid);
+
+        if($("#areaIdUpd").length > 0) {
+            $("#areaIdUpd").remove();
+        }
+
+        $("#memberUpdForm").append("<input type='hidden' name='areaIdUpd' id='areaIdUpd'>");
+        $("#areaIdUpd").val(areaid);
+
         $("#_searchDiv").remove();
     }else{
         Common.alert("Please check your address.");
@@ -1181,8 +1259,16 @@ function fn_getAreaId(){
                               areaValue : areaValue
                             };
         Common.ajax("GET", "/sales/customer/getAreaId.do", jsonObj, function(result) {
+            console.log("getAreaId");
 
-             $("#areaId").val(result.areaId);
+            $("#areaId").val(result.areaId);
+
+            if($("#areaIdUpd").length > 0) {
+                $("#areaIdUpd").remove();
+            }
+
+            $("#memberUpdForm").append("<input type='hidden' name='areaIdUpd' id='areaIdUpd'>");
+            $("#areaIdUpd").val(result.areaId);
 
         });
 
@@ -1368,625 +1454,655 @@ function checkBankAccNo() {
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
-<header class="pop_header"><!-- pop_header start -->
-<h1>Member List - Edit Member</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
+    <header class="pop_header"><!-- pop_header start -->
+        <h1>Member List - Edit Member</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+        </ul>
+    </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
-<form action="#" id="memberUpdForm" method="post"></form>
+    <section class="pop_body"><!-- pop_body start -->
+        <form action="#" id="memberUpdForm" method="post"></form>
 
-<form action="#" id="memberAddForm" method="post">
-<input type="hidden" id="areaId" name="areaId" value="${memberView.areaId}">
-<input type="hidden" id="searchSt1" name="searchSt1">
-<input type="hidden" id="streetDtl1" name="streetDtl1">
-<input type="hidden" id="addrDtl1" name="addrDtl1">
-<input type="hidden" id="traineeType" name="traineeType" value="${memberView.traineeType}">
-<input type="hidden" id="memType" name="memType" value="${memType}">
-<input type="hidden"id="MemberID" name="MemberID" value="${memId}">
+        <form action="#" id="memberAddForm" method="post">
+            <input type="hidden" id="areaId" name="areaId" value="${memberView.areaId}">
+            <input type="hidden" id="searchSt1" name="searchSt1">
+            <input type="hidden" id="streetDtl1" name="streetDtl1">
+            <input type="hidden" id="addrDtl1" name="addrDtl1">
+            <input type="hidden" id="traineeType" name="traineeType" value="${memberView.traineeType}">
+            <input type="hidden" id="memType" name="memType" value="${memType}">
+            <input type="hidden"id="MemberID" name="MemberID" value="${memId}">
 
-<input type="hidden" value="<c:out value="${memberView.gender}"/> "  id="gender" name="gender"/>
-<input type="hidden" value="<c:out value="${memberView.memCode}"/> "  id="memCode" name="memCode"/>
-<input type="hidden" value="<c:out value="${memberView.c64}"/> "  id="userId" name="userId"/>
-<input type="hidden" value="<c:out value="${memberView.rank}"/> "  id="rank" name="rank"/>
-<input type="hidden" value="<c:out value="${memberView.c65}"/> "  id="fullName" name="fullName"/>
-<input type="hidden" value="<c:out value="${memberView.c66}"/> "  id="agrmntNo" name="agrmntNo"/>
-<input type="hidden" value="<c:out value="${memberView.c67}"/> "  id="syncChk" name="syncChk"/>
-<input type="hidden" value="<c:out value="${memberView.c35}"/> "  id="national" name="national"/>
-<input type="hidden" value="<c:out value="${memberView.c3} " /> "  id="branch" name="branch"/>
-<input type="hidden"   id="groupCode[memberLvl]" name="groupCode[memberLvl]"/>
-<input type="hidden"   id="groupCode[flag]" name="groupCode[flag]"/>
+            <input type="hidden" value="<c:out value="${memberView.gender}"/> "  id="gender" name="gender"/>
+            <input type="hidden" value="<c:out value="${memberView.memCode}"/> "  id="memCode" name="memCode"/>
+            <input type="hidden" value="<c:out value="${memberView.c64}"/> "  id="userId" name="userId"/>
+            <input type="hidden" value="<c:out value="${memberView.rank}"/> "  id="rank" name="rank"/>
+            <input type="hidden" value="<c:out value="${memberView.c65}"/> "  id="fullName" name="fullName"/>
+            <input type="hidden" value="<c:out value="${memberView.c66}"/> "  id="agrmntNo" name="agrmntNo"/>
+            <input type="hidden" value="<c:out value="${memberView.c67}"/> "  id="syncChk" name="syncChk"/>
+            <input type="hidden" value="<c:out value="${memberView.c35}"/> "  id="national" name="national"/>
+            <input type="hidden" value="<c:out value="${memberView.c3} " /> "  id="branch" name="branch"/>
+            <input type="hidden"   id="groupCode[memberLvl]" name="groupCode[memberLvl]"/>
+            <input type="hidden"   id="groupCode[flag]" name="groupCode[flag]"/>
 
+            <!-- Member Type -->
+            <table class="type1"><!-- table start -->
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:180px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row">Member Type</th>
+                        <td>
+                            <select class="w100p" id="memberType" name="memberType">
+                                <option value="1">Health Planner (HP)</option>
+                                <option value="2">Coway Lady (Cody)</option>
+                                <option value="3">Coway Technician (CT)</option>
+                                <option value="4">Coway Staff (Staff)</option>
+                                <option value="5">Trainee</option>
+                                <option value="2803">HP Applicant</option>
+                                <option value="7">Homecare Technician (HT)</option>
+                                <option value="5758">Homecare Delivery Technician (DT)</option>
+                                <option value="6171">Temporary Staff Code</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table><!-- table end -->
 
+            <section class="tap_wrap"><!-- tap_wrap start -->
+                <ul class="tap_type1 num4">
+                    <li><a href="#" class="on">Basic Info</a></li>
+                    <li id="spouseInfoTab"><a href="#">Spouse Info</a></li>
+                    <li id="documentSubTab"><a href="#">Document Submission</a></li>
+                    <li><a href="#">Member Address</a></li>
+                </ul>
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Member Type</th>
-    <td>
-        <select class="w100p" id="memberType" name="memberType">
-            <option value="1">Health Planner (HP)</option>
-            <option value="2">Coway Lady (Cody)</option>
-            <option value="3">Coway Technician (CT)</option>
-            <option value="4">Coway Staff (Staff)</option>
-            <option value="5">Trainee</option>
-            <option value="2803">HP Applicant</option>
-            <option value="7">Homecare Technician (HT)</option>
-            <option value="5758">Homecare Delivery Technician (DT)</option>
-            <option value="6171">Temporary Staff Code</option>
-        </select>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
+                <!-- Basic Info -->
+                <article class="tap_area">
+                <!-- tap_area start -->
 
-<section class="tap_wrap"><!-- tap_wrap start -->
-<ul class="tap_type1 num4">
-    <li><a href="#" class="on">Basic Info</a></li>
-    <li><a href="#">Spouse Info</a></li>
-    <li><a href="#">Document Submission</a></li>
-    <li><a href="#">Member Address</a></li>
-</ul>
+                    <!-- title_line start -->
+                    <aside class="title_line">
+                        <h2>Basic Information</h2>
+                        <div id="hpNoTBB" class="right_chk">
+                            <label for="noTBB">No TBB</label>
+                            <input type="checkbox" id="noTBBChkbox" name="noTBBChkbox" <c:if test="${memberView.noTbb eq '1'}">checked</c:if>>
+                        </div>
+                    </aside>
+                    <!-- title_line end -->
 
-<article class="tap_area"><!-- tap_area start -->
+                    <!-- table start -->
+                    <table class="type1">
+                        <caption>table</caption>
+                        <colgroup>
+                            <col style="width:160px" />
+                            <col style="width:*" />
+                            <col style="width:150px" />
+                            <col style="width:*" />
+                            <col style="width:150px" />
+                            <col style="width:*" />
+                        </colgroup>
+                        <tbody>
+                            <tr id="editRow1_1">
+                                <th scope="row">Member Code</th>
+                                <td colspan="3">
+                                    <input type="text" title="" id="memberCode" placeHolder="Member Code" class="w100p" value="<c:out value="${memberView.memCode}"/>" />
+                                </td>
+                                <th scope="row">Convert Staff</th>
+                                <td>
+                                    <input type="checkbox" id="convStaff" name="convStaff" />
+                                </td>
+                            </tr>
+                            <tr id="editRow1_2">
+                                <th scope="row">Member Name<span class="must">*</span></th>
+                                <td colspan="3">
+                                   <input type="text" title="" id="memberNm" name="memberNm" placeholder="Member Name" class="w100p"  value="<c:out value="${memberView.name1}"/>"/>
+                                </td>
+                                <th scope="row">Joined Date<span class="must">*</span></th>
+                                <td>
+                                   <input type="text" title="Create start Date" id="joinDate" name="joinDate" placeholder="DD/MM/YYYY" class="j_date"  disabled="disabled"  value="<c:out value="${memberView.c30}"/>"/>
+                                </td>
+                            </tr>
+                            <tr id="editRow1_3">
+                                <th scope="row">Gender<span class="must">*</span></th>
+                                <td>
+                                    <label><input type="radio" name="gender" id="gender_m" value="M" disabled="true" /><span>Male</span></label>
+                                    <label><input type="radio" name="gender" id="gender_f" value="F" disabled="true" /><span>Female</span></label>
+                                </td>
+                                <th scope="row">Date of Birth<span class="must">*</span></th>
+                                <td>
+                                   <input type="text" title="Create start Date" id="Birth" name="Birth"placeholder="DD/MM/YYYY" class="j_date" value="<c:out value="${memberView.c29}"/>" />
+                                </td>
+                                <th scope="row">Race<span class="must">*</span></th>
+                                <td>
+                                   <select class="w100p" id="cmbRace" name="cmbRace"></select>
+                                </td>
+                            </tr>
+                            <tr id="editRow1_4">
+                                <th scope="row">Nationality<span class="must">*</span></th>
+                                <td>
+                                    <span><c:out value="${memberView.c36} " /></span>
+                                    <!--
+                                    <select class="w100p" id="national" name="national"></select>
+                                     -->
+                                </td>
+                                <th scope="row">NRIC (New)<span class="must">*</span></th>
+                                <td>
+                                    <input type="text" title="" placeholder="NRIC (New)" id="nric" name="nric" class="w100p" disabled="true"/>
+                                </td>
+                                <th scope="row">Marital Status<span class="must">*</span></th>
+                                <td>
+                                    <select class="w100p" id="marrital" name="marrital"></select>
+                                </td>
+                            </tr>
+                            <%-- <tr>
+                                <th scope="row" rowspan="3">Address<span class="must">*</span></th>
+                                <td colspan="5">
+                                <input type="text" title="" placeholder="Address(1)" class="w100p" id="address1" name="address1"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">
+                                <input type="text" title="" placeholder="Address(2)" class="w100p" id="address2" name="address2"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">
+                                <input type="text" title="" placeholder="Address(3)" class="w100p" id="address3" name="address3"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Country<span class="must">*</span></th>
+                                <td>
+                                <select class="w100p" id="country" name="country">
+                                </select>
+                                </td>
+                                <th scope="row">State<span class="must">*</span></th>
+                                <td>
+                                <select class="w100p" id="state" name="state">
+                                    <c:forEach var="list" items="${state }" varStatus="status">
+                                       <option value="${list.codeId}">${list.codeName}</option>
+                                    </c:forEach>
+                                </select>
+                                </td>
+                                <th scope="row">Area<span class="must">*</span></th>
+                                <td>
+                                <select class="w100p" id="area" name="area">
 
-<aside class="title_line"><!-- title_line start -->
-    <h2>Basic Information</h2>
-    <div id="hpNoTBB" class="right_chk">
-        <label for="noTBB">No TBB</label>
-        <input type="checkbox" id="noTBBChkbox" name="noTBBChkbox" <c:if test="${memberView.noTbb eq '1'}">checked</c:if>>
-    </div>
-</aside><!-- title_line end -->
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:160px" />
-    <col style="width:*" />
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:150px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr id="staffCodeRow">
-    <th scope="row">Member Code</th>
-    <td colspan="3">
-        <input type="text" title="" id="memberCode" placeHolder="Member Code" class="w100p" value="<c:out value="${memberView.memCode}"/>" />
-    </td>
-    <th scope="row">Convert Staff</th>
-    <td>
-        <input type="checkbox" id="convStaff" name="convStaff" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Member Name<span class="must">*</span></th>
-    <td colspan="3">
-    <input type="text" title="" id="memberNm" name="memberNm" placeholder="Member Name" class="w100p"  value="<c:out value="${memberView.name1}"/>"/>
-    </td>
-    <th scope="row">Joined Date<span class="must">*</span></th>
-    <td>
-    <input type="text" title="Create start Date" id="joinDate" name="joinDate" placeholder="DD/MM/YYYY" class="j_date"  disabled="disabled"  value="<c:out value="${memberView.c30}"/>"/>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Gender<span class="must">*</span></th>
-    <td>
-    <label><input type="radio" name="gender" id="gender_m" value="M" disabled="true" /><span>Male</span></label>
-    <label><input type="radio" name="gender" id="gender_f" value="F" disabled="true" /><span>Female</span></label>
-    </td>
-    <th scope="row">Date of Birth<span class="must">*</span></th>
-    <td>
-    <input type="text" title="Create start Date" id="Birth" name="Birth"placeholder="DD/MM/YYYY" class="j_date" value="<c:out value="${memberView.c29}"/>" />
-    </td>
-    <th scope="row">Race<span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="cmbRace" name="cmbRace">
-    </select>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Nationality<span class="must">*</span></th>
-    <td>
-    <span><c:out value="${memberView.c36} " /></span>
-    <!--
-    <select class="w100p" id="national" name="national">
-    </select>
-     -->
-    </td>
-    <th scope="row">NRIC (New)<span class="must">*</span></th>
-    <td>
-    <input type="text" title="" placeholder="NRIC (New)" id="nric" name="nric" class="w100p" disabled="true"/>
-    </td>
-    <th scope="row">Marital Status<span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="marrital" name="marrital">
-    </select>
-    </td>
-</tr>
-<%-- <tr>
-    <th scope="row" rowspan="3">Address<span class="must">*</span></th>
-    <td colspan="5">
-    <input type="text" title="" placeholder="Address(1)" class="w100p" id="address1" name="address1"/>
-    </td>
-</tr>
-<tr>
-    <td colspan="5">
-    <input type="text" title="" placeholder="Address(2)" class="w100p" id="address2" name="address2"/>
-    </td>
-</tr>
-<tr>
-    <td colspan="5">
-    <input type="text" title="" placeholder="Address(3)" class="w100p" id="address3" name="address3"/>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Country<span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="country" name="country">
-    </select>
-    </td>
-    <th scope="row">State<span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="state" name="state">
-        <c:forEach var="list" items="${state }" varStatus="status">
-           <option value="${list.codeId}">${list.codeName}</option>
-        </c:forEach>
-    </select>
-    </td>
-    <th scope="row">Area<span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="area" name="area">
+                                </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Postcode<span class="must">*</span></th>
+                                <td>
+                                <select class="w100p" id="postCode" name="postCode">
+                                </select>
+                                </td>
+                                <th scope="row">Email</th>
+                                <td colspan="3">
+                                <input type="text" title="" placeholder="Email" class="w100p" id="email" name="email"/>
+                                </td>
+                            </tr> --%>
+                            <tr id="editRow1_5">
+                                <th scope="row">Email</th>
+                                <td colspan="5">
+                                   <input type="text" title="" placeholder="Email" class="w100p" id="email" name="email" />
+                                </td>
+                            </tr>
+                            <tr id="editRow1_6">
+                                <th scope="row">Mobile No.</th>
+                                <td>
+                                   <input type="text" title="" placeholder="Numeric Only" class="w100p" id="mobileNo" name="mobileNo" maxlength="11" onKeyDown="fn_checkMobileNo()"
+                                    onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
+                                </td>
+                                <th scope="row">Office No.</th>
+                                <td>
+                                   <input type="text" title="" placeholder="Numberic Only" class="w100p"  id="officeNo" name="officeNo"
+                                    onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
+                                </td>
+                                <th scope="row">Residence No.</th>
+                                <td>
+                                   <input type="text" title="" placeholder="Numberic Only" class="w100p" id="residenceNo"  name="residenceNo"
+                                    onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
+                                </td>
+                            </tr>
+                            <tr id="editRow1_7">
+                                <th scope="row">Sponsor's Code</th>
+                                <td>
+                                   <div class="search_100p"><!-- search_100p start -->
+                                       <input type="text" title="" placeholder="Sponsor's Code" class="w100p" id="sponsorCd" name="sponsorCd"/>
+                                       <a href="javascript:fn_sponsorPop();" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                                   </div><!-- search_100p end -->
+                                </td>
+                                <th scope="row">Sponsor's Name</th>
+                                <td>
+                                   <input type="text" title="" placeholder="Sponsor's Name" class="w100p"  id="sponsorNm" name="sponsorNm"/>
+                                </td>
+                                <th scope="row">Sponsor's NRIC</th>
+                                <td>
+                                   <input type="text" title="" placeholder="Sponsor's NRIC" class="w100p" id="sponsorNric" name="sponsorNric"/>
+                                </td>
+                            </tr>
+                            <tr id="editRow1_8">
+                                <th scope="row">Branch</th>
+                                <td id="selectBranchCol">
+                                    <!-- <span><c:out value="${memberView.c4} - ${memberView.c5} " /></span>-->
+                                    <select class="w100p"  id="selectBranch" name="selectBranch">
+                                    <option value="0">Choose One</option>
+                                        <c:forEach var="list" items="${branch}" varStatus="status">
+                                           <option value="${list.brnchId}">${list.branchCode} - ${list.branchName}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                                <!--
+                                <td>
+                                <select class="w100p" id="branch" name="branch">
+                                </select>
+                                </td>
+                                -->
+                                <th scope="row" id="deptCodeLbl">Department Code<span class="must">*</span></th>
+                                <td id="deptCode">
+                                    <%-- <c:choose>
+                                        <c:when test = "${memberView.memType =='2803'}">
+                                            <select class="w100p" id="deptCd" name="deptCd">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span><c:out value="${memberView.c41}"/></span>
+                                        </c:otherwise>
+                                    </c:choose> --%>
+                                    <span><c:out value="${memberView.c41}"/></span>
+                                    <!-- <span><c:out value="${memberView.c41} - ${memberView.c22} - ${memberView.c23} "/></span> -->
+                                </td>
+                                <!--
+                                <td>
+                                <select class="w100p" id="deptCd" name="deptCd">
+                                </select>
+                                </td>
+                                -->
+                                <th scope="row" id="transportCodeLbl">Transport Code</th>
+                                <td id="transportCdCol">
+                                    <select class="w100p"  id="transportCd" name="transportCd"></select>
+                                </td>
+                            </tr>
+                            <tr id="editRow1_9">
+                                <th scope="row" id="meetingPointLbl">Reporting Branch</th>
+                                <td colspan="5">
+                                    <select class="w100p" id="meetingPoint" name="meetingPoint"></select>
+                                </td>
+                            </tr>
+                            <tr id="editRow1_10">
+                                <th scope="row">e-Approval Status</th>
+                                <td colspan="5">
+                                    <input type="text" title="" placeholder="e-Approval Status" class="w100p" />
+                                </td>
+                            </tr>
+                            <tr id="editRow1_11">
+                                <th scope="row">Religion</th>
+                                <td colspan="2">
+                                    <select class="w100p" id="religion" name="religion">
+                                        <option value="">Choose One</option>
+                                        <c:forEach var="list" items="${Religion}" varStatus="status">
+                                            <option value="${list.detailcodeid}">${list.detailcodename } </option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                                <th scope="row">e-Approval Status</th>
+                                <td colspan="2">
+                                    <select class="w100p" id=statusID name=statusID>
+                                        <option value="1">Active</option>
+                                        <option value="44">Pending</option>
+                                        <option value="5">Approved</option>
+                                        <option value="6">Rejected</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr id="editRow1_12">
+                                <th scope="row">Training Course</th>
+                                <td colspan="2">
+                                    <select class="w100p" id="course" name="course">
+                                </select>
+                                </td>
+                                <th scope="row">Total Vacation</th>
+                                <td colspan="2">
+                                    <input type="text" title="" placeholder="Total Vacation" class="w100p" />
+                                </td>
+                            </tr>
+                            <tr id="editRow1_13">
+                                <th scope="row">Application Status</th>
+                                <td colspan="2">
+                                    <select class="w100p">
+                                        <option value="">Register</option>
+                                        <option value="">Training</option>
+                                        <option value="">Result-fail</option>
+                                        <option value="">Pass, Absent</option>
+                                        <option value="">Confirmed</option>
+                                        <option value="">Cancelled</option>
+                                    </select>
+                                </td>
+                                <th scope="row">Remain Vacation</th>
+                                <td colspan="2">
+                                    <input type="text" title="" placeholder="Remain Vacation" class="w100p" />
+                                </td>
+                            </tr>
+                            <tr id="editRow1_14">
+                                <th scope="row" id="searchdepartmentLbl">Main Department</th>
+                                <td id="searchdepartmentcol" colspan="2">
+                                    <select class="w100p" id="searchdepartment" name="searchdepartment"  >
+                                        <option selected>Choose One</option>
+                                        <c:forEach var="list" items="${mainDeptList}" varStatus="status">
+                                            <option value="${list.deptId}">${list.deptName } </option>
+                                        </c:forEach>
+                                </select>
+                                </td>
+                                <!--
+                                <th scope="row" id="subDeptLbl">Sub Department</th>
+                                <td id="subDeptLblCol" colspan="2">
+                                    <select class="w100p" id="inputSubDept" name="inputSubDept">
+                                        <option selected>Choose One</option>
+                                        <c:forEach var="list" items="${subDeptList}" varStatus="status">
+                                            <option value="${list.codeId}">${list.codeName } </option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                                 -->
+                            </tr>
+                            <tr id="editRow1_15">
+                                <th scope="row">Businesses Type</th>
+                                <td>
+                                    <select class="w100p" id="businessType" name="businessType"></select>
+                                </td>
+                                <th scope="row">Hospitalization</th>
+                                <td>
+                                    <span><input type="checkbox" id="hsptlzCheck" name="hsptlzCheck" disabled = "disabled"
+                                        <c:if test="${memberView.hsptlz eq '1'}">checked</c:if>/>
+                                    </span>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr id="trMobileUseYn">
+                                <th scope="row">Mobile App</th>
+                                <td colspan="4">
+                                    <label><input type="radio" name="mobileUseYn" id="mobileUseYn" value="Y" <c:if test="${memberView.mobileUseYn eq 'Y'}">checked</c:if>/><span>Use</span></label>
+                                    <label><input type="radio" name="mobileUseYn" id="mobileUseYn" value="N" <c:if test="${memberView.mobileUseYn eq 'N'}">checked</c:if>/><span>Unused</span></label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table><!-- table end -->
 
-    </select>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Postcode<span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="postCode" name="postCode">
-    </select>
-    </td>
-    <th scope="row">Email</th>
-    <td colspan="3">
-    <input type="text" title="" placeholder="Email" class="w100p" id="email" name="email"/>
-    </td>
-</tr> --%>
-<tr>
-    <th scope="row">Email</th>
-    <td colspan="5">
-    <input type="text" title="" placeholder="Email" class="w100p" id="email" name="email" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Mobile No.</th>
-    <td>
-    <input type="text" title="" placeholder="Numeric Only" class="w100p" id="mobileNo" name="mobileNo" maxlength="11" onKeyDown="fn_checkMobileNo()"
-        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
-    </td>
-    <th scope="row">Office No.</th>
-    <td>
-    <input type="text" title="" placeholder="Numberic Only" class="w100p"  id="officeNo" name="officeNo"
-        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
-    </td>
-    <th scope="row">Residence No.</th>
-    <td>
-    <input type="text" title="" placeholder="Numberic Only" class="w100p" id="residenceNo"  name="residenceNo"
-        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Sponsor's Code</th>
-    <td>
+                    <!-- title_line start -->
+                    <aside class="title_line">
+                        <h2>Bank Account Information</h2>
+                    </aside>
+                    <!-- title_line end -->
 
-    <div class="search_100p"><!-- search_100p start -->
-    <input type="text" title="" placeholder="Sponsor's Code" class="w100p" id="sponsorCd" name="sponsorCd"/>
-    <a href="javascript:fn_sponsorPop();" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-    </div><!-- search_100p end -->
+                    <!-- table start -->
+                    <table class="type1">
+                        <caption>table</caption>
+                        <colgroup>
+                            <col style="width:150px" />
+                            <col style="width:*" />
+                            <col style="width:180px" />
+                            <col style="width:*" />
+                        </colgroup>
+                        <tbody>
+                            <tr id="editRow1_16">
+                                <th scope="row">Issued Bank<span class="must">*</span></th>
+                                <td>
+                                    <select class="w100p" id="issuedBank" name="issuedBank"></select>
+                                </td>
+                                <th scope="row">Bank Account No<span class="must">*</span></th>
+                                <td>
+                                    <input type="text" title="" placeholder="Bank Account No" class="w100p" id="bankAccNo"  name="bankAccNo" onKeyDown="checkBankAccNoEnter()"
+                                     onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- table end -->
 
-    </td>
-    <th scope="row">Sponsor's Name</th>
-    <td>
-    <input type="text" title="" placeholder="Sponsor's Name" class="w100p"  id="sponsorNm" name="sponsorNm"/>
-    </td>
-    <th scope="row">Sponsor's NRIC</th>
-    <td>
-    <input type="text" title="" placeholder="Sponsor's NRIC" class="w100p" id="sponsorNric" name="sponsorNric"/>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Branch</th>
-    <td>
-     <!-- <span><c:out value="${memberView.c4} - ${memberView.c5} " /></span>-->
-     <select class="w100p"  id="selectBranch" name="selectBranch">
-        <option value="0">Choose One</option>
-        <c:forEach var="list" items="${branch}" varStatus="status">
-           <option value="${list.brnchId}">${list.branchCode} - ${list.branchName}</option>
-        </c:forEach>
-    </select>
-    </td>
-    <!--
-    <td>
-    <select class="w100p" id="branch" name="branch">
-    </select>
-    </td>
-    -->
-    <th scope="row">Department Code<span class="must">*</span></th>
-    <td>
-        <%-- <c:choose>
-            <c:when test = "${memberView.memType =='2803'}">
-                <select class="w100p" id="deptCd" name="deptCd">
-            </c:when>
-            <c:otherwise>
-                <span><c:out value="${memberView.c41}"/></span>
-            </c:otherwise>
-        </c:choose> --%>
-     <span><c:out value="${memberView.c41}"/></span>
-     <!-- <span><c:out value="${memberView.c41} - ${memberView.c22} - ${memberView.c23} "/></span> -->
-    </td>
-    <!--
-    <td>
-    <select class="w100p" id="deptCd" name="deptCd">
-    </select>
-    </td>
-    -->
-    <th scope="row">Transport Code</th>
-    <td>
-    <select class="w100p"  id="transportCd" name="transportCd">
-    </select>
-    </td>
-</tr>
-<tr>
-    <th scope="row" id="meetingPointLbl">Reporting Branch</th>
-    <td colspan="5">
-        <select class="w100p" id="meetingPoint" name="meetingPoint"></select>
-    </td>
-</tr>
-<tr>
-    <th scope="row">e-Approval Status</th>
-    <td colspan="5">
-    <input type="text" title="" placeholder="e-Approval Status" class="w100p" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Religion</th>
-    <td colspan="2">
-    <select class="w100p" id="religion" name="religion">
-            <option value="">Choose One</option>
-        <c:forEach var="list" items="${Religion}" varStatus="status">
-            <option value="${list.detailcodeid}">${list.detailcodename } </option>
-        </c:forEach>
-    </select>
-    </td>
-    <th scope="row">e-Approval Status</th>
-    <td colspan="2">
-    <select class="w100p" id=statusID name=statusID>
-        <option value="1">Active</option>
-        <option value="44">Pending</option>
-        <option value="5">Approved</option>
-        <option value="6">Rejected</option>
-    </select>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Training Course</th>
-    <td colspan="2">
-    <select class="w100p" id="course" name="course">
-    </select>
-    </td>
-    <th scope="row">Total Vacation</th>
-    <td colspan="2">
-    <input type="text" title="" placeholder="Total Vacation" class="w100p" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Application Status</th>
-    <td colspan="2">
-    <select class="w100p">
-        <option value="">Register</option>
-        <option value="">Training</option>
-        <option value="">Result-fail</option>
-        <option value="">Pass, Absent</option>
-        <option value="">Confirmed</option>
-        <option value="">Cancelled</option>
-    </select>
-    </td>
-    <th scope="row">Remain Vacation</th>
-    <td colspan="2">
-    <input type="text" title="" placeholder="Remain Vacation" class="w100p" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Main Department</th>
-    <td colspan="2">
-    <select class="w100p" id="searchdepartment" name="searchdepartment"  >
-        <option selected>Choose One</option>
-         <c:forEach var="list" items="${mainDeptList}" varStatus="status">
-             <option value="${list.deptId}">${list.deptName } </option>
-        </c:forEach>
-    </select>
-    </td>
-    <th scope="row">Sub Department</th>
-    <td colspan="2">
-    <select class="w100p" id="inputSubDept" name="inputSubDept">
-        <option selected>Choose One</option>
-        <c:forEach var="list" items="${subDeptList}" varStatus="status">
-             <option value="${list.codeId}">${list.codeName } </option>
-        </c:forEach>
-    </select>
-    </td>
-</tr>
-<tr>
-<th scope="row">Businesses Type</th>
-      <td>
-         <select class="w100p" id="businessType" name="businessType">
-    </select>
-    </td>
-    <th scope="row">Hospitalization</th>
-    <td>
-        <span><input type="checkbox" id="hsptlzCheck" name="hsptlzCheck" disabled = "disabled"
-            <c:if test="${memberView.hsptlz eq '1'}">checked</c:if>/>
-        </span>
-    </td>
+                    <!-- title_line start -->
+                    <aside id="languageTitle" class="title_line">
+                        <h2>Language Proficiency</h2>
+                    </aside>
+                    <!-- title_line end -->
 
+                    <!-- table start -->
+                    <table id="languageTable" class="type1">
+                        <caption>table</caption>
+                        <colgroup>
+                            <col style="width:150px" />
+                            <col style="width:*" />
+                            <col style="width:180px" />
+                            <col style="width:*" />
+                        </colgroup>
+                        <tbody>
+                            <tr id="editRow1_17">
+                                <th scope="row">Education Level</th>
+                                <td>
+                                   <select class="w100p" id="educationLvl" name="educationLvl"></select>
+                                </td>
+                                <th scope="row">Language</th>
+                                <td>
+                                   <select class="w100p" id="language" name="language"></select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- table end -->
 
- <td>
- </td>
-</tr>
-<tr id="trMobileUseYn">
-    <th scope="row">Mobile App</th>
-    <td colspan="4">
-        <label><input type="radio" name="mobileUseYn" id="mobileUseYn" value="Y" <c:if test="${memberView.mobileUseYn eq 'Y'}">checked</c:if>/><span>Use</span></label>
-        <label><input type="radio" name="mobileUseYn" id="mobileUseYn" value="N" <c:if test="${memberView.mobileUseYn eq 'N'}">checked</c:if>/><span>Unused</span></label>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
+                    <!-- title_line start -->
+                    <aside id="trConsignTitle" class="title_line">
+                        <h2>First TR Consign</h2>
+                    </aside>
+                    <!-- title_line end -->
 
-<aside class="title_line"><!-- title_line start -->
-<h2>Bank Account Information</h2>
-</aside><!-- title_line end -->
+                    <!-- table start -->
+                    <table id="trConsignTable" class="type1">
+                        <caption>table</caption>
+                        <colgroup>
+                            <col style="width:150px" />
+                            <col style="width:*" />
+                        </colgroup>
+                        <tbody>
+                            <tr id="editRow1_18">
+                                <th scope="row">TR No.</th>
+                                <td>
+                                    <input type="text" title="" placeholder="TR No." class="w100p" id="trNo" name="trNo"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- table end -->
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Issued Bank<span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="issuedBank" name="issuedBank">
-    </select>
-    </td>
-    <th scope="row">Bank Account No<span class="must">*</span></th>
-    <td>
-    <input type="text" title="" placeholder="Bank Account No" class="w100p" id="bankAccNo"  name="bankAccNo" onKeyDown="checkBankAccNoEnter()"
-        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
+                    <!-- title_line start -->
+                    <aside class="title_line" id="hideContentTitle">
+                        <h2>Agreement</h2>
+                    </aside>
+                    <!-- title_line end -->
 
-<aside class="title_line"><!-- title_line start -->
-<h2>Language Proficiency</h2>
-</aside><!-- title_line end -->
+                    <!-- table start -->
+                    <table class="type1" id="hideContent">
+                        <caption>table</caption>
+                        <colgroup>
+                            <col style="width:150px" />
+                            <col style="width:*" />
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th scope="row"  class="hideContent">Cody PA Expiry<span class="must">*</span></th>
+                            <td  class="hideContent">
+                               <%-- <span><span><c:out value="${PAExpired.agExprDt}"/></span></span>  --%>
+                               <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="codyPaExpr" name="codyPaExpr"  value="${PAExpired.agExprDt}"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <!-- table end -->
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Education Level</th>
-    <td>
-    <select class="w100p" id="educationLvl" name="educationLvl">
-    </select>
-    </td>
-    <th scope="row">Language</th>
-    <td>
-    <select class="w100p" id="language" name="language">
-    </select>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
+                    <ul class="center_btns">
+                        <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
+                        <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
+                    </ul>
 
-<aside class="title_line"><!-- title_line start -->
-<h2>First TR Consign</h2>
-</aside><!-- title_line end -->
+                </article>
+                <!-- tap_area end -->
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">TR No.</th>
-    <td>
-    <input type="text" title="" placeholder="TR No." class="w100p" id="trNo" name="trNo"/>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
+                <!-- ================================================================ -->
 
-<aside class="title_line" id="hideContentTitle"><!-- title_line start -->
-<h2>Agreement</h2>
-</aside><!-- title_line end -->
+                <!-- Spouse Info -->
+                <!-- tap_area start -->
+                <article id="spouseInfoDisplay" class="tap_area">
 
-<table class="type1" id="hideContent"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row"  class="hideContent">Cody PA Expiry<span class="must">*</span></th>
-    <td  class="hideContent">
-    <%-- <span><span><c:out value="${PAExpired.agExprDt}"/></span></span>  --%>
-    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="codyPaExpr" name="codyPaExpr"  value="${PAExpired.agExprDt}"/>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
+                    <!-- table start -->
+                    <table class="type1">
+                        <caption>table</caption>
+                        <colgroup>
+                            <col style="width:120px" />
+                            <col style="width:*" />
+                            <col style="width:130px" />
+                            <col style="width:*" />
+                            <col style="width:180px" />
+                            <col style="width:*" />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th scope="row">MCode</th>
+                                <td>
+                                    <input type="text" title="" placeholder="MCode" class="w100p" id="spouseCode" name="spouseCode"  value="<c:out value="${memberView.spouseCode}"/>"/>
+                                </td>
+                                <th scope="row">Spouse Name</th>
+                                <td>
+                                    <input type="text" title="" placeholder="Spouse Nam" class="w100p" id="spouseName" name="spouseName" value="<c:out value="${memberView.spouseName}"/>"/>
+                                </td>
+                                <th scope="row">NRIC / Passport No.</th>
+                                <td>
+                                    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p" id="spouseNric" name="spouseNric" value="<c:out value="${memberView.spouseNric}"/>" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Occupation</th>
+                                <td>
+                                    <input type="text" title="" placeholder="Occupation" class="w100p" id="spouseOcc" value="<c:out value="${memberView.spouseOcpat}"/>" />
+                                </td>
+                                <th scope="row">Date of Birth</th>
+                                <td>
+                                    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="spouseDob" name="spouseDob" value="<c:out value="${memberView.c58}"/>" />
+                                </td>
+                                <th scope="row">Contact No.</th>
+                                <td>
+                                    <input type="text" title="" placeholder="Contact No. (Numberic Only)" class="w100p" id="spouseContat" name="spouseContat" value="<c:out value="${memberView.spouseTelCntc}"/>" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- table end -->
 
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
-</ul>
+                    <ul class="center_btns">
+                        <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
+                        <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
+                    </ul>
 
-</article><!-- tap_area end -->
+                </article>
+                <!-- tap_area end -->
 
-<article class="tap_area"><!-- tap_area start -->
+                <!-- ================================================================ -->
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:120px" />
-    <col style="width:*" />
-    <col style="width:130px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">MCode</th>
-    <td>
-    <input type="text" title="" placeholder="MCode" class="w100p" id="spouseCode" name="spouseCode"  value="<c:out value="${memberView.spouseCode}"/>"/>
-    </td>
-    <th scope="row">Spouse Name</th>
-    <td>
-    <input type="text" title="" placeholder="Spouse Nam" class="w100p" id="spouseName" name="spouseName" value="<c:out value="${memberView.spouseName}"/>"/>
-    </td>
-    <th scope="row">NRIC / Passport No.</th>
-    <td>
-    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p" id="spouseNric" name="spouseNric" value="<c:out value="${memberView.spouseNric}"/>" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Occupation</th>
-    <td>
-    <input type="text" title="" placeholder="Occupation" class="w100p" id="spouseOcc" value="<c:out value="${memberView.spouseOcpat}"/>" />
-    </td>
-    <th scope="row">Date of Birth</th>
-    <td>
-    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="spouseDob" name="spouseDob" value="<c:out value="${memberView.c58}"/>" />
-    </td>
-    <th scope="row">Contact No.</th>
-    <td>
-    <input type="text" title="" placeholder="Contact No. (Numberic Only)" class="w100p" id="spouseContat" name="spouseContat" value="<c:out value="${memberView.spouseTelCntc}"/>" />
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
+                <!-- Document Submission -->
+                <!-- tap_area start -->
+                <article id="documentSubDisplay" class="tap_area">
+                    <div id="grid_wrap_doc" style="width: 100%; height:430px; margin: 0 auto;"></div>
 
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
-</ul>
+                    <ul class="center_btns">
+                        <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
+                        <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
+                    </ul>
+                </article>
+                <!-- tap_area end -->
 
-</article><!-- tap_area end -->
+        </form>
 
-<article class="tap_area"><!-- tap_area start -->
-<div id="grid_wrap_doc" style="width: 100%; height:430px; margin: 0 auto;"></div>
+        <!-- ================================================================ -->
 
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
-</ul>
-</article><!-- tap_area end -->
+        <!-- tap_area start -->
+        <article class="tap_area">
+            <!-- title_line start -->
+            <aside class="title_line">
+               <h2>Installation Address</h2>
+            </aside>
+            <!-- title_line end -->
 
+            <form id="insAddressForm" name="insAddressForm" method="POST">
 
-</form>
-<article class="tap_area"><!-- tap_area start -->
+                <!-- table start -->
+                <table class="type1">
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width:135px" />
+                        <col style="width:*" />
+                        <col style="width:130px" />
+                        <col style="width:*" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Area search<span class="must">*</span></th>
+                            <td colspan="3">
+                               <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" value="<c:out value="${memberView.area}"/> "/><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" >Address Detail<span class="must">*</span></th>
+                            <td colspan="3">
+                               <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.addrDtl}"/>" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" >Street</th>
+                            <td colspan="3">
+                               <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.street}"/>" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Area(4)<span class="must">*</span></th>
+                            <td colspan="3">
+                               <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">City(2)<span class="must">*</span></th>
+                            <td>
+                               <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
+                            </td>
+                            <th scope="row">PostCode(3)<span class="must">*</span></th>
+                            <td>
+                               <select class="w100p" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">State(1)<span class="must">*</span></th>
+                            <td>
+                               <select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
+                            </td>
+                            <th scope="row">Country<span class="must">*</span></th>
+                            <td>
+                               <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table><!-- table end -->
+            </form>
 
-<aside class="title_line"><!-- title_line start -->
-<h2>Installation Address</h2>
-</aside><!-- title_line end -->
+            <ul class="center_btns">
+                <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
+                <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
+            </ul>
 
-<form id="insAddressForm" name="insAddressForm" method="POST">
+        </article><!-- tap_area end -->
 
-    <table class="type1"><!-- table start -->
-    <caption>table</caption>
-    <colgroup>
-        <col style="width:135px" />
-        <col style="width:*" />
-        <col style="width:130px" />
-        <col style="width:*" />
-    </colgroup>
-         <tbody>
-            <tr>
-                <th scope="row">Area search<span class="must">*</span></th>
-                <td colspan="3">
-                <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" value="<c:out value="${memberView.area}"/> "/><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row" >Address Detail<span class="must">*</span></th>
-                <td colspan="3">
-                <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.addrDtl}"/>" />
-                </td>
-            </tr>
-            <tr>
-                <th scope="row" >Street</th>
-                <td colspan="3">
-                <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.street}"/>" />
-                </td>
-            </tr>
-            <tr>
-               <th scope="row">Area(4)<span class="must">*</span></th>
-                <td colspan="3">
-                <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
-                </td>
-            </tr>
-            <tr>
-                 <th scope="row">City(2)<span class="must">*</span></th>
-                <td>
-                <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
-                </td>
-                <th scope="row">PostCode(3)<span class="must">*</span></th>
-                <td>
-                <select class="w100p" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">State(1)<span class="must">*</span></th>
-                <td>
-                <select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
-                </td>
-                <th scope="row">Country<span class="must">*</span></th>
-                <td>
-                <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
-                </td>
-            </tr>
-        </tbody>
-    </table><!-- table end -->
-</form>
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">CANCEL</a></p></li>
-</ul>
-
-</article><!-- tap_area end -->
-
-</section><!-- tap_wrap end -->
+    </section><!-- tap_wrap end -->
 
 
 </div><!-- popup_wrap end -->

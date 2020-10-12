@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
 /********************************Global Variable Start***********************************/
@@ -16,7 +15,6 @@ function chkPwd(str){
     if(regPwd.test(str)){
         return true;
     }
-
     return false;
 }
 
@@ -25,26 +23,24 @@ function chkDate(str){
     if(regStr.test(str)){
         return true;
     }
-
     return false;
 }
 
 function chkEmail(str){
     var regStr = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-    if(regStr.test(str) && str.indexOf("@coway.com.my") > -1){
-        return true;
-    }
 
+    if($("#userTypeId").val() == "4" || $("#userTypeId").val() == "6") {
+        if(regStr.test(str) && str.indexOf("@coway.com.my") > -1){
+            return true;
+        }
+    }
     return false;
 }
-
-
 
 function convDateForm(date){
     var parts = date.split("/");
     return new Date(parts[2], parts[1] - 1, parts[0]);
 }
-
 
 /****************************Function  End***********************************
  *
@@ -52,58 +48,52 @@ function convDateForm(date){
 /****************************Transaction Start********************************/
 
 function fn_userTypeCodesearch(){
-    Common.ajax(
-            "GET",
-            "/common/userManagement/selectUserTypeList.do",
-            "",
-            function(data, textStatus, jqXHR){ // Success
-                for(var idx=0; idx < data.length ; idx++){
-                	$("#userTypeId").append("<option value='"+data[idx].codeId+"'>"+data[idx].codeName+"</option>");
-                }
-            },
-            function(jqXHR, textStatus, errorThrown){ // Error
-                alert("Fail : " + jqXHR.responseJSON.message);
+    Common.ajax("GET", "/common/userManagement/selectUserTypeList.do", "", function(data, textStatus, jqXHR){ // Success
+        for(var idx=0; idx < data.length ; idx++){
+            if(data[idx].codeId == '4' || data[idx].codeId == '6' || data[idx].codeId == '1161' || data[idx].codeId == '1165') {
+                $("#userTypeId").append("<option value='"+data[idx].codeId+"'>"+data[idx].codeName+"</option>");
             }
-    )
+        }
+    }, function(jqXHR, textStatus, errorThrown){ // Error
+        alert("Fail : " + jqXHR.responseJSON.message);
+    })
 };
 
 function fn_brnchCodesearch(){
-    Common.ajax(
-            "GET",
-            "/common/userManagement/selectBranchList.do",
-            "",
-            function(data, textStatus, jqXHR){ // Success
-                for(var idx=0; idx < data.length ; idx++){
-                    $("#saveForm #userBrnchId").append("<option value='"+data[idx].brnchId+"'>"+data[idx].name+"</option>");
-                }
-            },
-            function(jqXHR, textStatus, errorThrown){ // Error
-                alert("Fail : " + jqXHR.responseJSON.message);
-            }
-    )
+    Common.ajax("GET", "/common/userManagement/selectBranchList.do", "", function(data, textStatus, jqXHR){ // Success
+        for(var idx=0; idx < data.length ; idx++){
+            $("#saveForm #userBrnchId").append("<option value='"+data[idx].brnchId+"'>"+data[idx].name+"</option>");
+        }
+    }, function(jqXHR, textStatus, errorThrown){ // Error
+        alert("Fail : " + jqXHR.responseJSON.message);
+    })
 };
 
 function fn_departmentCodesearch(divCd){
-    Common.ajax(
-            "GET",
-            "/common/userManagement/selectDeptList.do",
-            "divCd="+divCd,
-            function(data, textStatus, jqXHR){ // Success
-            	if(divCd == "2"){
-            		for(var idx=0; idx < data.length ; idx++){
-                        $("#saveForm #userDeptId1").append("<option value='"+data[idx].deptId+"'>"+data[idx].deptName+"</option>");
-                    }
-            	}else{
-            		for(var idx=0; idx < data.length ; idx++){
-                        $("#saveForm #userDeptId").append("<option value='"+data[idx].deptId+"'>"+data[idx].deptName+"</option>");
-                    }
-            	}
-
-            },
-            function(jqXHR, textStatus, errorThrown){ // Error
-                alert("Fail : " + jqXHR.responseJSON.message);
+    Common.ajax("GET", "/common/userManagement/selectDeptList.do", "divCd="+divCd, function(data, textStatus, jqXHR){ // Success
+        if(divCd == "2"){
+            for(var idx=0; idx < data.length ; idx++){
+                $("#saveForm #userDeptId1").append("<option value='"+data[idx].deptId+"'>"+data[idx].deptName+"</option>");
             }
+        }else{
+            for(var idx=0; idx < data.length ; idx++){
+                $("#saveForm #userDeptId").append("<option value='"+data[idx].deptId+"'>"+data[idx].deptName+"</option>");
+            }
+        }
+    }, function(jqXHR, textStatus, errorThrown){ // Error
+        alert("Fail : " + jqXHR.responseJSON.message);
+        }
     )
+};
+
+function fn_deptList(branchId) {
+    Common.ajax("GET", "/common/userManagement/getDeptList.do", "branchId=" + branchId, function(data, textStatus, jqXHR) {
+        for(var i = 0; i < data.length; i++) {
+            $("#saveForm #userDeptId").append("<option value='"+data[i].codeId+"'>"+data[i].codeName+"</option>");
+        }
+    }, function(jqXHR, textStatus, errorThrown){ // Error
+        alert("Fail : " + jqXHR.responseJSON.message);
+    })
 };
 
 function fn_roleCodesearch(roleLev,parentRole){
@@ -122,67 +112,46 @@ function fn_roleCodesearch(roleLev,parentRole){
         $("#saveForm #roleId3").append("<option value=''>- Select -</option>");
         return;
      }
-	 Common.ajax(
-	            "GET",
-	            "/common/userManagement/selectRoleList.do",
-	            "roleLev="+roleLev+"&parentRole="+parentRole,
-	            function(data, textStatus, jqXHR){ // Success
-	                if(roleLev == "1"){
-	                	$("#saveForm select[id='roleId1'] option").remove();
-	                	$("#saveForm select[id='roleId2'] option").remove();
-                        $("#saveForm select[id='roleId3'] option").remove();
 
-                        $("#saveForm #roleId1").append("<option value=''>- Select -</option>");
-                        $("#saveForm #roleId2").append("<option value=''>- Select -</option>");
-                        $("#saveForm #roleId3").append("<option value=''>- Select -</option>");
+	 Common.ajax("GET", "/common/userManagement/selectRoleList.do", "roleLev="+roleLev+"&parentRole="+parentRole, function(data, textStatus, jqXHR) { // Success
+	     if(roleLev == "1"){
+	         $("#saveForm select[id='roleId1'] option").remove();
+	         $("#saveForm select[id='roleId2'] option").remove();
+             $("#saveForm select[id='roleId3'] option").remove();
 
-	                	for(var idx=0; idx < data.length ; idx++){
-	                        $("#saveForm #roleId1").append("<option value='"+data[idx].roleId+"'>"+data[idx].roleCode+"</option>");
-	                    }
+             $("#saveForm #roleId1").append("<option value=''>- Select -</option>");
+             $("#saveForm #roleId2").append("<option value=''>- Select -</option>");
+             $("#saveForm #roleId3").append("<option value=''>- Select -</option>");
 
-	                }else if(roleLev == "2"){
+	         for(var idx=0; idx < data.length ; idx++){
+	             $("#saveForm #roleId1").append("<option value='"+data[idx].roleId+"'>"+data[idx].roleCode+"</option>");
 
-                        $("#saveForm select[id='roleId2'] option").remove();
-                        $("#saveForm select[id='roleId3'] option").remove();
+	         }
+	     } else if(roleLev == "2") {
+	         $("#saveForm select[id='roleId2'] option").remove();
+             $("#saveForm select[id='roleId3'] option").remove();
 
-                        $("#saveForm #roleId2").append("<option value=''>- Select -</option>");
-                        $("#saveForm #roleId3").append("<option value=''>- Select -</option>");
+             $("#saveForm #roleId2").append("<option value=''>- Select -</option>");
+             $("#saveForm #roleId3").append("<option value=''>- Select -</option>");
 
-                        for(var idx=0; idx < data.length ; idx++){
-                            $("#saveForm #roleId2").append("<option value='"+data[idx].roleId+"'>"+data[idx].roleCode+"</option>");
-                        }
-                    }else{
+             for(var idx=0; idx < data.length ; idx++){
+                 $("#saveForm #roleId2").append("<option value='"+data[idx].roleId+"'>"+data[idx].roleCode+"</option>");
+             }
 
-                        $("#saveForm select[id='roleId3'] option").remove();
+         } else {
+             $("#saveForm select[id='roleId3'] option").remove();
 
-                        $("#saveForm #roleId3").append("<option value=''>- Select -</option>");
+             $("#saveForm #roleId3").append("<option value=''>- Select -</option>");
 
-	                    for(var idx=0; idx < data.length ; idx++){
-	                        $("#saveForm #roleId3").append("<option value='"+data[idx].roleId+"'>"+data[idx].roleCode+"</option>");
-	                    }
-	                }
+	         for(var idx=0; idx < data.length ; idx++){
+	             $("#saveForm #roleId3").append("<option value='"+data[idx].roleId+"'>"+data[idx].roleCode+"</option>");
+	         }
+	     }
+	 }, function(jqXHR, textStatus, errorThrown) { // Error
+	     alert("Fail : " + jqXHR.responseJSON.message);
+	 }, {async:false , isShowLoader : false}
+	 )};
 
-	            },
-	            function(jqXHR, textStatus, errorThrown){ // Error
-	                alert("Fail : " + jqXHR.responseJSON.message);
-	            },
-	            {async:false , isShowLoader : false}
-	    )
-};
-
-function fn_openMemberPopup(){
-	var popUpObj = Common.popupDiv
-	(
-	     "/common/userManagement/memberCodePop.do"
-	     , ""
-	     , null
-	     , "false"
-	     , "memberCodePop"
-	);
-}
-function popupMemberCallback(result){
-    $("#hrCode").val(result.memCode);
-};
 
 function fn_save(){
 
@@ -282,10 +251,8 @@ function fn_save(){
     if($("#saveForm input[id=userIsExtrnl]").is(":checked")) userIsExtrnl = 1;
 
     debugger;
-    Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
-        Common.ajax(
-                "GET",
-                "/common/userManagement/saveUserManagementList.do",
+    Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
+        Common.ajax("GET", "/common/userManagement/saveUserManagementList.do",
                 $("#saveForm").serialize()+"&userIsPartTm="+userIsPartTm+"&userIsExtrnl="+userIsExtrnl+"&userStusId=1"+"&roleId="+$("#saveForm #roleId3").val(), //Init status is 1
                 function(data, textStatus, jqXHR){ // Success
                     Common.alert("<spring:message code='sys.msg.success' htmlEscape='false'/>",removePopupCallback);
@@ -300,19 +267,65 @@ function fn_save(){
 function onClickSelectMyMenuPop(){
 	mymenuPopSelect($("#select_myMenu option:selected").val());
 }
+
+function checkNRIC(nric, userType) {
+    console.log(nric);
+
+    if(userType == "4" || userType == "6") {
+        Common.ajax("GET", "/common/userManagement/checkUserNric.do", {"nric" : nric}, function(result) {
+            console.log("checkUserNric");
+            if(result.code == "99") {
+                $("#saveForm #userNric").val("");
+                Common.alert(result.message);
+            }
+        });
+    }
+}
 /**************************** Transaction End    ********************************/
 /**************************** Grid setting Start  ******************************/
 /**************************** Program Init Start *******************************/
 $(document).ready(function(){
+    console.log("userManagementNewPop");
     // AUIGrid 그리드를 생성
-	fn_userTypeCodesearch();
-	fn_brnchCodesearch("1");
-	fn_departmentCodesearch("1");
-	fn_departmentCodesearch("2");
-	fn_roleCodesearch("1","");
+    fn_userTypeCodesearch();
+    fn_brnchCodesearch("1");
+    fn_roleCodesearch("1","");
+
+    $("#userDeptId").attr("readonly", true);
+    //$("#userDeptId1").attr("readonly", true);
+    $("#userDeptId1").attr("disabled", true);
+
+    $("#userBrnchId").change(function() {
+        $("#userDeptId").attr("readonly", false);
+        var deptId = $("#userBrnchId").val();
+        $("#userDeptId").empty();
+        $("#saveForm #userDeptId").append("<option value=''>- Select -</option>");
+
+        fn_deptList(deptId);
+    });
+
+    $("#userDeptId").change(function() {
+        $("#userDeptId1").attr("disabled", true);
+        $("#userDeptId1").empty();
+        var deptName = $("#userDeptId option:selected").text();
+        if(deptName == "Careline") {
+            $("#userDeptId1").attr("readonly", false);
+            $("#userDeptId1").attr("disabled", false);
+            fn_departmentCodesearch("2");
+        }
+    });
+
+    $("#saveForm #userNric").keydown(function(event) {
+        if(event.which === 13) {
+            if($("#saveForm #userTypeId").val() != "" || typeof($("#saveForm #userTypeId").val()) != "undefined"){
+                checkNRIC($("#saveForm #userNric").val(), $("#saveForm #userTypeId").val());
+            }
+        }
+    });
 });
 /****************************Program Init End********************************/
 </script>
+
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
@@ -438,10 +451,8 @@ $(document).ready(function(){
     </select>
     <!-- <input id="callCenterYn" type="text" name=""callCenterYn"" title="" placeholder="CallCenter Use Y/N" class="w100p" maxlength="15" /> -->
     </td>
-    <th scope="row">Member Code</th>
+    <th scope="row"></th>
     <td>
-    <input id="hrCode" type="text" name="hrCode" title="" placeholder="Member Code" class="w50p" maxlength="30"/>
-    <a href="#" class="search_btn" onclick="javascript:fn_openMemberPopup()"><img src="/resources/images/common/normal_search.gif" alt="search"></a>
     </td>
 </tr>
 <tr>

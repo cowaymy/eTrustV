@@ -936,10 +936,8 @@ public class MemberListController {
         // ADDED BY TOMMY 27/05/2020 FOR HOSPITALISATION CHECKBOX
         formMap.put("hsptlz",  params.get("hsptlz"));
         // LaiKW - Comment starts here
-        /*
         formMap.put("memberType", formMap.get("memberTypeUpd"));
         formMap.put("MemberID", formMap.get("MemberIDUpd"));
-        */
         // LaiKW - Comment ends here
 
         String memCode = "";
@@ -955,16 +953,16 @@ public class MemberListController {
 
         // update
 
+        /*
 		memCode = (String) formMap.get("memCode");
         memId = (String) formMap.get("MemberID");
         memberType = (String) formMap.get("memberType");
+        */
 
 		// LaiKW - Comment starts here
-        /*
         memCode = (String) formMap.get("memberCodeUpd");
         memId = (String) formMap.get("MemberIDUpd");
         memberType = (String) formMap.get("memberTypeUpd");
-        */
         // LaiKW - Comment ends here
         // doc 공통업데이트
         memberListService.updateDocSub(updList, memId, userId, memberType);
@@ -982,15 +980,20 @@ public class MemberListController {
         int u4 = 0; // Applicant update
         int u5 = 0; // Training course
         int u6 = 0; // Service capacity
+        int u7 = 0; // CD PA update
 
         // Not HP Applicant
         // hp가아닐때
         if (!formMap.get("memberType").toString().equals("2803")) {
             // LaiKW - Comment from here (New)
-            /*
-            if(formMap.containsKey("selectBranchUpd")) {
+            if(formMap.containsKey("selectBranchUpd") || formMap.containsKey("convStaffFlgUpd")) {
+                // Update SYS0047M - Branch/HR Code
                 u1 = memberListService.memberListUpdate_SYS47(formMap);
-                u2 = memberListService.memberListUpdate_ORG05(formMap);
+
+                // Update ORG0005D - Branch ID
+                if(formMap.containsKey("selectBranchUpd")) {
+                    u2 = memberListService.memberListUpdate_ORG05(formMap);
+                }
             }
 
             u3 = memberListService.memberListUpdate_ORG01(formMap);
@@ -1009,15 +1012,22 @@ public class MemberListController {
                 u6 = memberListService.memberListUpdate_ORG15(formMap);
             }
 
+            if(formMap.get("memberType").toString().equals("2")) {
+                if(formMap.containsKey("codyPaExprUpd")) {
+                    u7 = memberListService.memberListUpdate_ORG02(formMap);
+                }
+            }
+
             logger.debug("Non-HP Update :: Branch :: u1 = " + Integer.toString(u1) + ", u2 = " + Integer.toString(u2));
             logger.debug("Non-HP Update :: Member :: u3 = " + Integer.toString(u3));
             logger.debug("Non-HP Update :: Applicant :: u4 = " + Integer.toString(u4));
             logger.debug("Non-HP Update :: Course :: u5 = " + Integer.toString(u5));
             logger.debug("Non-HP Update :: Service capacity :: u6 = " + Integer.toString(u6));
-            */
+            logger.debug("Non-HP Update :: CD PA :: u7 = " + Integer.toString(u7));
             // LaiKW - Comment ends here (New)
 
             // LaiKW - Comment starts here (Old)
+            /*
             // Branch info update (SYS0047M, ORG0005D)
             resultUpc1 = memberListService.memberListUpdate_user(formMap);
             resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
@@ -1048,6 +1058,7 @@ public class MemberListController {
             if(memType.trim().equals("7")) {
                 memberListService.memberListUpdate_memorg3(formMap);
             }
+            */
             // LaiKW - Comment ends here (Old)
 
             /*if(memType.trim().equals("2")) {

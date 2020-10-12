@@ -191,156 +191,154 @@
 
 <update id="saveUserManagementList" parameterType="Map">
 MERGE INTO SYS0047M a
- USING (
-       SELECT #{userId} AS user_id
-				, #{userName} AS user_name
-				, #{userPasswd} AS user_passwd
-				, #{userFullName}AS user_full_name
-				, #{userEmail} AS user_email
-				, #{userStusId} AS user_stus_id
-				, #{userBrnchId} AS user_brnch_id
-				, #{userDeptId} AS user_dept_id
-				, #{userUpdUserId} AS user_upd_user_id
-				, SYSDATE AS user_upd_dt
-				, 0 AS user_sync_chk
-				, #{userNric} AS user_nric
-				, TO_DATE(REPLACE(#{userDtJoin},'/',''),'DDMMYYYY') AS user_dt_join
-				, 0 AS user_gsec_syn_chk
-				, SYSDATE AS user_passwd_last_upd_dt
-				, #{userTypeId} AS user_type_id
-				, #{userPasswd} AS user_dflt_passwd
-				, TO_DATE(REPLACE(#{userValIdFrom},'/',''),'DDMMYYYY') AS user_val_id_from
-				, TO_DATE(REPLACE(#{userValIdTo},'/',''),'DDMMYYYY') AS user_val_id_to
-				, 0 AS user_sec_ques_id
-				, '' AS user_sec_ques_ans
-				, #{userWorkNo} AS user_work_no
-				, #{userMobileNo} AS user_mobile_no
-				, #{userExtNo} AS user_ext_no
-				, #{userDeptId1} AS user_dept_id1
-				, #{userIsPartTm} AS user_is_part_tm
-				, #{userIsExtrnl} AS user_is_extrnl
-
-				, #{callcenterUseYn} AS callcenter_use_yn
-                , #{hrCode} AS hr_code
-          FROM dual
-  ) b
-     ON ( a.user_id = b.user_id )
-   WHEN MATCHED THEN
-        UPDATE
-          SET a.user_upd_dt           = b.user_upd_dt
-              <if test="userName != null and userName !=''">
-              , a.user_name             = b.user_name
-              </if>
-              <if test="userPasswd != null and userPasswd !=''">
-	          , a.user_passwd          = b.user_passwd
-	          </if>
-	          <if test="userFullName != null and userFullName !=''">
-	          , a.user_full_name        = b.user_full_name
-	          </if>
-	          <if test="userEmail != null and userEmail !=''">
-	          , a.user_email              = b.user_email
-	          </if>
-	          <if test="userStusId != null and userStusId !=''">
-	          , a.user_stus_id           = b.user_stus_id
-	          </if>
-	          <if test="userBrnchId != null and userBrnchId !=''">
-	          , a.user_brnch_id         = b.user_brnch_id
-	          </if>
-	          <if test="userDeptId != null and userDeptId !=''">
-	          , a.user_dept_id          = b.user_dept_id
-	          </if>
-	          <if test="userUpdUserId != null and userUpdUserId !=''">
-	          , a.user_upd_user_id    = b.user_upd_user_id
-	          </if>
-	          <if test="userSyncChk != null and userSyncChk !=''">
-	          , a.user_sync_chk        = b.user_sync_chk
-	          </if>
-	          <if test="userNric != null and userNric !=''">
-	          , a.user_nric                = b.user_nric
-	          </if>
-	          <if test="userDtJoin != null and userDtJoin !=''">
-	          , a.user_dt_join           = b.user_dt_join
-	          </if>
-	          <if test="userGsecSynChk != null and userGsecSynChk !=''">
-	          , a.user_gsec_syn_chk  = b.user_gsec_syn_chk
-	          </if>
-	          <if test="userPasswdLastUpdDt != null and userPasswdLastUpdDt !=''">
-	          , a.user_passwd_last_upd_dt = b.user_passwd_last_upd_dt
-	          </if>
-	          <if test="userTypeId != null and userTypeId !=''">
-	          , a.user_type_id           = b.user_type_id
-	          </if>
-	          <if test="userDfltPassWd != null and userDfltPassWd !=''">
-	          , a.user_dflt_passwd    = b.user_dflt_passwd
-	          </if>
-	          <if test="userValIdFrom != null and userValIdFrom !=''">
-	          , a.user_val_id_from      = b.user_val_id_from
-	          </if>
-	          <if test="userValIdTo != null and userValIdTo !=''">
-	          , a.user_val_id_to         = b.user_val_id_to
-	          </if>
-	          <if test="userSecQuesId != null and userSecQuesId !=''">
-	          , a.user_sec_ques_id     = b.user_sec_ques_id
-	          </if>
-	          <if test="userSecQuesAns != null and userSecQuesAns !=''">
-	          , a.user_sec_ques_ans   = b.user_sec_ques_ans
-	          </if>
-	          <if test="userWorkNo != null and userWorkNo !=''">
-	          , a.user_work_no          = b.user_work_no
-	          </if>
-	          <if test="userMobileNo != null and userMobileNo !=''">
-	          , a.user_mobile_no        = b.user_mobile_no
-	          </if>
-	          <if test="userExtNo != null and userExtNo !=''">
-	          , a.user_ext_no            = b.user_ext_no
-	          </if>
-	          <if test="userDeptId1 != null and userDeptId1 !=''">
-	          , a.user_dept_id1         = b.user_dept_id1
-	          </if>
-	          <if test="userIsPartTm != null and userIsPartTm !=''">
-	          , a.user_is_part_tm       = b.user_is_part_tm
-	          </if>
-	          <if test="userIsExtrnl != null and userIsExtrnl !=''">
-	          , a.user_is_extrnl          = b.user_is_extrnl
-	          </if>
-
-	          <if test="callcenterUseYn != null and callcenterUseYn !=''">
-              , a.callcenter_use_yn       = b.callcenter_use_yn
-              </if>
-              <if test="hrCode != null and hrCode !=''">
-              , a.hr_code          = b.hr_code
-              </if>
+USING (
+    SELECT
+        #{userId} AS user_id
+      , UPPER(#{userName}) AS user_name
+      , #{userPasswd} AS user_passwd
+      , UPPER(#{userFullName}) AS user_full_name
+      , #{userEmail} AS user_email
+      , #{userStusId} AS user_stus_id
+      , #{userBrnchId} AS user_brnch_id
+      , #{userDeptId} AS user_dept_id
+      , #{userUpdUserId} AS user_upd_user_id
+      , SYSDATE AS user_upd_dt
+      , 0 AS user_sync_chk
+      , #{userNric} AS user_nric
+      , TO_DATE(REPLACE(#{userDtJoin},'/',''),'DDMMYYYY') AS user_dt_join
+      , 0 AS user_gsec_syn_chk
+      , SYSDATE AS user_passwd_last_upd_dt
+      , #{userTypeId} AS user_type_id
+      , #{userPasswd} AS user_dflt_passwd
+      , TO_DATE(REPLACE(#{userValIdFrom},'/',''),'DDMMYYYY') AS user_val_id_from
+      , TO_DATE(REPLACE(#{userValIdTo},'/',''),'DDMMYYYY') AS user_val_id_to
+      , 0 AS user_sec_ques_id
+      , '' AS user_sec_ques_ans
+      , #{userWorkNo} AS user_work_no
+      , #{userMobileNo} AS user_mobile_no
+      , #{userExtNo} AS user_ext_no
+      , #{userDeptId1} AS user_dept_id1
+      , #{userIsPartTm} AS user_is_part_tm
+      , #{userIsExtrnl} AS user_is_extrnl
+      , #{callcenterUseYn} AS callcenter_use_yn
+      , UPPER(#{userName}) AS hr_code
+    FROM dual
+) b
+ON ( a.user_id = b.user_id )
+WHEN MATCHED THEN
+UPDATE SET
+      a.user_upd_dt           = b.user_upd_dt
+    <if test="userName != null and userName !=''">
+    , a.user_name             = b.user_name
+    </if>
+    <if test="userPasswd != null and userPasswd !=''">
+    , a.user_passwd          = b.user_passwd
+    </if>
+    <if test="userFullName != null and userFullName !=''">
+    , a.user_full_name        = b.user_full_name
+    </if>
+    <if test="userEmail != null and userEmail !=''">
+    , a.user_email              = b.user_email
+    </if>
+    <if test="userStusId != null and userStusId !=''">
+    , a.user_stus_id           = b.user_stus_id
+    </if>
+    <if test="userBrnchId != null and userBrnchId !=''">
+    , a.user_brnch_id         = b.user_brnch_id
+    </if>
+    <if test="userDeptId != null and userDeptId !=''">
+    , a.user_dept_id          = b.user_dept_id
+    </if>
+    <if test="userUpdUserId != null and userUpdUserId !=''">
+    , a.user_upd_user_id    = b.user_upd_user_id
+    </if>
+    <if test="userSyncChk != null and userSyncChk !=''">
+    , a.user_sync_chk        = b.user_sync_chk
+    </if>
+    <if test="userNric != null and userNric !=''">
+    , a.user_nric                = b.user_nric
+    </if>
+    <if test="userDtJoin != null and userDtJoin !=''">
+    , a.user_dt_join           = b.user_dt_join
+    </if>
+    <if test="userGsecSynChk != null and userGsecSynChk !=''">
+    , a.user_gsec_syn_chk  = b.user_gsec_syn_chk
+    </if>
+    <if test="userPasswdLastUpdDt != null and userPasswdLastUpdDt !=''">
+    , a.user_passwd_last_upd_dt = b.user_passwd_last_upd_dt
+    </if>
+    <if test="userTypeId != null and userTypeId !=''">
+    , a.user_type_id           = b.user_type_id
+    </if>
+    <if test="userDfltPassWd != null and userDfltPassWd !=''">
+    , a.user_dflt_passwd    = b.user_dflt_passwd
+    </if>
+    <if test="userValIdFrom != null and userValIdFrom !=''">
+    , a.user_val_id_from      = b.user_val_id_from
+    </if>
+    <if test="userValIdTo != null and userValIdTo !=''">
+    , a.user_val_id_to         = b.user_val_id_to
+    </if>
+    <if test="userSecQuesId != null and userSecQuesId !=''">
+    , a.user_sec_ques_id     = b.user_sec_ques_id
+    </if>
+    <if test="userSecQuesAns != null and userSecQuesAns !=''">
+    , a.user_sec_ques_ans   = b.user_sec_ques_ans
+    </if>
+    <if test="userWorkNo != null and userWorkNo !=''">
+    , a.user_work_no          = b.user_work_no
+    </if>
+    <if test="userMobileNo != null and userMobileNo !=''">
+    , a.user_mobile_no        = b.user_mobile_no
+    </if>
+    <if test="userExtNo != null and userExtNo !=''">
+    , a.user_ext_no            = b.user_ext_no
+    </if>
+    <if test="userDeptId1 != null and userDeptId1 !=''">
+    , a.user_dept_id1         = b.user_dept_id1
+    </if>
+    <if test="userIsPartTm != null and userIsPartTm !=''">
+    , a.user_is_part_tm       = b.user_is_part_tm
+    </if>
+    <if test="userIsExtrnl != null and userIsExtrnl !=''">
+    , a.user_is_extrnl          = b.user_is_extrnl
+    </if>
+    <if test="callcenterUseYn != null and callcenterUseYn !=''">
+    , a.callcenter_use_yn       = b.callcenter_use_yn
+    </if>
+    <if test="hrCode != null and hrCode !=''">
+    , a.hr_code          = b.hr_code
+    </if>
    WHEN NOT MATCHED THEN
         INSERT
         (
-		    a.user_id
-		  , a.user_name
-		  , a.user_passwd
-		  , a.user_full_name
-		  , a.user_email
-		  , a.user_stus_id
-		  , a.user_brnch_id
-		  , a.user_dept_id
-		  , a.user_upd_user_id
-		  , a.user_upd_dt
-		  , a.user_sync_chk
-		  , a.user_nric
-		  , a.user_dt_join
-		  , a.user_gsec_syn_chk
-		  , a.user_passwd_last_upd_dt
-		  , a.user_type_id
-		  , a.user_dflt_passwd
-		  , a.user_val_id_from
-		  , a.user_val_id_to
-		  , a.user_sec_ques_id
-		  , a.user_sec_ques_ans
-		  , a.user_work_no
-		  , a.user_mobile_no
-		  , a.user_ext_no
-		  , a.user_dept_id1
-		  , a.user_is_part_tm
-		  , a.user_is_extrnl
-
+            a.user_id
+          , a.user_name
+          , a.user_passwd
+          , a.user_full_name
+          , a.user_email
+          , a.user_stus_id
+          , a.user_brnch_id
+          , a.user_dept_id
+          , a.user_upd_user_id
+          , a.user_upd_dt
+          , a.user_sync_chk
+          , a.user_nric
+          , a.user_dt_join
+          , a.user_gsec_syn_chk
+          , a.user_passwd_last_upd_dt
+          , a.user_type_id
+          , a.user_dflt_passwd
+          , a.user_val_id_from
+          , a.user_val_id_to
+          , a.user_sec_ques_id
+          , a.user_sec_ques_ans
+          , a.user_work_no
+          , a.user_mobile_no
+          , a.user_ext_no
+          , a.user_dept_id1
+          , a.user_is_part_tm
+          , a.user_is_extrnl
           , a.callcenter_use_yn
           , a.hr_code
         )
@@ -373,7 +371,6 @@ MERGE INTO SYS0047M a
           , b.user_dept_id1
           , b.user_is_part_tm
           , b.user_is_extrnl
-
           , b.callcenter_use_yn
           , b.hr_code
         )
@@ -419,4 +416,87 @@ MERGE INTO SYS0047M a
 	        , b.upd_user_id
         )
 </insert>
+
+<select id="getDeptList" parameterType="Map" resultType="egovMap">
+    SELECT
+        ID CODE_ID,
+        CASE WHEN MAIN_TYPE_ID = 1 THEN NAME
+             ELSE CODE || ' - ' || NAME
+        END CODE_NAME
+    FROM SYS0105M
+    WHERE BRNCH_ID = #{branchId}
+</select>
+
+<insert id="saveMemberDetails" parameterType="Map">
+    INSERT INTO ORG0001D
+    (MEM_ID, MEM_CODE, MEM_TYPE, NAME, FULL_NAME, NRIC, DOB, GENDER, NATION, EMAIL, JOIN_DT, BRNCH, STUS, MAIN_DEPT, SUB_DEPT, CRT_DT, CRT_USER_ID, UPD_DT, UPD_USER_ID)
+    SELECT
+        ORG0001D_MEM_ID_SEQ.NEXTVAL,
+        HR_CODE,
+        #{userTypeId},
+        USER_FULL_NAME,
+        USER_FULL_NAME,
+        USER_NRIC,
+        TO_DATE(SUBSTR(USER_NRIC, 1, 6), 'YYMMDD'),
+        CASE WHEN MOD(SUBSTR(USER_NRIC, -1), 2) = 0 THEN 'F' ELSE 'M' END,
+        '1',
+        USER_EMAIL,
+        USER_DT_JOIN,
+        USER_BRNCH_ID,
+        USER_STUS_ID,
+        (SELECT MAIN_DEPT_CODE FROM SYS0105M WHERE ID = #{userDeptId}),
+        (SELECT SUB_DEPT_CODE FROM SYS0105M WHERE ID = #{userDeptId}),
+        SYSDATE,
+        #{userUpdUserId},
+        SYSDATE,
+        #{userUpdUserId}
+    FROM SYS0047M
+    WHERE USER_NAME = #{userName}
+</insert>
+
+<insert id="saveMemOrgDetails" parameterType="Map">
+    INSERT INTO ORG0005D
+    (MEM_ID, MEM_LVL, ORG_UPD_USER_ID, ORG_UPD_DT, ORG_STUS_CODE_ID, BRNCH_ID)
+    SELECT
+        MEM_ID,
+        '4',
+        #{userUpdUserId},
+        SYSDATE,
+        STUS,
+        BRNCH
+    FROM ORG0001D
+    WHERE MEM_CODE = #{userName}
+</insert>
+
+<select id="getTempStaffCodeType" parameterType="Map" resultType="Integer">
+    SELECT
+        CODE_ID
+    FROM SYS0013M
+    WHERE CODE_MASTER_ID = 1
+    AND CODE = 'TPS'
+</select>
+
+<select id="checkSYS47" parameterType="Map" resultType="Integer">
+    SELECT
+        USER_ID,
+        USER_NAME,
+        HR_CODE
+    FROM SYS0047M
+    WHERE USER_NRIC = #{nric}
+    AND USER_STUS_ID = 1
+</select>
+
+<select id="checkORG01" parameterType="Map" resultType="egovMap">
+    SELECT
+        a.MEM_CODE,
+        a.STUS,
+        b.NAME STUS_DESC,
+        NVL(TO_CHAR(a.RESIGN_DT, 'YYYYMMDD'), '19000101') RESIGN_DT,
+        TO_CHAR(a.TRM_DT, 'DD/MM/YYYY') TRM_DT
+    FROM ORG0001D a
+    JOIN SYS0038M b
+        ON a.STUS = b.STUS_CODE_ID
+    WHERE a.NRIC = #{nric}
+    AND a.STUS in (1, 3, 51)
+</select>
 </mapper>

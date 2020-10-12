@@ -31,18 +31,16 @@ public interface UserManagementMapper {
 	List<EgovMap> selectUserRoleList(Map<String, Object> params);
 
 	void saveUserRoleList(Map<String, Object> params);
+
+	List<EgovMap> getDeptList(Map<String, Object> params);
+
+	void saveMemberDetails(Map<String, Object> params);
+
+	void saveMemOrgDetails(Map<String, Object> params);
+
+	int getTempStaffCodeType();
+
+	List<EgovMap> checkSYS47(Map<String, Object> params);
+
+	List<EgovMap> checkORG01(Map<String, Object> params);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

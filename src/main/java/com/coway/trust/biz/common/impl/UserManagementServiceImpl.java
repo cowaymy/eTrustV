@@ -1,12 +1,20 @@
 package com.coway.trust.biz.common.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.UserManagementService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
+import com.ibm.icu.util.Calendar;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("userManagementService")
@@ -74,6 +82,16 @@ public class UserManagementServiceImpl implements UserManagementService {
 
 		userManagementMapper.saveUserRoleList(params);
 
+		// 20200915 - Added to auto insert temporary staff detail
+		if("0".equals(params.get("userIsPartTm").toString()) && "0".equals(params.get("userIsExtrnl").toString())) {
+		    if("4".equals(params.get("userTypeId").toString())) {
+	            params.put("userTypeId", userManagementMapper.getTempStaffCodeType());
+	        }
+
+	        userManagementMapper.saveMemberDetails(params); // ORG0001D insert
+	        userManagementMapper.saveMemOrgDetails(params); // ORG0005D insert
+		}
+
 	}
 
 	@Override
@@ -102,6 +120,83 @@ public class UserManagementServiceImpl implements UserManagementService {
 		params.put("updUserId", loginId);
 
 		userManagementMapper.saveUserRoleList(params);
+	}
+
+	@Override
+	public List<EgovMap> getDeptList(Map<String, Object> params) {
+	    return userManagementMapper.getDeptList(params);
+	}
+
+	@Override
+	public ReturnMessage checkUserNric(Map<String, Object> params) throws Exception {
+	    ReturnMessage message = new ReturnMessage();
+
+	    String msg = "";
+	    String nric = params.get("nric").toString();
+
+	    List<EgovMap> sys47 = userManagementMapper.checkSYS47(params);
+
+	    // Check SYS0047M NRIC + User status = 1
+	    if(sys47.size() == 1) {
+
+	        // Check ORG0001D
+	        List<EgovMap> org01 = userManagementMapper.checkORG01(params);
+	        if(org01.size() > 0) {
+	            for(int i = 0; i < org01.size(); i++) {
+	                String memCode = org01.get(i).get("memCode").toString();
+	                String status = org01.get(i).get("stus").toString();
+	                String statusDesc = org01.get(i).get("stusDesc").toString();
+	                String resignDate = org01.get(i).get("resignDt").toString();
+
+	                if("3".equals(status)) {
+	                    String terminateDate = org01.get(i).get("trmDt").toString();
+
+	                    // Terminated Member
+	                    msg = "Member : " + nric + " (" + memCode + ") is " + statusDesc + " on " + terminateDate + ".";
+	                    message.setCode(AppConstants.FAIL);
+	                    message.setMessage(msg);
+	                    break;
+
+	                } else if("1".equals(status)) {
+	                    // Active Member
+	                    msg = "Member : " + nric + " (" + memCode + ") is of " + statusDesc + " status.";
+	                    message.setCode(AppConstants.FAIL);
+	                    message.setMessage(msg);
+                        break;
+
+	                } else if("51".equals(status)) {
+	                    // Resigned Member
+	                    Date currentDate = new SimpleDateFormat("yyyyMMdd").parse(CommonUtils.getNowDate());
+	                    Calendar currentCal = Calendar.getInstance();
+	                    currentCal.setTime(currentDate);
+	                    currentCal.add(Calendar.MONTH, -6);
+
+	                    Date resignDt = new SimpleDateFormat("yyyyMMdd").parse(resignDate);
+	                    Calendar resignCal = Calendar.getInstance();
+	                    resignCal.setTime(resignDt);
+
+	                    if(resignCal.before(currentCal)) {
+	                        msg = "Member : " + nric + " (" + memCode + ") resignation within 6 months";
+	                        message.setCode(AppConstants.FAIL);
+	                        message.setMessage(msg);
+	                        break;
+	                    }
+	                }
+	            }
+	        } else {
+	            msg = nric + " has an active account.";
+	            message.setCode(AppConstants.FAIL);
+	            message.setMessage(msg);
+	        }
+	    } else if(sys47.size() > 1) {
+	        msg = nric + " has multiple active accounts.";
+	        message.setCode(AppConstants.FAIL);
+            message.setMessage(msg);
+	    } else {
+	        message.setCode(AppConstants.SUCCESS);
+	    }
+
+	    return message;
 	}
 }
 

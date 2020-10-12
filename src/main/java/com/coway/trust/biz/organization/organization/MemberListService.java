@@ -210,6 +210,7 @@ public interface MemberListService {
 	int memberListUpdate_ORG03(Map<String, Object> params);
 	int memberListUpdate_MSC09(Map<String, Object> params);
 	int memberListUpdate_ORG15(Map<String, Object> params);
+	int memberListUpdate_ORG02(Map<String, Object> params);
 
 	EgovMap selectMemCourse(Map<String, Object> params);
 

@@ -2513,6 +2513,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 
 	@Override
+	public int memberListUpdate_ORG02(Map<String, Object> params) {
+	    return memberListMapper.memberListUpdate_ORG02(params);
+	}
+
+	@Override
 	public EgovMap selectMemCourse(Map<String, Object> params) {
 	    return memberListMapper.selectMemCourse(params);
 	}
