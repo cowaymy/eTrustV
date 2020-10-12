@@ -333,6 +333,8 @@
         $("#btnSerialEdit").attr("style", "");
     }
 
+    // Added for displaying instruction remarks. By Hui Ding, 2020-10-09
+    document.getElementById("instruction").value = $("#srvRem").val();
 
   });
 
@@ -376,6 +378,8 @@
          console.log("data : " + result);
        });
     */
+
+    console.log("instruction: " + $("#instruction").val());
     // KR-OHK Serial Check
     if (FormUtil.checkReqValue($("#cmbStatusType1"))) {
       Common.alert("Please Select HS Status.");
@@ -641,6 +645,7 @@ function fnSerialSearchResult(data) {
  <input type="hidden" value="${orderDetail.basicInfo.ordNo}" id="hidSalesOrdNo" name="hidSalesOrdNo"/>
  <input type="hidden" value="${orderDetail.codyInfo.serialRequireChkYn}" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
  <input type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
+ <input type="hidden" value="${hsDefaultInfo.srvRem}" id="srvRem" name="hidSrvRem"/>
 <header class="pop_header"><!-- pop_header start -->
 
 <h1>HS - New HS Result</h1>

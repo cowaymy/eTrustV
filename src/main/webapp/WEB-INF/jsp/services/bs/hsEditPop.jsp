@@ -961,12 +961,14 @@ function SearchListAjax(obj){
 <tr>
     <th scope="row" style="width: 176px; ">Remark</th>
     <td>
-        <input id="txtRemark" name="txtRemark"  type="text" title="" placeholder="Remark" class="w100p" value="${basicinfo.resultRem}"/>
+        <textarea cols="20" rows="5" id="txtRemark" name="txtRemark" placeholder="${basicinfo.resultRem}"/>
+        <%-- <input id="txtRemark" name="txtRemark"  type="text" title="" placeholder="Remark" class="w100p" value="${basicinfo.resultRem}"/> --%>
         <%-- <span>${basicinfo.resultRem}</span> --%>
     </td>
     <th scope="row" style="width: 59px; ">Instruction</th>
     <td>
-        <input id="txtInstruction" name="txtInstruction"  type="text" title="" placeholder="Instruction" class="w100p" value="${basicinfo.instct}"/>
+        <textarea cols="20" rows="5" id="txtRemark" name="txtRemark" placeholder="${basicinfo.instct}"/>
+        <%--<input id="txtInstruction" name="txtInstruction"  type="text" title="" placeholder="Instruction" class="w100p" value="${basicinfo.instct}"/> -->
         <%-- <span>${settleInfo.configBsRem}</span> --%>
     </td>
 </tr>
