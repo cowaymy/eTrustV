@@ -2501,9 +2501,9 @@
             </tr>
             <tr>
               <th scope="row"><spring:message code='service.title.PSIRcd' /><span class="must" id="m15" style="display: none"> *</span></th>
-              <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" disabled="disabled" onkeypress='validate(event)'</td>
+              <td><input type="text" title="" placeholder="<spring:message code='service.title.PSIRcd' />" class="w100p" id="psiRcd" name="psiRcd" disabled="disabled" onkeypress='validate(event)'/></td>
               <th scope="row"><spring:message code='service.title.lmp' /><span class="must" id="m16" style="display: none"> *</span></th>
-              <td><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" disabled="disabled" onkeypress='validate(event)'</td>
+              <td><input type="text" title="" placeholder="<spring:message code='service.title.lmp' />" class="w100p" id="lpmRcd" name="lpmRcd" disabled="disabled" onkeypress='validate(event)'/></td>
               </td>
             </tr>
             <tr>
