@@ -2660,7 +2660,7 @@
     LEFT JOIN SAL0023D C ON C.CUST_ADD_ID = B.ADD_ID
     LEFT JOIN SYS0064M D ON D.AREA_ID = C.AREA_ID
     WHERE 1=1
-
+    AND A.STUS_CODE_ID = 1
     <if test="ordId != null and ordId !=''">
       AND A.SALES_ORD_ID_OLD = #{ordId}
     </if>
