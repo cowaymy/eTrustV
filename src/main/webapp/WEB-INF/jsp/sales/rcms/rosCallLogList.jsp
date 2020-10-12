@@ -39,6 +39,7 @@ $(document).ready(function() {//////////////////////////////////////////////////
 	CommonCombo.make("mainReason", "/sales/rcms/getReasonCodeList", {typeId : '1175' , stusCodeId : '1'},  '', {type: "S"});  //Reason Code
 	CommonCombo.make("rosStatus", "/common/selectCodeList.do", {groupCode : '391'}, '', {type: "S"});  //Reason Code
 	CommonCombo.make("rosCallerType", "/sales/rcms/selectAgentTypeList", {codeMasterId : '329'}, '',  { type: "S"});
+	CommonCombo.make("rosCaller", "/sales/rcms/selectRosCaller", {stus:'1'} ,'',  {id:'agentId', name:"agentName", isShowChoose: false,isCheckAll : false , type: "M"});
 
 
 	//Search
@@ -50,9 +51,9 @@ $(document).ready(function() {//////////////////////////////////////////////////
 		});
 	});
 
-	$("#rosCallerType").change(function(){
+	/* $("#rosCallerType").change(function(){
 		CommonCombo.make("rosCaller", "/sales/rcms/selectRosCaller", {stus:'1',agentType: this.value} ,'',  {id:'agentId', name:"agentName", isShowChoose: false,isCheckAll : false , type: "M"});
-	});
+	}); */
 
 	AUIGrid.bind(rosGridID, "cellDoubleClick", function(event){
 		if('${PAGE_AUTH.funcUserDefine1}' == 'Y'){
@@ -244,6 +245,12 @@ function fn_setOptGrpClass() {
 function fn_alert() {
 	Common.alert("Under Development");
 }
+
+$(function() {
+	$("#rosCallerType").change(function(){
+		CommonCombo.make("rosCaller", "/sales/rcms/selectRosCaller", {stus:'1',agentType: this.value} ,'',  {id:'agentId', name:"agentName", isShowChoose: false,isCheckAll : false , type: "M"});
+	});
+});
 </script>
 
 
