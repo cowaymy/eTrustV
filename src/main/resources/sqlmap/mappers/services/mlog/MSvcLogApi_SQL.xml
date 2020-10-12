@@ -199,7 +199,7 @@
                                    FROM SYS0064M
                                    WHERE STATUS_ID = 1
                                      AND AREA_ID = Q.AREA_ID) install_Address,
-                                   SRV_CONFIG_ID,
+                                   U.SRV_CONFIG_ID,
                                    /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'POST')  postcode, */
                                    /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'STATE')  service_State, */
                                    /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'FULL_ADDR')  install_Address */
