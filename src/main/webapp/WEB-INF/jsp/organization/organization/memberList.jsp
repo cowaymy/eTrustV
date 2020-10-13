@@ -379,6 +379,12 @@ $(document).ready(function() {
     $("#position").attr("disabled",true);
     /*By KV End - Position button disable function in selection*/
 
+    if($("#userRole").val() == "130" || $("#userRole").val() == "137" // Administrator
+      || $("#userRole").val() == "141" || $("#userRole").val() == "142" || $("#userRole").val() == "160" // HR
+    ) {
+
+    }
+
  });
 
 function createAUIGrid() {
@@ -651,7 +657,11 @@ $(function() {
         } else {
             Common.alert("Please select a member!");
         }
-    })
+    });
+
+    $('#meetingPointMgmt').click(function() {
+        Common.popupDiv("/organization/meetingPointMgmt.do?isPop=true", "");
+    });
 });
 
 </script>
@@ -879,6 +889,9 @@ $(function() {
             <c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
                 <li><p class="link_btn"><a href="#" id="getHpApplicantURL">HP Applicant e-Agreement URL</a></li>
             </c:if>
+            <!-- <c:if test="${PAGE_AUTH.funcUserDefine12 == 'Y'}"> -->
+                <li><p class="link_btn"><a href="#" id="meetingPointMgmt">Meeting Point Management</a></li>
+            <!-- </c:if> -->
         </ul>
         <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
         </dd>

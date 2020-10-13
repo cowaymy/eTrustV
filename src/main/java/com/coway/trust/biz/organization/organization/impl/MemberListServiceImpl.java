@@ -2538,4 +2538,49 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    return message;
 	}
 	// LaiKW - Comment end here
+
+	@Override
+    public List<EgovMap> selectTraining(Map<String, Object> params) {
+        return memberListMapper.selectTraining(params);
+    }
+
+	@Override
+	public int getNextMPID() {
+	    return memberListMapper.getNextMPID();
+	}
+
+	@Override
+    public List<EgovMap> searchMP(Map<String, Object> params) {
+        return memberListMapper.searchMP(params);
+    }
+
+	@Override
+	public int addMeetingPoint(List<Object> addList, String userId) {
+	    int cnt = 0;
+
+	    for(Object obj : addList) {
+	        ((Map<String, Object>) obj).put("userId", userId);
+
+	        cnt = memberListMapper.addMeetingPoint((Map<String, Object>) obj);
+	    }
+
+	    return cnt;
+	};
+
+	@Override
+	public int updMeetingPoint(List<Object> updList, String userId) {
+	    int cnt = 0;
+
+        for(Object obj : updList) {
+            ((Map<String, Object>) obj).put("userId", userId);
+
+            cnt = memberListMapper.updMeetingPoint((Map<String, Object>) obj);
+        }
+
+        return cnt;
+	}
+
+	public int updHPMeetingPoint(Map<String, Object> params) throws Exception {
+	    return memberListMapper.updHPMeetingPoint(params);
+	}
 }

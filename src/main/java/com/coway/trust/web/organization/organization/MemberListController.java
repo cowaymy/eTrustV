@@ -2,11 +2,13 @@ package com.coway.trust.web.organization.organization;
 
 import java.io.File;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -25,11 +27,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.login.LoginService;
+import com.coway.trust.biz.organization.organization.HPMeetingPointUploadVO;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
@@ -39,7 +44,9 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
+import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.BeanConverter;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.Precondition;
 import com.ibm.icu.text.SimpleDateFormat;
@@ -73,6 +80,9 @@ public class MemberListController {
 
     @Autowired
     private MessageSourceAccessor messageAccessor;
+
+    @Autowired
+    private CsvReadComponent csvReadComponent;
 
 	/**
 	 * Call commission rule book management Page
@@ -2038,5 +2048,112 @@ logger.debug("params : {}", params);
 	    ReturnMessage message = memberListService.checkMemCode(params);
 	    return ResponseEntity.ok(message);
 	}
+
+	@RequestMapping(value = "/selectTraining", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectTraining(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+        List<EgovMap> selectTraining = memberListService.selectTraining(params);
+        logger.debug("selectPromote : {}", selectTraining);
+        return ResponseEntity.ok(selectTraining);
+    }
+
+	@RequestMapping(value = "/meetingPointMgmt.do")
+	public String meetingPointMgmtPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	    return "organization/organization/meetingPointMgmtPop";
+	}
+
+    @RequestMapping(value = "/searchMP", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> searchMP(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+        List<EgovMap> searchMP = memberListService.searchMP(params);
+        logger.debug("selectPromote : {}", searchMP);
+        return ResponseEntity.ok(searchMP);
+    }
+
+    @RequestMapping(value = "/getNextMPSeq", method = RequestMethod.GET)
+    public ResponseEntity<ReturnMessage> getNextMPSeq(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+
+        int nextSeq = memberListService.getNextMPID();
+
+        ReturnMessage message = new ReturnMessage();
+        if(nextSeq != 0) {
+            message.setCode(AppConstants.SUCCESS);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+            message.setData(nextSeq);
+        } else {
+            message.setCode(AppConstants.FAIL);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+
+        }
+        return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/saveMeetingPointGrid", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> saveMeetingPointGrid(@RequestBody Map<String, ArrayList<Object>> params, Model model, SessionVO sessionVO) {
+
+        int cnt = 0;
+        List<Object> updList = params.get(AppConstants.AUIGRID_UPDATE);
+        List<Object> addList = params.get(AppConstants.AUIGRID_ADD);
+
+        String userId = Integer.toString(sessionVO.getUserId());
+
+        if(addList.size() > 0) {
+            cnt = memberListService.addMeetingPoint(addList, userId);
+        }
+
+        if(updList.size() > 0) {
+            cnt = memberListService.updMeetingPoint(updList, userId);
+        }
+
+        ReturnMessage message = new ReturnMessage();
+        if(cnt > 0) {
+            message.setCode(AppConstants.SUCCESS);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        } else {
+            message.setCode(AppConstants.FAIL);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        }
+
+        return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/updateHPMeetingPoint", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> updateHPMeetingPoint(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
+
+        int cnt = 0;
+
+        Map<String, MultipartFile> fileMap = request.getFileMap();
+        MultipartFile multipartFile = fileMap.get("csvFile");
+        List<HPMeetingPointUploadVO> vos = csvReadComponent.readCsvToList(multipartFile, true, HPMeetingPointUploadVO::create);
+
+        Map<String, Object> csvParam = new HashMap<String, Object>();
+        csvParam.put("voList", vos);
+        csvParam.put("userId", sessionVO.getUserId());
+
+        List<HPMeetingPointUploadVO> vos2 = (List<HPMeetingPointUploadVO>) csvParam.get("voList");
+
+        List<Map> hpMPList = vos2.stream().map(r -> {
+            Map<String, Object> map = BeanConverter.toMap(r);
+
+            map.put("memCode", r.getMemCode());
+            map.put("memName", r.getMemName());
+            map.put("meetpoint", r.getMeetpoint());
+
+            return map;
+        }).collect(Collectors.toList());
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", sessionVO.getUserId());
+        map.put("list", hpMPList.stream().collect(Collectors.toCollection(ArrayList::new)));
+        cnt = memberListService.updHPMeetingPoint(map);
+
+        ReturnMessage message = new ReturnMessage();
+        if(cnt > 0) {
+            message.setCode(AppConstants.SUCCESS);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        } else {
+            message.setCode(AppConstants.FAIL);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        }
+        return ResponseEntity.ok(message);
+    }
 
 }

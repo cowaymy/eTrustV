@@ -5139,4 +5139,90 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		AND ORG0001D.MEM_CODE = #{username}
     </select>
 <!-- LaiKW - Comment ends here -->
+
+    <select id="selectTraining" parameterType="Map" resultType="egovMap">
+	    SELECT
+	        C.COURS_CODE || ' - ' || C.COURS_NAME COURSE_CODE,
+	        TO_CHAR(C.COURS_START, 'DD/MM/YYYY') C_DATE,
+	        CASE WHEN B.COURS_TEST_RESULT = 'P' THEN 'PASS'
+	             WHEN B.COURS_TEST_RESULT = 'AB' THEN 'ABSENT'
+	             WHEN B.COURS_TEST_RESULT = 'F' THEN 'FAILED'
+	             ELSE '-'
+	        END RESULT
+	    FROM ORG0001D A
+	    LEFT JOIN MSC0009D B
+	        ON A.MEM_ID = B.COURS_MEM_ID
+	    LEFT JOIN MSC0008D C
+	        ON B.COURS_ID = C.COURS_ID
+	        AND C.COURS_STUS_ID = 1
+	    WHERE A.MEM_ID = #{MemberID}
+    </select>
+
+    <select id="getNextMPID" parameterType="Map" resultType="int">
+        SELECT
+            MAX(MEET_POINT_ID) + 1
+        FROM SYS0089M
+    </select>
+
+    <select id="searchMP" parameterType="Map" resultType="egovMap">
+        SELECT
+            MEET_POINT_ID,
+            MEET_POINT_CODE,
+            MEET_POINT_DESC,
+            CASE WHEN STUS = 1 THEN 'ACTIVE'
+                 ELSE 'INACTIVE'
+            END STUS
+        FROM SYS0089M
+        WHERE 1=1
+        <if test="mpCode != null and mpCode != '' ">
+            AND MEET_POINT_CODE = #{mpCode}
+        </if>
+        <if test="mpName != null and mpName != '' ">
+            AND MEET_POINT_DESC like '%' || #{mpCode} || '%'
+        </if>
+        ORDER BY MEET_POINT_ID
+    </select>
+
+    <insert id="addMeetingPoint" parameterType="Map">
+        INSERT INTO SYS0089M
+        VALUES (
+            #{meetPointId},
+            UPPER(#{meetPointCode}),
+            UPPER(#{meetPointDesc}),
+            #{stus},
+            #{userId},
+            SYSDATE,
+            #{userId},
+            SYSDATE
+        )
+    </insert>
+
+    <update id="updMeetingPoint" parameterType="Map">
+        UPDATE SYS0089M
+        SET MEET_POINT_CODE = UPPER(#{meetPointCode}),
+            MEET_POINT_DESC = UPPER(#{meetPointDesc}),
+            STUS = #{stus},
+            UPD_USER_ID = #{userId},
+            UPD_DT = SYSDATE
+        WHERE MEET_POINT_ID = #{meetPointId}
+    </update>
+
+    <update id="updHPMeetingPoint" parameterType="java.util.List">
+        MERGE INTO ORG0003D T
+        USING (
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT
+                APLICNT_ID,
+                #{item.meetpoint} APLICNT_MEETPOINT,
+                #{userId} UPD_USER_ID
+            FROM ORG0001D
+            WHERE MEM_CODE = #{item.memCode}
+        </foreach>
+        )S
+        ON (T.APLCTN_ID = S.APLICNT_ID)
+        WHEN MATCHED THEN UPDATE
+        SET T.APLICNT_MEETPOINT = S.APLICNT_MEETPOINT,
+            T.UPD_USER_ID = S.UPD_USER_ID,
+            T.UPD_DT = SYSDATE
+    </update>
 </mapper>

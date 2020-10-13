@@ -216,4 +216,12 @@ public interface MemberListService {
 
 	ReturnMessage checkMemCode(Map<String, Object> params);
 	// LaiKW - Comment ends here
+
+	List<EgovMap> selectTraining(Map<String, Object> params);
+
+	int getNextMPID();
+	List<EgovMap> searchMP(Map<String, Object> params);
+	int addMeetingPoint(List<Object> addList, String userId);
+	int updMeetingPoint(List<Object> updList, String userId);
+	int updHPMeetingPoint(Map<String, Object> params) throws Exception;
 }

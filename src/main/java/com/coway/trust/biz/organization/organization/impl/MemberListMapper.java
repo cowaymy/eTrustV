@@ -314,4 +314,12 @@ public interface MemberListMapper {
 
 	int checkMemCode(Map<String, Object> params);
 	// LaiKW - Comment ends here
+
+	List<EgovMap> selectTraining(Map<String, Object> params);
+
+	int getNextMPID();
+	List<EgovMap> searchMP(Map<String, Object> params);
+	int addMeetingPoint(Map<String, Object> params);
+    int updMeetingPoint(Map<String, Object> params);
+    int updHPMeetingPoint(Map<String, Object> params) throws Exception;
 }
