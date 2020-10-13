@@ -95,6 +95,8 @@ public class HeartServiceResultForm {
 	private String disinfecServ;
 
 	private String hsChkLst;
+	private String instruction;
+
 
 	public String getCheckInDate() {
 		return checkInDate;
@@ -321,6 +323,14 @@ public class HeartServiceResultForm {
 
 	public void setHsChkLst(String hsChkLst) {
 		this.hsChkLst = hsChkLst;
+	}
+
+	public String getInstruction() {
+		return instruction;
+	}
+
+	public void setInstruction(String instruction) {
+		this.instruction = instruction;
 	}
 
 	public List<Map<String, Object>> createMaps(HeartServiceResultForm heartServiceResultForm) {
