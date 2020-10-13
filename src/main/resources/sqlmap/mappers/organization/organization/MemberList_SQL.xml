@@ -5189,7 +5189,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             #{meetPointId},
             UPPER(#{meetPointCode}),
             UPPER(#{meetPointDesc}),
-            #{stus},
+            CASE WHEN #{stus} = 'ACTIVE' THEN '1' ELSE '0' END,
             #{userId},
             SYSDATE,
             #{userId},
@@ -5201,7 +5201,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         UPDATE SYS0089M
         SET MEET_POINT_CODE = UPPER(#{meetPointCode}),
             MEET_POINT_DESC = UPPER(#{meetPointDesc}),
-            STUS = #{stus},
+            STUS = CASE WHEN #{stus} = 'ACTIVE' THEN '1' ELSE '0' END,
             UPD_USER_ID = #{userId},
             UPD_DT = SYSDATE
         WHERE MEET_POINT_ID = #{meetPointId}
