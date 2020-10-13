@@ -18,6 +18,7 @@
 }
 </style>
 <script type="text/javascript">
+//console.log("webInvoice");
 var webInvoiceColumnLayout = [ {
     dataField : "invcDt",
     headerText : '<spring:message code="webInvoice.postingDate" />',
@@ -646,9 +647,9 @@ function fn_setNewGridEvent() {
 		                        console.log("availableAmtCp");
 		                        console.log(result.totalAvailable);
 
-		                        var finAvailable = result.totalAvilableAdj - result.totalPending - result.totalUtilized;
+		                        var finAvailable = parseFloat(result.totalAvilableAdj) - parseFloat(result.totalPending) - parseFloat(result.totalUtilized);
 
-		                        if(finAvailable < event.item.totAmt) {
+		                        if(parseFloat(finAvailable) < parseFloat(event.item.totAmt)) {
 		                            console.log("else if :: result.totalAvailable < event.item.totAmt");
 		                            Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
 		                            console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
