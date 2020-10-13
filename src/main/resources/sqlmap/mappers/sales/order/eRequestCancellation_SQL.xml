@@ -1293,10 +1293,10 @@
       <if test="deptCode != null and deptCode != ''">
         AND UPPER(ORG.DEPT_CODE) = UPPER(#{deptCode})
       </if>
-      <if test="isHomecare == '1'">
+      <if test="isHomecare == 1">
         AND SOM.BNDL_ID > 0
       </if>
-      <if test="isHomecare == '0'">
+      <if test="isHomecare == 2">
         AND (SOM.BNDL_ID = 0 OR SOM.BNDL_ID IS NULL)
       </if>
       ORDER BY RQST_ID DESC

@@ -8,10 +8,11 @@
 
   $(document).ready(
       function() {
+
     	  if ("${SESSION_INFO.roleId}" == "297") {
     		  $("#isHomecare").val("1");
-    	  }else if ("${SESSION_INFO.memberLevel}" < 0){
-    		  $("#isHomecare").val("0");
+    	  }else if ("${SESSION_INFO.memberLevel}" == ""){
+    		  $("#isHomecare").val("2");
     	  }
 
     	  if ("${SESSION_INFO.memberLevel}" == "1") {
@@ -61,7 +62,7 @@
 
         createAUIGrid();
 
-        doGetComboSepa('/common/selectBranchCodeList.do', '3', ' - ', '${SESSION_INFO.userBranchId}', 'cmbDscBranchId', 'M', 'f_multiCombo'); //Branch Code
+        doGetComboSepa('/common/selectBranchCodeList.do', '48', ' - ', '${SESSION_INFO.userBranchId}', 'cmbDscBranchId', 'M', 'f_multiCombo'); //Branch Code
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
