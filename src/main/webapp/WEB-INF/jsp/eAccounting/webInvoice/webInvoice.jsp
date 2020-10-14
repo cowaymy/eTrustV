@@ -647,7 +647,7 @@ function fn_setNewGridEvent() {
 		                        console.log("availableAmtCp");
 		                        console.log(result.totalAvailable);
 
-		                        var finAvailable = parseFloat(result.totalAvilableAdj) - parseFloat(result.totalPending) - parseFloat(result.totalUtilized);
+		                        var finAvailable = (parseFloat(result.totalAvilableAdj) - parseFloat(result.totalPending) - parseFloat(result.totalUtilized)).toFixed(2);
 
 		                        if(parseFloat(finAvailable) < parseFloat(event.item.totAmt)) {
 		                            console.log("else if :: result.totalAvailable < event.item.totAmt");

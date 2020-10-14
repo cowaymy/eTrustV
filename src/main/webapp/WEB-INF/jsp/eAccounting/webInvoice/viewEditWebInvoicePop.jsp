@@ -403,7 +403,8 @@ console.log("length > 0");
                         console.log("availableAmtCp");
                         console.log(result.totalAvailable);
 
-                        var finAvailable = result.totalAvilableAdj - result.totalPending - result.totalUtilized;
+                        //var finAvailable = result.totalAvilableAdj - result.totalPending - result.totalUtilized;
+                        var finAvailable = (parseFloat(result.totalAvilableAdj) - parseFloat(result.totalPending) - parseFloat(result.totalUtilized)).toFixed(2);
 
                         if(finAvailable < AUIGrid.getCellValue(newGridID, i, "totAmt")) {
                             Common.alert("Insufficient budget amount available for Budget Code : " + AUIGrid.getCellValue(newGridID, i, "budgetCode") + ", GL Code : " + AUIGrid.getCellValue(newGridID, i, "glAccCode") + ". ");
