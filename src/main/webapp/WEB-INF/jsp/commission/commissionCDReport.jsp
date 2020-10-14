@@ -119,11 +119,15 @@
                     }
 
                 }
+console.log(month);
+console.log(year);
+            if (month >= 9 && year >= 2020 || year > 2020){
 
-            if (month >= 9 && year >= 2020 || year >2020){
+            	console.log(1);
                reportFileName = "/commission/CodyComm_PDF_202010.rpt"; //reportFileName
             }
             else if (month >= 10 && year >= 2018 || year >2018){
+            	console.log(2);
                 reportFileName = "/commission/CodyComm_PDF_201810.rpt"; //reportFileName
             }
             else{
