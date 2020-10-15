@@ -8,6 +8,7 @@
         WHERE 1 = 1
         AND USER_ID = #{userId}
         AND SURVEY_TYPE_ID = #{surveyTypeId}
+        AND DISAB = 0
 </select>
 
 <select id="isSurveyRequired" parameterType="Map" resultType="egovMap">
@@ -15,22 +16,25 @@
     FROM MSC0047M
         WHERE STUS_CODE_ID = 1
         AND TO_DATE(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(SURVEY_START_DT,'DD/MM/YYYY') AND TO_DATE(SURVEY_END_DT,'DD/MM/YYYY')
-        <if test="userTypeId == 4 or userTypeId == 6">
-            AND IS_STAFF = 1 AND ROLE_ID IN (0,#{roleType})
-         </if>
-         <if test="userTypeId == 1">
-            AND IS_HP = 1 AND ROLE_ID IN (0,#{roleType})
-         </if>
-         <if test="userTypeId == 2">
-            AND IS_CD = 1 AND ROLE_ID IN (0,#{roleType})
-         </if>
-         <if test="userTypeId == 3">
-            AND IS_CT = 1 AND ROLE_ID IN (0,#{roleType})
-         </if>
-         <if test="userTypeId == 7">
-            AND IS_HT = 1 AND ROLE_ID IN (0,#{roleType})
-         </if>
-         <if test="inWeb != null and inWeb != '' ">
+        --AND TO_DATE(SURVEY_START_DT,'DD/MM/YYYY') >= TO_DATE(SYSDATE,'DD/MM/YYYY')
+        <choose>
+            <when test="userTypeId == 1">
+                AND IS_HP = 1 AND ROLE_ID IN (0,#{roleType})
+            </when>
+           <when test="userTypeId == 2">
+                AND IS_CD = 1 AND ROLE_ID IN (0,#{roleType})
+           </when>
+           <when test="userTypeId == 3">
+                AND IS_CT = 1 AND ROLE_ID IN (0,#{roleType})
+           </when>
+           <when test="userTypeId == 7">
+                AND IS_HT = 1 AND ROLE_ID IN (0,#{roleType})
+           </when>
+          <otherwise>
+              AND IS_STAFF = 1 AND ROLE_ID IN (0,#{roleType})
+          </otherwise>
+        </choose>
+        <if test="inWeb != null and inWeb != '' ">
             AND IN_WEB = #{inWeb}
          </if>
 </select>
