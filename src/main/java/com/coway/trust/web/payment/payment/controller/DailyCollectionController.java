@@ -89,13 +89,13 @@ public class DailyCollectionController {
             String[] titles;
 
             columns = new String[] {"receiptno","orderno","trxDate","name","bankAcc","debtCode","branchcode","payitemappvno","payitemchqno",
-            		"username","description","payitemamt","payitemremark","fpayitemccno","paymode","trNo","refNo","crcmode",
+            		"username","description","payitemamt","payitemremark","fpayitemccno","paymode","trNo","refNo","refDtl","crcmode",
             		"crctype","payitemccholdername","payitemccexpirydate","refdate","keyinby","issuedbank","deptcode","orderstatus",
             		"custvano","bankChgAmt","advancemth","runningno","cardtype","pvMonth","pvYear","crcStatementNo","crcStatus",
             		"crcStatementRemark","custcategory","custtype","transId","ordCrtDt"};
 
             titles = new String[] {"RECEIPTNO","ORDERNO","TRX_DATE","NAME","BANK_ACC","DEBT_CODE","BRANCHCODE","PAYITEMAPPVNO","PAYITEMCHQNO","USERNAME",
-            		"DESCRIPTION","PAYITEMAMT","PAYITEMREMARK","FPAYITEMCCNO","PAYMODE","TR_NO","REF_NO","CRCMODE","CRCTYPE","PAYITEMCCHOLDERNAME",
+            		"DESCRIPTION","PAYITEMAMT","PAYITEMREMARK","FPAYITEMCCNO","PAYMODE","TR_NO","REF_NO","REF_DTL","CRCMODE","CRCTYPE","PAYITEMCCHOLDERNAME",
             		"PAYITEMCCEXPIRYDATE","REFDATE","KEYINBY","ISSUEDBANK","DEPTCODE","ORDERSTATUS","CUSTVANO","BANK_CHG_AMT","ADVANCEMTH",
             		"RUNNINGNO","CARDTYPE","PV_MONTH","PV_YEAR","CRC_STATEMENT_NO","CRC_STATUS","CRC_STATEMENT_REMARK","CustCategory","CustType","TRANS_ID",
             		"ORD_CRT_DT"};
