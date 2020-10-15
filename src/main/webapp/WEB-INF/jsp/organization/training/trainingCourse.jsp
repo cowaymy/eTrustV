@@ -686,7 +686,9 @@ $.fn.clearForm = function() {
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Course Management</h2>
         <ul class="right_btns">
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_blue"><a href="#" id="registration_btn"><span class="new"></span>New</a></p></li>
+            </c:if>
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a href="#" id="search_btn"><span class="search"></span>Search</a></p></li>
             </c:if>
@@ -836,7 +838,7 @@ $.fn.clearForm = function() {
                 </c:if>
                 -->
                 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-                    <li><p class="btn_grid"><a href="#" id="course_Save_btn">Save</a></p></li>
+                    <li><p class="btn_grid"><a href="#" id="course_Save_btn">Save Course</a></p></li>
                 </c:if>
             </ul>
         </aside>
@@ -852,10 +854,10 @@ $.fn.clearForm = function() {
             <h4>Attendee List</h4>
             <ul class="right_btns">
                 <!-- <li><p class="btn_grid"><a href="#" id="attendee_btn">Attendee</a></p></li> -->
-                <li><p class="btn_grid"><a href="#" id="result_btn">Result</a></p></li>
                 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-                <li><p class="btn_grid"><a href="#" id="addRow_btn">Add</a></p></li>
-                <li><p class="btn_grid"><a href="#" id="delRow_btn">Del</a></p></li>
+                <li><p class="btn_grid"><a href="#" id="result_btn">Result</a></p></li>
+                <li><p class="btn_grid"><a href="#" id="addRow_btn">Add Row</a></p></li>
+                <li><p class="btn_grid"><a href="#" id="delRow_btn">Del Row</a></p></li>
                 <li><p class="btn_grid"><a href="#" id="attendee_save_btn">Save Attendees</a></p></li>
                 </c:if>
             </ul>
