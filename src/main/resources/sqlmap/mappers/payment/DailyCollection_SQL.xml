@@ -322,6 +322,7 @@
                 A.PAY_ITM_ORI_CC_NO AS fPayItemCCNo,
                 NVL(b.TR_NO, ' ') AS TR_NO  ,
                 NVL(a.PAY_ITM_REF_NO, ' ') AS REF_NO  ,
+                NVL(b.REF_DTL,' ') AS REF_DTL ,
                 (CASE
                     WHEN a.PAY_ITM_IS_ONLINE = 1 THEN 'Online'
                     WHEN a.PAY_ITM_IS_ONLINE = 2 THEN 'Offline' ELSE ' ' END) AS CRCMode  ,
@@ -423,6 +424,7 @@
                 A.PAY_ITM_ORI_CC_NO FPAYITEMCCNO  ,
                 NVL(b.TR_NO, ' ') TR_NO  ,
                 NVL(a.PAY_ITM_REF_NO, ' ') REF_NO  ,
+                 NVL(b.REF_DTL,' ') AS REF_DTL ,
                 (CASE
                     WHEN a.PAY_ITM_IS_ONLINE = 1 THEN 'Online'
                     WHEN a.PAY_ITM_IS_ONLINE = 2 THEN 'Offline' ELSE ' ' END) CRCMODE  ,
@@ -520,6 +522,7 @@
             A.PAY_ITM_ORI_CC_NO FPAYITEMCCNO  ,
             NVL(b.TR_NO, ' ') TR_NO  ,
             NVL(a.PAY_ITM_REF_NO, ' ') REF_NO  ,
+             NVL(b.REF_DTL,' ') AS REF_DTL ,
             (CASE
                 WHEN a.PAY_ITM_IS_ONLINE = 1 THEN 'Online'
                 WHEN a.PAY_ITM_IS_ONLINE = 2 THEN 'Offline' ELSE ' ' END) CRCMODE  ,
