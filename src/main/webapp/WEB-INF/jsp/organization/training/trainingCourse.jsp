@@ -28,6 +28,7 @@
  }
 </style>
 <script type="text/javascript">
+console.log("trainingCourse.jsp");
 //그리드에 삽입된 데이터의 전체 길이 보관
 var courseRowIndex;
 var courseLimit;
@@ -59,7 +60,7 @@ var courseColumnLayout = [ {
     editable : false,
     style : "aui-grid-user-custom-left"
 }, {
-	dataField : "coursLoc",
+    dataField : "coursLoc",
     headerText : 'Location',
     editable : false,
     style : "aui-grid-user-custom-left"
@@ -126,7 +127,7 @@ var attendeeColumnLayout = [ {
         unCheckValue : "Inactive"
     }
 }, {
-	dataField : "",
+    dataField : "",
     headerText : 'No.',
     dataType: "numeric",
     width : 40,
@@ -152,7 +153,7 @@ var attendeeColumnLayout = [ {
     dataField : "memCode",
     headerText : 'Member Code',
     editable : false,
-    colSpan : 2,
+    //colSpan : 2,
     width : 90
 }, {
     dataField : "",
@@ -166,9 +167,9 @@ var attendeeColumnLayout = [ {
         iconWidth : 24,
         iconHeight : 24,
         onclick : function(rowIndex, columnIndex, value, item) {
-        	rIndex = rowIndex;
-        	gridId = attendeeGridID;
-        	fn_searchUserIdPop();
+            rIndex = rowIndex;
+            gridId = attendeeGridID;
+            fn_searchUserIdPop();
             }
         },
     colSpan : -1
@@ -176,6 +177,7 @@ var attendeeColumnLayout = [ {
     dataField : "coursDMemName",
     headerText : 'Member Name',
     style : "aui-grid-user-custom-left",
+    editable : false,
     width : 300
 }, {
     dataField : "coursDMemNric",
@@ -193,9 +195,14 @@ var attendeeColumnLayout = [ {
 }, {
     dataField : "coursAttendDay",
     headerText : 'Attend Day',
-    editable : true,
+    editable : false,
     width : 90
 }, {
+    dataField : "coursTestResultDesc", //COURS_TEST_RESULT_DESC
+    headerText : 'Result',
+    width : 130,
+    editable : false
+}/*, {
     dataField : "coursTestResult",
     headerText : 'Result',
     renderer : {
@@ -205,34 +212,35 @@ var attendeeColumnLayout = [ {
         valueField : "name" // value 에 해당되는 필드명
     },
     width :130
-}//, {
-//    dataField : "coursMemShirtSize",
-//    headerText : 'Shirt Size',
-//    renderer : {
-//        type : "DropDownListRenderer",
-//        list : [{"coursMemShirtSize":"S","name":"S"},{"coursMemShirtSize":"M","name":"M"},{"coursMemShirtSize":"L","name":"L"},{"coursMemShirtSize":"XL","name":"XL"},{"coursMemShirtSize":"XXL","name":"XXL"},{"coursMemShirtSize":"XXXL","name":"XXXL"}], //key-value Object 로 구성된 리스트
-//        keyField : "coursMemShirtSize", // key 에 해당되는 필드명
-//        valueField : "name" // value 에 해당되는 필드명
-//    }
-//}, {
-//    dataField : "coursItmMemPup",
-//    headerText : 'PUP',
-//    renderer : {
-//        type : "DropDownListRenderer",
-//        list : [{"coursItmMemPup":"344","name":"Central"},{"coursItmMemPup":"345","name":"Northen"},{"coursItmMemPup":"346","name":"Southern"}], //key-value Object 로 구성된 리스트
-//        keyField : "coursItmMemPup", // key 에 해당되는 필드명
-//        valueField : "name" // value 에 해당되는 필드명
-//    }
-//}, {
-//    dataField : "coursItmMemIsVege",
-//    headerText : 'IS VEG?',
-//    renderer : {
-//        type : "DropDownListRenderer",
-//        list : [{"coursItmMemIsVege":"1","name":"Yes"},{"coursItmMemIsVege":"0","name":"No"}], //key-value Object 로 구성된 리스트
-//        keyField : "coursItmMemIsVege", // key 에 해당되는 필드명
-//        valueField : "name" // value 에 해당되는 필드명
-//    }
-//}
+}, {
+    dataField : "coursMemShirtSize",
+    headerText : 'Shirt Size',
+    renderer : {
+        type : "DropDownListRenderer",
+        list : [{"coursMemShirtSize":"S","name":"S"},{"coursMemShirtSize":"M","name":"M"},{"coursMemShirtSize":"L","name":"L"},{"coursMemShirtSize":"XL","name":"XL"},{"coursMemShirtSize":"XXL","name":"XXL"},{"coursMemShirtSize":"XXXL","name":"XXXL"}], //key-value Object 로 구성된 리스트
+        keyField : "coursMemShirtSize", // key 에 해당되는 필드명
+        valueField : "name" // value 에 해당되는 필드명
+    }
+}, {
+    dataField : "coursItmMemPup",
+    headerText : 'PUP',
+    renderer : {
+        type : "DropDownListRenderer",
+        list : [{"coursItmMemPup":"344","name":"Central"},{"coursItmMemPup":"345","name":"Northen"},{"coursItmMemPup":"346","name":"Southern"}], //key-value Object 로 구성된 리스트
+        keyField : "coursItmMemPup", // key 에 해당되는 필드명
+        valueField : "name" // value 에 해당되는 필드명
+    }
+}, {
+    dataField : "coursItmMemIsVege",
+    headerText : 'IS VEG?',
+    renderer : {
+        type : "DropDownListRenderer",
+        list : [{"coursItmMemIsVege":"1","name":"Yes"},{"coursItmMemIsVege":"0","name":"No"}], //key-value Object 로 구성된 리스트
+        keyField : "coursItmMemIsVege", // key 에 해당되는 필드명
+        valueField : "name" // value 에 해당되는 필드명
+    }
+}
+*/
 ];
 
 //그리드 속성 설정
@@ -250,26 +258,26 @@ var attendeeGridPros = {
 var attendeeGridID;
 
 $(document).ready(function () {
-	courseGridID = AUIGrid.create("#course_grid_wrap", courseColumnLayout, courseGridPros);
-	attendeeGridID = AUIGrid.create("#attendee_grid_wrap", attendeeColumnLayout, attendeeGridPros);
+    courseGridID = AUIGrid.create("#course_grid_wrap", courseColumnLayout, courseGridPros);
+    attendeeGridID = AUIGrid.create("#attendee_grid_wrap", attendeeColumnLayout, attendeeGridPros);
 
-	fn_setAttendeeGridCheckboxEvent();
+    fn_setAttendeeGridCheckboxEvent();
 
-	// course status
+    // course status
     CommonCombo.make("stusCodeId", "/organization/training/selectCourseStatusList.do", null, "", {
         id: "stusCodeId",
         name: "name",
         type:"S"
     });
 
-	// course type
-	CommonCombo.make("codeId", "/organization/training/selectCourseTypeList.do", null, "", {
+    // course type
+    CommonCombo.make("codeId", "/organization/training/selectCourseTypeList.do", null, "", {
         id: "codeId",
         name: "codeName",
         type:"S"
     });
 
-	// Memeber (Y/N)
+    // Memeber (Y/N)
     CommonCombo.make("generalCode", "/common/selectCodeList.do", {groupCode : '328'}, "", {
         id: "codeId",
         name: "code",
@@ -284,35 +292,35 @@ $(document).ready(function () {
         type:"S"
     });
 
-	// search list
-	$("#search_btn").click(fn_selectCourseList);
+    // search list
+    $("#search_btn").click(fn_selectCourseList);
 
-	// view/edit popup
-	// 셀 더블클릭 이벤트 바인딩
+    // view/edit popup
+    // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(courseGridID, "cellDoubleClick", function(event){
-    	fn_courseViewPop(event.item.coursId);
+        fn_courseViewPop(event.item.coursId);
     });
 
-	AUIGrid.bind(courseGridID, "selectionChange", auiGridSelectionChangeHandler );
+    AUIGrid.bind(courseGridID, "selectionChange", auiGridSelectionChangeHandler );
 
-	$("#registration_btn").click(fn_courseNewPop);
-//	$("#viewEdit_btn").click(fn_courseViewPop);
-	$("#attendee_btn").click(function() {
-		fn_attendeePop("");
-	});
-	$("#addRow_btn").click(function() {
-		fn_addRow(attendeeGridID);
-	});
-	$("#delRow_btn").click(function() {
-		fn_delRow(attendeeGridID);
-	});
-	$("#course_Save_btn").click(fn_courseSave);
-	$("#attendee_save_btn").click(function() {
-		fn_attendeeSave(attendeeGridID);
-	});
-	$("#result_btn").click(fn_courseResultPop);
+    $("#registration_btn").click(fn_courseNewPop);
+//    $("#viewEdit_btn").click(fn_courseViewPop);
+    $("#attendee_btn").click(function() {
+        fn_attendeePop("");
+    });
+    $("#addRow_btn").click(function() {
+        fn_addRow(attendeeGridID);
+    });
+    $("#delRow_btn").click(function() {
+        fn_delRow(attendeeGridID);
+    });
+    $("#course_Save_btn").click(fn_courseSave);
+    $("#attendee_save_btn").click(function() {
+        fn_attendeeSave(attendeeGridID);
+    });
+    $("#result_btn").click(fn_courseResultPop);
 
-	fn_setToDay();
+    fn_setToDay();
 });
 
 function auiGridSelectionChangeHandler(event) {
@@ -322,7 +330,7 @@ function auiGridSelectionChangeHandler(event) {
     }
 
     timerId = setTimeout(function() {
-    	var selectedItems = event.selectedItems;
+        var selectedItems = event.selectedItems;
 //        if(selectedItems.length <= 0)
 //            return;
 
@@ -346,7 +354,7 @@ function auiGridSelectionChangeHandler(event) {
 }
 
 function fn_setAttendeeGridCheckboxEvent() {
-	// ready 이벤트 바인딩
+    // ready 이벤트 바인딩
     AUIGrid.bind(attendeeGridID, "ready", function(event) {
         gridDataLength = AUIGrid.getRowCount(attendeeGridID); // 그리드 전체 행수 보관
     });
@@ -394,7 +402,7 @@ function checkAll(isChecked) {
     // 그리드의 전체 데이터를 대상으로 isActive 필드를 "Active" 또는 "Inactive" 로 바꿈.
     if(isChecked) {
         for(var i = 0; i < idx; i++){
-        	//AUIGrid.updateAllToValue(invoAprveGridID, "isActive", "Active");
+            //AUIGrid.updateAllToValue(invoAprveGridID, "isActive", "Active");
             AUIGrid.setCellValue(attendeeGridID, i, "isActive", "Active")
         }
     } else {
@@ -425,98 +433,103 @@ function fn_setToDay() {
 }
 
 function fn_selectCourseList() {
-	courseRowIndex = null;
-	Common.ajax("GET", "/organization/training/selectCourseList.do?_cacheId=" + Math.random(), $("#form_course").serialize(), function(result) {
+    courseRowIndex = null;
+    Common.ajax("GET", "/organization/training/selectCourseList.do?_cacheId=" + Math.random(), $("#form_course").serialize(), function(result) {
         console.log(result);
         AUIGrid.setGridData(courseGridID, result);
     });
 
-	AUIGrid.destroy(attendeeGridID);
-	attendeeGridID = AUIGrid.create("#attendee_grid_wrap", attendeeColumnLayout, attendeeGridPros);
+    AUIGrid.destroy(attendeeGridID);
+    attendeeGridID = AUIGrid.create("#attendee_grid_wrap", attendeeColumnLayout, attendeeGridPros);
 
-	fn_setAttendeeGridCheckboxEvent();
+    fn_setAttendeeGridCheckboxEvent();
 }
 
 function fn_courseViewPop(couseIdVal) {
-	if(couseIdVal > 0) {
-		var data = {
-	            coursId : couseIdVal
-	    };
-	    Common.popupDiv("/organization/training/courseViewPop.do", data, null, true, "courseViewPop");
+    if(couseIdVal > 0) {
+        var data = {
+            coursId : couseIdVal
+        };
+        Common.popupDiv("/organization/training/courseViewPop.do", data, null, true, "courseViewPop");
 
-	    coursId = 0;
+        coursId = 0;
     } else {
-    	Common.alert('Please select a course.');
+        Common.alert('Please select a course.');
     }
 }
 
 function fn_selectAttendeeList(coursId) {
-	var data = {
-            coursId : coursId
+    var data = {
+        coursId : coursId
     };
-	Common.ajax("GET", "/organization/training/selectAttendeeList.do?_cacheId=" + Math.random(), data, function(result) {
+    Common.ajax("GET", "/organization/training/selectAttendeeList.do?_cacheId=" + Math.random(), data, function(result) {
         console.log(result);
         AUIGrid.setGridData(attendeeGridID, result);
     });
 }
 
 function fn_courseNewPop() {
-	Common.popupDiv("/organization/training/courseNewPop.do", null, null, true, "courseNewPop");
+    Common.popupDiv("/organization/training/courseNewPop.do", null, null, true, "courseNewPop");
 }
 
 function fn_checkMemberType() {
-	var val = $("#generalCode").val();
-	if(val == "2318") {
-		$("#memType").removeAttr("disabled");
-	} else {
-		$("#memType").attr("disabled", "disabled");
-	}
+    var val = $("#generalCode").val();
+    if(val == "2318") {
+        $("#memType").removeAttr("disabled");
+    } else {
+        $("#memType").attr("disabled", "disabled");
+    }
 }
 
 function fn_checkAttendance() {
-	var val = $("#attendance").val();
-	if(val == "2315") {
-		$("#coursLimit").attr("readonly", "readonly");
-		$("#coursLimit").val("9999");
-		$("#newAttendee_btn").show();
-	} else {
-		$("#coursLimit").removeAttr("readonly");
-		$("#coursLimit").val("");
-		$("#newAttendee_btn").hide();
-	}
+    var val = $("#attendance").val();
+    if(val == "2315") {
+        $("#coursLimit").attr("readonly", "readonly");
+        $("#coursLimit").val("9999");
+        $("#newAttendee_btn").show();
+    } else {
+        $("#coursLimit").removeAttr("readonly");
+        $("#coursLimit").val("");
+        $("#newAttendee_btn").hide();
+    }
 }
 
 function fn_attendeePop(pType) {
-	var data = {
-			pType : pType, coursId : coursId
-	};
-	Common.popupDiv("/organization/training/attendeePop.do", data, null, true, "attendeePop");
+    var data = {
+        pType : pType, coursId : coursId
+    };
+    Common.popupDiv("/organization/training/attendeePop.do", data, null, true, "attendeePop");
 }
 
 function fn_addRow(gridID) {
-	console.log("addrow");
-	console.log("courseRowIndex :: " + courseRowIndex);
-	if(courseRowIndex == null) {
-		Common.alert("Please select course.");
-	} else {
-		console.log("courseLimit :: " + courseLimit);
-		console.log("courseAplcnt :: " + courseAplcnt);
-		if(courseLimit > courseAplcnt) {
+    console.log("addrow");
+    console.log("courseRowIndex :: " + courseRowIndex);
+    if(courseRowIndex == null) {
+        Common.alert("Please select course.");
+    } else {
+        console.log("courseLimit :: " + courseLimit);
+        console.log("courseAplcnt :: " + courseAplcnt);
+        if(courseLimit > courseAplcnt) {
             AUIGrid.addRow(gridID, {}, "first");
         } else {
             Common.alert("Training course limit reached!");
         }
-	}
+    }
 }
 
 function fn_delRow(gridID) {
-	var rowIndexes = AUIGrid.getRowIndexesByValue(gridID, "isActive", "Active");
+    var rowIndexes = AUIGrid.getRowIndexesByValue(gridID, "isActive", "Active");
     console.log(rowIndexes);
-	AUIGrid.removeRow(gridID, rowIndexes); // rowIndex 0, 1, 2 삭제(즉, 3개의 행 삭제)
+    AUIGrid.removeRow(gridID, rowIndexes); // rowIndex 0, 1, 2 삭제(즉, 3개의 행 삭제)
 }
 
 function fn_searchUserIdPop() {
-    Common.popupDiv("/common/memberPop.do", null, null, true);
+    var memCode = AUIGrid.getCellValue(gridId, rIndex, "memCode");
+    console.log("fn_searchUserIdPop :: " + memCode);
+
+    if(FormUtil.isEmpty(AUIGrid.getCellValue(gridId, rIndex, "memCode"))) {
+        Common.popupDiv("/common/memberPop.do", null, null, true);
+    }
 }
 
 // set 하는 function
@@ -538,14 +551,14 @@ function fn_loadOrderSalesman(memId, memCode) {
             AUIGrid.setCellValue(gridId, rIndex, "coursDMemNric", memInfo.nric);
 
             Common.ajax("GET", "/organization/training/selectBranchByMemberId.do", {memId : memInfo.memId}, function(result) {
-            	console.log(result);
+                console.log(result);
 
-            	if(result.data) {
-            		AUIGrid.setCellValue(gridId, rIndex, "brnchId", result.data.brnchId);
+                if(result.data) {
+                    AUIGrid.setCellValue(gridId, rIndex, "brnchId", result.data.brnchId);
                     AUIGrid.setCellValue(gridId, rIndex, "code", result.data.code);
-            	}
+                }
 
-            	gridId = null;
+                gridId = null;
                 rIndex = 0;
             });
         }
@@ -553,45 +566,45 @@ function fn_loadOrderSalesman(memId, memCode) {
 }
 
 function fn_courseSave() {
-	console.log(GridCommon.getEditData(courseGridID));
-	if(GridCommon.getEditData(courseGridID).update.length > 0) {
-		Common.ajax("POST", "/organization/training/updateCourseForLimitStatus.do", GridCommon.getEditData(courseGridID), function(result) {
-	        console.log(result);
+    console.log(GridCommon.getEditData(courseGridID));
+    if(GridCommon.getEditData(courseGridID).update.length > 0) {
+        Common.ajax("POST", "/organization/training/updateCourseForLimitStatus.do", GridCommon.getEditData(courseGridID), function(result) {
+            console.log(result);
 
-	        fn_selectCourseList();
+            fn_selectCourseList();
 
-	        Common.alert('Saved successfully.');
-	    });
-	} else {
-		Common.alert('Modified data not found.');
-	}
+            Common.alert('Saved successfully.');
+        });
+    } else {
+        Common.alert('Modified data not found.');
+    }
 }
 
 function fn_attendeeSave(gridID) {
-	console.log(GridCommon.getEditData(gridID));
-	if(coursId > 0) {
-		var data = {
-				coursId : coursId,
-				gridData : GridCommon.getEditData(gridID)
-		};
-		Common.ajax("POST", "/organization/training/updateAttendee.do", data, function(result) {
-	        console.log(result);
+    console.log(GridCommon.getEditData(gridID));
+    if(coursId > 0) {
+        var data = {
+            coursId : coursId,
+            gridData : GridCommon.getEditData(gridID)
+        };
+        Common.ajax("POST", "/organization/training/updateAttendee.do", data, function(result) {
+            console.log(result);
 
-	        fn_selectAttendeeList(coursId);
+            fn_selectAttendeeList(coursId);
 
-	        Common.alert('Saved successfully.');
+            Common.alert('Saved successfully.');
 
-	        //coursId = 0;
-	    });
-	} else {
-		Common.alert('Course not selected.');
-	}
+            //coursId = 0;
+        });
+    } else {
+        Common.alert('Course not selected.');
+    }
 }
 
 function fn_courseResultPop() {
     if(coursId > 0) {
         var data = {
-                coursId : coursId
+            coursId : coursId
         };
         Common.popupDiv("/organization/training/courseResultPop.do", data, null, true, "courseResultPop");
 
@@ -603,12 +616,12 @@ function fn_courseResultPop() {
 
 function fn_generate(method){
 
-	if($("#coursId").val() == ""){
-		Common.alert("Please select the item to print.");
-	}
-	//CURRENT DATE
+    if($("#coursId").val() == ""){
+        Common.alert("Please select the item to print.");
+    }
+    //CURRENT DATE
     var date = new Date().getDate();
-	var mon = new Date().getMonth()+1;
+    var mon = new Date().getMonth()+1;
 
     if(date.toString().length == 1){
         date = "0" + date;
@@ -618,7 +631,7 @@ function fn_generate(method){
         mon = "0" + mon;
     }
 
-	//VIEW
+    //VIEW
     if(method == "PDF"){
         $("#viewType").val('PDF');     //method
         $("#reportFileName").val('/organization/training/HPTrainingReport_PDF.rpt'); //File Name
@@ -643,7 +656,6 @@ function fn_generate(method){
     };
 
     Common.report("dataForm", option);
-
 }
 
 $.fn.clearForm = function() {
@@ -665,176 +677,197 @@ $.fn.clearForm = function() {
 </script>
 
 <section id="content"><!-- content start -->
-<ul class="path">
-	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-</ul>
+    <ul class="path">
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+    </ul>
 
-<aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Course Management</h2>
-<ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" id="registration_btn"><span class="new"></span>New</a></p></li>
-	<c:if test="${PAGE_AUTH.funcView == 'Y'}">
-	<li><p class="btn_blue"><a href="#" id="search_btn"><span class="search"></span>Search</a></p></li>
-	</c:if>
-	<li><p class="btn_blue"><a href="#" onclick="javascript:$('#form_course').clearForm();"><span class="clear"></span>Clear</a></p></li>
-</ul>
-</aside><!-- title_line end -->
+    <!-- title_line start -->
+    <aside class="title_line">
+        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <h2>Course Management</h2>
+        <ul class="right_btns">
+            <li><p class="btn_blue"><a href="#" id="registration_btn"><span class="new"></span>New</a></p></li>
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+            <li><p class="btn_blue"><a href="#" id="search_btn"><span class="search"></span>Search</a></p></li>
+            </c:if>
+            <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form_course').clearForm();"><span class="clear"></span>Clear</a></p></li>
+        </ul>
+    </aside>
+    <!-- title_line end -->
 
-<section class="search_table"><!-- search_table start -->
-<form id="dataForm" name="dataForm">
-    <input type="hidden" id="reportFileName" name="reportFileName" />
-    <input type="hidden" id="viewType" name="viewType" />
-    <input type="hidden" id="reportDownFileName" name="reportDownFileName" />
-    <!--param  -->
-    <input type="hidden" id="V_COURSEID" name="V_COURSEID"  />
-    <input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  />
-    <input type="hidden" id="V_WHERESQL" name="V_WHERESQL"  />
-    <input type="hidden" id="V_EXTRAWHERESQL" name="V_EXTRAWHERESQL"  />
-    <input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL"  />
-    <input type="hidden" id="V_FULLSQL" name="V_FULLSQL"  />
-</form>
-<form action="#" method="post" id="form_course" name="form_course">
-<input type="hidden" id="coursId" name="coursId"  />
-<input type="hidden" id="coursCodeR" name="coursCodeR"  />
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:130px" />
-	<col style="width:*" />
-	<col style="width:170px" />
-	<col style="width:*" />
-	<col style="width:130px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<!-- <tr>
-	<th scope="row">Course Code</th>
-	<td>
-	<input type="text" title="Course Code" placeholder="" class="w100p" id="coursCode" name="coursCode"/>
-	</td>
-	<th scope="row">Course Status</th>
-	<td>
-	<select class="w100p" id="stusCodeId" name="stusCodeId">
-	</select>
-	</td>
-	<th scope="row">Course Type</th>
-	<td>
-	<select class="w100p" id="codeId" name="codeId">
-	</select>
-	</td>
-</tr>
- -->
- <tr>
-    <th scope="row">Course Type</th>
-    <td>
-    <select class="w100p" id="codeId" name="codeId">
-    </select>
-    </td>
-    <th scope="row">Member(Y/N)/Type</th>
-    <td>
-    <select class="w23_5p" id="generalCode" name="generalCode">
-    </select>
-    <select class="ml5"  style="width: 73%"  id="memType" name="memType">
-    </select>
-    </td>
-    <th scope="row">Effective date</th>
-    <td>
-        <div class="date_set"><!-- date_set start -->
-        <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="coursStart" name="coursStart" value="${courseInfo.coursStart}"/></p>
-<!--         <span>To</span>
-        <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="newCoursEnd" name="coursEnd" value="${courseInfo.coursEnd}"/></p>
--->
-        </div><!-- date_set end -->
-    </td>
-</tr>
-<tr>
-    <th scope="row">Course Status</th>
-    <td>
-    <select class="w100p" id="stusCodeId" name="stusCodeId">
-    </select>
-    </td>
-	<th scope="row">Course Name</th>
-	<td>
-	<input type="text" title="Course Name" placeholder="" class="w100p" id="coursName" name="coursName"/>
-	</td>
-	<th scope="row">Course Code</th>
-    <td>
-    <input type="text" title="Course Code" placeholder="" class="w100p" id="coursCode" name="coursCode"/>
-    </td>
-<!--
-	<th scope="row">Location</th>
-	<td>
-	<input type="text" title="Location" placeholder="" class="w100p" id="coursLoc" name="coursLoc"/>
-	</td>
-	<th scope="row">Training Period</th>
-	<td>
-	<div class="date_set"><!-- date_set start --
-	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="coursStart" name="coursStart"/></p>
-	<span>To</span>
-	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="coursEnd" name="coursEnd"/></p>
-	</div><!-- date_set end --
-	</td>
--->
-</tr>
-</tbody>
-</table><!-- table end -->
+    <!-- search_table start -->
+    <section class="search_table">
+    <form id="dataForm" name="dataForm">
+        <input type="hidden" id="reportFileName" name="reportFileName" />
+        <input type="hidden" id="viewType" name="viewType" />
+        <input type="hidden" id="reportDownFileName" name="reportDownFileName" />
+        <!-- param  -->
+        <input type="hidden" id="V_COURSEID" name="V_COURSEID"  />
+        <input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  />
+        <input type="hidden" id="V_WHERESQL" name="V_WHERESQL"  />
+        <input type="hidden" id="V_EXTRAWHERESQL" name="V_EXTRAWHERESQL"  />
+        <input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL"  />
+        <input type="hidden" id="V_FULLSQL" name="V_FULLSQL"  />
+    </form>
 
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-</c:if>
-<dl class="link_list">
-	<dt>Link</dt>
-	<dd>
-	<ul class="btns">
-		<li><p class="link_btn"><a href="#" onclick="javascript:fn_generate('PDF');">Course Report (PDF)</a></p></li>
-		<li><p class="link_btn"><a href="#" onclick="javascript:fn_generate('EXCEL');">Course Report (Excel)</a></p></li>
- 	    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-	</dd>
-</dl>
-</aside><!-- link_btns_wrap end -->
+    <form action="#" method="post" id="form_course" name="form_course">
+        <input type="hidden" id="coursId" name="coursId"  />
+        <input type="hidden" id="coursCodeR" name="coursCodeR"  />
+        <table class="type1"><!-- table start -->
+            <caption>table</caption>
+            <colgroup>
+                <col style="width:130px" />
+                <col style="width:*" />
+                <col style="width:170px" />
+                <col style="width:*" />
+                <col style="width:130px" />
+                <col style="width:*" />
+            </colgroup>
+            <tbody>
+                <!-- <tr>
+                    <th scope="row">Course Code</th>
+                    <td>
+                    <input type="text" title="Course Code" placeholder="" class="w100p" id="coursCode" name="coursCode"/>
+                    </td>
+                    <th scope="row">Course Status</th>
+                    <td>
+                    <select class="w100p" id="stusCodeId" name="stusCodeId">
+                    </select>
+                    </td>
+                    <th scope="row">Course Type</th>
+                    <td>
+                    <select class="w100p" id="codeId" name="codeId">
+                    </select>
+                    </td>
+                </tr>
+                 -->
+                 <tr>
+                    <th scope="row">Course Type</th>
+                    <td>
+                        <select class="w100p" id="codeId" name="codeId"></select>
+                    </td>
+                    <th scope="row">Member(Y/N)/Type</th>
+                    <td>
+                        <select class="w23_5p" id="generalCode" name="generalCode"></select>
+                        <select class="ml5"  style="width: 73%"  id="memType" name="memType"></select>
+                    </td>
+                    <th scope="row">Effective date</th>
+                    <td>
+                        <!-- date_set start -->
+                        <div class="date_set">
+                            <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="coursStart" name="coursStart" value="${courseInfo.coursStart}"/></p>
+                        <!--
+                        <span>To</span>
+                        <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="newCoursEnd" name="coursEnd" value="${courseInfo.coursEnd}"/></p>
+                        -->
+                        </div>
+                        <!-- date_set end -->
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Course Status</th>
+                    <td>
+                        <select class="w100p" id="stusCodeId" name="stusCodeId"></select>
+                    </td>
+                    <th scope="row">Course Name</th>
+                    <td>
+                        <input type="text" title="Course Name" placeholder="" class="w100p" id="coursName" name="coursName"/>
+                    </td>
+                    <th scope="row">Course Code</th>
+                    <td>
+                        <input type="text" title="Course Code" placeholder="" class="w100p" id="coursCode" name="coursCode"/>
+                    </td>
+                    <!--
+                    <th scope="row">Location</th>
+                    <td>
+                    <input type="text" title="Location" placeholder="" class="w100p" id="coursLoc" name="coursLoc"/>
+                    </td>
+                    <th scope="row">Training Period</th>
+                    <td>
+                    <div class="date_set"><!-- date_set start --
+                    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="coursStart" name="coursStart"/></p>
+                    <span>To</span>
+                    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="coursEnd" name="coursEnd"/></p>
+                    </div><!-- date_set end --
+                    </td>
+                -->
+                </tr>
+            </tbody>
+        </table>
+        <!-- table end -->
 
-</form>
-</section><!-- search_table end -->
+        <!-- link_btns_wrap start -->
+        <aside class="link_btns_wrap">
+            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+                <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+            </c:if>
+            <dl class="link_list">
+                <dt>Link</dt>
+                <dd>
+                    <ul class="btns">
+                        <li><p class="link_btn"><a href="#" onclick="javascript:fn_generate('PDF');">Course Report (PDF)</a></p></li>
+                        <li><p class="link_btn"><a href="#" onclick="javascript:fn_generate('EXCEL');">Course Report (Excel)</a></p></li>
+                    </ul>
+                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+                </dd>
+            </dl>
+        </aside>
+        <!-- link_btns_wrap end -->
 
-<section class="search_result"><!-- search_result start -->
+    </form>
+    </section>
+    <!-- search_table end -->
 
-<aside class="title_line"><!-- title_line start -->
-<h4>Course List</h4>
-<ul class="right_btns">
-    <!-- <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li>
-    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-    <li><p class="btn_grid"><a href="#" id="viewEdit_btn">Edit</a></p></li>
-   <li><p class="btn_grid"><a href="#" id="registration_btn">New</a></p></li>-->
-    <li><p class="btn_grid"><a href="#" id="result_btn">Result</a></p></li>
-    </c:if>
-    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_grid"><a href="#" id="course_Save_btn">Save</a></p></li>
-    </c:if>
-</ul>
-</aside><!-- title_line end -->
+    <section class="search_result">
+    <!-- search_result start -->
 
-<article class="grid_wrap" id="course_grid_wrap" style="width:100%; height:200px; margin:0 auto;"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
+        <!-- title_line start -->
+        <aside class="title_line">
+            <h4>Course List</h4>
+            <ul class="right_btns">
+                <!--
+                <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+                <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+                <li><p class="btn_grid"><a href="#">DEL</a></p></li>
+                <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+                <li><p class="btn_grid"><a href="#" id="viewEdit_btn">Edit</a></p></li>
+                <li><p class="btn_grid"><a href="#" id="registration_btn">New</a></p></li>
+                <li><p class="btn_grid"><a href="#" id="result_btn">Result</a></p></li>
+                </c:if>
+                -->
+                <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                    <li><p class="btn_grid"><a href="#" id="course_Save_btn">Save</a></p></li>
+                </c:if>
+            </ul>
+        </aside>
+        <!-- title_line end -->
 
-<aside class="title_line" style="margin-top:10px;"><!-- title_line start -->
-<h4>Attendee List</h4>
-<ul class="right_btns">
-    <!-- <li><p class="btn_grid"><a href="#" id="attendee_btn">Attendee</a></p></li> -->
-    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_grid"><a href="#" id="addRow_btn">Add</a></p></li>
-    <li><p class="btn_grid"><a href="#" id="delRow_btn">Del</a></p></li>
-    <li><p class="btn_grid"><a href="#" id="attendee_save_btn">Save</a></p></li>
-    </c:if>
-</ul>
-</aside><!-- title_line end -->
+        <!-- grid_wrap start -->
+        <article class="grid_wrap" id="course_grid_wrap" style="width:100%; height:200px; margin:0 auto;">
+        </article>
+        <!-- grid_wrap end -->
 
-<article class="grid_wrap" id="attendee_grid_wrap" style="width:100%; height:200px; margin:0 auto;"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
+        <!-- title_line start -->
+        <aside class="title_line" style="margin-top:10px;">
+            <h4>Attendee List</h4>
+            <ul class="right_btns">
+                <!-- <li><p class="btn_grid"><a href="#" id="attendee_btn">Attendee</a></p></li> -->
+                <li><p class="btn_grid"><a href="#" id="result_btn">Result</a></p></li>
+                <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                <li><p class="btn_grid"><a href="#" id="addRow_btn">Add</a></p></li>
+                <li><p class="btn_grid"><a href="#" id="delRow_btn">Del</a></p></li>
+                <li><p class="btn_grid"><a href="#" id="attendee_save_btn">Save Attendees</a></p></li>
+                </c:if>
+            </ul>
+        </aside>
+        <!-- title_line end -->
 
-</section><!-- search_result end -->
+        <article class="grid_wrap" id="attendee_grid_wrap" style="width:100%; height:200px; margin:0 auto;"><!-- grid_wrap start -->
+        </article>
+        <!-- grid_wrap end -->
 
-</section><!-- content end -->
+    </section>
+    <!-- search_result end -->
+
+</section>
+<!-- content end -->
