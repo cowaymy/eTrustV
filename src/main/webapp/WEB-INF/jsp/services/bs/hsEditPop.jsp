@@ -159,9 +159,16 @@ var myDetailGridData = null;
           AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
         } else {
           if  ( availQty  <  Number(event.value) ){
-            Common.alert('*<b> Not enough available stock to the member.  <br> availQty['+ availQty +'] </b>');
-            AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
-           }
+        	  // temporary allow WP CORE product to by pass qty checking by Hui Ding, 15-10-2020. (Temporary)
+        	  var productId = $("#hidStockCode").val(); //basicInfo.stockId
+        	  console.log("hidStockCode: " + productId);
+        	  if (sk == 295 && productId == 112194){
+        		  //by pass. lets go through
+        	  } else {
+	            Common.alert('*<b> Not enough available stock to the member.  <br> availQty['+ availQty +'] </b>');
+	            AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
+        	  }
+	       }
         }
 
         // KR-OHK Serial Check add
@@ -1030,6 +1037,7 @@ function SearchListAjax(obj){
  <input type="hidden" value="${orderDetail.basicInfo.stockCode}" id="hidStockCode" name="hidStockCode"/>
  <input type="hidden" value="${orderDetail.basicInfo.ordNo}" id="hidSalesOrdNo" name="hidSalesOrdNo"/>
  <input type="hidden" value="${basicinfo.no}" id="hidSalesOrdCd" name="hidSalesOrdCd"/>
+
 
  <input type="text" value="<c:out value="${basicinfo.stusCodeId}"/> "  id="stusCode" name="stusCode"/>
  <input type="text" value="<c:out value="${basicinfo.failResnId}"/> "  id="failResn" name="failResn"/>
