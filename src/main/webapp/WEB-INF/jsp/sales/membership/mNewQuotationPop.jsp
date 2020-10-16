@@ -1196,7 +1196,7 @@ $(document).ready(function(){
 								rtnMsg += "* This order has outstanding. Membership purchase is disallowed.<br />";
 								rtnValue = false;
 							} else{
-										 //webster lee 20072020:Added new validation
+								//webster lee 20072020:Added new validation
 				                Common.ajaxSync("GET", "/sales/membership/getOutrightMemLedge", $("#getDataForm").serialize(), function(result1) {
 				                	console.log("==========4===");
 			                        console.log(result1);
@@ -1246,7 +1246,33 @@ $(document).ready(function(){
 				rtnMsg += "<spring:message code="sal.alert.msg.onlyRegOrINV" /><br>";
 				rtnValue = false;
 			}
+		} else {
+		    Common.ajaxSync("GET", "/sales/membership/getOutrightMemLedge", $("#getDataForm").serialize(), function(result1) {
+                console.log("==========4===");
+                console.log(result1);
+
+                if(result1 != null) {
+                    if (result1.amt > 0) {
+                        rtnMsg +=  "This order has outstanding.<br />";
+                        rtnValue = false;
+                    }
+                }
+
+            }, function(jqXHR, textStatus, errorThrown) {
+                try {
+                    console.log("status : " + jqXHR.status);
+                    console.log("code : " + jqXHR.responseJSON.code);
+                    console.log("message : " + jqXHR.responseJSON.message);
+                    console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+                }
+                catch (e) {
+                    console.log(e);
+                }
+                rtnMsg += jqXHR.responseJSON.message;
+                rtnValue = false;
+            });
 		}
+
 
 	    if (rtnValue == false) {
 	        Common.alert("<spring:message code="sal.alert.title.rentalOrderValidation" />" + DEFAULT_DELIMITER + rtnMsg);
