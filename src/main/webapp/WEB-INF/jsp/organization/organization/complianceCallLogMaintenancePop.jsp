@@ -26,6 +26,8 @@ $(document).ready(function(){
     	   orderNo =  AUIGrid.getCellValue(myGridID_order, event.rowIndex, "salesOrdNo");
        });
 
+       var picID = "${complianceValue.cmplncPersonInChrg}";
+       $("#cmdchangePerson option[value='" + picID + "']").attr("selected", true);
 
        $("#cmbCaseStatus").change(function(){
     	   //class="disabled" disabled="disabled"

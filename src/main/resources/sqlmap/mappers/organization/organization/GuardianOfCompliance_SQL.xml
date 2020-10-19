@@ -3,155 +3,173 @@
 <mapper
     namespace="com.coway.trust.biz.organization.organization.impl.GuardianOfComplianceMapper">
 
-		<select id="selectGuardianofComplianceList" parameterType="Map" resultType="egovMap">
-		<![CDATA[
-		SELECT Project1.REQUESTID REQUESTID  ,
-		                ( SELECT TT.CODE_NAME
-					          FROM
-					             ( SELECT DISTINCT T.C1
-					                    , T.CODE_ID
-					                    , T.CODE_NAME
-					                 FROM
-					                    ( SELECT 1 C1
-					                           , T1.RESN_ID CODE_ID
-					                           , T1.CODE ||'-'|| T1.RESN_DESC AS CODE_NAME
-					                        FROM SYS0032M T1
-					                       WHERE T1.RESN_TYPE_ID = '1389'
-					                         AND 1 = T1.STUS_CODE_ID
-					                       UNION ALL
-					                      SELECT 1 C1
-					                           , T2.RESN_ID CODE_ID
-					                           , T2.CODE || ' - ' || T2.RESN_DESC AS CODE_NAME
-					                        FROM SYS0032M T2
-					                       WHERE T2.RESN_ID = '1'
-					                    ) T
-					             ) TT  WHERE 1=1 AND TT.CODE_ID = project1.requestcategory) requestcategory,
-			       Project1.RESN_DESC RESN_DESC  ,
-			       Project1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
-			       Project1.REQUESTORDERID REQUESTORDERID  ,
-			       Project1.SALES_ORD_NO SALES_ORD_NO  ,
-			       Project1.NAME NAME  ,
-			       Project1.REQUESTREFDATE REQUESTREFDATE  ,
-			       Project1.REQUESTMEMID REQUESTMEMID  ,
-			       Project1.MEM_CODE MEM_CODE  ,
-			       Project1.REQUESTCONTENT REQUESTCONTENT  ,
-			       Project1.REQUESTATTACHMENT REQUESTATTACHMENT  ,
-			       Project1.REQUESTORTYPEID REQUESTORTYPEID  ,
-			       Project1.REQUESTSTATUSID REQUESTSTATUSID  ,
-			       Project1.NAME1 NAME1  ,
-			       Project1.REQUESTCREATEAT REQUESTCREATEAT  ,
-			       Project1.USER_NAME USER_NAME ,
-					Project1.STATE STATE ,
-
-			       Project1.RESPNS_UPDATED ,
-                   Project1.RESPNS_MSG
-
-			  FROM ( SELECT Filter1.REQUESTID REQUESTID  ,
-			                Filter1.REQUESTCATEGORY REQUESTCATEGORY  ,
-			                Filter1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
-			                Filter1.REQUESTORDERID REQUESTORDERID  ,
-			                Filter1.REQUESTREFDATE REQUESTREFDATE  ,
-			                Filter1.REQUESTMEMID REQUESTMEMID  ,
-			                Filter1.REQUESTCONTENT REQUESTCONTENT  ,
-			                Filter1.REQUESTATTACHMENT REQUESTATTACHMENT  ,
-			                Filter1.REQUESTORTYPEID REQUESTORTYPEID  ,
-			                Filter1.REQUESTSTATUSID REQUESTSTATUSID  ,
-			                Filter1.REQUESTCREATEAT REQUESTCREATEAT  ,
-			                Filter1.SALES_ORD_NO SALES_ORD_NO  ,
-			                Filter1.NAME1 NAME  ,
-			                Filter1.MEM_CODE MEM_CODE  ,
-			                Filter1.RESN_DESC RESN_DESC  ,
-			                Filter1.NAME2 NAME1  ,
-			                Extent8.USER_NAME USER_NAME ,
-			                Filter1.STATE STATE ,
-
-			                Filter1.RESPNS_UPDATED ,
-                            Filter1.RESPNS_MSG
-
-
-			         FROM ( SELECT Extent1.REQST_ID REQUESTID  ,
-					                       Extent1.REQST_CTGRY REQUESTCATEGORY  ,
-					                       Extent1.REQST_CTGRY_SUB REQUESTCATEGORY_SUB  ,
-					                       Extent1.REQST_ORD_ID REQUESTORDERID  ,
-					                       Extent1.REQST_REF_DT REQUESTREFDATE  ,
-					                       Extent1.REQST_MEM_ID REQUESTMEMID  ,
-					                       Extent1.REQST_CNTNT REQUESTCONTENT  ,
-					                       Extent1.REQST_ATTACH REQUESTATTACHMENT  ,
-					                       Extent1.REQST_OR_TYPE_ID REQUESTORTYPEID  ,
-					                       Extent1.REQST_STUS_ID REQUESTSTATUSID  ,
-					                       Extent1.REQST_CRT_DT REQUESTCREATEAT  ,
-					                       Extent1.REQST_CRT_USER_ID REQUESTCREATEBY  ,
-					                       Extent2.SALES_ORD_NO SALES_ORD_NO  ,
-					                       Extent3.NAME NAME1  ,
-					                       Extent4.MEM_CODE MEM_CODE  ,
-					                       Extent6.RESN_DESC RESN_DESC  ,
-
-					                       Extent7.NAME NAME2 ,
-					                       Extent10.STATE STATE ,
-
-
-					                       Extent9.RESPNS_UPDATED ,
-                                           Extent9.RESPNS_MSG
-
-				                FROM MSC0043M Extent1
-				                       LEFT JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.REQST_ORD_ID
-				                       LEFT JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
-				                       LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.REQST_MEM_ID
-				                       LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent4.MEM_TYPE
-				                       LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = Extent1.REQST_CTGRY
-				                       LEFT JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent1.REQST_STUS_ID
-
-				                       LEFT JOIN SAL0023D Extent8 ON Extent8.CUST_ADD_ID = Extent3.CUST_ID
-                                       LEFT JOIN SYS0064M Extent10 ON Extent10.AREA_ID = Extent8.AREA_ID
-
-
-                                       LEFT JOIN MSC0044M Extent9   ON Extent9.PAPARAZ_REQST_ID = Extent1.REQST_ID
-                                       AND Extent9.RESPNS_ID in 
-                                       (
-                                         SELECT MAX(a.RESPNS_ID)
-                                         from MSC0044M a , MSC0043M b
-                                         where a.PAPARAZ_REQST_ID = b.REQST_ID
-                                         group by a.PAPARAZ_REQST_ID
-                                         )
-
-				                WHERE 1=1
-                    ]]>
-                      <if test="caseCategoryList != null and caseCategoryList != '' ">
-                             AND  Extent1.REQST_CTGRY IN
-                            <foreach item="item" collection="caseCategoryList" index="index" open="(" separator="," close=")">
+        <select id="selectGuardianofComplianceList" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+            SELECT
+                Project1.REQUESTID REQUESTID  ,
+                ( SELECT TT.CODE_NAME
+                  FROM (
+                    SELECT
+                        DISTINCT T.C1
+                      , T.CODE_ID
+                      , T.CODE_NAME
+                    FROM (
+                        SELECT
+                            1 C1
+                          , T1.RESN_ID CODE_ID
+                          , T1.CODE ||'-'|| T1.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T1
+                        WHERE T1.RESN_TYPE_ID = '1389'
+                          AND 1 = T1.STUS_CODE_ID
+                        UNION ALL
+                        SELECT
+                            1 C1
+                          , T2.RESN_ID CODE_ID
+                          , T2.CODE || ' - ' || T2.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T2
+                        WHERE T2.RESN_ID = '1'
+                    ) T
+                  ) TT
+                  WHERE 1=1
+                  AND TT.CODE_ID = project1.requestcategory
+                ) requestcategory,
+                Project1.RESN_DESC RESN_DESC  ,
+                Project1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
+                Project1.REQUESTORDERID REQUESTORDERID  ,
+                Project1.SALES_ORD_NO SALES_ORD_NO  ,
+                Project1.NAME NAME  ,
+                Project1.REQUESTREFDATE REQUESTREFDATE  ,
+                Project1.REQUESTMEMID REQUESTMEMID  ,
+                Project1.MEM_CODE MEM_CODE  ,
+                Project1.REQUESTCONTENT REQUESTCONTENT  ,
+                Project1.REQUESTATTACHMENT REQUESTATTACHMENT  ,
+                Project1.REQUESTORTYPEID REQUESTORTYPEID  ,
+                Project1.REQUESTSTATUSID REQUESTSTATUSID  ,
+                Project1.NAME1 NAME1  ,
+                Project1.REQUESTCREATEAT REQUESTCREATEAT  ,
+                Project1.USER_NAME USER_NAME ,
+                Project1.STATE STATE ,
+                Project1.RESPNS_UPDATED ,
+                Project1.RESPNS_MSG,
+                Project1.CASE_NO,
+                Project1.PIC_NAME
+            FROM (
+                SELECT
+                    Filter1.REQUESTID REQUESTID  ,
+                    Filter1.REQUESTCATEGORY REQUESTCATEGORY  ,
+                    Filter1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
+                    Filter1.REQUESTORDERID REQUESTORDERID  ,
+                    Filter1.REQUESTREFDATE REQUESTREFDATE  ,
+                    Filter1.REQUESTMEMID REQUESTMEMID  ,
+                    Filter1.REQUESTCONTENT REQUESTCONTENT  ,
+                    Filter1.REQUESTATTACHMENT REQUESTATTACHMENT  ,
+                    Filter1.REQUESTORTYPEID REQUESTORTYPEID  ,
+                    Filter1.REQUESTSTATUSID REQUESTSTATUSID  ,
+                    Filter1.REQUESTCREATEAT REQUESTCREATEAT  ,
+                    Filter1.SALES_ORD_NO SALES_ORD_NO  ,
+                    Filter1.NAME1 NAME  ,
+                    Filter1.MEM_CODE MEM_CODE  ,
+                    Filter1.RESN_DESC RESN_DESC  ,
+                    Filter1.NAME2 NAME1  ,
+                    Extent8.USER_NAME USER_NAME ,
+                    Filter1.STATE STATE ,
+                    Filter1.RESPNS_UPDATED ,
+                    Filter1.RESPNS_MSG,
+                    Filter1.CASE_NO,
+                    Filter1.PIC_NAME
+                FROM (
+                    SELECT
+                        Extent1.REQST_ID REQUESTID  ,
+                        Extent1.REQST_CTGRY REQUESTCATEGORY  ,
+                        Extent1.REQST_CTGRY_SUB REQUESTCATEGORY_SUB  ,
+                        Extent1.REQST_ORD_ID REQUESTORDERID  ,
+                        Extent1.REQST_REF_DT REQUESTREFDATE  ,
+                        Extent1.REQST_MEM_ID REQUESTMEMID  ,
+                        Extent1.REQST_CNTNT REQUESTCONTENT  ,
+                        Extent1.REQST_ATTACH REQUESTATTACHMENT  ,
+                        Extent1.REQST_OR_TYPE_ID REQUESTORTYPEID  ,
+                        Extent1.REQST_STUS_ID REQUESTSTATUSID  ,
+                        Extent1.REQST_CRT_DT REQUESTCREATEAT  ,
+                        Extent1.REQST_CRT_USER_ID REQUESTCREATEBY  ,
+                        Extent2.SALES_ORD_NO SALES_ORD_NO  ,
+                        Extent3.NAME NAME1  ,
+                        Extent4.MEM_CODE MEM_CODE  ,
+                        Extent6.RESN_DESC RESN_DESC  ,
+                        Extent7.NAME NAME2 ,
+                        Extent10.STATE STATE ,
+                        Extent9.RESPNS_UPDATED ,
+                        Extent9.RESPNS_MSG,
+                        Extent1.REQST_NO CASE_NO,
+                        Extent11.NAME PIC_NAME
+                    FROM MSC0043M Extent1
+                    LEFT JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.REQST_ORD_ID
+                    LEFT JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
+                    LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.REQST_MEM_ID
+                    LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent4.MEM_TYPE
+                    LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = Extent1.REQST_CTGRY
+                    LEFT JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent1.REQST_STUS_ID
+                    LEFT JOIN SAL0023D Extent8   ON Extent8.CUST_ADD_ID = Extent3.CUST_ID
+                    LEFT JOIN SYS0064M Extent10  ON Extent10.AREA_ID = Extent8.AREA_ID
+                    LEFT JOIN MSC0044M Extent9   ON Extent9.PAPARAZ_REQST_ID = Extent1.REQST_ID
+                                                AND Extent9.RESPNS_ID in (
+                                                    SELECT MAX(a.RESPNS_ID)
+                                                    from MSC0044M a , MSC0043M b
+                                                    where a.PAPARAZ_REQST_ID = b.REQST_ID
+                                                    group by a.PAPARAZ_REQST_ID
+                                                )
+                    LEFT JOIN (
+                        SELECT
+                            A.CMPLNC_ID,
+                            A.CMPLNC_NO,
+                            A.MEM_ID,
+                            B.CMPLNC_SO_ID,
+                            C.CMPLNC_PERSON_IN_CHRG,
+                            E.NAME
+                        FROM MSC0005D A, MSC0006D B, MSC0007D C, SYS0047M D, ORG0001D E
+                        WHERE A.CMPLNC_ID = B.CMPLNC_ID
+                          AND A.CMPLNC_ID = C.CMPLNC_ID
+                          AND C.CMPLNC_PERSON_IN_CHRG = D.USER_ID
+                          AND D.HR_CODE = E.MEM_CODE
+                    ) Extent11  ON Extent1.REQST_MEM_ID = Extent11.MEM_ID
+                                                AND Extent1.REQST_ORD_ID = Extent11.CMPLNC_SO_ID
+                    WHERE 1=1
+            ]]>
+                    <if test="caseCategoryList != null and caseCategoryList != '' ">
+                        AND  Extent1.REQST_CTGRY IN
+                        <foreach item="item" collection="caseCategoryList" index="index" open="(" separator="," close=")">
                             #{item}
-                            </foreach>
-                      </if>
+                        </foreach>
+                    </if>
                     <if test="requestStatusIdList != null and requestStatusIdList != '' ">
-                             AND  Extent1.REQST_STUS_ID IN
-                            <foreach item="item" collection="requestStatusIdList" index="index" open="(" separator="," close=")">
+                        AND  Extent1.REQST_STUS_ID IN
+                        <foreach item="item" collection="requestStatusIdList" index="index" open="(" separator="," close=")">
                             #{item}
-                            </foreach>
-                      </if>
-                         ) Filter1
+                        </foreach>
+                    </if>
+                ) Filter1
                 JOIN SYS0047M Extent8   ON Extent8.USER_ID = Filter1.REQUESTCREATEBY
                 WHERE 1=1
-                    <if test="requestCreatStart != null and requestCreatStart != '' ">
-                        AND  Filter1.REQUESTCREATEAT >= to_date(#{requestCreatStart},'DD/MM/YYYY')
-                    </if>
-                    <if test="requestCreatEnd != null and requestCreatEnd != '' ">
-                        AND  Filter1.REQUESTCREATEAT <![CDATA[<]]>  to_date(#{requestCreatEnd},'DD/MM/YYYY')
-                    </if>
-                    <if test="salesOrdNo != null and salesOrdNo != '' ">
-                        AND  Filter1.SALES_ORD_NO = #{salesOrdNo}
-                    </if>
-                    <if test="customerName != null and customerName != '' ">
-                        AND  Filter1.NAME1 = #{customerName}
-                    </if>
-                    <if test="complaintDate != null and complaintDate != '' ">
-                        AND  Filter1.REQUESTREFDATE =  to_date(#{complaintDate},'DD/MM/YYYY')
-                    </if>
-                    <if test="involvedPersonCode != null and involvedPersonCode != '' ">
-                        AND  Filter1.MEM_CODE = #{involvedPersonCode}
-                    </if>
-			          ) Project1
-                ORDER BY Project1.REQUESTID ASC
-		</select>
+                <if test="requestCreatStart != null and requestCreatStart != '' ">
+                    AND  Filter1.REQUESTCREATEAT >= to_date(#{requestCreatStart},'DD/MM/YYYY')
+                </if>
+                <if test="requestCreatEnd != null and requestCreatEnd != '' ">
+                    AND  Filter1.REQUESTCREATEAT <![CDATA[<]]>  to_date(#{requestCreatEnd},'DD/MM/YYYY')
+                </if>
+                <if test="salesOrdNo != null and salesOrdNo != '' ">
+                    AND  Filter1.SALES_ORD_NO = #{salesOrdNo}
+                </if>
+                <if test="customerName != null and customerName != '' ">
+                    AND  Filter1.NAME1 = #{customerName}
+                </if>
+                <if test="complaintDate != null and complaintDate != '' ">
+                    AND  Filter1.REQUESTREFDATE =  to_date(#{complaintDate},'DD/MM/YYYY')
+                </if>
+                <if test="involvedPersonCode != null and involvedPersonCode != '' ">
+                    AND  Filter1.MEM_CODE = #{involvedPersonCode}
+                </if>
+            ) Project1
+            ORDER BY Project1.REQUESTID ASC
+        </select>
 
 		<select id="selectGuardianofComplianceListCodyHP" parameterType="Map" resultType="egovMap">
         <![CDATA[

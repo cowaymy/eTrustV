@@ -10,6 +10,8 @@ $(document).ready(function(){
 	   fn_GuardianRemarkGrid();
 	   fn_guardianRemark();
 
+	   doGetComboAndGroup2('/organization/compliance/getPicList.do', {}, '', 'cmdchangePerson', 'S', 'fn_setOptGrpClass');//product 생성
+
 
             var reqstCtgry = "${guardianofCompliance.reqstCtgry}";
             $("#caseCategory option[value='"+ reqstCtgry +"']").attr("selected", true);
@@ -178,6 +180,9 @@ function fn_memberListNew(){
 	});
 }
 
+function fn_setOptGrpClass() {
+    $("optgroup").attr("class" , "optgroup_text")
+}
 
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -344,6 +349,10 @@ function fn_memberListNew(){
         <option value="10">Cancelled</option>
 
     </select>
+    </td>
+    <th scope="row">Person In Charge</th>
+    <td colspan="3">
+        <select id="cmdchangePerson" name="changePerson" class="w100p"></select>
     </td>
 </tr>
 <tr id = "ccontent">

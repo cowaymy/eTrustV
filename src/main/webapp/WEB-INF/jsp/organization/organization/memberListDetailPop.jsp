@@ -6,6 +6,7 @@ var myGridID4;/* promote */
 var myGridID1;/* doc */
 var myGridID2;
 var myGridID3;
+var myGridID5; /* Training */
 var grpOrgList = new Array(); // Group Organization List
 var orgList = new Array(); // Organization List
 
@@ -17,11 +18,13 @@ console.log("ter-res-pro-dem pop");
     createAUIGrid1();
     createAUIGrid2();
     createAUIGrid3();
+    createAUIGrid5();
 
     fn_selectPromote();
     fn_selectDocSubmission();
     fn_selectPaymentHistory();
     fn_selectRenewalHistory();
+    fn_selectTraining();
 
     doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
 
@@ -521,6 +524,40 @@ function createAUIGrid3() {
     myGridID3 = AUIGrid.create("#grid_wrap3", columnLayout, gridPros);
 }
 
+function createAUIGrid5() {
+
+    var columnLayout = [ {
+        dataField : "courseCode",
+        headerText : "Training Course",
+        editable : false,
+        width : 575
+    }, {
+        dataField : "cDate",
+        headerText : "Date",
+        editable : false,
+        width : 130
+    }, {
+        dataField : "result",
+        headerText : "Result",
+        editable : false,
+        width : 130
+    }];
+
+    var gridPros = {
+        usePaging : true,
+        pageRowCount : 20,
+        editable : true,
+        showStateColumn : true,
+        displayTreeOpen : true,
+        headerHeight : 30,
+        skipReadonlyColumns : true,
+        wrapSelectionMove : true,
+        showRowNumColumn : true
+    };
+
+    myGridID5 = AUIGrid.create("#grid_wrap5", columnLayout, gridPros);
+}
+
 var gridPros = {
 
     // 페이징 사용
@@ -627,6 +664,19 @@ function fn_selectPromote(){
     });
 }
 
+function fn_selectTraining() {
+    var jsonObj = {
+            MemberID : $("#memberid").val(),
+            MemberType : $("#memtype").val()
+    };
+
+    Common.ajax("GET", "/organization/selectTraining", jsonObj, function(result) {
+        console.log("data : " + result);
+        AUIGrid.setGridData(myGridID5, result);
+        AUIGrid.resize(myGridID5, 1000, 400);
+    });
+}
+
 function fn_tabSize(){
 	AUIGrid.resize(myGridID,1000,400);
 }
@@ -694,6 +744,7 @@ function fn_winClose(){
     <li><a href="#"  >Member Payment History</a></li>
     <li><a href="#" >Promote/Demote History</a></li>
     <li id="hideContent" ><a href="#" >Pa Renewal History</a></li>
+    <li><a href="#" >Training</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -1197,6 +1248,14 @@ function fn_winClose(){
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="grid_wrap3" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+</article><!-- grid_wrap end -->
+
+</article><!-- tap_area end -->
+
+<article class="tap_area"><!-- tap_area start -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+<div id="grid_wrap5" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->

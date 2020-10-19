@@ -224,8 +224,20 @@ function ExcelListGrid() {
         editable : false,
         width : 350,
         style : "aui-grid-user-custom-left"
-    }
+    },
     /////////////////////////// ADDITIONAL FIELD //////////////////////////////
+    {
+        dataField : "caseNo",
+        headerText : "Case No",
+        editable : false,
+        width : 150
+    },
+    {
+        dataField : "picName",
+        headerText : "PIC",
+        editable : false,
+        width : 250
+    }
     ];
 
 
@@ -357,10 +369,10 @@ $("#download").click(function() {
 <ul class="right_btns">
      <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceNew()"><span class="new"></span>New</a></p></li>
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-        <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceView()"><span class="view"></span>View</a></p></li>
+        <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceView()"><span class="view"></span>Compliance View</a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-        <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceViewLimit()"><span class="view"></span>View</a></p></li>
+        <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceViewLimit()"><span class="view"></span>Requester View</a></p></li>
     </c:if>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceSearch()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#complianceSearch').clearForm();"><span class="clear"></span>Clear</a></p></li>

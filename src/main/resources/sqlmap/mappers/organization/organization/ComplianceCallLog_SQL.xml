@@ -323,8 +323,11 @@
 				       Extent1.CMPLNC_CRT_DT CMPLNC_CRT_DT  ,
 				       Extent1.CMPLNC_CRT_USER_ID CMPLNC_CRT_USER_ID  ,
 				       Extent1.CMPLNC_UPD_DT CMPLNC_UPD_DT  ,
-				       Extent1.CMPLNC_UPD_USER_ID CMPLNC_UPD_USER_ID
+				       Extent1.CMPLNC_UPD_USER_ID CMPLNC_UPD_USER_ID,
+				       Extent2.CMPLNC_PERSON_IN_CHRG
 				  FROM MSC0005D Extent1
+				  LEFT JOIN MSC0007D Extent2
+				    ON Extent1.CMPLNC_ID = Extent2.CMPLNC_ID
 				 WHERE  Extent1.CMPLNC_ID = #{complianceId} AND ROWNUM <= 1
 	   ]]>
      </select>
