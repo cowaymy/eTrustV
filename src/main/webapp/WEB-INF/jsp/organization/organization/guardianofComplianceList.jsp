@@ -7,6 +7,8 @@ $(document).ready(function() {
 	ComplianceListGrid();
 	ExcelListGrid();
 
+	doGetComboAndGroup2('/organization/compliance/getPicList.do', {}, '', 'cmdchangePerson', 'S', 'fn_setOptGrpClass');//product 생성
+
     AUIGrid.bind(myGridID, "cellClick", function(event) {
 	    requestid = AUIGrid.getCellValue(myGridID, event.rowIndex, "requestid");
 	});
@@ -355,6 +357,10 @@ $("#download").click(function() {
 	AUIGrid.exportToXlsx(excelGridID, excelProps);
 });
 });
+
+function fn_setOptGrpClass() {
+    $("optgroup").attr("class" , "optgroup_text")
+}
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -428,22 +434,26 @@ $("#download").click(function() {
     </td>
     <th scope="row">Order No</th>
     <td>
-    <input type="text" title="" placeholder="Order No" class="" id="salesOrdNo" name="salesOrdNo"/>
+    <input type="text" title="" placeholder="Order No" class="w100p" id="salesOrdNo" name="salesOrdNo"/>
     </td>
     <th scope="row">Customer Name</th>
     <td>
-    <input type="text" title="" placeholder="Customer Name" class="" id="customerName" name="customerName"/>
+    <input type="text" title="" placeholder="Customer Name" class="w100p" id="customerName" name="customerName"/>
     </td>
 </tr>
 
 <tr>
     <th scope="row">Complaint Date</th>
     <td>
-    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="complaintDate" name="complaintDate"/>
+        <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date w100p" id="complaintDate" name="complaintDate"/>
     </td>
     <th scope="row">Involved Person Code</th>
-    <td colspan="3">
-    <input type="text" title="" placeholder="Involved Person Code" class="" id="involvedPersonCode" name="involvedPersonCode"/>
+    <td>
+        <input type="text" title="" placeholder="Involved Person Code" class="w100p" id="involvedPersonCode" name="involvedPersonCode"/>
+    </td>
+    <th scope="row">Person In Charge</th>
+    <td>
+        <select id="cmdchangePerson" name="changePerson" class="w100p"></select>
     </td>
 </tr>
 </tbody>
