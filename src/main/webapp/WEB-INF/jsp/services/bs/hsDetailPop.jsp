@@ -472,21 +472,30 @@
     // add by jgkim
     var jsonObj = {};
     var resultList = new Array();
+    var updIsReturnList = new Array();
     var gridDataList = AUIGrid.getGridData(myDetailGridID);
     //var gridDataList = AUIGrid.getOrgGridData(myDetailGridID);
     //var gridDataList = AUIGrid.getEditedRowItems(myDetailGridID);
     console.log("fn_saveHsResult :: gridDataList :: " + gridDataList);
     for(var i = 0; i < gridDataList.length; i++) {
       var item = gridDataList[i];
-    	//if(item.name > 0) { // remove this to allow customer discontinue mineral filter (not renew case) by Hui Ding, 2020-10-20
+    	if(item.name > 0) {
     		resultList.push(gridDataList[i]);
-    	//}
+    		console.log("added add result filter: " + gridDataList[i].stkDesc);
+    	} else if (item.isReturn == 1){
+    		updIsReturnList.push(gridDataList[i]);
+    		console.log("added upd filter: " + gridDataList[i].stkDesc);
+    	}
     }
     console.log("fn_saveHsResult :: resultList :: " + resultList);
     jsonObj.add = resultList;
     $("input[name='settleDate']").removeAttr('disabled');
     $("select[name=cmbCollectType]").removeAttr('disabled');
     jsonObj.form = $("#addHsForm").serializeJSON();
+
+    if (updIsReturnList != null){
+    	jsonObj.update = updIsReturnList;
+    }
     //$("input[name='settleDate']").attr('disabled', true);
     //$("select[name=cmbCollectType]").attr('disabled', true);
     console.log("fn_saveHsResult :: jsonObj ::" + jsonObj);

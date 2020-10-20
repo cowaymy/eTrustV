@@ -449,89 +449,92 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       for (int i = 0; i < docType.size(); i++) {
         Map<String, Object> docSub = (Map<String, Object>) docType.get(i);
 
-        docSub.put("bsResultId", nextSeq);
-        docSub.put("bsResultPartId", docSub.get("stkId"));
-        docSub.put("bsResultPartDesc", docSub.get("stkDesc"));
-        docSub.put("bsResultPartQty", docSub.get("name"));
-        docSub.put("bsResultRem", "");
-        docSub.put("bsResultCrtUserId", sessionVO.getUserId());
-        docSub.put("bsResultFilterClm", docSub.get("name"));
-        docSub.put("serialNo", docSub.get("filterBarcdSerialNo"));
+        	logger.info("#### addList: " + docSub.get("stkDesc").toString());
 
-        // docSub.put("bsResultCrtDt");
-        // Map<String, Object> docSub2 = (Map<String, Object>)
-        // insertHsResultfinal.get(i);
+            docSub.put("bsResultId", nextSeq);
+            docSub.put("bsResultPartId", docSub.get("stkId"));
+            docSub.put("bsResultPartDesc", docSub.get("stkDesc"));
+            docSub.put("bsResultPartQty", docSub.get("name"));
+            docSub.put("bsResultRem", "");
+            docSub.put("bsResultCrtUserId", sessionVO.getUserId());
+            docSub.put("bsResultFilterClm", docSub.get("name"));
+            docSub.put("serialNo", docSub.get("filterBarcdSerialNo"));
 
-        EgovMap docSub2 = new EgovMap();
-        Map<String, Object> docSub3 = (Map<String, Object>) docType.get(i);
-        int custId = hsManualMapper.selectCustomer(params);
-        int codyId = hsManualMapper.selectCody(params);
-        params.put("bsResultId", nextSeq);
+            // docSub.put("bsResultCrtDt");
+            // Map<String, Object> docSub2 = (Map<String, Object>)
+            // insertHsResultfinal.get(i);
 
-        // String serialNo = hsManualMapper.selectSerialNo(params);
+            EgovMap docSub2 = new EgovMap();
+            Map<String, Object> docSub3 = (Map<String, Object>) docType.get(i);
+            int custId = hsManualMapper.selectCustomer(params);
+            int codyId = hsManualMapper.selectCody(params);
+            params.put("bsResultId", nextSeq);
 
-        docSub2.put("hsNo", LOG_SVC0008D_NO);
-        docSub2.put("custId", custId);
-        docSub2.put("bsResultPartId", docSub3.get("stkId"));
-        docSub2.put("bsResultPartQty", docSub3.get("name"));
-        docSub2.put("serialNo", docSub3.get("serialNo"));
-        docSub2.put("bsCodyId", codyId);
-        docSub2.put("bsResultId", nextSeq);
+            // String serialNo = hsManualMapper.selectSerialNo(params);
 
-        // docSub2.put("bsResultCrtDt");
+            docSub2.put("hsNo", LOG_SVC0008D_NO);
+            docSub2.put("custId", custId);
+            docSub2.put("bsResultPartId", docSub3.get("stkId"));
+            docSub2.put("bsResultPartQty", docSub3.get("name"));
+            docSub2.put("serialNo", docSub3.get("serialNo"));
+            docSub2.put("bsCodyId", codyId);
+            docSub2.put("bsResultId", nextSeq);
 
-        String vstkId = String.valueOf(docSub.get("stkId"));
-        logger.debug("= STOCK ID : {}", vstkId);
+            // docSub2.put("bsResultCrtDt");
 
-        /*
-         * String filterLastserial = hsManualMapper.select0087DFilter(docSub);
-         *
-         * if("".equals(filterLastserial)){ docSub.put("prvSerialNo",
-         * filterLastserial); }else { docSub.put("lastSerialNo",
-         * docSub.get("SerialNo")); }
-         *
-         * docSub.put("settleDate", params.get("settleDate"));
-         * docSub.put("hidCodyId", params.get("hidCodyId"));
-         * params.put("srvConfigId", docSub.get("srvConfigId"));
-         *
-         * hsManualMapper.updateHsFilterSiriNo(docSub);
-         */
+            String vstkId = String.valueOf(docSub.get("stkId"));
+            logger.debug("= STOCK ID : {}", vstkId);
 
-        if (!"".equals(vstkId) && !("null").equals(vstkId) && vstkId != null) {
-          logger.debug("= INSERT SVC0007D VIA docSub: {}", docSub);
-          hsManualMapper.insertHsResultD(docSub); // INSERT SVC0007D
-          logger.debug("= INSERT LOG0082M VIA docSub2: {}", docSub2);
-          hsManualMapper.insertUsedFilter(docSub2); // INSERT LOG0082M
+            /*
+             * String filterLastserial = hsManualMapper.select0087DFilter(docSub);
+             *
+             * if("".equals(filterLastserial)){ docSub.put("prvSerialNo",
+             * filterLastserial); }else { docSub.put("lastSerialNo",
+             * docSub.get("SerialNo")); }
+             *
+             * docSub.put("settleDate", params.get("settleDate"));
+             * docSub.put("hidCodyId", params.get("hidCodyId"));
+             * params.put("srvConfigId", docSub.get("srvConfigId"));
+             *
+             * hsManualMapper.updateHsFilterSiriNo(docSub);
+             */
 
-          docSub.put("hidOrdId", params.get("hidSalesOrdId"));
+            if (!"".equals(vstkId) && !("null").equals(vstkId) && vstkId != null) {
+              logger.debug("= INSERT SVC0007D VIA docSub: {}", docSub);
+              hsManualMapper.insertHsResultD(docSub); // INSERT SVC0007D
+              logger.debug("= INSERT LOG0082M VIA docSub2: {}", docSub2);
+              hsManualMapper.insertUsedFilter(docSub2); // INSERT LOG0082M
 
-          String filterLastserial = "";
+              docSub.put("hidOrdId", params.get("hidSalesOrdId"));
 
-          if (!CommonUtils.nvl(docSub.get("srvFilterId")).equals("")) {
-            filterLastserial = hsManualMapper.select0087DFilter(docSub);
-          } else {
-            filterLastserial = hsManualMapper.select0087DFilter2(docSub);
+              String filterLastserial = "";
+
+              if (!CommonUtils.nvl(docSub.get("srvFilterId")).equals("")) {
+                filterLastserial = hsManualMapper.select0087DFilter(docSub);
+              } else {
+                filterLastserial = hsManualMapper.select0087DFilter2(docSub);
+              }
+
+              /*
+               * if ("".equals(filterLastserial)) { docSub.put("prvSerialNo",
+               * filterLastserial); } else { docSub.put("lastSerialNo",
+               * docSub.get("serialNo")); }
+               */
+
+              docSub.put("prvSerialNo", CommonUtils.nvl(filterLastserial));
+              docSub.put("lastSerialNo", CommonUtils.nvl(docSub.get("serialNo")));
+              docSub.put("settleDate", params.get("settleDate"));
+              docSub.put("hidCodyId", params.get("hidCodyId"));
+              params.put("srvConfigId", docSub.get("srvConfigId"));
+
+              if (!CommonUtils.nvl(docSub.get("srvFilterId")).equals("")) {
+                hsManualMapper.updateHsFilterSiriNo(docSub); // UPDATE SAL0087D
+              } else {
+                hsManualMapper.updateHsFilterSiriNo2(docSub); // UPDATE SAL0087D
+              }
+            }
           }
 
-          /*
-           * if ("".equals(filterLastserial)) { docSub.put("prvSerialNo",
-           * filterLastserial); } else { docSub.put("lastSerialNo",
-           * docSub.get("serialNo")); }
-           */
-
-          docSub.put("prvSerialNo", CommonUtils.nvl(filterLastserial));
-          docSub.put("lastSerialNo", CommonUtils.nvl(docSub.get("serialNo")));
-          docSub.put("settleDate", params.get("settleDate"));
-          docSub.put("hidCodyId", params.get("hidCodyId"));
-          params.put("srvConfigId", docSub.get("srvConfigId"));
-
-          if (!CommonUtils.nvl(docSub.get("srvFilterId")).equals("")) {
-            hsManualMapper.updateHsFilterSiriNo(docSub); // UPDATE SAL0087D
-          } else {
-            hsManualMapper.updateHsFilterSiriNo2(docSub); // UPDATE SAL0087D
-          }
-        }
-      }
       hsManualMapper.updateHs009d(params); // UPDATE SAL0090D
     }
 
@@ -1351,10 +1354,11 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       bsResultMas_Rev.put("ResultMatchID", String.valueOf(qryBS_Rev.get("resultId")));// RESULT_ID
       bsResultMas_Rev.put("ResultIsAdjust", String.valueOf(1));
 
-      if(qryBS_Rev.get("instChklstCheckBox") != null)
+      if(qryBS_Rev.get("instChklstCheckBox") != null) {
          bsResultMas_Rev.put("instChklstCheckBox", qryBS_Rev.get("instChklstCheckBox"));
-      else
+      } else {
     	 bsResultMas_Rev.put("instChklstCheckBox", params.get("instChklstCheckBox"));
+      }
 
       int count = hsManualMapper.selectTotalFilter(bsResultMas_Rev);
       logger.debug("selectQryResultDet : {}" + bsResultMas_Rev);
