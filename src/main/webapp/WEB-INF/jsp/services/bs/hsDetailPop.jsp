@@ -478,9 +478,9 @@
     console.log("fn_saveHsResult :: gridDataList :: " + gridDataList);
     for(var i = 0; i < gridDataList.length; i++) {
       var item = gridDataList[i];
-    	if(item.name > 0) {
+    	//if(item.name > 0) { // remove this to allow customer discontinue mineral filter (not renew case) by Hui Ding, 2020-10-20
     		resultList.push(gridDataList[i]);
-    	}
+    	//}
     }
     console.log("fn_saveHsResult :: resultList :: " + resultList);
     jsonObj.add = resultList;
