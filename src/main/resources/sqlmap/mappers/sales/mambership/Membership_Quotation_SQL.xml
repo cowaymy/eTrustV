@@ -779,7 +779,7 @@
 	    <select id="getOutrightMemLedge"   parameterType="Map"  resultType="egovMap">
 	       <![CDATA[
 
-		          select SUM(b.SRV_MEM_AMT) AS AMT
+		          select SUM(ROUND(b.SRV_MEM_AMT, 2)) AS AMT
 		              from PAY0024D b
 		              join SAL0095D a  on a.SRV_MEM_ID = b.SRV_MEM_ID
 		          where
