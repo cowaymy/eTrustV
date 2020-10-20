@@ -96,15 +96,19 @@
                #{item}
              </foreach>
          </if>
-         <if test='arrExpiredPeriod != null and arrExpiredPeriod != ""'>
-            AND FLOOR(MONTHS_BETWEEN(FN_GET_LAST_DAY_MONTH(SYSDATE),FN_GET_LAST_DAY_MONTH(T0.EXPIRY_DT))) IN
-             <foreach item="item" collection="arrExpiredPeriod" index="index" open="(" separator="," close=")">
-                    #{item}
-             </foreach>
-             <if test="expPeriod != null and expPeriod !='' ">
+         <choose>
+            <when test="expPeriod != null and expPeriod !='' ">
                       AND FLOOR(MONTHS_BETWEEN(FN_GET_LAST_DAY_MONTH(SYSDATE),FN_GET_LAST_DAY_MONTH(T0.EXPIRY_DT)))  <![CDATA[>=]]> #{expPeriod}
-              </if>
-         </if>
+             </when>
+             <otherwise>
+                <if test='arrExpiredPeriod != null and arrExpiredPeriod != ""'>
+                    AND FLOOR(MONTHS_BETWEEN(FN_GET_LAST_DAY_MONTH(SYSDATE),FN_GET_LAST_DAY_MONTH(T0.EXPIRY_DT))) IN
+                    <foreach item="item" collection="arrExpiredPeriod" index="index" open="(" separator="," close=")">
+                            #{item}
+                    </foreach>
+                </if>
+             </otherwise>
+         </choose>
          <if test="custType != null and custType != '' ">
             AND T3.TYPE_ID = #{custType}
         </if>

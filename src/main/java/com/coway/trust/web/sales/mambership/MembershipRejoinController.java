@@ -97,7 +97,7 @@ public class  MembershipRejoinController {
 
           for (String str : arrExpiredPeriod){
             if("7".equals(str))
-                params.put("expPeriod", "8");
+                params.put("expPeriod", "7");
           }
         }
 
