@@ -5,14 +5,16 @@
   var myGridID;
   var basicAuth = false;
   var rcdTms;
-
+  var brnchType = 0;
+  var isHomecareUser = "${SESSION_INFO.roleId}" == "297" ? true : false;
   $(document).ready(
       function() {
-
-    	  if ("${SESSION_INFO.roleId}" == "297") {
+    	  if (isHomecareUser) {
     		  $("#isHomecare").val("1");
+    		  brnchType = 5758;
     	  }else if ("${SESSION_INFO.memberLevel}" == ""){
     		  $("#isHomecare").val("2");
+    		  brnchType = 3;
     	  }
 
     	  if ("${SESSION_INFO.memberLevel}" == "1") {
@@ -62,7 +64,7 @@
 
         createAUIGrid();
 
-        doGetComboSepa('/common/selectBranchCodeList.do', '48', ' - ', '${SESSION_INFO.userBranchId}', 'cmbDscBranchId', 'M', 'f_multiCombo'); //Branch Code
+        doGetComboSepa('/common/selectBranchCodeList.do', brnchType , ' - ', '${SESSION_INFO.userBranchId}', 'cmbDscBranchId', 'M', 'f_multiCombo'); //Branch Code
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
@@ -131,8 +133,11 @@
         selectAll : true,
         width : '100%'
       });
-      //$('#cmbDscBranchId').multipleSelect("checkAll");
       $("#cmbDscBranchId").multipleSelect("disable");
+
+      if(isHomecareUser){
+    	  $('#cmbDscBranchId').multipleSelect("checkAll");
+      }
     });
   }
 

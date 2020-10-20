@@ -645,8 +645,12 @@
   }
 
   function fn_loadInstallAddrInfoNew(custAddId) {
+	  var isHomecare = 'N';
+
+	  if(BNDL_ID > 0) isHomecare = 'Y';
+
 	    Common.ajax("GET", "/sales/order/selectInstallAddrInfo.do", {
-	      custAddId : custAddId
+	      custAddId : custAddId, isHomecare: isHomecare
 	    }, function(addrInfo) {
 
 	      if (addrInfo != null) {
@@ -661,12 +665,7 @@
 	        $("#modInstAreaId").val(addrInfo.areaId);
 	        $("#modInstCustAddId").val(addrInfo.custAddId);
 
-	        if(BNDL_ID > 0){
-	        	$("#modDscBrnchId").val(addrInfo.htBrnchId); //DSC Branch
-	        }
-	        else{
-	        	$("#modDscBrnchId").val(addrInfo.brnchId); //DSC Branch
-	        }
+	        $("#modDscBrnchId").val(addrInfo.brnchId); //DSC Branch
 
 	      }
 	    });

@@ -1190,7 +1190,8 @@
           RQST_TYPE.CODE_NAME RQST_TYPE,
           RQST.RQST_REM RQST_REM,
           RQST.REM REM,
-          CASE WHEN RQST.RQST_TYPE_ID = 5970 THEN TO_BRNCH.NAME
+          CASE WHEN RQST.RQST_TYPE_ID = 5970 AND BNDL_ID IS NULL AND BNDL_ID = 0 THEN TO_BRNCH1.NAME
+               WHEN RQST.RQST_TYPE_ID = 5970 AND BNDL_ID > 0                     THEN TO_BRNCH2.NAME
                    ELSE BRNCH.NAME
           END DSC,
           CRT.USER_NAME CRT_USER,
@@ -1212,7 +1213,8 @@
       LEFT JOIN SYS0005M BRNCH ON BRNCH.BRNCH_ID = INST.BRNCH_ID
       LEFT JOIN SAL0023D TO_ADDR ON TO_ADDR.CUST_ADD_ID = RQST.RQST_DATA_TO
       LEFT JOIN SYS0064M TO_AREA ON TO_AREA.AREA_ID = TO_ADDR.AREA_ID
-      LEFT JOIN SYS0005M TO_BRNCH ON TO_BRNCH.CODE = TO_AREA.CT_BRNCH_CODE
+      LEFT JOIN SYS0005M TO_BRNCH1 ON TO_BRNCH1.CODE = TO_AREA.CT_BRNCH_CODE AND (BNDL_ID IS NULL OR BNDL_ID = 0)
+      LEFT JOIN SYS0005M TO_BRNCH2 ON TO_BRNCH2.CODE = TO_AREA.DT_BRNCH_CODE AND (BNDL_ID > 0)
       JOIN SYS0038M INST_STUS ON INST_STUS.STUS_CODE_ID = (CASE WHEN SOM.STUS_CODE_ID = 1 THEN 24 ELSE 25 END)
       LEFT JOIN ORG1001V ORG ON ORG.MEM_CODE = CRT.USER_NAME
 
@@ -1230,7 +1232,7 @@
         AND RQST.CRT_DT <![CDATA[ >= ]]> TO_DATE(#{startCrtDt},'DD/MM/YYYY')
       </if>
       <if test = "endCrtDt != null and endCrtDt != '' ">
-        AND RQST.CRT_DT <![CDATA[ <= ]]> TO_DATE(#{endCrtDt},'DD/MM/YYYY')
+        AND RQST.CRT_DT <![CDATA[ <= ]]> TO_DATE(#{endCrtDt},'DD/MM/YYYY')+1
       </if>
       <if test = "crtUserId != null and crtUserId != '' ">
         AND UPPER(CRT.USER_NAME) LIKE UPPER('%' || #{crtUserId} || '%')
@@ -1267,11 +1269,17 @@
 
          OR
 
-         TO_BRNCH.BRNCH_ID IN
+         TO_BRNCH1.BRNCH_ID IN
          <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
             #{item}
           </foreach>
 
+          OR
+
+         TO_BRNCH2.BRNCH_ID IN
+         <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+            #{item}
+          </foreach>
          )
 
       </if>
@@ -1297,7 +1305,7 @@
         AND SOM.BNDL_ID > 0
       </if>
       <if test="isHomecare == 2">
-        AND (SOM.BNDL_ID = 0 OR SOM.BNDL_ID IS NULL)
+        --AND (SOM.BNDL_ID = 0 OR SOM.BNDL_ID IS NULL)
       </if>
       ORDER BY RQST_ID DESC
    </select>

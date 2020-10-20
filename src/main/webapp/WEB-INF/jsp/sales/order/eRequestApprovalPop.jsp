@@ -13,7 +13,7 @@
   var rqstDataTo = "${eRequestDetail.rqstDataTo}";
   var rqstDataRem = "${eRequestDetail.rqstRem}";
 
-  var isHomecare= '${orderDetail.basicInfo.bndlId}' > 0 ? true : false;
+  var isHomecare= '${orderDetail.basicInfo.bndlId}' > 0 ? "Y" : "N";
 
   var _approvalMsg = "Another order :  " + AUX_ORD_NO + "<br/>is also approved together.<br/><br/>";
   var filterGridID;
@@ -151,8 +151,9 @@
 
   function fn_loadInstallAddrInfoNew(custAddIdOld,custAddIdNew) {
 	  var brnchIdOld,brnchIdNew;
+	  console.log(isHomecare);
 
-	    Common.ajaxSync("GET", "/sales/order/selectInstallAddrInfo.do", {custAddId : custAddIdOld}, function(addrInfo) {
+	    Common.ajaxSync("GET", "/sales/order/selectInstallAddrInfo.do", {custAddId : custAddIdOld, isHomecare : isHomecare}, function(addrInfo) {
 
 	      if (addrInfo != null) {
 	        $("#modInstAddrDtlOld").text(addrInfo.addrDtl);
@@ -163,17 +164,11 @@
 	        $("#modInstStateOld").text(addrInfo.city);
 	        $("#modInstCntyOld").text(addrInfo.country);
 
-	        if(isHomecare){
-	        	brnchIdOld = addrInfo.htBrnchId;
-	        }else{
-	        	brnchIdOld =addrInfo.brnchId;
-	        }
-
-	        doGetComboSepa('/common/selectBranchCodeList.do', '48', '-', addrInfo.htBrnchId , 'modDscBrnchIdOld', 'S'); //Branch Code
+	        doGetComboSepa('/common/selectBranchCodeList.do', '3', '-', addrInfo.brnchId , 'modDscBrnchIdOld', 'S'); //Branch Code
 	      }
 	    });
 
-	     Common.ajaxSync("GET", "/sales/order/selectInstallAddrInfo.do", {custAddId : custAddIdNew}, function(addrInfo) {
+	     Common.ajaxSync("GET", "/sales/order/selectInstallAddrInfo.do", {custAddId : custAddIdNew, isHomecare : isHomecare}, function(addrInfo) {
 
 	     if (addrInfo != null) {
 	       $("#modInstAddrDtlNew").text(addrInfo.addrDtl);
@@ -184,14 +179,8 @@
 	       $("#modInstStateNew").text(addrInfo.city);
 	       $("#modInstCntyNew").text(addrInfo.country);
 
-	       if(isHomecare){
-               brnchIdNew = addrInfo.htBrnchId;
-           }else{
-               brnchIdNew =addrInfo.brnchId;
-           }
-
 	       $("#dscBrnchId").val(brnchIdNew);
-	       doGetComboSepa('/common/selectBranchCodeList.do', '48', '-', brnchIdNew, 'modDscBrnchIdNew', 'S'); //Branch Code
+	       doGetComboSepa('/common/selectBranchCodeList.do', '3', '-', addrInfo.brnchId, 'modDscBrnchIdNew', 'S'); //Branch Code
 	      }
 	    });
 
