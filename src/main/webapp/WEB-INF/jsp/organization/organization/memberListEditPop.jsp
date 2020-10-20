@@ -26,7 +26,7 @@ function fn_memberSave(){
     $("#memberType").attr("disabled",false);
     var jsonObj = GridCommon.getEditData(myGridID_Doc);;
 
-    if($("#memberType").val() != "4" && $("#memberType").val() != "6171") {
+    if($("#memberType").val() != "4" && $("#memberType").val() != "6185") {
         jsonObj = GridCommon.getEditData(myGridID_Doc);
     }
     // jsonObj.form = $("#memberAddForm").serializeJSON();
@@ -200,7 +200,7 @@ $(document).ready(function() {
     if("${memType}" == "2" || "${memType}" == "7") {
         $("#hsptlzCheck").attr({"disabled" : false });
 
-    } else if("${memType}" == "4" || "${memType}" == "6171") {
+    } else if("${memType}" == "4" || "${memType}" == "6185") {
         // AUIGrid.destroy(myGridID_Doc);
 
         // Remove Tabs
@@ -220,7 +220,7 @@ $(document).ready(function() {
         $("#subDeptLblCol").remove();
         $("#searchdepartmentcol").attr('colspan', 5);
 
-        if("${memType}" == "6171") {
+        if("${memType}" == "6185") {
             $("#editRow1").show();
         }
 
@@ -242,7 +242,7 @@ $(document).ready(function() {
         $("#hpNoTBB").show();
     }
 
-    if("${memType}" != "4" && "${memType}" != "6171") {
+    if("${memType}" != "4" && "${memType}" != "6185") {
         fn_docSubmission();
     }
 
@@ -584,7 +584,7 @@ function fn_setMemInfo(data){
 		fn_departmentCode(data.memType);
 
 		var jsonObj;
-		if(data.memType != "4" && data.memType != "6171") {
+		if(data.memType != "4" && data.memType != "6185") {
 		    jsonObj = GridCommon.getEditData(myGridID_Doc);
 		}
 
@@ -674,7 +674,7 @@ function fn_setMemInfo(data){
 	    $("#selectBranch option[value='"+ data.c3 +"']").attr("selected", true);
 
 	    // If member type = staff/temporary staff code
-	    if("${memType}" == "4" || "${memType}" == "6171") {
+	    if("${memType}" == "4" || "${memType}" == "6185") {
 	        $("#searchdepartment").empty();
 	        $("#searchdepartmentLbl").append("<span class='must'>*</span>");
 
@@ -1171,8 +1171,8 @@ function fn_saveValidation(){
     }
     //endregion
 
-    if(action == "4" || action == "6171") {
-        if(action == "6171") {
+    if(action == "4" || action == "6185") {
+        if(action == "6185") {
             if($("#convStaff").is(":checked")) {
                 if($("#memberCode").val() == "") {
                     valid = false;
@@ -1505,7 +1505,7 @@ function checkBankAccNo() {
                                 <option value="2803">HP Applicant</option>
                                 <option value="7">Homecare Technician (HT)</option>
                                 <option value="5758">Homecare Delivery Technician (DT)</option>
-                                <option value="6171">Temporary Staff Code</option>
+                                <option value="6185">Temporary Staff Code</option>
                             </select>
                         </td>
                     </tr>
