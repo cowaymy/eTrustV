@@ -41,7 +41,7 @@ function fn_report(){
     }
 
     if(!($("#txtAgrNoFrom").val() == null || $("#txtAgrNoFrom").val().length == 0) && !($("#txtAgrNoTo").val() == null || $("#txtAgrNoTo").val().length == 0)){
-    	whereSQL += " AND (ArgM.GOV_AG_BATCH_NO BETWEEN '"+txtOrderNo1.replace("'", "''")+"' AND '"+txtOrderNo2.replace("'", "''")+"')";
+    	whereSQL += " AND (ArgM.GOV_AG_BATCH_NO BETWEEN '"+$("#txtAgrNoFrom").val() .replace("'", "''")+"' AND '"+$("#txtAgrNoTo").val().replace("'", "''")+"')";
     }
     if($("#ddlProgress option:selected").index() > 0){
         whereSQL += " AND ArgM.GOV_AG_PRGRS_ID = '"+$("#ddlProgress option:selected").val()+"'";

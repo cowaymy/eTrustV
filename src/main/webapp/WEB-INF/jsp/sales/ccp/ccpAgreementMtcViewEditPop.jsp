@@ -108,7 +108,7 @@
     		var prevChk = $("#_updErlTerNonCrisisChk").val() == 1? true:  false;
 
             if ($("#_prgId").val() != '8'){
-            	Common.alert("[Early Termination Non Crisis] flag only allow to be edited at [Agreement Verifying] stage.");
+            	Common.alert("[Early Termination Non N/Crisis] flag only allow to be edited at [Agreement Verifying] stage.");
             	$("#_erlTerNonCrisisChk").prop("checked" , prevChk);
             }
         });
@@ -448,6 +448,13 @@
             }
         }
 
+        // Added for EAR termination non national crisis, by Hui Ding 2020-10-20
+        if($("#_prgId").val() == '8'){ // at verifying stage
+        	 if($("#_msgStatus").val() == '6' ){ // if "reject"
+        		 $("#_erlTerNonCrisisChk").prop("checked" , false); // reset Ear termination non national crisis flag to 0
+        	 }
+        }
+
 
         //Remark
         if(null == $("#_resultRemark").val() || '' == $("#_resultRemark").val()){
@@ -481,17 +488,6 @@
         }
     }
 
-   /*  function fn_blockUncheck () {
-
-    	if ($("#_prgId").val() != 8){
-    		Common.alert("[Early Termination Non Crisis] flag only allow to be edited at [Agreement Verifying] stage.");
-    		$("#_erlTerNonCrisisChk").attr("disabled" , true);
-    		return false;
-    	} else {
-    		return true;
-    	}
-
-    } */
 </script>
 
 
@@ -576,6 +572,28 @@
     <td><span>${infoMap.corpCustType}</span></td>
     <th scope="row">Agreement Type</th>
     <td><span>${infoMap.agreementType}</span></td>
+</tr>
+
+<!-- Added for 36M Commission Payout enhancement 2.0 by Hui Ding, 2020-10-19 -->
+<tr>
+    <th scope="row">Early TER Non N/Crisis</th>
+    <td>
+        <c:choose>
+	        <c:when test="${infoMap.govAgPrgrsId <= 8 }">
+	            <span>-</span>
+	        </c:when>
+	        <c:otherwise>
+	           <c:if test="${infoMap.erlTerNonCrisisChk == 1}">
+	               <span>Yes</span>
+	           </c:if>
+	           <c:if test="${infoMap.erlTerNonCrisisChk != 1}">
+                   <span>No</span>
+               </c:if>
+	        </c:otherwise>
+	    </c:choose>
+    </td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -675,14 +693,14 @@
     </td>
     <th scope="row">Early TER Non N/Crisis</th>
     <td>
-        <c:choose>
+        <%-- <c:choose>
             <c:when test="${infoMap.govAgPrgrsId == 8 }">
                 <input type="checkbox" id="_erlTerNonCrisisChk" name="erlTerNonCrisisChk"/>
             </c:when>
-            <c:otherwise>
+            <c:otherwise> --%>
                 <input type="checkbox" id="_erlTerNonCrisisChk" name="erlTerNonCrisisChk"/>
-            </c:otherwise>
-        </c:choose>
+            <%-- </c:otherwise>
+        </c:choose> --%>
     </td>
 </tr>
 <tr>
