@@ -572,6 +572,11 @@ public class HsManualController {
 
     }
 
+    // Added to update only "Has Return" flag
+    if (updList != null) {
+        hsManualService.UpdateIsReturn(formMap, updList, sessionVO);
+    }
+
     message.setMessage(msg);
     return ResponseEntity.ok(message);
   }
