@@ -1044,6 +1044,9 @@
         if(FormUtil.checkReqValue($('#sofNo'))) {
             isValid = false;
             msg += "* Please key in eSales(SOF) No.<br>";
+        }else if($('#sofNo').val().substring(0,3) != "AAA"){
+        	isValid = false;
+            msg += "* Please key in <b>AAA</b> at SOF No";
         }
 
         if(!isValid) Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");

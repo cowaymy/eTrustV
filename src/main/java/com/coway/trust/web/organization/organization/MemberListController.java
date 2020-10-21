@@ -36,6 +36,7 @@ import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.biz.organization.organization.HPMeetingPointUploadVO;
 import com.coway.trust.biz.organization.organization.MemberListService;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
 import com.coway.trust.cmmn.model.EmailVO;
@@ -68,6 +69,9 @@ public class MemberListController {
 
 	@Resource(name = "tagMgmtService")
 	TagMgmtService tagMgmtService;
+
+  @Resource(name = "salesCommonService")
+  private SalesCommonService salesCommonService;
 
 	@Autowired
     private LoginService loginService;
@@ -146,6 +150,16 @@ public class MemberListController {
 		EgovMap userRole = memberListService.getUserRole(params);
 		logger.debug("userRole     " + userRole);
 		model.addAttribute("userRole", userRole.get("roleid"));
+
+    //if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+		if( sessionVO.getUserTypeId() == 1){
+      EgovMap result =  salesCommonService.getUserInfo(params);
+
+      model.put("orgCode", result.get("orgCode"));
+      model.put("grpCode", result.get("grpCode"));
+      model.put("deptCode", result.get("deptCode"));
+      model.put("memCode", result.get("memCode"));
+    }
 
 		// 호출될 화면
 		return "organization/organization/memberList";

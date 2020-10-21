@@ -350,6 +350,59 @@ function fn_RejectHPMem(){
 //Start AUIGrid --start Load Page- user 1st click Member
 $(document).ready(function() {
 
+    if("${SESSION_INFO.memberLevel}" =="1"){
+
+        /* $("#orgCode").val("${orgCode}");
+        $("#orgCode").attr("class", "w100p readonly");
+        $("#orgCode").attr("readonly", "readonly"); */
+
+    }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+        $("#orgCode").val("${orgCode}");
+        $("#orgCode").attr("class", "w100p readonly");
+        $("#orgCode").attr("readonly", "readonly");
+
+        $("#grpCode").val("${grpCode}");
+        $("#grpCode").attr("class", "w100p readonly");
+        $("#grpCode").attr("readonly", "readonly");
+
+    }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+        $("#orgCode").val("${orgCode}");
+        $("#orgCode").attr("class", "w100p readonly");
+        $("#orgCode").attr("readonly", "readonly");
+
+        $("#grpCode").val("${grpCode}");
+        $("#grpCode").attr("class", "w100p readonly");
+        $("#grpCode").attr("readonly", "readonly");
+
+        $("#deptCode").val("${deptCode}");
+        $("#deptCode").attr("class", "w100p readonly");
+        $("#deptCode").attr("readonly", "readonly");
+
+    }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+        $("#orgCode").val("${orgCode}");
+        $("#orgCode").attr("class", "w100p readonly");
+        $("#orgCode").attr("readonly", "readonly");
+
+        $("#grpCode").val("${grpCode}");
+        $("#grpCode").attr("class", "w100p readonly");
+        $("#grpCode").attr("readonly", "readonly");
+
+        $("#deptCode").val("${deptCode}");
+        $("#deptCode").attr("class", "w100p readonly");
+        $("#deptCode").attr("readonly", "readonly");
+
+        $("#memCode").val("${memCode}");
+        $("#memCode").attr("class", "w100p readonly");
+        $("#memCode").attr("readonly", "readonly");
+
+
+        $("#memLvl").attr("class", "w100p readonly");
+        $("#memLvl").attr("readonly", "readonly");
+    }
+
     // AUIGrid 그리드를 생성합니다.
     createAUIGrid();
 
@@ -863,6 +916,17 @@ $(function() {
 
     </td>
 </tr>
+<tr>
+      <tr>
+        <th scope="row">Org Code</th>
+        <td><input type="text" title="orgCode" id="orgCode" name="orgCode" placeholder="Org Code" class="w100p" /></td>
+        <th scope="row">Grp Code</th>
+        <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  placeholder="Grp Code" class="w100p"/></td>
+        <th scope="row">Dept Code</th>
+        <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p"/></td>
+        <th scope="row"></th>
+        <td></td>
+      </tr>
 </tbody>
 </table><!-- table end -->
 
