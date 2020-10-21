@@ -340,4 +340,6 @@ public interface HsManualMapper {
 
   List<EgovMap> instChkLst();
 
+  EgovMap getHsResultDocNo(Map<String, Object> params);
+
 }

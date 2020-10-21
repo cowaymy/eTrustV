@@ -4056,6 +4056,13 @@ ORDER BY CODE_NAME
         ]]>
     </select>
 
+    <!-- Added for solving HS Result number being wasted issue. Hui Ding, 2020-10-21-->
+    <select id="getHsResultDocNo" parameterType="Map" resultType="egovMap">
+       <![CDATA[
+                SELECT FN_GET_DOCNO(#{DOCNO})  hsrno  FROM DUAL
+        ]]>
+    </select>
+
 
     <select id="getASEntryId" parameterType="Map" resultType="egovMap">
        <![CDATA[

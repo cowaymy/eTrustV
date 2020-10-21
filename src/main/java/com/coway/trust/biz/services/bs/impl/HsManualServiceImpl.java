@@ -1304,7 +1304,18 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
     Map<String, Object> bsResultMas_Rev = new HashMap<String, Object>();
 
+
     String ResultNo_Rev = "";
+    int BS_RESULT = 11;
+    String docNo = null;
+
+    bsResultMas_Rev.put("DOCNO", BS_RESULT);
+    EgovMap eMap = hsManualMapper.getHsResultDocNo(bsResultMas_Rev);
+    docNo = String.valueOf(eMap.get("hsrno")).trim();
+    bsResultMas_Rev.put("docNo", docNo);
+    logger.info("###HSRNO: " + docNo);
+
+   /* String ResultNo_Rev = "";
     int BS_RESULT = 11;
     bsResultMas_Rev.put("doctype", BS_RESULT);
 
@@ -1315,16 +1326,16 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     String BS_RESULT_BSR = "HSR";
 
     String nextNo = getNextDocNo(BS_RESULT_BSR, docNo);
-    /*
+
      * String DocNoFormat = ""; for (int i = 1; i <= BS_RESULT_BSR.length();
      * i++) { DocNoFormat += "0"; } DocNoFormat = "{0:" + DocNoFormat + "}";
      *
      * int docNo_int = Integer.parseInt(docNo.replace(BS_RESULT_BSR,
      * "").toString()); int nextNo = docNo_int +1;
-     */
+
     bsResultMas_Rev.put("ID_New", BS_RESULT);
     bsResultMas_Rev.put("nextDocNo_New", nextNo);
-    hsManualMapper.updateQry_New(bsResultMas_Rev);
+    hsManualMapper.updateQry_New(bsResultMas_Rev);*/
     // int docNo1 = hsManualMapper.GetDocNo1(bsResultMas_Rev);
 
     EgovMap qryBS_Rev = null;
@@ -1554,7 +1565,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
       String ResultNo_New = null;
       BS_RESULT = 11;
-      bsResultMas_Rev.put("doctype", String.valueOf(BS_RESULT));
+      bsResultMas_Rev.put("DOCNO", String.valueOf(BS_RESULT));
+
+      eMap = hsManualMapper.getHsResultDocNo(bsResultMas_Rev);
+      ResultNo_New = String.valueOf(eMap.get("hsrno")).trim();
+      logger.info("###ResultNo_New: " + ResultNo_New);
+
+
+      /*
       ResultNo_New = hsManualMapper.GetDocNo(bsResultMas_Rev);
 
       int ID_New = 11;
@@ -1563,7 +1581,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       Map<String, Object> qry_New = new HashMap<String, Object>();
       qry_New.put("ID_New", String.valueOf(BS_RESULT));
       qry_New.put("nextDocNo_New", String.valueOf(nextDocNo_New));
-      hsManualMapper.updateQry_New(qry_New);
+      hsManualMapper.updateQry_New(qry_New);*/
 
       int BSResultM_resultID2 = hsManualMapper.getBSResultM_resultID();
       bsResultMas.put("No", ResultNo_New);
@@ -1848,25 +1866,31 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
     String ResultNo_Rev = "";
     int BS_RESULT = 11;
-    bsResultMas_Rev.put("doctype", BS_RESULT);
+    bsResultMas_Rev.put("DOCNO", BS_RESULT);
 
     String docNo = null;
+
+    EgovMap eMap = hsManualMapper.getHsResultDocNo(bsResultMas_Rev);
+    docNo = String.valueOf(eMap.get("hsrno")).trim();
+    logger.info("###docNo: " + docNo);
+
+    /*
     docNo = hsManualMapper.GetDocNo(bsResultMas_Rev);
     bsResultMas_Rev.put("docNo", docNo);
 
     String BS_RESULT_BSR = "HSR";
 
     String nextNo = getNextDocNo(BS_RESULT_BSR, docNo);
-    /*
+    *
      * String DocNoFormat = ""; for (int i = 1; i <= BS_RESULT_BSR.length();
      * i++) { DocNoFormat += "0"; } DocNoFormat = "{0:" + DocNoFormat + "}";
      *
      * int docNo_int = Integer.parseInt(docNo.replace(BS_RESULT_BSR,
      * "").toString()); int nextNo = docNo_int +1;
-     */
+     *
     bsResultMas_Rev.put("ID_New", BS_RESULT);
     bsResultMas_Rev.put("nextDocNo_New", nextNo);
-    hsManualMapper.updateQry_New(bsResultMas_Rev);
+    hsManualMapper.updateQry_New(bsResultMas_Rev);*/
     // int docNo1 = hsManualMapper.GetDocNo1(bsResultMas_Rev);
 
     EgovMap qryBS_Rev = null;
@@ -2119,8 +2143,13 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
       String ResultNo_New = null;
       BS_RESULT = 11;
-      bsResultMas_Rev.put("doctype", String.valueOf(BS_RESULT));
-      ResultNo_New = hsManualMapper.GetDocNo(bsResultMas_Rev);
+      bsResultMas_Rev.put("DOCNO", String.valueOf(BS_RESULT));
+
+      eMap = hsManualMapper.getHsResultDocNo(bsResultMas_Rev);
+      ResultNo_New = String.valueOf(eMap.get("hsrno")).trim();
+      logger.info("###ResultNo_New: " + ResultNo_New);
+
+      /*ResultNo_New = hsManualMapper.GetDocNo(bsResultMas_Rev);
 
       int ID_New = 11;
       String nextDocNo_New = getNextDocNo(BS_RESULT_BSR, ResultNo_New);
@@ -2128,7 +2157,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       Map<String, Object> qry_New = new HashMap<String, Object>();
       qry_New.put("ID_New", String.valueOf(BS_RESULT));
       qry_New.put("nextDocNo_New", String.valueOf(nextDocNo_New));
-      hsManualMapper.updateQry_New(qry_New);
+      hsManualMapper.updateQry_New(qry_New);*/
 
       int BSResultM_resultID2 = hsManualMapper.getBSResultM_resultID();
       bsResultMas.put("No", ResultNo_New);
@@ -2700,9 +2729,15 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     Map<String, Object> bsResultMas_Rev = new HashMap<String, Object>();
 
     int BS_RESULT = 11;
-    bsResultMas_Rev.put("doctype", BS_RESULT);
+    bsResultMas_Rev.put("DOCNO", BS_RESULT);
 
     String docNo = null;
+
+    EgovMap eMap = hsManualMapper.getHsResultDocNo(bsResultMas_Rev);
+    docNo = String.valueOf(eMap.get("hsrno")).trim();
+    logger.info("###docNo: " + docNo);
+
+   /* String docNo = null;
     docNo = hsManualMapper.GetDocNo(bsResultMas_Rev);
     bsResultMas_Rev.put("docNo", docNo);
 
@@ -2712,7 +2747,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
     bsResultMas_Rev.put("ID_New", BS_RESULT);
     bsResultMas_Rev.put("nextDocNo_New", nextNo);
-    hsManualMapper.updateQry_New(bsResultMas_Rev);
+    hsManualMapper.updateQry_New(bsResultMas_Rev);*/
     // int docNo1 = hsManualMapper.GetDocNo1(bsResultMas_Rev);
 
     EgovMap qryBS_Rev = null;
