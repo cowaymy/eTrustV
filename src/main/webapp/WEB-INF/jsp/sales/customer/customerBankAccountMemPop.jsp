@@ -125,7 +125,7 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
         }
         //MY CLEAR - BANK RAKYAT
         if(bankId == 25){
-            if(lengthOfAccNo != 12){
+            if(lengthOfAccNo < 10 || lengthOfAccNo > 12){
                 valid = false;
                 return valid;
             }
