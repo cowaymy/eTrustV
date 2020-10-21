@@ -12,7 +12,7 @@
     	  if (isHomecareUser) {
     		  $("#isHomecare").val("1");
     		  brnchType = 5758;
-    	  }else if ("${SESSION_INFO.memberLevel}" == ""){
+    	  }else if ("${SESSION_INFO.memberLevel}" == "" && '${SESSION_INFO.roleId}' != 130){
     		  $("#isHomecare").val("2");
     		  brnchType = 3;
     	  }
@@ -23,7 +23,7 @@
               $("#orgCode").attr("class", "w100p readonly");
               $("#orgCode").attr("readonly", "readonly");
 
-            } else if ("${SESSION_INFO.memberLevel}" == "2") {
+         } else if ("${SESSION_INFO.memberLevel}" == "2") {
 
               $("#orgCode").val("${orgCode}");
               $("#orgCode").attr("class", "w100p readonly");
@@ -33,21 +33,7 @@
               $("#grpCode").attr("class", "w100p readonly");
               $("#grpCode").attr("readonly", "readonly");
 
-            } else if ("${SESSION_INFO.memberLevel}" == "3") {
-
-              $("#orgCode").val("${orgCode}");
-              $("#orgCode").attr("class", "w100p readonly");
-              $("#orgCode").attr("readonly", "readonly");
-
-              $("#grpCode").val("${grpCode}");
-              $("#grpCode").attr("class", "w100p readonly");
-              $("#grpCode").attr("readonly", "readonly");
-
-              $("#deptCode").val("${deptCode}");
-              $("#deptCode").attr("class", "w100p readonly");
-              $("#deptCode").attr("readonly", "readonly");
-
-            } else if ("${SESSION_INFO.memberLevel}" == "4") {
+          } else if ("${SESSION_INFO.memberLevel}" == "3") {
 
               $("#orgCode").val("${orgCode}");
               $("#orgCode").attr("class", "w100p readonly");
@@ -60,7 +46,21 @@
               $("#deptCode").val("${deptCode}");
               $("#deptCode").attr("class", "w100p readonly");
               $("#deptCode").attr("readonly", "readonly");
-            }
+
+          } else if ("${SESSION_INFO.memberLevel}" == "4") {
+
+              $("#orgCode").val("${orgCode}");
+              $("#orgCode").attr("class", "w100p readonly");
+              $("#orgCode").attr("readonly", "readonly");
+
+              $("#grpCode").val("${grpCode}");
+              $("#grpCode").attr("class", "w100p readonly");
+              $("#grpCode").attr("readonly", "readonly");
+
+              $("#deptCode").val("${deptCode}");
+              $("#deptCode").attr("class", "w100p readonly");
+              $("#deptCode").attr("readonly", "readonly");
+          }
 
         createAUIGrid();
 

@@ -1190,7 +1190,7 @@
           RQST_TYPE.CODE_NAME RQST_TYPE,
           RQST.RQST_REM RQST_REM,
           RQST.REM REM,
-          CASE WHEN RQST.RQST_TYPE_ID = 5970 AND BNDL_ID IS NULL AND BNDL_ID = 0 THEN TO_BRNCH1.NAME
+          CASE WHEN RQST.RQST_TYPE_ID = 5970 AND (BNDL_ID IS NULL OR BNDL_ID = 0) THEN TO_BRNCH1.NAME
                WHEN RQST.RQST_TYPE_ID = 5970 AND BNDL_ID > 0                     THEN TO_BRNCH2.NAME
                    ELSE BRNCH.NAME
           END DSC,
@@ -1262,24 +1262,26 @@
         AND
          (
 
-         INST.BRNCH_ID IN
-          <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
-            #{item}
-          </foreach>
-
-         OR
-
-         TO_BRNCH1.BRNCH_ID IN
-         <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
-            #{item}
-          </foreach>
-
-          OR
-
-         TO_BRNCH2.BRNCH_ID IN
-         <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
-            #{item}
-          </foreach>
+           ( RQST.RQST_TYPE_ID = 5969 AND
+             INST.BRNCH_ID IN
+              <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+                #{item}
+              </foreach>
+           )
+           OR
+           ( RQST.RQST_TYPE_ID = 5970 AND
+             TO_BRNCH1.BRNCH_ID IN
+             <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+                #{item}
+              </foreach>
+            )
+            OR
+           ( RQST.RQST_TYPE_ID = 5970 AND
+             TO_BRNCH2.BRNCH_ID IN
+             <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+                #{item}
+              </foreach>
+            )
          )
 
       </if>
@@ -1305,7 +1307,7 @@
         AND SOM.BNDL_ID > 0
       </if>
       <if test="isHomecare == 2">
-        --AND (SOM.BNDL_ID = 0 OR SOM.BNDL_ID IS NULL)
+        AND (SOM.BNDL_ID = 0 OR SOM.BNDL_ID IS NULL)
       </if>
       ORDER BY RQST_ID DESC
    </select>
