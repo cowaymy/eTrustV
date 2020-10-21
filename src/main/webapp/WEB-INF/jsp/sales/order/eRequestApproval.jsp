@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
   //AUIGrid 생성 후 반환 ID
-  var myGridID;
+  var myGridID, excelGridID;
   var basicAuth = false;
   var rcdTms;
   var brnchType = 0;
@@ -102,6 +102,28 @@
         , { dataField : 'rqstDataTo', headerText : 'Request Data To', width : 100, visible : false, editable : false }
     ];
 
+    var excelLayout = [
+            { dataField : "salesOrdNo", headerText : "<spring:message code='sal.title.ordNo' />",width : 100 }
+          , { dataField : "stus", headerText : "<spring:message code='sal.title.text.requestStatus' />", width : 150}
+          , { dataField : "appType", headerText : "<spring:message code='sal.title.text.appType' />", width : 150}
+          , { dataField : "custName", headerText : "<spring:message code='sal.title.text.customer' />", width : 300}
+          , { dataField : "nric", headerText : "<spring:message code='sal.title.text.nricCompNo' />", width : 300}
+          , { dataField : "instStus", headerText : "<spring:message code='sal.title.text.requestStage' />", width : 150}
+          , { dataField : "rqstType", headerText : "<spring:message code='log.label.rqstTyp' />", width : 150}
+          , { dataField : "rqstRem", headerText : "<spring:message code='sal.title.text.reqstRem' />", width : 500}
+          , { dataField : "crtUser", headerText : "<spring:message code='sal.title.created' />", width : 300}
+          , { dataField : "crtDt", headerText : "<spring:message code='sal.title.crtDate' />", width : 300}
+          , { dataField : "updUser", headerText : "<spring:message code='sal.title.updateBy' />", width : 300}
+          , { dataField : "updDt", headerText : "<spring:message code='sal.title.updateDate' />", width : 300}
+          , { dataField : "rem", headerText : "<spring:message code='sal.title.remark' />", width : 500}
+          , { dataField : 'dsc', headerText : 'DSC', width : 150, editable : false }
+          , { dataField : 'rqstDataFr', headerText : 'Request Data From', width : 100, visible : false, editable : false }
+          , { dataField : 'rqstDataTo', headerText : 'Request Data To', width : 100, visible : false, editable : false }
+          , { dataField : 'orgCode', headerText : '<spring:message code='sal.title.text.orgCode' />', width : 150}
+          , { dataField : 'grpCode', headerText : '<spring:message code='sal.title.text.groupCode' />', width : 150}
+          , { dataField : 'deptCode', headerText : '<spring:message code='sal.title.text.deptCode' />', width : 150}
+    ];
+
     // 그리드 속성 설정
     var gridPros = {
       usePaging : true,
@@ -112,6 +134,7 @@
 
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+    excelGridID = AUIGrid.create("#excel_grid_wrap", excelLayout, gridPros);
   }
 
   // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
@@ -145,6 +168,7 @@
   function fn_requestApprovalListAjax() {
     Common.ajax("GET", "/sales/order/selectRequestApprovalList.do", $("#searchForm").serialize(), function(result) {
       AUIGrid.setGridData(myGridID, result);
+      AUIGrid.setGridData(excelGridID, result);
     });
   }
 
@@ -167,6 +191,10 @@
       }
     });
   };
+
+  function fn_excelDown() {
+      GridCommon.exportTo("excel_grid_wrap", "xlsx", "eRequestApprovalRaw");
+    }
  </script>
 <section id="content">
  <!-- content start -->
@@ -187,13 +215,13 @@
    <spring:message code="sales.title.eReqAppr" />
   </h2>
   <ul class="right_btns">
-   <%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
+   <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue">
       <a href="#" onclick="javascript:fn_requestApprovalListAjax()"><span
        class="search"></span>
       <spring:message code="sal.btn.search" /></a>
      </p></li>
-   <%-- </c:if> --%>
+   </c:if>
    <li><p class="btn_blue">
      <a href="#" onclick="javascript:$('#searchForm').clearForm();"><span
       class="clear"></span>
@@ -295,13 +323,20 @@
 
   </form>
  </section>
+
+    <ul class="right_btns">
+        <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+            <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='sal.title.text.download'/></a></p></li>
+        </c:if>
+    </ul>
+
  <!-- search_table end -->
  <section class="search_result">
   <!-- search_result start -->
   <article class="grid_wrap">
    <!-- grid_wrap start -->
-   <div id="grid_wrap"
-    style="width: 100%; height: 480px; margin: 0 auto;"></div>
+    <div id="grid_wrap" style="width: 100%; height: 480px; margin: 0 auto;"></div>
+    <div id="excel_grid_wrap" style="display:none; width: 100%; height: 480px; margin: 0 auto;"></div>
   </article>
   <!-- grid_wrap end -->
  </section>
