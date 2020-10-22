@@ -2583,4 +2583,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public int updHPMeetingPoint(Map<String, Object> params) throws Exception {
 	    return memberListMapper.updHPMeetingPoint(params);
 	}
+
+	@Override
+	public String getUpdUserID(Map<String, Object> params) {
+	    return memberListMapper.getUpdUserID(params);
+	}
+
+	public int updateOrgUserPW(Map<String, Object> params) {
+	    return memberListMapper.updateOrgUserPW(params);
+	}
 }

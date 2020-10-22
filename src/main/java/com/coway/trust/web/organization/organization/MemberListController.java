@@ -2170,4 +2170,34 @@ logger.debug("params : {}", params);
         return ResponseEntity.ok(message);
     }
 
+    @RequestMapping(value = "/resetOrgPW.do")
+    public String resetOrgPW(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+
+        String updUserId = memberListService.getUpdUserID(params);
+
+        model.addAttribute("memberID", params.get("memberID"));
+        model.addAttribute("updUserId", updUserId);
+
+        return "organization/organization/resetOrgPW";
+    }
+
+    @RequestMapping(value = "/updateOrgUserPW.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> updateOrgUserPW(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+
+        logger.debug("params {}", params);
+
+        params.put("userID", sessionVO.getUserId());
+        int cnt = memberListService.updateOrgUserPW(params);
+
+        ReturnMessage message = new ReturnMessage();
+        if(cnt > 0) {
+            message.setCode(AppConstants.SUCCESS);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        } else {
+            message.setCode(AppConstants.FAIL);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        }
+
+        return ResponseEntity.ok(message);
+    }
 }

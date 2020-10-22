@@ -322,4 +322,7 @@ public interface MemberListMapper {
 	int addMeetingPoint(Map<String, Object> params);
     int updMeetingPoint(Map<String, Object> params);
     int updHPMeetingPoint(Map<String, Object> params) throws Exception;
+
+    String getUpdUserID(Map<String, Object> params);
+    int updateOrgUserPW(Map<String, Object> params);
 }

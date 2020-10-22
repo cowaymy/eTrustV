@@ -224,4 +224,7 @@ public interface MemberListService {
 	int addMeetingPoint(List<Object> addList, String userId);
 	int updMeetingPoint(List<Object> updList, String userId);
 	int updHPMeetingPoint(Map<String, Object> params) throws Exception;
+
+	String getUpdUserID(Map<String, Object> params);
+	int updateOrgUserPW(Map<String, Object> params);
 }

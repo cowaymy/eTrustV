@@ -715,6 +715,32 @@ $(function() {
     $('#meetingPointMgmt').click(function() {
         Common.popupDiv("/organization/meetingPointMgmt.do?isPop=true", "");
     });
+
+    //hpPwReset
+    $("#hpPwReset").click(function() {
+        if(selRowIndex >= 0 && selRowIndex != null) {
+            if(memberType == "1") {
+                Common.popupDiv("/organization/resetOrgPW.do", {memberID : memberid, memType : "1"}, null, true, 'editPWHP');
+            } else {
+                Common.alert("Only HP Member is allowed!");
+            }
+        } else {
+            Common.alert("Please select a member!");
+        }
+    });
+
+    $("#cdPwReset").click(function() {
+        if(selRowIndex >= 0 && selRowIndex != null) {
+            if(memberType == "2") {
+                Common.popupDiv("/organization/resetOrgPW.do", {memberID : memberid,  memType : "2"}, null, true, 'editPWCD');
+            } else {
+                Common.alert("Only CD Member is allowed!");
+            }
+
+        } else {
+            Common.alert("Please select a member!");
+        }
+    });
 });
 
 </script>
@@ -953,9 +979,15 @@ $(function() {
             <c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
                 <li><p class="link_btn"><a href="#" id="getHpApplicantURL">HP Applicant e-Agreement URL</a></li>
             </c:if>
-            <!-- <c:if test="${PAGE_AUTH.funcUserDefine12 == 'Y'}"> -->
+            <c:if test="${PAGE_AUTH.funcUserDefine12 == 'Y'}">
                 <li><p class="link_btn"><a href="#" id="meetingPointMgmt">Meeting Point Management</a></li>
-            <!-- </c:if> -->
+            </c:if>
+            <c:if test="${PAGE_AUTH.funcUserDefine13 == 'Y'}">
+                <li><p class="link_btn"><a href="#" id="hpPwReset">HP Password Reset</a></li>
+            </c:if>
+            <c:if test="${PAGE_AUTH.funcUserDefine14 == 'Y'}">
+                <li><p class="link_btn"><a href="#" id="cdPwReset">CD Password Reset</a></li>
+            </c:if>
         </ul>
         <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
         </dd>

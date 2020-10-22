@@ -5225,4 +5225,23 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             T.UPD_USER_ID = S.UPD_USER_ID,
             T.UPD_DT = SYSDATE
     </update>
+
+    <select id="getUpdUserID" parameterType="Map" resultType="String">
+        SELECT
+            USER_ID
+        FROM ORG0001D A,
+             SYS0047M B
+        WHERE A.MEM_CODE = B.HR_CODE
+          AND A.MEM_ID = #{memberID}
+          AND A.MEM_TYPE = #{memType}
+    </select>
+
+    <update id="updateOrgUserPW" parameterType="Map">
+        UPDATE SYS0047M
+        SET USER_PASSWD = #{userPasswd},
+            USER_UPD_DT = SYSDATE,
+            USER_PASSWD_LAST_UPD_DT = SYSDATE,
+            USER_UPD_USER_ID = #{userID}
+        WHERE USER_ID = #{updUserId}
+    </update>
 </mapper>
