@@ -10,7 +10,7 @@ $(document).ready(function(){
 	   fn_GuardianRemarkGrid();
 	   fn_guardianRemark();
 
-	   doGetComboAndGroup2('/organization/compliance/getPicList.do', {}, '', 'cmdchangePerson', 'S', 'fn_setOptGrpClass');//product 생성
+	   doGetComboAndGroup2('/organization/compliance/getPicList.do', {}, '', 'changePerson', 'S', 'fn_setOptGrpClass');//product 생성
 
 
             var reqstCtgry = "${guardianofCompliance.reqstCtgry}";
@@ -352,7 +352,7 @@ function fn_setOptGrpClass() {
     </td>
     <th scope="row">Person In Charge</th>
     <td colspan="3">
-        <select id="cmdchangePerson" name="changePerson" class="w100p"></select>
+        <select id="changePerson" name="changePerson" class="w100p"></select>
     </td>
 </tr>
 <tr id = "ccontent">
