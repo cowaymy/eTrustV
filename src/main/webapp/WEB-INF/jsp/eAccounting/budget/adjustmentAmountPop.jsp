@@ -94,9 +94,9 @@ $(document).ready(function(){
              var idx = AUIGrid.getRowCount(adjGridID);
              var amt = 0;
              for(var i = 0; i < idx; i++){
-                if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") == '01'){
+                 if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") == '01'){
                     var adjAmt = AUIGrid.getCellValue(adjGridID, i, "adjAmt");
-                    adjAmt = adjAmt.replace(/,/g, "");
+                    // adjAmt = adjAmt.replace(/,/g, "");
                     if(AUIGrid.getCellValue(adjGridID, i, "signal") =="+"){
                          amt += parseFloat(adjAmt);
                      } else {
@@ -119,9 +119,9 @@ $(document).ready(function(){
         	 var idx = AUIGrid.getRowCount(adjGridID);
              var amt = 0;
              for(var i = 0; i < idx; i++){
-                if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") == '02'){
+                 if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") == '02'){
                     var adjAmt = AUIGrid.getCellValue(adjGridID, i, "adjAmt");
-                    adjAmt = adjAmt.replace(/,/g, "");
+                    // adjAmt = adjAmt.replace(/,/g, "");
                     if(AUIGrid.getCellValue(adjGridID, i, "signal") =="+"){
                          amt += parseFloat(adjAmt);
                      } else {
@@ -144,9 +144,9 @@ $(document).ready(function(){
              var idx = AUIGrid.getRowCount(adjGridID);
              var amt = 0;
              for(var i = 0; i < idx; i++){
-                if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") != '01' && AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") != '02'){
+                 if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") != '01' && AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") != '02'){
                     var adjAmt = AUIGrid.getCellValue(adjGridID, i, "adjAmt");
-                    adjAmt = adjAmt.replace(/,/g, "");
+                    // adjAmt = adjAmt.replace(/,/g, "");
                     if(AUIGrid.getCellValue(adjGridID, i, "signal") =="+"){
                          amt += parseFloat(adjAmt);
                      } else {

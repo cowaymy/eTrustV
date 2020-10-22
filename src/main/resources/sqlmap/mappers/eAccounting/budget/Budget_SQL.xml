@@ -557,7 +557,8 @@ WHERE 1=1
                   ,B.GL_ACC_CODE
                   ,(SELECT GL_ACC_DESC FROM FCM0009M A WHERE A.GL_ACC_CODE = B.GL_ACC_CODE) GL_ACC_DESC
                   ,B.SIGNAL
-                  ,TO_CHAR(ADJ_AMT, '9,999,999.99') ADJ_AMT
+                  /*,TO_CHAR(ADJ_AMT, '9,999,999.99') ADJ_AMT*/
+                  ,ADJ_AMT
                   ,B.ADJ_REM
          FROM FCM0102M  A,  FCM0103D B, FCM0105M C
         WHERE  A.BUDGET_DOC_NO = B.BUDGET_DOC_NO
