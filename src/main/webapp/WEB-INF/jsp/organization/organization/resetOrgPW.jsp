@@ -12,6 +12,7 @@
         if(regPwd.test(str)){
             return true;
         }
+        Common.alert("Password has to be alphanumeric and between 6 to 20 length.");
         return false;
     }
 
