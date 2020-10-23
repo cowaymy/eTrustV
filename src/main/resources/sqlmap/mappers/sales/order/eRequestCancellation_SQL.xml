@@ -1177,29 +1177,32 @@
    <select id="selectRequestApprovalList" parameterType="Map" resultType="egovMap">
         SELECT
 
-          RQST.RQST_ID,
-          SOM.SALES_ORD_ID SALES_ORD_ID,
-          SOM.SALES_ORD_NO SALES_ORD_NO,
-          RQST.STUS_CODE_ID STUS_CODE_ID,
-          STUS_CODE.NAME STUS,
-          APP_TYPE.CODE_NAME APP_TYPE,
-          CUST.NAME CUST_NAME,
-          CUST.NRIC NRIC,
-          INST_STUS.NAME INST_STUS,
-          RQST.RQST_TYPE_ID TYPE_ID,
-          RQST_TYPE.CODE_NAME RQST_TYPE,
-          RQST.RQST_REM RQST_REM,
-          RQST.REM REM,
+          RQST.RQST_ID ,
+          SOM.SALES_ORD_ID SALES_ORD_ID ,
+          SOM.SALES_ORD_NO SALES_ORD_NO ,
+          RQST.STUS_CODE_ID STUS_CODE_ID ,
+          STUS_CODE.NAME STUS ,
+          APP_TYPE.CODE_NAME APP_TYPE ,
+          CUST.NAME CUST_NAME ,
+          CUST.NRIC NRIC ,
+          INST_STUS.NAME INST_STUS ,
+          RQST.RQST_TYPE_ID TYPE_ID ,
+          RQST_TYPE.CODE_NAME RQST_TYPE ,
+          RQST.RQST_REM RQST_REM ,
+          RQST.REM REM ,
           CASE WHEN RQST.RQST_TYPE_ID = 5970 AND (BNDL_ID IS NULL OR BNDL_ID = 0) THEN TO_BRNCH1.NAME
                WHEN RQST.RQST_TYPE_ID = 5970 AND BNDL_ID > 0                     THEN TO_BRNCH2.NAME
                    ELSE BRNCH.NAME
-          END DSC,
-          CRT.USER_NAME CRT_USER,
-          TO_CHAR(RQST.CRT_DT,'DD/MM/YYYY HH24:MI:SS') CRT_DT,
-          UPD.USER_NAME UPD_USER,
-          TO_CHAR(RQST.UPD_DT,'DD/MM/YYYY HH24:MI:SS') UPD_DT,
-          RQST.RQST_DATA_FR,
-          RQST.RQST_DATA_TO
+          END DSC ,
+          CRT.USER_NAME CRT_USER ,
+          TO_CHAR(RQST.CRT_DT,'DD/MM/YYYY HH24:MI:SS') CRT_DT ,
+          UPD.USER_NAME UPD_USER ,
+          TO_CHAR(RQST.UPD_DT,'DD/MM/YYYY HH24:MI:SS') UPD_DT ,
+          RQST.RQST_DATA_FR ,
+          RQST.RQST_DATA_TO ,
+          ORG.ORG_CODE ,
+          ORG.GRP_CODE ,
+          ORG.DEPT_CODE
 
       FROM SAL0269D RQST
       JOIN SAL0001D SOM ON SOM.SALES_ORD_ID = RQST.SALES_ORD_ID

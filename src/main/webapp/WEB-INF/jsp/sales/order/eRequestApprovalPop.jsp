@@ -179,7 +179,7 @@
 	       $("#modInstStateNew").text(addrInfo.city);
 	       $("#modInstCntyNew").text(addrInfo.country);
 
-	       $("#dscBrnchId").val(brnchIdNew);
+	       $("#dscBrnchId").val(addrInfo.brnchId);
 	       doGetComboSepa('/common/selectBranchCodeList.do', '3', '-', addrInfo.brnchId, 'modDscBrnchIdNew', 'S'); //Branch Code
 	      }
 	    });
