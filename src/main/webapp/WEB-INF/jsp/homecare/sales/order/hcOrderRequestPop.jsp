@@ -289,6 +289,9 @@
                                 break;
                             }
                         }
+
+                        if((anoOrdId > 0 && selVal == 25) || (anoOrdId == '' && selVal == 24))
+                            isExist = false;
                     }
 
                     if(!isExist) {
@@ -1167,7 +1170,7 @@
         var PromoItemPrice = 0;
         var PromoItemPV = 0;
 
-        Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : srvPacId}, function(promoPriceInfo) {
+        Common.ajaxSync("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : srvPacId}, function(promoPriceInfo) {
             if(promoPriceInfo != null) {
                 $("#txtPriceAexc").val(promoPriceInfo.orderPricePromo);
                 $("#txtPVAexc").val(promoPriceInfo.orderPVPromo);
@@ -1188,7 +1191,7 @@
         var totalAmount = 0;
 
         if("${orderDetail.basicInfo.appTypeId}" == "66") {
-            Common.ajax("GET", "/sales/order/selectOrderSimulatorViewByOrderNo.do", {salesOrdNo : ORD_NO}, function(result) {
+            Common.ajaxSync("GET", "/sales/order/selectOrderSimulatorViewByOrderNo.do", {salesOrdNo : ORD_NO}, function(result) {
                 if(result != null) {
                     isNull2 = false;
                 }
@@ -1206,7 +1209,7 @@
                     } else {
                         totalAmount = parseFloat(PromoItemPrice) - (totalRPF + totalBillAmount);
                     }
-                }
+ }
             });
         }
 
@@ -1247,7 +1250,7 @@
         if(appTypeVal == '' || exTrade == '') return;
 
         if(appTypeVal == 67 || appTypeVal == 68) {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:'${orderDetail.basicInfo.srvPacId}', isSrvPac:'Y'}, '', 'cmbPromotionAexc', 'S', ''); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val(), isSrvPac:'Y'}, '', 'cmbPromotionAexc', 'S', ''); //Common Code
         } else {
             doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal, stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val()}, '', 'cmbPromotionAexc', 'S'); //Common Code
         }

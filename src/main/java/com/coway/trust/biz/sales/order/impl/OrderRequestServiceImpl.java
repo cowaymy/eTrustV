@@ -2250,6 +2250,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
       int appTypeId = Integer.parseInt(String.valueOf(view.get("appTypeId")));
       int orderStatusID = Integer.parseInt(String.valueOf(view.get("stusCodeId")));
       String rentalStatus = String.valueOf(view.get("stusCodeId1"));
+      int bndlId = Integer.parseInt(String.valueOf(view.get("bndlId")));
+      int pacId = 3;
 
       params.put("salesOrdId", salesOrdId);
 
@@ -2265,11 +2267,16 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         int tracePromoID = 600;
 
         if (CommonUtils.intNvl(view.get("ordDt")) > 20140701) {
+          if(bndlId == 1){
+            pacId = 25;
+          }else if(bndlId == 2){
+            pacId = 24;
+          }
           // To get no promotion applied
           Map<String, Object> noPromo = new HashMap<>();
           noPromo.put("promoTypeId", "2282");
           noPromo.put("promoAppTypeId", "2285");
-          noPromo.put("promoSrvMemPacId", "3");
+          noPromo.put("promoSrvMemPacId", pacId);
           noPromo.put("promoPrcPrcnt", "0");
           noPromo.put("promoRpfDiscAmt", "0");
           noPromo.put("promoAddDiscPrc", "0");
