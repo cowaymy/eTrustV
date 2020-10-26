@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
-/**
+/** 
  * The persistent class for the SAL0020D database table.
  *
  */

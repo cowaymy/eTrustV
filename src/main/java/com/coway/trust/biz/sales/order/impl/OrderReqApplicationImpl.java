@@ -22,7 +22,7 @@ import com.coway.trust.biz.common.impl.FileMapper;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.order.OrderReqApplication;
 
-@Service("OrderReqApplication")
+@Service("OrderReqApplication") 
 public class OrderReqApplicationImpl implements OrderReqApplication {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl.class);
