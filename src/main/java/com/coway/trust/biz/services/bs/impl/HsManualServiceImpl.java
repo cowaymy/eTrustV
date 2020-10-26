@@ -444,7 +444,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
       List<EgovMap> qryUsedFilter = hsManualMapper.selectQryUsedFilter2(insertHsResultfinal);
 
-     // logger.debug("= LOOP ITEM : {}", docType.size());
+      logger.debug("= LOOP ITEM : {}", docType.size());
 
       for (int i = 0; i < docType.size(); i++) {
         Map<String, Object> docSub = (Map<String, Object>) docType.get(i);
