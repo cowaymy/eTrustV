@@ -1856,7 +1856,7 @@ public class ReportBatchController {
     LOGGER.info("[END] SQLColorGrid_NoRental-Out-Ins_Excel...");
   }
 
-  @RequestMapping(value = "/Hand_Collection_vs_Autopay_Excel.do")
+/*  @RequestMapping(value = "/Hand_Collection_vs_Autopay_Excel.do")
   //@Scheduled(cron = " 0 0 6 1 * ?")//Monthly (Day 1) 6:00am
   public void handCollectionVsAutopay() {
     LOGGER.info("[START] Hand_Collection_vs_Autopay_Excel...");
@@ -1872,6 +1872,24 @@ public class ReportBatchController {
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] Hand_Collection_vs_Autopay_Excel...");
+  }*/
+
+  @RequestMapping(value = "/Daily_BadDebtRaw.do")
+  //@Scheduled(cron = " 0 0 6 1 * ?")//Monthly (Day 1) 6:00am
+  public void dailyBadDebtRaw() {
+    LOGGER.info("[START] Daily_BadDebtRaw...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/DailyBadDebtRaw.rpt");// visualcut
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "RCM" + File.separator + "Daily_BadDebtRaw" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] Daily_BadDebtRaw...");
   }
 
 
