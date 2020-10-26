@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.api.mobile.payment.payment.PaymentForm;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.MobileAppTicketApiCommonService;
+import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.biz.payment.common.service.impl.CommonPaymentMapper;
 import com.coway.trust.biz.payment.payment.service.PaymentApiService;
@@ -41,6 +42,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 2. 6.     MY-ONGHC   Add E-Notification
  * 2020. 4. 9.     MY_ONGHC  Amend insertSalesNotification to Add Customer Name
  * 2020. 5. 29.   MY_ONGHC   Amend sendEmail function
+ * 2020. 10. 26.  MY_YONGJH Amend sendEmail function
  *          </pre>
  */
 @Service("paymentApiService")
@@ -499,11 +501,15 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     }
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void sendEmail(Map<String, Object> params) {
     EmailVO email = new EmailVO();
     String emailTitle = paymentApiMapper.getEmailTitle(params);
-    String emailDetails = paymentApiMapper.getEmailDetails(params);
+
+    Map<String, Object> additionalParams = (Map<String, Object>) paymentApiMapper.getEmailDetails(params);
+    params.putAll(additionalParams);
+
     //String emailNo = "";
     List<String> emailNo = new ArrayList<String>();
 
@@ -526,9 +532,9 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     email.setTo(emailNo);
     email.setHtml(true);
     email.setSubject(emailTitle);
-    email.setText(emailDetails);
+    email.setHasInlineImage(true);
 
     boolean isResult = false;
-    isResult = adaptorService.sendEmail(email, false);
+    isResult = adaptorService.sendEmail(email, false, EmailTemplateType.E_TEMPORARY_RECEIPT, params);
   }
 }

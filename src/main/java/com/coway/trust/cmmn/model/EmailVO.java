@@ -17,6 +17,7 @@ public class EmailVO {
 	private String text;
 	private boolean isHtml;
 	private List<File> files;
+	private boolean hasInlineImage;
 
 	public List<String> getTo() {
 		if (this.to == null || this.to.size() == 0) {
@@ -87,5 +88,13 @@ public class EmailVO {
 			return Collections.emptyList();
 		}
 		return this.files;
+	}
+
+	public boolean getHasInlineImage() {
+		return hasInlineImage;
+	}
+
+	public void setHasInlineImage(boolean hasInlineImage) {
+		this.hasInlineImage = hasInlineImage;
 	}
 }

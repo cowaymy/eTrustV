@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -115,6 +116,8 @@ public class AdaptorServiceImpl implements AdaptorService {
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
 			boolean isMultiPart = email.getFiles().size() == 0 ? false : true;
+			isMultiPart = email.getHasInlineImage();
+
 			MimeMessageHelper messageHelper = new MimeMessageHelper(message, isMultiPart, AppConstants.DEFAULT_CHARSET);
 			messageHelper.setFrom(from);
 			messageHelper.setTo(email.getTo().toArray(new String[email.getTo().size()]));
@@ -126,7 +129,13 @@ public class AdaptorServiceImpl implements AdaptorService {
 				messageHelper.setText(email.getText(), email.isHtml());
 			}
 
-			if (isMultiPart) {
+			if (isMultiPart && email.getHasInlineImage()) {
+				try {
+					messageHelper.addInline("coway_header", new ClassPathResource("template/stylesheet/images/coway_header.png"));
+				} catch (Exception e) {
+					throw new ApplicationException(e, AppConstants.FAIL, e.getMessage());
+				}
+			} else if (isMultiPart) {
 				email.getFiles().forEach(file -> {
 					try {
 						messageHelper.addAttachment(file.getName(), file);
