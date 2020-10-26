@@ -449,7 +449,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       for (int i = 0; i < docType.size(); i++) {
         Map<String, Object> docSub = (Map<String, Object>) docType.get(i);
 
-        	logger.info("#### addList: " + docSub.get("stkDesc").toString());
+        	// logger.info("#### addList: " + docSub.get("stkDesc").toString());
 
             docSub.put("bsResultId", nextSeq);
             docSub.put("bsResultPartId", docSub.get("stkId"));
@@ -3534,7 +3534,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     hsManualMapper.updateDisinfecSrv(params);
   }
 
-  @Override
+   @Override
   public List<EgovMap> instChkLst() {
 	  return hsManualMapper.instChkLst();
   }
