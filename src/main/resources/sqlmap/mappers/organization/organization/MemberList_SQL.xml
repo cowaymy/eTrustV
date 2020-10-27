@@ -5000,8 +5000,8 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		<if test="religionUpd != null and religionUpd != '' ">
 		  , RELIGION = #{religionUpd}
 		</if>
-		<if test="trMobileUseYnUpd != null and trMobileUseYnUpd != '' ">
-		  , MOBILE_USE_YN = #{trMobileUseYnUpd}
+		<if test="mobileUseYnUpd != null and mobileUseYnUpd != '' ">
+		  , MOBILE_USE_YN = #{mobileUseYnUpd}
 		</if>
 		<if test="noTBBChkboxUpd != null and noTBBChkboxUpd != '' ">
           , NO_TBB = #{noTBBChkboxUpd}

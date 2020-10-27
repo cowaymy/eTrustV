@@ -194,7 +194,7 @@ $(document).ready(function() {
     // ADDED BY TOMMY 27/05/2020 ONLY ALLOW CODY AND HT FOR HOSPITALISATION CHECKBOX
     // 20201007 - LaiKW - Added No TBB for HP
     // 20201008 - LaiKW - Amended to cater editing of temporary staff codes details
-    $("#editRow1").hide();
+    $("#editRow1_1").hide();
     $("#hpNoTBB").hide();
 
     if("${memType}" == "2" || "${memType}" == "7") {
@@ -449,10 +449,10 @@ $(document).ready(function() {
     //
 
     //
-    $('#trMobileUseYn').change(function() {
-        $("#trMobileUseYnUpd").remove();
-        $("#memberUpdForm").append("<input type='hidden' name='trMobileUseYnUpd' id='trMobileUseYnUpd'>");
-        $("#trMobileUseYnUpd").val($("#trMobileUseYn").val());
+    $('#mobileUseYn').change(function() {
+        $("#mobileUseYnUpd").remove();
+        $("#memberUpdForm").append("<input type='hidden' name='mobileUseYnUpd' id='mobileUseYnUpd'>");
+        $("#mobileUseYnUpd").val($("#mobileUseYn").val());
     });
     //
 
