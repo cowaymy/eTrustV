@@ -61,4 +61,9 @@ public class MainNoticeServiceImpl extends EgovAbstractServiceImpl implements Ma
         return mainNoticeMapper.selectSalesOrgPerf(params);
     }
 
+	@Override
+	public List<EgovMap> getCustomerBday(Map<String, Object> params) {
+	    return mainNoticeMapper.getCustomerBday(params);
+	}
+
 }

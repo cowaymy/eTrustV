@@ -67,180 +67,156 @@
     var hpDashboard = [{
         dataField: "period",
         headerText: "Period",
-        width : 75
+        width : "12.5%"
     }, {
         dataField: "ranking",
         headerText: "Rank",
-        width : 90
+        width : "12.5%"
     }, {
         dataField: "sponsor",
         headerText: "Self<br/>Sponsor",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 70
+        width : "15%"
     }, {
         dataField: "actMem",
         headerText: "Active<br/>HP",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 70
+        width : "15%"
     }, {
         dataField: "sales",
         headerText: "Own<br/>Sales",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 70
+        width : "15%"
     }, {
         dataField: "pvValue",
         headerText: "PV<br/>Value",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 80
-    }, {
-        dataField: "ys",
-        headerText: "YS",
-        dataType : "numeric",
-        formatString : "#,##0",
-        visible : false
-    }, {
-        dataField: "actOrd",
-        headerText: "Active<br/>Order",
-        dataType : "numeric",
-        formatString : "#,##0",
-        visible : false
+        width : "15%"
     }, {
         dataField: "rc",
         headerText: "SHI<br/>Index",
         formatString : "#,##0.00",
-        width : 70
+        width : "15%"
     }];
 
     var salesManagerDashboard = [{
         dataField: "period",
         headerText: "Period",
-        width : 75
+        width : "12.5%"
     }, {
         dataField: "ranking",
         headerText: "Rank",
-        width : 70
+        width : "10.5%"
     }, {
         dataField: "sponsor",
         headerText: "Sponsor",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 70
+        width : "9%"
     }, {
         dataField: "recruit",
         headerText: "Recruit",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 70
+        width : "9%"
     }, {
         dataField: "actMem",
         headerText: "Active<br/>HP",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 70
+        width : "9%"
     }, {
         dataField: "productivity",
         headerText: "Productivity",
         dataType : "numeric",
         formatString : "#,##0.0",
-        width : 100
+        width : "12.5%"
     }, {
         dataField: "sales",
         headerText: "Group<br/>Sales",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 70
+        width : "12.5%"
     }, {
         dataField: "pvValue",
         headerText: "PV<br/>Value",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 80
+        width : "12.5%"
     }, {
         dataField: "rc",
         headerText: "SHI<br/>Index",
         formatString : "#,##0.00",
-        width : 70
+        width : "12.5%"
     }];
 
     var sgmDashboard = [{
         dataField: "period",
         headerText: "Period",
-        width : 75
+        width : "12.5%"
     }, {
         dataField: "sponsor",
         headerText: "Sponsor",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 70
+        width : "12.5%"
     }, {
         dataField: "recruit",
         headerText: "Recruit",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 70
+        width : "12.5%"
     }, {
         dataField: "actMem",
         headerText: "Active HP<br/>with<br/>Net Sales",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 100
+        width : "12.5%"
     }, {
         dataField: "productivity",
         headerText: "Productivity",
         dataType : "numeric",
         formatString : "#,##0.0",
-        width : 100
+        width : "12.5%"
     }, {
         dataField: "sales",
         headerText: "Group<br/>Sales",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 70
+        width : "12.5%"
     }, {
         dataField: "pvValue",
         headerText: "PV Value<br/>(Net Sales)",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 90
-    }, {
-        dataField: "actOrd",
-        headerText: "Active<br/>Order",
-        dataType : "numeric",
-        formatString : "#,##0",
-        visible : false
-    }, {
-        dataField: "ys",
-        headerText: "YS",
-        dataType : "numeric",
-        formatString : "#,##0",
-        visible : false
+        width : "12.5%"
     }, {
         dataField: "rc",
         headerText: "SHI<br/>Index",
         formatString : "#,##0.00",
-        width : 70
+        width : "12.5%"
     }];
 
     var dailyPerfDashboard = [{
         dataField: "period",
         headerText: "Period",
-        width : 75
+        width : "45%"
     }, {
         dataField: "actOrd",
         headerText: "Active<br/>Order",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 75
+        width : "27.5%"
     }, {
         dataField: "ys",
         headerText: "YS",
         dataType : "numeric",
         formatString : "#,##0",
-        width : 75
+        width : "27.5%"
     }];
 /*
     var tagStatusColumnLayout =
@@ -482,8 +458,21 @@
                     {dataField: "department",headerText :"<spring:message code='log.head.department'/>"          ,width:"20%"    ,height:30 , visible:true},
                ];
 
+    var customerBdayColumnLayout = [
+        {
+            dataField: "bdate",
+            headerText: "Date",
+            width: "20%"
+        },
+        {
+            dataField: "name",
+            headerText: "Customer Name",
+            width: "80%"
+        }
+    ];
+
     //AUIGrid 생성 후 반환 ID
-    var noticeGridID, detailGridID, statusCodeGridID, memoGridID, salesOrgPerfM, salesOrgPerfD;
+    var noticeGridID, detailGridID, statusCodeGridID, memoGridID, salesOrgPerfM, salesOrgPerfD, customerBdayGrid;
 
     var gridOption = {
         showStateColumn : false,
@@ -501,12 +490,13 @@
         $(".bottom_msg_box").attr("style","display:none");
         /***********************************************[ NOTICE GRID] ************************************************/
 
-        var roleType;
+        var roleType, userId;
 
         Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
             console.log(result);
 
             roleType = result.roleType;
+            userId = result.userId;
 
             if(result.userTypeId == 1) {
                 $("#notice").remove();
@@ -524,6 +514,7 @@
                     };
 
                 salesOrgPerfD = GridCommon.createAUIGrid("salesOrgPerfD", dailyPerfDashboard, null, salesGridOption);
+                customerBdayGrid = GridCommon.createAUIGrid("salesOrgCustBday", customerBdayColumnLayout, null, salesGridOption);
 
                 if(result.roleType == 115) {
                     console.log("else :: hpDashboard");
@@ -536,9 +527,10 @@
                     salesOrgPerfM = GridCommon.createAUIGrid("salesOrgPerfM", salesManagerDashboard, null, salesGridOption);
                 }
 
-                AUIGrid.resize(salesOrgPerfM, 1200, 160);
+                //AUIGrid.resize(salesOrgPerfM, 1200, 160);
 
-                fn_selectSalesDashboard(roleType);
+                fn_selectSalesDashboard(userId, roleType);
+                //fn_getCustomerBday(userId, roleType);
 
             } else {
                 noticeGridID = GridCommon.createAUIGrid("noticeGrid", noticeLayout, null, gridOption);
@@ -722,7 +714,7 @@
         });
     }
 
-    function fn_selectSalesDashboard(userRole) {
+    function fn_selectSalesDashboard(userId, userRole) {
         Common.ajax("GET", "/common/getSalesOrgPerf.do", {}, function (result) {
             AUIGrid.setGridData(salesOrgPerfM, result);
             AUIGrid.setGridData(salesOrgPerfD, result);
@@ -744,6 +736,12 @@
                 }
             });
             AUIGrid.update(salesOrgPerfD);
+
+            Common.ajax("GET", "/common/getCustomerBday.do", {userId : userId, roleId : userRole}, function(result1) {
+                console.log("fn_getCustomerBday");
+                console.log(result1);
+                AUIGrid.setGridData(customerBdayGrid, result1);
+            });
         });
     }
 
@@ -846,7 +844,7 @@
 -->
 
         <div id="salesOrg" class="divine_auto">
-            <div style="width:75%">
+            <div style="width:50%">
                 <aside class="title_line">
                     <h2>Sales Organization Performance</h2>
                 </aside>
@@ -860,6 +858,14 @@
                 </aside>
 
                 <div id="salesOrgPerfD" class="grid_wrap" style="width: 100%; height:160px; margin: 0 auto;"></div>
+            </div>
+
+            <div style="width:25%">
+                <aside class="title_line">
+                    <h2>Customer Birthday</h2>
+                </aside>
+
+                <div id="salesOrgCustBday" class="grid_wrap" style="width: 100%; height:160px; margin: 0 auto;"></div>
             </div>
         </div>
 

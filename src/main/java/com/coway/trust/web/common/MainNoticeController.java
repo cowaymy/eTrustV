@@ -96,4 +96,10 @@ public class MainNoticeController {
         return ResponseEntity.ok(notice);
     }
 
+	@RequestMapping(value = "/getCustomerBday.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> getCustomerBday(@RequestParam Map<String, Object> params, SessionVO sessionVO) {
+        params.put("userId", sessionVO.getUserId());
+        List<EgovMap> notice = mainNoticeService.getCustomerBday(params);
+        return ResponseEntity.ok(notice);
+    }
 }

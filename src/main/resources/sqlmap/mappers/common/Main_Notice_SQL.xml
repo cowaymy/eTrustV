@@ -197,4 +197,60 @@ FROM VIEW_COUNT
         ]]>
     </select>
 
+    <select id="getCustomerBday" parameterType="Map" resultType="egovMap">
+        SELECT * FROM (
+	        SELECT DISTINCT * FROM (
+			    SELECT A.CUST_ID, A.NAME, TO_CHAR(A.DOB, 'DD/MM') BDATE
+				FROM (
+				    SELECT DISTINCT A2.CUST_ID, A2.NAME, A2.DOB, A1.MEM_ID
+				    FROM SAL0001D A1, SAL0029D A2
+				    WHERE A1.CUST_ID = A2.CUST_ID
+				    AND A1.STUS_CODE_ID = '4'
+				    AND A2.TYPE_ID = 964
+				    AND EXTRACT(MONTH FROM A2.DOB) = EXTRACT(MONTH FROM SYSDATE)
+				) A
+				JOIN ORG1001V B
+				    ON A.MEM_ID = B.MEM_ID
+				<if test="roleId == 114">
+				    AND B.DEPT_CODE = (
+				        SELECT LAST_DEPT_CODE
+				        FROM ORG0001D X1, ORG0005D X2, SYS0047M X3
+				        WHERE X1.MEM_ID = X2.MEM_ID
+				        AND X1.MEM_CODE = X3.HR_CODE
+				        AND X3.USER_ID = #{userId}
+				    )
+				</if>
+				<if test="roleId == 113">
+				    AND B.GRP_CODE = (
+		                SELECT LAST_GRP_CODE
+		                FROM ORG0001D X1, ORG0005D X2, SYS0047M X3
+		                WHERE X1.MEM_ID = X2.MEM_ID
+		                AND X1.MEM_CODE = X3.HR_CODE
+		                AND X3.USER_ID = #{userId}
+		            )
+		        </if>
+		        <if test="roleId == 112">
+		            AND B.ORG_CODE = (
+		                SELECT LAST_ORG_CODE
+		                FROM ORG0001D X1, ORG0005D X2, SYS0047M X3
+		                WHERE X1.MEM_ID = X2.MEM_ID
+		                AND X1.MEM_CODE = X3.HR_CODE
+		                AND X3.USER_ID = #{userId}
+		            )
+		        </if>
+				<if test="roleId == 115">
+				JOIN SYS0047M C
+				    ON B.MEM_CODE = C.HR_CODE
+				    AND C.USER_TYPE_ID = 1
+				    AND C.USER_ID = #{userId}
+				</if>
+				JOIN ORG0001D D
+				    ON B.MEM_ID = D.MEM_ID
+				    AND D.MEM_TYPE = 1
+	        )
+	        ORDER BY TO_NUMBER(SUBSTR(BDATE, 1, 2)),
+	                 CUST_ID
+        )
+        WHERE ROWNUM <![CDATA[ <= ]]> 3
+    </select>
 </mapper>

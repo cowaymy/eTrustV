@@ -18,4 +18,7 @@ public interface MainNoticeService {
 	List<EgovMap> getDailyPerformance(Map<String, Object> params);
 
 	List<EgovMap> getSalesOrgPerf(Map<String, Object> params);
+
+	List<EgovMap> getCustomerBday(Map<String, Object> params);
+
 }
