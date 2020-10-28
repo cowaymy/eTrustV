@@ -870,7 +870,9 @@ SELECT Extent1.CCP_ID   ,
 			       CCP_PNC_REM = #{pncRem},
 			       CCP_HAS_GRNT = #{hasGrnt},
 			       CCP_IS_HOLD = #{onHoldCcp},
-			       CCP_FICO = #{ficoScore}
+			       CCP_FICO = #{ficoScore},
+			       CCP_AGM_REQ = #{agmReq},
+			       CCP_TEMPLATE = #{cowayTemplate}
 			WHERE
 			       CCP_ID = #{saveCcpId}
 </update>

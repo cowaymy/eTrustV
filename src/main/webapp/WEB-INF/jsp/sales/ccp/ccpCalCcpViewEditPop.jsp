@@ -231,6 +231,18 @@ $(document).ready(function() {
        }else{
            $("#_isChkSms").val("0");
        }
+       //_summon
+       if($("#agmReq").is(":checked") == true){
+           $("#agmReq").val("1");
+       }else{
+           $("#agmReq").val("0");
+       }
+       //_summon
+       if($("#cowayTemplate").is(":checked") == true){
+           $("#cowayTemplate").val("1");
+       }else{
+           $("#cowayTemplate").val("0");
+       }
        calSave();
 
     });//Save End
@@ -1078,10 +1090,17 @@ function chgTab(tabNm) {
     <td colspan="5"><textarea cols="20" rows="5" id="_pncRem" name="pncRem" maxlength="4000">${ccpInfoMap.ccpPncRem}</textarea></td>
 </tr>
 <tr>
+    <!--
     <th scope="row"><spring:message code="sal.title.letterOfUnder" /></th>
     <td><span><input type="checkbox"  id="_letterOfUdt"  name="letterOfUdt"/></span></td>
     <th scope="row"><spring:message code="sal.title.text.summon" /></th>
     <td><span><input type="checkbox"  id="_summon"  name="summon"/></span></td>
+    -->
+    <!-- 20201023 - LaiKW - Amend checkbox -->
+    <th scope="row">Need Agreement</th>
+    <td><span><input type="checkbox"  id="agmReq"  name="agmReq"/></span></td>
+    <th scope="row">Coway Template</th>
+    <td><span><input type="checkbox"  id="cowayTemplate"  name="cowayTemplate"/></span></td>
     <th scope="row"><spring:message code="sal.title.text.onHoldCcp" /></th>
     <td><span><input type="checkbox"  id="_onHoldCcp"  name="onHoldCcp"/></span></td>
 </tr>
