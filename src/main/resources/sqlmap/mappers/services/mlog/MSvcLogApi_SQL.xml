@@ -294,7 +294,7 @@
                  SAL0028D W,
                  SYS0013M X ,
                  SAL0261D Y ,
-                 SAL0090D Z
+                 (SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID, SRV_SO_ID, SRV_REM FROM SAL0090D WHERE SRV_STUS_ID = 1 GROUP BY SRV_SO_ID, SRV_REM) Z
 
                  WHERE A.SCHDUL_ID = B.SCHDUL_ID(+)
                     AND A.SALES_ORD_ID = B.SALES_ORD_ID(+)
