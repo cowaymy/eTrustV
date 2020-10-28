@@ -638,10 +638,17 @@ function chgTab(tabNm) {
     <td colspan="5"><textarea cols="20" rows="5" id="_pncRem" name="pncRem">${ccpInfoMap.ccpPncRem}</textarea></td>
 </tr>
 <tr>
+    <!--
     <th scope="row"><spring:message code="sal.title.letterOfUnder" /></th>
     <td><span><input type="checkbox"  id="_letterOfUdt"  name="letterOfUdt"/></span></td>
     <th scope="row"><spring:message code="sal.title.text.summon" /></th>
     <td><span><input type="checkbox"  id="_summon"  name="summon"/></span></td>
+    -->
+    <!-- 20201023 - LaiKW - Amend checkbox -->
+    <th scope="row">Need Agreement</th>
+    <td><span><input type="checkbox"  id="agmReq"  name="agmReq"/></span></td>
+    <th scope="row">Coway Template</th>
+    <td><span><input type="checkbox"  id="cowayTemplate"  name="cowayTemplate"/></span></td>
     <th scope="row"><spring:message code="sal.title.text.onHoldCcp" /></th>
     <td><span><input type="checkbox"  id="_onHoldCcp"  name="onHoldCcp"/></span></td>
 </tr>
