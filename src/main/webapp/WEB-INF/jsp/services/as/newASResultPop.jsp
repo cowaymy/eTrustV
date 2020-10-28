@@ -1635,12 +1635,14 @@
           rtnValue = false;
         }
 
-        if (FormUtil.checkReqValue($("#ddlErrorCode"))) { // ERROR CODE
+      //if (FormUtil.checkReqValue($("#ddlErrorCode"))) {
+        if(!$("#ddlErrorCode").val()){
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Error Code' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
 
-        if (FormUtil.checkReqValue($("#ddlErrorDesc"))) { // ERROR DESCRIPTION
+        //if (FormUtil.checkReqValue($("#ddlErrorDesc"))) {
+        if(!$("#ddlErrorDesc").val()){
           rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Error Description' htmlEscape='false'/> </br>";
           rtnValue = false;
         }
