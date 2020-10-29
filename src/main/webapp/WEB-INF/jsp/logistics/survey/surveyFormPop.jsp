@@ -102,9 +102,9 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:1px solid #d3d9
 <tbody>
 <c:forEach items="${title}" var="title">
 <tr>
-        <%-- <th scope="row" colspan="3"><br><b>${title.surveyMessage}</b><br/></th> --%>
+        <th scope="row" colspan="3"><br><b>${title.surveyMessage}</b><br/></th>
 
-        <th scope="row" colspan="3"><b>Score : 5 - Very Satisfied | 4 - Satisfied | 3 - Average | 2 - Dissatisfied | 1 - Very Dissatisfied </b></th>
+        <!-- <th scope="row" colspan="3"><b>Score : 5 - Very Satisfied | 4 - Satisfied | 3 - Average | 2 - Dissatisfied | 1 - Very Dissatisfied </b></th> -->
 </tr>
     <tr>
         <th scope="row">No.</th>
