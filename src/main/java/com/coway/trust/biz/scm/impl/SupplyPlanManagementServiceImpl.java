@@ -51,10 +51,10 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 
 	@Autowired
 	private SupplyPlanManagementMapper supplyPlanManagementMapper;
-	
+
 	@Autowired
 	private ScmCommonMapper scmCommonMapper;
-	
+
 	/*
 	 * Supply Plan By CDC
 	 */
@@ -80,10 +80,10 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 	}
 	@Override
 	public int insertSupplyPlanMaster(Map<String, Object> params, SessionVO sessionVO) {
-		
+
 		int saveCnt	= 0;
 		LOGGER.debug("insertSupplyPlanMaster : {}", params);
-		
+
 		//	variables
 		String issDtFrom	= "";	String planWeekStart	= "";
 		String issDtTo		= "";	String planWeekEnd		= "";
@@ -103,11 +103,14 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		int closeYear		= 0;
 		int closeMonth	= 0;
 		int m0WeekCnt	= 0;	int m1WeekCnt	= 0;	int m2WeekCnt	= 0;	int m3WeekCnt	= 0;	int m4WeekCnt	= 0;
-		
+
+		// Insert by Hui Ding -- set max dummy weeks -- 18
+		int maxDumWeek = 18;
+
 		//	0.0 set from params
 		cdc	= params.get("scmCdcCbBox").toString();
 		crtUserId	= sessionVO.getUserId();
-		
+
 		//	0. set from SCM Total Info
 		List<EgovMap> selectScmTotalInfo	= scmCommonMapper.selectScmTotalInfo(params);
 		//List<EgovMap> selectSalesplanMonth	= salesPlanManagementMapper.selectSalesPlanMonth(params);
@@ -133,11 +136,11 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		m2WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("m2WeekCnt").toString());
 		m3WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("m3WeekCnt").toString());
 		m4WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("m4WeekCnt").toString());
-		
+
 		if ( planFstWeek == planFstSpltWeek ) {
 			planWeekTh	= planWeekTh + 1;
 		}
-		
+
 		//	1. insert Supply Plan Master
 		Map<String, Object> mstParams = new HashMap<String, Object>();
 		mstParams.put("planYear", planYear);
@@ -152,11 +155,11 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		
+
 		//	2. insert Supply Plan Detail
 		List<EgovMap> selectGetSupplyPlanId	= supplyPlanManagementMapper.selectGetSupplyPlanId(params);
 		planId	= Integer.parseInt(selectGetSupplyPlanId.get(0).get("planId").toString());
-		
+
 		Map<String, Object> psi1InsParams = new HashMap<String, Object>();
 		//	2-1. psi #1 : Sales Plan insert
 		psi1InsParams.put("planId", planId);
@@ -174,7 +177,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		
+
 		Map<String, Object> psi235InsParams = new HashMap<String, Object>();
 		//	2-2. psi #2, #3, #5 : Safety Stock, Inventory by CDC
 		psi235InsParams.put("planId", planId);
@@ -190,7 +193,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		
+
 		Map<String, Object> psi4InsParams = new HashMap<String, Object>();
 		//	2-3. psi #4 : Before Week Supply Plan
 		psi4InsParams.put("planId", planId);
@@ -207,7 +210,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		
+
 		//	3. update Supply Plan Detail
 		String stockCode	= "";
 		int m0Psi1	= 0;	int m0Psi2	= 0;	int m0Psi3	= 0;	int m0Psi5	= 0;
@@ -217,7 +220,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		int m4Psi1	= 0;	int m4Psi2	= 0;	int m4Psi3	= 0;	int m4Psi5	= 0;
 		int planGrYear	= 0;
 		int planGrWeek	= 0;
-		
+
 		params.put("psiId", 1);	List<EgovMap> selectPsi1	= supplyPlanManagementMapper.selectPsi1(params);		//	psi1
 		params.put("psiId", 2);	List<EgovMap> selectPsi2	= supplyPlanManagementMapper.selectEachPsi(params);		//	psi2
 		params.put("psiId", 4);	List<EgovMap> selectPsi4	= supplyPlanManagementMapper.selectEachPsi(params);		//	psi4
@@ -226,13 +229,13 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		LOGGER.debug("selectPsi2 : {}", selectPsi2);
 		LOGGER.debug("selectPsi4 : {}", selectPsi4);
 		LOGGER.debug("selectPsi5 : {}", selectPsi5);
-		
+
 		//	psi2, psi5
 		Map<String, Object> psi1UpdParams = new HashMap<String, Object>();
 		Map<String, Object> psi2UpdParams = new HashMap<String, Object>();
 		Map<String, Object> psi3UpdParams = new HashMap<String, Object>();
 		Map<String, Object> psi5UpdParams = new HashMap<String, Object>();
-		
+
 		int moq	= 0;
 		int safetyStock	= 0;
 		//int loadingQty	= 0;
@@ -248,7 +251,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			int psi2	= 0;	//	ex) m01 Safety qty
 			int psi3	= 0;	//	ex) w01 Supply plan
 			int psi5	= 0;	//	ex) w01 - 1 Inventory qty
-			
+
 			stockCode	= selectPsi1.get(i).get("stockCode").toString();
 			planDtlId	= Integer.parseInt(selectPsi1.get(i).get("planDtlId").toString());
 			moq			= Integer.parseInt(selectPsi1.get(i).get("moq").toString());
@@ -257,10 +260,10 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			basicQty	= Integer.parseInt(selectPsi5.get(i).get("overdue").toString());	//	psi1의 overdue는 전월 기초재고
 			overdue		= Integer.parseInt(selectPsi1.get(i).get("overdue").toString());	//	psi5의 overdue는 전월 Overdue
 			earlyGr		= Integer.parseInt(selectPsi4.get(i).get("overdue").toString());	//	psi4의 overdue는 수립월 기준 early gr
-			
+
 			//	basicQty다시 계산
 			basicQty	= basicQty - overdue - earlyGr;
-			
+
 			psi1UpdParams.put("planId", planId);
 			psi1UpdParams.put("psiId", 1);
 			psi1UpdParams.put("stockCode", stockCode);
@@ -273,7 +276,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			psi5UpdParams.put("planId", planId);
 			psi5UpdParams.put("psiId", 5);
 			psi5UpdParams.put("stockCode", stockCode);
-			
+
 			//	to get po cnt
 			Map<String, Object> targetParams = new HashMap<String, Object>();
 			//LOGGER.debug("planFstWeek : " + planFstWeek + ", planFstSpltWeekk : " + planFstSpltWeek + ", planWeekTh : " + planWeekTh);
@@ -293,7 +296,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				scmWeekSeq	= Integer.parseInt(selectGetPoCntTarget.get(j).get("scmWeekSeq").toString());
 				planGrYear	= Integer.parseInt(selectGetPoCntTarget.get(j).get("scmYear").toString());
 				planGrWeek	= Integer.parseInt(selectGetPoCntTarget.get(j).get("scmWeek").toString());
-				
+
 				seq	= j + 1;
 				if ( 1 == isSplt ) {
 					if ( 1 == scmWeekSeq ) {
@@ -322,14 +325,14 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			LOGGER.debug("poParams : {}", poParams);
 			LOGGER.debug("This week confirm section : " + selectGetPoCntTarget.size());
 			List<EgovMap> selectGetPoCnt	= supplyPlanManagementMapper.selectGetPoCnt(poParams);
-			
+
 			//	each sum var init
 			m0Psi1	= 0;	m0Psi3	= 0;
 			m1Psi1	= 0;	m1Psi3	= 0;
 			m2Psi1	= 0;	m2Psi3	= 0;
 			m3Psi1	= 0;	m3Psi3	= 0;
 			m4Psi1	= 0;	m4Psi3	= 0;
-			
+
 			//	m0
 			//	get m0Psi1
 			for ( int m0 = 1 ; m0 < m0WeekCnt + 1 ; m0++ ) {
@@ -358,9 +361,11 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				LOGGER.debug("before calc : " + (m0Psi1 / 30.0 * safetyStock) + ", after calc : " + (int) Math.ceil((m0Psi1 / 30.0) * safetyStock));
 				psi2UpdParams.put("m0", m0Psi2);
 				psi2UpdParams.put("w" + intToStrFieldCnt2, m0Psi2);
-				
+
 				//	psi3
-				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
+				// Added by Hui Ding -- set max dummy week, 2020-10-29
+				if (iLoopDataFieldCnt2 < maxDumWeek)
+					psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
 				psi2	= m0Psi2;	//	ok
 				//	check leadTm
 				if ( totLeadTm >= iLoopDataFieldCnt2 ) {
@@ -369,7 +374,10 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 						//psi5	= basicQty - overdue - earlyGr;
 						psi5	= basicQty;
 					}
-					psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
+					// Added by Hui Ding -- set max dummy week, 2020-10-29
+					if (iLoopDataFieldCnt2 < maxDumWeek)
+						psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
+
 					//LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
 					psi5	= psi5 - psi1 + psi3;
 				} else {
@@ -394,11 +402,11 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				psi3UpdParams.put("w" + intToStrFieldCnt2, psi3);
 				psi5UpdParams.put("m0", psi5);	//	하나씩 덮어넣다보면 제일 마지막것이 들어간다.
 				psi5UpdParams.put("w" + intToStrFieldCnt2, psi5);
-				
+
 				iLoopDataFieldCnt2++;
 			}
 			psi3UpdParams.put("m0", m0Psi3);
-			
+
 			//	m1
 			for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
 				intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
@@ -430,7 +438,9 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				psi2	= m1Psi2;
 				if ( totLeadTm >= iLoopDataFieldCnt2 ) {
 				//if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
-					psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
+					// Added by Hui Ding -- set max dummy week, 2020-10-29
+					if (iLoopDataFieldCnt2 < maxDumWeek)
+						psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
 					//LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
 				} else {
 					if ( 0 > psi1 + psi2 - psi5 ) {
@@ -458,11 +468,11 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				psi3UpdParams.put("w" + intToStrFieldCnt2, psi3);
 				psi5UpdParams.put("m1", psi5);
 				psi5UpdParams.put("w" + intToStrFieldCnt2, psi5);
-				
+
 				iLoopDataFieldCnt2++;
 			}
 			psi3UpdParams.put("m1", m1Psi3);
-			
+
 			//	m2
 			for ( int m2 = 1 ; m2 < m2WeekCnt + 1 ; m2++ ) {
 				intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
@@ -490,11 +500,15 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				psi2UpdParams.put("m2", m2Psi2);
 				psi2UpdParams.put("w" + intToStrFieldCnt2, m2Psi2);
 				//	psi3, psi5
-				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
+				// Added by Hui Ding -- set max dummy week, 2020-10-29
+				if (iLoopDataFieldCnt2 < maxDumWeek)
+					psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
 				psi2	= m2Psi2;
 				if ( totLeadTm >= iLoopDataFieldCnt2 ) {
 				//if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
-					psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
+					// Added by Hui Ding -- set max dummy week, 2020-10-29
+					if (iLoopDataFieldCnt2 < maxDumWeek)
+						psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
 					//LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
 				} else {
 					if ( 0 > psi1 + psi2 - psi5 ) {
@@ -522,11 +536,11 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				psi3UpdParams.put("w" + intToStrFieldCnt2, psi3);
 				psi5UpdParams.put("m2", psi5);
 				psi5UpdParams.put("w" + intToStrFieldCnt2, psi5);
-				
+
 				iLoopDataFieldCnt2++;
 			}
 			psi3UpdParams.put("m2", m2Psi3);
-			
+
 			//	m3
 			for ( int m3 = 1 ; m3 < m3WeekCnt + 1 ; m3++ ) {
 				intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
@@ -548,11 +562,16 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				psi2UpdParams.put("m3", m3Psi2);
 				psi2UpdParams.put("w" + intToStrFieldCnt2, m3Psi2);
 				//	psi3, psi5
-				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
+				// Added by Hui Ding -- set max dummy week, 2020-10-29
+				if (iLoopDataFieldCnt2 < maxDumWeek)
+					psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
 				psi2	= m3Psi2;
 				if ( totLeadTm >= iLoopDataFieldCnt2 ) {
 				//if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
-					psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
+					LOGGER.debug("###iLoopDataFieldCnt2: " + iLoopDataFieldCnt2);
+					// Added by Hui Ding -- set max dummy week, 2020-10-29
+					if (iLoopDataFieldCnt2 < maxDumWeek)
+						psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
 					//LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
 				} else {
 					if ( 0 > psi1 + psi2 - psi5 ) {
@@ -580,11 +599,11 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				psi3UpdParams.put("w" + intToStrFieldCnt2, psi3);
 				psi5UpdParams.put("m3", psi5);
 				psi5UpdParams.put("w" + intToStrFieldCnt2, psi5);
-				
+
 				iLoopDataFieldCnt2++;
 			}
 			psi3UpdParams.put("m3", m3Psi3);
-			
+
 			//	m4
 			for ( int m4 = 1 ; m4 < m4WeekCnt + 1 ; m4++ ) {
 				intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
@@ -606,7 +625,9 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				psi2UpdParams.put("m4", m4Psi2);
 				psi2UpdParams.put("w" + intToStrFieldCnt2, m4Psi2);
 				//	psi3, psi5
-				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
+				// Added by Hui Ding -- set max dummy week, 2020-10-29
+				if (iLoopDataFieldCnt2 < maxDumWeek)
+					psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
 				psi2	= m4Psi2;
 				if ( 0 > psi1 + psi2 - psi5 ) {
 					psi3	= 0;
@@ -632,11 +653,11 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				psi3UpdParams.put("w" + intToStrFieldCnt2, psi3);
 				psi5UpdParams.put("m4", psi5);
 				psi5UpdParams.put("w" + intToStrFieldCnt2, psi5);
-				
+
 				iLoopDataFieldCnt2++;
 			}
 			psi3UpdParams.put("m4", m4Psi3);
-			
+
 			//	set last week to 30 week
 			int totWeekCnt	= m0WeekCnt + m1WeekCnt + m2WeekCnt + m3WeekCnt + m4WeekCnt;
 			for ( int remain = totWeekCnt + 1 ; remain < 31 ; remain++ ) {
@@ -655,14 +676,14 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			supplyPlanManagementMapper.updateSupplyPlanDetailPsi23(psi3UpdParams);
 			supplyPlanManagementMapper.updateSupplyPlanDetailPsi5(psi5UpdParams);
 		}
-		
+
 		return	saveCnt;
 	}
 	@Override
 	public void deleteSupplyPlanMaster(Map<String, Object> params, SessionVO sessionVO) {
 		int dtlCnt	= 0;
 		int mstCnt	= 0;
-		
+
 		try {
 			dtlCnt	= supplyPlanManagementMapper.deleteSupplyPlanDetail(params);
 			LOGGER.debug("Supply Plan Detail Delete cnt : " + dtlCnt);
@@ -677,7 +698,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		//	int var
 		int saveCnt	= 0;
 		int updUserId	= sessionVO.getUserId();
-		
+
 		try {
 			for ( Object obj : updList ) {
 				((Map<String, Object>) obj).put("updUserId", updUserId);
@@ -688,23 +709,23 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		
+
 		return	saveCnt;
 	}
 	@Override
 	public int updateSupplyPlanMaster(Map<String, Object> params, SessionVO sessionVO) {
 		int saveCnt	= 0;
-		
+
 		try {
 			supplyPlanManagementMapper.updateSupplyPlanMaster(params);
 			saveCnt++;
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		
+
 		return	saveCnt;
 	}
-	
+
 	/*
 	 * Supply Plan Summary View
 	 */
@@ -717,14 +738,14 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 	@Override
 	public int insertSupplyPlanDetail(Map<String, Object> params, SessionVO sessionVO) {
 		int saveCnt	= 0;
-		
+
 		String planId		= "";
 		String planYear		= "";	String befWeekYear	= "";
 		String planMonth	= "";	String befWeekMonth	= "";
 		String planWeek		= "";	String befWeekWeek	= "";
 		String issDtFrom	= "";
 		String issDtTo		= "";
-		
+
 		List<EgovMap> selectSupplyPlanInfo	= supplyPlanManagementMapper.selectSupplyPlanInfo(params);	//	planId, planMonth
 		planId		= selectSupplyPlanInfo.get(0).get("planId").toString();
 		planYear	= params.get("scmYearCbBox").toString();
@@ -737,7 +758,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		List<EgovMap> selectBefWeekInfo	= supplyPlanManagementMapper.selectBefWeekInfo(params);			//	befWeekYear, befWeekMonth, befWeekWeek
 		LOGGER.debug("selectSplitInfo : {}", selectSplitInfo);
 		LOGGER.debug("selectBefWeekInfo : {}", selectBefWeekInfo);
-		
+
 		if ( 1 == planMonth.length() ) {
 			planMonth	= "0" + planMonth;
 		}
@@ -745,7 +766,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		issDtTo		= planYear + planMonth + "31";
 		params.put("issDtFrom", issDtFrom);
 		params.put("issDtTo", issDtTo);
-		
+
 		//	1. psi #1 : Sales Plan insert
 		try {
 			LOGGER.debug("insert psi#1 -> issDtFrom : " + issDtFrom + ", issDtTo : " + issDtTo);
@@ -753,7 +774,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		
+
 		//	2. psi #4 : Before Week Supply Plan
 		befWeekYear		= selectBefWeekInfo.get(0).get("befWeekYear").toString();
 		befWeekMonth	= selectBefWeekInfo.get(0).get("befWeekMonth").toString();
@@ -761,14 +782,14 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		params.put("befWeekYear", Integer.parseInt(befWeekYear));
 		params.put("befWeekMonth", Integer.parseInt(befWeekMonth));
 		params.put("befWeekWeek", Integer.parseInt(befWeekWeek));
-		
+
 		try {
 			LOGGER.debug("insert psi 4 -> befWeekYear : " + befWeekYear + ", befWeekMonth : " + befWeekMonth + ", befWeekWeek : " + befWeekWeek);
 			supplyPlanManagementMapper.insertSupplyPlanDetailPsi4(params);
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		
+
 		//	3. psi #2, #5 : Safety Stock, Inventory by CDC
 		try {
 			LOGGER.debug("insert psi 2 & 5");
@@ -776,19 +797,19 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-		
+
 		return	saveCnt;
 	}
-	
+
 	public static String getReplaceStr(String str, String oldChar, String newChar) {
 		if ( null == str )	return	"";
-		
+
 		StringBuffer out	= new StringBuffer();
 		StringTokenizer st	= new StringTokenizer(str.toString(), oldChar);
 		while ( st.hasMoreTokens() ) {
 			out.append(st.nextToken() + newChar);
 		}
-		
+
 		return	out.toString();
 	}
 	@Override
