@@ -652,9 +652,9 @@ function chgTab(tabNm) {
     -->
     <!-- 20201023 - LaiKW - Amend checkbox -->
     <th scope="row">Need Agreement</th>
-    <td><span><input type="checkbox"  id="agmReq"  name="agmReq"/></span></td>
+    <td><span><input type="checkbox"  id="agmReq" name="agmReq" <c:if test="${ccpInfoMap.ccpAgmReq eq '1'}">checked</c:if> /></span></td>
     <th scope="row">Coway Template</th>
-    <td><span><input type="checkbox"  id="cowayTemplate"  name="cowayTemplate"/></span></td>
+    <td><span><input type="checkbox"  id="cowayTemplate"  name="cowayTemplate" <c:if test="${ccpInfoMap.ccpTemplate eq '1'}">checked</c:if> /></span></td>
     <th scope="row"><spring:message code="sal.title.text.onHoldCcp" /></th>
     <td><span><input type="checkbox"  id="_onHoldCcp"  name="onHoldCcp"/></span></td>
 </tr>
