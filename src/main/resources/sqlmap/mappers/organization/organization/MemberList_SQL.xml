@@ -4919,7 +4919,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		  </if>
 		</if>
 		<if test="memberNmUpd != null and memberNmUpd != '' ">
-		  , NAME = UPPER(#{memberNmUpd}),
+		  , NAME = UPPER(#{memberNmUpd})
 		  , FULL_NAME = UPPER(#{memberNmUpd})
 		</if>
 		<if test="cmbRaceUpd != null and cmbRaceUpd != '' ">
@@ -5014,7 +5014,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		SET UPD_USER_ID = #{user_id}
 		  , UPD_DT = SYSDATE
 		<if test="memberNmUpd != null and memberNmUpd != '' ">
-		  , APLICNT_NAME = UPPER(#{memberNmUpd}),
+		  , APLICNT_NAME = UPPER(#{memberNmUpd})
 		  , APLICNT_FULL_NAME = UPPER(#{memberNmUpd})
 		</if>
 		<if test="cmbRaceUpd != null and cmbRaceUpd != '' ">
