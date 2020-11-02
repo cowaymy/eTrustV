@@ -212,7 +212,8 @@
     		  msg = 'Only order with [REG] rental status is allowed to perform eRequest.<br/>';
 
     	  }else if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2) || "${orderDetail.logView.prgrsId}" == 1) {
-              if ("${orderDetail.logView.prgrsId}" == 1) {
+    		  if ("${orderDetail.logView.prgrsId}" == 1 || "${orderDetail.logView.prgrsId}" == 4
+    	                || "${orderDetail.logView.prgrsId}" == 11 || "${orderDetail.logView.prgrsId}" == 12 ) {
                Common.ajaxSync("GET", "/sales/order/checkeRequestAutoDebitDeduction.do", { salesOrdId : ORD_ID },
                  function(rsltInfo) {
                    if (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
@@ -232,7 +233,7 @@
               isLock = true;
               msg = 'Cancelled order is not allowed to do eRequest.<br/>';
 
-    	  }else if(RENTAL_STUS == 'INV' || RENTAL_STUS == 'SUS' || RENTAL_STUS == 'WOF'  || RENTAL_STUS == 'TER'){
+    	  }else if(RENTAL_STUS == 'INV' || RENTAL_STUS == 'SUS' || RENTAL_STUS == 'RET' || RENTAL_STUS == 'WOF'  || RENTAL_STUS == 'TER'){
               isLock = true;
               msg = 'Only order with [REG] rental status is allowed to perform eRequest.<br/>';
 
@@ -240,7 +241,8 @@
         	  isLock = true;
               msg = 'Ex-trade/i-Care order (Before Install) is not allowed to do eRequest.<br/>';
           }else if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2) || "${orderDetail.logView.prgrsId}" == 1) {
-              if ("${orderDetail.logView.prgrsId}" == 1) {
+        	  if ("${orderDetail.logView.prgrsId}" == 1 || "${orderDetail.logView.prgrsId}" == 4
+                      || "${orderDetail.logView.prgrsId}" == 11 || "${orderDetail.logView.prgrsId}" == 12 ) {
                 Common.ajaxSync("GET", "/sales/order/checkeRequestAutoDebitDeduction.do", { salesOrdId : ORD_ID },
                   function(rsltInfo) {
                     if (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
