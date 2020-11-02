@@ -78,8 +78,10 @@ $(document).ready(function() {
     $("#_spcialRem").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     $("#_pncRem").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
 
-    $("#_letterOfUdt").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
-    $("#_summon").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    //$("#_letterOfUdt").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    //$("#_summon").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#agmReq").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+    $("#cowayTemplate").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     $("#_onHoldCcp").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     $("#_updSmsChk").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     $("#_updSmsMsg").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
@@ -130,8 +132,10 @@ function  bind_RetrieveData(){
         //chkbox
         $("#_onHoldCcp").attr("checked" , false);
         $("#_onHoldCcp").attr("disabled" , "disabled");
-        $("#_summon").attr("disabled" , false);
-        $("#_letterOfUdt").attr("disabled" , false);
+        //$("#_summon").attr("disabled" , false);
+        //$("#_letterOfUdt").attr("disabled" , false);
+        $("#agmReq").attr("disabled" , false);
+        $("#cowayTemplate").attr("disabled" , false);
 
        /*  if(isAllowSendSMS() == true){
 
@@ -151,8 +155,10 @@ function  bind_RetrieveData(){
         //chkbox
         $("#_onHoldCcp").attr("checked" , false);
         $("#_onHoldCcp").attr("disabled" , "disabled");
-        $("#_summon").attr("disabled" , false);
-        $("#_letterOfUdt").attr("disabled" , false);
+        //$("#_summon").attr("disabled" , false);
+        //$("#_letterOfUdt").attr("disabled" , false);
+        $("#agmReq").attr("disabled" , false);
+        $("#cowayTemplate").attr("disabled" , false);
 
     }
 
