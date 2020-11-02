@@ -6,44 +6,44 @@
     var addrGridID;      // addrlist
     var contactGridID; // contact list
     var optionModule = {
-                type: "S",                  
-                isShowChoose: false  
+                type: "S",
+                isShowChoose: false
         };
-    
+
     $(document).ready(function(){
         fn_getAddrListAjax(); // address list
         fn_getContactListAjax(); // contact list
-        
+
         createCntGrid();
         createAddrGrid();
-        
+
         AUIGrid.bind(addrGridID, "cellDoubleClick", function(event){
             $("#_editDealerId").val(event.item.dealerId);
             $("#_editDealerAddId").val(event.item.dealerAddId);
             Common.popupDiv('/sales/pst/dealerEditAddrUpdPop.do', $("#editForm").serializeJSON(), null , true ,'_editDiv2Pop');
         });
-        
+
         // 셀 더블클릭 이벤트 바인딩 - contact 수정
         AUIGrid.bind(contactGridID, "cellDoubleClick", function(event){
-            
+
             $("#_editDealerId").val(event.item.dealerId);
             $("#_editDealerCntId").val(event.item.dealerCntId);
             Common.popupDiv("/sales/pst/dealerEditCntUpdPop.do", $("#editForm").serializeJSON(), null , true, '_editDiv3Pop');
         });
-        
+
         $("#_newAddr").click(function() {
             Common.popupDiv('/sales/pst/editDealerNewAddressPop.do', $("#paramForm").serializeJSON(), null , true ,'_editDiv2New');
         });
-        
+
         $("#_newContact").click(function() {
-            
+
             Common.popupDiv('/sales/pst/updateDealerNewContactPop.do', $("#paramForm").serializeJSON(), null , true ,'_editDiv3New');
         });
-        
+
     });
-    
+
     function createAddrGrid(){
-        
+
         // 데이터 형태는 다음과 같은 형태임,
         var columnLayout = [{
                 dataField : "code",
@@ -55,39 +55,39 @@
                 headerText : '<spring:message code="sal.text.fullAddr" />',
                 editable : false
             }, {
-                dataField : "setMain", 
-                headerText : '<spring:message code="sal.title.setAsMain" />', 
-                width:'10%', 
-                renderer : { 
-                    type : "TemplateRenderer", 
+                dataField : "setMain",
+                headerText : '<spring:message code="sal.title.setAsMain" />',
+                width:'10%',
+                renderer : {
+                    type : "TemplateRenderer",
                     editable : true // 체크박스 편집 활성화 여부(기본값 : false)
-                }, 
-                // dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음. 
-                labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성 
+                },
+                // dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
+                labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
                     var html = '';
-                
+
                     html += '<label><input type="radio" name="setmain"  onclick="javascript: fn_setMain(' + item.dealerAddId + ','+item.dealerId+')"';
-                    
+
                     if(item.stusCodeId == 9){
                         html+= ' checked = "checked"';
                         html+= ' disabled = "disabled"';
                     }
-                    
-                    html += '/></label>'; 
-                    
+
+                    html += '/></label>';
+
                     return html;
-                } 
+                }
             }];
-       
+
         // 그리드 속성 설정
         var gridPros = {
-            // 페이징 사용       
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 10,
             editable : true,
             fixedColumnCount : 1,
-            showStateColumn : true, 
+            showStateColumn : true,
             displayTreeOpen : true,
             selectionMode : "multipleCells",
             headerHeight : 30,
@@ -101,25 +101,25 @@
             showRowNumColumn : true,
             groupingMessage : "Here groupping"
         };
-        
+
         addrGridID = AUIGrid.create("#addr_grid_wrap", columnLayout, gridPros);
     }
-    
+
     doGetCombo('/common/selectCodeList.do', '357', '${pstDealerBasicInfo.dealerType}','editDealerType', 'S' , '');     // Dealer Type Combo Box
     CommonCombo.make('cmbDealerBranch', "/sales/pst/dealerBrnchJsonList", '' , '${pstDealerBasicInfo.dealerBrnchId}', optionModule);
-    
+
     // 조회조건 combo box
     function f_multiCombo(){
         $(function() {
             $('#cmbDealerType').change(function() {
-            
+
             }).multipleSelect({
-                selectAll: true, // 전체선택 
+                selectAll: true, // 전체선택
                 width: '80%'
             });
         });
     }
-    
+
     function fn_edit(){
         Common.ajax("GET", "/sales/pst/editDealer.do", $("#editForm").serialize(), function(result){
             //result alert and reload
@@ -130,7 +130,7 @@
                 console.log("code : " + jqXHR.responseJSON.code);
                 console.log("message : " + jqXHR.responseJSON.message);
                 console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-    
+
                 //Common.alert("Failed to order invest reject.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
                 Common.alert('<spring:message code="sal.alert.msg.unableToRetrieveExchgeReq" />');
                 }
@@ -140,13 +140,13 @@
             }
             alert("Fail : " + jqXHR.responseJSON.message);
             });
-        
+
     }
-    
+
     function createCntGrid(){
-        
+
         // Contact Column
-        var contactColumnLayout= [ 
+        var contactColumnLayout= [
               {dataField : "stusCode", headerText : '<spring:message code="sal.title.status" />', width : '10%'},
               {dataField : "cntName", headerText : '<spring:message code="sal.text.name" />', width : '35%'},
               {dataField : "telM1", headerText : '<spring:message code="sal.text.telM" />', width : '10%'},
@@ -155,75 +155,75 @@
               {dataField : "telf",headerText : '<spring:message code="sal.text.telF" />',width : '10%'},
               {dataField : "dealerCntId", visible: false },
               {dataField : "dealerId", visible : false},
-              { 
-                  dataField : "setMain", 
-                  headerText : '<spring:message code="sal.title.setAsMain" />', 
-                  width:'10%', 
-                  renderer : { 
-                      type : "TemplateRenderer", 
+              {
+                  dataField : "setMain",
+                  headerText : '<spring:message code="sal.title.setAsMain" />',
+                  width:'10%',
+                  renderer : {
+                      type : "TemplateRenderer",
                       editable : true // 체크박스 편집 활성화 여부(기본값 : false)
-                  }, 
-                  // dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음. 
-                  labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성 
-                      
+                  },
+                  // dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
+                  labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
+
                       var html = '';
-                  
+
                       html += '<label><input type="radio" name="setmainCnt"  onclick="javascript: fn_setMainCnt(' + item.dealerCntId + ','+item.dealerId+')"';
-                      
+
                       if(item.stusCodeId == 9){
                           html+= ' checked = "checked"';
                           html+= ' disabled = "disabled"';
                       }
-                      
-                      html += '/></label>'; 
-                      
+
+                      html += '/></label>';
+
                       return html;
-                  } 
-                  
+                  }
+
                 }];
-         
+
       //그리드 속성 설정
         var gridPros = {
-                
+
                 usePaging           : true,         //페이징 사용
-                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-                editable            : false,            
-                fixedColumnCount    : 1,            
-                showStateColumn     : true,             
-                displayTreeOpen     : false,            
-                selectionMode       : "singleRow",  //"multipleCells",            
-                headerHeight        : 30,       
+                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+                editable            : false,
+                fixedColumnCount    : 1,
+                showStateColumn     : true,
+                displayTreeOpen     : false,
+                selectionMode       : "singleRow",  //"multipleCells",
+                headerHeight        : 30,
                 useGroupingPanel    : false,        //그룹핑 패널 사용
                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
                 noDataMessage       : "No order found.",
                 groupingMessage     : "Here groupping"
             };
-        
+
          contactGridID = GridCommon.createAUIGrid("#contact_grid_wrap", contactColumnLayout,'',gridPros); // contact list
-            
+
     }
-    
+
     function fn_getAddrListAjax(){
         Common.ajax("GET", "/sales/pst/pstDealerAddrJsonList", $("#editForm").serialize(), function(result) {
             AUIGrid.setGridData(addrGridID, result);
         }
         );
     }
-    
+
     // set Main Func (Confirm)
-    function fn_setMain(dealerAddId, dealerId){ 
+    function fn_setMain(dealerAddId, dealerId){
         $("#tempDealerId").val(dealerId);
-        $("#tempDealerAddrId").val(dealerAddId);  
+        $("#tempDealerAddrId").val(dealerAddId);
         Common.confirm('<spring:message code="sal.confirm.msg.confirmMainAddress" />', fn_changeMainAddr, fn_noConfirm);
-        
+
     }
-    
+
     //call Ajax(Set Main Address)
     function fn_changeMainAddr(){
         $("#_dealerId").val($("#tempDealerId").val());
-        $("#_dealerAddId").val($("#tempDealerAddrId").val()); 
+        $("#_dealerAddId").val($("#tempDealerAddrId").val());
 
         Common.ajax("GET", "/sales/pst/updateDealerAddressSetMain.do", $("#popForm").serialize(), function(result){
             //result alert and reload
@@ -234,7 +234,7 @@
             fn_selectPstRequestDOListAjax();
         });
     }
-    
+
     // main confirm => No
     function fn_noConfirm(){
         //Parent Window Method Call
@@ -243,27 +243,27 @@
         $("#_close").click();
         $("#autoClose").click();
     }
-  
+
     function fn_getContactListAjax(){
         Common.ajax("GET", "/sales/pst/pstDealerCntJsonList", $("#editForm").serialize(), function(result) {
             AUIGrid.setGridData(contactGridID, result);
         }
         );
     }
-    
+
  // set Main Func (Confirm)
     function fn_setMainCnt(dealerCntId, dealerId){ //sys.common.alert.save // <spring:message code='sys.common.alert.save'/>
 
         $("#tempDealerId").val(dealerId);
-        $("#tempDealerCntId").val(dealerCntId); 
+        $("#tempDealerCntId").val(dealerCntId);
         Common.confirm('<spring:message code="sal.confirm.msg.confirmMainCntc" />', fn_changeMainContact, fn_noConfirmCnt);
-       
+
     }
-    
+
     //call Ajax(Set Main Contact)
     function fn_changeMainContact(){
         $("#_dealerId").val($("#tempDealerId").val());
-        $("#_dealerCntId").val($("#tempDealerCntId").val()); 
+        $("#_dealerCntId").val($("#tempDealerCntId").val());
 
         Common.ajax("GET", "/sales/pst/updateDealerContactSetMain.do", $("#popForm").serialize(), function(result){
             //result alert and reload
@@ -274,7 +274,7 @@
             fn_selectPstRequestDOListAjax();
         });
     }
-    
+
     // main confirm => No
     function fn_noConfirmCnt(){
         //Parent Window Method Call
@@ -284,13 +284,13 @@
         $("#autoClose").click();
         $("#_eClose").click();
     }
-    
+
     function fn_success(){
         fn_pstDealerListAjax();
-        
+
         $("#_eClose").click();
     }
-    
+
     //resize func (tab click)
     function fn_resizefunc(gridName){
         AUIGrid.resize(gridName, 950, 300);
@@ -337,7 +337,7 @@
     <input type="hidden" id="dealerId" name="dealerId" value="${paramDealerId }">
     <input type="hidden" name="editDealerAddId"   id="_editDealerAddId"/><!-- Address Id  -->
     <input type="hidden" name="editDealerCntId"   id="_editDealerCntId"> <!--Contact Id  -->
-    <input type="hidden" name="_editCustId"   id="_editCustId"> <!--Contact Id  안씀-->    
+    <input type="hidden" name="_editCustId"   id="_editCustId"> <!--Contact Id  안씀-->
     <table class="type1"><!-- table start -->
     <caption>table</caption>
     <colgroup>
@@ -357,7 +357,9 @@
     </tr>
     <tr>
         <th scope="row"><spring:message code="sal.text.email" /></th>
-        <td colspan="3"><input type="text" id="editEmail" name="editEmail" value="${pstDealerBasicInfo.dealerEmail }" title="" placeholder="" class="w100p" /></td>
+        <td><input type="text" id="editEmail" name="editEmail" value="${pstDealerBasicInfo.dealerEmail }" title="" placeholder="" class="w100p" /></td>
+        <th scope="row"><spring:message code="sal.title.text.sboCode" /></th>
+        <td><input type="text" id="editSboCode" name="editSboCode" value="${pstDealerBasicInfo.sboCode }" title="" placeholder="" class="w100p" /></td>
     </tr>
     <tr>
         <th scope="row"><spring:message code="sal.title.text.nricCompNo" /><span class="must">*</span></th>

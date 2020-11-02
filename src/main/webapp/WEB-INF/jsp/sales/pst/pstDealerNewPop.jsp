@@ -330,8 +330,8 @@
         <select class="w100p" id="newDealerType" name="newDealerType">
         </select>
     </td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row"><spring:message code="sal.title.text.sboCode" /></th>
+    <td><input type="text" id="dealerSboCode" name="dealerSboCode" title="" placeholder="" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->

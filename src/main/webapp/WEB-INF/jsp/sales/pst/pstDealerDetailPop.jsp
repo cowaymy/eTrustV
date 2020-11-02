@@ -4,18 +4,18 @@
 <script type="text/javascript">
 	var addrGridID;      // addrlist
 	var contactGridID; // contact list
-	
+
 	$(document).ready(function(){
 		fn_getAddrListAjax(); // address list
 		fn_getContactListAjax(); // contact list
-		
+
 		createCntGrid();
 		createAddrGrid();
-		
+
 	});
-	
+
 	function createAddrGrid(){
-		
+
 		// 데이터 형태는 다음과 같은 형태임,
         var columnLayout = [ {
                 dataField : "code",
@@ -45,14 +45,14 @@
 
      // 그리드 속성 설정
         var gridPros = {
-            
-            // 페이징 사용       
+
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 10,
             editable : true,
             fixedColumnCount : 1,
-            showStateColumn : false, 
+            showStateColumn : false,
             displayTreeOpen : true,
             selectionMode : "multipleCells",
             headerHeight : 30,
@@ -64,15 +64,15 @@
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : true,
-        
+
             groupingMessage : "Here groupping"
         };
-        
+
         addrGridID = AUIGrid.create("#addr_grid_wrap", columnLayout, gridPros);
     }
-	
+
 function createCntGrid(){
-        
+
         // 데이터 형태는 다음과 같은 형태임,
         var columnLayout = [ {
                 dataField : "stusCode",
@@ -131,14 +131,14 @@ function createCntGrid(){
 
      // 그리드 속성 설정
         var gridPros = {
-            
-            // 페이징 사용       
+
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 10,
             editable : true,
             fixedColumnCount : 1,
-            showStateColumn : false, 
+            showStateColumn : false,
             displayTreeOpen : true,
             selectionMode : "multipleCells",
             headerHeight : 30,
@@ -150,33 +150,33 @@ function createCntGrid(){
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : true,
-        
+
             groupingMessage : "Here groupping"
         };
-        
+
         contactGridID = AUIGrid.create("#cnt_grid_wrap", columnLayout, gridPros);
     }
-	
+
 	function fn_getAddrListAjax(){
 		Common.ajax("GET", "/sales/pst/pstDealerAddrJsonList", $("#viewForm").serialize(), function(result) {
             AUIGrid.setGridData(addrGridID, result);
         }
         );
 	}
-	
+
 	function fn_getContactListAjax(){
         Common.ajax("GET", "/sales/pst/pstDealerCntJsonList", $("#viewForm").serialize(), function(result) {
             AUIGrid.setGridData(contactGridID, result);
         }
         );
     }
-	
+
 	function fn_goDealerEdit(){
 		fn_pstDealerListAjax();
         Common.popupDiv('/sales/pst/getPstDealerEditPop.do', $('#viewForm').serializeJSON(), null , true, '_editDiv11');
         $("#autoClose").click();
     }
-	
+
 	//resize func (tab click)
     function fn_resizefunc(gridName){
         AUIGrid.resize(gridName, 950, 300);
@@ -230,7 +230,9 @@ function createCntGrid(){
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.email" /></th>
-    <td colspan="3"><span>${pstDealerBasicInfo.dealerEmail }</span></td>
+    <td><span>${pstDealerBasicInfo.dealerEmail }</span></td>
+    <th scope="row"><spring:message code="sal.title.text.sboCode" /></th>
+    <td><span>${pstDealerBasicInfo.sboCode }</span></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
