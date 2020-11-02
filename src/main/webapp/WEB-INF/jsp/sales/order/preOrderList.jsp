@@ -139,8 +139,10 @@
             var preOrdId = AUIGrid.getCellValue(listGridID, selectRowIdx, "preOrdId");
             var sofNo     = AUIGrid.getCellValue(listGridID, selectRowIdx, "sofNo");
             var custNric  = AUIGrid.getCellValue(listGridID, selectRowIdx, "nric");
+            var rcdTms = AUIGrid.getCellValue(listGridID, selectRowIdx, "updDt");
 
             $('#hiddenPreOrdId').val(preOrdId);
+            $('#hiddenRcdTms').val(rcdTms);
             $('#hiddenSof').val(sofNo);
             $('#view_sofNo').text(sofNo);
             $('#view_custIc').text(custNric);
@@ -163,8 +165,7 @@
     	var name = $('#_action option:selected').text();
         var sof = $('#hiddenSof').val();
 
-        var preOrdId = $('#hiddenPreOrdId').val();
-        var rcdTms = AUIGrid.getCellValue(listGridID, selectRowIdx, "updDt");
+        var preOrdId = AUIGrid.getCellValue(listGridID, selectRowIdx, "preOrdId");
 
     	if(action == "" ){
     		Common.alert("Please select action");
@@ -184,7 +185,8 @@
     	};
 
     	Common.confirm("Confirm to " + name + " SOF : " + sof  + " ? " , function(){
-    		if(!fn_validRcdTms(preOrdId, rcdTms, '#updFail_wrap')){
+
+    		if(!fn_validRcdTms()){
                 return;
             }else{
                 Common.ajax("POST", "/sales/order/updateFailPreOrderStatus.do", failUpdOrd, function(result) {
@@ -551,7 +553,7 @@
         });
     };
 
-    function fn_validRcdTms(preOrdId, rcdTms, wrapVal) {
+    /* function fn_validRcdTms(preOrdId, rcdTms, wrapVal) {
         var isValid = true, msg = "";
 
         var param = {
@@ -574,6 +576,24 @@
             hideViewPopup($(wrapVal));
             fn_getPreOrderList();
         });
+        return isValid;
+    } */
+
+    function fn_validRcdTms() {
+        var isValid = true, msg = "";
+
+        Common.ajaxSync("GET", "/sales/order/selRcdTms.do", $("#updFailForm").serialize(), function(result) {
+            if(result.code == "99"){
+                isValid = false;
+                msg = result.message;
+            }
+        });
+
+        if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>", function(){
+            hideViewPopup('#updFail_wrap');
+            fn_getPreOrderList();
+        });
+
         return isValid;
     }
 </script>
@@ -728,6 +748,7 @@
     <!-- pop_body start -->
     <form name="updFailForm" id="updFailForm"  method="post">
     <input id="hiddenPreOrdId" name="preOrdId"   type="hidden"/>
+    <input id="hiddenRcdTms" name="rcdTms"   type="hidden"/>
     <input id="hiddenSof" name="sofNo"   type="hidden"/>
     <section class="pop_body">
         <!-- search_table start -->
