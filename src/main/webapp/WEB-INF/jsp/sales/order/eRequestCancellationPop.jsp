@@ -207,9 +207,9 @@
     		  isLock = true;
     		  msg = 'Cancelled order is not allowed to do eRequest.<br/>';
 
-    	  }else if(RENTAL_STUS == 'INV' || RENTAL_STUS == 'SUS' || RENTAL_STUS == 'WOF'  || RENTAL_STUS == 'TER'){
+    	  }else if(RENTAL_STUS == 'INV' || RENTAL_STUS == 'SUS' || RENTAL_STUS == 'RET' || RENTAL_STUS == 'WOF'  || RENTAL_STUS == 'TER'){
     		  isLock = true;
-    		  msg = 'Only order with [REG] rental status is allowed to perform eRequest.<br/>';
+    		  msg = 'Order under INV/SUS/RET/WOF status is not allowed to perform eRequest<br/>';
 
     	  }else if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2) || "${orderDetail.logView.prgrsId}" == 1) {
     		  if ("${orderDetail.logView.prgrsId}" == 1 || "${orderDetail.logView.prgrsId}" == 4
@@ -235,7 +235,7 @@
 
     	  }else if(RENTAL_STUS == 'INV' || RENTAL_STUS == 'SUS' || RENTAL_STUS == 'RET' || RENTAL_STUS == 'WOF'  || RENTAL_STUS == 'TER'){
               isLock = true;
-              msg = 'Only order with [REG] rental status is allowed to perform eRequest.<br/>';
+              msg = 'Order under INV/SUS/RET/WOF status is not allowed to perform eRequest<br/>';
 
           }else if(EX_TRADE > 0 && ORD_STUS_ID != 4){
         	  isLock = true;
