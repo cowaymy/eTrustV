@@ -1875,7 +1875,7 @@ public class ReportBatchController {
   }*/
 
   @RequestMapping(value = "/Daily_BadDebtRaw.do")
-  //@Scheduled(cron = " 0 0 6 1 * ?")//Monthly (Day 1) 6:00am
+  //@Scheduled(cron = "0 0 6 * * *")
   public void dailyBadDebtRaw() {
     LOGGER.info("[START] Daily_BadDebtRaw...");
     Map<String, Object> params = new HashMap<>();
