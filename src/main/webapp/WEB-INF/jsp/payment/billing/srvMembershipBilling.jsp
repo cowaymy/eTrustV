@@ -2,23 +2,24 @@
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
+console.log("srvMembershipBilling");
 var myGridID;
 var myViewDetailGridID;
 
-//Grid Properties 설정 
-var gridPros = {            
+//Grid Properties 설정
+var gridPros = {
 		editable : false,                 // 편집 가능 여부 (기본값 : false)
         showStateColumn : false,     // 상태 칼럼 사용
-        // 사용자가 추가한 새행은 softRemoveRowMode 적용 안함. 
+        // 사용자가 추가한 새행은 softRemoveRowMode 적용 안함.
         // 즉, 바로 삭제함.
         //softRemovePolicy : "exceptNew"
         softRemoveRowMode : false
 };
 
-var detailGridPros = {            
+var detailGridPros = {
         editable : false,                 // 편집 가능 여부 (기본값 : false)
         showStateColumn : false,     // 상태 칼럼 사용
-        usePaging : false,        
+        usePaging : false,
         height : 200
 };
 
@@ -29,20 +30,21 @@ var columnLayout = [
     { dataField:"srvMemQuotIdTxt" ,headerText:"<spring:message code='pay.head.salesOrderId'/>",editable : false ,visible : false},
     { dataField:"salesOrdId" ,headerText:"<spring:message code='pay.head.salesOrderId'/>",editable : false ,visible : false},
     { dataField:"custId" ,headerText:"<spring:message code='pay.head.custId'/>",editable : false ,visible : false},
-    { dataField:"appTypeId" ,headerText:"<spring:message code='pay.head.appTypeId'/>",editable : false ,visible : false},    
+    { dataField:"appTypeId" ,headerText:"<spring:message code='pay.head.appTypeId'/>",editable : false ,visible : false},
     { dataField:"srvMemPacId" ,headerText:"<spring:message code='pay.head.membershipTypeId'/>",editable : false ,visible : false},
     { dataField:"srvQuotValId" ,headerText:"<spring:message code='pay.head.expiredDate'/>", editable : false ,visible : false, dataType : "date", formatString : "dd-mm-yyyy"},
-    
+
     { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>",width: 100 , editable : false },
     { dataField:"srvMemQuotNo" ,headerText:"<spring:message code='pay.head.quotationNo'/>",width: 100 , editable : false },
     { dataField:"srvDur" ,headerText:"<spring:message code='pay.head.duration'/>",width: 70 , editable : false},
-    { dataField:"srvFreq" ,headerText:"<spring:message code='pay.head.frequent'/>",width: 70 , editable : false },    
-    { dataField:"custName" ,headerText:"<spring:message code='pay.head.customerName'/>",editable : false},    
-    { dataField:"stkDesc" ,headerText:"<spring:message code='pay.head.product'/>",width: 200,editable : false },    
+    { dataField:"srvFreq" ,headerText:"<spring:message code='pay.head.frequent'/>",width: 70 , editable : false },
+    { dataField:"custName" ,headerText:"<spring:message code='pay.head.customerName'/>",editable : false},
+    { dataField:"stkDesc" ,headerText:"<spring:message code='pay.head.product'/>",width: 200,editable : false },
     { dataField:"srvMemDesc" ,headerText:"<spring:message code='pay.head.type'/>",width: 180 ,editable : false},
     { dataField:"srvMemPacAmt" ,headerText:"<spring:message code='pay.head.packageCharges'/>",width: 100, editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"},
     { dataField:"srvMemBsAmt" ,headerText:"<spring:message code='pay.head.filterCharges'/>",width: 100, editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"},
     { dataField:"totalAmt" ,headerText:"<spring:message code='pay.head.totalCharges'/>",width: 100, editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"},
+    { dataField:"custType", headerText:"Customer Type", width:100, editable:false, visible:false},
     {
         dataField : "",
         headerText : "",
@@ -56,14 +58,14 @@ var columnLayout = [
             }
         }
       }
-    
+
     ];
-    
+
 var viewDetailcolumnLayout = [
     { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>", editable : false },
     { dataField:"srvMemQuotNo" ,headerText:"<spring:message code='pay.head.smqNo'/>",editable : false },
     { dataField:"totalAmt" ,headerText:"<spring:message code='pay.head.amount'/>",editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"}
-                    
+
 ];
 
 $(document).ready(function(){
@@ -76,25 +78,25 @@ function fn_search(){
     Common.popupDiv('/sales/membership/initSrchMembershipQuotationPop.do', '', null , true ,'_searchQuotation');
 }
 
-function _callBackQuotationPop(obj){	
+function _callBackQuotationPop(obj){
 	//팝업창 닫기
 	$('#_searchQuotation').hide();
 	$('#_searchQuotation').remove();
-	
+
 	//현재 그리드에서 Quotation ID 배열을 가져온다.
     var srvMemQuotIdTxtArray = AUIGrid.getColumnDistinctValues(myGridID,"srvMemQuotIdTxt");
-	
+
 	//추가하려는 객체의 Quotation ID값이 이미 존재하는지 체크
     if(srvMemQuotIdTxtArray.indexOf(obj.srvMemQuotIdTxt) > -1){
-        Common.alert("<spring:message code='pay.alert.selectedBillExistingList'/>");     
+        Common.alert("<spring:message code='pay.alert.selectedBillExistingList'/>");
         return;
-        
+
     }else{
         // parameter
         // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
         // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
         AUIGrid.addRow(myGridID, obj, "last" );
-        
+
         $('#orderNo').val(obj.salesOrdNo);
         $('#quoNo').val(obj.srvMemQuotNo);
     }
@@ -102,67 +104,79 @@ function _callBackQuotationPop(obj){
 
 
 //Layer close
-hideViewPopup=function(val){   
+hideViewPopup=function(val){
   $(val).hide();
 }
 
 
 function fn_createBills(){
 	var rowCount = AUIGrid.getRowCount(myGridID);
-	
+
 	if(rowCount < 1){
 		Common.alert("<spring:message code='pay.alert.noRecordsGridView'/>");
 		return;
 	}else if (rowCount == 1){
-		fn_showRemark();
+	    var custType = AUIGrid.getColumnValues(myGridID, "custType");
+	    if(custType == "IND") {
+	        Common.alert("Incorrect customer type.");
+	        return false;
+	    } else {
+	        fn_showRemark();
+	    }
 	}else{
-		$("#viewDetail_wrap").show();
-		AUIGrid.resize(myViewDetailGridID);		
-		
-		//그리드 복사
-		AUIGrid.setGridData(myViewDetailGridID, AUIGrid.getGridData(myGridID));
-		
-		//Summary 값		
-		var amtArray = AUIGrid.getColumnValues(myGridID,"totalAmt");
-		var sum = 0;
-		for(i=0; i<amtArray.length; i++) {                
-            sum += amtArray[i];
-        }   		
-		$('#view_count').text(AUIGrid.getRowCount(myGridID));
-		$('#view_total').text('RM ' + sum);
-		
+	    var custType = AUIGrid.getColumnValues(myGridID, "custType");
+
+	    if(custType.includes("IND")) {
+	        Common.alert("Incorrect customer type.");
+            return false;
+	    } else {
+	        $("#viewDetail_wrap").show();
+	        AUIGrid.resize(myViewDetailGridID);
+
+	        //그리드 복사
+	        AUIGrid.setGridData(myViewDetailGridID, AUIGrid.getGridData(myGridID));
+
+	        //Summary 값
+	        var amtArray = AUIGrid.getColumnValues(myGridID,"totalAmt");
+	        var sum = 0;
+	        for(i=0; i<amtArray.length; i++) {
+	            sum += amtArray[i];
+	        }
+	        $('#view_count').text(AUIGrid.getRowCount(myGridID));
+	        $('#view_total').text('RM ' + sum);
+	    }
 	}
 }
 
 function fn_showRemark(){
 	hideViewPopup('#viewDetail_wrap');
 	$("#remark_wrap").show();
-	
+
 }
 
 function fn_save(){
 	//param data array
     var data = GridCommon.getGridData(myGridID);
     data.form = $("#remarkForm").serializeJSON();
-    
+
     //Ajax 호출
-    Common.ajax("POST", "/payment/saveSrvMembershipBilling.do", data, function(result) {       
-    	var msg = '';    	
+    Common.ajax("POST", "/payment/saveSrvMembershipBilling.do", data, function(result) {
+    	var msg = '';
     	if(result.message == 1){
     		msg = "<spring:message code='pay.alert.quotationSuccess'/>";
     	}else if (result.message == 99){
     		msg = "<spring:message code='pay.alert.failedToInvoice'/>";
         }else if (result.message == 98){
-        	msg = "<spring:message code='pay.alert.failedToConvert'/>";                      
+        	msg = "<spring:message code='pay.alert.failedToConvert'/>";
         }else if (result.message == 97){
-    	    msg = "<spring:message code='pay.alert.failedToSave'/>";    	   
+    	    msg = "<spring:message code='pay.alert.failedToSave'/>";
         }else {
     	    msg = "<spring:message code='pay.alert.failedToSave'/>";
         }
-    	
+
     	Common.alert(msg, function(){
     		location.href = "/payment/initSrvMembershipBilling.do";
-        }); 
+        });
     });
 }
 
@@ -187,20 +201,20 @@ function fn_save(){
 	<ul class="path">
 	    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 	</ul>
-	
+
 	<!-- title_line start -->
 	<aside class="title_line">
 	    <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
-	    <h2>Membership</h2>	    
+	    <h2>Membership</h2>
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_createBills();"><spring:message code='pay.btn.createBills'/></a></p></li>
             </c:if>
         </ul>
-        
+
 	</aside>
 	<!-- title_line end -->
-	
+
 	<!-- search_table start -->
 	<section class="search_table">
 	    <form name="searchForm" id="searchForm"  method="post">
@@ -231,16 +245,16 @@ function fn_save(){
 	        </table>
 	    </form>
 	    <!-- table end -->
-	    
+
 	    <!-- grid_wrap start -->
-	    <article  id="grid_wrap" class="grid_wrap mt30"></article>	    
-	    <!-- grid_wrap end -->	    
-	 
+	    <article  id="grid_wrap" class="grid_wrap mt30"></article>
+	    <!-- grid_wrap end -->
+
 	</section><!-- search_table end -->
 </section><!-- content end -->
 
 
-<!--------------------------------------------------------------- 
+<!---------------------------------------------------------------
     POP-UP (VIEW DETAIL)
 ---------------------------------------------------------------->
 <!-- popup_wrap start -->
@@ -251,12 +265,12 @@ function fn_save(){
             <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#viewDetail_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
-    
+
     <section class="pop_body">
         <section class="search_result"><!-- search_result start -->
-            <article class="grid_wrap"  id="viewDetail_grid_wrap" ></article>             
+            <article class="grid_wrap"  id="viewDetail_grid_wrap" ></article>
         </section>
-        
+
         <section class="search_table">
 	        <!-- table start -->
 	        <table class="type1">
@@ -274,23 +288,23 @@ function fn_save(){
 	                    <th scope="row">Total</th>
 	                    <td id="view_total"></td>
 	                </tr>
-	            </tbody>  
+	            </tbody>
 	        </table>
-	    </section>   
-        
+	    </section>
+
         <ul class="center_btns mt20" >
             <b><h2>Do you want continue to proceed?</h2></b>
         </ul>
         <ul class="center_btns mt10" >
             <li><p class="btn_blue2"><a href="javascript:fn_showRemark();"><spring:message code='pay.alert.manualBillingYes'/></a></p></li>
             <li><p class="btn_blue2"><a href="javascript:hideViewPopup('#viewDetail_wrap');"><spring:message code='pay.alert.manualBillingNo'/></a></p></li>
-        </ul>        
+        </ul>
     </section>
 </div>
 <!-- popup_wrap end -->
 
 
-<!--------------------------------------------------------------- 
+<!---------------------------------------------------------------
     POP-UP (REMARK)
 ---------------------------------------------------------------->
 <!-- popup_wrap start -->
@@ -301,7 +315,7 @@ function fn_save(){
             <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#remark_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
-    
+
     <form name="remarkForm" id="remarkForm"  method="post">
     <section class="pop_body">
         <section class="search_table">
@@ -315,23 +329,23 @@ function fn_save(){
                 <tbody>
                     <tr>
                         <th scope="row">PO/LO No.</th>
-                        <td><input type="text" id="poNo" name="poNo" title="Purchase Order Number" placeholder="Purchase Order Number" class="w100p" /></td>                        
+                        <td><input type="text" id="poNo" name="poNo" title="Purchase Order Number" placeholder="Purchase Order Number" class="w100p" /></td>
                     </tr>
                     <tr>
                         <th scope="row">Remark</th>
-                        <td><textarea cols="20" rows="5" id="remark" name="remark" title="Remark" placeholder="Remark"></textarea></td>                                                
+                        <td><textarea cols="20" rows="5" id="remark" name="remark" title="Remark" placeholder="Remark"></textarea></td>
                     </tr>
                     <tr>
                         <th scope="row">Invoice Remark</th>
-                        <td><textarea cols="20" rows="5" id="invcRemark" name="invcRemark" title="Invoice Remark" placeholder="Invoice Remark"></textarea></td>                        
+                        <td><textarea cols="20" rows="5" id="invcRemark" name="invcRemark" title="Invoice Remark" placeholder="Invoice Remark"></textarea></td>
                     </tr>
-                </tbody>  
+                </tbody>
             </table>
-        </section>   
-        
+        </section>
+
         <ul class="center_btns mt10" >
-            <li><p class="btn_blue2"><a href="javascript:fn_save();"><spring:message code='sys.btn.save'/></a></p></li>           
-        </ul>        
+            <li><p class="btn_blue2"><a href="javascript:fn_save();"><spring:message code='sys.btn.save'/></a></p></li>
+        </ul>
     </section>
     </form>
 </div>
