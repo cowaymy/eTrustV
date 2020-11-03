@@ -432,7 +432,7 @@
       INNER JOIN SAL0017D B ON  B.PROMO_ID = A.PROMO_ID
                                AND B.PROMO_STUS_ID = 1
                                AND B.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(2284, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
-                             /*  AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId} */
+
                                AND B.PROMO_TYPE_ID = 2282
                                AND B.PROMO_IS_TRIAL_CNVR = 0
                                AND B.EMP_CHK = #{empChk}
