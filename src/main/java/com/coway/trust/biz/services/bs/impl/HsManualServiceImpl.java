@@ -538,13 +538,13 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       hsManualMapper.updateHs009d(params); // UPDATE SAL0090D
     }
 
-    if (params.get("instruction") != null && params.get("instruction") != ""){
+   /* if (params.get("instruction") != null && params.get("instruction") != ""){
     	Map<String, Object> instructionParams = new HashMap<String, Object>();
     	instructionParams.put("instruction", params.get("instruction").toString().trim());
     	instructionParams.put("hidSalesOrdId", params.get("hidSalesOrdId"));
     	//hsManualMapper.updateHs009d(instructionParams); // UPDATE SAL0090D to set latest instruction.
     	hsManualMapper.updateHsIns(instructionParams); // UPDATE SAL0090D to set latest instruction.
-    }
+    }*/
 
     EgovMap getHsResultMList = hsManualMapper.selectHSResultMList(params); // GET
                                                                            // SVC0006D
