@@ -32,9 +32,11 @@ function chkEmail(str){
     if($("#userTypeId").val() == "4" || $("#userTypeId").val() == "6") {
         if(regStr.test(str) && str.indexOf("@coway.com.my") > -1){
             return true;
+        } else {
+            return false;
         }
     }
-    return false;
+    return true;
 }
 
 function convDateForm(date){
