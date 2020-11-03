@@ -3117,17 +3117,6 @@ AND   TO_CHAR(D.VALID_TO_DT,'YYYYMMDD')   >   TO_CHAR(SYSDATE,'YYYYMMDD')
 
                      </update>
 
-                     <update id="updateHsIns" parameterType="Map">
-
-                       UPDATE SAL0090D
-                           SET SRV_REM = #{instruction},
-                               SRV_UPD_DT = sysdate
-                         WHERE   SRV_SO_ID = #{hidSalesOrdId} AND SRV_STUS_ID = 1
-
-                     </update>
-
-
-
                      <select id="selectBranch_id"  parameterType="Map" resultType="egovMap">
                         SELECT BRNCH_ID CODE_ID,
                                      CODE CODE_NAME
