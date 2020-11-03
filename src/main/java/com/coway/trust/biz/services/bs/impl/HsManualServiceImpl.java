@@ -542,7 +542,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     	Map<String, Object> instructionParams = new HashMap<String, Object>();
     	instructionParams.put("instruction", params.get("instruction").toString().trim());
     	instructionParams.put("hidSalesOrdId", params.get("hidSalesOrdId"));
-    	hsManualMapper.updateHs009d(instructionParams); // UPDATE SAL0090D to set latest instruction.
+    	//hsManualMapper.updateHs009d(instructionParams); // UPDATE SAL0090D to set latest instruction.
+    	hsManualMapper.updateHsIns(instructionParams); // UPDATE SAL0090D to set latest instruction.
     }
 
     EgovMap getHsResultMList = hsManualMapper.selectHSResultMList(params); // GET
