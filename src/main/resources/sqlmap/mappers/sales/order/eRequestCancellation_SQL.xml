@@ -93,10 +93,10 @@
                  LEFT JOIN SAL1008V F1 ON V1.ORD_ID = F1.ORD_ID
                 WHERE 1 = 1
                 <if test='ordDt == null || ordDt == ""'>
-                  AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+                  AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')+1
                 </if>
                 <if test='ordDt != null and ordDt != ""'>
-                  AND V1.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                  AND V1.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')+1
                 </if>
                 <if test='ordNo != null and ordNo != ""'>
                   AND V1.ORD_NO = #{ordNo}

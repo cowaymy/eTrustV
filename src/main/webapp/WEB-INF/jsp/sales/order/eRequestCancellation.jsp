@@ -404,11 +404,11 @@
             <td>
               <div class="date_set w100p">
                 <p>
-                  <input id="listOrdStartDt" name="ordStartDt" type="text" value="${bfDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
+                  <input id="listOrdStartDt" name="ordStartDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
                 </p>
                 <span><spring:message code='sal.text.to'/></span>
                 <p>
-                  <input id="listOrdEndDt" name="ordEndDt" type="text" value="${toDay}" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" />
+                  <input id="listOrdEndDt" name="ordEndDt" type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" />
                 </p>
               </div>
             </td>
