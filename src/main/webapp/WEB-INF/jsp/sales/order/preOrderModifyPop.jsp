@@ -1392,8 +1392,11 @@
 
         $('#ordPromo').removeAttr("disabled");
 
+        var isSrvPac = null;
+        if(appTypeVal == "66") isSrvPac = "Y";
+
         if('${preOrderInfo.month}' >= '7' && '${preOrderInfo.year}' == '2019') {
-            doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac}, '', 'ordPromo', 'S', ''); //Common Code
         }
         else
         {
@@ -1998,7 +2001,7 @@
                     //$('#salesmanCd').change();
                 }
 
-                $('#appType').val("66");
+                //$('#appType').val("66");
                 $('#appType').prop("disabled", true);
 
                 if($('#ordProudct').val() == null){

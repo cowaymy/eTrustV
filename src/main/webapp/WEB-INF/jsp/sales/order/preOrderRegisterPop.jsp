@@ -1387,9 +1387,12 @@
         console.log('fn_loadProductPromotion --> empChk:'+empChk);
         console.log('fn_loadProductPromotion --> custTypeVal:'+custTypeVal);
 
+        var isSrvPac = null;
         $('#ordPromo').removeAttr("disabled");
 
-        doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
+        if(appTypeVal == "66") isSrvPac = "Y";
+
+        doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac}, '', 'ordPromo', 'S', ''); //Common Code
     }
 
     //LoadProductPrice
@@ -1820,7 +1823,7 @@
                     $('#salesmanCd').change();
                 }
 
-                $('#appType').val("66");
+                //$('#appType').val("66");
                 $('#appType').prop("disabled", true);
 
                 if($('#ordProudct').val() == null){
