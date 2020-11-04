@@ -221,7 +221,7 @@ $(document).ready(function() {
         $("#searchdepartmentcol").attr('colspan', 5);
 
         if("${memType}" == "6185") {
-            $("#editRow1").show();
+            $("#editRow1_1").show();
         }
 
         $("#editRow1_7").remove();
