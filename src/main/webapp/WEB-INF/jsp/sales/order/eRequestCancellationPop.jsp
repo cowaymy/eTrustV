@@ -182,16 +182,16 @@
   	        Common.ajaxSync("GET", "/sales/order/checkeRequestAutoDebitDeduction.do", { salesOrdId : ORD_ID },
   	          function(rsltInfo) {
   	            //Valid eCash Floating Stus - 1
-  	            console.log(rsltInfo.leng);
-  	            if (rsltInfo.length && (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1)) {
+  	            if (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
   	             isLock = true;
   	             msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + 'Order cancellation request is disallowed.<br />';
   	           }
   	         });
-  	      }else {
+  	      }
+  	      /* else {
               isLock = true;
               msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'Order cancellation request is disallowed.<br />';
-          }
+          } */
   	    }
 
       //Valid OCR Status - (CallLog Type - 257, Stus - 20, InstallResult Stus - Active )
