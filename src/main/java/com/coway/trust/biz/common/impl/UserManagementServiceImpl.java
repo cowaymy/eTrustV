@@ -84,7 +84,7 @@ public class UserManagementServiceImpl implements UserManagementService {
 
 		// 20200915 - Added to auto insert temporary staff detail
 		if("0".equals(params.get("userIsPartTm").toString()) && "0".equals(params.get("userIsExtrnl").toString())) {
-		    if("4".equals(params.get("userTypeId").toString())) {
+		    if("4".equals(params.get("userTypeId").toString()) || "6".equals(params.get("userTypeId").toString())) {
 	            params.put("userTypeId", userManagementMapper.getTempStaffCodeType());
 	        }
 
