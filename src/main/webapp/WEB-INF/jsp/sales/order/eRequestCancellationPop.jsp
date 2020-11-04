@@ -182,15 +182,16 @@
   	        Common.ajaxSync("GET", "/sales/order/checkeRequestAutoDebitDeduction.do", { salesOrdId : ORD_ID },
   	          function(rsltInfo) {
   	            //Valid eCash Floating Stus - 1
-  	            if (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
+  	            console.log(rsltInfo.leng);
+  	            if (rsltInfo.length && (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1)) {
   	             isLock = true;
   	             msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + 'Order cancellation request is disallowed.<br />';
-  	           } else {
-  	             isLock = true;
-  	             msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'Order cancellation request is disallowed.<br />';
   	           }
   	         });
-  	      }
+  	      }else {
+              isLock = true;
+              msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'Order cancellation request is disallowed.<br />';
+          }
   	    }
 
       //Valid OCR Status - (CallLog Type - 257, Stus - 20, InstallResult Stus - Active )
@@ -211,19 +212,19 @@
     		  isLock = true;
     		  msg = 'Order under INV/SUS/RET/WOF status is not allowed to perform eRequest<br/>';
 
-    	  }else if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2) || "${orderDetail.logView.prgrsId}" == 1) {
-    		  if ("${orderDetail.logView.prgrsId}" == 1 || "${orderDetail.logView.prgrsId}" == 4
-    	                || "${orderDetail.logView.prgrsId}" == 11 || "${orderDetail.logView.prgrsId}" == 12 ) {
+    	  }else if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2) || "${orderDetail.logView.prgrsId}" == 1
+    			  || "${orderDetail.logView.prgrsId}" == 4 || "${orderDetail.logView.prgrsId}" == 11 || "${orderDetail.logView.prgrsId}" == 12 ) {
+    		  if ("${orderDetail.logView.prgrsId}" == 1) {
                Common.ajaxSync("GET", "/sales/order/checkeRequestAutoDebitDeduction.do", { salesOrdId : ORD_ID },
                  function(rsltInfo) {
                    if (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
                     isLock = true;
                     msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + 'eRequest is disallowed.<br />';
-                  } else {
-                      isLock = true;
-                      msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'eRequest is disallowed.<br />';
                   }
                 });
+             }else {
+                 isLock = true;
+                 msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'eRequest is disallowed.<br />';
              }
            }
 
@@ -240,20 +241,20 @@
           }else if(EX_TRADE > 0 && ORD_STUS_ID != 4){
         	  isLock = true;
               msg = 'Ex-trade/i-Care order (Before Install) is not allowed to do eRequest.<br/>';
-          }else if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2) || "${orderDetail.logView.prgrsId}" == 1) {
-        	  if ("${orderDetail.logView.prgrsId}" == 1 || "${orderDetail.logView.prgrsId}" == 4
-                      || "${orderDetail.logView.prgrsId}" == 11 || "${orderDetail.logView.prgrsId}" == 12 ) {
+          }else if (("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2) || "${orderDetail.logView.prgrsId}" == 1
+                  || "${orderDetail.logView.prgrsId}" == 4 || "${orderDetail.logView.prgrsId}" == 11 || "${orderDetail.logView.prgrsId}" == 12 ) {
+        	  if ("${orderDetail.logView.prgrsId}" == 1) {
                 Common.ajaxSync("GET", "/sales/order/checkeRequestAutoDebitDeduction.do", { salesOrdId : ORD_ID },
                   function(rsltInfo) {
                     if (rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
                      isLock = true;
                      msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + 'eRequest is disallowed.<br />';
-                   } else {
-                       isLock = true;
-                       msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'eRequest is disallowed.<br />';
-                     }
+                   }
                  });
-              }
+              }else {
+                  isLock = true;
+                  msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>'  + 'eRequest is disallowed.<br />';
+                }
             }
       }
 
