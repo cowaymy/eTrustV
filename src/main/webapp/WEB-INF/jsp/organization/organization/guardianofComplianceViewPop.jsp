@@ -7,34 +7,33 @@ var myGridID_remark;
 var complianceList;
 $(document).ready(function(){
 
-	   fn_GuardianRemarkGrid();
-	   fn_guardianRemark();
+    fn_GuardianRemarkGrid();
+    fn_guardianRemark();
 
-	   doGetComboAndGroup2('/organization/compliance/getPicList.do', {}, '', 'changePerson', 'S', 'fn_setOptGrpClass');//product 생성
+	doGetComboAndGroup2('/organization/compliance/getPicList.do', {}, '', 'changePerson', 'S', 'fn_setOptGrpClass');//product 생성
 
+    var reqstCtgry = "${guardianofCompliance.reqstCtgry}";
+    $("#caseCategory option[value='"+ reqstCtgry +"']").attr("selected", true);
 
-            var reqstCtgry = "${guardianofCompliance.reqstCtgry}";
-            $("#caseCategory option[value='"+ reqstCtgry +"']").attr("selected", true);
+    var reqstCtgrySub = "${guardianofCompliance.reqstCtgrySub}";
+    $("#docType option[value='"+ reqstCtgrySub +"']").attr("selected", true);
 
-            var reqstCtgrySub = "${guardianofCompliance.reqstCtgrySub}";
-            $("#docType option[value='"+ reqstCtgrySub +"']").attr("selected", true);
+    var reqstStus = "${guardianofCompliance.reqstStusId}";
 
-            var reqstStus = "${guardianofCompliance.reqstStusId}";
+    if(reqstStus == 5 || reqstStus == 6){
+        $('#empty').addClass("blind");
+        $('#status').addClass("blind");
+        $('#save').addClass("blind");
+        $('#ccontent').addClass("blind");
+    } else {
+        $('#empty').removeClass("blind");
+        $('#status').removeClass("blind");
+        $('#save').removeClass("blind");
+        $('#ccontent').removeClass("blind");
+    }
 
-            	if(reqstStus == 5 || reqstStus == 6){
-                    $('#empty').addClass("blind");
-                    $('#status').addClass("blind");
-                    $('#save').addClass("blind");
-                    $('#ccontent').addClass("blind");
-                }
-                else{
-                    $('#empty').removeClass("blind");
-                    $('#status').removeClass("blind");
-                    $('#save').removeClass("blind");
-                    $('#ccontent').removeClass("blind");
-                }
-
-
+    console.log("Person In Charge :: " + "${guardianofCompliance.personInChrg}");
+    $("#changePerson option[value='" + "${guardianofCompliance.personInChrg}" +"']").attr("selected", true);
 });
 
 function fn_GuardianRemarkGrid() {
@@ -135,6 +134,11 @@ function fn_validation(){
 
 function fn_save(){
     if(fn_validation()){
+        Common.ajax("POST", "/organization/compliance/saveGuardianCompliance2.do",$("#saveForm").serializeJSON() , function(result) {
+            console.log("성공.");
+            Common.alert("Compliance call Log saved.<br /> Case No : "+result.data+"<br />", fn_guardianViewPopClose());
+        });
+        /*
     	if($("#cmbreqStatus").val() == '36'){
     		Common.ajax("POST", "/organization/compliance/saveGuardianCompliance2.do",$("#saveForm").serializeJSON() , function(result) {
                 console.log("성공.");
@@ -151,7 +155,7 @@ function fn_save(){
                 }
             });
     	}
-
+        */
     }
 }
 
