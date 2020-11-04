@@ -518,7 +518,7 @@
 
 
   function fn_doSaveReqCanc() {
-    Common.ajax("POST", "/sales/order/eReqEditOrdInfo.do", $('#frmReqCanc').serializeJSON(), function(result) {
+    Common.ajax("POST", "/sales/order/eRequestCancelOrder.do", $('#frmReqCanc').serializeJSON(), function(result) {
       Common.alert('<spring:message code="sal.alert.msg.cancReqSum" />' + DEFAULT_DELIMITER + "<b>" + result.message + "</b>", fn_selfClose);
     }, function(jqXHR, textStatus, errorThrown) {
       try {
