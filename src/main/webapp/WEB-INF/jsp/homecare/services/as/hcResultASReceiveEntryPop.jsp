@@ -24,6 +24,8 @@
   var asMalfuncResnId;
   var asErrorCde;
   var asBrCde;
+  var codyCde;
+  var codyId;
 
   $(document).ready(function() {
     fn_keyEvent();
@@ -57,7 +59,28 @@
     fn_setComboBox2();
 
     fn_checkASReceiveEntryPop();
-  });
+
+    $("#memType").change(function(){
+        codyId = '${orderDetail.codyInfo.memId}';
+    	codyCde ='${orderDetail.codyInfo.memCode}';
+
+    	if($("#memType option:selected").index()=="1"){ //HT
+    		if(codyCde != null || codyCde != ""){
+    			$("#CTID").val(codyId);
+    			 $("#CTCode").val(codyCde);
+    		}
+    		else{
+    			$("#CTID").val("");
+    			$("#CTCode").val("");
+    		}
+    	}else{ // DT
+    		$("#CTID").val("");
+    		$("#CTCode").val("");
+    		fn_brCde_SetVal();
+    	}
+    });
+
+});
 
   function fn_getErrMstList(_ordNo) {
     var SALES_ORD_NO = _ordNo;
@@ -416,13 +439,15 @@
       CTgroupObj : 'CTgroupObj'
     }
 
-    // /organization/allocation/allocation.do
-    Common.popupDiv("/homecare/services/install/hcAllocation.do", {
-      ORD_ID : ord_id,
-      S_DATE : vdte,
-      OPTIONS : options,
-      TYPE : 'AS'
-    }, null, true, '_doAllactionDiv');
+    if($("#memType option:selected").index() =="2"){//DT
+    	 // /organization/allocation/allocation.do
+        Common.popupDiv("/homecare/services/install/hcAllocation.do", {
+        	  ORD_ID : ord_id,
+        	  S_DATE : vdte,
+        	  OPTIONS : options,
+        	  TYPE : 'AS'
+        }, null, true, '_doAllactionDiv');
+     }
   }
 
   function fn_getBSHistoryInfo() {
@@ -751,6 +776,7 @@
                        "PIC_CNTC" : $("#perContact").val(),
                        "ISRAS" : $("#ISRAS").val()
                      }
+
       Common.ajax("POST", "/services/as/saveASEntry.do", saveForm, function(result) {
         if (result.logerr == "Y") {
           //Common.alert("물류 오류 ..........." );
@@ -794,7 +820,7 @@
                     var memCode = $("#CTCode").val();
                     var appDate = $("#appDate").val();
                     var branchDSC = $("#branchDSC option:selected").text();
-
+                    
                     if ($("#checkSms").prop("checked")) {
                       $("#sms_AsNo").val(asNo);
                       $("#sms_AsId").val(asId);
@@ -965,15 +991,16 @@
         rtnValue =false;
     }
     */
+    if($("#memType option:selected").index() != "1"){ // DT
+        if ($("#CTCode").val() == "" || $("#branchDSC").val() == null) {
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='CT Code' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
 
-    if ($("#CTCode").val() == "" || $("#branchDSC").val() == null) {
-      rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='CT Code' htmlEscape='false'/> </br>";
-      rtnValue = false;
-    }
-
-    if ($("#CTID").val() == "" || $("#branchDSC").val() == null) {
-      rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='CT ID' htmlEscape='false'/> </br>";
-      rtnValue = false;
+        if ($("#CTID").val() == "" || $("#branchDSC").val() == null) {
+          rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='CT ID' htmlEscape='false'/> </br>";
+          rtnValue = false;
+        }
     }
 
     if ($("#requestor").val() == ""  || $("#branchDSC").val() == null) {
@@ -1338,6 +1365,18 @@
         <col style="width: *" />
        </colgroup>
        <tbody>
+       <tr>
+        <th scope="row"><spring:message code='service.title.memType' /></th>
+        <td colspan="3">
+            <select class="w100p" id="memType" name="memType" class="">
+                <option value="">Choose One</option>
+                <option value="7">HT</option>
+                <option value="5758">DT</option>
+            </select>
+        </td>
+        <th></th>
+        <td colspan="3"></td>
+       </tr>
         <tr>
          <th scope="row"><spring:message code='service.grid.ReqstDt' /><span class="must">*</span></th>
          <td>

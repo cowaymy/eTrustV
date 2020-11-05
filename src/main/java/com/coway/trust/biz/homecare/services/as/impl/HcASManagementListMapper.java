@@ -47,4 +47,9 @@ public interface HcASManagementListMapper {
 
 	// serial Y/N check
 	public String selectSerialYnSearch(Map<String, Object> params) throws Exception;
+
+	public List<EgovMap> selectHTAndDTCode() throws Exception;
+
+  //HomeCare-As Entry
+  public int hcChkRcdTms(Map<String, Object> params) throws Exception;
 }

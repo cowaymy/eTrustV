@@ -258,8 +258,8 @@
 	                 AND ( 1 = Extent7.AS_RESULT_IS_CURR )
 	                 WHERE ( 8 <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
 
-                       AND Extent9.TYPE_ID = (SELECT CODE_ID FROM SYS0013M
-                                               WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE = 'HDC')
+                      /* AND Extent9.TYPE_ID = (SELECT CODE_ID FROM SYS0013M
+                                               WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE = 'HDC')*/
 
 	                 <if test="asStatusList != null and asStatusList != '' ">
 	                   AND Extent1.AS_STUS_ID IN
@@ -1044,5 +1044,29 @@
   	    AND S26.STK_CODE = #{stkCode}
     </select>
 
+    <select id="selectHTAndDTCode" resultType="egovMap">
+    SELECT A.MEM_ID CODE_ID
+     , A.MEM_CODE CODE_NAME
+     , A.BRNCH BRANCH_ID
+     , B.CODE BRANCH_CODE
+    FROM ORG0001D A
+    JOIN SYS0005M B ON A.BRNCH = B.BRNCH_ID
+    WHERE
+    B.TYPE_ID IN (SELECT CODE_ID FROM SYS0013M
+                        WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE = 'HDC')
+    AND A.STUS = '1'
+    OR A.MEM_CODE LIKE 'HT%'
+    </select>
+
+  <update id="hcChkRcdTms" parameterType="Map">
+    UPDATE SVC0001D
+    SET RCD_TMS = TO_CHAR(SYSTIMESTAMP,'ddmmyyyyHH24miss'),
+    AS_MEM_ID = #{asCTId},
+    AS_BRNCH_ID = #{asBrnchId}
+    WHERE AS_SO_ID = #{asSoId}
+      AND AS_ID = #{asEntryId}
+      AND AS_NO = #{asNo}
+      AND RCD_TMS = #{rcdTms}
+  </update>
 
 </mapper>

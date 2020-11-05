@@ -58,7 +58,7 @@ var branchDs = [];
                     + "&ord_No=" + salesOrdNo
                     + "&as_No=" + asNo
                     + "&as_Id=" + asid
-                    + "&IND= 1";;
+                    + "&IND= 1";
 
           Common.popupDiv("/services/as/asResultViewPop.do" + param, null, null, true, '_newASResultDiv1');
         });
@@ -940,6 +940,28 @@ var branchDs = [];
     return gap;
   }
 
+  $(function(){
+	  $('#btnClear').click(function() {
+          $('#ASForm').clearForm();
+      });
+  });
+
+  $.fn.clearForm = function() {
+	    return this.each(function() {
+	        var type = this.type, tag = this.tagName.toLowerCase();
+	        if (tag === 'form'){
+	            return $(':input',this).clearForm();
+	        }
+  	        switch(type){
+  	            case 'select': this.selectedIndex = 0;
+  	                               break;
+      	        case 'checkbox':
+      	        case 'radio': this.checked = false;
+      	                          break;
+      	        default: this.value = '';
+      	    }
+	    });
+	};
 </script>
 <section id="content">
  <!-- content start -->
@@ -1013,7 +1035,7 @@ var branchDs = [];
      </p></li>
    </c:if>
    <li><p class="btn_blue">
-     <a href="#none"><span class="clear"></span><spring:message code='service.btn.Clear'/></a>
+       <a id="btnClear"  href="#"><span class="clear"></span><spring:message code='service.btn.Clear'/></a>
     </p></li>
   </ul>
  </aside>

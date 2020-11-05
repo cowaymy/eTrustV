@@ -23,6 +23,8 @@
 
   var ddlFilterObj = {};
 
+  var selectedHTAndDTObj = {};
+
   $(document).ready(
     function() {
       createAUIGrid();
@@ -73,7 +75,8 @@
       // doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=166', '', '', 'ddlFailReason', 'S', '');
       // doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , '');
       // doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');
-
+     
+      fn_getHTandCTDetails();
       fn_getASOrderInfo(); // GET AS ORDER INFOR.
       fn_getASEvntsInfo(); // GET AS EVENT INFOR.
       fn_getASHistoryInfo(); // GET AS HISTORY INFOR
@@ -97,7 +100,31 @@
         $("#inHouseRepair_div").attr("style", "display:none");
       }
 
+      $("#ddlCTCodeText").change(function(){
+    	 var ddlCTCodeTextSelectedVal = $("#ddlCTCodeText option:selected").val();
+    	 var selectedCTbranchId = selectedHTAndDTObj[ddlCTCodeTextSelectedVal].branchId;
+    	 var selectedCTbranchCode = selectedHTAndDTObj[ddlCTCodeTextSelectedVal].branchCode;
+
+          $("#ddlDSCCode").val(selectedCTbranchId);
+          $("#ddlDSCCodeText").val(selectedCTbranchCode)
+          $("#ddlCTCode").val(ddlCTCodeTextSelectedVal);          
+        });
     });
+
+  function fn_getHTandCTDetails() {
+	  $.ajax({
+		  type : "GET",
+		  url:"/homecare/services/as/selectHTAndDTCode",
+		  dataType : "json",
+          contentType : "application/json;charset=UTF-8",
+          success : function(result) {
+        	  $.each(result, function(idx, row){
+        		  selectedHTAndDTObj[row.codeId] = {"codeId":row.codeId, "codeName":row.codeName, "branchId":row.branchId, "branchCode":row.branchCode};
+              });
+        	  doDefCombo(result, '', 'ddlCTCodeText', 'S', '');        	
+          }
+	  });
+  }
 
   function fn_inHouseAutoClose() {
     if ('${IS_AUTO}' == "true") {
@@ -164,7 +191,7 @@
   }
 
   function fn_setSVC0004dInfo(result) {
-    $("#creator").val(result[0].c28);
+	$("#creator").val(result[0].c28);
     $("#creatorat").val(result[0].asResultCrtDt);
     $("#txtResultNo").text(result[0].asResultNo);
 
@@ -923,7 +950,7 @@
 
     $("#ddlCTCode").val(selectedItems[0].item.asMemId);
     $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
-    $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
+    $("#ddlCTCodeText").val(selectedItems[0].item.asMemId);
     $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
 
     if (selectedItems[0].item.asMalfuncId != "") {
@@ -1472,7 +1499,7 @@
       SERIAL_NO : $("#stockSerialNo").val(),
       SERIAL_REQUIRE_CHK_YN : $("#hidSerialRequireChkYn").val()
     }
-
+    
     var saveForm = {
       "asResultM" : asResultM,
       "add" : addedRowItems,
@@ -2540,7 +2567,8 @@ function fnSerialSearchResult(data) {
           </th>
           <td>
             <input type="hidden" title="" placeholder="<spring:message code='service.grid.CTCode' />" class="" id='ddlCTCode' name='ddlCTCode' />
-            <input type="text" title="" placeholder="" disabled="disabled" id='ddlCTCodeText' name='ddlCTCodeText' />
+           <!--<input type="text" title="" placeholder="" disabled="disabled" id='ddlCTCodeText' name='ddlCTCodeText' />-->
+            <select id='ddlCTCodeText' name='ddlCTCodeText' class="w100p"  disabled="disabled"></select>
             <!-- <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
                  <input type="text" title="" placeholder="" class="readonly" id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
              -->

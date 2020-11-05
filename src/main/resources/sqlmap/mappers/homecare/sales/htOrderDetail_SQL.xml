@@ -639,6 +639,7 @@
         parameterType="Map" resultType="egovMap">
     <![CDATA[
         SELECT T1.SRV_ORD_ID SALES_ORD_ID
+             , T3.MEM_ID MEM_ID
              , T3.MEM_CODE MEM_CODE
              , T3.NAME NAME
              , T3.NRIC NRIC

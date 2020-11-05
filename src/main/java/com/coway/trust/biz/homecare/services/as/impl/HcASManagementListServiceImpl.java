@@ -41,6 +41,9 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
 	@Resource(name = "hcASManagementListMapper")
 	private HcASManagementListMapper hcASManagementListMapper;
 
+	@Resource(name = "hcASManagementListService")
+  private HcASManagementListService hcASManagementListService;
+
 	@Resource(name = "ASManagementListMapper")
 	private ASManagementListMapper ASManagementListMapper;
 
@@ -49,6 +52,8 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
 
 	@Resource(name = "servicesLogisticsPFCService")
 	private ServicesLogisticsPFCService servicesLogisticsPFCService;
+
+	//private HcASManagementListService hcASManagementListService;
 
 	@Override
 	public String getSearchDtRange() throws Exception{
@@ -79,6 +84,11 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
 	public List<EgovMap> selectCTByDSCSearch(Map<String, Object> params) throws Exception{
 		return hcASManagementListMapper.selectCTByDSCSearch(params);
 	}
+
+	@Override
+  public List<EgovMap> selectHTAndDTCode() throws Exception{
+    return hcASManagementListMapper.selectHTAndDTCode();
+  }
 
 	@Override
 	public List<EgovMap> getErrMstList(Map<String, Object> params) throws Exception{
@@ -166,10 +176,15 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
     	return hcASManagementListMapper.selectSerialYnSearch(params);
     }
 
+    @Override
+    public int hcChkRcdTms(Map<String, Object> params) throws Exception {
+      return hcASManagementListMapper.hcChkRcdTms(params);
+    }
+
     // as result pop save
     @Override
     public ReturnMessage newASInHouseAddSerial(Map<String, Object> params) throws Exception{
-
+     
   	  ReturnMessage message = new ReturnMessage();
 
   	  HashMap<String, Object> mp = new HashMap<String, Object>();
@@ -180,8 +195,11 @@ public class HcASManagementListServiceImpl extends EgovAbstractServiceImpl imple
   	  params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
   	  params.put("asSoId", svc0004dmap.get("AS_SO_ID"));
   	  params.put("rcdTms", svc0004dmap.get("RCD_TMS"));
+  	  params.put("asCTId", svc0004dmap.get("AS_CT_ID"));
+  	  params.put("asBrnchId", svc0004dmap.get("AS_BRNCH_ID"));
 
-  	  int noRcd = ASManagementListService.chkRcdTms(params);
+  	 // int noRcd = ASManagementListService.hcChkRcdTms(params);
+      int noRcd = hcASManagementListService.hcChkRcdTms(params);
 
   	  if (noRcd == 1) { // RECORD ABLE TO UPDATE
   	      int isAsCnt = ASManagementListService.isAsAlreadyResult(mp);
