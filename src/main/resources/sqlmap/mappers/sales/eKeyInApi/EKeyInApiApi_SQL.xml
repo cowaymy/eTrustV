@@ -443,7 +443,7 @@
                                )
     ]]>
 
-    <if test='isSrvPac != null and isSrvPac == "Y"'>
+    <if test='appTypeId == 66'>
      AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
      </if>
 
