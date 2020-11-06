@@ -442,7 +442,7 @@
                                )
      ]]>
 
-     <if test='appTypeId == 2284'>
+     <if test='appTypeId == 2284 || appTypeId == 66'>
         AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
      </if>
 
