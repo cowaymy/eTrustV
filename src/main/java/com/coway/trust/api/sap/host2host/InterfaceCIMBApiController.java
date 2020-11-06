@@ -187,6 +187,7 @@ public class InterfaceCIMBApiController {
 		}catch(Exception e) {
 			dto.setCode("2001");
 			dto.setMessage("Unexpected Error:" + e.getMessage());
+			LOGGER.error("Unexpected Error:" + e.getMessage());
 			return ResponseEntity.ok(dto);
 		}
 
@@ -255,7 +256,7 @@ public class InterfaceCIMBApiController {
 
 			    if(rtn == 0){	// success encrypt
     			    LOGGER.debug("4-1. Send file to cimb ftp Start.");
-    			   // LOGGER.debug("4-1(TEMP). Skip send file to cimb (UAT).");
+    			    //LOGGER.debug("4-1(TEMP). Skip send file to cimb (UAT).");
     				// 3. Send file to cimb ftp
     			    File fileEncrypt = new File(encryptFilePath);
     			    LOGGER.debug(">>>fileEncrypt.getPath : " + fileEncrypt.getPath());
@@ -318,6 +319,7 @@ public class InterfaceCIMBApiController {
 		String password = SAP_IF_FTP_USERPW;
 		String dir = SAP_IF_FTP_ROOTPATH;		// from dir
 		String rootPath = WAS_ENCRYPT_TEMP_ROOTPATH; 	// to dir
+		//String rootPath = "C:/Users/HQIT-HUIDING/Desktop/CIMBTEST/";
 
 		Date today = new Date();
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMdd");
