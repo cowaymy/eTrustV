@@ -443,9 +443,17 @@
                                )
      ]]>
 
+     <choose>
+      <when test='appTypeId == 66'>
+        AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
+      </when>
+      </choose>
 
+     <if test='appTypeId == 66'>
+     <![CDATA[
      AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
-
+      ]]>
+     </if>
 
     <if test='promoId == 0'>
       <![CDATA[
