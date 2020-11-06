@@ -190,7 +190,7 @@
                         fn_getPreOrderList();
                     });
                 }else{
-                    Common.ajax("POST", "/sales/order/updateFailPreOrderStatus.do", failUpdOrd, function(result) {
+                    Common.ajax("POST", "/homecare/sales/order/updateHcPreOrderStatus.do", failUpdOrd, function(result) {
                         Common.alert("Order Failed" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closeFailedStusPop);
                     },
                     function(jqXHR, textStatus, errorThrown) {
