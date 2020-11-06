@@ -423,8 +423,8 @@
   </select>
 
   <select id="selectPromotionByAppTypeStockESales" parameterType="Map" resultType="egovMap">
-    <![CDATA[
-      /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectPromotionByAppTypeStockESales] 20191210 - KR JAEMAJEM */
+<!--     <![CDATA[
+      /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selectPromotionByAppTypeStockESales] 20191210 - KR JAEMAJEM */ -->
       SELECT DISTINCT B.PROMO_ID AS PROMO_ID
                              , UPPER(B.PROMO_CODE || '-' || B.PROMO_DESC) AS PROMO_DESC
                              , TO_CHAR(B.PROMO_DT_FROM, 'YYYYMMDD') AS PROMO_DT_FROM
@@ -432,6 +432,10 @@
       INNER JOIN SAL0017D B ON  B.PROMO_ID = A.PROMO_ID
                                AND B.PROMO_STUS_ID = 1
                                AND B.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(2284, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
+
+                        <if test='appTypeId == 66'>
+                             AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
+                         </if>
 
                                AND B.PROMO_TYPE_ID = 2282
                                AND B.PROMO_IS_TRIAL_CNVR = 0
@@ -441,11 +445,11 @@
                                    OR B.PROMO_CUST_TYPE = 0
                                    OR B.PROMO_CUST_TYPE IS NULL
                                )
-    ]]>
+<!--     ]]> -->
 
-    <if test='appTypeId == 66'>
+<!--     <if test='appTypeId == "66" '>
      AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
-     </if>
+     </if> -->
 
     <if test='promoId == 0'>
       <![CDATA[
