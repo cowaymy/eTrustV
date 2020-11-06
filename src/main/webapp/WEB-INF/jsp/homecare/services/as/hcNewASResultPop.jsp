@@ -107,7 +107,7 @@
 
           $("#ddlDSCCode").val(selectedCTbranchId);
           $("#ddlDSCCodeText").val(selectedCTbranchCode)
-          $("#ddlCTCode").val(ddlCTCodeTextSelectedVal);          
+          $("#ddlCTCode").val(ddlCTCodeTextSelectedVal);
         });
     });
 
@@ -121,7 +121,7 @@
         	  $.each(result, function(idx, row){
         		  selectedHTAndDTObj[row.codeId] = {"codeId":row.codeId, "codeName":row.codeName, "branchId":row.branchId, "branchCode":row.branchCode};
               });
-        	  doDefCombo(result, '', 'ddlCTCodeText', 'S', '');        	
+        	  doDefCombo(result, '', 'ddlCTCodeText', 'S', '');
           }
 	  });
   }
@@ -212,7 +212,8 @@
 
     fn_errMst_SelectedIndexChanged(result[0].asMalfuncResnId);
 
-    $("#ddlCTCodeText").val(result[0].c12);
+   // $("#ddlCTCodeText").val(result[0].c12);
+    $("#ddlCTCodeText").val(result[0].c11);
     $("#ddlCTCode").val(result[0].c11);
     $("#CTID").val(result[0].c11);
 
@@ -221,6 +222,14 @@
 
     if (result[0].c27 == "1") {
       $("#iscommission").attr("checked", true);
+    }
+
+    if(result[0].asTransferToDt == "1")
+    {
+        $("#isTransferToDT").attr("checked", true);
+    }
+    else {
+        $("#isTransferToDT").attr("checked", false);
     }
 
     $('#def_type').val(result[0].c16);
@@ -1499,7 +1508,7 @@
       SERIAL_NO : $("#stockSerialNo").val(),
       SERIAL_REQUIRE_CHK_YN : $("#hidSerialRequireChkYn").val()
     }
-    
+
     var saveForm = {
       "asResultM" : asResultM,
       "add" : addedRowItems,

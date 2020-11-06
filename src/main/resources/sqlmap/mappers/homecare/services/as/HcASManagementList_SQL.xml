@@ -257,9 +257,8 @@
 	                 AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
 	                 AND ( 1 = Extent7.AS_RESULT_IS_CURR )
 	                 WHERE ( 8 <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
-
-                      /* AND Extent9.TYPE_ID = (SELECT CODE_ID FROM SYS0013M
-                                               WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE = 'HDC')*/
+                      AND Extent9.TYPE_ID IN (SELECT CODE_ID FROM SYS0013M
+                                                           WHERE CODE_MASTER_ID = '45' AND DISAB = '0' AND CODE IN ('HDC','HT','CDB'))
 
 	                 <if test="asStatusList != null and asStatusList != '' ">
 	                   AND Extent1.AS_STUS_ID IN
@@ -861,7 +860,8 @@
   	           CASE WHEN ( S.AS_RESULT_STUS_ID ='4' )
   	                  THEN TO_CHAR(S.AS_RESULT_UPD_DT,'dd/mm/yyyy')
   	                  ELSE '-'
-  	           END AS AS_RESULT_DT
+  	           END AS AS_RESULT_DT,
+               S.AS_TRANSFER_TO_DT AS_TRANSFER_TO_DT
   	    FROM ( SELECT E.AS_RESULT_ID AS_RESULT_ID ,
   	                  E.AS_RESULT_NO AS_RESULT_NO ,
   	                  E.AS_ENTRY_ID ,
@@ -929,7 +929,8 @@
   	                  E.IN_HUSE_REPAIR_PRODUCT_CODE,
   	                  E.IN_HUSE_REPAIR_SERIAL_NO,
   	                  E.APPNT_DT,
-  	                  E.AS_RESULT_UPD_DT
+  	                  E.AS_RESULT_UPD_DT,
+                      E.AS_TRANSFER_TO_DT
   	           FROM SVC0004D E JOIN SYS0038M Extent2 ON Extent2.STUS_CODE_ID = E.AS_RESULT_STUS_ID
   	           LEFT JOIN SYS0032M Extent3 ON Extent3.RESN_ID = E.AS_FAIL_RESN_ID
   	           LEFT JOIN SYS0005M Extent4 ON Extent4.BRNCH_ID = E.AS_BRNCH_ID

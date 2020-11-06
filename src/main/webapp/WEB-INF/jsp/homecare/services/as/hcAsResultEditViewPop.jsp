@@ -16,7 +16,6 @@
   var actPrdCode;
 
   $(document).ready(function() {
-
     createAUIGrid();
 
     fn_getASOrderInfo();
@@ -174,6 +173,7 @@
 
       $("#txtDSCCode").text(result[0].c7 + "-" + result[0].c8);
       $("#txtInchargeCT").text(result[0].c10 + "-" + result[0].c11);
+      $("#ddlDSCCodeText").text(result[0].c9);
 
       $("#txtRequestor").text(result[0].c3);
       $("#txtASKeyBy").text(result[0].c1);

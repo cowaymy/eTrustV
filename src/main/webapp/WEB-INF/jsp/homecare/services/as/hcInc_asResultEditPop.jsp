@@ -27,6 +27,7 @@
 
   var asSolDisable = false;
   var ddlFilterObj = {};
+  var selectedHTAndDTObj = {};
 
   $(document).ready(
     function() {
@@ -66,7 +67,35 @@
         } else if (event.marker == "added-edited") {
         }
       });
+
+      fn_getHTandCTDetails();
+
+      $("#ddlCTCodeText").change(function(){
+          var ddlCTCodeTextSelectedVal = $("#ddlCTCodeText option:selected").val();
+          var selectedCTbranchId = selectedHTAndDTObj[ddlCTCodeTextSelectedVal].branchId;
+          var selectedCTbranchCode = selectedHTAndDTObj[ddlCTCodeTextSelectedVal].branchCode;
+
+           $("#ddlDSCCode").val(selectedCTbranchId);
+           $("#ddlDSCCodeText").val(selectedCTbranchCode)
+           $("#ddlCTCode").val(ddlCTCodeTextSelectedVal);
+         });
+
     });
+
+  function fn_getHTandCTDetails() {
+      $.ajax({
+          type : "GET",
+          url:"/homecare/services/as/selectHTAndDTCode",
+          dataType : "json",
+          contentType : "application/json;charset=UTF-8",
+          success : function(result) {
+              $.each(result, function(idx, row){
+                  selectedHTAndDTObj[row.codeId] = {"codeId":row.codeId, "codeName":row.codeName, "branchId":row.branchId, "branchCode":row.branchCode};
+              });
+              doDefCombo(result, '', 'ddlCTCodeText', 'S', '');
+          }
+      });
+  }
 
   function trim(text) {
     return String(text).replace(/^\s+|\s+$/g, '');
@@ -319,7 +348,7 @@
 
   // GET FILTER INFO.
   function fn_getASRulstEditFilterInfo() {
-    Common.ajax("POST", "/homecare/services/as/getASRulstEditFilterInfo.do", { AS_RESULT_NO : $('#asData_AS_RESULT_NO').val() },
+	 Common.ajax("POST", "/homecare/services/as/getASRulstEditFilterInfo.do", { AS_RESULT_NO : $('#asData_AS_RESULT_NO').val() },
       function(result) {
     	$.each(result, function(i, row){
     		if(row.isSmo == "Y"){
@@ -343,7 +372,7 @@
   }
 
   function fn_setSVC0004dInfo(result) {
-    currentStatus = result[0].asResultStusId; // SET BEFORE STATUS
+	currentStatus = result[0].asResultStusId; // SET BEFORE STATUS
     asRslt = result[0]; // SET 1ST IMAGE VALUE SET FOR LATER USE
 
     $("#ddlStatus").val(result[0].asResultStusId);
@@ -377,7 +406,8 @@
 
     $("#ddlCTCode").val(result[0].c11);
     $("#ddlDSCCode").val(result[0].asBrnchId);
-    $("#ddlCTCodeText").val(result[0].c12);
+    //$("#ddlCTCodeText").val(result[0].c12);
+    $("#ddlCTCodeText").val(result[0].c11);
     $("#ddlDSCCodeText").val(result[0].c5);
 
     $("#ddlWarehouse").val(result[0].asWhId);
@@ -385,6 +415,14 @@
 
     if (result[0].c27 == "1") {
       $("#iscommission").attr("checked", true);
+    }
+
+    if(result[0].asTransferToDt == "1")
+    {
+    	$("#isTransferToDT").attr("checked", true);
+    }
+    else {
+    	$("#isTransferToDT").attr("checked", false);
     }
 
     $('#def_type').val(result[0].c16);
@@ -479,6 +517,7 @@
     }
 
     fn_ddlStatus_SelectedIndexChanged();
+
   }
 
   function fn_getASReasonCode2(_obj, _tobj, _v) {
@@ -558,7 +597,7 @@
       var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
       $("#ddlCTCode").val(selectedItems[0].item.asMemId);
       $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
-      $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
+      $("#ddlCTCodeText").val(selectedItems[0].item.asMemId);
       $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
     }
 
@@ -710,6 +749,7 @@
       $('#ddlErrorDesc').attr("disabled", true);
       $('#txtRemark').attr("disabled", true);
       $("#iscommission").attr("disabled", true);
+      $('#isTransferToDT').attr("disabled", true);
 
       $('#def_type').attr("disabled", true);
       $('#def_code').attr("disabled", true);
@@ -1037,6 +1077,8 @@
     $('#ddlWarehouse').val("").attr("disabled", true);
     $('#txtRemark').val("").attr("disabled", true);
     $("#iscommission").attr("disabled", true);
+    $("#isTransferToDT").attr("checked", false);
+    $("#isTransferToDT").attr("disabled", true);
 
     fn_clearPanelField_ASChargesFees();
 
@@ -1672,7 +1714,7 @@
           // PAYMENT MAPPED
           Common.confirm("<spring:message code='service.msg.confirmPmtMap'/>", fn_setSaveFormData);
         } else {
-          fn_setSaveFormData();
+        	fn_setSaveFormData();
         }
       });
   }
@@ -1715,6 +1757,7 @@
       AS_RESULT_REM : $('#txtRemark').val(),
       AS_MALFUNC_ID : $('#ddlErrorCode').val(),
       AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
+      AS_TRANSFER_TO_DT : $("#isTransferToDT").prop("checked") ? '1' : '0',
 
       // AS RECALL ENTRY
       AS_APP_DT : $("#appDate").val(),
@@ -1787,7 +1830,7 @@
 
     var saveForm;
     if ($("#requestMod").val() == "INHOUSE") { // IN HOUSE SESSION
-      saveForm = {
+    	saveForm = {
         "asResultM" : asResultM,
         "add" : addedRowItems,
         "update" : editedRowItems,
@@ -1803,7 +1846,7 @@
         });
     } else {
       if ($("#requestMod").val() == "NEW") {
-        saveForm = {
+    	saveForm = {
           "asResultM" : asResultM,
           "add" : addedRowItems,
           "update" : editedRowItems,
@@ -1839,7 +1882,7 @@
         // KR-OHK Serial Check add
         Common.ajax("POST", "/homecare/services/as/newResultUpdateSerial.do", saveForm,
           function(result) {
-            if (result.data != "") {
+        	if (result.data != "") {
               $("#newResultNo").html("<B>" + result.data + "</B>");
               Common.alert("<spring:message code='service.msg.updSucc'/>");
               //fn_DisablePageControl();
@@ -1884,6 +1927,7 @@
     $('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");
     $('#txtRemark').removeAttr("disabled").removeClass("readonly");
     $('#iscommission').removeAttr("disabled").removeClass("readonly");
+  //  $('#isTransferToDT').removeAttr("disabled").removeClass("readonly");
 
     //$('#def_type').removeAttr("disabled").removeClass("readonly");
     //$('#def_code').removeAttr("disabled").removeClass("readonly");
@@ -1925,6 +1969,8 @@
   }
 
   function fn_setASDataInit(ops) {
+	alert("fn_setASDataInit START");
+
     this.ops = ops;
     $("#asData_AS_ID").val(ops.AS_ID);
     $("#asData_AS_SO_ID").val(ops.AS_SO_ID);
@@ -1974,6 +2020,7 @@
       $("#txtFilterRemark").attr("disabled", true);
       $("#txtLabourCharge").attr("disabled", true);
       $("#txtFilterCharge").attr("disabled", true);
+      $("#isTransferToDT").attr("disabled", true);
 
       $('#def_type').attr("disabled", true);
       $('#def_code').attr("disabled", true);
@@ -2430,7 +2477,8 @@
        </th>
        <td>
          <input type="hidden" title="" placeholder="ddlCTCode" class="" id='ddlCTCode' name='ddlCTCode' />
-         <input type="text" title="" placeholder="" class="readonly w100p" id='ddlCTCodeText' name='ddlCTCodeText'/>
+         <!--<input type="text" title="" placeholder="" class="readonly w100p" id='ddlCTCodeText' name='ddlCTCodeText'/>  -->
+            <select id='ddlCTCodeText' name='ddlCTCodeText' class="w100p"  disabled="disabled"></select>
          <!--
            <input type="hidden" title="" placeholder="ddlCTCode" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
            <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
@@ -2468,6 +2516,14 @@
                <a id="serialEdit" href="#" onClick="fn_serialModifyPop()">EDIT</a>
             </p>
        </td>
+      </tr>
+      <tr>
+             <th scope="row"><spring:message code='home.text.TransferToDT' /></th>
+             <td>
+                   <label><input type="checkbox" disabled="disabled" id='isTransferToDT' name='isTransferToDT' /><span><spring:message code='home.text.TransferToDT' /></span></label>
+             </td>
+             <td></td>
+             <td></td>
       </tr>
       <tr>
        <th scope="row"><spring:message code='service.grid.CrtBy' /></th>

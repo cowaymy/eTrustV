@@ -24,6 +24,7 @@
   var failRsn;
 
   var errMsg;
+  var selectedHTAndDTObj = {};
 
   $(document).ready(
     function() {
@@ -40,12 +41,38 @@
       //doGetCombo('/services/as/getASFilterInfo.do', '', '','ddlFilterCode', 'S' , '');  // Customer Type Combo Box
       //doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');
 
+      fn_getHTandCTDetails();
       fn_getASOrderInfo();
       fn_getASEvntsInfo();
       fn_getASHistoryInfo();
 
+      $("#ddlCTCodeText").change(function(){
+          var ddlCTCodeTextSelectedVal = $("#ddlCTCodeText option:selected").val();
+          var selectedCTbranchId = selectedHTAndDTObj[ddlCTCodeTextSelectedVal].branchId;
+          var selectedCTbranchCode = selectedHTAndDTObj[ddlCTCodeTextSelectedVal].branchCode;
+
+           $("#ddlDSCCode").val(selectedCTbranchId);
+           $("#ddlDSCCodeText").val(selectedCTbranchCode)
+           $("#ddlCTCode").val(ddlCTCodeTextSelectedVal);
+         });
+
       //fn_getASRulstEditFilterInfo();
     });
+
+  function fn_getHTandCTDetails() {
+      $.ajax({
+          type : "GET",
+          url:"/homecare/services/as/selectHTAndDTCode",
+          dataType : "json",
+          contentType : "application/json;charset=UTF-8",
+          success : function(result) {
+              $.each(result, function(idx, row){
+                  selectedHTAndDTObj[row.codeId] = {"codeId":row.codeId, "codeName":row.codeName, "branchId":row.branchId, "branchCode":row.branchCode};
+              });
+              doDefCombo(result, '', 'ddlCTCodeText', 'S', '');
+          }
+      });
+  }
 
   function fn_getErrMstList(_ordNo) {
     $("#ddlErrorCode option").remove();
@@ -114,7 +141,7 @@
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
     $("#ddlCTCode").val(selectedItems[0].item.asMemId);
     $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
-    $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
+    $("#ddlCTCodeText").val(selectedItems[0].item.asMemId);
     $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
     $("#CTID").val(result[0].c11);
 
@@ -123,6 +150,14 @@
 
     if (result[0].c27 == "1") {
       $("#iscommission").attr("checked", true);
+    }
+
+    if(result[0].asTransferToDt == "1")
+    {
+        $("#isTransferToDT").attr("checked", true);
+    }
+    else {
+        $("#isTransferToDT").attr("checked", false);
     }
 
     $('#def_type').val(String(result[0].c16).trim());
@@ -1374,7 +1409,8 @@ function SearchListAjax(obj){
          <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText'  />
          <input type="hidden" title="" placeholder="" class=""  id='CTID' name='CTID'/> -->
          <input type="hidden" title="" placeholder="" class="" id='ddlCTCode' name='ddlCTCode' />
-         <input type="text" title="" placeholder="" class="readonly w100p" id='ddlCTCodeText' name='ddlCTCodeText' readonly/>
+         <!--<input type="text" title="" placeholder="" class="readonly w100p" id='ddlCTCodeText' name='ddlCTCodeText' readonly/>  -->
+         <select id='ddlCTCodeText' name='ddlCTCodeText' class="w100p"  disabled="disabled"></select>
          <input type="hidden" title="" placeholder="" class="" id='CTID' name='CTID' />
          </td>
         </tr>
@@ -1406,6 +1442,14 @@ function SearchListAjax(obj){
             </p>
          </td>
         </tr>
+        <tr>
+             <th scope="row"><spring:message code='home.text.TransferToDT' /></th>
+             <td>
+                   <label><input type="checkbox" disabled="disabled" id='isTransferToDT' name='isTransferToDT' /><span><spring:message code='home.text.TransferToDT' /></span></label>
+             </td>
+             <td></td>
+             <td></td>
+         </tr>
         <tr>
          <th scope="row"><spring:message code='service.grid.CrtBy' /></th>
          <td><input type="text" title="" placeholder="" class="disabled w100p" disabled="disabled" id='creator' name='creator' /></td>
