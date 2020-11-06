@@ -455,9 +455,9 @@
      AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
      </if>
 
-     <if test='typeId == "964" and exTrade == 0 and empChk == 0 '>
+<!--      <if test='typeId == "964" and exTrade == 0 and empChk == 0 '>
      AND B.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
-     </if>
+     </if> -->
 
      <if test='appTypeId == 66'>
      <![CDATA[
