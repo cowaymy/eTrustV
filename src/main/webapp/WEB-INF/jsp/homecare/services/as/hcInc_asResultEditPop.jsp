@@ -1969,8 +1969,6 @@
   }
 
   function fn_setASDataInit(ops) {
-	alert("fn_setASDataInit START");
-
     this.ops = ops;
     $("#asData_AS_ID").val(ops.AS_ID);
     $("#asData_AS_SO_ID").val(ops.AS_SO_ID);
