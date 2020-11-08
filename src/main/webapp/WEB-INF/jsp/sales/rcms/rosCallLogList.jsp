@@ -29,6 +29,8 @@ var gridPros = {
         groupingMessage     : "Here groupping"
     };
 
+var rosSummaryReportData = [{"codeId": "ROSRC","codeName": "ROS Caller RC Report"},{"codeId": "ROSMR","codeName": "ROS Caller Main Reason"}];
+
 $(document).ready(function() {/////////////////////////////////////////////////////////////// Document Ready Func Start
 
 	createRosCallGrid();
@@ -67,6 +69,233 @@ $(document).ready(function() {//////////////////////////////////////////////////
 	$('#excelDown').click(function() {
 	    GridCommon.exportTo("rosCall_grid_wrap", 'xlsx', "ROS Call Log");
 	 });
+
+	$('#_btnGenVip').click(function() {
+
+		var whereSql = '';
+
+		if(FormUtil.isEmpty($("#vipCustForm  #vip_custId").val()) && FormUtil.isEmpty($("#vipCustForm  #vip_custName").val()) ){
+	           Common.alert("Please keyin either 1 field");
+	            return;
+	    }else{
+	    	if(FormUtil.isNotEmpty($("#vipCustForm  #vip_custId").val()) ){
+	    		whereSql += " AND T2.CUST_ID = " + $("#vipCustForm  #vip_custId").val();
+	    	}
+
+	        if(FormUtil.isNotEmpty($("#vipCustForm  #vip_custName").val()) ){
+	        	whereSql += " AND UPPER(T2.NAME) LIKE UPPER(" + "'%"  + $("#vipCustForm  #vip_custName").val() + "%')";
+	        	//whereSql += " AND UPPER(T2.NAME) = '"  + $("#vipCustForm  #vip_custName").val() + "' ";
+            }
+
+	    }
+
+		var date = new Date().getDate();
+        if(date.toString().length == 1){
+            date = "0" + date;
+        }
+
+        $("#reportFileName").val("/sales/rosCaller/RosCaller_VIPCust.rpt");
+        $("#V_WHERESQL").val(whereSql);
+        $("#reportDownFileName").val("ROS Caller VVIP Cusomer Info_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+
+        var option = {
+                isProcedure : true
+        };
+
+        Common.report("reportForm", option);
+	});
+
+	$('#_btnGenSum').click(function(){
+
+		var rptType                 =  $("#rosSum_reportType").val();
+		var rosSumCaller         = $("#rosSum_Caller").val();
+		var rosSumRentusStus = $("#rosSum_rentalStatus").val();
+		var rosSumStartDt       = $("#rosSum_StartDt").val();
+		var rosSumEndDt         = $("#rosSum_EndDt").val();
+		var rosSumResn         = $("#rosSum_mainReason").val();
+
+		var whereSql = '';
+		var runNo = 0;
+
+		var date = new Date(), y = date.getFullYear(), m = date.getMonth();
+		var firstDay = new Date(y, m, 1);
+		var lastDay = new Date(y, m + 1, 0);
+		//Get Current Month
+		var currentMonth = m < 10 ? ("0" + (m + 1)) : (m+1).toString();
+
+		console.log(currentMonth);
+
+		var today = $.datepicker.formatDate('ddmmyy', date);
+		var f_firstDay = $.datepicker.formatDate('yy/mm/dd', firstDay);
+		var f_lastDay = $.datepicker.formatDate('yy/mm/dd', lastDay);
+
+		var startDtSplit;
+        var endDtSplit
+
+        var startDt;
+        var endDt;
+
+        // Format Date
+        if(FormUtil.isNotEmpty(rosSumStartDt)){
+        	startDtSplit = rosSumStartDt.split("/");
+            startDt = startDtSplit[2] + '/' + startDtSplit[1] + '/' + startDtSplit[0];
+        }
+        if(FormUtil.isNotEmpty(rosSumEndDt)){
+            endDtSplit = rosSumEndDt.split("/");
+            endDt  = endDtSplit[2] + '/' + endDtSplit[1] + '/' + endDtSplit[0];
+        }
+
+
+		if(rptType == null){
+			Common.alert("<spring:message code='sal.alert.msg.plzSelReportType' />");
+			return;
+		}else if(FormUtil.isNotEmpty(rosSumStartDt) && FormUtil.isNotEmpty(rosSumEndDt) &&
+				( currentMonth != endDtSplit[1] || currentMonth != startDtSplit[1])){
+		    Common.alert("Please select current month");
+		    return;
+		}else{
+			if(rptType == 'ROSRC'){
+
+				if(FormUtil.isNotEmpty(rosSumCaller) ){
+			        whereSql += " AND  T0.AGENT_ID IN (";
+			        $('#rosSum_Caller :selected').each(function(i, mul){
+			            if(runNo > 0){
+			                whereSql += ",'"+$(mul).val()+"'";
+			            }else{
+			                whereSql += "'"+$(mul).val()+"'";
+			            }
+			            runNo += 1;
+			        });
+			        whereSql += ") ";
+
+			        runNo = 0;
+			    }
+
+			    if(FormUtil.isNotEmpty(rosSumRentusStus) ){
+			    	whereSql += " AND  RENS.STUS_CODE_ID IN (";
+                    $('#rosSum_rentalStatus :selected').each(function(i, mul){
+                        if(runNo > 0){
+                            whereSql += ",'"+$(mul).val()+"'";
+                        }else{
+                            whereSql += "'"+$(mul).val()+"'";
+                        }
+                        runNo += 1;
+                    });
+                    whereSql += ") ";
+
+                    runNo = 0;
+                }
+
+			    if(FormUtil.isEmpty(rosSumStartDt) && FormUtil.isEmpty(rosSumEndDt)){
+
+			    	whereSql += " AND PM.PAY_DATA >= TO_DATE('" + f_firstDay + "','YYYY/MM/DD') AND PM.PAY_DATA    <= TO_DATE('" + f_lastDay + "','YYYY/MM/DD') ";
+
+			    }else if(FormUtil.isNotEmpty(rosSumStartDt) && FormUtil.isNotEmpty(rosSumEndDt)){
+
+                    whereSql += " AND PM.PAY_DATA >= TO_DATE('" + startDt + "','YYYY/MM/DD') AND PM.PAY_DATA    <= TO_DATE('" + endDt + "','YYYY/MM/DD') ";
+
+                }else{
+                	Common.alert("<spring:message code='sal.alert.msg.plzSelKeyinDateFromTo' />");
+                    return;
+                }
+
+			    if(FormUtil.isNotEmpty(rosSumResn) ){
+			    	whereSql += " AND  RM.RESN_ID = " + rosSumResn;
+
+			    	if(FormUtil.isNotEmpty(rosSumStartDt) && FormUtil.isNotEmpty(rosSumEndDt)){
+			    		whereSql += " AND ROS.ROS_CALL_CRT_DT >= TO_DATE('" + startDt + "','YYYY/MM/DD') AND ROS.ROS_CALL_CRT_DT  <= TO_DATE('" + endDt + "','YYYY/MM/DD') ";
+			    	}else{
+			    		whereSql += " AND ROS.ROS_CALL_CRT_DT >= TO_DATE('" + f_firstDay + "','YYYY/MM/DD') AND ROS.ROS_CALL_CRT_DT    <= TO_DATE('" + f_lastDay + "','YYYY/MM/DD') ";
+			    	}
+                }
+
+			    $("#reportFileName").val("/sales/rosCaller/RosCaller_RCRaw.rpt");
+			    $("#V_WHERESQL").val(whereSql);
+			    $("#reportDownFileName").val("ROS Caller RCRaw_"+today );
+
+			    console.log(whereSql);
+		        var option = {
+		                isProcedure : true
+		        };
+
+		        Common.report("reportForm", option);
+
+			}
+
+		    if(rptType == 'ROSMR'){
+
+		    	if(FormUtil.isNotEmpty(rosSumCaller) ){
+                    whereSql += " AND  RCMS.AGENT_ID IN (";
+                    $('#rosSummaryForm  #rosSum_Caller :selected').each(function(i, mul){
+                        if(runNo > 0){
+                            whereSql += ",'"+$(mul).val()+"'";
+                        }else{
+                            whereSql += "'"+$(mul).val()+"'";
+                        }
+                        runNo += 1;
+                    });
+                    whereSql += ") ";
+
+                    runNo = 0;
+                }
+
+                if(FormUtil.isNotEmpty(rosSumRentusStus) ){
+                    whereSql += " AND  RENS.STUS_CODE_ID IN (";
+                    $('#rosSummaryForm  #rosSum_rentalStatus :selected').each(function(i, mul){
+                        if(runNo > 0){
+                            whereSql += ",'"+$(mul).val()+"'";
+                        }else{
+                            whereSql += "'"+$(mul).val()+"'";
+                        }
+                        runNo += 1;
+                    });
+                    whereSql += ") ";
+
+                    runNo = 0;
+                }
+
+                if(FormUtil.isEmpty(rosSumStartDt) && FormUtil.isEmpty(rosSumEndDt)){
+
+                	whereSql += " AND ROS.ROS_CALL_CRT_DT >= TO_DATE('" + f_firstDay + "','YYYY/MM/DD') AND ROS.ROS_CALL_CRT_DT    <= TO_DATE('" + f_lastDay + "','YYYY/MM/DD') ";
+
+                }else if(FormUtil.isNotEmpty(rosSumStartDt) && FormUtil.isNotEmpty(rosSumEndDt)){
+
+                    startDtSplit = rosSumStartDt.split("/");
+                    endDtSplit = rosSumEndDt.split("/");
+
+                    startDt = startDtSplit[2] + '/' + startDtSplit[1] + '/' + startDtSplit[0];
+                    endDt  = endDtSplit[2] + '/' + endDtSplit[1] + '/' + endDtSplit[0];
+
+                    whereSql += " AND ROS.ROS_CALL_CRT_DT >= TO_DATE('" + startDt + "','YYYY/MM/DD') AND ROS.ROS_CALL_CRT_DT  <= TO_DATE('" + endDt + "','YYYY/MM/DD') ";
+
+                }else{
+                    Common.alert("<spring:message code='sal.alert.msg.plzSelKeyinDateFromTo' />");
+                    return;
+                }
+
+                if(FormUtil.isNotEmpty(rosSumResn) ){
+                    whereSql += " AND  RM.RESN_ID = " + rosSumResn;
+                }
+
+                console.log(whereSql)
+
+                $("#reportFileName").val("/sales/rosCaller/RosCaller_MainReason.rpt");
+                $("#V_WHERESQL").val(whereSql);
+                $("#reportDownFileName").val("ROS Caller MainReason_"+today);
+
+                var option = {
+                        isProcedure : true
+                };
+
+                Common.report("reportForm", option);
+
+            }
+
+		}
+
+	});
+
+
 });////////////////////////////////////////////////////////////////////////////////////////////////// Document Ready Func End
 
 function f_multiCombo(){
@@ -234,16 +463,37 @@ $.fn.clearForm = function() {
     });
 };
 
+hideViewPopup=function(val){
+    $(val).hide();
+}
+
 function fn_feedbackList(){
 	Common.popupDiv("/sales/rcms/feedbackPop.do", null ,  null , true, '_feedbackPop');
 }
 
-function fn_setOptGrpClass() {
-    $("optgroup").attr("class" , "optgroup_text");
+function fn_vipCustList(){
+    $("#vipCust_wrap").show();
 }
 
-function fn_alert() {
-	Common.alert("Under Development");
+function fn_rosSumList(){
+	$("#rosSummary_wrap").show();
+
+	CommonCombo.make("rosSum_mainReason", "/sales/rcms/getReasonCodeList", {typeId : '1175' , stusCodeId : '1'},  '', {type: "S"});  //Reason Code
+    CommonCombo.make("rosSum_CallerType", "/sales/rcms/selectAgentTypeList", {codeMasterId : '329'}, '2326',  { type: "S"});
+    CommonCombo.make("rosSum_Caller", "/sales/rcms/selectRosCaller", {stus:'1',agentType: '2326'} ,'',  {id:'agentId', name:"agentName", isShowChoose: false,isCheckAll : false , type: "M"});
+    doDefCombo(rosSummaryReportData, '' ,'rosSum_reportType', 'S', '');
+    CommonCombo.make('rosSum_rentalStatus', "/status/selectStatusCategoryCdList.do", {selCategoryId : 26} , '',
+            {
+                id: "code",              // 콤보박스 value 에 지정할 필드명.
+                name: "codeName",  // 콤보박스 text 에 지정할 필드명.
+                isShowChoose: false,
+                isCheckAll : false,
+                type : 'M'
+                });
+}
+
+function fn_setOptGrpClass() {
+    $("optgroup").attr("class" , "optgroup_text");
 }
 
 $(function() {
@@ -408,8 +658,8 @@ $(function() {
     <dd>
     <ul class="btns">
         <li><p class="link_btn"><a onclick="javascript:fn_feedbackList()"><spring:message code="sal.title.text.feedbackList" /></a></p></li>
-        <li><p class="link_btn"><a onclick="javascript:fn_alert()">VVIP Customer Info</a></p></li>
-        <li><p class="link_btn"><a onclick="javascript:fn_alert()">ROS Summary Report</a></p></li>
+        <li><p class="link_btn"><a onclick="javascript:fn_vipCustList()">VVIP Customer Info</a></p></li>
+        <li><p class="link_btn"><a onclick="javascript:fn_rosSumList()">ROS Summary Report</a></p></li>
         <%-- <li><p class="link_btn"><a href="${pageContext.request.contextPath}/payment/initInvoiceIssue.do">Invoice</a></p></li>  --%>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
@@ -417,6 +667,13 @@ $(function() {
 </dl>
 </aside><!-- link_btns_wrap end -->
 
+</form>
+
+<form id="reportForm">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
+    <input type="hidden" id="viewType" name="viewType" value="EXCEL" />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+    <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
 </form>
 </section><!-- search_table end -->
 
@@ -434,4 +691,115 @@ $(function() {
 
 </section><!-- search_result end -->
 
+
+
+<!-- VVIP Customer Info Wrap -->
+<div class="popup_wrap size_small" id="vipCust_wrap" style="display:none;">
+
+    <header class="pop_header">
+        <h1>VVIP Customer Info</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#vipCust_wrap')">CLOSE</a></p></li>
+        </ul>
+    </header>
+
+    <form name="vipCustForm" id="vipCustForm"  method="post">
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:150px" />
+                    <col style="width:*" />
+                </colgroup>
+
+                <tbody>
+                <tr>
+                    <th scope="row"><spring:message code="sal.text.customerId" /></th>
+                    <td><input type="text" title="" placeholder="Customer Id" class="w100p" id="vip_custId" name="vipCustId"/></td>
+                 </tr>
+                 <tr>
+                    <th scope="row"><spring:message code="sal.text.custName" /></th>
+                    <td><input type="text" title="" placeholder="Customer Name" class="w100p" id="vip_custName" name="vipCustName"/></td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <ul class="center_btns" >
+            <li><p class="btn_blue2"><a id="_btnGenVip" href="#"><spring:message code="sal.btn.generate" /></a></p></li>
+            <li><p class="btn_blue2"><a onclick="javascript:$('#vipCustForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
+        </ul>
+    </section>
+    </form>
+    <!-- pop_body end -->
+</div>
+
+<!-- ROS Summary Report Wrap -->
+<div class="popup_wrap size_medium" id="rosSummary_wrap" style="display:none;">
+
+    <header class="pop_header">
+        <h1>ROS Summary Report</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#rosSummary_wrap')">CLOSE</a></p></li>
+        </ul>
+    </header>
+
+    <form name="rosSummaryForm" id="rosSummaryForm"  method="post">
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:150px" />
+                    <col style="width:*" />
+                    <col style="width:150px" />
+                    <col style="width:*" />
+                </colgroup>
+
+                <tbody>
+                <tr>
+                    <th scope="row"><spring:message code="sal.text.reportType" /></th>
+                    <td><select class="w100p" id="rosSum_reportType" name="rosSum_reportType"></select></td>
+                    <th scope="row"><spring:message code="sal.title.text.agentType" /></th>
+                    <td><select class="w100p" id="rosSum_CallerType" name="rosSum_CallerType" disabled></select></td>
+
+                 </tr>
+                 <tr>
+                    <th scope="row"><spring:message code="sal.title.text.rosCaller" /></th>
+                    <td><select id="rosSum_Caller" name="rosSum_Caller" class="multy_select w100p" multiple="multiple"></select></td>
+                    <th scope="row"><spring:message code="sal.text.rentalStatus" /></th>
+                    <td><select id="rosSum_rentalStatus" name="rosSum_rentalStatus" class="multy_select w100p" multiple="multiple"></select></td>
+                </tr>
+                <tr>
+                    <th scope="row"><spring:message code="sal.title.date" /></th>
+                    <td>
+                        <div class="date_set w100p">
+                            <p><input id="rosSum_StartDt" name="rosSum_StartDt" type="text" value="" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            <span>To</span>
+                            <p><input id="rosSum_EndDt" name="rosSum_EndDt" type="text" value="" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                        </div>
+                    </td>
+                    <th scope="row"><spring:message code="sal.title.text.mainReason" /></th>
+                    <td><select class="w100p" id="rosSum_mainReason" name="rosSum_mainReason"></select></td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <ul class="center_btns" >
+            <li><p class="btn_blue2"><a id="_btnGenSum" href="#"><spring:message code="sal.btn.generate" /></a></p></li>
+            <li><p class="btn_blue2"><a onclick="javascript:$('#vipCustForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
+        </ul>
+    </section>
+    </form>
+    <!-- pop_body end -->
+</div>
+
+
 </section><!-- content end -->
+
