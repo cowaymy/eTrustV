@@ -5,6 +5,7 @@
  ----------------------------------------------------------------
  15/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP and Add Order Number Search Criteria
  26/04/2019  ONGHC  1.0.1          ADD RECALL STATUS
+ 09/11/2020  ONGHC  1.0.2          AMEND FOR GENERATE REPORT TYPE ISSUE
  -->
 <script type="text/javaScript">
   $(document).ready(
@@ -70,6 +71,7 @@
 
     var runNo1 = 0;
     var asStus = "";
+    var asType = "";
 
     if (date.getDate() < 10) {
       day = "0" + date.getDate();
@@ -87,6 +89,21 @@
               asStus += ", " + $(mul).val() + " ";
             } else {
               asStus += " " + $(mul).val() + " ";
+            }
+            runNo1 += 1;
+          }
+        });
+      }
+
+      runNo1 = 0;
+
+      if ($("#asTypeReport :checked").length > 0) {
+        $("#asTypeReport :checked").each(function(i, mul) {
+          if ($(mul).val() != "0") {
+            if (runNo1 > 0) {
+              asType += ", " + $(mul).val() + " ";
+            } else {
+              asType += " " + $(mul).val() + " ";
             }
             runNo1 += 1;
           }
@@ -174,8 +191,8 @@
         whereSql += " AND ae.AS_STUS_ID IN (" + asStus + ") ";
       }
 
-      var asType = "";
-      asType = $("#asTypeReport :selected").val();
+      //var asType = "";
+      //asType = $("#asTypeReport :selected").val();
       if (asType != '' && asType != null) {
 
         whereSql += "AND ae.AS_TYPE_ID IN (" + asType + ") " + " ";
