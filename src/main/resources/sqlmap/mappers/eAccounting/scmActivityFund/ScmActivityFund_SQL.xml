@@ -198,7 +198,7 @@ SELECT T1.CLM_SEQ,
        T1.GL_ACC_CODE_NAME,
        T1.BUDGET_CODE,
        T1.BUDGET_CODE_NAME,
-       T4.MEM_ACC_ID AS SUPPLIR,
+       /*T4.MEM_ACC_ID AS SUPPLIR,*/
        T1.SUPPLIR AS SUPPLIR_NAME,
        T1.INVC_TYPE,
        ( CASE T1.INVC_TYPE
@@ -225,8 +225,10 @@ FROM   FCM0020D T1
               ON T1.TAX_CODE = T2.TAX_CODE
        LEFT JOIN FCM0019M T3
               ON T1.CLM_NO = T3.CLM_NO
+       /*
        LEFT JOIN FCM0006M T4
               ON T1.SUPPLIR = T4.MEM_ACC_NAME
+       */
 WHERE  T1.CLM_NO = #{clmNo}
 ORDER  BY T1.CLM_SEQ
 </select>
@@ -251,7 +253,7 @@ SELECT T1.CLM_SEQ,
        T1.GL_ACC_CODE_NAME,
        T1.BUDGET_CODE,
        T1.BUDGET_CODE_NAME,
-       T5.MEM_ACC_ID                                       AS SUPPLIR,
+       /* T5.MEM_ACC_ID                                       AS SUPPLIR, */
        T1.SUPPLIR                                          AS SUPPLIR_NAME,
        T1.INVC_TYPE,
        T1.INVC_NO,
@@ -280,8 +282,10 @@ FROM   FCM0020D T1
               ON T1.CLM_NO = T3.CLM_NO
        LEFT JOIN FCM0006M T4
               ON T3.MEM_ACC_ID = T4.MEM_ACC_ID
+       /*
        LEFT JOIN FCM0006M T5
               ON T1.SUPPLIR = T4.MEM_ACC_NAME
+       */
 WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
 </select>
 
