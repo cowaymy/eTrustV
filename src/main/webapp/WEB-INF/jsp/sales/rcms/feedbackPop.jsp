@@ -193,9 +193,6 @@ $(document).ready(function() {
             }
 		}
 
-		//Generate Report
-		$("#reportFileName").val("/sales/ROSFeedbackKeyList.rpt");
-		$("#viewType").val("EXCEL");
 		//title
 	    var date = new Date().getDate();
 	    if(date.toString().length == 1){
@@ -270,8 +267,8 @@ $('.multy_select').change(function() {
 
 <form id="_feedRptForm">
     <!-- Essential Params -->
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/AccumulatedAccReport_PDF.rpt" />
-    <input type="hidden" id="viewType" name="viewType" />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/ROSFeedbackKeyList.rpt" />
+    <input type="hidden" id="viewType" name="viewType" value="EXCEL"/>
     <input type="hidden" id="reportDownFileName" name="reportDownFileName"  />
 
     <!-- Procedure Params -->
