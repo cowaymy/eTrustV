@@ -199,16 +199,15 @@ $(document).ready(function() {
 	        date = "0" + date;
 	    }
 	    var title = "ROSFeedbackKeyInList_"+date+(new Date().getMonth()+1)+new Date().getFullYear();
-	    $("#reportDownFileName").val(title); //Download File Name
+	    $("#_feedRptForm #reportDownFileName").val(title); //Download File Name
 
 	    /* Procedure Params */
 	    $("#V_SELECTSQL").val(" ");
-	    $("#V_WHERESQL").val(whereSql);
+	    $("#_feedRptForm #V_WHERESQL").val(whereSql);
 	    $("#V_ORDERBYSQL").val(orderSql);
 	    $("#V_SELECTSQL").val(" ");
 
-	    console.log("whereSql : " + whereSql);
-	    console.log("orderSql : " + orderSql);
+	    console.log($("#_feedRptForm").serializeJSON());
 
 	  //Gen Report
 	    var option = {

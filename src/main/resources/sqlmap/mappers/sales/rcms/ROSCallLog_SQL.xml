@@ -152,7 +152,7 @@
                     AND  TO_DATE(Extent3.ROS_CALL_RECALL_DT,'DD/MM/YYYY') >= TO_DATE(#{rclStartDt},'DD/MM/YYYY')
                  </if>
                  <if test=" rclEndDt != null and rclEndDt != '' ">
-                    AND  TO_DATE(Extent3.ROS_CALL_RECALL_DT,'DD/MM/YYYY') <![CDATA[<=]]> TO_DATE(#{rclEndDt},'DD/MM/YYYY') +1
+                    AND  TO_DATE(Extent3.ROS_CALL_RECALL_DT,'DD/MM/YYYY') <![CDATA[<=]]> TO_DATE(#{rclEndDt},'DD/MM/YYYY')
                  </if>
                  <if test=" mainReason != null and mainReason != '' ">
                     AND  Extent11.RESN_ID = #{mainReason}
@@ -167,7 +167,7 @@
                     AND  TO_DATE(Extent3.PTP_DT,'DD/MM/YYYY') >= TO_DATE(#{ptpStartDt},'DD/MM/YYYY')
                  </if>
                  <if test=" ptpEndDt != null and ptpEndDt != '' ">
-                    AND  TO_DATE(Extent3.PTP_DT,'DD/MM/YYYY') <![CDATA[<=]]> TO_DATE(#{ptpEndDt},'DD/MM/YYYY') +1
+                    AND  TO_DATE(Extent3.PTP_DT,'DD/MM/YYYY') <![CDATA[<=]]> TO_DATE(#{ptpEndDt},'DD/MM/YYYY')
                  </if>
                  <if test=" rosStatus != null and rosStatus != '' ">
                     AND  Extent3.ROS_STUS =#{rosStatus}
