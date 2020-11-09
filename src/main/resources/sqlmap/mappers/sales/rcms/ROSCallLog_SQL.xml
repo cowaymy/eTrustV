@@ -97,6 +97,7 @@
                        LEFT JOIN SYS0013M Extent9 ON Extent9.CODE_ID = Extent8.MODE_ID
                        LEFT JOIN SYS0034M Extent10 ON Extent10.RESN_ID = extent3.ROS_CALL_RESN_ID
                        LEFT JOIN SYS0032M Extent11 ON Extent11.RESN_ID = extent10.PARENT_RESN_ID
+                       JOIN SAL0027D Extent12 ON Extent12.CUST_CNTC_ID = Extent1.ORD_CNTC_ID
                  WHERE 1 = 1
                  <if test=" ordNo != null and ordNo != '' ">
                     AND  Extent1.ORD_NO = #{ordNo}
@@ -121,6 +122,55 @@
                     <foreach collection="rentalArr" item="item" open="(" separator="," close=")">
                         #{item}
                     </foreach>
+                 </if>
+
+                 <if test=" poNo != null and poNo != '' ">
+                    AND  UPPER(Extent1.ORD_PO_NO) LIKE '%'||UPPER(#{poNo}) ||'%'
+                 </if>
+                 <if test=" corpTypeArr != null and corpTypeArr != '' ">
+                    AND Extent8.CORP_TYPE_ID IN
+                    <foreach collection="corpTypeArr" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                 </if>
+                 <if test=" contactNo != null and contactNo != '' ">
+                    AND (Extent12.TEL_M1 = #{contactNo} OR Extent12.TEL_M2 = #{contactNo} OR Extent12.TEL_O = #{contactNo})
+                 </if>
+                 <if test=" productId != null and productId != '' ">
+                    AND  Extent1.STOCK_ID = #{productId}
+                 </if>
+                 <if test=" serialNo != null and serialNo != '' ">
+                    AND  UPPER(ir1.SERIAL_NO) LIKE '%'||UPPER(#{serialNo}) ||'%'
+                 </if>
+                 <if test=" vaNo != null and vaNo != '' ">
+                    AND  UPPER(Extent1.CUST_VA_NO) LIKE '%'||UPPER(#{vaNo}) ||'%'
+                 </if>
+                 <if test=" rosCallerType != null and rosCallerType != '' ">
+                    AND  Extent5.AGENT_TYPE = #{rosCallerType}
+                 </if>
+                 <if test=" rclStartDt != null and rclStartDt != '' ">
+                    AND  TO_DATE(Extent3.ROS_CALL_RECALL_DT,'DD/MM/YYYY') >= TO_DATE(#{rclStartDt},'DD/MM/YYYY')
+                 </if>
+                 <if test=" rclEndDt != null and rclEndDt != '' ">
+                    AND  TO_DATE(Extent3.ROS_CALL_RECALL_DT,'DD/MM/YYYY') <![CDATA[<=]]> TO_DATE(#{rclEndDt},'DD/MM/YYYY') +1
+                 </if>
+                 <if test=" mainReason != null and mainReason != '' ">
+                    AND  Extent11.RESN_ID = #{mainReason}
+                 </if>
+                 <if test=" rosCallerArr != null and rosCallerArr != '' ">
+                    AND Extent4.AGENT_ID IN
+                    <foreach collection="rosCallerArr" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                 </if>
+                 <if test=" ptpStartDt != null and ptpStartDt != '' ">
+                    AND  TO_DATE(Extent3.PTP_DT,'DD/MM/YYYY') >= TO_DATE(#{ptpStartDt},'DD/MM/YYYY')
+                 </if>
+                 <if test=" ptpEndDt != null and ptpEndDt != '' ">
+                    AND  TO_DATE(Extent3.PTP_DT,'DD/MM/YYYY') <![CDATA[<=]]> TO_DATE(#{ptpEndDt},'DD/MM/YYYY') +1
+                 </if>
+                 <if test=" rosStatus != null and rosStatus != '' ">
+                    AND  Extent3.ROS_STUS =#{rosStatus}
                  </if>
                           ) Project1
   ORDER BY Project1.ORD_ID ASC

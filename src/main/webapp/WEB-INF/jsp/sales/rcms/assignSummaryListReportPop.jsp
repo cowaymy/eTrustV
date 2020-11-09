@@ -10,17 +10,17 @@ $(document).ready(function() {
     //Rental Status
     CommonCombo.make('_rentalStusType', "/status/selectStatusCategoryCdList.do", {selCategoryId : 26} , 'INV|!|SUS', {id: "code", name: "codeName", isShowChoose: false,isCheckAll : false,type : 'M'});
     //Agent Type
-    CommonCombo.make("_agentType", "/sales/rcms/selectAgentTypeList", {codeMasterId : '329'}, '',  {isShowChoose: false, type: "M"});
+    CommonCombo.make("_agentType", "/sales/rcms/selectAgentTypeList", {codeMasterId : '329'}, '',  {isShowChoose: false, type: "S",isShowChoose: true});
     //Customer Type
     CommonCombo.make("_customerType", "/common/selectCodeList.do", {groupCode : '8'}, '', {type : "M"});
     //Company Type
     CommonCombo.make("_companyType", "/common/selectCodeList.do", {groupCode : '95'}, null, {isShowChoose: false , isCheckAll : false, type: "M"});
 
+    CommonCombo.make("_rosCaller", "/sales/rcms/selectRosCaller", {stus:'1'}, '',{  id:"agentId",  name:"agentName", isCheckAll : false,isShowChoose: false ,type: "M"});
     $("#_companyType").multipleSelect("disable");
 
     $("#_agentType").change(function(){
-        var agentType = $("#_agentType").val() != null ? $("#_agentType").val() : 2326;
-        CommonCombo.make("_rosCaller", "/sales/rcms/selectRosCaller", {stus:'1',agentType: agentType}, '',
+        CommonCombo.make("_rosCaller", "/sales/rcms/selectRosCaller", {stus:'1',agentType: $("#_agentType").val()}, '',
                 {
                     id:"agentId",
                     name:"agentName",
@@ -29,9 +29,6 @@ $(document).ready(function() {
                     type: "M"
                 });
     });
-
-    // Trigger onchange when page loaded.
-    $("#_agentType").trigger('change');
 
 });
 
