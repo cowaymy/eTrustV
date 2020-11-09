@@ -194,13 +194,13 @@
       //var asType = "";
       //asType = $("#asTypeReport :selected").val();
       if (asType != '' && asType != null) {
-
         whereSql += "AND ae.AS_TYPE_ID IN (" + asType + ") " + " ";
       } else {
         var text = "<spring:message code='service.grid.ASTyp' />";
         Common.alert("* <spring:message code='sys.msg.necessary' arguments='"+ text + "' htmlEscape='false'/>");
         return false;
       }
+      console.log(whereSql);
 
       var asGroup = "";
       if ($("#CTGroup").val() != '' && $("#CTGroup").val() != null) {
