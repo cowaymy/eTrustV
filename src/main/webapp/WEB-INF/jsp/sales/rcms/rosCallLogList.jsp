@@ -151,7 +151,7 @@ $(document).ready(function() {//////////////////////////////////////////////////
 			return;
 		}else if(FormUtil.isNotEmpty(rosSumStartDt) && FormUtil.isNotEmpty(rosSumEndDt) &&
 				( currentMonth != endDtSplit[1] || currentMonth != startDtSplit[1])){
-		    Common.alert("Please select current month");
+		    Common.alert("Please select within current month");
 		    return;
 		}else{
 			if(rptType == 'ROSRC'){
