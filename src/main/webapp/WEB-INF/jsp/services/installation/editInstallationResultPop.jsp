@@ -235,7 +235,8 @@ function notMandatoryForAP(){
   //stkId for kecil = 1735, petit = 298 (for testing in developmennt)
  // PSI CHECKING
     if ( ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")
-    		&& !($("#editInstallForm #hidStkId").val()  == 1735)) {
+    		//&& !($("#editInstallForm #hidStkId").val()  == 1735)) {
+    	    && !(("${installResult.installStkId}" == 1735)  ||  ("${installResult.installStkId}" == 1737))) {
       if ( $("#psiRcd").val() == "") {
         msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
       }
@@ -264,6 +265,11 @@ function notMandatoryForAP(){
   //stkId for kecil = 1735, petit = 298 (for testing in developmennt)
     if($("#editInstallForm #hidStkId").val() == 1735){
         msg += validationForKecik();
+    }
+  
+  //stkId for GLAZE = 1737
+    if($("#editInstallForm #hidStkId").val() == 1737){
+        msg += validationForGlaze();
     }
 
     if (msg != "") {
@@ -303,6 +309,35 @@ function notMandatoryForAP(){
         }
       return msg;
   }
+  
+  function validationForGlaze(){
+      var msg = "";
+
+      if ( !($("#volt").val() >=206.8 && $("#volt").val() <=270) ) {
+          msg += "* <spring:message code='sys.msg.range' arguments='Voltage,206.8,270' htmlEscape='false'/> </br>";
+        }
+      if ( $("#psiRcd").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
+          }
+      if ( $("#lpmRcd").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
+          }
+      if ( $("#tds").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Total Dissolved Solid (TDS)' htmlEscape='false'/> </br>";
+        }
+       if ( $("#roomTemp").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Room Temperature' htmlEscape='false'/> </br>";
+        }
+       if ( $("#waterSourceTemp").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Water Source Temperature' htmlEscape='false'/> </br>";
+        }
+      if ( $("#adptUsed").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Adapter Used' htmlEscape='false'/> </br>";
+        }
+
+      return msg;
+    }
+  
   function fn_serialSearchPop(){
 
 	  $("#pLocationType").val('${installInfo.whLocGb}');

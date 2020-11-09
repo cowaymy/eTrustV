@@ -472,7 +472,8 @@
       //stkId for kecil = 1735, petit = 298 (for testing in developmennt)
       // PSI CHECKING
       if ( ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")
-          && !("${installResult.installStkId}" == 1735) ) {
+          //&& !("${installResult.installStkId}" == 1735) ) {
+    	  && !(("${installResult.installStkId}" == 1735)  ||  ("${installResult.installStkId}" == 1737))) {
         if ( $("#psiRcd").val() == "") {
           msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
         }
@@ -506,6 +507,11 @@
               msg += validationForKecikWhenCompleted();
       }
 
+      //stkId for GLAZE = 1737
+      if("${installResult.installStkId}" == 1737){
+              msg += validationForGlazeWhenCompleted();
+      }
+
       if (msg != "") {
         Common.alert(msg);
         return;
@@ -530,6 +536,11 @@
            if("${installResult.installStkId}" == 1735){
             msg += validationForKecikWhenFail();
           }
+
+         //stkId for GLAZE = 1737
+           if("${installResult.installStkId}" == 1737){
+               msg += validationForGlazeWhenFail();
+             }
 
           if ( $("#psiRcd").val() == "") {
             msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
@@ -611,6 +622,36 @@
     return msg;
   }
 
+  function validationForGlazeWhenCompleted(){
+      var msg = "";
+
+      if ( !($("#volt").val() >=206.8 && $("#volt").val() <=270) ) {
+          msg += "* <spring:message code='sys.msg.range' arguments='Voltage,206.8,270' htmlEscape='false'/> </br>";
+        }
+      if ( $("#psiRcd").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
+          }
+      if ( $("#lpmRcd").val() == "") {
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
+          }
+      if ( $("#tds").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Total Dissolved Solid (TDS)' htmlEscape='false'/> </br>";
+        }
+       if ( $("#roomTemp").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Room Temperature' htmlEscape='false'/> </br>";
+        }
+       if ( $("#waterSourceTemp").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Water Source Temperature' htmlEscape='false'/> </br>";
+        }
+      if ( $("#adptUsed").val() == "") {
+          msg += "* <spring:message code='sys.msg.invalid' arguments='Adapter Used' htmlEscape='false'/> </br>";
+        }
+      if (!$("#instChklstCheckBox").prop('checked')) {
+          msg += "* <spring:message code='sys.msg.tickCheckBox' arguments='Installation Checklist' htmlEscape='false'/> </br>";
+        }
+      return msg;
+    }
+
   function validationForKecikWhenFail(){
     var msg = "";
 
@@ -669,6 +710,21 @@
 
     return msg;
   }
+
+  function validationForGlazeWhenFail(){
+      var msg = "";
+
+      if($("#failReasonCode").val() == 8008){
+          if( !$("#volt").val() == "" ){
+            if ( (($("#volt").val() >= 0 && $("#volt").val() <= 206.79) || ($("#volt").val() >= 270) ) && !$("#volt").val() == "" ) {
+            } else{
+              msg += "* <spring:message code='sys.msg.notInRange' arguments='Voltage' htmlEscape='false'/> </br>";
+            }
+          }
+        }
+
+      return msg;
+}
 
   function createInstallationChkViewAUIGrid() {
     var columnLayout = [  {
