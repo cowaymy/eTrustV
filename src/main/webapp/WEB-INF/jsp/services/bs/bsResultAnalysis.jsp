@@ -6,7 +6,6 @@
 
     var gridID, listByMemberGridID;
 
-
     $(document).ready(function(){
         $("#table1").hide();
 
@@ -85,66 +84,67 @@
     }
 
     var columnLayout = [
-                                 { dataField : "orgCode", headerText : "Org Code", width : 80 },
-                                 { dataField : "grpCode", headerText : "Grp Code", width : 80 },
-                                 { dataField : "deptCode", headerText : "Dept Code", width : 80 },
-                                 { dataField : "memCode", headerText : "Cody Code", width : 80 },
-                                 { dataField : "totBs", headerText : "Unit", width : 80 },
-                                 { dataField : "act", headerText : "Active", width : 80 },
-                                 { dataField : "cmplt", headerText : "Complete", width : 80 },
-                                 { dataField : "cmpltOwn", headerText : "Complete (Own)", width : 130 },
-                                 { dataField : "cmpltOtr", headerText : "Complete (Other)", width : 140 },
-                                 { dataField : "fail", headerText : "Fail", width : 80 },
-                                 { dataField : "cancl", headerText : "Cancel", width : 80 },
-                                 { dataField : "bsSuccesRateWeek1", headerText : "WEEK 1 (>30%)", dataType : "numeric", formatString : "#,##0.00", width : 120 },
-                                 { dataField : "bsSuccesBalncWeek1", headerText : "Balance (By Unit)", width : 130 },
-                                 { dataField : "bsSuccesRateWeek2", headerText : "WEEK 2 (>60%)", dataType : "numeric", formatString : "#,##0.00", width : 120 },
-                                 { dataField : "bsSuccesBalncWeek2", headerText : "Balance (By Unit)", width : 130 },
-                                 { dataField : "bsSuccesRateWeek3", headerText : "WEEK 3 (>90%)", dataType : "numeric", formatString : "#,##0.00", width : 120 },
-                                 { dataField : "bsSuccesBalncWeek3", headerText : "Balance (By Unit)", width : 130 },
-                                 { dataField : "bsSuccesRateWeek4", headerText : "WEEK 4 (100%)", dataType : "numeric", formatString : "#,##0.00", width : 120 },
-                                 { dataField : "bsSuccesBalncWeek4", headerText : "Balance (By Unit)", width : 130 }
-                                ];
+        { dataField : "orgCode", headerText : "Org Code", width : 80 },
+        { dataField : "grpCode", headerText : "Grp Code", width : 80 },
+        { dataField : "deptCode", headerText : "Dept Code", width : 80 },
+        { dataField : "memCode", headerText : "Cody Code", width : 80 },
+        { dataField : "targetTotal", headerText : "Target", width : 80 },
+        { dataField : "totBs", headerText : "Unit", width : 80 },
+        { dataField : "act", headerText : "Active", width : 80 },
+        { dataField : "cmplt", headerText : "Complete", width : 80 },
+        { dataField : "cmpltOwn", headerText : "Complete (Own)", width : 130 },
+        /* { dataField : "cmpltOtr", headerText : "Complete (Other)", width : 140 }, */
+        { dataField : "fail", headerText : "Fail", width : 80 },
+        { dataField : "cancl", headerText : "Cancel", width : 80 },
+        { dataField : "bsSuccesRateWeek1", headerText : "WEEK 1 (>30%)", dataType : "numeric", formatString : "#,##0.00", width : 120 },
+        { dataField : "bsSuccesBalncWeek1", headerText : "Balance (By Unit)", width : 130 },
+        { dataField : "bsSuccesRateWeek2", headerText : "WEEK 2 (>60%)", dataType : "numeric", formatString : "#,##0.00", width : 120 },
+        { dataField : "bsSuccesBalncWeek2", headerText : "Balance (By Unit)", width : 130 },
+        { dataField : "bsSuccesRateWeek3", headerText : "WEEK 3 (>90%)", dataType : "numeric", formatString : "#,##0.00", width : 120 },
+        { dataField : "bsSuccesBalncWeek3", headerText : "Balance (By Unit)", width : 130 },
+        { dataField : "bsSuccesRateWeek4", headerText : "WEEK 4 (100%)", dataType : "numeric", formatString : "#,##0.00", width : 120 },
+        { dataField : "bsSuccesBalncWeek4", headerText : "Balance (By Unit)", width : 130 }
+    ];
 
     var memberListingColumnLayout = [
-                                                    { dataField : "bsno", headerText : "BS No", width : 80 },
-                                                    { dataField : "bsmonth", headerText : "BS Month", width : 80 },
-                                                    { dataField : "bsyear", headerText : "BS Year", width : 80 },
-                                                    { dataField : "bsstatusid", headerText : "BS Status", width : 80 },
-                                                    { dataField : "bsrno", headerText : "Result No", width : 80 },
-                                                    { dataField : "orderno", headerText : "Order No", width : 80 },
-                                                    { dataField : "orderapptype", headerText : "App Type", width : 80 },
-                                                    { dataField : "bscustname", headerText : "Customer", width : 130 },
-                                                    { dataField : "memcode", headerText : "Assign Member", width : 140 },
-                                                    { dataField : "actionmemcode", headerText : "Incharge Member", width : 80 },
-                                                   ];
+        { dataField : "bsno", headerText : "BS No", width : 80 },
+        { dataField : "bsmonth", headerText : "BS Month", width : 80 },
+        { dataField : "bsyear", headerText : "BS Year", width : 80 },
+        { dataField : "bsstatusid", headerText : "BS Status", width : 80 },
+        { dataField : "bsrno", headerText : "Result No", width : 80 },
+        { dataField : "orderno", headerText : "Order No", width : 80 },
+        { dataField : "orderapptype", headerText : "App Type", width : 80 },
+        { dataField : "bscustname", headerText : "Customer", width : 130 },
+        { dataField : "memcode", headerText : "Assign Member", width : 140 },
+        { dataField : "actionmemcode", headerText : "Incharge Member", width : 80 },
+    ];
 
     var gridPos = {
-                         usePaging : true,
-                         pageRowCount : 20,
-                         editable : false,
-                         //fixedColumnCount : 1,
-                         showStateColumn : true,
-                         displayTreeOpen : false,
-                         headerHeight : 30,
-                         useGroupingPanel : false,
-                         skipReadonlyColumns : true,
-                         wrapSelectionMove : true,
-                         showRowNumColumn : true
-                        };
+        usePaging : true,
+        pageRowCount : 20,
+        editable : false,
+        //fixedColumnCount : 1,
+        showStateColumn : true,
+        displayTreeOpen : false,
+        headerHeight : 30,
+        useGroupingPanel : false,
+        skipReadonlyColumns : true,
+        wrapSelectionMove : true,
+        showRowNumColumn : true
+    };
 
 
-      function fn_doViewLegder(){
+    function fn_doViewLegder(){
 
-          var selectedItems = AUIGrid.getSelectedItems(gridID);
-          console.log(selectedItems);
+        var selectedItems = AUIGrid.getSelectedItems(gridID);
+        console.log(selectedItems);
 
-          if(selectedItems.length <= 0) {
-              Common.alert("<spring:message code="sal.alert.noMembershipSelect" /> ");
-              return;
-          }
-          Common.popupDiv("/sales/membership/selMembershipViewLeader.do?MBRSH_ID="+selectedItems[0].item.mbrshId, null, null , true, '_ViewLegder');
-      }
+        if(selectedItems.length <= 0) {
+            Common.alert("<spring:message code="sal.alert.noMembershipSelect" /> ");
+            return;
+        }
+        Common.popupDiv("/sales/membership/selMembershipViewLeader.do?MBRSH_ID="+selectedItems[0].item.mbrshId, null, null , true, '_ViewLegder');
+    }
 
     function fn_clear(){
     	if("${memLvl}" == "4") {

@@ -10,6 +10,7 @@
             CASE WHEN ( CASE WHEN ( l.MEM_LVL <> 1 AND l.MEM_LVL <> 2 ) THEN '' ELSE a.GRP_CODE END ) = '0' THEN '' ELSE ( CASE WHEN ( l.MEM_LVL <> 1 AND l.MEM_LVL <> 2 ) THEN '' ELSE a.GRP_CODE END) END AS GRP_CODE,
             CASE WHEN ( CASE WHEN l.MEM_LVL = 4 THEN '' ELSE a.DEPT_CODE END ) = '0' THEN '' ELSE ( CASE WHEN l.MEM_LVL = 4 THEN '' ELSE a.DEPT_CODE END ) END AS DEPT_CODE,
             CASE WHEN a.MEM_CODE = '0' then '' else a.MEM_CODE END AS MEM_CODE,
+            a.TARGET_TOTAL,
             a.TOT_BS,
             a.ACT,
             a.FAIL,
@@ -34,7 +35,7 @@
             a.BS_SUCCES_RATE_WEEK4,
             a.BS_SUCCES_BALNC_WEEK4
         ]]>
-        from REP0008S a
+        from REP0008S_KW a
         join (
             select
                 c.MEM_LVL,
