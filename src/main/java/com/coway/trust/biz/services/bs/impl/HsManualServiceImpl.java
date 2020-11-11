@@ -2765,8 +2765,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
       bsResultMas_Rev.put("SalesOrderId", String.valueOf(qryBS_Rev.get("salesOrdId")));
       bsResultMas_Rev.put("CodyID", String.valueOf(qryBS_Rev.get("codyId")));
       bsResultMas_Rev.put("SettleDate", String.valueOf(qryBS_Rev.get("setlDt")));
-      bsResultMas_Rev.put("ResultStatusCodeID", "12");// RESULT_STUS_CODE_ID --
-                                                      // 12 - REOPEN
+      bsResultMas_Rev.put("ResultStatusCodeID", "4");// RESULT_STUS_CODE_ID --
+                                                      // 12 - REOPEN CHANGE TO 4 - COMPLETE -- 20201111 BY TOMMY
       bsResultMas_Rev.put("FailReasonID", String.valueOf(qryBS_Rev.get("failResnId")));// FAIL_RESN_ID
       bsResultMas_Rev.put("RenCollectionID", String.valueOf(qryBS_Rev.get("renColctId")));// REN_COLCT_ID
       bsResultMas_Rev.put("WarehouseID", String.valueOf(qryBS_Rev.get("whId")));// WH_ID
