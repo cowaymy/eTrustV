@@ -102,4 +102,10 @@ public class MainNoticeController {
         List<EgovMap> notice = mainNoticeService.getCustomerBday(params);
         return ResponseEntity.ok(notice);
     }
+
+	 @RequestMapping(value = "/getAccRewardPoints.do", method = RequestMethod.GET)
+   public ResponseEntity<List<EgovMap>> getAccRewardPoints(@RequestParam Map<String, Object> params) {
+       List<EgovMap> list = mainNoticeService.getAccRewardPoints(params);
+       return ResponseEntity.ok(list);
+   }
 }

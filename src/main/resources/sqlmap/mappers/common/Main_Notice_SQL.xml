@@ -254,4 +254,42 @@ FROM VIEW_COUNT
         )
         WHERE ROWNUM <![CDATA[ <= ]]> 3
     </select>
+
+    <select id="getAccRewardPoints" parameterType="Map" resultType="egovMap">
+        SELECT
+                ORG_CODE ,
+                GRP_CODE ,
+                DEPT_CODE ,
+                MEM_CODE ,
+                RPT_YEAR ,
+                NS_M1 ,
+                RP_M1 ,
+                NS_M2 ,
+                RP_M2 ,
+                NS_M3 ,
+                RP_M3 ,
+                NS_M4 ,
+                RP_M4 ,
+                NS_M5 ,
+                RP_M5 ,
+                NS_M6 ,
+                RP_M6 ,
+                NS_M7 ,
+                RP_M7 ,
+                NS_M8 ,
+                RP_M8 ,
+                NS_M9 ,
+                RP_M9 ,
+                NS_M10 ,
+                RP_M10 ,
+                NS_M11 ,
+                RP_M11 ,
+                NS_M12 ,
+                RP_M12
+        FROM REP0124S
+        WHERE RPT_YEAR = EXTRACT(YEAR FROM SYSDATE)
+        AND MEM_CODE = #{userName}
+
+    </select>
+
 </mapper>

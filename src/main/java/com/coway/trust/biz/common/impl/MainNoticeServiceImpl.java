@@ -66,4 +66,9 @@ public class MainNoticeServiceImpl extends EgovAbstractServiceImpl implements Ma
 	    return mainNoticeMapper.getCustomerBday(params);
 	}
 
+	 @Override
+	  public List<EgovMap> getAccRewardPoints(Map<String, Object> params) {
+	      return mainNoticeMapper.getAccRewardPoints(params);
+	  }
+
 }

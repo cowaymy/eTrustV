@@ -471,8 +471,138 @@
         }
     ];
 
+    var rewardPointColumnLayout = [
+          {dataField: "rptYear",headerText :"Year",width:120, height: 30, visible : false},
+          {dataField: "orgCode",headerText :"Org Code",width:120, height: 30, visible : false},
+          {dataField: "grpCode",headerText :"Grp Code",width:120, height: 30, visible : false},
+          {dataField: "deptCode",headerText :"Dept Code",width:120, height: 30, visible : false},
+          {dataField: "memCode",headerText :"Member Code",width:120, height: 30},
+          {
+              dataField: "",
+              headerText: "Jan",
+              children:
+              [
+                    {dataField: "nsM1",headerText :"Net Sales(Units)",width:120},
+                    {dataField: "rpM1",headerText :"Reward Point",width:120},
+              ],
+              width: "20%",
+              editable: false
+          },
+          {
+              dataField: "",
+              headerText: "Feb",
+              children:
+              [
+                    {dataField: "nsM2",headerText :"Net Sales(Units)",width:120},
+                    {dataField: "rpM2",headerText :"Reward Point",width:120},
+              ],
+              width: "20%",
+              editable: false
+          },{
+              dataField: "",
+              headerText: "Mar",
+              children:
+              [
+                    {dataField: "nsM3",headerText :"Net Sales(Units)",width:120},
+                    {dataField: "rpM3",headerText :"Reward Point",width:120},
+              ],
+              width: "20%",
+              editable: false
+          },{
+              dataField: "",
+              headerText: "Apr",
+              children:
+              [
+                    {dataField: "nsM4",headerText :"Net Sales(Units)",width:120},
+                    {dataField: "rpM4",headerText :"Reward Point",width:120},
+              ],
+              width: "20%",
+              editable: false
+          },{
+              dataField: "",
+              headerText: "May",
+              children:
+              [
+                    {dataField: "nsM5",headerText :"Net Sales(Units)",width:120},
+                    {dataField: "rpM5",headerText :"Reward Point",width:120},
+              ],
+              width: "20%",
+              editable: false
+          },{
+              dataField: "",
+              headerText: "Jun",
+              children:
+              [
+                    {dataField: "nsM6",headerText :"Net Sales(Units)",width:120},
+                    {dataField: "rpM6",headerText :"Reward Point",width:120},
+              ],
+              width: "20%",
+              editable: false
+          },{
+              dataField: "",
+              headerText: "Jul",
+              children:
+              [
+                    {dataField: "nsM7",headerText :"Net Sales(Units)",width:120},
+                    {dataField: "rpM7",headerText :"Reward Point",width:120},
+              ],
+              width: "20%",
+              editable: false
+          },{
+              dataField: "",
+              headerText: "Aug",
+              children:
+              [
+                    {dataField: "nsM8",headerText :"Net Sales(Units)",width:120},
+                    {dataField: "rpM8",headerText :"Reward Point",width:120},
+              ],
+              width: "20%",
+              editable: false
+          },{
+              dataField: "",
+              headerText: "Sep",
+              children:
+              [
+                    {dataField: "nsM9",headerText :"Net Sales(Units)",width:120},
+                    {dataField: "rpM9",headerText :"Reward Point",width:120},
+              ],
+              width: "20%",
+              editable: false
+          },{
+              dataField: "",
+              headerText: "Oct",
+              children:
+              [
+                    {dataField: "nsM10",headerText :"Net Sales(Units)",width:120},
+                    {dataField: "rpM10",headerText :"Reward Point",width:120},
+              ],
+              width: "20%",
+              editable: false
+          },{
+              dataField: "",
+              headerText: "Nov",
+              children:
+              [
+                    {dataField: "nsM11",headerText :"Net Sales(Units)",width:120},
+                    {dataField: "rpM11",headerText :"Reward Point",width:120},
+              ],
+              width: "20%",
+              editable: false
+          },{
+              dataField: "",
+              headerText: "Dec",
+              children:
+              [
+                    {dataField: "nsM12",headerText :"Net Sales(Units)",width:120},
+                    {dataField: "rpM12",headerText :"Reward Point",width:120},
+              ],
+              width: "20%",
+              editable: false
+          }
+    ];
+
     //AUIGrid 생성 후 반환 ID
-    var noticeGridID, detailGridID, statusCodeGridID, memoGridID, salesOrgPerfM, salesOrgPerfD, customerBdayGrid;
+    var noticeGridID, detailGridID, statusCodeGridID, memoGridID, salesOrgPerfM, salesOrgPerfD, customerBdayGrid, rewardPointGridID;
 
     var gridOption = {
         showStateColumn : false,
@@ -490,13 +620,15 @@
         $(".bottom_msg_box").attr("style","display:none");
         /***********************************************[ NOTICE GRID] ************************************************/
 
-        var roleType, userId;
+        var roleType, userId, userName;
 
         Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
             console.log(result);
 
             roleType = result.roleType;
             userId = result.userId;
+            userName =  '${SESSION_INFO.userName}';
+
 
             if(result.userTypeId == 1) {
                 $("#notice").remove();
@@ -593,6 +725,20 @@
                 detailGridID = GridCommon.createAUIGrid("detailGrid", detailColumnLayout, "stusCodeId", dtailOptions);
 
                 fn_selectDailyPerformanceListAjax();
+            }
+
+            if(result.userTypeId == 2){
+            	$('#accRewardPoint').show();
+            	$('#accRewardPointHeader').html('Monthly Accumulated Reward Points - ' + (new Date().getFullYear() ) );
+
+            	rpOption = {
+            			usePaging: false,
+                        showRowNumColumn: false, // 그리드 넘버링
+                        //showStateColumn : false,
+                        fixedColumnCount : 5,
+            	}
+            	rewardPointGridID = GridCommon.createAUIGrid("rewardPointGridID", rewardPointColumnLayout, null, rpOption);
+            	fn_selectAccRewardPoint(userName);
             }
 
             //  [Woongjin Jun] Tab
@@ -746,13 +892,15 @@
     }
 
     function fn_selectMemoDashboard() {
-        var url = "/logistics/memorandum/memoSearchList.do";
-
         Common.ajax("POST", "/logistics/memorandum/memoSearchList.do", {}, function (result) {
             AUIGrid.setGridData(memoGridID, result.data);
         });
+    }
 
-
+    function fn_selectAccRewardPoint(userName) {
+        Common.ajax("GET", "/common/getAccRewardPoints.do", {userName : userName}, function (result) {
+            AUIGrid.setGridData(rewardPointGridID, result);
+        });
     }
 
 /*
@@ -886,6 +1034,14 @@
 
         <article class="grid_wrap">
              <div id="memoGridID" style="height:210px;"></div>
+        </article>
+
+        <aside id="accRewardPoint" class="title_line main_title mt30" style="display:none;">
+            <h2 id='accRewardPointHeader'></h2>
+        </aside>
+
+        <article class="grid_wrap">
+             <div id="rewardPointGridID" style="height:100px;"></div>
         </article>
 
 

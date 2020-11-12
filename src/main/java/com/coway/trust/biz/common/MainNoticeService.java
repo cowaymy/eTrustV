@@ -21,4 +21,7 @@ public interface MainNoticeService {
 
 	List<EgovMap> getCustomerBday(Map<String, Object> params);
 
+	 List<EgovMap> getAccRewardPoints(Map<String, Object> params);
+
+
 }
