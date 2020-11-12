@@ -1716,7 +1716,7 @@ WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SVC0008D
              <select id="selectHSResultMCnt"  parameterType="Map" resultType="int">
                         SELECT count(*) cnt
                           FROM SVC0006D Extent1
-                        WHERE  Extent1.SCHDUL_ID = #{hidschdulId} AND Extent1.RESULT_STUS_CODE_ID NOT IN (12)
+                        WHERE  Extent1.SCHDUL_ID = #{hidschdulId} AND Extent1.RESULT_STUS_CODE_ID NOT IN (12,4)
 
               </select>
 
