@@ -119,8 +119,9 @@
                     $('#ordRentalFees1').val('${preMatOrderInfo.mthRentAmt}');
                     $('#promoDiscPeriodTp1').val('${preMatOrderInfo.promoDiscPeriodTp}');
                     $('#promoDiscPeriod1').val('${preMatOrderInfo.promoDiscPeriod}');
-                    $('#ordPrice1').val('${preMatOrderInfo.norAmt}');
+                    $('#ordPrice1').val('${preMatOrderInfo.totAmt}');
 
+                    $('#orgOrdRentalFees1').val('${preMatOrderInfo.discRntFee}');
                     $('#ordRentalFees1').val('${preMatOrderInfo.discRntFee}');
                     $('#ordPv1').val('${preMatOrderInfo.totPv}');
                     $('#ordPvGST1').val('${preMatOrderInfo.totPvGst}');
@@ -138,6 +139,7 @@
                         , '${preFrmOrderInfo.promoId}', 'ordPromo2', 'S', ''); //Common Code
 
                     $('#ordRentalFees2').val('${preFrmOrderInfo.mthRentAmt}');
+                    $('#orgOrdRentalFees2').val('${preFrmOrderInfo.discRntFee}');
                     $('#promoDiscPeriodTp2').val('${preFrmOrderInfo.promoDiscPeriodTp}');
                     $('#promoDiscPeriod2').val('${preFrmOrderInfo.promoDiscPeriod}');
                     $('#ordPrice2').val('${preFrmOrderInfo.totAmt}');
