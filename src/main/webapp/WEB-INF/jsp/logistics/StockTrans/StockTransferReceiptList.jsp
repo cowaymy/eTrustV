@@ -232,7 +232,7 @@
                         return false;
                         break;
                     }
-                    if(arrDelyNo[i-1] != checkedItems[i].delyno) {
+                    if(arrDelyNo.indexOf(checkedItems[i].delyno) == -1) {
                         arrDelyNo[arrDelyNoIdx] = checkedItems[i].delyno;
                         ++arrDelyNoIdx;
                     }
