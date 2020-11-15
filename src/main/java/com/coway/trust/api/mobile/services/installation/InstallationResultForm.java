@@ -79,7 +79,35 @@ public class InstallationResultForm {
   private String adptUsed;
   private String instChklstCheckBox;
 
-  public String getLpmRcd() {
+  private String boosterPump;
+  private String cowayPump;
+  private String customerExternalPump;
+
+  public String getBoosterPump() {
+	return boosterPump;
+}
+
+public void setBoosterPump(String boosterPump) {
+	this.boosterPump = boosterPump;
+}
+
+public String getCowayPump() {
+	return cowayPump;
+}
+
+public void setCowayPump(String cowayPump) {
+	this.cowayPump = cowayPump;
+}
+
+public String getCustomerExternalPump() {
+	return customerExternalPump;
+}
+
+public void setCustomerExternalPump(String customerExternalPump) {
+	this.customerExternalPump = customerExternalPump;
+}
+
+public String getLpmRcd() {
     return lpmRcd;
   }
 
