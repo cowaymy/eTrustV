@@ -620,7 +620,7 @@
         $(".bottom_msg_box").attr("style","display:none");
         /***********************************************[ NOTICE GRID] ************************************************/
 
-        var roleType, userId, userName;
+        var roleType, userId, userName, memLvl;
 
         Common.ajax("GET", "/login/getLoginDtls.do", {}, function (result) {
             console.log(result);
@@ -628,6 +628,7 @@
             roleType = result.roleType;
             userId = result.userId;
             userName =  '${SESSION_INFO.userName}';
+            memLvl =  '${SESSION_INFO.memberLevel}';
 
 
             if(result.userTypeId == 1) {
@@ -727,7 +728,7 @@
                 fn_selectDailyPerformanceListAjax();
             }
 
-            if(result.userTypeId == 2){
+            if(result.userTypeId == 2 && memLvl == 4){
             	$('#accRewardPoint').show();
             	$('#accRewardPointHeader').html('Monthly Accumulated Reward Points - ' + (new Date().getFullYear() ) );
 
