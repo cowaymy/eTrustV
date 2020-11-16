@@ -80,8 +80,8 @@ public class InstallationResultForm {
   private String instChklstCheckBox;
 
   private String boosterPump;
-  private String cowayPump;
-  private String customerExternalPump;
+  private String aftPsi;
+  private String aftLpm;
 
   public String getBoosterPump() {
 	return boosterPump;
@@ -91,20 +91,20 @@ public void setBoosterPump(String boosterPump) {
 	this.boosterPump = boosterPump;
 }
 
-public String getCowayPump() {
-	return cowayPump;
+public String getAftPsi() {
+	return aftPsi;
 }
 
-public void setCowayPump(String cowayPump) {
-	this.cowayPump = cowayPump;
+public void setAftPsi(String aftPsi) {
+	this.aftPsi = aftPsi;
 }
 
-public String getCustomerExternalPump() {
-	return customerExternalPump;
+public String getAftLpm() {
+	return aftLpm;
 }
 
-public void setCustomerExternalPump(String customerExternalPump) {
-	this.customerExternalPump = customerExternalPump;
+public void setAftLpm(String aftLpm) {
+	this.aftLpm = aftLpm;
 }
 
 public String getLpmRcd() {
