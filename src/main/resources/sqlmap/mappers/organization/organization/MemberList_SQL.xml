@@ -4956,7 +4956,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		  , SPOUSE_TEL_CNTC = #{spouseContatUpd}
 		</if>
 		<if test="spouseDobUpd != null and spouseDobUpd != '' ">
-		  , SPOUSE_DOB = NVL(TO_DATE(#{spouseDobUpd},'DD/MM/YYYY'))
+		  , SPOUSE_DOB = TO_DATE(#{spouseDobUpd},'DD/MM/YYYY')
 		</if>
 		<if test="educationLvlUpd != null and educationLvlUpd != '' ">
 		  , EDC_LEV = #{educationLvlUpd}
@@ -5051,7 +5051,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		  , APLICNT_SPOUSE_TEL_CNTC = #{spouseContatUpd}
 		</if>
 		<if test="spouseDobUpd != null and spouseDobUpd != '' ">
-		  , APLICNT_SPOUSE_DOB = NVL(TO_DATE(#{spouseDobUpd},'DD/MM/YYYY'))
+		  , APLICNT_SPOUSE_DOB = TO_DATE(#{spouseDobUpd},'DD/MM/YYYY')
 		</if>
 		<if test="educationLvlUpd != null and educationLvlUpd != '' ">
 		  , APLICNT_EDC_LEV = #{educationLvlUpd}
