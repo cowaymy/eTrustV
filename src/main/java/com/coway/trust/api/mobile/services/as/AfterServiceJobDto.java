@@ -261,37 +261,6 @@ public class AfterServiceJobDto {
   @ApiModelProperty(value = "PRODCAT")
   private int prodcat;
 
-  private String boosterPump;
-
-  private String cowayPump;
-
-  private String customerExternalPump;
-
-
-  public String getBoosterPump() {
-	return boosterPump;
-}
-
-public void setBoosterPump(String boosterPump) {
-	this.boosterPump = boosterPump;
-}
-
-public String getCowayPump() {
-	return cowayPump;
-}
-
-public void setCowayPump(String cowayPump) {
-	this.cowayPump = cowayPump;
-}
-
-public String getCustomerExternalPump() {
-	return customerExternalPump;
-}
-
-public void setCustomerExternalPump(String customerExternalPump) {
-	this.customerExternalPump = customerExternalPump;
-}
-
   public int getProdcat() {
     return prodcat;
   }
