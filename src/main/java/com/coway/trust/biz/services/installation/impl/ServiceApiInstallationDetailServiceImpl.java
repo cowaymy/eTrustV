@@ -177,8 +177,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         params.put("checkCommission", 1);
 
         params.put("boosterPump", String.valueOf(installResult.get("boosterPump")));
-        params.put("cowayPump", String.valueOf(installResult.get("cowayPump")));
-        params.put("customerExternalPump", String.valueOf(installResult.get("customerExternalPump")));
+        params.put("aftPsi", String.valueOf(installResult.get("aftPsi")));
+        params.put("aftLpm", String.valueOf(installResult.get("aftLpm")));
 
         if (orderInfo != null) {
           params.put("hidOutright_Price", CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
