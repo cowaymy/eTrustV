@@ -269,7 +269,38 @@ public class InstallationJobDto {
 
   private String instChkLst;
 
-  public String getVoltage() {
+  private String boosterPump;
+
+  private String aftPsi;
+
+  private String aftLpm;
+
+
+  public String getBoosterPump() {
+	return boosterPump;
+}
+
+public void setBoosterPump(String boosterPump) {
+	this.boosterPump = boosterPump;
+}
+
+public String getAftPsi() {
+	return aftPsi;
+}
+
+public void setAftPsi(String aftPsi) {
+	this.aftPsi = aftPsi;
+}
+
+public String getAftLpm() {
+	return aftLpm;
+}
+
+public void setAftLpm(String aftLpm) {
+	this.aftLpm = aftLpm;
+}
+
+public String getVoltage() {
     return voltage;
   }
 
