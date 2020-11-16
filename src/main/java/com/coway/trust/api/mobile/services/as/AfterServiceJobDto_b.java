@@ -259,12 +259,6 @@ public class AfterServiceJobDto_b {
   @ApiModelProperty(value = "PRODCAT")
   private int prodcat;
 
-  private String boosterPump;
-
-  private String cowayPump;
-
-  private String customerExternalPump;
-
   public String getPsi() {
     return psi;
   }
@@ -980,29 +974,5 @@ public class AfterServiceJobDto_b {
   public static AfterServiceJobDto_b create(EgovMap egovMap) {
     return BeanConverter.toBean(egovMap, AfterServiceJobDto_b.class);
   }
-
-  public String getBoosterPump() {
-		return boosterPump;
-	}
-
-	public void setBoosterPump(String boosterPump) {
-		this.boosterPump = boosterPump;
-	}
-
-	public String getCowayPump() {
-		return cowayPump;
-	}
-
-	public void setCowayPump(String cowayPump) {
-		this.cowayPump = cowayPump;
-	}
-
-	public String getCustomerExternalPump() {
-		return customerExternalPump;
-	}
-
-	public void setCustomerExternalPump(String customerExternalPump) {
-		this.customerExternalPump = customerExternalPump;
-	}
 
 }
