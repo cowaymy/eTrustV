@@ -2260,8 +2260,8 @@
            Extent2.NEXT_CALL_DT NEXT_CALL_DT  ,
            Extent2.REM REM  ,
            Extent2.BOOSTER_PUMP BOOSTER_PUMP ,
-           Extent2.COWAY_PUMP COWAY_PUMP ,
-           Extent2.CUSTOMER_EXTERNAL_PUMP CUSTOMER_EXTERNAL_PUMP ,
+           Extent2.AFT_PSI AFT_PSI ,
+           Extent2.AFT_LPM AFT_LPM ,
            CASE WHEN ( Extent3.CUST_BILL_ID IS NOT NULL )
              THEN Extent3.CUST_BILL_ID
              ELSE 0 END C7  ,
