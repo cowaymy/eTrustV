@@ -468,11 +468,6 @@
                                       customer_Va_No,
                                       sirim_No,
                                       fn_get_order_serial(sales_Order_Id, NULL) as serial_No,
-
-                                      booster_pump,
-                                      coway_pump,
-                                      customer_external_pump,
-
                                       installation_Date,
                                       rental_Status,
                                       contract_Duration,
@@ -571,11 +566,6 @@
                                            sal0022d.cust_acc_no AS card_Account_No,
                                            sal0047d.sirim_no AS sirim_No,
                                            sal0047d.serial_no AS serial_No,
-
-                                           SAL0047D.booster_pump AS booster_pump,
-                                           SAL0047D.coway_pump AS coway_pump,
-                                           SAL0047D.customer_external_pump AS customer_external_pump,
-
                                            TO_CHAR (sal0095d.srv_expr_dt, 'YYYYMMDD') AS Membership_Contract_Expiry,
                                            sal0071d.stus_code_id AS rental_Status,
                                            sys0005m.code AS dsc_Code,
@@ -1659,10 +1649,7 @@
            TO_CHAR(SERIAL_CHK) AS serial_Chk,
            TO_CHAR(PSI) AS psi,
            TO_CHAR(LPM) AS lpm,
-           TO_CHAR(PRODCAT) AS prodcat,
-           TO_CHAR(BOOSTER_PUMP) AS booster_Pump,
-           TO_CHAR(COWAY_PUMP) AS coway_Pump,
-           TO_CHAR(CUSTOMER_EXTERNAL_PUMP) AS customer_External_Pump
+           TO_CHAR(PRODCAT) AS prodcat
     FROM SVC0102T
     WHERE MEM_CODE = #{userId}
   </select>
