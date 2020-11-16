@@ -1009,6 +1009,9 @@
                    , TO_CHAR (SAL0047D.WATER_SRC_TEMP) AS water_Src_Temp
                    , TO_CHAR (SAL0047D.ADPT_USED) AS adpt_Used
                    , TO_CHAR (SAL0047D.INST_CHKLST) AS inst_Chk_Lst
+                   , TO_CHAR (SAL0047D.BOOSTER_PUMP) AS booster_Pump
+                   , TO_CHAR (SAL0047D.AFT_PSI) AS aft_Psi
+                   , TO_CHAR (SAL0047D.AFT_LPM) AS aft_Lpm
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
@@ -1158,6 +1161,9 @@
          , TO_CHAR(WATER_SRC_TEMP) AS water_Src_Temp
          , TO_CHAR(ADPT_USED) AS adpt_Used
          , TO_CHAR(INST_CHKLST) AS inst_Chk_Lst
+         , TO_CHAR(BOOSTER_PUMP) AS booster_Pump
+         , TO_CHAR(AFT_PSI) AS aft_Psi
+         , TO_CHAR(AFT_LPM) AS aft_Lpm
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
