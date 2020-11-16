@@ -4928,10 +4928,10 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		<if test="marritalUpd != null and marritalUpd != '' ">
 		  , MARTL = #{marritalUpd}
 		</if>
-		<if test="officeNoUpd != null and officeNoUpd != '' ">
+		<if test="officeNoUpd != null">
 		  , TEL_OFFICE = #{officeNoUpd}
 		</if>
-		<if test="residenceNoUpd != null and residenceNoUpd != '' ">
+		<if test="residenceNoUpd != null ">
 		  , TEL_HUSE = #{residenceNoUpd}
 		</if>
 		<if test="mobileNoUpd != null and mobileNoUpd != '' ">
@@ -4940,22 +4940,22 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		<if test="emailUpd != null and emailUpd != '' ">
 		  , EMAIL = #{emailUpd}
 		</if>
-		<if test="spouseCodeUpd != null and spouseCodeUpd != '' ">
+		<if test="spouseCodeUpd != null">
 		  , SPUSE_CODE = #{spouseCodeUpd}
 		</if>
-		<if test="spouseNameUpd != null and spouseNameUpd != '' ">
+		<if test="spouseNameUpd != null">
 		  , SPOUSE_NAME = UPPER(#{spouseNameUpd})
 		</if>
-		<if test="spouseNricUpd != null and spouseNricUpd != '' ">
+		<if test="spouseNricUpd != null">
 		  , SPOUSE_NRIC = #{spouseNricUpd}
 		</if>
-		<if test="spouseOccUpd != null and spouseOccUpd != '' ">
+		<if test="spouseOccUpd != null">
 		  , SPOUSE_OCPAT = #{spouseOccUpd}
 		</if>
-		<if test="spouseContatUpd != null and spouseContatUpd != '' ">
+		<if test="spouseContatUpd != null">
 		  , SPOUSE_TEL_CNTC = #{spouseContatUpd}
 		</if>
-		<if test="spouseDobUpd != null and spouseDobUpd != '' ">
+		<if test="spouseDobUpd != null">
 		  , SPOUSE_DOB = TO_DATE(#{spouseDobUpd},'DD/MM/YYYY')
 		</if>
 		<if test="educationLvlUpd != null and educationLvlUpd != '' ">
@@ -5023,10 +5023,10 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		<if test="marritalUpd != null and marritalUpd != '' ">
 		  , APLICNT_MARTL = #{marritalUpd}
 		</if>
-		<if test="officeNoUpd != null and officeNoUpd != '' ">
+		<if test="officeNoUpd != null">
 		  , APLICNT_TEL_OFFICE = #{officeNoUpd}
 		</if>
-		<if test="residenceNoUpd != null and residenceNoUpd != '' ">
+		<if test="residenceNoUpd != null">
 		  , APLICNT_TEL_HUSE = #{residenceNoUpd}
 		</if>
 		<if test="mobileNoUpd != null and mobileNoUpd != '' ">
@@ -5035,22 +5035,22 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		<if test="emailUpd != null and emailUpd != '' ">
 		  , APLICNT_EMAIL = #{emailUpd}
 		</if>
-		<if test="spouseCodeUpd != null and spouseCodeUpd != '' ">
+		<if test="spouseCodeUpd != null">
 		  , APLICNT_SPUSE_CODE = #{spouseCodeUpd}
 		</if>
-		<if test="spouseNameUpd != null and spouseNameUpd != '' ">
+		<if test="spouseNameUpd != null">
 		  , APLICNT_SPOUSE_NAME = UPPER(#{spouseNameUpd})
 		</if>
-		<if test="spouseNricUpd != null and spouseNricUpd != '' ">
+		<if test="spouseNricUpd != null">
 		  , APLICNT_SPOUSE_NRIC = #{spouseNricUpd}
 		</if>
-		<if test="spouseOccUpd != null and spouseOccUpd != '' ">
+		<if test="spouseOccUpd != null">
 		  , APLICNT_SPOUSE_OCPAT = #{spouseOccUpd}
 		</if>
-		<if test="spouseContatUpd != null and spouseContatUpd != '' ">
+		<if test="spouseContatUpd != null">
 		  , APLICNT_SPOUSE_TEL_CNTC = #{spouseContatUpd}
 		</if>
-		<if test="spouseDobUpd != null and spouseDobUpd != '' ">
+		<if test="spouseDobUpd != null">
 		  , APLICNT_SPOUSE_DOB = TO_DATE(#{spouseDobUpd},'DD/MM/YYYY')
 		</if>
 		<if test="educationLvlUpd != null and educationLvlUpd != '' ">

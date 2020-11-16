@@ -339,7 +339,8 @@ $(document).ready(function() {
         $("#memberCodeUpd").val($("#memCode").val());
     }
 
-    $("#memberNm").change(function() {
+    document.getElementById("memberNm").addEventListener("input", function() {
+    // $("#memberNm").change(function() {
         $("#memberNmUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='memberNmUpd' id='memberNmUpd'>");
         $("#memberNmUpd").val($("#memberNm").val());
@@ -357,30 +358,34 @@ $(document).ready(function() {
         $("#marritalUpd").val($("#marrital").val());
     });
 
-    $('#email').change(function() {
+    document.getElementById("email").addEventListener("input", function() {
+    // $('#email').change(function() {
         $("#emailUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='emailUpd' id='emailUpd'>");
         $("#emailUpd").val($("#email").val());
     });
 
     //
-    $('#mobileNo').change(function() {
+    document.getElementById("mobileNo").addEventListener("input", function() {
+    // $('#mobileNo').change(function() {
         $("#mobileNoUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='mobileNoUpd' id='mobileNoUpd'>");
         $("#mobileNoUpd").val($("#mobileNo").val());
     });
 
-    $('#officeNo').change(function() {
+    document.getElementById("officeNo").addEventListener("input", function() {
+    // $('#officeNo').change(function() {
         $("#officeNoUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='officeNoUpd' id='officeNoUpd'>");
         $("#officeNoUpd").val($("#officeNo").val());
     });
 
-    $('#residenceNo').change(function() {
+    document.getElementById("residenceNo").addEventListener("input", function() {
         $("#residenceNoUpd").remove();
-        $("#memberUpdForm").append("<input type='hidden' name='residenceNoUpd' id='emailUpd'>");
+        $("#memberUpdForm").append("<input type='hidden' name='residenceNoUpd' id='residenceNoUpd'>");
         $("#residenceNoUpd").val($("#residenceNo").val());
     });
+
     //
 
     //
@@ -463,7 +468,8 @@ $(document).ready(function() {
         $("#issuedBankUpd").val($("#issuedBank").val());
     });
 
-    $('#bankAccNo').change(function() {
+    document.getElementById("bankAccNo").addEventListener("input", function() {
+    // $('#bankAccNo').change(function() {
         $("#bankAccNoUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='bankAccNoUpd' id='bankAccNoUpd'>");
         $("#bankAccNoUpd").val($("#bankAccNo").val());
@@ -484,7 +490,8 @@ $(document).ready(function() {
     });
     //
 
-    $('#trNo').change(function() {
+    document.getElementById("trNo").addEventListener("input", function() {
+    // $('#trNo').change(function() {
         $("#trNoUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='trNoUpd' id='trNoUpd'>");
         $("#trNoUpd").val($("#trNo").val());
@@ -498,37 +505,43 @@ $(document).ready(function() {
     // Basic Info Tab on change append - end
 
     // Spouse Tab on change append - start
-    $('#spouseCode').change(function() {
+    document.getElementById("spouseCode").addEventListener("input", function() {
+    // $('#spouseCode').change(function() {
         $("#spouseCodeUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='spouseCodeUpd' id='spouseCodeUpd'>");
         $("#spouseCodeUpd").val($("#spouseCode").val());
     });
 
-    $('#spouseName').change(function() {
+    document.getElementById("spouseName").addEventListener("input", function() {
+    // $('#spouseName').change(function() {
         $("#spouseNameUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='spouseNameUpd' id='spouseNameUpd'>");
         $("#spouseNameUpd").val($("#spouseName").val());
     });
 
-    $('#spouseNric').change(function() {
+    document.getElementById("spouseNric").addEventListener("input", function() {
+    // $('#spouseNric').change(function() {
         $("#spouseNricUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='spouseNricUpd' id='spouseNricUpd'>");
         $("#spouseNricUpd").val($("#spouseNric").val());
     });
 
-    $('#spouseOcc').change(function() {
+    document.getElementById("spouseOcc").addEventListener("input", function() {
+    // $('#spouseOcc').change(function() {
         $("#spouseOccUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='spouseOccUpd' id='spouseOccUpd'>");
         $("#spouseOccUpd").val($("#spouseOcc").val());
     });
 
-    $('#spouseDob').change(function() {
+    document.getElementById("spouseDob").addEventListener("input", function() {
+    // $('#spouseDob').change(function() {
         $("#spouseDobUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='spouseDobUpd' id='spouseDobUpd'>");
         $("#spouseDobUpd").val($("#spouseDob").val());
     });
 
-    $('#spouseContat').change(function() {
+    document.getElementById("spouseContat").addEventListener("input", function() {
+    // $('#spouseContat').change(function() {
         $("#spouseContatUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='spouseContatUpd' id='spouseContatUpd'>");
         $("#spouseContatUpd").val($("#spouseContat").val());
@@ -555,7 +568,6 @@ $(document).ready(function() {
     });
     // AddressTab on change append - end
 });
-
 
 function fn_getMemInfo(){
 	console.log("fn_setMemInfo. sss");
