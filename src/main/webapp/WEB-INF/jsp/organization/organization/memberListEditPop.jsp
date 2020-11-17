@@ -489,64 +489,68 @@ $(document).ready(function() {
         $("#languageUpd").val($("#language").val());
     });
     //
-
-    document.getElementById("trNo").addEventListener("input", function() {
-    // $('#trNo').change(function() {
-        $("#trNoUpd").remove();
-        $("#memberUpdForm").append("<input type='hidden' name='trNoUpd' id='trNoUpd'>");
-        $("#trNoUpd").val($("#trNo").val());
-    });
-
-    $('#codyPaExpr').change(function() {
-        $("#codyPaExprUpd").remove();
-        $("#memberUpdForm").append("<input type='hidden' name='codyPaExprUpd' id='codyPaExprUpd'>");
-        $("#codyPaExprUpd").val($("#codyPaExpr").val());
-    });
     // Basic Info Tab on change append - end
 
-    // Spouse Tab on change append - start
-    document.getElementById("spouseCode").addEventListener("input", function() {
-    // $('#spouseCode').change(function() {
-        $("#spouseCodeUpd").remove();
-        $("#memberUpdForm").append("<input type='hidden' name='spouseCodeUpd' id='spouseCodeUpd'>");
-        $("#spouseCodeUpd").val($("#spouseCode").val());
-    });
+    if("${memType}" != "4" && "${memType}" != "6185") {
+        // Basic Info Tab on change append - Start
+        document.getElementById("trNo").addEventListener("input", function() {
+            // $('#trNo').change(function() {
+            $("#trNoUpd").remove();
+            $("#memberUpdForm").append("<input type='hidden' name='trNoUpd' id='trNoUpd'>");
+            $("#trNoUpd").val($("#trNo").val());
+        });
 
-    document.getElementById("spouseName").addEventListener("input", function() {
-    // $('#spouseName').change(function() {
-        $("#spouseNameUpd").remove();
-        $("#memberUpdForm").append("<input type='hidden' name='spouseNameUpd' id='spouseNameUpd'>");
-        $("#spouseNameUpd").val($("#spouseName").val());
-    });
+        $('#codyPaExpr').change(function() {
+            $("#codyPaExprUpd").remove();
+            $("#memberUpdForm").append("<input type='hidden' name='codyPaExprUpd' id='codyPaExprUpd'>");
+            $("#codyPaExprUpd").val($("#codyPaExpr").val());
+        });
+        // Basic Info Tab on change append - End
 
-    document.getElementById("spouseNric").addEventListener("input", function() {
-    // $('#spouseNric').change(function() {
-        $("#spouseNricUpd").remove();
-        $("#memberUpdForm").append("<input type='hidden' name='spouseNricUpd' id='spouseNricUpd'>");
-        $("#spouseNricUpd").val($("#spouseNric").val());
-    });
+        // Spouse Tab on change append - start
+        document.getElementById("spouseCode").addEventListener("input", function() {
+        // $('#spouseCode').change(function() {
+            $("#spouseCodeUpd").remove();
+            $("#memberUpdForm").append("<input type='hidden' name='spouseCodeUpd' id='spouseCodeUpd'>");
+            $("#spouseCodeUpd").val($("#spouseCode").val());
+        });
 
-    document.getElementById("spouseOcc").addEventListener("input", function() {
-    // $('#spouseOcc').change(function() {
-        $("#spouseOccUpd").remove();
-        $("#memberUpdForm").append("<input type='hidden' name='spouseOccUpd' id='spouseOccUpd'>");
-        $("#spouseOccUpd").val($("#spouseOcc").val());
-    });
+        document.getElementById("spouseName").addEventListener("input", function() {
+        // $('#spouseName').change(function() {
+            $("#spouseNameUpd").remove();
+            $("#memberUpdForm").append("<input type='hidden' name='spouseNameUpd' id='spouseNameUpd'>");
+            $("#spouseNameUpd").val($("#spouseName").val());
+        });
 
-    document.getElementById("spouseDob").addEventListener("input", function() {
-    // $('#spouseDob').change(function() {
-        $("#spouseDobUpd").remove();
-        $("#memberUpdForm").append("<input type='hidden' name='spouseDobUpd' id='spouseDobUpd'>");
-        $("#spouseDobUpd").val($("#spouseDob").val());
-    });
+        document.getElementById("spouseNric").addEventListener("input", function() {
+        // $('#spouseNric').change(function() {
+            $("#spouseNricUpd").remove();
+            $("#memberUpdForm").append("<input type='hidden' name='spouseNricUpd' id='spouseNricUpd'>");
+            $("#spouseNricUpd").val($("#spouseNric").val());
+        });
 
-    document.getElementById("spouseContat").addEventListener("input", function() {
-    // $('#spouseContat').change(function() {
-        $("#spouseContatUpd").remove();
-        $("#memberUpdForm").append("<input type='hidden' name='spouseContatUpd' id='spouseContatUpd'>");
-        $("#spouseContatUpd").val($("#spouseContat").val());
-    });
-    // Spouse Tab on change append - end
+        document.getElementById("spouseOcc").addEventListener("input", function() {
+        // $('#spouseOcc').change(function() {
+            $("#spouseOccUpd").remove();
+            $("#memberUpdForm").append("<input type='hidden' name='spouseOccUpd' id='spouseOccUpd'>");
+            $("#spouseOccUpd").val($("#spouseOcc").val());
+        });
+
+        document.getElementById("spouseDob").addEventListener("input", function() {
+        // $('#spouseDob').change(function() {
+            $("#spouseDobUpd").remove();
+            $("#memberUpdForm").append("<input type='hidden' name='spouseDobUpd' id='spouseDobUpd'>");
+            $("#spouseDobUpd").val($("#spouseDob").val());
+        });
+
+        document.getElementById("spouseContat").addEventListener("input", function() {
+        // $('#spouseContat').change(function() {
+            $("#spouseContatUpd").remove();
+            $("#memberUpdForm").append("<input type='hidden' name='spouseContatUpd' id='spouseContatUpd'>");
+            $("#spouseContatUpd").val($("#spouseContat").val());
+        });
+        // Spouse Tab on change append - end
+    }
 
     // Address Tab on change append - start
     $('#areaId').change(function() {
