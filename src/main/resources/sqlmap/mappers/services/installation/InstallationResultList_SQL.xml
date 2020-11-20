@@ -485,8 +485,8 @@
          , Extent2.NEXT_CALL_DT NEXT_CALL_DT
          , Extent2.REM REM
          , Extent2.BOOSTER_PUMP BOOSTER_PUMP
-         , Extent2.COWAY_PUMP COWAY_PUMP
-         , Extent2.CUSTOMER_EXTERNAL_PUMP CUSTOMER_EXTERNAL_PUMP
+         , Extent2.AFT_PSI AFT_PSI
+         , Extent2.AFT_LPM AFT_LPM
          , CASE WHEN ( Extent3.CUST_BILL_ID IS NOT NULL ) THEN Extent3.CUST_BILL_ID ELSE 0 END C7
          , Extent6.CODE_NAME CODENAME2
          , Extent18.CITY
@@ -3064,7 +3064,14 @@
                WHEN ( Limit1.ALLOW_COMM IS NOT NULL ) THEN Limit1.ALLOW_COMM
                ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
              END C1
-           , Limit1.CRT_DT CRT_DT
+           , TO_char( Limit1.CRT_DT , 'dd/mm/yyyy' ) CRT_DT
+
+           , EXTRACT(DAY FROM Limit1.CRT_DT) AS DAYC
+           , EXTRACT(MONTH FROM Limit1.CRT_DT) AS MONC
+           , EXTRACT(YEAR FROM Limit1.CRT_DT) AS YEARC
+
+
+
            , TO_char( Limit1.INSTALL_DT, 'dd/mm/yyyy') INSTALL_DT
            , CASE
                WHEN ( Limit1.USER_ID IS NOT NULL ) THEN Limit1.USER_NAME
@@ -3559,6 +3566,9 @@
                         ,FAIL_LOC
                         ,INST_CHKLST
                         ,FAIL_DEPT_CHK
+                        ,BOOSTER_PUMP
+                        ,AFT_PSI
+                        ,AFT_LPM
     ) VALUES (SAL0047D_RESULT_ID_SEQ.NEXTVAL
             , #{entryId}
             , #{statusCodeId}
@@ -3591,6 +3601,9 @@
             , #{failLct}
             , #{instChklstCheckBox}
             , #{failDeptChk}
+            , #{boosterPump}
+            , #{aftPsi}
+            , #{aftLpm}
     )
   </insert>
 
@@ -4731,8 +4744,8 @@
                       ,WATER_SRC_TEMP = #{waterSourceTemp}
                       ,ADPT_USED = #{adptUsed}
                       ,BOOSTER_PUMP = #{boosterPump}
-                      ,COWAY_PUMP = #{cowayPump}
-                      ,CUSTOMER_EXTERNAL_PUMP = #{customerExternalPump}
+                      ,AFT_PSI = #{aftPsi}
+                      ,AFT_LPM = #{aftLpm}
     WHERE ( RESULT_ID = #{resultId} )
   </update>
 
