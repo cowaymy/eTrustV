@@ -1044,7 +1044,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/PreMonth_ASResult.do")
-  //@Scheduled(cron = " 0 0 6 2 * ?")//Monthly (Day 2) 6:00am
+  //@Scheduled(cron = " 0 0 6 10 * ?")//Monthly (Day 10) 6:00am
   public void preMonthAsResult() throws IOException {
     LOGGER.info("[START] PreMonth_ASResult...");
     Map<String, Object> params = new HashMap<>();
@@ -1061,7 +1061,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/PreMonth_Installation.do")
-  //@Scheduled(cron = " 0 0 6 2 * ?")//Monthly (Day 2) 6:00am
+  //@Scheduled(cron = " 0 0 6 10 * ?")//Monthly (Day 10) 6:00am
   public void preMonthInstallation() throws IOException {
     LOGGER.info("[START] PreMonth_Installation...");
     Map<String, Object> params = new HashMap<>();
@@ -1079,7 +1079,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/PreMonth_ProductReturn.do")
-  //@Scheduled(cron = " 0 0 6 2 * ?")//Monthly (Day 2) 6:00am
+  //@Scheduled(cron = " 0 0 6 10 * ?")//Monthly (Day 10) 6:00am
   public void preMonthProductReturn() throws IOException {
     LOGGER.info("[START] PreMonth_ProductReturn...");
     Map<String, Object> params = new HashMap<>();
@@ -1097,7 +1097,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/PreMonth_HS_Filter.do")
-  //@Scheduled(cron = " 0 0 6 2 * ?")//Monthly (Day 2) 6:00am
+  //@Scheduled(cron = " 0 0 6 10 * ?")//Monthly (Day 10) 6:00am
   public void preMonthHsFilter() throws IOException {
     LOGGER.info("[START] PreMonth_HS_Filter...");
     Map<String, Object> params = new HashMap<>();
