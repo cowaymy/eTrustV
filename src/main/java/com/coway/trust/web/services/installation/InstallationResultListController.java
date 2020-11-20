@@ -1105,6 +1105,38 @@ public class InstallationResultListController {
     return "services/installation/editInstallationResultPop";
   }
 
+  /**
+   * InstallationResult fail Installation Result Popup
+   *
+   * @param request
+   * @param model
+   * @return
+   * @throws Exception
+   */
+  @RequestMapping(value = "/ failInstallationPopup.do")
+  public String failInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model , SessionVO sessionVO) throws Exception {
+
+    EgovMap installInfo = installationResultListService.selectInstallInfo(params);
+    model.addAttribute("installInfo", installInfo);
+
+    EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
+    model.put("orderDetail", orderDetail);
+    model.put("codeId", params.get("codeId"));
+
+    EgovMap orderInfo = null;
+
+    if (params.get("codeId").toString().equals("258")) {
+      orderInfo = installationResultListService.getOrderExchangeTypeByInstallEntryID(params);
+    } else {
+      orderInfo = installationResultListService.getOrderInfo(params);
+    }
+
+    model.put("orderInfo", orderInfo);
+
+    // 호출될 화면
+    return "services/installation/failInstallationResultPop";
+  }
+
   @RequestMapping(value = "/editInstallation.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> editInstallationResult(@RequestBody Map<String, Object> params,
       SessionVO sessionVO) throws ParseException {
@@ -1116,6 +1148,26 @@ public class InstallationResultListController {
     logger.debug("params : {}", params);
 
     resultValue = installationResultListService.editInstallationResult(params, sessionVO);
+    if (resultValue > 0) {
+      message.setMessage("Installation result successfully updated.");
+    } else {
+      message.setMessage("Failed to update installation result. Please try again later.");
+    }
+
+    return ResponseEntity.ok(message);
+  }
+
+  @RequestMapping(value = "/failInstallation.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> failInstallationResult(@RequestBody Map<String, Object> params,
+      SessionVO sessionVO) throws ParseException {
+    ReturnMessage message = new ReturnMessage();
+    int resultValue = 0;
+
+    int userId = sessionVO.getUserId();
+    params.put("user_id", userId);
+    logger.debug("params : {}", params);
+
+    resultValue = installationResultListService.failInstallationResult(params, sessionVO);
     if (resultValue > 0) {
       message.setMessage("Installation result successfully updated.");
     } else {
