@@ -176,13 +176,17 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         params.put("codeId", String.valueOf(installResult.get("257")));
         params.put("checkCommission", 1);
 
-/*        params.put("boosterPump", String.valueOf(installResult.get("boosterPump")));
+/*     params.put("boosterPump", String.valueOf(installResult.get("boosterPump")));
         params.put("aftPsi", String.valueOf(installResult.get("aftPsi")));
         params.put("aftLpm", String.valueOf(installResult.get("aftLpm")));*/
 
-        params.put("boosterPump", String.valueOf(params.get("boosterPump")));
+      params.put("boosterPump", String.valueOf(insApiresult.get("boosterPump")));
+        params.put("aftPsi", String.valueOf(insApiresult.get("aftPsi")));
+        params.put("aftLpm", String.valueOf(insApiresult.get("aftLpm")));
+
+/*        params.put("boosterPump", String.valueOf(params.get("boosterPump")));
         params.put("aftPsi", String.valueOf(params.get("aftPsi")));
-        params.put("aftLpm", String.valueOf(params.get("aftLpm")));
+        params.put("aftLpm", String.valueOf(params.get("aftLpm")));*/
 
         if (orderInfo != null) {
           params.put("hidOutright_Price", CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
