@@ -94,6 +94,8 @@ public interface InstallationResultListService {
   
   int editInstallationResult(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
   
+  int failInstallationResult(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
+
   int isInstallAlreadyResult(Map<String, Object> params);
   
   int insResultSync(Map<String, Object> params);
