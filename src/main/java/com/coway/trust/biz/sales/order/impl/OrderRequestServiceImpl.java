@@ -1,5 +1,5 @@
 package com.coway.trust.biz.sales.order.impl;
-  
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.SimpleDateFormat;
@@ -712,10 +712,10 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     custBillMasterVO.setCustBillEmail("");
     custBillMasterVO.setCustBillIsEstm(SalesConstants.IS_FALSE);
     custBillMasterVO.setCustBillIsSms(
-        CommonUtils.intNvl(params.get("txtHiddenThirdPartyID")) == SalesConstants.CUST_TYPE_CODE_ID_IND
+        CommonUtils.intNvl(params.get("hiddenCustTypeID")) == SalesConstants.CUST_TYPE_CODE_ID_IND
             ? SalesConstants.IS_TRUE : SalesConstants.IS_FALSE);
     custBillMasterVO.setCustBillIsPost(
-        CommonUtils.intNvl(params.get("txtHiddenThirdPartyID")) != SalesConstants.CUST_TYPE_CODE_ID_IND
+        CommonUtils.intNvl(params.get("hiddenCustTypeID")) != SalesConstants.CUST_TYPE_CODE_ID_IND
             ? SalesConstants.IS_TRUE : SalesConstants.IS_FALSE);
   }
 
