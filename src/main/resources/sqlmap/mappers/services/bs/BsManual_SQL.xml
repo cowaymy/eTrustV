@@ -4362,7 +4362,8 @@ ORDER BY CODE_NAME
                                                       AND ( Extent2.BS_RESULT_PART_QTY > 0 )
                                                       AND Extent1.RESULT_STUS_CODE_ID <> 12 ) Filter1
                                             LEFT JOIN SYS0047M Extent4   ON Filter1.RESULT_CRT_USER_ID = Extent4.USER_ID
-                                      WHERE  Filter1.SCHDUL_ID = #{selSchdulId} ) Distinct1
+                                      WHERE  Filter1.SCHDUL_ID = #{selSchdulId}
+                                      and result_is_curr = 1) Distinct1
                                       WHERE  Distinct1.STK_ID = 1428
 
                         ]]>
