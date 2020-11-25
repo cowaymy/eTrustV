@@ -36,6 +36,8 @@ public interface InstallationResultListMapper {
 
   EgovMap getInstallResultByInstallEntryID(Map<String, Object> params);
 
+  EgovMap getFileID(Map<String, Object> params); ///FileXXX
+
   EgovMap getOrderInfo(Map<String, Object> params);
 
   // EgovMap getcustomerInfo(Object cust_id);
@@ -208,6 +210,10 @@ public interface InstallationResultListMapper {
 
   int updateInstallResultEdit(Map<String, Object> params);
 
+  int updateInstallFileKey(Map<String, Object> params);
+
+  int updateInstallResultFail(Map<String, Object> params);
+
   String getPAY0033D_SEQ(Map<String, Object> params);
 
   EgovMap getOutrightPreBill(Map<String, Object> params);
@@ -284,6 +290,8 @@ public interface InstallationResultListMapper {
 
   List<EgovMap> adapterUsed();
 
+ List<EgovMap> boosterUsed();
+
   List<EgovMap> viewChkLst();
 
   List<EgovMap> failParent();
@@ -295,5 +303,7 @@ public interface InstallationResultListMapper {
   List<EgovMap> waterEnvironmentList(Map<String, Object> params);
 
   List<EgovMap> getProductListwithCategory(Map<String, Object> params);
+
+
 
 }
