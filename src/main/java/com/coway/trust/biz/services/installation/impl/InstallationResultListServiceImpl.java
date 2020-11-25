@@ -91,6 +91,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   }
 
   @Override
+  public List<EgovMap> boosterUsed() {
+    return installationResultListMapper.boosterUsed();
+  }
+
+  @Override
   public List<EgovMap> instChkLst() {
     return installationResultListMapper.instChkLst();
   }
@@ -121,6 +126,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   @Override
   public EgovMap getInstallResultByInstallEntryID(Map<String, Object> params) {
     return installationResultListMapper.getInstallResultByInstallEntryID(params);
+  }
+
+  @Override
+  public EgovMap getFileID(Map<String, Object> params) { ///FileXXX
+    return installationResultListMapper.getFileID(params);
   }
 
   @Override
@@ -2705,6 +2715,61 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     return resultValue;
   }
 
+  public int updateInstallFileKey(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+	    String allowCom = String.valueOf(params.get("allwcom"));
+	    String istrade = String.valueOf(params.get("trade"));
+	    String isreqsms = String.valueOf(params.get("reqsms"));
+	    String resultId = String.valueOf(params.get("resultId"));
+	    String fileGroupKey = String.valueOf(params.get("fileGroupKey"));
+	    String StkId = String.valueOf(params.get("StkId"));
+	    String SalesOrderId = String.valueOf(params.get("SalesOrderId"));
+
+	    Map<String, Object> locInfoEntry = new HashMap<String, Object>();
+	    params.put("userId", sessionVO.getUserId());
+		params.put("resultId", CommonUtils.nvl(params.get("resultId")));
+		params.put("StkId", CommonUtils.nvl(params.get("hidStkId")));
+		params.put("SalesOrderId", CommonUtils.nvl(params.get("hidSalesOrderId")));
+		params.put("installDt", CommonUtils.nvl(params.get("installdt")));
+		locInfoEntry.put("userId", sessionVO.getUserId());
+		params.put("installEntryId", CommonUtils.nvl(params.get("installEntryId")));
+
+		 EgovMap installResult = getFileID (params); ///FileXXX
+		 EgovMap locInfo = (EgovMap) installationResultListMapper.getFileID(locInfoEntry);
+
+		 logger.debug("LOC. INFO. : {}" + locInfo);
+		 params.put("atchFileGrpId", locInfo.get("atchFileGrpId"));
+
+		 logger.debug("File RESULT :{}" + installResult);
+		 logger.debug("params ================================>>  " + params);
+
+	//	 params.put("EXC_CT_ID", installResult.get("ctId"));
+
+
+	    if (allowCom.equals("on")) {
+	      params.put("allowCom", 1);
+	    } else {
+	      params.put("allowCom", 0);
+	    }
+	    if (istrade.equals("on")) {
+	      params.put("istrade", 1);
+	    } else {
+	      params.put("istrade", 0);
+	    }
+	    if (isreqsms.equals("on")) {
+	      params.put("isreqsms", 1);
+	    } else {
+	      params.put("isreqsms", 0);
+	    }
+
+	    logger.debug("resultId: " + resultId);
+
+
+	    int resultValue = installationResultListMapper.updateInstallFileKey(params);
+	 //   installationResultListMapper.updateInstallEntryEdit(params);
+
+	    return resultValue;
+	  }
+
   @Override
   public int failInstallationResult(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
     String allowCom = String.valueOf(params.get("allwcom"));
@@ -2726,7 +2791,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
       params.put("isreqsms", 0);
     }
 
-    int resultValue = installationResultListMapper.updateInstallResultEdit(params);
+    int resultValue = installationResultListMapper.updateInstallResultFail(params);
     installationResultListMapper.updateInstallEntryEdit(params);
 
     return resultValue;
