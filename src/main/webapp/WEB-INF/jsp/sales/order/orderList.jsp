@@ -564,13 +564,15 @@
     <li><p class="btn_blue"><a id="btnSimul" href="#"><spring:message code='sales.btn.simul'/></a></p></li>
   </c:if>
 </c:if>
-<c:if test="${SESSION_INFO.userIsExternal == '1'}">
+<%-- <c:if test="${SESSION_INFO.userIsExternal == '1'}">
 	<li><p class="btn_blue"><a id="_btnLedger1" href="#"><spring:message code="sal.btn.ledger" />(1)</a></p></li>
 	<li><p class="btn_blue"><a id="_btnLedger2" href="#"><spring:message code="sal.btn.ledger" />(2)</a></p></li>
 	<li><p class="btn_blue"><a id="_btnTaxInvc" href="#"><spring:message code="sal.btn.taxInvoice" /></a></p></li>
-</c:if>
+</c:if> --%>
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	<li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span><spring:message code='sales.Search'/></a></p></li>
 	<li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
+</c:if>
 </ul>
 </aside><!-- title_line end -->
 
