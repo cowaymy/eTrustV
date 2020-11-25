@@ -12,10 +12,18 @@
  -->
 <script type="text/javaScript">
 
+//파일 저장 캐시
+var myFileCaches = {};
+
 var today = new Date();
 var dd = String(today.getDate()).padStart(2, '0');
 var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = today.getFullYear();
+var update = new Array();
+var remove = new Array();
+var photo1ID = 0;
+
+var photo1Name = "";
 
 
   $(document).ready(function() {
@@ -35,30 +43,9 @@ var yyyy = today.getFullYear();
       $("#reqsms").prop("checked", true);
     }
 
+
     doGetCombo('/services/adapterList.do', '', '${installInfo.adptUsed}','adptUsed', 'S' , '');
-
-
-     /*  $("#boosterPump").change(function() {
-        val = $(this).val();
-        //var $boosterPump = $("#boosterPump")[0];
-        //$($boosterPump).empty(); //remove children
-        //$("#cowayPump").hide(); //stat
-        //$("#customerExternalPump").hide(); //stat
-        if (val == "1") { //CodyComm_PDF.rpt
-           // $("#searchForm #confirmChk").val("N");
-        	$("#editInstallForm #aftPsi").hide();
-            $("#editInstallForm #m12").attr("disabled", true);
-        	$("#editInstallForm #aftLpm").hide();
-            $("#editInstallForm #m13").attr("disabled", true);
-        }
-              else {
-            	 $("#editInstallForm #aftPsi").show();
-            	 $("#editInstallForm #m12").attr("disabled", false);
-            	 $("#editInstallForm #aftLpm").show();
-                 $("#editInstallForm #m13").attr("disabled", false);
-            }
-
-    }); */
+  //  doGetCombo('/services/parentList.do', '', '${installInfo.failLoc}','failLoc', 'S' , '');
 
 
     $("#installdt").change( function() {
@@ -72,22 +59,22 @@ var yyyy = today.getFullYear();
       });
     });
 
+    $('#photo1').change(function(evt) {
+        var file = evt.target.files[0];
+        if(file == null && myFileCaches[1] != null){
+            delete myFileCaches[1];
+        }else if(file != null){
+            myFileCaches[1] = {file:file};
+        }
+        console.log(myFileCaches);
+    });
+
  // ONGHC - 20200221 ADD FOR PSI
     // 54 - WP
     // 57 - SOFTENER
     // 58 - BIDET
     // 400 - POE
     if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
-
-    	// ALEX - 20200911 ADD ADDITIONAL COLUMN - boosterPump for all 4 categery
-
-/*     	$("#editInstallForm #m11").show();
-        $("#boosterPump").attr("disabled", false);
-        $("#editInstallForm #m12").show();
-        $("#aftPsi").attr("disabled", false);
-        $("#editInstallForm #m13").show();
-        $("#aftLpm").attr("disabled", false); */
-
 
 
     	if ("${orderInfo.stkCtgryId}" != "54") {
@@ -224,8 +211,10 @@ function notMandatoryForAP(){
   }
 
   function fn_openFailChild(selectedData){
-	  $("#failReasonCode").attr("disabled",false);
+	  console.log("selectedData::" + selectedData);
+	 // $("#failReasonCode").attr("disabled",false);
 	  doGetCombo('/services/selectFailChild.do', selectedData, '','failReasonCode', 'S' , '');
+
 	  /*   if(selectedData == "8000"&&("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")) {
 	      $("#addInstallForm #m8").show();
 	      $("#addInstallForm #m9").show();
@@ -246,11 +235,99 @@ function notMandatoryForAP(){
 	      $("#addInstallForm #m13").hide();
 	      $("#addInstallForm #m14").hide();
 	    } */
-	    if(selectedData == "8000" || selectedData == "8100"){
+	  /*   if(selectedData == "8000" || selectedData == "8100"){
 	    $("#failReasonCode").attr("disabled",false);
 	    doGetCombo('/services/selectFailChild.do', selectedData, '','failReasonCode', 'S' , '');
-	    }
+	    } */
 	  }
+
+/*   function fn_loadAtchment(atchFileGrpId) {
+      Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId :atchFileGrpId} , function(result) {
+          console.log(result);
+         if(result) {
+              if(result.length > 0) {
+                  $("#attachTd").html("");
+                  for ( var i = 0 ; i < result.length ; i++ ) {
+                      switch (result[i].fileKeySeq){
+                      case '1':
+                    	  photo1ID = result[i].atchFileId;
+                    	  photo1Name = result[i].atchFileName;
+                          $(".input_text[id='photo1Txt']").val(photo1Name);
+                          break;
+                       default:
+                           Common.alert("no files");
+                      }
+                  }
+
+                  // 파일 다운
+                  $(".input_text").dblclick(function() {
+                      var oriFileName = $(this).val();
+                      var fileGrpId;
+                      var fileId;
+                      for(var i = 0; i < result.length; i++) {
+                          if(result[i].atchFileName == oriFileName) {
+                              fileGrpId = result[i].atchFileGrpId;
+                              fileId = result[i].atchFileId;
+                          }
+                      }
+                      if(fileId != null) fn_atchViewDown(fileGrpId, fileId);
+                  });
+              }
+          }
+     });
+  } */
+
+  function fn_doSavePreOrder() {
+
+	  var orderVO = {
+              SalesOrderId       :  $('#hidSalesOrderId').val(),
+              hidStkId               : $('#editInstallForm #hidStkId').val().trim(),
+              resultId               : $("#editInstallForm #resultId").val().trim(),
+              atchFileGrpId        : '${installInfo.atchFileGrpId}',
+              installdt              : $('#editInstallForm #installdt').val(),
+              installEntryId        : $('#entryId').val()
+          };
+
+      var formData = new FormData();
+      formData.append("atchFileGrpId", '${preOrderInfo.atchFileGrpId}');
+      formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+      formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+      console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+      console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+      $.each(myFileCaches, function(n, v) {
+          console.log(v.file);
+          formData.append(n, v.file);
+      });
+
+      Common.ajaxFile("/services/attachFileUpload.do", formData, function(result) {
+
+    	  var resultId = ${installInfo.resultId}
+          fileGroupKey = result.data.fileGroupKey
+          console.log ("resultId value :" + resultId );
+          console.log ("fileGroupKey value :" + fileGroupKey );
+
+    	  if(result != 0 && result.code == 00){
+
+              Common.ajax("POST", "/services/updateFileKey.do", orderVO, function(result) {
+                      Common.alert(result.message);
+              },
+              function(jqXHR, textStatus, errorThrown) {
+                  try {
+                      Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
+                      Common.removeLoader();
+                  }
+                  catch (e) {
+                      console.log(e);
+                  }
+              });
+          }else{
+              Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+          }
+
+      },function(result){
+          Common.alert("Upload Failed. Please check with System Administrator.");
+      });
+  }
 
 
 
@@ -270,20 +347,9 @@ function notMandatoryForAP(){
   function fn_saveInstall() {
     if (fn_validate()) {
 
-/*     	var todayDD = Number(TODAY_DD.substr(0, 2));
-        var todayYY = Number(TODAY_DD.substr(6, 4)); */
-
        var  dayc = ${installInfo.dayc};
        var  monc = ${installInfo.monc};
        var  yearc = ${installInfo.yearc};
-
-/*         var dd2 = String(crt_date.getDate()).padStart(2, '0');
-        var mm2 = String(crt_date.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy2 = crt_date.getFullYear(); */
-
-      //  var todayDD = Number(crt_date.substr(0, 2));
-     //   var todayMM = Number(crt_date.substr(6, 3));
-      //  var todayYY = Number(crt_date.substr(6, 4));
 
      	var today = new Date();
 
@@ -291,24 +357,33 @@ function notMandatoryForAP(){
     	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     	var yyyy = today.getFullYear();
 
-    	console.log ('dd :' + dd);
-    	console.log ('mm :' + mm);
-    	console.log ('yyyy :' + yyyy);
-
-        console.log ('dayc  :' + dayc );
-        console.log ('monc  :' + monc );
-     	console.log ('yearc  :' + yearc );
-
-     	var crt_day = (yearc * 12 * 30) +  (monc * 30) + (dayc * 1) ; //727200 + 330 + 19
+     	var crt_day = (yearc * 12 * 30) +  (monc * 30) + (dayc * 1) ;
      	var sys_day = (yyyy * 12 * 30) +  (mm * 30) + ( dd * 1) ;
-      	console.log ('crt_day  :' + crt_day );
-     	console.log ('sys_day  :' + sys_day );
+/*       	console.log ('crt_day  :' + crt_day );
+     	console.log ('sys_day  :' + sys_day ); */
 
 
-     	if ( (sys_day - crt_day) > 1000 ) {
+     	if ( (sys_day - crt_day) > 10 ) {
      		Common.alert('Fail installation Result only allow within 7 days to edit');
             return;
      	}
+
+     	var formData = new FormData();
+        formData.append("atchFileGrpId", '${preOrderInfo.atchFileGrpId}');
+        formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        $.each(myFileCaches, function(n, v) {
+            console.log(v.file);
+            formData.append(n, v.file);
+
+            if (v.file > 0 || v.file != null) {
+                fn_doSavePreOrder();
+                }
+        });
+
+
 
         // KR-OHK Serial Check add
         var url = "";
@@ -318,7 +393,6 @@ function notMandatoryForAP(){
         } else {
             url = "/services/failInstallation.do";
         }
-
       Common.ajax("POST", url, $("#editInstallForm").serializeJSON(), function(result) {
         Common.alert(result.message);
         if (result.message == "Installation result successfully updated.") {
@@ -329,9 +403,15 @@ function notMandatoryForAP(){
     }
   }
 
+
   function fn_validate() {
     var msg = "";
+    var isValid = true;  // attachment
 
+   /*  if(FormUtil.isEmpty($('#photo1').val().trim())) { // attachment
+        isValid = false;
+        msg += "* Please upload copy of SOF<br>";
+    } */
 
     if ($("#editInstallForm #installdt").val() == '') {
       msg += "* <spring:message code='sys.msg.necessary' arguments='Actual Install Date' htmlEscape='false'/> </br>";
@@ -339,23 +419,12 @@ function notMandatoryForAP(){
     if ($("#editInstallForm #sirimNo").val().trim() == '' || ("#editInstallForm #sirimNo") == null) {
       msg += "* <spring:message code='sys.msg.necessary' arguments='Sirim No' htmlEscape='false'/> </br>";
     }
-
-/*      if ($("#editInstallForm #boosterPump").val().trim() == '2' || $("#editInstallForm #boosterPump").val().trim() == '3' ){
-
-        if ($("#editInstallForm #aftPsi").val().trim() == '' || $("#editInstallForm #aftPsi") == null ){
-        msg += "* <spring:message code='sys.msg.necessary' arguments='After Pump PSI' htmlEscape='false'/> </br>";
-      }
-        if ($("#editInstallForm #aftLpm").val().trim() == '' || $("#editInstallForm #aftLpm") == null ){
-        msg += "* <spring:message code='sys.msg.necessary' arguments='After Pump LPM' htmlEscape='false'/> </br>";
-      }
-
-    } */
-  /*   else {
-        if ($("#editInstallForm #boosterPump").val().trim() == '0' || ("#editInstallForm #boosterPump").val().trim() == '1') {
-        	 msg += "121212";
-          }
-    } */
-
+    if ($("#editInstallForm #failLoc").val() == '') {
+        msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Location' htmlEscape='false'/> </br>";
+     }
+    if ($("#editInstallForm #failReasonCode").val() == '') {
+        msg += "* <spring:message code='sys.msg.necessary' arguments='Failed Reason' htmlEscape='false'/> </br>";
+     }
 
     if ($("#editInstallForm #serialNo").val().trim() == '' || ("#editInstallForm #serialNo") == null) {
       msg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
@@ -639,54 +708,50 @@ function notMandatoryForAP(){
                   </c:forEach>
                 </select>
             </tr>
-            <tr>
+
+              <%-- <tr>
+              <th scope="row"><spring:message code='service.title.FailedLocation' /><span name="m15" id="m15" class="must">*</span></th>
+              <td colspan="3">
+                <select class="w100p" id="failLoc" name="failLoc">
+                  <c:forEach var="list" items="${failParent}" varStatus="status">
+                    <option value="${list.defectId}" selected>${list.defectDesc}</option>
+                  </c:forEach>
+                </select>
+            </tr> --%>
+
+              <tr>
             <th scope="row"><spring:message code='service.title.FailedLocation' /><span name="m15" id="m15" class="must">*</span></th>
-            <td><select class="w100p" id="failLocCde" name="failLocCde" onchange="fn_openFailChild(this.value)">
-                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+            <td><select class="w100p" id="failLoc" name="failLoc" onchange="fn_openFailChild(this.value)">
+                <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
                 <c:forEach var="list" items="${failParent}" varStatus="status">
                   <option value="${list.defectId}">${list.defectDesc}</option>
                 </c:forEach></td>
             </select>
             <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m16" id="m16" class="must">*</span></th>
             <td><select class="w100p" id="failReasonCode" name="failReasonCode">
-                <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+                <option value="" ><spring:message code='sal.combo.text.chooseOne' /></option>
                 <c:forEach var="list" items="${failChild}" varStatus="status">
                   <option value="${list.defectId}">${list.defectDesc}</option>
                 </c:forEach>
             </select></td>
             </tr>
 
-
-             <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
-   <%--           <tr>
-
-             <th scope="row"><spring:message code='service.title.BoosterPump' /><span class="must" id="m11"> *</span></th>
-              <td colspan="3">
-
-              <select class="w100p" id="boosterPump" name="boosterPump">
-                                    <option value="0">Choose One</option>
-                                    <option value="1">No</option>
-                                    <option value="2">Coway pump</option>
-                                    <option value="3">Customer external pump</option>
-                        </select>
-              </td>
-
-          </tr>
-
-          <tr>
-              <th scope="row"><spring:message code='service.title.AfterPumpPsi' /><span class="must" id="m12" style="display: none;"> *</span></th>
-              <td>
-                <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpPsi' />" class="w100p" id="aftPsi" name="aftPsi" "/>
-              </td>
-              <th scope="row"><spring:message code='service.title.AfterPumpLpm' /><span class="must" id="m13" style="display: none;"> *</span></th>
-              <td>
-                <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpLpm' />" class="w100p" id="aftLpm" name="aftLpm" "/>
-              </td>
-            </tr> --%>
-
-          <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
-
-
+            <tr>
+            <th scope="row">Attach Picture</th>
+            <td>
+                <div class="auto_file2 auto_file3">
+                    <input type="file" title="file add" id="photo1" accept="image/*"/>
+                        <label>
+                            <input type='text' class='input_text' readonly='readonly' id='photo1Txt' value=" <c:out value="${installInfo.atchFileGrpId}"/>"/>
+                            <span class='label_text'><a href='#'>Upload</a></span>
+                            <!-- <span class='label_text'><a href='#' onclick='fn_removeFile("MSOFTNC")'>Remove</a></span> -->
+                        </label>
+                </div>
+            </td>
+            </tr>
+            <tr>
+            <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
+            </tr>
 
             <tr>
               <th scope="row"><spring:message code='service.title.Remark' /></th>
