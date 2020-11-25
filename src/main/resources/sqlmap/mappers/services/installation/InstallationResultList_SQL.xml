@@ -75,6 +75,19 @@
     ]]>
   </select>
 
+ <select id="boosterUsed" parameterType="Map" resultType="egovMap">
+
+    <![CDATA[
+      SELECT Extent1.CODE_ID CODE_ID
+           , Extent1.CODE CODE
+           , Extent1.CODE_NAME CODE_NAME
+      FROM SYS0013M Extent1
+      WHERE CODE_MASTER_ID = 459 AND DISAB = 0
+      ORDER BY CODE_ID
+    ]]>
+  </select>
+
+
   <select id="failParent" parameterType="Map" resultType="egovMap">
 
     <![CDATA[
@@ -433,6 +446,12 @@
       ) Project1
       WHERE  Project1.ROW_NUMBER > 0
       ORDER BY Project1.INSTALL_ENTRY_ID ASC )
+    ]]>
+  </select>
+
+  <select id="getFileID" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      select max(ATCH_FILE_GRP_ID) AS ATCH_FILE_GRP_ID from  SYS0070M where  UPD_USER_ID = #{userId}
     ]]>
   </select>
 
@@ -3147,6 +3166,13 @@
            , WATER_SRC_TEMP WATER_SRC_TEMP
            , ADPT_USED ADPT_USED
            , STK_ID STK_ID
+
+           , FAIL_LOC FAIL_LOC
+           , BOOSTER_PUMP BOOSTER_PUMP
+           , AFT_PSI AFT_PSI
+           , AFT_LPM AFT_LPM
+           , ATCH_FILE_GRP_ID
+
       FROM ( SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID
                   , Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO
                   , Extent1.INSTALL_STK_ID INSTALL_STK_ID
@@ -3188,6 +3214,16 @@
                   , Extent3.ROOM_TEMP ROOM_TEMP
                   , Extent3.WATER_SRC_TEMP WATER_SRC_TEMP
                   , Extent3.ADPT_USED ADPT_USED
+
+                  , Extent3.FAIL_LOC FAIL_LOC
+                  , Extent3.BOOSTER_PUMP BOOSTER_PUMP
+                  , Extent3.AFT_PSI AFT_PSI
+                  , Extent3.AFT_LPM AFT_LPM
+                  , CASE
+                        WHEN ( Extent3.ATCH_FILE_GRP_ID IS NOT NULL ) THEN Extent3.ATCH_FILE_GRP_ID || '_' || Extent1.INSTALL_ENTRY_NO || '_WEB'
+                        ELSE ''
+                        END ATCH_FILE_GRP_ID
+
          FROM SAL0046D Extent1
          JOIN SYS0026M Extent2 ON Extent2.STK_ID = Extent1.INSTALL_STK_ID
          JOIN SAL0047D Extent3 ON Extent3.ENTRY_ID = Extent1.INSTALL_ENTRY_ID
@@ -4746,6 +4782,40 @@
                       ,BOOSTER_PUMP = #{boosterPump}
                       ,AFT_PSI = #{aftPsi}
                       ,AFT_LPM = #{aftLpm}
+
+                    <if test="atchFileGrpId != null and atchFileGrpId != ''">
+                      ,ATCH_FILE_GRP_ID = #{atchFileGrpId}
+                      </if>
+
+    WHERE ( RESULT_ID = #{resultId} )
+  </update>
+
+  <update id="updateInstallFileKey" parameterType="Map">
+    UPDATE SAL0047D SET ATCH_FILE_GRP_ID = #{atchFileGrpId}
+    WHERE ( RESULT_ID = #{resultId} )
+  </update>
+
+  <update id="updateInstallResultFail" parameterType="Map">
+    UPDATE SAL0047D SET REM = #{remark}
+                      , ALLOW_COMM = #{allowCom}
+                      , IS_TRADE_IN = #{istrade}
+                      , REQUIRE_SMS = #{isreqsms}
+                      , SIRIM_NO = UPPER(#{sirimNo})
+                      , SERIAL_NO = #{serialNo}
+                      , DOC_REF_NO1 = #{refNo1}
+                      , DOC_REF_NO2 = #{refNo1}
+                      , UPD_DT = SYSDATE
+                      , UPD_USER_ID = #{user_id}
+                      , INSTALL_DT = to_date( #{installdt} , 'DD/MM/YYYY' )
+                      , PSI = #{psiRcd}
+                      , LPM = #{lpmRcd}
+                      ,VOLT = #{volt}
+                      ,TDS  = #{tds}
+                      ,ROOM_TEMP = #{roomTemp}
+                      ,WATER_SRC_TEMP = #{waterSourceTemp}
+                      ,ADPT_USED = #{adptUsed}
+                      ,FAIL_LOC = #{failLoc}
+                      ,FAIL_ID = #{failReasonCode}
     WHERE ( RESULT_ID = #{resultId} )
   </update>
 
