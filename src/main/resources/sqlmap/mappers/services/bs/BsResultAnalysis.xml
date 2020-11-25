@@ -35,7 +35,7 @@
             a.BS_SUCCES_RATE_WEEK4,
             a.BS_SUCCES_BALNC_WEEK4
         ]]>
-        from REP0008S_KW a
+        from REP0008S a
         join (
             select
                 c.MEM_LVL,
