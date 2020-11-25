@@ -1627,4 +1627,8 @@ ORDER BY a.or_no
          WHERE SRV_ORD_ID      = #{ordId}
     </update>
 
+    <select id="selectOrderRentalAccntStatus" parameterType="Map" resultType="String">
+        SELECT STUS_CODE_ID FROM SAL0071D WHERE SALES_ORD_ID = #{orderId}
+    </select>
+
 </mapper>

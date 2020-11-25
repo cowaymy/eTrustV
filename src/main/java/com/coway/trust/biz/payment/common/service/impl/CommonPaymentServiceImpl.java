@@ -169,6 +169,7 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     double unbillAmount = 0.0D;
     double billTotal = 0.0D;
     double totalAmt = 0.0D;
+    String orderRentalAccntStatus = "";
 
     /*********************************************************
      * rpfTotal Bill Amount값 계산
@@ -309,6 +310,10 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
       unbillCount = currentInstallment - lastBilledInstallment;
       if (unbillCount > 0)
         unbillAmount = unbillCount * rf;
+    }
+    orderRentalAccntStatus = commonPaymentMapper.selectOrderRentalAccntStatus(params);
+    if ("TER".equals(orderRentalAccntStatus) || "WOF_1".equals(orderRentalAccntStatus)) {
+    	unbillAmount = 0.0D;
     }
 
     Map<String, Object> resultMap = new HashMap<String, Object>();

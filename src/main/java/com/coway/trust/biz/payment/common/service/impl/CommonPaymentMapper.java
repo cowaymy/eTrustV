@@ -544,4 +544,6 @@ public interface CommonPaymentMapper {
 
 	void updateCareSalesMStatus(Object object);
 
+	String selectOrderRentalAccntStatus(Map<String, Object> params);
+
 }
