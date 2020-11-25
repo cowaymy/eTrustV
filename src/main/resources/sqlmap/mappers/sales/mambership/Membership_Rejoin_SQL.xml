@@ -6,46 +6,51 @@
     <select id="selectRejoinList" parameterType="Map" resultType="egovMap">
 
 		SELECT
-		    ORG_CODE ,
-		    GRP_CODE ,
-		    DEPT_CODE ,
-		    MEM_CODE ,
-		    CASE WHEN MEM_LVL = 1 THEN 'GCM'
-		            WHEN MEM_LVL = 2 THEN 'SCM'
-		            WHEN MEM_LVL = 3 THEN 'CM'
-		            WHEN MEM_LVL = 4 THEN 'Cody'
-		            END MEM_LVL,
-		    TOTAL_EXPIRED ,
-		    TOTAL_FRESH_EXPIRED ,
-		    SVM_BY_OWN ,
-		    SVM_BY_OTHER ,
-		    EXTRADE_BY_OWN ,
-		    EXTRADE_BY_OTHER ,
-		    REJOIN_RATE ,
-		    UPD_DT
-		FROM SAL0259T
+            T0.ORG_CODE ,
+            T0.GRP_CODE ,
+            T0.DEPT_CODE ,
+            T0.MEM_CODE ,
+            CASE WHEN T0.MEM_LVL = 1 THEN 'GCM'
+                    WHEN T0.MEM_LVL = 2 THEN 'SCM'
+                    WHEN T0.MEM_LVL = 3 THEN 'CM'
+                    WHEN T0.MEM_LVL = 4 THEN 'Cody'
+                    END MEM_LVL,
+            T0.TOTAL_EXPIRED ,
+            T0.TOTAL_FRESH_EXPIRED ,
+            NVL(T1.TOTAL_FRESH_EXPIRED,0) TOTAL_FRESH_EXPIRED_LAST,
+            NVL(T2.TOTAL_FRESH_EXPIRED,0) TOTAL_FRESH_EXPIRED_LAST2,
+            T0.TOTAL_FRESH_EXPIRED_3M,
+            T0.SVM_BY_OWN ,
+            T0.SVM_BY_OTHER ,
+            T0.EXTRADE_BY_OWN ,
+            T0.EXTRADE_BY_OTHER ,
+            T0.REJOIN_RATE_3M REJOIN_RATE,
+            T0.UPD_DT
+        FROM SAL0259T T0
+        LEFT JOIN SAL0259T T1 ON T1.MEM_CODE = T0.MEM_CODE AND T1.REJOIN_YEAR = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYY') AND T1.REJOIN_MONTH = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'MM')
+        LEFT JOIN SAL0259T T2 ON T2.MEM_CODE = T0.MEM_CODE AND T2.REJOIN_YEAR = TO_CHAR(ADD_MONTHS(SYSDATE,-2),'YYYY') AND T2.REJOIN_MONTH = TO_CHAR(ADD_MONTHS(SYSDATE,-2),'MM')
 		WHERE 1 = 1
-            AND MEM_LVL <![CDATA[<>]]> 0
-            AND REJOIN_YEAR = TO_CHAR(SYSDATE,'YYYY')
-            AND REJOIN_MONTH = TO_CHAR(SYSDATE,'MM')
+            AND T0.MEM_LVL <![CDATA[<>]]> 0
+            AND T0.REJOIN_YEAR = TO_CHAR(SYSDATE,'YYYY')
+            AND T0.REJOIN_MONTH = TO_CHAR(SYSDATE,'MM')
 
         <if test="orgCode != null and orgCode != '' ">
-            AND ORG_CODE = #{orgCode}
+            AND T0.ORG_CODE = #{orgCode}
         </if>
         <if test="grpCode != null and grpCode != '' ">
-            AND GRP_CODE = #{grpCode}
+            AND T0.GRP_CODE = #{grpCode}
         </if>
         <if test="deptCode != null and deptCode != '' ">
-            AND DEPT_CODE = #{deptCode}
+            AND T0.DEPT_CODE = #{deptCode}
         </if>
         <if test="memCode != null and memCode != '' ">
-            AND MEM_CODE = #{memCode}
+            AND T0.MEM_CODE = #{memCode}
         </if>
         <if test="memLvl != null and memLvl != '' ">
-            AND MEM_LVL = #{memLvl}
+            AND T0.MEM_LVL = #{memLvl}
         </if>
 
-        ORDER BY SAL0259T.MEM_LVL ASC
+        ORDER BY T0.MEM_LVL ASC
     </select>
 
     <select id="selectExpiredMembershipList" parameterType="Map" resultType="egovMap">

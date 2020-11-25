@@ -79,7 +79,10 @@ $(document).ready(function(){
     }
 
     var gridPros = {
-            showStateColumn : false
+            showStateColumn : false,
+            wordWrap : true,
+            headerHeight :40,
+            fixedColumnCount : 5,
     };
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 
@@ -87,18 +90,21 @@ $(document).ready(function(){
 
 	// AUIGrid 칼럼 설정
 	var columnLayout = [
-	      { dataField : "orgCode", headerText : "<spring:message code='sal.text.orgCode'/>" }
-	    , { dataField : "grpCode", headerText : "<spring:message code='sal.text.grpCode'/>" }
-	    , { dataField : "deptCode", headerText : "<spring:message code='sal.text.detpCode'/>" }
-	    , { dataField : "memCode", headerText : "<spring:message code='sal.title.codyCode'/>" }
-	    , { dataField : "memLvl", headerText : "<spring:message code='sal.title.memLvl'/>" }
-	    , { dataField : "totalExpired", headerText : "<spring:message code='sal.title.totExp'/>" }
-	    , { dataField : "totalFreshExpired", headerText : "<spring:message code='sal.title.totFreshExp'/>" }
-	    , { dataField : "svmByOwn", headerText : "<spring:message code='sal.title.svmOwn'/>" }
-	    , { dataField : "svmByOther", headerText : "<spring:message code='sal.title.svmOther'/>" }
-	    , { dataField : "extradeByOwn", headerText : "<spring:message code='sal.title.exTradeOwn'/>" }
-	    , { dataField : "extradeByOther", headerText : "<spring:message code='sal.title.extradeOther'/>" }
-	    , { dataField : "rejoinRate", headerText : "<spring:message code='sal.title.rejoinPercent'/>",dataType : "numeric",formatString : "###0.00", }
+	      { dataField : "orgCode", headerText : "<spring:message code='sal.text.orgCode'/>", width : '7%' }
+	    , { dataField : "grpCode", headerText : "<spring:message code='sal.text.grpCode'/>", width : '7%' }
+	    , { dataField : "deptCode", headerText : "<spring:message code='sal.text.detpCode'/>", width : '7%' }
+	    , { dataField : "memCode", headerText : "<spring:message code='sal.title.codyCode'/>", width : '7%' }
+	    , { dataField : "memLvl", headerText : "<spring:message code='sal.title.memLvl'/>", width : '8%' }
+	    , { dataField : "totalExpired", headerText : "<spring:message code='sal.title.totExp'/>", width : '8%' }
+	    , { dataField : "totalFreshExpired", headerText : "<spring:message code='sal.title.totFreshExp'/>", width : '11%' }
+	    , { dataField : "totalFreshExpiredLast", headerText : "<spring:message code='sal.title.totFreshExpLast'/>", width : '11%' }
+	    , { dataField : "totalFreshExpiredLast2", headerText : "<spring:message code='sal.title.totFreshExpLast2'/>", width : '11%' }
+	    , { dataField : "totalFreshExpired3m", headerText : "<spring:message code='sal.title.totFreshExpAvg'/>", width : '10%' }
+	    , { dataField : "svmByOwn", headerText : "<spring:message code='sal.title.svmOwn'/>", width : '8%' }
+	    , { dataField : "svmByOther", headerText : "<spring:message code='sal.title.svmOther'/>", width : '8%' }
+	    , { dataField : "extradeByOwn", headerText : "<spring:message code='sal.title.exTradeOwn'/>", width : '10%' }
+	    , { dataField : "extradeByOther", headerText : "<spring:message code='sal.title.extradeOther'/>", width : '10%' }
+	    , { dataField : "rejoinRate", headerText : "<spring:message code='sal.title.rejoinPercent'/>",dataType : "numeric",formatString : "###0.00", width : '7%'}
     ];
 
     // ajax list 조회.
