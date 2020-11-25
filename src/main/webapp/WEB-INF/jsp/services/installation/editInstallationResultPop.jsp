@@ -11,8 +11,16 @@
  28/08/2020  FARUQ   1.0.5         Remove installation status active, add psi,lpm, volt, tds, room temp, water source temp, failParent, failChild, instChkLst
  -->
 <script type="text/javaScript">
-  $(document).ready(
-    function() {
+
+var myFileCaches = {};
+
+var update = new Array();
+var remove = new Array();
+var photo1ID = 0;
+var photo1Name = "";
+var fileGroupKey ="";
+
+  $(document).ready(function() {
     var allcom = ${installInfo.c1};
     var istrdin = ${installInfo.c7};
     var reqsms = ${installInfo.c9};
@@ -30,6 +38,29 @@
     }
 
     doGetCombo('/services/adapterList.do', '', '${installInfo.adptUsed}','adptUsed', 'S' , '');
+    doGetCombo('/services/boosterList.do', '', '${installInfo.boosterPump}','boosterPump', 'S' , '');
+
+     /*  $("#boosterPump").change(function() {
+        val = $(this).val();
+        //var $boosterPump = $("#boosterPump")[0];
+        //$($boosterPump).empty(); //remove children
+        //$("#cowayPump").hide(); //stat
+        //$("#customerExternalPump").hide(); //stat
+        if (val == "1") { //CodyComm_PDF.rpt
+           // $("#searchForm #confirmChk").val("N");
+        	$("#editInstallForm #aftPsi").hide();
+            $("#editInstallForm #m12").attr("disabled", true);
+        	$("#editInstallForm #aftLpm").hide();
+            $("#editInstallForm #m13").attr("disabled", true);
+        }
+              else {
+            	 $("#editInstallForm #aftPsi").show();
+            	 $("#editInstallForm #m12").attr("disabled", false);
+            	 $("#editInstallForm #aftLpm").show();
+                 $("#editInstallForm #m13").attr("disabled", false);
+            }
+    }); */
+
 
     $("#installdt").change( function() {
       var checkMon = $("#installdt").val();
@@ -42,13 +73,35 @@
       });
     });
 
+    $('#photo1').change(function(evt) {
+        var file = evt.target.files[0];
+        console.log("file:::" + file);
+        if(file == null && myFileCaches[1] != null){
+            delete myFileCaches[1];
+        }else if(file != null){
+            myFileCaches[1] = {file:file};
+        }
+        console.log(myFileCaches);
+    });
+
  // ONGHC - 20200221 ADD FOR PSI
     // 54 - WP
     // 57 - SOFTENER
     // 58 - BIDET
     // 400 - POE
     if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
-      if ("${orderInfo.stkCtgryId}" != "54") {
+
+    	// ALEX - 20200911 ADD ADDITIONAL COLUMN - boosterPump for all 4 categery
+
+    	$("#editInstallForm #m11").show();
+        $("#boosterPump").attr("disabled", false);
+        $("#editInstallForm #m12").show();
+        $("#aftPsi").attr("disabled", false);
+        $("#editInstallForm #m13").show();
+        $("#aftLpm").attr("disabled", false);
+
+
+    	if ("${orderInfo.stkCtgryId}" != "54") {
         $("#editInstallForm #m4").show();
         $("#psiRcd").attr("disabled", false);
         $("#m5").show();
@@ -197,6 +250,21 @@ function notMandatoryForAP(){
   function fn_saveInstall() {
     if (fn_validate()) {
 
+    	var formData = new FormData();
+        formData.append("atchFileGrpId", '${installInfo.atchFileGrpId}');
+        formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        $.each(myFileCaches, function(n, v) {
+            console.log(v.file);
+            formData.append(n, v.file);
+
+            if (v.file > 0 || v.file != null) {
+            fn_doSavePreOrder();
+            }
+        });
+
         // KR-OHK Serial Check add
         var url = "";
 
@@ -216,6 +284,64 @@ function notMandatoryForAP(){
     }
   }
 
+  function fn_doSavePreOrder() {
+
+	  var orderVO = {
+			  SalesOrderId       :  $('#hidSalesOrderId').val(),
+			  hidStkId               : $('#editInstallForm #hidStkId').val().trim(),
+              resultId               : $("#editInstallForm #resultId").val().trim(),
+              atchFileGrpId        : '${installInfo.atchFileGrpId}',
+              installdt              : $('#editInstallForm #installdt').val(),
+              installEntryId        : $('#entryId').val()
+          };
+
+	        var formData = new FormData();
+	        formData.append("atchFileGrpId", '${installInfo.atchFileGrpId}');
+	        formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+	        formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+	        console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+	        console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+
+	        $.each(myFileCaches, function(n, v) {
+	            console.log(v.file);
+	            formData.append(n, v.file);
+	        });
+
+	        Common.ajaxFile("/services/attachFileUploadEdit.do", formData, function(result) {
+
+
+	        var resultId = ${installInfo.resultId}
+	        fileGroupKey = result.data.fileGroupKey
+
+	        console.log ("resultId value :" + resultId );
+	        console.log ("fileGroupKey value :" + fileGroupKey );
+
+	        $("#editInstallForm #resultId").val(resultId);
+	        $("#editInstallForm #fileGroupKey").val(fileGroupKey);
+
+	        if(result != 0 && result.code == 00){
+
+	        	Common.ajax("POST", "/services/updateFileKey.do", orderVO, function(result) {
+
+	        	        Common.alert(result.message);
+	        	},
+	        	function(jqXHR, textStatus, errorThrown) {
+                    try {
+                        Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
+                        Common.removeLoader();
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                });
+	        }else{
+                Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+            }
+	        },function(result){
+	            Common.alert("Upload Failed. Please check with System Administrator.");
+	        });
+	    }
+
   function fn_validate() {
     var msg = "";
     if ($("#editInstallForm #installdt").val() == '') {
@@ -224,9 +350,26 @@ function notMandatoryForAP(){
     if ($("#editInstallForm #sirimNo").val().trim() == '' || ("#editInstallForm #sirimNo") == null) {
       msg += "* <spring:message code='sys.msg.necessary' arguments='Sirim No' htmlEscape='false'/> </br>";
     }
+    // ADDED BOOSTER PUMP
+    if ($("#editInstallForm #boosterPump").val().trim() == '' || ("#editInstallForm #boosterPump") == null || $("#editInstallForm #boosterPump").val().trim() == '0') {
+        msg += "* <spring:message code='sys.msg.necessary' arguments='Booster Pump' htmlEscape='false'/> </br>";
+      }
+
+     if ($("#editInstallForm #boosterPump").val().trim() == '6178' || $("#editInstallForm #boosterPump").val().trim() == '6179' ){
+
+        if ($("#editInstallForm #aftPsi").val().trim() == '' || $("#editInstallForm #aftPsi") == null ){
+        msg += "* <spring:message code='sys.msg.necessary' arguments='After Pump PSI' htmlEscape='false'/> </br>";
+      }
+        if ($("#editInstallForm #aftLpm").val().trim() == '' || $("#editInstallForm #aftLpm") == null ){
+        msg += "* <spring:message code='sys.msg.necessary' arguments='After Pump LPM' htmlEscape='false'/> </br>";
+      }
+    }
+
+
     if ($("#editInstallForm #serialNo").val().trim() == '' || ("#editInstallForm #serialNo") == null) {
       msg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
-    } else {
+    }
+    else {
       if ($("#editInstallForm #serialNo").val().trim().length < 9) {
         msg += "* <spring:message code='sys.msg.invalid' arguments='Serial No' htmlEscape='false'/> </br>";
       }
@@ -266,7 +409,7 @@ function notMandatoryForAP(){
     if($("#editInstallForm #hidStkId").val() == 1735){
         msg += validationForKecik();
     }
-  
+
   //stkId for GLAZE = 1737
     if($("#editInstallForm #hidStkId").val() == 1737){
         msg += validationForGlaze();
@@ -309,7 +452,7 @@ function notMandatoryForAP(){
         }
       return msg;
   }
-  
+
   function validationForGlaze(){
       var msg = "";
 
@@ -337,7 +480,7 @@ function notMandatoryForAP(){
 
       return msg;
     }
-  
+
   function fn_serialSearchPop(){
 
 	  $("#pLocationType").val('${installInfo.whLocGb}');
@@ -505,6 +648,52 @@ function notMandatoryForAP(){
                   </c:forEach>
                 </select>
             </tr>
+
+
+             <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
+              <tr>
+
+             <th scope="row"><spring:message code='service.title.BoosterPump' /><span class="must" id="m11"> *</span></th>
+              <td colspan="3">
+                <select class="w100p" id="boosterPump" name="boosterPump">
+                  <c:forEach var="list" items="${boosterUsed}" varStatus="status">
+                    <option value="${list.codeId}" selected>${list.codeName}</option>
+                  </c:forEach>
+                       </select>
+              </td>
+
+          </tr>
+
+          <tr>
+              <th scope="row"><spring:message code='service.title.AfterPumpPsi' /><span class="must" id="m12" style="display: none;"> *</span></th>
+              <td>
+                <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpPsi' />" class="w100p" id="aftPsi" name="aftPsi" value=" <c:out value="${installInfo.aftPsi}"/>"/>
+              </td>
+              <th scope="row"><spring:message code='service.title.AfterPumpLpm' /><span class="must" id="m13" style="display: none;"> *</span></th>
+              <td>
+                <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpLpm' />" class="w100p" id="aftLpm" name="aftLpm" value=" <c:out value="${installInfo.aftLpm}"/>"/>
+              </td>
+            </tr>
+
+          <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
+          
+            <tr>
+            <th scope="row">Attach Picture</th>
+            <td>
+                <div class="auto_file2 auto_file3">
+                    <input type="file" title="file add" id="photo1" accept="image/*"/>
+                        <label>
+                            <input type='text' class='input_text' readonly='readonly' id='photo1Txt'  value=" <c:out value="${installInfo.atchFileGrpId}"/>"/>
+                            <span class='label_text'><a href='#'>Upload</a></span>
+                            <!-- <span class='label_text'><a href='#' onclick='fn_removeFile("MSOFTNC")'>Remove</a></span>ATCH_FILE_GRP_ID -->
+                        </label>
+                </div>
+            </td>
+            </tr>
+            <tr>
+            <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
+            </tr>
+
             <tr>
               <th scope="row"><spring:message code='service.title.Remark' /></th>
               <td colspan="3">
