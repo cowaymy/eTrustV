@@ -87,14 +87,12 @@
     ]]>
   </select>
 
-
   <select id="failParent" parameterType="Map" resultType="egovMap">
 
     <![CDATA[
-      SELECT Extent1.DEFECT_ID DEFECT_ID
-           , Extent1.DEFECT_CODE DEFECT_CODE
-           , Extent1.DEFECT_DESC DEFECT_DESC
-           , Extent1.DEFECT_STATUS DEFECT_STATUS
+       SELECT Extent1.DEFECT_ID CODE_ID
+           , Extent1.DEFECT_CODE CODE
+           , Extent1.DEFECT_DESC CODE_NAME
       FROM SYS0100M Extent1
       WHERE DEFECT_TYP = 'IF' AND DEFECT_STATUS = 1
       ORDER BY DEFECT_ID
@@ -4870,7 +4868,7 @@
     WHERE 1=1
         AND DEFECT_STATUS =1
 
-    <choose>
+     <choose>
       <when test=' groupCode == 8000 '>
         AND DEFECT_TYP = 'IFA'
       </when>
