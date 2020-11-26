@@ -9,6 +9,7 @@
  10/06/2020  ONGHC  1.0.3          Add PSI & LPM Field onblur Checking
  27/07/2020  ONGHC  1.0.4          Amend Design
  28/08/2020  FARUQ   1.0.5         Remove installation status active, add psi,lpm, volt, tds, room temp, water source temp, failParent, failChild, instChkLst
+ 26/11/2020  ALEX     2.0             Cron over existing function from Edit Installation result to enable Fail result to be edited with new fields
  -->
 <script type="text/javaScript">
 
@@ -46,7 +47,8 @@ var photo1Name = "";
 
     doGetCombo('/services/adapterList.do', '', '${installInfo.adptUsed}','adptUsed', 'S' , '');
     doGetCombo('/services/parentList.do', '', '${installInfo.failLoc}','failLoc', 'S' , '');
-    doGetCombo('/services/selectFailChild.do', '', '${installInfo.failReasonCode}','failReasonCode', 'S' , '');
+ //   doGetCombo('/services/selectFailChild.do', '', '${installInfo.failReasonCode}','failReasonCode', 'S' , '');
+    doGetCombo('/services/selectFailChild.do', '${installInfo.failLoc}', '${installInfo.c5}','failReasonCode', 'S' , '');
 
 
     $("#installdt").change( function() {
