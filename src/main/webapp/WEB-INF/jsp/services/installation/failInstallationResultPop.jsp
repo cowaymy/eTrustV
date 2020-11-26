@@ -45,7 +45,8 @@ var photo1Name = "";
 
 
     doGetCombo('/services/adapterList.do', '', '${installInfo.adptUsed}','adptUsed', 'S' , '');
-  //  doGetCombo('/services/parentList.do', '', '${installInfo.failLoc}','failLoc', 'S' , '');
+    doGetCombo('/services/parentList.do', '', '${installInfo.failLoc}','failLoc', 'S' , '');
+    doGetCombo('/services/selectFailChild.do', '', '${installInfo.failReasonCode}','failReasonCode', 'S' , '');
 
 
     $("#installdt").change( function() {
@@ -709,29 +710,29 @@ function notMandatoryForAP(){
                 </select>
             </tr>
 
-              <%-- <tr>
+               <%-- <tr>
               <th scope="row"><spring:message code='service.title.FailedLocation' /><span name="m15" id="m15" class="must">*</span></th>
               <td colspan="3">
                 <select class="w100p" id="failLoc" name="failLoc">
                   <c:forEach var="list" items="${failParent}" varStatus="status">
-                    <option value="${list.defectId}" selected>${list.defectDesc}</option>
+                    <option value="${list.codeId}" selected>${list.codeName}</option>
                   </c:forEach>
                 </select>
-            </tr> --%>
+            </tr>  --%>
 
-              <tr>
+               <tr>
             <th scope="row"><spring:message code='service.title.FailedLocation' /><span name="m15" id="m15" class="must">*</span></th>
             <td><select class="w100p" id="failLoc" name="failLoc" onchange="fn_openFailChild(this.value)">
                 <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
                 <c:forEach var="list" items="${failParent}" varStatus="status">
-                  <option value="${list.defectId}">${list.defectDesc}</option>
+                  <option value="${list.codeId}">${list.codeName}</option>
                 </c:forEach></td>
             </select>
             <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m16" id="m16" class="must">*</span></th>
             <td><select class="w100p" id="failReasonCode" name="failReasonCode">
                 <option value="" ><spring:message code='sal.combo.text.chooseOne' /></option>
-                <c:forEach var="list" items="${failChild}" varStatus="status">
-                  <option value="${list.defectId}">${list.defectDesc}</option>
+                <c:forEach var="list" items="${selectFailChild}" varStatus="status">
+                  <option value="${list.codeId}">${list.codeName}</option>
                 </c:forEach>
             </select></td>
             </tr>
