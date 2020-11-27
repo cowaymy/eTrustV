@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.royaltyCustomerListApi.impl.RoyaltyCustomerListApiMapper">
+
+
+
+
+<select id=selectWsLoyaltyList resultType="egovMap">
+<![CDATA[
+
+SELECT
+
+    LOYALTY_ID  ,
+    SALES_ORD_ID ,
+    SALES_ORD_NO ,
+    HP_CODE ,
+    CUST_ID ,
+    CUST_NAME
+
+FROM    SAL0271D
+ORDER BY    CUST_NAME
+]]>
+</select>
+
+
+</mapper>
