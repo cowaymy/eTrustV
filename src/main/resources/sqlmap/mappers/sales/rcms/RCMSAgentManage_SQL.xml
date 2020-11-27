@@ -133,6 +133,7 @@
       <if test="agentType != null and agentType != '' ">
          AND A.AGENT_TYPE = #{agentType}
       </if>
+     ORDER BY A.AGENT_ID
 </select>
 
 <select id="selectAssignAgentList" parameterType="Map" resultType="egovMap">

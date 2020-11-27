@@ -27,9 +27,18 @@
             T0.REJOIN_RATE_3M REJOIN_RATE,
             T0.UPD_DT
         FROM SAL0259T T0
-        LEFT JOIN SAL0259T T1 ON T1.MEM_CODE = T0.MEM_CODE AND T1.REJOIN_YEAR = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYY') AND T1.REJOIN_MONTH = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'MM')
-        LEFT JOIN SAL0259T T2 ON T2.MEM_CODE = T0.MEM_CODE AND T2.REJOIN_YEAR = TO_CHAR(ADD_MONTHS(SYSDATE,-2),'YYYY') AND T2.REJOIN_MONTH = TO_CHAR(ADD_MONTHS(SYSDATE,-2),'MM')
-		WHERE 1 = 1
+        LEFT JOIN SAL0259T T1 ON T1.MEM_CODE = T0.MEM_CODE
+                                        AND T1.ORG_CODE = T0.ORG_CODE
+                                        AND T1.GRP_CODE  = T0.GRP_CODE
+                                        AND T1.DEPT_CODE = T0.DEPT_CODE
+                                        AND T1.REJOIN_YEAR = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYY')
+                                        AND T1.REJOIN_MONTH = TO_CHAR(ADD_MONTHS(SYSDATE,-1),'MM')
+        LEFT JOIN SAL0259T T2 ON T2.MEM_CODE = T0.MEM_CODE
+                                        AND T2.ORG_CODE = T0.ORG_CODE
+                                        AND T2.GRP_CODE = T0.GRP_CODE
+                                        AND T2.DEPT_CODE = T0.DEPT_CODE
+                                        AND T2.REJOIN_YEAR = TO_CHAR(ADD_MONTHS(SYSDATE,-2),'YYYY')
+                                        AND T2.REJOIN_MONTH = TO_CHAR(ADD_MONTHS(SYSDATE,-2),'MM')WHERE 1 = 1
             AND T0.MEM_LVL <![CDATA[<>]]> 0
             AND T0.REJOIN_YEAR = TO_CHAR(SYSDATE,'YYYY')
             AND T0.REJOIN_MONTH = TO_CHAR(SYSDATE,'MM')

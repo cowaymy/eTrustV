@@ -4,7 +4,7 @@
 <script type="text/javascript">
 
 //Create and Return Grid Id
-var rosGridID;
+var rosGridID,excelGridID;
 
 var optionModule = {
         type: "M",
@@ -50,6 +50,7 @@ $(document).ready(function() {//////////////////////////////////////////////////
 		Common.ajax("GET","/sales/rcms/selectRosCallLogList" , $("#_searchForm").serialize(),function(result){
 			//set Grid Data
 			AUIGrid.setGridData(rosGridID, result);
+			AUIGrid.setGridData(excelGridID, result);
 		});
 	});
 
@@ -378,24 +379,45 @@ function fn_orderUloadBatch(){
 
 function createRosCallGrid(){
 	 var rosColumnLayout =  [
-	                            {dataField : "ordNo", headerText : '<spring:message code="sal.text.ordNo" />', width : '10%' , editable : false},
-	                            {dataField : "firstInstallDt", headerText : '<spring:message code="sal.text.insDate" />', width : '10%', editable : false},
-	                            {dataField : "ordStusName", headerText : '<spring:message code="sal.text.orderStatus" />', width : '10%' , editable : false},
-	                            {dataField : "appTypeCode", headerText : '<spring:message code="sal.title.text.appType" />', width : '10%' , editable : false},
-	                            {dataField : "stockDesc", headerText : '<spring:message code="sal.title.text.product" />', width : '20%' , editable : false},
-	                            {dataField : "custName", headerText : '<spring:message code="sal.text.custName" />', width : '20%' , editable : false},
-	                            {dataField : "custId", headerText : '<spring:message code="sal.text.customerId" />', width : '15%' , editable : false},
-	                            {dataField : "custType", headerText : '<spring:message code="sal.text.custType" />', width : '20%' , editable : false},
-	                            {dataField : "rentalStus", headerText : '<spring:message code="sal.text.rentalStatus" />', width : '10%' , editable : false},
-	                            {dataField : "currMthAging", headerText : '<spring:message code="sal.title.msg.currAgingMonth" />', width : '15%' , editable : false},
-	                            {dataField : "currentOs", headerText : '<spring:message code="sal.text.currOutstnd" />', width : '15%' , editable : false},
-	                            {dataField : "rosCaller", headerText : '<spring:message code="sal.title.text.rosCaller" />', width : '20%' , editable : false},
-	                            {dataField : "rosMainReason", headerText : '<spring:message code="sal.title.text.mainReason"/>', width : '20%' , editable : false},
-	                            {dataField : "paymode", headerText : '<spring:message code="sal.title.paymode" />', width : '15%' , editable : false},
+	                            {dataField : "ordNo", headerText : '<spring:message code="sal.text.ordNo" />', width : '5%' , editable : false},
+	                            {dataField : "firstInstallDt", headerText : '<spring:message code="sal.text.insDate" />', width : '7%', editable : false},
+	                            {dataField : "ordStusName", headerText : '<spring:message code="sal.text.orderStatus" />', width : '7%' , editable : false},
+	                            {dataField : "appTypeCode", headerText : '<spring:message code="sal.title.text.appType" />', width : '7%' , editable : false},
+	                            {dataField : "stockDesc", headerText : '<spring:message code="sal.title.text.product" />', width : '8%' , editable : false},
+	                            {dataField : "custName", headerText : '<spring:message code="sal.text.custName" />', width : '8%' , editable : false},
+	                            {dataField : "custId", headerText : '<spring:message code="sal.text.customerId" />', width : '5%' , editable : false},
+	                            {dataField : "custType", headerText : '<spring:message code="sal.text.custType" />', width : '5%' , editable : false},
+	                            {dataField : "rentalStus", headerText : '<spring:message code="sal.text.rentalStatus" />', width : '5%' , editable : false},
+	                            {dataField : "currMthAging", headerText : '<spring:message code="sal.title.msg.currAgingMonth" />', width : '7%' , editable : false},
+	                            {dataField : "currentOs", headerText : '<spring:message code="sal.text.currOutstnd" />', width : '7%' , editable : false},
+	                            {dataField : "rosCaller", headerText : '<spring:message code="sal.title.text.rosCaller" />', width : '7%' , editable : false},
+	                            {dataField : "rosMainReason", headerText : '<spring:message code="sal.title.text.mainReason"/>', width : '10%' , editable : false},
+	                            {dataField : "paymode", headerText : '<spring:message code="sal.title.paymode" />', width : '7%' , editable : false},
 	                            {dataField : "etr", headerText : '<spring:message code="sal.title.text.etr" />', width : '5%' , editable : false},
 	                            {dataField : "ordId", visible : false},
 	                            {dataField : "custBillId", visible : false}
 	                           ];
+
+	 var rosColumnLayout =  [
+                             {dataField : "ordNo", headerText : '<spring:message code="sal.text.ordNo" />', width : 200 , editable : false, dataType : "string"},
+                             {dataField : "firstInstallDt", headerText : '<spring:message code="sal.text.insDate" />', width :200, editable : false},
+                             {dataField : "ordStusName", headerText : '<spring:message code="sal.text.orderStatus" />', width : 200 , editable : false},
+                             {dataField : "appTypeCode", headerText : '<spring:message code="sal.title.text.appType" />', width : 200 , editable : false},
+                             {dataField : "stockDesc", headerText : '<spring:message code="sal.title.text.product" />', width : 200 , editable : false},
+                             {dataField : "custName", headerText : '<spring:message code="sal.text.custName" />', width : 200 , editable : false},
+                             {dataField : "custId", headerText : '<spring:message code="sal.text.customerId" />', width : 200 , editable : false},
+                             {dataField : "custType", headerText : '<spring:message code="sal.text.custType" />', width : 200 , editable : false},
+                             {dataField : "rentalStus", headerText : '<spring:message code="sal.text.rentalStatus" />', width : 200 , editable : false},
+                             {dataField : "currMthAging", headerText : '<spring:message code="sal.title.msg.currAgingMonth" />', width : 200 , editable : false},
+                             {dataField : "currentOs", headerText : '<spring:message code="sal.text.currOutstnd" />', width : 200 , editable : false},
+                             {dataField : "rosCaller", headerText : '<spring:message code="sal.title.text.rosCaller" />', width : 200 , editable : false},
+                             {dataField : "rosMainReason", headerText : '<spring:message code="sal.title.text.mainReason"/>', width : 200 , editable : false},
+                             {dataField : "paymode", headerText : '<spring:message code="sal.title.paymode" />', width : 200 , editable : false},
+                             {dataField : "coltAmt", headerText : '<spring:message code="sal.title.text.collectionAmt" />', width : 200 , editable : false},
+                             {dataField : "recallDt", headerText : '<spring:message code="sal.title.text.reCallDate" />', width : 200 , editable : false},
+                             {dataField : "ptpDt", headerText : '<spring:message code="sal.title.text.ptpDate" />', width : 200 , editable : false},
+                             {dataField : "keyInDt", headerText : '<spring:message code="sal.text.keyInDate" />', width : 200 , editable : false},
+                            ];
 
 	    //그리드 속성 설정
 	    var gridPros = {
@@ -415,7 +437,8 @@ function createRosCallGrid(){
 	            groupingMessage     : "Here groupping"
 	    };
 
-	    rosGridID = GridCommon.createAUIGrid("#rosCall_grid_wrap", rosColumnLayout,'', gridPros);  // address list
+	    rosGridID = GridCommon.createAUIGrid("#rosCall_grid_wrap", rosColumnLayout,'', gridPros);
+	    excelGridID = GridCommon.createAUIGrid("#excel_grid_wrap", rosColumnLayout,'', gridPros);
 }
 
 function fn_newROSCall(){
@@ -687,6 +710,7 @@ $(function() {
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="rosCall_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+<div id="excel_grid_wrap" style="display:none"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

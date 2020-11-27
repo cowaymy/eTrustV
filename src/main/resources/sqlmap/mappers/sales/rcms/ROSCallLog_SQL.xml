@@ -31,8 +31,13 @@
                                              RANK
                                      FROM sal0046d
                                     WHERE stus_code_id = 4)
-                            WHERE RANK = 1)
-    SELECT Project1.ORD_ID   ,
+                            WHERE RANK = 1),
+            ROS AS (SELECT * FROM (
+                SELECT SALES_ORD_ID, CALL_RESULT_ID, ROW_NUMBER() OVER(PARTITION BY SALES_ORD_ID ORDER BY CALL_RESULT_ID DESC) RN FROM CCR0006D CE
+                 JOIN CCR0007D CR ON CR.CALL_ENTRY_ID = CE.CALL_ENTRY_ID
+                WHERE TYPE_ID = 507
+                ) WHERE RN = 1)
+    SELECT DISTINCT Project1.ORD_ID   ,
                 Project1.ORD_NO   ,
                 Project1.RENTAL_STUS   ,
                 Project1.ORD_REF_NO   ,
@@ -56,7 +61,11 @@
                 Project1.FIRST_INSTALL_DT ,
                 Project1.PAYMODE ,
                 Project1.ROS_MAIN_REASON ,
-                Project1.CUST_BILL_ID
+                Project1.CUST_BILL_ID ,
+                Project1.COLT_AMT ,
+                Project1.RECALL_DT ,
+                Project1.PTP_DT ,
+                Project1.KEY_IN_DT
          FROM ( SELECT Extent1.ORD_ID   ,
                        Extent1.ORD_NO   ,
                        Extent1.ORD_STUS_NAME ,
@@ -82,15 +91,21 @@
                        Extent9.CODE_NAME PAYMODE ,
                        Extent11.CODE ROS_CALL_RESN_ID ,
                        CASE WHEN Extent3.ROS_CALL_RESN_ID IS NOT NULL THEN Extent11.CODE || ' - ' || Extent11.RESN_DESC END ROS_MAIN_REASON ,
-                       Extent1.CUST_BILL_ID
+                       Extent1.CUST_BILL_ID ,
+                       CR.CALL_ROS_AMT COLT_AMT ,
+                       TO_CHAR(Extent3.ROS_CALL_RECALL_DT,'DD/MM/YYYY') RECALL_DT,
+                       TO_CHAR(Extent3.PTP_DT,'DD/MM/YYYY') PTP_DT ,
+                       TO_CHAR(CR.CALL_CRT_DT,'DD/MM/YYYY') KEY_IN_DT
                 FROM
                        SAL1006V Extent1
                        LEFT JOIN MSC0013D Extent3 ON Extent3.SALES_ORD_ID = Extent1.ORD_ID AND ROS_YEAR = TO_CHAR(SYSDATE,'YYYY') AND ROS_MONTH = TO_CHAR(SYSDATE,'MM')
+                       LEFT JOIN ROS ROS ON ROS.SALES_ORD_ID = Extent1.ORD_ID
+                       LEFT JOIN CCR0007D CR ON CR.CALL_RESULT_ID = ROS.CALL_RESULT_ID
                        LEFT JOIN SAL0149D Extent4 ON Extent4.SALES_ORD_ID = Extent1.ORD_ID
                        LEFT JOIN SAL0148M Extent5 ON Extent5.AGENT_ID = Extent4.AGENT_ID
-                       JOIN SAL0029D Extent8 ON Extent8.CUST_ID =Extent1.CUST_ID
+                       JOIN SAL0029D CUST ON CUST.CUST_ID =Extent1.CUST_ID
                        LEFT JOIN SYS0013M Extent6 ON Extent6.CODE_ID = Extent1.CUST_TYPE_ID
-                       LEFT JOIN SYS0013M Extent7 ON Extent7.CODE_ID = Extent8.CORP_TYPE_ID
+                       LEFT JOIN SYS0013M Extent7 ON Extent7.CODE_ID = CUST.CORP_TYPE_ID
                        LEFT JOIN entry_info_min eimin ON eimin.sales_ord_id = Extent1.ORD_ID
                        LEFT JOIN sal0047d ir1 ON ir1.entry_id = eimin.install_entry_id and ir1.result_id = eimin.INSTALL_RESULT_ID
                        LEFT JOIN SAL0074D Extent8 ON Extent8.SALES_ORD_ID = Extent1.ORD_ID
@@ -149,10 +164,10 @@
                     AND  Extent5.AGENT_TYPE = #{rosCallerType}
                  </if>
                  <if test=" rclStartDt != null and rclStartDt != '' ">
-                    AND  TO_DATE(Extent3.ROS_CALL_RECALL_DT,'DD/MM/YYYY') >= TO_DATE(#{rclStartDt},'DD/MM/YYYY')
+                    AND  Extent3.ROS_CALL_RECALL_DT >= TO_DATE(#{rclStartDt},'DD/MM/YYYY')
                  </if>
                  <if test=" rclEndDt != null and rclEndDt != '' ">
-                    AND  TO_DATE(Extent3.ROS_CALL_RECALL_DT,'DD/MM/YYYY') <![CDATA[<=]]> TO_DATE(#{rclEndDt},'DD/MM/YYYY')
+                    AND  Extent3.ROS_CALL_RECALL_DT <![CDATA[<=]]> TO_DATE(#{rclEndDt},'DD/MM/YYYY')
                  </if>
                  <if test=" mainReason != null and mainReason != '' ">
                     AND  Extent11.RESN_ID = #{mainReason}
@@ -164,10 +179,10 @@
                     </foreach>
                  </if>
                  <if test=" ptpStartDt != null and ptpStartDt != '' ">
-                    AND  TO_DATE(Extent3.PTP_DT,'DD/MM/YYYY') >= TO_DATE(#{ptpStartDt},'DD/MM/YYYY')
+                    AND  Extent3.PTP_DT >= TO_DATE(#{ptpStartDt},'DD/MM/YYYY')
                  </if>
                  <if test=" ptpEndDt != null and ptpEndDt != '' ">
-                    AND  TO_DATE(Extent3.PTP_DT,'DD/MM/YYYY') <![CDATA[<=]]> TO_DATE(#{ptpEndDt},'DD/MM/YYYY')
+                    AND  Extent3.PTP_DT  <![CDATA[<=]]> TO_DATE(#{ptpEndDt},'DD/MM/YYYY')
                  </if>
                  <if test=" rosStatus != null and rosStatus != '' ">
                     AND  Extent3.ROS_STUS =#{rosStatus}
