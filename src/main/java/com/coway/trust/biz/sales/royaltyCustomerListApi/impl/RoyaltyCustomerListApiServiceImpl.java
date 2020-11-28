@@ -22,7 +22,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2019. 11. 13.    KR-JAEMJAEM:)   First creation
  * </pre>
  */
-@Service("ProductInfoListApiService")
+@Service("RoyaltyCustomerListApiService")
 public class RoyaltyCustomerListApiServiceImpl extends EgovAbstractServiceImpl implements RoyaltyCustomerListApiService{
 
 
