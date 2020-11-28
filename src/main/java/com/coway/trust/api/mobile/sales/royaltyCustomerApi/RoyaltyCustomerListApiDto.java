@@ -52,8 +52,13 @@ public class RoyaltyCustomerListApiDto {
 	private String hpCallRemark;
 	private int stus;
 	private String remark;
+	private int crtUserId;
+	private String crtDt;
+	private int updUserId;
+	private String updDt;
 	private String hpViewStartDt;
 	private String hpViewEndDt;
+	private int hpAssgnmtUploadId;
 
 	public int getLoyaltyId() {
 		return loyaltyId;
@@ -259,6 +264,30 @@ public class RoyaltyCustomerListApiDto {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+	public int getCrtUserId() {
+		return crtUserId;
+	}
+	public void setCrtUserId(int crtUserId) {
+		this.crtUserId = crtUserId;
+	}
+	public String getCrtDt() {
+		return crtDt;
+	}
+	public void setCrtDt(String crtDt) {
+		this.crtDt = crtDt;
+	}
+	public int getUpdUserId() {
+		return updUserId;
+	}
+	public void setUpdUserId(int updUserId) {
+		this.updUserId = updUserId;
+	}
+	public String getUpdDt() {
+		return updDt;
+	}
+	public void setUpdDt(String updDt) {
+		this.updDt = updDt;
+	}
 	public String getHpViewStartDt() {
 		return hpViewStartDt;
 	}
@@ -270,6 +299,12 @@ public class RoyaltyCustomerListApiDto {
 	}
 	public void setHpViewEndDt(String hpViewEndDt) {
 		this.hpViewEndDt = hpViewEndDt;
+	}
+	public int getHpAssgnmtUploadId() {
+		return hpAssgnmtUploadId;
+	}
+	public void setHpAssgnmtUploadId(int hpAssgnmtUploadId) {
+		this.hpAssgnmtUploadId = hpAssgnmtUploadId;
 	}
 
 }
