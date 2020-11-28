@@ -24,13 +24,36 @@ public class RoyaltyCustomerListApiDto {
 	private int hpCode;
 	private String custID;
 	private String custName;
-
-
-
-
-
-
-
+	private String telM;
+	private String telR;
+	private String telO;
+	private String email;
+	private String instAddLine1;
+	private String instAddLine2;
+	private String instArea;
+	private String instPostcode;
+	private String instCity;
+	private String instState;
+	private double totOutst;
+	private int totOrderInUse;
+	private int wpInUse;
+	private double wpTotOutst;
+	private int apInUse;
+	private double apTotOutst;
+	private int mattressInUse;
+	private double mattressTotOutst;
+	private int poeInUse;
+	private double poeTotOutst;
+	private int softenerInUse;
+	private double softenerTotOutst;
+	private int bidetInUse;
+	private double bidetTotOutst;
+	private int hpCallReasonCode;
+	private String hpCallRemark;
+	private int stus;
+	private String remark;
+	private String hpViewStartDt;
+	private String hpViewEndDt;
 
 	public int getLoyaltyId() {
 		return loyaltyId;
@@ -68,19 +91,185 @@ public class RoyaltyCustomerListApiDto {
 	public void setCustName(String custName) {
 		this.custName = custName;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	public String getTelM() {
+		return telM;
+	}
+	public void setTelM(String telM) {
+		this.telM = telM;
+	}
+	public String getTelR() {
+		return telR;
+	}
+	public void setTelR(String telR) {
+		this.telR = telR;
+	}
+	public String getTelO() {
+		return telO;
+	}
+	public void setTelO(String telO) {
+		this.telO = telO;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getInstAddLine1() {
+		return instAddLine1;
+	}
+	public void setInstAddLine1(String instAddLine1) {
+		this.instAddLine1 = instAddLine1;
+	}
+	public String getInstAddLine2() {
+		return instAddLine2;
+	}
+	public void setInstAddLine2(String instAddLine2) {
+		this.instAddLine2 = instAddLine2;
+	}
+	public String getInstArea() {
+		return instArea;
+	}
+	public void setInstArea(String instArea) {
+		this.instArea = instArea;
+	}
+	public String getInstPostcode() {
+		return instPostcode;
+	}
+	public void setInstPostcode(String instPostcode) {
+		this.instPostcode = instPostcode;
+	}
+	public String getInstCity() {
+		return instCity;
+	}
+	public void setInstCity(String instCity) {
+		this.instCity = instCity;
+	}
+	public String getInstState() {
+		return instState;
+	}
+	public void setInstState(String instState) {
+		this.instState = instState;
+	}
+	public double getTotOutst() {
+		return totOutst;
+	}
+	public void setTotOutst(double totOutst) {
+		this.totOutst = totOutst;
+	}
+	public int getTotOrderInUse() {
+		return totOrderInUse;
+	}
+	public void setTotOrderInUse(int totOrderInUse) {
+		this.totOrderInUse = totOrderInUse;
+	}
+	public int getWpInUse() {
+		return wpInUse;
+	}
+	public void setWpInUse(int wpInUse) {
+		this.wpInUse = wpInUse;
+	}
+	public double getWpTotOutst() {
+		return wpTotOutst;
+	}
+	public void setWpTotOutst(double wpTotOutst) {
+		this.wpTotOutst = wpTotOutst;
+	}
+	public int getApInUse() {
+		return apInUse;
+	}
+	public void setApInUse(int apInUse) {
+		this.apInUse = apInUse;
+	}
+	public double getApTotOutst() {
+		return apTotOutst;
+	}
+	public void setApTotOutst(double apTotOutst) {
+		this.apTotOutst = apTotOutst;
+	}
+	public int getMattressInUse() {
+		return mattressInUse;
+	}
+	public void setMattressInUse(int mattressInUse) {
+		this.mattressInUse = mattressInUse;
+	}
+	public double getMattressTotOutst() {
+		return mattressTotOutst;
+	}
+	public void setMattressTotOutst(double mattressTotOutst) {
+		this.mattressTotOutst = mattressTotOutst;
+	}
+	public int getPoeInUse() {
+		return poeInUse;
+	}
+	public void setPoeInUse(int poeInUse) {
+		this.poeInUse = poeInUse;
+	}
+	public double getPoeTotOutst() {
+		return poeTotOutst;
+	}
+	public void setPoeTotOutst(double poeTotOutst) {
+		this.poeTotOutst = poeTotOutst;
+	}
+	public int getSoftenerInUse() {
+		return softenerInUse;
+	}
+	public void setSoftenerInUse(int softenerInUse) {
+		this.softenerInUse = softenerInUse;
+	}
+	public double getSoftenerTotOutst() {
+		return softenerTotOutst;
+	}
+	public void setSoftenerTotOutst(double softenerTotOutst) {
+		this.softenerTotOutst = softenerTotOutst;
+	}
+	public int getBidetInUse() {
+		return bidetInUse;
+	}
+	public void setBidetInUse(int bidetInUse) {
+		this.bidetInUse = bidetInUse;
+	}
+	public double getBidetTotOutst() {
+		return bidetTotOutst;
+	}
+	public void setBidetTotOutst(double bidetTotOutst) {
+		this.bidetTotOutst = bidetTotOutst;
+	}
+	public int getHpCallReasonCode() {
+		return hpCallReasonCode;
+	}
+	public void setHpCallReasonCode(int hpCallReasonCode) {
+		this.hpCallReasonCode = hpCallReasonCode;
+	}
+	public String getHpCallRemark() {
+		return hpCallRemark;
+	}
+	public void setHpCallRemark(String hpCallRemark) {
+		this.hpCallRemark = hpCallRemark;
+	}
+	public int getStus() {
+		return stus;
+	}
+	public void setStus(int stus) {
+		this.stus = stus;
+	}
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	public String getHpViewStartDt() {
+		return hpViewStartDt;
+	}
+	public void setHpViewStartDt(String hpViewStartDt) {
+		this.hpViewStartDt = hpViewStartDt;
+	}
+	public String getHpViewEndDt() {
+		return hpViewEndDt;
+	}
+	public void setHpViewEndDt(String hpViewEndDt) {
+		this.hpViewEndDt = hpViewEndDt;
+	}
 
 }
