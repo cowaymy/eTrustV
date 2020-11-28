@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.api.mobile.sales.productInfoListApi.ProductInfoListApiDto;
-import com.coway.trust.api.mobile.sales.productInfoListApi.ProductInfoListApiForm;
 import com.coway.trust.biz.sales.msales.OrderCustomerApiService;
-import com.coway.trust.biz.sales.productInfoListApi.ProductInfoListApiService;
 import com.coway.trust.biz.sales.royaltyCustomerListApi.RoyaltyCustomerListApiService;
 
 
@@ -47,7 +44,7 @@ public class RoyaltyCustomerListApiController {
 	public ResponseEntity<List<RoyaltyCustomerListApiDto>> selectWsLoyaltyList() throws Exception {
 		List<EgovMap> selectWsLoyaltyList = royaltyCustomerListApiService.selectWsLoyaltyList();
 
-	//	 List<EgovMap> selectCodeList = productInfoListApiService.selectCodeList();
+
 
 		if(LOGGER.isDebugEnabled()){
 			for (int i = 0; i < selectWsLoyaltyList.size(); i++) {
