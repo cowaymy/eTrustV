@@ -5,7 +5,7 @@
 
 
 
-<select id=selectWsLoyaltyList resultType="egovMap">
+<select id="selectWsLoyaltyList" resultType="egovMap">
 <![CDATA[
 
 SELECT
