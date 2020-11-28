@@ -1,6 +1,5 @@
 package com.coway.trust.api.mobile.sales.royaltyCustomerApi;
 
-import com.coway.trust.api.mobile.sales.productInfoListApi.ProductInfoListApiDto;
 import com.coway.trust.util.BeanConverter;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.ApiModel;
