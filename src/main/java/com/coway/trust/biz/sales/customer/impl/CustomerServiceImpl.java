@@ -960,4 +960,9 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
   public void updateTokenStagingF(Map<String, Object> params) {
       customerMapper.updateTokenStagingF(params);
   }
+
+  @Override
+  public List<EgovMap> selectExpiredCustomerList(Map<String, Object> params) {
+	  return customerMapper.selectExpiredCustomerList(params);
+  }
 }

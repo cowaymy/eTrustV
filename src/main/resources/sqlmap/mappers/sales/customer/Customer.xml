@@ -2903,4 +2903,54 @@
       WHERE TKN_ID = LTRIM(TO_NUMBER(SUBSTR(#{refId}, 37, 10)))
         AND REF_NO = #{refId}
   </update>
+
+  <select id="selectExpiredCustomerList" parameterType="Map" resultType="egovMap">
+    SELECT S.SALES_ORD_NO, S.CUST_ID ,C.CODE Title, C.NAME  , P.STUS_CODE_ID AS REN_STUS, G.MEM_CODE HP_CODE , G.NAME AS HP_NAME,
+    CH.CHS_STUS ,UPPER(MA.STATE) AS INSTL_STATE, X.DIFF_MTHS AS USED_MTH ,
+    V.DEPT_CODE, V.GRP_CODE, V.ORG_CODE,
+    NVL(Y.OUTSTD,0) OUTSTD
+    FROM SAL0001D S
+    JOIN SAL0029D C ON C.CUST_ID = S.CUST_ID
+    JOIN SAL0027D CN ON CN.CUST_CNTC_ID = S.CUST_CNT_ID
+    JOIN SYS0013M C ON C.CODE_ID = CN.CUST_INITIAL
+    JOIN ORG0001D G ON G.MEM_ID = S.MEM_ID
+    JOIN SAL0071D P ON P.SALES_ORD_ID = S.SALES_ORD_ID
+    JOIN SAL0262D CH ON CH.CHS_ID = (SELECT MAX(CHS_ID) FROM SAL0262D WHERE CUST_ID = S.CUST_ID   )
+    JOIN SAL0045D INS ON INS.SALES_ORD_ID = S.SALES_ORD_ID AND INS.STUS_CODE_ID = '1'
+    JOIN SAL0023D ADDS ON ADDS.CUST_ADD_ID = INS.ADD_ID
+    JOIN SYS0064M MA ON MA.AREA_ID = ADDS.AREA_ID
+    JOIN ( SELECT SRV_SALES_ORD_ID, FLOOR(MONTHS_BETWEEN( MAX(SRV_EXPR_DT),SYSDATE )) DIFF_MTHS
+       FROM SAL0095D
+       WHERE SRV_STUS_CODE_ID = '4'
+       GROUP BY SRV_SALES_ORD_ID
+       HAVING ( FLOOR(MONTHS_BETWEEN( MAX(SRV_EXPR_DT),SYSDATE ))) BETWEEN  4  AND 10 ) X ON X.SRV_SALES_ORD_ID = S.SALES_ORD_ID
+    LEFT JOIN ( SELECT RENT_SO_ID, SUM(RENT_AMT) OUTSTD
+            FROM PAY0022D
+            GROUP BY RENT_SO_ID
+            HAVING SUM(RENT_AMT) <![CDATA[>]]> 0 ) Y ON Y.RENT_SO_ID = S.SALES_ORD_ID
+    LEFT JOIN ORG1001V V ON V.MEM_ID = S.MEM_ID
+    WHERE S.APP_TYPE_ID = '66' AND C.TYPE_ID = '964'
+    AND G.MEM_TYPE = '1'
+         <if test="salesOrdNo != null and salesOrdNo !=''">
+           AND S.SALES_ORD_NO = #{salesOrdNo}
+         </if>
+         <if test="custId != null and custId !=''">
+           AND C.CUST_ID = #{custId}
+         </if>
+         <if test="name != null and name !=''">
+           AND C.NAME = #{name}
+         </if>
+         <if test="arrRentStus !=null and arrRentStus !=''">
+           AND P.STUS_CODE_ID IN
+           <foreach item="status" collection="arrRentStus" index="index" open="(" separator="," close=")">
+                #{status}
+           </foreach>
+         </if>
+         <if test="arrExpMth !=null and arrExpMth !=''">
+            AND X.DIFF_MTHS IN
+            <foreach item="month" collection="arrExpMth" index="index" open="(" separator="," close=")">
+                #{month}
+            </foreach>
+         </if>
+  </select>
 </mapper>

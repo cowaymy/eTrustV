@@ -623,4 +623,6 @@ public interface CustomerMapper {
   EgovMap getTokenNumber(Map<String, Object> params);
 
   void updateTokenStagingF(Map<String, Object> params);
+
+  List<EgovMap> selectExpiredCustomerList(Map<String, Object> params);
 }
