@@ -19,7 +19,7 @@ public class RoyaltyCustomerListApiDto {
 
 	private int loyaltyId;
 	private int salesOrdId;
-	private int salesOrdNo;
+	private String salesOrdNo;
 	private String hpCode;
 	private int custID;
 	private String custName;
@@ -33,20 +33,20 @@ public class RoyaltyCustomerListApiDto {
 	private String instPostcode;
 	private String instCity;
 	private String instState;
-	private double totOutst;
-	private int totOrderInUse;
-	private int wpInUse;
-	private double wpTotOutst;
-	private int apInUse;
-	private double apTotOutst;
-	private int mattressInUse;
-	private double mattressTotOutst;
-	private int poeInUse;
-	private double poeTotOutst;
-	private int softenerInUse;
-	private double softenerTotOutst;
-	private int bidetInUse;
-	private double bidetTotOutst;
+//	private double totOutst;
+//	private int totOrderInUse;
+//	private int wpInUse;
+//	private double wpTotOutst;
+//	private int apInUse;
+//	private double apTotOutst;
+//	private int mattressInUse;
+//	private double mattressTotOutst;
+//	private int poeInUse;
+//	private double poeTotOutst;
+//	private int softenerInUse;
+//	private double softenerTotOutst;
+//	private int bidetInUse;
+//	private double bidetTotOutst;
 	private int hpCallReasonCode;
 	private String hpCallRemark;
 	//private int stus;
@@ -71,10 +71,11 @@ public class RoyaltyCustomerListApiDto {
 	public void setSalesOrdId(int salesOrdId) {
 		this.salesOrdId = salesOrdId;
 	}
-	public int getSalesOrdNo() {
+
+	public String getSalesOrdNo() {
 		return salesOrdNo;
 	}
-	public void setSalesOrdNo(int salesOrdNo) {
+	public void setSalesOrdNo(String salesOrdNo) {
 		this.salesOrdNo = salesOrdNo;
 	}
 	public String getHpCode() {
@@ -155,7 +156,7 @@ public class RoyaltyCustomerListApiDto {
 	public void setInstState(String instState) {
 		this.instState = instState;
 	}
-	public double getTotOutst() {
+	/*public double getTotOutst() {
 		return totOutst;
 	}
 	public void setTotOutst(double totOutst) {
@@ -238,7 +239,7 @@ public class RoyaltyCustomerListApiDto {
 	}
 	public void setBidetTotOutst(double bidetTotOutst) {
 		this.bidetTotOutst = bidetTotOutst;
-	}
+	}*/
 	public int getHpCallReasonCode() {
 		return hpCallReasonCode;
 	}
