@@ -116,7 +116,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
 			boolean isMultiPart = email.getFiles().size() == 0 ? false : true;
-			isMultiPart = email.getHasInlineImage();
+			isMultiPart = email.getHasInlineImage();	//for attaching image in HTML inline
 
 			MimeMessageHelper messageHelper = new MimeMessageHelper(message, isMultiPart, AppConstants.DEFAULT_CHARSET);
 			messageHelper.setFrom(from);

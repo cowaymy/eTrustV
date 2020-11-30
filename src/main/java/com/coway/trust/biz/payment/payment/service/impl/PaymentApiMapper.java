@@ -31,6 +31,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * -------------  -----------  -------------
  * 2019. 9. 30.   KR-HAN        First creation
  * 2020.2.06      MY-ONGHC    Add Add E-Notification
+ * 2020.10.26	   MY-YONGJH   Update E-Notification (Email Details)
  *          </pre>
  */
 @Mapper("paymentApiMapper")

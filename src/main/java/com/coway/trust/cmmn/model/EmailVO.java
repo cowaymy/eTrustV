@@ -94,7 +94,7 @@ public class EmailVO {
 		return hasInlineImage;
 	}
 
-	public void setHasInlineImage(boolean hasInlineImage) {
+	public void setHasInlineImage(boolean hasInlineImage){
 		this.hasInlineImage = hasInlineImage;
 	}
 }

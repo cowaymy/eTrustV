@@ -42,7 +42,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 2020. 2. 6.     MY-ONGHC   Add E-Notification
  * 2020. 4. 9.     MY_ONGHC  Amend insertSalesNotification to Add Customer Name
  * 2020. 5. 29.   MY_ONGHC   Amend sendEmail function
- * 2020. 10. 26.  MY_YONGJH Amend sendEmail function
+ * 2020. 10. 26.  MY_YONGJH Amend sendEmail function to use Email Template Type
  *          </pre>
  */
 @Service("paymentApiService")

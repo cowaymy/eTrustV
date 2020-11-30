@@ -220,6 +220,6 @@
         JOIN SYS0026M s26 ON s26.STK_ID = s2.ITM_STK_ID
         JOIN SYS0013M s13 ON s13.CODE_ID = p.PAY_MODE
         JOIN SYS0047M s47 ON s47.USER_ID = p.CRT_USER_ID
-    WHERE p.MOB_TICKET_NO = #{mobTicketNo}
+     WHERE p.MOB_TICKET_NO = #{mobTicketNo}
   </select>
 </mapper>
