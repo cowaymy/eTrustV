@@ -398,7 +398,7 @@ function createRosCallGrid(){
 	                            {dataField : "custBillId", visible : false}
 	                           ];
 
-	 var rosColumnLayout =  [
+	 var excelColumnLayout =  [
                              {dataField : "ordNo", headerText : '<spring:message code="sal.text.ordNo" />', width : 200 , editable : false, dataType : "string"},
                              {dataField : "firstInstallDt", headerText : '<spring:message code="sal.text.insDate" />', width :200, editable : false},
                              {dataField : "ordStusName", headerText : '<spring:message code="sal.text.orderStatus" />', width : 200 , editable : false},
@@ -438,7 +438,7 @@ function createRosCallGrid(){
 	    };
 
 	    rosGridID = GridCommon.createAUIGrid("#rosCall_grid_wrap", rosColumnLayout,'', gridPros);
-	    excelGridID = GridCommon.createAUIGrid("#excel_grid_wrap", rosColumnLayout,'', gridPros);
+	    excelGridID = GridCommon.createAUIGrid("#excel_grid_wrap", excelColumnLayout,'', gridPros);
 }
 
 function fn_newROSCall(){
