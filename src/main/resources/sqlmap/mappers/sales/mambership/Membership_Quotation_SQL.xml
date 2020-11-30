@@ -823,7 +823,7 @@
 							         JOIN SAL0001D A   ON S.SRV_SALES_ORD_ID = A.SALES_ORD_ID
 							 WHERE  ( 1 = S.SRV_QUOT_STUS_ID )
 							          AND ( A.SALES_ORD_NO = #{ORD_NO} )
-							          AND ( S.SRV_QUOT_VAL_ID >= SYSDATE ) AND ROWNUM <= 1
+							          AND ( TO_DATE(TO_CHAR(S.SRV_QUOT_VAL_ID, 'YYYYMMDD'), 'YYYYMMDD') >= TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD') ) AND ROWNUM <= 1
                  ]]>
       </select>
 
