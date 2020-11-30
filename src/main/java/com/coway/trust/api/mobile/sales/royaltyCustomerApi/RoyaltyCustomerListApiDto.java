@@ -20,7 +20,7 @@ public class RoyaltyCustomerListApiDto {
 	private int loyaltyId;
 	private int salesOrdId;
 	private int salesOrdNo;
-	private int hpCode;
+	private String hpCode;
 	private int custID;
 	private String custName;
 	private String telM;
@@ -77,10 +77,10 @@ public class RoyaltyCustomerListApiDto {
 	public void setSalesOrdNo(int salesOrdNo) {
 		this.salesOrdNo = salesOrdNo;
 	}
-	public int getHpCode() {
+	public String getHpCode() {
 		return hpCode;
 	}
-	public void setHpCode(int hpCode) {
+	public void setHpCode(String hpCode) {
 		this.hpCode = hpCode;
 	}
 	public int getCustID() {
