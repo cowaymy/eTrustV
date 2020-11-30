@@ -49,14 +49,14 @@ public class RoyaltyCustomerListApiDto {
 	private double bidetTotOutst;
 	private int hpCallReasonCode;
 	private String hpCallRemark;
-	private int stus;
+	//private int stus;
 	private String remark;
 	private int crtUserId;
-	private String crtDt;
+	//private String crtDt;
 	private int updUserId;
-	private String updDt;
-	private String hpViewStartDt;
-	private String hpViewEndDt;
+	//private String updDt;
+	//private String hpViewStartDt;
+	//private String hpViewEndDt;
 	private int hpAssgnmtUploadId;
 
 	public int getLoyaltyId() {
@@ -251,12 +251,12 @@ public class RoyaltyCustomerListApiDto {
 	public void setHpCallRemark(String hpCallRemark) {
 		this.hpCallRemark = hpCallRemark;
 	}
-	public int getStus() {
+	/*public int getStus() {
 		return stus;
 	}
 	public void setStus(int stus) {
 		this.stus = stus;
-	}
+	}*/
 	public String getRemark() {
 		return remark;
 	}
@@ -269,19 +269,19 @@ public class RoyaltyCustomerListApiDto {
 	public void setCrtUserId(int crtUserId) {
 		this.crtUserId = crtUserId;
 	}
-	public String getCrtDt() {
+	/*public String getCrtDt() {
 		return crtDt;
 	}
 	public void setCrtDt(String crtDt) {
 		this.crtDt = crtDt;
-	}
+	}*/
 	public int getUpdUserId() {
 		return updUserId;
 	}
 	public void setUpdUserId(int updUserId) {
 		this.updUserId = updUserId;
 	}
-	public String getUpdDt() {
+	/*public String getUpdDt() {
 		return updDt;
 	}
 	public void setUpdDt(String updDt) {
@@ -298,7 +298,7 @@ public class RoyaltyCustomerListApiDto {
 	}
 	public void setHpViewEndDt(String hpViewEndDt) {
 		this.hpViewEndDt = hpViewEndDt;
-	}
+	}*/
 	public int getHpAssgnmtUploadId() {
 		return hpAssgnmtUploadId;
 	}
