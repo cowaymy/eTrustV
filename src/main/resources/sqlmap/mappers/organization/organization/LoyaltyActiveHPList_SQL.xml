@@ -3,6 +3,7 @@
 <mapper namespace="com.coway.trust.biz.organization.organization.impl.LoyaltyActiveHPListMapper">
 
     <select id="selectLoyaltyActiveHPList" parameterType="Map" resultType="egovMap">
+    SELECT T.* FROM (
         SELECT DISTINCT A.MEM_ID, A.MEM_CODE,A.NAME, TO_CHAR(A.JOIN_DT, 'DD/MM/YYYY') JOIN_DT,
                                 V.DEPT_CODE,  V.GRP_CODE,  V.ORG_CODE,
                                 NVL(X6.M6,0) M6,
@@ -64,6 +65,7 @@
          <if test="meetingPoint != null and meetingPoint !=''">
             AND MP.MEET_POINT_ID = #{meetingPoint}
          </if>
+         ) T WHERE T.TOT_SAL <![CDATA[>]]>= 1
     </select>
 
 </mapper>
