@@ -28,7 +28,8 @@ public class RoyaltyCustomerListApiForm {
 	//	params.put("custID", vo.getCustID());
 		params.put("hpCallReasonCode", vo.getHpCallReasonCode());
 		params.put("hpCallRemark", vo.getHpCallRemark());
-		params.put("updUserId", vo.getUpdUserId());
+	//	params.put("updUserId", vo.getUpdUserId());
+		params.put("regId", vo.getRegId());
 
 		return params;
 	}
@@ -41,8 +42,18 @@ public class RoyaltyCustomerListApiForm {
 	private String hpCallRemark;
 	private int updUserId;
 	private String updDt;
+	private String regId;
 
 
+
+
+
+	public String getRegId() {
+		return regId;
+	}
+	public void setRegId(String regId) {
+		this.regId = regId;
+	}
 	public int getUpdUserId() {
 		return updUserId;
 	}

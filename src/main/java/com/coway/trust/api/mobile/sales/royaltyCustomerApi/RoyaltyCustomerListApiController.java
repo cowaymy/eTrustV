@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.logistics.stockAudit.StockAuditApiDto;
 import com.coway.trust.api.mobile.payment.fundTransferApi.FundTransferApiForm;
 import com.coway.trust.api.mobile.payment.groupOrder.GroupOrderForm;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
@@ -72,13 +73,16 @@ public class RoyaltyCustomerListApiController {
 	    return ResponseEntity.ok(royaltyCustomerListApiService.updateWsLoyaltyList(param));
 	  }*/
 
-	 @ApiOperation(value = "updateWsLoyaltyList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	 /*@ApiOperation(value = "updateWsLoyaltyList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 		@RequestMapping(value = "/updateWsLoyaltyList", method = RequestMethod.POST)
 		public void updateWsLoyaltyList(@RequestBody RoyaltyCustomerListApiForm  param) throws Exception {
 		 royaltyCustomerListApiService.updateWsLoyaltyList(param);
-		}
+		}*/
 
-
-
-
-}
+	 @ApiOperation(value = "updateWsLoyaltyList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	    @RequestMapping(value = "/updateWsLoyaltyList", method = RequestMethod.POST)
+	    public ResponseEntity<RoyaltyCustomerListApiForm> updateWsLoyaltyList(@RequestBody RoyaltyCustomerListApiForm param) throws Exception {
+		 RoyaltyCustomerListApiForm updateWsLoyaltyList = royaltyCustomerListApiService.updateWsLoyaltyList(param);
+	        return ResponseEntity.ok(updateWsLoyaltyList);
+	 	}
+	 }
