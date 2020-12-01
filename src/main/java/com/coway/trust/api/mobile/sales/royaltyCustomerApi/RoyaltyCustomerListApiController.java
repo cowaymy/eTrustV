@@ -13,11 +13,17 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.payment.fundTransferApi.FundTransferApiForm;
+import com.coway.trust.api.mobile.payment.groupOrder.GroupOrderForm;
+import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
+import com.coway.trust.api.mobile.services.as.AfterServiceResultDto;
+import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
 import com.coway.trust.biz.sales.msales.OrderCustomerApiService;
 import com.coway.trust.biz.sales.royaltyCustomerListApi.RoyaltyCustomerListApiService;
 
@@ -44,8 +50,6 @@ public class RoyaltyCustomerListApiController {
 	public ResponseEntity<List<RoyaltyCustomerListApiDto>> selectWsLoyaltyList() throws Exception {
 		List<EgovMap> selectWsLoyaltyList = royaltyCustomerListApiService.selectWsLoyaltyList();
 
-
-
 		if(LOGGER.isDebugEnabled()){
 			for (int i = 0; i < selectWsLoyaltyList.size(); i++) {
 				LOGGER.debug("selectWsLoyaltyList    값 : {}", selectWsLoyaltyList.get(i));
@@ -53,5 +57,28 @@ public class RoyaltyCustomerListApiController {
 		}
 		return ResponseEntity.ok(selectWsLoyaltyList.stream().map(r -> RoyaltyCustomerListApiDto.create(r)).collect(Collectors.toList()));
 	}
+
+	////// UPDATE STATUS /////
+/*	 @ApiOperation(value = "updateWsLoyaltyList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/updateWsLoyaltyList", method = RequestMethod.POST)
+	  public ResponseEntity<RoyaltyCustomerListApiForm> updateWsLoyaltyList(@RequestBody RoyaltyCustomerListApiForm param) throws Exception {
+		 RoyaltyCustomerListApiForm updateWsLoyaltyList = royaltyCustomerListApiService.updateWsLoyaltyList(param);
+		 return ResponseEntity.ok(updateWsLoyaltyList);
+	 }*/
+
+	/* @ApiOperation(value = "updateWsLoyaltyList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/updateWsLoyaltyList", method = RequestMethod.POST)
+	  public ResponseEntity<RoyaltyCustomerListApiDto> updateWsLoyaltyList(@RequestBody RoyaltyCustomerListApiDto param) throws Exception {
+	    return ResponseEntity.ok(royaltyCustomerListApiService.updateWsLoyaltyList(param));
+	  }*/
+
+	 @ApiOperation(value = "updateWsLoyaltyList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+		@RequestMapping(value = "/updateWsLoyaltyList", method = RequestMethod.POST)
+		public void updateWsLoyaltyList(@RequestBody RoyaltyCustomerListApiForm  param) throws Exception {
+		 royaltyCustomerListApiService.updateWsLoyaltyList(param);
+		}
+
+
+
 
 }
