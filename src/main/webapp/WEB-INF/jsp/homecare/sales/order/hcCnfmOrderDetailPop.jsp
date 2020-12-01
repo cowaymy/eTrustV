@@ -42,19 +42,43 @@
       $('#btnConfirm_RW').click(function() {
 	      console.log('!@# fn_doSaveOrder before call');
 
-          if(!$('#tabRC').hasClass("blind") && !FormUtil.checkReqValue($('#certRefFile'))) {
-	          console.log("attach file start");
-	    	  var formData = Common.getFormData("fileUploadForm");
+	      if(convToOrdYn == 'Y'){
+	          Common.ajax("GET", "/sales/order/selRcdTms.do", {preOrdId : preOrdId, rcdTms : rcdTms}, function(result) {
+	              if(result.code == "99"){
+	                  Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_orderRegPopClose());
+	                  return;
+	              }
+	              else{
+                    if(!$('#tabRC').hasClass("blind") && !FormUtil.checkReqValue($('#certRefFile'))) {
+          	          console.log("attach file start");
+          	    	  var formData = Common.getFormData("fileUploadForm");
 
-	    	  Common.ajaxFile("/sales/order/gstEurCertUpload.do", formData, function(result) {
-	    	      console.log(result.atchFileGrpId);
-	    		  $('#atchFileGrpId').val(result.atchFileGrpId);
-	    		  fn_doSaveOrder();
-	    	  });
-	      } else {
-              fn_doSaveOrder();
-          }
+          	    	  Common.ajaxFile("/sales/order/gstEurCertUpload.do", formData, function(result) {
+          	    	      console.log(result.atchFileGrpId);
+          	    		  $('#atchFileGrpId').val(result.atchFileGrpId);
+          	    		  fn_doSaveOrder();
+          	    	  });
+          	    	 } else {
+                        fn_doSaveOrder();
+                     }
+	              }
+	          });
+	      }else{
+	    	  if(!$('#tabRC').hasClass("blind") && !FormUtil.checkReqValue($('#certRefFile'))) {
+                  console.log("attach file start");
+                  var formData = Common.getFormData("fileUploadForm");
+
+                  Common.ajaxFile("/sales/order/gstEurCertUpload.do", formData, function(result) {
+                      console.log(result.atchFileGrpId);
+                      $('#atchFileGrpId').val(result.atchFileGrpId);
+                      fn_doSaveOrder();
+                  });
+                 } else {
+                    fn_doSaveOrder();
+                 }
+	      }
       });
+
   });
 
 </script>
