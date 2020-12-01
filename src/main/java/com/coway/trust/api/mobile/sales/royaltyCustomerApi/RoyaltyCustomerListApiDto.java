@@ -52,9 +52,9 @@ public class RoyaltyCustomerListApiDto {
 	//private int stus;
 	private String remark;
 	private int crtUserId;
-	//private String crtDt;
+	private String crtDt;
 	private int updUserId;
-	//private String updDt;
+	private String updDt;
 	//private String hpViewStartDt;
 	//private String hpViewEndDt;
 	private int hpAssgnmtUploadId;
@@ -270,25 +270,25 @@ public class RoyaltyCustomerListApiDto {
 	public void setCrtUserId(int crtUserId) {
 		this.crtUserId = crtUserId;
 	}
-	/*public String getCrtDt() {
+	public String getCrtDt() {
 		return crtDt;
 	}
 	public void setCrtDt(String crtDt) {
 		this.crtDt = crtDt;
-	}*/
+	}
 	public int getUpdUserId() {
 		return updUserId;
 	}
 	public void setUpdUserId(int updUserId) {
 		this.updUserId = updUserId;
 	}
-	/*public String getUpdDt() {
+	public String getUpdDt() {
 		return updDt;
 	}
 	public void setUpdDt(String updDt) {
 		this.updDt = updDt;
 	}
-	public String getHpViewStartDt() {
+  /*public String getHpViewStartDt() {
 		return hpViewStartDt;
 	}
 	public void setHpViewStartDt(String hpViewStartDt) {
