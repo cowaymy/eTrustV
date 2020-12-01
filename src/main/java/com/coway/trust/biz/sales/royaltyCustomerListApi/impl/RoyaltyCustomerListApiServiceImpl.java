@@ -61,7 +61,7 @@ public class RoyaltyCustomerListApiServiceImpl extends EgovAbstractServiceImpl i
 		 	    }
 
 		    Map<String, Object> loginInfoMap = new HashMap<String, Object>();
-		    loginInfoMap.put("_USER_ID", param.getUpdUserId());
+		    loginInfoMap.put("_USER_ID", param.getRegId());
 		    LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
 		    if (null == loginVO || CommonUtils.isEmpty(loginVO.getUserId())) {
 		      throw new ApplicationException(AppConstants.FAIL, "UserID is null.");
@@ -104,7 +104,10 @@ public class RoyaltyCustomerListApiServiceImpl extends EgovAbstractServiceImpl i
 		sal0271d.put("hpCallRemark", param.getHpCallRemark());
 		sal0271d.put("updUserId", loginVO.getUserId());
 
-	   royaltyCustomerListApiMapper.updateWsLoyaltyList(sal0271d);
+	   int saveCnt = royaltyCustomerListApiMapper.updateWsLoyaltyList(sal0271d);
+	   if( saveCnt != 1 ){
+           throw new ApplicationException(AppConstants.FAIL, "Failed to save.");
+       }
 
 
 		return param;

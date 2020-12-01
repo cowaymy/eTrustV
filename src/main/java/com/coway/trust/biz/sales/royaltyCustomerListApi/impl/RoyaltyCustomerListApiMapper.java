@@ -27,5 +27,5 @@ public interface RoyaltyCustomerListApiMapper {
 
 	/*int updateWsLoyaltyList(Map<String, Object> param);*/
 
-	void updateWsLoyaltyList(Map<String, Object> params);
+	int updateWsLoyaltyList(Map<String, Object> params);
 }
