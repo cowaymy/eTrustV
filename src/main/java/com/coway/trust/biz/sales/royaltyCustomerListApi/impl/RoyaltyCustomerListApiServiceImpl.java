@@ -97,8 +97,8 @@ public class RoyaltyCustomerListApiServiceImpl extends EgovAbstractServiceImpl i
 
 		Map<String, Object> sal0271d = new HashMap<String, Object>();
 		sal0271d.put("loyaltyId", param.getLoyaltyId());
-		sal0271d.put("salesOrdId", param.getSalesOrdId());
-	//	sal0271d.put("salesOrdNo", param.getSalesOrdNo());
+	//	sal0271d.put("salesOrdId", param.getSalesOrdId());
+		sal0271d.put("salesOrdNo", param.getSalesOrdNo());
 	//	sal0271d.put("custID", param.getCustID());
 		sal0271d.put("hpCallReasonCode", param.getHpCallReasonCode());
 		sal0271d.put("hpCallRemark", param.getHpCallRemark());
