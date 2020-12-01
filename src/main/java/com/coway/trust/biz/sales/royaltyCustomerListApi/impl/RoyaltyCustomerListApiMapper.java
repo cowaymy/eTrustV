@@ -22,4 +22,10 @@ public interface RoyaltyCustomerListApiMapper {
 
 
 	List<EgovMap> selectWsLoyaltyList();
+
+/*	List<EgovMap> updateWsLoyaltyList();*/
+
+	/*int updateWsLoyaltyList(Map<String, Object> param);*/
+
+	void updateWsLoyaltyList(Map<String, Object> params);
 }
