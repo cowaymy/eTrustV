@@ -5,17 +5,10 @@
     //AUIGrid 생성 후 반환 ID
     var myGridID;
 
-    var categoryCdList = [];
-    <c:forEach var="obj" items="${categoryCdList}">
-    categoryCdList.push({codeId:"${obj.code}", codeName:"${obj.codeName}", code:"${obj.code}"});
-    </c:forEach>
-
     $(document).ready(function(){
 
     	// AUIGrid 그리드를 생성합니다.
         createAUIGrid();
-
-        doDefCombo(categoryCdList, '', 'cmbRentalStus', 'M', 'f_multiCombo');   //Rental Status
 
     });
 
@@ -255,7 +248,13 @@
                 </tr>
                 <tr>
                     <th scope="row">Rental Status</th>
-                    <td><select id="cmbRentalStus" name="rentStus" class="multy_select w100p" multiple="multiple"></select></td>
+                    <td>
+                        <select id="cmbRentalStus" name="rentStus" class="multy_select w100p" multiple="multiple">
+                            <option value="REG">Regular</option>
+                            <option value="INV">Investigate</option>
+                            <option value="SUS">Suspend</option>
+                        </select>
+                    </td>
                     <th scope="row">Expired Months</th>
                     <td>
                         <select id="cmbExpMth" name="expMth" class="multy_select w100p" multiple="multiple">

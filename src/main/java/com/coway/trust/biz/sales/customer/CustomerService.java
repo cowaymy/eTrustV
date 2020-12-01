@@ -583,5 +583,4 @@ public interface CustomerService {
 
   void updateTokenStagingF(Map<String, Object> params);
 
-  List<EgovMap> selectExpiredCustomerList(Map<String, Object> params);
 }

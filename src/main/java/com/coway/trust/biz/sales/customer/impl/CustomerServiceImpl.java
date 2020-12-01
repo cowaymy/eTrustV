@@ -961,8 +961,4 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
       customerMapper.updateTokenStagingF(params);
   }
 
-  @Override
-  public List<EgovMap> selectExpiredCustomerList(Map<String, Object> params) {
-	  return customerMapper.selectExpiredCustomerList(params);
-  }
 }
