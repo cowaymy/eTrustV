@@ -45,9 +45,9 @@ SELECT
 
     REMARK,
     CRT_USER_ID,
-    CRT_DT,
+
     UPD_USER_ID,
-    UPD_DT,
+
 
 
     HP_ASSGNMT_UPLOAD_ID
@@ -62,7 +62,7 @@ ORDER BY    CUST_NAME
                            SET HP_CALL_REASON_CODE = #{hpCallReasonCode}
                                 ,HP_CALL_REMARK = #{hpCallRemark}
                                 ,UPD_USER_ID = #{updUserId}
-                                ,UPD_DT = SYSDATE
+                               <!--  ,UPD_DT = SYSDATE -->
                          WHERE   LOYALTY_ID = #{loyaltyId}
              </update>
 
