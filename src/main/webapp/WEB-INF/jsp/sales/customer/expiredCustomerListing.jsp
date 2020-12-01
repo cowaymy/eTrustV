@@ -136,15 +136,6 @@
         });
     }
 
-    function f_multiCombo(){
-         $('#cmbRentalStus').change(function() {
-
-         }).multipleSelect({
-            selectAll: true, //전체선택
-            width: '80%'
-         });
-    }
-
     $(function(){
     	$('#btnSrch').click(function() {
     		if(fn_validSearchList()) fn_getExpiredCustomerListAjax();
@@ -167,7 +158,6 @@
 
     	if(!isValid) Common.alert('<spring:message code="sal.title.text.expCustSrch" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
 
-    	console.log("after" + isValid);
     	return isValid;
 
     }
