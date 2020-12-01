@@ -2,6 +2,7 @@ package com.coway.trust.biz.sales.royaltyCustomerListApi;
 
 import java.util.List;
 
+import com.coway.trust.api.mobile.sales.royaltyCustomerApi.RoyaltyCustomerListApiForm;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -20,5 +21,7 @@ public interface RoyaltyCustomerListApiService {
 
 
 	 List<EgovMap> selectWsLoyaltyList() throws Exception;
+
+	 RoyaltyCustomerListApiForm updateWsLoyaltyList (RoyaltyCustomerListApiForm param) throws Exception;
 
 }
