@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.logistics.stockAudit.StockAuditApiFormDto;
+import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
+import com.coway.trust.api.mobile.sales.royaltyCustomerApi.RoyaltyCustomerListApiDto;
 import com.coway.trust.api.mobile.sales.royaltyCustomerApi.RoyaltyCustomerListApiForm;
 import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.biz.sales.royaltyCustomerListApi.RoyaltyCustomerListApiService;
@@ -49,7 +51,9 @@ public class RoyaltyCustomerListApiServiceImpl extends EgovAbstractServiceImpl i
 	}
 
 	@Override
-	public RoyaltyCustomerListApiForm updateWsLoyaltyList(RoyaltyCustomerListApiForm param) throws Exception {
+//	public RoyaltyCustomerListApiForm updateWsLoyaltyList(RoyaltyCustomerListApiForm param) throws Exception { //666
+
+		public RoyaltyCustomerListApiDto updateWsLoyaltyList(RoyaltyCustomerListApiDto param) throws Exception {
 		// TODO Auto-generated method stub
 
 
@@ -61,7 +65,7 @@ public class RoyaltyCustomerListApiServiceImpl extends EgovAbstractServiceImpl i
 		 	    }
 
 		    Map<String, Object> loginInfoMap = new HashMap<String, Object>();
-		    loginInfoMap.put("_USER_ID", param.getRegId());
+		    loginInfoMap.put("_USER_ID", param.getRegId()); //666
 		    LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
 		    if (null == loginVO || CommonUtils.isEmpty(loginVO.getUserId())) {
 		      throw new ApplicationException(AppConstants.FAIL, "UserID is null.");
