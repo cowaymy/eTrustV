@@ -61,7 +61,7 @@ ORDER BY    CUST_NAME
                update   SAL0271D
                            SET HP_CALL_REASON_CODE = #{hpCallReasonCode}
                                 ,HP_CALL_REMARK = #{hpCallRemark}
-                                ,UPD_USER_ID = #{updUserId}
+                               <!--  ,UPD_USER_ID = #{updUserId} -->
                                <!--  ,UPD_DT = SYSDATE -->
                          WHERE   LOYALTY_ID = #{loyaltyId}
              </update>
