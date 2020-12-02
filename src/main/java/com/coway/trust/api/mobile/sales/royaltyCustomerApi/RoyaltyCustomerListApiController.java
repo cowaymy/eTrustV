@@ -80,9 +80,17 @@ public class RoyaltyCustomerListApiController {
 		}*/
 
 	 @ApiOperation(value = "updateWsLoyaltyList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	  @RequestMapping(value = "/updateWsLoyaltyList", method = RequestMethod.POST)
+	  public ResponseEntity<RoyaltyCustomerListApiDto> updateEkeyIn(@RequestBody RoyaltyCustomerListApiDto param) throws Exception {
+	    return ResponseEntity.ok(royaltyCustomerListApiService.updateWsLoyaltyList(param));
+	  }
+
+/*	 @ApiOperation(value = "updateWsLoyaltyList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	    @RequestMapping(value = "/updateWsLoyaltyList", method = RequestMethod.POST)
 	    public ResponseEntity<RoyaltyCustomerListApiForm> updateWsLoyaltyList(@RequestBody RoyaltyCustomerListApiForm param) throws Exception {
 		 RoyaltyCustomerListApiForm updateWsLoyaltyList = royaltyCustomerListApiService.updateWsLoyaltyList(param);
-	        return ResponseEntity.ok(updateWsLoyaltyList);
-	 	}
+	        return ResponseEntity.ok(updateWsLoyaltyList); //666
+	 	}*/
+
+
 	 }

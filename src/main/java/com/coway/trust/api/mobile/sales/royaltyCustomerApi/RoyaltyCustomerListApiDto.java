@@ -16,7 +16,7 @@ public class RoyaltyCustomerListApiDto {
 		return BeanConverter.toBean(egvoMap, RoyaltyCustomerListApiDto.class);
 	}
 
-
+	private String regId; //666
 	private int loyaltyId;
 	private int salesOrdId;
 	private String salesOrdNo;
@@ -59,6 +59,15 @@ public class RoyaltyCustomerListApiDto {
 	//private String hpViewEndDt;
 	private int hpAssgnmtUploadId;
 
+
+
+
+	public String getRegId() {
+		return regId;
+	}
+	public void setRegId(String regId) {
+		this.regId = regId;
+	}
 	public int getLoyaltyId() {
 		return loyaltyId;
 	}
