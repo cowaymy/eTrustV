@@ -59,6 +59,8 @@
 <!--         , (select REQST_CDC_RDC From log0047m where REQST_NO= l60.STOCK_TRNSFR_REQST) REQST_CDC_RDC -->
         ,  (select(select wh_loc_code || ' - ' || wh_loc_desc from sys0028m where wh_loc_id= RCIV_CDC_RDC) From log0047m where REQST_NO= l60.STOCK_TRNSFR_REQST) RCIV_CDC_RDC
         ,  (select(select wh_loc_code || ' - ' || wh_loc_desc from sys0028m where wh_loc_id= REQST_CDC_RDC) From log0047m where REQST_NO= l60.STOCK_TRNSFR_REQST) REQST_CDC_RDC
+        <!-- Added by Hui Ding for displaying main sales order no in mdn search list, 2020-06-24 -->
+        , l60.MAIN_ORD_NO
         from log0059m l59
         , log0060d l60
         , sys0026m s26
@@ -178,7 +180,7 @@
             and (select WH_LOC_ID from sys0028m where WH_LOC_CODE =#{mainloc}) in(STORG_LOC,RCIV_ISSU_STORG_LOC)
         </if>
         <if test="ordno !=null and ordno != ''">
-            AND l59.MAIN_SALES_ORD_NO = #{ordno}
+            AND l60.MAIN_SALES_ORD_NO = #{ordno}
         </if>
         <if test="serialNo !=null and serialNo !=''">
             AND EXISTS (SELECT 1
@@ -221,7 +223,7 @@
               ,LAST_DELVRY_NO AS DELVRY_NO
               ,LAST_DELVRY_NO_ITM AS DELVRY_NO_ITM
       FROM LOG0100M
-    WHERE LAST_SALES_ORD_ID = #{ordno}
+    WHERE LAST_SALES_ORD_ID in (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordno})
         AND LAST_SALES_ORD_ID IS NOT NULL
     </if>
     <if test="trnscTypeCode != 'OD'">
@@ -237,16 +239,97 @@
     WHERE 1=1
         AND SCAN_STUS_CODE != 'D'
         AND IO_TYPE = #{ioType}
-        <if test="delvryNo != null and delvryNo !=''">
+        <if test="delvryNo != null and delvryNo !='' and trnscTypeCode != 'HP'">
             AND DELVRY_NO = #{delvryNo}
             AND DELVRY_NO_ITM = #{delvryNoItm}
         </if>
-        <if test="delvryNo == null">
+        <if test="reqstNo != null and trnscTypeCode = 'HP'">
             AND REQST_NO =  #{reqstNo}
             AND REQST_NO_ITM = #{reqstNoItm}
         </if>
      ORDER BY SERIAL_NO
      </if>
     </select>
+
+    <select id="getNextMdnNo" parameterType="Map" resultType="egovMap">
+        SELECT 'MDN' || TO_CHAR (SYSDATE, 'YYMMDD') || LPAD (MDN_SEQ.NEXTVAL, 5, '0') mdnno
+              FROM DUAL
+    </select>
+
+    <insert id="insertMdnMaster" parameterType="Map">
+        INSERT INTO LOG0059M (
+                MATRL_DOC_NO
+                , MATRL_DOC_YEAR
+                , TRNSC_TYPE_CODE
+                , DOC_DT
+                , USNAM
+                , PGM
+                , REF_DOC_NO
+                , MAIN_SALES_ORD_NO
+                , CRT_USER_ID
+                , CRT_DT)
+         VALUES (
+            #{newmdnno}
+            , TO_CHAR (SYSDATE, 'YYYY')
+            , #{ttype}
+            , TO_CHAR (SYSDATE, 'YYYYMMDD')
+            , TO_CHAR (SYSDATE, 'YYYYMMDD')
+            , #{prgnm}
+            , #{refdocno}
+            , #{gtype}
+            , #{ordno}
+            , #{userid}
+            , SYSDATE
+         )
+    </insert>
+
+    <insert id="insertMdnDetail" parameterType="Map">
+            INSERT INTO LOG0060D (
+                  MATRL_DOC_NO,
+                  MATRL_DOC_YEAR,
+                  MATRL_DOC_ITM,
+                  INVNTRY_MOV_TYPE,
+                  AUTO_CRT_ITM,
+                  DEBT_CRDIT_INDICT,
+                  MATRL_NO,
+                  STORG_LOC,
+                  SALES_ORD_NO,
+                  DELVRY_NO,
+                  DELVRY_ITM_NO,
+                  STOCK_TRNSFR_REQST,
+                  STOCK_TRNSFR_REQST_ITM_NO,
+                  QTY,
+                  MEASURE_BAS_UNIT,
+                  ITM_TXT,
+                  RCIV_ISSU_MATRL,
+                  RCIV_ISSU_STORG_LOC,
+                  DOC_POSTNG_DT,
+                  CRT_USER_ID,
+                  CRT_DT)
+            VALUES (
+                #{newmdnno}
+                , TO_CHAR (SYSDATE, 'YYYY')
+                , #{itmno}
+                , #{mtype}
+                , #{autoManual}
+                , #{cdtype}
+                , #{itmCode}
+                , #{rcivcdcrdc}
+                , #{refdocno}
+                , #{delvryno}
+                , #{delvrynoitm}
+                , #{reqstno}
+                , #{reqstnoitm}
+                , #{delvryqty}
+                , #{uom}
+                , #{itmtxt}
+                , #{itmCode}
+                , #{reqstcdcrdc}
+                , TO_CHAR (SYSDATE, 'YYYYMMDD')
+                , #{userid}
+                , SYSDATE
+            )
+    </insert>
+
 
 </mapper>
