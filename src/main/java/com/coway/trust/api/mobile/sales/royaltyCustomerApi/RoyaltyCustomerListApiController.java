@@ -81,7 +81,7 @@ public class RoyaltyCustomerListApiController {
 
 	 @ApiOperation(value = "updateWsLoyaltyList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	  @RequestMapping(value = "/updateWsLoyaltyList", method = RequestMethod.POST)
-	  public ResponseEntity<RoyaltyCustomerListApiDto> updateEkeyIn(@RequestBody RoyaltyCustomerListApiDto param) throws Exception {
+	  public ResponseEntity<RoyaltyCustomerListApiDto> updateWsLoyaltyList(@RequestBody RoyaltyCustomerListApiDto param) throws Exception {
 	    return ResponseEntity.ok(royaltyCustomerListApiService.updateWsLoyaltyList(param));
 	  }
 
