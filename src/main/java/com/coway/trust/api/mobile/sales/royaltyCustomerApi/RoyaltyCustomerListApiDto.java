@@ -33,23 +33,28 @@ public class RoyaltyCustomerListApiDto {
 	private String instPostcode;
 	private String instCity;
 	private String instState;
-//	private double totOutst;
-//	private int totOrderInUse;
-//	private int wpInUse;
-//	private double wpTotOutst;
-//	private int apInUse;
-//	private double apTotOutst;
-//	private int mattressInUse;
-//	private double mattressTotOutst;
-//	private int poeInUse;
-//	private double poeTotOutst;
-//	private int softenerInUse;
-//	private double softenerTotOutst;
-//	private int bidetInUse;
-//	private double bidetTotOutst;
+
+	private double totOutst;
+	private int totOrderInUse;
+	private int wpInUse;
+	private double wpTotOutst;
+	private int apInUse;
+	private double apTotOutst;
+	private int mattressInUse;
+	private double mattressTotOutst;
+	private int poeInUse;
+	private double poeTotOutst;
+	private int softenerInUse;
+	private double softenerTotOutst;
+	private int bidetInUse;
+	private double bidetTotOutst;
+
 	private int hpCallReasonCode;
 	private String hpCallRemark;
+
 	//private int stus;
+	private String stus;
+
 	private String remark;
 	private int crtUserId;
 	//private String crtDt;
@@ -165,7 +170,7 @@ public class RoyaltyCustomerListApiDto {
 	public void setInstState(String instState) {
 		this.instState = instState;
 	}
-	/*public double getTotOutst() {
+	public double getTotOutst() {
 		return totOutst;
 	}
 	public void setTotOutst(double totOutst) {
@@ -248,7 +253,7 @@ public class RoyaltyCustomerListApiDto {
 	}
 	public void setBidetTotOutst(double bidetTotOutst) {
 		this.bidetTotOutst = bidetTotOutst;
-	}*/
+	}
 	public int getHpCallReasonCode() {
 		return hpCallReasonCode;
 	}
@@ -261,12 +266,12 @@ public class RoyaltyCustomerListApiDto {
 	public void setHpCallRemark(String hpCallRemark) {
 		this.hpCallRemark = hpCallRemark;
 	}
-	/*public int getStus() {
+	public String getStus() {
 		return stus;
 	}
-	public void setStus(int stus) {
+	public void setStus(String stus) {
 		this.stus = stus;
-	}*/
+	}
 	public String getRemark() {
 		return remark;
 	}
