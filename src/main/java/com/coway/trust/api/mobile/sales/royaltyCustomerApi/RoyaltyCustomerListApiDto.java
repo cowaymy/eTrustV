@@ -34,7 +34,7 @@ public class RoyaltyCustomerListApiDto {
 	private String instCity;
 	private String instState;
 
-	private double totOutst;
+/*	private double totOutst;
 	private int totOrderInUse;
 	private int wpInUse;
 	private double wpTotOutst;
@@ -47,7 +47,7 @@ public class RoyaltyCustomerListApiDto {
 	private int softenerInUse;
 	private double softenerTotOutst;
 	private int bidetInUse;
-	private double bidetTotOutst;
+	private double bidetTotOutst;*/
 
 	private int hpCallReasonCode;
 	private String hpCallRemark;
@@ -170,7 +170,7 @@ public class RoyaltyCustomerListApiDto {
 	public void setInstState(String instState) {
 		this.instState = instState;
 	}
-	public double getTotOutst() {
+	/*public double getTotOutst() {
 		return totOutst;
 	}
 	public void setTotOutst(double totOutst) {
@@ -253,7 +253,7 @@ public class RoyaltyCustomerListApiDto {
 	}
 	public void setBidetTotOutst(double bidetTotOutst) {
 		this.bidetTotOutst = bidetTotOutst;
-	}
+	}*/
 	public int getHpCallReasonCode() {
 		return hpCallReasonCode;
 	}
