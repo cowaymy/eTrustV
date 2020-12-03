@@ -34,20 +34,20 @@ public class RoyaltyCustomerListApiDto {
 	private String instCity;
 	private String instState;
 
-/*	private double totOutst;
+	//private double totOutst;
 	private int totOrderInUse;
 	private int wpInUse;
-	private double wpTotOutst;
+	//private double wpTotOutst;
 	private int apInUse;
-	private double apTotOutst;
+	//private double apTotOutst;
 	private int mattressInUse;
-	private double mattressTotOutst;
+	//private double mattressTotOutst;
 	private int poeInUse;
-	private double poeTotOutst;
+	//private double poeTotOutst;
 	private int softenerInUse;
-	private double softenerTotOutst;
+	//private double softenerTotOutst;
 	private int bidetInUse;
-	private double bidetTotOutst;*/
+	//private double bidetTotOutst;
 
 	private int hpCallReasonCode;
 	private String hpCallRemark;
@@ -85,7 +85,6 @@ public class RoyaltyCustomerListApiDto {
 	public void setSalesOrdId(int salesOrdId) {
 		this.salesOrdId = salesOrdId;
 	}
-
 	public String getSalesOrdNo() {
 		return salesOrdNo;
 	}
@@ -175,7 +174,7 @@ public class RoyaltyCustomerListApiDto {
 	}
 	public void setTotOutst(double totOutst) {
 		this.totOutst = totOutst;
-	}
+	}*/
 	public int getTotOrderInUse() {
 		return totOrderInUse;
 	}
@@ -188,67 +187,67 @@ public class RoyaltyCustomerListApiDto {
 	public void setWpInUse(int wpInUse) {
 		this.wpInUse = wpInUse;
 	}
-	public double getWpTotOutst() {
+	/*public double getWpTotOutst() {
 		return wpTotOutst;
 	}
 	public void setWpTotOutst(double wpTotOutst) {
 		this.wpTotOutst = wpTotOutst;
-	}
+	}*/
 	public int getApInUse() {
 		return apInUse;
 	}
 	public void setApInUse(int apInUse) {
 		this.apInUse = apInUse;
 	}
-	public double getApTotOutst() {
+	/*public double getApTotOutst() {
 		return apTotOutst;
 	}
 	public void setApTotOutst(double apTotOutst) {
 		this.apTotOutst = apTotOutst;
-	}
+	}*/
 	public int getMattressInUse() {
 		return mattressInUse;
 	}
 	public void setMattressInUse(int mattressInUse) {
 		this.mattressInUse = mattressInUse;
 	}
-	public double getMattressTotOutst() {
+	/*public double getMattressTotOutst() {
 		return mattressTotOutst;
 	}
 	public void setMattressTotOutst(double mattressTotOutst) {
 		this.mattressTotOutst = mattressTotOutst;
-	}
+	}*/
 	public int getPoeInUse() {
 		return poeInUse;
 	}
 	public void setPoeInUse(int poeInUse) {
 		this.poeInUse = poeInUse;
 	}
-	public double getPoeTotOutst() {
+	/*public double getPoeTotOutst() {
 		return poeTotOutst;
 	}
 	public void setPoeTotOutst(double poeTotOutst) {
 		this.poeTotOutst = poeTotOutst;
-	}
+	}*/
 	public int getSoftenerInUse() {
 		return softenerInUse;
 	}
 	public void setSoftenerInUse(int softenerInUse) {
 		this.softenerInUse = softenerInUse;
 	}
-	public double getSoftenerTotOutst() {
+	/*public double getSoftenerTotOutst() {
 		return softenerTotOutst;
 	}
 	public void setSoftenerTotOutst(double softenerTotOutst) {
 		this.softenerTotOutst = softenerTotOutst;
-	}
+	}*/
 	public int getBidetInUse() {
 		return bidetInUse;
 	}
 	public void setBidetInUse(int bidetInUse) {
 		this.bidetInUse = bidetInUse;
 	}
-	public double getBidetTotOutst() {
+	/*public double getBidetTotOutst() {
 		return bidetTotOutst;
 	}
 	public void setBidetTotOutst(double bidetTotOutst) {
