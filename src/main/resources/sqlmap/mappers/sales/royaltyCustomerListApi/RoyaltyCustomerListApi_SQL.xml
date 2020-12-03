@@ -28,6 +28,21 @@ SELECT
     INST_STATE,
 
 
+
+    TOT_ORDER_IN_USE ,
+    WP_IN_USE ,
+
+    AP_IN_USE ,
+
+    MATTRESS_IN_USE ,
+
+    POE_IN_USE ,
+
+    SOFTENER_IN_USE ,
+
+    BIDET_IN_USE ,
+
+
     HP_CALL_REASON_CODE,
     HP_CALL_REMARK,
     STUS ,
