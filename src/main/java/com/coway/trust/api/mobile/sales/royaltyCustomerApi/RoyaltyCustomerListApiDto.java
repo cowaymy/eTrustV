@@ -34,20 +34,20 @@ public class RoyaltyCustomerListApiDto {
 	private String instCity;
 	private String instState;
 
-	//private double totOutst;
+	private int totOutst;
 	private int totOrderInUse;
 	private int wpInUse;
-	//private double wpTotOutst;
+	private int wpTotOutst;
 	private int apInUse;
-	//private double apTotOutst;
+	private int apTotOutst;
 	private int mattressInUse;
-	//private double mattressTotOutst;
+	private int mattressTotOutst;
 	private int poeInUse;
-	//private double poeTotOutst;
+	private int poeTotOutst;
 	private int softenerInUse;
-	//private double softenerTotOutst;
+	private int softenerTotOutst;
 	private int bidetInUse;
-	//private double bidetTotOutst;
+	private int bidetTotOutst;
 
 	private int hpCallReasonCode;
 	private String hpCallRemark;
@@ -62,7 +62,7 @@ public class RoyaltyCustomerListApiDto {
 	//private String updDt;
 	//private String hpViewStartDt;
 	//private String hpViewEndDt;
-	private int hpAssgnmtUploadId;
+	//private int hpAssgnmtUploadId;
 
 
 
@@ -169,12 +169,12 @@ public class RoyaltyCustomerListApiDto {
 	public void setInstState(String instState) {
 		this.instState = instState;
 	}
-	/*public double getTotOutst() {
+	public int getTotOutst() {
 		return totOutst;
 	}
-	public void setTotOutst(double totOutst) {
+	public void setTotOutst(int totOutst) {
 		this.totOutst = totOutst;
-	}*/
+	}
 	public int getTotOrderInUse() {
 		return totOrderInUse;
 	}
@@ -187,72 +187,72 @@ public class RoyaltyCustomerListApiDto {
 	public void setWpInUse(int wpInUse) {
 		this.wpInUse = wpInUse;
 	}
-	/*public double getWpTotOutst() {
+	public int getWpTotOutst() {
 		return wpTotOutst;
 	}
-	public void setWpTotOutst(double wpTotOutst) {
+	public void setWpTotOutst(int wpTotOutst) {
 		this.wpTotOutst = wpTotOutst;
-	}*/
+	}
 	public int getApInUse() {
 		return apInUse;
 	}
 	public void setApInUse(int apInUse) {
 		this.apInUse = apInUse;
 	}
-	/*public double getApTotOutst() {
+	public int getApTotOutst() {
 		return apTotOutst;
 	}
-	public void setApTotOutst(double apTotOutst) {
+	public void setApTotOutst(int apTotOutst) {
 		this.apTotOutst = apTotOutst;
-	}*/
+	}
 	public int getMattressInUse() {
 		return mattressInUse;
 	}
 	public void setMattressInUse(int mattressInUse) {
 		this.mattressInUse = mattressInUse;
 	}
-	/*public double getMattressTotOutst() {
+	public double getMattressTotOutst() {
 		return mattressTotOutst;
 	}
-	public void setMattressTotOutst(double mattressTotOutst) {
+	public void setMattressTotOutst(int mattressTotOutst) {
 		this.mattressTotOutst = mattressTotOutst;
-	}*/
+	}
 	public int getPoeInUse() {
 		return poeInUse;
 	}
 	public void setPoeInUse(int poeInUse) {
 		this.poeInUse = poeInUse;
 	}
-	/*public double getPoeTotOutst() {
+	public double getPoeTotOutst() {
 		return poeTotOutst;
 	}
-	public void setPoeTotOutst(double poeTotOutst) {
+	public void setPoeTotOutst(int poeTotOutst) {
 		this.poeTotOutst = poeTotOutst;
-	}*/
+	}
 	public int getSoftenerInUse() {
 		return softenerInUse;
 	}
 	public void setSoftenerInUse(int softenerInUse) {
 		this.softenerInUse = softenerInUse;
 	}
-	/*public double getSoftenerTotOutst() {
+	public int getSoftenerTotOutst() {
 		return softenerTotOutst;
 	}
-	public void setSoftenerTotOutst(double softenerTotOutst) {
+	public void setSoftenerTotOutst(int softenerTotOutst) {
 		this.softenerTotOutst = softenerTotOutst;
-	}*/
+	}
 	public int getBidetInUse() {
 		return bidetInUse;
 	}
 	public void setBidetInUse(int bidetInUse) {
 		this.bidetInUse = bidetInUse;
 	}
-	/*public double getBidetTotOutst() {
+	public int getBidetTotOutst() {
 		return bidetTotOutst;
 	}
-	public void setBidetTotOutst(double bidetTotOutst) {
+	public void setBidetTotOutst(int bidetTotOutst) {
 		this.bidetTotOutst = bidetTotOutst;
-	}*/
+	}
 	public int getHpCallReasonCode() {
 		return hpCallReasonCode;
 	}
@@ -313,11 +313,11 @@ public class RoyaltyCustomerListApiDto {
 	public void setHpViewEndDt(String hpViewEndDt) {
 		this.hpViewEndDt = hpViewEndDt;
 	}*/
-	public int getHpAssgnmtUploadId() {
+	/*public int getHpAssgnmtUploadId() {
 		return hpAssgnmtUploadId;
 	}
 	public void setHpAssgnmtUploadId(int hpAssgnmtUploadId) {
 		this.hpAssgnmtUploadId = hpAssgnmtUploadId;
-	}
+	}*/
 
 }
