@@ -3,6 +3,8 @@ package com.coway.trust.api.mobile.sales.royaltyCustomerApi;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.coway.trust.api.mobile.logistics.stockAudit.StockAuditApiFormDto;
+
 import io.swagger.annotations.ApiModel;
 
 
@@ -29,11 +31,27 @@ public class RoyaltyCustomerListApiForm {
 		params.put("hpCallReasonCode", vo.getHpCallReasonCode());
 		params.put("hpCallRemark", vo.getHpCallRemark());
 	//	params.put("updUserId", vo.getUpdUserId());
+		params.put("hpCode", vo.getHpCode());
+		params.put("whLocId", vo.getWhLocId());
 		params.put("regId", vo.getRegId());
 
 		return params;
 	}
 
+
+/*	public static Map<String, Object> createMap(StockAuditApiFormDto vo) {
+		Map<String, Object> params = new HashMap<>();
+        params.put("regId", vo.getRegId());
+		params.put("whLocId", vo.getWhLocId());
+		params.put("stockAuditNo", vo.getStockAuditNo());
+        params.put("viewGu", vo.getViewGu());
+        params.put("docStartDt", vo.getDocStartDt());
+        params.put("docEndDt", vo.getDocEndDt());
+		return params;
+	}*/
+
+
+	private int WhLocId;
 	private int loyaltyId;
 	private int salesOrdId;
 	private int salesOrdNo;
@@ -43,11 +61,23 @@ public class RoyaltyCustomerListApiForm {
 	private int updUserId;
 	private String updDt;
 	private String regId;
+	private String hpCode;
 
 
 
 
-
+	public String getHpCode() {
+		return hpCode;
+	}
+	public void setHpCode(String hpCode) {
+		this.hpCode = hpCode;
+	}
+	public int getWhLocId() {
+		return WhLocId;
+	}
+	public void setWhLocId(int whLocId) {
+		WhLocId = whLocId;
+	}
 	public String getRegId() {
 		return regId;
 	}

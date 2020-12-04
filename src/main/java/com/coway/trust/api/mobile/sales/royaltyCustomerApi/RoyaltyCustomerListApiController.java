@@ -20,9 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.logistics.stockAudit.StockAuditApiDto;
+import com.coway.trust.api.mobile.logistics.stockAudit.StockAuditApiFormDto;
 import com.coway.trust.api.mobile.payment.fundTransferApi.FundTransferApiForm;
 import com.coway.trust.api.mobile.payment.groupOrder.GroupOrderForm;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
+import com.coway.trust.api.mobile.sales.salesDashboardApi.SalesDashboardApiDto;
+import com.coway.trust.api.mobile.sales.salesDashboardApi.SalesDashboardApiForm;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
 import com.coway.trust.biz.sales.msales.OrderCustomerApiService;
@@ -46,18 +49,31 @@ public class RoyaltyCustomerListApiController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
-	@ApiOperation(value = "selectWsLoyaltyList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	/*@ApiOperation(value = "selectWsLoyaltyList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/selectWsLoyaltyList", method = RequestMethod.GET)
 	public ResponseEntity<List<RoyaltyCustomerListApiDto>> selectWsLoyaltyList() throws Exception {
 		List<EgovMap> selectWsLoyaltyList = royaltyCustomerListApiService.selectWsLoyaltyList();
-
 		if(LOGGER.isDebugEnabled()){
 			for (int i = 0; i < selectWsLoyaltyList.size(); i++) {
 				LOGGER.debug("selectWsLoyaltyList    값 : {}", selectWsLoyaltyList.get(i));
 			}
 		}
 		return ResponseEntity.ok(selectWsLoyaltyList.stream().map(r -> RoyaltyCustomerListApiDto.create(r)).collect(Collectors.toList()));
-	}
+	}*/
+
+
+	 @ApiOperation(value = "selectWsLoyaltyList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	    @RequestMapping(value = "/selectWsLoyaltyList", method = RequestMethod.GET)
+	    public ResponseEntity<List<RoyaltyCustomerListApiDto>> selectWsLoyaltyList(@ModelAttribute RoyaltyCustomerListApiForm param) throws Exception {
+	        List<EgovMap>  selectWsLoyaltyList = royaltyCustomerListApiService.selectWsLoyaltyList(param);
+	        if(LOGGER.isErrorEnabled()){
+	            for (int i = 0; i < selectWsLoyaltyList.size(); i++) {
+	                    LOGGER.debug("selectStockAuditDetailList    값 : {}", selectWsLoyaltyList.get(i));
+	            }
+	        }
+	        return ResponseEntity.ok(selectWsLoyaltyList.stream().map(r -> RoyaltyCustomerListApiDto.create(r)).collect(Collectors.toList()));
+	    }
+
 
 	////// UPDATE STATUS /////
 /*	 @ApiOperation(value = "updateWsLoyaltyList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
