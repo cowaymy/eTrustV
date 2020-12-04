@@ -4,7 +4,7 @@
 
 <div id="_loading" class="prog" style="display:none;"><!-- prog start -->
 	<p>
-		<span><img src="${pageContext.request.contextPath}/resources/images/common/logo_coway2.gif" alt="Coway" /></span>
+		<span><img src="${pageContext.request.contextPath}/resources/images/common/logo_coway2.png" alt="Coway" /></span>
 		<span><img src="${pageContext.request.contextPath}/resources/images/common/proge.gif" alt="loding...." /></span>
 		<a href="javascript:void(0);"></a>
 	</p>

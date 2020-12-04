@@ -457,7 +457,7 @@
 
 <body>
 <div id="login_wrap"><!-- login_wrap start -->
-    <h1><img src="${pageContext.request.contextPath}/resources/images/common/logo_coway.gif" alt="Coway"/></h1>
+    <h1><img src="${pageContext.request.contextPath}/resources/images/common/logo_coway2.png" alt="Coway"/></h1>
 
     <article class="login_box"><!-- login_box start -->
         <form id="loginForm" name="loginForm" method="post">
