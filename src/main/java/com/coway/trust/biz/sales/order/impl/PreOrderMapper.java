@@ -51,5 +51,7 @@ public interface PreOrderMapper {
 
 	int selRcdTms(Map<String, Object> params);
 
+	int selPreOrdId(Map<String, Object> params);
+
 	void updateKeyinSOF(Map<String, Object> params);
 }

@@ -415,8 +415,9 @@ public class PreOrderController {
 	     logger.debug("params : {}", params);
 
 	     int noRcd = preOrderService.selRcdTms(params);
+	     int cnt = preOrderService.selPreOrdId(params);
 
-	     if (noRcd == 1) {
+	     if (noRcd == 1 && cnt <= 0) {
 	       message.setMessage("OK");
 	       message.setCode("1");
 	     } else {

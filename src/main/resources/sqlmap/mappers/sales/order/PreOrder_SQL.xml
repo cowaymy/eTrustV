@@ -503,6 +503,12 @@
        AND TO_CHAR(UPD_DT,'YYYYMMDDHH24MISS') = #{rcdTms}
     </select>
 
+    <select id="selPreOrdId" parameterType="Map" resultType="int">
+      SELECT COUNT(*) COUNT
+        FROM SAL0001D
+      WHERE PRE_ORD_ID = #{preOrdId}
+    </select>
+
     <update id="updateKeyinSOF" parameterType="Map">
         UPDATE SAL0213M
            SET

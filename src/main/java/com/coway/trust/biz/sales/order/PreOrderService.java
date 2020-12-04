@@ -38,6 +38,8 @@ public interface PreOrderService {
 
 	int selRcdTms(Map<String, Object> params);
 
+	int selPreOrdId(Map<String, Object> params);
+
 	EgovMap checkOldOrderIdEKeyIn(Map<String, Object> params);
 
 	EgovMap checkOldOrderIdICareEKeyIn(Map<String, Object> params);

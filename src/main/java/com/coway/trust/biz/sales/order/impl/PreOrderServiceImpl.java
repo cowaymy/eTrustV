@@ -174,6 +174,10 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 	    return preOrderMapper.selRcdTms(params);
 	  }
 
+	public int selPreOrdId(Map<String, Object> params) {
+     return preOrderMapper.selPreOrdId(params);
+    }
+
 	@Override
 	  public EgovMap checkOldOrderIdEKeyIn(Map<String, Object> params) {
 
