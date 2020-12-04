@@ -51,8 +51,10 @@ SELECT
     UPD_USER_ID
 
 FROM    SAL0271D
-ORDER BY    CUST_NAME
+
 WHERE   HP_CODE = #{regId}
+ORDER BY    CUST_NAME
+
 ]]>
 </select>
 
