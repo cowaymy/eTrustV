@@ -17,12 +17,14 @@ public interface LoyaltyHpMapper {
 
 	int insertLoyaltyHpDtl(Map<String, Object> params);
 
-	void callBatchLoyaltyHpUpd(Map<String, Object> params);;
+	void callBatchLoyaltyHpUpd(Map<String, Object> params);
 
 	List<EgovMap> selectLoyaltyHpMstList(Map<String, Object> params);
 
 	EgovMap selectLoyaltyHpMasterInfo(Map<String, Object> params);
 
 	List<EgovMap> selectLoyaltyHpDetailInfo(Map<String, Object> params);
+
+	int updateLoyaltyHpMasterStus(Map<String, Object> params);
 
 }

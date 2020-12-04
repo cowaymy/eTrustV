@@ -15,4 +15,5 @@ public interface LoyaltyHpService {
 
 	void callLoyaltyHpConfirm(Map<String, Object> params);
 
+	int updLoyaltyHpReject(Map<String, Object> params);
 }

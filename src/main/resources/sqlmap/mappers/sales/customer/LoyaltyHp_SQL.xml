@@ -159,8 +159,16 @@ AND ROWNUM <= 20000
   </select>
 
  <update id="callBatchLoyaltyHpUpd" statementType="CALLABLE" parameterType="Map">
-        {call SP_BATCH_LOYALTY_HP_UPD(#{loyaltyHpBatchId},#{loginId},#{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR})}
+        {call SP_BATCH_LOYALTY_HP_UPD(#{loyaltyHpBatchId},#{loginId})}
     </update>
+
+   <update id = "updateLoyaltyHpMasterStus" parameterType="Map">
+    UPDATE SAL0272D
+        SET LOYALTY_HP_STUS_ID = 8
+              ,UPD_USER_ID = #{loginId}
+              ,UPD_DT = SYSDATE
+         WHERE LOYALTY_HP_BATCH_ID = #{loyaltyHpBatchId}
+   </update>
 
 
 </mapper>

@@ -143,6 +143,27 @@ public class LoyaltyHpController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/loyaltyHpReject")
+	public ResponseEntity<ReturnMessage> loyaltyHpReject(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+		params.put("loginId", loginId);
+
+		int result = loyaltyHpService.updLoyaltyHpReject(params);
+
+	    if(result > 0){
+
+		        message.setMessage("Loyalty HP File successfully rejected.<br />");
+		        message.setCode(AppConstants.SUCCESS);
+		    }else{
+		        message.setMessage("Failed to reject Loyalty HP File. Please try again later.");
+		        message.setCode(AppConstants.FAIL);
+		    }
+
+		return ResponseEntity.ok(message);
+	}
+
 
 
 }

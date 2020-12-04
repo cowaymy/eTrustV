@@ -51,7 +51,6 @@ $(document).ready(function () {
         GridCommon.exportTo("loyaltyHp_view_grid_wrap", 'xlsx', 'Loyalty HP File Upload List');
     });
 
-
     AUIGrid.setGridData(viewGridID, $.parseJSON('${loyaltyHpBatchItem}'));
 });
 
@@ -62,17 +61,41 @@ function fn_closePop() {
 //master confirm button
 function fn_confirm(){
 
+	if('${loyaltyHpBatchInfo.stusName}' == 'Completed' || '${loyaltyHpBatchInfo.stusName}' == 'Inactive'){
+		Common.alert("Batch is Completed/Inactive. Confirmation not allowed.");
+
+	} else {
+
         Common.ajax("GET", "/sales/customer/loyaltyHpConfirm", $("#form_LoyaltyHpView").serializeJSON() , function(result) {
             if(result.message != null){
                 //Common.alert("No valid in this batch </br> "+result.message);
                 Common.alert("<spring:message code='commission.alert.incentive.noValid' arguments='"+result.message+"' htmlEscape='false'/>");
             }else{
-                //Common.alert("This upload batch has been confirmed and saved.");
-                Common.alert('<spring:message code="commission.alert.incentive.confirm.fail"/>');
+                Common.alert("This upload batch has been confirmed and saved.");
             }
         });
-
+	}
 }
+
+function fn_reject() {
+	   if('${loyaltyHpBatchInfo.stusName}' == 'Completed' || '${loyaltyHpBatchInfo.stusName}' == 'Inactive'){
+	        Common.alert("Batch is Completed/Inactive. Rejection not allowed.");
+
+	    } else {
+
+	        Common.ajax("GET", "/sales/customer/loyaltyHpReject", $("#form_LoyaltyHpView").serializeJSON() , function(result) {
+	            if(result.message != null){
+	                //Common.alert("No valid in this batch </br> "+result.message);
+	                Common.alert("<spring:message code='commission.alert.incentive.noValid' arguments='"+result.message+"' htmlEscape='false'/>");
+	            }else{
+	                //Common.alert("This upload batch has been confirmed and saved.");
+	                Common.alert('<spring:message code="commission.alert.incentive.confirm.fail"/>');
+
+	            }
+	        });
+	    }
+}
+
 
 </script>
 
@@ -131,6 +154,7 @@ function fn_confirm(){
 
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="javascript:fn_confirm();">Confirm</a></p></li>
+    <li><p class="btn_blue2 big"><a href="javascript:fn_reject();">Reject</a></p></li>
     <li><p class="btn_blue2 big"><a href="#" id="excelDown"><spring:message code='pay.btn.exceldw'/></a></p></li>
 </ul>
 

@@ -51,9 +51,6 @@ public class LoyaltyHpServiceImpl implements LoyaltyHpService {
             loyaltyHpMapper.insertLoyaltyHpDtl(loyaltyHpList); // INSERT INTO SAL0273D
         }
 
-        //CALL PROCEDURE
-        //loyaltyHpMapper.callBatchLoyaltyHpUpd(master); // MERGE INTO SAL0271D
-
         return masterSeq;
 	}
 
@@ -77,6 +74,14 @@ public class LoyaltyHpServiceImpl implements LoyaltyHpService {
 
         //CALL PROCEDURE
         loyaltyHpMapper.callBatchLoyaltyHpUpd(params); // MERGE INTO SAL0271D
+	}
+
+	@Override
+	public int updLoyaltyHpReject(Map<String, Object> params) {
+
+        int result = loyaltyHpMapper.updateLoyaltyHpMasterStus(params);
+
+        return result;
 	}
 
 }
