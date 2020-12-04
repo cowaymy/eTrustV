@@ -21,7 +21,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface RoyaltyCustomerListApiMapper {
 
 
-	List<EgovMap> selectWsLoyaltyList();
+//	List<EgovMap> selectWsLoyaltyList();
+
+	List<EgovMap> selectWsLoyaltyList(Map<String, Object> params);
 
 /*	List<EgovMap> updateWsLoyaltyList();*/
 
