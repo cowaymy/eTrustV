@@ -209,7 +209,7 @@ var Common = {
         var loadingHtml = ''
             + '<div id="_loading" class="prog">'
             + '<p>'
-            + '<span><img src="' + contextPath + '/resources/images/common/logo_coway2.gif" alt="Coway" /></span>'
+            + '<span><img src="' + contextPath + '/resources/images/common/logo_coway2.png" alt="Coway" /></span>'
             + '<span><img src="' + contextPath + '/resources/images/common/proge.gif" alt="loding...." /></span>'
             + '<a href="javascript:void(0);"></a>'
             + '</p>'
