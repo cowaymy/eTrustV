@@ -50,9 +50,9 @@ public class RoyaltyCustomerListApiServiceImpl extends EgovAbstractServiceImpl i
 		// TODO Auto-generated method stub
       //  param.setWhLocId(loginVO.getUserId());
 
-    	 if( CommonUtils.isEmpty(param.getRegId()) ){
+    /*	 if( CommonUtils.isEmpty(param.getRegId()) ){
              throw new ApplicationException(AppConstants.FAIL, "Reg ID value does not exist.");
-         }
+         }*/
 
     	 Map<String, Object> loginInfoMap = new HashMap<String, Object>();
          loginInfoMap.put("_USER_ID", param.getRegId());
