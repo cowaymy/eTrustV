@@ -52,6 +52,7 @@ SELECT
 
 FROM    SAL0271D
 ORDER BY    CUST_NAME
+WHERE   HP_CODE = #{regId}
 ]]>
 </select>
 
