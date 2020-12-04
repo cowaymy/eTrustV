@@ -68,7 +68,7 @@ $(document).ready(function() {//////////////////////////////////////////////////
 	});
 
 	$('#excelDown').click(function() {
-	    GridCommon.exportTo("rosCall_grid_wrap", 'xlsx', "ROS Call Log");
+	    GridCommon.exportTo("excel_grid_wrap", 'xlsx', "ROS Call Log");
 	 });
 
 	$('#_btnGenVip').click(function() {
