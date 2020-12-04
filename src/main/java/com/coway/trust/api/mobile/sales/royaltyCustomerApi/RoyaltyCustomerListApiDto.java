@@ -100,7 +100,7 @@ public class RoyaltyCustomerListApiDto {
 	public int getCustId() {
 		return custId;
 	}
-	public void setCustID(int custId) {
+	public void setCustId(int custId) {
 		this.custId = custId;
 	}
 	public String getCustName() {
