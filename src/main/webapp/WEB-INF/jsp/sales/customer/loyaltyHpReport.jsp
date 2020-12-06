@@ -1,0 +1,140 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
+<script type="text/javaScript">
+    //화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
+    today = "${today}";
+    $(document).ready(function() {
+
+        //form clear
+        $("#clear").click(function() {
+            $("#searchForm")[0].reset();
+            $("#reportType").trigger("change");
+        });
+
+        //change report type box
+        $("#reportType").change(function() {
+            val = $(this).val();
+            var $reportForm = $("#reportForm")[0];
+            $($reportForm).empty(); //remove children
+        });
+
+        $('#generate').click(function() {
+            var $reportForm = $("#reportForm")[0];
+
+            $($reportForm).empty(); //remove children
+            var type = $("#reportType").val(); //report type
+
+            if (type == "") {
+                //Common.alert("Please select Report Type ");
+                Common.alert("<spring:message code='commission.alert.report.selectType'/>");
+                return;
+            }
+
+            var reportDownFileName = ""; //download report name
+            var reportFileName = ""; //reportFileName
+            var reportViewType = ""; //viewType
+
+            //default input setting
+            $($reportForm).append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name
+            $($reportForm).append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
+            $($reportForm).append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
+
+            if (type == "1") {
+
+                reportFileName = "/sales/LoyaltyHpRaw_Excel.rpt"; //reportFileName
+                reportDownFileName = "LoyaltyHpRaw_" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+            } else if (type == "2") {
+
+                reportFileName = "/sales/LoyaltyHpSummary_Excel.rpt"; //reportFileName
+                reportDownFileName = "LoyaltyHpSummary_" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+            }
+
+            //report info
+            if (reportFileName == "" || reportDownFileName == "" || reportViewType == "") {
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='Report Info' htmlEscape='false'/>");
+                return;
+            }
+
+            //default setting
+            $("#reportForm #reportFileName").val(reportFileName);
+            $("#reportForm #reportDownFileName").val(reportDownFileName);
+            $("#reportForm #viewType").val(reportViewType);
+
+            //  report 호출
+            var option = {
+                isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
+            };
+            Common.report("reportForm", option);
+
+        });
+
+    });
+</script>
+
+
+<section id="content">
+    <!-- content start -->
+    <ul class="path">
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+        <li>Sales</li>
+        <li>Customer</li>
+    </ul>
+
+    <aside class="title_line">
+        <!-- title_line start -->
+        <p class="fav">
+            <a href="#" class="click_add_on">My menu</a>
+        </p>
+        <h2>Loyalty HP Report</h2>
+    </aside>
+    <!-- title_line end -->
+
+
+    <section class="search_table">
+        <!-- search_table start -->
+        <form name="searchForm" id="searchForm" method="post">
+            <table class="type1">
+                <!-- table start -->
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width: 140px" />
+                    <col style="width: *" />
+                    <col style="width: 170px" />
+                    <col style="width: *" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row">Report Type</th>
+                        <td colspan="3"><select id="reportType" name="reportType" style="width:300px;">
+                                <option value="">Report Type</option>
+                                    <option value="1">Loyalty WS HP Raw</option>
+                                    <option value="2">Loyalty WS HP Summary</option>
+                        </select></td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- table end -->
+
+            <ul class="center_btns">
+                <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+                    <li><p class="btn_blue2 big">
+                            <a href="#" id="generate" id="generate"><spring:message code='commission.button.generate'/></a>
+                        </p></li>
+                </c:if>
+                <li><p class="btn_blue2 big">
+                        <a href="#" id="clear" name="clear"><spring:message code='sys.btn.clear'/></a>
+                    </p></li>
+            </ul>
+
+        </form>
+    </section>
+</section>
+<!-- search_table end -->
+<!-- content end -->
+<form name="reportForm" id="reportForm" method="post"></form>
