@@ -45,8 +45,6 @@ $(document).ready(function () {
 
     $("#close_btn").click(fn_closePop);
 
-
-
     $('#excelDown').click(function() {
         GridCommon.exportTo("loyaltyHp_view_grid_wrap", 'xlsx', 'Loyalty HP File Upload List');
     });
@@ -69,31 +67,27 @@ function fn_confirm(){
         Common.ajax("GET", "/sales/customer/loyaltyHpConfirm", $("#form_LoyaltyHpView").serializeJSON() , function(result) {
             if(result.message != null){
                 //Common.alert("No valid in this batch </br> "+result.message);
-                Common.alert("<spring:message code='commission.alert.incentive.noValid' arguments='"+result.message+"' htmlEscape='false'/>");
+                Common.alert("<spring:message code='commission.alert.incentive.noValid' arguments='"+result.message+"' htmlEscape='false'/>",fn_closePopAndReload);
             }else{
-                Common.alert("This upload batch has been confirmed and saved.");
+                Common.alert("This upload batch has been confirmed and saved.",fn_closePopAndReload);
             }
         });
 	}
+
 }
 
 function fn_reject() {
 	   if('${loyaltyHpBatchInfo.stusName}' == 'Completed' || '${loyaltyHpBatchInfo.stusName}' == 'Inactive'){
 	        Common.alert("Batch is Completed/Inactive. Rejection not allowed.");
-
 	    } else {
-
 	        Common.ajax("GET", "/sales/customer/loyaltyHpReject", $("#form_LoyaltyHpView").serializeJSON() , function(result) {
-	            if(result.message != null){
-	                //Common.alert("No valid in this batch </br> "+result.message);
-	                Common.alert("<spring:message code='commission.alert.incentive.noValid' arguments='"+result.message+"' htmlEscape='false'/>");
-	            }else{
-	                //Common.alert("This upload batch has been confirmed and saved.");
-	                Common.alert('<spring:message code="commission.alert.incentive.confirm.fail"/>');
-
-	            }
+	            Common.alert(result.message,fn_closePopAndReload);
 	        });
 	    }
+}
+
+function fn_closePopAndReload() {
+	window.location.reload();
 }
 
 
