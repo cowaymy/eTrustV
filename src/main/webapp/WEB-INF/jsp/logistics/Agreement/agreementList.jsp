@@ -27,7 +27,7 @@ $(document).ready(function() {
             $("#userRole").val() == 177 || $("#userRole").val() == 179 || $("#userRole").val() == 180 || // Cody Support
             $("#userRole").val() == 200 || $("#userRole").val() == 252 || $("#userRole").val() == 253 || // Cody Planning
             $("#userRole").val() == 250 || $("#userRole").val() == 256 || // Cody Branch
-            $("#userRole").val() == 339 || $("#userRole").val() == 343 || $("#userRole").val() == 344 // Home care
+            $("#userRole").val() == 342 || $("#userRole").val() == 343 || $("#userRole").val() == 344 // Home care
     ) {
 
         //doGetComboSepa("/common/selectBranchCodeList.do",2 , '-',''   , 'branch' , 'S', '');
@@ -68,7 +68,7 @@ $(document).ready(function() {
             if($("#userRole").val() == 177 || $("#userRole").val() == 256) {
                 $("#selectBranch").attr("disabled", true);
             }
-        } else if($("#userRole").val() == 339 || $("#userRole").val() == 343 || $("#userRole").val() == 344){// Homecare Department
+        } else if($("#userRole").val() == 342 || $("#userRole").val() == 343 || $("#userRole").val() == 344){// Homecare Department
 
             var brnch = "${branch}";
             $('#selectBranch option[value="' + brnch +'"] ').attr("selected", true);
