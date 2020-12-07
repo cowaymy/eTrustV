@@ -12,7 +12,7 @@
 
 /* 셀렉션의 대표 셀 보더 색상 스타일 재정의*/
 #ctos_detail_grid_wrap .aui-grid-selection-cell-border-lines {
-    ackground: #2e6da4; 
+    ackground: #2e6da4;
 }
 </style>
 
@@ -22,87 +22,87 @@ var ctosListGridID;
 var ctosDetailGridID;
 
 $(document).ready(function() {
-    
+
 	//create Grid
 	createCtosGrid();
 	createCtosDetailGrid();
-	
-	
+
+
 	//Search
 	$("#_search").click(function() {
-		  
+
 		//Validation
 		if( null == $("#_sDate").val() || '' == $("#_sDate").val()){
 			Common.alert('<spring:message code="sal.alert.msg.plzKeyInFromDt" />');
 			return;
 		}
-		
+
 		/* if(null == $("#_eDate").val() || '' == $("#_eDate").val()){
 		    Common.alert("* please key in to Date");
 		    return;
 		} */
-		
+
 		Common.ajax("GET", "/sales/ccp/selectCTOSB2BList", $("#_searchForm").serialize(), function(result){
 			//set Grid
 			AUIGrid.setGridData(ctosListGridID, result);
-			
+
 		});
 	});
-	
+
 	//Cell Double Click
 	AUIGrid.bind(ctosListGridID, "cellDoubleClick", function(event){
-        
+
 		var detailParam = {batchId : event.item.batchId};
 		Common.ajax("GET", "/sales/ccp/getCTOSDetailList", detailParam , function(result){
 			$("#_ordNo").attr("disabled" , false);
 			$("#_filterChange").attr("disabled" , false);
 			AUIGrid.setGridData(ctosDetailGridID, result);
-			
+
 		});
-		
+
     });
-	
+
 	//Order Search
 	$("#_ordSrchBtn").click(function() {
-		
+
 		$("#_filterChange").val("0");
 		clearDetailFilterAll();
-		
+
 		if( null == $("#_ordNo").val() || '' == $("#_ordNo").val()){
             Common.alert('<spring:message code="sal.alert.msg.plzKeyInOrdNumb" />');
             return;
         }
-		
+
 		var options = {
 		        direction : true, // 검색 방향  (true : 다음, false : 이전 검색)
 		        caseSensitive : false, // 대소문자 구분 여부 (true : 대소문자 구별, false :  무시)
 		        wholeWord : true, // 온전한 단어 여부
 		        wrapSearch : true, // 끝에서 되돌리기 여부
 		};
-		
+
 		AUIGrid.search(ctosDetailGridID, "ordNo", $("#_ordNo").val() , options);
-		
-		
+
+
 		//Validation
 		/* if(AUIGrid.getGridData(ctosListGridID) <= 0 || AUIGrid.getGridData(ctosDetailGridID) <= 0 ){
 			Common.alert("* Please search first.");
 			return;
 		}
-		
+
 		if( null == $("#_ordNo").val() || '' == $("#_ordNo").val()){
 			Common.alert("* Please key in order number. ");
 			return;
 		}
-		
+
 		var clickObj =  AUIGrid.getSelectedItems(ctosListGridID);
 		var batchId = clickObj[0].item.batchId;
 		var ordParam = {batchId : batchId , ordNo : $("#_ordNo").val()};
 		Common.ajax("GET", "/sales/ccp/getCTOSDetailByOrdNo", ordParam , function(result){
 			AUIGrid.setGridData(ctosDetailGridID, result);
 		}); */
-		
+
 	});
-	
+
 	$("#_filterChange").change(function() {
 		if(this.value == 0){
 			clearDetailFilterAll();
@@ -117,7 +117,7 @@ $(document).ready(function() {
 			fn_detailPrev();
 		}
 		if(this.value == 4){
-			fn_scoreZero(); 
+			fn_scoreZero();
 		}
 		if(this.value == 5){
 			fn_scoreGT();
@@ -125,19 +125,19 @@ $(document).ready(function() {
 		if(this.value == 6){
             fn_scoreLT();
         }
-		
+
 	});
-	
+
 	// Search Not Found Binding Event
     AUIGrid.bind(ctosDetailGridID, "notFound", searchNotFoundHandler);
-	
+
 });//Document Ready Func End
 
 
 function searchNotFoundHandler(event) {
-    var term = event.term; 
-    var wrapFound = event.wrapFound; 
-    
+    var term = event.term;
+    var wrapFound = event.wrapFound;
+
     if(wrapFound) {
         Common.alert('<spring:message code="sal.alert.msg.notFoundBrOrdNo" />' + term);
     } else {
@@ -148,7 +148,7 @@ function searchNotFoundHandler(event) {
 function createCtosGrid(){
 	var  columnLayout = [
 	                     {dataField : "batchId", headerText : '<spring:message code="sal.title.text.batchNo" />', width : "7%" , editable : false},
-	                     {dataField : "fileName", headerText : '<spring:message code="sal.title.text.fileName" />', width : "23%" , editable : false},
+	                     {dataField : "fileName", headerText : '<spring:message code="sal.title.text.fileName" />', width : "15%" , editable : false},
 	                     {dataField : "rowCnt", headerText : '<spring:message code="sal.title.text.tot" />', width : "7%" , editable : false},
 	                     {dataField : "comple", headerText : '<spring:message code="sal.combo.text.compl" />', width : "7%" , editable : false},
 	                     {dataField : "act", headerText : '<spring:message code="sal.title.text.act" />', width : "7%" , editable : false},
@@ -157,29 +157,42 @@ function createCtosGrid(){
 	                     {dataField : "gt501", headerText : '<spring:message code="sal.title.text.gt500" />', width : "6%" , editable : false},
 	                     {dataField : "stus", headerText : '<spring:message code="sal.title.status" />', width : "6%" , editable : false},
 	                     {dataField : "updDt", headerText : '<spring:message code="sal.title.text.uploadTime" />', width : "15%" , editable : false},
-	                     {dataField : "updUserId", headerText : '<spring:message code="sal.title.text.uploadUser" />', width : "9%" , editable : false}
+	                     {dataField : "updUserId", headerText : '<spring:message code="sal.title.text.uploadUser" />', width : "9%" , editable : false},
+	                     {
+	                         dataField : "",
+	                         headerText : "",
+	                         renderer : {
+	                             type : "ButtonRenderer",
+	                             labelText : "Download",
+	                             onclick : function(rowIndex, columnIndex, value, item) {
+	                               fileDown(item.batchId);
+	                             }
+	                         }
+	                     , width : "9%"
+	                     , editable : false
+	                     },
 	               ]
-	
-	
+
+
 	//그리드 속성 설정
     var gridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 9,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
-            fixedColumnCount    : 1,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-     //       selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 9,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 1,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+     //       selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn    : false
         };
-    
+
 	ctosListGridID = GridCommon.createAUIGrid("#ctos_grid_wrap", columnLayout,'', gridPros);
-	
-	
+
+
 }
 
 
@@ -195,54 +208,54 @@ function createCtosDetailGrid(){
                          {dataField : "ctosDt", headerText : '<spring:message code="sal.title.text.updateTime" />', width : "9%" , editable : false},
                          {dataField : "updUserId", headerText : '<spring:message code="sal.title.text.updateUser" />', width : "9%" , editable : false},
                          {
-                             dataField : "undefined", 
-                             headerText : '<spring:message code="sal.title.text.ficoReport" />', 
+                             dataField : "undefined",
+                             headerText : '<spring:message code="sal.title.text.ficoReport" />',
                              width : '9%',
                              renderer : {
-                                      type : "ButtonRenderer", 
-                                      labelText : "View", 
+                                      type : "ButtonRenderer",
+                                      labelText : "View",
                                       onclick : function(rowIndex, columnIndex, value, item) {
-                                          
+
                                     	  console.log("item.batchId : " + item.batchId);
                                     	//  alert("Fico View  batchId : " + item.batchId + " , ordNo : " + item.ordNo );
                                     	  fn_displayReport("FICO_VIEW" , item.batchId , item.ordNo);
-                                          
+
                                     }
                              }
                          },
                          {
-                             dataField : "undefined", 
-                             headerText : '<spring:message code="sal.title.text.ctosReport" />', 
+                             dataField : "undefined",
+                             headerText : '<spring:message code="sal.title.text.ctosReport" />',
                              width : '9%',
                              renderer : {
-                                      type : "ButtonRenderer", 
-                                      labelText : "View", 
+                                      type : "ButtonRenderer",
+                                      labelText : "View",
                                       onclick : function(rowIndex, columnIndex, value, item) {
-                                          
+
                                     	  fn_displayReport("CTOS_VIEW" , item.batchId , item.ordNo);
-                                          
+
                                     }
                              }
                          },
                          {dataField : "prcss", visible: false}
                          ]
-	
+
 	//그리드 속성 설정
     var gridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 9,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
-            fixedColumnCount    : 1,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-   //         selectionMode       : "multipleCells",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 9,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 1,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+   //         selectionMode       : "multipleCells",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn    : false
         };
-    
+
 	ctosDetailGridID = GridCommon.createAUIGrid("#ctos_detail_grid_wrap", columnLayout,'', gridPros);
 }
 
@@ -253,7 +266,7 @@ function fn_underDevelop(){
 
 //Filter Clear
 function clearDetailFilterAll() {
-    
+
     AUIGrid.clearFilterAll(ctosDetailGridID);
 };
 // score == 0
@@ -268,7 +281,7 @@ function fn_scoreZero() {
 };
 
 //score > 500
-function fn_scoreGT() {  
+function fn_scoreGT() {
 	clearDetailFilterAll();
 	AUIGrid.setFilter(ctosDetailGridID, "ficoScre",  function(dataField, value, item) {
         if(item.ficoScre > 500){
@@ -279,7 +292,7 @@ function fn_scoreGT() {
 };
 
 //score <= 500 and score != 0
-function fn_scoreLT() { 
+function fn_scoreLT() {
 	clearDetailFilterAll();
 	AUIGrid.setFilter(ctosDetailGridID, "ficoScre",  function(dataField, value, item) {
         if(item.ficoScre <= 500 && item.ficoScre > 0){
@@ -290,7 +303,7 @@ function fn_scoreLT() {
 };
 
 //Active
-function fn_detailAct() { 
+function fn_detailAct() {
 	clearDetailFilterAll();
 	AUIGrid.setFilter(ctosDetailGridID, "prcss",  function(dataField, value, item) {
         if(item.prcss  == '0'){
@@ -322,11 +335,28 @@ function fn_detailPrev() {
     });
 };
 
+function fileDown(batchId){
+
+	var date = new Date().getDate();
+
+	if(date.toString().length == 1){
+        date = "0" + date;
+    }
+
+	$('#v_batchId').val(batchId);
+	$('#reportDownFileName').val("B2B RawData_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+
+	 var option = {
+	            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+	    };
+
+	    Common.report("_searchForm", option);
+}
 
 /*****************************Display Report View**********************************************/
 
 function fn_displayReport(viewType, batchId, ordNo){
-	
+
 	var isRe = false;
 	console.log("DEFAULT_RESOURCE_FILE : " + DEFAULT_RESOURCE_FILE);
 	Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplay", {viewType : viewType , batchId : batchId , ordNo : ordNo}, function(result){
@@ -338,7 +368,7 @@ function fn_displayReport(viewType, batchId, ordNo){
 			isRe  = true;
 		}
 	},'',{async : false});
-	
+
 	if(isRe == true){
 		Common.alert('<spring:message code="sal.alert.msg.noResultCTOS" />');
 		return;
@@ -369,6 +399,11 @@ function fn_displayReport(viewType, batchId, ordNo){
 
 <section class="search_table"><!-- search_table start -->
 <form id="_searchForm">
+
+<input type="hidden" id="reportFileName" name="reportFileName" value="/sales/CCPB2BRaw_Excel.rpt" />
+<input type="hidden" id="v_batchId" name="v_batchId" value="" />
+<input type="hidden" id="viewType" name="viewType" value="EXCEL" />
+<input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -422,8 +457,8 @@ function fn_displayReport(viewType, batchId, ordNo){
             <option value="6"> > 500</option>
         </select>
     </li>
-    
-    <li>  
+
+    <li>
         <input type="text" title="" placeholder="search by order number" class="wAuto"  id="_ordNo" disabled="disabled" /><a  id="_ordSrchBtn" class="search_btn">
         <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
     </li>
