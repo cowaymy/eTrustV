@@ -268,7 +268,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
   private void preprocSrvMembershipSales(SrvMembershipSalesVO srvMembershipSalesVO, Map<String, Object> params,
       SessionVO sessionVO) throws Exception {
 
-    params.put("SELPACKAGE_ID", 3);
+    params.put("SELPACKAGE_ID", params.get("srvPacId").toString());
     params.put("STOCK_ID", CommonUtils.intNvl((String) params.get("hiddenProductID")));
 
     EgovMap memMap = membershipQuotationMapper.mPackageInfo(params);
