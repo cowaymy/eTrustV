@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-<!--
+<!--sw
  DATE        BY     VERSION        REMARK
  ----------------------------------------------------------------
  25/02/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
@@ -372,7 +372,7 @@
         if ( $("#lpmRcd").val() == "") {
           msg += "* <spring:message code='sys.msg.invalid' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
         }
-        if ("${orderInfo.stkCtgryId}" == "54") {
+         if ("${orderInfo.stkCtgryId}" == "54") {
         if ( $("#volt").val() == "") {
             msg += "* <spring:message code='sys.msg.invalid' arguments='Voltage' htmlEscape='false'/> </br>";
           }
@@ -1398,7 +1398,8 @@ Name: ${hpMember.name1}</textarea></td>
             <td><select class="w100p" id="failLocCde" name="failLocCde" onchange="fn_openFailChild(this.value)">
                 <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                 <c:forEach var="list" items="${failParent}" varStatus="status">
-                  <option value="${list.defectId}">${list.defectDesc}</option>
+                  <%-- <option value="${list.defectId}">${list.defectDesc}</option> --%>
+                  <option value="${list.codeId}">${list.codeName}</option>
                 </c:forEach></td>
             </select>
             <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m16" id="m16" class="must">*</span></th>
@@ -1409,6 +1410,26 @@ Name: ${hpMember.name1}</textarea></td>
                 </c:forEach>
             </select></td>
           </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           <tr>
             <th scope="row"><spring:message code='service.title.NextCallDate' /><span name="m7" id="m7" class="must">*</span></th>
             <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="nextCallDate" name="nextCallDate" /></td>
