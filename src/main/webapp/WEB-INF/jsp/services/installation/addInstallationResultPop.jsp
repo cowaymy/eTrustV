@@ -1441,7 +1441,7 @@ Name: ${hpMember.name1}</textarea></td>
 
              <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
 
-              <tr>
+              <%-- <tr>
              <th scope="row"><spring:message code='service.title.BoosterPump' /><span class="must" id="m21"> *</span></th>
               <td colspan="3">
                 <select class="w100p" id="boosterPump" name="boosterPump">
@@ -1462,7 +1462,7 @@ Name: ${hpMember.name1}</textarea></td>
               <td>
                 <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpLpm' />" class="w100p" id="aftLpm" name="aftLpm" value=" <c:out value="${installInfo.aftLpm}"/>"/>
               </td>
-            </tr>
+            </tr> --%>
           <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
 
 
