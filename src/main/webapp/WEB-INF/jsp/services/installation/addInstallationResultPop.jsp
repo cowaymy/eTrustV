@@ -92,6 +92,7 @@
         $("#addInstallForm #m13").hide();
         $("#addInstallForm #m14").hide();
         $("#addInstallForm #m17").hide();
+
         if ("${orderInfo.stkCtgryId}" != "54") {
           $("#addInstallForm #grid_wrap_instChk_view").hide();
           $("#addInstallForm #instChklstCheckBox").hide();
@@ -213,6 +214,7 @@
             $("#addInstallForm #m13").hide();
             $("#addInstallForm #m14").hide();
             $("#addInstallForm #m17").hide();
+
             if ("${orderInfo.stkCtgryId}" == "54") {
               $("#addInstallForm #grid_wrap_instChk_view").hide();
               $("#addInstallForm #instChklstCheckBox").hide();
@@ -276,6 +278,15 @@
       // 58 - BIDET
       // 400 - POE
       if ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56") {
+
+    	  $("#addInstallForm #m21").show();
+          $("#boosterPump").attr("disabled", false);
+          $("#addInstallForm #m22").show();
+          $("#aftPsi").attr("disabled", false);
+          $("#addInstallForm #m23").show();
+          $("#aftLpm").attr("disabled", false);
+
+
         if ("${orderInfo.stkCtgryId}" != "54") {
           $("#m8").show();
           $("#psiRcd").attr("disabled", false);
@@ -291,6 +302,7 @@
           $("#waterSourceTemp").attr("disabled", true);
           $("#m14").hide();
           $("#adptUsed").attr("disabled", true);
+
         } else {
           $("#m8").show();
           $("#psiRcd").attr("disabled", false);
@@ -354,6 +366,22 @@
       if ($("#addInstallForm #sirimNo").val().trim() == '' || ("#addInstallForm #sirimNo") == null) {
         msg += "* <spring:message code='sys.msg.necessary' arguments='SIRIM No' htmlEscape='false'/> </br>";
       }
+
+      // ADDED BOOSTER PUMP
+      if ($("#addInstallForm #boosterPump").val().trim() == '' || ("#addInstallForm #boosterPump") == null || $("#addInstallForm #boosterPump").val().trim() == '0') {
+          msg += "* <spring:message code='sys.msg.necessary' arguments='Booster Pump' htmlEscape='false'/> </br>";
+        }
+
+       if ($("#addInstallForm #boosterPump").val().trim() == '6178' || $("#addInstallForm #boosterPump").val().trim() == '6179' ){
+
+          if ($("#addInstallForm #aftPsi").val().trim() == '' || $("#addInstallForm #aftPsi") == null ){
+          msg += "* <spring:message code='sys.msg.necessary' arguments='After Pump PSI' htmlEscape='false'/> </br>";
+        }
+          if ($("#addInstallForm #aftLpm").val().trim() == '' || $("#addInstallForm #aftLpm") == null ){
+          msg += "* <spring:message code='sys.msg.necessary' arguments='After Pump LPM' htmlEscape='false'/> </br>";
+        }
+      }
+
       if ($("#addInstallForm #serialNo").val().trim() == '' || ("#addInstallForm #serialNo") == null) {
         msg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
       } else {
@@ -1411,23 +1439,31 @@ Name: ${hpMember.name1}</textarea></td>
             </select></td>
           </tr>
 
+             <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
 
+              <tr>
+             <th scope="row"><spring:message code='service.title.BoosterPump' /><span class="must" id="m21"> *</span></th>
+              <td colspan="3">
+                <select class="w100p" id="boosterPump" name="boosterPump">
+                   <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
+                  <c:forEach var="list" items="${boosterUsed}" varStatus="status">
+                    <option value="${list.codeId}" selected>${list.codeName}</option>
+                  </c:forEach>
+                       </select>
+              </td>
+          </tr>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+          <tr>
+              <th scope="row"><spring:message code='service.title.AfterPumpPsi' /><span class="must" id="m22" style="display: none;"> *</span></th>
+              <td>
+                <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpPsi' />" class="w100p" id="aftPsi" name="aftPsi" value=" <c:out value="${installInfo.aftPsi}"/>"/>
+              </td>
+              <th scope="row"><spring:message code='service.title.AfterPumpLpm' /><span class="must" id="m23" style="display: none;"> *</span></th>
+              <td>
+                <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpLpm' />" class="w100p" id="aftLpm" name="aftLpm" value=" <c:out value="${installInfo.aftLpm}"/>"/>
+              </td>
+            </tr>
+          <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
 
 
           <tr>
