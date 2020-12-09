@@ -43,14 +43,14 @@
 
             if (type == "1") {
 
-                reportFileName = "/sales/LoyaltyHpRaw_Excel.rpt"; //reportFileName
-                reportDownFileName = "LoyaltyHpRaw_" + today; //report name
+                reportFileName = "/sales/LoyaltyWsHpHm_Excel.rpt"; //reportFileName
+                reportDownFileName = "LoyaltyWsHpHm_" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
             } else if (type == "2") {
 
-                reportFileName = "/sales/LoyaltyHpSummary_Excel.rpt"; //reportFileName
-                reportDownFileName = "LoyaltyHpSummary_" + today; //report name
+                reportFileName = "/sales/LoyaltyWsHpSm_Excel.rpt"; //reportFileName
+                reportDownFileName = "LoyaltyWsHpSm_" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
             }
@@ -113,8 +113,8 @@
                         <th scope="row">Report Type</th>
                         <td colspan="3"><select id="reportType" name="reportType" style="width:300px;">
                                 <option value="">Report Type</option>
-                                    <option value="1">Loyalty WS HP Raw</option>
-                                    <option value="2">Loyalty WS HP Summary</option>
+                                    <option value="1">Loyalty WS HP - HM report</option>
+                                    <option value="2">Loyalty WS HP - SM report</option>
                         </select></td>
                     </tr>
                 </tbody>
