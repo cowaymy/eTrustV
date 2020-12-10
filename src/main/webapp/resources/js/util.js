@@ -341,7 +341,7 @@ var FormUtil = {
         }
         else if (IssueBankID == 2 || IssueBankID == 35) {
             //ALLIANCE BANK
-            if (LengthOfAccNo != 15)
+            if (LengthOfAccNo != 15 && LengthOfAccNo != 14)
                 valid = false;
         }
         else if (IssueBankID == 5 || IssueBankID == 29) {

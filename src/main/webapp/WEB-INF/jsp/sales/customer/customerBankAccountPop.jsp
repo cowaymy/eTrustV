@@ -123,7 +123,7 @@ doGetComboCodeId('/sales/customer/selectDdlChnl.do', { isAllowForDd : '1' }, '',
         }
         //ALLIANCE BANK
         if(bankId == 2 || bankId == 35){
-            if(lengthOfAccNo != 15){
+            if(lengthOfAccNo != 15 && lengthOfAccNo != 14){
                 valid = false;
                 return valid;
             }
