@@ -368,7 +368,7 @@
       }
 
       // ADDED BOOSTER PUMP
-   /*     if ($("#addInstallForm #boosterPump").val().trim() == '' || ("#addInstallForm #boosterPump") == null || $("#addInstallForm #boosterPump").val().trim() == '0') {
+        if ($("#addInstallForm #boosterPump").val().trim() == '' || ("#addInstallForm #boosterPump") == null || $("#addInstallForm #boosterPump").val().trim() == '0') {
           msg += "* <spring:message code='sys.msg.necessary' arguments='Booster Pump' htmlEscape='false'/> </br>";
         }
 
@@ -380,7 +380,7 @@
           if ($("#addInstallForm #aftLpm").val().trim() == '' || $("#addInstallForm #aftLpm") == null ){
           msg += "* <spring:message code='sys.msg.necessary' arguments='After Pump LPM' htmlEscape='false'/> </br>";
         }
-      } */
+      }
 
       if ($("#addInstallForm #serialNo").val().trim() == '' || ("#addInstallForm #serialNo") == null) {
         msg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
@@ -1441,7 +1441,7 @@ Name: ${hpMember.name1}</textarea></td>
 
              <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
 
-<%--         <tr>
+         <tr>
             <th scope="row"><spring:message code='service.title.BoosterPump' /><span name="m21" id="m21" class="must">*</span></th>
             <td colspan='3'><select class="w100p" id="boosterPump" name="boosterPump">
                 <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
@@ -1449,9 +1449,9 @@ Name: ${hpMember.name1}</textarea></td>
                   <option value="${list.codeId}" select>${list.codeName}</option>
                 </c:forEach>
             </select></td>
-          </tr> --%>
+          </tr>
 
-<%--                <tr>
+      <%--           <tr>
              <th scope="row"><spring:message code='service.title.BoosterPump' /><span class="must" id="m21"> *</span></th>
               <td colspan="3">
                 <select class="w100p" id="boosterPump" name="boosterPump">
@@ -1461,9 +1461,9 @@ Name: ${hpMember.name1}</textarea></td>
                   </c:forEach>
                        </select>
               </td>
-          </tr> --%>
+          </tr>  --%>
 
-     <%--      <tr>
+           <tr>
               <th scope="row"><spring:message code='service.title.AfterPumpPsi' /><span class="must" id="m22" style="display: none;"> *</span></th>
               <td>
                 <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpPsi' />" class="w100p" id="aftPsi" name="aftPsi" value=" <c:out value="${installInfo.aftPsi}"/>"/>
@@ -1472,7 +1472,7 @@ Name: ${hpMember.name1}</textarea></td>
               <td>
                 <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpLpm' />" class="w100p" id="aftLpm" name="aftLpm" value=" <c:out value="${installInfo.aftLpm}"/>"/>
               </td>
-            </tr> --%>
+            </tr>
           <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
 
 
