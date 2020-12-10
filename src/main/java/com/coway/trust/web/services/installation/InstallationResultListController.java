@@ -292,6 +292,7 @@ public class InstallationResultListController {
 
     List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
     List<EgovMap> adapterUsed = installationResultListService.adapterUsed();
+    List<EgovMap> boosterUsed = installationResultListService.boosterUsed();
     List<EgovMap> failParent = installationResultListService.failParent();
     List<EgovMap> failReason = installationResultListService.selectFailReason(params);
     EgovMap callType = installationResultListService.selectCallType(params); // CALL
@@ -386,6 +387,7 @@ public class InstallationResultListController {
     logger.debug("failParent : {}", failParent);
     logger.debug("installStatus : {}", installStatus);
     logger.debug("adapterUsed : {}", adapterUsed);
+    logger.debug("boosterUsed : {}", boosterUsed);
     logger.debug("stock : {}", stock);
     logger.debug("sirimLoc : {}", sirimLoc);
     logger.debug("promotionView : {}", promotionView);
@@ -404,6 +406,7 @@ public class InstallationResultListController {
     model.addAttribute("failReason", failReason);
     model.addAttribute("installStatus", installStatus);
     model.addAttribute("adapterUsed", adapterUsed);
+    model.addAttribute("boosterUsed", boosterUsed);
     model.addAttribute("failParent", failParent);
     model.addAttribute("stock", stock);
     model.addAttribute("sirimLoc", sirimLoc);
