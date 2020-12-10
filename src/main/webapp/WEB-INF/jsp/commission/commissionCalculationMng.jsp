@@ -19,12 +19,12 @@
 	chan = "${PAGE_AUTH.funcChange}";
 	view = "${PAGE_AUTH.funcView}";
 
-	// Make AUIGrid 
+	// Make AUIGrid
 	var myGridID_CAL;
 	var orgList = new Array(); //그룹 리스트
 	var orgGridCdList = new Array(); //그리드 등록 그룹 리스트
 	var orgItemList = new Array();   //그리드 등록 아이템 리스트
-	
+
 	var date = new Date();
     var year  = date.getFullYear();
     var month = date.getMonth() + 1; // 0부터 시작하므로 1더함 더함
@@ -32,24 +32,25 @@
 
 	//Start AUIGrid
 	$(document).ready(function() {
-		
+
 		// AUIGrid 그리드를 생성합니다.
 		//myGridID_CAL = GridCommon.createAUIGrid("grid_wrap", columnLayout);
 		createAUIGrid();
 
         // cellClick event.
         AUIGrid.bind(myGridID_CAL, "cellClick", function(event) {
-            console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");          
-        });     
-        
+            console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+        });
+
         AUIGrid.bind(myGridID_CAL, "cellEditBegin", auiCellEditingHandler);      // 에디팅 시작 이벤트 바인딩
         AUIGrid.bind(myGridID_CAL, "cellEditEnd", auiCellEditingHandler);        // 에디팅 정상 종료 이벤트 바인딩
         AUIGrid.bind(myGridID_CAL, "cellEditCancel", auiCellEditingHandler);    // 에디팅 취소 이벤트 바인딩
-        AUIGrid.bind(myGridID_CAL, "addRow", auiAddRowHandler);               // 행 추가 이벤트 바인딩 
-        AUIGrid.bind(myGridID_CAL, "removeRow", auiRemoveRowHandler);     // 행 삭제 이벤트 바인딩 
-        
+        AUIGrid.bind(myGridID_CAL, "addRow", auiAddRowHandler);               // 행 추가 이벤트 바인딩
+        AUIGrid.bind(myGridID_CAL, "removeRow", auiRemoveRowHandler);     // 행 삭제 이벤트 바인딩
+
         //Rule Book Item search
-        $("#search").click(function(){  
+        $("#search").click(function(){
+        	debugger;
             if(Number(year) < Number($("#searchDt").val().substr(3,7))){
                 Common.alert("<spring:message code='commission.alert.currentDate'/>");
             }else if(Number(year) == Number($("#searchDt").val().substr(3,7)) && Number(month) < Number($("#searchDt").val().substr(0,2))){
@@ -58,12 +59,12 @@
                 Common.ajax("GET", "/commission/calculation/selectCalculationList", $("#searchForm").serialize(), function(result) {
                     $("#batchYn").val("");
                     console.log("<spring:message code='sys.msg.success'/>");
-                    console.log("data : " + result);
+                    console.log(result);
                     AUIGrid.setGridData(myGridID_CAL, result);
                 });
             }
        });
-        
+
         $("#runBatch").click(function(){
             if(Number(year) < Number($("#searchDt").val().substr(3,7))){
                 Common.alert("<spring:message code='commission.alert.currentDate'/>");
@@ -71,26 +72,26 @@
                 Common.alert("<spring:message code='commission.alert.currentDate'/>");
             }else{
                 /* var  myGridID_CALLength = AUIGrid.getGridData(myGridID_CAL).length;
-                
+
                 for(var i=0;i<myGridID_CALLength ;i++){
                     if(AUIGrid.getCellValue(myGridID_CAL, i, 2) == "1"){
                         Common.alert("<spring:message code='commission.alert.calRunning'/>");
                         return false;
                     }
                 } */
-                
+
                 //Check : Run procedure in 20 minutes
                 Common.ajax("GET", "/commission/calculation/runningPrdCheck",$("#searchForm").serializeJSON(), function(result) {
                     if(result.data[0] == null){
-                        
+
                         var gridList = AUIGrid.getGridData(myGridID_CAL);       //그리드 데이터
                         var formList = $("#searchForm").serializeArray();       //폼 데이터
-                        
+
                         //param data array
                         var data = {};
                         data.all = gridList;
                         data.form = formList;
-                        
+
                         var option = {
                                 timeout: 60000*3
                             };
@@ -122,7 +123,7 @@
 		});
 
 	});//Ready
-	
+
 	//event management
     function auiCellEditingHandler(event) {
     }
@@ -221,7 +222,8 @@
                             return false;
                         }
                     }
-                    
+
+                    debugger;
                     if(Number(year) < Number($("#searchDt").val().substr(3,7))){
                         Common.alert("<spring:message code='commission.alert.currentDate'/>");
                         return false;
@@ -232,10 +234,10 @@
                         Common.alert("<spring:message code='commission.alert.calFirstErrorExecute'/>");
                         return false;
                     }else {
-                        
+
                         var data={"actionType":$("input[type=radio][name=actionType]:checked").val(),"ItemGrCd":AUIGrid.getCellValue(myGridID_CAL, rowIndex, "cd") , "prdNm":AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeName")};
                         Common.ajax("GET", "/commission/calculation/runningPrdCheck",data, function(result) {
-                            
+
                             if(result.data[0] == null){
                                 $("#lastLine").val("");
                                 if(rowIndex == myGridID_CALLength-1){
@@ -245,25 +247,25 @@
                                 }
                                 var option = {
                                         timeout: 60000*2
-                                    }; 
+                                    };
                                 Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#searchForm").serialize(), function(result) {
                                     $("#search").trigger("click");
                                 }, function(jqXHR, textStatus, errorThrown) {
-                                      console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);                    
-                             
+                                      console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+
                                       if (textStatus=="timeout" ||jqXHR.status == 503) {
                                           Common.alert("<spring:message code='commission.alert.calculation.wait503error'/>");
                                            //Common.alert("Running... Please wait about 20 minutes ");
                                            $("#search").trigger("click");
                                       }
                                 },option); //callPrd
-                                
+
                             }else{
                                 Common.alert("<spring:message code='commission.alert.calculation.runningWait' arguments='"+result.data[0].cd+"' htmlEscape='false' argumentSeparator=';' />");
                                 //Common.alert(result.data[0].calYearMonth +" - "+result.data[0].calName+ " is running. </br> Please wait about 20 minutes ");
                             }
                         });//runningPrdCheck
-                        
+
                     }
                 }
             },
@@ -281,7 +283,7 @@
 		} ];
 		// 그리드 속성 설정
 		var gridPros = {
-			usePaging : true, // 페이징 사용       
+			usePaging : true, // 페이징 사용
 			pageRowCount : 20, // 한 화면에 출력되는 행 개수 20(기본값:20)
 			skipReadonlyColumns : true, // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 			wrapSelectionMove : true, // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
@@ -290,7 +292,7 @@
 		};
 		myGridID_CAL = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
 	}
-	
+
 	//addcolum button hidden
     function cellStyleNonChan(rowIndex, columnIndex, value, headerText, item, dataField){
         if(chan != "Y"){
@@ -324,7 +326,7 @@
         <h2><spring:message code='commission.title.calculation'/></h2>
 
 		<ul class="right_btns">
-			<li><p class="btn_blue">		
+			<li><p class="btn_blue">
 					<c:if test="${PAGE_AUTH.funcView == 'Y'}"><a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a></c:if>
 				</p></li>
 		</ul>
@@ -340,7 +342,7 @@
           <input type="hidden" name="prdDec" id="prdDec"/>
 		  <input type="hidden" id="orgGrCd" name="orgGrCd" value=""/>
 		  <input type="hidden" id="lastLine" name="lastLine" value=""/>
-          
+
             <table class="type1">
                 <!-- table start -->
                 <caption>search table</caption>
@@ -371,11 +373,11 @@
 	       <input type="hidden" name="codeId" id="codeId"/>
 	       <input type="hidden" name="code" id="code"/>
 	       <input type="hidden" name="batchYn" id="batchYn"/>
-	       
+
 		<%-- 	<ul class="right_btns">
 				<c:if test="${PAGE_AUTH.funcChange == 'Y'}"><li><p class="btn_grid"><a href="#" id="runBatch"><spring:message code='commission.button.runBatch'/></a></p></li></c:if>
 			</ul> --%>
-			
+
 			<article class="grid_wrap">
 				<!-- grid_wrap start -->
 				<div id="grid_wrap" style="width: 100%; height: 500px; margin: 0 auto;"></div>

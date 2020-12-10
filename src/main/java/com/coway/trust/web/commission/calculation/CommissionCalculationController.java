@@ -609,6 +609,14 @@ public class CommissionCalculationController {
 			popName = "calculationData0024T_Pop";
 		}
 
+		// Added for HT Commission by Hui Ding, 08-12-2020
+		if((params.get("code")).equals(CommissionConstants.COMIS_HTN_P01)){
+			popName = "calculationData7001HTN_Pop";
+		}else if ((params.get("code")).equals(CommissionConstants.COMIS_HTN_P02)){
+			popName = "calculationData7002HTN_Pop";
+		}
+
+
 		// 호출될 화면
 		if(popName != null && !"".equals(popName)){
 			return "commission/"+popName;
@@ -939,6 +947,91 @@ public class CommissionCalculationController {
 			params.put("emplyLev", CommissionConstants.COMIS_HP_SGM_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPB_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_HP_HP_LEV);
+
+		int cnt = commissionCalculationService.cntCMM0029D(params);
+		return ResponseEntity.ok(cnt);
+	}
+
+	// Added for HT Commission by Hui Ding, 08-12-2020
+	/**
+	 * Search HT Data 7001
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectData7001HT")
+	public ResponseEntity<List<EgovMap>> selectData7001HT(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
+
+		params.put("taskId", String.valueOf(sTaskID));
+		params.put("isExclude", 0);
+		params.put("codeGruop", CommissionConstants.COMIS_HT);
+
+		if((params.get("code")).equals(CommissionConstants.COMIS_HTN_P01) ){
+			params.put("emplyLev", CommissionConstants.COMIS_HT_HTN_LEV);
+			params.put("bizType", CommissionConstants.COMIS_HT_HTN_BIZTYPE);
+		}
+
+		List<EgovMap> dataList = commissionCalculationService.selectData7001(params);
+
+		return ResponseEntity.ok(dataList);
+	}
+
+	/**
+	 * Search HT Data 7002
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectData7002HT")
+	public ResponseEntity<List<EgovMap>> selectData7002HT(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
+
+		params.put("taskId", String.valueOf(sTaskID));
+		params.put("isExclude", 0);
+		params.put("codeGruop", CommissionConstants.COMIS_HT);
+
+		if((params.get("code")).equals(CommissionConstants.COMIS_HTN_P02) ){
+			params.put("emplyLev", CommissionConstants.COMIS_HT_HTN_LEV);
+			params.put("bizType", CommissionConstants.COMIS_HT_HTN_BIZTYPE);
+		}
+
+		List<EgovMap> dataList = commissionCalculationService.selectData7002(params);
+
+		return ResponseEntity.ok(dataList);
+	}
+
+	@RequestMapping(value = "/cntData7001HT")
+	public ResponseEntity<Integer> cntData7001HT(@RequestParam Map<String, Object> params, ModelMap model) {
+		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
+		params.put("taskId", String.valueOf(sTaskID));
+		params.put("codeGruop", CommissionConstants.COMIS_HT);
+
+		if((params.get("code")).equals(CommissionConstants.COMIS_HTN_P01) ){
+			params.put("emplyLev", CommissionConstants.COMIS_HT_HTN_LEV);
+			params.put("bizType", CommissionConstants.COMIS_HT_HTN_BIZTYPE);
+		}
+
+		int cnt = commissionCalculationService.cntCMM0028D(params);
+		return ResponseEntity.ok(cnt);
+	}
+
+	@RequestMapping(value = "/cntData7002HT")
+	public ResponseEntity<Integer> cntData7002HT(@RequestParam Map<String, Object> params, ModelMap model) {
+		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
+		params.put("taskId", String.valueOf(sTaskID));
+		params.put("codeGruop", CommissionConstants.COMIS_HT);
+
+		if((params.get("code")).equals(CommissionConstants.COMIS_HTN_P02) ){
+			params.put("emplyLev", CommissionConstants.COMIS_HT_HTN_LEV);
+			params.put("bizType", CommissionConstants.COMIS_HT_HTN_BIZTYPE);
+		}
 
 		int cnt = commissionCalculationService.cntCMM0029D(params);
 		return ResponseEntity.ok(cnt);

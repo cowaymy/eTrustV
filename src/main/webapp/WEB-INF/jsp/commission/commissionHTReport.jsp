@@ -41,6 +41,7 @@
             }
             Common.ajax("GET", "/commission/report/selectMemberCount", $("#searchForm").serialize(), function(result) {
                 console.log("<spring:message code='sys.msg.success'/>");
+                console.log("mem_type: " + $("#searchForm [name=memType]").val());
                 if (result < 1) {
                     Common.alert("Unable to find [" + salesPersonCd + "] in HT Code .<br />Please ensure you key in the correct member code.");
                     //Common.alert("<spring:message code='commission.alert.common.unableCtCode' arguments='"+salesPersonCd+"' htmlEscape='false' />");
@@ -216,7 +217,7 @@
         <!-- search_table start -->
         <form name="searchForm" id="searchForm" method="post">
             <input type="hidden" id="confirmChk" name="confirmChk" value="N" />
-            <input type="hidden" id="memType" name="memType" value="3" />
+            <input type="hidden" id="memType" name="memType" value="7" />
             <table class="type1">
                 <!-- table start -->
                 <caption>table</caption>
