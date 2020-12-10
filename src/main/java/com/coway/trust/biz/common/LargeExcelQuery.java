@@ -15,6 +15,8 @@ public enum LargeExcelQuery {
 	, CMM0029CD("selectCMM0029DCD"), CMM0029CT("selectCMM0029DCT"), CMM0029HP("selectCMM0029DHP")
 	, CMM0028TCD("selectCMM0028TCD"), CMM0028TCT("selectCMM0028TCT"), CMM0028THP("selectCMM0028THP")
 	, CMM0029TCD("selectCMM0029TCD"), CMM0029TCT("selectCMM0029TCT"), CMM0029THP("selectCMM0029THP")
+	// Added for HT Commission by Hui Ding, 10-12-2020
+	, CMM0028HT("selectCMM0028DHT"), CMM0029HT("selectCMM0029DHT")
 	, RESULTINDEX_HP("selectHPRawData"), RESULTINDEX_CM("selectCMRawData"), RESULTINDEX_CD("selectCodyRawData"), RESULTINDEX_CT("selectCTRawData")
 
 	, CLAIM_DETAIL("selectClaimDetailById"), CLAIM_DETAIL_PAGING("selectClaimDetailByIdPaging"), INVOICE_SUMMARY("selectInvoiceAdjList"),ALLDCPMASTER("selectAllDCPMaster")

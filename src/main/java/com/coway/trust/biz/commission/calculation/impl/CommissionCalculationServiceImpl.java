@@ -236,7 +236,9 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 				return commissionCalculationMapper.selectCMM0028DCD(params);
 			}else if(CommissionConstants.COMIS_HP.equals(params.get("codeGruop"))){
 				return commissionCalculationMapper.selectCMM0028DHP(params);
-			}else return null;
+			}if (CommissionConstants.COMIS_HT.equals(params.get("codeGruop"))){
+				return commissionCalculationMapper.selectCMM0028DHT(params);
+			} else return null;
 		}else{
 			if(CommissionConstants.COMIS_CT.equals(params.get("codeGruop"))){
 				return commissionCalculationMapper.selectCMM0028TCT(params);
@@ -273,6 +275,8 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 				return commissionCalculationMapper.selectCMM0029DCD(params);
 			}else if(CommissionConstants.COMIS_HP.equals(params.get("codeGruop"))){
 				return commissionCalculationMapper.selectCMM0029DHP(params);
+			}else if(CommissionConstants.COMIS_HT.equals(params.get("codeGruop"))){
+				return commissionCalculationMapper.selectCMM0029DHT(params);
 			}else return null;
 		}else{
 			if(CommissionConstants.COMIS_CT.equals(params.get("codeGruop"))){

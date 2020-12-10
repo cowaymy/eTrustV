@@ -152,7 +152,7 @@ public interface CommissionCalculationMapper {
 	List<EgovMap> selectOrgGrList(Map<String, Object> params);
 
 	/**
-	 * calculation Data select(CMM0028D CD, CT, HP)
+	 * calculation Data select(CMM0028D CD, CT, HP, HT)
 	 *
 	 * @param Map
 	 * @return
@@ -161,8 +161,10 @@ public interface CommissionCalculationMapper {
 	List<EgovMap> selectCMM0028DCT(Map<String, Object> params);
 	List<EgovMap> selectCMM0028DCD(Map<String, Object> params);
 	List<EgovMap> selectCMM0028DHP(Map<String, Object> params);
+	List<EgovMap> selectCMM0028DHT(Map<String, Object> params);
+
 	/**
-	 * CMM0029D CD, CT, HP Data select
+	 * CMM0029D CD, CT, HP, HT Data select
 	 *
 	 * @param Map
 	 * @return
@@ -171,6 +173,7 @@ public interface CommissionCalculationMapper {
 	List<EgovMap> selectCMM0029DCT(Map<String, Object> params);
 	List<EgovMap> selectCMM0029DCD(Map<String, Object> params);
 	List<EgovMap> selectCMM0029DHP(Map<String, Object> params);
+	List<EgovMap> selectCMM0029DHT(Map<String, Object> params);
 
 	/**
 	 * Basic Data select
