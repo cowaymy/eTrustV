@@ -2525,7 +2525,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
               msgT = "Unbill Amount Exist";
               msg = "This order come with un-bill amount. Contact CRT.";
               isInValid = "isInValid";
-            } else if (LastBillMth >= 36) {
+            } else if (LastBillMth > 36) {
               msgT = "Exceed 36 Billing Month";
               msg = "This order exceeded 36th billing month.";
               isInValid = "isInValid";
