@@ -7,18 +7,36 @@
     today = "${today}";
     $(document).ready(function() {
 
-        //form clear
-        $("#clear").click(function() {
-            $("#searchForm")[0].reset();
-            $("#reportType").trigger("change");
-        });
-
         //change report type box
         $("#reportType").change(function() {
             val = $(this).val();
             var $reportForm = $("#reportForm")[0];
             $($reportForm).empty(); //remove children
         });
+
+    	var userType = '${SESSION_INFO.userTypeId}';
+
+        if(userType == 1){
+
+            if ("${SESSION_INFO.memberLevel}" == "1") {
+
+                $("#reportType").val(1); // GM view
+
+                 } else if ("${SESSION_INFO.memberLevel}" == "2") {
+
+                     $("#reportType").val(2); // SM view
+
+                 } else if ("${SESSION_INFO.memberLevel}" == "3") {
+
+                     $("#reportType").val(3); // HM view
+
+                 }
+
+               $("#reportType").attr('disabled',true);
+
+           } else {
+        	   $("#reportType").attr('disabled',false);
+           }
 
         $('#generate').click(function() {
             var $reportForm = $("#reportForm")[0];
@@ -43,14 +61,47 @@
 
             if (type == "1") {
 
-                reportFileName = "/sales/LoyaltyWsHpHm_Excel.rpt"; //reportFileName
-                reportDownFileName = "LoyaltyWsHpHm_" + today; //report name
-                reportViewType = "EXCEL"; //viewType
+                reportFileName = "/sales/LoyaltyWsHpGm_PDF.rpt"; //reportFileName
+                reportDownFileName = "LoyaltyWsHpGm_" + today; //report name
+                reportViewType = "PDF"; //viewType
+
+                //set parameters
+                $($reportForm).append('<input type="hidden" id="OrgCode" name="@OrgCode" value="" /> ');
+
+                $("#reportForm #OrgCode").val("${orgCode}");
 
             } else if (type == "2") {
 
-                reportFileName = "/sales/LoyaltyWsHpSm_Excel.rpt"; //reportFileName
+                reportFileName = "/sales/LoyaltyWsHpSm_PDF.rpt"; //reportFileName
                 reportDownFileName = "LoyaltyWsHpSm_" + today; //report name
+                reportViewType = "PDF"; //viewType
+
+                //set parameters
+                $($reportForm).append('<input type="hidden" id="GrpCode" name="@GrpCode" value="" /> ');
+
+                $("#reportForm #GrpCode").val("${grpCode}");
+
+            } else if (type == "3") {
+
+            	reportFileName = "/sales/LoyaltyWsHpHm_Excel.rpt"; //reportFileName
+            	reportDownFileName = "LoyaltyWsHpHm_" + today; //report name
+            	reportViewType = "EXCEL"; //viewType
+
+                //set parameters
+                $($reportForm).append('<input type="hidden" id="DeptCode" name="@DeptCode" value="" /> ');
+
+                $("#reportForm #DeptCode").val("${deptCode}");
+
+            } else if (type == "4") {
+
+                reportFileName = "/sales/LoyaltyWsHpSmAll_Excel.rpt"; //reportFileName
+                reportDownFileName = "LoyaltyWsHpSmAll_" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+            } else if (type == "5") {
+
+                reportFileName = "/sales/LoyaltyWsHpHmAll_Excel.rpt"; //reportFileName
+                reportDownFileName = "LoyaltyWsHpHmAll_" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
             }
@@ -112,9 +163,18 @@
                     <tr>
                         <th scope="row">Report Type</th>
                         <td colspan="3"><select id="reportType" name="reportType" style="width:300px;">
-                                <option value="">Report Type</option>
-                                    <option value="1">Loyalty WS HP - HM report</option>
-                                    <option value="2">Loyalty WS HP - SM report</option>
+                                        <option value="">Report Type</option>
+                                <c:choose>
+                                    <c:when test="${PAGE_AUTH.funcUserDefine1 != 'Y' }">
+                                        <option value="1">Loyalty WS HP - GM report</option>
+                                        <option value="2">Loyalty WS HP - SM report</option>
+                                        <option value="3">Loyalty WS HP - HM report</option>
+                                    </c:when>
+                                    <c:when test="${PAGE_AUTH.funcUserDefine1 == 'Y' }">
+                                        <option value="4">Loyalty WS HP - SM report - All (Excel)</option>
+                                        <option value="5">Loyalty WS HP - HM report - All (Excel)</option>
+                                    </c:when>
+                                </c:choose>
                         </select></td>
                     </tr>
                 </tbody>
@@ -127,9 +187,6 @@
                             <a href="#" id="generate" id="generate"><spring:message code='commission.button.generate'/></a>
                         </p></li>
                 </c:if>
-                <li><p class="btn_blue2 big">
-                        <a href="#" id="clear" name="clear"><spring:message code='sys.btn.clear'/></a>
-                    </p></li>
             </ul>
 
         </form>
