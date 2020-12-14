@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <style type="text/css">
 #neContent{
@@ -6,14 +6,14 @@
     width: 100%;
 }
 </style>
-
-<script  type="text/javascript">
+<script type="text/javaScript">
 $(document).ready(function() {
 	  doGetCombo('/common/selectCodeList.do','458', '', 'nreasonCat', 'S', '');
 });
 
 function fn_winClose(){
-	$("#newClose").click();
+	//$("#newClose").click();
+	$("#popup_wrap_new").remove();
 	fn_searchList();
 }
 
@@ -29,7 +29,6 @@ function fn_saveHasratCody() {
 }
 
 function validRequiredField() {
-
 	if($("#ncodyEmail").val() == ''){
 		Common.alert("Cody Email is required.");
 		return false;
@@ -81,10 +80,7 @@ function validRequiredField() {
 
 	return false;
 }
-
 </script>
-
-
 <div id="popup_wrap_new" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
 <h1>New Hasrat Cody Record</h1>
@@ -94,7 +90,6 @@ function validRequiredField() {
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-
 <ul class="right_btns">
     <li><p class="red_text"><spring:message code="sal.title.text.compulsoryField" /></p></li>
 </ul>
@@ -105,7 +100,6 @@ function validRequiredField() {
 <input type="hidden" name="nscmCode" id="nscmCode" value="${userInfo.defaultScmCode}"/>
 <input type="hidden" name="ngcmCode" id="ngcmCode" value="'${userInfo.defaultGcmCode}"/>
 <input type="hidden" name="nbranchId" id="nbranchId" value="${userInfo.defaultBranchId}"/>
-<%-- <input type="hidden" name="actionType" id="actionType" value='${userInfo.actionType}'/> --%>
 
 <table class="type1">
 <caption>New Record</caption>
@@ -114,7 +108,7 @@ function validRequiredField() {
     <col style="width:*" />
 </colgroup>
 <tbody>
-    <tr>
+	<tr>
 	    <th scope="row">Cody Email<span class="must">*</span></th>
 	    <td><input type="text" name="ncodyEmail" id="ncodyEmail" maxlength="100" class="w100p" /></td>
 	</tr>
@@ -128,21 +122,21 @@ function validRequiredField() {
             <input type="text" name="ncodyCode" id="ncodyCode" class="w100p" value="${userInfo.defaultUserCode}" readonly/>
         </td>
     </tr>
-    <tr>
+	<tr>
         <th scope="row">Branch Code<span class="must">*</span></th>
         <td>
             <input type="text" name="nbranchCode" id="nbranchCode" class="w100p" value="${userInfo.defaultBranch}" readonly/>
         </td>
     </tr>
-    <tr>
+	<tr>
         <th scope="row">Contact Number<span class="must">*</span></th>
         <td><input type="text" name="ncontactNumber" id="ncontactNumber" class="w100p" value="${userInfo.defaultContact}"/></td>
     </tr>
-    <tr>
+	<tr>
         <th scope="row">Please Select One Reason<span class="must">*</span></th>
         <td><select id="nreasonCat" name='nreasonCat' class="w100p"></select></td>
     </tr>
-    <tr>
+	<tr>
         <th scope="row">Content<span class="must">*</span></th>
         <td>
         <textarea cols="20" rows="10" id="neContent" name="neContent" placeholder="Email Content"></textarea>
