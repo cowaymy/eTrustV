@@ -163,18 +163,12 @@
                     <tr>
                         <th scope="row">Report Type</th>
                         <td colspan="3"><select id="reportType" name="reportType" style="width:300px;">
-                                        <option value="">Report Type</option>
-                                <c:choose>
-                                    <c:when test="${PAGE_AUTH.funcUserDefine1 != 'Y' }">
-                                        <option value="1">Loyalty WS HP - GM report</option>
-                                        <option value="2">Loyalty WS HP - SM report</option>
-                                        <option value="3">Loyalty WS HP - HM report</option>
-                                    </c:when>
-                                    <c:when test="${PAGE_AUTH.funcUserDefine1 == 'Y' }">
-                                        <option value="4">Loyalty WS HP - SM report - All (Excel)</option>
-                                        <option value="5">Loyalty WS HP - HM report - All (Excel)</option>
-                                    </c:when>
-                                </c:choose>
+                            <option value="">Report Type</option>
+                            <option value="1">Loyalty WS HP - GM report</option>
+                            <option value="2">Loyalty WS HP - SM report</option>
+                            <option value="3">Loyalty WS HP - HM report</option>
+                            <option value="4">Loyalty WS HP - SM report - All (Excel)</option>
+                            <option value="5">Loyalty WS HP - HM report - All (Excel)</option>
                         </select></td>
                     </tr>
                 </tbody>
