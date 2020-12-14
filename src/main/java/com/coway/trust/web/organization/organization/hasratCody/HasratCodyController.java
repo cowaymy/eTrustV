@@ -67,8 +67,7 @@ public class HasratCodyController {
 
 
 	@RequestMapping(value = "/hasratCodySearchList.do", method = RequestMethod.GET)
-	//public ResponseEntity<Map> selectHasratCodySearchList(@RequestBody Map<String, Object> params, Model model)
-	public ResponseEntity<List<EgovMap>> selectHasratCodySearchList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model)
+	public ResponseEntity<List<EgovMap>> selectHasratCodySearchList(@RequestParam Map<String, Object>params)
 	      throws Exception {
 
 		logger.info("###params: " + params.toString());
@@ -84,15 +83,15 @@ public class HasratCodyController {
 	    return ResponseEntity.ok(codeList);
 	}
 
-	@RequestMapping(value = "/hasratCodyNewPop.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/hasratCodyNewPop.do")
 	public String newHasratCody(@RequestParam Map<String, Object>params, ModelMap model,  SessionVO sessionVO) {
 
 		//model.addAttribute("actionType", "ADD");
-		/*logger.info("###actionType: " + params.get("actionType"));
+		logger.info("###actionType: " + params.get("actionType"));
 		logger.info("###id: " + params.get("id"));
 		int loginId = sessionVO.getUserId();
 
-		if (params.get("actionType")!= null){
+		//if (params.get("actionType")!= null){
 
 			Map<String, Object> map = new HashMap();
     		//map.put("actionType", params.get("actionType"));
@@ -118,7 +117,7 @@ public class HasratCodyController {
             		map.put("defaultGcmCode", userInfo.get("gcmcode") != null ? userInfo.get("gcmcode").toString() : "");
         		}
     		//}
-			model.addAttribute("userInfo", map);*/
+			model.addAttribute("userInfo", map);
 		//}
 
 		return "organization/organization/hasratCodyNew";
