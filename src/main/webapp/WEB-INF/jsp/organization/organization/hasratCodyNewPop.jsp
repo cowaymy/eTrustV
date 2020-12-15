@@ -8,13 +8,13 @@
 </style>
 <script type="text/javaScript">
 $(document).ready(function() {
-	  doGetCombo('/common/selectCodeList.do','458', '', 'nreasonCat', 'S', '');
+      doGetComboData('/common/selectCodeList.do', {groupCode : '458'}, '', 'nreasonCat', 'S', '');
 });
 
 function fn_winClose(){
-	//$("#newClose").click();
-	$("#popup_wrap_new").remove();
-	fn_searchList();
+    //$("#newClose").click();
+    $("#popup_wrap_new").remove();
+    fn_searchList();
 }
 
 function fn_saveHasratCody() {
@@ -29,56 +29,56 @@ function fn_saveHasratCody() {
 }
 
 function validRequiredField() {
-	if($("#ncodyEmail").val() == ''){
-		Common.alert("Cody Email is required.");
-		return false;
-	}
+    if($("#ncodyEmail").val() == ''){
+        Common.alert("Cody Email is required.");
+        return false;
+    }
 
-	if($("#ncodyName").val() == ''){
+    if($("#ncodyName").val() == ''){
         Common.alert("Cody Name is required.");
         return false;
     }
 
-	if($("#ncodyCode").val() == ''){
+    if($("#ncodyCode").val() == ''){
         Common.alert("Cody Code is required.");
         return false;
     }
 
-	if($("#nbranchCode").val() == ''){
+    if($("#nbranchCode").val() == ''){
         Common.alert("Branch Code is required.");
         return false;
     }
 
-	if($("#ncontactNumber").val() == ''){
+    if($("#ncontactNumber").val() == ''){
         Common.alert("Contact Number is required.");
         return false;
     }
 
-	if($("#nreasonCat").val() == ''){
+    if($("#nreasonCat").val() == ''){
         Common.alert("Please select reason category.");
         return false;
     }
 
-	//debugger;
-	if($("#neContent").val() == ''){
+    //debugger;
+    if($("#neContent").val() == ''){
         Common.alert("Content is required.");
         return false;
     } else {
-    	var oriContent = $("#neContent").val();
-    	$("#neContent").val(oriContent.replace(/\r\n|\r|\n/g,"<br />"));
+        var oriContent = $("#neContent").val();
+        $("#neContent").val(oriContent.replace(/\r\n|\r|\n/g,"<br />"));
     }
 
-	var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-	if (mailformat.test($("#ncodyEmail").val()))
-	{
-	    return true;
-	} else {
-		Common.alert("You have entered an invalid email address");
-	    return false;
-	}
+    if (mailformat.test($("#ncodyEmail").val()))
+    {
+        return true;
+    } else {
+        Common.alert("You have entered an invalid email address");
+        return false;
+    }
 
-	return false;
+    return false;
 }
 </script>
 <div id="popup_wrap_new" class="popup_wrap"><!-- popup_wrap start -->
@@ -98,8 +98,9 @@ function validRequiredField() {
 <input type="hidden" name="ncodyId" id="ncodyId" value="${userInfo.defaultUserId }"/>
 <input type="hidden" name="ncmCode" id="ncmCode" value="${userInfo.defaultCmCode}"/>
 <input type="hidden" name="nscmCode" id="nscmCode" value="${userInfo.defaultScmCode}"/>
-<input type="hidden" name="ngcmCode" id="ngcmCode" value="'${userInfo.defaultGcmCode}"/>
+<input type="hidden" name="ngcmCode" id="ngcmCode" value="${userInfo.defaultGcmCode}"/>
 <input type="hidden" name="nbranchId" id="nbranchId" value="${userInfo.defaultBranchId}"/>
+<input type="hidden" name="actionType" id="actionType" value="ADD"/>
 
 <table class="type1">
 <caption>New Record</caption>
@@ -108,35 +109,35 @@ function validRequiredField() {
     <col style="width:*" />
 </colgroup>
 <tbody>
-	<tr>
-	    <th scope="row">Cody Email<span class="must">*</span></th>
-	    <td><input type="text" name="ncodyEmail" id="ncodyEmail" maxlength="100" class="w100p" /></td>
-	</tr>
-	<tr>
-	    <th scope="row">Cody Name<span class="must">*</span></th>
-	    <td><input type="text" name="ncodyName" id="ncodyName" class="w100p" value="${userInfo.defaultName}"/></td>
-	</tr>
-	<tr>
+    <tr>
+        <th scope="row">Cody Email<span class="must">*</span></th>
+        <td><input type="text" name="ncodyEmail" id="ncodyEmail" maxlength="100" class="w100p" /></td>
+    </tr>
+    <tr>
+        <th scope="row">Cody Name<span class="must">*</span></th>
+        <td><input type="text" name="ncodyName" id="ncodyName" class="w100p" value="${userInfo.defaultName}"/></td>
+    </tr>
+    <tr>
         <th scope="row">Cody Code<span class="must">*</span></th>
         <td>
             <input type="text" name="ncodyCode" id="ncodyCode" class="w100p" value="${userInfo.defaultUserCode}" readonly/>
         </td>
     </tr>
-	<tr>
+    <tr>
         <th scope="row">Branch Code<span class="must">*</span></th>
         <td>
             <input type="text" name="nbranchCode" id="nbranchCode" class="w100p" value="${userInfo.defaultBranch}" readonly/>
         </td>
     </tr>
-	<tr>
+    <tr>
         <th scope="row">Contact Number<span class="must">*</span></th>
         <td><input type="text" name="ncontactNumber" id="ncontactNumber" class="w100p" value="${userInfo.defaultContact}"/></td>
     </tr>
-	<tr>
+    <tr>
         <th scope="row">Please Select One Reason<span class="must">*</span></th>
         <td><select id="nreasonCat" name='nreasonCat' class="w100p"></select></td>
     </tr>
-	<tr>
+    <tr>
         <th scope="row">Content<span class="must">*</span></th>
         <td>
         <textarea cols="20" rows="10" id="neContent" name="neContent" placeholder="Email Content"></textarea>

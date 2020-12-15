@@ -58,13 +58,6 @@
    function createAUIGrid() {
        var columnLayout = [
             {
-                dataField : "rnum",
-                headerText : "<spring:message code='log.head.rownum'/>",
-                width : 120,
-                height : 50,
-                visible : false
-              },
-              {
                    dataField : "id",
                    headerText : "ID",
                    width : 100,

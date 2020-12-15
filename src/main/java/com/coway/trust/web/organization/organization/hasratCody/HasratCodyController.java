@@ -120,7 +120,7 @@ public class HasratCodyController {
 			model.addAttribute("userInfo", map);
 		//}
 
-		return "organization/organization/hasratCodyNew";
+		return "organization/organization/hasratCodyNewPop";
 	}
 
 	@RequestMapping(value = "/saveHasratCody", method = RequestMethod.GET)
@@ -129,30 +129,43 @@ public class HasratCodyController {
 
 		params.put("user_id", sessionVO.getUserId());
 		ReturnMessage message = new ReturnMessage();
+		int proceed = 0;
+		String returnMsg = AppConstants.SUCCESS;
+		String returnCode = messageAccessor.getMessage(AppConstants.MSG_SUCCESS);
 
 		logger.info("###params: " + params.toString());
 
 		if (params.get("actionType") != null){
 			if (params.get("actionType").toString().equalsIgnoreCase("ADD")){
 
-				// send email
-				boolean sendEmail = hasratCodyService.sendContentEmail(params);
-				// insert new record
-				if (sendEmail) {
-					hasratCodyService.insertHasratCody(params);
+				try {
+    				// insert new record
+    				hasratCodyService.insertHasratCody(params);
+    				proceed++;
 
-					message.setCode(AppConstants.SUCCESS);
-					message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-				} else {
-					message.setCode(AppConstants.FAIL);
-					message.setMessage("Fail to send email!");
+        			if (proceed > 0) {
+        				// send email
+        				boolean sendEmail = hasratCodyService.sendContentEmail(params);
+
+        				if (!sendEmail){
+        					returnCode = AppConstants.FAIL;
+        					returnMsg = "Fail to send email!";
+        				}
+        			}  else {
+        				returnCode = AppConstants.FAIL;
+    					returnMsg = "Fail to save.";
+
+    				}
+				} catch (Exception e){
+					throw e;
 				}
+
 			} else {
 				// update existing record
 				// do nothing
 			}
-			message.setCode(AppConstants.SUCCESS);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			message.setCode(returnMsg);
+			message.setMessage(returnCode);
 		}
 
 		return ResponseEntity.ok(message);
