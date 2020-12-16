@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
@@ -57,12 +58,15 @@ public class OrderListController {
 	@Resource(name = "servicesLogisticsPFCService")
 	private ServicesLogisticsPFCService servicesLogisticsPFCService;
 
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
 
 	@RequestMapping(value = "/orderList.do")
-	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String main(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
 		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
 		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
@@ -70,11 +74,22 @@ public class OrderListController {
 		model.put("bfDay", bfDay);
 		model.put("toDay", toDay);
 
+		if(sessionVO.getUserTypeId() != 4 && sessionVO.getUserTypeId() != 6) {
+		    params.put("userId", sessionVO.getUserId());
+		    EgovMap result =  salesCommonService.getUserInfo(params);
+
+		    model.put("memId", result.get("memId"));
+		    model.put("memCode", result.get("memCode"));
+		    model.put("orgCode", result.get("orgCode"));
+		    model.put("grpCode", result.get("grpCode"));
+		    model.put("deptCode", result.get("deptCode"));
+		}
+
 		return "sales/order/orderList";
 	}
 
 	@RequestMapping(value = "/selectOrderJsonList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectOrderJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectOrderJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
 		String[] arrAppType   = request.getParameterValues("appType"); //Application Type
 		String[] arrOrdStusId = request.getParameterValues("ordStusId"); //Order Status
@@ -93,6 +108,11 @@ public class OrderListController {
 		if(arrKeyinBrnchId != null && !CommonUtils.containsEmpty(arrKeyinBrnchId)) params.put("arrKeyinBrnchId", arrKeyinBrnchId);
 		if(arrDscBrnchId   != null && !CommonUtils.containsEmpty(arrDscBrnchId))   params.put("arrDscBrnchId", arrDscBrnchId);
 		if(arrRentStus     != null && !CommonUtils.containsEmpty(arrRentStus))     params.put("arrRentStus", arrRentStus);
+
+		if(sessionVO.getUserTypeId() != 4 && sessionVO.getUserTypeId() != 6) {
+		    params.put("memType", sessionVO.getUserTypeId());
+		    params.put("memlvl", sessionVO.getMemberLevel());
+		}
 
 		if(params.get("custIc") == null) {logger.debug("!@###### custIc is null");}
 		if("".equals(params.get("custIc"))) {logger.debug("!@###### custIc ''");}

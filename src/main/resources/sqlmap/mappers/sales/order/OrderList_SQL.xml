@@ -293,7 +293,29 @@
                           </choose>
                         ) A on V1.ORD_ID = A.SALES_ORD_ID
            </if>
-
+			<if test='memType != null and memType != "" '>
+			JOIN(
+			    SELECT DISTINCT S1.CUST_ID , S1.SALES_ORD_ID
+			    FROM SAL0090D G
+			    LEFT JOIN ORG1001V V ON V.MEM_ID = G.SRV_CODY_ID
+			    JOIN SAL0001D S ON S.SALES_ORD_ID = G.SRV_SO_ID
+			    JOIN SAL0001D S1 on S1.CUST_ID = S.CUST_ID
+			    WHERE 1=1
+			    <if test="memlvl == 4">
+				AND V.MEM_ID = #{memId}
+				</if>
+				<if test="memlvl == 3">
+				AND V.DEPT_CODE = #{deptCode}
+				</if>
+				<if test="memlvl == 2">
+				AND V.GRP_CODE = #{grpCode}
+				</if>
+				<if test="memlvl == 1">
+				AND V.ORG_CODE = #{orgCode}
+				</if>
+			) SVC
+			ON V1.ORD_ID = SVC.SALES_ORD_ID
+			</if>
            WHERE 1 = 1
            <if test='ordDt == null || ordDt == ""'>
              AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
