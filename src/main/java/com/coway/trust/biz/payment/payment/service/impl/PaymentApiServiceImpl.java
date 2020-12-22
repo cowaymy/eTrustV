@@ -540,9 +540,9 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
 
     boolean isResult = false;
 
-    logger.debug("============================================ ");
-    logger.debug("= PAYMENT EMAIL TO " + emailNo.toString() + emailTitle);
-    logger.debug("============================================ ");
+    logger.error("================DEBUG======================== ");
+    logger.error("= PAYMENT EMAIL TO " + emailNo.toString() + emailTitle);
+    logger.error("================DEBUG======================== ");
 
     isResult = adaptorService.sendEmail(email, false, EmailTemplateType.E_TEMPORARY_RECEIPT, params);
   }

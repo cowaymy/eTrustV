@@ -133,6 +133,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 				try {
 					messageHelper.addInline("coway_header", new ClassPathResource("template/stylesheet/images/coway_header.png"));
 				} catch (Exception e) {
+					LOGGER.error(e.toString());
 					throw new ApplicationException(e, AppConstants.FAIL, e.getMessage());
 				}
 			} else if (isMultiPart) {
@@ -140,19 +141,20 @@ public class AdaptorServiceImpl implements AdaptorService {
 					try {
 						messageHelper.addAttachment(file.getName(), file);
 					} catch (Exception e) {
+						LOGGER.error(e.toString());
 						throw new ApplicationException(e, AppConstants.FAIL, e.getMessage());
 					}
 				});
 			}
-		    LOGGER.debug("============================================ ");
-		    LOGGER.debug("= PAYMENT EMAIL = BEFORE SEND = from " + from + ". Title: " + email.getSubject());
-		    LOGGER.debug("============================================ ");
+		    LOGGER.error("==============DEBUG ============================= ");
+		    LOGGER.error("= PAYMENT EMAIL = BEFORE SEND = from " + from + ". Title: " + email.getSubject());
+		    LOGGER.error("==============DEBUG============================== ");
 
 		    mailSender.send(message);
 
-		    LOGGER.debug("============================================ ");
-		    LOGGER.debug("= PAYMENT EMAIL = AFTER SEND = from " + from + ". Title: " + email.getSubject());
-		    LOGGER.debug("============================================ ");
+		    LOGGER.error("==============DEBUG============================== ");
+		    LOGGER.error("= PAYMENT EMAIL = AFTER SEND = from " + from + ". Title: " + email.getSubject());
+		    LOGGER.error("==============DEBUG============================== ");
 
 		} catch (Exception e) {
 			isSuccess = false;
