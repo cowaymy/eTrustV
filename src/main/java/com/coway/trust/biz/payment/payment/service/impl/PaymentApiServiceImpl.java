@@ -501,14 +501,17 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     }
   }
 
-  @SuppressWarnings("unchecked")
+  //@SuppressWarnings("unchecked")
   @Override
   public void sendEmail(Map<String, Object> params) {
     EmailVO email = new EmailVO();
     String emailTitle = paymentApiMapper.getEmailTitle(params);
 
+    String emailDetails = paymentApiMapper.getEmailDetails(params);
+    /*
     Map<String, Object> additionalParams = (Map<String, Object>) paymentApiMapper.getEmailDetails(params);
     params.putAll(additionalParams);
+    */
 
     //String emailNo = "";
     List<String> emailNo = new ArrayList<String>();
@@ -536,7 +539,8 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     email.setTo(emailNo);
     email.setHtml(true);
     email.setSubject(emailTitle);
-    email.setHasInlineImage(true);
+    email.setText(emailDetails);
+    //email.setHasInlineImage(true);
 
     boolean isResult = false;
 
@@ -544,6 +548,7 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     logger.error("= PAYMENT EMAIL TO " + emailNo.toString() + emailTitle);
     logger.error("================DEBUG======================== ");
 
-    isResult = adaptorService.sendEmail(email, false, EmailTemplateType.E_TEMPORARY_RECEIPT, params);
+    isResult = adaptorService.sendEmail(email, false);
+    //isResult = adaptorService.sendEmail(email, false, EmailTemplateType.E_TEMPORARY_RECEIPT, params);
   }
 }

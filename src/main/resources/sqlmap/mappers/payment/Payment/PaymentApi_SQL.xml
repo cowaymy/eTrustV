@@ -198,28 +198,34 @@
     FROM DUAL
   </select>
 
-  <select id="getEmailDetails" parameterType="Map" resultType="egovMap">
-    SELECT
-        p.SALES_ORD_NO AS SALES_ORD_NO,
-        p.PAY_AMT AS PAY_AMT,
-        s47.USER_NAME AS COLLECTOR_CODE,
-        s47.USER_FULL_NAME AS COLLECTOR_NAME,
-        s26.STK_DESC AS STK_DESC,
-        TO_CHAR(SYSDATE, 'YYYY-MM-DD') AS RECEIPT_DT,
-        s13.CODE_NAME AS PYMT_MODE,
-        (SELECT INST_ADDR_DTL || ', ' ||
-                INST_STREET || ', ' ||
-                INST_AREA || ', ' ||
-                INST_POSTCODE || ', ' ||
-                INST_CITY || ', ' ||
-                INST_STATE || ', ' ||
-                INST_COUNTRY FROM SAL1010V WHERE ORD_ID = s1.SALES_ORD_ID AND ROWNUM = 1) AS INST_ADDRESS
-    FROM PAY0297D p
-        JOIN SAL0001D s1 ON s1.SALES_ORD_NO = p.SALES_ORD_NO
-        JOIN SAL0002D s2 ON s2.SALES_ORD_ID = s1.SALES_ORD_ID
-        JOIN SYS0026M s26 ON s26.STK_ID = s2.ITM_STK_ID
-        JOIN SYS0013M s13 ON s13.CODE_ID = p.PAY_MODE
-        JOIN SYS0047M s47 ON s47.USER_ID = p.CRT_USER_ID
-     WHERE p.MOB_TICKET_NO = #{mobTicketNo}
+<!--   <select id="getEmailDetails" parameterType="Map" resultType="egovMap"> -->
+<!--     SELECT -->
+<!--         p.SALES_ORD_NO AS SALES_ORD_NO, -->
+<!--         p.PAY_AMT AS PAY_AMT, -->
+<!--         s47.USER_NAME AS COLLECTOR_CODE, -->
+<!--         s47.USER_FULL_NAME AS COLLECTOR_NAME, -->
+<!--         s26.STK_DESC AS STK_DESC, -->
+<!--         TO_CHAR(SYSDATE, 'YYYY-MM-DD') AS RECEIPT_DT, -->
+<!--         s13.CODE_NAME AS PYMT_MODE, -->
+<!--         (SELECT INST_ADDR_DTL || ', ' || -->
+<!--                 INST_STREET || ', ' || -->
+<!--                 INST_AREA || ', ' || -->
+<!--                 INST_POSTCODE || ', ' || -->
+<!--                 INST_CITY || ', ' || -->
+<!--                 INST_STATE || ', ' || -->
+<!--                 INST_COUNTRY FROM SAL1010V WHERE ORD_ID = s1.SALES_ORD_ID AND ROWNUM = 1) AS INST_ADDRESS -->
+<!--     FROM PAY0297D p -->
+<!--         JOIN SAL0001D s1 ON s1.SALES_ORD_NO = p.SALES_ORD_NO -->
+<!--         JOIN SAL0002D s2 ON s2.SALES_ORD_ID = s1.SALES_ORD_ID -->
+<!--         JOIN SYS0026M s26 ON s26.STK_ID = s2.ITM_STK_ID -->
+<!--         JOIN SYS0013M s13 ON s13.CODE_ID = p.PAY_MODE -->
+<!--         JOIN SYS0047M s47 ON s47.USER_ID = p.CRT_USER_ID -->
+<!--      WHERE p.MOB_TICKET_NO = #{mobTicketNo} -->
+<!--   </select> -->
+
+  <select id="getEmailDetails" parameterType="Map" resultType="String">
+    SELECT REPLACE(REPLACE(REPLACE(REPLACE((SELECT MSG_EMAIL_DFN FROM SYS0043D WHERE MSG_ID = 11 AND MSG_TYPE_ID = 2001),'{1}', #{custNm}), '{2}', #{payAmt}), '{3}', #{mobTicketNo}), '{4}', #{salesOrdNo})
+    FROM DUAL
   </select>
+
 </mapper>

@@ -85,6 +85,8 @@ public interface PaymentApiMapper {
 
   String getEmailTitle(Map<String, Object> params);
 
-  EgovMap getEmailDetails(Map<String, Object> params);
+  String getEmailDetails(Map<String, Object> params);
+
+  //EgovMap getEmailDetails(Map<String, Object> params);
 
 }
