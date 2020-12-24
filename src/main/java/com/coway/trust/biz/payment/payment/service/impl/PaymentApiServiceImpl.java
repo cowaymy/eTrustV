@@ -434,7 +434,24 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     // SMS
     this.sendSms(params);
     // EMAIL
-    this.sendEmail(params);
+
+    // TEMP DEBUG CHECKPOINT 1 BY YONG - START
+    logger.error("================DEBUG======================== ");
+    logger.error("= INSERT SALES NOTIFICATION = BEFORE EMAIL = MOB TICKET NO: " + mobTicketNo);
+    logger.error("================DEBUG======================== ");
+    // TEMP DEBUG CHECKPOINT 1 BY YONG - END
+
+    try {
+    	this.sendEmail(params);
+    } catch (Exception e) {
+    	logger.error("EMAIL SENDING PROCESS ENCOUNTERED ERROR: " + e.getMessage());
+    }
+
+    // TEMP DEBUG CHECKPOINT 2 BY YONG - START
+    logger.error("================DEBUG======================== ");
+    logger.error("= INSERT SALES NOTIFICATION = AFTER EMAIL = MOB TICKET NO: " + mobTicketNo);
+    logger.error("================DEBUG======================== ");
+    // TEMP DEBUG CHECKPOINT 2 BY YONG - END
 
     return rtn;
   }
@@ -533,7 +550,7 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     }
 
     // 22.12.2020 - added to debug E-Temporary Receipt email issue - Yong - start
-    emailNo.add("jiahua.yong@coway.com.my");
+    // emailNo.add("jiahua.yong@coway.com.my");
     // 22.12.2020 - added to debug E-Temporary Receipt email issue - Yong - end
 
     email.setTo(emailNo);
