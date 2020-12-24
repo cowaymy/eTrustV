@@ -300,18 +300,23 @@
 			    LEFT JOIN ORG1001V V ON V.MEM_ID = G.SRV_CODY_ID
 			    JOIN SAL0001D S ON S.SALES_ORD_ID = G.SRV_SO_ID
 			    JOIN SAL0001D S1 on S1.CUST_ID = S.CUST_ID
+			    JOIN SAL0029D C ON S.CUST_ID = C.CUST_ID
 			    WHERE 1=1
 			    <if test="memlvl == 4">
-				AND V.MEM_ID = #{memId}
+				AND (V.MEM_ID = #{memId}
+				OR C.TYPE_ID = 965)
 				</if>
 				<if test="memlvl == 3">
-				AND V.DEPT_CODE = #{deptCode}
+				AND (V.DEPT_CODE = #{deptCode}
+				OR C.TYPE_ID = 965)
 				</if>
 				<if test="memlvl == 2">
-				AND V.GRP_CODE = #{grpCode}
+				AND (V.GRP_CODE = #{grpCode}
+				OR C.TYPE_ID = 965)
 				</if>
 				<if test="memlvl == 1">
-				AND V.ORG_CODE = #{orgCode}
+				AND (V.ORG_CODE = #{orgCode}
+				OR C.TYPE_ID = 965)
 				</if>
 			) SVC
 			ON V1.ORD_ID = SVC.SALES_ORD_ID
