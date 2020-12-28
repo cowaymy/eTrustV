@@ -32,7 +32,6 @@ public class EComApiDto{
 	private String ordStus;
 	private String ccpStus;
 	private String feedbackCode;
-	private String isCardExists;
 
   public String getOrdNo() {
     return ordNo;
@@ -46,10 +45,6 @@ public class EComApiDto{
   public String getFeedbackCode() {
     return feedbackCode;
   }
-  public String getIsCardExists() {
-    return isCardExists;
-  }
-
 
   public void setOrdNo(String ordNo) {
     this.ordNo = ordNo;
@@ -62,9 +57,6 @@ public class EComApiDto{
   }
   public void setFeedbackCode(String feedbackCode) {
     this.feedbackCode = feedbackCode;
-  }
-  public void setIsCardExists(String isCardExists) {
-    this.isCardExists = isCardExists;
   }
 
 }
