@@ -63,6 +63,6 @@ public interface OrderListService {
 	//add by leo.ham
 	List<EgovMap> getCustIdOfOrderList(Map<String, Object> params);
 
-
+	List<EgovMap> selectOrderListCody(Map<String, Object> params);
 
 }

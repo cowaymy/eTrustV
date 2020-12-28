@@ -501,6 +501,9 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
     return orderListMapper.getCustIdOfOrderList(params);
   }
 
-
+  @Override
+  public List<EgovMap> selectOrderListCody(Map<String, Object> params) {
+    return orderListMapper.selectOrderListCody(params);
+  }
 
 }
