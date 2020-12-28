@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.api.impl.EcommApiMapper">
+
+<!--
+**************************************
+ * Author                  Date                    Remark
+ * Chew Kah Kit        2019/04/11           API for Common
+**************************************
+ -->
+
+<select id="checkOrderStatus" parameterType="Map" resultType="egovMap">
+    SELECT S.SALES_ORD_NO ORD_NO
+             , C.NAME ORD_STUS
+             , CASE WHEN CP.CCP_SALES_ORD_ID IS NOT NULL THEN C1.NAME ELSE '-' END  CCP_STUS
+             , CASE WHEN S.STUS_CODE_ID = 1 THEN R.CODE || '-' || R.RESN_DESC ELSE '-' END FEEDBACK_CODE
+    FROM SAL0001D S
+    JOIN SYS0038M C ON C.STUS_CODE_ID = S.STUS_CODE_ID
+    LEFT JOIN SAL0102D CP ON CP.CCP_SALES_ORD_ID = S.SALES_ORD_ID
+    LEFT JOIN SYS0032M R ON R.RESN_ID = CCP_RESN_ID
+    LEFT JOIN SYS0038M C1 ON C1.STUS_CODE_ID = CP.CCP_STUS_ID
+
+    WHERE S.SALES_ORD_NO = #{ordNo}
+</select>
+
+<select id="isCardExists" parameterType="Map" resultType="egovMap">
+    SELECT 'X' IS_EXISTS
+    FROM SAL0029D C
+    LEFT JOIN SAL0028D CR ON CR.CUST_ID = C.CUST_ID
+    LEFT JOIN SAL0074D R ON R.CUST_CRC_ID = CR.CUST_CRC_ID
+    WHERE
+        CUST_CRC_TOKEN = #{cardTokenId}
+        AND NRIC = #{nric}
+        <if test='thrdParty != null and thrdParty != "" '>
+            AND r.is_3rd_party = 1
+        </if>
+</select>
+
+
+</mapper>

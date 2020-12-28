@@ -43,6 +43,12 @@ public class SwaggerConfig {
 				.select().paths(includePath(CALLCENTER)).paths(includePath(PATH_API)).paths(excludePath(MOBILE)).build();
 	}
 
+	 @Bean
+	  public Docket confWebApiDocContext() {
+	    return new Docket(DocumentationType.SWAGGER_2).groupName(WEB).apiInfo(getWebApiInfo())
+	        .select().paths(includePath(WEB)).paths(includePath(PATH_API)).paths(excludePath(MOBILE)).paths(excludePath(CALLCENTER)).build();
+	  }
+
 	private ApiInfo getMobileApiInfo() {
 		ApiInfo apiInfo = new ApiInfo("Mobile Api", "Api Spec/Test Tool", "1.0", "", "", "", "");
 		return apiInfo;
@@ -52,6 +58,11 @@ public class SwaggerConfig {
 		ApiInfo apiInfo = new ApiInfo("Callcenter Api", "Api Spec/Test Tool", "1.0", "", "", "", "");
 		return apiInfo;
 	}
+
+	 private ApiInfo getWebApiInfo() {
+	    ApiInfo apiInfo = new ApiInfo("Web Api", "Api Spec/Test Tool", "1.0", "", "", "", "");
+	    return apiInfo;
+	  }
 
 //	private Predicate<String> getCallcenterPaths() {
 //		return or(containsPattern(SLASH + CALLCENTER + PATH_API + "/*"));
