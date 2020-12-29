@@ -396,6 +396,12 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     logger.debug("= PAYMENT FORM = " + paymentForm.toString());
     logger.debug("============================================ ");
 
+    // TEMP DEBUG CHECKPOINT BY YONG - START
+    logger.error("================DEBUG======================== ");
+    logger.error("= IN insertSalesNotification method ... START ");
+    logger.error("================DEBUG======================== ");
+    // TEMP DEBUG CHECKPOINT BY YONG - END
+
     int rtn = 0;
 
     Map<String, Object> params = PaymentForm.createMap(paymentForm);
@@ -428,7 +434,19 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     params.put("updUserId", loginVO.getUserId());
     params.put("custNm", custNm);
 
+    // TEMP DEBUG CHECKPOINT BY YONG - START
+    logger.error("================DEBUG======================== ");
+    logger.error("= BEFORE insertSalesNotification table update");
+    logger.error("================DEBUG======================== ");
+    // TEMP DEBUG CHECKPOINT BY YONG - END
+
     rtn = paymentApiMapper.insertSalesNotification(params);
+
+    // TEMP DEBUG CHECKPOINT BY YONG - START
+    logger.error("================DEBUG======================== ");
+    logger.error("= AFTER insertSalesNotification table update");
+    logger.error("================DEBUG======================== ");
+    // TEMP DEBUG CHECKPOINT BY YONG - END
 
     // ONGHC - START
     // SMS
