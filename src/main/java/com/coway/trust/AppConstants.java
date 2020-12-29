@@ -14,6 +14,8 @@ public class AppConstants {
 
 	public static final String CALLCENTER = "callcenter";
 
+	public static final String WEB = "web";
+
 	public static final String PATH_API = SLASH + "api";
 
 	public static final int RECORD_COUNT_PER_PAGE = 10;
@@ -32,6 +34,8 @@ public class AppConstants {
 			+ AppConstants.API_BASE_URI;
 	public static final String MOBILE_API_BASE_URI = AppConstants.SLASH + AppConstants.MOBILE
 			+ AppConstants.API_BASE_URI;
+	public static final String WEB_API_BASE_URI = AppConstants.SLASH + AppConstants.WEB
+      + AppConstants.API_BASE_URI ;
 
 	public static final String DEFAULT_CHARSET = "UTF-8";
 
@@ -180,10 +184,14 @@ public class AppConstants {
 
 	public static final int RESPONSE_CODE_SUCCESS = 200;
 	public static final int RESPONSE_CODE_INVALID = 400;
+	public static final int RESPONSE_CODE_UNAUTHORIZED = 401;
+	public static final int RESPONSE_CODE_FORBIDDEN = 403;
 	public static final int RESPONSE_CODE_NOT_FOUND = 404;
 
 	public static final String RESPONSE_DESC_SUCCESS = "Successful Operation";
-    public static final String RESPONSE_DESC_INVALID = "Invalid NricOrPassport supplied";
-    public static final String RESPONSE_DESC_NOT_FOUND = "User not found";
+	public static final String RESPONSE_DESC_INVALID = "Invalid Parameter(s) supplied";
+	public static final String RESPONSE_DESC_UNAUTHORIZED = "Invalid API Key";
+	public static final String RESPONSE_DESC_FORBIDDEN = "Forbidden";
+	public static final String RESPONSE_DESC_NOT_FOUND = "User not found";
 
 }
