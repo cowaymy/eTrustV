@@ -471,6 +471,12 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     logger.error("================DEBUG======================== ");
     // TEMP DEBUG CHECKPOINT 2 BY YONG - END
 
+    // TEMP DEBUG CHECKPOINT BY YONG - START
+    logger.error("================DEBUG======================== ");
+    logger.error("= IN insertSalesNotification method ... END ");
+    logger.error("================DEBUG======================== ");
+    // TEMP DEBUG CHECKPOINT BY YONG - END
+
     return rtn;
   }
 
