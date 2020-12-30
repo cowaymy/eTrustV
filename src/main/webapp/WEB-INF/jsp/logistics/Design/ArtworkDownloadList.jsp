@@ -86,13 +86,13 @@ $(function(){
 	                    <a href="https://drive.google.com/drive/folders/1FWBm7eMu0t31sLmCaFKCX2TmoA_ri63U?usp=sharing" target="_blank"><font class="tblFontCongf">Promotion</font></a>
 	                    <br />
 	                    <br />
-	                    <a href="https://drive.google.com/open?id=1s-1rApHlYW3XbI9voT02SbqoZRilhmNG" target="_blank"><font class="tblFontCongf">Product USP</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1s-1rApHlYW3XbI9voT02SbqoZRilhmNG?usp=sharing" target="_blank"><font class="tblFontCongf">Product USP</font></a>
 	                    <br />
 	                    <br />
-	                    <a href="https://drive.google.com/open?id=1ThDlCyUPZC2AtR-P9op8ePP3BzXg_fcO" target="_blank"><font class="tblFontCongf">Company Profile</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1LDtAaKXxrwj79Tt8wjoNJbPIyGW7VGn6?usp=sharing" target="_blank"><font class="tblFontCongf">Company Profile</font></a>
 	                    <br />
 	                    <br />
-	                    <a href="https://drive.google.com/open?id=1w1Js3kDZ9MRBbBReFp8xAFpwAomwAiS0" target="_blank"><font class="tblFontCongf">Social Media</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1w1Js3kDZ9MRBbBReFp8xAFpwAomwAiS0?usp=sharing" target="_blank"><font class="tblFontCongf">Social Media</font></a>
 	                    <br />
 	                </td>
 	                <td></td>
