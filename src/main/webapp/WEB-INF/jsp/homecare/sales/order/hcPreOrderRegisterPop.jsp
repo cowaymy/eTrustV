@@ -1501,7 +1501,7 @@
     function fn_loadCustomer(custId, nric){
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId, nric : nric}, function(result) {
             Common.removeLoader();
-            if(result != null && result.length == 1) {
+            if(result != null && result.length >= 1) {
 
                 $('#scPreOrdArea').removeClass("blind");
 

@@ -252,7 +252,7 @@
     ) P1
     ) P2
     WHERE P2.row_number > 0
-    ORDER BY P2.CUST_ID ASC
+    ORDER BY P2.CUST_ID DESC
 
   </select>
   <!-- Customer basic Info(Customer View) -->
