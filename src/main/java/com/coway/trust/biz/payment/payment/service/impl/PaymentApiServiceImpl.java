@@ -397,9 +397,7 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     logger.debug("============================================ ");
 
     // TEMP DEBUG CHECKPOINT BY YONG - START
-    logger.debug("================DEBUG======================== ");
-    logger.debug("= IN insertSalesNotification method ... START ");
-    logger.debug("================DEBUG======================== ");
+    logger.debug("= DEBUG ... IN insertSalesNotification method ... START ");
     // TEMP DEBUG CHECKPOINT BY YONG - END
 
     int rtn = 0;
@@ -435,17 +433,13 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     params.put("custNm", custNm);
 
     // TEMP DEBUG CHECKPOINT BY YONG - START
-    logger.debug("================DEBUG======================== ");
-    logger.debug("= BEFORE insertSalesNotification table update");
-    logger.debug("================DEBUG======================== ");
+    logger.debug("= DEBUG ... BEFORE insertSalesNotification table update");
     // TEMP DEBUG CHECKPOINT BY YONG - END
 
     rtn = paymentApiMapper.insertSalesNotification(params);
 
     // TEMP DEBUG CHECKPOINT BY YONG - START
-    logger.debug("================DEBUG======================== ");
-    logger.debug("= AFTER insertSalesNotification table update");
-    logger.debug("================DEBUG======================== ");
+    logger.debug("= DEBUG ... AFTER insertSalesNotification table update");
     // TEMP DEBUG CHECKPOINT BY YONG - END
 
     // ONGHC - START
@@ -454,9 +448,7 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     // EMAIL
 
     // TEMP DEBUG CHECKPOINT BY YONG - START
-    logger.debug("================DEBUG======================== ");
-    logger.debug("= INSERT SALES NOTIFICATION = BEFORE EMAIL = MOB TICKET NO: " + mobTicketNo);
-    logger.debug("================DEBUG======================== ");
+    logger.debug("= DEBUG ... INSERT SALES NOTIFICATION = BEFORE EMAIL = MOB TICKET NO: " + mobTicketNo);
     // TEMP DEBUG CHECKPOINT BY YONG - END
 
     try {
@@ -466,15 +458,11 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     }
 
     // TEMP DEBUG CHECKPOINT 2 BY YONG - START
-    logger.debug("================DEBUG======================== ");
-    logger.debug("= INSERT SALES NOTIFICATION = AFTER EMAIL = MOB TICKET NO: " + mobTicketNo);
-    logger.debug("================DEBUG======================== ");
+    logger.debug("= DEBUG ... INSERT SALES NOTIFICATION = AFTER EMAIL = MOB TICKET NO: " + mobTicketNo);
     // TEMP DEBUG CHECKPOINT 2 BY YONG - END
 
     // TEMP DEBUG CHECKPOINT BY YONG - START
-    logger.debug("================DEBUG======================== ");
-    logger.debug("= IN insertSalesNotification method ... END ");
-    logger.debug("================DEBUG======================== ");
+    logger.debug("= DEBUG ... IN insertSalesNotification method ... END ");
     // TEMP DEBUG CHECKPOINT BY YONG - END
 
     return rtn;
@@ -574,7 +562,7 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     }
 
     // 22.12.2020 - added to debug E-Temporary Receipt email issue - Yong - start
-    // emailNo.add("jiahua.yong@coway.com.my");
+    emailNo.add("jiahua.yong@coway.com.my");
     // 22.12.2020 - added to debug E-Temporary Receipt email issue - Yong - end
 
     email.setTo(emailNo);
@@ -585,9 +573,7 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
 
     boolean isResult = false;
 
-    logger.debug("================DEBUG======================== ");
-    logger.debug("= PAYMENT EMAIL TO " + emailNo.toString() + emailTitle);
-    logger.debug("================DEBUG======================== ");
+    logger.debug("= DEBUG ... PAYMENT EMAIL TO " + emailNo.toString() + emailTitle);
 
     isResult = adaptorService.sendEmail(email, false);
     //isResult = adaptorService.sendEmail(email, false, EmailTemplateType.E_TEMPORARY_RECEIPT, params);

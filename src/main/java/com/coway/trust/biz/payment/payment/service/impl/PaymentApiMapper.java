@@ -87,6 +87,6 @@ public interface PaymentApiMapper {
 
   String getEmailDetails(Map<String, Object> params);
 
-  //EgovMap getEmailDetails(Map<String, Object> params);
+  //EgovMap getEmailDetails(Map<String, Object> params); // for E-TR with HTML template
 
 }
