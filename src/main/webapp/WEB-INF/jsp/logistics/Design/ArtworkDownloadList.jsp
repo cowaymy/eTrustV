@@ -83,7 +83,7 @@ $(function(){
                 </tr>
                 <tr>
 	                <td >
-	                    <a href="https://drive.google.com/open?id=1IEW-o9_sSLMTRnVsnMXvDfT1w7YTvbTX" target="_blank"><font class="tblFontCongf">Promotion</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1FWBm7eMu0t31sLmCaFKCX2TmoA_ri63U?usp=sharing" target="_blank"><font class="tblFontCongf">Promotion</font></a>
 	                    <br />
 	                    <br />
 	                    <a href="https://drive.google.com/open?id=1s-1rApHlYW3XbI9voT02SbqoZRilhmNG" target="_blank"><font class="tblFontCongf">Product USP</font></a>
