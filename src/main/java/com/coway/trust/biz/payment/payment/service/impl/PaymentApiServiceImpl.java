@@ -397,9 +397,9 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     logger.debug("============================================ ");
 
     // TEMP DEBUG CHECKPOINT BY YONG - START
-    logger.error("================DEBUG======================== ");
-    logger.error("= IN insertSalesNotification method ... START ");
-    logger.error("================DEBUG======================== ");
+    logger.debug("================DEBUG======================== ");
+    logger.debug("= IN insertSalesNotification method ... START ");
+    logger.debug("================DEBUG======================== ");
     // TEMP DEBUG CHECKPOINT BY YONG - END
 
     int rtn = 0;
@@ -435,17 +435,17 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     params.put("custNm", custNm);
 
     // TEMP DEBUG CHECKPOINT BY YONG - START
-    logger.error("================DEBUG======================== ");
-    logger.error("= BEFORE insertSalesNotification table update");
-    logger.error("================DEBUG======================== ");
+    logger.debug("================DEBUG======================== ");
+    logger.debug("= BEFORE insertSalesNotification table update");
+    logger.debug("================DEBUG======================== ");
     // TEMP DEBUG CHECKPOINT BY YONG - END
 
     rtn = paymentApiMapper.insertSalesNotification(params);
 
     // TEMP DEBUG CHECKPOINT BY YONG - START
-    logger.error("================DEBUG======================== ");
-    logger.error("= AFTER insertSalesNotification table update");
-    logger.error("================DEBUG======================== ");
+    logger.debug("================DEBUG======================== ");
+    logger.debug("= AFTER insertSalesNotification table update");
+    logger.debug("================DEBUG======================== ");
     // TEMP DEBUG CHECKPOINT BY YONG - END
 
     // ONGHC - START
@@ -453,11 +453,11 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     this.sendSms(params);
     // EMAIL
 
-    // TEMP DEBUG CHECKPOINT 1 BY YONG - START
-    logger.error("================DEBUG======================== ");
-    logger.error("= INSERT SALES NOTIFICATION = BEFORE EMAIL = MOB TICKET NO: " + mobTicketNo);
-    logger.error("================DEBUG======================== ");
-    // TEMP DEBUG CHECKPOINT 1 BY YONG - END
+    // TEMP DEBUG CHECKPOINT BY YONG - START
+    logger.debug("================DEBUG======================== ");
+    logger.debug("= INSERT SALES NOTIFICATION = BEFORE EMAIL = MOB TICKET NO: " + mobTicketNo);
+    logger.debug("================DEBUG======================== ");
+    // TEMP DEBUG CHECKPOINT BY YONG - END
 
     try {
     	this.sendEmail(params);
@@ -466,15 +466,15 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     }
 
     // TEMP DEBUG CHECKPOINT 2 BY YONG - START
-    logger.error("================DEBUG======================== ");
-    logger.error("= INSERT SALES NOTIFICATION = AFTER EMAIL = MOB TICKET NO: " + mobTicketNo);
-    logger.error("================DEBUG======================== ");
+    logger.debug("================DEBUG======================== ");
+    logger.debug("= INSERT SALES NOTIFICATION = AFTER EMAIL = MOB TICKET NO: " + mobTicketNo);
+    logger.debug("================DEBUG======================== ");
     // TEMP DEBUG CHECKPOINT 2 BY YONG - END
 
     // TEMP DEBUG CHECKPOINT BY YONG - START
-    logger.error("================DEBUG======================== ");
-    logger.error("= IN insertSalesNotification method ... END ");
-    logger.error("================DEBUG======================== ");
+    logger.debug("================DEBUG======================== ");
+    logger.debug("= IN insertSalesNotification method ... END ");
+    logger.debug("================DEBUG======================== ");
     // TEMP DEBUG CHECKPOINT BY YONG - END
 
     return rtn;
@@ -585,9 +585,9 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
 
     boolean isResult = false;
 
-    logger.error("================DEBUG======================== ");
-    logger.error("= PAYMENT EMAIL TO " + emailNo.toString() + emailTitle);
-    logger.error("================DEBUG======================== ");
+    logger.debug("================DEBUG======================== ");
+    logger.debug("= PAYMENT EMAIL TO " + emailNo.toString() + emailTitle);
+    logger.debug("================DEBUG======================== ");
 
     isResult = adaptorService.sendEmail(email, false);
     //isResult = adaptorService.sendEmail(email, false, EmailTemplateType.E_TEMPORARY_RECEIPT, params);

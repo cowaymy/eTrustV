@@ -159,15 +159,15 @@ public class AdaptorServiceImpl implements AdaptorService {
 				});
 			}
 
-		    LOGGER.error("==============DEBUG ============================= ");
-		    LOGGER.error("= PAYMENT EMAIL = BEFORE SEND = from " + from + ". Title: " + email.getSubject());
-		    LOGGER.error("==============DEBUG============================== ");
+		    LOGGER.debug("==============DEBUG ============================= ");
+		    LOGGER.debug("= EMAIL = BEFORE SEND = from " + from + ". Title: " + email.getSubject());
+		    LOGGER.debug("==============DEBUG============================== ");
 
 		    mailSender.send(message);
 
-		    LOGGER.error("==============DEBUG============================== ");
-		    LOGGER.error("= PAYMENT EMAIL = AFTER SEND = from " + from + ". Title: " + email.getSubject());
-		    LOGGER.error("==============DEBUG============================== ");
+		    LOGGER.debug("==============DEBUG============================== ");
+		    LOGGER.debug("= EMAIL = AFTER SEND = from " + from + ". Title: " + email.getSubject());
+		    LOGGER.debug("==============DEBUG============================== ");
 
 		} catch (Exception e) {
 			isSuccess = false;
