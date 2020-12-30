@@ -1,45 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
-	<Appenders>
-		<Console name="console" target="SYSTEM_OUT">
-			<PatternLayout pattern="%d %5p [%c] %m%n" />
-		</Console>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %5p [%c] %m%n" />
+        </Console>
 
 
-		<RollingFile name="rollingFile" fileName="/apps/domains/SalesDmain/servers/eTRUST/log-prd/rollingFile.log"
-			filePattern="/apps/domains/SalesDmain/servers/eTRUST/log-prd/rollingFile-%d{MM-dd-yyyy}-%i.log">
-			<PatternLayout>
-				<Pattern>%d %p %c [%t] %m%n</Pattern>
-			</PatternLayout>
-			<Policies>
-				<TimeBasedTriggeringPolicy />
-				<SizeBasedTriggeringPolicy size="20 MB" />
-			</Policies>
-			<DefaultRolloverStrategy max="500" />
-		</RollingFile>
-	</Appenders>
+        <RollingFile name="rollingFile" fileName="/apps/domains/SalesDmain/servers/eTRUST/log-prd/rollingFile.log"
+            filePattern="/apps/domains/SalesDmain/servers/eTRUST/log-prd/rollingFile-%d{MM-dd-yyyy}-%i.log">
+            <PatternLayout>
+                <Pattern>%d %p %c [%t] %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="20 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="500" />
+        </RollingFile>
 
-	<Loggers>
-		<Logger name="java.sql" level="DEBUG" additivity="false">
-			<AppenderRef ref="rollingFile" />
-		</Logger>
-		<Logger name="egovframework" level="INFO" additivity="false">
-			<AppenderRef ref="rollingFile" />
-		</Logger>
-		<!-- log SQL with timing information, post execution -->
-		<Logger name="jdbc.sqltiming" level="INFO" additivity="false">
-			<AppenderRef ref="rollingFile" />
-		</Logger>
-		<Logger name="org.springframework" level="INFO" additivity="false">
-			<AppenderRef ref="rollingFile" />
-		</Logger>
+        <RollingFile name="rollingYong" fileName="/apps/domains/SalesDmain/servers/eTRUST/log-prd/rollingYong.log"
+            filePattern="/apps/domains/SalesDmain/servers/eTRUST/log-prd/rollingYong-%d{MM-dd-yyyy}-%i.log">
+            <PatternLayout>
+                <Pattern>%d %p %c [%t] %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="20 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="500" />
+        </RollingFile>
+    </Appenders>
 
-		<Logger name="com.coway.trust" level="DEBUG" additivity="false">
-			<AppenderRef ref="rollingFile" />
-		</Logger>
+    <Loggers>
+        <Logger name="java.sql" level="ERROR" additivity="false">
+            <AppenderRef ref="rollingFile" />
+        </Logger>
+        <Logger name="egovframework" level="ERROR" additivity="false">
+            <AppenderRef ref="rollingFile" />
+        </Logger>
+        <!-- log SQL with timing information, post execution -->
+        <Logger name="jdbc.sqltiming" level="ERROR" additivity="false">
+            <AppenderRef ref="rollingFile" />
+        </Logger>
+        <Logger name="org.springframework" level="ERROR" additivity="false">
+            <AppenderRef ref="rollingFile" />
+        </Logger>
 
-		<Root level="WARN">
-			<AppenderRef ref="rollingFile" />
-		</Root>
-	</Loggers>
+        <Logger name="com.crystaldecisions12" level="ERROR" additivity="false">
+            <AppenderRef ref="rollingFile" />
+        </Logger>
+
+        <Logger name="com.crystaldecisions" level="ERROR" additivity="false">
+            <AppenderRef ref="rollingFile" />
+        </Logger>
+
+        <Logger name="com.coway.trust" level="ERROR" additivity="false">
+            <AppenderRef ref="rollingFile" />
+        </Logger>
+
+        <Logger name="com.coway.trust.biz.common.impl.AdaptorServiceImpl" level="DEBUG" additivity="false">
+            <AppenderRef ref="rollingYong"/>
+        </Logger>
+
+        <Logger name="com.coway.trust.biz.payment.payment.service.impl.PaymentApiServiceImpl" level="DEBUG" additivity="false">
+            <AppenderRef ref="rollingYong"/>
+        </Logger>
+
+        <Root level="WARN">
+            <AppenderRef ref="rollingFile" />
+        </Root>
+    </Loggers>
 </Configuration>
