@@ -2293,7 +2293,8 @@ Name: ${orderInfo.name2}</textarea></td>
               <select class="w100p" id="failLocCde" name="failLocCde" onchange="fn_openFailChild(this.value)">
                 <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                 <c:forEach var="list" items="${failParent}" varStatus="status">
-                  <option value="${list.defectId}">${list.defectDesc}</option>
+                  <%-- <option value="${list.defectId}">${list.defectDesc}</option> --%>
+                  <option value="${list.codeId}">${list.codeName}</option>
                 </c:forEach>
             </td>
             </select>
