@@ -320,7 +320,7 @@
                         LEFT JOIN (  SELECT *
                                           FROM (SELECT A.*, ROW_NUMBER() OVER (PARTITION BY COURS_MEM_ID
                                                                              ORDER BY COURS_ITM_ID DESC) ITM_ROWS
-                                                FROM MSC0009D A)
+                                                FROM MSC0009D A WHERE COURS_MEM_STUS_ID <![CDATA[  <>  ]]> 8)
                                           WHERE ITM_ROWS = 1 ) Extend8 ON Extent1.MEM_ID = Extend8.COURS_MEM_ID
 
                         WHERE 1=1
