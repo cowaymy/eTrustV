@@ -116,7 +116,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
 			boolean isMultiPart = email.getFiles().size() == 0 ? false : true;
-			//isMultiPart = email.getHasInlineImage();	//for attaching image in HTML inline
+			isMultiPart = email.getHasInlineImage();	//for attaching image in HTML inline
 
 			MimeMessageHelper messageHelper = new MimeMessageHelper(message, isMultiPart, AppConstants.DEFAULT_CHARSET);
 			messageHelper.setFrom(from);
@@ -129,7 +129,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 				messageHelper.setText(email.getText(), email.isHtml());
 			}
 
-			/*
+
 			if (isMultiPart && email.getHasInlineImage()) {
 				try {
 					messageHelper.addInline("coway_header", new ClassPathResource("template/stylesheet/images/coway_header.png"));
@@ -147,8 +147,9 @@ public class AdaptorServiceImpl implements AdaptorService {
 					}
 				});
 			}
-			*/
 
+
+			/*
 			if (isMultiPart) {
 				email.getFiles().forEach(file -> {
 					try {
@@ -158,6 +159,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 					}
 				});
 			}
+			*/
 
 		    LOGGER.debug("= DEBUG ... EMAIL = BEFORE SEND = from " + from + ". Title: " + email.getSubject());
 
