@@ -562,7 +562,7 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     }
 
     // 22.12.2020 - added to debug E-Temporary Receipt email issue - Yong - start
-    emailNo.add("jiahua.yong@coway.com.my");
+    // emailNo.add("jiahua.yong@coway.com.my");
     // 22.12.2020 - added to debug E-Temporary Receipt email issue - Yong - end
 
     email.setTo(emailNo);
