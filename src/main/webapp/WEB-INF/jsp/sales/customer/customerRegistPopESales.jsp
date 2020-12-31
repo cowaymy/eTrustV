@@ -63,6 +63,7 @@
       //  CommonCombo.make('_mState_', "/sales/customer/selectMagicAddressComboList", '' , '', optionState);
          //f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
      //   doGetCombo('/common/selectCodeList.do', '8', '964','_cmbTypeId_', 'S' , '');                              // Customer Type Combo Box
+        doGetCombo('/common/selectCodeList.do', '8', '964','_cmbTypeId_', 'S' , '');                              // Customer Type Combo Box
         doGetCombo('/sales/customer/getNationList', '338' , '1' ,'_cmbNation_' , 'S');        // Nationality Combo Box
         doGetCombo('/common/selectCodeList.do', '95', '','_cmbCorpTypeId_', 'S' , '');                      // Company Type Combo Box
         doGetCombo('/common/selectCodeList.do', '17', '','_cmbInitials_', 'S' , '');                             // Initials Combo Box
@@ -70,10 +71,16 @@
     //    doGetCombo('/common/selectCodeList.do', '20', '','cmbBankType', 'S' , '');                         // Add Bank Type Combo Box
        // getAddrRelay('mstate' , '1' , 'state', '');
 
+    console.log("testing 1 :" + $("#_cmbTypeId_").val());
+    console.log("testing 2 :" + $("#cmbTypeId").val());
+
         //temp for individual only
         /********************************************************/
-        $("#_cmbTypeId_").val($('input[name=cmbTypeId]:checked').val());
+      //  $("#_cmbTypeId_").val($('input[name=cmbTypeId]:checked').val());
+        $("#_cmbTypeId_").val();
+
         $("#_nric_").val('${nric}');
+
         onChangeCompanyType($("#_cmbTypeId_").val());
         fn_nricChkAndSuggDob($("#_nric_").val());
 
@@ -277,10 +284,46 @@
         AUIGrid.setGridData(myGridID1, []);
     }
 
+    function fn_radioButton(val){
+
+
+    	var _cmbTypeId_ = val;
+    	console.log ("val:" + _cmbTypeId_);
+
+        if(val == 965) {
+
+
+
+        	$("#_cmbInitials_").hide();
+        	$("#_cmbInitials_title").hide();
+
+            /* $("#grid_wrap_dtSubGroup").show();
+            $("#grid_wrap_dtaAreaSubGroup").hide();
+            // 버튼 보이게 한다.
+            $("#hiddenBtn1").show();
+            $("#hiddenBtn2").show();
+            $("#hiddenBtn3").show();
+
+            AUIGrid.resize(myGridID); */
+
+        } else {
+
+        	$("#_cmbInitials_").show();
+        	$("#_cmbInitials_title").show();
+            /* $("#grid_wrap_dtaAreaSubGroup").show();
+            $("#grid_wrap_dtSubGroup").hide();
+            // 버튼 안보이게 한다.
+            $("#hiddenBtn1").hide();
+            $("#hiddenBtn2").hide();
+            $("#hiddenBtn3").hide();
+
+            AUIGrid.resize(myGridID2); */
+        }
+    }
     // Customer Type 선택시 Company Type 변경 (Basic Info)
    function onChangeCompanyType(val){
 
-        if($("#_cmbTypeId_").val() == '965'){
+        if($("#_cmbTypeId_").val() == '965'){ // Company
             $("select[name=cmbCorpTypeId]").removeAttr("disabled");
             $("select[name=cmbCorpTypeId]").removeClass("w100p disabled");
             $("select[name=cmbCorpTypeId]").addClass("w100p");
@@ -300,7 +343,9 @@
             $("input:radio[name='gender']").attr("disabled" , "disabled");
             $("#genderForm").attr('checked', false);
             $("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
-        }else if($("#_cmbTypeId_").val() == '964'){
+
+
+        }else if($("#_cmbTypeId_").val() == '964'){ // individual
             $("#_cmbCorpTypeId_").val('');
             $("#_cmbNation_").val('1');
             $("select[name=cmbCorpTypeId]").attr('disabled', 'disabled');
@@ -311,10 +356,11 @@
             $("select[name=cmbRace]").removeClass("w100p disabled");
             $("select[name=cmbRace]").addClass("w100p");
             $("select[name=cmbRace]").removeAttr("disabled");
-//            $("select[name=dob]").removeAttr("readonly");
-            //$("#genderForm").removeAttr('disabled');
-            //$("input:radio[name='gender']").attr("disabled" , false);
-            //$('input:radio[name="gender"][value="M"]').prop('checked', true);
+          //  $("select[name=dob]").removeAttr("readonly");
+            $("#_dob_").attr({'disabled' : false , 'class' : 'j_date3 w100p'});
+            $("#genderForm").removeAttr('disabled');
+            $("input:radio[name='gender']").attr("disabled" , false);
+           // $('input:radio[name="gender"][value="M"]').prop('checked', true);
             $("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
 
 
@@ -366,6 +412,7 @@
         console.log("save click");
 
         if(fn_saveValidationCheck()){
+
             Common.confirm("<spring:message code='sal.alert.savePreOrdCust'/>" + "<br/>" + $('#_custName_').val() + "<br/>" +  $('#_nric_').val() + "<br/>", fn_saveNewCustomer);
         }
     }
@@ -377,7 +424,8 @@
                 dataSet     : GridCommon.getEditData(myGridID),
                 dataSetBank     : GridCommon.getEditData(myGridID1),
                 customerVO : {
-                    cmbTypeId : $('input[name=cmbTypeId]:checked').val(),//insBasicForm.cmbTypeId.value,
+                  //  cmbTypeId : $('input[name=cmbTypeId]:checked').val(),//insBasicForm.cmbTypeId.value,
+                    cmbTypeId : $("#_cmbTypeId_").val(),
                     custName : insBasicForm.custName.value,
                     cmbCorpTypeId : insBasicForm.cmbCorpTypeId.value,
                     custInitial : insBasicForm.cmbInitials.value,
@@ -466,12 +514,14 @@
 
     // Validation Check
     function fn_saveValidationCheck(){
-        console.log("1.  type Check");
+
+    	console.log("1.  type Check ::"+ $("#_cmbTypeId_").val());
         if($("#_cmbTypeId_").val() == ''){
             Common.alert('<spring:message code="sal.alert.msg.plzSelCustType" />');
             return false;
         }
-         console.log("2.  nric Check");
+
+         console.log("2.  nric Check ::" + $("#_nric_").val());
         if($("#_nric_").val() == ''){
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinNricCompNum" />');
             return false;
@@ -489,6 +539,13 @@
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinCustName" />');
             return false;
         }
+
+        console.log("3B.  tel check on Tel(Mobile)"); // Compalsary on Mobile number
+        if(FormUtil.isEmpty($("#_telM1_").val())){
+        	Common.alert('<spring:message code="sal.msg.keyInTelMComp" />');
+            return false;
+        }
+
         console.log("4.  tel check");
         if(FormUtil.isEmpty($("#_telM1_").val()) && FormUtil.isEmpty($("#_telR_").val()) && FormUtil.isEmpty($("#_telF_").val()) && FormUtil.isEmpty($("#_telO_").val()) ){
             Common.alert('<spring:message code="sal.msg.keyInContactNum" />');
@@ -553,7 +610,7 @@
                    }
                } */
         }
-        console.log("5.  cmb type check");
+        console.log("5.  cmb type check for 964 ");
         if($("#_cmbTypeId_").val() == '964'){
             if($("#_cmbNation_").val() == ''){
                 Common.alert('<spring:message code="sal.alert.msg.plzSelNationality" />');
@@ -572,6 +629,22 @@
                 Common.alert('<spring:message code="sal.alert.msg.plzSelCntcPersonInitial" />');
                    return false;
             }
+        }
+
+        console.log("5B.  cmb type check for 965 ");// For company
+
+        if($("#_cmbTypeId_").val() == '965'){
+        	 if($("#_email_").val() == ""){
+        		 Common.alert('<spring:message code="sal.alert.msg.invaildEmailAddr" />');
+        		 return false
+             }else{
+                 if(FormUtil.checkEmail($("#_email_").val())){
+//                   $("input[name='email']").focus();
+                     Common.alert('<spring:message code="sal.alert.msg.invaildEmailAddr" />');
+                     $("#_email_").val('');
+                     return false;
+                 }
+             }
         }
         /* console.log("6.  detail addr check");
         if($("#_addrDtl_").val() == ''){
@@ -679,6 +752,7 @@
 //        }
         return true;
     }
+
 
     function fn_focusToCustName(){
         $("#_asCustName_").focus();
@@ -831,9 +905,12 @@
 
     function fn_nricChkAndSuggDob(inputVal){
 
-        if($("#_cmbTypeId_").val() != '964'){
+        /* if($("#_cmbTypeId_").val() != '964'){
             return;
-        }
+        } */
+
+
+        console.log("_cmbTypeId_ ::" + $("#_cmbTypeId_").val());
 
         //Dup Check
         //Init Field
@@ -868,6 +945,7 @@
         /****** Validation ********/
         //Init Filed
         $("#_dob_").val('');
+
         console.log("inputVal : " + inputVal);
         var rtnVal = "";
         //1.number check
@@ -878,8 +956,15 @@
         //2. Digit
         if(inputVal.length != 12){
             console.log("Length is : " + inputVal.length);
+          //$("#_cmbTypeId_").val('965');
             return;
         }
+
+        /* if(inputVal.length == 12){
+        	 $("#_cmbTypeId_").val('964');
+        	 return;
+        } */
+
         //3. Make YYYY
         if(inputVal.substring(0, 2) >  20){
             rtnVal = '19' + inputVal.substring(0, 6);
@@ -993,17 +1078,23 @@
                             <tr>
                                 <th scope="row"><spring:message code="sal.text.custType2" /><span class="must">*</span></th>
                                 <td>
-                                    <!-- <select class="w100p"  id="_cmbTypeId_" name="cmbTypeId" onchange="onChangeCompanyType(this.value)"> -->
-                                    <!-- <select class="w100p disabled" id="_cmbTypeId_" name="cmbTypeId" disabled="disabled"></select> -->
-                                    <div id="custTypeForm">
-                                        <label><input type="radio" name="cmbTypeId" value="965" disabled="disabled" /><span>Company</span></label>
+                                      <select class="w100p"  id="_cmbTypeId_" name="cmbTypeId" onchange="onChangeCompanyType(this.value)">
+                                      <!-- <select name="cmbTypeId" id="cmbTypeId" > -->
+                                        <option value="">Please Choose a Customer Type</option>
+                                        <option value="965">Company</option>
+                                        <option value="964">Individual</option>
+                                      <select class="w100p disabled" id="_cmbTypeId_" name="cmbTypeId" disabled="disabled"></select>
+                                    <!-- <div id="custTypeForm">
+                                         <label><input type="radio" name="cmbTypeId" value="965" disabled="disabled" /><span>Company</span></label>
                                         <label><input type="radio" name="cmbTypeId" value="964" disabled="disabled" checked/><span>Individual</span></label>
-                                                   <input id="_cmbTypeId_" name="cmbTypeId" type="hidden"/>
-                                    </div>
+                                         <label><input type="radio" id="custCom" name="cmbTypeId" value="965" onclick="fn_radioButton(965)" checked/><span>Company</span></label>
+                                        <label><input type="radio" id="custInd" name="cmbTypeId" value="964" onclick="fn_radioButton(964)" /><span>Individual</span></label>
+                                                    <input id="_cmbTypeId_" name="cmbTypeId" type="hidden"/>
+                                    </div> -->
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row"><spring:message code="sal.text.initial2" /><span class="must">*</span></th>
+                                <th scope="row"><spring:message code="sal.text.initial2"/><span class="must">*</span></th>
                                 <td><select class="w100p" id="_cmbInitials_" name="cmbInitials"></select></td>
                             </tr>
                             <tr>
