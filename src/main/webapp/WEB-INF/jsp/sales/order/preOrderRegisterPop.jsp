@@ -130,6 +130,7 @@
             if(fn_isExistESalesNo() == 'true') return false;
 
             //encryptIc($('#nric').val());
+           ///// $('#cmbTypeId').prop("disabled", true);
             $('#nric').prop("readonly", true).addClass("readonly");
             $('#sofNo').prop("readonly", true).addClass("readonly");
             $('#btnConfirm').addClass("blind");
@@ -137,6 +138,10 @@
           //$('#scPreOrdArea').removeClass("blind");
 
             /* $('#refereNo').val($('#sofNo').val().trim()) */
+
+            // fn_loadCustomer(null, $('#nric').val());
+
+            //console.log("cmbTypeId before ::" + $('#cmbTypeId').val());
 
             fn_loadCustomer(null, $('#nric').val());
         });
@@ -1026,6 +1031,21 @@
     function fn_validConfirm() {
         var isValid = true, msg = "";
 
+        /* var cmbTypeId = $('#cmbTypeId').val();
+        console.log ("cmbTypeId :: "+ cmbTypeId); */
+
+        var nric = $('#nric').val();
+        console.log ("nric :: "+ nric);
+
+        var sofNo = $('#sofNo').val();
+        console.log ("sofNo :: "+ sofNo);
+
+
+        /* if(FormUtil.checkReqValue($('#cmbTypeId'))) {
+            isValid = false;
+            msg += "* Please key in Customer Type.<br>";
+        } */
+
         if(FormUtil.checkReqValue($('#nric'))) {
             isValid = false;
             msg += "* Please key in NRIC/Company No.<br>";
@@ -1543,6 +1563,11 @@
 
     function fn_loadCustomer(custId, nric){
 
+    	 // console.log("cmbTypeId 1:" +cmbTypeId);
+    	  console.log("custId 1:" +custId);
+    	  console.log("nric 1:" +nric);
+
+
         Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId, nric : nric}, function(result) {
             Common.removeLoader();
 
@@ -1824,7 +1849,7 @@
                 }
 
                 //$('#appType').val("66");
-                $('#appType').prop("disabled", true);
+             //   $('#appType').prop("disabled", true);
 
                 if($('#ordProudct').val() == null){
                        $('#appType').change();
@@ -1832,14 +1857,14 @@
 
                 $('[name="advPay"]').prop("disabled", true);
                 $('#advPayNo').prop("checked", true);
-                $('#poNo').prop("disabled", true);
+             //   $('#poNo').prop("disabled", true);
 
                 break;
             case 'pay' :
                 if($('#appType').val() == '66'){
                     $('#rentPayMode').val('131');
                     $('#rentPayMode').change();
-                    $('#rentPayMode').prop("disabled", true);
+               //     $('#rentPayMode').prop("disabled", true);
                     $('#thrdParty').prop("disabled", true);
                 }
 
@@ -1974,6 +1999,25 @@
 		    <col style="width:*" />
 		</colgroup>
 		<tbody>
+              <%-- <tr>
+                    <th scope="row"><spring:message code="sal.text.custType" /><span class="must">*</span></th>
+                     <td>
+                       <select name="cmbTypeId" id="cmbTypeId" >
+                        <option value="">Please Choose a Customer Type</option>
+                        <option value="965">Company</option>
+                        <option value="964">Individual</option>
+                        </select>
+                        <!-- <select class="w100p disabled" id="_cmbTypeId_" name="cmbTypeId" disabled="disabled"></select> -->
+                        <input id="_cmbTypeId_" name="cmbTypeId" type="hidden"/>
+                        <!--  <div id="custTypeForm">
+                           <label><input type="radio" id="CustCom" name="cmbTypeId" value="965"  /><span>Company</span></label>
+                          <label><input type="radio" id="CustInd" name="cmbTypeId" value="964" /><span>Individual</span></label>
+                          <input id="_cmbTypeId_" name="cmbTypeId" type="hidden"/>
+                          </div> -->
+                     </td>
+              </tr> --%>
+
+
 			<tr>
 			    <th scope="row">NRIC/Company No</th>
 			    <td colspan="3" ><input id="nric" name="nric" type="text" title="" placeholder="" class="w100p" style="min-width:150px"  value=""'/></td>
@@ -2692,10 +2736,10 @@
 <h3>Billing Address</h3>
 </aside><!-- title_line end -->
 
-<!-- <ul class="right_btns mb10">
+ <ul class="right_btns mb10">
     <li><p class="btn_grid"><a id="billNewAddrBtn" href="#">Add New Address</a></p></li>
     <li><p class="btn_grid"><a id="billSelAddrBtn" href="#">Select Another Address</a></p></li>
-</ul> -->
+</ul>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
