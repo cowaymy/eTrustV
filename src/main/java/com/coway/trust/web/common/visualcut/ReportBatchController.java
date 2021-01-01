@@ -277,7 +277,12 @@ public class ReportBatchController {
   public void rcmDailyCurrentYear() {
     LOGGER.info("[START] RCM_Daily_Current_Year...");
 
-    String startYear = String.valueOf(LocalDate.now().getYear());
+    // RCM report for YEAR 2020-2021
+    String startYear = "2020";
+    String endYear = "2021";
+ /*   String startYear = String.valueOf(LocalDate.now().getYear());*/
+
+
 
     Map<String, Object> params = new HashMap<>();
     params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily.rpt");// visualcut
