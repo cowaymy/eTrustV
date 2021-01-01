@@ -292,7 +292,7 @@ public class ReportBatchController {
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put("V_TEMP", "TEMP");// parameter
     params.put("V_STARTYEAR", startYear);// parameter
-    params.put("V_ENDYEAR", "");// parameter
+    params.put("V_ENDYEAR", endYear);// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "RCM" + File.separator + "RCM_Daily_"  + startYear + "_"+ CommonUtils.getNowDate() + ".xls");
 
