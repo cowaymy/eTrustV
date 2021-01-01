@@ -344,13 +344,16 @@ WHEN NOT MATCHED THEN
     <if test="costCentr2 != null and costCentr2 != '' " >
         AND A.COST_CENTR in (#{costCentr}, #{costCentr2})
     </if>
-    <if test="stCostCentr != null and stCostCentr != '' " >
-        <if test="edCostCentr != null and edCostCentr != '' ">
+    <if test="stCostCentr != null and stCostCentr != '' and (stCostCentr == costCentr and costCentr != null and costCentr != '') " >
+        <if test="edCostCentr != null and edCostCentr != '' and (edCostCentr == costCentr and costCentr != null and costCentr != '')">
             AND A.COST_CENTR BETWEEN #{stCostCentr} AND #{edCostCentr}
         </if>
         <if test="edCostCentr == null or edCostCentr == '' ">
         AND A.COST_CENTR = #{stCostCentr}
         </if>
+    </if>
+    <if test="stCostCentr != costCentr">
+        AND A.COST_CENTR = ''
     </if>
     <if test="stGlAccCode != null and stGlAccCode != '' ">
         <if test="edGlAccCode != null and edGlAccCode != ''">

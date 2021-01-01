@@ -169,14 +169,19 @@ public class BudgetController {
 
         if("".equals(params.get("costCentr")) || !params.containsKey("costCentr")) {
             if(permissions != null) {
+                params.put("modFlg", "0");
                 if(!"A1101".equals(permissions.get("costCenter"))) {
                     params.put("costCentr", permissions.get("costCenter"));
                 }
             }
         }
 
-        if(sessionVO.getUserId() == 16003) {
-            params.put("costCentr2", "A1801");
+        if(sessionVO.getUserId() == 141938) {
+            params.put("costCentr2", "A1904");
+        }
+
+        if(sessionVO.getUserId() == 567) {
+            params.put("costCentr2", "D1001");
         }
 
 		LOGGER.debug("params =====================================>>  " + params);
@@ -344,8 +349,12 @@ public class BudgetController {
 		    }
 		}
 
-		if(sessionVO.getUserId() == 16003) {
-            params.put("costCentr2", "A1801");
+        if(sessionVO.getUserId() == 141938) {
+            params.put("costCentr2", "A1904");
+        }
+
+        if(sessionVO.getUserId() == 567) {
+            params.put("costCentr2", "D1001");
         }
 
 		if(params.containsKey("stYearMonth") && params.containsKey("edYearMonth")) {
@@ -895,8 +904,12 @@ public class BudgetController {
             }
         }
 
-        if(sessionVO.getUserId() == 16003) {
-            params.put("costCentr2", "A1801");
+        if(sessionVO.getUserId() == 141938) {
+            params.put("costCentr2", "A1904");
+        }
+
+        if(sessionVO.getUserId() == 567) {
+            params.put("costCentr2", "D1001");
         }
 
 		LOGGER.debug("params =====================================>>  " + params);
