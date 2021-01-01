@@ -352,7 +352,7 @@ WHEN NOT MATCHED THEN
         AND A.COST_CENTR = #{stCostCentr}
         </if>
     </if>
-    <if test="stCostCentr != costCentr">
+    <if test="stCostCentr != costCentr and (costCentr2 == null or costCentr2 == '')">
         AND A.COST_CENTR = ''
     </if>
     <if test="stGlAccCode != null and stGlAccCode != '' ">
