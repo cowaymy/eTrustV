@@ -1861,6 +1861,24 @@ public class ReportBatchController {
     LOGGER.info("[END] SQLColorGrid_NoRental-Out-Ins_Excel...");
   }
 
+  @RequestMapping(value = "/HC_ColorGrid_Daily_2020_Jan_Dec_S.do")
+  //@Scheduled(cron = "0 20 5 * * *")//Daily (5:20am)
+  public void hcColorGridDaily2020JanDecS() {
+    LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/HC_ColorGrid_Daily_2020_Jan_Dec_S.rpt");// visualcut
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "ColorGrid" + File.separator + "HC_ColorGrid_Daily_2020_Jan_Dec_S" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] SQLColorGrid_NoRental-Out-Ins_Excel...");
+  }
+
 /*  @RequestMapping(value = "/Hand_Collection_vs_Autopay_Excel.do")
   //@Scheduled(cron = " 0 0 6 1 * ?")//Monthly (Day 1) 6:00am
   public void handCollectionVsAutopay() {
