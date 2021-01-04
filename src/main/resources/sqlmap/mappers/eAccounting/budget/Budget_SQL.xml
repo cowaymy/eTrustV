@@ -338,21 +338,25 @@ WHEN NOT MATCHED THEN
      AND A.BUDGET_CODE = C.BUDGET_CODE
      AND A.GL_ACC_CODE = C.GL_ACC_CODE
     WHERE A.BUDGET_PLAN_YEAR =#{budgetPlanYear}
-    <if test="(costCentr != null and costCentr != '') and (costCentr2 == null and costCentr2 == '') " >
-        AND A.COST_CENTR = #{costCentr}
+    <if test="stCostCentr == null or stCostCentr == '' ">
+        <if test="(costCentr != null and costCentr != '') and (costCentr2 == null or costCentr2 == '') " >
+	        AND A.COST_CENTR = #{costCentr}
+	    </if>
+	    <if test="costCentr2 != null and costCentr2 != '' " >
+	        AND A.COST_CENTR in (#{costCentr}, #{costCentr2})
+	    </if>
     </if>
-    <if test="costCentr2 != null and costCentr2 != '' " >
-        AND A.COST_CENTR in (#{costCentr}, #{costCentr2})
+    <if test="costCentr == null or costCentr == '' ">
+        <if test="stCostCentr != null and stCostCentr != '' " >
+	        <if test="edCostCentr != null and edCostCentr != '' ">
+	            AND A.COST_CENTR BETWEEN #{stCostCentr} AND #{edCostCentr}
+	        </if>
+	        <if test="edCostCentr == null or edCostCentr == '' ">
+	            AND A.COST_CENTR = #{stCostCentr}
+	        </if>
+	    </if>
     </if>
-    <if test="stCostCentr != null and stCostCentr != '' and (stCostCentr == costCentr and costCentr != null and costCentr != '') " >
-        <if test="edCostCentr != null and edCostCentr != '' and (edCostCentr == costCentr and costCentr != null and costCentr != '')">
-            AND A.COST_CENTR BETWEEN #{stCostCentr} AND #{edCostCentr}
-        </if>
-        <if test="edCostCentr == null or edCostCentr == '' ">
-        AND A.COST_CENTR = #{stCostCentr}
-        </if>
-    </if>
-    <if test="stCostCentr != costCentr and (costCentr2 == null or costCentr2 == '')">
+    <if test="(stCostCentr != null and stCostCentr != '') and stCostCentr != costCentr and (costCentr != null or costCentr != '') and flg == 1 ">
         AND A.COST_CENTR = ''
     </if>
     <if test="stGlAccCode != null and stGlAccCode != '' ">

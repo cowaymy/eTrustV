@@ -184,6 +184,14 @@ public class BudgetController {
             params.put("costCentr2", "D1001");
         }
 
+        LOGGER.debug(sessionVO.getCostCentr());
+        if(!"A1101".equals(sessionVO.getCostCentr())) {
+            params.put("flg", "1");
+        } else {
+            params.put("flg", "0");
+        }
+
+        LOGGER.debug("budgetController :: selectMonthlyBudgetList");
 		LOGGER.debug("params =====================================>>  " + params);
 
 		budgetList = budgetService.selectMonthlyBudgetList(params);
