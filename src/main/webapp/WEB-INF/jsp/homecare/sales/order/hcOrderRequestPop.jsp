@@ -544,9 +544,9 @@
         $('#ordPv'+ _tagNum).addClass("readonly");
         $('#ordRentalFees'+ _tagNum).addClass("readonly");
 
-        if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68 ) {
+        /* if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68 ) {
             SRV_PAC_ID = 0;
-        }
+        } */
 
         if(FormUtil.isNotEmpty(stkIdVal)) {
             fn_loadProductPrice(APP_TYPE_ID, stkIdVal, SRV_PAC_ID, _tagNum);
@@ -2408,9 +2408,11 @@
         // Homecare Product 조회
         //doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:SRV_PAC_ID, stkCtgryId: "${orderDetail.basicInfo.stkCtgryId}"}, STOCK_ID, 'cmbOrderProduct', 'S', 'fn_setLoadListPexch');//product 생성
         // StkCategoryID - Mattress(5706)
-         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:SRV_PAC_ID, stkCtgryId:'5706'}, STOCK_ID, 'ordProduct1', 'S', 'fn_setOptGrpClass1');//product 생성
+         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderDetail.basicInfo.srvPacId}', stkCtgryId:'5706'}, STOCK_ID, 'ordProduct1', 'S', 'fn_setOptGrpClass1');//product 생성
+         console.log(SRV_PAC_ID);
          // StkCategoryID - Frame(5707)
-         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:SRV_PAC_ID, stkCtgryId:'5707'}, STOCK_ID2, 'ordProduct2', 'S', 'fn_setOptGrpClass2');//product 생성
+         doGetComboAndGroup2('/homecare/sales/order/selectHcProductCodeList.do', {stkType:stkType, srvPacId:'${orderDetail.basicInfo.srvPacId}', stkCtgryId:'5707'}, STOCK_ID2, 'ordProduct2', 'S', 'fn_setOptGrpClass2');//product 생성
+         console.log(SRV_PAC_ID);
 
         doGetComboData('/sales/order/selectResnCodeList.do', {resnTypeId : '287', stusCodeId:'1'}, '', 'cmbReasonExch', 'S', ''); //Reason Code
         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp1', 'S'); //Discount period
