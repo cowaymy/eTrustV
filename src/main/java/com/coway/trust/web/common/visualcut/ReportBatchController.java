@@ -1643,26 +1643,31 @@ public class ReportBatchController {
     LOGGER.info("[END] Gen_AS_Raw_PassMth_Excel...");
   }
 
-  @RequestMapping(value = "/CSP_Raw_Data_Excel_2018.do")
+  @RequestMapping(value = "/CSP_Raw_Data_Excel.do")
   //@Scheduled(cron = "0 0 3 * * *")//Daily (3:00am)
-  public void CSP_Raw_Data_Excel_2018() {
-    LOGGER.info("[START] CSP_Raw_Data_Excel...");
-    Map<String, Object> params = new HashMap<>();
-    params.put(REPORT_FILE_NAME, "/visualcut/CSPRawData.rpt");// visualcut
-                                                                                  // rpt
-                                                                                  // file
-                                                                                  // name.
-    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-    params.put("V_TEMP", "TEMP");// parameter
-    params.put("V_YEAR", "2018");// parameter
-    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "CSP" + File.separator + "CSP_Raw_Data_2018_" + CommonUtils.getNowDate() + ".xls");
+  public void CSP_Raw_Data_Excel() {
 
-    this.viewProcedure(null, null, params);
-    LOGGER.info("[END] CSP_Raw_Data_Excel...");
+    int currentYear = LocalDate.now().getYear();
+
+    for(int year= 2018;year <= currentYear; year++){
+      LOGGER.info("[START] CSP_Raw_Data_Excel...");
+      Map<String, Object> params = new HashMap<>();
+      params.put(REPORT_FILE_NAME, "/visualcut/CSPRawData.rpt");// visualcut
+                                                                                    // rpt
+                                                                                    // file
+                                                                                    // name.
+      params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+      params.put("V_TEMP", "TEMP");// parameter
+      params.put("V_YEAR", year);// parameter
+      params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+          "CSP" + File.separator + "CSP_Raw_Data_" + year + "_" + CommonUtils.getNowDate() + ".xls");
+
+      this.viewProcedure(null, null, params);
+      LOGGER.info("[END] CSP_Raw_Data_Excel...");
+    }
   }
 
-  @RequestMapping(value = "/CSP_Raw_Data_Excel_2019.do")
+  /*@RequestMapping(value = "/CSP_Raw_Data_Excel_2019.do")
   //@Scheduled(cron = "0 30 3 * * *")//Daily (3:30am)
   public void CSP_Raw_Data_Excel_2019() {
     LOGGER.info("[START] CSP_Raw_Data_Excel...");
@@ -1698,7 +1703,7 @@ public class ReportBatchController {
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] CSP_Raw_Data_Excel...");
-  }
+  }*/
 
   @RequestMapping(value = "/SST_Agreement_Raw_Data_Excel.do")
   //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
