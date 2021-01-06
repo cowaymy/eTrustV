@@ -26,6 +26,8 @@ public interface htOrderListMapper {
 
 	List<EgovMap> selectOrderList(Map<String, Object> params); //Referral Info
 
+	List<EgovMap> selectCodeList_exc(Map<String, Object> params); //Referral Info exc
+
 	List<EgovMap> getApplicationTypeList(Map<String, Object> params);
 
 	List<EgovMap> getUserCodeList();

@@ -182,9 +182,14 @@ public class htOrderListServiceImpl extends EgovAbstractServiceImpl implements h
 		return htOrderListMapper.getPrCTInfo(params);
 	}
 
-	@Override
+	/*@Override
 	public List<EgovMap> selectCodeList(Map<String, Object> params) {
 		return htOrderListMapper.selectCodeList(params);
+	}*/
+
+	@Override
+	public List<EgovMap> selectCodeList(Map<String, Object> params) {
+		return htOrderListMapper.selectCodeList_exc(params); // Excluding unnecessary selection
 	}
 
 }
