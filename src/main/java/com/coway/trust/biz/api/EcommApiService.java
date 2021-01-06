@@ -1,5 +1,7 @@
 package com.coway.trust.biz.api;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**************************************
  * Author                  Date                    Remark
  * Chew Kah Kit        2019/04/11           API for customer portal
@@ -13,7 +15,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface EcommApiService {
 
-  EComApiDto checkOrderStatus(EComApiForm params) throws Exception;
-  EgovMap isCardExists(EComApiForm params) throws Exception;
+  EgovMap checkOrderStatus(HttpServletRequest request,EComApiForm eComApiForm) throws Exception;
+  EgovMap cardDiffNRIC(HttpServletRequest request, EComApiForm eComApiForm) throws Exception;
 
 }

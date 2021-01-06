@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.api.CommonApiService;
 
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -39,8 +41,8 @@ public class CommonApiController {
 
   @ApiOperation(value = "checkAccess", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/checkAccess", method = RequestMethod.GET)
-  public ResponseEntity<CommonApiDto> checkAccess(@ModelAttribute CommonApiForm params) throws Exception {
-    return ResponseEntity.ok(commonApiService.checkAccess(params));
+  public ResponseEntity<EgovMap> checkAccess(HttpServletRequest request,@ModelAttribute CommonApiForm params) throws Exception {
+    return ResponseEntity.ok(commonApiService.checkAccess(request,params));
   }
 
 }

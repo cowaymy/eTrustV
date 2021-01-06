@@ -19,6 +19,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface EcommApiMapper {
 
   EgovMap checkOrderStatus(Map<String, Object> params);
-  EgovMap isCardExists(Map<String, Object> params);
+  EgovMap cardDiffNRIC(Map<String, Object> params);
 
 }

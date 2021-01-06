@@ -8,17 +8,26 @@ import java.util.List;
  ***************************************/
 
 import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.Resource;
-
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.biz.api.CommonApiService;
 import com.coway.trust.biz.api.EcommApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.google.common.collect.Maps;
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.project.common.CommonApiDto;
+import com.coway.trust.api.project.common.CommonApiForm;
 import com.coway.trust.api.project.eCommerce.EComApiDto;
 import com.coway.trust.api.project.eCommerce.EComApiForm;
 
@@ -34,56 +43,116 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
   @Resource(name = "CommonApiMapper")
   private CommonApiMapper commonApiMapper;
 
+  @Resource(name = "commonApiService")
+  private CommonApiService commonApiService;
+
   @Override
-  public EComApiDto checkOrderStatus(EComApiForm params) throws Exception {
-    if(null == params){
-      throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
-    }
-    if(CommonUtils.isEmpty(params.getKey())){
-      throw new ApplicationException(String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED),AppConstants.RESPONSE_DESC_UNAUTHORIZED);
-    }
-    if(commonApiMapper.checkAccess(EComApiForm.createMap(params)) == null){
-      throw new ApplicationException(String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED),AppConstants.RESPONSE_DESC_UNAUTHORIZED);
-    }
-    if(CommonUtils.isEmpty(params.getOrdNo())){
-      throw new ApplicationException(AppConstants.FAIL, "Order Number value does not exist.");
-    }
-    EgovMap access = ecommApiMapper.checkOrderStatus(EComApiForm.createMap(params));
+  public EgovMap checkOrderStatus(HttpServletRequest request,EComApiForm eComApiForm) throws Exception {
+    String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0";
+
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.reset();
+    stopWatch.start();
+
+    EgovMap data = new EgovMap(), access = new EgovMap();
+    Map<String, Object> reqPrm = Maps.filterValues(EComApiForm.createMap(eComApiForm),Objects::nonNull);
     EComApiDto rtn = new EComApiDto();
 
-    if(MapUtils.isNotEmpty(access)){
-      return rtn.create(access);
+    try{
+
+      access = commonApiMapper.checkAccess(reqPrm);
+      if(access == null){
+        code = String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED);
+        message = AppConstants.RESPONSE_DESC_UNAUTHORIZED;
+      }
+      else if(CommonUtils.isEmpty(eComApiForm.getOrdNo())){
+        code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+        message = "Order Number Not Found";
+      }
+      else {
+        data = ecommApiMapper.checkOrderStatus(EComApiForm.createMap(eComApiForm));
+
+        if(MapUtils.isNotEmpty(data)){
+          code = String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS);
+          message = String.valueOf(AppConstants.RESPONSE_DESC_SUCCESS);
+
+          rtn = EComApiDto.create(data);
+        }else{
+          code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+          message = "Order Number Not Found";
+        }
+      }
+
+    }catch(Exception e){
+      code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+      message = StringUtils.substring(e.getMessage(), 0, 4000);
+    } finally{
+      stopWatch.stop();
+      respTm = stopWatch.toString();
     }
 
-    return rtn;
+    return commonApiService.rtnRespMsg(request, code, message, respTm, reqPrm, EComApiDto.createMap(rtn) ,apiUserId);
   }
 
   @Override
-  public EgovMap isCardExists(EComApiForm params) throws Exception {
-    if(null == params){
-      throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
-    }
-    if(CommonUtils.isEmpty(params.getKey())){
-      throw new ApplicationException(String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED),AppConstants.RESPONSE_DESC_UNAUTHORIZED);
-    }
-    if(commonApiMapper.checkAccess(EComApiForm.createMap(params)) == null){
-      throw new ApplicationException(String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED),AppConstants.RESPONSE_DESC_UNAUTHORIZED);
-    }
-    if(CommonUtils.isEmpty(params.getNric())){
-      throw new ApplicationException(AppConstants.FAIL, "NRIC value does not exist.");
-    }
-    if(CommonUtils.isEmpty(params.getCardTokenId())){
-      throw new ApplicationException(AppConstants.FAIL, "token ID value does not exist.");
-    }
-    EgovMap access = new EgovMap();
+  public EgovMap cardDiffNRIC(HttpServletRequest request, EComApiForm eComApiForm) throws Exception {
 
-    if(ecommApiMapper.isCardExists(EComApiForm.createMap(params)) != null ){
-      access.put("isCardExists", "Y");
-    }else{
-      access.put("isCardExists", "N");
+    String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0";
+
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.reset();
+    stopWatch.start();
+
+    EgovMap data = new EgovMap(), params = new EgovMap(), access = new EgovMap();
+    Map<String, Object> reqPrm = Maps.filterValues(EComApiForm.createMap(eComApiForm),Objects::nonNull);
+
+    params.put("cardDiffNRIC", "F");
+
+    try{
+
+      access = commonApiMapper.checkAccess(reqPrm);
+      if(access == null){
+        code = String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED);
+        message = AppConstants.RESPONSE_DESC_UNAUTHORIZED;
+      }
+      else if(CommonUtils.isEmpty(eComApiForm.getNric())){
+        code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+        message = "NRIC not found.";
+      }
+      else if(CommonUtils.isEmpty(eComApiForm.getCardTokenId())){
+        code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+        message = "Card Token Id not found.";
+      }
+      else {
+
+        data = ecommApiMapper.cardDiffNRIC(EComApiForm.createMap(eComApiForm));
+
+        if(data != null){
+          code = String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS);
+          message = String.valueOf(AppConstants.RESPONSE_DESC_SUCCESS);
+
+          if(!(data.get("custCrcToken") == null) && data.get("nric") == null )
+            params.put("cardDiffNRIC", "Y");
+          else{
+            params.put("cardDiffNRIC", "N");
+          }
+        }else{
+          code = String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS);
+          message = String.valueOf(AppConstants.RESPONSE_DESC_SUCCESS);
+          params.put("cardDiffNRIC", "N");
+        }
+
+      }
+
+    }catch(Exception e){
+      code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+      message = StringUtils.substring(e.getMessage(), 0, 4000);
+    } finally{
+      stopWatch.stop();
+      respTm = stopWatch.toString();
     }
 
-    return access;
+    return commonApiService.rtnRespMsg(request, code, message, respTm, reqPrm, params ,apiUserId);
   }
 
 

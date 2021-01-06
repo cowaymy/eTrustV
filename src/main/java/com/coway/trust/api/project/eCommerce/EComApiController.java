@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.api.EcommApiService;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -40,14 +43,14 @@ public class EComApiController {
 
   @ApiOperation(value = "/checkOrdStus", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/checkOrdStus", method = RequestMethod.GET)
-  public ResponseEntity<EComApiDto> checkOrdStus(@ModelAttribute EComApiForm params) throws Exception {
-    return ResponseEntity.ok(eCommApiService.checkOrderStatus(params));
+  public ResponseEntity<EgovMap> checkOrdStus(HttpServletRequest request,@ModelAttribute EComApiForm params) throws Exception {
+    return ResponseEntity.ok(eCommApiService.checkOrderStatus(request, params));
   }
 
-  @ApiOperation(value = "/isCardExists", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/isCardExists", method = RequestMethod.GET)
-  public ResponseEntity<EgovMap> isCardExists(@ModelAttribute EComApiForm params) throws Exception {
-    return ResponseEntity.ok(eCommApiService.isCardExists(params));
+  @ApiOperation(value = "/cardDiffNRIC", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/cardDiffNRIC", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> cardDiffNRIC(HttpServletRequest request,@ModelAttribute EComApiForm params) throws Exception {
+    return ResponseEntity.ok(eCommApiService.cardDiffNRIC(request, params));
   }
 
 }

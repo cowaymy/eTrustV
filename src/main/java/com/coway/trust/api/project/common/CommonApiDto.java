@@ -1,6 +1,9 @@
 package com.coway.trust.api.project.common;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.coway.trust.AppConstants;
 import com.coway.trust.util.BeanConverter;
 
@@ -24,37 +27,26 @@ import io.swagger.annotations.ApiModel;
 public class CommonApiDto{
 
   @SuppressWarnings("unchecked")
-	public CommonApiDto create(EgovMap egovMap) {
+	public static CommonApiDto create(EgovMap egovMap) {
 	  CommonApiDto commonApiDto = new CommonApiDto();
 
-	  commonApiDto.setCode(AppConstants.RESPONSE_CODE_SUCCESS);
-	  commonApiDto.setMessage(AppConstants.RESPONSE_DESC_SUCCESS);
 	  commonApiDto.setApiUserName("Hello, " +  egovMap.get("apiUserName"));
 
 		return commonApiDto;
 	}
 
-	private int code;
-	private String message;
+  public static Map<String, Object> createMap(CommonApiDto commonApiDto){
+    Map<String, Object> params = new HashMap<>();
+    params.put("apiUserName", commonApiDto.getApiUserName());
+    return params;
+  }
+
 	private String apiUserName;
 
-  public int getCode() {
-    return code;
-  }
-  public String getMessage() {
-    return message;
-  }
   public String getApiUserName() {
     return apiUserName;
   }
 
-
-  public void setCode(int code) {
-    this.code = code;
-  }
-  public void setMessage(String message) {
-    this.message = message;
-  }
   public void setApiUserName(String apiUserName) {
     this.apiUserName = apiUserName;
   }

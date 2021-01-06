@@ -28,7 +28,7 @@
        ,PGM_PATH
        ,ERR_MSG
        ,CRT_DT
-       ,CRT_USER_ID
+       ,API_USER_ID
     ) VALUES (
         API0004M_RESP_ID_SEQ.NEXTVAL
         , #{reqParam}

@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModel;
  * <pre>
  * Date             Author          Description
  * -------------    -----------     -------------
- * 2019. 12. 23.    KR-JAEMJAEM:)   First creation
+ * 2020. 12. 17.    MY-KAHKIT   First creation
  * </pre>
  */
 @ApiModel(value = "EComApiForm", description = "EComApiForm")

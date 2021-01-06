@@ -3,6 +3,7 @@ package com.coway.trust.api.project.eCommerce;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.coway.trust.api.project.common.CommonApiDto;
 import com.coway.trust.util.BeanConverter;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -24,9 +25,18 @@ import io.swagger.annotations.ApiModel;
 public class EComApiDto{
 
 	@SuppressWarnings("unchecked")
-	public EComApiDto create(EgovMap egvoMap) {
+	public static EComApiDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, EComApiDto.class);
 	}
+
+	 public static Map<String, Object> createMap(EComApiDto eComApiDto){
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("ordNo", eComApiDto.getOrdNo());
+	    params.put("ordStus", eComApiDto.getOrdStus());
+	    params.put("ccpStus", eComApiDto.getCcpStus());
+	    params.put("feedbackCode", eComApiDto.getFeedbackCode());
+	    return params;
+	  }
 
 	private String ordNo;
 	private String ordStus;

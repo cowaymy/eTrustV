@@ -19,8 +19,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface CommonApiService {
 
-  CommonApiDto checkAccess(CommonApiForm params) throws Exception;
+  EgovMap checkAccess(HttpServletRequest request, CommonApiForm params);
 
-  EgovMap returnResponseMessage(HttpServletRequest request, Map<String, Object> params, EgovMap responseData);
+  EgovMap rtnRespMsg(HttpServletRequest request, String code, String msg, String respTm, Map<String, Object> reqPrm,
+      Map<String, Object> respPrm, String apiUserId) ;
 
 }

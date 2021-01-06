@@ -1,5 +1,6 @@
 package com.coway.trust.biz.api.impl;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**************************************
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.biz.api.CommonApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.project.common.CommonApiDto;
 import com.coway.trust.api.project.common.CommonApiForm;
@@ -34,75 +36,72 @@ public class CommonApiServiceImpl extends EgovAbstractServiceImpl implements Com
   private CommonApiMapper commonApiMapper;
 
   @Override
-  public CommonApiDto checkAccess(CommonApiForm params) throws Exception{
+  public EgovMap checkAccess(HttpServletRequest request,CommonApiForm commonApiForm){
 
-    if(null == params){
-      throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
-    }
-    if(CommonUtils.isEmpty(params.getKey())){
-      throw new ApplicationException(String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED),AppConstants.RESPONSE_DESC_UNAUTHORIZED);
-    }
-    EgovMap access = commonApiMapper.checkAccess(CommonApiForm.createMap(params));
+    String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0";
+
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.reset();
+    stopWatch.start();
+
+    Map<String, Object> reqPrm = CommonApiForm.createMap(commonApiForm);
     CommonApiDto rtn = new CommonApiDto();
 
-    if(MapUtils.isNotEmpty(access)){
-      return rtn.create(access);
-    }else{
-      throw new ApplicationException(String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED),AppConstants.RESPONSE_DESC_UNAUTHORIZED);
+    try{
+      if(CommonUtils.isEmpty(commonApiForm.getKey())){
+        code = String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED);
+        message = AppConstants.RESPONSE_DESC_UNAUTHORIZED;
+      }
+
+      EgovMap access = commonApiMapper.checkAccess(reqPrm);
+
+      if(MapUtils.isNotEmpty(access)){
+        apiUserId = access.get("apiUserId").toString();
+        rtn = CommonApiDto.create(access);
+
+        code = String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS);
+        message = String.valueOf(AppConstants.RESPONSE_DESC_SUCCESS);
+      }else{
+        code = String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED);
+        message = AppConstants.RESPONSE_DESC_UNAUTHORIZED;
+      }
+    } catch (Exception e){
+      code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+      message = StringUtils.substring(e.getMessage(), 0, 4000);
+
+    } finally {
+      stopWatch.stop();
+      respTm = stopWatch.toString();
     }
+
+    return rtnRespMsg(request, code, message, respTm, reqPrm, CommonApiDto.createMap(rtn),apiUserId);
+
   }
 
   @Override
-  public EgovMap returnResponseMessage(HttpServletRequest request, Map<String, Object> params, EgovMap responseData) {
+  public EgovMap rtnRespMsg(HttpServletRequest request, String code, String msg, String respTm, Map<String, Object> reqPrm, Map<String, Object> respPrm, String apiUserId) {
 
-    EgovMap response = new EgovMap();
-    String respTm = null;
+    EgovMap data = new EgovMap();
+    Map<String, Object> params = new HashMap<>();
     String pgmPath = StringUtils.defaultString(request.getRequestURI()) + "?" + StringUtils.defaultString(request.getQueryString());
 
-    try {
-
-      StopWatch stopWatch = new StopWatch();
-      stopWatch.reset();
-      stopWatch.start();
-      stopWatch.stop();
-      respTm = stopWatch.toString();
-
-      if (!request.getQueryString().equals(null)) {
-
-        if (responseData.size() < 1) {
-          params.put("respCde", AppConstants.RESPONSE_CODE_NOT_FOUND);
-          params.put("respDesc", AppConstants.RESPONSE_DESC_NOT_FOUND);
-        } else {
-          params.put("respCde", AppConstants.RESPONSE_CODE_SUCCESS);
-          params.put("respDesc", AppConstants.RESPONSE_DESC_SUCCESS);
-        }
-
-      } else {
-        params.put("respCde", AppConstants.RESPONSE_CODE_INVALID);
-        params.put("respDesc", AppConstants.RESPONSE_DESC_INVALID);
-        params.put("errMsg", "No paramater");
-      }
-
-    } catch (Exception e) {
-
-      params.put("respCde", AppConstants.RESPONSE_CODE_INVALID);
-      params.put("respDesc", AppConstants.RESPONSE_DESC_INVALID);
-      params.put("errMsg", StringUtils.substring(e.getMessage(), 0, 4000));
-
-    } finally {
-      params.put("reqParam", params.toString());
+      params.put("respCde", code);
+      params.put("respDesc", msg);
+      params.put("reqParam", reqPrm.toString());
       params.put("ipAddr", CommonUtils.getClientIp(request));
       params.put("prgPath", pgmPath);
       params.put("respTm", respTm);
-      params.put("respParam", responseData != null ? responseData.toString().length() >= 4000 ? responseData.toString().substring(0,4000) : responseData.toString() : responseData);
+      params.put("respParam", respPrm != null ? respPrm.toString().length() >= 4000 ? respPrm.toString().substring(0,4000) : respPrm.toString() : respPrm);
+      params.put("apiUserId", apiUserId);
 
       commonApiMapper.insertApiAccessLog(params);
 
-      response.put("response", params.get("respCde").toString() + " - " + params.get("respDesc").toString());
-      if(responseData.size() > 0) response.put("responseData", responseData);
-    }
+      data.put("code", code);
+      data.put("message", msg);
+      data.put("data", respPrm);
 
-    return response;
+
+    return data;
   }
 
 }
