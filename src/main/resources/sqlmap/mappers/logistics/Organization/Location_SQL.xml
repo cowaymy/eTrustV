@@ -269,4 +269,21 @@
         SELECT WH_LOC_BRNCH_ID BRANCH_ID FROM SYS0028M WHERE WH_LOC_CODE = #{whLocCd}
     </select>
 
+    <update id="updateBranchLoc" parameterType="Map">
+	    MERGE INTO SYS0028M M1 USING
+		    (SELECT M.WH_LOC_CODE, D.MEM_CODE, M.CDC_CODE, M.RDC_CODE, M.WH_LOC_BRNCH_ID, M.SL_PLANT, B.WH_LOC_BRNCH_ID AS NEW_BRANCH, B.WH_LOC_CODE B_LOC_CODE, B.CDC_CODE B_CDC_CODE, B.RDC_CODE B_RDC_CODE, B.SL_PLANT B_SL_PLANT
+		        FROM SYS0028M M
+		        , ORG0001D D
+		        , (select * from SYS0028M WHERE WH_LOC_BRNCH_ID = #{selectBranchUpd} and WH_LOC_GB = '02' AND WH_LOC_STK_GRAD = 'A' and wh_loc_stus_id = 1) B
+                WHERE M.WH_LOC_CODE = D.MEM_CODE
+		        AND D.MEM_CODE = TRIM(' ' FROM #{memberCodeUpd})
+		        AND D.STUS = 1) BRANCH
+		ON (M1.WH_LOC_CODE = BRANCH.WH_LOC_CODE)
+		WHEN MATCHED THEN
+		    UPDATE SET M1.CDC_CODE = BRANCH.B_CDC_CODE,
+		                M1.RDC_CODE = BRANCH.B_RDC_CODE,
+		                M1.SL_PLANT = BRANCH.B_SL_PLANT,
+		                M1.WH_LOC_BRNCH_ID = BRANCH.NEW_BRANCH
+    </update>
+
 </mapper>

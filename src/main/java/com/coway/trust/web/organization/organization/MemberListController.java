@@ -1,6 +1,5 @@
 package com.coway.trust.web.organization.organization;
 
-import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,6 +33,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.login.LoginService;
+import com.coway.trust.biz.logistics.organization.LocationService;
 import com.coway.trust.biz.organization.organization.HPMeetingPointUploadVO;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.sales.common.SalesCommonService;
@@ -43,8 +43,6 @@ import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.cmmn.model.SmsResult;
-import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.BeanConverter;
@@ -72,6 +70,9 @@ public class MemberListController {
 
   @Resource(name = "salesCommonService")
   private SalesCommonService salesCommonService;
+
+  	@Resource(name="locationService")
+  	private LocationService locationService;
 
 	@Autowired
     private LoginService loginService;
@@ -1017,6 +1018,11 @@ public class MemberListController {
                 // Update ORG0005D - Branch ID
                 if(formMap.containsKey("selectBranchUpd")) {
                     u2 = memberListService.memberListUpdate_ORG05(formMap);
+
+                    logger.debug("####update logistic warehouse location code (memberCodeUpd): " + formMap.get("memberCodeUpd"));
+
+                 // Added to update SYS0028M logistic warehouse branch as well by Hui Ding, 2021-01-07
+                    locationService.updateBranchLoc(formMap);
                 }
             }
 

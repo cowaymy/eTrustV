@@ -86,4 +86,9 @@ public class LocationServiceImpl extends EgovAbstractServiceImpl implements Loca
 		return locMapper.selectLocStatusList(params);
 	}
 
+	@Override
+	public void updateBranchLoc(Map<String, Object> params){
+		locMapper.updateBranchLoc(params);
+	}
+
 }

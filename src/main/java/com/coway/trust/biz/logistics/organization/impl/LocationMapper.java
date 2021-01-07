@@ -28,4 +28,6 @@ public interface LocationMapper {
 
 	EgovMap selectBranchByWhLocId(Map<String, Object> params);
 
+	void updateBranchLoc(Map<String, Object> params);
+
 }
