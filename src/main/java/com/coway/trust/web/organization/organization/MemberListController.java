@@ -1019,8 +1019,6 @@ public class MemberListController {
                 if(formMap.containsKey("selectBranchUpd")) {
                     u2 = memberListService.memberListUpdate_ORG05(formMap);
 
-                    logger.debug("####update logistic warehouse location code (memberCodeUpd): " + formMap.get("memberCodeUpd"));
-
                  // Added to update SYS0028M logistic warehouse branch as well by Hui Ding, 2021-01-07
                     locationService.updateBranchLoc(formMap);
                 }
