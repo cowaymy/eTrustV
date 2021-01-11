@@ -650,7 +650,8 @@ function isAllowSendSMS(){
     var salesmanMemTypeID  = $("#_editSalesMemTypeId").val();
     var editSalesManTelMobile = $("#_editSalesManTelMobile").val();
 
-    if(salesmanMemTypeID != 1 && salesmanMemTypeID != 2){
+   // if(salesmanMemTypeID != 1 && salesmanMemTypeID != 2){
+   	if(salesmanMemTypeID != 1 && salesmanMemTypeID != 2 && salesmanMemTypeID != 7){
 
         Common.alert('<spring:message code="sal.alert.msg.notHpCody" />');
         return false;
