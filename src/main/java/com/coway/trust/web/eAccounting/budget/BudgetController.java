@@ -184,6 +184,11 @@ public class BudgetController {
             params.put("costCentr2", "D1001");
         }
 
+        // Hardcode for rachel as Role is administrator but not allowed to view all budget
+        if(sessionVO.getUserId() == 374) {
+            params.put("costCentr", "A1301");
+        }
+
         LOGGER.debug(sessionVO.getCostCentr());
         if(!"A1101".equals(sessionVO.getCostCentr())) {
             params.put("flg", "1");
@@ -363,6 +368,11 @@ public class BudgetController {
 
         if(sessionVO.getUserId() == 567) {
             params.put("costCentr2", "D1001");
+        }
+
+        // Hardcode for rachel as Role is administrator but not allowed to view all budget
+        if(sessionVO.getUserId() == 374) {
+            params.put("costCentr", "A1301");
         }
 
 		if(params.containsKey("stYearMonth") && params.containsKey("edYearMonth")) {
@@ -918,6 +928,11 @@ public class BudgetController {
 
         if(sessionVO.getUserId() == 567) {
             params.put("costCentr2", "D1001");
+        }
+
+        // Hardcode for rachel as Role is administrator but not allowed to view all budget
+        if(sessionVO.getUserId() == 374) {
+            params.put("costCentr", "A1301");
         }
 
 		LOGGER.debug("params =====================================>>  " + params);
