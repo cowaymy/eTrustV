@@ -8,7 +8,7 @@
     var keyValueList = [];
     var MEM_TYPE = '${SESSION_INFO.userTypeId}';
     var CATE_ID  = "14";
-    var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "5764","codeName": "Auxiliary"}];
+    var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"},{"codeId": "5764","codeName": "Auxiliary"}];
     var actData= [{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancel"}];
     var memTypeData = [{"codeId": "1","codeName": "HP"},{"codeId": "2","codeName": "Cody"},{"codeId": "4","codeName": "Staff"},{"codeId": "7","codeName": "HT"}];
     var myFileCaches = {};
