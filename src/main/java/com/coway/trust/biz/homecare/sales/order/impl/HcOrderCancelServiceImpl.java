@@ -145,7 +145,7 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 		EgovMap hcOrderInfo = hcOrderListService.selectHcOrderInfo(params);
 
 		// has Frame Order
-		if(hcOrderInfo != null) {
+		if(hcOrderInfo != null && CommonUtils.intNvl(hcOrderInfo.get("anoOrdId")) > 0) {
 			int anoOrdId = CommonUtils.intNvl(hcOrderInfo.get("anoOrdId")); // Frame OrderId
 			params.put("paramOrdId", anoOrdId);
 			params.put("appTypeId", SalesConstants.APP_TYPE_CODE_ID_AUX);
