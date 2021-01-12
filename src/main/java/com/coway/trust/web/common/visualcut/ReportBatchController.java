@@ -47,6 +47,7 @@ import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
  * CAUTION : 135 Server only //////@Scheduled of ReportBatchController should be
  * uncommented. Then the report batch is executed. Note: If another instance is
  * uncommented, it will be executed multiple times.
+ * Cron job formatter: https://fmaker7.tistory.com/163
  * http://10.201.32.135:8094/
  * Path: /apps/domains/SalesDmain/servers/eTRUST_report/WEB-INF/classes/com/coway/trust/web/common/visualcut
  * Folder: /apps/apache/htdocs/resources/WebShare/RawData/Public
@@ -1536,7 +1537,7 @@ public class ReportBatchController {
 
   /*KV*/
   @RequestMapping(value = "/SQLHs_and_Filter_RawDataWeekly_Excel.do")
-  //@Scheduled(cron = " 0 30 0 * * 5") // Weekly Friday 12:30am
+  //@Scheduled(cron = " 0 30 0 * * MON,WED,FRI") // Weekly Mon, Wed, Fri 12:30am
   public void SQLHs_and_Filter_RawDataWeekly_Excel() throws IOException {
     LOGGER.info("[START] SQLHs_and_Filter_RawDataWeekly_Excel...");
     Map<String, Object> params = new HashMap<>();
