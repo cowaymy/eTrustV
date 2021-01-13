@@ -268,6 +268,89 @@ public class AdaptorServiceImpl implements AdaptorService {
 		return result;
 	}
 
+	/* 20211112 - LaiKW - Duplicate sendSMS with result returning SMS ID - Start */
+	@Override
+    public SmsResult sendSMS2(SmsVO smsVO) {
+        return this.sendSMS2(smsVO, null, null);
+    }
+
+    @Override
+    public SmsResult sendSMS2(SmsVO smsVO, SMSTemplateType templateType, Map<String, Object> templateParams) {
+
+        if (smsVO.getMobiles().size() == 0) {
+            throw new ApplicationException(AppConstants.FAIL, "required mobiles.....");
+        }
+
+        Map<String, String> reason = new HashMap<>();
+        SmsResult result = new SmsResult();
+        result.setReqCount(smsVO.getMobiles().size());
+
+        if (templateType != null) {
+            smsVO.setMessage(getSmsTextByTemplate(templateType, templateParams));
+        }
+
+        String msgId = UUIDGenerator.get();
+        result.setMsgId(msgId);
+        int vendorId = 2;
+        smsVO.getMobiles().forEach(mobileNo -> {
+            String smsUrl;
+            try {
+                smsUrl = "http://" + gensuiteHost + gensuitePath + "?" + "ClientID=" + gensuiteClientId + "&Username="
+                        + gensuiteUserName + "&Password=" + gensuitePassword + "&Type=" + gensuiteType + "&Message="
+                        + URLEncoder.encode("RM0.00 " + smsVO.getMessage(), StandardCharsets.UTF_8.name())
+//                              .replaceAll("\\+", " ").replaceAll("%40", "@").replaceAll("%21", "!")
+//                              .replaceAll("%23", "#").replaceAll("%24", "$").replaceAll("%3A", ":")
+//                              .replaceAll("%28", "(").replaceAll("%2F", "/").replaceAll("%29", ")")
+//                              .replaceAll("%26", "&").replaceAll("%3C", "<").replaceAll("%60", "`")
+//                              .replaceAll("%7E", "~").replaceAll("%24", "$").replaceAll("%5E", "^")
+//                              .replaceAll("%5F", "_").replaceAll("%7B", "{").replaceAll("%7D", "}")
+//                              .replaceAll("%7C", "|").replaceAll("%5B", "[").replaceAll("%5D", "]")
+//                              .replaceAll("%3F", "?").replaceAll("%0A", "\n")
+                        + "&SenderID=" + gensuiteSenderId + "&Phone=" + gensuiteCountryCode + mobileNo
+                        + "&Concatenated=1&MsgID=" + msgId;
+            } catch (UnsupportedEncodingException e) {
+                throw new ApplicationException(e, AppConstants.FAIL);
+            }
+
+            Client client = Client.create();
+            WebResource webResource = client.resource(smsUrl);
+            ClientResponse response = webResource.accept("application/json").get(ClientResponse.class);
+            String output = response.getEntity(String.class);
+
+            int statusId;
+            String body;
+
+            if (response.getStatus() == 200) {
+                body = output;
+
+                if (GENSUITE_SUCCESS.equals(body)) {
+                    statusId = 4;
+                    result.setSuccessCount(result.getSuccessCount() + 1);
+                } else {
+                    statusId = 21;
+                    result.setFailCount(result.getFailCount() + 1);
+                    reason.clear();
+                    reason.put(mobileNo, body);
+                    result.addFailReason(reason);
+                }
+
+            } else {
+                statusId = 1;
+                body = output;
+                result.setErrorCount(result.getErrorCount() + 1);
+            }
+
+            int smsId = insertSMS(mobileNo, smsVO.getMessage(), smsVO.getUserId(), smsVO.getPriority(), smsVO.getExpireDayAdd(),
+                    smsVO.getSmsType(), smsVO.getRemark(), statusId, smsVO.getRetryNo(), body, output, msgId, vendorId);
+
+            result.setSmsId(smsId);
+        });
+
+        return result;
+    }
+    /* 20211112 - LaiKW - Duplicate sendSMS with result returning SMS ID - End */
+
+
 	/**
 	 * ------------------------ MVGate Error Code ------------------------
 	 * --------------------------------------------------------------------------------------------------------------

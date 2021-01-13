@@ -15,7 +15,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface AdaptorService {
 	/**
 	 * mail 전송
-	 * 
+	 *
 	 * @param email
 	 * @param isTransactional
 	 *            : rollback 필요 한 경우 true, rollback 불필요 false
@@ -38,12 +38,22 @@ public interface AdaptorService {
 
 	SmsResult sendSMS(SmsVO smsVO, SMSTemplateType templateType, Map<String, Object> params);
 
+	/*
+	 * 20210112 - LaiKW
+	 * Duplicated from sendSMS
+	 * Returns with additional SMS_ID information
+	 */
+
+	SmsResult sendSMS2(SmsVO smsVO);
+
+	SmsResult sendSMS2(SmsVO smsVO, SMSTemplateType templateType, Map<String, Object> params);
+
 	/**
 	 * The transmission speed is fast and the price is relatively high. [Bulk shipment] Used mainly for invoicing and
 	 * eStatement shipment.
 	 *
 	 * 전송속도가 빠르고 가격이 상대적으로 비쌉니다. 대량 발송...주로 인보이스 및 eStatement 발송에 사용됩니다.
-	 * 
+	 *
 	 * @param bulkSmsVO
 	 * @return
 	 */
@@ -62,7 +72,7 @@ public interface AdaptorService {
 
 	/**
 	 * get template string
-	 * 
+	 *
 	 * @param templateType
 	 * @param params
 	 * @return
@@ -71,7 +81,7 @@ public interface AdaptorService {
 
 	/**
 	 * get template string
-	 * 
+	 *
 	 * @param templateType
 	 * @param params
 	 * @return
