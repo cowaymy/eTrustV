@@ -580,4 +580,24 @@ public class LoginController {
 		return "/login/loginNoticePop";
 	}
 
+	@RequestMapping(value = "/tempPwProcess.do")
+	public ResponseEntity<ReturnMessage> tempPwProcess(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO session) {
+	    LOGGER.debug("loginController :: tempPwProcess");
+	    LOGGER.debug("params : {}", params);
+
+	    Map<String, Object> tempPwProcess = new HashMap<String, Object>();
+	    tempPwProcess = loginService.tempPwProcess(params);
+
+	    ReturnMessage message = new ReturnMessage();
+	    if("fail".equals(tempPwProcess.get("flg").toString())) {
+            message.setCode(AppConstants.FAIL);
+            message.setMessage(tempPwProcess.get("message").toString());
+        } else {
+            message.setCode(AppConstants.SUCCESS);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        }
+
+        return ResponseEntity.ok(message);
+	}
+
 }

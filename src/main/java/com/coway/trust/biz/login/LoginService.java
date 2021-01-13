@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.cmmn.model.LoginVO;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -42,4 +43,8 @@ public interface LoginService {
 	EgovMap getCowayNoticePopDtls(Map<String, Object> params);
 
 	int checkNotice();
+
+//	int passwordRequest(Map<String, Object> params);
+
+	Map<String, Object> tempPwProcess(Map<String, Object> params);
 }

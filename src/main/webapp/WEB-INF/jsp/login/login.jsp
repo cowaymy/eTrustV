@@ -425,6 +425,21 @@
                 $("#searchLoginName").val(returnSearchUserInfo.userName);
                 $("#securityQuestion").val(returnSearchUserInfo.securityQuestion);
 
+                $("#tempPwCheckBtn").hide();
+
+                if(returnSearchUserInfo.userTypeId == "1") {
+                    // HP
+                    $("#secQuest").hide();
+                    $("#secAns").hide();
+                    $("#secCheckBtn").hide();
+
+                    $("#backBtn").hide();
+                    $("#secCheckBtn").hide();
+
+                    $("#mobileRow").show();
+                    $("#smsReqBtn").show();
+                }
+
                 $("#step2").show();
                 $("#step2").click();
                 $("#securityAnswerTxt").focus();
@@ -452,6 +467,13 @@
            window.close();
     	   $("#btnClose").click();
    } */
+
+   function fn_orgResetPassword() {
+       console.log("fn_orgResetPassword");
+
+       //Common.popupDiv("/login/orgResetPW.do", null, null, true, "orgResetPwPop");
+       var popUpObj = Common.popupDiv("/login/orgResetPW.do", null, null, true, "orgResetPwPop");
+   }
 
 </script>
 

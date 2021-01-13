@@ -49,4 +49,13 @@ public interface LoginMapper {
 	EgovMap getCowayNoticePopDtls(Map<String, Object> params);
 
 	int checkNotice();
+
+	int checkMobileNumber(Map<String, Object> params);
+	EgovMap getConfig(Map<String, Object> params);
+	int getSmsReqCnt(Map<String, Object> params);
+
+	int getReqId();
+	void logRequest(Map<String, Object> params);
+	void updateSYS47M_req(Map<String, Object> params);
+	void updateRequest(Map<String, Object> params);
 }

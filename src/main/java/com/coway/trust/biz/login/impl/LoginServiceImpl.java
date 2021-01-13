@@ -15,8 +15,10 @@
  */
 package com.coway.trust.biz.login.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +27,15 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.login.LoginHistory;
 import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.cmmn.model.LoginSubAuthVO;
 import com.coway.trust.cmmn.model.LoginVO;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -39,6 +46,9 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private LoginMapper loginMapper;
+
+	@Autowired
+	private AdaptorService adaptorService;
 
 	@Override
 	public LoginVO getLoginInfo(Map<String, Object> params) {
@@ -181,5 +191,92 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public int checkNotice() {
 	    return loginMapper.checkNotice();
+	}
+
+	@Override
+	public Map<String, Object> tempPwProcess(Map<String, Object> params) {
+	    LOGGER.debug("LoginServiceImpl :: tempPwProcess");
+        LOGGER.debug("params : {}", params);
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        String msg = "";
+
+        int cnt = loginMapper.checkMobileNumber(params);
+        if(cnt < 1) {
+            msg = "Dear HP, please enter the correct HP code or update your mobile number at nearest sales office.";
+            // Mobile number does not exist
+            result.put("flg", "fail");
+
+        } else {
+            // Mobile number exist
+
+            // TODO
+            // Create checking point if SMS password request reached 7 days limit (querying from SYS0098M)
+            //
+            params.put("module", "LOGIN");
+            params.put("subModule", "PW_RESET");
+            params.put("paramCode", "SMS_REQ_LIMIT");
+
+            EgovMap cpMap = null;
+            cpMap = loginMapper.getConfig(params);
+            int smsLimit = Integer.valueOf(cpMap.get("paramVal").toString());
+
+            params.put("paramCode", "SMS_DAY_CNT");
+            cpMap = loginMapper.getConfig(params);
+            params.put("dayCnt", cpMap.get("paramVal"));
+
+            int smsReqCnt = loginMapper.getSmsReqCnt(params);
+
+            if(smsReqCnt > smsLimit) {
+                msg = "Dear HP, request limit reached, kindly seek relevant PIC for further assistance.";
+                result.put("flg", "fail");
+
+            } else {
+                // Generate temporary password
+                Random random = new Random();
+
+                char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+                StringBuilder sb = new StringBuilder();
+
+                int charsLen = chars.length;
+
+                for(int i = 0; i < 6; i++) {
+                    int num = random.nextInt(charsLen);
+                    sb.append(chars[num]);
+                }
+
+                params.put("tempPw", sb.toString());
+
+                int reqId = loginMapper.getReqId();
+                params.put("reqId", reqId);
+
+                /*
+                 * Insert SMS request log (ORG0033D)
+                 * Update User table with temporary password and expired user password last update date (-3 months)
+                 */
+                loginMapper.logRequest(params);
+                loginMapper.updateSYS47M_req(params);
+
+                String message = " COWAY:Confidential! Never share your temporary password.Password: " +
+                                 sb + ". Kindly login to update your password.";
+
+                // Send SMS
+                SmsVO sms = new SmsVO(Integer.valueOf(params.get("userId").toString()), 6204);
+                sms.setMessage(message);
+                sms.setMobiles(CommonUtils.nvl(params.get("mobileNo")));
+
+                SmsResult smsResult = adaptorService.sendSMS2(sms);
+                LOGGER.debug("LoginServiceImpl :: tempPwProcess :: {}", smsResult.toString());
+
+                params.put("smsId", smsResult.getSmsId());
+
+                loginMapper.updateRequest(params);
+
+                result.put("flg", "success");
+            }
+        }
+
+        result.put("message", msg);
+        return result;
 	}
 }
