@@ -1004,7 +1004,7 @@
             <spring:message code="sal.page.title.ordReq" />
         </h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a id="btnCloseReq" href="#"><spring:message code="sal.btn.close" /></a></p></li>
+            <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
         </ul>
     </header>
     <!-- pop_header end -->

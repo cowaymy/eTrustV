@@ -16,6 +16,8 @@
                fn_cnfmOrdNo();
            }
         });
+
+        //$('#btnCloseReq').click(fn_back("ordNoSearch"));
     });
 
     // Search Order Form functions - Start
@@ -48,7 +50,7 @@
                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
                     return false;
                 }
-/* to remove this section's comment
+/* to remove this section's comment before going live
                 if (todayYY >= 2018) {
                     if (todayDD >= 26 || todayDD == 1) {
                         var msg = '<spring:message code="sal.msg.underOwnTrans2" />';
@@ -117,8 +119,12 @@ to remove this section's comment
                     console.log("rootRequestOrderSearch :: fn_isLockOrder :: false - [allowed] ");
 
                     // TO-DO :: add validation for active ROT request before pop up Request ROT
+                    /*
                     Common.popupDiv("/sales/ownershipTransfer/requestROT.do", {salesOrderId : ORD_ID}, null, true, "requestROT");
                     $("#btnCloseReq").click();
+                    */
+
+                    fn_requestROT(ORD_ID);
                 }
 
             } else {
@@ -143,16 +149,13 @@ to remove this section's comment
         console.log("fn_resetOrdSearch");
     }
 
-    function fn_selfClose() {
-        $('#btnCloseReq').click();
-    }
     // Search Order Form functions - End
 </script>
 
 <!-- ==================== Design ==================== -->
 
 <!-- popup_wrap start -->
-<div id="popup_wrap" class="popup_wrap">
+<div id="ordSearch_popup" class="popup_wrap">
     <!-- pop_header start -->
     <header class="pop_header">
         <h1>ROT Request</h1>
@@ -180,8 +183,6 @@ to remove this section's comment
                             <input type="text" title="" id="sOrdNo" name="sOrdNo" placeholder="" class="" />
                             <p class="btn_sky" id='sCnfmOrdNo'><a href="#" onclick="javascript: fn_cnfmOrdNo()"> <spring:message code="sal.btn.confirm" /></a></p>
                             <p class="btn_sky" id='sSearch'><a href="#" onclick="javascript: fn_searchOrdNo()"><spring:message code="sal.btn.search" /></a></p>
-                            <input type="text" title="" id="sOrdNoResult" name="sOrdNoResult" placeholder="" class="readonly " readonly="readonly" />
-                            <p class="btn_sky" id="sReset"><a href="#" onclick="javascript :fn_resetOrdSearch()"><spring:message code="sal.btn.reselect" /></a></p>
                         </td>
                     </tr>
                 </tbody>

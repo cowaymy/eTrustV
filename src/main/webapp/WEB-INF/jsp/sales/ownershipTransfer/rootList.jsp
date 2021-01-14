@@ -85,6 +85,10 @@
         $("#updateROT").click(fn_updateROT);
         $("#search_requestor_btn").click(fn_supplierSearchPop);
 
+        fn_setGridEvent();
+    });
+
+    function fn_setGridEvent() {
         AUIGrid.bind(rootGridID, "cellClick", function(e) {
             console.log("rootList :: cellClick :: rowIndex :: " + e.rowIndex);
             console.log("rootList :: cellClick :: rotId :: " + e.item.rotId);
@@ -95,7 +99,7 @@
             rotOrdNo = e.item.rotOrdNo;
             ccpID = e.item.ccpId;
         });
-    });
+    }
 
     function fn_multiCombo() {
         $('#rotReqBrnch').change(function() {
@@ -139,14 +143,20 @@
         });
     }
 
-    function fn_requestROT() {
+    function fn_requestROT(salesOrderId) {
         console.log("fn_requestROT");
-        Common.popupDiv("/sales/ownershipTransfer/requestROT.do?isPop=true");
+        Common.popupDiv("/sales/ownershipTransfer/requestROT.do", {salesOrderId : salesOrderId}, null, true, "requestROTPop");
+        $("#ordSearch_popup").remove();
     }
 
     function fn_requestROTSearchOrder() {
-        console.log("fn_requestROT2");
-        Common.popupDiv("/sales/ownershipTransfer/requestROTSearchOrder.do?isPop=true");
+        console.log("fn_requestROT");
+        Common.popupDiv("/sales/ownershipTransfer/requestROTSearchOrder.do", null, null, true, "rotOrdNoSearchPop");
+    }
+
+    function fn_requestROT_d(salesOrderId) {
+        Common.popupDiv("/sales/ownershipTransfer/requestROT_d.do", {salesOrderId : salesOrderId}, null, true, "requestROT");
+        $("#ordSearch_popup").remove();
     }
 
     function fn_updateROT() {
@@ -159,11 +169,36 @@
                 salesOrdNo : rotOrdNo,
                 ccpId : ccpID
             };
-console.log(data);
+
             Common.popupDiv("/sales/ownershipTransfer/updateROT.do", data, null, true, "fn_updateROT");
         }
     }
     // Button functions - End
+
+    /*
+    function fn_resetRotGrid() {
+        console.log("fn_resetRotGrid");
+        if(AUIGrid.isCreated("#grid_wrap")) {
+            AUIGrid.destroy("#grid_wrap");
+            rootGridID = null;
+            rootGridID = AUIGrid.create("#grid_wrap", ownershipTransferColumn, ownershipTransferGridPros);
+            fn_setEvent();
+        }
+    }
+
+    function fn_back(popup) {
+        console.log("fn_back");
+
+        if(popup == "req" || popup == "reqc") {
+            $("#reqPopup").remove();
+        } else if(popup == "ordNoSearch") {
+            $("#ordSearch_popup").remove();
+        }
+
+        fn_resetRotGrid();
+        fn_searchROT();
+    }
+    */
 
 </script>
 

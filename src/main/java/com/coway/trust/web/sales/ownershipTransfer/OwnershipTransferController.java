@@ -151,6 +151,32 @@ public class OwnershipTransferController {
         return "sales/ownershipTransfer/rootRequestPop";
     }
 
+    // TODO
+    // Remove
+    @RequestMapping(value = "/requestROT_d.do")
+    public String requestROT_d(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) throws Exception {
+        LOGGER.info("ownershipTransferController :: requestROT");
+        LOGGER.info("params : {}", params);
+
+        String callCenterYn = "N";
+        if (CommonUtils.isNotEmpty(params.get(AppConstants.CALLCENTER_TOKEN_KEY))) {
+            callCenterYn = "Y";
+        }
+
+        // Retrive ROOT Request reasons
+        params.put("typeId", "6202");
+        List<EgovMap> requestCodeList = ownershipTransferService.rootCodeList(params);
+
+        // Retrieve order information
+        EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+
+        model.put("requestReasonList", requestCodeList);
+        model.put("orderDetail", orderDetail);
+        model.put("callCenterYn", callCenterYn);
+
+        return "sales/ownershipTransfer/rootRequestPop_d";
+    }
+
     @RequestMapping(value = "/attachmentUpload.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> attachmentUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
         LOGGER.info("ownershipTransferController :: attachmentUpload");

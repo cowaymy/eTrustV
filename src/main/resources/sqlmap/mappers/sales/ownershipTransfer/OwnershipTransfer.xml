@@ -84,6 +84,7 @@
                 #{item}
             </foreach>
         </if>
+        ORDER BY A.ROT_ID DESC
     </select>
 
     <select id="getSalesOrdId" parameterType="String" resultType="egovMap">
