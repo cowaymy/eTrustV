@@ -18,17 +18,6 @@
             <DefaultRolloverStrategy max="500" />
         </RollingFile>
 
-        <RollingFile name="rollingYong" fileName="/apps/domains/SalesDmain/servers/eTRUST/log-prd/rollingYong.log"
-            filePattern="/apps/domains/SalesDmain/servers/eTRUST/log-prd/rollingYong-%d{MM-dd-yyyy}-%i.log">
-            <PatternLayout>
-                <Pattern>%d %p %c [%t] %m%n</Pattern>
-            </PatternLayout>
-            <Policies>
-                <TimeBasedTriggeringPolicy />
-                <SizeBasedTriggeringPolicy size="20 MB" />
-            </Policies>
-            <DefaultRolloverStrategy max="500" />
-        </RollingFile>
     </Appenders>
 
     <Loggers>
@@ -56,14 +45,6 @@
 
         <Logger name="com.coway.trust" level="ERROR" additivity="false">
             <AppenderRef ref="rollingFile" />
-        </Logger>
-
-        <Logger name="com.coway.trust.biz.common.impl.AdaptorServiceImpl" level="DEBUG" additivity="false">
-            <AppenderRef ref="rollingYong"/>
-        </Logger>
-
-        <Logger name="com.coway.trust.biz.payment.payment.service.impl.PaymentApiServiceImpl" level="DEBUG" additivity="false">
-            <AppenderRef ref="rollingYong"/>
         </Logger>
 
         <Root level="WARN">
