@@ -31,21 +31,16 @@ public class EComApiDto{
 
 	 public static Map<String, Object> createMap(EComApiDto eComApiDto){
 	    Map<String, Object> params = new HashMap<>();
-	    params.put("ordNo", eComApiDto.getOrdNo());
 	    params.put("ordStus", eComApiDto.getOrdStus());
 	    params.put("ccpStus", eComApiDto.getCcpStus());
 	    params.put("feedbackCode", eComApiDto.getFeedbackCode());
 	    return params;
 	  }
 
-	private String ordNo;
 	private String ordStus;
 	private String ccpStus;
 	private String feedbackCode;
 
-  public String getOrdNo() {
-    return ordNo;
-  }
   public String getOrdStus() {
     return ordStus;
   }
@@ -56,9 +51,6 @@ public class EComApiDto{
     return feedbackCode;
   }
 
-  public void setOrdNo(String ordNo) {
-    this.ordNo = ordNo;
-  }
   public void setOrdStus(String ordStus) {
     this.ordStus = ordStus;
   }
@@ -67,6 +59,23 @@ public class EComApiDto{
   }
   public void setFeedbackCode(String feedbackCode) {
     this.feedbackCode = feedbackCode;
+  }
+
+
+  private String areaId;
+
+  public static Map<String, Object> createAddrMap(EComApiDto eComApiDto){
+    Map<String, Object> params = new HashMap<>();
+    params.put("areaId", eComApiDto.getAreaId());
+    return params;
+  }
+
+  public String getAreaId() {
+    return areaId;
+  }
+
+  public void setAreaId(String areaId) {
+    this.areaId = areaId;
   }
 
 }

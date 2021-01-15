@@ -15,7 +15,10 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface EcommApiService {
 
+  EgovMap registerOrder(HttpServletRequest request,EComApiForm eComApiForm) throws Exception;
   EgovMap checkOrderStatus(HttpServletRequest request,EComApiForm eComApiForm) throws Exception;
   EgovMap cardDiffNRIC(HttpServletRequest request, EComApiForm eComApiForm) throws Exception;
+  EgovMap insertNewAddr(HttpServletRequest request,EComApiForm eComApiForm) throws Exception;
+  EgovMap cancelOrder(HttpServletRequest request,EComApiForm eComApiForm) throws Exception;
 
 }

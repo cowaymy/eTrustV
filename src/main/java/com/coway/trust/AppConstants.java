@@ -183,12 +183,14 @@ public class AppConstants {
 	public static final int SIRIM_TRANSFER = 72;
 
 	public static final int RESPONSE_CODE_SUCCESS = 200;
+	public static final int RESPONSE_CODE_CREATED = 201;
 	public static final int RESPONSE_CODE_INVALID = 400;
 	public static final int RESPONSE_CODE_UNAUTHORIZED = 401;
 	public static final int RESPONSE_CODE_FORBIDDEN = 403;
 	public static final int RESPONSE_CODE_NOT_FOUND = 404;
 
 	public static final String RESPONSE_DESC_SUCCESS = "Successful Operation";
+	public static final String RESPONSE_DESC_CREATED = "Successful Created";
 	public static final String RESPONSE_DESC_INVALID = "Invalid Parameter(s) supplied";
 	public static final String RESPONSE_DESC_UNAUTHORIZED = "Invalid API Key";
 	public static final String RESPONSE_DESC_FORBIDDEN = "Forbidden";

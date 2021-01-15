@@ -41,6 +41,12 @@ public class EComApiController {
   @Resource(name = "eCommApiService")
   private EcommApiService eCommApiService;
 
+  @ApiOperation(value = "/registerOrder", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/registerOrder", method = RequestMethod.POST)
+  public ResponseEntity<EgovMap> registerOrd(HttpServletRequest request,@ModelAttribute EComApiForm params) throws Exception {
+    return ResponseEntity.ok(eCommApiService.registerOrder(request, params));
+  }
+
   @ApiOperation(value = "/checkOrdStus", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/checkOrdStus", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> checkOrdStus(HttpServletRequest request,@ModelAttribute EComApiForm params) throws Exception {
@@ -51,6 +57,18 @@ public class EComApiController {
   @RequestMapping(value = "/cardDiffNRIC", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> cardDiffNRIC(HttpServletRequest request,@ModelAttribute EComApiForm params) throws Exception {
     return ResponseEntity.ok(eCommApiService.cardDiffNRIC(request, params));
+  }
+
+  @ApiOperation(value = "/insertNewAddr", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/insertNewAddr", method = RequestMethod.POST)
+  public ResponseEntity<EgovMap> insertNewAddr(HttpServletRequest request,@ModelAttribute EComApiForm params) throws Exception {
+    return ResponseEntity.ok(eCommApiService.insertNewAddr(request, params));
+  }
+
+  @ApiOperation(value = "/cancelOrder", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/cancelOrder", method = RequestMethod.POST)
+  public ResponseEntity<EgovMap> cancelOrder(HttpServletRequest request,@ModelAttribute EComApiForm params) throws Exception {
+    return ResponseEntity.ok(eCommApiService.cancelOrder(request, params));
   }
 
 }

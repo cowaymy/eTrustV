@@ -9,22 +9,119 @@
 **************************************
  -->
 
+<insert id="registerOrd" parameterType="Map">
+  INSERT INTO API0005D
+  (
+      ECOMM_ORD_ID ,
+      TITLE ,
+      CUST_NAME ,
+      NRIC ,
+      NATION ,
+      PASSPORT_EXPR ,
+      VISA_EXPR ,
+      DOB ,
+      GENDER ,
+      RACE ,
+      EMAIL1 ,
+      TELM ,
+      TELO ,
+      TELH ,
+      TELF ,
+      SCNTC_NAME ,
+      EMAIL2 ,
+      TELM2 ,
+      TELO2 ,
+      TELH2 ,
+      TELF2 ,
+      ADDR1 ,
+      ADDR2 ,
+      AREA_ID ,
+      ISSUE_BANK ,
+      CARD_TYPE ,
+      CARD_NAME ,
+      CARD_NO ,
+      EXPR_DT ,
+      APP_TYPE ,
+      SRV_PAC ,
+      REF_NO ,
+      PRODUCT ,
+      PROMO ,
+      SALES_MAN_CODE ,
+      STUS_CODE_ID ,
+      CRT_DT ,
+      CRT_USER_ID ,
+      UPD_DT ,
+      UPD_USER_ID
+  ) VALUES
+  (
+      API0005D_ECOMM_ORD_ID_SEQ.NEXTVAL ,
+      #{title} ,
+      #{custName} ,
+      #{nric} ,
+      #{nation} ,
+      #{passportExpr} ,
+      #{visaExpr} ,
+      #{dob} ,
+      #{gender} ,
+      #{race} ,
+      #{email1} ,
+      #{telM} ,
+      #{telO} ,
+      #{telH} ,
+      #{telF} ,
+      #{scntcName} ,
+      #{email2} ,
+      #{telM2} ,
+      #{telO2} ,
+      #{telH2} ,
+      #{telF2},
+      #{addr1} ,
+      #{addr2},
+      #{areaId} ,
+      #{issueBank} ,
+      #{cardType} ,
+      #{cardName} ,
+      #{cardNo} ,
+      #{exprDt} ,
+      #{appType} ,
+      #{srvPac} ,
+      #{refNo} ,
+      #{product} ,
+      #{promo} ,
+      #{salesmanCode} ,
+      1 ,
+      SYSDATE ,
+      #{apiUserId} ,
+      SYSDATE ,
+      #{apiUserId}
+  )
+</insert>
+
+
 <select id="checkOrderStatus" parameterType="Map" resultType="egovMap">
-    SELECT S.SALES_ORD_NO ORD_NO
-             , C.NAME ORD_STUS
-             , CASE WHEN CP.CCP_SALES_ORD_ID IS NOT NULL THEN C1.NAME ELSE '-' END  CCP_STUS
-             , CASE WHEN S.STUS_CODE_ID = 1 THEN R.CODE || '-' || R.RESN_DESC ELSE '-' END FEEDBACK_CODE
+    SELECT
+
+        C.NAME ORD_STUS
+      , CASE WHEN CP.CCP_SALES_ORD_ID IS NOT NULL THEN C1.NAME ELSE '-' END  CCP_STUS
+      , CASE WHEN S.STUS_CODE_ID = 1 THEN R.CODE || '-' || R.RESN_DESC ELSE '-' END FEEDBACK_CODE
+
     FROM SAL0001D S
+    JOIN SAL0029D CM ON CM.CUST_ID = S.CUST_ID
     JOIN SYS0038M C ON C.STUS_CODE_ID = S.STUS_CODE_ID
     LEFT JOIN SAL0102D CP ON CP.CCP_SALES_ORD_ID = S.SALES_ORD_ID
     LEFT JOIN SYS0032M R ON R.RESN_ID = CCP_RESN_ID
     LEFT JOIN SYS0038M C1 ON C1.STUS_CODE_ID = CP.CCP_STUS_ID
 
-    WHERE S.SALES_ORD_NO = #{ordNo}
+    WHERE S.REF_NO = #{sofNo}
+    AND CM.NRIC = #{nric}
 </select>
 
 <select id="cardDiffNRIC" parameterType="Map" resultType="egovMap">
-    SELECT CR.CUST_CRC_TOKEN, C.NRIC
+    SELECT
+
+          CR.CUST_CRC_TOKEN
+        , C.NRIC
+
     FROM SAL0028D CR
     LEFT JOIN SAL0029D C ON C.CUST_ID = CR.CUST_ID AND NRIC = #{nric}
     LEFT JOIN SAL0074D R ON R.CUST_CRC_ID = CR.CUST_CRC_ID
@@ -34,6 +131,36 @@
             AND r.is_3rd_party = 1
         </if>
 </select>
+
+<insert id="insertNewAddr" parameterType="Map">
+    INSERT INTO SYS0064M
+    (
+      AREA_ID
+      , ISO
+      , COUNTRY
+      , LANGUAGE
+      , STATE
+      , CITY
+      , POSTCODE
+      , AREA
+    )
+    VALUES
+    (
+      ((SELECT #{postcode}||'-'||LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode} AND AREA_ID NOT LIKE 'DM%'))
+      , (SELECT DISTINCT(ISO) FROM SYS0064M WHERE COUNTRY= 'Malaysia')
+      , 'Malaysia'
+      , 'EN'
+      , #{state}
+      , #{city}
+      , #{postcode}
+      , #{area}
+    )
+</insert>
+
+<resultMap id="resultOrdCancelMap" type="egovMap" />
+  <select id="cancelOrd" statementType="CALLABLE" parameterType="Map">
+    {call SP_ORD_CANCL_E_COMM(#{sofNo},#{apiUserId}, #{p1, mode=OUT, jdbcType=VARCHAR, javaType=String,resultMap=resultOrdCancelMap})}
+  </select>
 
 
 </mapper>
