@@ -1645,7 +1645,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/CSP_Raw_Data_Excel.do")
-  //@Scheduled(cron = "0 0 3 * * *")//Daily (3:00am)
+  //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
   public void CSP_Raw_Data_Excel() {
 
     int currentYear = LocalDate.now().getYear();
