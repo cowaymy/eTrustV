@@ -140,6 +140,9 @@ public class BudgetController {
 		String year = CommonUtils.getNowDate().substring(0,4);
 
 		model.addAttribute("year", year);
+		model.addAttribute("userId", sessionVO.getUserId());
+		model.addAttribute("roleId", sessionVO.getRoleId());
+		model.addAttribute("costCenter", sessionVO.getCostCentr());
 		return "eAccounting/budget/monthlyBudgetList";
 	}
 
@@ -176,15 +179,17 @@ public class BudgetController {
             }
         }
 
+        // Hardcode for Yena for 2nd cost center
         if(sessionVO.getUserId() == 141938) {
             params.put("costCentr2", "A1904");
         }
 
+        // Hardcode for Wei Hong for 2nd cost center
         if(sessionVO.getUserId() == 567) {
             params.put("costCentr2", "D1001");
         }
 
-        // Hardcode for rachel as Role is administrator but not allowed to view all budget
+        // Hardcode for Rachel as Role is administrator but not allowed to view all budget
         if(sessionVO.getUserId() == 374) {
             params.put("costCentr", "A1301");
         }
@@ -193,7 +198,11 @@ public class BudgetController {
         if(!"A1101".equals(sessionVO.getCostCentr())) {
             params.put("flg", "1");
         } else {
-            params.put("flg", "0");
+            if(sessionVO.getUserId() == 140139) {
+                params.put("flg", "1");
+            } else {
+                params.put("flg", "0");
+            }
         }
 
         LOGGER.debug("budgetController :: selectMonthlyBudgetList");

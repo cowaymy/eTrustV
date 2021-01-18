@@ -27,12 +27,12 @@
 </style>
 <script  type="text/javascript">
 var budgetMGrid;
+var roleId = "${roleId}";
+var costCenter = "${costCenter}";
+var userId = "${userId}";
 
 $(document).ready(function(){
-
-
-
-
+    console.log("monthlybudgetlist");
     //엑셀 다운
     $('#excelDown').click(function() {
        GridCommon.exportTo("budgetMGrid", 'xlsx', "<spring:message code='budget.MonthlyBudgetInterchange' />");
@@ -40,6 +40,15 @@ $(document).ready(function(){
 
     //그리드 생성
     fn_makeGrid();
+
+    if(roleId != '128' && roleId != '129' && roleId != '130') {
+        if(costCenter != 'A1101' || userId == "140139") {
+            $("#stCostCentr").attr("disabled", "true");
+            $("#stCostCenterSearchIcon").hide();
+            $("#edCostCentr").attr("disabled", "true");
+            $("#edCostCenterSearchIcon").hide();
+        }
+    }
 
 });
 
@@ -452,26 +461,34 @@ function fn_goApproval(){
 <tbody>
 <tr>
     <th scope="row"><spring:message code="budget.Year" /></th>
-    <td><input type="text" title="" id="budgetPlanYear" name="budgetPlanYear" placeholder="" class="w100p" value="${year}" /></td>
+    <td>
+        <input type="text" title="" id="budgetPlanYear" name="budgetPlanYear" placeholder="" class="w100p" value="${year}" />
+    </td>
     <th scope="row"><spring:message code="budget.Month" /></th>
     <td>
-    <div class="date_set w100p"><!-- date_set start -->
-    <p class=""><input type="text" id="stMonth" name="stMonth" title="" placeholder="" class="w100p" value="01" /></p>
-    <span>~</span>
-    <p class=""><input type="text" id="edMonth" name="edMonth" title="" placeholder="" class="w100p" value="12" /></p>
-    </div><!-- date_set end -->
+        <div class="date_set w100p"><!-- date_set start -->
+            <p class=""><input type="text" id="stMonth" name="stMonth" title="" placeholder="" class="w100p" value="01" /></p>
+            <span>~</span>
+            <p class=""><input type="text" id="edMonth" name="edMonth" title="" placeholder="" class="w100p" value="12" /></p>
+        </div><!-- date_set end -->
     </td>
     <th scope="row"><spring:message code="budget.CostCenter" /></th>
     <td>
-    <div class="date_set w100p"><!-- date_set start -->
-    <p class="search_type"><input type="hidden" id="stCostCentrName" name="stCostCentrName" title="" placeholder="" class="fl_left" />
-    <input type="text" id="stCostCentr" name="stCostCentr" title="" placeholder="" class="fl_left" />
-    <a href="#" class="search_btn"  onclick="javascript:fn_costCenterSearchPop('st')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></p>
-    <span>~</span>
-    <p class="search_type"><input type="hidden" id="edCostCentrName" name="edCostCentrName" title="" placeholder="" class="fl_left" />
-    <input type="text" id="edCostCentr" name="edCostCentr" title="" placeholder="" class="fl_left" />
-    <a href="#" class="search_btn" onclick="javascript:fn_costCenterSearchPop('ed')"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></p>
-    </div><!-- date_set end -->
+        <div class="date_set w100p"><!-- date_set start -->
+            <p class="search_type"><input type="hidden" id="stCostCentrName" name="stCostCentrName" title="" placeholder="" class="fl_left" />
+	            <input type="text" id="stCostCentr" name="stCostCentr" title="" placeholder="" class="fl_left" />
+	            <a href="#" class="search_btn" onclick="javascript:fn_costCenterSearchPop('st')" id="stCostCenterSearchIcon">
+	                <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+	            </a>
+            </p>
+            <span>~</span>
+            <p class="search_type"><input type="hidden" id="edCostCentrName" name="edCostCentrName" title="" placeholder="" class="fl_left" />
+                <input type="text" id="edCostCentr" name="edCostCentr" title="" placeholder="" class="fl_left" />
+                <a href="#" class="search_btn" onclick="javascript:fn_costCenterSearchPop('ed')" id="edCostCenterSearchIcon">
+                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+                </a>
+            </p>
+        </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
