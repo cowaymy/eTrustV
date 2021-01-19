@@ -30,4 +30,8 @@ public interface RoyaltyCustomerListApiMapper {
 	/*int updateWsLoyaltyList(Map<String, Object> param);*/
 
 	int updateWsLoyaltyList(Map<String, Object> params);
+
+	//List<EgovMap> selectWaterPurifierResultDetailList(Map<String, Object> params);
+
+	List<EgovMap> waterPurifierResult(Map<String, Object> createMap);
 }
