@@ -1,6 +1,7 @@
 package com.coway.trust.biz.sales.royaltyCustomerListApi;
 
 import java.util.List;
+import java.util.Map;
 
 import com.coway.trust.api.mobile.logistics.stockAudit.StockAuditApiFormDto;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
@@ -30,5 +31,9 @@ public interface RoyaltyCustomerListApiService {
 	// RoyaltyCustomerListApiForm updateWsLoyaltyList (RoyaltyCustomerListApiForm param) throws Exception; //666
 
 	 RoyaltyCustomerListApiDto updateWsLoyaltyList(RoyaltyCustomerListApiDto param) throws Exception;
+
+	//Map<String, Object> selectWaterPurifierResultDetailList(Map<String, Object> params);
+
+	List<EgovMap> waterPurifierResult(RoyaltyCustomerListApiForm param);
 
 }
