@@ -134,4 +134,27 @@ public class RoyaltyCustomerListApiServiceImpl extends EgovAbstractServiceImpl i
 		return param;
 	}
 
+
+	 @Override
+	    public List<EgovMap> waterPurifierResult( RoyaltyCustomerListApiForm param) {
+		//public List<EgovMap> selectWsLoyaltyList( RoyaltyCustomerListApiDto param) throws Exception {
+			// TODO Auto-generated method stub
+	      //  param.setWhLocId(loginVO.getUserId());
+
+	    /*	 if( CommonUtils.isEmpty(param.getRegId()) ){
+	             throw new ApplicationException(AppConstants.FAIL, "Reg ID value does not exist.");
+	         }*/
+
+	    	 Map<String, Object> loginInfoMap = new HashMap<String, Object>();
+	         loginInfoMap.put("_USER_ID", param.getRegId());
+	         LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
+	         if( null == loginVO || CommonUtils.isEmpty(loginVO.getUserId()) ){
+	             throw new ApplicationException(AppConstants.FAIL, "Reg ID value does not exist.");
+	         }
+	         param.setWhLocId(loginVO.getUserId());
+
+			//return royaltyCustomerListApiMapper.selectWsLoyaltyList();
+			return royaltyCustomerListApiMapper.waterPurifierResult(RoyaltyCustomerListApiForm.createMap(param));
+		}
+
 }
