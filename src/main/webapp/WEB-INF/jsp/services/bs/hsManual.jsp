@@ -116,7 +116,13 @@ var TODAY_DD      = "${toDay}";
   } , {
     dataField : "serialRequireChkYn",
     headerText : "serialRequireChkYn",
-    width : 0}];
+    width : 0
+  }, {
+      dataField : "stkId",
+      headerText : "Stock ID",
+      visible : false
+  }
+  ];
 
   var columnAssiinLayout = [
       {
@@ -1231,11 +1237,83 @@ var TODAY_DD      = "${toDay}";
   }
 
 
-    function fn_hsReversal(i){
-    // ADDED BY TPY - 18/06/2019
-    // AMEND BY OHC - 20/01/2020 - TO ADD FOR REVERSAL PASS MONTH HS
-	  var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+  function fn_hsReversalValid() {
+      console.log("fn_hsReversalValid");
 
+      var valid = true;
+      var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+
+      if(checkedItems.length <= 0) {
+          Common.alert('No data selected.');
+          valid = false;
+      } else if (checkedItems.length >= 2) {
+          Common.alert('Only available to reverse with single HS order');
+          valid = false;
+      } else {
+          console.log("fn_hsReversalValid :: selected :: 1");
+
+          // Allow Ombak with FAIL status proceed
+          if(checkedItems[0]["stkId"] == "1427") {
+              if(checkedItems[0]["code"] != "FAL") {
+                  Common.alert('Ombak only available to reverse for the HS order with FAIL status');
+                  valid = false;
+              }
+          } else {
+              if(checkedItems[0]["code"] != "COM") {
+                  Common.alert('Only available to reverse for the HS order with COM status');
+                  valid = false;
+              }
+          }
+      }
+
+      return valid;
+  }
+
+    function fn_hsReversal(i){
+       /*
+        * ADDED BY TPY - 18/06/2019
+        * AMEND BY OHC - 20/01/2020 - TO ADD FOR REVERSAL PASS MONTH HS
+        * 2021/01/19 - LaiKW - Removed checked row validation to new validation function fn_hsReversalValid()
+        */
+        var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+
+        if(fn_hsReversalValid()) {
+            var rowItem ;
+            var salesOrdId = "";
+            var schdulId = "";
+            var serialRequireChkYn = "";
+
+            for (var i = 0, len = checkedItems.length; i < len; i++) {
+                rowItem = checkedItems[i];
+                schdulId = rowItem.schdulId;
+                salesOrdId = rowItem.salesOrdId;
+                serialRequireChkYn = rowItem.serialRequireChkYn;
+            }
+
+            var url = "";
+            if (serialRequireChkYn == 'Y') {
+              url = "/services/bs/hsReversalSerial.do";
+            } else {
+              url = "/services/bs/hsReversal.do";
+            }
+
+            // KR-OHK Serial Check add
+            Common.confirm("Are you sure want to reverse this HS ?", function() {
+                console.log("schdulId :: " + schdulId + "  salesOrdId :: " + salesOrdId + "  revInd :: " + i);
+                Common.ajax("GET", url,  {schdulId : schdulId , salesOrdId : salesOrdId, serialRequireChkYn : serialRequireChkYn, revInd : i } , function(result) {
+                    if(result == null || result == "") {
+                        Common.alert("HS Reverse Failed.");
+                        return;
+                    }else{
+                        Common.alert(result.message, fn_parentReload);
+                    }
+                });
+            });
+        } else {
+            return;
+        }
+
+        /*
 	    if (checkedItems.length <= 0) {
 	      Common.alert('No data selected.');
 	      return;
@@ -1257,8 +1335,8 @@ var TODAY_DD      = "${toDay}";
 	          schdulId = rowItem.schdulId;
 	          salesOrdId = rowItem.salesOrdId;
 	          serialRequireChkYn = rowItem.serialRequireChkYn;
-	        }
 	      }
+	    }
 
 	      // KR-OHK Serial Check add
           var url = "";
@@ -1279,6 +1357,7 @@ var TODAY_DD      = "${toDay}";
             }
           });
 	    });
+          */
     }
 
   function fn_HSRptCustSign() {

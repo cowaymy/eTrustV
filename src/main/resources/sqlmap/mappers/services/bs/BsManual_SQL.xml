@@ -339,6 +339,7 @@
                                             ,(CASE WHEN (EXTRACT(month from lAST_brm.SETL_DT)= extract(month from ADD_MONTHS(sysdate,-1)) and EXTRACT(YEAR FROM lAST_brm.SETL_DT) = extract(YEAR from ADD_MONTHS(sysdate,-1))) THEN STUS.CODE ELSE 'x' END) PREV_MTH_HS_STATUS
                                           ,STUS1.CODE CODY_STATUS
                                           ,HSM.SCHDUL_ID
+                                          ,SOD.ITM_STK_ID STK_ID
                                 FROM    SAL0001D SOM
                                         ,SAL0029D C
                                         ,SYS0013M CORPTYPE
