@@ -34,6 +34,12 @@ $(document).ready(function(){
 
     console.log("Person In Charge :: " + "${guardianofCompliance.personInChrg}");
     $("#changePerson option[value='" + "${guardianofCompliance.personInChrg}" +"']").attr("selected", true);
+
+    $("#cmbreqStatus option[value='" + "${guardianofCompliance.reqstStusId}" + "']").attr('selected', true);
+
+    if("${guardianofCompliance.reqstStusId}" != "60") {
+        $("#cmbreqStatus").attr("disabled", true);
+    }
 });
 
 function fn_GuardianRemarkGrid() {
