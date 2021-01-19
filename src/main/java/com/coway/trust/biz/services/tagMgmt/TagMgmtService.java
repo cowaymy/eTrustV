@@ -46,4 +46,6 @@ public interface TagMgmtService {
   List<EgovMap> getAttachList(Map<String, Object> params);
 
   List<EgovMap> getAttachList2(Map<String, Object> params);
+
+  List<EgovMap> selectCmGroup(Map<String, Object> params);
 }

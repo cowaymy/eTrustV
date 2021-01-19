@@ -180,6 +180,30 @@ public class TagMgmtController {
     return ResponseEntity.ok(subDeptList);
   }
 
+  /**
+   * to get CM Group by Branch
+   *
+   * @Date Dec 17, 2020
+   * @Author HQIT-HUIDING
+   * @param params
+   * @param request
+   * @param model
+   * @return
+   */
+  @RequestMapping(value = "/selectCmGroup.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getCmGroup(@RequestParam Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO, ModelMap model){
+
+	  int memLvl = sessionVO.getMemberLevel();
+	  String groupCode = null;
+	  String deptCode = null;
+
+	  if (memLvl > 2){ // CM & CODY level
+
+	  }
+	  List<EgovMap> cmGroupList = tagMgmtService.selectCmGroup(params);
+	  return ResponseEntity.ok(cmGroupList);
+  }
+
   @RequestMapping(value = "/selectMainInquiry.do", method = RequestMethod.GET)
   public ResponseEntity<List<EgovMap>> getMainInquiryList(@RequestParam Map<String, Object> params,
       HttpServletRequest request, ModelMap model) {

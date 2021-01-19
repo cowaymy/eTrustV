@@ -9,6 +9,7 @@
            Z.Main_inquiry,
            Z.Sub_inquiry,
            Z.Feedback_code,
+            z.CMGROUP,
            Z.MAIN_DEPT,
            Z.SUB_DEPT,
            Z.DEPT_CODE,
@@ -33,6 +34,7 @@
                 , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', B.MAIN_DEPT )) AS MAIN_DEPT
                 , DECODE(B.SUB_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE)
                 , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', B.SUB_DEPT)) AS SUB_DEPT
+                , T4.dept_code as CMGROUP
                 , CASE WHEN B.MAIN_DEPT IS NULL
                     THEN A.DEPT_CODE
                     ELSE B.MAIN_DEPT END DEPT_CODE
@@ -81,6 +83,22 @@
            LEFT OUTER JOIN GBSLCVD.CCR0006D B ON A.CUR_SEQNO = B.CUR_SEQ_NO
           LEFT JOIN GBSLCVD.SYS0047M usr ON b.UPD_USER_ID = usr.USER_ID
           LEFT JOIN GBSLCVD.SYS0005M brnch ON usr.USER_BRNCH_ID = brnch.BRNCH_ID
+          -- Added cmgroup by Hui Ding, 2020-12-17
+          LEFT JOIN sal0090D C on C.SRV_SO_ID = A.ord_id
+          JOIN ORG0001D T3 ON T3.MEM_ID = C.SRV_CODY_ID
+          JOIN ( SELECT V1.MEM_ID MEM_ID
+                      , V1.MEM_CODE MEM_CODE
+                      , V1.MEM_LVL MEM_LVL
+                      , V1.DEPT_CODE DEPT_CODE
+                      , V1.GRP_CODE GRP_CODE
+                      , V1.ORG_CODE ORG_CODE
+                      , V1.TOP_ORG_CODE TOP_ORG_CODE
+                      , V1.MEM_UP_ID MEM_UP_ID
+                      , V1.LVL3_UP_ID LVL3_UP_ID
+                      , V1.LVL2_UP_ID LVL2_UP_ID
+                      , V1.LVL1_UP_ID LVL1_UP_ID
+                      , V1.LVL0_UP_ID LVL0_UP_ID
+                 FROM ORG1001V V1 ) T4 ON T4.MEM_ID = T3.MEM_ID
           WHERE A.TR_DVCD = 'T'
     ) Z
     WHERE 1=1
@@ -107,6 +125,10 @@
 
     <if test="sub_department != null and sub_department != '' ">
       AND Z.SUB_DEPT_CDE IN (#{sub_department})
+    </if>
+
+    <if test="cmGroup != null and cmGroup !='' ">
+        AND Z.CMGROUP IN (#{cmGroup})
     </if>
 
     <if test="feedback_code != null and feedback_code != '' ">
@@ -586,4 +608,19 @@
     ORDER BY CODE
   </select>
 
+  <select id="selectCmGroup" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT C.LAST_DEPT_CODE CODE, C.LAST_DEPT_CODE CODE_NAME FROM
+		(SELECT
+		  SUBSTR(CODE_NAME,0, INSTR(CODE_NAME, '-', 1, 1)+2) BRANCH_CODE,
+		  CODE
+		  FROM SYS0013M
+		  WHERE CODE_MASTER_ID = 360
+		  AND CODE IN (SELECT SUB_DEPT_CODE FROM SVC0063C WHERE MAIN_DEPT_CODE = #{mainDept})
+		) M
+	JOIN SYS0005M B ON M.BRANCH_CODE = B.CODE
+	JOIN ORG0005D C ON C.BRNCH_ID = B.BRNCH_ID
+	WHERE TRIM(' ' FROM C.LAST_DEPT_CODE) IS NOT NULL
+	AND M.CODE = #{subDept}
+	ORDER BY C.LAST_DEPT_CODE
+  </select>
 </mapper>

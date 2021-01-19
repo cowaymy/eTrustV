@@ -130,4 +130,9 @@ public class TagMgmtServiceImpl implements TagMgmtService {
     return tagMgmtMapper.selectAttachList2(params);
   }
 
+  @Override
+  public List<EgovMap> selectCmGroup(Map<String, Object> params) {
+	  return tagMgmtMapper.selectCmGroup(params);
+  }
+
 }
