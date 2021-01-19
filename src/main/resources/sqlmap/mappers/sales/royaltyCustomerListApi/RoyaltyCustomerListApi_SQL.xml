@@ -59,7 +59,7 @@ ORDER BY    CUST_NAME
 </select>
 
 
-      <update id="updateWsLoyaltyList" parameterType="Map">
+<update id="updateWsLoyaltyList" parameterType="Map">
                update   SAL0271D
                            SET HP_CALL_REASON_CODE = #{hpCallReasonCode}
                                 ,HP_CALL_REMARK = #{hpCallRemark}
@@ -69,7 +69,25 @@ ORDER BY    CUST_NAME
                                  ,UPD_DT = SYSDATE
 
                          WHERE   LOYALTY_ID = #{loyaltyId}
-             </update>
+</update>
+
+
+
+<select id="waterPurifierResult" resultType="egovMap">
+<![CDATA[
+
+SELECT
+
+WP_IN_USE ,
+WP_TOT_OUTST
+
+FROM    SAL0271D
+
+WHERE   HP_CODE = #{regId}
+ORDER BY    CUST_NAME
+
+]]>
+</select>
 
 
 </mapper>
