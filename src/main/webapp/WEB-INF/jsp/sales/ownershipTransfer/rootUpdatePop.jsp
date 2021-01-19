@@ -288,9 +288,29 @@
         fn_retrieveRotCallLog();
         $("#supplier_search_btn").click(fn_popSupplierSearchPop);
         $("#rotCL_add_btn").click(fn_clAddRow);
+        $("#save_rotCLbtn").click(fn_saveCallLog);
 
         // ROT History Grid Data Init
         fn_retrieveRotHist();
+
+        if("${ccpInfoMap.name}" != "Active") {
+            console.log("status :: Approved/Reject");
+            $("#_statusEdit").attr("disabled", "disabled");
+            $("#_incomeRangeEdit").attr("disabled", "disabled");
+            $("#_rejectStatusEdit").attr("disabled", "disabled");
+            $("#_ficoScore").attr("disabled", "disabled");
+            $("#_reasonCodeEdit").attr("disabled", "disabled");
+            $("#_spcialRem").attr("readonly", "readonly");
+            $("#_pncRem").attr("readonly", "readonly");
+            $("#agmReq").attr("disabled", "disabled");
+            $("#cowayTemplate").attr("disabled", "disabled");
+            $("#_onHoldCcp").attr("disabled", "disabled");
+            $("#rotCcpRem").attr("readonly", "readonly");
+
+            $("#rotCallLogInput").hide();
+            $("#rotCL_add_btn").hide();
+            $("#save_rotCLbtn").hide();
+        }
     });
 
     // General Functions - Start
@@ -1319,11 +1339,11 @@
                         <tr>
                             <th scope="row">Need Agreement</th>
                             <td>
-                                <span><input type="checkbox"  id="agmReq"  name="agmReq"/></span>
+                                <span><input type="checkbox"  id="agmReq"  name="agmReq" <c:if test="${ccpInfoMap.ccpAgmReq eq '1'}">checked</c:if> /></span>
                             </td>
                             <th scope="row">Coway Template</th>
                             <td>
-                                <span><input type="checkbox"  id="cowayTemplate"  name="cowayTemplate"/></span>
+                                <span><input type="checkbox"  id="cowayTemplate"  name="cowayTemplate" <c:if test="${ccpInfoMap.ccpTemplate eq '1'}">checked</c:if> /></span>
                             </td>
                             <th scope="row"><spring:message code="sal.title.text.onHoldCcp" /></th>
                             <td>
@@ -2205,7 +2225,7 @@
             <form action="#" id="rotCLForm" method="post">
                 <input type="hidden" id="newMemAccId" name="newMemAccId">
 
-                <table class="type1">
+                <table class="type1" id="rotCallLogInput">
                     <caption>table</caption>
                     <colgroup>
                         <col style="width:190px" />
