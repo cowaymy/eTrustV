@@ -22,6 +22,7 @@ public class RoyaltyCustomerListApiDto {
 	private int unit;
 	private int outst;
 	private int usageMth;
+	private int ctgryDesc;
 
 /*	@ApiModelProperty(value = "waterPurifierResult")
 	private List<waterPurifierResult> waterPurifierResult;*/
@@ -364,7 +365,11 @@ public class RoyaltyCustomerListApiDto {
 	public void setUsageMth(int usageMth) {
 		this.usageMth = usageMth;
 	}
-
-
+	public int getCtgryDesc() {
+		return ctgryDesc;
+	}
+	public void setCtgryDesc(int ctgryDesc) {
+		this.ctgryDesc = ctgryDesc;
+	}
 
 }
