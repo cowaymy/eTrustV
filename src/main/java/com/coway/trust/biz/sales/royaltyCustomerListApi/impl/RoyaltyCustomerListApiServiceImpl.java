@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -151,9 +152,12 @@ public class RoyaltyCustomerListApiServiceImpl extends EgovAbstractServiceImpl i
 	         if( null == loginVO || CommonUtils.isEmpty(loginVO.getUserId()) ){
 	             throw new ApplicationException(AppConstants.FAIL, "Reg ID value does not exist.");
 	         }
+	         loginInfoMap.put("loyaltyId", param.getLoyaltyId());
+	         //param.put("loyaltyId", param.getLoyaltyId());
 	         param.setWhLocId(loginVO.getUserId());
+	         param.setLoyaltyId(param.getLoyaltyId());
 
-			//return royaltyCustomerListApiMapper.selectWsLoyaltyList();
+
 			return royaltyCustomerListApiMapper.waterPurifierResult(RoyaltyCustomerListApiForm.createMap(param));
 		}
 
