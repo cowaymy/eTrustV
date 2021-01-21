@@ -4,6 +4,11 @@
 <script type="text/javaScript">
 $(document).ready(function() {
 
+    if("${PAGE_AUTH.funcUserDefine1}" != 'Y') {
+        $("#caseNoLbl").remove();
+        $("#caseNoCol").remove();
+    }
+
 	ComplianceListGrid();
 	ExcelListGrid();
 
@@ -110,32 +115,16 @@ function ComplianceListGrid() {
 
     // 그리드 속성 설정
    var gridPros = {
-
-	        // 페이징 사용
-	        usePaging : true,
-
-	        // 한 화면에 출력되는 행 개수 20(기본값:20)
-	        pageRowCount : 20,
-
-	        editable : true,
-
-	        displayTreeOpen : true,
-
-	        selectionMode : "singleRow",
-
-	        headerHeight : 30,
-
-	        // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-	        skipReadonlyColumns : true,
-
-	        // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-	        wrapSelectionMove : true,
-
-	        // 줄번호 칼럼 렌더러 출력
-	        showRowNumColumn : true,
-
-	        exportURL : "/common/exportGrid.do"
-
+       usePaging : true, // 페이징 사용
+       pageRowCount : 20, // 한 화면에 출력되는 행 개수 20(기본값:20)
+       editable : true,
+       displayTreeOpen : true,
+       selectionMode : "singleRow",
+       headerHeight : 30,
+       skipReadonlyColumns : true, // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+       wrapSelectionMove : true, // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+       showRowNumColumn : true, // 줄번호 칼럼 렌더러 출력
+       exportURL : "/common/exportGrid.do"
    };
 
     myGridID = AUIGrid.create("#grid_wrap_complianceList", columnLayout, gridPros);
@@ -143,13 +132,17 @@ function ComplianceListGrid() {
 
 function ExcelListGrid() {
     //AUIGrid 칼럼 설정
-    var columnLayout = [ /* {
+    var columnLayout = [
+    /*
+    {
         dataField : "requestid",
         headerText : "No",
         editable : false,
         visible : false,
         width : 100
-    }, */ {
+    },
+    */
+    {
         dataField : "userName",
         headerText : "Requestor",
         editable : false,
@@ -160,16 +153,14 @@ function ExcelListGrid() {
         headerText : "Request Status",
         editable : false,
         width : 150
-    },
-    {
+    }, {
         dataField : "requestcreateat",
         headerText : "Request Date",
         editable : false,
         width : 150,
         dataType : "date",
         formatString : "dd/mm/yyyy"
-    },
-    {
+    }, {
         dataField : "salesOrdNo",
         headerText : "Order No",
         editable : false,
@@ -198,12 +189,15 @@ function ExcelListGrid() {
         formatString : "dd/mm/yyyy"
     },
     /////////////////////////// ADDITIONAL FIELD ////////////////////////////// ALEX-21072020
-    /* {
+    /*
+    {
         dataField : "memCode",
         headerText : "Person Involved",
         editable : false,
         width : 150
-    },  */{
+    },
+    */
+    {
         dataField : "requestcontent",
         headerText : "Feedback Content",
         editable : false,
@@ -242,60 +236,39 @@ function ExcelListGrid() {
     }
     ];
 
-
-
     // 그리드 속성 설정
-   var gridPros = {
-
-            // 페이징 사용
-            usePaging : true,
-
-            // 한 화면에 출력되는 행 개수 20(기본값:20)
-            pageRowCount : 20,
-
-            editable : true,
-
-            displayTreeOpen : true,
-
-            selectionMode : "singleRow",
-
-            headerHeight : 30,
-
-            // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-            skipReadonlyColumns : true,
-
-            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            wrapSelectionMove : true,
-
-            // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : true,
-
-            exportURL : "/common/exportGrid.do",
-
-   };
+    var gridPros = {
+        usePaging : true, // 페이징 사용
+        pageRowCount : 20, // 한 화면에 출력되는 행 개수 20(기본값:20)
+        editable : true,
+        displayTreeOpen : true,
+        selectionMode : "singleRow",
+        headerHeight : 30,
+        skipReadonlyColumns : true, // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+        wrapSelectionMove : true, // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+        showRowNumColumn : true, // 줄번호 칼럼 렌더러 출력
+        exportURL : "/common/exportGrid.do",
+    };
 
     excelGridID = AUIGrid.create("#grid_wrap_excelList", columnLayout, gridPros);
 }
 
 function fn_complianceSearch(){
-	 if("${PAGE_AUTH.funcUserDefine1}" !='Y'){
-	 Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceListCodyHP.do", $("#complianceSearch").serialize(), function(result) {
-       	console.log("성공.");
-        //console.log("data : " + JSON.stringify(result));
-        AUIGrid.setGridData(myGridID, result);
-
-    });
+    if("${PAGE_AUTH.funcUserDefine1}" != 'Y'){
+        Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceListCodyHP.do", $("#complianceSearch").serialize(), function(result) {
+            console.log("성공.");
+            //console.log("data : " + JSON.stringify(result));
+            AUIGrid.setGridData(myGridID, result);
+        });
+    } else {
+        Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceList.do", $("#complianceSearch").serialize(), function(result) {
+            console.log("성공.");
+            console.log("data : " + JSON.stringify(result));
+            AUIGrid.setGridData(myGridID, result);
+            AUIGrid.setGridData(excelGridID, result);
+        });
+    }
 }
-	 else{
-	 Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceList.do", $("#complianceSearch").serialize(), function(result) {
-		console.log("성공.");
-		console.log("data : " + JSON.stringify(result));
-		AUIGrid.setGridData(myGridID, result);
-		        AUIGrid.setGridData(excelGridID, result);
-		    });
-		 }
-	 }
-
 
 $.fn.clearForm = function() {
     return this.each(function() {
@@ -305,9 +278,9 @@ $.fn.clearForm = function() {
         }
         if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
             this.value = '';
-        }else if (type === 'checkbox' || type === 'radio'){
+        } else if (type === 'checkbox' || type === 'radio'){
             this.checked = false;
-        }else if (tag === 'select'){
+        } else if (tag === 'select'){
             this.selectedIndex = -1;
         }
         AUIGrid.clearGridData(myGridID);
@@ -414,12 +387,16 @@ function fn_setOptGrpClass() {
         </select>
     </td>
     <th scope="row">Pre-Register Date</th>
-    <td colspan="3">
-    <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="requestCreatStart" name="requestCreatStart"/></p>
-    <span>To</span>
-    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="requestCreatEnd" name="requestCreatEnd"/></p>
-    </div><!-- date_set end -->
+    <td>
+        <div class="date_set"><!-- date_set start -->
+            <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="requestCreatStart" name="requestCreatStart"/></p>
+            <span>To</span>
+            <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="requestCreatEnd" name="requestCreatEnd"/></p>
+        </div><!-- date_set end -->
+    </td>
+    <th scope="row" id="caseNoLbl">Case No</th>
+    <td id="caseNoCol">
+        <input type="text" title="" placeholder="Case No" class="w100p" id="caseNo" name="caseNo"/>
     </td>
 </tr>
 <tr>

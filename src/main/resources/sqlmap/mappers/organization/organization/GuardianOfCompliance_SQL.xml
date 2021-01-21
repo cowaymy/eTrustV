@@ -172,6 +172,9 @@
                 <if test="changePerson != null and changePerson != '' ">
                     AND  Filter1.PIC_USER_ID = #{changePerson}
                 </if>
+                <if test="caseNo != null and caseNo != '' ">
+                    AND  Filter1.CASE_NO = #{caseNo}
+                </if>
             ) Project1
             ORDER BY Project1.REQUESTID ASC
         </select>
