@@ -76,21 +76,27 @@ ORDER BY    CUST_NAME
 <select id="waterPurifierResult" resultType="egovMap">
 <![CDATA[
 
-SELECT
 
-    A.LOYALTY_ID,
-    B.STK_DESC,
-    B.STK_CTGRY_ID,
-    '1' as UNIT,
-    B.OUTST,
-    B.USAGE_MTH
+SELECT      
+A.LOYALTY_ID,     
+B.STK_DESC,     
+B.STK_CTGRY_ID, 
+case when B.STK_CTGRY_ID = '54' Then 'WP'
+when B.STK_CTGRY_ID = '55' Then 'AP'
+when B.STK_CTGRY_ID = '5706' Then 'MATTRESS' 
+when B.STK_CTGRY_ID = '400' Then 'POE' 
+when B.STK_CTGRY_ID = '57' Then 'SOFTENER' 
+when B.STK_CTGRY_ID = '56' Then 'BIDET' 
+else 'OTHERS' END AS CTGRY_DESC ,
+'1' as UNIT,     
+B.OUTST,     
+B.USAGE_MTH  
 
-FROM    SAL0271D A JOIN SAL0284D B
-ON A.LOYALTY_ID = B.LOYALTY_ID
+FROM    SAL0271D A JOIN SAL0284D B 
+ON A.LOYALTY_ID = B.LOYALTY_ID  
 
 WHERE   A.HP_CODE = #{regId}
-and A.LOYALTY_ID = #{loyaltyId}
-and B.STK_CTGRY_ID = '54'
+and A.LOYALTY_ID = #{loyaltyId} 
 ORDER BY    A.CUST_NAME
 
 ]]>
