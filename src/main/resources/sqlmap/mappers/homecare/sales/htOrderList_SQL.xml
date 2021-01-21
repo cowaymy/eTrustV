@@ -41,9 +41,9 @@
  V1.BRAND,
  V1.PRODUCT_NAME,
  V1.ADJNOTE,
- V1.LAST_ORG_CODE ORG_CODE,
- V1.LAST_GRP_CODE GRP_CODE,
- V1.LAST_DEPT_CODE DEPT_CODE
+ V1.ORG_CODE ORG_CODE,
+ V1.GRP_CODE GRP_CODE,
+ V1.DEPT_CODE DEPT_CODE
  FROM (
  SELECT DISTINCT
           cd.CODE APP_TYPE_CODE,
@@ -84,9 +84,9 @@
           NVL (SOM.SALES_PROD_BRD,'OTHER') BRAND,
           som.SALES_PROD_SZ PRODUCT_NAME,
           EXTENT10.MEMO_ADJ_REF_NO ADJNOTE,
-          F1.LAST_ORG_CODE ,
-          F1.LAST_GRP_CODE ,
-          F1.LAST_DEPT_CODE
+          F1.ORG_CODE ,
+          F1.GRP_CODE ,
+          F1.DEPT_CODE
      FROM SAL0225D som
           JOIN SYS0013M cd ON cd.CODE_ID = som.APP_TYPE_ID
           JOIN SAL0029D c ON c.CUST_ID = som.CUST_ID
@@ -100,19 +100,19 @@
           LEFT JOIN PAY0031D EXTENT7 ON EXTENT7.TAX_INVC_SVC_NO = SOM.SRV_ORD_NO
           LEFT JOIN PAY0011D EXTENT10 ON EXTENT10.MEMO_ADJ_INVC_NO = EXTENT7.TAX_INVC_REF_NO
                                    AND MEMO_ADJ_STUS_ID = 4
-          LEFT JOIN ORG0005D F1 ON SOM.MEM_ID = F1.MEM_ID
+          LEFT JOIN ORG1001V F1 ON SOM.MEM_ID = F1.MEM_ID
 
           WHERE  1= 1
                   AND SOM.APP_TYPE_ID IN (3216,3217)
 
                <if test="orgCode != null and orgCode != ''">
-                  AND UPPER(F1.LAST_ORG_CODE) = UPPER(#{orgCode})
+                  AND UPPER(F1.ORG_CODE) = UPPER(#{orgCode})
               </if>
               <if test="grpCode != null and grpCode != ''">
-                  AND UPPER(F1.LAST_GRP_CODE) = UPPER(#{grpCode})
+                  AND UPPER(F1.GRP_CODE) = UPPER(#{grpCode})
               </if>
               <if test="deptCode != null and deptCode != ''">
-                  AND UPPER(F1.LAST_DEPT_CODE) = UPPER(#{deptCode})
+                  AND UPPER(F1.DEPT_CODE) = UPPER(#{deptCode})
               </if>
 
           UNION
@@ -156,9 +156,9 @@
           NVL (SOM.SALES_PROD_BRD,'OTHER') BRAND,
           som.SALES_PROD_SZ PRODUCT_NAME,
           EXTENT10.MEMO_ADJ_REF_NO ADJNOTE,
-          F1.LAST_ORG_CODE ,
-          F1.LAST_GRP_CODE ,
-          F1.LAST_DEPT_CODE
+          F1.ORG_CODE ,
+          F1.GRP_CODE ,
+          F1.DEPT_CODE
      FROM SAL0225D som
           JOIN SYS0013M cd ON cd.CODE_ID = som.APP_TYPE_ID
           JOIN SAL0029D c ON c.CUST_ID = som.CUST_ID
@@ -172,7 +172,7 @@
           LEFT JOIN PAY0031D EXTENT7 ON EXTENT7.TAX_INVC_SVC_NO = SOM.SRV_ORD_NO
           LEFT JOIN PAY0011D EXTENT10 ON EXTENT10.MEMO_ADJ_INVC_NO = EXTENT7.TAX_INVC_REF_NO
                                    AND MEMO_ADJ_STUS_ID = 4
-          LEFT JOIN ORG0005D F1 ON SOM.MEM_ID = F1.MEM_ID
+          LEFT JOIN ORG1001V F1 ON SOM.MEM_ID = F1.MEM_ID
 
           WHERE  1= 1
                   AND SOM.APP_TYPE_ID IN (5701,5702)
