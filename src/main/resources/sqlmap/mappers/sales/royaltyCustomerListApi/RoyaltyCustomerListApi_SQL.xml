@@ -89,8 +89,9 @@ FROM    SAL0271D A JOIN SAL0284D B
 ON A.LOYALTY_ID = B.LOYALTY_ID
 
 WHERE   A.HP_CODE = #{regId}
+and A.LOYALTY_ID = #{loyaltyId}
 and B.STK_CTGRY_ID = '54'
-ORDER BY    A.CUST_NAME
+ORDER BY    A.CUST_NAME;
 
 ]]>
 </select>
