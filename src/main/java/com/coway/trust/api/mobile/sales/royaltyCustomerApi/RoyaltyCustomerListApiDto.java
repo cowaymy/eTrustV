@@ -5,6 +5,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
+import java.util.List;
 
 
 
@@ -15,6 +16,15 @@ public class RoyaltyCustomerListApiDto {
 	public static RoyaltyCustomerListApiDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, RoyaltyCustomerListApiDto.class);
 	}
+
+	private String stkDesc;
+	private int stkCtgryId;
+	private int unit;
+	private int outst;
+	private int usageMth;
+
+/*	@ApiModelProperty(value = "waterPurifierResult")
+	private List<waterPurifierResult> waterPurifierResult;*/
 
 	private String regId; //666
 	private int loyaltyId;
@@ -64,8 +74,12 @@ public class RoyaltyCustomerListApiDto {
 	//private String hpViewEndDt;
 	//private int hpAssgnmtUploadId;
 
-
-
+/*	public List<waterPurifierResult> getWaterPurifierResult() {
+		return waterPurifierResult;
+	}
+	public void setWaterPurifierResult(List<waterPurifierResult> waterPurifierResult) {
+		this.waterPurifierResult = waterPurifierResult;
+	}*/
 
 	public String getRegId() {
 		return regId;
@@ -319,5 +333,38 @@ public class RoyaltyCustomerListApiDto {
 	public void setHpAssgnmtUploadId(int hpAssgnmtUploadId) {
 		this.hpAssgnmtUploadId = hpAssgnmtUploadId;
 	}*/
+
+	public String getStkDesc() {
+		return stkDesc;
+	}
+	public void setStkDesc(String stkDesc) {
+		this.stkDesc = stkDesc;
+	}
+	public int getStkCtgryId() {
+		return stkCtgryId;
+	}
+	public void setStkCtgryId(int stkCtgryId) {
+		this.stkCtgryId = stkCtgryId;
+	}
+	public int getUnit() {
+		return unit;
+	}
+	public void setUnit(int unit) {
+		this.unit = unit;
+	}
+	public int getOutst() {
+		return outst;
+	}
+	public void setOutst(int outst) {
+		this.outst = outst;
+	}
+	public int getUsageMth() {
+		return usageMth;
+	}
+	public void setUsageMth(int usageMth) {
+		this.usageMth = usageMth;
+	}
+
+
 
 }
