@@ -31,9 +31,9 @@ $(document).ready(function() {
 	$("#atteRgistUpload_btn").click(function() {
 		fn_setGridDataByUploadData("${pType}");
 	});
-    
+
 	setInputFile();
-    
+
 	if($("#memTypeYN").val() == 2318){
 		$("#memTemp").show();
 		$("#applTemp").hide();
@@ -41,28 +41,28 @@ $(document).ready(function() {
 		$("#memTemp").hide();
         $("#applTemp").show();
 	}
-	
+
 	$("#uploadGrid").hide();
     // 최초 그리드 생성함.
     createInitGrid();
-    
+
  // ready 이벤트 바인딩
     AUIGrid.bind(atteRgistGridID, "ready", function(event) {
     	atteRgistGridDataLength = AUIGrid.getGridData(atteRgistGridID).length; // 그리드 전체 행수 보관
     });
-    
+
     // 헤더 클릭 핸들러 바인딩
     AUIGrid.bind(atteRgistGridID, "headerClick", atteRgistHeaderClickHandler);
-    
+
     // 셀 수정 완료 이벤트 바인딩
     AUIGrid.bind(atteRgistGridID, "cellEditEnd", function(event) {
-        
+
         // isActive 칼럼 수정 완료 한 경우
         if(event.dataField == "isActive") {
-            
+
             // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
             var activeItems = AUIGrid.getItemsByValue(atteRgistGridID, "isActive", "Active");
-            
+
             // 헤더 체크 박스 전체 체크 일치시킴.
             if(activeItems.length != atteRgistGridDataLength) {
                 document.getElementById("atteRgistAllCheckbox").checked = false;
@@ -71,7 +71,7 @@ $(document).ready(function() {
             }
         }
     });
-    
+
     // IE10, 11은 readAsBinaryString 지원을 안함. 따라서 체크함.
     var rABS = typeof FileReader !== "undefined" && typeof FileReader.prototype !== "undefined" && typeof FileReader.prototype.readAsBinaryString !== "undefined";
 
@@ -83,7 +83,7 @@ $(document).ready(function() {
         }
         return isCompatible;
     };
-    
+
     // 파일 선택하기
     $('#fileSelector').on('change', function(evt) {
     	var data = null;
@@ -91,21 +91,21 @@ $(document).ready(function() {
         if (typeof file == "undefined") {
             return;
         }
-        
+
         var reader = new FileReader();
         //reader.readAsText(file); // 파일 내용 읽기
         reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
         reader.onload = function(event) {
             if (typeof event.target.result != "undefined") {
-                                    
+
                 // 그리드 CSV 데이터 적용시킴
                 AUIGrid.setCsvGridData(uploadGrid, event.target.result, false);
-                
+
                 //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
                 AUIGrid.removeRow(uploadGrid,0);
-                
+
                 fn_checkNewAttend();
-                
+
             } else {
                 alert('No data to import!');
             }
@@ -115,7 +115,7 @@ $(document).ready(function() {
             alert('Unable to read ' + file.fileName);
         };
     });
-    
+
 });
 
 function fn_checkNewAttend(){
@@ -125,21 +125,21 @@ function fn_checkNewAttend(){
     Common.ajax("POST", "/organization/training/chkNewAttendList.do", data, function(result)    {
 
         console.log("성공." + JSON.stringify(result));
-        console.log("data : " + result.data);              
-                                
+        console.log("data : " + result.data);
+
         AUIGrid.setGridData(atteRgistGridID, result.data);
-                
+
         AUIGrid.setProp(atteRgistGridID, "rowStyleFunction", function(rowIndex, item) {
-            if(item.chkFlag == "Y") { 
+            if(item.chkFlag == "Y") {
                 return "my-row-style";
             }
             return "";
 
-        }); 
+        });
 
         // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
         AUIGrid.update(atteRgistGridID);
-                
+
         }
     , function(jqXHR, textStatus, errorThrown){
          try {
@@ -159,7 +159,7 @@ function fn_checkNewAttend(){
 
 //그리드 헤더 클릭 핸들러
 function atteRgistHeaderClickHandler(event) {
-    
+
     // isActive 칼럼 클릭 한 경우
     if(event.dataField == "isActive") {
         if(event.orgEvent.target.id == "atteRgistAllCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
@@ -172,9 +172,9 @@ function atteRgistHeaderClickHandler(event) {
 
 // 전체 체크 설정, 전체 체크 해제 하기
 function atteRgistCheckAll(isChecked) {
-    
-     var idx = AUIGrid.getRowCount(atteRgistGridID); 
-    
+
+     var idx = AUIGrid.getRowCount(atteRgistGridID);
+
     // 그리드의 전체 데이터를 대상으로 isActive 필드를 "Active" 또는 "Inactive" 로 바꿈.
     if(isChecked) {
         for(var i = 0; i < idx; i++){
@@ -184,7 +184,7 @@ function atteRgistCheckAll(isChecked) {
     } else {
         AUIGrid.updateAllToValue(atteRgistGridID, "isActive", "Inactive");
     }
-    
+
     // 헤더 체크 박스 일치시킴.
     document.getElementById("atteRgistAllCheckbox").checked = isChecked;
 }
@@ -211,7 +211,7 @@ function to_json(workbook) {
  var result = {};
  workbook.SheetNames.forEach(function(sheetName) {
      var roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName], {defval:""});
-     
+
      if(roa.length > 0){
          result[sheetName] = roa;
      }
@@ -220,17 +220,17 @@ function to_json(workbook) {
 }
 
 function setAUIGrid(jsonData) {
- 
+
  var firstRow = jsonData;
- 
+
  console.log(firstRow);
- 
+
  if(typeof firstRow == "undefined") {
      Common.alert("* Can Convert File. Please Try Again.");
      $("#fileSelector").val("");
      return;
  }
- 
+
     var gridArray = [];
     $.each(firstRow, function(key , value) {
     	var keyValue = {};
@@ -262,13 +262,13 @@ function setAUIGrid(jsonData) {
         $("#fileSelector").val("");
         return;
     }
- 
+
     AUIGrid.setGridData(atteRgistGridID, gridArray);
 }; //Create Grid End
 
 //최초 그리드 생성..
 function createInitGrid() {
- 
+
 	var upColLayout = [ {
         dataField : "0",
         headerText : "nric",
@@ -278,7 +278,7 @@ function createInitGrid() {
         headerText : "result",
         width : 100
     }];
-	
+
 	var atteMemRgistColumnLayout = [
                         {dataField : "memCode" , headerText : "Member Code", width : "33%",  editable : false },
                         {dataField : "coursDMemNric" , headerText : "NRIC", width : "33%",  editable : false },
@@ -298,7 +298,7 @@ function createInitGrid() {
 	var atteRgistGridPros = {
 			showFooter : true
 			};
-	
+
 	var upOptions = {
             showStateColumn:false,
             showRowNumColumn    : true,
@@ -306,7 +306,7 @@ function createInitGrid() {
             editable : false,
             softRemoveRowMode:false
       };
-	
+
 	// 푸터 설정
     var footerObject = [ {
         labelText : "Total number",
@@ -321,11 +321,11 @@ function createInitGrid() {
          * footerValues : 푸터 전체 operation 수행된 값 또는 labelText 값 (Array)
          */
          labelFunction : function(value, columnValues, footerValues) {
-             
+
              // 1월~3 최대값합 : footerValues[1], footerValues[2], footerValues[3] (푸터 설정 대로임)
              // 예를 들어 footerValues[0] 은 "사용자 정의 수식" 임.
              //var newValue = footerValues[1] + footerValues[2] + footerValues[3] - footerValues[4]; // 1~3 월 더한 후 (p1203(3월) 최대값 - 최소값) 빼줌
-             
+
              return AUIGrid.getRowCount(atteRgistGridID);
          }
     }];
@@ -335,7 +335,7 @@ function createInitGrid() {
     }else{
     	atteRgistGridID = AUIGrid.create("#atteRgistGridID", atteRgistColumnLayout, atteRgistGridPros);
     }
-	
+
 	// 푸터 객체 세팅
     AUIGrid.setFooter(atteRgistGridID, footerObject);
 }
@@ -345,29 +345,29 @@ function createInitGrid() {
 //즉, 이것은 IE 10 이상에서는 불필요 (IE8, 9 에서만 해당됨)
 function commitFormSubmit() {
     AUIGrid.showAjaxLoader(atteRgistGridID);
-  
+
     // Submit 을 AJax 로 보내고 받음.
     // ajaxSubmit 을 사용하려면 jQuery Plug-in 인 jquery.form.js 필요함
     // 링크 : http://malsup.com/jquery/form/
-  
+
     $('#form_atteRgist').ajaxSubmit({
        type : "json",
        success : function(responseText, statusText) {
            if(responseText != "error") {
-               
+
                var csvText = responseText;
                console.log(csvText);
-               
+
                // 기본 개행은 \r\n 으로 구분합니다.
                // Linux 계열 서버에서 \n 으로 구분하는 경우가 발생함.
                // 따라서 \n 을 \r\n 으로 바꿔서 그리드에 삽입
-               // 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함. 
+               // 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함.
                csvText = csvText.replace(/\r?\n/g, "\r\n")
                console.log(csvText);
-               
+
                // 그리드 CSV 데이터 적용시킴
                //AUIGrid.setCsvGridData(atteRgistGridID, csvText);
-               
+
                AUIGrid.removeAjaxLoader(atteRgistGridID);
            }
        },
@@ -380,7 +380,7 @@ function commitFormSubmit() {
 function fn_setGridDataByUploadData(pType) {
 	var atteRgistGridData = AUIGrid.getGridData(atteRgistGridID);
 	console.log(atteRgistGridData);
-	
+
 	var idx = AUIGrid.getRowCount(atteRgistGridID);
 	for(var i=0; i < idx; i++){
 		if(AUIGrid.getCellValue(atteRgistGridID, i, "chkFlag") == "Y"){
@@ -422,16 +422,16 @@ function fn_setGridDataByUploadData(pType) {
     var jsonParam = { nricArray : nricArray};
 
     if($("#memTypeYN").val() == 2318){
-    	
+
     	Common.ajax("GET", "/organization/training/getUploadMemList", jsonParam , function(result) {
             console.log("result : "+result)
-            
+
             if(result == null){
                 Common.alert('<b>Member not found.</br>');
                 $("#fileSelector").val("");
                 return;
             }else{
-                
+
            var resultArray = [];
            $.each(result, function(key , value) {
                var resultMap = {};
@@ -440,7 +440,8 @@ function fn_setGridDataByUploadData(pType) {
                  if(k.trim() == "coursDMemNric") {
 //                   if(value[k] == gridArray[key][k]) {  //Template
                          resultMap[k] = v;
-                         resultMap.coursMemShirtSize = gridArray[key].coursMemShirtSize;
+                         /* 2021-01-21 - LaiKW - Commented due to shirt size is not picked up in SQL */
+                         //resultMap.coursMemShirtSize = gridArray[key].coursMemShirtSize;
 //                     }
                  } else {
                      resultMap[k] = v;
@@ -455,13 +456,13 @@ function fn_setGridDataByUploadData(pType) {
                 console.log(newAttendeeGridData);
                 var addArray = [];
                 var updateArray = [];
-               
+
               //Params Setting
                 var strArr = [];
                 for (var idx = 0; idx < newAttendeeGridData.length; idx++) {
-                   strArr.push(newAttendeeGridData[idx].coursDMemNric);   
+                   strArr.push(newAttendeeGridData[idx].coursDMemNric);
                 }
-                
+
                 $.each(resultArray, function(i , o) {
                     var data = null;
                     $.each(o, function(k, v) {
@@ -478,7 +479,7 @@ function fn_setGridDataByUploadData(pType) {
                       }
                     });
                 });
-                
+
                 if(addArray.length > 0) {
                     console.log("add");
                     console.log(addArray);
@@ -496,7 +497,7 @@ function fn_setGridDataByUploadData(pType) {
                         AUIGrid.updateRow(newAttendeeGridID, updateArray[idx], rows[0]);
                     }
                 }
-                
+
                $("#attendeePop").remove();
            } else {
                var atteRgistGridData = AUIGrid.getGridData(atteRgistGridID);
@@ -507,9 +508,9 @@ function fn_setGridDataByUploadData(pType) {
               //Params Setting
                 var strArr = [];
                 for (var idx = 0; idx < atteRgistGridData.length; idx++) {
-                   strArr.push(atteRgistGridData[idx].coursDMemNric);   
+                   strArr.push(atteRgistGridData[idx].coursDMemNric);
                 }
-                
+
                 $.each(resultArray, function(i , o) {
                     var data = null;
                     $.each(o, function(k, v) {
@@ -526,7 +527,7 @@ function fn_setGridDataByUploadData(pType) {
       //                }
                     });
                 });
-                
+
                 if(addArray.length > 0) {
                     console.log("add");
                     console.log(addArray);
@@ -536,24 +537,24 @@ function fn_setGridDataByUploadData(pType) {
                     console.log("update");
                     console.log(updateArray);
                 }
-                
+
                $("#attendeePop").remove();
            }
         }
       });
-      
+
     }else{
     	var atteRgistGridData2 = AUIGrid.getGridData(atteRgistGridID);
         console.log("data2: "+atteRgistGridData2);
-        
+
         var addArray = [];
         var updateArray = [];
-       
+
         var strArr = [];
         for (var idx = 0; idx < atteRgistGridData.length; idx++) {
-           strArr.push(atteRgistGridData[idx].coursDMemNric);   
+           strArr.push(atteRgistGridData[idx].coursDMemNric);
         }
-        
+
     	$.each(gridArray, function(key , value) {
     		var keyValue = {};
 
@@ -566,7 +567,7 @@ function fn_setGridDataByUploadData(pType) {
                     data = value;
                     updateArray.push(data);
                 }
-    			
+
     		});
     	});
     	if(addArray.length > 0) {
@@ -578,12 +579,12 @@ function fn_setGridDataByUploadData(pType) {
             console.log("update2");
             console.log("updateArray : "+JSON.stringify(updateArray));
         }
-        
+
         $("#attendeePop").remove();
     }
-    
-    
-	
+
+
+
 }
 </script>
 
