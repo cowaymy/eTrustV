@@ -1254,8 +1254,8 @@ var TODAY_DD      = "${toDay}";
 
           // Allow Ombak with FAIL status proceed
           if(checkedItems[0]["stkId"] == "1427") {
-              if(checkedItems[0]["code"] != "FAL") {
-                  Common.alert('Ombak only available to reverse for the HS order with FAIL status');
+              if(checkedItems[0]["code"] != "FAL" && checkedItems[0]["code"] != "COM") {
+                  Common.alert('Ombak only available to reverse for the HS order with FAIL/COM status');
                   valid = false;
               }
           } else {
