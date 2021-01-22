@@ -347,6 +347,16 @@
             //Common.popupWin("searchForm", "/sales/customer/customerAddressSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callPrgm : "ORD_REGISTER_BILL_MTH"}, null, true);
         });
+
+        $('#billPreferAddAddrBtn').click(function() {
+            //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
+            Common.popupDiv('/sales/customer/updateCustomerNewAddContactPop.do', {"custId":$('#txtHiddenCustIDOwnt').val(), "callParam" : ""}, null , true ,'_editDiv3New');
+        });
+
+        $('#billPreferSelAddrBtn').click(function() {
+            //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
+            Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callPrgm : "ORD_REGISTER_BILL_PRF"}, null, true);
+        });
     });
 
     function fn_loadBillingGroup(billGrpId, custBillGrpNo, billType, billAddrFull, custBillRem, custBillAddId) {
