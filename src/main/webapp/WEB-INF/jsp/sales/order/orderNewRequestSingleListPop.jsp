@@ -127,8 +127,10 @@
         var todayDd = today.getDate();
         var todayYMD = today.getFullYear() +""+ (todayMm<10 ? '0' + todayMm : todayMm) +""+ (todayDd<10 ? '0' + todayDd : todayDd);
         var callDay = document.viewForm.insCallDt.value;
-
         var callDayValue = callDay.substr(6) + callDay.substr(3,2) + callDay.substr(0,2);
+
+        // reqHasAttchmt is used to differentiate control flow for request with attachment vs request without attachment.
+        var reqHasAttchmt = false;
 
         if(document.viewForm.cmbInvType.value == ""){
             Common.alert("<spring:message code='sal.alert.msg.pleaseSelectAnInvestRequest' />");
@@ -167,9 +169,11 @@
 
         if(document.viewForm.attachInvest.value != ""){
             var formData = Common.getFormData("viewForm");
+            reqHasAttchmt = true;
             Common.ajaxFile("/sales/order/investFileUpload.do", formData
             , function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
             	$("#atchFileGrpId").val(result.atchFileGrpId);
+                fn_orderReqOk();
             }
             , function(jqXHR, textStatus, errorThrown){
                 try {
@@ -187,7 +191,12 @@
              ,{async: true});
         }
 
-        setTimeout(function(){
+        if (!reqHasAttchmt) {
+        	fn_orderReqOk();
+        }
+        //setTimeout(function(){
+
+        function fn_orderReqOk(){
         	console.log("attachment : " + $("#atchFileGrpId").val());
         Common.ajax("GET", "/sales/order/orderNewRequestSingleOk", $("#viewForm").serializeJSON(), function(result) {
 
@@ -214,7 +223,8 @@
               }
               alert("Fail : " + jqXHR.responseJSON.message);
         });
-       },1000);
+        }
+       //},1000);
     }
 
     function setInputFile2(){//인풋파일 세팅하기
