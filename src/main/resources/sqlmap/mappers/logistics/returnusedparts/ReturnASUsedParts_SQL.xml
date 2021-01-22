@@ -45,6 +45,7 @@
       SELECT ROWNUM rnum,
              A.SEQ AS SEQ,
              A.SVC_ORD_ID AS service_order,
+             G.AS_RESULT_NO AS asr_no,
              C.SALES_ORD_NO AS order_no,
              C.CUST_ID AS customer,
              D.NAME AS customer_name,
@@ -53,6 +54,9 @@
              E.STK_CODE AS material_code_actual,
              E.STK_DESC AS material_name,
              A.STK_ID,
+             M.stk_code as product_code,
+             M.stk_desc as product_name,
+             N.CODE_DESC as product_cat,
              A.OLD_SERIAL AS serial_number,
              A.NEW_SERIAL AS serial,
              A.QTY AS qty,
@@ -73,7 +77,11 @@
              (SELECT CODE FROM SYS0005M WHERE BRNCH_ID = F.BRNCH ) code,
              (SELECT NAME FROM SYS0005M WHERE BRNCH_ID = F.BRNCH ) brnch_name,
              J.DEFECT_DESC AS defTyp,
-             K.DEFECT_DESC AS defCde
+             K.DEFECT_DESC AS defCde,
+             TO_CHAR(P.INSTALL_DT,'YYYY/MM/DD') install_dt,
+             CASE WHEN G.AS_SETL_DT IS NOT NULL THEN
+                          MONTHS_BETWEEN(FN_GET_FIRST_DAY_MONTH(G.AS_SETL_DT),FN_GET_FIRST_DAY_MONTH(P.INSTALL_DT)) ELSE
+                          0 END AS as_aging
       FROM LOG0103M A
       JOIN SVC0001D B ON B.AS_NO = A.SVC_ORD_ID
       JOIN SAL0001D C ON B.AS_SO_ID = C.SALES_ORD_ID
@@ -92,6 +100,11 @@
             HAVING SUM(CC.qty) <![CDATA[<>]]> 0) I ON (A.RESULT_ID = I.RESULT_ID)
       LEFT JOIN SYS0100M J ON G.AS_DEFECT_TYPE_ID = J.DEFECT_ID AND J.DEFECT_TYP = 'DT'
       LEFT JOIN SYS0100M K ON G.AS_DEFECT_ID = K.DEFECT_ID AND K.DEFECT_TYP = 'DC'
+      JOIN SAL0002D L ON L.SALES_ORD_ID = C.SALES_ORD_ID
+      JOIN SYS0026M M ON M.STK_ID = L.ITM_STK_ID
+      JOIN SYS0013M N ON N.CODE_ID = M.STK_CTGRY_ID
+      JOIN SAL0046D O ON O.INSTALL_ENTRY_ID = (SELECT MIN(SAL0046D.INSTALL_ENTRY_ID) FROM SAL0046D WHERE SAL0046D.SALES_ORD_ID = C.SALES_ORD_ID AND SAL0046D.STUS_CODE_ID = '4' GROUP BY SAL0046D.SALES_ORD_ID) AND O.SALES_ORD_ID = C.SALES_ORD_ID
+      JOIN SAL0047D P ON O.INSTALL_ENTRY_ID = P.ENTRY_ID
       WHERE 1 = 1
 
       <if test="searchOder != null and searchOder !=''">
@@ -159,6 +172,7 @@
       SELECT ROWNUM rnum,
              A.SEQ AS SEQ,
              A.SVC_ORD_ID AS service_order,
+             G.AS_RESULT_NO AS asr_no,
              C.SALES_ORD_NO AS order_no,
              C.CUST_ID AS customer,
              D.NAME AS customer_name,
@@ -167,6 +181,9 @@
              E.STK_CODE AS material_code_actual,
              E.STK_DESC AS material_name,
              A.STK_ID,
+             M.stk_code as product_code,
+             M.stk_desc as product_name,
+             N.CODE_DESC as product_cat,
              A.OLD_SERIAL AS serial_number,
              A.NEW_SERIAL AS serial,
              A.QTY AS qty,
@@ -187,7 +204,11 @@
              (SELECT CODE FROM SYS0005M WHERE BRNCH_ID = F.BRNCH ) code,
              (SELECT NAME FROM SYS0005M WHERE BRNCH_ID = F.BRNCH ) brnch_name,
              J.DEFECT_DESC AS defTyp,
-             K.DEFECT_DESC AS defCde
+             K.DEFECT_DESC AS defCde,
+             TO_CHAR(P.INSTALL_DT,'YYYY/MM/DD') install_dt,
+             CASE WHEN G.AS_SETL_DT IS NOT NULL THEN
+                          MONTHS_BETWEEN(FN_GET_FIRST_DAY_MONTH(G.AS_SETL_DT),FN_GET_FIRST_DAY_MONTH(P.INSTALL_DT)) ELSE
+                          0 END AS as_aging
       FROM LOG0103M A
       JOIN SVC0108D B ON B.AS_NO = A.SVC_ORD_ID
       JOIN SAL0001D C ON B.AS_SO_ID = C.SALES_ORD_ID
@@ -206,6 +227,11 @@
             HAVING SUM(CC.qty) <![CDATA[<>]]> 0) I ON (A.RESULT_ID = I.RESULT_ID)
       LEFT JOIN SYS0100M J ON G.AS_DEFECT_TYPE_ID = J.DEFECT_ID AND J.DEFECT_TYP = 'DT'
       LEFT JOIN SYS0100M K ON G.AS_DEFECT_ID = K.DEFECT_ID AND K.DEFECT_TYP = 'DC'
+      JOIN SAL0002D L ON L.SALES_ORD_ID = C.SALES_ORD_ID
+      JOIN SYS0026M M ON M.STK_ID = L.ITM_STK_ID
+      JOIN SYS0013M N ON N.CODE_ID = M.STK_CTGRY_ID
+      JOIN SAL0046D O ON O.INSTALL_ENTRY_ID = (SELECT MIN(SAL0046D.INSTALL_ENTRY_ID) FROM SAL0046D WHERE SAL0046D.SALES_ORD_ID = C.SALES_ORD_ID AND SAL0046D.STUS_CODE_ID = '4' GROUP BY SAL0046D.SALES_ORD_ID) AND O.SALES_ORD_ID = C.SALES_ORD_ID
+      JOIN SAL0047D P ON O.INSTALL_ENTRY_ID = P.ENTRY_ID
       WHERE 1 = 1
 
       <if test="searchOder != null and searchOder !=''">

@@ -110,12 +110,47 @@
         editable : false
       },
       {
+          dataField : "asrNo",
+          headerText : "<spring:message code='service.grid.ASRNo'/>",
+          width : 120,
+          height : 30,
+          editable : false
+        },
+      {
         dataField : "orderNo",
         headerText : "<spring:message code='log.head.orderno'/>",
         width : 120,
         height : 30,
         editable : false
       },
+     {
+        dataField : "installDt",
+        headerText : "<spring:message code='service.title.InstallationDate'/>",
+        width : 120,
+        height : 30,
+        editable : false
+      },
+      {
+         dataField : "productCode",
+         headerText : "<spring:message code='sal.text.productCode'/>",
+         width : 120,
+         height : 30,
+         editable : false
+       },
+       {
+          dataField : "productName",
+          headerText : "<spring:message code='sal.text.productName'/>",
+          width : 120,
+          height : 30,
+          editable : false
+       },
+       {
+         dataField : "productCat",
+         headerText : "<spring:message code='sal.text.productCategory'/>",
+         width : 120,
+         height : 30,
+         editable : false
+       },
       {
         dataField : "code",
         headerText : "<spring:message code='log.head.branch'/>",
@@ -177,6 +212,12 @@
         headerText : "<spring:message code='log.head.qty'/>",
         width : 120,
         height : 30
+      },
+      {
+         dataField : "asAging",
+         headerText : "<spring:message code='service.grid.asAging'/>",
+         width : 120,
+         height : 30
       },
       {
         dataField : "noPartsReturn",
