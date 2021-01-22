@@ -22,7 +22,7 @@ public class RoyaltyCustomerListApiDto {
 	private int unit;
 	private int outst;
 	private int usageMth;
-	private int ctgryDesc;
+	private String ctgryDesc;
 
 /*	@ApiModelProperty(value = "waterPurifierResult")
 	private List<waterPurifierResult> waterPurifierResult;*/
@@ -365,11 +365,13 @@ public class RoyaltyCustomerListApiDto {
 	public void setUsageMth(int usageMth) {
 		this.usageMth = usageMth;
 	}
-	public int getCtgryDesc() {
+	public String getCtgryDesc() {
 		return ctgryDesc;
 	}
-	public void setCtgryDesc(int ctgryDesc) {
+	public void setCtgryDesc(String ctgryDesc) {
 		this.ctgryDesc = ctgryDesc;
 	}
+
+
 
 }
