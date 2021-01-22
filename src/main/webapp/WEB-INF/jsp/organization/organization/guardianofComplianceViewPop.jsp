@@ -25,21 +25,24 @@ $(document).ready(function(){
         $('#status').addClass("blind");
         $('#save').addClass("blind");
         $('#ccontent').addClass("blind");
+
     } else {
         $('#empty').removeClass("blind");
         $('#status').removeClass("blind");
-        $('#save').removeClass("blind");
         $('#ccontent').removeClass("blind");
+
+        if(reqstStus == 10 || reqstStus == 36) {
+            $('#save').addClass("blind");
+            $("#cmbreqStatus").attr("readonly", "readonly");
+        } else {
+            $('#save').removeClass("blind");
+        }
     }
 
     console.log("Person In Charge :: " + "${guardianofCompliance.personInChrg}");
     $("#changePerson option[value='" + "${guardianofCompliance.personInChrg}" +"']").attr("selected", true);
 
     $("#cmbreqStatus option[value='" + "${guardianofCompliance.reqstStusId}" + "']").attr('selected', true);
-
-    if("${guardianofCompliance.reqstStusId}" != "60") {
-        $("#cmbreqStatus").attr("disabled", true);
-    }
 });
 
 function fn_GuardianRemarkGrid() {
