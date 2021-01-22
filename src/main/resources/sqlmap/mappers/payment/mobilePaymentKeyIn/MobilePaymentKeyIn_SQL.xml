@@ -163,16 +163,16 @@
 
     ) A LEFT JOIN (SELECT RENT_SO_ID, SUM(RENT_AMT) AS S FROM PAY0022D GROUP BY RENT_SO_ID) B ON B.RENT_SO_ID = A.ORD_ID
     LEFT JOIN ORG0001D C ON A.CRT_USER_NM = C.MEM_CODE
-    LEFT JOIN ORG0005D D ON C.MEM_ID = D.MEM_ID
+    LEFT JOIN ORG1001V D ON C.MEM_ID = D.MEM_ID
       <where>
         <if test="hidOrgCode != null and hidOrgCode != '' ">
-          AND D.LAST_ORG_CODE = TO_CHAR(#{hidOrgCode})
+          AND D.ORG_CODE = TO_CHAR(#{hidOrgCode})
         </if>
         <if test="hidGrpCode != null and hidGrpCode != '' ">
-          AND D.LAST_GRP_CODE = #{hidGrpCode}
+          AND D.GRP_CODE = #{hidGrpCode}
         </if>
         <if test="hidDeptCode != null and hidDeptCode != '' ">
-          AND D.LAST_DEPT_CODE = #{hidDeptCode}
+          AND D.DEPT_CODE = #{hidDeptCode}
         </if>
      </where>
     ORDER BY A.MOB_TICKET_NO DESC
