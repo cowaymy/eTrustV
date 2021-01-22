@@ -175,6 +175,13 @@ function fn_report(type) {
         $("#NSD_YEAR").val(year);
         $("#viewType").val('EXCEL');
     }
+    else if(dataForm.reportType.value=="18"){
+        $("#reportFileName").val('/sales/Net_Sales_Daily_Report_V2.rpt');
+        $("#reportDownFileName").val("Net_Sales_Daily_Report_V2_" + $("#yyyymmDate").val());
+        $("#NSD_MONTH").val(month);
+        $("#NSD_YEAR").val(year);
+        $("#viewType").val('EXCEL');
+    }
 
 
     var option = {
@@ -239,6 +246,7 @@ function fn_report(type) {
         <option value="15">M_Mem_Sales_By_Category</option>
         <option value="16">Sales Analysis Report</option>
         <option value="17">Net Sales Daily Report</option>
+        <option value="18">Net Sales Daily Report V2</option>
     </select>
     </td>
 </tr>
