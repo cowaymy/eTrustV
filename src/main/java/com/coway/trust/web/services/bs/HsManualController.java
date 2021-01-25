@@ -1208,47 +1208,53 @@ public class HsManualController {
                                                                  // - ADDED BY
                                                                  // TPY -
                                                                  // 18/06/2019
-    logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ITM_STK_ID : " + stkInfo.get("itmStkId").toString());
-    String stkItem = stkInfo.get("itmStkId").toString();
-    if (stkItem.equals("1427")) { // OMBAK - STK ID // 1243 - DEV // 1427 - PRD
+    String stkItem = "";
+    if(stkInfo != null) {
+        logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ITM_STK_ID : " + stkInfo.get("itmStkId").toString());
+        stkItem = stkInfo.get("itmStkId").toString();
+    }
+
+    if (stkItem.equals("1427") || (stkInfo == null && params.get("stkId").toString().equals("1427"))) { // OMBAK - STK ID // 1243 - DEV // 1427 - PRD
 
       // ADD FUNCTION TO REVERSE HS
       hsResultNo = hsManualService.reverseHSResult(params, sessionVO);
       msg2 += "<br / > HS RESULT NO : " + hsResultNo;
 
-      if (stkInfo.get("brNo") != null) {
-        params.put("memoAdjustInvoiceNo", stkInfo.get("brNo").toString());
-        params.put("memoAdjustTotalAmount", stkInfo.get("invcItmAmtDue").toString());
-        params.put("MemoItemInvoiceItemID", stkInfo.get("txinvoiceitemid").toString());
-        params.put("memoItemInvoiceItmQty", stkInfo.get("invcItmQty").toString());
-        params.put("memoItemCreditAccID", "39"); // TRADE RECEIVABLE - A/S
-        params.put("memoItemDebitAccID", "167");// SALES - A/S
-        params.put("memoItemTaxCodeID", 0);
-        params.put("memoItemStatusID", "4");
-        params.put("memoItemRemark", "HS REVERSAL - OMBAK");
-        params.put("memoItemGSTRate", stkInfo.get("invcItmGstRate").toString());
-        params.put("memoItemCharges", stkInfo.get("invcItmChrg").toString());
-        params.put("memoItemTaxes", stkInfo.get("invcItmGstTxs").toString());
-        params.put("memoItemAmount", stkInfo.get("invcItmAmtDue").toString());
+      if(stkInfo != null) {
+          if (stkInfo.get("brNo") != null) {
+              params.put("memoAdjustInvoiceNo", stkInfo.get("brNo").toString());
+              params.put("memoAdjustTotalAmount", stkInfo.get("invcItmAmtDue").toString());
+              params.put("MemoItemInvoiceItemID", stkInfo.get("txinvoiceitemid").toString());
+              params.put("memoItemInvoiceItmQty", stkInfo.get("invcItmQty").toString());
+              params.put("memoItemCreditAccID", "39"); // TRADE RECEIVABLE - A/S
+              params.put("memoItemDebitAccID", "167");// SALES - A/S
+              params.put("memoItemTaxCodeID", 0);
+              params.put("memoItemStatusID", "4");
+              params.put("memoItemRemark", "HS REVERSAL - OMBAK");
+              params.put("memoItemGSTRate", stkInfo.get("invcItmGstRate").toString());
+              params.put("memoItemCharges", stkInfo.get("invcItmChrg").toString());
+              params.put("memoItemTaxes", stkInfo.get("invcItmGstTxs").toString());
+              params.put("memoItemAmount", stkInfo.get("invcItmAmtDue").toString());
 
-        params.put("invcSvcNo", stkInfo.get("invcSvcNo").toString());
-        params.put("asId", stkInfo.get("asId").toString());
-        params.put("bsResultPartId", stkInfo.get("bsResultPartId").toString());
-        params.put("invcItmUnitPrc", CommonUtils.nvl(stkInfo.get("invcItmUnitPrc")));
-        params.put("invcItmChrg", stkInfo.get("invcItmChrg").toString());
-        params.put("invcItmDesc1", stkInfo.get("invcItmDesc1").toString());
+              params.put("invcSvcNo", stkInfo.get("invcSvcNo").toString());
+              params.put("asId", stkInfo.get("asId").toString());
+              params.put("bsResultPartId", stkInfo.get("bsResultPartId").toString());
+              params.put("invcItmUnitPrc", CommonUtils.nvl(stkInfo.get("invcItmUnitPrc")));
+              params.put("invcItmChrg", stkInfo.get("invcItmChrg").toString());
+              params.put("invcItmDesc1", stkInfo.get("invcItmDesc1").toString());
 
-        logger.debug("hsReversal params --- : " + params);
+              logger.debug("hsReversal params --- : " + params);
 
-        // ADD FUNCTION TO CREATE CN BILLING AND INVOICE
-        CNRefNo = hsManualService.createCreditNote(params, sessionVO);
+              // ADD FUNCTION TO CREATE CN BILLING AND INVOICE
+              CNRefNo = hsManualService.createCreditNote(params, sessionVO);
 
-        // ADD FUNCTION TO REVERSE AS
-        ASResultNo = hsManualService.createASResults(params, sessionVO);
+              // ADD FUNCTION TO REVERSE AS
+              ASResultNo = hsManualService.createASResults(params, sessionVO);
 
-        ReverseASResultNo = hsManualService.createReverseASResults(params, sessionVO);
+              ReverseASResultNo = hsManualService.createReverseASResults(params, sessionVO);
 
-        msg2 += "<br /> CREDIT NOTE REF NO : " + CNRefNo + "<br /> AS REF : " + ReverseASResultNo;
+              msg2 += "<br /> CREDIT NOTE REF NO : " + CNRefNo + "<br /> AS REF : " + ReverseASResultNo;
+            }
       }
 
       msg = "HS REVERSAL SUCCESSFUL. <br /> HS ORDER NO : " + stkInfo.get("salesOrdNo").toString() + "<br />  HS NO : "
