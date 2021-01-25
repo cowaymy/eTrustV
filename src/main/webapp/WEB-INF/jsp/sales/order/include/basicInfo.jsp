@@ -153,7 +153,9 @@
     <th scope="row">SST Type</th>
     <td colspan="1">${orderDetail.basicInfo.corpCustType}</td>
     <th scope="row">Agreement Type</th>
-    <td colspan="3">${orderDetail.basicInfo.agreementType}</td>
+    <td colspan="1">${orderDetail.basicInfo.agreementType}</td>
+    <th scope="row">Product Usage Month</th>
+    <td colspan="1">${orderDetail.prodUsgMthInfo.productUsageMonth}</td>
 </tr>
 </tbody>
 </table><!-- table end -->
