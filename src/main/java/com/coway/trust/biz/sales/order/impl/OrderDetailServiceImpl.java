@@ -84,7 +84,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     EgovMap grntnfo = null;
     EgovMap orderCfgInfo = orderDetailMapper.selectOrderConfigInfo(params);
     EgovMap gstCertInfo = orderDetailMapper.selectGSTCertInfo(params);
-    EgovMap prodUsgMthInfo = orderDetailMapper.getProductUsageMonth(params);
+    EgovMap prodUsgMthInfo = orderDetailMapper.selectProductUsageMonth(params);
 
     params.put("viewSort", "1");
     List<EgovMap> callLog = orderDetailMapper.selectCallLogList(params);

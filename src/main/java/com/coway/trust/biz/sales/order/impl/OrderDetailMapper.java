@@ -108,6 +108,6 @@ public interface OrderDetailMapper {
 
   List<EgovMap> getInstAsPSIData(Map<String, Object> params);
 
-  EgovMap getProductUsageMonth(Map<String, Object> params);
+  EgovMap selectProductUsageMonth(Map<String, Object> params);
 
 }

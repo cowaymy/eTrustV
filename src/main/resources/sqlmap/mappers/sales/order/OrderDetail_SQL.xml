@@ -1554,25 +1554,29 @@
     ) A ORDER BY A.SEQ, A.COMPLETE_DT ASC
   </select>
 
-  <select id="getProductUsageMonth" parameterType="Map" resultType="egovMap">
-    SELECT
-    A.SALES_ORD_ID
-    , ROUND(
-        CASE
-            WHEN B.SO_EXCHG_UPD_DT IS NULL THEN MONTHS_BETWEEN(SYSDATE,TO_DATE(A.INSTALL_DT, 'DD/MM/YYYY'))
-            ELSE MONTHS_BETWEEN(SYSDATE, TO_DATE(B.SO_EXCHG_UPD_DT, 'DD/MM/YYYY'))
-        END
-    ) AS PRODUCT_USAGE_MONTH
-    FROM
-    SAL0046D A
-    LEFT JOIN (
+  <select id="selectProductUsageMonth" parameterType="Map" resultType="egovMap">
+  <![CDATA[
+   SELECT * FROM (
+        SELECT
+        A.SALES_ORD_ID
+        , A.INSTALL_ENTRY_ID
+        , ROUND(
+            CASE
+                WHEN B.SO_EXCHG_UPD_DT IS NULL THEN MONTHS_BETWEEN(SYSDATE, A.INSTALL_DT)
+                ELSE MONTHS_BETWEEN(SYSDATE, B.SO_EXCHG_UPD_DT)
+            END
+        ) AS PRODUCT_USAGE_MONTH
+        FROM SAL0046D A
+        LEFT JOIN (
         SELECT * FROM SAL0004D WHERE SO_EXCHG_ID =
-            (
-                SELECT MAX(SO_EXCHG_ID)
+            (   SELECT MAX(SO_EXCHG_ID)
                 FROM SAL0004D
                 WHERE SO_ID = #{salesOrderId} AND SO_EXCHG_TYPE_ID = 284 AND SO_EXCHG_STUS_ID = 4
             )
         ) B ON A.SALES_ORD_ID = B.SO_ID
-    WHERE A.SALES_ORD_ID = #{salesOrderId} AND STUS_CODE_ID = 4
+        WHERE A.SALES_ORD_ID = #{salesOrderId} AND A.STUS_CODE_ID = 4
+        ORDER BY A.INSTALL_ENTRY_ID ASC )
+    WHERE ROWNUM <= 1
+    ]]>
   </select>
 </mapper>
