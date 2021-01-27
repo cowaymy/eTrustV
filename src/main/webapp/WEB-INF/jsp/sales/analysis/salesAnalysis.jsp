@@ -183,6 +183,26 @@ function fn_report(type) {
         $("#viewType").val('EXCEL');
     }
 
+    else if(dataForm.reportType.value=="19"){
+        $("#reportFileName").val('/sales/M_Sales_Report_Plan_By_Channel_and_Type.rpt');
+        $("#reportDownFileName").val("M_Sales_Report_Plan_By_Channel_and_Type_" + $("#accReportYear").val());
+        $("#NSD_YEAR").val(year2);
+        $("#viewType").val('EXCEL');
+    }
+
+    else if(dataForm.reportType.value=="20"){
+        $("#reportFileName").val('/sales/M_Sales_Report_Plan_By_GM.rpt');
+        $("#reportDownFileName").val("M_Sales_Report_Plan_By_GM" + $("#accReportYear").val());
+        $("#NSD_YEAR").val(year2);
+        $("#viewType").val('EXCEL');
+    }
+
+    else if(dataForm.reportType.value=="21"){
+        $("#reportFileName").val('/sales/M_Sales_Report_Plan_By_Category.rpt');
+        $("#reportDownFileName").val("M_Sales_Report_Plan_By_Category_" + $("#accReportYear").val());
+        $("#NSD_YEAR").val(year2);
+        $("#viewType").val('EXCEL');
+    }
 
     var option = {
         isProcedure : false
@@ -247,6 +267,9 @@ function fn_report(type) {
         <option value="16">Sales Analysis Report</option>
         <option value="17">Net Sales Daily Report</option>
         <option value="18">Net Sales Daily Report V2</option>
+        <option value="19">M_Sales_Report_Plan_By_Channel_and_Type</option>
+        <option value="20">M_Sales_Report_Plan_By_GM</option>
+        <option value="21">M_Sales_Report_Plan_By_Category</option>
     </select>
     </td>
 </tr>
