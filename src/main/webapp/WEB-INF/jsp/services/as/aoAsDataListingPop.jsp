@@ -42,7 +42,6 @@
 			var reqDateFrom = "1900-01-01";
 			var reqDateTo = "1900-01-01";
 			var branchID =  $("#cmbbranchId1").val();
-            alert (branchID);
 			if ($("#reqStrDate").val() != '' && $("#reqEndDate").val() != ''
 					&& $("#reqStrDate").val() != null
 					&& $("#reqEndDate").val() != null) {
