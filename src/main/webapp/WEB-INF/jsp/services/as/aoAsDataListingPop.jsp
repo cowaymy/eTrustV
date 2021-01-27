@@ -41,7 +41,7 @@
 		if (fn_validation()) {
 			var reqDateFrom = "1900-01-01";
 			var reqDateTo = "1900-01-01";
-			var branchID =  $("#cmbbranchId1").val();
+			var branchID =  $("#cmbbranchId1").val(); 
 			if ($("#reqStrDate").val() != '' && $("#reqEndDate").val() != ''
 					&& $("#reqStrDate").val() != null
 					&& $("#reqEndDate").val() != null) {
