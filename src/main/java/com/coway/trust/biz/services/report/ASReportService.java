@@ -33,4 +33,6 @@ public interface ASReportService {
 
   List<EgovMap> selectAsYsAge();
 
+  List<EgovMap> selectBranchList(Map<String, Object> params);
+
 }

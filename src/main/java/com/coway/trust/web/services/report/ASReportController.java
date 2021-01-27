@@ -16,140 +16,160 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.services.report.ASReportService;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /*********************************************************************************************
- * DATE          PIC        VERSION     COMMENT
- *--------------------------------------------------------------------------------------------
- * 26/07/2019    ONGHC      1.0.1       - Add Recall Status
- * 17/09/2019    ONGHC      1.0.2       - Amend asLedgerPop
- * 03/10/2019    ONGHC      1.0.3       - Add AS Raw Report for 31Days
+ * DATE PIC VERSION COMMENT --------------------------------------------------------------------------------------------
+ * 26/07/2019 ONGHC 1.0.1 - Add Recall Status 17/09/2019 ONGHC 1.0.2 - Amend asLedgerPop 03/10/2019 ONGHC 1.0.3 - Add AS
+ * Raw Report for 31Days 25/01/2021 KV 1.0.4 - Add AOAS Data Listing- Ombak
  *********************************************************************************************/
 
 @Controller
 @RequestMapping(value = "/services/as/report")
 public class ASReportController {
-  private static final Logger logger = LoggerFactory.getLogger(ASReportController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ASReportController.class);
 
-  @Resource(name = "ASReportService")
-  private ASReportService ASReportService;
+	@Resource(name = "ASReportService")
+	private ASReportService ASReportService;
 
-  @RequestMapping(value = "/asReportPop.do")
-  public String asReportPop(@RequestParam Map<String, Object> params, ModelMap model) {
-    EgovMap orderNum = ASReportService.selectOrderNum();
-    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3,
-        SalesConstants.DEFAULT_DATE_FORMAT1);
-    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
-    model.addAttribute("orderNum", orderNum);
-    // 호출될 화면
-    return "services/as/asReportPop";
-  }
+	@RequestMapping(value = "/asReportPop.do")
+	public String asReportPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		EgovMap orderNum = ASReportService.selectOrderNum();
+		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3,
+				SalesConstants.DEFAULT_DATE_FORMAT1);
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+		model.addAttribute("orderNum", orderNum);
+		// 호출될 화면
+		return "services/as/asReportPop";
+	}
 
-  /**
-   * Search rule book management list
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
-  @RequestMapping(value = "/selectMemberCodeList.do", method = RequestMethod.GET)
-  public ResponseEntity<List<EgovMap>> selectMemberCode(@RequestParam Map<String, Object> params,
-      HttpServletRequest request, ModelMap model) {
-    logger.debug("params {}", params);
-    /*
-     * BY KV - branch - CT
-     */
-    List<EgovMap> memberCode = ASReportService.selectMemberCodeList(params);
-    // model.addAttribute("branchList", branchList);
-    logger.debug("memberCode {}", memberCode);
-    return ResponseEntity.ok(memberCode);
-  }
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectMemberCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMemberCode(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		/*
+		 * BY KV - branch - CT
+		 */
+		List<EgovMap> memberCode = ASReportService.selectMemberCodeList(params);
+		// model.addAttribute("branchList", branchList);
+		logger.debug("memberCode {}", memberCode);
+		return ResponseEntity.ok(memberCode);
+	}
 
-  @RequestMapping(value = "/asRawDataPop.do")
-  public String asRawDataPop(@RequestParam Map<String, Object> params, ModelMap model) {
-    model.addAttribute("ind", params.get("ind"));
-    return "services/as/asRawDataPop";
-  }
+	@RequestMapping(value = "/asRawDataPop.do")
+	public String asRawDataPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("ind", params.get("ind"));
+		return "services/as/asRawDataPop";
+	}
 
-  @RequestMapping(value = "/asYellowSheetPop.do")
-  public String asYellowSheetPop(@RequestParam Map<String, Object> params, ModelMap model) {
-    List<EgovMap> asYsTyp = ASReportService.selectAsYsTyp();
-    model.addAttribute("asYsTyp", asYsTyp);
+	@RequestMapping(value = "/asYellowSheetPop.do")
+	public String asYellowSheetPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> asYsTyp = ASReportService.selectAsYsTyp();
+		model.addAttribute("asYsTyp", asYsTyp);
 
-    List<EgovMap> asYsAge = ASReportService.selectAsYsAge();
-    model.addAttribute("asYsAge", asYsAge);
-    return "services/as/asYellowSheetPop";
-  }
+		List<EgovMap> asYsAge = ASReportService.selectAsYsAge();
+		model.addAttribute("asYsAge", asYsAge);
+		return "services/as/asYellowSheetPop";
+	}
 
-  @RequestMapping(value = "/asLogBookListPop.do")
-  public String asPerformanceReportPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	/* KV */
+	@RequestMapping(value = "/aoAsDataListingPop.do")
+	public String aoAsDataListingPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		params.put("memberLevel", sessionVO.getMemberLevel());
+		params.put("userName", sessionVO.getUserName());
+		params.put("userType", sessionVO.getUserTypeId());
 
-    List<EgovMap> asLogBookTyp = ASReportService.selectAsLogBookTyp();
-    model.addAttribute("asLogBookTyp", asLogBookTyp);
+		List<EgovMap> branchList = ASReportService.selectBranchList(params);
 
-    List<EgovMap> asLogBookGrp= ASReportService.selectAsLogBookGrp();
-    model.addAttribute("asLogBookGrp", asLogBookGrp);
+		logger.debug("=======================================================================================");
+		logger.debug("==============aoAsDataListingPop params{} ", params);
+		logger.debug("=======================================================================================");
 
-    return "services/as/asLogBookListPop";
-  }
+		model.addAttribute("branchList", branchList);
+		model.addAttribute("userName", sessionVO.getUserName());
+		model.addAttribute("memberLevel", sessionVO.getMemberLevel());
+		model.addAttribute("userType", sessionVO.getUserTypeId());
 
-  @RequestMapping(value = "/asSummaryListPop.do")
-  public String asSummaryListPop(@RequestParam Map<String, Object> params, ModelMap model) {
-    List<EgovMap> asSumTyp = ASReportService.selectAsSumTyp();
-    model.addAttribute("asSumTyp", asSumTyp);
+		return "services/as/aoAsDataListingPop";
+	}
 
-    List<EgovMap> asSumStat = ASReportService.selectAsSumStat();
-    model.addAttribute("asSumStat", asSumStat);
+	@RequestMapping(value = "/asLogBookListPop.do")
+	public String asPerformanceReportPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-    List<EgovMap> asSumGrp= ASReportService.selectAsLogBookGrp();
-    model.addAttribute("asSumGrp", asSumGrp);
-    return "services/as/asSummaryListPop";
-  }
+		List<EgovMap> asLogBookTyp = ASReportService.selectAsLogBookTyp();
+		model.addAttribute("asLogBookTyp", asLogBookTyp);
 
-  @RequestMapping(value = "/asLedgerPop.do")
-  public String asLedgerPop(@RequestParam Map<String, Object> params, ModelMap model) {
-    logger.debug("params {}", params);
+		List<EgovMap> asLogBookGrp = ASReportService.selectAsLogBookGrp();
+		model.addAttribute("asLogBookGrp", asLogBookGrp);
 
-    model.addAttribute("ASNo", params.get("ASNO"));
-    // 호출될 화면
-    return "services/as/asLedgerPop";
-  }
+		return "services/as/asLogBookListPop";
+	}
 
-  /**
-   * Search rule book management list
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
-  @RequestMapping(value = "/getViewLedger.do", method = RequestMethod.GET)
-  public ResponseEntity<List<EgovMap>> getViewLedger(@RequestParam Map<String, Object> params,
-      HttpServletRequest request, ModelMap model) {
-    List<EgovMap> viewLedger = ASReportService.selectViewLedger(params);
-    return ResponseEntity.ok(viewLedger);
-  }
+	@RequestMapping(value = "/asSummaryListPop.do")
+	public String asSummaryListPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> asSumTyp = ASReportService.selectAsSumTyp();
+		model.addAttribute("asSumTyp", asSumTyp);
 
-  /**
-   * Search rule book management list
-   *
-   * @param request
-   * @param model
-   * @return
-   * @throws Exception
-   */
-  @RequestMapping(value = "/selectMemCodeList.do", method = RequestMethod.GET)
-  public ResponseEntity<List<EgovMap>> selectMemCodeList(@RequestParam Map<String, Object> params,
-      HttpServletRequest request, ModelMap model) {
-    logger.debug("params {}", params);
-    List<EgovMap> memberCode = ASReportService.selectMemCodeList();
-    // model.addAttribute("branchList", branchList);
-    logger.debug("memberCode {}", memberCode);
-    return ResponseEntity.ok(memberCode);
-  }
+		List<EgovMap> asSumStat = ASReportService.selectAsSumStat();
+		model.addAttribute("asSumStat", asSumStat);
+
+		List<EgovMap> asSumGrp = ASReportService.selectAsLogBookGrp();
+		model.addAttribute("asSumGrp", asSumGrp);
+		return "services/as/asSummaryListPop";
+	}
+
+	@RequestMapping(value = "/asLedgerPop.do")
+	public String asLedgerPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		logger.debug("params {}", params);
+
+		model.addAttribute("ASNo", params.get("ASNO"));
+		// 호출될 화면
+		return "services/as/asLedgerPop";
+	}
+
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getViewLedger.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getViewLedger(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+		List<EgovMap> viewLedger = ASReportService.selectViewLedger(params);
+		return ResponseEntity.ok(viewLedger);
+	}
+
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectMemCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMemCodeList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> memberCode = ASReportService.selectMemCodeList();
+		// model.addAttribute("branchList", branchList);
+		logger.debug("memberCode {}", memberCode);
+		return ResponseEntity.ok(memberCode);
+	}
 
 }

@@ -943,6 +943,12 @@
     }
   }
 
+  /*KV*/
+  function fn_aoAsDataListing() {
+	  Common.popupDiv("/services/as/report/aoAsDataListingPop.do", null, null, true, '');
+	  }
+
+
   function fn_getDateGap(sdate, edate) {
     var startArr, endArr;
 
@@ -1229,6 +1235,15 @@
                    code='service.btn.MobileFailListAS' /></a>
               </p>
           </li>
+          <!-- By KV - AOAS Data Listing -->
+         <c:if test="${PAGE_AUTH.funcUserDefine12 == 'Y'}">
+         <li>
+          <p class="link_btn type2">
+           <a href="#" onclick="fn_aoAsDataListing()"><spring:message code='service.btn.aoAsDataListOmbak'/></a>
+          </p>
+         </li>
+        </c:if>
+
        </c:if>
       </ul>
       <p class="hide_btn">

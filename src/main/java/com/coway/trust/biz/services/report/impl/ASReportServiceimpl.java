@@ -74,5 +74,8 @@ public class ASReportServiceimpl extends EgovAbstractServiceImpl implements ASRe
     return ASReportMapper.selectAsYsAge();
   }
 
-
+  @Override
+  public List<EgovMap> selectBranchList(Map<String, Object> params) {
+    return ASReportMapper.selectBranchList(params);
+  }
 }

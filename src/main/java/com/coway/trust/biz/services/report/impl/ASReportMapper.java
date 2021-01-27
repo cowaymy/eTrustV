@@ -34,4 +34,6 @@ public interface ASReportMapper {
   List<EgovMap> selectAsYsTyp();
 
   List<EgovMap> selectAsYsAge();
+
+  List<EgovMap> selectBranchList(Map<String, Object> params);
 }
