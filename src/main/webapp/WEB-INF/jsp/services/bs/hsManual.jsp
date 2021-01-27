@@ -1283,6 +1283,8 @@ var TODAY_DD      = "${toDay}";
             var schdulId = "";
             var serialRequireChkYn = "";
             var stkId = "";
+            var salesOrdNo = "";
+            var hsNo = "";
 
             for (var i = 0, len = checkedItems.length; i < len; i++) {
                 rowItem = checkedItems[i];
@@ -1290,6 +1292,8 @@ var TODAY_DD      = "${toDay}";
                 salesOrdId = rowItem.salesOrdId;
                 serialRequireChkYn = rowItem.serialRequireChkYn;
                 stkId = rowItem.stkId;
+                salesOrdNo = rowItem.salesOrdNo;
+                hsNo = rowItem.no;
             }
 
             var url = "";
@@ -1302,7 +1306,7 @@ var TODAY_DD      = "${toDay}";
             // KR-OHK Serial Check add
             Common.confirm("Are you sure want to reverse this HS ?", function() {
                 console.log("schdulId :: " + schdulId + "  salesOrdId :: " + salesOrdId + "  revInd :: " + i);
-                Common.ajax("GET", url,  {schdulId : schdulId , salesOrdId : salesOrdId, serialRequireChkYn : serialRequireChkYn, revInd : i, stkId : stkId} , function(result) {
+                Common.ajax("GET", url,  {schdulId : schdulId , salesOrdId : salesOrdId, serialRequireChkYn : serialRequireChkYn, revInd : i, stkId : stkId, salesOrdNo : salesOrdNo, hsNo : hsNo} , function(result) {
                     if(result == null || result == "") {
                         Common.alert("HS Reverse Failed.");
                         return;

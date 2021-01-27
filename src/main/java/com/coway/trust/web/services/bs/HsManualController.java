@@ -1197,6 +1197,9 @@ public class HsManualController {
     String msg = "";
     String msg2 = "";
 
+    String salesOrdNo = params.get("salesordNo").toString();
+    String hsNo = params.get("hsNo").toString();
+
     String hsResultNo = "";
     String CNRefNo = "";
     String ASResultNo = "";
@@ -1257,8 +1260,12 @@ public class HsManualController {
             }
       }
 
-      msg = "HS REVERSAL SUCCESSFUL. <br /> HS ORDER NO : " + stkInfo.get("salesOrdNo").toString() + "<br />  HS NO : "
-          + stkInfo.get("no").toString() + msg2;
+      if(stkInfo != null) {
+          salesOrdNo = stkInfo.get("salesOrdNo").toString();
+          hsNo = stkInfo.get("no").toString();
+      }
+
+      msg = "HS REVERSAL SUCCESSFUL. <br /> HS ORDER NO : " + salesOrdNo + "<br />  HS NO : " + hsNo + msg2;
 
     } else {
       // msg = "HS REVERSAL ONLY ALLOW FOR OMBAK PRODUCT.";
