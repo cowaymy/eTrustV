@@ -10,7 +10,7 @@ $(document).ready(function() {
 
 
  	  $("#reportType").change(function (){
-		  if($("#reportType").val() != "16" && $("#reportType").val() != "19"  && $("#reportType").val() != "20"  && $("#reportType").val() != "21" ){
+		  if($("#reportType").val() != "16" && $("#reportType").val() != "20"  && $("#reportType").val() != "21" ){
 			  console.log("reportType : " + $("#reportType").val() );
 			  //$("#titleYear").hide();
 			  $("#accReportYear").hide();
@@ -33,7 +33,7 @@ $(document).ready(function() {
 
 function fn_report(type) {
 
-	if($("#reportType").val() != "16" && $("#reportType").val() != "19" && $("#reportType").val() != "20" && $("#reportType").val() != "21"){
+	if($("#reportType").val() != "16" && $("#reportType").val() != "20" && $("#reportType").val() != "21"){
     if($("#yyyymmDate").val() == null || $("#yyyymmDate").val() == ''){
         Common.alert('<spring:message code="sal.alert.msg.keyInDate" />');
         return;
@@ -185,8 +185,9 @@ function fn_report(type) {
 
     else if(dataForm.reportType.value=="19"){
         $("#reportFileName").val('/sales/M_Sales_Report_Plan_By_Channel_and_Type.rpt');
-        $("#reportDownFileName").val("M_Sales_Report_Plan_By_Channel_and_Type_" + $("#accReportYear").val());
-        $("#NSD_YEAR").val(year2);
+        $("#reportDownFileName").val("M_Sales_Report_Plan_By_Channel_and_Type_" + $("#yyyymmDate").val());
+        //$("#NSD_YEAR").val(year2);
+        $("#NSD_YEAR").val(year);
         $("#viewType").val('EXCEL');
     }
 
