@@ -56,6 +56,12 @@ function fn_report(type) {
         $("#Month").val(month);
         $("#Year").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="1"){
          $("#reportFileName").val('/sales/D_Ren_Sales_By_Channel.rpt');
@@ -63,6 +69,12 @@ function fn_report(type) {
          $("#Month").val(month);
          $("#Year").val(year);
          $("#viewType").val('EXCEL');
+
+         var option = {
+                 isProcedure : false
+             };
+
+             Common.report("dataForm", option);
      }
     else if(dataForm.reportType.value=="2"){
         $("#reportFileName").val('/sales/D_Ren_Sales_By_Category_Channel.rpt');
@@ -70,6 +82,12 @@ function fn_report(type) {
         $("#Month").val(month);
         $("#Year").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="3"){
         $("#reportFileName").val('/sales/D_Ren_Sales_Details.rpt');
@@ -77,6 +95,12 @@ function fn_report(type) {
         $("#Month").val(month);
         $("#Year").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="4"){
         $("#reportFileName").val('/sales/D_Out_Sales_By_Category.rpt');
@@ -84,6 +108,12 @@ function fn_report(type) {
         $("#Month").val(month);
         $("#Year").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="5"){
         $("#reportFileName").val('/sales/D_Out_Sales_By_Channel.rpt');
@@ -91,6 +121,12 @@ function fn_report(type) {
         $("#Month").val(month);
         $("#Year").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="6"){
         $("#reportFileName").val('/sales/D_Out_Sales_By_Category_Channel.rpt');
@@ -98,6 +134,12 @@ function fn_report(type) {
         $("#Month").val(month);
         $("#Year").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="7"){
         $("#reportFileName").val('/sales/D_Mem_Sales_By_Category.rpt');
@@ -105,6 +147,12 @@ function fn_report(type) {
         $("#Month").val(month);
         $("#Year").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="8"){
         $("#reportFileName").val('/sales/M_Ren_Sales_By_Category.rpt');
@@ -112,6 +160,12 @@ function fn_report(type) {
         $("#Month").val(month);
         $("#Year").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="9"){
         $("#reportFileName").val('/sales/M_Ren_Sales_By_Channel.rpt');
@@ -119,6 +173,12 @@ function fn_report(type) {
         $("#Month").val(month);
         $("#Year").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="10"){
         $("#reportFileName").val('/sales/M_Ren_Sales_By_Category_Channel.rpt');
@@ -126,6 +186,12 @@ function fn_report(type) {
         $("#Month").val(month);
         $("#Year").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="11"){
         $("#reportFileName").val('/sales/M_Ren_Sales_Details.rpt');
@@ -133,6 +199,12 @@ function fn_report(type) {
         $("#Month").val(month);
         $("#Year").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="12"){
         $("#reportFileName").val('/sales/M_Out_Sales_By_Category.rpt');
@@ -140,6 +212,12 @@ function fn_report(type) {
         $("#Month").val(month);
         $("#Year").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="13"){
         $("#reportFileName").val('/sales/M_Out_Sales_By_Channel.rpt');
@@ -147,6 +225,12 @@ function fn_report(type) {
         $("#Month").val(month);
         $("#Year").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="14"){
         $("#reportFileName").val('/sales/M_Out_Sales_By_Category_Channel.rpt');
@@ -154,6 +238,12 @@ function fn_report(type) {
         $("#Month").val(month);
         $("#Year").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="15"){
         $("#reportFileName").val('/sales/M_Mem_Sales_By_Category.rpt');
@@ -161,12 +251,24 @@ function fn_report(type) {
         $("#Month").val(month);
         $("#Year").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="16"){
         $("#reportFileName").val('/sales/Sales_Analysis_Process_PDF.rpt');
         $("#reportDownFileName").val("Sales_Analysis_" + $("#accReportYear").val());
         $("#v_Year").val(year2);
         $("#viewType").val('PDF');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="17"){
         $("#reportFileName").val('/sales/Net_Sales_Daily_Report.rpt');
@@ -174,6 +276,12 @@ function fn_report(type) {
         $("#NSD_MONTH").val(month);
         $("#NSD_YEAR").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
     else if(dataForm.reportType.value=="18"){
         $("#reportFileName").val('/sales/Net_Sales_Daily_Report_V2.rpt');
@@ -181,17 +289,29 @@ function fn_report(type) {
         $("#NSD_MONTH").val(month);
         $("#NSD_YEAR").val(year);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : false
+            };
+
+            Common.report("dataForm", option);
     }
 
-     else if(dataForm.reportType.value=="19"){
+    else if(dataForm.reportType.value=="19"){
         $("#reportFileName").val('/sales/M_Sales_Report_Plan_By_Channel_and_Type.rpt');
         $("#reportDownFileName").val("M_Sales_Report_Plan_By_Channel_and_Type_" + $("#accReportYear").val());
-        /* console.log ("month::" + month);
+        console.log ("month::" + month);
         console.log ("year::" + year);
-        console.log ("year2::" + year2); */
+        console.log ("year2::" + year2);
         $("#NSD_MONTH").val(month);
         $("#NSD_YEAR").val(year2);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : true
+            };
+
+            Common.report("dataForm", option);
     }
 
     else if(dataForm.reportType.value=="20"){
@@ -200,6 +320,12 @@ function fn_report(type) {
         $("#NSD_MONTH").val(month);
         $("#NSD_YEAR").val(year2);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : true
+            };
+
+            Common.report("dataForm", option);
     }
 
       else if(dataForm.reportType.value=="21"){
@@ -208,13 +334,20 @@ function fn_report(type) {
         $("#NSD_MONTH").val(month);
         $("#NSD_YEAR").val(year2);
         $("#viewType").val('EXCEL');
+
+        var option = {
+                isProcedure : true
+            };
+
+            Common.report("dataForm", option);
+
     }
 
-    var option = {
-        isProcedure : false
+/*     var option = {
+        isProcedure : true
     };
 
-    Common.report("dataForm", option);
+    Common.report("dataForm", option); */
 }
 
 
