@@ -1266,6 +1266,15 @@ var TODAY_DD      = "${toDay}";
           }
       }
 
+      if("${PAGE_AUTH.funcUserDefine6}" != "Y") {
+          var currentPeriod = $.datepicker.formatDate('mm/yy', new Date());
+
+          if(checkedItems[0]["hsDate"] != currentPeriod) {
+              Common.alert('Past month HS Reversal not permitted.');
+              valid = false;
+          }
+      }
+
       return valid;
   }
 
@@ -1306,7 +1315,7 @@ var TODAY_DD      = "${toDay}";
             // KR-OHK Serial Check add
             Common.confirm("Are you sure want to reverse this HS ?", function() {
                 console.log("schdulId :: " + schdulId + "  salesOrdId :: " + salesOrdId + "  revInd :: " + i);
-                Common.ajax("GET", url,  {schdulId : schdulId , salesOrdId : salesOrdId, serialRequireChkYn : serialRequireChkYn, revInd : i, stkId : stkId, salesOrdNo : salesOrdNo, hsNo : hsNo} , function(result) {
+                Common.ajax("GET", url,  {schdulId : schdulId , salesOrdId : salesOrdId, serialRequireChkYn : serialRequireChkYn, revInd : i, stkId : stkId, salesordNo : salesOrdNo, hsNo : hsNo} , function(result) {
                     if(result == null || result == "") {
                         Common.alert("HS Reverse Failed.");
                         return;
@@ -1425,7 +1434,7 @@ var TODAY_DD      = "${toDay}";
    <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
      <li><p class="btn_blue">
        <a href="#" onclick="javascript:fn_hsReversal('1');"
-         id="hsReversalPass">HS Reversal (Pass Month)</a>
+         id="hsReversalPass">HS Reversal (Past Month)</a>
        </p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
