@@ -10,7 +10,7 @@ $(document).ready(function() {
 
 
  	  $("#reportType").change(function (){
-		  if($("#reportType").val() != "16"){
+		  if($("#reportType").val() != "16" && $("#reportType").val() != "19"  && $("#reportType").val() != "20"  && $("#reportType").val() != "21" ){
 			  console.log("reportType : " + $("#reportType").val() );
 			  //$("#titleYear").hide();
 			  $("#accReportYear").hide();
@@ -33,7 +33,7 @@ $(document).ready(function() {
 
 function fn_report(type) {
 
-	if($("#reportType").val() != "16"){
+	if($("#reportType").val() != "16" && $("#reportType").val() != "19" && $("#reportType").val() != "20" && $("#reportType").val() != "21"){
     if($("#yyyymmDate").val() == null || $("#yyyymmDate").val() == ''){
         Common.alert('<spring:message code="sal.alert.msg.keyInDate" />');
         return;
