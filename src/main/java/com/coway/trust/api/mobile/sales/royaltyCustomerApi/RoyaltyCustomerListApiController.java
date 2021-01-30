@@ -121,64 +121,6 @@ public class RoyaltyCustomerListApiController {
 	        return ResponseEntity.ok(updateWsLoyaltyList); //666
 	 	}*/
 
-	  /*@ApiOperation(value = "waterPurifierResult", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	  @RequestMapping(value = "/waterPurifierResult", method = RequestMethod.POST)
-	  public ResponseEntity<OutStandingResultVo> outStandingResult(@RequestBody RentalServiceCustomerForm rentalForm) throws Exception {
-	  public ResponseEntity<RoyaltyCustomerListApiDto> waterPurifierResult(@RequestBody RoyaltyCustomerListApiDto param) throws Exception {
-	    //String transactionId = "";
 
-	    Map<String, Object> map = new HashMap();
-
-	    //map.put("userId", (String) rentalForm.getUserId());
-	    //map.put("salesOrderNo", (String) rentalForm.getSalesOrderNo());
-
-	    LOGGER.debug("==================================[MB]WP Result ====================================");
-	    LOGGER.debug("### WP Result FORM : " + param.toString());
-	    LOGGER.debug("==================================[MB]WP Result ====================================");
-
-	    //OutStandingResultVo orv = new OutStandingResultVo();
-	    //RoyaltyCustomerListApiDto orv = new RoyaltyCustomerListApiDto();
-
-	    //Map<String, Object> rmap = MSvcLogApiService.selectOutstandingResult(map);
-
-	    if (rmap != null) {
-	      LOGGER.debug(" :::: {}", rmap);
-	    }
-
-	    //List<EgovMap> rcList = MSvcLogApiService.selectOutstandingResultDetailList(map);
-	    List<EgovMap> wpList = (List<EgovMap>) royaltyCustomerListApiService.selectWaterPurifierResultDetailList(map);
-
-	    List<OutStandignResultDetail> list = rcList.stream().map(r -> OutStandignResultDetail.create(r))
-	        .collect(Collectors.toList());
-
-	    List<waterPurifierResult> list = wpList.stream().map(r -> waterPurifierResult.create(r)).collect(Collectors.toList());
-
-	    //return ResponseEntity.ok(selectWsLoyaltyList.stream().map(r -> RoyaltyCustomerListApiDto.create(r)).collect(Collectors.toList()));
-
-
-
-	    orv.setOsrd(list);
-
-	    if (rmap != null) {
-	      orv.setSumRpf(String.valueOf(rmap.get("sumRpf")));
-	      orv.setSumRpt(String.valueOf(rmap.get("sumRpt")));
-	      orv.setSumRhf(String.valueOf(rmap.get("sumRhf")));
-	      orv.setSumRental(String.valueOf(rmap.get("sumRental")));
-	      orv.setSumAdjust(String.valueOf(rmap.get("sumAdjust")));
-	    } else {
-	      orv.setSumRpf("0");
-	      orv.setSumRpt("0");
-	      orv.setSumRhf("0");
-	      orv.setSumRental("0");
-	      orv.setSumAdjust("0");
-	    }
-
-
-	     * List<OutStandignResultDetail> list = rcList.stream().map(r ->
-	     * RentalServiceCustomerDto.create(r)) .collect(Collectors.toList());
-
-	    return ResponseEntity.ok(orv);
-
-	  }*/
 
 	 }
