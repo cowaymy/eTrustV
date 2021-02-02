@@ -682,7 +682,7 @@
 
   // 리스트 조회.
   function fn_selectPstRequestDOListAjax() {
-    console.log($("#searchForm").serialize());
+    //console.log($("#searchForm").serialize());
     Common.ajax("GET", "/mobilePaymentKeyIn/selectMobilePaymentKeyInJsonList.do", $("#searchForm").serialize(), function(result) {
       AUIGrid.setGridData(myGridID, result);
 
@@ -1209,6 +1209,13 @@
       }
     }
   }
+
+  $(function() {
+    $('#keyInExpiryMonth').keyup(function(e) {
+  	  if (this.value.length == this.size) $('#keyInExpiryYear').focus();
+    });
+  });
+
 </script>
 <section id="content">
   <!-- content start -->

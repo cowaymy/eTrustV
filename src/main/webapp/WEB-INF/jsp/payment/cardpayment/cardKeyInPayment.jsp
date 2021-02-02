@@ -3054,6 +3054,12 @@ function isDupOutSrvcToFinal(){
       }
     }
 
+    $(function() {
+    	$('#keyInExpiryMonth').keyup(function(e) {
+    		if (this.value.length == this.size) $('#keyInExpiryYear').focus();
+    	});
+    });
+
 </script>
 <section id="content">
   <ul class="path">
