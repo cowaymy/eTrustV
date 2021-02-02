@@ -201,7 +201,7 @@ var emptyData = [];
       }
       //MY CLEAR - BANK RAKYAT
       if(bankId == 25){
-        if(lengthOfAccNo != 12){
+    	  if(lengthOfAccNo < 10 || lengthOfAccNo > 12){
           valid = false;
           return valid;
         }
