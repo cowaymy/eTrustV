@@ -1,5 +1,7 @@
 package com.coway.trust.biz.api.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,7 +23,22 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.api.CommonApiService;
 import com.coway.trust.biz.api.EcommApiService;
+import com.coway.trust.biz.sales.order.OrderRegisterService;
+import com.coway.trust.biz.sales.order.vo.AccClaimAdtVO;
+import com.coway.trust.biz.sales.order.vo.CustBillMasterVO;
+import com.coway.trust.biz.sales.order.vo.DocSubmissionVO;
+import com.coway.trust.biz.sales.order.vo.EStatementReqVO;
+import com.coway.trust.biz.sales.order.vo.GSTEURCertificateVO;
+import com.coway.trust.biz.sales.order.vo.InstallationVO;
+import com.coway.trust.biz.sales.order.vo.OrderVO;
+import com.coway.trust.biz.sales.order.vo.RentPaySetVO;
+import com.coway.trust.biz.sales.order.vo.RentalSchemeVO;
+import com.coway.trust.biz.sales.order.vo.SalesOrderDVO;
+import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
+import com.coway.trust.cmmn.model.GridDataSet;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 import com.google.common.collect.Maps;
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.project.eCommerce.EComApiDto;
@@ -42,6 +59,9 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
   @Resource(name = "commonApiService")
   private CommonApiService commonApiService;
 
+  @Resource(name = "orderRegisterService")
+  private OrderRegisterService orderRegisterService;
+
   @Override
   public EgovMap registerOrder(HttpServletRequest request, EComApiForm eComApiForm) throws Exception {
     String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0";
@@ -52,8 +72,9 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
     EgovMap access = new EgovMap();
     Map<String, Object> reqPrm = Maps.filterValues(EComApiForm.createRegOrdMap(eComApiForm),Objects::nonNull);
+    EgovMap custInfo = new EgovMap();
 
-    try{
+    //try{
 
       access = commonApiMapper.checkAccess(reqPrm);
       if(access == null){
@@ -65,7 +86,102 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
         reqPrm.put("apiUserId", apiUserId);
 
-        int created = ecommApiMapper.registerOrd(reqPrm);
+        int created = 0;
+
+
+        ecommApiMapper.registerOrd(reqPrm);
+
+        //ecommApiMapper.createCustomer(reqPrm);
+        //custInfo = (EgovMap) ((ArrayList) reqPrm.get("p1")).get(0);
+
+        System.out.println("=================================");
+        System.out.println(reqPrm.toString());
+        System.out.println(custInfo);
+        System.out.println("=================================");
+
+        /*SessionVO sessionVO = new SessionVO();
+        sessionVO.setUserId(349);
+
+        OrderVO orderVO = new OrderVO();
+        SalesOrderMVO salesOrderMVO = new SalesOrderMVO();
+        SalesOrderDVO salesOrderDVO = new SalesOrderDVO();
+        InstallationVO installationVO = new InstallationVO();
+        RentPaySetVO rentPaySetVO = new RentPaySetVO();
+        CustBillMasterVO custBillMasterVO = new CustBillMasterVO();
+        AccClaimAdtVO accClaimAdtVO = new AccClaimAdtVO();
+        EStatementReqVO eStatementReqVO = new EStatementReqVO();
+        GridDataSet<DocSubmissionVO> documentList = new GridDataSet<DocSubmissionVO>();
+
+        ArrayList<String> docList = new ArrayList<String>();
+        cars.add("Volvo");
+
+        orderVO.setCustTypeId(964);
+        orderVO.setRaceId( Integer.valueOf(reqPrm.get("race").toString()) );
+
+        salesOrderMVO.setAppTypeId( Integer.valueOf(reqPrm.get("appType").toString()) );
+        salesOrderMVO.setSrvPacId( Integer.valueOf(reqPrm.get("srvPac").toString()) );
+        salesOrderMVO.setRefNo(reqPrm.get("refNo").toString());
+        salesOrderMVO.setRem("Ecommerce Order");
+        orderVO.setSalesOrderMVO(salesOrderMVO);
+
+        salesOrderDVO.setItmPrc(BigDecimal.valueOf(50));
+        salesOrderDVO.setItmPrcId(399);
+        salesOrderDVO.setItmPv(BigDecimal.valueOf(0));
+        salesOrderDVO.setItmStkId(Integer.valueOf(reqPrm.get("product").toString()) );
+        salesOrderDVO.setItmCompId(Integer.valueOf(reqPrm.get("cpntId").toString()) );
+        orderVO.setSalesOrderDVO(salesOrderDVO);
+
+        installationVO.setAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
+        installationVO.setBrnchId(42);
+        installationVO.setCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));;
+        installationVO.setInstct(null);
+        installationVO.setPreDt("1900/01/01");
+        installationVO.setPreTm("12:00");
+        orderVO.setInstallationVO(installationVO);
+
+        rentPaySetVO.setBankId(Integer.valueOf(reqPrm.get("issueBank").toString()));
+        rentPaySetVO.setCustAccId(0);
+        rentPaySetVO.setCustCrcId(Integer.valueOf(custInfo.get("custcrcid").toString()));
+        rentPaySetVO.setCustId(Integer.valueOf(custInfo.get("custid").toString()));
+        //rentPaySetVO.setIs3rdParty(Integer.valueOf(reqPrm.get("thrdParty").toString()));
+        rentPaySetVO.setModeId(133);
+        rentPaySetVO.setIssuNric(null);
+        rentPaySetVO.setNricOld(null);
+        orderVO.setRentPaySetVO(rentPaySetVO);
+
+        custBillMasterVO.setCustBillAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
+        custBillMasterVO.setCustBillCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));
+        custBillMasterVO.setCustBillCustCareCntId(Integer.valueOf(custInfo.get("custcarecntid").toString()));
+        custBillMasterVO.setCustBillCustId(Integer.valueOf(custInfo.get("custid").toString()));
+        custBillMasterVO.setCustBillIsEstm(1);
+        custBillMasterVO.setCustBillEmail(reqPrm.get("email1").toString());
+        custBillMasterVO.setCustBillIsPost(0);
+        custBillMasterVO.setCustBillIsSms(0);
+        custBillMasterVO.setCustBillIsSms2(0);
+        custBillMasterVO.setCustBillIsWebPortal(0);
+        custBillMasterVO.setCustBillRem(null);
+        custBillMasterVO.setCustBillWebPortalUrl(null);
+        orderVO.setCustBillMasterVO(custBillMasterVO);
+
+        accClaimAdtVO.setAccClBillClmAmt(BigDecimal.valueOf(0));
+        accClaimAdtVO.setAccClClmAmt(BigDecimal.valueOf(0));
+        accClaimAdtVO.setAccClAccTName(reqPrm.get("cardName").toString());
+        accClaimAdtVO.setAccClAccNric(reqPrm.get("nric").toString());
+        accClaimAdtVO.setAccClPayMode("CRC");
+        accClaimAdtVO.setAccClPayModeId(131);
+        orderVO.setAccClaimAdtVO(accClaimAdtVO);
+
+        eStatementReqVO.setEmail(reqPrm.get("email1").toString());
+        orderVO.seteStatementReqVO(eStatementReqVO);
+
+        documentList.setUpdate(docList);
+
+
+        orderRegisterService.registerOrder(orderVO, sessionVO);*/
+
+
+
+
         if(created > 0){
           code = String.valueOf(AppConstants.RESPONSE_CODE_CREATED);
           message = AppConstants.RESPONSE_DESC_CREATED;
@@ -75,13 +191,13 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         }
       }
 
-    }catch(Exception e){
+    /*} catch(Exception e){
       code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
       message = StringUtils.substring(e.getMessage(), 0, 4000);
     } finally{
       stopWatch.stop();
       respTm = stopWatch.toString();
-    }
+    }*/
 
     return commonApiService.rtnRespMsg(request, code, message, respTm, reqPrm, null ,apiUserId);
   }
@@ -208,7 +324,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
     stopWatch.reset();
     stopWatch.start();
 
-    EgovMap access = new EgovMap();
+    EgovMap access = new EgovMap(), params = new EgovMap();
     int created = 0;
     Map<String, Object> reqPrm = Maps.filterValues(EComApiForm.createAddrMap(eComApiForm),Objects::nonNull);
 
@@ -222,6 +338,8 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
       else {
         apiUserId = access.get("apiUserId").toString();
         created = ecommApiMapper.insertNewAddr(reqPrm);
+
+        params.put("areaId", reqPrm.get("areaId").toString());
 
         if(created > 0){
           code = String.valueOf(AppConstants.RESPONSE_CODE_CREATED);
@@ -240,7 +358,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
       respTm = stopWatch.toString();
     }
 
-    return commonApiService.rtnRespMsg(request, code, message, respTm, reqPrm, null ,apiUserId);
+    return commonApiService.rtnRespMsg(request, code, message, respTm, reqPrm, params ,apiUserId);
   }
 
   @Override
@@ -290,5 +408,4 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
     return commonApiService.rtnRespMsg(request, code, message, respTm, reqPrm, null ,apiUserId);
   }
-
 }

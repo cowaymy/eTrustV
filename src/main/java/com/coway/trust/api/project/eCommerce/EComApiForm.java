@@ -64,9 +64,11 @@ public class EComApiForm {
 
     params.put("issueBank", ecomForm.getIssueBank());
     params.put("cardType", ecomForm.getCardType());
+    params.put("crcType", ecomForm.getCrcType());
     params.put("cardName", ecomForm.getCardName());
     params.put("cardNo", ecomForm.getCardNo());
     params.put("exprDt", ecomForm.getExprDt());
+    params.put("crcToken", ecomForm.getCardTokenId());
 
     params.put("appType", ecomForm.getAppType());
     params.put("srvPac", ecomForm.getSrvPac());
@@ -74,6 +76,8 @@ public class EComApiForm {
     params.put("product", ecomForm.getProduct());
     params.put("promo", ecomForm.getPromo());
     params.put("salesmanCode", ecomForm.getSalesmanCode());
+    params.put("instPriod", ecomForm.getInstalmentPeriod());
+    params.put("cpntId", ecomForm.getComponentId());
 
     return params;
   }
@@ -108,9 +112,11 @@ public class EComApiForm {
 
   private int    issueBank;
   private int    cardType;
+  private int    crcType;
   private String cardName;
   private String cardNo;
   private String exprDt;
+
 
   private int    appType;
   private int    srvPac;
@@ -118,6 +124,8 @@ public class EComApiForm {
   private int    product;
   private int    promo;
   private String salesmanCode;
+  private int    instalmentPeriod;
+  private int    componentId;
 
 	private String cardTokenId;
 	private int thrdParty;
@@ -233,6 +241,10 @@ public class EComApiForm {
     return cardType;
   }
 
+  public int getCrcType() {
+    return crcType;
+  }
+
   public String getCardName() {
     return cardName;
   }
@@ -243,6 +255,10 @@ public class EComApiForm {
 
   public String getExprDt() {
     return exprDt;
+  }
+
+  public String getCardTokenId() {
+    return cardTokenId;
   }
 
   public int getAppType() {
@@ -269,8 +285,12 @@ public class EComApiForm {
     return salesmanCode;
   }
 
-  public String getCardTokenId() {
-    return cardTokenId;
+  public int getInstalmentPeriod() {
+    return instalmentPeriod;
+  }
+
+  public int getComponentId() {
+    return componentId;
   }
 
   public int getThrdParty() {
@@ -385,6 +405,10 @@ public class EComApiForm {
     this.cardType = cardType;
   }
 
+  public void setCrcType(int crcType) {
+    this.crcType = crcType;
+  }
+
   public void setCardName(String cardName) {
     this.cardName = cardName;
   }
@@ -395,6 +419,10 @@ public class EComApiForm {
 
   public void setExprDt(String exprDt) {
     this.exprDt = exprDt;
+  }
+
+  public void setCardTokenId(String cardTokenId) {
+    this.cardTokenId = cardTokenId;
   }
 
   public void setAppType(int appType) {
@@ -421,8 +449,12 @@ public class EComApiForm {
     this.salesmanCode = salesmanCode;
   }
 
-  public void setCardTokenId(String cardTokenId) {
-    this.cardTokenId = cardTokenId;
+  public void setInstalmentPeriod(int instalmentPeriod) {
+    this.instalmentPeriod = instalmentPeriod;
+  }
+
+  public void setComponentId(int componentId) {
+    this.componentId = componentId;
   }
 
   public void setThrdParty(int thrdParty) {
@@ -476,6 +508,5 @@ public class EComApiForm {
   public void setCity(String city) {
     this.city = city;
   }
-
 
 }

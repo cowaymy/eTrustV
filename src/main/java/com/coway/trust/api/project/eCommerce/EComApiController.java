@@ -47,8 +47,8 @@ public class EComApiController {
     return ResponseEntity.ok(eCommApiService.registerOrder(request, params));
   }
 
-  @ApiOperation(value = "/checkOrdStus", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  @RequestMapping(value = "/checkOrdStus", method = RequestMethod.GET)
+  @ApiOperation(value = "/checkOrdStatus", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "/checkOrdStatus", method = RequestMethod.GET)
   public ResponseEntity<EgovMap> checkOrdStus(HttpServletRequest request,@ModelAttribute EComApiForm params) throws Exception {
     return ResponseEntity.ok(eCommApiService.checkOrderStatus(request, params));
   }

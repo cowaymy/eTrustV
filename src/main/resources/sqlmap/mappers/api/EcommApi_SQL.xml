@@ -10,6 +10,9 @@
  -->
 
 <insert id="registerOrd" parameterType="Map">
+    <selectKey keyProperty="ecommOrdId" resultType="int" order="BEFORE">
+      SELECT API0005D_ECOMM_ORD_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
   INSERT INTO API0005D
   (
       ECOMM_ORD_ID ,
@@ -38,15 +41,19 @@
       AREA_ID ,
       ISSUE_BANK ,
       CARD_TYPE ,
+      CRC_TYPE ,
       CARD_NAME ,
       CARD_NO ,
       EXPR_DT ,
+      CRC_TOKEN ,
       APP_TYPE ,
       SRV_PAC ,
       REF_NO ,
       PRODUCT ,
       PROMO ,
       SALES_MAN_CODE ,
+      INST_PRIOD ,
+      CPNT_ID ,
       STUS_CODE_ID ,
       CRT_DT ,
       CRT_USER_ID ,
@@ -54,7 +61,7 @@
       UPD_USER_ID
   ) VALUES
   (
-      API0005D_ECOMM_ORD_ID_SEQ.NEXTVAL ,
+      #{ecommOrdId} ,
       #{title} ,
       #{custName} ,
       #{nric} ,
@@ -80,15 +87,19 @@
       #{areaId} ,
       #{issueBank} ,
       #{cardType} ,
+      #{crcType} ,
       #{cardName} ,
       #{cardNo} ,
       #{exprDt} ,
+      #{crcToken} ,
       #{appType} ,
       #{srvPac} ,
       #{refNo} ,
       #{product} ,
       #{promo} ,
       #{salesmanCode} ,
+      #{instPriod} ,
+      #{cpntId} ,
       1 ,
       SYSDATE ,
       #{apiUserId} ,
@@ -96,6 +107,11 @@
       #{apiUserId}
   )
 </insert>
+
+<resultMap id="resultCustomerInfoMap" type="egovMap" />
+  <select id="createCustomer" statementType="CALLABLE" parameterType="Map">
+    { call SP_API_ORD_CRT(#{ecommOrdId} ,#{p1, mode=OUT, jdbcType=CURSOR,javaType=ResultSet,resultMap=resultCustomerInfoMap})}
+  </select>
 
 
 <select id="checkOrderStatus" parameterType="Map" resultType="egovMap">
@@ -133,6 +149,15 @@
 </select>
 
 <insert id="insertNewAddr" parameterType="Map">
+
+    <selectKey keyProperty="areaId" resultType="String" order="BEFORE">
+      SELECT
+        #{postcode}||'-'||LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0')
+      FROM SYS0064M
+        WHERE POSTCODE=#{postcode} AND AREA_ID NOT LIKE 'DM%'
+    </selectKey>
+
+
     INSERT INTO SYS0064M
     (
       AREA_ID
@@ -146,7 +171,7 @@
     )
     VALUES
     (
-      ((SELECT #{postcode}||'-'||LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode} AND AREA_ID NOT LIKE 'DM%'))
+        #{areaId}
       , (SELECT DISTINCT(ISO) FROM SYS0064M WHERE COUNTRY= 'Malaysia')
       , 'Malaysia'
       , 'EN'
