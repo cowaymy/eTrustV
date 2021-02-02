@@ -206,7 +206,8 @@ $(document).ready(function () {
     }
 
     $("#newAttendee_btn").click(function() {
-    	fn_attendeePop("new");
+        var memYNType = $("#generalCodeView").val();
+    	fn_attendeePop("new", memYNType);
     });
     $("#newAddRow_btn").click(function() {
     	fn_addRow(newAttendeeGridID);

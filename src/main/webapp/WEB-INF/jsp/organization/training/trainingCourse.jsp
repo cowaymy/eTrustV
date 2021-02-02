@@ -495,8 +495,19 @@ function fn_checkAttendance() {
 }
 
 function fn_attendeePop(pType) {
+    console.log("fn_attendeePop :: 1 param");
     var data = {
         pType : pType, coursId : coursId
+    };
+    Common.popupDiv("/organization/training/attendeePop.do", data, null, true, "attendeePop");
+}
+
+function fn_attendeePop(pType, memYNType) {
+    console.log("fn_attendeePop :: 2 params");
+    var data = {
+        pType : pType,
+        coursId : coursId,
+        memTypeYN : memYNType
     };
     Common.popupDiv("/organization/training/attendeePop.do", data, null, true, "attendeePop");
 }
