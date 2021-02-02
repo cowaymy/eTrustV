@@ -227,8 +227,8 @@ public class LoginServiceImpl implements LoginService {
 
             int smsReqCnt = loginMapper.getSmsReqCnt(params);
 
-            if(smsReqCnt > smsLimit) {
-                msg = "Dear HP, request limit reached, kindly seek relevant PIC for further assistance.";
+            if(smsReqCnt >= smsLimit) {
+                msg = "Dear HP, request limit reached, kindly email to hpresetpassword@coway.com.my for further assistance";
                 result.put("flg", "fail");
 
             } else {

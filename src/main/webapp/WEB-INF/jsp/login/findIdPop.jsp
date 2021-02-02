@@ -200,7 +200,7 @@ function fnReqSMS() {
 					<tr id="mobileRow">
                         <th scope="row">Mobile Number</th>
                         <td>
-                          <input type="text" id="memberMobile" name="memberMobile" class="w100p" placeholder="Numeric Only"
+                          <input type="text" id="memberMobile" name="memberMobile" class="w100p" placeholder="Numeric Only (Eg: 01xxxxxxxx)"
                           onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" />
                         </td>
                     </tr>
