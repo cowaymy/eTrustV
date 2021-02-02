@@ -261,7 +261,7 @@ public class LoginServiceImpl implements LoginService {
                                  sb + ". Kindly login to update your password.";
 
                 // Send SMS
-                SmsVO sms = new SmsVO(Integer.valueOf(params.get("userId").toString()), 6204);
+                SmsVO sms = new SmsVO(Integer.valueOf(params.get("userId").toString()), 6209);
                 sms.setMessage(message);
                 sms.setMobiles(CommonUtils.nvl(params.get("mobileNo")));
 
