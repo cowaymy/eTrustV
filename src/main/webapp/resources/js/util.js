@@ -356,7 +356,7 @@ var FormUtil = {
         }
         else if (IssueBankID == 25) {
             //MY CLEAR - BANK RAKYAT
-            if (LengthOfAccNo != 12)
+            if (LengthOfAccNo < 10 || LengthOfAccNo > 12)
                 valid = false;
         }
         else if (IssueBankID == 10) {
