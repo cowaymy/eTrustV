@@ -1474,6 +1474,7 @@
     function fn_loadProductPromotion(promoAppTypeId, stkId, empChk, custTypeVal, exTrade) {
         var exTrade = 0;
         $('#ordPromo').removeAttr("disabled");
+        console.log(empChk);
 
         // Care Service - Special Promotion for CNY 2021
         var now = new Date(), y = now.getFullYear(), m = now.getMonth()+1, d = now.getDate();
@@ -1481,7 +1482,7 @@
 
         if(promoAppTypeId == 3220 || promoAppTypeId == 3221){
 
-        	if(y+mm+dd <= '20210225' && promoAppTypeId == 3220){
+        	if(y+mm+dd <= '20210225' && promoAppTypeId == 3220 && empChk == 0){
         		if(stkId == 'SINGLE'){
                     var promoData = [
                       {"codeId":"32206","codeName":"CS1T_D_210201_01-CNY PROMOTION 2021-1st SINGLE RM138"},
