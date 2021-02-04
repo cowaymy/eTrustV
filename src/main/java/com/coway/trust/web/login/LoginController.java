@@ -326,7 +326,7 @@ public class LoginController {
 				else if ("5".equals(stusId) && "1".equals(cnfm) && !"1900-01-01".equals(cnfmDt)) {
 
 					LOGGER.debug("============ ACCEPTED =============");
-					// HP Renewal
+					// HM, SM, GM Renewal
 					if ("0001".equals(userTypeId) && !"115".equals(item1.get("roleType"))) {
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -488,6 +488,48 @@ public class LoginController {
 		    memLvl = Integer.parseInt(item1.get("memLvl").toString());
 		}
 
+		String popType = "";
+		if(params.containsKey("popType")) {
+		    popType = params.get("popType").toString();
+		}
+		int userType = Integer.parseInt(item1.get("userTypeId").toString());
+
+		/*
+		 * For Organization ::
+		 * Agreement :: highest precedence
+		 * Memo :: 2nd
+		 * Notice :: Lowest (Generally configured for all type users inclusive staff)
+		 */
+		if(!"A".equals(popType) && !"M".equals(popType) && noticeExist > 0) {
+		    switch(userType) {
+	        case 1:
+	            // if(!"".equals(popType)) params.put("popType", "N");
+	            params.put("popType", "N");
+	            break;
+	        case 2:
+	            if(memLvl < 4) {
+	                // CM, SCM, GCM
+	                // Default Notice view as there's no contract renewal applicable
+	                params.put("popType", "N");
+	            } else if(memLvl == 4) {
+	                if("-".equals(popType)) {
+	                    params.put("popType", "N");
+	                }
+	            }
+	            break;
+	        case 7:
+	            /*
+	             * HT has no memo applied as of 2021-02-04
+	             * Subject to change if required
+	             */
+	            if(!"A".equals(popType)) params.put("popType", "N");
+	            break;
+	        default:
+	            params.put("popType", "N");
+	        }
+		}
+
+		/*
 		if("1".equals(item1.get("userTypeId").toString()) || "2".equals(item1.get("userTypeId").toString()) || "7".equals(item1.get("userTypeId").toString())) {
 		    if((!"A".equals(params.get("popType").toString()) && noticeExist != 0) || ("2".equals(item1.get("userTypeId").toString()) && memLvl < 4)) {
 	            params.put("popType", "N");
@@ -495,6 +537,7 @@ public class LoginController {
 		} else {
 		    params.put("popType", "N");
 		}
+		*/
 
 		EgovMap item2 = new EgovMap();
 		item2 = (EgovMap) loginService.getPopDtls(params);
