@@ -2197,13 +2197,27 @@ console.log(orderVO);
     function fn_loadOrderSalesman(memId, memCode) {
         fn_clearOrderSalesman();
 
-        Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode}, function(memRc) {
+        var custId = $("#custId").val();
+
+        Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode, custId : custId}, function(memRc) {
+            console.log("checkRc");
             if(memRc != null) {
-                if(memRc.rcPrct < 50) {
+                if(memRc.opCnt == 0 && memRc.rcPrct <= 50) {
+                    // Not own purchase and SHI below 50
                     fn_clearOrderSalesman();
                     Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to RC below 50%.");
-
                     return false;
+                } else if(memRc.opCnt > 0) {
+                     // Own Purchase
+                     if(memRc.flg6Month == 0) {
+                         Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed for own purchase due member join less than 6 months.");
+                         return false;
+                     }
+
+                     if(memRc.rcPrct <= 55) {
+                         Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed for own purchase key in due to RC below 55%.");
+                         return false;
+                     }
                 }
             }
 
@@ -2234,6 +2248,7 @@ console.log(orderVO);
                 }
             });
         });
+
     }
 
     function fn_loadTrialNo(trialNo) {

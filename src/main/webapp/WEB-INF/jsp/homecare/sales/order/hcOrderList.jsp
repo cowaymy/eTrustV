@@ -95,18 +95,31 @@
         console.log(selIdx);
         if(selIdx > -1) {
             var memCode = AUIGrid.getCellValue(listMyGridID, selIdx, "salesmanCode");
-            Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode}, function(memRc) {
-            	if(memRc != null) {
-                    if(memRc.rcPrct < 50) {
+            var custId = AUIGrid.getCellValue(listMyGridID, selIdx, "custId");
+
+            Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode, custId : custId}, function(memRc) {
+                console.log("checkRc");
+                if(memRc != null) {
+                    if(memRc.opCnt == 0 && memRc.rcPrct <= 50) {
+                        // Not own purchase and SHI below 50
                         fn_clearOrderSalesman();
                         Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 50%");
                         return false;
+                    } else if(memRc.opCnt > 0) {
+                        // Own Purchase
+                        if(memRc.flg6Month == 0) {
+                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed for own purchase due member join less than 6 months.");
+                            return false;
+                        }
+
+                        if(memRc.rcPrct <= 55) {
+                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed for own purchase key in due to RC below 55%.");
+                            return false;
+                        }
                     }
-            	}
-
-            	Common.popupDiv("/homecare/sales/order/copyChangeHcOrder.do", { ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo") }, null , true);
-
-            });
+                }
+                Common.popupDiv("/homecare/sales/order/copyChangeHcOrder.do", { ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo") }, null , true);
+           });
         } else {
             Common.alert('<spring:message code="sal.alert.msg.preOrdMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noPreOrdSel" /></b>');
         }

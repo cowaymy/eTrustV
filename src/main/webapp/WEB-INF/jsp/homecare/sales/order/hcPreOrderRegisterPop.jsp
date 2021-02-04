@@ -117,7 +117,8 @@
             $('#btnConfirm').addClass("blind");
             $('#btnClear').addClass("blind");
 
-            fn_loadCustomer(null, $('#nric').val());
+            fn_checkRc($('#nric').val());
+            //fn_loadCustomer(null, $('#nric').val());
         });
         $('#nric').keydown(function (event) {
             if (event.which === 13) {
@@ -129,7 +130,8 @@
                 $('#btnConfirm').addClass("blind");
                 $('#btnClear').addClass("blind");
 
-                fn_loadCustomer(null, $('#nric').val());
+                fn_checkRc($('#nric').val());
+                //fn_loadCustomer(null, $('#nric').val());
             }
         });
         $('#sofNo').keydown(function (event) {
@@ -142,7 +144,8 @@
                 $('#btnConfirm').addClass("blind");
                 $('#btnClear').addClass("blind");
 
-                fn_loadCustomer(null, $('#nric').val());
+                fn_checkRc($('#nric').val());
+                //fn_loadCustomer(null, $('#nric').val());
             }
         });
         $('#chkSameCntc').click(function() {
@@ -1502,6 +1505,30 @@
         $('#rentPayCRCBank').val('');
         $('#hiddenRentPayCRCBankId').val('');
         $('#rentPayCRCCardType').val('');
+    }
+
+    function fn_checkRc(nric) {
+        Common.ajax("GET", "/sales/order/checkRC.do", {nric : nric}, function(result) {
+            console.log("checkRc");
+            if(result != null) {
+                if(result.opCnt == 0 && result.rcPrct <= 55) {
+                    Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 50%");
+                    return false;
+                } else if(result.opCnt > 0) {
+                    // Own Purchase
+                    if(result.flg6Month == 0) {
+                        Common.alert(result.name + " (" + result.memCode + ") is not allowed for own purchase due member join less than 6 months.");
+                        return false;
+                    }
+
+                    if(result.rcPrct <= 55) {
+                        Common.alert(result.name + " (" + result.memCode + ") is not allowed for own purchase key in due to RC below 55%.");
+                        return false;
+                    }
+                }
+            }
+            fn_loadCustomer(null, nric);
+        });
     }
 
     function fn_loadCustomer(custId, nric){
