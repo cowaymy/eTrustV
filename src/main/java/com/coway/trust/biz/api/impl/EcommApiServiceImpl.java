@@ -91,15 +91,15 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
         ecommApiMapper.registerOrd(reqPrm);
 
-        //ecommApiMapper.createCustomer(reqPrm);
-        //custInfo = (EgovMap) ((ArrayList) reqPrm.get("p1")).get(0);
+        ecommApiMapper.createCustomer(reqPrm);
+        /*custInfo = (EgovMap) ((ArrayList) reqPrm.get("p1")).get(0);
 
         System.out.println("=================================");
         System.out.println(reqPrm.toString());
         System.out.println(custInfo);
         System.out.println("=================================");
 
-        /*SessionVO sessionVO = new SessionVO();
+        SessionVO sessionVO = new SessionVO();
         sessionVO.setUserId(349);
 
         OrderVO orderVO = new OrderVO();
@@ -110,10 +110,13 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         CustBillMasterVO custBillMasterVO = new CustBillMasterVO();
         AccClaimAdtVO accClaimAdtVO = new AccClaimAdtVO();
         EStatementReqVO eStatementReqVO = new EStatementReqVO();
-        GridDataSet<DocSubmissionVO> documentList = new GridDataSet<DocSubmissionVO>();
 
-        ArrayList<String> docList = new ArrayList<String>();
-        cars.add("Volvo");
+        GridDataSet<DocSubmissionVO> documentList = new GridDataSet<DocSubmissionVO>();
+        ArrayList<DocSubmissionVO> docList = new ArrayList<DocSubmissionVO>();
+        Map <String, Object> docListDetails = new HashMap<String, Object>();
+        docListDetails.put("chkfield", 1);
+        docListDetails.put("codeId", 3198);
+        docListDetails.put("typeDesc", "Sales Order Form");
 
         orderVO.setCustTypeId(964);
         orderVO.setRaceId( Integer.valueOf(reqPrm.get("race").toString()) );
@@ -174,7 +177,9 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         eStatementReqVO.setEmail(reqPrm.get("email1").toString());
         orderVO.seteStatementReqVO(eStatementReqVO);
 
+        docList.add((DocSubmissionVO) docListDetails);
         documentList.setUpdate(docList);
+        orderVO.setDocSubmissionVOList(documentList);
 
 
         orderRegisterService.registerOrder(orderVO, sessionVO);*/
@@ -334,6 +339,21 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
       if(access == null){
         code = String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED);
         message = AppConstants.RESPONSE_DESC_UNAUTHORIZED;
+      }else if(CommonUtils.isEmpty(eComApiForm.getCountry())){
+        code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+        message = "Country not found.";
+      }else if(CommonUtils.isEmpty(eComApiForm.getState())){
+        code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+        message = "State not found.";
+      }else if(CommonUtils.isEmpty(eComApiForm.getPostcode())){
+        code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+        message = "Postcode not found.";
+      }else if(CommonUtils.isEmpty(eComApiForm.getArea())){
+        code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+        message = "Area not found.";
+      }else if(CommonUtils.isEmpty(eComApiForm.getCity())){
+        code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+        message = "City not found.";
       }
       else {
         apiUserId = access.get("apiUserId").toString();
