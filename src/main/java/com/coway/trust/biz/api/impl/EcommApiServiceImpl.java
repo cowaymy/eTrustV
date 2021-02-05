@@ -89,7 +89,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         int created = 0;
 
 
-        ecommApiMapper.registerOrd(reqPrm);
+        created = ecommApiMapper.registerOrd(reqPrm);
 
         ecommApiMapper.createCustomer(reqPrm);
         /*custInfo = (EgovMap) ((ArrayList) reqPrm.get("p1")).get(0);
