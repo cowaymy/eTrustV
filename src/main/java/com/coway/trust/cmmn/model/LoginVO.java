@@ -44,6 +44,8 @@ public class LoginVO {
 	private String agrmt; //ADD AGREEMENT STATUS FOR MOBILE
 	private String mobileUseYn;
 	private String serialRequireChkYn;
+	private String hpStus;
+	private String memStus;
 
 	public String getUserNric() {
 		return userNric;
@@ -368,4 +370,19 @@ public class LoginVO {
 		this.serialRequireChkYn = serialRequireChkYn;
 	}
 
+	public void setHpStus(String hpStus) {
+	    this.hpStus = hpStus;
+	}
+
+	public String getHpStus() {
+	    return hpStus;
+	}
+
+	public void setMemStus(String memStus) {
+        this.memStus = memStus;
+    }
+
+    public String getMemStus() {
+        return memStus;
+    }
 }

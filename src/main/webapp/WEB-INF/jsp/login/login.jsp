@@ -429,6 +429,12 @@
 
                 if(returnSearchUserInfo.userTypeId == "1") {
                     // HP
+                    if(returnSearchUserInfo.memStus != "1" || returnSearchUserInfo.hpStus == "1366") {
+                        Common.alert("Dear Hp, please email to hpresetpassword@coway.com.my for further assistance.");
+                        $("#popup_wrap").remove();
+                        return false;
+                    }
+
                     $("#secQuest").hide();
                     $("#secAns").hide();
                     $("#secCheckBtn").hide();

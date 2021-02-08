@@ -187,11 +187,15 @@
          ,SYS47M.USER_SEC_QUES_ANS userSecQuesAns
          ,SYS32M.RESN_DESC         securityQuestion
          ,SYS47M.USER_TYPE_ID   userTypeId
+         ,ORG01D.RANK           hpStus
+         ,ORG01D.STUS           memStus
     FROM  SYS0047M SYS47M
         , SYS0032M SYS32M
-    WHERE SYS47M.USER_NAME = #{userIdFindPopTxt}
+        , ORG0001D ORG01D
+    WHERE ROWNUM = 1
       AND (SYS32M.RESN_ID = SYS47M.USER_SEC_QUES_ID  OR SYS47M.USER_SEC_QUES_ID = 0  )
-      AND ROWNUM = 1
+      AND SYS47M.HR_CODE = ORG01D.MEM_CODE
+      AND SYS47M.USER_NAME = #{userIdFindPopTxt}
   </select>
 
     <insert id="insertLoginHistory" parameterType="loginHistory">
