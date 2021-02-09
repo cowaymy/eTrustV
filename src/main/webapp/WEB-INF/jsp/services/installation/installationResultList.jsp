@@ -12,8 +12,8 @@
  01/07/2020  ONGHC  1.0.5          Add Installation Job Transfer Failure Listing
  07/08/2020  FANNIE  1.0.6          Add Allow Commision columns in listing
  -->
-
-<script type="text/javaScript">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
+<script type="text/javaScript" >
   $(document).ready(
     function() {
     doGetCombo('/services/getProductList.do', '', '', 'product', 'S', '');
@@ -54,12 +54,25 @@
 		  } else if ($("#startDate").val() == '' && $("#endDate").val() != '') {
 			  msg = "Appointment Start Date is required.";
 	          valid = false;
+		  } else if ($("#startDate").val() != '' && $("#endDate").val() != ''){
+			  var startDt = $("#startDate").val();
+	          var endDt = $("#endDate").val();
+
+	          if (!fn_checkDateRange(startDt,endDt,"Appointment"))
+	        	  valid = false;
+
 		  } else if ($("#instalStrlDate").val() != '' && $("#installEndDate").val() == '') {
 			  msg = "Installation End Date is required.";
 	          valid = false;
 		  } else if ($("#instalStrlDate").val() == '' && $("#installEndDate").val() != '') {
 	          msg = "Installation Start Date is required.";
 	          valid = false;
+	      } else if ($("#instalStrlDate").val() != '' && $("#installEndDate").val() != ''){
+              var startDt = $("#instalStrlDate").val();
+              var endDt = $("#installEndDate").val();
+
+              if (!fn_checkDateRange(startDt,endDt,"Installation"))
+                  valid = false;
 	      }
 	  }
 
@@ -70,6 +83,27 @@
 	   } else {
 		   Common.alert(msg);
 	   }
+  }
+
+  function fn_checkDateRange(startDate, endDate, field){
+
+      var arrStDt = startDate.split('/');
+      var arrEnDt = endDate.split('/');
+      var dat1 = new Date(arrStDt[2], arrStDt[1], arrStDt[0]);
+      var dat2 = new Date(arrEnDt[2], arrEnDt[1], arrEnDt[0]);
+
+      var diff = dat2 - dat1;
+      if(diff < 0){
+          Common.alert(field + " End Date MUST be greater than " + field + " Start Date.");
+          return false;
+      }
+
+      if(js.date.dateDiff(dat1, dat2) > 183){ // 3 months = 92
+          Common.alert("Please keep the " + field + " range within 6 months.");
+          return false;
+      }
+
+      return true;
   }
 
   function fn_addInstallation(codeid1) {
