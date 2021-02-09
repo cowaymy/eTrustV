@@ -4,152 +4,172 @@
 
 
     <select id="selectBasicInfo" parameterType="Map" resultType="egovMap">
- SELECT
- V1.APP_TYPE_ID,
- V1.APP_TYPE_CODE,
- V1.APP_TYPE_NAME,
- V1.CRT_USER_ID,
- V1.CUST_ID,
- V1.CUST_NAME,
- V1.CUST_IC,
- V1.CUST_VA_NO,
- V1.CUST_TYPE_ID,
- V1.CUST_TYPE,
- V1.CUST_DOB,
- V1.CUST_NATION,
- V1.CUST_GENDER,
- V1.CUST_RACE,
- V1.CUST_EMAIL,
- V1.CUST_PASSPORT_EXPR,
- V1.CUST_VISA_EXPR,
- V1.KEYIN_BRNCH_ID,
- V1.KEYIN_BRNCH_NAME,
- V1.ORD_DT,
- V1.SALES_DT,
- V1.ORD_ID,
- V1.ORD_NO,
- V1.ORD_STUS_CODE,
- V1.ORD_STUS_ID,
- V1.PO_NO,
- V1.TOT_AMT,
- V1.REF_NO,
- V1.SALESMAN_MEM_ID,
- V1.SALESMAN_CODE,
- V1.SALESMAN_MEM_TYPE_ID,
- V1.BILLING_GRP_ID,
- V1.MAIL_TEL_MOB,
- V1.MAIL_TEL_FAX,
- V1.MAIL_TEL_OFF,
- V1.MAIL_TEL_RES,
- V1.INST_TEL_FAX,
- V1.INST_TEL_MOB,
- V1.INST_TEL_OFF,
- V1.INST_TEL_RES,
- V1.PV_MONTH,
- V1.PV_YEAR,
- V1.PROMO_ID,
- V1.PROMO_CODE,
- V1.PROMO_DESC,
- V1.RELATED_NO,
- V1.RELATED_ID,
- V1.BRAND,
- V1.PRODUCT_NAME,
- V1.REM,
- V1.UPD_DT,
- V1.UPD_USER_ID
- FROM (
- SELECT DISTINCT
-          cd.CODE APP_TYPE_CODE,
-          som.APP_TYPE_ID,
-          cd.CODE_NAME APP_TYPE_NAME,
-          NVL (u.USER_NAME, ' ') CRT_USER_ID,
-          c.NRIC CUST_IC,
-          c.NAME CUST_NAME,
-          som.CUST_ID,
-          NVL (c.CUST_VA_NO, ' ') CUST_VA_NO,
-          c.TYPE_ID CUST_TYPE_ID,
-        (
-            CASE
-                WHEN C.TYPE_ID NOT IN (964)
-                     AND C.CORP_TYPE_ID > 0 THEN ( NVL(CUSTTYPE.CODE_NAME,' ')
-                || ' ('
-                || NVL(CORPTYPE.CODE_NAME,' ')
-                || ')' )
-                ELSE NVL(CUSTTYPE.CODE_NAME,' ')
-            END
-        ) CUST_TYPE,
-        (
-            CASE
-                WHEN NVL(C.TYPE_ID,0) = 964 THEN NVL(C.DOB,TO_DATE('19000101','YYYYMMDD') )
-                ELSE TO_DATE('19000101','YYYYMMDD')
-            END
-        ) AS CUST_DOB,
-        NVL(CO.NAME,' ') CUST_NATION,
-        (
-            CASE
-                WHEN NVL(C.TYPE_ID,0) = 964 THEN NVL(C.GENDER,' ')
-                ELSE ' '
-            END
-        ) CUST_GENDER,
-        NVL(RC.CODE_NAME,' ') CUST_RACE,
-        NVL(C.EMAIL,' ') CUST_EMAIL,
-        C.PAS_SPORT_EXPR CUST_PASSPORT_EXPR,
-        C.VISA_EXPR CUST_VISA_EXPR,
-          NVL (B.CODE, 0) KEYIN_BRNCH_ID,
-          NVL(B.NAME,' ') KEYIN_BRNCH_NAME,
-          TO_DATE(NVL(TO_CHAR(som.SALES_DT,'DD/MM/YYYY'), '01/01/1900'),'DD/MM/YYYY') ORD_DT,
-          som.SALES_DT,
-          som.SRV_ORD_ID ORD_ID,
-          som.SRV_ORD_NO ORD_NO,
-          S.CODE ORD_STUS_CODE,
-          som.STUS_CODE_ID ORD_STUS_ID,
-          NVL (som.CUST_PO_NO, ' ') PO_NO,
-          som.TOT_AMT,
-          NVL (som.REF_NO, ' ') REF_NO,
-          NVL (som.MEM_ID, 0) SALESMAN_MEM_ID,
-          NVL (mem.MEM_CODE, ' ') SALESMAN_CODE,
-          NVL (mem.MEM_TYPE, 0) SALESMAN_MEM_TYPE_ID,
-          NVL (som.CUST_BILL_ID, 0) BILLING_GRP_ID,
-          cp2.TEL_M1 MAIL_TEL_MOB,
-          cp2.TELF MAIL_TEL_FAX,
-          cp2.TEL_O MAIL_TEL_OFF,
-          cp2.TEL_R MAIL_TEL_RES,
-          cp3.TELF INST_TEL_FAX,
-          cp3.TEL_M1 INST_TEL_MOB,
-          cp3.TEL_O INST_TEL_OFF,
-          cp3.TEL_R INST_TEL_RES,
-          som.PV_MONTH PV_MONTH,
-          som.PV_YEAR PV_YEAR,
-           som.PROMO_ID,
-          NVL (pm.PROMO_CODE, ' ') PROMO_CODE,
-          NVL (TO_CHAR (pm.PROMO_DESC), ' ') PROMO_DESC,
-          NVL (som.BINDING_NO, ' ') RELATED_NO,
-          NVL (som.SALES_ORD_ID_OLD, 0) RELATED_ID,
-          NVL (SOM.SALES_PROD_BRD,'OTHER') BRAND,
-          som.SALES_PROD_SZ PRODUCT_NAME,
-          som.REM,
-           TO_DATE(nvl(TO_CHAR(som.UPD_DT,'DD/MM/YYYY'),'01/01/1900'),'DD/MM/YYYY') upd_dt,
-            u2.USER_NAME UPD_USER_ID
+    SELECT
+       V1.APP_TYPE_ID,
+       V1.APP_TYPE_CODE,
+       V1.APP_TYPE_NAME,
+       V1.CRT_USER_ID,
+       V1.CUST_ID,
+       V1.CUST_NAME,
+       V1.CUST_IC,
+       V1.CUST_VA_NO,
+       V1.CUST_TYPE_ID,
+       V1.CUST_TYPE,
+       V1.CUST_DOB,
+       V1.CUST_NATION,
+       V1.CUST_GENDER,
+       V1.CUST_RACE,
+       V1.CUST_EMAIL,
+       V1.CUST_PASSPORT_EXPR,
+       V1.CUST_VISA_EXPR,
+       V1.KEYIN_BRNCH_ID,
+       V1.KEYIN_BRNCH_NAME,
+       V1.ORD_DT,
+       V1.SALES_DT,
+       V1.ORD_ID,
+       V1.ORD_NO,
+       V1.ORD_STUS_CODE,
+       V1.ORD_STUS_ID,
+       V1.ORD_PO_NO,
+       V1.TOT_AMT,
+       V1.ORD_REF_NO,
+       V1.ORD_MEM_ID,
+       V1.ORD_MEM_NAME,
+       V1.ORD_MEM_NRIC,
+       V1.ORD_MEM_CODE,
+       V1.ORD_MEM_TYPE_ID,
+       V1.ORD_MEM_TYPE_NAME,
+       V1.BILLING_GRP_ID,
+       V1.MAIL_TEL_MOB,
+       V1.MAIL_TEL_FAX,
+       V1.MAIL_TEL_OFF,
+       V1.MAIL_TEL_RES,
+       V1.INST_TEL_FAX,
+       V1.INST_TEL_MOB,
+       V1.INST_TEL_OFF,
+       V1.INST_TEL_RES,
+       V1.PV_MONTH,
+       V1.PV_YEAR,
+       V1.PROMO_ID,
+       V1.PROMO_CODE,
+       V1.PROMO_DESC,
+       V1.RELATED_NO,
+       V1.RELATED_ID,
+       V1.BRAND,
+       V1.PRODUCT_NAME,
+       V1.ORD_DEPT_CODE,
+       V1.ORD_GRP_CODE,
+       V1.ORD_ORG_CODE,
+       V1.ORD_HM_ID,
+       V1.ORD_SM_ID,
+       V1.ORD_GM_ID,
+       V1.ORD_REM,
+       V1.UPD_DT,
+       V1.UPD_USER_ID
+       FROM (
+       SELECT DISTINCT
+                cd.CODE APP_TYPE_CODE,
+                som.APP_TYPE_ID,
+                cd.CODE_NAME APP_TYPE_NAME,
+                NVL (u.USER_NAME, ' ') CRT_USER_ID,
+                c.NRIC CUST_IC,
+                c.NAME CUST_NAME,
+                som.CUST_ID,
+                NVL (c.CUST_VA_NO, ' ') CUST_VA_NO,
+                c.TYPE_ID CUST_TYPE_ID,
+              (
+                  CASE
+                      WHEN C.TYPE_ID NOT IN (964)
+                           AND C.CORP_TYPE_ID > 0 THEN ( NVL(CUSTTYPE.CODE_NAME,' ')
+                      || ' ('
+                      || NVL(CORPTYPE.CODE_NAME,' ')
+                      || ')' )
+                      ELSE NVL(CUSTTYPE.CODE_NAME,' ')
+                  END
+              ) CUST_TYPE,
+              (
+                  CASE
+                      WHEN NVL(C.TYPE_ID,0) = 964 THEN NVL(C.DOB,TO_DATE('19000101','YYYYMMDD') )
+                      ELSE TO_DATE('19000101','YYYYMMDD')
+                  END
+              ) AS CUST_DOB,
+              NVL(CO.NAME,' ') CUST_NATION,
+              (
+                  CASE
+                      WHEN NVL(C.TYPE_ID,0) = 964 THEN NVL(C.GENDER,' ')
+                      ELSE ' '
+                  END
+              ) CUST_GENDER,
+              NVL(RC.CODE_NAME,' ') CUST_RACE,
+              NVL(C.EMAIL,' ') CUST_EMAIL,
+              C.PAS_SPORT_EXPR CUST_PASSPORT_EXPR,
+              C.VISA_EXPR CUST_VISA_EXPR,
+                NVL(SOM.BRNCH_ID, 0) KEYIN_BRNCH_ID,
+                NVL(B.CODE || ' - ' || B.NAME,' ') KEYIN_BRNCH_NAME,
+                TO_DATE(NVL(TO_CHAR(som.SALES_DT,'DD/MM/YYYY'), '01/01/1900'),'DD/MM/YYYY') ORD_DT,
+                som.SALES_DT,
+                som.SRV_ORD_ID ORD_ID,
+                som.SRV_ORD_NO ORD_NO,
+                S.CODE ORD_STUS_CODE,
+                som.STUS_CODE_ID ORD_STUS_ID,
+                NVL (som.CUST_PO_NO, ' ') ORD_PO_NO,
+                som.TOT_AMT,
+                NVL (som.REF_NO, ' ') ORD_REF_NO,
+                NVL (som.MEM_ID, 0) ORD_MEM_ID,
+                NVL (mem.NAME, ' ') ORD_MEM_NAME,
+                NVL (mem.NRIC, ' ') ORD_MEM_NRIC,
+                NVL (mem.MEM_CODE, ' ') ORD_MEM_CODE,
+                NVL (mem.MEM_TYPE, 0) ORD_MEM_TYPE_ID,
+                NVL (mt.CODE_NAME,' ') ORD_MEM_TYPE_NAME ,
+                NVL (som.CUST_BILL_ID, 0) BILLING_GRP_ID,
+                cp2.TEL_M1 MAIL_TEL_MOB,
+                cp2.TELF MAIL_TEL_FAX,
+                cp2.TEL_O MAIL_TEL_OFF,
+                cp2.TEL_R MAIL_TEL_RES,
+                cp3.TELF INST_TEL_FAX,
+                cp3.TEL_M1 INST_TEL_MOB,
+                cp3.TEL_O INST_TEL_OFF,
+                cp3.TEL_R INST_TEL_RES,
+                som.PV_MONTH PV_MONTH,
+                som.PV_YEAR PV_YEAR,
+                 som.PROMO_ID,
+                NVL (pm.PROMO_CODE, ' ') PROMO_CODE,
+                NVL (TO_CHAR (pm.PROMO_DESC), ' ') PROMO_DESC,
+                NVL (som.BINDING_NO, ' ') RELATED_NO,
+                NVL (som.SALES_ORD_ID_OLD, 0) RELATED_ID,
+                NVL (SOM.SALES_PROD_BRD,'OTHER') BRAND,
+                DEPT_CODE ORD_DEPT_CODE,
+                GRP_CODE ORD_GRP_CODE,
+                ORG_CODE ORD_ORG_CODE,
+                SALES_HM_ID ORD_HM_ID,
+                SALES_SM_ID ORD_SM_ID,
+                SALES_GM_ID ORD_GM_ID,
+                som.SALES_PROD_SZ PRODUCT_NAME,
 
-     FROM SAL0225D som
-          JOIN SYS0013M cd ON cd.CODE_ID = som.APP_TYPE_ID
-          JOIN SAL0029D c ON c.CUST_ID = som.CUST_ID
-          JOIN SAL0045D i ON i.SALES_ORD_ID = som.SRV_ORD_ID
-          JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID
-          LEFT JOIN SYS0047M u ON u.USER_ID = som.CRT_USER_ID
-           LEFT JOIN SYS0047M u2 ON u2.USER_ID = som.UPD_USER_ID
-          LEFT JOIN SAL0027D cp2 ON cp2.CUST_CNTC_ID = som.CUST_CNT_ID
-          LEFT JOIN SAL0027D cp3 ON cp3.CUST_CNTC_ID = i.CNT_ID
-          LEFT JOIN ORG0001D mem ON mem.MEM_ID = som.MEM_ID
-          LEFT JOIN SAL0017D pm ON pm.PROMO_ID = som.PROMO_ID
-          LEFT JOIN SYS0005M B ON B.BRNCH_ID = SOM.BRNCH_ID
-         LEFT JOIN SYS0015M CO ON CO.CNTY_ID = C.NATION AND NVL(C.TYPE_ID,0) = 964
-        LEFT JOIN SYS0013M RC ON RC.CODE_ID = C.RACE_ID AND NVL(C.TYPE_ID,0) = 964
-        LEFT JOIN SYS0013M CORPTYPE ON CORPTYPE.CODE_ID = C.CORP_TYPE_ID AND C.TYPE_ID NOT IN (964) AND C.CORP_TYPE_ID > 0
-        LEFT JOIN SYS0013M CUSTTYPE ON CUSTTYPE.CODE_ID = C.TYPE_ID
-          ) V1
+                som.REM ORD_REM,
+                 TO_DATE(nvl(TO_CHAR(som.UPD_DT,'DD/MM/YYYY'),'01/01/1900'),'DD/MM/YYYY') upd_dt,
+                  u2.USER_NAME UPD_USER_ID
 
-          WHERE  1= 1
+           FROM SAL0225D som
+                JOIN SYS0013M cd ON cd.CODE_ID = som.APP_TYPE_ID
+                JOIN SAL0029D c ON c.CUST_ID = som.CUST_ID
+                JOIN SAL0045D i ON i.SALES_ORD_ID = som.SRV_ORD_ID
+                JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID
+                LEFT JOIN SYS0047M u ON u.USER_ID = som.CRT_USER_ID
+                LEFT JOIN SYS0047M u2 ON u2.USER_ID = som.UPD_USER_ID
+                LEFT JOIN SAL0027D cp2 ON cp2.CUST_CNTC_ID = som.CUST_CNT_ID
+                LEFT JOIN SAL0027D cp3 ON cp3.CUST_CNTC_ID = i.CNT_ID
+                LEFT JOIN ORG0001D mem ON mem.MEM_ID = som.MEM_ID
+                LEFT JOIN SAL0017D pm ON pm.PROMO_ID = som.PROMO_ID
+                LEFT JOIN SYS0005M B ON B.BRNCH_ID = SOM.BRNCH_ID
+                LEFT JOIN SYS0015M CO ON CO.CNTY_ID = C.NATION AND NVL(C.TYPE_ID,0) = 964
+                LEFT JOIN SYS0013M RC ON RC.CODE_ID = C.RACE_ID AND NVL(C.TYPE_ID,0) = 964
+                LEFT JOIN SYS0013M CORPTYPE ON CORPTYPE.CODE_ID = C.CORP_TYPE_ID AND C.TYPE_ID NOT IN (964) AND C.CORP_TYPE_ID > 0
+                LEFT JOIN SYS0013M CUSTTYPE ON CUSTTYPE.CODE_ID = C.TYPE_ID
+                LEFT JOIN SYS0013M MT ON MT.CODE_ID = MEM.MEM_TYPE
+       ) V1
+
+       WHERE  1= 1
 
        AND V1.ORD_ID = #{salesOrderId}
 

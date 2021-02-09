@@ -23,7 +23,7 @@
     <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>${orderDetail.basicInfo.appTypeName}</td>
     <th scope="row"><spring:message code="sal.text.refNo" /></th>
-    <td>${orderDetail.basicInfo.refNo}</td>
+    <td>${orderDetail.basicInfo.ordRefNo}</td>
     <th scope="row"><spring:message code="sal.title.text.keyAtBy" /></th>
     <td>${orderDetail.basicInfo.crtUserId}</td>
 </tr>
@@ -31,9 +31,9 @@
     <th scope="row">Product Size</th>
     <td>${orderDetail.basicInfo.productName}</td>
     <th scope="row"><spring:message code="sal.title.text.poNumber" /></th>
-    <td>${orderDetail.basicInfo.poNo}</td>
+    <td>${orderDetail.basicInfo.ordPoNo}</td>
     <th scope="row"><spring:message code="sal.text.keyInBranch" /></th>
-    <td>(${orderDetail.basicInfo.keyinBrnchId}) - ${orderDetail.basicInfo.keyinBrnchName}</td>
+    <td>${orderDetail.basicInfo.keyinBrnchName}</td>
 </tr>
 <tr>
      <th scope="row">Brand</th>
@@ -55,7 +55,7 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>
-    <td colspan="5">${orderDetail.basicInfo.rem}</td>
+    <td colspan="5">${orderDetail.basicInfo.ordRem}</td>
 </tr>
 
 
