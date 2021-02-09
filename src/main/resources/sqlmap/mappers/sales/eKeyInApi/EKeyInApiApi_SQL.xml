@@ -1124,6 +1124,8 @@
              , B.COLLECT_TOT AS COLLECT_TOT
              , B.RC_PRCT AS RC_PRCT
              , NVL(C.CNT, 0) AS CNT
+             , NVL(OP.FLG_6_MONTH, 0) FLG_6_MONTH
+             , NVL(OP.OP_CNT, 0) OP_CNT
     FROM ORG0001D A
     LEFT JOIN SAL0248M B ON A.MEM_CODE = B.MEM_CODE
     LEFT JOIN ( SELECT MEM_ID
@@ -1132,6 +1134,20 @@
                      WHERE TO_CHAR(SALES_DT, 'YYYYMM') = TO_CHAR(SYSDATE, 'YYYYMM')
                      GROUP BY MEM_ID
                    ) C ON A.MEM_ID = C.MEM_ID
+    LEFT JOIN ( SELECT A.MEM_ID
+                     , CASE WHEN(TO_DATE(TO_CHAR(A.JOIN_DT, 'YYYYMM'), 'YYYYMM') <![CDATA[<=]]> TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -6), 'YYYYMM'), 'YYYYMM')) THEN '1' ELSE '0' END AS FLG_6_MONTH
+                     , COUNT(*) OP_CNT
+                FROM ( SELECT MEM_ID, NRIC, JOIN_DT
+                       FROM ORG0001D
+                       WHERE MEM_CODE = ( SELECT HR_CODE FROM SYS0047M WHERE USER_ID = #{userId} )
+                ) A
+                JOIN ( SELECT NRIC
+                       FROM SAL0029D
+                       WHERE NRIC = #{nric}
+                ) B
+                ON A.NRIC = B.NRIC
+                GROUP BY A.MEM_ID, CASE WHEN(TO_DATE(TO_CHAR(A.JOIN_DT, 'YYYYMM'), 'YYYYMM') <![CDATA[<=]]> TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -6), 'YYYYMM'), 'YYYYMM')) THEN '1' ELSE '0' END
+              ) D ON A.MEM_ID = D.MEM_ID
     WHERE B.MONTH = EXTRACT(MONTH FROM ADD_MONTHS(SYSDATE, -1))
         AND B.YEAR = EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE, -1))
         AND A.MEM_CODE = ( SELECT HR_CODE
