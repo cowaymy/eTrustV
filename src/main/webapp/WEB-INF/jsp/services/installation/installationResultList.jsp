@@ -41,9 +41,35 @@
   });
 
   function fn_installationListSearch() {
-    Common.ajax("GET", "/services/installationListSearch.do", $("#searchForm").serialize(), function(result) {
-      AUIGrid.setGridData(myGridID, result);
-    });
+	  var valid = true;
+	  var msg;
+
+	  if ($("#installNo").val() == '' && $("#orderNo").val() == '') {
+		  if ($("#startDate").val() == '' && $("#endDate").val() == '' && $("#instalStrlDate").val() == '' && $("#installEndDate").val() == ''){
+			  msg = "Either Appointment Date OR Installation Date is required when Install No. and Order No. is empty.";
+			  valid = false;
+		  } else if ($("#startDate").val() != '' && $("#endDate").val() == '') {
+			  msg = "Appointment End Date is required.";
+	          valid = false;
+		  } else if ($("#startDate").val() == '' && $("#endDate").val() != '') {
+			  msg = "Appointment Start Date is required.";
+	          valid = false;
+		  } else if ($("#instalStrlDate").val() != '' && $("#installEndDate").val() == '') {
+			  msg = "Installation End Date is required.";
+	          valid = false;
+		  } else if ($("#instalStrlDate").val() == '' && $("#installEndDate").val() != '') {
+	          msg = "Installation Start Date is required.";
+	          valid = false;
+	      }
+	  }
+
+	   if (valid){
+	      Common.ajax("GET", "/services/installationListSearch.do", $("#searchForm").serialize(), function(result) {
+	      AUIGrid.setGridData(myGridID, result);
+	      });
+	   } else {
+		   Common.alert(msg);
+	   }
   }
 
   function fn_addInstallation(codeid1) {
