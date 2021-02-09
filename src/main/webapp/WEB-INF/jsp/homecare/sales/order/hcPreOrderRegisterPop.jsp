@@ -1511,7 +1511,7 @@
         Common.ajax("GET", "/sales/order/checkRC.do", {nric : nric}, function(result) {
             console.log("checkRc");
             if(result != null) {
-                if(result.opCnt == 0 && result.rcPrct <= 55) {
+                if(result.opCnt == 0 && result.rcPrct <= 50) {
                     Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 50%");
                     return false;
                 } else if(result.opCnt > 0) {
