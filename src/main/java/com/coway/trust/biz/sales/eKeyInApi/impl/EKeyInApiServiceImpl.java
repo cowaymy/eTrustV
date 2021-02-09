@@ -1197,9 +1197,6 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     if (CommonUtils.isEmpty(param.getRegId())) {
       throw new ApplicationException(AppConstants.FAIL, "regId value does not exist.");
     }
-    if (CommonUtils.isEmpty(param.getNric())) {
-      throw new ApplicationException(AppConstants.FAIL, "nric value does not exist.");
-    }
     Map<String, Object> loginInfoMap = new HashMap<String, Object>();
     loginInfoMap.put("_USER_ID", param.getRegId());
     LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
@@ -1208,7 +1205,10 @@ public class EKeyInApiServiceImpl extends EgovAbstractServiceImpl implements EKe
     }
     Map<String, Object> params = new HashMap<String, Object>();
     params.put("userId", loginVO.getUserId());
-    params.put("nric", param.getNric());
+    if (!CommonUtils.isEmpty(param.getNric())) {
+        params.put("nric", param.getNric());
+    }
+
     EgovMap selectCheckRc = eKeyInApiMapper.selectCheckRc(params);
 
     EKeyInApiDto rtn = new EKeyInApiDto();
