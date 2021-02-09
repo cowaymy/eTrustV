@@ -1124,8 +1124,8 @@
              , B.COLLECT_TOT AS COLLECT_TOT
              , B.RC_PRCT AS RC_PRCT
              , NVL(C.CNT, 0) AS CNT
-             , NVL(OP.FLG_6_MONTH, 0) FLG_6_MONTH
-             , NVL(OP.OP_CNT, 0) OP_CNT
+             , NVL(D.FLG_6_MONTH, 0) FLG_6_MONTH
+             , NVL(D.OP_CNT, 0) OP_CNT
     FROM ORG0001D A
     LEFT JOIN SAL0248M B ON A.MEM_CODE = B.MEM_CODE
     LEFT JOIN ( SELECT MEM_ID
