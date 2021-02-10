@@ -1268,7 +1268,7 @@ var TODAY_DD      = "${toDay}";
 
       if("${PAGE_AUTH.funcUserDefine6}" != "Y") {
           var currentPeriod = $.datepicker.formatDate('mm/yy', new Date());
-
+          currentPeriod = currentPeriod.replace(/^0+/, '');
           if(checkedItems[0]["hsDate"] != currentPeriod) {
               Common.alert('Past month HS Reversal not permitted.');
               valid = false;
