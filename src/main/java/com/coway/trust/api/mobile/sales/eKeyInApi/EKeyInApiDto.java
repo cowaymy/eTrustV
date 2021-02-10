@@ -201,6 +201,8 @@ public class EKeyInApiDto {
   private BigDecimal targetTot;
   private BigDecimal collectTot;
   private BigDecimal rcPrct;
+  private int opCnt;
+  private int flg6Month;
   private int cnt;
   private String userId;
   private int dscBrnchId;
@@ -1573,6 +1575,22 @@ public class EKeyInApiDto {
   public void setRcPrct(BigDecimal rcPrct) {
     this.rcPrct = rcPrct;
   }
+
+  public int getOpCnt() {
+    return opCnt;
+  }
+
+  public void setOpCnt(int opCnt) {
+    this.opCnt = opCnt;
+  }
+
+  public int getFlg6Month() {
+      return flg6Month;
+    }
+
+    public void setFlg6Month(int flg6Month) {
+      this.flg6Month = flg6Month;
+    }
 
   public int getCnt() {
     return cnt;
