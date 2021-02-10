@@ -217,7 +217,9 @@
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="#" id="search"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
             <li><p class="btn_blue"><a href="#" id="requestROT">Request</a></p></li>
+            <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
             <li><p class="btn_blue"><a href="#" id="updateROT">Update</a></p></li>
+            </c:if>
             <li><p class="btn_blue type2"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
         </ul>
     </aside>
