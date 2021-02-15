@@ -138,7 +138,7 @@ public class OwnershipTransferController {
         }
 
         // Retrive ROOT Request reasons
-        params.put("typeId", "6202");
+        params.put("typeId", "6241");
         List<EgovMap> requestCodeList = ownershipTransferService.rootCodeList(params);
 
         // Retrieve order information
@@ -164,7 +164,7 @@ public class OwnershipTransferController {
         }
 
         // Retrive ROOT Request reasons
-        params.put("typeId", "6202");
+        params.put("typeId", "6241");
         List<EgovMap> requestCodeList = ownershipTransferService.rootCodeList(params);
 
         // Retrieve order information
@@ -285,7 +285,7 @@ public class OwnershipTransferController {
         }
 
         // Retrive ROOT Request reasons
-        params.put("typeId", "6203");
+        params.put("typeId", "6242");
         List<EgovMap> remarkList = ownershipTransferService.rootCodeList(params);
 
         // Retrieve order information
