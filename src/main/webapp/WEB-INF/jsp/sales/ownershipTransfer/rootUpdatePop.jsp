@@ -341,10 +341,10 @@
                     var oriFileName = $(this).val();
                     var fileGrpId;
                     var fileId;
-                    for(var i = 0; i < attachList.length; i++) {
-                        if(attachList[i].atchFileName == oriFileName) {
-                            fileGrpId = attachList[i].atchFileGrpId;
-                            fileId = attachList[i].atchFileId;
+                    for(var i = 0; i < result.data.length; i++) {
+                        if(result.data[i].atchFileName == oriFileName) {
+                            fileGrpId = result.data[i].atchFileGrpId;
+                            fileId = result.data[i].atchFileId;
                         }
                     }
                     fn_atchViewDown(fileGrpId, fileId);
