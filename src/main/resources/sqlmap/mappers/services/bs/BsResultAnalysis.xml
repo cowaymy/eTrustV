@@ -45,10 +45,14 @@
                 on b.MEM_CODE = a.HR_CODE
             LEFT join ORG0005D c
                 on c.MEM_ID = b.MEM_ID
-            <if test = "roleId != '128' and roleId != '129' and roleId != '130' and roleId != '137' and roleId != '179' ">
+            <if test = "roleId != '128' and roleId != '129' and roleId != '130' and roleId != '137' and roleId != '179'
+                        and roleId != '360' and roleId != '200' and roleId != '253' and roleId != '252' and roleId != '365' and roleId != '367' ">
+                /* 1 */
                 where a.USER_ID = #{userId}
             </if>
-            <if test = "roleId == '128' or roleId == '129' or roleId == '130' or roleId == '137' or roleId == '179' ">
+            <if test = "roleId == '128' or roleId == '129' or roleId == '130' or roleId == '137' or roleId == '179'
+                        or roleId == '360' or roleId == '200' or roleId == '253' or roleId == '252' or roleId == '365' or roleId == '367' ">
+                /* 2 */
                 where c.MEM_LVL = '1'
             </if>
         ) l
