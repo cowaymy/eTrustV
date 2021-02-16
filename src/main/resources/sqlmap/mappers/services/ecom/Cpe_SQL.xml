@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.ecom.impl.CpeMapper">
+
+  <select id="getCpeStat" parameterType="Map" resultType="egovMap">
+    SELECT CODE AS CODE,
+           CODE_NAME AS CODE_NAME
+    FROM SYS0094M
+    WHERE IND = 'CPE_STAT'
+      AND DISB = 0
+    ORDER BY CODE
+  </select>
+
+  <select id="selectMainDept"  resultType="egovMap">
+    SELECT CODE CODE_ID
+         , CODE_DESC CODE_NAME
+    FROM GBSLCVD.SYS0013M
+    WHERE CODE_MASTER_ID = 359
+    ORDER BY CODE
+  </select>
+
+  <select id="selectSubDept"  parameterType="Map" resultType="egovMap">
+    SELECT CODE CODE_ID
+         , CODE_DESC CODE_NAME
+    FROM GBSLCVD.SYS0013M
+    WHERE CODE_MASTER_ID = 360
+
+    <if test = "groupCode != null and groupCode != '' ">
+      AND CODE IN (SELECT SUB_DEPT_CODE FROM SVC0063C WHERE MAIN_DEPT_CODE = #{groupCode})
+    </if>
+
+    ORDER BY CODE_NAME
+  </select>
+
+  <select id="selectSearchOrderNo" parameterType="Map" resultType="egovMap">
+                SELECT
+                    Distinct1.C1 C1 ,
+                    Distinct1.ORD_ID ,
+                    Distinct1.ORD_NO, TO_CHAR(Distinct1.ORD_DT, 'DD-MM-YYYY') ORD_DT,
+                    Distinct1.ORD_STUS_CODE ,
+                    Distinct1.CUST_NAME ,
+                    Distinct1.CUST_NRIC ,
+                    Distinct1.APP_TYPE_CODE ,
+                    Distinct1.STOCK_CODE ,
+                    Distinct1.STOCK_DESC,
+                    Distinct1.ORD_PV_MONTH,
+                    Distinct1.ORD_PV_YEAR,
+                    Distinct1.APP_TYPE_ID
+                FROM ( SELECT DISTINCT Extent1.ORD_ID ORD_ID ,
+                                       Extent1.ORD_NO ORD_NO ,
+                                       Extent1.ORD_STUS_CODE  ,
+                                       Extent1.APP_TYPE_CODE  ,
+                                       Extent1.STOCK_CODE  ,
+                                       Extent1.STOCK_DESC  ,
+                                       Extent1.CUST_NAME  ,
+                                       Extent1.CUST_NRIC  , 1 C1,
+                                       Extent1.ORD_DT,
+                                       Extent1.ORD_PV_MONTH,
+                                       Extent1.ORD_PV_YEAR,
+                                       Extent1.APP_TYPE_ID
+                                       FROM (
+                                            SELECT vOrderBasicInfo.ORD_ID  ,
+                                            vOrderBasicInfo.ORD_NO ORD_NO ,
+                                            vOrderBasicInfo.RENTAL_STUS RENTAL_STUS ,
+                                            vOrderBasicInfo.ORD_STUS_ID ORD_STUS_ID ,
+                                            vOrderBasicInfo.ORD_STUS_CODE ORD_STUS_CODE ,
+                                            vOrderBasicInfo.ORD_STUS_NAME ORD_STUS_NAME ,
+                                            vOrderBasicInfo.ORD_DT ORD_DT ,
+                                            vOrderBasicInfo.INSTLMT_PRIOD INSTLMT_PRIOD ,
+                                            vOrderBasicInfo.ORD_AMT ORD_AMT ,
+                                            vOrderBasicInfo.ORD_MTH_RENTAL ORD_MTH_RENTAL ,
+                                            vOrderBasicInfo.ORD_PV ORD_PV ,
+                                            vOrderBasicInfo.ORD_PV_MONTH ORD_PV_MONTH ,
+                                            vOrderBasicInfo.ORD_PV_YEAR ORD_PV_YEAR ,
+                                            vOrderBasicInfo.ORD_REF_NO ORD_REF_NO ,
+                                            vOrderBasicInfo.ORD_PO_NO ORD_PO_NO ,
+                                            vOrderBasicInfo.ORD_DEPT_CODE ORD_DEPT_CODE ,
+                                            vOrderBasicInfo.ORD_GRP_CODE ORD_GRP_CODE ,
+                                            vOrderBasicInfo.ORD_ORG_CODE ORD_ORG_CODE ,
+                                            vOrderBasicInfo.ORD_CRT_USER_ID ORD_CRT_USER_ID ,
+                                            vOrderBasicInfo.ORD_CRT_DT ORD_CRT_DT ,
+                                            vOrderBasicInfo.APP_TYPE_ID APP_TYPE_ID ,
+                                            vOrderBasicInfo.APP_TYPE_CODE APP_TYPE_CODE ,
+                                            vOrderBasicInfo.APP_TYPE_DESC APP_TYPE_DESC ,
+                                            vOrderBasicInfo.STOCK_ID STOCK_ID ,
+                                            vOrderBasicInfo.STOCK_CODE STOCK_CODE ,
+                                            vOrderBasicInfo.STOCK_DESC STOCK_DESC ,
+                                            vOrderBasicInfo.CUST_ID CUST_ID ,
+                                            vOrderBasicInfo.CUST_TYPE CUST_TYPE ,
+                                            vOrderBasicInfo.CUST_NAME CUST_NAME ,
+                                            vOrderBasicInfo.CUST_NRIC CUST_NRIC ,
+                                            vOrderBasicInfo.CUST_DOB CUST_DOB ,
+                                            vOrderBasicInfo.CUST_NATION CUST_NATION ,
+                                            vOrderBasicInfo.CUST_GENDER CUST_GENDER ,
+                                            vOrderBasicInfo.CUST_RACE CUST_RACE ,
+                                            vOrderBasicInfo.CUST_EMAIL CUST_EMAIL ,
+                                            vOrderBasicInfo.CUST_VA_NO CUST_VA_NO ,
+                                            vOrderBasicInfo.CUST_PASSPORT_EXPR CUST_PASSPORT_EXPR ,
+                                            vOrderBasicInfo.CUST_VISA_EXPR CUST_VISA_EXPR ,
+                                            vOrderBasicInfo.ORD_PROMO_ID ORD_PROMO_ID ,
+                                            vOrderBasicInfo.ORD_PROMO_CODE ORD_PROMO_CODE ,
+                                            vOrderBasicInfo.ORD_PROMO_DESC ORD_PROMO_DESC ,
+                                            vOrderBasicInfo.ORD_MEM_ID ORD_MEM_ID ,
+                                            vOrderBasicInfo.ORD_MEM_CODE ORD_MEM_CODE ,
+                                            vOrderBasicInfo.ORD_MEM_NAME ORD_MEM_NAME ,
+                                            vOrderBasicInfo.ORD_MEM_NRIC ORD_MEM_NRIC ,
+                                            vOrderBasicInfo.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID ,
+                                            vOrderBasicInfo.ORD_MEM_TYPE_CODE ORD_MEM_TYPE_CODE ,
+                                            vOrderBasicInfo.ORD_MEM_TYPE_NAME ORD_MEM_TYPE_NAME ,
+                                            vOrderBasicInfo.COOL_OFF_PRIOD COOL_OFF_PRIOD ,
+                                            vOrderBasicInfo.KEYIN_BRNCH_ID KEYIN_BRNCH_ID ,
+                                            vOrderBasicInfo.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE ,
+                                            vOrderBasicInfo.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME ,
+                                            vOrderBasicInfo.ORD_REM ORD_REM ,
+                                            vOrderBasicInfo.RENT_CHK_ID RENT_CHK_ID ,
+                                            vOrderBasicInfo.ORD_HM_ID ORD_HM_ID ,
+                                            vOrderBasicInfo.ORD_SM_ID ORD_SM_ID ,
+                                            vOrderBasicInfo.ORD_GM_ID ORD_GM_ID ,
+                                            vOrderBasicInfo.ORD_ADDR_ID ORD_ADDR_ID ,
+                                            vOrderBasicInfo.ORD_CNTC_ID ORD_CNTC_ID ,
+                                            vOrderBasicInfo.ORD_PROMO_RELATED_NO ORD_PROMO_RELATED_NO ,
+                                            vOrderBasicInfo.UPD_DT UPD_DT ,
+                                            vOrderBasicInfo.UPD_USER_ID UPD_USER_ID ,
+                                            vOrderBasicInfo.JOM_PAY_REF JOM_PAY_REF ,
+                                            vOrderBasicInfo.STK_CTGRY_ID STK_CTGRY_ID ,
+                                            vOrderBasicInfo.STK_CTGRY_NAME STK_CTGRY_NAME ,
+                                            vOrderBasicInfo.CUST_TYPE_ID CUST_TYPE_ID ,
+                                            vOrderBasicInfo.CUST_BILL_ID CUST_BILL_ID ,
+                                            vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR
+                                       FROM SAL1006V vOrderBasicInfo ) Extent1
+                          <![CDATA[
+                          WHERE  ( 'IACT' <> Extent1.ORD_STUS_CODE )
+                           ]]>
+                            AND NOT EXISTS (SELECT 1
+                                              FROM SAL0001D Z
+                                             WHERE Z.SALES_ORD_ID = EXTENT1.ORD_ID
+                                               AND Z.BNDL_ID IS NOT NULL
+                                            )             -- homecare Remove(except)
+                           <if test=" '' != searchOrdNo and null != searchOrdNo">
+                                AND ( Extent1.ORD_NO = #{searchOrdNo})
+                           </if>
+                           <if test=" '' != searchOrdDate and null != searchOrdDate">
+                                AND (Extent1.ORD_DT = TO_DATE(#{searchOrdDate}, 'DD/MM/YYYY') )
+                           </if>
+                           <if test=" '' != searchOrdCustName and null != searchOrdCustName">
+                                AND ( (UTILS.CONVERT_TO_NUMBER(INSTR(UPPER(Extent1.CUST_NAME), UPPER(#{searchOrdCustName})),10,0)) > 0 )
+                           </if>
+                           <if test=" '' != searchOrdCustNric and null != searchOrdCustNric">
+                                AND ( (UTILS.CONVERT_TO_NUMBER(INSTR(UPPER(Extent1.CUST_NRIC), UPPER(#{searchOrdCustNric})),10,0)) > 0 )
+                           </if>
+                           <if test=" null != appType and appType.length > 0">
+                                AND Extent1.APP_TYPE_ID  IN
+                                <foreach collection="appType" item="item" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                           </if>
+
+                ) Distinct1
+     </select>
+
+     <select id="getOrderId" parameterType="Map" resultType="egovMap" >
+     <![CDATA[
+     SELECT T1.ORD_ID   ,
+                T1.ORD_NO   ,
+                T1.RENTAL_STUS   ,
+                T1.ORD_STUS_ID   ,
+                T1.ORD_STUS_CODE   ,
+                T1.ORD_STUS_NAME   ,
+                T1.ORD_DT   ,
+                T1.INSTLMT_PRIOD   ,
+                T1.ORD_AMT   ,
+                T1.ORD_MTH_RENTAL   ,
+                T1.ORD_PV   ,
+                T1.ORD_PV_MONTH   ,
+                T1.ORD_PV_YEAR   ,
+                T1.ORD_REF_NO   ,
+                T1.ORD_PO_NO   ,
+                T1.ORD_DEPT_CODE   ,
+                T1.ORD_GRP_CODE   ,
+                T1.ORD_ORG_CODE   ,
+                T1.ORD_CRT_USER_ID   ,
+                T1.ORD_CRT_DT   ,
+                T1.APP_TYPE_ID   ,
+                T1.APP_TYPE_CODE   ,
+                T1.APP_TYPE_DESC ,
+                T1.STOCK_ID   ,
+                T1.STOCK_CODE   ,
+                T1.STOCK_DESC   ,
+                T1.CUST_ID   ,
+                T1.CUST_TYPE   ,
+                T1.CUST_NAME   ,
+                T1.CUST_NRIC   ,
+                T1.CUST_DOB   ,
+                T1.CUST_NATION   ,
+                T1.CUST_GENDER   ,
+                T1.CUST_RACE   ,
+                T1.CUST_EMAIL   ,
+                T1.CUST_VA_NO   ,
+                T1.CUST_PASSPORT_EXPR   ,
+                T1.CUST_VISA_EXPR   ,
+                T1.ORD_PROMO_ID   ,
+                T1.ORD_PROMO_CODE   ,
+                T1.ORD_PROMO_DESC   ,
+                T1.ORD_MEM_ID   ,
+                T1.ORD_MEM_CODE   ,
+                T1.ORD_MEM_NAME   ,
+                T1.ORD_MEM_NRIC   ,
+                T1.ORD_MEM_TYPE_ID   ,
+                T1.ORD_MEM_TYPE_CODE   ,
+                T1.ORD_MEM_TYPE_NAME   ,
+                T1.COOL_OFF_PRIOD   ,
+                T1.KEYIN_BRNCH_ID   ,
+                T1.KEYIN_BRNCH_CODE   ,
+                T1.KEYIN_BRNCH_NAME   ,
+                T1.ORD_REM   ,
+                T1.RENT_CHK_ID   ,
+                T1.ORD_HM_ID   ,
+                T1.ORD_SM_ID   ,
+                T1.ORD_GM_ID   ,
+                T1.ORD_ADDR_ID   ,
+                T1.ORD_CNTC_ID   ,
+                T1.ORD_PROMO_RELATED_NO   ,
+                T1.UPD_DT   ,
+                T1.UPD_USER_ID   ,
+                T1.JOM_PAY_REF   ,
+                T1.STK_CTGRY_ID   ,
+                T1.STK_CTGRY_NAME   ,
+                T1.CUST_TYPE_ID   ,
+                T1.CUST_BILL_ID   ,
+                T1.OBLIGT_YEAR
+       FROM
+                SAL1006V T1
+       WHERE
+                T1.ORD_NO = #{salesOrderNo}  AND ROWNUM <= 1
+       ]]>
+
+     </select>
+
+     <select id="selectRequestType" resultType="egovMap">
+     SELECT CODE_MASTER_ID AS CODE_ID, CODE_MASTER_NAME AS CODE_NAME FROM SYS0012M
+                WHERE CODE_MASTER_ID IN (462, 463, 464, 465)
+     </select>
+
+     <select id="getSubRequestTypeList" parameterType="Map" resultType="egovMap">
+     SELECT CODE_ID, CODE_NAME FROM SYS0013M
+                WHERE CODE_MASTER_ID = #{groupCode}
+                AND DISAB = 0
+     </select>
+
+     <select id="selectNextCpeId" resultType="int">
+     SELECT NVL(MAX(CPE_ID) + 1, 1) AS CPE_ID FROM SVC0118M
+     </select>
+
+     <insert id="insertCpeReqst" parameterType="Map">
+     INSERT INTO SVC0118M
+        (
+             CPE_ID
+<!--      ,CPE_NO -->
+            ,CPE_TYPE
+            ,CPE_SUBTYPE
+            ,SALES_ORD_ID
+            ,SALES_ORD_NO
+            ,CUST_ID
+            ,CPE_STAGE
+            ,REQUESTOR_DEPT
+            ,REQ_MAIN_DEPT
+            ,REQ_SUB_DEPT
+            ,CPE_STATUS
+            ,DSC_BRANCH
+            ,APPV_REQRD
+            ,CPE_APPV_PRCSS_NO
+            ,CRT_DT
+            ,CRT_USER_ID
+        )
+            values
+        (
+            #{cpeSeq}
+            ,#{inputReqTypeSelect}
+            ,#{inputSubReqTypeSelect}
+            ,#{salesOrdId}
+            ,#{salesOrdNo}
+            ,#{custId}
+            ,#{reqStageId}
+            ,#{req}
+            ,#{reqstAmt}
+            ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
+            ,#{fileGroupKey}
+            ,#{reqstRem}
+            ,#{appvPrcssNo}
+            ,SYSDATE
+            ,#{userId}
+            ,SYSDATE
+            ,#{userId}
+        )
+    </insert>
+
+</mapper>
