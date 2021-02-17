@@ -151,7 +151,7 @@ public class CpeController {
 		return ResponseEntity.ok(requestType);
 	}
 
-	@RequestMapping(value = "/selectSubRequestTypeJsonList.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/selectSubRequestTypeJsonList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getSubRequestType(@RequestParam Map<String, Object> params, HttpServletRequest request,
 	    ModelMap model) {
 
@@ -171,7 +171,6 @@ public class CpeController {
 
 	@RequestMapping(value = "/cpeReqstCompletedMsgPop.do")
 	public String reqstCompletedMsgPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		model.addAttribute("callType", params.get("callType"));
 		model.addAttribute("cpeReqNo", params.get("cpeReqNo"));
 		return "services/ecom/cpeReqstCompletedMsgPop";
 	}
@@ -180,34 +179,33 @@ public class CpeController {
 	public ResponseEntity<ReturnMessage> cpeReqstApproveLineSubmit(@RequestBody Map<String, Object> params, ModelMap model,
 	    SessionVO sessionVO) {
 
-//	    String appvPrcssNo = cpeService.selectNextAppvPrcssNo();
-//	    params.put("appvPrcssNo", appvPrcssNo);
+	    String cpeAppvPrcssNo = cpeService.selectNextCpeAppvPrcssNo();
+	    params.put("cpeAppvPrcssNo", cpeAppvPrcssNo);
 	    params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 	    params.put("userName", sessionVO.getUserName());
 
 	    logger.debug("cpeReqstApproveLineSubmit ==========================>>  " + params);
 
-	    // TODO
-//	    cpeService.insertRqstApproveManagement(params);
+	    cpeService.insertCpeRqstApproveMgmt(params);
 
 	    ReturnMessage message = new ReturnMessage();
 	    message.setCode(AppConstants.SUCCESS);
 	    message.setData(params);
-//	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 	    return ResponseEntity.ok(message);
 	  }
 
 	@RequestMapping(value = "/insertCpeReqst.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> insertCpeReqst(HttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+	public ResponseEntity<ReturnMessage> insertCpeReqst(@RequestBody Map<String, Object> params, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
 
-		logger.debug("params =====================================>>  " + params);
+		logger.debug("insertCpeReqst =====================================>>  " + params);
 
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
 
-        int cpeSeq = cpeService.selectNextCpeId();
-		params.put("cpeSeq", cpeSeq);
+        int cpeReqNo = cpeService.selectNextCpeId();
+		params.put("cpeReqNo", cpeReqNo);
 		cpeService.insertCpeReqst(params);
 
 		ReturnMessage message = new ReturnMessage();

@@ -43,7 +43,7 @@
                     $("#_inputSubReqTypeSelect").val('');
                     $("#_inputSubReqTypeSelect").find("option").remove();
                   } else {
-                    doGetCombo('/services/ecom/selectSubRequestTypeJsonList.do', $("#_inputReqTypeSelect").val(), '', '_inputSubReqTypeSelect', 'S', '');
+                    doGetCombo('/services/ecom/selectSubRequestTypeJsonList', $("#_inputReqTypeSelect").val(), '', '_inputSubReqTypeSelect', 'S', '');
                   }
               });
 
@@ -151,8 +151,8 @@
             // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
 //            fn_saveUpdateRequest("");
 //        }
-
-        Common.popupDiv("/services/ecom/cpeReqstApproveLinePop.do", null, null, true, "cpeApproveLineSearchPop");
+        var cpeReqstNo =  $("#_cpeReqNo").val();
+        Common.popupDiv("/services/ecom/cpeReqstApproveLinePop.do", {cpeReqNo:cpeReqstNo}, null, true, "cpeReqstApproveLinePop");
     }
 
     function fn_checkApprovalRequired() {
@@ -164,9 +164,9 @@
     }
 
     function fn_saveNewCpeRequest() {
-    	var cpeFormData = Common.getFormData("form_newReqst");
-        Common.ajaxFile("/services/ecom/insertCpeReqst.do", cpeFormData, function(result) {
+        Common.ajax("POST", "/services/ecom/insertCpeReqst.do", $("#form_newReqst").serializeJSON(), function(result) {
             console.log(result);
+            $("#_cpeReqNo").val(result.data.cpeReqNo);
         });
     }
 
@@ -318,10 +318,11 @@
 <h3><spring:message code="cpe.title.helpdeskRequest" /></h3>
 </aside><!-- title_line end -->
 <form id="form_newReqst">
-<input type="hidden" name="salesOrdId" id="_salesOrdId" value="${orderDetail.basicInfo.ordId}">
-<input type="hidden" name="reqStageId" id="_reqStageId" value="${orderDetail.basicInfo.ordStusId}">
-<input type="hidden" name="salesOrdNo" id="_salesOrdNo" value="${orderDetail.basicInfo.ordNo}">
-<input type="hidden" name="custId" id="_custId" value="${orderDetail.basicInfo.custId}">
+<input type="hidden" name="salesOrdId" id="_salesOrdId" value="${orderDetail.basicInfo.ordId}" />
+<input type="hidden" name="reqStageId" id="_reqStageId" value="${orderDetail.basicInfo.ordStusId}" />
+<input type="hidden" name="salesOrdNo" id="_salesOrdNo" value="${orderDetail.basicInfo.ordNo}" />
+<input type="hidden" name="custId" id="_custId" value="${orderDetail.basicInfo.custId}" />
+<input type="hidden" name="cpeReqNo" id="_cpeReqNo"' />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

@@ -24,4 +24,8 @@ public interface CpeService {
 	void insertCpeReqst(Map<String, Object> params);
 
 	int selectNextCpeId();
+
+	String selectNextCpeAppvPrcssNo();
+
+	void insertCpeRqstApproveMgmt(Map<String, Object> params);
 }

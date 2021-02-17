@@ -26,4 +26,8 @@ public interface CpeMapper {
 	public void insertCpeReqst(Map<String, Object> params);
 
 	public int selectNextCpeId();
+
+	public String selectNextCpeAppvPrcssNo();
+
+	void insertCpeApproveManagement(Map<String, Object> params);
 }

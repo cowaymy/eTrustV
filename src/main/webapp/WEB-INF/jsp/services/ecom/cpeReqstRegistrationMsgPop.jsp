@@ -22,7 +22,7 @@ function fn_cpeApproveLineSubmit() {
 
     Common.ajax("POST", "/services/ecom/cpeReqstApproveLineSubmit.do", obj, function(result) {
         console.log(result);
-        Common.popupDiv("/services/ecom/cpeReqstCompletedMsgPop.do", {callType:callType,cpeReqNo:result.data.cpeReqNo}, null, true, "cpeReqstCompletedMsgPop");
+        Common.popupDiv("/services/ecom/cpeReqstCompletedMsgPop.do", {cpeReqNo:result.data.cpeReqNo}, null, true, "cpeReqstCompletedMsgPop");
         //Common.alert("Your authorization request was successful.");
     });
 }

@@ -1,5 +1,7 @@
 package com.coway.trust.biz.services.ecom.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.services.ecom.CpeService;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -64,6 +67,71 @@ public class CpeServiceImpl implements CpeService {
 	@Override
 	public int selectNextCpeId() {
 		return cpeMapper.selectNextCpeId();
+	}
+
+	@Override
+	public String selectNextCpeAppvPrcssNo() {
+		return cpeMapper.selectNextCpeAppvPrcssNo();
+	}
+
+	@Override
+	public void insertCpeRqstApproveMgmt(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		logger.debug("params =====================================>>  " + params);
+
+		List<Object> apprGridList = (List<Object>) params.get("apprGridList");
+
+		params.put("appvLineCnt", apprGridList.size());
+
+		logger.debug("insertApproveManagement =====================================>>  " + params);
+		cpeMapper.insertCpeApproveManagement(params);
+
+//TODO: YONG - START
+/*
+		if (apprGridList.size() > 0) {
+			Map hm = null;
+			List<String> appvLineUserId = new ArrayList<>();
+
+
+
+			for (Object map : apprGridList) {
+				hm = (HashMap<String, Object>) map;
+				hm.put("appvPrcssNo", params.get("appvPrcssNo"));
+				hm.put("userId", params.get("userId"));
+				hm.put("userName", params.get("userName"));
+				logger.debug("insertCpeApproveLineDetail =====================================>>  " + hm);
+				cpeMapper.insertCpeApproveLineDetail(hm);
+			}
+
+            Map ntf = (HashMap<String, Object>) apprGridList.get(0);
+            ntf.put("cpeReqNo", params.get("cpeReqNo"));
+
+            EgovMap ntfDtls = new EgovMap();
+            ntfDtls = (EgovMap) webInvoiceMapper.getClmDesc(params);
+            ntf.put("codeName", ntfDtls.get("codeDesc"));
+
+            ntfDtls = (EgovMap) webInvoiceMapper.getNtfUser(ntf);
+            ntf.put("reqstUserId", ntfDtls.get("userName"));
+            ntf.put("code", params.get("clmNo").toString().substring(0, 2));
+            ntf.put("appvStus", "R");
+            ntf.put("rejctResn", "Pending Approval.");
+
+            logger.debug("ntf =====================================>>  " + ntf);
+
+            cpeMapper.insertNotification(ntf);
+		}
+
+		int appvItmSeq = webInvoiceMapper.selectNextAppvItmSeq(String.valueOf(params.get("appvPrcssNo")));
+		params.put("appvItmSeq", appvItmSeq);
+		logger.debug("insertApproveItems =====================================>>  " + params);
+		// TODO appvLineItemsTable Insert
+		cpeMapper.insertRqstApproveItems(params);
+
+		logger.debug("updateAppvPrcssNo =====================================>>  " + params);
+		// TODO pettyCashReqst table update
+		cpeMapper.updateRqstAppvPrcssNo(params);
+*/
+//TODO: YONG - END
 	}
 
 }
