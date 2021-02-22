@@ -103,7 +103,7 @@ SELECT SAL0273D_SEQ.NEXTVAL , loyaltyHpBatchId , salesOrdNo , hpCode , startDate
             ,#{item.salesOrdNo} salesOrdNo
             ,#{item.hpCode} hpCode
             ,TO_DATE(#{item.startDate},'DD/MM/YYYY') startDate
-            ,TO_DATE(#{item.endDate},'DD/MM/YYYY') endDate
+            ,TO_DATE(#{item.endDate}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS') endDate
             ,#{item.crtUserId} crtUserId
             ,SYSDATE crtDt
             ,#{item.updUserId} updUserId
