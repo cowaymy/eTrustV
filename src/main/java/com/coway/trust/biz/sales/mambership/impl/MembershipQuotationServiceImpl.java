@@ -435,8 +435,6 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
         return membershipQuotationMapper.getMaxPeriodEarlyBirdPromo(params);
     }
 
-
-
 }
 
 

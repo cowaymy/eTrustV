@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.common.SalesCommonService;
+import com.coway.trust.biz.sales.mambership.MembershipConvSaleService;
 import com.coway.trust.biz.sales.mambership.MembershipService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -42,6 +43,9 @@ public class MembershipController {
 
 	@Resource(name = "membershipService")
 	private MembershipService membershipService;
+
+	@Resource(name = "membershipConvSaleService")
+	private MembershipConvSaleService membershipConvSaleService;
 
 	@Resource(name = "salesCommonService")
 	private SalesCommonService salesCommonService;
@@ -101,6 +105,8 @@ public class MembershipController {
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 
+		logger.info("###ACTION: " + params.get("ACTION"));
+
 		membershipInfoTab = membershipService.selectMembershipInfoTab(params);
 		orderInfoTab = membershipService.selectOderInfoTab(params);
 		contactInfoTab = membershipService.selectInstallAddr(params);
@@ -108,6 +114,7 @@ public class MembershipController {
 		model.addAttribute("membershipInfoTab", membershipInfoTab);
 		model.addAttribute("orderInfoTab", orderInfoTab);
 		model.addAttribute("contactInfoTab", contactInfoTab);
+		model.addAttribute("action", params.get("ACTION"));
 
 		return "sales/membership/selMembershipViewPop";
 	}
@@ -670,5 +677,43 @@ public class MembershipController {
 		}else{
 			return null;
 		}
+	}
+
+	@RequestMapping(value = "/editMembershipSave.do" ,method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> editMembershipSave(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+		int res = -1;
+		logger.debug("in  editMembershipSave ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		if (params != null){
+        		// check ref_no duplication
+        		if (membershipConvSaleService.checkDuplicateRefNo(params)){
+        			ReturnMessage message = new ReturnMessage();
+        			message.setCode(AppConstants.FAIL);
+        			message.setMessage("Entered SVM No. had been used. Please try other SVM No.");
+
+        			return ResponseEntity.ok(message);
+        		}
+
+        		params.put("srvCreateBy", sessionVO.getUserId());
+        		params.put("srvUpdateAt", sessionVO.getUserId());
+
+        		//String docNo = membershipQuotationService.insertQuotationInfo(params);
+        		res = membershipService.updateMembershipById(params);
+		}
+
+		ReturnMessage message = new ReturnMessage();
+		if (res > 0){
+    		message.setCode(AppConstants.SUCCESS);
+    		message.setMessage("Update successfully.");
+		} else {
+    		message.setCode(AppConstants.FAIL);
+    		message.setMessage("Fail to update membership.");
+		}
+
+		return ResponseEntity.ok(message);
 	}
 }

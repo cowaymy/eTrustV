@@ -389,8 +389,6 @@ public class  MembershipQuotationController {
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 
-
-
 		params.put("srvCreateBy", sessionVO.getUserId());
 		params.put("srvUpdateAt", sessionVO.getUserId());
 

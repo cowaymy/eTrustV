@@ -10,7 +10,7 @@
     <col style="width:*" />
     <col style="width:100px" />
     <col style="width:*" />
-    <col style="width:100px" /> 
+    <col style="width:100px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -26,7 +26,16 @@
     <th scope="row"><spring:message code="sales.pakCode" /></th>
     <td><span>${membershipInfoTab.pacCode}</span></td>
     <th scope="row"><spring:message code="sales.pakName" /></th>
-    <td colspan="3"><span>${membershipInfoTab.pacName}</span></td>
+    <td><span>${membershipInfoTab.pacName}</span></td>
+    <th scope="row"><spring:message code="sal.text.refNo" /></th>
+    <c:choose>
+        <c:when test="${action == 'EDIT' }">
+            <td><input type="text"  id="refNo" name="refNo" class="w100p" value="${membershipInfoTab.refNo}"/></td>
+        </c:when>
+        <c:otherwise>
+            <td><span>${membershipInfoTab.refNo}</span></td>
+        </c:otherwise>
+    </c:choose>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sales.StartDate" /></th>
@@ -64,14 +73,14 @@
     <th scope="row"><spring:message code="sales.pakPro" /></th>
     <td colspan="5">
           <span>  ${membershipInfoTab.mbrshPacPromoCode} <c:if test="${not empty membershipInfoTab.mbrshPacPromoCode}"> -  ${membershipInfoTab.mbrshPacPromoName} </c:if> </span>
-    
+
     </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sales.filterPro" /></th>
      <td colspan="5">
           <span>  ${membershipInfoTab.mbrshPromoCode} <c:if test="${not empty membershipInfoTab.mbrshPromoCode}"> -  ${membershipInfoTab.mbrshPromoName} </c:if> </span>
-    
+
     </td>
 </tr>
 <tr>
@@ -91,9 +100,43 @@
 </tbody>
 </table><!-- table end     -->
 
+<c:if test="${action == 'EDIT'}">
+<section>
+<table>
+    <tr>
+        <td class="center_btns mt20">
+            <p class="btn_blue2 big"  id="saveBtn" ><a href="#" onclick="javascript:fn_save()">Save</a></p>
+        </td>
+    </tr>
+</table>
+</section>
+</c:if>
+
 </article><!-- tap_area end   MembershipInfo tab-->
 
 
 <script>
   $("#QUOT_ID").val(${membershipInfoTab.quotId});
+
+  function fn_save() {
+	  var mSaveForm={
+			  membershipId : ${membershipInfoTab.mbrshId},
+			  refNo : $("#refNo").val().trim()
+	  }
+
+	  console.log(mSaveForm);
+	  Common.ajax("GET", "/sales/membership/editMembershipSave.do", mSaveForm,  function(result) {
+	      console.log(result);
+
+	      if(result.code == "00"){
+	           Common.alert("<b>Membership successfully saved.</b>");
+	           $("#membershipDtlDiv").remove();
+	      }
+	      else {
+              Common.alert(result.message);
+         }
+
+	  });
+  }
+
 </script>

@@ -28,7 +28,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @since 2014.01.24
  * @version 1.0
  * @see
- * 
+ *
  *      <pre>
  *  == 개정이력(Modification Information) ==
  *
@@ -40,7 +40,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 @Mapper("membershipConvSaleMapper")
 public interface MembershipConvSaleMapper {
-	
+
 	int  SAL0095D_insert(Map<String, Object> params);
 	int  SAL0088D_insert(Map<String, Object> params);
 	int  PAY0007D_insert(Map<String, Object> params);
@@ -49,37 +49,35 @@ public interface MembershipConvSaleMapper {
 	int  PAY0031D_insert(Map<String, Object> params);
 	int  PAY0032D_insert(Map<String, Object> params);
 	int  PAY0032DFilter_insert(Map<String, Object> params);
-	
-	
-	
+
+
+
 	int  getTaxRate(Map<String, Object> params);
 	EgovMap  getHasBill(Map<String, Object> params);
-	
-	
+
+
 	int update_SAL0090D_Stus(Map<String, Object> params);
 	int update_SAL0093D_Stus(Map<String, Object> params);
 	int PAY0031D_INVC_ITM_UPDATE(Map<String, Object> params);
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	String getDocNo(Map<String, Object> params);
 	EgovMap  getSAL0095D_SEQ(Map<String, Object> params);
 	EgovMap  getSAL0001D_Data(Map<String, Object> params);
-	EgovMap  getSAL0090D_Data(Map<String, Object> params);  
+	EgovMap  getSAL0090D_Data(Map<String, Object> params);
 	EgovMap  getSAL0093D_Data(Map<String, Object> params);
-	
+
 	List<EgovMap> getFilterListData(Map<String, Object> params);
 	EgovMap getNewAddr(Map<String, Object> params);
-	
-	
 
-	
-	
-	
-	
-	
-	
+	EgovMap getMembershipByRefNo(Map<String, Object> params);
+
+
+
+
+
 }

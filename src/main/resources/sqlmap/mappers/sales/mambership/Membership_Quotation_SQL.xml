@@ -1360,5 +1360,4 @@
 					select to_char(add_months( to_date( #{MBSH_EXP_DT},'yyyymm'), -3 ),'MM-dd-yyyy') strPrmoDt from dual
 		 </select>
 
-
 </mapper>

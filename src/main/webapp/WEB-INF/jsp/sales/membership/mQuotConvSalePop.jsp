@@ -476,7 +476,9 @@ function fn_Sale_processing(){
 								trType:  $("#trType").val() ,
 								srvStockCode :  $("#inc_stockCode").text(),
 							    srvStockDesc :  $("#inc_stockDesc").text(),
-							    poNo : $("#poNo").val()
+							    poNo : $("#poNo").val(),
+							    // Added Reference No column by Hui Ding, 17-02-2021
+							    refNo : $("#refNo").val().trim()
 
 	}
 
@@ -485,12 +487,15 @@ function fn_Sale_processing(){
 	Common.ajax("POST", "/sales/membership/mQuotConvSaleSave.do", mSaveForm,  function(result) {
        console.log( result);
 
-       if(result !="" ){
-           Common.alert("<b>Membership successfully saved.<br> You must key in payment.</b>");
-           $("#_mConvSaleDiv1").remove();
-           fn_selectListAjax() ;
+       if (result.code == "00"){
+	       if(result.data != ""){
+	           Common.alert("<b>Membership successfully saved.<br> You must key in payment.<br>" + result.data + "</b>");
+	           $("#_mConvSaleDiv1").remove();
+	           fn_selectListAjax() ;
+	       }
+       } else {
+    	   Common.alert(result.message);
        }
-
 
    });
 }
@@ -644,7 +649,8 @@ function fn_getHasBill (){
 <tr>
     <th scope="row">PO No</th>
     <td><input type="text" id="poNo" name="poNo" title="" placeholder="" class="w100p" /></td>
-    <td colspan="2"></td>
+    <th scope="row">Reference No</th>
+    <td><input type="text" id="refNo" name="refNo" title="" placeholder="" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -308,4 +308,9 @@ public class MembershipServiceImpl extends EgovAbstractServiceImpl implements Me
 		return membershipMapper.getBrnchCodeListByBrnchId(params);
 	}
 
+	@Override
+	public int updateMembershipById (Map<String, Object> params){
+		return membershipMapper.updateMembershipById (params);
+	}
+
 }

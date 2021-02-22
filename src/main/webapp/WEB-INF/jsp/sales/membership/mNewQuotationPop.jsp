@@ -657,12 +657,40 @@ $(document).ready(function(){
 
 		$("#cPromo").val("");
 
-		doGetCombo('/sales/membership/getFilterPromotionCode?PROMO_SRV_MEM_PAC_ID=' + $("#SELPACKAGE_ID").val() + "&E_YN=" + $("#cEmplo").val(), '', '', 'cPromo', 'S', '');
+		//doGetCombo('/sales/membership/getFilterPromotionCode?PROMO_SRV_MEM_PAC_ID=' + $("#SELPACKAGE_ID").val() + "&E_YN=" + $("#cEmplo").val(), '', '', 'cPromo', 'S', '');
+		doGetComboCodeId('/sales/membership/getFilterPromotionCode?PROMO_SRV_MEM_PAC_ID=' + $("#SELPACKAGE_ID").val() + "&E_YN=" + $("#cEmplo").val(), '', '', 'cPromo', 'S', 'fn_setDefaultFilterPromo');
 
 		/* if ($("#HiddenIsCharge").val() != "0") {
 			$("#cPromo").prop("disabled", false);
 			$("#cPromo").attr("class", "");
 		} */
+	}
+
+	function fn_setDefaultFilterPromo() {
+
+		console.log("set default filter promo");
+		var paramdata = {
+                groupCode : '466',
+                codeName : 'FIL_MEM_DEFAULT_PROMO_N_EMP'
+        };
+
+		if ($("#cEmplo").val() == 1){
+            paramdata = {
+                    groupCode : '466',
+                    codeName : 'FIL_MEM_DEFAULT_PROMO_EMP'
+            };
+        }
+
+		Common.ajax("GET", "/common/selectCodeList.do", paramdata, function(result) {
+			console.log(result[0]);
+			if (result != null && result.length > 0) {
+                $("#cPromo option[value='" + result[0].code + "']").attr("selected", true);
+            }
+            else {
+                $("#cPromo option[value='']").attr("selected", true);
+            }
+		});
+
 	}
 
 	function fn_doPackagePro(v) {
@@ -1373,6 +1401,9 @@ $(document).ready(function(){
 			$("#isFilterCharge").val("FALSE");
 		}
 
+		/* // Added Reference No column by Hui Ding, 15-02-2021
+		$("#refNo").val($("#REF_NO").val().trim());
+ */
 		Common.ajax("GET", "/sales/membership/mNewQuotationSave", $("#save_Form").serialize(), function(result) {
 			console.log(result);
 
@@ -1651,6 +1682,8 @@ $(document).ready(function(){
             <input type="text" name="empChk" id="empChk" />
             <input type="text" name="zeroRatYn" id="zeroRatYn" />
             <input type="text" name="eurCertYn" id="eurCertYn" />
+            <!-- Added reference No column by Hui Ding, 15-02-2021
+            <input type="text" name="refNo" id="refNo"/> -->
     </div>
 </form>
 
@@ -1953,6 +1986,12 @@ $(document).ready(function(){
             <th scope="row"><spring:message code="sal.text.bsFrequency" /></th>
             <td colspan="3" ><span id='txtBSFreq'></span></td>
         </tr>
+       <%--  <tr>
+            <th scope="row"><spring:message code="sal.text.refNo" /></th>
+            <td><input type="text" title="" placeholder="" class=""  id="REF_NO" name="REF_NO"  />
+            <th></th>
+            <td colspan="3"></td>
+        </tr> --%>
         </tbody>
         </table><!-- table end -->
         </form>

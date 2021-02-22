@@ -211,7 +211,8 @@
 				       stb.pac_name , stb.quot_id ,
 				       stb.quot_no , stb.bill_id_pckg ,
 				       stb.bill_id_filter , stb.cust_name ,
-				       stb.cust_ic
+				       stb.cust_ic,
+				       stb.ref_no
 				  FROM (SELECT mfo.mbrsh_id mbrsh_id,
 				               mfo.mbrsh_no mbrsh_no,
 				               mfo.mbrsh_bill_no mbrsh_bill_no,
@@ -263,7 +264,8 @@
 				               mfo.bill_id_pckg bill_id_pckg,
 				               mfo.bill_id_filter bill_id_filter,
 				               mfo.cust_name cust_name,
-				               mfo.cust_ic cust_ic
+				               mfo.cust_ic cust_ic,
+				               mfo.ref_no ref_no
 				          FROM sal1002v mfo) stb
 				 WHERE stb.mbrsh_id = #{MBRSH_ID} AND ROWNUM <= 1
 		]]>
@@ -1524,4 +1526,8 @@
 				    </if>
 			    ORDER BY CODE ASC
     </select>
+
+    <insert id="updateMembershipById" parameterType="Map">
+        UPDATE SAL0095D SET REF_NO = #{refNo} WHERE SRV_MEM_ID = #{membershipId}
+    </insert>
 </mapper>

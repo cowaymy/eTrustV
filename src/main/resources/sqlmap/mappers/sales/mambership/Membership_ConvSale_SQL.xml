@@ -15,7 +15,7 @@
 										   SRV_MEM_SALES_MEM_ID, SRV_MEM_CUST_CNT_ID, SRV_MEM_QTY,
 										   SRV_BS_QTY, SRV_MEM_PROMO_ID, SRV_MEM_PV_MONTH,
 										   SRV_MEM_PV_YEAR, SRV_MEM_IS_MNL, SRV_MEM_BRNCH_ID,
-										   SRV_MEM_PAC_PROMO_ID, SRV_MEM_FORM_NO)
+										   SRV_MEM_PAC_PROMO_ID, SRV_MEM_FORM_NO, REF_NO)
 										VALUES (
 													  #{srvMemId},
 													   #{srvMemQuotId},
@@ -48,7 +48,8 @@
 													   #{srvMemIsMnl},
 													   #{srvMemBrnchId},
 													   #{srvMemPacPromoId},
-													   #{srvMemFormNo}
+													   #{srvMemFormNo},
+													   #{refNo}
 										   )
      </insert>
 
@@ -530,5 +531,11 @@
 		                                                                               ELSE B.CUST_BILL_ADD_ID END)
 		    JOIN SYS0064M D ON  C.AREA_ID = D.AREA_ID
 		WHERE A.SALES_ORD_ID = #{srvSalesOrdId}
+    </select>
+
+    <select id="getMembershipByRefNo" parameterType="Map" resultType="egovMap">
+        SELECT SRV_MEM_ID
+        FROM SAL0095D
+        WHERE REF_NO = #{refNo}
     </select>
 </mapper>

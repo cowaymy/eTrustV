@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.coway.trust.web.sales.mambership;
 
@@ -35,7 +35,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 
 /**
- * 
+ *
  * @author hamhg
  *
  */
@@ -44,104 +44,107 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class  MembershipConvSaleController {
 
 	private static Logger logger = LoggerFactory.getLogger(MembershipConvSaleController.class);
-	
+
 	@Resource(name = "membershipConvSaleService")
-	private MembershipConvSaleService membershipConvSaleService;   
+	private MembershipConvSaleService membershipConvSaleService;
 
 	@Resource(name = "membershipService")
 	private MembershipService membershipService;
-	
-	
+
+
 	@RequestMapping(value = "/mConvSale.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		logger.debug("in  mConvSale.do ");  
+
+		logger.debug("in  mConvSale.do ");
 
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-		
+
 		model.addAttribute("ORD_ID",params.get("ORD_ID"));
 		model.addAttribute("QUOT_ID",params.get("QUOT_ID"));
 		model.addAttribute("MBRSH_ID",params.get("MBRSH_ID"));
-		
-		return "sales/membership/mQuotConvSalePop";  
+
+		return "sales/membership/mQuotConvSalePop";
 	}
-	
-	
-	
+
+
+
 	@RequestMapping(value = "/mAutoConvSale.do")
 	public String mAutoConvSale(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		logger.debug("in  mAutoConvSale.do ");  
+
+		logger.debug("in  mAutoConvSale.do ");
 
 		logger.debug("			pram set  log");
-		logger.debug("					" + params.toString()); 
+		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-		  
+
 		List<EgovMap> list = membershipService.selectMembershipQuotInfo(params);
 
-		
+
 		logger.debug("===>"+list.toString());
-		
+
 		model.addAttribute("ORD_ID",((EgovMap)list.get(0)).get("ordId"));
 		model.addAttribute("QUOT_ID",params.get("QUOT_ID"));
 		logger.debug("=ordId==>"+((EgovMap)list.get(0)).get("ordId"));
 		logger.debug("QUOT_ID {}",params.get("QUOT_ID"));
-		
-		return "sales/membership/mQuotConvSalePop";   
+
+		return "sales/membership/mQuotConvSalePop";
 	}
-	
-		
-	
-	
+
+
+
+
 
 
 	@RequestMapping(value = "/mQuotConvSaleSave.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> mQuotConvSaleSave(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
-		
+
 		logger.debug("in  mQuotConvSaleSave ");
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
-		logger.debug("			pram set end  ");  
-		
+		logger.debug("			pram set end  ");
+
 		params.put("updator", sessionVO.getUserId());
 		params.put("userId", sessionVO.getUserId());
-		
-		
+
+		// check ref_no duplication
+		if (membershipConvSaleService.checkDuplicateRefNo(params)){
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.FAIL);
+			message.setMessage("Entered SVM No. had been used. Please try other SVM No.");
+
+			return ResponseEntity.ok(message);
+		}
+
 		ReturnMessage message = new ReturnMessage();
-		
+
 		EgovMap  hasbillMap =membershipConvSaleService.getHasBill(params);
-		
-		
-		
+
+
+
 		if(null !=hasbillMap){
-			
+
 			 if(! CommonUtils.isEmpty(hasbillMap.get("srvMemLgId"))){
 					message.setCode(AppConstants.FAIL);
 					message.setData("hasBill");
 				 	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-					return ResponseEntity.ok(message);  
+					return ResponseEntity.ok(message);
 			 }
 		}
-		
-		int rtnValue = membershipConvSaleService.SAL0095D_insert(params);
-		
-	
+
+		//int rtnValue = membershipConvSaleService.SAL0095D_insert(params);
+		String docNo =  membershipConvSaleService.SAL0095D_insert(params);
+
+
 		message.setCode(AppConstants.SUCCESS);
-		message.setData(rtnValue);
+		message.setData(docNo);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
-				
-		return ResponseEntity.ok(message);  
-		
+
+		return ResponseEntity.ok(message);
+
 	}
-	
-	
-	
-	
-	
-	
 
 	@RequestMapping(value = "/getHasBill.do" ,method = RequestMethod.GET)
 	public ResponseEntity<EgovMap>  getHasBill(@RequestParam Map<String, Object> params, HttpServletRequest request,Model model)	throws Exception {
@@ -150,15 +153,14 @@ public class  MembershipConvSaleController {
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-		
+
 		EgovMap  hasbillMap =membershipConvSaleService.getHasBill(params);
-		
+
 		return ResponseEntity.ok(hasbillMap);
 	}
-	
-	
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
-	
+
+
 }

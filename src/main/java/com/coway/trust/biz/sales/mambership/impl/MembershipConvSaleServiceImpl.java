@@ -51,7 +51,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 	}
 
 	@Override
-	public int  SAL0095D_insert(Map<String, Object> params) {
+	public String SAL0095D_insert(Map<String, Object> params) {
 
 		boolean   hasBill =false;
 		EgovMap   sal0001dData=null;
@@ -163,7 +163,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 		 /////////////processBills///////////////////
 
 
-		 return o;
+		 return memNo;
 
 	}
 
@@ -696,5 +696,23 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 		return a;
 	}
 
+	@Override
+	public boolean checkDuplicateRefNo (Map<String, Object> params){
+
+		if (params.get("refNo") != null) {
+    		EgovMap svmNoExist = getMembershipByRefNo(params);
+
+    		if (svmNoExist != null)
+    			return true;
+    		else
+    			return false;
+		}
+		return false;
+	}
+
+
+	public EgovMap getMembershipByRefNo(Map<String, Object> params) {
+		return membershipConvSaleMapper.getMembershipByRefNo(params);
+	}
 
 }
