@@ -9,13 +9,9 @@ $(document).ready(function () {
 
 function fn_closePop() {
     $("#cpeReqstCompletedMsgPop").remove();
-    $("#cpeApproveLineSearchPop").remove();
-
-//    if(callType == "new") {
-//        $("#newRequestPop").remove();
-//    } else {
-//        $("#viewRequestPop").remove();
-//    }
+    $("#cpeReqstApproveLinePop").remove();
+    $("#cpeNewSearchResultPop").remove();
+    $("#cpeRequestNewSearchPop").remove();
 
 //    fn_selectRequestList();
 }
@@ -29,7 +25,7 @@ function fn_closePop() {
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<p class="msg_txt"><spring:message code="newRgistRqstMsg.compleMsg" /><br><spring:message code="newWebInvoRegistMsg.clmNo" /> ${clmNo}</p>
+<p class="msg_txt"><spring:message code="newRgistRqstMsg.compleMsg" /><br><spring:message code="newWebInvoRegistMsg.clmNo" /> ${cpeReqNo}</p>
 <ul class="center_btns">
     <li><p class="btn_blue2" id="ok"><a href="#"><spring:message code="newWebInvoRegistMsg.ok" /></a></p></li>
 </ul>

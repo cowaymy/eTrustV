@@ -83,16 +83,12 @@ public class CpeServiceImpl implements CpeService {
 
 		params.put("appvLineCnt", apprGridList.size());
 
-		logger.debug("insertApproveManagement =====================================>>  " + params);
+		logger.debug("insertCpeApproveManagement =====================================>>  " + params);
 		cpeMapper.insertCpeApproveManagement(params);
 
-//TODO: YONG - START
-/*
 		if (apprGridList.size() > 0) {
 			Map hm = null;
 			List<String> appvLineUserId = new ArrayList<>();
-
-
 
 			for (Object map : apprGridList) {
 				hm = (HashMap<String, Object>) map;
@@ -103,7 +99,8 @@ public class CpeServiceImpl implements CpeService {
 				cpeMapper.insertCpeApproveLineDetail(hm);
 			}
 
-            Map ntf = (HashMap<String, Object>) apprGridList.get(0);
+			// TODO: Notification - Yong - start
+/*            Map ntf = (HashMap<String, Object>) apprGridList.get(0);
             ntf.put("cpeReqNo", params.get("cpeReqNo"));
 
             EgovMap ntfDtls = new EgovMap();
@@ -119,19 +116,21 @@ public class CpeServiceImpl implements CpeService {
             logger.debug("ntf =====================================>>  " + ntf);
 
             cpeMapper.insertNotification(ntf);
+*/         // TODO: Notification - Yong - end
 		}
 
-		int appvItmSeq = webInvoiceMapper.selectNextAppvItmSeq(String.valueOf(params.get("appvPrcssNo")));
-		params.put("appvItmSeq", appvItmSeq);
 		logger.debug("insertApproveItems =====================================>>  " + params);
-		// TODO appvLineItemsTable Insert
-		cpeMapper.insertRqstApproveItems(params);
+		// TODO: Yong - Insert into specific CPE Request Sub Type detail table e.g. Product Exchange's own table, Product Promotion Change's own table
+		//cpeMapper.insertCpeRqstApproveItems(params);
 
 		logger.debug("updateAppvPrcssNo =====================================>>  " + params);
-		// TODO pettyCashReqst table update
-		cpeMapper.updateRqstAppvPrcssNo(params);
-*/
-//TODO: YONG - END
+		cpeMapper.updateCpeRqstAppvPrcssNo(params);
+
+	}
+
+	@Override
+	public List<EgovMap> selectCpeRequestList(Map<String, Object> params) {
+		return cpeMapper.selectCpeRequestList(params);
 	}
 
 }

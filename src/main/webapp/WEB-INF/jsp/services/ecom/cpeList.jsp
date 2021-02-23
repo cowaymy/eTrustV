@@ -8,7 +8,7 @@
   function cpeGrid() {
 
     var columnLayout = [ {
-        dataField : "ordNo",
+        dataField : "salesOrdNo",
         headerText : "Order Number",
         width : "5%"
     }, {
@@ -28,11 +28,11 @@
       headerText : "NRIC/Company No.",
       width : "12%"
     }, {
-      dataField : "helpdeskRequest",
+      dataField : "cpeId",
       headerText : "Helpdesk Request",
       width : "13%"
     }, {
-      dataField : "regDate",
+      dataField : "crtDt",
       headerText : "<spring:message code='service.grid.registerDt'/>",
       width : "10%"
     }, {
@@ -147,8 +147,7 @@
     gridIDExcelHide = GridCommon.createAUIGrid("grid_wrap_hide", excelLayout, "", excelGridPros);
   }
 
-  $(document).ready(
-    function() {
+  $(document).ready(function() {
       cpeGrid();
 
       $("#search").click(
@@ -168,9 +167,12 @@
           });
 
           // cell click
-          AUIGrid.bind(gridID, "cellClick",
-            function(event) {
-              orderNo = AUIGrid.getCellValue(gridID, event.rowIndex, "ordNo");
+          AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
+              console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+              console.log("CellDoubleClick clmNo : " + event.item.cpeId);
+
+              var cpeId = event.item.cpeType;
+              fn_cpeRequestViewPop(event.item.appvPrcssNo);
           });
 
           doGetCombo('/services/ecom/selectMainDept.do', '', '', 'main_department', 'S', '');
@@ -189,7 +191,7 @@
   });
 
   function fn_search() {
-    Common.ajax("GET", "/services/ecom/selectCpe", $("#cpeForm").serialize(),
+    Common.ajax("GET", "/services/ecom/selectCpeRequestList", $("#cpeForm").serialize(),
       function(result) {
         AUIGrid.setGridData(gridID, result);
         AUIGrid.setGridData(gridIDExcelHide, result);
@@ -267,7 +269,14 @@
   }
 
   function fn_cpeRequestPop() {
-	  Common.popupDiv("/services/ecom/cpeRequest.do" , null, null , true, '_cpeRequestPop');
+	  Common.popupDiv("/services/ecom/cpeRequest.do" , null, null , true, 'cpeRequestNewSearchPop');
+  }
+
+  function fn_cpeRequestViewPop(appvPrcssNo) {
+      var data = {
+          appvPrcssNo : appvPrcssNo
+      };
+      Common.popupDiv("/services/ecom/cpeRqstViewPop.do", data, null, true, "cpeRqstViewPop");
   }
 
 </script>

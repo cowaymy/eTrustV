@@ -179,8 +179,8 @@ public class CpeController {
 	public ResponseEntity<ReturnMessage> cpeReqstApproveLineSubmit(@RequestBody Map<String, Object> params, ModelMap model,
 	    SessionVO sessionVO) {
 
-	    String cpeAppvPrcssNo = cpeService.selectNextCpeAppvPrcssNo();
-	    params.put("cpeAppvPrcssNo", cpeAppvPrcssNo);
+	    String appvPrcssNo = cpeService.selectNextCpeAppvPrcssNo();
+	    params.put("appvPrcssNo", appvPrcssNo);
 	    params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 	    params.put("userName", sessionVO.getUserName());
 
@@ -214,6 +214,14 @@ public class CpeController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/selectCpeRequestList", method = RequestMethod.GET )
+	public ResponseEntity<List<EgovMap>> selectCpeRequestList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+		logger.debug("selectCpeRequestList==========================>> " + params);
+		List<EgovMap> cpeRequestList = cpeService.selectCpeRequestList(params);
+		return ResponseEntity.ok(cpeRequestList);
 	}
 
 

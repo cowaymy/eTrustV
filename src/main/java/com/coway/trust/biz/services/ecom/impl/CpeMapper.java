@@ -30,4 +30,12 @@ public interface CpeMapper {
 	public String selectNextCpeAppvPrcssNo();
 
 	void insertCpeApproveManagement(Map<String, Object> params);
+
+	public void insertCpeApproveLineDetail(Map hm);
+
+	public void insertCpeRqstApproveItems(Map<String, Object> params);
+
+	public void updateCpeRqstAppvPrcssNo(Map<String, Object> params);
+
+	public List<EgovMap> selectCpeRequestList(Map<String, Object> params);
 }

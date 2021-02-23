@@ -286,23 +286,23 @@
 
     <select id="selectNextCpeAppvPrcssNo" resultType="String">
         SELECT    TO_CHAR (SYSDATE, 'yyyy')
-            || NVL (TO_CHAR (MAX (SUBSTR (CPE_APPV_PRCSS_NO, 5, 6) + 1), 'FM000000'), '000001') AS CPE_APPV_PRCSS_NO
+            || NVL (TO_CHAR (MAX (SUBSTR (APPV_PRCSS_NO, 5, 6) + 1), 'FM000000'), '000001') AS APPV_PRCSS_NO
         FROM SVC0119M
-        WHERE SUBSTR (CPE_APPV_PRCSS_NO, 1, 4) = TO_CHAR (SYSDATE, 'yyyy')
+        WHERE SUBSTR (APPV_PRCSS_NO, 1, 4) = TO_CHAR (SYSDATE, 'yyyy')
     </select>
 
     <insert id="insertCpeApproveManagement" parameterType="Map">
     /* APPV_PRCSS_STUS : R - Request, P - Approve In Progress, A - Approved, J - Rejected */
         INSERT INTO SVC0119M
         (
-            CPE_APPV_PRCSS_NO
-            ,CPE_APPV_REQ_NO
+            APPV_PRCSS_NO
+            ,APPV_REQ_NO
             ,REQST_DT
             ,REQST_USER_ID
-            ,CPE_APPV_PRCSS_STUS
-            ,CPE_APPV_LINE_CNT
-            ,CPE_APPV_LINE_PRCSS_CNT
-            ,CPE_APPV_PRCSS_DESC
+            ,APPV_PRCSS_STUS
+            ,APPV_LINE_CNT
+            ,APPV_LINE_PRCSS_CNT
+            ,APPV_PRCSS_DESC
             ,CRT_DT
             ,CRT_USER_ID
             ,UPD_DT
@@ -310,7 +310,7 @@
         )
         values
         (
-            #{cpeAppvPrcssNo}
+            #{appvPrcssNo}
             ,#{cpeReqNo}
             ,SYSDATE
             ,#{userName}
@@ -324,5 +324,124 @@
             ,#{userId}
             )
     </insert>
+
+    <insert id="insertCpeApproveLineDetail" parameterType="Map">
+    INSERT INTO SVC0120D
+        (
+            APPV_PRCSS_NO
+            ,APPV_LINE_SEQ
+            ,APPV_LINE_USER_ID
+            ,APPV_DT
+            ,APPV_STUS
+            ,CRT_DT
+            ,CRT_USER_ID
+            ,UPD_DT
+            ,UPD_USER_ID
+         )
+        values
+        (
+            #{appvPrcssNo}
+            ,#{approveNo}
+            ,#{memCode}
+            ,#{appvDt}
+            <choose>
+                <when test="approveNo == 1">
+                    ,'R'
+                </when>
+                <otherwise>
+                    ,'T'
+                </otherwise>
+            </choose>
+            ,SYSDATE
+            ,#{userId}
+            ,SYSDATE
+            ,#{userId}
+        )
+    </insert>
+
+    <insert id="insertCpeRqstApproveItems" parameterType="Map">
+    INSERT INTO FCM0015D
+    (
+        APPV_PRCSS_NO
+       ,APPV_ITM_SEQ
+       ,INVC_NO
+       ,INVC_DT
+       ,INVC_TYPE
+       ,MEM_ACC_ID
+       ,PAY_DUE_DT
+       ,EXP_TYPE
+       ,EXP_TYPE_NAME
+       ,COST_CENTR
+       ,COST_CENTR_NAME
+       ,GL_ACC_CODE
+       ,GL_ACC_CODE_NAME
+       ,BUDGET_CODE
+       ,BUDGET_CODE_NAME
+       ,TAX_CODE
+       ,NET_AMT
+       ,TAX_AMT
+       ,APPV_AMT
+       ,EXP_DESC
+       ,ATCH_FILE_GRP_ID
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+       ,INVC_CUR
+    )
+    values
+    (
+        #{appvPrcssNo}
+       ,#{appvItmSeq}
+       ,#{invcNo}
+       ,SYSDATE
+       ,#{invcType}
+       ,#{memAccId}
+       ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
+       ,#{expType}
+       ,#{expTypeName}
+       ,#{costCentr}
+       ,#{costCentrName}
+       ,#{glAccCode}
+       ,#{glAccCodeName}
+       ,#{budgetCode}
+       ,#{budgetCodeName}
+       ,'VB'
+       ,#{reqstAmt}
+       ,0
+       ,#{reqstAmt}
+       ,#{expDesc}
+       ,#{atchFileGrpId}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+       ,'MYR'
+    )
+    </insert>
+
+    <update id="updateCpeRqstAppvPrcssNo" parameterType="Map">
+        UPDATE SVC0118M
+            SET APPV_PRCSS_NO = #{appvPrcssNo}
+            ,UPD_DT = SYSDATE
+            ,UPD_USER_ID = #{userId}
+        WHERE CPE_ID = #{cpeReqNo}
+    </update>
+
+
+    <select id="selectCpeRequestList" parameterType="Map" resultType="egovMap">
+<!--     TODO: Yong - Add query parameters for more search fields based on CPE main page -->
+    SELECT
+        SALES_ORD_NO
+        , CPE_ID
+        , TO_CHAR(CRT_DT, 'YYYY-MM-DD') CRT_DT
+        , CPE_SUBTYPE
+        FROM SVC0118M
+    WHERE 1=1
+    <if test="cpeReqNo != null and cpeReqNo != '' ">
+      AND CPE_ID = #{cpeReqNo}
+    </if>
+    ORDER BY CRT_DT DESC
+   </select>
 
 </mapper>

@@ -2,6 +2,9 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
+    //var callType = "${callType}";   // TODO: Yong - To identity if request is for New vs View/Update
+    var callType = "new";
+
 
     var gridPros = {
             usePaging           : true,         //페이징 사용
@@ -35,8 +38,12 @@
         	}
         });
 
+        $("#tempSave_btn").click(fn_tempSave);
+
+        //Populate Request Type List
         doGetCombo("/services/ecom/selectRequestTypeJsonList", '', '', '_inputReqTypeSelect', 'S', '');
 
+        //Populate Request Sub Type List
         $("#_inputReqTypeSelect").change(
                 function() {
                   if ($("#_inputReqTypeSelect").val() == '') {
@@ -50,9 +57,12 @@
         fn_setKeyInDate();
 
         $("#_inputMainDeptSelect").change(function(){
-
             doGetCombo('/services/ecom/selectSubDept.do',  $("#_inputMainDeptSelect").val(), '','_inputSubDeptSelect', 'S' ,  '');
+        });
 
+        $("_inputSubReqTypeSelect").change(function(){
+            var reqSubType = $("#_inputSubReqTypeSelect").val();
+            fn_changeTab(reqSubType);
         });
 
     });//Doc Ready End
@@ -108,17 +118,6 @@
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //Save Validation
-    function fn_saveValidation(){
-
-        //리마크 널체크
-        if('' == $("#_agreementAgmRemark").val() || null == $("#_agreementAgmRemark").val()){
-            Common.alert('<spring:message code="sal.alert.msg.plzKeyInTheRem" />');
-            return false;
-        }
-        return true;
-    }
-
     function fn_setKeyInDate() {
         var today = new Date();
 
@@ -138,19 +137,19 @@
     }
 
     function fn_cpeReqstApproveLinePop() {
-//        var checkResult = fn_checkEmpty2();
+        var checkResult = fn_checkEmpty2();
 
-//        if(!checkResult){
-//            return false;
-//        }
+        if(!checkResult){
+            return false;
+        }
 
         // tempSave를 하지 않고 바로 submit인 경우
-//        if(FormUtil.isEmpty($("#clmNo").val())) {
+        if(FormUtil.isEmpty($("#_cpeReqNo").val())) {
             fn_saveNewCpeRequest();
-//        } else {
+        } else {
             // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
-//            fn_saveUpdateRequest("");
-//        }
+            fn_saveUpdateRequest("");
+        }
         var cpeReqstNo =  $("#_cpeReqNo").val();
         Common.popupDiv("/services/ecom/cpeReqstApproveLinePop.do", {cpeReqNo:cpeReqstNo}, null, true, "cpeReqstApproveLinePop");
     }
@@ -167,7 +166,46 @@
         Common.ajax("POST", "/services/ecom/insertCpeReqst.do", $("#form_newReqst").serializeJSON(), function(result) {
             console.log(result);
             $("#_cpeReqNo").val(result.data.cpeReqNo);
+            //if(st == "new") {   //TODO: Yong - to check and revise
+                Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
+                //$("#newRequestPop").remove(); //TODO: Close pop up
+            //}  //TODO: Yong - to check and revise
+            //fn_selectRequestList(); //TODO: refresh list upon request submission and pop up closure
         });
+    }
+
+    function fn_checkEmpty2() {
+        var checkResult = true;
+
+        //TODO: Add validation for mandatory fields
+        /*if (FormUtil.isEmpty($("#newCostCenter").val())) {
+            Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
+            checkResult = false;
+        }*/
+        return checkResult;
+    }
+
+    function fn_tempSave() {
+        if(fn_checkEmpty2()) {
+            if(FormUtil.isEmpty($("#_cpeReqNo").val())) {
+                fn_saveNewRequest(callType);
+            } else {
+                fn_saveUpdateRequest(callType);
+            }
+        }
+    }
+
+    function fn_saveUpdateRequest(st) {
+        if(fn_checkEmpty2()){
+            Common.ajax("POST", "/services/ecom/updateCpeReqst.do", $("#form_newReqst"), function(result) {
+                console.log(result);
+                if(st == "new") {
+                    Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
+                    $("#newRequestPop").remove();
+                }
+                //fn_selectRequestList();
+            });
+        }
     }
 
 </script>
@@ -380,11 +418,13 @@
 </table><!-- table end -->
 
 <ul class="center_btns">
+    <li><p class="btn_blue2"><a href="#" id="tempSave_btn"><spring:message code="newWebInvoice.btn.tempSave" /></a></p></li>
     <li><p class="btn_blue2 big"><a href="#" id="_submitBtn"><spring:message code="sal.btn.submit" /></a></p></li>
     <li><p class="btn_blue2 big"><a href="#" id="_clearBtn"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </form>
 </section><!-- search_result end -->
+
 
 </section><!-- content end -->
 

@@ -28,4 +28,6 @@ public interface CpeService {
 	String selectNextCpeAppvPrcssNo();
 
 	void insertCpeRqstApproveMgmt(Map<String, Object> params);
+
+	List<EgovMap> selectCpeRequestList(Map<String, Object> params);
 }
