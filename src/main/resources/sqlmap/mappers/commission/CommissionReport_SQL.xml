@@ -32,7 +32,7 @@
         FROM SYS0012M T1
         JOIN SYS0013M T2
         ON T1.CODE_MASTER_ID = T2.CODE_MASTER_ID
-        WHERE T2.CODE_ID IN (1,2)
+        WHERE T2.CODE_ID IN (1,2,7)
         ORDER BY T2.CODE
    </select>
 
