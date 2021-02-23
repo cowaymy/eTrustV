@@ -233,6 +233,7 @@ public class LoginController {
 		model.put("userId", (String) params.get("userId"));
 		model.put("password", (String) params.get("password"));
 		model.put("userType", (String) params.get("loginUserType"));
+		model.put("popId", params.get("popId"));
 		model.put("pdfNm", params.get("loginPdf"));
 		model.put("popType", params.get("popType"));
 		model.put("popAck1", params.get("popAck1"));
@@ -242,6 +243,10 @@ public class LoginController {
 		model.put("verNRIC", params.get("verNRIC"));
 		model.put("verBankAccNo", params.get("verBankAccNo"));
 		model.put("verBankName", params.get("verBankName"));
+
+		if(params.containsKey("consentFlg")) {
+		    model.put("consentFlg", params.get("consentFlg"));
+		}
 
 		return "/login/loginPop";
 	}
@@ -282,6 +287,11 @@ public class LoginController {
 
 		int noticeExist = loginService.checkNotice();
 
+		// check consent letter exist
+		int consentExist = loginService.checkConsent();
+		EgovMap itemConsent = new EgovMap();
+		itemConsent = (EgovMap) loginService.getConsentDtls(params); // To pull if exist
+
 		// Get User type, role/contract type, agreement status (if applicable)
 		EgovMap item1 = new EgovMap();
 		item1 = (EgovMap) loginService.getDtls(params);
@@ -316,13 +326,20 @@ public class LoginController {
 				popInfo.put("verBankAccNo", item1.get("bankAccNo"));
 				popInfo.put("verBankName", item1.get("bankName"));
 
-				// Pending
+				// Pending Agreement (New Members)
 				if ("44".equals(stusId) && "0".equals(cnfm) && "1900-01-01".equals(cnfmDt)) {
 					LOGGER.debug("============ PENDING =============");
 					params.put("roleId", item1.get("roleType"));
 					params.put("popType", "A");
+
+					if("115".equals(item1.get("roleType")) ||
+					   "121".equals(item1.get("roleType")) ||
+					   "352".equals(item1.get("roleType")) || "352".equals(item1.get("roleType"))
+					  ) {
+					    params.put("consentFlg", "Y");
+					}
 				}
-				// Accepted
+				// Accepted (Existing Members)
 				else if ("5".equals(stusId) && "1".equals(cnfm) && !"1900-01-01".equals(cnfmDt)) {
 
 					LOGGER.debug("============ ACCEPTED =============");
@@ -405,7 +422,6 @@ public class LoginController {
 							LOGGER.error(e.toString());
 						}
 					}
-
 					// HT agreement renewal
 					else if ("0007".equals(userTypeId)
 					        /*("0007".equals(userTypeId) && (("348".equals(item1.get("roleType")))
@@ -465,9 +481,14 @@ public class LoginController {
 							LOGGER.error(e.toString());
 						}
 					}
-					// HT agreement renewal end
-
-					// Other than HP user type
+					// HP, CD, HT
+                    else if(consentExist > 0 && itemConsent == null &&
+                            "4".equals(item1.get("memLvl").toString()) &&
+                            ("0001".equals(userTypeId) || "0002".equals(userTypeId) || "0007".equals(userTypeId))) {
+                        LOGGER.info("HP :: ORG0036D empty");
+                        params.put("popType", "C");
+                    }
+					// Other than HP user type (Staff, Admin)
 					else {
 						params.put("popType", "M");
 					}
@@ -503,8 +524,8 @@ public class LoginController {
 		if(!"A".equals(popType) && !"M".equals(popType) && noticeExist > 0) {
 		    switch(userType) {
 	        case 1:
-	            // if(!"".equals(popType)) params.put("popType", "N");
-	            params.put("popType", "N");
+	            if("".equals(popType)) params.put("popType", "N");
+	            //params.put("popType", "N");
 	            break;
 	        case 2:
 	            if(memLvl < 4) {
@@ -512,7 +533,7 @@ public class LoginController {
 	                // Default Notice view as there's no contract renewal applicable
 	                params.put("popType", "N");
 	            } else if(memLvl == 4) {
-	                if("-".equals(popType)) {
+	                if("-".equals(popType) || "".equals(popType)) {
 	                    params.put("popType", "N");
 	                }
 	            }
@@ -546,6 +567,7 @@ public class LoginController {
 		if (item2 != null) {
 			// Pop up configuration exist - get configurations
 			if (item2.containsKey("popNewFlNm")) {
+			    popInfo.put("popId", item2.get("popId"));
 				popInfo.put("popFlName", item2.get("popNewFlNm"));
 				popInfo.put("popExceptionMemroleCnt", item2.get("popExceptionMemroleCnt"));
 				popInfo.put("popExceptionUserCnt", item2.get("popExceptionUserCnt"));
@@ -570,6 +592,10 @@ public class LoginController {
 			params.put("surveyTypeId", surveyTypeId);
 		}
 		int verifySurveyStus = surveyService.verifyStatus(params, sessionVO);
+
+		if(params.containsKey("consentFlg")) {
+		    popInfo.put("consentFlg", params.get("consentFlg"));
+		}
 
 		popInfo.put("surveyTypeId", surveyTypeId);
 		popInfo.put("verifySurveyStus", verifySurveyStus);
@@ -643,4 +669,18 @@ public class LoginController {
         return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/popAccept.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> popAccept(@RequestParam Map<String, Object> params, ModelMap model) {
+	    LOGGER.debug("params : {}", params);
+
+	    SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+        params.put("userId", sessionVO.getUserId());
+	    int acceptPop = loginService.loginPopAccept(params);
+
+	    ReturnMessage message = new ReturnMessage();
+	    message.setCode(AppConstants.SUCCESS);
+	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+	    return ResponseEntity.ok(message);
+	}
 }

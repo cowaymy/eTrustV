@@ -58,4 +58,8 @@ public interface LoginMapper {
 	void logRequest(Map<String, Object> params);
 	void updateSYS47M_req(Map<String, Object> params);
 	void updateRequest(Map<String, Object> params);
+
+	int checkConsent();
+	EgovMap getConsentDtls(Map<String, Object> params);
+	int loginPopAccept(Map<String, Object> params);
 }

@@ -26,4 +26,8 @@ public interface agreementService {
     List<EgovMap> branch();
 
     EgovMap cdEagmt1(Map<String, Object> params);
+    
+    int checkConsent(Map<String, Object> params);
+    
+    List<EgovMap> consentList(Map<String, Object> params);
 }

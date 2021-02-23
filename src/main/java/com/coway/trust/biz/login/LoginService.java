@@ -47,4 +47,8 @@ public interface LoginService {
 //	int passwordRequest(Map<String, Object> params);
 
 	Map<String, Object> tempPwProcess(Map<String, Object> params);
+
+	int checkConsent();
+	EgovMap getConsentDtls(Map<String, Object> params);
+	int loginPopAccept(Map<String, Object> params);
 }

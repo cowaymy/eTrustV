@@ -275,4 +275,24 @@
         FROM ORG0003D
         WHERE APLICNT_CODE = #{memID}
     </select>
+
+    <select id="checkConsent" parameterType="Map" resultType="int">
+        SELECT COUNT(*)
+        FROM ORG0036D
+        WHERE MEM_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{memCode})
+    </select>
+
+    <select id="consentList" parameterType="Map" resultType="EgovMap">
+        SELECT
+            A.MEM_CODE,
+            A.NAME,
+            CASE WHEN (B.MEM_ID IS NOT NULL) THEN 'Y' ELSE '' END INDICATOR,
+            TO_CHAR(B.ACTION_DT, 'DD/MM/YYYY') ACTION_DATE
+        FROM ORG0001D A
+        LEFT JOIN ORG0036D B
+          ON A.MEM_ID = B.MEM_ID
+        WHERE A.STUS = 1
+          AND A.MEM_TYPE IN (1,2,7)
+        ORDER BY MEM_CODE
+    </select>
 </mapper>

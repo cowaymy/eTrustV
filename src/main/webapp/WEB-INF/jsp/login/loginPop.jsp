@@ -33,14 +33,19 @@ console.log("loginPop.jsp");
     if("${popType}" == "M" || "${popType}" == "N") {
         $("#memoButton").attr("hidden", false);
         $("#agreementButton").attr("hidden", true);
+        $("#popButton").attr("hidden", true);
 
         $("#acknowledgement").attr("hidden", true);
+        $("#popAcknowledgement").attr("hidden", true);
         $("#PDF").css("height", "600px");
     }
     // Organization's Agreement
     if("${popType}" == "A") {
         $("#agreementButton").attr("hidden", false);
         $("#memoButton").attr("hidden", true);
+        $("#popButton").attr("hidden", true);
+        $("#acknowledgement").attr("hidden", false);
+        $("#popAcknowledgement").attr("hidden", true);
 
         $("#acknowledgement").attr("hidden", false);
 
@@ -49,16 +54,25 @@ console.log("loginPop.jsp");
         } else {
             $("#agreementRejectBtn").attr("hidden", true);
         }
+
+        if(userType == "2") {
+            $("#agreementLogoutBtn").attr("hidden", false);
+            $("#agreementRejectBtn").attr("hidden", true);
+        }
+
+        if(userType == "7") {
+            $("#agreementLogoutBtn").attr("hidden", false);
+            $("#agreementRejectBtn").attr("hidden", true);
+        }
     }
 
-    if(userType == "2") {
-    	$("#agreementLogoutBtn").attr("hidden", false);
-        $("#agreementRejectBtn").attr("hidden", true);
-    }
-
-    if(userType == "7") {
-        $("#agreementLogoutBtn").attr("hidden", false);
-        $("#agreementRejectBtn").attr("hidden", true);
+    // Consent Letter/Additional Pop Up type
+    if("${popType}" != "A" && "${popType}" != "M" && "${popType}" != "N") {
+        $("#agreementButton").attr("hidden", true);
+        $("#memoButton").attr("hidden", true);
+        $("#popButton").attr("hidden", false);
+        $("#acknowledgement").attr("hidden", true);
+        $("#popAcknowledgement").attr("hidden", false);
     }
 
 });
@@ -90,7 +104,7 @@ function fn_AcceptAgreement() {
 
     Common.confirm("Are you sure want to confirm this application?", function() {
         // Update applicant status
-        Common.ajax("GET", "/organization/updateCodyCfm.do", {choice:"Y"}, function(result) {
+        Common.ajax("GET", "/organization/updateCodyCfm.do", {choice:"Y", consentFlg:$("#consentFlg").val()}, function(result) {
             if(result.message == "success.") {
                 var successMsg = "";
 
@@ -140,6 +154,24 @@ function fn_Logout() {
         action: "/login/logout.do",
         method: "POST"
     }).submit();
+}
+
+function fn_popAccept() {
+    console.log("fn_popAccept");
+
+    if($("#popAck1Checkbox").is(":checked") == false) {
+        Common.alert("* Please agree the terms and conditions.");
+        return false;
+    }
+
+    Common.ajax("GET", "/login/popAccept.do", {choice: "Y", popId: "${popId}"}, function(result) {
+        if(result.message == "success.") {
+            $("#loginForm").attr({
+                action: getContextPath() + "/common/main.do",
+                method: "POST"
+            }).submit();
+        }
+    });
 }
 
 </script>
@@ -233,6 +265,8 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:none; border-le
 
     <input type="hidden" title="ID" placeholder="ID" id="userId" name="userId" value="${userId}"/>
     <input type="hidden" title="PASSWORD" placeholder="PASSWORD" id="password" name="password" value="${password}"/>
+
+    <input type="hidden" id="consentFlg" name="consentFlg" value="${consentFlg}"/>
 </form>
 
 <form id="popForm" style="width: 100%">
@@ -279,6 +313,25 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:none; border-le
         </table>
     </div>
 
+    <div id="popAcknowledgement" style="padding-top:1%; padding-left: 1%; padding-right: 1%">
+        <table class="type1" style="border: none"><!-- table start -->
+            <caption>table</caption>
+            <colgroup>
+                <col style = "width: 50px"/>
+                <col style = "width: *"/>
+            </colgroup>
+
+            <tbody>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="popAck1Checkbox" name="popAck1Checkbox" value="1" />
+                    </td>
+                    <td style="padding-top:0.6%; padding-bottom:0.6%;">${popAck1}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <ul class="center_btns" id="memoButton" style="padding: 10px">
         <li><p class="btn_blue"><a href="javascript:fn_cont();">Close</a></p></li>
     </ul>
@@ -287,6 +340,11 @@ table.type1 tbody td{height:20px; padding:2px 6px; border-bottom:none; border-le
         <li><p class="btn_blue" id="agreementAcceptBtn"><a href="javascript:fn_AcceptAgreement();">Accept</a></p></li>
         <li><p class="btn_blue" id="agreementRejectBtn"><a href="javascript:fn_RejectAgreement();">Reject</a></p></li>
         <li><p class="btn_blue" id="agreementLogoutBtn"><a href="javascript:fn_Logout();">Logout</a></p></li>
+    </ul>
+
+    <ul class="center_btns" id="popButton">
+        <li><p class="btn_blue" id="popAcceptBtn"><a href="javascript:fn_popAccept();">Accept</a></p></li>
+        <li><p class="btn_blue" id="popLogoutBtn"><a href="javascript:fn_Logout();">Logout</a></p></li>
     </ul>
 </form>
 

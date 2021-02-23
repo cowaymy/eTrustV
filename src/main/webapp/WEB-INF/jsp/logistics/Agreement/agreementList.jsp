@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
-var myGridID;
+var myGridID, consentGridID;
 
 var cnfmDt, joinDt, agmtStus;
 
@@ -17,6 +17,8 @@ $(document).ready(function() {
 
     console.log($("#userRole").val());
     console.log("here");
+
+    //$("#consentDownload").hide();
 
     if($("#userRole").val() == 97 || $("#userRole").val() == 98 || $("#userRole").val() == 99 || $("#userRole").val() == 100 || // SO Branch
             $("#userRole").val() == 103 || $("#userRole").val() == 104 || $("#userRole").val() == 105 || // DST Support
@@ -401,6 +403,15 @@ function fn_searchMember() {
         $("#promoDt").val(result[0].promodt);
         $("#joinDt").val(result[0].joindt);
         $("#cnfmDt").val(result[0].cnfmdt);
+
+        Common.ajax("GET", "/logistics/agreement/checkConsent.do", {memCode : $("#code").val()}, function(result) {
+            console.log(result);
+            if(result.code == "00") {
+                $("#consentDownload").show();
+            } else {
+                $("#consentDownload").hide();
+            }
+        });
     });
 }
 
@@ -806,6 +817,51 @@ function createAUIGrid() {
     myGridID = AUIGrid.create("#grid_wrap_memList", columnLayout, gridPros);
 }
 
+
+function fn_consentRawDownload() {
+    console.log("fn_consentRawDownload");
+    var columnLayout = [
+    {
+        dataField : "memCode",
+        headerText : "Member Code"
+    }, {
+        dataField : "name",
+        headerText : "Member Name"
+    }, {
+        dataField : "indicator",
+        headerText : "Indicator"
+    }, {
+        dataField : "actionDate",
+        headerText : "Action Date"
+    }
+    ];
+
+    var gridPros = {
+            usePaging            : true,
+            pageRowCount         : 20,
+            editable             : false,
+            showStateColumn      : false,
+            displayTreeOpen      : false,
+            selectionMode        : "singleRow",
+            headerHeight         : 30,
+            useGroupingPanel     : false,
+            skipReadonlyColumns  : true,
+            wrapSelectionMove    : true,
+            showRowNumColumn     : true
+    };
+
+    consentGridID = AUIGrid.create("#consent_grip_wrap", columnLayout, gridPros);
+
+    Common.ajax("GET", "/logistics/agreement/consentList.do", null, function(result) {
+        AUIGrid.setGridData(consentGridID, result);
+        GridCommon.exportTo("consent_grip_wrap", "xlsx", "MemberConsentList");
+
+        AUIGrid.destroy("consent_grip_wrap");
+        consentGridID = null;
+    });
+
+}
+
 </script>
 
 <!-- --------------------------------------DESIGN------------------------------------------------ -->
@@ -950,44 +1006,46 @@ function createAUIGrid() {
     </section>
     <!-- search_table end -->
 
-    <!--
-<article class="link_btns_wrap">
-    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-    <dl class="link_list">
-        <dt><spring:message code="sal.title.text.link" /></dt>
-        <dd>
-            <ul class="btns">
-                <li><p class="link_btn"><a href="#" id="resetAgreementStus">Reset Agreement Status</a></li>
-            </ul>
-            <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-        </dd>
-    </dl>
-</article>
--->
+    <article class="link_btns_wrap">
+        <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+        <dl class="link_list">
+            <dt><spring:message code="sal.title.text.link" /></dt>
+            <dd>
+                <ul class="btns">
+                    <!--
+                    <li><p class="link_btn"><a href="#" id="resetAgreementStus">Reset Agreement Status</a></li>style="display: none"
+                     -->
+                     <li><p class="link_btn"><a href="${pageContext.request.contextPath}/resources/report/prd/organization/LoginPopUp/ConsentLetter.pdf" id="consentDownload" target="_blank">Download Consent Letter</a></p></li>
+
+                     <li><p class="link_btn"><a href="javascript:fn_consentRawDownload();" id="consentRawDownload">Consent Agreement Raw</a></li>
+
+                </ul>
+                <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+            </dd>
+        </dl>
+    </article>
 
     <article class="grid_wrap">
-        <!-- grid_wrap start -->
-        <div id="grid_wrap_memList"
-            style="width: 100%;
-  height: 500px;
-  margin: 0 auto;"></div>
+        <div id="grid_wrap_memList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
     </article>
-    <!-- grid_wrap end -->
 
-    <input type="hidden" id="userRole" name="userRole" value="${userRole} " />
+    <article class="grid_wrap" style="display:none;">
+        <div id="consent_grip_wrap" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+    </article>
+
+    <input type="hidden" id="userRole" name="userRole" value="${userRole}" />
 
     <form id="agreementReport" name="agreementReport" style="display: none">
-        <input id="reportFileName" name="reportFileName"
-            value="/organization/HPAgreement.rpt" /> <input id="viewType"
-            name="viewType" value="PDF" /> <input id="reportDownFileName"
-            name="reportDownFileName" /> <input id="v_memCode" name="v_memCode"
-            value="" />
+        <input id="reportFileName" name="reportFileName" value="/organization/HPAgreement.rpt" />
+        <input id="viewType" name="viewType" value="PDF" />
+        <input id="reportDownFileName" name="reportDownFileName" />
+        <input id="v_memCode" name="v_memCode" value="" />
     </form>
 
     <form id="applicantValidateForm" method="post">
         <div style="display: none">
-            <input type="text" name="aplcntCode" id="aplcntCode" /> <input
-                type="text" name="aplcntNRIC" id="aplcntNRIC" />
+            <input type="text" name="aplcntCode" id="aplcntCode" />
+            <input type="text" name="aplcntNRIC" id="aplcntNRIC" />
         </div>
     </form>
 

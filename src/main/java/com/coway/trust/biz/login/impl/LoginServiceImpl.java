@@ -279,4 +279,19 @@ public class LoginServiceImpl implements LoginService {
         result.put("message", msg);
         return result;
 	}
+
+	@Override
+	public int checkConsent() {
+	    return loginMapper.checkConsent();
+	}
+
+	@Override
+	public EgovMap getConsentDtls(Map<String, Object> params) {
+	    return loginMapper.getConsentDtls(params);
+	}
+	
+	@Override
+	public int loginPopAccept(Map<String, Object> params) {
+	    return loginMapper.loginPopAccept(params);
+	}
 }

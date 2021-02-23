@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.agreement.agreementService;
 import com.coway.trust.biz.organization.organization.MemberListService;
 
@@ -209,5 +211,34 @@ public class AgreementController {
         agreementInfo.put("rptFileNm", item.get("fileName"));
 
         return ResponseEntity.ok(agreementInfo);
+    }
+
+    @RequestMapping(value = "/agreement/checkConsent.do", method = RequestMethod.GET)
+    public ResponseEntity<ReturnMessage> checkConsent(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO session) {
+        logger.debug("loginController :: tempPwProcess");
+        logger.debug("params : {}", params);
+
+//        Map<String, Object> consentMap = new HashMap<String, Object>();
+        int consent = agreementService.checkConsent(params);
+
+        ReturnMessage message = new ReturnMessage();
+        if(consent > 0) {
+            message.setCode(AppConstants.SUCCESS);
+        } else {
+            message.setCode(AppConstants.FAIL);
+        }
+
+        return ResponseEntity.ok(message);
+    }
+    
+    @RequestMapping(value = "/agreement/consentList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> consentList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+        logger.debug("==================== consentList ====================");
+        logger.debug("params of memberList :: {}", params);
+
+        List<EgovMap> memberList = agreementService.consentList(params);
+
+        return ResponseEntity.ok(memberList);
     }
 }

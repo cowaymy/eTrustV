@@ -64,4 +64,14 @@ public class agreementServImpl extends EgovAbstractServiceImpl implements agreem
     public EgovMap cdEagmt1(Map<String, Object> params) {
         return agreementMapper.cdEagmt1(params);
     }
+	
+	@Override
+	public int checkConsent(Map<String, Object> params) {
+	    return agreementMapper.checkConsent(params);
+	}
+	
+	@Override
+    public List<EgovMap> consentList(Map<String, Object> params) {
+        return agreementMapper.consentList(params);
+    }
 }

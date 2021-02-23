@@ -317,6 +317,7 @@
 
     <select id="getPopDtls" parameterType="Map" resultType="egovMap">
         SELECT
+            A.POP_ID,
             A.POP_NEW_FL_NM,
             A.POP_FLG,
             A.POP_TYPE,
@@ -456,5 +457,63 @@
         UPDATE ORG0033D
         SET SMS_ID = #{smsId}
         WHERE REQ_ID = #{reqId}
+    </update>
+
+    <select id="checkConsent" parameterType="Map" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM SYS0091M
+        WHERE POP_TYPE = 'C'
+        AND POP_FLG = 'A'
+        AND VALID_FR <![CDATA[<=]]> SYSDATE
+        AND VALID_TO <![CDATA[>=]]> SYSDATE
+    </select>
+
+    <select id="getConsentDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            USER_ID,
+            MEM_ID,
+            POP_ID,
+            ACTION_DT
+        FROM ORG0036D
+        WHERE USER_ID = #{userId}
+        AND POP_ID = (
+            SELECT POP_ID
+            FROM SYS0091M
+            WHERE POP_TYPE = 'C'
+            AND POP_FLG = 'A'
+            AND VALID_FR <![CDATA[<=]]> SYSDATE
+            AND VALID_TO <![CDATA[>=]]> SYSDATE
+        )
+    </select>
+
+    <update id="loginPopAccept" parameterType="Map">
+        MERGE INTO ORG0036D T
+        USING (
+            SELECT
+                A.USER_ID,
+                B.MEM_ID,
+                <choose>
+                    <when test=' popId != null and popId != "" '>
+                        ${popId} POP_ID
+                    </when>
+                    <otherwise>
+                        (SELECT POP_ID
+                         FROM SYS0091M
+                         WHERE POP_TYPE = 'C'
+                         AND POP_FLG = 'A'
+                         AND VALID_FR <![CDATA[<=]]> SYSDATE
+                         AND VALID_TO <![CDATA[>=]]> SYSDATE
+                        ) POP_ID
+                    </otherwise>
+                </choose>
+            FROM SYS0047M A, ORG0001D B
+            WHERE A.HR_CODE = B.MEM_CODE
+            AND A.USER_ID = ${userId}
+        ) S
+        ON (T.USER_ID = S.USER_ID and T.MEM_ID = S.MEM_ID and T.POP_ID = S.POP_ID)
+        WHEN NOT MATCHED THEN
+        INSERT (T.SEQ, T.USER_ID, T.MEM_ID, T.POP_ID, T.ACTION_DT)
+        VALUES(ORG0036D_ID_SEQ.NEXTVAL, S.USER_ID, S.MEM_ID, S.POP_ID, SYSDATE)
     </update>
 </mapper>

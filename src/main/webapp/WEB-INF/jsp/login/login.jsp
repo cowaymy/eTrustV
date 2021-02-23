@@ -301,7 +301,8 @@
                                     inQueue = 1;
                                 }
                                 else {
-                                	inQueue = 1;
+                                    inQueue = 1;
+                                    $("#popId").val(aResult.popId);
                                     $("#loginPdf").val(aResult.popFlName);
                                     $("#popType").val(aResult.popType);
                                     $("#popAck1").val(aResult.popAck1);
@@ -313,6 +314,7 @@
                                     $("#verNRIC").val(aResult.verNRIC);
                                     $("#verBankAccNo").val(aResult.verBankAccNo);
                                     $("#verBankName").val(aResult.verBankName);
+                                    $("#consentFlg").val(aResult.consentFlg);
                                     Common.popupDiv("/login/loginPop.do", $("#loginForm").serializeJSON(), null, false, '_loginPop');
                                 }
                             } else {
@@ -494,6 +496,7 @@
             <input type="hidden" id="loginBrowser" name="browser" value=""/>
 
             <input type="hidden" id="loginUserType" name="loginUserType" value=""/> <!-- 2017-07-24 - LaiKW - Staff Memo Pop Up -->
+            <input type="hidden" id="popId" name="popId" value=""/>
             <input type="hidden" id="loginPdf" name="loginPdf" value=""/>
             <input type="hidden" id="popType" name="popType" value=""/>
             <input type="hidden" id="popAck1" name="popAck1" value=""/>
@@ -505,6 +508,7 @@
             <input type="hidden" id="verNRIC" name="verNRIC" value=""/>
             <input type="hidden" id="verBankAccNo" name="verBankAccNo" value=""/>
             <input type="hidden" id="verBankName" name="verBankName" value=""/>
+            <input type="hidden" id="consentFlg" name="consentFlg" value=""/>
 
             <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust.gif" alt="Coway"/></h2>
             <p><input type="text" title="ID" placeholder="ID" id="userId" name="userId" value=""/></p>
