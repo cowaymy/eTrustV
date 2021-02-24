@@ -543,7 +543,8 @@ public class LoginController {
 	             * HT has no memo applied as of 2021-02-04
 	             * Subject to change if required
 	             */
-	            if(!"A".equals(popType)) params.put("popType", "N");
+	            //if(!"A".equals(popType)) params.put("popType", "N");
+	            if("".equals(popType)) params.put("popType", "N");
 	            break;
 	        default:
 	            params.put("popType", "N");
