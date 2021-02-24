@@ -87,6 +87,9 @@ public class InvoiceAdjController {
 	@RequestMapping(value = "/selectAdjustmentList.do")
 	public ResponseEntity<List<EgovMap>> selectInvoiceList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
+	    LOGGER.error("selectAdjustmentList.do :: START");
+	    LOGGER.error("selectAdjustmentList :: params {}", params.toString());
+
 	    if(params.containsKey("mode") && "APPROVAL".equals(params.get("mode").toString())) {
 	        String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
 	        params.put("memCode", memCode);
@@ -98,7 +101,9 @@ public class InvoiceAdjController {
 	        }
 	    }
 
+	    LOGGER.error("Query :: selectInvoiceAdj :: START");
 		List<EgovMap> list = invoiceService.selectInvoiceAdj(params);
+		LOGGER.error("Query :: selectInvoiceAdj :: END");
 		return ResponseEntity.ok(list);
 	}
 
@@ -170,36 +175,34 @@ public class InvoiceAdjController {
 	            sessionApprGrp = apprDtls.get("apprGrp").toString();
 	        }
 
-	        List<EgovMap> apprList = null;
-	        apprList = invoiceService.selectAppvLineInfo(params);
-	        if(!apprList.isEmpty()) {
-	        	EgovMap apprDetail = apprList.get(0);
+	        List<EgovMap> apprList = invoiceService.selectAppvLineInfo(params);
+	        EgovMap apprDetail = apprList.get(0);
 
-		        ArrayList<String> appvPrcssStusList = new ArrayList<String>();
-		        //ArrayList<Map> appvPrcssStusList = new ArrayList<Map> ();
-		        HashMap<String, Object> appvHm = new HashMap<String, Object>();
+	        ArrayList<String> appvPrcssStusList = new ArrayList<String>();
+	        //ArrayList<Map> appvPrcssStusList = new ArrayList<Map> ();
+	        HashMap<String, Object> appvHm = new HashMap<String, Object>();
 
-		        appvPrcssStusList.add("- Requested By " + (String) apprDetail.get("memoReqstUserId") + " [" + (String) apprDetail.get("reqstDt") + "]");
+	        appvPrcssStusList.add("- Requested By " + (String) apprDetail.get("memoReqstUserId") + " [" + (String) apprDetail.get("reqstDt") + "]");
 
-		        String finalAppr = "";
-		        for(int i = 0; i < apprList.size(); i++) {
-		            apprDetail = apprList.get(i);
+	        String finalAppr = "";
+	        for(int i = 0; i < apprList.size(); i++) {
+	            apprDetail = apprList.get(i);
 
-		            if("R".equals((String)apprDetail.get("memoAppvStus")) || "T".equals((String)apprDetail.get("memoAppvStus"))) {
-		                appvPrcssStusList.add("- Pending for Approval By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
-		            } else if("A".equals((String)apprDetail.get("memoAppvStus"))) {
-		                appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
-		                finalAppr = "- Approved By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "]";
-		            } else if("J".equals((String)apprDetail.get("memoAppvStus"))) {
-		                appvPrcssStusList.add("- Rejected By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
-		                finalAppr = "- Rejected By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "]";
-		            }
-		        }
-
-		        apprResult.put("appvPrcssStus", appvPrcssStusList);
-		        returnValue.put("apprList", apprResult);
-		        returnValue.put("finalAppr", finalAppr);
+	            if("R".equals((String)apprDetail.get("memoAppvStus")) || "T".equals((String)apprDetail.get("memoAppvStus"))) {
+	                appvPrcssStusList.add("- Pending for Approval By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
+	            } else if("A".equals((String)apprDetail.get("memoAppvStus"))) {
+	                appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
+	                finalAppr = "- Approved By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "]";
+	            } else if("J".equals((String)apprDetail.get("memoAppvStus"))) {
+	                appvPrcssStusList.add("- Rejected By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
+	                finalAppr = "- Rejected By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "]";
+	            }
 	        }
+
+	        apprResult.put("appvPrcssStus", appvPrcssStusList);
+	        returnValue.put("apprList", apprResult);
+	        returnValue.put("finalAppr", finalAppr);
+
 			return ResponseEntity.ok(returnValue);
 
 
@@ -881,10 +884,10 @@ public class InvoiceAdjController {
             		accParam.put("memoTypeId", Integer.parseInt(memoTypeId));
             		accParam.put("invoiceType", Integer.parseInt(invoiceType));
             		accParam.put("invoiceItemTypeId", invoiceItemTypeId);
-            		EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
-
-            		returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
-            		returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
+//            		EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
+//
+//            		returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
+//            		returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
 
             	} else if (Integer.parseInt(invoiceType) == 127) {
             		//Outright
@@ -912,10 +915,10 @@ public class InvoiceAdjController {
             				accParam.put("memoTypeId", Integer.parseInt(memoTypeId));
             				accParam.put("invoiceType", Integer.parseInt(invoiceType));
             				accParam.put("invoiceItemTypeId", invoiceItemTypeId);
-            				EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
-
-            				returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
-            				returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
+//            				EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
+//
+//            				returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
+//            				returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
             			}else if (invoiceItemTypeId == 1326){
             				returnParam.put("memoItemCreditAccID",46);
             				returnParam.put("memoItemDebitAccID",543);
@@ -924,19 +927,19 @@ public class InvoiceAdjController {
             				accParam.put("memoTypeId", Integer.parseInt(memoTypeId));
             				accParam.put("invoiceType", Integer.parseInt(invoiceType));
             				accParam.put("invoiceItemTypeId", invoiceItemTypeId);
-            				EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
-
-            				returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
-            				returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
+//            				EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
+//
+//            				returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
+//            				returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
             			}else if (invoiceItemTypeId == 1328){
             				HashMap <String, Object> accParam = new HashMap<String, Object>();
             				accParam.put("memoTypeId", Integer.parseInt(memoTypeId));
             				accParam.put("invoiceType", Integer.parseInt(invoiceType));
             				accParam.put("invoiceItemTypeId", invoiceItemTypeId);
-            				EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
-
-            				returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
-            				returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
+//            				EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
+//
+//            				returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
+//            				returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
             			}
             		}else {
             			// DN
@@ -951,10 +954,10 @@ public class InvoiceAdjController {
             				accParam.put("memoTypeId", Integer.parseInt(memoTypeId));
             				accParam.put("invoiceType", Integer.parseInt(invoiceType));
             				accParam.put("invoiceItemTypeId", invoiceItemTypeId);
-            				EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
-
-            				returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
-            				returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
+//            				EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
+//
+//            				returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
+//            				returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
             			}else if (invoiceItemTypeId == 1326){
             				returnParam.put("memoItemCreditAccID",543);
             				returnParam.put("memoItemDebitAccID",46);
@@ -963,19 +966,19 @@ public class InvoiceAdjController {
             				accParam.put("memoTypeId", Integer.parseInt(memoTypeId));
             				accParam.put("invoiceType", Integer.parseInt(invoiceType));
             				accParam.put("invoiceItemTypeId", invoiceItemTypeId);
-            				EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
-
-            				returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
-            				returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
+//            				EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
+//
+//            				returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
+//            				returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
             			}else if (invoiceItemTypeId == 1328){
             				HashMap <String, Object> accParam = new HashMap<String, Object>();
             				accParam.put("memoTypeId", Integer.parseInt(memoTypeId));
             				accParam.put("invoiceType", Integer.parseInt(invoiceType));
             				accParam.put("invoiceItemTypeId", invoiceItemTypeId);
-            				EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
-
-            				returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
-            				returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
+//            				EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
+//
+//            				returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
+//            				returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
             			}
             		}
             	}
@@ -985,10 +988,10 @@ public class InvoiceAdjController {
             	accParam.put("memoTypeId", Integer.parseInt(memoTypeId));
             	accParam.put("invoiceType", Integer.parseInt(invoiceType));
             	accParam.put("invoiceItemTypeId", invoiceItemTypeId);
-            	EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
-
-            	returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
-            	returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
+//            	EgovMap accReturn = invoiceService.getAdjustmentCnDnAccId(accParam);
+//
+//            	returnParam.put("memoItemCreditAccID",accReturn.get("adjSetCrAccId"));
+//            	returnParam.put("memoItemDebitAccID",accReturn.get("adjSetDrAccId"));
             }
 
             returnParam.put("memoItemTaxCodeID", Integer.parseInt(billItemTaxCodeId));
