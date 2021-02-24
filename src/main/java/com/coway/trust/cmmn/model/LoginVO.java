@@ -46,6 +46,7 @@ public class LoginVO {
 	private String serialRequireChkYn;
 	private String hpStus;
 	private String memStus;
+	private String rank;
 
 	public String getUserNric() {
 		return userNric;
@@ -384,5 +385,13 @@ public class LoginVO {
 
     public String getMemStus() {
         return memStus;
+    }
+
+    public void setRank(String rank) {
+        this.rank = rank;
+    }
+
+    public String getRank() {
+        return rank;
     }
 }
