@@ -38,4 +38,6 @@ public interface CpeMapper {
 	public void updateCpeRqstAppvPrcssNo(Map<String, Object> params);
 
 	public List<EgovMap> selectCpeRequestList(Map<String, Object> params);
+
+	public EgovMap selectRequestInfo(Map<String, Object> params);
 }

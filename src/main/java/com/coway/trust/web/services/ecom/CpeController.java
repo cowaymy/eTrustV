@@ -224,6 +224,17 @@ public class CpeController {
 		return ResponseEntity.ok(cpeRequestList);
 	}
 
+	@RequestMapping(value = "/cpeRqstViewPop.do")
+	public String viewRequestPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO session) {
 
+		logger.debug("params =====================================>>  " + params);
+
+		EgovMap requestInfo = cpeService.selectRequestInfo(params);
+
+		model.addAttribute("requestInfo", requestInfo);
+
+		// TODO: Yong - return different View depending on Cpe request type (those needing approval, and those not needing approval)
+		return "services/ecom/cpeRqstViewPop";
+	}
 
 }

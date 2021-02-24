@@ -444,4 +444,16 @@
     ORDER BY CRT_DT DESC
    </select>
 
+   <select id="selectRequestInfo" parameterType="Map" resultType="egovMap">
+    SELECT CPE_ID
+         ,SALES_ORD_NO
+         ,CPE_TYPE
+         ,CPE_SUBTYPE
+         ,APPV_PRCSS_NO
+         ,CRT_USER_ID
+         ,CRT_DT
+    FROM SVC0118M
+    WHERE CPE_ID = #{cpeId}
+    </select>
+
 </mapper>

@@ -171,8 +171,8 @@
               console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
               console.log("CellDoubleClick clmNo : " + event.item.cpeId);
 
-              var cpeId = event.item.cpeType;
-              fn_cpeRequestViewPop(event.item.appvPrcssNo);
+              var cpeId = event.item.cpeId;
+              fn_cpeRequestViewPop(cpeId);
           });
 
           doGetCombo('/services/ecom/selectMainDept.do', '', '', 'main_department', 'S', '');
@@ -272,9 +272,10 @@
 	  Common.popupDiv("/services/ecom/cpeRequest.do" , null, null , true, 'cpeRequestNewSearchPop');
   }
 
-  function fn_cpeRequestViewPop(appvPrcssNo) {
+  function fn_cpeRequestViewPop(cpeId) {
       var data = {
-          appvPrcssNo : appvPrcssNo
+          //appvPrcssNo : appvPrcssNo  //TODO: Yong - consider if this is required as part of approval management submission
+          cpeId : cpeId
       };
       Common.popupDiv("/services/ecom/cpeRqstViewPop.do", data, null, true, "cpeRqstViewPop");
   }

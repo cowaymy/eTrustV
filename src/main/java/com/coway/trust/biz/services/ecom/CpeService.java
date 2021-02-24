@@ -30,4 +30,6 @@ public interface CpeService {
 	void insertCpeRqstApproveMgmt(Map<String, Object> params);
 
 	List<EgovMap> selectCpeRequestList(Map<String, Object> params);
+
+	EgovMap selectRequestInfo(Map<String, Object> params);
 }

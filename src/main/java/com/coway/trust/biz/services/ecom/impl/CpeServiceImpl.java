@@ -133,4 +133,9 @@ public class CpeServiceImpl implements CpeService {
 		return cpeMapper.selectCpeRequestList(params);
 	}
 
+	@Override
+	public EgovMap selectRequestInfo(Map<String, Object> params) {
+		return cpeMapper.selectRequestInfo(params);
+	}
+
 }
