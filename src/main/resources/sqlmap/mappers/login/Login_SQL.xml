@@ -348,7 +348,7 @@
         ) C
             ON A.POP_ID = C.POP_ID
         WHERE 1=1
-        <if test='popType != "N" '>
+        <if test='popType != "N" and popType != "C" '>
             AND SUBSTR(A.POP_MEM_TYPE, 1, 4) = #{userTypeId}
             <if test='userTypeId != "0004" and popType == "A" '>
                 <if test='roleId != null and roleId != "" '>
@@ -359,8 +359,8 @@
                 AND POP_TYPE = #{popType}
             </if>
         </if>
-        <if test='popType == "N" '>
-            AND POP_TYPE = 'N'
+        <if test='popType == "N" or popType == "C" '>
+            AND POP_TYPE = #{popType}
             AND VALID_FR <![CDATA[<=]]> SYSDATE
             AND VALID_TO <![CDATA[>=]]> SYSDATE
         </if>
