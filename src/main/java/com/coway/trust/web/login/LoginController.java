@@ -534,7 +534,11 @@ public class LoginController {
 	                params.put("popType", "N");
 	            } else if(memLvl == 4) {
 	                if("-".equals(popType) || "".equals(popType)) {
-	                    params.put("popType", "N");
+	                    if(consentExist > 0 && itemConsent == null) {
+	                        params.put("popType", "C");
+	                    } else {
+	                        params.put("popType", "N");
+	                    }
 	                }
 	            }
 	            break;
@@ -544,7 +548,7 @@ public class LoginController {
 	             * Subject to change if required
 	             */
 	            if(!"A".equals(popType)) {
-	                if(consentExist > 0) {
+	                if(consentExist > 0 && itemConsent == null) {
 	                    params.put("popType", "C");
 	                } else {
 	                    params.put("popType", "N");

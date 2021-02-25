@@ -1980,6 +1980,13 @@ logger.debug("params : {}", params);
         // service
         memberListService.updateCodyCfm(params);
 
+        if(params.containsKey("consentFlg")) {
+            if(!"".equals(params.get("consentFlg"))) {
+                params.put("userId", sessionVO.getUserId());
+                loginService.loginPopAccept(params);
+            }
+        }
+
         ReturnMessage message = new ReturnMessage();
         message.setCode(AppConstants.SUCCESS);
         message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
