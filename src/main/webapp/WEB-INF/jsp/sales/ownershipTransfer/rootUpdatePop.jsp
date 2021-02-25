@@ -796,10 +796,13 @@
             });
         }
 
+        /* Temporary disable validation on call log :: 20210225 */
+        /*
         if(callEntCount > 0){
             Common.alert('<spring:message code="sal.alert.msg.existInCallEtry" />');
             return;
         }
+        */
 
         //Validation Success - Save
         //Check box params Setting

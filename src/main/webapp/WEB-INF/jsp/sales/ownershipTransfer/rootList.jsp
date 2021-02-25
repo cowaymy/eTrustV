@@ -84,6 +84,7 @@
         $("#requestROT").click(fn_requestROTSearchOrder);
         $("#updateROT").click(fn_updateROT);
         $("#search_requestor_btn").click(fn_supplierSearchPop);
+        $("#newAS").click(fn_newAS);
 
         fn_setGridEvent();
     });
@@ -173,6 +174,67 @@
             Common.popupDiv("/sales/ownershipTransfer/updateROT.do", data, null, true, "fn_updateROT");
         }
     }
+
+    function fn_newAS() {
+        console.log("fn_newAS");
+        if(FormUtil.isNotEmpty(rotId)) {
+            console.log("fn_newAS :: rotNo :: " + rotNo);
+            console.log("fn_newAS :: rotOrdNo :: " + rotOrdNo);
+
+            // Common.popupDiv("/services/as/ASReceiveEntryPop.do", {in_ordNo : rotOrdNo}, null, true, '_NewEntryPopDiv1');
+
+            Common.ajax("GET", "/services/as/searchOrderNo", {orderNo : rotOrdNo}, function(result) {
+                if (result == null) {
+                    Common.alert("<spring:message code='service.msg.asOrdNtFound' />");
+                    $("#Panel_AS").attr("style", "display:none");
+                    return;
+                } else {
+                    var msg = fn_checkASReceiveEntry();
+
+                    if (msg == "") {
+                        fn_resultASPop(result.ordId, result.ordNo);
+                    } else {
+                        msg += "<br/> <spring:message code='service.msg.doPrc' /> <br/>";
+
+                        Common.confirm("<spring:message code='service.title.asRecvEntConf' />"
+                                       + DEFAULT_DELIMITER
+                                       + "<b>" + msg
+                                       + "</b>",
+                                       fn_resultASPop(result.ordId, result.ordNo));
+                    }
+                }
+            });
+
+        } else {
+            Common.alert("No record selected!");
+            return false;
+        }
+    }
+
+    function fn_checkASReceiveEntry() {
+        Common.ajaxSync("GET", "/services/as/checkASReceiveEntry.do", {salesOrderNo : $("#entry_orderNo").val()}, function(result) {
+            msg = result.message;
+        });
+        return msg;
+    }
+
+    // Callback function for new AS
+    function fn_resultASPop(ordId, ordNo) {
+        var selectedItems = AUIGrid.getCheckedRowItems(rootGridID);
+        var mafuncId = "";
+        var mafuncResnId = "";
+        var asId = "";
+
+        if (selectedItems.length > 0) {
+          mafuncId = selectedItems[0].item.asMalfuncId;
+          mafuncResnId = selectedItems[0].item.asMalfuncResnId;
+          asId = selectedItems[0].item.asId;
+        }
+
+        var pram = "?salesOrderId=" + ordId + "&ordNo=" + ordNo + "&mafuncId=" + mafuncId + "&mafuncResnId=" + mafuncResnId + "&AS_ID=" + asId + "&IND= 1";
+
+        Common.popupDiv("/services/as/resultASReceiveEntryPop.do" + pram, null, null, true, '_resultNewEntryPopDiv1');
+      }
     // Button functions - End
 
     /*
@@ -305,6 +367,21 @@
         </form>
     </section>
     <!-- search_table end -->
+
+    <!-- Link Wrap Start -->
+    <article class="link_btns_wrap">
+        <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+        <dl class="link_list">
+            <dt><spring:message code="sal.title.text.link" /></dt>
+            <dd>
+                <ul class="btns">
+                     <li><p class="link_btn"><a href="#" id="newAS">New AS</a></p></li>
+                </ul>
+                <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+            </dd>
+        </dl>
+    </article>
+    <!-- Link Wrap End -->
 
     <!-- search_result start -->
     <section class="search_result">
