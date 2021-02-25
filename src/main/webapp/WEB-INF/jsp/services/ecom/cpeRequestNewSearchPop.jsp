@@ -89,7 +89,7 @@ function fn_searchNewOrderPop(){
 
 
     if(isRtn == true){
-        Common.popupDiv("/services/ecom/newCpeSearchResultPop.do", $("#_searchForm_").serializeJSON(), null , true , 'cpeNewSearchResultPop');
+        Common.popupDiv("/services/ecom/cpeNewSearchResultPop.do", $("#_searchForm_").serializeJSON(), null , true , 'cpeNewSearchResultPop');
     }
 
 }

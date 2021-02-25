@@ -138,4 +138,10 @@ public class CpeServiceImpl implements CpeService {
 		return cpeMapper.selectRequestInfo(params);
 	}
 
+	@Override
+	public List<EgovMap> selectCpeApprovalList(Map<String, Object> params) {
+		// TODO get all requests requiring approval, and assigned to logged on user
+		return null;
+	}
+
 }

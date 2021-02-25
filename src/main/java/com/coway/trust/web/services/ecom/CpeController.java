@@ -122,8 +122,8 @@ public class CpeController {
 		return ResponseEntity.ok(resultMap);
 	}
 
-	@RequestMapping(value = "/newCpeSearchResultPop.do", method = RequestMethod.POST)
-	public String newCpeSearchResultPop (@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+	@RequestMapping(value = "/cpeNewSearchResultPop.do", method = RequestMethod.POST)
+	public String cpeNewSearchResultPop (@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 
 		int prgrsId = 0;
 		EgovMap orderDetail = null;

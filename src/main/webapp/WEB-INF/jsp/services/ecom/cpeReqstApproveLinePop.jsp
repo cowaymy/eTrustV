@@ -164,6 +164,16 @@ function fn_reqstSubmit() {
             }
         }
     }
+
+    if(length == 1) {
+        for(var i = 0; i < length; i++) {
+            if(FormUtil.isEmpty(AUIGrid.getCellValue(approveLineGridID, i, "memCode"))) {
+                Common.alert('<spring:message code="approveLine.empty.msg" />' + (i +1) + ".");
+                checkMemCode = false;
+            }
+        }
+    }
+
     console.log(checkMemCode);
     if(checkMemCode) {
         Common.popupDiv("/services/ecom/cpeReqstRegistrationMsgPop.do", null, null, true, "cpeReqstRegistrationMsgPop");

@@ -2,9 +2,6 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
-    //var callType = "${callType}";   // TODO: Yong - To identity if request is for New vs View/Update
-    var callType = "new";
-
 
     var gridPros = {
             usePaging           : true,         //페이징 사용
@@ -27,18 +24,17 @@
 
         //Reselect(Whole)
         $("#_reSelect").click(function() {
-            //self.location.href = getContextPath()+"/sales/ccp/insertCcpAgreementSearch.do";
             $("#_cpeResultPopCloseBtn").click();
         });
 
         //Submit
         $("#_submitBtn").click(function() {
         	if (fn_checkApprovalRequired()) {
-        	    fn_cpeReqstApproveLinePop();
+        	    fn_cpeReqstApproveLinePop();   //save and open approval pop up
+        	} else {
+        		fn_saveNewCpeRequest();        //save
         	}
         });
-
-        $("#tempSave_btn").click(fn_tempSave);
 
         //Populate Request Type List
         doGetCombo("/services/ecom/selectRequestTypeJsonList", '', '', '_inputReqTypeSelect', 'S', '');
@@ -54,15 +50,19 @@
                   }
               });
 
+        //Populate Request Date
         fn_setKeyInDate();
 
+        //Populate Main Department in-charge
         $("#_inputMainDeptSelect").change(function(){
             doGetCombo('/services/ecom/selectSubDept.do',  $("#_inputMainDeptSelect").val(), '','_inputSubDeptSelect', 'S' ,  '');
         });
 
-        $("_inputSubReqTypeSelect").change(function(){
+        //Populate Sub Request Type
+        $("#_inputSubReqTypeSelect").change(function(){
+            var reqType = $("#_inputReqTypeSelect").val();
             var reqSubType = $("#_inputSubReqTypeSelect").val();
-            fn_changeTab(reqSubType);
+            fn_showSubReqSection(reqType, reqSubType);
         });
 
     });//Doc Ready End
@@ -137,74 +137,94 @@
     }
 
     function fn_cpeReqstApproveLinePop() {
-        var checkResult = fn_checkEmpty2();
 
-        if(!checkResult){
-            return false;
-        }
+        fn_saveNewCpeRequest();
 
-        // tempSave를 하지 않고 바로 submit인 경우
-        if(FormUtil.isEmpty($("#_cpeReqNo").val())) {
-            fn_saveNewCpeRequest();
-        } else {
-            // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
-            fn_saveUpdateRequest("");
-        }
-        var cpeReqstNo =  $("#_cpeReqNo").val();
-        Common.popupDiv("/services/ecom/cpeReqstApproveLinePop.do", {cpeReqNo:cpeReqstNo}, null, true, "cpeReqstApproveLinePop");
+        var cpeReqNo =  $("#_cpeReqNo").val();
+        Common.popupDiv("/services/ecom/cpeReqstApproveLinePop.do", {cpeReqNo:cpeReqNo}, null, true, "cpeReqstApproveLinePop");
     }
 
     function fn_checkApprovalRequired() {
     	var reqSubType = $("#_inputSubReqTypeSelect").val();
     	if(reqSubType == "6212" || reqSubType == "6213") { // 6212 - Change Promotion Code, 6213 - Request Product Exchange
+    		$("#_approvalRequired").val('1'); //1 represents true
     		return true;
     	}
     	return false;
     }
 
     function fn_saveNewCpeRequest() {
+
+        var checkResult = fn_checkEmptyFields();
+
+        if(!checkResult){
+            return false;
+        }
+
         Common.ajax("POST", "/services/ecom/insertCpeReqst.do", $("#form_newReqst").serializeJSON(), function(result) {
             console.log(result);
             $("#_cpeReqNo").val(result.data.cpeReqNo);
-            //if(st == "new") {   //TODO: Yong - to check and revise
-                Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
+                Common.alert('<spring:message code="newCpe.save.msg" />', fn_closePopNoApprovalRqrd);
                 //$("#newRequestPop").remove(); //TODO: Close pop up
-            //}  //TODO: Yong - to check and revise
-            //fn_selectRequestList(); //TODO: refresh list upon request submission and pop up closure
         });
     }
 
-    function fn_checkEmpty2() {
+    function fn_checkEmptyFields() {
         var checkResult = true;
 
-        //TODO: Add validation for mandatory fields
-        /*if (FormUtil.isEmpty($("#newCostCenter").val())) {
-            Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
+        if (FormUtil.isEmpty($("#_inputReqTypeSelect").val())) {
+            Common.alert('<spring:message code="cpe.requestType.msg" />');
             checkResult = false;
-        }*/
+        }
+
+        if (FormUtil.isEmpty($("#_inputSubReqTypeSelect").val())) {
+            Common.alert('<spring:message code="cpe.requestSubType.msg" />');
+            checkResult = false;
+        }
+
+        if (FormUtil.isEmpty($("#_inputMainDeptSelect").val())) {
+            Common.alert('<spring:message code="cpe.mainDept.msg" />');
+            checkResult = false;
+        }
+
+        if (FormUtil.isEmpty($("#_inputSubDeptSelect").val())) {
+            Common.alert('<spring:message code="cpe.subDept.msg" />');
+            checkResult = false;
+        }
+
+        if (FormUtil.isEmpty($("#_inputIssueSelect").val())) {
+        	Common.alert('<spring:message code="cpe.issue.msg" />');
+        	checkResult = false;
+        }
+
+        if (FormUtil.isEmpty($("#_inputRemark").val())) {
+            Common.alert('<spring:message code="cpe.remark.msg" />');
+            checkResult = false;
+        }
+
         return checkResult;
     }
 
-    function fn_tempSave() {
-        if(fn_checkEmpty2()) {
-            if(FormUtil.isEmpty($("#_cpeReqNo").val())) {
-                fn_saveNewRequest(callType);
-            } else {
-                fn_saveUpdateRequest(callType);
-            }
-        }
+    function fn_closePopNoApprovalRqrd() {
+    	//Close these pop ups if approval is not required.
+    	//If approval is required, these pop ups are needed as part of approval process and they will be closed after approval request submission.
+    	if ($("#_approvalRequired").val() != 1) {
+            $("#cpeNewSearchResultPop").remove();
+            $("#cpeRequestNewSearchPop").remove();
+    	};
     }
 
-    function fn_saveUpdateRequest(st) {
-        if(fn_checkEmpty2()){
-            Common.ajax("POST", "/services/ecom/updateCpeReqst.do", $("#form_newReqst"), function(result) {
-                console.log(result);
-                if(st == "new") {
-                    Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
-                    $("#newRequestPop").remove();
-                }
-                //fn_selectRequestList();
-            });
+    function fn_showSubReqSection(reqType, reqSubType) {
+        if (reqType == '462' && reqSubType == "6212") { // 6212 - Change Promotion Code
+        	$("#scChangePromo").removeClass("blind");
+        } else {
+        	$("#scChangePromo").addClass("blind");
+        }
+
+        if (reqType == '462'  && reqSubType == "6213") { // 6213 - Request Product Exchange
+        	$("#scProductExch").removeClass("blind");
+        } else {
+        	$("#scProductExch").addClass("blind");
         }
     }
 
@@ -360,7 +380,8 @@
 <input type="hidden" name="reqStageId" id="_reqStageId" value="${orderDetail.basicInfo.ordStusId}" />
 <input type="hidden" name="salesOrdNo" id="_salesOrdNo" value="${orderDetail.basicInfo.ordNo}" />
 <input type="hidden" name="custId" id="_custId" value="${orderDetail.basicInfo.custId}" />
-<input type="hidden" name="cpeReqNo" id="_cpeReqNo"' />
+<input type="hidden" name="cpeReqNo" id="_cpeReqNo" />
+<input type="hidden" name="approvalRequired" id="_approvalRequired" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -404,7 +425,6 @@
 <tr>
     <th scope="row">Issue<span class="must">*</span></th>
     <td colspan="5"><select class="w100p" name="inputIssueSelect" id="_inputIssueSelect">
-    <!-- TODO: DROP DOWN VALUES SHOULD BE BASED ON SUB REQUEST TYPE? TO BE CONFIGURED in CODE MGMT -->
         <option value="1">Entered wrong data</option>
         <option value="2">Customer provided wrong info</option>
         <option value="3">Others</option>
@@ -412,17 +432,87 @@
 </tr>
 <tr>
     <th scope="row">Remark<span class="must">*</span></th>
-    <td colspan="5"><textarea cols="20" rows="5" name="cpeRemark" id="_cpeRemark"></textarea></td>
+    <td colspan="5"><textarea cols="20" rows="5" name="inputRemark" id="_inputRemark"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
+<section id="scChangePromo" class="blind">
+<aside class="title_line"><!-- title_line start -->
+<h3><spring:message code="cpe.title.changePromo" /></h3>
+</aside><!-- title_line end -->
+<table class="type1">
+<caption>Change Promo table</caption>
+<colgroup>
+    <col style="width:140px" />
+    <col style="width:260px" />
+    <col style="width:160px" />
+    <col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Old Promo Code</th>
+    <td colspan="3"><input type="text" title="" placeholder="<spring:message code='cpe.promo.old'/>"
+        class="w100p" id="oldPromoCode" name="oldPromoCode" /></td>
+    <th scope="row">New Promo Code</th>
+    <td colspan="3"><input type="text" title="" placeholder="<spring:message code='cpe.promo.new'/>"
+        class="w100p" id="newPromoCode" name="newPromoCode" /></td>
+</tr>
+<tr>
+    <th scope="row">Temp Field Promo</th>
+    <td colspan="3"><input type="text" title="" placeholder="<spring:message code='cpe.promo.field'/>"
+        class="w100p" id="tempFieldPromo" name="tempFieldPromo" /></td>
+    <th scope="row">Temp Field 2 Promo </th>
+    <td colspan="3"><input type="text" title="" placeholder="<spring:message code='cpe.promo2.field'/>"
+        class="w100p" id="tempField2Promo" name="tempField2Promo" /></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+<section id="scProductExch" class="blind">
+<aside class="title_line"><!-- title_line start -->
+<h3><spring:message code="cpe.title.productExchange" /></h3>
+</aside><!-- title_line end -->
+<table class="type1">
+<caption>Product Exchange table</caption>
+<colgroup>
+    <col style="width:140px" />
+    <col style="width:260px" />
+    <col style="width:160px" />
+    <col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Old Product</th>
+    <td colspan="3"><input type="text" title="" placeholder="<spring:message code='cpe.product.old'/>"
+        class="w100p" id="oldProduct" name="oldProduct" /></td>
+    <th scope="row">New Product</th>
+    <td colspan="3"><input type="text" title="" placeholder="<spring:message code='cpe.product.new'/>"
+        class="w100p" id="newProduct" name="newProduct" /></td>
+</tr>
+<tr>
+    <th scope="row">Temp Field Product Exchange</th>
+    <td colspan="3"><input type="text" title="" placeholder="<spring:message code='cpe.product.exchange.field'/>"
+        class="w100p" id="tempFieldPex" name="tempFieldPex" /></td>
+    <th scope="row">Temp Field 2 Product Exchange </th>
+    <td colspan="3"><input type="text" title="" placeholder="<spring:message code='cpe.product.exchange.field.2'/>"
+        class="w100p" id="tempField2Pex" name="tempField2Pex" /></td>
+</tr>
+</tbody>
+</table>
+</section>
+
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" id="tempSave_btn"><spring:message code="newWebInvoice.btn.tempSave" /></a></p></li>
     <li><p class="btn_blue2 big"><a href="#" id="_submitBtn"><spring:message code="sal.btn.submit" /></a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" id="_clearBtn"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
+
 </form>
+
 </section><!-- search_result end -->
 
 
