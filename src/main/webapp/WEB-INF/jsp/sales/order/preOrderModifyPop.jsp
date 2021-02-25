@@ -1224,10 +1224,26 @@
           Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : $("#ordProudct").val()}, function(defaultKey) {
             if(defaultKey != null) {
               key = defaultKey.code;
+              fn_reloadPromo();
             }
             $('#compType').val(key).change();
           });
         }
+      }
+
+    function fn_reloadPromo() {
+        $('#ordPromo option').remove();
+        $('#ordPromo').removeClass("blind");
+        $('#ordPromo').removeClass("disabled");
+
+        var appTyp = $("#appType").val();
+        var stkId = $("#ordProudct").val();
+        var cpntId = $("#compType").val();
+        var empInd = 0;
+        var exTrade = $("#exTrade").val();
+        var srvPacId = appTyp != 66 ? '' : $("#srvPacId").val();
+
+        doGetComboData('/sales/order/selectPromoBsdCpnt.do', { appTyp:appTyp, stkId:stkId, cpntId:cpntId, empInd:empInd, exTrade:exTrade, srvPacId:srvPacId }, '', 'ordPromo', 'S', '');
       }
 
     function fn_closePreOrdModPop() {
@@ -1395,7 +1411,7 @@
         var isSrvPac = null;
         if(appTypeVal == "66") isSrvPac = "Y";
 
-        if('${preOrderInfo.month}' >= '7' && '${preOrderInfo.year}' == '2019') {
+        if('${preOrderInfo.month}' >= '7' && '${preOrderInfo.year}' >= '2019') {
             doGetComboData('/sales/order/selectPromotionByAppTypeStockESales.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val(), isSrvPac:isSrvPac}, '', 'ordPromo', 'S', ''); //Common Code
         }
         else
@@ -1726,7 +1742,8 @@
                 ,promoCustType:vCustTypeId
                 ,exTrade:'${preOrderInfo.exTrade}'
                 ,srvPacId:'${preOrderInfo.srvPacId}'
-                ,promoId:'${preOrderInfo.promoId}'}
+                ,promoId:'${preOrderInfo.promoId}'
+                ,isSrvPac:('${preOrderInfo.appTypeId}' == 66 ? 'Y' : '')}
                 ,'${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
         }
         else
@@ -2561,7 +2578,7 @@
     <th scope="row">Product | Produk<span class="must">*</span></th>
     <td>
         <select id="ordProudct" name="ordProudct" class="w50p" disabled></select>
-        <select id="compType" name="compType" class="w50p blind" ></select>
+        <select id="compType" name="compType" class="w50p blind" onchange="fn_reloadPromo()"></select>
     </td>
 </tr>
 <tr>
