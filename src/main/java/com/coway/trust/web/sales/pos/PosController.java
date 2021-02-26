@@ -1,9 +1,12 @@
 package com.coway.trust.web.sales.pos;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -17,12 +20,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.pos.PosService;
 import com.coway.trust.biz.sales.pos.vo.PosGridVO;
+import com.coway.trust.biz.sales.pos.vo.PosLoyaltyRewardVO;
+import com.coway.trust.biz.sales.rcms.vo.uploadAssignAgentDataVO;
+import com.coway.trust.biz.sales.rcms.vo.uploadAssignConvertVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.BeanConverter;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -39,6 +50,9 @@ public class PosController {
 
   @Autowired
   private SessionHandler sessionHandler;
+
+  @Autowired
+  private CsvReadComponent csvReadComponent;
 
   @Resource(name = "posService")
   private PosService posService;
@@ -928,4 +942,54 @@ public class PosController {
     return ResponseEntity.ok(revMap);
 
   }
+
+  @RequestMapping(value = "/loyaltyRewardPointList.do")
+  public String loyaltyRewardPointList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+    return "sales/pos/posLoyaltyRewardList";
+  }
+
+  @RequestMapping(value = "/selectLoyaltyRewardPointList.do")
+  public ResponseEntity<List<EgovMap>> selectLoyaltyRewardPointList(@RequestParam Map<String, Object> params) throws Exception {
+    List<EgovMap> result = posService.selectLoyaltyRewardPointList(params);
+    return ResponseEntity.ok(result);
+  }
+
+  @RequestMapping(value = "/selectLoyaltyRewardPointDetails.do")
+  public ResponseEntity<List<EgovMap>> selectLoyaltyRewardPointDetails(@RequestParam Map<String, Object> params) throws Exception {
+    List<EgovMap> result = posService.selectLoyaltyRewardPointDetails(params);
+    return ResponseEntity.ok(result);
+  }
+
+  @RequestMapping(value = "/getLoyaltyRewardPointByMemCode.do")
+  public ResponseEntity<EgovMap> selectLoyaltyRewardPointByMemCode(@RequestParam Map<String, Object> params) throws Exception {
+    EgovMap result = posService.selectLoyaltyRewardPointByMemCode(params);
+    return ResponseEntity.ok(result);
+  }
+
+  @RequestMapping(value = "/uploadLoyaltyRewardBulk.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> uploadLoyaltyRewardBulk(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
+
+      Map<String, MultipartFile> fileMap = request.getFileMap();
+      MultipartFile multipartFile = fileMap.get("csvFile");
+
+      List<EgovMap> uploadedList = null;
+      List<PosLoyaltyRewardVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,PosLoyaltyRewardVO::create);
+
+      Map<String, Object> cvsParam = new HashMap<String, Object>();
+      cvsParam.put("voList", vos);
+      cvsParam.put("usrId", sessionVO.getUserId());
+      cvsParam.put("stus", 1);
+
+      posService.insertUploadedLoyaltyRewardList(cvsParam);
+
+      // 결과 만들기.
+      ReturnMessage message = new ReturnMessage();
+      message.setCode(AppConstants.SUCCESS);
+      message.setData(uploadedList);
+      message.setMessage("Saved Successfully");
+
+      return ResponseEntity.ok(message);
+  }
+
+
 }

@@ -256,6 +256,9 @@ $(document).ready(function() {
     //Purchase Btn
     $("#_purchBtn").click(function() {
 
+    	// Set Balance Capped amount here
+    	balanceCapped = $('#_posBalanceCapped').val();
+
     	//Pos Sales  AND Deduction
     	if($("#_insPosModuleType").val() == 2390 || $("#_insPosModuleType").val() == 2391) {
 
@@ -807,11 +810,11 @@ function createPurchaseGridID(){
 
     var posColumnLayout =  [
                             {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%'},
-                            {dataField : "stkDesc", headerText : '<spring:message code="sal.title.itemDesc" />', width : '30%'},
+                            {dataField : "stkDesc", headerText : '<spring:message code="sal.title.itemDesc" />', width : '20%'},
                             {dataField : "qty", headerText : '<spring:message code="sal.title.text.invStock" />', width : '10%'},
-                            {dataField : "inputQty", headerText : '<spring:message code="sal.title.qty" />', width : '10%'},
+                            {dataField : "inputQty", headerText : '<spring:message code="sal.title.qty" />', width : '6%'},
                             {dataField : "amt", headerText : '<spring:message code="sal.title.unitPrice" />', width : '10%' , dataType : "numeric", formatString : "#,##0.00"},
-                            {dataField : "subTotal", headerText : '<spring:message code="sal.title.subTotalExclGST" />', width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
+                            {dataField : "subTotal", headerText : '<spring:message code="sal.title.subTotalExclGST" />', width : '13%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
                             	var calObj = fn_calculateAmt(item.amt , item.inputQty);
                             	return Number(calObj.subChanges);
 							}},
@@ -819,9 +822,14 @@ function createPurchaseGridID(){
                             	var calObj = fn_calculateAmt(item.amt , item.inputQty);
                                 return Number(calObj.taxes);
                             }},
-                            {dataField : "totalAmt", headerText : '<spring:message code="sal.text.totAmt" />', width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
-                            	var calObj = fn_calculateAmt(item.amt , item.inputQty);
-                            	return Number(calObj.subTotal);
+                            {dataField : "totalAmt", headerText : '<spring:message code="sal.text.totAmt" />', width : '13%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
+                            	var calObj = fn_calculateFinalDisc(item.amt , item.inputQty);
+                            	return Number(calObj.discountTotal);
+                            }},
+                            {dataField : "totalDiscount", headerText : 'Discount', width : '10%', visible : false, dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
+                            	var calObj = fn_calculateFinalDisc(item.amt , item.inputQty);
+                            	balanceCapped = (balanceCapped - calObj.discountSub);
+                            	return Number(calObj.discountSub);
                             }},
                             {dataField : "stkTypeId" , visible :false},
                             {dataField : "stkId" , visible :false}//STK_ID
@@ -871,7 +879,13 @@ function createPurchaseGridID(){
            operation : "SUM",
            formatString : "#,##0.00",
            style : "aui-grid-my-footer-sum-total2"
-      }];
+      },{
+          dataField : "totalDiscount",
+          positionField : "totalDiscount",
+          operation : "SUM",
+          formatString : "#,##0.00",
+          style : "aui-grid-my-footer-sum-total2"
+     }];
 //
    // 푸터 레이아웃 그리드에 설정
    AUIGrid.setFooter(purchaseGridID, footerLayout);
@@ -1024,13 +1038,39 @@ function fn_calculateAmt(amt, qty) {
     var subChanges = 0;
     var taxes = 0;
 
+    var discountRate = $('#_posDiscount').val()/100;
+    var discountSub = 0;
+    var discountTotal = 0;
+    var balance = balanceCapped;
+
     subTotal = amt * qty;
     subChanges = (subTotal * 100) / 100;
     subChanges = subChanges.toFixed(2); //소수점2반올림
     taxes = subTotal - subChanges;
     taxes = taxes.toFixed(2);
 
-    var retObj = {subTotal : subTotal , subChanges : subChanges , taxes : taxes};
+    discountSub = subTotal * discountRate;
+    discountTotal = subTotal - discountSub;
+
+    var retObj = {subTotal : subTotal , subChanges : subChanges , taxes : taxes, discountSub : discountSub, discountTotal : discountTotal};
+
+    return retObj;
+
+}
+
+function fn_calculateFinalDisc(amt, qty) {
+
+    var subTotal = 0;
+    var discountRate = $('#_posDiscount').val()/100;
+    var discountSub = 0;
+    var discountTotal = 0;
+    var balance = balanceCapped;
+
+    subTotal = amt * qty;
+    discountSub = (balance - (subTotal * discountRate) > 0) ? (subTotal * discountRate) : balance;
+    discountTotal = subTotal - discountSub;
+
+    var retObj = {discountSub : discountSub, discountTotal : discountTotal};
 
     return retObj;
 
@@ -1113,6 +1153,7 @@ function fn_inputAmt(obj){
 <input type="hidden" name="posReason" id="_posReason">
 <input type="hidden" name="payResult" id="_payResult">
 <input type="hidden" name="hidSerialRequireChkYn" id="hidSerialRequireChkYn">
+<input type="hidden" name="hidLrpId" id="_hidLrpId">
 
 <!-- MODULE & SYSTEM -->
 <input type="hidden" name="insPosModuleType" id="_hidInsPosModuleType">
@@ -1152,6 +1193,28 @@ function fn_inputAmt(obj){
     <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td colspan="2">
         <input type="text" title="" placeholder="" class="w100p" id="_posRemark" name="posRemark" maxlength = "50" />
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.title.balanceCapped" /></th>
+    <td colspan="2">
+        <input type="text" title="" placeholder="" class="w50p" id="_posBalanceCapped" name="posBalanceCapped" maxlength = "50" disabled />
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.title.text.discount" /></th>
+    <td colspan="2">
+        <input type="text" title="" placeholder="" class="w50p" id="_posDiscount" name="posDiscount" maxlength = "50" disabled />
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.title.validDate" /></th>
+    <td colspan="2">
+        <div class="date_set w50p"><!-- date_set start -->
+        <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  name="sDate" id="_posSDate" disabled/></p>
+        <span><spring:message code="sal.title.to" /></span>
+        <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="eDate"  id="_posEDate" disabled/></p>
+        </div>
     </td>
 </tr>
 </tbody>

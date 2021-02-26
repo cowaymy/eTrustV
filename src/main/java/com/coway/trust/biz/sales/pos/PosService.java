@@ -113,4 +113,12 @@ public interface PosService {
 	// KR-OHK Serial check add
 	EgovMap insertPosReversalSerial(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectLoyaltyRewardPointList(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> selectLoyaltyRewardPointDetails(Map<String, Object> params) throws Exception;
+
+	EgovMap selectLoyaltyRewardPointByMemCode(Map<String, Object> params) throws Exception;
+
+	void insertUploadedLoyaltyRewardList(Map<String, Object> params);
+
 }

@@ -3754,4 +3754,141 @@
       }
      </select>
 
+     <select id="selectLoyaltyRewardPointList" parameterType="Map" resultType="egovMap">
+        SELECT M.LRP_BATCH_ID
+            , S.CODE STUS
+            , M.REM
+            , TO_CHAR(M.CRT_DT,'DD/MM/YYYY') CRT_DT
+            , U.USER_NAME CRT_USER_NAME
+        FROM SAL0286M M
+        JOIN SYS0047M U ON U.USER_ID = M.CRT_USER_ID
+        JOIN SYS0038M S ON S.STUS_CODE_ID = M.STUS_ID
+        <if test="status != null and status != ''">
+            AND M.STUS_ID = #{status}
+        </if>
+        <if test="batchId != null and batchId != ''">
+            AND M.LRP_BATCH_ID = #{batchId}
+        </if>
+        ORDER BY M.LRP_BATCH_ID DESC
+     </select>
+
+     <select id="selectLoyaltyRewardPointDetails" parameterType="Map" resultType="egovMap">
+        SELECT
+            D.LRP_ITM_ID ,
+            D.LRP_BATCH_ID ,
+            D.MEM_CODE ,
+            D.LRP_UPL_AMT ,
+            D.LRP_UPL_DISCOUNT_PERCENT ,
+            TO_CHAR(D.LRP_START_DT,'DD/MM/YYYY') START_DT,
+            TO_CHAR(D.LRP_END_DT,'DD/MM/YYYY') END_DT,
+            D.LRP_BALANCE_AMT ,
+            S.CODE STUS ,
+            D.REM
+        FROM SAL0287D D
+        JOIN SAL0286M M ON M.LRP_BATCH_ID = D.LRP_BATCH_ID
+        JOIN SYS0038M S ON S.STUS_CODE_ID = D.STUS_ID
+        <if test="status != null and status != ''">
+            AND D.STUS_ID = #{status}
+        </if>
+        <if test="batchId != null and batchId != ''">
+            AND D.LRP_BATCH_ID = #{batchId}
+        </if>
+        ORDER BY D.LRP_ITM_ID
+     </select>
+
+     <select id="selectLoyaltyRewardPointByMemCode" parameterType="Map" resultType="egovMap">
+        SELECT
+            LRP_ITM_ID ,
+            LRP_BATCH_ID ,
+            MEM_CODE ,
+            LRP_UPL_AMT ,
+            LRP_UPL_DISCOUNT_PERCENT ,
+            TO_CHAR(LRP_START_DT,'DD/MM/YYYY') START_DT,
+            TO_CHAR(LRP_END_DT,'DD/MM/YYYY') END_DT,
+            LRP_BALANCE_AMT ,
+            STUS_ID ,
+            REM ,
+            CRT_DT ,
+            CRT_USER_ID ,
+            UPD_DT ,
+            UPD_USER_ID
+        FROM SAL0287D
+        WHERE STUS_ID = 4
+        AND MEM_CODE = #{memCode}
+        AND LRP_BALANCE_AMT > 0
+        AND TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN TO_CHAR(LRP_START_DT,'YYYYMMDD') AND TO_CHAR(LRP_END_DT,'YYYYMMDD')
+     </select>
+
+     <insert id="insertUploadedLoyaltyRewardMaster" parameterType="Map">
+      INSERT INTO SAL0286M (
+          LRP_BATCH_ID,
+          STUS_ID,
+          REM,
+          CRT_DT,
+          CRT_USER_ID,
+          UPD_DT,
+          UPD_USER_ID
+      ) VALUES (
+          #{id},
+          #{stus},
+          null,
+          SYSDATE,
+          #{usrId},
+          SYSDATE,
+          #{usrId}
+      )
+     </insert>
+
+     <insert id="insertLoyaltyRewardPointItmBulk" parameterType="java.util.List">
+        INSERT INTO SAL0287D
+        (   LRP_ITM_ID ,
+            LRP_BATCH_ID ,
+            MEM_CODE ,
+            LRP_UPL_AMT ,
+            LRP_UPD_DISCOUNT_PERCENT ,
+            LRP_START_DT ,
+            LRP_END_DT ,
+            LRT_BALANCE_AMT ,
+            STUS_ID ,
+            REM ,
+            CRT_DT ,
+            CRT_USER_ID ,
+            UPD_DT ,
+            UPD_USER_ID )
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+          SELECT
+              #{item.itmId},
+              #{item.id},
+              #{item.memCode},
+              #{item.balanceCapped},
+              #{item.discount},
+              #{item.startDate},
+              #{item.endDate},
+              0,
+              1,
+              NULL,
+              SYSDATE,
+              #{item.userId},
+              SYSDATE,
+              #{item.userId}
+          FROM DUAL
+          </foreach>
+      </insert>
+
+      <select id="getSeqSAL0286M" resultType="int"  flushCache="true">
+          SELECT SAL0286M_LRP_BATCH_ID_SEQ.NEXTVAL FROM DUAL
+      </select>
+
+      <select id="getSeqSAL0287D" resultType="int"  flushCache="true">
+          SELECT SAL0287D_LRP_ITM_ID_SEQ.NEXTVAL FROM DUAL
+      </select>
+
+      <update id="updateLoyaltyRewardPoint"  parameterType="Map">
+          UPDATE SAL0287D
+          SET UPD_DT = SYSDATE
+            , UPD_USER_ID = #{userId}
+            , LRP_BALANCE_AMT = LRP_BALANCE_AMT - #{posDiscount}
+          WHERE LRP_ITM_ID = #{hidLrpId}
+      </update>
+
 </mapper>

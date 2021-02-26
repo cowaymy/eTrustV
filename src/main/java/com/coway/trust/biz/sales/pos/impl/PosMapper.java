@@ -260,4 +260,20 @@ public interface PosMapper {
 	// KR-OHK Serial Check add
 	Map<String, Object> SP_SALES_BARCODE_SAVE(Map<String, Object> params);
 
+	List<EgovMap> selectLoyaltyRewardPointList (Map<String, Object> params);
+
+	List<EgovMap> selectLoyaltyRewardPointDetails (Map<String, Object> params);
+
+	EgovMap selectLoyaltyRewardPointByMemCode (Map<String, Object> params);
+
+	int insertUploadedLoyaltyRewardMaster(Map<String, Object> params);
+
+	void insertLoyaltyRewardPointItmBulk(Map<String, Object> params);
+
+	int getSeqSAL0286M();
+
+	int getSeqSAL0287D();
+
+	void updateLoyaltyRewardPoint(Map<String, Object> params);
+
 }

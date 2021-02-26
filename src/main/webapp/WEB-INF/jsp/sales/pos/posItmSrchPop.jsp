@@ -617,7 +617,7 @@ function fn_createBasketGrid(){
 
 	 var basketColumnLayout =  [
 	                            {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%' , editable : false},
-	                            {dataField : "stkDesc", headerText : '<spring:message code="sal.title.itemDesc" />', width : '30%', editable : false},
+	                            {dataField : "stkDesc", headerText : '<spring:message code="sal.title.itemDesc" />', width : '20%', editable : false},
 	                            {dataField : "qty", headerText : '<spring:message code="sal.title.inventory" />', width : '10%', editable : false},
 	                            {dataField : "inputQty", headerText : '<spring:message code="sal.title.qty" />', width : '10%', dataType : "numeric"
 
@@ -634,6 +634,10 @@ function fn_createBasketGrid(){
 	                            {dataField : "taxes", headerText : 'GST(0%)', width : '10%', editable : false , dataType : "numeric", formatString : "#,##0.00", expFunction : function(  rowIndex, columnIndex, item, dataField ) {
 	                                var subObj = fn_calculateAmt(item.amt , item.inputQty);
 	                                return Number(subObj.taxes);
+	                            }},
+	                            {dataField : "totalAmt", headerText : '<spring:message code="sal.text.totAmt" />', width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
+	                                var calObj = fn_calculateAmt(item.amt , item.inputQty);
+	                                return Number(calObj.discountTotal);
 	                            }},
 	                            {
 	                                dataField : "undefined",

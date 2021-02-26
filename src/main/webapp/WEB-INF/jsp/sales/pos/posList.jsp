@@ -24,7 +24,7 @@ var optionReasonChoose = {
 var arrPosStusCode; //POS GRID
 var arrItmStusCode;  //ITEM GRID
 var arrMemStusCode; //MEMBER GRID
-
+var balanceCapped = 0;
 //Ajax async
 var ajaxOtp= {async : false};
 
@@ -766,6 +766,22 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
         $('#salesmanCd').removeClass("readonly");
         $('#salesmanPopNm').val(memInfo.name);
       }
+
+      //Load Salesman Loyalty Reward
+      Common.ajax("GET", "/sales/pos/getLoyaltyRewardPointByMemCode.do", {memCode : memCode},function(result){
+    	  console.log(result);
+    	  if(result != null){
+
+    		    $('#_hidLrpId').val(result.lrpItmId);
+    		    $('#_posBalanceCapped').val(result.lrpBalanceAmt);
+    		    $('#_posDiscount').val(result.lrpUplDiscountPercent);
+    		    $('#_posSDate').val(result.startDt);
+    		    $('#_posEDate').val(result.endDt);
+
+    	  }
+
+      });
+
     }
   });
 }

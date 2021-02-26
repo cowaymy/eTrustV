@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +17,13 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.pos.PosService;
 import com.coway.trust.biz.sales.pos.vo.PosDetailVO;
 import com.coway.trust.biz.sales.pos.vo.PosGridVO;
+import com.coway.trust.biz.sales.pos.vo.PosLoyaltyRewardVO;
 import com.coway.trust.biz.sales.pos.vo.PosMasterVO;
 import com.coway.trust.biz.sales.pos.vo.PosMemberVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.BeanConverter;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 import com.ibm.icu.math.BigDecimal;
@@ -192,6 +196,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     ;
     BigDecimal tempTotalCharge = new BigDecimal("0");
     ;
+    BigDecimal tempTotalDiscount = new BigDecimal("0");
 
     BigDecimal calHundred = new BigDecimal("100");
     BigDecimal calGst = new BigDecimal(SalesConstants.POS_INV_ITM_GST_RATE);
@@ -206,6 +211,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       amtMap = (Map<String, Object>) basketGrid.get(i);
       BigDecimal tempQty = new BigDecimal(String.valueOf(amtMap.get("inputQty")));
       BigDecimal tempUnitPrc = new BigDecimal(String.valueOf(amtMap.get("amt")));
+      BigDecimal tempDiscount = new BigDecimal(String.valueOf(amtMap.get("totalDiscount")));
 
       BigDecimal tempCurAmt = tempUnitPrc.multiply(tempQty); // Prc * Qty
       BigDecimal tempCurCharge = tempCurAmt; // Charges
@@ -213,18 +219,21 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
       LOGGER.info("__________________________________________________________________________________________");
       LOGGER.info("_____________NO.[" + i + "] =  prc : " + tempUnitPrc + ",  qty : " + tempQty + " , total Amt : "
-          + tempCurAmt + " , total Tax : " + tempCurTax + " , total Charges : " + tempCurCharge);
+          + tempCurAmt + " , total Tax : " + tempCurTax + " , total Charges : " + tempCurCharge + " , total Discount : " + tempDiscount);
       LOGGER.info("__________________________________________________________________________________________");
 
       tempTotalAmt = tempTotalAmt.add(tempCurAmt);
       tempTotalTax = tempTotalTax.add(tempCurTax);
       tempTotalCharge = tempTotalCharge.add(tempCurCharge);
+      tempTotalDiscount = tempTotalDiscount.add(tempDiscount);
 
     }
 
     double rtnAmt = tempTotalAmt.doubleValue();
     double rtnTax = tempTotalTax.doubleValue();
     double rtnCharge = tempTotalCharge.doubleValue();
+    double rtnDiscount = tempTotalDiscount.doubleValue();
+    rtnAmt = rtnAmt - rtnDiscount;
 
     if ((SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION)
         .equals(String.valueOf(posMap.get("insPosModuleType")))) { // 2391
@@ -238,8 +247,10 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
     LOGGER.info("_____________________________________________________________________________________");
     LOGGER.info("_______________________ TOTAL PRICE : " + rtnAmt + " , TOTAL TAX : " + rtnTax + " , TOTAL CHARGES : "
-        + rtnCharge);
+        + rtnCharge + ", TOTAL DISCOUNT : " + rtnDiscount + " ");
     LOGGER.info("_____________________________________________________________________________________");
+
+
 
     LOGGER.info("############### Parameter Setting , Insert and Update  ################");
     /* #### Parameter Setting , Insert and Update ###### */
@@ -320,7 +331,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     posMap.put("posTotalAmt", rtnAmt);
     posMap.put("posCharge", rtnCharge);
     posMap.put("posTaxes", rtnTax);
-    posMap.put("posDiscount", 0); // TODO 확인 필요
+    posMap.put("posDiscount", rtnDiscount); // TODO 확인 필요
     // hidLocId 와 branch ID
     if (posMap.get("hidLocId") == null) {
       posMap.put("hidLocId", "0");
@@ -432,7 +443,15 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
         posMapper.insertPosDetail(itemMap);
         LOGGER.info("############### 2 - " + idx + "  POS DETAIL INSERT END  ################");
 
+        System.out.println("----------------------------");
+        System.out.println(posMap);
+        System.out.println("----------------------------");
+
       } // Detail Insert End
+
+      if(posMap.get("hidLrpId") != null){
+        posMapper.updateLoyaltyRewardPoint(posMap);
+      }
 
       // Serial Insert
       if (serialGrid != null) {
@@ -3496,6 +3515,14 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
         posMapper.insertPosDetail(itemMap);
       } // Detail Insert End
 
+      System.out.println("----------------------------");
+      System.out.println(posMap);
+      System.out.println("----------------------------");
+
+      if(posMap.get("hidLrpId") != null){
+        posMapper.updateLoyaltyRewardPoint(posMap);
+      }
+
       // Serial Insert
       if (serialGrid != null) {
         for (int i = 0; i < serialGrid.size(); i++) {
@@ -3508,6 +3535,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
         }
       }
+
     }
 
     /*
@@ -3877,6 +3905,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     ;
     BigDecimal tempTotalCharge = new BigDecimal("0");
     ;
+    BigDecimal tempTotalDiscount = new BigDecimal("0");
 
     BigDecimal calHundred = new BigDecimal("100");
     BigDecimal calGst = new BigDecimal(SalesConstants.POS_INV_ITM_GST_RATE);
@@ -3895,21 +3924,25 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       BigDecimal tempCurAmt = tempUnitPrc.multiply(tempQty); // Prc * Qty
       BigDecimal tempCurCharge = tempCurAmt; // Charges
       BigDecimal tempCurTax = tempCurAmt.subtract(tempCurCharge); // Tax
+      BigDecimal tempDiscount = new BigDecimal(String.valueOf(amtMap.get("totalDiscount")));
 
       LOGGER.info("__________________________________________________________________________________________");
       LOGGER.info("_____________NO.[" + i + "] =  prc : " + tempUnitPrc + ",  qty : " + tempQty + " , total Amt : "
-          + tempCurAmt + " , total Tax : " + tempCurTax + " , total Charges : " + tempCurCharge);
+          + tempCurAmt + " , total Tax : " + tempCurTax + " , total Charges : " + tempCurCharge + " , total Discount : " + tempDiscount);
       LOGGER.info("__________________________________________________________________________________________");
 
       tempTotalAmt = tempTotalAmt.add(tempCurAmt);
       tempTotalTax = tempTotalTax.add(tempCurTax);
       tempTotalCharge = tempTotalCharge.add(tempCurCharge);
+      tempTotalDiscount = tempTotalDiscount.add(tempDiscount);
 
     }
 
     double rtnAmt = tempTotalAmt.doubleValue();
     double rtnTax = tempTotalTax.doubleValue();
     double rtnCharge = tempTotalCharge.doubleValue();
+    double rtnDiscount = tempTotalDiscount.doubleValue();
+    rtnAmt = rtnAmt - rtnDiscount;
 
     if ((SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION)
         .equals(String.valueOf(posMap.get("insPosModuleType")))) { // 2391
@@ -3923,7 +3956,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
     LOGGER.info("_____________________________________________________________________________________");
     LOGGER.info("_______________________ TOTAL PRICE : " + rtnAmt + " , TOTAL TAX : " + rtnTax + " , TOTAL CHARGES : "
-        + rtnCharge);
+        + rtnCharge + ", TOTAL DISCOUNT : " + rtnDiscount + " ");
     LOGGER.info("_____________________________________________________________________________________");
 
     LOGGER.info("############### Parameter Setting , Insert and Update  ################");
@@ -4005,7 +4038,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     posMap.put("posTotalAmt", rtnAmt);
     posMap.put("posCharge", rtnCharge);
     posMap.put("posTaxes", rtnTax);
-    posMap.put("posDiscount", 0); // TODO 확인 필요
+    posMap.put("posDiscount", rtnDiscount); // TODO 확인 필요
     // hidLocId 와 branch ID
     if (posMap.get("hidLocId") == null) {
       posMap.put("hidLocId", "0");
@@ -4118,6 +4151,14 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
         LOGGER.info("############### 2 - " + idx + "  POS DETAIL INSERT END  ################");
 
       } // Detail Insert End
+
+      System.out.println("----------------------------");
+      System.out.println(posMap);
+      System.out.println("----------------------------");
+
+      if(posMap.get("hidLrpId") != null){
+        posMapper.updateLoyaltyRewardPoint(posMap);
+      }
 
       // Serial Insert
       if (serialGrid != null) {
@@ -5605,4 +5646,69 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     return rtnMap;
 
   }
+
+  @Override
+  public List<EgovMap> selectLoyaltyRewardPointList(Map<String, Object> params) throws Exception {
+    return posMapper.selectLoyaltyRewardPointList(params);
+  }
+
+  @Override
+  public List<EgovMap> selectLoyaltyRewardPointDetails(Map<String, Object> params) throws Exception {
+    return posMapper.selectLoyaltyRewardPointDetails(params);
+  }
+
+  @Override
+  public EgovMap selectLoyaltyRewardPointByMemCode(Map<String, Object> params) throws Exception {
+    return posMapper.selectLoyaltyRewardPointByMemCode(params);
+  }
+
+  @Override
+  public void insertUploadedLoyaltyRewardList(Map<String, Object> params) {
+
+    List<PosLoyaltyRewardVO> vos2 = (List<PosLoyaltyRewardVO>) params.get("voList");
+
+    int id = posMapper.getSeqSAL0286M();
+    params.put("id", id);
+
+    posMapper.insertUploadedLoyaltyRewardMaster(params);
+
+    List<Map> list = vos2.stream().map(r -> {
+        final int seq  = posMapper.getSeqSAL0287D();
+
+        Map<String, Object> map = BeanConverter.toMap(r);
+        map.put("id", id);
+        map.put("itmId", seq);
+        map.put("memCode", r.getMemCode());
+        map.put("balanceCapped", r.getBalanceCapped());
+        map.put("discount", r.getDiscount());
+        map.put("startDate", r.getStartDate());
+        map.put("endDate", r.getEndDate());
+        map.put("stus", params.get("stus"));
+        map.put("userId", params.get("usrId"));
+        return map;
+    }).collect(Collectors.toList());
+
+    Map<String, Object> bulkMap = new HashMap<>();
+
+    int size = 10000;
+    int page = list.size() / size;
+    int start;
+    int end;
+
+    for (int i = 0; i <= page; i++) {
+      start = i * size;
+      end = size;
+
+      if (i == page) {
+        end = list.size();
+      }
+      if(list.stream().skip(start).limit(end).count() != 0){
+          bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+          posMapper.insertLoyaltyRewardPointItmBulk(bulkMap);
+      }
+    }
+
+
+  }
+
 }
