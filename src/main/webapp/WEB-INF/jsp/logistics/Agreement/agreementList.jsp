@@ -1016,9 +1016,9 @@ function fn_consentRawDownload() {
                     <li><p class="link_btn"><a href="#" id="resetAgreementStus">Reset Agreement Status</a></li>style="display: none"
                      -->
                      <li><p class="link_btn"><a href="${pageContext.request.contextPath}/resources/report/prd/organization/LoginPopUp/ConsentLetter.pdf" id="consentDownload" target="_blank">Download Consent Letter</a></p></li>
-
+                     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
                      <li><p class="link_btn"><a href="javascript:fn_consentRawDownload();" id="consentRawDownload">Consent Agreement Raw</a></li>
-
+                     </c:if>
                 </ul>
                 <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
             </dd>
