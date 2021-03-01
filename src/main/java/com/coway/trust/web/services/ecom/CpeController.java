@@ -164,14 +164,9 @@ public class CpeController {
 		return "services/ecom/cpeReqstApproveLinePop";
 	}
 
-	@RequestMapping(value = "/cpeReqstRegistrationMsgPop.do")
-	public String cpeReqstRegistrationMsgPop(ModelMap model) {
-		return "services/ecom/cpeReqstRegistrationMsgPop";
-	}
-
 	@RequestMapping(value = "/cpeReqstCompletedMsgPop.do")
 	public String reqstCompletedMsgPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		model.addAttribute("cpeReqNo", params.get("cpeReqNo"));
+		model.addAttribute("cpeReqId", params.get("cpeReqId"));
 		return "services/ecom/cpeReqstCompletedMsgPop";
 	}
 
@@ -204,9 +199,13 @@ public class CpeController {
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
 
-        int cpeReqNo = cpeService.selectNextCpeId();
-		params.put("cpeReqNo", cpeReqNo);
+        int cpeReqId = cpeService.selectNextCpeId();
+		params.put("cpeReqId", cpeReqId);
 		cpeService.insertCpeReqst(params);
+
+		int activeStatusForNew = 1;
+		params.put("status", activeStatusForNew);
+		cpeService.insertCpeReqstDetail(params);
 
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -224,17 +223,58 @@ public class CpeController {
 		return ResponseEntity.ok(cpeRequestList);
 	}
 
-	@RequestMapping(value = "/cpeRqstViewPop.do")
-	public String viewRequestPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO session) {
+	@RequestMapping(value = "/cpeRqstUpdateApprovePop.do")
+	public String cpeRequestUpdateApprove(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 
 		logger.debug("params =====================================>>  " + params);
 
-		EgovMap requestInfo = cpeService.selectRequestInfo(params);
+		int prgrsId = 0;
+		EgovMap orderDetail = null;
+		params.put("prgrsId", prgrsId);
 
+        orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+		model.put("orderDetail", orderDetail);
+
+		EgovMap requestInfo = cpeService.selectRequestInfo(params);
 		model.addAttribute("requestInfo", requestInfo);
 
-		// TODO: Yong - return different View depending on Cpe request type (those needing approval, and those not needing approval)
-		return "services/ecom/cpeRqstViewPop";
+		List<EgovMap> cpeStat = cpeService.getCpeStat(params);
+		model.addAttribute("cpeStat", cpeStat);
+
+        List<EgovMap> mainDeptList = cpeService.getMainDeptList();
+		model.addAttribute("mainDeptList", mainDeptList);
+
+		String approverList = cpeService.getApproverList(params);
+		model.addAttribute("approverList", approverList);
+
+		return "services/ecom/cpeRqstUpdateApprovePop";
+	}
+
+	@RequestMapping(value = "/selectCpeDetailList", method = RequestMethod.GET )
+	public ResponseEntity<List<EgovMap>> selectCpeDetailList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+		logger.debug("selectCpeDetailList==========================>> " + params);
+		List<EgovMap> cpeDetailList = cpeService.selectCpeDetailList(params);
+		return ResponseEntity.ok(cpeDetailList);
+	}
+
+	@RequestMapping(value = "/updateCpeStatus.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateCpeStatus(@RequestBody Map<String, Object> params, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+
+		logger.debug("updateCpeStatus====================================>>  " + params);
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		params.put("userName", sessionVO.getUserName());
+
+		cpeService.insertCpeReqstDetail(params); //insert new status record for CPE
+		cpeService.updateCpeStatusMain(params);  //update main table with latest status for CPE
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
 	}
 
 }

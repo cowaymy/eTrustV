@@ -33,5 +33,11 @@ public interface CpeService {
 
 	EgovMap selectRequestInfo(Map<String, Object> params);
 
-	List<EgovMap> selectCpeApprovalList(Map<String, Object> params);
+	void insertCpeReqstDetail(Map<String, Object> params);
+
+	List<EgovMap> selectCpeDetailList(Map<String, Object> params);
+
+	void updateCpeStatusMain(Map<String, Object> params);
+
+	String getApproverList(Map<String, Object> params);
 }

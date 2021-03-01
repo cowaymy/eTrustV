@@ -3,7 +3,7 @@
 <script type="text/javaScript">
   var gridID;
   var gridIDExcel;
-  var orderNo;
+  var cpeReqId;
 
   function cpeGrid() {
 
@@ -12,28 +12,23 @@
         headerText : "Order Number",
         width : "5%"
     }, {
-        dataField : "reportNo",
-        headerText : "Report No.",
-        width : "10%"
+        dataField : "salesOrdId",
+        visible : false
     }, {
       dataField : "customerName",
       headerText : "<spring:message code='service.grid.CustomerName'/>",
       width : "10%"
     }, {
-      dataField : "requestStage",
-      headerText : "Request Stage",
-      width : "13%"
-    }, {
       dataField : "nricCompanyNo",
       headerText : "NRIC/Company No.",
       width : "12%"
     }, {
-      dataField : "cpeId",
-      headerText : "Helpdesk Request",
-      width : "13%"
+      dataField : "cpeReqId",
+      headerText : "Request ID",
+      width : "5%"
     }, {
       dataField : "crtDt",
-      headerText : "<spring:message code='service.grid.registerDt'/>",
+      headerText : "<spring:message code='cpe.grid.requestDt'/>",
       width : "10%"
     }, {
       dataField : "requestorDept",
@@ -55,17 +50,20 @@
         dataField : "dscBranch",
         headerText : "DSC Branch",
         dataType : "date"
+    }, {
+        dataField : "requestStage",
+        headerText : "Request Stage",
+        width : "13%"
+    }, {
+        dataField : "asNo",
+        headerText : "AS No.",
+        width : "10%"
     }];
 
     var excelLayout = [ {
       dataField : "ordNo",
       headerText : "Order Number",
       width : 150,
-      height : 80
-    }, {
-      dataField : "reportNo",
-      headerText : "Report No.",
-      width : 200,
       height : 80
     }, {
       dataField : "customerName",
@@ -83,13 +81,13 @@
       width : 200,
       height : 80
     }, {
-      dataField : "helpdeskRequest",
-      headerText : "Helpdesk Request",
+      dataField : "cpeReqId",
+      headerText : "Request ID",
       width : 200,
       height : 80
     }, {
       dataField : "regDate",
-      headerText : "<spring:message code='service.grid.registerDt'/>",
+      headerText : "<spring:message code='cpe.grid.requestDt'/>",
       width : 200,
       height : 80
     }, {
@@ -117,7 +115,16 @@
       headerText : "DSC Branch",
       width : 500,
       height : 80
-    } ];
+    }, {
+        dataField : "requestStage",
+        headerText : "Request Stage",
+        width : "13%"
+    }, {
+        dataField : "asNo",
+        headerText : "AS No.",
+        width : 200,
+        height : 80
+    }];
 
     var gridPros = {
       usePaging : true,
@@ -155,8 +162,8 @@
             fn_search();
           });
 
-          //excel Download
-          $('#excelDown').click(
+      //excel Download
+      $('#excelDown').click(
             function() {
               //GridCommon.exportTo("tagMgmt_grid_wap", 'xlsx',"Tag Management");
               var excelProps = {
@@ -164,20 +171,23 @@
                 exceptColumnFields : AUIGrid.getHiddenColumnDataFields(gridIDExcelHide)
               };
               AUIGrid.exportToXlsx(gridIDExcelHide, excelProps);
-          });
+       });
 
-          // cell click
-          AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
-              console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-              console.log("CellDoubleClick clmNo : " + event.item.cpeId);
+       // cell double click
+//        AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
+//             console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+//             console.log("CellDoubleClick cpeReqId : " + event.item.cpeReqId);
 
-              var cpeId = event.item.cpeId;
-              fn_cpeRequestViewPop(cpeId);
-          });
+//             var cpeReqId = event.item.cpeReqId;
+//             fn_cpeRequestViewPop(cpeReqId);
+//        });
 
-          doGetCombo('/services/ecom/selectMainDept.do', '', '', 'main_department', 'S', '');
+       // cell click
+       AUIGrid.bind(gridID, "cellClick", function(event) {
+           cpeReqId = AUIGrid.getCellValue(gridID, event.rowIndex, "cpeReqId");
+       });
 
-          $("#main_department").change(
+       $("#main_department").change(
             function() {
               if ($("#main_department").val() == '') {
                 $("#sub_department").val('');
@@ -185,9 +195,11 @@
               } else {
                 doGetCombo('/services/ecom/selectSubDept.do', $("#main_department").val(), '', 'sub_department', 'S', '');
               }
-          });
+        });
 
-          doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'dsc_branch', 'M', 'fn_multiCombo'); //Branch Code
+       doGetCombo('/services/ecom/selectMainDept.do', '', '', 'main_department', 'S', '');
+       doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'dsc_branch', 'M', 'fn_multiCombo'); //Branch Code
+       doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','requestor_department', 'M' , 'fn_multiCombo');
   });
 
   function fn_search() {
@@ -196,17 +208,6 @@
         AUIGrid.setGridData(gridID, result);
         AUIGrid.setGridData(gridIDExcelHide, result);
       });
-  }
-
-  function fn_viewCpeDetail() {
-    var selectedItems = AUIGrid.getSelectedItems(orderNo);
-    if (selectedItems.length <= 0) {
-      Common.alert("<spring:message code='service.msg.NoRcd'/>");
-      return;
-    }
-
-    //Common.popupDiv("/services/tagMgmt/tagLogRegist.do?&salesOrdId="+salesOrdId +"&brnchId="+brnchId, null, null , true , '_ConfigBasicPop');
-    Common.popupDiv("/services/ecom/cpeRegistPop.do?orderNo=" + orderNo + "", null, null, true, "cpeRegistPop");
   }
 
   /* TODO: for CPE
@@ -263,7 +264,14 @@
       $('#dsc_branch').change(function() {
           //console.log($(this).val());
       }).multipleSelect({
-          selectAll: true, // 전체선택
+          selectAll: true,
+          width: '100%'
+      });
+
+      $('#requestor_department').change(function() {
+          //console.log($(this).val());
+      }).multipleSelect({
+          selectAll: true,
           width: '100%'
       });
   }
@@ -272,13 +280,34 @@
 	  Common.popupDiv("/services/ecom/cpeRequest.do" , null, null , true, 'cpeRequestNewSearchPop');
   }
 
-  function fn_cpeRequestViewPop(cpeId) {
-      var data = {
-          //appvPrcssNo : appvPrcssNo  //TODO: Yong - consider if this is required as part of approval management submission
-          cpeId : cpeId
-      };
-      Common.popupDiv("/services/ecom/cpeRqstViewPop.do", data, null, true, "cpeRqstViewPop");
+//   function fn_cpeRequestViewPop(cpeReqId) {
+//       var data = {
+//           //appvPrcssNo : appvPrcssNo  //TODO: Yong - consider if this is required as part of approval management submission
+//           cpeReqId : cpeReqId
+//       };
+//       Common.popupDiv("/services/ecom/cpeRqstViewPop.do", data, null, true, "cpeRqstViewPop");
+//   }
+
+  function fn_cpeUpdateApprove() {
+	  var selectedItems = AUIGrid.getSelectedItems(gridID);
+	  if (selectedItems.length <= 0) {
+	    Common.alert("<spring:message code='service.msg.NoRcd'/>");
+	    return;
+	  }
+
+	  var itemCpeReqId = selectedItems[0].item.cpeReqId;
+	  var itemSalesOrdId = selectedItems[0].item.salesOrdId;
+	  var itemSalesOrdNo = selectedItems[0].item.salesOrdNo;
+
+	  var data = {
+			  cpeReqId : itemCpeReqId,
+	          salesOrderId : itemSalesOrdId,
+	          salesOrderNo : itemSalesOrdNo
+	  };
+
+	  Common.popupDiv("/services/ecom/cpeRqstUpdateApprovePop.do", data, null, true, "cpeRqstUpdateApprovePop");
   }
+
 
 </script>
 <section id="content">
@@ -300,6 +329,11 @@
    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue">
       <a href="javascript:fn_cpeRequestPop()">Request</a>
+     </p></li>
+   </c:if>
+   <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <li><p class="btn_blue">
+      <a href="javascript:fn_cpeUpdateApprove()"><spring:message code='cpe.text.updateApprove'/></a>
      </p></li>
    </c:if>
    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
@@ -354,14 +388,12 @@
       </select></td>
      </tr>
      <tr>
-      <th scope="row"><spring:message code='cpe.grid.reportNo'/></th>
-      <td><input type="text" id="report_no" name="report_no"
-       placeholder="<spring:message code='cpe.grid.reportNo'/>" class="w100p" /></td>
-      <th scope="row"><spring:message code='cpe.grid.helpdeskRequest'/></th>
-      <td><select class="w100p" id="helpdesk_request"
-       name="helpdesk_request">
-       <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
-       </select></td>
+      <th scope="row"><spring:message code='cpe.grid.asNo'/></th>
+      <td><input type="text" id="asNo" name="asNo"
+       placeholder="<spring:message code='cpe.grid.asNo'/>" class="w100p" /></td>
+      <th scope="row"><spring:message code='cpe.grid.requestId'/></th>
+      <td><input type="text" id="cpeReqId" name="cpeReqId"
+       placeholder="<spring:message code='cpe.grid.requestId'/>" class="w100p" /></td>
       <th scope="row"><spring:message code='service.grid.subDept'/></th>
       <td><select class="w100p" id="sub_department"
        name="sub_department">
@@ -373,20 +405,20 @@
       <td><input type="text" id="customer_name"
        name="customer_name" title="" placeholder="<spring:message code='service.title.CustomerName'/>"
        class="w100p" /></td>
-      <th scope="row"><spring:message code='service.grid.registerDt'/></th>
+      <th scope="row"><spring:message code='cpe.grid.requestDt'/></th>
       <td>
        <div class="date_set w100p">
         <!-- date_set start -->
         <p>
          <input type="text" title="Create start Date" value="${bfDay}"
-          placeholder="DD/MM/YYYY" class="j_date w100p" id="regStartDt"
-          name="regStartDt" />
+          placeholder="DD/MM/YYYY" class="j_date w100p" id="reqStartDt"
+          name="reqStartDt" />
         </p>
         <span>To</span>
         <p>
          <input type="text" title="Create end Date" value="${toDay}"
-          placeholder="DD/MM/YYYY" class="j_date w100p" id="regEndDt"
-          name="regEndDt" />
+          placeholder="DD/MM/YYYY" class="j_date w100p" id="reqEndDt"
+          name="reqEndDt" />
         </p>
        </div>
        <!-- date_set end -->
@@ -416,7 +448,7 @@
        </select>
       </td>
       <th scope="row"><spring:message code="cpe.title.text.requestorDept" /></th>
-      <td><select class="w100p" id="requestor_department" name="requestor_department">
+      <td><select class="multy_select w100p" id="requestor_department" name="requestor_department">
        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
        </select></td>
       <th scope="row"><spring:message code="sal.title.text.dscBrnch" /></th>

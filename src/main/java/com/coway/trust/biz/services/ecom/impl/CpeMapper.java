@@ -40,4 +40,12 @@ public interface CpeMapper {
 	public List<EgovMap> selectCpeRequestList(Map<String, Object> params);
 
 	public EgovMap selectRequestInfo(Map<String, Object> params);
+
+	public void insertCpeRqstDetail(Map<String, Object> params);
+
+	public List<EgovMap> selectCpeDetailList(Map<String, Object> params);
+
+	public void updateCpeStatusMain(Map<String, Object> params);
+
+	public List<EgovMap> getApproverList(Map<String, Object> params);
 }

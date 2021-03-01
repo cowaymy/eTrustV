@@ -61,7 +61,14 @@ public class CpeServiceImpl implements CpeService {
 
 	@Override
 	public void insertCpeReqst(Map<String, Object> params) {
+		logger.debug("insertCpeReqst (master table) ===================================>>  " + params);
 		cpeMapper.insertCpeReqst(params);
+	}
+
+	@Override
+	public void insertCpeReqstDetail(Map<String, Object> params) {
+		logger.debug("insertCpeReqst (detail table) =====================================>>  " + params);
+		cpeMapper.insertCpeRqstDetail(params);
 	}
 
 	@Override
@@ -101,7 +108,7 @@ public class CpeServiceImpl implements CpeService {
 
 			// TODO: Notification - Yong - start
 /*            Map ntf = (HashMap<String, Object>) apprGridList.get(0);
-            ntf.put("cpeReqNo", params.get("cpeReqNo"));
+            ntf.put("cpeReqId", params.get("cpeReqId"));
 
             EgovMap ntfDtls = new EgovMap();
             ntfDtls = (EgovMap) webInvoiceMapper.getClmDesc(params);
@@ -119,10 +126,6 @@ public class CpeServiceImpl implements CpeService {
 */         // TODO: Notification - Yong - end
 		}
 
-		logger.debug("insertApproveItems =====================================>>  " + params);
-		// TODO: Yong - Insert into specific CPE Request Sub Type detail table e.g. Product Exchange's own table, Product Promotion Change's own table
-		//cpeMapper.insertCpeRqstApproveItems(params);
-
 		logger.debug("updateAppvPrcssNo =====================================>>  " + params);
 		cpeMapper.updateCpeRqstAppvPrcssNo(params);
 
@@ -139,9 +142,35 @@ public class CpeServiceImpl implements CpeService {
 	}
 
 	@Override
-	public List<EgovMap> selectCpeApprovalList(Map<String, Object> params) {
-		// TODO get all requests requiring approval, and assigned to logged on user
-		return null;
+	public List<EgovMap> selectCpeDetailList(Map<String, Object> params) {
+		return cpeMapper.selectCpeDetailList(params);
+	}
+
+	@Override
+	public void updateCpeStatusMain(Map<String, Object> params) {
+		logger.debug("updateCpeStatusMain =====================================>>  " + params);
+		cpeMapper.updateCpeStatusMain(params);
+	}
+
+	@Override
+	public String getApproverList(Map<String, Object> params) {
+
+		List<EgovMap> approverList = cpeMapper.getApproverList(params);
+		StringBuilder sbApprovers = new StringBuilder();
+
+		if (!approverList.isEmpty()) {
+			for(int i = 0; i < approverList.size(); i++) {
+				EgovMap appvLine = approverList.get(i);
+				String appvLineUserName = (String) appvLine.get("appvLineUserName");
+
+				sbApprovers.append(appvLineUserName);
+				sbApprovers.append("<br>");
+			}
+		} else {
+			sbApprovers.append("N/A");
+		}
+
+		return sbApprovers.toString();
 	}
 
 }

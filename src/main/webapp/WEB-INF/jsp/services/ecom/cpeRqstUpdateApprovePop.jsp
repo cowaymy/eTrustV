@@ -3,6 +3,7 @@
 
 <script type="text/javascript">
 
+    var gridID1;
     var gridPros = {
             usePaging           : true,         //페이징 사용
             pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
@@ -22,40 +23,25 @@
 
     $(document).ready(function() {
 
-        //Reselect(Whole)
-        $("#_reSelect").click(function() {
-            $("#_cpeResultPopCloseBtn").click();
-        });
-
-        //Submit
-        $("#_submitBtn").click(function() {
-        	if (fn_checkApprovalRequired()) {
-        	    fn_cpeReqstApproveLinePop();   //save and open approval pop up
-        	} else {
-        		fn_saveNewCpeRequest();        //save
-        	}
-        });
-
-        //Populate Request Type List
-        doGetCombo("/services/ecom/selectRequestTypeJsonList", '', '', '_inputReqTypeSelect', 'S', '');
-
-        //Populate Request Sub Type List
-        $("#_inputReqTypeSelect").change(
-                function() {
-                  if ($("#_inputReqTypeSelect").val() == '') {
-                    $("#_inputSubReqTypeSelect").val('');
-                    $("#_inputSubReqTypeSelect").find("option").remove();
-                  } else {
-                    doGetCombo('/services/ecom/selectSubRequestTypeJsonList', $("#_inputReqTypeSelect").val(), '', '_inputSubReqTypeSelect', 'S', '');
-                  }
-              });
-
-        //Populate Request Date
-        fn_setKeyInDate();
-
         //Populate Sub Department in-charge
         $("#_inputMainDeptSelect").change(function(){
             doGetCombo('/services/ecom/selectSubDept.do',  $("#_inputMainDeptSelect").val(), '','_inputSubDeptSelect', 'S' ,  '');
+        });
+
+        cpeRespondGrid();
+
+        $("#respondInfo").click(function() {
+            var cpeReqId = $("#_cpeReqId").val();
+
+            Common.ajax("GET", "/services/ecom/selectCpeDetailList.do?cpeReqId=" + cpeReqId + "", '',
+                    function(result) {
+                      AUIGrid.setGridData(gridID1, result);
+                      AUIGrid.resize(gridID1, 900, 300);
+                    });
+         });
+
+        $("#saveBtn").click(function() {
+            fn_updateCpeStatus();
         });
 
     });//Doc Ready End
@@ -111,57 +97,6 @@
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    function fn_setKeyInDate() {
-        var today = new Date();
-
-        var dd = today.getDate();
-        var mm = today.getMonth() + 1;
-        var yyyy = today.getFullYear();
-
-        if(dd < 10) {
-            dd = "0" + dd;
-        }
-        if(mm < 10){
-            mm = "0" + mm
-        }
-
-        today = dd + "/" + mm + "/" + yyyy;
-        $("#_inputRequestDate").val(today);
-    }
-
-    function fn_cpeReqstApproveLinePop() {
-
-        fn_saveNewCpeRequest();
-
-        var cpeReqId =  $("#_cpeReqId").val();
-        Common.popupDiv("/services/ecom/cpeReqstApproveLinePop.do", {cpeReqId:cpeReqId}, null, true, "cpeReqstApproveLinePop");
-    }
-
-    function fn_checkApprovalRequired() {
-    	var reqSubType = $("#_inputSubReqTypeSelect").val();
-    	if(reqSubType == "6212" || reqSubType == "6213") { // 6212 - Change Promotion Code, 6213 - Request Product Exchange
-    		$("#_approvalRequired").val('1'); //1 represents true
-    		return true;
-    	}
-    	return false;
-    }
-
-    function fn_saveNewCpeRequest() {
-
-        var checkResult = fn_checkEmptyFields();
-
-        if(!checkResult){
-            return false;
-        }
-
-        Common.ajax("POST", "/services/ecom/insertCpeReqst.do", $("#form_newReqst").serializeJSON(), function(result) {
-            console.log(result);
-            $("#_cpeReqId").val(result.data.cpeReqId);
-                Common.alert('<spring:message code="newCpe.save.msg" />', fn_closePopNoApprovalRqrd);
-                //$("#newRequestPop").remove(); //TODO: Close pop up
-        });
-    }
-
     function fn_checkEmptyFields() {
         var checkResult = true;
 
@@ -175,78 +110,85 @@
             checkResult = false;
         }
 
-        if (FormUtil.isEmpty($("#_inputMainDeptSelect").val())) {
-            Common.alert('<spring:message code="cpe.mainDept.msg" />');
-            checkResult = false;
-        }
-
-        if (FormUtil.isEmpty($("#_inputSubDeptSelect").val())) {
-            Common.alert('<spring:message code="cpe.subDept.msg" />');
-            checkResult = false;
-        }
-
-        if (FormUtil.isEmpty($("#_inputIssueSelect").val())) {
-        	Common.alert('<spring:message code="cpe.issue.msg" />');
-        	checkResult = false;
-        }
-
-        if (FormUtil.isEmpty($("#_inputRemark").val())) {
-            Common.alert('<spring:message code="cpe.remark.msg" />');
-            checkResult = false;
-        }
-
         return checkResult;
     }
 
-    function fn_closePopNoApprovalRqrd() {
-    	//Close these pop ups if approval is not required.
-    	//If approval is required, these pop ups are needed as part of approval process and they will be closed after approval request submission.
-    	if ($("#_approvalRequired").val() != 1) {
-            $("#cpeNewSearchResultPop").remove();
-            $("#cpeRequestNewSearchPop").remove();
-    	};
+    function cpeRespondGrid() {
+
+        var columnLayout1 = [{
+          dataField : "cpeReqId",
+          visible : false
+        }, {
+          dataField : "reqDtlId",
+          visible : false
+        }, {
+          dataField : "mainDept",
+          headerText : "Main Department",
+          width : '10%'
+        }, {
+          dataField : "subDept",
+          headerText : "Sub Department",
+          width : '10%'
+        },{
+          dataField : "remark",
+          headerText : "Remark",
+          width : '40%'
+        }, {
+          dataField : "createdBy",
+          headerText : "Created By",
+          width : '20%'
+        }, {
+          dataField : "status",
+          headerText : "Status",
+          width : '10%'
+        }, {
+          dataField : "crtDt",
+          headerText : "Date",
+          dataType : "date",
+          width : '10%'
+        }];
+
+        var gridPros1 = {
+          pageRowCount : 20,
+          showStateColumn : false,
+          displayTreeOpen : false,
+          //selectionMode : "singleRow",
+          skipReadonlyColumns : true,
+          wrapSelectionMove : true,
+          showRowNumColumn : true,
+          editable : false,
+          wordWrap : true
+        };
+
+        gridID1 = GridCommon.createAUIGrid("respond_grid_wrap", columnLayout1, "", gridPros1);
+
+      }
+
+    function fn_updateCpeStatus() {
+
+        Common.ajax("POST", "/services/ecom/updateCpeStatus.do", $("#form_updReqst").serializeJSON(), function(result) {
+            console.log(result);
+            Common.alert('<spring:message code="cpe.update.msg" />', $("#cpeRqstUpdateApprovePop").remove());
+        });
     }
 
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code="sal.title.text.cpeNewSrch" /></h1>
+<h1><spring:message code="cpe.update.title.text" /></h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a id="_cpeResultPopCloseBtn"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
 
-<section class="search_table"><!-- search_table start -->
-<form id="_newOrderAddForm">
-    <input id="_addOrdId" name="addOrdId" type="hidden" >
-</form>
-
-<form action="#" method="get" id="_searchForm">
-<input id="salesOrderId" name="salesOrderId" type="hidden" value="${orderDetail.basicInfo.ordId}">
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr id="_resultTr" >
-    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
-    <td><input type="text" title="" placeholder="" class=""  value="${salesOrderNo}" readonly="readonly"/><p class="btn_sky"><a href="#" id="_reSelect"><spring:message code="sal.btn.reselect" /></a></p></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-</form>
-</section><!-- search_table end -->
-
 <section class="search_result" id="_searchResultSection" ><!-- search_result start -->
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
     <li><a href="#" class="on"><spring:message code="sal.tap.title.ordInfo" /></a></li>
+    <li><a href="#" id="respondInfo"><spring:message code='service.title.respInfo'/></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start --><!--###################################  -->
@@ -348,18 +290,33 @@
 
 </article><!-- tap_area end --><!--###################################  -->
 
-</section><!-- tap_wrap end -->
+   <!-- Respond Info Start -->
+   <article class="tap_area">
+    <!-- tap_area start -->
+    <aside class="title_line">
+     <!-- title_line start -->
+     <h3><spring:message code='service.title.respInfo'/></h3>
+    </aside>
+    <!-- title_line end -->
+    <article class="grid_wrap">
+     <!-- grid_wrap start -->
+     <div id="respond_grid_wrap"
+      style="width: 100%; height: 300px; margin: 0"></div>
+    </article>
+    <!-- grid_wrap end -->
+   </article>
+  </section><!-- tap_wrap end -->
 
 
 <aside class="title_line"><!-- title_line start -->
 <h3><spring:message code="cpe.title.helpdeskRequest" /></h3>
 </aside><!-- title_line end -->
-<form id="form_newReqst">
+<form id="form_updReqst">
 <input type="hidden" name="salesOrdId" id="_salesOrdId" value="${orderDetail.basicInfo.ordId}" />
 <input type="hidden" name="reqStageId" id="_reqStageId" value="${orderDetail.basicInfo.ordStusId}" />
 <input type="hidden" name="salesOrdNo" id="_salesOrdNo" value="${orderDetail.basicInfo.ordNo}" />
 <input type="hidden" name="custId" id="_custId" value="${orderDetail.basicInfo.custId}" />
-<input type="hidden" name="cpeReqId" id="_cpeReqId" />
+<input type="hidden" name="cpeReqId" id="_cpeReqId" value="${requestInfo.cpeReqId}" />
 <input type="hidden" name="approvalRequired" id="_approvalRequired" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -373,51 +330,86 @@
 </colgroup>
 <tbody>
 <tr>
+    <th scope="row">Request ID</th>
+    <td>${requestInfo.cpeReqId}</td>
+    <th scope="row">Approver List</th>
+    <td colspan="3">${approverList}</td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.text.requestDate" /></th>
-    <td>
-    <div class="date_set w100p"><!-- date_set start -->
-    <p><input type="text" title="Create Request Date" placeholder="DD/MM/YYYY" class="j_date"  name="inputRequestDate" id="_inputRequestDate" readonly="readonly"/></p>
-    </div><!-- date_set end -->
-    </td>
-    <th scope="row"><spring:message code="service.grid.mainDept" /><span class="must">*</span></th>
-    <td colspan="3">
+    <td>${requestInfo.crtDt}</td>
+    <th scope="row">Requestor</th>
+    <td colspan="3">${requestInfo.createdBy}</td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="log.label.rqstTyp" /></th>
+    <td>${requestInfo.cpeType}</td>
+    <th scope="row">Request Sub Type</th>
+    <td colspan="3">${requestInfo.cpeSubtype}</td>
+</tr>
+<tr>
+    <th scope="row">Remark</th>
+    <td colspan="5">${requestInfo.remark}</td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h3>Add Update</h3>
+</aside><!-- title_line end -->
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:140px" />
+    <col style="width:260px" />
+    <col style="width:160px" />
+    <col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+      <tr>
+       <th scope="row"><spring:message code="service.grid.mainDept" /><span class='must'>*</span></th>
+       <td>
         <select class="w100p" name="mainDept" id="_inputMainDeptSelect">
             <option value="">Choose One</option>
             <c:forEach var="list" items="${mainDeptList}" varStatus="status">
                 <option value="${list.codeId}">${list.codeName} </option>
             </c:forEach>
         </select></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="log.label.rqstTyp" /><span class="must">*</span></th>
-    <td><select class="w100p" name="inputReqTypeSelect" id="_inputReqTypeSelect"></select></td>
-    <th scope="row"><spring:message code="service.grid.subDept" /><span class="must">*</span></th>
-    <td colspan="3"><select class="w100p" name="subDept" id="_inputSubDeptSelect"></select></td>
-</tr>
-<tr>
-    <th scope="row">Sub Request<span class="must">*</span></th>
-    <td><select class="w100p" name="inputSubReqTypeSelect" id="_inputSubReqTypeSelect"></select></td>
-    <th scope="row">AS No.</th>
-    <td colspan="3"><input type="text" title="" placeholder="<spring:message code='cpe.grid.asNo'/>"
-        class="w100p" id="asNo" name="asNo" /></td>
-</tr>
-<tr>
-    <th scope="row">Issue<span class="must">*</span></th>
-    <td colspan="5"><select class="w100p" name="inputIssueSelect" id="_inputIssueSelect">
-        <option value="1">Entered wrong data</option>
-        <option value="2">Customer provided wrong info</option>
-        <option value="3">Others</option>
+       <th scope="row"><spring:message code="service.grid.subDept" /><span class="must">*</span></th>
+       <td colspan="4"><select class="w100p" name="subDept" id="_inputSubDeptSelect"></select></td>
+       </tr>
+    <tr>
+    <th scope="row">Status<span class='must'>*</span></th>
+    <td><select class="w100p" id="status" name="status">
+         <option value="" selected><spring:message code='sal.combo.text.chooseOne'/></option>
+         <c:forEach var="list" items="${cpeStat}" varStatus="status">
+           <option value="${list.code}">${list.codeName}</option>
+          </c:forEach>
+
+         <!-- <option value="1">Active</option>
+         <option value="5">Approved</option>
+         <option value="6">Cancel</option>
+         <option value="44">Pending</option>
+         <option value="34">Solve</option>
+         <option value="35">Not yet to solve</option>
+         <option value="36">Close</option>
+         <option value="10">Cancel</option> -->
+
     </select></td>
+    <th scope="row"></th>
+    <td colspan="3"></td>
 </tr>
 <tr>
-    <th scope="row">Remark<span class="must">*</span></th>
-    <td colspan="5"><textarea cols="20" rows="5" name="inputRemark" id="_inputRemark"></textarea></td>
+    <th scope="row">Remark</th>
+    <td colspan="6"><textarea cols="20" rows="5" name="inputRemark" id="_inputRemark"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="_submitBtn"><spring:message code="cpe.btn.submit" /></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="saveBtn">Save</a></p></li>
 </ul>
 
 </form>

@@ -176,8 +176,22 @@ function fn_reqstSubmit() {
 
     console.log(checkMemCode);
     if(checkMemCode) {
-        Common.popupDiv("/services/ecom/cpeReqstRegistrationMsgPop.do", null, null, true, "cpeReqstRegistrationMsgPop");
+    	fn_cpeApproveLineSubmit();
     }
+}
+
+function fn_cpeApproveLineSubmit() {
+
+    var apprGridList = AUIGrid.getOrgGridData(approveLineGridID);
+    var obj = $("#form_newReqst").serializeJSON();
+    obj.apprGridList = apprGridList;
+    console.log(obj);
+
+    Common.ajax("POST", "/services/ecom/cpeReqstApproveLineSubmit.do", obj, function(result) {
+        console.log(result);
+        Common.popupDiv("/services/ecom/cpeReqstCompletedMsgPop.do", {cpeReqId:result.data.cpeReqId}, null, true, "cpeReqstCompletedMsgPop");
+        //Common.alert("Your authorization request was successful.");
+    });
 }
 </script>
 
@@ -185,9 +199,11 @@ function fn_reqstSubmit() {
 
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="approveLine.title" /></h1>
+<!--
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code="newCpeRequest.btn.close" /></a></p></li>
 </ul>
+-->
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->

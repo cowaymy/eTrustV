@@ -248,13 +248,13 @@
      </select>
 
      <select id="selectNextCpeId" resultType="int">
-     SELECT NVL(MAX(CPE_ID) + 1, 1) AS CPE_ID FROM SVC0118M
+     SELECT NVL(MAX(CPE_REQ_ID) + 1, 1) AS CPE_REQ_ID FROM SVC0118M
      </select>
 
      <insert id="insertCpeReqst" parameterType="Map">
      INSERT INTO SVC0118M
         (
-             CPE_ID
+             CPE_REQ_ID
             ,CPE_TYPE
             ,CPE_SUBTYPE
             ,SALES_ORD_ID
@@ -266,21 +266,22 @@
             ,CPE_STUS_ID
             ,CRT_DT
             ,CRT_USER_ID
+            ,AS_NO
         )
             values
         (
-            #{cpeReqNo}
+            #{cpeReqId}
             ,#{inputReqTypeSelect}
             ,#{inputSubReqTypeSelect}
             ,#{salesOrdId}
             ,#{salesOrdNo}
             ,#{custId}
             ,#{reqStageId}
-            ,#{inputMainDeptSelect}
-            ,#{inputSubDeptSelect}
-            ,1
+            ,#{mainDept}
+            ,#{subDept}
             ,SYSDATE
             ,#{userId}
+            ,#{asNo}
         )
     </insert>
 
@@ -299,7 +300,6 @@
             ,APPV_REQ_NO
             ,REQST_DT
             ,REQST_USER_ID
-            ,APPV_PRCSS_STUS
             ,APPV_LINE_CNT
             ,APPV_LINE_PRCSS_CNT
             ,APPV_PRCSS_DESC
@@ -311,10 +311,9 @@
         values
         (
             #{appvPrcssNo}
-            ,#{cpeReqNo}
+            ,#{cpeReqId}
             ,SYSDATE
             ,#{userName}
-            ,'R'
             ,#{appvLineCnt}
             ,0
             ,#{appvPrcssDesc}
@@ -332,7 +331,6 @@
             ,APPV_LINE_SEQ
             ,APPV_LINE_USER_ID
             ,APPV_DT
-            ,APPV_STUS
             ,CRT_DT
             ,CRT_USER_ID
             ,UPD_DT
@@ -344,14 +342,6 @@
             ,#{approveNo}
             ,#{memCode}
             ,#{appvDt}
-            <choose>
-                <when test="approveNo == 1">
-                    ,'R'
-                </when>
-                <otherwise>
-                    ,'T'
-                </otherwise>
-            </choose>
             ,SYSDATE
             ,#{userId}
             ,SYSDATE
@@ -359,64 +349,28 @@
         )
     </insert>
 
-    <insert id="insertCpeRqstApproveItems" parameterType="Map">
-    INSERT INTO FCM0015D
+    <insert id="insertCpeRqstDetail" parameterType="Map">
+    INSERT INTO SVC0121D
     (
-        APPV_PRCSS_NO
-       ,APPV_ITM_SEQ
-       ,INVC_NO
-       ,INVC_DT
-       ,INVC_TYPE
-       ,MEM_ACC_ID
-       ,PAY_DUE_DT
-       ,EXP_TYPE
-       ,EXP_TYPE_NAME
-       ,COST_CENTR
-       ,COST_CENTR_NAME
-       ,GL_ACC_CODE
-       ,GL_ACC_CODE_NAME
-       ,BUDGET_CODE
-       ,BUDGET_CODE_NAME
-       ,TAX_CODE
-       ,NET_AMT
-       ,TAX_AMT
-       ,APPV_AMT
-       ,EXP_DESC
-       ,ATCH_FILE_GRP_ID
+        REQ_DTL_ID
+       ,CPE_REQ_ID
+       ,MAIN_DEPT
+       ,SUB_DEPT
+       ,REMARK
+       ,STUS_CODE_ID
        ,CRT_DT
        ,CRT_USER_ID
-       ,UPD_DT
-       ,UPD_USER_ID
-       ,INVC_CUR
     )
     values
     (
-        #{appvPrcssNo}
-       ,#{appvItmSeq}
-       ,#{invcNo}
-       ,SYSDATE
-       ,#{invcType}
-       ,#{memAccId}
-       ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
-       ,#{expType}
-       ,#{expTypeName}
-       ,#{costCentr}
-       ,#{costCentrName}
-       ,#{glAccCode}
-       ,#{glAccCodeName}
-       ,#{budgetCode}
-       ,#{budgetCodeName}
-       ,'VB'
-       ,#{reqstAmt}
-       ,0
-       ,#{reqstAmt}
-       ,#{expDesc}
-       ,#{atchFileGrpId}
+       SVC0121D_SEQ.NEXTVAL
+       ,#{cpeReqId}
+       ,#{mainDept}
+       ,#{subDept}
+       ,#{inputRemark}
+       ,#{status}
        ,SYSDATE
        ,#{userId}
-       ,SYSDATE
-       ,#{userId}
-       ,'MYR'
     )
     </insert>
 
@@ -425,35 +379,120 @@
             SET APPV_PRCSS_NO = #{appvPrcssNo}
             ,UPD_DT = SYSDATE
             ,UPD_USER_ID = #{userId}
-        WHERE CPE_ID = #{cpeReqNo}
+        WHERE CPE_REQ_ID = #{cpeReqId}
     </update>
 
 
     <select id="selectCpeRequestList" parameterType="Map" resultType="egovMap">
-<!--     TODO: Yong - Add query parameters for more search fields based on CPE main page -->
-    SELECT
-        SALES_ORD_NO
-        , CPE_ID
-        , TO_CHAR(CRT_DT, 'YYYY-MM-DD') CRT_DT
-        , CPE_SUBTYPE
-        FROM SVC0118M
-    WHERE 1=1
-    <if test="cpeReqNo != null and cpeReqNo != '' ">
-      AND CPE_ID = #{cpeReqNo}
+<!--     TODO: Yong - Add query parameters for search fields based on CPE main page -->
+       SELECT
+            T1.SALES_ORD_NO
+            ,T1.SALES_ORD_ID
+            ,T1.CPE_REQ_ID
+            ,TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD') CRT_DT
+            ,T1.CPE_SUBTYPE
+            ,T1.AS_NO
+            ,T3.NAME AS CUSTOMER_NAME
+            ,T3.NRIC AS NRIC_COMPANY_NO
+            ,T4.CODE_NAME AS MAIN_DEPT
+            ,T5.CODE_NAME AS SUB_DEPT
+            ,T6.CODE || ' - ' || T6.NAME AS DSC_BRANCH
+            , DECODE(T1.CPE_STAGE, 4, 'After Install', 'Before Install') AS REQUEST_STAGE
+            ,T8.CODE || ' - ' || T8.NAME AS REQUESTOR_DEPT
+            ,T9.NAME AS STATUS
+        FROM SVC0118M T1
+        JOIN SAL0001D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+        JOIN SAL0029D T3 ON T3.CUST_ID = T1.CUST_ID
+        JOIN SYS0013M T4 ON T4.CODE = T1.REQ_MAIN_DEPT
+        JOIN SYS0013M T5 ON T5.CODE = T1.REQ_SUB_DEPT
+        JOIN SYS0005M T6 ON T6.BRNCH_ID = T2.BRNCH_ID
+        JOIN SYS0047M T7 ON T7.USER_ID = T1.CRT_USER_ID
+        JOIN SYS0005M T8 ON T8.BRNCH_ID = T7.USER_BRNCH_ID
+        JOIN SYS0038M T9 ON T9.STUS_CODE_ID = T1.CPE_STUS_ID
+        WHERE 1=1
+    <if test="cpeReqId != null and cpeReqId != '' ">
+        AND T1.CPE_REQ_ID = #{cpeReqId}
     </if>
-    ORDER BY CRT_DT DESC
-   </select>
+        ORDER BY T1.CRT_DT DESC
+    </select>
 
    <select id="selectRequestInfo" parameterType="Map" resultType="egovMap">
-    SELECT CPE_ID
-         ,SALES_ORD_NO
-         ,CPE_TYPE
-         ,CPE_SUBTYPE
-         ,APPV_PRCSS_NO
-         ,CRT_USER_ID
-         ,CRT_DT
-    FROM SVC0118M
-    WHERE CPE_ID = #{cpeId}
+      SELECT
+            T1.SALES_ORD_NO
+            ,T1.SALES_ORD_ID
+            ,T1.CPE_REQ_ID
+            ,TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD') CRT_DT
+            ,T9.CODE_MASTER_NAME AS CPE_TYPE
+            ,T10.CODE_NAME AS CPE_SUBTYPE
+            ,T1.AS_NO
+            ,T3.NAME AS CUSTOMER_NAME
+            ,T3.NRIC AS NRIC_COMPANY_NO
+            ,T4.CODE_NAME AS MAIN_DEPT
+            ,T5.CODE_NAME AS SUB_DEPT
+            ,T6.CODE || ' - ' || T6.NAME AS DSC_BRANCH
+            , DECODE(T2.STUS_CODE_ID, 4, 'After Install', 'Before Install') AS REQUEST_STAGE
+            ,T8.CODE || ' - ' || T8.NAME AS REQUESTOR_DEPT
+            ,T7.USER_FULL_NAME AS CREATED_BY
+            ,T11.REMARK
+        FROM SVC0118M T1
+        JOIN SAL0001D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+        JOIN SAL0029D T3 ON T3.CUST_ID = T1.CUST_ID
+        JOIN SYS0013M T4 ON T4.CODE = T1.REQ_MAIN_DEPT
+        JOIN SYS0013M T5 ON T5.CODE = T1.REQ_SUB_DEPT
+        JOIN SYS0005M T6 ON T6.BRNCH_ID = T2.BRNCH_ID
+        JOIN SYS0047M T7 ON T7.USER_ID = T1.CRT_USER_ID
+        JOIN SYS0005M T8 ON T8.BRNCH_ID = T7.USER_BRNCH_ID
+        JOIN SYS0012M T9 ON T9.CODE_MASTER_ID = T1.CPE_TYPE
+        JOIN SYS0013M T10 ON T10.CODE_ID = T1.CPE_SUBTYPE
+        LEFT JOIN
+        (SELECT * FROM SVC0121D WHERE REQ_DTL_ID =
+            (SELECT MIN(REQ_DTL_ID) FROM SVC0121D
+             WHERE CPE_REQ_ID = #{cpeReqId})
+        ) T11 ON T11.CPE_REQ_ID = T1.CPE_REQ_ID
+        WHERE
+        T1.CPE_REQ_ID =  #{cpeReqId}
+    </select>
+
+
+    <select id="selectCpeDetailList" parameterType="Map" resultType="egovMap">
+    SELECT
+         T1.CPE_REQ_ID
+         ,T1.REQ_DTL_ID
+         ,T4.CODE_NAME AS MAIN_DEPT
+         ,T5.CODE_NAME AS SUB_DEPT
+         ,T1.REMARK
+         ,TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD HH24:MI:SS') CRT_DT
+         ,T2.USER_FULL_NAME AS CREATED_BY
+         ,T3.NAME AS STATUS
+    FROM SVC0121D T1
+    JOIN SYS0047M T2 ON T2.USER_ID = T1.CRT_USER_ID
+    JOIN SYS0038M T3 ON T3.STUS_CODE_ID = T1.STUS_CODE_ID
+    JOIN SYS0013M T4 ON T4.CODE = T1.MAIN_DEPT
+    JOIN SYS0013M T5 ON T5.CODE = T1.SUB_DEPT
+    WHERE T1.CPE_REQ_ID = #{cpeReqId}
+    ORDER BY T1.REQ_DTL_ID ASC
+    </select>
+
+    <update id="updateCpeStatusMain" parameterType="Map">
+        UPDATE SVC0118M
+            SET CPE_STUS_ID = #{status}
+            ,UPD_DT = SYSDATE
+            ,UPD_USER_ID = #{userId}
+        WHERE CPE_REQ_ID = #{cpeReqId}
+    </update>
+
+    <select id="getApproverList" parameterType="Map" resultType="egovMap">
+     select
+         T1.CPE_REQ_ID
+        ,T1.SALES_ORD_ID
+        ,T1.SALES_ORD_NO
+        ,T2.APPV_PRCSS_NO
+        ,T4.NAME AS APPV_LINE_USER_NAME
+        FROM SVC0118M T1
+            JOIN SVC0119M T2 ON T2.APPV_PRCSS_NO = T1.APPV_PRCSS_NO
+            JOIN SVC0120D T3 ON T3.APPV_PRCSS_NO = T2.APPV_PRCSS_NO
+            JOIN ORG0001D T4 ON T4.MEM_CODE = T3.APPV_LINE_USER_ID
+        WHERE T1.CPE_REQ_ID = #{cpeReqId}
     </select>
 
 </mapper>
