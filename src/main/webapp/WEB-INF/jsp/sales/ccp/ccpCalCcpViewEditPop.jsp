@@ -166,7 +166,8 @@ $(document).ready(function() {
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='Fico Score' />");
             return;
         }else{
-            if( $("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 300 && $("#_ficoScore").val() !=  0){
+            //if( $("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 300 && $("#_ficoScore").val() !=  0){
+            if( $("#_ficoScore").val() > 850 || $("#_ficoScore").val() < 0){
                 Common.alert('<spring:message code="sal.alert.text.ficoRange" />');
                 return;
             }
@@ -194,10 +195,10 @@ $(document).ready(function() {
 
 
 
-        if(callEntCount > 0){
+        /* if(callEntCount > 0){
             Common.alert('<spring:message code="sal.alert.msg.existInCallEtry" />');
             return;
-        }
+        } */
        //Validation Success - Save
        //Check box params Setting
        //_letterOfUdt
