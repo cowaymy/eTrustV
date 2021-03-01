@@ -163,6 +163,7 @@ public class CpeServiceImpl implements CpeService {
 				EgovMap appvLine = approverList.get(i);
 				String appvLineUserName = (String) appvLine.get("appvLineUserName");
 
+				sbApprovers.append(" - ");
 				sbApprovers.append(appvLineUserName);
 				sbApprovers.append("<br>");
 			}
