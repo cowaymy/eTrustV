@@ -90,6 +90,8 @@ public class  MembershipRejoinController {
     public ResponseEntity<List<EgovMap>> selectExpiredMembershipList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
         String[] arrAppType   = request.getParameterValues("listAppType");
         String[] arrExpiredPeriod   = request.getParameterValues("expiredPeriod");
+        String[] arrCategory   = request.getParameterValues("cmbCategory");
+        String[] arrProduct   = request.getParameterValues("cmbProduct");
 
         if(arrAppType != null && !CommonUtils.containsEmpty(arrAppType)) params.put("arrAppType", arrAppType);
         if(arrExpiredPeriod != null && !CommonUtils.containsEmpty(arrExpiredPeriod)){
@@ -100,6 +102,8 @@ public class  MembershipRejoinController {
                 params.put("expPeriod", "7");
           }
         }
+        if(arrCategory != null && !CommonUtils.containsEmpty(arrCategory)) params.put("arrCategory", arrCategory);
+        if(arrProduct != null && !CommonUtils.containsEmpty(arrProduct)) params.put("arrProduct", arrProduct);
 
         List<EgovMap> list = membershipRejoinService.selectExpiredMembershipList(params);
         return ResponseEntity.ok(list);

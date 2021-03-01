@@ -169,6 +169,18 @@
         <if test="memCode != null and memCode != '' ">
             AND T0.MEM_CODE = #{memCode}
         </if>
+        <if test='arrCategory != null and arrCategory != ""'>
+             AND STK.STK_CTGRY_ID IN
+             <foreach item="item" collection="arrCategory" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+         </if>
+         <if test='arrProduct != null and arrProduct != ""'>
+             AND T0.ITM_STK_ID IN
+             <foreach item="item" collection="arrProduct" index="index" open="(" separator="," close=")">
+               #{item}
+             </foreach>
+         </if>
 
 
     </select>

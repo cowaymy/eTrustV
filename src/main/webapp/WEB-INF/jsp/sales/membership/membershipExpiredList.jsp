@@ -28,6 +28,8 @@ $(document).ready(function(){
 	doGetCombo('/common/selectCodeList.do', '8', '',  'custType', 'S');
 	doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType', 'M', 'fn_multiCombo');
 	doDefCombo(expiredPeriodData, '' ,'expiredPeriod', 'M', 'fn_multiCombo');
+	CommonCombo.make('cmbCategory', '/common/selectCodeList.do', {groupCode : 11, codeIn : 'WP,AP,BT,BB,MAT,FRM,POE'}, '' , {type: 'M'});
+	doGetComboOrder('/callCenter/selectProductList.do', '', 'CODE_ID', '', 'cmbProduct', 'M', 'fn_multiCombo'); //Common Code
 
 	if("${SESSION_INFO.userTypeId}" == "1" ||"${SESSION_INFO.userTypeId}" == "2" ){
         $("#table1").show();
@@ -148,6 +150,19 @@ $(document).ready(function(){
             width: '100%'
         });
 
+        $('#cmbCategory').change(function() {
+        }).multipleSelect({
+            selectAll : true, // 전체선택
+            width : '100%'
+        });
+
+        $('#cmbProduct').change(function() {
+        }).multipleSelect({
+            selectAll : true, // 전체선택
+            width : '100%'
+        });
+        $('#cmbProduct').multipleSelect("checkAll");
+
     }
 
     hideViewPopup=function(val){
@@ -213,6 +228,12 @@ $(document).ready(function(){
                         <td><select id="expiredPeriod" name="expiredPeriod" class="multy_select w100p" multiple="multiple"></select></td>
                         <th scope="row">Application Type</th>
                         <td><select id="listAppType" name="listAppType" class="multy_select w100p" multiple="multiple"></select></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Product Category</th>
+                        <td><select id="cmbCategory" name="cmbCategory" class="w100p"></select></td>
+                        <th scope="row">Product</th>
+                        <td><select id="cmbProduct" name="cmbProduct" class="w100p"></select></td>
                     </tr>
                     <tr>
                         <th scope="row">Customer Type</th>
