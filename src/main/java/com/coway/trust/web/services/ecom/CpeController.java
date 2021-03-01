@@ -36,6 +36,11 @@ import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
+/*******************************************************************
+ * DATE 				PIC 	  		COMMENT
+ * 17/02/2021 	YONGJH 		- Initial creation
+ *******************************************************************/
+
 @Controller
 @RequestMapping(value = "/services/ecom")
 public class CpeController {
@@ -265,9 +270,15 @@ public class CpeController {
 
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
+		params.put("userFullname", sessionVO.getUserFullname());
 
 		cpeService.insertCpeReqstDetail(params); //insert new status record for CPE
 		cpeService.updateCpeStatusMain(params);  //update main table with latest status for CPE
+
+		if (params.get("approvalRequired").equals("1") &&
+				(params.get("status").equals("5") || params.get("status").equals("6"))) {
+			cpeService.sendNotificationEmail(params); //send email to notify about request approval/rejection
+		}
 
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);

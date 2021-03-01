@@ -40,4 +40,6 @@ public interface CpeService {
 	void updateCpeStatusMain(Map<String, Object> params);
 
 	String getApproverList(Map<String, Object> params);
+
+	void sendNotificationEmail(Map<String, Object> params);
 }

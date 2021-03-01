@@ -41,7 +41,9 @@
          });
 
         $("#saveBtn").click(function() {
-            fn_updateCpeStatus();
+            if (fn_checkEmptyFields()) {
+                fn_updateCpeStatus();
+            }
         });
 
     });//Doc Ready End
@@ -100,13 +102,18 @@
     function fn_checkEmptyFields() {
         var checkResult = true;
 
-        if (FormUtil.isEmpty($("#_inputReqTypeSelect").val())) {
-            Common.alert('<spring:message code="cpe.requestType.msg" />');
+        if (FormUtil.isEmpty($("#_inputMainDeptSelect").val())) {
+            Common.alert('Main Department is required.');
             checkResult = false;
         }
 
-        if (FormUtil.isEmpty($("#_inputSubReqTypeSelect").val())) {
-            Common.alert('<spring:message code="cpe.requestSubType.msg" />');
+        if (FormUtil.isEmpty($("#_inputSubDeptSelect").val())) {
+            Common.alert('Sub Department is required.');
+            checkResult = false;
+        }
+
+        if (FormUtil.isEmpty($("#status").val())) {
+            Common.alert('Status is required.');
             checkResult = false;
         }
 
@@ -317,7 +324,10 @@
 <input type="hidden" name="salesOrdNo" id="_salesOrdNo" value="${orderDetail.basicInfo.ordNo}" />
 <input type="hidden" name="custId" id="_custId" value="${orderDetail.basicInfo.custId}" />
 <input type="hidden" name="cpeReqId" id="_cpeReqId" value="${requestInfo.cpeReqId}" />
-<input type="hidden" name="approvalRequired" id="_approvalRequired" />
+<input type="hidden" name="approvalRequired" id="_approvalRequired" value="${requestInfo.appvReqrd}" />
+<input type="hidden" name="requestorEmail" id="_requestorEmail" value="${requestInfo.requestorEmail}" />
+<input type="hidden" name="cpeType" id="_cpeType" value="${requestInfo.cpeType}" />
+
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -390,7 +400,7 @@
 
          <!-- <option value="1">Active</option>
          <option value="5">Approved</option>
-         <option value="6">Cancel</option>
+         <option value="6">Rejected</option>
          <option value="44">Pending</option>
          <option value="34">Solve</option>
          <option value="35">Not yet to solve</option>

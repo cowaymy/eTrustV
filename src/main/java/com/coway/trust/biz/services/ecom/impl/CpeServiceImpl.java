@@ -9,9 +9,12 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.services.ecom.CpeService;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -23,6 +26,9 @@ public class CpeServiceImpl implements CpeService {
 
 	@Resource(name = "cpeMapper")
 	private CpeMapper cpeMapper;
+
+	@Autowired
+	private AdaptorService adaptorService;
 
 	@Override
 	public List<EgovMap> getCpeStat(Map<String, Object> params) {
@@ -172,6 +178,38 @@ public class CpeServiceImpl implements CpeService {
 		}
 
 		return sbApprovers.toString();
+	}
+
+	@Override
+	public void sendNotificationEmail(Map<String, Object> params) {
+
+		String requestorEmail = (String) params.get("requestorEmail");
+		String cpeReqId = (String) params.get("cpeReqId");
+		String userFullname = (String) params.get("userFullname");
+		//String cpeType = (String) params.get("cpeType");
+		String salesOrdNo = (String) params.get("salesOrdNo");
+		int cpeApprovalStatus = Integer.parseInt(String.valueOf(params.get("status")));
+
+		EmailVO email = new EmailVO();
+		List<String> toList = new ArrayList<String>();
+		toList.add(requestorEmail);
+
+		String Subject = "CPE Request  (" + cpeReqId + ") - " + salesOrdNo + " - ";
+		email.setTo(toList);
+		email.setHtml(true);
+
+		if (cpeApprovalStatus == 5) {
+			Subject += "Approved";
+			email.setText("CPE request (" + cpeReqId + ") for order " + salesOrdNo +
+					" has been approved by " + userFullname + ".");
+		} else {
+			Subject += "Rejected";
+			email.setText("CPE request (" + cpeReqId + ") for order " + salesOrdNo +
+					" has been rejected by " + userFullname + ".");
+		}
+
+		email.setSubject(Subject);
+		adaptorService.sendEmail(email, false);
 	}
 
 }

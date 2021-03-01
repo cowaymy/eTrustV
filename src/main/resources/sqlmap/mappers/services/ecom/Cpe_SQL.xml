@@ -279,6 +279,7 @@
             ,#{reqStageId}
             ,#{mainDept}
             ,#{subDept}
+            ,1
             ,SYSDATE
             ,#{userId}
             ,#{asNo}
@@ -379,6 +380,7 @@
             SET APPV_PRCSS_NO = #{appvPrcssNo}
             ,UPD_DT = SYSDATE
             ,UPD_USER_ID = #{userId}
+            ,APPV_REQRD = 1
         WHERE CPE_REQ_ID = #{cpeReqId}
     </update>
 
@@ -421,6 +423,7 @@
             T1.SALES_ORD_NO
             ,T1.SALES_ORD_ID
             ,T1.CPE_REQ_ID
+            ,T1.APPV_REQRD
             ,TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD') CRT_DT
             ,T9.CODE_MASTER_NAME AS CPE_TYPE
             ,T10.CODE_NAME AS CPE_SUBTYPE
@@ -434,6 +437,7 @@
             ,T8.CODE || ' - ' || T8.NAME AS REQUESTOR_DEPT
             ,T7.USER_FULL_NAME AS CREATED_BY
             ,T11.REMARK
+            ,T7.USER_EMAIL AS REQUESTOR_EMAIL
         FROM SVC0118M T1
         JOIN SAL0001D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
         JOIN SAL0029D T3 ON T3.CUST_ID = T1.CUST_ID
