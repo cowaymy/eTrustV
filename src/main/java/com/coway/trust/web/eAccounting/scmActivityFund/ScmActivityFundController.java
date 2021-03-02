@@ -78,7 +78,7 @@ public class ScmActivityFundController {
 
 		String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
 		if(!"A1101".equals(costCentr)) {
-		    if(sessionVO.getRoleId() != 200 && sessionVO.getRoleId() != 252) {
+		    if(sessionVO.getRoleId() != 200 && sessionVO.getRoleId() != 252 && sessionVO.getRoleId() != 253) {
 		        params.put("loginUserId", sessionVO.getUserId());
 		    }
 		}
