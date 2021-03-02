@@ -130,7 +130,7 @@ $(document).ready(function() {
 function fn_view(item) {
 	if('${PAGE_AUTH.funcChange}' == 'Y'){
 
-	    if(item.stkCtgryId != 5707 && item.apptypeid !=5764){
+	    if(item.apptypeid !=5764){
 	        if(item.ccpStusId == 1){
 	            $("#_ccpId").val(item.ccpId);
 	            $("#_salesOrdId").val(item.salesOrdId);
