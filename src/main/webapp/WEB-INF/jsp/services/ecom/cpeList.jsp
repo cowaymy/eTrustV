@@ -163,23 +163,13 @@
           });
 
       //excel Download
-      $('#excelDown').click(
-            function() {
-              //GridCommon.exportTo("tagMgmt_grid_wap", 'xlsx',"Tag Management");
-              var excelProps = {
-                fileName : "CPE",
-                exceptColumnFields : AUIGrid.getHiddenColumnDataFields(gridIDExcelHide)
-              };
-              AUIGrid.exportToXlsx(gridIDExcelHide, excelProps);
-       });
-
-       // cell double click
-//        AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
-//             console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-//             console.log("CellDoubleClick cpeReqId : " + event.item.cpeReqId);
-
-//             var cpeReqId = event.item.cpeReqId;
-//             fn_cpeRequestViewPop(cpeReqId);
+//       $('#excelDown').click(
+//             function() {
+//               var excelProps = {
+//                 fileName : "CPE",
+//                 exceptColumnFields : AUIGrid.getHiddenColumnDataFields(gridIDExcelHide)
+//               };
+//               AUIGrid.exportToXlsx(gridIDExcelHide, excelProps);
 //        });
 
        // cell click
@@ -280,14 +270,6 @@
 	  Common.popupDiv("/services/ecom/cpeRequest.do" , null, null , true, 'cpeRequestNewSearchPop');
   }
 
-//   function fn_cpeRequestViewPop(cpeReqId) {
-//       var data = {
-//           //appvPrcssNo : appvPrcssNo  //TODO: Yong - consider if this is required as part of approval management submission
-//           cpeReqId : cpeReqId
-//       };
-//       Common.popupDiv("/services/ecom/cpeRqstViewPop.do", data, null, true, "cpeRqstViewPop");
-//   }
-
   function fn_cpeUpdateApprove() {
 	  var selectedItems = AUIGrid.getSelectedItems(gridID);
 	  if (selectedItems.length <= 0) {
@@ -306,6 +288,30 @@
 	  };
 
 	  Common.popupDiv("/services/ecom/cpeRqstUpdateApprovePop.do", data, null, true, "cpeRqstUpdateApprovePop");
+  }
+
+  function fn_generateCpeRaw() {
+	  var $reportForm = $("#reportForm")[0];
+
+      var reportDownFileName = "CPERawData"; //report name
+      var reportFileName = "/services/CPERawData_Excel.rpt"; //reportFileName
+      var reportViewType = "EXCEL"; //viewType
+
+      //default input setting
+      $($reportForm).append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name
+      $($reportForm).append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
+      $($reportForm).append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
+
+      //default setting
+      $("#reportForm #reportFileName").val(reportFileName);
+      $("#reportForm #reportDownFileName").val(reportDownFileName);
+      $("#reportForm #viewType").val(reportViewType);
+
+      //  report 호출
+      var option = {
+          isProcedure : false // procedure 로 구성된 리포트 인경우 필수.
+      };
+      Common.report("reportForm", option);
   }
 
 
@@ -468,7 +474,7 @@
     <dd>
      <ul class="btns">
       <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-       <li><p class="link_btn"> <a href="javascript:fn_basicInfo()" id="basicInfo">cpe.title.rawData</a> </p></li>
+       <li><p class="link_btn"> <a href="javascript:fn_generateCpeRaw()" id="genCpeRaw">CPE Raw Data</a> </p></li>
       </c:if>
      </ul>
      <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
@@ -480,6 +486,7 @@
  <!-- search_table end -->
  <section class="search_result">
   <!-- search_result start -->
+  <!--
   <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
    <ul class="right_btns">
     <li><p class="btn_grid">
@@ -487,6 +494,7 @@
      </p></li>
    </ul>
   </c:if>
+  -->
   <article class="grid_wrap">
    <!-- grid_wrap start  그리드 영역-->
    <div id="cpe_grid_wrap"
@@ -498,3 +506,4 @@
  <!-- search_result end -->
 </section>
 <!-- content end -->
+<form name="reportForm" id="reportForm" method="post"></form>
