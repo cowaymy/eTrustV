@@ -27,12 +27,13 @@
     <td><span>${membershipInfoTab.pacCode}</span></td>
     <th scope="row"><spring:message code="sales.pakName" /></th>
     <td><span>${membershipInfoTab.pacName}</span></td>
-    <th scope="row"><spring:message code="sal.text.refNo" /></th>
     <c:choose>
+        <th scope="row"><spring:message code="sal.text.refNo" /> <span class="must">*</span></th>
         <c:when test="${action == 'EDIT' }">
             <td><input type="text"  id="refNo" name="refNo" class="w100p" value="${membershipInfoTab.refNo}"/></td>
         </c:when>
         <c:otherwise>
+            <th scope="row"><spring:message code="sal.text.refNo" /></th>
             <td><span>${membershipInfoTab.refNo}</span></td>
         </c:otherwise>
     </c:choose>
@@ -119,6 +120,11 @@
   $("#QUOT_ID").val(${membershipInfoTab.quotId});
 
   function fn_save() {
+
+	  if ($("#refNo").val().trim() == ""){
+		  Common.alert("Please enter Reference Number.");
+		  return;
+	  }
 	  var mSaveForm={
 			  membershipId : ${membershipInfoTab.mbrshId},
 			  refNo : $("#refNo").val().trim()

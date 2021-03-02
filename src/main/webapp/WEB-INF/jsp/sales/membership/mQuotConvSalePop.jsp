@@ -377,6 +377,11 @@ function fn_goSalesConfirm(){
                 return ;
         }
 
+       if ($("#refNo").val() == ""){
+    	   Common.alert("Please enter Reference Number.");
+           return ;
+        }
+
 
         Common.ajax("GET", "/sales/membership/paymentColleConfirm", { COLL_MEM_CODE:   $("#SALES_PERSON").val() } , function(result) {
                  console.log( result);
@@ -649,7 +654,7 @@ function fn_getHasBill (){
 <tr>
     <th scope="row">PO No</th>
     <td><input type="text" id="poNo" name="poNo" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">Reference No</th>
+    <th scope="row">Reference No <span class="must">*</span></th>
     <td><input type="text" id="refNo" name="refNo" title="" placeholder="" class="w100p" /></td>
 </tr>
 </tbody>

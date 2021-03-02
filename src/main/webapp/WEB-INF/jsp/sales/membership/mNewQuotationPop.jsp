@@ -446,7 +446,7 @@ $(document).ready(function(){
 
 		fn_getMembershipPackageFilterInfo();
 
-		//fn_getFilterPromotionAmt();
+		fn_getFilterPromotionAmt();
 
 	}
 
@@ -655,7 +655,7 @@ $(document).ready(function(){
 
 		$("#cPromoCombox").removeAttr("disabled");
 
-		$("#cPromo").val("");
+		//$("#cPromo").val("");
 
 		//doGetCombo('/sales/membership/getFilterPromotionCode?PROMO_SRV_MEM_PAC_ID=' + $("#SELPACKAGE_ID").val() + "&E_YN=" + $("#cEmplo").val(), '', '', 'cPromo', 'S', '');
 		doGetComboCodeId('/sales/membership/getFilterPromotionCode?PROMO_SRV_MEM_PAC_ID=' + $("#SELPACKAGE_ID").val() + "&E_YN=" + $("#cEmplo").val(), '', '', 'cPromo', 'S', 'fn_setDefaultFilterPromo');
@@ -681,7 +681,7 @@ $(document).ready(function(){
             };
         }
 
-		Common.ajax("GET", "/common/selectCodeList.do", paramdata, function(result) {
+		Common.ajaxSync("GET", "/common/selectCodeList.do", paramdata, function(result) {
 			console.log(result[0]);
 			if (result != null && result.length > 0) {
                 $("#cPromo option[value='" + result[0].code + "']").attr("selected", true);
@@ -691,6 +691,7 @@ $(document).ready(function(){
             }
 		});
 
+        fn_getFilterChargeList();
 	}
 
 	function fn_doPackagePro(v) {
