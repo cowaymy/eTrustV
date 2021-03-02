@@ -316,6 +316,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
             ROOT_STATE = "ROOT_3";
           } else {
 
+            /*
+            // 2021-03-02 - LaiKW - Amended for expiry date checking
             Calendar calNow = Calendar.getInstance();
 
             int nowYear = calNow.YEAR;
@@ -346,6 +348,17 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
               logger.debug("@####:InValid");
 
               isInValid = "InValid";
+            }
+            */
+
+            msg = "-SVM End Date : <b>" + (String) GetExpDate.get("srvPrdExprDtMmyy") + "</b> <br/>";
+
+            if(!"Y".equals(GetExpDate.get("extradeAllowFlg").toString())) {
+                logger.debug("@####:InValid");
+                isInValid = "InValid";
+
+            } else {
+                logger.debug("@####:not InValid");
             }
 
             EgovMap validateRentOutright = this.selectSalesOrderM(getOldOrderID, 0);

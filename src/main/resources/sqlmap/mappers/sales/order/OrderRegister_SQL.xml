@@ -45,12 +45,14 @@
              , T.SRV_PRD_EXPR_DT
              , T.SRV_PRD_EXPR_DT_MMYY
              , T.SRV_PRD_EXPR_DT_MMYY_ADD
+             , T.EXTRADE_ALLOW_FLG
     FROM ( SELECT T1.SRV_START_DT SRV_PRD_START_DT
                         , TO_CHAR(T1.SRV_START_DT, 'MM/YY') SRV_PRD_START_DT_MMYY
                         , TO_CHAR(ADD_MONTHS(T1.SRV_START_DT, 1),'MM/YY') SRV_PRD_START_DT_MMYY_ADD
                         , T1.SRV_EXPR_DT SRV_PRD_EXPR_DT
                         , TO_CHAR(T1.SRV_EXPR_DT, 'MM/YY') SRV_PRD_EXPR_DT_MMYY
                         , TO_CHAR(ADD_MONTHS(T1.SRV_EXPR_DT, 1),'MM/YY') SRV_PRD_EXPR_DT_MMYY_ADD
+                        , CASE WHEN (TO_CHAR(SYSDATE, 'YYYYMM') >= TO_CHAR(ADD_MONTHS(SRV_EXPR_DT, -4), 'YYYYMM')) THEN 'Y' ELSE 'N' END EXTRADE_ALLOW_FLG
                FROM SAL0095D T1
                WHERE T1.SRV_SALES_ORD_ID = #{value}
                   AND 4 = T1.SRV_STUS_CODE_ID
