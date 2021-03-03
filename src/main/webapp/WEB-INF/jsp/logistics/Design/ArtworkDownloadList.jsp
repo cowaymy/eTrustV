@@ -83,10 +83,10 @@ $(function(){
                 </tr>
                 <tr>
 	                <td >
-	                    <a href="https://drive.google.com/drive/folders/1FWBm7eMu0t31sLmCaFKCX2TmoA_ri63U?usp=sharing" target="_blank"><font class="tblFontCongf">Promotion</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1B1uO4Ra-WMvnhwa59zcR8gpF0WXyzrm-?usp=sharing" target="_blank"><font class="tblFontCongf">Promotion</font></a>
 	                    <br />
 	                    <br />
-	                    <a href="https://drive.google.com/drive/folders/1s-1rApHlYW3XbI9voT02SbqoZRilhmNG?usp=sharing" target="_blank"><font class="tblFontCongf">Product USP</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1SZu5kIoH9TSh7LQQzDwhxKVihIAJReep?usp=sharing" target="_blank"><font class="tblFontCongf">Product USP</font></a>
 	                    <br />
 	                    <br />
 	                    <a href="https://drive.google.com/drive/folders/1LDtAaKXxrwj79Tt8wjoNJbPIyGW7VGn6?usp=sharing" target="_blank"><font class="tblFontCongf">Company Profile</font></a>
