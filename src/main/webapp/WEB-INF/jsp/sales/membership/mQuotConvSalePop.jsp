@@ -447,6 +447,10 @@ function fn_doSalesResult(item){
 
 function fn_Sale_processing(){
 
+	if ($("#refNo").val().trim() == ""){
+        Common.alert("Please enter Reference Number.");
+        return;
+    }
 
 	var mSaveForm={
 								srvMemQuotId :   $("#QUOT_ID").val() =="" ?  '${QUOT_ID}' : $("#QUOT_ID").val()  ,
@@ -486,7 +490,6 @@ function fn_Sale_processing(){
 							    refNo : $("#refNo").val().trim()
 
 	}
-
 
 	console.log(mSaveForm);
 	Common.ajax("POST", "/sales/membership/mQuotConvSaleSave.do", mSaveForm,  function(result) {
