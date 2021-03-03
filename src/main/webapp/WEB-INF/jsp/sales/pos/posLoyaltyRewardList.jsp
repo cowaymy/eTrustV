@@ -64,11 +64,19 @@ function fn_uploadFile(){
 
 	var formData = new FormData();
 
-    formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
+	if($("input[name=uploadfile]")[0].files[0] != undefined)
+	{
+	    formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
 
-    Common.ajaxFile("/sales/pos/uploadLoyaltyRewardBulk.do", formData, function(result)    {
-        Common.alert("Done");
-    });
+	    Common.ajaxFile("/sales/pos/uploadLoyaltyRewardBulk.do", formData, function(result)    {
+	    	Common.alert("Upload Successful", function(){
+	    		$('#_btnClose').click();
+	    		$('#_btnSearch').click();
+	        });
+	    });
+	}else{
+		Common.alert("File not found.");
+	}
 };
 
 $(function(){

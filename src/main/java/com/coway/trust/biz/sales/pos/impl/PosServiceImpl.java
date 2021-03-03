@@ -5708,6 +5708,8 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       }
     }
 
+    posMapper.SP_POS_LRP_CONFIRM(params);
+
 
   }
 

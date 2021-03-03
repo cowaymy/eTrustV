@@ -276,4 +276,6 @@ public interface PosMapper {
 
 	void updateLoyaltyRewardPoint(Map<String, Object> params);
 
+	void SP_POS_LRP_CONFIRM(Map<String, Object> params);
+
 }

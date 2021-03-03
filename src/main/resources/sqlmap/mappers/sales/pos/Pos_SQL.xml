@@ -3891,4 +3891,8 @@
           WHERE LRP_ITM_ID = #{hidLrpId}
       </update>
 
+      <select id="SP_POS_LRP_CONFIRM"  parameterType="Map"  statementType="CALLABLE" >
+            {call  SP_POS_LRP_CONFIRM(#{id}, #{usrId})}
+      </select>
+
 </mapper>
