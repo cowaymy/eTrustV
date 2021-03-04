@@ -1746,7 +1746,8 @@
         promoCustType : vCustTypeId,
         exTrade : '${preMatOrderInfo.exTrade}',
         srvPacId : '${preMatOrderInfo.srvPacId}',
-        promoId : '${preMatOrderInfo.promoId}'
+        promoId : '${preMatOrderInfo.promoId}',
+        isSrvPac:('${preMatOrderInfo.appTypeId}' == 66 ? 'Y' : '')
       }, '${preMatOrderInfo.promoId}', 'ordPromo1', 'S', ''); //Common Code
 
       $('#ordRentalFees1').val('${preMatOrderInfo.mthRentAmt}');
@@ -1770,7 +1771,8 @@
         promoCustType : vCustTypeId,
         exTrade : '${preFrmOrderInfo.exTrade}',
         srvPacId : '${preFrmOrderInfo.srvPacId}',
-        promoId : '${preFrmOrderInfo.promoId}'
+        promoId : '${preFrmOrderInfo.promoId}',
+        isSrvPac:('${preFrmOrderInfo.appTypeId}' == 5764 ? 'Y' : '')
       }, '${preFrmOrderInfo.promoId}', 'ordPromo2', 'S', ''); //Common Code
 
       $('#ordRentalFees2').val('${preFrmOrderInfo.mthRentAmt}');
