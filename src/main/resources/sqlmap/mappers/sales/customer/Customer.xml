@@ -167,38 +167,8 @@
                                                     LEFT OUTER
                                                     JOIN SYS0013M T5
                                                       ON T5.CODE_ID =  T1.RACE_ID
-                                                    LEFT OUTER JOIN (SELECT
-		                                                                         ADDT.CUST_ID,
-		                                                                         ADDT.CUST_ADD_ID,
-		                                                                         ADDT.CNT
-		                                                                        FROM
-		                                                                        (
-		                                                                        SELECT
-		                                                                            CUST_ID,
-		                                                                            CUST_ADD_ID,
-		                                                                            ROW_NUMBER() OVER (PARTITION BY CUST_ID ORDER BY UPD_DT) CNT
-		                                                                        FROM
-		                                                                           SAL0023D
-		                                                                        WHERE
-		                                                                            9 = STUS_CODE_ID
-		                                                                        )ADDT
-		                                                                        WHERE ADDT.CNT = 1
-		                                                                                ) T6 ON T6.CUST_ID = T1.CUST_ID
-                                                    LEFT OUTER JOIN (SELECT
-		                                                                        CNTC.CUST_CNTC_ID,
-		                                                                        CNTC.CUST_ID
-		                                                                     FROM(
-		                                                                             SELECT
-		                                                                                CUST_CNTC_ID,
-		                                                                                CUST_ID,
-		                                                                                ROW_NUMBER() OVER (PARTITION BY CUST_ID ORDER BY UPD_DT) CNT
-		                                                                             FROM
-		                                                                                SAL0027D
-		                                                                             WHERE
-		                                                                                9 = STUS_CODE_ID
-		                                                                            )CNTC
-		                                                                      WHERE CNTC.CNT = 1
-		                                                                       ) T7 ON T7.CUST_ID = T1.CUST_ID
+                                                    LEFT OUTER JOIN SAL0023D T6 ON T6.CUST_ID = T1.CUST_ID AND T6.STUS_CODE_ID = 9
+                                                    LEFT OUTER JOIN SAL0027D T7 ON T7.CUST_ID = T1.CUST_ID AND T7.STUS_CODE_ID = 9
                                                     LEFT OUTER
                                                     JOIN SAL0026D T8
                                                       ON T8.CUST_ID = T1.CUST_ID AND (9 =   T8.STUS_CODE_ID)
@@ -234,7 +204,7 @@
       AND S1.CUST_ID1 = #{custId}
     </if>
     <if test="nric != null and nric !=''">
-      AND UPPER(S1.NRIC1) = UPPER(#{nric})
+      AND S1.NRIC1 = #{nric}
     </if>
     <if test="raceId != null and raceId !=''">
       AND S1.RACE_ID1 = #{raceId}
