@@ -278,6 +278,17 @@ public class ApiController {
 
   }
 
+  @RequestMapping(value = "/customer/genStatementofAccount.do")
+  public void genStatementofAccount(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> params) {
+
+    params.put(REPORT_FILE_NAME, "/statement/Official_StatementofAccount_Company_PDF_New.rpt");
+    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    params.put("V_STATEMENTID", params.get("statementId").toString()); // parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Official_StatementofAccount_Company_PDF_" + CommonUtils.getNowDate() + ".pdf");
+
+    this.viewProcedure(request, response, params);
+  }
+
   private void checkArgument(Map<String, Object> params) {
 
     Precondition.checkArgument(CommonUtils.isNotEmpty(params.get(REPORT_FILE_NAME)),
