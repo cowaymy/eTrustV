@@ -155,32 +155,47 @@
                                                         T5.CODE_ID AS CODE_ID2, T5.CODE_NAME AS CODE_NAME2, T1.STUS_CODE_ID AS STUS_CODE_ID1, T1.UPD_DT AS UPD_DT1, T1.UPD_USER_ID AS UPD_USER_ID1, T3.USER_ID AS USER_ID2, T3.USER_NAME AS USER_NAME2,
                                                         T6.CUST_ADD_ID AS CUST_ADD_ID, T7.CUST_CNTC_ID AS CUST_CNTC_ID, T8.CUST_CARE_CNT_ID AS CUST_CARE_CNT_ID, T1.CUST_VA_NO AS CUST_VA_NO, T1.GST_RGIST_NO AS GST_RGIST_NO
                                                     FROM SAL0029D T1
-                                                    LEFT OUTER
-                                                    JOIN SYS0047M T2
-                                                      ON T2.USER_ID = T1.CRT_USER_ID
-                                                    LEFT OUTER
-                                                    JOIN SYS0047M T3
-                                                      ON T3.USER_ID = T1.UPD_USER_ID
-                                                    LEFT OUTER
-                                                    JOIN SYS0015M T4
-                                                      ON T4.CNTY_ID =  T1.NATION
-                                                    LEFT OUTER
-                                                    JOIN SYS0013M T5
-                                                      ON T5.CODE_ID =  T1.RACE_ID
-                                                    LEFT OUTER JOIN SAL0023D T6 ON T6.CUST_ID = T1.CUST_ID AND T6.STUS_CODE_ID = 9
-                                                    LEFT OUTER JOIN SAL0027D T7 ON T7.CUST_ID = T1.CUST_ID AND T7.STUS_CODE_ID = 9
-                                                    LEFT OUTER
-                                                    JOIN SAL0026D T8
-                                                      ON T8.CUST_ID = T1.CUST_ID AND (9 =   T8.STUS_CODE_ID)
-                                                    LEFT OUTER
-                                                    JOIN SYS0013M T9
-                                                      ON T9.CODE_ID = T1.TYPE_ID
+                                                    LEFT OUTER JOIN SYS0047M T2 ON T2.USER_ID = T1.CRT_USER_ID
+                                                    LEFT OUTER JOIN SYS0047M T3 ON T3.USER_ID = T1.UPD_USER_ID
+                                                    LEFT OUTER JOIN SYS0015M T4 ON T4.CNTY_ID =  T1.NATION
+                                                    LEFT OUTER JOIN SYS0013M T5 ON T5.CODE_ID =  T1.RACE_ID
+                                                    LEFT OUTER JOIN (SELECT
+		                                                                         ADDT.CUST_ID,
+		                                                                         ADDT.CUST_ADD_ID,
+		                                                                         ADDT.CNT
+		                                                                        FROM
+		                                                                        (
+		                                                                        SELECT
+		                                                                            CUST_ID,
+		                                                                            CUST_ADD_ID,
+		                                                                            ROW_NUMBER() OVER (PARTITION BY CUST_ID ORDER BY UPD_DT) CNT
+		                                                                        FROM
+		                                                                           SAL0023D
+		                                                                        WHERE
+		                                                                            9 = STUS_CODE_ID
+		                                                                        )ADDT
+		                                                                        WHERE ADDT.CNT = 1
+		                                                                                ) T6 ON T6.CUST_ID = T1.CUST_ID
+                                                    LEFT OUTER JOIN (SELECT
+		                                                                        CNTC.CUST_CNTC_ID,
+		                                                                        CNTC.CUST_ID
+		                                                                     FROM(
+		                                                                             SELECT
+		                                                                                CUST_CNTC_ID,
+		                                                                                CUST_ID,
+		                                                                                ROW_NUMBER() OVER (PARTITION BY CUST_ID ORDER BY UPD_DT) CNT
+		                                                                             FROM
+		                                                                                SAL0027D
+		                                                                             WHERE
+		                                                                                9 = STUS_CODE_ID
+		                                                                            )CNTC
+		                                                                      WHERE CNTC.CNT = 1
+		                                                                       ) T7 ON T7.CUST_ID = T1.CUST_ID
+                                                    LEFT OUTER JOIN SAL0026D T8 ON T8.CUST_ID = T1.CUST_ID AND (9 =   T8.STUS_CODE_ID)
+                                                    LEFT OUTER JOIN SYS0013M T9 ON T9.CODE_ID = T1.TYPE_ID
                                                    WHERE (8 <>   T1.STUS_CODE_ID)
                                                    ) S1
-                                            LEFT OUTER
-                                            JOIN SYS0013M T10
-                                              ON T10.CODE_ID = S1.CORP_TYPE_ID
-                                             AND S1.CORP_TYPE_ID IS NOT NULL
+                                             LEFT OUTER JOIN SYS0013M T10 ON T10.CODE_ID = S1.CORP_TYPE_ID AND S1.CORP_TYPE_ID IS NOT NULL
                                          WHERE 1=1
 				                            ]]>
     <if test="typeIdList != null and typeIdList != ''">
