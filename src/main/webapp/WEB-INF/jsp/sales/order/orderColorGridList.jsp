@@ -288,7 +288,7 @@
 
         //  lev 1  Order Date    Order Date
         //  lev 2   netSalesMonth
-
+console.log("searchColorGrid");
         var isValid = true;
         if(FormUtil.isEmpty($("#ordNo").val())         &&
            FormUtil.isEmpty($("#contactNum").val()) &&
@@ -307,18 +307,19 @@
 	        	 if( $("#createStDate").val()  ==""  ||    $("#createEnDate").val()  ==""  ){
 	        		 isValid = false;
 	        	 }
-	        	  /* var startDate = $('#createStDate').val();
+	        	  var startDate = $('#createStDate').val();
 	              var endDate = $('#createEnDate').val();
-	              if( fn_getDateGap(startDate , endDate) > 31){
-	                  Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
+	              if( fn_getDateGap(startDate , endDate) > 15){
+	                  //Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
+	                  Common.alert("Start date can not be more than 31 days before the end date.");
 	                  return;
-	              } */
+	              }
 	        }
         }
 
 
-
-       /* if( $("#createStDate").val()  !=""  &&   $("#createEnDate").val()  !=""  ){
+/*
+       if( $("#createStDate").val()  !=""  &&   $("#createEnDate").val()  !=""  ){
 
             var startDate = $('#createStDate').val();
             var endDate = $('#createEnDate').val();
@@ -326,11 +327,11 @@
                 Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
                 return;
             }
-        } */
+        }
+*/
 
 
-        /*
-
+/*
         //Search Condition max 31Days -- add by Lee seok hee
         if(($("#createStDate").val() != null && $("#createStDate").val() != '') || ($("#createEnDate").val() != null && $("#createEnDate").val() != '')){
 
@@ -354,8 +355,8 @@
 
 
         }
+*/
 
-           */
           if(isValid == true){
         	var param =  $("#searchForm").serialize();
             var htMemberType = $('#memtype').find('option:selected').val();
@@ -364,6 +365,7 @@
            			    param += "&memtype="+htMemberType;
         		 }
         	}
+
 
 	       	Common.ajax("GET", "/sales/order/orderColorGridJsonList", param, function(result) {
 	            AUIGrid.setGridData(myGridID, result);
@@ -387,6 +389,7 @@
 	             // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
 	             AUIGrid.update(myGridID);
 	        });
+
            }else{
                Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastOrdDateNetSales' />");
                return ;
