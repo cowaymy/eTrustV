@@ -1,5 +1,7 @@
 package com.coway.trust.biz.payment.payment.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -29,7 +31,7 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 
 	@Resource(name = "batchPaymentMapper")
 	private BatchPaymentMapper batchPaymentMapper;
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(BatchPaymentServiceImpl.class);
 
 	/**
@@ -68,12 +70,12 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 		int insResult = 0;
 		int callResult = -1;
 		int returnResult = 0;
-		
+
 		if(paymentMs != null){
 			if(String.valueOf(paymentMs.get("batchStusId")).equals("1") && String.valueOf(paymentMs.get("cnfmStusId")).equals("44")){
-				
+
 				insResult = batchPaymentMapper.saveConfirmBatch(params);
-				
+
 				if(String.valueOf(paymentMs.get("batchPayType")).equals("96") || String.valueOf(paymentMs.get("batchPayType")).equals("97")){
 					//CALL PROCEDURE
 					batchPaymentMapper.callCnvrBatchPay(params);
@@ -81,13 +83,13 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 				}
 			}
 		}
-		
+
 		if(insResult > 0 && callResult > -1){
 			returnResult = 1;
 		}else{
 			returnResult = 0;
 		}
-		
+
 		return returnResult;
 	}
 
@@ -111,22 +113,45 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 		int mastetSeq = batchPaymentMapper.getPAY0044DSEQ();
 		master.put("batchId", mastetSeq);
 		int mResult = batchPaymentMapper.saveBatchPayMaster(master);
-		
-		if(mResult > 0 && detailList.size() > 0){
+
+/*		if(mResult > 0 && detailList.size() > 0){
 			for(int i=0 ; i < detailList.size() ; i++){
 				int detailSeq = batchPaymentMapper.getPAY0043DSEQ();
 				detailList.get(i).put("detId", detailSeq);
 				detailList.get(i).put("batchId", mastetSeq);
 				detailList.get(i).put("jomPay", master.get("jomPay"));
-				
+
 				logger.debug("detailList {}",detailList.get(i));
 				batchPaymentMapper.saveBatchPayDetailList(detailList.get(i));
 			}
 			//CALL PROCEDURE
 			batchPaymentMapper.callBatchPayVerifyDet(master);
-		}
-		
-		return mastetSeq;
+		}*/
+
+		if(mResult > 0 && detailList.size() > 0){
+		  List  buLit = new ArrayList();
+      for(int i=0 ; i < detailList.size() ; i++){
+        int detailSeq = batchPaymentMapper.getPAY0043DSEQ();
+
+        detailList.get(i).put("detId", detailSeq);
+        detailList.get(i).put("batchId", mastetSeq);
+        detailList.get(i).put("jomPay", master.get("jomPay"));
+        logger.debug("detId ::" + detailSeq);
+        logger.debug("detailList {}",detailList.get(i));
+        //batchPaymentMapper.saveBatchPayDetailList(detailList.get(i));
+         buLit.add(detailList.get(i));
+      }
+
+      master.put("list", buLit);
+      batchPaymentMapper.saveBatchPayDetailList(master);
+
+
+      //CALL PROCEDURE
+      batchPaymentMapper.callBatchPayVerifyDet(master);
+    }
+
+    return mastetSeq;
+
 	}
-	
+
 }

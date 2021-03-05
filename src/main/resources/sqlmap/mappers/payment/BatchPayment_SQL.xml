@@ -400,7 +400,7 @@
         SELECT PAY0044D_SEQ.NEXTVAL FROM DUAL
     </select>
 
-    <select id="getPAY0043DSEQ" resultType="int">
+    <select id="getPAY0043DSEQ" resultType="int" flushCache="true">
         SELECT PAY0043D_SEQ.NEXTVAL FROM DUAL
     </select>
 
@@ -442,7 +442,7 @@
 		)
     </insert>
 
-    <insert id="saveBatchPayDetailList" parameterType="Map">
+    <insert id="saveBatchPayDetailList2" parameterType="Map">
          INSERT INTO PAY0043D
 		(
 		DET_ID,
@@ -538,6 +538,101 @@
 		#{cardModeId},
 		#{approvalCode}
 		)
+    </insert>
+
+    <insert id="saveBatchPayDetailList" parameterType="Map">
+         INSERT INTO PAY0043D
+        (
+        DET_ID,
+        BATCH_ID,
+        DISAB,
+        CRT_USER_ID,
+        CRT_DT,
+        UPD_USER_ID,
+        UPD_DT,
+        VALID_STUS_ID,
+        VALID_REM,
+        USER_ORD_NO,
+        USER_TR_NO,
+        USER_REF_NO,
+        USER_AMT,
+        USER_BANK_ACC,
+        USER_CHQ_NO,
+        USER_ISS_BANK,
+        USER_RUN_NO,
+        USER_EFT_NO,
+        USER_REF_DT_MONTH,
+        USER_REF_DT_DAY,
+        USER_REF_DT_YEAR,
+        USER_BC_AMT,
+        USER_BC_ACC,
+        SYS_ORD_ID,
+        SYS_APP_TYPE_ID,
+        SYS_AMT,
+        SYS_BANK_ACC_ID,
+        SYS_ISS_BANK_ID,
+        SYS_REF_DT,
+        SYS_BC_AMT,
+        SYS_BC_ACC_ID,
+        USER_TR_DT,
+        USER_CLCTR_CODE,
+        SYS_CLCTR_ID,
+        PAY_TYPE,
+        PAY_TYPE_ID,
+        ADV_MONTH,
+        USER_REM
+        )
+     <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+        SELECT
+        #{item.detId},
+        #{item.batchId},
+        #{item.disabled},
+        #{item.creator},
+        SYSDATE,
+        #{item.updator},
+        SYSDATE,
+        #{item.validStatusId},
+        #{item.validRemark},
+         decode( #{item.jomPay} , '1' ,
+                     (   SELECT B.SALES_ORD_NO
+                           FROM SAL0024D A, SAL0001D B
+                          WHERE 1=1
+                            AND A.CUST_BILL_ID = B.CUST_BILL_ID
+                            AND A.CUST_BILL_SO_ID = B.SALES_ORD_ID
+                            AND CUST_BILL_PAY_REF_NO1  =   LPAD(#{item.userOrderNo}, 8, '0')
+                      ),
+                      LPAD(#{item.userOrderNo}, 7, '0')
+         ) ,
+        #{item.userTrNo},
+        #{item.userRefNo},
+        #{item.userAmount},
+        #{item.userBankAcc},
+        #{item.userChqNo},
+        #{item.userIssueBank},
+        #{item.userRunningNo},
+        #{item.userEftNo},
+        #{item.userRefDate_Month},
+        #{item.userRefDate_Day},
+        #{item.userRefDate_Year},
+        #{item.userBankChargeAmt},
+        #{item.userBankChargeAcc},
+        #{item.sysOrderId},
+        #{item.sysAppTypeId},
+        #{item.sysAmount},
+        #{item.sysBankAccId},
+        #{item.sysIssBankId},
+        TO_DATE(#{item.sysRefDate} , 'YYYY/MM/DD'),
+        #{item.sysBCAmt},
+        #{item.sysBCAccId},
+        TO_DATE(#{item.userTrDate} , 'YYYY/MM/DD'),
+        #{item.userCollectorCode},
+        #{item.sysCollectorId},
+        #{item.paymentType},
+        #{item.PaymentTypeId},
+        #{item.advanceMonth},
+        #{item.userRemark}
+        FROM DUAL
+        </foreach>
     </insert>
 
     <resultMap id="confMap" type="egovMap"></resultMap>
