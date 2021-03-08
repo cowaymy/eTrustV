@@ -183,6 +183,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         params.put("boosterPump", String.valueOf(insApiresult.get("boosterPump")));
         params.put("aftPsi", String.valueOf(insApiresult.get("aftPsi")));
         params.put("aftLpm", String.valueOf(insApiresult.get("aftLpm")));
+        params.put("turbLvl", String.valueOf(insApiresult.get("turbLvl")));
 
 /*        params.put("boosterPump", String.valueOf(params.get("boosterPump")));
         params.put("aftPsi", String.valueOf(params.get("aftPsi")));
