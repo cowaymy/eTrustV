@@ -20,6 +20,9 @@
             createAUIGrid();
             AUIGrid.setSelectionMode(myGridID2, "singleRow");
 
+            console.log("session Type TESTING111::" + userDefine1);
+            console.log("session Type TESTING222::" + userDefine2);
+
             if ("${SESSION_INFO.userTypeId}" != 1
                 && "${SESSION_INFO.userTypeId}" != 2) {
               $("#typeCode").prop("disabled", false);
@@ -166,6 +169,9 @@
                             custType = "'964', '965'";
                         }
 
+                        var catType = $("#catType").val();
+                        concole.log("catType ::"+ catType);
+
                         var reportFileName = "/commission/SHIIndexExcelRaw.rpt"; //reportFileName
                         var reportDownFileName = "SHIIndexExcelFile_" + today; //report name
                         var reportViewType = "EXCEL"; //viewType
@@ -177,6 +183,7 @@
                         $("#reportForm #mType").val(typeCode);
                         $("#reportForm #deptCode").val(teamCode);
                         $("#reportForm #rptCustType").val(custType);
+                        $("#reportForm #rptCatType").val(catType);
 
                         $("#reportForm #reportFileName").val(reportFileName);
                         $("#reportForm #reportDownFileName").val(reportDownFileName);
@@ -314,6 +321,7 @@
             <input type="hidden" name="V_MEMLVL" id="mLvl" /> <input type="hidden" name="V_MEMTYPE" id="mType" />
             <input type="hidden" name="V_DEPTCODE" id="deptCode" />
             <input type="hidden" name="V_CUST_TYPE" id="rptCustType" />
+            <input type="hidden" name="V_CAT_TYPE" id="rptCatType" />
             <input type="hidden" name="reportDownFileName" id="reportDownFileName" />
             <input type="hidden" name="reportFileName" id="reportFileName" />
             <input type="hidden" name="viewType" id="viewType" />
@@ -375,6 +383,20 @@
                                 <option value="965">Company</option>
                             </select>
                         </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">* <spring:message code='sal.title.text.category' /></th>
+                        <td>
+                            <select class="w100p" id="catType" name="catType">
+                                <option value="ALL">All</option>
+                                <option value="HA">HA - Home Appliances</option>
+                                <option value="HC">HC - Homecare</option>
+                            </select>
+                        </td>
+                        <th scope="row"></th>
+                        <td></td>
+                        <th scope="row"></th>
+                        <td></td>
                     </tr>
                     <tr>
                         <td colspan="6" class="col_all">
