@@ -206,8 +206,10 @@ public class CommissionReportController {
 		} else {
 		    custType = "'" + custType + "'";
 		}
-
 		params.put("custType", custType);
+
+		String catType = params.get("catType").toString();
+		params.put("catType", catType);
 
 		commissionReportService.commSPCRgenrawSHIIndexCall(params);
 
