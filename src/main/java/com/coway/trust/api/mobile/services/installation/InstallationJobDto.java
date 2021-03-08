@@ -275,8 +275,18 @@ public class InstallationJobDto {
 
   private String aftLpm;
 
+  private String turbLvl;
 
-  public String getBoosterPump() {
+
+  public String getTurbLvl() {
+	return turbLvl;
+}
+
+public void setTurbLvl(String turbLvl) {
+	this.turbLvl = turbLvl;
+}
+
+public String getBoosterPump() {
 	return boosterPump;
 }
 
