@@ -53,7 +53,7 @@
 			<if test="custName != null and custName != '' ">
 			AND Filter1.TAX_INVC_CUST_NAME LIKE '%' || #{custName} || '%'
 			</if>
-        ORDER BY Filter1.INVC_ITM_ORD_NO DESC
+        --ORDER BY Filter1.INVC_ITM_ORD_NO DESC
 
 	</select>
 

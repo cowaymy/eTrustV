@@ -56,6 +56,11 @@ function fn_getTaxInvoiceListAjax() {
         return;
     }
 
+    if(FormUtil.checkReqValue($("#brNo")) && FormUtil.checkReqValue($("#orderNo"))){
+        Common.alert('* Please Input BR No OR Order No.<br/>');
+        return;
+    }
+
     Common.ajax("POST", "/payment/selectTaxInvoiceRentalList.do", $("#searchForm").serializeJSON(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
