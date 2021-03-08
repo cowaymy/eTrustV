@@ -580,7 +580,10 @@
         PAY_TYPE,
         PAY_TYPE_ID,
         ADV_MONTH,
-        USER_REM
+        USER_REM,
+        CARD_NO,
+        CARD_MODE_ID,
+        APPROVAL_CODE
         )
      <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
         SELECT
@@ -630,7 +633,10 @@
         #{item.paymentType},
         #{item.PaymentTypeId},
         #{item.advanceMonth},
-        #{item.userRemark}
+        #{item.userRemark},
+        #{item.cardNo},
+        #{item.cardModeId},
+        #{item.approvalCode}
         FROM DUAL
         </foreach>
     </insert>

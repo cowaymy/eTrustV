@@ -123,6 +123,12 @@ function fn_getOrderListAjax(goPage) {
 	//페이징 변수 세팅
     $("#pageNo").val(goPage);
 
+    if(FormUtil.checkReqValue($('#payDate1')) && FormUtil.checkReqValue($('#payDate2'))){
+        Common.alert("Pay Date required");
+        return;
+    }
+
+
 	AUIGrid.destroy(subGridID);//subGrid 초기화
     Common.ajax("GET", "/payment/selectOrderList", $("#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result.resultList);

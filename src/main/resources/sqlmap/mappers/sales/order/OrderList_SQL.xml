@@ -155,7 +155,7 @@
                    AND #{contactNo} IN (V1.MAIL_TEL_MOB, V1.MAIL_TEL_OFF, V1.MAIL_TEL_RES)
                  </if>
                  <if test='vaNo != null and vaNo != ""'>
-                   AND UPPER(V1.CUST_VA_NO) = UPPER(#{vaNo})
+                   AND V1.CUST_VA_NO = #{vaNo}
                  </if>
                  <if test='serialNo != null and serialNo != ""'>
                    AND V1.SERIAL_NO = #{serialNo}
@@ -1399,7 +1399,7 @@
              )
            </if>
            <if test='vaNo != null and vaNo != ""'>
-             AND REPLACE(T.CUST_VA_NO,' ')= REPLACE(UPPER(#{vaNo}),' ')
+             AND REPLACE(T.CUST_VA_NO,' ')= REPLACE(#{vaNo},' ')
            </if>
 
            <if test='crtUserId != null and crtUserId != ""'>

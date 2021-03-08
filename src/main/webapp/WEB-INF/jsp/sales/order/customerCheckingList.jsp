@@ -40,7 +40,12 @@
         //Search
         $("#_listSearchBtn").click(function() {
 
-            fn_selectPstRequestDOListAjax();
+        	if(FormUtil.checkReqValue($('#_nric'))){
+        		Common.alert("NRIC/Company No. required");
+        	}else{
+        		fn_selectCustomerCheckingListAjax();
+        	}
+
         });
 
     });
@@ -126,7 +131,7 @@
     }
 
     // 리스트 조회.
-    function fn_selectPstRequestDOListAjax() {
+    function fn_selectCustomerCheckingListAjax() {
         Common.ajax("GET", "/sales/customer/selectCustomerCheckingList", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(custGridID, result);
         }
