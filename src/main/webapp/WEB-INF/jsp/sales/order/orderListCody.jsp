@@ -14,7 +14,6 @@
     };
 
     $(document).ready(function(){
-console.log("orderlist");
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         if("${SESSION_INFO.userTypeId}" == "2" ){
@@ -728,11 +727,11 @@ console.log("orderlist");
     </td>
     <th scope="row"><spring:message code='sales.SeriacNo'/></th>
     <td>
-    <input id="listSerialNo" name="serialNo" type="text" title="Serial Number" placeholder="<spring:message code='sales.SeriacNo'/>" class="w100p" />
+    <input id="listSerialNo" name="serialNo" type="text" title="Serial Number" onkeyup="this.value = this.value.toUpperCase();" placeholder="<spring:message code='sales.SeriacNo'/>" class="w100p" />
     </td>
     <th scope="row"><spring:message code='sales.SirimNo'/></th>
     <td>
-    <input id="listSirimNo" name="sirimNo" type="text" title="Sirim Number" placeholder="<spring:message code='sales.SirimNo'/>" class="w100p" />
+    <input id="listSirimNo" name="sirimNo" type="text" title="Sirim Number" onkeyup="this.value = this.value.toUpperCase();" placeholder="<spring:message code='sales.SirimNo'/>" class="w100p" />
     </td>
 </tr>
 <tr>
@@ -751,11 +750,11 @@ console.log("orderlist");
 </tr>
 <tr>
     <th scope="row">Org Code</th>
-    <td><input type="text" title="orgCode" id="orgCode" name="orgCode" placeholder="Org Code" class="w100p" value="${orgCode}"/></td>
+    <td><input type="text" title="orgCode" id="orgCode" name="orgCode" onkeyup="this.value = this.value.toUpperCase();" placeholder="Org Code" class="w100p" value="${orgCode}"/></td>
     <th scope="row">Grp Code</th>
-    <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  placeholder="Grp Code" class="w100p" value="${grpCode}"/></td>
+    <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  onkeyup="this.value = this.value.toUpperCase();" placeholder="Grp Code" class="w100p" value="${grpCode}"/></td>
     <th scope="row">Dept Code</th>
-    <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p" value="${deptCode}"/></td>
+    <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  onkeyup="this.value = this.value.toUpperCase();" placeholder="Dept Code" class="w100p" value="${deptCode}"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code='sales.isEKeyin'/></th>

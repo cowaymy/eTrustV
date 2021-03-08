@@ -276,13 +276,13 @@
     	   JOIN SAL0029D S29 ON S29.NRIC = F1.CUST_IC
           WHERE 1 = 1
           <if test="orgCode != null and orgCode != ''">
-            AND F1.ORG_CODE = UPPER(#{orgCode})
+            AND F1.ORG_CODE = #{orgCode}
           </if>
           <if test="grpCode != null and grpCode != ''">
-            AND F1.GRP_CODE = UPPER(#{grpCode})
+            AND F1.GRP_CODE = #{grpCode}
           </if>
           <if test="deptCode != null and deptCode != ''">
-            AND F1.DEPT_CODE = UPPER(#{deptCode})
+            AND F1.DEPT_CODE = #{deptCode}
           </if>
           <if test="memCode != null and memCode != ''" >
             AND F1.MEM_CODE = #{memCode}
@@ -291,10 +291,10 @@
             AND F1.ORD_NO = #{ordNo}
           </if>
           <if test="custName != null and custName != ''">
-            AND F1.CUST_NAME LIKE '%'|| UPPER(#{custName}) || '%'
+            AND F1.CUST_NAME LIKE '%'|| #{custName} || '%'
           </if>
           <if test="custIc != null and custIc != ''">
-            AND F1.CUST_IC LIKE '%'|| UPPER(#{custIc}) || '%'
+            AND F1.CUST_IC LIKE '%'|| #{custIc} || '%'
           </if>
           <if test="createStDate != null and createStDate != ''">
             AND F1.ORD_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
@@ -312,10 +312,10 @@
             AND F1.PV_MONTH = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
           </if>
           <if test="salesmanCode != null and salesmanCode != ''">
-            AND F1.SALESMAN_CODE = UPPER(#{salesmanCode})
+            AND F1.SALESMAN_CODE = #{salesmanCode}
           </if>
           <if test="promoCode != null and promoCode != ''">
-            AND F1.PROMO_CODE = UPPER(#{promoCode})
+            AND F1.PROMO_CODE = #{promoCode}
           </if>
            <if test="memtype != null and memtype != ''">
             AND MEM_TYPE = #{memtype}

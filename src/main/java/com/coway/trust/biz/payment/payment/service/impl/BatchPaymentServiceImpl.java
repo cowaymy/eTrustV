@@ -147,7 +147,7 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 
 
       //CALL PROCEDURE
-      batchPaymentMapper.callBatchPayVerifyDet(master);
+      //batchPaymentMapper.callBatchPayVerifyDet(master);
     }
 
     return mastetSeq;

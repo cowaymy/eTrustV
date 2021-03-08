@@ -606,15 +606,15 @@ console.log("searchColorGrid");
 <tr>
     <th scope="row"><spring:message code="sal.title.text.orgCode" /></th>
     <td>
-    <input type="text" title="" id="orgCode" name="orgCode" value="${orgCode}" placeholder="Organization Code" class="w100p" />
+    <input type="text" title="" id="orgCode" name="orgCode" onkeyup="this.value = this.value.toUpperCase();" value="${orgCode}" placeholder="Organization Code" class="w100p" />
     </td>
     <th scope="row"><spring:message code="sal.title.text.groupCode" /></th>
     <td>
-    <input type="text" title="" id="grpCode" name="grpCode" placeholder="Group Code" class="w100p" />
+    <input type="text" title="" id="grpCode" name="grpCode" onkeyup="this.value = this.value.toUpperCase();" placeholder="Group Code" class="w100p" />
     </td>
     <th scope="row"><spring:message code="sal.title.text.deptCode" /></th>
     <td>
-    <input type="text" title="" id="deptCode" name="deptCode" placeholder="Department Code" class="w100p" />
+    <input type="text" title="" id="deptCode" name="deptCode" onkeyup="this.value = this.value.toUpperCase();" placeholder="Department Code" class="w100p" />
     </td>
 </tr>
 <tr>
@@ -656,7 +656,7 @@ console.log("searchColorGrid");
     <td><input type="text" title="기준년월" id="netSalesMonth" name="netSalesMonth" placeholder="MM/YYYY" class="j_date2 w100p" /></td>
     <th scope="row"><spring:message code="sal.text.salManCode" /></th>
     <td>
-    <input type="text" title="" id="salesmanCode" name="salesmanCode" placeholder="Salesman (Member Code)" class="w100p" />
+    <input type="text" title="" id="salesmanCode" name="salesmanCode" onkeyup="this.value = this.value.toUpperCase();" placeholder="Salesman (Member Code)" class="w100p" />
     </td>
     <th scope="row"><spring:message code="sal.text.contactNumber" /></th>
     <td>

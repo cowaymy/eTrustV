@@ -102,14 +102,14 @@
                             LEFT OUTER JOIN SAL0046D IE ON IE.INSTALL_ENTRY_ID = IR.ENTRY_ID WHERE
                                     <choose>
                                         <when test='serialNo != null and serialNo != ""'>
-                                            UPPER(IR.SERIAL_NO) = UPPER(#{serialNo})
+                                            IR.SERIAL_NO = #{serialNo}
                                             <if test='sirimNo != null and sirimNo != ""'>
-                                                AND UPPER(IR.SIRIM_NO) = UPPER(#{sirimNo})
+                                                AND IR.SIRIM_NO = #{sirimNo}
                                             </if>
                                         </when>
                                         <otherwise>
                                             <if test='sirimNo != null and sirimNo != ""'>
-                                                IR.SIRIM_NO = UPPER(#{sirimNo})
+                                                IR.SIRIM_NO = #{sirimNo}
                                             </if>
                                         </otherwise>
                                     </choose>
