@@ -21,8 +21,6 @@ public interface CpeService {
 
 	List<EgovMap> getSubRequestTypeList(Map<String, Object> params);
 
-	void insertCpeReqst(Map<String, Object> params);
-
 	int selectNextCpeId();
 
 	String selectNextCpeAppvPrcssNo();
@@ -33,13 +31,13 @@ public interface CpeService {
 
 	EgovMap selectRequestInfo(Map<String, Object> params);
 
-	void insertCpeReqstDetail(Map<String, Object> params);
-
 	List<EgovMap> selectCpeDetailList(Map<String, Object> params);
-
-	void updateCpeStatusMain(Map<String, Object> params);
 
 	String getApproverList(Map<String, Object> params);
 
 	void sendNotificationEmail(Map<String, Object> params);
+
+	void insertCpe(Map<String, Object> params);
+
+	void updateCpe(Map<String, Object> params);
 }

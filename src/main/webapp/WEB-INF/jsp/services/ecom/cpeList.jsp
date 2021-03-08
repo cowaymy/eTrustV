@@ -162,16 +162,6 @@
             fn_search();
           });
 
-      //excel Download
-//       $('#excelDown').click(
-//             function() {
-//               var excelProps = {
-//                 fileName : "CPE",
-//                 exceptColumnFields : AUIGrid.getHiddenColumnDataFields(gridIDExcelHide)
-//               };
-//               AUIGrid.exportToXlsx(gridIDExcelHide, excelProps);
-//        });
-
        // cell click
        AUIGrid.bind(gridID, "cellClick", function(event) {
            cpeReqId = AUIGrid.getCellValue(gridID, event.rowIndex, "cpeReqId");
@@ -199,52 +189,6 @@
         AUIGrid.setGridData(gridIDExcelHide, result);
       });
   }
-
-  /* TODO: for CPE
-  function fn_download() {
-    var gridObj = AUIGrid.getSelectedItems(gridID);
-
-    if (gridObj == null || gridObj.length <= 0) {
-      Common.alert("<spring:message code='service.msg.NoRcd'/>");
-      return;
-    }
-
-    var counselingNo = gridObj[0].item.counselingNo;
-
-    var whereSQL = "";
-    var whereSQL2 = "";
-    var whereSQL3 = "";
-    var date = new Date().getDate();
-    if (date.toString().length == 1) {
-      date = "0" + date;
-    }
-
-    $("#reportFileName").val("");
-    $("#reportDownFileName").val("");
-    $("#viewType").val("");
-
-    whereSQL = " AND z.Counselling_No = '" + counselingNo + "'";
-    whereSQL2 = " WHERE T1.CUR_SEQNO = '" + counselingNo + "'";
-    whereSQL3 = "  AND T4.CUR_SEQNO = '" + counselingNo + "'";
-    $("#dataForm3 #viewType").val("PDF");
-    $("#dataForm3 #reportFileName").val("/services/TagCFFReport_PDF.rpt");
-    $("#reportDownFileName").val("Tag/CFF_" + counselingNo + "_" + date + (new Date().getMonth() + 1) + new Date().getFullYear());
-
-    $("#dataForm3 #V_COUNSELLINGNO").val(counselingNo);
-    $("#dataForm3 #V_WHERESQL").val(whereSQL);
-    $("#dataForm3 #V_WHERESQL2").val(whereSQL2);
-    $("#dataForm3 #V_WHERESQL3").val(whereSQL3);
-    $("#dataForm3 #V_SELECTSQL").val("");
-    $("#dataForm3 #V_SELECTSQL2").val("");
-    $("#dataForm3 #V_FULLSQL").val("");
-
-    var option = {
-      isProcedure : true
-      // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
-    };
-
-    Common.report("dataForm3", option);
-  }*/
 
   function fn_clear() {
 	  location.reload();
@@ -354,20 +298,6 @@
  <!-- title_line end -->
  <section class="search_table">
   <!-- search_table start -->
-  <!--  TODO : for CPE
-  <form id="dataForm3">
-   <input type="hidden" id="reportFileName" name="reportFileName" value="" />
-   <input type="hidden" id="viewType" name="viewType" value="" />
-   <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
-   <input type="hidden" id="V_COUNSELLINGNO" name="V_COUNSELLINGNO" value="" />
-   <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
-   <input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" value="" />
-   <input type="hidden" id="V_WHERESQL3" name="V_WHERESQL3" value="" />
-   <input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" value="" />
-   <input type="hidden" id="V_SELECTSQL2" name="V_SELECTSQL2" value="" />
-   <input type="hidden" id="V_FULLSQL" name="V_FULLSQL" value="" />
-  </form>
-   -->
   <form id="cpeForm" name="cpeForm" method="post">
    <table class="type1">
     <!-- table start -->
@@ -438,6 +368,8 @@
         </c:forEach>
 
         <!-- <option value="1">Active</option>
+        <option value="5">Approved</option>
+        <option value="6">Rejected</option>
         <option value="44">Pending</option>
         <option value="34">Solved</option>
         <option value="35">Unsolved</option>

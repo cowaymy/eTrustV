@@ -158,7 +158,6 @@
             console.log(result);
             $("#_cpeReqId").val(result.data.cpeReqId);
                 Common.alert('<spring:message code="newCpe.save.msg" />', fn_closePopNoApprovalRqrd);
-                //$("#newRequestPop").remove(); //TODO: Close pop up
         });
     }
 

@@ -66,13 +66,10 @@ public class CpeServiceImpl implements CpeService {
 	}
 
 	@Override
-	public void insertCpeReqst(Map<String, Object> params) {
+	public void insertCpe(Map<String, Object> params) {
 		logger.debug("insertCpeReqst (master table) ===================================>>  " + params);
 		cpeMapper.insertCpeReqst(params);
-	}
 
-	@Override
-	public void insertCpeReqstDetail(Map<String, Object> params) {
 		logger.debug("insertCpeReqst (detail table) =====================================>>  " + params);
 		cpeMapper.insertCpeRqstDetail(params);
 	}
@@ -112,29 +109,22 @@ public class CpeServiceImpl implements CpeService {
 				cpeMapper.insertCpeApproveLineDetail(hm);
 			}
 
-			// TODO: Notification - Yong - start
-/*            Map ntf = (HashMap<String, Object>) apprGridList.get(0);
-            ntf.put("cpeReqId", params.get("cpeReqId"));
-
-            EgovMap ntfDtls = new EgovMap();
-            ntfDtls = (EgovMap) webInvoiceMapper.getClmDesc(params);
-            ntf.put("codeName", ntfDtls.get("codeDesc"));
-
-            ntfDtls = (EgovMap) webInvoiceMapper.getNtfUser(ntf);
-            ntf.put("reqstUserId", ntfDtls.get("userName"));
-            ntf.put("code", params.get("clmNo").toString().substring(0, 2));
-            ntf.put("appvStus", "R");
-            ntf.put("rejctResn", "Pending Approval.");
-
-            logger.debug("ntf =====================================>>  " + ntf);
-
-            cpeMapper.insertNotification(ntf);
-*/         // TODO: Notification - Yong - end
 		}
 
 		logger.debug("updateAppvPrcssNo =====================================>>  " + params);
 		cpeMapper.updateCpeRqstAppvPrcssNo(params);
 
+	}
+
+	@Override
+	public void updateCpe(Map<String, Object> params) {
+		cpeMapper.insertCpeRqstDetail(params); //insert new status record for CPE
+		cpeMapper.updateCpeStatusMain(params);  //update main table with latest status for CPE
+
+		if (params.get("approvalRequired").equals("1") &&
+				(params.get("status").equals("5") || params.get("status").equals("6"))) {
+			this.sendNotificationEmail(params); //send email to notify about request approval (status = 5) or rejection (status = 6)
+		}
 	}
 
 	@Override
@@ -150,12 +140,6 @@ public class CpeServiceImpl implements CpeService {
 	@Override
 	public List<EgovMap> selectCpeDetailList(Map<String, Object> params) {
 		return cpeMapper.selectCpeDetailList(params);
-	}
-
-	@Override
-	public void updateCpeStatusMain(Map<String, Object> params) {
-		logger.debug("updateCpeStatusMain =====================================>>  " + params);
-		cpeMapper.updateCpeStatusMain(params);
 	}
 
 	@Override

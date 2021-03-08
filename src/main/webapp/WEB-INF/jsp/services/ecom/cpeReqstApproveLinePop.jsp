@@ -74,7 +74,7 @@ var approveLineGridPros = {
     pageRowCount : 20,
     showStateColumn : true,
     // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
-    enableRestore : true,
+    enableRestore : false,
     showRowNumColumn : false,
     softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
     softRemoveRowMode : false,
@@ -114,7 +114,12 @@ function fn_appvLineGridAddRow() {
 }
 
 function fn_appvLineGridDeleteRow() {
-    AUIGrid.removeRow(approveLineGridID, selectRowIdx);
+	var appvRowCount  = AUIGrid.getRowCount(approveLineGridID);
+	if (appvRowCount > 1) {
+		AUIGrid.removeRow(approveLineGridID, selectRowIdx);
+	} else {
+		//do nothing
+	}
 }
 
 function fn_searchUserIdPop() {
@@ -168,7 +173,7 @@ function fn_reqstSubmit() {
     if(length == 1) {
         for(var i = 0; i < length; i++) {
             if(FormUtil.isEmpty(AUIGrid.getCellValue(approveLineGridID, i, "memCode"))) {
-                Common.alert('<spring:message code="approveLine.empty.msg" />' + (i +1) + ".");
+                Common.alert('<spring:message code="cpe.approveLine.empty.msg" />');
                 checkMemCode = false;
             }
         }

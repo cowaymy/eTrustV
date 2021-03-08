@@ -199,18 +199,14 @@ public class CpeController {
 	@RequestMapping(value = "/insertCpeReqst.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertCpeReqst(@RequestBody Map<String, Object> params, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
 
-		logger.debug("insertCpeReqst =====================================>>  " + params);
+		logger.debug("insertCpe =====================================>>  " + params);
 
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
 
         int cpeReqId = cpeService.selectNextCpeId();
 		params.put("cpeReqId", cpeReqId);
-		cpeService.insertCpeReqst(params);
-
-		int activeStatusForNew = 1;
-		params.put("status", activeStatusForNew);
-		cpeService.insertCpeReqstDetail(params);
+		cpeService.insertCpe(params);
 
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -272,13 +268,7 @@ public class CpeController {
 		params.put("userName", sessionVO.getUserName());
 		params.put("userFullname", sessionVO.getUserFullname());
 
-		cpeService.insertCpeReqstDetail(params); //insert new status record for CPE
-		cpeService.updateCpeStatusMain(params);  //update main table with latest status for CPE
-
-		if (params.get("approvalRequired").equals("1") &&
-				(params.get("status").equals("5") || params.get("status").equals("6"))) {
-			cpeService.sendNotificationEmail(params); //send email to notify about request approval/rejection
-		}
+		cpeService.updateCpe(params); //update CPE status and send notification mail if approved or rejected
 
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);

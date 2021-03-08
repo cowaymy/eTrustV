@@ -369,7 +369,7 @@
        ,#{mainDept}
        ,#{subDept}
        ,#{inputRemark}
-       ,#{status}
+       ,1
        ,SYSDATE
        ,#{userId}
     )
