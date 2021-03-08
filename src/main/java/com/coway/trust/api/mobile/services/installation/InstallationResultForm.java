@@ -82,8 +82,18 @@ public class InstallationResultForm {
   private String boosterPump;
   private String aftPsi;
   private String aftLpm;
+  private String turb_Lvl;
 
-  public String getBoosterPump() {
+
+  public String getTurb_Lvl() {
+	return turb_Lvl;
+}
+
+public void setTurb_Lvl(String turb_Lvl) {
+	this.turb_Lvl = turb_Lvl;
+}
+
+public String getBoosterPump() {
 	return boosterPump;
 }
 
