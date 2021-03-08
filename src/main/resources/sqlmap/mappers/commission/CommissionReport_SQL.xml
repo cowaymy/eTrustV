@@ -83,7 +83,7 @@
     <resultMap id="commSHIIndexMap" type="egovMap" />
     <select id="commSHIIndexCall" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
         {
-        call  SP_SPC_RGENRAW_SHI_IDX(#{memCode},#{pvMonth},#{pvYear},#{level},#{typeCode},#{teamCode},#{custType},#{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=commSHIIndexMap})
+        call  SP_SPC_RGENRAW_SHI_IDX(#{memCode},#{pvMonth},#{pvYear},#{level},#{typeCode},#{teamCode},#{custType},#{catType},#{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=commSHIIndexMap})
         }
     </select>
 
