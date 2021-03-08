@@ -28,8 +28,8 @@
     <th scope="row"><spring:message code="sales.pakName" /></th>
     <td><span>${membershipInfoTab.pacName}</span></td>
     <c:choose>
-        <th scope="row"><spring:message code="sal.text.refNo" /> <span class="must">*</span></th>
         <c:when test="${action == 'EDIT' }">
+            <th scope="row"><spring:message code="sal.text.refNo" /> <span class="must">*</span></th>
             <td><input type="text"  id="refNo" name="refNo" class="w100p" value="${membershipInfoTab.refNo}"/></td>
         </c:when>
         <c:otherwise>
