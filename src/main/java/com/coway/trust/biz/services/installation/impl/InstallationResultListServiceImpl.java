@@ -1769,6 +1769,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("boosterPump", CommonUtils.nvl(params.get("boosterPump")).toString());
     installResult.put("aftPsi", CommonUtils.nvl(params.get("aftPsi")).toString());
     installResult.put("aftLpm", CommonUtils.nvl(params.get("aftLpm")).toString());
+    installResult.put("turbLvl", CommonUtils.nvl(params.get("turbLvl")).toString());
 
     // installResult.put("failId", CommonUtils.nvl(params.get("failChild")).toString());
     // installResult.put("failLct", CommonUtils.nvl(params.get("failParent")).toString());
