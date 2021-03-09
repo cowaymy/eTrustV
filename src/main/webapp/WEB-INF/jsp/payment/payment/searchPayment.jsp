@@ -123,28 +123,24 @@ function fn_getOrderListAjax(goPage) {
 	//페이징 변수 세팅
     $("#pageNo").val(goPage);
 
-    if(FormUtil.checkReqValue($('#payDate1')) && FormUtil.checkReqValue($('#payDate2'))){
-        Common.alert("Pay Date required");
-        return;
+    if(fn_validSearch()){
+		AUIGrid.destroy(subGridID);//subGrid 초기화
+	    Common.ajax("GET", "/payment/selectOrderList", $("#searchForm").serialize(), function(result) {
+	        AUIGrid.setGridData(myGridID, result.resultList);
+
+	        //전체건수 세팅
+	        _totalRowCount = result.totalRowCount;
+
+	        //페이징 처리를 위한 옵션 설정
+	        var pagingPros = {
+	                // 1페이지에서 보여줄 행의 수
+	                rowCount : $("#rowCount").val()
+	        };
+
+	        GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
+
+	    });
     }
-
-
-	AUIGrid.destroy(subGridID);//subGrid 초기화
-    Common.ajax("GET", "/payment/selectOrderList", $("#searchForm").serialize(), function(result) {
-        AUIGrid.setGridData(myGridID, result.resultList);
-
-        //전체건수 세팅
-        _totalRowCount = result.totalRowCount;
-
-        //페이징 처리를 위한 옵션 설정
-        var pagingPros = {
-                // 1페이지에서 보여줄 행의 수
-                rowCount : $("#rowCount").val()
-        };
-
-        GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
-
-    });
 }
 
 //마스터 그리드 페이지 이동
@@ -293,6 +289,22 @@ function fn_officialReceiptReport_V2(){
     }else{
         Common.alert("<spring:message code='pay.alert.noPay'/>");
    }
+}
+
+function fn_validSearch() {
+	var isValid = true, msg = "";
+
+	if( FormUtil.isEmpty($('#orderNo').val())
+	 && FormUtil.isEmpty($('#orNo').val()) ){
+		if(FormUtil.isEmpty($('#payDate1').val()) || FormUtil.isEmpty($('#payDate2').val())) {
+            isValid = false;
+            msg += '* <spring:message code="pay.alert.dateFormTo" /><br/>';
+        }
+	}
+
+	 if(!isValid) Common.alert(msg);
+
+     return isValid;
 }
 </script>
 
