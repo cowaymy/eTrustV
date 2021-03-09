@@ -115,7 +115,63 @@
             AUIGrid.exportToXlsx(excelListGridID, excelProps);
         });
 
+        fn_setToDay();
+
     });
+
+    function fn_setToDay() {
+        var today = new Date();
+
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
+
+        if(dd < 10) {
+            dd = "0" + dd;
+        }
+        if(mm < 10){
+            mm = "0" + mm
+        }
+
+        var dd_1 = dd;
+        var mm_1 = today.getMonth();
+        var yyyy_1 = "";
+
+        if(mm_1 < 1) {
+            yyyy_1 = today.getFullYear() - 1;
+        } else {
+            yyyy_1 = today.getFullYear();
+        }
+
+        // if February
+        if(mm_1 == 2) {
+            if(((yyyy % 4 == 0) && (yyyy % 100 != 0)) || (yyyy % 400 == 0)) {
+                // If true == leap year
+                if(dd > 29) {
+                    dd_1 = 29;
+                }
+            } else {
+                // If false == normal
+                if(dd > 28) {
+                    dd_1 = 28;
+                }
+            }
+        } else if(mm_1 == 4 || mm_1 == 6 || mm_1 == 9 || mm_1 == 11) {
+            if(dd > 30) {
+                dd_1 = 30;
+            }
+        }
+
+        if(mm_1 < 10){
+            mm_1 = "0" + mm_1
+        }
+
+        today = dd + "/" + mm + "/" + yyyy;
+        $("#_reqstEndDt").val(today);
+
+        var today_1 = dd_1 + "/" + mm_1 + "/" + yyyy_1;
+        $("#_reqstStartDt").val(today_1);
+    }
 
     function fn_statusCodeSearch(){
         Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do", {selCategoryId : CATE_ID, parmDisab : 0}, function(result) {
@@ -407,6 +463,11 @@
               msg += '* Unable to search due to no access right.<br/>';
         }
 
+        if((FormUtil.isEmpty($('#_reqstStartDt').val()) || FormUtil.isEmpty($('#_reqstEndDt').val()))) {
+            isValid = false;
+            msg += '<spring:message code="sal.alert.msg.selectOrdDate" /><br/>';
+        }
+
 
     	if(FormUtil.isEmpty($('#_memCode').val())
     			&& FormUtil.isEmpty($('#_appTypeId').val())
@@ -415,14 +476,15 @@
     		    && FormUtil.isEmpty($('#_typeId').val())
     		    && FormUtil.isEmpty($('#_nric').val())
     		    && FormUtil.isEmpty($('#_name').val())
-    		    && (FormUtil.isEmpty($('#_reqstStartDt').val()) || FormUtil.isEmpty($('#_reqstEndDt').val()))
         ){
+    	    /*
     		 if((!FormUtil.isEmpty($('#_reqstStartDt').val()) && FormUtil.isEmpty($('#_reqstEndDt').val()))
     		  || (FormUtil.isEmpty($('#_reqstStartDt').val()) && !FormUtil.isEmpty($('#_reqstEndDt').val())))
     		 {
     			    isValid = false;
     			    msg += '<spring:message code="sal.alert.msg.selectOrdDate" /><br/>';
     		 }
+    	    */
     		if(FormUtil.isEmpty($('#_sofNo').val())){
     			isValid = false;
     			msg += '<spring:message code="sal.alert.msg.selSofNo" /><br/>';
