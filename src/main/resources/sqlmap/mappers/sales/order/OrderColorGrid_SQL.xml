@@ -162,18 +162,40 @@
                                 FROM SAL1008V vC ) E1
 
                         <if test="contactNum != null and contactNum != ''">
+                        /*
                           JOIN (SELECT vM.ORD_ID
                                 FROM SAL1011V vM
-                                WHERE vM.MAIL_CNT_TEL_M = #{contactNum}
-                                   OR vM.MAIL_CNT_TEL_O = #{contactNum}
-                                   OR vM.MAIL_CNT_TEL_F = #{contactNum}
-                                   OR vM.MAIL_CNT_TEL_R = #{contactNum}) E2 ON E2.ORD_ID = E1.ORD_ID
+                                WHERE vM.MAIL_CNT_TEL_M = contactNum
+                                   OR vM.MAIL_CNT_TEL_O = contactNum
+                                   OR vM.MAIL_CNT_TEL_F = contactNum
+                                   OR vM.MAIL_CNT_TEL_R = contactNum
+                          ) E2 ON E2.ORD_ID = E1.ORD_ID
                           JOIN ( SELECT vI.ORD_ID
                                  FROM SAL1010V vI
-                                 WHERE vI.INST_CNT_TEL_M = #{contactNum}
-                                    OR vI.INST_CNT_TEL_F = #{contactNum}
-                                    OR vI.INST_CNT_TEL_O = #{contactNum}
-                                    OR vI.INST_CNT_TEL_R = #{contactNum}) E3 ON E3.ORD_ID = E1.ORD_ID
+                                 WHERE vI.INST_CNT_TEL_M = contactNum
+                                    OR vI.INST_CNT_TEL_F = contactNum
+                                    OR vI.INST_CNT_TEL_O = contactNum
+                                    OR vI.INST_CNT_TEL_R = contactNum
+                          ) E3 ON E3.ORD_ID = E1.ORD_ID
+                        */
+                        JOIN (
+                            SELECT A.SALES_ORD_ID
+                            FROM SAL0001D A
+                            JOIN SAL0027D C ON A.CUST_CNT_ID = C.CUST_CNTC_ID
+                            WHERE TEL_M1 = #{contactNum}
+                            OR TEL_O = #{contactNum}
+                            OR TEL_R = #{contactNum}
+                            OR TELF = #{contactNum}
+                        ) E2 ON E2.SALES_ORD_ID = E1.ORD_ID
+                        JOIN (
+                            SELECT A.SALES_ORD_ID
+                            FROM sal0045d A
+                            JOIN SAL0027D B ON B.CUST_CNTC_ID = A.CNT_ID
+                            WHERE B.TEL_M1 = #{contactNum}
+                            OR B.TEL_O = #{contactNum}
+                            OR B.TEL_R = #{contactNum}
+                            OR B.TELF = #{contactNum}
+                        ) E3 ON E3.SALES_ORD_ID = E1.ORD_ID
                         </if>
 
                         <!-- JOIN ( SELECT vM.ORD_ID ,
