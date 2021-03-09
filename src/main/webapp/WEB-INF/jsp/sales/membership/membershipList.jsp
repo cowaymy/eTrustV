@@ -348,8 +348,10 @@ function fn_clear(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2><spring:message code="sal.page.title.membershipOutright" /></h2>
 <ul class="right_btns">
-    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doEdit();"><spring:message code="sales.btn.edit" /></a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doMFree();"><spring:message code="sal.btn.freeMembership" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
