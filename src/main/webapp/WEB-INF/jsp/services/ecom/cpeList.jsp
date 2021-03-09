@@ -180,6 +180,7 @@
        doGetCombo('/services/ecom/selectMainDept.do', '', '', 'main_department', 'S', '');
        doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'dsc_branch', 'M', 'fn_multiCombo'); //Branch Code
        doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','requestorBranch', 'M' , 'fn_multiCombo');
+       doGetCombo("/services/ecom/selectRequestTypeJsonList", '', '', 'reqType', 'M', 'fn_multiCombo');
   });
 
   function fn_search() {
@@ -203,10 +204,15 @@
       });
 
       $('#requestorBranch').change(function() {
-          //console.log($(this).val());
       }).multipleSelect({
           selectAll: true,
           width: '100%'
+      });
+
+      $('#reqType').change(function() {
+      }).multipleSelect({
+    	  selectAll: true,
+    	  width: '100%'
       });
   }
 
@@ -393,6 +399,16 @@
       <td><select class="multy_select w100p" id="dsc_branch" name="dsc_branch" multiple="multiple"></select>
       </td>
       </td>
+     </tr>
+     <tr>
+      <th scope="row"><spring:message code="cpe.title.text.requestType" /></th>
+      <td><select class="multy_select w100p" id="reqType" name="reqType" multiple="multiple"></select>
+      <th scope="row">
+      <td></td>
+      </th>
+      <th scope="row">
+      <td></td>
+      </th>
      </tr>
     </tbody>
    </table>

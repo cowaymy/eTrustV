@@ -480,6 +480,13 @@
         </foreach>
     </if>
 
+    <if test="arrReqType != null and arrReqType != '' ">
+       AND T1.CPE_TYPE IN
+        <foreach item="item" collection="arrReqType" index="index" open="(" separator="," close=")">
+         #{item}
+        </foreach>
+    </if>
+
       ORDER BY T1.CRT_DT DESC
     </select>
 

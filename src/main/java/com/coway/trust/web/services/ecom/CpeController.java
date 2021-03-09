@@ -224,11 +224,13 @@ public class CpeController {
 		String[] arrRequestorBranch = request.getParameterValues("requestorBranch");
 		String[] arrStatusList = request.getParameterValues("statusList"); //Request Status
 		String[] arrDscBrnchId = request.getParameterValues("dsc_branch"); //DSC Branch
+		String[] arrReqType = request.getParameterValues("reqType"); //Request Type
 
 		if(arrReqStageId      != null && !CommonUtils.containsEmpty(arrReqStageId))      params.put("arrReqStageId", arrReqStageId);
 		if(arrRequestorBranch    != null && !CommonUtils.containsEmpty(arrRequestorBranch))    params.put("arrRequestorBranch", arrRequestorBranch);
 		if(arrStatusList != null && !CommonUtils.containsEmpty(arrStatusList)) params.put("arrStatusList", arrStatusList);
 		if(arrDscBrnchId   != null && !CommonUtils.containsEmpty(arrDscBrnchId))   params.put("arrDscBrnchId", arrDscBrnchId);
+		if(arrReqType   != null && !CommonUtils.containsEmpty(arrReqType))   params.put("arrReqType", arrReqType);
 
 		logger.debug("selectCpeRequestList==========================>> " + params);
 		List<EgovMap> cpeRequestList = cpeService.selectCpeRequestList(params);
