@@ -175,8 +175,13 @@
 
         Common.ajax("POST", "/services/ecom/updateCpeStatus.do", $("#form_updReqst").serializeJSON(), function(result) {
             console.log(result);
-            Common.alert('<spring:message code="cpe.update.msg" />', $("#cpeRqstUpdateApprovePop").remove());
+            Common.alert('<spring:message code="cpe.update.msg" />', fn_closePopRefreshSearch);
         });
+    }
+
+    function fn_closePopRefreshSearch() {
+    	$("#cpeRqstUpdateApprovePop").remove();
+    	fn_search();
     }
 
 </script>
