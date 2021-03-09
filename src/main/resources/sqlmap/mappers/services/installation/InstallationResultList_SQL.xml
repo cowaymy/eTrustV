@@ -504,6 +504,7 @@
          , Extent2.BOOSTER_PUMP BOOSTER_PUMP
          , Extent2.AFT_PSI AFT_PSI
          , Extent2.AFT_LPM AFT_LPM
+         , Extent2.TURB_LVL TURB_LVL
          , CASE WHEN ( Extent3.CUST_BILL_ID IS NOT NULL ) THEN Extent3.CUST_BILL_ID ELSE 0 END C7
          , Extent6.CODE_NAME CODENAME2
          , Extent18.CITY
@@ -3603,6 +3604,7 @@
                         ,BOOSTER_PUMP
                         ,AFT_PSI
                         ,AFT_LPM
+                        ,TURB_LVL
     ) VALUES (SAL0047D_RESULT_ID_SEQ.NEXTVAL
             , #{entryId}
             , #{statusCodeId}
@@ -3638,6 +3640,7 @@
             , #{boosterPump}
             , #{aftPsi}
             , #{aftLpm}
+            , #{turbLvl}
     )
   </insert>
 
@@ -4780,6 +4783,7 @@
                       ,BOOSTER_PUMP = #{boosterPump}
                       ,AFT_PSI = #{aftPsi}
                       ,AFT_LPM = #{aftLpm}
+                      ,TURB_LVL = #{turbLvl}
 
                     <if test="atchFileGrpId != null and atchFileGrpId != ''">
                       ,ATCH_FILE_GRP_ID = #{atchFileGrpId}
