@@ -260,13 +260,14 @@
             ,SALES_ORD_ID
             ,SALES_ORD_NO
             ,CUST_ID
-            ,CPE_STAGE
+            ,REQ_STAGE_ID
             ,REQ_MAIN_DEPT
             ,REQ_SUB_DEPT
             ,CPE_STUS_ID
             ,CRT_DT
             ,CRT_USER_ID
             ,AS_NO
+            ,REQUESTOR_BRANCH
         )
             values
         (
@@ -283,6 +284,7 @@
             ,SYSDATE
             ,#{userId}
             ,#{asNo}
+            ,#{requestorBranch}
         )
     </insert>
 
@@ -369,7 +371,7 @@
        ,#{mainDept}
        ,#{subDept}
        ,#{inputRemark}
-       ,1
+       ,#{status}
        ,SYSDATE
        ,#{userId}
     )
@@ -399,23 +401,86 @@
             ,T4.CODE_NAME AS MAIN_DEPT
             ,T5.CODE_NAME AS SUB_DEPT
             ,T6.CODE || ' - ' || T6.NAME AS DSC_BRANCH
-            , DECODE(T1.CPE_STAGE, 4, 'After Install', 'Before Install') AS REQUEST_STAGE
-            ,T8.CODE || ' - ' || T8.NAME AS REQUESTOR_DEPT
+            ,T10.NAME AS REQUEST_STAGE
+            ,T8.CODE || ' - ' || T8.NAME AS REQUESTOR_BRANCH
             ,T9.NAME AS STATUS
         FROM SVC0118M T1
         JOIN SAL0001D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
         JOIN SAL0029D T3 ON T3.CUST_ID = T1.CUST_ID
         JOIN SYS0013M T4 ON T4.CODE = T1.REQ_MAIN_DEPT
         JOIN SYS0013M T5 ON T5.CODE = T1.REQ_SUB_DEPT
-        JOIN SYS0005M T6 ON T6.BRNCH_ID = T2.BRNCH_ID
         JOIN SYS0047M T7 ON T7.USER_ID = T1.CRT_USER_ID
         JOIN SYS0005M T8 ON T8.BRNCH_ID = T7.USER_BRNCH_ID
         JOIN SYS0038M T9 ON T9.STUS_CODE_ID = T1.CPE_STUS_ID
+        JOIN SYS0038M T10 ON T10.STUS_CODE_ID = T1.REQ_STAGE_ID
+        JOIN SAL0045D T11 ON T11.SALES_ORD_ID = T1.SALES_ORD_ID
+        JOIN SYS0005M T6 ON T6.BRNCH_ID = T11.BRNCH_ID
         WHERE 1=1
     <if test="cpeReqId != null and cpeReqId != '' ">
         AND T1.CPE_REQ_ID = #{cpeReqId}
     </if>
-        ORDER BY T1.CRT_DT DESC
+
+    <if test="order_no != null and order_no != '' ">
+      AND T1.SALES_ORD_NO = #{order_no}
+    </if>
+
+    <if test="asNo != null and asNo != '' ">
+      AND T1.AS_NO = #{asNo}
+    </if>
+
+    <if test="customer_name != null and customer_name != '' ">
+       AND UPPER(T3.NAME) LIKE '%'|| UPPER(#{customer_name}) ||'%'
+    </if>
+
+    <if test="arrReqStageId != null and arrReqStageId != ''">
+      AND T1.REQ_STAGE_ID IN
+      <foreach item="item" collection="arrReqStageId" index="index" open="(" separator="," close=")">
+          #{item}
+      </foreach>
+    </if>
+
+    <if test="nric_company_no != null and nric_company_no != '' ">
+      AND UPPER(T3.NRIC) LIKE '%'||UPPER(#{nric_company_no})||'%'
+    </if>
+
+    <if test="reqStartDt != null and reqStartDt != '' ">
+      AND T1.CRT_DT <![CDATA[ >= ]]>  TO_DATE(#{reqStartDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+    </if>
+
+    <if test="reqEndDt != null and reqEndDt != '' ">
+      AND T1.CRT_DT <![CDATA[ <= ]]>  TO_DATE(#{reqEndDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+    </if>
+
+    <if test="arrRequestorBranch != null and arrRequestorBranch != '' ">
+      AND T1.REQUESTOR_BRANCH IN
+      <foreach item="item" collection="arrRequestorBranch" index="index" open="(" separator="," close=")">
+          #{item}
+      </foreach>
+    </if>
+
+    <if test="main_department != null and main_department != '' ">
+      AND T4.CODE = #{main_department}
+    </if>
+
+    <if test="sub_department != null and sub_department != '' ">
+      AND T5.CODE = #{sub_department}
+    </if>
+
+    <if test='arrStatusList != null and arrStatusList != ""'>
+      AND T1.CPE_STUS_ID IN
+      <foreach item="item" collection="arrStatusList" index="index" open="(" separator="," close=")">
+         #{item}
+      </foreach>
+    </if>
+
+    <if test='arrDscBrnchId != null and arrDscBrnchId != ""'>
+       AND T11.BRNCH_ID IN
+        <foreach item="item" collection="arrDscBrnchId" index="index" open="(" separator="," close=")">
+         #{item}
+        </foreach>
+    </if>
+
+      ORDER BY T1.CRT_DT DESC
     </select>
 
    <select id="selectRequestInfo" parameterType="Map" resultType="egovMap">
@@ -434,7 +499,7 @@
             ,T5.CODE_NAME AS SUB_DEPT
             ,T6.CODE || ' - ' || T6.NAME AS DSC_BRANCH
             , DECODE(T2.STUS_CODE_ID, 4, 'After Install', 'Before Install') AS REQUEST_STAGE
-            ,T8.CODE || ' - ' || T8.NAME AS REQUESTOR_DEPT
+            ,T8.CODE || ' - ' || T8.NAME AS REQUESTOR_BRANCH
             ,T7.USER_FULL_NAME AS CREATED_BY
             ,T11.REMARK
             ,T7.USER_EMAIL AS REQUESTOR_EMAIL

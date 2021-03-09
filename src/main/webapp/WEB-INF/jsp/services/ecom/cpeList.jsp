@@ -31,8 +31,8 @@
       headerText : "<spring:message code='cpe.grid.requestDt'/>",
       width : "10%"
     }, {
-      dataField : "requestorDept",
-      headerText : "Requestor Department",
+      dataField : "requestorBranch",
+      headerText : "Requestor Branch",
       width : "13%"
     }, {
       dataField : "mainDept",
@@ -91,8 +91,8 @@
       width : 200,
       height : 80
     }, {
-        dataField : "requestorDept",
-        headerText : "Requestor Department",
+        dataField : "requestorBranch",
+        headerText : "Requestor Branch",
         width : 200,
         height : 80
     }, {
@@ -179,7 +179,7 @@
 
        doGetCombo('/services/ecom/selectMainDept.do', '', '', 'main_department', 'S', '');
        doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'dsc_branch', 'M', 'fn_multiCombo'); //Branch Code
-       doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','requestor_department', 'M' , 'fn_multiCombo');
+       doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','requestorBranch', 'M' , 'fn_multiCombo');
   });
 
   function fn_search() {
@@ -202,7 +202,7 @@
           width: '100%'
       });
 
-      $('#requestor_department').change(function() {
+      $('#requestorBranch').change(function() {
           //console.log($(this).val());
       }).multipleSelect({
           selectAll: true,
@@ -385,8 +385,8 @@
        <option value="25" selected><spring:message code="sal.text.afterInstall" /></option>
        </select>
       </td>
-      <th scope="row"><spring:message code="cpe.title.text.requestorDept" /></th>
-      <td><select class="multy_select w100p" id="requestor_department" name="requestor_department">
+      <th scope="row"><spring:message code="cpe.title.text.requestorBranch" /></th>
+      <td><select class="multy_select w100p" id="requestorBranch" name="requestorBranch">
        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
        </select></td>
       <th scope="row"><spring:message code="sal.title.text.dscBrnch" /></th>

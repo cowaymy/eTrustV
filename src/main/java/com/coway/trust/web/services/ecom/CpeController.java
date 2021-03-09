@@ -203,6 +203,7 @@ public class CpeController {
 
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
+		params.put("requestorBranch", sessionVO.getUserBranchId());
 
         int cpeReqId = cpeService.selectNextCpeId();
 		params.put("cpeReqId", cpeReqId);
@@ -218,6 +219,16 @@ public class CpeController {
 
 	@RequestMapping(value = "/selectCpeRequestList", method = RequestMethod.GET )
 	public ResponseEntity<List<EgovMap>> selectCpeRequestList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+		String[] arrReqStageId   = request.getParameterValues("reqStageId");//Order stage when request is made
+		String[] arrRequestorBranch = request.getParameterValues("requestorBranch");
+		String[] arrStatusList = request.getParameterValues("statusList"); //Request Status
+		String[] arrDscBrnchId = request.getParameterValues("dsc_branch"); //DSC Branch
+
+		if(arrReqStageId      != null && !CommonUtils.containsEmpty(arrReqStageId))      params.put("arrReqStageId", arrReqStageId);
+		if(arrRequestorBranch    != null && !CommonUtils.containsEmpty(arrRequestorBranch))    params.put("arrRequestorBranch", arrRequestorBranch);
+		if(arrStatusList != null && !CommonUtils.containsEmpty(arrStatusList)) params.put("arrStatusList", arrStatusList);
+		if(arrDscBrnchId   != null && !CommonUtils.containsEmpty(arrDscBrnchId))   params.put("arrDscBrnchId", arrDscBrnchId);
 
 		logger.debug("selectCpeRequestList==========================>> " + params);
 		List<EgovMap> cpeRequestList = cpeService.selectCpeRequestList(params);

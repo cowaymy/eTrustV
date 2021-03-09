@@ -157,7 +157,7 @@
         Common.ajax("POST", "/services/ecom/insertCpeReqst.do", $("#form_newReqst").serializeJSON(), function(result) {
             console.log(result);
             $("#_cpeReqId").val(result.data.cpeReqId);
-                Common.alert('<spring:message code="newCpe.save.msg" />', fn_closePopNoApprovalRqrd);
+            Common.alert('<spring:message code="newCpe.save.msg" /><br/> Request ID: ' + result.data.cpeReqId, fn_closePopNoApprovalRqrd);
         });
     }
 
@@ -355,7 +355,7 @@
 </aside><!-- title_line end -->
 <form id="form_newReqst">
 <input type="hidden" name="salesOrdId" id="_salesOrdId" value="${orderDetail.basicInfo.ordId}" />
-<input type="hidden" name="reqStageId" id="_reqStageId" value="${orderDetail.basicInfo.ordStusId}" />
+<input type="hidden" name="ordStusId" id="_ordStusId" value="${orderDetail.basicInfo.ordStusId}" />
 <input type="hidden" name="salesOrdNo" id="_salesOrdNo" value="${orderDetail.basicInfo.ordNo}" />
 <input type="hidden" name="custId" id="_custId" value="${orderDetail.basicInfo.custId}" />
 <input type="hidden" name="cpeReqId" id="_cpeReqId" />

@@ -67,8 +67,16 @@ public class CpeServiceImpl implements CpeService {
 
 	@Override
 	public void insertCpe(Map<String, Object> params) {
+
+		int ordStatusId = Integer.parseInt((String) params.get("ordStusId"));
+		int reqStageId = ordStatusId == 1 ? 24 : 25;
+		params.put("reqStageId", reqStageId);
+
 		logger.debug("insertCpeReqst (master table) ===================================>>  " + params);
 		cpeMapper.insertCpeReqst(params);
+
+		int activeStatusForNewReq = 1;
+		params.put("status", activeStatusForNewReq);
 
 		logger.debug("insertCpeReqst (detail table) =====================================>>  " + params);
 		cpeMapper.insertCpeRqstDetail(params);
