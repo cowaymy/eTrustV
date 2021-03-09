@@ -58,7 +58,7 @@
 			  var startDt = $("#startDate").val();
 	          var endDt = $("#endDate").val();
 
-	          if (!fn_checkDateRange(startDt,endDt,"Appointment"))
+	          if (!js.date.checkDateRange(startDt,endDt,"Appointment", "6"))
 	        	  valid = false;
 
 		  } else if ($("#instalStrlDate").val() != '' && $("#installEndDate").val() == '') {
@@ -71,7 +71,7 @@
               var startDt = $("#instalStrlDate").val();
               var endDt = $("#installEndDate").val();
 
-              if (!fn_checkDateRange(startDt,endDt,"Installation"))
+              if (!js.date.checkDateRange(startDt,endDt,"Installation", "6"))
                   valid = false;
 	      }
 	  }
@@ -85,7 +85,7 @@
 	   }
   }
 
-  function fn_checkDateRange(startDate, endDate, field){
+  /* function fn_checkDateRange(startDate, endDate, field){
 
       var arrStDt = startDate.split('/');
       var arrEnDt = endDate.split('/');
@@ -104,7 +104,7 @@
       }
 
       return true;
-  }
+  } */
 
   function fn_addInstallation(codeid1) {
 

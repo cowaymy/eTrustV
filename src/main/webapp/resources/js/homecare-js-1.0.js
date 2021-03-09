@@ -354,8 +354,57 @@
 		dayOfMonth:function(year, month){
 			//month 는 0 부터 시작해서..
 		    return 32 - new Date(year, month-1, 32).getDate();
+		},
+
+		/**
+		*
+		* @param startDate
+		* @param endDate
+		* @param field
+		* @param validityOfMonth
+		* @returns {Boolean}
+		*/
+		checkDateRange : function (startDate, endDate, field, validityOfMonth){
+
+				var range = "";
+		   var arrStDt = startDate.split('/');
+		   var arrEnDt = endDate.split('/');
+		   var dat1 = new Date(arrStDt[2], arrStDt[1], arrStDt[0]);
+		   var dat2 = new Date(arrEnDt[2], arrEnDt[1], arrEnDt[0]);
+
+		   var diff = dat2 - dat1;
+		   if(diff < 0){
+		       Common.alert(field + " End Date MUST be greater than " + field + " Start Date.");
+		       return false;
+		   }
+
+		   if (validityOfMonth == ""){
+		   	Common.alert("Invalid Date Range Checking.");
+		   } else if (validityOfMonth == "1"){
+		   	range = 31;
+		   } else if (validityOfMonth == "2"){
+		   	range = 62;
+		   } else if (validityOfMonth == "3"){
+		   	range = 92;
+		   } else if (validityOfMonth == "4"){
+		   	range = 122;
+		   } else if (validityOfMonth == "5"){
+		   	range = 153;
+		   } else if (validityOfMonth == "6"){
+		   	range = 183;
+		   }
+
+		   if(js.date.dateDiff(dat1, dat2) > range){ // 3 months = 92
+		       Common.alert("Please keep the " + field + " range within " + validityOfMonth + " months.");
+		       return false;
+		   }
+		   return true;
 		}
+
+
 	};
+
+
 
 	/**
 	 * 바코드 출력을 위한 재생성 처리.

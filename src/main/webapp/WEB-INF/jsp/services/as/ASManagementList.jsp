@@ -16,6 +16,7 @@
  17/12/2019  ONGHC  1.0.9          Add BS No. Column
  -->
 
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
 <script type="text/javaScript">
   var option = {
     width : "1200px",
@@ -308,18 +309,41 @@
     var endDate = $('#createEndDate').val();
     var dt_range = $('#dt_range').val();
 
-    if (dt_range != "") {
+    var valid = true;
+    var msg = "";
+
+    if ($("#asNum").val() == '' && $("#resultNum").val() == '') {
+        if (startDate == '' && endDate == ''){
+            msg = "Request Date is required when AS No. and Result No. are empty.";
+            valid = false;
+        } else if (startDate != '' && endDate == '') {
+            msg = "Request End Date is required.";
+            valid = false;
+        } else if (startDate == '' && endDate != '') {
+            msg = "Request Start Date is required.";
+            valid = false;
+        } else if (startDate != '' && endDate != ''){
+            if (!js.date.checkDateRange(startDate,endDate,"Request", "3"))
+                valid = false;
+        }
+    }
+
+   /*  if (dt_range != "") {
       if (fn_getDateGap(startDate, endDate) > dt_range) {
         var fName = "<b><spring:message code='service.grid.ReqstDt'/></b>";
 
         Common.alert("<spring:message code='service.msg.asSearchDtRange' arguments='" + fName + " ; <b>" + dt_range +"</b>' htmlEscape='false' argumentSeparator=';' />");
         return false;
       }
-    }
+    } */
 
-    Common.ajax("GET", "/services/as/searchASManagementList.do", $("#ASForm").serialize(), function(result) {
-      AUIGrid.setGridData(myGridID, result);
-    });
+    if (valid){
+	    Common.ajax("GET", "/services/as/searchASManagementList.do", $("#ASForm").serialize(), function(result) {
+	      AUIGrid.setGridData(myGridID, result);
+	    });
+    } else {
+        Common.alert(msg);
+    }
   }
 
   function fn_newASPop() { // CREATE AS
