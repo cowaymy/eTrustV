@@ -46,6 +46,8 @@ public class InstallFailJobRequestForm {
 
   private String waterSourceTemp;
 
+  private String turbLvl;
+
   private String failLocCde;
 
   private String nxtCallDate;
@@ -56,7 +58,16 @@ public class InstallFailJobRequestForm {
 
   private String failDeptChk;
 
-  public String getFailDeptChk() {
+
+  public String getTurbLvl() {
+	return turbLvl;
+}
+
+public void setTurbLvl(String turbLvl) {
+	this.turbLvl = turbLvl;
+}
+
+public String getFailDeptChk() {
     return failDeptChk;
   }
 
