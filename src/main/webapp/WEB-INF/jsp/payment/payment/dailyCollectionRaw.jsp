@@ -81,7 +81,7 @@ function fn_searchCollection() {
     }
 
     if (valid){
-
+    	Common.showLoader();
     $.fileDownload("/payment/selectDailyCollectionData.do?payDateFr=" + payDateFr + "&payDateTo="+payDateTo)
     .done(function () {
         Common.alert("<spring:message code='pay.alert.downSuccess'/>");
