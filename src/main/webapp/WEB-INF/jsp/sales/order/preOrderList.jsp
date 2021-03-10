@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript" language="javascript">
-
+console.log("preOrderList");
 	var listGridID;
 	var excelListGridID;
 	var keyValueList = [];
@@ -133,44 +133,11 @@
             mm = "0" + mm
         }
 
-        var dd_1 = dd;
-        var mm_1 = today.getMonth();
-        var yyyy_1 = "";
-
-        if(mm_1 < 1) {
-            yyyy_1 = today.getFullYear() - 1;
-        } else {
-            yyyy_1 = today.getFullYear();
-        }
-
-        // if February
-        if(mm_1 == 2) {
-            if(((yyyy % 4 == 0) && (yyyy % 100 != 0)) || (yyyy % 400 == 0)) {
-                // If true == leap year
-                if(dd > 29) {
-                    dd_1 = 29;
-                }
-            } else {
-                // If false == normal
-                if(dd > 28) {
-                    dd_1 = 28;
-                }
-            }
-        } else if(mm_1 == 4 || mm_1 == 6 || mm_1 == 9 || mm_1 == 11) {
-            if(dd > 30) {
-                dd_1 = 30;
-            }
-        }
-
-        if(mm_1 < 10){
-            mm_1 = "0" + mm_1
-        }
-
         today = dd + "/" + mm + "/" + yyyy;
         $("#_reqstEndDt").val(today);
 
-        var today_1 = dd_1 + "/" + mm_1 + "/" + yyyy_1;
-        $("#_reqstStartDt").val(today_1);
+        var today_s = "01/" + mm + "/" + yyyy;
+        $("#_reqstStartDt").val(today_s);
     }
 
     function fn_statusCodeSearch(){
@@ -466,6 +433,32 @@
         if((FormUtil.isEmpty($('#_reqstStartDt').val()) || FormUtil.isEmpty($('#_reqstEndDt').val()))) {
             isValid = false;
             msg += '<spring:message code="sal.alert.msg.selectOrdDate" /><br/>';
+        }
+
+        if(!FormUtil.isEmpty($('#_reqstStartDt').val()) && !FormUtil.isEmpty($('#_reqstEndDt').val()) ) {
+            var sDate = $('#_reqstStartDt').val();
+            var eDate = $('#_reqstEndDt').val();
+
+            var dd = "";
+            var mm = "";
+            var yyyy = "";
+
+            var dateArr;
+            dateArr = sDate.split("/");
+            var sDt = new Date(Number(dateArr[2]), Number(dateArr[1])-1, Number(dateArr[0]));
+
+            dateArr = eDate.split("/");
+            var eDt = new Date(Number(dateArr[2]), Number(dateArr[1])-1, Number(dateArr[0]));
+
+            var dtDiff = new Date(eDt - sDt);
+            var days = dtDiff/1000/60/60/24;
+            console.log("dayDiff :: " + days);
+
+            if(days > 30) {
+                Common.alert("Pre-Order date range cannot be greater than 30 days.");
+                return false;
+            }
+
         }
 
 
