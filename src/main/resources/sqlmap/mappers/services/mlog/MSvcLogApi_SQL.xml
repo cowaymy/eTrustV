@@ -2264,7 +2264,7 @@
            Extent2.BOOSTER_PUMP BOOSTER_PUMP ,
            Extent2.AFT_PSI AFT_PSI ,
            Extent2.AFT_LPM AFT_LPM ,
-           Extent2.TURB_LVL TURB_LVL ,
+           <!-- Extent2.TURB_LVL TURB_LVL , -->
            CASE WHEN ( Extent3.CUST_BILL_ID IS NOT NULL )
              THEN Extent3.CUST_BILL_ID
              ELSE 0 END C7  ,
