@@ -668,30 +668,32 @@ $(document).ready(function(){
 
 	function fn_setDefaultFilterPromo() {
 
-		console.log("set default filter promo");
-		var paramdata = {
-                groupCode : '466',
-                codeName : 'FIL_MEM_DEFAULT_PROMO_N_EMP'
-        };
+		if ($("#HiddenIsCharge").val() != "0") {
+			console.log("set default filter promo");
+			var paramdata = {
+	                groupCode : '466',
+	                codeName : 'FIL_MEM_DEFAULT_PROMO_N_EMP'
+	        };
 
-		if ($("#cEmplo").val() == 1){
-            paramdata = {
-                    groupCode : '466',
-                    codeName : 'FIL_MEM_DEFAULT_PROMO_EMP'
-            };
-        }
+			if ($("#cEmplo").val() == 1){
+	            paramdata = {
+	                    groupCode : '466',
+	                    codeName : 'FIL_MEM_DEFAULT_PROMO_EMP'
+	            };
+	        }
 
-		Common.ajaxSync("GET", "/common/selectCodeList.do", paramdata, function(result) {
-			console.log(result[0]);
-			if (result != null && result.length > 0) {
-                $("#cPromo option[value='" + result[0].code + "']").attr("selected", true);
-            }
-            else {
-                $("#cPromo option[value='']").attr("selected", true);
-            }
-		});
+			Common.ajaxSync("GET", "/common/selectCodeList.do", paramdata, function(result) {
+				console.log(result[0]);
+				if (result != null && result.length > 0) {
+	                $("#cPromo option[value='" + result[0].code + "']").attr("selected", true);
+	            }
+	            else {
+	                $("#cPromo option[value='']").attr("selected", true);
+	            }
+			});
 
-        fn_getFilterChargeList();
+	        fn_getFilterChargeList();
+		}
 	}
 
 	function fn_doPackagePro(v) {
