@@ -112,4 +112,5 @@ public interface OrderListMapper {
 
   List<EgovMap> selectOrderListCody(Map<String, Object> params);
 
+  int getSirimOrdID(Map<String, Object> params);
 }

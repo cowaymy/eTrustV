@@ -65,4 +65,7 @@ public interface OrderListService {
 
 	List<EgovMap> selectOrderListCody(Map<String, Object> params);
 
+	// LaiKW - Added 2 steps listing before selectOrderListCody if Sirim No exist
+	int getSirimOrdID(Map<String, Object> params);
+
 }

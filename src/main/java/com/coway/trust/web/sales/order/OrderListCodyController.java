@@ -91,6 +91,8 @@ public class OrderListCodyController {
 	@RequestMapping(value = "/selectOrderJsonListCody", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectOrderJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
+logger.debug("params : {}", params);
+
 		String[] arrAppType   = request.getParameterValues("appType"); //Application Type
 		String[] arrOrdStusId = request.getParameterValues("ordStusId"); //Order Status
 		String[] arrKeyinBrnchId = request.getParameterValues("keyinBrnchId"); //Key-In Branch
@@ -136,6 +138,15 @@ public class OrderListCodyController {
 		logger.debug("listCustIc,{}", StringUtils.isEmpty(params.get("custIc")));
 		logger.debug("listCustName,{}", StringUtils.isEmpty(params.get("custName")));
 		logger.debug("listCrtUserId,{}", StringUtils.isEmpty(params.get("crtUserId")));
+
+		// 20210310 - LaiKW - Added 2 steps searching by removal of installation sirim/serial search
+		int sirimOrdID;
+		if(params.containsKey("sirimNo")) {
+		    if(!"".equals(params.get("sirimNo").toString())) {
+		        sirimOrdID = orderListService.getSirimOrdID(params);
+	            params.put("ordId", sirimOrdID);
+		    }
+		}
 
 		//if  Customer  (NRIC / VANo / ContactNo/ NAME / CrtUserId )   not empty
 		if( ! StringUtils.isEmpty(params.get("vaNo"))
