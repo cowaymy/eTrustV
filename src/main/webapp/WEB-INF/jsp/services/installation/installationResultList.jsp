@@ -58,8 +58,10 @@
 			  var startDt = $("#startDate").val();
 	          var endDt = $("#endDate").val();
 
-	          if (!js.date.checkDateRange(startDt,endDt,"Appointment", "6"))
-	        	  valid = false;
+	          /* if (!js.date.checkDateRange(startDt,endDt,"Appointment", "6"))
+	        	  valid = false; */
+	          if (!fn_checkDateRange(startDt,endDt,"Appointment"))
+                  valid = false;
 
 		  } else if ($("#instalStrlDate").val() != '' && $("#installEndDate").val() == '') {
 			  msg = "Installation End Date is required.";
@@ -71,7 +73,9 @@
               var startDt = $("#instalStrlDate").val();
               var endDt = $("#installEndDate").val();
 
-              if (!js.date.checkDateRange(startDt,endDt,"Installation", "6"))
+             /*  if (!js.date.checkDateRange(startDt,endDt,"Installation", "6"))
+                  valid = false; */
+              if (!fn_checkDateRange(startDt,endDt,"Installation"))
                   valid = false;
 	      }
 	  }
@@ -85,7 +89,7 @@
 	   }
   }
 
-  /* function fn_checkDateRange(startDate, endDate, field){
+   function fn_checkDateRange(startDate, endDate, field){
 
       var arrStDt = startDate.split('/');
       var arrEnDt = endDate.split('/');
@@ -104,7 +108,7 @@
       }
 
       return true;
-  } */
+  }
 
   function fn_addInstallation(codeid1) {
 

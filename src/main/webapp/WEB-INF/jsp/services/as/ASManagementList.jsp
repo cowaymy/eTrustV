@@ -312,9 +312,9 @@
     var valid = true;
     var msg = "";
 
-    if ($("#asNum").val() == '' && $("#resultNum").val() == '') {
+    if ($("#asNum").val() == '' && $("#resultNum").val() == '' && $("#orderRefNo").val() == '') {
         if (startDate == '' && endDate == ''){
-            msg = "Request Date is required when AS No. and Result No. are empty.";
+            msg = "Request Date is required when AS No.,  Result No. and Order No. are empty.";
             valid = false;
         } else if (startDate != '' && endDate == '') {
             msg = "Request End Date is required.";
@@ -323,7 +323,10 @@
             msg = "Request Start Date is required.";
             valid = false;
         } else if (startDate != '' && endDate != ''){
-            if (!js.date.checkDateRange(startDate,endDate,"Request", "3"))
+            /* if (!js.date.checkDateRange(startDate,endDate,"Request", "3"))
+                valid = false; */
+
+        	if (!fn_checkDateRange(startDate,endDate,"Request"))
                 valid = false;
         }
     }
@@ -344,6 +347,27 @@
     } else {
         Common.alert(msg);
     }
+  }
+
+  function fn_checkDateRange(startDate, endDate, field){
+
+      var arrStDt = startDate.split('/');
+      var arrEnDt = endDate.split('/');
+      var dat1 = new Date(arrStDt[2], arrStDt[1], arrStDt[0]);
+      var dat2 = new Date(arrEnDt[2], arrEnDt[1], arrEnDt[0]);
+
+      var diff = dat2 - dat1;
+      if(diff < 0){
+          Common.alert(field + " End Date MUST be greater than " + field + " Start Date.");
+          return false;
+      }
+
+      if(js.date.dateDiff(dat1, dat2) > 92){ // 3 months = 92
+          Common.alert("Please keep the " + field + " range within 3 months.");
+          return false;
+      }
+
+      return true;
   }
 
   function fn_newASPop() { // CREATE AS
