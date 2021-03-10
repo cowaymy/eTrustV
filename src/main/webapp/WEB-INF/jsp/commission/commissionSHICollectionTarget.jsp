@@ -170,7 +170,6 @@
                         }
 
                         var catType = $("#catType").val();
-                        concole.log("catType ::"+ catType);
 
                         var reportFileName = "/commission/SHIIndexExcelRaw.rpt"; //reportFileName
                         var reportDownFileName = "SHIIndexExcelFile_" + today; //report name
