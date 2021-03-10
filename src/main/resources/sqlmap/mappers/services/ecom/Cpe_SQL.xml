@@ -363,6 +363,7 @@
        ,STUS_CODE_ID
        ,CRT_DT
        ,CRT_USER_ID
+       ,ATCH_FILE_GRP_ID
     )
     values
     (
@@ -374,6 +375,7 @@
        ,#{status}
        ,SYSDATE
        ,#{userId}
+       ,#{atchFileGrpId}
     )
     </insert>
 
@@ -540,11 +542,18 @@
          ,TO_CHAR(T1.CRT_DT, 'YYYY-MM-DD HH24:MI:SS') CRT_DT
          ,T2.USER_FULL_NAME AS CREATED_BY
          ,T3.NAME AS STATUS
+         ,T6.ATCH_FILE_GRP_ID
+         ,T7.ATCH_FILE_ID
+         ,T7.ATCH_FILE_NAME
+         ,T7.FILE_SUB_PATH
+         ,T7.PHYSICL_FILE_NAME
     FROM SVC0121D T1
     JOIN SYS0047M T2 ON T2.USER_ID = T1.CRT_USER_ID
     JOIN SYS0038M T3 ON T3.STUS_CODE_ID = T1.STUS_CODE_ID
     JOIN SYS0013M T4 ON T4.CODE = T1.MAIN_DEPT
     JOIN SYS0013M T5 ON T5.CODE = T1.SUB_DEPT
+    LEFT JOIN SYS0070M T6 ON T6.ATCH_FILE_GRP_ID = T1.ATCH_FILE_GRP_ID
+    LEFT JOIN SYS0071D T7 ON T7.ATCH_FILE_ID = T6.ATCH_FILE_ID
     WHERE T1.CPE_REQ_ID = #{cpeReqId}
     ORDER BY T1.REQ_DTL_ID ASC
     </select>

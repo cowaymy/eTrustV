@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.order.OrderDetailService;
@@ -38,7 +40,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /*******************************************************************
  * DATE 				PIC 	  		COMMENT
- * 17/02/2021 	YONGJH 		- Initial creation
+ * 17/02/2021 	YONGJH 		- Initial creation. Note: Overall title of this module is called CPE, though it caters for both CPE (Customer Particular Edit)
+ * 										 and general requests (non-CPE).
  *******************************************************************/
 
 @Controller
@@ -46,6 +49,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class CpeController {
 
 	private static final Logger logger = LoggerFactory.getLogger(CpeController.class);
+
+	@Value("${web.resource.upload.file}")
+	private String uploadDir;
 
 	@Resource(name = "cpeService")
 	private CpeService cpeService;
@@ -56,6 +62,9 @@ public class CpeController {
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+
+	@Autowired
+	private FileApplication fileApplication;
 
 	@RequestMapping(value = "/cpe.do")
 	public String viewCpe(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -197,13 +206,24 @@ public class CpeController {
 	  }
 
 	@RequestMapping(value = "/insertCpeReqst.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> insertCpeReqst(@RequestBody Map<String, Object> params, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+	public ResponseEntity<ReturnMessage> insertCpeReqst(@RequestParam Map<String, Object> params, MultipartHttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
 
 		logger.debug("insertCpe =====================================>>  " + params);
+
+	    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "cpe" + File.separator + "reqattch", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
 		params.put("requestorBranch", sessionVO.getUserBranchId());
+
+	    logger.debug("== REQUEST FILE LISTING {} ", list);
+	    logger.debug("== REQUEST FILE SIZE " + list.size());
+
+	    if (list.size() > 0) {
+	      params.put("fileName", list.get(0).getServerSubPath() + list.get(0).getFileName());
+	      int fileGroupKey = fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
+	      params.put("atchFileGrpId", fileGroupKey);
+	    }
 
         int cpeReqId = cpeService.selectNextCpeId();
 		params.put("cpeReqId", cpeReqId);
@@ -273,13 +293,24 @@ public class CpeController {
 	}
 
 	@RequestMapping(value = "/updateCpeStatus.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updateCpeStatus(@RequestBody Map<String, Object> params, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+	public ResponseEntity<ReturnMessage> updateCpeStatus(@RequestParam Map<String, Object> params, MultipartHttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
 
 		logger.debug("updateCpeStatus====================================>>  " + params);
+
+	    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "cpe" + File.separator + "reqattch", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
 		params.put("userFullname", sessionVO.getUserFullname());
+
+	    logger.debug("== REQUEST FILE LISTING {} ", list);
+	    logger.debug("== REQUEST FILE SIZE " + list.size());
+
+	    if (list.size() > 0) {
+	      params.put("fileName", list.get(0).getServerSubPath() + list.get(0).getFileName());
+	      int fileGroupKey = fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
+	      params.put("atchFileGrpId", fileGroupKey);
+	    }
 
 		cpeService.updateCpe(params); //update CPE status and send notification mail if approved or rejected
 

@@ -23,6 +23,8 @@
 
     $(document).ready(function() {
 
+        fn_setAutoFile2();
+
         //Populate Sub Department in-charge
         $("#_inputMainDeptSelect").change(function(){
             doGetCombo('/services/ecom/selectSubDept.do',  $("#_inputMainDeptSelect").val(), '','_inputSubDeptSelect', 'S' ,  '');
@@ -44,6 +46,13 @@
             if (fn_checkEmptyFields()) {
                 fn_updateCpeStatus();
             }
+        });
+
+        //file Delete
+        $("#btnfileDel").click(function() {
+            $("#reqAttchFile").val('');
+            $(".input_text").val('');
+            console.log("fileDel complete.");
         });
 
     });//Doc Ready End
@@ -120,6 +129,10 @@
         return checkResult;
     }
 
+    function fn_setAutoFile2() {
+        $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a id='btnfileDel'>Delete</a></span>");
+    }
+
     function cpeRespondGrid() {
 
         var columnLayout1 = [{
@@ -153,6 +166,61 @@
           headerText : "Date",
           dataType : "date",
           width : '10%'
+        }, {
+          dataField : "atchFileGrpId",
+          visible : false // Color 칼럼은 숨긴채 출력시킴
+        }, {
+          dataField : "atchFileId",
+          visible : false // Color 칼럼은 숨긴채 출력시킴
+        }, {
+          dataField : "atchFileName",
+          headerText : '<spring:message code="newWebInvoice.attachment" />',
+          width : 200,
+          labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                var myString = value;
+                // 로직 처리
+                // 여기서 value 를 원하는 형태로 재가공 또는 포매팅하여 반환하십시오.
+                if(FormUtil.isEmpty(myString)) {
+                    myString = '<spring:message code="invoiceApprove.noAtch.msg" />';
+                }
+                return myString;
+             },
+            renderer : {
+                type : "ButtonRenderer",
+                onclick : function(rowIndex, columnIndex, value, item) {
+                	console.log("value :" + value);
+                	if (!(value == undefined || value == "" || value == null)) {
+                    console.log("view_btn click atchFileGrpId : " + item.atchFileGrpId + " atchFileId : " + item.atchFileId);
+                            var data = {
+                                    atchFileGrpId : item.atchFileGrpId,
+                                    atchFileId : item.atchFileId
+                            };
+                            if(item.fileExtsn == "jpg" || item.fileExtsn == "png" || item.fileExtsn == "gif") {
+                                // TODO View
+                                console.log(data);
+                                Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                                    console.log(result);
+                                    var fileSubPath = result.fileSubPath;
+                                    fileSubPath = fileSubPath.replace('\', '/'');
+                                    console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                                    window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                                });
+                            } else {
+                                Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                                    console.log(result);
+                                    var fileSubPath = result.fileSubPath;
+                                    fileSubPath = fileSubPath.replace('\', '/'');
+                                    console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
+                                            + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                                    window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
+                                        + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                                });
+                            }
+                	} else {
+                		//do nothing
+                	}
+                }
+            }
         }];
 
         var gridPros1 = {
@@ -173,7 +241,14 @@
 
     function fn_updateCpeStatus() {
 
-        Common.ajax("POST", "/services/ecom/updateCpeStatus.do", $("#form_updReqst").serializeJSON(), function(result) {
+        var formData = Common.getFormData("form_updReqst");
+        var obj = $("#form_updReqst").serializeJSON();
+
+        $.each(obj, function(key, value) {
+          formData.append(key, value);
+        });
+
+        Common.ajaxFile("/services/ecom/updateCpeStatus.do", formData, function(result) {
             console.log(result);
             Common.alert('<spring:message code="cpe.update.msg" />', fn_closePopRefreshSearch);
         });
@@ -414,7 +489,16 @@
 
     </select></td>
     <th scope="row"></th>
-    <td colspan="3"></td>
+    <td colspan="4"></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='cpe.attachment' /></th>
+        <td>
+            <div class="auto_file2">
+            <!-- auto_file2 start -->
+                <input id="reqAttchFile" name="reqAttchFile" type="file" title="file add" />
+             </div><!-- auto_file2 end -->
+         </td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
