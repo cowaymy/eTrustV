@@ -491,7 +491,7 @@
 </script>
 
 <body>
-<div id="login_wrap"><!-- login_wrap start -->
+<div id="login_wrap" style="padding:30px 0"><!-- login_wrap start -->
     <h1><img src="${pageContext.request.contextPath}/resources/images/common/logo_coway2.png" alt="Coway"/></h1>
 
     <article class="login_box"><!-- login_box start -->
@@ -549,7 +549,22 @@
             <ul class="login_opt">
                 <li><a href="javascript:fnRestPassPopUp();"><spring:message code='sys.btn.id.search'/> & <spring:message code='sys.btn.password.search'/></a></li>
             </ul>
-
+            <!-- [s] subject to change upon requirement -- Celeste  -->
+            <div class="icon_container" style=text-align:center;>
+                <p>
+                <a href="http://bit.ly/CowayCC">
+                <img src="${pageContext.request.contextPath}/resources/images/common/login_hyp_icon.png" style=padding-left:5px>
+                </a>
+                 </p>
+            </div>
+            <div class="icon_container">
+                <p style=padding-left:5px;>
+                 <ul>
+                    <li><b>HP Voice</b></li>
+                 </ul>
+                 </p>
+            </div>
+            <!-- [e] subject to change upon requirement -- Celeste  -->
         </form>
     </article><!-- login_box end -->
 
