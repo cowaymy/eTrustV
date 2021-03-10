@@ -1165,7 +1165,7 @@
          , TO_CHAR(BOOSTER_PUMP) AS booster_Pump
          , TO_CHAR(AFT_PSI) AS aft_Psi
          , TO_CHAR(AFT_LPM) AS aft_Lpm
-         , TO_CHAR(TURB_LVL) AS turb_Lvl
+       <!--   , TO_CHAR(TURB_LVL) AS turb_Lvl -->
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
