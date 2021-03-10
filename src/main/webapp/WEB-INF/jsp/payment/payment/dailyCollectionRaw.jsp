@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
 <script type="text/javaScript">
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
@@ -48,10 +49,75 @@ function fn_genDocument(){
 		}
 	});
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function fn_searchCollection() {
+
+/*     if(FormUtil.checkReqValue($('#payDateFr')) || FormUtil.checkReqValue($('#payDateTo'))){
+        Common.alert("<spring:message code='pay.alert.payDateFromTo'/>");
+        return;
+    } */
+
+    var payDateFr = $("#payDateFr").val();
+    var payDateTo = $("#payDateTo").val();
+    var dt_range = $('#dt_range').val();
+
+    var valid = true;
+    var msg = "";
+
+    console.log ();
+
+    if (payDateFr == '' && payDateTo == ''){
+        msg = "Request Date is required.";
+        valid = false;
+    } else if (payDateFr != '' && payDateTo == '') {
+        msg = "Request End Date is required.";
+        valid = false;
+    } else if (payDateFr == '' && payDateTo != '') {
+        msg = "Request Start Date is required.";
+        valid = false;
+    } else if (payDateFr != '' && payDateTo != ''){
+        if (!fn_checkDateRange(payDateFr,payDateTo,"Request"))
+        valid = false;
+    }
+
+    if (valid){
+
+    $.fileDownload("/payment/selectDailyCollectionData.do?payDateFr=" + payDateFr + "&payDateTo="+payDateTo)
+    .done(function () {
+        Common.alert("<spring:message code='pay.alert.downSuccess'/>");
+        Common.removeLoader();
+    })
+    } else {
+        Common.alert(msg);
+    }
+
+}
 
 
 function fn_clear(){
     $("#searchForm")[0].reset();
+}
+
+
+function fn_checkDateRange(payDateFr, payDateTo, field){
+
+    var arrStDt = payDateFr.split('/');
+    var arrEnDt = payDateTo.split('/');
+    var dat1 = new Date(arrStDt[2], arrStDt[1], arrStDt[0]);
+    var dat2 = new Date(arrEnDt[2], arrEnDt[1], arrEnDt[0]);
+
+    var diff = dat2 - dat1;
+    if(diff < 0){
+        Common.alert(field + " End Date MUST be greater than " + field + " Start Date.");
+        return false;
+    }
+
+    if(js.date.dateDiff(dat1, dat2) > 7){
+        Common.alert("Please keep the " + field + " range within 7 days.");
+        return false;
+    }
+
+    return true;
 }
 
 </script>
@@ -68,7 +134,8 @@ function fn_clear(){
         <h2>Daily Collection Raw</h2>
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
-            <li><p class="btn_blue"><a href="javascript:fn_genDocument();"><spring:message code='pay.btn.generate'/></a></p></li>
+            <%-- <li><p class="btn_blue"><a href="javascript:fn_genDocument();"><spring:message code='pay.btn.generate'/></a></p></li> --%>
+            <li><p class="btn_blue"><a href="javascript:fn_searchCollection();"><spring:message code='sys.btn.search'/></a></p></li>
             </c:if>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
