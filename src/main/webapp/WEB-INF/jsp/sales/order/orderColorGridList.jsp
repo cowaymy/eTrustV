@@ -309,9 +309,9 @@ console.log("searchColorGrid");
 	        	 }
 	        	  var startDate = $('#createStDate').val();
 	              var endDate = $('#createEnDate').val();
-	              if( fn_getDateGap(startDate , endDate) > 31){
+	              if( fn_getDateGap(startDate , endDate) > 91){
 	                  //Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
-	                  Common.alert("Start date can not be more than 31 days before the end date.");
+	                  Common.alert("Start date can not be more than 91 days before the end date.");
 	                  return;
 	              }
 	        }
