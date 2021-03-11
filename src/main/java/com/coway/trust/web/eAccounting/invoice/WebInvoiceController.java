@@ -186,12 +186,14 @@ public class WebInvoiceController {
 		String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
 
 		// VANNIE ADD TO GET FILE GROUP ID, FILE ID AND FILE COUNT.
-        List<EgovMap> atchFileData = webInvoiceService.selectAtchFileData(params);
+		if("R1".equals(clmType)) {
+            List<EgovMap> atchFileData = webInvoiceService.selectAtchFileData(params);
 
-        if(atchFileData.isEmpty()){
-          model.addAttribute("atchFileCnt", 0);
-        } else {
-          model.addAttribute("atchFileCnt", atchFileData.get(0).get("fileCnt"));
+            if(atchFileData.isEmpty()){
+                model.addAttribute("atchFileCnt", 0);
+            } else {
+                model.addAttribute("atchFileCnt", atchFileData.get(0).get("fileCnt"));
+            }
         }
 
 		model.addAttribute("pageAuthFuncChange", params.get("pageAuthFuncChange"));

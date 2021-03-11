@@ -92,7 +92,7 @@ var invoAprveGridColLayout = [ {
     dataField : "appvPrcssStus",
     headerText : '<spring:message code="webInvoice.status" />',
     style : "aui-grid-user-custom-left"
-}, {
+}, /*{
     dataField : "atchFileGrpId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
@@ -161,7 +161,7 @@ var invoAprveGridColLayout = [ {
 }, {
     dataField : "fileCnt",
     visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
+},*/ {
     dataField : "appvPrcssDt",
     headerText : '<spring:message code="invoiceApprove.appvBrDt" />'
 }
