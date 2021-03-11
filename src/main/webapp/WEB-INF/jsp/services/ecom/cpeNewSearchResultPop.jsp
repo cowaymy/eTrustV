@@ -29,6 +29,10 @@
             $("#_cpeResultPopCloseBtn").click();
         });
 
+        //TODO: Yong 20210311 - Start
+        //Currently for requests requiring approval, the Save Request and Approval Request are distinct Controller calls. This is not ideal.
+        //Ideally both Save and Approval requests should be treated as a "transaction", meaning if Approval Request fails, the Save Request should also fail/rolled back.
+        //TODO: Yong 20210311 -End
         //Submit
         $("#_submitBtn").click(function() {
         	if (fn_checkApprovalRequired()) {
