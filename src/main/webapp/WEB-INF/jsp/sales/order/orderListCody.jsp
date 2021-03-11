@@ -323,7 +323,7 @@
             else {
                 var diffDay = fn_diffDate($('#listOrdStartDt').val(), $('#listOrdEndDt').val());
 
-                if(diffDay > 31 || diffDay < 0) {
+                if(diffDay > 91 || diffDay < 0) {
                     isValid = false;
                     msg += '* <spring:message code="sal.alert.msg.srchPeriodDt" />';
                 }
@@ -342,10 +342,10 @@
         var dt1 = new Date(arrDt1[2], arrDt1[1]-1, arrDt1[0]);
         var dt2 = new Date(arrDt2[2], arrDt2[1]-1, arrDt2[0]);
 
-        var diff = dt2 - dt1;
-        var day = 1000*60*60*24;
+        var diff = new Date(dt2 - dt1);
+        var day = diff/1000/60/60/24;
 
-        return (diff/day);
+        return day;
     }
 
     function fn_orderModifyPop() {

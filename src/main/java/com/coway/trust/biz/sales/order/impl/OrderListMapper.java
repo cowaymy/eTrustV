@@ -112,5 +112,7 @@ public interface OrderListMapper {
 
   List<EgovMap> selectOrderListCody(Map<String, Object> params);
 
+  // 20210310 - LaiKW - Added 2 steps query before selectOrderList/selectOrderListCody
   int getSirimOrdID(Map<String, Object> params);
+  int getMemberID(Map<String, Object> params);
 }

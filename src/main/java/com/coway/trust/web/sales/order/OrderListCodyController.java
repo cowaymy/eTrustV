@@ -140,13 +140,19 @@ logger.debug("params : {}", params);
 		logger.debug("listCrtUserId,{}", StringUtils.isEmpty(params.get("crtUserId")));
 
 		// 20210310 - LaiKW - Added 2 steps searching by removal of installation sirim/serial search
-		int sirimOrdID;
-		if(params.containsKey("sirimNo")) {
-		    if(!"".equals(params.get("sirimNo").toString())) {
-		        sirimOrdID = orderListService.getSirimOrdID(params);
-	            params.put("ordId", sirimOrdID);
+		if(params.containsKey("sirimNo") || params.containsKey("serialNo")) {
+		    if(!"".equals(params.get("sirimNo").toString()) || !"".equals(params.get("serialNo").toString())) {
+		        int ordID = orderListService.getSirimOrdID(params);
+	            params.put("ordId", ordID);
 		    }
 		}
+
+        if(params.containsKey("salesmanCode")) {
+            if(!"".equals(params.get("salesmanCode").toString())) {
+                int memberID = orderListService.getMemberID(params);
+                params.put("memID", memberID);
+            }
+        }
 
 		//if  Customer  (NRIC / VANo / ContactNo/ NAME / CrtUserId )   not empty
 		if( ! StringUtils.isEmpty(params.get("vaNo"))

@@ -367,6 +367,9 @@
             --> -- Mattress, Frame
                   AND V1.APP_TYPE_ID NOT IN (5764)
            </if>
+           <if test = 'memID != null and memID != ""'>
+           AND V1.SALESMAN_MEM_ID = #{memID}
+           </if>
     ) T
      WHERE 1=1
 
@@ -406,9 +409,9 @@
            <if test='productId != null and productId != ""'>
              AND T.PRODUCT_ID = #{productId}
            </if>
-           <if test='salesmanCode != null and salesmanCode != ""'>
-             AND T.SALESMAN_CODE = #{salesmanCode}
-           </if>
+
+             /*AND T.SALESMAN_CODE = salesmanCode*/
+
            <if test='arrRentStus != null and arrRentStus != ""'>
              AND T.RENT_STUS IN
              <foreach item="item" collection="arrRentStus" index="index" open="(" separator="," close=")">
@@ -1632,6 +1635,9 @@
             --> -- Mattress, Frame
                   AND V1.APP_TYPE_ID NOT IN (5764)
            </if>
+           <if test = 'memID != null and memID != ""'>
+           AND V1.SALESMAN_MEM_ID = #{memID}
+           </if>
     ) T
      WHERE 1=1
 
@@ -1671,9 +1677,9 @@
            <if test='productId != null and productId != ""'>
              AND T.PRODUCT_ID = #{productId}
            </if>
-           <if test='salesmanCode != null and salesmanCode != ""'>
-             AND T.SALESMAN_CODE = #{salesmanCode}
-           </if>
+
+             /*AND T.SALESMAN_CODE = salesmanCode*/
+
            <if test='arrRentStus != null and arrRentStus != ""'>
              AND T.RENT_STUS IN
              <foreach item="item" collection="arrRentStus" index="index" open="(" separator="," close=")">
@@ -1713,6 +1719,15 @@
       </if>
       <if test='serialNo != null and serialNo != "" '>
         AND IR.SERIAL_NO = #{serialNo}
+      </if>
+  </select>
+
+  <select id="getMemberID" parameterType="Map" resultType="int">
+      SELECT MEM_ID
+      FROM ORG0001D
+      WHERE 1=1
+      <if test='salesmanCode != null and salesmanCode != "" '>
+        AND MEM_CODE = #{salesmanCode}
       </if>
   </select>
 
