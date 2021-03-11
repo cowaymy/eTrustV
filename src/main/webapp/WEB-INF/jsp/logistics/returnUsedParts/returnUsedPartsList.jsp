@@ -24,6 +24,7 @@
 }
 
 </style>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
 var listGrid;
@@ -354,12 +355,12 @@ $(document).ready(function(){
 
     $('#searchBranch').change(function(){
     	if ($('#searchBranch').val() != null && $('#searchBranch').val() != "" ){
-    		
+
         var searchlocgb = $('#searchlocgb').val();
         var searchBranch = $('#searchBranch').val();
-        
+
         if ($('#searchlocgb').val() == null || $('#searchlocgb').val() == "" ){
-        	
+
         	Common.alert("Please select Location Type");
         	doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
         	return false;
@@ -380,7 +381,7 @@ $(document).ready(function(){
     });
 
 
-   
+
 	$('#searchlocgb').change(function() {
 		var searchlocgb = $('#searchlocgb').val();
 			//console.log('1 '+searchlocgb);
@@ -542,11 +543,29 @@ $(document).ready(function(){
 		else if ($("#searchLoc").val() == '' || $("#searchLoc").val() == undefined) {
 			Common.alert('Please select Location.');
 			return false;
+		}
 
+		// Added search range limitation checking by Hui Ding, 2021-03-11
+		var startDt = $("#servicesdt").val();
+		var endDt = $("#serviceedt").val();
+
+		if (startDt != '' && endDt != '') {
+			if (!js.date.checkDateRange(startDt,endDt,"Service Date", "3"))
+				return false;
+		} else {
+			if (startDt == '' && endDt == '') {
+				Common.alert("Service Date is required.");
+				return false;
+			} else if (startDt == '' && endDt != '') {
+				Common.alert("Service Start Date is required.");
+				return false;
+			} else if (startDt != '' && endDt == '') {
+	            Common.alert("Service End Date is required.");
+	            return false;
+	        }
 		}
-		else {
-			return true;
-		}
+
+		return true;
 	}
 </script>
 
@@ -596,15 +615,15 @@ $(document).ready(function(){
             </colgroup>
             <tbody>
                  <tr>
-                   <th scope="row">Location Type</th>
+                   <th scope="row">Location Type<span class="must">*</span></th>
                    <td>
                         <select class="w100p" id="searchlocgb" name="searchlocgb"></select>
                    </td>
-                   <th scope="row">Branch</th>
+                   <th scope="row">Branch<span class="must">*</span></th>
                    <td>
                         <select class="w100p" id="searchBranch"  name="searchBranch"></select>
                    </td>
-                   <th scope="row">Location</th>
+                   <th scope="row">Location<span class="must">*</span></th>
                    <td>
 <!--                        <select class="w100p" id="searchLoc" name="searchLoc"><option value="">Choose One</option></select> -->
                        <select class="w100p" id="searchLoc" name="searchLoc"></select>
@@ -625,7 +644,7 @@ $(document).ready(function(){
                    </td>
                 </tr>
                 <tr>
-                    <th scope="row">Service date</th>
+                    <th scope="row">Service date<span class="must">*</span></th>
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="servicesdt" name="servicesdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
