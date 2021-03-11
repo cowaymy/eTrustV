@@ -1012,7 +1012,7 @@
                    , TO_CHAR (SAL0047D.BOOSTER_PUMP) AS booster_Pump
                    , TO_CHAR (SAL0047D.AFT_PSI) AS aft_Psi
                    , TO_CHAR (SAL0047D.AFT_LPM) AS aft_Lpm
-                   , TO_CHAR (SAL0047D.TURB_LVL) AS turb_Lvl
+
             FROM SAL0046D,
                  ORG0001D,
                  ORG0005D,
@@ -1165,7 +1165,7 @@
          , TO_CHAR(BOOSTER_PUMP) AS booster_Pump
          , TO_CHAR(AFT_PSI) AS aft_Psi
          , TO_CHAR(AFT_LPM) AS aft_Lpm
-         , TO_CHAR(TURB_LVL) AS turb_Lvl
+  <!--        , TO_CHAR(TURB_LVL) AS turb_Lvl -->
     FROM SVC0103T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -2264,7 +2264,7 @@
            Extent2.BOOSTER_PUMP BOOSTER_PUMP ,
            Extent2.AFT_PSI AFT_PSI ,
            Extent2.AFT_LPM AFT_LPM ,
-           Extent2.TURB_LVL TURB_LVL ,
+          <!--  Extent2.TURB_LVL TURB_LVL , -->
            CASE WHEN ( Extent3.CUST_BILL_ID IS NOT NULL )
              THEN Extent3.CUST_BILL_ID
              ELSE 0 END C7  ,
