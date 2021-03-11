@@ -430,6 +430,7 @@ console.log("preOrderList");
               msg += '* Unable to search due to no access right.<br/>';
         }
 
+        /*
         if((FormUtil.isEmpty($('#_reqstStartDt').val()) || FormUtil.isEmpty($('#_reqstEndDt').val()))) {
             isValid = false;
             msg += '<spring:message code="sal.alert.msg.selectOrdDate" /><br/>';
@@ -460,6 +461,7 @@ console.log("preOrderList");
             }
 
         }
+        */
 
 
     	if(FormUtil.isEmpty($('#_memCode').val())
@@ -469,15 +471,15 @@ console.log("preOrderList");
     		    && FormUtil.isEmpty($('#_typeId').val())
     		    && FormUtil.isEmpty($('#_nric').val())
     		    && FormUtil.isEmpty($('#_name').val())
+    		    && (FormUtil.isEmpty($('#_reqstStartDt').val()) || FormUtil.isEmpty($('#_reqstEndDt').val()))
         ){
-    	    /*
     		 if((!FormUtil.isEmpty($('#_reqstStartDt').val()) && FormUtil.isEmpty($('#_reqstEndDt').val()))
     		  || (FormUtil.isEmpty($('#_reqstStartDt').val()) && !FormUtil.isEmpty($('#_reqstEndDt').val())))
     		 {
     			    isValid = false;
     			    msg += '<spring:message code="sal.alert.msg.selectOrdDate" /><br/>';
     		 }
-    	    */
+
     		if(FormUtil.isEmpty($('#_sofNo').val())){
     			isValid = false;
     			msg += '<spring:message code="sal.alert.msg.selSofNo" /><br/>';
@@ -491,7 +493,42 @@ console.log("preOrderList");
             }
         }
 
-         if(!isValid) Common.alert('<spring:message code="sal.title.text.ordSrch" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+    	if(FormUtil.isEmpty($('#_memCode').val())
+    	        && FormUtil.isEmpty($('#_sofNo').val())
+    	        && FormUtil.isEmpty($('#_ordNo').val())
+    	        && FormUtil.isEmpty($('#_reqstStartDt').val())
+    	        && FormUtil.isEmpty($('#_reqstEndDt').val())
+    	        ) {
+    	    isValid = false;
+    	    msg += '<spring:message code="sal.alert.msg.selectOrdDate" /><br/>';
+    	} else {
+    	    if(!FormUtil.isEmpty($('#_reqstStartDt').val()) && !FormUtil.isEmpty($('#_reqstEndDt').val()) ) {
+                var sDate = $('#_reqstStartDt').val();
+                var eDate = $('#_reqstEndDt').val();
+
+                var dd = "";
+                var mm = "";
+                var yyyy = "";
+
+                var dateArr;
+                dateArr = sDate.split("/");
+                var sDt = new Date(Number(dateArr[2]), Number(dateArr[1])-1, Number(dateArr[0]));
+
+                dateArr = eDate.split("/");
+                var eDt = new Date(Number(dateArr[2]), Number(dateArr[1])-1, Number(dateArr[0]));
+
+                var dtDiff = new Date(eDt - sDt);
+                var days = dtDiff/1000/60/60/24;
+                console.log("dayDiff :: " + days);
+
+                if(days > 30) {
+                    Common.alert("Pre-Order date range cannot be greater than 30 days.");
+                    return false;
+                }
+            }
+    	}
+
+        if(!isValid) Common.alert('<spring:message code="sal.title.text.ordSrch" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
          return isValid;
 
