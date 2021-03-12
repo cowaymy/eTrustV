@@ -322,11 +322,11 @@
 				            AND E1.ORD_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
 				          </if>
 				          <if test="cmbProduct != null and cmbProduct != ''">
-				            AND F1.STK_ID = #{cmbProduct}
+				            AND E1.STK_ID = #{cmbProduct}
 				          </if>
 				          <if test="netSalesMonth != null and netSalesMonth != ''">
-				          <!-- AND F1.PV_YEAR = #{pvYear}
-				               AND F1.PV_MONTH = #{pvMonth} -->
+				          <!-- AND E1.PV_YEAR = #{pvYear}
+				               AND E1.PV_MONTH = #{pvMonth} -->
 				            AND E1.PV_YEAR = EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
 				            AND E1.PV_MONTH = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
 				          </if>
