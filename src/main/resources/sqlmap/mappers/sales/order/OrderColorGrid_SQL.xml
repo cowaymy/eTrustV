@@ -292,53 +292,56 @@
                             AND E1.INSTALL_STUS_ID = 1
                             AND E1.STUS_ID != 10
                         </if>
+
+
+                         <if test="orgCode != null and orgCode != ''">
+				            AND E1.ORG_CODE = #{orgCode}
+				          </if>
+				          <if test="grpCode != null and grpCode != ''">
+				            AND E1.GRP_CODE = #{grpCode}
+				          </if>
+				          <if test="deptCode != null and deptCode != ''">
+				            AND E1.DEPT_CODE = #{deptCode}
+				          </if>
+				          <if test="memCode != null and memCode != ''" >
+				            AND E1.MEM_CODE = #{memCode}
+				          </if>
+				          <if test="ordNo != null and ordNo != ''">
+				            AND E1.ORD_NO = #{ordNo}
+				          </if>
+				          <if test="custName != null and custName != ''">
+				            AND E1.CUST_NAME LIKE '%'|| #{custName} || '%'
+				          </if>
+				          <if test="custIc != null and custIc != ''">
+				            AND E1.CUST_IC LIKE '%'|| #{custIc} || '%'
+				          </if>
+				          <if test="createStDate != null and createStDate != ''">
+				            AND E1.ORD_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+				          </if>
+				          <if test="createEnDate != null and createEnDate != ''">
+				            AND E1.ORD_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+				          </if>
+				          <if test="cmbProduct != null and cmbProduct != ''">
+				            AND F1.STK_ID = #{cmbProduct}
+				          </if>
+				          <if test="netSalesMonth != null and netSalesMonth != ''">
+				          <!-- AND F1.PV_YEAR = #{pvYear}
+				               AND F1.PV_MONTH = #{pvMonth} -->
+				            AND E1.PV_YEAR = EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+				            AND E1.PV_MONTH = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+				          </if>
+				          <if test="salesmanCode != null and salesmanCode != ''">
+				            AND E1.SALESMAN_CODE = #{salesmanCode}
+				          </if>
+				          <if test="promoCode != null and promoCode != ''">
+				            AND E1.PROMO_CODE = #{promoCode}
+				          </if>
+
            ) F1
-           LEFT JOIN ORG0001D MEM ON MEM.MEM_CODE = F1.MEM_CODE
-    	   JOIN SYS0013M S13 ON S13.CODE_ID = MEM.MEM_TYPE AND CODE_MASTER_ID = 1
+          <!--   LEFT JOIN ORG0001D MEM ON MEM.MEM_CODE = F1.MEM_CODE
+    	   JOIN SYS0013M S13 ON S13.CODE_ID = MEM.MEM_TYPE AND CODE_MASTER_ID = 1-->
     	   JOIN SAL0029D S29 ON S29.NRIC = F1.CUST_IC
           WHERE 1 = 1
-          <if test="orgCode != null and orgCode != ''">
-            AND F1.ORG_CODE = #{orgCode}
-          </if>
-          <if test="grpCode != null and grpCode != ''">
-            AND F1.GRP_CODE = #{grpCode}
-          </if>
-          <if test="deptCode != null and deptCode != ''">
-            AND F1.DEPT_CODE = #{deptCode}
-          </if>
-          <if test="memCode != null and memCode != ''" >
-            AND F1.MEM_CODE = #{memCode}
-          </if>
-          <if test="ordNo != null and ordNo != ''">
-            AND F1.ORD_NO = #{ordNo}
-          </if>
-          <if test="custName != null and custName != ''">
-            AND F1.CUST_NAME LIKE '%'|| #{custName} || '%'
-          </if>
-          <if test="custIc != null and custIc != ''">
-            AND F1.CUST_IC LIKE '%'|| #{custIc} || '%'
-          </if>
-          <if test="createStDate != null and createStDate != ''">
-            AND F1.ORD_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
-          </if>
-          <if test="createEnDate != null and createEnDate != ''">
-            AND F1.ORD_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
-          </if>
-          <if test="cmbProduct != null and cmbProduct != ''">
-            AND F1.STK_ID = #{cmbProduct}
-          </if>
-          <if test="netSalesMonth != null and netSalesMonth != ''">
-          <!-- AND F1.PV_YEAR = #{pvYear}
-               AND F1.PV_MONTH = #{pvMonth} -->
-            AND F1.PV_YEAR = EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
-            AND F1.PV_MONTH = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
-          </if>
-          <if test="salesmanCode != null and salesmanCode != ''">
-            AND F1.SALESMAN_CODE = #{salesmanCode}
-          </if>
-          <if test="promoCode != null and promoCode != ''">
-            AND F1.PROMO_CODE = #{promoCode}
-          </if>
            <if test="memtype != null and memtype != ''">
             AND MEM_TYPE = #{memtype}
           </if>
