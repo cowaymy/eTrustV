@@ -294,17 +294,45 @@ function fn_officialReceiptReport_V2(){
 function fn_validSearch() {
 	var isValid = true, msg = "";
 
-	if( FormUtil.isEmpty($('#orderNo').val())
-	 && FormUtil.isEmpty($('#orNo').val()) ){
+	if(FormUtil.isEmpty($('#orderNo').val())
+	&& FormUtil.isEmpty($('#orNo').val())
+	&& FormUtil.isEmpty($('#customerId').val())
+	&& FormUtil.isEmpty($('#customerName').val())
+	&& FormUtil.isEmpty($('#chequeNo').val())
+	&& FormUtil.isEmpty($('#crcNo').val())
+	&& FormUtil.isEmpty($('#trxId').val())
+	&& FormUtil.isEmpty($('#trNo').val()) )
+	{
 		if(FormUtil.isEmpty($('#payDate1').val()) || FormUtil.isEmpty($('#payDate2').val())) {
             isValid = false;
             msg += '* <spring:message code="pay.alert.dateFormTo" /><br/>';
+        } else{
+        	var diffDay = fn_diffDate($('#payDate1').val(), $('#payDate2').val());
+            var dayGap = 1;
+        	if(diffDay > dayGap || diffDay < 0) {
+                isValid = false;
+                msg += '* Please enter search period within ' + dayGap + ' days';
+            }
+
         }
 	}
 
 	 if(!isValid) Common.alert(msg);
 
      return isValid;
+}
+
+function fn_diffDate(startDt, endDt) {
+		var arrDt1 = startDt.split("/");
+		var arrDt2 = endDt.split("/");
+
+		var dt1 = new Date(arrDt1[2], arrDt1[1]-1, arrDt1[0]);
+		var dt2 = new Date(arrDt2[2], arrDt2[1]-1, arrDt2[0]);
+
+		var diff = dt2 - dt1;
+		var day = 1000*60*60*24;
+
+		return (diff/day);
 }
 </script>
 
