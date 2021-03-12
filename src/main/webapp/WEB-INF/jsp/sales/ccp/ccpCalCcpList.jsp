@@ -127,6 +127,50 @@ $(document).ready(function() {
 
 });//Doc Ready Func End
 
+
+function fn_searchListAjax(){
+
+	var startDate = $('#calStartDate').val();
+    var endDate = $('#calEndDate').val();
+    var isValid = true , msg = "";
+
+    console.log("startDate :" + startDate);
+    console.log("endDate :" + endDate);
+
+              if (startDate == '' || endDate == ''){
+                  Common.alert("Order Date is required.");
+                  return;
+              }
+
+              if( fn_getDateGap(startDate , endDate) > 180){
+                  Common.alert("Start date can not be more than 180 days before the end date.");
+                  return;
+              }
+
+        Common.ajax("GET", "/sales/ccp/selectCalCcpListAjax", $("#_searchForm").serialize(), function(result) {
+            AUIGrid.setGridData(calGrid, result);
+        });
+
+}
+
+
+function fn_getDateGap(sdate, edate){
+
+    var startArr, endArr;
+
+    startArr = sdate.split('/');
+    endArr = edate.split('/');
+
+    var keyStartDate = new Date(startArr[2] , startArr[1] , startArr[0]);
+    var keyEndDate = new Date(endArr[2] , endArr[1] , endArr[0]);
+
+    var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
+
+    console.log("gap : " + gap);
+
+    return gap;
+}
+
 function fn_view(item) {
 	if('${PAGE_AUTH.funcChange}' == 'Y'){
 
@@ -405,7 +449,8 @@ function popup(location){
     <li><p class="btn_blue type2"><a id="_updCustBtn"><spring:message code="sal.title.text.updCustInfo" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue type2"><a id="_calSearch"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+    <%-- <li><p class="btn_blue type2"><a id="_calSearch"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li> --%>
+    <li><p class="btn_blue"><a href="#" onClick="fn_searchListAjax()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
     <li><p class="btn_blue type2"><a href="#" onclick="javascript:$('#_searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
@@ -440,9 +485,9 @@ function popup(location){
     <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" name="calStartDate"/></p>
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="calStartDate" name="calStartDate"/></p>
     <span><spring:message code="sal.title.to" /></span>
-    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date"  name="calEndDate"/></p>
+    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date"  id="calEndDate" name="calEndDate"/></p>
     </div><!-- date_set end -->
     </td>
     <th scope="row"><spring:message code="sal.title.text.ccpStatus" /><span class="must">*</span></th>
