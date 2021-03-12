@@ -162,6 +162,7 @@
                </where>
 
     ) A LEFT JOIN (SELECT RENT_SO_ID, SUM(RENT_AMT) AS S FROM PAY0022D GROUP BY RENT_SO_ID) B ON B.RENT_SO_ID = A.ORD_ID
+    <if test="(hidOrgCode != null and hidOrgCode != '' ) or (hidGrpCode != null and hidGrpCode != '' ) or (hidDeptCode != null and hidDeptCode != '' )">
     LEFT JOIN ORG0001D C ON A.CRT_USER_NM = C.MEM_CODE
     LEFT JOIN ORG1001V D ON C.MEM_ID = D.MEM_ID
       <where>
@@ -175,7 +176,8 @@
           AND D.DEPT_CODE = #{hidDeptCode}
         </if>
      </where>
-    ORDER BY A.MOB_TICKET_NO DESC
+    </if>
+    ORDER BY TO_NUMBER(A.MOB_TICKET_NO) DESC
   </select>
 
   <update id="updateMobilePaymentKeyInReject" parameterType="Map">

@@ -699,7 +699,7 @@
   // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
   doGetCombo('/common/selectCodeList.do', '435', '', 'ticketType', 'S', ''); // Ticket Type
   doGetCombo('/common/selectCodeList.do', '439', '', 'payMode', 'S', ''); // Pay Mode
-  doGetCombo('/mobileAppTicket/selectMobileAppTicketStatus.do', '', '', 'ticketStatus', 'S', '');
+  // doGetCombo('/mobileAppTicket/selectMobileAppTicketStatus.do', '', '', 'ticketStatus', 'S', '');
   doGetCombo('/common/selectCodeList.do', '130', '', 'keyInCardMode', 'S', ''); //CreditCardMode 생성
   doGetCombo('/common/selectCodeList.do', '21', '', 'keyInCrcType', 'S', ''); //Credit Card Type 생성
 
@@ -1278,7 +1278,12 @@
           <tr>
             <th scope="row"><spring:message code="pay.title.ticketStatus" /></th>
             <td>
-              <select id="ticketStatus" name="ticketStatus" class="w100p"></select>
+              <select id="ticketStatus" name="ticketStatus" class="w100p">
+                <option value="1">Active</option>
+                <option value="5">Approved</option>
+                <option value="6">Rejected</option>
+                <option value="10">Cancelled</option>
+              </select>
             </td>
             <th scope="row"><spring:message code="pay.title.branchCode" /></th>
             <td>
