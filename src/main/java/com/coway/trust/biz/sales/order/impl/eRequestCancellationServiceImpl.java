@@ -773,10 +773,12 @@ public class eRequestCancellationServiceImpl extends EgovAbstractServiceImpl imp
       logger.info("====================== CANCELLATION IS SUB COMBO PACKAGE ==========================");
 
       EgovMap revCboPckage = orderCancelMapper.revSubCboPckage(searchSAL0001D);
-      revCboPckage.put("reqStageId", "24");
+      if (revCboPckage != null) {
+        revCboPckage.put("reqStageId", "24");
 
-      logger.info("= PARAM 2 = " + revCboPckage.toString());
-      orderCancelMapper.insertSAL0254D(revCboPckage);
+        logger.info("= PARAM 2 = " + revCboPckage.toString());
+        orderCancelMapper.insertSAL0254D(revCboPckage);
+      }
 
     } else {
       // 2ND CHECK PACKAGE (MAIN)
