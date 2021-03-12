@@ -1883,7 +1883,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     EgovMap stkMap = orderRegisterMapper.getCtgryId(salesOrderDVO.getItmStkId());
     int ctgyId = CommonUtils.intNvl(stkMap.get("stkCtgryId"));
 
-    if(ctgyId == HomecareConstants.HC_CTGRY_ID.MAT) {  // Mattress Only
+    if(ctgyId == HomecareConstants.HC_CTGRY_ID.MAT
+        || (ctgyId == HomecareConstants.HC_CTGRY_ID.FRM && orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL)) {  // Mattress Only
     	salesOrderMVO.setSalesProdSz(CommonUtils.nvl(stkMap.get("stkSize")));
     	orderRegisterMapper.insert_SAL0225D(salesOrderMVO);
     }
