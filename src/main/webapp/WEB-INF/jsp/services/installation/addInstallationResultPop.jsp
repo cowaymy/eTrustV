@@ -13,6 +13,7 @@
  28/08/2020  FARUQ   1.0.7         Add validation feature for Kecik when completed
  07/09/2020  FARUQ   1.0.8         Add validation feature for Kecik when failed
  05/10/2020  FARUQ   1.0.9         Amend the default next call date when failed
+ 12/03/2021  ALEX      1.0.10       Add Turbidity Level for NEO PLUS involved both COMPLETE and FAIL
  -->
 <script type="text/javaScript">
   $(document).ready(function() {
@@ -92,6 +93,7 @@
         $("#addInstallForm #m13").hide();
         $("#addInstallForm #m14").hide();
         $("#addInstallForm #m17").hide();
+        $("#addInstallForm #m24").hide();
 
         if ("${orderInfo.stkCtgryId}" != "54") {
           $("#addInstallForm #grid_wrap_instChk_view").hide();
@@ -110,6 +112,7 @@
         $("#addInstallForm #m12").show();
         $("#addInstallForm #m13").show();
         $("#addInstallForm #m14").show();
+        $("#addInstallForm #m24").hide();
 
         $("#addInstallForm #m6").hide();
         $("#addInstallForm #m7").hide();
@@ -214,6 +217,7 @@
             $("#addInstallForm #m13").hide();
             $("#addInstallForm #m14").hide();
             $("#addInstallForm #m17").hide();
+            $("#addInstallForm #m24").hide();
 
             if ("${orderInfo.stkCtgryId}" == "54") {
               $("#addInstallForm #grid_wrap_instChk_view").hide();
@@ -302,6 +306,8 @@
           $("#waterSourceTemp").attr("disabled", true);
           $("#m14").hide();
           $("#adptUsed").attr("disabled", true);
+          $("#m24").hide();
+          $("#turbLvl").attr("disabled", true);
 
         } else {
           $("#m8").show();
@@ -318,6 +324,8 @@
           $("#waterSourceTemp").attr("disabled", false);
           $("#m14").show();
           $("#adptUsed").attr("disabled", false);
+          $("#m24").hide();
+          $("#turbLvl").attr("disabled", false);
         }
       } else {
         $("#m8").hide();
@@ -334,6 +342,8 @@
         $("#waterSourceTemp").attr("disabled", true);
         $("#m14").hide();
         $("#adptUsed").attr("disabled", true);
+        $("#m24").hide();
+        $("#turbLvl").attr("disabled", true);
       }
       if ("${orderInfo.stkCtgryId}" == "55"){
           notMandatoryForAP();
@@ -349,6 +359,7 @@
       $("#addInstallForm #m12").hide();
       $("#addInstallForm #m13").hide();
       $("#addInstallForm #m14").hide();
+      $("#addInstallForm #m24").hide();
   }
 
   function fn_saveInstall() {
@@ -368,7 +379,7 @@
       }
 
       // ADDED BOOSTER PUMP
-        if ($("#addInstallForm #boosterPump").val().trim() == '' || ("#addInstallForm #boosterPump") == null || $("#addInstallForm #boosterPump").val().trim() == '0') {
+       /*  if ($("#addInstallForm #boosterPump").val().trim() == '' || ("#addInstallForm #boosterPump") == null || $("#addInstallForm #boosterPump").val().trim() == '0') {
           msg += "* <spring:message code='sys.msg.necessary' arguments='Booster Pump' htmlEscape='false'/> </br>";
         }
 
@@ -380,7 +391,7 @@
           if ($("#addInstallForm #aftLpm").val().trim() == '' || $("#addInstallForm #aftLpm") == null ){
           msg += "* <spring:message code='sys.msg.necessary' arguments='After Pump LPM' htmlEscape='false'/> </br>";
         }
-      }
+      } */
 
       if ($("#addInstallForm #serialNo").val().trim() == '' || ("#addInstallForm #serialNo") == null) {
         msg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
@@ -411,7 +422,7 @@
             msg += "* <spring:message code='sys.msg.invalid' arguments='Room Temperature' htmlEscape='false'/> </br>";
           }
          if ( $("#waterSourceTemp").val() == "") {
-            msg += "* <spring:message code='sys.msg.invalid' arguments='Water Source Temperature' htmlEscape='false'/> </br>";
+        	 msg += "* <spring:message code='sys.msg.invalid' arguments='Water Source Temperature' htmlEscape='false'/> </br>";
           }
           if ( $("#adptUsed").val() == "") {
             msg += "* <spring:message code='sys.msg.invalid' arguments='Adapter Used' htmlEscape='false'/> </br>";
@@ -419,6 +430,19 @@
           if (!$("#instChklstCheckBox").prop('checked')) {
             msg += "* <spring:message code='sys.msg.tickCheckBox' arguments='Installation Checklist' htmlEscape='false'/> </br>";
           }
+
+          //////////// / Condition for turbLvl - 11/03/2021 - This specific for NEO PLUS installStkId = 1845 OR  STK_CODE = 113149 ///////////892
+          if ("${installResult.installStkId}" == 1845) {
+        	  if ( $("#turbLvl").val() == "") {
+                  msg += "* <spring:message code='sys.msg.invalid' arguments='Turbidity Level' htmlEscape='false'/> </br>";
+                }
+        	  else {
+        	  if (($("#turbLvl").val() < 1 || $("#turbLvl").val() > 5 )) {
+        	      msg += "* <spring:message code='sys.msg.range' arguments='TurbidityLevel,1,5' htmlEscape='false'/> </br>";
+        	    }
+        	  }
+          }
+          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }
       }
 
@@ -481,6 +505,23 @@
             if ( $("#waterSourceTemp").val() == "") {
               msg += "* <spring:message code='sys.msg.invalid' arguments='Water Source Temperature' htmlEscape='false'/> </br>";
             }
+
+///////////// Condition for turbLvl - 11/03/2021 - This specific for NEO PLUS installStkId = 1845 OR  STK_CODE = 113149 ///////////892 FAIL INSTALLATION
+            if("${installResult.installStkId}" == 1845){
+
+            	if($("#failReasonCode").val() == 8018){ // IF57
+            	      if( !$("#turbLvl").val() == "" ){
+            	        if ($("#turbLvl").val() == 4 || $("#turbLvl").val() == 5 ) {
+            	        } else{
+            	          msg += "* <spring:message code='sys.msg.notInRange' arguments='Turbidity Level' htmlEscape='false'/> </br>";
+            	        }
+            	      }
+            	      if($("#turbLvl").val() == "" ){
+            	    	  msg += "* <spring:message code='sys.msg.invalid' arguments='Turbidity Level' htmlEscape='false'/> </br>";
+            	      }
+            	    }
+              }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
           }
         }
 
@@ -872,6 +913,7 @@
         $("#addInstallForm #m12").show();
         $("#addInstallForm #m13").show();
         $("#addInstallForm #m14").hide();
+        $("#addInstallForm #m24").hide();
       }
     }
     else{
@@ -882,6 +924,7 @@
       $("#addInstallForm #m12").hide();
       $("#addInstallForm #m13").hide();
       $("#addInstallForm #m14").hide();
+      $("#addInstallForm #m24").hide();
     }
     if(selectedData == "8000" || selectedData == "8100"){
     $("#failReasonCode").attr("disabled",false);
@@ -1317,6 +1360,12 @@
             <td><input type="text" title="" placeholder="<spring:message code='service.title.WaterSourceTemp' />" class="w100p" id="waterSourceTemp" name="waterSourceTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' /></td>
           </tr>
           <tr>
+            <th scope="row"><spring:message code='service.title.TurbidityLevel' /><span name="m24" id="m24" class="must">*</span></th>
+            <td><input type="text" title="" placeholder="<spring:message code='service.title.TurbidityLevel' />" class="w100p" id="turbLvl" name="turbLvl" onkeypress='validate(event)' onblur='validate2(this);' /></td>
+            <th></th>
+            <td></td>
+          </tr>
+          <tr>
             <th scope="row"><spring:message code='service.title.adptUsed' /><span name="m14" id="m14" class="must">*</span></th>
             <td colspan='3'><select class="w100p" id="adptUsed" name="adptUsed">
                 <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
@@ -1426,8 +1475,8 @@ Name: ${hpMember.name1}</textarea></td>
             <td><select class="w100p" id="failLocCde" name="failLocCde" onchange="fn_openFailChild(this.value)">
                 <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
                 <c:forEach var="list" items="${failParent}" varStatus="status">
-                  <%-- <option value="${list.defectId}">${list.defectDesc}</option> --%>
-                  <option value="${list.codeId}">${list.codeName}</option>
+                   <%-- <option value="${list.defectId}">${list.defectDesc}</option> --%>
+                   <option value="${list.codeId}">${list.codeName}</option>
                 </c:forEach></td>
             </select>
             <th scope="row"><spring:message code='service.title.FailedReason' /><span name="m16" id="m16" class="must">*</span></th>
@@ -1441,7 +1490,7 @@ Name: ${hpMember.name1}</textarea></td>
 
              <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
 
-         <tr>
+         <%-- <tr>
             <th scope="row"><spring:message code='service.title.BoosterPump' /><span name="m21" id="m21" class="must">*</span></th>
             <td colspan='3'><select class="w100p" id="boosterPump" name="boosterPump">
                 <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
@@ -1449,7 +1498,7 @@ Name: ${hpMember.name1}</textarea></td>
                   <option value="${list.codeId}" select>${list.codeName}</option>
                 </c:forEach>
             </select></td>
-          </tr>
+          </tr> --%>
 
       <%--           <tr>
              <th scope="row"><spring:message code='service.title.BoosterPump' /><span class="must" id="m21"> *</span></th>
@@ -1463,7 +1512,7 @@ Name: ${hpMember.name1}</textarea></td>
               </td>
           </tr>  --%>
 
-           <tr>
+           <%-- <tr>
               <th scope="row"><spring:message code='service.title.AfterPumpPsi' /><span class="must" id="m22" style="display: none;"> *</span></th>
               <td>
                 <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpPsi' />" class="w100p" id="aftPsi" name="aftPsi" value=" <c:out value="${installInfo.aftPsi}"/>"/>
@@ -1472,7 +1521,7 @@ Name: ${hpMember.name1}</textarea></td>
               <td>
                 <input type="text" title="" placeholder="<spring:message code='service.title.AfterPumpLpm' />" class="w100p" id="aftLpm" name="aftLpm" value=" <c:out value="${installInfo.aftLpm}"/>"/>
               </td>
-            </tr>
+            </tr> --%>
           <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
 
 
