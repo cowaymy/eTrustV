@@ -14,7 +14,7 @@ var selectedGridValue;
 //Grid Properties 설정
 var gridPros = {
         editable : false,                 // 편집 가능 여부 (기본값 : false)
-        showStateColumn : false     // 상태 칼럼 사용
+        showStateColumn : true     // 상태 칼럼 사용
 };
 
 //Grid Properties 설정 : 마스터 그리드용
@@ -22,7 +22,7 @@ var gridProsMaster = {
         editable : false,                 // 편집 가능 여부 (기본값 : false)
         showStateColumn : false,     // 상태 칼럼 사용
         showRowNumColumn : false,
-        usePaging : false
+        usePaging : true
 };
 
 //페이징에 사용될 변수
@@ -129,7 +129,7 @@ function fn_getOrderListAjax(goPage) {
 	        AUIGrid.setGridData(myGridID, result.resultList);
 
 	        //전체건수 세팅
-	        _totalRowCount = result.totalRowCount;
+	        /* _totalRowCount = result.totalRowCount;
 
 	        //페이징 처리를 위한 옵션 설정
 	        var pagingPros = {
@@ -137,7 +137,7 @@ function fn_getOrderListAjax(goPage) {
 	                rowCount : $("#rowCount").val()
 	        };
 
-	        GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
+	        GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros); */
 
 	    });
     }
@@ -308,7 +308,7 @@ function fn_validSearch() {
             msg += '* <spring:message code="pay.alert.dateFormTo" /><br/>';
         } else{
         	var diffDay = fn_diffDate($('#payDate1').val(), $('#payDate2').val());
-            var dayGap = 1;
+            var dayGap = 15 ;
         	if(diffDay > dayGap || diffDay < 0) {
                 isValid = false;
                 msg += '* Please enter search period within ' + dayGap + ' days';
