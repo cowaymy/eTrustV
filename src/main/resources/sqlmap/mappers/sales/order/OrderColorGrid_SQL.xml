@@ -158,7 +158,10 @@
                                        vC.TOT_CNT ,
                                        vC.TOT_OTSTND ,
                                        vC.PROMO_CODE ,
-                                       vC.PROMO_DESC
+                                       vC.PROMO_DESC ,
+                                       vC.MEM_TYPE ,
+                                       vC.CUST_TYPE_ID ,
+                                       vC.CORP_TYPE_ID
                                 FROM SAL1008V vC ) E1
 
                         <if test="contactNum != null and contactNum != ''">
@@ -319,7 +322,7 @@
 				            AND E1.ORD_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
 				          </if>
 				          <if test="createEnDate != null and createEnDate != ''">
-				            AND E1.ORD_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+				            AND E1.ORD_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
 				          </if>
 				          <if test="cmbProduct != null and cmbProduct != ''">
 				            AND E1.STK_ID = #{cmbProduct}
@@ -336,37 +339,40 @@
 				          <if test="promoCode != null and promoCode != ''">
 				            AND E1.PROMO_CODE = #{promoCode}
 				          </if>
+                          <if test="memtype != null and memtype != ''">
+                            AND E1.MEM_TYPE = #{memtype}
+                          </if>
+                          <if test="cmbCustomerType != null and cmbCustomerType != ''">
+                              AND E1.CUST_TYPE_ID IN
+                              <foreach item="item" collection="cmbCustomerType" index="index" open="(" separator="," close=")">
+                                    #{item}
+                              </foreach>
+                          </if>
+                          <if test="cmbCorpTypeId != null and cmbCorpTypeId != ''">
+                              AND E1.CORP_TYPE_ID IN
+                              <choose>
+                              <when test="Individual !=null and Individual !=''">
+                                  <foreach item="item" collection="cmbCorpTypeId" index="index" open="(" separator="," close=" ">
+                                      #{item}
+                                  </foreach>
+                                   ,0)
+                              </when>
+                              <otherwise>
+                                  <foreach item="item" collection="cmbCorpTypeId" index="index" open="(" separator="," close=")">
+                                      #{item}
+                                 </foreach>
+                              </otherwise>
+                             </choose>
+                          </if>
 
            ) F1
           <!--   LEFT JOIN ORG0001D MEM ON MEM.MEM_CODE = F1.MEM_CODE
-    	   JOIN SYS0013M S13 ON S13.CODE_ID = MEM.MEM_TYPE AND CODE_MASTER_ID = 1-->
-    	   JOIN SAL0029D S29 ON S29.NRIC = F1.CUST_IC
+    	   JOIN SYS0013M S13 ON S13.CODE_ID = MEM.MEM_TYPE AND CODE_MASTER_ID = 1
+    	   JOIN SAL0029D S29 ON S29.NRIC = F1.CUST_IC-->
           WHERE 1 = 1
-           <if test="memtype != null and memtype != ''">
+           <!-- <if test="memtype != null and memtype != ''">
             AND MEM_TYPE = #{memtype}
-          </if>
-          <if test="cmbCustomerType != null and cmbCustomerType != ''">
-              AND S29.TYPE_ID IN
-              <foreach item="item" collection="cmbCustomerType" index="index" open="(" separator="," close=")">
-                    #{item}
-              </foreach>
-          </if>
-          <if test="cmbCorpTypeId != null and cmbCorpTypeId != ''">
-              AND S29.CORP_TYPE_ID IN
-              <choose>
-              <when test="Individual !=null and Individual !=''">
-                  <foreach item="item" collection="cmbCorpTypeId" index="index" open="(" separator="," close=" ">
-                      #{item}
-                  </foreach>
-                   ,0)
-              </when>
-              <otherwise>
-	              <foreach item="item" collection="cmbCorpTypeId" index="index" open="(" separator="," close=")">
-	                  #{item}
-	             </foreach>
-              </otherwise>
-             </choose>
-          </if>
+          </if> -->
     ) D1
     ORDER BY D1.ORD_ID DESC
   </select>
