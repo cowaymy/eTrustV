@@ -308,6 +308,7 @@ console.log("preOrderList");
         //AUIGrid 칼럼 설정
         var excelColumnLayout = [
            { headerText : "eKey-in Date",  dataField : "requestDt",  editable : false, width:100}
+          , { headerText : "eKey-in Time",  dataField : "requestTm",  editable : false, width:100}
           , { headerText : "SOF No.",         dataField : "sofNo",      editable : false, width:100}
           , { headerText : "Order Number", dataField : "salesOrdNo",       editable : false, width:100}
           , { headerText : "Status",          dataField : "stusName",     editable : false,width:150}
