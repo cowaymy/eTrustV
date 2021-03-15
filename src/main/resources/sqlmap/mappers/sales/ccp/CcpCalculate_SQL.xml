@@ -196,7 +196,8 @@ ORDER BY Project1.CODE_NAME ASC
 			               <!-- Filter1.CCP_STUS_ID = 1 -->
 
 			              <if test=" '' != calOrdNo and null != calOrdNo">
-			                 AND  Filter1.SALES_ORD_NO LIKE '%'||#{calOrdNo}||'%'
+			                 <!-- AND  Filter1.SALES_ORD_NO LIKE '%'||#{calOrdNo}||'%'  -->
+			                 AND  Filter1.SALES_ORD_NO = #{calOrdNo}
 			              </if>
 
 			              <if test=" '' != calStartDate and null != calStartDate">
@@ -221,7 +222,8 @@ ORDER BY Project1.CODE_NAME ASC
 			               </if>
 
 			               <if test=" '' != calCustName and null != calCustName">
-			                 AND  UPPER(Filter1.NAME3) LIKE '%'||UPPER(#{calCustName})||'%'
+			                 <!-- AND  UPPER(Filter1.NAME3) LIKE '%'||UPPER(#{calCustName})||'%' -->
+			                 AND  UPPER(Filter1.NAME3) = #{calCustName}
 			               </if>
 
 			               <if test=" '' != calNric and null != calNric">
@@ -251,7 +253,8 @@ ORDER BY Project1.CODE_NAME ASC
 			              </if>
 
 			               <if test=" '' != calUpdator and null != calUpdator">
-			                  AND  UPPER(Filter1.USERNAME3) =  UPPER(#{calUpdator})
+			                  <!-- AND  UPPER(Filter1.USERNAME3) =  UPPER(#{calUpdator}) -->
+			                  AND  Filter1.USERNAME3 =  #{calUpdator}
 			               </if>
 
 			               <if test=" bndlNo != '' and bndlNo != null">

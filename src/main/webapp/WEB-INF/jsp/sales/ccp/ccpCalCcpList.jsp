@@ -25,12 +25,14 @@ $(document).ready(function() {
 	doGetCombo('/sales/ccp/selectReasonCodeFbList', '', '','_reasonCode', 'M' , 'f_multiCombo'); //Reason
 
 	//Search
+	/*
 	$("#_calSearch").click(function() {
 
 		Common.ajax("GET", "/sales/ccp/selectCalCcpListAjax", $("#_searchForm").serialize(), function(result) {
 			   AUIGrid.setGridData(calGrid, result);
 		   });
 	});
+	*/
 
 
 	//Edit
@@ -123,7 +125,16 @@ $(document).ready(function() {
         }
     });
 
+	var toDate = new Date();
+	var dd = toDate.getDate();
+	var mm = toDate.getMonth() + 1;
+	var yy = toDate.getFullYear();
 
+	if(mm < 10) mm = "0" + mm;
+
+	toDate = dd + "/" + mm + "/" + yy;
+	$('#calStartDate').val(toDate);
+	$('#calEndDate').val(toDate);
 
 });//Doc Ready Func End
 
@@ -137,19 +148,27 @@ function fn_searchListAjax(){
     console.log("startDate :" + startDate);
     console.log("endDate :" + endDate);
 
-              if (startDate == '' || endDate == ''){
-                  Common.alert("Order Date is required.");
-                  return;
-              }
+    if (startDate == '' || endDate == ''){
+        Common.alert("Order Date is required.");
+        return;
+    }
 
-              if( fn_getDateGap(startDate , endDate) > 180){
-                  Common.alert("Start date can not be more than 180 days before the end date.");
-                  return;
-              }
+    if( fn_getDateGap(startDate , endDate) > 180){
+        Common.alert("Start date can not be more than 180 days before the end date.");
+        return;
+    }
 
-        Common.ajax("GET", "/sales/ccp/selectCalCcpListAjax", $("#_searchForm").serialize(), function(result) {
-            AUIGrid.setGridData(calGrid, result);
-        });
+    if(!FormUtil.isEmpty($('#calCustName').val())) {
+        $('#calCustName').val($('#calCustName').val().toUpperCase());
+    }
+
+    if(!FormUtil.isEmpty($('#calCustName').val())) {
+        $('#calCustName').val($('#calCustName').val().toUpperCase());
+    }
+
+    Common.ajax("GET", "/sales/ccp/selectCalCcpListAjax", $("#_searchForm").serialize(), function(result) {
+        AUIGrid.setGridData(calGrid, result);
+    });
 
 }
 
@@ -509,7 +528,7 @@ function popup(location){
     <select class="w100p" name="calDscBranch" id="_keyInDscBranch"></select>
     </td>
     <th scope="row"><spring:message code="sal.text.custName" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p"  name="calCustName"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p"  name="calCustName" id="calCustName"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
@@ -554,7 +573,7 @@ function popup(location){
     <select class="multy_select w100p" multiple="multiple" id="_reasonCode" name="calReason"></select>
     </td>
     <th scope="row"><spring:message code="sal.title.text.lastUpdUser" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p" name="calUpdator"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" name="calUpdator" id="calUpdator"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.ordBundleNo" /></th>
