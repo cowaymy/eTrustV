@@ -115,8 +115,9 @@ public class AdaptorServiceImpl implements AdaptorService {
 		boolean isSuccess = true;
 		try {
 			MimeMessage message = mailSender.createMimeMessage();
-			boolean isMultiPart = email.getFiles().size() == 0 ? false : true;
-			isMultiPart = email.getHasInlineImage();	//for attaching image in HTML inline
+			boolean hasFile = email.getFiles().size() == 0 ? false : true;
+			boolean hasInlineImage = email.getHasInlineImage();	//for attaching image in HTML inline
+			boolean isMultiPart = hasFile || hasInlineImage;
 
 			MimeMessageHelper messageHelper = new MimeMessageHelper(message, isMultiPart, AppConstants.DEFAULT_CHARSET);
 			messageHelper.setFrom(from);
@@ -148,24 +149,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 				});
 			}
 
-
-			/*
-			if (isMultiPart) {
-				email.getFiles().forEach(file -> {
-					try {
-						messageHelper.addAttachment(file.getName(), file);
-					} catch (Exception e) {
-						throw new ApplicationException(e, AppConstants.FAIL, e.getMessage());
-					}
-				});
-			}
-			*/
-
-		    LOGGER.debug("= DEBUG ... EMAIL = BEFORE SEND = from " + from + ". Title: " + email.getSubject());
-
 		    mailSender.send(message);
-
-		    LOGGER.debug("= DEBUG ... EMAIL = AFTER SEND = from " + from + ". Title: " + email.getSubject());
 
 		} catch (Exception e) {
 			isSuccess = false;
