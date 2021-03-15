@@ -16,7 +16,9 @@
  17/12/2019  ONGHC  1.0.9          Add BS No. Column
  -->
 
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
+<script>
+    document.write('<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js?v='+new Date().getTime()+'"><\/script>');
+</script>
 <script type="text/javaScript">
   var option = {
     width : "1200px",
@@ -309,10 +311,13 @@
     var endDate = $('#createEndDate').val();
     var dt_range = $('#dt_range').val();
 
+    console.log("here1");
     var valid = true;
     var msg = "";
 
-    if ($("#asNum").val() == '' && $("#resultNum").val() == '' && $("#orderRefNo").val() == '') {
+    console.log($("#asNum").val());
+
+    if ($("#asNum").val() == '' && $("#resultNum").val() == '' && $("#orderNum").val() == '') {
         if (startDate == '' && endDate == ''){
             msg = "Request Date is required when AS No.,  Result No. and Order No. are empty.";
             valid = false;
@@ -323,11 +328,12 @@
             msg = "Request Start Date is required.";
             valid = false;
         } else if (startDate != '' && endDate != ''){
-            /* if (!js.date.checkDateRange(startDate,endDate,"Request", "3"))
-                valid = false; */
-
-        	if (!fn_checkDateRange(startDate,endDate,"Request"))
+        	console.log("here");
+             if (!js.date.checkDateRange(startDate,endDate,"Request", "3"))
                 valid = false;
+
+        	/* if (!fn_checkDateRange(startDate,endDate,"Request"))
+                valid = false; */
         }
     }
 
@@ -349,7 +355,7 @@
     }
   }
 
-  function fn_checkDateRange(startDate, endDate, field){
+  /* function fn_checkDateRange(startDate, endDate, field){
 
       var arrStDt = startDate.split('/');
       var arrEnDt = endDate.split('/');
@@ -368,7 +374,7 @@
       }
 
       return true;
-  }
+  } */
 
   function fn_newASPop() { // CREATE AS
     Common.popupDiv("/services/as/ASReceiveEntryPop.do", {in_ordNo : ""}, null, true, '_NewEntryPopDiv1');

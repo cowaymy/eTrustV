@@ -74,13 +74,15 @@
         join SVC0008D s08 on l82.SVC_ORD_ID=s08.NO
         join SAL0001D s01 on s08.SALES_ORD_ID=s01.SALES_ORD_ID
         join SVC0006D s06 on s06.RESULT_ID=l82.RESULT_ID
-       JOIN (select * from LOG0082M SM
+
+        JOIN LOG0082M SM ON SM.RESULT_ID = (SELECT MAX(aa.RESULT_ID) from LOG0082M aa where  aa.SVC_ORD_ID =  SM.SVC_ORD_ID) AND SM.SEQ = l82.SEQ
+       <!-- JOIN (select * from LOG0082M SM
                         where SM.RESULT_ID = (SELECT MAX(aa.RESULT_ID)
                                                from LOG0082M aa
                                                 where
                                                 aa.SVC_ORD_ID =  SM.SVC_ORD_ID ))SM
                                                 on (SM.SEQ = l82.SEQ)
-      <!--  JOIN (select WW.RESULT_ID, sum(WW.qty) from LOG0082M WW
+        JOIN (select WW.RESULT_ID, sum(WW.qty) from LOG0082M WW
        group by WW.RESULT_ID
        having sum(WW.qty)<![CDATA[<>]]>  0)QQ on (QQ.RESULT_ID = SM.RESULT_ID) -->
        where 1=1

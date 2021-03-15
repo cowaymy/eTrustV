@@ -12,7 +12,11 @@
  01/07/2020  ONGHC  1.0.5          Add Installation Job Transfer Failure Listing
  07/08/2020  FANNIE  1.0.6          Add Allow Commision columns in listing
  -->
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js"></script>
+
+<script>
+    document.write('<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js?v='+new Date().getTime()+'"><\/script>');
+</script>
+
 <script type="text/javaScript" >
   $(document).ready(
     function() {
@@ -58,10 +62,10 @@
 			  var startDt = $("#startDate").val();
 	          var endDt = $("#endDate").val();
 
-	          /* if (!js.date.checkDateRange(startDt,endDt,"Appointment", "6"))
-	        	  valid = false; */
-	          if (!fn_checkDateRange(startDt,endDt,"Appointment"))
-                  valid = false;
+	           if (!js.date.checkDateRange(startDt,endDt,"Appointment", "6"))
+	        	  valid = false;
+	          /* if (!fn_checkDateRange(startDt,endDt,"Appointment"))
+                  valid = false; */
 
 		  } else if ($("#instalStrlDate").val() != '' && $("#installEndDate").val() == '') {
 			  msg = "Installation End Date is required.";
@@ -73,10 +77,10 @@
               var startDt = $("#instalStrlDate").val();
               var endDt = $("#installEndDate").val();
 
-             /*  if (!js.date.checkDateRange(startDt,endDt,"Installation", "6"))
-                  valid = false; */
-              if (!fn_checkDateRange(startDt,endDt,"Installation"))
+               if (!js.date.checkDateRange(startDt,endDt,"Installation", "6"))
                   valid = false;
+              /* if (!fn_checkDateRange(startDt,endDt,"Installation"))
+                  valid = false; */
 	      }
 	  }
 
@@ -89,7 +93,7 @@
 	   }
   }
 
-   function fn_checkDateRange(startDate, endDate, field){
+   /* function fn_checkDateRange(startDate, endDate, field){
 
       var arrStDt = startDate.split('/');
       var arrEnDt = endDate.split('/');
@@ -108,7 +112,7 @@
       }
 
       return true;
-  }
+  } */
 
   function fn_addInstallation(codeid1) {
 
