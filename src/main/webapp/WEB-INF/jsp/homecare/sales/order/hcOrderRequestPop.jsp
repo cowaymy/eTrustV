@@ -1798,7 +1798,7 @@
     function fn_getPenaltyAmt(usedMnth, obPeriod) {
         var vPenaltyAmt = 0;
 
-        Common.ajax("GET", "/sales/order/selectPenaltyAmt.do", {salesOrdId : ORD_ID, usedMnth : usedMnth, obPeriod : obPeriod}, function(result) {
+        Common.ajaxSync("GET", "/sales/order/selectPenaltyAmt.do", {salesOrdId : ORD_ID, usedMnth : usedMnth, obPeriod : obPeriod}, function(result) {
 
             console.log('result:'+result);
 
@@ -1890,7 +1890,7 @@
     function fn_getOrderLastRentalBillLedger1() {
         var vTotalUseMth = 0;
 
-        Common.ajax("GET", "/sales/order/selectOrderLastRentalBillLedger1.do", {salesOrderId : ORD_ID}, function(result) {
+        Common.ajaxSync("GET", "/sales/order/selectOrderLastRentalBillLedger1.do", {salesOrderId : ORD_ID}, function(result) {
             if(result != null) {
                 vTotalUseMth = result.rentInstNo;
             }
@@ -1902,7 +1902,7 @@
     function fn_getObligtPriod() {
         var vObligtPriod = 0;
 
-        Common.ajax("GET", "/sales/order/selectObligtPriod.do", {salesOrdId : ORD_ID}, function(result) {
+        Common.ajaxSync("GET", "/sales/order/selectObligtPriod.do", {salesOrdId : ORD_ID}, function(result) {
             if(result != null) {
                 vObligtPriod = result.obligtPriod;
             }
