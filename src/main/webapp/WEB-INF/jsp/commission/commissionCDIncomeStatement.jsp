@@ -262,9 +262,9 @@
 					<li><p class="btn_blue2 big">
 							<a href="#" id="generate" id="generate">Generate</a>
 						</p></li>
-					<li><p class="btn_blue2 big">
+				<!-- 	<li><p class="btn_blue2 big">
 							<a href="#" id="cp58" id="cp58">CP58 Form</a>
-						</p></li>
+						</p></li> -->
 				</c:if>
 				<li><p class="btn_blue2 big">
 						<a href="#" id="clear" name="clear">CLEAR</a>
