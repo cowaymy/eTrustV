@@ -396,10 +396,6 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     logger.debug("= PAYMENT FORM = " + paymentForm.toString());
     logger.debug("============================================ ");
 
-    // TEMP DEBUG CHECKPOINT BY YONG - START
-    logger.debug("= DEBUG ... IN insertSalesNotification method ... START ");
-    // TEMP DEBUG CHECKPOINT BY YONG - END
-
     int rtn = 0;
 
     Map<String, Object> params = PaymentForm.createMap(paymentForm);
@@ -432,38 +428,18 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     params.put("updUserId", loginVO.getUserId());
     params.put("custNm", custNm);
 
-    // TEMP DEBUG CHECKPOINT BY YONG - START
-    logger.debug("= DEBUG ... BEFORE insertSalesNotification table update");
-    // TEMP DEBUG CHECKPOINT BY YONG - END
-
     rtn = paymentApiMapper.insertSalesNotification(params);
-
-    // TEMP DEBUG CHECKPOINT BY YONG - START
-    logger.debug("= DEBUG ... AFTER insertSalesNotification table update");
-    // TEMP DEBUG CHECKPOINT BY YONG - END
 
     // ONGHC - START
     // SMS
     this.sendSms(params);
     // EMAIL
 
-    // TEMP DEBUG CHECKPOINT BY YONG - START
-    logger.debug("= DEBUG ... INSERT SALES NOTIFICATION = BEFORE EMAIL = MOB TICKET NO: " + mobTicketNo);
-    // TEMP DEBUG CHECKPOINT BY YONG - END
-
     try {
     	this.sendEmail(params);
     } catch (Exception e) {
     	logger.error("EMAIL SENDING PROCESS ENCOUNTERED ERROR: " + e.getMessage());
     }
-
-    // TEMP DEBUG CHECKPOINT 2 BY YONG - START
-    logger.debug("= DEBUG ... INSERT SALES NOTIFICATION = AFTER EMAIL = MOB TICKET NO: " + mobTicketNo);
-    // TEMP DEBUG CHECKPOINT 2 BY YONG - END
-
-    // TEMP DEBUG CHECKPOINT BY YONG - START
-    logger.debug("= DEBUG ... IN insertSalesNotification method ... END ");
-    // TEMP DEBUG CHECKPOINT BY YONG - END
 
     return rtn;
   }
@@ -561,10 +537,6 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
       emailNo.add(CommonUtils.nvl(params.get("email2")));
     }
 
-    // 22.12.2020 - added to debug E-Temporary Receipt email issue - Yong - start
-    // emailNo.add("jiahua.yong@coway.com.my");
-    // 22.12.2020 - added to debug E-Temporary Receipt email issue - Yong - end
-
     email.setTo(emailNo);
     email.setHtml(true);
     email.setSubject(emailTitle);
@@ -572,8 +544,6 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     email.setHasInlineImage(true);
 
     boolean isResult = false;
-
-    logger.debug("= DEBUG ... PAYMENT EMAIL TO " + emailNo.toString() + emailTitle);
 
     //isResult = adaptorService.sendEmail(email, false);
     isResult = adaptorService.sendEmail(email, false, EmailTemplateType.E_TEMPORARY_RECEIPT, params);
