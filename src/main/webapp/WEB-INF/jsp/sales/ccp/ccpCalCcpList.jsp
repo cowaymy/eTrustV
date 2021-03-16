@@ -125,16 +125,25 @@ $(document).ready(function() {
         }
     });
 
-	var toDate = new Date();
-	var dd = toDate.getDate();
-	var mm = toDate.getMonth() + 1;
-	var yy = toDate.getFullYear();
+	var now = new Date();
+	var dd = now.getDate();
+	var mm = now.getMonth() + 1;
+	var yy = now.getFullYear();
 
+	if(dd < 10) dd = "0" + dd;
 	if(mm < 10) mm = "0" + mm;
 
-	toDate = dd + "/" + mm + "/" + yy;
-	$('#calStartDate').val(toDate);
-	$('#calEndDate').val(toDate);
+	var prev = new Date(now.setMonth(now.getMonth() - 6));
+	var dd_1 = prev.getDate();
+	var mm_1 = prev.getMonth() + 1;
+	var yy_1 = prev.getFullYear();
+
+	if(dd_1 < 10) dd = "0" + dd_1;
+	if(mm_1 < 10) mm_1 = "0" + mm_1;
+
+	$('#calEndDate').val(dd + "/" + mm + "/" + yy);
+
+	$('#calStartDate').val(dd_1 + "/" + mm_1 + "/" + yy_1);
 
 });//Doc Ready Func End
 
