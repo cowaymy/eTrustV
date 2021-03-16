@@ -2652,8 +2652,8 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	  String batchDate = claimMap.get("ctrlBatchDt").toString();
 	  String fileDirectory = filePath + subPath;
 
-	  String srcDir  = fileDirectory + batchDate;
-	  String zipEncryptFile = fileDirectory + batchName +"_" +batchDate + ".gpg";
+	  String srcDir  = fileDirectory + "/" + batchDate;
+	  String zipEncryptFile = fileDirectory + "/" + batchName +"_" +batchDate + ".gpg";
 	  String subPathZipEnc = subPath + batchName +"_" +batchDate + ".gpg";
 
 	  String cmd = "";
@@ -2665,7 +2665,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	  try {
 		  LOGGER.debug("1-1. PGP ZIP encryption Start.");
 
-		  cmd = "gpg-zip --encrypt --output " + zipEncryptFile + " --gpg-args -recipient " + CIMB_KEYNAME  + " " + srcDir ;
+		  cmd = "gpg-zip --encrypt --output " + zipEncryptFile + " --gpg-args --recipient " + CIMB_KEYNAME  + " " + srcDir ;
 
 		  LOGGER.debug(">>>>>>>>>encrypt cmd: " + cmd);
 
