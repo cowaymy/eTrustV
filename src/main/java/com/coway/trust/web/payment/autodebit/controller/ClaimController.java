@@ -2665,7 +2665,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	  try {
 		  LOGGER.debug("1-1. PGP ZIP encryption Start.");
 
-		  cmd = "gpg-zip --encrypt --output " + zipEncryptFile + " --gpg-args --recipient " + CIMB_KEYNAME  + " " + srcDir ;
+		  cmd = "gpg-zip --encrypt --output " + zipEncryptFile + " '--recipient " + CIMB_KEYNAME  + "' " + srcDir ;
 
 		  LOGGER.debug(">>>>>>>>>encrypt cmd: " + cmd);
 
