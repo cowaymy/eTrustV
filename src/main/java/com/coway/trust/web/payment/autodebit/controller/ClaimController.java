@@ -1,9 +1,11 @@
 package com.coway.trust.web.payment.autodebit.controller;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,6 +83,9 @@ public class ClaimController {
 
   @Value("${autodebit.email.receiver}")
   private String emailReceiver;
+
+  @Value("${host2host.cimb.keyname}")
+  public String CIMB_KEYNAME; // cimbsfguat
 
   @Autowired
   private AdaptorService adaptorService;
@@ -1166,6 +1171,11 @@ public class ClaimController {
     //Zip Files to email and download
     if(isZip.equals("Y")){
       zipFilesEmail(claimMap);
+
+      if(requireFileEncrypt(claimMap)) {
+          zipFilesEncrypt(claimMap);
+      }
+
     }
 
     // 결과 만들기
@@ -1173,6 +1183,10 @@ public class ClaimController {
     message.setCode(AppConstants.SUCCESS);
     message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
     message.setData(claimMap.get("file").toString());
+
+    if (claimMap.get("encFile") != null && !claimMap.get("encFile").toString().equals("")) {
+        message.setData(claimMap.get("encFile").toString());
+    }
 
     return ResponseEntity.ok(message);
 
@@ -1975,9 +1989,17 @@ public class ClaimController {
 
       }
     }
+
+    // CHECK IF ENCRYPTION NEEDED AND ENCRYPT
+    if (fileInfo.size() > 0) {
+    	if(requireFileEncrypt(claimMap)) {
+    	    this.generateEncryptFile(fileInfo, claimMap, sFile, subPath);
+    	}
+    }
+
   }
 
-  private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, String[] columns, String[] titles,
+private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, String[] columns, String[] titles,
       String path, String subPath, Map<String, Object> params) {
     FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
     excelDownloadVO.setFilePath(path);
@@ -2543,5 +2565,145 @@ public class ClaimController {
 		return ResponseEntity.ok(message);
 
 	}
+
+  private boolean requireFileEncrypt(EgovMap claimMap) {
+
+	  if ("3".equals(String.valueOf(claimMap.get("ctrlBankId")))
+			  && "0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
+			  return true; //only for CIMB and Direct Debit (deduction channels : e-Mandate and General)
+	  }
+
+	  return false;
+  }
+
+  private void generateEncryptFile(List<EgovMap> fileInfo, EgovMap claimMap, String srcFile, String subPath) {
+
+	  for (int a = 0; a < fileInfo.size(); a++) {
+		  Map<String, Object> fileInfoConf2 = new HashMap<String, Object>();
+		  fileInfoConf2 = (Map<String, Object>) fileInfo.get(a);
+
+		  LOGGER.debug("1. PGP encryption Start.");
+
+		  String cmd = "";
+		  String str = null;
+		  StringBuffer sb = null;
+		  String encryptFilePath = "";
+		  String encFile = "";
+
+		  try {
+			  LOGGER.debug("1-1. PGP encryption Start.");
+			  LOGGER.debug("fileName:" + srcFile);
+
+			  String[] arr = srcFile.split("\\.");
+			  encryptFilePath = filePath + fileInfoConf2.get("ctrlSubPath").toString() + arr[0] + ".GPG";
+			  encFile = arr[0] + ".GPG";
+
+			  String temRootPath  = filePath + fileInfoConf2.get("ctrlSubPath").toString();
+
+			  // encrypt file exist -> delete
+			  File fileEncryptDel = new File(encryptFilePath);
+			  fileEncryptDel.delete();
+
+			  cmd = "gpg --output " + encryptFilePath + " --encrypt --recipient " + CIMB_KEYNAME  + " "+ temRootPath + srcFile ;
+
+			  LOGGER.debug(">>>>>>>>>encrypt cmd: " + cmd);
+
+			  // 명령행 출력 라인 캡쳐를 위한 StringBuffer 설정
+			  sb = new StringBuffer();
+			  // 명령 실행
+			  Process proc = Runtime.getRuntime().exec(cmd);
+			  // 명령행의 출력 스트림을 얻고, 그 내용을 buffered reader input stream에 입력한다.
+			  BufferedReader br = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+			  // 명령행에서의 출력 라인 읽음
+			  while ((str = br.readLine()) != null){
+				  sb.append(str).append("\n");
+				  LOGGER.debug(">>>>>>>>>" + str);
+			  }
+
+			  // 명령행이 종결되길 기다린다
+			  int rtn = -9999;
+			  try {
+				  proc.waitFor();
+				  // 종료값 체크
+				  rtn = proc.exitValue();
+				  LOGGER.debug( ">>>>>>>>>>>>rtn:" + rtn);
+			  }catch(InterruptedException e){
+				  LOGGER.error("Error encrypt file.", e);
+			  }finally{
+				  //stream을 닫는다
+				  br.close();
+			  }
+
+			  LOGGER.debug("1-2. PGP encryption End.");
+
+		  }catch(Exception e) {
+			  LOGGER.debug("Unexpected Error:" + e.getMessage());
+		  }
+
+		  LOGGER.debug("1. PGP encryption End.");
+		  claimMap.put("encFile", subPath + encFile);
+	  }
+  }
+
+  public void zipFilesEncrypt(EgovMap claimMap) {
+
+	  String batchName = claimMap.get("batchName").toString();
+	  String subPath = claimMap.get("subPath").toString();
+	  String batchDate = claimMap.get("ctrlBatchDt").toString();
+	  String fileDirectory = filePath + subPath;
+
+	  String srcDir  = fileDirectory + batchDate;
+	  String zipEncryptFile = fileDirectory + batchName +"_" +batchDate + ".gpg";
+	  String subPathZipEnc = subPath + batchName +"_" +batchDate + ".gpg";
+
+	  String cmd = "";
+	  String str = null;
+	  StringBuffer sb = null;
+
+	  LOGGER.debug("1. PGP ZIP encryption Start.");
+
+	  try {
+		  LOGGER.debug("1-1. PGP ZIP encryption Start.");
+
+		  cmd = "gpg-zip --encrypt --output " + zipEncryptFile + " --gpg-args -recipient " + CIMB_KEYNAME  + " " + srcDir ;
+
+		  LOGGER.debug(">>>>>>>>>encrypt cmd: " + cmd);
+
+		  // 명령행 출력 라인 캡쳐를 위한 StringBuffer 설정
+		  sb = new StringBuffer();
+		  // 명령 실행
+		  Process proc = Runtime.getRuntime().exec(cmd);
+		  // 명령행의 출력 스트림을 얻고, 그 내용을 buffered reader input stream에 입력한다.
+		  BufferedReader br = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+		  // 명령행에서의 출력 라인 읽음
+		  while ((str = br.readLine()) != null){
+			  sb.append(str).append("\n");
+			  LOGGER.debug(">>>>>>>>>" + str);
+		  }
+
+		  // 명령행이 종결되길 기다린다
+		  int rtn = -9999;
+		  try {
+			  proc.waitFor();
+			  // 종료값 체크
+			  rtn = proc.exitValue();
+			  LOGGER.debug( ">>>>>>>>>>>>rtn:" + rtn);
+
+		  }catch(InterruptedException e) {
+			  LOGGER.error("e", e);
+		  }finally{
+			  //stream을 닫는다
+			  br.close();
+		  }
+
+		  LOGGER.debug("1-2. PGP ZIP encryption End.");
+
+	  } catch (Exception e) {
+		  LOGGER.debug("Unexpected Error:" + e.getMessage());
+	  }
+
+	  LOGGER.debug("1. PGP ZIP encryption End.");
+      claimMap.put("encFile", subPathZipEnc);
+  }
 
 }
