@@ -84,8 +84,8 @@ public class ClaimController {
   @Value("${autodebit.email.receiver}")
   private String emailReceiver;
 
-  @Value("${host2host.cimb.keyname}")
-  public String CIMB_KEYNAME; // cimbsfguat
+  @Value("${directdebit.cimb.keyname}")
+  public String CIMB_DD_KEYNAME;
 
   @Autowired
   private AdaptorService adaptorService;
@@ -2604,7 +2604,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 			  File fileEncryptDel = new File(encryptFilePath);
 			  fileEncryptDel.delete();
 
-			  cmd = "gpg --output " + encryptFilePath + " --encrypt --recipient " + CIMB_KEYNAME  + " "+ temRootPath + srcFile ;
+			  cmd = "gpg --output " + encryptFilePath + " --encrypt --recipient " + CIMB_DD_KEYNAME  + " "+ temRootPath + srcFile ;
 
 			  LOGGER.debug(">>>>>>>>>encrypt cmd: " + cmd);
 
@@ -2665,7 +2665,11 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	  try {
 		  LOGGER.debug("1-1. PGP ZIP encryption Start.");
 
-		  cmd = "gpg-zip --encrypt --output " + zipEncryptFile + " '--recipient " + CIMB_KEYNAME  + "' " + srcDir ;
+		  // encrypt file exist -> delete
+		  File fileEncryptZipDel = new File(zipEncryptFile);
+		  fileEncryptZipDel.delete();
+
+		  cmd = "gpg-zip --encrypt --output " + zipEncryptFile + " '--recipient " + CIMB_DD_KEYNAME  + "' " + srcDir ;
 
 		  LOGGER.debug(">>>>>>>>>encrypt cmd: " + cmd);
 
