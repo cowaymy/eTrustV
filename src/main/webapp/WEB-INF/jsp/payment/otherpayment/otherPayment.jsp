@@ -768,8 +768,10 @@ var columnLayout = [
 	    var rows = AUIGrid.getRowIndexesByValue(targetRenMstGridID, "salesOrdId", $("#rentalOrdId").val());
 	    var mthRentAmt = AUIGrid.getCellValue(targetRenMstGridID, rows, "mthRentAmt");
 		var megaDeal = $("#rentalMegaDeal").val();
+		var cnvrScheme = $("#rentalCnvrScheme").val();
+	    var advDisc = $("#rentalAdvDisc").val();
 
-		if(megaDeal == 0 ){
+		if(megaDeal == 0 && cnvrScheme == 0 && advDisc == 1){
 			if (advMonth >= 6 && advMonth < 12){
 				discountValue = mthRentAmt * advMonth * 0.97;
 				originalprice = mthRentAmt * advMonth;
@@ -866,8 +868,10 @@ var columnLayout = [
 	    var grandtotal = tot + discountValue;
 	    $("#rentalAdvAmt").val($.number(discountValue,2,'.',''));
 		var megaDeal = $("#rentalMegaDeal").val();
+		var cnvrScheme = $("#rentalCnvrScheme").val();
+		console.log("discountrate: " + discountrate);
 
-		if(megaDeal == 0 ){
+		if(megaDeal == 0 && cnvrScheme == 0 ){
 			if (tot > 0) {
 			    $("#rentalTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
 			} else {
@@ -2323,6 +2327,8 @@ function isDupPOSToFinal(){
 		Common.ajax("GET", "/payment/common/selectMegaDealByOrderId.do", megaDeal, function(result) {
 
 			$("#rentalMegaDeal").val(result.megaDeal);
+			$("#rentalCnvrScheme").val(result.cnvrSchemeId);
+	        $("#rentalAdvDisc").val(result.advDisc);
 	    });
 
         //Rental : Order 정보 조회
@@ -4058,6 +4064,8 @@ $.fn.clearForm = function() {
                 <input type="hidden" name="rentalBillGrpId" id="rentalBillGrpId" />
                 <input type="hidden" name="rentalAdvAmt" id="rentalAdvAmt" />
 	            <input type="hidden" name="rentalMegaDeal" id="rentalMegaDeal" />
+	            <input type="hidden" name="rentalCnvrScheme" id="rentalCnvrScheme" />
+                <input type="hidden" name="rentalAdvDisc" id="rentalAdvDisc" />
 
                 <table class="type1">
                     <caption>table</caption>
