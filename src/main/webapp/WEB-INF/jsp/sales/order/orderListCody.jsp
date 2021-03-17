@@ -441,7 +441,7 @@
             selectAll: true, // 전체선택
             width: '100%'
         });
-        $('#listOrdStusId').multipleSelect("checkAll");
+        //$('#listOrdStusId').multipleSelect("checkAll");
         $('#listRentStus').change(function() {
             //console.log($(this).val());
         }).multipleSelect({

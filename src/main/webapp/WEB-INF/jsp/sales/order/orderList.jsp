@@ -14,7 +14,6 @@
     };
 
     $(document).ready(function(){
-console.log("orderlist");
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         if("${SESSION_INFO.userTypeId}" == "2" ){
@@ -442,7 +441,7 @@ console.log("orderlist");
             selectAll: true, // 전체선택
             width: '100%'
         });
-        $('#listOrdStusId').multipleSelect("checkAll");
+        //$('#listOrdStusId').multipleSelect("checkAll");
         $('#listRentStus').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
