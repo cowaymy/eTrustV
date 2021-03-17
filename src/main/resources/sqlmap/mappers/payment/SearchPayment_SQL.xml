@@ -120,7 +120,13 @@
 	        <if test="trNo != '' and trNo != null">
 			AND pay.TR_NO = #{trNo}
 			</if>
-	        <if test="chequeNo != '' and chequeNo != null">
+            <if test="payIdList != '' and payIdList != null">
+                AND pay.PAY_ID IN
+                <foreach item="item" collection="payIdList" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+            </if>
+	        <!-- <if test="chequeNo != '' and chequeNo != null">
 			AND pay.PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_CHQ_NO = #{chequeNo})
 			</if>
 	        <if test="crcNo != '' and crcNo != null">
@@ -128,7 +134,7 @@
 			</if>
 	        <if test="bankAccount != '' and bankAccount != null">
 			AND pay.PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_ISSU_BANK_ID = #{bankAccount})
-			</if>
+			</if> -->
 	        <if test="batchPaymentId != '' and batchPaymentId != null">
 			AND pay.BATCH_PAY_ID = #{batchPaymentId}
 			</if>
@@ -210,7 +216,13 @@
             <if test="trNo != '' and trNo != null">
             AND pay.TR_NO = #{trNo}
             </if>
-            <if test="chequeNo != '' and chequeNo != null">
+            <if test="payIdList != '' and payIdList != null">
+                AND pay.PAY_ID IN
+                <foreach item="item" collection="payIdList" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+            </if>
+            <!-- <if test="chequeNo != '' and chequeNo != null">
             AND pay.PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_CHQ_NO = #{chequeNo})
             </if>
             <if test="crcNo != '' and crcNo != null">
@@ -218,7 +230,7 @@
             </if>
             <if test="bankAccount != '' and bankAccount != null">
             AND pay.PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_ISSU_BANK_ID = #{bankAccount})
-            </if>
+            </if> -->
             <if test="batchPaymentId != '' and batchPaymentId != null">
             AND pay.BATCH_PAY_ID = #{batchPaymentId}
             </if>
@@ -1628,6 +1640,21 @@
        E.MEM_CODE ,
        A.DEPT_CODE ,
        A.GRP_CODE
+
+    </select>
+
+    <select id="getPayIdByType" resultType="egovMap">
+        SELECT DISTINCT PAY_ID from PAY0065D
+        WHERE 1 = 1
+            <if test="chequeNo != '' and chequeNo != null">
+                AND PAY_ITM_CHQ_NO = #{chequeNo}
+            </if>
+            <if test="crcNo != '' and crcNo != null">
+                AND PAY_ITM_ORI_CC_NO = #{crcNo}
+            </if>
+            <if test="bankAccount != '' and bankAccount != null">
+                AND PAY_ITM_ISSU_BANK_ID = #{bankAccount}
+            </if>
 
     </select>
 

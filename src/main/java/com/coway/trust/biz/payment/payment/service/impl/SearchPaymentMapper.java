@@ -251,4 +251,6 @@ public interface SearchPaymentMapper {
 
 	List<RentalCollectionByOrganizationVO> searchRCByOrganizationList(RentalCollectionByOrganizationVO orgVO);
 
+	List<EgovMap> getPayIdByType(Map<String, Object> params);
+
 }
