@@ -162,8 +162,8 @@ function fn_searchListAjax(){
         return;
     }
 
-    if( fn_getDateGap(startDate , endDate) > 180){
-        Common.alert("Start date can not be more than 180 days before the end date.");
+    if( fn_getDateGap(startDate , endDate) > 6){
+        Common.alert("Start date can not be more than 6 months before the end date.");
         return;
     }
 
@@ -192,7 +192,11 @@ function fn_getDateGap(sdate, edate){
     var keyStartDate = new Date(startArr[2] , startArr[1] , startArr[0]);
     var keyEndDate = new Date(endArr[2] , endArr[1] , endArr[0]);
 
-    var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
+    //var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
+
+    var gap = (keyEndDate.getFullYear() - keyStartDate.getFullYear()) * 12;
+    gap -= keyStartDate.getMonth();
+    gap += keyEndDate.getMonth();
 
     console.log("gap : " + gap);
 
