@@ -2669,7 +2669,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 		  File fileEncryptZipDel = new File(zipEncryptFile);
 		  fileEncryptZipDel.delete();
 
-		  cmd = "gpg-zip --encrypt --yes --always-trust --output " + zipEncryptFile + " --recipient " + CIMB_DD_KEYNAME  + " " + srcDir ;
+		  cmd = "gpg-zip --encrypt --output " + zipEncryptFile + " --recipient " + CIMB_DD_KEYNAME  + " " + srcDir ;
 
 		  LOGGER.debug(">>>>>>>>>encrypt cmd: " + cmd);
 
