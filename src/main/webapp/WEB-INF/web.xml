@@ -82,11 +82,6 @@
 		<auth-method>BASIC</auth-method>
 	</login-config>
 
-	<mime-mapping>
-        <extension>gpg</extension>
-        <mime-type>application/gpg-encryption</mime-type>
-    </mime-mapping>
-
 	<!--
 	<error-page>
 		<error-code>404</error-code>
