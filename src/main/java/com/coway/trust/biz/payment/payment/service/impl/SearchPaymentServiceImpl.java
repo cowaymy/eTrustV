@@ -67,8 +67,7 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public List<EgovMap> selectOrderList(Map<String, Object> params) {
 
-
-	  if(params.get("chequeNo") != null || params.get("crcNo")  != null  || params.get("bankAccount")  != null ){
+	  if(params.get("chequeNo") != "" || params.get("crcNo")  != ""  || params.get("bankAccount")  != "" ){
 	    List<EgovMap> list =  searchPaymentMapper.getPayIdByType(params);
 
 	    List<String> payList = new ArrayList<String>();
