@@ -1675,6 +1675,11 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
             AND J8 <> '0'
         ]]>
     </if>
+    <if test="clmType == 'J9' ">
+        <![CDATA[
+            AND J9 <> '0'
+        ]]>
+    </if>
     <if test="clmType == 'R1' ">
         <![CDATA[
             AND R1 <> '0'
@@ -1693,6 +1698,11 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
     <if test="clmType == 'A1' ">
         <![CDATA[
             AND A1 <> '0'
+        ]]>
+    </if>
+    <if test="clmType == 'V1' ">
+        <![CDATA[
+            AND V1 <> '0'
         ]]>
     </if>
 </select>
