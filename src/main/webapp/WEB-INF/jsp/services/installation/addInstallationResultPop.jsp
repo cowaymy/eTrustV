@@ -1360,7 +1360,7 @@
             <td><input type="text" title="" placeholder="<spring:message code='service.title.WaterSourceTemp' />" class="w100p" id="waterSourceTemp" name="waterSourceTemp" onkeypress='return validateFloatKeyPress(this,event)' onblur='validate3(this);' /></td>
           </tr>
           <tr>
-            <th scope="row"><spring:message code='service.title.TurbidityLevel' /><span name="m24" id="m24" class="must">*</span></th>
+            <th scope="row"><spring:message code='service.title.TurbidityLevel' /><span name="m24" id="m24" class="must">*</span> <p class="link_btn"><a href="${pageContext.request.contextPath}/resources/download/service/Turbidity.pptx"> <u>Guideline </u><img src="${pageContext.request.contextPath}/resources/AUIGrid/images/help_ico.png"</a></p></th>
             <td><input type="text" title="" placeholder="<spring:message code='service.title.TurbidityLevel' />" class="w100p" id="turbLvl" name="turbLvl" onkeypress='validate(event)' onblur='validate2(this);' /></td>
             <th></th>
             <td></td>
