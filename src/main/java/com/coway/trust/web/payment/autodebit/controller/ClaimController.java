@@ -1168,14 +1168,9 @@ public class ClaimController {
       this.createClaimFileFPX(claimMap);
     }
 
-    //Zip Files to email and download
     if(isZip.equals("Y")){
-      zipFilesEmail(claimMap);
-
-      if(requireFileEncrypt(claimMap)) {
-          zipFilesEncrypt(claimMap);
-      }
-
+        //Zip Files to email and download
+        zipFilesEmail(claimMap);
     }
 
     // 결과 만들기
@@ -1896,6 +1891,7 @@ public class ClaimController {
     String subPath = "";
     String todayDate = "";
     String inputDate = "";
+    String encFile = "";
 
     /*
      * {0} - TODAY DATE
@@ -1962,6 +1958,13 @@ public class ClaimController {
       }
     }
 
+    // CHECK IF ENCRYPTION NEEDED AND ENCRYPT
+    if (fileInfo.size() > 0) {
+    	if(requireFileEncrypt(claimMap)) {
+    	    encFile = generateEncryptFile(fileInfo, claimMap, sFile, subPath);
+    	}
+    }
+
     // SEND EMAIL
     if (fileInfo.size() > 0) {
       for (int a = 0; a < fileInfo.size(); a++) {
@@ -1969,7 +1972,14 @@ public class ClaimController {
         fileInfoConf = (Map<String, Object>) fileInfo.get(a);
 
         if (CommonUtils.nvl(fileInfoConf.get("ctrlEmail")).toString().toUpperCase().equals("Y")) { // CTRL_EMAIL
-          File file = new File(filePath + fileInfoConf.get("ctrlSubPath").toString() + sFile);
+
+          File file = null;
+
+          if (encFile != null & !encFile.equals("")) {
+        	  file = new File(filePath + fileInfoConf.get("ctrlSubPath").toString() + encFile);
+          } else {
+              file = new File(filePath + fileInfoConf.get("ctrlSubPath").toString() + sFile);
+          }
 
           String emailSubj = fileInfoConf.get("ctrlEmailSubj").toString().replace("{0}", inputDate).replace("{1}", bnkCde).replace("{2}", bchId);
           String emailTxt = fileInfoConf.get("ctrlEmailText").toString();
@@ -1979,7 +1989,10 @@ public class ClaimController {
           email.setHtml(false);
           email.setSubject(emailSubj);
           email.setText(emailTxt);
-          email.addFile(file);
+
+          if (file != null) {
+        	  email.addFile(file);
+          }
 
           adaptorService.sendEmail(email, false);
 
@@ -1988,13 +2001,6 @@ public class ClaimController {
         claimMap.put("file", subPath + sFile);
 
       }
-    }
-
-    // CHECK IF ENCRYPTION NEEDED AND ENCRYPT
-    if (fileInfo.size() > 0) {
-    	if(requireFileEncrypt(claimMap)) {
-    	    this.generateEncryptFile(fileInfo, claimMap, sFile, subPath);
-    	}
     }
 
   }
@@ -2348,6 +2354,8 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
       String srcDir  = fileDirectory + "/" + batchDate;
       String subPathFile = subPath + batchName +"_" +batchDate + ".zip";
 
+      String encZipFile = "";
+
       try {
 
           // create byte buffer
@@ -2380,15 +2388,29 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
           // close the ZipOutputStream
           zos.close();
 
+          if (requireFileEncrypt(claimMap)) {
+        	  encZipFile = zipFilesEncrypt(claimMap);
+          }
+
           //Email Start
-          File file = new File(zipFile);
+          File file = null;
+
+          if (encZipFile != null && !encZipFile.equals("")) {
+        	  file = new File(encZipFile);
+          } else {
+        	  file = new File(zipFile);
+          }
+
           EmailVO email = new EmailVO();
 
           email.setTo(emailReceiver);
           email.setHtml(false);
           email.setSubject(emailSubject.replace("{0}", batchDate));
           email.setText(emailBody);
-          email.addFile(file);
+
+          if (file != null) {
+        	  email.addFile(file);
+          }
 
           adaptorService.sendEmail(email, false);
 
@@ -2576,7 +2598,9 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	  return false;
   }
 
-  private void generateEncryptFile(List<EgovMap> fileInfo, EgovMap claimMap, String srcFile, String subPath) {
+  private String generateEncryptFile(List<EgovMap> fileInfo, EgovMap claimMap, String srcFile, String subPath) {
+
+	  String encryptedFileName = "";
 
 	  for (int a = 0; a < fileInfo.size(); a++) {
 		  Map<String, Object> fileInfoConf2 = new HashMap<String, Object>();
@@ -2588,7 +2612,6 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 		  String str = null;
 		  StringBuffer sb = null;
 		  String encryptFilePath = "";
-		  String encFile = "";
 
 		  try {
 			  LOGGER.debug("1-1. PGP encryption Start.");
@@ -2596,7 +2619,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 
 			  String[] arr = srcFile.split("\\.");
 			  encryptFilePath = filePath + fileInfoConf2.get("ctrlSubPath").toString() + arr[0] + ".GPG";
-			  encFile = arr[0] + ".GPG";
+			  encryptedFileName = arr[0] + ".GPG";
 
 			  String temRootPath  = filePath + fileInfoConf2.get("ctrlSubPath").toString();
 
@@ -2641,11 +2664,11 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 		  }
 
 		  LOGGER.debug("1. PGP encryption End.");
-		  claimMap.put("encFile", subPath + encFile);
 	  }
+	  return encryptedFileName;
   }
 
-  public void zipFilesEncrypt(EgovMap claimMap) {
+  public String zipFilesEncrypt(EgovMap claimMap) {
 
 	  String batchName = claimMap.get("batchName").toString();
 	  String subPath = claimMap.get("subPath").toString();
@@ -2654,7 +2677,6 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 
 	  String srcDir  = fileDirectory + "/" + batchDate;
 	  String zipEncryptFile = fileDirectory + "/" + batchName +"_" +batchDate + ".gpg";
-	  String subPathZipEnc = subPath + batchName +"_" +batchDate + ".gpg";
 
 	  String cmd = "";
 	  String str = null;
@@ -2707,7 +2729,8 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	  }
 
 	  LOGGER.debug("1. PGP ZIP encryption End.");
-      claimMap.put("encFile", subPathZipEnc);
+
+	  return zipEncryptFile;
   }
 
 }
