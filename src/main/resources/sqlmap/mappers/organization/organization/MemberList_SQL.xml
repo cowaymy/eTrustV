@@ -368,6 +368,16 @@
                             AND Extent5.MEM_LVL= #{position}
                          </if>
 
+                         <if test="orgCode != null and orgCode != '' ">
+                            AND EXTENT12.ORG_CODE = #{orgCode}
+                         </if>
+                         <if test="grpCode != null and grpCode != '' ">
+                            AND EXTENT12.GRP_CODE = #{grpCode}
+                         </if>
+                         <if test="deptCode != null and deptCode != '' ">
+                            AND EXTENT12.DEPT_CODE = #{deptCode}
+                         </if>
+
                         <choose>
                                 <when test="memberLevel == 1">
 <!--                                     AND Extent5.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} ) -->

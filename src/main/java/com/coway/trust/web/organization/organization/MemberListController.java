@@ -152,8 +152,8 @@ public class MemberListController {
 		logger.debug("userRole     " + userRole);
 		model.addAttribute("userRole", userRole.get("roleid"));
 
-    //if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
-		if( sessionVO.getUserTypeId() == 1){
+    if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+		//if( sessionVO.getUserTypeId() == 1){
       EgovMap result =  salesCommonService.getUserInfo(params);
 
       model.put("orgCode", result.get("orgCode"));
