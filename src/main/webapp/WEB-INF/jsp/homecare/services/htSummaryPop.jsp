@@ -42,7 +42,7 @@
 
         $("#cmbContent").change(function() {
 
-          if($(this).val() ==0) {
+          if($(this).val() ==0 || $(this).val() ==2) {
             $("#cmbDSC").val("");
             $("#cmbStatus").val("");
             $("#cmbInsStatus").val("");
@@ -55,7 +55,7 @@
             $('#cmbArea').attr("disabled",true);
 
 
-          }else if($(this).val() ==1 || $(this).val() ==2) {
+          }else if($(this).val() ==1) {
              $('#cmbDSC').attr("disabled",false);
             $('#cmbStatus').attr("disabled",false);
             $('#cmbInsStatus').attr("disabled",false);
@@ -154,13 +154,33 @@ function fn_Generate(){
              $("#summaryform #V_FULLSQL").val("");
          }else if (cmid == 2){
 
-                 var month = $("#hsMonth").val().substring(0,2);
-                 var year= $("#hsMonth").val().substring(3,7);
+             var whereSql ="";
 
-                 $("#summaryform #V_BSMONTH").val(month);
-                 $("#summaryform #V_BSYEAR").val(year);
-                 $("#summaryform #V_BSCODYID").val($("#cmbCodyCode").val());
-                 $("#summaryform #V_BSCODYDEPTCODE").val($("#cmbDeptCode").val());
+             if($("#hsMonth").val() != '' && $("#hsMonth").val() != null) {
+                 whereSql+= " and m.YEAR =  to_char(to_date('" +  $("#hsMonth").val() + "'" + ",'" + "mm/yyyy" + "')," + "'yyyy" +  "')" ;
+                 whereSql+= " and m.MONTH =  to_char(to_date('" +  $("#hsMonth").val() + "'" + ",'" + "mm/yyyy" + "')," + "'mm" +  "')" ;
+             }
+
+             if($("#cmbDeptCode").val() != '' && $("#cmbDeptCode").val() != null) {
+                whereSql+= " AND v.DEPT_CODE = '" + $("#cmbDeptCode").val() + "'";
+             }
+
+             if($("#cmbCodyCode").val() != '' && $("#cmbCodyCode").val() != null) {
+                whereSql+= " AND mr.MEM_CODE = '" + $("#cmbCodyCode").val() + "'";
+             }
+
+             $("#summaryform #V_SELECTSQL").val("");
+             $("#summaryform #V_WHERESQL").val(whereSql);
+             $("#summaryform #V_GROUPBYSQL").val("");
+             $("#summaryform #V_FULLSQL").val("");
+
+             //var month = $("#hsMonth").val().substring(0,2);
+             //var year= $("#hsMonth").val().substring(3,7);
+
+             //$("#summaryform #V_BSMONTH").val(month);
+             //$("#summaryform #V_BSYEAR").val(year);
+             //$("#summaryform #V_BSCODYID").val($("#cmbCodyCode").val());
+             //$("#summaryform #V_BSCODYDEPTCODE").val($("#cmbDeptCode").val());
          }
 
 
