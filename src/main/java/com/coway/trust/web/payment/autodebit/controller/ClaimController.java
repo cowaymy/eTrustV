@@ -85,7 +85,7 @@ public class ClaimController {
   private String emailReceiver;
 
   @Value("${directdebit.cimb.keyname}")
-  public String CIMB_DD_KEYNAME;
+  private String CIMB_DD_KEYNAME;
 
   @Autowired
   private AdaptorService adaptorService;
