@@ -1179,10 +1179,6 @@ public class ClaimController {
     message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
     message.setData(claimMap.get("file").toString());
 
-    if (claimMap.get("encFile") != null && !claimMap.get("encFile").toString().equals("")) {
-        message.setData(claimMap.get("encFile").toString());
-    }
-
     return ResponseEntity.ok(message);
 
   }
@@ -1985,7 +1981,8 @@ public class ClaimController {
           String emailTxt = fileInfoConf.get("ctrlEmailText").toString();
 
           EmailVO email = new EmailVO();
-          email.setTo(emailReceiver);
+          //email.setTo(emailReceiver);
+          email.setTo("jiahua.yong@coway.com.my"); //temp set for DEV testing
           email.setHtml(false);
           email.setSubject(emailSubj);
           email.setText(emailTxt);
@@ -2403,7 +2400,8 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 
           EmailVO email = new EmailVO();
 
-          email.setTo(emailReceiver);
+          //email.setTo(emailReceiver);
+          email.setTo("jiahua.yong@coway.com.my"); //temp set for DEV testing
           email.setHtml(false);
           email.setSubject(emailSubject.replace("{0}", batchDate));
           email.setText(emailBody);
