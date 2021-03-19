@@ -1,6 +1,8 @@
 package com.coway.trust.web.services.ecom;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -210,7 +212,9 @@ public class CpeController {
 
 		logger.debug("insertCpe =====================================>>  " + params);
 
-	    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "cpe" + File.separator + "reqattch", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+		String atchSubPath = generateAttchmtSubPath();
+
+	    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, atchSubPath, AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
@@ -297,7 +301,9 @@ public class CpeController {
 
 		logger.debug("updateCpeStatus====================================>>  " + params);
 
-	    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "cpe" + File.separator + "reqattch", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+		String atchSubPath = generateAttchmtSubPath();
+
+	    List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, atchSubPath, AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
@@ -320,6 +326,14 @@ public class CpeController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
+	}
+
+	public String generateAttchmtSubPath(){
+		Date today = new Date();
+		SimpleDateFormat formatAttchtDt = new SimpleDateFormat("yyyyMMdd");
+		String dt = formatAttchtDt.format(today);
+		String subPath = File.separator + "cpe" + File.separator  + dt.substring(0, 4) + File.separator + dt.substring(0, 6);
+		return subPath;
 	}
 
 }
