@@ -1020,6 +1020,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     // salesOrderContractVO.setCntrctObligtPriod(36);
     salesOrderContractVO.setCntrctRentalPriod(CommonUtils.intNvl(outMap.get("srvCntrctPacDur")));
     salesOrderContractVO.setCntrctObligtPriod(CommonUtils.intNvl(outMap.get("obligtPriod")));
+    salesOrderContractVO.setCntrctRcoPriod(CommonUtils.intNvl(outMap.get("rcoPriod")));
     salesOrderContractVO.setCntrctStusId(SalesConstants.STATUS_ACTIVE);
     salesOrderContractVO.setCntrctRem("");
     salesOrderContractVO.setCntrctCrtUserId(sessionVO.getUserId());

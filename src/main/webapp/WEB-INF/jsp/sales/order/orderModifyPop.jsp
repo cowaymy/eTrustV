@@ -296,7 +296,6 @@
     $('#btnSaveBasicInfo').click(function() {
       if (!fn_validBasicInfo())
         return false;
-console.log("SOF" + SOF_NO);
       if(SOF_NO != $('#modOrdRefNo').val()){
     	  if(fn_isExistESalesNo() == 'true')
     		  return false;

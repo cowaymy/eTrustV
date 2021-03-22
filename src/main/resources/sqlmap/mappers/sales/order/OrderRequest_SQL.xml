@@ -1947,7 +1947,7 @@
   </update>
 
   <select id="selectObligtPriod" parameterType="Map" resultType="egovMap">
-    SELECT CNTRCT_OBLIGT_PRIOD AS OBLIGT_PRIOD
+    SELECT CNTRCT_OBLIGT_PRIOD AS OBLIGT_PRIOD, CNTRCT_RCO_PRIOD AS RCO_PRIOD
     FROM SAL0003D
     WHERE CNTRCT_SALES_ORD_ID = #{salesOrdId}
   </select>

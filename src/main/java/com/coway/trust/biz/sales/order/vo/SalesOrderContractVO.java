@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * The persistent class for the SAL0003D database table.
- * 
+ *
  */
 public class SalesOrderContractVO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -19,6 +19,8 @@ public class SalesOrderContractVO implements Serializable {
 	private int cntrctCrtUserId;
 
 	private int cntrctObligtPriod;
+
+	private int cntrctRcoPriod;
 
 	private String cntrctRem;
 
@@ -66,6 +68,14 @@ public class SalesOrderContractVO implements Serializable {
 	public void setCntrctObligtPriod(int cntrctObligtPriod) {
 		this.cntrctObligtPriod = cntrctObligtPriod;
 	}
+
+	public int getCntrctRcoPriod() {
+    return cntrctRcoPriod;
+  }
+
+  public void setCntrctRcoPriod(int cntrctRcoPriod) {
+    this.cntrctRcoPriod = cntrctRcoPriod;
+  }
 
 	public String getCntrctRem() {
 		return cntrctRem;

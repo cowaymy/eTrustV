@@ -2153,6 +2153,7 @@
 		     , CNTRCT_SALES_ORD_ID
 		     , CNTRCT_RENTAL_PRIOD
 		     , CNTRCT_OBLIGT_PRIOD
+             , CNTRCT_RCO_PRIOD
 		     , CNTRCT_STUS_ID
 		     , CNTRCT_REM
 		     , CNTRCT_CRT_DT
@@ -2165,6 +2166,7 @@
 		     , #{cntrctSalesOrdId}
 		     , #{cntrctRentalPriod}
 		     , #{cntrctObligtPriod}
+             , #{cntrctRcoPriod}
 		     , #{cntrctStusId}
 		     , #{cntrctRem}
 		     , SYSDATE
@@ -2392,6 +2394,7 @@
              , T1.SRV_CNTRCT_PAC_END_DT
              , T1.PAC_TYPE
              , T1.OBLIGT_PRIOD
+             , T1.RCO_PRIOD
           FROM SAL0081D T1
          WHERE T1.SRV_CNTRCT_PAC_ID = #{srvCntrctPacId}
            AND T1.SRV_CNTRCT_PAC_STUS_ID = 1

@@ -2438,9 +2438,9 @@ public class OrderRequestServiceImpl implements OrderRequestService {
             msgT = "Unbill Amount Exist";
             msg = "This order come with un-bill amount. Contact CRT.";
             isInValid = "isInValid";
-          } else if (LastBillMth > Integer.parseInt(obligtPriod.get("obligtPriod").toString())) {
-            msgT = "Exceed 24 Billing Month";
-            msg = "This order exceeded "+Integer.parseInt(obligtPriod.get("obligtPriod").toString())+"th billing month. Contact CRT.";
+          } else if (LastBillMth > Integer.parseInt(obligtPriod.get("rcoPriod").toString())) {
+            msgT = "Exceed RCO Billing Month";
+            msg = "This order exceeded "+Integer.parseInt(obligtPriod.get("rcoPriod").toString())+"th billing month. Contact CRT.";
             isInValid = "isInValid";
           } else if (Integer.parseInt(installDate) <= 19000101) {
             msgT = "Invalid Install Date";
@@ -2472,6 +2472,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     String isInValid = "Valid", msgT = "", msg = "";
 
     EgovMap view = this.selectOrderSimulatorViewByOrderNo2(params);
+    EgovMap obligtPriod = this.selectObligtPriod(params);
     EgovMap RESULT = new EgovMap();
 
     int salesOrdId = CommonUtils.intNvl(view.get("salesOrdId"));
@@ -2525,13 +2526,19 @@ public class OrderRequestServiceImpl implements OrderRequestService {
               msgT = "Unbill Amount Exist";
               msg = "This order come with un-bill amount. Contact CRT.";
               isInValid = "isInValid";
-              /*} else if (LastBillMth > 36) {
+            }
+            /*else if (LastBillMth > 36) {
               msgT = "Exceed 36 Billing Month";
               msg = "This order exceeded 36th billing month.";
-              isInValid = "isInValid";*/
+              isInValid = "isInValid";
             } else if (LastBillMth >= 48) {
               msgT = "Exceed 48 Billing Month";
               msg = "This order exceeded 48th billing month.";
+              isInValid = "isInValid";
+            }*/
+            else if (LastBillMth > Integer.parseInt(obligtPriod.get("rcoPriod").toString())) {
+              msgT = "Exceed RCO Billing Month";
+              msg = "This order exceeded "+Integer.parseInt(obligtPriod.get("rcoPriod").toString())+"th billing month. Contact CRT.";
               isInValid = "isInValid";
             } else if (OutrightPrice.compareTo(BigDecimal.ZERO) == 0) {
               msgT = "Outright Price Missing";
