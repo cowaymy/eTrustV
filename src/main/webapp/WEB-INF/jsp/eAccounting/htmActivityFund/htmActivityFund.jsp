@@ -881,7 +881,7 @@ function fn_checkClmMonthAndMemAccId() {
 
 <!-- report Form -->
 <form id="dataForm">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/StaffClaim.rpt" />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/HTMActFund.rpt" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="_repClaimNo" name="v_CLM_NO" />
 </form>
@@ -956,7 +956,7 @@ function fn_checkClmMonthAndMemAccId() {
                     <dt>Link</dt>
                     <dd>
                         <ul class="btns">
-                            <li><p class="link_btn"><a href="#" id="htmClaimBtn">Staff Claim</a></p></li>
+                            <li><p class="link_btn"><a href="#" id="htmClaimBtn">HTM Activity Fund Claim</a></p></li>
                         </ul>
                         <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>
