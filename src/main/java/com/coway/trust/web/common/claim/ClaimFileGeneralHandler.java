@@ -60,7 +60,7 @@ public class ClaimFileGeneralHandler extends BasicTextDownloadHandler implements
     try {
       if (!isStarted) {
         init();
-        writeHeader();
+        writeHeader(result);
         isStarted = true;
       }
 
@@ -75,10 +75,11 @@ public class ClaimFileGeneralHandler extends BasicTextDownloadHandler implements
     out = createFile();
   }
 
-  private void writeHeader() throws Exception {
+  private void writeHeader(ResultContext<? extends Map<String, Object>> result) throws Exception {
     // HEADER
     strHeader = "";
     strData = "";
+    Map<String, Object> dataRow = result.getResultObject();
 
     if (headerInfo != null) {
       if (headerInfo.size() > 0) {
@@ -86,7 +87,7 @@ public class ClaimFileGeneralHandler extends BasicTextDownloadHandler implements
           Map<String, Object> headerConf = new HashMap<String, Object>();
           headerConf = (Map<String, Object>) headerInfo.get(a);
 
-          strData = this.dataReplace(headerConf, null);
+          strData = this.dataReplace(headerConf, dataRow);
           strData = this.dataProcessor(headerConf, strData);
           strHeader += strData;
         }

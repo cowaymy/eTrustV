@@ -778,7 +778,7 @@ public class ClaimController {
       String cardType = CommonUtils.nvl(String.valueOf(claim.get("new_cardType")));
       String mayBank = CommonUtils.nvl(String.valueOf(claim.get("_mayBank")));
       String installMonth = CommonUtils.nvl(String.valueOf(claim.get("hiddenMonth")));
-
+      String custType = CommonUtils.nvl(String.valueOf(claim.get("custType")));
 
       claim.put("new_claimType", isCRC);
       claim.put("new_debitDate", inputDate);
@@ -789,6 +789,7 @@ public class ClaimController {
       claim.put("mayBank", mayBank);
       claim.put("installMonth", installMonth);
       claim.put("userId", sessionVO.getUserId());
+      claim.put("custType", custType);
 
       claimService.createClaimCreditCard(claim); // 프로시저 함수 호출
       List<EgovMap> resultMapList = (List<EgovMap>) claim.get("p1"); // 결과 뿌려보기
@@ -1115,6 +1116,22 @@ public class ClaimController {
               this.createCreditCardFileMBB(claimMap);
             }
           }
+        } else if("17".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+            // createCreditCardFileHSBC
+            int totRowCount = claimService.selectCCClaimDetailByIdCnt(map);
+            int totBatToday = claimService.selectClaimDetailBatchGen(map);
+            int pageCnt = (int) Math.round(Math.ceil(totRowCount / 99999.0));
+
+            if(pageCnt > 0) {
+                for(int i = 1; i <= pageCnt; i++) {
+                    claimMap.put("pageNo", i);
+                    claimMap.put("rowCount", 99999);
+                    claimMap.put("batchNo", totBatToday);
+                    claimMap.put("pageCnt", pageCnt);
+
+                    this.createCreditCardFileHSBC(claimMap);
+                }
+            }
         }
       }
       /* else {
@@ -2230,6 +2247,58 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
   }
 
   /**
+   * CRC HSBC - Create Claim File
+   *
+   * @param claimMap
+   * @param claimDetailList
+   * @throws Exception
+   */
+  public void createCreditCardFileHSBC(EgovMap claimMap) throws Exception {
+      ClaimFileGeneralHandler downloadHandler = null;
+      String sFile = "";
+      String subPath = "";
+      String inputDate = "";
+
+      Map<String, Object> map = new HashMap<String, Object>();
+      LOGGER.debug("params : {}", claimMap);
+      List<EgovMap> fileInfo = claimService.selectMstConf(claimMap);
+
+      try {
+          LOGGER.info("createCreditCardFileHSBC :: Start");
+          if(fileInfo.size() > 0) {
+              for(int i = 0; i < fileInfo.size(); i++) {
+                  Map<String, Object> fileInfoConf = new HashMap<String, Object>();
+                  fileInfoConf = (Map<String, Object>) fileInfo.get(i);
+                  claimMap.put("ctrlConfId", fileInfoConf.get("id"));
+
+                  // Form File Name
+                  // HSBC has no file extension
+                  sFile = fileInfoConf.get("ctrlFileNm").toString().replace("{0}", "_" + claimMap.get("pageNo").toString());
+
+                  inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
+                  subPath = CommonUtils.nvl(fileInfoConf.get("ctrlSubPath")) + inputDate + "/";
+
+                  downloadHandler = getTextDownloadGeneralHandler(sFile, claimFileColumns, null, filePath, subPath, claimMap);
+                  largeExcelService.downloadCreditCardFileHSBC(claimMap, downloadHandler);
+              }
+          }
+          LOGGER.info("createCreditCardFileHSBC :: End");
+      } catch(Exception ex) {
+          LOGGER.debug(ex.getMessage());
+          throw new ApplicationException(ex, AppConstants.FAIL);
+      } finally {
+          if(downloadHandler != null) {
+              try {
+                  downloadHandler.close();
+                  LOGGER.info("createCreditCardFileHSBC :: downloadHandler :: Close");
+              } catch(Exception ex) {
+                  LOGGER.debug(ex.getMessage());
+              }
+          }
+      }
+  }
+
+  /**
    * FPX - Create Claim File
    *
    * @param claimMap
@@ -2347,6 +2416,11 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
     String emailBody = claimMap.get("emailBody").toString();
     String fileDirectory = filePath + subPath;
 
+    if("1".equals(String.valueOf(claimMap.get("ctrlIsCrc"))) && "17".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+        // HSBC - Remove param from filename
+        batchName = batchName.replace("{0}", "");
+    }
+
       String zipFile = fileDirectory + "/" + batchName +"_" +batchDate + ".zip";
       String srcDir  = fileDirectory + "/" + batchDate;
       String subPathFile = subPath + batchName +"_" +batchDate + ".zip";
@@ -2401,7 +2475,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
           EmailVO email = new EmailVO();
 
           //email.setTo(emailReceiver);
-          email.setTo("jiahua.yong@coway.com.my"); //temp set for DEV testing
+          email.setTo("kitwai.lai@coway.com.my"); //temp set for DEV testing
           email.setHtml(false);
           email.setSubject(emailSubject.replace("{0}", batchDate));
           email.setText(emailBody);

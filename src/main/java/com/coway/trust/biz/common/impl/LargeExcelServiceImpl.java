@@ -376,4 +376,9 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	public void downLoadClaimFileGeneral(Object parameter, ClaimFileGeneralHandler claimFileGeneralHandler) {
 		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileGeneralHandler);
 	}
+
+	@Override
+    public void downloadCreditCardFileHSBC(Object parameter, ClaimFileGeneralHandler claimFileGeneralHandler) {
+        this.downLoad(LargeExcelQuery.CREDITCARD_DETAIL_PAGING.getQueryId(), parameter, claimFileGeneralHandler);
+    }
 }

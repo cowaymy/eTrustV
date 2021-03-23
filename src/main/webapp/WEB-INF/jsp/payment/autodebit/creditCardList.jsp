@@ -29,7 +29,8 @@ var bankData = [{"codeId": "2","codeName": "Alliance Bank"},
 //Issue Bank Combo Data for CRC
 var bankDataCRC = [
                 {"codeId": "3","codeName": "CIMB Bank"},
-                {"codeId": "19","codeName": "Standard Chartered Bank"}
+                {"codeId": "19","codeName": "Standard Chartered Bank"},
+                {"codeId": "17","codeName": "HSBC Bank"}
                 /* {"codeId": "21","codeName": "Maybank"} */
                 ];
 //SMS Combo Data
@@ -1154,8 +1155,14 @@ function fn_report(){
                             </select>
                             <input type="hidden"  id="hiddenMonth" name="hiddenMonth"/>
                         </td>
+                        <th scope="row">Customer Type<span class="must">*</span></th>
+                        <td>
+                            <select id="custType" name="custType" class="w100p">
+                                <option value="0">All</option>
+                                <option value="1">Odd</option>
+                                <option value="2">Even</option>
+                            </select>
                         </td>
-                        <td  colspan="2"></td>
                     </tr>
                    </tbody>
             </table>
