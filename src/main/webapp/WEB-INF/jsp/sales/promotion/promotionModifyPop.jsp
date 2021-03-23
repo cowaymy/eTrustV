@@ -37,6 +37,14 @@
         else {
             $('#megaDealN').prop("checked", true);
         }
+
+        if('${promoInfo.advDisc}' == '1') {
+            $('#advDiscY').prop("checked", true);
+        }
+        else {
+            $('#advDiscN').prop("checked", true);
+        }
+
     });
 
     function fn_addOption() {
@@ -152,6 +160,7 @@
                 exTrade                 : $('#exTrade').val(),
                 empChk                  : $('#empChk').val(),
                 megaDeal                : $('input:radio[name="megaDeal"]:checked').val(),
+                advDisc                 : $('input:radio[name="advDisc"]:checked').val(),
                 promoESales             :$('#eSales').val().trim(),
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
@@ -942,6 +951,16 @@
     <th scope="row"><spring:message code='sales.promo.eSales'/><span class="must">*</span></th>
     <td>
         <select id="eSales" name="eSales" class="w100p"></select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Advance Discount</th>
+    <td>
+        <input id="advDiscY" name="advDisc" type="radio" value="1" /><span>Yes</span>
+        <input id="advDiscN" name="advDisc" type="radio" value="0" /><span>No</span>
+    </td>
+    <th scope="row"></th>
+    <td>
     </td>
 </tr>
 <!--

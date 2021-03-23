@@ -75,6 +75,8 @@ public class SalesPromoMVO implements Serializable {
 
 	private int megaDeal;
 
+	private int advDisc;
+
 	private int b2b;
 
 	private int promoESales;
@@ -318,6 +320,14 @@ public class SalesPromoMVO implements Serializable {
 	public void setMegaDeal(int megaDeal) {
 		this.megaDeal = megaDeal;
 	}
+
+	public int getAdvDisc() {
+    return advDisc;
+  }
+
+  public void setAdvDisc(int advDisc) {
+    this.advDisc = advDisc;
+  }
 
 	public int getB2b() {
 		return b2b;
