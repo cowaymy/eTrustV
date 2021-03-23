@@ -995,7 +995,7 @@
         if(addedItems.length <= 0) {
             return false
         } else {
-            Common.ajax("POST", "/ownershipTransfer/saveRotCallLog.do", GridCommon.getEditData(myGridID), function(result) {
+            Common.ajax("POST", "/ownershipTransfer/saveRotCallLog.do", GridCommon.getEditData(rotCallLogGridID), function(result) {
                 console.log(result);
 
                 if(result.code == "00") {
