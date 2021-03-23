@@ -18,6 +18,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,6 +34,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,6 +48,7 @@ import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.biz.payment.autodebit.service.ClaimService;
 import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.exception.FileDownException;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -1185,9 +1188,14 @@ public class ClaimController {
       this.createClaimFileFPX(claimMap);
     }
 
+    //Zip Files to email and download
     if(isZip.equals("Y")){
-        //Zip Files to email and download
-        zipFilesEmail(claimMap);
+      zipFilesEmail(claimMap);
+
+      if(requireFileEncrypt(claimMap)) {
+          zipFilesEncrypt(claimMap); //encrypt into gpg zip file
+      }
+
     }
 
     // 결과 만들기
@@ -1195,6 +1203,10 @@ public class ClaimController {
     message.setCode(AppConstants.SUCCESS);
     message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
     message.setData(claimMap.get("file").toString());
+
+    if (claimMap.get("encFile") != null && !claimMap.get("encFile").toString().equals("")) {
+        message.setData(claimMap.get("encFile").toString());
+    }
 
     return ResponseEntity.ok(message);
 
@@ -1904,7 +1916,6 @@ public class ClaimController {
     String subPath = "";
     String todayDate = "";
     String inputDate = "";
-    String encFile = "";
 
     /*
      * {0} - TODAY DATE
@@ -1971,13 +1982,6 @@ public class ClaimController {
       }
     }
 
-    // CHECK IF ENCRYPTION NEEDED AND ENCRYPT
-    if (fileInfo.size() > 0) {
-    	if(requireFileEncrypt(claimMap)) {
-    	    encFile = generateEncryptFile(fileInfo, claimMap, sFile, subPath);
-    	}
-    }
-
     // SEND EMAIL
     if (fileInfo.size() > 0) {
       for (int a = 0; a < fileInfo.size(); a++) {
@@ -1985,14 +1989,7 @@ public class ClaimController {
         fileInfoConf = (Map<String, Object>) fileInfo.get(a);
 
         if (CommonUtils.nvl(fileInfoConf.get("ctrlEmail")).toString().toUpperCase().equals("Y")) { // CTRL_EMAIL
-
-          File file = null;
-
-          if (encFile != null & !encFile.equals("")) {
-        	  file = new File(filePath + fileInfoConf.get("ctrlSubPath").toString() + encFile);
-          } else {
-              file = new File(filePath + fileInfoConf.get("ctrlSubPath").toString() + sFile);
-          }
+          File file = new File(filePath + fileInfoConf.get("ctrlSubPath").toString() + sFile);
 
           String emailSubj = fileInfoConf.get("ctrlEmailSubj").toString().replace("{0}", inputDate).replace("{1}", bnkCde).replace("{2}", bchId);
           String emailTxt = fileInfoConf.get("ctrlEmailText").toString();
@@ -2003,10 +2000,7 @@ public class ClaimController {
           email.setHtml(false);
           email.setSubject(emailSubj);
           email.setText(emailTxt);
-
-          if (file != null) {
-        	  email.addFile(file);
-          }
+          email.addFile(file);
 
           adaptorService.sendEmail(email, false);
 
@@ -2015,6 +2009,13 @@ public class ClaimController {
         claimMap.put("file", subPath + sFile);
 
       }
+    }
+
+    // CHECK IF ENCRYPTION NEEDED AND ENCRYPT
+    if (fileInfo.size() > 0) {
+    	if(requireFileEncrypt(claimMap)) {
+    	    this.generateEncryptFile(fileInfo, claimMap, sFile, subPath);
+    	}
     }
 
   }
@@ -2425,8 +2426,6 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
       String srcDir  = fileDirectory + "/" + batchDate;
       String subPathFile = subPath + batchName +"_" +batchDate + ".zip";
 
-      String encZipFile = "";
-
       try {
 
           // create byte buffer
@@ -2459,30 +2458,17 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
           // close the ZipOutputStream
           zos.close();
 
-          if (requireFileEncrypt(claimMap)) {
-        	  encZipFile = zipFilesEncrypt(claimMap);
-          }
-
           //Email Start
-          File file = null;
-
-          if (encZipFile != null && !encZipFile.equals("")) {
-        	  file = new File(encZipFile);
-          } else {
-        	  file = new File(zipFile);
-          }
+          File file = new File(zipFile);
 
           EmailVO email = new EmailVO();
 
           //email.setTo(emailReceiver);
-          email.setTo("kitwai.lai@coway.com.my"); //temp set for DEV testing
+          email.setTo("jiahua.yong@coway.com.my"); //temp set for DEV testing
           email.setHtml(false);
           email.setSubject(emailSubject.replace("{0}", batchDate));
           email.setText(emailBody);
-
-          if (file != null) {
-        	  email.addFile(file);
-          }
+          email.addFile(file);
 
           adaptorService.sendEmail(email, false);
 
@@ -2670,9 +2656,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	  return false;
   }
 
-  private String generateEncryptFile(List<EgovMap> fileInfo, EgovMap claimMap, String srcFile, String subPath) {
-
-	  String encryptedFileName = "";
+  private void generateEncryptFile(List<EgovMap> fileInfo, EgovMap claimMap, String srcFile, String subPath) {
 
 	  for (int a = 0; a < fileInfo.size(); a++) {
 		  Map<String, Object> fileInfoConf2 = new HashMap<String, Object>();
@@ -2684,6 +2668,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 		  String str = null;
 		  StringBuffer sb = null;
 		  String encryptFilePath = "";
+		  String encFile = "";
 
 		  try {
 			  LOGGER.debug("1-1. PGP encryption Start.");
@@ -2691,7 +2676,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 
 			  String[] arr = srcFile.split("\\.");
 			  encryptFilePath = filePath + fileInfoConf2.get("ctrlSubPath").toString() + arr[0] + ".GPG";
-			  encryptedFileName = arr[0] + ".GPG";
+			  encFile = arr[0] + ".GPG";
 
 			  String temRootPath  = filePath + fileInfoConf2.get("ctrlSubPath").toString();
 
@@ -2736,11 +2721,11 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 		  }
 
 		  LOGGER.debug("1. PGP encryption End.");
+		  claimMap.put("encFile", subPath + encFile);
 	  }
-	  return encryptedFileName;
   }
 
-  public String zipFilesEncrypt(EgovMap claimMap) {
+  public void zipFilesEncrypt(EgovMap claimMap) {
 
 	  String batchName = claimMap.get("batchName").toString();
 	  String subPath = claimMap.get("subPath").toString();
@@ -2749,6 +2734,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 
 	  String srcDir  = fileDirectory + "/" + batchDate;
 	  String zipEncryptFile = fileDirectory + "/" + batchName +"_" +batchDate + ".gpg";
+	  String subPathZipEnc = subPath + batchName +"_" +batchDate + ".gpg";
 
 	  String cmd = "";
 	  String str = null;
@@ -2801,8 +2787,48 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	  }
 
 	  LOGGER.debug("1. PGP ZIP encryption End.");
-
-	  return zipEncryptFile;
+      claimMap.put("encFile", subPathZipEnc);
   }
+
+	@RequestMapping(value = "/downloadClaimFile.do", method = RequestMethod.POST)
+	public void fileDownClaim(	@RequestParam("dloadPathAndName") String dloadPathAndName,
+										HttpServletRequest request,
+										HttpServletResponse response) throws Exception {
+
+		LOGGER.debug("params: downloadSubPathAndName:" + dloadPathAndName);
+
+		String[] tempArray = dloadPathAndName.split("/");
+		String filename = "";
+
+		if(tempArray.length > 0){
+			int indexFileName = tempArray.length - 1;
+			filename = tempArray[indexFileName];
+		}
+
+		File dFile = new File(filePath, dloadPathAndName);
+		long fSize = dFile.length();
+
+		if (fSize > 0) {
+			String mimetype = "application/octet-stream";
+			response.setContentType(mimetype);
+			response.setHeader("Content-Disposition", "attachment;filename=" + filename);
+			FileInputStream in = null;
+			ServletOutputStream out = response.getOutputStream();
+
+			try {
+				in = new FileInputStream(dFile);
+				FileCopyUtils.copy(in, out);
+				in.close();
+				out.flush();
+			} catch (IOException ex) {
+				LOGGER.debug("IO Exception", ex);
+			} finally {
+				//out.close();
+			}
+
+		} else {
+			throw new FileDownException(AppConstants.FAIL, "Could not get file : " + filename);
+		}
+	}
 
 }

@@ -1284,10 +1284,14 @@
             data,
             function(result) {
               Common
-                  .alert("<spring:message code='pay.alert.claimSucessCreate'/>",function(){
-                	  window.open("${pageContext.request.contextPath}" + subPath + result.data);
-                	  }
-                  );
+                  .alert("<spring:message code='pay.alert.claimSucessCreate'/>", function(){
+                      fn_downloadClaimFile(result.data);
+                    // Yong 20210323 - Comment - start
+                    // Downloading using window.open below works for CSV, TXT files etc. Somehow it does not work for GPG files.
+                    // That is why fn_downloadClaimFile is added.
+                    // Yong 20210323 - Comment - end
+                    // window.open("${pageContext.request.contextPath}" + subPath + result.data);
+                  });
 
             },
             function(result) {
@@ -1295,6 +1299,11 @@
                   .alert("<spring:message code='pay.alert.claimFailGenFile'/>");
             });
 
+  }
+
+  function fn_downloadClaimFile(resultData) {
+      $("#dloadPathAndName").val(resultData);
+      $("#downloadFileForm").submit();
   }
 
   function fn_clear() {
@@ -1829,6 +1838,9 @@
      </p></li>
    </ul>
   </section>
+ </form>
+ <form name="downloadFileForm" id="downloadFileForm" method="post" action="/payment/downloadClaimFile.do">
+    <input id="dloadPathAndName" name="dloadPathAndName" type="hidden" >
  </form>
  <!-- pop_body end -->
 </div>
