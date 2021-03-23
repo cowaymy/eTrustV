@@ -432,7 +432,7 @@
           }
 
           //////////// / Condition for turbLvl - 11/03/2021 - This specific for NEO PLUS installStkId = 1845 OR  STK_CODE = 113149 ///////////892
-          if ("${installResult.installStkId}" == 892) {
+          if ("${installResult.installStkId}" == 1845) {
         	  if ( $("#turbLvl").val() == "") {
                   msg += "* <spring:message code='sys.msg.invalid' arguments='Turbidity Level' htmlEscape='false'/> </br>";
                 }
@@ -507,7 +507,7 @@
             }
 
 ///////////// Condition for turbLvl - 11/03/2021 - This specific for NEO PLUS installStkId = 1845 OR  STK_CODE = 113149 ///////////892 FAIL INSTALLATION
-            if("${installResult.installStkId}" == 892){
+            if("${installResult.installStkId}" == 1845){
 
             	if($("#failReasonCode").val() == 8018){ // IF57
             	      if( !$("#turbLvl").val() == "" ){
