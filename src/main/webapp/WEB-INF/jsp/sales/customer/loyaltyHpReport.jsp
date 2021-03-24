@@ -18,21 +18,25 @@
 
         if(userType == 1){
 
-            if ("${SESSION_INFO.memberLevel}" == "1") {
+        	if ("${SESSION_INFO.memberLevel}" == "0") {
+
+                $("#reportType").val(6); // SGM view
+
+            } else if ("${SESSION_INFO.memberLevel}" == "1") {
 
                 $("#reportType").val(1); // GM view
 
-                 } else if ("${SESSION_INFO.memberLevel}" == "2") {
+            } else if ("${SESSION_INFO.memberLevel}" == "2") {
 
-                     $("#reportType").val(2); // SM view
+                $("#reportType").val(2); // SM view
 
-                 } else if ("${SESSION_INFO.memberLevel}" == "3") {
+            } else if ("${SESSION_INFO.memberLevel}" == "3") {
 
-                     $("#reportType").val(3); // HM view
+                $("#reportType").val(3); // HM view
 
-                 }
+            }
 
-               $("#reportType").attr('disabled',true);
+            $("#reportType").attr('disabled',true);
 
            } else {
         	   $("#reportType").attr('disabled',false);
@@ -104,6 +108,12 @@
                 reportDownFileName = "LoyaltyWsHpHmAll_" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
+            } else if (type == "6") {
+
+                reportFileName = "/sales/LoyaltyWsHpSgm_PDF.rpt"; //reportFileName
+                reportDownFileName = "LoyaltyWsHpSgm_" + today; //report name
+                reportViewType = "PDF"; //viewType
+
             }
 
             //report info
@@ -164,6 +174,7 @@
                         <th scope="row">Report Type</th>
                         <td colspan="3"><select id="reportType" name="reportType" style="width:300px;">
                             <option value="">Report Type</option>
+                            <option value="6">Loyalty WS HP - SGM report</option>
                             <option value="1">Loyalty WS HP - GM report</option>
                             <option value="2">Loyalty WS HP - SM report</option>
                             <option value="3">Loyalty WS HP - HM report</option>
