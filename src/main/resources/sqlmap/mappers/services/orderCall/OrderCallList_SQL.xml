@@ -730,7 +730,7 @@
     SELECT STK_ID CODE_ID
          , C1
          , CODE_NAME
-    FROM (SELECT DISTINCT T1.STK_ID
+    FROM (SELECT DISTINCT T1.STK_ID, T1.STK_CODE, T1.STK_DESC
                         , T1.STK_CODE ||' - '||T1.STK_DESC CODE_NAME
                         , T3.CODE_NAME C1
           FROM SYS0026M T1,
@@ -741,7 +741,7 @@
 
           UNION
 
-          SELECT DISTINCT T1.STK_ID
+          SELECT DISTINCT T1.STK_ID, T1.STK_CODE, T1.STK_DESC
                         , T1.STK_CODE ||' - '||T1.STK_DESC C1
                         , T3.CODE_NAME
           FROM SYS0026M T1,
@@ -749,7 +749,7 @@
           WHERE T1.STK_CTGRY_ID = T3.CODE_ID
             AND 61 = T1.STK_TYPE_ID
             AND T1.STUS_CODE_ID = 1)
-    ORDER BY CODE_NAME ASC, STK_ID ASC
+    ORDER BY STK_CODE, STK_DESC
   </select>
 
   <select id="selectCallLogTyp" parameterType="Map" resultType="egovMap">
