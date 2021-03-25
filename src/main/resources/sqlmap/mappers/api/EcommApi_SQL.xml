@@ -5,7 +5,7 @@
 <!--
 **************************************
  * Author                  Date                    Remark
- * Chew Kah Kit        2019/04/11           API for Common
+ * Chew Kah Kit        2020/12/18           API for Ecommerce
 **************************************
  -->
 
@@ -109,8 +109,8 @@
 </insert>
 
 <resultMap id="resultCustomerInfoMap" type="egovMap" />
-  <select id="createCustomer" statementType="CALLABLE" parameterType="Map">
-    { call SP_API_ORD_CRT(#{ecommOrdId} ,#{p1, mode=OUT, jdbcType=CURSOR,javaType=ResultSet,resultMap=resultCustomerInfoMap})}
+  <select id="getCustomerInfo" statementType="CALLABLE" parameterType="Map">
+    { call SP_API_GET_CUST_INFO(#{ecommOrdId} ,#{p1, mode=OUT, jdbcType=CURSOR,javaType=ResultSet,resultMap=resultCustomerInfoMap})}
   </select>
 
 

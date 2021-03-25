@@ -28,7 +28,6 @@ import com.coway.trust.biz.sales.order.vo.AccClaimAdtVO;
 import com.coway.trust.biz.sales.order.vo.CustBillMasterVO;
 import com.coway.trust.biz.sales.order.vo.DocSubmissionVO;
 import com.coway.trust.biz.sales.order.vo.EStatementReqVO;
-import com.coway.trust.biz.sales.order.vo.GSTEURCertificateVO;
 import com.coway.trust.biz.sales.order.vo.InstallationVO;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.biz.sales.order.vo.RentPaySetVO;
@@ -38,7 +37,6 @@ import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
-import com.coway.trust.web.sales.SalesConstants;
 import com.google.common.collect.Maps;
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.project.eCommerce.EComApiDto;
@@ -64,7 +62,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
   @Override
   public EgovMap registerOrder(HttpServletRequest request, EComApiForm eComApiForm) throws Exception {
-    String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0";
+    String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0", sysUserId = "0";
 
     StopWatch stopWatch = new StopWatch();
     stopWatch.reset();
@@ -83,24 +81,19 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
       }
       else {
         apiUserId = access.get("apiUserId").toString();
-
+        sysUserId = access.get("sysUserId").toString();
         reqPrm.put("apiUserId", apiUserId);
 
         int created = 0;
+        String salesMenCode = reqPrm.get("salesmanCode") == null ? "100334" : reqPrm.get("salesmanCode").toString();
 
+        ecommApiMapper.registerOrd(reqPrm);
+        ecommApiMapper.getCustomerInfo(reqPrm);
 
-        created = ecommApiMapper.registerOrd(reqPrm);
-
-        ecommApiMapper.createCustomer(reqPrm);
-        /*custInfo = (EgovMap) ((ArrayList) reqPrm.get("p1")).get(0);
-
-        System.out.println("=================================");
-        System.out.println(reqPrm.toString());
-        System.out.println(custInfo);
-        System.out.println("=================================");
+        custInfo = (EgovMap) ((ArrayList) reqPrm.get("p1")).get(0);
 
         SessionVO sessionVO = new SessionVO();
-        sessionVO.setUserId(349);
+        sessionVO.setUserId(Integer.parseInt(sysUserId));
 
         OrderVO orderVO = new OrderVO();
         SalesOrderMVO salesOrderMVO = new SalesOrderMVO();
@@ -110,54 +103,101 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         CustBillMasterVO custBillMasterVO = new CustBillMasterVO();
         AccClaimAdtVO accClaimAdtVO = new AccClaimAdtVO();
         EStatementReqVO eStatementReqVO = new EStatementReqVO();
-
+        DocSubmissionVO docSubmissionVO = new DocSubmissionVO();
         GridDataSet<DocSubmissionVO> documentList = new GridDataSet<DocSubmissionVO>();
-        ArrayList<DocSubmissionVO> docList = new ArrayList<DocSubmissionVO>();
-        Map <String, Object> docListDetails = new HashMap<String, Object>();
-        docListDetails.put("chkfield", 1);
-        docListDetails.put("codeId", 3198);
-        docListDetails.put("typeDesc", "Sales Order Form");
+        List<DocSubmissionVO> docList = new ArrayList<DocSubmissionVO>();
+        RentalSchemeVO rentalSchemeVO = new RentalSchemeVO();
+
+        // Get Promotion Price Info
+        Map<String, Object> ordInfo = new HashMap<String, Object>();
+        ordInfo.put("appTypeId" , reqPrm.get("appType").toString());
+        ordInfo.put("promoId"   , reqPrm.get("promo").toString());
+        ordInfo.put("stkId"     , reqPrm.get("product").toString());
+        ordInfo.put("srvPacId"  , reqPrm.get("srvPac").toString());
+
+        Map<String, Object> memberCode = new HashMap<String, Object>();
+        memberCode.put("memCode", salesMenCode);
+        memberCode.put("stus", 1);
+        memberCode.put("salesMen", 1);
+
+        EgovMap productPrice = orderRegisterService.selectStockPrice(ordInfo);
+        EgovMap promoPrice = orderRegisterService.selectProductPromotionPriceByPromoStockID(ordInfo);
+        EgovMap memInfo = orderRegisterService.selectMemberByMemberIDCode(memberCode);
 
         orderVO.setCustTypeId(964);
         orderVO.setRaceId( Integer.valueOf(reqPrm.get("race").toString()) );
+        orderVO.setBillGrp("new");
 
+        //SAL0001D
+        salesOrderMVO.setAdvBill(0);
         salesOrderMVO.setAppTypeId( Integer.valueOf(reqPrm.get("appType").toString()) );
         salesOrderMVO.setSrvPacId( Integer.valueOf(reqPrm.get("srvPac").toString()) );
+        salesOrderMVO.setCustAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
+        salesOrderMVO.setCustCareCntId(Integer.valueOf(custInfo.get("custcarecntid").toString()));
+        salesOrderMVO.setCustCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));
+        salesOrderMVO.setCustId(Integer.valueOf(custInfo.get("custid").toString()));
+        salesOrderMVO.setInstPriod(0);
+        salesOrderMVO.setPvMonth(0);
+        salesOrderMVO.setPvYear(0);
+
+        salesOrderMVO.setDefRentAmt( new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+        salesOrderMVO.setMthRentAmt( new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()) );
+        salesOrderMVO.setPromoDiscPeriod(Integer.valueOf(promoPrice.get("promoDiscPeriod").toString()));
+        salesOrderMVO.setPromoDiscPeriodTp(Integer.valueOf(promoPrice.get("promoDiscPeriodTp").toString()));
+        salesOrderMVO.setTotPv(new BigDecimal(promoPrice.get("orderPVPromo").toString()));
+        salesOrderMVO.setNorAmt(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+        salesOrderMVO.setNorRntFee(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+        salesOrderMVO.setDiscRntFee(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+
+        salesOrderMVO.setPromoId( Integer.valueOf(reqPrm.get("promo").toString()) );
         salesOrderMVO.setRefNo(reqPrm.get("refNo").toString());
         salesOrderMVO.setRem("Ecommerce Order");
+        salesOrderMVO.setBrnchId(42);
+
+        salesOrderMVO.setMemId(Integer.valueOf(memInfo.get("memId").toString()));
+        salesOrderMVO.setDeptCode(memInfo.get("deptCode").toString());
+        salesOrderMVO.setGrpCode(memInfo.get("grpCode").toString());
+        salesOrderMVO.setOrgCode(memInfo.get("orgCode").toString());
+        salesOrderMVO.setSalesGmId(Integer.valueOf(memInfo.get("lvl1UpId").toString()));
+        salesOrderMVO.setSalesSmId(Integer.valueOf(memInfo.get("lvl2UpId").toString()));
+        salesOrderMVO.setSalesHmId(Integer.valueOf(memInfo.get("lvl3UpId").toString()));
         orderVO.setSalesOrderMVO(salesOrderMVO);
 
-        salesOrderDVO.setItmPrc(BigDecimal.valueOf(50));
-        salesOrderDVO.setItmPrcId(399);
-        salesOrderDVO.setItmPv(BigDecimal.valueOf(0));
+        // SAL0002D
+        salesOrderDVO.setItmPrc(new BigDecimal(promoPrice.get("orderRentalFeesPromo").toString()));
+        salesOrderDVO.setItmPrcId(Integer.valueOf(productPrice.get("priceId").toString()));
+        salesOrderDVO.setItmPv(new BigDecimal(promoPrice.get("orderPVPromo").toString()));
         salesOrderDVO.setItmStkId(Integer.valueOf(reqPrm.get("product").toString()) );
         salesOrderDVO.setItmCompId(Integer.valueOf(reqPrm.get("cpntId").toString()) );
         orderVO.setSalesOrderDVO(salesOrderDVO);
 
+        // SAL0045D
         installationVO.setAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
         installationVO.setBrnchId(42);
         installationVO.setCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));;
         installationVO.setInstct(null);
-        installationVO.setPreDt("1900/01/01");
+        installationVO.setPreDt("01/01/1900");
         installationVO.setPreTm("12:00");
         orderVO.setInstallationVO(installationVO);
 
+        // SAL0074D
         rentPaySetVO.setBankId(Integer.valueOf(reqPrm.get("issueBank").toString()));
         rentPaySetVO.setCustAccId(0);
         rentPaySetVO.setCustCrcId(Integer.valueOf(custInfo.get("custcrcid").toString()));
         rentPaySetVO.setCustId(Integer.valueOf(custInfo.get("custid").toString()));
         //rentPaySetVO.setIs3rdParty(Integer.valueOf(reqPrm.get("thrdParty").toString()));
-        rentPaySetVO.setModeId(133);
+        rentPaySetVO.setModeId(131);
         rentPaySetVO.setIssuNric(null);
         rentPaySetVO.setNricOld(null);
         orderVO.setRentPaySetVO(rentPaySetVO);
 
+        // SAL0024D
         custBillMasterVO.setCustBillAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
         custBillMasterVO.setCustBillCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));
         custBillMasterVO.setCustBillCustCareCntId(Integer.valueOf(custInfo.get("custcarecntid").toString()));
         custBillMasterVO.setCustBillCustId(Integer.valueOf(custInfo.get("custid").toString()));
         custBillMasterVO.setCustBillIsEstm(1);
-        custBillMasterVO.setCustBillEmail(reqPrm.get("email1").toString());
+        custBillMasterVO.setCustBillEmail(reqPrm.get("email1") != null ? reqPrm.get("email1").toString() : null);
         custBillMasterVO.setCustBillIsPost(0);
         custBillMasterVO.setCustBillIsSms(0);
         custBillMasterVO.setCustBillIsSms2(0);
@@ -166,6 +206,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         custBillMasterVO.setCustBillWebPortalUrl(null);
         orderVO.setCustBillMasterVO(custBillMasterVO);
 
+        // PAY0008M
         accClaimAdtVO.setAccClBillClmAmt(BigDecimal.valueOf(0));
         accClaimAdtVO.setAccClClmAmt(BigDecimal.valueOf(0));
         accClaimAdtVO.setAccClAccTName(reqPrm.get("cardName").toString());
@@ -174,17 +215,22 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         accClaimAdtVO.setAccClPayModeId(131);
         orderVO.setAccClaimAdtVO(accClaimAdtVO);
 
-        eStatementReqVO.setEmail(reqPrm.get("email1").toString());
+        eStatementReqVO.setEmail(reqPrm.get("email1") != null ? reqPrm.get("email1").toString() : null);
         orderVO.seteStatementReqVO(eStatementReqVO);
 
-        docList.add((DocSubmissionVO) docListDetails);
-        documentList.setUpdate(docList);
+        // ORG0010D
+        docSubmissionVO.setChkfield(1);
+        docSubmissionVO.setDocTypeId(3198);
+        docSubmissionVO.setTypeDesc("Sales Order Form");
+        docList.add(0, docSubmissionVO);
+        documentList.setUpdate((ArrayList<DocSubmissionVO>) docList);
         orderVO.setDocSubmissionVOList(documentList);
+        orderVO.setRentalSchemeVO(rentalSchemeVO);
 
 
-        orderRegisterService.registerOrder(orderVO, sessionVO);*/
+        orderRegisterService.registerOrder(orderVO, sessionVO);
 
-
+        created = 1;
 
 
         if(created > 0){

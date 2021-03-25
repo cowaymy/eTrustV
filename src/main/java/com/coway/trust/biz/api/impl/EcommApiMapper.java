@@ -20,7 +20,7 @@ public interface EcommApiMapper {
 
   int registerOrd(Map<String, Object> params);
 
-  Map<String, Object> createCustomer(Map<String, Object> param);
+  Map<String, Object> getCustomerInfo(Map<String, Object> param);
 
   EgovMap checkOrderStatus(Map<String, Object> params);
 
