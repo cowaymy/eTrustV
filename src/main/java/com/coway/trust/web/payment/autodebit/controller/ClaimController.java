@@ -2012,11 +2012,11 @@ public class ClaimController {
     }
 
     // CHECK IF ENCRYPTION NEEDED AND ENCRYPT
-    if (fileInfo.size() > 0) {
-    	if(requireFileEncrypt(claimMap)) {
-    	    this.generateEncryptFile(fileInfo, claimMap, sFile, subPath);
-    	}
-    }
+//    if (fileInfo.size() > 0) {
+//    	if(requireFileEncrypt(claimMap)) {
+//    	    this.generateEncryptFile(fileInfo, claimMap, sFile, subPath);
+//    	}
+//    }
 
   }
 
@@ -2649,13 +2649,15 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
   private boolean requireFileEncrypt(EgovMap claimMap) {
 
 	  if ("3".equals(String.valueOf(claimMap.get("ctrlBankId")))
-			  && "0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
-			  return true; //only for CIMB and Direct Debit (deduction channels : e-Mandate and General)
+			  && "0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))
+			  && !"3182".equals(String.valueOf(claimMap.get("ctrlDdtChl")))) {
+			  return true; //only for CIMB Direct Debit (deduction channel : General)
 	  }
 
 	  return false;
   }
 
+  /*
   private void generateEncryptFile(List<EgovMap> fileInfo, EgovMap claimMap, String srcFile, String subPath) {
 
 	  for (int a = 0; a < fileInfo.size(); a++) {
@@ -2723,7 +2725,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 		  LOGGER.debug("1. PGP encryption End.");
 		  claimMap.put("encFile", subPath + encFile);
 	  }
-  }
+  } */
 
   public void zipFilesEncrypt(EgovMap claimMap) {
 
