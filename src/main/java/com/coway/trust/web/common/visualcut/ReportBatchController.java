@@ -273,32 +273,26 @@ public class ReportBatchController {
     LOGGER.info("[END] RCM_Daily_2015_S2_2...");
   }
 
-  @RequestMapping(value = "/RCM_Daily_Current_Year.do")
+  @RequestMapping(value = "/RCM_Daily.do")
   //@Scheduled(cron = "0 30 5 * * *")//Daily (5:30am)
-  public void rcmDailyCurrentYear() {
-    LOGGER.info("[START] RCM_Daily_Current_Year...");
+  public void rcmDaily() {
 
-    // RCM report for YEAR 2020-2021
-    String startYear = "2020";
-    String endYear = "2021";
- /*   String startYear = String.valueOf(LocalDate.now().getYear());*/
+    int startYear = 2020;
+    int currentYear = LocalDate.now().getYear();
 
+    for(int year= startYear;year <= currentYear; year++){
+      LOGGER.info("[START] RCM_Daily_Current_Year...");
+      Map<String, Object> params = new HashMap<>();
+      params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily.rpt");// visualcut
+      params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+      params.put("V_STARTYEAR", startYear);// parameter
+      params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+          "CSP" + File.separator + "RCM_Daily_" + startYear + "_" + CommonUtils.getNowDate() + ".xls");
 
+      this.viewProcedure(null, null, params);
+      LOGGER.info("[END] RCM_Daily_Current_Year...");
+    }
 
-    Map<String, Object> params = new HashMap<>();
-    params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily.rpt");// visualcut
-                                                                       // rpt
-                                                                       // file
-                                                                       // name.
-    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-    params.put("V_TEMP", "TEMP");// parameter
-    params.put("V_STARTYEAR", startYear);// parameter
-    params.put("V_ENDYEAR", endYear);// parameter
-    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "RCM" + File.separator + "RCM_Daily_"  + startYear + "_"+ CommonUtils.getNowDate() + ".xls");
-
-    this.viewProcedure(null, null, params);
-    LOGGER.info("[END] RCM_Daily_Current_Year...");
   }
 
   @RequestMapping(value = "/RCM_Daily_2015_Company.do")
@@ -783,9 +777,9 @@ public class ReportBatchController {
   /*
    * Split to rcmDailySimplified_1 and rcmDailySimplified_2
    * Not Required to run
-   */
+
   @RequestMapping(value = "/RCM_Daily_Simplified.do")
-  //@Scheduled(cron = "0 10 5 * * *")
+  @Scheduled(cron = "0 10 5 * * *")
   public void rcmDailySimplified() throws IOException {
     LOGGER.info("[START] RCM_Daily_Simplified...");
     Map<String, Object> params = new HashMap<>();
@@ -800,6 +794,8 @@ public class ReportBatchController {
     this.view(null, null, params);
     LOGGER.info("[END] RCM_Daily_Simplified...");
   }
+
+   */
 
   @RequestMapping(value = "/RCM_Daily_Simplified_1.do")
   //@Scheduled(cron = "0 10 5 * * *")
@@ -1668,7 +1664,7 @@ public class ReportBatchController {
     }
   }
 
-  /*@RequestMapping(value = "/CSP_Raw_Data_Excel_2019.do")
+  @RequestMapping(value = "/CSP_Raw_Data_Excel_2019.do")
   //@Scheduled(cron = "0 30 3 * * *")//Daily (3:30am)
   public void CSP_Raw_Data_Excel_2019() {
     LOGGER.info("[START] CSP_Raw_Data_Excel...");
@@ -1704,7 +1700,7 @@ public class ReportBatchController {
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] CSP_Raw_Data_Excel...");
-  }*/
+  }
 
   @RequestMapping(value = "/SST_Agreement_Raw_Data_Excel.do")
   //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
@@ -1936,8 +1932,8 @@ public class ReportBatchController {
             "rachel.wong@coway.com.my",
             "shawn.chow@coway.com.my",
             "austin@coway.com.my",
-            /*
-            "<jypark30@coway.co.kr>",
+            "hod@coway.com.my"
+            /*"<jypark30@coway.co.kr>",
             "<enough06@coway.co.kr>",
             "<rose3128@coway.co.kr>",
             "<jenux@coway.co.kr>",
@@ -1946,8 +1942,7 @@ public class ReportBatchController {
             "<ikchoul85@coway.co.kr>",
             "<kangsh@coway.co.kr>",
             "<hsjjang99@coway.co.kr>",
-            "<jun1853@coway.co.kr>"
-            */
+            "<jun1853@coway.co.kr>"*/
           };
     String email = "";
     email += "Dear All,\r\n\r\n";
@@ -1986,8 +1981,8 @@ public class ReportBatchController {
         "rachel.wong@coway.com.my",
         "shawn.chow@coway.com.my",
         "austin@coway.com.my",
-        /*
-        "<jypark30@coway.co.kr>",
+        "hod@coway.com.my"
+        /*"<jypark30@coway.co.kr>",
         "<enough06@coway.co.kr>",
         "<rose3128@coway.co.kr>",
         "<jenux@coway.co.kr>",
@@ -1996,8 +1991,7 @@ public class ReportBatchController {
         "<ikchoul85@coway.co.kr>",
         "<kangsh@coway.co.kr>",
         "<hsjjang99@coway.co.kr>",
-        "<jun1853@coway.co.kr>"
-        */
+        "<jun1853@coway.co.kr>"*/
         };
     String email = "";
     email += "Dear All,\r\n\r\n";
