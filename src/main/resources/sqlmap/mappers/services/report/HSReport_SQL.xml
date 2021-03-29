@@ -222,6 +222,7 @@
      ORDER BY Project1.BRNCH_ID ASC
   </select>
 
+  <!--
   <select id="selectDeptCodeList" parameterType="Map" resultType="egovMap">
     SELECT Distinct1.C1 C1,
                Distinct1.DEPT_CODE CODE_ID,
@@ -237,7 +238,7 @@
                 AND ( Extent1.MEM_LVL = #{groupCode} )
               </if>
 
-              <!-- AND ( Extent1.DEPT_CODE LIKE '%CCS%'ESCAPE '~' ) -->
+
                 AND Extent2.MEM_TYPE = 2
                 AND ( 1 = Extent1.ORG_STUS_CODE_ID )
 
@@ -254,6 +255,55 @@
                      AND ( 1 = Extent1.ORG_STUS_CODE_ID )
     ) Distinct1
     ORDER BY  Distinct1.DEPT_CODE
+  </select>
+  -->
+
+  <select id="selectDeptCodeList" parameterType="Map" resultType="egovMap">
+    SELECT T1.USER_NAME,
+               T1.CODE_ID,
+               T1.CODE_NAME
+    FROM (
+            SELECT A.USER_NAME,
+                B.DEPT_CODE as CODE_ID,
+                B.DEPT_CODE || ' - ' || C.NAME as CODE_NAME
+            FROM SYS0047M A
+            JOIN ORG1001V B ON B.MEM_CODE = A.USER_NAME
+            JOIN ORG0001D C ON C.MEM_ID = B.MEM_ID
+            WHERE 1 = 1
+
+            <choose>
+                <when test='memLvl != null and memLvl !="" and (memLvl.equals("3") or memLvl.equals("4"))'>
+                    AND B.DEPT_CODE = #{deptCode}
+                </when>
+                <when test='memLvl != null and memLvl !="" and memLvl.equals("2")'>
+                    AND B.GRP_CODE = #{grpCode}
+                </when>
+                <when test='memLvl != null and memLvl !="" and memLvl.equals("1")'>
+                    AND B.ORG_CODE = #{orgCode}
+                </when>
+            </choose>
+
+            <if test='!deptCode.equals("CTS3167")'>
+                    AND C.MEM_TYPE = '2'
+            </if>
+
+             AND B.MEM_LVL = '3'
+             AND C.STUS = '1'
+
+            <if test='memLvl == null or memLvl.equals("")'>
+             UNION
+                (SELECT A.USER_NAME,
+                    B.DEPT_CODE as CODE_ID,
+                    B.DEPT_CODE || ' - ' || C.NAME as CODE_NAME
+                 FROM SYS0047M A
+                 JOIN ORG1001V B ON B.MEM_CODE = A.USER_NAME
+                 JOIN ORG0001D C ON C.MEM_ID = B.MEM_ID
+                 AND (B.MEM_LVL = '3')
+                 AND (B.DEPT_CODE = 'CTS3167')
+                 AND (C.STUS = '1'))
+            </if>
+
+    ) T1 ORDER BY T1.CODE_ID
   </select>
 
   <select id="selectDscCodeList" parameterType="Map" resultType="egovMap">
@@ -440,6 +490,12 @@
                                WHERE ( 1 = Extent1.STUS )
                                    AND ( Extent1.MEM_TYPE IN ( 2,3 )
     ) ) Project1
+    <if test="memCode != null and memCode !=''">
+        WHERE  (Project1.MEM_CODE = #{memCode})
+    </if>
+    <if test="deptCode != null and deptCode != ''">
+        WHERE  (Project1.C1 = #{deptCode})
+    </if>
     ORDER BY Project1.MEM_CODE ASC
   </select>
 

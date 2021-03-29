@@ -5,31 +5,39 @@
 
     $(document).ready(function(){
 
-     doGetCombo('/services/bs/report/deptCode.do', 3, '','cmbDeptCode', 'S');
+     var userInfo = {
+    		 memLvl : "${memLvl}",
+    	     memCode : "${memCode}",
+    	     deptCode : "${deptCode}",
+    	     grpCode : "${grpCode}",
+    	     orgCode : "${orgCode}"
+     }
+
+     fn_setDeptCodeCombo(userInfo);
+     fn_setCodyCodeCombo(userInfo, "dummyNoSelection");
      doGetCombo('/services/bs/report/dscCode.do', 3, '','cmbDSC', 'S');
      doGetCombo('/services/bs/report/insStatusCode.do', 1, '','cmbInsStatus', 'S');
-     doGetCombo('/services/bs/report/codyCode.do', 3, '','cmbCodyCode', 'S');
      doGetCombo('/services/bs/report/areaCode.do', 3, '','cmbArea', 'S');
 
      $('#hsMonth').val($.datepicker.formatDate('mm/yy', new Date()));
 
+     $("#cmbDeptCode").change(function() {
 
-        $("#cmbDeptCode").change(function() {
+           var selectedDeptCode = $("#cmbDeptCode option:selected").val();
 
-           if($("#cmbDeptCode option:selected").val() == 0 || $("#cmbDeptCode option:selected").val() == "undefined" ){
-                alert($("#cmbDeptCode option:selected").val());
-                doGetCombo('/services/bs/report/codyCode.do', 3, '','cmbCodyCode', 'S');
+           if(selectedDeptCode == 0 || selectedDeptCode == "undefined" ){
+                selectedDeptCode = "dummyNoSelection";
+        	    fn_setCodyCodeCombo(userInfo, selectedDeptCode);
             }else{
-                 doGetCombo('/services/bs/report/codyCode_1.do', $("#cmbDeptCode option:selected").val() , '','cmbCodyCode', 'S');
+            	fn_setCodyCodeCombo(userInfo, selectedDeptCode);
             }
 
-            doGetCombo('/services/bs/report/codyCode_1.do', $("#cmbDeptCode option:selected").val() , '','cmbCodyCode', 'S');
+           fn_setCodyCodeCombo(userInfo, selectedDeptCode);
 
         });
 
 
-		$("#cmbContent").change(function() {
-
+	  $("#cmbContent").change(function() {
 
 		  if($(this).val() ==3) {
 		    $("#cmbDSC").val("");
@@ -43,7 +51,6 @@
 		    $('#cmbInsStatus').attr("disabled",true);
 		    $('#cmbArea').attr("disabled",true);
 
-
 		  }else if($(this).val() ==1 || $(this).val() ==2) {
              $('#cmbDSC').attr("disabled",false);
             $('#cmbStatus').attr("disabled",false);
@@ -54,13 +61,35 @@
 
     });
 
+function fn_setDeptCodeCombo(userInfo){
+    if (userInfo.memLvl == '3' || userInfo.memLvl == '4') {
+        doGetComboCodeId('/services/bs/report/deptCode.do',
+                {
+                 memLvl : userInfo.memLvl,
+                 deptCode : userInfo.deptCode,
+                 grpCode : userInfo.grpCode,
+                 orgCode : userInfo.orgCode
+                 },  userInfo.deptCode,'cmbDeptCode', 'S');
+    } else {
+        doGetComboCodeId('/services/bs/report/deptCode.do',
+                {
+        	     memLvl : userInfo.memLvl,
+                 deptCode : userInfo.deptCode,
+                 grpCode : userInfo.grpCode,
+                 orgCode : userInfo.orgCode
+                 },  '', 'cmbDeptCode', 'S');
+    }
+}
 
-
-
-
-
-
-
+function fn_setCodyCodeCombo(userInfo, selectedDeptCode){
+    if (userInfo.memLvl == '4') {
+        doGetComboCodeId('/services/bs/report/codyCode.do', {memCode : userInfo.memCode}, userInfo.memCode, 'cmbCodyCode', 'S');
+    } else if (userInfo.memLvl == '3') {
+        doGetComboCodeId('/services/bs/report/codyCode.do', {deptCode : userInfo.deptCode}, '','cmbCodyCode', 'S');
+    } else { //if userInfo.memLvl is 2 or 1 or none (none meaning user is non-Cody)
+        doGetComboCodeId('/services/bs/report/codyCode.do', {deptCode : selectedDeptCode}, '','cmbCodyCode', 'S');
+    }
+}
 
 function fn_validation(){
      if($("#cmbContent option:selected").index() < 1)

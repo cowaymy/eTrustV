@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.services.report.HSReportService;
 import com.coway.trust.biz.services.bs.HsManualService;
@@ -32,6 +33,9 @@ public class HSReportController {
 
   @Resource(name = "hsManualService")
   private HsManualService hsManualService;
+
+  @Resource(name = "salesCommonService")
+  private SalesCommonService salesCommonService;
 
   @RequestMapping(value = "/hsCountForecastListingPop.do")
   public String hsCountForecastListingPop(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -52,8 +56,21 @@ public class HSReportController {
   }
 
   @RequestMapping(value = "/bSSummaryList.do")
-  public String bSSummaryList(@RequestParam Map<String, Object> params, ModelMap model) {
-    // 호출될 화면
+  public String bSSummaryList(@RequestParam Map<String, Object> params, ModelMap model,  SessionVO sessionVO) {
+
+	  params.put("userId", sessionVO.getUserId());
+	  EgovMap userInfo = salesCommonService.getUserInfo(params);
+
+	  if (userInfo != null) {
+	      model.put("memCode", userInfo.get("memCode"));
+	      model.put("memLvl", userInfo.get("memLvl"));
+	      model.put("orgCode", userInfo.get("orgCode"));
+	      model.put("grpCode", userInfo.get("grpCode"));
+	      model.put("deptCode", userInfo.get("deptCode"));
+	      logger.info("memType ##### " + userInfo.get("memType"));
+	  }
+
+	  // 호출될 화면
     return "services/bs/bSSummaryPop";
   }
 
