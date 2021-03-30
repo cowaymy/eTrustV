@@ -326,7 +326,7 @@ public class PreOrderController {
 		String month   = String.format("%02d",date.getMonthValue());
 
 		String subPath = File.separator + "sales"
-		               + File.separator + "preOrder"
+		               + File.separator + "ekeyin"
 		               + File.separator + year
 		               + File.separator + month
 		               + File.separator + CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT3);
