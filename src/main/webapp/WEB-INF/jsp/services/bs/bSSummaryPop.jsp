@@ -37,7 +37,7 @@
         });
 
 
-	  $("#cmbContent").change(function() {
+	 $("#cmbContent").change(function() {
 
 		  if($(this).val() ==3) {
 		    $("#cmbDSC").val("");
@@ -86,7 +86,7 @@ function fn_setCodyCodeCombo(userInfo, selectedDeptCode){
         doGetComboCodeId('/services/bs/report/codyCode.do', {memCode : userInfo.memCode}, userInfo.memCode, 'cmbCodyCode', 'S');
     } else if (userInfo.memLvl == '3') {
         doGetComboCodeId('/services/bs/report/codyCode.do', {deptCode : userInfo.deptCode}, '','cmbCodyCode', 'S');
-    } else { //if userInfo.memLvl is 2 or 1 or none (none meaning user is non-Cody)
+    } else {
         doGetComboCodeId('/services/bs/report/codyCode.do', {deptCode : selectedDeptCode}, '','cmbCodyCode', 'S');
     }
 }
