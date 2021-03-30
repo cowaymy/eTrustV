@@ -180,7 +180,7 @@
             and (select WH_LOC_ID from sys0028m where WH_LOC_CODE =#{mainloc}) in(STORG_LOC,RCIV_ISSU_STORG_LOC)
         </if>
         <if test="ordno !=null and ordno != ''">
-            AND l60.MAIN_SALES_ORD_NO = #{ordno}
+            AND l59.MAIN_SALES_ORD_NO = #{ordno}
         </if>
         <if test="serialNo !=null and serialNo !=''">
             AND EXISTS (SELECT 1
