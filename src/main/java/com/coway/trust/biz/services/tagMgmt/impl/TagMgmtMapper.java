@@ -55,4 +55,6 @@ public interface TagMgmtMapper {
   public List<EgovMap> selectAttachList2(Map<String, Object> params);
 
   public List<EgovMap> selectCmGroup(Map<String, Object> params);
+
+  public EgovMap selectCmGroupByUsername(Map<String, Object> params);
 }

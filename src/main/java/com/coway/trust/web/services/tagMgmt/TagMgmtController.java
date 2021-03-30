@@ -1,7 +1,7 @@
 package com.coway.trust.web.services.tagMgmt;
 
 import java.io.File;
-import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,18 +16,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -35,7 +34,6 @@ import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
 import com.coway.trust.web.services.servicePlanning.MileageCalculationController;
-
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -191,17 +189,43 @@ public class TagMgmtController {
    * @return
    */
   @RequestMapping(value = "/selectCmGroup.do", method = RequestMethod.GET)
-  public ResponseEntity<List<EgovMap>> getCmGroup(@RequestParam Map<String, Object> params, HttpServletRequest request, SessionVO sessionVO, ModelMap model){
+  public ResponseEntity<List<EgovMap>> getCmGroup(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model){
 
-	  int memLvl = sessionVO.getMemberLevel();
-	  String groupCode = null;
-	  String deptCode = null;
+	  /*String groupCode = null;
+	  String deptCode = null;*/
 
-	  if (memLvl > 2){ // CM & CODY level
-
-	  }
 	  List<EgovMap> cmGroupList = tagMgmtService.selectCmGroup(params);
 	  return ResponseEntity.ok(cmGroupList);
+  }
+
+  /**
+   * To get Default CM Group by Login ID
+   *
+   * @Date Dec 18, 2021
+   * @Author HQIT-HUIDING
+   * @param params
+   * @param request
+   * @param model
+   * @return
+   */
+  @RequestMapping(value = "/getDefaultCmGrp.do", method = RequestMethod.GET)
+  public ResponseEntity<Map> getDefaultCmGroup(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO){
+
+	  Map<String, Object> defaultCmMap = null;
+
+	  Map<String, Object> userMap = new HashMap<String, Object>();
+	  String username = sessionVO.getUserName();
+	  userMap.put("username", username);
+
+	  EgovMap defaultCmGroup = tagMgmtService.selectCmGroupByUsername(userMap);
+	  logger.info("####defaultCmGroup: " + defaultCmGroup.toString());
+
+	  if (defaultCmGroup != null && defaultCmGroup.get("lastDeptCode")!= null){
+		  defaultCmMap = new HashMap<String, Object> ();
+		  defaultCmMap.put("defCmGrp", defaultCmGroup.get("lastDeptCode"));
+	  }
+
+	  return ResponseEntity.ok(defaultCmMap);
   }
 
   @RequestMapping(value = "/selectMainInquiry.do", method = RequestMethod.GET)
@@ -235,4 +259,5 @@ public class TagMgmtController {
 
     return ResponseEntity.ok(attachList);
   }
+
 }

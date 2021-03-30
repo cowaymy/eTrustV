@@ -135,4 +135,9 @@ public class TagMgmtServiceImpl implements TagMgmtService {
 	  return tagMgmtMapper.selectCmGroup(params);
   }
 
+  @Override
+  public EgovMap selectCmGroupByUsername(Map<String, Object> params) {
+	  return tagMgmtMapper.selectCmGroupByUsername(params);
+  }
+
 }

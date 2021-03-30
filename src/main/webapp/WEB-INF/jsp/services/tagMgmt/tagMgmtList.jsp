@@ -154,6 +154,9 @@
 
   $(document).ready(
     function() {
+
+    var brnch = '${SESSION_INFO.userBranchId}';
+
       tagMgmtGrid();
 
       $("#search").click(
@@ -201,7 +204,7 @@
           $("#sub_department").change(function() {
         	  if ($("#main_department").val() == 'MD08'){ // only for CODY support
         		  $("#cmGroup").attr("disabled", false);
-        		  doGetComboData("/services/tagMgmt/selectCmGroup.do", {mainDept : $("#main_department").val(), subDept : $("#sub_department").val()}, 'cmGroup', 'cmGroup', 'S', '');
+        		  doGetComboData("/services/tagMgmt/selectCmGroup.do", {mainDept : $("#main_department").val(), subDept : $("#sub_department").val()}, 'cmGroup', 'cmGroup', 'S', 'fn_setDefaultToSelection');
         	  } else {
         		  $("#cmGroup").val('');
         		  $("#cmGroup").attr("disabled", true);
@@ -271,6 +274,20 @@
     };
 
     Common.report("dataForm3", option);
+  }
+
+
+  function fn_setDefaultToSelection() {
+
+      Common.ajax("GET", "/services/tagMgmt/getDefaultCmGrp.do", '', function(result) {
+          console.log(result);
+          if (result != null) {
+              $("#cmGroup option[value='" + result.defCmGrp + "']").attr("selected", true);
+          }
+          else {
+              $("#cmGroup option[value='']").attr("selected", true);
+          }
+      });
   }
 
 </script>
