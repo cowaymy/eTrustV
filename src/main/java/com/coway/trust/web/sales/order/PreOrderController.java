@@ -5,6 +5,7 @@ package com.coway.trust.web.sales.order;
 
 import java.io.File;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -320,6 +321,16 @@ public class PreOrderController {
 		String code = "";
 		List<String> seqs = new ArrayList<>();
 
+		LocalDate date = LocalDate.now();
+		String year    = String.valueOf(date.getYear());
+		String month   = String.format("%02d",date.getMonthValue());
+
+		String subPath = File.separator + "sales"
+		               + File.separator + "preOrder"
+		               + File.separator + year
+		               + File.separator + month
+		               + File.separator + CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT3);
+
 		try{
 			 Set set = request.getFileMap().entrySet();
 			 Iterator i = set.iterator();
@@ -330,7 +341,7 @@ public class PreOrderController {
 			     seqs.add(key);
 			 }
 
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "sales" + File.separator + "preOrder", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadImageFilesWithCompress(request, uploadDir, subPath , AppConstants.UPLOAD_MIN_FILE_SIZE, true);
 
 		logger.debug("list.size : {}", list.size());
 

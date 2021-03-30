@@ -1,5 +1,6 @@
 package com.coway.trust.util;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -9,12 +10,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -49,7 +57,7 @@ public class EgovFormBasedFileUtil {
 
 	/**
 	 * 오늘 날짜 문자열 취득. ex) 20090101
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getTodayString() {
@@ -60,7 +68,7 @@ public class EgovFormBasedFileUtil {
 
 	/**
 	 * 물리적 파일명 생성.
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getPhysicalFileName() {
@@ -69,7 +77,7 @@ public class EgovFormBasedFileUtil {
 
 	/**
 	 * 파일명 변환.
-	 * 
+	 *
 	 * @param filename
 	 *            String
 	 * @return
@@ -82,7 +90,7 @@ public class EgovFormBasedFileUtil {
 
 	/**
 	 * Stream으로부터 파일을 저장함.
-	 * 
+	 *
 	 * @param is
 	 *            InputStream
 	 * @param file
@@ -311,4 +319,55 @@ public class EgovFormBasedFileUtil {
 		}
 		return tempFile;
 	}
+
+	public static long saveImageFile(InputStream is, File file) throws IOException {
+
+    file.setReadable(true, false);
+    file.setExecutable(true, false);
+    file.setWritable(true, false);
+
+    // 디렉토리 생성
+    File parentFile = file.getParentFile();
+
+    parentFile.setReadable(true, false);
+    parentFile.setExecutable(true, false);
+    parentFile.setWritable(true, false);
+
+    if (!parentFile.exists()) {
+      parentFile.mkdirs();
+    }
+
+    OutputStream os = null;
+    long size = 0L;
+
+    try {
+      os = new FileOutputStream(file);
+      ImageWriter writer = null;
+      ImageOutputStream ios = null;
+
+      BufferedImage image = ImageIO.read(is);
+      Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
+      writer = (ImageWriter) writers.next();
+      ios = ImageIO.createImageOutputStream(os);
+      writer.setOutput(ios);
+
+      ImageWriteParam param = writer.getDefaultWriteParam();
+
+      param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+      param.setCompressionQuality(0.7f); // Change the quality value you prefer
+      writer.write(null, new IIOImage(image, null, null), param);
+
+      size = ios.length();
+
+      ios.close();
+      writer.dispose();
+
+
+    } finally {
+      EgovResourceCloseHelper.close(os);
+    }
+
+    return size;
+  }
+
 }
