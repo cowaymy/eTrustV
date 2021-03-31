@@ -289,7 +289,7 @@ public class ReportBatchController {
       params.put("V_STARTYEAR", year);// parameter
       params.put("V_ENDYEAR", "");// parameter
       params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-          "CSP" + File.separator + "RCM_Daily_" + startYear + "_" + CommonUtils.getNowDate() + ".xls");
+          "RCM" + File.separator + "RCM_Daily_" + year + "_" + CommonUtils.getNowDate() + ".xls");
 
       this.viewProcedure(null, null, params);
       LOGGER.info("[END] RCM_Daily_Current_Year...");
