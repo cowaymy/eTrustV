@@ -2275,7 +2275,7 @@
            Extent2.BOOSTER_PUMP BOOSTER_PUMP ,
            Extent2.AFT_PSI AFT_PSI ,
            Extent2.AFT_LPM AFT_LPM ,
-           Extent2.TURB_LVL TURB_LVL , 
+           Extent2.TURB_LVL TURB_LVL ,
            CASE WHEN ( Extent3.CUST_BILL_ID IS NOT NULL )
              THEN Extent3.CUST_BILL_ID
              ELSE 0 END C7  ,
@@ -2686,6 +2686,14 @@
             JOIN PAY0053S S ON S.ACC_DEBT_ORD_ID = A.ACC_DEBT_ORD_ID
                            AND S.ACC_DEBT_SRV_CNTRCT_ID = A.ACC_DEBT_SRV_CNTRCT_ID
             JOIN ORG0001D B ON B.MEM_ID = A.ACC_DEBT_ORD_TRGET_CODY_ID
+            JOIN SAL0001D AA ON AA.SALES_ORD_ID =  (
+                                                    SELECT   SALES_ORD_ID
+                                                    FROM SAL0070D
+                                                    WHERE SALES_ORD_ID = A.ACC_DEBT_ORD_ID
+                                                    GROUP BY SALES_ORD_ID
+                                                    HAVING ADD_MONTHS(MAX(RENT_INST_DT),6) >= FN_GET_FIRST_DAY_MONTH(SYSDATE)
+                                                    )
+
             WHERE A.ACC_DEBT_OPNG_RENTAL_STUS = 'REG'
               AND A.ACC_DEBT_OPNG_APP_TYPE_ID = 66
               AND S.ACC_DEBT_SUB_OPNG_OTSTND_AGING < 5
