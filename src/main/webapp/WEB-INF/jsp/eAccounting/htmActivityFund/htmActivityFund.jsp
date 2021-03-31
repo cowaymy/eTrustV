@@ -755,6 +755,12 @@ function fn_approveLinePop(memAccId, clmMonth) {
     });
     */
 
+    if(FormUtil.isEmpty(clmNo)) {
+        fn_insertHtmActFundClaimExp("");
+    } else {
+        fn_updateStaffClaimExp("");
+    }
+
     Common.popupDiv("/eAccounting/htmActivityFund/approveLinePop.do", null, null, true, "approveLineSearchPop");
 }
 
