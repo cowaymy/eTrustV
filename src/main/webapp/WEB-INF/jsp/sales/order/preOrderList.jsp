@@ -248,6 +248,7 @@ console.log("preOrderList");
           /* , { headerText : "App Type",        dataField : "appType",    editable : false, width : 80  } */
           , { headerText : "eKey-in Date",  dataField : "requestDt",  editable : false, width : '7%' }
           , { headerText : "eKey-in Time",  dataField : "requestTm",  editable : false, width : '8%' }
+          , { headerText : "eKey-in Entry Point",  dataField : "channel",  editable : false, width : '8%' }
           , { headerText : "Product",         dataField : "product",    editable : false, width : '10%'}
           , { headerText : "Customer Name",   dataField : "custNm",     editable : false, width : '8%'  }
           /* , { headerText : "Customer Type",   dataField : "custType",   editable : false, width : 80  } */
@@ -309,6 +310,7 @@ console.log("preOrderList");
         var excelColumnLayout = [
            { headerText : "eKey-in Date",  dataField : "requestDt",  editable : false, width:100}
           , { headerText : "eKey-in Time",  dataField : "requestTm",  editable : false, width:100}
+          , { headerText : "eKey-in Entry Point",  dataField : "channel",  editable : false, width:100}
           , { headerText : "SOF No.",         dataField : "sofNo",      editable : false, width:100}
           , { headerText : "Order Number", dataField : "salesOrdNo",       editable : false, width:100}
           , { headerText : "Status",          dataField : "stusName",     editable : false,width:150}
