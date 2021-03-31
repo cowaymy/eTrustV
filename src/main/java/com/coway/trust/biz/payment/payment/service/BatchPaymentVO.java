@@ -25,6 +25,7 @@ public class BatchPaymentVO {
 	private String userRemark;
 	private String cardNo;
 	private String approvalCode;
+	private String cardMode;
 
 
 	public static BatchPaymentVO create(CSVRecord CSVRecord) {
@@ -50,6 +51,7 @@ public class BatchPaymentVO {
 		vo.setUserRemark(CSVRecord.get(18));
 		vo.setCardNo(CSVRecord.get(19));
 		vo.setApprovalCode(CSVRecord.get(20));
+		vo.setCardMode(CSVRecord.get(21));
 
 		return vo;
 	}
@@ -221,5 +223,13 @@ public class BatchPaymentVO {
     public void setApprovalCode(String approvalCode) {
         this.approvalCode = approvalCode;
     }
+
+	public String getCardMode() {
+		return cardMode;
+	}
+
+	public void setCardMode(String cardMode) {
+		this.cardMode = cardMode;
+	}
 
 }

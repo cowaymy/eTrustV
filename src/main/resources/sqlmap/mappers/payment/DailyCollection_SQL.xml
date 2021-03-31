@@ -316,6 +316,7 @@
                 A.PAY_ITM_CHQ_NO AS PayItemChqNo,
                 H.USER_NAME AS UserName,
                 I.CODE_DESC AS Description,
+                cm.CODE_NAME AS CardMode,
                 A.PAY_ITM_AMT AS PayItemAmt,
                 A.PAY_ITM_REM AS PayItemRemark,
                 j.CODE AS code,
@@ -400,6 +401,7 @@
                 LEFT JOIN ORG0001D mbb   ON mbb.MEM_ID = C.MEM_ID
                 LEFT JOIN ORG0001D mbb1   ON mbb1.MEM_ID = B.COLL_MEM_ID
                 LEFT JOIN PAY0069D trx   ON trx.TRX_ID = B.TRX_ID
+                LEFT JOIN SYS0013M cm ON cm.CODE_ID = a.PAY_ITM_CARD_MODE_ID
             WHERE
                 trx.TRX_DT <![CDATA[ >= ]]> TO_DATE(#{payDateFr},'DD/MM/YYYY')
                 AND trx.TRX_DT  <![CDATA[ < ]]> TO_DATE(#{payDateTo},'DD/MM/YYYY') + 1
@@ -418,6 +420,7 @@
                 A.PAY_ITM_CHQ_NO ,
                 H.USER_NAME ,
                 I.CODE_DESC,
+                cm.CODE_NAME,
                 A.PAY_ITM_AMT ,
                 A.PAY_ITM_REM,
                 j.CODE ,
@@ -498,6 +501,7 @@
                 LEFT JOIN ORG0001D mbb   ON mbb.MEM_ID = som.MEM_ID
                 LEFT JOIN ORG0001D mbb1   ON mbb1.MEM_ID = B.COLL_MEM_ID
                 LEFT JOIN PAY0069D trx   ON trx.TRX_ID = B.TRX_ID
+                LEFT JOIN SYS0013M cm ON cm.CODE_ID = A.PAY_ITM_CARD_MODE_ID
         WHERE
                 trx.TRX_DT <![CDATA[ >= ]]> TO_DATE(#{payDateFr},'DD/MM/YYYY')
                 AND trx.TRX_DT  <![CDATA[ < ]]> TO_DATE(#{payDateTo},'DD/MM/YYYY') + 1
@@ -516,6 +520,7 @@
             A.PAY_ITM_CHQ_NO ,
             H.USER_NAME ,
             I.CODE_DESC ,
+            cm.CODE_NAME,
             A.PAY_ITM_AMT ,
             A.PAY_ITM_REM ,
             j.CODE ,
@@ -594,6 +599,7 @@
             */
             LEFT JOIN ORG0001D mbb1   ON mbb1.MEM_ID = B.COLL_MEM_ID
             LEFT JOIN PAY0069D trx   ON trx.TRX_ID = B.TRX_ID
+            LEFT JOIN SYS0013M cm ON cm.CODE_ID = A.PAY_ITM_CARD_MODE_ID
         WHERE
             trx.TRX_DT <![CDATA[ >= ]]> TO_DATE(#{payDateFr},'DD/MM/YYYY')
             AND trx.TRX_DT  <![CDATA[ < ]]> TO_DATE(#{payDateTo},'DD/MM/YYYY') + 1
