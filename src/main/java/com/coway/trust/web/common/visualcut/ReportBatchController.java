@@ -285,7 +285,9 @@ public class ReportBatchController {
       Map<String, Object> params = new HashMap<>();
       params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily.rpt");// visualcut
       params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-      params.put("V_STARTYEAR", startYear);// parameter
+      params.put("V_TEMP", "TEMP");// parameter
+      params.put("V_STARTYEAR", year);// parameter
+      params.put("V_ENDYEAR", "");// parameter
       params.put(AppConstants.REPORT_DOWN_FILE_NAME,
           "CSP" + File.separator + "RCM_Daily_" + startYear + "_" + CommonUtils.getNowDate() + ".xls");
 
@@ -779,7 +781,7 @@ public class ReportBatchController {
    * Not Required to run
 
   @RequestMapping(value = "/RCM_Daily_Simplified.do")
-  @Scheduled(cron = "0 10 5 * * *")
+  //@Scheduled(cron = "0 10 5 * * *")
   public void rcmDailySimplified() throws IOException {
     LOGGER.info("[START] RCM_Daily_Simplified...");
     Map<String, Object> params = new HashMap<>();
