@@ -491,7 +491,7 @@
 </script>
 
 <body>
-<div id="login_wrap" style="padding:30px 0"><!-- login_wrap start -->
+<div id="login_wrap" style="padding:30px 0; background-size:contain"><!-- login_wrap start -->
     <h1><img src="${pageContext.request.contextPath}/resources/images/common/logo_coway2.png" alt="Coway"/></h1>
 
     <article class="login_box"><!-- login_box start -->
@@ -550,24 +550,27 @@
                 <li><a href="javascript:fnRestPassPopUp();"><spring:message code='sys.btn.id.search'/> & <spring:message code='sys.btn.password.search'/></a></li>
             </ul>
             <!-- [s] subject to change upon requirement -- Celeste  -->
-            <div class="icon_container" style=text-align:center;>
+            <!-- <div class="icon_container" style=text-align:center;> -->
+            <div class="icon_container" style="height:100%; padding-top:10%;padding-left:12px">
                 <p>
                 <a href="http://bit.ly/CowayCC">
-                <img src="${pageContext.request.contextPath}/resources/images/common/login_hyp_icon.png" style=padding-left:5px>
+                <!--  <img src="${pageContext.request.contextPath}/resources/images/common/login_hyp_icon.png" style=padding-left:135px>-->
+                <img src="${pageContext.request.contextPath}/resources/images/common/210302_Coway-eTrust-icon-09.gif" style="max-width:100%;">
                 </a>
                  </p>
             </div>
+            <!--
             <div class="icon_container">
                 <p style=padding-left:5px;>
                  <ul>
-                    <li><b>HP Voice</b></li>
+                    <li style=text-align:center><b>HP Voice</b></li>
                  </ul>
                  </p>
-            </div>
+            </div>-->
             <!-- [e] subject to change upon requirement -- Celeste  -->
         </form>
     </article><!-- login_box end -->
 
-    <p class="copy">Copyrights 2017. Coway Malaysia Sdn. Bhd. All rights reserved..</p>
+    <p class="copy" style="padding-top: 80px">Copyrights 2017. Coway Malaysia Sdn. Bhd. All rights reserved..</p>
 </div><!-- login_wrap end -->
 </body>
