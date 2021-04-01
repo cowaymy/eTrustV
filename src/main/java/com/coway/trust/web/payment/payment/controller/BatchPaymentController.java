@@ -292,7 +292,7 @@ public class BatchPaymentController {
 
 			if("107".equals(payModeId) && vo.getCardMode().trim().equals("ECOM")){
 				hm.put("cardModeId", "6300");
-			} else if ("107".equals(payModeId) && vo.getCardMode().trim().equals("PNP")){
+			} else if ("107".equals(payModeId)){
 				hm.put("cardModeId", "6166");
 			} else {
 				hm.put("cardModeId", "");
