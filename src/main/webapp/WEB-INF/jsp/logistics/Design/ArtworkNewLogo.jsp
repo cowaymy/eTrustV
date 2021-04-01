@@ -76,7 +76,7 @@ $(function(){
                 </tr>
                 <tr>
 	                <td >
-	                    <a href="https://drive.google.com/drive/folders/10L_2d3pXZJgT6slACOAK1Cc_F5oni4YI?usp=sharing" target="_blank"><font class="tblFontCongf">Get New Logo Here</font></a>
+	                    <a href="https://drive.google.com/drive/folders/10L_2d3pXZJgT6slACOAK1Cc_F5oni4YI?usp=sharing" target="_blank"><font class="tblFontCongf">Download here</font></a>
 	                    <br />
 	                </td>
 	                <td></td>
