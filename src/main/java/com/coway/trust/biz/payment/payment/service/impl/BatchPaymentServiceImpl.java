@@ -154,4 +154,9 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 
 	}
 
+	@Override
+	public String selectBatchPayCardModeId(String cardModeCode) {
+		return batchPaymentMapper.selectBatchPayCardModeId(cardModeCode);
+	}
+
 }

@@ -51,6 +51,11 @@ public class BatchPaymentController {
 	 */
 	@RequestMapping(value = "/initBatchPaymentList.do")
 	public String initDailyCollection(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		String cardModeIdEcom = "";
+		cardModeIdEcom = batchPaymentService.selectBatchPayCardModeId("ECOM");
+		model.put("cardModeIdEcom", cardModeIdEcom);
+
 		return "payment/payment/batchPaymentList";
 	}
 
@@ -240,14 +245,16 @@ public class BatchPaymentController {
 		ReturnMessage message = new ReturnMessage();
 
 		String payModeId = request.getParameter("payModeId");
+		String cardModeIdEcom = batchPaymentService.selectBatchPayCardModeId("ECOM");
+		String cardModeIdPnp = batchPaymentService.selectBatchPayCardModeId("PNPRPS");
 		/*
 		 * String payItmCardModeId = "";
 		 * if("107".equals(payModeId)) {
 		 * payItmCardModeId = "6166";
 		 * }
 		 */
-		if("6300".equals(payModeId)) {
-			payModeId = "107"; //Yong: set payModeId back to 107 because Payment Mode is actually Credit Card, whereas 6300 is Card Mode i.e. ECOM
+		if(cardModeIdEcom.equals(payModeId)) {
+			payModeId = "107"; //Yong: set payment mode back to Credit Card because actual payment mode is Credit Card whereas ECOM is actually a Card Mode
 		}
 
 		Map<String, MultipartFile> fileMap = request.getFileMap();
@@ -291,9 +298,9 @@ public class BatchPaymentController {
 			//hm.put("cardModeId", payItmCardModeId);
 
 			if("107".equals(payModeId) && vo.getCardMode().trim().equals("ECOM")){
-				hm.put("cardModeId", "6300");
+				hm.put("cardModeId", cardModeIdEcom);
 			} else if ("107".equals(payModeId)){
-				hm.put("cardModeId", "6166");
+				hm.put("cardModeId", cardModeIdPnp);
 			} else {
 				hm.put("cardModeId", "");
 			}

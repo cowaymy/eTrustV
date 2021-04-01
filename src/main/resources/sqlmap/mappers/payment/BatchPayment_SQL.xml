@@ -652,4 +652,12 @@
         {call SP_BATCH_PAY_VERIFY_DET(#{batchId})}
     </update>
 
+    <select id="selectBatchPayCardModeId" parameterType="String" resultType="String">
+       SELECT
+              CODE_ID
+        FROM SYS0013M
+        WHERE  CODE_MASTER_ID = '130'
+                    AND CODE = #{cardModeCode}
+    </select>
+
 </mapper>

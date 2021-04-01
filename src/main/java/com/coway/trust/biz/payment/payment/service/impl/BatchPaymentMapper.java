@@ -23,112 +23,114 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("batchPaymentMapper")
 public interface BatchPaymentMapper {
 
-	
+
 	/**
 	 * selectBatchList(Master Grid) 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectBatchList(Map<String, Object> params);
-	
+
 	/**
 	 * selectBatchPaymentView 조회
 	 * @param params
 	 * @return
 	 */
 	EgovMap selectBatchPaymentView(Map<String, Object> params);
-	
+
 	/**
 	 * selectBatchPaymentDetList 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectBatchPaymentDetList(Map<String, Object> params);
-	
+
 	/**
 	 * selectTotalValidAmt 조회
 	 * @param params
 	 * @return
 	 */
 	EgovMap selectTotalValidAmt(Map<String, Object> params);
-	
-	
+
+
 	/**
 	 * updRemoveItem
 	 * @param params
 	 * @return
 	 */
 	int updRemoveItem(Map<String, Object> params);
-	
+
 	/**
 	 * saveConfirmBatch
 	 * @param params
 	 * @return
 	 */
 	int saveConfirmBatch(Map<String, Object> params);
-	
-	
+
+
 	/**
 	 * selectBatchPaymentMs 조회
 	 * @param params
 	 * @return
 	 */
 	EgovMap selectBatchPaymentMs(Map<String, Object> params);
-	
+
 	/**
 	 * selectBatchPaymentDs 조회
 	 * @param params
 	 * @return
 	 */
 	EgovMap selectBatchPaymentDs(Map<String, Object> params);
-	
+
 	/**
 	 * saveDeactivateBatch
 	 * @param params
 	 * @return
 	 */
 	int saveDeactivateBatch(Map<String, Object> params);
-	
+
 	/**
 	 * getPAY0044DSEQ
 	 * @param params
 	 * @return
 	 */
 	int getPAY0044DSEQ();
-	
+
 	/**
 	 * getPAY0043DSEQ
 	 * @param params
 	 * @return
 	 */
 	int getPAY0043DSEQ();
-	
+
 	/**
 	 * saveBatchPayMaster
 	 * @param params
 	 * @return
 	 */
 	int saveBatchPayMaster(Map<String, Object> params);
-	
+
 	/**
 	 * saveBatchPayDetailList
 	 * @param params
 	 * @return
 	 */
 	int saveBatchPayDetailList(Map<String, Object> params);
-	
+
 	/**
 	 * callCnvrBatchPay
 	 * @param params
 	 * @return
 	 */
 	void callCnvrBatchPay(Map<String, Object> params);
-	
+
 	/**
 	 * callBatchPayVerifyDet
 	 * @param params
 	 * @return
 	 */
 	void callBatchPayVerifyDet(Map<String, Object> params);
-	
+
+	String selectBatchPayCardModeId(String cardModeCode);
+
 }
