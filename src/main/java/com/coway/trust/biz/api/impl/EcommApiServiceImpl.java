@@ -72,7 +72,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
     Map<String, Object> reqPrm = Maps.filterValues(EComApiForm.createRegOrdMap(eComApiForm),Objects::nonNull);
     EgovMap custInfo = new EgovMap();
 
-    try{
+    //try{
 
       access = commonApiMapper.checkAccess(reqPrm);
       if(access == null){
@@ -121,6 +121,12 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         memberCode.put("salesMen", 1);
 
         EgovMap productPrice = orderRegisterService.selectStockPrice(ordInfo);
+
+        // Non Rental Order - SRV_PAC_ID = 0
+        if(!ordInfo.get("appTypeId").toString().equals("66")){
+          ordInfo.put("srvPacId",0);
+        }
+
         EgovMap promoPrice = orderRegisterService.selectProductPromotionPriceByPromoStockID(ordInfo);
         EgovMap memInfo = orderRegisterService.selectMemberByMemberIDCode(memberCode);
 
@@ -242,13 +248,13 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         }
       }
 
-    } catch(Exception e){
+    /*} catch(Exception e){
       code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
       message = StringUtils.substring(e.getMessage(), 0, 4000);
     } finally{
       stopWatch.stop();
       respTm = stopWatch.toString();
-    }
+    }*/
 
     return commonApiService.rtnRespMsg(request, code, message, respTm, reqPrm, null ,apiUserId);
   }
