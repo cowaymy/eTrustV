@@ -720,7 +720,7 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                         , Project2.SALES_ORD_ID
                         , Project2.branch_cd
                         , Project2.CODY_MANGR_USER_ID
-                        , Project2.Result as Result
+                        <!-- , Project2.Result as Result  -->
                         , project2.dept_code
                         , project2.crt_user_id
                         , project2.SERIAL_REQUIRE_CHK_YN
@@ -735,7 +735,7 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                               , hs.month
                               , hs.year
                               , st.code
-                              , hr.no AS result
+                              <!-- , hr.no AS result -->
                               , so.sales_ord_no
                               , ap.code AS apptype
                               , cu.name
@@ -770,7 +770,7 @@ WITH entry_info_min AS (SELECT sales_ord_id, install_entry_id,INSTALL_RESULT_ID
                 INNER JOIN SAL0045D ins ON ins.sales_ord_id = sal01.sales_ord_id
                 INNER JOIN SAL0023D ad ON ad.cust_add_id = ins.add_id
                 INNER JOIN SYS0064M mg ON mg.area_id = ad.area_id
-                LEFT JOIN SVC0006D hr ON hr.schdul_id = hs.schdul_id
+                <!--LEFT JOIN SVC0006D hr ON hr.schdul_id = hs.schdul_id -->
                 LEFT JOIN SYS0038M st ON st.stus_code_id = hs.stus_code_id
                 INNER JOIN SYS0013M ap ON ap.code_id = so.app_type_id
                 INNER JOIN SAL0029D cu ON cu.cust_id = so.cust_id
