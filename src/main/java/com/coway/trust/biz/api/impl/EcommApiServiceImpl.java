@@ -85,7 +85,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         reqPrm.put("apiUserId", apiUserId);
 
         int created = 0;
-        String salesMenCode = reqPrm.get("salesmanCode") == null ? "100334" : reqPrm.get("salesmanCode").toString();
+        String salesMenCode = CommonUtils.nvl(reqPrm.get("salesmanCode")) == "" ? "100334" : reqPrm.get("salesmanCode").toString();
 
         ecommApiMapper.registerOrd(reqPrm);
         ecommApiMapper.getCustomerInfo(reqPrm);
