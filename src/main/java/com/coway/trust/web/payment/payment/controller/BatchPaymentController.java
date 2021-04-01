@@ -51,11 +51,6 @@ public class BatchPaymentController {
 	 */
 	@RequestMapping(value = "/initBatchPaymentList.do")
 	public String initDailyCollection(@RequestParam Map<String, Object> params, ModelMap model) {
-
-		String cardModeIdEcom = "";
-		cardModeIdEcom = batchPaymentService.selectBatchPayCardModeId("ECOM");
-		model.put("cardModeIdEcom", cardModeIdEcom);
-
 		return "payment/payment/batchPaymentList";
 	}
 
@@ -253,9 +248,6 @@ public class BatchPaymentController {
 		 * payItmCardModeId = "6166";
 		 * }
 		 */
-		if(cardModeIdEcom.equals(payModeId)) {
-			payModeId = "107"; //Yong: set payment mode back to Credit Card because actual payment mode is Credit Card whereas ECOM is actually a Card Mode
-		}
 
 		Map<String, MultipartFile> fileMap = request.getFileMap();
 		MultipartFile multipartFile = fileMap.get("csvFile");

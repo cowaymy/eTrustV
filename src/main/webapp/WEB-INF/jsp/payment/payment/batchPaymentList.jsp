@@ -956,7 +956,6 @@ var batchInfoLayout = [
 					        <option value="106">Cheque (CHQ)</option>
 					        <option value="108">Online Payment (ONL)</option>
 					        <option value="107">Credit Card (CRC)</option>
-					        <option value="${cardModeIdEcom}">E-Commerce (ECOM)</option><!-- Yong: This specific option is not an actual Payment Mode. It is actually a Card Mode -->
 					    </select>
 					    </td>
 
