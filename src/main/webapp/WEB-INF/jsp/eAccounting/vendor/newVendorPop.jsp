@@ -166,26 +166,26 @@ function fn_approveLinePop() {
 
     // new
     if(FormUtil.isEmpty($("#newReqNo").val())) {
-        Common.ajax("GET", "/eAccounting/vendor/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
-            console.log(result.data);
-            if(!result.data) {
+        //Common.ajax("GET", "/eAccounting/vendor/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+           // console.log(result.data);
+           // if(!result.data) {
             	fn_attachmentUpload("");
             	Common.popupDiv("/eAccounting/vendor/approveLinePop.do", null, null, true, "approveLineSearchPop");
-            }
-        });
+            //}
+       // });
     } else {
         // update
         data.reqNo = $("#newReqNo").val();
-        Common.ajax("GET", "/eAccounting/vendor/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
-            console.log(result);
-            if(result.data && result.data != $("#newReqNo").val()) {
-                Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
-            } else {
+       // Common.ajax("GET", "/eAccounting/vendor/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+         //   console.log(result);
+          //  if(result.data && result.data != $("#newReqNo").val()) {
+              //  Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+          //  } else {
                 fn_attachmentUpdate("");
 
                 Common.popupDiv("/eAccounting/vendor/approveLinePop.do", null, null, true, "approveLineSearchPop");
-            }
-        });
+            //}
+       // });
     }
 
 }

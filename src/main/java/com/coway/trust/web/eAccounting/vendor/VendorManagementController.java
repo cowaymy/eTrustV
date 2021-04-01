@@ -229,6 +229,13 @@ public class VendorManagementController {
 		params.put("appvPrcssNo", appvPrcssNo);
 		ReturnMessage message = new ReturnMessage();
 
+		vendorService.insertVendorInfo(params);
+
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		/*
 		int regCompNoCount = vendorService.checkExistNo(params.get("regCompNo").toString());
 		int paymentTermCount = vendorService.checkExistNo(params.get("paymentTerms").toString());
 		int bankListCount = vendorService.checkExistNo(params.get("bankList").toString());
@@ -286,7 +293,7 @@ public class VendorManagementController {
 				}
 			}
 		}
-
+*/
 		return ResponseEntity.ok(message);
 	}
 
