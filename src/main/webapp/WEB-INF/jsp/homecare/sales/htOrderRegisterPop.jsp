@@ -23,7 +23,10 @@
 
         //doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', ''); //Common Code
 
-        if(ROLE_ID == "341" || ROLE_ID == "342" || ROLE_ID == "343" || ROLE_ID == "344" || ROLE_ID == "130"){
+        if(ROLE_ID == "341" || ROLE_ID == "342" || ROLE_ID == "343" || ROLE_ID == "344" || ROLE_ID == "130" ||
+           ROLE_ID == "99" || ROLE_ID == "97" || ROLE_ID == "103" || ROLE_ID == "104" || ROLE_ID == "105" || // SO Admin
+           ROLE_ID == "177" || ROLE_ID == "179" || ROLE_ID == "180" || ROLE_ID == "250" || ROLE_ID == "256" // CDB Admin
+        ) {
         CommonCombo.make("appType", "/homecare/sales/selectCodeList.do", {groupCode : '10', codeIn : 'CS1T,CS1Y,FT1T,FT1Y'}, "", {
             id: "codeId",
             name: "codeName",
