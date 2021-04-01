@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.eAccounting.vendor.VendorMapper">
+
+    <select id="selectVendorGroup" resultType="egovMap">
+
+            SELECT DISTINCT ACC_GRP ACC_GRP
+            FROM FCM0006M
+            WHERE ACC_GRP = 'VM11' OR ACC_GRP = 'VM02' OR ACC_GRP = 'VM03'
+
+    </select>
+
+    <select id="selectSAPCountry" resultType="egovMap">
+
+            SELECT SAP_CNTY_S_CODE CODE, SAP_CNT_NAME NAME
+            FROM FCM0030C ORDER BY SAP_CNT_NAME
+
+    </select>
+
+        <select id="selectBank" resultType="egovMap">
+
+            SELECT CODE CODE, NAME NAME
+            FROM SYS0004M
+            WHERE IS_SAP = 1
+
+    </select>
+
+    <select id="selectVendorList" parameterType="Map" resultType="egovMap">
+
+            SELECT A.VENDOR_ACC_ID
+            , A.VENDOR_NAME
+            , A.VENDOR_REG_NO_NRIC
+            , NVL((CASE B.APPV_STUS
+                        WHEN 'R'
+                            THEN 'Request'
+                        WHEN 'P'
+                            THEN 'Approve In-Progress'
+                        WHEN 'A'
+                            THEN 'Approved'
+                        WHEN 'J'
+                            THEN 'Rejected'
+                       END),
+                       'Temporary Save') APPV_PRCSS_STUS
+            , B.APPV_DT
+            , C.REQST_DT
+            FROM FCM0029D A
+            LEFT JOIN FCM0005D B
+            ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+            LEFT JOIN FCM0004M C
+            ON B.APPV_PRCSS_NO = C.APPV_PRCSS_NO
+            WHERE 1=1
+            <if test="memAccId != null and memAccId != ''">
+                AND VENDOR_ACC_ID = #{memAccId}
+           </if>
+           <if test="regNo != null and regNo != ''">
+                AND VENDOR_REG_NO_NRIC = #{regNo}
+           </if>
+           <if test="costCenter != null and costCenter != ''">
+                AND COST_CENTER =  #{costCenter}
+           </if>
+           <if test="(appvPrcssStus != null and appvPrcssStus != '' ) and ((appStartDt == null or appStartDt == '') and (appEndDt == null or appEndDt == ''))">
+			     AND B.APPV_STUS IN
+			     <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+			         #{item}
+			     </foreach>
+		   </if>
+		   <if test="startDt != null and startDt != ''">
+	        <![CDATA[
+	             AND C.REQST_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
+	        ]]>
+	        </if>
+	        <if test="endDt != null and endDt != ''">
+		        <![CDATA[
+		             AND C.REQST_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
+		        ]]>
+		        </if>
+		    <if test="appStartDt != null and appStartDt != ''">
+	            <![CDATA[
+	                AND B.APPV_DT >= TO_DATE(#{appStartDt}, 'DD/MM/YYYY')
+	            ]]>
+	        </if>
+	        <if test="appEndDt != null and appEndDt != ''">
+	            <![CDATA[
+	                AND B.APPV_DT < TO_DATE(#{appEndDt}, 'DD/MM/YYYY') + 1
+	            ]]>
+	        </if>
+
+    </select>
+
+    <select id="selectNextReqNo" resultType="String">
+
+	     SELECT
+        'V1' ||
+        TO_CHAR (SYSDATE, 'yymm') ||
+        MAX(CLM_NO) AS CLM_NO
+    FROM (
+        SELECT NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
+        FROM FCM0002M
+        WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
+
+        UNION ALL
+
+        SELECT NVL (TO_CHAR (MAX (SUBSTR (VENDOR_REQ_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
+        FROM FCM0029D
+        WHERE SUBSTR (VENDOR_REQ_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
+    )
+    </select>
+
+    <select id="selectSameVender" parameterType="Map" resultType="String">
+
+       SELECT
+            A.VENDOR_REQ_NO
+       FROM FCM0029D A
+           INNER JOIN FCM0004M B
+           ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+    </select>
+
+    <select id="selectNextAppvPrcssNo" resultType="String">
+
+	    SELECT    TO_CHAR (SYSDATE, 'yyyy')
+	       || NVL (TO_CHAR (MAX (SUBSTR (APPV_PRCSS_NO, 5, 6) + 1), 'FM000000'), '000001') AS APPV_PRCSS_NO
+	    FROM FCM0004M
+	    WHERE SUBSTR (APPV_PRCSS_NO, 1, 4) = TO_CHAR (SYSDATE, 'yyyy')
+	</select>
+
+	<select id="getFinApprover" parameterType="Map" resultType="egovMap">
+	    SELECT
+	        APPR_MEM_CODE
+	    FROM FCM0023M
+	    WHERE APPR_MEM_STUS = '1'
+	    <if test="clmType == 'J1' ">
+	        <![CDATA[
+	            AND J1 <> '0'
+	        ]]>
+	    </if>
+	    <if test="clmType == 'J2' ">
+	        <![CDATA[
+	            AND J2 <> '0'
+	        ]]>
+	    </if>
+	    <if test="clmType == 'J3' ">
+	        <![CDATA[
+	            AND J3 <> '0'
+	        ]]>
+	    </if>
+	    <if test="clmType == 'J4' ">
+	        <![CDATA[
+	            AND J4 <> '0'
+	        ]]>
+	    </if>
+	    <if test="clmType == 'J5' ">
+	        <![CDATA[
+	            AND J5 <> '0'
+	        ]]>
+	    </if>
+	    <if test="clmType == 'J6' ">
+	        <![CDATA[
+	            AND J6 <> '0'
+	        ]]>
+	    </if>
+	    <if test="clmType == 'J7' ">
+	        <![CDATA[
+	            AND J7 <> '0'
+	        ]]>
+	    </if>
+	    <if test="clmType == 'J8' ">
+	        <![CDATA[
+	            AND J8 <> '0'
+	        ]]>
+	    </if>
+	    <if test="clmType == 'J9' ">
+	        <![CDATA[
+	            AND J9 <> '0'
+	        ]]>
+	    </if>
+	    <if test="clmType == 'R1' ">
+	        <![CDATA[
+	            AND R1 <> '0'
+	        ]]>
+	    </if>
+	    <if test="clmType == 'Bulk_J1' ">
+	        <![CDATA[
+	            AND BULK_J1 <> '0'
+	        ]]>
+	    </if>
+	    <if test="clmType == 'R2' ">
+	        <![CDATA[
+	            AND R2 <> '0'
+	        ]]>
+	    </if>
+	    <if test="clmType == 'A1' ">
+	        <![CDATA[
+	            AND A1 <> '0'
+	        ]]>
+	    </if>
+	    <if test="clmType == 'V1' ">
+	        <![CDATA[
+	            AND V1 <> '0'
+	        ]]>
+	    </if>
+	</select>
+
+	<select id="checkExistClmNo" parameterType="String" resultType="int">
+        SELECT COUNT(*) AS CLM_NO_CNT FROM FCM0004M WHERE APPV_REQ_KEY_NO = #{reqNo}
+    </select>
+
+    <insert id="insertVendorInfo" parameterType="Map">
+
+	        INSERT INTO FCM0029D
+		    (
+		        VENDOR_REQ_NO
+		       ,VENDOR_ACC_ID
+		       ,VENDOR_GRP
+		       ,COST_CENTER
+		       ,COST_CENTER_NAME
+		       ,VENDOR_NAME
+		       ,VENDOR_REG_NO_NRIC
+		       ,ADD_HOUSE_LOT_NO
+		       ,ADD_STREET
+		       ,ADD_POSTAL_CODE
+		       ,ADD_CITY
+		       ,ADD_COUNTRY
+		       ,BANK_COUNTRY
+		       ,BANK
+		       ,BANK_ACC_HOLDER
+		       ,BANK_ACC_NO
+		       ,BANK_BRANCH
+		       ,SWIFT_CODE
+		       ,CONTACT_DESIGNATION
+		       ,CONTACT_NAME
+		       ,CONTACT_PHONE_NO
+		       ,CONTACT_EMAIL
+		       ,PAY_TERM
+		       ,PAY_TYPE
+		       ,PAY_OTH
+		       ,ATCH_FILE_GRP_ID
+		       ,APPV_PRCSS_NO
+		       ,REM
+		       ,CRT_USER_ID
+		       ,CRT_DATE
+		       ,UPD_USER_ID
+		       ,UPD_DATE
+		    )
+		    VALUES
+		    (
+		       #{reqNo}
+		       ,NULL
+		       ,#{vendorGroup}
+		       ,#{costCentr}
+		       ,NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = #{costCentr}))
+		       ,#{regCompName}
+		       ,#{regCompNo}
+		       ,#{houseNo}
+		       ,#{street}
+		       ,#{postalCode}
+		       ,#{city}
+		       ,#{vendorCountry}
+		       ,#{bankCountry}
+		       ,#{bankList}
+		       ,#{bankAccHolder}
+		       ,#{bankAccNo}
+		       ,#{bankBranch}
+		       ,#{swiftCode}
+		       ,#{designation}
+		       ,#{vendorName}
+		       ,#{vendorPhoneNo}
+		       ,#{vendorEmail}
+		       ,#{paymentTerms}
+		       ,#{paymentMethod}
+		       ,NVL(#{others},NULL)
+		       ,#{atchFileGrpId}
+		       ,#{appvPrcssNo}
+		       ,NULL
+		       ,#{userId}
+		       ,SYSDATE
+		       ,#{userId}
+		       ,SYSDATE
+		    )
+	</insert>
+
+	<select id="getClmDesc" parameterType="Map" resultType="egovMap">
+		    SELECT
+		        CODE_DESC
+		    FROM SYS0013M
+		    WHERE CODE_MASTER_ID = '343'
+		    AND CODE = SUBSTR(#{reqNo}, 1, 2)
+	</select>
+
+	<select id="getNtfUser" parameterType="Map" resultType="egovMap">
+	    SELECT
+	        USER_NAME
+	    FROM SYS0047M
+	    WHERE
+	    <if test="memCode != null and memCode != '' ">
+	        HR_CODE = #{memCode}
+	    </if>
+	    <if test="memCode == null or memCode == '' ">
+	        HR_CODE = (
+	            SELECT
+	                APPV_LINE_USER_ID
+	            FROM FCM0005D
+	            WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+	        AND APPV_LINE_SEQ = #{appvLineSeq}
+	        )
+	    </if>
+	</select>
+
+	   <select id="checkExistRegCompNo" parameterType="Map" resultType="egovMap">
+            SELECT COUNT(*)
+            FROM FCM0029D
+            WHERE VENDOR_REG_NO_NRIC = #{regCompNo}
+    </select>
+
+	<insert id="insertNotification" parameterType="Map">
+	    INSERT INTO SYS0092M VALUES (
+	        SYS0092M_ID_SEQ.NEXTVAL,
+	        #{code},
+	        #{codeName},
+	        #{reqNo},
+	        #{appvStus},
+	        #{rejctResn},
+	        #{reqstUserId},
+	        '1',
+	        SYSDATE,
+	        #{userId},
+	        SYSDATE,
+	        #{userId}
+	    )
+	</insert>
+
+	<insert id="insertApproveManagement" parameterType="Map">
+
+	   INSERT INTO FCM0004M
+	   (
+	        APPV_PRCSS_NO
+	       ,APPV_REQ_KEY_NO
+	       ,REQST_DT
+	       ,REQST_USER_ID
+	       ,APPV_PRCSS_STUS
+	       ,APPV_LINE_CNT
+	       ,APPV_LINE_PRCSS_CNT
+	       ,APPV_PRCSS_DESC
+	       ,CRT_DT
+	       ,CRT_USER_ID
+	       ,UPD_DT
+	       ,UPD_USER_ID
+	    )
+	    values
+	    (
+	        #{appvPrcssNo}
+	       ,#{reqNo}
+	       ,SYSDATE
+	       ,#{userName}
+	       ,'R'
+	       ,#{appvLineCnt}
+	       ,0
+	       ,#{appvPrcssDesc}
+	       ,SYSDATE
+	       ,#{userId}
+	       ,SYSDATE
+	       ,#{userId}
+	    )
+	</insert>
+
+	<insert id="insertApproveLineDetail" parameterType="Map">
+
+	   INSERT INTO FCM0005D
+	   (
+	        APPV_PRCSS_NO
+	       ,APPV_LINE_SEQ
+	       ,APPV_LINE_USER_ID
+	       ,APPV_DT
+	       ,APPV_STUS
+	       ,CRT_DT
+	       ,CRT_USER_ID
+	       ,UPD_DT
+	       ,UPD_USER_ID
+	    )
+	    values
+	    (
+	        #{appvPrcssNo}
+	       ,#{approveNo}
+	       ,#{memCode}
+	       ,#{appvDt}
+	       <choose>
+	       <when test="approveNo == 1">
+	       ,'R'
+	       </when>
+	       <otherwise>
+	       ,'T'
+	       </otherwise>
+	       </choose>
+	       ,SYSDATE
+	       ,#{userId}
+	       ,SYSDATE
+	       ,#{userId}
+	    )
+	</insert>
+
+	<update id="insMissAppr" parameterType="Map">
+	    MERGE INTO FCM0005D A
+	    USING (
+	        SELECT
+	            APPV_PRCSS_NO,
+	            MAX(APPV_LINE_SEQ) APPV_LINE_SEQ,
+	            #{memCode} APPV_LINE_USER_ID
+	        FROM FCM0005D
+	        WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+	        GROUP BY APPV_PRCSS_NO, #{memCode}
+	    ) SRC
+	    ON (A.APPV_PRCSS_NO = SRC.APPV_PRCSS_NO
+	    AND A.APPV_LINE_SEQ = SRC.APPV_LINE_SEQ
+	    AND A.APPV_LINE_USER_ID = SRC.APPV_LINE_USER_ID)
+	    WHEN NOT MATCHED THEN
+	    INSERT (
+	        APPV_PRCSS_NO,
+	        APPV_LINE_SEQ,
+	        APPV_LINE_USER_ID,
+	        APPV_STUS,
+	        CRT_DT,
+	        CRT_USER_ID,
+	        UPD_DT,
+	        UPD_USER_ID
+	    ) VALUES (
+	        SRC.APPV_PRCSS_NO,
+	        (TO_NUMBER(SRC.APPV_LINE_SEQ) + 1),
+	        #{memCode},
+	        'T',
+	        SYSDATE,
+	        #{userId},
+	        SYSDATE,
+	        #{userId}
+	    )
+	</update>
+
+</mapper>
