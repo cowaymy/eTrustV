@@ -206,10 +206,12 @@ $(document).ready(function(){
 		// $("#CVT_LAST_SRV_MEM_EXPR_DATE").val(result.srvconfig.cvtLastSrvMemExprDate);
 		//  $("#CVT_NOW_DATE").val(result.srvconfig.cvtNowDate);
 
-		fn_newGetExpDate(result);
 		//20190917 Vannie add to get min period for earlybird promo
 		if (result.srvconfig.lastSrvMemExprDate != undefined){
+			fn_newGetExpDate(result);
 			fn_getMaxPeriodEarlyBirdPromo(result.srvconfig.lastSrvMemExprDate);
+		}else{
+			$("#HiddenIsCharge").val(0);
 		}
 		fn_setTerm();
 		fn_getDataCPerson();
