@@ -1717,10 +1717,10 @@
         ON IE.INSTALL_ENTRY_ID = IR.ENTRY_ID
       WHERE 1=1
       <if test='sirimNo != null and sirimNo != "" '>
-        AND IR.SIRIM_NO = #{sirimNo}
+        AND UPPER(IR.SIRIM_NO) = #{sirimNo}
       </if>
       <if test='serialNo != null and serialNo != "" '>
-        AND IR.SERIAL_NO = #{serialNo}
+        AND UPPER(IR.SERIAL_NO) = #{serialNo}
       </if>
   </select>
 
