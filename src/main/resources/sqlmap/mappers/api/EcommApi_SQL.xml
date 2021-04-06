@@ -187,5 +187,13 @@
     {call SP_ORD_CANCL_E_COMM(#{sofNo},#{apiUserId}, #{p1, mode=OUT, jdbcType=VARCHAR, javaType=String,resultMap=resultOrdCancelMap})}
   </select>
 
+<update  id="updateEcommOrderStatus" parameterType="salesOrderMVO">
+    UPDATE API0005D
+    SET
+        SALES_ORD_ID = #{salesOrdId}
+      , STUS_CODE_ID = 4
+    WHERE ECOMM_ORD_ID = #{ecommOrdId}
+</update>
+
 
 </mapper>

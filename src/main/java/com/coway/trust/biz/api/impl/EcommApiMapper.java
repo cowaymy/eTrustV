@@ -1,6 +1,5 @@
 package com.coway.trust.biz.api.impl;
 
-import java.util.List;
 
 /**************************************
  * Author                  Date                    Remark
@@ -8,9 +7,7 @@ import java.util.List;
  ***************************************/
 
 import java.util.Map;
-
-import com.coway.trust.api.project.eCommerce.EComApiDto;
-import com.coway.trust.api.project.eCommerce.EComApiForm;
+import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -29,5 +26,7 @@ public interface EcommApiMapper {
   int insertNewAddr(Map<String, Object> params);
 
   Map<String, Object> cancelOrd(Map<String, Object> param);
+
+  void updateEcommOrderStatus(SalesOrderMVO salesOrderMVO);
 
 }

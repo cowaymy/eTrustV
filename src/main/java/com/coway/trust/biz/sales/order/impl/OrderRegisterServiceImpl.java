@@ -24,6 +24,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.coway.trust.biz.api.impl.EcommApiMapper;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.vo.ASEntryVO;
@@ -78,6 +79,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
   @Resource(name = "preOrderMapper")
   private PreOrderMapper preOrderMapper;
+
+  @Resource(name = "EcommApiMapper")
+  private EcommApiMapper ecommApiMapper;
 
   @Resource(name = "orderLedgerMapper")
   private OrderLedgerMapper orderLedgerMapper;
@@ -1824,6 +1828,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       preOrderVO.setSalesOrdId(salesOrdId);
 
       preOrderMapper.updatePreOrderStatus(preOrderVO);
+    }else if(CommonUtils.nvl(salesOrderMVO.getEcommOrdId()) != ""){
+      ecommApiMapper.updateEcommOrderStatus(salesOrderMVO);
     }
 
     // Set Sales_Order_ID - KR-SH

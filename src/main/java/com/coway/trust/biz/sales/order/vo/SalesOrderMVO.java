@@ -149,6 +149,8 @@ public class SalesOrderMVO implements Serializable {
 
   private int preOrdId;
 
+  private int ecommOrdId;
+
   public String getSalesProdSz() {
 	return salesProdSz;
 }
@@ -687,6 +689,14 @@ public int getPreOrdId() {
 
 public void setPreOrdId(int preOrdId) {
   this.preOrdId = preOrdId;
+}
+
+public int getEcommOrdId() {
+  return ecommOrdId;
+}
+
+public void setEcommOrdId(int ecommOrdId) {
+  this.ecommOrdId = ecommOrdId;
 }
 
 }
