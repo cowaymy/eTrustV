@@ -233,23 +233,43 @@ SELECT Extent1.BRNCH AS BRNCH_ID   ,
 </select>
 
 <update id="updateCourse" parameterType="Map">
-/* trainingMapper.updateCourse */
-   UPDATE MSC0008D
-   SET COURS_TYPE_CODE_ID = #{codeId}
-       ,COURS_CODE = #{coursCode}
-       ,COURS_NAME = #{coursName}
-       ,COURS_LOC = #{coursLoc}
-       ,COURS_START = TO_DATE(#{coursStart}, 'DD/MM/YYYY')
-       ,COURS_END = TO_DATE(#{coursEnd}, 'DD/MM/YYYY')
-       ,COURS_LIMIT = #{coursLimit}
-       <if test="stusCodeId != null and stusCodeId != ''">
-       ,COURS_STUS_ID = #{stusCodeId}
-       </if>
-       ,COURS_UPD_DT = SYSDATE
-       ,COURS_UPD_USER_ID = #{userId}
-       ,COURS_MEM_YN_ID = #{generalCode}
-       ,COURS_MEM_TYPE_ID = #{memType}
-       ,COURS_ATTEND_OWNER = #{attendance}
+    /* trainingMapper.updateCourse */
+    UPDATE MSC0008D
+    SET COURS_UPD_DT = SYSDATE,
+        COURS_UPD_USER_ID = #{userId}
+        <if test="codeId != null and codeId != ''">
+            , COURS_TYPE_CODE_ID = #{codeId}
+        </if>
+        <if test="coursCode != null and coursCode != ''">
+            , COURS_CODE = #{coursCode}
+        </if>
+        <if test="coursName != null and coursName != ''">
+            , COURS_NAME = #{coursName}
+        </if>
+        <if test="coursLoc != null and coursLoc != ''">
+            , COURS_LOC = #{coursLoc}
+        </if>
+        <if test="coursStart != null and coursStart != ''">
+            , COURS_START = TO_DATE(#{coursStart}, 'DD/MM/YYYY')
+        </if>
+        <if test="coursEnd != null and coursEnd != ''">
+            , COURS_END = TO_DATE(#{coursEnd}, 'DD/MM/YYYY')
+        </if>
+        <if test="coursLimit != null and coursLimit != ''">
+            , COURS_LIMIT = #{coursLimit}
+        </if>
+        <if test="stusCodeId != null and stusCodeId != ''">
+            , COURS_STUS_ID = #{stusCodeId}
+        </if>
+        <if test="generalCode != null and generalCode != ''">
+            , COURS_MEM_YN_ID = #{generalCode}
+        </if>
+        <if test="memType != null and memType != ''">
+            , COURS_MEM_TYPE_ID = #{memType}
+        </if>
+        <if test="attendance != null and attendance != ''">
+            , COURS_ATTEND_OWNER = #{attendance}
+        </if>
     WHERE COURS_ID = #{coursId}
 </update>
 
@@ -650,6 +670,21 @@ SELECT Extent1.COURS_ITM_ID   ,
              , MEM_CODE
       FROM ORG0001D
     WHERE MEM_ID = #{memId}
-</select>
+    </select>
+
+    <update id="updateRookie" parameterType="Map">
+        MERGE INTO ORG0001D T
+        USING (
+            SELECT B.COURS_MEM_ID MEM_ID
+            FROM MSC0008D A, MSC0009D B
+            WHERE A.COURS_ID = B.COURS_ID
+            AND A.COURS_ID = #{coursId}
+            AND A.COURS_STUS_ID = 4
+            AND B.COURS_TEST_RESULT = 'P'
+        ) S
+        ON (T.MEM_ID = S.MEM_ID)
+        WHEN MATCHED THEN UPDATE
+        SET ROOKIE = 1
+    </update>
 
 </mapper>
