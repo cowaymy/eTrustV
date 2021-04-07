@@ -303,16 +303,22 @@
     $(function(){
         $('#_btnNew').click(function() {
             Common.ajax("GET", "/sales/order/checkRC.do", "", function(memRc){
-                if(memRc !=  null && (memRc.rcPrct < 50)) {
-                    Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%.");
-                } else {
-                     // 20190925 KR-OHK Moblie Popup Setting
-                     if(Common.checkPlatformType() == "mobile") {
-                        popupObj = Common.popupWin("frmNew", "/homecare/sales/order/hcPreOrderRegisterPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
-                    } else{
-                        Common.popupDiv("/homecare/sales/order/hcPreOrderRegisterPop.do", null, null, true, '_divPreOrdRegPop');
+                if(memRc.rookie == 1) {
+                    if(memRc.rcPrct < 50) {
+                        Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%.");
+                    } else {
+                         // 20190925 KR-OHK Moblie Popup Setting
+                         if(Common.checkPlatformType() == "mobile") {
+                            popupObj = Common.popupWin("frmNew", "/homecare/sales/order/hcPreOrderRegisterPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+                        } else{
+                            Common.popupDiv("/homecare/sales/order/hcPreOrderRegisterPop.do", null, null, true, '_divPreOrdRegPop');
+                        }
                     }
+                } else {
+                    Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
+                    return false;
                 }
+
             });
         });
         $('#_btnClear').click(function() {
@@ -434,11 +440,17 @@
                 var memCode = AUIGrid.getCellValue(listGridID, selIdx, "crtName");
 
                 Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode}, function(memRc) {
-                    if(memRc !=  null && (memRc.rcPrct < 50)) {
-                        Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 50%.");
+                    if(memRc.rookie == 1) {
+                        if(memRc.rcPrct < 50) {
+                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 50%.");
+                        } else {
+                            Common.popupDiv("/homecare/sales/order/convertToHcOrderPop.do", { preOrdId : AUIGrid.getCellValue(listGridID, selIdx, "preOrdId") }, null , true);
+                        }
                     } else {
-                        Common.popupDiv("/homecare/sales/order/convertToHcOrderPop.do", { preOrdId : AUIGrid.getCellValue(listGridID, selIdx, "preOrdId") }, null , true);
+                        Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
+                        return false;
                     }
+
                 });
             }
         }else {

@@ -2329,12 +2329,18 @@ console.log("vBindingNo" + vBindingNo);
         Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode}, function(memRc) {
             console.log("memRC checking");
 
-            if(memRc != null) {
-                if(memRc.rcPrct < 30) {
-                    fn_clearOrderSalesman();
-                    Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%");
-                    return false;
+            if(memRc.rookie == 1) {
+                if(memRc.rcPrct != null) {
+                    if(memRc.rcPrct < 30) {
+                        fn_clearOrderSalesman();
+                        Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%");
+                        return false;
+                    }
                 }
+            } else {
+                fn_clearOrderSalesman();
+                Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed");
+                return false;
             }
 
             Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {

@@ -83,11 +83,16 @@
             Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode}, function(memRc) {
                 console.log("checkRC");
 
-                if(memRc != null) {
-                    if(memRc.rcPrct < 30) {
-                        Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%");
-                        return false;
+                if(memRc.rookie == 1) {
+                    if(memRc.rcPrct != null) {
+                        if(memRc.rcPrct < 30) {
+                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%.");
+                            return false;
+                        }
                     }
+                } else {
+                    Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
+                    return false;
                 }
 
                 Common.popupDiv("/sales/order/copyChangeOrder.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);

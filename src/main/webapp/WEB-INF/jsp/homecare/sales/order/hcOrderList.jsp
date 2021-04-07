@@ -99,25 +99,32 @@
 
             Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode, custId : custId}, function(memRc) {
                 console.log("checkRc");
-                if(memRc != null) {
-                    if(memRc.opCnt == 0 && memRc.rcPrct <= 50) {
-                        // Not own purchase and SHI below 50
-                        fn_clearOrderSalesman();
-                        Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 50%");
-                        return false;
-                    } else if(memRc.opCnt > 0) {
-                        // Own Purchase
-                        if(memRc.flg6Month == 0) {
-                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed for own purchase due member join less than 6 months.");
-                            return false;
-                        }
 
-                        if(memRc.rcPrct <= 55) {
-                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed for own purchase key in due to RC below 55%.");
+                if(memRc.rookie == 1) {
+                    if(memRc.rcPrct != null) {
+                        if(memRc.opCnt == 0 && memRc.rcPrct <= 50) {
+                            // Not own purchase and SHI below 50
+                            fn_clearOrderSalesman();
+                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 50%");
                             return false;
+                        } else if(memRc.opCnt > 0) {
+                            // Own Purchase
+                            if(memRc.flg6Month == 0) {
+                                Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed for own purchase due member join less than 6 months.");
+                                return false;
+                            }
+
+                            if(memRc.rcPrct <= 55) {
+                                Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed for own purchase key in due to RC below 55%.");
+                                return false;
+                            }
                         }
                     }
+                } else {
+                    Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
+                    return false;
                 }
+
                 Common.popupDiv("/homecare/sales/order/copyChangeHcOrder.do", { ordNo : AUIGrid.getCellValue(listMyGridID, selIdx, "ordNo") }, null , true);
            });
         } else {
@@ -573,7 +580,7 @@
                         </p></li>
                 </c:if>
             </c:if>
-            <c:if test="${SESSION_INFO.userIsExternal == '1'}">
+
                 <li><p class="btn_blue">
                         <a id="_btnLedger1" href="#"><spring:message code="sal.btn.ledger" />(1)</a>
                     </p></li>
@@ -583,7 +590,7 @@
                 <li><p class="btn_blue">
                         <a id="_btnTaxInvc" href="#"><spring:message code="sal.btn.taxInvoice" /></a>
                     </p></li>
-            </c:if>
+
             <li><p class="btn_blue">
                     <a id="btnSrch" href="#"><span class="search"></span>
                     <spring:message code='sales.Search' /></a>
