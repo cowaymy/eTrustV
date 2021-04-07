@@ -325,4 +325,8 @@ public interface MemberListMapper {
 
     String getUpdUserID(Map<String, Object> params);
     int updateOrgUserPW(Map<String, Object> params);
+
+    int getRookie(Map<String, Object> params);
+    int getOrientation(Map<String, Object> params);
+    void insertHPorientation(Map<String, Object> params);
 }

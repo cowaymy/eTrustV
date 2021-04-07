@@ -5254,4 +5254,39 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             USER_UPD_USER_ID = #{userID}
         WHERE USER_ID = #{updUserId}
     </update>
+
+    <update id="insertHPorientation" parameterType="Map">
+        MERGE INTO MSC0009D T
+        USING (
+            SELECT
+                A.MEM_ID,
+                A.NAME,
+                A.NRIC,
+                A.CRT_USER_ID,
+                B.COURS_ID
+            FROM ORG0001D A, ORG0003D B
+            WHERE A.APLICNT_ID = B.APLCTN_ID
+            AND B.APLCTN_ID = #{MemberID}
+        ) S
+        ON (T.COURS_MEM_ID = S.MEM_ID AND T.COURS_ID = S.COURS_ID)
+        WHEN NOT MATCHED THEN INSERT (
+            COURS_ITM_ID,
+            COURS_ID,
+            COURS_MEM_ID,
+            COURS_MEM_STUS_ID,
+            COURS_D_UPD_USER_ID,
+            COURS_D_UPD_DT,
+            COURS_D_MEM_NAME,
+            COURS_D_MEM_NRIC
+        ) VALUES (
+            MSC0009D_COURS_ITM_ID_SEQ.NEXTVAL,
+            S.COURS_ID,
+            S.MEM_ID,
+            '1',
+            S.CRT_USER_ID,
+            SYSDATE,
+            S.NAME,
+            S.NRIC
+        )
+    </update>
 </mapper>

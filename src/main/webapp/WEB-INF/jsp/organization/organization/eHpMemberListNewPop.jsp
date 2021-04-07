@@ -12,144 +12,137 @@ var issuedBankTxt;
 
 function fn_memberSave(){
 
-                if( $("#eHPuserType").val() == "1") {
-                    $('#eHPmemberType').attr("disabled", false);
-                    $('#eHPsearchdepartment').attr("disabled", false);
-                    $('#eHPsearchSubDept').attr("disabled", false);
+    if( $("#eHPuserType").val() == "1") {
+        $('#eHPmemberType').attr("disabled", false);
+        $('#eHPsearchdepartment').attr("disabled", false);
+        $('#eHPsearchSubDept').attr("disabled", false);
+    }
+
+    $("#eHPstreetDtl1").val(eHPinsAddressForm.streetDtl.value);
+    $("#eHPaddrDtl1").val(eHPinsAddressForm.addrDtl.value);
+    $("#eHPtraineeType").val(($("#eHPtraineeType1").value));
+    $("#eHPsubDept").val(($("#eHPsearchSubDept").value));
+
+    var gender = "";
+    if( $('input[name=gender]:checked', '#eHPmemberAddForm').val() == "M"){
+        gender = "M";
+    }else if( $('input[name=gender]:checked', '#eHPmemberAddForm').val() == "F"){
+        gender = "F";
+    }
+
+    var formData = new FormData();
+    $.each(myFileCaches, function(n, v) {
+        console.log("n : " + n + " v.file : " + v.file);
+        formData.append(n, v.file);
+    });
+    //formData.append('atchFileGrpId',atchFileGrpId);
+
+    Common.ajaxFile("/organization/attachFileUpload.do", formData, function(result) {
+        if(result != 0 && result.code == 00) {
+            atchFileGrpId = result.data.fileGroupKey;
+            console.log("atchFileGrpId :: " + atchFileGrpId);
+
+            var jsonObj =  {
+                    eHPareaId : $("#eHPareaId").val(),
+                    eHPstreetDtl : $("#eHPstreetDtl").val(),
+                    eHPaddrDtl : $("#eHPaddrDtl").val(),
+                    //eHPtraineeType : $("#eHPtraineeType").val(),
+                    eHPsubDept : $("#eHPsubDept").val(),
+                    eHPuserType : $("#eHPuserType").val(),
+                    eHPmemType : $("#eHPmemType").val(),
+                    eHPmemberType : $("#eHPmemberType").val(),
+                    eHPmemberNm : $("#eHPmemberNm").val(),
+                    eHPjoinDate : $("#eHPjoinDate").val(),
+                    //eHPgender : $("#eHPgender").val(),
+                    eHPgender : gender,
+                    eHPBirth : $("#eHPBirth").val(),
+                    eHPcmbRace : $("#eHPcmbRace").val(),
+                    eHPnational : $("#eHPnational").val(),
+                    eHPnric : $("#eHPnric").val(),
+                    eHPmarrital : $("#eHPmarrital").val(),
+                    eHPemail : $("#eHPemail").val(),
+                    eHPmobileNo : $("#eHPmobileNo").val(),
+                    eHPofficeNo : $("#eHPofficeNo").val(),
+                    eHPresidenceNo : $("#eHPresidenceNo").val(),
+                    eHPsponsorCd : $("#eHPsponsorCd").val(),
+                    eHPsponsorNm : $("#eHPsponsorNm").val(),
+                    eHPsponsorNric : $("#eHPsponsorNric").val(),
+                    eHPdeptCd : $("#eHPdeptCd").val(),
+                    eHPmeetingPoint : $("#eHPmeetingPoint").val(),
+                    //eHPtraineeType1 : $("#eHPtraineeType1").val(),
+                    eHPissuedBank : $("#eHPissuedBank").val(),
+                    eHPbankAccNo : $("#eHPbankAccNo").val(),
+                    eHPcollectionBrnch : $("#eHPcollectionBranch").val(),
+                    eHPcodyPaExpr : $("#eHPcodyPaExpr").val(),
+                    eHPspouseCode : $("#eHPspouseCode").val(),
+                    eHPspouseName : $("#eHPspouseName").val(),
+                    eHPspouseNric : $("#eHPspouseNric").val(),
+                    eHPspouseOcc : $("#eHPspouseOcc").val(),
+                    eHPspouseDob : $("#eHPspouseDob").val(),
+                    eHPspouseContat : $("#eHPspouseContat").val(),
+                    eHPorientation : $("#course").val(),
+                    atchFileGrpId : atchFileGrpId
+            };
+            // jsonObj.form = $("#memberAddForm").serializeJSON();
+
+            console.log("-------------------------" + JSON.stringify(jsonObj));
+            Common.ajax("POST", "/organization/eHPmemberSave",  jsonObj , function(result) {
+                console.log("message : " + result.message );
+
+                // Only applicable to HP Applicant
+                if($("#eHPmemberType").val() == "2803") {
+                    $("#eHPaplcntNRIC").val($("#eHPnric").val());
+                    $("#eHPaplcntName").val($("#eHPmemberNm").val());
+                    $("#eHPaplcntMobile").val($("#eHPmobileNo").val());
+
+                    console.log("NRIC :: " + $("#eHPaplcntNRIC").val());
+                    console.log("Name :: " + $("#eHPaplcntName").val());
+                    console.log("Mobile :: " + $("#eHPaplcntMobile").val());
+
+                    // Get ID and identification
+                    Common.ajax("GET", "/organization/getApplicantInfo", $("#eHPapplicantDtls").serialize(), function(result) {
+                        console.log("saving member details");
+                        console.log(result);
+
+                        var aplcntId = result.id;
+                        var idntfc = result.idntfc;
+
+                        // Construct Agreement URL via SMS
+                        var cnfmSms = " COWAY: COMPULSORY click " +
+                                      "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
+                                      " for confirmation of HP agreement. TQ!";
+
+                        if($("#eHPmobileNo").val() != "") {
+                            var rTelNo = $("#eHPmobileNo").val();
+
+                            /*
+                            Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
+                                console.log("sms.");
+                                console.log( result);
+                            });
+                            */
+                        }
+
+                        if($("#eHPemail").val() != "") {
+                            var recipient = $("#eHPemail").val();
+                            var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
+
+                            // Send Email file, recipient
+                            Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
+                                console.log("email.");
+                                console.log(result);
+                            })
+                        }
+                    });
                 }
-
-                $("#eHPstreetDtl1").val(eHPinsAddressForm.streetDtl.value);
-                $("#eHPaddrDtl1").val(eHPinsAddressForm.addrDtl.value);
-                $("#eHPtraineeType").val(($("#eHPtraineeType1").value));
-                $("#eHPsubDept").val(($("#eHPsearchSubDept").value));
-
-
-
-                var gender = "";
-                if( $('input[name=gender]:checked', '#eHPmemberAddForm').val() == "M"){
-                    gender = "M";
-                }else if( $('input[name=gender]:checked', '#eHPmemberAddForm').val() == "F"){
-                    gender = "F";
-                }
-
-                var formData = new FormData();
-                $.each(myFileCaches, function(n, v) {
-                    console.log("n : " + n + " v.file : " + v.file);
-                    formData.append(n, v.file);
-                });
-                //formData.append('atchFileGrpId',atchFileGrpId);
-
-
-
-                Common.ajaxFile("/organization/attachFileUpload.do", formData, function(result) {
-                    if(result != 0 && result.code == 00){
-                    	atchFileGrpId = result.data.fileGroupKey;
-                    	 console.log("atchFileGrpId :: " + atchFileGrpId);
-                    	  var jsonObj =  {
-                    			  eHPareaId : $("#eHPareaId").val(),
-                    			  eHPstreetDtl : $("#eHPstreetDtl").val(),
-                    			  eHPaddrDtl : $("#eHPaddrDtl").val(),
-                    			  //eHPtraineeType : $("#eHPtraineeType").val(),
-                    			  eHPsubDept : $("#eHPsubDept").val(),
-                    			  eHPuserType : $("#eHPuserType").val(),
-                    			  eHPmemType : $("#eHPmemType").val(),
-                    			  eHPmemberType : $("#eHPmemberType").val(),
-                    			  eHPmemberNm : $("#eHPmemberNm").val(),
-                    			  eHPjoinDate : $("#eHPjoinDate").val(),
-                    			  //eHPgender : $("#eHPgender").val(),
-                    			  eHPgender : gender,
-                    			  eHPBirth : $("#eHPBirth").val(),
-                    			  eHPcmbRace : $("#eHPcmbRace").val(),
-                    			  eHPnational : $("#eHPnational").val(),
-                    			  eHPnric : $("#eHPnric").val(),
-                    			  eHPmarrital : $("#eHPmarrital").val(),
-                    			  eHPemail : $("#eHPemail").val(),
-                    			  eHPmobileNo : $("#eHPmobileNo").val(),
-                    			  eHPofficeNo : $("#eHPofficeNo").val(),
-                    			  eHPresidenceNo : $("#eHPresidenceNo").val(),
-                    			  eHPsponsorCd : $("#eHPsponsorCd").val(),
-                    			  eHPsponsorNm : $("#eHPsponsorNm").val(),
-                    			  eHPsponsorNric : $("#eHPsponsorNric").val(),
-                    			  eHPdeptCd : $("#eHPdeptCd").val(),
-                    			  eHPmeetingPoint : $("#eHPmeetingPoint").val(),
-                    			  //eHPtraineeType1 : $("#eHPtraineeType1").val(),
-                    			  eHPissuedBank : $("#eHPissuedBank").val(),
-                    			  eHPbankAccNo : $("#eHPbankAccNo").val(),
-                    			  eHPcollectionBrnch : $("#eHPcollectionBranch").val(),
-                    			  eHPcodyPaExpr : $("#eHPcodyPaExpr").val(),
-                    			  eHPspouseCode : $("#eHPspouseCode").val(),
-                    			  eHPspouseName : $("#eHPspouseName").val(),
-                    			  eHPspouseNric : $("#eHPspouseNric").val(),
-                    			  eHPspouseOcc : $("#eHPspouseOcc").val(),
-                    			  eHPspouseDob : $("#eHPspouseDob").val(),
-                    			  eHPspouseContat : $("#eHPspouseContat").val(),
-                    			  atchFileGrpId : atchFileGrpId
-
-                    	  };
-
-                    	 // jsonObj.form = $("#memberAddForm").serializeJSON();
-
-
-                console.log("-------------------------" + JSON.stringify(jsonObj));
-                Common.ajax("POST", "/organization/eHPmemberSave",  jsonObj , function(result) {
-                    console.log("message : " + result.message );
-
-                    // Only applicable to HP Applicant
-                    if($("#eHPmemberType").val() == "2803") {
-                        $("#eHPaplcntNRIC").val($("#eHPnric").val());
-                        $("#eHPaplcntName").val($("#eHPmemberNm").val());
-                        $("#eHPaplcntMobile").val($("#eHPmobileNo").val());
-
-                        console.log("NRIC :: " + $("#eHPaplcntNRIC").val());
-                        console.log("Name :: " + $("#eHPaplcntName").val());
-                        console.log("Mobile :: " + $("#eHPaplcntMobile").val());
-
-
-                        // Get ID and identification
-                        Common.ajax("GET", "/organization/getApplicantInfo", $("#eHPapplicantDtls").serialize(), function(result) {
-                            console.log("saving member details");
-                            console.log(result);
-
-                            var aplcntId = result.id;
-                            var idntfc = result.idntfc;
-
-                            // Construct Agreement URL via SMS
-                            var cnfmSms = " COWAY: COMPULSORY click " +
-                                                 "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
-                                                 " for confirmation of HP agreement. TQ!";
-
-                            if($("#eHPmobileNo").val() != "") {
-                                var rTelNo = $("#eHPmobileNo").val();
-
-                                Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
-                                    console.log("sms.");
-                                    console.log( result);
-                                });
-                            }
-
-                            if($("#eHPemail").val() != "") {
-                                var recipient = $("#eHPemail").val();
-
-                                var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
-
-                                // Send Email file, recipient
-                                Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
-                                    console.log("email.");
-                                    console.log(result);
-                                })
-                            }
-
-                        });
-
-                    }
-                    Common.alert(result.message,fn_close);
-        });
-                    }else{
-                        Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
-                    }
-                },function(result){
-                    Common.alert("Upload Failed. Please check with System Administrator.");
-                });
+                Common.alert(result.message,fn_close);
+            });
+        } else {
+            Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+        }
+    }, function(result){
+        Common.alert("Upload Failed. Please check with System Administrator.");
+    });
 }
 
 $(function(){
@@ -493,13 +486,10 @@ function fn_departmentCode(value){
 
                 });
             }
-
         break;
-
     }
-
-
 }
+
 $(document).ready(function() {
 console.log("ready");
     //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
@@ -658,6 +648,20 @@ console.log("ready");
      $("#eHPmobileNo").blur(function() {
         fmtNumber("#eHPmobileNo"); // 2018-07-06 - LaiKW - Removal of special characters from mobile no
      });
+
+    Common.ajax("GET", "/organization/selectHPOrientation.do", "", function(result) {
+
+        $("#course").find('option').each(function() {
+            $(this).remove();
+        });
+        console.log("-------------------------" + JSON.stringify(result));
+        if (result!= null) {
+            $("#course").append("<option value=''>Choose One</option>");
+            for( var i=0; i< result.length; i++) {
+                $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
+            }
+        }
+    });
 });
 
 // 2018-06-20 - LaiKW - Removal of MBF Bank and Others from Issued Bank drop down box
@@ -818,23 +822,27 @@ console.log("validation");
             }
         }
 
-            if($("#eHPemail").val() == '') {
-                Common.alert("Please key in Email Address");
-                return false;
-            }
+        if($("#eHPemail").val() == '') {
+            Common.alert("Please key in Email Address");
+            return false;
+        }
 
-            // 2018-07-26 - LaiKW - Added Meeting Point and Branch
-            if($('#eHPmeetingPoint').val() == '') {
-                Common.alert("Please select reporting branch");
-                return false;
-            }
+        // 2018-07-26 - LaiKW - Added Meeting Point and Branch
+        if($('#eHPmeetingPoint').val() == '') {
+            Common.alert("Please select reporting branch");
+            return false;
+        }
 
-            console.log("Collection Branch : " + $("#eHPcollectionBranch").val());
-            if($("#eHPcollectionBranch").val() == '' ) {
-                Common.alert("Please select Collection branch");
-                return false;
-            }
+        console.log("Collection Branch : " + $("#eHPcollectionBranch").val());
+        if($("#eHPcollectionBranch").val() == '' ) {
+            Common.alert("Please select Collection branch");
+            return false;
+        }
 
+        if($("#course").val() == "") {
+            Common.alert("Please select orientation date");
+            return false;
+        }
 
     }
 
@@ -1238,646 +1246,674 @@ function fn_validFile() {
     return isValid;
 }
 
-
 </script>
+
+<!--
+****************************************
+**************** DESIGN ****************
+****************************************
+ -->
+
 <form id="eHpForm">
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+    <div id="popup_wrap" class="popup_wrap">
 
-<header class="pop_header"><!-- pop_header start -->
-<h1>eHP - Add New Member</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
+        <header class="pop_header">
+            <h1>eHP - Add New Member</h1>
+            <ul class="right_opt">
+                <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+            </ul>
+        </header>
 
-<form id="eHPapplicantDtls" method="post">
-    <div style="display:none">
-        <input type="text" name="eHPaplcntNRIC"  id="eHPaplcntNRIC"/>
-        <input type="text" name="eHPaplcntName"  id="eHPaplcntName"/>
-        <input type="text" name="eHPaplcntMobile"  id="eHPaplcntMobile"/>
-    </div>
-</form>
+        <form id="eHPapplicantDtls" method="post">
+            <div style="display:none">
+                <input type="text" name="eHPaplcntNRIC"  id="eHPaplcntNRIC"/>
+                <input type="text" name="eHPaplcntName"  id="eHPaplcntName"/>
+                <input type="text" name="eHPaplcntMobile"  id="eHPaplcntMobile"/>
+            </div>
+        </form>
 
-<section class="pop_body"><!-- pop_body start -->
-<form action="#" id="eHPmemberAddForm" method="post">
-<input type="hidden" id="eHPareaId" name="areaId">
-<input type="hidden" id="eHPstreetDtl1" name="streetDtl">
-<input type="hidden" value ="eHPaddrDtl" id="addrDtl1" name="addrDtl">
-<input type="hidden" id="eHPtraineeType" name="traineeType">
-<input type="hidden" id="eHPsubDept" name="subDept">
-<input type="hidden" id="eHPuserType" name="userType" value="${userType}">
-<input type="hidden" id="eHPmemType" name="memType" value="${memType}">
+        <section class="pop_body">
+            <form action="#" id="eHPmemberAddForm" method="post">
+                <input type="hidden" id="eHPareaId" name="areaId">
+                <input type="hidden" id="eHPstreetDtl1" name="streetDtl">
+                <input type="hidden" value ="eHPaddrDtl" id="addrDtl1" name="addrDtl">
+                <input type="hidden" id="eHPtraineeType" name="traineeType">
+                <input type="hidden" id="eHPsubDept" name="subDept">
+                <input type="hidden" id="eHPuserType" name="userType" value="${userType}">
+                <input type="hidden" id="eHPmemType" name="memType" value="${memType}">
 
-<!--<input type="hidden" id = "memberType" name="memberType"> -->
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Member Type</th>
-    <td>
-    <select class="w100p" id="eHPmemberType" name="memberType" disabled="disabled">
-        <option value="2803" selected>HP Applicant</option>
-    </select>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-<section class="tap_wrap"><!-- tap_wrap start -->
-<ul class="tap_type1 num4">
-    <li><a href="#" class="on">Basic Info</a></li>
-    <li><a href="#">Spouse Info</a></li>
-    <li><a href="#">Member Address</a></li>
-    <li><a href="#">Attachment</a></li>
-</ul>
+                <!--<input type="hidden" id = "memberType" name="memberType"> -->
+                <table class="type1">
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width:180px" />
+                        <col style="width:*" />
+                    </colgroup>
 
-<article class="tap_area"><!-- tap_area start -->
+                    <tbody>
+                        <tr>
+                            <th scope="row">Member Type</th>
+                            <td>
+                            <select class="w100p" id="eHPmemberType" name="memberType" disabled="disabled">
+                                <option value="2803" selected>HP Applicant</option>
+                            </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
-<aside class="title_line"><!-- title_line start -->
-<h2>Basic Information</h2>
-</aside><!-- title_line end -->
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:160px" />
-    <col style="width:*" />
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:150px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<!-- <tr>
-    <th scope="row">Member Code</th>
-    <td colspan="5">
-    <input type="text" title="" id="memberCd" name="memberCd" placeholder="Member Code" class="w100p" disabled="disabled" />
-    </td>
-</tr> -->
-<tr>
-    <th scope="row">Member Name<span class="must">*</span></th>
-    <td colspan="3">
-    <input type="text" title="" id="eHPmemberNm" name="memberNm" placeholder="Member Name" class="w100p" />
-    </td>
-    <th scope="row">Joined Date<span class="must">*</span></th>
-    <td>
-    <input type="text" title="Create start Date" id="eHPjoinDate" name="joinDate" placeholder="DD/MM/YYYY" class="w100p" />
-    </td>
-</tr>
-<tr>
-   <th scope="row">NRIC (New)<span class="must">*</span></th>
-    <td>
-    <input type="text" title="" placeholder="NRIC (New)" id="eHPnric" name="nric" class="w100p"  maxlength="12" onKeyDown="checkNRICEnter()"
-        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
-    </td>
-    <th scope="row">Date of Birth<span class="must">*</span></th>
-    <td>
-    <input type="text" title="Create start Date" id="eHPBirth" name="Birth"placeholder="DD/MM/YYYY" class="j_date" />
-    </td>
-    <th scope="row">Race<span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="eHPcmbRace" name="cmbRace">
-         <option value="">Choose One</option>
-        <c:forEach var="list" items="${race}" varStatus="status">
-            <option value="${list.detailcodeid}">${list.detailcodename } </option>
-        </c:forEach>
-    </select>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Nationality<span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="eHPnational" name="national">
-     <c:forEach var="list" items="${nationality}" varStatus="status">
-             <option value="${list.countryid}">${list.name } </option>
-        </c:forEach>
-    </select>
-    </td>
-        <th scope="row">Gender<span class="must">*</span></th>
-    <td>
-    <label><input type="radio" name="gender" id="eHPgender" value="M" /><span>Male</span></label>
-    <label><input type="radio" name="gender" id="eHPgender" value="F"/><span>Female</span></label>
-    </td>
-    <th scope="row">Marital Status<span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="eHPmarrital" name="marrital" onchange="javascript : fn_onchangeMarrital()">
-    </select>
-    </td>
-</tr>
-<tr>
-    <th scope="row" id="eHPemailLbl" name ="emailLbl">Email</th>
-    <td colspan="5">
-    <input type="text" title="" placeholder="Email" class="w100p" id="eHPemail" name="email" />
-    </td>
-</tr>
-<tr>
-    <th scope="row" id="eHPmobileNoLbl" name="mobileNoLbl">Mobile No.</th>
-    <td>
-    <input type="text" title="" placeholder="Numeric Only" class="w100p" id="eHPmobileNo" name="mobileNo" maxlength="11" onKeyDown="fn_checkMobileNo()"
-        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
-    </td>
-    <th scope="row">Office No.</th>
-    <td>
-    <input type="text" title="" placeholder="Numberic Only" class="w100p"  id="eHPofficeNo" name="officeNo"
-        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
-    </td>
-    <th scope="row">Residence No.</th>
-    <td>
-    <input type="text" title="" placeholder="Numberic Only" class="w100p" id="eHPresidenceNo"  name="residenceNo"
-        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Sponsor's Code<span class="must">*</span></th>
-    <td>
+                <section class="tap_wrap">
+                <ul class="tap_type1 num4">
+                    <li><a href="#" class="on">Basic Info</a></li>
+                    <li><a href="#">Spouse Info</a></li>
+                    <li><a href="#">Member Address</a></li>
+                    <li><a href="#">Attachment</a></li>
+                </ul>
 
-    <div class="search_100p"><!-- search_100p start -->
-    <input type="text" title="" placeholder="Sponsor's Code" class="w100p" id="eHPsponsorCd" name="sponsorCd" onKeyDown="fn_sponsorCheck()"/>
-    <a href="javascript:fn_sponsorPop();" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-    </div><!-- search_100p end -->
+                <article class="tap_area">
 
-    </td>
-    <th scope="row">Sponsor's Name</th>
-    <td>
-    <input type="text" title="" placeholder="Sponsor's Name" class="w100p"  id="eHPsponsorNm" name="sponsorNm"/>
-    </td>
-    <th scope="row">Sponsor's NRIC</th>
-    <td>
-    <input type="text" title="" placeholder="Sponsor's NRIC" class="w100p" id="eHPsponsorNric" name="sponsorNric"
-        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Branch<span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="eHPbranch" name="branch">
-    </select>
-    </td>
-    <th scope="row">Department Code<span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="eHPdeptCd" name="deptCd">
-        <c:forEach var="list" items="${DeptCdList}" varStatus="status">
-            <option value="${list.codeId}">${list.codeName } </option>
-        </c:forEach>
+                <aside class="title_line">
+                    <h2>Basic Information</h2>
+                </aside>
+                <table class="type1">
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width:160px" />
+                        <col style="width:*" />
+                        <col style="width:150px" />
+                        <col style="width:*" />
+                        <col style="width:150px" />
+                        <col style="width:*" />
+                    </colgroup>
 
-    </select>
-    </td>
-    <th scope="row">Transport Code</th>
-    <td>
-    <select class="w100p"  id="eHPtransportCd" name="transportCd">
-    </select>
-    </td>
-</tr>
-<tr>
-    <th scope="row" id="eHPmeetingPointLbl">Reporting Branch</th>
-    <td colspan="5">
-        <select class="w100p" id="eHPmeetingPoint" name="meetingPoint"></select>
-    </td>
-</tr>
-<%-- <tr>
-    <th scope="row">e-Approval Status</th>
-    <td colspan="5">
-    <input type="text" id="eHPapprStusText" name="apprStusText" title="" placeholder="e-Approval Status" class="w100p" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Religion</th>
-    <td colspan="2">
-    <select class="w100p" id="eHPreligion" name="religion">
-            <option value="">Choose One</option>
-        <c:forEach var="list" items="${Religion}" varStatus="status">
-            <option value="${list.detailcodeid}">${list.detailcodename } </option>
-        </c:forEach>
-    </select>
-    </td>
-    <th scope="row">e-Approval Status</th>
-    <td colspan="2">
-    <select class="w100p" id="eHPapprStusCombo" name="apprStusCombo">
-       <!--  <option value="">Choose One</option> -->
-        <option value="">Pending</option>
-        <option value="">Approved</option>
-        <option value="">Rejected</option>
-    </select>
-    </td>
-</tr>
-<tr>
-    <th id="eHPcourseLbl" scope="row">Training Course</th>
-    <td colspan="2">
-    <select class="w100p" id="eHPcourse" name="course">
-    </select>
-    </td>
-    <th scope="row">Total Vacation</th>
-    <td colspan="2">
-    <input type="text" id="eHPtotalVacation" name="totalVacation" title="" placeholder="Total Vacation" class="w100p" />
-    </td>
-</tr>
-<tr>
-    <th scope="row">Application Status</th>
-    <td colspan="2">
-    <select class="w100p" id="eHPapplicationStatus">
-        <option value="">Choose One</option>
-        <option value="">Register</option>
-        <option value="">Training</option>
-        <option value="">Result-fail</option>
-        <option value="">Pass, Absent</option>
-        <option value="">Confirmed</option>
-        <option value="">Cancelled</option>
-    </select>
-    </td>
-    <th scope="row">Remain Vacation</th>
-    <td colspan="2">
-    <input type="text" id="eHPremainVacation" name="remainVacation" title="" placeholder="Remain Vacation" class="w100p" />
-    </td>
-</tr>
-<tr id = "eHPtrTrainee" >
-    <th scope="row">Trainee Type </th>
-    <td colspan="2">
-        <select class= "w100p" id="eHPtraineeType1" name="traineeType1">
-        <option value="">Choose One</option>
-        <option value= "2">Cody</option>
-        <option value = "3">CT</option>
-        <option value = "7">HT</option>
-        <option value = "5758">DT</option>
-    </select>
-    </td>
-    <th scope="row"></th>
-    <td colspan="2">
-    </td>
-</tr>
-<tr>
-    <th scope="row">Main Department</th>
-    <td colspan="2">
-    <select class="w100p" id="eHPsearchdepartment" name="searchdepartment"  >
-            <option value="">Choose One</option>
-         <c:forEach var="list" items="${mainDeptList}" varStatus="status">
-             <option value="${list.deptId}">${list.deptName } </option>
-        </c:forEach>
-    </select>
-    </td>
-    <th scope="row">Sub Department</th>
-    <td colspan="2">
-    <select class="w100p" id="eHPsearchSubDept" name="searchSubDept">
-             <option value="">Choose One</option>
-       <c:forEach var="list" items="${subDeptList}" varStatus="status">
-             <option value="${list.deptId}">${list.deptName} </option>
-        </c:forEach>
-    </select>
-    </td>
-</tr> --%>
-</tbody>
-</table><!-- table end -->
+                    <tbody>
+                    <!-- <tr>
+                        <th scope="row">Member Code</th>
+                        <td colspan="5">
+                        <input type="text" title="" id="memberCd" name="memberCd" placeholder="Member Code" class="w100p" disabled="disabled" />
+                        </td>
+                    </tr> -->
+                    <tr>
+                        <th scope="row">Member Name<span class="must">*</span></th>
+                        <td colspan="3">
+                            <input type="text" title="" id="eHPmemberNm" name="memberNm" placeholder="Member Name" class="w100p" />
+                        </td>
+                        <th scope="row">Joined Date<span class="must">*</span></th>
+                        <td>
+                            <input type="text" title="Create start Date" id="eHPjoinDate" name="joinDate" placeholder="DD/MM/YYYY" class="w100p" />
+                        </td>
+                    </tr>
+                    <tr>
+                       <th scope="row">NRIC (New)<span class="must">*</span></th>
+                        <td>
+                            <input type="text" title="" placeholder="NRIC (New)" id="eHPnric" name="nric" class="w100p"  maxlength="12" onKeyDown="checkNRICEnter()"
+                            onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
+                        </td>
+                        <th scope="row">Date of Birth<span class="must">*</span></th>
+                        <td>
+                            <input type="text" title="Create start Date" id="eHPBirth" name="Birth"placeholder="DD/MM/YYYY" class="j_date" />
+                        </td>
+                        <th scope="row">Race<span class="must">*</span></th>
+                        <td>
+                            <select class="w100p" id="eHPcmbRace" name="cmbRace">
+                                <option value="">Choose One</option>
+                                <c:forEach var="list" items="${race}" varStatus="status">
+                                    <option value="${list.detailcodeid}">${list.detailcodename } </option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Nationality<span class="must">*</span></th>
+                        <td>
+                        <select class="w100p" id="eHPnational" name="national">
+                         <c:forEach var="list" items="${nationality}" varStatus="status">
+                                 <option value="${list.countryid}">${list.name } </option>
+                            </c:forEach>
+                        </select>
+                        </td>
+                            <th scope="row">Gender<span class="must">*</span></th>
+                        <td>
+                        <label><input type="radio" name="gender" id="eHPgender" value="M" /><span>Male</span></label>
+                        <label><input type="radio" name="gender" id="eHPgender" value="F"/><span>Female</span></label>
+                        </td>
+                        <th scope="row">Marital Status<span class="must">*</span></th>
+                        <td>
+                        <select class="w100p" id="eHPmarrital" name="marrital" onchange="javascript : fn_onchangeMarrital()">
+                        </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="eHPemailLbl" name ="emailLbl">Email</th>
+                        <td colspan="5">
+                        <input type="text" title="" placeholder="Email" class="w100p" id="eHPemail" name="email" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="eHPmobileNoLbl" name="mobileNoLbl">Mobile No.</th>
+                        <td>
+                        <input type="text" title="" placeholder="Numeric Only" class="w100p" id="eHPmobileNo" name="mobileNo" maxlength="11" onKeyDown="fn_checkMobileNo()"
+                            onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
+                        </td>
+                        <th scope="row">Office No.</th>
+                        <td>
+                        <input type="text" title="" placeholder="Numberic Only" class="w100p"  id="eHPofficeNo" name="officeNo"
+                            onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
+                        </td>
+                        <th scope="row">Residence No.</th>
+                        <td>
+                        <input type="text" title="" placeholder="Numberic Only" class="w100p" id="eHPresidenceNo"  name="residenceNo"
+                            onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Sponsor's Code<span class="must">*</span></th>
+                        <td>
 
-<aside class="title_line"><!-- title_line start -->
-<h2>Bank Account Information</h2>
-</aside><!-- title_line end -->
+                        <div class="search_100p"><!-- search_100p start -->
+                        <input type="text" title="" placeholder="Sponsor's Code" class="w100p" id="eHPsponsorCd" name="sponsorCd" onKeyDown="fn_sponsorCheck()"/>
+                        <a href="javascript:fn_sponsorPop();" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                        </div><!-- search_100p end -->
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Issued Bank<span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="eHPissuedBank" name="issuedBank" onClick="javascript : onclickIssuedBank()" onChange="onChangeIssuedBank(this)">
-    </select>
-    </td>
-    <th scope="row">Bank Account No<span class="must">*</span></th>
-    <td>
-    <input type="text" title="" placeholder="Bank Account No" class="w100p" id="eHPbankAccNo"  name="bankAccNo" onKeyDown="checkBankAccNoEnter()"
-    onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
+                        </td>
+                        <th scope="row">Sponsor's Name</th>
+                        <td>
+                        <input type="text" title="" placeholder="Sponsor's Name" class="w100p"  id="eHPsponsorNm" name="sponsorNm"/>
+                        </td>
+                        <th scope="row">Sponsor's NRIC</th>
+                        <td>
+                        <input type="text" title="" placeholder="Sponsor's NRIC" class="w100p" id="eHPsponsorNric" name="sponsorNric"
+                            onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Branch<span class="must">*</span></th>
+                        <td>
+                        <select class="w100p" id="eHPbranch" name="branch">
+                        </select>
+                        </td>
+                        <th scope="row">Department Code<span class="must">*</span></th>
+                        <td>
+                        <select class="w100p" id="eHPdeptCd" name="deptCd">
+                            <c:forEach var="list" items="${DeptCdList}" varStatus="status">
+                                <option value="${list.codeId}">${list.codeName } </option>
+                            </c:forEach>
 
-<!-- <aside class="title_line">title_line start
-<h2>Language Proficiency</h2>
-</aside>title_line end
+                        </select>
+                        </td>
+                        <th scope="row">Transport Code</th>
+                        <td>
+                        <select class="w100p"  id="eHPtransportCd" name="transportCd">
+                        </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="eHPmeetingPointLbl">Reporting Branch</th>
+                        <td colspan="5">
+                            <select class="w100p" id="eHPmeetingPoint" name="meetingPoint"></select>
+                        </td>
+                    </tr>
+                    <%-- <tr>
+                        <th scope="row">e-Approval Status</th>
+                        <td colspan="5">
+                        <input type="text" id="eHPapprStusText" name="apprStusText" title="" placeholder="e-Approval Status" class="w100p" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Religion</th>
+                        <td colspan="2">
+                        <select class="w100p" id="eHPreligion" name="religion">
+                                <option value="">Choose One</option>
+                            <c:forEach var="list" items="${Religion}" varStatus="status">
+                                <option value="${list.detailcodeid}">${list.detailcodename } </option>
+                            </c:forEach>
+                        </select>
+                        </td>
+                        <th scope="row">e-Approval Status</th>
+                        <td colspan="2">
+                        <select class="w100p" id="eHPapprStusCombo" name="apprStusCombo">
+                           <!--  <option value="">Choose One</option> -->
+                            <option value="">Pending</option>
+                            <option value="">Approved</option>
+                            <option value="">Rejected</option>
+                        </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th id="eHPcourseLbl" scope="row">Training Course</th>
+                        <td colspan="2">
+                        <select class="w100p" id="eHPcourse" name="course">
+                        </select>
+                        </td>
+                        <th scope="row">Total Vacation</th>
+                        <td colspan="2">
+                        <input type="text" id="eHPtotalVacation" name="totalVacation" title="" placeholder="Total Vacation" class="w100p" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Application Status</th>
+                        <td colspan="2">
+                        <select class="w100p" id="eHPapplicationStatus">
+                            <option value="">Choose One</option>
+                            <option value="">Register</option>
+                            <option value="">Training</option>
+                            <option value="">Result-fail</option>
+                            <option value="">Pass, Absent</option>
+                            <option value="">Confirmed</option>
+                            <option value="">Cancelled</option>
+                        </select>
+                        </td>
+                        <th scope="row">Remain Vacation</th>
+                        <td colspan="2">
+                        <input type="text" id="eHPremainVacation" name="remainVacation" title="" placeholder="Remain Vacation" class="w100p" />
+                        </td>
+                    </tr>
+                    <tr id = "eHPtrTrainee" >
+                        <th scope="row">Trainee Type </th>
+                        <td colspan="2">
+                            <select class= "w100p" id="eHPtraineeType1" name="traineeType1">
+                            <option value="">Choose One</option>
+                            <option value= "2">Cody</option>
+                            <option value = "3">CT</option>
+                            <option value = "7">HT</option>
+                            <option value = "5758">DT</option>
+                        </select>
+                        </td>
+                        <th scope="row"></th>
+                        <td colspan="2">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Main Department</th>
+                        <td colspan="2">
+                        <select class="w100p" id="eHPsearchdepartment" name="searchdepartment"  >
+                                <option value="">Choose One</option>
+                             <c:forEach var="list" items="${mainDeptList}" varStatus="status">
+                                 <option value="${list.deptId}">${list.deptName } </option>
+                            </c:forEach>
+                        </select>
+                        </td>
+                        <th scope="row">Sub Department</th>
+                        <td colspan="2">
+                        <select class="w100p" id="eHPsearchSubDept" name="searchSubDept">
+                                 <option value="">Choose One</option>
+                           <c:forEach var="list" items="${subDeptList}" varStatus="status">
+                                 <option value="${list.deptId}">${list.deptName} </option>
+                            </c:forEach>
+                        </select>
+                        </td>
+                    </tr> --%>
+                    </tbody>
+                </table><!-- table end -->
 
-<table class="type1">table start
-<caption>table</caption>
-<colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Education Level</th>
-    <td>
-    <select class="w100p" id="eHPeducationLvl" name="educationLvl">
-    </select>
-    </td>
-    <th scope="row">Language</th>
-    <td>
-    <select class="w100p" id="eHPlanguage" name="language">
-    </select>
-    </td>
-</tr>
-</tbody>
-</table>table end -->
+                <aside class="title_line">
+                <h2>Bank Account Information</h2>
+                </aside>
 
-<aside class="title_line"><!-- title_line start -->
-<h2>Starter Kit & ID Tag</h2>
-</aside><!-- title_line end -->
+                <table class="type1">
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:150px" />
+                    <col style="width:*" />
+                    <col style="width:180px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                <tr>
+                    <th scope="row">Issued Bank<span class="must">*</span></th>
+                    <td>
+                    <select class="w100p" id="eHPissuedBank" name="issuedBank" onClick="javascript : onclickIssuedBank()" onChange="onChangeIssuedBank(this)">
+                    </select>
+                    </td>
+                    <th scope="row">Bank Account No<span class="must">*</span></th>
+                    <td>
+                    <input type="text" title="" placeholder="Bank Account No" class="w100p" id="eHPbankAccNo"  name="bankAccNo" onKeyDown="checkBankAccNoEnter()"
+                    onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
+                    </td>
+                </tr>
+                </tbody>
+                </table><!-- table end -->
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">Collection Branch<span class="must">*</span></th>
+                <!-- <aside class="title_line">title_line start
+                <h2>Language Proficiency</h2>
+                </aside>title_line end
 
-      <td colspan="5">
-       <select class="w100p" id="eHPcollectionBranch" name="collectionBranch">
-               <option value="" selected>Select Branch</option>
-        <c:forEach var="list" items="${SOBranch }" varStatus="status">
-           <option value="${list.codeId}">${list.codeName}</option>
-        </c:forEach>
-        </select>
-    </td>
+                <table class="type1">table start
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:150px" />
+                    <col style="width:*" />
+                    <col style="width:180px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                <tr>
+                    <th scope="row">Education Level</th>
+                    <td>
+                    <select class="w100p" id="eHPeducationLvl" name="educationLvl">
+                    </select>
+                    </td>
+                    <th scope="row">Language</th>
+                    <td>
+                    <select class="w100p" id="eHPlanguage" name="language">
+                    </select>
+                    </td>
+                </tr>
+                </tbody>
+                </table>table end -->
 
-</tr>
-</tbody>
-</table><!-- table end -->
+                <aside class="title_line">
+                <h2>Starter Kit & ID Tag</h2>
+                </aside>
 
-<aside class="title_line" ><!-- title_line start -->
-<h2>Agreement</h2>
-</aside><!-- title_line end -->
+                <table class="type1">
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:150px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                <tr>
+                    <th scope="row">Collection Branch<span class="must">*</span></th>
 
-<table class="type1" id="eHPhideContent"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row"  class="hideContent">Cody PA Expiry<span class="must">*</span></th>
-    <td  class="hideContent">
-    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="codyPaExpr" name="codyPaExpr"/>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
+                      <td colspan="5">
+                       <select class="w100p" id="eHPcollectionBranch" name="collectionBranch">
+                               <option value="" selected>Select Branch</option>
+                        <c:forEach var="list" items="${SOBranch }" varStatus="status">
+                           <option value="${list.codeId}">${list.codeName}</option>
+                        </c:forEach>
+                        </select>
+                    </td>
 
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_close()">CANCEL</a></p></li>
-</ul>
+                </tr>
+                </tbody>
+                </table><!-- table end -->
 
-</article><!-- tap_area end -->
+                <!--
+                <aside class="title_line" >
+                <h2>Agreement</h2>
+                </aside>
+                 -->
 
-<article class="tap_area"><!-- tap_area start -->
+                <table class="type1" id="eHPhideContent">
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:150px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                <tr>
+                    <th scope="row"  class="hideContent">Cody PA Expiry<span class="must">*</span></th>
+                    <td  class="hideContent">
+                    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="codyPaExpr" name="codyPaExpr"/>
+                    </td>
+                </tr>
+                </tbody>
+                </table><!-- table end -->
 
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:120px" />
-    <col style="width:*" />
-    <col style="width:130px" />
-    <col style="width:*" />
-    <col style="width:180px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row" id="eHPspouseCodeLbl" name="spouseCodeLbl">MCode</th>
-    <td>
-    <input type="text" title="" placeholder="MCode" class="w100p" id="eHPspouseCode" name="spouseCode" value=""/>
-    </td>
-    <th scope="row" id="eHPspouseNameLbl" name="spouseNameLbl">Spouse Name</th>
-    <td>
-    <input type="text" title="" placeholder="Spouse Nam" class="w100p" id="eHPspouseName" name="spouseName" value=""/>
-    </td>
-    <th scope="row" id="eHPspouseNricLbl" name="eHPspouseNricLbl">NRIC / Passport No.</th>
-    <td>
-    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p" id="eHPspouseNric" name="spouseNric"  value=""/>
-    </td>
-</tr>
-<tr>
-    <th scope="row" id="eHPspouseOccLbl" name="spouseOccLbl">Occupation</th>
-    <td>
-    <input type="text" title="" placeholder="Occupation" class="w100p" id="eHPspouseOcc" name="spouseOcc" value=""/>
-    </td>
-    <th scope="row" id="eHPspouseDobLbl" name="spouseDobLbl">Date of Birth</th>
-    <td>
-    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date readonly" id="eHPspouseDob" name="spouseDob" value=""/>
-    </td>
-    <th scope="row" id="eHPspouseContatLbl" name="spouseContatLbl">Contact No.</th>
-    <td>
-    <input type="text" title="" placeholder="Contact No. (Numberic Only)" class="w100p readonly" id="eHPspouseContat" name="spouseContat"  value=""/>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
+                <aside class="title_line">
+                    <h2>Orientation</h2>
+                </aside>
 
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_close()">CANCEL</a></p></li>
-</ul>
+                <table class="type1" id="orientationTbl">
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width:150px" />
+                        <col style="width:*" />
+                    </colgroup>
 
-</article><!-- tap_area end -->
+                    <tbody>
+                        <tr>
+                            <th scope="row">Orientation</th>
+                            <td>
+                                <select class="w100p" id="course" name="course">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
-</form>
-<article class="tap_area"><!-- tap_area start -->
+                <ul class="center_btns">
+                    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
+                    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_close()">CANCEL</a></p></li>
+                </ul>
 
-<aside class="title_line"><!-- title_line start -->
-<h2>Installation Address</h2>
-</aside><!-- title_line end -->
+                </article>
 
-<form id="eHPinsAddressForm" name="insAddressForm" method="POST">
+                <article class="tap_area">
 
-    <table class="type1"><!-- table start -->
-    <caption>table</caption>
-    <colgroup>
-        <col style="width:135px" />
-        <col style="width:*" />
-        <col style="width:130px" />
-        <col style="width:*" />
-    </colgroup>
-         <tbody>
+                <table class="type1">
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:120px" />
+                    <col style="width:*" />
+                    <col style="width:130px" />
+                    <col style="width:*" />
+                    <col style="width:180px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                <tr>
+                    <th scope="row" id="eHPspouseCodeLbl" name="spouseCodeLbl">MCode</th>
+                    <td>
+                    <input type="text" title="" placeholder="MCode" class="w100p" id="eHPspouseCode" name="spouseCode" value=""/>
+                    </td>
+                    <th scope="row" id="eHPspouseNameLbl" name="spouseNameLbl">Spouse Name</th>
+                    <td>
+                    <input type="text" title="" placeholder="Spouse Nam" class="w100p" id="eHPspouseName" name="spouseName" value=""/>
+                    </td>
+                    <th scope="row" id="eHPspouseNricLbl" name="eHPspouseNricLbl">NRIC / Passport No.</th>
+                    <td>
+                    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p" id="eHPspouseNric" name="spouseNric"  value=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row" id="eHPspouseOccLbl" name="spouseOccLbl">Occupation</th>
+                    <td>
+                    <input type="text" title="" placeholder="Occupation" class="w100p" id="eHPspouseOcc" name="spouseOcc" value=""/>
+                    </td>
+                    <th scope="row" id="eHPspouseDobLbl" name="spouseDobLbl">Date of Birth</th>
+                    <td>
+                    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date readonly" id="eHPspouseDob" name="spouseDob" value=""/>
+                    </td>
+                    <th scope="row" id="eHPspouseContatLbl" name="spouseContatLbl">Contact No.</th>
+                    <td>
+                    <input type="text" title="" placeholder="Contact No. (Numberic Only)" class="w100p readonly" id="eHPspouseContat" name="spouseContat"  value=""/>
+                    </td>
+                </tr>
+                </tbody>
+                </table><!-- table end -->
+
+                <ul class="center_btns">
+                    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
+                    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_close()">CANCEL</a></p></li>
+                </ul>
+
+                </article>
+
+            </form>
+            <article class="tap_area">
+
+            <aside class="title_line">
+            <h2>Installation Address</h2>
+            </aside>
+
+            <form id="eHPinsAddressForm" name="insAddressForm" method="POST">
+
+                <table class="type1">
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:135px" />
+                    <col style="width:*" />
+                    <col style="width:130px" />
+                    <col style="width:*" />
+                </colgroup>
+                     <tbody>
+                        <tr>
+                            <th scope="row">Area search<span class="must">*</span></th>
+                            <td colspan="3">
+                            <input type="text" title="" id="eHPsearchSt" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" >Address Detail<span class="must">*</span></th>
+                            <td colspan="3">
+                            <input type="text" title="" id="eHPaddrDtl" name="addrDtl" placeholder="Detail Address" class="w100p"  maxlength="50"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" >Street</th>
+                            <td colspan="3">
+                            <input type="text" title="" id="eHPstreetDtl" name="streetDtl" placeholder="Street" class="w100p"  maxlength="50"/>
+                            </td>
+                        </tr>
+                        <tr>
+                           <th scope="row">Area(4)<span class="must">*</span></th>
+                            <td colspan="3">
+                            <select class="w100p" id="eHPmArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                             <th scope="row">City(2)<span class="must">*</span></th>
+                            <td>
+                            <select class="w100p" id="eHPmCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
+                            </td>
+                            <th scope="row">PostCode(3)<span class="must">*</span></th>
+                            <td>
+                            <select class="w100p" id="eHPmPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">State(1)<span class="must">*</span></th>
+                            <td>
+                            <select class="w100p" id="eHPmState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
+                            </td>
+                            <th scope="row">Country<span class="must">*</span></th>
+                            <td>
+                            <input type="text" title="" id="eHPmCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table><!-- table end -->
+            </form>
+            <ul class="center_btns">
+                <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
+                  <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_close()">CANCEL</a></p></li>
+            </ul>
+            </article>
+
+
+            <article class="tap_area">
+
+            <aside class="title_line">
+            <h2>Attachment</h2>
+            </aside>
+
+            <form id="attachmentForm" name="attachmentForm" method="POST">
+
+            <table class="type1">
+            <caption>table</caption>
+            <colgroup>
+                 <col style="width:30%" />
+                <col style="width:*" />
+
+            </colgroup>
+            <tbody>
             <tr>
-                <th scope="row">Area search<span class="must">*</span></th>
-                <td colspan="3">
-                <input type="text" title="" id="eHPsearchSt" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                <th scope="row">NRIC<span class="must">*</span></th>
+                <td >
+                    <div class="auto_file2">
+                        <input type="file" title="file add" id="nricFile" accept="image/*"/>
+                        <label>
+                            <input type='text' class='input_text' readonly='readonly' />
+                            <span class='label_text'><a href='#'>Upload</a></span>
+                        </label>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <th scope="row">Bank Passbook/Statement Copy<span class="must">*</span></th>
+                <td >
+                    <div class="auto_file2">
+                        <input type="file" title="file add" id="statementFile" accept="image/*"/>
+                        <label>
+                            <input type='text' class='input_text' readonly='readonly' />
+                            <span class='label_text'><a href='#'>Upload</a></span>
+                        </label>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <th scope="row">Passport Photo<span class="must">*</span></th>
+                <td >
+                    <div class="auto_file2">
+                        <input type="file" title="file add" id="passportFile" accept="image/*"/>
+                        <label>
+                        <input type='text' class='input_text'  />
+                        <span class='label_text'><a href='#'>Upload</a></span>
+                        </label>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <th scope="row">Payment RM120</th>
+                <td >
+                    <div class="auto_file2">
+                        <input type="file" title="file add" id="paymentFile" accept="image/*"/>
+                        <label>
+                            <input type='text' class='input_text'  />
+                            <span class='label_text'><a href='#'>Upload</a></span>
+                        </label>
+                        <span class='label_text'><a href='#' onclick='fn_removeFile("PAY")'>Remove</a></span>
+                    </div>
                 </td>
             </tr>
             <tr>
-                <th scope="row" >Address Detail<span class="must">*</span></th>
-                <td colspan="3">
-                <input type="text" title="" id="eHPaddrDtl" name="addrDtl" placeholder="Detail Address" class="w100p"  maxlength="50"/>
+                <th scope="row">Declaration letter/Others form</th>
+                <td >
+                    <div class="auto_file2">
+                        <input type="file" title="file add" id="otherFile" accept="image/*"/>
+                        <label>
+                            <input type='text' class='input_text'  />
+                            <span class='label_text'><a href='#'>Upload</a></span>
+                            </label>
+                          <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span>
+                        </label>
+                    </div>
                 </td>
             </tr>
             <tr>
-                <th scope="row" >Street</th>
-                <td colspan="3">
-                <input type="text" title="" id="eHPstreetDtl" name="streetDtl" placeholder="Street" class="w100p"  maxlength="50"/>
+                <th scope="row">Declaration letter/Others form 2</th>
+                <td >
+                    <div class="auto_file2">
+                        <input type="file" title="file add" id="otherFile2" accept="image/*"/>
+                        <label>
+                            <input type='text' class='input_text'  />
+                            <span class='label_text'><a href='#'>Upload</a></span>
+                            </label>
+                            <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
+                        </label>
+                    </div>
                 </td>
             </tr>
+
             <tr>
-               <th scope="row">Area(4)<span class="must">*</span></th>
-                <td colspan="3">
-                <select class="w100p" id="eHPmArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
-                </td>
+                <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
             </tr>
-            <tr>
-                 <th scope="row">City(2)<span class="must">*</span></th>
-                <td>
-                <select class="w100p" id="eHPmCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
-                </td>
-                <th scope="row">PostCode(3)<span class="must">*</span></th>
-                <td>
-                <select class="w100p" id="eHPmPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">State(1)<span class="must">*</span></th>
-                <td>
-                <select class="w100p" id="eHPmState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
-                </td>
-                <th scope="row">Country<span class="must">*</span></th>
-                <td>
-                <input type="text" title="" id="eHPmCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
-                </td>
-            </tr>
-        </tbody>
-    </table><!-- table end -->
-</form>
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
-      <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_close()">CANCEL</a></p></li>
-</ul>
-</article><!-- tap_area end -->
+            </tbody>
+            </table>
 
 
-<article class="tap_area"><!-- tap_area start -->
+            </form>
 
-<aside class="title_line"><!-- title_line start -->
-<h2>Attachment</h2>
-</aside><!-- title_line end -->
+            <ul class="center_btns">
+                <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
+                <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_close()">CANCEL</a></p></li>
+            </ul>
 
-<form id="attachmentForm" name="attachmentForm" method="POST">
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-     <col style="width:30%" />
-    <col style="width:*" />
-
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row">NRIC<span class="must">*</span></th>
-    <td >
-        <div class="auto_file2">
-            <input type="file" title="file add" id="nricFile" accept="image/*"/>
-            <label>
-                <input type='text' class='input_text' readonly='readonly' />
-                <span class='label_text'><a href='#'>Upload</a></span>
-            </label>
-        </div>
-    </td>
-</tr>
-
-<tr>
-    <th scope="row">Bank Passbook/Statement Copy<span class="must">*</span></th>
-    <td >
-        <div class="auto_file2">
-            <input type="file" title="file add" id="statementFile" accept="image/*"/>
-            <label>
-                <input type='text' class='input_text' readonly='readonly' />
-                <span class='label_text'><a href='#'>Upload</a></span>
-            </label>
-        </div>
-    </td>
-</tr>
-
-<tr>
-    <th scope="row">Passport Photo<span class="must">*</span></th>
-    <td >
-        <div class="auto_file2">
-            <input type="file" title="file add" id="passportFile" accept="image/*"/>
-            <label>
-            <input type='text' class='input_text'  />
-            <span class='label_text'><a href='#'>Upload</a></span>
-            </label>
-        </div>
-    </td>
-</tr>
-
-<tr>
-    <th scope="row">Payment RM120</th>
-    <td >
-        <div class="auto_file2">
-            <input type="file" title="file add" id="paymentFile" accept="image/*"/>
-            <label>
-                <input type='text' class='input_text'  />
-                <span class='label_text'><a href='#'>Upload</a></span>
-            </label>
-            <span class='label_text'><a href='#' onclick='fn_removeFile("PAY")'>Remove</a></span>
-        </div>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Declaration letter/Others form</th>
-    <td >
-        <div class="auto_file2">
-            <input type="file" title="file add" id="otherFile" accept="image/*"/>
-            <label>
-                <input type='text' class='input_text'  />
-                <span class='label_text'><a href='#'>Upload</a></span>
-                </label>
-              <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span>
-            </label>
-        </div>
-    </td>
-</tr>
-<tr>
-    <th scope="row">Declaration letter/Others form 2</th>
-    <td >
-        <div class="auto_file2">
-            <input type="file" title="file add" id="otherFile2" accept="image/*"/>
-            <label>
-                <input type='text' class='input_text'  />
-                <span class='label_text'><a href='#'>Upload</a></span>
-                </label>
-                <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
-            </label>
-        </div>
-    </td>
-</tr>
-
-<tr>
-    <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
-</tr>
-</tbody>
-</table>
-
-
-</form>
-
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_saveConfirm()">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_close()">CANCEL</a></p></li>
-</ul>
-
-
-</article><!-- tap_area end -->
-
-</section><!-- tap_wrap end -->
-
-
-</div><!-- popup_wrap end -->
+            </article>
+        </section><!-- tap_wrap end -->
+    </div><!-- popup_wrap end -->
 </form>

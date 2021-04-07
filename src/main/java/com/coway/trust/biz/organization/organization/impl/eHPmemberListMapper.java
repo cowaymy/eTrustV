@@ -50,5 +50,5 @@ public interface eHPmemberListMapper {
 
   List<EgovMap> getDetailCommonCodeList(Map<String, Object> params);
 
-
+    List<EgovMap> selectHPOrientation(Map<String, Object> params);
 }

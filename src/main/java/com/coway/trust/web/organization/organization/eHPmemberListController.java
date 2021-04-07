@@ -49,7 +49,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import com.coway.trust.util.EgovFormBasedFileVo;
-
+import com.ibm.icu.util.Calendar;
 import com.coway.trust.biz.organization.organization.eHpMemberListApplication;
 
 
@@ -440,7 +440,6 @@ public class eHPmemberListController {
 
        memCode = eHPmemberListService.saveEHPMember(params, sessionVO );
 
-
        logger.debug("memCode : {}", memCode);
 
        ReturnMessage message = new ReturnMessage();
@@ -584,4 +583,36 @@ public class eHPmemberListController {
 
        return ResponseEntity.ok(message);
    }
+
+    @RequestMapping(value = "/selectHPOrientation.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectHPOrientation(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+        logger.debug("eHP :: selectHPOrientation");
+
+        Calendar cal = Calendar.getInstance();
+
+        StringBuffer cDt = new StringBuffer();
+        cDt.append(String.format("%04d", cal.get(cal.YEAR)));
+        cDt.append(String.format("%02d", cal.get(cal.MONTH) + 1));
+        cDt.append(String.format("%02d", cal.get(cal.DATE)));
+        params.put("curDt", cDt.toString());
+
+        // Original + 1 month
+//        cal.add(Calendar.MONTH, 1);
+
+        StringBuffer d2 = new StringBuffer();
+        d2.append(String.format("%04d", cal.get(cal.YEAR)));
+        d2.append(String.format("%02d", cal.get(cal.MONTH) + 1));
+        params.put("startDay", d2.toString());
+
+        // Original + 2 months
+        cal.add(Calendar.MONTH, 1);
+
+        StringBuffer d3 = new StringBuffer();
+        d3.append(String.format("%04d", cal.get(cal.YEAR)));
+        d3.append(String.format("%02d", cal.get(cal.MONTH) + 1));
+        params.put("endDay", d3.toString());
+
+        List<EgovMap> orientation = eHPmemberListService.selectHPOrientation(params);
+        return ResponseEntity.ok(orientation);
+    }
 }

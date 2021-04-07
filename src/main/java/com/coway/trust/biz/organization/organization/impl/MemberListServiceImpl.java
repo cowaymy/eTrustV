@@ -1830,10 +1830,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			String   memId_seq =  String.valueOf(memberListMapper.getORG0001D_SEQ(params));
 
 			params.put("memId" ,memId_seq );
-			int a =memberListMapper.hpMemRegister(params);
+			int a = memberListMapper.hpMemRegister(params);
 
 			EgovMap selectOrganization = null;
 			if(a> 0){
+			    // 2021-04-07 - LaiKW - Insert MSC0009D for HP Orientation
+			    memberListMapper.insertHPorientation(params);
 
 				Map<String, Object> memOrg = new HashMap<String, Object>();
 				CodeMap.put("code", "mem");

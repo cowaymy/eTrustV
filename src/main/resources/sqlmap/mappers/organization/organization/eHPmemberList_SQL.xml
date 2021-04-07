@@ -358,8 +358,9 @@
 
 <!-- select EHP Applicant -->
 <select id="selectEHPApplicantList" parameterType="Map" resultType="egovMap">
-        <![CDATA[
-           SELECT row_number,
+    <![CDATA[
+        SELECT
+            row_number,
             Project1.MEM_ID MemberID,
             Project1.MEM_TYPE  MemberType,
             Project1.MEM_CODE MemberCode,
@@ -374,48 +375,50 @@
             Project1.brnch_id,
             Project1.ct_sub_grp,
             Project1.C1 C1,
-                    Project1.COLLCT_BRNCH ,
-                    Project1.FAIL_RESN_ID ,
-                    Project1.RESN_DESC,
-                    Project1.REM,
-                    Project1.CRT_USR_ID,
-                    Project1.ATCH_FILE_GRP_ID ,
-                    Project1.DEPT_CODE ,
-                    Project1.STUS_UPD_ID,
-                    Project1.HP_CODE,
-                    Project1.BRNCH_CODE,
-                    Project1.APPROVED_BY,
-                    Project1.CRT_DT
-
-            FROM ( SELECT Project1.C1 C1,
-                     Project1.MEM_ID MEM_ID,
-                     Project1.MEM_CODE MEM_CODE,
-                     Project1.MEM_TYPE MEM_TYPE,
-                     Project1.NAME NAME,
-                     Project1.NRIC NRIC,
-                     Project1.STUS STUS,
-                    TO_CHAR(Project1.UPD_DT,'DD-MM-YYYY HH:MI AM') UPD_DT,
-                     Project1.CODE_NAME CODE_NAME,
-                     Project1.status_name,
-                     Project1.position_name,
-                     Project1.brnch_id,
-                    Project1.ct_sub_grp,
-                    Project1.COLLCT_BRNCH ,
-                    Project1.FAIL_RESN_ID ,
-                    Project1.RESN_DESC,
-                    Project1.REM,
-                    Project1.CRT_USR_ID,
-                    Project1.ATCH_FILE_GRP_ID,
-                    Project1.DEPT_CODE ,
-                    Project1.STUS_UPD_ID ,
-                    Project1.HP_CODE,
-                    Project1.BRNCH_CODE,
-                    Project1.APPROVED_BY,
-                    Project1.EXTEND1_CDATE, /*webster lee 07072020 - added new column call key-in-At -----------------------*/
-                    TO_CHAR(Project1.CRT_DT,'DD-MM-YYYY') CRT_DT ,
-                     row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
-                     FROM ( SELECT
-                   '' C1,
+            Project1.COLLCT_BRNCH ,
+            Project1.FAIL_RESN_ID ,
+            Project1.RESN_DESC,
+            Project1.REM,
+            Project1.CRT_USR_ID,
+            Project1.ATCH_FILE_GRP_ID ,
+            Project1.DEPT_CODE ,
+            Project1.STUS_UPD_ID,
+            Project1.HP_CODE,
+            Project1.BRNCH_CODE,
+            Project1.APPROVED_BY,
+            Project1.CRT_DT
+        FROM (
+            SELECT
+                Project1.C1 C1,
+                Project1.MEM_ID MEM_ID,
+                Project1.MEM_CODE MEM_CODE,
+                Project1.MEM_TYPE MEM_TYPE,
+                Project1.NAME NAME,
+                Project1.NRIC NRIC,
+                Project1.STUS STUS,
+                TO_CHAR(Project1.UPD_DT,'DD-MM-YYYY HH:MI AM') UPD_DT,
+                Project1.CODE_NAME CODE_NAME,
+                Project1.status_name,
+                Project1.position_name,
+                Project1.brnch_id,
+                Project1.ct_sub_grp,
+                Project1.COLLCT_BRNCH ,
+                Project1.FAIL_RESN_ID ,
+                Project1.RESN_DESC,
+                Project1.REM,
+                Project1.CRT_USR_ID,
+                Project1.ATCH_FILE_GRP_ID,
+                Project1.DEPT_CODE ,
+                Project1.STUS_UPD_ID ,
+                Project1.HP_CODE,
+                Project1.BRNCH_CODE,
+                Project1.APPROVED_BY,
+                Project1.EXTEND1_CDATE, /*webster lee 07072020 - added new column call key-in-At -----------------------*/
+                TO_CHAR(Project1.CRT_DT,'DD-MM-YYYY') CRT_DT ,
+                row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
+            FROM (
+                SELECT
+                    '' C1,
                     Extent1.APLCTN_ID MEM_ID,
                     Extent1.APLICNT_CODE MEM_CODE,
                     Extent1.APLICNT_TYPE MEM_TYPE,
@@ -465,78 +468,64 @@
                     LEFT JOIN ORG0001D Extent20 ON Extent20.APLICNT_ID = Extent1.APLCTN_ID
                     LEFT JOIN SYS0005M Extent21 ON Extent1.COLLCT_BRNCH = Extent21.BRNCH_ID
                     LEFT JOIN SYS0047M Extent22 ON Extent20.CRT_USER_ID = Extent22.USER_ID
-                    ]]>
-                        WHERE 1=1
+    ]]>
+                    WHERE 1=1
                         AND Extent1.APLICNT_TYPE IN ('2803')
-                         <if test="eHPcode != null and eHPcode != ''">
-                           AND  UPPER(Extent1.APLICNT_CODE) LIKE  UPPER('%' ||  #{eHPcode} || '%')
-                         </if>
-                         <if test="eHPname != null and eHPname != ''">
-                           AND  UPPER(Extent1.APLICNT_NAME) LIKE UPPER('%' || #{eHPname} || '%')
-                         </if>
-                         <if test="eHPicNum != null and eHPicNum != ''">
-                           AND  Extent1.APLICNT_NRIC LIKE   '%' || #{eHPicNum} || '%'
-                         </if>
-                       <!--   <if test="eHPbirth != null and eHPbirth != ''">
-                           AND Extent1.APLICNT_DOB =  TO_DATE(#{eHPbirth}, 'DD/MM/YYYY')
-                         </if>
-                          <if test="eHPnation != null and eHPnation != ''">
-                           AND  Extent1.APLICNT_NATION =  #{eHPnation}
-                         </if>
-                         <if test="eHPrace != null and eHPrace != ''">
-                           AND Extent1.APLICNT_RACE =  #{eHPrace}
-                         </if> -->
-                         <if test="eHPstatus != null and eHPstatus != ''">
-                           AND  Extent1.STUS_ID =  #{eHPstatus}
-                         </if>
-                        <!--  <if test="eHPkeyUser != null and eHPkeyUser != ''">
-                           AND  Extent1.CRT_USER_ID =  #{eHPkeyUser}
-                         </if> -->
-                         <if test="eHPcreateDate != '' and eHPendDate == '' ">
+                        <if test="eHPcode != null and eHPcode != ''">
+                            AND  UPPER(Extent1.APLICNT_CODE) LIKE  UPPER('%' ||  #{eHPcode} || '%')
+                        </if>
+                        <if test="eHPname != null and eHPname != ''">
+                            AND  UPPER(Extent1.APLICNT_NAME) LIKE UPPER('%' || #{eHPname} || '%')
+                        </if>
+                        <if test="eHPicNum != null and eHPicNum != ''">
+                            AND  Extent1.APLICNT_NRIC LIKE   '%' || #{eHPicNum} || '%'
+                        </if>
+                        <if test="eHPstatus != null and eHPstatus != ''">
+                            AND  Extent1.STUS_ID =  #{eHPstatus}
+                        </if>
+                        <if test="eHPcreateDate != '' and eHPendDate == '' ">
                             <![CDATA[ AND  TO_DATE(TO_CHAR(Extent1.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(#{eHPcreateDate}, 'DD/MM/YYYY') ]]>
-                         </if>
-                          <if test="eHPendDate != '' and eHPcreateDate == '' ">
+                        </if>
+                        <if test="eHPendDate != '' and eHPcreateDate == '' ">
                             <![CDATA[  AND TO_DATE(TO_CHAR(Extent1.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD')   <=  TO_DATE(#{eHPendDate}, 'DD/MM/YYYY') ]]>
-                         </if>
-                          <if test="eHPcreateDate != '' and eHPendDate != '' ">
+                        </if>
+                        <if test="eHPcreateDate != '' and eHPendDate != '' ">
                             <![CDATA[  AND trunc(Extent1.CRT_DT) >= TO_DATE(#{eHPcreateDate}, 'DD/MM/YYYY') and trunc(Extent1.CRT_DT) <= TO_DATE(#{eHPendDate}, 'DD/MM/YYYY') ]]>
-                         </if>
-                          <if test="eHPcontact != null and eHPcontact != ''">
+                        </if>
+                        <if test="eHPcontact != null and eHPcontact != ''">
                             AND  ((Extent1.APLICNT_TEL_HUSE LIKE '%' || #{eHPcontact}|| '%' ) OR ( Extent1.APLICNT_TEL_OFFICE LIKE '%' || #{eHPcontact}|| '%' ) OR ( Extent1.APLICNT_TEL_MOBILE LIKE '%' || #{eHPcontact}|| '%' ) ) AND ( Extent1.APLICNT_TEL_MOBILE = #{eHPcontact} OR Extent1.APLICNT_TEL_HUSE = #{eHPcontact} OR Extent1.APLICNT_TEL_OFFICE = #{eHPcontact})
-                         </if>
-                           <if test="eHPcollectionBrnch != null and eHPcollectionBrnch != ''">
+                        </if>
+                        <if test="eHPcollectionBrnch != null and eHPcollectionBrnch != ''">
                            AND  TO_NUMBER(Extent1.COLLCT_BRNCH,99999.99) =  #{eHPcollectionBrnch}
-                         </if>
-
-                         <if test = 'memberLevel == "3" '>
+                        </if>
+                        <if test = 'memberLevel == "3" '>
                             <if test="deptCodeHd != null and deptCodeHd != ''">
                                 AND Extent1.DEPT_CODE = #{deptCodeHd}
                             </if>
-                         </if>
-                         <if test = 'memberLevel == "2" '>
+                        </if>
+                        <if test = 'memberLevel == "2" '>
                             <if test="grpCodeHd != null and grpCodeHd != ''">
                                 AND Extent4.LAST_GRP_CODE = #{grpCodeHd}
                             </if>
-                         </if>
-                         <if test = 'memberLevel == "1" '>
+                        </if>
+                        <if test = 'memberLevel == "1" '>
                             <if test="orgCodeHd != null and orgCodeHd != ''">
                                 AND Extent4.LAST_ORG_CODE = #{orgCodeHd}
                             </if>
-                         </if>
+                        </if>
                          <!--websterLee 7/7/2020 - add new filter called approved date-->
-                         <if test = 'eHApprovedDateFrom !="" and eHApprovedDateFrom !=null' >
-                             <if test = 'eHApprovedDateTo !="" and eHApprovedDateTo !=null '>
-	                             <![CDATA[ AND  TO_DATE(TO_CHAR(Extent20.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(#{eHApprovedDateFrom}, 'DD/MM/YYYY') ]]>
-	                              <![CDATA[ AND  TO_DATE(TO_CHAR(Extent20.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') <= TO_DATE(#{eHApprovedDateTo}, 'DD/MM/YYYY')  ]]>
-                             </if>
-                         </if >
-
-                  <![CDATA[
-                )   Project1
-            )  Project1
+                        <if test = 'eHApprovedDateFrom !="" and eHApprovedDateFrom !=null' >
+                            <if test = 'eHApprovedDateTo !="" and eHApprovedDateTo !=null '>
+	                            <![CDATA[ AND  TO_DATE(TO_CHAR(Extent20.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(#{eHApprovedDateFrom}, 'DD/MM/YYYY') ]]>
+	                            <![CDATA[ AND  TO_DATE(TO_CHAR(Extent20.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') <= TO_DATE(#{eHApprovedDateTo}, 'DD/MM/YYYY')  ]]>
+                            </if>
+                        </if >
+            <![CDATA[
+                ) Project1
+            ) Project1
             WHERE Project1.row_number >  0
             ORDER BY Project1.MEM_CODE ASC
-             ]]>
+            ]]>
     </select>
 
       <insert id="insertEHPMemApp" parameterType="Map">
@@ -585,6 +574,7 @@
        , APLICNT_MEETPOINT
        , COLLCT_BRNCH
        , ATCH_FILE_GRP_ID
+       , COURS_ID
        )
       VALUES (
       ORG0003D_APLCTN_ID_SEQ.NEXTVAL
@@ -632,6 +622,7 @@
       , #{meetingPoint}
       , #{collectionBrnch}
       , #{atchFileGrpId}
+      , #{coursId}
       )
   </insert>
 
@@ -1380,6 +1371,25 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                     AND DISAB = 0
 
             ORDER BY CODE ASC
+    </select>
+
+    <select id="selectHPOrientation" parameterType="Map" resultType="egovMap">
+    SELECT A.COURS_ID CODE_ID, A.COURS_NAME || ' - ' || TO_CHAR(A.COURS_CLS_DT, 'DD/MM/YYYY') CODE_NAME
+    FROM MSC0008D A
+    LEFT JOIN (
+        SELECT COURS_ID, COUNT(*) CNT
+        FROM MSC0009D
+        WHERE COURS_MEM_STUS_ID = 1
+        GROUP BY COURS_ID
+    ) B
+        ON A.COURS_ID = B.COURS_ID
+    WHERE A.COURS_MEM_TYPE_ID = '1'
+        AND A.COURS_TYPE_CODE_ID = '2936'
+        AND A.COURS_STUS_ID = 1
+        AND A.COURS_LIMIT > NVL (B.CNT, 0)
+        AND TO_DATE(TO_CHAR(A.COURS_START, 'YYYYMM'), 'YYYYMM') BETWEEN TO_DATE(#{startDay},'yyyymm') AND TO_DATE(#{endDay},'yyyymm')
+        AND TO_DATE(TO_CHAR(A.COURS_END, 'YYYYMM'), 'YYYYMM') BETWEEN TO_DATE(#{startDay},'yyyymm') AND TO_DATE(#{endDay},'yyyymm')
+        AND A.COURS_CLS_DT >= TO_DATE(#{curDt}, 'yyyymmdd')
     </select>
 
     </mapper>

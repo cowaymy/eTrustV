@@ -213,6 +213,7 @@ public class eHPmemberListServiceImpl extends EgovAbstractServiceImpl implements
           MemApp.put("meetingPoint", params.get("eHPmeetingPoint").toString());
 
           MemApp.put("collectionBrnch", params.get("eHPcollectionBrnch").toString());
+          MemApp.put("coursId", params.get("eHPorientation").toString());
 
           MemApp.put("atchFileGrpId", params.get("atchFileGrpId").toString());
 
@@ -283,5 +284,10 @@ public class eHPmemberListServiceImpl extends EgovAbstractServiceImpl implements
       public List<EgovMap> getDetailCommonCodeList(Map<String, Object> params) {
           return eHPmemberListMapper.getDetailCommonCodeList(params);
       }
+
+    @Override
+    public List<EgovMap> selectHPOrientation(Map<String, Object> params) {
+        return eHPmemberListMapper.selectHPOrientation(params);
+    }
 
 }
