@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.api.CommonApiService;
 import com.coway.trust.biz.api.EcommApiService;
+import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.vo.AccClaimAdtVO;
 import com.coway.trust.biz.sales.order.vo.CustBillMasterVO;
@@ -60,6 +61,9 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
   @Resource(name = "orderRegisterService")
   private OrderRegisterService orderRegisterService;
 
+  @Resource(name = "customerService")
+  private CustomerService customerService;
+
   @Override
   public EgovMap registerOrder(HttpServletRequest request, EComApiForm eComApiForm) throws Exception {
     String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0", sysUserId = "0";
@@ -92,9 +96,6 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
         custInfo = (EgovMap) ((ArrayList) reqPrm.get("p1")).get(0);
 
-        SessionVO sessionVO = new SessionVO();
-        sessionVO.setUserId(Integer.parseInt(sysUserId));
-
         OrderVO orderVO = new OrderVO();
         SalesOrderMVO salesOrderMVO = new SalesOrderMVO();
         SalesOrderDVO salesOrderDVO = new SalesOrderDVO();
@@ -120,8 +121,10 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         memberCode.put("stus", 1);
         memberCode.put("salesMen", 1);
 
-        EgovMap productPrice = orderRegisterService.selectStockPrice(ordInfo);
+        Map<String, Object> custAdd = new HashMap<String, Object>();
+        custAdd.put("custAddId", Integer.valueOf(custInfo.get("custaddid").toString()));
 
+        EgovMap productPrice = orderRegisterService.selectStockPrice(ordInfo);
         // Non Rental Order - SRV_PAC_ID = 0
         if(!ordInfo.get("appTypeId").toString().equals("66")){
           ordInfo.put("srvPacId",0);
@@ -129,6 +132,11 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
         EgovMap promoPrice = orderRegisterService.selectProductPromotionPriceByPromoStockID(ordInfo);
         EgovMap memInfo = orderRegisterService.selectMemberByMemberIDCode(memberCode);
+        EgovMap custAddInfo = customerService.selectCustomerViewMainAddress(custAdd);
+
+        SessionVO sessionVO = new SessionVO();
+        sessionVO.setUserId(Integer.parseInt(sysUserId));
+        sessionVO.setUserBranchId(42);
 
         orderVO.setCustTypeId(964);
         orderVO.setRaceId( Integer.valueOf(reqPrm.get("race").toString()) );
@@ -159,7 +167,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         salesOrderMVO.setPromoId( Integer.valueOf(reqPrm.get("promo").toString()) );
         salesOrderMVO.setRefNo(reqPrm.get("refNo").toString());
         salesOrderMVO.setRem("Ecommerce Order");
-        salesOrderMVO.setBrnchId(42);
+        salesOrderMVO.setBrnchId(Integer.valueOf(custAddInfo.get("soBrnchId").toString()));
 
         salesOrderMVO.setMemId(Integer.valueOf(memInfo.get("memId").toString()));
         salesOrderMVO.setDeptCode(memInfo.get("deptCode").toString());
@@ -180,7 +188,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
         // SAL0045D
         installationVO.setAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
-        installationVO.setBrnchId(42);
+        installationVO.setBrnchId(Integer.valueOf(custAddInfo.get("cdBrnchId").toString()));
         installationVO.setCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));;
         installationVO.setInstct(null);
         installationVO.setPreDt("01/01/1900");
