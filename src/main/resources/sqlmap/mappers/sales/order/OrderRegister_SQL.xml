@@ -932,18 +932,21 @@
 
     <select id="checkRC" parameterType="Map" resultType="egovMap">
         SELECT
-            SAL0248M.MEM_ID,
-            SAL0248M.MEM_CODE,
+            ORG0001D.MEM_ID,
+            ORG0001D.MEM_CODE,
             ORG0001D.NAME,
             SAL0248M.TARGET_TOT,
             SAL0248M.COLLECT_TOT,
             SAL0248M.RC_PRCT,
             NVL(SAL0001D.CNT, 0) CNT,
             NVL(OP.FLG_6_MONTH, 0) FLG_6_MONTH,
-            NVL(OP.OP_CNT, 0) OP_CNT
+            NVL(OP.OP_CNT, 0) OP_CNT,
+            NVL(ORG0001D.ROOKIE, 0) ROOKIE
         FROM ORG0001D
         LEFT JOIN SAL0248M
             ON ORG0001D.MEM_CODE = SAL0248M.MEM_CODE
+            AND SAL0248M.MONTH = EXTRACT(MONTH FROM ADD_MONTHS(SYSDATE, -1))
+            AND SAL0248M.YEAR = EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE, -1))
         LEFT JOIN (
             SELECT
                 MEM_ID,
@@ -979,9 +982,7 @@
             GROUP BY A.MEM_ID, CASE WHEN(TO_DATE(TO_CHAR(A.JOIN_DT, 'YYYYMM'), 'YYYYMM') <![CDATA[<=]]> TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -6), 'YYYYMM'), 'YYYYMM')) THEN '1' ELSE '0' END
         ) OP
             ON ORG0001D.MEM_ID = OP.MEM_ID
-        WHERE SAL0248M.MONTH = EXTRACT(MONTH FROM ADD_MONTHS(SYSDATE, -1))
-            AND SAL0248M.YEAR = EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE, -1))
-            AND ORG0001D.MEM_CODE = #{memCode}
+        WHERE ORG0001D.MEM_CODE = #{memCode}
             AND ORG0001D.MEM_TYPE = '1'
     </select>
 
