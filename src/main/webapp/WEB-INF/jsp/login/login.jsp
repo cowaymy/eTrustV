@@ -551,14 +551,19 @@
             </ul>
             <!-- [s] subject to change upon requirement -- Celeste  -->
             <!-- <div class="icon_container" style=text-align:center;> -->
+            <!-- 2021-04-21 - Requested to hide banner until further notice -->
+            <!--
             <div class="icon_container" style="height:100%; padding-top:10%;padding-left:12px">
                 <p>
                 <a href="http://bit.ly/CowayCC">
+                 -->
                 <!--  <img src="${pageContext.request.contextPath}/resources/images/common/login_hyp_icon.png" style=padding-left:135px>-->
+                <!--
                 <img src="${pageContext.request.contextPath}/resources/images/common/210302_Coway-eTrust-icon-09.gif" style="max-width:100%;">
                 </a>
                  </p>
             </div>
+             -->
             <!--
             <div class="icon_container">
                 <p style=padding-left:5px;>
