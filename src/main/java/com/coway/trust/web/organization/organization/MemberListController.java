@@ -211,6 +211,7 @@ public class MemberListController {
 		// By KV end - Do Search Button for Position Level
 
 		logger.debug("contact : {}", params.get("contact"));
+		logger.debug("sponsor : {}", params.get("sponsor"));
 		logger.debug("keyUser : {}", params.get("keyUser"));
 		logger.debug("keyBranch : {}", params.get("keyBranch"));
 		logger.debug("createDate : {}", params.get("createDate"));
