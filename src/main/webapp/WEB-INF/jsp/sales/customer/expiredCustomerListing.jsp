@@ -247,14 +247,14 @@
                     </td>
                     <th scope="row">Expired Months</th>
                     <td>
-                        <select id="cmbExpMth" name="expMth" class="multy_select w100p" multiple="multiple">
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
+                        <select id="cmbExpMth" name="expMth" class="multy_select w100p" multiple="multiple"><!-- options are negative values because the query checks for negative values of MONTHS_BETWEEN -->
+                            <option value="-4">4</option>
+                            <option value="-5">5</option>
+                            <option value="-6">6</option>
+                            <option value="-7">7</option>
+                            <option value="-8">8</option>
+                            <option value="-9">9</option>
+                            <option value="-10">10</option>
                         </select>
                     </td>
                     <th scope="row"></th>
