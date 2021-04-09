@@ -84,7 +84,6 @@ console.log( memberType )
 
 }
 
-/*By KV start - requestVacationPop*/
 function fn_requestVacationPop(){
      var jsonObj = {
              MemberID :memberid,
@@ -99,10 +98,7 @@ function fn_requestVacationPop(){
         Common.alert("Only available to entry with request vacation in case of CT member");
     }
 }
-/*By KV end - requestVacationPop*/
 
-
-/*By KV start - traineeToMemberRegistPop*/
  function fn_confirmMemRegisPop(){
      var jsonObj = {
              MemberID :memberid,
@@ -345,8 +341,6 @@ function fn_RejectHPMem(){
         }
 }
 
-/*By KV end - traineeToMemberRegistPop*/
-
 //Start AUIGrid --start Load Page- user 1st click Member
 $(document).ready(function() {
 
@@ -428,9 +422,7 @@ $(document).ready(function() {
         //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
     });
 
-    /*By KV Start  - Position button disable function in selection*/
     $("#position").attr("disabled",true);
-    /*By KV End - Position button disable function in selection*/
 
     if($("#userRole").val() == "130" || $("#userRole").val() == "137" // Administrator
       || $("#userRole").val() == "141" || $("#userRole").val() == "142" || $("#userRole").val() == "160" // HR
@@ -491,7 +483,6 @@ function createAUIGrid() {
             width : 130
 
         },
-        /*BY KV Position*/
         {
             dataField : "positionName",
             headerText : "Position Desc",
@@ -593,10 +584,6 @@ function fn_branchEditPop(){
      Common.popupDiv("/organization/memberListBranchEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
    }
 
-
-
-
-/*By KV start - Position - This is for display Position data only in Position selection.*/
 function fn_searchPosition(selectedData){
     $("#position option").remove();
       if(selectedData == "2" || selectedData =="3" || selectedData =="1" || selectedData =="7" || selectedData =="5758"){
@@ -605,7 +592,6 @@ function fn_searchPosition(selectedData){
                     "/organization/positionList.do",
                     "memberType="+selectedData,
                     function(result) {
-                        /* By KV - user able use "select account" */
                         $("#position").append("<option value=''>Select Position</option> " );
                         for(var idx=0; idx < result.length ; idx++){
                             $("#position").append("<option value='" +result[idx].positionLevel+ "'> "+result[idx].positionName+ "</option>");
@@ -620,7 +606,6 @@ function fn_searchPosition(selectedData){
 
        }
 }
-/*By KV end - Position - This is for display Position data only in Position selection.*/
 
 function fn_genRawData() {
 
@@ -892,8 +877,6 @@ $(function() {
     <td>
     <input type="text" title="Contact No" placeholder="" class="w100p" id="contact" name="contact"/>
     </td>
-
-    <%-- By KV start - Position Selection button --%>
     <th scope="row">Position</th>
     <td>
     <select class="w100p" id="position" name="position">
@@ -903,10 +886,9 @@ $(function() {
         </c:forEach>
     </select>
     </td>
-    <%-- By KV end - Position Selection button --%>
-
-    <th scope="row"></th>
+    <th scope="row">Sponsor's Code</th>
     <td>
+     <input type="text" title="Sponsor's Code" placeholder="" class="w100p" id=sponsor name="sponsor"/>
     </td>
     <th scope="row"></th>
     <td>
