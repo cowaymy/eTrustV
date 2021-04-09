@@ -308,6 +308,7 @@
             A.MEM_ID CODE_ID, A.MEM_CODE || ' - '|| NAME CODE_NAME , NAME
             from org0001d A INNER JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
             where brnch =#{groupCode}
+            AND A.MEM_TYPE IN (2,3) <!-- allow only CT and CODY. Hui Ding, 09-04-2021 -->
             AND B.MEM_LVL IN(2,3,4) AND STUS = 1
             ORDER BY A.MEM_ID , MEM_CODE,NAME
        </select>
