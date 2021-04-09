@@ -43,7 +43,6 @@
     )  Distinct1
     </select>
 
-       <!-- By KV start Position-->
         <select id="selectPosition" parameterType="Map" resultType="egovMap">
             select b.mem_org_lvl as position_level
                    , b.mem_org_desc as position_name
@@ -52,10 +51,7 @@
             where a.code_id = b.mem_type_id
             and b.mem_type_id = #{memberType}
           </select>
-       <!-- By KV start - Position -->
 
-
-       <!-- By KV start ReplacementCT-->
         <select id="selectReplaceCTList" parameterType="Map" resultType="egovMap">
             select a.mem_id  as code_Id, a.mem_code || ' - ' || a.name as code_Name, a.name,a.stus, c.name, a.mem_type, b.code, d.mem_lvl, e.mem_org_desc,a.brnch as brnch_id, f.name, d.ct_sub_grp
             FROM   ORG0001D a ,   /*Member eg.get mem_type eg HP, CODY, CT*/
@@ -76,7 +72,6 @@
              <!-- AND d.ct_sub_grp = (select  ct_sub_grp from ORG0005D where mem_id =#{mem_id}) -->    /*dynamid get from parameter*/
              AND a.mem_code != #{mem_code}   /*dynamid get from parameter*/
           </select>
-       <!-- By KV start - ReplacementCT -->
 
     <select id="selectUserBranch" parameterType="Map" resultType="egovMap">
         SELECT
@@ -127,7 +122,6 @@
 		]]>
     </select>
 
-    <!-- By KV started Position query -->
     <select id="selectMemberList" parameterType="Map" resultType="egovMap">
         <![CDATA[
            SELECT row_number,
@@ -140,13 +134,9 @@
             Project1.status_name,
             Project1.UPD_DT Updated,
             Project1.STUS Status,
-
-            /*By KV - Position*/
             Project1.position_name,
             Project1.brnch_id,
             Project1.ct_sub_grp,
-
-
             Project1.C1 C1,
             project1.TRAINEE_TYPE,
             project1.TEST_RESULT,
@@ -167,8 +157,6 @@
                     TO_CHAR(Project1.UPD_DT,'DD-MM-YYYY') UPD_DT,
                      Project1.CODE_NAME CODE_NAME,
                      Project1.status_name,
-
-                     /*By KV*/
                      Project1.position_name,
                      Project1.brnch_id,
                     Project1.ct_sub_grp,
@@ -198,7 +186,6 @@
                     Extent1.brnch as brnch_id,
                     Extent5.ct_sub_grp,
                     extent1.TRAINEE_TYPE,
-                    /*By KV*/
                     Extend6.MEM_ORG_DESC position_name,
                     CASE
                         WHEN ( Extend8.COURS_TEST_RESULT = 'P' )
@@ -233,8 +220,6 @@
                     FROM   ORG0001D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT*/
                     INNER JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
                     INNER JOIN SYS0038M Extent3 ON Extent1.STUS = Extent3.STUS_CODE_ID   /*StatusCode   eg.active, not active*/
-
-                     /* By KV - add Position*/
                     LEFT JOIN ORG0005D Extent5 ON Extent5.MEM_ID = Extent1.MEM_ID          /*MemberOrganization eg.get mem_LVL*/
                     LEFT JOIN ORG0012D Extend6 ON Extend6.MEM_TYPE_ID =  Extent1.MEM_TYPE and Extend6.MEM_ORG_LVL =  Extent5.MEM_LVL /* MemberOrganizationDesc eg get full desc of mem_type and mem_LVL*/
                     LEFT JOIN SYS0047M Extent9 ON Extent1.CRT_USER_ID = Extent9.USER_ID
@@ -289,14 +274,15 @@
                          <if test="keyBranch != null and keyBranch != ''">
                            AND  Extent4.BRNCH =  #{keyBranch}
                          </if>
-
                          <if test="createDate != '' and endDate != '' ">
                             <![CDATA[  AND TO_DATE(Extent4.CRT_DT)  between TO_DATE(#{createDate}, 'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
                          </if>
                          <if test="contact != null and contact != ''">
                             AND (( Extent4.TEL_HUSE LIKE '%' || #{contact}|| '%' ) OR ( Extent4.TEL_OFFICE LIKE '%' || #{contact}|| '%' ) OR ( Extent4.TEL_MOBILE LIKE '%' || #{contact}|| '%' ) ) AND ( Extent4.TEL_MOBILE = #{contact} OR Extent4.TEL_HUSE = #{contact} OR Extent4.TEL_OFFICE = #{contact})
                          </if>
-
+                         <if test="sponsor != null and sponsor != ''">
+                            AND   UPPER(Extent4.SPONS_CODE) LIKE UPPER('%' || #{sponsor} || '%')
+                         </if>
                          <if test="position != null and position != ' ' ">
                             AND Extent7.MEM_LVL= #{position}
                          </if>
@@ -362,8 +348,9 @@
                           <if test="contact != null and contact != ''">
                             AND  ((Extent1.TEL_HUSE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.TEL_OFFICE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.TEL_MOBILE LIKE '%' || #{contact}|| '%' ) ) AND ( Extent1.TEL_MOBILE = #{contact} OR Extent1.TEL_HUSE = #{contact} OR Extent1.TEL_OFFICE = #{contact})
                          </if>
-
-                           /*By KV - Position*/
+                         <if test="sponsor != null and sponsor != ''">
+                            AND   UPPER(Extent1.SPONS_CODE) LIKE UPPER('%' || #{sponsor} || '%')
+                         </if>
                           <if test="position != null and position != ''">
                             AND Extent5.MEM_LVL= #{position}
                          </if>
@@ -404,7 +391,6 @@
             ORDER BY Project1.MEM_CODE ASC
              ]]>
     </select>
-    <!-- By KV end - add Position query -->
 
 <!-- CYC select HP Applicant -->
 <select id="selectHPApplicantList" parameterType="Map" resultType="egovMap">
@@ -496,6 +482,9 @@
                           <if test="contact != null and contact != ''">
                             AND  ((Extent1.APLICNT_TEL_HUSE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.APLICNT_TEL_OFFICE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.APLICNT_TEL_MOBILE LIKE '%' || #{contact}|| '%' ) ) AND ( Extent1.APLICNT_TEL_MOBILE = #{contact} OR Extent1.APLICNT_TEL_HUSE = #{contact} OR Extent1.APLICNT_TEL_OFFICE = #{contact})
                          </if>
+                          <if test="sponsor != null and sponsor != ''">
+                            AND   UPPER(Extent1.APLICNT_SPONS_CODE) LIKE UPPER('%' || #{sponsor} || '%')
+                         </if>
                          <if test = 'memberLevel == "3" '>
                             <if test="deptCodeHd != null and deptCodeHd != ''">
                                 AND Extent1.DEPT_CODE = #{deptCodeHd}
@@ -524,7 +513,6 @@
     </resultMap>
 
 
-<!-- By KV start - Check MemberListDetail  query -->
     <select id="selectMemberListView" parameterType="Map" resultType="egovMap">
     <![CDATA[
     SELECT Limit1.MEM_ID MEM_ID  ,
@@ -1015,7 +1003,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
           WHERE  Extent1.MEM_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
            ]]>
     </select>
-    <!-- By KV end - Check MemberListDetail  query -->
+
 
     <resultMap id="clobMap1" type="EgovMap">
         <result property="CODE_DESC" column="CODE_DESC" jdbcType="CLOB"  javaType="java.lang.String" />
@@ -1077,17 +1065,13 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                     Extent2.BILL_NO BILL_NO  ,
                     Extent3.CODE_NAME CODE_NAME  ,
                     Extent4.OR_NO OR_NO  ,
-                     /* By KV start change  date format in correct way */
-                   TO_CHAR(Extent4.PAY_DATA,'DD-MM-YYYY') C1  ,
-                     /* By KV end change  date format in correct way */
+                    TO_CHAR(Extent4.PAY_DATA,'DD-MM-YYYY') C1  ,
 
                     CASE
                          WHEN ( Extent4.TOT_AMT IS NOT NULL ) THEN Extent4.TOT_AMT
                     ELSE 0
                        END C2  ,
-                      /* By KV start change  date format in correct way */
                     TO_CHAR(Extent4.CRT_DT,'DD-MM-YYYY') C3  ,
-                      /* By KV start change  date format in correct way */
                     CASE
                          WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
                     ELSE ''
@@ -2368,7 +2352,6 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	 </insert>
 
 
-<!-- by KV start  insert Request Vacation -->
      <insert id="insertVacationEntry" parameterType="Map">
        INSERT INTO ORG0007D (
              PROMO_ID
@@ -2407,9 +2390,6 @@ SELECT Extent1.MEM_ID MEM_ID  ,
            , #{vactReplCt}
             )
      </insert>
-<!-- by KV end  insert Request Vacation  -->
-
-
 
 	 <update id="updateMember" parameterType="Map">
 	   UPDATE ORG0001D
