@@ -22,7 +22,7 @@ public class ClaimFileCIMBHandler extends BasicTextDownloadHandler implements Re
 	String sbatchNo = "";
 	String sSecCode = "";
 	String sText = "";
-	
+
 	// 본문 작성
 	String stextDetails = "";
 	String sDocno = "";
@@ -34,19 +34,20 @@ public class ClaimFileCIMBHandler extends BasicTextDownloadHandler implements Re
 	String sReservedB = "";
 	String sUnusedA = "";
 	String debitAmount = "";
+	String sOrgCode = "";
 
 	long sLimit = 0;
 	long iTotalAmt = 0;
-	long ihashtot3 = 0;	
+	long ihashtot3 = 0;
 	int iTotalCnt = 0;
-	
+
 	// footer 작성
 	String sRecTot = "";
 	String sBatchTot = "";
 	String sHashTot = "";
 	int endIndex = 0;
 	String sTextBtn = "";
-	
+
 	BigDecimal amount = null;
 	BigDecimal hunred = new BigDecimal(100);
 
@@ -81,7 +82,10 @@ public class ClaimFileCIMBHandler extends BasicTextDownloadHandler implements Re
 		sbatchNo = CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + "01";
 		sSecCode = StringUtils.leftPad(String.valueOf((Integer.parseInt(sbatchNo) + 1208083646)), 10, " ");
 
-		sText = "01" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + "01" + "2120"
+		//20210412 YONGJH: substring operation is based on batchName value i.e. "BILLING_ORG2120_"
+		sOrgCode = ((String) params.get("batchName")).substring(11, 15);
+
+		sText = "01" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + "01" + sOrgCode
 				+ StringUtils.rightPad("WOONGJIN COWAY", 40, " ")
 				+ CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyyyy") + sSecCode
 				+ StringUtils.rightPad("", 128, " ");
@@ -95,7 +99,7 @@ public class ClaimFileCIMBHandler extends BasicTextDownloadHandler implements Re
 
 	private void writeBody(ResultContext<? extends Map<String, Object>> result) throws IOException {
 		Map<String, Object> dataRow = result.getResultObject();
-		
+
 		sDocno = StringUtils.rightPad(String.valueOf(dataRow.get("cntrctNOrdNo")), 30, " ");
 		sItemID = StringUtils.rightPad(String.valueOf(dataRow.get("bankDtlId")), 56, " ");
 		sReservedA = StringUtils.rightPad("", 11, " ");
@@ -115,18 +119,18 @@ public class ClaimFileCIMBHandler extends BasicTextDownloadHandler implements Re
 				: StringUtils.rightPad((String) dataRow.get("bankDtlDrNric"), 16, " ");
 
 		//sLimit = ((java.math.BigDecimal) dataRow.get("bankDtlAmt")).longValue() * 100;
-		
+
 		//금액 계산
-		amount = (BigDecimal)dataRow.get("bankDtlAmt");						
+		amount = (BigDecimal)dataRow.get("bankDtlAmt");
 		sLimit = amount.multiply(hunred).longValue();
-				
-				
+
+
 		iTotalAmt = iTotalAmt + sLimit;
 		ihashtot3 = ihashtot3 + sLimit + Long.parseLong(sDrAccNo.trim());
 		iTotalCnt++;
-		
+
 		debitAmount = StringUtils.leftPad(String.valueOf(sLimit), 13, "0");
-		
+
 
 		stextDetails = "02" + sbatchNo + sDocno + sNRIC + sDrName + sDrAccNo + debitAmount + sReservedA
 				+ sReservedB + sUnusedA + sItemID;
@@ -134,9 +138,9 @@ public class ClaimFileCIMBHandler extends BasicTextDownloadHandler implements Re
 		out.write(stextDetails);
 		out.newLine();
 		out.flush();
-					
 
-		
+
+
 	}
 
 	public void writeFooter() throws IOException {
@@ -145,13 +149,13 @@ public class ClaimFileCIMBHandler extends BasicTextDownloadHandler implements Re
 		sHashTot = String.valueOf(ihashtot3);
 
 		endIndex = sHashTot.length() > 15 ? 15 : sHashTot.length();
-		
+
 		sTextBtn = "03" + sbatchNo + sRecTot + sBatchTot + StringUtils.rightPad("", 42, " ")
 				+ sHashTot.substring(0, endIndex) + StringUtils.rightPad("", 112, " ");
 
 		out.write(sTextBtn);
 		out.newLine();
 		out.flush();
-		
+
 	}
 }
