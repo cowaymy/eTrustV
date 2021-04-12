@@ -764,10 +764,13 @@
             }
         }
 
+        /*
+         * 2021-04-12 - LaiKW - Remove income range + validation
         if(null == $("#_incomeRangeEdit").val() || '' == $("#_incomeRangeEdit").val()){
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='Income Range'/>");
             return;
         }
+        */
 
         if(null == $("#_ficoScore").val() || '' == $("#_ficoScore").val()){
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='Fico Score' />");
@@ -863,6 +866,8 @@
         console.log("fn_saveRotCCP");
 
         // if($("input[name=ccpFileSelector]")[0].files[0] == "" || $("input[name=ccpFileSelector]")[0].files[0] == null) {
+        /*
+         * 2021-04-21 - LaiKW - remove compulsory CCP attachment
         if(ccpAtchFlg == 0) {
             if($("input[name=ccpFile]")[0].files[0] == "" || $("input[name=ccpFile]")[0].files[0] == null) {
                 Common.alert("Attachment required.");
@@ -874,32 +879,36 @@
                 return false;
             }
         }
+        */
 
+        if(ccpAtchFlg > 0) {
+            if($("#ccpAtchFileGrpId").val() != null && $("#ccpAtchFileGrpId").val() != "") {
+                console.log("Update attachment");
 
-        if($("#ccpAtchFileGrpId").val() != null && $("#ccpAtchFileGrpId").val() != "") {
-            console.log("Update attachment");
+                var formData = Common.getFormData("ccpForm");
+                formData.append("atchFileGrpId", $("#ccpAtchFileGrpId").val());
+                formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
 
-            var formData = Common.getFormData("ccpForm");
-            formData.append("atchFileGrpId", $("#ccpAtchFileGrpId").val());
-            formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+                Common.ajaxFile("/sales/ownershipTransfer/attachmentUpdate.do", formData, function(result) {
+                    console.log("fn_saveRotCCP :: attachmentUpdate");
+                    console.log(result);
 
-            Common.ajaxFile("/sales/ownershipTransfer/attachmentUpdate.do", formData, function(result) {
-                console.log("fn_saveRotCCP :: attachmentUpdate");
-                console.log(result);
+                    fn_doSaveRotCCP();
+                })
 
-                fn_doSaveRotCCP();
-            })
+            } else {
+                console.log("New attachment");
 
+                var formData = Common.getFormData("ccpForm");
+                Common.ajaxFile("/sales/ownershipTransfer/attachmentUpload.do", formData, function(result) {
+                    console.log("fn_saveRotCCP :: attachmentUpload");
+                    console.log(result);
+                    $("#ccpAtchFileGrpId").val(result.data.fileGroupKey);
+                    fn_doSaveRotCCP();
+                });
+            }
         } else {
-            console.log("New attachment");
-
-            var formData = Common.getFormData("ccpForm");
-            Common.ajaxFile("/sales/ownershipTransfer/attachmentUpload.do", formData, function(result) {
-                console.log("fn_saveRotCCP :: attachmentUpload");
-                console.log(result);
-                $("#ccpAtchFileGrpId").val(result.data.fileGroupKey);
-                fn_doSaveRotCCP();
-            });
+            fn_doSaveRotCCP();
         }
     }
 
