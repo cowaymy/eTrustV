@@ -2729,6 +2729,14 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 
   public void zipFilesEncrypt(EgovMap claimMap) {
 
+	  /*
+	   * [20210412 YONGJH] - start
+	   * Note: GPG zip encryption will not work on local Windows-based environment,
+	   * because the GPG command only supports Unix-based directory parsing. If you test this on local Windows,
+	   * expect an encryption error. Reader - if you can fix this, please do :)
+	   * [20210412 YONGJH] - end
+	  */
+
 	  String batchName = claimMap.get("batchName").toString();
 	  String subPath = claimMap.get("subPath").toString();
 	  String batchDate = claimMap.get("ctrlBatchDt").toString();
