@@ -104,6 +104,10 @@ public class TrainingServiceImpl implements TrainingService {
 				hm.put("userId", params.get("userId"));
 				Logger.debug("updateCourse =====================================>>  " + hm);
 				trainingMapper.updateCourse(hm);
+
+				if(hm.get("coursCode").toString().contains("ROA") && "4".equals(hm.get("stusCodeId"))) {
+				    trainingMapper.updateRookie(hm);
+				}
 			}
 		}
 
