@@ -1392,19 +1392,19 @@
   </select>
 
   <select id="revSubCboPckage" parameterType="Map" resultType="egovMap">
-    SELECT A.SALES_ORD_ID AS ORD_ID,
-           A.SALES_ORD_NO AS ORD_NO,
-           A.PROMO_ID AS OLD_PROMO,
-           C.PROMO_CAN_ID AS NEW_PROMO,
-           A.TOT_PV AS OLD_PV,
-           D.PROMO_ITM_PV AS NEW_PV,
-           A.MTH_RENT_AMT AS OLD_MTH_RENT_AMT,
-           CASE WHEN C.CHG_RENT_AMT = 1
-           THEN CASE WHEN F.APP_TYPE_ID IN (67,68)
-             THEN TRUNC(FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC),-1)
-             ELSE FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC) END
-           ELSE A.MTH_RENT_AMT END AS PROMO_AMT,
-           C.CHG_RENT_AMT
+    SELECT DISTINCT A.SALES_ORD_ID AS ORD_ID,
+                             A.SALES_ORD_NO AS ORD_NO,
+                             A.PROMO_ID AS OLD_PROMO,
+                             C.PROMO_CAN_ID AS NEW_PROMO,
+                             A.TOT_PV AS OLD_PV,
+                             D.PROMO_ITM_PV AS NEW_PV,
+                             A.MTH_RENT_AMT AS OLD_MTH_RENT_AMT,
+                             CASE WHEN C.CHG_RENT_AMT = 1
+                               THEN CASE WHEN F.APP_TYPE_ID IN (67,68)
+                               THEN TRUNC(FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC),-1)
+                               ELSE FLOOR(F.AMT - DECODE(E.PROMO_DISC_TYPE, 0, F.AMT*(E.PROMO_PRC_PRCNT/100), E.PROMO_PRC_PRCNT) - E.PROMO_ADD_DISC_PRC) END
+                               ELSE A.MTH_RENT_AMT END AS PROMO_AMT,
+                             C.CHG_RENT_AMT
     FROM SAL0001D A
     JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
     JOIN SAL0252M C ON A.PROMO_ID = C.PROMO_ID AND B.ITM_STK_ID = C.PROD_CDE
