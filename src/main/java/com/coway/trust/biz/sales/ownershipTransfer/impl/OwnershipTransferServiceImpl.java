@@ -785,6 +785,8 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService{
             LOGGER.info("auxAppType : " + (params.get("auxAppType")));
             LOGGER.info("payMode : " + (params.get("payMode")));
 
+            /*
+             * 2021-04-12 - Disabled as ROT not required to insert into call log + change status
             if(eCashMap != null || (params.get("auxAppType") != null && params.get("payMode") != null)) {
                 // Call Entry Insert
                 callSeq = ccpCalculateMapper.crtSeqCCR0006D();
@@ -809,6 +811,7 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService{
                 LOGGER.info("4. Insert Sales Order Progress Log SAL0009D :: Approve");
                 ccpCalculateMapper.insertLog(params);
             }
+            */
             /* From CCP Calculation on approve CCP - End */
 
             LOGGER.info("===================================");
