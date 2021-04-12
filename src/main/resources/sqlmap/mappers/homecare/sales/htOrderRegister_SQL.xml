@@ -398,6 +398,10 @@
                   AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
                 AND T2.PROMO_APP_TYPE_ID = #{appTypeId}
                 AND T2.E_SALES = 0
+                <if test='stkSize != null and stkSize !=""'>
+                    AND (T2.STK_SIZE = #{stkSize} OR T2.STK_SIZE IS NULL)
+                </if>
+
              ) T
          ORDER BY T.PROMO_DT_FROM DESC
     </select>
@@ -1935,6 +1939,7 @@
              , CNTRCT_SALES_ORD_ID
              , CNTRCT_RENTAL_PRIOD
              , CNTRCT_OBLIGT_PRIOD
+             , CNTRCT_RCO_PRIOD
              , CNTRCT_STUS_ID
              , CNTRCT_REM
              , CNTRCT_CRT_DT
@@ -1947,6 +1952,7 @@
              , #{cntrctSalesOrdId}
              , #{cntrctRentalPriod}
              , #{cntrctObligtPriod}
+             , #{cntrctRcoPriod}
              , #{cntrctStusId}
              , #{cntrctRem}
              , SYSDATE

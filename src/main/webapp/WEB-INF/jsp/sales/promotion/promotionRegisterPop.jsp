@@ -6,6 +6,10 @@
     //AUIGrid 생성 후 반환 ID
     var stckGridID, giftGridID;
 
+    var stkSizeData = [{"codeId": "KING"  ,"codeName": "KING"},
+                       {"codeId": "QUEEN" ,"codeName": "QUEEN"},
+                       {"codeId": "SINGLE","codeName": "SINGLE"}];
+
     $(document).ready(function(){
 
         //AUIGrid 그리드를 생성합니다.
@@ -20,7 +24,7 @@
         doGetComboData('/common/selectCodeList.do', {groupCode :'323'}, '', 'promoDiscType',        'S'); //Discount Type
       //doGetComboData('/common/selectCodeList.do', {groupCode :'321'}, '', 'promoFreesvcPeriodTp', 'S'); //Free SVC Period
         doGetComboData('/common/selectCodeList.do', {groupCode :'451', orderValue:'CODE_ID'}, '','eSales','S');
-
+        doDefCombo(stkSizeData, '' ,'stkSize', 'S', '');
     });
 
     function fn_addOption() {
@@ -107,6 +111,7 @@
                 empChk                  : $('#empChk').val(),
                 megaDeal                : $('input:radio[name="megaDeal"]:checked').val(),
                 advDisc                : $('input:radio[name="advDisc"]:checked').val(),
+                stkSize                 : $('#stkSize').val(),
                 promoESales             :$('#eSales').val().trim(),
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
@@ -836,8 +841,9 @@
         <input id="advDiscY" name="advDisc" type="radio" value="1" /><span>Yes</span>
         <input id="advDiscN" name="advDisc" type="radio" value="0" checked/><span>No</span>
     </td>
-    <th scope="row"></th>
+    <th scope="row">Mattress Size</th>
     <td>
+        <select id="stkSize" name="stkSize" class="w100p"></select>
     </td>
 </tr>
 <!--

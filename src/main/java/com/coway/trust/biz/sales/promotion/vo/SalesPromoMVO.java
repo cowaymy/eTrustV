@@ -77,6 +77,8 @@ public class SalesPromoMVO implements Serializable {
 
 	private int advDisc;
 
+	private String stkSize;
+
 	private int b2b;
 
 	private int promoESales;
@@ -329,7 +331,15 @@ public class SalesPromoMVO implements Serializable {
     this.advDisc = advDisc;
   }
 
-	public int getB2b() {
+	public String getStkSize() {
+    return stkSize;
+  }
+
+  public void setStkSize(String stkSize) {
+    this.stkSize = stkSize;
+  }
+
+  public int getB2b() {
 		return b2b;
 	}
 
@@ -337,12 +347,12 @@ public class SalesPromoMVO implements Serializable {
 		this.b2b = b2b;
 	}
 
-	   public int getPromoESales() {
-	      return promoESales;
-	    }
+	public int getPromoESales() {
+	   return promoESales;
+	}
 
-	    public void setPromoESales(int promoESales) {
-	      this.promoESales = promoESales;
-	    }
+	public void setPromoESales(int promoESales) {
+	  this.promoESales = promoESales;
+	}
 
 }

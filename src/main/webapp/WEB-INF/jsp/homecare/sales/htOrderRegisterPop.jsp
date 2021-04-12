@@ -735,7 +735,7 @@
             console.log('promo change --> promoAppTypeId:'+promoAppTypeId);
 
                 fn_loadProductPrice(appTypeVal, stkIdVal);
-                fn_loadProductPromotion(promoAppTypeId, stkIdVal, empChk, custTypeVal, exTrade);
+                fn_loadProductPromotion(promoAppTypeId, stkIdVal, empChk, custTypeVal, exTrade, stkIdVal);
 
         });
 
@@ -1474,51 +1474,17 @@
     }
 
     //LoadProductPromotion
-    function fn_loadProductPromotion(promoAppTypeId, stkId, empChk, custTypeVal, exTrade) {
+    function fn_loadProductPromotion(promoAppTypeId, stkId, empChk, custTypeVal, exTrade, stkSize) {
         var exTrade = 0;
         $('#ordPromo').removeAttr("disabled");
-        console.log(empChk);
-
-        // Care Service - Special Promotion for CNY 2021
-        var now = new Date(), y = now.getFullYear(), m = now.getMonth()+1, d = now.getDate();
-        var mm = m < 10 ? '0' + m : m, dd = d < 10 ? '0' + d : d;
 
         if(promoAppTypeId == 3220 || promoAppTypeId == 3221){
-
-        	if(y+mm+dd <= '20210225' && promoAppTypeId == 3220 && empChk == 0){
-        		if(stkId == 'SINGLE'){
-                    var promoData = [
-                      {"codeId":"32206","codeName":"CS1T_D_210201_01-CNY PROMOTION 2021-1st SINGLE RM138"},
-                      {"codeId":"32209","codeName":"CS1T_D_210201_04-CNY PROMOTION 2021-2nd SINGLE RM108"},
-                      {"codeId":"32212","codeName":"CS1T_D_210201_07-CNY PROMOTION 2021-3rd SINGLE RM98"},
-                      {"codeId":"32215","codeName":"CS1T_D_210201_10-CNY PROMOTION 2021-4th SINGLE RM88"}
-                    ];
-
-                    doDefCombo(promoData, '' ,'ordPromo', 'S', '');
-                }else if(stkId == 'QUEEN'){
-                    var promoData = [
-                      {"codeId":"32207","codeName":"CS1T_D_210201_02-CNY PROMOTION 2021-1st QUEEN RM158"},
-                      {"codeId":"32210","codeName":"CS1T_D_210201_05-CNY PROMOTION 2021-2nd QUEEN RM108"},
-                      {"codeId":"32213","codeName":"CS1T_D_210201_08-CNY PROMOTION 2021-3rd QUEEN RM98"},
-                      {"codeId":"32217","codeName":"CS1T_D_210202_01-CNY PROMOTION 2021-4th QUEEN RM88"}
-                    ];
-
-                    doDefCombo(promoData, '' ,'ordPromo', 'S', '');
-                }else if(stkId == 'KING'){
-                    var promoData = [
-                      {"codeId":"32208","codeName":"CS1T_D_210201_03-CNY PROMOTION 2021-1st KING RM188"},
-                      {"codeId":"32211","codeName":"CS1T_D_210201_06-CNY PROMOTION 2021-2nd KING RM108"},
-                      {"codeId":"32214","codeName":"CS1T_D_210201_09-CNY PROMOTION 2021-3rd KING RM98"},
-                      {"codeId":"32216","codeName":"CS1T_D_210201_11-CNY PROMOTION 2021-4th KING RM88"}
-                    ];
-
-                    doDefCombo(promoData, '' ,'ordPromo', 'S', '');
-                }else{
-                    doGetComboData('/homecare/sales/selectPromotionByAppTypeStock.do', {appTypeId:promoAppTypeId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade}, '', 'ordPromo', 'S', ''); //Common Code
-                }
-        	}else{
-        		doGetComboData('/homecare/sales/selectPromotionByAppTypeStock.do', {appTypeId:promoAppTypeId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade}, '', 'ordPromo', 'S', ''); //Common Code
-        	}
+        	doGetComboData('/homecare/sales/selectPromotionByAppTypeStock.do',
+        			{appTypeId:promoAppTypeId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, stkSize:stkSize}
+		            , ''
+		            , 'ordPromo'
+		            , 'S'
+		            , ''); //Common Code
         }
         else{
         	$('#ordPromo').prop("disabled", true);

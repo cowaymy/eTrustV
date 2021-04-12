@@ -31,6 +31,7 @@
              , T1.EX_TRADE
              , T1.B2B
              , T4.NAME STATUS
+             , T1.STK_SIZE STK_SIZE
           FROM SAL0017D T1
           LEFT OUTER
           JOIN SYS0013M T2
@@ -290,7 +291,8 @@
              , IS_NEW
              , MEGA_DEAL
              , E_SALES
-             , ADV_DISC)
+             , ADV_DISC
+             , STK_SIZE)
         VALUES
              ( #{promoId}
              , #{promoMtchId}
@@ -323,7 +325,8 @@
              , #{isNew}
              , #{megaDeal}
              , #{promoESales}
-             , #{advDisc})
+             , #{advDisc}
+             , #{stkSize})
     </insert>
 
     <insert id="insertSalesPromoD" parameterType="salesPromoDVO">
@@ -418,6 +421,7 @@
              , T1.MEGA_DEAL
              , T1.E_SALES
              , T1.ADV_DISC
+             , T1.STK_SIZE
           FROM SAL0017D T1
          WHERE T1.PROMO_ID = #{promoId}
     </select>
@@ -615,8 +619,9 @@
              , UPD_USER_ID             = #{updUserId}
              , UPD_DT                  = SYSDATE
              , MEGA_DEAL               = #{megaDeal}
-             , E_SALES                  = #{promoESales}
+             , E_SALES                 = #{promoESales}
              , ADV_DISC                = #{advDisc}
+             , STK_SIZE                = #{stkSize}
          WHERE PROMO_ID                = #{promoId}
     </update>
 
