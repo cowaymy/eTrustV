@@ -137,9 +137,9 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 
 		// return - Matress Product
 		EgovMap rtnMat = orderListService.insertProductReturnResultSerial(params);
-		if(AppConstants.FAIL.equals(CommonUtils.nvl(rtnMat.get("rtnCode")))) { // return Fail
+		/*if(AppConstants.FAIL.equals(CommonUtils.nvl(rtnMat.get("rtnCode")))) { // return Fail
 			throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnMat.get("message")));
-		}
+		}*/
 
 		// select another order
 		EgovMap hcOrderInfo = hcOrderListService.selectHcOrderInfo(params);
@@ -160,9 +160,9 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 
 			// return - Frame Product
 			EgovMap rtnFra = orderListService.insertProductReturnResultSerial(params);
-			if(AppConstants.FAIL.equals(CommonUtils.nvl(rtnFra.get("rtnCode")))) { // return Fail
+			/*if(AppConstants.FAIL.equals(CommonUtils.nvl(rtnFra.get("rtnCode")))) { // return Fail
 				throw new ApplicationException(AppConstants.FAIL, CommonUtils.nvl(rtnFra.get("message")));
-			}
+			}*/
 		}
 
 		message.setCode(AppConstants.SUCCESS);
