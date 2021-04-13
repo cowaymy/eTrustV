@@ -143,7 +143,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         orderVO.setBillGrp("new");
 
         //SAL0001D
-//        salesOrderMVO.setEcommOrdId(Integer.valueOf(reqPrm.get("ecommOrdId").toString()));
+        salesOrderMVO.setEcommOrdId(Integer.valueOf(reqPrm.get("ecommOrdId").toString()));
         salesOrderMVO.setAdvBill(0);
         salesOrderMVO.setAppTypeId( Integer.valueOf(reqPrm.get("appType").toString()) );
         salesOrderMVO.setSrvPacId( Integer.valueOf(reqPrm.get("srvPac").toString()) );

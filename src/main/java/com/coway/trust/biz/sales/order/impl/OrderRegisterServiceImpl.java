@@ -1828,10 +1828,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
       preOrderVO.setSalesOrdId(salesOrdId);
 
       preOrderMapper.updatePreOrderStatus(preOrderVO);
-    }
-    /*else if(CommonUtils.nvl(salesOrderMVO.getEcommOrdId()) != ""){
+    }else if(CommonUtils.nvl(salesOrderMVO.getEcommOrdId()) != ""){
       ecommApiMapper.updateEcommOrderStatus(salesOrderMVO);
-    }*/
+    }
 
     // Set Sales_Order_ID - KR-SH
     salesOrderMVO.setSalesOrdId(CommonUtils.intNvl(salesOrdId));
