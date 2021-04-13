@@ -954,7 +954,7 @@
             #{rotID},
             SAL0278D_ID_SEQ.NEXTVAL,
             (SELECT USER_ID FROM SYS0047M WHERE HR_CODE = #{rotCallRespdId}),
-            #{rotCallDt},
+            TO_DATE(#{rotCallDt}, 'DD/MM/YYYY'),
             #{rotCallStus},
             #{rotRem},
             '',
