@@ -168,7 +168,7 @@
         var ccpStus = $("#_ccpStusId").val();
         doGetCombo('/sales/ccp/getCcpStusCodeList', '', ccpStus,'_statusEdit', 'S');
 
-        CommonCombo.make('_incomeRangeEdit', '/sales/ccp/getLoadIncomeRange' , {editCcpId : ccpId}, selVal , optionModule);
+        // CommonCombo.make('_incomeRangeEdit', '/sales/ccp/getLoadIncomeRange' , {editCcpId : ccpId}, selVal , optionModule);
         doGetCombo('/sales/ccp/getCcpRejectCodeList', '', '','_rejectStatusEdit', 'S');
 
         //Feedback
@@ -1004,7 +1004,7 @@
         if(addedItems.length <= 0) {
             return false
         } else {
-            Common.ajax("POST", "/ownershipTransfer/saveRotCallLog.do", GridCommon.getEditData(rotCallLogGridID), function(result) {
+            Common.ajax("POST", "/sales/ownershipTransfer/saveRotCallLog.do", GridCommon.getEditData(rotCallLogGridID), function(result) {
                 console.log(result);
 
                 if(result.code == "00") {
@@ -1303,14 +1303,18 @@
                             <td>
                                 <span><select class="w100p" name="statusEdit" id="_statusEdit" onchange="javascript : fn_ccpStatusChangeFunc(this.value)"></select></span>
                             </td>
+                            <!--
                             <th scope="row"><spring:message code="sal.title.text.ccpIncomeRange" /></th>
                             <td>
                                 <span><select class="w100p" name="incomeRangeEdit" id="_incomeRangeEdit"></select></span>
                             </td>
+                             -->
                             <th scope="row"><spring:message code="sal.title.text.rejStus" /></th>
                             <td>
                                 <span><select class="w100p" name="rejectStatusEdit" id="_rejectStatusEdit"></select></span>
                             </td>
+                            <th></th>
+                            <td></td>
                         </tr>
                         <tr>
                             <th scope="row"><spring:message code="sal.title.text.ficoScore" /></th>
