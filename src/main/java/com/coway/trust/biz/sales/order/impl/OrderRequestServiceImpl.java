@@ -2281,6 +2281,9 @@ public class OrderRequestServiceImpl implements OrderRequestService {
           noPromo.put("promoRpfDiscAmt", "0");
           noPromo.put("promoAddDiscPrc", "0");
           noPromo.put("dateBetween", "1");
+          // Solve bug - Added Stock ID to retrieve promo ID precisely. Hui Ding, 13-04-2021
+          if(view.get("itmStkId") != null)
+          noPromo.put("promoItmStkId", view.get("itmStkId"));
 
           EgovMap promoId = orderRequestMapper.selectPromoD(noPromo);
           tracePromoID = ((BigDecimal) promoId.get("promoId")).intValue();
