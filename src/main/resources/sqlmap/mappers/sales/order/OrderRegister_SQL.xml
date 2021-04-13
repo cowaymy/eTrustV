@@ -1176,7 +1176,7 @@
                   , PCKAGE_BINDING_NO
                   , BNDL_ID
                   , PRE_ORD_ID
-                  , ECOMM_ORD_ID
+                  <!-- , ECOMM_ORD_ID  -->
     ) VALUES ( #{salesOrdId}
              , #{salesOrdNo}
              , UPPER(#{refNo})
@@ -1239,7 +1239,7 @@
              , #{comboOrdBind}
              , #{bndlId}
              , #{preOrdId}
-             , #{ecommOrdId}
+             <!-- , #{ecommOrdId}  -->
      )
   </insert>
 
