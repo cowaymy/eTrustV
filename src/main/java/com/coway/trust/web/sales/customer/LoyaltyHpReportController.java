@@ -2,6 +2,7 @@ package com.coway.trust.web.sales.customer;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -10,12 +11,15 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.sales.common.SalesCommonService;
+import com.coway.trust.biz.sales.customer.LoyaltyHpReportService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
@@ -32,6 +36,9 @@ public class LoyaltyHpReportController {
 
 	@Resource(name = "salesCommonService")
 	private SalesCommonService salesCommonService;
+
+	@Resource(name = "loyaltyHpReportService")
+	private LoyaltyHpReportService loyaltyHpReportService;
 
 	@RequestMapping(value = "/loyaltyHpReport.do")
 	public String loyaltyHpReport(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
@@ -57,6 +64,13 @@ public class LoyaltyHpReportController {
 	    }
 
 		return "sales/customer/loyaltyHpReport";
+	}
+
+	@RequestMapping(value = "/selectBatchUploadNumbers", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBatchUploadNumbers(@RequestParam Map<String, Object>params, ModelMap model) {
+		List<EgovMap> batchUploadNumbers = loyaltyHpReportService.selectBatchUploadNumbers(params);
+
+		return ResponseEntity.ok(batchUploadNumbers);
 	}
 
 }

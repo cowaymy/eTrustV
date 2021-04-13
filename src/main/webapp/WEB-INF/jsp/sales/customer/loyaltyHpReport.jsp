@@ -7,11 +7,21 @@
     today = "${today}";
     $(document).ready(function() {
 
+        doGetCombo('/sales/customer/selectBatchUploadNumbers', '', '','cmbBatchNo', 'S');
+
         //change report type box
         $("#reportType").change(function() {
             val = $(this).val();
             var $reportForm = $("#reportForm")[0];
             $($reportForm).empty(); //remove children
+
+            if ($("#reportType").val() == "6") {
+            	$("#cmbBatchNo").val("");
+                $("#batchUploadSelect").show();
+            } else {
+                $("#cmbBatchNo").val("");
+            	$("#batchUploadSelect").hide();
+            }
         });
 
     	var userType = '${SESSION_INFO.userTypeId}';
@@ -38,9 +48,15 @@
 
             $("#reportType").attr('disabled',true);
 
-           } else {
-        	   $("#reportType").attr('disabled',false);
-           }
+        } else {
+        	$("#reportType").attr('disabled',false);
+        }
+
+
+        if (userType == 1 && "${SESSION_INFO.memberLevel}" == "0") {
+            $("#searchForm #batchUploadSelect").show();
+        }
+
 
         $('#generate').click(function() {
             var $reportForm = $("#reportForm")[0];
@@ -54,9 +70,16 @@
                 return;
             }
 
+            if (type == "6" && ($("#cmbBatchNo").val() == "")) {
+                //Common.alert("Please select Batch Upload No. ");
+                Common.alert("<spring:message code='loyaltyhp.alert.rpt.selectBatch'/>");
+                return;
+            }
+
             var reportDownFileName = ""; //download report name
             var reportFileName = ""; //reportFileName
             var reportViewType = ""; //viewType
+            var reportBatchUploadNo = "";
 
             //default input setting
             $($reportForm).append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name
@@ -114,12 +137,11 @@
                 reportDownFileName = "LoyaltyWsHpSgm_" + today; //report name
                 reportViewType = "PDF"; //viewType
 
-            }
+                //set parameters
+                reportBatchUploadNo = $("#cmbBatchNo").val();
+                $($reportForm).append('<input type="hidden" id="BatchID" name="@BatchID" value="" /> ');
+                $("#reportForm #BatchID").val(reportBatchUploadNo);
 
-            //report info
-            if (reportFileName == "" || reportDownFileName == "" || reportViewType == "") {
-                Common.alert("<spring:message code='sys.common.alert.validation' arguments='Report Info' htmlEscape='false'/>");
-                return;
             }
 
             //default setting
@@ -181,6 +203,13 @@
                             <option value="4">Loyalty WS HP - SM report - All (Excel)</option>
                             <option value="5">Loyalty WS HP - HM report - All (Excel)</option>
                         </select></td>
+                    </tr>
+                    <tr id="batchUploadSelect" name="batchUploadSelect" style="display: none;">
+                        <th scope="row"><spring:message code='loyaltyhp.rpt.batchupload.no'/></th>
+                        <td colspan="2">
+                            <select id="cmbBatchNo" name="cmbBatchNo"></select>
+                        </td>
+                        </td>
                     </tr>
                 </tbody>
             </table>
