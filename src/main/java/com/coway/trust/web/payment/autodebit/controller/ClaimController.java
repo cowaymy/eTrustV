@@ -2743,7 +2743,8 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	  String fileDirectory = filePath + subPath;
 
 	  String srcDir  = fileDirectory + "/" + batchDate;
-	  String zipEncryptFile = fileDirectory + "/" + batchName +"_" +batchDate + ".gpg";
+	  String zipEncryptFilePath = fileDirectory + "/" + batchName +"_" +batchDate + ".gpg";
+	  String zipEncryptFile = batchName +"_" +batchDate + ".gpg";
 	  String subPathZipEnc = subPath + batchName +"_" +batchDate + ".gpg";
 
 	  String cmd = "";
@@ -2756,7 +2757,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 		  LOGGER.debug("1-1. PGP ZIP encryption Start.");
 
 		  // encrypt file exist -> delete
-		  File fileEncryptZipDel = new File(zipEncryptFile);
+		  File fileEncryptZipDel = new File(zipEncryptFilePath);
 		  fileEncryptZipDel.delete();
 
 		  cmd = "gpg-zip --encrypt --output " + zipEncryptFile + " --recipient " + CIMB_DD_KEYNAME  + " " + srcDir ;
