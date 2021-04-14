@@ -402,9 +402,6 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
       if(access == null){
         code = String.valueOf(AppConstants.RESPONSE_CODE_UNAUTHORIZED);
         message = AppConstants.RESPONSE_DESC_UNAUTHORIZED;
-      }else if(CommonUtils.isEmpty(eComApiForm.getCountry())){
-        code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
-        message = "Country not found.";
       }else if(CommonUtils.isEmpty(eComApiForm.getState())){
         code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
         message = "State not found.";
