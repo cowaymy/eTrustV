@@ -468,7 +468,6 @@ public class EComApiForm {
   public static Map<String, Object> createAddrMap(EComApiForm ecomForm){
     Map<String, Object> params = new HashMap<>();
     params.put("key", ecomForm.getKey());
-    params.put("country", ecomForm.getCountry());
     params.put("state", ecomForm.getState());
     params.put("postcode", ecomForm.getPostcode());
     params.put("area", ecomForm.getArea());
