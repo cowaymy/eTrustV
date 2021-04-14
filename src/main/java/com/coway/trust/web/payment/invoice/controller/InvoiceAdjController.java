@@ -176,32 +176,34 @@ public class InvoiceAdjController {
 	        }
 
 	        List<EgovMap> apprList = invoiceService.selectAppvLineInfo(params);
-	        EgovMap apprDetail = apprList.get(0);
+	        if(!apprList.isEmpty()) {
+	            EgovMap apprDetail = apprList.get(0);
 
-	        ArrayList<String> appvPrcssStusList = new ArrayList<String>();
-	        //ArrayList<Map> appvPrcssStusList = new ArrayList<Map> ();
-	        HashMap<String, Object> appvHm = new HashMap<String, Object>();
+	            ArrayList<String> appvPrcssStusList = new ArrayList<String>();
+	            //ArrayList<Map> appvPrcssStusList = new ArrayList<Map> ();
+	            HashMap<String, Object> appvHm = new HashMap<String, Object>();
 
-	        appvPrcssStusList.add("- Requested By " + (String) apprDetail.get("memoReqstUserId") + " [" + (String) apprDetail.get("reqstDt") + "]");
+	            appvPrcssStusList.add("- Requested By " + (String) apprDetail.get("memoReqstUserId") + " [" + (String) apprDetail.get("reqstDt") + "]");
 
-	        String finalAppr = "";
-	        for(int i = 0; i < apprList.size(); i++) {
-	            apprDetail = apprList.get(i);
+	            String finalAppr = "";
+	            for(int i = 0; i < apprList.size(); i++) {
+	                apprDetail = apprList.get(i);
 
-	            if("R".equals((String)apprDetail.get("memoAppvStus")) || "T".equals((String)apprDetail.get("memoAppvStus"))) {
-	                appvPrcssStusList.add("- Pending for Approval By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
-	            } else if("A".equals((String)apprDetail.get("memoAppvStus"))) {
-	                appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
-	                finalAppr = "- Approved By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "]";
-	            } else if("J".equals((String)apprDetail.get("memoAppvStus"))) {
-	                appvPrcssStusList.add("- Rejected By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
-	                finalAppr = "- Rejected By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "]";
+	                if("R".equals((String)apprDetail.get("memoAppvStus")) || "T".equals((String)apprDetail.get("memoAppvStus"))) {
+	                    appvPrcssStusList.add("- Pending for Approval By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
+	                } else if("A".equals((String)apprDetail.get("memoAppvStus"))) {
+	                    appvPrcssStusList.add("- Approved By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
+	                    finalAppr = "- Approved By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "]";
+	                } else if("J".equals((String)apprDetail.get("memoAppvStus"))) {
+	                    appvPrcssStusList.add("- Rejected By " + apprDetail.get("appvLineUserName") + " [" + apprDetail.get("appvDt") + "] - " + apprDetail.get("memoRem"));
+	                    finalAppr = "- Rejected By " + (String) apprDetail.get("finalApprUser") + " [" + (String) apprDetail.get("finalAppvDt") + "]";
+	                }
 	            }
-	        }
 
-	        apprResult.put("appvPrcssStus", appvPrcssStusList);
-	        returnValue.put("apprList", apprResult);
-	        returnValue.put("finalAppr", finalAppr);
+	            apprResult.put("appvPrcssStus", appvPrcssStusList);
+	            returnValue.put("apprList", apprResult);
+	            returnValue.put("finalAppr", finalAppr);
+	        }
 
 			return ResponseEntity.ok(returnValue);
 
