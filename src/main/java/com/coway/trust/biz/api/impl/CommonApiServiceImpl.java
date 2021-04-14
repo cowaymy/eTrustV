@@ -86,7 +86,7 @@ public class CommonApiServiceImpl extends EgovAbstractServiceImpl implements Com
     String pgmPath = StringUtils.defaultString(request.getRequestURI()) + "?" + StringUtils.defaultString(request.getQueryString());
 
       params.put("respCde", code);
-      params.put("respDesc", msg);
+      params.put("errMsg", msg);
       params.put("reqParam", reqPrm.toString());
       params.put("ipAddr", CommonUtils.getClientIp(request));
       params.put("prgPath", pgmPath);

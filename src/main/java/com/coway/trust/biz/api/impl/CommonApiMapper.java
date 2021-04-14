@@ -9,9 +9,6 @@ import java.util.List;
 
 import java.util.Map;
 
-import com.coway.trust.api.project.eCommerce.EComApiDto;
-import com.coway.trust.api.project.eCommerce.EComApiForm;
-
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 

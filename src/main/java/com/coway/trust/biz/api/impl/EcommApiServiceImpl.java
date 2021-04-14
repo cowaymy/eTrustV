@@ -76,7 +76,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
     Map<String, Object> reqPrm = Maps.filterValues(EComApiForm.createRegOrdMap(eComApiForm),Objects::nonNull);
     EgovMap custInfo = new EgovMap();
 
-    //try{
+    try{
 
       access = commonApiMapper.checkAccess(reqPrm);
       if(access == null){
@@ -257,13 +257,15 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         }
       }
 
-    /*} catch(Exception e){
+    } catch(Exception e){
       code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
       message = StringUtils.substring(e.getMessage(), 0, 4000);
+
+      System.out.println();
     } finally{
       stopWatch.stop();
       respTm = stopWatch.toString();
-    }*/
+    }
 
     return commonApiService.rtnRespMsg(request, code, message, respTm, reqPrm, null ,apiUserId);
   }
@@ -452,7 +454,6 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
     EgovMap access = new EgovMap();
     Map<String, Object> reqPrm = Maps.filterValues(EComApiForm.createMap(eComApiForm),Objects::nonNull);
-    Map<String, Object> cancelResult = new HashMap<String, Object>();
 
     try{
 

@@ -1,6 +1,5 @@
 package com.coway.trust.biz.api;
 
-import java.util.List;
 
 /**************************************
  * Author                  Date                    Remark
@@ -12,7 +11,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.coway.trust.api.project.common.CommonApiDto;
 import com.coway.trust.api.project.common.CommonApiForm;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
