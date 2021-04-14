@@ -2744,11 +2744,9 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 
 	  String srcDir  = fileDirectory + "/" + batchDate;
 	  String zipEncryptFilePath = fileDirectory + "/" + batchName +"_" +batchDate + ".gpg";
-	  String zipEncryptFile = batchName +"_" +batchDate + ".gpg";
 	  String subPathZipEnc = subPath + batchName +"_" +batchDate + ".gpg";
 
-	  String cmdEnc = "";
-	  String cmdMv = "";
+	  String cmd = "";
 	  String str = null;
 	  StringBuffer sb = null;
 
@@ -2761,22 +2759,16 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 		  File fileEncryptZipDel = new File(zipEncryptFilePath);
 		  fileEncryptZipDel.delete();
 
-		  //File fileEncryptZipDir = new File(fileDirectory);
 		  File fileSrcDir = new File(srcDir);
 
-		  cmdEnc = "gpg-zip --encrypt --output " + zipEncryptFile + " --recipient " + CIMB_DD_KEYNAME  + " ." ;
-		  cmdMv = "mv " + zipEncryptFile + " " + fileDirectory;
+		  cmd = "gpg-zip --encrypt --output " + zipEncryptFilePath + " --recipient " + CIMB_DD_KEYNAME  + " ." ;
 
-		  String arrCmd[] = {cmdEnc, cmdMv};
-
-		  LOGGER.debug(">>>>>>>>>encrypt cmd: " + cmdEnc);
-		  LOGGER.debug(">>>>>>>>>move file cmd: " + cmdMv);
+		  LOGGER.debug(">>>>>>>>>encrypt cmd: " + cmd);
 
 		  // 명령행 출력 라인 캡쳐를 위한 StringBuffer 설정
 		  sb = new StringBuffer();
 		  // 명령 실행
-		  //Process proc = Runtime.getRuntime().exec(cmd);
-		  Process proc = Runtime.getRuntime().exec(arrCmd, null, fileSrcDir);
+		  Process proc = Runtime.getRuntime().exec(cmd, null, fileSrcDir);
 		  // 명령행의 출력 스트림을 얻고, 그 내용을 buffered reader input stream에 입력한다.
 		  BufferedReader br = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 		  // 명령행에서의 출력 라인 읽음
