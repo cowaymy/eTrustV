@@ -2765,7 +2765,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 		  File fileSrcDir = new File(srcDir);
 
 		  cmdEnc = "gpg-zip --encrypt --output " + zipEncryptFile + " --recipient " + CIMB_DD_KEYNAME  + " ." ;
-		  cmdMv = "mv zipEncryptFile " + fileDirectory;
+		  cmdMv = "mv " + zipEncryptFile + " " + fileDirectory;
 
 		  String arrCmd[] = {cmdEnc, cmdMv};
 
