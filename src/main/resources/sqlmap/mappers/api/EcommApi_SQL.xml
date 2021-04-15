@@ -151,10 +151,13 @@
 <insert id="insertNewAddr" parameterType="Map">
 
     <selectKey keyProperty="areaId" resultType="String" order="BEFORE">
-      SELECT
-        #{postcode}||'-'||LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0')
-      FROM SYS0064M
-        WHERE POSTCODE=#{postcode} AND AREA_ID NOT LIKE 'DM%'
+    (SELECT
+        DISTINCT(
+        CASE  WHEN (SELECT LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode}) IS NULL
+              THEN #{postcode}||'-'||LPAD(0001,4,'0')
+              ELSE (SELECT #{postcode}||'-'||LPAD(TO_NUMBER(SUBSTR(MAX(AREA_ID),7,10)+1),4,'0') FROM SYS0064M WHERE POSTCODE=#{postcode} )
+        END)
+     FROM SYS0064M)
     </selectKey>
 
 
