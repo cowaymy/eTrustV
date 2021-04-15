@@ -377,6 +377,12 @@
           editable : false,
           style : "aui-grid-user-custom-left"
         }, {
+        dataField : "crtUserNm",
+        headerText : '<spring:message code="pay.head.memberCode" />',
+        width : 160,
+        editable : false,
+        style : "aui-grid-user-custom-left"
+       }, {
           dataField : "payModeNm",
           width : 160,
           headerText : '<spring:message code="sal.text.payMode" />',
@@ -568,13 +574,15 @@
           headerText : '<spring:message code="pay.title.branchCode" />',
           width : 160,
           editable : false
-        }, {
+        },
+/*         {
           dataField : "crtUserNm",
           headerText : '<spring:message code="pay.head.memberCode" />',
           width : 160,
           editable : false,
           style : "aui-grid-user-custom-left"
-        }, {
+        },  */
+        {
           dataField : "updDt",
           headerText : '<spring:message code="pay.text.updDt" />',
           width : 160,
