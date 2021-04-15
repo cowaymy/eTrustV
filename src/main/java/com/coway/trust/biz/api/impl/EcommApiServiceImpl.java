@@ -167,7 +167,6 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         salesOrderMVO.setPromoId( Integer.valueOf(reqPrm.get("promo").toString()) );
         salesOrderMVO.setRefNo(reqPrm.get("refNo").toString());
         salesOrderMVO.setRem("Ecommerce Order");
-        salesOrderMVO.setBrnchId(Integer.valueOf(custAddInfo.get("soBrnchId").toString()));
 
         salesOrderMVO.setMemId(Integer.valueOf(memInfo.get("memId").toString()));
         salesOrderMVO.setDeptCode(memInfo.get("deptCode").toString());
@@ -188,7 +187,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
         // SAL0045D
         installationVO.setAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
-        installationVO.setBrnchId(Integer.valueOf(custAddInfo.get("cdBrnchId").toString()));
+        installationVO.setBrnchId(CommonUtils.nvl(Integer.valueOf(custAddInfo.get("cdBrnchId").toString()),42));
         installationVO.setCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));;
         installationVO.setInstct(null);
         installationVO.setPreDt("01/01/1900");

@@ -129,7 +129,7 @@
     LEFT JOIN SYS0038M C1 ON C1.STUS_CODE_ID = CP.CCP_STUS_ID
 
     WHERE S.REF_NO = #{sofNo}
-    AND CM.NRIC = #{nric}
+        AND ROWNUM = 1
 </select>
 
 <select id="cardDiffNRIC" parameterType="Map" resultType="egovMap">
