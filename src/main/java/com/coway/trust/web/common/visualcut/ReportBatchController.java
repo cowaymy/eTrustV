@@ -1920,7 +1920,7 @@ public class ReportBatchController {
   }
 
 
-  @RequestMapping(value = "/CowayDailySalesStatusHP_Adv.do")
+  /*@RequestMapping(value = "/CowayDailySalesStatusHP_Adv.do")
   public void CowayDailySalesStatusHP_Adv() {
     LOGGER.info("[START] CowayDailySalesStatusHP_Adv...");
     Map<String, Object> params = new HashMap<>();
@@ -1935,7 +1935,7 @@ public class ReportBatchController {
             "shawn.chow@coway.com.my",
             "austin@coway.com.my",
             "hod@coway.com.my"
-            /*"<jypark30@coway.co.kr>",
+            "<jypark30@coway.co.kr>",
             "<enough06@coway.co.kr>",
             "<rose3128@coway.co.kr>",
             "<jenux@coway.co.kr>",
@@ -1944,7 +1944,7 @@ public class ReportBatchController {
             "<ikchoul85@coway.co.kr>",
             "<kangsh@coway.co.kr>",
             "<hsjjang99@coway.co.kr>",
-            "<jun1853@coway.co.kr>"*/
+            "<jun1853@coway.co.kr>"
           };
     String email = "";
     email += "Dear All,\r\n\r\n";
@@ -1984,7 +1984,7 @@ public class ReportBatchController {
         "shawn.chow@coway.com.my",
         "austin@coway.com.my",
         "hod@coway.com.my"
-        /*"<jypark30@coway.co.kr>",
+        "<jypark30@coway.co.kr>",
         "<enough06@coway.co.kr>",
         "<rose3128@coway.co.kr>",
         "<jenux@coway.co.kr>",
@@ -1993,7 +1993,7 @@ public class ReportBatchController {
         "<ikchoul85@coway.co.kr>",
         "<kangsh@coway.co.kr>",
         "<hsjjang99@coway.co.kr>",
-        "<jun1853@coway.co.kr>"*/
+        "<jun1853@coway.co.kr>"
         };
     String email = "";
     email += "Dear All,\r\n\r\n";
@@ -2015,7 +2015,7 @@ public class ReportBatchController {
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] CowayDailySalesStatusCody...");
-  }
+  }*/
 
   @RequestMapping(value = "/AutoDebitDuductionSummary.do")
    //@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am)
