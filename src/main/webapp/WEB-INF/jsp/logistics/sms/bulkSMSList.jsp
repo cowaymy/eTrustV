@@ -229,9 +229,19 @@ var updResultColLayout = [
    }
 
     $(function(){
+
+
    	    $("#search").click(function(){
    	    	/* if(fn_validSearchList()) */
+   	    	if("${SESSION_INFO.userId}" !="40784") {
    	    	    getBulkSmsListAjax();
+   	    	}
+   	    	else
+   	    	{
+   	    		getBulkSmsListAjaxException();
+   	    	}
+
+
          });
 
         $("#clear").click(function(){
@@ -276,6 +286,12 @@ var updResultColLayout = [
         Common.ajax("GET", "/logistics/sms/selectBulkSmsList.do",  $('#SearchForm').serialize(), function(result) {
           AUIGrid.setGridData(myGridID, result.data);
         });
+    }
+
+    function getBulkSmsListAjaxException() {
+        Common.ajax("GET", "/logistics/sms/selectBulkSmsListException.do",  $('#SearchForm').serialize(), function(result) {
+            AUIGrid.setGridData(myGridID, result.data);
+          });
     }
 
     function  isValidMobileNo(inputContact){
