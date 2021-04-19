@@ -54,6 +54,12 @@ public class SmsServiceImpl implements SmsService
 		return smsMapper.selectBulkSmsList(params);
 	}
 
+	@Override
+	public List<EgovMap> selectBulkSmsListException(Map<String, Object> params)
+	{
+		return smsMapper.selectBulkSmsListException(params);
+	}
+
 	private void preprocSmsDetails(SmsVO smsVO, Map<String, Object> params, SessionVO sessionVO) {
 		logger.debug("@#### preprocSmsDetails START :: " + params.toString());
 

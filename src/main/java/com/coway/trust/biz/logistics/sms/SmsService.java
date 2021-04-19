@@ -19,6 +19,9 @@ public interface SmsService {
 
 	List<EgovMap> selectBulkSmsList(Map<String, Object> params);
 
+	List<EgovMap> selectBulkSmsListException(Map<String, Object> params);
+
+
 	List<EgovMap> selectLiveSmsList(Map<String, Object> params);
 
 	void insertSmsView(Map<String, Object> params, SessionVO sessionVO)  throws Exception;

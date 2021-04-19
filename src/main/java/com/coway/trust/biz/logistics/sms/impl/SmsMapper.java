@@ -21,6 +21,8 @@ public interface SmsMapper
 
 	List<EgovMap> selectBulkSmsList(Map<String, Object> params);
 
+	List<EgovMap> selectBulkSmsListException(Map<String, Object> params);
+
 	List<EgovMap> selectTempSmsList(Map<String, Object> params);
 
 	void insertSmsView(SmsVO smsVO);
