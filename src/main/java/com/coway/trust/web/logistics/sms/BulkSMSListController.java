@@ -89,6 +89,17 @@ public class BulkSMSListController {
 		return ResponseEntity.ok(map);
 	}
 
+	@RequestMapping(value = "/selectBulkSmsListException.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectBulkSmsListException(@RequestParam Map<String, Object> params,HttpServletRequest request, Model model) {
+
+		List<EgovMap> list = smsService.selectBulkSmsListException(params);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}
+
 	@RequestMapping(value = "/selectBulkSmsItem.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> selectBulkSmsItem(@RequestParam Map<String, Object> params,HttpServletRequest request, Model model) {
 
