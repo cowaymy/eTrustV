@@ -70,6 +70,7 @@ WHERE
 	JOIN SYS0047M T3 ON T1.SMS_UPLOAD_CRT_USER_ID = T3.USER_ID
 	WHERE
     1 = 1
+    AND ( T3.USER_ID NOT IN ('40784'))
     <if test="smsUploadId != null and smsUploadId !=''">
                AND  ( T1.SMS_UPLOAD_ID = #{smsUploadId})
     </if>
@@ -86,6 +87,39 @@ WHERE
          AND T2.SMS_EXPR_DT between to_date(#{searchExpStartDt}||'000000' , 'dd/mm/yyyyhh24miss') and to_date(#{searchExpEndDt}||'235959' , 'dd/mm/yyyyhh24miss')
     </if>
 	GROUP BY T1.SMS_UPLOAD_ID,T1.SMS_UPLOAD_REF_NO,TO_CHAR(T2.SMS_EXPR_DT,'DD-MM-YYYY'),TO_CHAR(T1.SMS_UPLOAD_CRT_DT,'DD-MM-YYYY'),T1.SMS_UPLOAD_CRT_USER_ID,T3.USER_FULL_NAME
+    ORDER BY T1.SMS_UPLOAD_ID DESC
+</select>
+
+<select id="selectBulkSmsListException" parameterType="Map" resultType="EgovMap">
+    SELECT
+        T1.SMS_UPLOAD_ID,
+        T1.SMS_UPLOAD_REF_NO,
+        TO_CHAR(T2.SMS_EXPR_DT, 'DD-MM-YYYY') SMS_EXPR_DT,
+        COUNT(T2.SMS_ID) TOTAL_SMS,
+        TO_CHAR(T1.SMS_UPLOAD_CRT_DT, 'DD-MM-YYYY') SMS_UPLOAD_CRT_DT,
+        T1.SMS_UPLOAD_CRT_USER_ID,
+        T3.USER_FULL_NAME
+    FROM MSC0014D T1
+    JOIN MSC0015D T2 ON T1.SMS_UPLOAD_ID = T2.SMS_BATCH_UPLOAD_ID
+    JOIN SYS0047M T3 ON T1.SMS_UPLOAD_CRT_USER_ID = T3.USER_ID
+    WHERE
+    1 = 1
+    <if test="smsUploadId != null and smsUploadId !=''">
+               AND  ( T1.SMS_UPLOAD_ID = #{smsUploadId})
+    </if>
+    <if test="searchRefNo != null and searchRefNo !=''">
+               AND  ( T1.SMS_UPLOAD_REF_NO = #{searchRefNo})
+    </if>
+    <if test="searchCreateUser != null and searchCreateUser !=''">
+               AND  ( T3.USER_FULL_NAME LIKE '%'||UPPER(#{searchCreateUser})||'%')
+    </if>
+    <if test="searchCrtStartDt != null and searchCrtStartDt != '' and searchCrtEndDt != null and searchCrtEndDt != '' ">
+           AND T1.SMS_UPLOAD_CRT_DT between to_date(#{searchCrtStartDt}||'000000' , 'dd/mm/yyyyhh24miss') and to_date(#{searchCrtEndDt}||'235959' , 'dd/mm/yyyyhh24miss')
+    </if>
+    <if test="searchExpStartDt != null and searchExpStartDt != '' and searchExpEndDt != null and searchExpEndDt != '' ">
+         AND T2.SMS_EXPR_DT between to_date(#{searchExpStartDt}||'000000' , 'dd/mm/yyyyhh24miss') and to_date(#{searchExpEndDt}||'235959' , 'dd/mm/yyyyhh24miss')
+    </if>
+    GROUP BY T1.SMS_UPLOAD_ID,T1.SMS_UPLOAD_REF_NO,TO_CHAR(T2.SMS_EXPR_DT,'DD-MM-YYYY'),TO_CHAR(T1.SMS_UPLOAD_CRT_DT,'DD-MM-YYYY'),T1.SMS_UPLOAD_CRT_USER_ID,T3.USER_FULL_NAME
     ORDER BY T1.SMS_UPLOAD_ID DESC
 </select>
 
