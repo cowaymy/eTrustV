@@ -1193,7 +1193,8 @@ public class ClaimController {
       zipFilesEmail(claimMap);
 
       if(requireFileEncrypt(claimMap)) {
-          zipFilesEncrypt(claimMap); //encrypt into gpg zip file
+    	  generateEncryptFile(claimMap);
+          //zipFilesEncrypt(claimMap);
       }
 
     }
@@ -2011,13 +2012,6 @@ public class ClaimController {
       }
     }
 
-    // CHECK IF ENCRYPTION NEEDED AND ENCRYPT
-//    if (fileInfo.size() > 0) {
-//    	if(requireFileEncrypt(claimMap)) {
-//    	    this.generateEncryptFile(fileInfo, claimMap, sFile, subPath);
-//    	}
-//    }
-
   }
 
 private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, String[] columns, String[] titles,
@@ -2657,12 +2651,21 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	  return false;
   }
 
-  /*
-  private void generateEncryptFile(List<EgovMap> fileInfo, EgovMap claimMap, String srcFile, String subPath) {
+  private void generateEncryptFile(EgovMap claimMap) {
 
-	  for (int a = 0; a < fileInfo.size(); a++) {
-		  Map<String, Object> fileInfoConf2 = new HashMap<String, Object>();
-		  fileInfoConf2 = (Map<String, Object>) fileInfo.get(a);
+	  String subPath = claimMap.get("subPath").toString();
+	  String batchDate = claimMap.get("ctrlBatchDt").toString();
+	  String fileDirectory = filePath + subPath;
+
+	  String srcDir  = fileDirectory + "/" + batchDate + "/";
+
+      File dir = new File(srcDir);
+      File[] files = dir.listFiles();
+	  String srcFile = "";
+
+      for (int i = 0; i < files.length; i++) {
+    	  srcFile = files[i].getName();
+          System.out.println("To encrypt file: " + srcFile);
 
 		  LOGGER.debug("1. PGP encryption Start.");
 
@@ -2677,16 +2680,14 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 			  LOGGER.debug("fileName:" + srcFile);
 
 			  String[] arr = srcFile.split("\\.");
-			  encryptFilePath = filePath + fileInfoConf2.get("ctrlSubPath").toString() + arr[0] + ".GPG";
+			  encryptFilePath = filePath + subPath + arr[0] + ".GPG";
 			  encFile = arr[0] + ".GPG";
-
-			  String temRootPath  = filePath + fileInfoConf2.get("ctrlSubPath").toString();
 
 			  // encrypt file exist -> delete
 			  File fileEncryptDel = new File(encryptFilePath);
 			  fileEncryptDel.delete();
 
-			  cmd = "gpg --output " + encryptFilePath + " --encrypt --recipient " + CIMB_DD_KEYNAME  + " "+ temRootPath + srcFile ;
+			  cmd = "gpg --output " + encryptFilePath + " --encrypt --recipient " + CIMB_DD_KEYNAME  + " " + srcDir + srcFile ;
 
 			  LOGGER.debug(">>>>>>>>>encrypt cmd: " + cmd);
 
@@ -2724,18 +2725,12 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 
 		  LOGGER.debug("1. PGP encryption End.");
 		  claimMap.put("encFile", subPath + encFile);
-	  }
-  } */
+      }
+  }
 
+  /*
+  // YONGJH 20210421 - commented this method because it is unused
   public void zipFilesEncrypt(EgovMap claimMap) {
-
-	  /*
-	   * [20210412 YONGJH] - start
-	   * Note: GPG zip encryption will not work on local Windows-based environment,
-	   * because the GPG command only supports Unix-based directory parsing. If you test this on local Windows,
-	   * expect an encryption error. Reader - if you can fix this, please do :)
-	   * [20210412 YONGJH] - end
-	  */
 
 	  String batchName = claimMap.get("batchName").toString();
 	  String subPath = claimMap.get("subPath").toString();
@@ -2801,6 +2796,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 	  LOGGER.debug("1. PGP ZIP encryption End.");
       claimMap.put("encFile", subPathZipEnc);
   }
+  */
 
 	@RequestMapping(value = "/downloadClaimFile.do", method = RequestMethod.POST)
 	public void fileDownClaim(	@RequestParam("dloadPathAndName") String dloadPathAndName,
