@@ -30,6 +30,14 @@
       Common.alert("<spring:message code='sys.common.alert.validation' arguments='request date (From & To)' htmlEscape='false'/>");
       return false;
     }
+    if ($("#settleDateFr").val() != '' && $("#settleDateTo").val() == '') {
+        Common.alert("<spring:message code='sys.common.alert.validation' arguments='settle date (To)' htmlEscape='false'/>");
+        return false;
+    }
+    if ($("#settleDateFr").val() == '' && $("#settleDateTo").val() != '') {
+        Common.alert("<spring:message code='sys.common.alert.validation' arguments='settle date (From)' htmlEscape='false'/>");
+        return false;
+    }
 
     var dtRange = 0;
 
@@ -70,6 +78,9 @@
   function fn_openGenerate() {
     if (fn_validation()) {
       var whereSql = "";
+      var whereSql2 = "";
+      var whereSql2LeftJoin = "";
+
       var keyInDateFrom = $("#reqstDateFr").val().substring(6, 10) + "-"
                         + $("#reqstDateFr").val().substring(3, 5) + "-"
                         + $("#reqstDateFr").val().substring(0, 2) + " 12:00:00 AM";
@@ -84,6 +95,14 @@
                        + $("#reqstDateTo").val().substring(3, 5) + "-"
                        + $("#reqstDateTo").val().substring(0, 2);
 
+      var settleDateFrom = $("#settleDateFr").val().substring(6, 10) + "-"
+      + $("#settleDateFr").val().substring(3, 5) + "-"
+      + $("#settleDateFr").val().substring(0, 2);
+
+      var settleDateTo = $("#settleDateTo").val().substring(6, 10) + "-"
+      + $("#settleDateTo").val().substring(3, 5) + "-"
+      + $("#settleDateTo").val().substring(0, 2);
+
       if ($("#reqstDateFr").val() != '' && $("#reqstDateTo").val() != ''
        && $("#reqstDateFr").val() != null
        && $("#reqstDateTo").val() != null) {
@@ -93,6 +112,14 @@
         } else {
           whereSql += " AND (TO_CHAR(A.AS_REQST_DT,'YYYY-MM-DD')) >= '" + keyInDateFrom1 + "' AND (TO_CHAR(A.AS_REQST_DT,'YYYY-MM-DD')) <= '" + keyInDateTo1 + "' ";
         }
+      }
+
+      if ($("#settleDateFr").val() != '' && $("#settleDateTo").val() != ''
+          && $("#settleDateFr").val() != null
+          && $("#settleDateTo").val() != null) {
+          whereSql2 = " AND (TO_CHAR(B.AS_SETL_DT,'YYYY-MM-DD')) >= '" + settleDateFrom + "' AND (TO_CHAR(B.AS_SETL_DT,'YYYY-MM-DD')) <= '" + settleDateTo + "' ";
+      } else {
+          whereSql2LeftJoin = " LEFT ";
       }
 
       if ($("#reportType").val() == '1') {
@@ -134,6 +161,8 @@
         }
         $("#reportForm1").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
         $("#reportForm1").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2LEFTJOIN" name="V_WHERESQL2LEFTJOIN" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_DEPT" name="V_DEPT" /> ');
@@ -141,10 +170,21 @@
         // Homecare Remove(except)
         whereSql += " AND B.BNDL_ID IS NULL";
 
+        //
+        if ($("#settleDateFr").val() != '' && $("#settleDateTo").val() != ''
+            && $("#settleDateFr").val() != null
+            && $("#settleDateTo").val() != null) {
+            whereSql2 = " AND (TO_CHAR(G.AS_SETL_DT,'YYYY-MM-DD')) >= '" + settleDateFrom + "' AND (TO_CHAR(G.AS_SETL_DT,'YYYY-MM-DD')) <= '" + settleDateTo + "' ";
+        } else {
+            whereSql2LeftJoin = " LEFT ";
+        }
+
         $("#reportForm1 #V_SELECTSQL").val(" ");
         $("#reportForm1 #V_ORDERBYSQL").val(" ");
         $("#reportForm1 #V_FULLSQL").val(" ");
         $("#reportForm1 #V_WHERESQL").val(whereSql);
+        $("#reportForm1 #V_WHERESQL2").val(whereSql2);
+        $("#reportForm1 #V_WHERESQL2LEFTJOIN").val(whereSql2LeftJoin);
         $("#reportForm1 #reportFileName").val('/services/ASRawPQC.rpt');
         $("#reportForm1 #viewType").val("EXCEL");
         $("#reportForm1 #reportDownFileName").val("ASRawPQCData_" + day + month + date.getFullYear());
@@ -195,6 +235,8 @@
         }
         $("#reportForm1").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
         $("#reportForm1").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2LEFTJOIN" name="V_WHERESQL2LEFTJOIN" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
 
@@ -209,6 +251,8 @@
         $("#reportForm1 #V_ORDERBYSQL").val(" ");
         $("#reportForm1 #V_FULLSQL").val(" ");
         $("#reportForm1 #V_WHERESQL").val(whereSql);
+        $("#reportForm1 #V_WHERESQL2").val(whereSql2);
+        $("#reportForm1 #V_WHERESQL2LEFTJOIN").val(whereSql2LeftJoin);
         $("#reportForm1 #reportFileName").val('/services/ASRawDataKOR.rpt');
         $("#reportForm1 #viewType").val("EXCEL");
         $("#reportForm1 #reportDownFileName").val("ASRawDataKOR_" + day + month + date.getFullYear());
@@ -227,6 +271,8 @@
           }
           $("#reportForm1").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
           $("#reportForm1").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2LEFTJOIN" name="V_WHERESQL2LEFTJOIN" /> ');
           $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
           $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
 
@@ -242,6 +288,8 @@
           $("#reportForm1 #V_ORDERBYSQL").val(" ");
           $("#reportForm1 #V_FULLSQL").val(" ");
           $("#reportForm1 #V_WHERESQL").val(whereSql);
+          $("#reportForm1 #V_WHERESQL2").val(whereSql2);
+          $("#reportForm1 #V_WHERESQL2LEFTJOIN").val(whereSql2LeftJoin);
           $("#reportForm1 #reportFileName").val('/services/ASRawDataKOR.rpt');
           $("#reportForm1 #viewType").val("EXCEL");
           $("#reportForm1 #reportDownFileName").val("ASRawDataAOASKOR_" + day + month + date.getFullYear());
@@ -260,6 +308,8 @@
           }
           $("#reportForm1").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
           $("#reportForm1").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2LEFTJOIN" name="V_WHERESQL2LEFTJOIN" /> ');
           $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
           $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
 
@@ -276,6 +326,8 @@
           $("#reportForm1 #V_FULLSQL").val(" ");
           $("#reportForm1 #V_WHERESQL").val(whereSql);
           console.log("V_WHERESQL " + toString($("#reportForm1 #V_WHERESQL").val()));
+          $("#reportForm1 #V_WHERESQL2").val(whereSql2);
+          $("#reportForm1 #V_WHERESQL2LEFTJOIN").val(whereSql2LeftJoin);
           $("#reportForm1 #reportFileName").val('/services/ASRawDataSprPrtKOR.rpt');
           $("#reportForm1 #viewType").val("EXCEL");
           $("#reportForm1 #reportDownFileName").val("ASRawDataSprPrtKOR_" + day + month + date.getFullYear());
@@ -293,13 +345,27 @@
           day = "0" + date.getDate();
         }
 
+        if ($("#settleDateFr").val() != '' && $("#settleDateTo").val() != ''
+            && $("#settleDateFr").val() != null
+            && $("#settleDateTo").val() != null) {
+        	settleDateFrom = settleDateFrom + " 12:00:00 AM";
+        	settleDateTo = settleDateTo + " 12:00:00 AM";
+        } else {
+            settleDateFrom = "1900-01-01 12:00:00 AM";
+            settleDateTo = "9999-12-31 12:00:00 AM";
+        }
+
         // SP_CR_PART_DLVY_ORD_RAW
         $("#reportForm1").append('<input type="hidden" id="V_KEYINDATEFROM" name="V_KEYINDATEFROM" /> ');
         $("#reportForm1").append('<input type="hidden" id="V_KEYINDATETO" name="V_KEYINDATETO"  /> ');
         $("#reportForm1").append('<input type="hidden" id="V_DSCBRANCHID" name="V_DSCBRANCHID" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_SETTLEDATEFROM" name="V_SETTLEDATEFROM" /> ');
+        $("#reportForm1").append('<input type="hidden" id="V_SETTLEDATETO" name="V_SETTLEDATETO" /> ');
         $("#reportForm1 #V_KEYINDATEFROM").val(keyInDateFrom);
         $("#reportForm1 #V_KEYINDATETO").val(keyInDateTo);
         $("#reportForm1 #V_DSCBRANCHID").val(0);
+        $("#reportForm1 #V_SETTLEDATEFROM").val(settleDateFrom);
+        $("#reportForm1 #V_SETTLEDATETO").val(settleDateTo);
         $("#reportForm1 #reportFileName").val('/services/ASSparePartRaw.rpt');
         $("#reportForm1 #viewType").val("EXCEL");
         $("#reportForm1 #reportDownFileName").val("ASSparePartRaw_" + day + month + date.getFullYear());
@@ -392,7 +458,7 @@
       </tr>
       <tr>
       <th scope="row">Request Date<span id='m2' name='m2' class='must'> *</span></th>
-       <td colspan='3'>
+       <td>
         <div class="date_set">
          <!-- date_set start -->
          <p>
@@ -403,6 +469,22 @@
          <p>
           <input type="text" title="Create end Date"
            placeholder="DD/MM/YYYY" class="j_date" id="reqstDateTo" />
+         </p>
+        </div>
+        <!-- date_set end -->
+       </td>
+       <th scope="row">Settle Date</th>
+       <td>
+        <div class="date_set">
+         <!-- date_set start -->
+         <p>
+          <input type="text" title="Settle start Date"
+           placeholder="DD/MM/YYYY" class="j_date" id="settleDateFr" />
+         </p>
+         <span>To</span>
+         <p>
+          <input type="text" title="Settle end Date"
+           placeholder="DD/MM/YYYY" class="j_date" id="settleDateTo" />
          </p>
         </div>
         <!-- date_set end -->
