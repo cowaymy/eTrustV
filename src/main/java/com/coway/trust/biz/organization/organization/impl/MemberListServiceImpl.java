@@ -618,6 +618,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					}else
 						if(selectOrganization.get("memLvl").toString().equals("3") && selectOrganization.get("deptCode").toString().equals(params.get("deptCode").toString())){
 							deptParentID = selectOrganization.get("memId").toString();
+							lastGroupCode = selectOrganization.get("lastGrpCode").toString();
+							lastOrgCode = selectOrganization.get("lastOrgCode").toString();
 							//Map<String, Object> groupMap = new HashMap<String, Object>();
 
 							//groupMap.put("memberUpId", deptParentID);
@@ -1871,8 +1873,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					memOrg.put("grandPrCode","");
 					memOrg.put("grandPrMemberId",0);
 					memOrg.put("lastDeptCode",selectOrganization.get("deptCode"));
-					memOrg.put("lastGrpCode",lastGroupCode);
-					memOrg.put("lastOrgCode",lastOrgCode);
+					memOrg.put("lastGrpCode",selectOrganization.get("lastGrpCode"));
+					memOrg.put("lastOrgCode",selectOrganization.get("lastOrgCode"));
 					memOrg.put("lastTopOrgCode","");
 					memOrg.put("branchId",0);
 
