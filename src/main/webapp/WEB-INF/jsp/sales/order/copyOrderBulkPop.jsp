@@ -24,17 +24,19 @@
             }
 
             if(memRc == 1) {
-                if(rcPrct < 30) {
-                    var qty = parseInt($('#_copyQty').val());
-                    var tot = qty + parseInt(cnt);
+                if(rcPrct != "" && rcPrct != null) {
+                    if(rcPrct < 30) {
+                        var qty = parseInt($('#_copyQty').val());
+                        var tot = qty + parseInt(cnt);
 
-                    if(tot > 3) {
-                        Common.alert(salesmanName + " (" + memCode + ") is not allowed to key in more than 3 orders due to RC below 30%");
-                        return false;
-                    } else {
-                        $('#hiddenCopyQty').val($('#_copyQty').val());
-                        fn_preCheckSave();
-                        $('#btnCnfmOrderClose').click();
+                        if(tot > 3) {
+                            Common.alert(salesmanName + " (" + memCode + ") is not allowed to key in more than 3 orders due to RC below 30%");
+                            return false;
+                        } else {
+                            $('#hiddenCopyQty').val($('#_copyQty').val());
+                            fn_preCheckSave();
+                            $('#btnCnfmOrderClose').click();
+                        }
                     }
                 } else {
                     if($('#_copyQty').val() <= 1) {
