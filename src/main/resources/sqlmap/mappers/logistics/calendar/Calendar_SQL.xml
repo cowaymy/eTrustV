@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.calendar.impl.CalendarMapper">
+
+    <select id="selectCalendarEventList"  parameterType="Map" resultType="egovMap">
+        SELECT EVENT_ID
+        , EVENT_DT
+        , EXTRACT(DAY FROM EVENT_DT) DAY_OF_MONTH
+        , EVENT_DESC
+        FROM MSC0052D
+        WHERE TO_CHAR(EVENT_DT, 'MM/YYYY') = #{calMonth}
+        AND DISAB = 0
+        ORDER BY EVENT_DT
+    </select>
+
+</mapper>
