@@ -815,24 +815,25 @@ function createPurchaseGridID(){
                             {dataField : "inputQty", headerText : '<spring:message code="sal.title.qty" />', width : '6%'},
                             {dataField : "amt", headerText : '<spring:message code="sal.title.unitPrice" />', width : '10%' , dataType : "numeric", formatString : "#,##0.00"},
                             {dataField : "subTotal", headerText : '<spring:message code="sal.title.subTotalExclGST" />', width : '13%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
-                            	var calObj = fn_calculateAmt(item.amt , item.inputQty);
+                            	var calObj = fn_calculateAmt(item.amt , item.inputQty, item.stkCtgryId);
                             	return Number(calObj.subChanges);
 							}},
                             {dataField : "subChng", headerText : 'GST(0%)', width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
-                            	var calObj = fn_calculateAmt(item.amt , item.inputQty);
+                            	var calObj = fn_calculateAmt(item.amt , item.inputQty, item.stkCtgryId);
                                 return Number(calObj.taxes);
                             }},
                             {dataField : "totalAmt", headerText : '<spring:message code="sal.text.totAmt" />', width : '13%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
-                            	var calObj = fn_calculateFinalDisc(item.amt , item.inputQty);
+                            	var calObj = fn_calculateFinalDisc(item.amt , item.inputQty, item.stkCtgryId);
                             	return Number(calObj.discountTotal);
                             }},
                             {dataField : "totalDiscount", headerText : 'Discount', width : '10%', visible : false, dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
-                            	var calObj = fn_calculateFinalDisc(item.amt , item.inputQty);
+                            	var calObj = fn_calculateFinalDisc(item.amt , item.inputQty, item.stkCtgryId);
                             	balanceCapped = (balanceCapped - calObj.discountSub);
                             	return Number(calObj.discountSub);
                             }},
                             {dataField : "stkTypeId" , visible :false},
-                            {dataField : "stkId" , visible :false}//STK_ID
+                            {dataField : "stkId" , visible :false},//STK_ID
+                            {dataField : "stkCtgryId" , visible : false}
                            ];
 
     //그리드 속성 설정
@@ -1032,16 +1033,16 @@ function getItemListFromSrchPop(itmList, serialList){
 	AUIGrid.setGridData(serialTempGridID, serialList);
 }
 
-function fn_calculateAmt(amt, qty) {
+function fn_calculateAmt(amt, qty,stkCtgryId) {
 
     var subTotal = 0;
     var subChanges = 0;
     var taxes = 0;
 
-    var discountRate = $('#_posDiscount').val()/100;
-    var discountSub = 0;
-    var discountTotal = 0;
-    var balance = balanceCapped;
+	var discountRate = stkCtgryId == 1346 ? $('#_posDiscount').val()/100 : 0;
+	var discountSub = 0;
+	var discountTotal = 0;
+	var balance = balanceCapped;
 
     subTotal = amt * qty;
     subChanges = (subTotal * 100) / 100;
@@ -1052,16 +1053,16 @@ function fn_calculateAmt(amt, qty) {
     discountSub = subTotal * discountRate;
     discountTotal = subTotal - discountSub;
 
-    var retObj = {subTotal : subTotal , subChanges : subChanges , taxes : taxes, discountSub : discountSub, discountTotal : discountTotal};
+    var retObj = {subTotal : subTotal , subChanges : subChanges , taxes : taxes, discountTotal : discountTotal};
 
     return retObj;
 
 }
 
-function fn_calculateFinalDisc(amt, qty) {
+function fn_calculateFinalDisc(amt, qty, stkCtgryId) {
 
     var subTotal = 0;
-    var discountRate = $('#_posDiscount').val()/100;
+    var discountRate = stkCtgryId == 1346 ? $('#_posDiscount').val()/100 : 0;
     var discountSub = 0;
     var discountTotal = 0;
     var balance = balanceCapped;

@@ -106,7 +106,7 @@ $(document).ready(function() {
             Common.ajax('GET', '/sales/pos/chkStockList2', $("#_itemSrcForm").serialize(), function(result) {
 
                 for (var i = 0; i < result.length; i++) {
-                   var calResult = fn_calculateAmt(result[i].amt, 1);
+                   var calResult = fn_calculateAmt(result[i].amt, 1, 0);
                    result[i].subTotal  = calResult.subTotal;
                    result[i].subChanges = calResult.subChanges;
                    result[i].taxes  = calResult.taxes;
@@ -133,7 +133,7 @@ $(document).ready(function() {
             Common.ajax('GET', '/sales/pos/chkStockList', $("#_itemSrcForm").serialize(), function(result) {
 
                 for (var i = 0; i < result.length; i++) {
-                   var calResult = fn_calculateAmt(result[i].amt, 1);
+                   var calResult = fn_calculateAmt(result[i].amt, 1, 0);
                    result[i].subTotal  = calResult.subTotal;
                    result[i].subChanges = calResult.subChanges;
                    result[i].taxes  = calResult.taxes;
@@ -155,7 +155,7 @@ $(document).ready(function() {
     		Common.ajax('GET', '/sales/pos/chkStockList', $("#_itemSrcForm").serialize(), function(result) {
 
                 for (var i = 0; i < result.length; i++) {
-                   var calResult = fn_calculateAmt(result[i].amt, 1);
+                   var calResult = fn_calculateAmt(result[i].amt, 1, 0);
                    result[i].subTotal  = calResult.subTotal;
                    result[i].subChanges = calResult.subChanges;
                    result[i].taxes  = calResult.taxes;
@@ -175,7 +175,7 @@ $(document).ready(function() {
             Common.ajax('GET', '/sales/pos/chkStockList', $("#_itemSrcForm").serialize(), function(result) {
 
                 for (var i = 0; i < result.length; i++) {
-                   var calResult = fn_calculateAmt(result[i].amt, 1);
+                   var calResult = fn_calculateAmt(result[i].amt, 1, 0);
                    result[i].subTotal  = calResult.subTotal;
                    result[i].subChanges = calResult.subChanges;
                    result[i].taxes  = calResult.taxes;
@@ -628,15 +628,15 @@ function fn_createBasketGrid(){
 	                                allowPoint : true
 	                            }},
 	                            {dataField : "subChanges", headerText : '<spring:message code="sal.title.excludeGST" />', width : '10%', editable : false , dataType : "numeric", formatString : "#,##0.00",expFunction : function(  rowIndex, columnIndex, item, dataField ) {
-	                                var subObj = fn_calculateAmt(item.amt , item.inputQty);
+	                                var subObj = fn_calculateAmt(item.amt , item.inputQty, item.stkCtgryId);
 	                                return Number(subObj.subChanges);
 	                            }},
 	                            {dataField : "taxes", headerText : 'GST(0%)', width : '10%', editable : false , dataType : "numeric", formatString : "#,##0.00", expFunction : function(  rowIndex, columnIndex, item, dataField ) {
-	                                var subObj = fn_calculateAmt(item.amt , item.inputQty);
+	                                var subObj = fn_calculateAmt(item.amt , item.inputQty, item.stkCtgryId);
 	                                return Number(subObj.taxes);
 	                            }},
 	                            {dataField : "totalAmt", headerText : '<spring:message code="sal.text.totAmt" />', width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
-	                                var calObj = fn_calculateAmt(item.amt , item.inputQty);
+	                                var calObj = fn_calculateAmt(item.amt , item.inputQty, item.stkCtgryId);
 	                                return Number(calObj.discountTotal);
 	                            }},
 	                            {
@@ -662,7 +662,8 @@ function fn_createBasketGrid(){
 	                            },
 	                            {dataField : "stkTypeId" , visible :false},
 	                            {dataField : "serialChk" , visible :false}, ////SERIAL_CHK
-	                            {dataField : "stkId" , visible :false}//STK_ID
+	                            {dataField : "stkId" , visible :false},//STK_ID
+	                            {dataField : "stkCtgryId" , visible :false}
 	                           ];
 
 	    //그리드 속성 설정
