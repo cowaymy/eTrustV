@@ -115,6 +115,21 @@ public class BulkSMSListController {
 		return ResponseEntity.ok(map);
 	}
 
+	@RequestMapping(value = "/selectBulkSmsItemException.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectBulkSmsItemException(@RequestParam Map<String, Object> params,HttpServletRequest request, Model model) {
+
+		List<EgovMap> mst = smsService.selectBulkSmsListException(params);
+
+		params.put("smsPrio", 3);
+		List<EgovMap> details = smsService.selectLiveSmsList(params);
+
+		Map<String, Object> map = new HashMap();
+		map.put("mst", mst.get(0));
+		map.put("details", details);
+
+		return ResponseEntity.ok(map);
+	}
+
 	@RequestMapping(value="/smsRawDataPop.do")
 	public String orderSalesYSListingPop(){
 

@@ -95,7 +95,12 @@ var updResultColLayout = [
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event)
         {
         	var smsUploadId = AUIGrid.getCellValue(myGridID, event.rowIndex, "smsUploadId");
-        	 Common.ajax("GET", "/logistics/sms/selectBulkSmsItem.do",{smsUploadId : smsUploadId} , function(result) {
+        	var url = "/logistics/sms/selectBulkSmsItem.do";
+        	if("${SESSION_INFO.userId}" =="40784") {
+        		url = "/logistics/sms/selectBulkSmsItemException.do";
+        	}
+
+        	 Common.ajax("GET", url,{smsUploadId : smsUploadId} , function(result) {
         		 $("#view_wrap").show();
         		 $("#view_refNo").text(result.mst.smsUploadRefNo);
                  $("#view_totalSms").text(result.mst.totalSms);
