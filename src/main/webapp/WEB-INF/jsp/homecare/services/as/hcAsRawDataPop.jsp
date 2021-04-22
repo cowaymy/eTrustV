@@ -10,6 +10,8 @@
  03/10/2019  ONGHC  1.0.4          Add AS Raw Report for 31Days
  17/10/2019  ONGHC  1.0.5          Add After Service (AS) Spare Part Exchange Raw Data [New]
  22/04/2021  ONGHC  1.0.6          Add V_WHERESQL2 and V_WHERESQL2LEFTJOIN
+ 22/04/2021 YONGJH  1.0.7          Add variable "whereSql2LeftJoin". Changes in 1.0.6 and this version is because
+                                                same stored proc used by some reports in this JSP and asRawDataPop JSP.
  -->
 
 <script type="text/javaScript">
@@ -71,6 +73,8 @@
   function fn_openGenerate() {
     if (fn_validation()) {
       var whereSql = "";
+      var whereSql2LeftJoin = " LEFT ";
+
       var keyInDateFrom = $("#reqstDateFr").val().substring(6, 10) + "-"
                         + $("#reqstDateFr").val().substring(3, 5) + "-"
                         + $("#reqstDateFr").val().substring(0, 2) + " 12:00:00 AM";
@@ -150,6 +154,7 @@
         $("#reportForm1 #V_ORDERBYSQL").val(" ");
         $("#reportForm1 #V_FULLSQL").val(" ");
         $("#reportForm1 #V_WHERESQL").val(whereSql);
+        $("#reportForm1 #V_WHERESQL2LEFTJOIN").val(whereSql2LeftJoin);
         $("#reportForm1 #reportFileName").val('/homecare/hcASRawPQC.rpt');
         $("#reportForm1 #viewType").val("EXCEL");
         $("#reportForm1 #reportDownFileName").val("hcASRawPQCData_" + day + month + date.getFullYear());
@@ -216,6 +221,7 @@
         $("#reportForm1 #V_ORDERBYSQL").val(" ");
         $("#reportForm1 #V_FULLSQL").val(" ");
         $("#reportForm1 #V_WHERESQL").val(whereSql);
+        $("#reportForm1 #V_WHERESQL2LEFTJOIN").val(whereSql2LeftJoin);
         $("#reportForm1 #reportFileName").val('/services/ASRawDataKOR.rpt');
         $("#reportForm1 #viewType").val("EXCEL");
         $("#reportForm1 #reportDownFileName").val("hcASRawDataKOR_" + day + month + date.getFullYear());
@@ -252,6 +258,7 @@
           $("#reportForm1 #V_ORDERBYSQL").val(" ");
           $("#reportForm1 #V_FULLSQL").val(" ");
           $("#reportForm1 #V_WHERESQL").val(whereSql);
+          $("#reportForm1 #V_WHERESQL2LEFTJOIN").val(whereSql2LeftJoin);
           $("#reportForm1 #reportFileName").val('/homecare/hcASRawDataKOR.rpt');
           $("#reportForm1 #viewType").val("EXCEL");
           $("#reportForm1 #reportDownFileName").val("hcASRawDataAOASKOR_" + day + month + date.getFullYear());
@@ -288,6 +295,7 @@
           $("#reportForm1 #V_ORDERBYSQL").val(" ");
           $("#reportForm1 #V_FULLSQL").val(" ");
           $("#reportForm1 #V_WHERESQL").val(whereSql);
+          $("#reportForm1 #V_WHERESQL2LEFTJOIN").val(whereSql2LeftJoin);
           $("#reportForm1 #reportFileName").val('/homecare/hcASRawDataSprPrtKOR.rpt');
           $("#reportForm1 #viewType").val("EXCEL");
           $("#reportForm1 #reportDownFileName").val("hcASRawDataSprPrtKOR_" + day + month + date.getFullYear());
