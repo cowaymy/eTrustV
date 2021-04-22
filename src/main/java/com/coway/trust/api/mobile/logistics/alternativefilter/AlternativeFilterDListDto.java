@@ -30,6 +30,8 @@ public class AlternativeFilterDListDto {
 	@ApiModelProperty(value = "필터구분코드(Alternative)")
 	private String divisionCode;
 
+	private String partType;
+
 	public static AlternativeFilterDListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, AlternativeFilterDListDto.class);
 	}
@@ -88,6 +90,14 @@ public class AlternativeFilterDListDto {
 
 	public void setDivisionCode(String divisionCode) {
 		this.divisionCode = divisionCode;
+	}
+
+	public String getPartType() {
+		return partType;
+	}
+
+	public void setPartType(String partType) {
+		this.partType = partType;
 	}
 
 }
