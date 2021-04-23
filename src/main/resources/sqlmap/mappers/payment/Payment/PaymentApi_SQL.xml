@@ -207,13 +207,22 @@
         s26.STK_DESC AS STK_DESC,
         TO_CHAR(SYSDATE, 'YYYY-MM-DD') AS RECEIPT_DT,
         s13.CODE_NAME AS PYMT_MODE,
-        (SELECT INST_ADDR_DTL || ', ' ||
-                INST_STREET || ', ' ||
-                INST_AREA || ', ' ||
-                INST_POSTCODE || ', ' ||
-                INST_CITY || ', ' ||
-                INST_STATE || ', ' ||
-                INST_COUNTRY FROM SAL1010V WHERE ORD_ID = s1.SALES_ORD_ID AND ROWNUM = 1) AS INST_ADDRESS
+        (select
+            NVL (ca1.ADDR_DTL, ' ')  || ', ' ||
+            NVL (ca1.STREET, ' ')  || ', ' ||
+            NVL (ma1.AREA, ' ')  || ', ' ||
+            NVL (ma1.POSTCODE, ' ')  || ', ' ||
+            NVL (ma1.CITY, ' ')  || ', ' ||
+            NVL (ma1.STATE, ' ')  || ', ' ||
+            NVL (ma1.COUNTRY, ' ')
+            FROM sal0001d som
+                JOIN sal0045d i
+                    ON i.sales_ord_id = som.sales_ord_id
+                LEFT JOIN sal0023d ca1
+                    ON ca1.cust_add_id = i.add_id
+                LEFT JOIN SYS0064M ma1
+                    ON ma1.AREA_ID = ca1.AREA_ID
+                where som.sales_ord_id = s1.SALES_ORD_ID) AS INST_ADDRESS
     FROM PAY0297D p
         JOIN SAL0001D s1 ON s1.SALES_ORD_NO = p.SALES_ORD_NO
         JOIN SAL0002D s2 ON s2.SALES_ORD_ID = s1.SALES_ORD_ID
