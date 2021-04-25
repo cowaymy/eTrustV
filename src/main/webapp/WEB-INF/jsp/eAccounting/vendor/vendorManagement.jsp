@@ -63,26 +63,62 @@ $(document).ready(function () {
 	$("#search_regNo_btn").click(fn_supplierSearchPop);
 	$("#search_costCenter_btn").click(fn_costCenterSearchPop);
 	$("#new_vendor_btn").click(fn_newVendorPop);
-	$("#edit_vendor_btn").click(fn_editVendorPop);
+	$("#edit_vendor_btn").click(fn_preEdit);
 
 
 
 	AUIGrid.bind(vendorManagementGridID, "cellDoubleClick", function( event )
 		    {
 		        console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+		        console.log(event);
 		        console.log("CellDoubleClick reqNo : " + event.item.reqNo);
 		        console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
 		        console.log("CellDoubleClick appvPrcssStusCode : " + event.item.appvPrcssStusCode);
+		        console.log("CellDoubleClick costCenterName : " + event.item.costCenterName);
 		        // TODO detail popup open
 		        if(event.item.appvPrcssStusCode == "T") {
-		        	fn_viewEditWebInvoicePop(event.item.reqNo);
+		        	fn_editVendorPop(event.item.reqNo);
 		        } else {
 		        	var reqNo = event.item.reqNo;
 		        	var clmType = reqNo.substr(0, 2);
-		        	fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType);
+		        	var costCenterName = event.item.costCenterName;
+		        	var costCenter = event.item.costCenter;
+		        	fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType, costCenterName, costCenter);
 		        }
 
 		    });
+
+	$("#edit_vendor_btn").click(function() {
+
+        //Param Set
+        var gridObj = AUIGrid.getSelectedItems(vendorManagementGridID);
+
+        var list = AUIGrid.getCheckedRowItems(vendorManagementGridID);
+
+        var reqNo = '';
+
+        if(gridObj == null || gridObj.length <= 0 ){
+            if(list == null || list.length < 1) {
+                Common.alert("* No Value Selected. ");
+                return;
+            } else if(list.length > 1) {
+                Common.alert("* Only 1 record can be selected.");
+                return
+            } else {
+                reqNo = list[0].item.reqNo;
+            }
+        } else {
+            reqNo = gridObj[0].item.reqNo;
+        }
+
+        $("#_reqNo").val(reqNo);
+        console.log("reqNo : " + $("#_reqNo").val());
+
+        $("#reportDownFileName").val(reqNo);
+
+        //fn_report();
+        //Common.alert('The program is under development.');
+    });
 
 	// Edit rejected web invoice
 	$("#editRejBtn").click(fn_editRejected);
@@ -122,8 +158,8 @@ function fn_setToDay() {
     }
 
     today = dd + "/" + mm + "/" + yyyy;
-    $("#startDt").val(today)
-    $("#endDt").val(today)
+   // $("#startDt").val(today)
+    //$("#endDt").val(today)
 }
 
 function fn_setPayDueDtEvent() {
@@ -209,22 +245,6 @@ function fn_popSupplierSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop",accGrp:"VM04"}, null, true, "supplierSearchPop");
 }
 
-function fn_viewEditWebInvoicePop(clmNo) {
-	var data = {
-            clmNo : clmNo,
-            callType : 'view'
-    };
-	Common.popupDiv("/eAccounting/webInvoice/viewEditWebInvoicePop.do", data, null, true, "viewEditWebInvoicePop");
-}
-
-function fn_webInvoiceRequestPop(appvPrcssNo, clmType) {
-    var data = {
-    		clmType : clmType
-    		,appvPrcssNo : appvPrcssNo
-    };
-    Common.popupDiv("/eAccounting/webInvoice/webInvoiceRqstViewPop.do", data, null, true, "webInvoiceRqstViewPop");
-}
-
 function fn_popCostCenterSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:"pop"}, null, true, "costCenterSearchPop");
 }
@@ -233,16 +253,64 @@ function fn_newVendorPop() {
     Common.popupDiv("/eAccounting/vendor/newVendorPop.do", {callType:'new'}, null, true, "newVendorPop");
 }
 
-function fn_editVendorPop() {
+
+function fn_preEdit() {
+
+	var selectedItems = AUIGrid.getSelectedItems(vendorManagementGridID);
+
+	if(selectedItems.length <= 0) {
+        return;
+    }
+    else{
+    	if(selectedItems[0].item.appvPrcssStusCode == "T") {
+    		var reqNo = selectedItems[0].item.reqNo;
+    		fn_editVendorPop(reqNo);
+        }
+    	else
+    	{
+    		var reqNo = selectedItems[0].item.reqNo;
+            var clmType = reqNo.substr(0, 2);
+            var costCenterName = selectedItems[0].item.costCenterName;
+            var costCenter = selectedItems[0].item.costCenter;
+            fn_webInvoiceRequestPop(selectedItems[0].item.appvPrcssNo, clmType, costCenterName, costCenter);
+    	}
+
+        //console.log('PreEDIT reqNo: ' + reqNo);
+
+    }
+
+}
+
+function fn_editVendorPop(reqNo) {
 
 	 var selectedItems = AUIGrid.getSelectedItems(vendorManagementGridID);
 
-	    if(selectedItems.length <= 0) {
-	        Common.alert("No data selected.");
-	        return;
-	    }
+     if(selectedItems.length <= 0) {
+         Common.alert("No data selected.");
+         return;
+     }
+     else{
+    	 if(reqNo == null || reqNo == '')
+    	{
+    		 reqNo = selectedItems[0].item.reqNo;
+    		 console.log('reqNo: ' + reqNo);
+    	}
+    	 var data = {
+    	            reqNo : reqNo,
+    	            callType : 'view'
+    	    };
+    	    Common.popupDiv("/eAccounting/vendor/editVendorPop.do", data, null, true, "editVendorPop");
+     }
+}
 
-    Common.popupDiv("/eAccounting/vendor/editVendorPop.do", {callType:'new'}, null, true, "editVendorPop");
+function fn_webInvoiceRequestPop(appvPrcssNo, clmType, costCenterName, costCenter) {
+    var data = {
+            clmType : clmType
+            ,appvPrcssNo : appvPrcssNo
+            ,costCenterName : costCenterName
+            ,costCenter : costCenter
+    };
+    Common.popupDiv("/eAccounting/vendor/vendorRqstViewPop.do", data, null, true, "vendorRqstViewPop");
 }
 
 function fn_selectVendorList() {
@@ -367,8 +435,6 @@ function fn_removeRow() {
 
 function fn_checkEmpty() {
 	console.log("fn_checkEmpty");
-	console.log($("#newMemAccId").val());
-	console.log($("#invcNo").val());
 	var checkResult = true;
 	/*
 	if(FormUtil.isEmpty($("#invcDt").val())) {
@@ -377,49 +443,49 @@ function fn_checkEmpty() {
         return checkResult;
     }
 	*/
-	//if($("#invcType").val() == "F") {
-	    if(FormUtil.isEmpty($("#vendorGroup").val())) {
-	        Common.alert('Please choose a Vendor Group');
-	        checkResult = false;
-	        return checkResult;
-	    }
-	    if(FormUtil.isEmpty($("#bankAccHolder").val())) {
-	        Common.alert('Please enter the Account Holder');
-	        checkResult = false;
-	        return checkResult;
-	    }
-	    if(FormUtil.isEmpty($("#bankAccNo").val())) {
-            Common.alert('Please enter the Bank Account Number');
-            checkResult = false;
-            return checkResult;
-        }
-	    /*ivar length = AUIGrid.getGridData(newGridID).length;
-	    if(length > 0) {
-	    	for(var i = 0; i < length; i++) {
-	            f(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "taxCode"))) {
-	                Common.alert('<spring:message code="webInvoice.taxCode.msg" />' + (i +1) + ".");
-	                checkResult = false;
-	                return checkResult;
-	            }
-	            if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "netAmt"))) {
-                    Common.alert('<spring:message code="webInvoice.netAmt.msg" />' + (i +1) + ".");
-                    checkResult = false;
-                    return checkResult;
-                }
-	            if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "expDesc"))) {
-                    Common.alert('Please enter the description of line line ' + (i +1) + ".");
-                    checkResult = false;
-                    return checkResult;
-                }
-                if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "totAmt")) || AUIGrid.getCellValue(newGridID, i, "totAmt") <= 0) { //gstBeforAmt
-                    //Common.alert('<spring:message code="pettyCashExp.amtBeforeGstOfLine.msg" />' + (i +1) + ".");
-                    Common.alert('Please enter amount for detail line' + (i +1) + ".");
-                    checkResult = false;
-                    return checkResult;
-                }
-	        }
-	    }*/
-	//}
+
+    if(FormUtil.isEmpty($("#vendorGroup").val())) {
+        Common.alert('Please choose a Vendor Group');
+        checkResult = false;
+        return checkResult;
+    }
+    if(FormUtil.isEmpty($("#newCostCenter").val())) {
+        Common.alert('Please choose a Cost Center');
+        checkResult = false;
+        return checkResult;
+    }
+    if(FormUtil.isEmpty($("#regCompName").val())) {
+        Common.alert('Please enter the Registered Company / Individual Name');
+        checkResult = false;
+        return checkResult;
+    }
+    if(FormUtil.isEmpty($("#regCompNo").val())) {
+        Common.alert('Please enter the Company No / IC No');
+        checkResult = false;
+        return checkResult;
+    }
+    if(FormUtil.isEmpty($("#bankAccHolder").val())) {
+        Common.alert('Please enter the Account Holder');
+        checkResult = false;
+        return checkResult;
+    }
+    if(FormUtil.isEmpty($("#bankAccNo").val())) {
+           Common.alert('Please enter the Bank Account Number');
+           checkResult = false;
+           return checkResult;
+    }
+    if(FormUtil.isEmpty($("#bankList").val())) {
+           Common.alert('Please choose a Bank');
+           checkResult = false;
+           return checkResult;
+    }
+    console.log("attachTd: " + ($("#attachTd").length)-1);
+    if(($("#attachTd").length) - 1 < 0) {
+        Common.alert('Please select an Attachment');
+        checkResult = false;
+        return checkResult;
+    }
+
 	return checkResult;
 }
 
@@ -861,6 +927,7 @@ function fn_editRejected() {
     <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
     <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="123123" /> --><!-- Download Name -->
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+    <input type="hidden" id="displayCostCenterName" name="displayCostCenterName" value="${costCenterName}"/><!-- View Type  -->
 
     <!-- params -->
     <input type="hidden" id="_reqNo" name="V_REQNO" />

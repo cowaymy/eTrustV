@@ -61,9 +61,32 @@ public class VendorServiceImpl implements VendorService {
 	}
 
 	@Override
-    public int checkExistNo(String clmNo) {
-        return vendorMapper.checkExistNo(clmNo);
+    public int checkExistNo(String regCompNo) {
+        return vendorMapper.checkExistNo(regCompNo);
     }
+
+	@Override
+	public int checkExistPaymentTermNo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return vendorMapper.checkExistPaymentTermNo(params);
+	}
+
+	@Override
+	public int checkExistBankListNo(Map<String, Object> params) {
+		return vendorMapper.checkExistBankListNo(params);
+	}
+
+	@Override
+	public int checkExistBankAccNo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return vendorMapper.checkExistBankAccNo(params);
+	}
+
+	@Override
+	public String selectExistBankAccNo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return vendorMapper.selectExistBankAccNo(params);
+	}
 
 	@Override
 	public String selectMemberID(String regCompNo) {
@@ -97,6 +120,24 @@ public class VendorServiceImpl implements VendorService {
     public int checkExistClmNo(String clmNo) {
         return vendorMapper.checkExistClmNo(clmNo);
     }
+
+	@Override
+	public EgovMap selectVendorInfo(String reqNo) {
+		// TODO Auto-generated method stub
+		return vendorMapper.selectVendorInfo(reqNo);
+	}
+
+	@Override
+	public List<EgovMap> selectAttachList(String atchFileGrpId) {
+		// TODO Auto-generated method stub
+		return vendorMapper.selectAttachList(atchFileGrpId);
+	}
+
+	@Override
+	public String checkReqNo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return vendorMapper.checkReqNo(params);
+	}
 
 	@Override
 	public void insertVendorInfo(Map<String, Object> params) {
@@ -160,7 +201,7 @@ public class VendorServiceImpl implements VendorService {
 				appvLineUserId.add(hm.get("memCode").toString());
 			}
 
-			params.put("clmType", params.get("reqNo").toString().substring(0, 2));
+			params.put("clmType", params.get("newReqNo").toString().substring(0, 2));
 			EgovMap e1 = vendorMapper.getFinApprover(params);
 			String memCode = e1.get("apprMemCode").toString();
 			LOGGER.debug("getFinApprover.memCode =====================================>>  " + memCode);
@@ -176,15 +217,16 @@ public class VendorServiceImpl implements VendorService {
 
 			// 2019-02-19 - LaiKW - Insert notification for request.
 			Map ntf = (HashMap<String, Object>) apprGridList.get(0);
-			ntf.put("reqNo", params.get("reqNo"));
+			ntf.put("reqNo", params.get("newReqNo"));
 
+			LOGGER.debug("reqNo =====================================>>  " + params.get("newReqNo"));
 			EgovMap ntfDtls = new EgovMap();
 			ntfDtls = (EgovMap) vendorMapper.getClmDesc(params);
 			ntf.put("codeName", ntfDtls.get("codeDesc"));
 
 			ntfDtls = (EgovMap) vendorMapper.getNtfUser(ntf);
 			ntf.put("reqstUserId", ntfDtls.get("userName"));
-			ntf.put("code", params.get("reqNo").toString().substring(0, 2));
+			ntf.put("code", params.get("newReqNo").toString().substring(0, 2));
 			ntf.put("appvStus", "R");
 			ntf.put("rejctResn", "Pending Approval.");
 
@@ -194,8 +236,8 @@ public class VendorServiceImpl implements VendorService {
 
 		}
 
-		//LOGGER.debug("updateAppvPrcssNo =====================================>>  " + params);
-		//vendorMapper.updateAppvPrcssNo(params);
+		LOGGER.debug("updateAppvPrcssNo =====================================>>  " + params);
+		vendorMapper.updateAppvPrcssNo(params);
 	}
 
 	@Override
@@ -222,4 +264,11 @@ public class VendorServiceImpl implements VendorService {
 		return list;
 	}
 
+	@Override
+	public void updateVendorInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		LOGGER.debug("params =====================================>>  " + params);
+		vendorMapper.updateVendorInfo(params);
+
+	}
 }

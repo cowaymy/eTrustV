@@ -89,8 +89,10 @@ var approveLineGridID;
 $(document).ready(function () {
     approveLineGridID = AUIGrid.create("#approveLine_grid_wrap", approveLineColumnLayout, approveLineGridPros);
 
-    var newCostCentr =  $("#newCostCenter").val();
-    console.log("approvalLine newCostCentr: " + newCostCentr);
+    //var newCostCentr =  $("#newCostCenter").val();
+    //console.log("approvalLine newCostCentr: " + newCostCentr);
+    //var newReqNo = $("#reqNo").val();
+    //console.log("approvalLine newReqNo: " + newReqNo);
 
     $("#lineDel_btn").click(fn_appvLineGridDeleteRow);
     $("#submit").click(fn_newRegistMsgPop);
@@ -169,7 +171,7 @@ function fn_newRegistMsgPop() {
             }
         }
     }
-    console.log(checkMemCode);
+    console.log("MemberCode in ApproveLinePop: " + checkMemCode);
     if(checkMemCode) {
         Common.popupDiv("/eAccounting/vendor/newRegistMsgPop.do", null, null, true, "registMsgPop");
     }

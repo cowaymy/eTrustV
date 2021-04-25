@@ -17,7 +17,7 @@
     text-align:right;
 }
 /* 특정 칼럼 드랍 리스트 왼쪽 정렬 재정의*/
-#newVendor_grid_wrap-aui-grid-drop-list-taxCode .aui-grid-drop-list-ul {
+#editVendorPop_grid_wrap-aui-grid-drop-list-taxCode .aui-grid-drop-list-ul {
      text-align:left;
  }
 </style>
@@ -25,112 +25,51 @@
 var newGridID;
 var selectRowIdx;
 var callType = "${callType}";
-var keyValueList = $.parseJSON('${taxCodeList}');
+var removeOriFileName = new Array();
+var gridDataList = new Array();
+var currList = ["MYR", "USD"];
+<c:forEach var="data" items="${venforInfo}">
+var obj = {
+		newReqNo : "${data.reqNo}"
+        ,vendorGroup : "${data.vendorGroup}"
+        ,keyDate : "${data.keyDate}" //change
+        ,newCostCenter : "${data.newCostCenter}"
+        ,userName : "${data.userName}"
+        ,regCompName : "${data.regCompName}"
+        ,regCompNo : "${data.regCompNo}"
+        ,street : "${data.addStreet}"
+        ,houseNo : "${data.addHouseLotNo}"
+        ,postalCode : "${data.addPostalCode}"
+        ,city : "${data.addCity}"
+        ,vendorCountry : "${data.addCountry}"
+        ,paymentTerms : "${data.payTerm}"
+        ,others : "${data.payOth}"
+        ,bankCountry : "${data.bankCountry}"
+        ,bankAccHolder : "${data.bankAccHolder}"
+        ,bankList : "${data.bank}"
+        ,bankAccNo : "${data.bankAccNo}"
+        ,bankBranch : "${data.bankBranch}"
+        ,swiftCode : "${data.swiftCode}"
+        ,designation : "${data.contactDesignation}"
+        ,vendorName : "${data.vendorName}"
+        ,vendorPhoneNo : "${data.vendorPhoneNo}"
+        ,vendorEmail : "${data.vendorEmail}"
+};
+
+</c:forEach>
 //file action list
 var update = new Array();
 var remove = new Array();
-var attachList;
-var currList = ["MYR", "USD"];
+var attachmentList = new Array();
+<c:forEach var="file" items="${attachmentList}">
+var obj = {
+		atchFileGrpId : "${file.atchFileGrpId}"
+		,atchFileId : "${file.atchFileId}"
+		,atchFileName : "${file.atchFileName}"
+};
+attachmentList.push(obj);
+</c:forEach>
 
-/*
-var myColumnLayout = [ {
-    dataField : "clamUn",
-    editable : false,
-    headerText : '<spring:message code="newWebInvoice.seq" />'
-}, {
-    dataField : "clmSeq",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-	dataField : "budgetCode",
-    headerText : '<spring:message code="expense.Activity" />',
-    editable : false,
-    colSpan : 2
-}, {
-    dataField : "",
-    headerText : '',
-    width: 30,
-    editable : false,
-    renderer : {
-        type : "IconRenderer",
-        iconTableRef :  {
-            "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"// default
-        },
-        iconWidth : 24,
-        iconHeight : 24,
-        onclick : function(rowIndex, columnIndex, value, item) {
-            fn_budgetCodePop(rowIndex);
-            }
-        },
-    colSpan : -1
-}, {
-	dataField : "budgetCodeName",
-    headerText : '<spring:message code="newWebInvoice.activityName" />',
-    style : "aui-grid-user-custom-left",
-    editable : false
-},{
-	dataField : "glAccCode",
-    headerText : '<spring:message code="expense.GLAccount" />',
-    editable : false,
-    colSpan : 2
-}, {
-    dataField : "",
-    headerText : '',
-    width: 30,
-    editable : false,
-    renderer : {
-        type : "IconRenderer",
-        iconTableRef :  {
-            "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"// default
-        },
-        iconWidth : 24,
-        iconHeight : 24,
-        onclick : function(rowIndex, columnIndex, value, item) {
-            fn_glAccountSearchPop(rowIndex);
-            }
-        },
-    colSpan : -1
-}, {
-	dataField : "glAccCodeName",
-    headerText : '<spring:message code="newWebInvoice.glAccountName" />',
-    style : "aui-grid-user-custom-left",
-    editable : false
-}, {
-    dataField : "taxCode",
-    headerText : '<spring:message code="newWebInvoice.taxCode" />',
-
-}, {
-    dataField : "cur",
-    headerText : '<spring:message code="newWebInvoice.cur" />',
-    renderer : {
-        type : "DropDownListRenderer",
-        list : currList
-    }
-}, {
-    dataField : "totAmt",
-    headerText : '<spring:message code="newWebInvoice.totalAmount" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00",
-    styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
-        if(item.yN == "N") {
-            return "my-cell-style";
-        }
-        return null;
-    }
-}, {
-    dataField : "expDesc",
-    headerText : '<spring:message code="newWebInvoice.description" />',
-    style : "aui-grid-user-custom-left",
-    width : 200,
-    editRenderer : {
-        maxlength: 100
-    }
-}, {
-    dataField : "yN",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}
-];
-*/
 
 //그리드 속성 설정
 var myGridPros = {
@@ -147,22 +86,61 @@ var myGridPros = {
     height : 160,
     // 셀 선택모드 (기본값: singleCell)
     selectionMode : "multipleCells"
+
 };
 
-$("#keyDate").val($.datepicker.formatDate('dd/mm/yy', new Date()));
-
-$("#keyDate").attr("readOnly", true);
-
-
 $(document).ready(function () {
-    //newGridID = AUIGrid.create("#newVendor_grid_wrap", myColumnLayout, myGridPros);
+	console.log("EditVendorCallType: " + callType);
+	var appvPrccNo = "${vendorInfo.appvPrcssNo}";
+	var vendorCountry = "${vendorInfo.addCountry}";
+	var bankCountry = "${vendorInfo.bankCountry}";
+	var bankList = "${vendorInfo.bank}";
+	var paymentMethod = "${vendorInfo.payType}";
+	var designation = "${vendorInfo.contactDesignation}";
 
-    setInputFile2();
+	   /*
+    if(appvPrccNo == null || appvPrccNo == '') {
+        newGridID = AUIGrid.create("#viewEditWebInvoice_grid_wrap", myColumnLayout, myGridPros);
+    } else {
+        newGridID = AUIGrid.create("#viewEditWebInvoice_grid_wrap", approvalColumnLayout, myGridPros);
+    }
+	   */
+
+	AUIGrid.bind(vendorManagementGridID, "cellDoubleClick", function( event )
+        {
+            console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+            console.log(event);
+            console.log("CellDoubleClick reqNo : " + event.item.reqNo);
+            console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
+            console.log("CellDoubleClick appvPrcssStusCode : " + event.item.appvPrcssStusCode);
+            console.log("CellDoubleClick costCenterName : " + event.item.costCenterName);
+            // TODO detail popup open
+            if(event.item.appvPrcssStusCode == "T") {
+                fn_editVendorPop(event.item.reqNo);
+            } else {
+                var reqNo = event.item.reqNo;
+                var clmType = reqNo.substr(0, 2);
+                var costCenterName = event.item.costCenterName;
+                var costCenter = event.item.costCenter;
+                fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType, costCenterName, costCenter);
+            }
+
+        });
+
+	$("#vendorCountry option[value='"+ vendorCountry +"']").attr("selected", true);
+	$("#bankCountry option[value='"+ bankCountry +"']").attr("selected", true);
+	$("#bankList option[value='"+ bankList +"']").attr("selected", true);
+	$("#paymentMethod option[value='"+ paymentMethod +"']").attr("selected", true);
+
+	doGetCombo('/common/selectCodeList.do', '17', designation, 'designation', 'S' , ''); // Customer Initial Type Combo Box
 
     $("#tempSave").click(fn_tempSave);
-    $("#remove_row").click(fn_removeRow);
+    $("#submitPop").click(fn_submit);
+    $("#add_row").click(fn_addRow);
+    $("#delete_row").click(fn_removeRow);
     $("#supplier_search_btn").click(fn_popSupplierSearchPop);
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
+
 
     fn_setNewGridEvent();
 
@@ -171,121 +149,166 @@ $(document).ready(function () {
     fn_setCostCenterEvent();
     fn_setSupplierEvent();
 
-    doGetCombo('/common/selectCodeList.do', '17', '', 'designation', 'S' , ''); // Customer Initial Type Combo Box
+   // if(gridDataList.length > 0) {
+     //   fn_setGridData(gridDataList);
+   // }
+    // 수정시 첨부파일이 없는경우 디폴트 파일태그 생성
+    console.log(attachmentList);
+    if(attachmentList.length <= 0) {
+        setInputFile2();
+    }
 
-    $("#newRegCompName").bind("keyup", function()
-   	    {
-   	        $(this).val($(this).val().toUpperCase());
+    // 파일 다운
+    $(".input_text").dblclick(function() {
+    	var oriFileName = $(this).val();
+    	var fileGrpId;
+    	var fileId;
+    	for(var i = 0; i < attachmentList.length; i++) {
+    		if(attachmentList[i].atchFileName == oriFileName) {
+    			fileGrpId = attachmentList[i].atchFileGrpId;
+    			fileId = attachmentList[i].atchFileId;
+    		}
+    	}
+    	fn_atchViewDown(fileGrpId, fileId);
+    });
+    // 파일 수정
+    $("#form_newVendor :file").change(function() {
+        var div = $(this).parents(".auto_file2");
+        var oriFileName = div.find(":text").val();
+        console.log(oriFileName);
+        for(var i = 0; i < attachmentList.length; i++) {
+            if(attachmentList[i].atchFileName == oriFileName) {
+                update.push(attachmentList[i].atchFileId);
+                console.log(JSON.stringify(update));
+            }
+        }
+    });
+    // 파일 삭제
+    $(".auto_file2 a:contains('Delete')").click(function() {
+        var div = $(this).parents(".auto_file2");
+        var oriFileName = div.find(":text").val();
+        console.log(oriFileName);
+        for(var i = 0; i < attachmentList.length; i++) {
+            if(attachmentList[i].atchFileName == oriFileName) {
+                remove.push(attachmentList[i].atchFileId);
+                console.log(JSON.stringify(remove));
+            }
+        }
+    });
 
-   	    });
-    $("#newRegCompNo").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
+    $('#vendorCountry').change(function() {
+        $("#vendorCountry").remove();
+        $("#form_newVendor").append("<input type='hidden' name='vendorCountryUpd' id='vendorCountryUpd'>");
+        $("#vendorCountryUpd").val($("#vendorCountry").val());
+    });
 
-            });
-    $("#street").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#houseNo").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#postalCode").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#city").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#accHolder").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#branch").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#bankAccNo").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#swiftCode").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#vendorName").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#vendorPhoneNo").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#vendorEmail").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
 });
 
 /* 인풋 파일(멀티) */
 function setInputFile2(){//인풋파일 세팅하기
-    $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
+    $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label>");
 }
 
 function fn_approveLinePop() {
+    console.log("fn_approveLinePop");
 	var checkResult = fn_checkEmpty();
-
+console.log("fn_approveLinePop :: checkResult :: " + checkResult);
     if(!checkResult){
         return false;
     }
 
-    var data = {
-            RegCompName : $("#newRegCompName").val(),
-            invcNo : $("#invcNo").val()
+    var length = AUIGrid.getGridData(newGridID).length;
+    if(length > 0) {
+console.log("length > 0");
+        for(var i = 0; i < length; i++) {
+            var availableVar = {
+                    costCentr : $("#newCostCenter").val(),
+                    stYearMonth : $("#keyDate").val().substring(3),
+                    stBudgetCode : AUIGrid.getCellValue(newGridID, i, "budgetCode"),
+                    stGlAccCode : AUIGrid.getCellValue(newGridID, i, "glAccCode")
+                }
+
+            var availableAmtCp = 0;
+            Common.ajax("GET", "/eAccounting/webInvoice/checkBgtPlan.do", availableVar, function(result1) {
+                console.log(result1.ctrlType);
+
+                if(result1.ctrlType == "Y") {
+                    Common.ajax("GET", "/eAccounting/webInvoice/availableAmtCp.do", availableVar, function(result) {
+                        console.log("availableAmtCp");
+                        console.log(result.totalAvailable);
+
+                        //var finAvailable = result.totalAvilableAdj - result.totalPending - result.totalUtilized;
+                        var finAvailable = (parseFloat(result.totalAvilableAdj) - parseFloat(result.totalPending) - parseFloat(result.totalUtilized)).toFixed(2);
+
+                        if(finAvailable < AUIGrid.getCellValue(newGridID, i, "totAmt")) {
+                            Common.alert("Insufficient budget amount available for Budget Code : " + AUIGrid.getCellValue(newGridID, i, "budgetCode") + ", GL Code : " + AUIGrid.getCellValue(newGridID, i, "glAccCode") + ". ");
+                            AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
+                            AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
+
+                            return false;
+                        } else {
+                            var data = {
+                                    memAccId : $("#newMemAccId").val(),
+                                    invcNo : $("#invcNo").val()
+                                    //clmNo : $("#newClmNo").val()
+                            }
+
+                            Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+                                console.log(result);
+                                if(result.data && result.data != $("#newClmNo").val()) {
+                                    Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+                                    return false;
+                                } else {
+                                    // 수정 후 temp save가 아닌 바로 submit
+                                    // 고려하여 update 후 approve
+                                    // file 업로드를 하지 않은 상태라면 atchFileGrpId가 없을 수 있다
+                                    if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
+                                        console.log("fn_attachmentUpload Action");
+                                        fn_attachmentUpload("");
+                                    } else {
+                                        console.log("fn_attachmentUpdate Action");
+                                        fn_attachmentUpdate("");
+                                    }
+
+                                    Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    var data = {
+                            memAccId : $("#newMemAccId").val(),
+                            invcNo : $("#invcNo").val()
+                            //clmNo : $("#newClmNo").val()
+                    }
+
+                    Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+                        console.log(result);
+                        if(result.data && result.data != $("#newClmNo").val()) {
+                            Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+                            return false;
+                        } else {
+                            // 수정 후 temp save가 아닌 바로 submit
+                            // 고려하여 update 후 approve
+                            // file 업로드를 하지 않은 상태라면 atchFileGrpId가 없을 수 있다
+                            if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
+                                console.log("fn_attachmentUpload Action");
+                                fn_attachmentUpload("");
+                            } else {
+                                console.log("fn_attachmentUpdate Action");
+                                fn_attachmentUpdate("");
+                            }
+
+                            Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
+                        }
+                    });
+                }
+            });
+        }
     }
-
-    // new
-    if(FormUtil.isEmpty($("#newClmNo").val())) {
-        Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
-            console.log(result);
-            if(result.data) {
-                Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
-            } else {
-                fn_attachmentUpload("");
-
-                Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
-            }
-        });
-    } else {
-        // update
-        data.clmNo = $("#newClmNo").val();
-        Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
-            console.log(result);
-            if(result.data && result.data != $("#newClmNo").val()) {
-                Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
-            } else {
-                fn_attachmentUpdate("");
-
-                Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
-            }
-        });
-    }
-
 }
 
+/*
 function fn_tempSave() {
 	var checkResult = fn_checkEmpty();
 
@@ -294,58 +317,120 @@ function fn_tempSave() {
     }
 
     var data = {
-            RegCompName : $("#newRegCompName").val(),
+            memAccId : $("#newMemAccId").val(),
             invcNo : $("#invcNo").val()
     }
-    // new
-    if(FormUtil.isEmpty($("#newClmNo").val())) {
-    	Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
-            console.log(result);
-            if(result.data) {
-                Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
-            } else {
+
+    Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+        console.log(result);
+        if(result.data && result.data != $("#newClmNo").val()) {
+            Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+            return false;
+        } else {
+        	if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
+        		console.log("fn_attachmentUpload Action");
                 fn_attachmentUpload(callType);
-            }
-        });
-    } else {
-    	// update
-    	Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
-            console.log(result);
-            if(result.data && result.data != $("#newClmNo").val()) {
-                Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
             } else {
+            	console.log("fn_attachmentUpdate Action");
+                fn_attachmentUpdate(callType);
+            }
+        }
+    });
+
+}
+*/
+
+function fn_tempSave() {
+
+    fn_vendorValidation("ts");
+}
+
+function fn_submit() {
+    fn_vendorValidation("");
+}
+
+function fn_vendorValidation(ts){
+
+    var checkResult = fn_checkEmpty();
+
+    if(!checkResult){
+        return false;
+    }
+
+    if(ts == 'ts') // temp_Save
+    {
+        var obj = $("#form_newVendor").serializeJSON();
+        console.log("Edit_fn_vendorValidation_saveDraft");
+        Common.ajax("GET", "/eAccounting/vendor/vendorValidation.do?_cacheId=" + Math.random(), obj, function(result){
+            $("#isReset").val(result.isReset);
+            $("#isPass").val(result.isPass);
+            $("#sameReqNo").val(result.sameReqNo);
+            $("#mem_acc_id").val(result.vendorAccId);
+            console.log("SameReqNo: " + $("#sameReqNo").val());
+
+
+            if($("#isReset").val() == 1 && $("#isPass").val() == 0) //isReset=1: false, isPass=1:NotPass
+            {
             	fn_attachmentUpdate(callType);
             }
+            else
+            {
+            	if($("#sameReqNo").val() == 0)
+            	{
+            		//update
+            		fn_attachmentUpdate(callType);
+            	}
+            	else
+            	{
+            		Common.alert('Somthing is wrong. Please contact administrator2.');
+            	}
+            }
+
+        });
+    }
+    else // Submit
+    {
+        var obj = $("#form_newVendor").serializeJSON();
+        console.log("Edit_fn_vendorValidation_submit");
+        Common.ajax("GET", "/eAccounting/vendor/vendorValidation.do?_cacheId=" + Math.random(), obj, function(result){
+            $("#isReset").val(result.isReset);
+            $("#isPass").val(result.isPass);
+            $("#sameReqNo").val(result.sameReqNo);
+            $("#mem_acc_id").val(result.vendorAccId);
+
+            if($("#isReset").val() == 1 && $("#isPass").val() == 0) //isReset=1: false, isPass=1:NotPass
+            {
+            	if(FormUtil.isEmpty($("#appvPrcssNo").val()))
+            	{
+                    fn_attachmentUpdate("");
+                }
+            }
+            else
+            {
+                if($("#sameReqNo").val() == 0)
+                {
+                    //update
+                    fn_attachmentUpdate("");
+                }
+                else
+                {
+                    Common.alert('Somthing is wrong. Please contact administrator2.');
+                }
+            }
+
+
         });
     }
 }
 
 function fn_attachmentUpload(st) {
-	var formData = Common.getFormData("form_editVendor");
+    var formData = Common.getFormData("form_newWebInvoice");
     Common.ajaxFile("/eAccounting/webInvoice/attachmentUpload.do", formData, function(result) {
         console.log(result);
         // 신규 add return atchFileGrpId의 key = fileGroupKey
+        console.log(result.data.fileGroupKey);
         $("#atchFileGrpId").val(result.data.fileGroupKey);
-        fn_insertWebInvoiceInfo(st);
-    });
-}
-
-function fn_insertWebInvoiceInfo(st) {
-    var obj = $("#form_editVendor").serializeJSON();
-    var gridData = GridCommon.getEditData(newGridID);
-    obj.gridData = gridData;
-    console.log(obj);
-    Common.ajax("POST", "/eAccounting/webInvoice/insertWebInvoiceInfo.do", obj, function(result) {
-        console.log(result);
-        $("#newClmNo").val(result.data.clmNo);
-        //fn_selectWebInvoiceItemList(result.data.clmNo);
-        fn_selectWebInvoiceInfo(result.data.clmNo);
-
-        if(st == 'new') {
-            Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
-            $("#newWebInvoicePop").remove();
-        }
-        fn_selectWebInvoiceList();
+        fn_updateWebInvoiceInfo(st);
     });
 }
 
@@ -353,46 +438,76 @@ function fn_attachmentUpdate(st) {
     // 신규 add or 추가 add인지 update or delete인지 분기 필요
     // 파일 수정해야 하는 경우 : delete 버튼 클릭 or file 버튼 클릭으로 수정
     // delete 버튼의 파일이름 찾아서 저장
-    var formData = Common.getFormData("form_editVendor");
+    var formData = Common.getFormData("form_newVendor");
     formData.append("atchFileGrpId", $("#atchFileGrpId").val());
-    formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-    console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-    formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-    console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-    Common.ajaxFile("/eAccounting/webInvoice/attachmentUpdate.do", formData, function(result) {
+    Common.ajaxFile("/eAccounting/vendor/attachmentUpdate.do", formData, function(result) {
         console.log(result);
-        fn_updateWebInvoiceInfo(st);
+        fn_updateVendorInfo(st);
     });
 }
 
-function fn_updateWebInvoiceInfo(st) {
-    var obj = $("#form_editVendor").serializeJSON();
-    var gridData = GridCommon.getEditData(newGridID);
-    obj.gridData = gridData;
+function fn_updateVendorInfo(st) {
+    var obj = $("#form_newVendor").serializeJSON();
+    //var gridData = GridCommon.getEditData(newGridID);
+    //obj.gridData = gridData;
     console.log(obj);
-    Common.ajax("POST", "/eAccounting/webInvoice/updateWebInvoiceInfo.do", obj, function(result) {
+    Common.ajax("POST", "/eAccounting/vendor/updateVendorInfo.do", obj, function(result) {
         console.log(result);
         //fn_selectWebInvoiceItemList(result.data.clmNo);
-        fn_selectWebInvoiceInfo(result.data.clmNo);
-
-        if(st == "new"){
-            Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
-            $("#newWebInvoicePop").remove();
+        //fn_selectWebInvoiceInfo(result.data.clmNo);
+        if(st == "view"){
+            Common.alert('Temporary save succeeded.');
+            $("#editVendorPop").remove();
         }
-        fn_selectWebInvoiceList();
+        else
+        {
+        	if(FormUtil.isEmpty($("#appvPrcssNo").val())) {
+                Common.popupDiv("/eAccounting/vendor/approveLinePop.do", null, null, true, "approveLineSearchPop");
+            } else {
+                // update
+                Common.popupDiv("/eAccounting/vendor/approveLinePop.do", null, null, true, "approveLineSearchPop");
+            }
+        }
+        //fn_selectWebInvoiceList();
     });
+
 }
 
+function fn_setGridData(data) {
+	console.log(data);
+	AUIGrid.setGridData(newGridID, data);
+}
 
+$.fn.clearForm = function() {
+    return this.each(function() {
+        var type = this.type, tag = this.tagName.toLowerCase();
+        if (tag === 'form'){
+            return $(':input',this).clearForm();
+        }
+        if (type === 'text' || type === 'password' || type === 'hidden' || type === 'file' || type === 'number' || tag === 'textarea'){
+            this.value = '';
+        }else if (type === 'checkbox' || type === 'radio'){
+            this.checked = false;
+        }else if (tag === 'select'){
+            this.selectedIndex = 0;
+        }
+
+        if(this.id === 'vendorCountry' || this.id === 'bankCountry')
+        {
+            $("#vendorCountry").val("MY").attr("selected", "selected");
+            $("#bankCountry").val("MY").attr("selected", "selected");
+        }
+
+    });
+};
 </script>
-
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>Edit Vendor Registration</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 
 </header><!-- pop_header end -->
@@ -400,47 +515,58 @@ function fn_updateWebInvoiceInfo(st) {
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
-	<li><p class="btn_blue2"><a href="#" id="tempSave">Save Draft</a></p></li>
-	<li><p class="btn_blue2"><a href="#" id="submitPop">Submit</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="tempSave">Save Draft</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="submitPop">Submit</a></p></li>
 </ul>
 
 <section class="search_table"><!-- search_table start -->
 
-<form action="#" method="post" enctype="multipart/form-data" id="form_editVendor">
-<input type="hidden" id="newClmNo" name="clmNo">
-<input type="hidden" id="atchFileGrpId" name="atchFileGrpId">
-<input type="hidden" id="newCostCenterText" name="costCentrName">
+<form action="#" method="post" enctype="multipart/form-data" id="form_newVendor">
+<input type="hidden" id="newReqNo" name="newReqNo" value="${vendorInfo.vendorReqNo}">
+<input type="hidden" id="atchFileGrpId" name="atchFileGrpId" value="${vendorInfo.atchFileGrpId}">
+<input type="hidden" id="appvPrcssNo" name="appvPrcssNo" value="${vendorInfo.reqNo}">
+<input type="hidden" id="isReset" name="isReset">
+<input type="hidden" id="isPass" name="isPass">
+<input type="hidden" id="sameReqNo" name="sameReqNo">
+<input type="hidden" id="mem_acc_id" name="mem_acc_id">
+<input type="hidden" id="newCostCenterText" name="costCentrName" value="${vendorInfo.costCenterName}">
 <!-- <input type="hidden" id="newMemAccName" name="memAccName"> -->
-<input type="hidden" id="bankCode" name="bankCode">
-<input type="hidden" id="totAmt" name="totAmt">
 <input type="hidden" id="crtUserId" name="crtUserId" value="${userId}">
+
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:180px" />
-	<col style="width:*" />
-	<col style="width:150px" />
-	<col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
     <th scope="row">Claim No / Vendor Code<span class="must">*</span></th>
-    <td colspan=3><input type="text" title="" id="newVendorCode" name="vendorCode" placeholder="" class="readonly w100p" readonly="readonly" value="*To change again when edit draft to show else completed request no need show*"/></td><!--  value="${claimNo}"-->
+    <td colspan=3><input type="text" title="" id="newVendorCode" name="vendorCode" placeholder="" class="readonly w100p" readonly="readonly" value="${vendorInfo.reqNo}"/></td><!--  value="${claimNo}"-->
 </tr>
 <tr>
     <th scope="row">Vendor Group<span class="must">*</span></th>
-    <td><input type="text" title="" id="newVendorGroup" name= "vendorGroup" placeholder="" class="readonly w100p" readonly="readonly" value="${vendorGrp }" /></td>
-	<th scope="row">Key in date</th>
-	<td>
-	<input type="text" title="" id="keyDate" name="keyDate" placeholder="DD/MM/YYYY" class="w100p" />
-	</td>
+	    <td>
+	       <select class="w100p" id=vendorGroup name="vendorGroup">
+                  <!--  <option value="VM02"<c:if test="${vendorInfo.vendorGrp eq 'VM02'}">selected="selected"</c:if>>VM02 - Coway_Supplier_Foreign</option>-->
+                  <option value="VM02"<c:if test="${vendorInfo.vendorGrp eq 'VM02'}">selected="selected"</c:if>>VM02 - Coway_Supplier_Foreign</option>
+                  <option value="VM03"<c:if test="${vendorInfo.vendorGrp eq 'VM03'}">selected="selected"</c:if>>VM03 - Coway_Supplier_Foreign (Related Company)</option>
+                  <option value="VM11"<c:if test="${vendorInfo.vendorGrp eq 'VM11'}">selected="selected"</c:if>>VM11 - Coway_Suppliers_Local</option>
+           </select>
+	    </td>
+    <th scope="row">Key in date</th>
+    <td>
+    <input type="text" title="" id="keyDate" name="keyDate" placeholder="DD/MM/YYYY" class="readonly w100p" readonly="readonly"/>
+    </td>
 </tr>
 <tr>
       <th scope="row">Cost Center</th>
-      <td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" value="${costCentr}"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+      <td><input type="text" title="" placeholder="" class="readonly w100p" id="newCostCenter" name="costCentr" value="${vendorInfo.costCenter}" readonly="readonly"/></td>
     <th scope="row">Create User ID</th>
-    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${userName}"/></td>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" id="userName" readonly="readonly" value="${vendorInfo.userName}" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -460,12 +586,12 @@ function fn_updateWebInvoiceInfo(st) {
 </colgroup>
 <tbody>
 <tr>
-	<th colspan=2 scope="row">Registered Company/Individual Name</th>
-	<td colspan=3><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newRegCompName" name="regCompName" value="${regCompName}"/></td>
+    <th colspan=2 scope="row">Registered Company/Individual Name</th>
+    <td colspan=3><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="regCompName" name="regCompName" value="${vendorInfo.vendorName}"/></td>
 </tr>
 <tr>
-	<th colspan = 2 scope="row">Company Registration No/IC No</th>
-    <td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newRegCompNo" name="regCompNo" value="${regCompNo}"/></td>
+    <th colspan = 2 scope="row">Company Registration No/IC No</th>
+    <td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="regCompNo" name="regCompNo" value="${vendorInfo.vendorRegNoNric}"/></td>
 </tr>
 
 </tbody>
@@ -485,20 +611,26 @@ function fn_updateWebInvoiceInfo(st) {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Street</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="street" name="street"/></td>
+    <th scope="row">Street</th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="street" name="street" value="${vendorInfo.addStreet}"/></td>
     <th scope="row">House/Lot Number</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="houseNo" name="houseNo"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="houseNo" name="houseNo" value="${vendorInfo.addHouseLotNo}"/></td>
 </tr>
 <tr>
-	<th scope="row">Postal Code</th>
-	<td><input type="text" title="" placeholder="" class="w100p" id="postalCode" name="postalCode"/></td>
-	<th scope="row">City</th>
-	<td><input type="text" title="" placeholder="" class="w100p" id="city" name="city"/></td>
+    <th scope="row">Postal Code</th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="postalCode" name="postalCode" value="${vendorInfo.addPostalCode}"/></td>
+    <th scope="row">City</th>
+	    <td><input type="text" title="" placeholder="" class="w100p" id="city" name="city" value="${vendorInfo.addCity}"/></td>
 </tr>
 <tr>
-	<th scope="row">Country</th>
-	<td>Combo Box</td>
+    <th scope="row">Country</th>
+	    <td>
+	       <select  style="text-transform:uppercase" class="w100p" id="vendorCountry" name="vendorCountry">
+            <c:forEach var="list" items="${countryList}" varStatus="status">
+               <option value="${list.code}">${list.name}</option>
+            </c:forEach>
+        </select>
+	    </td>
 </tr>
 
 </tbody>
@@ -519,13 +651,21 @@ function fn_updateWebInvoiceInfo(st) {
 <tbody>
 <tr>
     <th>Payment Terms <b>(Days)</b></th>
-    <td><input type="number" min="1"  title="" placeholder="" class="w100p" id="paymentTerms" name="paymentTerms" /></td>
+    <td><input type="number" min="1"  title="" placeholder="" class="w100p" id="paymentTerms" name="paymentTerms" value="${vendorInfo.payTerm}"/></td>
     <th>Payment Method</th>
-    <td>Combo Box</td>
+    <td>
+        <select class="w100p" id=paymentMethod name="paymentMethod">
+                  <!--  <option value="CASH">CASH</option>-->
+                  <option value="CASH"<c:if test="${vendorInfo.payType eq 'CASH'}">selected="selected"</c:if>>CASH</option>
+                  <option value="CHEQ"<c:if test="${vendorInfo.payType eq 'CHEQ'}">selected="selected"</c:if>>CHEQUE</option>
+                  <option value="OTRX"<c:if test="${vendorInfo.payType eq 'OTRX'}">selected="selected"</c:if>>ONLINE TRANSFER</option>
+                  <option value="TTRX"<c:if test="${vendorInfo.payType eq 'TTRX'}">selected="selected"</c:if>>TELEGRAPHIC TRANSFER</option>
+           </select>
+    </td>
 </tr>
 <tr>
     <th>Others (Please State)</th>
-    <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="others" name="others" /></td>
+    <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="others" name="others" value="${vendorInfo.payOth}" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -545,23 +685,35 @@ function fn_updateWebInvoiceInfo(st) {
 <tbody>
 <tr>
     <th scope="row">Country</th>
-    <td>Combo Box</td>
+    <td>
+        <select  style="text-transform:uppercase" class="w100p" id="bankCountry" name="bankCountry">
+            <c:forEach var="list" items="${countryList}" varStatus="status">
+               <option value="${list.code}">${list.name}</option>
+            </c:forEach>
+        </select>
+    </td>
     <th scope="row">Account Holder<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="accHolder" name="accHolder"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="bankAccHolder" name="bankAccHolder" value="${vendorInfo.bankAccHolder}"/></td>
 </tr>
 <tr>
     <th scope="row"> Bank<span class="must">*</span></th>
-    <td>Combo Box</td>
+    <td>
+        <select class="w100p" id="bankList" name="bankList">
+            <c:forEach var="list" items="${bankList}" varStatus="status">
+               <option value="${list.code}">${list.name}</option>
+            </c:forEach>
+        </select>
+    </td>
     <th scope="row">Bank Account Number<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="bankAccNo" name="bankAccNo"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="bankAccNo" name="bankAccNo" value="${vendorInfo.bankAccNo}"/></td>
 </tr>
 <tr>
     <th>Branch</th>
-    <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="branch" name="branch"/></td>
+    <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="branch" name="branch" value="${vendorInfo.bankBranch}"/></td>
 </tr>
 <tr>
     <th>Swift Code</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="swiftCode" name="swiftCode"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="swiftCode" name="swiftCode" value="${vendorInfo.swiftCode}"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -587,13 +739,13 @@ function fn_updateWebInvoiceInfo(st) {
 </tr>
 <tr>
     <th scope="row"> Name</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="vendorName" name="vendorName"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="vendorName" name="vendorName" value="${vendorInfo.contactName}"/></td>
 </tr>
 <tr>
     <th>Phone Number</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="vendorPhoneNo" name="phoneNo"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="vendorPhoneNo" name="phoneNo" value="${vendorInfo.contactPhoneNo}"/></td>
     <th>Email Address</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="vendorEmail" name="email" /></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="vendorEmail" name="email" value="${vendorInfo.contactEmail}"/></td>
 </tr>
 
 </tbody>
@@ -613,12 +765,24 @@ function fn_updateWebInvoiceInfo(st) {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Attachment<span class="must">*</span></th>
-	<td colspan="3" id="attachTd">
-    <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
-    <input type="file" title="file add" style="width:300px" />
-    </div><!-- auto_file end -->
-	</td>
+    <th scope="row">Attachment<span class="must">*</span></th>
+    <td colspan="3" id="attachTd">
+	    <c:forEach var="files" items="${attachmentList}" varStatus="st">
+		    <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
+			    <c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
+			    <input type="file" title="file add" style="width:300px" />
+			    <label>
+			    </c:if>
+			    <input type='text' class='input_text' readonly='readonly' value="${files.atchFileName}" />
+			    <c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
+			    <span class='label_text'><a href='#'><spring:message code="viewEditWebInvoice.file" /></a></span>
+			    </c:if>
+			    <c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
+			    </label>
+			     </c:if>
+			 </div>
+	    </c:forEach>
+    </td>
 </tr>
 
 </tbody>

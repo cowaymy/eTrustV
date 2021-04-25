@@ -25,7 +25,6 @@
 var newGridID;
 var selectRowIdx;
 var callType = "${callType}";
-var keyValueList = $.parseJSON('${taxCodeList}');
 //file action list
 var update = new Array();
 var remove = new Array();
@@ -63,7 +62,7 @@ $(document).ready(function () {
     setInputFile2();
 
     $("#tempSave").click(fn_tempSave);
-    $("#submitPop").click(fn_approveLinePop);
+    $("#submitPop").click(fn_submit);
     $("#remove_row").click(fn_removeRow);
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
 
@@ -147,111 +146,16 @@ function fn_close(){
 
 /* 인풋 파일(멀티) */
 function setInputFile2(){//인풋파일 세팅하기
-    $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
-}
-
-function fn_approveLinePop() {
-	console.log("fn_approveLinePop");
-	var checkResult = fn_checkEmpty();
-	console.log("result:" + checkResult);
-
-    if(!checkResult){
-        return false;
-    }
-
-    var data = {
-            RegCompName : $("#regCompName").val()
-            //invcNo : $("#invcNo").val()
-    }
-
-    // new
-    if(FormUtil.isEmpty($("#newReqNo").val())) {
-        //Common.ajax("GET", "/eAccounting/vendor/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
-           // console.log(result.data);
-           // if(!result.data) {
-            	fn_attachmentUpload("");
-            	Common.popupDiv("/eAccounting/vendor/approveLinePop.do", null, null, true, "approveLineSearchPop");
-            //}
-       // });
-    } else {
-        // update
-        data.reqNo = $("#newReqNo").val();
-       // Common.ajax("GET", "/eAccounting/vendor/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
-         //   console.log(result);
-          //  if(result.data && result.data != $("#newReqNo").val()) {
-              //  Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
-          //  } else {
-                fn_attachmentUpdate("");
-
-                Common.popupDiv("/eAccounting/vendor/approveLinePop.do", null, null, true, "approveLineSearchPop");
-            //}
-       // });
-    }
-
+    $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label>");
 }
 
 function fn_tempSave() {
-	var checkResult = fn_checkEmpty();
 
-    if(!checkResult){
-        return false;
-    }
-
-    var data = {
-            RegCompName : $("#regCompName").val(),
-            invcNo : $("#invcNo").val()
-    }
-    // new
-    if(FormUtil.isEmpty($("#newReqNo").val())) {
-    	Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
-            console.log(result);
-            if(result.data) {
-                Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
-            } else {
-                fn_attachmentUpload(callType);
-            }
-        });
-    } else {
-    	// update
-    	Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
-            console.log(result);
-            if(result.data && result.data != $("#newReqNo").val()) {
-                Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
-            } else {
-            	fn_attachmentUpdate(callType);
-            }
-        });
-    }
+	fn_vendorValidation("ts");
 }
 
-function fn_attachmentUpload(st) {
-	var formData = Common.getFormData("form_newVendor");
-    Common.ajaxFile("/eAccounting/vendor/attachmentUpload.do", formData, function(result) {
-        console.log("testing:" + result);
-        // 신규 add return atchFileGrpId의 key = fileGroupKey
-        $("#atchFileGrpId").val(result.data.fileGroupKey);
-        fn_insertVendorInfo(st);
-    });
-}
-
-function fn_insertVendorInfo(st) {
-    var obj = $("#form_newVendor").serializeJSON();
-    //var gridData = GridCommon.getEditData(newGridID);
-    //obj.gridData = gridData;
-    //console.log(obj);
-    Common.ajax("POST", "/eAccounting/vendor/insertVendorInfo.do", obj, function(result) {
-        console.log(result);
-        $("#newReqNo").val(result.data.reqNo);
-        //fn_selectWebInvoiceItemList(result.data.reqNo);
-        //fn_selectVendorList(result.data.reqNo);
-
-        if(st == 'new') {
-            Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
-            $("#newVendorPop").remove();
-        }
-        //fn_selectVendorList();
-        //fn_close();
-    });
+function fn_submit() {
+    fn_vendorValidation("");
 }
 
 function fn_attachmentUpdate(st) {
@@ -268,6 +172,120 @@ function fn_attachmentUpdate(st) {
         console.log(result);
         fn_updateWebInvoiceInfo(st);
     });
+}
+
+function fn_attachmentUpload(st) {
+	var formData = Common.getFormData("form_newVendor");
+    Common.ajaxFile("/eAccounting/vendor/attachmentUpload.do", formData, function(result) {
+        // 신규 add return atchFileGrpId의 key = fileGroupKey
+         console.log("attachmentUpload: " + result);
+        $("#atchFileGrpId").val(result.data.fileGroupKey);
+        fn_insertVendorInfo(st);
+    });
+}
+
+function fn_insertVendorInfo(st) {
+    var obj = $("#form_newVendor").serializeJSON();
+
+    if(st == 'new')
+   	{
+    	console.log("fn_insertVendorInfo_TempSave");
+    	Common.ajax("POST", "/eAccounting/vendor/insertVendorInfo.do", obj, function(result) {
+
+    	});
+    	Common.alert('Temporary Save succeeded.');
+    	fn_close();
+   	}
+    else
+    {
+    	console.log("fn_insertVendorInfoSubmit");
+        Common.ajax("POST", "/eAccounting/vendor/insertVendorInfo.do", obj, function(result) {
+            console.log(result);
+
+            $("#newReqNo").val(result.data.reqNo);
+            $("#appvPrcssNo").val(result.data.appvPrcssNo);
+
+            // new
+            console.log("newReqNo in newVendorPop: " + $("#newReqNo").val());
+               if(FormUtil.isEmpty($("#newReqNo").val())) {
+                   Common.popupDiv("/eAccounting/vendor/approveLinePop.do", null, null, true, "approveLineSearchPop");
+               } else {
+                   // update
+                   Common.popupDiv("/eAccounting/vendor/approveLinePop.do", null, null, true, "approveLineSearchPop");
+               }
+        });
+    }
+
+}
+
+function fn_vendorValidation(ts){
+
+	var checkResult = fn_checkEmpty();
+
+    if(!checkResult){
+        return false;
+    }
+
+    if(ts == 'ts') // temp_Save
+   	{
+    	var obj = $("#form_newVendor").serializeJSON();
+        console.log("fn_vendorValidation_saveDraft");
+        Common.ajax("GET", "/eAccounting/vendor/vendorValidation.do?_cacheId=" + Math.random(), obj, function(result){
+            $("#isReset").val(result.isReset);
+            $("#isPass").val(result.isPass);
+            $("#mem_acc_id").val(result.vendorAccId);
+
+            if($("#isReset").val() == 1 && $("#isPass").val() == 0)
+            {
+            	// new
+                if(FormUtil.isEmpty($("#newReqNo").val())) {
+                    fn_attachmentUpload(callType);
+                } else {
+                // update
+                    fn_attachmentUpdate(callType);
+                 }
+            }
+            else
+            {
+            	if($("#mem_acc_id").val() != null && $("#mem_acc_id").val() != ''){
+
+            		Common.alert('Vendor Existed. Member Account ID: ' + $("#mem_acc_id").val());
+                    $('#form_newVendor').clearForm();
+            	} else {
+            		Common.alert('Vendor existed in Pending stage.');
+            		$('#form_newVendor').clearForm();
+            	}
+
+            }
+
+        });
+   	}
+    else // Submit
+    {
+    	var obj = $("#form_newVendor").serializeJSON();
+        console.log("fn_vendorValidation_submit");
+        Common.ajax("GET", "/eAccounting/vendor/vendorValidation.do?_cacheId=" + Math.random(), obj, function(result){
+            $("#isReset").val(result.isReset);
+            $("#isPass").val(result.isPass);
+            $("#mem_acc_id").val(result.vendorAccId);
+
+            if($("#isReset").val() == 1 && $("#isPass").val() == 0)
+            {
+                if(FormUtil.isEmpty($("#newReqNo").val())) {
+                    fn_attachmentUpload("");
+                }
+                else{
+                    fn_attachmentUpdate("");
+                }
+            }
+            else
+            {
+                Common.alert('Vendor Existed. Member Account ID: ' + $("#mem_acc_id").val());
+                $('#form_newVendor').clearForm();
+            }
+
+        });
+    }
 }
 
 function fn_updateWebInvoiceInfo(st) {
@@ -288,9 +306,31 @@ function fn_updateWebInvoiceInfo(st) {
     });
 }
 
+$.fn.clearForm = function() {
+    return this.each(function() {
+        var type = this.type, tag = this.tagName.toLowerCase();
+        if (tag === 'form'){
+            return $(':input',this).clearForm();
+        }
+        if (type === 'text' || type === 'password' || type === 'hidden' || type === 'file' || type === 'number' || tag === 'textarea'){
+            this.value = '';
+        }else if (type === 'checkbox' || type === 'radio'){
+            this.checked = false;
+        }else if (tag === 'select'){
+            this.selectedIndex = 0;
+        }
+
+        if(this.id === 'vendorCountry' || this.id === 'bankCountry')
+       	{
+        	$("#vendorCountry").val("MY").attr("selected", "selected");
+        	$("#bankCountry").val("MY").attr("selected", "selected");
+       	}
+
+    });
+};
+
 
 </script>
-
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
@@ -311,13 +351,16 @@ function fn_updateWebInvoiceInfo(st) {
 
 <section class="search_table"><!-- search_table start -->
 
-<form action="#" method="post" enctype="multipart/form-data" id="form_newVendor">
-<input type="hidden" id="newReqNo" name="reqNo">
+<form action="#" method="post" enctype="multipart/form-data" id="form_newVendor" name="form_newVendor">
+<input type="hidden" id="newReqNo" name="newReqNo">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId">
+<input type="hidden" id="appvPrcssNo" name="appvPrcssNo">
+<input type="hidden" id="isReset" name="isReset">
+<input type="hidden" id="isPass" name="isPass">
+<input type="hidden" id="mem_acc_id" name="mem_acc_id">
 <input type="hidden" id="newCostCenterText" name="costCentrName">
 <!-- <input type="hidden" id="newMemAccName" name="memAccName"> -->
 <input type="hidden" id="bankCode" name="bankCode">
-<input type="hidden" id="totAmt" name="totAmt">
 <input type="hidden" id="crtUserId" name="crtUserId" value="${userId}">
 
 <table class="type1"><!-- table start -->
@@ -329,6 +372,7 @@ function fn_updateWebInvoiceInfo(st) {
 	<col style="width:*" />
 </colgroup>
 <tbody>
+
 <tr>
     <th scope="row">Vendor Group<span class="must">*</span></th>
 	    <td>
@@ -344,7 +388,7 @@ function fn_updateWebInvoiceInfo(st) {
 	</td>
 </tr>
 <tr>
-      <th scope="row">Cost Center</th>
+      <th scope="row">Cost Center<span class="must">*</span></th>
       <td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" value="${costCentr}"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row">Create User ID</th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${userName}"/></td>
@@ -367,11 +411,11 @@ function fn_updateWebInvoiceInfo(st) {
 </colgroup>
 <tbody>
 <tr>
-	<th colspan=2 scope="row">Registered Company/Individual Name</th>
+	<th colspan=2 scope="row">Registered Company/Individual Name<span class="must">*</span></th>
 	<td colspan=3><input type="text" title="" placeholder="" class="w100p" id="regCompName" name="regCompName"/></td>
 </tr>
 <tr>
-	<th colspan = 2 scope="row">Company Registration No/IC No</th>
+	<th colspan = 2 scope="row">Company Registration No/IC No<span class="must">*</span></th>
     <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="regCompNo" name="regCompNo"/></td>
 </tr>
 

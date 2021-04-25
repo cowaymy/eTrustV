@@ -17,7 +17,15 @@ public interface VendorService {
 
 	List<EgovMap> selectVendorList(Map<String, Object> params);
 
-	int checkExistNo(String reqNo);
+	int checkExistNo(String regCompNo);
+
+	int checkExistPaymentTermNo(Map<String, Object> params);
+
+	int checkExistBankListNo(Map<String, Object> params);
+
+	int checkExistBankAccNo(Map<String, Object> params);
+
+	String selectExistBankAccNo(Map<String, Object> params);
 
 	String selectMemberID(String selectMemberID);
 
@@ -34,4 +42,12 @@ public interface VendorService {
 	int checkExistClmNo(String reqNo);
 
 	EgovMap getFinApprover(Map<String, Object> params);
+
+	EgovMap selectVendorInfo(String reqNo);
+
+	List<EgovMap> selectAttachList(String atchFileGrpId);
+
+	String checkReqNo(Map<String, Object> params);
+
+	void updateVendorInfo(Map<String, Object> params);
 }

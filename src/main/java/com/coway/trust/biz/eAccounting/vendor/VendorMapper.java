@@ -21,7 +21,7 @@ public interface VendorMapper {
 
 	List<EgovMap> selectVendorList(Map<String, Object> params);
 
-	int checkExistNo(String clmNo);
+	int checkExistNo(String regCompNo);
 
 	String selectMemberID(String regCompNo);
 
@@ -47,9 +47,25 @@ public interface VendorMapper {
 
 	int checkExistClmNo(String clmNo);
 
+	int checkExistPaymentTermNo(Map<String, Object> params);
+
+	int checkExistBankListNo(Map<String, Object> params);
+
+	int checkExistBankAccNo(Map<String, Object> params);
+
+	String selectExistBankAccNo(Map<String, Object> params);
+
 	EgovMap getFinApprover(Map<String, Object> params);
 
 	EgovMap getClmDesc(Map<String, Object> params);
 
 	EgovMap getNtfUser(Map<String, Object> params);
+
+	EgovMap selectVendorInfo(String reqNo);
+
+	List<EgovMap> selectAttachList(String atchFileGrpId);
+
+	String checkReqNo(Map<String, Object> params);
+
+	void updateVendorInfo(Map<String, Object> params);
 }

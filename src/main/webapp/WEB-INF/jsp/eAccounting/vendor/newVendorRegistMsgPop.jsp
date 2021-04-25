@@ -21,7 +21,7 @@ function fn_approveLineSubmit() {
     var date = new Date();
     var year = date.getFullYear();
     var month = date.getMonth() + 1;
-    var costCentr = $("#newCostCentr").val();
+    var costCentr = $("#newCostCenter").val();
     console.log("CostCenter: " + costCentr);
     var data = {
             newGridList : newGridList
