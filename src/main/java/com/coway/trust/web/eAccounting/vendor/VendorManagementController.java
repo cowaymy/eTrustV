@@ -171,8 +171,9 @@ public class VendorManagementController {
             HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
         String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
-        params.put("userId", sessionVO.getUserId());
+
         if (!"A1101".equals(costCentr)) {
+        	params.put("loginUserId", sessionVO.getUserId());
         }
 
         LOGGER.debug("params =====================================>>  " + params);
@@ -182,6 +183,7 @@ public class VendorManagementController {
         params.put("appvPrcssStus", appvPrcssStus);
 
         List<EgovMap> list = vendorService.selectVendorList(params);
+
 
         LOGGER.debug("params =====================================>>  " + list.toString());
 

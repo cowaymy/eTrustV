@@ -18,6 +18,7 @@
 }
 </style>
 <script type="text/javascript">
+
 console.log("vendorManagement");
 var vendorManagementColumnLayout = [ {
     dataField : "vendorAccId",
@@ -66,18 +67,29 @@ $(document).ready(function () {
 	$("#edit_vendor_btn").click(fn_preEdit);
 
 
-
+	var userId = "${SESSION_INFO.userId}";
+	console.log("crtUserID: " + userId);
 	AUIGrid.bind(vendorManagementGridID, "cellDoubleClick", function( event )
 		    {
 		        console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
 		        console.log(event);
+		        console.log(event.item.userId);
 		        console.log("CellDoubleClick reqNo : " + event.item.reqNo);
 		        console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
 		        console.log("CellDoubleClick appvPrcssStusCode : " + event.item.appvPrcssStusCode);
 		        console.log("CellDoubleClick costCenterName : " + event.item.costCenterName);
 		        // TODO detail popup open
+		        console.log("crtUserID: " + userId);
 		        if(event.item.appvPrcssStusCode == "T") {
-		        	fn_editVendorPop(event.item.reqNo);
+		        	if(userId != event.item.userId)
+		        	{
+		        		Common.alert("You are not allow to edit the record.");
+		        	}
+		        	else
+		        	{
+		        		fn_editVendorPop(event.item.reqNo);
+		        	}
+
 		        } else {
 		        	var reqNo = event.item.reqNo;
 		        	var clmType = reqNo.substr(0, 2);
@@ -256,15 +268,24 @@ function fn_newVendorPop() {
 
 function fn_preEdit() {
 
+	var userId = "${SESSION_INFO.userId}";
 	var selectedItems = AUIGrid.getSelectedItems(vendorManagementGridID);
 
 	if(selectedItems.length <= 0) {
         return;
     }
     else{
-    	if(selectedItems[0].item.appvPrcssStusCode == "T") {
-    		var reqNo = selectedItems[0].item.reqNo;
-    		fn_editVendorPop(reqNo);
+    	if(selectedItems[0].item.appvPrcssStusCode == "T")
+    	{
+    		if(userId != selectedItems[0].item.userId)
+            {
+                Common.alert("You are not allow to edit the record.");
+            }
+            else
+            {
+            	var reqNo = selectedItems[0].item.reqNo;
+                fn_editVendorPop(reqNo);
+            }
         }
     	else
     	{

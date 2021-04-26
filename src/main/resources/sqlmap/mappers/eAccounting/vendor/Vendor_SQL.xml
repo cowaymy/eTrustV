@@ -59,7 +59,8 @@
 		        NVL(A.VENDOR_GRP, B.VENDOR_GRP) VENDOR_GRP,
 		        NVL(A.VENDOR_NAME, B.VENDOR_NAME) VENDOR_NAME,
 		        NVL(A.VENDOR_REG_NO_NRIC, B.VENDOR_REG_NO_NRIC) VENDOR_REG_NO_NRIC,
-		        NVL(B.APPV_PRCSS_NO, '') APPV_PRCSS_NO
+		        NVL(B.APPV_PRCSS_NO, '') APPV_PRCSS_NO,
+		        B.CRT_USER_ID USER_ID
 		    FROM FCM0031D A
 		    FULL JOIN (
 		        SELECT B1.*
@@ -70,12 +71,12 @@
 		            GROUP BY VENDOR_REG_NO_NRIC
 		        ) B2
 		        ON B1.VENDOR_REQ_NO = B2.REQ_NO
+		        <if test="loginUserId != null and loginUserId != ''"> WHERE B1.CRT_USER_ID = #{loginUserId}</if>
 		    ) B
 		        ON A.VENDOR_REG_NO_NRIC = B.VENDOR_REG_NO_NRIC
 		    WHERE 1=1
 		    /* Vendor related where clause */
 
-		    AND B.CRT_USER_ID = #{userId}
 		    <if test="memAccId != null and memAccId != ''"> AND (NVL(A.VENDOR_ACC_ID, B.VENDOR_ACC_ID)) = #{memAccId}</if>
 		    <if test="regNo != null and regNo != ''"> AND (NVL(A.VENDOR_REG_NO_NRIC, B.VENDOR_REG_NO_NRIC)) = #{regNo}</if>
 		    <if test="costCenter != null and costCenter != ''"> AND (NVL(A.COST_CENTER, B.COST_CENTER)) =  #{costCenter}</if>
