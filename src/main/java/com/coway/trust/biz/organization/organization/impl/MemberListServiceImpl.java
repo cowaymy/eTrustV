@@ -1837,7 +1837,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			EgovMap selectOrganization = null;
 			if(a> 0){
 			    // 2021-04-07 - LaiKW - Insert MSC0009D for HP Orientation
-//			    memberListMapper.insertHPorientation(params);
+			    memberListMapper.insertHPorientation(params);
 
 				Map<String, Object> memOrg = new HashMap<String, Object>();
 				CodeMap.put("code", "mem");
