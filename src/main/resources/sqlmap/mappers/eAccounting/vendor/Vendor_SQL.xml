@@ -71,7 +71,6 @@
 		            GROUP BY VENDOR_REG_NO_NRIC
 		        ) B2
 		        ON B1.VENDOR_REQ_NO = B2.REQ_NO
-		        <if test="loginUserId != null and loginUserId != ''"> WHERE B1.CRT_USER_ID = #{loginUserId}</if>
 		    ) B
 		        ON A.VENDOR_REG_NO_NRIC = B.VENDOR_REG_NO_NRIC
 		    WHERE 1=1
@@ -91,6 +90,16 @@
 		            AND B.CRT_DATE < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
 		        ]]>
 		    </if>
+		    <if test="vendorReqNoFrom != null and vendorReqNoFrom != ''">
+	             <![CDATA[
+	                AND UPPER(B.VENDOR_REQ_NO) >= UPPER(#{vendorReqNoFrom})
+	             ]]>
+	        </if>
+	        <if test="vendorReqNoTo != null and vendorReqNoTo != ''">
+	             <![CDATA[
+	                AND UPPER(B.VENDOR_REQ_NO) <= UPPER(#{vendorReqNoTo})
+	             ]]>
+	        </if>
 
 		) X1
 		LEFT JOIN FCM0004M X2
@@ -530,6 +539,7 @@
                    ,T1.ATCH_FILE_GRP_ID
                    ,T1.APPV_PRCSS_NO
                    ,T1.REM
+                   ,T1.UPD_DATE
                    ,T2.USER_NAME AS USER_NAME
 		FROM FCM0029D T1
 		LEFT JOIN SYS0047M T2

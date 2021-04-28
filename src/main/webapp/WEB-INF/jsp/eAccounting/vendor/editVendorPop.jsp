@@ -545,7 +545,7 @@ $.fn.clearForm = function() {
 <tbody>
 <tr>
     <th scope="row">Claim No / Vendor Code<span class="must">*</span></th>
-    <td colspan=3><input type="text" title="" id="newVendorCode" name="vendorCode" placeholder="" class="readonly w100p" readonly="readonly" value="${vendorInfo.reqNo}"/></td><!--  value="${claimNo}"-->
+    <td colspan=3><input type="text" title="" id="newVendorCode" name="vendorCode" placeholder="" class="readonly w100p" readonly="readonly" value="${vendorInfo.vendorReqNo}"/></td><!--  value="${claimNo}"-->
 </tr>
 <tr>
     <th scope="row">Vendor Group<span class="must">*</span></th>
@@ -593,6 +593,14 @@ $.fn.clearForm = function() {
     <th colspan = 2 scope="row">Company Registration No/IC No</th>
     <td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="regCompNo" name="regCompNo" value="${vendorInfo.vendorRegNoNric}"/></td>
 </tr>
+<tr>
+    <th colspan = 2 scope="row">Email Address (payment advice)<span class="must">*</span></th>
+    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="emailPayAdv" name="emailPayAdv"/></td>
+</tr>
+<tr>
+    <th colspan = 2 scope="row">Email Address 2 (payment advice)</th>
+    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="emailPayAdv2" name="emailPayAdv2"/></td>
+</tr>
 
 </tbody>
 </table><!-- table end -->
@@ -624,7 +632,7 @@ $.fn.clearForm = function() {
 </tr>
 <tr>
     <th scope="row">Country</th>
-	    <td>
+	    <td colspan=3>
 	       <select  style="text-transform:uppercase" class="w100p" id="vendorCountry" name="vendorCountry">
             <c:forEach var="list" items="${countryList}" varStatus="status">
                <option value="${list.code}">${list.name}</option>
@@ -713,7 +721,7 @@ $.fn.clearForm = function() {
 </tr>
 <tr>
     <th>Swift Code</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="swiftCode" name="swiftCode" value="${vendorInfo.swiftCode}"/></td>
+    <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="swiftCode" name="swiftCode" value="${vendorInfo.swiftCode}"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -736,8 +744,6 @@ $.fn.clearForm = function() {
     <td>
     <select class="w100p" id="designation" name="designation"></select>
     </td>
-</tr>
-<tr>
     <th scope="row"> Name</th>
     <td><input type="text" title="" placeholder="" class="w100p" id="vendorName" name="vendorName" value="${vendorInfo.contactName}"/></td>
 </tr>

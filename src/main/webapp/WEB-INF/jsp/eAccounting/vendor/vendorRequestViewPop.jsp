@@ -15,85 +15,11 @@
 console.log("vendorRequestViewPop");
 var myGridID;
 var myGridData = $.parseJSON('${appvInfoAndItems}');
+var vendorInfo = "${vendorInfo}";
+var attachmentList = new Array();
 
 var attachList = null;
-/*
-var myColumnLayout = [ {
-    dataField : "clamUn",
-    headerText : '<spring:message code="newWebInvoice.seq" />'
-}, {
-    dataField : "clmSeq",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "expGrp",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "expGrp",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "appvItmSeq",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "glAccCode",
-    headerText : '<spring:message code="expense.GLAccount" />'
-}, {
-    dataField : "glAccCodeName",
-    headerText : '<spring:message code="newWebInvoice.glAccountName" />',
-    style : "aui-grid-user-custom-left"
-}, {
-    dataField : "budgetCode",
-    headerText : '<spring:message code="approveView.budget" />'
-}, {
-    dataField : "budgetCodeName",
-    headerText : '<spring:message code="approveView.budgetName" />',
-    style : "aui-grid-user-custom-left"
-},{
-    dataField : "taxCode",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "taxName",
-    headerText : '<spring:message code="newWebInvoice.taxCode" />',
-    style : "aui-grid-user-custom-left"
-}, {
-    dataField : "cur",
-    headerText : '<spring:message code="newWebInvoice.cur" />'
-}, /*{
-    dataField : "netAmt",
-    headerText : '<spring:message code="newWebInvoice.netAmount" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, {
-    dataField : "taxAmt",
-    headerText : '<spring:message code="newWebInvoice.taxAmount" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, {
-    dataField : "taxNonClmAmt",
-    headerText : '<spring:message code="newWebInvoice.taxNonClmAmt" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, {
-    dataField : "totAmt",
-    headerText : '<spring:message code="newWebInvoice.totalAmount" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00",
-    editable : false//,
-    /*expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        return (item.netAmt + item.taxAmt + item.taxNonClmAmt);
-    }
-}, {
-    dataField : "expDesc",
-    headerText : '<spring:message code="newWebInvoice.description" />',
-    style : "aui-grid-user-custom-left",
-    width : 200
-}
-];
-*/
+
 //그리드 속성 설정
 var myGridPros = {
     // 페이징 사용
@@ -105,94 +31,7 @@ var myGridPros = {
     // 셀 선택모드 (기본값: singleCell)
     selectionMode : "multipleCells"
 };
-/*
-var mGridColumnLayout = [ {
-    dataField : "clamUn",
-    headerText : '<spring:message code="newWebInvoice.seq" />'
-}, {
-    dataField : "expGrp",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "clmSeq",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "expType",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "expTypeName",
-    headerText : '<spring:message code="pettyCashNewExp.expTypeBrName" />',
-    style : "aui-grid-user-custom-left"
-}, {
-    dataField : "glAccCode",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "glAccCodeName",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "budgetCode",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "budgetCodeName",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "taxCode",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "taxName",
-    headerText : '<spring:message code="newWebInvoice.taxCode" />'
-}, {
-    dataField : "taxRate",
-    dataType: "numeric",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "cur",
-    headerText : '<spring:message code="newWebInvoice.cur" />',
-    editable : false
-}, /*{
-    dataField : "gstBeforAmt",
-    headerText : '<spring:message code="newWebInvoice.netAmount" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, {
-    dataField : "oriTaxAmt",
-    dataType: "numeric",
-    visible : false, // Color 칼럼은 숨긴채 출력시킴
-    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        return (item.gstBeforAmt * (item.taxRate / 100));
-    }
-}, {
-    dataField : "gstAmt",
-    headerText : '<spring:message code="newWebInvoice.taxAmount" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, {
-    dataField : "taxNonClmAmt",
-    headerText : '<spring:message code="newWebInvoice.taxNonClmAmt" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, {
-    dataField : "totAmt",
-    headerText : '<spring:message code="newWebInvoice.totalAmount" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00",
-    /*expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        return (item.gstBeforAmt + item.gstAmt + item.taxNonClmAmt);
-    }
-}, {
-    dataField : "atchFileGrpId",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "cnt",
-    visible : false
-}
-];
-*/
+
 //그리드 속성 설정
 var mGridPros = {
     rowIdField : "clmSeq",
@@ -204,175 +43,35 @@ var mGridPros = {
 
 var mGridID;
 
-/*
-var mileageGridColumnLayout = [ {
-    dataField : "clamUn",
-    headerText : '<spring:message code="newWebInvoice.seq" />'
-}, {
-    dataField : "expGrp",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "clmSeq",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "carMilagDt",
-    headerText : '<spring:message code="pettyCashNewExp.date" />',
-    dataType : "date",
-    formatString : "dd/mm/yyyy"
-}, {
 
-    headerText : '<spring:message code="newStaffClaim.location" />',
-    children : [
-        {
-                dataField: "locFrom",
-                headerText: '<spring:message code="newStaffClaim.from" />',
-                style : "aui-grid-user-custom-left"
-        }, {
-                dataField: "locTo",
-                headerText: '<spring:message code="newStaffClaim.to" />',
-                style : "aui-grid-user-custom-left"
-        }
-    ]
-}, {
-    dataField : "cur",
-    headerText : '<spring:message code="newWebInvoice.cur" />',
-}, {
-    dataField : "carMilag",
-    headerText : '<spring:message code="newStaffClaim.mileageBrKm" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, {
-    dataField : "carMilagAmt",
-    headerText : '<spring:message code="newStaffClaim.mileageBrAmt" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, {
-    dataField : "tollAmt",
-    headerText : '<spring:message code="newStaffClaim.tollsBrRm" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, {
-    dataField : "parkingAmt",
-    headerText : '<spring:message code="newStaffClaim.parkingBrRm" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, {
-    dataField : "purpose",
-    headerText : '<spring:message code="newStaffClaim.purpose" />',
-    style : "aui-grid-user-custom-left"
-}, {
-    dataField : "expDesc",
-    headerText : '<spring:message code="newWebInvoice.remark" />',
-    style : "aui-grid-user-custom-left",
-    width : 150
-}, {
-    dataField : "atchFileGrpId",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "atchFileId",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "atchFileName",
-    headerText : '<spring:message code="newWebInvoice.attachment" />',
-    width : 200,
-    labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-        var myString = value;
-        // 로직 처리
-        // 여기서 value 를 원하는 형태로 재가공 또는 포매팅하여 반환하십시오.
-        if(FormUtil.isEmpty(myString)) {
-            myString = '<spring:message code="invoiceApprove.noAtch.msg" />';
-        }
-        return myString;
-     },
-    renderer : {
-        type : "ButtonRenderer",
-        onclick : function(rowIndex, columnIndex, value, item) {
-            console.log("view_btn click atchFileGrpId : " + item.atchFileGrpId + " atchFileId : " + item.atchFileId);
-            if(item.fileCnt == 1) {
-                var data = {
-                        atchFileGrpId : item.atchFileGrpId,
-                        atchFileId : item.atchFileId
-                };
-                if(item.fileExtsn == "jpg" || item.fileExtsn == "png" || item.fileExtsn == "gif") {
-                    // TODO View
-                    console.log(data);
-                    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-                        console.log(result);
-                        var fileSubPath = result.fileSubPath;
-                        fileSubPath = fileSubPath.replace('\', '/'');
-                        console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                        window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                    });
-                } else {
-                    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-                        console.log(result);
-                        var fileSubPath = result.fileSubPath;
-                        fileSubPath = fileSubPath.replace('\', '/'');
-                        console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
-                                + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                        window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
-                            + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                    });
-                }
-            } else {
-                Common.alert('<spring:message code="invoiceApprove.notFoundAtch.msg" />');
-            }
-        }
-    }
-}, {
-    dataField : "fileExtsn",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "fileCnt",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}
-];
-
-//그리드 속성 설정
-var mileageGridPros = {
-    // 헤더 높이 지정
-    headerHeight : 20,
-    // 그리드가 height 지정( 지정하지 않으면 부모 height 의 100% 할당받음 )
-    height : 175,
-    showStateColumn : true,
-    softRemoveRowMode : false,
-    // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
-    enableRestore : true,
-    rowIdField : "id",
-    // 셀 선택모드 (기본값: singleCell)
-    selectionMode : "multipleCells"
-};
-*/
 var mileageGridID;
 
 $(document).ready(function () {
-    //myGridID = AUIGrid.create("#approveView_grid_wrap", myColumnLayout, myGridPros);
-
-    /*AUIGrid.bind(myGridID, "cellDoubleClick", function( event )
-            {
-                console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-                console.log("CellDoubleClick clmNo : " + $("#viewClmNo").text());
-                console.log("CellDoubleClick clamUn : " + event.item.clamUn);
-                console.log("CellDoubleClick appvItmSeq : " + event.item.appvItmSeq);
-                console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
-                console.log("CellDoubleClick atchFileGrpId : " + event.item.atchFileGrpId);
-                // TODO detail popup open
-                //appvPrcssNo = event.item.appvPrcssNo;
-                //atchFileGrpId = event.item.atchFileGrpId;
-                var clmNo = $("#viewClmNo").text();
-                var clmType = clmNo.substr(0, 2);
-                if(clmType != "R1") {
-                	fn_getAppvItemOfClmUn($("#viewClmNo").text(), event.item.appvItmSeq, event.item.clamUn);
-                }
-            });
-    */
-
 
     console.log('vendorRequestViewPop: '+ myGridData);
+
+    var appvPrccNo = "${vendorInfo.appvPrcssNo}";
+    var vendorCountry = "${vendorInfo.addCountry}";
+    var bankCountry = "${vendorInfo.bankCountry}";
+    var bankList = "${vendorInfo.bank}";
+    var paymentMethod = "${vendorInfo.payType}";
+    var designation = "${vendorInfo.contactDesignation}";
+   $("#keyDate").val("${vendorInfo.updDate}");
+
+
+    doGetCombo('/common/selectCodeList.do', '17', designation, 'designation', 'S' , ''); // Customer Initial Type Combo Box
+    $("#vendorCountry option[value='"+ vendorCountry +"']").attr("selected", true);
+    $("#bankCountry option[value='"+ bankCountry +"']").attr("selected", true);
+    $("#bankList option[value='"+ bankList +"']").attr("selected", true);
+    $("#paymentMethod option[value='"+ paymentMethod +"']").attr("selected", true);
+
+    $('#vendorCountry').attr("disabled", true);
+    $('#bankCountry').attr("disabled", true);
+    $('#bankList').attr("disabled", true);
+    $('#paymentMethod').attr("disabled", true);
+    $('#vendorGroup').attr("disabled", true);
+    $('#designation').attr("disabled", true);
+
     var costCenterName =  $("#costCenterName").val();
     var costCenter =  $("#costCenter").val();
     console.log(costCenterName);
@@ -405,20 +104,7 @@ $(document).ready(function () {
         }
     }
     $("#viewPayDueDt").text(myGridData[0].payDueDt);
-    /*
-    // 2018-07-03 - LaiKW - Added looping calculation of total - Start
-    var totalAmt = 0;
-    for(var i = 0; i < myGridData.length; i++  ) {
-        totalAmt += myGridData[i].appvAmt;
-    }
-    $("#viewAppvAmt").text(totalAmt);
 
-    $("#viewAppvAmt").text(AUIGrid.formatNumber(totalAmt, "#,##0.00"));
-    // 2018-07-03 - LaiKW - Added looping calculation of total - End
-
-    $("#pApprove_btn").click(fn_approvalSubmit);
-    $("#pReject_btn").click(fn_RejectSubmit);
-    */
     if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J") {
         $("#pApprove_btn").hide();
         $("#pReject_btn").hide();
@@ -726,86 +412,271 @@ function fn_atchViewDown(fileGrpId, fileId) {
 </tbody>
 </table><!-- table end -->
 
-</form>
-</section><!-- search_table end -->
+<aside class="title_line"><!-- title_line start -->
+<h2></h2>
+</aside><!-- title_line end -->
 
-<table class="type1 mt10" id="noMileage" style="display: none;"><!-- table start -->
-<caption><spring:message code="webInvoice.table" /></caption>
+<table class="type1"><!-- table start -->
+<caption>table</caption>
 <colgroup>
-    <col style="width:190px" />
+    <col style="width:180px" />
     <col style="width:*" />
     <col style="width:150px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row"><spring:message code="pettyCashNewExp.invcNo" /></th>
-    <td id="invcNo"></td>
-    <th scope="row" id="supplirTh"></th>
-    <td id="supplirTd"></td>
-    <!-- <th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
-    <td id="invcType"></td> -->
-</tr>
-<tr id="crcInfo">
-    <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
-    <td id="crcInvcDt"></td>
-    <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-    <td id="crcCostCentr"></td>
-</tr>
-<!-- <tr>
-    <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
-    <td id="gstRgistNo"></td>
-</tr>-->
-<tr id="payInfo1" style="display: none;">
-    <th scope="row"><spring:message code="newWebInvoice.utilNo" /></th>
-    <td id="utilNo"></td>
-    <th scope="row">Billing Period</th>
-    <td id="bilPeriod"></td>
-    <!-- <th scope="row" id="supplirTh"></th>
-    <td id="supplirTd"></td> -->
-</tr>
-<tr id="payInfo2" style="display: none;">
-    <th scope="row">JomPAY No</th>
-    <td id="jPayNo"></td>
-    <th scope="row"></th>
-    <td></td>
-</tr>
-<tr id="payInfo3" style="display: none;">
-    <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
-    <td id="payInfo3InvcDt"></td>
-    <th scope="row">Billing Period</th>
-    <td id="payInfo3bilPeriod"></td>
-</tr>
-<tr id="payInfo4" style="display: none;">
-    <th scope="row"><spring:message code="newWebInvoice.utilNo" /></th>
-    <td id="payInfo4utilNo"></td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row">Claim No / Vendor Code<span class="must">*</span></th>
+    <td colspan=3><input type="text" title="" id="newVendorCode" name="vendorCode" placeholder="" class="readonly w100p" readonly="readonly" value="${vendorInfo.vendorReqNo}"/></td><!--  value="${claimNo}"-->
 </tr>
 <tr>
-    <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
-    <td colspan="3" id="attachTd">
-    <div class="auto_file2 auto_file3"><!-- auto_file start -->
-    <input type="file" title="file add" />
-    </div><!-- auto_file end -->
+    <th scope="row">Vendor Group<span class="must">*</span></th>
+        <td>
+           <select class="w100p" id=vendorGroup name="vendorGroup">
+                  <!--  <option value="VM02"<c:if test="${vendorInfo.vendorGrp eq 'VM02'}">selected="selected"</c:if>>VM02 - Coway_Supplier_Foreign</option>-->
+                  <option value="VM02"<c:if test="${vendorInfo.vendorGrp eq 'VM02'}">selected="selected"</c:if>>VM02 - Coway_Supplier_Foreign</option>
+                  <option value="VM03"<c:if test="${vendorInfo.vendorGrp eq 'VM03'}">selected="selected"</c:if>>VM03 - Coway_Supplier_Foreign (Related Company)</option>
+                  <option value="VM11"<c:if test="${vendorInfo.vendorGrp eq 'VM11'}">selected="selected"</c:if>>VM11 - Coway_Suppliers_Local</option>
+           </select>
+        </td>
+    <th scope="row">Key in date</th>
+    <td>
+    <input type="text" title="" id="keyDate" name="keyDate" placeholder="DD/MM/YYYY" class="readonly w100p" readonly="readonly"/>
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="newWebInvoice.remark" /></th>
-    <td colspan="3" id="expDesc"></td>
+      <th scope="row">Cost Center</th>
+      <td><input type="text" title="" placeholder="" class="readonly w100p" id="newCostCenter" name="costCentr" value="${vendorInfo.costCenter}" readonly="readonly"/></td>
+    <th scope="row">Create User ID</th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" id="userName" readonly="readonly" value="${vendorInfo.userName}" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
-<article class="grid_wrap" id="mGrid_wrap" style="display: none;"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
+<aside class="title_line"><!-- title_line start -->
+<h2></h2>
+</aside><!-- title_line end -->
 
-<article class="grid_wrap" id="mileage_grid_wrap" style="display: none;"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th colspan=2 scope="row">Registered Company/Individual Name</th>
+    <td colspan=3><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="regCompName" name="regCompName" value="${vendorInfo.vendorName}"/></td>
+</tr>
+<tr>
+    <th colspan = 2 scope="row">Company Registration No/IC No</th>
+    <td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="regCompNo" name="regCompNo" value="${vendorInfo.vendorRegNoNric}"/></td>
+</tr>
+<tr>
+    <th colspan = 2 scope="row">Email Address (payment advice)<span class="must">*</span></th>
+    <td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="emailPayAdv" name="emailPayAdv"/></td>
+</tr>
+<tr>
+    <th colspan = 2 scope="row">Email Address 2 (payment advice)</th>
+    <td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="emailPayAdv2" name="emailPayAdv2"/></td>
+</tr>
+
+</tbody>
+</table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<!--  <h2 class="total_text"><spring:message code="newWebInvoice.total" /><span id="viewAppvAmt"></span></h2>-->
+<h2>Vendor Address</h2>
 </aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Street</th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="street" name="street" value="${vendorInfo.addStreet}"/></td>
+    <th scope="row">House/Lot Number</th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="houseNo" name="houseNo" value="${vendorInfo.addHouseLotNo}"/></td>
+</tr>
+<tr>
+    <th scope="row">Postal Code</th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="postalCode" name="postalCode" value="${vendorInfo.addPostalCode}"/></td>
+    <th scope="row">City</th>
+        <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="city" name="city" value="${vendorInfo.addCity}"/></td>
+</tr>
+<tr>
+    <th scope="row">Country</th>
+        <td colspan=3>
+           <select  style="text-transform:uppercase" class="readonly w100p" id="vendorCountry" name="vendorCountry">
+            <c:forEach var="list" items="${countryList}" varStatus="status">
+               <option value="${list.code}">${list.name}</option>
+            </c:forEach>
+        </select>
+        </td>
+</tr>
+
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Payment Information</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th>Payment Terms <b>(Days)</b></th>
+    <td><input type="text" min="1"  title="" placeholder="" class="readonly w100p" readonly='readonly' id="paymentTerms" name="paymentTerms" value="${vendorInfo.payTerm}"/></td>
+    <th>Payment Method</th>
+    <td>
+        <select class="readonly w100p" id=paymentMethod name="paymentMethod">
+                  <!--  <option value="CASH">CASH</option>-->
+                  <option value="CASH"<c:if test="${vendorInfo.payType eq 'CASH'}">selected="selected"</c:if>>CASH</option>
+                  <option value="CHEQ"<c:if test="${vendorInfo.payType eq 'CHEQ'}">selected="selected"</c:if>>CHEQUE</option>
+                  <option value="OTRX"<c:if test="${vendorInfo.payType eq 'OTRX'}">selected="selected"</c:if>>ONLINE TRANSFER</option>
+                  <option value="TTRX"<c:if test="${vendorInfo.payType eq 'TTRX'}">selected="selected"</c:if>>TELEGRAPHIC TRANSFER</option>
+           </select>
+    </td>
+</tr>
+<tr>
+    <th>Others (Please State)</th>
+    <td colspan=3><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="others" name="others" value="${vendorInfo.payOth}" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Vendor Bank Details</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Country</th>
+    <td>
+        <select  style="text-transform:uppercase" class="readonly w100p" id="bankCountry" name="bankCountry">
+            <c:forEach var="list" items="${countryList}" varStatus="status">
+               <option value="${list.code}">${list.name}</option>
+            </c:forEach>
+        </select>
+    </td>
+    <th scope="row">Account Holder<span class="must">*</span></th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="bankAccHolder" name="bankAccHolder" value="${vendorInfo.bankAccHolder}"/></td>
+</tr>
+<tr>
+    <th scope="row"> Bank<span class="must">*</span></th>
+    <td>
+        <select class="readonly w100p" id="bankList" name="bankList">
+            <c:forEach var="list" items="${bankList}" varStatus="status">
+               <option value="${list.code}">${list.name}</option>
+            </c:forEach>
+        </select>
+    </td>
+    <th scope="row">Bank Account Number<span class="must">*</span></th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="bankAccNo" name="bankAccNo" value="${vendorInfo.bankAccNo}"/></td>
+</tr>
+<tr>
+    <th>Branch</th>
+    <td colspan=3><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="branch" name="branch" value="${vendorInfo.bankBranch}"/></td>
+</tr>
+<tr>
+    <th scope="row">Swift Code</th>
+    <td colspan=3><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="swiftCode" name="swiftCode" value="${vendorInfo.swiftCode}"/></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2>Vendor Contact Information</h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Designation</th>
+    <td>
+    <select class="w100p" id="designation" name="designation"></select>
+    </td>
+    <th scope="row"> Name</th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="vendorEmail" name="email" value="${vendorInfo.contactName}"/></td>
+</tr>
+<tr>
+    <th>Phone Number</th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="vendorPhoneNo" name="phoneNo" value="${vendorInfo.contactPhoneNo}"/></td>
+    <th>Email Address</th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="vendorEmail" name="email" value="${vendorInfo.contactEmail}"/></td>
+</tr>
+
+</tbody>
+</table><!-- table end -->
+
+<aside class="title_line"><!-- title_line start -->
+<h2></h2>
+</aside><!-- title_line end -->
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:180px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Attachment</th>
+    <td colspan="3" id="attachTd">
+        <c:forEach var="files" items="${attachmentList}" varStatus="st">
+            <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
+                <c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
+                <label>
+                </c:if>
+                <input type='text' class='input_text' readonly='readonly' value="${files.atchFileName}" />
+                <c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
+                </c:if>
+                <c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
+                </label>
+                 </c:if>
+             </div>
+        </c:forEach>
+    </td>
+</tr>
+
+</tbody>
+</table><!-- table end -->
+
+</form>
+</section><!-- search_table end -->
+
 
 <article class="grid_wrap" id="approveView_grid_wrap"><!-- grid_wrap start -->
 </article><!-- grid_wrap end -->

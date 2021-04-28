@@ -511,11 +511,16 @@ public class VendorManagementController {
 	    }
 	    List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(params);
 
+	    List<EgovMap> bankList = vendorService.selectBank();
+		List<EgovMap> countryList = vendorService.selectSAPCountry();
+
 	    // TODO appvPrcssStus 생성
 	    String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
 
 	    // VANNIE ADD TO GET FILE GROUP ID, FILE ID AND FILE COUNT.
 	    List<EgovMap> atchFileData = webInvoiceService.selectAtchFileData(params);
+	    String reqNo = (String)params.get("reqNo");
+		EgovMap vendorInfo = vendorService.selectVendorInfo(reqNo);
 
 	    if (atchFileData.isEmpty()) {
 	      model.addAttribute("atchFileCnt", 0);
@@ -523,11 +528,23 @@ public class VendorManagementController {
 	      model.addAttribute("atchFileCnt", atchFileData.get(0).get("fileCnt"));
 	    }
 
+	    String atchFileGrpId = String.valueOf(vendorInfo.get("atchFileGrpId"));
+	    if(atchFileGrpId != "null") {
+			List<EgovMap> vendorAttachList = vendorService.selectAttachList(atchFileGrpId);
+			model.addAttribute("attachmentList", vendorAttachList);
+			LOGGER.debug("attachmentList =====================================>>  " + vendorAttachList);
+		}
+
 	    model.addAttribute("appvPrcssStus", appvPrcssStus);
 	    model.addAttribute("appvPrcssResult", appvInfoAndItems.get(0).get("appvPrcssStus"));
 	    model.addAttribute("costCenterName", params.get("costCenterName").toString());
 	    model.addAttribute("costCenter", params.get("costCenter").toString());
 	    model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
+	    model.addAttribute("vendorInfo", vendorInfo);
+	    model.addAttribute("bankList", bankList);
+		model.addAttribute("countryList", countryList);
+
+	    LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
 
 	    if (clmType.equalsIgnoreCase("R1")) {
 	      return "eAccounting/webInvoice/webInvoiceRequestViewR1Pop";

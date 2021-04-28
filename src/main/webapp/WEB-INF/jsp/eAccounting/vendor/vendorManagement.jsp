@@ -21,6 +21,9 @@
 
 console.log("vendorManagement");
 var vendorManagementColumnLayout = [ {
+	dataField : "reqNo",
+    headerText : 'Vendor Request No'
+}, {
     dataField : "vendorAccId",
     headerText : 'Supplier Code'
 }, {
@@ -95,7 +98,7 @@ $(document).ready(function () {
 		        	var clmType = reqNo.substr(0, 2);
 		        	var costCenterName = event.item.costCenterName;
 		        	var costCenter = event.item.costCenter;
-		        	fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType, costCenterName, costCenter);
+		        	fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType, costCenterName, costCenter, reqNo);
 		        }
 
 		    });
@@ -293,7 +296,7 @@ function fn_preEdit() {
             var clmType = reqNo.substr(0, 2);
             var costCenterName = selectedItems[0].item.costCenterName;
             var costCenter = selectedItems[0].item.costCenter;
-            fn_webInvoiceRequestPop(selectedItems[0].item.appvPrcssNo, clmType, costCenterName, costCenter);
+            fn_webInvoiceRequestPop(selectedItems[0].item.appvPrcssNo, clmType, costCenterName, costCenter, reqNo);
     	}
 
         //console.log('PreEDIT reqNo: ' + reqNo);
@@ -324,12 +327,13 @@ function fn_editVendorPop(reqNo) {
      }
 }
 
-function fn_webInvoiceRequestPop(appvPrcssNo, clmType, costCenterName, costCenter) {
+function fn_webInvoiceRequestPop(appvPrcssNo, clmType, costCenterName, costCenter, reqNo) {
     var data = {
             clmType : clmType
             ,appvPrcssNo : appvPrcssNo
             ,costCenterName : costCenterName
             ,costCenter : costCenter
+            ,reqNo : reqNo
     };
     Common.popupDiv("/eAccounting/vendor/vendorRqstViewPop.do", data, null, true, "vendorRqstViewPop");
 }
@@ -1014,6 +1018,7 @@ function fn_editRejected() {
             <a href="#"  id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         </td>
 </tr>
+<tr>
     <th scope="row">Approval Date</th>
 	    <td>
 	        <div class="date_set w100p"><!-- date_set start -->
@@ -1032,6 +1037,16 @@ function fn_editRejected() {
 		        <option value="J"><spring:message code="pettyCashRqst.rejected" /></option>
            </select>
 	    </td>
+</tr>
+<tr>
+    <th scope="row">Vendor Request Number</th>
+        <td>
+            <div class="date_set w100p"><!-- date_set start -->
+            <p><input type="text" title="" id="vendorReqNoFrom" name="vendorReqNoFrom" class="cRange" /></p>
+            <span>to</span>
+            <p><input type="text" title="" id="vendorReqNoTo" name="vendorReqNoTo" class="cRange"  /></p>
+        </div><!-- date_set end -->
+        </td>
 </tr>
 </tbody>
 </table><!-- table end -->
