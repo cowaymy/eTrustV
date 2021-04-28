@@ -122,7 +122,7 @@ $(document).ready(function () {
                 var clmType = reqNo.substr(0, 2);
                 var costCenterName = event.item.costCenterName;
                 var costCenter = event.item.costCenter;
-                fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType, costCenterName, costCenter);
+                fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType, costCenterName, costCenter, reqNo);
             }
 
         });
