@@ -1050,7 +1050,7 @@ function fn_calculateAmt(amt, qty,stkCtgryId) {
     taxes = subTotal - subChanges;
     taxes = taxes.toFixed(2);
 
-    discountSub = subTotal * discountRate;
+    discountSub = (subTotal * discountRate).toFixed(2);
     discountTotal = subTotal - discountSub;
 
     var retObj = {subTotal : subTotal , subChanges : subChanges , taxes : taxes, discountTotal : discountTotal};
@@ -1069,6 +1069,7 @@ function fn_calculateFinalDisc(amt, qty, stkCtgryId) {
 
     subTotal = amt * qty;
     discountSub = (balance - (subTotal * discountRate) > 0) ? (subTotal * discountRate) : balance;
+    discountSub = discountSub.toFixed(2);
     discountTotal = subTotal - discountSub;
 
     var retObj = {discountSub : discountSub, discountTotal : discountTotal};
