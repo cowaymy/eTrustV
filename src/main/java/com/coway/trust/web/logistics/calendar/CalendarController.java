@@ -1,7 +1,8 @@
 package com.coway.trust.web.logistics.calendar;
 
-import java.text.ParseException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,18 +11,26 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Response;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.coway.trust.AppConstants;
+import com.coway.trust.biz.logistics.calendar.CalendarEventVO;
 import com.coway.trust.biz.logistics.calendar.CalendarService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.csv.CsvReadComponent;
 import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -31,6 +40,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class CalendarController {
 
 	private static final Logger logger = LoggerFactory.getLogger(CalendarController.class);
+
+	@Autowired
+	private CsvReadComponent csvReadComponent;
 
 	@Resource(name = "calendarService")
 	private CalendarService calendarService;
@@ -56,7 +68,7 @@ public class CalendarController {
 
 		String monthYear = prefixMonth + calMonth + "/" + calYear;
 
-		params.put("calMonth", monthYear);
+		params.put("calMonthYear", monthYear);
 
 		List<EgovMap> eventList = calendarService.selectCalendarEventList(params);
 
@@ -65,6 +77,8 @@ public class CalendarController {
 		model.put("eventListJsonStr", eventListJsonStr);
 		model.put("dayOfWeekFirstDt", dayOfWeekFirstDt);
 		model.put("lastDateOfMonth", lastDateOfMonth);
+		model.put("displayMth", calMonth);
+		model.put("displayYear", calYear);
 
 		return "logistics/calendar/initCalendar";
 	}
@@ -77,7 +91,7 @@ public class CalendarController {
 
 		List<EgovMap> eventList = calendarService.selectCalendarEventList(params);
 
-		String firstDayOfMonth = "01/" + (String) params.get("calMonth"); //Example: 01/05/2020
+		String firstDayOfMonth = "01/" + (String) params.get("calMonthYear"); //Example: 01/05/2020
 		Date firstDayOfMonthDt = new SimpleDateFormat("dd/MM/yyyy").parse(firstDayOfMonth);
 
 		Calendar cal = Calendar.getInstance();
@@ -92,6 +106,62 @@ public class CalendarController {
 		model.put("dayOfWeekFirstDt", dayOfWeekFirstDt);
 		model.put("lastDateOfMonth", lastDateOfMonth);
 
+		String[] splitMthYr = ((String) params.get("calMonthYear")).split("/");
+
+		model.put("displayMth", splitMthYr[0]);
+		model.put("displayYear", splitMthYr[1]);
+
 		return "/logistics/calendar/initCalendar";
 	}
+
+	@RequestMapping(value = "/calendarEventFileUploadPop.do")
+	public String calendarEventFileUploadPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "/logistics/calendar/calendarEventFileUploadPop";
+	}
+
+	@RequestMapping(value = "/csvUpload.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> csvUpload(MultipartHttpServletRequest request, SessionVO sessionVO) throws IOException, InvalidFormatException  {
+		ReturnMessage message = new ReturnMessage();
+
+		String batchMthYear = request.getParameter("batchMthYear");
+		String batchMemType = request.getParameter("batchMemType");
+
+		logger.debug("==== Request Param - batchMthYear : " + batchMthYear);
+		logger.debug("==== Request Param - batchMemType : " + batchMemType);
+
+		Map<String, MultipartFile> fileMap = request.getFileMap();
+		MultipartFile multipartFile = fileMap.get("csvFile");
+		List<CalendarEventVO> vos = csvReadComponent.readCsvToList(multipartFile, true, CalendarEventVO::create);
+
+		List<Map<String, Object>> detailList = new ArrayList<Map<String, Object>>();
+		for (CalendarEventVO vo : vos) {
+			HashMap<String, Object> hm = new HashMap<String, Object>();
+			hm.put("eventDt", vo.getDate());
+			hm.put("eventDesc", vo.getAgenda());
+			hm.put("crtUserId", sessionVO.getUserId());
+
+			detailList.add(hm);
+		}
+
+		Map<String, Object> master = new HashMap<String, Object>();
+		master.put("crtUserId", sessionVO.getUserId());
+		master.put("batchStatusId", 1);
+		master.put("batchCalRem", "");
+		master.put("batchMthYear", batchMthYear);
+		master.put("batchMemType", batchMemType);
+
+		int result = calendarService.saveCsvUpload(master, detailList);
+
+		if (result > 0) {
+			message.setMessage("Calendar file successfully uploaded.<br/>Batch ID : " + result);
+			message.setCode(AppConstants.SUCCESS);
+		} else {
+			message.setMessage("Failed to upload Calendar file. Please try again later.");
+			message.setCode(AppConstants.FAIL);
+		}
+
+		return ResponseEntity.ok(message);
+	}
+
+
 }

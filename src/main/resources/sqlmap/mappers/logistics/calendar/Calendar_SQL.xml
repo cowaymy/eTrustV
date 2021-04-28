@@ -8,9 +8,68 @@
         , EXTRACT(DAY FROM EVENT_DT) DAY_OF_MONTH
         , EVENT_DESC
         FROM MSC0052D
-        WHERE TO_CHAR(EVENT_DT, 'MM/YYYY') = #{calMonth}
+        WHERE TO_CHAR(EVENT_DT, 'MM/YYYY') = #{calMonthYear}
         AND DISAB = 0
+        AND MEM_TYPE = #{calMemType}
         ORDER BY EVENT_DT
     </select>
+
+    <select id="selectNextBatchId" resultType="int">
+            SELECT NVL(MAX(BATCH_ID) + 1, 1) AS BATCH_ID FROM MSC0050M
+    </select>
+
+    <insert id="saveBatchCalMst" parameterType="Map">
+        INSERT INTO MSC0050M
+        (
+        BATCH_ID,
+        BATCH_MEM_TYPE,
+        BATCH_MTH_YEAR,
+        BATCH_STUS_ID,
+        CNFM_STUS_ID,
+        CRT_USER_ID,
+        CRT_DT,
+        BATCH_CAL_REM
+        ) VALUES (
+        #{batchId},
+        #{batchMemType},
+        #{batchMthYear},
+        '1',
+        '44',
+        #{crtUserId},
+        SYSDATE,
+        'Calendar File Upload'
+        )
+    </insert>
+
+    <insert id="saveBatchCalDetailList" parameterType="java.util.List">
+        INSERT INTO MSC0051D
+        (
+        BATCH_DET_ID,
+        BATCH_ID,
+        EVENT_DT,
+        BATCH_MEM_TYPE,
+        EVENT_DESC,
+        DISAB,
+        CRT_USER_ID,
+        CRT_DT
+        )
+        SELECT MSC0051D_SEQ.NEXTVAL, batchId, eventDt, batchMemType, eventDesc, disab, crtUserId, crtDt FROM (
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+         SELECT
+        #{item.batchId} batchId,
+        #{item.eventDt} eventDt,
+        #{item.batchMemType} batchMemType,
+        #{item.eventDesc} eventDesc,
+        '0' disab,
+        #{item.crtUserId} crtUserId,
+        SYSDATE crtDt
+        FROM DUAL
+        </foreach>
+        )
+    </insert>
+
+    <update id="callBatchCalUpdList" statementType="CALLABLE" parameterType="Map">
+        {call SP_BATCH_CALENDAR_UPD_LIST(#{batchId})}
+    </update>
 
 </mapper>

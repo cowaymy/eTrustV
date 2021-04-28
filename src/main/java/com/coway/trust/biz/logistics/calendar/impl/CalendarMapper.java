@@ -11,4 +11,14 @@ public interface CalendarMapper {
 
 	List<EgovMap> selectCalendarEventList(Map<String, Object> params);
 
+	int selectNextBatchId();
+
+	int saveBatchCalMst(Map<String, Object> master);
+
+	int getMSC0051DSEQ();
+
+	int saveBatchCalDetailList(List<Map<String, Object>> detailList);
+
+	void callBatchCalUpdList(Map<String, Object> params);
+
 }

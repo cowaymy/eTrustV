@@ -9,4 +9,6 @@ public interface CalendarService {
 
 	List<EgovMap> selectCalendarEventList(Map<String, Object> params);
 
+	int saveCsvUpload(Map<String, Object> master, List<Map<String, Object>> detailList);
+
 }

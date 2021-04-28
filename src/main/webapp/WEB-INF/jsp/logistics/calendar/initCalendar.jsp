@@ -13,6 +13,13 @@ $(document).ready(function(){
         var selectorDt = '#calDt' + eventListJson[i].dayOfMonth;
         $(selectorDt).append("<br>- " + eventListJson[i].eventDesc);
     }
+
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"];
+
+    $("#displayMth").text(monthNames[ "${displayMth}" - 1]);
+    $("#displayYear").text("${displayYear}");
+
 });
 
 function fn_searchCalendar() {
@@ -22,11 +29,20 @@ function fn_searchCalendar() {
 }
 
 function fn_validateSearch() {
-	if ($("#calMonth").val() == "") {
+	if ($("#calMonthYear").val() == "") {
 		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Month' htmlEscape='false'/>");
 		return false;
 	}
+
+	if ($("#calMemType").val() == "") {
+	        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Member Type' htmlEscape='false'/>");
+	    return false;
+	}
 	return true;
+}
+
+function fn_eventUploadPopup(){
+    Common.popupDiv("/logistics/calendar/calendarEventFileUploadPop.do", null, null, true, 'eventUploadPopup');
 }
 
 </script>
@@ -56,18 +72,51 @@ function fn_validateSearch() {
         <tbody>
             <tr>
                 <th scope="row"><spring:message code='cal.search.month'/></th>
-                <td><input type="text" id="calMonth" name="calMonth" title="Month" class="j_date2" placeholder="Choose one" />
-                </td>
+                <td colspan='3'><input type="text" id="calMonthYear" name="calMonthYear" title="Month" class="j_date2" placeholder="Choose one" /></td>
+            </tr>
+            <tr>
+                <th scope="row"><spring:message code='cal.search.memType'/></th>
+                    <td colspan='3'>
+                        <select class="" id="calMemType" name="calMemType">
+                            <option value="">Choose One</option>
+                            <option value="1">Health Planner</option>
+                            <option value="2">Coway Lady</option>
+                            <option value="4">Staff</option>
+                            <option value="7">Homecare Technician</option>
+                        </select>
+                    </td>
             </tr>
         </tbody>
     </table><!-- table end -->
 </form>
 </section><!-- search_table end -->
 
+<aside class="link_btns_wrap">
+<%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> --%>
+    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+        <dl class="link_list">
+            <dt>Link</dt>
+            <dd>
+                <ul class="btns">
+                    <li><p class="link_btn"><a href="javascript:fn_eventUploadPopup();"><spring:message code='cal.btn.link.uploadEvent'/></a></p></li>
+<%--            <li><p class="link_btn"><a href="javascript:fn_viewBatchPopup();"><spring:message code='pay.btn.link.viewBatchPayment'/></a></p></li> --%>
+<%--            <li><p class="link_btn"><a href="javascript:fn_confirmEventPopup();"><spring:message code='cal.btn.link.confirmEvent'/></a></p></li> --%>
+                </ul>
+                <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+            </dd>
+        </dl>
+<%-- </c:if> --%>
+</aside><!-- link_btns_wrap end -->
+<br>
+
 <section class="search_result"><!-- search_result start -->
 <c:set var="mainCounter" value="1"/>
 <c:set var="createNewRow" value="true"/>
 <table class="type1">
+    <tr>
+        <th id="displayMth" scope="column" style="border: 1px solid black; height: 40px; color:white; font-size:20px; background-color:#25527c"></th>
+        <th id="displayYear" scope="column" style="border: 1px solid; height: 40px; font-size:20px; background-color:white" colspan="6"></th>
+    </tr>
     <th style="border: 1px solid">Monday</th>
     <th style="border: 1px solid">Tuesday</th>
     <th style="border: 1px solid">Wednesday</th>
@@ -75,19 +124,22 @@ function fn_validateSearch() {
     <th style="border: 1px solid">Friday</th>
     <th style="border: 1px solid">Saturday</th>
     <th style="border: 1px solid">Sunday</th>
-
         <tr> <%--Populate Calendar first row --%>
             <c:forEach begin="1" end="7" varStatus="columnCounter">
                         <c:choose>
                             <c:when test="${columnCounter.count eq dayOfWeekFirstDt}">
                                 <td style="border: 1px solid; vertical-align:top">${mainCounter}<br>
-                                                                <span style="border:0;" id="calDt${mainCounter}"></span>
+                                    <div style="height: 50px; overflow: hidden;">
+                                        <span style="border:0;" id="calDt${mainCounter}"></span>
+                                    </div>
                                 </td>
                             </c:when>
                             <c:when test="${columnCounter.count gt dayOfWeekFirstDt}">
                                 <c:set var="mainCounter" value="${mainCounter + 1}"/>
                                 <td style="border: 1px solid; vertical-align:top">${mainCounter}<br>
-                                                                <span style="border:0;" id="calDt${mainCounter}"></span>
+                                    <div style="height: 50px; overflow: hidden;">
+                                         <span style="border:0;" id="calDt${mainCounter}"></span>
+                                    </div>
                                 </td>
                             </c:when>
                             <c:otherwise>
@@ -105,7 +157,9 @@ function fn_validateSearch() {
                             <c:choose>
                                 <c:when test="${mainCounter le lastDateOfMonth}">
                                     <td style="border: 1px solid; vertical-align:top">${mainCounter}<br>
-                                                                <span style="border:0;" id="calDt${mainCounter}"></span>
+                                        <div style="height: 50px; overflow: hidden;">
+                                             <span style="border:0;" id="calDt${mainCounter}"></span>
+                                        </div>
                                     </td>
                                     <c:if test="${mainCounter eq lastDateOfMonth}">
                                         <c:set var="createNewRow" value="false"/>

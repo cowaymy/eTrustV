@@ -1,5 +1,7 @@
 package com.coway.trust.biz.logistics.calendar.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,5 +26,27 @@ public class CalendarServiceImpl implements CalendarService {
 	@Override
 	public List<EgovMap> selectCalendarEventList(Map<String, Object> params) {
 		return calendarMapper.selectCalendarEventList(params);
+	}
+
+	@Override
+	public int saveCsvUpload(Map<String, Object> master, List<Map<String, Object>> detailList) {
+
+		int masterSeq = calendarMapper.selectNextBatchId();
+		master.put("batchId", masterSeq);
+		int mResult = calendarMapper.saveBatchCalMst(master); // INSERT INTO MSC0050M
+
+		if(mResult > 0 && detailList.size() > 0) {
+			for (int i=0; i < detailList.size(); i++) {
+				detailList.get(i).put("batchId", masterSeq);
+				detailList.get(i).put("batchMemType", master.get("batchMemType"));
+		        logger.debug("detailList {}",detailList.get(i));
+			}
+			calendarMapper.saveBatchCalDetailList(detailList);  // INSERT INTO MSC0051D
+
+			//CALL PROCEDURE
+			calendarMapper.callBatchCalUpdList(master); // INSERT INTO MSC0052D
+		}
+
+		return masterSeq;
 	}
 }
