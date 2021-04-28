@@ -211,7 +211,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       amtMap = (Map<String, Object>) basketGrid.get(i);
       BigDecimal tempQty = new BigDecimal(String.valueOf(amtMap.get("inputQty")));
       BigDecimal tempUnitPrc = new BigDecimal(String.valueOf(amtMap.get("amt")));
-      BigDecimal tempDiscount = new BigDecimal(CommonUtils.nvl(String.valueOf(amtMap.get("totalDiscount")),0));
+      BigDecimal tempDiscount = new BigDecimal(String.valueOf(CommonUtils.nvl(amtMap.get("totalDiscount").toString(),"0")));
 
       BigDecimal tempCurAmt = tempUnitPrc.multiply(tempQty); // Prc * Qty
       BigDecimal tempCurCharge = tempCurAmt; // Charges

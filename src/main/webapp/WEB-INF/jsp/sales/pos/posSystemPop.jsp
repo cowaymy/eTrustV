@@ -1065,7 +1065,7 @@ function fn_calculateFinalDisc(amt, qty, stkCtgryId) {
     var discountRate = stkCtgryId == 1346 ? $('#_posDiscount').val()/100 : 0;
     var discountSub = 0;
     var discountTotal = 0;
-    var balance = balanceCapped;
+    var balance = balanceCapped > 0 ? balanceCapped : 0;
 
     subTotal = amt * qty;
     discountSub = (balance - (subTotal * discountRate) > 0) ? (subTotal * discountRate) : balance;
