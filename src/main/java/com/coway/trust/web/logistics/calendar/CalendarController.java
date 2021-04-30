@@ -48,7 +48,7 @@ public class CalendarController {
 	private CalendarService calendarService;
 
 	@RequestMapping(value = "/initCalendar.do")
-	public String initCalendar(@RequestParam Map<String, Object> params, ModelMap model) throws Exception  {
+	public String initCalendar(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception  {
 
 		logger.debug("==== initCalendar Params: " + params.toString());
 
@@ -70,6 +70,12 @@ public class CalendarController {
 
 		params.put("calMonthYear", monthYear);
 
+		if (sessionVO.getUserTypeId() != 1 && sessionVO.getUserTypeId() != 2 && sessionVO.getUserTypeId() != 7) {
+			params.put("calMemType", 4);
+		} else {
+			params.put("calMemType", (int) sessionVO.getUserTypeId());
+		}
+
 		List<EgovMap> eventList = calendarService.selectCalendarEventList(params);
 
 		String eventListJsonStr = new Gson().toJson(eventList);
@@ -79,13 +85,17 @@ public class CalendarController {
 		model.put("lastDateOfMonth", lastDateOfMonth);
 		model.put("displayMth", calMonth);
 		model.put("displayYear", calYear);
+		model.put("calMemType", sessionVO.getUserTypeId());
 
 		return "logistics/calendar/initCalendar";
 	}
 
 	@RequestMapping(value = "/selectCalendarEvents.do", method = RequestMethod.POST)
 	public String selectCalendarEvents(@RequestParam Map<String, Object> params
-			, HttpServletRequest request, ModelMap model) throws Exception  {
+			, HttpServletRequest request
+			, ModelMap model
+			, SessionVO sessionVO
+			) throws Exception  {
 
 		logger.debug("==== selectCalendarEvents Params: " + params.toString());
 
@@ -110,6 +120,8 @@ public class CalendarController {
 
 		model.put("displayMth", splitMthYr[0]);
 		model.put("displayYear", splitMthYr[1]);
+
+		model.put("calMemType", params.get("calMemType"));
 
 		return "/logistics/calendar/initCalendar";
 	}

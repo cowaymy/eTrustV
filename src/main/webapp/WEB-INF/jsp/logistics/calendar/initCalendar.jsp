@@ -20,6 +20,9 @@ $(document).ready(function(){
     $("#displayMth").text(monthNames[ "${displayMth}" - 1]);
     $("#displayYear").text("${displayYear}");
 
+    fn_setSearchAttr(); //20210430 Yong: set fields back to values used in previous search, because ajax calls are not used. consider refactoring to use ajax
+    fn_setMemTypeVisibility();
+
 });
 
 function fn_searchCalendar() {
@@ -34,15 +37,38 @@ function fn_validateSearch() {
 		return false;
 	}
 
-	if ($("#calMemType").val() == "") {
+	if ($("#calMemType").is(":visible") && $("#calMemType").val() == "") {
 	        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Member Type' htmlEscape='false'/>");
 	    return false;
 	}
 	return true;
 }
 
-function fn_eventUploadPopup(){
+function fn_eventUploadPopup() {
     Common.popupDiv("/logistics/calendar/calendarEventFileUploadPop.do", null, null, true, 'eventUploadPopup');
+}
+
+function fn_setSearchAttr() {
+	if("${calMemType}" != null && "${calMemType}" != "") {
+		$("#calMemType").val("${calMemType}");
+	}
+
+    if(("${displayMth}" != null && "${displayMth}" != "")
+    		&& ("${displayYear}" != null && "${displayYear}" != "")) {
+    	var searchedCalMthYear = "${displayMth}" + "/" + "${displayYear}";
+        $("#calMonthYear").val(searchedCalMthYear);
+    }
+}
+
+function fn_setMemTypeVisibility() {
+	var userType = '${SESSION_INFO.userTypeId}';
+
+	if(userType != 1 && userType != 2 && userType != 7) {
+	    //$("#calMemType").val(4); //default to Staff view
+	    $("#rowMemType").show();
+	} else {
+		$("#calMemType").val(userType);
+	}
 }
 
 </script>
@@ -74,7 +100,7 @@ function fn_eventUploadPopup(){
                 <th scope="row"><spring:message code='cal.search.month'/></th>
                 <td colspan='3'><input type="text" id="calMonthYear" name="calMonthYear" title="Month" class="j_date2" placeholder="Choose one" /></td>
             </tr>
-            <tr>
+            <tr id = "rowMemType" style="display:none;">
                 <th scope="row"><spring:message code='cal.search.memType'/></th>
                     <td colspan='3'>
                         <select class="" id="calMemType" name="calMemType">
@@ -92,7 +118,7 @@ function fn_eventUploadPopup(){
 </section><!-- search_table end -->
 
 <aside class="link_btns_wrap">
-<%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> --%>
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
         <dl class="link_list">
             <dt>Link</dt>
@@ -105,7 +131,7 @@ function fn_eventUploadPopup(){
                 <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
             </dd>
         </dl>
-<%-- </c:if> --%>
+</c:if>
 </aside><!-- link_btns_wrap end -->
 <br>
 
@@ -175,5 +201,4 @@ function fn_eventUploadPopup(){
         </c:forEach>
 </table>
 </section><!-- search_result end -->
-
 </section><!-- content end -->
