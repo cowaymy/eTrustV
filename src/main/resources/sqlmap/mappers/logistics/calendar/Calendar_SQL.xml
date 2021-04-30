@@ -57,7 +57,7 @@
         <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
          SELECT
         #{item.batchId} batchId,
-        #{item.eventDt} eventDt,
+        TO_DATE(#{item.eventDt}, 'DD/MM/YYYY') eventDt,
         #{item.batchMemType} batchMemType,
         #{item.eventDesc} eventDesc,
         '0' disab,
