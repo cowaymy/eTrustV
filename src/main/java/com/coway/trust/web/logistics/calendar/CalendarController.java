@@ -83,7 +83,7 @@ public class CalendarController {
 		model.put("eventListJsonStr", eventListJsonStr);
 		model.put("dayOfWeekFirstDt", dayOfWeekFirstDt);
 		model.put("lastDateOfMonth", lastDateOfMonth);
-		model.put("displayMth", calMonth);
+		model.put("displayMth", prefixMonth + calMonth);
 		model.put("displayYear", calYear);
 		model.put("calMemType", sessionVO.getUserTypeId());
 
