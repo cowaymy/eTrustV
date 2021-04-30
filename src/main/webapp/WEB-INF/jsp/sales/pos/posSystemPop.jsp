@@ -1065,11 +1065,15 @@ function fn_calculateFinalDisc(amt, qty, stkCtgryId) {
     var discountRate = stkCtgryId == 1346 ? $('#_posDiscount').val()/100 : 0;
     var discountSub = 0;
     var discountTotal = 0;
-    var balance = balanceCapped > 0 ? balanceCapped : 0;
+    var balance = balanceCapped == '' ? 0 : balanceCapped;
+    console.log(balance);
+    console.log(subTotal);
+    console.log(discountRate);
 
     subTotal = amt * qty;
     discountSub = (balance - (subTotal * discountRate) > 0) ? (subTotal * discountRate) : balance;
-    discountSub = discountSub.toFixed(2);
+    console.log(discountSub);
+    discountSub = ((discountSub * 100)/100).toFixed(2);
     discountTotal = subTotal - discountSub;
 
     var retObj = {discountSub : discountSub, discountTotal : discountTotal};
