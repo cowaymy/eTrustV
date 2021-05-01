@@ -298,9 +298,8 @@
                                 		  fn_goMain();
                                 	}
                                 }
-                                else if ((aResult.popExceptionMemroleCnt <= 0 || aResult.popExceptionUserCnt <= 0)&&
+                                else if (/* (aResult.popExceptionMemroleCnt <= 0 || aResult.popExceptionUserCnt <= 0)&& */
                                         (aResult.surveyTypeId > 0 && aResult.verifySurveyStus <= 0) ){
-                                    console.log("aResult.surveyTypeId ::" + aResult.surveyTypeId + ".  aResult.verifySurveyStus ::" +  aResult.verifySurveyStus );
                                     $("#loginForm surveyTypeId").val(aResult.surveyTypeId);
                                     fn_goSurveyForm(aResult.surveyTypeId);
                                     inQueue = 1;
