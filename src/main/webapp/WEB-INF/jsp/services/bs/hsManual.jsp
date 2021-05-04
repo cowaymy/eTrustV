@@ -1592,6 +1592,8 @@ var TODAY_DD      = "${toDay}";
              <a href="#" onclick="javascript:fn_hsReportSingle()">HS
               Report(Single)</a>
             </p></li>
+          </c:if>
+          <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
            <li><p class="link_btn type2">
              <a href="#" onclick="javascript:fn_hsReportGroup()">HS
               Report Corporate (Group)</a>
