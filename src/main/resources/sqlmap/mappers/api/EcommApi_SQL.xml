@@ -134,7 +134,7 @@
 
 <select id="cardDiffNRIC" parameterType="Map" resultType="egovMap">
     SELECT
-
+        DISTINCT
           CR.CUST_CRC_TOKEN
         , C.NRIC
 
