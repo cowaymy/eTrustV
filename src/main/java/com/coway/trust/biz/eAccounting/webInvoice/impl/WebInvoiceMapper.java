@@ -61,6 +61,8 @@ public interface WebInvoiceMapper {
 
   List<EgovMap> selectApproveList(Map<String, Object> params);
 
+  List<EgovMap> selectVendorApproveList(Map<String, Object> params);
+
   List<EgovMap> selectAppvLineInfo(Map<String, Object> params);
 
   String selectRejectOfAppvPrcssNo(Map<String, Object> params);

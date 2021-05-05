@@ -76,6 +76,11 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	}
 
 	@Override
+	public List<EgovMap> selectVendorApproveList(Map<String, Object> params) {
+	    return webInvoiceMapper.selectVendorApproveList(params);
+	}
+
+	@Override
 	public List<EgovMap> selectAppvLineInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectAppvLineInfo(params);
