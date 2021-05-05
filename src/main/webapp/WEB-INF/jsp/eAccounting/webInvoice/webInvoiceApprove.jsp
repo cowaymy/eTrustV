@@ -20,173 +20,252 @@
 var excelGrid;
 var appvPrcssNo;
 var atchFileGrpId;
-var clmType;
+var clmType, clmNo;
 //그리드에 삽입된 데이터의 전체 길이 보관
 var gridDataLength = 0;
-var invoAprveGridColLayout = [ {
-    dataField : "appvPrcssNo",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-},{
-    dataField : "appvLineSeq",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-},{
-    dataField : "clamUn",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-},{
-    dataField : "isActive",
-    headerText : '<input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
-    width: 30,
-    renderer : {
-        type : "CheckBoxEditRenderer",
-        showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-        editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-        checkValue : "Active", // true, false 인 경우가 기본
-        unCheckValue : "Inactive",
-        // 체크박스 disabled 함수
-        disabledFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
-            if(item.appvPrcssStusCode == "A" || item.appvPrcssStusCode == "J")
-                return true; // true 반환하면 disabled 시킴
-            return false;
-        }
-    }
-},{
-    dataField : "clmNo",
-    headerText : '<spring:message code="invoiceApprove.clmNo" />',
-    width : 90
-},{
-    dataField : "reqstDt",
-    headerText : '<spring:message code="invoiceApprove.reqstDt" />',
-    dataType : "date",
-    formatString : "dd/mm/yyyy"
-}, {
-    dataField : "codeName",
-    headerText : '<spring:message code="invoiceApprove.clmType" />',
-    style : "aui-grid-user-custom-left"
-}, {
-    dataField : "costCentr",
-    headerText : '<spring:message code="webInvoice.cc" />'
-}, {
-    dataField : "costCentrName",
-    headerText : '<spring:message code="webInvoice.ccName" />',
-    style : "aui-grid-user-custom-left"
-}, {
-    dataField : "memAccId",
-    headerText : '<spring:message code="invoiceApprove.member" />',
-}, {
-    dataField : "memAccName",
-    headerText : '<spring:message code="invoiceApprove.memberName" />',
-    style : "aui-grid-user-custom-left"
-}, {
-    dataField : "cur",
-    headerText : '<spring:message code="newWebInvoice.cur" />'
-}, {
-    dataField : "appvAmt",
-    headerText : '<spring:message code="webInvoice.amount" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00"
-}, {
-    dataField : "appvPrcssStusCode",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "appvPrcssStus",
-    headerText : '<spring:message code="webInvoice.status" />',
-    style : "aui-grid-user-custom-left"
-}, /*{
-    dataField : "atchFileGrpId",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "atchFileId",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "atchFileName",
-    headerText : '<spring:message code="newWebInvoice.attachment" />',
-    width : 200,
-    visible : false,
-    labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-        var myString = value;
-        // 로직 처리
-        // 여기서 value 를 원하는 형태로 재가공 또는 포매팅하여 반환하십시오.
-        if(FormUtil.isEmpty(myString)) {
-        	myString = '<spring:message code="invoiceApprove.noAtch.msg" />';
-        }
-        return myString;
-     },
-    renderer : {
-        type : "ButtonRenderer",
-        onclick : function(rowIndex, columnIndex, value, item) {
-        	console.log("view_btn click item.appvPrcssNo : " + item.appvPrcssNo);
-        	console.log("view_btn click atchFileGrpId : " + item.atchFileGrpId + " atchFileId : " + item.atchFileId);
-        	console.log("view_btn click item.fileCnt : " + item.fileCnt);
-        	if(item.fileCnt > 1) {
-        		//atchFileGrpId = item.atchFileGrpId;
-        		appvPrcssNo = item.appvPrcssNo;
-        		fn_fileListOfAppvPrcssNoPop();
-        	} else {
-        		if(item.fileCnt == 1) {
-        			var data = {
-                            atchFileGrpId : item.atchFileGrpId,
-                            atchFileId : item.atchFileId
-                    };
-                    if(item.fileExtsn == "jpg" || item.fileExtsn == "png" || item.fileExtsn == "gif") {
-                        // TODO View
-                        console.log(data);
-                        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-                            console.log(result);
-                            var fileSubPath = result.fileSubPath;
-                            fileSubPath = fileSubPath.replace('\', '/'');
-                            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                        });
-                    } else {
-                        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-                            console.log(result);
-                            var fileSubPath = result.fileSubPath;
-                            fileSubPath = fileSubPath.replace('\', '/'');
-                            console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
-                                    + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                            window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
-                                + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                        });
-                    }
-        		} else {
-        			Common.alert('<spring:message code="invoiceApprove.notFoundAtch.msg" />');
-        		}
-        	}
-        }
-    }
-}, {
-    dataField : "fileExtsn",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "fileCnt",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-},*/ {
-    dataField : "appvPrcssDt",
-    headerText : '<spring:message code="invoiceApprove.appvBrDt" />'
-}
-];
 
-//그리드 속성 설정
-var invoAprveGridPros = {
-    // 페이징 사용
-    usePaging : true,
-    // 한 화면에 출력되는 행 개수 20(기본값:20)
-    pageRowCount : 20,
-    // 체크박스 표시 설정
-    showRowCheckColumn : false,
-    showRowNumColumn : false,
-    // 헤더 높이 지정
-    headerHeight : 40,
-    showEditedCellMarker : false,
-    // 셀 선택모드 (기본값: singleCell)
-    selectionMode : "multipleCells"
-};
+function createAUIGrid(ind) {
+    var invoAprveGridColLayout = [ {
+        dataField : "appvPrcssNo",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    },{
+        dataField : "appvLineSeq",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    },{
+        dataField : "clamUn",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    },{
+        dataField : "isActive",
+        headerText : '<input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+        width: 30,
+        renderer : {
+            type : "CheckBoxEditRenderer",
+            showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+            editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+            checkValue : "Active", // true, false 인 경우가 기본
+            unCheckValue : "Inactive",
+            // 체크박스 disabled 함수
+            disabledFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
+                if(item.appvPrcssStusCode == "A" || item.appvPrcssStusCode == "J")
+                    return true; // true 반환하면 disabled 시킴
+                return false;
+            }
+        }
+    },{
+        dataField : "clmNo",
+        headerText : '<spring:message code="invoiceApprove.clmNo" />',
+        width : 90
+    },{
+        dataField : "reqstDt",
+        headerText : '<spring:message code="invoiceApprove.reqstDt" />',
+        dataType : "date",
+        formatString : "dd/mm/yyyy"
+    }, {
+        dataField : "codeName",
+        headerText : '<spring:message code="invoiceApprove.clmType" />',
+        style : "aui-grid-user-custom-left"
+    }, {
+        dataField : "costCentr",
+        headerText : '<spring:message code="webInvoice.cc" />'
+    }, {
+        dataField : "costCentrName",
+        headerText : '<spring:message code="webInvoice.ccName" />',
+        style : "aui-grid-user-custom-left"
+    }, {
+        dataField : "memAccId",
+        headerText : '<spring:message code="invoiceApprove.member" />',
+    }, {
+        dataField : "memAccName",
+        headerText : '<spring:message code="invoiceApprove.memberName" />',
+        style : "aui-grid-user-custom-left"
+    }, {
+        dataField : "cur",
+        headerText : '<spring:message code="newWebInvoice.cur" />'
+    }, {
+        dataField : "appvAmt",
+        headerText : '<spring:message code="webInvoice.amount" />',
+        style : "aui-grid-user-custom-right",
+        dataType: "numeric",
+        formatString : "#,##0.00"
+    }, {
+        dataField : "appvPrcssStusCode",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "appvPrcssStus",
+        headerText : '<spring:message code="webInvoice.status" />',
+        style : "aui-grid-user-custom-left"
+    }, /*{
+        dataField : "atchFileGrpId",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "atchFileId",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "atchFileName",
+        headerText : '<spring:message code="newWebInvoice.attachment" />',
+        width : 200,
+        visible : false,
+        labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+            var myString = value;
+            // 로직 처리
+            // 여기서 value 를 원하는 형태로 재가공 또는 포매팅하여 반환하십시오.
+            if(FormUtil.isEmpty(myString)) {
+                myString = '<spring:message code="invoiceApprove.noAtch.msg" />';
+            }
+            return myString;
+         },
+        renderer : {
+            type : "ButtonRenderer",
+            onclick : function(rowIndex, columnIndex, value, item) {
+                console.log("view_btn click item.appvPrcssNo : " + item.appvPrcssNo);
+                console.log("view_btn click atchFileGrpId : " + item.atchFileGrpId + " atchFileId : " + item.atchFileId);
+                console.log("view_btn click item.fileCnt : " + item.fileCnt);
+                if(item.fileCnt > 1) {
+                    //atchFileGrpId = item.atchFileGrpId;
+                    appvPrcssNo = item.appvPrcssNo;
+                    fn_fileListOfAppvPrcssNoPop();
+                } else {
+                    if(item.fileCnt == 1) {
+                        var data = {
+                                atchFileGrpId : item.atchFileGrpId,
+                                atchFileId : item.atchFileId
+                        };
+                        if(item.fileExtsn == "jpg" || item.fileExtsn == "png" || item.fileExtsn == "gif") {
+                            // TODO View
+                            console.log(data);
+                            Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                                console.log(result);
+                                var fileSubPath = result.fileSubPath;
+                                fileSubPath = fileSubPath.replace('\', '/'');
+                                console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                                window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                            });
+                        } else {
+                            Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                                console.log(result);
+                                var fileSubPath = result.fileSubPath;
+                                fileSubPath = fileSubPath.replace('\', '/'');
+                                console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
+                                        + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                                window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
+                                    + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                            });
+                        }
+                    } else {
+                        Common.alert('<spring:message code="invoiceApprove.notFoundAtch.msg" />');
+                    }
+                }
+            }
+        }
+    }, {
+        dataField : "fileExtsn",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "fileCnt",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    },*/ {
+        dataField : "appvPrcssDt",
+        headerText : '<spring:message code="invoiceApprove.appvBrDt" />'
+    }
+    ];
+
+    var vendorAppvGridLayout = [
+    {
+        dataField : "appvPrcssNo",
+        visible : false
+    }, {
+        dataField : "appvLineSeq",
+        visible : false
+    }, {
+        dataField : "isActive",
+        headerText : '<input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+        width: 30,
+        renderer : {
+            type : "CheckBoxEditRenderer",
+            showLabel : false,
+            editable : true,
+            checkValue : "Active",
+            unCheckValue : "Inactive",
+            disabledFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
+                if(item.appvPrcssStusCode == "A" || item.appvPrcssStusCode == "J")
+                    return true;
+                return false;
+            }
+        }
+    }, {
+        dataField : "clmNo",
+        headerText : '<spring:message code="invoiceApprove.clmNo" />',
+        width : "10%"
+    }, {
+        dataField : "requestDt",
+        headerText : "Request Date",
+        width : "8%"
+    }, {
+        dataField : "requestor",
+        headerText : "Requestor",
+        width : "10%"
+    }, {
+        dataField : "vendorGrp",
+        headerText : "Vendor Group",
+        width : "10%"
+    }, {
+        dataField : "vendorName",
+        headerText : "Vendor Name",
+        width : "40%"
+    }, {
+        dataField : "appvPrcssStus",
+        headerText : "Approval Status",
+        width : "10%"
+    }, {
+        dataField : "appvDt",
+        headerText : "Approval Date",
+        width : "8%"
+    }
+    ];
+
+    //그리드 속성 설정
+    var invoAprveGridPros = {
+        // 페이징 사용
+        usePaging : true,
+        // 한 화면에 출력되는 행 개수 20(기본값:20)
+        pageRowCount : 20,
+        // 체크박스 표시 설정
+        showRowCheckColumn : false,
+        showRowNumColumn : false,
+        // 헤더 높이 지정
+        headerHeight : 40,
+        showEditedCellMarker : false,
+        // 셀 선택모드 (기본값: singleCell)
+        selectionMode : "multipleCells"
+    };
+
+    if(ind == "0") {
+        invoAprveGridID = AUIGrid.create("#approve_grid_wrap", invoAprveGridColLayout, invoAprveGridPros);
+    } else {
+        invoAprveGridID = AUIGrid.create("#approve_grid_wrap", vendorAppvGridLayout, invoAprveGridPros);
+    }
+
+    AUIGrid.bind(invoAprveGridID, "cellDoubleClick", function( event ) {
+        console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+        console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
+        //console.log("CellDoubleClick atchFileGrpId : " + event.item.atchFileGrpId);
+
+        // TODO detail popup open
+        appvPrcssNo = event.item.appvPrcssNo;
+        // atchFileGrpId = event.item.atchFileGrpId;
+
+        clmNo = event.item.clmNo;
+        clmType = clmNo.substr(0, 2);
+
+        fn_webInvoiceAppvViewPop();
+    });
+}
 
 var invoAprveGridID;
 
 $(document).ready(function () {
-	invoAprveGridID = AUIGrid.create("#approve_grid_wrap", invoAprveGridColLayout, invoAprveGridPros);
+    console.log("webInvoiceApprove.jsp");
+    createAUIGrid("0");
 
     $("#search_supplier_btn").click(fn_supplierSearchPop);
     $("#search_costCenter_btn").click(fn_costCenterSearchPop);
@@ -194,20 +273,6 @@ $(document).ready(function () {
     $("#approve_btn").click(fn_approveRegistPop);
     $("#reject_btn").click(fn_rejectRegistPop);
     $("#excelDown_btn").click(fn_getAppvExcelInfo);
-
-    AUIGrid.bind(invoAprveGridID, "cellDoubleClick", function( event )
-            {
-                console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-                console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
-                console.log("CellDoubleClick atchFileGrpId : " + event.item.atchFileGrpId);
-                // TODO detail popup open
-                appvPrcssNo = event.item.appvPrcssNo;
-                atchFileGrpId = event.item.atchFileGrpId;
-                var clmNo = event.item.clmNo;
-                clmType = clmNo.substr(0, 2);
-
-                fn_webInvoiceAppvViewPop();
-            });
 
     // ready 이벤트 바인딩
     AUIGrid.bind(invoAprveGridID, "ready", function(event) {
@@ -253,10 +318,42 @@ $(document).ready(function () {
         $("#clmNoEnd").val('${clmNo}');
 
         fn_selectApproveList();
-
-        Common.ajax("POST", "")
     }
+
+    $(":input:radio[name=appGrp]").on('change', function(evt) {
+        fn_changeAppvView();
+    });
+
+    $("#r1v").hide();
 });
+
+function fn_changeAppvView() {
+    if($(":input:radio[name=appGrp]:checked").val() == "0") {
+        // Paydoc Grid
+        AUIGrid.destroy("#approve_grid_wrap");
+        invoAprveGridID = null;
+        //invoAprveGridID = AUIGrid.create("#approve_grid_wrap", invoAprveGridColLayout, invoAprveGridPros);
+        createAUIGrid("0");
+
+        $("#r1").text("Claim Type");
+        $("#r1c").show();
+        $("#r1v").hide();
+
+        $("#appvType").val("0");
+    } else {
+        // Vendor Grid
+        AUIGrid.destroy("#approve_grid_wrap");
+        invoAprveGridID = null;
+        //invoAprveGridID = AUIGrid.create("#approve_grid_wrap", vendorAppvGridLayout, invoAprveGridPros);
+        createAUIGrid("1");
+
+        $("#r1").text("Vendor Group");
+        $("#r1c").hide();
+        $("#r1v").show();
+
+        $("#appvType").val("1");
+    }
+}
 
 //그리드 헤더 클릭 핸들러
 function headerClickHandler(event) {
@@ -381,7 +478,11 @@ function fn_webInvoiceAppvViewPop() {
 
     if(clmType == "A1" || clmType == "R2") {
         url = "/eAccounting/staffAdvance/staffAdvanceAppvViewPop.do";
-    } else {
+    } else if(clmType == "V1") {
+        url = "/eAccounting/vendor/vendorRqstViewPop.do";
+
+        $.extend(data, {reqNo : clmNo});
+    }else {
         url = "/eAccounting/webInvoice/webInvoiceAppvViewPop.do";
     }
 
@@ -627,6 +728,7 @@ function fn_makeGrid(){
 <form action="#" method="post" id="form_approve">
 <input type="hidden" id="memAccName" name="memAccName">
 <input type="hidden" id="costCenterText" name="costCenterText">
+<input type="hidden" id="appvType" name="appvType" value="0">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -638,10 +740,35 @@ function fn_makeGrid(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row"><spring:message code="invoiceApprove.clmType" /></th>
+    <th scope="row">Approval Type</th>
+    <td colspan="3">
+        <label><input type="radio" id="paydoc_radio" name="appGrp" checked="checked" value="0"/>Payment Document</label>
+        <label><input type="radio" id="vendor_radio" name="appGrp" value="1"/>Vendor</label>
+    </td>
+    <!--
+    <th scope="row" id="vendorGrpLabel">Vendor Group</th>
+    <td id="vendorGrpSel">
+        <select class="multy_select" multiple="multiple" id="vendorGrp" name="vendorGrp">
+            <option value="VM02">VM02 - Coway_Suppliers_Foreign</option>
+            <option value="VM03">VM03 - Coway_Supplier_Foreign</option>
+            <option value="VM11">VM11 - Coway_Suppliers_Expense</option>
+        </select>
+    </td>
+     -->
+</tr>
+<tr>
+	<th scope="row" id="r1"><spring:message code="invoiceApprove.clmType" /></th>
 	<td>
-	<select class="w100p" id="clmType" name="clmType" multiple="multiple">
-	</select>
+	    <div id="r1c" class="w100p">
+	        <select class="w100p" id="clmType" name="clmType" multiple="multiple"></select>
+	    </div>
+	    <div id="r1v">
+	        <select class="multy_select" multiple="multiple" id="vendorGrp" name="vendorGrp">
+	            <option value="VM02">VM02 - Coway_Suppliers_Foreign</option>
+	            <option value="VM03">VM03 - Coway_Supplier_Foreign</option>
+	            <option value="VM11">VM11 - Coway_Suppliers_Expense</option>
+	        </select>
+	    </div>
 	</td>
 	<th scope="row"><spring:message code="invoiceApprove.createUser" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="createUser" name="createUser" /><a href="#" class="search_btn" id="search_createUser_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>

@@ -397,7 +397,13 @@ public class WebInvoiceController {
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
 
-		List<EgovMap> list = webInvoiceService.selectApproveList(params);
+		List<EgovMap> list = null;
+
+		if("0".equals(params.get("appvType").toString())) {
+		    list = webInvoiceService.selectApproveList(params);
+		} else {
+		    list = webInvoiceService.selectVendorApproveList(params);
+		}
 
 		return ResponseEntity.ok(list);
 	}

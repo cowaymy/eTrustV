@@ -824,6 +824,10 @@ SELECT T.APPV_PRCSS_NO
                             APPR_MEM_CODE
                         FROM FCM0023M
                         WHERE APPR_GRP = #{apprGrp}
+                        <if test="memCode == 'P0594' ">
+                        UNION
+                        SELECT 'P0594' FROM DUAL
+                        </if>
                     )
                 </if>
         <!-- GROUP BY T1.APPV_PRCSS_NO
@@ -903,6 +907,90 @@ SELECT T.APPV_PRCSS_NO
             AND T.APPV_PRCSS_STUS_CODE = 'A'
         </if>
         ORDER BY T.APPV_PRCSS_NO, T.REQST_DT
+</select>
+
+<select id="selectVendorApproveList" parameterType="Map" resultType="egovMap">
+    SELECT
+	    A.APPV_PRCSS_NO,
+	    B.APPV_LINE_SEQ,
+	    C.VENDOR_REQ_NO CLM_NO,
+	    A.REQST_DT,
+	    D.HR_CODE || ' - ' || E.MEM_ACC_NAME REQUESTOR,
+	    C.VENDOR_GRP,
+	    C.VENDOR_NAME,
+	    CASE B.APPV_STUS WHEN 'R' THEN 'Request'
+	                      WHEN 'A' THEN 'Approved'
+	                      WHEN 'J' THEN 'Rejected'
+	    END APPV_PRCSS_STUS,
+	    B.APPV_STUS APPV_PRCSS_STUS_CODE,
+	    TO_CHAR(B.APPV_DT, 'DD/MM/YYYY') APPV_DT
+	FROM FCM0004M A
+	LEFT JOIN FCM0005D B
+	    ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+	    AND (B.APPV_STUS = 'R' OR B.APPV_STUS = 'A' OR B.APPV_STUS = 'J')
+	    <if test="apprGrp == null or apprGrp == ''">
+	        AND B.APPV_LINE_USER_ID = #{memCode}
+	    </if>
+	    <if test="apprGrp != null and apprGrp != ''">
+	        AND B.APPV_LINE_USER_ID IN (
+	            SELECT
+	                APPR_MEM_CODE
+	            FROM FCM0023M
+	            WHERE APPR_GRP = #{apprGrp}
+	        )
+	    </if>
+	JOIN FCM0029D C
+	    ON A.APPV_PRCSS_NO = C.APPV_PRCSS_NO
+	JOIN SYS0047M D
+	    ON C.CRT_USER_ID = D.USER_ID
+	JOIN FCM0006M E
+	    ON D.HR_CODE = E.MEM_ACC_ID
+	WHERE (A.APPV_PRCSS_STUS = 'R' OR A.APPV_PRCSS_STUS = 'P' OR A.APPV_PRCSS_STUS = 'A' or A.APPV_PRCSS_STUS = 'J')
+	<if test="startDt != null and startDt != ''">
+	    <![CDATA[
+	    AND A.REQST_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
+	    ]]>
+	</if>
+	<if test="endDt != null and endDt != ''">
+	    <![CDATA[
+	    AND A.REQST_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
+	    ]]>
+	</if>
+	<if test="memAccId != null and memAccId != ''">
+	    AND C.VENDOR_ACC_ID = #{memAccId}
+	</if>
+	<if test="createUser != null and createUser != ''">
+	    AND A.REQST_USER_ID = (SELECT USER_NAME FROM SYS0047M WHERE HR_CODE = UPPER(#{createUser}))
+	</if>
+	<if test="costCenter != null and costCenter != ''">
+	    AND C.COST_CENTR) = #{costCenter}
+	</if>
+	<if test="appvPrcssStus != null and appvPrcssStus != '' and ((appStartDt == null or appStartDt == '') and (appEndDt == null or appEndDt == ''))">
+	    AND B.APPV_STUS IN
+	    <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+	        #{item}
+	    </foreach>
+	</if>
+	<if test="clmNoStart != null and clmNoStart != ''">
+	    <![CDATA[
+	    AND C.VENDOR_REQ_NO >= UPPER(#{clmNoStart})
+	    ]]>
+	</if>
+	<if test="clmNoEnd != null and clmNoEnd != ''">
+	    <![CDATA[
+	    AND C.VENDOR_REQ_NO <= UPPER(#{clmNoEnd})
+	    ]]>
+	</if>
+	<if test="appStartDt != null and appStartDt != ''">
+	    <![CDATA[
+	    AND TO_DATE(B.APPV_DT, 'DD/MM/YYYY') >= TO_DATE(#{appStartDt}, 'DD/MM/YYYY')
+	    ]]>
+	</if>
+	<if test="appEndDt != null and appEndDt != ''">
+	    <![CDATA[
+	    AND TO_DATE(B.APPV_DT, 'DD/MM/YYYY') < TO_DATE(#{appEndDt}, 'DD/MM/YYYY') + 1
+	    ]]>
+	</if>
 </select>
 
 <select id="selectAppvLineInfo" parameterType="Map" resultType="egovMap">

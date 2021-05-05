@@ -537,8 +537,8 @@ public class VendorManagementController {
 
 	    model.addAttribute("appvPrcssStus", appvPrcssStus);
 	    model.addAttribute("appvPrcssResult", appvInfoAndItems.get(0).get("appvPrcssStus"));
-	    model.addAttribute("costCenterName", params.get("costCenterName").toString());
-	    model.addAttribute("costCenter", params.get("costCenter").toString());
+//	    model.addAttribute("costCenterName", params.get("costCenterName").toString());
+//	    model.addAttribute("costCenter", params.get("costCenter").toString());
 	    model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
 	    model.addAttribute("vendorInfo", vendorInfo);
 	    model.addAttribute("bankList", bankList);
