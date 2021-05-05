@@ -624,4 +624,9 @@ public interface CustomerMapper {
 
   void updateTokenStagingF(Map<String, Object> params);
 
+  EgovMap getCustStatus(Map<String, Object> params);
+
+  int selCustRcdTms(Map<String, Object> params);
+
+  void updateCustomerStatus(Map<String, Object> params);
 }

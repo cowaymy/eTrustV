@@ -50,6 +50,7 @@ import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
@@ -2676,5 +2677,41 @@ public class CustomerController {
       message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
       return ResponseEntity.ok(message);
+  }
+
+  @RequestMapping(value = "/customerEditDeactivatePop.do")
+  public String customerEditDeactivatePop(@RequestParam Map<String, Object> params, Model model) {
+
+    model.addAttribute("custInfo",params);
+
+    return "sales/customer/customerEditDeactivatePop";
+  }
+
+  @RequestMapping(value = "/validCustStatus.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> validCustStatus(@RequestParam Map<String, Object> params)throws Exception {
+
+      EgovMap result = customerService.validCustStatus(params);
+
+      return ResponseEntity.ok(result);
+  }
+
+  @RequestMapping(value = "/updateCustStatus.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> updateCustStatus(@RequestBody Map<String, Object> params, SessionVO sessionVO)throws Exception {
+
+    System.out.println(params);
+    params.put("userId",sessionVO.getUserId());
+
+    int record = customerService.updateCustStatus(params);
+
+    ReturnMessage message = new ReturnMessage();
+    if(record > 0){
+      message.setCode(AppConstants.SUCCESS);
+      message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    }else{
+      message.setCode(AppConstants.FAIL);
+      message.setMessage("Fail to update due to record had been updated by other user.");
+    }
+
+    return ResponseEntity.ok(message);
   }
 }

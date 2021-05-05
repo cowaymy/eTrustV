@@ -141,7 +141,7 @@
                                             CASE WHEN (964 <> S1.TYPE_ID) THEN '' WHEN (S1.CODE_ID2 IS NOT NULL) THEN S1.CODE_NAME2 ELSE '' END AS CODE_NAME2,
                                             CASE WHEN (S1.STUS_CODE_ID1 IS NOT NULL) THEN   S1.STUS_CODE_ID1 ELSE 0 END AS STUS_CODE_ID,
                                             CASE WHEN (S1.UPD_USER_ID1 IS NOT NULL) THEN S1.UPD_USER_ID1 ELSE 0 END AS UPD_USER_ID,
-                                            CASE WHEN S1.UPD_DT1 IS NOT NULL THEN   S1.UPD_DT1 ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END AS UPD_DT,
+                                            CASE WHEN S1.UPD_DT1 IS NOT NULL THEN  TO_CHAR(S1.UPD_DT1,'YYYYMMDDHH24MISS') ELSE '01/01/1900' END AS UPD_DT,
                                             CASE WHEN (S1.USER_ID2 IS NOT NULL) THEN S1.USER_NAME2 ELSE '' END AS USER_NAME2,
                                             CASE WHEN (S1.CUST_ADD_ID IS NOT NULL) THEN S1.CUST_ADD_ID ELSE 0 END AS CUST_ADD_ID,
                                             CASE WHEN (S1.CUST_CNTC_ID IS NOT NULL) THEN S1.CUST_CNTC_ID ELSE 0 END AS CUST_CNTC_ID,
@@ -2887,6 +2887,66 @@
           STATUS = 21
       WHERE TKN_ID = LTRIM(TO_NUMBER(SUBSTR(#{refId}, 37, 10)))
         AND REF_NO = #{refId}
+  </update>
+
+  <select id="getCustStatus" parameterType="Map" resultType="egovMap">
+      WITH S AS (
+          SELECT * FROM (
+              SELECT S.CUST_ID
+                      , CASE WHEN S.SALES_ORD_NO IS NOT NULL THEN 'X' ELSE NULL END ISVALID
+                      , S.STUS_CODE_ID
+                      , CCP.CCP_STUS_ID
+                      , I.STUS_CODE_ID INS_STUS
+              FROM SAL0001D S
+              LEFT JOIN SAL0102D CCP ON CCP.CCP_SALES_ORD_ID = S.SALES_ORD_ID
+              LEFT JOIN (
+              SELECT * FROM
+                  (SELECT
+                      SALES_ORD_ID,
+                      STUS_CODE_ID,
+                      ROW_NUMBER() OVER (PARTITION BY SALES_ORD_ID ORDER BY INSTALL_ENTRY_ID desc) ROWN
+                  FROM SAL0046D
+                  )
+                  WHERE ROWN = 1
+              ) I ON I.SALES_ORD_ID = S.SALES_ORD_ID
+
+              )
+              <if test='action == "EDIT"'>
+                WHERE STUS_CODE_ID = 10 OR (CCP_STUS_ID = 5 AND INS_STUS = 1)
+              </if>
+              <if test='action == "DEACTIVE"'>
+                WHERE STUS_CODE_ID IN (1,4) OR (CCP_STUS_ID = 1)
+              </if>
+          )
+      SELECT C.CUST_ID
+           , ROUND(SYSDATE-C.CRT_DT,0) CRT_DT_DIFF
+           , S.ISVALID
+      FROM SAL0029D C
+      LEFT JOIN S ON S.CUST_ID = C.CUST_ID
+      WHERE C.CUST_ID = #{custId}
+      AND ROWNUM = 1
+  </select>
+
+  <select id="selCustRcdTms" parameterType="Map" resultType="int">
+    SELECT COUNT(*) COUNT
+    FROM SAL0029D
+    WHERE CUST_ID = #{custId}
+      AND TO_CHAR(UPD_DT,'YYYYMMDDHH24MISS') = #{rcdTms}
+  </select>
+
+  <update id="updateCustomerStatus" parameterType="Map">
+    UPDATE SAL0029D
+    SET
+        UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+        <if test='action == "EDIT"'>
+          , NRIC = #{nric}
+        </if>
+        <if test='action == "DEACTIVE"'>
+          , STUS_CODE_ID = 8
+        </if>
+
+    WHERE CUST_ID = #{custId}
   </update>
 
 </mapper>

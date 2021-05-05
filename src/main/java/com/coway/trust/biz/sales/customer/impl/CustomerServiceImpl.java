@@ -961,4 +961,19 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
       customerMapper.updateTokenStagingF(params);
   }
 
+  @Override
+  public EgovMap validCustStatus(Map<String, Object> params) {
+    return customerMapper.getCustStatus(params);
+  }
+
+  @Override
+  public int updateCustStatus(Map<String, Object> params) {
+
+    int count = customerMapper.selCustRcdTms(params);
+
+    if(count > 0) customerMapper.updateCustomerStatus(params);
+
+    return count;
+  }
+
 }

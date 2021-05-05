@@ -583,4 +583,9 @@ public interface CustomerService {
 
   void updateTokenStagingF(Map<String, Object> params);
 
+  EgovMap validCustStatus(Map<String, Object> params);
+
+  int updateCustStatus(Map<String, Object> params);
+
+
 }
