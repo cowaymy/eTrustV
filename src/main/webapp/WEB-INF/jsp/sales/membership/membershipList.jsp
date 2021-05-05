@@ -191,13 +191,17 @@
               return ;
           }
 
-          if (selectedItems[0].item.mbrshStusCode == 'ACT'){
+          // Temporary removed by Hui Ding - wait until Billing enhancement complete. 2021-05-05
+          /* if (selectedItems[0].item.mbrshStusCode == 'ACT'){
         	  var pram  ="?MBRSH_ID="+selectedItems[0].item.mbrshId+"&ORD_ID="+selectedItems[0].item.ordId + "&ACTION=EDIT";
               Common.popupDiv("/sales/membership/selMembershipView.do"+pram, null, null, true, 'membershipDtlDiv');
           } else {
         	  Common.alert("Edit only applicable to ACT status membership.");
               return ;
-          }
+          } */
+
+          var pram  ="?MBRSH_ID="+selectedItems[0].item.mbrshId+"&ORD_ID="+selectedItems[0].item.ordId + "&ACTION=EDIT";
+          Common.popupDiv("/sales/membership/selMembershipView.do"+pram, null, null, true, 'membershipDtlDiv');
 
 	  }
 
