@@ -68,6 +68,18 @@
             fn_selectPstRequestDOListAjax();
         });
 
+        $("#_editDeactCustomer").click(function() {
+        	var gridObj = AUIGrid.getSelectedItems(custGridID);
+
+        	var param = gridObj[0].item;
+            if(gridObj == null || gridObj.length <= 0 ){
+                Common.alert('<spring:message code="sal.alert.msg.noCustSel" />');
+                return;
+            }else{
+                Common.popupDiv("/sales/customer/customerEditDeactivatePop.do", param, null, true, '_editDiv7');
+            }
+        });
+
 
         //Basic Auth (update Btn)
         if('${PAGE_AUTH.funcUserDefine2}' == 'Y'){
@@ -390,6 +402,10 @@
             <c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">
             <li><p class="link_btn"><a href="#" id="tokenTest" onclick="javascript:fn_tokenTest()">Tokenization Test (IT Usage only)</a></p></li>
             </c:if>
+            <c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
+            <li><p class="link_btn"><a href="#" id="_editDeactCustomer">Edit/Deactivate Customer</a></p></li>
+            </c:if>
+
         </ul>
         <ul class="btns">
         </ul>
