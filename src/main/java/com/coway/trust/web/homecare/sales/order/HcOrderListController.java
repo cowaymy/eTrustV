@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -19,8 +20,11 @@ import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.HomecareCmService;
 import com.coway.trust.biz.homecare.sales.order.HcOrderListService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -40,6 +44,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/homecare/sales/order")
 public class HcOrderListController {
+
+	private static Logger logger = LoggerFactory.getLogger(HcOrderListController.class);
 
     @Resource(name = "hcOrderListService")
     private HcOrderListService hcOrderListService;
@@ -64,7 +70,7 @@ public class HcOrderListController {
      * @throws ParseException
      */
     @RequestMapping(value = "/hcOrderList.do")
-    public String main(@RequestParam Map<String, Object> params, ModelMap model) throws ParseException {
+    public String main(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
         String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,
                 SalesConstants.DEFAULT_DATE_FORMAT1);
         String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
@@ -87,6 +93,17 @@ public class HcOrderListController {
 
         // Product
         List<EgovMap> productList_1 = hcOrderListService.selectProductCodeList();
+
+        if(sessionVO.getUserTypeId() != 4 && sessionVO.getUserTypeId() != 6) {
+		    params.put("userId", sessionVO.getUserId());
+		    EgovMap result =  hcOrderListService.getOrgDtls(params);
+
+		    model.put("memId", result.get("memId"));
+		    model.put("memCode", result.get("memCode"));
+		    model.put("orgCode", result.get("orgCode"));
+		    model.put("grpCode", result.get("grpCode"));
+		    model.put("deptCode", result.get("deptCode"));
+		}
 
         model.put("bfDay", bfDay);
         model.put("toDay", toDay);
@@ -111,7 +128,7 @@ public class HcOrderListController {
 	 * @return
 	 */
 	@RequestMapping(value = "/selectHcOrderList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectHcOrderList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectHcOrderList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
 		String[] arrAppType       	= request.getParameterValues("appType"); 		// Application Type
 		String[] arrOrdStusId      	= request.getParameterValues("ordStusId"); 		// Order Status
@@ -133,6 +150,17 @@ public class HcOrderListController {
 		if(arrRentStus      	!= null && !CommonUtils.containsEmpty(arrRentStus))        	params.put("arrRentStus", arrRentStus);
 		if(arrProd        != null && !CommonUtils.containsEmpty(arrProd))         params.put("arrProd", arrProd);
 
+		if(sessionVO.getUserTypeId() != 4 && sessionVO.getUserTypeId() != 6) {
+		    params.put("memType", sessionVO.getUserTypeId());
+		    params.put("memlvl", sessionVO.getMemberLevel());
+		}
+		if(params.containsKey("salesmanCode")) {
+            if(!"".equals(params.get("salesmanCode").toString())) {
+                int memberID = hcOrderListService.getMemberID(params);
+                params.put("memID", memberID);
+            }
+        }
+		logger.debug("params ===========> " + params);
 		// 데이터 리턴.
 		return ResponseEntity.ok(hcOrderListService.selectHcOrderList(params));
 	}

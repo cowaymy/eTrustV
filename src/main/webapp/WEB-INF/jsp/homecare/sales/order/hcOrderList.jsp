@@ -30,7 +30,7 @@
     </c:forEach>
 
     var productList = [];
-    <c:forEach var="obj" items="${productList_1}">
+    <c:forEach var="obj" items="${productList_1}">1
     productList.push({codeId:"${obj.code}", codeName:"${obj.codeName}", code:"${obj.code}"});
     </c:forEach>
 
@@ -41,6 +41,23 @@
 
             if("${SESSION_INFO.memberLevel}" =="3" || "${SESSION_INFO.memberLevel}" =="4"){
                 $("#btnReq").hide();
+            }
+        }
+
+        if("${SESSION_INFO.userTypeId}" != "4" && "${SESSION_INFO.userTypeId}" != "6") {
+            $("#orgCode").attr("readonly", true);
+            $("#grpCode").attr("readonly", true);
+            $("#deptCode").attr("readonly", true);
+
+            console.log('memberLevel: ' + "${SESSION_INFO.memberLevel}");
+            if("${SESSION_INFO.memberLevel}" =="2")
+            {
+                $("#deptCode").attr("readonly", false);
+            }
+            if("${SESSION_INFO.memberLevel}" =="1")
+            {
+                $("#grpCode").attr("readonly", false);
+                $("#deptCode").attr("readonly", false);
             }
         }
 
@@ -641,6 +658,7 @@
 
         <form id="listSearchForm" name="listSearchForm" action="#" method="post" autocomplete=off>
             <input id="listSalesOrderId" name="salesOrderId" type="hidden" />
+            <input id="memId" name="memId" type="hidden" value="${memId}"/>
             <table class="type1">
                 <!-- table start -->
                 <caption>table</caption>
@@ -740,6 +758,14 @@
                         <td><input id="listPromoCode" name="promoCode" type="text" title="Promotion Code" placeholder="<spring:message code='sales.promoCd'/>" class="w100p" /></td>
                         <th scope="row"><spring:message code='sales.relatedNo2' /></th>
                         <td><input id="listRelatedNo" name="relatedNo" type="text" title="Related No(Exchange)" placeholder="<spring:message code='sales.relatedNo2'/>" class="w100p" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Org Code</th>
+                        <td><input type="text" title="orgCode" id="orgCode" name="orgCode" onkeyup="this.value = this.value.toUpperCase();" placeholder="Org Code" class="w100p" value="${orgCode}"/></td>
+                        <th scope="row">Grp Code</th>
+                        <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  onkeyup="this.value = this.value.toUpperCase();" placeholder="Grp Code" class="w100p" value="${grpCode}"/></td>
+                        <th scope="row">Dept Code</th>
+                        <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  onkeyup="this.value = this.value.toUpperCase();" placeholder="Dept Code" class="w100p" value="${deptCode}"/></td>
                     </tr>
                     <tr>
                         <th scope="row"><spring:message code='sales.isEKeyin' /></th>

@@ -51,5 +51,7 @@ public interface HcOrderListService {
   public EgovMap selectProductInfo(String salesOrdId);
 
   public List<EgovMap> selectProductCodeList();
+  int getMemberID(Map<String, Object> params);
+  EgovMap getOrgDtls(Map<String, Object> params);
 
 }

@@ -77,4 +77,14 @@ public class HcOrderListServiceImpl extends EgovAbstractServiceImpl implements H
   public List<EgovMap> selectProductCodeList() {
     return hcOrderListMapper.selectProductCodeList();
   }
+
+  @Override
+  public int getMemberID(Map<String, Object> params) {
+      return hcOrderListMapper.getMemberID(params);
+  }
+
+  @Override
+  public EgovMap getOrgDtls(Map<String, Object> params) {
+      return hcOrderListMapper.getOrgDtls(params);
+  }
 }
