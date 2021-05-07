@@ -48,7 +48,10 @@ public class CalendarController {
 	private CalendarService calendarService;
 
 	@RequestMapping(value = "/initCalendar.do")
-	public String initCalendar(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception  {
+	public String initCalendar(@RequestParam Map<String, Object> params
+			, ModelMap model
+			, SessionVO sessionVO
+			, HttpServletRequest request) throws Exception  {
 
 		logger.debug("==== initCalendar Params: " + params.toString());
 
@@ -70,10 +73,12 @@ public class CalendarController {
 
 		params.put("calMonthYear", monthYear);
 
-		if (sessionVO.getUserTypeId() != 1 && sessionVO.getUserTypeId() != 2 && sessionVO.getUserTypeId() != 7) {
-			params.put("calMemType", 4);
-		} else {
-			params.put("calMemType", (int) sessionVO.getUserTypeId());
+		params.put("calMemType", (int) sessionVO.getUserTypeId());
+
+		if (sessionVO.getUserTypeId() == 4) { //Staff
+			request.getSession().setAttribute("calAllowUpload", "Y");
+		} else { // Non-Staff
+			request.getSession().setAttribute("calAllowUpload", "N");
 		}
 
 		List<EgovMap> eventList = calendarService.selectCalendarEventList(params);

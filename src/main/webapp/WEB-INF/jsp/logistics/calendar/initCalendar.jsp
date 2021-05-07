@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<!-- TODO Yong: tidy up calendar CSS styling -->
 <script type="text/javaScript" language="javascript">
 
 $(document).ready(function(){
@@ -20,7 +21,7 @@ $(document).ready(function(){
     $("#displayMth").text(monthNames[ "${displayMth}" - 1]);
     $("#displayYear").text("${displayYear}");
 
-    fn_setSearchAttr(); //20210430 Yong: set fields back to values used in previous search, because ajax calls are not used. consider refactoring to use ajax
+    fn_setSearchAttr(); //20210430 Yong: set fields back to values used in previous search, because ajax not used. Consider refactoring to use ajax
     fn_setMemTypeVisibility();
 
 });
@@ -63,8 +64,7 @@ function fn_setSearchAttr() {
 function fn_setMemTypeVisibility() {
 	var userType = '${SESSION_INFO.userTypeId}';
 
-	if(userType != 1 && userType != 2 && userType != 7) {
-	    //$("#calMemType").val(4); //default to Staff view
+	if(userType == 4) { //Staff view
 	    $("#rowMemType").show();
 	} else {
 		$("#calMemType").val(userType);
@@ -118,15 +118,16 @@ function fn_setMemTypeVisibility() {
 </section><!-- search_table end -->
 
 <aside class="link_btns_wrap">
-<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+
+<%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'} "> --%>
+<!-- Yong 20210705: PAGE_AUTH not used for validation because it only works when Calendar menu is clicked. When Calendar Search is clicked, the validation will fail -->
+<c:if test="${sessionScope.calAllowUpload eq 'Y'}">
     <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
         <dl class="link_list">
             <dt>Link</dt>
             <dd>
                 <ul class="btns">
                     <li><p class="link_btn"><a href="javascript:fn_eventUploadPopup();"><spring:message code='cal.btn.link.uploadEvent'/></a></p></li>
-<%--            <li><p class="link_btn"><a href="javascript:fn_viewBatchPopup();"><spring:message code='pay.btn.link.viewBatchPayment'/></a></p></li> --%>
-<%--            <li><p class="link_btn"><a href="javascript:fn_confirmEventPopup();"><spring:message code='cal.btn.link.confirmEvent'/></a></p></li> --%>
                 </ul>
                 <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
             </dd>
