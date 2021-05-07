@@ -252,7 +252,7 @@
     </select>
 
     <select id="getNextMdnNo" parameterType="Map" resultType="egovMap">
-        SELECT 'MDN' || TO_CHAR (SYSDATE, 'YYMMDD') || LPAD (MDN_SEQ.NEXTVAL, 5, '0') mdnno
+        SELECT 'MDN' || TO_CHAR (SYSDATE, 'YYMMDD') || LPAD (MDN_SEQ.NEXTVAL, 6, '0') mdnno
               FROM DUAL
     </select>
 
