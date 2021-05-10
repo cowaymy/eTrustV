@@ -115,7 +115,7 @@ public class MemberGroupListController {
 
 	    List<EgovMap> list = groupService.selectGroupMstList(params);
 
-	    LOGGER.debug("list =====================================>>  " + list.toString());
+	    LOGGER.debug("list ======================================>>  " + list.toString());
 	    return ResponseEntity.ok(list);
 	}
 
