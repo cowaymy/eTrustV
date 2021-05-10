@@ -6,13 +6,14 @@
     SELECT /* [com.coway.trust.biz.payment.payment.service.impl.CashMatchingMapper.selectCashMatching] 20191017 - KR HAN */
                Extent1.MOB_PAY_NO MOB_PAY_NO
              , Extent1.SALES_ORD_NO SALES_ORD_NO
-             <!-- , Extent1.PAY_AMT PAY_AMT -->
-             ,     CASE WHEN Extent1.PAY_MODE = '5698' THEN Extent1.PAY_AMT || ' - ' || 'CASH'
-                   ELSE Extent1.PAY_AMT || ' - ' || 'CHQ'
-                   END AS PAY_AMT
-             , Extent1.UPLOAD_IMG3 UPLOAD_IMG3
+             , Extent1.PAY_AMT PAY_AMT
              , TO_CHAR(Extent1.CRT_DT, 'DD/MM/YYYY') SALES_DT
-             , EXTENT3.NAME NAME
+            <!--  , EXTENT3.NAME NAME -->
+
+             ,     CASE WHEN Extent1.PAY_MODE = '5698' THEN EXTENT3.NAME || ' - ' || 'CASH'
+                   ELSE EXTENT3.NAME || ' - ' || 'CHQ'
+                   END AS NAME
+
              , CASE WHEN Extent1.PAY_MODE = '5698' THEN 'CASH'
                ELSE 'CHQ'
                END AS PAY_MODE
