@@ -11,6 +11,7 @@ public class GroupRawDataVO {
 	private String transDate;
 	private String memberCodeTo;
 	private String groupMemberType;
+	
 
 
 
