@@ -18,7 +18,7 @@ function fn_uploadFile() {
     } else {
 
     var formData = new FormData();
-    //formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
+    //formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]) ;
     formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
 
     Common.ajaxFile("/organization/groupCsvUpload", formData, function (result) {

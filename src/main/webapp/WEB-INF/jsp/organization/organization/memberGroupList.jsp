@@ -140,7 +140,7 @@
                 width : 140,
                 editable : false,
                 style: 'left_style'
-            }, */
+            },  */
             {
                 dataField : "userName",
                 headerText : "<spring:message code='sal.text.creator' />",

@@ -107,7 +107,7 @@ function fn_closePopAndReload() {
     <li><p class="btn_blue2"><a href="#" id="close_btn"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>
 
-</header><!-- pop_header end -->
+</header><!-- pop_header end   -->
 
 <section class="pop_body"><!-- pop_body start -->
 
