@@ -94,7 +94,7 @@ ORDER BY A.GROUP_BATCH_DT DESC
   </insert>
 
         <insert id="insertGroupDtl" parameterType="Map">
-<!--        INSERT INTO SAL0273D(
+<!--         INSERT INTO SAL0273D(
         LOYALTY_HP_DTL_ID
         ,LOYALTY_HP_BATCH_ID
         ,SALES_ORD_NO
