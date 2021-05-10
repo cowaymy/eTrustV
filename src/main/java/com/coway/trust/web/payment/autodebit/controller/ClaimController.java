@@ -1996,8 +1996,7 @@ public class ClaimController {
           String emailTxt = fileInfoConf.get("ctrlEmailText").toString();
 
           EmailVO email = new EmailVO();
-          //email.setTo(emailReceiver);
-          email.setTo("jiahua.yong@coway.com.my"); //temp set for DEV testing
+          email.setTo(emailReceiver);
           email.setHtml(false);
           email.setSubject(emailSubj);
           email.setText(emailTxt);
@@ -2798,6 +2797,9 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
   }
   */
 
+  	/**
+  	 *20210323 - fileDownClaim method added by Yong
+  	 */
 	@RequestMapping(value = "/downloadClaimFile.do", method = RequestMethod.POST)
 	public void fileDownClaim(	@RequestParam("dloadPathAndName") String dloadPathAndName,
 										HttpServletRequest request,
