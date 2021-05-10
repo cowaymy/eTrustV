@@ -9,6 +9,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("groupMapper")
 public interface GroupMapper {
 
+
 	int selectNextBatchId();
 
 	int selectNextDetId();
