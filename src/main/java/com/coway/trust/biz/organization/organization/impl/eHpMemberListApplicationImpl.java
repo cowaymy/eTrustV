@@ -22,9 +22,6 @@ import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.organization.organization.eHpMemberListApplication;
 //import com.coway.trust.biz.organization.organization.impl.eHPmemberListMapper;
 
-
-
-
   @Service("eHpMemberListApplication")
   public class eHpMemberListApplicationImpl implements eHpMemberListApplication {
 
