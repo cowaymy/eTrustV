@@ -1019,6 +1019,13 @@ function fn_winClose(){
     <span><span><c:out value="${PAExpired.agExprDt}"/></span></span>
     </td>
 </tr>
+<tr>
+<th scope="row">Coway Mall Link</th>
+    <td colspan="5">
+    <span><span>emall.coway.com.my/?agentcode=<c:out value="${memberView.memCode}"/></span></span>
+    <!--  <a href="https://coway-uat.ascentisecommerce.com/?agentcode=" +${memberView.memCode}>https://coway-uat.ascentisecommerce.com/?agentcode=<c:out value="${memberView.memCode}"/></a>-->
+    </td>
+</tr>
 </tbody>
 </table><!-- table end -->
 <%--
