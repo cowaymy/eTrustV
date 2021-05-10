@@ -18,6 +18,7 @@ import com.coway.trust.biz.sales.customer.impl.LoyaltyHpMapper;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
+
 @Service("groupService")
 public class GroupServiceImpl implements GroupService {
 
