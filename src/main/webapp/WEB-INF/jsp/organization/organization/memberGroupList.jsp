@@ -5,7 +5,7 @@
 
     var myGridID;
 
- //  화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
+ // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
     $(document).ready(function(){
 
         // AUIGrid 그리드를 생성합니다.
@@ -45,28 +45,28 @@
 
 /*     function fn_confirmPopup(){
 
-    	var activeItems = AUIGrid.getCheckedRowItems(myGridID);
+        var activeItems = AUIGrid.getCheckedRowItems(myGridID);
 
-    	if (activeItems.length > 1) {
-    		Common.alert("Please choose only one request.");
-    		return;
-    	} else if (activeItems.length == 0) {
-    		if(stusId != 60  ){
+        if (activeItems.length > 1) {
+            Common.alert("Please choose only one request.");
+            return;
+        } else if (activeItems.length == 0) {
+            if(stusId != 60  ){
                 Common.alert("Only event [In Progress] status is allowed.");
                 return;
             } else {
-            	Common.popupDiv("/organization/getMemberEventDetailPop.do?isPop=true&promoId=" + promoId, "");
+                Common.popupDiv("/organization/getMemberEventDetailPop.do?isPop=true&promoId=" + promoId, "");
             }
         }
 
-    	for(var i in activeItems){
-    		if(activeItems[i].item.stusId != 60  ){
-    			Common.alert("Only event [In Progress] status is allowed.");
-    			return;
-    		} else {
-    			Common.popupDiv("/organization/getMemberEventDetailPop.do?isPop=true&promoId=" + activeItems[0].item.promoId, "");
-    		}
-    	}
+        for(var i in activeItems){
+            if(activeItems[i].item.stusId != 60  ){
+                Common.alert("Only event [In Progress] status is allowed.");
+                return;
+            } else {
+                Common.popupDiv("/organization/getMemberEventDetailPop.do?isPop=true&promoId=" + activeItems[0].item.promoId, "");
+            }
+        }
     } */
 
  // AUIGrid 생성 후 반환 ID
@@ -160,7 +160,7 @@
      // 그리드 속성 설정
          var gridPros = {
 
-        		 usePaging           : true,         //페이징 사용
+                 usePaging           : true,         //페이징 사용
                  pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
                  editable            : false,
                  fixedColumnCount    : 1,
@@ -182,94 +182,94 @@
 
     /* function createAUIGrid(){
         // AUIGrid 칼럼 설정
-	    var columnLayout = [
-	         {
-	        	 dataField : "groupBatchId",
-	                headerText : "<spring:message code='sal.title.text.batchNo' />",
-	                width : 130,
-	                editable : false,
-	                style: 'left_style'
+        var columnLayout = [
+             {
+                 dataField : "groupBatchId",
+                    headerText : "<spring:message code='sal.title.text.batchNo' />",
+                    width : 130,
+                    editable : false,
+                    style: 'left_style'
               }, {
                   dataField : "branchid",
                   headerText : "branchid",
                   width:0
               },{
-	              dataField : "eventdt",
-	              headerText : "eventdt",
-	              width:0
-	          },{
+                  dataField : "eventdt",
+                  headerText : "eventdt",
+                  width:0
+              },{
                     dataField : "promoId",
                     headerText : "promo ID.",
                     width : 120,
                     visible:false
                 }, {
-	                dataField : "reqstNo",
-	                headerText : "Request No.",
-	                width : 120
-	            }, {
-	                dataField : "typeDesc",
-	                headerText : "Req Type",
-	                width : 120
-	            }, {
-	                dataField : "code",
-	                headerText : "Member Type",
-	                width : 120
-	            }, {
-	                dataField : "memCode",
-	                headerText : "Member Code.",
-	                width : 120
-	            }, {
-	                dataField : "name",
-	                headerText : "Member Name.",
-	                width : 120
-	            }, {
-	                dataField : "c1",
-	                headerText : "Level (From)",
-	                width : 120
-	            }, {
-	                dataField : "c2",
-	                headerText : "Level (To)",
-	                width : 120
-	            }, {
-	                dataField : "name1",
-	                headerText : "Status",
-	                width : 120
-	            }, {
-	                dataField : "userName",
-	                headerText : "ReqBy",
-	                width : 120
-	            }, {
-	                dataField : "crtDt",
-	                headerText : "ReqAt",
-	                width : 120
-	            }, {
+                    dataField : "reqstNo",
+                    headerText : "Request No.",
+                    width : 120
+                }, {
+                    dataField : "typeDesc",
+                    headerText : "Req Type",
+                    width : 120
+                }, {
+                    dataField : "code",
+                    headerText : "Member Type",
+                    width : 120
+                }, {
+                    dataField : "memCode",
+                    headerText : "Member Code.",
+                    width : 120
+                }, {
+                    dataField : "name",
+                    headerText : "Member Name.",
+                    width : 120
+                }, {
+                    dataField : "c1",
+                    headerText : "Level (From)",
+                    width : 120
+                }, {
+                    dataField : "c2",
+                    headerText : "Level (To)",
+                    width : 120
+                }, {
+                    dataField : "name1",
+                    headerText : "Status",
+                    width : 120
+                }, {
+                    dataField : "userName",
+                    headerText : "ReqBy",
+                    width : 120
+                }, {
+                    dataField : "crtDt",
+                    headerText : "ReqAt",
+                    width : 120
+                }, {
                     dataField : "stusId",
                     headerText : "",
                     width : 0
 
 
-		    }];
-		    // 그리드 속성 설정
-		    var gridPros = {
+            }];
+            // 그리드 속성 설정
+            var gridPros = {
 
-		    		 usePaging           : true,         //페이징 사용
-	                 pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
-	                 editable            : false,
-	                 fixedColumnCount    : 1,
-	                 showStateColumn     : false,
-	                 displayTreeOpen     : false,
-	                 selectionMode       : "singleRow",  //"multipleCells",
-	                 headerHeight        : 30,
-	                 useGroupingPanel    : false,        //그룹핑 패널 사용
-	                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-	                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-	                 showRowNumColumn    : true ,       //줄번호 칼럼 렌더러 출력
-	                 showRowCheckColumn : true,
-	                 showRowAllCheckBox : true
+                     usePaging           : true,         //페이징 사용
+                     pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+                     editable            : false,
+                     fixedColumnCount    : 1,
+                     showStateColumn     : false,
+                     displayTreeOpen     : false,
+                     selectionMode       : "singleRow",  //"multipleCells",
+                     headerHeight        : 30,
+                     useGroupingPanel    : false,        //그룹핑 패널 사용
+                     skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                     wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                     showRowNumColumn    : true ,       //줄번호 칼럼 렌더러 출력
+                     showRowCheckColumn : true,
+                     showRowAllCheckBox : true
 
-		    };
-		            //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-		        myGridID = AUIGrid.create("#list_grid_wrap", columnLayout, gridPros);
+            };
+                    //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
+                myGridID = AUIGrid.create("#list_grid_wrap", columnLayout, gridPros);
     } */
 
 
