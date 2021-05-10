@@ -6,7 +6,10 @@
     SELECT /* [com.coway.trust.biz.payment.payment.service.impl.CashMatchingMapper.selectCashMatching] 20191017 - KR HAN */
                Extent1.MOB_PAY_NO MOB_PAY_NO
              , Extent1.SALES_ORD_NO SALES_ORD_NO
-             , Extent1.PAY_AMT PAY_AMT
+             <!-- , Extent1.PAY_AMT PAY_AMT -->
+             ,     CASE WHEN Extent1.PAY_MODE = '5698' THEN Extent1.PAY_AMT || ' - ' || 'CASH'
+                   ELSE Extent1.PAY_AMT || ' - ' || 'CHQ'
+                   END AS PAY_AMT
              , Extent1.UPLOAD_IMG3 UPLOAD_IMG3
              , TO_CHAR(Extent1.CRT_DT, 'DD/MM/YYYY') SALES_DT
              , EXTENT3.NAME NAME
@@ -16,7 +19,7 @@
     FROM PAY0297D Extent1
     LEFT JOIN SAL0001D Extent2 ON Extent1.SALES_ORD_NO = Extent2.SALES_ORD_NO
     LEFT JOIN SAL0029D Extent3 ON Extent2.CUST_ID = Extent3.CUST_ID
-    WHERE Extent1.PAY_MODE in ('5698')
+    WHERE Extent1.PAY_MODE in ('5698','5697')
         AND Extent1.UPLOAD_IMG IS NULL
         AND Extent1.SLIP_NO IS NULL
         AND Extent1.CRT_USER_ID = #{userId}
