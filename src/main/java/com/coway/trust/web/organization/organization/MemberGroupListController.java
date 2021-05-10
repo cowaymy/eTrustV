@@ -172,6 +172,7 @@ public class MemberGroupListController {
 		    }
 
 		return ResponseEntity.ok(message);
+
 	}
 
 
