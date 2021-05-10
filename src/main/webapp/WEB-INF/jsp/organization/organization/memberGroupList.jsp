@@ -5,7 +5,7 @@
 
     var myGridID;
 
- // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
+ //  화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
     $(document).ready(function(){
 
         // AUIGrid 그리드를 생성합니다.
