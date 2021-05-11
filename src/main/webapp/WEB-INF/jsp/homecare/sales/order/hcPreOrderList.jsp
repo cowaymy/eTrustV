@@ -307,18 +307,19 @@
                     if(memRc.rookie == 1) {
                         if(memRc.rcPrct < 50) {
                             Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%.");
-                        } else {
-                             // 20190925 KR-OHK Moblie Popup Setting
-                             if(Common.checkPlatformType() == "mobile") {
-                                popupObj = Common.popupWin("frmNew", "/homecare/sales/order/hcPreOrderRegisterPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
-                            } else{
-                                Common.popupDiv("/homecare/sales/order/hcPreOrderRegisterPop.do", null, null, true, '_divPreOrdRegPop');
-                            }
+                            return false;
                         }
                     } else {
                         Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
                         return false;
                     }
+                }
+
+                // 20190925 KR-OHK Moblie Popup Setting
+                if(Common.checkPlatformType() == "mobile") {
+                    popupObj = Common.popupWin("frmNew", "/homecare/sales/order/hcPreOrderRegisterPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
+                } else{
+                    Common.popupDiv("/homecare/sales/order/hcPreOrderRegisterPop.do", null, null, true, '_divPreOrdRegPop');
                 }
 
             });
