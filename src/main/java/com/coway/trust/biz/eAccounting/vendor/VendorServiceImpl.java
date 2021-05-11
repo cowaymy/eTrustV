@@ -89,8 +89,8 @@ public class VendorServiceImpl implements VendorService {
 	}
 
 	@Override
-	public String selectMemberID(String regCompNo) {
-		return vendorMapper.selectMemberID(regCompNo);
+	public String selectMemberCode(String memId) {
+		return vendorMapper.selectMemberCode(memId);
 	}
 
 	@Override

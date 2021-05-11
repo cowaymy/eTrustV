@@ -31,10 +31,11 @@
 
     <select id="selectVendorList" parameterType="Map" resultType="egovMap">
 
+        SELECT RES.* FROM (
             SELECT
 		    X1.*,
 		    CASE WHEN X2.APPV_PRCSS_STUS = 'R' THEN 'Request'
-		         WHEN X2.APPV_PRCSS_STUS = 'A' THEN 'Approval-In-Progress'
+		         WHEN X2.APPV_PRCSS_STUS = 'A' THEN 'Approved'
 		         WHEN X2.APPV_PRCSS_STUS = 'P' THEN 'Pending'
 		         WHEN X2.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
 		         WHEN X2.APPV_PRCSS_STUS = 'T' THEN 'DRAFT'
@@ -78,7 +79,7 @@
 
 		    <if test="memAccId != null and memAccId != ''"> AND (NVL(A.VENDOR_ACC_ID, B.VENDOR_ACC_ID)) = #{memAccId}</if>
 		    <if test="regNo != null and regNo != ''"> AND (NVL(A.VENDOR_REG_NO_NRIC, B.VENDOR_REG_NO_NRIC)) = #{regNo}</if>
-		    <if test="costCenter != null and costCenter != ''"> AND (NVL(A.COST_CENTER, B.COST_CENTER)) =  #{costCenter}</if>
+		    <if test="costCenter != null and costCenter != ''"> AND (NVL(B.COST_CENTER, '')) =  #{costCenter}</if>
 
 		    <if test="startDt != null and startDt != ''">
 		        <![CDATA[
@@ -106,13 +107,8 @@
 		    ON X1.APPV_PRCSS_NO = X2.APPV_PRCSS_NO
 		LEFT JOIN SYS0047M X3
 		    ON X2.REQST_USER_ID = X3.USER_NAME
+		WHERE 1 = 1
 		/* Approval related where clause */
-		    <if test="(appvPrcssStus != null and appvPrcssStus != '' ) and ((appStartDt == null or appStartDt == '') and (appEndDt == null or appEndDt == ''))">
-		        AND X2.APPV_PRCSS_STUS IN
-		            <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
-		                         #{item}
-		            </foreach>
-		    </if>
 		    <if test="appStartDt != null and appStartDt != ''">
 		        <![CDATA[
 		            AND X2.APPV_PRCSS_DT >= TO_DATE(#{appStartDt}, 'DD/MM/YYYY')
@@ -123,6 +119,13 @@
 		            AND X2.APPV_PRCSS_DT < TO_DATE(#{appEndDt}, 'DD/MM/YYYY') + 1
 		        ]]>
 		    </if>
+	) RES
+	<if test="(appvPrcssStus != null and appvPrcssStus != '' ) and ((appStartDt == null or appStartDt == '') and (appEndDt == null or appEndDt == ''))">
+                WHERE RES.APPV_PRCSS_STUS_CODE IN
+                    <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+                                 #{item}
+                    </foreach>
+            </if>
 
     </select>
 
@@ -160,6 +163,10 @@
 	       || NVL (TO_CHAR (MAX (SUBSTR (APPV_PRCSS_NO, 5, 6) + 1), 'FM000000'), '000001') AS APPV_PRCSS_NO
 	    FROM FCM0004M
 	    WHERE SUBSTR (APPV_PRCSS_NO, 1, 4) = TO_CHAR (SYSDATE, 'yyyy')
+	</select>
+
+	<select id="selectMemberCode" resultType="String">
+	    SELECT MEM_CODE FROM ORG0001D where mem_id = #{memId}
 	</select>
 
 	<select id="getFinApprover" parameterType="Map" resultType="egovMap">

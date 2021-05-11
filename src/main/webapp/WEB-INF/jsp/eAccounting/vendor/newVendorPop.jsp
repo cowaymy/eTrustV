@@ -30,7 +30,7 @@ var update = new Array();
 var remove = new Array();
 var attachList;
 var currList = ["MYR", "USD"];
-
+var conditionalCheck = 0; //0:No need to check; 1:Need to check
 
 //그리드 속성 설정
 var myGridPros = {
@@ -77,6 +77,9 @@ $(document).ready(function () {
 
     $("#vendorCountry option[value='MY']").attr('selected', 'selected');
     $("#bankCountry option[value='MY']").attr('selected', 'selected');
+    $("#vendorGroup option[value='VM11']").attr('selected', 'selected');
+    $("#paymentMethod option[value='OTRX']").attr('selected', 'selected');
+    $("#paymentMethod option[value='ap@coway.com.my']").attr('selected', 'selected');
 
     $("#regCompName").bind("keyup", function()
    	    {
@@ -138,10 +141,56 @@ $(document).ready(function () {
                 $(this).val($(this).val().toUpperCase());
 
             });
+
 });
 
 function fn_close(){
     $("#popup_wrap").remove();
+}
+
+function fn_jsFunction(){
+	console.log("fn_jsFunction");
+	var txtBankCountry = $("#bankCountry :selected").val()
+	var txtVendorCountry = $("#vendorCountry :selected").val()
+
+	console.log("txtBankCountry" + txtBankCountry);
+	console.log("txtVendorCountry" + txtVendorCountry);
+
+	if(txtBankCountry != 'MY')
+	{
+		$("#bankList").replaceWith('<input type="text" class="w100p" id="bankList" name="bankList" style="text-transform:uppercase"/>');
+		$("#swiftCodeHeader").html('Swift Code<span class="must">*</span>');
+		$("#bankAccNo").attr('maxLength',100);
+		conditionalCheck = 1;
+	}
+	if(txtBankCountry == 'MY')
+	{
+		$("#bankList").replaceWith('<select class="w100p" id="bankList" name="bankList"><c:forEach var="list" items="${bankList}" varStatus="status"><option value="${list.code}">${list.name}</option></c:forEach></select>');
+		$("#swiftCodeHeader").html('Swift Code');
+		conditionalCheck = 0;
+		console.log('$("#bankAccNo").length: ' + $("#bankAccNo").val().length);
+		if($("#bankAccNo").val().length > 16)
+		{
+			var strBankAccNo = $("#bankAccNo").val();
+			strBankAccNo = strBankAccNo.substr(0,16);
+			$("#bankAccNo").val(strBankAccNo);
+		}
+		$("#bankAccNo").attr('maxLength',16);
+		console.log("conditionalCheck: " + conditionalCheck);
+	}
+
+	console.log("conditionalCheck: " + conditionalCheck);
+	if(txtVendorCountry != 'MY')
+	{
+		//$("#paymentMethod option[value='TTRX']").attr('selected', 'selected');
+		$("#paymentMethod").val("TTRX").attr("selected", "selected");
+	}
+	if(txtVendorCountry == 'MY')
+	{
+		//$("#paymentMethod option[value='OTRX']").attr('selected', 'selected');
+		$("#paymentMethod").val("OTRX").attr("selected", "selected");
+	}
+	console.log($("#paymentMethod").val());
 }
 
 /* 인풋 파일(멀티) */
@@ -221,10 +270,15 @@ function fn_insertVendorInfo(st) {
 function fn_vendorValidation(ts){
 
 	var checkResult = fn_checkEmpty();
+	var checkRegex = fn_checkRegex();
 
     if(!checkResult){
         return false;
     }
+
+    if(!checkRegex){
+    	return false;
+    };
 
     if(ts == 'ts') // temp_Save
    	{
@@ -304,6 +358,18 @@ function fn_updateWebInvoiceInfo(st) {
         }
         fn_selectWebInvoiceList();
     });
+}
+
+function fn_checkRegex()
+{
+	 var checkRegexResult = true;
+	 var regExp = /^[a-zA-Z0-9 ]*$/i;
+	    if( regExp.test($("#regCompName").val()) == false ){
+	         Common.alert("* Special character is not allow for Registered Company/Individual Name. ");
+	         checkRegexResult = false;;
+	         return checkRegexResult;
+	    }
+	 return checkRegexResult;
 }
 
 $.fn.clearForm = function() {
@@ -391,7 +457,7 @@ $.fn.clearForm = function() {
       <th scope="row">Cost Center<span class="must">*</span></th>
       <td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" value="${costCentr}"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row">Create User ID</th>
-    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${userName}"/></td>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${userName} / ${memCode}"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -420,7 +486,12 @@ $.fn.clearForm = function() {
 </tr>
 <tr>
     <th colspan = 2 scope="row">Email Address (payment advice)<span class="must">*</span></th>
-    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="emailPayAdv" name="emailPayAdv"/></td>
+    <td colspan="3">
+        <select class="w100p" id=emailPayAdv name="emailPayAdv">
+                  <option value="ap@coway.com.my">ap@coway.com.my</option>
+                  <option value="ga.payment@coway.com.my">ga.payment@coway.com.my</option>
+           </select>
+    </td>
 </tr>
 <tr>
     <th colspan = 2 scope="row">Email Address 2 (payment advice)</th>
@@ -458,7 +529,7 @@ $.fn.clearForm = function() {
 <tr>
 	<th scope="row">Country</th>
 	<td colspan=3>
-	<select  style="text-transform:uppercase" class="w100p" id="vendorCountry" name="vendorCountry">
+	<select onchange="fn_jsFunction()" style="text-transform:uppercase" class="w100p" id="vendorCountry" name="vendorCountry">
             <c:forEach var="list" items="${countryList}" varStatus="status">
                <option value="${list.code}">${list.name}</option>
             </c:forEach>
@@ -518,7 +589,7 @@ $.fn.clearForm = function() {
 <tr>
     <th scope="row">Country</th>
     <td >
-        <select style="text-transform:uppercase" class="w100p" id="bankCountry" name="bankCountry">
+        <select onchange="fn_jsFunction()" style="text-transform:uppercase" class="w100p" id="bankCountry" name="bankCountry">
             <c:forEach var="list" items="${countryList}" varStatus="status">
                <option  value="${list.code}">${list.name}</option>
             </c:forEach>
@@ -538,14 +609,14 @@ $.fn.clearForm = function() {
 
     </td>
     <th scope="row">Bank Account Number<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="bankAccNo" name="bankAccNo"/></td>
+    <td><input type="text" maxlength = "16" title="" placeholder="" class="w100p" id="bankAccNo" name="bankAccNo" onchange="fn_jsFunction()"/></td>
 </tr>
 <tr>
     <th>Branch</th>
     <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="bankBranch" name="bankBranch"/></td>
 </tr>
 <tr>
-    <th>Swift Code</th>
+    <th id="swiftCodeHeader">Swift Code</th>
     <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="swiftCode" name="swiftCode"/></td>
 </tr>
 </tbody>

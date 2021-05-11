@@ -27,7 +27,7 @@ public interface VendorService {
 
 	String selectExistBankAccNo(Map<String, Object> params);
 
-	String selectMemberID(String selectMemberID);
+	String selectMemberCode(String memId);
 
 	String selectNextReqNo();
 

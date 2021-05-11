@@ -136,6 +136,7 @@ public class VendorManagementController {
 		model.addAttribute("vendorGrp", vendorGrp);
 		model.addAttribute("bankList", bankList);
 		model.addAttribute("countryList", countryList);
+		model.addAttribute("memCode", vendorService.selectMemberCode(sessionVO.getMemId()));
 
 
 
@@ -537,8 +538,17 @@ public class VendorManagementController {
 
 	    model.addAttribute("appvPrcssStus", appvPrcssStus);
 	    model.addAttribute("appvPrcssResult", appvInfoAndItems.get(0).get("appvPrcssStus"));
-//	    model.addAttribute("costCenterName", params.get("costCenterName").toString());
-//	    model.addAttribute("costCenter", params.get("costCenter").toString());
+	    if(params.containsKey("costCenter"))
+	    {
+	    	model.addAttribute("costCenterName", params.get("costCenterName").toString());
+		    model.addAttribute("costCenter", params.get("costCenter").toString());
+	    }
+	    else
+	    {
+	    	model.addAttribute("costCenterName", vendorInfo.get("costCentrName").toString());
+		    model.addAttribute("costCenter", vendorInfo.get("costCentr").toString());
+	    }
+
 	    model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
 	    model.addAttribute("vendorInfo", vendorInfo);
 	    model.addAttribute("bankList", bankList);

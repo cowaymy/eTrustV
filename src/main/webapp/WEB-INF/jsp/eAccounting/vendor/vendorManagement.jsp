@@ -98,7 +98,7 @@ $(document).ready(function () {
 		        	var clmType = reqNo.substr(0, 2);
 		        	var costCenterName = event.item.costCenterName;
 		        	var costCenter = event.item.costCenter;
-		        	fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType, costCenterName, costCenter, reqNo);
+		        	fn_vendorRequestPop(event.item.appvPrcssNo, clmType, costCenterName, costCenter, reqNo);
 		        }
 
 		    });
@@ -296,13 +296,9 @@ function fn_preEdit() {
             var clmType = reqNo.substr(0, 2);
             var costCenterName = selectedItems[0].item.costCenterName;
             var costCenter = selectedItems[0].item.costCenter;
-            fn_webInvoiceRequestPop(selectedItems[0].item.appvPrcssNo, clmType, costCenterName, costCenter, reqNo);
+            fn_vendorRequestPop(selectedItems[0].item.appvPrcssNo, clmType, costCenterName, costCenter, reqNo);
     	}
-
-        //console.log('PreEDIT reqNo: ' + reqNo);
-
     }
-
 }
 
 function fn_editVendorPop(reqNo) {
@@ -327,7 +323,7 @@ function fn_editVendorPop(reqNo) {
      }
 }
 
-function fn_webInvoiceRequestPop(appvPrcssNo, clmType, costCenterName, costCenter, reqNo) {
+function fn_vendorRequestPop(appvPrcssNo, clmType, costCenterName, costCenter, reqNo) {
     var data = {
             clmType : clmType
             ,appvPrcssNo : appvPrcssNo
@@ -504,14 +500,28 @@ function fn_checkEmpty() {
            checkResult = false;
            return checkResult;
     }
-    console.log("attachTd: " + ($("#attachTd").length)-1);
-    if(($("#attachTd").length) - 1 < 0) {
-        Common.alert('Please select an Attachment');
-        checkResult = false;
-        return checkResult;
+    if(conditionalCheck == 1 && FormUtil.isEmpty($("#swiftCode").val())) {
+           Common.alert('Please enter Swift Code');
+           checkResult = false;
+           return checkResult;
     }
+    console.log("attachTd: " + $('#form_newVendor input[type=file]').get(0).files.length);
+    console.log("Hello World" + '#attachTd'.value);
 
-	return checkResult;
+
+    if($('#form_newVendor input[type=file]').get(0).files.length == 0)
+    {
+    	//if ($('#attachTd').get(0).files.length === 0) {
+    	// if(($("#attachTd").length) - 1 < 0) {
+    	//if($('#attachTd').val() == null || $('#attachTd').val() == '')
+    	//{
+    		Common.alert('Please select an Attachment');
+            checkResult = false;
+            return checkResult;
+    	//}
+
+    	return checkResult;
+    }
 }
 
 function fn_selectWebInvoiceItemList(clmNo) {
@@ -562,216 +572,200 @@ function fn_glAccountSearchPop(rowIndex){
 }
 
 function fn_setNewGridEvent() {
-	AUIGrid.bind(newGridID, "cellClick", function( event )
-		    {
-		        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-		        selectRowIdx = event.rowIndex;
-		    });
+    AUIGrid.bind(newGridID, "cellClick", function( event )
+            {
+                console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+                selectRowIdx = event.rowIndex;
+            });
 
-		    AUIGrid.bind(newGridID, "cellEditBegin", function( event ) {
-		        // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
-		        if($("#invcType").val() == "S") {
-		            if(event.dataField == "taxNonClmAmt") {
-		                if(event.item.taxAmt <= 30) {
-		                    Common.alert('<spring:message code="newWebInvoice.gstLess.msg" />');
-		                    AUIGrid.forceEditingComplete(newGridID, null, true);
-		                }
-		            }
-		        } else {
-		            if(event.dataField == "taxNonClmAmt") {
-		                Common.alert('<spring:message code="newWebInvoice.gstFullTax.msg" />');
-		                AUIGrid.forceEditingComplete(newGridID, null, true);
-		            }
-		        }
-		  });
+            AUIGrid.bind(newGridID, "cellEditBegin", function( event ) {
+                // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
+                if($("#invcType").val() == "S") {
+                    if(event.dataField == "taxNonClmAmt") {
+                        if(event.item.taxAmt <= 30) {
+                            Common.alert('<spring:message code="newWebInvoice.gstLess.msg" />');
+                            AUIGrid.forceEditingComplete(newGridID, null, true);
+                        }
+                    }
+                } else {
+                    if(event.dataField == "taxNonClmAmt") {
+                        Common.alert('<spring:message code="newWebInvoice.gstFullTax.msg" />');
+                        AUIGrid.forceEditingComplete(newGridID, null, true);
+                    }
+                }
+          });
 
-		    AUIGrid.bind(newGridID, "cellEditEnd", function( event ) {
-		        if(event.dataField == "netAmt" || event.dataField == "taxAmt" || event.dataField == "taxNonClmAmt" || event.dataField == "totAmt") {
-		            var taxAmt = 0;
-		            var taxNonClmAmt = 0;
-		            if($("#invcType").val() == "S") {
-		                if(event.dataField == "netAmt") {
-		                    var taxAmtCnt = fn_getTotTaxAmt(event.rowIndex);
-		                    if(taxAmtCnt >= 30) {
-		                        taxNonClmAmt = event.item.oriTaxAmt;
-		                    } else {
-		                        if(taxAmtCnt == 0) {
-		                            if(event.item.oriTaxAmt > 30) {
-		                                taxAmt = 30;
-		                                taxNonClmAmt = event.item.oriTaxAmt - 30;
-		                            } else {
-		                                taxAmt = event.item.oriTaxAmt;
-		                            }
-		                        } else {
-		                            if((taxAmtCnt + event.item.oriTaxAmt) > 30) {
-		                                taxAmt = 30 - taxAmtCnt;
-		                                if(event.item.oriTaxAmt > taxAmt) {
-		                                    taxNonClmAmt = event.item.oriTaxAmt - taxAmt;
-		                                } else {
-		                                    taxNonClmAmt = taxAmt - event.item.oriTaxAmt;
-		                                }
-		                            } else {
-		                                taxAmt = event.item.oriTaxAmt;
-		                                taxNonClmAmt = 0;
-		                            }
-		                        }
-		                    }
-		                    AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", taxAmt);
-		                    AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
-		                }
-		                if(event.dataField == "taxAmt") {
-		                    if(event.value > 30) {
-		                        Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
-		                        AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", event.oldValue);
-		                    } else {
-		                        var taxAmtCnt = fn_getTotTaxAmt(event.rowIndex);
-		                        if((taxAmtCnt + event.value) > 30) {
-		                            Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
-		                            AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", event.oldValue);
-		                        }
-		                    }
-		                }
-		            } else {
-		                if(event.dataField == "netAmt") {
-		                    taxAmt = event.item.oriTaxAmt;
-		                    AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", taxAmt);
-		                    AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
-		                }
-		            }
+            AUIGrid.bind(newGridID, "cellEditEnd", function( event ) {
+                if(event.dataField == "netAmt" || event.dataField == "taxAmt" || event.dataField == "taxNonClmAmt" || event.dataField == "totAmt") {
+                    var taxAmt = 0;
+                    var taxNonClmAmt = 0;
+                    if($("#invcType").val() == "S") {
+                        if(event.dataField == "netAmt") {
+                            var taxAmtCnt = fn_getTotTaxAmt(event.rowIndex);
+                            if(taxAmtCnt >= 30) {
+                                taxNonClmAmt = event.item.oriTaxAmt;
+                            } else {
+                                if(taxAmtCnt == 0) {
+                                    if(event.item.oriTaxAmt > 30) {
+                                        taxAmt = 30;
+                                        taxNonClmAmt = event.item.oriTaxAmt - 30;
+                                    } else {
+                                        taxAmt = event.item.oriTaxAmt;
+                                    }
+                                } else {
+                                    if((taxAmtCnt + event.item.oriTaxAmt) > 30) {
+                                        taxAmt = 30 - taxAmtCnt;
+                                        if(event.item.oriTaxAmt > taxAmt) {
+                                            taxNonClmAmt = event.item.oriTaxAmt - taxAmt;
+                                        } else {
+                                            taxNonClmAmt = taxAmt - event.item.oriTaxAmt;
+                                        }
+                                    } else {
+                                        taxAmt = event.item.oriTaxAmt;
+                                        taxNonClmAmt = 0;
+                                    }
+                                }
+                            }
+                            AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", taxAmt);
+                            AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
+                        }
+                        if(event.dataField == "taxAmt") {
+                            if(event.value > 30) {
+                                Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
+                                AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", event.oldValue);
+                            } else {
+                                var taxAmtCnt = fn_getTotTaxAmt(event.rowIndex);
+                                if((taxAmtCnt + event.value) > 30) {
+                                    Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
+                                    AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", event.oldValue);
+                                }
+                            }
+                        }
+                    } else {
+                        if(event.dataField == "netAmt") {
+                            taxAmt = event.item.oriTaxAmt;
+                            AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", taxAmt);
+                            AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
+                        }
+                    }
 
-		            var totAmt = fn_getTotalAmount();
+                    var totAmt = fn_getTotalAmount();
                     $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
                     console.log(totAmt);
                     $("#totAmt").val(totAmt);
 
-		            var availableVar = {
-		                costCentr : $("#newCostCenter").val(),
-		                stYearMonth : $("#keyDate").val().substring(3),
-		                stBudgetCode : event.item.budgetCode,
-		                stGlAccCode : event.item.glAccCode
-		            }
+                    var availableVar = {
+                        costCentr : $("#newCostCenter").val(),
+                        stYearMonth : $("#keyDate").val().substring(3),
+                        stBudgetCode : event.item.budgetCode,
+                        stGlAccCode : event.item.glAccCode
+                    }
 
-		            var availableAmtCp = 0;
-		            Common.ajax("GET", "/eAccounting/webInvoice/checkBgtPlan.do", availableVar, function(result1) {
-		                console.log(result1.ctrlType);
+                    var availableAmtCp = 0;
+                    Common.ajax("GET", "/eAccounting/webInvoice/checkBgtPlan.do", availableVar, function(result1) {
+                        console.log(result1.ctrlType);
 
-		                if(result1.ctrlType == "Y") {
-		                    Common.ajax("GET", "/eAccounting/webInvoice/availableAmtCp.do", availableVar, function(result) {
-		                        console.log("availableAmtCp");
-		                        console.log(result.totalAvailable);
+                        if(result1.ctrlType == "Y") {
+                            Common.ajax("GET", "/eAccounting/webInvoice/availableAmtCp.do", availableVar, function(result) {
+                                console.log("availableAmtCp");
+                                console.log(result.totalAvailable);
 
-		                        var finAvailable = (parseFloat(result.totalAvilableAdj) - parseFloat(result.totalPending) - parseFloat(result.totalUtilized)).toFixed(2);
+                                var finAvailable = (parseFloat(result.totalAvilableAdj) - parseFloat(result.totalPending) - parseFloat(result.totalUtilized)).toFixed(2);
 
-		                        if(parseFloat(finAvailable) < parseFloat(event.item.totAmt)) {
-		                            console.log("else if :: result.totalAvailable < event.item.totAmt");
-		                            Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
-		                            console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
-		                            AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
-		                            AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
+                                if(parseFloat(finAvailable) < parseFloat(event.item.totAmt)) {
+                                    console.log("else if :: result.totalAvailable < event.item.totAmt");
+                                    Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+                                    console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+                                    AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
+                                    AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
 
-		                            var totAmt = fn_getTotalAmount();
-		                            $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
-		                            console.log(totAmt);
-		                            $("#totAmt").val(totAmt);
-		                        } else {
-		                            var idx = AUIGrid.getRowCount(newGridID);
+                                    var totAmt = fn_getTotalAmount();
+                                    $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
+                                    console.log(totAmt);
+                                    $("#totAmt").val(totAmt);
+                                } else {
+                                    var idx = AUIGrid.getRowCount(newGridID);
 
-		                            console.log("Details count :: " + idx);
+                                    console.log("Details count :: " + idx);
 
-		                            for(var a = 0; a < idx; a++) {
-		                                console.log("for a :: " + a);
+                                    for(var a = 0; a < idx; a++) {
+                                        console.log("for a :: " + a);
 
-		                                if(event.item.budgetCode == AUIGrid.getCellValue(newGridID, a, "budgetCode") && event.item.glAccCode == AUIGrid.getCellValue(newGridID, a, "glAccCode")) {
-		                                    availableAmtCp += AUIGrid.getCellValue(newGridID, a, "totAmt");
-		                                    console.log(availableAmtCp);
-		                                }
-		                            }
+                                        if(event.item.budgetCode == AUIGrid.getCellValue(newGridID, a, "budgetCode") && event.item.glAccCode == AUIGrid.getCellValue(newGridID, a, "glAccCode")) {
+                                            availableAmtCp += AUIGrid.getCellValue(newGridID, a, "totAmt");
+                                            console.log(availableAmtCp);
+                                        }
+                                    }
 
-		                            if(result.totalAvailable < availableAmtCp) {
-		                                console.log("else :: result.totalAvailable < availableAmtCp");
+                                    if(result.totalAvailable < availableAmtCp) {
+                                        console.log("else :: result.totalAvailable < availableAmtCp");
 
-		                                Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
-		                                console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
-		                                AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
-		                                AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
+                                        Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+                                        console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+                                        AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
+                                        AUIGrid.setCellValue(newGridID, event.rowIndex, "totAmt", "0.00");
 
-		                                var totAmt = fn_getTotalAmount();
-		                                $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
-		                                console.log(totAmt);
-		                                $("#totAmt").val(totAmt);
+                                        var totAmt = fn_getTotalAmount();
+                                        $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
+                                        console.log(totAmt);
+                                        $("#totAmt").val(totAmt);
 
 
-		                            }
-		                        }
-		                    });
-		                }
-		            });
-		        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
 
-		        if(event.dataField == "taxCode") {
-		            console.log("taxCode Choice Action");
-		            console.log(event.item.taxCode);
-		            var data = {
-		                    taxCode : event.item.taxCode
-		            };
-		            Common.ajax("GET", "/eAccounting/webInvoice/selectTaxRate.do", data, function(result) {
-		                console.log(result);
-		                AUIGrid.setCellValue(newGridID, event.rowIndex, "taxRate", result.taxRate);
-		            });
-		        }
+                if(event.dataField == "taxCode") {
+                    console.log("taxCode Choice Action");
+                    console.log(event.item.taxCode);
+                    var data = {
+                            taxCode : event.item.taxCode
+                    };
+                    Common.ajax("GET", "/eAccounting/webInvoice/selectTaxRate.do", data, function(result) {
+                        console.log(result);
+                        AUIGrid.setCellValue(newGridID, event.rowIndex, "taxRate", result.taxRate);
+                    });
+                }
 
-		        if(event.dataField == "cur") {
-		            console.log("currency change");
+                if(event.dataField == "cur") {
+                    console.log("currency change");
 
-		            var fCur = AUIGrid.getCellValue(newGridID, 0, "cur");
+                    var fCur = AUIGrid.getCellValue(newGridID, 0, "cur");
 
-		            if(event.rowIndex != 0) {
-		                if(AUIGrid.getRowCount(newGridID) > 1) {
-	                        var cCur = AUIGrid.getCellValue(newGridID, event.rowIndex, "cur");
+                    if(event.rowIndex != 0) {
+                        if(AUIGrid.getRowCount(newGridID) > 1) {
+                            var cCur = AUIGrid.getCellValue(newGridID, event.rowIndex, "cur");
 
-	                        if(cCur != fCur) {
-	                            Common.alert("Different currency selected!");
-	                            AUIGrid.setCellValue(newGridID, event.rowIndex, "cur", fCur);
-	                        }
-	                    }
-		            } else {
-		                for(var i = 1; i < AUIGrid.getRowCount(newGridID); i++) {
-		                    AUIGrid.setCellValue(newGridID, i, "cur", fCur);
-		                }
-		            }
-		        }
-		  });
+                            if(cCur != fCur) {
+                                Common.alert("Different currency selected!");
+                                AUIGrid.setCellValue(newGridID, event.rowIndex, "cur", fCur);
+                            }
+                        }
+                    } else {
+                        for(var i = 1; i < AUIGrid.getRowCount(newGridID); i++) {
+                            AUIGrid.setCellValue(newGridID, i, "cur", fCur);
+                        }
+                    }
+                }
+          });
 
-	AUIGrid.bind(newGridID, "selectionChange", function(event) {
-	    if(event.dataField == "cur") {
-	        if(AUIGrid.getRowCount(newGridID > 1)) {
-	            var fCur = AUIGrid.getCellValue(newGridID, 0, "cur");
-	            var cCur = AUIGrid.getCellValue(newGridID, event.rowIndex, "cur");
+    AUIGrid.bind(newGridID, "selectionChange", function(event) {
+        if(event.dataField == "cur") {
+            if(AUIGrid.getRowCount(newGridID > 1)) {
+                var fCur = AUIGrid.getCellValue(newGridID, 0, "cur");
+                var cCur = AUIGrid.getCellValue(newGridID, event.rowIndex, "cur");
 
-	            if(cCur != fCur) {
-	                Common.alert("Different currency selected.");
-	            }
-	        }
-	    }
-	});
+                if(cCur != fCur) {
+                    Common.alert("Different currency selected.");
+                }
+            }
+        }
+    });
 }
 
-function fn_getTotTaxAmt(rowIndex) {
-    var taxAmtCnt = 0;
-    // 필터링이 된 경우 필터링 된 상태의 값만 원한다면 false 지정
-    var amtArr = AUIGrid.getColumnValues(newGridID, "taxAmt", true);
-    console.log(amtArr);
-    for(var i = 0; i < amtArr.length; i++) {
-        taxAmtCnt += amtArr[i];
-    }
-    // 0번째 행의 name 칼럼의 값 얻기
-    var value = AUIGrid.getCellValue(newGridID, rowIndex, "taxAmt");
-    console.log(taxAmtCnt);
-    console.log(value);
-    taxAmtCnt -= value;
-    console.log("taxAmtCnt : " + taxAmtCnt);
-    return taxAmtCnt;
-}
 
 function fn_atchViewDown(fileGrpId, fileId) {
     var data = {
@@ -1030,11 +1024,16 @@ function fn_editRejected() {
     <th scope="row">Status</th>
 	    <td>
 	       <select class="multy_select" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
-		        <option value="T"><spring:message code="webInvoice.select.tempSave" /></option>
+		        <!--  <option value="T"><spring:message code="webInvoice.select.tempSave" /></option>
 		        <option value="R"><spring:message code="webInvoice.select.request" /></option>
 		        <option value="P"><spring:message code="webInvoice.select.progress" /></option>
 		        <option value="A"><spring:message code="webInvoice.select.approved" /></option>
-		        <option value="J"><spring:message code="pettyCashRqst.rejected" /></option>
+		        <option value="J"><spring:message code="pettyCashRqst.rejected" /></option>-->
+		        <option value="T">Draft</option>
+		        <option value="R">Request</option>
+		        <option value="P">Pending for Approval</option>
+		        <option value="A">Approved</option>
+		        <option value="J">Rejected</option>
            </select>
 	    </td>
 </tr>

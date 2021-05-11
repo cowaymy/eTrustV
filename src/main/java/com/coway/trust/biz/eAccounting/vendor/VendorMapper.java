@@ -23,7 +23,7 @@ public interface VendorMapper {
 
 	int checkExistNo(String regCompNo);
 
-	String selectMemberID(String regCompNo);
+	String selectMemberCode(String memId);
 
 	String selectNextReqNo();
 

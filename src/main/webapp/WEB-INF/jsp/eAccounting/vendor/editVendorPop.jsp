@@ -25,6 +25,7 @@
 var newGridID;
 var selectRowIdx;
 var callType = "${callType}";
+var conditionalCheck = 0; //0:No need to check; 1:Need to check
 var removeOriFileName = new Array();
 var gridDataList = new Array();
 var currList = ["MYR", "USD"];
@@ -98,6 +99,7 @@ $(document).ready(function () {
 	var paymentMethod = "${vendorInfo.payType}";
 	var designation = "${vendorInfo.contactDesignation}";
 
+
 	   /*
     if(appvPrccNo == null || appvPrccNo == '') {
         newGridID = AUIGrid.create("#viewEditWebInvoice_grid_wrap", myColumnLayout, myGridPros);
@@ -122,7 +124,7 @@ $(document).ready(function () {
                 var clmType = reqNo.substr(0, 2);
                 var costCenterName = event.item.costCenterName;
                 var costCenter = event.item.costCenter;
-                fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType, costCenterName, costCenter, reqNo);
+                fn_vendorRequestPop(event.item.appvPrcssNo, clmType, costCenterName, costCenter, reqNo);
             }
 
         });
@@ -131,6 +133,7 @@ $(document).ready(function () {
 	$("#bankCountry option[value='"+ bankCountry +"']").attr("selected", true);
 	$("#bankList option[value='"+ bankList +"']").attr("selected", true);
 	$("#paymentMethod option[value='"+ paymentMethod +"']").attr("selected", true);
+
 
 	doGetCombo('/common/selectCodeList.do', '17', designation, 'designation', 'S' , ''); // Customer Initial Type Combo Box
 
@@ -203,6 +206,52 @@ $(document).ready(function () {
     });
 
 });
+
+
+function fn_jsFunction(){
+    console.log("fn_jsFunction");
+    var txtBankCountry = $("#bankCountry :selected").val()
+    var txtVendorCountry = $("#vendorCountry :selected").val()
+
+    console.log("txtBankCountry" + txtBankCountry);
+    console.log("txtVendorCountry" + txtVendorCountry);
+
+    if(txtBankCountry != 'MY')
+    {
+        $("#bankList").replaceWith('<input type="text" class="w100p" id="bankList" style="text-transform:uppercase"/>');
+        $("#swiftCodeHeader").html('Swift Code<span class="must">*</span>');
+        $("#bankAccNo").attr('maxLength',100);
+        conditionalCheck = 1;
+    }
+    if(txtBankCountry == 'MY')
+    {
+        $("#bankList").replaceWith('<select class="w100p" id="bankList" name="bankList"><c:forEach var="list" items="${bankList}" varStatus="status"><option value="${list.code}">${list.name}</option></c:forEach></select>');
+        $("#swiftCodeHeader").html('Swift Code');
+        conditionalCheck = 0;
+        console.log('$("#bankAccNo").length: ' + $("#bankAccNo").val().length);
+        if($("#bankAccNo").val().length > 16)
+        {
+            var strBankAccNo = $("#bankAccNo").val();
+            strBankAccNo = strBankAccNo.substr(0,16);
+            $("#bankAccNo").val(strBankAccNo);
+        }
+        $("#bankAccNo").attr('maxLength',16);
+        console.log("conditionalCheck: " + conditionalCheck);
+    }
+
+    console.log("conditionalCheck: " + conditionalCheck);
+    if(txtVendorCountry != 'MY')
+    {
+        //$("#paymentMethod option[value='TTRX']").attr('selected', 'selected');
+        $("#paymentMethod").val("TTRX").attr("selected", "selected");
+    }
+    if(txtVendorCountry == 'MY')
+    {
+        //$("#paymentMethod option[value='OTRX']").attr('selected', 'selected');
+        $("#paymentMethod").val("OTRX").attr("selected", "selected");
+    }
+    console.log($("#paymentMethod").val());
+}
 
 /* 인풋 파일(멀티) */
 function setInputFile2(){//인풋파일 세팅하기
@@ -633,7 +682,7 @@ $.fn.clearForm = function() {
 <tr>
     <th scope="row">Country</th>
 	    <td colspan=3>
-	       <select  style="text-transform:uppercase" class="w100p" id="vendorCountry" name="vendorCountry">
+	       <select onchange="fn_jsFunction()"  style="text-transform:uppercase" class="w100p" id="vendorCountry" name="vendorCountry">
             <c:forEach var="list" items="${countryList}" varStatus="status">
                <option value="${list.code}">${list.name}</option>
             </c:forEach>
@@ -694,7 +743,7 @@ $.fn.clearForm = function() {
 <tr>
     <th scope="row">Country</th>
     <td>
-        <select  style="text-transform:uppercase" class="w100p" id="bankCountry" name="bankCountry">
+        <select onchange="fn_jsFunction()"  style="text-transform:uppercase" class="w100p" id="bankCountry" name="bankCountry">
             <c:forEach var="list" items="${countryList}" varStatus="status">
                <option value="${list.code}">${list.name}</option>
             </c:forEach>
@@ -713,7 +762,7 @@ $.fn.clearForm = function() {
         </select>
     </td>
     <th scope="row">Bank Account Number<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="bankAccNo" name="bankAccNo" value="${vendorInfo.bankAccNo}"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="bankAccNo" name="bankAccNo" value="${vendorInfo.bankAccNo}" onchange="fn_jsFunction()" maxlength = "16"/></td>
 </tr>
 <tr>
     <th>Branch</th>
