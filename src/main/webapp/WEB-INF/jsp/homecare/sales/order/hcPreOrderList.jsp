@@ -447,14 +447,15 @@
                         if(memRc.rookie == 1) {
                             if(memRc.rcPrct < 50) {
                                 Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 50%.");
-                            } else {
-                                Common.popupDiv("/homecare/sales/order/convertToHcOrderPop.do", { preOrdId : AUIGrid.getCellValue(listGridID, selIdx, "preOrdId") }, null , true);
+                                return false;
                             }
                         } else {
                             Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
                             return false;
                         }
                     }
+
+                    Common.popupDiv("/homecare/sales/order/convertToHcOrderPop.do", { preOrdId : AUIGrid.getCellValue(listGridID, selIdx, "preOrdId") }, null , true);
 
                 });
             }
