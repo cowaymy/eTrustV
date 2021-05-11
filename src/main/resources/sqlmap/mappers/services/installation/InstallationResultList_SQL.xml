@@ -3551,6 +3551,24 @@
            , STK_DESC
   </select>
 
+  <select id="getProductList2" parameterType="Map" resultType="egovMap">
+    SELECT STK_ID
+         , STK_CODE CODE
+         , STK_CODE || ' - ' || STK_DESC CODE_NAME
+    FROM SYS0026M
+    WHERE STK_TYPE_ID = '61'
+      AND STUS_CODE_ID = '1'
+      <if test="prodCat != '' and prodCat != null">
+            AND STK_CTGRY_ID IN
+            <foreach item="item" collection="prodCat" index="index"
+		        open="(" separator="," close=")">
+		        #{item}
+		      </foreach>
+      </if>
+    ORDER BY STK_CODE
+           , STK_DESC
+  </select>
+
   <select id="selRcdTms" parameterType="Map" resultType="int">
     SELECT COUNT(*) COUNT
     FROM SAL0046D
