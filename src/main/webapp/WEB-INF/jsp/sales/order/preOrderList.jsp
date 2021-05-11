@@ -356,17 +356,20 @@ console.log("preOrderList");
             Common.ajax("GET", "/sales/order/checkRC.do", "", function(memRc){
                 console.log("checkRC.do");
 
-                if(memRc.rookie == 1) {
-                    if(memRc.rcPrct != null) {
-                        if(memRc.rcPrct < 30) {
-                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%.");
-                            return false;
+                if(memRc != null) {
+                    if(memRc.rookie == 1) {
+                        if(memRc.rcPrct != null) {
+                            if(memRc.rcPrct < 30) {
+                                Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%.");
+                                return false;
+                            }
                         }
+                    } else {
+                        Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
+                        return false;
                     }
-                } else {
-                    Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
-                    return false;
                 }
+
                 // 20190925 KR-OHK Moblie Popup Setting
                 if(Common.checkPlatformType() == "mobile") {
                     popupObj = Common.popupWin("frmNew", "/sales/order/preOrderRegisterPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "yes"});
@@ -575,16 +578,18 @@ console.log("preOrderList");
                 Common.ajax("GET", "/sales/order/checkRC.do", {memCode : memCode}, function(memRc) {
                     console.log("checkRc");
 
-                    if(memRc.rookie == 1) {
-                        if(memRc.rcPrct != null) {
-                            if(memRc.rcPrct < 30) {
-                                Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%.");
-                                return false;
+                    if(memRc != null) {
+                        if(memRc.rookie == 1) {
+                            if(memRc.rcPrct != null) {
+                                if(memRc.rcPrct < 30) {
+                                    Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 30%.");
+                                    return false;
+                                }
                             }
+                        } else {
+                            Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
+                            return false;
                         }
-                    } else {
-                        Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
-                        return false;
                     }
 
                     Common.popupDiv("/sales/order/convertToOrderPop.do", { preOrdId : AUIGrid.getCellValue(listGridID, selIdx, "preOrdId") }, null , true);

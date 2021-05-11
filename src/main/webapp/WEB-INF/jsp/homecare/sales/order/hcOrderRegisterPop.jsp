@@ -2201,8 +2201,8 @@ console.log(orderVO);
 
         Common.ajax("GET", "/sales/order/checkRC.do", {memId : memId, memCode : memCode, custId : custId}, function(memRc) {
             console.log("checkRc");
-            if(memRc.rookie == 1) {
-                if(memRc != null) {
+            if(memRc != null) {
+                if(memRc.rookie == 1) {
                     if(memRc.opCnt == 0 && memRc.rcPrct <= 50) {
                         // Not own purchase and SHI below 50
                         fn_clearOrderSalesman();
@@ -2220,12 +2220,11 @@ console.log(orderVO);
                              return false;
                          }
                     }
+                } else {
+                    Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
+                    return false;
                 }
-            } else {
-                Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
-                return false;
             }
-
 
             Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
 
