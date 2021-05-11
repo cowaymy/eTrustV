@@ -2456,8 +2456,7 @@ private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, S
 
           EmailVO email = new EmailVO();
 
-          //email.setTo(emailReceiver);
-          email.setTo("jiahua.yong@coway.com.my"); //temp set for DEV testing
+          email.setTo(emailReceiver);
           email.setHtml(false);
           email.setSubject(emailSubject.replace("{0}", batchDate));
           email.setText(emailBody);
