@@ -199,6 +199,11 @@
       headerText : '<spring:message code="service.grid.OrderNo" />',
       editable : false,
       width : 150
+    },{ // Added Feedback Code by Hui Ding. 12-04-2021
+        dataField : "feedBack",
+        headerText : '<spring:message code="service.title.FeedbackCode" />',
+        editable : false,
+        width : 150
     }, {
       dataField : "appTypeName",
       headerText : '<spring:message code="service.grid.AppType" />',
@@ -316,6 +321,7 @@
     $("#contactNo").val("");
     $("#listDSCCode").val("");
     $("#PONum").val("");
+    $("#feedBackCode").val("");
     $("#sortBy").val("0");
   }
 
@@ -534,14 +540,21 @@
 
      <tr>
       <th scope="row">Promotion Code</th>
-      <td colspan="5"><select class="multy_select w100p" multiple="multiple" id="callLogPromotionList" name="promotion">
+      <td colspan="2"><select class="multy_select w100p" multiple="multiple" id="callLogPromotionList" name="promotion">
        <!--  <option value="">Choose One</option> -->
      <%--    <c:forEach var="list" items="${promotionList}" varStatus="status">
          <option value="${list.promoId}">${list.c1}</option>
         </c:forEach> --%>
       </select></td>
-
+      <th scope="row">Feedback Code</th>
+      <td colspan="2"><select class="w100p" id="feedBackCode" name="feedBackCode">
+            <option value=""><spring:message code='service.title.FeedbackCode' /></option>
+	        <c:forEach var="list" items="${callStatus}" varStatus="status">
+	           <option value="${list.resnId}">${list.c1}</option>
+	        </c:forEach>
+	   </select></td>
      </tr>
+
     </tbody>
    </table>
    <!-- table end -->
