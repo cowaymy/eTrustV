@@ -755,6 +755,9 @@
         RENT_PAY_CRC_EXPR
       </when>
       <otherwise>
+        <if test='ctrlBankId == "17" '>
+        ,TO_CHAR(SYSDATE, 'YYYY-MM-DD') TRX_DATE
+        </if>
         ,NVL( ( SELECT
         MAX(NVL(crc.CUST_CRC_EXPR, '0000')) RENT_PAY_CRC_EXPR
         FROM
@@ -815,7 +818,7 @@
     call SP_AUTO_DEBT_GENRT_CLM_CCD(#{new_claimType} ,
     #{new_merchantBank},
     #{new_cardType}, #{new_debitDate}, #{userId},
-    #{new_issueBankId},#{mayBank},#{installMonth},
+    #{new_issueBankId},#{mayBank},#{installMonth},#{custType},
     #{p1, mode=OUT, jdbcType=CURSOR,
     javaType=ResultSet,
     resultMap=resultClaimMap})
