@@ -187,7 +187,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
         // SAL0045D
         installationVO.setAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
-        installationVO.setBrnchId(CommonUtils.nvl(Integer.valueOf(custAddInfo.get("cdBrnchId").toString()),42));
+        installationVO.setBrnchId(CommonUtils.nvl(Integer.valueOf(custAddInfo.get("brnchId").toString()),42));
         installationVO.setCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));;
         installationVO.setInstct(null);
         installationVO.setPreDt("01/01/1900");
