@@ -225,6 +225,7 @@ public class MemberListController {
 
 		List<EgovMap> memberList = null;
 
+		params.put("sessionTypeID", sessionVO.getUserTypeId());
 		if (sessionVO.getUserTypeId() == 1) {
 			params.put("userId", sessionVO.getUserId());
 
