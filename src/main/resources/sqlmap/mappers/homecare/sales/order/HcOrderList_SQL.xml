@@ -115,6 +115,7 @@
                                     </choose>
                                           ) A on V1.ORD_ID = A.SALES_ORD_ID
                     </if>
+                    /*
                     JOIN ORG0005D ORG ON V1.SALESMAN_MEM_ID = ORG.MEM_ID
                     WHERE 1=1
                         <if test="memlvl == 4">
@@ -129,6 +130,7 @@
                         <if test="memlvl == 1">
                             AND ORG.ORG_CODE = #{orgCode}
                         </if>
+                        */
                         <if test='ordDt == null || ordDt == ""'>
                              AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
                         </if>
@@ -343,7 +345,9 @@
       </if>
     </select>
 
+
     <select id="getOrgDtls" parameterType="Map" resultType="egovMap">
+      /*
       SELECT
             B.MEM_ID,
             B.MEM_CODE,
@@ -356,5 +360,7 @@
         JOIN ORG0005D C
             ON B.MEM_ID = C.MEM_ID
         WHERE A.USER_ID = #{userId}
+        */
     </select>
+
 </mapper>

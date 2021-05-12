@@ -6,6 +6,7 @@
 var listMyGridID;
 var IS_3RD_PARTY = '${SESSION_INFO.userIsExternal}';
 var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
+var salesmanCode = '${SESSION_INFO.userName}';
 
 var _option = {
     width : "1200px", // 창 가로 크기
@@ -26,6 +27,8 @@ $(document).ready(function(){
         }
     });
 
+
+    console.log("SalesmanCode: " + '${SESSION_INFO.userId}');
 
     //if($("#memType").val() == 1 || $("#memType").val() == 2){
         if("${SESSION_INFO.memberLevel}" =="1"){
@@ -75,6 +78,9 @@ $(document).ready(function(){
             $("#memCode").val("${memCode}");
             /* $("#memCode").attr("class", "w100p readonly");
             $("#memCode").attr("readonly", "readonly"); */
+
+            $("#listSalesmanCode").val(salesmanCode);
+            $("#listSalesmanCode").attr("readonly", true);
         }
  //   }
 

@@ -7,6 +7,7 @@
     var listMyGridID;
     var IS_3RD_PARTY = '${SESSION_INFO.userIsExternal}';
     var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
+    //var salesmanCode = '${SESSION_INFO.userName}';
 
     var _option = {
         width : "1200px", // 창 가로 크기
@@ -30,7 +31,7 @@
     </c:forEach>
 
     var productList = [];
-    <c:forEach var="obj" items="${productList_1}">1
+    <c:forEach var="obj" items="${productList_1}">
     productList.push({codeId:"${obj.code}", codeName:"${obj.codeName}", code:"${obj.code}"});
     </c:forEach>
 
@@ -44,12 +45,18 @@
             }
         }
 
+        /* [Celeste - Hide as wrong understanding]
         if("${SESSION_INFO.userTypeId}" != "4" && "${SESSION_INFO.userTypeId}" != "6") {
             $("#orgCode").attr("readonly", true);
             $("#grpCode").attr("readonly", true);
             $("#deptCode").attr("readonly", true);
 
             console.log('memberLevel: ' + "${SESSION_INFO.memberLevel}");
+          //if("${SESSION_INFO.memberLevel}" =="4")
+            //{
+                //$("#listSalesmanCode").val(salesmanCode);
+                //$("#listSalesmanCode").attr("readonly", true);
+            //}
             if("${SESSION_INFO.memberLevel}" =="2")
             {
                 $("#deptCode").attr("readonly", false);
@@ -60,7 +67,7 @@
                 $("#deptCode").attr("readonly", false);
             }
         }
-
+        */
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(listMyGridID, "cellDoubleClick", function(event) {
             if(IS_3RD_PARTY == '0') {
@@ -660,7 +667,7 @@
 
         <form id="listSearchForm" name="listSearchForm" action="#" method="post" autocomplete=off>
             <input id="listSalesOrderId" name="salesOrderId" type="hidden" />
-            <input id="memId" name="memId" type="hidden" value="${memId}"/>
+            <!--  <input id="memId" name="memId" type="hidden" value="${memId}"/>-->
             <table class="type1">
                 <!-- table start -->
                 <caption>table</caption>
@@ -761,6 +768,7 @@
                         <th scope="row"><spring:message code='sales.relatedNo2' /></th>
                         <td><input id="listRelatedNo" name="relatedNo" type="text" title="Related No(Exchange)" placeholder="<spring:message code='sales.relatedNo2'/>" class="w100p" /></td>
                     </tr>
+                    <!--
                     <tr>
                         <th scope="row">Org Code</th>
                         <td><input type="text" title="orgCode" id="orgCode" name="orgCode" onkeyup="this.value = this.value.toUpperCase();" placeholder="Org Code" class="w100p" value="${orgCode}"/></td>
@@ -769,6 +777,7 @@
                         <th scope="row">Dept Code</th>
                         <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  onkeyup="this.value = this.value.toUpperCase();" placeholder="Dept Code" class="w100p" value="${deptCode}"/></td>
                     </tr>
+                    -->
                     <tr>
                         <th scope="row"><spring:message code='sales.isEKeyin' /></th>
                         <td><input id="isEKeyin" name="isEKeyin" type="checkbox" /></td>

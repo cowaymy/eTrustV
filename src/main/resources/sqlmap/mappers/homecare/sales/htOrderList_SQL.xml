@@ -114,6 +114,9 @@
               <if test="deptCode != null and deptCode != ''">
                   AND UPPER(F1.DEPT_CODE) = UPPER(#{deptCode})
               </if>
+              <if test="salemanCode != null and salemanCode != ''">
+                  AND UPPER(F1.DEPT_CODE) = UPPER(#{salemanCode})
+              </if>
 
           UNION
 
