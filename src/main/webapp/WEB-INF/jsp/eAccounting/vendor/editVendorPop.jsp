@@ -821,7 +821,7 @@ $.fn.clearForm = function() {
 <tbody>
 <tr>
     <th scope="row">Attachment<span class="must">*</span></th>
-    <td colspan="3" id="attachTd">
+    <td colspan="3" id="attachTd" name="attachTd">
 	    <c:forEach var="files" items="${attachmentList}" varStatus="st">
 		    <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
 			    <c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">

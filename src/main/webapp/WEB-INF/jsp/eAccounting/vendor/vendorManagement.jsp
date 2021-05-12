@@ -506,22 +506,27 @@ function fn_checkEmpty() {
            return checkResult;
     }
     console.log("attachTd: " + $('#form_newVendor input[type=file]').get(0).files.length);
-    console.log("Hello World" + '#attachTd'.value);
+    console.log("Hello World: " + $("input[name=attachTd]").length);
 
-
-    if($('#form_newVendor input[type=file]').get(0).files.length == 0)
+    if($("input[name=attachTd]").length == 0 &&  $('#form_newVendor input[type=file]').get(0).files.length == 0)
     {
+    	Common.alert('Please select an Attachment');
+        checkResult = false;
+        return checkResult;
+    }
+
+    //if($('#form_newVendor input[type=file]').get(0).files.length == 0)
+    //{
     	//if ($('#attachTd').get(0).files.length === 0) {
     	// if(($("#attachTd").length) - 1 < 0) {
     	//if($('#attachTd').val() == null || $('#attachTd').val() == '')
     	//{
-    		Common.alert('Please select an Attachment');
-            checkResult = false;
-            return checkResult;
+    		//Common.alert('Please select an Attachment');
+           // checkResult = false;
+           // return checkResult;
     	//}
-
     	return checkResult;
-    }
+    //}
 }
 
 function fn_selectWebInvoiceItemList(clmNo) {
