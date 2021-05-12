@@ -32,6 +32,8 @@ public class AlternativeFilterDListDto {
 
 	private int partType;
 
+	private int salesPrice;
+
 	public static AlternativeFilterDListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, AlternativeFilterDListDto.class);
 	}
@@ -98,6 +100,14 @@ public class AlternativeFilterDListDto {
 
 	public void setPartType(int partType) {
 		this.partType = partType;
+	}
+
+	public int getSalesPrice() {
+		return salesPrice;
+	}
+
+	public void setSalesPrice(int salesPrice) {
+		this.salesPrice = salesPrice;
 	}
 
 }
