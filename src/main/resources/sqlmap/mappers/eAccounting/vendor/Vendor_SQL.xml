@@ -289,6 +289,8 @@
 		       ,COST_CENTER_NAME
 		       ,VENDOR_NAME
 		       ,VENDOR_REG_NO_NRIC
+		       ,PAY_ADV_EMAIL1
+		       ,PAY_ADV_EMAIL2
 		       ,ADD_HOUSE_LOT_NO
 		       ,ADD_STREET
 		       ,ADD_POSTAL_CODE
@@ -324,6 +326,8 @@
 		       ,NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = #{costCentr}))
 		       ,#{regCompName}
 		       ,#{regCompNo}
+		       ,#{payAdvEmail1}
+		       ,NVL（#{payAdvEmail1}, NULL）
 		       ,#{houseNo}
 		       ,#{street}
 		       ,#{postalCode}
@@ -525,6 +529,8 @@
                    ,T1.COST_CENTER_NAME
                    ,T1.VENDOR_NAME
                    ,T1.VENDOR_REG_NO_NRIC
+                   ,T1.PAY_ADV_EMAIL1
+                   ,T1.PAY_ADV_EMAIL2
                    ,T1.ADD_HOUSE_LOT_NO
                    ,T1.ADD_STREET
                    ,T1.ADD_POSTAL_CODE
@@ -573,7 +579,10 @@
 <update id="updateVendorInfo" parameterType="Map">
 
          UPDATE FCM0029D
-         SET ADD_HOUSE_LOT_NO = #{houseNo}
+         SET VENDOR_GRP = #{vendorGroup}
+                ,PAY_ADV_EMAIL1 = #{payAdvEmail1}
+                ,PAY_ADV_EMAIL2 = #{payAdvEmail1}
+                ,ADD_HOUSE_LOT_NO = #{houseNo}
                 ,ADD_STREET = #{street}
                 ,ADD_POSTAL_CODE = #{postalCode}
                 ,ADD_CITY = #{city}

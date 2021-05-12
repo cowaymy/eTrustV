@@ -99,6 +99,7 @@ $(document).ready(function () {
 	var paymentMethod = "${vendorInfo.payType}";
 	var designation = "${vendorInfo.contactDesignation}";
 
+	console.log("VendorGroup: " + "${vendorInfo.vendorGrp}")
 
 	   /*
     if(appvPrccNo == null || appvPrccNo == '') {
@@ -644,11 +645,11 @@ $.fn.clearForm = function() {
 </tr>
 <tr>
     <th colspan = 2 scope="row">Email Address (payment advice)<span class="must">*</span></th>
-    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="emailPayAdv" name="emailPayAdv"/></td>
+    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="payAdvEmail1" name="payAdvEmail1"/></td>
 </tr>
 <tr>
     <th colspan = 2 scope="row">Email Address 2 (payment advice)</th>
-    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="emailPayAdv2" name="emailPayAdv2"/></td>
+    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="payAdvEmail2" name="payAdvEmail2"/></td>
 </tr>
 
 </tbody>

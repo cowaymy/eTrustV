@@ -507,13 +507,28 @@ function fn_checkEmpty() {
     }
     console.log("attachTd: " + $('#form_newVendor input[type=file]').get(0).files.length);
     console.log("Hello World: " + $("input[name=attachTd]").length);
+    console.log("inputText: " + $(".input_text").val());
 
-    if($("input[name=attachTd]").length == 0 &&  $('#form_newVendor input[type=file]').get(0).files.length == 0)
+    if($("input[name=attachTd]").length == 0 &&  $('#form_newVendor input[type=file]').get(0).files.length == 0 && FormUtil.isEmpty($(".input_text").val()))
     {
     	Common.alert('Please select an Attachment');
         checkResult = false;
         return checkResult;
     }
+
+
+    $(".input_text").dblclick(function() {
+        var oriFileName = $(this).val();
+        var fileGrpId;
+        var fileId;
+        for(var i = 0; i < attachList.length; i++) {
+            if(attachList[i].atchFileName == oriFileName) {
+                fileGrpId = attachList[i].atchFileGrpId;
+                fileId = attachList[i].atchFileId;
+            }
+        }
+        fn_atchViewDown(fileGrpId, fileId);
+    });
 
     //if($('#form_newVendor input[type=file]').get(0).files.length == 0)
     //{
