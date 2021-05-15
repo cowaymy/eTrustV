@@ -8,12 +8,7 @@
              , Extent1.SALES_ORD_NO SALES_ORD_NO
              , Extent1.PAY_AMT PAY_AMT
              , TO_CHAR(Extent1.CRT_DT, 'DD/MM/YYYY') SALES_DT
-            <!--  , EXTENT3.NAME NAME -->
-
-             ,     CASE WHEN Extent1.PAY_MODE = '5698' THEN EXTENT3.NAME || ' - ' || 'CASH'
-                   ELSE EXTENT3.NAME || ' - ' || 'CHQ'
-                   END AS NAME
-
+             , EXTENT3.NAME NAME
              , CASE WHEN Extent1.PAY_MODE = '5698' THEN 'CASH'
                ELSE 'CHQ'
                END AS PAY_MODE
