@@ -35,6 +35,9 @@ public class CashMatchingDto {
 	@ApiModelProperty(value = "name")
 	private String name;
 
+	@ApiModelProperty(value = "payMode")
+	private String payMode;
+
 	public int getMobPayNo() {
 		return mobPayNo;
 	}
@@ -73,6 +76,14 @@ public class CashMatchingDto {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getPayMode() {
+		return payMode;
+	}
+
+	public void setPayMode(String payMode) {
+		this.payMode = payMode;
 	}
 
 	public static CashMatchingDto create(EgovMap egvoMap) {
