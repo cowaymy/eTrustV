@@ -1328,6 +1328,9 @@ public class ServiceApiController {
   @RequestMapping(value = "/installationResult", method = RequestMethod.POST)
   public ResponseEntity<InstallationResultDto> installationResult(
       @RequestBody List<InstallationResultForm> installationResultForms) throws Exception {
+
+	  LOGGER.debug("============ServiceApiController.java @ installationResult============");
+
     return serviceApiInstallationService.installationResult(installationResultForms);
 
     // String transactionId = "";
