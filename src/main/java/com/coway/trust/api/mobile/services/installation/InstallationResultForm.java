@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.api.mobile.services.as.AfterServiceResultDetailForm;
+import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
 import com.coway.trust.util.BeanConverter;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -83,6 +84,15 @@ public class InstallationResultForm {
   private String aftPsi;
   private String aftLpm;
   private String turbLvl;
+
+  /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
+
+  @ApiModelProperty(value = "partList")
+  private List<InstallationResultDetailForm> partList;
+
+
+  /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
+
 
 public String getTurbLvl() {
 	return turbLvl;
@@ -414,6 +424,14 @@ public String getLpmRcd() {
     this.realBeforeProductSerialNo = realBeforeProductSerialNo;
   }
 
+  public List<InstallationResultDetailForm> getPartList() {
+	return partList;
+ }
+
+  public void setPartList(List<InstallationResultDetailForm> partList) {
+	this.partList = partList;
+  }
+
   // public static Map<String, Object> createMaps(InstallationResultForm
   // installationResultForm) {
   // Map<String, Object> params = new HashMap<>();
@@ -443,7 +461,9 @@ public String getLpmRcd() {
   // return params;
   // }
 
-  public List<Map<String, Object>> createMaps(InstallationResultForm installationResultForm) {
+
+
+public List<Map<String, Object>> createMaps(InstallationResultForm installationResultForm) {
 
     List<Map<String, Object>> list = new ArrayList<>();
     Map<String, Object> map;
@@ -478,9 +498,52 @@ public String getLpmRcd() {
     map.put("signRegDate", installationResultForm.getSignRegDate());
     map.put("signRegTime", installationResultForm.getSignRegTime());
 
+    /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
+
+    if (partList != null && partList.size() > 0) {
+    	for (InstallationResultDetailForm dtl : partList) {
+    	map.put("filterCode", dtl.getFilterCode());
+        map.put("chargesFoc", dtl.getChargesFoc());
+        map.put("exchangeId", dtl.getExchangeId());
+        map.put("salesPrice", dtl.getSalesPrice());
+        map.put("filterChangeQty", dtl.getFilterChangeQty());
+        map.put("partsType", dtl.getPartsType());
+        map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo());
+        map.put("retSmoSerialNo", dtl.getRetSmoSerialNo());
+    	}
+    }
+    /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
+
     list.add(map);
 
     return list;
   }
+
+/*  public List<Map<String, Object>> createMaps(InstallationResultForm installationResultForm) {
+
+	    List<Map<String, Object>> list = new ArrayList<>();
+
+	    if (partList != null && partList.size() > 0) {
+	      Map<String, Object> map;
+	      for (InstallationResultDetailForm dtl : partList) {
+	        map = BeanConverter.toMap(installationResultForm, "signData", "partList");
+	        map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
+
+	        // as Dtails
+	        map.put("filterCode", dtl.getFilterCode());
+	        map.put("chargesFoc", dtl.getChargesFoc());
+	        map.put("exchangeId", dtl.getExchangeId());
+	        map.put("salesPrice", dtl.getSalesPrice());
+	        map.put("filterChangeQty", dtl.getFilterChangeQty());
+	        map.put("partsType", dtl.getPartsType());
+	        map.put("filterBarcdSerialNo", dtl.getFilterBarcdSerialNo());
+	        map.put("retSmoSerialNo", dtl.getRetSmoSerialNo());
+
+	        list.add(map);
+	      }
+
+	    }
+	    return list;
+	  }*/
 
 }
