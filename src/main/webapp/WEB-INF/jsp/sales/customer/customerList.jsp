@@ -127,6 +127,9 @@
                 dataField : "custCntcId",
                 visible : false
             },{
+                dataField : "updDt",
+                visible : false
+            },{
                 dataField : "undefined",
                 headerText : "Edit",
                 width : 170,

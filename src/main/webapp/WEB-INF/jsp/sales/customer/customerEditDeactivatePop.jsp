@@ -32,7 +32,7 @@
                 var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}.|\\":<>\?]/);
 
                 var nricObj = {nric:nric};
-                var custObj = {custId:'${custInfo.custId}', action:action, nric:nric, rcdTms:'${custInfo.updTms}'};
+                var custObj = {custId:'${custInfo.custId}', action:action, nric:nric, rcdTms:'${custInfo.updDt}'};
 
                 Common.ajaxSync("GET", "/sales/customer/validCustStatus.do", custObj, function(result) {
                     if(result != null){
