@@ -194,6 +194,11 @@ public class BudgetController {
             params.put("costCentr", "A1301");
         }
 
+        // Hardcode for Ivan Liew and Shawn to view Cody Planning - 20210517
+        if(sessionVO.getUserId() == 379 || sessionVO.getUserId() == 22141) {
+            params.put("costCentr2", "D1201");
+        }
+
         LOGGER.debug(sessionVO.getCostCentr());
         if(!"A1101".equals(sessionVO.getCostCentr())) {
             params.put("flg", "1");
@@ -382,6 +387,11 @@ public class BudgetController {
         // Hardcode for rachel as Role is administrator but not allowed to view all budget
         if(sessionVO.getUserId() == 374) {
             params.put("costCentr", "A1301");
+        }
+        
+        // Hardcode for Ivan Liew and Shawn to view Cody Planning - 20210517
+        if(sessionVO.getUserId() == 379 || sessionVO.getUserId() == 22141) {
+            params.put("costCentr2", "D1201");
         }
 
 		if(params.containsKey("stYearMonth") && params.containsKey("edYearMonth")) {
@@ -944,6 +954,11 @@ public class BudgetController {
             params.put("costCentr", "A1301");
         }
 
+        // Hardcode for Ivan Liew and Shawn to view Cody Planning - 20210517
+        if(sessionVO.getUserId() == 379 || sessionVO.getUserId() == 22141) {
+            params.put("costCentr2", "D1201");
+        }
+        
 		LOGGER.debug("params =====================================>>  " + params);
 
 		budgetList = budgetService.selectAvailableBudgetList(params);
