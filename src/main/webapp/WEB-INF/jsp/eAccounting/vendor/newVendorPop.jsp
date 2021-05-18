@@ -73,74 +73,13 @@ $(document).ready(function () {
     fn_setCostCenterEvent();
     fn_setSupplierEvent();
 
-    doGetCombo('/common/selectCodeList.do', '17', '', 'designation', 'S' , ''); // Customer Initial Type Combo Box
+    //doGetCombo('/common/selectCodeList.do', '17', '', 'designation', 'S' , ''); // Customer Initial Type Combo Box
 
     $("#vendorCountry option[value='MY']").attr('selected', 'selected');
     $("#bankCountry option[value='MY']").attr('selected', 'selected');
     $("#vendorGroup option[value='VM11']").attr('selected', 'selected');
     $("#paymentMethod option[value='OTRX']").attr('selected', 'selected');
     $("#paymentMethod option[value='ap@coway.com.my']").attr('selected', 'selected');
-
-    $("#regCompName").bind("keyup", function()
-   	    {
-   	        $(this).val($(this).val().toUpperCase());
-
-   	    });
-    $("#regCompNo").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#street").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#houseNo").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#postalCode").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#city").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#bankAccHolder").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#bankBranch").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#bankAccNo").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#swiftCode").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#vendorName").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
-    $("#vendorPhoneNo").bind("keyup", function()
-            {
-                $(this).val($(this).val().toUpperCase());
-
-            });
 
 });
 
@@ -478,11 +417,11 @@ $.fn.clearForm = function() {
 <tbody>
 <tr>
 	<th colspan=2 scope="row">Registered Company/Individual Name<span class="must">*</span></th>
-	<td colspan=3><input type="text" title="" placeholder="" class="w100p" id="regCompName" name="regCompName"/></td>
+	<td colspan=3><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="regCompName" name="regCompName" maxlength = "50"/></td>
 </tr>
 <tr>
 	<th colspan = 2 scope="row">Company Registration No/IC No<span class="must">*</span></th>
-    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="regCompNo" name="regCompNo"/></td>
+    <td colspan="3"><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="regCompNo" name="regCompNo" maxlength = "50"/></td>
 </tr>
 <tr>
     <th colspan = 2 scope="row">Email Address (payment advice)<span class="must">*</span></th>
@@ -516,15 +455,15 @@ $.fn.clearForm = function() {
 <tbody>
 <tr>
 	<th scope="row">Street</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="street" name="street"/></td>
+    <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="street" name="street"/></td>
     <th scope="row">House/Lot Number</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="houseNo" name="houseNo"/></td>
+    <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="houseNo" name="houseNo"/></td>
 </tr>
 <tr>
 	<th scope="row">Postal Code</th>
-	<td><input type="text" title="" placeholder="" class="w100p" id="postalCode" name="postalCode"/></td>
+	<td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="postalCode" name="postalCode" maxlength = "10"/></td>
 	<th scope="row">City</th>
-	<td><input type="text" title="" placeholder="" class="w100p" id="city" name="city"/></td>
+	<td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="city" name="city" maxlength = "50"/></td>
 </tr>
 <tr>
 	<th scope="row">Country</th>
@@ -568,7 +507,7 @@ $.fn.clearForm = function() {
 </tr>
 <tr>
     <th>Others (Please State)</th>
-    <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="others" name="others" /></td>
+    <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="others" name="others" maxlength = "50"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -596,7 +535,7 @@ $.fn.clearForm = function() {
         </select>
     </td>
     <th scope="row">Account Holder<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="bankAccHolder" name="bankAccHolder"/></td>
+    <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="bankAccHolder" name="bankAccHolder" maxlength = "100"/></td>
 </tr>
 <tr>
     <th scope="row"> Bank<span class="must">*</span></th>
@@ -609,15 +548,15 @@ $.fn.clearForm = function() {
 
     </td>
     <th scope="row">Bank Account Number<span class="must">*</span></th>
-    <td><input type="text" maxlength = "16" title="" placeholder="" class="w100p" id="bankAccNo" name="bankAccNo" onchange="fn_jsFunction()"/></td>
+    <td><input style="text-transform: uppercase" type="text" maxlength = "16" title="" placeholder="" class="w100p" id="bankAccNo" name="bankAccNo" onchange="fn_jsFunction()"/></td>
 </tr>
 <tr>
     <th>Branch</th>
-    <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="bankBranch" name="bankBranch"/></td>
+    <td colspan=3><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="bankBranch" name="bankBranch" maxlength = "50"/></td>
 </tr>
 <tr>
     <th id="swiftCodeHeader">Swift Code</th>
-    <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="swiftCode" name="swiftCode"/></td>
+    <td colspan=3><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="swiftCode" name="swiftCode" maxlength = "20"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -638,15 +577,21 @@ $.fn.clearForm = function() {
 <tr>
     <th scope="row">Designation</th>
     <td>
-    <select class="w100p" id="designation" name="designation"></select>
+    <!-- <select class="w100p" id="designation" name="designation"></select>-->
+    <select class="w100p" id=designation name="designation">
+                  <option value="Company">Company</option>
+                  <option value="Mr.">Mr.</option>
+                  <option value="Mr. and Mrs.">Mr. and Mrs.</option>
+                  <option value="Ms.">Ms.</option>
+           </select>
     </td>
 
      <th scope="row"> Name</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="vendorName" name="vendorName"/></td>
+    <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="vendorName" name="vendorName" maxlength = "50"/></td>
 </tr>
 <tr>
     <th>Phone Number</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="vendorPhoneNo" name="vendorPhoneNo"/></td>
+    <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="vendorPhoneNo" name="vendorPhoneNo" maxlength = "20"/></td>
     <th>Email Address</th>
     <td><input type="text" title="" placeholder="" class="w100p" id="vendorEmail" name="vendorEmail" /></td>
 </tr>

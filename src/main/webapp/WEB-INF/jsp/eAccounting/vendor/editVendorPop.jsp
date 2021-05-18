@@ -99,7 +99,7 @@ $(document).ready(function () {
 	var paymentMethod = "${vendorInfo.payType}";
 	var designation = "${vendorInfo.contactDesignation}";
 
-	console.log("VendorGroup: " + "${vendorInfo.vendorGrp}")
+	console.log("designation: " + "${vendorInfo.contactDesignation}")
 
 	   /*
     if(appvPrccNo == null || appvPrccNo == '') {
@@ -134,9 +134,10 @@ $(document).ready(function () {
 	$("#bankCountry option[value='"+ bankCountry +"']").attr("selected", true);
 	$("#bankList option[value='"+ bankList +"']").attr("selected", true);
 	$("#paymentMethod option[value='"+ paymentMethod +"']").attr("selected", true);
+	$("#designation option[value='"+ designation +"']").attr("selected", true);
 
 
-	doGetCombo('/common/selectCodeList.do', '17', designation, 'designation', 'S' , ''); // Customer Initial Type Combo Box
+	//doGetCombo('/common/selectCodeList.do', '17', designation, 'designation', 'S' , ''); // Customer Initial Type Combo Box
 
     $("#tempSave").click(fn_tempSave);
     $("#submitPop").click(fn_submit);
@@ -645,11 +646,11 @@ $.fn.clearForm = function() {
 </tr>
 <tr>
     <th colspan = 2 scope="row">Email Address (payment advice)<span class="must">*</span></th>
-    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="payAdvEmail1" name="payAdvEmail1"/></td>
+    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="payAdvEmail1" name="payAdvEmail1" value="${vendorInfo.payAdvEmail1}"/></td>
 </tr>
 <tr>
     <th colspan = 2 scope="row">Email Address 2 (payment advice)</th>
-    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="payAdvEmail2" name="payAdvEmail2"/></td>
+    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="payAdvEmail2" name="payAdvEmail2" value="${vendorInfo.payAdvEmail2}"/></td>
 </tr>
 
 </tbody>
@@ -670,15 +671,15 @@ $.fn.clearForm = function() {
 <tbody>
 <tr>
     <th scope="row">Street</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="street" name="street" value="${vendorInfo.addStreet}"/></td>
+    <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="street" name="street" value="${vendorInfo.addStreet}"/></td>
     <th scope="row">House/Lot Number</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="houseNo" name="houseNo" value="${vendorInfo.addHouseLotNo}"/></td>
+    <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="houseNo" name="houseNo" value="${vendorInfo.addHouseLotNo}"/></td>
 </tr>
 <tr>
     <th scope="row">Postal Code</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="postalCode" name="postalCode" value="${vendorInfo.addPostalCode}"/></td>
+    <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="postalCode" name="postalCode" value="${vendorInfo.addPostalCode}" maxlength = "10"/></td>
     <th scope="row">City</th>
-	    <td><input type="text" title="" placeholder="" class="w100p" id="city" name="city" value="${vendorInfo.addCity}"/></td>
+	    <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="city" name="city" value="${vendorInfo.addCity}" maxlength = "50"/></td>
 </tr>
 <tr>
     <th scope="row">Country</th>
@@ -723,7 +724,7 @@ $.fn.clearForm = function() {
 </tr>
 <tr>
     <th>Others (Please State)</th>
-    <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="others" name="others" value="${vendorInfo.payOth}" /></td>
+    <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="others" name="others" value="${vendorInfo.payOth}" maxlength = "50"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -751,7 +752,7 @@ $.fn.clearForm = function() {
         </select>
     </td>
     <th scope="row">Account Holder<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="bankAccHolder" name="bankAccHolder" value="${vendorInfo.bankAccHolder}"/></td>
+    <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="bankAccHolder" name="bankAccHolder" value="${vendorInfo.bankAccHolder}" maxlength = "100"/></td>
 </tr>
 <tr>
     <th scope="row"> Bank<span class="must">*</span></th>
@@ -763,15 +764,15 @@ $.fn.clearForm = function() {
         </select>
     </td>
     <th scope="row">Bank Account Number<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="bankAccNo" name="bankAccNo" value="${vendorInfo.bankAccNo}" onchange="fn_jsFunction()" maxlength = "16"/></td>
+    <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="bankAccNo" name="bankAccNo" value="${vendorInfo.bankAccNo}" onchange="fn_jsFunction()" maxlength = "16"/></td>
 </tr>
 <tr>
     <th>Branch</th>
-    <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="branch" name="branch" value="${vendorInfo.bankBranch}"/></td>
+    <td colspan=3><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="branch" name="branch" value="${vendorInfo.bankBranch}" maxlength = "50"/></td>
 </tr>
 <tr>
     <th>Swift Code</th>
-    <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="swiftCode" name="swiftCode" value="${vendorInfo.swiftCode}"/></td>
+    <td colspan=3><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="swiftCode" name="swiftCode" value="${vendorInfo.swiftCode}" maxlength = "20"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -792,14 +793,20 @@ $.fn.clearForm = function() {
 <tr>
     <th scope="row">Designation</th>
     <td>
-    <select class="w100p" id="designation" name="designation"></select>
+    <!--  <select class="w100p" id="designation" name="designation"></select>-->
+    <select class="w100p" id=designation name="designation">
+                  <option value="Company"<c:if test="${vendorInfo.contactDesignation eq 'Company'}">selected="selected"</c:if>>Company</option>
+                  <option value="Mr."<c:if test="${vendorInfo.contactDesignation eq 'Mr.'}">selected="selected"</c:if>>Mr.</option>
+                  <option value="Mr. and Mrs."<c:if test="${vendorInfo.contactDesignation eq 'Mr. and Mrs.'}">selected="selected"</c:if>>Mr. and Mrs.</option>
+                  <option value="Ms."<c:if test="${vendorInfo.contactDesignation eq 'Ms.'}">selected="selected"</c:if>>Ms.</option>
+    </select>
     </td>
     <th scope="row"> Name</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="vendorName" name="vendorName" value="${vendorInfo.contactName}"/></td>
+    <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="vendorName" name="vendorName" value="${vendorInfo.contactName}" maxlength = "50"/></td>
 </tr>
 <tr>
     <th>Phone Number</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="vendorPhoneNo" name="phoneNo" value="${vendorInfo.contactPhoneNo}"/></td>
+    <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="vendorPhoneNo" name="phoneNo" value="${vendorInfo.contactPhoneNo}" maxlength = "20"/></td>
     <th>Email Address</th>
     <td><input type="text" title="" placeholder="" class="w100p" id="vendorEmail" name="email" value="${vendorInfo.contactEmail}"/></td>
 </tr>

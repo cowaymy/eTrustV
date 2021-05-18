@@ -113,8 +113,6 @@ public class VendorManagementController {
 
 	@RequestMapping(value = "/newCompletedMsgPop.do")
 	public String newCompletedMsgPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		model.addAttribute("callType", params.get("callType"));
-		model.addAttribute("clmNo", params.get("clmNo"));
 		return "eAccounting/vendor/newVendorCompletedMsgPop";
 	}
 

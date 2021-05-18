@@ -163,7 +163,7 @@ public class VendorServiceImpl implements VendorService {
 		params.put("bankAccNo", params.get("bankAccNo").toString().trim().toUpperCase());
 		params.put("bankBranch", params.get("bankBranch").toString().trim().toUpperCase());
 		params.put("swiftCode", params.get("swiftCode").toString().trim().toUpperCase());
-		params.put("designation", params.get("designation").toString().trim().toUpperCase());
+		params.put("designation", params.get("designation").toString().trim());
 		params.put("vendorName", params.get("vendorName").toString().trim().toUpperCase());
 		params.put("vendorPhoneNo", params.get("vendorPhoneNo").toString().trim().toUpperCase());
 		params.put("vendorEmail", params.get("vendorEmail").toString().trim());

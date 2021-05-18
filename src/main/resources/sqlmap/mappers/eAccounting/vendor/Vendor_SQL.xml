@@ -22,6 +22,7 @@
             SELECT CODE CODE, NAME NAME
             FROM SYS0004M
             WHERE IS_SAP = 1
+            ORDER BY CODE
 
     </select>
 
@@ -327,7 +328,7 @@
 		       ,#{regCompName}
 		       ,#{regCompNo}
 		       ,#{payAdvEmail1}
-		       ,NVL（#{payAdvEmail1}, NULL）
+		       ,NVL（#{payAdvEmail2}, NULL）
 		       ,#{houseNo}
 		       ,#{street}
 		       ,#{postalCode}
@@ -581,7 +582,7 @@
          UPDATE FCM0029D
          SET VENDOR_GRP = #{vendorGroup}
                 ,PAY_ADV_EMAIL1 = #{payAdvEmail1}
-                ,PAY_ADV_EMAIL2 = #{payAdvEmail1}
+                ,PAY_ADV_EMAIL2 = NVL(#{payAdvEmail2}, NULL)
                 ,ADD_HOUSE_LOT_NO = #{houseNo}
                 ,ADD_STREET = #{street}
                 ,ADD_POSTAL_CODE = #{postalCode}

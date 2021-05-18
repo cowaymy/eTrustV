@@ -10,6 +10,7 @@ $(document).ready(function () {
 function fn_closePop() {
     $("#completedMsgPop").remove();
     $("#approveLineSearchPop").remove();
+    $("#newVendorPop").remove();
     console.log(callType);
     if("${callType}" == "new") {
     	$("#newVendorPop").remove();
@@ -29,7 +30,7 @@ function fn_closePop() {
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<p class="msg_txt">Registration of new Vendor has been completed.<br>Vendor Code ${reqNo}</p>
+<p class="msg_txt">Registration of new Vendor has been completed.</p>
 <ul class="center_btns">
     <li><p class="btn_blue2" id="ok"><a href="#"><spring:message code="newWebInvoRegistMsg.ok" /></a></p></li>
 </ul>
