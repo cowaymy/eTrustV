@@ -10,6 +10,7 @@
     var salesmanName = "${salesmanName}";
 
 	$(document).ready(function(){
+	    console.log("bulkpop");
         $('#_custNm').val($('#name').val());
         $('#_appType').val($('#appType option:selected').text());
 	});
@@ -37,17 +38,17 @@
                             fn_preCheckSave();
                             $('#btnCnfmOrderClose').click();
                         }
-                    }
-                } else {
-                    if($('#_copyQty').val() <= 1) {
-                        var msg = '* <spring:message code="sal.alert.msg.plzKeyInNum1" />';
-                        Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
-                        return false;
-                    }
-                    else {
-                        $('#hiddenCopyQty').val($('#_copyQty').val());
-                        fn_preCheckSave();
-                        $('#btnCnfmOrderClose').click();
+                    } else {
+                        if($('#_copyQty').val() <= 1) {
+                            var msg = '* <spring:message code="sal.alert.msg.plzKeyInNum1" />';
+                            Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+                            return false;
+                        }
+                        else {
+                            $('#hiddenCopyQty').val($('#_copyQty').val());
+                            fn_preCheckSave();
+                            $('#btnCnfmOrderClose').click();
+                        }
                     }
                 }
             } else if(memRc == 0) {
