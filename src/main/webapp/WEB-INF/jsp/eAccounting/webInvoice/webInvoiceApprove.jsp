@@ -740,11 +740,13 @@ function fn_makeGrid(){
 </colgroup>
 <tbody>
 <tr>
+<!--
     <th scope="row">Approval Type</th>
     <td colspan="3">
         <label><input type="radio" id="paydoc_radio" name="appGrp" checked="checked" value="0"/>Payment Document</label>
         <label><input type="radio" id="vendor_radio" name="appGrp" value="1"/>Vendor</label>
     </td>
+ -->
     <!--
     <th scope="row" id="vendorGrpLabel">Vendor Group</th>
     <td id="vendorGrpSel">
