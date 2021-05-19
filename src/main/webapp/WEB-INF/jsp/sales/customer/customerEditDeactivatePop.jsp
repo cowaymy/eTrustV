@@ -42,7 +42,7 @@
                             Common.alert("Exceed allowable period" + DEFAULT_DELIMITER + "Exceed allowable period.<br/>Kindly refer to IT department");
                             return;
                         }else{
-                        	if(action == "EDIT"){
+                        	if(action == "EDIT" && !isValid){
                                 if (FormUtil.isEmpty(nric)) {
                                     Common.alert('<spring:message code="sal.alert.msg.plzKeyInCustNricComNo" />');
                                     return;
