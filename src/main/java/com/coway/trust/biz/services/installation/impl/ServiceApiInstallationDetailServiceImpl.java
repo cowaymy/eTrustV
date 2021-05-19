@@ -3,6 +3,7 @@ package com.coway.trust.biz.services.installation.impl;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -15,7 +16,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.api.mobile.services.RegistrationConstants;
+import com.coway.trust.api.mobile.services.as.AfterServiceResultDetailForm;
 import com.coway.trust.api.mobile.services.installation.InstallFailJobRequestDto;
+import com.coway.trust.api.mobile.services.installation.InstallationResultDetailForm;
 import com.coway.trust.api.mobile.services.installation.InstallationResultDto;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
@@ -80,6 +83,11 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         // DETAIL INFO SELECT (SALES_ORD_NO, INSTALL_ENTRY_NO)
         EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
         params.put("installEntryId", installResult.get("installEntryId"));
+
+        // INST AS FILTER CHARGE PARTS 19/05/2021 ALEXXX
+        List<Map<String, Object>> paramsDetail = InstallationResultDetailForm.createMaps((List<InstallationResultDetailForm>) insApiresult.get("partList"));
+		logger.debug("### INST AS PART INFO : " + paramsDetail.toString());
+
 
         Map<String, Object> salesOrdId = new HashMap<String, Object>();
         salesOrdId.put("salesOrdId", String.valueOf(installResult.get("salesOrdId")));
