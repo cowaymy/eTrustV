@@ -73,6 +73,12 @@ public class ArtworkRequestController {
         return "logistics/Design/ArtworkNewLogo";
     }
 
+	@RequestMapping(value = "/MarketingMaterials.do")
+    public String MarketingMaterials(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        return "logistics/Design/MarketingMaterials";
+    }
+
 	@RequestMapping(value = "/selectArtworkCategory.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectArtworkCateList(@RequestParam Map<String, Object> params,
 			ModelMap model) {
@@ -93,4 +99,5 @@ public class ArtworkRequestController {
 
 		return ResponseEntity.ok(list);
 	}
+
 }
