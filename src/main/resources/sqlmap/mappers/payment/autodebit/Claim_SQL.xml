@@ -727,74 +727,79 @@
   <!--Auto Debit - Claim Detail 조회 -->
   <select id="selectCreditCardDetailByIdPaging" parameterType="Map"
     resultType="egovMap">
-    SELECT *
-    FROM( SELECT ROWNUM RNUM
-    ,#{pageNo} as PAGENO
-    ,Z.*
-    ,SUM(BANK_DTL_AMT) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING
-    AND UNBOUNDED
-    FOLLOWING) AS TOT_AMT
-    ,COUNT(BANK_DTL_CTRL_ID) OVER
-    (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED
-    FOLLOWING) AS
-    TOT_ITM
-    FROM(
     SELECT
-    Extent1.BANK_DTL_GRP_ID
-    ,Extent1.BANK_DTL_CTRL_ID
-    ,Extent1.BANK_DTL_CRC_NO
-    ,Extent1.BANK_DTL_CRC_NAME
-    ,Extent1.BANK_DTL_AMT
-
-    <choose>
-      <when test='ctrlBankId == "19" '>
-        ,(CASE WHEN LENGTH(Extent1.BANK_DTL_CRC_EXPR) <![CDATA[   < ]]> 4 THEN '0000'
-               WHEN Extent1.BANK_DTL_CRC_EXPR like '00%' THEN '0000'
-               WHEN TO_DATE(Extent1.BANK_DTL_CRC_EXPR,'MMYY') <![CDATA[   > ]]> SYSDATE THEN Extent1.BANK_DTL_CRC_EXPR
-               ELSE '0000' END) AS
-        RENT_PAY_CRC_EXPR
-      </when>
-      <otherwise>
-        <if test='ctrlBankId == "17" '>
-        ,TO_CHAR(SYSDATE, 'YYYY-MM-DD') TRX_DATE
+        <if test='ctrlBankId != "17" '>
+        *
         </if>
-        ,NVL( ( SELECT
-        MAX(NVL(crc.CUST_CRC_EXPR, '0000')) RENT_PAY_CRC_EXPR
-        FROM
-        PAY0287D grp
-        JOIN PAY0042D dtl on grp.BANK_DTL_GRP_ID =
-        dtl.BANK_DTL_GRP_ID
-        JOIN SAL0001D som ON som.SALES_ORD_ID =
-        dtl.SALES_ORD_ID
-        LEFT JOIN SAL0074D rs ON rs.SALES_ORD_ID =
-        som.SALES_ORD_ID
-        LEFT JOIN SAL0028D crc ON crc.CUST_CRC_ID =
-        rs.CUST_CRC_ID AND
-        rs.CUST_CRC_ID <![CDATA[   <> ]]>
-        0
-        WHERE
-        som.STUS_CODE_ID <![CDATA[  <> ]]>
-        10
-        AND rs.MODE_ID = 131
-        AND som.APP_TYPE_ID = 66
-        AND rs.BANK_ID IN
-        (19,34,17,28,18,31,16)
-        AND dtl.BANK_DTL_GRP_ID =
-        EXTENT1.BANK_DTL_GRP_ID
-        ),'0000') AS RENT_PAY_CRC_EXPR
-      </otherwise>
-    </choose>
-
-    FROM PAY0287D Extent1
-    WHERE
-    Extent1.BANK_DTL_CTRL_ID = #{ctrlId}
-    ORDER
-    BY Extent1.BANK_DTL_GRP_ID) Z
-    WHERE ROWNUM <![CDATA[<=]]>
-    ( #{pageNo} * #{rowCount})
-    ORDER BY RNUM ASC)
-    WHERE RNUM > ((#{pageNo}
-    - 1) * #{rowCount})
+        <if test='ctrlBankId == "17" '>
+        RNUM,
+        PAGENO,
+        BANK_DTL_GRP_ID,
+        BANK_DTL_CTRL_ID,
+        BANK_DTL_CRC_NO,
+        BANK_DTL_CRC_NAME,
+        (BANK_DTL_AMT * 100) BANK_DTL_AMT,
+        TRX_DATE,
+        RENT_PAY_CRC_EXPR,
+        (TOT_AMT * 100) TOT_AMT,
+        TOT_ITM
+        </if>
+    FROM (
+        SELECT
+            ROWNUM RNUM
+           ,#{pageNo} as PAGENO
+           ,Z.*
+           ,SUM(BANK_DTL_AMT) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_AMT
+           ,COUNT(BANK_DTL_CTRL_ID) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_ITM
+        FROM(
+            SELECT
+                Extent1.BANK_DTL_GRP_ID
+               ,Extent1.BANK_DTL_CTRL_ID
+               ,Extent1.BANK_DTL_CRC_NO
+               ,Extent1.BANK_DTL_CRC_NAME
+                <if test='ctrlBankId == "17" '>
+               ,Extent1.BANK_DTL_AMT
+                </if>
+                <if test='ctrlBankId != "17" '>
+               ,Extent1.BANK_DTL_AMT
+                </if>
+                <choose>
+                    <when test='ctrlBankId == "19" '>
+                   ,(CASE WHEN LENGTH(Extent1.BANK_DTL_CRC_EXPR) <![CDATA[   < ]]> 4 THEN '0000'
+                           WHEN Extent1.BANK_DTL_CRC_EXPR like '00%' THEN '0000'
+                           WHEN TO_DATE(Extent1.BANK_DTL_CRC_EXPR,'MMYY') <![CDATA[   > ]]> SYSDATE THEN Extent1.BANK_DTL_CRC_EXPR
+                           ELSE '0000' END) AS
+                    RENT_PAY_CRC_EXPR
+                    </when>
+                    <otherwise>
+                        <if test='ctrlBankId == "17" '>
+                       ,TO_CHAR(SYSDATE, 'YYYY-MM-DD') TRX_DATE
+                        </if>
+                       ,NVL( (
+                            SELECT
+                                MAX(NVL(crc.CUST_CRC_EXPR, '0000')) RENT_PAY_CRC_EXPR
+                            FROM PAY0287D grp
+                            JOIN PAY0042D dtl on grp.BANK_DTL_GRP_ID = dtl.BANK_DTL_GRP_ID
+                            JOIN SAL0001D som ON som.SALES_ORD_ID = dtl.SALES_ORD_ID
+                            LEFT JOIN SAL0074D rs ON rs.SALES_ORD_ID = som.SALES_ORD_ID
+                            LEFT JOIN SAL0028D crc ON crc.CUST_CRC_ID = rs.CUST_CRC_ID
+                                                  AND rs.CUST_CRC_ID <![CDATA[ <> ]]> 0
+                            WHERE som.STUS_CODE_ID <![CDATA[ <> ]]> 10
+                              AND rs.MODE_ID = 131
+                              AND som.APP_TYPE_ID = 66
+                              AND rs.BANK_ID IN (19,34,17,28,18,31,16)
+                              AND dtl.BANK_DTL_GRP_ID = EXTENT1.BANK_DTL_GRP_ID
+                        ), '0000') AS RENT_PAY_CRC_EXPR
+                    </otherwise>
+                </choose>
+            FROM PAY0287D Extent1
+            WHERE Extent1.BANK_DTL_CTRL_ID = #{ctrlId}
+            ORDER BY Extent1.BANK_DTL_GRP_ID
+        ) Z
+        WHERE ROWNUM <![CDATA[ <= ]]> ( #{pageNo} * #{rowCount})
+        ORDER BY RNUM ASC
+    )
+    WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
   </select>
 
   <resultMap id="resultClaimMap" type="egovMap" />
@@ -818,7 +823,7 @@
     call SP_AUTO_DEBT_GENRT_CLM_CCD(#{new_claimType} ,
     #{new_merchantBank},
     #{new_cardType}, #{new_debitDate}, #{userId},
-    #{new_issueBankId},#{mayBank},#{installMonth},#{custType},
+    #{new_issueBankId},#{mayBank},#{installMonth}, #{custType},
     #{p1, mode=OUT, jdbcType=CURSOR,
     javaType=ResultSet,
     resultMap=resultClaimMap})
