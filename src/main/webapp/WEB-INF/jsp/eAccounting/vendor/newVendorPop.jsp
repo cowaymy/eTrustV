@@ -302,12 +302,18 @@ function fn_updateWebInvoiceInfo(st) {
 function fn_checkRegex()
 {
 	 var checkRegexResult = true;
-	 var regExp = /^[a-zA-Z0-9 ]*$/i;
-	    if( regExp.test($("#regCompName").val()) == false ){
+	 var regExpSpecChar = /^[a-zA-Z0-9 ]*$/i;
+	 var regExpNum = /^[0-9]*$/;
+	    if( regExpSpecChar.test($("#regCompName").val()) == false ){
 	         Common.alert("* Special character is not allow for Registered Company/Individual Name. ");
 	         checkRegexResult = false;;
 	         return checkRegexResult;
 	    }
+	    if( regExpNum.test($("#bankAccNo").val()) == false ){
+            Common.alert("* Only number is allow for Bank Account Number. ");
+            checkRegexResult = false;;
+            return checkRegexResult;
+       }
 	 return checkRegexResult;
 }
 

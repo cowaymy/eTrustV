@@ -207,6 +207,11 @@ $(document).ready(function () {
         $("#vendorCountryUpd").val($("#vendorCountry").val());
     });
 
+    if(bankCountry != 'MY')
+   	{
+    	fn_jsFunction();
+    	$("#bankList").val('${vendorInfo.bank}');
+   	}
 });
 
 
@@ -220,7 +225,7 @@ function fn_jsFunction(){
 
     if(txtBankCountry != 'MY')
     {
-        $("#bankList").replaceWith('<input type="text" class="w100p" id="bankList" style="text-transform:uppercase"/>');
+        $("#bankList").replaceWith('<input type="text" class="w100p" id="bankList" name="bankList" style="text-transform:uppercase"/>');
         $("#swiftCodeHeader").html('Swift Code<span class="must">*</span>');
         $("#bankAccNo").attr('maxLength',100);
         conditionalCheck = 1;
@@ -771,7 +776,7 @@ $.fn.clearForm = function() {
     <td colspan=3><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="branch" name="branch" value="${vendorInfo.bankBranch}" maxlength = "50"/></td>
 </tr>
 <tr>
-    <th>Swift Code</th>
+    <th id="swiftCodeHeader">Swift Code</th>
     <td colspan=3><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="swiftCode" name="swiftCode" value="${vendorInfo.swiftCode}" maxlength = "20"/></td>
 </tr>
 </tbody>
