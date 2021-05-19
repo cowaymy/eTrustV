@@ -668,6 +668,7 @@
              , V1.MAIL_CNT_NAME
              , V1.MAIL_CNT_NRIC
              , V1.MAIL_CNT_EMAIL
+             , V1.MAIL_CNT_EMAIL_ADD
              , V1.MAIL_CNT_TEL_M
              , V1.MAIL_CNT_TEL_O
              , V1.MAIL_CNT_TEL_R

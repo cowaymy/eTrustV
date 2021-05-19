@@ -74,6 +74,14 @@
     <th scope="row"><spring:message code="sal.text.country" /></th>
     <td><span>${orderDetail.mailingInfo.mailCnty}</span></td>
 </tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.email" /></th>
+    <td><span>${orderDetail.mailingInfo.mailCntEmail}</span></td>
+    <th scope="row"><spring:message code="pay.head.additionalEmail" /></th>
+    <td><span>${orderDetail.mailingInfo.mailCntEmailAdd}</span></td>
+    <th scope="row"></th>
+    <td></td>
+</tr>
 </tbody>
 </table><!-- table end -->
 
