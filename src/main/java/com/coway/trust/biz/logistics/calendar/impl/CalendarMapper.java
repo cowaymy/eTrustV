@@ -21,4 +21,9 @@ public interface CalendarMapper {
 
 	void callBatchCalUpdList(Map<String, Object> params);
 
+	List<EgovMap> selectEventListToManage(Map<String, Object> params);
+
+	int updRemoveCalItem(Map<String, Object> params);
+
+	int saveCalEventChangeList(Map<String, Object> obj);
 }

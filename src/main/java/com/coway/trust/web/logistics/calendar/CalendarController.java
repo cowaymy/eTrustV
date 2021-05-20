@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -180,5 +181,56 @@ public class CalendarController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/calendarEventEditDeletePop.do")
+	public String calendarEventEditDeletePop(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "/logistics/calendar/calendarEventEditDeletePop";
+	}
+
+	@RequestMapping(value = "/searchCalendarEvents.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCalendarEvents(@RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> calendarEventList = calendarService.selectEventListToManage(params);
+		return ResponseEntity.ok(calendarEventList);
+	}
+
+	@RequestMapping(value = "/updRemoveCalItem.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> updRemoveCalItem(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+
+		int userId = sessionVO.getUserId();
+		params.put("userId", userId);
+
+		int result = 0;
+		result = calendarService.updRemoveCalItem(params);
+
+		if(result > 0) {
+			message.setMessage("Calendar item has been removed.");
+			message.setCode(AppConstants.SUCCESS);
+		} else {
+			message.setMessage("Failed to remove calendar item. Please try again later.");
+			message.setCode(AppConstants.FAIL);
+		}
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/saveCalEventChangeList.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveCalEventChangeList(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+
+		List<Object> updList = params.get(AppConstants.AUIGRID_UPDATE); // Get Grid Update List
+
+		int updResult = 0;
+		updResult = calendarService.saveCalEventChangeList(updList, sessionVO.getUserId());
+
+		if(updResult > 0) {
+			message.setMessage("Calendar item(s) has been updated.");
+			message.setCode(AppConstants.SUCCESS);
+		} else {
+			message.setMessage("Failed to update calendar item(s). Please try again later.");
+			message.setCode(AppConstants.FAIL);
+		}
+
+		return ResponseEntity.ok(message);
+	}
 
 }

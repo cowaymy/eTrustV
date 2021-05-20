@@ -46,7 +46,11 @@ function fn_validateSearch() {
 }
 
 function fn_eventUploadPopup() {
-    Common.popupDiv("/logistics/calendar/calendarEventFileUploadPop.do", null, null, true, 'eventUploadPopup');
+    Common.popupDiv("/logistics/calendar/calendarEventFileUploadPop.do", null, fn_searchCalendar, true, 'eventUploadPopup');
+}
+
+function fn_eventEditDeletePopup() {
+    Common.popupDiv("/logistics/calendar/calendarEventEditDeletePop.do", null, fn_searchCalendar, true, 'eventEditDeletePopup');
 }
 
 function fn_setSearchAttr() {
@@ -128,6 +132,7 @@ function fn_setMemTypeVisibility() {
             <dd>
                 <ul class="btns">
                     <li><p class="link_btn"><a href="javascript:fn_eventUploadPopup();"><spring:message code='cal.btn.link.uploadEvent'/></a></p></li>
+                    <li><p class="link_btn"><a href="javascript:fn_eventEditDeletePopup();"><spring:message code='cal.btn.link.editDeleteEvent'/></a></p></li>
                 </ul>
                 <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
             </dd>
@@ -157,7 +162,7 @@ function fn_setMemTypeVisibility() {
                             <c:when test="${columnCounter.count eq dayOfWeekFirstDt}">
                                 <td style="border: 1px solid; vertical-align:top">${mainCounter}<br>
                                     <div style="height: 50px; overflow: hidden;">
-                                        <span style="border:0;" id="calDt${mainCounter}"></span>
+                                        <span style="border:0; id="calDt${mainCounter}"></span>
                                     </div>
                                 </td>
                             </c:when>
@@ -165,7 +170,7 @@ function fn_setMemTypeVisibility() {
                                 <c:set var="mainCounter" value="${mainCounter + 1}"/>
                                 <td style="border: 1px solid; vertical-align:top">${mainCounter}<br>
                                     <div style="height: 50px; overflow: hidden;">
-                                         <span style="border:0;" id="calDt${mainCounter}"></span>
+                                         <span style="border:0; id="calDt${mainCounter}"></span>
                                     </div>
                                 </td>
                             </c:when>

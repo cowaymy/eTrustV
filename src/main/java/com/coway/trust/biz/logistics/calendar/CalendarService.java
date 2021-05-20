@@ -11,4 +11,10 @@ public interface CalendarService {
 
 	int saveCsvUpload(Map<String, Object> master, List<Map<String, Object>> detailList);
 
+	List<EgovMap> selectEventListToManage(Map<String, Object> params);
+
+	int updRemoveCalItem(Map<String, Object> params);
+
+	int saveCalEventChangeList(List<Object> updList, Integer updUserId);
+
 }

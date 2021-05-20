@@ -49,4 +49,34 @@ public class CalendarServiceImpl implements CalendarService {
 
 		return masterSeq;
 	}
+
+	public List<EgovMap> selectEventListToManage(Map<String, Object> params) {
+		return calendarMapper.selectEventListToManage(params);
+	}
+
+	@Override
+	public int updRemoveCalItem(Map<String, Object> params) {
+		return calendarMapper.updRemoveCalItem(params);
+	}
+
+	@Override
+	public int saveCalEventChangeList(List<Object> updList, Integer updUserId) {
+		int saveCnt = 0;
+
+		for(Object obj : updList) {
+
+			((Map<String, Object>) obj).put("updUserId", updUserId);
+			logger.debug(" === Update Calendar event change === ");
+			logger.debug(" eventId : {}", ((Map<String, Object>) obj).get("eventId"));
+			logger.debug(" eventDt : {}", ((Map<String, Object>) obj).get("eventDt"));
+			logger.debug(" memType : {}", ((Map<String, Object>) obj).get("memType"));
+			logger.debug(" eventDesc : {}", ((Map<String, Object>) obj).get("eventDesc"));
+
+			saveCnt++;
+
+			calendarMapper.saveCalEventChangeList((Map<String, Object>) obj);
+		}
+
+		return saveCnt;
+	}
 }
