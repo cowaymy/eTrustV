@@ -162,7 +162,7 @@ function fn_setMemTypeVisibility() {
                             <c:when test="${columnCounter.count eq dayOfWeekFirstDt}">
                                 <td style="border: 1px solid; vertical-align:top">${mainCounter}<br>
                                     <div style="height: 50px; overflow: hidden;">
-                                        <span style="border:0; id="calDt${mainCounter}"></span>
+                                        <span style="border:0;" id="calDt${mainCounter}"></span>
                                     </div>
                                 </td>
                             </c:when>
@@ -170,7 +170,7 @@ function fn_setMemTypeVisibility() {
                                 <c:set var="mainCounter" value="${mainCounter + 1}"/>
                                 <td style="border: 1px solid; vertical-align:top">${mainCounter}<br>
                                     <div style="height: 50px; overflow: hidden;">
-                                         <span style="border:0; id="calDt${mainCounter}"></span>
+                                         <span style="border:0;" id="calDt${mainCounter}"></span>
                                     </div>
                                 </td>
                             </c:when>
