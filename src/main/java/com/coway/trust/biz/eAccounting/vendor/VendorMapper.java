@@ -63,6 +63,8 @@ public interface VendorMapper {
 
 	EgovMap selectVendorInfo(String reqNo);
 
+	EgovMap selectVendorInfoMaster(String vendorAccId);
+
 	List<EgovMap> selectAttachList(String atchFileGrpId);
 
 	String checkReqNo(Map<String, Object> params);

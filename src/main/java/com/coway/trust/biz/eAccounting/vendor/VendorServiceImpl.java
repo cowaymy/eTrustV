@@ -128,6 +128,12 @@ public class VendorServiceImpl implements VendorService {
 	}
 
 	@Override
+	public EgovMap selectVendorInfoMaster(String vendorAccId) {
+		// TODO Auto-generated method stub
+		return vendorMapper.selectVendorInfoMaster(vendorAccId);
+	}
+
+	@Override
 	public List<EgovMap> selectAttachList(String atchFileGrpId) {
 		// TODO Auto-generated method stub
 		return vendorMapper.selectAttachList(atchFileGrpId);

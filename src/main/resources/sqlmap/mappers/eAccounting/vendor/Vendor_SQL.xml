@@ -561,6 +561,16 @@
 		WHERE T1.VENDOR_REQ_NO = #{reqNo}
 </select>
 
+<select id="selectVendorInfoMaster" parameterType="String" resultType="egovMap">
+
+         SELECT T3.*
+                    ,NVL(T2.USER_NAME, '') AS USER_NAME
+		FROM FCM0031D T3
+		LEFT JOIN SYS0047M T2
+		ON T3.CRT_USER_ID = T2.USER_ID
+        WHERE T3.VENDOR_ACC_ID = #{vendorAccId}
+</select>
+
 <select id="selectAttachList" parameterType="String" resultType="egovMap">
 
          SELECT T1.ATCH_FILE_GRP_ID

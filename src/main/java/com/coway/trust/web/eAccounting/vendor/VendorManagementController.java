@@ -493,6 +493,31 @@ public class VendorManagementController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/MvendorRqstViewPop.do")
+	  public String MvendorRqstViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		LOGGER.debug("params =====================================>>  " + params);
+		String vendorAccId = (String)params.get("vendorAccId");
+		EgovMap vendorInfo = vendorService.selectVendorInfoMaster(vendorAccId);
+
+		LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
+
+	    List<EgovMap> bankList = vendorService.selectBank();
+		List<EgovMap> countryList = vendorService.selectSAPCountry();
+
+	    if(params.containsKey("costCenter"))
+	    {
+	    	model.addAttribute("costCenterName", params.get("costCenterName").toString());
+		    model.addAttribute("costCenter", params.get("costCenter").toString());
+	    }
+
+	    model.addAttribute("bankList", bankList);
+		model.addAttribute("countryList", countryList);
+
+		model.addAttribute("vendorInfo", vendorInfo);
+		 LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
+		 return "eAccounting/vendor/vendorRequestViewPopMaster";
+	}
+
 	@RequestMapping(value = "/vendorRqstViewPop.do")
 	  public String vendorRqstViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
 

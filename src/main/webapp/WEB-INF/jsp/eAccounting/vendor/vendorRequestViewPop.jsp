@@ -59,11 +59,12 @@ $(document).ready(function () {
    $("#keyDate").val("${vendorInfo.updDate}");
 
 
-    doGetCombo('/common/selectCodeList.do', '17', designation, 'designation', 'S' , ''); // Customer Initial Type Combo Box
+    //doGetCombo('/common/selectCodeList.do', '17', designation, 'designation', 'S' , ''); // Customer Initial Type Combo Box
     $("#vendorCountry option[value='"+ vendorCountry +"']").attr("selected", true);
     $("#bankCountry option[value='"+ bankCountry +"']").attr("selected", true);
     $("#bankList option[value='"+ bankList +"']").attr("selected", true);
     $("#paymentMethod option[value='"+ paymentMethod +"']").attr("selected", true);
+    $("#designation option[value='"+ designation +"']").attr("selected", true);
 
     $('#vendorCountry').attr("disabled", true);
     $('#bankCountry').attr("disabled", true);
@@ -477,11 +478,11 @@ function fn_atchViewDown(fileGrpId, fileId) {
 </tr>
 <tr>
     <th colspan = 2 scope="row">Email Address (payment advice)<span class="must">*</span></th>
-    <td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="emailPayAdv" name="emailPayAdv"/></td>
+    <td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="payAdvEmail1" name="payAdvEmail1" value="${vendorInfo.payAdvEmail1}"/></td>
 </tr>
 <tr>
     <th colspan = 2 scope="row">Email Address 2 (payment advice)</th>
-    <td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="emailPayAdv2" name="emailPayAdv2"/></td>
+    <td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="payAdvEmail2" name="payAdvEmail2" value="${vendorInfo.payAdvEmail2}"/></td>
 </tr>
 
 </tbody>
@@ -624,7 +625,12 @@ function fn_atchViewDown(fileGrpId, fileId) {
 <tr>
     <th scope="row">Designation</th>
     <td>
-    <select class="w100p" id="designation" name="designation"></select>
+    <select class="w100p" id=designation name="designation">
+                  <option value="Company"<c:if test="${vendorInfo.contactDesignation eq 'Company'}">selected="selected"</c:if>>Company</option>
+                  <option value="Mr."<c:if test="${vendorInfo.contactDesignation eq 'Mr.'}">selected="selected"</c:if>>Mr.</option>
+                  <option value="Mr. and Mrs."<c:if test="${vendorInfo.contactDesignation eq 'Mr. and Mrs.'}">selected="selected"</c:if>>Mr. and Mrs.</option>
+                  <option value="Ms."<c:if test="${vendorInfo.contactDesignation eq 'Ms.'}">selected="selected"</c:if>>Ms.</option>
+    </select>
     </td>
     <th scope="row"> Name</th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="vendorEmail" name="email" value="${vendorInfo.contactName}"/></td>

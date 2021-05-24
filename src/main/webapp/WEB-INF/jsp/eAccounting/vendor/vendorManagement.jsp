@@ -83,7 +83,16 @@ $(document).ready(function () {
 		        console.log("CellDoubleClick costCenterName : " + event.item.costCenterName);
 		        // TODO detail popup open
 		        console.log("crtUserID: " + userId);
-		        if(event.item.appvPrcssStusCode == "T") {
+		        console.log("Master table flag: " + event.item.flg);
+		        if(event.item.flg == 'M')
+		        {
+		        	var vendorAccId = event.item.vendorAccId;
+		        	console.log("vendor acc id: " + vendorAccId);
+                    var costCenterName = event.item.costCenterName;
+                    var costCenter = event.item.costCenter;
+                    fn_MvendorRequestPop(event.item.appvPrcssNo, clmType, costCenterName, costCenter, vendorAccId);
+		        }
+		        else if(event.item.appvPrcssStusCode == "T") {
 		        	if(userId != event.item.userId)
 		        	{
 		        		Common.alert("You are not allow to edit the record.");
@@ -332,6 +341,17 @@ function fn_vendorRequestPop(appvPrcssNo, clmType, costCenterName, costCenter, r
             ,reqNo : reqNo
     };
     Common.popupDiv("/eAccounting/vendor/vendorRqstViewPop.do", data, null, true, "vendorRqstViewPop");
+}
+
+function fn_MvendorRequestPop(appvPrcssNo, clmType, costCenterName, costCenter, vendorAccId) {
+    var data = {
+            clmType : clmType
+            ,appvPrcssNo : appvPrcssNo
+            ,costCenterName : costCenterName
+            ,costCenter : costCenter
+            ,vendorAccId : vendorAccId
+    };
+    Common.popupDiv("/eAccounting/vendor/MvendorRqstViewPop.do", data, null, true, "vendorRqstViewPop");
 }
 
 function fn_selectVendorList() {
