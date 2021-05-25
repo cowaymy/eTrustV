@@ -3195,7 +3195,6 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		,SPOUSE_DOB 		,EDC_LEV 		,LANG 		,BANK 		,BANK_ACC_NO
 		,SPONS_CODE 		,CRT_DT 		,CRT_USER_ID 		,UPD_DT 		,UPD_USER_ID,  stus, APLICNT_ID
 		,MAIN_DEPT , SUB_DEPT, JOIN_DT , AREA_ID, ADDR_DTL, STREET, BRNCH, MOBILE_USE_YN
-		, ROOKIE /* To remove on 25th May 2021 */
 		)
 		select
 		        #{memId},
@@ -3238,7 +3237,6 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		        ,SYSDATE JOIN_DT, AREA_ID, ADDR_DTL, STREET,
 		        #{branchId}
 		        ,'Y'
-		        , '1' /* To remove on 25th May 2021 */
 		from ORG0003D   d
 		where 1=1 and APLCTN_ID = #{MemberID}
     </insert>
