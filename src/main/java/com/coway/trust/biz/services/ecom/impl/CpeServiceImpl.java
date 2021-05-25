@@ -204,4 +204,9 @@ public class CpeServiceImpl implements CpeService {
 		adaptorService.sendEmail(email, false);
 	}
 
+	@Override
+	public EgovMap getOrderDscCode(String orderDscCode) {
+		return cpeMapper.getOrderDscCode(orderDscCode);
+	}
+
 }

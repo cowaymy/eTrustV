@@ -14,7 +14,7 @@
   <select id="selectMainDept"  resultType="egovMap">
     SELECT CODE CODE_ID
          , CODE_DESC CODE_NAME
-    FROM GBSLCVD.SYS0013M
+    FROM SYS0013M
     WHERE CODE_MASTER_ID = 359
     ORDER BY CODE
   </select>
@@ -579,5 +579,13 @@
             JOIN ORG0001D T4 ON T4.MEM_CODE = T3.APPV_LINE_USER_ID
         WHERE T1.CPE_REQ_ID = #{cpeReqId}
     </select>
+
+    <select id="getOrderDscCode"  parameterType="String" resultType="egovMap">
+        SELECT NVL(CODE, '') CODE
+        FROM SYS0013M
+        WHERE CODE_NAME LIKE '%' || #{orderDscCode} || '%'
+        AND CODE_MASTER_ID = 360
+        AND ROWNUM = 1
+  </select>
 
 </mapper>

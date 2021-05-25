@@ -66,9 +66,12 @@
         //Populate Request Date
         fn_setKeyInDate();
 
-        //Populate Sub Department in-charge
+        //Auto-populate Sub Department during initial pop up load
+        doGetCombo('/services/ecom/selectSubDept.do',  $("#_inputMainDeptSelect").val(), '${orderDscCodeSys}', '_inputSubDeptSelect', 'S' , '');
+
+        //Populate Sub Department in-charge when Main Dept is changed
         $("#_inputMainDeptSelect").change(function(){
-            doGetCombo('/services/ecom/selectSubDept.do',  $("#_inputMainDeptSelect").val(), '','_inputSubDeptSelect', 'S' ,  '');
+            doGetCombo('/services/ecom/selectSubDept.do',  $("#_inputMainDeptSelect").val(), '', '_inputSubDeptSelect', 'S' ,  '');
         });
 
     });//Doc Ready End
@@ -399,9 +402,15 @@
                         <th scope="row"><spring:message code="service.grid.mainDept" /><span class="must">*</span></th>
                         <td colspan="3">
                             <select class="w100p" name="mainDept" id="_inputMainDeptSelect">
-                                <option value="">Choose One</option>
                                 <c:forEach var="list" items="${mainDeptList}" varStatus="status">
-                                    <option value="${list.codeId}">${list.codeName} </option>
+                                    <c:choose>
+                                         <c:when test="${list.codeId == 'MD11'}"> <%-- Customer Service Support --%>
+                                            <option value="${list.codeId}" selected="selected">${list.codeName} </option>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <option value="${list.codeId}">${list.codeName} </option>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </c:forEach>
                             </select></td>
                     </tr>

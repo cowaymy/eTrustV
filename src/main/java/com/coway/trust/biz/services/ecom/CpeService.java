@@ -40,4 +40,6 @@ public interface CpeService {
 	void insertCpe(Map<String, Object> params);
 
 	void updateCpe(Map<String, Object> params);
+
+	EgovMap getOrderDscCode(String orderDscCode);
 }

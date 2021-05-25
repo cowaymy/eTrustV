@@ -48,4 +48,6 @@ public interface CpeMapper {
 	public void updateCpeStatusMain(Map<String, Object> params);
 
 	public List<EgovMap> getApproverList(Map<String, Object> params);
+
+	public EgovMap getOrderDscCode(String orderDscCode);
 }

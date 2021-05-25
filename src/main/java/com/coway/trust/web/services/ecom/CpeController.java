@@ -151,6 +151,7 @@ public class CpeController {
 		model.put("orderDetail", orderDetail);
 		model.addAttribute("mainDeptList", mainDeptList);
 		model.addAttribute("salesOrderNo", params.get("salesOrderNo"));
+		model.addAttribute("orderDscCodeSys", retrieveDscAsSubDept(orderDetail));
 
 		return "services/ecom/cpeNewSearchResultPop";
 	}
@@ -334,6 +335,21 @@ public class CpeController {
 		String dt = formatAttchtDt.format(today);
 		String subPath = File.separator + "cpe" + File.separator  + dt.substring(0, 4) + File.separator + dt.substring(0, 6);
 		return subPath;
+	}
+
+	/*
+	 * Method for retrieving DSC Code from table SYS0013M (sample value SD136) to auto-populate as Sub Department value in JSP.
+	 * DSC-NO-VALUE required as fallback dummy query parameter since mapper SQL contains LIKE clause
+	 */
+	public String retrieveDscAsSubDept(EgovMap orderDetail) {
+
+		String orderDscCode = ((EgovMap) orderDetail.get("installationInfo")).get("dscCode") != null
+										? (String) ((EgovMap) orderDetail.get("installationInfo")).get("dscCode")
+										: "DSC-NO-VALUE" ;		  //example valid value of dscCode: DSC-25
+
+		String orderDscCodeSys = (String) (cpeService.getOrderDscCode(orderDscCode)).get("code"); //code example value : SD136
+
+		return orderDscCodeSys;
 	}
 
 }
