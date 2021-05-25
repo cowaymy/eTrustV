@@ -85,6 +85,8 @@ public class InstallationResultForm {
   private String aftLpm;
   private String turbLvl;
 
+  private String chkCrtAs;
+
   /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
 
   @ApiModelProperty(value = "partList")
@@ -93,6 +95,13 @@ public class InstallationResultForm {
 
   /////////////////////////////// ADD FILTER /PARTS /MISC /////////////////////////////////////
 
+public String getChkCrtAs() {
+	return chkCrtAs;
+}
+
+public void setChkCrtAs(String chkCrtAs) {
+	this.chkCrtAs = chkCrtAs;
+}
 
 public String getTurbLvl() {
 	return turbLvl;
