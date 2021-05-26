@@ -2268,7 +2268,7 @@ public class ReportBatchController {
 
   //Coway Mall SFTP file
  @RequestMapping(value = "/agentData_raw.do")
- @Scheduled(cron = " 0 45 23 * * ?")//Daily 11:45pm
+ //@Scheduled(cron = " 0 45 23 * * ?")//Daily 11:45pm
  public void agentData_raw() throws IOException {
    LOGGER.info("[START] agentData_raw...");
    Map<String, Object> params = new HashMap<>();
@@ -2285,7 +2285,7 @@ public class ReportBatchController {
  }
 
  @RequestMapping(value = "/magicAddress_raw.do")
- @Scheduled(cron = " 0 45 23 * * ?")//Daily 11:45pm
+ //@Scheduled(cron = " 0 45 23 * * ?")//Daily 11:45pm
  public void magicAddress_raw() throws IOException {
    LOGGER.info("[START] magicAddress_raw...");
    Map<String, Object> params = new HashMap<>();
