@@ -1643,7 +1643,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/CSP_Raw_Data_Excel.do")
-  //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
+  //@Scheduled(cron = "0 0 6 * * *")//Daily (4:00am)
   public void CSP_Raw_Data_Excel() {
 
     int currentYear = LocalDate.now().getYear();
@@ -2265,6 +2265,41 @@ public class ReportBatchController {
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] RentalFinLeaseDetailsOthRaw_Excel...");
   }
+
+  //Coway Mall SFTP file
+ @RequestMapping(value = "/agentData_raw.do")
+ @Scheduled(cron = " 0 45 23 * * ?")//Daily 11:45pm
+ public void agentData_raw() throws IOException {
+   LOGGER.info("[START] agentData_raw...");
+   Map<String, Object> params = new HashMap<>();
+   params.put(REPORT_FILE_NAME, "/visualcut/E_MALL_AGENT_INFO.rpt");// visualcut
+                                                                                 // rpt
+                                                                                 // file
+                                                                                 // name.
+   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+   params.put("V_TEMP", "TEMP");// parameter
+   params.put(AppConstants.REPORT_DOWN_FILE_NAME, File.separator + "agent_data" + ".xls");
+
+   this.view(null, null, params);
+   LOGGER.info("[END] agentData_raw...");
+ }
+
+ @RequestMapping(value = "/magicAddress_raw.do")
+ @Scheduled(cron = " 0 45 23 * * ?")//Daily 11:45pm
+ public void magicAddress_raw() throws IOException {
+   LOGGER.info("[START] magicAddress_raw...");
+   Map<String, Object> params = new HashMap<>();
+   params.put(REPORT_FILE_NAME, "/visualcut/E_MALL_MAGIC_ADDRESS.rpt");// visualcut
+                                                                                 // rpt
+                                                                                 // file
+                                                                                 // name.
+   params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+   params.put("V_TEMP", "TEMP");// parameter
+   params.put(AppConstants.REPORT_DOWN_FILE_NAME, File.separator + "magic_address.xls");
+
+   this.view(null, null, params);
+   LOGGER.info("[END] magicAddress_raw...");
+ }
 
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
