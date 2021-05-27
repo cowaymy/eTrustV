@@ -1074,8 +1074,13 @@
               AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
               AND SAL0046D.INSTALL_ENTRY_NO = SVC0113D.SVC_NO(+)
               AND SAL0001D.PROMO_ID = SAL0017D.PROMO_ID(+)
-              ) WHERE rnum = 1
     ]]>
+
+         <if test='userId == "DT100004" '>
+              AND SAL0046D.INSTALL_DT between #{requestDate} - 3 and #{requestDate}
+         </if>
+
+      ) WHERE rnum = 1
 
     <!-- WHERE rnum = 1
 
