@@ -474,8 +474,16 @@ console.log("searchColorGrid");
                $(obj).append('<optgroup label="Bidet">');
                count++;
            }
+           if(data[index].codeId == 1653  && count == 0){
+               $(obj).append('<optgroup label="Frame">');
+               count++;
+           }
            if(data[index].codeId == 790 && count == 0){
                $(obj).append('<optgroup label="Juicer">');
+               count++;
+           }
+           if(data[index].codeId == 1646 && count == 0){
+               $(obj).append('<optgroup label="Mattress">');
                count++;
            }
            //
