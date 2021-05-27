@@ -1077,7 +1077,8 @@
     ]]>
 
          <if test='userId == "DT100004" '>
-              AND SAL0046D.INSTALL_DT between #{requestDate} - 3 and #{requestDate}
+              <!-- AND SAL0046D.INSTALL_DT between #{requestDate} - 3 and #{requestDate} -->
+              AND SAL0046D.INSTALL_DT between sysdate - 1 and sysdate
          </if>
 
       ) WHERE rnum = 1
