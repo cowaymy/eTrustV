@@ -568,8 +568,8 @@ public class VendorManagementController {
 	    }
 	    else
 	    {
-	    	model.addAttribute("costCenterName", vendorInfo.get("costCentrName").toString());
-		    model.addAttribute("costCenter", vendorInfo.get("costCentr").toString());
+	    	model.addAttribute("costCenterName", vendorInfo.get("costCenterName").toString());
+		    model.addAttribute("costCenter", vendorInfo.get("costCenter").toString());
 	    }
 
 	    model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
