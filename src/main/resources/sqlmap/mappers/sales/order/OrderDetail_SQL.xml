@@ -188,7 +188,7 @@
                         , TO_CHAR(T1.GOV_AG_ITM_UPD_DT, 'DD/MM/YYYY')) AS GOV_AG_ITM_UPD_DT
                FROM SAL0034D T1
                LEFT OUTER JOIN SAL0033D T2 ON T1.GOV_AG_ID = T2.GOV_AG_ID
-               WHERE T1.GOV_AG_ITM_SALES_ORD_ID = #{salesOrderId}
+               WHERE T1.GOV_AG_ITM_SALES_ORD_ID = #{salesOrderId} AND T1. GOV_AG_ITM_STUS_ID <![CDATA[ <> ]]>8
     ) T WHERE RANK1 = 1
   </select>
 
