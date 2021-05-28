@@ -36,7 +36,7 @@
                                   , SLIP_NO = #{slipNo}
                                   , UPLOAD_IMG = #{uploadImg1}
                                   , UPLOAD_IMG2 = #{uploadImg2}
-                                  , UPLOAD_IMG3 = #{uploadImg3}
+                                  <!-- , UPLOAD_IMG3 = #{uploadImg3} -->
                                   , UPLOAD_IMG4 = #{uploadImg4}
     WHERE MOB_PAY_NO = #{mobPayNo}
         AND SALES_ORD_NO = #{salesOrdNo}
