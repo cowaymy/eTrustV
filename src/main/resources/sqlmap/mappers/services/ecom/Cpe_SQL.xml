@@ -268,6 +268,7 @@
             ,CRT_USER_ID
             ,AS_NO
             ,REQUESTOR_BRANCH
+            ,ISSUE_TYPE_ID
         )
             values
         (
@@ -285,6 +286,7 @@
             ,#{userId}
             ,#{asNo}
             ,#{requestorBranch}
+            ,#{inputIssueSelect}
         )
     </insert>
 
@@ -586,6 +588,14 @@
         WHERE CODE_NAME LIKE '%' || #{orderDscCode} || '%'
         AND CODE_MASTER_ID = 360
         AND ROWNUM = 1
+  </select>
+
+  <select id="selectIssueTypeList" resultType="egovMap">
+        SELECT CODE CODE_ID
+        , CODE_NAME
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = 468
+        ORDER BY CODE
   </select>
 
 </mapper>

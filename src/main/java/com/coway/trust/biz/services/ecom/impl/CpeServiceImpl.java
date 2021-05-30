@@ -209,4 +209,9 @@ public class CpeServiceImpl implements CpeService {
 		return cpeMapper.getOrderDscCode(orderDscCode);
 	}
 
+	@Override
+	public List<EgovMap> getIssueTypeList() {
+		return cpeMapper.selectIssueTypeList();
+	}
+
 }

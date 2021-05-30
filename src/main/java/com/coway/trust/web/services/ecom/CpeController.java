@@ -352,4 +352,10 @@ public class CpeController {
 		return orderDscCodeSys;
 	}
 
+	@RequestMapping(value = "/selectIssueType.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getIssueType(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+		List<EgovMap> issueTypeList = cpeService.getIssueTypeList();
+		return ResponseEntity.ok(issueTypeList);
+	}
 }

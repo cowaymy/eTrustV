@@ -67,12 +67,15 @@
         fn_setKeyInDate();
 
         //Auto-populate Sub Department during initial pop up load
-        doGetCombo('/services/ecom/selectSubDept.do',  $("#_inputMainDeptSelect").val(), '${orderDscCodeSys}', '_inputSubDeptSelect', 'S' , '');
+        doGetCombo('/services/ecom/selectSubDept.do',  $("#_inputMainDeptSelect").val(), '${orderDscCodeSys}', '_inputSubDeptSelect', 'S', '');
 
         //Populate Sub Department in-charge when Main Dept is changed
         $("#_inputMainDeptSelect").change(function(){
-            doGetCombo('/services/ecom/selectSubDept.do',  $("#_inputMainDeptSelect").val(), '', '_inputSubDeptSelect', 'S' ,  '');
+            doGetCombo('/services/ecom/selectSubDept.do',  $("#_inputMainDeptSelect").val(), '', '_inputSubDeptSelect', 'S' , '');
         });
+
+        //Populate Issue Type
+        doGetCombo('/services/ecom/selectIssueType.do', '', '', '_inputIssueSelect', 'S', '');
 
     });//Doc Ready End
 
