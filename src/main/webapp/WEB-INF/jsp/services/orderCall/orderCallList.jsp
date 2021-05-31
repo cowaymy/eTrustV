@@ -321,7 +321,7 @@
     $("#contactNo").val("");
     $("#listDSCCode").val("");
     $("#PONum").val("");
-    $("#feedBackCode").val("");
+    $("#searchFeedBackCode").val("");
     $("#sortBy").val("0");
   }
 
@@ -547,7 +547,7 @@
         </c:forEach> --%>
       </select></td>
       <th scope="row">Feedback Code</th>
-      <td colspan="2"><select class="w100p" id="feedBackCode" name="feedBackCode">
+      <td colspan="2"><select class="w100p" id="searchFeedBackCode" name="searchFeedBackCode">
             <option value=""><spring:message code='service.title.FeedbackCode' /></option>
 	        <c:forEach var="list" items="${callStatus}" varStatus="status">
 	           <option value="${list.resnId}">${list.c1}</option>

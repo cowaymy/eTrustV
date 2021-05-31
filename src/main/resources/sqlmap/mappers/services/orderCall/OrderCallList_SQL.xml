@@ -202,8 +202,8 @@
       AND TRIM(UPPER(Extent1.area)) = TRIM(UPPER(#{ordArea}))
     </if>
     <!-- Added feedback code criteria by Hui Ding, 12-04-2021 -->
-    <if test="feedBackCode != null and feedBackCode !=''">
-      AND Extent1.CALL_FDBCK_ID = TRIM(#{feedBackCode})
+    <if test="searchFeedBackCode != null and searchFeedBackCode !=''">
+      AND Extent1.CALL_FDBCK_ID = TRIM(#{searchFeedBackCode})
     </if>
 
     <if test="sortBy != null and sortBy != '' and sortBy == 1 ">

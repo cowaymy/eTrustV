@@ -81,6 +81,16 @@
       msg += "* <spring:message code='sys.msg.necessary' arguments='Feedback Code' htmlEscape='false'/> </br>";
     }
 
+    var feedBackCode = $("#feedBackCode option:selected").val();
+    console.log('feedBackCode: ' + feedBackCode);
+    if(rdcStk != 0 || rdcStk != '')
+    {
+        if(feedBackCode == '2129') //FB26 - Stock In Transit
+        {
+            Common.alert("Currently Stock Available in RDC. Please Select Correct Feedback Code");
+        }
+    }
+
     if (msg != "") {
       Common.alert(msg);
       return false;
