@@ -339,6 +339,7 @@ function fn_vendorRequestPop(appvPrcssNo, clmType, costCenterName, costCenter, r
             ,costCenterName : costCenterName
             ,costCenter : costCenter
             ,reqNo : reqNo
+            ,viewType : "VIEW"
     };
     Common.popupDiv("/eAccounting/vendor/vendorRqstViewPop.do", data, null, true, "vendorRqstViewPop");
 }
@@ -1081,9 +1082,9 @@ function fn_editRejected() {
     <th scope="row">Vendor Request Number</th>
         <td>
             <div class="date_set w100p"><!-- date_set start -->
-            <p><input type="text" title="" id="vendorReqNoFrom" name="vendorReqNoFrom" class="cRange" /></p>
+            <p><input style="text-transform: uppercase" type="text" title="" id="vendorReqNoFrom" name="vendorReqNoFrom" class="cRange" /></p>
             <span>to</span>
-            <p><input type="text" title="" id="vendorReqNoTo" name="vendorReqNoTo" class="cRange"  /></p>
+            <p><input style="text-transform: uppercase" type="text" title="" id="vendorReqNoTo" name="vendorReqNoTo" class="cRange"  /></p>
         </div><!-- date_set end -->
         </td>
 </tr>
