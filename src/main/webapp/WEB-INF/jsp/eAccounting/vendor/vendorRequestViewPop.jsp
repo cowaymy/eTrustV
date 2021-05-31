@@ -20,6 +20,18 @@ var attachmentList = new Array();
 
 var attachList = null;
 
+var update = new Array();
+var remove = new Array();
+var attachmentList = new Array();
+<c:forEach var="file" items="${attachmentList}">
+var obj = {
+        atchFileGrpId : "${file.atchFileGrpId}"
+        ,atchFileId : "${file.atchFileId}"
+        ,atchFileName : "${file.atchFileName}"
+};
+attachmentList.push(obj);
+</c:forEach>
+
 //그리드 속성 설정
 var myGridPros = {
     // 페이징 사용
@@ -105,6 +117,19 @@ $(document).ready(function () {
         }
     }
     $("#viewPayDueDt").text(myGridData[0].payDueDt);
+
+    $(".input_text").dblclick(function() {
+        var oriFileName = $(this).val();
+        var fileGrpId;
+        var fileId;
+        for(var i = 0; i < attachmentList.length; i++) {
+            if(attachmentList[i].atchFileName == oriFileName) {
+                fileGrpId = attachmentList[i].atchFileGrpId;
+                fileId = attachmentList[i].atchFileId;
+            }
+        }
+        fn_atchViewDown(fileGrpId, fileId);
+    });
 
     if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J") {
         $("#pApprove_btn").hide();
