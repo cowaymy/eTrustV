@@ -580,7 +580,14 @@
     <td>
         <c:choose>
 	        <c:when test="${infoMap.govAgPrgrsId <= 8 }">
-	            <span>-</span>
+	           <c:choose>
+	               <c:when test="${infoMap.erlTerNonCrisisChk == 1}">
+	                   <span>Yes</span>
+	               </c:when>
+	               <c:otherwise>
+	                   <span>-</span>
+	               </c:otherwise>
+	           </c:choose>
 	        </c:when>
 	        <c:otherwise>
 	           <c:if test="${infoMap.erlTerNonCrisisChk == 1}">
