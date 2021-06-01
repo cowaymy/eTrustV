@@ -49,11 +49,12 @@ public class MemberGroupListController {
 	@Resource(name = "groupService")
 	private GroupService groupService;
 
-	/*@RequestMapping(value = "/loyaltyHp.do")
-	public String loyaltyHpUploadList(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
-
-		return "sales/customer/loyaltyHpUploadList";
-	}*/
+	/*
+	 * @RequestMapping(value = "/loyaltyHp.do") public String loyaltyHpUploadList(@RequestParam Map<String, Object>
+	 * params, ModelMap model) throws Exception {
+	 * 
+	 * return "sales/customer/loyaltyHpUploadList"; }
+	 */
 
 	@RequestMapping(value = "groupUploadPop.do")
 	public String groupUploadPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
@@ -62,77 +63,76 @@ public class MemberGroupListController {
 	}
 
 	@RequestMapping(value = "/groupCsvUpload", method = RequestMethod.POST)
-	public ResponseEntity readFile(@RequestParam Map<String, Object> params, MultipartHttpServletRequest request,SessionVO sessionVO) throws IOException, InvalidFormatException {
+	public ResponseEntity readFile(@RequestParam Map<String, Object> params, MultipartHttpServletRequest request,
+			SessionVO sessionVO) throws IOException, InvalidFormatException {
 		LOGGER.debug("groupCsvUpload params =============================>>  " + params);
-	    ReturnMessage message = new ReturnMessage();
-	    Map<String, MultipartFile> fileMap = request.getFileMap();
-	    MultipartFile multipartFile = fileMap.get("csvFile");
-	    List<GroupRawDataVO> vos = csvReadComponent.readCsvToList(multipartFile, true, GroupRawDataVO::create);
+		ReturnMessage message = new ReturnMessage();
+		Map<String, MultipartFile> fileMap = request.getFileMap();
+		MultipartFile multipartFile = fileMap.get("csvFile");
+		List<GroupRawDataVO> vos = csvReadComponent.readCsvToList(multipartFile, true, GroupRawDataVO::create);
 
-	    List<Map<String, Object>> detailList = new ArrayList<Map<String, Object>>();
-	    for (GroupRawDataVO vo : vos) {
+		List<Map<String, Object>> detailList = new ArrayList<Map<String, Object>>();
+		for (GroupRawDataVO vo : vos) {
 
-	        HashMap<String, Object> hm = new HashMap<String, Object>();
+			HashMap<String, Object> hm = new HashMap<String, Object>();
 
-	        hm.put("fromTrans", vo.getFromTrans().trim());
-	        hm.put("memberCode", vo.getMemberCode().trim());
-	        hm.put("toTrans", vo.getToTrans().trim());
-	        hm.put("memberLevel", vo.getMemberLevel().trim());
-	        hm.put("transDate", vo.getTransDate().trim());
-	        hm.put("memberCodeTo", vo.getMemberCodeTo().trim());
-	        hm.put("groupMemberType", vo.getGroupMemberType().trim());
-	        hm.put("crtUserId", sessionVO.getUserId());
-	        hm.put("updUserId", sessionVO.getUserId());
+			hm.put("fromTrans", vo.getFromTrans().trim());
+			hm.put("memberCode", vo.getMemberCode().trim());
+			hm.put("toTrans", vo.getToTrans().trim());
+			hm.put("memberLevel", vo.getMemberLevel().trim());
+			hm.put("transDate", vo.getTransDate().trim());
+			hm.put("memberCodeTo", vo.getMemberCodeTo().trim());
+			hm.put("groupMemberType", vo.getGroupMemberType().trim());
+			hm.put("crtUserId", sessionVO.getUserId());
+			hm.put("updUserId", sessionVO.getUserId());
 
-	        detailList.add(hm);
-	    }
+			detailList.add(hm);
+		}
 
-	    Map<String, Object> master = new HashMap<String, Object>();
+		Map<String, Object> master = new HashMap<String, Object>();
 
-	    master.put("crtUserId", sessionVO.getUserId());
-	    master.put("updUserId", sessionVO.getUserId());
-	    master.put("groupRem", "Group Transfer File Upload");
-	    master.put("groupTotItm", vos.size());
-	    master.put("groupTotSuccess", 0);
-	    master.put("groupTotFail", 0);
+		master.put("crtUserId", sessionVO.getUserId());
+		master.put("updUserId", sessionVO.getUserId());
+		master.put("groupRem", "Group Transfer File Upload");
+		master.put("groupTotItm", vos.size());
+		master.put("groupTotSuccess", 0);
+		master.put("groupTotFail", 0);
 
-	    int result = groupService.saveCsvUpload(master, detailList);
-	    if(result > 0){
+		int result = groupService.saveCsvUpload(master, detailList);
+		if (result > 0) {
 
-	        message.setMessage("Group Transfer File successfully uploaded.<br />Batch ID : "+result);
-	        message.setCode(AppConstants.SUCCESS);
-	    }else{
-	        message.setMessage("Failed to upload Group Transfer File. Please try again later.");
-	        message.setCode(AppConstants.FAIL);
-	    }
+			message.setMessage("Group Transfer File successfully uploaded.<br />Batch ID : " + result);
+			message.setCode(AppConstants.SUCCESS);
+		} else {
+			message.setMessage("Failed to upload Group Transfer File. Please try again later.");
+			message.setCode(AppConstants.FAIL);
+		}
 
-	    return ResponseEntity.ok(message);
+		return ResponseEntity.ok(message);
 	}
 
-	 @RequestMapping(value = "/selectGroupMstList", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectGroupMstList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
-	    LOGGER.debug("params =====================================>>  " + params);
+	@RequestMapping(value = "/selectGroupMstList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectGroupMstList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+		LOGGER.debug("params =====================================>>  " + params);
 
-	    List<EgovMap> list = groupService.selectGroupMstList(params);
+		List<EgovMap> list = groupService.selectGroupMstList(params);
 
-	    LOGGER.debug("list =====================================>>  " + list.toString());
-	    return ResponseEntity.ok(list);
+		LOGGER.debug("list =====================================>>  " + list.toString());
+		return ResponseEntity.ok(list);
 	}
-
 
 	@RequestMapping(value = "/groupDetailViewPop.do")
 	public String loyaltyHpDetailViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
-	    LOGGER.debug("params =====================================>>  " + params);
+		LOGGER.debug("params =====================================>>  " + params);
 
-	    EgovMap groupBatchInfo = groupService.selectGroupInfo(params);
+		EgovMap groupBatchInfo = groupService.selectGroupInfo(params);
 
-	    model.addAttribute("groupBatchInfo", groupBatchInfo);
-	    model.addAttribute("groupBatchItem", new Gson().toJson(groupBatchInfo.get("groupBatchItem")));
+		model.addAttribute("groupBatchInfo", groupBatchInfo);
+		model.addAttribute("groupBatchItem", new Gson().toJson(groupBatchInfo.get("groupBatchItem")));
 
-
-	    return "organization/organization/groupDetailViewPop";
+		return "organization/organization/groupDetailViewPop";
 	}
-
 
 	@RequestMapping(value = "/groupConfirm")
 	public ResponseEntity<ReturnMessage> groupConfirm(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -144,14 +144,13 @@ public class MemberGroupListController {
 		groupService.callGroupConfirm(params);
 
 		String msg = null;
-		if(params.get("v_sqlcode") != null)
-			msg = "("+ params.get("v_sqlcode") +")"+ params.get("v_sqlcont");
-		System.out.println("##msg : "+msg);
+		if (params.get("v_sqlcode") != null)
+			msg = "(" + params.get("v_sqlcode") + ")" + params.get("v_sqlcont");
+		System.out.println("##msg : " + msg);
 
 		message.setMessage(msg);
 		return ResponseEntity.ok(message);
 	}
-
 
 	@RequestMapping(value = "/groupReject")
 	public ResponseEntity<ReturnMessage> groupReject(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -162,19 +161,17 @@ public class MemberGroupListController {
 
 		int result = groupService.updGroupReject(params);
 
-	    if(result > 0){
+		if (result > 0) {
 
-		        message.setMessage("Group Transfer File successfully rejected.<br />");
-		        message.setCode(AppConstants.SUCCESS);
-		    }else{
-		        message.setMessage("Failed to reject Group Transfer File. Please try again later.");
-		        message.setCode(AppConstants.FAIL);
-		    }
+			message.setMessage("Group Transfer File successfully rejected.<br />");
+			message.setCode(AppConstants.SUCCESS);
+		} else {
+			message.setMessage("Failed to reject Group Transfer File. Please try again later.");
+			message.setCode(AppConstants.FAIL);
+		}
 
 		return ResponseEntity.ok(message);
 
 	}
-
-
 
 }

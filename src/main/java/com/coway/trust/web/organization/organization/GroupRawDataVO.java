@@ -11,9 +11,6 @@ public class GroupRawDataVO {
 	private String transDate;
 	private String memberCodeTo;
 	private String groupMemberType;
-	
-
-
 
 	public static GroupRawDataVO create(CSVRecord CSVRecord) {
 		GroupRawDataVO vo = new GroupRawDataVO();
@@ -83,6 +80,5 @@ public class GroupRawDataVO {
 	public void setGroupMemberType(String groupMemberType) {
 		this.groupMemberType = groupMemberType;
 	}
-
 
 }
