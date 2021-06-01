@@ -70,4 +70,6 @@ public interface VendorMapper {
 	String checkReqNo(Map<String, Object> params);
 
 	void updateVendorInfo(Map<String, Object> params);
+
+	void insertVendorInterface(Map<String, Object> params);
 }

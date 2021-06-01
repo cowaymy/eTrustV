@@ -13,6 +13,8 @@
 </style>
 <script type="text/javascript">
 console.log("vendorRequestViewPop");
+var reqNo;
+
 var myGridID;
 var myGridData = $.parseJSON('${appvInfoAndItems}');
 var vendorInfo = "${vendorInfo}";
@@ -23,6 +25,7 @@ var attachList = null;
 var update = new Array();
 var remove = new Array();
 var attachmentList = new Array();
+
 <c:forEach var="file" items="${attachmentList}">
 var obj = {
         atchFileGrpId : "${file.atchFileGrpId}"
@@ -68,8 +71,7 @@ $(document).ready(function () {
     var bankList = "${vendorInfo.bank}";
     var paymentMethod = "${vendorInfo.payType}";
     var designation = "${vendorInfo.contactDesignation}";
-   $("#keyDate").val("${vendorInfo.updDate}");
-
+    $("#keyDate").val("${vendorInfo.updDate}");
 
     //doGetCombo('/common/selectCodeList.do', '17', designation, 'designation', 'S' , ''); // Customer Initial Type Combo Box
     $("#vendorCountry option[value='"+ vendorCountry +"']").attr("selected", true);
@@ -87,35 +89,21 @@ $(document).ready(function () {
 
     var costCenterName =  $("#costCenterName").val();
     var costCenter =  $("#costCenter").val();
-    console.log(costCenterName);
-    console.log(costCenter);
+
+    reqNo = myGridData[0].clmNo;
     $("#viewClmNo").text(myGridData[0].clmNo);
     $("#viewClmType").text(myGridData[0].clmType);
     //$("#viewCostCentr").text(myGridData[0].costCentr + "/" + myGridData[0].costCentrName);
     $("#viewInvcDt").text(myGridData[0].invcDt);
     $("#viewReqstDt").text(myGridData[0].reqstDt);
     $("#viewReqstUserId").text(myGridData[0].reqstUserId);
+
     var clmNo = myGridData[0].clmNo
     var clmType = clmNo.substr(0, 2);
-    if(clmType == "J3") {
-        $("#viewMemAccNameTh").html('<spring:message code="crditCardNewReim.crditCardNo" />');
-        $("#viewMemAccNameTd").text(myGridData[0].crditCardNo);
-        $("#paydueDtLbl").empty();
-        $("#viewPayDueDt").empty();
-        $("#invcDtLbl").html("Claim Month");
-        $("#viewInvcDt").text(myGridData[0].clmMonth);
-    } else {
-        $("#viewMemAccNameTh").html('<spring:message code="invoiceApprove.member" />');
-        $("#viewMemAccId").val(myGridData[0].memAccId);
-        $("#viewMemAccNameTd").text(myGridData[0].memAccId + " / " + myGridData[0].memAccName);
 
-        if(clmType == "J2") {
-            $("#paydueDtLbl").empty();
-            $("#viewPayDueDt").empty();
-            $("#invcDtLbl").html("Claim Month");
-            $("#viewInvcDt").text(myGridData[0].clmMonth);
-        }
-    }
+    $("#viewMemAccNameTh").html('<spring:message code="invoiceApprove.member" />');
+    $("#viewMemAccId").val(myGridData[0].memAccId);
+    $("#viewMemAccNameTd").text(myGridData[0].memAccId + " / " + myGridData[0].memAccName);
     $("#viewPayDueDt").text(myGridData[0].payDueDt);
 
     $(".input_text").dblclick(function() {
@@ -131,231 +119,78 @@ $(document).ready(function () {
         fn_atchViewDown(fileGrpId, fileId);
     });
 
-    if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J") {
-        $("#pApprove_btn").hide();
-        $("#pReject_btn").hide();
+    console.log("viewType :: " + "${viewType}");
+    if("${viewType}" == "APPV") {
+        $("#appvBtns").show();
 
-        $("#finApprAct").show();
+        if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J") {
+            $("#pApprove_btn").hide();
+            $("#pReject_btn").hide();
 
-        Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: myGridData[0].appvPrcssNo}, function(result) {
-            console.log(result);
+            $("#finApprAct").show();
 
-            $("#viewFinAppr").text(result.finalAppr);
-        });
-    } else {
-        $("#finApprAct").hide();
+            Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: myGridData[0].appvPrcssNo}, function(result) {
+                console.log(result);
+
+                $("#viewFinAppr").text(result.finalAppr);
+            });
+        } else {
+            $("#finApprAct").hide();
+        }
     }
 
     AUIGrid.setGridData(myGridID, myGridData);
 });
 
-function fn_approvalSubmit() {
+function fn_approveRegistPop() {
     var rows = AUIGrid.getRowIndexesByValue(invoAprveGridID, "clmNo", [$("#viewClmNo").text()]);
     // isActive
     AUIGrid.setCellValue(invoAprveGridID, rows, "isActive", "Active");
-    fn_approveRegistPop();
-}
-
-function fn_RejectSubmit() {
-    var rows = AUIGrid.getRowIndexesByValue(invoAprveGridID, "clmNo", [$("#viewClmNo").text()]);
-    AUIGrid.setCellValue(invoAprveGridID, rows, "isActive", "Active");
-    fn_rejectRegistPop();
-}
-
-function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
-    var url = "";
-    var obj = {
-            clmNo : clmNo
-            ,clmSeq : appvItmSeq
-            ,clamUn : clamUn
+console.log("rows :: " + rows);
+    var data = {
+            appvPrcssNo : appvPrcssNo
     };
-    var clmType = clmNo.substr(0, 2);
-    if(clmType == "J1") {
-        url = "/eAccounting/webInvoice/getAppvItemOfClmUn.do?_cacheId=" + Math.random();
-    } else if(clmType == "J2") {
-        url = "/eAccounting/pettyCash/getAppvItemOfClmUn.do?_cacheId=" + Math.random();
-    } else if(clmType == "J3") {
-        url = "/eAccounting/creditCard/getAppvItemOfClmUn.do?_cacheId=" + Math.random();
+    Common.popupDiv("/eAccounting/vendor/approveRegistPop.do", null, null, true, "approveRegistPop");
+}
+
+function fn_rejectRegistPop() {
+    var rows = AUIGrid.getRowIndexesByValue(invoAprveGridID, "clmNo", [$("#viewClmNo").text()]);
+    // isActive
+    AUIGrid.setCellValue(invoAprveGridID, rows, "isActive", "Active");
+    console.log("rows :: " + rows);
+    var data = {
+            appvPrcssNo : appvPrcssNo
+    };
+    Common.popupDiv("/eAccounting/vendor/rejectRegistPop.do", null, null, true, "rejectRegistPop");
+}
+
+/*
+function fn_appvRejectVendorReq(v) {
+    console.log("v :: " + v);
+    console.log("reqNo :: " + reqNo);
+
+    var action;
+    if(v == "A") {
+        action = "approve";
     } else {
-        // same table, same query
-        url = "/eAccounting/staffClaim/getAppvItemOfClmUn.do?_cacheId=" + Math.random();
+        action = "reject";
     }
-    Common.ajax("POST", url, obj, function(result) {
-        console.log(result);
-        console.log(result.data);
 
-        console.log("expGrp : " + result.data.expGrp);
-        if(result.data.expGrp == "1") {
-            $("#noMileage").hide();
+    var msg1 = "Are you sure you want to ";
+    var msg2 = " this vendor request submit form?";
 
-            fn_destroyMGrid();
-            fn_createMileageAUIGrid(result.data.itemGrp);
-
-            // TODO attachFile
-            attachList = result.data.attachList;
-            console.log(attachList);
-            if(attachList) {
-                if(attachList.length > 0) {
-                    for(var i = 0; i < attachList.length; i++) {
-                        result.data.itemGrp[i].atchFileId = attachList[i].atchFileId;
-                        result.data.itemGrp[i].atchFileName = attachList[i].atchFileName;
-                        var str = attachList[i].atchFileName.split(".");
-                        result.data.itemGrp[i].fileExtsn = str[1];
-                        result.data.itemGrp[i].fileCnt = 1;
-                    }
-                }
-            }
-        } else {
-            $("#noMileage").show();
-
-            if(clmType == "J1") {
-                $("#viewInvcDt").text(result.data.invcDt);
-                $("#supplirTh").html('');
-                $("#supplirTd").text("");
-                $("#crcInfo").hide();
-                $("#payInfo1").show();
-                $("#payInfo2").show();
-                $("#expDesc").text(result.data.invcRem);
-                $("#utilNo").text(result.data.utilNo);
-                $("#jPayNo").text(result.data.jPayNo);
-                var bilPeriod = "";
-                if(!FormUtil.isEmpty(result.data.bilPeriodF) && !FormUtil.isEmpty(result.data.bilPeriodT)) {
-                	bilPeriod = result.data.bilPeriodF + " - " + result.data.bilPeriodT;
-                } else {
-                	if(!FormUtil.isEmpty(result.data.bilPeriodF) && FormUtil.isEmpty(result.data.bilPeriodT)) {
-                		bilPeriod = result.data.bilPeriodF + " - ";
-                	}
-                	if(FormUtil.isEmpty(result.data.bilPeriodF) && !FormUtil.isEmpty(result.data.bilPeriodT)) {
-                        bilPeriod = " - " + result.data.bilPeriodT;
-                    }
-                }
-                $("#bilPeriod").text(bilPeriod);
-                mGridColumnLayout[4].visible = false;
-            } else if(clmType == "J2") {
-                $("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
-                $("#supplirTd").text(result.data.supplier);
-                $("#crcInfo").hide();
-                $("#payInfo3").show();
-                $("#payInfo3InvcDt").text(result.data.invcDt);
-                var bilPeriod = "";
-                if(!FormUtil.isEmpty(result.data.bilPeriodF) && !FormUtil.isEmpty(result.data.bilPeriodT)) {
-                    bilPeriod = result.data.bilPeriodF + " - " + result.data.bilPeriodT;
-                } else {
-                    if(!FormUtil.isEmpty(result.data.bilPeriodF) && FormUtil.isEmpty(result.data.bilPeriodT)) {
-                        bilPeriod = result.data.bilPeriodF + " - ";
-                    }
-                    if(FormUtil.isEmpty(result.data.bilPeriodF) && !FormUtil.isEmpty(result.data.bilPeriodT)) {
-                        bilPeriod = " - " + result.data.bilPeriodT;
-                    }
-                }
-                $("#payInfo3bilPeriod").text(bilPeriod);
-                $("#payInfo4").show();
-                $("#payInfo4utilNo").text(result.data.utilNo);
-            } else if(clmType == "J3"){
-                $("#ccInvcInfo").hide();
-                $("#crcInfo").show();
-                $("#crcCostCentr").text(result.data.sCostCentr + "/" + result.data.sCostCentrName);
-                $("#crcInvcDt").text(result.data.invcDt);
-                $("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
-                $("#supplirTd").text(result.data.supplier);
-                $("#payInfo1").hide();
-                $("#payInfo2").hide();
-            } else {
-                $("#viewInvcDt").text(result.data.invcDt);
-                $("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
-                $("#supplirTd").text(result.data.supplier);
-                $("#payInfo1").hide();
-                $("#payInfo2").hide();
-            }
-            $("#invcType").text(result.data.invcType);
-            $("#invcNo").text(result.data.invcNo);
-            $("#gstRgistNo").text(result.data.gstRgistNo);
-            $("#expDesc").text(result.data.expDesc);
-
-            fn_destroyMileageGrid();
-            fn_createMGrid(result.data.itemGrp);
-
-            // TODO attachFile
-            attachList = result.data.attachList;
-            console.log(attachList);
-            if(attachList) {
-                if(attachList.length > 0) {
-                    $("#attachTd").html("");
-                    for(var i = 0; i < attachList.length; i++) {
-                        //$("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
-                        var atchTdId = "atchId" + (i+1);
-                        $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='" + atchTdId + "'/></div>");
-                        $(".input_text[name='" + atchTdId + "']").val(attachList[i].atchFileName);
-                    }
-
-                    // 파일 다운
-                    $(".input_text").dblclick(function() {
-                        var oriFileName = $(this).val();
-                        var fileGrpId;
-                        var fileId;
-                        for(var i = 0; i < attachList.length; i++) {
-                            if(attachList[i].atchFileName == oriFileName) {
-                                fileGrpId = attachList[i].atchFileGrpId;
-                                fileId = attachList[i].atchFileId;
-                            }
-                        }
-                        fn_atchViewDown(fileGrpId, fileId);
-                    });
-                }
-            }
+    Common.confirm(msg1 + action + msg2, function() {
+        var data = {
+                appvPrcssNo : $("#appvPrcssNo").val(),
+                reqNo : reqNo,
+                action : v
         }
-
-        //fn_setGridData(mGridID, result.itemGrp);
-    });
+        Common.ajax("POST", "/eAccounting/vendor/appvRejectSubmit.do", data, function(result) {
+            console.log(result);
+        });
+    })
 }
-
-//AUIGrid 를 생성합니다.
-function fn_createMileageAUIGrid(gridData) {
-    // 이미 생성되어 있는 경우
-    console.log("isCreated : " + AUIGrid.isCreated("#mileage_grid_wrap"));
-    if(AUIGrid.isCreated("#mileage_grid_wrap")) {
-        fn_destroyMileageGrid();
-    }
-
-    $("#mileage_grid_wrap").show();
-
-    // 실제로 #grid_wrap 에 그리드 생성
-    mileageGridID = AUIGrid.create("#mileage_grid_wrap", mileageGridColumnLayout, mileageGridPros);
-    // AUIGrid 에 데이터 삽입합니다.
-    AUIGrid.setGridData(mileageGridID, gridData);
-}
-
-// 그리드를 제거합니다.
-function fn_destroyMileageGrid() {
-    $("#mileage_grid_wrap").hide();
-    AUIGrid.destroy("#mileage_grid_wrap");
-    mileageGridID = null;
-}
-
-//AUIGrid 를 생성합니다.
-function fn_createMGrid(gridData) {
-    // 이미 생성되어 있는 경우
-    console.log("isCreated : " + AUIGrid.isCreated("#mGrid_wrap"));
-    if(AUIGrid.isCreated("#mGrid_wrap")) {
-        fn_destroyMGrid();
-    }
-
-    $("#mGrid_wrap").show();
-
-    // 실제로 #grid_wrap 에 그리드 생성
-    mGridID = AUIGrid.create("#mGrid_wrap", mGridColumnLayout, mGridPros);
-    // AUIGrid 에 데이터 삽입합니다.
-    AUIGrid.setGridData(mGridID, gridData);
-
-    //fn_myGridSetEvent();
-}
-
-// 그리드를 제거합니다.
-function fn_destroyMGrid() {
-    $("#mGrid_wrap").hide();
-    AUIGrid.destroy("#mGrid_wrap");
-    mGridID = null;
-}
+*/
 
 function fn_atchViewDown(fileGrpId, fileId) {
     var data = {
@@ -396,6 +231,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_approveView">
 <input type="hidden" id="viewMemAccId">
+<input type="hidden" id="appvPrcssNo" value="${appvPrcssNo}">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -708,9 +544,10 @@ function fn_atchViewDown(fileGrpId, fileId) {
 </form>
 </section><!-- search_table end -->
 
-
-<article class="grid_wrap" id="approveView_grid_wrap"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
+<ul id="appvBtns" class="center_btns" style="display: none;">
+    <li><p class="btn_blue2"><a href="javascript:fn_approveRegistPop()" id="pApprove_btn"><spring:message code="invoiceApprove.title" /></a></p></li>
+    <li><p class="btn_blue2"><a href="javascript:fn_rejectRegistPop()" id="pReject_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>
+</ul>
 
 </section><!-- pop_body end -->
 

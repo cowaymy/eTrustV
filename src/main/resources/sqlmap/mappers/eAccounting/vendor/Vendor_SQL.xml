@@ -618,4 +618,61 @@
          WHERE VENDOR_REQ_NO = #{newReqNo}
 </update>
 
+    <insert id="insertVendorInterface" parameterType="Map">
+        INSERT INTO ITF0110M
+        SELECT
+            FN_CRT_IFKEY('110') AS IF_KEY,
+            '1' SEQ,
+            '110' IF_TYPE,
+            '10' TRAN_STATUS_CD,
+            '' ERR_CD,
+            '' ERR_MSG,
+            TO_CHAR(SYSDATE, 'YYYYMMDD') TRAN_DT,
+            TO_CHAR(SYSDATE, 'HH24MISS') TRAN_TM,
+            TO_CHAR(SYSDATE, 'YYYYMMDD') RGST_DT,
+            TO_CHAR(SYSDATE, 'HH24MISS') RGST_TM,
+            'BAT_110' RGST_ID,
+            VENDOR_ACC_ID CUST_NO,
+            VENDOR_NAME CUST_NM,
+            VENDOR_GRP CUST_GROUP,
+            ADD_POSTAL_CODE ZIP_CD,
+            ADD_COUNTRY COUNTRY,
+            '' KONZS,
+            '' ADDR1,
+            '' ADDR2,
+            '' LOCATE_CD,
+            '' KUNNR,
+            '' LIFNR,
+            '' BIZ_KEY,
+            '' PROCAN_YN,
+            '' PG_ID,
+            '' IF_REM,
+            '' BIZ_DT,
+            '' BIZ_TM,
+            VENDOR_REG_NO_NRIC STENR,
+            VENDOR_REQ_NO ALTKN,
+            ADD_HOUSE_LOT_NO HOUSE_NUM1,
+            ADD_STREET STREET,
+            ADD_CITY CITY,
+            PAY_ADV_EMAIL1 EMAIL_01,
+            PAY_ADV_EMAIL2 EMAIL_02,
+            BANK_COUNTRY BANKS,
+            BANK BANKL,
+            BANK_ACC_NO BANKN,
+            BANK_ACC_HOLDER KOINH,
+            '' BANKA,
+            '' STRAS,
+            '' ORT01,
+            '' BRNCH,
+            '' BGRUP,
+            SWIFT_CODE SWIFT,
+            CASE WHEN (VENDOR_GRP = 'VM02') THEN '0022200300'
+                 WHEN (VENDOR_GRP = 'VM03') THEN '0022200100'
+                 WHEN (VENDOR_GRP = 'VM11') THEN '0022200400'
+                 ELSE ''
+        END AKONT
+        FROM FCM0029D
+        WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+    </insert>
+
 </mapper>

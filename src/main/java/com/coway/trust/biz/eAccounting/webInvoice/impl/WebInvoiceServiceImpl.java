@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.eAccounting.vendor.VendorMapper;
 import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
 import com.coway.trust.biz.sample.impl.SampleServiceImpl;
 import com.coway.trust.util.CommonUtils;
@@ -35,6 +36,9 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 
 	@Resource(name = "webInvoiceMapper")
 	private WebInvoiceMapper webInvoiceMapper;
+
+	@Resource(name = "vendorMapper")
+    private VendorMapper vendorMapper;
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
@@ -407,6 +411,9 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 
                         webInvoiceMapper.insertAdvInterface(invoAppvItems);
                     }
+				} else if("V1".equals(clmType)) {
+				    LOGGER.debug("insertVendorInterface :: ", invoAppvInfo);
+				    vendorMapper.insertVendorInterface(invoAppvInfo);
 				}
 			}
 		}

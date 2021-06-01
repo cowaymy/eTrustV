@@ -481,7 +481,7 @@ function fn_webInvoiceAppvViewPop() {
     } else if(clmType == "V1") {
         url = "/eAccounting/vendor/vendorRqstViewPop.do";
 
-        $.extend(data, {reqNo : clmNo});
+        $.extend(data, {reqNo : clmNo, viewType : "APPV"});
     }else {
         url = "/eAccounting/webInvoice/webInvoiceAppvViewPop.do";
     }
@@ -532,14 +532,24 @@ function fn_appvRejctSubmit(type, rejctResn) {
         Common.ajax("POST", url, data, function(result) {
             console.log(result);
             if(result.code == "99") {
-            	console.log(result.message);
-            	Common.alert("The claim No is a document that has been approved or rejected. Please check and select again." + result.data.clmNoArr);
+                console.log(result.message);
+                Common.alert("The claim No is a document that has been approved or rejected. Please check and select again." + result.data.clmNoArr);
             } else {
-            	console.log(result.message);
-            	if(type == "appv") {
-                    Common.popupDiv("/eAccounting/webInvoice/approveComplePop.do", null, null, true, "approveComplePop");
-                }else if(type == 'rejct') {
-                    Common.popupDiv("/eAccounting/webInvoice/rejectComplePop.do", null, null, true, "rejectComplePop");
+                console.log(result.message);
+                if($("#appvType").val() == "0") {
+                    // Normal Claim
+                    if(type == "appv") {
+                        Common.popupDiv("/eAccounting/webInvoice/approveComplePop.do", null, null, true, "approveComplePop");
+                    }else if(type == 'rejct') {
+                        Common.popupDiv("/eAccounting/webInvoice/rejectComplePop.do", null, null, true, "rejectComplePop");
+                    }
+                } else {
+                    // Vendor
+                    if(type == "appv") {
+                        Common.popupDiv("/eAccounting/vendor/approveComplePop.do", null, null, true, "approveComplePop");
+                    }else if(type == 'rejct') {
+                        Common.popupDiv("/eAccounting/vendor/rejectComplePop.do", null, null, true, "rejectComplePop");
+                    }
                 }
             }
         });
