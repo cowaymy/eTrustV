@@ -389,6 +389,7 @@
     FROM SYS0032M Extent1
     WHERE ( Extent1.RESN_TYPE_ID = 276 )
       AND ( Extent1.STUS_CODE_ID = 1 )
+      ORDER BY Extent1.CODE
   </select>
 
   <select id="selectMaxId" parameterType="Map" resultType="String">
