@@ -2,12 +2,15 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
-
+var userBranchID = '${SESSION_INFO.userBranchId}';
 $(document).ready(function() {
-	doGetComboData('/logistics/returnusedparts/selectBranchCodeList.do','', '', 'cmbBranchCode', 'S','');
-	CommonCombo.make('cmbDepartmentCode', '/logistics/returnusedparts/getDeptCodeList', {memLvl : 3, memType : 2} , '');
-	//CommonCombo.make('searchBranch', '/logistics/returnusedparts/selectBranchList.do', '' , '');
+	var userBranchID = '${SESSION_INFO.userBranchId}';
+	//doGetComboData('/logistics/returnusedparts/selectBranchCodeList.do',$("#cmbBranchCode").val(), 'userBranchID', 'cmbBranchCode', 'S','');
 
+	doGetCombo('/logistics/returnusedparts/selectBranchCodeList.do', '',userBranchID, 'cmbBranchCode', 'S','fn_setBranchCodeClass');
+	CommonCombo.make('cmbDepartmentCode', '/logistics/returnusedparts/getDeptCodeList', {memLvl : 3, memType : 2, userBranchID: userBranchID} , '');
+
+	//CommonCombo.make('searchBranch', '/logistics/returnusedparts/selectBranchList.do', '' , '');
 });
 
 /* 멀티셀렉트 플러그인 start */
@@ -45,6 +48,13 @@ $.fn.clearForm = function() {
     });
 };
 
+function fn_setBranchCodeClass() {
+    $('#cmbBranchCode option[value="' + userBranchID + ']').attr('selected', 'selected');
+    console.log('selectedBranchCode: ' + $("#cmbBranchCode").val());
+    var selectedBranchCode = $("#cmbBranchCode").val();
+    CommonCombo.make('cmbDepartmentCode', '/logistics/returnusedparts/getDeptCodeList', {memLvl : 3, memType : 2, userBranchID : selectedBranchCode} , '');
+}
+
 function validRequiredField(){
 
     var valid = true;
@@ -79,6 +89,10 @@ function validRequiredField(){
 function cmbDepartmentCode_SelectedIndexChanged(){
 	CommonCombo.make('cmbCodyCode', '/logistics/returnusedparts/getCodyCodeList', {memLvl : 4, memType : 2, upperLineMemberID : $("#cmbDepartmentCode").val()}, '');
 
+}
+
+function cmbBranchCode_SelectedIndexChanged(){
+	CommonCombo.make('cmbDepartmentCode', '/logistics/returnusedparts/getDeptCodeList', {memLvl : 3, memType : 2, userBranchID: $("#cmbBranchCode").val()} , '');
 
 }
 
@@ -257,7 +271,7 @@ function btnGeneratePDF_Click(){
     </td>
     <th scope="row">Warehouse Code</th>
     <td>
-    <select class="w100p" id="cmbBranchCode"  name="cmbBranchCode"></select>
+    <select class="w100p" id="cmbBranchCode"  name="cmbBranchCode" onchange="cmbBranchCode_SelectedIndexChanged()"></select>
     </td>
 </tr>
 <tr>

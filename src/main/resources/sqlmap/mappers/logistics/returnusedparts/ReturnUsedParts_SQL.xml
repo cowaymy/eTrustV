@@ -262,6 +262,7 @@
                 AND ( Extent2.MEM_LVL  = #{memLvl} )
         WHERE ( 1 = Extent1.STUS )
                 AND ( Extent1.MEM_TYPE = #{memType} )
+                <if test="userBranchID != null and userBranchID != ''"> AND ( Extent1.BRNCH = #{userBranchID} )</if>
         ORDER BY Extent2.DEPT_CODE
     </select>
 
