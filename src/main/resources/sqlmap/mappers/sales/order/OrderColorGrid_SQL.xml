@@ -161,7 +161,8 @@
                                        vC.PROMO_DESC ,
                                        vC.MEM_TYPE ,
                                        vC.CUST_TYPE_ID ,
-                                       vC.CORP_TYPE_ID
+                                       vC.CORP_TYPE_ID ,
+                                       vC.EX_TRADE
                                 FROM SAL1008V vC ) E1
 
                         <if test="contactNum != null and contactNum != ''">
@@ -364,6 +365,12 @@
                               </otherwise>
                              </choose>
                           </if>
+                          <if test="cmbSalesType != null and cmbSalesType != ''">
+                          AND E1.EX_TRADE IN
+                            <foreach item="item" collection="cmbSalesType" index="index" open="(" separator="," close=")">
+                              #{item}
+                            </foreach>
+                        </if>
 
            ) F1
           <!--   LEFT JOIN ORG0001D MEM ON MEM.MEM_CODE = F1.MEM_CODE

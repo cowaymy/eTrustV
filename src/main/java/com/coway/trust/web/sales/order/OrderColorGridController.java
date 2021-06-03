@@ -69,26 +69,28 @@ public class OrderColorGridController {
 
 		String[] cmbAppTypeList = request.getParameterValues("cmbAppType");
 		String[] cmbCustomerType = request.getParameterValues("cmbCustomerType"); // Customer Type
-        String[] cmbCorpTypeId = request.getParameterValues("cmbCorpTypeId"); // Company Type
+    String[] cmbCorpTypeId = request.getParameterValues("cmbCorpTypeId"); // Company Type
+    String[] cmbSalesType = request.getParameterValues("cmbSalesType"); // Company Type
 
-        logger.info("Customer type:: " + Arrays.toString(cmbCustomerType));
-        logger.info("Company type:: " + Arrays.toString(cmbCorpTypeId));
+    logger.info("Customer type:: " + Arrays.toString(cmbCustomerType));
+    logger.info("Company type:: " + Arrays.toString(cmbCorpTypeId));
 
-        if(cmbCustomerType!= null){
-            for(int i = 0; i < cmbCustomerType.length; i++){
-            	int tmp = Integer.parseInt(cmbCustomerType[i].toString());
+    if(cmbCustomerType!= null){
+        for(int i = 0; i < cmbCustomerType.length; i++){
+        	int tmp = Integer.parseInt(cmbCustomerType[i].toString());
 
-            	if(tmp == 964){
-            	 	params.put("Individual","individual");
-            	}
-             }
-            params.put("cmbCustomerType", cmbCustomerType);
-        }else{
-        	params.put("cmbCustomerType", "");
-        }
+        	if(tmp == 964){
+        	 	params.put("Individual","individual");
+        	}
+         }
+        params.put("cmbCustomerType", cmbCustomerType);
+    }else{
+    	params.put("cmbCustomerType", "");
+    }
 
 		params.put("cmbAppTypeList", cmbAppTypeList);
 		params.put("cmbCorpTypeId", cmbCorpTypeId);
+		params.put("cmbSalesType", cmbSalesType);
 
 		List<EgovMap> colorGridList = orderColorGridService.colorGridList(params);
 
