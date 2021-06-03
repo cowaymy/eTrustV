@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.otherpayment.service.impl.CustVaExcludeMapper">
+
+  <select id="selectCustVaExcludeList" parameterType="Map" resultType="egovMap">
+    SELECT
+       E.PAY_CUST_VA_EXCLU_ID
+      ,E.PAY_CUST_ID CUST_ID
+      ,E.PAY_CUST_VA_NO CUST_VA
+      ,C.NAME CUST_NAME
+      ,S.NAME STUS
+      ,TO_CHAR(E.UPD_DT,'DD/MM/YYYY') UPD_DT
+      ,U.USER_NAME UPD_USERNAME
+    FROM PAY0310D E
+    JOIN SAL0029D C ON C.CUST_ID = E.PAY_CUST_ID AND C.CUST_VA_NO = E.PAY_CUST_VA_NO
+    JOIN SYS0038M S ON S.STUS_CODE_ID = E.STUS_CODE_ID
+    JOIN SYS0047M U ON U.USER_ID = E.UPD_USER_ID
+    WHERE 1 = 1
+    <if test="custId != null and custId != '' ">
+      AND E.PAY_CUST_ID = #{custId}
+    </if>
+    <if test="custVa != null and custVa != '' ">
+      AND E.PAY_CUST_VA_NO = #{custVa}
+    </if>
+    ORDER BY 2 ASC
+  </select>
+
+  <select id="getCustIdByVaNo" parameterType="Map" resultType="egovMap">
+    SELECT CUST_ID
+    FROM SAL0029D
+    WHERE CUST_VA_NO = #{custVaNo}
+  </select>
+
+  <insert id="insertCustVaExclude" parameterType="Map">
+        INSERT INTO PAY0310D (
+             PAY_CUST_VA_EXCLU_ID
+            ,PAY_CUST_ID
+            ,PAY_CUST_VA_NO
+            ,STUS_CODE_ID
+            ,REM
+            ,CRT_DT
+            ,CRT_USER_ID
+            ,UPD_DT
+            ,UPD_USER_ID
+        ) VALUES (
+            PAY0310D_CUST_VA_EXCLU_ID_SEQ.NEXTVAL
+           , #{custVaId}
+           , #{custVaNo}
+           , 1
+           , ''
+           , SYSDATE
+           , #{userId}
+           , SYSDATE
+           , #{userId}
+        )
+    </insert>
+
+    <update id="updateCustVaExclude" parameterType="Map">
+    UPDATE PAY0310D
+    SET
+         UPD_DT = SYSDATE
+       , UPD_USER_ID = #{userId}
+
+       <if test="stus == 'Active'">
+       , STUS_CODE_ID = 1
+       </if>
+       <if test="stus == 'Inactive'">
+       , STUS_CODE_ID = 8
+       </if>
+
+    WHERE PAY_CUST_VA_EXCLU_ID = #{payCustVaExcluId}
+    </update>
+
+    <update id="saveCustVaExcludeBulk" parameterType="Map">
+    MERGE INTO PAY0310D D
+    USING (
+      SELECT
+        C.CUST_ID
+        , C.CUST_VA_NO
+        , #{uploadStatus} STUS_CODE_ID
+        , #{userId} USER_ID
+        , 'upload by batch' REM
+        FROM
+      (
+          <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT #{item.custVaNo} PAY_CUST_VA_NO FROM DUAL
+          </foreach>
+      ) V JOIN SAL0029D C ON C.CUST_VA_NO = V.PAY_CUST_VA_NO
+
+    ) S ON (S.CUST_ID = D.PAY_CUST_ID AND S.CUST_VA_NO = D.PAY_CUST_VA_NO)
+    WHEN MATCHED THEN UPDATE SET STUS_CODE_ID = S.STUS_CODE_ID
+                               , UPD_DT = SYSDATE
+                               , UPD_USER_ID = S.USER_ID
+    WHEN NOT MATCHED THEN INSERT (
+                 PAY_CUST_VA_EXCLU_ID
+                ,PAY_CUST_ID
+                ,PAY_CUST_VA_NO
+                ,STUS_CODE_ID
+                ,REM
+                ,CRT_DT
+                ,CRT_USER_ID
+                ,UPD_DT
+                ,UPD_USER_ID
+            ) VALUES (
+                PAY0310D_CUST_VA_EXCLU_ID_SEQ.NEXTVAL
+                ,S.CUST_ID
+                ,S.CUST_VA_NO
+                ,S.STUS_CODE_ID
+                ,S.REM
+                ,SYSDATE
+                ,S.USER_ID
+                ,SYSDATE
+                ,S.USER_ID
+            )
+    </update>
+
+
+</mapper>
