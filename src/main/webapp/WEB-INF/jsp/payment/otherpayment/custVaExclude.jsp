@@ -153,17 +153,32 @@ $(function(){
         	Common.alert("Customer Va No is empty.");
         	return;
         }
+
         if($('#_custVaId').val() == ''){
             Common.alert("Customer ID is empty.");
             return;
         }
 
-        Common.ajax("POST", "/payment/saveCustVaExclude.do", $("#addCustVaForm").serializeJSON(), function(result) {
+        console.log($('#_custVaNo').val());
+        console.log($('#_custVaId').val());
+        if($('#_custVaNo').val() != '' && $('#_custVaId').val() != ''){
+        	var data = {};
+        	data = {"custVa" : $('#_custVaNo').val(), "custId" : $('#_custVaId').val()};
+
+        	Common.ajaxSync("GET", "/payment/selectCustVaExcludeList.do", data , function(result) {
+        	    if(result.length > 0){
+        	    	Common.alert("Customer Va No existed.<br/>Kindly edit from the grid view.");
+        	    	return;
+        	    }
+            });
+        }
+
+/*         Common.ajax("POST", "/payment/saveCustVaExclude.do", $("#addCustVaForm").serializeJSON(), function(result) {
         	Common.alert("VA Number has saved successfully",function(){
         		fn_close();
         		$('#search').click();
         	});
-        });
+        }); */
     });
 
 });
