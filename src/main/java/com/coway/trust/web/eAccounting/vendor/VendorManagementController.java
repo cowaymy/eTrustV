@@ -49,130 +49,127 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/eAccounting/vendor")
 public class VendorManagementController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(VendorManagementController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VendorManagementController.class);
 
-	@Autowired
-	private WebInvoiceService webInvoiceService;
+    @Autowired
+    private WebInvoiceService webInvoiceService;
 
-	@Autowired
-	private VendorApplication vendorApplication;
+    @Autowired
+    private VendorApplication vendorApplication;
 
-	@Autowired
-	private VendorService vendorService;
+    @Autowired
+    private VendorService vendorService;
 
-	@Value("${web.resource.upload.file}")
-	private String uploadDir;
+    @Value("${web.resource.upload.file}")
+    private String uploadDir;
 
-	// DataBase message accessor....
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
+    // DataBase message accessor....
+    @Autowired
+    private MessageSourceAccessor messageAccessor;
 
-	@Autowired
-	private SessionHandler sessionHandler;
+    @Autowired
+    private SessionHandler sessionHandler;
 
-	@RequestMapping(value = "/vendorManagement.do")
-	public String vendorManagement(@RequestParam Map<String, Object> params, ModelMap model) {
-	    if(params != null) {
+    @RequestMapping(value = "/vendorManagement.do")
+    public String vendorManagement(@RequestParam Map<String, Object> params, ModelMap model) {
+        if (params != null) {
             String clmNo = (String) params.get("clmNo");
             model.addAttribute("clmNo", clmNo);
         }
 
-		return "eAccounting/vendor/vendorManagement";
-	}
+        return "eAccounting/vendor/vendorManagement";
+    }
 
-	@RequestMapping(value = "/supplierSearchPop.do")
-	public String supplierSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    @RequestMapping(value = "/supplierSearchPop.do")
+    public String supplierSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		LOGGER.debug("params =====================================>>  " + params);
+        LOGGER.debug("params =====================================>>  " + params);
 
-		model.addAttribute("pop", params.get("pop"));
-		model.addAttribute("accGrp", params.get("accGrp"));
-		model.addAttribute("entry", params.get("entry"));
-		return "eAccounting/vendor/memberAccountSearchPop";
-	}
+        model.addAttribute("pop", params.get("pop"));
+        model.addAttribute("accGrp", params.get("accGrp"));
+        model.addAttribute("entry", params.get("entry"));
+        return "eAccounting/vendor/memberAccountSearchPop";
+    }
 
-	@RequestMapping(value = "/costCenterSearchPop.do")
-	public String costCenterSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+    @RequestMapping(value = "/costCenterSearchPop.do")
+    public String costCenterSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		LOGGER.debug("params =====================================>>  " + params);
+        LOGGER.debug("params =====================================>>  " + params);
 
-		model.addAttribute("pop", params.get("pop"));
-		model.addAttribute("call", params.get("call"));
-		return "eAccounting/vendor/costCenterSearchPop";
-	}
+        model.addAttribute("pop", params.get("pop"));
+        model.addAttribute("call", params.get("call"));
+        return "eAccounting/vendor/costCenterSearchPop";
+    }
 
-	@RequestMapping(value = "/approveLinePop.do")
-	public String approveLinePop(ModelMap model) {
-		return "eAccounting/vendor/approveLinePop";
-	}
+    @RequestMapping(value = "/approveLinePop.do")
+    public String approveLinePop(ModelMap model) {
+        return "eAccounting/vendor/approveLinePop";
+    }
 
-	@RequestMapping(value = "/newRegistMsgPop.do")
-	public String newRegistMsgPop(ModelMap model) {
-		return "eAccounting/vendor/newVendorRegistMsgPop";
-	}
+    @RequestMapping(value = "/newRegistMsgPop.do")
+    public String newRegistMsgPop(ModelMap model) {
+        return "eAccounting/vendor/newVendorRegistMsgPop";
+    }
 
-	@RequestMapping(value = "/newCompletedMsgPop.do")
-	public String newCompletedMsgPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "eAccounting/vendor/newVendorCompletedMsgPop";
-	}
+    @RequestMapping(value = "/newCompletedMsgPop.do")
+    public String newCompletedMsgPop(@RequestParam Map<String, Object> params, ModelMap model) {
+        return "eAccounting/vendor/newVendorCompletedMsgPop";
+    }
 
+    @RequestMapping(value = "/newVendorPop.do")
+    public String newVendor(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
-	@RequestMapping(value = "/newVendorPop.do")
-	public String newVendor(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+        LOGGER.debug("params =====================================>>  " + params);
 
-		LOGGER.debug("params =====================================>>  " + params);
+        List<EgovMap> vendorGrp = vendorService.selectVendorGroup();
+        List<EgovMap> bankList = vendorService.selectBank();
+        List<EgovMap> countryList = vendorService.selectSAPCountry();
 
-		List<EgovMap> vendorGrp = vendorService.selectVendorGroup();
-		List<EgovMap> bankList = vendorService.selectBank();
-		List<EgovMap> countryList = vendorService.selectSAPCountry();
+        model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
+        model.addAttribute("userName", sessionVO.getUserName());
+        model.addAttribute("costCentr", sessionVO.getCostCentr());
+        model.addAttribute("callType", params.get("callType"));
 
-		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
-		model.addAttribute("userName", sessionVO.getUserName());
-		model.addAttribute("costCentr", sessionVO.getCostCentr());
-		model.addAttribute("callType", params.get("callType"));
+        model.addAttribute("vendorGrp", vendorGrp);
+        model.addAttribute("bankList", bankList);
+        model.addAttribute("countryList", countryList);
+        model.addAttribute("memCode", vendorService.selectMemberCode(sessionVO.getMemId()));
 
-		model.addAttribute("vendorGrp", vendorGrp);
-		model.addAttribute("bankList", bankList);
-		model.addAttribute("countryList", countryList);
-		model.addAttribute("memCode", vendorService.selectMemberCode(sessionVO.getMemId()));
+        if (sessionVO.getCostCentr() != null) {
+            params.put("costCenter", sessionVO.getCostCentr());
+            EgovMap costName = (EgovMap) webInvoiceService.getCostCenterName(params);
 
+            model.addAttribute("costCentrNm", costName.get("costCenterName"));
+        }
 
+        return "eAccounting/vendor/newVendorPop";
+    }
 
-		if(sessionVO.getCostCentr() != null) {
-		    params.put("costCenter", sessionVO.getCostCentr());
-	        EgovMap costName = (EgovMap) webInvoiceService.getCostCenterName(params);
+    @RequestMapping(value = "/selectSupplier.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectSupplier(@RequestParam Map<String, Object> params, ModelMap model) {
+        List<EgovMap> list = webInvoiceService.selectSupplier(params);
 
-	        model.addAttribute("costCentrNm", costName.get("costCenterName"));
-		}
+        return ResponseEntity.ok(list);
+    }
 
-		return "eAccounting/vendor/newVendorPop";
-	}
+    @RequestMapping(value = "/selectCostCenter.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectcostCenter(@RequestParam Map<String, Object> params, ModelMap model) {
 
-	@RequestMapping(value = "/selectSupplier.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectSupplier(@RequestParam Map<String, Object> params, ModelMap model) {
-		List<EgovMap> list = webInvoiceService.selectSupplier(params);
+        LOGGER.debug("params =====================================>>  " + params);
 
-		return ResponseEntity.ok(list);
-	}
+        List<EgovMap> list = webInvoiceService.selectCostCenter(params);
 
-	@RequestMapping(value = "/selectCostCenter.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectcostCenter(@RequestParam Map<String, Object> params, ModelMap model) {
+        return ResponseEntity.ok(list);
+    }
 
-		LOGGER.debug("params =====================================>>  " + params);
-
-		List<EgovMap> list = webInvoiceService.selectCostCenter(params);
-
-		return ResponseEntity.ok(list);
-	}
-
-	@RequestMapping(value = "/selectVendorList.do", method = RequestMethod.GET)
+    @RequestMapping(value = "/selectVendorList.do", method = RequestMethod.GET)
     public ResponseEntity<List<EgovMap>> selectVendorList(@RequestParam Map<String, Object> params,
             HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
         String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
 
         if (!"A1101".equals(costCentr)) {
-        	params.put("loginUserId", sessionVO.getUserId());
+            params.put("loginUserId", sessionVO.getUserId());
         }
 
         LOGGER.debug("params =====================================>>  " + params);
@@ -183,195 +180,179 @@ public class VendorManagementController {
 
         List<EgovMap> list = vendorService.selectVendorList(params);
 
-
         LOGGER.debug("params =====================================>>  " + list.toString());
 
         return ResponseEntity.ok(list);
     }
 
-	@RequestMapping(value = "/vendorValidation.do", method = RequestMethod.GET)
-	 public ResponseEntity<Map<String, Object>> vendorValidation(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+    @RequestMapping(value = "/vendorValidation.do", method = RequestMethod.GET)
+    public ResponseEntity<Map<String, Object>> vendorValidation(@RequestParam Map<String, Object> params,
+            HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
-		LOGGER.debug("params =====================================>>  " + params);
+        LOGGER.debug("params =====================================>>  " + params);
 
-		ReturnMessage message = new ReturnMessage();
-		int regCompNoCount = vendorService.checkExistNo(params.get("regCompNo").toString());
-		int paymentTermCount = vendorService.checkExistPaymentTermNo(params);
-		int bankListCount = vendorService.checkExistBankListNo(params);
-		int bankAccNoCount = vendorService.checkExistBankAccNo(params);
-		String vendorAccId = vendorService.selectExistBankAccNo(params);
-		String checkReqNo = vendorService.checkReqNo(params);
-		int isReset = 1; //1:false, 0:true;
-		int isPass = 1;  //1:NotPass, 0:Pass;
-		int sameReqNo = 1; //1:NotSame, 0:Same;
+        ReturnMessage message = new ReturnMessage();
+        int regCompNoCount = vendorService.checkExistNo(params.get("regCompNo").toString());
+        int paymentTermCount = vendorService.checkExistPaymentTermNo(params);
+        int bankListCount = vendorService.checkExistBankListNo(params);
+        int bankAccNoCount = vendorService.checkExistBankAccNo(params);
+        String vendorAccId = vendorService.selectExistBankAccNo(params);
+        String checkReqNo = vendorService.checkReqNo(params);
+        int isReset = 1; // 1:false, 0:true;
+        int isPass = 1; // 1:NotPass, 0:Pass;
+        int sameReqNo = 1; // 1:NotSame, 0:Same;
 
-		if(checkReqNo != null && !checkReqNo.equals("") &&  checkReqNo.equals(params.get("newReqNo").toString()))
-		{
-			sameReqNo = 0;
-		}
+        if (checkReqNo != null && !checkReqNo.equals("") && checkReqNo.equals(params.get("newReqNo").toString())) {
+            sameReqNo = 0;
+        }
 
-		if(regCompNoCount == 0)
-		{
-			isPass = 0;
-			params.put("isPass", isPass);
-			params.put("isReset", isReset);
+        if (regCompNoCount == 0) {
+            isPass = 0;
+            params.put("isPass", isPass);
+            params.put("isReset", isReset);
 
-		}
-		else
-		{
-			if(paymentTermCount == 0)
-			{
-				isPass = 0;
-				params.put("isPass", isPass);
-				params.put("isReset", isReset);
-			}
-			else
-			{
-				if(bankListCount == 0)
-				{
-					isPass = 0;
-					params.put("isPass", isPass);
-					params.put("isReset", isReset);
-				}
-				else
-				{
-					if(bankAccNoCount == 0)
-					{
-						isPass = 0;
-						params.put("isPass", isPass);
-						params.put("isReset", isReset);
-					}
-					else
-					{
-						if(vendorAccId != null && !vendorAccId.equals(""))
-						{
-							isReset = 0;
-							isPass = 1;
-							params.put("isReset", isReset);
-							params.put("isPass", isPass);
-							params.put("vendorAccId", vendorAccId);
-							message.setCode(AppConstants.FAIL);
-							message.setData(params);
-							message.setMessage("Vendor Existed. Member Account ID: " + vendorAccId);
-						}
-						else
-						{
-							isReset = 0;
-							isPass = 1;
-							params.put("isReset", isReset);
-							params.put("isPass", isPass);
-							message.setCode(AppConstants.FAIL);
-							message.setData(params);
-							message.setMessage("Vendor existed in Pending stage.");
-						}
-					}
-				}
-			}
-		}
+        } else {
+            if (paymentTermCount == 0) {
+                isPass = 0;
+                params.put("isPass", isPass);
+                params.put("isReset", isReset);
+            } else {
+                if (bankListCount == 0) {
+                    isPass = 0;
+                    params.put("isPass", isPass);
+                    params.put("isReset", isReset);
+                } else {
+                    if (bankAccNoCount == 0) {
+                        isPass = 0;
+                        params.put("isPass", isPass);
+                        params.put("isReset", isReset);
+                    } else {
+                        if (vendorAccId != null && !vendorAccId.equals("")) {
+                            isReset = 0;
+                            isPass = 1;
+                            params.put("isReset", isReset);
+                            params.put("isPass", isPass);
+                            params.put("vendorAccId", vendorAccId);
+                            message.setCode(AppConstants.FAIL);
+                            message.setData(params);
+                            message.setMessage("Vendor Existed. Member Account ID: " + vendorAccId);
+                        } else {
+                            isReset = 0;
+                            isPass = 1;
+                            params.put("isReset", isReset);
+                            params.put("isPass", isPass);
+                            message.setCode(AppConstants.FAIL);
+                            message.setData(params);
+                            message.setMessage("Vendor existed in Pending stage.");
+                        }
+                    }
+                }
+            }
+        }
 
-		params.put("sameReqNo", sameReqNo);
-		LOGGER.debug("params =====================================>>  " + params);
-		return ResponseEntity.ok(params);
+        params.put("sameReqNo", sameReqNo);
+        LOGGER.debug("params =====================================>>  " + params);
+        return ResponseEntity.ok(params);
 
-	}
+    }
 
+    @RequestMapping(value = "/insertVendorInfo.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> insertVendorInfo(@RequestBody Map<String, Object> params, Model model,
+            SessionVO sessionVO) {
 
+        LOGGER.debug("params =====================================>>  " + params);
 
-	@RequestMapping(value = "/insertVendorInfo.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> insertVendorInfo(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+        String reqNo = vendorService.selectNextReqNo();
+        params.put("reqNo", reqNo);
+        params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
-		LOGGER.debug("params =====================================>>  " + params);
+        // String appvPrcssNo = vendorService.selectNextAppvPrcssNo();
+        // params.put("appvPrcssNo", appvPrcssNo);
+        ReturnMessage message = new ReturnMessage();
 
-		String reqNo = vendorService.selectNextReqNo();
-		params.put("reqNo", reqNo);
-		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+        vendorService.insertVendorInfo(params);
 
-//		String appvPrcssNo = vendorService.selectNextAppvPrcssNo();
-//		params.put("appvPrcssNo", appvPrcssNo);
-		ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(params);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
-		vendorService.insertVendorInfo(params);
+        LOGGER.debug("params =====================================>>  " + params);
+        return ResponseEntity.ok(message);
+    }
 
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(params);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    @RequestMapping(value = "/attachmentUpload.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> attachmentUpload(MultipartHttpServletRequest request,
+            @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 
+        LOGGER.debug("params =====================================>>  " + params);
 
-		LOGGER.debug("params =====================================>>  " + params);
-		return ResponseEntity.ok(message);
-	}
+        List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+                File.separator + "eAccounting" + File.separator + "vendor", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 
-	@RequestMapping(value = "/attachmentUpload.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> attachmentUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+        LOGGER.debug("list.size : {}", list.size());
 
-		LOGGER.debug("params =====================================>>  " + params);
+        params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "eAccounting" + File.separator + "vendor", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+        // serivce 에서 파일정보를 가지고, DB 처리.
+        if (list.size() > 0) {
+            vendorApplication.insertVendorAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
+        }
 
-		LOGGER.debug("list.size : {}", list.size());
+        params.put("attachmentList", list);
 
-		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(params);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
-		// serivce 에서 파일정보를 가지고, DB 처리.
-		if (list.size() > 0) {
-			vendorApplication.insertVendorAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
-		}
+        return ResponseEntity.ok(message);
+    }
 
-		params.put("attachmentList", list);
+    @RequestMapping(value = "/approveLineSubmit.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> approveLineSubmit(@RequestBody Map<String, Object> params, ModelMap model,
+            SessionVO sessionVO) {
 
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(params);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        LOGGER.debug("params =====================================>>  " + params);
 
-		return ResponseEntity.ok(message);
-	}
+        String appvPrcssNo = vendorService.selectNextAppvPrcssNo();
+        params.put("appvPrcssNo", appvPrcssNo);
+        params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+        params.put("userName", sessionVO.getUserName());
 
-	@RequestMapping(value = "/approveLineSubmit.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> approveLineSubmit(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+        // TODO appvLineMasterTable Insert
+        vendorService.insertApproveManagement(params);
 
-		LOGGER.debug("params =====================================>>  " + params);
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(params);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
-		String appvPrcssNo = vendorService.selectNextAppvPrcssNo();
-		params.put("appvPrcssNo", appvPrcssNo);
-		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
-		params.put("userName", sessionVO.getUserName());
+        return ResponseEntity.ok(message);
+    }
 
-		// TODO appvLineMasterTable Insert
-		vendorService.insertApproveManagement(params);
+    @RequestMapping(value = "/budgetCheck.do", method = RequestMethod.POST)
+    public ResponseEntity<List<Object>> budgetCheck(@RequestBody Map<String, Object> params, ModelMap model) {
 
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(params);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        LOGGER.debug("params =====================================>>  " + params);
 
-		return ResponseEntity.ok(message);
-	}
+        List<Object> result = vendorService.budgetCheck(params);
 
-	@RequestMapping(value = "/budgetCheck.do", method = RequestMethod.POST)
-	public ResponseEntity<List<Object>> budgetCheck(@RequestBody Map<String, Object> params, ModelMap model) {
+        LOGGER.debug("result =====================================>>  " + result);
 
-		LOGGER.debug("params =====================================>>  " + params);
+        return ResponseEntity.ok(result);
+    }
 
-		List<Object> result = vendorService.budgetCheck(params);
-
-		LOGGER.debug("result =====================================>>  " + result);
-
-		return ResponseEntity.ok(result);
-	}
-
-	@RequestMapping(value = "/checkFinAppr.do", method = RequestMethod.POST)
-    public ResponseEntity<ReturnMessage> checkFinAppr(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+    @RequestMapping(value = "/checkFinAppr.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> checkFinAppr(@RequestBody Map<String, Object> params, ModelMap model,
+            SessionVO sessionVO) {
 
         LOGGER.debug("params =====================================>>  " + params);
 
         ReturnMessage message = new ReturnMessage();
 
-
         int subCount = vendorService.checkExistClmNo(params.get("newReqNo").toString());
 
-        if(subCount > 0) {
+        if (subCount > 0) {
             message.setCode(AppConstants.FAIL);
             message.setData(params);
             message.setMessage("Claim has been submitted.");
@@ -395,7 +376,7 @@ public class VendorManagementController {
                 LOGGER.debug("getFinApprover.memCode =====================================>>  " + memCode);
 
                 memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
-                if(!finAppvLineUserId.equals(memCode)) {
+                if (!finAppvLineUserId.equals(memCode)) {
                     message.setCode(AppConstants.FAIL);
                     message.setData(params);
                     message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
@@ -410,180 +391,201 @@ public class VendorManagementController {
         return ResponseEntity.ok(message);
     }
 
-	@RequestMapping(value = "/editVendorPop.do")
-	public String editVendorPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+    @RequestMapping(value = "/editVendorPop.do")
+    public String editVendorPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
-		LOGGER.debug("params =====================================>>  " + params);
+        LOGGER.debug("params =====================================>>  " + params);
 
-		List<EgovMap> bankList = vendorService.selectBank();
-		List<EgovMap> countryList = vendorService.selectSAPCountry();
-		//List<EgovMap> taxCodeList = webInvoiceService.selectTaxCodeWebInvoiceFlag();
-		String reqNo = (String)params.get("reqNo");
-		EgovMap vendorInfo = vendorService.selectVendorInfo(reqNo);
-//		List<EgovMap> vendorItems = webInvoiceService.selectWebInvoiceItems(reqNo);
-//		LOGGER.debug("webInvoiceItems =====================================>>  " + vendorItems);
-		String atchFileGrpId = String.valueOf(vendorInfo.get("atchFileGrpId"));
-		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
-		// atchFileGrpId db column type number -> null인 경우 nullPointExecption (String.valueOf 처리)
-		// file add 하지 않은 경우 "null" -> StringUtils.isEmpty false return
-		if(atchFileGrpId != "null") {
-			List<EgovMap> vendorAttachList = vendorService.selectAttachList(atchFileGrpId);
-			model.addAttribute("attachmentList", vendorAttachList);
-			LOGGER.debug("attachmentList =====================================>>  " + vendorAttachList);
-		}
+        List<EgovMap> bankList = vendorService.selectBank();
+        List<EgovMap> countryList = vendorService.selectSAPCountry();
+        // List<EgovMap> taxCodeList =
+        // webInvoiceService.selectTaxCodeWebInvoiceFlag();
+        String reqNo = (String) params.get("reqNo");
+        EgovMap vendorInfo = vendorService.selectVendorInfo(reqNo);
+        // List<EgovMap> vendorItems =
+        // webInvoiceService.selectWebInvoiceItems(reqNo);
+        // LOGGER.debug("webInvoiceItems =====================================>>
+        // " + vendorItems);
+        String atchFileGrpId = String.valueOf(vendorInfo.get("atchFileGrpId"));
+        LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
+        // atchFileGrpId db column type number -> null인 경우 nullPointExecption
+        // (String.valueOf 처리)
+        // file add 하지 않은 경우 "null" -> StringUtils.isEmpty false return
+        if (atchFileGrpId != "null") {
+            List<EgovMap> vendorAttachList = vendorService.selectAttachList(atchFileGrpId);
+            model.addAttribute("attachmentList", vendorAttachList);
+            LOGGER.debug("attachmentList =====================================>>  " + vendorAttachList);
+        }
 
-		model.addAttribute("vendorInfo", vendorInfo);
-//		model.addAttribute("gridDataList", vendorItems);
-		//model.addAttribute("taxCodeList", new Gson().toJson(taxCodeList));
-		model.addAttribute("callType", params.get("callType"));
-		model.addAttribute("bankList", bankList);
-		model.addAttribute("countryList", countryList);
+        model.addAttribute("vendorInfo", vendorInfo);
+        // model.addAttribute("gridDataList", vendorItems);
+        // model.addAttribute("taxCodeList", new Gson().toJson(taxCodeList));
+        model.addAttribute("callType", params.get("callType"));
+        model.addAttribute("bankList", bankList);
+        model.addAttribute("countryList", countryList);
 
-		LOGGER.debug("params =====================================>>  " + params);
-		LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
+        LOGGER.debug("params =====================================>>  " + params);
+        LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
 
-		return "eAccounting/vendor/editVendorPop";
-	}
+        return "eAccounting/vendor/editVendorPop";
+    }
 
-	@RequestMapping(value = "/attachmentUpdate.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> attachmentUpdate(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+    @RequestMapping(value = "/attachmentUpdate.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> attachmentUpdate(MultipartHttpServletRequest request,
+            @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 
-		LOGGER.debug("params =====================================>>  " + params);
+        LOGGER.debug("params =====================================>>  " + params);
 
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "eAccounting" + File.separator + "vendor", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+        List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+                File.separator + "eAccounting" + File.separator + "vendor", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
 
-		String remove = (String) params.get("remove");
+        String remove = (String) params.get("remove");
 
-		LOGGER.debug("list.size : {}", list.size());
-		LOGGER.debug("remove : {}", remove);
+        LOGGER.debug("list.size : {}", list.size());
+        LOGGER.debug("remove : {}", remove);
 
-		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+        params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
-		// serivce 에서 파일정보를 가지고, DB 처리.
-		if (list.size() > 0 || !StringUtils.isEmpty(remove)) {
-			// TODO
-			vendorApplication.updateVendorAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
-		}
+        // serivce 에서 파일정보를 가지고, DB 처리.
+        if (list.size() > 0 || !StringUtils.isEmpty(remove)) {
+            // TODO
+            vendorApplication.updateVendorAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
+        }
 
-		params.put("attachment", list);
+        params.put("attachment", list);
 
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(params);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(params);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
-		return ResponseEntity.ok(message);
-	}
+        return ResponseEntity.ok(message);
+    }
 
-	@RequestMapping(value = "/updateVendorInfo.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updateVendorInfo(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+    @RequestMapping(value = "/updateVendorInfo.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> updateVendorInfo(@RequestBody Map<String, Object> params, Model model,
+            SessionVO sessionVO) throws Exception {
 
+        LOGGER.debug("params =====================================>>  " + params);
 
-		LOGGER.debug("params =====================================>>  " + params);
+        params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
-		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+        vendorService.updateVendorInfo(params);
 
-		vendorService.updateVendorInfo(params);
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(params);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(params);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        return ResponseEntity.ok(message);
+    }
 
-		return ResponseEntity.ok(message);
-	}
+    @RequestMapping(value = "/MvendorRqstViewPop.do")
+    public String MvendorRqstViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+        LOGGER.debug("params =====================================>>  " + params);
+        String vendorAccId = (String) params.get("vendorAccId");
+        EgovMap vendorInfo = vendorService.selectVendorInfoMaster(vendorAccId);
 
-	@RequestMapping(value = "/MvendorRqstViewPop.do")
-	  public String MvendorRqstViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		LOGGER.debug("params =====================================>>  " + params);
-		String vendorAccId = (String)params.get("vendorAccId");
-		EgovMap vendorInfo = vendorService.selectVendorInfoMaster(vendorAccId);
+        LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
 
-		LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
+        List<EgovMap> bankList = vendorService.selectBank();
+        List<EgovMap> countryList = vendorService.selectSAPCountry();
 
-	    List<EgovMap> bankList = vendorService.selectBank();
-		List<EgovMap> countryList = vendorService.selectSAPCountry();
+        if (params.containsKey("costCenter")) {
+            model.addAttribute("costCenterName", params.get("costCenterName").toString());
+            model.addAttribute("costCenter", params.get("costCenter").toString());
+        }
 
-	    if(params.containsKey("costCenter"))
-	    {
-	    	model.addAttribute("costCenterName", params.get("costCenterName").toString());
-		    model.addAttribute("costCenter", params.get("costCenter").toString());
-	    }
+        model.addAttribute("bankList", bankList);
+        model.addAttribute("countryList", countryList);
 
-	    model.addAttribute("bankList", bankList);
-		model.addAttribute("countryList", countryList);
+        model.addAttribute("vendorInfo", vendorInfo);
+        LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
+        return "eAccounting/vendor/vendorRequestViewPopMaster";
+    }
 
-		model.addAttribute("vendorInfo", vendorInfo);
-		 LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
-		 return "eAccounting/vendor/vendorRequestViewPopMaster";
-	}
+    @RequestMapping(value = "/vendorRqstViewPop.do")
+    public String vendorRqstViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-	@RequestMapping(value = "/vendorRqstViewPop.do")
-	  public String vendorRqstViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+        LOGGER.debug("params =====================================>>  " + params);
 
-	    LOGGER.debug("params =====================================>>  " + params);
+        List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(params);
+        for (int i = 0; i < appvLineInfo.size(); i++) {
+            EgovMap info = appvLineInfo.get(i);
+            if ("J".equals(info.get("appvStus"))) {
+                String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(info);
+                model.addAttribute("rejctResn", rejctResn);
+            }
+        }
+        List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(params);
 
-	    String clmType = params.get("clmType").toString();
+        List<EgovMap> bankList = vendorService.selectBank();
+        List<EgovMap> countryList = vendorService.selectSAPCountry();
 
-	    List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(params);
-	    for (int i = 0; i < appvLineInfo.size(); i++) {
-	      EgovMap info = appvLineInfo.get(i);
-	      if ("J".equals(info.get("appvStus"))) {
-	        String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(info);
-	        model.addAttribute("rejctResn", rejctResn);
-	      }
-	    }
-	    List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(params);
+        // Approval Status 생성
+        String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
 
-	    List<EgovMap> bankList = vendorService.selectBank();
-		List<EgovMap> countryList = vendorService.selectSAPCountry();
+        // VANNIE ADD TO GET FILE GROUP ID, FILE ID AND FILE COUNT.
+        List<EgovMap> atchFileData = webInvoiceService.selectAtchFileData(params);
+        String reqNo = (String) params.get("reqNo");
+        EgovMap vendorInfo = vendorService.selectVendorInfo(reqNo);
 
-	    // TODO appvPrcssStus 생성
-	    String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
+        if(atchFileData.isEmpty()) {
+            model.addAttribute("atchFileCnt", 0);
+        } else {
+            model.addAttribute("atchFileCnt", atchFileData.get(0).get("fileCnt"));
+        }
 
-	    // VANNIE ADD TO GET FILE GROUP ID, FILE ID AND FILE COUNT.
-	    List<EgovMap> atchFileData = webInvoiceService.selectAtchFileData(params);
-	    String reqNo = (String)params.get("reqNo");
-		EgovMap vendorInfo = vendorService.selectVendorInfo(reqNo);
+        String atchFileGrpId = String.valueOf(vendorInfo.get("atchFileGrpId"));
+        if(atchFileGrpId != "null") {
+            List<EgovMap> vendorAttachList = vendorService.selectAttachList(atchFileGrpId);
+            model.addAttribute("attachmentList", vendorAttachList);
+            LOGGER.debug("attachmentList =====================================>>  " + vendorAttachList);
+        }
 
-	    if (atchFileData.isEmpty()) {
-	      model.addAttribute("atchFileCnt", 0);
-	    } else {
-	      model.addAttribute("atchFileCnt", atchFileData.get(0).get("fileCnt"));
-	    }
+        model.addAttribute("appvPrcssStus", appvPrcssStus);
+        model.addAttribute("appvPrcssResult", appvInfoAndItems.get(0).get("appvPrcssStus"));
+        if(params.containsKey("costCenter")) {
+            model.addAttribute("costCenterName", params.get("costCenterName").toString());
+            model.addAttribute("costCenter", params.get("costCenter").toString());
+        } else {
+            model.addAttribute("costCenterName", vendorInfo.get("costCenterName").toString());
+            model.addAttribute("costCenter", vendorInfo.get("costCenter").toString());
+        }
 
-	    String atchFileGrpId = String.valueOf(vendorInfo.get("atchFileGrpId"));
-	    if(atchFileGrpId != "null") {
-			List<EgovMap> vendorAttachList = vendorService.selectAttachList(atchFileGrpId);
-			model.addAttribute("attachmentList", vendorAttachList);
-			LOGGER.debug("attachmentList =====================================>>  " + vendorAttachList);
-		}
+        model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
+        model.addAttribute("vendorInfo", vendorInfo);
+        model.addAttribute("bankList", bankList);
+        model.addAttribute("countryList", countryList);
+        model.addAttribute("viewType", params.get("viewType").toString());
 
-	    model.addAttribute("appvPrcssStus", appvPrcssStus);
-	    model.addAttribute("appvPrcssResult", appvInfoAndItems.get(0).get("appvPrcssStus"));
-	    if(params.containsKey("costCenter"))
-	    {
-	    	model.addAttribute("costCenterName", params.get("costCenterName").toString());
-		    model.addAttribute("costCenter", params.get("costCenter").toString());
-	    }
-	    else
-	    {
-	    	model.addAttribute("costCenterName", vendorInfo.get("costCenterName").toString());
-		    model.addAttribute("costCenter", vendorInfo.get("costCenter").toString());
-	    }
+        if(params.containsKey("appvPrcssNo")) {
+            model.addAttribute("appvPrcssNo", params.get("appvPrcssNo"));
+        }
 
-	    model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
-	    model.addAttribute("vendorInfo", vendorInfo);
-	    model.addAttribute("bankList", bankList);
-		model.addAttribute("countryList", countryList);
+        LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
 
-	    LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
+        return "eAccounting/vendor/vendorRequestViewPop";
+    }
 
-	    if (clmType.equalsIgnoreCase("R1")) {
-	      return "eAccounting/webInvoice/webInvoiceRequestViewR1Pop";
-	    } else {
-	      return "eAccounting/vendor/vendorRequestViewPop";
-	    }
-	  }
+    @RequestMapping(value = "/approveRegistPop.do")
+    public String approveRegistPop(ModelMap model) {
+        return "eAccounting/vendor/approvalOfVendorRegistMsgPop";
+    }
+
+    @RequestMapping(value = "/approveComplePop.do")
+    public String approveComplePop(ModelMap model) {
+        return "eAccounting/vendor/approvalOfVendorCompletedMsgPop";
+    }
+
+    @RequestMapping(value = "/rejectRegistPop.do")
+    public String rejectRegistPop(ModelMap model) {
+        return "eAccounting/vendor/rejectionOfVendorRegistMsgPop";
+    }
+
+    @RequestMapping(value = "/rejectComplePop.do")
+    public String rejectComplePop(ModelMap model) {
+        return "eAccounting/vendor/rejectionOfVendorCompletedMsgPop";
+    }
 
 }
