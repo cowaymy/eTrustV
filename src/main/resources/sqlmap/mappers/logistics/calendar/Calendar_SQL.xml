@@ -72,18 +72,6 @@
         {call SP_BATCH_CALENDAR_UPD_LIST(#{batchId})}
     </update>
 
-    <select id="selectDateEventList"  parameterType="Map" resultType="egovMap">
-        SELECT EVENT_ID
-        , TO_CHAR(EVENT_DT, 'DD MON YYYY') EVENT_DT
-        , EXTRACT(DAY FROM EVENT_DT) DAY_OF_MONTH
-        , EVENT_DESC
-        FROM MSC0052D
-        WHERE TO_DATE(EVENT_DT, 'DD/MM/YYYY') = '03/05/2021'
-        AND DISAB = 0
-        AND MEM_TYPE = 1
-        ORDER BY EVENT_DT
-    </select>
-
     <select id="selectEventListToManage"  parameterType="Map" resultType="egovMap">
         SELECT EVENT_ID
         , TO_CHAR(cal.EVENT_DT, 'DD/MM/YYYY') EVENT_DT
