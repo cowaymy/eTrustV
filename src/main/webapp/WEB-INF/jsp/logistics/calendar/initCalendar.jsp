@@ -69,7 +69,7 @@ td.cal-date, td.empty-cell {
 .cal-tooltip {
     visibility: hidden;
     border: 3px solid #25527c;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 15px;
     background-color: #e9f0f4;
     position: absolute;
@@ -221,7 +221,7 @@ function fn_setMemTypeVisibility() {
   <aside class="link_btns_wrap">
     <%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'} "> --%>
     <!-- Yong 20210705: PAGE_AUTH not used for validation because it only works when Calendar menu is clicked. When Calendar Search is clicked, the validation will fail -->
-    <c:if test="${sessionScope.calAllowUpload eq 'Y'}">
+    <c:if test="${sessionScope.calAllowUpload == 'Y'}">
       <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
       <dl class="link_list">
         <dt>Link</dt>
@@ -256,9 +256,9 @@ function fn_setMemTypeVisibility() {
 
       <%--Populate Calendar first row --%>
       <tr>
-        <c:forEach begin="1" end="7" varStatus="columnCounter">
+        <c:forEach begin="1" end="7" varStatus="columnCounter"> <%-- Check for "dayOfWeekFirstDt == 0" is to handle cases where 1st day of month falls on Sunday --%>
           <c:choose>
-            <c:when test="${columnCounter.count eq dayOfWeekFirstDt}">
+            <c:when test="${(dayOfWeekFirstDt == 0) && (columnCounter.count == 7)}">
               <td class="cal-date">
                 <div class="cal-date-number">${dateCounter}</div>
                 <div class="cal-event-list">
@@ -267,7 +267,16 @@ function fn_setMemTypeVisibility() {
                 </div>
               </td>
             </c:when>
-            <c:when test="${columnCounter.count gt dayOfWeekFirstDt}">
+            <c:when test="${columnCounter.count == dayOfWeekFirstDt}">
+              <td class="cal-date">
+                <div class="cal-date-number">${dateCounter}</div>
+                <div class="cal-event-list">
+                  <span class="event-text" id="calDt${dateCounter}"></span>
+                  <span class="cal-tooltip" id="calDtHidden${dateCounter}"></span>
+                </div>
+              </td>
+            </c:when>
+            <c:when test="${((dayOfWeekFirstDt != 0)) && (columnCounter.count gt dayOfWeekFirstDt)}">
               <c:set var="dateCounter" value="${dateCounter + 1}"/>
               <td class="cal-date">
                 <div class="cal-date-number">${dateCounter}</div>
@@ -299,7 +308,7 @@ function fn_setMemTypeVisibility() {
                       <span class="cal-tooltip" id="calDtHidden${dateCounter}"></span>
                     </div>
                   </td>
-                  <c:if test="${dateCounter eq lastDateOfMonth}">
+                  <c:if test="${dateCounter == lastDateOfMonth}">
                     <c:set var="createNewRow" value="false"/>
                   </c:if>
                 </c:when>
