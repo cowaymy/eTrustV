@@ -963,7 +963,7 @@ SELECT T.APPV_PRCSS_NO
 	    AND A.REQST_USER_ID = (SELECT USER_NAME FROM SYS0047M WHERE HR_CODE = UPPER(#{createUser}))
 	</if>
 	<if test="costCenter != null and costCenter != ''">
-	    AND C.COST_CENTR) = #{costCenter}
+	    AND C.COST_CENTER = #{costCenter}
 	</if>
 	<if test="appvPrcssStus != null and appvPrcssStus != '' and ((appStartDt == null or appStartDt == '') and (appEndDt == null or appEndDt == ''))">
 	    AND B.APPV_STUS IN
