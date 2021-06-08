@@ -94,7 +94,8 @@ ORDER BY Project1.CODE_NAME ASC
 			       Filter1.BNDL_NO,
 			       Filter1.APP_TYPE ,
 			       Filter1.CHS_STUS ,
-			       Filter1.CHS_RSN
+			       Filter1.CHS_RSN ,
+			       Filter1.ECOMM_ORD_ID
 			FROM ( SELECT Extent1.CCP_ID   ,
 			          Extent1.CCP_SCHEME_TYPE_ID   ,
 			          Extent1.CCP_TYPE_ID   ,
@@ -135,7 +136,8 @@ ORDER BY Project1.CODE_NAME ASC
 			          Extent13.BNDL_NO,
 			          Extent14.CODE_NAME APP_TYPE ,
 			          Extent15.CHS_STUS ,
-			          Extent15.CHS_RSN
+			          Extent15.CHS_RSN,
+			          NVL(Extent3.ECOMM_ORD_ID,0) ECOMM_ORD_ID
 			       FROM SAL0102D Extent1
 			          JOIN ( SELECT Extent2.CCP_SALES_ORD_ID K1  ,
 			                        MAX(Extent2.CCP_ID)  A1
@@ -261,6 +263,9 @@ ORDER BY Project1.CODE_NAME ASC
                              <!--  AND  UPPER(Filter1.BNDL_NO) =  UPPER(#{bndlNo}) -->
                               AND  Filter1.BNDL_NO = #{bndlNo}
                            </if>
+                           <if test='isECommerce != null and isECommerce != ""'>
+				              AND Filter1.ECOMM_ORD_ID > 0
+				           </if>
 			              <!--End Condition  -->
 			  ORDER BY Filter1.CCP_ID ASC
 

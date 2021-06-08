@@ -540,19 +540,23 @@
 
      <tr>
       <th scope="row">Promotion Code</th>
-      <td colspan="2"><select class="multy_select w100p" multiple="multiple" id="callLogPromotionList" name="promotion">
+      <td><select class="multy_select w100p" multiple="multiple" id="callLogPromotionList" name="promotion">
        <!--  <option value="">Choose One</option> -->
      <%--    <c:forEach var="list" items="${promotionList}" varStatus="status">
          <option value="${list.promoId}">${list.c1}</option>
         </c:forEach> --%>
       </select></td>
       <th scope="row">Feedback Code</th>
-      <td colspan="2"><select class="w100p" id="searchFeedBackCode" name="searchFeedBackCode">
+      <td><select class="w100p" id="searchFeedBackCode" name="searchFeedBackCode">
             <option value=""><spring:message code='service.title.FeedbackCode' /></option>
 	        <c:forEach var="list" items="${callStatus}" varStatus="status">
 	           <option value="${list.resnId}">${list.c1}</option>
 	        </c:forEach>
 	   </select></td>
+	   <th scope="row">is e-Commerce</th>
+    <td>
+    <input id="isECommerce" name="isECommerce" type="checkbox"/>
+    </td>
      </tr>
 
     </tbody>

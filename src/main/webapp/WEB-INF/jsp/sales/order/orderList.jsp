@@ -768,8 +768,10 @@
     <td>
     <input id="isEKeyin" name="isEKeyin" type="checkbox"/>
     </td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row">is e-Commerce</th>
+    <td>
+    <input id="isECommerce" name="isECommerce" type="checkbox"/>
+    </td>
     <th scope="row"></th>
     <td></td>
 </tr>

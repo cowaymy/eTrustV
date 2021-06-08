@@ -591,8 +591,10 @@ function popup(location){
 <tr>
     <th scope="row"><spring:message code="sal.title.text.ordBundleNo" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" name="bndlNo"/></td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row">is e-Commerce</th>
+    <td>
+    <input id="isECommerce" name="isECommerce" type="checkbox"/>
+    </td>
     <th scope="row"></th>
     <td></td>
 </tr>

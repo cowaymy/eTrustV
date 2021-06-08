@@ -38,6 +38,7 @@
           , Extent1.RCD_TMS RCD_TMS
           , Extent1.POSTCODE POSTCODE
           , Extent1.DSC_CODE DSC_CODE
+          , Extent1.ECOMM_ORD_ID
           , Extent1.PROMO_ID
           , CASE WHEN ( Extent1.APP_TYPE_ID IS NOT NULL )
                    THEN Extent1.APP_TYPE_ID
@@ -99,9 +100,11 @@
                    , area.area
                    , area.postcode
                    , dsc.CODE DSC_CODE
+                   , NVL(sal.ECOMM_ORD_ID,0) ECOMM_ORD_ID
             FROM CCR1002V vCallLogOrderCall
             JOIN SYS0064M area on area.AREA_ID = vcalllogordercall.INSTALL_AREA_ID
             JOIN SYS0005M dsc on dsc.BRNCH_ID = vcalllogordercall.DSC_BRNCH_ID
+            JOIN sal0001d sal ON sal.SALES_ORD_NO = vcalllogordercall.SALES_ORD_NO
            <if test="branchTypeId != null and branchTypeId != ''">
                AND dsc.TYPE_ID = #{branchTypeId}
            </if>
@@ -204,6 +207,9 @@
     <!-- Added feedback code criteria by Hui Ding, 12-04-2021 -->
     <if test="searchFeedBackCode != null and searchFeedBackCode !=''">
       AND Extent1.CALL_FDBCK_ID = TRIM(#{searchFeedBackCode})
+    </if>
+    <if test='isECommerce != null and isECommerce != ""'>
+       AND Extent1.ECOMM_ORD_ID > 0
     </if>
 
     <if test="sortBy != null and sortBy != '' and sortBy == 1 ">
