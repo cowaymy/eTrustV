@@ -11,6 +11,7 @@ function fn_closePop() {
     $("#completedMsgPop").remove();
     $("#approveLineSearchPop").remove();
     $("#newVendorPop").remove();
+    $("#editVendorPop").remove();
     console.log(callType);
     if("${callType}" == "new") {
     	$("#newVendorPop").remove();

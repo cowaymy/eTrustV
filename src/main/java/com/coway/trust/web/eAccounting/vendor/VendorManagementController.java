@@ -398,34 +398,37 @@ public class VendorManagementController {
 
         List<EgovMap> bankList = vendorService.selectBank();
         List<EgovMap> countryList = vendorService.selectSAPCountry();
-        // List<EgovMap> taxCodeList =
-        // webInvoiceService.selectTaxCodeWebInvoiceFlag();
-        String reqNo = (String) params.get("reqNo");
-        EgovMap vendorInfo = vendorService.selectVendorInfo(reqNo);
-        // List<EgovMap> vendorItems =
-        // webInvoiceService.selectWebInvoiceItems(reqNo);
-        // LOGGER.debug("webInvoiceItems =====================================>>
-        // " + vendorItems);
-        String atchFileGrpId = String.valueOf(vendorInfo.get("atchFileGrpId"));
-        LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
-        // atchFileGrpId db column type number -> null인 경우 nullPointExecption
-        // (String.valueOf 처리)
-        // file add 하지 않은 경우 "null" -> StringUtils.isEmpty false return
-        if (atchFileGrpId != "null") {
-            List<EgovMap> vendorAttachList = vendorService.selectAttachList(atchFileGrpId);
-            model.addAttribute("attachmentList", vendorAttachList);
-            LOGGER.debug("attachmentList =====================================>>  " + vendorAttachList);
+
+        if(!params.get("flg").equals("M")){
+        	String reqNo = (String) params.get("reqNo");
+            EgovMap vendorInfo = vendorService.selectVendorInfo(reqNo);
+            String atchFileGrpId = String.valueOf(vendorInfo.get("atchFileGrpId"));
+            LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
+            // atchFileGrpId db column type number -> null인 경우 nullPointExecption
+            // (String.valueOf 처리)
+            // file add 하지 않은 경우 "null" -> StringUtils.isEmpty false return
+            if (atchFileGrpId != "null") {
+                List<EgovMap> vendorAttachList = vendorService.selectAttachList(atchFileGrpId);
+                model.addAttribute("attachmentList", vendorAttachList);
+                LOGGER.debug("attachmentList =====================================>>  " + vendorAttachList);
+            }
+            model.addAttribute("vendorInfo", vendorInfo);
+            model.addAttribute("flg", params.get("flg"));
+            LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
+        }
+        else{
+        	String vendorAccId = (String)params.get("vendorAccId");
+			EgovMap vendorInfo = vendorService.selectVendorInfoMaster(vendorAccId);
+			model.addAttribute("vendorInfo", vendorInfo);
+			model.addAttribute("flg", params.get("flg"));
+			LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
         }
 
-        model.addAttribute("vendorInfo", vendorInfo);
-        // model.addAttribute("gridDataList", vendorItems);
-        // model.addAttribute("taxCodeList", new Gson().toJson(taxCodeList));
         model.addAttribute("callType", params.get("callType"));
         model.addAttribute("bankList", bankList);
         model.addAttribute("countryList", countryList);
 
         LOGGER.debug("params =====================================>>  " + params);
-        LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
 
         return "eAccounting/vendor/editVendorPop";
     }

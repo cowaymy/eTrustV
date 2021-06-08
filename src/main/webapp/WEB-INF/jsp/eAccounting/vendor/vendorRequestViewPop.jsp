@@ -87,6 +87,15 @@ $(document).ready(function () {
     $('#vendorGroup').attr("disabled", true);
     $('#designation').attr("disabled", true);
 
+    console.log(bankCountry);
+    if(bankCountry != 'MY')
+    {
+        fn_jsFunction();
+        $("#bankList").val('${vendorInfo.bank}');
+
+
+    }
+
     var costCenterName =  $("#costCenterName").val();
     var costCenter =  $("#costCenter").val();
 
@@ -120,8 +129,7 @@ $(document).ready(function () {
     });
 
     console.log("viewType :: " + "${viewType}");
-    if("${viewType}" == "APPV") {
-        $("#appvBtns").show();
+    if("${viewType}" == "VIEW") {
 
         if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J") {
             $("#pApprove_btn").hide();
@@ -133,14 +141,43 @@ $(document).ready(function () {
                 console.log(result);
 
                 $("#viewFinAppr").text(result.finalAppr);
+                console.log('viewFinAppr: ' + $("#viewFinAppr").val());
             });
         } else {
             $("#finApprAct").hide();
         }
     }
+    else {
+    	 $("#appvBtns").show();
+    	}
 
     AUIGrid.setGridData(myGridID, myGridData);
 });
+
+function fn_jsFunction(){
+    console.log("fn_jsFunction");
+    var txtBankCountry = $("#bankCountry :selected").val()
+    var txtVendorCountry = $("#vendorCountry :selected").val()
+
+    console.log("txtBankCountry" + txtBankCountry);
+    console.log("txtVendorCountry" + txtVendorCountry);
+
+    if(txtBankCountry != 'MY')
+    {
+        $("#bankList").replaceWith('<input type="text" class="readonly w100p" id="bankList" name="bankList" style="text-transform:uppercase"/>');
+        $("#swiftCodeHeader").html('Swift Code<span class="must">*</span>');
+        $("#bankAccNo").attr('maxLength',100);
+    }
+    if(txtBankCountry == 'MY')
+    {
+        $("#bankList").replaceWith('<select class="w100p" id="bankList" name="bankList"><c:forEach var="list" items="${bankList}" varStatus="status"><option value="${list.code}">${list.name}</option></c:forEach></select>');
+        $("#swiftCodeHeader").html('Swift Code');
+
+        console.log('$("#bankAccNo").length: ' + $("#bankAccNo").val().length);
+        $("#bankAccNo").attr('maxLength',16);
+        console.log("conditionalCheck: " + conditionalCheck);
+    }
+}
 
 function fn_approveRegistPop() {
     var rows = AUIGrid.getRowIndexesByValue(invoAprveGridID, "clmNo", [$("#viewClmNo").text()]);
@@ -464,7 +501,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
     <td colspan=3><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="branch" name="branch" value="${vendorInfo.bankBranch}"/></td>
 </tr>
 <tr>
-    <th scope="row">Swift Code</th>
+    <th scope="row" id="swiftCodeHeader">Swift Code</th>
     <td colspan=3><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="swiftCode" name="swiftCode" value="${vendorInfo.swiftCode}"/></td>
 </tr>
 </tbody>

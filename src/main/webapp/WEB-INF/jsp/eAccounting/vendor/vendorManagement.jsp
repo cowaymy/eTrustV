@@ -41,6 +41,10 @@ var vendorManagementColumnLayout = [ {
     headerText : 'Approval Date',
     dataType : "date",
     formatString : "dd/mm/yyyy"
+}, {
+    dataField : "flg",
+    headerText : 'Flag',
+    visible : false
 }
 ];
 
@@ -81,8 +85,8 @@ $(document).ready(function () {
 		        console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
 		        console.log("CellDoubleClick appvPrcssStusCode : " + event.item.appvPrcssStusCode);
 		        console.log("CellDoubleClick costCenterName : " + event.item.costCenterName);
-		        // TODO detail popup open
-		        console.log("crtUserID: " + userId);
+
+		        console.log("crtUserID: " + event.item.userId);
 		        console.log("Master table flag: " + event.item.flg);
 		        if(event.item.flg == 'M')
 		        {
@@ -99,7 +103,8 @@ $(document).ready(function () {
 		        	}
 		        	else
 		        	{
-		        		fn_editVendorPop(event.item.reqNo);
+		        		console.log('testing: ' + event.item.flg);
+		        		fn_editVendorPop(event.item.reqNo, event.item.flg, event.item.vendorAccId);
 		        	}
 
 		        } else {
@@ -289,15 +294,27 @@ function fn_preEdit() {
     else{
     	if(selectedItems[0].item.appvPrcssStusCode == "T")
     	{
-    		if(userId != selectedItems[0].item.userId)
-            {
-                Common.alert("You are not allow to edit the record.");
-            }
-            else
-            {
-            	var reqNo = selectedItems[0].item.reqNo;
-                fn_editVendorPop(reqNo);
-            }
+    		if(selectedItems[0].item.flg == "M")
+   			{
+    			var reqNo = selectedItems[0].item.reqNo;
+    			var flg = selectedItems[0].item.flg;
+    			var vendorAccId = selectedItems[0].item.vendorAccId;
+                fn_editVendorPop(reqNo, flg, vendorAccId);
+   			}
+    		else{
+    			if(userId != selectedItems[0].item.userId)
+                {
+                    Common.alert("You are not allow to edit the record.");
+                }
+                else
+                {
+                    var reqNo = selectedItems[0].item.reqNo;
+                    var flg = selectedItems[0].item.flg;
+                    var vendorAccId = selectedItems[0].item.vendorAccId;
+                    fn_editVendorPop(reqNo, flg, vendorAccId);
+                }
+    		}
+
         }
     	else
     	{
@@ -310,7 +327,7 @@ function fn_preEdit() {
     }
 }
 
-function fn_editVendorPop(reqNo) {
+function fn_editVendorPop(reqNo, flg, vendorAccId) {
 
 	 var selectedItems = AUIGrid.getSelectedItems(vendorManagementGridID);
 
@@ -326,7 +343,9 @@ function fn_editVendorPop(reqNo) {
     	}
     	 var data = {
     	            reqNo : reqNo,
-    	            callType : 'view'
+    	            callType : 'view',
+    	            flg : flg,
+    	            vendorAccId : vendorAccId
     	    };
     	    Common.popupDiv("/eAccounting/vendor/editVendorPop.do", data, null, true, "editVendorPop");
      }
@@ -352,7 +371,7 @@ function fn_MvendorRequestPop(appvPrcssNo, clmType, costCenterName, costCenter, 
             ,costCenter : costCenter
             ,vendorAccId : vendorAccId
     };
-    Common.popupDiv("/eAccounting/vendor/MvendorRqstViewPop.do", data, null, true, "vendorRqstViewPop");
+    Common.popupDiv("/eAccounting/vendor/MvendorRqstViewPop.do", data, null, true, "vendorRequestViewPopMaster");
 }
 
 function fn_selectVendorList() {
