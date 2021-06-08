@@ -363,6 +363,7 @@
   }
 
   function fn_saveInstall() {
+    console.log("addInstallationResultPop :: fn_saveInstall");
     var msg = "";
     if ($("#addInstallForm #installStatus").val() == 4) {
       // COMPLETED
@@ -403,8 +404,8 @@
 
       //stkId for kecil = 1735, petit = 298 (for testing in developmennt)
       // PSI CHECKING
-      if ( ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")
-          && !(("${installResult.installStkId}" == 1735)  ||  ("${installResult.installStkId}" == 1737))) {
+      if ( "${orderInfo.appTypeId}" != "144" && (("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")
+          && !(("${installResult.installStkId}" == 1735)  ||  ("${installResult.installStkId}" == 1737)))) {
         if ( $("#psiRcd").val() == "") {
           msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
         }
@@ -447,12 +448,12 @@
       }
 
       //stkId for kecil = 1735, petit = 298 (for testing in developmennt)
-      if("${installResult.installStkId}" == 1735){
+      if("${installResult.installStkId}" == 1735 && "${orderInfo.appTypeId}" != "144"){
               msg += validationForKecikWhenCompleted();
       }
 
     //stkId for GLAZE = 1737
-      if("${installResult.installStkId}" == 1737){
+      if("${installResult.installStkId}" == 1737 && "${orderInfo.appTypeId}" != "144"){
               msg += validationForGlazeWhenCompleted();
       }
 
@@ -474,7 +475,7 @@
         }
 
      // 8000 - Fail at Location
-        if ($("#failLocCde").val() == 8000 &&("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")) {
+        if ("${orderInfo.appTypeId}" != "144" && $("#failLocCde").val() == 8000 &&("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")) {
 
           //stkId for kecil = 1735, petit = 298
           if("${installResult.installStkId}" == 1735){

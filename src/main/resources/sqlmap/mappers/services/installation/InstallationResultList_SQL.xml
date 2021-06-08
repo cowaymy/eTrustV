@@ -560,6 +560,7 @@
        , Extent3.REF_NO REF_NO
        , Extent3.SALES_DT SALES_DT
        , Extent3.UPD_DT UPD_DT
+       , Extent3.APP_TYPE_ID
        , Extent3.UPD_USER_ID UPD_USER_ID
        , Extent7.CODE_ID CODE_ID
        , Extent7.CODE_NAME CODE_NAME
@@ -1502,6 +1503,7 @@
          , Extent1.PREV_SVC_AREA
          , Extent1.NEXT_SVC_AREA
          , Extent4.SALES_ORD_NO SALES_ORD_NO
+         , Extent4.APP_TYPE_ID
          , CASE
              WHEN ( Extent4.REF_NO IS NOT NULL ) THEN Extent4.REF_NO
              ELSE ''
