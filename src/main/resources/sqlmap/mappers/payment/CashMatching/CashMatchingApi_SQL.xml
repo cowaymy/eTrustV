@@ -19,7 +19,7 @@
     LEFT JOIN SAL0001D Extent2 ON Extent1.SALES_ORD_NO = Extent2.SALES_ORD_NO
     LEFT JOIN SAL0029D Extent3 ON Extent2.CUST_ID = Extent3.CUST_ID
     WHERE Extent1.PAY_MODE in ('5698','5697')
-        AND Extent1.PAY_STUS_ID in ('1','21')
+        AND ((Extent1.PAY_STUS_ID in ('1') AND Extent1.UPLOAD_IMG IS NULL  AND Extent1.SLIP_NO IS NULL) OR Extent1.PAY_STUS_ID in ('21'))
         <!-- AND Extent1.UPLOAD_IMG IS NULL -->
         <!-- AND Extent1.SLIP_NO IS NULL -->
         AND Extent1.CRT_USER_ID = #{userId}
