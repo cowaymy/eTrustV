@@ -13,8 +13,11 @@
 					,DECODE( Extent1.UPLOAD_IMG, '', 'N', 'Y') IMG_YN
 					,Extent1.SLIP_NO SLIP_NO
 					,Extent1.CHEQUE_NO CHEQUE_NO
+                    ,Extent3.NAME STUS
 		FROM    PAY0297D Extent1
+                        LEFT JOIN SYS0038M Extent3 ON Extent1.PAY_STUS_ID = Extent3.STUS_CODE_ID
 		                LEFT JOIN SYS0013M Extent2 ON Extent1.PAY_MODE = Extent2.CODE_ID
+
                               AND Extent2.CODE_MASTER_ID = 439
         <where>
         AND      Extent1.CRT_USER_ID = #{userId}
