@@ -114,6 +114,14 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
         throw new ApplicationException(AppConstants.FAIL, "Please check the User Id value.");
       }
 
+      if (StringUtils.isEmpty(param.get("stus"))) {
+        throw new ApplicationException(AppConstants.FAIL, "Reject reason value does not exist.");
+      }
+
+      if (StringUtils.isEmpty(param.get("resnId"))) {
+        throw new ApplicationException(AppConstants.FAIL, "Reject reason value does not exist.");
+      }
+
       if (StringUtils.isEmpty(param.get("etc"))) {
         throw new ApplicationException(AppConstants.FAIL, "Reject reason value does not exist.");
       }
@@ -124,12 +132,14 @@ public class MobilePaymentKeyInServiceImpl extends EgovAbstractServiceImpl imple
       saveParam.put("etc", param.get("etc"));
       saveParam.put("mobPayNo", mobPayNo);
       saveParam.put("userId", param.get("userId"));
+      saveParam.put("stus", param.get("stus"));
+      saveParam.put("resnId", param.get("resnId"));
 
       saveCnt = mobilePaymentKeyInMapper.updateMobilePaymentKeyInReject(saveParam);
 
       // 티겟 상태 변경  - CHANGE TARGET STATUS
       Map<String, Object> ticketParam = new HashMap<String, Object>();
-      ticketParam.put("ticketStusId", 6);
+      ticketParam.put("ticketStusId", param.get("stus"));
       ticketParam.put("updUserId", param.get("userId"));
       ticketParam.put("mobTicketNo", mobTicketNo);
       mobileAppTicketApiCommonMapper.update(ticketParam);

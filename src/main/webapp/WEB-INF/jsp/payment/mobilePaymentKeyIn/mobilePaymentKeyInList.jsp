@@ -50,8 +50,12 @@
 
   var basicAuth = false;
 
+  var actData= [{"codeId": "21","codeName": "Failed"},{"codeId": "6","codeName": "Reject"}];
+
   $(document).ready(function() {
     // AUIGrid 그리드를 생성합니다.
+    doDefCombo(actData, '' ,'_action', 'S', '');
+
     createAUIGrid();
 
     //AUIGrid.setSelectionMode(myGridID , "singleRow");
@@ -70,8 +74,30 @@
       }
       fn_selectPstRequestDOListAjax();
     }
-
     );
+
+    $("#_action").change(function (){
+
+    	if($("#_action").val() == 21){
+    		$('#reject_reason').hide();
+            $('#rejectReason').val('');
+
+    		$('#fail_reason').show();
+    		doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : 341, inputId : 0, separator : '-'}, '', 'failReason', 'S'); //Reason Code
+    	}else if($("#_action").val() == 6){
+    		$('#fail_reason').hide();
+    		$('#failReason').val('');
+
+    		$('#reject_reason').show();
+            doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : 342, inputId : 0, separator : '-'}, '', 'rejectReason', 'S');
+    	}else{
+    		$('#reject_reason').hide();
+    		$('#rejectReason').val('');
+
+    		$('#fail_reason').hide();
+    		$('#failReason').val('');
+    	}
+    });
 
     //Basic Auth (update Btn)
     if ('${PAGE_AUTH.funcUserDefine2}' == 'Y') {
@@ -98,6 +124,7 @@
   // reject 처리
   function fn_reject() {
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
     if (selectedItems.length <= 0) {
       Common.alert("<b>No request selected.</b>");
       return;
@@ -116,9 +143,12 @@
       return false;
     }
 
-    var data = {};
+    $('#updFail_wrap').show();
+
+    /*var data = {};
     if (selectedItems.length > 0)
       data.all = selectedItems;
+
 
     Common.prompt("<spring:message code='pay.prompt.reject'/>", "", function() {
       if (FormUtil.isEmpty($("#promptText").val())) {
@@ -134,7 +164,7 @@
           }
         });
       }
-    });
+    }); */
 
     /*
      var indexArr = AUIGrid.getSelectedIndex(myGridID);
@@ -566,7 +596,7 @@
         }, {
           dataField : "payRem",
           headerText : '<spring:message code="pay.head.remark" />',
-          width : 160,
+          width : 300,
           editable : false,
           style : "aui-grid-user-custom-left"
         }, {
@@ -705,7 +735,7 @@
   }
 
   // f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-  doGetCombo('/common/selectCodeList.do', '435', '', 'ticketType', 'S', ''); // Ticket Type
+  //doGetCombo('/common/selectCodeList.do', '435', '', 'ticketType', 'S', ''); // Ticket Type
   doGetCombo('/common/selectCodeList.do', '439', '', 'payMode', 'S', ''); // Pay Mode
   // doGetCombo('/mobileAppTicket/selectMobileAppTicketStatus.do', '', '', 'ticketStatus', 'S', '');
   doGetCombo('/common/selectCodeList.do', '130', '', 'keyInCardMode', 'S', ''); //CreditCardMode 생성
@@ -723,6 +753,16 @@
       }).multipleSelect({
         selectAll : true, // 전체선택
         width : '80%'
+      });
+      $('#cmbRegion').change(function() {
+      }).multipleSelect({
+          selectAll: true,
+          width: '80%'
+      });
+      $('#_region').change(function() {
+      }).multipleSelect({
+          selectAll: true,
+          width: '80%'
       });
     });
   }
@@ -1207,6 +1247,49 @@
     });
   }
 
+  function fn_updateFailStatus() {
+
+	  var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+	  var data = {};
+	  var stus = $("#_action").val();
+	  var resn = '';
+
+	  data.all = selectedItems;
+
+	  if(stus != ''){
+
+		  if(stus == 21 && $("#failReason").val() != ''){
+			resn = $("#failReason").val();
+	      }else if(stus == 6 && $("#rejectReason").val() != ''){
+	    	resn = $('#rejectReason').val();
+	      }else{
+	    	Common.alert("* Please select reason");
+	    	return;
+	      }
+
+	      data.etc = $('#etc').val();
+	      data.stus = stus;
+	      data.resnId = resn;
+//PaymentMCdKeyinErrorSum
+	      Common.ajaxSync("POST", "/mobilePaymentKeyIn/saveMobilePaymentKeyInReject.do", data, function(result) {
+		      if (result != "" && null != result) {
+		    	  var msg = stus == 6 ? "<spring:message code='pay.alert.reject'/>" : "<spring:message code='pay.alert.failed'/>";
+
+		         Common.alert(msg, function() {
+		           fn_close();
+		           fn_selectPstRequestDOListAjax();
+		         });
+		       }
+	       });
+	  }else{
+		  Common.alert("* Please select action");
+		  return;
+	  }
+
+  }
+
+
+
   function nextTab(a, e) {
     if (e.keyCode != 8) {
       if (a.value.length == a.size) {
@@ -1218,9 +1301,116 @@
     }
   }
 
+  function fn_close(){
+	  $('#updFail_wrap').hide();
+      $('#updFailForm')[0].reset();
+
+      $('#errSum_wrap').hide();
+      $('#errorSummaryReport')[0].reset();
+  }
+
+  function fn_generate(){
+
+	var v_whereSQL = '';
+	var runNo = 0;
+
+	if(FormUtil.isEmpty($('#startDt').val()) && FormUtil.isEmpty($('#endDt').val()) ){
+		Common.alert("Please select request date");
+		return;
+
+	}else{
+		var sDate = $('#startDt').val(), eDate = $('#endDt').val();
+
+		var dd = "",mm = "",yyyy = "";
+
+		var dateArr;
+		dateArr = sDate.split("/");
+		var sDt = new Date(Number(dateArr[2]), Number(dateArr[1])-1, Number(dateArr[0]));
+
+		dateArr = eDate.split("/");
+		var eDt = new Date(Number(dateArr[2]), Number(dateArr[1])-1, Number(dateArr[0]));
+
+		var dtDiff = new Date(eDt - sDt);
+		var days = dtDiff/1000/60/60/24;
+
+		if(days > 30) {
+		    Common.alert("Request date range cannot be greater than 30 days.");
+		    return;
+		}else{
+			v_whereSQL += " AND P.CRT_DT BETWEEN "
+			     + "TO_DATE(" + $('#startDt').val() + ",'YYYY/MM/DD') AND "
+			     + "TO_DATE(" + $('#endDt').val() + ",'YYYY/MM/DD')+1 ";
+		}
+	}
+
+	if($("#_region").val() == null){
+        Common.alert("Please select region");
+        return;
+    }else{
+    	v_whereSQL += " AND  B.REGN_ID IN (";
+        $('#_region :selected').each(function(i, mul){
+           if(runNo > 0){
+        	   v_whereSQL += ",'"+$(mul).val()+"'";
+            }else{
+            	v_whereSQL += "'"+$(mul).val()+"'";
+            }
+            runNo += 1;
+        });
+        v_whereSQL += ") ";
+
+         runNo = 0;
+    }
+
+	if($("#_branch").val() == null){
+		Common.alert("Please select branch");
+		return;
+	}else{
+		v_whereSQL += " AND U.USER_BRNCH_ID IN (";
+        $('#_branch :selected').each(function(i, mul){
+           if(runNo > 0){
+               v_whereSQL += ",'"+$(mul).val()+"'";
+            }else{
+                v_whereSQL += "'"+$(mul).val()+"'";
+            }
+            runNo += 1;
+        });
+        v_whereSQL += ") ";
+
+       runNo = 0;
+	}
+
+	$("#reportFileName").val('/payment/PaymentMCdKeyinErrorSum.rpt');  //Rpt File Name
+    $("#viewType").val("EXCEL");  //view Type
+
+	var date = new Date().getDate();
+    if(date.toString().length == 1)
+        date = "0" + date;
+
+	var title = "CodyKeyinErrorSummary_"+date+(new Date().getMonth()+1)+new Date().getFullYear();
+
+	$("#reportDownFileName").val(title); //Download File Name
+    $("#V_WHERESQL").val(v_whereSQL);// Procedure Param
+
+    console.log(v_whereSQL);
+    console.log($("#V_WHERESQL").val());
+
+    var option = {
+            isProcedure : true
+    };
+
+    Common.report("errorSummaryReport", option);
+
+
+  }
+
   $(function() {
     $('#keyInExpiryMonth').keyup(function(e) {
   	  if (this.value.length == this.size) $('#keyInExpiryYear').focus();
+    });
+    $('#btnCdKeyinErrorSummary').click(function(e){
+    	doGetCombo('/common/selectCodeList.do', '49', '','_region', 'M' , 'f_multiCombo'); //region
+
+        $('#errSum_wrap').show();
     });
   });
 
@@ -1288,8 +1478,10 @@
             <td>
               <select id="ticketStatus" name="ticketStatus" class="w100p">
                 <option value="1">Active</option>
+                <option value="104">Processing</option>
                 <option value="5">Approved</option>
                 <option value="6">Rejected</option>
+                <option value="21">Failed</option>
                 <option value="10">Cancelled</option>
               </select>
             </td>
@@ -1301,10 +1493,11 @@
                 </c:forEach>
               </select>
             </td>
-            <th scope="row"><spring:message code="pay.title.memberCode" /></th>
-            <td>
-              <input type="text" title="<spring:message code="pay.title.memberCode" />" id="memberCode" name="memberCode" class="w100p" value="" />
-            </td>
+            <th scope="row">Region</th>
+		    <td>
+			    <select id="cmbRegion" name="cmbRegion" class="multy_select w100p" multiple="multiple">
+			    </select>
+		    </td>
           </tr>
           <tr>
             <th scope="row"><spring:message code="sal.text.payMode" /></th>
@@ -1315,8 +1508,10 @@
             <td>
               <input type="text" title="Slip No / Cheque No" id=serialNo name="serialNo" class="w100p" />
             </td>
-            <th scope="row"></th>
-            <td></td>
+            <th scope="row"><spring:message code="pay.title.memberCode" /></th>
+            <td>
+              <input type="text" title="<spring:message code="pay.title.memberCode" />" id="memberCode" name="memberCode" class="w100p" value="" />
+            </td>
           </tr>
           <tr>
             <th scope="row"><spring:message code="sal.text.orgCode" /></th>
@@ -1338,15 +1533,27 @@
     </form>
   </section>
   <!-- search_table end -->
+  <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<dl class="link_list">
+    <dt>Link</dt>
+    <dd>
+     <ul class="btns">
+       <li><p class="link_btn"><a href="#" id="btnCdKeyinErrorSummary"><spring:message code='pay.btn.cdKeyinErrorSummary'/></a></p></li>
+     </ul>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+    </dd>
+</dl>
+</aside> <!-- link_btns_wrap end  -->
   <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
       <li><p class="btn_grid"><a href="#" onClick="fn_viewLdg()"><spring:message code="sal.btn.ledger" /> </a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-      <li><p class="btn_grid"><a href="#" onClick="fn_validateLdg()"><spring:message code="pay.btn.update" /> </a></p></li>
+      <li><p class="btn_grid"><a href="#" onClick="fn_validateLdg()"><spring:message code="pay.btn.approve" /> </a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-      <li><p class="btn_grid"><a href="#" onClick="fn_reject()"><spring:message code="pay.btn.reject" /> </a></p></li>
+      <li><p class="btn_grid"><a href="#" onClick="fn_reject()"><spring:message code="pay.btn.failreject" /> </a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
       <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code="pay.btn.exceldw" /></a></p></li>
@@ -1543,5 +1750,128 @@
       <!-- popup_wrap end -->
   </section>
   <!-- search_result end -->
+
+<!-- popup_wrap start -->
+<div class="popup_wrap size_small" id="updFail_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="updFail_pop_header">
+        <h1>Update Status</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="fn_close()">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+
+    <!-- pop_body start -->
+    <form name="updFailForm" id="updFailForm"  method="post">
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:175px" />
+                    <col style="width:*" />
+                </colgroup>
+
+                <tbody>
+                <tr>
+                     <th scope="row">Action<span class="must">*</span></th>
+                     <td><select id="_action" name="_action"></select></td>
+                 </tr>
+
+                 <tr id="fail_reason" style="display: none;">
+                     <th scope="row">Fail reason code<span class="must">*</span></th>
+                        <td><select id="failReason" name="failReason" class="w50p"></select></td>
+                 </tr>
+                 <tr id="reject_reason" style="display: none;">
+                     <th scope="row">Reject reason code<span class="must">*</span></th>
+                        <td><select id="rejectReason" name="rejectReason" class="w50p"></select></td>
+                 </tr>
+                 <tr id="rem">
+                     <th scope="row"><spring:message code="pay.head.remark" /></th>
+                         <td>
+                             <textarea cols="20" rows="2" id="etc" name="etc" placeholder="Remark"></textarea>
+                         </td>
+                 </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <ul class="center_btns" >
+            <li><p class="btn_blue2"><a href="#" onClick="fn_updateFailStatus()">Save</a></p></li>
+        </ul>
+    </section>
+    </form>
+    <!-- pop_body end -->
+</div>
+
+<!-- popup_wrap start -->
+<div class="popup_wrap size_mid" id="errSum_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="updFail_pop_header">
+        <h1>Cody Keyin Error Summary</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="fn_close()">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+
+    <!-- pop_body start -->
+    <form name="errorSummaryReport" id="errorSummaryReport"  method="post">
+	<input type="hidden" id="reportFileName" name="reportFileName" value="" />
+	<input type="hidden" id="viewType" name="viewType" />
+	<input type="hidden" id="reportDownFileName" name="reportDownFileName"  />
+    <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" />
+
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:175px" />
+                    <col style="width:*" />
+                </colgroup>
+
+                <tbody>
+                <tr>
+                    <th scope="row"><spring:message code='pay.head.requestDate'/></th>
+                    <td>
+					    <div class="date_set w100p">
+					    <p><input id="startDt" name="startDt" type="text" value="" title="Request start date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+					    <span>To</span>
+					    <p><input id="endDt" name="endDt" type="text" value="" title="Request end date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+					    </div>
+				    </td>
+				 </tr>
+                 <tr>
+                     <th scope="row"><spring:message code='sal.title.text.region'/></th>
+                        <td><select id="_region" name="_region" class="w100p"></select></td>
+                 </tr>
+                 <tr>
+                     <th scope="row"><spring:message code='pay.head.branch'/></th>
+                        <td>
+                        <select class="multy_select w100p" id="_branch" name="_branch" multiple="multiple">
+				                <c:forEach var="list" items="${userBranch}" varStatus="status">
+				                  <option value="${list.branchid}">${list.c1}</option>
+				                </c:forEach>
+				              </select>
+                        </td>
+                 </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <ul class="center_btns" >
+            <li><p class="btn_blue2"><a href="#" onClick="fn_generate()">Save</a></p></li>
+        </ul>
+    </section>
+    </form>
+    <!-- pop_body end -->
+</div>
+
 </section>
 <!-- content end -->

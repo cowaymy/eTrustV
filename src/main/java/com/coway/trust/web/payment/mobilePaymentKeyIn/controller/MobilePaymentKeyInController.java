@@ -111,7 +111,10 @@ public class MobilePaymentKeyInController {
     LOGGER.debug(">>>>" + params.toString());
 
     String[] branchCode = request.getParameterValues("branchCode");
+    String[] cmbRegion = request.getParameterValues("cmbRegion");
+
     params.put("branchCode", branchCode);
+    params.put("cmbRegion", cmbRegion);
 
     LOGGER.debug(params.toString());
 

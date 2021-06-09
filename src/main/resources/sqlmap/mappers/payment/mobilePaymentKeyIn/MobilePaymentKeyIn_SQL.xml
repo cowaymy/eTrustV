@@ -60,7 +60,8 @@
                             Extent1.EMAIL_2 EMAIL_2,
                             Extent1.SMS_1 SMS_1,
                             Extent1.SMS_2 SMS_2,
-                            Extent1.PAY_REM PAY_REM,
+                            CASE WHEN Extent1.PAY_STUS_ID IN (6,10,21) THEN '['|| T6.RESN_DESC || '] ' || Extent1.PAY_REM
+                                 ELSE Extent1.PAY_REM END PAY_REM,
                             Extent5.CRT_USER_BRNCH CRT_USER_BRNCH,
                             T4.CODE CRT_USER_BRNCH_CD,
                             T4.NAME CRT_USER_BRNCH_NM,
@@ -124,6 +125,7 @@
                LEFT JOIN SYS0047M T11 ON T11.USER_ID = Extent1.UPD_USER_ID
                LEFT JOIN SYS0005M T4 ON T4.BRNCH_ID = T10.USER_BRNCH_ID
                LEFT JOIN SYS0013M T5 ON T5.CODE_ID = Extent2.APP_TYPE_ID AND T5.CODE_MASTER_ID = '10'
+               LEFT JOIN SYS0032M T6 ON T6.RESN_ID = Extent1.FAIL_RESN_ID
 
                <where>
                  <if test="_reqstStartDt != null and _reqstStartDt != '' ">
@@ -159,6 +161,12 @@
                  <if test="payMode != null and payMode != '' ">
                    AND Extent1.PAY_MODE = #{payMode}
                  </if>
+                 <if test="cmbRegion != null and cmbRegion != '' ">
+                    AND T4.REGN_ID IN
+                    <foreach item="item" collection="cmbRegion" index="index" open="(" separator="," close=")">
+                      #{item}
+                     </foreach>
+                 </if>
                </where>
 
     ) A LEFT JOIN (SELECT RENT_SO_ID, SUM(RENT_AMT) AS S FROM PAY0022D GROUP BY RENT_SO_ID) B ON B.RENT_SO_ID = A.ORD_ID
@@ -182,10 +190,11 @@
 
   <update id="updateMobilePaymentKeyInReject" parameterType="Map">
     UPDATE  /* [com.coway.trust.biz.payment.mobilePaymentKeyIn.service.impl.MobilePaymentKeyInMapper.updateMobilePaymentKeyInReject] 20191021 - KR HAN */
-    PAY0297D SET PAY_STUS_ID = 6
+    PAY0297D SET PAY_STUS_ID = #{stus}
                        , PAY_REM = #{etc}
                        , UPD_DT = SYSDATE
                        , UPD_USER_ID = #{userId}
+                       , FAIL_RESN_ID = #{resnId}
     WHERE MOB_PAY_NO =  #{mobPayNo}
    </update>
 
