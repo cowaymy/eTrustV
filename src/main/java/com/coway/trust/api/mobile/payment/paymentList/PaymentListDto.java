@@ -66,6 +66,9 @@ public class PaymentListDto {
 	@ApiModelProperty(value = "description")
 	private String description;
 
+	@ApiModelProperty(value = "stus")
+	private String stus;
+
 	public int getMobPayNo() {
 		return mobPayNo;
 	}
@@ -168,6 +171,14 @@ public class PaymentListDto {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getStus() {
+		return stus;
+	}
+
+	public void setStus(String stus) {
+		this.stus = stus;
 	}
 
 	public static PaymentListDto create(EgovMap egvoMap) {
