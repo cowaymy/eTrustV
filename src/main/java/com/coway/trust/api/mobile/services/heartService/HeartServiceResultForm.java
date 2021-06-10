@@ -97,6 +97,7 @@ public class HeartServiceResultForm {
 	private String hsChkLst;
 	private String instruction;
 
+	private String codeFailRemark;
 
 	public String getCheckInDate() {
 		return checkInDate;
@@ -323,6 +324,14 @@ public class HeartServiceResultForm {
 
 	public void setHsChkLst(String hsChkLst) {
 		this.hsChkLst = hsChkLst;
+	}
+
+	public String getCodeFailRemark() {
+		return codeFailRemark;
+	}
+
+	public void setCodeFailRemark(String codeFailRemark) {
+		this.codeFailRemark = codeFailRemark;
 	}
 
 	public String getInstruction() {
