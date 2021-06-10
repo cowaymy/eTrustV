@@ -24,12 +24,30 @@
     		editable : false,
     		style : 'left_style'
     	}, {
-    		dataField : "custId",
-    		headerText : "Cust ID",
+    		dataField : "stkCat",
+    		headerText : "Stock Category",
     		width : 130,
     		editable : false,
     		style : 'left_style'
     	}, {
+            dataField : "stkDesc",
+            headerText : "Stock Description",
+            width : 200,
+            editable : false,
+            style : 'left_style'
+    	}, {
+            dataField : "memType",
+            headerText : "Sales by",
+            width : 130,
+            editable : false,
+            style : 'left_style'
+    	}, {
+            dataField : "custId",
+            headerText : "Cust ID",
+            width : 130,
+            editable : false,
+            style : 'left_style'
+        }, {
     		dataField : "name",
     		headerText : "Customer Name",
     		width : 130,
