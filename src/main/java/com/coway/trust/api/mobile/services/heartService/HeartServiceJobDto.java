@@ -234,6 +234,7 @@ public class HeartServiceJobDto {
 
   private String redeemWarranty;
 
+  private String codeFailRemark;
 
 public String getSerialChk() {
     return serialChk;
@@ -869,6 +870,14 @@ public String getRedeemWarranty() {
 
 public void setRedeemWarranty(String redeemWarranty) {
 	this.redeemWarranty = redeemWarranty;
+}
+
+public String getCodeFailRemark() {
+	return codeFailRemark;
+}
+
+public void setCodeFailRemark(String codeFailRemark) {
+	this.codeFailRemark = codeFailRemark;
 }
 
 }
