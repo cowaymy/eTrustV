@@ -74,7 +74,8 @@
            A.HS_CHK_LST,
            A.VOUCHER ,
            A.REDEEM_DT,
-           A.REDEEM_WARRANTY
+           A.REDEEM_WARRANTY,
+           A.CODE_FAIL_REMARK
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -135,7 +136,8 @@
                   HS_CHKLIST AS HS_CHK_LST,
                   VOUCHER ,
                   REDEEM_DT,
-                  REDEEM_WARRANTY
+                  REDEEM_WARRANTY,
+                  CODE_FAIL_REMARK
            FROM ( SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
                                   A.STUS_CODE_ID AS job_Status,
@@ -425,6 +427,7 @@
           , TO_CHAR(VOUCHER) AS VOUCHER
           , TO_CHAR(REDEEM_DT) AS REDEEM_DT
           , TO_CHAR(REDEEM_WARRANTY) AS REDEEM_WARRANTY
+          , TO_CHAR(CODE_FAIL_REMARK) AS CODE_FAIL_REMARK
     FROM SVC0101T
     WHERE MEM_CODE = #{userId}
   </select>
@@ -1076,10 +1079,11 @@
               AND SAL0001D.PROMO_ID = SAL0017D.PROMO_ID(+)
     ]]>
 
-         <if test='userId == "DT100004" '>
-              <!-- AND SAL0046D.INSTALL_DT between #{requestDate} - 3 and #{requestDate} -->
+         <!-- <if test='userId == "DT100004" '>
+              AND SAL0046D.INSTALL_DT between #{requestDate} - 3 and #{requestDate}
               AND SAL0046D.INSTALL_DT between sysdate - 1 and sysdate
-         </if>
+              AND TO_CHAR(SAL0046D.INSTALL_DT, 'YYYYMMDD')  between TO_CHAR(SYSDATE, 'YYYYMMDD') - 1 and TO_CHAR(SYSDATE, 'YYYYMMDD')
+         </if> -->
 
       ) WHERE rnum = 1
 
