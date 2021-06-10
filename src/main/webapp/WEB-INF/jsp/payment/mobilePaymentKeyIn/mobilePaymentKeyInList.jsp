@@ -18,6 +18,13 @@
  06/07/2020  ONGHC  1.0.7             Add Extra Search Criteria for Organization, Group and Department Code
  17/08/2020  ONGHC  1.0.8             Add Transaction Slip, Submission Checklist, Other 1 and Other 2 attachment
  21/08/2020  ONGHC  1.0.9             Solve attachment Image no response issue
+ 08/06/2021  KAHKIT 1.0.10            1. Request ‘Failed‘ and Cody allow to Edit & Resubmit
+                                      2. Reject Reason Compulsory Selection for Admin to choose
+                                      3. Allow Cody & Managers to view Failed/Rejected Status at E-Trust & Mobile
+                                           - Ticket status add Failed & Processing
+                                           - Ticket status can be multiple selection
+                                           - Add region at search part
+                                      4. Request Cody key-in error summary
  -->
 <style type="text/css">
 /* 커스텀 칼럼 스타일 정의 */
@@ -1338,8 +1345,8 @@
 		    return;
 		}else{
 			v_whereSQL += " AND P.CRT_DT BETWEEN "
-			     + "TO_DATE(" + $('#startDt').val() + ",'YYYY/MM/DD') AND "
-			     + "TO_DATE(" + $('#endDt').val() + ",'YYYY/MM/DD')+1 ";
+			     + "TO_DATE('" + $('#startDt').val() + "','DD/MM/YYYY') AND "
+			     + "TO_DATE('" + $('#endDt').val() + "','DD/MM/YYYY')+1 ";
 		}
 	}
 
