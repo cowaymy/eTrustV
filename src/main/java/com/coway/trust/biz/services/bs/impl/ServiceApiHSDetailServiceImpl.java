@@ -150,6 +150,7 @@ public class ServiceApiHSDetailServiceImpl extends EgovAbstractServiceImpl imple
           params.put("hidSerialRequireChkYn", String.valueOf(insApiresult.get("serialRequireChkYn")));
           params.put("instChklstCheckBox", String.valueOf(insApiresult.get("hsChkLst")));/////////////////////////////////////////////hsChklst
           params.put("instruction", String.valueOf(insApiresult.get("instruction")));///////////////////////////////////////////// job instruction
+          params.put("codeFailRemark", String.valueOf(insApiresult.get("codeFailRemark"))); // Barcode Reason Enhancement
 
           logger.debug("### HS PARAM : " + params.toString());
           logger.debug("### HS PARAM FILTER : " + paramsDetailList.toString());
