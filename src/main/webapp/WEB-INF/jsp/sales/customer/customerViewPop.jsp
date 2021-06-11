@@ -217,7 +217,7 @@
                { dataField : "code2", headerText : '<spring:message code="sal.title.paymode" />', width : 100 },
                { dataField : "bankCode", headerText : '<spring:message code="sal.title.issueBank" />', width : 100},
                { dataField : "rentAmt", headerText : '<spring:message code="sal.title.outstanding" />', width : 100},
-               {dataField : "custBillGrpNo",headerText : 'RBG group No" />', width : 100},
+               {dataField : "custBillGrpNo",headerText : 'RBG group No>', width : 100},
 
                {
                    dataField : "undefined",
