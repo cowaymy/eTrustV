@@ -92,13 +92,13 @@ public class DailyCollectionController {
             		"username","description","cardmode","payitemamt","payitemremark","fpayitemccno","paymode","trNo","refNo","refDtl","crcmode",
             		"crctype","payitemccholdername","payitemccexpirydate","refdate","keyinby","issuedbank","deptcode","orderstatus",
             		"custvano","bankChgAmt","advancemth","runningno","cardtype","pvMonth","pvYear","crcStatementNo","crcStatus",
-            		"crcStatementRemark","custcategory","custtype","transId","ordCrtDt"};
+            		"crcStatementRemark","custcategory","custtype","transId","ordCrtDt","keyInScrn","paymentcollector","batchPayId","crcStateId"};
 
             titles = new String[] {"RECEIPTNO","ORDERNO","TRX_DATE","NAME","BANK_ACC","DEBT_CODE","BRANCHCODE","PAYITEMAPPVNO","PAYITEMCHQNO","USERNAME",
             		"DESCRIPTION","CARD_MODE","PAYITEMAMT","PAYITEMREMARK","FPAYITEMCCNO","PAYMODE","TR_NO","REF_NO","REF_DTL","CRCMODE","CRCTYPE","PAYITEMCCHOLDERNAME",
             		"PAYITEMCCEXPIRYDATE","REFDATE","KEYINBY","ISSUEDBANK","DEPTCODE","ORDERSTATUS","CUSTVANO","BANK_CHG_AMT","ADVANCEMTH",
             		"RUNNINGNO","CARDTYPE","PV_MONTH","PV_YEAR","CRC_STATEMENT_NO","CRC_STATUS","CRC_STATEMENT_REMARK","CustCategory","CustType","TRANS_ID",
-            		"ORD_CRT_DT"};
+            		"ORD_CRT_DT" ,"KEY IN SCRN" ,"PAYMENTCOLLECTOR" ,"BATCH_PAY_ID", "CRC STATE ID"};
 
 
 			downloadHandler = getExcelDownloadHandler(response, "DailyCollectionRawData.xlsx", columns, titles);

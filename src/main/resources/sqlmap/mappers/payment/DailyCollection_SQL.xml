@@ -355,7 +355,8 @@
                 NVL(B.BATCH_PAY_ID, 0) AS BATCH_PAY_ID  ,
                 NVL(mbb1.MEM_CODE, ' ') AS PAYMENTCOLLECTOR,
                 GP.BANK_STATE_MAPPING_ID AS TRANS_ID,
-                (CASE WHEN C.CRT_DT IS NULL THEN TO_CHAR(SOM.CRT_DT,'DD/MM/YYYY') ELSE TO_CHAR(C.CRT_DT,'DD/MM/YYYY')END) AS ORD_CRT_DT
+                (CASE WHEN C.CRT_DT IS NULL THEN TO_CHAR(SOM.CRT_DT,'DD/MM/YYYY') ELSE TO_CHAR(C.CRT_DT,'DD/MM/YYYY')END) AS ORD_CRT_DT,
+                GP.KEY_IN_SCRN
             FROM
                 PAY0064D B
                 JOIN PAY0065D A   ON A.PAY_ID = B.PAY_ID
@@ -459,7 +460,8 @@
                 NVL(B.BATCH_PAY_ID, 0) BATCH_PAY_ID  ,
                 NVL(mbb1.MEM_CODE, ' ') PAYMENTCOLLECTOR,
                 GP.BANK_STATE_MAPPING_ID AS TRANS_ID,
-                TO_CHAR(l.CRT_DT,'DD/MM/YYYY') AS ORD_CRT_DT
+                TO_CHAR(l.CRT_DT,'DD/MM/YYYY') AS ORD_CRT_DT,
+                GP.KEY_IN_SCRN
             FROM
                 PAY0064D B
                 JOIN PAY0065D A   ON A.PAY_ID = B.PAY_ID
@@ -559,7 +561,8 @@
             NVL(B.BATCH_PAY_ID, 0) BATCH_PAY_ID  ,
             NVL(mbb1.MEM_CODE, ' ') PAYMENTCOLLECTOR,
             GP.BANK_STATE_MAPPING_ID AS TRANS_ID,
-            TO_CHAR(l.CRT_DT,'DD/MM/YYYY') AS ORD_CRT_DT
+            TO_CHAR(l.CRT_DT,'DD/MM/YYYY') AS ORD_CRT_DT,
+            GP.KEY_IN_SCRN
         FROM
             PAY0064D B
             JOIN PAY0065D A   ON A.PAY_ID = B.PAY_ID

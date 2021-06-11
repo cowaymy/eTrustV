@@ -151,6 +151,16 @@ function fn_bankChange(){
 
 }
 
+function fn_bankAccChange(){
+
+	var bankaccType = $("#bankAcc").val();
+
+    if(bankaccType  =="546" || bankaccType =="561" ){
+    	   $("#bankType").val('2728');
+    }
+
+}
+
 //조회버튼 클릭시 처리
 function fn_searchAdvMatchList(){
 
@@ -528,7 +538,7 @@ hideAutoMatchViewPopup=function(){
                     <tr>
                         <th scope="row">Bank Account</th>
                         <td>
-                            <select id="bankAcc" name="bankAcc"  class="w100p"></select>
+                            <select id="bankAcc" name="bankAcc"  class="w100p"  onchange="javascript:fn_bankAccChange();"></select>
                         </td>
                         <th scope="row">VA Account</th>
                         <td>

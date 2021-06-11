@@ -19,37 +19,37 @@
 	//Grid Properties 설정
 	var gridPros = {
 	        // 편집 가능 여부 (기본값 : false)
-	        editable : false,        
+	        editable : false,
 	        // 상태 칼럼 사용
 	        showStateColumn : false,
 	        // 기본 헤더 높이 지정
 	        headerHeight : 35,
-	        
+
 	        softRemoveRowMode:false,
-	        
+
 	        // 체크박스 표시 설정
 	        showRowCheckColumn : true,
 	        // 전체 체크박스 표시 설정
 	        showRowAllCheckBox : true,
 	        //independentAllCheckBox : true
-	
+
 	};
-	
+
 	var gridPros2 = {
-			
+
 			// 편집 가능 여부 (기본값 : false)
-      //editable : false,        
+      //editable : false,
       // 상태 칼럼 사용
       showStateColumn : false,
       // 기본 헤더 높이 지정
       headerHeight : 35,
-	          
+
       softRemoveRowMode:false
-			
+
 	}
-	
+
 	// AUIGrid 칼럼 설정
-	var columnLayout = [ 
+	var columnLayout = [
 	    {dataField : "bsNo",headerText : "<spring:message code='pay.head.bsNo'/>",width : 100 , editable : false},
 	    {dataField : "bankName",headerText : "<spring:message code='pay.head.bank'/>",width : 160 , editable : false},
 	    {dataField : "bankAccName",headerText : "<spring:message code='pay.head.bankAccount'/>",width : 240 , editable : false},
@@ -58,28 +58,29 @@
 	    {dataField : "count",headerText : "<spring:message code='pay.head.count'/>",width : 80 , editable : false, dataType:"numeric", formatString:"#,##0"},
 	    {dataField : "remark",headerText : "<spring:message code='pay.head.remark'/>",editable : false}
 	    ];
-	    
+
 	var detailColumnLayout = [
 	    {dataField : "bankId",headerText : "<spring:message code='pay.head.bankId'/>",editable : false, visible : false},
 	    {dataField : "bankAcc",headerText : "<spring:message code='pay.head.bankAccountCode'/>", editable : false, visible : false},
 	    {dataField : "count",headerText : "", editable : false, visible : false},
-	    {dataField : "fTrnscId",headerText : "<spring:message code='pay.head.tranxId'/>", editable : false},     
-	    {dataField : "bankName",headerText : "<spring:message code='pay.head.bank'/>", editable : false},                    
-	    {dataField : "bankAccName",headerText : "<spring:message code='pay.head.bankAccount'/>",editable : false},                    
+	    {dataField : "tranxState",headerText : "Transaction status", editable : false},
+	    {dataField : "fTrnscId",headerText : "<spring:message code='pay.head.tranxId'/>", editable : false},
+	    {dataField : "bankName",headerText : "<spring:message code='pay.head.bank'/>", editable : false},
+	    {dataField : "bankAccName",headerText : "<spring:message code='pay.head.bankAccount'/>",editable : false},
 	    {dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.dateTime'/>", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
 	    {dataField : "fTrnscTellerId",headerText : "<spring:message code='pay.head.refCheqNo'/>", editable : true},
 	    {dataField : "fTrnscRef3",headerText : "<spring:message code='pay.head.description1'/>",editable : true},
 	    {dataField : "fTrnscRefChqNo",headerText : "<spring:message code='pay.head.description2'/>", editable : true},
 	    {dataField : "fTrnscRef1",headerText : "<spring:message code='pay.head.ref5'/>", editable : true},
 	    {dataField : "fTrnscRef2",headerText : "<spring:message code='pay.head.ref6'/>", editable : true},
-        {dataField : "fTrnscRef6",headerText : "<spring:message code='pay.head.ref7'/>", editable : true},                    
+        {dataField : "fTrnscRef6",headerText : "<spring:message code='pay.head.ref7'/>", editable : true},
         {dataField : "fTrnscRem",headerText : "<spring:message code='pay.head.type'/>", editable : true},
         {dataField : "fTrnscDebtAmt",headerText : "<spring:message code='pay.head.debit'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
         {dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.credit'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
 	    {dataField : "fTrnscRef4",headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>", editable : true},
 	    {dataField : "fTrnscNewChqNo",headerText : "<spring:message code='pay.head.chqNo'/>", editable : true},
 	    {dataField : "fTrnscRefVaNo",headerText : "<spring:message code='pay.head.vaNumber'/>", editable : true}
-	    ];    
+	    ];
 
     //AUIGrid 칼럼 설정
 	var uploadGridLayout = [
@@ -91,26 +92,26 @@
         {dataField : "5", headerText : "<spring:message code='pay.head.ref7'/>", editable : true},
         {dataField : "6", headerText : "<spring:message code='pay.head.mode'/>", editable : true},
         {dataField : "7", headerText : "<spring:message code='pay.head.debit'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
-        {dataField : "8", headerText : "<spring:message code='pay.head.credit'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},        
+        {dataField : "8", headerText : "<spring:message code='pay.head.credit'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
 		{dataField : "9", headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>", editable : true},
 		{dataField : "10", headerText : "<spring:message code='pay.head.chqNo'/>", editable : true},
 		{dataField : "11", headerText : "<spring:message code='pay.head.vaNumber'/>", editable : true}
 		];
-    
+
     var downloadGridLayout = [
 		{dataField : "bankId",headerText : "<spring:message code='pay.head.bankId'/>",editable : false, visible : false},
 		{dataField : "bankAcc",headerText : "<spring:message code='pay.head.bankAccountCode'/>", editable : false, visible : false},
 		{dataField : "count",headerText : "", editable : false, visible : false},
-		{dataField : "fTrnscId",headerText : "<spring:message code='pay.head.tranxId'/>", editable : false},     
-		{dataField : "bankName",headerText : "<spring:message code='pay.head.bank'/>", editable : false},                    
-		{dataField : "bankAccName",headerText : "<spring:message code='pay.head.bankAccount'/>",editable : false},                    
+		{dataField : "fTrnscId",headerText : "<spring:message code='pay.head.tranxId'/>", editable : false},
+		{dataField : "bankName",headerText : "<spring:message code='pay.head.bank'/>", editable : false},
+		{dataField : "bankAccName",headerText : "<spring:message code='pay.head.bankAccount'/>",editable : false},
 		{dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.dateTime'/>", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
 		{dataField : "fTrnscTellerId",headerText : "<spring:message code='pay.head.refCheqNo'/>", editable : false},
 		{dataField : "fTrnscRef3",headerText : "<spring:message code='pay.head.description1'/>",editable : false},
 		{dataField : "fTrnscRefChqNo",headerText : "<spring:message code='pay.head.description2'/>", editable : false},
 		{dataField : "fTrnscRef1",headerText : "<spring:message code='pay.head.ref5'/>", editable : false},
 		{dataField : "fTrnscRef2",headerText : "<spring:message code='pay.head.ref6'/>", editable : false},
-		{dataField : "fTrnscRef6",headerText : "<spring:message code='pay.head.ref7'/>", editable : false},                    
+		{dataField : "fTrnscRef6",headerText : "<spring:message code='pay.head.ref7'/>", editable : false},
 		{dataField : "fTrnscRem",headerText : "<spring:message code='pay.head.type'/>", editable : false},
 		{dataField : "fTrnscDebtAmt",headerText : "<spring:message code='pay.head.debit'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
 		{dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.credit'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
@@ -118,32 +119,32 @@
 		{dataField : "fTrnscNewChqNo",headerText : "<spring:message code='pay.head.chqNo'/>", editable : false},
 		{dataField : "fTrnscRefVaNo",headerText : "<spring:message code='pay.head.vaNumber'/>", editable : false}
 		];
-    
-    
+
+
 	$(document).ready(function(){
-		
+
 		//Issue Bank 조회
 	    doGetCombo('/common/getAccountList.do', 'CASH' , ''   , 'bankAccount' , 'S', '');
-		
-		//Upload Pop Up화면 : Bank 조회    
+
+		//Upload Pop Up화면 : Bank 조회
 	    doGetCombo('/common/getIssuedBankList.do', '' , ''   , 'uploadIssueBank' , 'S', '');
-		
+
 		//Upload Pop Up화면 : Bank Account 조회
 	    doGetCombo('/common/getAccountList.do', 'CASH' , ''   , 'uploadBankAccount' , 'S', '');
-		
+
 		//Download Pop Up화면 : Bank Account 조회
         doGetCombo('/common/getAccountList.do', 'CASH' , ''   , 'downloadBankAccount' , 'S', '');
-		
+
 		//그리드 생성
 	    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 	    myDetailGridID = GridCommon.createAUIGrid("detail_grid_wrap", detailColumnLayout,null,gridPros2);
 	    myUploadGridID = GridCommon.createAUIGrid("grid_upload_wrap", uploadGridLayout,null,gridPros2);
 	    myDownloadGridID = GridCommon.createAUIGrid("grid_download_wrap", downloadGridLayout,null,gridPros2);
-	    
-	    // 셀 더블클릭 이벤트 바인딩 : 상세 팝업 
+
+	    // 셀 더블클릭 이벤트 바인딩 : 상세 팝업
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
         	selectedGridValue = event.rowIndex;
-        	var bsNo = AUIGrid.getCellValue(myGridID , event.rowIndex , "bsNo");	
+        	var bsNo = AUIGrid.getCellValue(myGridID , event.rowIndex , "bsNo");
             Common.ajax("GET","/payment/selectBankStatementDetailList.do", {"bsNo" : bsNo}, function(result){
             	$("#detail_wrap").show();
             	$("#pop_bsNo").text(bsNo);
@@ -151,7 +152,7 @@
                 AUIGrid.resize(myDetailGridID);
             });
         });
-	    
+
 
       //**************************************************
       //** 업로드 파일 내용을 Grid에 적용하기
@@ -170,7 +171,7 @@
               if (typeof file == "undefined") {
                   return;
               }
-              
+
               var reader = new FileReader();
               //reader.readAsText(file); // 파일 내용 읽기
               reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
@@ -178,7 +179,7 @@
                   if (typeof event.target.result != "undefined") {
                 	  // 그리드 CSV 데이터 적용시킴
                       AUIGrid.setCsvGridData(myUploadGridID, event.target.result, false);
-                      
+
                       //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
                       AUIGrid.removeRow(myUploadGridID,0);
                   } else {
@@ -191,13 +192,13 @@
               };
           }
 
-      });  
-	    
+      });
+
 	});
 
     // ajax list 조회.
     function searchList(){
-    	
+
 		if(FormUtil.checkReqValue($("#bsNo"))){
 			if(FormUtil.checkReqValue($("#bankAccount option:selected")) &&
 					FormUtil.checkReqValue($("#tranDateFr")) &&
@@ -208,13 +209,13 @@
 				Common.alert("<spring:message code='pay.alert.searchCondition'/>");
 				return;
 			}
-			
+
 			if((!FormUtil.checkReqValue($("#tranDateFr")) && FormUtil.checkReqValue($("#tranDateTo"))) ||
 					(FormUtil.checkReqValue($("#tranDateFr")) && !FormUtil.checkReqValue($("#tranDateTo"))) ){
 				Common.alert("<spring:message code='pay.alert.inputTransDate'/>");
 				return;
 			}
-			
+
 			if((!FormUtil.checkReqValue($("#uploadDateFr")) && FormUtil.checkReqValue($("#uploadDateTo"))) ||
 					(FormUtil.checkReqValue($("#uploadDateFr")) && !FormUtil.checkReqValue($("#uploadDateTo"))) ){
 				Common.alert("<spring:message code='pay.alert.inputUploadDate'/>");
@@ -222,57 +223,57 @@
 			}
     	}
 
-    	Common.ajax("POST","/payment/selectBankStatementMasterList.do",$("#searchForm").serializeJSON(), function(result){    		
+    	Common.ajax("POST","/payment/selectBankStatementMasterList.do",$("#searchForm").serializeJSON(), function(result){
     		AUIGrid.setGridData(myGridID, result);
     	});
     }
-    
+
     // 화면 초기화
     function clear(){
     	//화면내 모든 form 객체 초기화
     	$("#searchForm")[0].reset();
     	$("#uploadForm")[0].reset();
-    	
+
     	//그리드 초기화
     	//AUIGrid.clearGridData(myGridID);
     	//AUIGrid.clearGridData(myDetailGridID);
     	//AUIGrid.clearGridData(myUploadGridID);
-    	
+
     	//팝업내 컬럼 초기화
-    	$("#pop_bsNo").text("");        
+    	$("#pop_bsNo").text("");
     }
-    
+
     // upload 화면 초기화
     function uploadClear(){
         //화면내 모든 form 객체 초기화
         $("#uploadForm")[0].reset();
-        
+
         //그리드 초기화
-        AUIGrid.clearGridData(myUploadGridID);        
+        AUIGrid.clearGridData(myUploadGridID);
     }
-    
+
   //Layer close
-  hideViewPopup=function(val){       
+  hideViewPopup=function(val){
       $(val).hide();
-      
-      //업로드창이 닫히면 upload 화면도 reset한다. 
-      if(val == '#upload_wrap'){    	  
+
+      //업로드창이 닫히면 upload 화면도 reset한다.
+      if(val == '#upload_wrap'){
     	  uploadClear();
       }
   }
-  
+
   // Upload 버튼 클릭시 업로드 팝업
   function showUploadPop(){
 	  $("#upload_wrap").show();
-	  AUIGrid.resize(myUploadGridID);	  	  
+	  AUIGrid.resize(myUploadGridID);
   }
-    
+
 //Upload 버튼 클릭시 업로드 팝업
 function upload(){
     //param data array
     var data = GridCommon.getGridData(myUploadGridID);
     data.form = $("#uploadForm").serializeJSON();
-    
+
     if(FormUtil.checkReqValue($("#uploadTranDt")) ){
         Common.alert("<spring:message code='pay.alert.selectTransDate'/>");
         return;
@@ -283,16 +284,16 @@ function upload(){
         return;
     }
 
-    if(FormUtil.checkReqValue($("#uploadBankAccount option:selected")) ){    
+    if(FormUtil.checkReqValue($("#uploadBankAccount option:selected")) ){
         Common.alert("<spring:message code='pay.alert.selectBankAccount'/>");
         return;
     }
 
-    if(FormUtil.checkReqValue($("#uploadRemark")) ){    
+    if(FormUtil.checkReqValue($("#uploadRemark")) ){
         Common.alert("<spring:message code='pay.alert.insertRemark'/>");
         return;
     }
-    
+
     if(data.all.length < 1){
         Common.alert("<spring:message code='pay.alert.claimSelectCsvFile'/>");
         return;
@@ -300,16 +301,16 @@ function upload(){
 
     //Ajax 호출
     Common.confirm("<spring:message code='pay.alert.uploadBankStateItems'/>",function (){
-    	Common.ajax("POST", "/payment/uploadBankStatement.do", data, 
+    	Common.ajax("POST", "/payment/uploadBankStatement.do", data,
                 function(result) {
                     var returnMsg = "<spring:message code='pay.alert.bankStateFormSuccess'/>";
 					returnMsg +=  "<br><b> B/S No : " + result.fBankJrnlId + "</b>";
-        
+
                     Common.alert(returnMsg, function (){
                         hideViewPopup('#upload_wrap');
                     });
-        
-                },  
+
+                },
                 function(jqXHR, textStatus, errorThrown) {
                     try {
                         console.log("status : " + jqXHR.status);
@@ -319,11 +320,11 @@ function upload(){
                     } catch (e) {
                         console.log(e);
                     }
-                    
-                    Common.alert("Fail : " + jqXHR.responseJSON.message);        
+
+                    Common.alert("Fail : " + jqXHR.responseJSON.message);
                 });
-    });    
-	   
+    });
+
 }
 
 //**************************************************
@@ -335,7 +336,7 @@ function checkHTML5Brower() {
     if (window.File && window.FileReader && window.FileList && window.Blob) {
         isCompatible = true;
     }
-    
+
     return isCompatible;
 };
 
@@ -359,13 +360,13 @@ function commitFormSubmit() {
                 // 기본 개행은 \r\n 으로 구분합니다.
                 // Linux 계열 서버에서 \n 으로 구분하는 경우가 발생함.
                 // 따라서 \n 을 \r\n 으로 바꿔서 그리드에 삽입
-                // 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함. 
+                // 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함.
                 csvText = csvText.replace(/\r?\n/g, "\r\n")
 
                 // 그리드 CSV 데이터 적용시킴
                 AUIGrid.setCsvGridData(myUploadGridID, csvText);
                 AUIGrid.removeAjaxLoader(myUploadGridID);
-                
+
                 //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
                 AUIGrid.removeRow(myUploadGridID,0);
             }
@@ -375,7 +376,7 @@ function commitFormSubmit() {
         }
     });
 
-}  
+}
 
 function bankStateDelete(){
 		var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
@@ -383,9 +384,9 @@ function bankStateDelete(){
 		var message = "";
 		if (checkedItems.length > 0){
 			 console.log(checkedItems);
-			 
+
 			 for (var i = 0 ; i < checkedItems.length ; i++){
-				 
+
 					 var count = Number(checkedItems[i].count);
 					 var bsNo = checkedItems[i].bsNo;
 					 if(count == 0){
@@ -393,20 +394,20 @@ function bankStateDelete(){
 							 valid = false;
 					 }
 			 }
-			 
+
 			 if(valid){
 				   var data = {};
 				   data.all = checkedItems;
 					 Common.confirm("<spring:message code='pay.alert.uploadBankDelete'/>",function (){
-						  
+
 						 Common.ajax("POST", "/payment/deleteBankStatement.do", data, function(result) {
-							 
+
 							 Common.alert(result.message);
 							 searchList();
-							 
+
 						 });
-						 
-					 }); 
+
+					 });
 			 }else{
 				  Common.alert(message);
 			 }
@@ -434,27 +435,27 @@ function updateBankStateDetail(){
 			 }
 		}
 	}
-	
+
 	if(valid){
 		  var  updateForm ={
 	            "update" : editedRowItems
 	            }
-	          
+
 		  Common.ajax("POST", "/payment/updateBankStateDetail.do", updateForm, function(result) {
 			  console.log(result);
 			  Common.alert(result.message);
 			  });
-		  
+
 	}else{
 		Common.alert(message);
 	}
-	
+
 }
 
 //Download 버튼 클릭시 업로드 팝업
 function showDownloadPop(){
     $("#download_wrap").show();
-    AUIGrid.resize(myDownloadGridID);         
+    AUIGrid.resize(myDownloadGridID);
 }
 
 //Download List Select and GridDataSet
@@ -491,7 +492,7 @@ function gridExportToExcel() {
                 <li><p class="btn_blue"><a href="javascript:bankStateDelete();"><spring:message code='pay.btn.delete'/></a></p></li>
             </c:if>
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-                <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>     
+                <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             </c:if>
             <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
@@ -535,8 +536,8 @@ function gridExportToExcel() {
                     </tr>
                     <tr>
                         <th scope="row">Bank Account</th>
-                        <td>  
-                            <select id="bankAccount" name="bankAccount" class="w100p">                                                               
+                        <td>
+                            <select id="bankAccount" name="bankAccount" class="w100p">
                             </select>
                         </td>
                         <th scope="row">Upload Date</th>
@@ -549,7 +550,7 @@ function gridExportToExcel() {
                             </div>
                             <!-- date_set end -->
                         </td>
-                        
+
                     </tr>
                 </tbody>
             </table>
@@ -571,7 +572,7 @@ function gridExportToExcel() {
 
 
 
-<!--------------------------------------------------------------- 
+<!---------------------------------------------------------------
 POP-UP (DETAIL)
 ---------------------------------------------------------------->
 <!-- popup_wrap start -->
@@ -595,19 +596,19 @@ POP-UP (DETAIL)
                 <caption>table</caption>
                 <colgroup>
                     <col style="width:165px" />
-                    <col style="width:*" />                
+                    <col style="width:*" />
                 </colgroup>
                 <tbody>
                     <tr>
                         <th scope="row">BS No</th>
                         <td id="pop_bsNo"></td>
                     </tr>
-                </tbody>  
+                </tbody>
             </table>
         </section>
 
         <section class="search_result">
-            <article class="grid_wrap"  id="detail_grid_wrap"></article>  
+            <article class="grid_wrap"  id="detail_grid_wrap"></article>
         </section>
         <!-- search_table end -->
     </section>
@@ -616,7 +617,7 @@ POP-UP (DETAIL)
 <!-- popup_wrap end -->
 
 
-<!--------------------------------------------------------------- 
+<!---------------------------------------------------------------
 POP-UP (UPLOAD)
 ---------------------------------------------------------------->
 <!-- popup_wrap start -->
@@ -633,13 +634,13 @@ POP-UP (UPLOAD)
     <!-- getParams  -->
     <section class="pop_body">
         <ul class="right_btns mb10">
-            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/BankStatement_Format.csv"><spring:message code='pay.btn.downloadTemplate'/></a></p></li>            
+            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/BankStatement_Format.csv"><spring:message code='pay.btn.downloadTemplate'/></a></p></li>
             <li><p class="btn_blue2"><a href="javascript:uploadClear();"><spring:message code='sys.btn.clear'/></a></p></li>
             <li><p class="btn_blue2"><a href="javascript:upload();"><spring:message code='pay.btn.upload'/></a></p></li>
         </ul>
 
         <!-- pop_body start -->
-        <form id="uploadForm"> 
+        <form id="uploadForm">
             <!-- table start -->
             <table class="type1">
                 <caption>table</caption>
@@ -666,7 +667,7 @@ POP-UP (UPLOAD)
                             <select id="uploadIssueBank" name="uploadIssueBank" class="w100p"></select>
                         </td>
                         <th scope="row">Bank Account</th>
-                        <td>  
+                        <td>
                             <select id="uploadBankAccount" name="uploadBankAccount" class="w100p"></select>
                         </td>
                     </tr>
@@ -678,12 +679,12 @@ POP-UP (UPLOAD)
                                 <input type="file" id="fileSelector" title="file add" accept=".csv"/>
                             </div>
                             <!-- auto_file end -->
-                        </td>                        
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">Remark</th>
-                        <td colspan="3"><input type="text" id="uploadRemark" name="uploadRemark" title="Remark" placeholder="Remark" class="w100p" /></td>                            
-                    </tr>                 
+                        <td colspan="3"><input type="text" id="uploadRemark" name="uploadRemark" title="Remark" placeholder="Remark" class="w100p" /></td>
+                    </tr>
                 </tbody>
             </table>
             <!-- table end -->
@@ -704,7 +705,7 @@ POP-UP (UPLOAD)
 </div>
 <!-- popup_wrap end -->
 
-<!--------------------------------------------------------------- 
+<!---------------------------------------------------------------
 POP-UP (DOWNLOAD)
 ---------------------------------------------------------------->
 <!-- popup_wrap start -->
@@ -722,18 +723,18 @@ POP-UP (DOWNLOAD)
     <section class="pop_body">
         <!-- search_table start -->
         <section class="search_table">
-            
+
             <ul class="right_btns mb10">
             <li><p class="btn_blue2"><a href="#" onclick="javascript:searchDownloadList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             </ul>
-            
-            <form id="downloadForm">         
+
+            <form id="downloadForm">
             <!-- table start -->
             <table class="type1">
                 <caption>table</caption>
                 <colgroup>
                     <col style="width:165px" />
-                    <col style="width:*" />                
+                    <col style="width:*" />
                 </colgroup>
                 <tbody>
                     <tr>
@@ -748,21 +749,21 @@ POP-UP (DOWNLOAD)
                             <!-- date_set end -->
                         </td>
                         <th scope="row">Bank Account</th>
-                        <td>  
-                            <select id="downloadBankAccount" name="downloadBankAccount" class="w100p">                                                               
+                        <td>
+                            <select id="downloadBankAccount" name="downloadBankAccount" class="w100p">
                             </select>
                         </td>
                     </tr>
-                </tbody>  
+                </tbody>
             </table>
             </form>
         </section>
 
         <section class="search_result">
-            <article class="grid_wrap"  id="grid_download_wrap"></article>  
+            <article class="grid_wrap"  id="grid_download_wrap"></article>
         </section>
         <!-- search_table end -->
-        
+
         <ul class="center_btns">
             <li><p class="btn_blue2 big"><a href="#" onclick="javascript:gridExportToExcel();">Generate</a></p></li>
         </ul>

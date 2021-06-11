@@ -902,7 +902,8 @@
                     Project6.modeId MODE_ID  ,
                     Project6.code2 CODE2  ,
                     Project6.bankCode BANK_CODE  ,
-                    TO_CHAR(Project6.rentAmt, 'FM9999999999990.00') AS RENT_AMT
+                    TO_CHAR(Project6.rentAmt, 'FM9999999999990.00') AS RENT_AMT,
+                    (SELECT CUST_BILL_GRP_NO  FROM SAL0024D WHERE   CUST_BILL_SO_ID = Project6.SALES_ORD_ID  AND ROWNUM <= 1 ) AS CUST_BILL_GRP_NO
              FROM ( SELECT  Project6.C1 C1  ,
                             Project6.SALES_ORD_ID SALES_ORD_ID  ,
                             Project6.SALES_ORD_NO SALES_ORD_NO  ,

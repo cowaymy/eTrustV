@@ -36,19 +36,38 @@
 	// AUIGrid 칼럼 설정
 	var columnLayout = [
         {dataField : "ftReqId",headerText : "<spring:message code='pay.head.ftRequestNo'/>",width : 150 , editable : false},
+        {dataField : "ftGrpSeq",headerText : "Payment Gruop Seq",width : 150 , editable : false},
+        {dataField : "ftOrdNo",headerText : "Sales Order",width : 150 , editable : false},
         {dataField : "ftResnNm",headerText : "<spring:message code='pay.head.reason'/>",width : 240 , editable : false},
+
+
+
         {dataField : "ftCrtUserNm",headerText : "<spring:message code='pay.head.requestor'/>",width : 180 , editable : false},
+        {dataField : "code",headerText : "Branch Code",width : 180 , editable : false},
+
+
         {dataField : "ftCrtDt",headerText : "<spring:message code='pay.head.requestDate'/>",width : 180 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
         {dataField : "ftStusId",headerText : "<spring:message code='pay.head.statusId'/>",width : 100 , editable : false, visible : false},
         {dataField : "ftStusNm",headerText : "<spring:message code='pay.head.status'/>",width : 150 , editable : false},
 		{dataField : "payId",headerText : "<spring:message code='pay.head.PID'/>",width : 150 , editable : false, visible : false},
-		{dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGrpNo'/>",width : 150 , editable : false, visible : false}
+		{dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGrpNo'/>",width : 150 , editable : false, visible : false},
+        {dataField : "ftAppvUser",headerText : "Approval",width : 180 , editable : false},
+
 	];
 
 
 	$(document).ready(function(){
 		doGetCombo('/common/selectCodeList.do', '396' , ''   , 'reason' , 'S', '');
 		doDefCombo(statusData, '' ,'status', 'S', '');
+
+
+
+
+		doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','branchId', 'S' , '');
+
+	     $('#branchId').change(function (){
+	            doGetCombo('/common/getUsersByBranch.do', $(this).val() , ''   , 'userId' , 'S', '');
+	     });
 
 		//그리드 생성
 	    confirmFTGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
@@ -166,6 +185,25 @@
 							<select id="status" name="status" class="w100p"></select>
                         </td>
                     </tr>
+
+                       <tr>
+                        <th scope="row"><spring:message code='sales.OrderNo'/></th>
+                        <td>
+                            <input id=ordNo name="ordNo" type="text" title="Order No" placeholder="<spring:message code='sales.OrderNo'/>" class="w100p" />
+                        </td>
+                        <th scope="row">Branch Code</th>
+                        <td>
+                               <select id="branchId" name="branchId" class="w100p"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Requestor</th>
+                        <td>
+                           <select id="userId" name="userId" class="w100p">
+                           </select>
+                        </td>
+                    </tr>
+
                 </tbody>
             </table>
             <!-- table end -->

@@ -71,6 +71,9 @@
                     <if test="orNo != null and orNo != '' ">
                     AND B.OR_NO = #{orNo}
                     </if>
+                     <if test="trxId != null and trxId != '' ">
+                            AND A.TRX_ID = #{trxId}
+                     </if>
                     UNION
                       SELECT
 	                    DISTINCT A.GROUP_SEQ
@@ -96,6 +99,10 @@
 	                    </if>
 	                    <if test="orNo != null and orNo != '' ">
 	                    AND B.OR_NO = #{orNo}
+                        </if>
+
+                        <if test="trxId != null and trxId != '' ">
+                            AND A.TRX_ID = #{trxId}
                         </if>
             )
         GROUP BY
@@ -473,21 +480,28 @@
 
     <select id="selectRequestFTList" parameterType="Map" resultType="egovMap">
         SELECT
-            A.FT_REQ_ID,
-            A.FT_RESN,
-            C.CODE_NAME AS FT_RESN_NM,
-            A.FT_STUS_ID,
-            B.NAME AS FT_STUS_NM,
-            A.FT_CRT_USER_ID,
-            D.USER_NAME AS FT_CRT_USER_NM,
-            A.FT_CRT_DT,
-            A.SRC_GRP_SEQ AS GROUP_SEQ,
-            A.SRC_PAY_ID AS PAY_ID
+             A.FT_REQ_ID,
+		    A.FT_RESN,
+		    C.CODE_NAME AS FT_RESN_NM,
+		    A.FT_STUS_ID,
+		    B.NAME AS FT_STUS_NM,
+		    A.FT_CRT_USER_ID,
+		    D.USER_NAME AS FT_CRT_USER_NM,
+		    A.FT_CRT_DT,
+		    A.SRC_GRP_SEQ AS GROUP_SEQ,
+		    A.SRC_PAY_ID AS PAY_ID,
+		    A.FT_GRP_SEQ AS FT_GRP_SEQ,
+		    A.FT_ORD_NO AS FT_ORD_NO,
+		    A.SRC_ORD_NO AS SRC_ORD_NO,
+		    H.CODE  AS CODE,
+		    I.USER_NAME AS  FT_APPV_USER
         FROM
             PAY0260D A
             LEFT JOIN SYS0038M B ON A.FT_STUS_ID = B.STUS_CODE_ID
             LEFT JOIN SYS0013M C ON A.FT_RESN = C.CODE_ID
             LEFT JOIN SYS0047M D ON A.FT_CRT_USER_ID = D.USER_ID
+            LEFT JOIN SYS0005M H ON D.USER_BRNCH_ID   = H.BRNCH_ID
+            LEFT JOIN SYS0047M I ON A.FT_APPV_USER_ID = I.USER_ID
         WHERE
             1=1
             <if test="reqDateFr != null and reqDateTo != null and reqDateFr != '' and reqDateTo != '' ">
@@ -503,6 +517,19 @@
             <if test="reqNo != null and reqNo != '' ">
             AND FT_REQ_ID = #{reqNo}
             </if>
+
+           <if test="ordNo != null and ordNo != '' ">
+            AND FT_ORD_NO = #{ordNo}
+            </if>
+
+                <if test="branchId != null and branchId != '' ">
+            AND H.BRNCH_ID = #{branchId}
+            </if>
+            <if test="userId != null and userId != '' ">
+            AND A.FT_CRT_USER_ID = #{userId}
+            </if>
+
+
         ORDER BY A.FT_REQ_ID
 
     </select>
@@ -523,7 +550,9 @@
             A.FT_CRT_USER_ID,
             D.USER_NAME AS FT_CRT_USER_NM,
             TO_CHAR(A.FT_CRT_DT,'DD/MM/YYYY') AS FT_CRT_DT,
-            A.FT_REM
+            A.FT_REM,
+            A.FT_APPV_REM,
+            (SELECT OR_NO FROM PAY0064D WHERE PAY_ID = A.SRC_PAY_ID )SRC_OR_NO
         FROM
             PAY0260D A
             LEFT JOIN SYS0038M B ON A.FT_STUS_ID = B.STUS_CODE_ID

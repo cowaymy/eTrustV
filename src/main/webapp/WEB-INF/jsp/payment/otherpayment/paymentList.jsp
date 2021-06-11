@@ -248,7 +248,16 @@
                             </div>
                             <!-- date_set end -->
                         </td>
+
                     </tr>
+
+                    <tr>
+                        <th scope="row">Transaction ID </th>
+                        <td colspan="3">
+                            <input type="text" id="trxId" name="trxId" class="" />
+                         </td>
+                    </tr>
+
                 </tbody>
             </table>
             <!-- table end -->

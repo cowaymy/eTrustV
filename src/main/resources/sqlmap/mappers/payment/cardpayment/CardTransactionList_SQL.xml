@@ -122,6 +122,10 @@
                             <if test='paymentMode != null and paymentMode != ""'>
                                AND E.PAY_ITM_MODE_ID = #{paymentMode}
                             </if>
+                            <if test='crcStateId != null and crcStateId != ""'>
+                               AND A.CRC_STATE_ID = #{crcStateId}
+                            </if>
+
                         </if>
                    ) T
            ORDER BY T.CRC_STATE_ID DESC, T.CRC_STATE_CRT_DT DESC, T.CRC_TRNSC_APPV ASC, T.OR_NO ASC

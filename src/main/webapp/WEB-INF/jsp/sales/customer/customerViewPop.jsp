@@ -209,18 +209,20 @@
     function createOwnOrderGrid(){
     	// Own Order Column
         var ownOrderColumnLayout = [
-               { dataField : "salesOrdNo", headerText : '<spring:message code="sal.text.ordNo" />', width : '10%'},
-               { dataField : "salesDt", headerText : '<spring:message code="sal.text.ordDate" />', width : '10%'},
-               { dataField : "code", headerText : '<spring:message code="sal.title.text.appType" />', width : '10%'},
-               { dataField : "code1", headerText : '<spring:message code="sal.title.status" />', width : '5%'},
-               { dataField : "stkDesc", headerText : '<spring:message code="sal.title.text.product" />', width : '15%'},
-               { dataField : "code2", headerText : '<spring:message code="sal.title.paymode" />', width : '10%' },
-               { dataField : "bankCode", headerText : '<spring:message code="sal.title.issueBank" />', width : '10%'},
-               { dataField : "rentAmt", headerText : '<spring:message code="sal.title.outstanding" />', width : '10%'},
+               { dataField : "salesOrdNo", headerText : '<spring:message code="sal.text.ordNo" />', width : 100},
+               { dataField : "salesDt", headerText : '<spring:message code="sal.text.ordDate" />', width : 100},
+               { dataField : "code", headerText : '<spring:message code="sal.title.text.appType" />', width : 100},
+               { dataField : "code1", headerText : '<spring:message code="sal.title.status" />', width : 100},
+               { dataField : "stkDesc", headerText : '<spring:message code="sal.title.text.product" />', width : 100},
+               { dataField : "code2", headerText : '<spring:message code="sal.title.paymode" />', width : 100 },
+               { dataField : "bankCode", headerText : '<spring:message code="sal.title.issueBank" />', width : 100},
+               { dataField : "rentAmt", headerText : '<spring:message code="sal.title.outstanding" />', width : 100},
+               {dataField : "custBillGrpNo",headerText : 'RBG group No" />', width : 100},
+
                {
                    dataField : "undefined",
                    headerText : '<spring:message code="sal.title.text.viewLedger" />',
-                   width : '10%',
+                   width : 100,
                    renderer : {
                        type : "ButtonRenderer",
                        labelText : '<spring:message code="sal.btn.link.ledger" />',
@@ -237,7 +239,7 @@
                {
                    dataField : "undefined",
                    headerText : '<spring:message code="sal.title.text.viewOrder" />',
-                   width : '10%',
+                   width : 100,
                    renderer : {
                        type : "ButtonRenderer",
                        labelText : '<spring:message code="sal.title.text.order" />',
@@ -279,6 +281,7 @@
              {dataField : "code2", headerText : '<spring:message code="sal.title.paymode" />',width : '10%'},
              {dataField : "bankCode", headerText : '<spring:message code="sal.title.issueBank" />', width : '10%'},
              {dataField : "rentAmt",headerText : '<spring:message code="sal.title.outstanding" />', width : '10%'},
+
              {
                  dataField : "undefined",
                  headerText : '<spring:message code="sal.title.text.viewLedger" />',

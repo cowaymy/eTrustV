@@ -351,6 +351,18 @@
                     <th scope="row"><spring:message code='pay.head.mid'/></th>
                     <td><input id="mid" name="mid" type="text"  placeholder="" class="w100p" /></td>
                 </tr>
+
+                <tr>
+
+                    <th scope="row">CRC State ID</th>
+                    <td >
+                        <input id="crcStateId" name="crcStateId" type="text"  placeholder="" class="w100p" />
+                    </td>
+                    <th scope="row"></th>
+                      <td colspan="3"></td>
+
+                </tr>
+
                 </tbody>
             </table><!-- table end -->
         </form>

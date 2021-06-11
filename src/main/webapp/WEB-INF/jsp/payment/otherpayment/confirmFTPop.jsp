@@ -21,6 +21,8 @@ function searchFTList(){
 		$("#newRemark").val(result.ftRem);
 		$("#newRequestor").text(result.ftCrtUserNm);
 		$("#newRequestDt").text(result.ftCrtDt);
+		$("#oldOrNo").text(result.srcOrNo);
+	    $("#appvRemark").text(result.ftAppvRem);
 	});
 }
 
@@ -150,8 +152,12 @@ function fn_reject(){
 						</tr>
 						<tr>
 							<th scope="row">Amount</th>
-							<td colspan="3" id="oldAmt">
+							<td  id="oldAmt">
 							</td>
+
+							<th scope="row">Source WOR No</th>
+                            <td id="oldOrNo">
+                            </td>
 						</tr>
 					</tbody>
 				</table>
