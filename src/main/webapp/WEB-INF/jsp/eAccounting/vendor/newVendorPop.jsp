@@ -329,10 +329,10 @@ function fn_updateWebInvoiceInfo(st) {
 function fn_checkRegex()
 {
 	 var checkRegexResult = true;
-	 var regExpSpecChar = /^[a-zA-Z0-9 ]*$/i;
+	 var regExpSpecChar = /^\S{1}[a-zA-Z0-9 ~`!#$%\^&*+=[\]\\(\)\';,{}.|\\":<>\?]*\S{1}$/;
 	 var regExpNum = /^[0-9]*$/;
 	    if( regExpSpecChar.test($("#regCompName").val()) == false ){
-	         Common.alert("* Special character is not allow for Registered Company/Individual Name. ");
+	         Common.alert("* Special character or space as the first and last character are not allow for Registered Company/Individual Name. ");
 	         checkRegexResult = false;;
 	         return checkRegexResult;
 	    }
