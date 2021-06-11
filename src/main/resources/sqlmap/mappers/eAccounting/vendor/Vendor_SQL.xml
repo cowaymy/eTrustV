@@ -121,11 +121,12 @@
 		        ]]>
 		    </if>
 	) RES
-	<if test="(appvPrcssStus != null and appvPrcssStus != '' ) and ((appStartDt == null or appStartDt == '') and (appEndDt == null or appEndDt == ''))">
+	<if test="(appvPrcssStus != null and appvPrcssStus != '' )">
                 WHERE RES.APPV_PRCSS_STUS_CODE IN
                     <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
                                  #{item}
                     </foreach>
+                 AND res.flg = 'R'
             </if>
 
     </select>

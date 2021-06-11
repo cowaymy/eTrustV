@@ -31,6 +31,7 @@ var remove = new Array();
 var attachList;
 var currList = ["MYR", "USD"];
 var conditionalCheck = 0; //0:No need to check; 1:Need to check
+var headerCheck = 1; //0:No need to check; 1:Need to check
 
 //그리드 속성 설정
 var myGridPros = {
@@ -79,7 +80,7 @@ $(document).ready(function () {
     $("#bankCountry option[value='MY']").attr('selected', 'selected');
     $("#vendorGroup option[value='VM11']").attr('selected', 'selected');
     $("#paymentMethod option[value='OTRX']").attr('selected', 'selected');
-    $("#paymentMethod option[value='ap@coway.com.my']").attr('selected', 'selected');
+    $("#payAdvEmail1 option[value='ap@coway.com.my']").attr('selected', 'selected');
 
 });
 
@@ -87,13 +88,37 @@ function fn_close(){
     $("#popup_wrap").remove();
 }
 
+function fn_jsFunction1(){
+	var txtPaymentMethod = $("#paymentMethod :selected").val();
+	console.log('txtPaymentMethod' + txtPaymentMethod);
+	if(txtPaymentMethod == 'CASH' || txtPaymentMethod == 'CHEQ')
+    {
+          $("#bankListHeader").replaceWith('<th id="bankListHeader" scope="row"> Bank</th>');
+          $("#bankAccHolderHeader").replaceWith('<th id="bankAccHolderHeader" scope="row">Account Holder</th>');
+          $("#bankAccNoHeader").replaceWith('<th id="bankAccNoHeader" scope="row">Bank Account Number</th>');
+          headerCheck = 0;
+
+    }
+    else
+    {
+        $("#bankListHeader").replaceWith('<th id="bankListHeader" scope="row"> Bank<span class="must">*</span></th>');
+        $("#bankAccHolderHeader").replaceWith('<th id="bankAccHolderHeader" scope="row">Account Holder<span class="must">*</span></th>');
+        $("#bankAccNoHeader").replaceWith('<th id="bankAccNoHeader" scope="row">Bank Account Number<span class="must">*</span></th>');
+        headerCheck = 1;
+    }
+	console.log('headerCheck: ' + headerCheck);
+	}
+
+
 function fn_jsFunction(){
 	console.log("fn_jsFunction");
-	var txtBankCountry = $("#bankCountry :selected").val()
-	var txtVendorCountry = $("#vendorCountry :selected").val()
+	var txtBankCountry = $("#bankCountry :selected").val();
+	var txtVendorCountry = $("#vendorCountry :selected").val();
+	var txtPaymentMethod = $("#paymentMethod :selected").val();
 
 	console.log("txtBankCountry" + txtBankCountry);
 	console.log("txtVendorCountry" + txtVendorCountry);
+	console.log("txtPaymentMethod" + txtPaymentMethod);
 
 	if(txtBankCountry != 'MY')
 	{
@@ -116,20 +141,22 @@ function fn_jsFunction(){
 		}
 		$("#bankAccNo").attr('maxLength',16);
 		console.log("conditionalCheck: " + conditionalCheck);
+
 	}
 
 	console.log("conditionalCheck: " + conditionalCheck);
-	if(txtVendorCountry != 'MY')
-	{
-		//$("#paymentMethod option[value='TTRX']").attr('selected', 'selected');
-		$("#paymentMethod").val("TTRX").attr("selected", "selected");
-	}
-	if(txtVendorCountry == 'MY')
-	{
-		//$("#paymentMethod option[value='OTRX']").attr('selected', 'selected');
-		$("#paymentMethod").val("OTRX").attr("selected", "selected");
-	}
-	console.log($("#paymentMethod").val());
+
+    if(txtVendorCountry != 'MY')
+    {
+        $("#paymentMethod").val("TTRX").attr("selected", "selected");
+    }
+    if(txtVendorCountry == 'MY')
+    {
+        $("#paymentMethod").val("OTRX").attr("selected", "selected");
+    }
+    console.log($("#paymentMethod").val());
+
+
 }
 
 /* 인풋 파일(멀티) */
@@ -311,6 +338,11 @@ function fn_checkRegex()
 	    }
 	    if( regExpNum.test($("#bankAccNo").val()) == false ){
             Common.alert("* Only number is allow for Bank Account Number. ");
+            checkRegexResult = false;;
+            return checkRegexResult;
+       }
+	    if( regExpNum.test($("#postalCode").val()) == false ){
+            Common.alert("* Only number is allow for Postal Code. ");
             checkRegexResult = false;;
             return checkRegexResult;
        }
@@ -503,7 +535,7 @@ $.fn.clearForm = function() {
     <td><input type="number" min="1"  title="" placeholder="" class="w100p" id="paymentTerms" name="paymentTerms" /></td>
     <th>Payment Method</th>
     <td>
-        <select class="w100p" id=paymentMethod name="paymentMethod">
+        <select onchange="fn_jsFunction1()" class="w100p" id=paymentMethod name="paymentMethod">
                   <option value="CASH">CASH</option>
                   <option value="CHEQ">CHEQUE</option>
                   <option value="OTRX">ONLINE TRANSFER</option>
@@ -540,11 +572,11 @@ $.fn.clearForm = function() {
             </c:forEach>
         </select>
     </td>
-    <th scope="row">Account Holder<span class="must">*</span></th>
+    <th id="bankAccHolderHeader" scope="row">Account Holder<span class="must">*</span></th>
     <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="bankAccHolder" name="bankAccHolder" maxlength = "100"/></td>
 </tr>
 <tr>
-    <th scope="row"> Bank<span class="must">*</span></th>
+    <th id="bankListHeader" scope="row"> Bank<span class="must">*</span></th>
     <td>
         <select class="w100p" id="bankList" name="bankList">
 	        <c:forEach var="list" items="${bankList}" varStatus="status">
@@ -553,7 +585,7 @@ $.fn.clearForm = function() {
         </select>
 
     </td>
-    <th scope="row">Bank Account Number<span class="must">*</span></th>
+    <th id="bankAccNoHeader" scope="row">Bank Account Number<span class="must">*</span></th>
     <td><input style="text-transform: uppercase" type="text" maxlength = "16" title="" placeholder="" class="w100p" id="bankAccNo" name="bankAccNo" onchange="fn_jsFunction()"/></td>
 </tr>
 <tr>

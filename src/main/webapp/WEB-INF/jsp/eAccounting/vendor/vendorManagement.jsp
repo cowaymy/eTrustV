@@ -37,7 +37,7 @@ var vendorManagementColumnLayout = [ {
     dataField : "appvPrcssStus",
     headerText : 'Status'
 }, {
-    dataField : "appvDt",
+    dataField : "appvPrcssDt",
     headerText : 'Approval Date',
     dataType : "date",
     formatString : "dd/mm/yyyy"
@@ -525,17 +525,17 @@ function fn_checkEmpty() {
         checkResult = false;
         return checkResult;
     }
-    if(FormUtil.isEmpty($("#bankAccHolder").val())) {
+    if(headerCheck == 1 && FormUtil.isEmpty($("#bankAccHolder").val())) {
         Common.alert('Please enter the Account Holder');
         checkResult = false;
         return checkResult;
     }
-    if(FormUtil.isEmpty($("#bankAccNo").val())) {
+    if(headerCheck == 1 && FormUtil.isEmpty($("#bankAccNo").val())) {
            Common.alert('Please enter the Bank Account Number');
            checkResult = false;
            return checkResult;
     }
-    if(FormUtil.isEmpty($("#bankList").val())) {
+    if(headerCheck == 1 && FormUtil.isEmpty($("#bankList").val())) {
            Common.alert('Please choose a Bank');
            checkResult = false;
            return checkResult;
@@ -546,7 +546,6 @@ function fn_checkEmpty() {
            return checkResult;
     }
     console.log("attachTd: " + $('#form_newVendor input[type=file]').get(0).files.length);
-    console.log("Hello World: " + $("input[name=attachTd]").length);
     console.log("inputText: " + $(".input_text").val());
 
     if($("input[name=attachTd]").length == 0 &&  $('#form_newVendor input[type=file]').get(0).files.length == 0 && FormUtil.isEmpty($(".input_text").val()))

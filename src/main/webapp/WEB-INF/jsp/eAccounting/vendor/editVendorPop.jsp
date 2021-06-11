@@ -417,10 +417,15 @@ function fn_submit() {
 function fn_vendorValidation(ts){
 
     var checkResult = fn_checkEmpty();
+    var checkRegex = fn_checkRegex();
 
     if(!checkResult){
         return false;
     }
+
+    if(!checkRegex){
+        return false;
+    };
 
     console.log('flg_in_edit_Vendor_Pop_TempSave: ' + flg);
     console.log('flg_in_edit_Vendor_Pop_TempSave: ' + "${flg}");
@@ -623,6 +628,29 @@ function fn_updateVendorInfo(st) {
 function fn_setGridData(data) {
 	console.log(data);
 	AUIGrid.setGridData(newGridID, data);
+}
+
+function fn_checkRegex()
+{
+     var checkRegexResult = true;
+     var regExpSpecChar = /^[a-zA-Z0-9 ]*$/i;
+     var regExpNum = /^[0-9]*$/;
+        if( regExpSpecChar.test($("#regCompName").val()) == false ){
+             Common.alert("* Special character is not allow for Registered Company/Individual Name. ");
+             checkRegexResult = false;;
+             return checkRegexResult;
+        }
+        if( regExpNum.test($("#bankAccNo").val()) == false ){
+            Common.alert("* Only number is allow for Bank Account Number. ");
+            checkRegexResult = false;;
+            return checkRegexResult;
+       }
+        if( regExpNum.test($("#postalCode").val()) == false ){
+            Common.alert("* Only number is allow for Postal Code. ");
+            checkRegexResult = false;;
+            return checkRegexResult;
+       }
+     return checkRegexResult;
 }
 
 $.fn.clearForm = function() {
