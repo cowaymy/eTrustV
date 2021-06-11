@@ -1,9 +1,12 @@
 package com.coway.trust.biz.api.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**************************************
  * Author                  Date                    Remark
@@ -109,6 +112,10 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         List<DocSubmissionVO> docList = new ArrayList<DocSubmissionVO>();
         RentalSchemeVO rentalSchemeVO = new RentalSchemeVO();
 
+        Date date = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault(Locale.Category.FORMAT));
+        String nowDate = df.format(date);
+
         // Get Promotion Price Info
         Map<String, Object> ordInfo = new HashMap<String, Object>();
         ordInfo.put("appTypeId" , reqPrm.get("appType").toString());
@@ -190,7 +197,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         installationVO.setBrnchId(CommonUtils.nvl(Integer.valueOf(custAddInfo.get("brnchId").toString()),42));
         installationVO.setCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));;
         installationVO.setInstct(null);
-        installationVO.setPreDt("01/01/1900");
+        installationVO.setPreDt(nowDate);
         installationVO.setPreTm("12:00");
         orderVO.setInstallationVO(installationVO);
 
