@@ -629,4 +629,5 @@ public interface CustomerMapper {
   int selCustRcdTms(Map<String, Object> params);
 
   void updateCustomerStatus(Map<String, Object> params);
+  void deactivateCustomerCreditCard(Map<String, Object> params);
 }

@@ -971,7 +971,12 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 
     int count = customerMapper.selCustRcdTms(params);
 
-    if(count > 0) customerMapper.updateCustomerStatus(params);
+    if(count > 0){
+      customerMapper.updateCustomerStatus(params);
+
+      if(params.get("action").equals("DEACTIVE"))
+        customerMapper.deactivateCustomerCreditCard(params);
+    }
 
     return count;
   }

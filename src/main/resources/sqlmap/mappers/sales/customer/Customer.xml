@@ -2950,4 +2950,14 @@
     WHERE CUST_ID = #{custId}
   </update>
 
+  <update id="deactivateCustomerCreditCard" parameterType="Map">
+    UPDATE SAL0028D
+    SET
+        CUST_CRC_UPD_DT = SYSDATE
+       ,CUST_CRC_UPD_USER_ID = #{userId}
+       ,CUST_CRC_STUS_ID = 8
+
+    WHERE CUST_ID = #{custId}
+  </update>
+
 </mapper>
