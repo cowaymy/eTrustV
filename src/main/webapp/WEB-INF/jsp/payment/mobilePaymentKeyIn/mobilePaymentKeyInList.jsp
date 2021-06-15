@@ -140,7 +140,7 @@
     // 2020.02.26 : Valid Add
     var isValidReject = true;
     $.each(selectedItems, function(idx, row) {
-      if (row.item.payStusId != "1") {
+      if (row.item.payStusId != "1" && row.item.payStusId != "21" && row.item.payStusId != "104") {
         isValidReject = false;
       }
     });
@@ -244,7 +244,7 @@
     //}
     var isValidReject = true;
     $.each(selectedItems, function(idx, row) {
-      if (row.item.payStusId != "1") {
+      if (row.item.payStusId != "1" && row.item.payStusId != "21" && row.item.payStusId != "104") {
         isValidReject = false;
       }
     });
@@ -747,6 +747,7 @@
   // doGetCombo('/mobileAppTicket/selectMobileAppTicketStatus.do', '', '', 'ticketStatus', 'S', '');
   doGetCombo('/common/selectCodeList.do', '130', '', 'keyInCardMode', 'S', ''); //CreditCardMode 생성
   doGetCombo('/common/selectCodeList.do', '21', '', 'keyInCrcType', 'S', ''); //Credit Card Type 생성
+  doGetCombo('/common/selectCodeList.do', '49', '','cmbRegion', 'M' , 'f_multiCombo'); //region
 
   // 조회조건 combo box
   function f_multiCombo() {
@@ -767,6 +768,11 @@
           width: '80%'
       });
       $('#_region').change(function() {
+      }).multipleSelect({
+          selectAll: true,
+          width: '80%'
+      });
+      $('#ticketStatus').change(function() {
       }).multipleSelect({
           selectAll: true,
           width: '80%'
@@ -1481,9 +1487,9 @@
             </td>
           </tr>
           <tr>
-            <th scope="row"><spring:message code="pay.title.ticketStatus" /></th>
+            <th scope="row"><spring:message code="pay.title.ticketStatus"/></th>
             <td>
-              <select id="ticketStatus" name="ticketStatus" class="w100p">
+              <select id="ticketStatus" name="ticketStatus" class="w100p" multiple="multiple">
                 <option value="1">Active</option>
                 <option value="104">Processing</option>
                 <option value="5">Approved</option>

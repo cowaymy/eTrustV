@@ -60,7 +60,7 @@
                             Extent1.EMAIL_2 EMAIL_2,
                             Extent1.SMS_1 SMS_1,
                             Extent1.SMS_2 SMS_2,
-                            CASE WHEN Extent1.PAY_STUS_ID IN (6,10,21) THEN '['|| T6.RESN_DESC || '] ' || Extent1.PAY_REM
+                            CASE WHEN Extent1.FAIL_RESN_ID > 0 THEN '['|| T6.RESN_DESC || '] - ' || Extent1.PAY_REM
                                  ELSE Extent1.PAY_REM END PAY_REM,
                             Extent5.CRT_USER_BRNCH CRT_USER_BRNCH,
                             T4.CODE CRT_USER_BRNCH_CD,
@@ -140,8 +140,14 @@
                  <if test="orderNo != null and orderNo != '' ">
                    AND Extent1.SALES_ORD_NO = #{orderNo}
                  </if>
-                 <if test="ticketStatus != null and ticketStatus != '' ">
+                 <!-- <if test="ticketStatus != null and ticketStatus != '' ">
                    AND Extent1.PAY_STUS_ID = #{ticketStatus}
+                 </if> -->
+                 <if test="ticketStatus != null and ticketStatus != '' ">
+                    AND Extent1.PAY_STUS_ID IN
+                    <foreach item="item" collection="ticketStatus" index="index" open="(" separator="," close=")">
+                      #{item}
+                     </foreach>
                  </if>
                  <if test="branchCode != null and branchCode != '' ">
                     AND T4.BRNCH_ID IN
