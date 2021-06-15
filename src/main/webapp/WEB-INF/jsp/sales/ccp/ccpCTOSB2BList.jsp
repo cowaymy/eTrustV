@@ -387,7 +387,8 @@ function fn_displayReport(viewType, batchId, ordNo){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2><spring:message code="sal.title.text.ctosB2BResult" /></h2>
+<!--  <h2><spring:message code="sal.title.text.ctosB2BResult" /></h2>-->
+<h2>CCP Auto-Approve Config</h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a id="_search"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>

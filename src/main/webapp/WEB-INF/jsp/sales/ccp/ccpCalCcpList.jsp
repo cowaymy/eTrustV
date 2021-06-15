@@ -117,6 +117,7 @@ $(document).ready(function() {
         		Common.popupDiv("/sales/ccp/ccpCalOrderModifyPop.do", { salesOrderId : AUIGrid.getCellValue(calGrid, selIdx, "salesOrdId") }, null , true);
         	}
         	else{
+        		console.log('apptypeID: ' + selectedItem[0].item.apptypeid);
         		Common.alert('Unable to edit due to this order already nett.');
         	      //      return;
         	}
@@ -357,7 +358,7 @@ $.fn.clearForm = function() {
 function createCalGrid(){
 
 	var  columnLayout = [
-                         {dataField : "bndlNo", headerText : '<spring:message code="sal.title.text.ordBundleNo" />', width : "7%" , editable : false},
+                         {dataField : "bndlNo", headerText : '<spring:message code="sal.title.text.ordBundleNo" />', width : "7%" , editable : false, visible: false},
 	                     {dataField : "salesOrdNo", headerText : '<spring:message code="sal.title.text.ordBrNo" />', width : "7%" , editable : false, style : "aui-grid-link-renderer",
 	                    	 renderer :
 	                         {
@@ -384,7 +385,7 @@ function createCalGrid(){
 	                      {dataField : "chsStus", headerText : "CHS Status", width : "7%" , editable : false},
 	                      {dataField : "chsRsn", headerText : "CHS Reason", width : "7%" , editable : false},
 	                     {dataField : "ccpStatus", headerText : '<spring:message code="sal.title.text.ccpBrStus" />', width : "7%" , editable : false},
-	                     {dataField : "name2", headerText : '<spring:message code="sal.title.text.ccpBrRjtBrStus" />', width : "7%" , editable : false},
+	                     {dataField : "name2", headerText : '<spring:message code="sal.title.text.ccpBrRjtBrStus" />', width : "7%" , editable : false , visible: false},
 	                     {dataField : "ccpRem", headerText : '<spring:message code="sal.title.text.ccpBrRem" />', width : "15%" , editable : false},
 	                     {dataField : "resnDesc", headerText : '<spring:message code="sal.title.text.specialBrRem" />', width : "10%" , editable : false},
 	                     {dataField : "updAt", headerText : '<spring:message code="sal.title.text.lastBrUpdAtBrBy" />', width : "10%" , editable : false},

@@ -98,7 +98,7 @@ $(document).ready(function() {
         }
     }
     //doGetCombo('/sales/ccp/getLoadIncomeRange', {editCcpId : ccpId} , selVal ,'_incomeRangeEdit', 'S');
-    CommonCombo.make('_incomeRangeEdit', '/sales/ccp/getLoadIncomeRange' , {editCcpId : ccpId}, selVal , optionModule);
+    //CommonCombo.make('_incomeRangeEdit', '/sales/ccp/getLoadIncomeRange' , {editCcpId : ccpId}, selVal , optionModule);
 
     //Ccp Status
     var ccpStus = $("#_ccpStusId").val();
@@ -976,38 +976,48 @@ function chgTab(tabNm) {
         <select class="w100p" name="ordUnit" id="_ordUnit"></select>
     </td>
     <th scope="row"><spring:message code="sal.title.text.count" /></th>
-    <td><span><b>${fieldMap.ordUnitCount }</b></span></td>
+    <td colspan='4'><span><b>${fieldMap.ordUnitCount }</b></span></td>
+    <!--
     <th scope="row"><spring:message code="sal.title.text.point" /></th>
     <td><span><b>${fieldMap.orderUnitPoint}</b></span></td>
+    -->
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.avgRosMth" /></th>
     <td> <select class="w100p" name="ordMth" id="_ordMth"></select></td>
     <th scope="row"><spring:message code="sal.title.text.count" /></th>
-    <td><span><b>${fieldMap.rosCount}</b></span></td>
+    <td colspan='4'><span><b>${fieldMap.rosCount}</b></span></td>
+    <!--
     <th scope="row"><spring:message code="sal.title.text.point" /></th>
     <td><span><b>${fieldMap.rosUnitPoint}</b></span></td>
+    -->
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.suspensionTermination" /></th>
     <td> <select class="w100p" name="ordSuspen" id="_ordSuspen"></select></td>
     <th scope="row"><spring:message code="sal.title.text.count" /></th>
-    <td><span><b>${fieldMap.susUnitCount}</b></span></td>
+    <td colspan='4'><span><b>${fieldMap.susUnitCount}</b></span></td>
+    <!--
     <th scope="row"><spring:message code="sal.title.text.point" /></th>
     <td><span><b>${fieldMap.susUnitPoint}</b></span></td>
+    -->
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.existCust" /></th>
     <td><select class="w100p" name="ordExistingCust" id="_ordExistingCust"></select></td>
     <th scope="row"><spring:message code="sal.title.text.count" /></th>
-    <td><span><b>${fieldMap.custUnitCount}</b></span></td>
+    <td colspan='4'><span><b>${fieldMap.custUnitCount}</b></span></td>
+    <!--
     <th scope="row"><spring:message code="sal.title.text.point" /></th>
     <td><span><b>${fieldMap.custUnitPoint}</b></span></td>
+    -->
 </tr>
+<!--
 <tr>
     <th scope="row"><spring:message code="sal.title.text.totPoint" /></th>
     <td colspan="5"><b>${fieldMap.totUnitPoint}</b></td>
 </tr>
+-->
 </tbody>
 </table><!-- table end -->
 
@@ -1061,11 +1071,13 @@ function chgTab(tabNm) {
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.ccpStatus" /></th>
-    <td><span><select class="w100p" name="statusEdit" id="_statusEdit" onchange="javascript : fn_ccpStatusChangeFunc(this.value)"></select></span></td>
+    <td colspan="5"><span><select class="w100p" name="statusEdit" id="_statusEdit" onchange="javascript : fn_ccpStatusChangeFunc(this.value)"></select></span></td>
+    <!--
     <th scope="row"><spring:message code="sal.title.text.ccpIncomeRange" /></th>
     <td><span><select class="w100p" name="incomeRangeEdit" id="_incomeRangeEdit"></select></span></td>
     <th scope="row"><spring:message code="sal.title.text.rejStus" /></th>
     <td><span><select class="w100p" name="rejectStatusEdit" id="_rejectStatusEdit"></select></span></td>
+    -->
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.ficoScore" /></th>

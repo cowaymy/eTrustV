@@ -17,7 +17,11 @@ public interface CcpCTOSB2BMapper {
 	EgovMap getResultRowForCTOSDisplay(Map<String, Object> params);
 
 	int  savePromoB2BUpdate(Map<String, Object> params);
-	
+
 	int  savePromoB2BUpdate2(Map<String, Object> params);
+
+	int  savePromoCHSUpdate(Map<String, Object> params);
+
+	int  savePromoCHSUpdate2(Map<String, Object> params);
 
 }

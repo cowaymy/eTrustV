@@ -136,4 +136,25 @@
 
             WHERE  PROMO_ID         = #{promoId}
 </update>
+
+<update id="savePromoCHSUpdate" parameterType="Map">
+
+  UPDATE SAL0017D
+            SET  CHS             = 0,
+                   PROMO_UPD_USER_ID                 = #{userId},
+                   PROMO_UPD_DT                         = SYSDATE
+
+            WHERE  PROMO_ID         = #{promoId}
+</update>
+
+
+<update id="savePromoCHSUpdate2" parameterType="Map">
+
+  UPDATE SAL0017D
+            SET  CHS             = 1,
+                   PROMO_UPD_USER_ID                 = #{userId},
+                   PROMO_UPD_DT                         = SYSDATE
+
+            WHERE  PROMO_ID         = #{promoId}
+</update>
 </mapper>

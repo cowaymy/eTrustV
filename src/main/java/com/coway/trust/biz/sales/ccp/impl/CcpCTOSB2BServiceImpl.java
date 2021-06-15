@@ -149,6 +149,23 @@ public class CcpCTOSB2BServiceImpl extends EgovAbstractServiceImpl implements Cc
 				}
 			}
 
+	  	if (updateItemList.size() > 0) {
+	  		for (int j = 0; j < updateItemList.size(); j++) {
+	  			Map<String, Object> updateMapCHS = (Map<String, Object>) updateItemList.get(j);
+
+	  			int checkCHS = Integer.parseInt(String.valueOf(updateMapCHS.get("chs")));
+	  			updateMapCHS.put("userId", params.get("userId"));
+
+	  			if(checkCHS == 0){
+	  				ccpCTOSB2BMapper.savePromoCHSUpdate(updateMapCHS) ;
+	  			}
+	  			else
+	  			{
+	  				ccpCTOSB2BMapper.savePromoCHSUpdate2(updateMapCHS) ;
+	  			}
+	  		}
+	  	}
+
 
 			return o ;
 		}

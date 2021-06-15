@@ -32,6 +32,7 @@
              , T1.B2B
              , T4.NAME STATUS
              , T1.STK_SIZE STK_SIZE
+             , T1.CHS
           FROM SAL0017D T1
           LEFT OUTER
           JOIN SYS0013M T2

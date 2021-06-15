@@ -81,6 +81,27 @@
 
               }
           }
+          , {
+              dataField : "chs",
+              headerText : "CHS",
+              editable : true,
+              width : 50,
+              renderer : {
+                  type : "CheckBoxEditRenderer",
+                  showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                  editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                  checkValue : "1", // true, false 인 경우가 기본
+                  unCheckValue : "0",
+                  styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
+                      if(item.b2b == "1") {
+                          return "disable-check-style";
+                      }
+                      return null;
+                  },
+
+
+              }
+          }
           ,{ headerText : "promoId",        dataField : "promoId",        visible : false}
           , { headerText : "promoAppTypeId", dataField : "promoAppTypeId", visible : false}
           ];
@@ -242,7 +263,7 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>CTOS(B2B) Promotion Management</h2>
+<h2>CCP Auto-Approve Promotion Management </h2>
 <ul class="right_btns">
 
     <li><p class="btn_blue"><a id="btnSaveStatus" href="#"><spring:message code='sales.btn.save'/></a></p></li>
