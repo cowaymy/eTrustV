@@ -1063,7 +1063,7 @@
     }
 
     function fn_validReqOwntBillGroup() {
-        var isValid = true, msg = "";
+        /* var isValid = true, msg = "";
 
         //if(APP_TYPE_ID == '66' || IS_NEW_VER == 'Y') {
         if (!$('#grpOpt1').is(":checked") && !$('#grpOpt2').is(":checked")) {
@@ -1082,6 +1082,73 @@
             $('#tabBG').click();
             Common.alert('<spring:message code="sal.alert.msg.ownTransSum" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
         }
+        return isValid;
+        */
+
+        var isValid = true, msg = "";
+
+        var grpOptSelYN = (!$('#grpOpt1').is(":checked") && !$('#grpOpt2').is(":checked")) ? false : true;
+        var grpOptVal   = $(':radio[name="grpOpt"]:checked').val(); //new, exist
+
+        if(!grpOptSelYN) {
+            isValid = false;
+            msg += '* <spring:message code="sal.alert.msg.plzSelGrpOpt" /><br>';
+        } else {
+            if(grpOptVal == 'exist') {
+
+                if(FormUtil.checkReqValue($('#hiddenBillGrpId'))) {
+                    isValid = false;
+                    msg += '* <spring:message code="sal.alert.msg.plzSelBillGrp" /><br>';
+                }
+            } else {
+
+                console.log('billMthdSms  checked:' + $("#billMthdSms" ).is(":checked"));
+                console.log('billMthdPost checked:' + $("#billMthdPost" ).is(":checked"));
+                console.log('billMthdEstm checked:' + $("#billMthdEstm" ).is(":checked"));
+
+                if(!$("#billMthdSms" ).is(":checked") && !$("#billMthdPost" ).is(":checked") && !$("#billMthdEstm" ).is(":checked")) {
+                    isValid = false;
+                    msg += '* <spring:message code="sal.alert.msg.pleaseSelectBillingMethod" /><br>';
+                }
+                else {
+                    if($("#typeIdOwnt").val() == '965' && $("#billMthdSms" ).is(":checked")) {
+                        isValid = false;
+                        msg += '* <spring:message code="sal.alert.msg.smsBillingMethod" /><br>';
+                    }
+
+                    if($("#billMthdEstm" ).is(":checked")) {
+                        if(FormUtil.checkReqValue($('#billMthdEmailTxt1'))) {
+                            isValid = false;
+                            msg += '* <spring:message code="sal.alert.msg.plzKeyInEmailAddr" /><br>';
+                        }
+                        else {
+                            if(FormUtil.checkEmail($('#billMthdEmailTxt1').val())) {
+                                isValid = false;
+                                msg += '* <spring:message code="sal.msg.invalidEmail" /><br>';
+                            }
+                        }
+                        if(!FormUtil.checkReqValue($('#billMthdEmailTxt2')) && FormUtil.checkEmail($('#billMthdEmailTxt2').val())) {
+                            isValid = false;
+                            msg += '* <spring:message code="sal.msg.invalidEmail" /><br>';
+                        }
+                    }
+                    else {
+                        if(!FormUtil.checkReqValue($('#billMthdEmailTxt1')) && FormUtil.checkEmail($('#billMthdEmailTxt1').val())) {
+                            isValid = false;
+                            msg += '* <spring:message code="sal.msg.invalidEmail" /><br>';
+                        }
+                        if(!FormUtil.checkReqValue($('#billMthdEmailTxt2')) && FormUtil.checkEmail($('#billMthdEmailTxt2').val())) {
+                            isValid = false;
+                            msg += '* <spring:message code="sal.msg.invalidEmail" /><br>';
+                        }
+                    }
+                }
+            }
+        }
+
+        if(!isValid)
+            Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
         return isValid;
     }
 
