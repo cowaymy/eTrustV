@@ -126,7 +126,6 @@
                     <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
                                  #{item}
                     </foreach>
-                 AND res.flg = 'R'
             </if>
 
     </select>
