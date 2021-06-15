@@ -92,6 +92,17 @@ public class SROController {
 	}
 
 
+	@RequestMapping(value = "/selectSroCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectSroCodeList(@RequestParam Map<String, Object> params) {
+
+
+		List<EgovMap> codeList = srosver.selectSroCodeList(params);
+		return ResponseEntity.ok(codeList);
+	}
+
+
+
+
 	@RequestMapping(value = "/saveSroItemMgmt.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveSroItemMgnt(@RequestBody Map<String, ArrayList<Object>> params, ModelMap model) {
 		logger.debug(":: {}", params);

@@ -19,6 +19,7 @@
     <!-- <include refid="pagingStart" /> -->
         SELECT
             H.BANK_STATE_MAPPING_ID TRX_ID,
+            B.CRC_STATE_ID,
 			pay.TRX_DT,
 			pay.TRX_AMT,
 			pay.PAY_ID,
@@ -73,9 +74,9 @@
 			pay.BATCH_PAY_ID
 	    FROM
 	        PAY1001V pay
-            LEFT JOIN (SELECT MAX(RSLT_SEQ),PAY_ID,BANK_STATE_MAPPING_ID
-                                FROM PAY0252T GROUP BY PAY_ID,BANK_STATE_MAPPING_ID) H ON pay.PAY_ID = H.PAY_ID
-
+            LEFT JOIN (SELECT MAX(RSLT_SEQ),PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID
+                                FROM PAY0252T GROUP BY PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID) H ON pay.PAY_ID = H.PAY_ID
+            LEFT JOIN PAY0076D B ON B.CRC_TRNSC_ID = H.CRC_STATE_MAPPING_ID
 	    WHERE
 	        1=1
 	        <if test="orderNo != '' and orderNo != null">
@@ -140,6 +141,9 @@
 			</if>
 			<if test="trxId != '' and trxId != null">
             AND H.BANK_STATE_MAPPING_ID = #{trxId}
+            </if>
+            <if test="crcStateId != '' and crcStateId != null">
+            AND B.CRC_STATE_ID = #{crcStateId}
             </if>
 
 			<if test="orderNo != '' and orderNo != null

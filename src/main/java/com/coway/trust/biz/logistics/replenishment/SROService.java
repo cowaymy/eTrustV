@@ -20,7 +20,7 @@ public interface SROService {
 	void  deleteUpdateLOG0112D(List <EgovMap>params, SessionVO sessionVO);
 
 
-
+	List<EgovMap> selectSroCodeList(Map<String, Object> params);
 
 
 	List<EgovMap> sroMgmtList(Map<String, Object> params);

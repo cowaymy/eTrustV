@@ -7,6 +7,21 @@
     </select>
 
 
+
+    <select id="selectSroCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+              CODE_ID ,
+              CODE ,
+              CODE_NAME ,
+              DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
+        FROM SYS0013M
+        WHERE DISAB = 0
+         AND  CODE_MASTER_ID = 339
+         AND  CODE IN ('02' ,'05')
+      </select>
+
+
+
     <select id="sroItemMgntList" parameterType="Map" resultType="egovMap">
                       SELECT
                            s28.WH_LOC_ID ,
@@ -18,7 +33,8 @@
                            s26.STK_DESC  as matname ,
                            nvl(( SELECT SRO_ITM_BAS_QTY FROM  GBSLCVD.LOG0110M WHERE SRO_STK_CODE = s26.STK_CODE   AND  SRO_WH_LOC_CODE  =s28.WH_LOC_CODE ) ,0)  as basicqty,
                            nvl(( SELECT SRO_ITM_RORD_POT FROM  GBSLCVD.LOG0110M WHERE SRO_STK_CODE = s26.STK_CODE   AND  SRO_WH_LOC_CODE  =s28.WH_LOC_CODE ),0) as reoderpoint,
-                           nvl(( SELECT SRO_ITM_ADD_POT FROM  GBSLCVD.LOG0110M WHERE SRO_STK_CODE = s26.STK_CODE   AND  SRO_WH_LOC_CODE  =s28.WH_LOC_CODE ),0)   as additional
+                           nvl(( SELECT SRO_ITM_ADD_POT FROM  GBSLCVD.LOG0110M WHERE SRO_STK_CODE = s26.STK_CODE   AND  SRO_WH_LOC_CODE  =s28.WH_LOC_CODE ),0)   as additional,
+                           nvl(( SELECT SRO_ITM_USE_YN FROM  GBSLCVD.LOG0110M WHERE SRO_STK_CODE = s26.STK_CODE   AND  SRO_WH_LOC_CODE  =s28.WH_LOC_CODE ),'N')   as useyn
                        FROM  log0056m l56
                             , SYS0028M s28
                             , SYS0026M s26
@@ -60,7 +76,7 @@
 
 
     <update id="updateSroItem"  parameterType="Map" >
-        MERGE INTO GBSLCVD.LOG0110M T0
+        MERGE INTO LOG0110M T0
         USING (
 	                SELECT
 	                     #{loccd}           AS SRO_WH_LOC_CODE
@@ -70,6 +86,7 @@
 	                    , #{additional}     AS SRO_ITM_ADD_POT
 	                    , #{updUserId}    AS UPD_USER_ID
 	                    , #{loclevl}         AS SRO_LOC_LEVEL
+	                    , #{useyn}         AS SRO_ITM_USE_YN
 	                FROM DUAL
             )T1
          ON( T0.SRO_WH_LOC_CODE = T1.SRO_WH_LOC_CODE AND T0.SRO_STK_CODE = T1.SRO_STK_CODE)
@@ -79,6 +96,7 @@
                     , SRO_ITM_RORD_POT  = NVL(T1.SRO_ITM_RORD_POT,SRO_ITM_RORD_POT)
                     , SRO_ITM_ADD_POT    = NVL(T1.SRO_ITM_ADD_POT,SRO_ITM_ADD_POT)
                     , SRO_LOC_LEVEL        = NVL(T1.SRO_LOC_LEVEL,SRO_LOC_LEVEL)
+                    , SRO_ITM_USE_YN      =NVL(T1.SRO_ITM_USE_YN,SRO_ITM_USE_YN)
                     , UPD_USER_ID            = T1.UPD_USER_ID
                     , UPD_DT                    =SYSDATE
         WHEN NOT MATCHED THEN
@@ -88,6 +106,7 @@
 	                    ,SRO_ITM_RORD_POT
 	                    ,SRO_ITM_ADD_POT
 	                    ,SRO_LOC_LEVEL
+	                    ,SRO_ITM_USE_YN
 	                    ,CRT_USER_ID
 	                    ,CRT_DT
 	                    ,UPD_USER_ID
@@ -100,6 +119,7 @@
 	                     ,T1.SRO_ITM_RORD_POT
 	                     ,T1.SRO_ITM_ADD_POT
 	                     ,T1.SRO_LOC_LEVEL
+	                     ,T1.SRO_ITM_USE_YN
 	                     ,T1.UPD_USER_ID
 	                     ,SYSDATE
 	                     ,T1.UPD_USER_ID
@@ -108,7 +128,7 @@
     </update>
 
     <insert id="insertLOG0111D"   parameterType="Map" >
-             INSERT  INTO GBSLCVD.LOG0111D (
+             INSERT  INTO LOG0111D (
                              SRO_NO
                             ,SRO_CRT_DT
                             ,SRO_FR_WH_LOC_CODE
@@ -119,7 +139,6 @@
                             ,SRO_RESUT_MSG
                             ,CRT_USER_ID
                             ,CRT_DT
-
                     )
                  SELECT
                     #{newsrono}
@@ -132,13 +151,13 @@
                     ,'Generation Complete'
                     ,#{updUserId}
                     ,SYSDATE
-                FROM GBSLCVD.LOG0111D  WHERE SRO_NO =#{srono}
+                FROM LOG0111D  WHERE SRO_NO =#{srono}
     </insert>
 
 
     <insert id="insertLOG0112D"   parameterType="Map"  >
        <![CDATA[
-			INSERT INTO GBSLCVD.LOG0112D (
+			INSERT INTO LOG0112D (
 			            SRO_NO
 			            ,SRO_STK_CODE
 			            ,SRO_ITM_REPL_CON_LEV
@@ -174,19 +193,20 @@
 																	                              )
 																	                        )
 														),0) +#{requestqty})                                                              AS SRO_ITM_REPL_FUL_QTY
-			            , (FN_GET_AVAILABLE_QTY(AA.SRO_STK_CODE,BB.SRO_FR_WH_LOC_CODE ) + #{requestqty})      AS   SRO_MAK_FR_AVL_QTY   /* 먼저 LOG0075M에 등록처리 됨 으로 확정수량 + 해야 한다.  */
+			            , (GBSLCVD.FN_GET_AVAILABLE_QTY(AA.SRO_STK_CODE,BB.SRO_FR_WH_LOC_CODE ) + #{requestqty})      AS   SRO_MAK_FR_AVL_QTY   /* 먼저 LOG0075M에 등록처리 됨 으로 확정수량 + 해야 한다.  */
 			            , CC.SRO_ITM_BAS_QTY    /* SRO_MAK_BAS_QTY*/
 			            , CC.SRO_ITM_RORD_POT   /* SRO_MAK_RORD_POT*/
 			            , CC.SRO_ITM_ADD_POT    /* SRO_MAK_ADD_POT*/
 			            , 'Generation Complete'
 			            , #{updUserId}
 			             , SYSDATE
-			        FROM GBSLCVD.LOG0112D  AA ,  GBSLCVD.LOG0111D BB , GBSLCVD.LOG0110M CC
+			        FROM LOG0112D  AA ,  LOG0111D BB , LOG0110M CC
 			    WHERE AA.SRO_NO  =BB.SRO_NO
 				    AND BB .SRO_TO_WH_LOC_CODE = CC.SRO_WH_LOC_CODE
 				    AND AA.SRO_STK_CODE  = CC.SRO_STK_CODE
 				    AND AA.SRO_NO            =#{srono}
 				    AND AA.SRO_STK_CODE  =#{srostkcode}
+				    CC.SRO_ITM_USE_YN      ='Y'
 				    ]]>
     </insert>
 
@@ -214,15 +234,30 @@ FROM (
 	            CRT_DT AS crtdt,
 	            ROW_NUMBER() OVER (PARTITION BY SRO_REF_SRO_NO ORDER BY  CRT_DT ASC  ,   SRO_NO)  osroNo,
 	            SRO_RESUT_MSG AS sroresutmsg
-	    FROM  GBSLCVD.LOG0111D
+	    FROM  LOG0111D
 	  WHERE 1=1
 	    <if test="statecd != null and statecd !=''">
 	         AND SRO_STATE_CD =  #{statecd}
 	    </if>
 
-	    <if test="crtsdt != null and crtsdt !=''">
-	                 AND to_char (to_date(SRO_CRT_DT, 'yyyymmdd'),'yyyymmdd') BETWEEN  TO_CHAR(  to_date (#{crtsdt} ,'dd/mm/yyyy'),'yyyymmdd') AND  TO_CHAR(to_date (#{crtedt} ,'dd/mm/yyyy'),'yyyymmdd')
+
+	    <if test="materialcode != null and materialcode !=''">
+		      AND SRO_NO  IN   (
+						                    SELECT SRO_NO
+						        FROM GBSLCVD.LOG0112D
+						           WHERE   SRO_STK_CODE  =#{materialcode}
+						             <if test="crtsdt != null and crtsdt !=''">
+                                        AND to_char (to_date(SRO_CRT_DT, 'yyyymmdd'),'yyyymmdd') BETWEEN  TO_CHAR(  to_date (#{crtsdt} ,'dd/mm/yyyy'),'yyyymmdd') AND  TO_CHAR(to_date (#{crtedt} ,'dd/mm/yyyy'),'yyyymmdd')
+                                    </if>
+
+             )
         </if>
+
+
+
+		    <if test="crtsdt != null and crtsdt !=''">
+		                 AND to_char (to_date(SRO_CRT_DT, 'yyyymmdd'),'yyyymmdd') BETWEEN  TO_CHAR(  to_date (#{crtsdt} ,'dd/mm/yyyy'),'yyyymmdd') AND  TO_CHAR(to_date (#{crtedt} ,'dd/mm/yyyy'),'yyyymmdd')
+	        </if>
 
         <if test="srono != null and srono !=''">
               AND SRO_NO  = #{srono}
@@ -236,6 +271,8 @@ FROM (
 	    <if test="tlocation != null and tlocation !=''">
                AND SRO_TO_WH_LOC_CODE =  (SELECT WH_LOC_CODE  FROM  SYS0028M WHERE WH_LOC_ID = #{tlocation})
         </if>
+
+         AND SRO_ITM_USE_YN ='Y'
         )
     ORDER BY   srorefsrono desc , osroNo
 
@@ -297,8 +334,8 @@ FROM (
 			    ,srorefsrono
 			    ,srotype
 			    ,sroitmresultmsg
-			    ,(FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) -sroconqty) as srofravailqty
-			    ,(FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) ) as srofravailqtyorg
+			    ,(GBSLCVD.FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) -sroconqty) as srofravailqty
+			    ,(GBSLCVD.FN_GET_AVAILABLE_QTY(srostkcode ,srofrwhloccode) ) as srofravailqtyorg
 			    ,crtuserid
 			    ,crtdt
 			    ,srocalautoreplenqty
@@ -376,7 +413,7 @@ FROM (
 				    ,L111.SRO_FR_WH_LOC_CODE  AS srofrwhloccode
 				    ,CASE WHEN D.REQST_DEL ='Y'  THEN  nvl(SRO_ITM_REPL_CON_QTY ,0) ELSE  0  END  srocalautoreplenqty
 				    ,D.REQST_DEL  reqstdel
-		    FROM GBSLCVD.LOG0112D L112 , SYS0026M s26  , GBSLCVD.LOG0111D L111 , LOG0047M D
+		    FROM LOG0112D L112 , SYS0026M s26  , LOG0111D L111 , LOG0047M D
 		 WHERE L112.SRO_NO =#{srono}
 		  AND  L112.SRO_NO =L111.SRO_NO
 		  AND  L111.SRO_REQST_NO  =D.REQST_NO(+)
@@ -409,7 +446,7 @@ FROM (
 			    CASE WHEN D.REQST_DEL ='Y'  THEN  nvl(SRO_ITM_REPL_CON_QTY *-1,0) ELSE  0  END  srocenautoreplenqty ,
 			    D.REQST_DEL  reqstdel,
 			     nvl(SRO_ITM_REPL_DIV_TOL_CNT,0) AS srodivtolcnt
-		   FROM  GBSLCVD.LOG0111D A , GBSLCVD.LOG0112D B ,SYS0026M C , LOG0047M D
+		   FROM  LOG0111D A , LOG0112D B ,SYS0026M C , LOG0047M D
 		WHERE A.SRO_NO =B.SRO_NO
 		 AND  B.SRO_STK_CODE  = C.STK_CODE
 		 AND  A.SRO_REQST_NO  =D.REQST_NO(+)
@@ -423,7 +460,7 @@ FROM (
 	     SELECT
 	          CASE   WHEN (A.SRO_ITM_REPL_CON_QTY  = A.SRO_ITM_REPL_SUP_QTY) THEN 'C'  ELSE 'A'  END srostate
 	         ,B.SRO_REF_SRO_NO   AS srorefsrono
-	     FROM GBSLCVD.LOG0112D  A , GBSLCVD.LOG0111d B
+	     FROM LOG0112D  A , LOG0111d B
 	    WHERE A.SRO_NO  =B.SRO_NO
 	     AND   A.sro_no = #{newsrono}
 	     AND   A.SRO_STK_CODE  = #{srostkcode}
@@ -432,7 +469,7 @@ FROM (
 
 
     <update id="updateLOG0112D">
-	     UPDATE  GBSLCVD.LOG0112D
+	     UPDATE  LOG0112D
 		    SET (SRO_ITM_REPL_CON_QTY  ,SRO_ITM_REPL_FUL_QTY,SRO_ITM_STATE_CD   ,UPD_DT ,UPD_USER_ID )=
 			     (
 			        SELECT
@@ -441,7 +478,7 @@ FROM (
 			            ,CASE   WHEN (X.SRO_ITM_REPL_CON_QTY  = X.SRO_ITM_REPL_SUP_QTY) THEN 'C'  ELSE 'A'  END
 			            ,SYSDATE
 			            ,#{updUserId}
-			        FROM GBSLCVD.LOG0112D X  WHERE  X.SRO_NO = #{newsrono}   AND X.SRO_STK_CODE =#{srostkcode}
+			        FROM LOG0112D X  WHERE  X.SRO_NO = #{newsrono}   AND X.SRO_STK_CODE =#{srostkcode}
 			     )
 		WHERE SRO_NO  =  #{srono}
 		  AND SRO_STK_CODE =#{srostkcode}
@@ -450,11 +487,11 @@ FROM (
 
     <update id="updateStateLOG0112D">
 
-     UPDATE  GBSLCVD.LOG0112D  X
+     UPDATE  LOG0112D  X
              SET ( SRO_ITM_STATE_CD  ,UPD_DT ,UPD_USER_ID )=
                 (SELECT
                        A.SRO_ITM_STATE_CD  , SYSDATE,  #{updUserId}
-                 FROM GBSLCVD.LOG0112D  A , GBSLCVD.LOG0111d B
+                 FROM LOG0112D  A , LOG0111d B
                 WHERE A.SRO_NO  =B.SRO_NO
                   AND   A.SRO_NO =#{srono}
                   AND   A.SRO_STK_CODE   = #{srostkcode}
@@ -471,7 +508,7 @@ FROM (
 
     <update id="updateReqNoLOG0111D">
 
-	    UPDATE GBSLCVD.LOG0111D
+	    UPDATE LOG0111D
 	    SET SRO_REQST_NO  =#{reqno}
 	       ,UPD_USER_ID       =#{updUserId}
 	       ,UPD_DT               =SYSDATE
@@ -480,7 +517,7 @@ FROM (
 
 
      <update id="deleteUpdateLOG0112D">
-		UPDATE  GBSLCVD.LOG0112D
+		UPDATE  LOG0112D
 		 SET SRO_ITM_STATE_CD ='T'
 		      ,SRO_ITM_RESULT_MSG  ='it was terminated by manual'
 		      ,UPD_DT  =sysdate
@@ -507,8 +544,8 @@ FROM (
 		          ,'US'                                    AS sttype
 		          ,'US03'                                 AS smtype
 		          ,'M'                                      AS pridic
-		    FROM    GBSLCVD.LOG0111D l11d
-		          , GBSLCVD.LOG0112D l12d
+		    FROM    LOG0111D l11d
+		          , LOG0112D l12d
 		          , SYS0026M s26m
 		          , LOG0056M l56m
 		          , SYS0028M s28m
@@ -541,8 +578,8 @@ FROM (
 		                  ,'UM03'                                 AS smtype
 		                  ,'M'                                      AS pridic
 		                  ,'02'                                     AS movpath
-            FROM GBSLCVD.LOG0111D l11d
-                  , GBSLCVD.LOG0112D l12d
+            FROM LOG0111D l11d
+                  , LOG0112D l12d
                   , SYS0026M s26m
                   , LOG0056M l56m
                   , SYS0028M s28m

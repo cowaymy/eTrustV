@@ -75,6 +75,8 @@ var columnLayout = [
 
   {dataField:"rnum", headerText:"<spring:message code='pay.head.no'/>", width : 80,editable : false },
   { dataField:"trxId" ,headerText:"TrxID",editable : false },
+  { dataField:"crcStateId" ,headerText:"CRC State ID",editable : false , width : 80,editable : false},
+
 	{ dataField:"trxDt" ,headerText:"<spring:message code='pay.head.trxDate'/>",editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
 	{ dataField:"trxAmt" ,headerText:"<spring:message code='pay.head.trxTotal'/>" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},
 	{ dataField:"payId" ,headerText:"<spring:message code='pay.head.PID'/>" ,editable : false },
@@ -465,7 +467,9 @@ function fn_diffDate(startDt, endDt) {
                         <td>
                           <input id="trxId" name="trxId" type="text" title="Transaction ID" placeholder="Transaction ID" class="w100p" />
                         </td>
-                        <th scope="row"></th>
+                        <th scope="row">CRC State ID</th>
+                           <td>
+                            <input id="crcStateId" name="crcStateId" type="text" title="CRC State ID" placeholder="CRC State ID" class="w100p" />
                         <td>
                         </td>
                     </tr>

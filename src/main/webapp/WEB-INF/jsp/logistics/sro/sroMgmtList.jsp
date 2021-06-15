@@ -638,7 +638,7 @@ fn_gridExport =function (type){
 
                      <th scope="row">Status</th>
                     <td >
-                        <select class="w100p" id="sstatus" name="sstatus">
+                        <select class="w100p" id="statecd" name=statecd>
                               <option selected value=""> ALL </option>
 	                          <option  value="A"> Active </option>
 	                          <option  value="C"> Complete</option>
@@ -672,6 +672,20 @@ fn_gridExport =function (type){
 			    <select class="w100p" id="tlocation" name="tlocation"></select>
 			    </td>
 			</tr>
+               <tr>
+                <th scope="row">Material Code</th>
+                <td>
+                 <input type="text" class="w100p" id="materialcode" name="materialcode" />
+                </td>
+                <th scope="row"></th>
+                <td >
+
+                </td>
+                <th scope="row"></th>
+                <td >
+
+                </td>
+            </tr>
 
 
             </tbody>
@@ -721,7 +735,7 @@ fn_gridExport =function (type){
         <header class="pop_header"><!-- pop_header start -->
             <h1 id="dataTitle">Auto Replenishment Detail DataList</h1>
             <ul class="right_opt">
-                <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+                <li><p class="btn_blue2" id="pmyclose"><a href="">CLOSE</a></p></li>
             </ul>
         </header><!-- pop_header end -->
 

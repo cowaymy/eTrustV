@@ -53,6 +53,14 @@ public class SROServiceImpl extends EgovAbstractServiceImpl implements SROServic
 		return replenishment.sroMgmtList(params);
 	}
 
+
+	@Override
+	public List<EgovMap> selectSroCodeList(Map<String, Object> params) {
+		return replenishment.selectSroCodeList(params);
+	}
+
+
+
 	@Override
 	public List<EgovMap> sroMgmtDetailList(Map<String, Object> params) {
 

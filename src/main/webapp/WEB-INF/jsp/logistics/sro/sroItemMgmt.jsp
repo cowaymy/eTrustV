@@ -43,7 +43,7 @@ $(document).ready(function(){
 
 
 	/*get combo data */
-	doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'loctype', 'M','f_multiCombo');
+	doGetComboData('/logistics/sro/selectSroCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'loctype', 'M','f_multiCombo');
 
 	var stockgradecomboData = [{"codeId": "A","codeName": "A"}];
     doDefCombo(stockgradecomboData, '' ,'locgrad', 'S', 'f_multiCombo');
@@ -58,6 +58,7 @@ $(document).ready(function(){
 
 
 var groupList = [" ", "A", "B", "C" ];
+var groupYnList = ["Y", "N" ];
 
 var columnLayout = [
                     {dataField: "loccd",headerText :"Location Code"                                         ,width:  110   ,height:30 , visible:true, editable : false},
@@ -65,15 +66,23 @@ var columnLayout = [
                     {dataField: "matcd",headerText :"Mat.Code"          ,width:120   ,height:30 , visible:true, editable : false},
                     {dataField: "matname",headerText :"Mat.Name"          ,width:220   ,height:30 , visible:true, editable : false},
                     {dataField: "basicqty",headerText :"Basic Qty"          ,width:120   ,height:30 , visible:true, editable : true},
-                    {dataField: "reoderpoint",headerText :"ReOrderPoint"          ,width:140   ,height:30 , visible:true ,editable : true},
-                    {dataField: "additional",headerText :"Additional"          ,width:120   ,height:30 , visible:true,editable : true},
+                    {dataField: "reoderpoint",headerText :"ReOrderPoint (%)"          ,width:140   ,height:30 , visible:true ,editable : true},
+                    {dataField: "additional",headerText :"Additional"          ,width:120   ,height:30 , visible:false,editable : true},
                     {dataField: "loclevl",headerText :"Location Level"  ,width:120   ,height:30 , visible:false ,
                         editRenderer : {
                             type : "ComboBoxRenderer",
                             showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                             list : groupList
                         }
+                    },
+                    {dataField: "useyn",headerText :"Ues YN"  ,width:80   ,height:30 , visible:true ,
+                        editRenderer : {
+                            type : "ComboBoxRenderer",
+                            showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                            list : groupYnList
+                        }
                     }
+
            ];
 
 
@@ -142,7 +151,6 @@ f_multiCombo = function (){
 }
 
 
-
 // 리스트 조회.
 fn_getDataListAjax  = function () {
 
@@ -193,6 +201,8 @@ fn_save =function (){
 
 	var param  =  {};
     param.add = AUIGrid.exportToObject("#grid_wrap");
+
+    console.log(GridCommon.getEditData(mstGridID));
 
 	Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
         Common.ajax(
@@ -339,7 +349,7 @@ if(AUIGrid.isCreated(mstGridID)) {
 	   if( $.trim(n)  =='Mat.Name')            fil="matname";
 	   if($.trim(n)  =='Basic Qty')             fil="basicqty";
 	   if( $.trim(n) =='ReOrderPoint')         fil="reoderpoint";
-	   if( $.trim(n) =='Additional')              fil="additional";
+	   if( $.trim(n) =='Additional')             fil="additional";
 	   if( $.trim(n) =='Location Level')       fil="loclevl";
 
 
@@ -496,13 +506,15 @@ function to_json(workbook) {
 	    </td>
 	</tr>
 	<tr>
-	<th scope="row">Material Code</th>
+	   <th scope="row">Material Code</th>
 	    <td colspan="3">
 	    <input type="text" class="w100p" id="materialCode" name="materialCode" />
 	    </td>
 	    <td colspan="4">
-	    </td>
+        </td>
+
 	</tr>
+
 	</tbody>
 	</table><!-- table end -->
 

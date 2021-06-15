@@ -19,6 +19,8 @@ public interface SROMapper {
 
 	List<EgovMap> sroMgmtDetailListPopUp(Map<String, Object> params);
 
+	List<EgovMap> selectSroCodeList(Map<String, Object> params);
+
 
 	int  insertLOG0111D(Map<String, Object> params);
 
