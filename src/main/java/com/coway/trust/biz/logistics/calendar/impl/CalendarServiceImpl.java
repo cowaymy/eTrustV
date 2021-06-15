@@ -13,10 +13,11 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.logistics.calendar.CalendarService;
 
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("calendarService")
-public class CalendarServiceImpl implements CalendarService {
+public class CalendarServiceImpl extends EgovAbstractServiceImpl implements CalendarService {
 
 	@Resource(name = "calendarMapper")
 	private CalendarMapper calendarMapper;
