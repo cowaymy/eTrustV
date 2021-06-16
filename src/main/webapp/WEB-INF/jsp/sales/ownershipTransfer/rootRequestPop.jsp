@@ -357,6 +357,43 @@
             //Common.popupWin("searchForm", "/sales/customer/customerConctactSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#txtHiddenCustIDOwnt').val(), callPrgm : "ORD_REGISTER_BILL_PRF"}, null, true);
         });
+
+        $('#billMthdPost').change(function() {
+            if($("#billMthdPost").is(":checked")) {
+                $('#billMthdEstm').change();
+                $('#billMthdSms').change();
+            }
+        });
+        $('#billMthdSms').change(function() {
+            $('#billMthdSms1').prop("checked", false).prop("disabled", true);
+            $('#billMthdSms2').prop("checked", false).prop("disabled", true);
+
+            if($("#billMthdSms").is(":checked")) {
+                $('#billMthdEstm').change();
+                $('#billMthdSms1').removeAttr("disabled").prop("checked", true);
+                $('#billMthdSms2').removeAttr("disabled");
+            }
+        });
+        $('#billMthdEstm').change(function() {
+
+            $('#spEmail1').text("");
+            $('#spEmail2').text("");
+            $('#billMthdEmail1').prop("checked", false).prop("disabled", true);
+            $('#billMthdEmail2').prop("checked", false).prop("disabled", true);
+            $('#billMthdEmailTxt1').val("").prop("disabled", true);
+            $('#billMthdEmailTxt2').val("").prop("disabled", true);
+
+            if($("#billMthdEstm").is(":checked")) {
+                $('#billMthdSms').change();
+                $('#spEmail1').text("*");
+                $('#spEmail2').text("*");
+                $('#billMthdEmail1').removeAttr("disabled").prop("checked", true);
+                $('#billMthdEmail2').removeAttr("disabled");
+                $('#billMthdEmailTxt1').removeAttr("disabled").val($('#txtContactEmailOwnt').val().trim());
+                $('#billMthdEmailTxt2').removeAttr("disabled");
+                //$('#billMthdEmailTxt2').removeAttr("disabled").val($('#srvCntcEmail').val().trim());
+            }
+        });
     });
 
     function fn_loadBillingGroup(billGrpId, custBillGrpNo, billType, billAddrFull, custBillRem, custBillAddId) {
