@@ -96,7 +96,9 @@ ORDER BY Project1.CODE_NAME ASC
 			       Filter1.CHS_STUS ,
 			       Filter1.CHS_RSN ,
 			       Filter1.ECOMM_ORD_ID,
-			       TO_CHAR(Filter1.CCP_ASSIGN_USER_DT, 'DD-MM-YYYY AM HH:MI:SS ') ||'(' ||Filter1.CCP_ASSIGN_USER_NAME ||')' ASSIGN_PIC
+			       CASE
+                    WHEN CCP_ASSIGN_USER_NAME IS NOT NULL THEN (TO_CHAR(FILTER1.CCP_ASSIGN_USER_DT, 'DD-MM-YYYY AM HH:MI:SS ') ||'(' ||FILTER1.CCP_ASSIGN_USER_NAME ||')')
+                   END AS ASSIGN_PIC
 			FROM ( SELECT Extent1.CCP_ID   ,
 			          Extent1.CCP_SCHEME_TYPE_ID   ,
 			          Extent1.CCP_TYPE_ID   ,
