@@ -95,7 +95,8 @@ ORDER BY Project1.CODE_NAME ASC
 			       Filter1.APP_TYPE ,
 			       Filter1.CHS_STUS ,
 			       Filter1.CHS_RSN ,
-			       Filter1.ECOMM_ORD_ID
+			       Filter1.ECOMM_ORD_ID,
+			       TO_CHAR(Filter1.CCP_ASSIGN_USER_DT, 'DD-MM-YYYY AM HH:MI:SS ') ||'(' ||Filter1.CCP_ASSIGN_USER_NAME ||')' ASSIGN_PIC
 			FROM ( SELECT Extent1.CCP_ID   ,
 			          Extent1.CCP_SCHEME_TYPE_ID   ,
 			          Extent1.CCP_TYPE_ID   ,
@@ -137,7 +138,9 @@ ORDER BY Project1.CODE_NAME ASC
 			          Extent14.CODE_NAME APP_TYPE ,
 			          Extent15.CHS_STUS ,
 			          Extent15.CHS_RSN,
-			          NVL(Extent3.ECOMM_ORD_ID,0) ECOMM_ORD_ID
+			          NVL(Extent3.ECOMM_ORD_ID,0) ECOMM_ORD_ID,
+			          Extent16.USER_NAME CCP_ASSIGN_USER_NAME,
+			          Extent1.CCP_ASSIGN_USER_DT
 			       FROM SAL0102D Extent1
 			          JOIN ( SELECT Extent2.CCP_SALES_ORD_ID K1  ,
 			                        MAX(Extent2.CCP_ID)  A1
@@ -160,6 +163,8 @@ ORDER BY Project1.CODE_NAME ASC
 			          LEFT JOIN SAL0262D Extent15 ON Extent3.CUST_ID = Extent15.CUST_ID
 			          AND Extent15.CHS_MONTH = EXTRACT(MONTH FROM SYSDATE)
 			          AND Extent15.CHS_YEAR = EXTRACT(YEAR FROM SYSDATE)
+			          <!-- Added to get assigned PIC by Hui Ding, 2021-06-16 -->
+			          LEFT JOIN SYS0047M Extent16 ON Extent1.CCP_ASSIGN_USER_ID = Extent16.USER_ID
 			          <!-- WHERE   1 = Extent1.CCP_STUS_ID -->
 
 			          <!-- ## RENTAL  ONLY ## -->
@@ -188,6 +193,10 @@ ORDER BY Project1.CODE_NAME ASC
 			             <foreach collection="arryCalReason" item="value" open="(" separator="," close=")">
 			               #{value}
 			             </foreach>
+			          </if>
+
+			          <if test=" '' != assignPic and null != assignPic">
+			             AND Extent16.USER_NAME = #{assignPic}
 			          </if>
 
 			          ) Filter1

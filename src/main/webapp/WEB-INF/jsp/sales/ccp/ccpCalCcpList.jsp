@@ -388,6 +388,7 @@ function createCalGrid(){
 	                     {dataField : "name2", headerText : '<spring:message code="sal.title.text.ccpBrRjtBrStus" />', width : "7%" , editable : false , visible: false},
 	                     {dataField : "ccpRem", headerText : '<spring:message code="sal.title.text.ccpBrRem" />', width : "15%" , editable : false},
 	                     {dataField : "resnDesc", headerText : '<spring:message code="sal.title.text.specialBrRem" />', width : "10%" , editable : false},
+	                     {dataField : "assignPic", headerText : 'Assigned to<br/> CCP User <br/>At (by)', width : "10%" , editable : false}, // Added assign PIC by Hui Ding, 2021-06-16
 	                     {dataField : "updAt", headerText : '<spring:message code="sal.title.text.lastBrUpdAtBrBy" />', width : "10%" , editable : false},
 	                     {dataField : "ccpId", visible : false},
 	                     {dataField : "salesOrdId", visible : false},
@@ -596,8 +597,9 @@ function popup(location){
     <td>
     <input id="isECommerce" name="isECommerce" type="checkbox"/>
     </td>
-    <th scope="row"></th>
-    <td></td>
+    <!-- Added for CCP Upload Assign User, by Hui Ding. 2021-06-16 -->
+    <th scope="row">Assigned to CCP User</th>
+    <td><input type="text" title="" placeholder="" class="w100p" name="assignPic" id="assignPic"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
