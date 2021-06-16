@@ -46,7 +46,7 @@
     JOIN SYS0026M STK ON STK.STK_ID = D.ITM_STK_ID
     JOIN SYS0013M STKD ON STKD.CODE_ID = STK.STK_CTGRY_ID AND STKD.CODE_MASTER_ID = 11
     WHERE S.APP_TYPE_ID = 66 AND C.TYPE_ID = 964
-    AND G.MEM_TYPE = 1
+    --AND G.MEM_TYPE = 1
     AND S.STUS_CODE_ID = 4
          <if test="salesOrdNo != null and salesOrdNo !=''">
            AND S.SALES_ORD_NO = #{salesOrdNo}
