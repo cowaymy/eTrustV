@@ -21,7 +21,7 @@ ORDER BY Extent1.CODE_ID ASC
 
 
 <select id="selectDscCodeList"  resultType="egovMap">
-SELECT Project1.BRNCH_ID ,
+SELECT Project1.BRNCH_ID CODE_ID,
        Project1.CODE_NAME
 FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
                 Extent1.CODE || ' - ' || Extent1.NAME CODE_NAME
