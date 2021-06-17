@@ -96,6 +96,7 @@ function fn_jsFunction1(){
           $("#bankListHeader").replaceWith('<th id="bankListHeader" scope="row"> Bank</th>');
           $("#bankAccHolderHeader").replaceWith('<th id="bankAccHolderHeader" scope="row">Account Holder</th>');
           $("#bankAccNoHeader").replaceWith('<th id="bankAccNoHeader" scope="row">Bank Account Number</th>');
+          $("#bankList").replaceWith('<select class="w100p" id="bankList" name="bankList"><option value=""></option><c:forEach var="list" items="${bankList}" varStatus="status"><option value="${list.code}">${list.name}</option></c:forEach></select>')
           headerCheck = 0;
 
     }
@@ -104,6 +105,7 @@ function fn_jsFunction1(){
         $("#bankListHeader").replaceWith('<th id="bankListHeader" scope="row"> Bank<span class="must">*</span></th>');
         $("#bankAccHolderHeader").replaceWith('<th id="bankAccHolderHeader" scope="row">Account Holder<span class="must">*</span></th>');
         $("#bankAccNoHeader").replaceWith('<th id="bankAccNoHeader" scope="row">Bank Account Number<span class="must">*</span></th>');
+        $("#bankList").replaceWith('<select class="w100p" id="bankList" name="bankList"><c:forEach var="list" items="${bankList}" varStatus="status"><option value="${list.code}">${list.name}</option></c:forEach></select>')
         headerCheck = 1;
     }
 	console.log('headerCheck: ' + headerCheck);
@@ -329,7 +331,7 @@ function fn_updateWebInvoiceInfo(st) {
 function fn_checkRegex()
 {
 	 var checkRegexResult = true;
-	 var regExpSpecChar = /^\S{1}[a-zA-Z0-9 ~`!#$%\^&*+=[\]\\(\)\';,{}.|\\":<>\?]*\S{1}$/;
+	 var regExpSpecChar = /^(?!-)(?!\/)\S{1}[a-zA-Z0-9 ~`!#$%\^&*+=[\]\\(\)\';,{}.|\\":<>\?]*(?!-)(?!\/)\S{1}$/;
 	 var regExpNum = /^[0-9]*$/;
 	    if( regExpSpecChar.test($("#regCompName").val()) == false ){
 	         Common.alert("* Special character or space as the first and last character are not allow for Registered Company/Individual Name. ");
@@ -565,7 +567,7 @@ $.fn.clearForm = function() {
 <tbody>
 <tr>
     <th scope="row">Country</th>
-    <td >
+    <td>
         <select onchange="fn_jsFunction()" style="text-transform:uppercase" class="w100p" id="bankCountry" name="bankCountry">
             <c:forEach var="list" items="${countryList}" varStatus="status">
                <option  value="${list.code}">${list.name}</option>

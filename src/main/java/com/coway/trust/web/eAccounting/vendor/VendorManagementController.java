@@ -424,6 +424,8 @@ public class VendorManagementController {
 			LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
         }
 
+        model.addAttribute("userName", sessionVO.getUserName());
+        model.addAttribute("memCode", vendorService.selectMemberCode(sessionVO.getMemId()));
         model.addAttribute("callType", params.get("callType"));
         model.addAttribute("bankList", bankList);
         model.addAttribute("countryList", countryList);

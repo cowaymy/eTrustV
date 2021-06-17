@@ -165,7 +165,7 @@ function fn_jsFunction(){
     if(txtBankCountry != 'MY')
     {
         $("#bankList").replaceWith('<input type="text" class="readonly w100p" id="bankList" name="bankList" style="text-transform:uppercase"/>');
-        $("#swiftCodeHeader").html('Swift Code<span class="must">*</span>');
+        $("#swiftCodeHeader").html('Swift Code');
         $("#bankAccNo").attr('maxLength',100);
     }
     if(txtBankCountry == 'MY')
@@ -293,7 +293,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
 </tr>
 <tr>
     <th scope="row"><spring:message code="webInvoice.requestDate" /></th>
-    <td id="viewReqstDt"></td>
+    <td colspan="3" id="viewReqstDt"></td>
 
 </tr>
 <tr>
@@ -325,11 +325,11 @@ function fn_atchViewDown(fileGrpId, fileId) {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Claim No / Vendor Code<span class="must">*</span></th>
+    <th scope="row">Claim No / Vendor Code</th>
     <td colspan=3><input type="text" title="" id="newVendorCode" name="vendorCode" placeholder="" class="readonly w100p" readonly="readonly" value="${vendorInfo.vendorReqNo}"/></td><!--  value="${claimNo}"-->
 </tr>
 <tr>
-    <th scope="row">Vendor Group<span class="must">*</span></th>
+    <th scope="row">Vendor Group</th>
         <td>
            <select class="w100p" id=vendorGroup name="vendorGroup">
                   <!--  <option value="VM02"<c:if test="${vendorInfo.vendorGrp eq 'VM02'}">selected="selected"</c:if>>VM02 - Coway_Supplier_Foreign</option>-->
@@ -481,19 +481,20 @@ function fn_atchViewDown(fileGrpId, fileId) {
             </c:forEach>
         </select>
     </td>
-    <th scope="row">Account Holder<span class="must">*</span></th>
+    <th scope="row">Account Holder</th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="bankAccHolder" name="bankAccHolder" value="${vendorInfo.bankAccHolder}"/></td>
 </tr>
 <tr>
-    <th scope="row"> Bank<span class="must">*</span></th>
+    <th scope="row">Bank</th>
     <td>
         <select class="readonly w100p" id="bankList" name="bankList">
+            <option value=""<c:if test="${vendorInfo.bank eq ''}">selected="selected"</c:if>></option>
             <c:forEach var="list" items="${bankList}" varStatus="status">
                <option value="${list.code}">${list.name}</option>
             </c:forEach>
         </select>
     </td>
-    <th scope="row">Bank Account Number<span class="must">*</span></th>
+    <th scope="row">Bank Account Number</th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="bankAccNo" name="bankAccNo" value="${vendorInfo.bankAccNo}"/></td>
 </tr>
 <tr>

@@ -99,8 +99,27 @@ $(document).ready(function () {
 	var bankList = "${vendorInfo.bank}";
 	var paymentMethod = "${vendorInfo.payType}";
 	var designation = "${vendorInfo.contactDesignation}";
+	var editorCostCenter = "${SESSION_INFO.costCentr}";
+    console.log('Editor Cost Center: ' + editorCostCenter);
 
 
+	var txtPaymentMethod = $("#paymentMethod :selected").val();
+    console.log('txtPaymentMethod' + txtPaymentMethod);
+    if(txtPaymentMethod == 'CASH' || txtPaymentMethod == 'CHEQ')
+    {
+          $("#bankListHeader").replaceWith('<th id="bankListHeader" scope="row"> Bank</th>');
+          $("#bankAccHolderHeader").replaceWith('<th id="bankAccHolderHeader" scope="row">Account Holder</th>');
+          $("#bankAccNoHeader").replaceWith('<th id="bankAccNoHeader" scope="row">Bank Account Number</th>');
+          headerCheck = 0;
+
+    }
+    else
+    {
+        $("#bankListHeader").replaceWith('<th id="bankListHeader" scope="row"> Bank<span class="must">*</span></th>');
+        $("#bankAccHolderHeader").replaceWith('<th id="bankAccHolderHeader" scope="row">Account Holder<span class="must">*</span></th>');
+        $("#bankAccNoHeader").replaceWith('<th id="bankAccNoHeader" scope="row">Bank Account Number<span class="must">*</span></th>');
+        headerCheck = 1;
+    }
 	   /*
     if(appvPrccNo == null || appvPrccNo == '') {
         newGridID = AUIGrid.create("#viewEditWebInvoice_grid_wrap", myColumnLayout, myGridPros);
@@ -223,6 +242,27 @@ $(document).ready(function () {
 function fn_close(){
     $("#popup_wrap").remove();
 }
+
+function fn_jsFunction1(){
+    var txtPaymentMethod = $("#paymentMethod :selected").val();
+    console.log('txtPaymentMethod' + txtPaymentMethod);
+    if(txtPaymentMethod == 'CASH' || txtPaymentMethod == 'CHEQ')
+    {
+          $("#bankListHeader").replaceWith('<th id="bankListHeader" scope="row"> Bank</th>');
+          $("#bankAccHolderHeader").replaceWith('<th id="bankAccHolderHeader" scope="row">Account Holder</th>');
+          $("#bankAccNoHeader").replaceWith('<th id="bankAccNoHeader" scope="row">Bank Account Number</th>');
+          headerCheck = 0;
+
+    }
+    else
+    {
+        $("#bankListHeader").replaceWith('<th id="bankListHeader" scope="row"> Bank<span class="must">*</span></th>');
+        $("#bankAccHolderHeader").replaceWith('<th id="bankAccHolderHeader" scope="row">Account Holder<span class="must">*</span></th>');
+        $("#bankAccNoHeader").replaceWith('<th id="bankAccNoHeader" scope="row">Bank Account Number<span class="must">*</span></th>');
+        headerCheck = 1;
+    }
+    console.log('headerCheck: ' + headerCheck);
+    }
 
 function fn_jsFunction(){
     console.log("fn_jsFunction");
@@ -633,10 +673,10 @@ function fn_setGridData(data) {
 function fn_checkRegex()
 {
      var checkRegexResult = true;
-     var regExpSpecChar = /^[a-zA-Z0-9 ]*$/i;
+     var regExpSpecChar = /^(?!-)(?!\/)\S{1}[a-zA-Z0-9 ~`!#$%\^&*+=[\]\\(\)\';,{}.|\\":<>\?]*(?!-)(?!\/)\S{1}$/;
      var regExpNum = /^[0-9]*$/;
         if( regExpSpecChar.test($("#regCompName").val()) == false ){
-             Common.alert("* Special character is not allow for Registered Company/Individual Name. ");
+             Common.alert("* Special character or space as the first and last character are not allow for Registered Company/Individual Name. ");
              checkRegexResult = false;;
              return checkRegexResult;
         }
@@ -740,13 +780,13 @@ $.fn.clearForm = function() {
 <tr>
       <th scope="row">Cost Center</th>
       <c:if test="${flg eq 'M'}">
-        <td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" value="${costCentr}"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+        <td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" value="${SESSION_INFO.costCentr}"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
       </c:if>
       <c:if test="${flg ne 'M'}">
         <td><input type="text" title="" placeholder="" class="readonly w100p" id="newCostCenter" name="costCentr" value="${vendorInfo.costCenter}" readonly="readonly"/></td>
       </c:if>
     <th scope="row">Create User ID</th>
-    <td><input type="text" title="" placeholder="" class="readonly w100p" id="userName" readonly="readonly" value="${vendorInfo.userName}" /></td>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" id="userName" readonly="readonly" value="${userName} / ${memCode}"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -767,7 +807,7 @@ $.fn.clearForm = function() {
 <tbody>
 <tr>
     <th colspan=2 scope="row">Registered Company/Individual Name</th>
-    <td colspan=3><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="regCompName" name="regCompName" value="${vendorInfo.vendorName}"/></td>
+    <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="regCompName" name="regCompName" value="${vendorInfo.vendorName}"/></td>
 </tr>
 <tr>
     <th colspan = 2 scope="row">Company Registration No/IC No</th>
@@ -842,7 +882,7 @@ $.fn.clearForm = function() {
     <td><input type="number" min="1"  title="" placeholder="" class="w100p" id="paymentTerms" name="paymentTerms" value="${vendorInfo.payTerm}"/></td>
     <th>Payment Method</th>
     <td>
-        <select class="w100p" id=paymentMethod name="paymentMethod">
+        <select onchange="fn_jsFunction1()" class="w100p" id=paymentMethod name="paymentMethod">
                   <!--  <option value="CASH">CASH</option>-->
                   <option value="CASH"<c:if test="${vendorInfo.payType eq 'CASH'}">selected="selected"</c:if>>CASH</option>
                   <option value="CHEQ"<c:if test="${vendorInfo.payType eq 'CHEQ'}">selected="selected"</c:if>>CHEQUE</option>
@@ -880,11 +920,11 @@ $.fn.clearForm = function() {
             </c:forEach>
         </select>
     </td>
-    <th scope="row">Account Holder<span class="must">*</span></th>
+    <th id="bankAccHolderHeader" scope="row">Account Holder<span class="must">*</span></th>
     <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="bankAccHolder" name="bankAccHolder" value="${vendorInfo.bankAccHolder}" maxlength = "100"/></td>
 </tr>
 <tr>
-    <th scope="row"> Bank<span class="must">*</span></th>
+    <th id="bankListHeader" scope="row"> Bank<span class="must">*</span></th>
     <td>
         <select class="w100p" id="bankList" name="bankList">
             <c:forEach var="list" items="${bankList}" varStatus="status">
@@ -892,7 +932,7 @@ $.fn.clearForm = function() {
             </c:forEach>
         </select>
     </td>
-    <th scope="row">Bank Account Number<span class="must">*</span></th>
+    <th id="bankAccNoHeader" scope="row">Bank Account Number<span class="must">*</span></th>
     <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="bankAccNo" name="bankAccNo" value="${vendorInfo.bankAccNo}" onchange="fn_jsFunction()" maxlength = "16"/></td>
 </tr>
 <tr>

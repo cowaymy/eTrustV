@@ -114,11 +114,11 @@ $(document).ready(function () {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Vendor Account ID<span class="must">*</span></th>
+    <th scope="row">Vendor Account ID</th>
     <td colspan=3><input type="text" title="" id="newVendorCode" name="vendorCode" placeholder="" class="readonly w100p" readonly="readonly" value="${vendorInfo.vendorAccId}"/></td><!--  value="${claimNo}"-->
 </tr>
 <tr>
-    <th scope="row">Vendor Group<span class="must">*</span></th>
+    <th scope="row">Vendor Group</th>
         <td>
            <select class="w100p" id=vendorGroup name="vendorGroup">
                   <!--  <option value="VM02"<c:if test="${vendorInfo.vendorGrp eq 'VM02'}">selected="selected"</c:if>>VM02 - Coway_Supplier_Foreign</option>-->
@@ -164,7 +164,7 @@ $(document).ready(function () {
     <td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="regCompNo" name="regCompNo" value="${vendorInfo.vendorRegNoNric}"/></td>
 </tr>
 <tr>
-    <th colspan = 2 scope="row">Email Address (payment advice)<span class="must">*</span></th>
+    <th colspan = 2 scope="row">Email Address (payment advice)</th>
     <td colspan="3"><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="emailPayAdv" name="emailPayAdv" value="${vendorInfo.payAdvEmail1}"/></td>
 </tr>
 <tr>
@@ -270,19 +270,20 @@ $(document).ready(function () {
             </c:forEach>
         </select>
     </td>
-    <th scope="row">Account Holder<span class="must">*</span></th>
+    <th scope="row">Account Holder</th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="bankAccHolder" name="bankAccHolder" value="${vendorInfo.bankAccHolder}"/></td>
 </tr>
 <tr>
-    <th scope="row"> Bank<span class="must">*</span></th>
+    <th scope="row">Bank</th>
     <td>
         <select class="readonly w100p" id="bankList" name="bankList">
+            <option value=""<c:if test="${vendorInfo.bank eq ''}">selected="selected"</c:if>></option>
             <c:forEach var="list" items="${bankList}" varStatus="status">
                <option value="${list.code}">${list.name}</option>
             </c:forEach>
         </select>
     </td>
-    <th scope="row">Bank Account Number<span class="must">*</span></th>
+    <th scope="row">Bank Account Number</th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="bankAccNo" name="bankAccNo" value="${vendorInfo.bankAccNo}"/></td>
 </tr>
 <tr>
