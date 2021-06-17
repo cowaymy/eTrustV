@@ -9,10 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.sales.customer.ExpiredCustomerService;
 
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("expiredCustomerService")
-public class ExpiredCustomerServiceImpl implements ExpiredCustomerService {
+public class ExpiredCustomerServiceImpl extends EgovAbstractServiceImpl implements ExpiredCustomerService {
 
 	@Resource(name = "expiredCustomerMapper")
 	private ExpiredCustomerMapper expiredCustomerMapper;

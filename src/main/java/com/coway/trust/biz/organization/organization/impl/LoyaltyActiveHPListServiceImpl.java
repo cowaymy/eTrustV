@@ -9,10 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.organization.organization.LoyaltyActiveHPListService;
 
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("loyaltyActiveHPListService")
-public class LoyaltyActiveHPListServiceImpl implements LoyaltyActiveHPListService {
+public class LoyaltyActiveHPListServiceImpl extends EgovAbstractServiceImpl implements LoyaltyActiveHPListService {
 
 	@Resource(name = "loyaltyActiveHPListMapper")
 	private LoyaltyActiveHPListMapper loyaltyActiveHPListMapper;

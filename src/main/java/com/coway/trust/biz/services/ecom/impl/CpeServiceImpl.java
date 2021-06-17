@@ -17,10 +17,11 @@ import com.coway.trust.biz.services.ecom.CpeService;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.util.CommonUtils;
 
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("cpeService")
-public class CpeServiceImpl implements CpeService {
+public class CpeServiceImpl extends EgovAbstractServiceImpl implements CpeService {
 
 	private static final Logger logger = LoggerFactory.getLogger(CpeServiceImpl.class);
 

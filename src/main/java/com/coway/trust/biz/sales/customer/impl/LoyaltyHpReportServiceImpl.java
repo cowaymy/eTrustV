@@ -11,10 +11,11 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.sales.customer.LoyaltyHpReportService;
 
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("loyaltyHpReportService")
-public class LoyaltyHpReportServiceImpl implements LoyaltyHpReportService {
+public class LoyaltyHpReportServiceImpl extends EgovAbstractServiceImpl implements LoyaltyHpReportService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoyaltyHpReportServiceImpl.class);
 
