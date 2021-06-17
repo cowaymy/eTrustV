@@ -88,4 +88,6 @@ public interface PaymentApiService {
 
   void sendEmail(Map<String, Object> params);
 
+  List<EgovMap> selectCardModeBox(Map<String, Object> params);
+
 }
