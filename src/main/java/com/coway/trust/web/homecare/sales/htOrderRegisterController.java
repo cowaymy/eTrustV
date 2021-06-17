@@ -1,10 +1,6 @@
 package com.coway.trust.web.homecare.sales;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -32,17 +28,19 @@ import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.homecare.sales.htOrderRegisterService;
+import com.coway.trust.biz.homecare.sales.vo.HTOrderVO;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
-import com.coway.trust.biz.homecare.sales.htOrderRegisterService;
 import com.coway.trust.biz.sales.order.OrderRequestService;
-import com.coway.trust.biz.homecare.sales.vo.HTOrderVO;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
+import com.coway.trust.cmmn.model.PageAuthVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
@@ -78,9 +76,15 @@ public class htOrderRegisterController {
 	@RequestMapping(value = "/htOrderRegisterPop.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
 
+		logger.info("############## page auth: " + params.toString());
+
 		logger.debug(CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 
 		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+
+		if (params.get("pageAuth") != null){
+			model.put("FREE_TRIAL_AUTH", params.get("pageAuth"));
+		}
 
 		return "homecare/sales/htOrderRegisterPop";
 	}

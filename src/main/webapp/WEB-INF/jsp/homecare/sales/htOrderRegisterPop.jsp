@@ -14,6 +14,7 @@
     var GST_CHK = '';
     var GST_MANNUAL = 'N';
     var ROLE_ID = "${SESSION_INFO.roleId}";
+    var freeTrialAuth = "${PAGE_AUTH.funcUserDefine5}";
 
     $(document).ready(function(){
 
@@ -23,7 +24,7 @@
 
         //doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', ''); //Common Code
 
-        if(ROLE_ID == "341" || ROLE_ID == "342" || ROLE_ID == "343" || ROLE_ID == "344" || ROLE_ID == "130" ||
+       /*  if(ROLE_ID == "341" || ROLE_ID == "342" || ROLE_ID == "343" || ROLE_ID == "344" || ROLE_ID == "130" ||
            ROLE_ID == "99" || ROLE_ID == "97" || ROLE_ID == "103" || ROLE_ID == "104" || ROLE_ID == "105" || // SO Admin
            ROLE_ID == "177" || ROLE_ID == "179" || ROLE_ID == "180" || ROLE_ID == "250" || ROLE_ID == "256" || // CDB Admin
            ROLE_ID == "253" || ROLE_ID == "256"// CODY Planning (current Service Innovative dept) -- by Hui Ding, 28/05/2021.
@@ -39,12 +40,28 @@
                   name: "codeName",
                   type:"S"
         	  });
+        } */ // NO LONGER USING
+
+        var codeInList;
+
+
+        if ('${FREE_TRIAL_AUTH}' == 'Y'){
+        	console.log("allow to add Free Trial app type.");
+        	codeInList = 'CS1T,CS1Y,FT1T,FT1Y';
+        } else {
+        	codeInList = 'CS1T,CS1Y';
         }
+
+        CommonCombo.make("appType", "/homecare/sales/selectCodeList.do", {groupCode : '10', codeIn : codeInList}, "", {
+            id: "codeId",
+            name: "codeName",
+            type:"S"
+        });
 
 
         //doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
-        doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
+        //doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 
         doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChk',  'S'); //EMP_CHK
         //doGetComboData('/common/selectCodeList.do', {groupCode :'325',orderValue : 'CODE_ID'}, '0', 'exTrade', 'S'); //EX-TRADE
@@ -1735,6 +1752,7 @@
 
 
 </script>
+
 <div id="popup_wrap" class="popup_wrap">
 <!--div id="popup_wrap" class="popup_wrap pop_win"--><!-- popup_wrap start -->
 

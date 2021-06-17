@@ -98,9 +98,9 @@ $(document).ready(function(){
 
 
     doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'listKeyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
-    doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo'); //Branch Code
+    //doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo'); //Branch Code
 
-    doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : 5, parmDisab : 0}, '', 'listRentStus', 'M', 'fn_multiCombo');
+    //doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : 5, parmDisab : 0}, '', 'listRentStus', 'M', 'fn_multiCombo');
 });
 
 function fn_setDetail(gridID, rowIdx){
@@ -122,7 +122,7 @@ function fn_setDetail(gridID, rowIdx){
   $(function(){
 
 	  $('#btnNew').click(function() {
-          Common.popupDiv("/homecare/sales/htOrderRegisterPop.do");
+          Common.popupDiv("/homecare/sales/htOrderRegisterPop.do?pageAuth=${PAGE_AUTH.funcUserDefine5}");
       });
 	  $('#btnEdit').click(function() {
           fn_orderModifyPop();
