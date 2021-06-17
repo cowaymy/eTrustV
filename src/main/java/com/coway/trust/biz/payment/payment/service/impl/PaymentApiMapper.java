@@ -89,4 +89,6 @@ public interface PaymentApiMapper {
 
   EgovMap getEmailDetails(Map<String, Object> params); // for E-TR with HTML template
 
+  List<EgovMap> selectCardModeBox(Map<String, Object> params);
+
 }
