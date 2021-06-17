@@ -212,7 +212,6 @@ public class PaymentApiController {
 	}
 
 
-
 	@ApiOperation(value = "Bank Select Box", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/selectBankSelectBox", method = RequestMethod.GET)
 	public ResponseEntity<List<PaymentDto>>  selectBankSelectBox(@ModelAttribute PaymentForm paymentForm) throws Exception {
@@ -222,6 +221,22 @@ public class PaymentApiController {
 
     // 조회.
        selectPaymentList = paymentApiService.selectBankSelectBox(params);
+
+       List<PaymentDto> paymentList = selectPaymentList.stream().map(r -> PaymentDto.create(r)).collect(Collectors.toList());
+
+       return ResponseEntity.ok(paymentList);
+	}
+
+
+	@ApiOperation(value = "Card Mode Box", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/selectCardModeBox", method = RequestMethod.GET)
+	public ResponseEntity<List<PaymentDto>>  selectCardModeBox(@ModelAttribute PaymentForm paymentForm) throws Exception {
+
+       Map<String, Object> params = paymentForm.createMap(paymentForm);
+       List<EgovMap> selectPaymentList = null;
+
+    // 조회.
+       selectPaymentList = paymentApiService.selectCardModeBox(params);
 
        List<PaymentDto> paymentList = selectPaymentList.stream().map(r -> PaymentDto.create(r)).collect(Collectors.toList());
 

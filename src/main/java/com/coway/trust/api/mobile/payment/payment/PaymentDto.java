@@ -86,6 +86,15 @@ public class PaymentDto {
     @ApiModelProperty(value = "appTypeId")
     private int appTypeId;
 
+    @ApiModelProperty(value = "codeId")
+    private int codeId;
+
+    @ApiModelProperty(value = "code")
+    private String code;
+
+    @ApiModelProperty(value = "codeName")
+    private String codeName;
+
 
 	public int getAppTypeId() {
 		return appTypeId;
@@ -261,6 +270,30 @@ public class PaymentDto {
 
 	public void setBankNm(String bankNm) {
 		this.bankNm = bankNm;
+	}
+
+	public int getCodeId() {
+		return codeId;
+	}
+
+	public void setCodeId(int codeId) {
+		this.codeId = codeId;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getCodeName() {
+		return codeName;
+	}
+
+	public void setCodeName(String codeName) {
+		this.codeName = codeName;
 	}
 
 	public static PaymentDto create(EgovMap egvoMap) {
