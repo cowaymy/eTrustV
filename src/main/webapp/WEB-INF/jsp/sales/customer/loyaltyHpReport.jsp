@@ -43,7 +43,6 @@
             } else if ("${SESSION_INFO.memberLevel}" == "3") {
 
                 $("#reportType").val(3); // HM view
-
             }
 
             $("#reportType").attr('disabled',true);

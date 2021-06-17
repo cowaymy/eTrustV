@@ -53,7 +53,7 @@ public class LoyaltyHpReportController {
 
 	    params.put("userId", sessionVO.getUserId());
 
-	    if( sessionVO.getUserTypeId() == 1){
+	    if(sessionVO.getUserTypeId() == 1){
 	    	EgovMap getUserInfo = salesCommonService.getUserInfo(params);
 	        model.put("memType", getUserInfo.get("memType"));
 	        model.put("orgCode", getUserInfo.get("orgCode"));

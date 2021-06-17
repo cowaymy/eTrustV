@@ -26,5 +26,4 @@ public class LoyaltyHpReportServiceImpl extends EgovAbstractServiceImpl implemen
 	public List<EgovMap> selectBatchUploadNumbers(Map<String, Object> params) {
 		return loyaltyHpReportMapper.selectBatchUploadNumbers(params);
 	}
-
 }

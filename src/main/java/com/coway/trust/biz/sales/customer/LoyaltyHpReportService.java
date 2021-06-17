@@ -8,5 +8,4 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface LoyaltyHpReportService {
 
 	List<EgovMap> selectBatchUploadNumbers(Map<String, Object> params);
-
 }
