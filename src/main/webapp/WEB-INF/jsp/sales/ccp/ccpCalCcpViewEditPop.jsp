@@ -151,7 +151,7 @@ $(document).ready(function() {
                     return;
                 }
             }
-            if( '6' == $("#_statusEdit").val()){  //|| '1' == $("#_statusEdit").val()
+            if( '6' == $("#_statusEdit").val() || '1' == $("#_statusEdit").val()) {
                 if(null == $("#_reasonCodeEdit").val() || '' == $("#_reasonCodeEdit").val()){
                     Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Feedback Code'/>");
                     return;
@@ -338,13 +338,13 @@ function fn_ccpStatusChangeFunc(getVal){
             $("#_summon").attr("disabled" , false);
             $("#_letterOfUdt").attr("disabled" , false);
 
-           /*  if(isAllowSendSMS() == true){
-
+            // 20210617 - LaiKW- Uncommented allow SMS section
+            if(isAllowSendSMS() == true){
                 $("#_smsDiv").css("display" , "");
                 $("#_updSmsChk").prop('checked', true) ;
                 $("#_updSmsMsg").attr("disabled" , false);
-                setSMSMessage();
-            } */
+                setSMSMessage('Active', $("#_reasonCodeEdit option:selected").text());
+            }
 
             //sms  changed by Lee(2018/01/18)
             if(ficoScre >= 350 && ficoScre <= 450){
@@ -468,13 +468,13 @@ function  bind_RetrieveData(){
         $("#_summon").attr("disabled" , false);
         $("#_letterOfUdt").attr("disabled" , false);
 
-        /* if(isAllowSendSMS() == true){
-
+        // 20210617 - LaiKW - Uncommented
+        if(isAllowSendSMS() == true){
             $("#_smsDiv").css("display" , "");
             $("#_updSmsChk").prop('checked', true) ;
             $("#_updSmsMsg").attr("disabled" , false);
-            setSMSMessage();
-        } */
+            setSMSMessage('Active', $("#_reasonCodeEdit option:selected").text());
+        }
 
         //sms  changed by Lee(2018/01/18)
 
