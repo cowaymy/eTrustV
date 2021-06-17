@@ -660,7 +660,7 @@
             VENDOR_REG_NO_NRIC STENR,
             VENDOR_REQ_NO ALTKN,
             ADD_HOUSE_LOT_NO HOUSE_NUM1,
-            ADD_STREET STREET,
+            SUBSTR(ADD_STREET, 0,35) STREET,
             ADD_CITY CITY,
             PAY_ADV_EMAIL1 EMAIL_01,
             PAY_ADV_EMAIL2 EMAIL_02,

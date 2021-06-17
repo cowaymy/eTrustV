@@ -21,6 +21,17 @@
 
 console.log("vendorManagement");
 var vendorManagementColumnLayout = [ {
+    dataField : "isActive",
+    headerText : '<input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+    width: 30,
+    renderer : {
+        type : "CheckBoxEditRenderer",
+        showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+        editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+        checkValue : "Active", // true, false 인 경우가 기본
+        unCheckValue : "Inactive"
+    }
+}, {
 	dataField : "reqNo",
     headerText : 'Vendor Request No'
 }, {
@@ -56,17 +67,18 @@ var vendorManagementGridPros = {
     pageRowCount : 20,
     // 셀 선택모드 (기본값: singleCell)
     selectionMode : "multipleCells",
-    showRowCheckColumn : true,
-    showRowAllCheckBox : true
+    showRowCheckColumn : false,
+    showRowAllCheckBox : false
 };
 
 var vendorManagementGridID;
-
+var gridDataLength = 0;
 var bulkRptInt;
 
 $(document).ready(function () {
 	vendorManagementGridID = AUIGrid.create("#vendorManagement _grid_wrap", vendorManagementColumnLayout, vendorManagementGridPros);
 
+	$("#appvPrcssStus").multipleSelect("checkAll");
 	$("#search_supplier_btn").click(fn_supplierSearchPop);
 	$("#search_regNo_btn").click(fn_supplierSearchPop);
 	$("#search_costCenter_btn").click(fn_costCenterSearchPop);
@@ -76,6 +88,23 @@ $(document).ready(function () {
 
 	var userId = "${SESSION_INFO.userId}";
 	console.log("crtUserID: " + userId);
+
+	 AUIGrid.bind(invoAprveGridID, "cellEditEnd", function(event) {
+
+	        // isActive 칼럼 수정 완료 한 경우
+	        if(event.dataField == "isActive") {
+
+	            // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
+	            var activeItems = AUIGrid.getItemsByValue(vendorManagementGridID, "isActive", "Active");
+
+	            // 헤더 체크 박스 전체 체크 일치시킴.
+	            if(activeItems.length != gridDataLength) {
+	                document.getElementById("allCheckbox").checked = false;
+	            } else if(activeItems.length == gridDataLength) {
+	                 document.getElementById("allCheckbox").checked = true;
+	            }
+	        }
+	    });
 	AUIGrid.bind(vendorManagementGridID, "cellDoubleClick", function( event )
 		    {
 		        console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
@@ -151,8 +180,6 @@ $(document).ready(function () {
 
 	// Edit rejected web invoice
 	$("#editRejBtn").click(fn_editRejected);
-
-	$("#appvPrcssStus").multipleSelect("checkAll");
 
 	fn_setToDay();
 /*
