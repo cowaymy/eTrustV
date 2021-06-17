@@ -393,7 +393,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 	     //                           FILTER     FILTER BILLING                           	   	   //
 	     //--------------------------------------------------------------------//
 
-         if(filterCharge >0){
+         if(filterCharge > 0){
 
         	  ///////////////bill//////////////////////////////
         	  Map<String , Object> pay0007dMap = new HashMap<String , Object> ();
@@ -651,7 +651,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 
                      }
 
-         	    	if (srvMemBsAmt > 0 ) {   //Filter
+         	    	if ((srvMemBsAmt-srvMemPacAmt) > 0 ) {   //Filter
 
         	    		 Map<String, Object>  selMap = new HashMap<String, Object>();
 
