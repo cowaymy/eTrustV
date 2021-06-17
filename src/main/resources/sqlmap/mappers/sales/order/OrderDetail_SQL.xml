@@ -722,6 +722,7 @@
              , V1.CARD_TYPE
              , V1.CARD_TYPE_ID
              , V1.DDT_CHNL
+             , V1.VISA_TYPE
     FROM PAY1009V V1
     WHERE V1.ORD_ID = #{salesOrderId}
         AND ROWNUM = 1

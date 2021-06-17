@@ -26,7 +26,7 @@
     <th scope="row"><spring:message code="sal.text.issueBank" /></th>
     <td><span>${orderDetail.rentPaySetInf.rentPayIssBank}</span></span></td>
     <th scope="row"><spring:message code="sal.text.cardType" /></th>
-    <td><span>${orderDetail.rentPaySetInf.cardType}</span></td>
+    <td><span>${orderDetail.rentPaySetInf.cardType} (${orderDetail.rentPaySetInf.visaType})</span></td>
    </tr>
    <tr>
     <th scope="row"><spring:message code="sal.text.claimBillDt" /></th>
