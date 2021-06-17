@@ -78,7 +78,6 @@ var bulkRptInt;
 $(document).ready(function () {
 	vendorManagementGridID = AUIGrid.create("#vendorManagement _grid_wrap", vendorManagementColumnLayout, vendorManagementGridPros);
 
-	$("#appvPrcssStus").multipleSelect("checkAll");
 	$("#search_supplier_btn").click(fn_supplierSearchPop);
 	$("#search_regNo_btn").click(fn_supplierSearchPop);
 	$("#search_costCenter_btn").click(fn_costCenterSearchPop);
@@ -89,7 +88,7 @@ $(document).ready(function () {
 	var userId = "${SESSION_INFO.userId}";
 	console.log("crtUserID: " + userId);
 
-	 AUIGrid.bind(invoAprveGridID, "cellEditEnd", function(event) {
+	 AUIGrid.bind(vendorManagementGridID, "cellEditEnd", function(event) {
 
 	        // isActive 칼럼 수정 완료 한 경우
 	        if(event.dataField == "isActive") {
@@ -180,6 +179,8 @@ $(document).ready(function () {
 
 	// Edit rejected web invoice
 	$("#editRejBtn").click(fn_editRejected);
+
+	$("#appvPrcssStus").multipleSelect("checkAll");
 
 	fn_setToDay();
 /*
