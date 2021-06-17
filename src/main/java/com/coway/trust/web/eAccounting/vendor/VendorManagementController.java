@@ -175,8 +175,11 @@ public class VendorManagementController {
         LOGGER.debug("params =====================================>>  " + params);
 
         String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
+        int countAppvPrcssStus = appvPrcssStus.length;
 
         params.put("appvPrcssStus", appvPrcssStus);
+        LOGGER.debug("countAppvPrcssStus =====================================>>  " + countAppvPrcssStus);
+        params.put("countAppvPrcssStus", countAppvPrcssStus);
 
         List<EgovMap> list = vendorService.selectVendorList(params);
 
