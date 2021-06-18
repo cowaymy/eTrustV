@@ -145,12 +145,14 @@ $(document).ready(function() {
              Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Status'/>");
              return;
         }else{
+            /*
             if( '6' == $("#_statusEdit").val()){
                 if(null == $("#_rejectStatusEdit").val() || '' == $("#_rejectStatusEdit").val()){
                     Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Reject Status'/>");
                     return;
                 }
             }
+            */
             if( '6' == $("#_statusEdit").val() || '1' == $("#_statusEdit").val()) {
                 if(null == $("#_reasonCodeEdit").val() || '' == $("#_reasonCodeEdit").val()){
                     Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Feedback Code'/>");
@@ -158,10 +160,12 @@ $(document).ready(function() {
                 }
             }
         }
+        /*
         if( null == $("#_incomeRangeEdit").val() || '' == $("#_incomeRangeEdit").val()){
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='Income Range'/>");
             return;
         }
+        */
         if( null == $("#_ficoScore").val() || '' == $("#_ficoScore").val()){
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='Fico Score' />");
             return;
