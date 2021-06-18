@@ -95,6 +95,12 @@ public class PaymentDto {
     @ApiModelProperty(value = "codeName")
     private String codeName;
 
+    @ApiModelProperty(value = "accCode")
+    private String accCode;
+
+    @ApiModelProperty(value = "accDesc")
+    private String accDesc;
+
 
 	public int getAppTypeId() {
 		return appTypeId;
@@ -294,6 +300,22 @@ public class PaymentDto {
 
 	public void setCodeName(String codeName) {
 		this.codeName = codeName;
+	}
+
+	public String getAccCode() {
+		return accCode;
+	}
+
+	public void setAccCode(String accCode) {
+		this.accCode = accCode;
+	}
+
+	public String getAccDesc() {
+		return accDesc;
+	}
+
+	public void setAccDesc(String accDesc) {
+		this.accDesc = accDesc;
 	}
 
 	public static PaymentDto create(EgovMap egvoMap) {
