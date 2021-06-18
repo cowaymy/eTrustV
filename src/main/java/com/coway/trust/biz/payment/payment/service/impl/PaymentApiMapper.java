@@ -91,4 +91,8 @@ public interface PaymentApiMapper {
 
   List<EgovMap> selectCardModeBox(Map<String, Object> params);
 
+  List<EgovMap> selectMerchantBankOn2710(Map<String, Object> params);
+
+  List<EgovMap> selectIssueBankOn2710(Map<String, Object> params);
+
 }

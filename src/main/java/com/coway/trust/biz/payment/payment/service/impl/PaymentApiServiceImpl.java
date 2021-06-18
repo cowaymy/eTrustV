@@ -470,6 +470,26 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
   }
 
   @Override
+  public List<EgovMap> selectMerchantBankOn2710(Map<String, Object> params) {
+
+    Map<String, Object> sParams = new HashMap<String, Object>();
+
+    return paymentApiMapper.selectMerchantBankOn2710(params);
+  }
+
+  @Override
+  public List<EgovMap> selectIssueBankOn2710(Map<String, Object> params) {
+
+    Map<String, Object> sParams = new HashMap<String, Object>();
+
+    return paymentApiMapper.selectIssueBankOn2710(params);
+  }
+
+
+
+
+
+  @Override
   public void sendSms(Map<String, Object> params) {
     SmsVO sms = new SmsVO(Integer.parseInt(params.get("crtUserId").toString()), 975);
     String smsTemplate = paymentApiMapper.getSmsTemplate(params);
