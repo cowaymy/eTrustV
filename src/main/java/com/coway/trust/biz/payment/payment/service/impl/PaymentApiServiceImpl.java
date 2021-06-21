@@ -470,11 +470,43 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
   }
 
   @Override
+  public List<EgovMap> selectMerchantBankOn2708(Map<String, Object> params) {
+
+    Map<String, Object> sParams = new HashMap<String, Object>();
+
+    return paymentApiMapper.selectMerchantBankOn2708(params);
+  }
+
+  @Override
+  public List<EgovMap> selectMerchantBankOn2709(Map<String, Object> params) {
+
+    Map<String, Object> sParams = new HashMap<String, Object>();
+
+    return paymentApiMapper.selectMerchantBankOn2709(params);
+  }
+
+  @Override
   public List<EgovMap> selectMerchantBankOn2710(Map<String, Object> params) {
 
     Map<String, Object> sParams = new HashMap<String, Object>();
 
     return paymentApiMapper.selectMerchantBankOn2710(params);
+  }
+
+  @Override
+  public List<EgovMap> selectMerchantBankOn2711(Map<String, Object> params) {
+
+    Map<String, Object> sParams = new HashMap<String, Object>();
+
+    return paymentApiMapper.selectMerchantBankOn2711(params);
+  }
+
+  @Override
+  public List<EgovMap> selectMerchantBankOn2712(Map<String, Object> params) {
+
+    Map<String, Object> sParams = new HashMap<String, Object>();
+
+    return paymentApiMapper.selectMerchantBankOn2712(params);
   }
 
   @Override
@@ -485,9 +517,21 @@ public class PaymentApiServiceImpl extends EgovAbstractServiceImpl implements Pa
     return paymentApiMapper.selectIssueBankOn2710(params);
   }
 
+  @Override
+  public List<EgovMap> selectIssueBankOn2712(Map<String, Object> params) {
 
+    Map<String, Object> sParams = new HashMap<String, Object>();
 
+    return paymentApiMapper.selectIssueBankOn2712(params);
+  }
 
+  @Override
+  public List<EgovMap> selectIssueBankOnDefault(Map<String, Object> params) {
+
+    Map<String, Object> sParams = new HashMap<String, Object>();
+
+    return paymentApiMapper.selectIssueBankOnDefault(params);
+  }
 
   @Override
   public void sendSms(Map<String, Object> params) {
