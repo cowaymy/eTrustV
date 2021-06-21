@@ -243,6 +243,36 @@ public class PaymentApiController {
        return ResponseEntity.ok(paymentList);
 	}
 
+	@ApiOperation(value = "selectMerchantBankOn2708", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/selectMerchantBankOn2708", method = RequestMethod.GET)
+	public ResponseEntity<List<PaymentDto>>  selectMerchantBankOn2708(@ModelAttribute PaymentForm paymentForm) throws Exception {
+
+       Map<String, Object> params = paymentForm.createMap(paymentForm);
+       List<EgovMap> selectPaymentList = null;
+
+    // 조회.
+       selectPaymentList = paymentApiService.selectMerchantBankOn2708(params);
+
+       List<PaymentDto> paymentList = selectPaymentList.stream().map(r -> PaymentDto.create(r)).collect(Collectors.toList());
+
+       return ResponseEntity.ok(paymentList);
+	}
+
+	@ApiOperation(value = "selectMerchantBankOn2709", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/selectMerchantBankOn2709", method = RequestMethod.GET)
+	public ResponseEntity<List<PaymentDto>>  selectMerchantBankOn2709(@ModelAttribute PaymentForm paymentForm) throws Exception {
+
+       Map<String, Object> params = paymentForm.createMap(paymentForm);
+       List<EgovMap> selectPaymentList = null;
+
+    // 조회.
+       selectPaymentList = paymentApiService.selectMerchantBankOn2709(params);
+
+       List<PaymentDto> paymentList = selectPaymentList.stream().map(r -> PaymentDto.create(r)).collect(Collectors.toList());
+
+       return ResponseEntity.ok(paymentList);
+	}
+
 	@ApiOperation(value = "selectMerchantBankOn2710", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/selectMerchantBankOn2710", method = RequestMethod.GET)
 	public ResponseEntity<List<PaymentDto>>  selectMerchantBankOn2710(@ModelAttribute PaymentForm paymentForm) throws Exception {
@@ -258,6 +288,36 @@ public class PaymentApiController {
        return ResponseEntity.ok(paymentList);
 	}
 
+	@ApiOperation(value = "selectMerchantBankOn2711", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/selectMerchantBankOn2711", method = RequestMethod.GET)
+	public ResponseEntity<List<PaymentDto>>  selectMerchantBankOn2711(@ModelAttribute PaymentForm paymentForm) throws Exception {
+
+       Map<String, Object> params = paymentForm.createMap(paymentForm);
+       List<EgovMap> selectPaymentList = null;
+
+    // 조회.
+       selectPaymentList = paymentApiService.selectMerchantBankOn2711(params);
+
+       List<PaymentDto> paymentList = selectPaymentList.stream().map(r -> PaymentDto.create(r)).collect(Collectors.toList());
+
+       return ResponseEntity.ok(paymentList);
+	}
+
+	@ApiOperation(value = "selectMerchantBankOn2712", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/selectMerchantBankOn2712", method = RequestMethod.GET)
+	public ResponseEntity<List<PaymentDto>>  selectMerchantBankOn2712(@ModelAttribute PaymentForm paymentForm) throws Exception {
+
+       Map<String, Object> params = paymentForm.createMap(paymentForm);
+       List<EgovMap> selectPaymentList = null;
+
+    // 조회.
+       selectPaymentList = paymentApiService.selectMerchantBankOn2712(params);
+
+       List<PaymentDto> paymentList = selectPaymentList.stream().map(r -> PaymentDto.create(r)).collect(Collectors.toList());
+
+       return ResponseEntity.ok(paymentList);
+	}
+
 	@ApiOperation(value = "selectIssueBankOn2710", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/selectIssueBankOn2710", method = RequestMethod.GET)
 	public ResponseEntity<List<PaymentDto>>  selectIssueBankOn2710(@ModelAttribute PaymentForm paymentForm) throws Exception {
@@ -267,6 +327,36 @@ public class PaymentApiController {
 
     // 조회.
        selectPaymentList = paymentApiService.selectIssueBankOn2710(params);
+
+       List<PaymentDto> paymentList = selectPaymentList.stream().map(r -> PaymentDto.create(r)).collect(Collectors.toList());
+
+       return ResponseEntity.ok(paymentList);
+	}
+
+	@ApiOperation(value = "selectIssueBankOn2712", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/selectIssueBankOn2712", method = RequestMethod.GET)
+	public ResponseEntity<List<PaymentDto>>  selectIssueBankOn2712(@ModelAttribute PaymentForm paymentForm) throws Exception {
+
+       Map<String, Object> params = paymentForm.createMap(paymentForm);
+       List<EgovMap> selectPaymentList = null;
+
+    // 조회.
+       selectPaymentList = paymentApiService.selectIssueBankOn2712(params);
+
+       List<PaymentDto> paymentList = selectPaymentList.stream().map(r -> PaymentDto.create(r)).collect(Collectors.toList());
+
+       return ResponseEntity.ok(paymentList);
+	}
+
+	@ApiOperation(value = "selectIssueBankOnDefault", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/selectIssueBankOnDefault", method = RequestMethod.GET)
+	public ResponseEntity<List<PaymentDto>>  selectIssueBankOnDefault(@ModelAttribute PaymentForm paymentForm) throws Exception {
+
+       Map<String, Object> params = paymentForm.createMap(paymentForm);
+       List<EgovMap> selectPaymentList = null;
+
+    // 조회.
+       selectPaymentList = paymentApiService.selectIssueBankOnDefault(params);
 
        List<PaymentDto> paymentList = selectPaymentList.stream().map(r -> PaymentDto.create(r)).collect(Collectors.toList());
 
