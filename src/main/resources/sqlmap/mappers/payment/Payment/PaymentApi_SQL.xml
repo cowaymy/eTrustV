@@ -162,8 +162,33 @@
         ORDER BY CODE_ID
   </select>
 
-    <select id="selectMerchantBankOn2710" parameterType="Map" resultType="egovMap">
+  <select id="selectMerchantBankOn2708" parameterType="Map" resultType="egovMap">
+         SELECT
+            ACC_ID AS CODE_ID,
+            ACC_CODE,
+            ACC_DESC,
+            ACC_CODE || ' - ' ||  ACC_DESC AS CODE_NAME
+        FROM SYS0001M
+        WHERE ACC_STUS_ID = 1
+        AND IS_PAY_CRC = 1
+        AND ACC_ID IN (102,107)
+        ORDER BY ACC_CODE ASC
+  </select>
 
+    <select id="selectMerchantBankOn2709" parameterType="Map" resultType="egovMap">
+         SELECT
+            ACC_ID AS CODE_ID,
+            ACC_CODE,
+            ACC_DESC,
+            ACC_CODE || ' - ' ||  ACC_DESC AS CODE_NAME
+        FROM SYS0001M
+        WHERE ACC_STUS_ID = 1
+        AND IS_PAY_CRC = 1
+        AND ACC_ID IN (102,107)
+        ORDER BY ACC_CODE ASC
+  </select>
+
+    <select id="selectMerchantBankOn2710" parameterType="Map" resultType="egovMap">
          SELECT
             ACC_ID AS CODE_ID,
             ACC_CODE,
@@ -174,11 +199,35 @@
         AND IS_PAY_CRC = 1
         AND ACC_ID IN (100,102,104,105,106,107,553,563)
         ORDER BY ACC_CODE ASC
+  </select>
 
+  <select id="selectMerchantBankOn2711" parameterType="Map" resultType="egovMap">
+         SELECT
+            ACC_ID AS CODE_ID,
+            ACC_CODE,
+            ACC_DESC,
+            ACC_CODE || ' - ' ||  ACC_DESC AS CODE_NAME
+        FROM SYS0001M
+        WHERE ACC_STUS_ID = 1
+        AND IS_PAY_CRC = 1
+        AND ACC_ID = 102
+        ORDER BY ACC_CODE ASC
+  </select>
+
+  <select id="selectMerchantBankOn2712" parameterType="Map" resultType="egovMap">
+         SELECT
+            ACC_ID AS CODE_ID,
+            ACC_CODE,
+            ACC_DESC,
+            ACC_CODE || ' - ' ||  ACC_DESC AS CODE_NAME
+        FROM SYS0001M
+        WHERE ACC_STUS_ID = 1
+        AND IS_PAY_CRC = 1
+        AND ACC_ID = 102
+        ORDER BY ACC_CODE ASC
   </select>
 
     <select id="selectIssueBankOn2710" parameterType="Map" resultType="egovMap">
-
         SELECT Project1.BANK_ID CODE_ID  ,
                    Project1.CODE_NAME CODE_NAME
         FROM ( SELECT Extent1.BANK_ID BANK_ID  ,
@@ -189,7 +238,31 @@
                         AND BANK_ID IN (5,6,17,19,20,21,28,29,30,34,38,23,3,36,32)
                     ) Project1
         ORDER BY Project1.CODE ASC
+  </select>
 
+  <select id="selectIssueBankOn2712" parameterType="Map" resultType="egovMap">
+        SELECT Project1.BANK_ID CODE_ID  ,
+                   Project1.CODE_NAME CODE_NAME
+        FROM ( SELECT Extent1.BANK_ID BANK_ID  ,
+                            Extent1.CODE CODE  ,
+                            Extent1.CODE || ' : ' || Extent1.NAME CODE_NAME
+                   FROM SYS0004M Extent1
+                   WHERE  1 = Extent1.STUS_CODE_ID
+                        AND BANK_ID IN (3,36)
+                    ) Project1
+        ORDER BY Project1.CODE ASC
+  </select>
+
+  <select id="selectIssueBankOnDefault" parameterType="Map" resultType="egovMap">
+        SELECT Project1.BANK_ID CODE_ID  ,
+                   Project1.CODE_NAME CODE_NAME
+        FROM ( SELECT Extent1.BANK_ID BANK_ID  ,
+                            Extent1.CODE CODE  ,
+                            Extent1.CODE || ' : ' || Extent1.NAME CODE_NAME
+                   FROM SYS0004M Extent1
+                   WHERE  1 = Extent1.STUS_CODE_ID
+                    ) Project1
+        ORDER BY Project1.CODE ASC
   </select>
 
   <select id="getSmsTemplate" parameterType="Map" resultType="String">
