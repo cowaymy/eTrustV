@@ -30,12 +30,12 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class ProductLostBillingController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductLostBillingController.class);
-	
+
 	@Resource(name = "productLostService")
 	private ProductLostBillingService productLostService;
-	
+
 	/**
-	 * BillingMgnt 초기화 화면 
+	 * BillingMgnt 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -44,39 +44,39 @@ public class ProductLostBillingController {
 	public String initBillingMgnt(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/billing/billProductLost";
 	}
-	
+
 	@RequestMapping(value = "/selectRentalProductLostPenalty.do")
-	public ResponseEntity<EgovMap> checkExistOrderCancellationList(@RequestParam Map<String, Object> params, ModelMap model) {	
+	public ResponseEntity<EgovMap> checkExistOrderCancellationList(@RequestParam Map<String, Object> params, ModelMap model) {
 		EgovMap result = null;
-		
+
 		LOGGER.debug("params : {}", params);
 		List<EgovMap> list = productLostService.selectRentalProductLostPenalty(String.valueOf(params.get("orderId")));
 		if(list.size() > 0){
-			result = list.get(0); 
+			result = list.get(0);
 		}
 		System.out.println("#####result : " + result);
-	
+
 		return ResponseEntity.ok(result);
 	}
-	
+
 	@RequestMapping(value = "/createBillForProductLost.do")
-	public ResponseEntity<Map<String, Object>> createBillForProductLost(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {	
+	public ResponseEntity<Map<String, Object>> createBillForProductLost(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		int userId = sessionVO.getUserId();
-		
+
 		LOGGER.debug("params : {}", params);
-		
+
 		if(userId > 0){
-			
+
 			String tmp = productLostService.getZRLocationId(String.valueOf(params.get("orderId")));
 			int zRLocationId = tmp == null ? 0 : Integer.parseInt(tmp);
 			String tmp2 = productLostService.getRSCertificateId(String.valueOf(params.get("orderId")));
 			int rLCertificateId = tmp2 == null ? 0 : Integer.parseInt(tmp2);
 			System.out.println("### zrId : " + zRLocationId + ", rLCertificateId : " + rLCertificateId);
-			
+
 			int taxCodeId = 0;
 			int taxRate = 0;
-			
+
 			if(zRLocationId != 0){
 				taxCodeId = 39;//ZR
 				taxRate = 0;
@@ -89,12 +89,12 @@ public class ProductLostBillingController {
 					taxRate = 6;
 				}
 			}
-			
+
 			Date curdate = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			
+
 			EgovMap sch = productLostService.selectRentalProductLostPenalty(String.valueOf(params.get("orderId"))).get(0);
-			
+
 			Map<String, Object> ledger = new HashMap<String, Object>();
 			ledger.put("rentId", 0);
 			ledger.put("rentSoId", params.get("orderId"));
@@ -109,7 +109,7 @@ public class ProductLostBillingController {
 			ledger.put("rentIsSync", false);
 			ledger.put("rentBillrunningTotal", 0);
 			ledger.put("rentRunId", 0);
-			
+
 			Map<String, Object> orderbill = new HashMap<String, Object>();
 			orderbill.put("accBillTaskId", 0);
 			orderbill.put("accBillRefDate", sdf.format(curdate));
@@ -132,7 +132,7 @@ public class ProductLostBillingController {
 			orderbill.put("accBillGroupId", 0);
 			orderbill.put("accBillTaxRate", taxRate);
 			orderbill.put("accBillTaxCodeId", taxCodeId);
-			
+
 			Map<String, Object> invoiceM = new HashMap<String, Object>();
 			invoiceM.put("taxInvoiceRefNo", "");
 			invoiceM.put("taxInvoiceRefDate", sdf.format(curdate));
@@ -151,18 +151,18 @@ public class ProductLostBillingController {
 			invoiceM.put("taxInvoiceRemark", params.get("remark"));
 			if(taxRate >0){
 				invoiceM.put("taxInvoiceCharges", (Integer.parseInt(String.valueOf(params.get("lossFee"))) * 100 / 106));
-				invoiceM.put("taxInvoiceTaxes", 
+				invoiceM.put("taxInvoiceTaxes",
 						Integer.parseInt(String.valueOf(params.get("lossFee")))-
 						(Integer.parseInt(String.valueOf(params.get("lossFee"))) * 100 / 106));
 				invoiceM.put("taxInvoiceAmoutDue", params.get("lossFee"));
 			}else{
-				invoiceM.put("taxInvoiceCharges", "lossFee");
+				invoiceM.put("taxInvoiceCharges", params.get("lossFee"));
 				invoiceM.put("taxInvoiceTaxes", 0);
-				invoiceM.put("taxInvoiceAmoutDue", "lossFee");
+				invoiceM.put("taxInvoiceAmoutDue", params.get("lossFee"));
 			}
 			invoiceM.put("taxInvoiceCreated", sdf.format(curdate));
 			invoiceM.put("taxInvoiceCreator", userId);
-			
+
 			Map<String, Object> invoiceD = new HashMap<String, Object>();
 			invoiceD.put("taxInvoiceId", 0);
 			invoiceD.put("invoiceItemType", 1274);
@@ -175,7 +175,7 @@ public class ProductLostBillingController {
 			invoiceD.put("invoiceItemQuantity", 1);
 			invoiceD.put("invoiceItemGSTRate", taxRate);
 			if(taxRate > 0){
-				invoiceD.put("invoiceItemGSTTaxes", 
+				invoiceD.put("invoiceItemGSTTaxes",
 						Integer.parseInt(String.valueOf(params.get("lossFee"))) -
 						(Integer.parseInt(String.valueOf(params.get("lossFee"))) * 100 / 106));
 				invoiceD.put("invoiceItemCharges", (Integer.parseInt(String.valueOf(params.get("lossFee"))) * 100 / 106));
@@ -192,22 +192,22 @@ public class ProductLostBillingController {
 			invoiceD.put("invoiceItemStateName", sch.get("installState"));
 			invoiceD.put("invoiceItemCountry", sch.get("installCnty"));
 			invoiceD.put("invoiceItemInstallDate", sdf.format(sch.get("installDt")));
-			
+
 			String invoiceNo = "";
 			String sMessage = "";
-			
+
 			invoiceNo = productLostService.doSaveProductLostPenalty(ledger, orderbill, invoiceM, invoiceD);
 			ledger.put("rentDocNo", invoiceNo);
-			
+
 			if(!invoiceNo.equals("")) sMessage = "Save Successfully";
 			else sMessage = "Failed To Save";
-			
+
 			result.put("data", ledger);
 			result.put("message", sMessage);
-			
-		}//end userId 
-	
+
+		}//end userId
+
 		return ResponseEntity.ok(result);
 	}
-	
+
 }
