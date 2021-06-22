@@ -282,6 +282,80 @@
         });
     }
 
+    function fn_genCardKeyinRawPop(){
+    	doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'rBankAccount' , 'S', '');
+        $('#popup_wrap').show();
+    }
+
+    function fn_generateReport(){
+
+        var d1Array = $("#keyinDateFr").val().split("/");
+        var d1 = new Date(d1Array[2] + "-" + d1Array[1] + "-" + d1Array[0]);
+        var d2Array = $("#keyinDateTo").val().split("/");
+        var d2 = new Date(d2Array[2] + "-" + d2Array[1] + "-" + d2Array[0]);
+
+        var whereSQL = '';
+
+        if(dayDiffs(d1,d2) <= 30) {
+            if($("#keyinDateFr").val() != "") {
+                whereSQL += " AND SUB1.PAY_DATA >= TO_DATE('" + $("#keyinDateFr").val() + "', 'DD/MM/YYYY') ";
+            } else {
+                Common.alert("Please fill in key in start date.");
+                return;
+            }
+
+            if($("#keyinDateTo").val() != "") {
+                whereSQL += " AND SUB1.PAY_DATA < TO_DATE('" + $("#keyinDateTo").val() + "', 'DD/MM/YYYY') + 1";
+            } else {
+                Common.alert("Please fill in key in end date.");
+                return;
+            }
+
+            if($("#rCrcNo").val() != "")
+                whereSQL += " AND T3.CRC_STATE_ID = " + $("#rCrcNo").val() ;
+
+            if($("#rCrcStateId").val() != "")
+                whereSQL += " AND T2.CRC_TRNSC_ID = " + $("#rCrcStateId").val() ;
+
+            if($("#rBankAccount").val() != "")
+                whereSQL += " AND PD.PAY_ITM_BANK_ACC_ID = " + $("#rBankAccount").val() ;
+
+            if($("#rStatus").val() != ""){
+            	if($("#rStatus").val() == "0")
+            	    whereSQL += " AND T1.CRC_STATE_MAPPING_STUS_ID != 4 " ;
+            	if($("#rStatus").val() == "1")
+            	    whereSQL += " AND T1.CRC_STATE_MAPPING_STUS_ID = 4 " ;
+            	if($("#rStatus").val() == "2")
+            	    whereSQL += " AND T1.REV_STUS_ID = 5 " ;
+            }
+
+            var date = new Date().getDate();
+            if(date.toString().length == 1) date = "0" + date;
+
+            $("#reportForm #reportDownFileName").val("Card_Keyin_Raw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+            $("#reportForm #v_WhereSQL").val(whereSQL);
+            $("#reportForm #viewType").val("EXCEL");
+            $("#reportForm #reportFileName").val("/payment/PaymentCardKeyinRaw.rpt");
+
+            var option = {
+                    isProcedure : true
+            };
+
+            Common.report("reportForm", option);
+        } else {
+            Common.alert("Date range must be or equal to 30 days.");
+        }
+    }
+
+    function dayDiffs(dayFr, dayTo){
+        return Math.floor((dayTo.getTime() - dayFr.getTime())  /(1000 * 60 * 60 * 24));
+    }
+
+    function fn_close(){
+        $("#reportForm")[0].reset();
+        $("#popup_wrap").hide();
+    }
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -368,6 +442,19 @@
         </form>
     </section><!-- search_table end -->
 
+    <aside class="link_btns_wrap">
+        <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+        <dl class="link_list">
+            <dt>Link</dt>
+            <dd>
+                <ul class="btns">
+                    <li><p class="link_btn"><a href="javascript:fn_genCardKeyinRawPop();">Generate Card Key-in Raw Data</a></p></li>
+                </ul>
+                <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+            </dd>
+        </dl>
+    </aside>
+
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
             <li><p class="btn_grid"><a href="#" id="excelDown"><spring:message code='sys.btn.excel.dw'/></a></p></li>
@@ -382,3 +469,77 @@
 </section>
 <!-- content end -->
 
+<div id="popup_wrap" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
+<section id="content"><!-- content start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>Card Key-in Report</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_close();" >CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+
+<section class="search_table"><!-- search_table start -->
+<form name="reportForm" id="reportForm" action="#" method="post">
+<input type="hidden" id="reportFileName" name="reportFileName" value="" />
+<input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+<input type="hidden" id="viewType" name="viewType" value="" />
+<input type="hidden" id="v_WhereSQL" name="v_WhereSQL" value="" />
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th><spring:message code='pay.text.keyinDate'/></th>
+    <td>
+        <div class="date_set w100p">
+            <p><input type="text" class="j_date" readonly id="keyinDateFr" name="keyinDateFr" placeholder="DD/MM/YYYY"/></p>
+            <span>To</span>
+            <p><input type="text" class="j_date" readonly id="keyinDateTo" name="keyinDateTo" placeholder="DD/MM/YYYY"/></p>
+        </div>
+    </td>
+    <th scope="row"><spring:message code='pay.head.crcNo'/></th>
+    <td><input type="text" class="w100p" id="rCrcNo" name="rCrcNo"></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='pay.head.crcState'/></th>
+    <td><input type="text" class="w100p" id="rCrcStateId" name="rCrcStateId"></td>
+    <th scope="row"><spring:message code='pay.head.bankAccount'/></th>
+    <td><select class="w100p" id="rBankAccount" name="rBankAccount"></select></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='pay.head.Status'/></th>
+    <td>
+        <select class="w100p" id="rStatus">
+            <option value="">Choose One</option>
+            <option value="0">Unmatched</option>
+            <option value="1">Matched</option>
+            <option value="2">Reversed</option>
+        </select>
+    </td>
+    <th scope="row"></th>
+    <td></td>
+</tr>
+
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_generateReport();">Generate Report</a></p></li>
+</ul>
+
+</form>
+</section><!-- search_table end -->
+
+
+</section><!-- content end -->
+</section><!-- pop_body end -->
+</div><!-- popup_wrap end -->

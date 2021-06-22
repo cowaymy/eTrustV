@@ -473,6 +473,36 @@ hideAutoMatchViewPopup=function(){
 	AUIGrid.clearGridData(jompayAutoMatchGridId);
 }
 
+function fn_advanceKeyinRaw(){
+    $('#reportAdvanceKeyin_wrap').show();
+}
+
+function fn_generateReport(){
+
+    var d1Array = $("#keyinDateFr").val().split("/");
+    var d1 = new Date(d1Array[2] + "-" + d1Array[1] + "-" + d1Array[0]);
+    var d2Array = $("#keyinDateTo").val().split("/");
+    var d2 = new Date(d2Array[2] + "-" + d2Array[1] + "-" + d2Array[0]);
+    var dayDiffs = Math.floor((d1.getTime() - d2.getTime())  /(1000 * 60 * 60 * 24));
+
+    if(dayDiffs <= 30) {
+
+    	var date = new Date().getDate();
+        if(date.toString().length == 1) date = "0" + date;
+
+        $("#reportForm #reportDownFileName").val("Advance_keyin_raw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+        $("#reportForm #v_startDt").val($("#keyinDateFr").val());
+        $("#reportForm #v_endDt").val($("#keyinDateTo").val());
+        $("#reportForm #viewType").val("EXCEL");
+        $("#reportForm #reportFileName").val("/payment/PaymentAdvanceKeyinRaw.rpt");
+
+        Common.report("reportForm", {isProcedure : true});
+    } else {
+        Common.alert("Date range must be or equal to 30 days.");
+    }
+}
+
+
 
 </script>
 <section id="content"><!-- content start -->
@@ -568,7 +598,10 @@ hideAutoMatchViewPopup=function(){
                     <li><p class="link_btn"><a href="javascript:fn_requestDCFPop();"><spring:message code='pay.btn.reverse'/></a></p></li>
                     <li><p class="link_btn"><a href="javascript:fn_debtor();"><spring:message code='pay.btn.debtor'/></a></p></li>
                     <li><p class="link_btn"><a href="javascript:fn_mapping();"><spring:message code='pay.btn.match'/></a></p></li>
+                    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
                     <li><p class="link_btn"><a href="javascript:fn_jompayAutoMap();"><spring:message code='pay.btn.jompayAutoMatch'/></a></p></li>
+                    <li><p class="link_btn"><a href="javascript:fn_advanceKeyinRaw();"><spring:message code='pay.btn.advanceKeyinRaw'/></a></p></li>
+                    </c:if>
                 </ul>
                 <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
             </dd>
@@ -769,3 +802,54 @@ hideAutoMatchViewPopup=function(){
     <!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->
+
+<div id="reportAdvanceKeyin_wrap" class="popup_wrap size_small" style="display:none">
+<section id="content">
+
+<header class="pop_header">
+<h1>Advance Key-in Report</h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#reportAdvanceKeyin_wrap');" >CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+
+<section class="search_table"><!-- search_table start -->
+<form name="reportForm" id="reportForm" action="#" method="post">
+<input type="hidden" id="reportFileName" name="reportFileName" value="" />
+<input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+<input type="hidden" id="viewType" name="viewType" value="" />
+<input type="hidden" id="v_startDt" name="v_startDt" value="" />
+<input type="hidden" id="v_endDt" name="v_endDt" value="" />
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th><spring:message code='pay.text.keyinDate'/></th>
+    <td>
+        <div class="date_set w100p">
+            <p><input type="text" class="j_date" readonly id="keyinDateFr" name="keyinDateFr" placeholder="DD/MM/YYYY"/></p>
+            <span>To</span>
+            <p><input type="text" class="j_date" readonly id="keyinDateTo" name="keyinDateTo" placeholder="DD/MM/YYYY"/></p>
+        </div>
+    </td>
+
+</tbody>
+</table><!-- table end -->
+
+<ul class="center_btns">
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_generateReport();">Generate Report</a></p></li>
+</ul>
+
+</form>
+</section>
+
+</section>
+</section>
+</div>
