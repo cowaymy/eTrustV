@@ -124,7 +124,7 @@
 	}
 
 	function fn_genFTRawPop() {
-        doGetCombo('/common/selectCodeList.do', '392' , ''   , 'cmbReason' , 'S', '');
+        doGetCombo('/common/selectCodeList.do', '396' , ''   , 'cmbReason' , 'S', '');
         doDefCombo(statusData, '' ,'cmbStatus', 'S', '');
         doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','cmbBranch', 'S' , '');
 
