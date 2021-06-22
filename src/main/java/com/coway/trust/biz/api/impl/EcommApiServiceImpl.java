@@ -217,10 +217,10 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         custBillMasterVO.setCustBillCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));
         custBillMasterVO.setCustBillCustCareCntId(Integer.valueOf(custInfo.get("custcarecntid").toString()));
         custBillMasterVO.setCustBillCustId(Integer.valueOf(custInfo.get("custid").toString()));
-        custBillMasterVO.setCustBillIsEstm(1);
+        custBillMasterVO.setCustBillIsEstm(0);
         custBillMasterVO.setCustBillEmail(reqPrm.get("email1") != null ? reqPrm.get("email1").toString() : null);
         custBillMasterVO.setCustBillIsPost(0);
-        custBillMasterVO.setCustBillIsSms(0);
+        custBillMasterVO.setCustBillIsSms(1);
         custBillMasterVO.setCustBillIsSms2(0);
         custBillMasterVO.setCustBillIsWebPortal(0);
         custBillMasterVO.setCustBillRem(null);
