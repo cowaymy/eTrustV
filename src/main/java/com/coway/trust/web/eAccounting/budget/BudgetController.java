@@ -199,6 +199,11 @@ public class BudgetController {
             params.put("costCentr2", "D1201");
         }
 
+        // Hardcode for Ee Vonne and Lee Ting to view D1303 - 20210623
+        if(sessionVO.getUserId() == 18748 || sessionVO.getUserId() == 14384) {
+            params.put("costCentr2", "D1303");
+        }
+
         LOGGER.debug(sessionVO.getCostCentr());
         if(!"A1101".equals(sessionVO.getCostCentr())) {
             params.put("flg", "1");
@@ -388,10 +393,15 @@ public class BudgetController {
         if(sessionVO.getUserId() == 374) {
             params.put("costCentr", "A1301");
         }
-        
+
         // Hardcode for Ivan Liew and Shawn to view Cody Planning - 20210517
         if(sessionVO.getUserId() == 379 || sessionVO.getUserId() == 22141) {
             params.put("costCentr2", "D1201");
+        }
+
+        // Hardcode for Ee Vonne and Lee Ting to view D1303 - 20210623
+        if(sessionVO.getUserId() == 18748 || sessionVO.getUserId() == 14384) {
+            params.put("costCentr2", "D1303");
         }
 
 		if(params.containsKey("stYearMonth") && params.containsKey("edYearMonth")) {
@@ -958,7 +968,12 @@ public class BudgetController {
         if(sessionVO.getUserId() == 379 || sessionVO.getUserId() == 22141) {
             params.put("costCentr2", "D1201");
         }
-        
+
+        // Hardcode for Ee Vonne and Lee Ting to view D1303 - 20210623
+        if(sessionVO.getUserId() == 18748 || sessionVO.getUserId() == 14384) {
+            params.put("costCentr2", "D1303");
+        }
+
 		LOGGER.debug("params =====================================>>  " + params);
 
 		budgetList = budgetService.selectAvailableBudgetList(params);
