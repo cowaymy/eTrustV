@@ -126,9 +126,9 @@
         // Initiate CCP Tab - Start
         var chsStatus = '${ccpInfoMap.chsStus}';
         var chsRsn = '${ccpInfoMap.chsRsn}';
-         console.log("chsStatus : "+ chsStatus);
-         console.log("chsRsn : "+ chsRsn);
-         if(chsStatus == "YELLOW") {
+        console.log("chsStatus : "+ chsStatus);
+        console.log("chsRsn : "+ chsRsn);
+        if(chsStatus == "YELLOW") {
             $('#chs_stus').append("<span class='red_text'>"+chsStatus+"</span>");
             $('#chs_rsn').append("<span class='red_text'>"+chsRsn+"</span>");
         }else if (chsStatus == "GREEN") {
@@ -245,8 +245,10 @@
                 }
             }
 
+            if(fileGrpId != null && fileId != null)
             fn_atchViewDown(fileGrpId, fileId);
         });
+
         //$("#ccpFileSelector").click(fn_atchViewDown($("#ccpAtchFileGrpId").val(), $("#ccpFileId").val()));
         // Initiate CCP Tab - End
 
@@ -347,6 +349,8 @@
                             fileId = result.data[i].atchFileId;
                         }
                     }
+
+                    if(fileGrpId != null && fileId != null)
                     fn_atchViewDown(fileGrpId, fileId);
                 });
 
