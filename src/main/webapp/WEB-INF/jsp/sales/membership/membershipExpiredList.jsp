@@ -183,6 +183,11 @@ $(document).ready(function(){
     		$("#rawDataHeader").text("Rejoin Net Raw Data");
     		$("#rawDataForm #reportFileName").val("/sales/RejoinNetRaw.rpt");
             $("#rawDataForm #reportDownFileName").val("RejoinNetRawData_" + today + ".xls");
+        }else if(val == "corporateRejoin"){
+        	console.log("corporateRejoin");
+        	$("#rawDataHeader").text("Corporate Rejoin Net Data");
+            $("#rawDataForm #reportFileName").val("/sales/RejoinCorporateNet.rpt");
+            $("#rawDataForm #reportDownFileName").val("CorporateRejoinNetData" + today + ".xls");
         }
 
     }
@@ -278,6 +283,9 @@ $(document).ready(function(){
 	      <li><p class="link_btn">
 	           <a href="javascript:fn_openRawDataDownload('rejoinNet');"><spring:message code='sales.btn.rejoinNet'/></a>
 	      </p></li>
+	      <li><p class="link_btn">
+               <a href="javascript:fn_openRawDataDownload('corporateRejoin');">Corporate Rejoin Net Data</a>
+          </p></li>
 
 	  </ul>
 	    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
