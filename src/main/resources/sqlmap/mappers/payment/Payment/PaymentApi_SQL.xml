@@ -111,6 +111,16 @@
                           , CRT_DT
                           , UPD_USER_ID
                           , UPD_DT
+
+                          , CARD_NO
+                          , APPROVAL_NO
+                          , CRC_NAME
+                          , TRANSACTION_DATE
+                          , EXPIRY_DATE
+                          , CARD_MODE
+                          , MERCHANT_BANK
+                          , CARD_BRAND
+
     ) VALUES( PAY0297D_SEQ.NEXTVAL
                   ,#{salesOrdNo}
                   ,#{payStusId}
@@ -138,6 +148,15 @@
                   ,SYSDATE
                   ,#{updUserId}
                   ,SYSDATE
+
+                  ,#{cardNo}
+                  ,#{approvalNo}
+                  ,#{crcName}
+                  ,#{transactionDate}
+                  ,#{expiryDate}
+                  ,#{cardMode}
+                  ,#{merchantBank}
+                  ,#{cardBrand}
     )
   </insert>
 
