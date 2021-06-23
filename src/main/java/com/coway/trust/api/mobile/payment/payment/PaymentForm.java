@@ -95,6 +95,33 @@ public class PaymentForm {
   @ApiModelProperty(value = "signData")
   private String signData;
 
+
+  @ApiModelProperty(value = "cardNo")
+  private String cardNo;
+
+  @ApiModelProperty(value = "approvalNo")
+  private String approvalNo;
+
+  @ApiModelProperty(value = "crcName")
+  private String crcName;
+
+  @ApiModelProperty(value = "transactionDate")
+  private String transactionDate;
+
+  @ApiModelProperty(value = "expiryDate")
+  private String expiryDate;
+
+  @ApiModelProperty(value = "cardMode")
+  private String cardMode;
+
+  @ApiModelProperty(value = "merchantBank")
+  private String merchantBank;
+
+  @ApiModelProperty(value = "cardBrand")
+  private String cardBrand;
+
+
+
   public String getPayMode() {
     return payMode;
   }
@@ -297,7 +324,72 @@ public class PaymentForm {
     this.signData = signData;
   }
 
-  public static Map<String, Object> createMap(PaymentForm paymentForm){
+  public String getCardNo() {
+	return cardNo;
+}
+
+public void setCardNo(String cardNo) {
+	this.cardNo = cardNo;
+}
+
+public String getApprovalNo() {
+	return approvalNo;
+}
+
+public void setApprovalNo(String approvalNo) {
+	this.approvalNo = approvalNo;
+}
+
+public String getCrcName() {
+	return crcName;
+}
+
+public void setCrcName(String crcName) {
+	this.crcName = crcName;
+}
+
+public String getTransactionDate() {
+	return transactionDate;
+}
+
+public void setTransactionDate(String transactionDate) {
+	this.transactionDate = transactionDate;
+}
+
+public String getExpiryDate() {
+	return expiryDate;
+}
+
+public void setExpiryDate(String expiryDate) {
+	this.expiryDate = expiryDate;
+}
+
+public String getCardMode() {
+	return cardMode;
+}
+
+public void setCardMode(String cardMode) {
+	this.cardMode = cardMode;
+}
+
+public String getMerchantBank() {
+	return merchantBank;
+}
+
+public void setMerchantBank(String merchantBank) {
+	this.merchantBank = merchantBank;
+}
+
+public String getCardBrand() {
+	return cardBrand;
+}
+
+public void setCardBrand(String cardBrand) {
+	this.cardBrand = cardBrand;
+}
+
+
+public static Map<String, Object> createMap(PaymentForm paymentForm){
     Map<String, Object> params = new HashMap<>();
 
     params.put("userId", paymentForm.getUserId());
@@ -326,6 +418,15 @@ public class PaymentForm {
     params.put("signImg", paymentForm.getSignImg());
     params.put("payRem", paymentForm.getPayRem());
     params.put("signData", paymentForm.getSignData());
+
+    params.put("cardNo", paymentForm.getCardNo());
+    params.put("approvalNo", paymentForm.getApprovalNo());
+    params.put("crcName", paymentForm.getCrcName());
+    params.put("transactionDate", paymentForm.getTransactionDate());
+    params.put("expiryDate", paymentForm.getExpiryDate());
+    params.put("cardMode", paymentForm.getCardMode());
+    params.put("merchantBank", paymentForm.getMerchantBank());
+    params.put("cardBrand", paymentForm.getCardBrand());
 
     return params;
   }
