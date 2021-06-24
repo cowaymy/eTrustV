@@ -52,4 +52,6 @@ public interface VendorService {
 	String checkReqNo(Map<String, Object> params);
 
 	void updateVendorInfo(Map<String, Object> params);
+
+	void editRejected(Map<String, Object> params);
 }

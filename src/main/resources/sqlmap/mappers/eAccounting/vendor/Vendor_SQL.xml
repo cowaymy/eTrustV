@@ -683,4 +683,135 @@
         WHERE APPV_PRCSS_NO = #{appvPrcssNo}
     </insert>
 
+    <select id="getAttachmenDetails" parameterType="Map" resultType="egovMap">
+        SELECT
+            ATCH_FILE_GRP_ID,
+            MAX(ATCH_FILE_ID) ATCH_FILE_ID
+        FROM SYS0070M
+        WHERE ATCH_FILE_GRP_ID = (
+            SELECT
+                ATCH_FILE_GRP_ID
+            FROM FCM0029D
+            WHERE VENDOR_REQ_NO = #{clmNo}
+        )
+        group by ATCH_FILE_GRP_ID
+    </select>
+
+    <select id="getFileAtchGrpId" resultType="int">
+        SELECT SYS0070M_ATCH_FILE_GRP_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getFileAtchId" resultType="int">
+        SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertSYS0070M_ER" parameterType="Map">
+        INSERT INTO SYS0070M
+        SELECT
+            #{newFileAtchGrpId},
+            #{newFileAtchId},
+            CHENAL_TYPE,
+            CRT_USER_ID,
+            SYSDATE,
+            UPD_USER_ID,
+            SYSDATE
+        FROM SYS0070M
+        WHERE ATCH_FILE_GRP_ID = #{exFileAtchGrpId}
+        AND ATCH_FILE_ID = #{exFileAtchId}
+    </insert>
+
+    <insert id="insertSYS0071D_ER" parameterType="Map">
+        INSERT INTO SYS0071D
+        SELECT
+            #{newFileAtchId},
+            ATCH_FILE_NAME,
+            FILE_SUB_PATH,
+            PHYSICL_FILE_NAME,
+            FILE_EXTSN,
+            FILE_SIZE,
+            FILE_PASSWORD,
+            FILE_UNQ_KEY,
+            FILE_KEY_SEQ
+        FROM SYS0071D
+        WHERE ATCH_FILE_ID = #{exFileAtchId}
+    </insert>
+
+    <insert id="insertRejectM" parameterType="Map">
+        INSERT INTO FCM0029D(
+            VENDOR_REQ_NO,
+            VENDOR_ACC_ID,
+            VENDOR_GRP,
+            COST_CENTER,
+            COST_CENTER_NAME,
+            VENDOR_NAME,
+            VENDOR_REG_NO_NRIC,
+            PAY_ADV_EMAIL1,
+            PAY_ADV_EMAIL2,
+            ADD_HOUSE_LOT_NO,
+            ADD_STREET,
+            ADD_POSTAL_CODE,
+            ADD_CITY,
+            ADD_COUNTRY,
+            BANK_COUNTRY,
+            BANK,
+            BANK_ACC_HOLDER,
+            BANK_ACC_NO,
+            BANK_BRANCH,
+            SWIFT_CODE,
+            CONTACT_DESIGNATION,
+            CONTACT_NAME,
+            CONTACT_PHONE_NO,
+            CONTACT_EMAIL,
+            PAY_TERM,
+            PAY_TYPE,
+            PAY_OTH,
+            ATCH_FILE_GRP_ID,
+            /*APPV_PRCSS_NO*/
+            REM,
+            CRT_USER_ID,
+            CRT_DATE,
+            UPD_USER_ID,
+            UPD_DATE,
+            PREV_CLM_NO
+        )
+        SELECT
+            #{newClmNo} VENDOR_REQ_NO,
+            VENDOR_ACC_ID,
+            VENDOR_GRP,
+            COST_CENTER,
+            COST_CENTER_NAME,
+            VENDOR_NAME,
+            VENDOR_REG_NO_NRIC,
+            PAY_ADV_EMAIL1,
+            PAY_ADV_EMAIL2,
+            ADD_HOUSE_LOT_NO,
+            ADD_STREET,
+            ADD_POSTAL_CODE,
+            ADD_CITY,
+            ADD_COUNTRY,
+            BANK_COUNTRY,
+            BANK,
+            BANK_ACC_HOLDER,
+            BANK_ACC_NO,
+            BANK_BRANCH,
+            SWIFT_CODE,
+            CONTACT_DESIGNATION,
+            CONTACT_NAME,
+            CONTACT_PHONE_NO,
+            CONTACT_EMAIL,
+            PAY_TERM,
+            PAY_TYPE,
+            PAY_OTH,
+            #{newFileAtchGrpId},
+            /*APPV_PRCSS_NO,*/
+            REM,
+            CRT_USER_ID,
+            SYSDATE,
+            UPD_USER_ID,
+            SYSDATE,
+            VENDOR_REQ_NO
+        FROM FCM0029D
+        WHERE VENDOR_REQ_NO = #{clmNo}
+    </insert>
+
 </mapper>

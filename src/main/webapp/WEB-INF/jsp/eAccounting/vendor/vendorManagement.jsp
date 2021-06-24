@@ -995,22 +995,18 @@ function fn_editRejected() {
 
         if(gridObj.length > 0) {
             status = gridObj[0].item.appvPrcssStus;
-            selClmNo = gridObj[0].item.clmNo;
+            selClmNo = gridObj[0].item.reqNo;
         } else {
             status = list[0].item.appvPrcssStus;
-            selClmNo = list[0].item.clmNo;
+            selClmNo = list[0].item.reqNo;
         }
 
         if(status == "Rejected") {
-            Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"J1"}, function(result) {
-                console.log(result);
+            Common.ajax("POST", "/eAccounting/vendor/editRejected.do", {clmNo : selClmNo}, function(result1) {
+                console.log(result1);
 
-                Common.ajax("POST", "/eAccounting/webInvoice/editRejected.do", {clmNo : selClmNo, clamUn : result.clamUn}, function(result1) {
-                    console.log(result1);
-
-                    Common.alert("New claim number : " + result1.data.newClmNo);
-                })
-            });
+                Common.alert("New claim number : " + result1.data.newClmNo);
+            })
         } else {
             Common.alert("Only rejected claims are allowed to edit.");
         }
@@ -1139,18 +1135,14 @@ function fn_editRejected() {
 
 </form>
 </section><!-- search_table end -->
-<%--
+
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
     <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
     <dl class="link_list">
         <dt>Link</dt>
         <dd>
             <ul class="btns">
-                <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-                    <li><p class="link_btn"><a href="#" id="_webInvBtn">Web Invoice</a></p></li>
-                </c:if>
                 <li><p class="link_btn"><a href="#" id="editRejBtn">Edit Rejected</a></p></li>
-                <li><p class="link_btn"><a href="#" id="bulkWebInvDl">Bulk Web Invoice</a></p></li>
             </ul>
             <ul class="btns">
             </ul>
@@ -1158,7 +1150,6 @@ function fn_editRejected() {
         </dd>
     </dl>
 </aside><!-- link_btns_wrap end -->
---%>
 
 <section class="search_result"><!-- search_result start -->
 

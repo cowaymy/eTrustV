@@ -596,4 +596,23 @@ public class VendorManagementController {
         return "eAccounting/vendor/rejectionOfVendorCompletedMsgPop";
     }
 
+    @RequestMapping(value = "/editRejected.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> editRejected(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+
+        LOGGER.debug("params =====================================>>  " + params);
+
+        String reqNo = vendorService.selectNextReqNo();
+        params.put("newClmNo", reqNo);
+        params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+        vendorService.editRejected(params);
+
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(params);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+        return ResponseEntity.ok(message);
+    }
+
 }
