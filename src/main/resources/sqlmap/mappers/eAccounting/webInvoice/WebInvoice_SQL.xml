@@ -945,7 +945,8 @@ SELECT T.APPV_PRCSS_NO
 	    ON C.CRT_USER_ID = D.USER_ID
 	JOIN FCM0006M E
 	    ON D.HR_CODE = E.MEM_ACC_ID
-	WHERE (A.APPV_PRCSS_STUS = 'R' OR A.APPV_PRCSS_STUS = 'P' OR A.APPV_PRCSS_STUS = 'A' or A.APPV_PRCSS_STUS = 'J')
+	WHERE 1=1
+	/*(A.APPV_PRCSS_STUS = 'R' OR A.APPV_PRCSS_STUS = 'P' OR A.APPV_PRCSS_STUS = 'A' or A.APPV_PRCSS_STUS = 'J')*/
 	<if test="startDt != null and startDt != ''">
 	    <![CDATA[
 	    AND A.REQST_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
@@ -965,12 +966,12 @@ SELECT T.APPV_PRCSS_NO
 	<if test="costCenter != null and costCenter != ''">
 	    AND C.COST_CENTER = #{costCenter}
 	</if>
-	<if test="appvPrcssStus != null and appvPrcssStus != '' and ((appStartDt == null or appStartDt == '') and (appEndDt == null or appEndDt == ''))">
-	    AND B.APPV_STUS IN
-	    <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
-	        #{item}
-	    </foreach>
-	</if>
+	<if test="appvPrcssStus != null and appvPrcssStus != ''">
+             AND A.APPV_PRCSS_STUS IN
+         <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+             #{item}
+         </foreach>
+    </if>
 	<if test="clmNoStart != null and clmNoStart != ''">
 	    <![CDATA[
 	    AND C.VENDOR_REQ_NO >= UPPER(#{clmNoStart})
