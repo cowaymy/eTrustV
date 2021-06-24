@@ -20,12 +20,7 @@ public class MembershipColorGridServiceImpl extends EgovAbstractServiceImpl impl
 
 	@Override
 	public List<EgovMap> membershipColorGridList(Map<String, Object> params) {
-
-		if ( ((String) params.get("membershipType")).equals("2") ) {
-			return membershipColorGridMapper.membershipColorGridList(params);		//outright membership
-		} else {
-			return membershipColorGridMapper.membershipRentalColorGridList(params);		//rental membership
-		}
+		return membershipColorGridMapper.membershipColorGridList(params);
 	}
 
 }

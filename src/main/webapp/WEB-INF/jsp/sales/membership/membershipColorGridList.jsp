@@ -176,7 +176,6 @@
                 style: 'left_style'
             }];
 
-     // 그리드 속성 설정
         var gridPros = {
 
             // 페이징 사용
@@ -201,20 +200,12 @@
             groupingMessage : "Here groupping"
         };
 
-        //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
         myGridID = AUIGrid.create("#list_grid_wrap", columnLayout, gridPros);
     }
 
     function fn_searchListAjax(){
 
-console.log("searchColorGrid");
         var isValid = true;
-
-        if($("#membershipType").val() == "") {
-        	isValid = false;
-            Common.alert("<spring:message code='sal.alert.msg.youMustChooseMembershipType' />");
-            return ;
-        }
 
         if(FormUtil.isEmpty($("#orderNo").val())   &&
            FormUtil.isEmpty($("#salesmanCode").val()) ){
@@ -234,14 +225,13 @@ console.log("searchColorGrid");
                   var startDate = $('#createStDate').val();
                   var endDate = $('#createEnDate').val();
                   if( fn_getDateGap(startDate , endDate) > 365){
-                      //Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
                       Common.alert("Start date can not be more than 365 days before the end date.");
                       return;
                   }
             }
         }
 
-          if(isValid == true){
+        if(isValid == true){
             var param =  $("#searchForm").serialize();
 
             Common.ajax("GET", "/sales/membership/membershipColorGridJsonList", param, function(result) {
@@ -267,10 +257,10 @@ console.log("searchColorGrid");
                  AUIGrid.update(myGridID);
             });
 
-           }else{
-               Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastCrtDateNetSales' />");
-               return ;
-           }
+        }else{
+            Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastCrtDateNetSales' />");
+            return ;
+        }
     }
 
     function fn_getDateGap(sdate, edate){
@@ -329,10 +319,6 @@ console.log("searchColorGrid");
 
 <section class="search_table"><!-- search_table start -->
 <form id="searchForm" name="searchForm" method="post">
-    <input type="hidden" id="salesOrderId" name="salesOrderId">
-    <input type="hidden" name="memType" id="memType" value="${memType }"/>
-    <input type="hidden" name="initGrpCode" id="initGrpCode" value="${grpCode }"/>
-    <input type="hidden" name="memCode" id="memCode" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -373,8 +359,8 @@ console.log("searchColorGrid");
     <td>
      <select class="w100p" id="membershipType" name="membershipType">
         <option value="">Choose One</option>
-        <option value="1">Rental Membership</option>
-        <option value="2">Outright Membership</option>
+        <option value="RENTAL">Rental Membership</option>
+        <option value="OUTRIGHT">Outright Membership</option>
     </select>
     </td>
     <th scope="row">Order Number</th>

@@ -3,16 +3,17 @@
 <mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipColorGridMapper">
 
     <select id="membershipColorGridList" parameterType="Map" resultType="egovMap">
-        SELECT sm.SRV_MEM_NO MBRSH_NO
+         SELECT * FROM (
+
+        (SELECT sm.SRV_MEM_NO MBRSH_NO
             , 'OUTRIGHT' MBRSH_TYPE
-            , sm.SRV_SALES_ORD_ID
+            , sm.SRV_SALES_ORD_ID SALES_ORD_ID
             , som.SALES_ORD_NO
-            , sm.SRV_START_DT MBRSH_START_DT
+            , TO_CHAR(sm.SRV_START_DT, 'DD/MM/YYYY') MBRSH_START_DT
             , sm.SRV_EXPR_DT MBRSH_EXPR_DT
             , sm.SRV_STUS_CODE_ID STUS_ID
             , s.CODE MBRSH_STUS_CODE
             , sm.SRV_CRT_DT MBRSH_CRT_DT
-            , sm.SRV_MEM_PAC_ID
             , NVL (mem.MEM_CODE, ' ') SALESMAN_CODE
             , sm.SRV_DUR MBRSH_DUR
             , mo.ORG_CODE
@@ -86,12 +87,12 @@
         <if test="deptCode != null and deptCode != ''">
             AND mo.DEPT_CODE = #{deptCode}
         </if>
-    </select>
 
-    <select id="membershipRentalColorGridList" parameterType="Map" resultType="egovMap">
+        ) UNION ALL (
+
         SELECT srm.SRV_CNTRCT_REF_NO MBRSH_NO
             , 'RENTAL' MBRSH_TYPE
-            , srm.SRV_CNTRCT_ORD_ID
+            , srm.SRV_CNTRCT_ORD_ID SALES_ORD_ID
             , som.SALES_ORD_NO
             , (CASE
                 WHEN TO_CHAR(E7.SRV_PRD_START_DT, 'YYYYMMDD') = '19000101'
@@ -177,6 +178,14 @@
         <if test="deptCode != null and deptCode != ''">
             AND mo.DEPT_CODE = #{deptCode}
         </if>
+
+        )
+
+        ) WHERE 1=1
+        <if test="membershipType != null and membershipType != ''">
+            AND MBRSH_TYPE = #{membershipType}
+        </if>
+
     </select>
 
 </mapper>

@@ -11,6 +11,4 @@ public interface MembershipColorGridMapper {
 
 	List<EgovMap> membershipColorGridList(Map<String, Object> params);
 
-	List<EgovMap> membershipRentalColorGridList(Map<String, Object> params);
-
 }
