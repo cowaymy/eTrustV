@@ -129,7 +129,7 @@ $(document).ready(function () {
     });
 
     console.log("viewType :: " + "${viewType}");
-    if("${viewType}" == "APPV" || "${viewType}" == "VIEW") {
+    if("${viewType}" == "VIEW") {
 
         if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J") {
             $("#pApprove_btn").hide();
@@ -148,6 +148,21 @@ $(document).ready(function () {
         }
     }
     else {
+    	if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J") {
+            $("#pApprove_btn").hide();
+            $("#pReject_btn").hide();
+
+            $("#finApprAct").show();
+
+            Common.ajax("GET", "/eAccounting/webInvoice/getFinalApprAct.do", {appvPrcssNo: myGridData[0].appvPrcssNo}, function(result) {
+                console.log(result);
+
+                $("#viewFinAppr").text(result.finalAppr);
+                console.log('viewFinAppr: ' + $("#viewFinAppr").val());
+            });
+        } else {
+            $("#finApprAct").hide();
+        }
     	 $("#appvBtns").show();
     	}
 
