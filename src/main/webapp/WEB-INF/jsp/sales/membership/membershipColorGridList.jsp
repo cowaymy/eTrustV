@@ -359,8 +359,8 @@
     <td>
      <select class="w100p" id="membershipType" name="membershipType">
         <option value="">Choose One</option>
-        <option value="RENTAL">Rental Membership</option>
-        <option value="OUTRIGHT">Outright Membership</option>
+        <option value="RENTAL"><spring:message code="sal.text.rentalMembership" /></option>
+        <option value="OUTRIGHT"><spring:message code="sal.text.outrightMembership" /></option>
     </select>
     </td>
     <th scope="row">Order Number</th>
@@ -369,7 +369,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Create Date</th> <!-- TODO [Yong] : create entry for spring message -->
+    <th scope="row"><spring:message code="sal.title.crtDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" id="createStDate" name="createStDate" placeholder="DD/MM/YYYY" class="j_date" readonly="readonly"/></p>
@@ -394,7 +394,7 @@
 <ul class="left_btns">
     <li><span class="green_text"><spring:message code="sal.combo.text.netSales" /></span></li>
     <li><span class="pink_text"><spring:message code="sal.combo.text.cancel" /></span></li>
-    <li><span class="yellow_text">Complete</span></li>
+    <li><span class="yellow_text"><spring:message code="sal.combo.text.complete" /></span></li>
     <li><span class="black_text"><spring:message code="sal.combo.text.active" /></span></li>
 </ul>
 
