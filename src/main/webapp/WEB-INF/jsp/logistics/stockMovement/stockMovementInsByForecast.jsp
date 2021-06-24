@@ -333,9 +333,10 @@
 			checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
 
 			var reqitms = AUIGrid.getGridData(reqGrid);
+			var maxItem = 40;
 
-			if (reqitms.length + checkedItems.length > 10){
-                Common.alert("Maximum 10 Material Code per SMO request.");
+			if (reqitms.length + checkedItems.length > maxItem){
+                Common.alert("Maximum " + maxItem + " Material Code per SMO request.");
                 return false;
             }
 
