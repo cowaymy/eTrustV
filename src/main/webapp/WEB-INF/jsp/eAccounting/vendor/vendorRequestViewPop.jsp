@@ -129,7 +129,7 @@ $(document).ready(function () {
     });
 
     console.log("viewType :: " + "${viewType}");
-    if("${viewType}" == "VIEW") {
+    if("${viewType}" == "APPV" || "${viewType}" == "VIEW") {
 
         if(myGridData[0].appvPrcssStus == "A" || myGridData[0].appvPrcssStus == "J") {
             $("#pApprove_btn").hide();
