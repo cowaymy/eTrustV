@@ -1039,7 +1039,7 @@ public class MemberListController {
             }
 
             if(formMap.get("memberType").toString().equals("7")) {
-                u6 = memberListService.memberListUpdate_ORG15(formMap);
+                u6 = memberListService.memberListUpdate_memorg3(formMap);
             }
 
             if(formMap.get("memberType").toString().equals("2")) {

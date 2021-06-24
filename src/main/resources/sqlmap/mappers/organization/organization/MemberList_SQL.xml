@@ -4973,8 +4973,16 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		<if test="trNoUpd != null and trNoUpd != '' ">
 		  , TR_NO = #{trNoUpd}
 		</if>
-		<if test="hsptlzCheck != null and hsptlzCheck != '' ">
-		  , HSPTLZ = #{hsptlzCheck}
+		<if test="hsptlz != null and hsptlz != '' ">
+		  , HSPTLZ = #{hsptlz}
+            <choose>
+                <when test="hsptlz == '0'">
+                    , MOBILE_USE_YN = 'Y'
+                </when>
+                <otherwise>
+                    , MOBILE_USE_YN = 'N'
+                </otherwise>
+            </choose>
 		</if>
 		<if test="areaIdUpd != null and areaIdUpd != '' ">
 		  , AREA_ID = #{areaIdUpd}
