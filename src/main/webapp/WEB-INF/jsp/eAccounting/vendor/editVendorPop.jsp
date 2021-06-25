@@ -128,7 +128,7 @@ $(document).ready(function () {
     }
 	   */
 
-	AUIGrid.bind(vendorManagementGridID, "cellDoubleClick", function( event )
+	/*AUIGrid.bind(vendorManagementGridID, "cellDoubleClick", function( event )
         {
             console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
             console.log(event);
@@ -148,7 +148,7 @@ $(document).ready(function () {
             }
 
         });
-
+*/
 
 	//console.log('flg: ' + flg);
 	if(flg == 'M')

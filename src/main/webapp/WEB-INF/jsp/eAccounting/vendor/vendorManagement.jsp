@@ -33,25 +33,30 @@ var vendorManagementColumnLayout = [ {
     }
 }, {
 	dataField : "reqNo",
-    headerText : 'Vendor Request No'
+    headerText : 'Vendor Request No',
+    width : "10%"
 }, {
     dataField : "vendorAccId",
-    headerText : 'Supplier Code'
+    headerText : 'Supplier Code',
+    width : "13.5%"
 }, {
     dataField : "vendorName",
-    headerText : 'Name'
+    headerText : 'Name',
+    width : "40%"
 }, {
     dataField : "vendorRegNoNric",
     headerText : 'Company Registration No/IC',
-    width : 140
+    width : "15%"
 }, {
     dataField : "appvPrcssStus",
-    headerText : 'Status'
+    headerText : 'Status',
+    width : "10%"
 }, {
     dataField : "appvPrcssDt",
     headerText : 'Approval Date',
     dataType : "date",
-    formatString : "dd/mm/yyyy"
+    formatString : "dd/mm/yyyy",
+    width : "10%"
 }, {
     dataField : "flg",
     headerText : 'Flag',
@@ -131,7 +136,6 @@ $(document).ready(function () {
 		        	}
 		        	else
 		        	{
-		        		console.log('testing: ' + event.item.flg);
 		        		fn_editVendorPop(event.item.reqNo, event.item.flg, event.item.vendorAccId);
 		        	}
 
