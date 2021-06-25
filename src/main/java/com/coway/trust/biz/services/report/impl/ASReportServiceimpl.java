@@ -78,4 +78,34 @@ public class ASReportServiceimpl extends EgovAbstractServiceImpl implements ASRe
   public List<EgovMap> selectBranchList(Map<String, Object> params) {
     return ASReportMapper.selectBranchList(params);
   }
+
+  @Override
+  public List<EgovMap> selectProductList() {
+	return ASReportMapper.selectProductList();
+  }
+
+  @Override
+  public List<EgovMap> selectDefectTypeList() {
+	return ASReportMapper.selectDefectTypeList();
+  }
+
+  @Override
+  public List<EgovMap> selectDefectRmkList() {
+	return ASReportMapper.selectDefectRmkList();
+  }
+
+  @Override
+  public List<EgovMap> selectDefectDescList() {
+	return ASReportMapper.selectDefectDescList();
+  }
+
+  @Override
+  public List<EgovMap> selectDefectDescSymptomList() {
+	return ASReportMapper.selectDefectDescSymptomList();
+  }
+
+  @Override
+  public List<EgovMap> selectProductTypeList() {
+	return ASReportMapper.selectProductTypeList();
+  }
 }

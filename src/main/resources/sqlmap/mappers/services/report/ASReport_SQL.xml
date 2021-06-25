@@ -228,4 +228,92 @@
     ORDER BY PROJECT.CODE_NAME ASC
   </select>
 
+  <select id="selectProductTypeList" parameterType="Map" resultType="egovMap">
+        SELECT
+              UPPER(CODE_NAME) CODE_ID
+              , CODE_NAME CODE_NAME
+        FROM SYS0013M
+        WHERE DISAB = 0
+           AND CODE_MASTER_ID = '431'
+        ORDER BY CODE_NAME
+  </select>
+
+  <select id="selectProductList" resultType="egovMap">
+    SELECT S.STK_CODE CODE_ID
+         , S.STK_CODE || ' - ' || S.STK_DESC CODE_NAME
+         , C.CODE_NAME GROUP_CD
+    FROM SYS0026M S, SAL0016M P, SYS0013M C
+    WHERE S.STK_ID = P.STK_ID
+      AND S.STK_CTGRY_ID = C.CODE_ID
+      AND S.IS_NCV <![CDATA[<>]]> 1
+      AND S.STUS_CODE_ID = 1
+      AND S.STK_TYPE_ID = 61
+      AND P.AMT <![CDATA[>]]> 0
+      AND UPPER(C.CODE_NAME) NOT IN ('FRAME','MATTRESS')
+    GROUP BY s.STK_ID,
+             s.STK_CODE,
+             s.STK_DESC,
+             c.CODE_NAME
+    ORDER BY c.CODE_NAME,
+             s.STK_DESC
+  </select>
+
+  <select id="selectDefectTypeList" resultType="egovMap">
+    SELECT
+        DEFECT_DESC CODE_ID
+        , DEFECT_DESC CODE_NAME
+        FROM (
+            SELECT
+                DEFECT_ID, DEFECT_DESC
+            FROM SYS0100M
+            WHERE DEFECT_TYP = 'DT'
+                AND DEFECT_STATUS = 1)
+     ORDER BY CODE_ID
+  </select>
+
+  <select id="selectDefectRmkList" resultType="egovMap">
+    SELECT
+        DEFECT_RMK CODE_ID
+        , DEFECT_RMK CODE_NAME
+        FROM (
+            SELECT DISTINCT
+                DEFECT_RMK
+            FROM SYS0100M
+            WHERE DEFECT_TYP = 'DP'
+                AND DEFECT_STATUS = 1
+                AND PROD_CAT IN ('WP','AP','BT','BB','JP','POE')
+        )
+    ORDER BY CODE_ID
+  </select>
+
+  <select id="selectDefectDescList" resultType="egovMap">
+    SELECT
+        DEFECT_DESC CODE_ID
+        , DEFECT_DESC CODE_NAME
+        FROM (
+            SELECT DISTINCT
+                DEFECT_DESC
+            FROM SYS0100M
+            WHERE DEFECT_TYP = 'DP'
+                AND DEFECT_STATUS = 1
+                AND PROD_CAT IN ('WP','AP','BT','BB','JP','POE')
+        )
+    ORDER BY CODE_ID
+  </select>
+
+  <select id="selectDefectDescSymptomList" resultType="egovMap">
+    SELECT
+        DEFECT_DESC CODE_ID
+        , DEFECT_DESC CODE_NAME
+        FROM (
+            SELECT DISTINCT
+                DEFECT_DESC
+            FROM SYS0100M
+            WHERE DEFECT_TYP = 'DD'
+                AND DEFECT_STATUS = 1
+                AND PROD_CAT IN ('WP','AP','BT','BB','JP','POE')
+        )
+    ORDER BY CODE_ID
+  </select>
+
 </mapper>

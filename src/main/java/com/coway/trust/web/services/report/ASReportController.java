@@ -172,4 +172,46 @@ public class ASReportController {
 		return ResponseEntity.ok(memberCode);
 	}
 
+	@RequestMapping(value = "/selectProductTypeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectProductTypeList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+		List<EgovMap> productList = ASReportService.selectProductTypeList();
+		return ResponseEntity.ok(productList);
+	}
+
+	@RequestMapping(value = "/selectProductList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectProductCodeList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+		List<EgovMap> productList = ASReportService.selectProductList();
+		return ResponseEntity.ok(productList);
+	}
+
+	@RequestMapping(value = "/selectDefectTypeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDefectTypeList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+		List<EgovMap> defectTypeList = ASReportService.selectDefectTypeList();
+		return ResponseEntity.ok(defectTypeList);
+	}
+
+	@RequestMapping(value = "/selectDefectRmkList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDefectRmkList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+		List<EgovMap> defectRmkList = ASReportService.selectDefectRmkList();
+		return ResponseEntity.ok(defectRmkList);
+	}
+
+	@RequestMapping(value = "/selectDefectDescList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDefectDescList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+		List<EgovMap> defectDescList = ASReportService.selectDefectDescList();
+		return ResponseEntity.ok(defectDescList);
+	}
+
+	@RequestMapping(value = "/selectDefectDescSymptomList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDefectDescSymptomList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+		List<EgovMap> defectDescSymptomList = ASReportService.selectDefectDescSymptomList();
+		return ResponseEntity.ok(defectDescSymptomList);
+	}
+
 }

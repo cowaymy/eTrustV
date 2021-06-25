@@ -9,12 +9,29 @@
  03/10/2019  ONGHC  1.0.3          Set Date Range Control
  03/10/2019  ONGHC  1.0.4          Add AS Raw Report for 31Days
  17/10/2019  ONGHC  1.0.5          Add After Service (AS) Spare Part Exchange Raw Data [New]
+ 25/06/2021  YONGJH 1.0.6          Change AS Raw PQC report from using ASRawDataSprPrtKOR.rpt to ASRawPQCNew.rpt. Also added search filters
  -->
 
 <script type="text/javaScript">
   $(document).ready(function() {
 
+      doGetCombo('/services/as/report/selectProductTypeList.do', '', '', 'cmbProductType', 'S', '');
+      doGetCombo('/services/as/report/selectProductList.do', '', '', 'cmbProductCode', 'S', '');
+      doGetCombo('/services/as/report/selectDefectTypeList.do', '', '', 'cmbDefectType', 'S', '');
+      doGetCombo('/services/as/report/selectDefectRmkList.do', '', '', 'cmbDefectRmk', 'S', '');
+      doGetCombo('/services/as/report/selectDefectDescList.do', '', '', 'cmbDefectDesc', 'S', '');
+      doGetCombo('/services/as/report/selectDefectDescSymptomList.do', '', '', 'cmbDefectDescSym', 'S', '');
+
   });
+
+  function fn_toggleAdditionalFilter(selVal) {
+	  if(selVal == '3') {
+          $("#reportForm1 .tr_toggle_display").show();
+	  } else {
+		  $('#reportForm1').clearForm();
+          $("#reportForm1 .tr_toggle_display").hide();
+	  }
+  }
 
   function fn_validation() {
 
@@ -70,6 +87,19 @@
           return false;
         }
       }
+    }
+
+    // VALIDATE AS STATUS ONLY FOR AS RAW (PQC)
+    if ($("#reportType").val() == '3') {
+    	if ($("#cmbAsStatus").val() == '') {
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='AS Status' htmlEscape='false'/>");
+            return false;
+    	}
+
+        if ($("#numAsAging").val() < 1 || $("#numAsAging").val() > 200) {
+            Common.alert("<spring:message code='sys.common.alert.validationNumberRange' arguments='AS Aging,1,200' htmlEscape='false'/>");
+            return false;
+        }
     }
 
     return true;
@@ -153,48 +183,93 @@
 
         Common.report("reportForm1", option);
       } else if ($("#reportType").val() == '3') {
-        var date = new Date();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        if (date.getDate() < 10) {
-          day = "0" + date.getDate();
-        }
-        $("#reportForm1").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
-        $("#reportForm1").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
-        $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" /> ');
-        $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2LEFTJOIN" name="V_WHERESQL2LEFTJOIN" /> ');
-        $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
-        $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
-        $("#reportForm1").append('<input type="hidden" id="V_DEPT" name="V_DEPT" /> ');
+          var date = new Date();
+          var month = date.getMonth() + 1;
+          var day = date.getDate();
+          if (date.getDate() < 10) {
+            day = "0" + date.getDate();
+          }
 
-        // Homecare Remove(except)
-        whereSql += " AND B.BNDL_ID IS NULL";
+          var whereSql3 = "";
 
-        //
-        if ($("#settleDateFr").val() != '' && $("#settleDateTo").val() != ''
-            && $("#settleDateFr").val() != null
-            && $("#settleDateTo").val() != null) {
-            whereSql2 = " AND (TO_CHAR(G.AS_SETL_DT,'YYYY-MM-DD')) >= '" + settleDateFrom + "' AND (TO_CHAR(G.AS_SETL_DT,'YYYY-MM-DD')) <= '" + settleDateTo + "' ";
-        } else {
-            whereSql2LeftJoin = " LEFT ";
-        }
+          if ($("#cmbAsStatus").val() != '') {
+              var whereAsStatus = " AND AS_STATUS = '" + $("#cmbAsStatus").val() + "' ";
+              whereSql3 += whereAsStatus;
+          }
 
-        $("#reportForm1 #V_SELECTSQL").val(" ");
-        $("#reportForm1 #V_ORDERBYSQL").val(" ");
-        $("#reportForm1 #V_FULLSQL").val(" ");
-        $("#reportForm1 #V_WHERESQL").val(whereSql);
-        $("#reportForm1 #V_WHERESQL2").val(whereSql2);
-        $("#reportForm1 #V_WHERESQL2LEFTJOIN").val(whereSql2LeftJoin);
-        $("#reportForm1 #reportFileName").val('/services/ASRawPQC.rpt');
-        $("#reportForm1 #viewType").val("EXCEL");
-        $("#reportForm1 #reportDownFileName").val("ASRawPQCData_" + day + month + date.getFullYear());
-        $("#reportForm1 #V_DEPT").val("PQC");
+          if ($("#cmbProductCategory").val() != '') {
+              var wherePrdCat = " AND PRODUCT_CATEGORY = '" + $("#cmbProductCategory").val() + "' ";
+              whereSql3 += wherePrdCat;
+          }
 
-        var option = {
-          isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-        };
+          if ($("#cmbProductType").val() != '') {
+              var wherePrdType = " AND PRODUCT_TYPE = '" + $("#cmbProductType").val() + "' ";
+              whereSql3 += wherePrdType;
+          }
 
-        Common.report("reportForm1", option);
+          if ($("#cmbProductCode").val() != '') {
+              var wherePrdCode = " AND PRODUCT_CODE = '" + $("#cmbProductCode").val() + "' ";
+              whereSql3 += wherePrdCode;
+          }
+
+          if ($("#numAsAging").val() != '') {
+              var whereAsAging = " AND AS_AGING = '" + $("#numAsAging").val() + "' ";
+              whereSql3 += whereAsAging;
+          }
+
+          if ($("#cmbDefectType").val() != '') {
+              var whereDefType = " AND AS_SOLUTION_LARGE = '" + $("#cmbDefectType").val() + "' ";
+              whereSql3 += whereDefType;
+          }
+
+          if ($("#cmbDefectRmk").val() != '') {
+              var whereDefRmk = " AND AS_DEFECT_PART_LARGE = '" + $("#cmbDefectRmk").val() + "' ";
+              whereSql3 += whereDefRmk;
+          }
+
+          if ($("#cmbDefectDesc").val() != '') {
+              var whereDefDesc = " AND AS_DEFECT_PART_SMALL = '" + $("#cmbDefectDesc").val() + "' ";
+              whereSql3 += whereDefDesc;
+          }
+
+          if ($("#cmbDefectDescSym").val() != '') {
+        	  var whereDefDescSym = " AND AS_PROBLEM_SYMPTOM_LARGE = '" + $("#cmbDefectDescSym").val() + "' ";
+        	  whereSql3 += whereDefDescSym;
+          }
+
+          //SP_CR_GEN_AS_RAW_PQC
+          $("#reportForm1").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_WHERESQL2LEFTJOIN" name="V_WHERESQL2LEFTJOIN" /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_WHERESQL3" name="V_WHERESQL3" /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
+          $("#reportForm1").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
+
+          // Homecare Remove(except)
+          whereSql += " AND EXISTS( SELECT 1 "
+                                + "   FROM SAL0001D C "
+                                + "  WHERE A.AS_SO_ID = C.SALES_ORD_ID "
+                                + "    AND C.BNDL_ID IS NULL ) ";
+
+          $("#reportForm1 #V_SELECTSQL").val(" ");
+          $("#reportForm1 #V_ORDERBYSQL").val(" ");
+          $("#reportForm1 #V_FULLSQL").val(" ");
+          $("#reportForm1 #V_WHERESQL").val(whereSql);
+          console.log("V_WHERESQL " + toString($("#reportForm1 #V_WHERESQL").val()));
+          $("#reportForm1 #V_WHERESQL2").val(whereSql2);
+          $("#reportForm1 #V_WHERESQL2LEFTJOIN").val(whereSql2LeftJoin);
+          $("#reportForm1 #V_WHERESQL3").val(whereSql3);
+          //$("#reportForm1 #reportFileName").val('/services/ASRawDataSprPrtKOR.rpt');
+          $("#reportForm1 #reportFileName").val('/services/ASRawPQCNew.rpt');
+          $("#reportForm1 #viewType").val("EXCEL");
+          $("#reportForm1 #reportDownFileName").val("ASRawPQCData_" + day + month + date.getFullYear());
+
+          var option = {
+            isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+          };
+
+          Common.report("reportForm1", option);
       } else if ($("#reportType").val() == '4') {
         var date = new Date();
         var month = date.getMonth() + 1;
@@ -387,13 +462,15 @@
         return $(':input', this).clearForm();
       }
       if (type === 'text' || type === 'password' || type === 'hidden'
-          || tag === 'textarea') {
+          || tag === 'textarea' || type === 'number') {
         this.value = '';
       } else if (type === 'checkbox' || type === 'radio') {
         this.checked = false;
       } else if (tag === 'select') {
-        this.selectedIndex = 1;
+        this.selectedIndex = 0;
       }
+
+      $("#reportForm1 .tr_toggle_display").hide();
 
     });
   };
@@ -441,7 +518,7 @@
      <tbody>
       <tr>
        <th scope="row">Report Type<span id='m1' name='m1' class='must'> *</span></th>
-       <td><select id="reportType" class="w100p" >
+       <td><select id="reportType" class="w100p" onchange="javascript : fn_toggleAdditionalFilter(this.value)">
 <!--          <option value="1">After Service (AS) Raw Data</option> -->
          <option value="5" selected>After Service (AS) Raw Data [New]</option>
          <option value="2">After Service (AS) Spare Part Exchange Raw Data</option>
@@ -489,6 +566,48 @@
         </div>
         <!-- date_set end -->
        </td>
+      </tr>
+      <tr class="tr_toggle_display" style="display:none;">
+        <th scope="row">AS Status<span id='m4' name='m4' class='must'> *</span></th>
+        <td><select id="cmbAsStatus" class="w100p">
+          <option value="">Choose One</option>
+          <option value="ACT">Active</option>
+          <option value="CAN">Cancelled</option>
+          <option value="COM">Completed</option>
+          <option value="RCL">Recall</option>
+        </select></td>
+        <th scope="row">Product Category</th>
+        <td><select id="cmbProductCategory" class="w100p">
+          <option value="">Choose One</option>
+          <option value="AIR PURIFIER">Air Purifier</option>
+          <option value="BIDET">Bidet</option>
+          <option value="JUICER">Juicer</option>
+          <option value="POINT OF ENTRY">Point of Entry</option>
+          <option value="SOFTENER">Softener</option>
+          <option value="WATER PURIFIER">Water Purifier</option>
+        </select></td>
+      </tr>
+      <tr class="tr_toggle_display" style="display:none;">
+        <th scope="row">Product Type</th>
+        <td><select id="cmbProductType" class="w100p" /></td>
+        <th scope="row">Product Code</th>
+        <td><select id="cmbProductCode" class="w100p" /></td>
+      </tr>
+      <tr class="tr_toggle_display" style="display:none;">
+        <th scope="row">AS Aging</th>
+        <td><input id="numAsAging" name="numAsAging" class="w100p" type="number" min="1" max="200" placeholder="min 1 ; max 200"/></td>
+        <th scope="row">AS Solution Large</th>
+        <td><select id="cmbDefectType" class="w100p" /></td>
+      </tr>
+      <tr class="tr_toggle_display" style="display:none;">
+        <th scope="row">AS Defect Part Large</th>
+        <td><select id="cmbDefectRmk" class="w100p" /></td>
+        <th scope="row">AS Defect Part Small</th>
+        <td><select id="cmbDefectDesc" class="w100p" /></td>
+      </tr>
+      <tr class="tr_toggle_display" style="display:none;">
+        <th scope="row">AS Problem Symptom Large</th>
+        <td><select id="cmbDefectDescSym" class="w100p" /></td>
       </tr>
      </tbody>
     </table>

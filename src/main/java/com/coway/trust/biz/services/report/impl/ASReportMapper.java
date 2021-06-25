@@ -36,4 +36,16 @@ public interface ASReportMapper {
   List<EgovMap> selectAsYsAge();
 
   List<EgovMap> selectBranchList(Map<String, Object> params);
+
+  List<EgovMap> selectProductList();
+
+  List<EgovMap> selectDefectTypeList();
+
+  List<EgovMap> selectDefectRmkList();
+
+  List<EgovMap> selectDefectDescList();
+
+  List<EgovMap> selectDefectDescSymptomList();
+
+  List<EgovMap> selectProductTypeList();
 }
