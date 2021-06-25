@@ -42,8 +42,8 @@
                                   , UPLOAD_IMG2 = #{uploadImg2}
                                   <!-- , UPLOAD_IMG3 = #{uploadImg3} -->
                                   , UPLOAD_IMG4 = #{uploadImg4}
+                                  , PAY_STUS_ID = 104
     WHERE MOB_PAY_NO = #{mobPayNo}
         AND SALES_ORD_NO = #{salesOrdNo}
-        AND PAY_STUS_ID = 104
   </update>
 </mapper>
