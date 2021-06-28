@@ -1811,6 +1811,24 @@ public class ReportBatchController {
     LOGGER.info("[END] CustomerHealthScoreRaw_Excel...");
   }
 
+  @RequestMapping(value = "/RentalPaymentSettingRaw_Excel.do")
+//@ScheduledScheduled(cron = "0 30 5 * * *")//Daily (5:30am)
+  public void RentalPaymentSettingRaw_Excel() {
+    LOGGER.info("[START] RentalPaymentSettingRaw_Excel...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/RentalPaymentSettingRaw.rpt");// visualcut
+                                                                                  // rpt
+                                                                                  // file
+                                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "CCP" + File.separator + "Rent_Pay_Set_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] RentalPaymentSettingRaw_Excel...");
+  }
+
   @RequestMapping(value = "/ColorGrid_Daily_2019_Jan_Dec_S.do")
   //@Scheduled(cron = "0 20 5 * * *")//Daily (5:20am)
   public void colorGridDaily2019JanDecS() {
