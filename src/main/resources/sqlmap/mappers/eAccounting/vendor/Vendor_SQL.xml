@@ -70,7 +70,7 @@
 		        JOIN (
 		            SELECT MAX(VENDOR_REQ_NO) REQ_NO
 		            FROM FCM0029D
-		            GROUP BY VENDOR_REG_NO_NRIC
+		            GROUP BY VENDOR_REQ_NO
 		        ) B2
 		        ON B1.VENDOR_REQ_NO = B2.REQ_NO
 		    ) B
