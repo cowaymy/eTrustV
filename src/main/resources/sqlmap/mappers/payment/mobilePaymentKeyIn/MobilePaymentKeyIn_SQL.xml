@@ -60,7 +60,7 @@
                             Extent1.EMAIL_2 EMAIL_2,
                             Extent1.SMS_1 SMS_1,
                             Extent1.SMS_2 SMS_2,
-                            CASE WHEN Extent1.FAIL_RESN_ID > 0 THEN '['|| T6.RESN_DESC || '] - ' || Extent1.PAY_REM
+                            CASE WHEN Extent1.FAIL_RESN_ID > 0 THEN '['|| T6.CODE ||'-'|| T6.RESN_DESC || '] - ' || Extent1.PAY_REM
                                  ELSE Extent1.PAY_REM END PAY_REM,
                             Extent5.CRT_USER_BRNCH CRT_USER_BRNCH,
                             T4.CODE CRT_USER_BRNCH_CD,
