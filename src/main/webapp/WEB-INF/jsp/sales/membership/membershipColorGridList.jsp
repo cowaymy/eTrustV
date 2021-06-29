@@ -2,7 +2,6 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <style type="text/css">
 
-/* 커스텀 행 스타일 */
 .my-yellow-style {
     background:#FFE400;
     font-weight:bold;
@@ -22,12 +21,10 @@
 }
 </style>
 <script type="text/javaScript">
-    //AUIGrid 생성 후 반환 ID
     var myGridID;
 
     $(document).ready(function() {
 
-        // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
 
         $("#orgCode").val($("#orgCode").val().trim());
@@ -67,17 +64,13 @@
                 $("#deptCode").val("${deptCode}");
                 $("#deptCode").attr("class", "w100p readonly");
                 $("#deptCode").attr("readonly", "readonly");
-
             }
         }
 
     });
 
     function createAUIGrid() {
-        // AUIGrid 칼럼 설정
 
-        // 데이터 형태는 다음과 같은 형태임,
-        //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
                 dataField : "mbrshNo",
                 headerText : "<spring:message code='sal.title.mbrshNo' />",
@@ -178,9 +171,7 @@
 
         var gridPros = {
 
-            // 페이징 사용
             usePaging : true,
-            // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 20,
             editable : true,
             fixedColumnCount : 1,
@@ -188,15 +179,10 @@
             displayTreeOpen : true,
             selectionMode : "multipleCells",
             headerHeight : 30,
-            // 그룹핑 패널 사용
             useGroupingPanel : false,
-            // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             skipReadonlyColumns : true,
-            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
-            // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : false,
-
             groupingMessage : "Here groupping"
         };
 
