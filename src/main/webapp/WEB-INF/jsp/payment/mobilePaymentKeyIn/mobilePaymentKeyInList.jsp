@@ -1557,7 +1557,9 @@
     <dt>Link</dt>
     <dd>
      <ul class="btns">
+     <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
        <li><p class="link_btn"><a href="#" id="btnCdKeyinErrorSummary"><spring:message code='pay.btn.cdKeyinErrorSummary'/></a></p></li>
+     </c:if>
      </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
