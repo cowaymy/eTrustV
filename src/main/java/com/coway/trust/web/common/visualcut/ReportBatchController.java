@@ -760,6 +760,23 @@ public class ReportBatchController {
     LOGGER.info("[END] HP_OwnPurchase...");
   }
 
+  @RequestMapping(value = "/DailyCollectionRaw.do")
+  //@Scheduled(cron = "0 45 5 * * WED") // every Wednesday
+  // http://fmaker7.tistory.com/163
+  public void DailyCollectionRaw() throws IOException {
+    LOGGER.info("[START] DailyCollectionRaw...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/DailyCollectionRaw.rpt");// visualcut
+                                                                  // rpt file
+                                                                  // name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Finance_Control" + File.separator + "DailyCollectionRaw_" + CommonUtils.getNowDate() + ".xls");
+
+    this.view(null, null, params);
+    LOGGER.info("[END] DailyCollectionRaw...");
+  }
+
   @RequestMapping(value = "/LCD_StockTransfer.do")
   //@Scheduled(cron = "0 50 4 * * *")
   public void lcdStockTransfer() throws IOException {
@@ -1812,7 +1829,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/RentalPaymentSettingRaw_Excel.do")
-//@ScheduledScheduled(cron = "0 30 5 * * *")//Daily (5:30am)
+//@Scheduled(cron = "0 30 5 * * *")//Daily (5:30am)
   public void RentalPaymentSettingRaw_Excel() {
     LOGGER.info("[START] RentalPaymentSettingRaw_Excel...");
     Map<String, Object> params = new HashMap<>();
