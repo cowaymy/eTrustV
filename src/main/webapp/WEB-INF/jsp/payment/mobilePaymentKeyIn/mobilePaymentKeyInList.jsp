@@ -60,7 +60,7 @@
   var actData= [{"codeId": "21","codeName": "Failed"},{"codeId": "6","codeName": "Reject"}];
 
   $(document).ready(function() {
-    // AUIGrid 그리드를 생성합니다.
+
     doDefCombo(actData, '' ,'_action', 'S', '');
 
     createAUIGrid();
@@ -1404,9 +1404,9 @@
 	$("#reportDownFileName").val(title); //Download File Name
     $("#V_WHERESQL").val(v_whereSQL);// Procedure Param
 
-    console.log(v_whereSQL);
+/*     console.log(v_whereSQL);
     console.log($("#V_WHERESQL").val());
-
+ */
     var option = {
             isProcedure : true
     };
@@ -1423,6 +1423,11 @@
     $('#btnCdKeyinErrorSummary').click(function(e){
     	doGetCombo('/common/selectCodeList.do', '49', '','_region', 'M' , 'f_multiCombo'); //region
 
+    	if("${SESSION_INFO.userTypeId}" == "4" || "${SESSION_INFO.userTypeId}" == "6") {
+    		$('#_branch').multipleSelect("enable");
+    	}
+
+        $('#_branch').multipleSelect("setSelects", [42]);
         $('#errSum_wrap').show();
     });
   });
@@ -1867,7 +1872,7 @@
                  <tr>
                      <th scope="row"><spring:message code='pay.head.branch'/></th>
                         <td>
-                        <select class="multy_select w100p" id="_branch" name="_branch" multiple="multiple">
+                        <select class="multy_select w100p" id="_branch" name="_branch" multiple="multiple" disabled>
 				                <c:forEach var="list" items="${userBranch}" varStatus="status">
 				                  <option value="${list.branchid}">${list.c1}</option>
 				                </c:forEach>
