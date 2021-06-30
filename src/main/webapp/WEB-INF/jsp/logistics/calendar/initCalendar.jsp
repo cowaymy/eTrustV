@@ -8,8 +8,9 @@
                                            search request will "automatically" clear the calendar contents (this is desired). If I use Ajax to populate
                                            calendar search result, it will require additional Javascript for clearing and resetting calendar contents.
                                            Refactor to use Ajax if required in the future.
-
  04/06/2021  YONGJH  1.0.1      Move inline styling to <style> tag. Add CSS to show pop up for calendar events.
+ 01/07/2021  YONGJH  1.0.1      Refactored to use Ajax (refer first remark). Due to authorization issues
+
 -->
 
 <style type="text/css">
@@ -100,33 +101,116 @@ td:nth-child(6) .cal-tooltip, td:nth-child(7) .cal-tooltip {
 
 $(document).ready(function(){
 
-    var eventListJson = JSON.parse('${eventListJsonStr}');
+	// *** set initial values when Calendar first loaded - start
+	var eventList = JSON.parse('${eventListJsonStr}');
 
-    var i;
-    var j = eventListJson.length;
-    for (i = 0; i < j; i++) {
-        var selectorDt = '#calDt' + eventListJson[i].dayOfMonth;
-        $(selectorDt).append("- " + eventListJson[i].eventDesc + "<br>");
+	var initData = {
+		     "eventList" : eventList ,
+		     "dayOfWeekFirstDt" : "${dayOfWeekFirstDt}" ,
+		     "lastDateOfMonth" : "${lastDateOfMonth}" ,
+		     "displayMth" : "${displayMth}" ,
+		     "displayYear" : "${displayYear}" ,
+		     "calMemType" : "${calMemType}"
+		     };
 
-        var selectorDtHidden = '#calDtHidden' + eventListJson[i].dayOfMonth;
-        $(selectorDtHidden).append("- " + eventListJson[i].eventDesc + "<br>");
-    }
-
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-                        "July", "August", "September", "October", "November", "December"];
-
-    $("#displayMth").text(monthNames[ "${displayMth}" - 1]);
-    $("#displayYear").text("${displayYear}");
-
-    fn_setSearchAttr(); // set fields back to values used in previous search, because ajax not used. See note at beginning of JSP.
-    fn_setMemTypeVisibility();
+	fn_setupCalendar(initData);
+	fn_setSearchAttr();
+	// *** set initial values when Calendar first loaded - end
 
 });
 
 function fn_searchCalendar() {
 	if (fn_validateSearch()) {
-	    document.getElementById("calSearchForm").submit();
+        var param =  $("#calSearchForm").serialize();
+        Common.ajax("GET", "/logistics/calendar/selectCalendarEvents.do", param, function(result) {
+        	console.log("result.eventList JSON stringify:" +JSON.stringify(result.eventList));
+            fn_setupCalendar(result);
+        });
 	}
+}
+
+function fn_setupCalendar(result) {
+    $(".cal-row").remove();
+    fn_populateCalendarHeader(result);
+    fn_constructCalendar(result);
+    fn_populateCalendarEvents(result);
+    fn_setMemTypeVisibility();
+}
+
+function fn_populateCalendarHeader(rData) {
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"];
+
+    $("#displayMth").text(monthNames[rData.displayMth - 1]);
+    $("#displayYear").text(rData.displayYear);
+
+}
+
+function fn_populateCalendarEvents(rData) {
+    var i;
+    var j = rData.eventList.length;
+    for (i = 0; i < j; i++) {
+        var selectorDt = '#calDt' + rData.eventList[i].dayOfMonth;
+        $(selectorDt).append("- " + rData.eventList[i].eventDesc + "<br>");
+
+        var selectorDtHidden = '#calDtHidden' + rData.eventList[i].dayOfMonth;
+        $(selectorDtHidden).append("- " + rData.eventList[i].eventDesc + "<br>");
+    }
+}
+
+function fn_constructCalendar(rData) {
+	var dateCounter = 1;
+	var createNewRow = true;
+
+    // *********  create the first row - start
+    var calRowFirstHtml = "<tr class='cal-row'>";
+	for (var columnCounter = 1; columnCounter < 8; columnCounter++) {
+		if ((rData.dayOfWeekFirstDt == 0 && columnCounter == 7)
+				|| (columnCounter == rData.dayOfWeekFirstDt)){
+			calRowFirstHtml = calRowFirstHtml + fn_constructHTML(dateCounter);
+		} else if ((rData.dayOfWeekFirstDt != 0) && (columnCounter > rData.dayOfWeekFirstDt)) {
+			dateCounter += 1;
+			calRowFirstHtml = calRowFirstHtml + fn_constructHTML(dateCounter);
+		} else {
+			calRowFirstHtml = calRowFirstHtml + "<td class='empty-cell'/>";
+		}
+	}
+	calRowFirstHtml = calRowFirstHtml + "</tr>";
+	document.getElementById("calTable").innerHTML = document.getElementById("calTable").innerHTML + calRowFirstHtml;
+	// *********  create the first row - end
+
+    // *********  create subsequent rows - start
+	for (var rowCounter = 0; rowCounter < 5; rowCounter++) {
+
+		if (createNewRow){
+		    var calRowNextHtml = "<tr class='cal-row'>";
+			for (var columnCounter = 1; columnCounter < 8; columnCounter++) {
+				dateCounter += 1;
+				if (dateCounter <= rData.lastDateOfMonth) {
+					calRowNextHtml = calRowNextHtml + fn_constructHTML(dateCounter);
+	                if (dateCounter == rData.lastDateOfMonth) {
+	                	createNewRow = false;
+	                }
+				} else {
+					calRowNextHtml = calRowNextHtml + "<td class='empty-cell'/>";
+				}
+			}
+			calRowNextHtml = calRowNextHtml + "</tr>";
+		    document.getElementById("calTable").innerHTML = document.getElementById("calTable").innerHTML + calRowNextHtml;
+		}
+	}
+    // *********  create subsequent rows - end
+
+}
+
+function fn_constructHTML(dateCounterVal) {
+	var htmlString = "<td class='cal-date'>"
+        + "<div class='cal-date-number'>" + dateCounterVal + "</div>"
+        + "<div class='cal-event-list'>"
+        + "<span class='event-text' id='calDt" + dateCounterVal + "'></span>"
+        + "<span class='cal-tooltip' id='calDtHidden" + dateCounterVal + "'></span>"
+        + "</div></td>";
+	return htmlString;
 }
 
 function fn_validateSearch() {
@@ -239,7 +323,7 @@ function fn_setMemTypeVisibility() {
   <section class="search_result"><!-- search_result start -->
     <c:set var="dateCounter" value="1"/>
     <c:set var="createNewRow" value="true"/>
-    <table class="type1 cal-result">
+    <table class="type1 cal-result" id="calTable">
       <tr>
         <th class="cal-header-month" id="displayMth" scope="column"></th>
         <th class="cal-header-year" id="displayYear" scope="column" colspan="6"></th>
@@ -253,73 +337,6 @@ function fn_setMemTypeVisibility() {
         <th class="day-of-week">Saturday</th>
         <th class="day-of-week">Sunday</th>
       </tr>
-
-      <%--Populate Calendar first row --%>
-      <tr>
-        <c:forEach begin="1" end="7" varStatus="columnCounter"> <%-- Check for "dayOfWeekFirstDt == 0" is to handle cases where 1st day of month falls on Sunday --%>
-          <c:choose>
-            <c:when test="${(dayOfWeekFirstDt == 0) && (columnCounter.count == 7)}">
-              <td class="cal-date">
-                <div class="cal-date-number">${dateCounter}</div>
-                <div class="cal-event-list">
-                  <span class="event-text" id="calDt${dateCounter}"></span>
-                  <span class="cal-tooltip" id="calDtHidden${dateCounter}"></span>
-                </div>
-              </td>
-            </c:when>
-            <c:when test="${columnCounter.count == dayOfWeekFirstDt}">
-              <td class="cal-date">
-                <div class="cal-date-number">${dateCounter}</div>
-                <div class="cal-event-list">
-                  <span class="event-text" id="calDt${dateCounter}"></span>
-                  <span class="cal-tooltip" id="calDtHidden${dateCounter}"></span>
-                </div>
-              </td>
-            </c:when>
-            <c:when test="${((dayOfWeekFirstDt != 0)) && (columnCounter.count gt dayOfWeekFirstDt)}">
-              <c:set var="dateCounter" value="${dateCounter + 1}"/>
-              <td class="cal-date">
-                <div class="cal-date-number">${dateCounter}</div>
-                <div class="cal-event-list">
-                  <span class="event-text" id="calDt${dateCounter}"></span>
-                  <span class="cal-tooltip" id="calDtHidden${dateCounter}"></span>
-                </div>
-              </td>
-            </c:when>
-            <c:otherwise>
-              <td class="empty-cell"/>
-            </c:otherwise>
-          </c:choose>
-        </c:forEach>
-      </tr>
-
-      <%--Populate Calendar subsequent rows --%>
-      <c:forEach begin="0" end="4">
-        <c:if test="${createNewRow}">
-          <tr>
-            <c:forEach begin="1" end="7">
-            <c:set var="dateCounter" value="${dateCounter + 1}"/>
-              <c:choose>
-                <c:when test="${dateCounter le lastDateOfMonth}">
-                  <td class="cal-date">
-                    <div class="cal-date-number">${dateCounter}</div>
-                    <div class="cal-event-list">
-                      <span class="event-text" id="calDt${dateCounter}"></span>
-                      <span class="cal-tooltip" id="calDtHidden${dateCounter}"></span>
-                    </div>
-                  </td>
-                  <c:if test="${dateCounter == lastDateOfMonth}">
-                    <c:set var="createNewRow" value="false"/>
-                  </c:if>
-                </c:when>
-                <c:otherwise>
-                  <td class="empty-cell"/>
-                </c:otherwise>
-              </c:choose>
-            </c:forEach>
-          </tr>
-        </c:if>
-      </c:forEach>
     </table>
   </section><!-- search_result end -->
 </section><!-- content end -->

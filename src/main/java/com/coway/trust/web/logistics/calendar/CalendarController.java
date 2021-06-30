@@ -73,7 +73,6 @@ public class CalendarController {
 		String monthYear = prefixMonth + calMonth + "/" + calYear;
 
 		params.put("calMonthYear", monthYear);
-
 		params.put("calMemType", (int) sessionVO.getUserTypeId());
 
 		if (sessionVO.getUserTypeId() == 4) { //Staff
@@ -96,8 +95,8 @@ public class CalendarController {
 		return "logistics/calendar/initCalendar";
 	}
 
-	@RequestMapping(value = "/selectCalendarEvents.do", method = RequestMethod.POST)
-	public String selectCalendarEvents(@RequestParam Map<String, Object> params
+	@RequestMapping(value = "/selectCalendarEvents.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectCalendarEvents(@RequestParam Map<String, Object> params
 			, HttpServletRequest request
 			, ModelMap model
 			, SessionVO sessionVO
@@ -116,20 +115,17 @@ public class CalendarController {
 		int dayOfWeekFirstDt = cal.get(Calendar.DAY_OF_WEEK) - 1;//minus one as calendar will show MON instead of SUN on first column
 		int lastDateOfMonth = cal.getActualMaximum(Calendar.DATE);
 
-		String eventListJsonStr = new Gson().toJson(eventList);
-
-		model.put("eventListJsonStr", eventListJsonStr);
-		model.put("dayOfWeekFirstDt", dayOfWeekFirstDt);
-		model.put("lastDateOfMonth", lastDateOfMonth);
-
 		String[] splitMthYr = ((String) params.get("calMonthYear")).split("/");
 
-		model.put("displayMth", splitMthYr[0]);
-		model.put("displayYear", splitMthYr[1]);
+		Map<String, Object> hm = new HashMap<>();
+		hm.put("eventList", eventList);
+		hm.put("dayOfWeekFirstDt", dayOfWeekFirstDt);
+		hm.put("lastDateOfMonth", lastDateOfMonth);
+		hm.put("displayMth", splitMthYr[0]);
+		hm.put("displayYear", splitMthYr[1]);
+		hm.put("calMemType", params.get("calMemType"));
 
-		model.put("calMemType", params.get("calMemType"));
-
-		return "/logistics/calendar/initCalendar";
+		return ResponseEntity.ok(hm);
 	}
 
 	@RequestMapping(value = "/calendarEventFileUploadPop.do")
