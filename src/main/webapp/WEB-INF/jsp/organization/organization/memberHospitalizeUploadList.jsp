@@ -44,10 +44,13 @@
                 Common.alert('<spring:message code="commission.alert.incentive.noSelect"/>');
             }else{
 
-                 /* if(stusId != 1){
+                 if(stusId != 1){
                 	 $('#btnConfirm').hide();
                      $('#btnDeactive').hide();
-                 } */
+                 }else{
+                	 $('#btnConfirm').show();
+                     $('#btnDeactive').show();
+                 }
 
                 $('#details_uploadId').text(uploadId);
                 $('#details_status').text(AUIGrid.getCellValue(hsptlzGridID, event.rowIndex, "name"));
@@ -264,7 +267,7 @@
 
                     Common.ajaxFile("/organization/hospitalizeUploadFile.do", formData, function (result) {
                         $("#search").click();
-                      ment.newForm.reset();
+                      document.newForm.reset();
                         Common.alert('<spring:message code="commission.alert.incentive.new.success" arguments="'+result+'" htmlEscape="false"/>');
 
                     });
@@ -381,12 +384,10 @@
         </p>
         <h2>Hospitalize Upload</h2>
         <ul class="right_btns">
-            <%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
-            <li><p class="btn_blue"><a href="javascript:newUploadPop();">New Upload</a></p></li>
-            <%-- </c:if> --%>
-            <%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+                <li><p class="btn_blue"><a href="javascript:newUploadPop();">New Upload</a></p></li>
                 <li><p class="btn_blue"><a href="#" id="search"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
-            <%-- </c:if> --%>
+            </c:if>
             <li><p class="btn_blue"><a href="javascript:fn_clearSearchForm();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
