@@ -4976,14 +4976,6 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		<if test="hsptlz != null and hsptlz != '' ">
 		  , HSPTLZ = #{hsptlz}
 		</if>
-        <choose>
-             <when test="hsptlz == 1">
-                 , MOBILE_USE_YN = 'N'
-             </when>
-             <otherwise>
-                 , MOBILE_USE_YN = 'Y'
-             </otherwise>
-        </choose>
 		<if test="areaIdUpd != null and areaIdUpd != '' ">
 		  , AREA_ID = #{areaIdUpd}
 		</if>

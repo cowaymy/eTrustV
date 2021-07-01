@@ -553,9 +553,13 @@ $(document).ready(function() {
 
         $("#hsptlzCheck").change(function() {
         	if($("#hsptlzCheck").is(":checked") == true){
-        		$('input:radio[name="mobileUseYn"]').filter('[value="N"]').prop('checked', true);
+        		$('input:radio[name="mobileUseYn"][value="N"]').prop('checked', true);
+        		$('#mobileUseYn').val("N");
+        		$('#mobileUseYn').change();
             }else{
-                $('input:radio[name="mobileUseYn"]').filter('[value="Y"]').prop('checked', true);
+                $('input:radio[name="mobileUseYn"][value="Y"]').prop('checked', true);
+                $('#mobileUseYn').val("Y");
+                $('#mobileUseYn').change();
             }
         });
     }
