@@ -41,7 +41,7 @@ function fn_memberSave(){
 
     $.extend(jsonObj, {'memberType' : $("#memberType").val()});
 
-    console.log("-------------------------" + JSON.stringify(jsonObj));
+    console.log(JSON.stringify(jsonObj));
     Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
         console.log("message : " + result.message );
         Common.alert(result.message, fn_close);
@@ -550,6 +550,14 @@ $(document).ready(function() {
             $("#spouseContatUpd").val($("#spouseContat").val());
         });
         // Spouse Tab on change append - end
+
+        $("#hsptlzCheck").change(function() {
+        	if($("#hsptlzCheck").is(":checked") == true){
+        		$('input:radio[name="mobileUseYn"]').filter('[value="N"]').prop('checked', true);
+            }else{
+                $('input:radio[name="mobileUseYn"]').filter('[value="Y"]').prop('checked', true);
+            }
+        });
     }
 
     // Address Tab on change append - start
