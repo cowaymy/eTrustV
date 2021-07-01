@@ -67,8 +67,6 @@
                 $('#totalInvalidTxt').text(AUIGrid.getCellValue(hsptlzGridID, event.rowIndex, "totalInvalid"));
                 $('#details_orgType').text(AUIGrid.getCellValue(hsptlzGridID, event.rowIndex, "codename1"));
 
-                $('#conForm #conForm_uploadId').val(uploadId);
-
                 $('#popupDetails_wrap').show();
                 fn_createItemGrid();
             }
@@ -328,7 +326,14 @@
         itemGridID = AUIGrid.create("#grid_wrap_confirm", columnLayout2,gridPros2);
         AUIGrid.resize(itemGridID);
 
-        Common.ajax("GET", "/organization/selectHospitalizeDetails.do", $("#conForm").serialize(), function(result) {
+        fn_itemDetailSearch('');
+
+    }
+
+    function fn_itemDetailSearch(statusId){
+
+    	var data = {uploadId :uploadId, statusId :statusId};
+    	Common.ajax("GET", "/organization/selectHospitalizeDetails.do", data, function(result) {
             AUIGrid.setGridData(itemGridID, result);
         });
 
@@ -565,13 +570,8 @@
 	</tbody>
 	</table><!-- table end -->
 
-	<form id="conForm" name="conForm">
-	    <input type="hidden" name="conForm_uploadId" id="conForm_uploadId">
-	    <input type="hidden" name="vStusId" id="vStusId">
-	</form>
-
 	<ul class="right_btns">
-	    <li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('0');"><spring:message code='commission.button.allItem'/></a></p></li>
+	    <li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('');"><spring:message code='commission.button.allItem'/></a></p></li>
 	    <li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('4');"><spring:message code='commission.button.viildItem'/></a></p></li>
 	    <li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('21');"><spring:message code='commission.button.invaildItem'/></a></p></li>
 	</ul>
