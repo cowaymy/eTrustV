@@ -14,23 +14,113 @@
 
 <script type="text/javaScript">
   $(document).ready(function() {
-
-      doGetCombo('/services/as/report/selectProductTypeList.do', '', '', 'cmbProductType', 'S', '');
-      doGetCombo('/services/as/report/selectProductList.do', '', '', 'cmbProductCode', 'S', '');
-      doGetCombo('/services/as/report/selectDefectTypeList.do', '', '', 'cmbDefectType', 'S', '');
-      doGetCombo('/services/as/report/selectDefectRmkList.do', '', '', 'cmbDefectRmk', 'S', '');
-      doGetCombo('/services/as/report/selectDefectDescList.do', '', '', 'cmbDefectDesc', 'S', '');
-      doGetCombo('/services/as/report/selectDefectDescSymptomList.do', '', '', 'cmbDefectDescSym', 'S', '');
-
+      $("#m5").hide(); //hide mandatory indicator (*) for Settle Date
+	  fn_populateComboOption();
   });
 
   function fn_toggleAdditionalFilter(selVal) {
 	  if(selVal == '3') {
           $("#reportForm1 .tr_toggle_display").show();
+          $("#m2").hide(); //hide mandatory indicator (*) for Request Date
+          $("#m3").hide(); //hide mandatory indicator (*) for Date Option
+          $("#m5").show(); //show mandatory indicator (*) for Settle Date
 	  } else {
 		  $('#reportForm1').clearForm();
           $("#reportForm1 .tr_toggle_display").hide();
+          $("#m2").show();
+          $("#m3").show();
+          $("#m5").hide();
 	  }
+  }
+
+  function fn_populateComboOption() {
+      doGetCombo('/services/as/report/selectProductTypeList.do', '', '', 'cmbProductType', 'M', 'f_multiCombo');
+      doGetCombo('/services/as/report/selectProductList.do', '', '', 'cmbProductCode', 'M', 'f_multiCombo');
+      doGetCombo('/services/as/report/selectDefectTypeList.do', '', '', 'cmbDefectType', 'M', 'f_multiCombo');
+      doGetCombo('/services/as/report/selectDefectRmkList.do', '', '', 'cmbDefectRmk', 'M', 'f_multiCombo');
+      doGetCombo('/services/as/report/selectDefectDescList.do', '', '', 'cmbDefectDesc', 'M', 'f_multiCombo');
+      doGetCombo('/services/as/report/selectDefectDescSymptomList.do', '', '', 'cmbDefectDescSym', 'M', 'f_multiCombo');
+      fn_createAsAgingCombo();
+  }
+
+  function fn_createAsAgingCombo() {
+      var selectAsAging = document.getElementById("cmbAsAging");
+      for(var i = 0; i < 201; i++) {
+          var elOption = document.createElement("option");
+          elOption.textContent = i;
+          elOption.value = i;
+          selectAsAging.appendChild(elOption);
+      }
+  }
+
+  function f_multiCombo(){
+      $(function() {
+
+          $('#cmbAsStatus').change(function() {
+
+          }).multipleSelect({
+              selectAll: true,
+              width: '80%'
+          });
+
+          $('#cmbProductCategory').change(function() {
+
+          }).multipleSelect({
+              selectAll: true,
+              width: '80%'
+          });
+
+
+          $('#cmbProductType').change(function() {
+
+          }).multipleSelect({
+              selectAll: true,
+              width: '80%'
+          });
+
+          $('#cmbProductCode').change(function() {
+
+          }).multipleSelect({
+        	  selectAll: true,
+        	  width: '80%'
+          });
+
+          $('#cmbAsAging').change(function() {
+
+          }).multipleSelect({
+              selectAll: true,
+              width: '80%'
+          });
+
+          $('#cmbDefectType').change(function() {
+
+          }).multipleSelect({
+              selectAll: true,
+              width: '80%'
+          });
+
+          $('#cmbDefectRmk').change(function() {
+
+          }).multipleSelect({
+              selectAll: true,
+              width: '80%'
+          });
+
+          $('#cmbDefectDesc').change(function() {
+
+          }).multipleSelect({
+              selectAll: true,
+              width: '80%'
+          });
+
+          $('#cmbDefectDescSym').change(function() {
+
+          }).multipleSelect({
+              selectAll: true,
+              width: '80%'
+          });
+
+      });
   }
 
   function fn_validation() {
@@ -43,16 +133,22 @@
         Common.alert("<spring:message code='sys.common.alert.validation' arguments='type' htmlEscape='false'/>");
         return false;
       }
-    if ($("#reqstDateFr").val() == '' || $("#reqstDateTo").val() == '') {
+    if (($("#reqstDateFr").val() == '' || $("#reqstDateTo").val() == '') && $("#reportType").val() != '3') {
       Common.alert("<spring:message code='sys.common.alert.validation' arguments='request date (From & To)' htmlEscape='false'/>");
       return false;
     }
+
+    if (($("#settleDateFr").val() == '' || $("#settleDateTo").val() == '') && $("#reportType").val() == '3') {
+        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Settle date (From & To)' htmlEscape='false'/>");
+        return false;
+    }
+
     if ($("#settleDateFr").val() != '' && $("#settleDateTo").val() == '') {
-        Common.alert("<spring:message code='sys.common.alert.validation' arguments='settle date (To)' htmlEscape='false'/>");
+        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Settle date (To)' htmlEscape='false'/>");
         return false;
     }
     if ($("#settleDateFr").val() == '' && $("#settleDateTo").val() != '') {
-        Common.alert("<spring:message code='sys.common.alert.validation' arguments='settle date (From)' htmlEscape='false'/>");
+        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Settle date (From)' htmlEscape='false'/>");
         return false;
     }
 
@@ -87,19 +183,39 @@
           return false;
         }
       }
+
+      // VALIDATE SETTLE DATE ONLY FOR AS RAW (PQC)
+      if ($("#reportType").val() == '3' ) {
+    	  if ($("#settleDateFr").val() != '' || $("#reqstDateTo").val() != '') {
+    		  var keyInDateFrom = $("#settleDateFr").val().substring(3, 5) + "/"
+                            + $("#settleDateFr").val().substring(0, 2) + "/"
+                            + $("#settleDateFr").val().substring(6, 10);
+
+    		  var keyInDateTo = $("#settleDateTo").val().substring(3, 5) + "/"
+                          + $("#settleDateTo").val().substring(0, 2) + "/"
+                          + $("#settleDateTo").val().substring(6, 10);
+
+    		  var date1 = new Date(keyInDateFrom);
+    		  var date2 = new Date(keyInDateTo);
+
+    		  var diff_in_time = date2.getTime() - date1.getTime();
+
+    		  var diff_in_days = diff_in_time / (1000 * 3600 * 24);
+
+    		  if (diff_in_days > dtRange) {
+    			    Common.alert("<spring:message code='sys.common.alert.dtRangeNtMore' arguments='" + dtRange + "' htmlEscape='false'/>");
+    			    return false;
+    	      }
+    	  }
+      }
     }
 
     // VALIDATE AS STATUS ONLY FOR AS RAW (PQC)
     if ($("#reportType").val() == '3') {
-    	if ($("#cmbAsStatus").val() == '') {
+    	if ($("#cmbAsStatus").val() == '' || $("#cmbAsStatus").val() == null) {
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='AS Status' htmlEscape='false'/>");
             return false;
     	}
-
-        if ($("#numAsAging").val() < 1 || $("#numAsAging").val() > 200) {
-            Common.alert("<spring:message code='sys.common.alert.validationNumberRange' arguments='AS Aging,1,200' htmlEscape='false'/>");
-            return false;
-        }
     }
 
     return true;
@@ -107,6 +223,7 @@
 
   function fn_openGenerate() {
     if (fn_validation()) {
+        console.log("cmbProductType: " + $('#cmbProductType').val());
       var whereSql = "";
       var whereSql2 = "";
       var whereSql2LeftJoin = "";
@@ -192,48 +309,48 @@
 
           var whereSql3 = "";
 
-          if ($("#cmbAsStatus").val() != '') {
-              var whereAsStatus = " AND AS_STATUS = '" + $("#cmbAsStatus").val() + "' ";
+          if ($("#cmbAsStatus").val() != '' && $("#cmbAsStatus").val() != null) {
+              var whereAsStatus = " AND AS_STATUS IN ('" + $("#cmbAsStatus").val().toString().replace(/,/g, "','") + "') ";
               whereSql3 += whereAsStatus;
           }
 
-          if ($("#cmbProductCategory").val() != '') {
-              var wherePrdCat = " AND PRODUCT_CATEGORY = '" + $("#cmbProductCategory").val() + "' ";
+          if ($("#cmbProductCategory").val() != '' && $("#cmbProductCategory").val() != null) {
+              var wherePrdCat = " AND PRODUCT_CATEGORY IN ('" + $("#cmbProductCategory").val().toString().replace(/,/g, "','") + "') ";
               whereSql3 += wherePrdCat;
           }
 
-          if ($("#cmbProductType").val() != '') {
-              var wherePrdType = " AND PRODUCT_TYPE = '" + $("#cmbProductType").val() + "' ";
+          if ($("#cmbProductType").val() != '' && $("#cmbProductType").val() != null) {
+        	  var wherePrdType = " AND PRODUCT_TYPE IN ('" + $("#cmbProductType").val().toString().replace(/,/g, "','") + "') ";
               whereSql3 += wherePrdType;
           }
 
-          if ($("#cmbProductCode").val() != '') {
-              var wherePrdCode = " AND PRODUCT_CODE = '" + $("#cmbProductCode").val() + "' ";
+          if ($("#cmbProductCode").val() != '' && $("#cmbProductCode").val() != null) {
+              var wherePrdCode = " AND PRODUCT_CODE IN ('" + $("#cmbProductCode").val().toString().replace(/,/g, "','") + "') ";
               whereSql3 += wherePrdCode;
           }
 
-          if ($("#numAsAging").val() != '') {
-              var whereAsAging = " AND AS_AGING = '" + $("#numAsAging").val() + "' ";
+          if ($("#cmbAsAging").val() != '' && $("#cmbAsAging").val() != null) {
+              var whereAsAging = " AND AS_AGING IN ('" + $("#cmbAsAging").val().toString().replace(/,/g, "','") + "') ";
               whereSql3 += whereAsAging;
           }
 
-          if ($("#cmbDefectType").val() != '') {
-              var whereDefType = " AND AS_SOLUTION_LARGE = '" + $("#cmbDefectType").val() + "' ";
+          if ($("#cmbDefectType").val() != '' && $("#cmbDefectType").val() != null) {
+              var whereDefType = " AND AS_SOLUTION_LARGE IN ('" + $("#cmbDefectType").val().toString().replace(/,/g, "','") + "') ";
               whereSql3 += whereDefType;
           }
 
-          if ($("#cmbDefectRmk").val() != '') {
-              var whereDefRmk = " AND AS_DEFECT_PART_LARGE = '" + $("#cmbDefectRmk").val() + "' ";
+          if ($("#cmbDefectRmk").val() != '' && $("#cmbDefectRmk").val() != null) {
+              var whereDefRmk = " AND AS_DEFECT_PART_LARGE IN ('" + $("#cmbDefectRmk").val().toString().replace(/,/g, "','") + "') ";
               whereSql3 += whereDefRmk;
           }
 
-          if ($("#cmbDefectDesc").val() != '') {
-              var whereDefDesc = " AND AS_DEFECT_PART_SMALL = '" + $("#cmbDefectDesc").val() + "' ";
+          if ($("#cmbDefectDesc").val() != '' && $("#cmbDefectDesc").val() != null) {
+              var whereDefDesc = " AND AS_DEFECT_PART_SMALL IN ('" + $("#cmbDefectDesc").val().toString().replace(/,/g, "','") + "') ";
               whereSql3 += whereDefDesc;
           }
 
-          if ($("#cmbDefectDescSym").val() != '') {
-        	  var whereDefDescSym = " AND AS_PROBLEM_SYMPTOM_LARGE = '" + $("#cmbDefectDescSym").val() + "' ";
+          if ($("#cmbDefectDescSym").val() != '' && $("#cmbDefectDescSym").val() != null) {
+        	  var whereDefDescSym = " AND AS_PROBLEM_SYMPTOM_LARGE IN ('" + $("#cmbDefectDescSym").val().toString().replace(/,/g, "','") + "') ";
         	  whereSql3 += whereDefDescSym;
           }
 
@@ -462,7 +579,7 @@
         return $(':input', this).clearForm();
       }
       if (type === 'text' || type === 'password' || type === 'hidden'
-          || tag === 'textarea' || type === 'number') {
+          || tag === 'textarea') {
         this.value = '';
       } else if (type === 'checkbox' || type === 'radio') {
         this.checked = false;
@@ -550,7 +667,7 @@
         </div>
         <!-- date_set end -->
        </td>
-       <th scope="row">Settle Date</th>
+       <th scope="row">Settle Date<span id='m5' name='m5' class='must'> *</span></th>
        <td>
         <div class="date_set">
          <!-- date_set start -->
@@ -569,16 +686,14 @@
       </tr>
       <tr class="tr_toggle_display" style="display:none;">
         <th scope="row">AS Status<span id='m4' name='m4' class='must'> *</span></th>
-        <td><select id="cmbAsStatus" class="w100p">
-          <option value="">Choose One</option>
+        <td><select id="cmbAsStatus" class="multy_select w100p" multiple="multiple">
           <option value="ACT">Active</option>
           <option value="CAN">Cancelled</option>
           <option value="COM">Completed</option>
           <option value="RCL">Recall</option>
         </select></td>
         <th scope="row">Product Category</th>
-        <td><select id="cmbProductCategory" class="w100p">
-          <option value="">Choose One</option>
+        <td><select id="cmbProductCategory" class="multy_select w100p" multiple="multiple">
           <option value="AIR PURIFIER">Air Purifier</option>
           <option value="BIDET">Bidet</option>
           <option value="JUICER">Juicer</option>
@@ -589,25 +704,25 @@
       </tr>
       <tr class="tr_toggle_display" style="display:none;">
         <th scope="row">Product Type</th>
-        <td><select id="cmbProductType" class="w100p" /></td>
+        <td><select id="cmbProductType" class="multy_select w100p" multiple="multiple"></select></td>
         <th scope="row">Product Code</th>
-        <td><select id="cmbProductCode" class="w100p" /></td>
+        <td><select id="cmbProductCode" class="multy_select w100p" multiple="multiple"></select></td>
       </tr>
       <tr class="tr_toggle_display" style="display:none;">
         <th scope="row">AS Aging</th>
-        <td><input id="numAsAging" name="numAsAging" class="w100p" type="number" min="1" max="200" placeholder="min 1 ; max 200"/></td>
+        <td><select id="cmbAsAging" class="multy_select w100p" multiple="multiple"></select></td>
         <th scope="row">AS Solution Large</th>
-        <td><select id="cmbDefectType" class="w100p" /></td>
+        <td><select id="cmbDefectType" class="multy_select w100p" multiple="multiple"></select></td>
       </tr>
       <tr class="tr_toggle_display" style="display:none;">
         <th scope="row">AS Defect Part Large</th>
-        <td><select id="cmbDefectRmk" class="w100p" /></td>
+        <td><select id="cmbDefectRmk" class="multy_select w100p" multiple="multiple"></select></td>
         <th scope="row">AS Defect Part Small</th>
-        <td><select id="cmbDefectDesc" class="w100p" /></td>
+        <td><select id="cmbDefectDesc" class="multy_select w100p" multiple="multiple"></select></td>
       </tr>
       <tr class="tr_toggle_display" style="display:none;">
         <th scope="row">AS Problem Symptom Large</th>
-        <td><select id="cmbDefectDescSym" class="w100p" /></td>
+        <td><select id="cmbDefectDescSym" class="multy_select w100p" multiple="multiple"></select></td>
       </tr>
      </tbody>
     </table>
