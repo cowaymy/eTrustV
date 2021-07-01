@@ -591,13 +591,29 @@ function fn_attachmentUpload(st) {
         fn_insertVendorInfo(st);
     });
 }
-
+/*
 function fn_attachmentUpdate(st) {
     // 신규 add or 추가 add인지 update or delete인지 분기 필요
     // 파일 수정해야 하는 경우 : delete 버튼 클릭 or file 버튼 클릭으로 수정
     // delete 버튼의 파일이름 찾아서 저장
     var formData = Common.getFormData("form_newVendor");
     formData.append("atchFileGrpId", $("#atchFileGrpId").val());
+    Common.ajaxFile("/eAccounting/vendor/attachmentUpdate.do", formData, function(result) {
+        console.log(result);
+        fn_updateVendorInfo(st);
+    });
+}
+*/
+function fn_attachmentUpdate(st) {
+    // 신규 add or 추가 add인지 update or delete인지 분기 필요
+    // 파일 수정해야 하는 경우 : delete 버튼 클릭 or file 버튼 클릭으로 수정
+    // delete 버튼의 파일이름 찾아서 저장
+    var formData = Common.getFormData("form_newVendor");
+    formData.append("atchFileGrpId", $("#atchFileGrpId").val());
+    formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+    console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+    formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+    console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
     Common.ajaxFile("/eAccounting/vendor/attachmentUpdate.do", formData, function(result) {
         console.log(result);
         fn_updateVendorInfo(st);
