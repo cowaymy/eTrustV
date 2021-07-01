@@ -75,12 +75,6 @@ public class CalendarController {
 		params.put("calMonthYear", monthYear);
 		params.put("calMemType", (int) sessionVO.getUserTypeId());
 
-		if (sessionVO.getUserTypeId() == 4) { //Staff
-			request.getSession().setAttribute("calAllowUpload", "Y");
-		} else { // Non-Staff
-			request.getSession().setAttribute("calAllowUpload", "N");
-		}
-
 		List<EgovMap> eventList = calendarService.selectCalendarEventList(params);
 
 		String eventListJsonStr = new Gson().toJson(eventList);

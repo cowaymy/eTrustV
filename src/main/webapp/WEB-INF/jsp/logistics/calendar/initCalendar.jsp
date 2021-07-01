@@ -303,9 +303,7 @@ function fn_setMemTypeVisibility() {
   </section><!-- search_table end -->
 
   <aside class="link_btns_wrap">
-    <%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'} "> --%>
-    <!-- Yong 20210705: PAGE_AUTH not used for validation because it only works when Calendar menu is clicked. When Calendar Search is clicked, the validation will fail -->
-    <c:if test="${sessionScope.calAllowUpload == 'Y'}">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
       <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
       <dl class="link_list">
         <dt>Link</dt>
