@@ -605,6 +605,7 @@ public class ReportBatchController {
     LOGGER.info("[END] OutrightPlusAging_12Month...");
   }
 
+  /*	Temporary Not using.
   @RequestMapping(value = "/BSReport.do")
   //@Scheduled(cron = " 0 0 3 2 * ?")//Monthly (Day 2) 3:00am
   public void bsReport() {
@@ -643,7 +644,9 @@ public class ReportBatchController {
 
     LOGGER.info("[END] BSReport...");
   }
+  */
 
+  /*
   @RequestMapping(value = "/BSReportCT.do")
   //@Scheduled(cron = " 0 0 3 2 * ?")//Monthly (Day 2) 3:00am
   public void bsReportCT() {
@@ -666,6 +669,7 @@ public class ReportBatchController {
 
     LOGGER.info("[END] BSReportCT...");
   }
+  */
 
   @RequestMapping(value = "/OrderCancellationProductReturnRawData.do")
   //@Scheduled(cron = "0 0 8 * * *")//Daily (8:00am)
