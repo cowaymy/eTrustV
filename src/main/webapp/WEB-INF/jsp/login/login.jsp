@@ -441,15 +441,18 @@
                         return false;
                     }
 
-                    $("#secQuest").hide();
-                    $("#secAns").hide();
-                    $("#secCheckBtn").hide();
+                    fn_showFieldsTmpPwd();
+                }
 
-                    $("#backBtn").hide();
-                    $("#secCheckBtn").hide();
+                if(returnSearchUserInfo.userTypeId == "2") {
+                    // Cody / Service Technician
+                    if(returnSearchUserInfo.memStus != "1") {
+                        Common.alert("Dear Cody/ST, your account is inactive.");
+                        $("#popup_wrap").remove();
+                        return false;
+                    }
 
-                    $("#mobileRow").show();
-                    $("#smsReqBtn").show();
+                    fn_showFieldsTmpPwd();
                 }
 
                 $("#step2").show();
@@ -485,6 +488,18 @@
 
        //Common.popupDiv("/login/orgResetPW.do", null, null, true, "orgResetPwPop");
        var popUpObj = Common.popupDiv("/login/orgResetPW.do", null, null, true, "orgResetPwPop");
+   }
+
+   function fn_showFieldsTmpPwd() {
+       $("#secQuest").hide();
+       $("#secAns").hide();
+       $("#secCheckBtn").hide();
+
+       $("#backBtn").hide();
+       $("#secCheckBtn").hide();
+
+       $("#mobileRow").show();
+       $("#smsReqBtn").show();
    }
 
 </script>

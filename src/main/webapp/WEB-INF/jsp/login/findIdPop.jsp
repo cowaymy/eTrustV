@@ -88,7 +88,8 @@ function fnReqSMS() {
     var data ={
         userId : $("#searchLoginId").val(),
         userName : $("#searchLoginName").val(),
-        mobileNo : $("#memberMobile").val()
+        mobileNo : $("#memberMobile").val(),
+        userIdFindPopTxt : $("#userIdFindPopTxt").val()
     }
 
     Common.ajaxSync("GET", "/login/tempPwProcess.do", data, function(result) {
@@ -99,7 +100,7 @@ function fnReqSMS() {
            Common.alert(result.message, findIdPopUpClose);
            return false;
        } else {
-           Common.alert("Dear HP, temporary password has been sent to your registered number " + $("memberMobile").val() +
+           Common.alert("Dear user, temporary password has been sent to your registered number " + $("memberMobile").val() +
                    ". Kindly login to reset your password.", findIdPopUpClose);
 
        }

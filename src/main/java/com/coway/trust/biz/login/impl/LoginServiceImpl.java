@@ -203,7 +203,7 @@ public class LoginServiceImpl implements LoginService {
 
         int cnt = loginMapper.checkMobileNumber(params);
         if(cnt < 1) {
-            msg = "Dear HP, please enter the correct HP code or update your mobile number at nearest sales office.";
+            msg = "Dear user, please enter the correct HP/Cody code or update your mobile number at nearest sales office.";
             // Mobile number does not exist
             result.put("flg", "fail");
 
@@ -227,8 +227,18 @@ public class LoginServiceImpl implements LoginService {
 
             int smsReqCnt = loginMapper.getSmsReqCnt(params);
 
+            int userTypeId = loginMapper.selectFindUserIdPop(params).getUserTypeId();
+
             if(smsReqCnt >= smsLimit) {
-                msg = "Dear HP, request limit reached, kindly email to hpresetpassword@coway.com.my for further assistance";
+
+                if(userTypeId == 1) {
+                	msg = "Dear HP, request limit reached, kindly email to hpresetpassword@coway.com.my for further assistance";
+                } else if (userTypeId == 2) {
+                	msg = "Dear Cody / ST, request limit reached, kindly refer to your manager to email to Service Innovation Department";
+                } else {
+                	msg = "Request limit reached";
+                }
+
                 result.put("flg", "fail");
 
             } else {
@@ -260,8 +270,14 @@ public class LoginServiceImpl implements LoginService {
                 String message = " COWAY:Confidential! Never share your temporary password.Password: " +
                                  sb + ". Kindly login to update your password.";
 
+                int smsType = 6209;
+
+                if(userTypeId == 2) {
+                	smsType = 6416;
+                }
+
                 // Send SMS
-                SmsVO sms = new SmsVO(Integer.valueOf(params.get("userId").toString()), 6209);
+                SmsVO sms = new SmsVO(Integer.valueOf(params.get("userId").toString()), smsType);
                 sms.setMessage(message);
                 sms.setMobiles(CommonUtils.nvl(params.get("mobileNo")));
 
@@ -289,7 +305,7 @@ public class LoginServiceImpl implements LoginService {
 	public EgovMap getConsentDtls(Map<String, Object> params) {
 	    return loginMapper.getConsentDtls(params);
 	}
-	
+
 	@Override
 	public int loginPopAccept(Map<String, Object> params) {
 	    return loginMapper.loginPopAccept(params);
