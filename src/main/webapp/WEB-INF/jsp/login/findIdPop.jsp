@@ -100,7 +100,9 @@ function fnReqSMS() {
            Common.alert(result.message, findIdPopUpClose);
            return false;
        } else {
-           Common.alert("Dear user, temporary password has been sent to your registered number " + $("memberMobile").val() +
+    	   var userType = $("#searchLoginName").val().startsWith("CD") ? "user" : "HP";
+    	   
+           Common.alert("Dear " + userType + ", temporary password has been sent to your registered number " + $("memberMobile").val() +
                    ". Kindly login to reset your password.", findIdPopUpClose);
 
        }
