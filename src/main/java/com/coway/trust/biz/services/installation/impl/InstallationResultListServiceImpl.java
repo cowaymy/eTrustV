@@ -16,19 +16,22 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.logistics.stocks.impl.StockMapper;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.sales.mambership.impl.MembershipConvSaleMapper;
 import com.coway.trust.biz.sales.mambership.impl.MembershipRentalQuotationMapper;
+import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
+import com.coway.trust.biz.services.as.impl.ASManagementListMapper;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 import com.coway.trust.web.services.installation.InstallationResultListController;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -64,6 +67,15 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
   @Resource(name = "servicesLogisticsPFCService")
   private ServicesLogisticsPFCService servicesLogisticsPFCService;
+
+  @Resource(name = "ASManagementListMapper")
+  private ASManagementListMapper ASManagementListMapper;
+
+  @Resource(name = "ASManagementListService")
+  private ASManagementListService asMgmtListService;
+
+  @Resource(name = "stockMapper")
+  private StockMapper stockMapper;
 
   @Override
   public List<EgovMap> selectInstallationType() {
@@ -2839,6 +2851,12 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   }
 
   @Override
+  public List<EgovMap> getProductList2(Map<String, Object> params) {
+    // TODO ProductCodeList 호출시 error남
+    return installationResultListMapper.getProductList2(params);
+  }
+
+  @Override
   public int chkRcdTms(Map<String, Object> params) {
     return installationResultListMapper.chkRcdTms(params);
   }
@@ -2874,13 +2892,17 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     ReturnMessage message = new ReturnMessage();
 
     if (sessionVO != null) {
-      int noRcd = chkRcdTms(params);
+
+    	List<EgovMap> add = (List<EgovMap>) params.get("add");
+    	Map<String, Object> param = (Map)params.get("installForm");
+
+      int noRcd = chkRcdTms(param);
 
       if (noRcd == 1) {
-        EgovMap installResult = getInstallResultByInstallEntryID(params);
+        EgovMap installResult = getInstallResultByInstallEntryID(param);
         logger.debug("INSTALLATION RESULT : {}" + installResult);
 
-        params.put("EXC_CT_ID", installResult.get("ctId"));
+        param.put("EXC_CT_ID", installResult.get("ctId"));
 
         Map<String, Object> locInfoEntry = new HashMap<String, Object>();
         locInfoEntry.put("CT_CODE", installResult.get("ctMemCode"));
@@ -2900,14 +2922,14 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
             message.setCode("99");
             message.setMessage("Fail to update result. [lack of stock]");
           } else {
-            EgovMap validMap = validationInstallationResult(params);
+            EgovMap validMap = validationInstallationResult(param);
             int resultCnt = ((BigDecimal) validMap.get("resultCnt")).intValue();
 
             if (resultCnt > 0) {
               message.setMessage("Record already exist. Please refer ResultID : " + validMap.get("resultId") + ".");
             } else {
               // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
-              resultValue = runInstSp(params, sessionVO, "1");
+              resultValue = runInstSp(param, sessionVO, "1");
             }
 
             if (null != resultValue) {
@@ -2934,16 +2956,16 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
                     throw new ApplicationException(AppConstants.FAIL, "[ERROR]" + errCode + ":" + errMsg);
                   }
                 }
-                String ordStat = getSalStat(params);
+                String ordStat = getSalStat(param);
 
                 if (!"1".equals(ordStat)) {
-                  if (params.get("hidCallType").equals("258")) {
-                    int exgCode = chkExgRsnCde(params);
+                  if (param.get("hidCallType").equals("258")) {
+                    int exgCode = chkExgRsnCde(param);
                     // SKIP SOEXC009 - EXCHANGE (WITHOUT RETURN)
                     if (exgCode == 0) { // PEX EXCHANGE CODE NOT IN THE LIST
-                      if (Integer.parseInt(params.get("installStatus").toString()) == 4) {
+                      if (Integer.parseInt(param.get("installStatus").toString()) == 4) {
                         // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
-                        resultValue = runInstSp(params, sessionVO, "2");
+                        resultValue = runInstSp(param, sessionVO, "2");
 
                         if (null != resultValue) {
                           spMap = (HashMap) resultValue.get("spMap");
@@ -2974,11 +2996,19 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
                   }
                 }
 
-                resultValue = Save_2(true, params, sessionVO);
+                resultValue = Save_2(true, param, sessionVO);
+
+                // Added for inserting charge out filters and spare parts at AS. By Hui Ding, 06-04-2021
+                if (resultValue.get("value") != null && resultValue.get("value").equals("Completed")){
+
+              	  if (param.get("chkCrtAS") != null && (param.get("chkCrtAS").toString().equals("on") || param.get("chkCrtAS").toString().equals("Y"))){
+              		  saveInsAsEntry(add, param, installResult, sessionVO);
+              	  }
+                }
 
                 message.setCode("1");
                 message.setData("Y");
-                if (Integer.parseInt(params.get("installStatus").toString()) == 21) {
+                if (Integer.parseInt(param.get("installStatus").toString()) == 21) {
                   message.setMessage(
                       "Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to "
                           + resultValue.get("value") + ". Please proceed to Calllog function.");
@@ -2989,11 +3019,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
                 }
 
                 // KR-OHK Barcode Save Start
-                if ("Y".equals(params.get("hidSerialRequireChkYn"))) {
+                if ("Y".equals(param.get("hidSerialRequireChkYn"))) {
                   Map<String, Object> setmap = new HashMap();
-                  setmap.put("serialNo", params.get("serialNo"));
-                  setmap.put("salesOrdId", params.get("hidSalesOrderId"));
-                  setmap.put("reqstNo", params.get("hiddeninstallEntryNo"));
+                  setmap.put("serialNo", param.get("serialNo"));
+                  setmap.put("salesOrdId", param.get("hidSalesOrderId"));
+                  setmap.put("reqstNo", param.get("hiddeninstallEntryNo"));
                   setmap.put("callGbn", "INSTALL");
                   setmap.put("mobileYn", "N");
                   setmap.put("userId", sessionVO.getUserId());
@@ -3221,6 +3251,224 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   public List<EgovMap> getProductListwithCategory(Map<String, Object> params) {
     // TODO ProductCodeList 호출시 error남
     return installationResultListMapper.getProductListwithCategory(params);
+  }
+
+
+  /**
+   * to create AS record for charge out filters and spare parts
+   *
+   * @Date Apr 7, 2021
+   * @Author HQIT-HUIDING
+   * @param params
+   * @return
+   */
+  @Override
+  public EgovMap saveInsAsEntry(List<EgovMap> add, Map<String, Object> params, EgovMap installResult, SessionVO sessionVO) {
+
+    Map svc0004dmap = new HashMap<String, Object>();
+
+    String AS_NO = "";
+
+    String defaultErrCode = "9001700"; // default as "General Request"
+	String defaultErrDesc = "1"; // default as 'Add Pump During Installation"
+	String defaultDefTypeId = "";
+	String defaultDefId = "";
+	String defaultDefDtlResnId = "";
+	String defaultDefPrtId = "";
+	String defaultSlutnResnId = "";
+
+	Map<String, Object> defectParam = new HashMap<String, Object>();
+	defectParam.put("errCd", defaultErrCode);
+	defectParam.put("errDesc", defaultErrDesc);
+
+	// get default defect code list for installation AS
+	List<EgovMap> getAsDefectEntryList = asMgmtListService.getAsDefectEntry(defectParam);
+
+	if (getAsDefectEntryList != null && getAsDefectEntryList.size() > 0){
+		if (getAsDefectEntryList.get(0)  != null){
+			defaultDefPrtId = getAsDefectEntryList.get(0).get("defectId").toString();
+		}
+		if (getAsDefectEntryList.get(1)  != null){
+			defaultDefDtlResnId = getAsDefectEntryList.get(1).get("defectId").toString();
+		}
+		if (getAsDefectEntryList.get(2)  != null){
+			defaultDefId = getAsDefectEntryList.get(2).get("defectId").toString();
+		}
+		if (getAsDefectEntryList.get(3)  != null){
+			defaultDefTypeId = getAsDefectEntryList.get(3).get("defectId").toString();
+		}
+		if (getAsDefectEntryList.get(4)  != null){
+			defaultSlutnResnId = getAsDefectEntryList.get(4).get("defectId").toString();
+		}
+	}
+
+	svc0004dmap.put("AS_SO_ID", CommonUtils.nvl(installResult.get("salesOrdId")).toString());
+	svc0004dmap.put("REF_REQUEST", CommonUtils.nvl(installResult.get("installEntryNo")).toString());
+	svc0004dmap.put("AS_CT_ID", CommonUtils.nvl(installResult.get("ctId")).toString());
+	svc0004dmap.put("AS_SETL_DT", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+	svc0004dmap.put("AS_SETL_TM", CommonUtils.getNowTime());
+	svc0004dmap.put("AS_RESULT_STUS_ID", "4");
+	svc0004dmap.put("AS_REN_COLCT_ID", 0);
+	svc0004dmap.put("AS_CMMS", 0);
+	svc0004dmap.put("AS_BRNCH_ID", CommonUtils.nvl(installResult.get("brnchId")).toString());
+	svc0004dmap.put("AS_WH_ID", CommonUtils.nvl(installResult.get("whLocId")).toString());
+	svc0004dmap.put("AS_RESULT_REM", CommonUtils.nvl(params.get("txtFilterRemark")).toString());
+
+	svc0004dmap.put("AS_MALFUNC_ID", defaultErrCode);
+	svc0004dmap.put("AS_MALFUNC_RESN_ID", defaultErrDesc);
+
+	svc0004dmap.put("AS_DEFECT_TYPE_ID", defaultDefTypeId);
+	svc0004dmap.put("AS_DEFECT_GRP_ID", 0);
+	svc0004dmap.put("AS_DEFECT_ID", defaultDefId);
+	svc0004dmap.put("AS_DEFECT_PART_GRP_ID", 0);
+	svc0004dmap.put("AS_DEFECT_PART_ID", defaultDefPrtId);
+	svc0004dmap.put("AS_DEFECT_DTL_RESN_ID", defaultDefDtlResnId);
+	svc0004dmap.put("AS_SLUTN_RESN_ID", defaultSlutnResnId);
+
+	svc0004dmap.put("AS_WORKMNSH", CommonUtils.nvl(params.get("txtLabourCharge")).toString());
+	svc0004dmap.put("AS_FILTER_AMT", CommonUtils.nvl(params.get("txtFilterCharge")).toString());
+	svc0004dmap.put("AS_ACSRS_AMT", 0);
+	svc0004dmap.put("AS_TOT_AMT", CommonUtils.nvl(params.get("txtTotalCharge")).toString());
+	svc0004dmap.put("AS_RESULT_IS_SYNCH", 0);
+	svc0004dmap.put("AS_RCALL", 0);
+	svc0004dmap.put("AS_RESULT_STOCK_USE", 0);
+	svc0004dmap.put("AS_RESULT_TYPE_ID", 457); // default as AS result type
+	svc0004dmap.put("AS_RESULT_IS_CURR", 1);
+
+	svc0004dmap.put("AS_RESULT_MTCH_ID", 0);
+	svc0004dmap.put("AS_ENTRY_POINT", 0);
+	svc0004dmap.put("AS_WORKMNSH_TAX_CODE_ID", 0);
+	svc0004dmap.put("AS_WORKMNSH_TXS", 0);
+	svc0004dmap.put("AS_RESULT_MOBILE_ID", 0);
+
+	svc0004dmap.put("APPNT_DT", CommonUtils.nvl(installResult.get("appntDt")).toString());
+	svc0004dmap.put("APPNT_TM", CommonUtils.nvl(installResult.get("appntTm")).toString());
+	svc0004dmap.put("AS_REQST_DT", CommonUtils.getFormattedString("dd/MM/yyyy"));
+	svc0004dmap.put("AS_APPNT_DT", CommonUtils.nvl(installResult.get("appntDt")).toString());
+
+	svc0004dmap.put("AS_MEM_ID", CommonUtils.nvl(installResult.get("ctId")).toString());
+	svc0004dmap.put("AS_STUS_ID", 4); // default set to COMPLETE
+	svc0004dmap.put("AS_TYPE_ID", 6246); // default set to INS AS type
+
+	svc0004dmap.put("AS_RESULT_REM", "[AUTO] Add installation parts during installation");
+
+    params.put("DOCNO", "17");
+    EgovMap eMap = ASManagementListMapper.getASEntryDocNo(params);
+    EgovMap seqMap = ASManagementListMapper.getASEntryId(params);
+
+    AS_NO = String.valueOf(eMap.get("asno")).trim();
+
+    params.put("AS_ID", String.valueOf(seqMap.get("seq")).trim());
+    params.put("AS_NO", String.valueOf(eMap.get("asno")).trim());
+    svc0004dmap.put("AS_ID", String.valueOf(seqMap.get("seq")).trim());
+    svc0004dmap.put("AS_NO", String.valueOf(eMap.get("asno")).trim());
+
+    params.put("DOCNO", "21");
+    EgovMap eMap_result = ASManagementListMapper.getASEntryDocNo(params);
+    EgovMap seqMap_result = ASManagementListMapper.getResultASEntryId(params);
+    String AS_RESULT_ID = String.valueOf(seqMap_result.get("seq"));
+    String AS_RESULT_NO = String.valueOf(eMap_result.get("asno"));
+
+    // 서비스 마스터
+    int a = ASManagementListMapper.insertSVC0001D(svc0004dmap);
+
+    svc0004dmap.put("AS_RESULT_ID", AS_RESULT_ID);
+    svc0004dmap.put("AS_RESULT_NO", AS_RESULT_NO);
+    svc0004dmap.put("AS_ENTRY_ID", String.valueOf(seqMap.get("seq")).trim());
+    svc0004dmap.put("updator", sessionVO.getUserId());
+
+    /// insert svc0004d
+    int c = asMgmtListService.insertInHouseSVC0004D(svc0004dmap);
+
+    //List<EgovMap> addItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
+    asMgmtListService.insertSVC0005D(add, AS_RESULT_ID, String.valueOf(sessionVO.getUserId()));
+
+    ///////////////////////// 물류 호출//////////////////////
+    Map<String, Object> logPram = new HashMap<String, Object>();
+    logPram.put("ORD_ID", String.valueOf(eMap.get("asno")).trim());
+    logPram.put("RETYPE", "COMPLET");
+    logPram.put("P_TYPE", "OD03");
+    logPram.put("P_PRGNM", "INSCOM_AS");
+    logPram.put("USERID", String.valueOf(sessionVO.getUserId()));
+
+    Map SRMap = new HashMap();
+    logger.debug("InstallationResultListServiceImpl.as_insert  물류 차감  PRAM ===>" + logPram.toString());
+    servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+    logger.debug("InstallationResultListServiceImpl.as_insert  물류 차감   결과 ===>" + logPram.toString());
+    logPram.put("P_RESULT_TYPE", "AS");
+    logPram.put("P_RESULT_MSG", logPram.get("p1"));
+    ///////////////////////// 물류 호출 END //////////////////////
+
+    EgovMap em = new EgovMap();
+    em.put("AS_NO", String.valueOf(eMap.get("asno")).trim());
+    em.put("AS_RESULT_NO", AS_RESULT_NO);
+    em.put("SP_MAP", logPram);
+
+    // insert Charge out filters only to SAL0289D -- Installation charge out filters
+    try{
+    	insertChgOutFilters(add, installResult, sessionVO);
+    } catch (Exception e){
+    	e.printStackTrace();
+    }
+
+
+    return em;
+  }
+
+  /**
+   * to retrieve INS AS exchangeable filter & spare part list
+   *
+   * @Date Apr 7, 2021
+   * @Author HQIT-HUIDING
+   * @param params
+   * @return
+   */
+  @Override
+  public List<EgovMap> selectFilterSparePartList (Map<String, Object> params){
+	  return installationResultListMapper.selectFilterSparePartList(params);
+  }
+
+  public void insertChgOutFilters (List<EgovMap> addItemList, EgovMap installResult, SessionVO sessionVO) throws Exception{
+
+	  if (!addItemList.isEmpty()){
+		  EgovMap param = null;
+		  int seq = 1;
+
+		  logger.info("### charge out filters: " + addItemList.toString());
+
+		  installResult.put("entryId", installResult.get("installEntryId"));
+
+		  EgovMap entry = installationResultListMapper.selectEntry_2(installResult);
+		  logger.debug("###===========================INSTALLATION ENTRY================================");
+	      logger.debug(" ### INSTALLATION ENTRY : {}", entry);
+	      logger.debug("###===========================INSTALLATION ENTRY================================");
+
+		//  if (!filterList.isEmpty()){
+    	  for (int i = 0; i < addItemList.size(); i++){
+    		  Map<String, Object> addItem = (Map<String, Object>) addItemList.get(i);
+    		  logger.info("addItem.get(stockTypeId) : " + addItem.get("stockTypeId"));
+    		  if (addItem.get("stockTypeId").toString().equals("62")){
+    			  logger.info("### is filter ###");
+    			  // insert into SAL0292D - INS Filter charge out list
+    			  param = new EgovMap();
+    			  param.put("insEntryId", entry.get("installEntryId"));
+    			  param.put("insResultId", entry.get("installResultId"));
+    			  param.put("seq", seq);
+    			  param.put("type", 62); // default filter
+    			  param.put("stkId", addItem.get("filterID"));
+    			  param.put("qty", addItem.get("filterQty"));
+    			  param.put("payMode", addItem.get("filterType"));
+    			  param.put("crtUserId", sessionVO.getUserId());
+
+    			  installationResultListMapper.insertFilterChargeOut(param);
+    			  seq++;
+    		  }
+    	  }
+	  }
+  }
+
+  public EgovMap selectStkCatType (Map<String, Object> params){
+	  return stockMapper.selectStkCatType(params);
   }
 
 }

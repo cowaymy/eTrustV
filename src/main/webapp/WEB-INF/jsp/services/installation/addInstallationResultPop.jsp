@@ -14,6 +14,7 @@
  07/09/2020  FARUQ   1.0.8         Add validation feature for Kecik when failed
  05/10/2020  FARUQ   1.0.9         Amend the default next call date when failed
  12/03/2021  ALEX      1.0.10       Add Turbidity Level for NEO PLUS involved both COMPLETE and FAIL
+ 09/04/2021  H.Ding   1.1.0         Add INS AS creation for spare parts/ filters auto charge out
  -->
 <script type="text/javaScript">
   $(document).ready(function() {
@@ -21,6 +22,7 @@
     var instChkLst_view;
     createInstallationViewAUIGrid();
     createInstallationChkViewAUIGrid();
+    createCFilterAUIGrid();
     fn_viewInstallResultSearch();
     fn_viewInstallationChkViewSearch();
 
@@ -202,6 +204,9 @@
             }
             $("#nextCallDate").val("");
 
+            // Added to enable "Add used parts during installation" check box. Hui Ding, 09-04-2021
+            $("#chkCrtAS").prop("disabled", false);
+
           } else {
             notMandatoryForAP()
             $("#addInstallForm #checkCommission").prop("checked", false);
@@ -249,6 +254,10 @@
                 day = '0' + day;
             var currentDate =  [day, month, year].join('/');
             $("#nextCallDate").val(currentDate);
+
+            // Added to enable "Add used parts during installation" check box. Hui Ding, 09-04-2021
+            $("#chkCrtAS").prop("disabled", true);
+
           }
 
           $("#addInstallForm #installDate").val("");
@@ -365,6 +374,7 @@
   function fn_saveInstall() {
     console.log("addInstallationResultPop :: fn_saveInstall");
     var msg = "";
+
     if ($("#addInstallForm #installStatus").val() == 4) {
       // COMPLETED
       if ($("#failLocCde").val() != 0 || $("#failReasonCode").val() != 0 || $("#nextCallDate").val() != "") {
@@ -457,6 +467,14 @@
               msg += validationForGlazeWhenCompleted();
       }
 
+      var addedRowItems;
+      // Added for INS AS filter/ spare part list
+      if ($("#chkCrtAS").prop('checked')){
+    	  addedRowItems = AUIGrid.getAddedRowItems(myFltGrd10); // Filter or spare part ADD SET
+
+    	  console.log("appointment Dt: " + $("#hidAppntDt").val());
+      }
+
       if (msg != "") {
         Common.alert(msg);
         return;
@@ -541,7 +559,13 @@
       url = "/services/addInstallation_2.do";
     }
 
-    Common.ajax("POST", url, $("#addInstallForm").serializeJSON(),
+    var saveForm = {
+  	      "installForm" : $("#addInstallForm").serializeJSON(),
+  	      "add" : addedRowItems
+    }
+
+    //Common.ajax("POST", url, $("#addInstallForm").serializeJSON(),
+    Common.ajax("POST", url, saveForm,
       function(result) {
         Common.alert(result.message, fn_saveclose);
         $("#popup_wrap").remove();
@@ -933,6 +957,367 @@
     }
   }
 
+  function createCFilterAUIGrid() {
+	    var clayout = [
+	        {
+	          dataField : "filterType",
+	          headerText : "<spring:message code='service.grid.ASNo'/>",
+	          editable : false
+	        }, {
+	          dataField : "filterDesc",
+	          headerText : "<spring:message code='service.grid.ASFltDesc'/>",
+	          editable : false,
+	          width : 250
+	        }, {
+	          dataField : "filterExCode",
+	          headerText : "<spring:message code='service.grid.ASFltCde'/>",
+	          editable : false,
+	          width : 150
+	        }, {
+	          dataField : "filterQty",
+	          headerText : "<spring:message code='service.grid.Quantity'/>",
+	          editable : false,
+	          width : 100
+	        }, {
+	          dataField : "filterPrice",
+	          headerText : "<spring:message code='service.title.Price'/>",
+	          editable : false,
+	          width : 100
+	        }, {
+	          dataField : "filterTotal",
+	          headerText : "<spring:message code='sal.title.total'/>",
+	          editable : false,
+	          width : 150
+	        }, {
+	          dataField : "filterRemark",
+	          headerText : "<spring:message code='service.title.Remark'/>",
+	          editable : false,
+	          width : 150,
+	          editable : false
+	        }, {
+	          dataField : "srvFilterLastSerial",
+	          headerText : "<spring:message code='service.title.SerialNo'/>",
+	          editable : false,
+	          width : 200,
+	          editable : true
+	        }, {
+	          dataField : "undefined",
+	          headerText : " ",
+	          width : 110,
+	          renderer : {
+	            type : "ButtonRenderer",
+	            labelText : "<spring:message code='pay.btn.remove'/>",
+	            onclick : function(rowIndex, columnIndex, value, item) {
+	              AUIGrid.removeRow(myFltGrd10, rowIndex);
+	            }
+	          }
+	        }, {
+	          dataField : "filterID",
+	          headerText : "<spring:message code='service.grid.FilterId'/>",
+	          width : 150,
+	          visible : false
+	        }, {
+              dataField : "stockTypeId",
+              headerText : "Stock Type",
+              width : 150,
+              visible : true
+	        } ];
+
+	    var gridPros2 = {
+	      usePaging : true,
+	      pageRowCount : 20,
+	      editable : true,
+	      fixedColumnCount : 1,
+	      selectionMode : "singleRow",
+	      showRowNumColumn : true
+	    };
+
+	    myFltGrd10 = GridCommon.createAUIGrid("asfilter_grid_wrap", clayout, "", gridPros2);
+	    AUIGrid.resize(myFltGrd10, 890, 200);
+	  }
+
+
+  function fn_chkCrtAS(chk){
+
+	 // doGetComboData('/services/getInsAsFilterSPList.do?groupCode=469&stkCode=' + ${orderInfo.stkCode}, '', 'ddlFilterCode', 'ddlFilterCode', 'S', '');
+
+	  console.log("chk: " + chk);
+	  if (chk.checked){
+		    $("#chrFee_div").attr("style", "display:block");
+		    doGetComboAndGroup2('/services/getInsAsFilterSPList.do?groupCode=469&stkCode=' + ${orderInfo.stkCode}, '', 'stkId', 'ddlFilterCode', 'S', 'fn_setOptGrpClass');
+	  } else{
+		    $("#chrFee_div").attr("style", "display:none");
+		    $("#ddlFilterCode").empty();
+	  }
+  }
+
+  function fn_setOptGrpClass() {
+	    $("optgroup").attr("class" , "optgroup_text");
+	  }
+
+  function fn_LabourCharge_CheckedChanged(_obj) {
+	    if (_obj.checked) {
+	      $("#fcm1").show();
+	      $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");
+	      $("#cmbLabourChargeAmt").val("");
+	      $("#txtLabourCharge").val("0.00");
+	    } else {
+	      $("#fcm1").hide();
+	      $("#cmbLabourChargeAmt").val("");
+	      $("#cmbLabourChargeAmt").attr("disabled", true);
+	      $("#txtLabourCharge").val("0.00");
+	    }
+
+	    fn_calculateTotalCharges();
+	  }
+
+  function fn_cmbLabourChargeAmt_SelectedIndexChanged() {
+	    var v = "0.00";
+	    if ($("#cmbLabourChargeAmt").val() != "") {
+	      v = $("#cmbLabourChargeAmt option:selected").text();
+	    } else {
+	      v = "0.00";
+	    }
+	    $("#txtLabourCharge").val(v);
+	    fn_calculateTotalCharges();
+  }
+
+  function fn_calculateTotalCharges() {
+	    var labourCharges = 0;
+	    var filterCharges = 0;
+	    var totalCharges = 0;
+
+	    labourCharges = $("#txtLabourCharge").val();
+	    filterCharges = $("#txtFilterCharge").val();
+	    totalCharges = parseFloat(labourCharges) + parseFloat(filterCharges);
+
+	    $("#txtTotalCharge").val(totalCharges.toFixed(2));
+  }
+
+  // Added parts charge out by Hui Ding, 25-03-2021
+  function fn_chStock() {
+    var ct = "${installResult.ctMemCode}";
+    var sk = $("#ddlFilterCode").val();
+
+    var availQty = isstckOk(ct, sk);
+
+    if (availQty == 0) {
+      Common.alert("<spring:message code='service.msg.NoStkAvl' arguments='<b>" + $("#ddlFilterCode option:selected").text()  + "</b> ; <b>" + ct + "</b>' htmlEscape='false' argumentSeparator=';' />");
+      fn_filterClear();
+      return false;
+    } else {
+
+      if (availQty < Number($("#ddlFilterQty").val())) {
+        Common.alert("<spring:message code='service.msg.lessStkQty' arguments='<b>" + $("#ddlFilterCode option:selected").text() + "</b> ; <b>" + ct + "</b>' htmlEscape='false' argumentSeparator=';' />");
+        fn_filterClear();
+        return false;
+      }
+
+      // KR-OHK Serial Check
+      if ($("#hidSerialRequireChkYn").val() == 'Y' && $("#hidSerialChk").val() == 'Y' && $("#ddlFilterQty").val() > 1) {
+        Common.alert("For serial check items, only quantity 1 can be entered.");
+        $("#ddlFilterQty").val("1");
+        return false;
+      }
+      if ($("#hidSerialRequireChkYn").val() == 'Y' && $("#hidSerialChk").val() == 'Y' && FormUtil.isEmpty($("#ddSrvFilterLastSerial").val())) {
+        var arg = "<spring:message code='service.title.SerialNo'/>";
+        Common.alert("<spring:message code='sys.msg.necessary' arguments='"+ arg +"'/>");
+        return false;
+      }
+
+      return true;
+    }
+  }
+
+  function isstckOk(ct, sk) {
+    // COUNT STOCK
+    var availQty = 0;
+
+    Common.ajaxSync("GET", "/services/as/getSVC_AVAILABLE_INVENTORY.do", {
+      CT_CODE : ct,
+      STK_CODE : sk
+    }, function(result) {
+      // KR-OHK Serial Check
+      $("#hidSerialChk").val(result.serialChk);
+
+      // RETURN AVAILABLE STOCK
+      availQty = result.availQty;
+    });
+
+    return availQty;
+  }
+
+  function fn_filterAddVaild() {
+	    var msg = "";
+	    var text = "";
+	    if (FormUtil.checkReqValue($("#ddlFilterCode option:selected"))) {
+	      text = "<spring:message code='service.title.FilterCode'/>";
+	      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
+	    }
+	    if (FormUtil.checkReqValue($("#ddlFilterQty option:selected"))) {
+	      text = "<spring:message code='service.grid.Quantity'/>";
+	      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
+	    }
+	    if (FormUtil.checkReqValue($("#ddlFilterPayType option:selected"))) {
+	      text = "<spring:message code='service.text.asPmtTyp'/>";
+	      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
+	    }
+	   /*  if (FormUtil.checkReqValue($("#ddlFilterExchangeCode option:selected"))) {
+	      text = "<spring:message code='service.text.asExcRsn'/>";
+	      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
+	    } */
+
+	    if ($("#txtLabourch").is(':checked')) {
+	      if (FormUtil.checkReqValue($("#cmbLabourChargeAmt option:selected"))) {
+	        text = "<spring:message code='service.text.asLbrChr'/>";
+	        msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false' argumentSeparator=';' /></br>";
+	      }
+	    }
+
+	    if (msg != "") {
+	      Common.alert(msg);
+	      return false;
+	    }
+	  }
+
+	  function fn_filterAdd() {
+	    // CHECK AVAILABLE STOCK
+	    if (fn_chStock() == false) {
+	      return;
+	    }
+
+	    if (fn_filterAddVaild() == false) {
+	      return false;
+	    }
+
+	    var fitem = new Object();
+
+	    fitem.filterType = $("#ddlFilterPayType").val();
+	    fitem.filterDesc = $("#ddlFilterCode option:selected").text();
+	    fitem.filterExCode = 0;
+	    fitem.filterQty = $("#ddlFilterQty").val();
+	    fitem.filterRemark = $("#txtFilterRemark").val();
+	    fitem.filterID = $("#ddlFilterCode").val();
+	    fitem.srvFilterLastSerial = $("#ddSrvFilterLastSerial").val();
+
+	    // get material's category
+	   // fitem.category = $("#ddlFilterCat").val();
+
+	    var jsonObj = {
+	    	stockId : $("#ddlFilterCode").val()
+	    };
+
+	    var typeId;
+	    Common.ajaxSync("GET", "/services/getStockCatType.do", jsonObj,
+        function(result) {
+          if(result != null){
+        	  console.log("result.stktypeid: " + result.stktypeid);
+        	  typeId = result.stktypeid;
+          }
+        });
+
+	    fitem.stockTypeId = typeId;
+
+	    // CHECK PRICE
+	    var chargePrice = 0;
+	    var chargeTotalPrice = 0;
+
+	    if (fitem.filterType == "CHG") {
+	      chargePrice = getASStockPrice(fitem.filterID);
+	      if (chargePrice == 0) {
+	        Common.alert("<spring:message code='service.msg.stkNoPrice'/>");
+	        return;
+	      }
+	    }
+
+	    fitem.filterPrice = parseInt(chargePrice, 10).toFixed(2);
+
+	    chargeTotalPrice = Number($("#ddlFilterQty").val()) * Number((chargePrice));
+	    fitem.filterTotal = Number(chargeTotalPrice).toFixed(2);
+
+	    var v = Number($("#txtFilterCharge").val()) + Number(chargeTotalPrice);
+	    $("#txtFilterCharge").val(v.toFixed(2));
+
+	    console.log("stockTypeId: " + fitem.stockTypeId);
+
+	    if (AUIGrid.isUniqueValue(myFltGrd10, "filterID", fitem.filterID)) {
+	      fn_addRow(fitem);
+	    } else {
+	      Common.alert("<spring:message code='service.msg.rcdExist'/>");
+	      return;
+	    }
+
+	    fn_calculateTotalCharges();
+	    fn_filterClear();
+	  }
+
+	  function fn_filterClear() {
+	    $("#ddlFilterCode").val("");
+	    $("#ddlFilterQty").val("");
+	    $("#ddlFilterPayType").val("");
+	    //$("#ddlFilterCat").val("");
+	    //$("#ddlFilterExchangeCode").val("");
+	    $("#ddSrvFilterLastSerial").val("");
+	    $("#txtFilterRemark").val("");
+	  }
+
+	  function fn_setMand(obj) {
+		    if (obj.value != "") {
+		    	console.log("obj: " + obj.value);
+
+		      $("#fcm3").show();
+		      $("#fcm4").show();
+		      $("#fcm5").show();
+
+		      $("#ddlFilterQty").val("");
+		      $("#ddlFilterPayType").val("");
+		      //$("#ddlFilterExchangeCode").val("");
+		      $("#ddSrvFilterLastSerial").val("");
+		    } else {
+		      $("#fcm3").hide();
+		      $("#fcm4").hide();
+		      $("#fcm5").hide();
+
+		      $("#ddlFilterQty").val("");
+		      $("#ddlFilterPayType").val("");
+		      //$("#ddlFilterExchangeCode").val("");
+		      $("#ddSrvFilterLastSerial").val("");
+		    }
+	}
+	  function getASStockPrice(_PRC_ID) {
+		    var ret = 0;
+		    Common.ajaxSync("GET", "/services/as/getASStockPrice.do", {
+		      PRC_ID : _PRC_ID
+		    }, function(result) {
+		      try {
+		        ret = parseInt(result[0].amt, 10);
+		      } catch (e) {
+		        Common.alert("<spring:message code='service.msg.NoStkPrc'/>");
+		        ret = 0;
+		      }
+		    });
+		    return ret;
+
+	}
+
+	function fn_addRow(gItem) {
+	    AUIGrid.addRow(myFltGrd10, gItem, "first");
+	 }
+
+
+	function fn_secChk(obj) {
+
+		console.log("obj id: " + obj.id);
+		console.log("check? " + $("#chkCrtAS").prop('checked'));
+
+	    if (obj.id == "addOnDt") {
+	      if (!$("#chkCrtAS").prop('checked')) {
+	        Common.alert("This section only available when \"Add Installation Used Parts option\" is checked.");
+	        return;
+	      }
+	    }
+	  }
+
 </script>
 <div id="popup_wrap" class="popup_wrap">
   <!-- popup_wrap start -->
@@ -1296,8 +1681,8 @@
     <form action="#" id="addInstallForm" method="post">
       <input type="hidden" name="hidStkId" id=hidStkId " value="${installResult.installStkId}"><input type="hidden" value="<c:out value="${installResult.installEntryId}"/>" id="installEntryId" name="installEntryId" /> <input type="hidden" value="${callType.typeId}" id="hidCallType" name="hidCallType" /> <input type="hidden" value="${installResult.installEntryId}" id="hidEntryId" name="hidEntryId" /> <input type="hidden" value="${installResult.custId}" id="hidCustomerId" name="hidCustomerId" /> <input type="hidden" value="${installResult.salesOrdId}" id="hidSalesOrderId" name="hidSalesOrderId" /> <input type="hidden" value="${installResult.sirimNo}" id="hidSirimNo" name="hidSirimNo" /> <input type="hidden" value="${installResult.serialNo}" id="hidSerialNo" name="hidSerialNo" /> <input type="hidden" value="${installResult.isSirim}" id="hidStockIsSirim" name="hidStockIsSirim" /> <input type="hidden" value="${installResult.stkGrad}" id="hidStockGrade" name="hidStockGrade" />
       <input type="hidden" value="${installResult.stkCtgryId}" id="hidSirimTypeId" name="hidSirimTypeId" /> <input type="hidden" value="${installResult.codeId}" id="hidAppTypeId" name="hidAppTypeId" /> <input type="hidden" value="${installResult.installStkId}" id="hidProductId" name="hidProductId" /> <input type="hidden" value="${installResult.custAddId}" id="hidCustAddressId" name="hidCustAddressId" /> <input type="hidden" value="${installResult.custCntId}" id="hidCustContactId" name="hidCustContactId" /> <input type="hidden" value="${installResult.custBillId}" id="hiddenBillId" name="hiddenBillId" /> <input type="hidden" value="${installResult.codeName}" id="hiddenCustomerPayMode" name="hiddenCustomerPayMode" /> <input type="hidden" value="${installResult.installEntryNo}" id="hiddeninstallEntryNo" name="hiddeninstallEntryNo" /> <input type="hidden" value="" id="hidActualCTMemCode" name="hidActualCTMemCode" /> <input type="hidden" value="" id="hidActualCTId"
-        name="hidActualCTId"
-      /> <input type="hidden" value="${sirimLoc.whLocCode}" id="hidSirimLoc" name="hidSirimLoc" /> <input type="hidden" value="" id="hidCategoryId" name="hidCategoryId" /> <input type="hidden" value="" id="hidPromotionId" name="hidPromotionId" /> <input type="hidden" value="" id="hidPriceId" name="hidPriceId" /> <input type="hidden" value="" id="hiddenOriPriceId" name="hiddenOriPriceId" /> <input type="hidden" value="${orderInfo.c5}" id="hiddenOriPrice" name="hiddenOriPrice" /> <input type="hidden" value="" id="hiddenOriPV" name="hiddenOriPV" /> <input type="hidden" value="" id="hiddenCatogory" name="hiddenCatogory" /> <input type="hidden" value="" id="hiddenProductItem" name="hiddenProductItem" /> <input type="hidden" value="" id="hidPERentAmt" name="hidPERentAmt" /> <input type="hidden" value="" id="hidPEDefRentAmt" name="hidPEDefRentAmt" /> <input type="hidden" value="" id="hidInstallStatusCodeId" name="hidInstallStatusCodeId" /> <input type="hidden" value=""
+        name="hidActualCTId"/> <input type="hidden" value="${installResult.ctWhLocId}" id="hidCtWhLocId" name="hidCtWhLocId" />
+        <input type="hidden" value="${sirimLoc.whLocCode}" id="hidSirimLoc" name="hidSirimLoc" /> <input type="hidden" value="" id="hidCategoryId" name="hidCategoryId" /> <input type="hidden" value="" id="hidPromotionId" name="hidPromotionId" /> <input type="hidden" value="" id="hidPriceId" name="hidPriceId" /> <input type="hidden" value="" id="hiddenOriPriceId" name="hiddenOriPriceId" /> <input type="hidden" value="${orderInfo.c5}" id="hiddenOriPrice" name="hiddenOriPrice" /> <input type="hidden" value="" id="hiddenOriPV" name="hiddenOriPV" /> <input type="hidden" value="" id="hiddenCatogory" name="hiddenCatogory" /> <input type="hidden" value="" id="hiddenProductItem" name="hiddenProductItem" /> <input type="hidden" value="" id="hidPERentAmt" name="hidPERentAmt" /> <input type="hidden" value="" id="hidPEDefRentAmt" name="hidPEDefRentAmt" /> <input type="hidden" value="" id="hidInstallStatusCodeId" name="hidInstallStatusCodeId" /> <input type="hidden" value=""
         id="hidPEPreviousStatus" name="hidPEPreviousStatus"
       /> <input type="hidden" value="" id="hidDocId" name="hidDocId" /> <input type="hidden" value="" id="hidOldPrice" name="hidOldPrice" /> <input type="hidden" value="" id="hidExchangeAppTypeId" name="hidExchangeAppTypeId" /> <input type="hidden" value="" id="hiddenCustomerType" name="hiddenCustomerType" /> <input type="hidden" value="" id="hiddenPostCode" name="hiddenPostCode" /> <input type="hidden" value="" id="hiddenCountryName" name="hiddenCountryName" /> <input type="hidden" value="" id="hiddenStateName" name="hiddenStateName" /> <input type="hidden" value="${promotionView.promoId}" id="hidPromoId" name="hidPromoId" /> <input type="hidden" value="${promotionView.promoPrice}" id="hidPromoPrice" name="hidPromoPrice" /> <input type="hidden" value="${promotionView.promoPV}" id="hidPromoPV" name="hidPromoPV" /> <input type="hidden" value="${promotionView.swapPromoId}" id="hidSwapPromoId" name="hidSwapPromoId" /> <input type="hidden"
         value="${promotionView.swapPormoPrice}" id="hidSwapPromoPrice" name="hidSwapPromoPrice"
@@ -1309,6 +1694,10 @@
         <input type="hidden" value=" ${orderInfo.c12}" id="hidOutright_Price" name="hidOutright_Price" />
       </c:if>
       <input type="hidden" value="${installation.address}" id="hidInstallation_AddDtl" name="hidInstallation_AddDtl" /> <input type="hidden" value="${installation.areaId}" id="hidInstallation_AreaID" name="hidInstallation_AreaID" /> <input type="hidden" value="${customerContractInfo.name}" id="hidInatallation_ContactPerson" name="hidInatallation_ContactPerson" /> <input type="hidden" value="${installResult.rcdTms}" id="rcdTms" name="rcdTms" /> <input type="hidden" value="${installResult.serialRequireChkYn}" id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" />
+      <input type="hidden" value="${orderInfo.brnch}" id="hidBrnch" name="hidBrnch" />
+      <input type="hidden" value="${installResult.appntDt}" id="hidAppntDt" name="hidAppntDt" />
+      <input type="hidden" value="${installResult.appntTm}" id="hidAppntTm" name="hidAppntTm" />
+      <input type="hidden" id="insAsItemList" name="insAsItemList"/>
       <table class="type1 mb1m">
         <!-- table start -->
         <caption>table</caption>
@@ -1366,7 +1755,7 @@
             <th></th>
             <td></td>
           </tr>
-          <tr>
+          <%-- <tr>
             <th scope="row"><spring:message code='service.title.adptUsed' /><span name="m14" id="m14" class="must">*</span></th>
             <td colspan='3'><select class="w100p" id="adptUsed" name="adptUsed">
                 <option value="" selected><spring:message code='sal.combo.text.chooseOne' /></option>
@@ -1374,6 +1763,10 @@
                   <option value="${list.codeId}" select>${list.codeName}</option>
                 </c:forEach>
             </select></td>
+          </tr> --%>
+          <tr>
+            <th scope="row"><spring:message code='service.title.AddUsedParts' /></th>
+            <td colspan='3'><label><input type="checkbox" id='chkCrtAS' name='chkCrtAS' onChange="fn_chkCrtAS(this)" /></label></td>
           </tr>
         </tbody>
       </table>
@@ -1412,6 +1805,100 @@
           </tr>
         </tbody>
       </table>
+       <br />
+
+      <!-- Added Used Part. 2021-03-11 by Hui Ding -->
+        <article class="acodi_wrap">
+          <dl>
+            <dt class="click_add_on on" id="addOnDt"  onclick="fn_secChk(this);">
+              <a href="#"><spring:message code='service.title.AddUsedParts' /></a>
+            </dt>
+
+            <dd id='chrFee_div' style="display: none">
+              <table class="type1">
+                <!-- table start -->
+                <caption>table</caption>
+                <colgroup>
+                  <col style="width: 170px" />
+                  <col style="width: *" />
+                  <col style="width: 140px" />
+                  <col style="width: *" />
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th scope="row"><spring:message code='service.text.asLbrChr' /></th>
+                    <td><label><input type="checkbox" id='txtLabourch' name='txtLabourch' onChange="fn_LabourCharge_CheckedChanged(this)" /></label></td>
+                    <th scope="row"><spring:message code='service.text.asLbrChr' /></th>
+                    <td><input type="text" id='txtLabourCharge' name='txtLabourCharge' value='0.00' disabled /></td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><spring:message code='service.text.asLbrChr' /> (RM) <span id="fcm1" name="fcm1" class="must" style="display: none">*</span></th>
+                    <td><select id='cmbLabourChargeAmt' name='cmbLabourChargeAmt' onChange="fn_cmbLabourChargeAmt_SelectedIndexChanged()" disabled>
+                        <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+                        <c:forEach var="list" items="${lbrFeeChr}" varStatus="status">
+                          <option value="${list.codeId}">${list.codeName}</option>
+                        </c:forEach>
+                    </select></td>
+                    <th scope="row"><spring:message code='service.text.asfltChr' /></th>
+                    <td><input type="text" id='txtFilterCharge' name='txtFilterCharge' value='0.00' disabled /></td>
+                  </tr>
+                  <tr>
+                    <th scope="row"></th>
+                    <td></td>
+                    <th scope="row"><b><spring:message code='service.text.asTtlChr' /></b></th>
+                    <td><input type="text" id='txtTotalCharge' name='txtTotalCharge' value='0.00' disabled /></td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><spring:message code='service.grid.FilterCode' /><span id="fcm2" name="fcm2" class="must" style="display: none">*</span></th>
+                    <td><select id='ddlFilterCode' name='ddlFilterCode' onchange="fn_setMand(this)"></select></td>
+                    <th scope="row"><spring:message code='service.grid.Quantity' /><span id="fcm3" name="fcm3" class="must" style="display: none">*</span></th>
+                    <td><select id='ddlFilterQty' name='ddlFilterQty'>
+                        <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+                        <c:forEach var="list" items="${fltQty}" varStatus="status">
+                          <option value="${list.codeId}">${list.codeName}</option>
+                        </c:forEach>
+                    </select></td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><spring:message code='service.text.asPmtTyp' /><span id="fcm4" name="fcm4" class="must" style="display: none">*</span></th>
+                    <td colspan="3"><select id='ddlFilterPayType' name='ddlFilterPayType'>
+                        <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
+                        <c:forEach var="list" items="${fltPmtTyp}" varStatus="status">
+                          <option value="${list.codeId}">${list.codeName}</option>
+                        </c:forEach>
+                    </select></td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><spring:message code='service.title.SerialNo' /><span id="fcm6" name="fcm6" class="must" style="display: none">*</span></th>
+                    <td colspan="3"><input type="text" id='ddSrvFilterLastSerial' name='ddSrvFilterLastSerial' /> <a id="serialSearch" class="search_btn" onclick="fn_serialSearchPop()" style="display: none"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+                  </tr>
+                  <tr>
+                    <th scope="row"><spring:message code='service.title.Remark' /></th>
+                    <td colspan="3"><textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark' />" id='txtFilterRemark' name='txtFilterRemark'></textarea></td>
+                  </tr>
+                  <tr>
+                    <td colspan="4"><span style="color: red; font-style: italic;"><spring:message code='service.msg.msgFltTtlAmt' /></span></td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- table end -->
+              <ul class="center_btns">
+                <li><p class="btn_blue2">
+                    <a href="#" onclick="fn_filterAdd()"><spring:message code='sys.btn.add' /></a>
+                  </p></li>
+                <li><p class="btn_blue2">
+                    <a href="#" onclick="fn_filterClear()"><spring:message code='sys.btn.clear' /></a>
+                  </p></li>
+              </ul>
+              <article class="grid_wrap">
+                <!-- grid_wrap start -->
+                <div id="asfilter_grid_wrap" style="width: 100%; height: 250px; margin: 0 auto;"></div>
+              </article>
+              <!-- grid_wrap end -->
+            </dd>
+          </dl>
+        </article>
+
       <aside class="title_line mt30">
         <!-- title_line start -->
         <h2 id="m17" name="m17">
@@ -1430,6 +1917,7 @@
         <td colspan="8"><label><input type="checkbox" id="instChklstCheckBox" name="instChklstCheckBox" value="Y" class="hide" /><span id="instChklstDesc" name="instChklstDesc" class="hide"><spring:message code='service.btn.instChklst' /> </span></label></td>
       </tr>
       <!-- table end -->
+
       <aside class="title_line" id="completedHide1">
         <!-- title_line start -->
         <h2>

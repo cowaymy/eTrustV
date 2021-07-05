@@ -21,7 +21,7 @@ public interface StockMapper {
 	List<EgovMap> selectStockImgList(Map<String, Object> params);
 
 	void updateStockInfo(Map<String, Object> params);
-	
+
 	void modifyServicePoint(Map<String, Object> params);
 
 	void updateSalePriceUOM(Map<String, Object> params);
@@ -37,7 +37,7 @@ public interface StockMapper {
 	int removeServiceInfoGrid(Map<String, Object> param);
 
 	int selectBomId();
-	
+
 	int stockSTKIDsearch();
 
 	int addFilterInfoGrid(Map<String, Object> param);
@@ -51,10 +51,42 @@ public interface StockMapper {
 	List<EgovMap> selectStockCommisionSetting(Map<String, Object> param);
 
 	void updateStockCommision(Map<String, Object> params);
-	
+
 	void nonvalueStockIns(Map<String, Object> params);
-	
+
 	void nonvalueItemPriceins(Map<String, Object> params);
-	
+
 	String nonvaluedItemCodeChk(Map<String, Object> params);
+
+	// Added by Hui Ding, 2020-06-22
+	EgovMap selectStkCatType(Map<String, Object> params);
+
+	/*//bom manual execution
+	List<EgovMap> selectITF180Data();
+	void insertBomMaster43M(Map<String, Object> map);
+	void insertBomDetail44D(Map<String, Object> map);
+	void updateITF180Status(Map<String, Object> map);
+	List<EgovMap> selectRmvITF180Data();
+	void updateDelete44D(Map<String, Object> map);
+
+	// material
+	List<EgovMap> selectITF140Data();
+	List<EgovMap> selectCdcCode();
+	void insertMaterialCall(Map<String, Object> map);
+	void insertSCM08Record(Map<String, Object> map);
+	void insertSCM17Record(Map<String, Object> map);
+	void updateITF140Status(Map<String, Object> map);
+
+	//FOB
+	List<EgovMap> selectITF141Data();
+	void deletePurchasePriceCall(Map<String, Object> map);
+	void insertPurchasePriceCall(Map<String, Object> map);
+	void updateITF141Status(Map<String, Object> map);
+
+	// BL INFO
+	List<EgovMap> selectITF160Data();
+	void insertBLMaster83M(Map<String, Object> map);
+	void insertBLMaster84D(Map<String, Object> map);
+	void updateITF160Status(Map<String, Object> map);*/
+
 }

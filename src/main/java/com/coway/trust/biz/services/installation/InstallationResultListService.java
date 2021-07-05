@@ -118,6 +118,8 @@ public interface InstallationResultListService {
 
   List<EgovMap> getProductList(Map<String, Object> params);
 
+  List<EgovMap> getProductList2(Map<String, Object> params);
+
   int chkRcdTms(Map<String, Object> params);
 
   int selRcdTms(Map<String, Object> params);
@@ -140,4 +142,9 @@ public interface InstallationResultListService {
 
   List<EgovMap> getProductListwithCategory(Map<String, Object> params);
 
+  EgovMap saveInsAsEntry(List<EgovMap> add, Map<String, Object> params, EgovMap installResult, SessionVO sessionVO);
+
+  List<EgovMap> selectFilterSparePartList(Map<String, Object> params);
+
+  EgovMap selectStkCatType (Map<String, Object> params);
 }

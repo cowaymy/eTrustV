@@ -524,6 +524,9 @@
          , Extent19.SERIAL_REQUIRE_CHK_YN
          , Extent19.WH_LOC_GB WH_LOC_GB
          , Extent19.WH_LOC_ID CT_WH_LOC_ID
+         , Extent1.APPNT_DT
+         , Extent1.APPNT_TM
+         , Extent2.RESULT_ID
     FROM SAL0046D Extent1
     LEFT JOIN SAL0047D Extent2 ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
     JOIN SAL0001D Extent3 ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
@@ -5356,4 +5359,57 @@ AND J.CODE IN ('COM','FAL','CAN')
     </if>
 
 </select>
+
+<select id="selectFilterSparePartList" parameterType="Map" resultType="egovMap">
+
+    <!-- SELECT S.STK_ID, S.STK_CODE || ' - ' || S.STK_DESC as c1, C.code_name
+        FROM LOG0043M B1 JOIN LOG0044D B2 ON B1.BOM = B2.BOM
+	       JOIN SYS0026M S ON B2.BOM_COMPNT = S.STK_CODE
+	       JOIN SYS0013M C on S.stk_type_id = C.code_id
+	   WHERE B1.MATRL_NO = #{stkCode}
+	       AND S.STK_TYPE_ID = 63 AND S.STUS_CODE_ID = 1
+	UNION
+	SELECT S.STK_ID, S.STK_CODE || ' - ' || S.STK_DESC as c1, C1.code_name
+	   FROM SYS0026M S JOIN SYS0013M C ON S.STK_CODE = C.CODE
+	   JOIN SYS0013M C1 on S.stk_type_id = C1.code_id
+	WHERE C.CODE_MASTER_ID = #{groupCode}
+	   AND C.DISAB <![CDATA[<>]]> 1
+	   AND S.STUS_CODE_ID =1
+	ORDER BY CODE_NAME, STK_ID -->
+
+	SELECT S.STK_ID, S.STK_CODE || ' - ' || S.STK_DESC as c1, C1.code_name
+	   FROM SYS0013M C JOIN SYS0026M S ON C.CODE = S.STK_CODE
+	   JOIN SYS0013M C1 ON S.STK_TYPE_ID = C1.CODE_ID
+	 WHERE C.CODE_MASTER_ID = #{groupCode}
+	   AND C.DISAB <![CDATA[<>]]> 1
+	   AND S.STUS_CODE_ID =1
+       ORDER BY CODE_NAME, STK_ID
+</select>
+
+<insert id="insertFilterChargeOut" parameterType="Map" >
+
+    INSERT INTO SAL0292D (
+        INS_RESULT_ID
+        , INS_ENTRY_ID
+        , SEQ
+        , TYPE
+        , FILTER_ID
+        , QTY
+        , PART_SERIAL_NO
+        , PAY_MODE
+        , CRT_USER_ID
+        , CRT_DT
+        ) VALUES (
+            #{insResultId}
+            , #{insEntryId}
+            , #{seq}
+            , #{type}
+            , #{stkId}
+            , #{qty}
+            , #{partSerialNo}
+            , #{payMode}
+            , #{crtUserId}
+            , sysdate
+        )
+</insert>
 </mapper>

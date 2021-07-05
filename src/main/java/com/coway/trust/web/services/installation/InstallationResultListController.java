@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,18 +30,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import com.coway.trust.biz.sales.order.PreOrderApplication;
-import com.coway.trust.biz.services.installation.InstallationApplication;
-import com.coway.trust.biz.sales.order.vo.PreOrderVO;
+
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
-import com.coway.trust.api.mobile.services.RegistrationConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.sales.order.PreOrderService;
+import com.coway.trust.biz.sales.order.vo.PreOrderVO;
+import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
+import com.coway.trust.biz.services.installation.InstallationApplication;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
+import com.coway.trust.biz.services.orderCall.OrderCallListService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -48,8 +51,6 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
-import com.coway.trust.biz.services.orderCall.OrderCallListService;
-import com.coway.trust.biz.sales.order.PreOrderService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -83,6 +84,9 @@ public class InstallationResultListController {
 
   @Autowired
 	private InstallationApplication installationApplication; //attachmentm
+
+  @Resource(name = "ASManagementListService")
+  private ASManagementListService ASManagementListService;
 
   @Value("${web.resource.upload.file}") // attachmentm
 	private String uploadDir;
@@ -417,6 +421,22 @@ public class InstallationResultListController {
     EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//
     model.put("orderDetail", orderDetail);
 
+    // Added Labour charge (like AS) by Hui Ding, 2021-03-11
+    List<EgovMap> lbrFeeChr = ASManagementListService.selectLbrFeeChr();
+    model.addAttribute("lbrFeeChr", lbrFeeChr);
+
+    //List<EgovMap> fltPmtTyp = ASManagementListService.selectFltPmtTyp();
+    List<EgovMap> fltPmtTyp = new ArrayList<EgovMap>();
+    EgovMap pmtType = new EgovMap();
+    pmtType.put("codeId", "FOC");
+    pmtType.put("codeName", "Free of Charge");
+
+    fltPmtTyp.add(pmtType);
+    model.addAttribute("fltPmtTyp", fltPmtTyp);
+
+    List<EgovMap> fltQty = ASManagementListService.selectFltQty();
+    model.addAttribute("fltQty", fltQty);
+
     // 호출될 화면
     return "services/installation/addInstallationResultPop";
   }
@@ -705,13 +725,16 @@ public class InstallationResultListController {
     logger.debug("params : {}", params);
     logger.debug("==========================/addInstallation_2.do=================================");
 
-    int noRcd = installationResultListService.chkRcdTms(params);
+    List<EgovMap> add = (List<EgovMap>) params.get("add");
+    Map<String, Object> param = (Map)params.get("installForm");
+
+    int noRcd = installationResultListService.chkRcdTms(param);
 
     if (noRcd == 1) {
-      EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
+      EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(param);
       logger.debug("INSTALLATION RESULT : {}" + installResult);
 
-      params.put("EXC_CT_ID", installResult.get("ctId"));
+      param.put("EXC_CT_ID", installResult.get("ctId"));
 
       Map<String, Object> locInfoEntry = new HashMap<String, Object>();
       locInfoEntry.put("CT_CODE", installResult.get("ctMemCode"));
@@ -729,17 +752,17 @@ public class InstallationResultListController {
         if (Integer.parseInt(locInfo.get("availQty").toString()) < 1) {
           message.setMessage("Fail to update result. [CT lack of stock]");
         } else {
-          EgovMap validMap = installationResultListService.validationInstallationResult(params);
+          EgovMap validMap = installationResultListService.validationInstallationResult(param);
           int resultCnt = ((BigDecimal) validMap.get("resultCnt")).intValue();
 
           if (resultCnt > 0) {
             message.setMessage("Record already exist. Please refer ResultID : " + validMap.get("resultId") + ".");
           } else {
             // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
-            resultValue = installationResultListService.runInstSp(params, sessionVO, "1");
+            resultValue = installationResultListService.runInstSp(param, sessionVO, "1");
           }
 
-          if (null != resultValue) {
+          if (null != resultValue && !resultValue.isEmpty()) {
             HashMap spMap = (HashMap) resultValue.get("spMap");
             logger.debug("spMap :" + spMap.toString());
             if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))
@@ -751,16 +774,16 @@ public class InstallationResultListController {
               if ("000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) {
                 servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
               }
-              String ordStat = installationResultListService.getSalStat(params);
+              String ordStat = installationResultListService.getSalStat(param);
 
               if (!"1".equals(ordStat)) {
-                if (params.get("hidCallType").equals("258")) {
-                  int exgCode = installationResultListService.chkExgRsnCde(params);
+                if (param.get("hidCallType").equals("258")) {
+                  int exgCode = installationResultListService.chkExgRsnCde(param);
                   // SKIP SOEXC009 - EXCHANGE (WITHOUT RETURN)
                   if (exgCode == 0) { // PEX EXCHANGE CODE NOT IN THE LIST
-                    if (Integer.parseInt(params.get("installStatus").toString()) == 4) {
+                    if (Integer.parseInt(param.get("installStatus").toString()) == 4) {
                       // RUN SP AND WAIT FOR RESULT BEFORE INSERT AND UPDATE
-                      resultValue = installationResultListService.runInstSp(params, sessionVO, "2");
+                      resultValue = installationResultListService.runInstSp(param, sessionVO, "2");
 
                       if (null != resultValue) {
                         spMap = (HashMap) resultValue.get("spMap");
@@ -797,11 +820,31 @@ public class InstallationResultListController {
                 }
               }
 
-              resultValue = installationResultListService.insertInstallationResult_2(params, sessionVO);
+              resultValue = installationResultListService.insertInstallationResult_2(param, sessionVO);
+
+              // Added for inserting charge out filters and spare parts at AS. By Hui Ding, 06-04-2021
+              if (resultValue.get("value") != null && resultValue.get("value").equals("Completed")){
+
+            	  if (param.get("chkCrtAS") != null && (param.get("chkCrtAS").toString().equals("on") || param.get("chkCrtAS").toString().equals("Y"))){
+
+            		  // change format from
+            		  String appntDtFormatted = null;
+
+            		  if (installResult.get("appntDt") != null){
+            			  Date appntDtOri = new SimpleDateFormat("yyyy-MM-dd").parse(installResult.get("appntDt").toString());
+            			  appntDtFormatted = CommonUtils.getFormattedString("dd/MM/yyyy", appntDtOri);
+            			  installResult.put("appntDt", appntDtFormatted); // format date (in string) to dd/MM/yyyy format
+            		  }
+            		  logger.info("### appointment date : " + appntDtFormatted);
+
+            		  installationResultListService.saveInsAsEntry(add, param, installResult, sessionVO);
+            	  }
+              }
+              // End of inserting charge out filters and spare parts at AS
 
               message.setCode("1");
               message.setData("Y");
-              if (Integer.parseInt(params.get("installStatus").toString()) == 21) {
+              if (Integer.parseInt(param.get("installStatus").toString()) == 21) {
                 message
                     .setMessage("Installation No. (" + resultValue.get("installEntryNo") + ") successfully updated to "
                         + resultValue.get("value") + ". Please proceed to Calllog function.");
@@ -1047,6 +1090,13 @@ public class InstallationResultListController {
    */
   @RequestMapping(value = "/installationRawDataPop.do")
   public String installationRawDataPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+	  List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
+	  List<EgovMap> dscCodeList = installationResultListService.selectDscCode();
+
+	  model.addAttribute("installStatus", installStatus);
+	  model.addAttribute("dscCodeList", dscCodeList);
+
     // 호출될 화면
     return "services/installation/installationRawDataPop";
   }
@@ -1467,6 +1517,27 @@ public class InstallationResultListController {
     return ResponseEntity.ok(codeList);
   }
 
+  /**
+   * Get product with specific criteria
+   *
+   * @Date Apr 12, 2021
+   * @Author HQIT-HUIDING
+   * @param params
+   * @return
+   */
+  @RequestMapping(value = "/getProductList2.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getProductList2(@RequestParam Map<String, Object> params) {
+
+	  String param = (String) params.get("prodCat");
+		String[] prodCatList = param.split("∈");
+		logger.debug("### product cat list: ", prodCatList.length);
+
+		params.put("prodCat", prodCatList);
+
+    List<EgovMap> codeList = installationResultListService.getProductList2(params);
+    return ResponseEntity.ok(codeList);
+  }
+
   @RequestMapping(value = "/selRcdTms.do", method = RequestMethod.POST)
   public ResponseEntity<ReturnMessage> chkRcdTms(@RequestBody Map<String, Object> params, ModelMap model,
       SessionVO sessionVO) {
@@ -1689,6 +1760,35 @@ public class InstallationResultListController {
   public ResponseEntity<List<EgovMap>> getProductListwithCategory(@RequestParam Map<String, Object> params) {
     List<EgovMap> codeList = installationResultListService.getProductListwithCategory(params);
     return ResponseEntity.ok(codeList);
+  }
+
+  /**
+   * to display installation charge out Filter/ spare part list
+   *
+   * @Date May 25, 2021
+   * @Author HQIT-HUIDING
+   * @param params
+   * @return
+   */
+  @RequestMapping(value = "/getInsAsFilterSPList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> getFilSparePartbyStockCode(@RequestParam Map<String, Object> params) {
+
+    List<EgovMap> codeList = installationResultListService.selectFilterSparePartList(params);
+    return ResponseEntity.ok(codeList);
+  }
+
+  /**
+   * to get stock's category and type info
+   *
+   * @Date Jul 1, 2021
+   * @Author HQIT-HUIDING
+   * @param params
+   * @return
+   */
+  @RequestMapping(value = "/getStockCatType.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> getStkCatType (@RequestParam Map<String, Object> params) {
+	  EgovMap stkCatType = installationResultListService.selectStkCatType(params);
+	  return ResponseEntity.ok(stkCatType);
   }
 
 }

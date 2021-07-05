@@ -264,6 +264,8 @@ public interface InstallationResultListMapper {
 
   List<EgovMap> getProductList(Map<String, Object> params);
 
+  List<EgovMap> getProductList2(Map<String, Object> params);
+
   EgovMap getExchangeInfo(Map<String, Object> params);
 
   int updateOrderInfoExchgM(Map<String, Object> params);
@@ -304,6 +306,8 @@ public interface InstallationResultListMapper {
 
   List<EgovMap> getProductListwithCategory(Map<String, Object> params);
 
+  List<EgovMap> selectFilterSparePartList(Map<String, Object> params);
 
+  void insertFilterChargeOut (Map<String, Object> params);
 
 }
