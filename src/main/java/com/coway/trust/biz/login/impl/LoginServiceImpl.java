@@ -202,8 +202,18 @@ public class LoginServiceImpl implements LoginService {
         String msg = "";
 
         int cnt = loginMapper.checkMobileNumber(params);
+
+        int userTypeId = loginMapper.selectFindUserIdPop(params).getUserTypeId();
+
         if(cnt < 1) {
-            msg = "Dear user, please enter the correct HP/Cody code or update your mobile number at nearest sales office.";
+
+        	if (userTypeId == 1) {
+        		msg = "Dear HP, please enter the correct HP code or update your mobile number at nearest sales office.";
+        	} else if (userTypeId == 2) {
+        		msg = "Dear Cody/ST, please enter the correct Cody/ST code or update your mobile number at nearest sales office.";
+        	} else {
+        		msg = "Dear user, please enter the correct username or update your mobile number at nearest sales office.";
+        	}
             // Mobile number does not exist
             result.put("flg", "fail");
 
@@ -226,8 +236,6 @@ public class LoginServiceImpl implements LoginService {
             params.put("dayCnt", cpMap.get("paramVal"));
 
             int smsReqCnt = loginMapper.getSmsReqCnt(params);
-
-            int userTypeId = loginMapper.selectFindUserIdPop(params).getUserTypeId();
 
             if(smsReqCnt >= smsLimit) {
 
