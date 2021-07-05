@@ -71,14 +71,19 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
 		params.put("complaintDate", params.get("reqstRefDt").toString());
 		/*params.put("orderId", Integer.parseInt(params.get("searchOrderId").toString()));*/
 		params.put("orderId", params.get("searchOrderId") != null && params.get("searchOrderId") !=""  ?  Integer.parseInt(params.get("searchOrderId").toString()) : 0 );
-		params.put("memberId", Integer.parseInt(params.get("memberId").toString()));
+		if("".equals(params.get("memberId").toString())) {
+		    params.put("memberId", params.get("memberId"));
+		    params.put("memTypeId", 0);
+		} else {
+		    params.put("memberId", Integer.parseInt(params.get("memberId").toString()));
+		    params.put("memTypeId", Integer.parseInt(params.get("memTypeId").toString()));
+		}
 		params.put("ActionId", params.get("action") != null && params.get("action") !=""  ? Integer.parseInt(params.get("action").toString()) : 0 );
 		params.put("complaintRemark", params.get("complianceRem").toString());
 		params.put("reqstCrtUserId", sessionVo.getUserId());
 		params.put("reqstUpdUserId", sessionVo.getUserId());
 		params.put("hidFileName", params.get("hidFileName").toString());
 		params.put("groupId", Integer.parseInt(params.get("groupId").toString()));
-		params.put("memTypeId", Integer.parseInt(params.get("memTypeId").toString()));
 
 		guardianOfComplianceMapper.saveGuardian(params);
 
@@ -238,7 +243,7 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
 		com_sub.put("complianceAttachmentFilename", params.get("hidFileName").toString());
 		com_sub.put("complianceCreateAt", "");
 		com_sub.put("complianceCreateBy", sessionVo.getUserId());
-		com_sub.put("compliancePersonInCharge", null);
+		com_sub.put("compliancePersonInCharge", params.get("changePerson") != "" && params.get("changePerson") != null ? Integer.parseInt(params.get("changePerson").toString()) : 0);
 		com_sub.put("complianceGroupId", Integer.parseInt(params.get("groupId").toString()));
 
 		//insert
