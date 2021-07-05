@@ -170,15 +170,18 @@
       Common.alert("Please select a complaint date");
       return false;
     }
-    if($("#orderId").val() == "" && $("#caseCategory1").val() != '2157'){
-    	console.log ( 'caseCategory1  :: ' + $("#caseCategory1").val() )
-        console.log ( 'docType  :: ' + $("#docType").val() )
-      Common.alert("Please key in Order No");
-      return false;
-    }
-    if ($("#reqstMemId").val() == "") {
-      Common.alert("Please key in Member Code");
-      return false;
+    // 20210705 - LaiKW - Added validation exclusion for Unauthorized online sales on order number and person involved validation (RESN_ID mismatch)
+    if($("#caseCategory1 option:selected").text() != "21-Unauthorized Online Sales") {
+        if($("#orderId").val() == "" && $("#caseCategory1").val() != '2157'){
+            console.log ( 'caseCategory1  :: ' + $("#caseCategory1").val() )
+            console.log ( 'docType  :: ' + $("#docType").val() )
+          Common.alert("Please key in Order No");
+          return false;
+        }
+        if ($("#reqstMemId").val() == "") {
+          Common.alert("Please key in Member Code");
+          return false;
+        }
     }
     if ($("#action").val() == "") {
       Common.alert("Please select an action");
