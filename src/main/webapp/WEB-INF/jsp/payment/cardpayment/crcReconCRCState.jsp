@@ -7,6 +7,8 @@
 }
 </style>
 <script type="text/javaScript">
+console.log("crcReconCRCState");
+
 var mappingGridId;
 var crcKeyInGridId;
 var crcStateGridId;
@@ -54,11 +56,11 @@ var gridPros3 = {
 
 $(document).ready(function(){
 
-	doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'bankAcc' , 'S', '');
+    doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'bankAcc' , 'S', '');
 
-	mappingGridId = GridCommon.createAUIGrid("mapping_grid_wrap", mappingLayout,"",gridPros);
-	crcKeyInGridId = GridCommon.createAUIGrid("crcKeyIn_grid_wrap", crcKeyInLayout,"",gridPros2);
-	crcStateGridId = GridCommon.createAUIGrid("crcState_grid_wrap", crcStateLayout,"",gridPros3);
+    mappingGridId = GridCommon.createAUIGrid("mapping_grid_wrap", mappingLayout,"",gridPros);
+    crcKeyInGridId = GridCommon.createAUIGrid("crcKeyIn_grid_wrap", crcKeyInLayout,"",gridPros2);
+    crcStateGridId = GridCommon.createAUIGrid("crcState_grid_wrap", crcStateLayout,"",gridPros3);
 
 });
 
@@ -220,114 +222,120 @@ var crcStateLayout = [
                       }];
 
 
-	function fn_getCrcReconStateList(ordNo, ordId){
+    function fn_getCrcReconStateList(ordNo, ordId){
 
-		if($("#bankAcc").val() == ''){
+        if($("#bankAcc").val() == ''){
+            Common.alert("Select Bank Account.");
+            return;
+        }
 
-	           Common.alert("Select Bank Account.");
+        if($("#transDateFr").val() != '' && $("#transDateTo").val() != ''){
+            var dtArr;
 
-			return;
-		}
+            var fdate = $("#transDateFr").val();
+            dtArr = fdate.split("/");
+            fdate = new Date(Number(dtArr[2]), Number(dtArr[1]) - 1, Number(dtArr[0]));
 
-		if($("#transDateFr").val() != '' && $("#transDateTo").val() != ''){
+            var tdate = $("#transDateTo").val();
+            dtArr = tdate.split("/");
+            tdate = new Date(Number(dtArr[2]), Number(dtArr[1]) - 1, Number(dtArr[0]));
 
+            console.log("frdate :: " + fdate );
+            console.log("todate :: " + tdate );
+            console.log("todate <= frdate :: " + tdate <= fdate);
 
-			var fdate = $("#transDateFr").val();
-            var fday = fdate.slice(0 , 2);
-            var fmonth =  fdate.slice(3 , 5) ;
-            var fyear = fdate.slice(6 , 11);
+            var months = (tdate.getFullYear() - fdate.getFullYear()) * 12;
+            months -= fdate.getMonth();
+            months += tdate.getMonth();
 
+            if(($("#stmtDateFr").val() != "" && $("#stmtDateTo").val() == "") || ($("#stmtDateFr").val() == "" && $("#stmtDateTo").val() != "")) {
+                Common.alert("Statement Dates incomplete.");
+                return;
+            } else if($("#stmtDateFr").val() != "" && $("#stmtDateTo").val() != "") {
+                var sfdate = $("#stmtDateFr").val();
+                dtArr = sfdate.split("/");
+                sfdate = new Date(Number(dtArr[2]), Number(dtArr[1]) - 1, Number(dtArr[0]));
 
-             var frdate = new Date(fyear , fmonth   , fday);
-              console.log(frdate );
-              fyear = frdate.getFullYear() + 1;
-               frdate = new Date(fyear , fmonth   , fday);
+                var stdate = $("#stmtDateTo").val();
+                dtArr = stdate.split("/");
+                stdate = new Date(Number(dtArr[2]), Number(dtArr[1]) - 1, Number(dtArr[0]));
 
+                if(sfdate > stdate) {
+                    Common.alert("Statement From Date cannot be later than Statement To Date.");
+                    return;
+                }
+            }
 
-              var tdate = $("#transDateTo").val();
-              var tday = tdate.slice(0 , 2);
-              var tmonth =  tdate.slice(3 , 5);
-              var tyear = tdate.slice(6 , 11);
+            if(fdate <= tdate) {
+                //if(months <= 6 && months >= 0) {
+                    console.log("flg");
+                    Common.ajax("GET","/payment/selectCrcReconCRCStateInfo.do", $("#searchForm").serialize(), function(result){
+                        console.log(result);
+                        AUIGrid.setGridData(mappingGridId, result.mappingList);
+                        AUIGrid.setGridData(crcKeyInGridId, result.keyInList);
+                        AUIGrid.setGridData(crcStateGridId, result.stateList);
+                    });
+                //} else {
+                    //Common.alert("Only maximum 6 months of transaction date allowed.");
+                //}
+            } else{
+                Common.alert("From date must not be greater than to date.");
+            }
 
+        }else{
+            Common.alert("Select Transaction Date.");
+        }
+    }
 
-               var todate = new Date(tyear , tmonth  , tday);
-
-
-               console.log(frdate );
-               console.log(todate );
-               console.log(todate <= frdate );
-
-			if(todate <= frdate) {
-				Common.ajax("GET","/payment/selectCrcReconCRCStateInfo.do", $("#searchForm").serialize(), function(result){
-			          console.log(result);
-
-			          AUIGrid.setGridData(mappingGridId, result.mappingList);
-			          AUIGrid.setGridData(crcKeyInGridId, result.keyInList);
-			          AUIGrid.setGridData(crcStateGridId, result.stateList);
-
-			      });
-
-
-			}
-			else{
-				Common.alert("Please Select  Date  within a year.");
-
-			}
-
-		}else{
-			Common.alert("Select Transaction Date.");
-		}
-	}
-
-	function fn_clear(){
-	    $("#searchForm")[0].reset();
-	}
+    function fn_clear(){
+        $("#searchForm")[0].reset();
+    }
 
     function fn_mappingProc() {
 
-    	var crcKeyInChkItem = AUIGrid.getCheckedRowItems(crcKeyInGridId);
-    	var crcStateChkItem = AUIGrid.getCheckedRowItems(crcStateGridId);
-    	var crcKeyInVal;
-    	var keyInRowItem;
-    	var stateRowItem;
-    	var item = new Object();
+        var crcKeyInChkItem = AUIGrid.getCheckedRowItems(crcKeyInGridId);
+        var crcStateChkItem = AUIGrid.getCheckedRowItems(crcStateGridId);
+        var crcKeyInVal;
+        var keyInRowItem;
+        var stateRowItem;
+        var item = new Object();
 
-		if(crcKeyInChkItem.length < 1 ){
-    		Common.alert("<spring:message code='pay.alert.crcKeyInData'/>");
-			return;
-    	}
+        if(crcKeyInChkItem.length < 1 ){
+            Common.alert("<spring:message code='pay.alert.crcKeyInData'/>");
+            return;
+        }
 
-		if(crcStateChkItem.length < 1){
-			Common.alert("<spring:message code='pay.alert.crcStateData'/>");
-			return;
-		}
+        if(crcStateChkItem.length < 1){
+            Common.alert("<spring:message code='pay.alert.crcStateData'/>");
+            return;
+        }
 
-		for(i = 0 ; i < crcKeyInChkItem.length ; i++){
-			keyInRowItem = crcKeyInChkItem[i];
-	        stateRowItem = crcStateChkItem[0];
+        for(i = 0 ; i < crcKeyInChkItem.length ; i++){
+            keyInRowItem = crcKeyInChkItem[i];
+            stateRowItem = crcStateChkItem[0];
 
-			crcKeyInVal = keyInRowItem.item.groupSeq;
-			item.cardModeName = keyInRowItem.item.cardModeName;
-			item.crcMcName = stateRowItem.item.bankAccName;
-			item.crcTrnscDt = stateRowItem.item.crcTrnscDt;
-			item.crcTrnscNo = stateRowItem.item.crcTrnscNo; // crcNo no check?
-			item.crcTrnscAppv = stateRowItem.item.crcTrnscAppv;
-			item.amount = stateRowItem.item.grosAmt;
-			item.groupSeq = crcKeyInVal;//hidden field
-			item.orNo = keyInRowItem.item.orNo;//hidden field
-			item.ordNo = keyInRowItem.item.ordNo;//hidden field
-			item.crcTrnscId = stateRowItem.item.crcTrnscId;//hidden field
-			item.crcStateAccId = stateRowItem.item.crcStateAccId;//hidden field
-			item.crcTrnscMid = stateRowItem.item.crcTrnscMid;//hidden field
-			item.crcStateAccCode = stateRowItem.item.accCode;//hidden field
-			item.crditCard = stateRowItem.item.crditCard;//hidden field
+            crcKeyInVal = keyInRowItem.item.groupSeq;
+            item.cardModeName = keyInRowItem.item.cardModeName;
+            item.crcMcName = stateRowItem.item.bankAccName;
+            item.crcTrnscDt = stateRowItem.item.crcTrnscDt;
+            item.crcTrnscNo = stateRowItem.item.crcTrnscNo; // crcNo no check?
+            item.crcTrnscAppv = stateRowItem.item.crcTrnscAppv;
+            item.amount = stateRowItem.item.grosAmt;
+            item.groupSeq = crcKeyInVal;//hidden field
+            item.orNo = keyInRowItem.item.orNo;//hidden field
+            item.ordNo = keyInRowItem.item.ordNo;//hidden field
+            item.crcTrnscId = stateRowItem.item.crcTrnscId;//hidden field
+            item.crcStateAccId = stateRowItem.item.crcStateAccId;//hidden field
+            item.crcTrnscMid = stateRowItem.item.crcTrnscMid;//hidden field
+            item.crcStateAccCode = stateRowItem.item.accCode;//hidden field
+            item.crditCard = stateRowItem.item.crditCard;//hidden field
 
-			console.log(item);
-			AUIGrid.addRow(mappingGridId, item, "last");
-		}
+            console.log(item);
+            AUIGrid.addRow(mappingGridId, item, "last");
+        }
 
-		AUIGrid.removeCheckedRows(crcKeyInGridId);
-		AUIGrid.removeCheckedRows(crcStateGridId);
+        AUIGrid.removeCheckedRows(crcKeyInGridId);
+        AUIGrid.removeCheckedRows(crcStateGridId);
     }
 
     function fn_mappingListKnockOff() {
@@ -339,7 +347,7 @@ var crcStateLayout = [
 
             Common.confirm("<spring:message code='pay.alert.knockOffCrc'/>",function (){
 
-            	Common.ajax("POST","/payment/updCrcReconState.do", data , function(result){
+                Common.ajax("POST","/payment/updCrcReconState.do", data , function(result){
                     console.log(result);
 
                     AUIGrid.clearGridData(mappingGridId);
@@ -349,46 +357,46 @@ var crcStateLayout = [
             });
 
         }else{
-        	Common.alert("<spring:message code='pay.alert.noMapping'/>");
+            Common.alert("<spring:message code='pay.alert.noMapping'/>");
         }
     }
 
-	function fn_incomeProc() {
-		var crcStateChkItem = AUIGrid.getCheckedRowItems(crcStateGridId);
-		var stateRowItem;
+    function fn_incomeProc() {
+        var crcStateChkItem = AUIGrid.getCheckedRowItems(crcStateGridId);
+        var stateRowItem;
 
-		if(crcStateChkItem.length > 0){
+        if(crcStateChkItem.length > 0){
 
-			stateRowItem = crcStateChkItem[0];
+            stateRowItem = crcStateChkItem[0];
 
-			$("#other_inc_pop").show();
-			$("#popCrcTrnscId").val(stateRowItem.item.crcTrnscId);
+            $("#other_inc_pop").show();
+            $("#popCrcTrnscId").val(stateRowItem.item.crcTrnscId);
             $("#crcStmtAmt").val(AUIGrid.formatNumber(stateRowItem.item.grosAmt, "#,##0.00"));
 
-		}else{
-			Common.alert("<spring:message code='pay.alert.crcStateData'/>");
-		}
-	}
+        }else{
+            Common.alert("<spring:message code='pay.alert.crcStateData'/>");
+        }
+    }
 
-	function fn_saveIncomeProc() {
-		Common.confirm("Do you want to confirm the seleced item as income?",function (){
+    function fn_saveIncomeProc() {
+        Common.confirm("Do you want to confirm the seleced item as income?",function (){
 
-		    Common.ajax("GET","/payment/updIncomeCrcStatement", {"crcTrnscId" : $("#popCrcTrnscId").val(), "grosAmt" : $("#crcStmtAmt").val(), "action" : $("#action").val()}, function(result){
+            Common.ajax("GET","/payment/updIncomeCrcStatement", {"crcTrnscId" : $("#popCrcTrnscId").val(), "grosAmt" : $("#crcStmtAmt").val(), "action" : $("#action").val()}, function(result){
 
-		    	var action;
-		    	if($("#action").val() == "INC") {
-		    		action = "Income";
-		    	} else {
-		    		action = "Contra";
-		    	}
+                var action;
+                if($("#action").val() == "INC") {
+                    action = "Income";
+                } else {
+                    action = "Contra";
+                }
 
-		        var message = "Success " + action +" Process";
-		        Common.alert(message, function(){
-		            fn_getCrcReconStateList();
-		        });
+                var message = "Success " + action +" Process";
+                Common.alert(message, function(){
+                    fn_getCrcReconStateList();
+                });
             });
         });
-	}
+    }
 
 </script>
 <section id="content"><!-- content start -->
@@ -433,6 +441,20 @@ var crcStateLayout = [
                         <td>
                             <select id="bankAcc" name="bankAcc" class="w100p" ></select>
                         </td>
+                    </tr>
+                    <tr>
+                        <th>Statement Date</th>
+                        <td>
+                            <!-- date_set start -->
+                            <div class="date_set w100p">
+                            <p><input type="text" id="stmtDateFr" name="stmtDateFr" title="Statement Start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            <span>To</span>
+                            <p><input type="text" id="stmtDateTo" name="stmtDateTo" title="Statement End Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            </div>
+                            <!-- date_set end -->
+                        </td>
+                        <th></th>
+                        <td></td>
                     </tr>
                 </tbody>
             </table><!-- table end -->
