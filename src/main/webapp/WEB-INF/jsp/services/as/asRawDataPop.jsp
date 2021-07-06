@@ -574,7 +574,7 @@
 
   $.fn.clearForm = function() {
     return this.each(function() {
-      var type = this.type, tag = this.tagName.toLowerCase();
+      var type = this.type, tag = this.tagName.toLowerCase(); identifier = this.id;
       if (tag === 'form') {
         return $(':input', this).clearForm();
       }
@@ -583,7 +583,7 @@
         this.value = '';
       } else if (type === 'checkbox' || type === 'radio') {
         this.checked = false;
-      } else if (tag === 'select') {
+      } else if (tag === 'select' && identifier === 'reportType') {
         this.selectedIndex = 0;
       }
 
