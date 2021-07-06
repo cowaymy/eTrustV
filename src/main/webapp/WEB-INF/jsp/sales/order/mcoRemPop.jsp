@@ -7,9 +7,16 @@
         console.log("mcoRemPop");
         createAUIGrid();
         fn_selMcoRem();
+
+        /*
+        Common.ajax("GET", "/sales/order/selectMCORemarkList.do", {salesOrderId : $("#salesOrdId").val()}, function(result) {
+            console.log(result);
+            AUIGrid.setGridData(mcoRemarkGridID2, result);
+        });
+        */
     });
 
-    var mcoRemarkGridID;
+    var mcoRemarkGridID, mcoRemarkGridID2;
     var salesOrderId = '${salesOrdId}';
 
     function createAUIGrid() {
@@ -41,7 +48,8 @@
                 wordWrap : true
             };
 
-        mcoRemarkGridID = GridCommon.createAUIGrid("#grid_wrap_remList", columnLayout, "", gridPros);
+        //mcoRemarkGridID = GridCommon.createAUIGrid("#grid_wrap_remList", columnLayout, "", gridPros);
+        mcoRemarkGridID2 = GridCommon.createAUIGrid("grid_mcoRemark_wrap1", columnLayout, "", gridPros);
     }
 
     function fn_selMcoRem() {
@@ -50,7 +58,7 @@
 
         Common.ajax("GET", "/sales/order/selectMCORemarkList.do", {salesOrderId : $("#salesOrdId").val()}, function(result) {
             console.log(result);
-            AUIGrid.setGridData(mcoRemarkGridID, result);
+            AUIGrid.setGridData(mcoRemarkGridID2, result);
         });
     }
 
@@ -65,6 +73,8 @@
 
     function fn_saveRem() {
         Common.ajax("POST", "/sales/order/saveMcoRem.do", $("#addRemForm").serializeJSON(), function(result) {
+            $("#agreeFlg").val("-");
+            $("#remark").val("");
             fn_selMcoRem();
         });
     }
@@ -83,6 +93,10 @@
 
     <section class="pop_body">
         <!-- acodi_wrap start -->
+        <div>
+
+</div>
+
         <article class="acodi_wrap">
             <dl>
                 <dt class="click_add_on on">
@@ -127,9 +141,12 @@
                         </tbody>
                     </table>
                      -->
-
+                    <!--
                     <article class="grid_wrap mt20">
                         <div id="grid_wrap_remList" style="width: 100%; height: 250px; margin: 0 auto;"></div>
+                    </article> -->
+                    <article class="grid_wrap">
+                        <div id="grid_mcoRemark_wrap1" style="width:100%; height:250px; margin:0 auto;"></div>
                     </article>
                 </dd>
                 <dt class="click_add_on">
@@ -166,7 +183,7 @@
                         <th scope="row">Agree to Proceed</th>
                         <td>
                             <select class="w100p" id="agreeFlg" name="agreeFlg">
-                                <option value="">Choose One</option>
+                                <option value="-">Choose One</option>
                                 <option value="0">No</option>
                                 <option value="1">Yes</option>
                                 <option value="2">Unreachable</option>
