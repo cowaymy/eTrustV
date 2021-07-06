@@ -110,4 +110,6 @@ public interface OrderDetailMapper {
 
   EgovMap selectProductUsageMonth(Map<String, Object> params);
 
+  List<EgovMap> selectMCORemarkList(Map<String, Object> params);
+
 }

@@ -54,4 +54,6 @@ public interface OrderDetailService {
 
   public List<EgovMap> getInstAsPSIData(Map<String, Object> params);
 
+  public List<EgovMap> selectMCORemarkList(Map<String, Object> params);
+
 }

@@ -606,4 +606,9 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     return orderDetailMapper.getInstAsPSIData(params);
   }
 
+  @Override
+  public List<EgovMap> selectMCORemarkList(Map<String, Object> params) {
+    return orderDetailMapper.selectMCORemarkList(params);
+  }
+
 }

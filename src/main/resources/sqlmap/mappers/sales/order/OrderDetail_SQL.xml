@@ -1581,4 +1581,18 @@
     WHERE ROWNUM <= 1
     ]]>
   </select>
+
+  <select id="selectMCORemarkList" parameterType="Map" resultType="egovMap">
+    SELECT CASE WHEN T1.FLAG = '1' THEN 'Yes'
+                       WHEN T1.FLAG = '0' THEN 'No'
+               END FLAG
+             , T2.SALES_ORD_NO
+             , T1.REMARK
+             , T3.USER_NAME
+             , TO_CHAR(T1.CRT_DT, 'DD/MM/YYYY') CRT_DT
+    FROM SAL0295D T1
+    JOIN SAL0001D T2 ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+    LEFT JOIN SYS0047M T3 ON T3.USER_ID = T1.CRT_USER_ID
+    WHERE T1.SALES_ORD_ID = #{salesOrderId}
+  </select>
 </mapper>

@@ -81,6 +81,12 @@
 	            	fn_selectGstRebateList();
                 }
                 break;
+            case 'mcoRemark' :
+                AUIGrid.resize(mcoRemarkGridID, 942, 380);
+	            if(AUIGrid.getRowCount(mcoRemarkGridID) <= 0) {
+	            	fn_selectMCORemarkList();
+                }
+                break;
         };
     }
 </script>
@@ -107,6 +113,7 @@
 	<li><a id="aTabGC"href="#"><spring:message code="sal.title.text.reliefCertificate" /></a></li>
 	<li><a href="#" onClick="javascript:chgTab('discountInfo');"><spring:message code="sal.title.text.discount" /></a></li>
 	<li><a href="#" onClick="javascript:chgTab('gstRebateInfo');"><spring:message code="sal.title.text.gstRebate" /></a></li>
+	<li><a href="#" onClick="javascript:chgTab('mcoRemark');">MCO Remark</a></li>
 </ul>
 <!------------------------------------------------------------------------------
     Basic Info
@@ -181,5 +188,9 @@
     GST Rebate
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/order/include/gstRebateList.jsp" %>
+<!------------------------------------------------------------------------------
+    MCO Remark
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/mcoRemark.jsp" %>
 </section><!-- tap_wrap end -->
 
