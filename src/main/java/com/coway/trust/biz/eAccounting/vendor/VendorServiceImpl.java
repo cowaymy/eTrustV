@@ -303,4 +303,30 @@ public class VendorServiceImpl implements VendorService {
         // Insert FCM0029D
         vendorMapper.insertRejectM(params);
     }
+
+	@Override
+    public void editApproved(Map<String, Object> params) {
+        // TODO Auto-generated method stub
+
+        LOGGER.debug("editApproved =====================================>>  " + params);
+
+        EgovMap attachmentDetails = new EgovMap();
+        attachmentDetails = (EgovMap) vendorMapper.getAttachmenDetails(params);
+        params.put("exFileAtchGrpId", attachmentDetails.get("atchFileGrpId"));
+        params.put("exFileAtchId", attachmentDetails.get("atchFileId"));
+
+        // Duplicate File ID
+        int newFileAtchGrpId = vendorMapper.getFileAtchGrpId();
+        int newFileAtchId = vendorMapper.getFileAtchId();
+        params.put("newFileAtchGrpId", newFileAtchGrpId);
+        params.put("newFileAtchId", newFileAtchId);
+
+        // Insert SYS0070M
+        vendorMapper.insertSYS0070M_ER(params);
+
+        vendorMapper.insertSYS0071D_ER(params);
+
+        // Insert FCM0029D
+        vendorMapper.insertApprovedDraft(params);
+    }
 }

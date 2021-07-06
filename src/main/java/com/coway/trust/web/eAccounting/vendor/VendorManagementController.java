@@ -417,6 +417,7 @@ public class VendorManagementController {
             }
             model.addAttribute("vendorInfo", vendorInfo);
             model.addAttribute("flg", params.get("flg"));
+            model.addAttribute("atchFileGrpId", atchFileGrpId);
             LOGGER.debug("vendorInfo =====================================>>  " + vendorInfo);
         }
         else{
@@ -432,6 +433,8 @@ public class VendorManagementController {
         model.addAttribute("callType", params.get("callType"));
         model.addAttribute("bankList", bankList);
         model.addAttribute("countryList", countryList);
+        model.addAttribute("appvPrcssStusCode",params.get("appvPrcssStusCode"));
+        model.addAttribute("vendorAccId",params.get("vendorAccId"));
 
         LOGGER.debug("params =====================================>>  " + params);
 
@@ -606,6 +609,25 @@ public class VendorManagementController {
         params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
         vendorService.editRejected(params);
+
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(params);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+        return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/editApproved.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> editApproved(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+
+        LOGGER.debug("params =====================================>>  " + params);
+
+        String reqNo = vendorService.selectNextReqNo();
+        params.put("newClmNo", reqNo);
+        params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+        vendorService.editApproved(params);
 
         ReturnMessage message = new ReturnMessage();
         message.setCode(AppConstants.SUCCESS);

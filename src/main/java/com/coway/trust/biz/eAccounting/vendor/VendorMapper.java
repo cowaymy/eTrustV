@@ -73,6 +73,8 @@ public interface VendorMapper {
 
 	void insertVendorInterface(Map<String, Object> params);
 
+	void insertApprovedDraft(Map<String, Object> params);
+
 	// Edit Rejected functions - 20210624 - Start
 	EgovMap getAttachmenDetails(Map<String, Object> params);
 

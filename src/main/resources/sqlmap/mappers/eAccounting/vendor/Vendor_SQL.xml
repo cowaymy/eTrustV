@@ -598,7 +598,8 @@
 <update id="updateVendorInfo" parameterType="Map">
 
          UPDATE FCM0029D
-         SET VENDOR_GRP = #{vendorGroup}
+         SET VENDOR_NAME = #{regCompName}
+                ,VENDOR_GRP = #{vendorGroup}
                 ,PAY_ADV_EMAIL1 = #{payAdvEmail1}
                 ,PAY_ADV_EMAIL2 = NVL(#{payAdvEmail2}, NULL)
                 ,ADD_HOUSE_LOT_NO = #{houseNo}
@@ -659,7 +660,7 @@
             '' BIZ_TM,
             VENDOR_REG_NO_NRIC STENR,
             VENDOR_REQ_NO ALTKN,
-            ADD_HOUSE_LOT_NO HOUSE_NUM1,
+            SUBSTR(ADD_HOUSE_LOT_NO, 0,10) HOUSE_NUM1,
             SUBSTR(ADD_STREET, 0,35) STREET,
             ADD_CITY CITY,
             PAY_ADV_EMAIL1 EMAIL_01,
@@ -737,6 +738,84 @@
     </insert>
 
     <insert id="insertRejectM" parameterType="Map">
+        INSERT INTO FCM0029D(
+            VENDOR_REQ_NO,
+            VENDOR_ACC_ID,
+            VENDOR_GRP,
+            COST_CENTER,
+            COST_CENTER_NAME,
+            VENDOR_NAME,
+            VENDOR_REG_NO_NRIC,
+            PAY_ADV_EMAIL1,
+            PAY_ADV_EMAIL2,
+            ADD_HOUSE_LOT_NO,
+            ADD_STREET,
+            ADD_POSTAL_CODE,
+            ADD_CITY,
+            ADD_COUNTRY,
+            BANK_COUNTRY,
+            BANK,
+            BANK_ACC_HOLDER,
+            BANK_ACC_NO,
+            BANK_BRANCH,
+            SWIFT_CODE,
+            CONTACT_DESIGNATION,
+            CONTACT_NAME,
+            CONTACT_PHONE_NO,
+            CONTACT_EMAIL,
+            PAY_TERM,
+            PAY_TYPE,
+            PAY_OTH,
+            ATCH_FILE_GRP_ID,
+            /*APPV_PRCSS_NO*/
+            REM,
+            CRT_USER_ID,
+            CRT_DATE,
+            UPD_USER_ID,
+            UPD_DATE,
+            PREV_CLM_NO
+        )
+        SELECT
+            #{newClmNo} VENDOR_REQ_NO,
+            VENDOR_ACC_ID,
+            VENDOR_GRP,
+            COST_CENTER,
+            COST_CENTER_NAME,
+            VENDOR_NAME,
+            VENDOR_REG_NO_NRIC,
+            PAY_ADV_EMAIL1,
+            PAY_ADV_EMAIL2,
+            ADD_HOUSE_LOT_NO,
+            ADD_STREET,
+            ADD_POSTAL_CODE,
+            ADD_CITY,
+            ADD_COUNTRY,
+            BANK_COUNTRY,
+            BANK,
+            BANK_ACC_HOLDER,
+            BANK_ACC_NO,
+            BANK_BRANCH,
+            SWIFT_CODE,
+            CONTACT_DESIGNATION,
+            CONTACT_NAME,
+            CONTACT_PHONE_NO,
+            CONTACT_EMAIL,
+            PAY_TERM,
+            PAY_TYPE,
+            PAY_OTH,
+            #{newFileAtchGrpId},
+            /*APPV_PRCSS_NO,*/
+            REM,
+            CRT_USER_ID,
+            SYSDATE,
+            UPD_USER_ID,
+            SYSDATE,
+            VENDOR_REQ_NO
+        FROM FCM0029D
+        WHERE VENDOR_REQ_NO = #{clmNo}
+    </insert>
+
+    <insert id="insertApprovedDraft" parameterType="Map">
         INSERT INTO FCM0029D(
             VENDOR_REQ_NO,
             VENDOR_ACC_ID,

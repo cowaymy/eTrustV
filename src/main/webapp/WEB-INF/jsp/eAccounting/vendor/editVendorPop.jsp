@@ -22,10 +22,14 @@
  }
 </style>
 <script type="text/javascript">
+console.log("editVendorPop");
 var newGridID;
 var selectRowIdx;
 var callType = "${callType}";
 var flg = "${flg}";
+var atchFileGrpId = "${atchFileGrpId}";
+var appvPrcssStusCode = "${appvPrcssStusCode}";
+var vendorAccId = "${vendorAccId}";
 var conditionalCheck = 0; //0:No need to check; 1:Need to check
 var removeOriFileName = new Array();
 var gridDataList = new Array();
@@ -92,7 +96,6 @@ var myGridPros = {
 };
 
 $(document).ready(function () {
-	console.log("EditVendorCallType: " + callType);
 	var appvPrccNo = "${vendorInfo.appvPrcssNo}";
 	var vendorCountry = "${vendorInfo.addCountry}";
 	var bankCountry = "${vendorInfo.bankCountry}";
@@ -100,11 +103,8 @@ $(document).ready(function () {
 	var paymentMethod = "${vendorInfo.payType}";
 	var designation = "${vendorInfo.contactDesignation}";
 	var editorCostCenter = "${SESSION_INFO.costCentr}";
-    console.log('Editor Cost Center: ' + editorCostCenter);
-
 
 	var txtPaymentMethod = $("#paymentMethod :selected").val();
-    console.log('txtPaymentMethod' + txtPaymentMethod);
     if(txtPaymentMethod == 'CASH' || txtPaymentMethod == 'CHEQ')
     {
           $("#bankListHeader").replaceWith('<th id="bankListHeader" scope="row"> Bank</th>');
@@ -120,37 +120,7 @@ $(document).ready(function () {
         $("#bankAccNoHeader").replaceWith('<th id="bankAccNoHeader" scope="row">Bank Account Number<span class="must">*</span></th>');
         headerCheck = 1;
     }
-	   /*
-    if(appvPrccNo == null || appvPrccNo == '') {
-        newGridID = AUIGrid.create("#viewEditWebInvoice_grid_wrap", myColumnLayout, myGridPros);
-    } else {
-        newGridID = AUIGrid.create("#viewEditWebInvoice_grid_wrap", approvalColumnLayout, myGridPros);
-    }
-	   */
 
-	/*AUIGrid.bind(vendorManagementGridID, "cellDoubleClick", function( event )
-        {
-            console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-            console.log(event);
-            console.log("CellDoubleClick reqNo : " + event.item.reqNo);
-            console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
-            console.log("CellDoubleClick appvPrcssStusCode : " + event.item.appvPrcssStusCode);
-            console.log("CellDoubleClick costCenterName : " + event.item.costCenterName);
-            // TODO detail popup open
-            if(event.item.appvPrcssStusCode == "T") {
-                fn_editVendorPop(event.item.reqNo);
-            } else {
-                var reqNo = event.item.reqNo;
-                var clmType = reqNo.substr(0, 2);
-                var costCenterName = event.item.costCenterName;
-                var costCenter = event.item.costCenter;
-                fn_vendorRequestPop(event.item.appvPrcssNo, clmType, costCenterName, costCenter, reqNo);
-            }
-
-        });
-*/
-
-	//console.log('flg: ' + flg);
 	if(flg == 'M')
 	{
 		setInputFile2();
@@ -183,10 +153,13 @@ $(document).ready(function () {
      //   fn_setGridData(gridDataList);
    // }
     // 수정시 첨부파일이 없는경우 디폴트 파일태그 생성
-    //console.log(attachmentList);
-    //if(attachmentList.length <= 0) {
-        //setInputFile2();
-    //}
+    console.log(attachmentList);
+    if(flg != 'M')
+    {
+    	if(attachmentList.length <= 0) {
+            setInputFile2();
+        }
+    }
 
     // 파일 다운
     $(".input_text").dblclick(function() {
@@ -245,7 +218,6 @@ function fn_close(){
 
 function fn_jsFunction1(){
     var txtPaymentMethod = $("#paymentMethod :selected").val();
-    console.log('txtPaymentMethod' + txtPaymentMethod);
     if(txtPaymentMethod == 'CASH' || txtPaymentMethod == 'CHEQ')
     {
           $("#bankListHeader").replaceWith('<th id="bankListHeader" scope="row"> Bank</th>');
@@ -261,16 +233,11 @@ function fn_jsFunction1(){
         $("#bankAccNoHeader").replaceWith('<th id="bankAccNoHeader" scope="row">Bank Account Number<span class="must">*</span></th>');
         headerCheck = 1;
     }
-    console.log('headerCheck: ' + headerCheck);
     }
 
 function fn_jsFunction(){
-    console.log("fn_jsFunction");
     var txtBankCountry = $("#bankCountry :selected").val()
     var txtVendorCountry = $("#vendorCountry :selected").val()
-
-    console.log("txtBankCountry" + txtBankCountry);
-    console.log("txtVendorCountry" + txtVendorCountry);
 
     if(txtBankCountry != 'MY')
     {
@@ -284,7 +251,6 @@ function fn_jsFunction(){
         $("#bankList").replaceWith('<select class="w100p" id="bankList" name="bankList"><c:forEach var="list" items="${bankList}" varStatus="status"><option value="${list.code}">${list.name}</option></c:forEach></select>');
         $("#swiftCodeHeader").html('Swift Code');
         conditionalCheck = 0;
-        console.log('$("#bankAccNo").length: ' + $("#bankAccNo").val().length);
         if($("#bankAccNo").val().length > 16)
         {
             var strBankAccNo = $("#bankAccNo").val();
@@ -292,10 +258,8 @@ function fn_jsFunction(){
             $("#bankAccNo").val(strBankAccNo);
         }
         $("#bankAccNo").attr('maxLength',16);
-        console.log("conditionalCheck: " + conditionalCheck);
     }
 
-    console.log("conditionalCheck: " + conditionalCheck);
     if(txtVendorCountry != 'MY')
     {
         //$("#paymentMethod option[value='TTRX']").attr('selected', 'selected');
@@ -306,25 +270,22 @@ function fn_jsFunction(){
         //$("#paymentMethod option[value='OTRX']").attr('selected', 'selected');
         $("#paymentMethod").val("OTRX").attr("selected", "selected");
     }
-    console.log($("#paymentMethod").val());
 }
 
 /* 인풋 파일(멀티) */
 function setInputFile2(){//인풋파일 세팅하기
-    $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label>");
+    console.log("setInputFile2");
+	$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label>");
 }
 
 function fn_approveLinePop() {
-    console.log("fn_approveLinePop");
 	var checkResult = fn_checkEmpty();
-console.log("fn_approveLinePop :: checkResult :: " + checkResult);
     if(!checkResult){
         return false;
     }
 
     var length = AUIGrid.getGridData(newGridID).length;
     if(length > 0) {
-console.log("length > 0");
         for(var i = 0; i < length; i++) {
             var availableVar = {
                     costCentr : $("#newCostCenter").val(),
@@ -335,11 +296,9 @@ console.log("length > 0");
 
             var availableAmtCp = 0;
             Common.ajax("GET", "/eAccounting/webInvoice/checkBgtPlan.do", availableVar, function(result1) {
-                console.log(result1.ctrlType);
 
                 if(result1.ctrlType == "Y") {
                     Common.ajax("GET", "/eAccounting/webInvoice/availableAmtCp.do", availableVar, function(result) {
-                        console.log("availableAmtCp");
                         console.log(result.totalAvailable);
 
                         //var finAvailable = result.totalAvilableAdj - result.totalPending - result.totalUtilized;
@@ -467,8 +426,7 @@ function fn_vendorValidation(ts){
         return false;
     };
 
-    console.log('flg_in_edit_Vendor_Pop_TempSave: ' + flg);
-    console.log('flg_in_edit_Vendor_Pop_TempSave: ' + "${flg}");
+
     if(ts == 'ts') // temp_Save
     {
     	if(flg == 'M')
@@ -483,7 +441,6 @@ function fn_vendorValidation(ts){
                 if($("#isReset").val() == 1 && $("#isPass").val() == 0) //isReset=1: false, isPass=1:NotPass
                 {
                     // new
-                    console.log('$("#newReqNo"): ' + $("#newReqNo").val());
                     if(FormUtil.isEmpty($("#newReqNo").val())) {
                         fn_attachmentUpload("new");
                     } else {
@@ -506,6 +463,28 @@ function fn_vendorValidation(ts){
 
             });
     	}
+    	else if(appvPrcssStusCode == 'A' && vendorAccId != '' && vendorAccId != null){
+    		var obj = $("#form_newVendor").serializeJSON();
+            Common.ajax("GET", "/eAccounting/vendor/vendorValidation.do?_cacheId=" + Math.random(), obj, function(result){
+                $("#isReset").val(result.isReset);
+                $("#isPass").val(result.isPass);
+                //$("#mem_acc_id").val(result.vendorAccId);
+
+                    // new
+                    //if(FormUtil.isEmpty($("#newReqNo").val())) {
+                        //fn_attachmentUpload("new");
+                    //} else {
+                    // update
+                       // fn_attachmentUpdate(callType);
+                    // }
+                Common.ajax("POST", "/eAccounting/vendor/editApproved.do", {clmNo : reqNo}, function(result1) {
+                    console.log(result1);
+                    Common.alert("New Draft Created : " + result1.data.newClmNo);
+                    //fn_editVendorPop(result1.data.newClmNo, flg, vendorAccId, appvPrcssStusCode);
+                });
+
+            });
+    	}
     	else
     	{
     		var obj = $("#form_newVendor").serializeJSON();
@@ -515,7 +494,6 @@ function fn_vendorValidation(ts){
                 $("#isPass").val(result.isPass);
                 $("#sameReqNo").val(result.sameReqNo);
                 $("#mem_acc_id").val(result.vendorAccId);
-                console.log("SameReqNo: " + $("#sameReqNo").val());
 
                 if($("#isReset").val() == 1 && $("#isPass").val() == 0) //isReset=1: false, isPass=1:NotPass
                 {
@@ -554,6 +532,21 @@ function fn_vendorValidation(ts){
             	if(flg == 'M')
             	{
             		fn_attachmentUpload("");
+            	}
+            	else if(appvPrcssStusCode == 'A' && vendorAccId != '' && vendorAccId != null)
+            	{
+
+            		//fn_attachmentUpload("");
+            		Common.ajax("POST", "/eAccounting/vendor/editApproved.do", {clmNo : reqNo}, function(result1) {
+                        console.log(result1);
+                        if(FormUtil.isEmpty($("#newReqNo").val())) {
+                            Common.popupDiv("/eAccounting/vendor/approveLinePop.do", null, null, true, "approveLineSearchPop");
+                        } else {
+                            // update
+                            Common.popupDiv("/eAccounting/vendor/approveLinePop.do", null, null, true, "approveLineSearchPop");
+                        }
+                        //fn_editVendorPop(result1.data.newClmNo, flg, vendorAccId, appvPrcssStusCode);
+                    });
             	}
             	else
             	{
@@ -642,7 +635,6 @@ function fn_insertVendorInfo(st) {
             $("#appvPrcssNo").val(result.data.appvPrcssNo);
 
             // new
-            console.log("newReqNo in newVendorPop: " + $("#newReqNo").val());
                if(FormUtil.isEmpty($("#newReqNo").val())) {
                    Common.popupDiv("/eAccounting/vendor/approveLinePop.do", null, null, true, "approveLineSearchPop");
                } else {
@@ -696,12 +688,17 @@ function fn_checkRegex()
              checkRegexResult = false;;
              return checkRegexResult;
         }
-        if( regExpNum.test($("#bankAccNo").val()) == false ){
+        else if( regExpSpecChar.test($("#bankAccHolder").val()) == false ){
+             Common.alert("* Special character or space as the first and last character are not allow for Bank Account Holder. ");
+             checkRegexResult = false;;
+             return checkRegexResult;
+        }
+        else if( regExpNum.test($("#bankAccNo").val()) == false ){
             Common.alert("* Only number is allow for Bank Account Number. ");
             checkRegexResult = false;;
             return checkRegexResult;
        }
-        if( regExpNum.test($("#postalCode").val()) == false ){
+        else if( regExpNum.test($("#postalCode").val()) == false ){
             Common.alert("* Only number is allow for Postal Code. ");
             checkRegexResult = false;;
             return checkRegexResult;
@@ -1036,11 +1033,23 @@ $.fn.clearForm = function() {
 	                <c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
 	                <span class='label_text'><a href='#'><spring:message code="viewEditWebInvoice.file" /></a></span>
 	                </c:if>
-	                <c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
 	                </label>
-	                 </c:if>
+	                <c:if test="${fn:length(attachmentList) <= 0}">
+					    <c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
+					    <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
+					    <input type="file" title="file add" style="width:300px" />
+					    </div><!-- auto_file end -->
+					    </c:if>
+					</c:if>
 	             </div>
 	        </c:forEach>
+	        <c:if test="${fn:length(attachmentList) <= 0}">
+			    <c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}">
+			         <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
+			             <input type="file" title="file add" style="width:300px" />
+			         </div><!-- auto_file end -->
+			    </c:if>
+		    </c:if>
 	    </td>
     </tr>
 </c:if>

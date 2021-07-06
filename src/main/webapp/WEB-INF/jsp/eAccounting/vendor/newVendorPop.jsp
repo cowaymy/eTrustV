@@ -338,12 +338,17 @@ function fn_checkRegex()
 	         checkRegexResult = false;;
 	         return checkRegexResult;
 	    }
-	    if( regExpNum.test($("#bankAccNo").val()) == false ){
+	    else if( regExpSpecChar.test($("#bankAccHolder").val()) == false ){
+            Common.alert("* Special character or space as the first and last character are not allow for Bank Account Holder. ");
+            checkRegexResult = false;;
+            return checkRegexResult;
+       }
+	    else if( regExpNum.test($("#bankAccNo").val()) == false ){
             Common.alert("* Only number is allow for Bank Account Number. ");
             checkRegexResult = false;;
             return checkRegexResult;
        }
-	    if( regExpNum.test($("#postalCode").val()) == false ){
+	    else if( regExpNum.test($("#postalCode").val()) == false ){
             Common.alert("* Only number is allow for Postal Code. ");
             checkRegexResult = false;;
             return checkRegexResult;

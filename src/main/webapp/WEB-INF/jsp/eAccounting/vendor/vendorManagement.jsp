@@ -136,7 +136,7 @@ $(document).ready(function () {
 		        	}
 		        	else
 		        	{
-		        		fn_editVendorPop(event.item.reqNo, event.item.flg, event.item.vendorAccId);
+		        		fn_editVendorPop(event.item.reqNo, event.item.flg, event.item.vendorAccId, event.item.appvPrcssStusCode);
 		        	}
 
 		        } else {
@@ -319,6 +319,7 @@ function fn_preEdit() {
 
 	var userId = "${SESSION_INFO.userId}";
 	var selectedItems = AUIGrid.getSelectedItems(vendorManagementGridID);
+	//console.log('vendorAccId: ' + selectedItems[0].item.vendorAccId);
 
 	if(selectedItems.length <= 0) {
         return;
@@ -331,7 +332,8 @@ function fn_preEdit() {
     			var reqNo = selectedItems[0].item.reqNo;
     			var flg = selectedItems[0].item.flg;
     			var vendorAccId = selectedItems[0].item.vendorAccId;
-                fn_editVendorPop(reqNo, flg, vendorAccId);
+    			var appvPrcssStusCode = selectedItems[0].item.appvPrcssStusCode;
+                fn_editVendorPop(reqNo, flg, vendorAccId, appvPrcssStusCode);
    			}
     		else{
     			if(userId != selectedItems[0].item.userId)
@@ -343,11 +345,23 @@ function fn_preEdit() {
                     var reqNo = selectedItems[0].item.reqNo;
                     var flg = selectedItems[0].item.flg;
                     var vendorAccId = selectedItems[0].item.vendorAccId;
-                    fn_editVendorPop(reqNo, flg, vendorAccId);
+                    var appvPrcssStusCode = selectedItems[0].item.appvPrcssStusCode;
+                    fn_editVendorPop(reqNo, flg, vendorAccId, appvPrcssStusCode);
                 }
     		}
 
         }
+    	else if(selectedItems[0].item.appvPrcssStusCode == "A" && selectedItems[0].item.vendorAccId != null && selectedItems[0].item.vendorAccId != ""){
+    		var reqNo = selectedItems[0].item.reqNo;
+            var flg = selectedItems[0].item.flg;
+            var vendorAccId = selectedItems[0].item.vendorAccId;
+            var appvPrcssStusCode = selectedItems[0].item.appvPrcssStusCode;
+    		Common.ajax("POST", "/eAccounting/vendor/editApproved.do", {clmNo : reqNo}, function(result1) {
+    			console.log(result1);
+                Common.alert("New Draft Created : " + result1.data.newClmNo);
+                //fn_editVendorPop(result1.data.newClmNo, flg, vendorAccId, appvPrcssStusCode);
+    		});
+    	}
     	else
     	{
     		var reqNo = selectedItems[0].item.reqNo;
@@ -359,7 +373,7 @@ function fn_preEdit() {
     }
 }
 
-function fn_editVendorPop(reqNo, flg, vendorAccId) {
+function fn_editVendorPop(reqNo, flg, vendorAccId, appvPrcssStusCode) {
 
 	 var selectedItems = AUIGrid.getSelectedItems(vendorManagementGridID);
 
@@ -377,7 +391,8 @@ function fn_editVendorPop(reqNo, flg, vendorAccId) {
     	            reqNo : reqNo,
     	            callType : 'view',
     	            flg : flg,
-    	            vendorAccId : vendorAccId
+    	            vendorAccId : vendorAccId,
+    	            appvPrcssStusCode : appvPrcssStusCode
     	    };
     	    Common.popupDiv("/eAccounting/vendor/editVendorPop.do", data, null, true, "editVendorPop");
      }
@@ -1081,7 +1096,7 @@ function fn_editRejected() {
     <th scope="row">Company Registration No/IC</th>
         <td>
 		    <input type="text" id="regNo" name="regNo" class="search_btn" title="" placeholder="" class="fl_left" />
-		    <a href="#" id="search_regNo_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+		    <!--  <a href="#" id="search_regNo_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>-->
         </td>
 </tr>
 <tr>
