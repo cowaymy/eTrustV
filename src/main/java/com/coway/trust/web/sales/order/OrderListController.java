@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.common.SalesCommonService;
+import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
@@ -51,6 +52,9 @@ public class OrderListController {
 
 	@Resource(name = "orderListService")
 	private OrderListService orderListService;
+
+	@Resource(name = "orderDetailService")
+	private OrderDetailService orderDetailService;
 
 	@Resource(name = "installationResultListService")
 	private InstallationResultListService installationResultListService;
@@ -729,6 +733,17 @@ public class OrderListController {
 		return arrayCustId;
    }
 
+   @RequestMapping(value = "/mcoRemPop.do")
+   public String mcoRemPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+       logger.debug("mcoRemPop");
+       logger.debug("params {}", params);
 
+       params.put("salesOrderId", params.get("ordId"));
+       EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+       model.addAttribute("salesOrdId", params.get("ordId"));
+       model.addAttribute("orderDetail", orderDetail);
+
+       return "sales/order/mcoRemPop";
+   }
 
 }

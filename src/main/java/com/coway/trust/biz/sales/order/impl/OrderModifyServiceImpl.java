@@ -727,9 +727,14 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
       return 1; // FAIL
     }
   }
-  
-	@Override
-	public int getExistSofNo(Map<String, Object> params) {
-		return orderModifyMapper.getExistSofNo(params);
-	}
+
+    @Override
+    public int getExistSofNo(Map<String, Object> params) {
+        return orderModifyMapper.getExistSofNo(params);
+    }
+
+    @Override
+    public void updateMcoRem(Map<String, Object> params) {
+        orderModifyMapper.updateMcoRem(params);
+    }
 }

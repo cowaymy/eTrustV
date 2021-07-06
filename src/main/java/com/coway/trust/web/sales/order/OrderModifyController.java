@@ -563,4 +563,20 @@ public class OrderModifyController {
 
 		return ResponseEntity.ok(result);
 	}
+
+  @RequestMapping(value = "/saveMcoRem.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> saveMcoRem(@RequestBody Map<String, Object> params, ModelMap mode, SessionVO sessionVO) {
+
+      logger.debug("saveMcoRem");
+      logger.debug("params {}", params);
+
+      params.put("userId", sessionVO.getUserId());
+
+      orderModifyService.updateMcoRem(params);
+
+      ReturnMessage message = new ReturnMessage();
+      message.setCode(AppConstants.SUCCESS);
+
+      return ResponseEntity.ok(message);
+  }
 }

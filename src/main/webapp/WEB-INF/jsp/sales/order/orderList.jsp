@@ -107,6 +107,17 @@
     }
 
     $(function(){
+        $('#btnMcoRem').click(function() {
+            var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+
+            if(selIdx > -1) {
+                $('#_ordId').val(AUIGrid.getCellValue(listMyGridID, selIdx, "ordId"));
+                Common.popupDiv("/sales/order/mcoRemPop.do", {ordId : $('#_ordId').val()}, null, true, "mcoRemPop");
+            }
+            else {
+                Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
+            }
+        })
         $('#btnCopy').click(function() {
             fn_copyChangeOrderPop();
         });
@@ -561,6 +572,7 @@
 <h2><spring:message code='sales.title.orderList'/></h2>
 <ul class="right_btns">
 <c:if test="${SESSION_INFO.userIsExternal == '0'}">
+    <li><p class="btn_blue"><a id="btnMcoRem" href="#" >New MCO Remark</a></p></li>
   <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a id="btnCopy" href="#" ><spring:message code='sales.btn.copyChange'/></a></p></li>
   </c:if>

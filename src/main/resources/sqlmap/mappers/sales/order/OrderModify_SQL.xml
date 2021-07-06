@@ -711,4 +711,19 @@ WHERE   SALES_ORD_NO = (
 
              )
     </select>
+
+    <insert id="updateMcoRem" parameterType="Map">
+        INSERT INTO SAL0295D
+        VALUES (
+            SAL0295D_ID_SEQ.nextval,
+            #{salesOrdId},
+            #{agreeFlg},
+            1,
+            #{remark},
+            #{userId},
+            SYSDATE,
+            #{userId},
+            SYSDATE
+        )
+    </insert>
 </mapper>
