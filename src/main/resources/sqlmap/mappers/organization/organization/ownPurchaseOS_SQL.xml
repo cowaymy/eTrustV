@@ -48,7 +48,9 @@
             AND g.STUS_CODE_ID NOT IN ('WOF', 'WOF_1')
         WHERE 1=1
         AND A.APP_TYPE_ID = 66
-        AND D.LAST_ORG_CODE = #{orgCode}
+        <if test="staffOwnPurch == 'false'">
+            AND D.LAST_ORG_CODE = #{orgCode}
+        </if>
         <if test="groupCode != null and groupCode != ''">
             AND D.LAST_GRP_CODE = #{groupCode}
         </if>

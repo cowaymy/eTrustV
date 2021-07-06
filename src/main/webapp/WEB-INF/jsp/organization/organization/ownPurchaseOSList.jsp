@@ -132,7 +132,17 @@
     function fn_search() {
         console.log("fn_search");
 
-        if(!FormUtil.isNotEmpty($("#orgCode").val())) {
+        if ("${SESSION_INFO.userTypeId}" == "4" && $("#memCode").val() == "${memCode}"){
+        	$("#staffOwnPurch").val("true");
+        } else {
+            $("#staffOwnPurch").val("false");
+        }
+
+        if ("${SESSION_INFO.userTypeId}" == "4" && $("#memCode").val().startsWith("P")
+            && $("#memCode").val() != "${memCode}") {
+            Common.alert("Please enter your own staff code.");
+            return false;
+        } else if (!FormUtil.isNotEmpty($("#orgCode").val()) && $("#staffOwnPurch").val() != "true") {
             Common.alert("Organization Code must not be empty!");
             return false;
         }
@@ -162,6 +172,7 @@
     </aside>
 
     <form action="#" id="searchForm" method="post">
+        <input type="hidden" name="staffOwnPurch" id="staffOwnPurch" />
         <table class="type1">
             <caption>table</caption>
             <colgroup>

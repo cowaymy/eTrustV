@@ -44,6 +44,12 @@ public class OwnPurchaseOSController {
             model.addAttribute("orgCode", (String) orgDtls.get("orgCode"));
             model.addAttribute("grpCode", (String) orgDtls.get("grpCode"));
             model.addAttribute("deptCode", (String) orgDtls.get("deptCode"));
+
+        } else if(sessionVO.getUserTypeId() == 4) {
+            params.put("userId", sessionVO.getUserId());
+            EgovMap orgDtls = (EgovMap) ownPurchaseOSService.getOrgDtls(params);
+
+            model.addAttribute("memCode", (String) orgDtls.get("memCode"));
         }
 
         return "organization/organization/ownPurchaseOSList";
