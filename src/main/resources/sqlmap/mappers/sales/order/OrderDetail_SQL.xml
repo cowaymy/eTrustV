@@ -1585,6 +1585,7 @@
   <select id="selectMCORemarkList" parameterType="Map" resultType="egovMap">
     SELECT CASE WHEN T1.FLAG = '1' THEN 'Yes'
                        WHEN T1.FLAG = '0' THEN 'No'
+                       WHEN T1.FLAG = '2' THEN 'Unreachable'
                END FLAG
              , T2.SALES_ORD_NO
              , T1.REMARK
