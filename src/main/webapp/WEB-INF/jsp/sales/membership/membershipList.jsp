@@ -467,10 +467,10 @@ function fn_clear(){
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_report('Invoice')"><spring:message code="sal.btn.link.invoice" /></a></p></li>
 		</c:if>
-		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' && SESSION_INFO.userTypeId != '2'}">
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_keyInList()" ><spring:message code="sal.btn.link.keyInList" /></a></p></li>
 		</c:if>
-		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' && SESSION_INFO.userTypeId != '2'}">
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_YSListing()"><spring:message code="sal.btn.link.ysList" /></a></p></li>
 		</c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
