@@ -766,7 +766,6 @@ public class ReportBatchController {
 
   @RequestMapping(value = "/DailyCollectionRaw.do")
   //@Scheduled(cron = "0 45 5 * * WED") // every Wednesday
-  // http://fmaker7.tistory.com/163
   public void DailyCollectionRaw() throws IOException {
     LOGGER.info("[START] DailyCollectionRaw...");
     Map<String, Object> params = new HashMap<>();
@@ -774,10 +773,11 @@ public class ReportBatchController {
                                                                   // rpt file
                                                                   // name.
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "Finance_Control" + File.separator + "DailyCollectionRaw_" + CommonUtils.getNowDate() + ".xls");
 
-    this.view(null, null, params);
+    this.viewProcedure(null, null, params);
     LOGGER.info("[END] DailyCollectionRaw...");
   }
 
