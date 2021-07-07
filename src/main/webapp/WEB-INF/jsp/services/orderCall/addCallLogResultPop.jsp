@@ -82,8 +82,8 @@
     }
 
     var feedBackCode = $("#feedBackCode option:selected").val();
-    console.log('feedBackCode: ' + feedBackCode);
-    if(rdcStk != 0 || rdcStk != '')
+    var rdcStk = $("#rdc").text();
+    if(rdcStk != "0")
     {
         if(feedBackCode == '2129') //FB26 - Stock In Transit ++  || feedBackCode == '3415'
         {
