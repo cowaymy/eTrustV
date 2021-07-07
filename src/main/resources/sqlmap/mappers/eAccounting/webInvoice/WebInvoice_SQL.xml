@@ -914,7 +914,7 @@ SELECT T.APPV_PRCSS_NO
 	    A.APPV_PRCSS_NO,
 	    B.APPV_LINE_SEQ,
 	    C.VENDOR_REQ_NO CLM_NO,
-	    A.REQST_DT,
+	    TO_CHAR(A.REQST_DT, 'DD/MM/YYYY') REQST_DT,
 	    D.HR_CODE || ' - ' || E.MEM_ACC_NAME REQUESTOR,
 	    C.VENDOR_GRP,
 	    C.VENDOR_NAME,
@@ -960,6 +960,12 @@ SELECT T.APPV_PRCSS_NO
 	<if test="memAccId != null and memAccId != ''">
 	    AND C.VENDOR_ACC_ID = #{memAccId}
 	</if>
+	<if test="vendorGrp != null and vendorGrp != ''">
+        AND C.VENDOR_GRP IN
+        <foreach item="item" collection="vendorGrp" index="index" open="(" separator="," close=")">
+             #{item}
+         </foreach>
+    </if>
 	<if test="createUser != null and createUser != ''">
 	    AND A.REQST_USER_ID = (SELECT USER_NAME FROM SYS0047M WHERE HR_CODE = UPPER(#{createUser}))
 	</if>
@@ -984,12 +990,12 @@ SELECT T.APPV_PRCSS_NO
 	</if>
 	<if test="appStartDt != null and appStartDt != ''">
 	    <![CDATA[
-	    AND TO_DATE(B.APPV_DT, 'DD/MM/YYYY') >= TO_DATE(#{appStartDt}, 'DD/MM/YYYY')
+	    AND B.APPV_DT >= TO_DATE(#{appStartDt}, 'DD/MM/YYYY')
 	    ]]>
 	</if>
 	<if test="appEndDt != null and appEndDt != ''">
 	    <![CDATA[
-	    AND TO_DATE(B.APPV_DT, 'DD/MM/YYYY') < TO_DATE(#{appEndDt}, 'DD/MM/YYYY') + 1
+	    AND B.APPV_DT < TO_DATE(#{appEndDt}, 'DD/MM/YYYY') + 1
 	    ]]>
 	</if>
 </select>

@@ -197,7 +197,7 @@ function createAUIGrid(ind) {
         headerText : '<spring:message code="invoiceApprove.clmNo" />',
         width : "10%"
     }, {
-        dataField : "requestDt",
+        dataField : "reqstDt",
         headerText : "Request Date",
         width : "8%"
     }, {
