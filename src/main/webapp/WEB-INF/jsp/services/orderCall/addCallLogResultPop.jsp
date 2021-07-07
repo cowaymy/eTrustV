@@ -85,9 +85,10 @@
     console.log('feedBackCode: ' + feedBackCode);
     if(rdcStk != 0 || rdcStk != '')
     {
-        if(feedBackCode == '2129') //FB26 - Stock In Transit
+        if(feedBackCode == '2129') //FB26 - Stock In Transit ++  || feedBackCode == '3415'
         {
             Common.alert("Currently Stock Available in RDC. Please Select Correct Feedback Code");
+            return false;
         }
     }
 
@@ -147,7 +148,8 @@
   }
 
   function fn_addCallSave() {
-    Common.ajax("POST", "/callCenter/addCallLogResult_2.do", $("#addCallForm").serializeJSON(), function(result) {
+
+	  Common.ajax("POST", "/callCenter/addCallLogResult_2.do", $("#addCallForm").serializeJSON(), function(result) {
       //Common.ajax("POST", "/callCenter/addCallLogResult.do", $("#addCallForm").serializeJSON(), function(result) {
       fn_orderCallList();
       $("#hideContent").hide();
