@@ -477,7 +477,9 @@ function fn_vendorValidation(ts){
                     // update
                        // fn_attachmentUpdate(callType);
                     // }
-                Common.ajax("POST", "/eAccounting/vendor/editApproved.do", {clmNo : reqNo}, function(result1) {
+                //var gridObj = AUIGrid.getSelectedItems(vendorManagementGridID);
+                //var reqNo = gridObj[0].item.reqNo;
+                Common.ajax("POST", "/eAccounting/vendor/editApproved.do", obj, function(result1) {
                     console.log(result1);
                     Common.alert("New Draft Created : " + result1.data.newClmNo);
                     //fn_editVendorPop(result1.data.newClmNo, flg, vendorAccId, appvPrcssStusCode);
@@ -537,13 +539,19 @@ function fn_vendorValidation(ts){
             	{
 
             		//fn_attachmentUpload("");
-            		Common.ajax("POST", "/eAccounting/vendor/editApproved.do", {clmNo : reqNo}, function(result1) {
+            		//var gridObj = AUIGrid.getSelectedItems(vendorManagementGridID);
+            		//var reqNo = gridObj[0].item.reqNo;
+            		Common.ajax("POST", "/eAccounting/vendor/editApproved.do", obj, function(result1) {
                         console.log(result1);
+                        var newClmNo = result1.data.newClmNo;
+                        obj.newClmNo = newClmNo;
+                        $("#newClmNo").val(newClmNo);
+                        console.log('newClmNo: ' + $("#newClmNo"));
                         if(FormUtil.isEmpty($("#newReqNo").val())) {
-                            Common.popupDiv("/eAccounting/vendor/approveLinePop.do", null, null, true, "approveLineSearchPop");
+                            Common.popupDiv("/eAccounting/vendor/approveLinePop.do", obj, null, true, "approveLineSearchPop");
                         } else {
                             // update
-                            Common.popupDiv("/eAccounting/vendor/approveLinePop.do", null, null, true, "approveLineSearchPop");
+                            Common.popupDiv("/eAccounting/vendor/approveLinePop.do", obj, null, true, "approveLineSearchPop");
                         }
                         //fn_editVendorPop(result1.data.newClmNo, flg, vendorAccId, appvPrcssStusCode);
                     });
@@ -756,6 +764,7 @@ $.fn.clearForm = function() {
 <input type="hidden" id="isReset" name="isReset">
 <input type="hidden" id="isPass" name="isPass">
 <input type="hidden" id="sameReqNo" name="sameReqNo">
+<input type="hidden" id="newClmNo" name="newClmNo">
 <input type="hidden" id="mem_acc_id" name="mem_acc_id">
 <input type="hidden" id="newCostCenterText" name="costCentrName" value="${vendorInfo.costCenterName}">
 <!-- <input type="hidden" id="newMemAccName" name="memAccName"> -->
@@ -820,7 +829,7 @@ $.fn.clearForm = function() {
 <tbody>
 <tr>
     <th colspan=2 scope="row">Registered Company/Individual Name</th>
-    <td colspan=3><input type="text" title="" placeholder="" class="w100p" id="regCompName" name="regCompName" value="${vendorInfo.vendorName}"/></td>
+    <td colspan=3><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="regCompName" name="regCompName" value="${vendorInfo.vendorName}"/></td>
 </tr>
 <tr>
     <th colspan = 2 scope="row">Company Registration No/IC No</th>

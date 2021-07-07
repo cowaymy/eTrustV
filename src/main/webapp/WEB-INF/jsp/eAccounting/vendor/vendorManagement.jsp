@@ -356,11 +356,8 @@ function fn_preEdit() {
             var flg = selectedItems[0].item.flg;
             var vendorAccId = selectedItems[0].item.vendorAccId;
             var appvPrcssStusCode = selectedItems[0].item.appvPrcssStusCode;
-    		Common.ajax("POST", "/eAccounting/vendor/editApproved.do", {clmNo : reqNo}, function(result1) {
-    			console.log(result1);
-                Common.alert("New Draft Created : " + result1.data.newClmNo);
-                //fn_editVendorPop(result1.data.newClmNo, flg, vendorAccId, appvPrcssStusCode);
-    		});
+
+                fn_editVendorPop(reqNo, flg, vendorAccId, appvPrcssStusCode);
     	}
     	else
     	{

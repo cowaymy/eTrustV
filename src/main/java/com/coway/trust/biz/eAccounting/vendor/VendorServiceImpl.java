@@ -311,6 +311,7 @@ public class VendorServiceImpl implements VendorService {
         LOGGER.debug("editApproved =====================================>>  " + params);
 
         EgovMap attachmentDetails = new EgovMap();
+        params.put("clmNo", params.get("newReqNo"));
         attachmentDetails = (EgovMap) vendorMapper.getAttachmenDetails(params);
         params.put("exFileAtchGrpId", attachmentDetails.get("atchFileGrpId"));
         params.put("exFileAtchId", attachmentDetails.get("atchFileId"));

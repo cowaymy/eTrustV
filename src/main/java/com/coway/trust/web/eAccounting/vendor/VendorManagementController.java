@@ -102,7 +102,8 @@ public class VendorManagementController {
     }
 
     @RequestMapping(value = "/approveLinePop.do")
-    public String approveLinePop(ModelMap model) {
+    public String approveLinePop(@RequestParam Map<String, Object> params,ModelMap model) {
+    	LOGGER.debug("approveLinePop =====================================>>  " + params);
         return "eAccounting/vendor/approveLinePop";
     }
 
@@ -322,6 +323,11 @@ public class VendorManagementController {
         params.put(CommonConstants.USER_ID, sessionVO.getUserId());
         params.put("userName", sessionVO.getUserName());
 
+        if(params.containsKey("newClmNo") && params.get("newClmNo").toString() != null && !params.get("newClmNo").toString().equals(""))
+        {
+        	params.put("newReqNo", params.get("newClmNo"));
+        }
+
         // TODO appvLineMasterTable Insert
         vendorService.insertApproveManagement(params);
 
@@ -353,7 +359,16 @@ public class VendorManagementController {
 
         ReturnMessage message = new ReturnMessage();
 
-        int subCount = vendorService.checkExistClmNo(params.get("newReqNo").toString());
+        int subCount;
+        if(params.containsKey("newClmNo") && params.get("newClmNo").toString() != null && !params.get("newClmNo").toString().equals(""))
+        {
+        	subCount = vendorService.checkExistClmNo(params.get("newClmNo").toString());
+        }
+        else
+        {
+        	subCount = vendorService.checkExistClmNo(params.get("newReqNo").toString());
+        }
+
 
         if (subCount > 0) {
             message.setCode(AppConstants.FAIL);
