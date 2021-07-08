@@ -119,6 +119,7 @@ public class StockListController {
 		Map<String, Object> map = new HashMap();
 		map.put("data", info);
 		map.put("data2", infoHistory);
+
 		return ResponseEntity.ok(map);
 	}
 
@@ -202,6 +203,7 @@ public class StockListController {
 
 	@RequestMapping(value = "/modifyPriceInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> modifyPriceInfo(@RequestBody Map<String, Object> params, Model model) throws Exception {
+
 		// sampleService.saveTransaction(params);
 		String retMsg = AppConstants.MSG_SUCCESS;
 
@@ -427,4 +429,12 @@ public class StockListController {
 		return ResponseEntity.ok(result);
 	}
 
+
+	 @RequestMapping(value = "/selectCodeList.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectCodeList() {
+
+	    List<EgovMap> codeList = stock.selectCodeList();
+
+	    return ResponseEntity.ok(codeList);
+	  }
 }

@@ -51,5 +51,7 @@ public interface StockService {
 	String nonvalueStockIns(Map<String, Object> params);
 	
 	EgovMap nonvaluedItemCodeChk(Map<String, Object> params);
+	
+	List<EgovMap> selectCodeList();
 
 }

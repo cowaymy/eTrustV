@@ -302,6 +302,7 @@
         });
 
         $("#price_info").click(function(){
+			doGetComboData('/stock/selectCodeList.do', '', '', 'srvPacId', 'S'); // Rental (367) & Outright (368) & Outright plus(370) packages
 
             if($("#price_info_div").css("display") == "none"){
                 f_removeclass();
@@ -323,17 +324,18 @@
         });
 
         $('#srvPacId').change(function() {
+			 var srvPacId = $("#srvPacId :selected").val();
         	 if($("#price_info_div").css("display") == "none"){
                  f_removeclass();
                  var selectedItems = AUIGrid.getSelectedItems(myGridID);
-                 var srvPacId = $("#srvPacId :selected").val();
+                 //var srvPacId = $("#srvPacId :selected").val();
                  for(i=0; i<selectedItems.length; i++) {
                      f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "P");
                  }
                  $("#price_info_div").show();
              }else{
                  var selectedItems = AUIGrid.getSelectedItems(myGridID);
-                 var srvPacId = $("#srvPacId :selected").val();
+                 //var srvPacId = $("#srvPacId :selected").val();
                  for(i=0; i<selectedItems.length; i++) {
                      f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "P");
                  }
@@ -439,7 +441,6 @@
         });
 
         $("#stock_info_edit").click(function(){
-
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             for(i=0; i<selectedItems.length; i++) {
                 if ($("#stock_info_edit").text() == "EDIT"){
@@ -458,15 +459,17 @@
         $("#price_info_edit").click(function(){
 
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
+			var srvPacId = $("#srvPacId :selected").val();
+
             for(i=0; i<selectedItems.length; i++) {
                 if ($("#price_info_edit").text() == "EDIT"){
                   //  if (selectedItems[i].item.statuscodeid == '1'){
-                        f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid, "EP");
+                          f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "EP");
                  //   }else{
                   //      alert(selectedItems[i].item.name + ' is a state that can not be changed.');
                   //  }
                 }else if ($("#price_info_edit").text() == "SAVE"){
-                    f_info_save("/stock/modifyPriceInfo.do" , selectedItems[i].item.stkid , "priceForm" ,"price_info");
+                    f_info_save("/stock/modifyPriceInfo.do?typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, selectedItems[i].item.stkid , "priceForm" ,"price_info");
                     //$("#stock_info_edit").text("EDIT");
                 }
             }
@@ -757,11 +760,9 @@
                 function(event) {
                     f_removeclass();
                     var selectedItems = event.selectedItems;
-                    f_view("/stock/StockInfo.do?stkid="
-                            + AUIGrid.getCellValue(myGridID, event.rowIndex, "stkid"), "S");
+                    f_view("/stock/StockInfo.do?stkid=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "stkid"), "S");
                     $("#subDiv").show();
-                    if (AUIGrid.getCellValue(myGridID, event.rowIndex,
-                            "stktypeid") == "61") {
+                    if (AUIGrid.getCellValue(myGridID, event.rowIndex,"stktypeid") == "61") {
                         $("#filter_info").show();
                         $("#spare_info").show();
                         $("#service_info").hide();
@@ -913,9 +914,7 @@
             $("#cbStockAudit").prop("disabled", false);  // 20191117 KR-OHK Stock Audit Add
 
             $("#txtStockType").text(data[0].typenm);
-            $("#txtStockType")
-                    .append(
-                            "<input type='hidden' name='stock_type' id='stock_type' value=''/>");
+            $("#txtStockType").append("<input type='hidden' name='stock_type' id='stock_type' value=''/>");
             $("#stock_type").val(data[0].typeid);
 //             $("#txtStatus").text(data[0].statusname);
 //             $("#txtStatus").html("<select id='statusselect' name='statusselect' class='w100'></select>");
@@ -923,36 +922,21 @@
             $("#txtStatus").text(data[0].statusname);
             $("#txtStatus").html("<select id='statusselect' name='statusselect' class='w100'></select>");
             doDefCombo(comboData,  data[0].statusid,'statusselect', 'S');
-            $("#txtStockCode")
-                    .html(
-                            "<input type='text' name='stock_code' id='stock_code' class='w100p' value='' disabled=true/>");
+            $("#txtStockCode").html("<input type='text' name='stock_code' id='stock_code' class='w100p' value='' disabled=true/>");
             $("#stock_code").val(data[0].stockcode);
-            $("#txtUOM").html(
-                    "<select id='stock_uom' name='stock_uom'></select>");
-            doGetCombo('/common/selectCodeList.do', '42', data[0].uomname,
-                    'stock_uom', 'S'); //청구처 리스트 조회
+            $("#txtUOM").html("<select id='stock_uom' name='stock_uom'></select>");
+            doGetCombo('/common/selectCodeList.do', '42', data[0].uomname,'stock_uom', 'S'); //청구처 리스트 조회
             $("#txtoldmat").html("<input type='text' name='old_stock_code' id='old_stock_code' class='w100p' value='' disabled=true/>");
             $("#old_stock_code").val(data[0].oldstkcd);
-            $("#txtStockName")
-                    .html(
-                            "<input type='text' name='stock_name' id='stock_name' class='w100' value=''/>");
+            $("#txtStockName").html("<input type='text' name='stock_name' id='stock_name' class='w100' value=''/>");
             $("#stock_name").val(data[0].stockname);
-            $("#txtCategory")
-                    .html(
-                            "<select id='stock_category' name='stock_category' class='w100p'></select>");
-            doGetCombo('/common/selectCodeList.do', '11', data[0].categotynm,
-                    'stock_category', 'S'); //청구처 리스트 조회
-            $("#txtNetWeight")
-                    .html(
-                            "<input type='text' name='netweight' id='netweight' class='w100p' value=''/>");
+            $("#txtCategory").html("<select id='stock_category' name='stock_category' class='w100p'></select>");
+            doGetCombo('/common/selectCodeList.do', '11', data[0].categotynm,'stock_category', 'S'); //청구처 리스트 조회
+            $("#txtNetWeight").html("<input type='text' name='netweight' id='netweight' class='w100p' value=''/>");
             $("#netweight").val(data[0].netweight);
-            $("#txtGrossWeight")
-                    .html(
-                            "<input type='text' name='grossweight' class='w100p' id='grossweight' value=''/>");
+            $("#txtGrossWeight").html("<input type='text' name='grossweight' class='w100p' id='grossweight' value=''/>");
             $("#grossweight").val(data[0].grossweight);
-            $("#txtMeasurement")
-                    .html(
-                            "<input type='text' name='measurement' class='w100p' id='measurement' value=''/>");
+            $("#txtMeasurement").html("<input type='text' name='measurement' class='w100p' id='measurement' value=''/>");
             $("#measurement").val(data[0].mcbm);
 
             if (data[0].isncv == 1) {
@@ -1023,59 +1007,52 @@
             var srvPacId = $("#srvPacId :selected").val();
             $("#srvPackageId").val(srvPacId);
             $("#priceTypeid").val(typeid);
-            if (typeid == '61') {
-                $("#txtPenaltyCharge")
-                        .html(
-                                "<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' disabled=true value='' class='w100p numberAmt'/>"); //PriceCharges
-                $("#dPenaltyCharge").val(data[0].penalty);
-                $("#txtPV")
-                        .html(
-                                "<input type='text' name='dPV' id='dPV' value='' class='w100p numberAmt'/>"); //PricePV
-                $("#dPV").val(data[0].pricepv);
-                $("#txtMonthlyRental")
-                        .html(
-                                "<input type='text' name='dMonthlyRental' id='dMonthlyRental' value='' class='w100p numberAmt'/>"); //amt
-                $("#dMonthlyRental").val(data[0].mrental);
-                $("#txtRentalDeposit")
-                        .html(
-                                "<input type='text' name='dRentalDeposit' id='dRentalDeposit' value='' class='w100p numberAmt'/>"); //PriceRPF
-                $("#dRentalDeposit").val(data[0].pricerpf);
-                $("#txtTradeInPV")
-                        .html(
-                                "<input type='text' name='dTradeInPV' id='dTradeInPV' value='' class='w100p numberAmt'/>"); //TradeInPV
-                $("#dTradeInPV").val(data[0].tradeinpv);
-            } else {
-                $("#txtPenaltyCharge")
-                        .html(
-                                "<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' value='' class='w100p numberAmt'/>"); //PriceCharges
-                $("#dPenaltyCharge").val(data[0].penalty);
-                $("#txtPV")
-                        .html(
-                                "<input type='text' name='dPV' id='dPV' disabled=true value='' class='w100p numberAmt'/>"); //PricePV
+            if(0== data.length && typeid == '61' ){
+                $("#txtCost").text("");
+                $("#txtNormalPrice").text("");
+                $("#txtPV").text("");
+                $("#txtMonthlyRental").text("");
+                $("#txtRentalDeposit").text("");
+                $("#txtPenaltyCharge").text("");
+                $("#txtTradeInPV").text("");
+                $("#txtPenaltyCharge").html("<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' disabled=true value='' class='w100p numberAmt'/>"); //PriceCharges
+                $("#txtPV").html("<input type='text' name='dPV' id='dPV' value='' class='w100p numberAmt'/>"); //PricePV
+                $("#txtMonthlyRental").html("<input type='text' name='dMonthlyRental' id='dMonthlyRental' value='' class='w100p numberAmt'/>"); //amt
+                $("#txtRentalDeposit").html("<input type='text' name='dRentalDeposit' id='dRentalDeposit' value='' class='w100p numberAmt'/>"); //PriceRPF
+                $("#txtTradeInPV").html("<input type='text' name='dTradeInPV' id='dTradeInPV' value='' class='w100p numberAmt'/>"); //TradeInPV
+                $("#txtCost").html("<input type='text' name='dCost' id='dCost' value='' class='w100p numberAmt'/>"); //PriceCosting
+                $("#txtNormalPrice").html("<input type='text' name='dNormalPrice' id='dNormalPrice' value='' class='w100p numberAmt'/>"); // amt
+            }else{
+               if (typeid == '61') {
+	                $("#txtPenaltyCharge").html("<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' disabled=true value='' class='w100p numberAmt'/>"); //PriceCharges
+	                $("#dPenaltyCharge").val(data[0].penalty);
+	                $("#txtPV").html("<input type='text' name='dPV' id='dPV' value='' class='w100p numberAmt'/>"); //PricePV
+	                $("#dPV").val(data[0].pricepv);
+	                $("#txtMonthlyRental").html("<input type='text' name='dMonthlyRental' id='dMonthlyRental' value='' class='w100p numberAmt'/>"); //amt
+	                $("#dMonthlyRental").val(data[0].mrental);
+	                $("#txtRentalDeposit").html("<input type='text' name='dRentalDeposit' id='dRentalDeposit' value='' class='w100p numberAmt'/>"); //PriceRPF
+	                $("#dRentalDeposit").val(data[0].pricerpf);
+	                $("#txtTradeInPV").html("<input type='text' name='dTradeInPV' id='dTradeInPV' value='' class='w100p numberAmt'/>"); //TradeInPV
+	                $("#dTradeInPV").val(data[0].tradeinpv);
+	           } else {
+	        	    $("#txtPenaltyCharge").html("<input type='text' name='dPenaltyCharge' id='dPenaltyCharge' value='' class='w100p numberAmt'/>"); //PriceCharges
+	                $("#dPenaltyCharge").val(data[0].penalty);
+	                $("#txtPV").html("<input type='text' name='dPV' id='dPV' disabled=true value='' class='w100p numberAmt'/>"); //PricePV
+	                $("#dPV").val(data[0].pricepv);
+	                $("#txtMonthlyRental").html("<input type='text' name='dMonthlyRental' id='dMonthlyRental' disabled=true value='' class='w100p numberAmt'/>"); //amt
+	                $("#dMonthlyRental").val(data[0].mrental);
+	                $("#txtRentalDeposit").html("<input type='text' name='dRentalDeposit' id='dRentalDeposit' disabled=true value='' class='w100p numberAmt'/>"); //PriceRPF
+	                $("#dRentalDeposit").val(data[0].pricerpf);
+	                $("#txtTradeInPV").html("<input type='text' name='dTradeInPV' id='dTradeInPV' disabled=true value='' class='w100p numberAmt'/>"); //TradeInPV
+	                $("#dTradeInPV").val(data[0].tradeinpv);
+               }
+	           $("#txtCost").html("<input type='text' name='dCost' id='dCost' value='' class='w100p numberAmt'/>"); //PriceCosting
+	           $("#dCost").val(data[0].pricecost);
+	           $("#txtNormalPrice").html("<input type='text' name='dNormalPrice' id='dNormalPrice' value='' class='w100p numberAmt'/>"); // amt
+	           $("#dNormalPrice").val(data[0].amt);
+          }
 
-                $("#dPV").val(data[0].pricepv);
-                $("#txtMonthlyRental")
-                        .html(
-                                "<input type='text' name='dMonthlyRental' id='dMonthlyRental' disabled=true value='' class='w100p numberAmt'/>"); //amt
-                $("#dMonthlyRental").val(data[0].mrental);
-                $("#txtRentalDeposit")
-                        .html(
-                                "<input type='text' name='dRentalDeposit' id='dRentalDeposit' disabled=true value='' class='w100p numberAmt'/>"); //PriceRPF
-                $("#dRentalDeposit").val(data[0].pricerpf);
-                $("#txtTradeInPV")
-                        .html(
-                                "<input type='text' name='dTradeInPV' id='dTradeInPV' disabled=true value='' class='w100p numberAmt'/>"); //TradeInPV
-                $("#dTradeInPV").val(data[0].tradeinpv);
-            }
-            $("#txtCost")
-                    .html(
-                            "<input type='text' name='dCost' id='dCost' value='' class='w100p numberAmt'/>"); //PriceCosting
-            $("#dCost").val(data[0].pricecost);
-            $("#txtNormalPrice")
-                    .html(
-                            "<input type='text' name='dNormalPrice' id='dNormalPrice' value='' class='w100p numberAmt'/>"); // amt
-            $("#dNormalPrice").val(data[0].amt);
-            $("#price_info_edit").text("SAVE");
+           $("#price_info_edit").text("SAVE");
 
             destory(priceHistoryGrid);
             priceHistoryAUIGrid(pricehiscolumn);
@@ -1193,13 +1170,15 @@
         $("#cbSirim").prop("checked", false);
         $("#cbSerial").prop("checked", false);
         $("#cbStockAudit").prop("checked", false); // 20191117 KR-OHK Stock Audit Add
-        $("#txtCost").text();
-        $("#txtNormalPrice").text();
-        $("#txtPV").text();
-        $("#txtMonthlyRental").text();
-        $("#txtRentalDeposit").text();
-        $("#txtPenaltyCharge").text();
-        $("#txtTradeInPV").text();
+        $("#txtCost").text("");
+        $("#txtNormalPrice").text("");
+        $("#txtPV").text("");
+        $("#txtMonthlyRental").text("");
+        $("#txtRentalDeposit").text("");
+        $("#txtPenaltyCharge").text("");
+        $("#txtTradeInPV").text("");
+        destory(priceHistoryGrid);
+        priceHistoryAUIGrid(pricehiscolumn);
         $("#txtStkSize").text();
         $("#cbIsSmo").prop("checked", false);
         $("#cbIsSerialReplc").prop("checked", false);
@@ -1625,17 +1604,20 @@
 
                 </aside>
                 <aside class="title_line"><!-- title_line start -->
-                <h1>Rental Package</h1>
+                <!--<h1>Rental Package</h1>
                 <ul class="left_opt">
                     <select class="w100p" id="srvPacId">
-        <option value="2" selected>Basic (60 months)</option>
-        <option value="3">NEO (84 months)</option>
-    </select>
-    </ul>
-    </aside>
+                        <option value="2" selected>Basic (60 months)</option>
+                        <option value="3">NEO (84 months)</option>
+                    </select>
+                </ul>-->
+                <h1>Package</h1>
+                <span class="w100p"><select  id="srvPacId" name="srvPacId"> </select> </span>
+                </aside>
                 <form id='priceForm' name='priceForm' method='post'>
                 <input type="hidden" name="priceTypeid" id="priceTypeid" value=""/>
                 <input type="hidden" name="srvPackageId" id="srvPackageId" value=""/>
+                <input type="hidden" name="appTypeId" id="hdnAppTypeId"/>
                 <table class="type1">
                     <caption>search table</caption>
                     <colgroup>
@@ -1683,16 +1665,14 @@
                     </tbody>
                 </table>
                 </form>
+                <div style="width:100%;">
+                <aside class="title_line">
+                <h3>Price & Value Information History</h3>
+                </aside>
+                <div id="priceHistory_div"></div>
+                </div>
                 </div>
                 <div style="width:1%;" >
-                </div>
-                <div style="width:49%;">
-
-                <aside class="title_line"><!-- title_line start -->
-                <h3>Price & Value Information History</h3>
-                </aside><!-- title_line end -->
-
-                <div id="priceHistory_div"></div>
                 </div>
 
                 </div><!-- divine_auto end -->

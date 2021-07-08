@@ -27,7 +27,8 @@ public interface StockMapper {
 	void updateSalePriceUOM(Map<String, Object> params);
 
 	void updateSalePriceInfo(Map<String, Object> params);
-
+	
+	void insertSalePriceInfo(Map<String, Object> params);
 	List<EgovMap> srvMembershipList();
 
 	int addServiceInfoGrid(Map<String, Object> param);
@@ -57,6 +58,9 @@ public interface StockMapper {
 	void nonvalueItemPriceins(Map<String, Object> params);
 
 	String nonvaluedItemCodeChk(Map<String, Object> params);
+	
+	List<EgovMap> selectCodeList();
+
 
 	// Added by Hui Ding, 2020-06-22
 	EgovMap selectStkCatType(Map<String, Object> params);
@@ -88,5 +92,6 @@ public interface StockMapper {
 	void insertBLMaster83M(Map<String, Object> map);
 	void insertBLMaster84D(Map<String, Object> map);
 	void updateITF160Status(Map<String, Object> map);*/
+
 
 }
