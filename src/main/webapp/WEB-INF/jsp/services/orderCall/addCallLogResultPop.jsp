@@ -85,7 +85,7 @@
     var rdcStk = $("#rdc").text();
     if(rdcStk != "0")
     {
-        if(feedBackCode == '2129') //FB26 - Stock In Transit ++  || feedBackCode == '3415'
+        if(feedBackCode == '2129' || feedBackCode == '3415') //FB26 - Stock In Transit ++
         {
             Common.alert("Currently Stock Available in RDC. Please Select Correct Feedback Code");
             return false;
