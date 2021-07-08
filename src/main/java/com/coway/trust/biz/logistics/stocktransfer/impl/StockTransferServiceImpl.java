@@ -339,9 +339,13 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 					stocktran.deliveryStockTransferDetailIns(insMap);
 				}
 				stocktran.deliveryStockTransferIns(insMap);
-				String reqstNo = (String) insMap.get("reqstno");
-				logger.info(" reqstNo ??? : {}", reqstNo);
-				stocktran.updateRequestTransfer(reqstNo);
+
+				for (int i = 0; i < updList.size(); i++) { // Added for when select more than two diff order by hltang, 8-7-2021
+					insMap = (Map<String, Object>) updList.get(i);
+					String reqstNo = (String) insMap.get("reqstno");
+					logger.info(" reqstNo ??? : {}", reqstNo);
+					stocktran.updateRequestTransfer(reqstNo);
+				}
 			}
 		} else {
 			seq = "dup";
