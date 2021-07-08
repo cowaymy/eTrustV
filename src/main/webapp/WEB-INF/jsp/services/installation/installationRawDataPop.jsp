@@ -8,7 +8,9 @@
  07/10/2019  ONGHC  1.0.1          AMEND CONDITION OF ORDER START AND END DATE
  12/04/2021  TEOHHD 1.0.2          Added searching criteria (order status, DSC branch, Ins Status, Ins Date, Appt Date, Product Category, Product Code)
  -->
-
+<!-- <script>
+    document.write('<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js?v='+new Date().getTime()+'"><\/script>');
+</script> -->
 <script type="text/javaScript">
   $(document).ready(
       function() {
@@ -80,10 +82,64 @@
   }
 
   function fn_validation() {
-    if ($("#orderStrDt").val() == '' || $("#orderEndDt").val() == '') {
+
+	  if (($("#orderStrDt").val() == '' &&  $("#orderEndDt").val() == '' )
+              && ($("#insStrDt").val() == '' &&  $("#insEndDt").val() == '' )
+              && ($("#apptStrDt").val() == '' &&  $("#apptEndDt").val() == '' )){
+
+		  Common.alert("At least 1 of the date options below must be choosen:<br\> - Order Date<br\> - Appointment Date<br\> - Installation Date");
+		  return false;
+
+     }
+
+	 if ($("#orderStrDt").val() != '' &&  $("#orderEndDt").val() == '' ) {
+    	 Common.alert("Order End Date is required");
+    	 return false;
+     } else if ($("#orderStrDt").val() == '' &&  $("#orderEndDt").val() != '' ) {
+         Common.alert("Order Start Date is required");
+         return false;
+     } else {
+            var startDt = $("#orderStrDt").val();
+            var endDt = $("#orderEndDt").val();
+
+             if (!js.date.checkDateRange(startDt,endDt,"Order Date", "3"))
+                return false;
+     }
+
+
+     if ($("#insStrDt").val() == '' &&  $("#insEndDt").val() != '' ) {
+         Common.alert("Installation Start Date is required");
+         return false;
+     } else if ($("#insStrDt").val() != '' &&  $("#insEndDt").val() == '' ) {
+         Common.alert("Installation End Date is required");
+         return false;
+     } else {
+         var startDt2 = $("#insStrDt").val();
+         var endDt2 = $("#insEndDt").val();
+
+          if (!js.date.checkDateRange(startDt2,endDt2,"Installation Date", "3"))
+             return false;
+     }
+
+
+     if ($("#apptStrDt").val() == '' &&  $("#apptEndDt").val() != '' ) {
+         Common.alert("Appointment Start Date is required");
+         return false;
+     } else if ($("#apptStrDt").val() != '' &&  $("#apptEndDt").val() == '' ) {
+         Common.alert("Appointment End Date is required");
+         return false;
+     } else {
+         var startDt3 = $("#apptStrDt").val();
+         var endDt3 = $("#apptEndDt").val();
+
+          if (!js.date.checkDateRange(startDt3,endDt3,"Appointment Date", "3"))
+             return false;
+     }
+
+    /* if ($("#orderStrDt").val() == '' || $("#orderEndDt").val() == '') {
       Common.alert("<spring:message code='sys.common.alert.validation' arguments='Order date (From & To)' htmlEscape='false'/>");
       return false;
-    }
+    } */
     return true;
   }
 
@@ -95,12 +151,6 @@
       var day = date.getDate();
 
       var whereSql2 ="";
-
-      console.log("orderStatus: " + $("#ordStatus").val());
-      console.log("dscBranch: " + $("#dscBranch").val());
-      console.log("insStatus: " + $("#insStatus").val());
-       console.log("prodCode: " + $("#prodCode").val());
-       console.log("prodCat: " + $("#prodCat").val());
 
       if (date.getDate() < 10) {
         day = "0" + date.getDate();
@@ -244,7 +294,7 @@
      <tbody>
      <!-- Added criteria for searching, by Hui Ding, 12-04-2021 -->
       <tr>
-       <th scope="row"><spring:message code='service.title.OrderDate' /> <span class="must">*</span></th>
+       <th scope="row"><spring:message code='service.title.OrderDate' /></th>
        <td>
         <div class="date_set">
          <!-- date_set start -->
