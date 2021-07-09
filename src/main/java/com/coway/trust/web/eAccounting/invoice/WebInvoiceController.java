@@ -391,18 +391,26 @@ public class WebInvoiceController {
 
 		String[] pClmType = request.getParameterValues("clmType");
 		String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
+		String[] vendorGrp = request.getParameterValues("vendorGrp");
 
 		params.put("clmType", pClmType);
 		params.put("appvPrcssStus", appvPrcssStus);
+		params.put("vendorGrp", vendorGrp);
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
 
 		List<EgovMap> list = null;
 
-		if("0".equals(params.get("appvType").toString())) {
-		    list = webInvoiceService.selectApproveList(params);
+		// Temporary disable to allow HTM Activity fund to go live first
+		// To remove outer most if statement
+		if(params.containsKey("appvType")) {
+		    if("0".equals(params.get("appvType").toString())) {
+	            list = webInvoiceService.selectApproveList(params);
+	        } else {
+	            list = webInvoiceService.selectVendorApproveList(params);
+	        }
 		} else {
-		    list = webInvoiceService.selectVendorApproveList(params);
+		    list = webInvoiceService.selectApproveList(params);
 		}
 
 		return ResponseEntity.ok(list);
