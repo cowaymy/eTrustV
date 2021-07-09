@@ -103,11 +103,12 @@
              , B.PAY_MODE PAY_MODE
              , C.CODE_NAME PAY_MODE_NAME
              , B.PAY_AMT PAY_AMT
-              , B.PAY_REM AS REM
+              , D.CODE ||'-'|| D.RESN_DESC ||'-'||B.PAY_REM AS REM
     FROM MOB0001D A
     JOIN PAY0297D B ON A.MOB_TICKET_NO = B.MOB_TICKET_NO
     JOIN SYS0013M C ON B.PAY_MODE = C.CODE_ID
                            AND C.CODE_MASTER_ID = 439
+    LEFT JOIN SYS0032M D ON D.RESN_ID = B.FAIL_RESN_ID
     WHERE A.MOB_TICKET_NO = #{mobTicketNo}
   </select>
 
