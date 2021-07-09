@@ -1145,7 +1145,7 @@
     AND     M13.CODE_MASTER_ID = '469'
     AND     M13.DISAB != '1'
     AND     M13.CODE = S26.STK_CODE
-    AND     S16.STK_ID  =  S26.STK_ID (+)
+    AND     S16.STK_ID  =  S26.STK_ID
     AND     S26.STUS_CODE_ID = '1'
     AND     S16.STUS_CODE_ID = '1'
     AND     S26.STK_TYPE_ID in ('63','64')
