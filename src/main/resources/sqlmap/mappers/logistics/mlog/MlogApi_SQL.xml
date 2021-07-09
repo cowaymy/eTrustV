@@ -1112,7 +1112,7 @@
 
     where   1=1
     AND     M13.CODE_MASTER_ID = '469'
-    AND     M13.DISAB <> '1'
+    AND     M13.DISAB != '1'
     AND     M13.CODE = S26.STK_CODE
     AND     S26.STUS_CODE_ID = '1'
     AND     S16.STUS_CODE_ID = '1'
@@ -1143,7 +1143,7 @@
 
     where   1=1
     AND     M13.CODE_MASTER_ID = '469'
-    AND     M13.DISAB <> '1'
+    AND     M13.DISAB != '1'
     AND     M13.CODE = S26.STK_CODE
     AND     S16.STK_ID  =  S26.STK_ID (+)
     AND     S26.STUS_CODE_ID = '1'
