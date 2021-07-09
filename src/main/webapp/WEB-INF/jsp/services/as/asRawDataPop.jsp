@@ -223,7 +223,6 @@
 
   function fn_openGenerate() {
     if (fn_validation()) {
-        console.log("cmbProductType: " + $('#cmbProductType').val());
       var whereSql = "";
       var whereSql2 = "";
       var whereSql2LeftJoin = "";
