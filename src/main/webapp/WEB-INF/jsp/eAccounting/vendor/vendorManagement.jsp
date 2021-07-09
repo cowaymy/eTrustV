@@ -392,6 +392,7 @@ function fn_editVendorPop(reqNo, flg, vendorAccId, appvPrcssStusCode) {
     	            appvPrcssStusCode : appvPrcssStusCode
     	    };
     	    Common.popupDiv("/eAccounting/vendor/editVendorPop.do", data, null, true, "editVendorPop");
+    	    fn_selectVendorList()
      }
 }
 
@@ -1022,6 +1023,7 @@ function fn_editRejected() {
                 console.log(result1);
 
                 Common.alert("New claim number : " + result1.data.newClmNo);
+                fn_selectVendorList()
             })
         } else {
             Common.alert("Only rejected claims are allowed to edit.");

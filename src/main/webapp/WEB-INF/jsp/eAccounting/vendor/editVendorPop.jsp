@@ -632,6 +632,7 @@ function fn_insertVendorInfo(st) {
         });
         Common.alert('Temporary Save succeeded.');
         fn_close();
+        fn_selectVendorList();
     }
     else
     {
@@ -666,6 +667,7 @@ function fn_updateVendorInfo(st) {
         if(st == "view"){
             Common.alert('Temporary save succeeded.');
             $("#editVendorPop").remove();
+            fn_selectVendorList();
         }
         else
         {
@@ -837,7 +839,12 @@ $.fn.clearForm = function() {
 </tr>
 <tr>
     <th colspan = 2 scope="row">Email Address (payment advice)<span class="must">*</span></th>
-    <td colspan="3"><input type="text" title="" placeholder="" class="w100p" id="payAdvEmail1" name="payAdvEmail1" value="${vendorInfo.payAdvEmail1}"/></td>
+    <td colspan="3">
+        <select class="w100p" id=payAdvEmail1 name="payAdvEmail1">
+                  <option value="ap@coway.com.my" <c:if test="${vendorInfo.payAdvEmail1 eq 'ap@coway.com.my'}">selected="selected"</c:if>>ap@coway.com.my</option>
+                  <option value="ga.payment@coway.com.my" <c:if test="${vendorInfo.payAdvEmail1 eq 'ga.payment@coway.com.my'}">selected="selected"</c:if>>ga.payment@coway.com.my</option>
+        </select>
+    </td>
 </tr>
 <tr>
     <th colspan = 2 scope="row">Email Address 2 (payment advice)</th>

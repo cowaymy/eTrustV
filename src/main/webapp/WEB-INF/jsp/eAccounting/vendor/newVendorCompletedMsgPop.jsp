@@ -19,7 +19,7 @@ function fn_closePop() {
     	$("#viewEditVendorPop").remove();
     }
 
-    fn_selectWebInvoiceList();
+    fn_selectVendorList();
 }
 </script>
 

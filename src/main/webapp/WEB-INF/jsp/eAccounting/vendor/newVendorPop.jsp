@@ -212,6 +212,7 @@ function fn_insertVendorInfo(st) {
     	});
     	Common.alert('Temporary Save succeeded.');
     	fn_close();
+    	fn_selectVendorList();
    	}
     else
     {
