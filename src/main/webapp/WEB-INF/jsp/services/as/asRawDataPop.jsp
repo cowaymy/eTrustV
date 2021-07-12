@@ -59,14 +59,14 @@
           $('#cmbAsStatus').change(function() {
 
           }).multipleSelect({
-              selectAll: true,
+              selectAll: false,
               width: '80%'
           });
 
           $('#cmbProductCategory').change(function() {
 
           }).multipleSelect({
-              selectAll: true,
+              selectAll: false,
               width: '80%'
           });
 
@@ -74,49 +74,49 @@
           $('#cmbProductType').change(function() {
 
           }).multipleSelect({
-              selectAll: true,
+              selectAll: false,
               width: '80%'
           });
 
           $('#cmbProductCode').change(function() {
 
           }).multipleSelect({
-        	  selectAll: true,
+        	  selectAll: false,
         	  width: '80%'
           });
 
           $('#cmbAsAging').change(function() {
 
           }).multipleSelect({
-              selectAll: true,
+              selectAll: false,
               width: '80%'
           });
 
           $('#cmbDefectType').change(function() {
 
           }).multipleSelect({
-              selectAll: true,
+              selectAll: false,
               width: '80%'
           });
 
           $('#cmbDefectRmk').change(function() {
 
           }).multipleSelect({
-              selectAll: true,
+              selectAll: false,
               width: '80%'
           });
 
           $('#cmbDefectDesc').change(function() {
 
           }).multipleSelect({
-              selectAll: true,
+              selectAll: false,
               width: '80%'
           });
 
           $('#cmbDefectDescSym').change(function() {
 
           }).multipleSelect({
-              selectAll: true,
+              selectAll: false,
               width: '80%'
           });
 
