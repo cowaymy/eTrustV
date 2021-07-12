@@ -392,7 +392,7 @@ function fn_editVendorPop(reqNo, flg, vendorAccId, appvPrcssStusCode) {
     	            appvPrcssStusCode : appvPrcssStusCode
     	    };
     	    Common.popupDiv("/eAccounting/vendor/editVendorPop.do", data, null, true, "editVendorPop");
-    	    fn_selectVendorList()
+    	    fn_selectVendorList();
      }
 }
 

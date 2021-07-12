@@ -274,6 +274,8 @@ public class VendorServiceImpl implements VendorService {
 	public void updateVendorInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
+		params.put("regCompName", params.get("regCompName").toString().trim().toUpperCase());
+		params.put("bankAccHolder", params.get("bankAccHolder").toString().trim().toUpperCase());
 		vendorMapper.updateVendorInfo(params);
 
 	}
