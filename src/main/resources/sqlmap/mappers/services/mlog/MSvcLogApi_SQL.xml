@@ -1712,7 +1712,10 @@
                        CASE WHEN TO_NUMBER(S5D.ASR_ITM_PART_QTY, '99999') <![CDATA[ > ]]> 0
                          THEN 'Y'
                          ELSE 'N' END AS chg_Y_N,
-                       ''  AS ex_Chgid
+                       ''  AS ex_Chgid,
+                       CASE WHEN X2.ASR_ITM_PART_ID in ('116') THEN 'PS2'
+                        ELSE ''
+                        END AS PS_REMARK
                 FROM ( SELECT *
                        FROM SVC0001D
                        WHERE AS_MEM_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{userId})
@@ -1740,6 +1743,24 @@
                                         WHERE 1 = 1
                                           AND S26.STUS_CODE_ID = 1
                 ) H ON F.STK_CODE = H.STK_CODE
+
+                LEFT OUTER JOIN (
+                select  ase.AS_ID, ase.AS_SO_ID, asd.ASR_ITM_PART_ID
+            FROM SVC0001D ase
+                 JOIN SVC0004D asm   ON ase.AS_ID = asm.AS_ENTRY_ID AND AS_STUS_ID = 4
+                 JOIN SVC0005D asd   ON asm.AS_RESULT_ID = asd.AS_RESULT_ID  AND asm.AS_RESULT_STUS_ID = 4
+                 JOIN ORG0001D M   ON M.MEM_ID = asm.AS_CT_ID WHERE asm.AS_RESULT_ID in
+                 (
+                  SELECT *  FROM (
+                    SELECT DISTINCT asm.AS_RESULT_ID
+                FROM SVC0001D ase JOIN SVC0004D asm ON ase.AS_ID = asm.AS_ENTRY_ID AND AS_STUS_ID = 4
+               JOIN SVC0005D asd ON asm.AS_RESULT_ID = asd.AS_RESULT_ID AND asm.AS_RESULT_STUS_ID = 4 AND asd.ASR_ITM_PART_ID in ('116') -- 116 NEO SENSE FILTER 11'
+                 AND asm.AS_RESULT_NO = (
+                 SELECT (SELECT MAX(AS_RESULT_NO) FROM SVC0004D WHERE AS_ENTRY_ID = ase.AS_ID) FROM DUAL )
+                    ORDER BY AS_RESULT_ID DESC )
+                                    )
+                )X2 ON A.AS_SO_ID = X2.AS_SO_ID
+
            ) MST LEFT OUTER JOIN (SELECT A.SRV_SO_ID
                                        , B.*
                                   FROM SAL0090D A
