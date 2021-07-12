@@ -42,6 +42,7 @@ public class AfterServiceResultDetailForm {
 
 	private String isSmo;
 	private String isSerialReplace;
+	private String psRemark;
 
 	public String getFilterCode() {
 		return filterCode;
@@ -123,7 +124,13 @@ public class AfterServiceResultDetailForm {
 		this.isSerialReplace = isSerialReplace;
 	}
 
+	public String getPsRemark() {
+		return psRemark;
+	}
 
+	public void setPsRemark(String psRemark) {
+		this.psRemark = psRemark;
+	}
 
 	public static List<Map<String, Object>>  createMaps(List<AfterServiceResultDetailForm> afterServiceResultDetailForms) {
 

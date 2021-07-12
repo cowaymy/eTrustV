@@ -69,6 +69,7 @@ public class AfterServicePartsDto {
 
 	private String isSmo;
 	private String isSerialReplace;
+	private String psRemark;
 
 	public String getFilterBarcdChkYn() {
 		return filterBarcdChkYn;
@@ -92,6 +93,14 @@ public class AfterServicePartsDto {
 
 	public void setIsSerialReplace(String isSerialReplace) {
 		this.isSerialReplace = isSerialReplace;
+	}
+
+	public String getPsRemark() {
+		return psRemark;
+	}
+
+	public void setPsRemark(String psRemark) {
+		this.psRemark = psRemark;
 	}
 
 	public String getSalesOrderNo() {
