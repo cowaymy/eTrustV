@@ -25,7 +25,6 @@
           $("#m3").hide(); //hide mandatory indicator (*) for Date Option
           $("#m5").show(); //show mandatory indicator (*) for Settle Date
 	  } else {
-		  $('#reportForm1').clearForm();
           $("#reportForm1 .tr_toggle_display").hide();
           $("#m2").show();
           $("#m3").show();
