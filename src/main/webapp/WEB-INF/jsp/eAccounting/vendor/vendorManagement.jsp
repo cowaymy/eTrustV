@@ -55,7 +55,7 @@ var vendorManagementColumnLayout = [ {
     dataField : "appvPrcssDt",
     headerText : 'Approval Date',
     dataType : "date",
-    formatString : "dd/mm/yyyy",
+    //formatString : "dd/mm/yyyy",
     width : "10%"
 }, {
     dataField : "flg",
