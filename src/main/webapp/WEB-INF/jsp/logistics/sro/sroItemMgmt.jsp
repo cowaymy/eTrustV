@@ -75,7 +75,7 @@ var columnLayout = [
                             list : groupList
                         }
                     },
-                    {dataField: "useyn",headerText :"Ues YN"  ,width:80   ,height:30 , visible:true ,
+                    {dataField: "useyn",headerText :"Use YN"  ,width:80   ,height:30 , visible:true ,
                         editRenderer : {
                             type : "ComboBoxRenderer",
                             showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -268,7 +268,7 @@ $(function(){
 
      $('#fileSelector').on('change', function(evt) {
          if (!checkHTML5Brower()) {
-             alert("브라우저가 HTML5 를 지원하지 않습니다.\r\n서버로 업로드해서 해결하십시오.");
+           //  alert("브라우저가 HTML5 를 지원하지 않습니다.\r\n서버로 업로드해서 해결하십시오.");
 
              isExcelUploadFlag =false;
              return;
@@ -281,7 +281,7 @@ $(function(){
              var data = null;
              var file = evt.target.files[0];
              if (typeof file == "undefined") {
-                 alert("파일 선택 시 오류 발생!!");
+                // alert("파일 선택 시 오류 발생!!");
                  return;
              }
              var reader = new FileReader();
