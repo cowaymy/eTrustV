@@ -469,7 +469,7 @@ public class ReportBatchController {
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put("V_TEMP", "TEMP"); // viewType
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "BSRaw" + File.separator + "PreBSConfig" + CommonUtils.getNowDate() + ".xls");
+        "HSRaw" + File.separator + "PreHSConfig" + CommonUtils.getNowDate() + ".xls");
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] PreBSConfig...");
@@ -637,7 +637,7 @@ public class ReportBatchController {
       params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
       params.put("V_CODYDEPTCODE", param); // parameter
       params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-          "BSReport" + File.separator + "BSReport" + CommonUtils.getNowDate() + "_" + param + ".xls");
+          "HSReport" + File.separator + "HSReport" + CommonUtils.getNowDate() + "_" + param + ".xls");
 
       this.viewProcedure(null, null, params);
     }
@@ -662,7 +662,7 @@ public class ReportBatchController {
       params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
       params.put("V_CTCODEASC", param);
       params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-          "BSReport" + File.separator + "BSReportCT" + CommonUtils.getNowDate() + "_" + param + ".xls");
+          "HSReport" + File.separator + "HSReportCT" + CommonUtils.getNowDate() + "_" + param + ".xls");
 
       this.viewProcedure(null, null, params);
     }
@@ -999,7 +999,7 @@ public class ReportBatchController {
                                                                 // file name.
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "BSRaw" + File.separator + "BSRawCurrent" + CommonUtils.getNowDate() + ".xls");
+        "HSRaw" + File.separator + "HSRawCurrent" + CommonUtils.getNowDate() + ".xls");
 
     this.view(null, null, params);
     LOGGER.info("[END] BSRawCurrent...");
@@ -1015,7 +1015,7 @@ public class ReportBatchController {
                                                                    // name.
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "BSRaw" + File.separator + "BSRawCurrent_S1" + CommonUtils.getNowDate() + ".xls");
+        "HSRaw" + File.separator + "HSRawCurrent_S1" + CommonUtils.getNowDate() + ".xls");
 
     this.view(null, null, params);
     LOGGER.info("[END] BSRawCurrent_S1...");
@@ -1031,7 +1031,7 @@ public class ReportBatchController {
                                                                     // name.
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "BSRaw" + File.separator + "BSRawPrevious_S1" + CommonUtils.getNowDate() + ".xls");
+        "HSRaw" + File.separator + "HSRawPrevious_S1" + CommonUtils.getNowDate() + ".xls");
 
     this.view(null, null, params);
     LOGGER.info("[END] BSRawPrevious_S1...");
@@ -1047,7 +1047,7 @@ public class ReportBatchController {
                                                                   // name.
     params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-        "BSRaw" + File.separator + "BSRawCurrent_S" + CommonUtils.getNowDate() + ".xls");
+        "HSRaw" + File.separator + "HSRawCurrent_S" + CommonUtils.getNowDate() + ".xls");
 
     this.view(null, null, params);
     LOGGER.info("[END] BSRawCurrent_S...");
