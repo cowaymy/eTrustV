@@ -181,7 +181,7 @@
 
         $('#btnReqOwnTrans').click(function() {
             // fn_isLockOrder is not needed here as data saving will insert into ROT staging
-
+            console.log("btnReqOwnTrans :: click");
             if(fn_validReqOwnt()) {
                 fn_attachmentUpload();
                 //fn_doSaveReqOwnt();
@@ -359,19 +359,30 @@
         });
 
         $('#billMthdPost').change(function() {
+            $('#hiddenBillMthdPost').val("0");
             if($("#billMthdPost").is(":checked")) {
                 $('#billMthdEstm').change();
                 $('#billMthdSms').change();
+                $('#hiddenBillMthdPost').val("1");
             }
         });
         $('#billMthdSms').change(function() {
             $('#billMthdSms1').prop("checked", false).prop("disabled", true);
             $('#billMthdSms2').prop("checked", false).prop("disabled", true);
 
+            $('#hiddenBillMthdSms1').val("0");
+            $('#hiddenBillMthdSms2').val("0");
             if($("#billMthdSms").is(":checked")) {
                 $('#billMthdEstm').change();
                 $('#billMthdSms1').removeAttr("disabled").prop("checked", true);
                 $('#billMthdSms2').removeAttr("disabled");
+                $('#hiddenBillMthdSms1').val("1");
+            }
+        });
+        $('#billMthdSms2').change(function() {
+            $('#hiddenBillMthdSms2').val("0");
+            if($("#billMthdSms").is(":checked")) {
+                $('#hiddenBillMthdSms2').val("1");
             }
         });
         $('#billMthdEstm').change(function() {
@@ -383,6 +394,8 @@
             $('#billMthdEmailTxt1').val("").prop("disabled", true);
             $('#billMthdEmailTxt2').val("").prop("disabled", true);
 
+            $('#hiddenBillMthdEstm').val("0");
+
             if($("#billMthdEstm").is(":checked")) {
                 $('#billMthdSms').change();
                 $('#spEmail1').text("*");
@@ -392,6 +405,13 @@
                 $('#billMthdEmailTxt1').removeAttr("disabled").val($('#txtContactEmailOwnt').val().trim());
                 $('#billMthdEmailTxt2').removeAttr("disabled");
                 //$('#billMthdEmailTxt2').removeAttr("disabled").val($('#srvCntcEmail').val().trim());
+                $('#hiddenBillMthdEstm').val("1");
+            }
+        });
+        $('#billGrpWeb').change(function() {
+            $('#hiddenBillGrpWeb').val("0");
+            if($("#billGrpWeb").is(":checked")) {
+                $('#hiddenBillGrpWeb').val("1");
             }
         });
     });
@@ -442,6 +462,8 @@
                 $('#billMthdEmailTxt1').removeAttr("disabled");
                 $('#billMthdEmailTxt2').removeAttr("disabled");
 
+                $('#hiddenBillMthdEstm').val("1");
+
                 if($("#corpTypeId").val() == 1151 || $("#corpTypeId").val() ==1154 || $("#corpTypeId").val() == 1333){
                     $('#billMthdPost').removeAttr("disabled");
                 }else{
@@ -461,11 +483,15 @@
                     $('#billMthdEmailTxt1').removeAttr("disabled");
                     $('#billMthdEmailTxt2').removeAttr("disabled");
                     $('#billMthdPost').removeAttr("disabled");
+
+                    $('#hiddenBillMthdEstm').val("1");
                 }
 
                 $('#billMthdSms').prop("checked", true);
                 $('#billMthdSms1').prop("checked", true).removeAttr("disabled");
                 $('#billMthdSms2').removeAttr("disabled");
+
+                $('#hiddenBillMthdSms1').val("1");
             }
 
         } else if (grpOpt == 'exist') {
@@ -1414,6 +1440,12 @@
                 <input id="txtHiddenInstContactIDOwnt" name="txtHiddenInstContactID" type="hidden" />
                 <input id="isNewVer" name="isNewVer" type="hidden" value="${orderDetail.isNewVer}" />
                 <input id="newCustCntcId" name="newCustCntcId" type="hidden" />
+
+                <input id="hiddenBillMthdPost" name="hiddenBillMthdPost" type="hidden" value="0" />
+                <input id="hiddenBillMthdSms1" name="hiddenBillMthdSms1" type="hidden" value="0" />
+                <input id="hiddenBillMthdSms2" name="hiddenBillMthdSms2" type="hidden" value="0" />
+                <input id="hiddenBillMthdEstm" name="hiddenBillMthdEstm" type="hidden" value="0" />
+                <input id="hiddenBillGrpWeb" name="hiddenBillGrpWeb" type="hidden" value="0" />
 
                 <input id="atchFileGrpId" name="atchFileGrpId" type="hidden" />
 

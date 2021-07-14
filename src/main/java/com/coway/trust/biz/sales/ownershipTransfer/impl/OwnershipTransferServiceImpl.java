@@ -285,10 +285,22 @@ public class OwnershipTransferServiceImpl implements OwnershipTransferService{
             billParam.put("userID", sessionVO.getUserId());
             billParam.put("custBillPayTrm", "0");
             billParam.put("custBillInchgMemId", "0");
+            /*
             billParam.put("custBillEmail", "");
             billParam.put("custBillIsEstm", SalesConstants.IS_FALSE);
             billParam.put("custBillIsSms", CommonUtils.intNvl(params.get("hiddenCustTypeID")) == SalesConstants.CUST_TYPE_CODE_ID_IND ? SalesConstants.IS_TRUE : SalesConstants.IS_FALSE);
             billParam.put("custBillIsPost", CommonUtils.intNvl(params.get("hiddenCustTypeID")) == SalesConstants.CUST_TYPE_CODE_ID_IND ? SalesConstants.IS_TRUE : SalesConstants.IS_FALSE);
+            */
+            billParam.put("custBillIsEstm", CommonUtils.intNvl(params.get("hiddenBillMthdEstm")) == 1 ? 1 : 0);
+            billParam.put("custBillIsSms", CommonUtils.intNvl(params.get("hiddenBillMthdSms1")) == 1 ? 1 : 0);
+            billParam.put("custBillIsSms2", CommonUtils.intNvl(params.get("hiddenBillMthdSms2")) == 1 ? 1 : 0);
+            billParam.put("custBillIsPost", CommonUtils.intNvl(params.get("hiddenBillMthdPost")) == 1 ? 1 : 0);
+            billParam.put("custBillIsWebPortal", CommonUtils.intNvl(params.get("hiddenBillGrpWeb")) == 1 ? 1 : 0);
+
+            billParam.put("custBillEmail", params.get("billMthdEmailTxt1"));
+            billParam.put("custBillEmailAdd", params.get("billMthdEmailTxt2"));
+            billParam.put("custBillWebPortalUrl", params.get("billGrpWebUrl"));
+
         }
 
         // Insert into rental group billing staging if new billing group
