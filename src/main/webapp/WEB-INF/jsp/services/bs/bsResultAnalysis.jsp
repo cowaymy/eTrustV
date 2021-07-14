@@ -109,10 +109,10 @@
     ];
 
     var memberListingColumnLayout = [
-        { dataField : "bsno", headerText : "BS No", width : 80 },
-        { dataField : "bsmonth", headerText : "BS Month", width : 80 },
-        { dataField : "bsyear", headerText : "BS Year", width : 80 },
-        { dataField : "bsstatusid", headerText : "BS Status", width : 80 },
+        { dataField : "bsno", headerText : "HS No", width : 80 },
+        { dataField : "bsmonth", headerText : "HS Month", width : 80 },
+        { dataField : "bsyear", headerText : "HS Year", width : 80 },
+        { dataField : "bsstatusid", headerText : "HS Status", width : 80 },
         { dataField : "bsrno", headerText : "Result No", width : 80 },
         { dataField : "orderno", headerText : "Order No", width : 80 },
         { dataField : "orderapptype", headerText : "App Type", width : 80 },
