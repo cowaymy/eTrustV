@@ -132,7 +132,7 @@ var columnLayout = [
 
     function fn_excelDown(){
         // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-        GridCommon.exportTo("grid_wrap", "xlsx", "RC by BS (Aging Month)");
+        GridCommon.exportTo("grid_wrap", "xlsx", "RC by HS (Aging Month)");
     }
 </script>
 
@@ -145,7 +145,7 @@ var columnLayout = [
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
-        <h2>RC by BS (Aging Month)</h2>
+        <h2>RC by HS (Aging Month)</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="#" onClick="viewRentalLedger()"><span class="search"></span><spring:message code='pay.btn.viewLedger'/></a></p></li>
             <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
@@ -195,7 +195,7 @@ var columnLayout = [
                         <td><input type="text" title="memCode" id="memCode" name="memCode"  placeholder="Member Code" class="w100p" /></td>
                     </tr>
                     <tr>
-                        <th scope="row">BS Month</th>
+                        <th scope="row">HS Month</th>
                         <td><select id="cmbBsMonth" name="cmbBsMonth" class="w100p"></select></td>
                         <th scope="row">Opening Aging</th>
                         <td><select id="cmbOpeningAging" name="cmbOpeningAging" class="w100p"></select></td>

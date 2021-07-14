@@ -1220,7 +1220,7 @@
              , NVL(MAX(PREV_3_MONTH), '-') AS PREV_3_MONTH
              , NVL(MAX(PREV_4_MONTH), '-') AS PREV_4_MONTH
              , NVL(MAX(PREV_5_MONTH), '-') AS PREV_5_MONTH
-    FROM ( SELECT 'BS' AS TYPE
+    FROM ( SELECT 'HS' AS TYPE
                         , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') = TO_CHAR(SYSDATE, 'YYYY-MM') THEN (M.NO || ' - ' || S.CODE)
                                   ELSE '' END AS CUR_MONTH
                         , CASE WHEN TO_CHAR(M.YEAR)||'-'||LPAD(TO_CHAR(M.MONTH),2,'0') = TO_CHAR(ADD_MONTHS(SYSDATE, - 1), 'YYYY-MM') THEN (M.NO || ' - ' || S.CODE)

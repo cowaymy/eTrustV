@@ -5,6 +5,7 @@
 <script type="text/javaScript" language="javascript">
 
     var gridID, listByMemberGridID;
+    var selectedGridValue;
 
     $(document).ready(function(){
         $("#table1").hide();
@@ -103,7 +104,8 @@
         { dataField : "bsSuccesRateWeek3", headerText : "WEEK 3 (>90%)", dataType : "numeric", formatString : "#,##0.00", width : 120 },
         { dataField : "bsSuccesBalncWeek3", headerText : "Balance (By Unit)", width : 130 },
         { dataField : "bsSuccesRateWeek4", headerText : "WEEK 4 (100%)", dataType : "numeric", formatString : "#,##0.00", width : 120 },
-        { dataField : "bsSuccesBalncWeek4", headerText : "Balance (By Unit)", width : 130 }
+        { dataField : "bsSuccesBalncWeek4", headerText : "Balance (By Unit)", width : 130 },
+        { dataField : "memCode", headerText : "Member Code", width : 80 }
     ];
 
     var memberListingColumnLayout = [
@@ -164,6 +166,12 @@
     function fn_openDivPop(val) {
         var selectedItem = AUIGrid.getSelectedIndex(gridID);
 
+        var selectedItem2 = AUIGrid.getSelectedItems(gridID);
+        if(selectedItem2 == null || selectedItem2.length <= 0 ){
+            Common.alert('* <spring:message code="service.msg.NoRcd" />');
+            return;
+        }
+
         var memCode = AUIGrid.getCellValue(gridID, selectedGridValue, "memCode");
 
         if(selectedItem[0] > -1) {
@@ -179,8 +187,8 @@
                 var date = new Date();
                 var dateTime = date.getDate().toString() + "-" + date.getMonth().toString() + "-" + date.getFullYear().toString() + " " + date.toLocaleTimeString();
 
-                $('#pop_header h1').text('BS Listing - By Member');
-                $('#pop_header h3').text('Before Service (BS) Listing by ' + memCode + ' as at ' + dateTime);
+                $('#pop_header h1').text('HS Listing - By Member');
+                $('#pop_header h3').text('Heart Service (HS) Listing by ' + memCode + ' as at ' + dateTime);
                 $('#center_btns1').hide();
                 $('#center_btns2').hide();
                 $('#center_btns3').hide();
@@ -192,6 +200,9 @@
         }
     }
 
+    hideViewPopup=function(val){
+        $(val).hide();
+    }
 
 </script>
 
@@ -205,7 +216,7 @@
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
-        <h2>BS Management - Result Analysis</h2>
+        <h2>HS Management - Result Analysis</h2>
         <ul class="right_btns">
             <!-- <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
                 <li><p class="btn_blue"><a href="#" onClick="fn_print()"><spring:message code='service.btn.Generate'/></a></p></li>
@@ -263,7 +274,7 @@
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">BS Listing - By Member</a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">HS Listing - By Member</a></p></li>
                     </ul>
                     <ul class="btns">
                     </ul>

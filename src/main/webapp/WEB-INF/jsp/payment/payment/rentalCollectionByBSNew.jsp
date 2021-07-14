@@ -101,7 +101,7 @@ var columnLayout = [
     }
 
     function fn_excelDown() {
-      GridCommon.exportTo("grid_wrap", "xlsx", "RC by BS");
+      GridCommon.exportTo("grid_wrap", "xlsx", "RC by HS");
     }
 </script>
 
@@ -114,7 +114,7 @@ var columnLayout = [
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
-        <h2>RC by BS</h2>
+        <h2>RC by HS</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
