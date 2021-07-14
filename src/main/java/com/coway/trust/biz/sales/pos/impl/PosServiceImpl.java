@@ -38,6 +38,10 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
   @Resource(name = "posMapper")
   private PosMapper posMapper;
 
+  @Resource(name = "posStockMapper")
+  private PosStockMapper posStockMapper;
+
+
   @Override
   public List<EgovMap> selectPosModuleCodeList(Map<String, Object> params) throws Exception {
 
@@ -1271,6 +1275,42 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       return rtnMap;
 
     }
+
+
+
+    if (String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_ITMBANK)) { // item bank
+        LOGGER.info("########## add by leo , 14-07-2021##################");
+        LOGGER.info("# If it is an item bank, stock out  from  LOG0106M#");
+
+        LOGGER.info("posMap===" +posMap.toString());
+        LOGGER.info("basketGrid===" +basketGrid.toString());
+        for (int i = 0; i < basketGrid.size(); i++) {
+
+            Map<String, Object> itemMap = (Map<String, Object>) basketGrid.get(i);
+
+            Map<String, Object>  log106map = new HashMap<String, Object>();
+            log106map.put("itemRecvQty", itemMap.get("inputQty"));
+            log106map.put("logId", posMap.get("cmbWhBrnchIdPop"));
+            log106map.put("itemCode", itemMap.get("stkId"));
+            log106map.put("userId", params.get("userId"));
+
+
+            LOGGER.info("log106map===>" +log106map.toString());
+
+            posStockMapper.updateOutStockLOG0106M(log106map);
+
+
+
+        }
+
+
+
+
+
+        LOGGER.info("############################################");
+    }
+
+
 
     // retrun Map
     Map<String, Object> rtnMap = new HashMap<String, Object>();

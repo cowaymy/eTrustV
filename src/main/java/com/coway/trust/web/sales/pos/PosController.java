@@ -684,22 +684,22 @@ public class PosController {
 
   @RequestMapping(value = "/selectPosFlexiJsonList")
   public ResponseEntity<List<EgovMap>> selectPosFlexiJsonList(@RequestParam Map<String, Object> params,
-      HttpServletRequest request) throws Exception {
+          HttpServletRequest request) throws Exception {
 
-    List<EgovMap> listMap = null;
+        List<EgovMap> listMap = null;
 
-    // params
-    String systemArray[] = request.getParameterValues("posTypeId");
-    String statusArray[] = request.getParameterValues("posStatusId");
+        // params
+        String systemArray[] = request.getParameterValues("posTypeId");
+        String statusArray[] = request.getParameterValues("posStatusId");
 
-    params.put("systemArray", systemArray);
-    params.put("statusArray", statusArray);
+        params.put("systemArray", systemArray);
+        params.put("statusArray", statusArray);
 
-    listMap = posService.selectPosFlexiJsonList(params);
+        listMap = posService.selectPosFlexiJsonList(params);
 
-    return ResponseEntity.ok(listMap);
+        return ResponseEntity.ok(listMap);
 
-  }
+      }
 
   @RequestMapping(value = "/posFlexiSystemPop.do")
   public String posFlexiSystemPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
