@@ -78,6 +78,8 @@ public Map<String, Object> insertPosStock(Map<String, Object> params) throws Exc
 		for (int i = 0; i < addList.size(); i++) {
 		      Map<String, Object> addMap = (Map<String, Object>)addList.get(i);
 
+
+		      LOGGER.debug(" addList===>"+addMap.toString());
 		      addMap.put("scnNo", sal0293Seq);
 		      addMap.put("userId", params.get("userId"));
 		      posMapper.insertSAL0294D(addMap);
