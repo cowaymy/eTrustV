@@ -200,7 +200,11 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
 
 		com.put("complianceId", 0);
 		com.put("complianceNo", complianceNo);
-		com.put("memberId", Integer.parseInt(params.get("memId").toString()));
+		if("".equals(params.get("memId").toString())) {
+		    com.put("memberId",0);
+		} else {
+		    com.put("memberId", Integer.parseInt(params.get("memId").toString()));
+		}
 		com.put("complianceStatusId", 1);
 		com.put("complianceCreatAt", "");
 		com.put("complianceCreateBy", sessionVo.getUserId());
