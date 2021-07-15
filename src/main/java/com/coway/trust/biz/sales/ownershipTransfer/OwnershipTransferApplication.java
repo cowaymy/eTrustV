@@ -8,7 +8,7 @@ import com.coway.trust.biz.common.type.FileType;
 
 public interface OwnershipTransferApplication {
 
-    void insertOwnershipTransferAttach(List<FileVO> list, FileType type, Map<String, Object> params);
+	void insertOwnershipTransferAttach(List<FileVO> list, FileType type, Map<String, Object> params);
 
-    void updateOwnershipTransferAttach(List<FileVO> list, FileType type, Map<String, Object> params);
+	void updateOwnershipTransferAttach(List<FileVO> list, FileType type, Map<String, Object> params);
 }

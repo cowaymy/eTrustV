@@ -9,30 +9,31 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface OwnershipTransferService {
 
-    List<EgovMap> selectStatusCode();
+	List<EgovMap> selectStatusCode();
 
-    List<EgovMap> selectRootList(Map<String, Object> params) throws Exception;
+	List<EgovMap> selectRootList(Map<String, Object> params) throws Exception;
 
-    List<EgovMap> rootCodeList(Map<String, Object> params);
+	List<EgovMap> rootCodeList(Map<String, Object> params);
 
-    int saveRequest(Map<String, Object> params, SessionVO sessionVO);
+	int saveRequest(Map<String, Object> params, SessionVO sessionVO);
 
-    List<EgovMap> getSalesOrdId(String params);
+	List<EgovMap> getSalesOrdId(String params);
 
-    Map<String, Object> selectLoadIncomeRange(Map<String, Object> params) throws Exception;
+	Map<String, Object> selectLoadIncomeRange(Map<String, Object> params) throws Exception;
 
-    EgovMap selectCcpInfoByCcpId(Map<String, Object> params) throws Exception;
+	EgovMap selectCcpInfoByCcpId(Map<String, Object> params) throws Exception;
 
-    EgovMap selectRootDetails(Map<String, Object> params);
+	EgovMap selectRootDetails(Map<String, Object> params);
 
-    List<EgovMap> selectRotCallLog(Map<String, Object> params) throws Exception;
+	List<EgovMap> selectRotCallLog(Map<String, Object> params) throws Exception;
 
-    List<EgovMap> selectRotHistory(Map<String, Object> params) throws Exception;
+	List<EgovMap> selectRotHistory(Map<String, Object> params) throws Exception;
 
-    int insCallLog(List<Object> addList, String userId);
+	int insCallLog(List<Object> addList, String userId);
 
-    int saveRotCCP(Map<String, Object> params, SessionVO sessionVO);
+	int saveRotCCP(Map<String, Object> params, SessionVO sessionVO);
 
-    List<EgovMap> getAttachments(Map<String, Object> params);
-    EgovMap getAttachmentInfo(Map<String, Object> params);
+	List<EgovMap> getAttachments(Map<String, Object> params);
+
+	EgovMap getAttachmentInfo(Map<String, Object> params);
 }
