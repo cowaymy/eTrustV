@@ -24,12 +24,15 @@ var columnLayout = [
                     {dataField: "scnFromLocId" ,headerText :"itemFromBrnchId"                ,width:120   ,height:30 , visible:false, editable : false},
                     {dataField: "itemCtgryId" ,headerText :"itemCategory"                ,width:120   ,height:30 , visible:false, editable : false},
                     {dataField: "itemReason",headerText :"Reason"  ,width:120    ,height:30 , visible:true ,
-                        renderer : {
-                            type : "DropDownListRenderer",
+
+                    	editRenderer : {
+                            type : "ComboBoxRenderer",
                             list : keyValueList, //key-value Object 로 구성된 리스트
                             keyField : "code", // key 에 해당되는 필드명
                             valueField : "value" // value 에 해당되는 필드명
                         }
+
+
                     }
 
 
@@ -74,7 +77,7 @@ $(document).ready(function () {
 
     myNewAjGridIDPOS = GridCommon.createAUIGrid("#grid_wrapPOS", columnLayout, gridProsPOS);
 
-    AUIGrid.bind(myNewAjGridIDPOS, ["cellEditBegin", "cellEditEndBefore", "cellEditEnd", "cellEditCancel"], auiNewAdjCellEditingHandler);
+    AUIGrid.bind(myNewAjGridIDPOS, ["cellEditEnd", "cellEditCancel"], auiNewAdjCellEditingHandler);
 
 
 });
@@ -143,6 +146,13 @@ function selectInventoryQty(){
 
 function addRow() {
 
+
+    if($("#purcItems").val() == ""
+        || $("#fromNewAddBrnchId").val() =="") {
+      Common.alert("Transfer to branch/Item/ is required.");
+      return ;
+  }
+
     var item = new Object();
     item.itemCode           = $("#purcItems").val() ,
     item.itemDesc           = $( "#purcItems option:selected" ).text(),
@@ -185,9 +195,14 @@ function auiNewAdjCellEditingHandler(event) {
             if(event.value>0){
                 var reqQty =event.item.itemInvtQty;
                 AUIGrid.setCellValue(myNewAjGridIDPOS, event.rowIndex, 4, event.value -reqQty );
+                //AUIGrid.setCellValue(myNewAjGridIDPOS, event.rowIndex, 8,""  );
                 //AUIGrid.setCellValue(myNewAjGridIDPOS, event.rowIndex, 6, "A");
                 //AUIGrid.setCellValue(myNewAjGridIDPOS, event.rowIndex, 7, "A");
             }
+         }
+
+         if(event.dataField=="itemReason"){
+
          }
 
 
@@ -199,7 +214,6 @@ function auiNewAdjCellEditingHandler(event) {
         // 개발자가 입력한 값을 변경할 수 있습니다.
 
                     //AUIGrid.setCellValue(myRecivedGridIDPOS, event.rowIndex, 5, "9999");
-
         return event.value; // 원래 값으로 적용 시킴
     }
 };
@@ -221,6 +235,24 @@ function fn_close(){
 
 
 function fn_saveGrid(){
+
+
+	var checkList = GridCommon.getGridData(myNewAjGridIDPOS);
+
+    console.log(checkList);
+
+   // if ($("#itemStatus").val() !="R"){
+      for(var i = 0 ; i < checkList.all.length ; i++){
+          var itemReqQty  = checkList.all[i].itemReason;
+
+          if(checkList.all[i].itemReason == "" || checkList.all[i].itemReason ==null ){
+              Common.alert('* There is an empty item in the list for a reason');
+              return ;
+          }
+      }
+   // }
+
+
 
     Common.ajax("POST", "/sales/posstock/insertNewAdjPosStock.do", GridCommon.getEditData(myNewAjGridIDPOS), function(result) {
         //resetUpdatedItems(); // 초기화
@@ -268,8 +300,8 @@ function fn_saveGrid(){
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_view">
-<!-- <input type="hidden" id="search_costCentr">
-<input type="hidden" id="search_costCentrName"> -->
+<!-- <input type="hidden" id="search_costCentr">-->
+<input type="hidden" id="tfocus">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
