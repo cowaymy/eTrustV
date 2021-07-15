@@ -1741,7 +1741,7 @@
                                     <td>
                                         <input type="checkbox" id="smsBillTypeCheckbox" <c:if test="${rotInfoMap.billSms eq '1'}">checked</c:if> /><span class="txt_box">SMS</span>
                                         <input type="checkbox" id="postBillTypeCheckbox" <c:if test="${rotInfoMap.billPost eq '1'}">checked</c:if> /><span class="txt_box">Post</span>
-                                        <input type="checkbox" id="estmBillTypeCheckbox" <c:if test="${rotInfoMap.billStm eq '1'}">checked</c:if> /><span class="txt_box">E-Statement</span>
+                                        <input type="checkbox" id="estmBillTypeCheckbox" <c:if test="${rotInfoMap.billEstm eq '1'}">checked</c:if> /><span class="txt_box">E-Statement</span>
                                     </td>
                                 </tr>
                             </tbody>
