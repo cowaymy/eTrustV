@@ -199,11 +199,11 @@ $(document).ready(function () {
         }
     });
 
-    $('#vendorCountry').change(function() {
+    /*$('#vendorCountry').change(function() {
         $("#vendorCountry").remove();
         $("#form_newVendor").append("<input type='hidden' name='vendorCountryUpd' id='vendorCountryUpd'>");
         $("#vendorCountryUpd").val($("#vendorCountry").val());
-    });
+    });*/
 
     if(bankCountry != 'MY')
    	{
