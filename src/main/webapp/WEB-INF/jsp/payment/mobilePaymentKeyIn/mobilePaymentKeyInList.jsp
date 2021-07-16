@@ -312,7 +312,7 @@
         }
       }
 
-      if (row.item.payStusId != "1") {
+      if (row.item.payStusId != "1" && row.item.payStusId != "21" && row.item.payStusId != "104") {
         isValid = false;
       } else {
         reqList.push(row.item);
@@ -1003,7 +1003,7 @@
         selPayType = row.item.payMode;
       }
 
-      if (row.item.payStusId != "1") {
+      if (row.item.payStusId != "1" && row.item.payStusId != "21" && row.item.payStusId != "104") {
         isValid = false;
       } else {
         reqList.push(row.item);
@@ -1108,7 +1108,7 @@
         selPayType = row.item.payMode;
       }
 
-      if (row.item.payStusId != "1") {
+      if (row.item.payStusId != "1" && row.item.payStusId != "21" && row.item.payStusId != "104") {
         isValid = false;
       } else {
         reqList.push(row.item);
@@ -1427,7 +1427,7 @@
     		$('#_branch').multipleSelect("enable");
     	}
 
-        $('#_branch').multipleSelect("setSelects", [42]);
+        $('#_branch').multipleSelect("setSelects", ["${SESSION_INFO.userBranchId}"]);
         $('#errSum_wrap').show();
     });
   });
