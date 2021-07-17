@@ -158,6 +158,7 @@ public class SrvItmMgmtListServiceImpl extends EgovAbstractServiceImpl implement
 
     if (itmResult != null) {
       String prxNo = (String) log89M.get("refNo");
+      String log91DseqNo = "0";
 
       noItm = itmResult.size();
       for (int i = 0; i < itmResult.size(); i++) {
@@ -175,9 +176,16 @@ public class SrvItmMgmtListServiceImpl extends EgovAbstractServiceImpl implement
 
         // START INSERT
         int noRowAffected = SrvItmMgmtListMapper.insertLog91D(itmAdd);
+        LOGGER.debug(itmAdd.toString());
+        log91DseqNo = itmAdd.get("log91DseqNo").toString();
         LOGGER.debug("= noRowAffected " + noRowAffected);
       }
       LOGGER.debug("= Total Quantity " + totalQty);
+
+      log89M.put("log91DseqNo", log91DseqNo);
+      log89M.put("refDocNo", resultM.get("refDocNo").toString());
+      log89M.put("memId", resultM.get("MEM_ID").toString());
+      log89M.put("deptCode", resultM.get("deptCode").toString());
 
       if (totalQty > 0) { // INSERT SUB DATA LOG0090D
         for (int x = 0; x < totalQty; x++) {
@@ -195,5 +203,10 @@ public class SrvItmMgmtListServiceImpl extends EgovAbstractServiceImpl implement
     LOGGER.debug("===================================================");
 
     return rtnRst;
+  }
+
+  @Override
+  public int deactivateLog91d(Map<String, Object> params) {
+    return SrvItmMgmtListMapper.deactivateLog91d(params);
   }
 }

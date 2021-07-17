@@ -17,12 +17,14 @@
 
   var myGridID;
 
+  var categoryData =  [{"codeId": "63","codeName": "Spare Part"},{"codeId": "2687","codeName": "Item Bank"}];
+
   $(document).ready( function() {
     srvItmMgmtGrid(); // GRID VIEW COLUMN CONFIGURATION
     // SET CBO LISING HERE --
     doGetCombo('/services/sim/getBchTyp.do', '', '${BR_TYP_ID}', 'cboBchTyp', 'S', 'fn_onChgBch'); // BRANCH TYPE
     doGetCombo('/services/sim/getItm.do', '', '', 'cboItm', 'S', ''); // ITEM TYPE
-
+    doDefCombo(categoryData, '' ,'cboCat', 'M', 'category_multiCombo');
 
     // SET TRIGGER FUNCTION HERE --
     $("#cboBchTyp").change(function() {
@@ -179,8 +181,26 @@
     Common.popupDiv("/services/sim/srvItmRawPop.do", null, null, true, '_printSrvItmRawPopDiv1');
   }
 
+  function fn_srvItmStkRaw() {
+    Common.popupDiv("/services/sim/srvItmStkRawPop.do", null, null, true, '_printSrvItmRawPopDiv1');
+  }
+
+  function fn_srvItmForecastRaw() {
+    Common.popupDiv("/services/sim/srvItmForecastRawPop.do", null, null, true, '_printSrvItmRawPopDiv1');
+  }
+
   function fn_excelDown() {
     GridCommon.exportTo("grid_wrap_srvItmList", "xlsx", "Service Item Management");
+  }
+
+  function category_multiCombo() {
+      $(function() {
+          $('#cboCat').change(function() {
+          }).multipleSelect({
+              selectAll : true, // 전체선택
+              width : '80%'
+          });
+      });
   }
 </script>
 <section id="content">
@@ -248,26 +268,36 @@
      </tr>
 
      <tr>
+      <th scope="row"><spring:message code='sal.title.text.category'/></th>
+      <td>
+        <select id="cboCat" name="cboCat" class="w100p" />
+      </td>
       <th scope="row"><spring:message code='sal.title.item'/></th>
       <td>
         <select id="cboItm" name="cboItm" class="w100p" />
       </td>
+     </tr>
+
+     <tr>
       <th scope="row"><spring:message code='service.grid.CrtDt'/></th>
       <td>
-       <div class="date_set w100p">
-        <p>
-         <input type="text" title="<spring:message code='service.grid.CrtDt'/>"
-          placeholder="DD/MM/YYYY" class="j_date" id="trxStrDate"
-          name="trxStrDate" />
-        </p>
-        <span><spring:message code='svc.hs.reversal.to'/></span>
-        <p>
-         <input type="text" title="<spring:message code='service.grid.CrtDt'/>"
-          placeholder="DD/MM/YYYY" class="j_date" id="trxEndDate"
-          name="trxEndDate" />
-        </p>
-       </div>
-      </td>
+        <div class="date_set w100p">
+         <p>
+          <input type="text" title="<spring:message code='service.grid.CrtDt'/>"
+           placeholder="DD/MM/YYYY" class="j_date" id="trxStrDate"
+           name="trxStrDate" />
+         </p>
+         <span><spring:message code='svc.hs.reversal.to'/></span>
+         <p>
+          <input type="text" title="<spring:message code='service.grid.CrtDt'/>"
+           placeholder="DD/MM/YYYY" class="j_date" id="trxEndDate"
+           name="trxEndDate" />
+         </p>
+        </div>
+       </td>
+       <th scope="row"></th>
+       <td>
+       </td>
      </tr>
     </tbody>
    </table>
@@ -287,6 +317,12 @@
         <li><p class="link_btn type2">
           <a href="#" onclick="fn_srvItmRaw()"><spring:message code='service.title.srvItmRaw'/></a>
          </p></li>
+         <li>
+            <p class="link_btn type2"><a href="#" onclick="fn_srvItmStkRaw()"><spring:message code='service.title.srvItmStkRaw'/></a></p>
+         </li>
+         <li>
+            <p class="link_btn type2"><a href="#" onclick="fn_srvItmForecastRaw()"><spring:message code='service.title.srvItmForecastRaw'/></a></p>
+         </li>
        </c:if>
       </ul>
       <p class="hide_btn">

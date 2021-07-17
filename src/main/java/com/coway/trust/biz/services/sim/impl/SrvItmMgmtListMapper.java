@@ -55,6 +55,8 @@ public interface SrvItmMgmtListMapper {
 
   int insertLog90D(Map subItmAdd);
 
+  int deactivateLog91d(Map<String, Object> resultM);
+
   /*EgovMap selectOrderBasicInfo(Map<String, Object> params);
 
   List<EgovMap> getErrMstList(Map<String, Object> params);

@@ -40,6 +40,8 @@
         doGetCombo('/services/sim/getMovDtl.do', ind, '', 'cboMovDtl', 'S', '');
       });
 
+      doGetCombo("/logistics/codystock/selectCMGroupList.do", '${BR}', '', 'cmgroup', 'S', '');
+
     });
 
   function srvItmMgmtGrid() {
@@ -273,9 +275,15 @@
 
   function fn_doSaveCont() {
     var allRowItems = AUIGrid.getGridData(myGridIDPopAdd);
+
+    console.log(allRowItems);
+
     var resultMst = { BR_TYP : $("#BR_TYP").val(),
                       BR : $("#BR").val(),
-                      ITM_CDE : $("#ITM_CDE").val()
+                      ITM_CDE : $("#ITM_CDE").val(),
+                      MEM_ID : $("#member").val(),
+                      refDocNo : $("#txtDocNo").val(),
+                      deptCode : $("#cmgroup").val()
                     }
     var saveForm = { "allRowItems" : allRowItems,
                      "resultMst" : resultMst
@@ -313,6 +321,48 @@
       }
     }
   }
+
+  function fn_ChangeCMGroup() {
+      CommonCombo.make('member', '/logistics/codystock/getCodyCodeList', {
+          memLvl : 4,
+          memType : 2,
+          upperLineMemberID : $("#cmgroup").val()
+      }, '');
+
+  }
+
+  function fn_checkQty(){
+    let movTyp   = $("#cboMovTyp").val();
+    let balance  = parseInt("${QTY}");
+    let quantity = $("#txtQty").val() != '' ? parseInt($("#txtQty").val()) : 0;
+
+    if(movTyp == '0'){
+        balance = balance + quantity;
+        $('#txtBal').val(balance);
+
+    }else if(movTyp == '1'){
+        balance = balance - quantity;
+
+        if( (balance) < 0){
+            $("#txtQty").val("0");
+            $('#txtBal').val("${QTY}");
+            Common.alert("Quantity cannot be lesser than balance");
+        }else{
+            $('#txtBal').val(balance);
+        }
+    }else{
+        $("#txtQty").val("0");
+        $('#txtBal').val("${QTY}");
+
+    }
+
+  }
+
+  $(function(){
+      $('#cboMovTyp').change(function(){
+          fn_checkQty();
+      });
+  });
 </script>
 
 <div id="popup_wrap" class="popup_wrap">
@@ -394,6 +444,8 @@
      <colgroup>
       <col style="width: 170px" />
       <col style="width: *" />
+      <col style="width: 170px" />
+      <col style="width: *" />
      </colgroup>
      <tbody>
       <tr>
@@ -401,14 +453,14 @@
        <td>
          <input type="text" title="<spring:message code='service.grid.trxDt'/>" placeholder="DD/MM/YYYY" class="j_date" id="txtTrxDt" name="txtTrxDt" />
        </td>
+       <th scope="row"></th>
+       <td></td>
       </tr>
       <tr>
        <th scope="row"><spring:message code='service.grid.mov'/><span class='must'> *</span></th>
        <td>
          <select id="cboMovTyp" name="cboMovTyp" class="w100p" />
        </td>
-      </tr>
-      <tr>
        <th scope="row"><spring:message code='service.grid.movDtl'/><span class='must'> *</span></th>
        <td>
          <select id="cboMovDtl" name="cboMovDtl" class="w100p">
@@ -417,14 +469,32 @@
        </td>
       </tr>
       <tr>
-       <th scope="row"><spring:message code='service.grid.Quantity'/><span class='must'> *</span></th>
+       <th scope="row"><spring:message code='log.title.text.cmGroup'/></th>
        <td>
-         <input type="text" placeholder="<spring:message code='service.grid.Quantity'/>" id="txtQty" name="txtQty" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')"/>
+           <select class="w100p" id="cmgroup" onchange="fn_ChangeCMGroup()"></select>
+       </td>
+       <th scope="row"><spring:message code='sal.title.memberCode'/></th>
+       <td>
+           <select class="w100p" id="member" name="member"></select>
        </td>
       </tr>
       <tr>
+       <th scope="row"><spring:message code='log.title.text.invStkBal'/></th>
+       <td>
+         <input type="text" id="txtBal" name="txtBal" class="disabled w100p" disabled value="${QTY}"/>
+       </td>
+       <th scope="row"><spring:message code='service.grid.Quantity'/><span class='must'> *</span></th>
+       <td>
+         <input type="text" placeholder="<spring:message code='service.grid.Quantity'/>" id="txtQty" name="txtQty" class="w100p" onblur="fn_checkQty()" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')"/>
+       </td>
+      </tr>
+      <tr>
+       <th scope="row"><spring:message code='log.head.refdocno'/></th>
+       <td colspan="3"><input type="text" id="txtDocNo" name="txtDocNo" class="w100p"/></td>
+      </tr>
+      <tr>
        <th scope="row"><spring:message code='service.title.Remark'/></th>
-       <td><textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark'/>" id='txtRmk' name='txtRmk'></textarea></td>
+       <td colspan="3"><textarea cols="20" rows="5" placeholder="<spring:message code='service.title.Remark'/>" id='txtRmk' name='txtRmk'></textarea></td>
       </tr>
      </tbody>
     </table>

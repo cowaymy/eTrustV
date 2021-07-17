@@ -39,6 +39,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * 01/04/2019    ONGHC      1.0.1       - CREATE SERVICE ITEM MENAGEMENT FUNCTION
  * 22/07/2019    ONGHC      1.0.2       - AMEND BAESD ON FEEDBACK
  * 29/08/2019    ONGHC      1.0.3       - Enhance to Support DSC Branch
+ * 06/07/2021    KAHKIT     1.1.0       - MAJOR ENHANCEMENT
  *********************************************************************************************/
 
 @Controller
@@ -124,6 +125,9 @@ public class SrvItmMgmtListController {
     String itmCde =  SrvItmMgmtListService.getItmCde(params.get("cboItm").toString());
     String itmDesc =  SrvItmMgmtListService.getItmDesc(params.get("cboItm").toString());
 
+    List<EgovMap> srvItmList = SrvItmMgmtListService.searchSrvItmLst(params);
+    String qty = srvItmList.get(0).get("qty").toString();
+
     model.put("BR_TYP", (String) params.get("cboBchTyp"));
     model.put("BR_TYP_DESC", brTyp);
     model.put("BR", (String) params.get("cboBch"));
@@ -131,6 +135,7 @@ public class SrvItmMgmtListController {
     model.put("ITM_CDE", (String) params.get("cboItm"));
     model.put("ITM_STK_CDE", itmCde);
     model.put("ITM_STK_DESC", itmDesc);
+    model.put("QTY", qty);
 
     return "services/sim/srvItmAddPop";
   }
@@ -177,6 +182,10 @@ public class SrvItmMgmtListController {
     logger.debug("===========================/searchSrvItmLst.do===============================");
     logger.debug("== params " + params.toString());
 
+    String[] ctgryList = request.getParameterValues("cboCat");
+
+    params.put("ctgryList", ctgryList);
+
     List<EgovMap> SrvItmList = SrvItmMgmtListService.searchSrvItmLst(params);
 
     logger.debug("== SrvItmList : {}", SrvItmList);
@@ -192,7 +201,7 @@ public class SrvItmMgmtListController {
 
     List<EgovMap> SrvItmRcd = SrvItmMgmtListService.getSrvItmRcd(params);
 
-    logger.debug("== SrvItmRcd : {}", SrvItmRcd);
+    //logger.debug("== SrvItmRcd : {}", SrvItmRcd);
     logger.debug("===========================/getSrvItmRcd.do===============================");
     return ResponseEntity.ok(SrvItmRcd);
   }
@@ -247,4 +256,85 @@ public class SrvItmMgmtListController {
     }
     return ResponseEntity.ok(message);
   }
+
+  @RequestMapping(value = "/srvItmStkRawPop.do")
+  public String srvItmStkRawPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+    logger.debug("===========================/srvItmRawPop.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/srvItmRawPop.do===============================");
+
+    String brTypId =  SrvItmMgmtListService.getBrTypId(sessionVO.getUserName());
+    model.put("BR_TYP_ID", brTypId);
+
+    return "services/sim/srvItmStkRawPop";
+  }
+
+  @RequestMapping(value = "/srvItmForecastRawPop.do")
+  public String srvForecastRawPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+    logger.debug("===========================/srvItmRawPop.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/srvItmRawPop.do===============================");
+
+    String brTypId =  SrvItmMgmtListService.getBrTypId(sessionVO.getUserName());
+    model.put("BR_TYP_ID", brTypId);
+
+    return "services/sim/srvItmForecastRawPop";
+  }
+
+  @RequestMapping(value = "/deleteSrvItmRcd.do")
+  public ResponseEntity<ReturnMessage> deleteSrvItmRcd(@RequestParam Map<String, Object> params, SessionVO sessionVO) {
+
+    params.put("updator", sessionVO.getUserId());
+
+    ReturnMessage message = new ReturnMessage();
+
+    int rtnValue = SrvItmMgmtListService.deactivateLog91d(params);
+
+    if (rtnValue != 0) {
+      message.setCode(AppConstants.SUCCESS);
+      message.setData(rtnValue);
+      message.setMessage("");
+    } else {
+      message.setCode(AppConstants.FAIL);
+      message.setData(rtnValue);
+      message.setMessage("");
+    }
+    return ResponseEntity.ok(message);
+
+  }
+
+  @RequestMapping(value = "/editSrvItmRcd.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> editSrvItmRcd(@RequestBody Map<String, Object> params, SessionVO sessionVO) {
+
+    params.put("updator", sessionVO.getUserId());
+
+    logger.debug("===========================/editSrvItmRcd.do===============================");
+    logger.debug("== params " + params.toString());
+    logger.debug("===========================/editSrvItmRcd.do===============================");
+
+    ReturnMessage message = new ReturnMessage();
+
+    Map<String, Object> deactData = (Map<String, Object>) params.get("resultMst");
+
+    logger.debug("== deactData " + deactData.toString());
+    int deactVal = SrvItmMgmtListService.deactivateLog91d(deactData);
+
+    EgovMap rtnValue = null;
+
+    if(deactVal != 0)
+      rtnValue = SrvItmMgmtListService.insertSrvItm(params);
+
+    if (rtnValue != null) {
+      message.setCode(AppConstants.SUCCESS);
+      message.setData(rtnValue);
+      message.setMessage("");
+    } else {
+      message.setCode(AppConstants.FAIL);
+      message.setData(rtnValue);
+      message.setMessage("");
+    }
+    return ResponseEntity.ok(message);
+
+  }
+
 }

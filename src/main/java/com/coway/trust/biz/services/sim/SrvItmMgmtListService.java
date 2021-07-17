@@ -43,6 +43,8 @@ public interface SrvItmMgmtListService {
   List<EgovMap> getMovDtl(Map<String, Object> params);
 
   EgovMap insertSrvItm(Map<String, Object> params);
+
+  int deactivateLog91d(Map<String, Object> params);
   /*
   List<EgovMap> selectASManagementList(Map<String, Object> params);
 
