@@ -76,7 +76,8 @@
            A.REDEEM_DT,
            A.REDEEM_WARRANTY,
            A.CODE_FAIL_REMARK,
-           A.VOUCHER_REDEMPTION
+           A.VOUCHER_REDEMPTION,
+           A.IS_VOUCHER
     FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
@@ -139,7 +140,8 @@
                   REDEEM_DT,
                   REDEEM_WARRANTY,
                   CODE_FAIL_REMARK,
-                  VOUCHER_REDEMPTION
+                  VOUCHER_REDEMPTION,
+                  IS_VOUCHER
            FROM ( SELECT DISTINCT TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
                                   A.NO AS service_No,
                                   A.STUS_CODE_ID AS job_Status,
@@ -213,6 +215,7 @@
                                    B.HS_CHKLIST,
                                    B.CODE_FAIL_REMARK,
                                    B.VOUCHER_REDEMPTION,
+                                   A.IS_VOUCHER,
                                    NVL(Y.VOUCHER, '') AS VOUCHER,
                                     CASE WHEN Y.REDEEM_HS = 0 OR Y.REDEEM_HS = '0' OR Y.REDEEM_HS = '' THEN ''
                                     ELSE TO_CHAR(Y.REDEEM_MTH || '-' || Y.REDEEM_YEAR) END AS REDEEM_DT,
@@ -433,6 +436,7 @@
           , TO_CHAR(REDEEM_WARRANTY) AS REDEEM_WARRANTY
           , TO_CHAR(CODE_FAIL_REMARK) AS CODE_FAIL_REMARK
           , TO_CHAR(VOUCHER_REDEMPTION) AS VOUCHER_REDEMPTION
+          , TO_CHAR(IS_VOUCHER) AS IS_VOUCHER
     FROM SVC0101T
     WHERE MEM_CODE = #{userId}
   </select>
