@@ -439,6 +439,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
       insertHsResultfinal.put("instChklstCheckBox", params.get("instChklstCheckBox"));
       insertHsResultfinal.put("codeFailRemark", params.get("codeFailRemark"));
+      insertHsResultfinal.put("voucherRedemption", params.get("voucherRedemption"));
 
       logger.debug("= INSERT SVC0006D START : {}", insertHsResultfinal);
       hsManualMapper.insertHsResultfinal(insertHsResultfinal); // INSERT  SVC0006D
