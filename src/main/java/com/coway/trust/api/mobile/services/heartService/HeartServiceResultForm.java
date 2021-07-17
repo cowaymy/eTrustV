@@ -98,6 +98,7 @@ public class HeartServiceResultForm {
 	private String instruction;
 
 	private String codeFailRemark;
+	private String voucherRedemption;
 
 	public String getCheckInDate() {
 		return checkInDate;
@@ -332,6 +333,14 @@ public class HeartServiceResultForm {
 
 	public void setCodeFailRemark(String codeFailRemark) {
 		this.codeFailRemark = codeFailRemark;
+	}
+
+	public String getVoucherRedemption() {
+		return voucherRedemption;
+	}
+
+	public void setVoucherRedemption(String voucherRedemption) {
+		this.voucherRedemption = voucherRedemption;
 	}
 
 	public String getInstruction() {

@@ -236,6 +236,8 @@ public class HeartServiceJobDto {
 
   private String codeFailRemark;
 
+  private String voucherRedemption;
+
 public String getSerialChk() {
     return serialChk;
   }
@@ -878,6 +880,14 @@ public String getCodeFailRemark() {
 
 public void setCodeFailRemark(String codeFailRemark) {
 	this.codeFailRemark = codeFailRemark;
+}
+
+public String getVoucherRedemption() {
+	return voucherRedemption;
+}
+
+public void setVoucherRedemption(String voucherRedemption) {
+	this.voucherRedemption = voucherRedemption;
 }
 
 }
