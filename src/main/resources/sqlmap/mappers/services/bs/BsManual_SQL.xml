@@ -1537,7 +1537,8 @@ WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SVC0008D
                                    RESULT_ACEPT_NAME,
                                    SGN_DT,
                                    HS_CHKLIST,
-                                   CODE_FAIL_REMARK
+                                   CODE_FAIL_REMARK,
+                                   VOUCHER_REDEMPTION
     ) VALUES ( #{resultId},
                #{docNo},
                #{typeId},
@@ -1570,7 +1571,8 @@ WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SVC0008D
                #{resultAceptName},
                #{sgnDt},
                #{instChklstCheckBox},
-               #{codeFailRemark}
+               #{codeFailRemark},
+               #{voucherRedemption}
     )
   </insert>
 
