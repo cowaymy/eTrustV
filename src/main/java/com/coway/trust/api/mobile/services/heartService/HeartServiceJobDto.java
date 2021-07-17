@@ -238,6 +238,8 @@ public class HeartServiceJobDto {
 
   private String voucherRedemption;
 
+  private String isVoucher;
+
 public String getSerialChk() {
     return serialChk;
   }
@@ -888,6 +890,14 @@ public String getVoucherRedemption() {
 
 public void setVoucherRedemption(String voucherRedemption) {
 	this.voucherRedemption = voucherRedemption;
+}
+
+public String getIsVoucher() {
+	return isVoucher;
+}
+
+public void setIsVoucher(String isVoucher) {
+	this.isVoucher = isVoucher;
 }
 
 }
