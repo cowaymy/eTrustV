@@ -138,7 +138,7 @@ function fn_report(viewType){
 
      if(viewType == "EXCEL"){
         $("#form #viewType").val("EXCEL");
-        $("#form #reportFileName").val("/services/HSFmcoEvoucher1.rpt");
+        $("#form #reportFileName").val("/services/HSFmcoEvoucher.rpt");
     }
 
 /*      $("#form #V_ORDERNOFROM").val(orderNoFrom);
