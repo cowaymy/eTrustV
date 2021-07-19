@@ -106,12 +106,12 @@ $(document).ready(function() {
 
      var flg = 0;
 
-     if($("#searchOrdNo").val() == "" && $("#searchOrdDate").val() == "" && $("#searchOrdCustName").val() == "" && $("#searchOrdCustNric").val() == "") {
+     if($("#searchOrdNo").val() == "" && $("#searchOrdCustNric").val() == "") {
          flg = 1;
      }
 
     if(flg > 0) {
-        Common.alert("Order No/Order Date/Customer Name/NRIC Comp No must not be blank!");
+        Common.alert("Order No. or NRIC/Company No. must not be left blank for search!");
         return false;
     } else {
         Common.ajax("GET", "/sales/ccp/selectsearchOrderNo",$("#_searchOrdForm").serialize(), function(result) {
@@ -181,12 +181,6 @@ $(document).ready(function() {
     <td>
     <select class="w100p" id="listAppType" name="searchOrdAppType"></select>
     </td>
-    <th scope="row"><spring:message code="sal.text.ordDate" /><span class="must">*</span></th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="searchOrdDate" id="searchOrdDate"/></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="sal.text.custName" /><span class="must">*</span></th>
-    <td colspan="3"><input type="text" title="" placeholder="Customer Name" class="w100p" name="searchOrdCustName" id="searchOrdCustName"/></td>
     <th scope="row"><spring:message code="sal.title.text.nricCompNo" /><span class="must">*</span></th>
     <td><input type="text" title="" placeholder="NRIC/Company No" class="w100p" name="searchOrdCustNric" id="searchOrdCustNric"/></td>
 </tr>
