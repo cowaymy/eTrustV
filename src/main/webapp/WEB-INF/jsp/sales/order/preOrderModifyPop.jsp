@@ -2032,7 +2032,7 @@
                 break;
             case 'pay' :
                 if($('#appType').val() == '66'){
-                    $('#rentPayMode').val('131')
+                    //$('#rentPayMode').val('131') //to show the correct info for rentPayMode
                     $('#rentPayMode').change();
                     $('#rentPayMode').prop("disabled", true);
                     $('#thrdParty').prop("disabled", true);
