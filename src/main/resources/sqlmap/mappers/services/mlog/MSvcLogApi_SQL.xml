@@ -1721,7 +1721,7 @@ SELECT MST.*
                          THEN 'Y'
                          ELSE 'N' END AS chg_Y_N,
                        ''  AS ex_Chgid,
-                       CASE WHEN X2.ASR_ITM_PART_ID in ('116') THEN 'PS2'
+                       CASE WHEN X2.ASR_ITM_PART_ID in ('1917','1915') THEN 'PS2'
                         ELSE ''
                         END AS PS_REMARK
                 FROM ( SELECT *
