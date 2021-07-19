@@ -660,4 +660,11 @@
      <![CDATA[ ORDER BY A.SCHDUL_ID ASC ]]>
   </select>
 
+    <select id="selectEVoucherList" resultType="egovMap">
+    SELECT CODE_ID,CODE_NAME
+FROM sys0013m
+WHERE CODE_MASTER_ID = '471' AND DISAB = '0'
+ORDER BY CODE_ID
+  </select>
+
 </mapper>

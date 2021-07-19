@@ -319,4 +319,24 @@ public class HSReportController {
     return ResponseEntity.ok(selectCodyBranch);
   }
 
+  @RequestMapping(value = "/hsFmcoEvoucherPop.do")
+  public String hsFmcoEvoucher(@RequestParam Map<String, Object> params, ModelMap model,  SessionVO sessionVO) {
+
+	  return "services/bs/hsFmcoEvoucherPop";
+  }
+
+  @RequestMapping(value = "/selectEVoucherList")
+	public ResponseEntity<List<EgovMap>> selectEVoucherList() throws Exception{
+
+	  logger.info("#############################################");
+	  logger.info("#############selectEVoucherList");
+	  logger.info("#############################################");
+
+		List<EgovMap> branchMap = null;
+
+		branchMap = HSReportService.selectEVoucherList();
+
+		return ResponseEntity.ok(branchMap);
+
+	}
 }

@@ -198,6 +198,10 @@
                Common.popupDiv("/services/bs/hSFilterSettingPop.do?&salesOrdId="+salesOrdId, null, null , true , '_FilterSetPop');
         }
 
+        function fn_fmcoEvoucher() {
+
+        	Common.popupDiv("/services/bs/report/hsFmcoEvoucherPop.do", null, null, true, '');
+        }
 
     </script>
 
@@ -279,6 +283,12 @@
                 <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
                 <li><p class="link_btn"><a href="javascript:fn_filterSetInfo()" id="filterSet">HS Filter Maintenance</a></p></li>
                 </c:if>
+
+                <!-- e-Voucher 2.0 - FMCO start -->
+                <c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">
+                    <li><p class="link_btn"> <a href="javascript:fn_fmcoEvoucher()" id="basicInfo">FMCCO E-VOUCHER</a> </p></li>
+                </c:if>
+                <!-- e-Voucher 2.0 - FMCO end -->
 
                 </ul>
                 <ul class="btns">

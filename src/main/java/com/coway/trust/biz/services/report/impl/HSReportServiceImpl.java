@@ -112,4 +112,10 @@ public class HSReportServiceImpl extends EgovAbstractServiceImpl implements HSRe
   public List<EgovMap> selectHSReportCustSign(Map<String, Object> params) {
     return HSReportMapper.selectHSReportCustSign(params);
   }
+
+  @Override
+  public List<EgovMap> selectEVoucherList() {
+	  // TODO Auto-generated method stub
+    return HSReportMapper.selectEVoucherList();
+  }
 }
