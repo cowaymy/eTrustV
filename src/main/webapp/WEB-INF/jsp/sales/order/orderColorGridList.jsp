@@ -113,7 +113,8 @@
         }
 
         CommonCombo.make('cmbAppType', '/common/selectCodeList.do', {groupCode : 10} , '', {type: 'M'});
-        doGetComboWh('/sales/order/colorGridProductList.do', '', '', 'cmbProduct', '', '');
+        doGetComboOrder('/sales/order/colorGridProductList.do', '', '', '', 'cmbProduct', 'M', 'f_multiCombo'); //Common Code
+        //doGetComboWh('/sales/order/colorGridProductList.do', '', '', 'cmbProduct', '', '');
         doGetCombo('/common/selectCodeList.do', '8', '','cmbCustomerType', 'M' , 'f_multiCombo');            // Customer Type Combo Box
         doGetCombo('/common/selectCodeList.do', '95', '','cmbCorpTypeId', 'M' , 'f_multiCombo');     // Company Type Combo Box
         //CommonCombo.make('cmbCustomerType', '/common/selectCodeList.do', {groupCode : 8} , '', {type: 'M'});
@@ -137,6 +138,20 @@
             });
 
             $('#cmbSalesType').change(function() {
+
+            }).multipleSelect({
+                selectAll: true, // 전체선택
+                width: '80%'
+            });
+
+            $('#cmbCondition').change(function() {
+
+            }).multipleSelect({
+                selectAll: true, // 전체선택
+                width: '80%'
+            });
+
+            $('#cmbProduct').change(function() {
 
             }).multipleSelect({
                 selectAll: true, // 전체선택
@@ -662,7 +677,7 @@ console.log("searchColorGrid");
     </td>
     <th scope="row"><spring:message code="sal.title.text.product" /></th>
     <td>
-    <select class="w100p" id="cmbProduct" name="cmbProduct">
+    <select class="w100p" id="cmbProduct" name="cmbProduct" multiple="multiple">
     </select>
     </td>
 </tr>
@@ -681,8 +696,8 @@ console.log("searchColorGrid");
 <tr>
     <th scope="row"><spring:message code="sal.text.condition" /></th>
     <td>
-    <select class="w100p" id="cmbCondition" name="cmbCondition">
-        <option value="">Choose One</option>
+    <select class="w100p" id="cmbCondition" name="cmbCondition" multiple="multiple">
+        <!-- <option value="">Choose One</option> -->
         <option value="1"><spring:message code="sal.combo.text.active" /></option>
         <option value="2"><spring:message code="sal.combo.text.cancel" /></option>
         <option value="3"><spring:message code="sal.combo.text.netSales" /></option>
