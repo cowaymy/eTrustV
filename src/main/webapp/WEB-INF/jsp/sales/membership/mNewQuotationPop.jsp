@@ -546,7 +546,7 @@ $(document).ready(function(){
 						}
 						else if (result[0].promoDiscType == "1") { //amt
 
-							var t1 = (oriprice - promoPrcPrcnt) - promoAddDiscPrc;
+							var t1 = ((oriprice - promoPrcPrcnt)* pacYear) - promoAddDiscPrc;
 							var t2 = 0;
 
 							if ($("#eurCertYn").val() == "N") {

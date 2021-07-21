@@ -421,7 +421,8 @@
 							         SAL0018D B ,
 							         SAL0002D C,
 							         SAL0001D D,
-							         SAL0029D  E
+							         SAL0029D  E,
+							         SVC0101T F
 							WHERE 1=1
 							    AND A.PROMO_ID = B.PROMO_ID
 							    AND A.PROMO_STUS_ID = '1'
@@ -435,6 +436,15 @@
 							    AND A.PROMO_SRV_MEM_PAC_ID = #{SRV_MEM_PAC_ID}
 							    AND C.SALES_ORD_ID = D.SALES_ORD_ID
 							    AND D.CUST_ID = E.CUST_ID
+                                AND
+                                (
+                                (F.SALES_ORD_no = D.SALES_ORD_no and A.PROMO_ID = '32246'
+                                    and ((select COUNT(VOUCHER_REDEMPTION) from SVC0006D where SALES_ORD_ID = #{SALES_ORD_ID} AND VOUCHER_REDEMPTION = '6426') = 1)
+                                    and ((select count(srv_pac_promo_id) from SAL0093D where srv_sales_ord_id = #{SALES_ORD_ID} AND SRV_QUOT_STUS_id = '4') = 0)
+                                    )
+                                or
+                                (F.SALES_ORD_no not in D.SALES_ORD_no and A.PROMO_ID not in '32246')
+                                )
 							    AND (A.PROMO_CUST_TYPE = E.TYPE_ID    OR A.PROMO_CUST_TYPE  =0 )
 							      ]]>
 					            <if test="E_YN != null and E_YN != ''">
