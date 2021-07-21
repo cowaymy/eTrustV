@@ -3,20 +3,22 @@
 
 <script type="text/javaScript">
 
+var myHisGridID
+
 $(document).ready(function() {
 	// AUIGrid 그리드를 생성합니다.
     createAUIGrid();
-    
-    AUIGrid.setSelectionMode(myGridID, "singleRow");
-    
-    AUIGrid.bind(myGridID, "cellClick", function(event) {
+
+    AUIGrid.setSelectionMode(myHisGridID, "singleRow");
+
+    AUIGrid.bind(myHisGridID, "cellClick", function(event) {
         //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "slaesOrdId"));
         //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, 10));
         /*
         var salesOrdId =  AUIGrid.getCellValue(myGridID, event.rowIndex, 8);
-        
-        if(salesOrdId.length<1){        
-        	salesOrdId =$("#orderId").val(); 
+
+        if(salesOrdId.length<1){
+        	salesOrdId =$("#orderId").val();
         }
         */
         //$("#orderId").val(AUIGrid.getCellValue(myGridID, event.rowIndex, 10));
@@ -24,14 +26,14 @@ $(document).ready(function() {
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
         	alert(AUIGrid.getCellValue(myGridID, event.rowIndex, 10));
         	alert(AUIGrid.getCellValue(myGridID, event.rowIndex, 11));
-        	
+
         	 Common.popupDiv("/services/bs/filterTreePop2.do?orderId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, 10)+"&bsrId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, 11));
         });
         */
         /*
         bsrId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "bsrId");
-        if(bsrId.length<1){        
-            bsrId =$("#bsrId").val(); 
+        if(bsrId.length<1){
+            bsrId =$("#bsrId").val();
         }
         $("#bsrId").val(bsrId);
         */
@@ -40,15 +42,15 @@ $(document).ready(function() {
 });
 
 function createAUIGrid() {
-    
-	
-     
+
+
+
 	//AUIGrid 칼럼 설정
-    
+
     var columnLayout = [ {
 	dataField : "bsrId",
     headerText : "<spring:message code='service.btn.FilterList'/>",
-    
+
     renderer : {
         type : "ButtonRenderer",
         labelText : "<spring:message code='service.btn.FilterList'/>",
@@ -136,7 +138,7 @@ function createAUIGrid() {
         dataField : "bsrId",
         headerText : "bsrId2",
         width : 0
-    }    
+    }
     ];
 
 
@@ -158,10 +160,10 @@ function createAUIGrid() {
     };
 
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-    myGridID = AUIGrid.create("#grid_wrap_memList", columnLayout, gridPros);
-}
+    myHisGridID = AUIGrid.create("#grid_wrap_memList", columnLayout, gridPros);
+};
 
-var gridPros = {
+/* var gridPros = {
 
     // 페이징 사용
     usePaging : true,
@@ -193,22 +195,22 @@ var gridPros = {
     // 줄번호 칼럼 렌더러 출력
     showRowNumColumn : false
 
-};
+};*/
 
 function fn_orderSearch(){
-	
+
    if($("#orderNumber").val() == ''){
-	   
+
 	   Common.alert("Please key in the  Order No ");
         return false;
     }
-	
+
     Common.ajax("GET", "/services/bs/bsHistorySearch", $("#searchForm").serialize(), function(orderList) {
     	if(orderList.length>0){
 	        console.log("성공.");
 	//        console.log("data : " + orderList[0]);
-	        AUIGrid.setGridData(myGridID, orderList);
-	        
+	        AUIGrid.setGridData(myHisGridID, orderList);
+
 	        $("#name").text(orderList[0].name);
 	        $("#orderNumber").text(orderList[0].salesOrdNo);
 	        $("#orderNumber2").text(orderList[0].salesOrdNo);
@@ -225,7 +227,7 @@ function fn_orderSearch(){
 	        $("#orderId").val(orderList[0].salesOrdId);
     	}
     });
-    
+
 //    fn_orderSearch2();
 
 }
@@ -244,7 +246,7 @@ function fn_filterInfo(){
 	if(orderId.length>1){
 	 Common.popupDiv("/services/bs/filterInfoPop2.do?orderId="+orderId );
 		//Common.popupDiv("/services/bs/filterInfoPop2.do?orderId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId") );
-		
+
 	}else{
 		return;
 	}
@@ -254,14 +256,14 @@ function fn_filterInfo(){
 function fn_filterTree(){
     var orderId = $("#orderId").val();
     var bsrId = $("#bsrId").val();
-    
+
     console.log("orderId : "+orderId);
     console.log("bsrId : "+bsrId);
-    
+
     if(bsrId.length>1){
      Common.popupDiv("/services/bs/filterTreePop2.do?orderId="+orderId+"&bsrId="+bsrId );
         //Common.popupDiv("/services/bs/filterInfoPop2.do?orderId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId") );
-        
+
     }else{
         return;
     }
@@ -285,13 +287,13 @@ function fn_filterTree(){
 
 <section class="search_table"><!-- search_table start -->
 <form action="searchForm" id="searchForm" method="post">
-    
+
     <aside class="link_btns_wrap">
     <div id="divErrorMessage" style="width: 100%; height: 20px; margin: 0 auto;">
         <span style="color: #CC0000" ID="lblErrorMessage"></span>
     </div>
     </aside><!-- grid_wrap end -->
-    
+
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -305,7 +307,7 @@ function fn_filterTree(){
     <td><input type="text" title="" id="orderNumber" name="orderNumber" placeholder="" class="" />
         <!-- <a href="javascript:fn_orderSearch();" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a> -->
         <p class="btn_grid"><a href="javascript:fn_orderSearch();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p>
-        
+
     </td>
 </tr>
 </tbody>
@@ -318,7 +320,7 @@ function fn_filterTree(){
     <col style="width:*" />
     <col style="width:170px" />
     <col style="width:*" />
-    
+
 </colgroup>
 <tbody>
 <tr>
@@ -345,13 +347,13 @@ function fn_filterTree(){
 <tr>
     <th scope="row"><spring:message code='service.title.MobileNo'/></th>
     <td><span id="mobile"></span></td>
-    
+
     <th scope="row"><spring:message code='service.title.ResidenceNo'/></th>
     <td><span id="residence"></span></td>
-    
+
     <th scope="row"><spring:message code='service.title.Bank'/></th>
     <td><span id="bankAccount"></span></td>
-    
+
     <th scope="row"><spring:message code='service.title.JomPayRef1'/></th>
     <td><span id="jomPayRef1"></span></td>
 </tr>
@@ -363,7 +365,7 @@ function fn_filterTree(){
     <td><span id="fax"></span></td>
     <th scope="row"><spring:message code='service.title.CustomerType'/></th>
     <td><span id="customerType"></span></td>
-    
+
 </tr>
 
 </tbody>
@@ -377,7 +379,7 @@ function fn_filterTree(){
     <dd>
     <ul class="btns">
         <li><p class="link_btn"><a href="javascript:fn_filterInfo()" id="filterInfo"><spring:message code='service.btn.FilterInfo'/></a></p></li>
-        
+
     </ul>
     </dd>
 </dl>
@@ -385,13 +387,13 @@ function fn_filterTree(){
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="grid_wrap_memList" style="width: 100%; height: 300px; margin: 0 auto;"></div>
-</article><!-- grid_wrap end -->   
+</article><!-- grid_wrap end -->
 <input type="hidden"  id="orderId" name="orderId"/>
 <input type="hidden"  id="bsrId" name="bsrId"/>
 
 </form>
 </section><!-- search_table end -->
-    
+
 
 
 </section><!-- content end -->
