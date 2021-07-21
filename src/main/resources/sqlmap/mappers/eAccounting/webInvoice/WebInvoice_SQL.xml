@@ -910,94 +910,103 @@ SELECT T.APPV_PRCSS_NO
 </select>
 
 <select id="selectVendorApproveList" parameterType="Map" resultType="egovMap">
-    SELECT
-	    A.APPV_PRCSS_NO,
-	    B.APPV_LINE_SEQ,
-	    C.VENDOR_REQ_NO CLM_NO,
-	    TO_CHAR(A.REQST_DT, 'DD/MM/YYYY') REQST_DT,
-	    D.HR_CODE || ' - ' || E.MEM_ACC_NAME REQUESTOR,
-	    C.VENDOR_GRP,
-	    C.VENDOR_NAME,
-	    CASE B.APPV_STUS WHEN 'R' THEN 'Request'
-	                      WHEN 'A' THEN 'Approved'
-	                      WHEN 'J' THEN 'Rejected'
-	    END APPV_PRCSS_STUS,
-	    B.APPV_STUS APPV_PRCSS_STUS_CODE,
-	    TO_CHAR(B.APPV_DT, 'DD/MM/YYYY') APPV_DT
-	FROM FCM0004M A
-	LEFT JOIN FCM0005D B
-	    ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
-	    AND (B.APPV_STUS = 'R' OR B.APPV_STUS = 'A' OR B.APPV_STUS = 'J')
-	    <if test="apprGrp == null or apprGrp == ''">
-	        AND B.APPV_LINE_USER_ID = #{memCode}
-	    </if>
-	    <if test="apprGrp != null and apprGrp != ''">
-	        AND B.APPV_LINE_USER_ID IN (
-	            SELECT
-	                APPR_MEM_CODE
-	            FROM FCM0023M
-	            WHERE APPR_GRP = #{apprGrp}
-	        )
-	    </if>
-	JOIN FCM0029D C
-	    ON A.APPV_PRCSS_NO = C.APPV_PRCSS_NO
-	JOIN SYS0047M D
-	    ON C.CRT_USER_ID = D.USER_ID
-	JOIN FCM0006M E
-	    ON D.HR_CODE = E.MEM_ACC_ID
-	WHERE 1=1
-	/*(A.APPV_PRCSS_STUS = 'R' OR A.APPV_PRCSS_STUS = 'P' OR A.APPV_PRCSS_STUS = 'A' or A.APPV_PRCSS_STUS = 'J')*/
-	<if test="startDt != null and startDt != ''">
-	    <![CDATA[
-	    AND A.REQST_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
-	    ]]>
-	</if>
-	<if test="endDt != null and endDt != ''">
-	    <![CDATA[
-	    AND A.REQST_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
-	    ]]>
-	</if>
-	<if test="memAccId != null and memAccId != ''">
-	    AND C.VENDOR_ACC_ID = #{memAccId}
-	</if>
-	<if test="vendorGrp != null and vendorGrp != ''">
-        AND C.VENDOR_GRP IN
+    SELECT *
+    FROM (
+        SELECT
+            A.APPV_PRCSS_NO,
+            B.APPV_LINE_SEQ,
+            C.VENDOR_REQ_NO CLM_NO,
+            TO_CHAR(A.REQST_DT, 'DD/MM/YYYY') REQST_DT,
+            D.HR_CODE || ' - ' || E.MEM_ACC_NAME REQUESTOR,
+            C.VENDOR_GRP,
+            C.VENDOR_NAME,
+            C.VENDOR_ACC_ID,
+            C.COST_CENTER,
+            CASE B.APPV_STUS WHEN 'R' THEN 'Request'
+                              WHEN 'A' THEN 'Approved'
+                              WHEN 'J' THEN 'Rejected'
+            END APPV_PRCSS_STUS,
+            B.APPV_STUS APPV_PRCSS_STUS_CODE,
+            A.APPV_PRCSS_STUS APPV_PRCSS_STUS_04,
+            TO_CHAR(B.APPV_DT, 'DD/MM/YYYY') APPV_DT,
+            A.REQST_USER_ID
+        FROM FCM0004M A
+        LEFT JOIN FCM0005D B
+            ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+            <if test="apprGrp == null or apprGrp == ''">
+                AND B.APPV_LINE_USER_ID = #{memCode}
+            </if>
+            <if test="apprGrp != null and apprGrp != ''">
+                AND B.APPV_LINE_USER_ID IN (
+                    SELECT
+                        APPR_MEM_CODE
+                    FROM FCM0023M
+                    WHERE APPR_GRP = #{apprGrp}
+                )
+            </if>
+        JOIN FCM0029D C
+            ON A.APPV_PRCSS_NO = C.APPV_PRCSS_NO
+        JOIN SYS0047M D
+            ON C.CRT_USER_ID = D.USER_ID
+        JOIN FCM0006M E
+            ON D.HR_CODE = E.MEM_ACC_ID
+        WHERE 1=1
+        AND (A.APPV_PRCSS_STUS = 'R' OR A.APPV_PRCSS_STUS = 'P' OR A.APPV_PRCSS_STUS = 'A' or A.APPV_PRCSS_STUS = 'J')
+        AND (B.APPV_STUS = 'R' OR B.APPV_STUS = 'A' OR B.APPV_STUS = 'J')
+    )
+    WHERE 1=1
+    <if test="startDt != null and startDt != ''">
+        <![CDATA[
+        AND REQST_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
+        ]]>
+    </if>
+    <if test="endDt != null and endDt != ''">
+        <![CDATA[
+        AND REQST_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
+        ]]>
+    </if>
+    <if test="memAccId != null and memAccId != ''">
+        AND VENDOR_ACC_ID = #{memAccId}
+    </if>
+    <if test="vendorGrp != null and vendorGrp != ''">
+        AND VENDOR_GRP IN
         <foreach item="item" collection="vendorGrp" index="index" open="(" separator="," close=")">
              #{item}
          </foreach>
     </if>
-	<if test="createUser != null and createUser != ''">
-	    AND A.REQST_USER_ID = (SELECT USER_NAME FROM SYS0047M WHERE HR_CODE = UPPER(#{createUser}))
-	</if>
-	<if test="costCenter != null and costCenter != ''">
-	    AND C.COST_CENTER = #{costCenter}
-	</if>
-	<if test="appvPrcssStus != null and appvPrcssStus != ''">
-             AND A.APPV_PRCSS_STUS IN
+    <if test="createUser != null and createUser != ''">
+        AND REQST_USER_ID = (SELECT USER_NAME FROM SYS0047M WHERE HR_CODE = UPPER(#{createUser}))
+    </if>
+    <if test="costCenter != null and costCenter != ''">
+        AND COST_CENTER = #{costCenter}
+    </if>
+    <if test="appvPrcssStus != null and appvPrcssStus != ''">
+             /*AND APPV_PRCSS_STUS_04 IN*/
+             AND APPV_PRCSS_STUS_CODE IN
          <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
              #{item}
          </foreach>
     </if>
-	<if test="clmNoStart != null and clmNoStart != ''">
-	    <![CDATA[
-	    AND C.VENDOR_REQ_NO >= UPPER(#{clmNoStart})
-	    ]]>
-	</if>
-	<if test="clmNoEnd != null and clmNoEnd != ''">
-	    <![CDATA[
-	    AND C.VENDOR_REQ_NO <= UPPER(#{clmNoEnd})
-	    ]]>
-	</if>
-	<if test="appStartDt != null and appStartDt != ''">
-	    <![CDATA[
-	    AND B.APPV_DT >= TO_DATE(#{appStartDt}, 'DD/MM/YYYY')
-	    ]]>
-	</if>
-	<if test="appEndDt != null and appEndDt != ''">
-	    <![CDATA[
-	    AND B.APPV_DT < TO_DATE(#{appEndDt}, 'DD/MM/YYYY') + 1
-	    ]]>
-	</if>
+    <if test="clmNoStart != null and clmNoStart != ''">
+        <![CDATA[
+        AND CLM_NO >= UPPER(#{clmNoStart})
+        ]]>
+    </if>
+    <if test="clmNoEnd != null and clmNoEnd != ''">
+        <![CDATA[
+        AND CLM_NO <= UPPER(#{clmNoEnd})
+        ]]>
+    </if>
+    <if test="appStartDt != null and appStartDt != ''">
+        <![CDATA[
+        AND TO_DATE(B.APPV_DT, 'DD/MM/YYYY') >= TO_DATE(#{appStartDt}, 'DD/MM/YYYY')
+        ]]>
+    </if>
+    <if test="appEndDt != null and appEndDt != ''">
+        <![CDATA[
+        AND TO_DATE(B.APPV_DT, 'DD/MM/YYYY') < TO_DATE(#{appEndDt}, 'DD/MM/YYYY') + 1
+        ]]>
+    </if>
 </select>
 
 <select id="selectAppvLineInfo" parameterType="Map" resultType="egovMap">
