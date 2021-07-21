@@ -999,12 +999,12 @@ SELECT T.APPV_PRCSS_NO
     </if>
     <if test="appStartDt != null and appStartDt != ''">
         <![CDATA[
-        AND TO_DATE(B.APPV_DT, 'DD/MM/YYYY') >= TO_DATE(#{appStartDt}, 'DD/MM/YYYY')
+        AND TO_DATE(APPV_DT, 'DD/MM/YYYY') >= TO_DATE(#{appStartDt}, 'DD/MM/YYYY')
         ]]>
     </if>
     <if test="appEndDt != null and appEndDt != ''">
         <![CDATA[
-        AND TO_DATE(B.APPV_DT, 'DD/MM/YYYY') < TO_DATE(#{appEndDt}, 'DD/MM/YYYY') + 1
+        AND TO_DATE(APPV_DT, 'DD/MM/YYYY') < TO_DATE(#{appEndDt}, 'DD/MM/YYYY') + 1
         ]]>
     </if>
 </select>
