@@ -957,12 +957,12 @@ SELECT T.APPV_PRCSS_NO
     WHERE 1=1
     <if test="startDt != null and startDt != ''">
         <![CDATA[
-        AND REQST_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
+        AND TO_DATE(REQST_DT, 'DD/MM/YYYY') >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
         ]]>
     </if>
     <if test="endDt != null and endDt != ''">
         <![CDATA[
-        AND REQST_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
+        AND TO_DATE(REQST_DT, 'DD/MM/YYYY') < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
         ]]>
     </if>
     <if test="memAccId != null and memAccId != ''">
