@@ -133,10 +133,12 @@
                       SELECT DISTINCT T1.REF_SEQ_NO
                              , T1.PFX_SEQ_NO
                              , T1.MEM_ID
+                             , T2.MEM_CODE
                              , T1.RMK
                              , T1.DEPT_CODE
                              FROM
                              LOG0090D T1
+                             JOIN ORG0001D T2 ON T2.MEM_ID = T1.MEM_ID
   )
     SELECT * FROM
       (SELECT H.CODE AS DSC,
@@ -156,6 +158,7 @@
              F.USER_NAME AS CRT_BY,
              B.SEQ_NO,
              X.MEM_ID,
+             X.MEM_CODE,
              X.RMK REF_NO,
              X.DEPT_CODE
       FROM LOG0089M A

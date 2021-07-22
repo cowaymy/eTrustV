@@ -20,7 +20,7 @@
   var myGridIDPop;
   var myGridIDPopAdd;
 
-  var deleteRowIdx;
+  var deleteRowIdx,deleteRow;
 
   $(document).ready(
     function() {
@@ -81,6 +81,18 @@
             headerText : "<spring:message code='service.grid.Quantity'/>",
             editable : false,
             width : 100
+          },
+          {
+            dataField : "memCode",
+            headerText : "<spring:message code='sal.title.memberCode'/>",
+            editable : false,
+            width : 100
+          },
+          {
+            dataField : "refNo",
+            headerText : "<spring:message code='log.head.refdocno'/>",
+            editable : false,
+            width : 200
           },
           {
             dataField : "rmk",
@@ -160,6 +172,18 @@
             width : 100
           },
           {
+            dataField : "memCode",
+            headerText : "<spring:message code='sal.title.memberCode'/>",
+            editable : false,
+            width : 100
+          },
+            {
+            dataField : "refNo",
+            headerText : "<spring:message code='log.head.refdocno'/>",
+            editable : false,
+            width : 200
+          },
+          {
             dataField : "rmk",
             headerText : "<spring:message code='service.title.Remark'/>",
             editable : false,
@@ -180,6 +204,7 @@
       myGridIDPopAdd = AUIGrid.create("#srvItmAdd_grid_wrap", columnLayoutAdd, gridProsAdd);
 
       AUIGrid.bind(myGridIDPopAdd, "cellClick", function( event ) {
+        deleteRow = event;
         deleteRowIdx = event.rowIndex;
       });
   }
@@ -205,6 +230,8 @@
     var movDtl = $("#cboMovDtl").val();
     var qty = $("#txtQty").val();
     var rmk = $("#txtRmk").val();
+    var memCode = $("#member").val();
+    var refNo = $("#txtDocNo").val();
 
     var msg = "";
     var lbl = "";
@@ -240,7 +267,30 @@
     itm.movDtlCde = movDtl;
     itm.movDtl = $("#cboMovDtl option:selected").text();
     itm.qty = qty;
+    itm.memCode = memCode;
+    itm.refNo = refNo;
     itm.rmk = rmk;
+
+    //Calculate Total Balance
+    let balance  = parseInt($('#txtBal').val());
+    let quantity = parseInt(itm.qty);
+    if(itm.movTypCde == 0){
+    	balance = balance + quantity;
+        $('#txtBal').val(balance);
+    }else if(itm.movTypCde == 1){
+    	balance = balance - quantity;
+
+        if( (balance) < 0){
+            $('#txtBal').val("${QTY}");
+            Common.alert("Quantity cannot be lesser than balance");
+            return;
+        }else{
+            $('#txtBal').val(balance);
+        }
+    }else{
+    	$('#txtBal').val("${QTY}");
+    }
+
 
     AUIGrid.addRow(myGridIDPopAdd, itm, "first");
     fn_resetInput();
@@ -251,6 +301,19 @@
       Common.alert("<spring:message code='service.msg.selectRcd'/>");
       return;
     }
+
+    let movTypCde = deleteRow.item.movTypCde;
+    let qty = parseInt(deleteRow.item.qty);
+    let balance = parseInt($("#txtBal").val());
+
+    if(movTypCde == "0"){
+    	balance = balance - qty;
+    	$("#txtBal").val(balance);
+    }else if(movTypCde == "1"){
+    	balance = balance + qty;
+    	$("#txtBal").val(balance);
+    }
+
     AUIGrid.removeRow(myGridIDPopAdd, deleteRowIdx);
     deleteRowIdx = -1;
   }
@@ -331,7 +394,7 @@
 
   }
 
-  function fn_checkQty(){
+  /* function fn_checkQty(){
     let movTyp   = $("#cboMovTyp").val();
     let balance  = parseInt("${QTY}");
     let quantity = $("#txtQty").val() != '' ? parseInt($("#txtQty").val()) : 0;
@@ -356,11 +419,24 @@
 
     }
 
-  }
+  } */
 
   $(function(){
       $('#cboMovTyp').change(function(){
-          fn_checkQty();
+          //fn_checkQty();
+      });
+      $('#cboMovDtl').change(function(){
+         if(
+        		 ($('#cboMovTyp').val() == '0' && this.value == '1') || // Movement In - Resigned Cody Return
+        		 ($('#cboMovTyp').val() == '1' && this.value == '0') // Movement Out - Consign to Cody
+        	){
+        	 $('#cmgroup').attr("disabled",false);
+        	 $('#member').attr("disabled",false);
+         }else{
+        	 $('#cmgroup').attr("disabled",true);
+             $('#member').attr("disabled",true);
+         }
+
       });
   });
 </script>
@@ -471,11 +547,11 @@
       <tr>
        <th scope="row"><spring:message code='log.title.text.cmGroup'/></th>
        <td>
-           <select class="w100p" id="cmgroup" onchange="fn_ChangeCMGroup()"></select>
+           <select class="w100p" id="cmgroup" onchange="fn_ChangeCMGroup()" disabled></select>
        </td>
        <th scope="row"><spring:message code='sal.title.memberCode'/></th>
        <td>
-           <select class="w100p" id="member" name="member"></select>
+           <select class="w100p" id="member" name="member" disabled></select>
        </td>
       </tr>
       <tr>
@@ -485,7 +561,7 @@
        </td>
        <th scope="row"><spring:message code='service.grid.Quantity'/><span class='must'> *</span></th>
        <td>
-         <input type="text" placeholder="<spring:message code='service.grid.Quantity'/>" id="txtQty" name="txtQty" class="w100p" onblur="fn_checkQty()" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')"/>
+         <input type="text" placeholder="<spring:message code='service.grid.Quantity'/>" id="txtQty" name="txtQty" class="w100p" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')"/>
        </td>
       </tr>
       <tr>

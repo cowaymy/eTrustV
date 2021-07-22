@@ -108,6 +108,18 @@
             width : 100
           },
           {
+            dataField : "memCode",
+            headerText : "<spring:message code='sal.title.memberCode'/>",
+            editable : false,
+            width : 100
+          },
+          {
+            dataField : "refNo",
+            headerText : "<spring:message code='log.head.refdocno'/>",
+            editable : false,
+            width : 200
+          },
+          {
             dataField : "rmk",
             headerText : "<spring:message code='service.title.Remark'/>",
             editable : false,
@@ -146,10 +158,6 @@
           },
           {
               dataField : "memId",
-              visible : false
-          },
-          {
-              dataField : "refNo",
               visible : false
           }
       ];
@@ -396,6 +404,19 @@
 
 	        fn_checkQty();
 	    });
+	  $('#cboMovDtl').change(function(){
+	         if(
+	                 ($('#cboMovTyp').val() == '0' && this.value == '1') || // Movement In - Resigned Cody Return
+	                 ($('#cboMovTyp').val() == '1' && this.value == '0') // Movement Out - Consign to Cody
+	            ){
+	             $('#cmgroup').attr("disabled",false);
+	             $('#member').attr("disabled",false);
+	         }else{
+	             $('#cmgroup').attr("disabled",true);
+	             $('#member').attr("disabled",true);
+	         }
+
+	  });
 	  $("#cmgroup").change(function(e){
 		  CommonCombo.make('member', '/logistics/codystock/getCodyCodeList'
 	              , {memLvl : 4,memType : 2,upperLineMemberID : $('#cmgroup').val()}
@@ -511,11 +532,11 @@
       <tr>
        <th scope="row"><spring:message code='log.title.text.cmGroup'/></th>
        <td>
-           <select class="w100p" id="cmgroup" name="cmgroup"></select>
+           <select class="w100p" id="cmgroup" name="cmgroup" disabled></select>
        </td>
        <th scope="row"><spring:message code='sal.title.memberCode'/></th>
        <td>
-           <select class="w100p" id="member" name="member"></select>
+           <select class="w100p" id="member" name="member" disabled></select>
        </td>
       </tr>
       <tr>
