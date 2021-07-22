@@ -668,7 +668,9 @@
             PAY_ADV_EMAIL1 EMAIL_01,
             PAY_ADV_EMAIL2 EMAIL_02,
             BANK_COUNTRY BANKS,
-            BANK BANKL,
+            CASE WHEN (VENDOR_GRP = 'VM02' OR VENDOR_GRP = 'VM03') THEN SWIFT_CODE
+                 ELSE BANK
+            END BANKL,
             BANK_ACC_NO BANKN,
             BANK_ACC_HOLDER KOINH,
             '' BANKA,
