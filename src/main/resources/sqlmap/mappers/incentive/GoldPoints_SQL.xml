@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.incentive.goldPoints.impl.GoldPointsMapper">
+
+    <select id="selectNextBatchId" resultType="int">
+        SELECT ICR0001M_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertGoldPointsMst" parameterType="Map">
+        INSERT INTO ICR0001M (
+            GP_BATCH_ID,
+            STUS_ID,
+            REM,
+            CRT_DT,
+            CRT_USER_ID
+        ) VALUES (
+            #{goldPtsBatchId},
+            1,
+            null,
+            SYSDATE,
+            #{crtUserId}
+        )
+    </insert>
+
+    <insert id="insertGoldPointsDtl" parameterType="Map">
+        INSERT INTO ICR0002D (
+            GP_BATCH_DTL_ID,
+            GP_BATCH_ID,
+            MEM_CODE,
+            MEM_NAME,
+            GP_DESC,
+            GP_UPL_PTS,
+            GP_START_DT,
+            GP_END_DT,
+            STUS_ID,
+            REM,
+            CRT_DT,
+            CRT_USER_ID
+        ) SELECT
+                ICR0002D_SEQ.NEXTVAL,
+                goldPtsBatchId,
+                memCode,
+                memName,
+                gpDesc,
+                gpUplPts,
+                gpStartDt,
+                gpEndDt,
+                stusId,
+                rem,
+                crtDt,
+                crtUserId
+            FROM (
+            <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+                SELECT
+                    #{goldPtsBatchId} goldPtsBatchId,
+                    #{item.memCode} memCode,
+                    #{item.memName} memName,
+                    #{item.ptsDesc} gpDesc,
+                    #{item.ptsEarned} gpUplPts,
+                    TO_DATE(#{item.startDate},'DD/MM/YYYY') gpStartDt,
+                    TO_DATE(#{item.endDate},'DD/MM/YYYY') gpEndDt,
+                    1 stusId,
+                    NULL rem,
+                    SYSDATE crtDt,
+                    #{item.crtUserId} crtUserId
+                FROM DUAL
+            </foreach>
+        )
+    </insert>
+
+    <update id="callGoldPointsConfirm" statementType="CALLABLE" parameterType="Map">
+        {call SP_GOLD_PTS_CONFIRM(#{goldPtsBatchId})}
+    </update>
+
+</mapper>
