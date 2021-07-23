@@ -59,7 +59,7 @@ public class GoldPointsSummaryController {
 	private CsvReadComponent csvReadComponent;
 
 	@RequestMapping(value = "/pointsSummaryList.do")
-	public String pointSummaryList(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String pointsSummaryList(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		LOGGER.info("===== pointsSummaryList.do =====");
 
