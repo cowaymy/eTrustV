@@ -77,7 +77,6 @@ public interface MembershipConvSaleMapper {
 	EgovMap getMembershipByRefNo(Map<String, Object> params);
 
 
-
-
+	void updateEligibleEVoucher(Map<String, Object> params);
 
 }

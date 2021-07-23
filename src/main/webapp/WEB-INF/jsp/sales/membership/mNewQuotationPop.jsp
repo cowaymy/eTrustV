@@ -1196,6 +1196,19 @@ $(document).ready(function(){
 			}
 		}
 
+		if($("#cPromotionpac").val() == "32246"){
+		        Common.ajaxSync("GET", "/sales/membership/mEligibleEVoucher", {
+		            ORD_NO : $("#ORD_NO").val()
+		        }, function(result) {
+		            console.log(result);
+
+		            if (result.length == 0) {
+		            	rtnMsg += "This order does not fulfill the criteria to entitle FMCO Service Membership RM50 Disc Promotion.<br>";
+		            	rtnValue = false;
+		            }
+		        });
+
+		}
 		//if ($("#cPromoCombox").prop("checked")){
 		//  if(FormUtil.checkReqValue($("#packpro"))){
 		// rtnMsg +="Please select the promotion <br>";

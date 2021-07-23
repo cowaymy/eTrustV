@@ -390,6 +390,8 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 			 }
 		 }
 
+
+
 		 return docNo;
 	}
 
@@ -434,6 +436,11 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
     public  EgovMap getMaxPeriodEarlyBirdPromo(Map<String, Object> params) {
         return membershipQuotationMapper.getMaxPeriodEarlyBirdPromo(params);
     }
+
+	@Override
+	public List<EgovMap> mEligibleEVoucher(Map<String, Object> params) {
+		return membershipQuotationMapper.mEligibleEVoucher(params);
+	}
 
 }
 

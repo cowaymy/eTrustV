@@ -715,4 +715,9 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 		return membershipConvSaleMapper.getMembershipByRefNo(params);
 	}
 
+	@Override
+	public void updateEligibleEVoucher(Map<String, Object> params) {
+		membershipConvSaleMapper.updateEligibleEVoucher(params);
+
+	}
 }

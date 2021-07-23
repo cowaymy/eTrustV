@@ -20,4 +20,6 @@ public interface MembershipConvSaleService {
 
 	boolean checkDuplicateRefNo(Map<String, Object> params);
 
+	void updateEligibleEVoucher(Map<String, Object> params);
+
 }

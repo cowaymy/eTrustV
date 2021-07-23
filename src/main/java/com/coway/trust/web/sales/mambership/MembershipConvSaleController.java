@@ -136,6 +136,9 @@ public class  MembershipConvSaleController {
 		//int rtnValue = membershipConvSaleService.SAL0095D_insert(params);
 		String docNo =  membershipConvSaleService.SAL0095D_insert(params);
 
+		 //update e-voucher temp table
+		membershipConvSaleService.updateEligibleEVoucher(params);
+		 //
 
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(docNo);

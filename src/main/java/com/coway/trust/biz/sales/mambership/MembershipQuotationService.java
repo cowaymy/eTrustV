@@ -61,4 +61,6 @@ public interface MembershipQuotationService {
 
   EgovMap getMaxPeriodEarlyBirdPromo(Map<String, Object> params);
 
+  List<EgovMap> mEligibleEVoucher(Map<String, Object> params);
+
 }

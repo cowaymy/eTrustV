@@ -534,4 +534,17 @@ public class  MembershipQuotationController {
   }
 
 
+  @RequestMapping(value = "/mEligibleEVoucher" ,method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>>  mEligibleEVoucher(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
+
+		logger.debug("in  mEligibleEVoucher ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+
+		List<EgovMap>  list = membershipQuotationService.mEligibleEVoucher(params);
+
+		return ResponseEntity.ok(list);
+	}
+
 }
