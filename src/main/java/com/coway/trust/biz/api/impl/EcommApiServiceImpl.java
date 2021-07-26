@@ -79,7 +79,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
     Map<String, Object> reqPrm = Maps.filterValues(EComApiForm.createRegOrdMap(eComApiForm),Objects::nonNull);
     EgovMap custInfo = new EgovMap();
 
-    try{
+    //try{
 
       access = commonApiMapper.checkAccess(reqPrm);
       if(access == null){
@@ -214,8 +214,8 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
         // SAL0024D
         custBillMasterVO.setCustBillAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
-        custBillMasterVO.setCustBillCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));
-        custBillMasterVO.setCustBillCustCareCntId(Integer.valueOf(custInfo.get("custcarecntid").toString()));
+        custBillMasterVO.setCustBillCntId(Integer.valueOf(custInfo.get("custcarecntid").toString()));
+        //custBillMasterVO.setCustBillCustCareCntId(Integer.valueOf(custInfo.get("custcarecntid").toString()));
         custBillMasterVO.setCustBillCustId(Integer.valueOf(custInfo.get("custid").toString()));
         custBillMasterVO.setCustBillIsEstm(0);
         custBillMasterVO.setCustBillEmail(reqPrm.get("email1") != null ? reqPrm.get("email1").toString() : null);
@@ -263,7 +263,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         }
       }
 
-    } catch(Exception e){
+    /*} catch(Exception e){
       code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
       message = StringUtils.substring(e.getMessage(), 0, 4000);
 
@@ -271,7 +271,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
     } finally{
       stopWatch.stop();
       respTm = stopWatch.toString();
-    }
+    }*/
 
     return commonApiService.rtnRespMsg(request, code, message, respTm, reqPrm, null ,apiUserId);
   }
