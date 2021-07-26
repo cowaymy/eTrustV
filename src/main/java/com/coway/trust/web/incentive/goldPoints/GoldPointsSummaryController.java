@@ -63,6 +63,8 @@ public class GoldPointsSummaryController {
 
 		LOGGER.info("===== pointsSummaryList.do =====");
 
+		params.put("groupCode",1);
+
 		List<EgovMap> memberType = commonService.selectCodeList(params);
 		List<EgovMap> status = memberListService.selectStatus();
 

@@ -14,12 +14,12 @@ public class GoldPointsVO {
 	public static GoldPointsVO create(CSVRecord CSVRecord) {
 		GoldPointsVO vo = new GoldPointsVO();
 
-		vo.setMemCode(CSVRecord.get(0).trim());
-		vo.setMemName(CSVRecord.get(1).trim());
-		vo.setPtsDesc(CSVRecord.get(2).trim());
-		vo.setPtsEarned(Integer.parseInt(CSVRecord.get(3).trim()));
-		vo.setStartDate(CSVRecord.get(4).trim());
-		vo.setEndDate(CSVRecord.get(5).trim());
+		vo.setMemCode(CSVRecord.get(0));
+		vo.setMemName(CSVRecord.get(1));
+		vo.setPtsDesc(CSVRecord.get(2));
+		vo.setPtsEarned(Integer.parseInt(CSVRecord.get(3)));
+		vo.setStartDate(CSVRecord.get(4));
+		vo.setEndDate(CSVRecord.get(5));
 
 		return vo;
 	}
