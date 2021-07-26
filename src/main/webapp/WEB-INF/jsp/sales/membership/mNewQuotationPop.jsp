@@ -1201,14 +1201,14 @@ $(document).ready(function(){
 			}
 		}
 
-		if($("#cPromotionpac").val() == "32246"){
+		if($("#cPromotionpac").val() == "32246" || $("#cPromotionpac").val() == "32247"){
 		        Common.ajaxSync("GET", "/sales/membership/mEligibleEVoucher", {
 		            ORD_NO : $("#ORD_NO").val()
 		        }, function(result) {
 		            console.log(result);
 
 		            if (result.length == 0) {
-		            	rtnMsg += "This order does not fulfill the criteria to entitle FMCO Service Membership RM50 Disc Promotion.<br>";
+		            	rtnMsg += "The FMCO SVM RM50 discount promotion has been claimed.<br>";
 		            	rtnValue = false;
 		            }
 		        });

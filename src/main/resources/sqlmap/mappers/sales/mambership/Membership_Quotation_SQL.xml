@@ -421,7 +421,8 @@
 							         SAL0018D B ,
 							         SAL0002D C,
 							         SAL0001D D,
-							         SAL0029D  E
+							         SAL0029D  E,
+                                     SAL0289T F
 							WHERE 1=1
 							    AND A.PROMO_ID = B.PROMO_ID
 							    AND A.PROMO_STUS_ID = '1'
@@ -435,6 +436,16 @@
 							    AND A.PROMO_SRV_MEM_PAC_ID = #{SRV_MEM_PAC_ID}
 							    AND C.SALES_ORD_ID = D.SALES_ORD_ID
 							    AND D.CUST_ID = E.CUST_ID
+							    --
+                                AND
+                                (
+                                    ((A.PROMO_ID in ('32246','32247') )
+                                    AND (F.SALES_ORD_ID = D.SALES_ORD_ID   )
+                                    )
+                                    or
+                                    (F.SALES_ORD_ID not in D.SALES_ORD_ID and A.PROMO_ID not in ('32246','32247'))
+                                )
+                                --
 							    AND (A.PROMO_CUST_TYPE = E.TYPE_ID    OR A.PROMO_CUST_TYPE  =0 )
 							      ]]>
 					            <if test="E_YN != null and E_YN != ''">

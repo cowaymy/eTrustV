@@ -540,7 +540,7 @@
     </select>
 
     <select id="updateEligibleEVoucher" parameterType="Map" >
-            update SAL0289T set IS_CLOSE = 'Y',close_dt = SYSDATE
+            update SAL0289T set IS_CLOSE = '1',close_dt = SYSDATE
 where SALES_ORD_id = #{srvSalesOrdId} and ev_type = '6426' and is_close = '0' and ROWNUM = 1
      </select>
 </mapper>
