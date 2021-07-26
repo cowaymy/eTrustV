@@ -15,4 +15,12 @@ public interface GoldPointsMapper {
 
 	void callGoldPointsConfirm(Map<String, Object> master);
 
+	int selectNextRedemptionItemsBatchId();
+
+	int insertRedemptionItemsMst(Map<String, Object> master);
+
+	void insertRedemptionItemsDtl(Map<String, Object> rdmItmList);
+
+	void callRedemptionItemsConfirm(Map<String, Object> master);
+
 }

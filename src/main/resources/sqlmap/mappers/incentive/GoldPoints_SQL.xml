@@ -12,13 +12,17 @@
             STUS_ID,
             REM,
             CRT_DT,
-            CRT_USER_ID
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID
         ) VALUES (
             #{goldPtsBatchId},
             1,
             null,
             SYSDATE,
-            #{crtUserId}
+            #{crtUserId},
+            SYSDATE,
+            #{updUserId}
         )
     </insert>
 
@@ -35,7 +39,9 @@
             STUS_ID,
             REM,
             CRT_DT,
-            CRT_USER_ID
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID
         ) SELECT
                 ICR0002D_SEQ.NEXTVAL,
                 goldPtsBatchId,
@@ -48,7 +54,9 @@
                 stusId,
                 rem,
                 crtDt,
-                crtUserId
+                crtUserId,
+                updDt,
+                updUserId
             FROM (
             <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
                 SELECT
@@ -62,7 +70,9 @@
                     1 stusId,
                     NULL rem,
                     SYSDATE crtDt,
-                    #{item.crtUserId} crtUserId
+                    #{item.crtUserId} crtUserId,
+                    SYSDATE updDt,
+                    #{item.updUserId} updUserId
                 FROM DUAL
             </foreach>
         )
@@ -70,6 +80,86 @@
 
     <update id="callGoldPointsConfirm" statementType="CALLABLE" parameterType="Map">
         {call SP_GOLD_PTS_CONFIRM(#{goldPtsBatchId})}
+    </update>
+
+    <select id="selectNextRedemptionItemsBatchId" resultType="int">
+        SELECT ICR0004M_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertRedemptionItemsMst" parameterType="Map">
+        INSERT INTO ICR0004M (
+            RI_BATCH_ID,
+            STUS_ID,
+            REM,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID
+        ) VALUES (
+            #{riBatchId},
+            1,
+            null,
+            SYSDATE,
+            #{crtUserId},
+            SYSDATE,
+            #{updUserId}
+        )
+    </insert>
+
+    <insert id="insertRedemptionItemsDtl" parameterType="Map">
+        INSERT INTO ICR0005D (
+            RI_BATCH_DTL_ID,
+            RI_BATCH_ID,
+            ITM_CODE,
+            ITM_CAT,
+            ITM_DESC,
+            GP_PER_UNIT,
+            RI_START_DT,
+            RI_END_DT,
+            STUS_ID,
+            REM,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID
+        ) SELECT
+                ICR0005D_SEQ.NEXTVAL,
+                riBatchId,
+                itmCode,
+                itmCat,
+                itmDesc,
+                gpPerUnit,
+                riStartDt,
+                riEndDt,
+                stusId,
+                rem,
+                crtDt,
+                crtUserId,
+                updDt,
+                updUserId
+            FROM (
+            <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+                SELECT
+                    #{riBatchId} riBatchId,
+                    #{item.itmCode} itmCode,
+                    #{item.itmCat} itmCat,
+                    #{item.itmDesc} itmDesc,
+                    #{item.gpPerUnit} gpPerUnit,
+                    TO_DATE(#{item.startDt},'DD/MM/YYYY') riStartDt,
+                    TO_DATE(#{item.endDt},'DD/MM/YYYY') riEndDt,
+                    1 stusId,
+                    NULL rem,
+                    SYSDATE crtDt,
+                    #{item.crtUserId} crtUserId,
+                    SYSDATE updDt,
+                    #{item.updUserId} updUserId
+                FROM DUAL
+            </foreach>
+        )
+    </insert>
+
+    <update id="callRedemptionItemsConfirm" statementType="CALLABLE" parameterType="Map">
+        {call SP_REDEMPTN_ITEMS_CONFIRM(#{riBatchId})}
     </update>
 
 </mapper>

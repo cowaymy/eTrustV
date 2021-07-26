@@ -62,4 +62,37 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 		return masterSeq;
 	}
 
+	@Override
+	public int saveCsvRedemptionItems(Map<String, Object> master, List<Map<String, Object>> detailList) {
+
+        int masterSeq = goldPointsMapper.selectNextRedemptionItemsBatchId();
+        master.put("riBatchId", masterSeq);
+        int mResult = goldPointsMapper.insertRedemptionItemsMst(master); // INSERT INTO ICR0004M
+
+        int size = 1000;
+        int page = detailList.size() / size;
+        int start;
+        int end;
+
+        Map<String, Object> rdmItmList = new HashMap<>();
+        rdmItmList.put("riBatchId", masterSeq);
+        for (int i = 0; i <= page; i++) {
+            start = i * size;
+            end = size;
+
+            if(i == page){
+                end = detailList.size();
+            }
+
+            rdmItmList.put("list",
+                detailList.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+            goldPointsMapper.insertRedemptionItemsDtl(rdmItmList); // INSERT INTO ICR0005D
+        }
+
+        //CALL PROCEDURE
+        goldPointsMapper.callRedemptionItemsConfirm(master); // MERGE INTO ICR0006D
+
+		return masterSeq;
+	}
+
 }

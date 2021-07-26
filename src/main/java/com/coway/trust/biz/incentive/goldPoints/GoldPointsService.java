@@ -5,6 +5,8 @@ import java.util.Map;
 
 public interface GoldPointsService {
 
-	  int saveCsvUpload(Map<String, Object> master, List<Map<String, Object>> detailList );
+	int saveCsvUpload(Map<String, Object> master, List<Map<String, Object>> detailList );
+
+	int saveCsvRedemptionItems(Map<String, Object> master, List<Map<String, Object>> detailList);
 
 }
