@@ -56,6 +56,9 @@
 
 	    <li><a href="javascript:fn_userSetting();"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_set.gif" alt="Setting" /></a></li>
 	    <li id="menuLinkHelp"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_help.gif" alt="Help" /></a></li>
+
+	    <li id="menuLinkHelpDesk"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/login_hyp_icon.png"  height="28" alt="Help" /></a></li>
+
 	</ul>
 	</header><!-- header end -->
 
@@ -226,6 +229,11 @@
 		        window.open(DEFAULT_HELP_FILE + "/" + menuCode.substr(0, 3) + "/" + menuCode + ".pdf", 'blank', 'width=1024,height=768');
 			}
 		});
+
+		$("#menuLinkHelpDesk").on("click", function(){
+            window.open("http://trustdesk.coway.com.my:8282/", 'blank');
+        });
+
    });
 
 
