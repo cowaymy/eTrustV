@@ -155,7 +155,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         salesOrderMVO.setAppTypeId( Integer.valueOf(reqPrm.get("appType").toString()) );
         salesOrderMVO.setSrvPacId( Integer.valueOf(reqPrm.get("srvPac").toString()) );
         salesOrderMVO.setCustAddId(Integer.valueOf(custInfo.get("custaddid").toString()));
-        salesOrderMVO.setCustCareCntId(Integer.valueOf(custInfo.get("custcarecntid").toString()));
+        //salesOrderMVO.setCustCareCntId(Integer.valueOf(custInfo.get("custcarecntid").toString()));
         salesOrderMVO.setCustCntId(Integer.valueOf(custInfo.get("custcnctid").toString()));
         salesOrderMVO.setCustId(Integer.valueOf(custInfo.get("custid").toString()));
         salesOrderMVO.setInstPriod(0);
