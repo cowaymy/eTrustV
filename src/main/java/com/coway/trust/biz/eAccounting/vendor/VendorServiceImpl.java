@@ -66,9 +66,9 @@ public class VendorServiceImpl implements VendorService {
     }
 
 	@Override
-	public int checkExistPaymentTermNo(Map<String, Object> params) {
+	public int checkExistPaymentType(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return vendorMapper.checkExistPaymentTermNo(params);
+		return vendorMapper.checkExistPaymentType(params);
 	}
 
 	@Override

@@ -197,7 +197,7 @@ public class VendorManagementController {
 
         ReturnMessage message = new ReturnMessage();
         int regCompNoCount = vendorService.checkExistNo(params.get("regCompNo").toString());
-        int paymentTermCount = vendorService.checkExistPaymentTermNo(params);
+        int paymentTypeCount = vendorService.checkExistPaymentType(params);
         int bankListCount = vendorService.checkExistBankListNo(params);
         int bankAccNoCount = vendorService.checkExistBankAccNo(params);
         String vendorAccId = vendorService.selectExistBankAccNo(params);
@@ -216,7 +216,7 @@ public class VendorManagementController {
             params.put("isReset", isReset);
 
         } else {
-            if (paymentTermCount == 0) {
+            if (paymentTypeCount == 0) {
                 isPass = 0;
                 params.put("isPass", isPass);
                 params.put("isReset", isReset);

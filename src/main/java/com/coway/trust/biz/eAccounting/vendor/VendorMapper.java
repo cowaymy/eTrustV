@@ -47,7 +47,7 @@ public interface VendorMapper {
 
 	int checkExistClmNo(String clmNo);
 
-	int checkExistPaymentTermNo(Map<String, Object> params);
+	int checkExistPaymentType(Map<String, Object> params);
 
 	int checkExistBankListNo(Map<String, Object> params);
 
