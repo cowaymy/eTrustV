@@ -57,7 +57,7 @@
 	    <li><a href="javascript:fn_userSetting();"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_set.gif" alt="Setting" /></a></li>
 	    <li id="menuLinkHelp"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_help.gif" alt="Help" /></a></li>
 
-	    <li id="menuLinkHelpDesk"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/login_hyp_icon.png"  height="28" alt="Help" /></a></li>
+	    <li id="menuLinkHelpDesk"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/login_hyp_icon.png"  height="28" alt="TrustDesk" /></a></li>
 
 	</ul>
 	</header><!-- header end -->
