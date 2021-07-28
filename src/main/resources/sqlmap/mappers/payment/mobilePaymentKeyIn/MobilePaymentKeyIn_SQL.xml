@@ -88,7 +88,28 @@
                             L.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME4,
                             Extent2.PV_MONTH as PV_MTH,
                             Extent2.PV_YEAR as PV_YEAR,
-                            T5.CODE AS APPTYP
+                            T5.CODE AS APPTYP,
+
+                            CASE WHEN Extent1.CARD_NO is null then ''
+                            ELSE SUBSTR (Extent1.CARD_NO, 1, 6) || '******'  || SUBSTR (Extent1.CARD_NO, 13, 4)
+                            END AS CARD_NO,
+                            Extent1.APPROVAL_NO AS APPROVAL_NO,
+                            Extent1.CRC_NAME AS CRC_NAME,
+                            TO_CHAR( TO_DATE( Extent1.TRANSACTION_DATE, 'DD/MM/YYYY' ), 'DD/MM/YYYY') TRANSACTION_DATE,
+                            TO_CHAR( TO_DATE( Extent1.EXPIRY_DATE, 'MM/YY' ), 'MM/YY') EXPIRY_DATE,
+                            T9.CODE_NAME AS CARD_MODE,
+                            T7.ACC_CODE || '' ||  T7.ACC_DESC AS MERCHANT_BANK,
+                            T8.CODE_NAME AS CARD_BRAND,
+
+                            Extent1.CARD_NO AS CARD_NO_RAW,
+                            Extent1.CARD_MODE AS CARD_MODE_RAW,
+                            Extent1.MERCHANT_BANK AS MERCHANT_BANK_RAW,
+                            Extent1.CARD_BRAND AS CARD_BRAND_RAW,
+                            Extent1.TRANSACTION_DATE AS TRANSACTION_DATE_RAW,
+                            Extent1.EXPIRY_DATE AS EXPIRY_DATE_RAW
+
+
+
                FROM PAY0297D Extent1
                LEFT JOIN SAL0001D Extent2 ON Extent1.SALES_ORD_NO = Extent2.SALES_ORD_NO
                LEFT JOIN SAL0029D Extent3 ON Extent2.CUST_ID = Extent3.CUST_ID
@@ -126,6 +147,9 @@
                LEFT JOIN SYS0005M T4 ON T4.BRNCH_ID = T10.USER_BRNCH_ID
                LEFT JOIN SYS0013M T5 ON T5.CODE_ID = Extent2.APP_TYPE_ID AND T5.CODE_MASTER_ID = '10'
                LEFT JOIN SYS0032M T6 ON T6.RESN_ID = Extent1.FAIL_RESN_ID
+               LEFT JOIN SYS0001M T7 ON T7.ACC_ID = Extent1.MERCHANT_BANK
+               LEFT JOIN SYS0013M T8 ON T8.CODE_ID = Extent1.CARD_BRAND AND T8.CODE_MASTER_ID = '21'
+               LEFT JOIN SYS0013M T9 ON T9.CODE_ID = Extent1.CARD_MODE AND T9.CODE_MASTER_ID = '130'
 
                <where>
                  <if test="_reqstStartDt != null and _reqstStartDt != '' ">
@@ -173,6 +197,21 @@
                       #{item}
                      </foreach>
                  </if>
+
+
+                 <if test="cardNoA != null and cardNoA != '' ">
+                   AND SUBSTR (Extent1.CARD_NO, 1, 6) = #{cardNoA}
+                 </if>
+
+                 <if test="cardNoB != null and cardNoB != '' ">
+                   AND SUBSTR (Extent1.CARD_NO, 13, 4) = #{cardNoB}
+                 </if>
+
+                 <if test="apprvNo != null and apprvNo != '' ">
+                   AND Extent1.APPROVAL_NO = #{apprvNo}
+                 </if>
+
+
                </where>
 
     ) A LEFT JOIN (SELECT RENT_SO_ID, SUM(RENT_AMT) AS S FROM PAY0022D GROUP BY RENT_SO_ID) B ON B.RENT_SO_ID = A.ORD_ID
