@@ -147,12 +147,6 @@
         TO_CHAR (SYSDATE, 'yymm') ||
         MAX(CLM_NO) AS CLM_NO
     FROM (
-        SELECT NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
-        FROM FCM0002M
-        WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
-
-        UNION ALL
-
         SELECT NVL (TO_CHAR (MAX (SUBSTR (VENDOR_REQ_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
         FROM FCM0029D
         WHERE SUBSTR (VENDOR_REQ_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
