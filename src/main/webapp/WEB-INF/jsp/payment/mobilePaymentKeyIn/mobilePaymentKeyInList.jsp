@@ -295,6 +295,7 @@
     var isValid = true;
     var isValid_1 = true;
     var isValid_2 = true;
+    var isValid_3 = true;
     var reqList = [];
     var payMode = "";
 
@@ -302,6 +303,8 @@
       if (idx == 0) {
         payMode = row.item.payMode;
         slipNo = row.item.slipNo;
+        cardNo = row.item.cardNo;
+
       } else {
         if (payMode != row.item.payMode) {
           isValid = false;
@@ -318,11 +321,18 @@
         reqList.push(row.item);
       }
 
-      if (row.item.payMode == "5698") {
+      if (row.item.payMode == "5698") { // Cash
         if (FormUtil.isEmpty(row.item.slipNo) == true) {
           isValid_1 = false;
         }
       }
+
+      if (row.item.payMode == "5696") { // CRC
+    	  if (cardNo != row.item.cardNo) {
+              isValid_3 = false;
+            }
+        }
+
     });
 
     if (!isValid) {
@@ -342,6 +352,12 @@
       Common.alert("Check Slip No.");
       return false;
     }
+
+    if (!isValid_3) {
+        //Common.alert("<spring:message code='pay.alert.payStatus'/>");
+        Common.alert("Check Card No.");
+        return false;
+      }
 
     // 초기화
     $("#paymentForm")[0].reset();
