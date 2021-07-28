@@ -353,11 +353,68 @@
     if (payMode == "5696") {
       // 카드 셋팅시 금액 셋팅
       var totPayAmt = 0;
+
+      var approvalNo = "";
+      var crcName = "";
+
+      var expiryDate = "";
+      var expiryDateRaw = "";
+      var transactionDate = "";
+      var transactionDateRaw = "";
+
+      var cardNo = "";
+      var cardNoRaw = "";
+
+      var cardMode = "";
+      var cardModeRaw = "";
+      var cardBrand = "";
+      var cardBrandRaw = "";
+      var issuBankId = "";
+      var bankNm = "";
+      var merchantBank = "";
+      var merchantBankRaw = "";
+
+
       $.each(selectedItems, function(idx, row) {
         totPayAmt += row.item.payAmt;
+
+        approvalNo = row.item.approvalNo;
+        crcName = row.item.crcName;
+        cardNoRaw = row.item.cardNoRaw;
+
+        expiryDateRaw = row.item.expiryDateRaw;
+        transactionDate = row.item.transactionDate;
+
+        cardModeRaw = row.item.cardModeRaw;
+        cardBrandRaw = row.item.cardBrandRaw;
+        issuBankId = row.item.issuBankId;
+        merchantBankRaw = row.item.merchantBankRaw;
+
+/*      console.log ("cardModeRaw:" + cardModeRaw);
+        console.log ("cardBrandRaw:" + cardBrandRaw);
+        console.log ("issuBankId:" + issuBankId);
+        console.log ("merchantBankRaw:" + merchantBankRaw); */
+
       });
 
+      $("#keyInApprovalNo").val(approvalNo)
+      $("#keyInHolderNm").val(crcName)
+      $("#keyInCardNo1").val(cardNoRaw.substr(0, 4))
+      $("#keyInCardNo2").val(cardNoRaw.substr(4, 4))
+      $("#keyInCardNo3").val(cardNoRaw.substr(8, 4))
+      $("#keyInCardNo4").val(cardNoRaw.substr(12, 4))
+
+      $("#keyInCardMode").val(cardModeRaw)
+      $("#keyInCrcType").val(cardBrandRaw)
+      $("#keyInIssueBank").val(issuBankId)
+      $("#keyInMerchantBank").val(merchantBankRaw)
+
+      $("#keyInTrDate").val(transactionDate)
+      $("#keyInExpiryMonth").val(expiryDateRaw.substr(0, 2))
+      $("#keyInExpiryYear").val(expiryDateRaw.substr(2, 2))
+
       $("#keyInAmount").val(totPayAmt)
+
       $("#PopUp2_wrap").show(); // Update [ Card ] Key-in
     } else {
       $("#PopUp1_wrap").show(); // Update [ Cash, Cheque, Bank-In Slip ] Key-in
@@ -666,7 +723,59 @@
         }, {
           dataField : "crntLdg",
           visible : false
-        }]
+        }, {
+            dataField : "cardNo",
+            headerText : '<spring:message code="pay.head.crc.cardNo" />',
+            width : 160,
+            editable : false,
+            style : "aui-grid-user-custom-left"
+         }, {
+              dataField : "approvalNo",
+              headerText : '<spring:message code="sal.title.text.apprvNo" />',
+              width : 160,
+              editable : false,
+              style : "aui-grid-user-custom-left"
+          }, {
+              dataField : "crcName",
+              headerText : '<spring:message code="sal.text.nameOnCard" />',
+              width : 160,
+              editable : false,
+              style : "aui-grid-user-custom-left"
+          }, {
+              dataField : "transactionDate",
+              headerText : 'CRC Transaction Date',
+              width : 160,
+              editable : false,
+              style : "aui-grid-user-custom-left"
+          }, {
+              dataField : "expiryDate",
+              headerText : 'Card Expiry Date',
+              width : 160,
+              editable : false,
+              style : "aui-grid-user-custom-left"
+          }, {
+              dataField : "cardMode",
+              headerText : 'Card Mode',
+              width : 160,
+              editable : false,
+              style : "aui-grid-user-custom-left"
+          }, {
+              dataField : "merchantBank",
+              headerText : 'CRC Merchant Bank',
+              width : 160,
+              editable : false,
+              style : "aui-grid-user-custom-left"
+          }, {
+              dataField : "cardBrand",
+              headerText : 'CRC Brand',
+              width : 160,
+              editable : false,
+              style : "aui-grid-user-custom-left"
+          }, {
+              dataField : "cardNoRaw",
+              visible : false
+          }
+        ]
     // 그리드 속성 설정
     var gridPros = { // 페이징 사용
       usePaging : true,
@@ -748,6 +857,9 @@
   doGetCombo('/common/selectCodeList.do', '130', '', 'keyInCardMode', 'S', ''); //CreditCardMode 생성
   doGetCombo('/common/selectCodeList.do', '21', '', 'keyInCrcType', 'S', ''); //Credit Card Type 생성
   doGetCombo('/common/selectCodeList.do', '49', '','cmbRegion', 'M' , 'f_multiCombo'); //region
+
+  doGetCombo('/common/getAccountList.do', '', '', 'keyInMerchantBank', 'S', '');
+  doGetCombo('/common/getIssuedBankList.do', '', '', 'keyInIssueBank', 'S', '');
 
   // 조회조건 combo box
   function f_multiCombo() {
@@ -907,6 +1019,7 @@
       return;
     } else {
       var crcType = $("#keyInCrcType").val();
+
       var cardNo1st1Val = $("#keyInCardNo1").val().substr(0, 1);
       var cardNo1st2Val = $("#keyInCardNo1").val().substr(0, 2);
       var cardNo1st4Val = $("#keyInCardNo1").val().substr(0, 4);
@@ -1531,6 +1644,23 @@
               <input type="text" title="<spring:message code="pay.title.memberCode" />" id="memberCode" name="memberCode" class="w100p" value="" />
             </td>
           </tr>
+
+
+           <tr>
+            <th scope="row"><spring:message code="sal.title.text.apprvNo" /></th>
+            <td>
+              <input type="text" title="Apprv No" id=apprvNo name="apprvNo" class="w100p" />
+            </td>
+            <th scope="row"><spring:message code="pay.head.crc.cardNo" /></th>
+            <td>
+                    <p class="short"><input type="text" title="First 6 Card No." id="cardNoA" name="cardNoA" size="10" maxlength="6" class="wAuto" placeholder="First 6 no."/></p> <span>**-****-</span>
+                    <p class="short"><input type="text" title="First 4 Card No." id="cardNoB" name="cardNoB" size="10" maxlength="4" class="wAuto" placeholder="Last 4 no."/></p>
+
+            </td>
+            <th></th>
+            <td></td>
+          </tr>
+
           <tr>
             <th scope="row"><spring:message code="sal.text.orgCode" /></th>
             <td>
@@ -1674,7 +1804,7 @@
                 <tr>
                   <th scope="row">Card Type<span class="must">*</span></th>
                   <td>
-                    <select id="keyCrcCardType" name="keyCrcCardType" class="w100p">
+                    <select id="keyCrcCardType" name="keyCrcCardType" class="w100p" disabled>
                       <option value="1241">Credit Card</option>
                       <option value="1240">Debit Card</option>
                     </select>
@@ -1687,52 +1817,51 @@
                 <tr>
                   <th scope="row">Card Mode<span class="must">*</span></th>
                   <td>
-                    <select id="keyInCardMode" name="keyInCardMode" class="w100p" onChange="javascript:fn_changeCrcMode();">
-                    </select>
+                    <select id="keyInCardMode" name="keyInCardMode" class="w100p" onChange="javascript:fn_changeCrcMode();"  disabled></select>
                   </td>
                   <th scope="row">Card Brand<span class="must">*</span></th>
                   <td>
-                    <select id="keyInCrcType" name="keyInCrcType" class="w100p"></select>
+                    <select id="keyInCrcType" name="keyInCrcType" class="w100p" disabled></select>
                   </td>
                 </tr>
                 <tr>
                   <th scope="row">Card No<span class="must">*</span></th>
                   <td>
-                    <p class="short"><input type="text" id="keyInCardNo1" name="keyInCardNo1" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);' onChange="javascript:fn_changeCardNo1();" /></p> <span>-</span>
-                    <p class="short"><input type="text" id="keyInCardNo2" name="keyInCardNo2" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);' /></p> <span>-</span>
-                    <p class="short"><input type="text" id="keyInCardNo3" name="keyInCardNo3" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);' /></p> <span>-</span>
-                    <p class="short"><input type="text" id="keyInCardNo4" name="keyInCardNo4" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);' /></p>
+                    <p class="short"><input type="text" id="keyInCardNo1" name="keyInCardNo1" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);' onChange="javascript:fn_changeCardNo1();"  readonly="readonly"/></p> <span>-</span>
+                    <p class="short"><input type="text" id="keyInCardNo2" name="keyInCardNo2" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);'  readonly="readonly" /></p> <span>-</span>
+                    <p class="short"><input type="text" id="keyInCardNo3" name="keyInCardNo3" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);'  readonly="readonly" /></p> <span>-</span>
+                    <p class="short"><input type="text" id="keyInCardNo4" name="keyInCardNo4" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);'  readonly="readonly" /></p>
                   </td>
                   <th scope="row">Approval No.<span class="must">*</span></th>
                   <td>
-                    <input type="text" id="keyInApprovalNo" name="keyInApprovalNo" class="w100p" maxlength="6" placeholder="Approval No." />
+                    <input type="text" id="keyInApprovalNo" name="keyInApprovalNo" class="w100p" maxlength="6" placeholder="Approval No."  readonly="readonly" />
                   </td>
                 </tr>
                 <tr>
                   <th scope="row">Credit Card Holder Name</th>
                   <td colspan="3">
-                    <input type="text" id="keyInHolderNm" name="keyInHolderNm" class="w100p" placeholder="Credit Card Holder Name" />
+                    <input type="text" id="keyInHolderNm" name="keyInHolderNm" class="w100p" placeholder="Credit Card Holder Name"  readonly="readonly" />
                   </td>
                 </tr>
                 <tr>
                   <th scope="row">Issue Bank<span class="must">*</span></th>
                   <td>
-                    <select id="keyInIssueBank" name="keyInIssueBank" class="w100p"></select>
+                    <select id="keyInIssueBank" name="keyInIssueBank" class="w100p"  disabled></select>
                   </td>
                   <th scope="row">Merchant Bank<span class="must">*</span></th>
                   <td>
-                    <select id="keyInMerchantBank" name="keyInMerchantBank" class="w100p" onChange="javascript:fn_changeMerchantBank();"></select>
+                    <select id="keyInMerchantBank" name="keyInMerchantBank" class="w100p" onChange="javascript:fn_changeMerchantBank();"  disabled ></select>
                   </td>
                 </tr>
                 <tr>
                   <th scope="row">Expiry Date(mm/yy)<span class="must">*</span></th>
                   <td>
-                    <p class="short"><input type="text" id="keyInExpiryMonth" name="keyInExpiryMonth" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p> <span>/</span>
-                    <p class="short"><input type="text" id="keyInExpiryYear" name="keyInExpiryYear" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+                    <p class="short"><input type="text" id="keyInExpiryMonth" name="keyInExpiryMonth" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)'  readonly="readonly"/></p> <span>/</span>
+                    <p class="short"><input type="text" id="keyInExpiryYear" name="keyInExpiryYear" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)'  readonly="readonly"/></p>
                   </td>
                   <th scope="row">Transaction Date<span class="must">*</span></th>
                   <td>
-                    <input id="keyInTrDate" name="keyInTrDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                    <input id="keyInTrDate" name="keyInTrDate" type="text" title="" placeholder="" class="j_date w100p"  disabled />
                   </td>
                 </tr>
                 <tr>
