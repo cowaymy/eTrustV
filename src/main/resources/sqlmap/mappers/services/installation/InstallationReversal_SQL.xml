@@ -1412,7 +1412,7 @@ AND ROWNUM                    <= 1
      <![CDATA[
         update SAL0090D
 		   set SRV_STUS_ID = 1
-		 where SRV_CONFIG_ID = (select SRV_CONFIG_ID from SAL0005D where SO_EXCHG_ID = #{esalesOrdId}
+		 where SRV_CONFIG_ID = (select SRV_CONFIG_ID from SAL0005D where SO_EXCHG_ID = #{esalesOrdId})
         ]]>
     </update>
 
@@ -1420,7 +1420,7 @@ AND ROWNUM                    <= 1
      <![CDATA[
         update SAL0089D
            set SRV_SETT_STUS_ID = 1
-         where SRV_SETT_ID = (select SRV_SETT_ID from SAL0008D where SO_EXCHG_ID = #{esalesOrdId}
+         where SRV_SETT_ID = (select SRV_SETT_ID from SAL0008D where SO_EXCHG_ID = #{esalesOrdId})
         ]]>
     </update>
 
@@ -1428,7 +1428,7 @@ AND ROWNUM                    <= 1
      <![CDATA[
         update SAL0088D
            set SRV_PRD_STUS_ID = 1
-         where SRV_PRD_ID = (select SRV_PRD_ID from SAL0007D where SO_EXCHG_ID = #{esalesOrdId}
+         where SRV_PRD_ID = (select SRV_PRD_ID from SAL0007D where SO_EXCHG_ID = #{esalesOrdId})
         ]]>
     </update>
 
@@ -1436,7 +1436,7 @@ AND ROWNUM                    <= 1
      <![CDATA[
         update SAL0087D
              set SRV_FILTER_STUS_ID = 1
-         where SRV_FILTER_ID = (select SRV_FILTER_ID from SAL0006D where SO_EXCHG_ID = #{esalesOrdId}
+         where SRV_FILTER_ID = (select SRV_FILTER_ID from SAL0006D where SO_EXCHG_ID = #{esalesOrdId})
         ]]>
     </update>
 
