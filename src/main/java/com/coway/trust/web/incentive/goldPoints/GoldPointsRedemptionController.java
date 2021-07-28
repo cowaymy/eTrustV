@@ -30,6 +30,7 @@ import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.csv.CsvReadComponent;
+import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -114,6 +115,24 @@ public class GoldPointsRedemptionController {
 
 	    return ResponseEntity.ok(message);
 
+	}
+
+	@RequestMapping(value = "/newRedemptionPop.do")
+	public String newRedemptionPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+		//params.put("userId", sessionVO.getUserId());  	//temporarily comment out for testing
+		params.put("userId", 89940);		//temporarily set for testing
+
+		String memCode = goldPointsService.getOrgDtls(params);
+		params.put("memCode", memCode);
+
+		EgovMap rBasicInfo = goldPointsService.selectRedemptionBasicInfo(params);
+		List<EgovMap> ptsExpiryList = goldPointsService.selectPointsExpiryList(params);
+
+		model.put("rBasicInfo", rBasicInfo);
+		model.put("ptsExpiryList", new Gson().toJson(ptsExpiryList));
+
+		return "incentive/goldPoints/newRedemptionPop";
 	}
 
 

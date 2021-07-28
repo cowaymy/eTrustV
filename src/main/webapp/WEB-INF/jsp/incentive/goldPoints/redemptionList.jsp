@@ -108,29 +108,17 @@
     function fn_search() {
         console.log("fn_search");
 
-        if ("${SESSION_INFO.userTypeId}" == "4" && $("#memCode").val() == "${memCode}"){
-            $("#staffOwnPurch").val("true");
-        } else {
-            $("#staffOwnPurch").val("false");
-        }
-
-        if ("${SESSION_INFO.userTypeId}" == "4" && $("#memCode").val().startsWith("P")
-            && $("#memCode").val() != "${memCode}") {
-            Common.alert("Please enter your own staff code.");
-            return false;
-        } else if (!FormUtil.isNotEmpty($("#orgCode").val()) && $("#staffOwnPurch").val() != "true") {
-            Common.alert("Organization Code must not be empty!");
-            return false;
-        }
-
-        Common.ajax("GET", "/incentive/goldPoints/searchPointsSummary.do", $("#searchForm").serialize(), function(result) {
-           console.log(result);
+        Common.ajax("GET", "/incentive/goldPoints/searchRedemptionList.do", $("#searchForm").serialize(), function(result) {
            AUIGrid.setGridData(gridID, result);
         });
     }
 
     function fn_addItems() {
         Common.popupDiv("/incentive/goldPoints/uploadRedemptionItemsPop.do", null, null, true, "uploadRedemptionItemsPop");
+    }
+
+    function fn_newRedemption() {
+        Common.popupDiv("/incentive/goldPoints/newRedemptionPop.do", null, null, true, "newRedemptionPop");
     }
 
 </script>
@@ -151,7 +139,7 @@
             <li><p class="btn_blue"><a href="javascript:fn_addItems();">Add Items</a></p></li>
             <li><p class="btn_blue"><a href="#">Update Status</a></p></li>
             <li><p class="btn_blue"><a href="#">Cancel Request</a></p></li>
-            <li><p class="btn_blue"><a href="#">New</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_newRedemption();">New</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_search();">Search</a></p></li>
         </ul>
     </aside>

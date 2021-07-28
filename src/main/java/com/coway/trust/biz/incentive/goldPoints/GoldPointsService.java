@@ -17,4 +17,8 @@ public interface GoldPointsService {
 
 	List<EgovMap> selectPointsExpiryList(Map<String, Object> params);
 
+	EgovMap selectRedemptionBasicInfo(Map<String, Object> params);
+
+	String getOrgDtls(Map<String, Object> params);
+
 }
