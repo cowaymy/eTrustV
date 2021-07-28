@@ -183,11 +183,11 @@
                     </td>
                     <th scope="row">Member Code</th>
                     <td>
-                        <input text="text" title="Member Code" placeholder="" class="w100p" id="memCode" name="memCode" />
+                       <input type="text" title="Member Code" placeholder="" class="w100p" id="memCode" name="memCode" />
                     </td>
                     <th scope="row">Member Name</th>
                     <td>
-                        <input text="text" title="Member Name" placeholder="" class="w100p" id="memName" name="memName" />
+                        <input type="text" title="Member Name" placeholder="" class="w100p" id="memName" name="memName" />
                     </td>
                     <th scope="row">IC Number</th>
                     <td>
