@@ -8,6 +8,10 @@
     $(document).ready(function() {
         createAUIGrid();
 
+        AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
+            fn_setDetail(gridID, event.rowIndex);
+        });
+
         if("${SESSION_INFO.userTypeId}" != "4") {
             if("${SESSION_INFO.memberLevel}" == "1") {
                 $("#orgCode").val("${orgCode}");
@@ -41,10 +45,15 @@
                 $("#memCode").attr("readonly", true);
             }
         }
+
     });
 
     function createAUIGrid() {
         var columnLayout = [{
+        	dataField : "gpItmId",
+            headerText : "Gold Points ID",
+            visible : false
+        }, {
             dataField : "memCode",
             headerText : "Member Code",
             width : "10%"
@@ -57,11 +66,11 @@
             headerText : "Status",
             width : "10%"
         }, {
-            dataField : "memType",
+            dataField : "positionDesc",
             headerText : "Position Desc",
             width : "20%"
         }, {
-            dataField : "goldPtsAvail",
+            dataField : "totBalPts",
             headerText : "Gold Points Available",
             width : "30%"
         }];
@@ -78,23 +87,6 @@
     }
 
     function fn_search() {
-        console.log("fn_search");
-
-        if ("${SESSION_INFO.userTypeId}" == "4" && $("#memCode").val() == "${memCode}"){
-            $("#staffOwnPurch").val("true");
-        } else {
-            $("#staffOwnPurch").val("false");
-        }
-
-        if ("${SESSION_INFO.userTypeId}" == "4" && $("#memCode").val().startsWith("P")
-            && $("#memCode").val() != "${memCode}") {
-            Common.alert("Please enter your own staff code.");
-            return false;
-        } else if (!FormUtil.isNotEmpty($("#orgCode").val()) && $("#staffOwnPurch").val() != "true") {
-            Common.alert("Organization Code must not be empty!");
-            return false;
-        }
-
         Common.ajax("GET", "/incentive/goldPoints/searchPointsSummary.do", $("#searchForm").serialize(), function(result) {
            console.log(result);
            AUIGrid.setGridData(gridID, result);
@@ -103,6 +95,10 @@
 
     function fn_creditPoints() {
         Common.popupDiv("/incentive/goldPoints/uploadPointsPop.do", null, null, true, "uploadPointsPop");
+    }
+
+    function fn_setDetail(gridID, rowIdx){
+        Common.popupDiv("/incentive/goldPoints/viewPointsDetailPop.do", { memCode : AUIGrid.getCellValue(gridID, rowIdx, "memCode") }, null, true, "viewPointsDetailPop");
     }
 
 </script>

@@ -3,10 +3,18 @@ package com.coway.trust.biz.incentive.goldPoints;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
 public interface GoldPointsService {
 
 	int saveCsvUpload(Map<String, Object> master, List<Map<String, Object>> detailList );
 
 	int saveCsvRedemptionItems(Map<String, Object> master, List<Map<String, Object>> detailList);
+
+	List<EgovMap> selectPointsSummaryList(Map<String, Object> params);
+
+	EgovMap selectTransactionHistory(Map<String, Object> params);
+
+	List<EgovMap> selectPointsExpiryList(Map<String, Object> params);
 
 }

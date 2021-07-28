@@ -162,4 +162,55 @@
         {call SP_REDEMPTN_ITEMS_CONFIRM(#{riBatchId})}
     </update>
 
+    <select id="selectPointsSummaryList" parameterType="Map" resultType="egovMap">
+        SELECT * FROM (
+            SELECT
+                I.MEM_CODE,
+                I.MEM_NAME,
+                T.NAME STATUS,
+                S.CODE_NAME POSITION_DESC,
+                SUM(I.GP_BAL_PTS) TOT_BAL_PTS
+            FROM ICR0003D I
+            JOIN ORG0001D O ON O.MEM_CODE = I.MEM_CODE
+            JOIN SYS0013M S ON S.CODE_ID = O.MEM_TYPE
+            JOIN SYS0038M T ON T.STUS_CODE_ID =  O.STUS
+            WHERE 1=1
+
+            <if test=" null != memCode and '' != memCode">
+                AND I.MEM_CODE = #{memCode}
+            </if>
+
+            AND S.CODE_MASTER_ID = 1
+            GROUP BY I.MEM_CODE, I.MEM_NAME, T.NAME, S.CODE_NAME
+        )
+    </select>
+
+    <select id="selectTransactionHistory" parameterType="Map" resultType="egovMap">
+        SELECT * FROM (
+            SELECT
+                I.MEM_CODE,
+                I.MEM_NAME,
+                T.NAME STATUS,
+                S.CODE_NAME POSITION_DESC,
+                SUM(I.GP_BAL_PTS) TOT_BAL_PTS
+            FROM ICR0003D I
+            JOIN ORG0001D O ON O.MEM_CODE = I.MEM_CODE
+            JOIN SYS0013M S ON S.CODE_ID = O.MEM_TYPE
+            JOIN SYS0038M T ON T.STUS_CODE_ID =  O.STUS
+            WHERE S.CODE_MASTER_ID = 1
+            AND I.MEM_CODE = #{memCode}
+            GROUP BY I.MEM_CODE, I.MEM_NAME, T.NAME, S.CODE_NAME
+        )
+    </select>
+
+    <select id="selectPointsExpiryList" parameterType="Map" resultType="egovMap">
+        SELECT
+            GP_DESC,
+            GP_UPL_PTS,
+            TO_CHAR(GP_END_DT, 'DD-MM-YYYY') GP_END_DT
+        FROM ICR0003D
+        WHERE MEM_CODE = #{memCode}
+        ORDER BY GP_ITM_ID
+    </select>
+
 </mapper>

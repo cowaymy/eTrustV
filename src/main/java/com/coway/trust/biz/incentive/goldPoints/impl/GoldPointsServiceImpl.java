@@ -17,6 +17,7 @@ import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.incentive.goldPoints.GoldPointsService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("goldPointsService")
 public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements GoldPointsService {
@@ -93,6 +94,21 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
         goldPointsMapper.callRedemptionItemsConfirm(master); // MERGE INTO ICR0006D
 
 		return masterSeq;
+	}
+
+	@Override
+	public List<EgovMap> selectPointsSummaryList(Map<String, Object> params) {
+		return goldPointsMapper.selectPointsSummaryList(params);
+	}
+
+	@Override
+	public EgovMap selectTransactionHistory(Map<String, Object> params) {
+		return goldPointsMapper.selectTransactionHistory(params);
+	}
+
+	@Override
+	public List<EgovMap> selectPointsExpiryList(Map<String, Object> params) {
+		return goldPointsMapper.selectPointsExpiryList(params);
 	}
 
 }

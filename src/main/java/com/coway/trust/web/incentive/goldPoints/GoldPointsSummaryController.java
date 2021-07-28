@@ -31,6 +31,7 @@ import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.csv.CsvReadComponent;
+import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -122,6 +123,23 @@ public class GoldPointsSummaryController {
 	    }
 
 	    return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/searchPointsSummary.do")
+	public ResponseEntity<List<EgovMap>> searchPointsSummary(@RequestParam Map<String, Object> params) {
+		List<EgovMap> pointsSummaryList = goldPointsService.selectPointsSummaryList(params);
+		return ResponseEntity.ok(pointsSummaryList);
+	}
+
+	@RequestMapping(value = "/viewPointsDetailPop.do")
+	public String viewPointsDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		List<EgovMap> ptsExpiryList = goldPointsService.selectPointsExpiryList(params);
+		EgovMap trxHistory = goldPointsService.selectTransactionHistory(params);
+		model.put("ptsExpiryList", new Gson().toJson(ptsExpiryList));
+		model.put("trxHistory", trxHistory);
+
+		return "incentive/goldPoints/pointsDetailPop";
 	}
 
 }
