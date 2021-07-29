@@ -87,7 +87,7 @@
     </if>
 
      <if test="ctgryList != null and ctgryList != '' ">
-        and C.STK_CTGRY_ID in
+        and C.STK_TYPE_ID in
         <foreach item="item" collection="ctgryList" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>

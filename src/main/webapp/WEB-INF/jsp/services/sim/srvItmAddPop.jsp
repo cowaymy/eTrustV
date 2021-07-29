@@ -36,6 +36,8 @@
           ind = '420';
         } else if ($("#cboMovTyp").val() == 1) {
           ind = '421';
+        } else {
+          ind = '';
         }
         doGetCombo('/services/sim/getMovDtl.do', ind, '', 'cboMovDtl', 'S', '');
       });
@@ -175,7 +177,7 @@
             dataField : "memCode",
             headerText : "<spring:message code='sal.title.memberCode'/>",
             editable : false,
-            width : 100
+            width : 200
           },
             {
             dataField : "refNo",
@@ -230,7 +232,7 @@
     var movDtl = $("#cboMovDtl").val();
     var qty = $("#txtQty").val();
     var rmk = $("#txtRmk").val();
-    var memCode = $("#member").val();
+    var memCode = $("#member option:selected").text();
     var refNo = $("#txtDocNo").val();
 
     var msg = "";
@@ -326,6 +328,11 @@
     doGetCombo('/services/sim/getMovDtl.do', '', '', 'cboMovDtl', 'S', '');
     $("#txtQty").val("");
     $("#txtRmk").val("");
+
+    $("#cmgroup").attr("disabled",true);
+    $("#member").attr("disabled",true);
+    $("#cmgroup").val("");
+    $("#member").val("");
   }
 
   function fn_doSave() {
@@ -424,6 +431,13 @@
   $(function(){
       $('#cboMovTyp').change(function(){
           //fn_checkQty();
+          if($('#cboMovTyp').val() == ""){
+        	  $('#cmgroup').attr("disabled",true);
+              $('#member').attr("disabled",true);
+
+              $('#cmgroup').val("");
+              $('#member').val("");
+          }
       });
       $('#cboMovDtl').change(function(){
          if(
@@ -435,6 +449,9 @@
          }else{
         	 $('#cmgroup').attr("disabled",true);
              $('#member').attr("disabled",true);
+
+             $('#cmgroup').val("");
+             $('#member').val("");
          }
 
       });

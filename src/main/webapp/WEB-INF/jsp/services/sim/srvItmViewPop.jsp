@@ -24,42 +24,45 @@
   var seqNo,crtDt,currentDt,crtDtString,currentDtString,movTypCde,movDtlCde,deptCode,memId,bal,qty;
 
   $(document).ready(
+
     function() {
       srvItmMgmtGrid(); // CREATE GRID
       getSrvItm(); // GET RECORD FOR GRID
 
       // Double click grid item to edit
-      AUIGrid.bind(myGridIDPop, "cellDoubleClick", function(event) {
+      if(funcUserDefine8 == "Y"){
+          AUIGrid.bind(myGridIDPop, "cellDoubleClick", function(event) {
 
-      Common.ajaxSync("GET", "/services/sim/searchSrvItmLst.do", {cboBch : '${BR}', cboItm : '${ITM_CDE}'}, function(result) {
-        bal = parseInt(result[0].qty);
-      });
+          Common.ajaxSync("GET", "/services/sim/searchSrvItmLst.do", {cboBch : '${BR}', cboItm : '${ITM_CDE}'}, function(result) {
+            bal = parseInt(result[0].qty);
+          });
 
-          crtDt = new Date(AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "crtDt"));
-          currentDt = new Date();
-          crtDtString = crtDt.getFullYear().toString()  + crtDt.getMonth().toString();
-          currentDtString = currentDt.getFullYear().toString()  + currentDt.getMonth().toString();
+              crtDt = new Date(AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "crtDt"));
+              currentDt = new Date();
+              crtDtString = crtDt.getFullYear().toString()  + crtDt.getMonth().toString();
+              currentDtString = currentDt.getFullYear().toString()  + currentDt.getMonth().toString();
 
-          movTypCde = AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "movTypCde");
-          movDtlCde = AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "movDtlCde");
+              movTypCde = AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "movTypCde");
+              movDtlCde = AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "movDtlCde");
 
-          deptCode = AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "deptCode");
-          qty = parseInt(AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "qty"))
-          memId = '';
+              deptCode = AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "deptCode");
+              qty = parseInt(AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "qty"))
+              memId = '';
 
-          if(AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "memId") != undefined)
-        	  memId = AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "memId").toString();
+              if(AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "memId") != undefined)
+            	  memId = AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "memId").toString();
 
-	      $('#txtTrxDt').val(AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "trxDt"));
-	      $('#txtDocNo').val(AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "refNo"));
-	      $("#txtBal").val(bal);
-	      $('#txtQty').val(qty);
-	      $('#txtRmk').val(AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "rmk"));
+    	      $('#txtTrxDt').val(AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "trxDt"));
+    	      $('#txtDocNo').val(AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "refNo"));
+    	      $("#txtBal").val(bal);
+    	      $('#txtQty').val(qty);
+    	      $('#txtRmk').val(AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "rmk"));
 
-	      seqNo = AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "seqNo");
+    	      seqNo = AUIGrid.getCellValue(myGridIDPop, event.rowIndex, "seqNo");
 
-	      fn_validEdit();
-      });
+    	      fn_validEdit();
+          });
+      }
     });
 
   function srvItmMgmtGrid() {

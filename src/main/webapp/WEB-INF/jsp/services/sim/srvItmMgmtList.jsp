@@ -19,6 +19,8 @@
 
   var categoryData =  [{"codeId": "63","codeName": "Spare Part"},{"codeId": "2687","codeName": "Item Bank"}];
 
+  var funcUserDefine8= '${PAGE_AUTH.funcUserDefine8}';
+
   $(document).ready( function() {
     srvItmMgmtGrid(); // GRID VIEW COLUMN CONFIGURATION
     // SET CBO LISING HERE --
