@@ -1086,7 +1086,8 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
           callEntry.put("TypeID", 258);
           callEntry.put("StatusCodeID", 1);
           callEntry.put("ResultID", 0);
-          callEntry.put("DocID", salesOrderID);
+          //callEntry.put("DocID", salesOrderID);
+          callEntry.put("DocID", orderExchangeTypeByInstallEntryID.get("docId")); // Hui Ding - change to use DOC_ID as this is the linkage to SAL0004D, 2021-07-29
           callEntry.put("userId", userId);
           callEntry.put("CallDate", nextCallDate);
           callEntry.put("IsWaitForCancel", 1);
@@ -2565,7 +2566,8 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 	    		callEntry.put("TypeID", 258);
 	    		callEntry.put("StatusCodeID", 1);
 	    		callEntry.put("ResultID", 0);
-	    		callEntry.put("DocID", salesOrderID);
+	    		//callEntry.put("DocID", salesOrderID);
+	    		callEntry.put("DocID",  params.get("docId"));
 	    		callEntry.put("userId", params.get("userId"));
 	    		callEntry.put("CallDate", nextCallDate);
 	    		callEntry.put("IsWaitForCancel", 1);
@@ -2603,6 +2605,9 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 	    		salesorderLog.put("CallEntryId", CallEntryId);
 
 	    		addSalesorderLog(salesorderLog);
+
+
+
 
 
 	    		if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68){
@@ -3007,7 +3012,8 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 	    		callEntry.put("TypeID", 258);
 	    		callEntry.put("StatusCodeID", 1);
 	    		callEntry.put("ResultID", 0);
-	    		callEntry.put("DocID", salesOrderID);
+	    		//callEntry.put("DocID", salesOrderID);
+	    		callEntry.put("DocID", orderExchangeTypeByInstallEntryID.get("docId")); // Hui Ding - change to use DOC_ID as this is the linkage to SAL0004D, 2021-07-29
 	    		callEntry.put("userId", params.get("userId"));
 	    		callEntry.put("CallDate", nextCallDate);
 	    		callEntry.put("IsWaitForCancel", 1);
