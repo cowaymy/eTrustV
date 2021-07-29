@@ -295,7 +295,14 @@
     var isValid = true;
     var isValid_1 = true;
     var isValid_2 = true;
-    var isValid_3 = true;
+
+    var isValid_cardNo = true;
+    var isValid_cardBrand = true;
+    var isValid_cardMode = true;
+    var isValid_crcName = true;
+    var isValid_expiryDate = true;
+    var isValid_transactionDate = true;
+
     var reqList = [];
     var payMode = "";
 
@@ -303,7 +310,13 @@
       if (idx == 0) {
         payMode = row.item.payMode;
         slipNo = row.item.slipNo;
+
         cardNo = row.item.cardNo;
+        cardBrand = row.item.cardBrand;
+        cardMode = row.item.cardMode;
+        crcName = row.item.crcName;
+        expiryDate = row.item.expiryDate;
+        transactionDate = row.item.expiryDate;
 
       } else {
         if (payMode != row.item.payMode) {
@@ -329,7 +342,22 @@
 
       if (row.item.payMode == "5696") { // CRC
     	  if (cardNo != row.item.cardNo) {
-              isValid_3 = false;
+              isValid_cardNo = false;
+            }
+    	  if (cardBrand != row.item.cardBrand) {
+              isValid_cardBrand = false;
+            }
+    	  if (cardMode != row.item.cardMode) {
+              isValid_cardMode = false;
+            }
+    	  if (crcName != row.item.crcName) {
+              isValid_crcName = false;
+            }
+    	  if (expiryDate != row.item.expiryDate) {
+              isValid_expiryDate = false;
+            }
+    	  if (transactionDate != row.item.transactionDate) {
+              isValid_transactionDate = false;
             }
         }
 
@@ -353,9 +381,33 @@
       return false;
     }
 
-    if (!isValid_3) {
-        //Common.alert("<spring:message code='pay.alert.payStatus'/>");
+    if (!isValid_cardNo) {
         Common.alert("Check Card No.");
+        return false;
+      }
+
+    if (!isValid_cardBrand) {
+        Common.alert("Check Card Brand.");
+        return false;
+      }
+
+    if (!isValid_cardMode) {
+        Common.alert("Check Card Mode.");
+        return false;
+      }
+
+    if (!isValid_crcName) {
+        Common.alert("Check Card Name.");
+        return false;
+      }
+
+    if (!isValid_expiryDate) {
+        Common.alert("Check Card Expiry Date.");
+        return false;
+      }
+
+    if (!isValid_transactionDate) {
+        Common.alert("Check Transaction Date.");
         return false;
       }
 
