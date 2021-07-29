@@ -302,6 +302,7 @@
     var isValid_crcName = true;
     var isValid_expiryDate = true;
     var isValid_transactionDate = true;
+    var isValid_approvalNo = true;
 
     var reqList = [];
     var payMode = "";
@@ -317,6 +318,7 @@
         crcName = row.item.crcName;
         expiryDate = row.item.expiryDate;
         transactionDate = row.item.expiryDate;
+        approvalNo = row.item.approvalNo;
 
       } else {
         if (payMode != row.item.payMode) {
@@ -358,6 +360,9 @@
             }
     	  if (transactionDate != row.item.transactionDate) {
               isValid_transactionDate = false;
+            }
+    	  if (approvalNo != row.item.approvalNo) {
+              isValid_approvalNo = false;
             }
         }
 
@@ -408,6 +413,11 @@
 
     if (!isValid_transactionDate) {
         Common.alert("Check Transaction Date.");
+        return false;
+      }
+
+    if (!isValid_approvalNo) {
+        Common.alert("Check Approval No.");
         return false;
       }
 
