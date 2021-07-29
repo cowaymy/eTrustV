@@ -317,7 +317,7 @@
         cardMode = row.item.cardMode;
         crcName = row.item.crcName;
         expiryDate = row.item.expiryDate;
-        transactionDate = row.item.expiryDate;
+        transactionDate = row.item.transactionDate;
         approvalNo = row.item.approvalNo;
 
       } else {
