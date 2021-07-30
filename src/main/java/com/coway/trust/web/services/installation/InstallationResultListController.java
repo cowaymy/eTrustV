@@ -830,12 +830,14 @@ public class InstallationResultListController {
             		  // change format from
             		  String appntDtFormatted = null;
 
-            		  if (installResult.get("appntDt") != null){
+            		  logger.info("### appointment date before: " + installResult.get("appntDt"));
+
+            		  /*if (installResult.get("appntDt") != null){
             			  Date appntDtOri = new SimpleDateFormat("yyyy-MM-dd").parse(installResult.get("appntDt").toString());
             			  appntDtFormatted = CommonUtils.getFormattedString("dd/MM/yyyy", appntDtOri);
             			  installResult.put("appntDt", appntDtFormatted); // format date (in string) to dd/MM/yyyy format
-            		  }
-            		  logger.info("### appointment date : " + appntDtFormatted);
+            		  }*/
+            		  logger.info("### appointment date after: " + installResult.get("appntDt"));
 
             		  installationResultListService.saveInsAsEntry(add, param, installResult, sessionVO);
             	  }
