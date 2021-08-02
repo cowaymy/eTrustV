@@ -776,27 +776,6 @@
             }
           }
         }, {
-          dataField : "email1",
-          headerText : '<spring:message code="pay.head.email" />',
-          width : 180,
-          editable : false,
-          style : "aui-grid-user-custom-left"
-        }, {
-          dataField : "email2",
-          headerText : '<spring:message code="pay.head.addEmail" />',
-          width : 180,
-          editable : false
-        }, {
-          dataField : "sms1",
-          headerText : '<spring:message code="pay.head.sms" />',
-          width : 140,
-          editable : false
-        }, {
-          dataField : "sms2",
-          headerText : '<spring:message code="pay.head.addSms" />',
-          width : 140,
-          editable : false
-        }, {
           dataField : "payRem",
           headerText : '<spring:message code="pay.head.remark" />',
           width : 300,
@@ -827,6 +806,27 @@
           editable : false,
           style : "aui-grid-user-custom-left"
         }, {
+            dataField : "email1",
+            headerText : '<spring:message code="pay.head.email" />',
+            width : 180,
+            editable : false,
+            style : "aui-grid-user-custom-left"
+          }, {
+            dataField : "email2",
+            headerText : '<spring:message code="pay.head.addEmail" />',
+            width : 180,
+            editable : false
+          }, {
+            dataField : "sms1",
+            headerText : '<spring:message code="pay.head.sms" />',
+            width : 140,
+            editable : false
+          }, {
+            dataField : "sms2",
+            headerText : '<spring:message code="pay.head.addSms" />',
+            width : 140,
+            editable : false
+          }, {
           dataField : "payStusId",
           visible : false
         }, {
