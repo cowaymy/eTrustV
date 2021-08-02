@@ -25,6 +25,7 @@
                                            - Ticket status can be multiple selection
                                            - Add region at search part
                                       4. Request Cody key-in error summary
+  02/08/2021  ALEX 1.0.11               Added CRC info SYNC with mobile inputs
  -->
 <style type="text/css">
 /* 커스텀 칼럼 스타일 정의 */
@@ -303,6 +304,7 @@
     var isValid_expiryDate = true;
     var isValid_transactionDate = true;
     var isValid_approvalNo = true;
+    var isValid_bankNm = true;
 
     var reqList = [];
     var payMode = "";
@@ -319,6 +321,7 @@
         expiryDate = row.item.expiryDate;
         transactionDate = row.item.transactionDate;
         approvalNo = row.item.approvalNo;
+        bankNm = row.item.bankNm;
 
       } else {
         if (payMode != row.item.payMode) {
@@ -364,8 +367,10 @@
     	  if (approvalNo != row.item.approvalNo) {
               isValid_approvalNo = false;
             }
+    	  if (bankNm != row.item.bankNm) {
+              isValid_bankNm = false;
+            }
         }
-
     });
 
     if (!isValid) {
@@ -418,6 +423,11 @@
 
     if (!isValid_approvalNo) {
         Common.alert("Check Approval No.");
+        return false;
+      }
+
+    if (!isValid_bankNm) {
+        Common.alert("Check Bank Name.");
         return false;
       }
 
@@ -635,6 +645,57 @@
           width : 120,
           editable : false
         }, {
+            dataField : "cardNo",
+            headerText : '<spring:message code="pay.head.crc.cardNo" />',
+            width : 160,
+            editable : false,
+            style : "aui-grid-user-custom-left"
+         }, {
+              dataField : "approvalNo",
+              headerText : '<spring:message code="sal.title.text.apprvNo" />',
+              width : 160,
+              editable : false,
+              style : "aui-grid-user-custom-left"
+          }, {
+              dataField : "crcName",
+              headerText : '<spring:message code="sal.text.nameOnCard" />',
+              width : 160,
+              editable : false,
+              style : "aui-grid-user-custom-left"
+          }, {
+              dataField : "transactionDate",
+              headerText : 'CRC Transaction Date',
+              width : 160,
+              editable : false,
+              style : "aui-grid-user-custom-left"
+          }, {
+              dataField : "expiryDate",
+              headerText : 'Card Expiry Date',
+              width : 160,
+              editable : false,
+              style : "aui-grid-user-custom-left"
+          }, {
+              dataField : "cardMode",
+              headerText : 'Card Mode',
+              width : 160,
+              editable : false,
+              style : "aui-grid-user-custom-left"
+          }, {
+              dataField : "merchantBank",
+              headerText : 'CRC Merchant Bank',
+              width : 160,
+              editable : false,
+              style : "aui-grid-user-custom-left"
+          }, {
+              dataField : "cardBrand",
+              headerText : 'CRC Brand',
+              width : 160,
+              editable : false,
+              style : "aui-grid-user-custom-left"
+          }, {
+              dataField : "cardNoRaw",
+              visible : false
+          },{
           dataField : "uploadImg",
           /* headerText : '<spring:message code=" " />', */
           headerText : '<spring:message code="pay.title.trnSlip" />',
@@ -801,58 +862,7 @@
         }, {
           dataField : "crntLdg",
           visible : false
-        }, {
-            dataField : "cardNo",
-            headerText : '<spring:message code="pay.head.crc.cardNo" />',
-            width : 160,
-            editable : false,
-            style : "aui-grid-user-custom-left"
-         }, {
-              dataField : "approvalNo",
-              headerText : '<spring:message code="sal.title.text.apprvNo" />',
-              width : 160,
-              editable : false,
-              style : "aui-grid-user-custom-left"
-          }, {
-              dataField : "crcName",
-              headerText : '<spring:message code="sal.text.nameOnCard" />',
-              width : 160,
-              editable : false,
-              style : "aui-grid-user-custom-left"
-          }, {
-              dataField : "transactionDate",
-              headerText : 'CRC Transaction Date',
-              width : 160,
-              editable : false,
-              style : "aui-grid-user-custom-left"
-          }, {
-              dataField : "expiryDate",
-              headerText : 'Card Expiry Date',
-              width : 160,
-              editable : false,
-              style : "aui-grid-user-custom-left"
-          }, {
-              dataField : "cardMode",
-              headerText : 'Card Mode',
-              width : 160,
-              editable : false,
-              style : "aui-grid-user-custom-left"
-          }, {
-              dataField : "merchantBank",
-              headerText : 'CRC Merchant Bank',
-              width : 160,
-              editable : false,
-              style : "aui-grid-user-custom-left"
-          }, {
-              dataField : "cardBrand",
-              headerText : 'CRC Brand',
-              width : 160,
-              editable : false,
-              style : "aui-grid-user-custom-left"
-          }, {
-              dataField : "cardNoRaw",
-              visible : false
-          }
+        }
         ]
     // 그리드 속성 설정
     var gridPros = { // 페이징 사용
