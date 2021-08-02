@@ -315,8 +315,7 @@ public class SrvItmMgmtListController {
     ReturnMessage message = new ReturnMessage();
 
     Map<String, Object> deactData = (Map<String, Object>) params.get("resultMst");
-
-    logger.debug("== deactData " + deactData.toString());
+    deactData.put("updator", sessionVO.getUserId());
     int deactVal = SrvItmMgmtListService.deactivateLog91d(deactData);
 
     EgovMap rtnValue = null;

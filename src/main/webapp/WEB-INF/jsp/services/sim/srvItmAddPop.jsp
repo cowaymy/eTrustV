@@ -174,12 +174,22 @@
             width : 100
           },
           {
+              dataField : "cmgroup",
+              visible : false,
+              width : 200
+            },
+          {
             dataField : "memCode",
             headerText : "<spring:message code='sal.title.memberCode'/>",
             editable : false,
             width : 200
           },
-            {
+          {
+              dataField : "memId",
+              visible : false,
+              width : 200
+          },
+          {
             dataField : "refNo",
             headerText : "<spring:message code='log.head.refdocno'/>",
             editable : false,
@@ -232,16 +242,30 @@
     var movDtl = $("#cboMovDtl").val();
     var qty = $("#txtQty").val();
     var rmk = $("#txtRmk").val();
+    var cmgroup = $("#cmgroup").val();
     var memCode = $("#member option:selected").text();
+    var memId = $("#member").val();
     var refNo = $("#txtDocNo").val();
 
     var msg = "";
     var lbl = "";
 
+
+    let dt = new Date();
+    dt.setHours(0,0,0,0);
+
+    let arrTrxDt = trxDt.split("/");
+    let tDt = new Date(arrTrxDt[2],arrTrxDt[1]-1,arrTrxDt[0]);
+
     if (trxDt == "" || trxDt == null) {
       lbl = "<spring:message code='service.grid.trxDt'/>";
       msg += "* <spring:message code='sys.msg.necessary' arguments='" + lbl + "' htmlEscape='false'/> <br/>";
     }
+    else if (dt < tDt){
+      lbl = "<spring:message code='service.grid.trxDt'/>";
+      msg += "* <spring:message code='service.msg.futureDateNotAllowed'/> <br/>";
+    }
+
     if (movTyp == "" || movTyp == null) {
       lbl = "<spring:message code='service.grid.mov'/>";
       msg += "* <spring:message code='sys.msg.necessary' arguments='" + lbl + "' htmlEscape='false'/> <br/>";
@@ -269,9 +293,12 @@
     itm.movDtlCde = movDtl;
     itm.movDtl = $("#cboMovDtl option:selected").text();
     itm.qty = qty;
+    itm.cmgroup = cmgroup;
     itm.memCode = memCode;
+    itm.memId = memId;
     itm.refNo = refNo;
     itm.rmk = rmk;
+
 
     //Calculate Total Balance
     let balance  = parseInt($('#txtBal').val());
@@ -329,8 +356,8 @@
     $("#txtQty").val("");
     $("#txtRmk").val("");
 
-    $("#cmgroup").attr("disabled",true);
-    $("#member").attr("disabled",true);
+    $("#cmgroup").removeAttr("disabled");
+    $("#member").removeAttr("disabled");
     $("#cmgroup").val("");
     $("#member").val("");
   }
@@ -351,9 +378,9 @@
     var resultMst = { BR_TYP : $("#BR_TYP").val(),
                       BR : $("#BR").val(),
                       ITM_CDE : $("#ITM_CDE").val(),
-                      MEM_ID : $("#member").val(),
+/*                       MEM_ID : $("#member").val(),
                       refDocNo : $("#txtDocNo").val(),
-                      deptCode : $("#cmgroup").val()
+                      deptCode : $("#cmgroup").val() */
                     }
     var saveForm = { "allRowItems" : allRowItems,
                      "resultMst" : resultMst
@@ -364,7 +391,8 @@
       return;
     }
 
-    Common.ajax("POST", "/services/sim/srvItmSave.do", saveForm,
+console.log(saveForm);
+     Common.ajax("POST", "/services/sim/srvItmSave.do", saveForm,
       function(result) {
         console.log(result);
         if (result.code == "00") {
@@ -435,23 +463,23 @@
         	  $('#cmgroup').attr("disabled",true);
               $('#member').attr("disabled",true);
 
-              $('#cmgroup').val("");
-              $('#member').val("");
+              /* $('#cmgroup').val("");
+              $('#member').val(""); */
           }
       });
       $('#cboMovDtl').change(function(){
          if(
-        		 ($('#cboMovTyp').val() == '0' && this.value == '1') || // Movement In - Resigned Cody Return
+        		 ($('#cboMovTyp').val() == '0' && (this.value == '1' || this.value == '4') )  || // Movement In - Resigned Cody Return
         		 ($('#cboMovTyp').val() == '1' && this.value == '0') // Movement Out - Consign to Cody
         	){
-        	 $('#cmgroup').attr("disabled",false);
-        	 $('#member').attr("disabled",false);
+        	 $('#cmgroup').removeAttr("disabled");
+        	 $('#member').removeAttr("disabled");
          }else{
         	 $('#cmgroup').attr("disabled",true);
              $('#member').attr("disabled",true);
 
-             $('#cmgroup').val("");
-             $('#member').val("");
+             //$('#cmgroup').val("");
+             //$('#member').val("");
          }
 
       });
@@ -564,11 +592,11 @@
       <tr>
        <th scope="row"><spring:message code='log.title.text.cmGroup'/></th>
        <td>
-           <select class="w100p" id="cmgroup" onchange="fn_ChangeCMGroup()" disabled></select>
+           <select class="w100p" id="cmgroup" onchange="fn_ChangeCMGroup()"></select>
        </td>
        <th scope="row"><spring:message code='sal.title.memberCode'/></th>
        <td>
-           <select class="w100p" id="member" name="member" disabled></select>
+           <select class="w100p" id="member" name="member" ></select>
        </td>
       </tr>
       <tr>

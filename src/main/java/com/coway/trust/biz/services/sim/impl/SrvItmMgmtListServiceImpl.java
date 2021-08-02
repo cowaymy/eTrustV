@@ -179,16 +179,19 @@ public class SrvItmMgmtListServiceImpl extends EgovAbstractServiceImpl implement
         LOGGER.debug(itmAdd.toString());
         log91DseqNo = itmAdd.get("log91DseqNo").toString();
         LOGGER.debug("= noRowAffected " + noRowAffected);
+
+        // PREPARE DATA TO INSERT LOG0090D
+        log89M.put("refDocNo", itmAdd.get("refNo").toString());
+        log89M.put("memId", itmAdd.get("memId").toString());
+        log89M.put("deptCode", itmAdd.get("cmgroup").toString());
       }
       LOGGER.debug("= Total Quantity " + totalQty);
 
       log89M.put("log91DseqNo", log91DseqNo);
-      log89M.put("refDocNo", resultM.get("refDocNo").toString());
-      log89M.put("memId", resultM.get("MEM_ID").toString());
-      log89M.put("deptCode", resultM.get("deptCode").toString());
 
       if (totalQty > 0) { // INSERT SUB DATA LOG0090D
         for (int x = 0; x < totalQty; x++) {
+
           int noRowAffected = SrvItmMgmtListMapper.insertLog90D(log89M);
         }
       }

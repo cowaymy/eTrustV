@@ -21,6 +21,8 @@ $(document).ready( function() {
     doDefCombo(forecastMonthData, '' ,'cboForecastMonth', 'S', '');
     doGetCombo('/services/sim/getBch.do', '', '', 'cboBchPopRaw', 'M', 'f_multiCombo');
     doGetCombo('/services/sim/getItm.do', '', '', 'cboItmPopRaw', 'M', 'f_multiCombo'); // ITEM TYPE
+    doGetCombo('/services/sim/getBchTyp.do', '', '', 'cboBchTypRaw', 'M', 'f_multiCombo'); // BRANCH TYPE
+    doGetCombo('/common/selectCodeList.do', '49', '','cboRegionPopRaw', 'M' , 'f_multiCombo'); //region
   });
 
   function f_multiCombo() {
@@ -38,6 +40,18 @@ $(document).ready( function() {
           }).multipleSelect("checkAll");
 
           $('#cboItmPopRaw').change(function() {
+          }).multipleSelect({
+              selectAll: true,
+              width: '80%'
+          }).multipleSelect("checkAll");
+
+          $('#cboBchTypRaw').change(function() {
+          }).multipleSelect({
+              selectAll: true,
+              width: '80%'
+          }).multipleSelect("checkAll");
+
+          $('#cboRegionPopRaw').change(function() {
           }).multipleSelect({
               selectAll: true,
               width: '80%'
@@ -67,7 +81,7 @@ $(document).ready( function() {
     	return;
     }
 
-    if ($("#cboBchPopRaw").val() != "" || $("#cboBchPopRaw").val() != null) {
+    if ($("#cboBchPopRaw").val() != null) {
     	whereSql += " AND  M.BR_NO IN (";
         $('#cboBchPopRaw :selected').each(function(i, mul){
             if(runNo > 0){
@@ -82,7 +96,7 @@ $(document).ready( function() {
         runNo = 0;
     }
 
-    if ($("#cboCatStkRaw").val() != "" || $("#cboCatStkRaw").val() != null) {
+    if ($("#cboCatStkRaw").val() != null) {
         whereSql += " AND  I.STK_TYPE_ID IN (";
         $('#cboCatStkRaw :selected').each(function(i, mul){
             if(runNo > 0){
@@ -97,13 +111,43 @@ $(document).ready( function() {
         runNo = 0;
     }
 
-    if ($("#cboItmPopRaw").val() != "" || $("#cboItmPopRaw").val() != null) {
+    if ($("#cboItmPopRaw").val() != null) {
         whereSql += " AND  M.ITM_CDE IN (";
         $('#cboItmPopRaw :selected').each(function(i, mul){
             if(runNo > 0){
                 whereSql += ",'"+$(mul).val()+"'";
             }else{
                 whereSql += "'"+$(mul).val()+"'";
+            }
+            runNo += 1;
+        });
+        whereSql += ") ";
+
+        runNo = 0;
+    }
+
+    if ($("#cboBchTypRaw").val() != null) {
+    	whereSql += " AND  B.TYPE_ID IN (";
+    	$('#cboBchTypRaw :selected').each(function(i, mul){
+        	if(runNo > 0){
+                whereSql += ",'"+$(mul).val()+"'";
+            }else{
+                whereSql += "'"+$(mul).val()+"'";
+            }
+            runNo += 1;
+        });
+        whereSql += ") ";
+
+        runNo = 0;
+    }
+
+    if ($("#cboRegionPopRaw").val() != null) {
+    	whereSql += " AND  B.REGN_ID IN (";
+        $('#cboRegionPopRaw :selected').each(function(i, mul){
+            if(runNo > 0){
+            	whereSql += ","+$(mul).val()+"";
+            }else{
+            	whereSql += ""+$(mul).val()+"";
             }
             runNo += 1;
         });
@@ -172,6 +216,18 @@ console.log($("#srvItmForecastForm").serializeJSON());
            <th scope="row"><spring:message code='service.title.forecastMonth'/><span class="must"> *</span></th>
            <td>
             <select id="cboForecastMonth" name="cboForecastMonth" class="w100p"/>
+           </td>
+         </tr>
+         <th scope="row"><spring:message code='sal.title.text.region'/></th>
+            <td>
+                <select id="cboRegionPopRaw" name="cboRegionPopRaw" class="multy_select w100p" multiple="multiple">
+                </select>
+            </td>
+         <tr>
+         <tr>
+           <th scope="row"><spring:message code='service.grid.brchTyp'/></th>
+           <td>
+            <select id="cboBchTypRaw" name="cboBchTypRaw"  class="multy_select w100p" multiple="multiple"/>
            </td>
          </tr>
          <tr>

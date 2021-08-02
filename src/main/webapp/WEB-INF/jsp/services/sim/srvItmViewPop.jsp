@@ -325,7 +325,7 @@
 	      if( (balance) < 0){
 	          $("#txtQty").val("0");
 	          $('#txtBal').val(bal);
-	          Common.alert("Quantity cannot be lesser than balance");
+	          Common.alert("Quantity cannot be greater than balance");
 	      }else{
 	          $('#txtBal').val(balance);
 	      }
@@ -339,6 +339,43 @@
 	}
 
   function fn_Edit(){
+
+	var msg = "";
+	var lbl = "";
+
+	let dt = new Date();
+    dt.setHours(0,0,0,0);
+    let arrTrxDt = $("#txtTrxDt").val().split("/");
+    let tDt = new Date(arrTrxDt[2],arrTrxDt[1]-1,arrTrxDt[0]);
+
+	if ($("#txtTrxDt").val() == "") {
+	  lbl = "<spring:message code='service.grid.trxDt'/>";
+	  msg += "* <spring:message code='sys.msg.necessary' arguments='" + lbl + "' htmlEscape='false'/> <br/>";
+	  }
+	else if (dt < tDt){
+	  lbl = "<spring:message code='service.grid.trxDt'/>";
+	  msg += "* <spring:message code='service.msg.futureDateNotAllowed'/> <br/>";
+	}
+
+	if ($("#cboMovTyp").val() == "") {
+	  lbl = "<spring:message code='service.grid.mov'/>";
+	  msg += "* <spring:message code='sys.msg.necessary' arguments='" + lbl + "' htmlEscape='false'/> <br/>";
+	}
+	if ($("#cboMovDtl").val() == "") {
+	  lbl = "<spring:message code='service.grid.movDtl'/>";
+	  msg += "* <spring:message code='sys.msg.necessary' arguments='" + lbl + "' htmlEscape='false'/> <br/>";
+	}
+	if ($("#txtQty").val() == "") {
+	  lbl = "<spring:message code='service.grid.Quantity'/>";
+	  msg += "* <spring:message code='sys.msg.necessary' arguments='" + lbl + "' htmlEscape='false'/> <br/>";
+	}
+
+	if (msg != "") {
+	  Common.alert(msg);
+	  return;
+	}
+
+
       Common.confirm("<spring:message code='sys.common.alert.save'/>",
         function(){
         var allRowItems = [];
@@ -348,16 +385,16 @@
                 movTypCde: $("#cboMovTyp").val(),
                 qty: $("#txtQty").val(),
                 rmk: $("#txtRmk").val(),
-                trxDt: $("#txtTrxDt").val()
+                trxDt: $("#txtTrxDt").val(),
+                memId : $("#member").val(),
+                refNo : $("#txtDocNo").val(),
+                cmgroup : $("#cmgroup").val(),
         };
 
           var resultMst = {
                 BR_TYP : '${BR_TYP}',
                 BR : '${BR}',
                 ITM_CDE : '${ITM_CDE}',
-                MEM_ID : $("#member").val(),
-                refDocNo : $("#txtDocNo").val(),
-                deptCode : $("#cmgroup").val(),
                 seqNo : seqNo
         };
 
@@ -396,27 +433,40 @@
 
   $(function(){
 	  $("#cboMovTyp").change(function(e) {
+
 	        var ind;
+
+	        $('#cmgroup').val("");
+            $('#member').val("");
+
+            if($('#cboMovTyp').val() == ""){
+                $('#cmgroup').attr("disabled",true);
+                $('#member').attr("disabled",true);
+            }
 
 	        if ($("#cboMovTyp").val() == 0) {
 	          ind = '420';
 	        } else if ($("#cboMovTyp").val() == 1) {
 	          ind = '421';
 	        }
+
 	        doGetCombo('/services/sim/getMovDtl.do', ind, '', 'cboMovDtl', 'S', '');
 
 	        fn_checkQty();
 	    });
 	  $('#cboMovDtl').change(function(){
 	         if(
-	                 ($('#cboMovTyp').val() == '0' && this.value == '1') || // Movement In - Resigned Cody Return
-	                 ($('#cboMovTyp').val() == '1' && this.value == '0') // Movement Out - Consign to Cody
-	            ){
+	             ($('#cboMovTyp').val() == '0' && (this.value == '1' || this.value == '4')) || // Movement In - Resigned Cody Return
+	             ($('#cboMovTyp').val() == '1' && this.value == '0') // Movement Out - Consign to Cody
+	         ){
 	             $('#cmgroup').attr("disabled",false);
 	             $('#member').attr("disabled",false);
 	         }else{
 	             $('#cmgroup').attr("disabled",true);
 	             $('#member').attr("disabled",true);
+
+	             $('#cmgroup').val("");
+	             $('#member').val("");
 	         }
 
 	  });
