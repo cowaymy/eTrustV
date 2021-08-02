@@ -121,4 +121,14 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 		return goldPointsMapper.getOrgDtls(params);
 	}
 
+	@Override
+	public List<EgovMap> searchItemCategoryList(Map<String, Object> params) {
+		return goldPointsMapper.searchItemCategoryList(params);
+	}
+
+	@Override
+	public List<EgovMap> searchRedemptionItemList(Map<String, Object> params) {
+		return goldPointsMapper.searchRedemptionItemList(params);
+	}
+
 }

@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.incentive.goldPoints.GoldPointsService;
-import com.coway.trust.biz.incentive.goldPoints.GoldPointsVO;
 import com.coway.trust.biz.incentive.goldPoints.RedemptionItemVO;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -135,5 +134,16 @@ public class GoldPointsRedemptionController {
 		return "incentive/goldPoints/newRedemptionPop";
 	}
 
+	@RequestMapping(value = "/searchItemCategoryList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> searchItemCategoryList(@RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> result = goldPointsService.searchItemCategoryList(params);
+		return ResponseEntity.ok(result);
+	}
+
+	@RequestMapping(value = "/searchRedemptionItemList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> searchRedemptionItemList(@RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> result = goldPointsService.searchRedemptionItemList(params);
+		return ResponseEntity.ok(result);
+	}
 
 }

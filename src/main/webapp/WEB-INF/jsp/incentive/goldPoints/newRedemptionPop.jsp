@@ -1,8 +1,10 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
 <script type="text/javaScript" language="javascript">
     var expGridID;
     var ptsExpiryList;
+    var itemListData;
 
     $(document).ready(function() {
 
@@ -13,9 +15,26 @@
         }
 
         createExpiryAUIGrid();
-    });
+        populateCategoryList();
+        populateItemsList("");
 
-    $(function(){
+        $("#categoryList").change(function() {
+        	var selectedCat = $("#categoryList").val();
+            $("#goldPtsPerUnit").val('');
+        	populateItemsList(selectedCat);
+        	recalculateTotAndBal();
+        });
+
+        $("#redemptionItemList").change(function() {
+            var selectedItm = $("#redemptionItemList").val();
+            populateGoldPtsPerUnit(selectedItm);
+            recalculateTotAndBal();
+        });
+
+        $("#qtySelected").change(function() {
+            recalculateTotAndBal();
+        });
+
         $('#btnPopClose').click(function() {
             $('#trxHistoryPop').remove();
         });
@@ -47,6 +66,54 @@
 
         expGridID = GridCommon.createAUIGrid("expGrid", expiryDtlColumnLayout, "", expOptions);
         AUIGrid.setGridData(expGridID, ptsExpiryList);
+    }
+
+    function populateCategoryList() {
+        Common.ajax("GET", "/incentive/goldPoints/searchItemCategoryList", "", function(result) {
+            var catListData = [];
+            for (var i=0; i < result.length; i++) {
+                  catListData[i] = {"codeId" : result[i].itmCat, "codeName" : result[i].itmCat};
+            }
+           doDefCombo(catListData, '' ,'categoryList', 'A', '');
+       });
+    }
+
+    function populateItemsList(selectedCat) {
+        Common.ajax("GET", "/incentive/goldPoints/searchRedemptionItemList", {category:selectedCat}, function(result) {
+        	itemListData = [];
+            for (var i=0; i < result.length; i++) {
+                  itemListData[i] = {"codeId" : result[i].riItmId, "codeName" : result[i].itmCode + " - " + result[i].itmDesc, "gpPerUnit" : result[i].gpPerUnit};
+            }
+           doDefCombo(itemListData, '' ,'redemptionItemList', 'S', '');
+       });
+    }
+
+    function populateGoldPtsPerUnit(selectedItm) {
+    	for (var i=0; i < itemListData.length; i++) {
+    	    if (itemListData[i].codeId == selectedItm) {
+    	        $("#goldPtsPerUnit").val(itemListData[i].gpPerUnit);
+    	    }
+    	}
+    }
+
+    function recalculateTotAndBal() {
+
+    	if ($("#redemptionItemList").val() != '') {
+    		var qty = $("#qtySelected").val();
+    		var ptsPerUnit = $("#goldPtsPerUnit").val();
+    		var tot = parseInt(qty) * parseInt(ptsPerUnit);
+    		var balAfterRedeem = parseInt("${rBasicInfo.totBalPts}") - tot;
+
+    		if (balAfterRedeem < 0) {
+    		    Common.alert("Insufficient points! Please reselect Quantity or Item.");
+    		    $("#qtySelected").val('');
+    		    $("#totGoldPtsReq").val('');
+    		    $("#balGoldPts").val('');
+    		} else {
+    		    $("#totGoldPtsReq").val(tot);
+    		    $("#balGoldPts").val(balAfterRedeem);
+    		}
+    	}
     }
 
 </script>
@@ -101,6 +168,7 @@
     <aside class="title_line"><!-- title_line start -->
       <h3>Redeem Information:</h3>
     </aside><!-- title_line end -->
+    <form action="#" method="post" name="myForm" id="myForm">
     <table class="type1"><!-- table start -->
       <caption>table</caption>
       <colgroup>
@@ -110,27 +178,35 @@
       <tbody>
         <tr>
           <th scope="row">Category</th>
-          <td><span>${trxHistory.memCode}</span></td>
+          <td><select id="categoryList" name="categoryList"></select></td>
         </tr>
         <tr>
           <th scope="row">Items</th>
-          <td><span>${trxHistory.memName}</span></td>
+          <td><select id="redemptionItemList" name="redemptionItemList"></select></td>
           </tr>
         <tr>
           <th scope="row">Gold Points Per Unit</th>
-          <td><span>${trxHistory.status}</span></td>
+          <td><input type="text" id="goldPtsPerUnit" name="goldPtsPerUnit" readonly disabled /></td>
         </tr>
         <tr>
           <th scope="row">Quantity</th>
-          <td><span>${trxHistory.totBalPts}</span></td>
+          <td>
+            <select id="qtySelected" name="qtySelected">
+              <option value="1" selected>1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </td>
         </tr>
         <tr>
           <th scope="row">Total Gold Points Required</th>
-          <td><span>${trxHistory.totBalPts}</span></td>
+          <td><input type="text" id="totGoldPtsReq" name="totGoldPtsReq" readonly disabled /></span></td>
         </tr>
         <tr>
           <th scope="row">Balance Gold Points</th>
-          <td><span>${trxHistory.totBalPts}</span></td>
+          <td><input type="text" id="balGoldPts" name="balGoldPts" readonly disabled /></span></td>
         </tr>
       </tbody>
     </table><!-- table end -->
@@ -151,6 +227,7 @@
         </tr>
       </tbody>
     </table><!-- table end -->
+    </form>
 
   </section><!-- pop_body end -->
 

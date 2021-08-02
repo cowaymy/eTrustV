@@ -238,4 +238,21 @@
         WHERE A.USER_ID = #{userId}
     </select>
 
+    <select id="searchItemCategoryList" parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT UPPER(ITM_CAT) ITM_CAT FROM ICR0006D WHERE SYSDATE BETWEEN RI_START_DT AND RI_END_DT
+    </select>
+
+    <select id="searchRedemptionItemList" parameterType="Map" resultType="egovMap">
+        SELECT
+            RI_ITM_ID,
+            UPPER(ITM_CODE) ITM_CODE,
+            UPPER(ITM_DESC) ITM_DESC,
+            GP_PER_UNIT
+        FROM ICR0006D
+        WHERE SYSDATE BETWEEN RI_START_DT AND RI_END_DT
+        <if test=" null != category and '' != category">
+            AND UPPER(ITM_CAT) = #{category}
+        </if>
+    </select>
+
 </mapper>

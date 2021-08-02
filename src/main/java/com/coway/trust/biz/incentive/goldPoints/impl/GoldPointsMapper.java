@@ -35,4 +35,8 @@ public interface GoldPointsMapper {
 
 	String getOrgDtls(Map<String, Object> params);
 
+	List<EgovMap> searchRedemptionItemList(Map<String, Object> params);
+
+	List<EgovMap> searchItemCategoryList(Map<String, Object> params);
+
 }
