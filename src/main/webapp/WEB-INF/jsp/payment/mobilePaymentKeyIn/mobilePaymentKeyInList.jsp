@@ -1892,7 +1892,7 @@
                 <tr>
                   <th scope="row">Card Type<span class="must">*</span></th>
                   <td>
-                    <select id="keyCrcCardType" name="keyCrcCardType" class="w100p" disabled>
+                    <select id="keyCrcCardType" name="keyCrcCardType" class="w100p" >
                       <option value="1241">Credit Card</option>
                       <option value="1240">Debit Card</option>
                     </select>
@@ -1905,11 +1905,11 @@
                 <tr>
                   <th scope="row">Card Mode<span class="must">*</span></th>
                   <td>
-                    <select id="keyInCardMode" name="keyInCardMode" class="w100p" onChange="javascript:fn_changeCrcMode();"  disabled></select>
+                    <select id="keyInCardMode" name="keyInCardMode" class="w100p" onChange="javascript:fn_changeCrcMode();" ></select>
                   </td>
                   <th scope="row">Card Brand<span class="must">*</span></th>
                   <td>
-                    <select id="keyInCrcType" name="keyInCrcType" class="w100p" disabled></select>
+                    <select id="keyInCrcType" name="keyInCrcType" class="w100p"></select>
                   </td>
                 </tr>
                 <tr>
@@ -1934,11 +1934,11 @@
                 <tr>
                   <th scope="row">Issue Bank<span class="must">*</span></th>
                   <td>
-                    <select id="keyInIssueBank" name="keyInIssueBank" class="w100p"  disabled></select>
+                    <select id="keyInIssueBank" name="keyInIssueBank" class="w100p"></select>
                   </td>
                   <th scope="row">Merchant Bank<span class="must">*</span></th>
                   <td>
-                    <select id="keyInMerchantBank" name="keyInMerchantBank" class="w100p" onChange="javascript:fn_changeMerchantBank();"  disabled ></select>
+                    <select id="keyInMerchantBank" name="keyInMerchantBank" class="w100p" onChange="javascript:fn_changeMerchantBank();" ></select>
                   </td>
                 </tr>
                 <tr>
@@ -1949,7 +1949,7 @@
                   </td>
                   <th scope="row">Transaction Date<span class="must">*</span></th>
                   <td>
-                    <input id="keyInTrDate" name="keyInTrDate" type="text" title="" placeholder="" class="j_date w100p"  disabled />
+                    <input id="keyInTrDate" name="keyInTrDate" type="text" title="" placeholder="" class="j_date w100p"  />
                   </td>
                 </tr>
                 <tr>
