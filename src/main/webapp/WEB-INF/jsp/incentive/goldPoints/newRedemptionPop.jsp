@@ -17,6 +17,7 @@
         createExpiryAUIGrid();
         populateCategoryList();
         populateItemsList("");
+        populateCollectionBranchList();
 
         $("#categoryList").change(function() {
         	var selectedCat = $("#categoryList").val();
@@ -82,7 +83,7 @@
         Common.ajax("GET", "/incentive/goldPoints/searchRedemptionItemList", {category:selectedCat}, function(result) {
         	itemListData = [];
             for (var i=0; i < result.length; i++) {
-                  itemListData[i] = {"codeId" : result[i].riItmId, "codeName" : result[i].itmCode + " - " + result[i].itmDesc, "gpPerUnit" : result[i].gpPerUnit};
+                  itemListData[i] = {"codeId" : result[i].riItmId, "codeName" : result[i].itmDisplayName, "gpPerUnit" : result[i].gpPerUnit};
             }
            doDefCombo(itemListData, '' ,'redemptionItemList', 'S', '');
        });
@@ -96,11 +97,15 @@
     	}
     }
 
-    function recalculateTotAndBal() {
+    function populateCollectionBranchList() {
+    	doGetComboSepa('/common/selectBranchCodeList.do', '45', ' - ', '', 'collectionBranchList', 'S', '');
+    }
 
+    function recalculateTotAndBal() {
     	if ($("#redemptionItemList").val() != ''
     		  && $("#qtySelected").val() != ''
-    			  && $("#qtySelected").val() != '0') {
+    			  && $("#qtySelected").val() != '0')
+    	{
     		var qty = $("#qtySelected").val();
     		var ptsPerUnit = $("#goldPtsPerUnit").val();
     		var tot = (parseInt(qty) || 0) * (parseInt(ptsPerUnit) || 0);
@@ -109,13 +114,45 @@
     		if (balAfterRedeem < 0) {
     		    Common.alert("Insufficient points! Please reselect Quantity or Item.");
     		    $("#qtySelected").val('');
-    		    $("#totGoldPtsReq").val('');
+    		    $("#totGoldPts").val('');
     		    $("#balGoldPts").val('');
     		} else {
-    		    $("#totGoldPtsReq").val(tot);
+    		    $("#totGoldPts").val(tot);
     		    $("#balGoldPts").val(balAfterRedeem);
     		}
     	}
+    }
+
+    function validateForm() {
+    	if ($("#redemptionItemList").val() == '') {
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Item' htmlEscape='false'/>");
+            return false;
+        }
+
+    	if ($("#qtySelected").val() == '' || $("#qtySelected").val() == '0') {
+    		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Quantity' htmlEscape='false'/>");
+    		return false;
+    	}
+
+        if ($("#collectionBranchList").val() == '') {
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Collection Branch' htmlEscape='false'/>");
+            return false;
+        }
+
+        return true;
+    }
+
+    function submitRedemption() {
+    	if (validateForm()) {
+    		Common.confirm("${rBasicInfo.memName} <br /> ${rBasicInfo.memCode} <br />" +
+    				$("#redemptionItemList option:selected").text() + "<br />Quantity : " + $("#qtySelected").val() + "<br />Total Gold Points : " +
+    				$("#totGoldPts").val() + "<br />Balance Gold Points : " + $("#balGoldPts").val() + "<br /><br />" +
+    				"Do you want to proceed with this redemption request?", saveRedemption());
+    	};
+    }
+
+    function saveRedemption() {
+        console.log("Redemption saved."); //temp
     }
 
 </script>
@@ -171,65 +208,70 @@
       <h3>Redeem Information:</h3>
     </aside><!-- title_line end -->
     <form action="#" method="post" name="myForm" id="myForm">
-    <table class="type1"><!-- table start -->
-      <caption>table</caption>
-      <colgroup>
-        <col style="width:160px" />
-        <col style="width:*" />
-      </colgroup>
-      <tbody>
-        <tr>
-          <th scope="row">Category</th>
-          <td><select id="categoryList" name="categoryList"></select></td>
-        </tr>
-        <tr>
-          <th scope="row">Item</th>
-          <td><select id="redemptionItemList" name="redemptionItemList"></select></td>
+      <table class="type1"><!-- table start -->
+        <caption>table</caption>
+        <colgroup>
+          <col style="width:160px" />
+          <col style="width:*" />
+        </colgroup>
+        <tbody>
+          <tr>
+            <th scope="row">Category</th>
+            <td><select id="categoryList" name="categoryList"></select></td>
           </tr>
-        <tr>
-          <th scope="row">Gold Points Per Unit</th>
-          <td><input type="text" id="goldPtsPerUnit" name="goldPtsPerUnit" readonly disabled /></td>
-        </tr>
-        <tr>
-          <th scope="row">Quantity</th>
-          <td>
-            <select id="qtySelected" name="qtySelected">
-              <option value="0" selected></option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">Total Gold Points Required</th>
-          <td><input type="text" id="totGoldPtsReq" name="totGoldPtsReq" readonly disabled /></span></td>
-        </tr>
-        <tr>
-          <th scope="row">Balance Gold Points</th>
-          <td><input type="text" id="balGoldPts" name="balGoldPts" readonly disabled /></span></td>
-        </tr>
-      </tbody>
-    </table><!-- table end -->
+          <tr>
+            <th scope="row">Item</th>
+            <td><select id="redemptionItemList" name="redemptionItemList"></select></td>
+          </tr>
+          <tr>
+            <th scope="row">Gold Points Per Unit</th>
+            <td><input type="text" id="goldPtsPerUnit" name="goldPtsPerUnit" readonly disabled /></td>
+          </tr>
+          <tr>
+            <th scope="row">Quantity</th>
+            <td>
+              <select id="qtySelected" name="qtySelected">
+                <option value="0" selected></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Total Gold Points</th>
+            <td><input type="text" id="totGoldPts" name="totGoldPts" readonly disabled /></span></td>
+          </tr>
+          <tr>
+            <th scope="row">Balance Gold Points</th>
+            <td><input type="text" id="balGoldPts" name="balGoldPts" readonly disabled /></span></td>
+          </tr>
+        </tbody>
+      </table><!-- table end -->
 
-    <aside class="title_line"><!-- title_line start -->
-      <h3>Collection Information:</h3>
-    </aside><!-- title_line end -->
-    <table class="type1"><!-- table start -->
-      <caption>table</caption>
-      <colgroup>
-        <col style="width:160px" />
-        <col style="width:*" />
-      </colgroup>
-      <tbody>
-        <tr>
-          <th scope="row">Collection Branch</th>
-          <td><span>${trxHistory.memCode}</span></td>
-        </tr>
-      </tbody>
-    </table><!-- table end -->
+      <aside class="title_line"><!-- title_line start -->
+        <h3>Collection Information:</h3>
+      </aside><!-- title_line end -->
+      <table class="type1"><!-- table start -->
+        <caption>table</caption>
+        <colgroup>
+          <col style="width:160px" />
+          <col style="width:*" />
+        </colgroup>
+        <tbody>
+          <tr>
+            <th scope="row">Collection Branch</th>
+            <td><select id="collectionBranchList" name="collectionBranchList"></select></td>
+          </tr>
+        </tbody>
+      </table><!-- table end -->
+
+      <ul class="center_btns">
+        <li><p class="btn_blue2 big"><a href="#" id="submitBtn" onclick="javascript:submitRedemption()">Redeem</a></p></li>
+      </ul>
+
     </form>
 
   </section><!-- pop_body end -->

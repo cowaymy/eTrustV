@@ -245,8 +245,7 @@
     <select id="searchRedemptionItemList" parameterType="Map" resultType="egovMap">
         SELECT
             RI_ITM_ID,
-            UPPER(ITM_CODE) ITM_CODE,
-            UPPER(ITM_DESC) ITM_DESC,
+            UPPER(ITM_CODE) || ' - ' || UPPER(ITM_DESC) AS ITM_DISPLAY_NAME,
             GP_PER_UNIT
         FROM ICR0006D
         WHERE SYSDATE BETWEEN RI_START_DT AND RI_END_DT
