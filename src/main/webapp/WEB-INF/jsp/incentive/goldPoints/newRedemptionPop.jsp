@@ -20,8 +20,8 @@
 
         $("#categoryList").change(function() {
         	var selectedCat = $("#categoryList").val();
-            $("#goldPtsPerUnit").val('');
         	populateItemsList(selectedCat);
+            $("#goldPtsPerUnit").val('');
         	recalculateTotAndBal();
         });
 
@@ -98,11 +98,13 @@
 
     function recalculateTotAndBal() {
 
-    	if ($("#redemptionItemList").val() != '') {
+    	if ($("#redemptionItemList").val() != ''
+    		  && $("#qtySelected").val() != ''
+    			  && $("#qtySelected").val() != '0') {
     		var qty = $("#qtySelected").val();
     		var ptsPerUnit = $("#goldPtsPerUnit").val();
-    		var tot = parseInt(qty) * parseInt(ptsPerUnit);
-    		var balAfterRedeem = parseInt("${rBasicInfo.totBalPts}") - tot;
+    		var tot = (parseInt(qty) || 0) * (parseInt(ptsPerUnit) || 0);
+    		var balAfterRedeem = (parseInt("${rBasicInfo.totBalPts}") || 0) - tot;
 
     		if (balAfterRedeem < 0) {
     		    Common.alert("Insufficient points! Please reselect Quantity or Item.");
@@ -181,7 +183,7 @@
           <td><select id="categoryList" name="categoryList"></select></td>
         </tr>
         <tr>
-          <th scope="row">Items</th>
+          <th scope="row">Item</th>
           <td><select id="redemptionItemList" name="redemptionItemList"></select></td>
           </tr>
         <tr>
@@ -192,7 +194,8 @@
           <th scope="row">Quantity</th>
           <td>
             <select id="qtySelected" name="qtySelected">
-              <option value="1" selected>1</option>
+              <option value="0" selected></option>
+              <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
               <option value="4">4</option>
