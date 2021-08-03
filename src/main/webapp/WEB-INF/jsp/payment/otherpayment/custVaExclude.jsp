@@ -159,8 +159,6 @@ $(function(){
             return;
         }
 
-        console.log($('#_custVaNo').val());
-        console.log($('#_custVaId').val());
         if($('#_custVaNo').val() != '' && $('#_custVaId').val() != ''){
         	var data = {};
         	data = {"custVa" : $('#_custVaNo').val(), "custId" : $('#_custVaId').val()};
@@ -173,12 +171,12 @@ $(function(){
             });
         }
 
-/*         Common.ajax("POST", "/payment/saveCustVaExclude.do", $("#addCustVaForm").serializeJSON(), function(result) {
+         Common.ajax("POST", "/payment/saveCustVaExclude.do", $("#addCustVaForm").serializeJSON(), function(result) {
         	Common.alert("VA Number has saved successfully",function(){
         		fn_close();
         		$('#search').click();
         	});
-        }); */
+        });
     });
 
 });
