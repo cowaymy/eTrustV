@@ -439,11 +439,11 @@
 							    --
                                 AND
                                 (
-                                    ((A.PROMO_ID in ('32246','32247') )
+                                    ((A.PROMO_ID in ('32295','32296') )
                                     AND (F.SALES_ORD_ID = D.SALES_ORD_ID   )
                                     )
                                     or
-                                    (F.SALES_ORD_ID not in D.SALES_ORD_ID and A.PROMO_ID not in ('32246','32247'))
+                                    (F.SALES_ORD_ID not in D.SALES_ORD_ID and A.PROMO_ID not in ('32295','32296'))
                                 )
                                 --
 							    AND (A.PROMO_CUST_TYPE = E.TYPE_ID    OR A.PROMO_CUST_TYPE  =0 )
