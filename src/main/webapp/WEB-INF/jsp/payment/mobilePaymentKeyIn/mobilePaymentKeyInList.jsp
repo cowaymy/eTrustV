@@ -465,24 +465,66 @@
 
       $.each(selectedItems, function(idx, row) {
         totPayAmt += row.item.payAmt;
+        console.log ("totPayAmt:" + totPayAmt);
 
         approvalNo = row.item.approvalNo;
         crcName = row.item.crcName;
         cardNoRaw = row.item.cardNoRaw;
 
+        console.log ("approvalNo:" + approvalNo);
+        console.log ("crcName:" + crcName);
+        console.log ("cardNoRaw:" + cardNoRaw);
+
         expiryDateRaw = row.item.expiryDateRaw;
         transactionDate = row.item.transactionDate;
+
+        console.log ("expiryDateRaw:" + expiryDateRaw);
+        console.log ("transactionDate:" + transactionDate);
 
         cardModeRaw = row.item.cardModeRaw;
         cardBrandRaw = row.item.cardBrandRaw;
         issuBankId = row.item.issuBankId;
         merchantBankRaw = row.item.merchantBankRaw;
 
-/*      console.log ("cardModeRaw:" + cardModeRaw);
+        console.log ("cardModeRaw:" + cardModeRaw);
         console.log ("cardBrandRaw:" + cardBrandRaw);
         console.log ("issuBankId:" + issuBankId);
-        console.log ("merchantBankRaw:" + merchantBankRaw); */
+        console.log ("merchantBankRaw:" + merchantBankRaw);
 
+
+
+        var cardNo1st1Val = cardNoRaw.substr(0, 1);
+        var cardNo1st2Val = cardNoRaw.substr(0, 2);
+        var cardNo1st4Val = cardNoRaw.substr(0, 4);
+
+        console.log ("cardNo1st1Val:" + cardNo1st1Val);
+        console.log ("cardNo1st2Val:" + cardNo1st2Val);
+        console.log ("cardNo1st4Val:" + cardNo1st4Val);
+
+
+        if (cardNo1st1Val == 4) {
+            if (cardBrandRaw != 112) {
+              Common.alert("Card No. is not compatible with Card Type. System Recommanded to Reject.");
+              return;
+            }
+          }
+
+          if ((cardNo1st2Val >= 51 && cardNo1st2Val <= 55) || (cardNo1st4Val >= 2221 && cardNo1st4Val <= 2720)) {
+            if (cardBrandRaw != 111) {
+            	Common.alert("Card No. is not compatible with Card Type. System Recommand to Reject.");
+              return;
+            }
+          }
+
+         if (totPayAmt == null || totPayAmt <= 0) {
+              Common.alert("Pay amount is not fulfill requirement. System Recommand to Reject.");
+              return;
+            }
+
+          if (totPayAmt > 200000) {
+              Common.alert("Pay amount is not fulfill requirement. System Recommand to Reject.");
+              return;
+            }
       });
 
       $("#keyInApprovalNo").val(approvalNo)
@@ -1047,18 +1089,18 @@
   function savePayment() { // CREDIT CARD
     //Validation Start !!!!!!
     //금액 체크
-    if (FormUtil.checkReqValue($("#keyInAmount")) || $("#keyInAmount").val() <= 0) {
+/*      if (FormUtil.checkReqValue($("#keyInAmount")) || $("#keyInAmount").val() <= 0) {
       Common.alert("<spring:message code='pay.alert.noAmount'/>");
       return;
-    }
+    } */
 
-    if ($("#keyInAmount").val() > 200000) {
+/*     if ($("#keyInAmount").val() > 200000) {
       Common.alert("Amount exceed RM 200000");
       return;
-    }
+    } */
 
     //카드번호 체크
-    if (FormUtil.checkReqValue($("#keyInCardNo1")) || FormUtil.checkReqValue($("#keyInCardNo2")) || FormUtil.checkReqValue($("#keyInCardNo3")) || FormUtil.checkReqValue($("#keyInCardNo4"))) {
+ /*    if (FormUtil.checkReqValue($("#keyInCardNo1")) || FormUtil.checkReqValue($("#keyInCardNo2")) || FormUtil.checkReqValue($("#keyInCardNo3")) || FormUtil.checkReqValue($("#keyInCardNo4"))) {
       Common.alert("<spring:message code='pay.head.noCrcNo'/>");
       return;
     } else {
@@ -1072,7 +1114,7 @@
         Common.alert("<spring:message code='pay.alert.ivalidCrcNo'/>");
         return;
       }
-    }
+    } */
 
     //Card Holder 체크
     //금액 체크
@@ -1082,7 +1124,7 @@
     //}
 
     //카드 유효일자 체크
-    if (FormUtil.checkReqValue($("#keyInExpiryMonth")) || FormUtil.checkReqValue($("#keyInExpiryYear"))) {
+   /*  if (FormUtil.checkReqValue($("#keyInExpiryMonth")) || FormUtil.checkReqValue($("#keyInExpiryYear"))) {
       Common.alert("<spring:message code='pay.alert.noCrcExpiryDate'/>");
       return;
     } else {
@@ -1099,10 +1141,11 @@
         Common.alert("<spring:message code='pay.alert.invalidCrcExpiryDate'/>");
         return;
       }
-    }
+    } */
+
 
     //카드 브랜드 체크
-    if (FormUtil.checkReqValue($("#keyInCrcType option:selected"))) {
+/*     if (FormUtil.checkReqValue($("#keyInCrcType option:selected"))) {
       Common.alert("<spring:message code='pay.alert.noCrcBrand'/>");
       return;
     } else {
@@ -1125,16 +1168,16 @@
           return;
         }
       }
-    }
+    } */
 
     //카드 모드 체크
-    if (FormUtil.checkReqValue($("#keyInCardMode option:selected"))) {
+    /* if (FormUtil.checkReqValue($("#keyInCardMode option:selected"))) {
       Common.alert("<spring:message code='pay.alert.noCrcMode'/>");
       return;
-    }
+    } */
 
     //승인 번호 체크
-    if (FormUtil.checkReqValue($("#keyInApprovalNo"))) {
+/*     if (FormUtil.checkReqValue($("#keyInApprovalNo"))) {
       Common.alert("<spring:message code='pay.alert.noApprovalNumber'/>");
       return;
     } else {
@@ -1144,25 +1187,25 @@
         Common.alert("<spring:message code='pay.alert.invalidApprovalNoLength '/>");
         return;
       }
-    }
+    } */
 
     //Issue Bank 체크
-    if (FormUtil.checkReqValue($("#keyInIssueBank option:selected"))) {
+   /*  if (FormUtil.checkReqValue($("#keyInIssueBank option:selected"))) {
       Common.alert("<spring:message code='pay.alert.noIssueBankSelected'/>");
       return;
-    }
+    } */
 
     //Merchant Bank 체크
-    if (FormUtil.checkReqValue($("#keyInMerchantBank option:selected"))) {
+    /* if (FormUtil.checkReqValue($("#keyInMerchantBank option:selected"))) {
       Common.alert("<spring:message code='pay.alert.noMerchantBankSelected'/>");
       return;
-    }
+    } */
 
     //Transaction Date 체크
-    if (FormUtil.checkReqValue($("#keyInTrDate"))) {
+/*     if (FormUtil.checkReqValue($("#keyInTrDate"))) {
       Common.alert("<spring:message code='pay.head.transDateEmpty'/>");
       return;
-    }
+    } */
 
     //TR No 체크
     //if(FormUtil.checkReqValue($("#keyInTrNo"))){
@@ -1889,30 +1932,56 @@
                 <col style="width: *" />
               </colgroup>
               <tbody>
+
+                 <!-- <input  type="hidden"  id="keyCrcCardType" name="keyCrcCardType" class="w100p" readonly="readonly" /> -->
+                <input  type="hidden"  id="keyInAmount" name="keyInAmount" class="w100p" readonly="readonly" />
+                <input  type="hidden"  id="keyInCardMode" name="keyInCardMode" class="w100p" readonly="readonly" />
+                <input  type="hidden"  id="keyInCrcType" name="keyInCrcType" class="w100p" readonly="readonly" />
+
+                <input  type="hidden"  id="keyInCardNo1" name="keyInCardNo1" class="w100p" readonly="readonly" />
+                <input  type="hidden"  id="keyInCardNo2" name="keyInCardNo2" class="w100p" readonly="readonly" />
+                <input  type="hidden"  id="keyInCardNo3" name="keyInCardNo3" class="w100p" readonly="readonly" />
+                <input  type="hidden"  id="keyInCardNo4" name="keyInCardNo4" class="w100p" readonly="readonly" />
+
+                <input  type="hidden"  id="keyInApprovalNo" name="keyInApprovalNo" class="w100p" readonly="readonly" />
+                <input  type="hidden"  id="keyInHolderNm" name="keyInHolderNm" class="w100p" readonly="readonly" />
+
+                 <input  type="hidden"  id="keyInIssueBank" name="keyInIssueBank" class="w100p" readonly="readonly" />
+                 <input  type="hidden"  id="keyInMerchantBank" name="keyInMerchantBank" class="w100p" readonly="readonly" />
+
+                 <input  type="hidden"  id="keyInExpiryMonth" name="keyInExpiryMonth" class="w100p" readonly="readonly" />
+                 <input  type="hidden"  id="keyInExpiryYear" name="keyInExpiryYear" class="w100p" readonly="readonly" />
+
+                 <input  type="hidden" id="keyInTrDate" name="keyInTrDate" />
+
+
                 <tr>
                   <th scope="row">Card Type<span class="must">*</span></th>
                   <td>
-                    <select id="keyCrcCardType" name="keyCrcCardType" class="w100p" >
+                     <select id="keyCrcCardType" name="keyCrcCardType" class="w100p" readonly="readonly">
                       <option value="1241">Credit Card</option>
                       <option value="1240">Debit Card</option>
                     </select>
+
                   </td>
-                  <th scope="row">Amount<span class="must">*</span></th>
-                  <td>
-                    <input type="text" id="keyInAmount" name="keyInAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' readonly="readonly" />
+                  <!-- <th scope="row">Amount<span class="must">*</span></th> -->
+                   <td>
+                    <!-- <input type="text" id="keyInAmount" name="keyInAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' readonly="readonly" /> -->
                   </td>
                 </tr>
-                <tr>
+
+                <!-- <tr>
                   <th scope="row">Card Mode<span class="must">*</span></th>
                   <td>
-                    <select id="keyInCardMode" name="keyInCardMode" class="w100p" onChange="javascript:fn_changeCrcMode();" ></select>
+                     <select id="keyInCardMode" name="keyInCardMode" class="w100p" onChange="javascript:fn_changeCrcMode();" ></select>
                   </td>
                   <th scope="row">Card Brand<span class="must">*</span></th>
                   <td>
                     <select id="keyInCrcType" name="keyInCrcType" class="w100p"></select>
                   </td>
-                </tr>
-                <tr>
+                </tr> -->
+
+                <!-- <tr>
                   <th scope="row">Card No<span class="must">*</span></th>
                   <td>
                     <p class="short"><input type="text" id="keyInCardNo1" name="keyInCardNo1" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onkeyup='nextTab(this, event);' onChange="javascript:fn_changeCardNo1();"  readonly="readonly"/></p> <span>-</span>
@@ -1922,26 +1991,29 @@
                   </td>
                   <th scope="row">Approval No.<span class="must">*</span></th>
                   <td>
-                    <input type="text" id="keyInApprovalNo" name="keyInApprovalNo" class="w100p" maxlength="6" placeholder="Approval No."  readonly="readonly" />
+                     <input type="text" id="keyInApprovalNo" name="keyInApprovalNo" class="w100p" maxlength="6" placeholder="Approval No."  readonly="readonly" />
                   </td>
-                </tr>
-                <tr>
+                </tr> -->
+
+                <!-- <tr>
                   <th scope="row">Credit Card Holder Name</th>
                   <td colspan="3">
                     <input type="text" id="keyInHolderNm" name="keyInHolderNm" class="w100p" placeholder="Credit Card Holder Name"  readonly="readonly" />
                   </td>
-                </tr>
-                <tr>
+                </tr> -->
+
+                <!-- <tr>
                   <th scope="row">Issue Bank<span class="must">*</span></th>
-                  <td>
-                    <select id="keyInIssueBank" name="keyInIssueBank" class="w100p"></select>
+                   <td>
+                      <select id="keyInIssueBank" name="keyInIssueBank" class="w100p"></select>
                   </td>
                   <th scope="row">Merchant Bank<span class="must">*</span></th>
                   <td>
                     <select id="keyInMerchantBank" name="keyInMerchantBank" class="w100p" onChange="javascript:fn_changeMerchantBank();" ></select>
                   </td>
-                </tr>
-                <tr>
+                </tr> -->
+
+                <!-- <tr>
                   <th scope="row">Expiry Date(mm/yy)<span class="must">*</span></th>
                   <td>
                     <p class="short"><input type="text" id="keyInExpiryMonth" name="keyInExpiryMonth" size="2" maxlength="2" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)'  readonly="readonly"/></p> <span>/</span>
@@ -1951,7 +2023,8 @@
                   <td>
                     <input id="keyInTrDate" name="keyInTrDate" type="text" title="" placeholder="" class="j_date w100p"  />
                   </td>
-                </tr>
+                </tr> -->
+
                 <tr>
                   <th scope="row">TR Ref No.</th>
                   <td>
@@ -1962,6 +2035,7 @@
                     <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="trIssDt2" name="trIssDt2" />
                   </td>
                 </tr>
+
                 <tr>
                   <td colspan="4">
                     <div>
@@ -1969,6 +2043,7 @@
                     </div>
                   </td>
                 </tr>
+
               </tbody>
             </table>
             <!-- table end -->
