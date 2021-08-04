@@ -554,9 +554,12 @@ console.log("searchColorGrid");
             		 this.selectedIndex = 0;
             	}
             }
-            $("#cmbAppType").multipleSelect("uncheckAll");
+            $("#cmbAppType").multipleSelect("checkAll");
             $("#cmbCustomerType").multipleSelect("uncheckAll");
             $("#cmbCorpTypeId").multipleSelect("uncheckAll");
+            $("#cmbCondition").multipleSelect("uncheckAll");
+            $("#cmbProduct").multipleSelect("uncheckAll");
+            $("#cmbSalesType").multipleSelect("uncheckAll");
         });
     };
 
