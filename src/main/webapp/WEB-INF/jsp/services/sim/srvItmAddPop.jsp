@@ -244,7 +244,7 @@
     var rmk = $("#txtRmk").val();
     var cmgroup = $("#cmgroup").val();
     var memCode = $("#member option:selected").text();
-    var memId = $("#member").val();
+    var memId = $("#member").val() != null ? $("#member").val() : "";
     var refNo = $("#txtDocNo").val();
 
     var msg = "";
@@ -311,7 +311,7 @@
 
         if( (balance) < 0){
             $('#txtBal').val("${QTY}");
-            Common.alert("Quantity cannot be lesser than balance");
+            Common.alert("Quantity cannot be greater than balance");
             return;
         }else{
             $('#txtBal').val(balance);
@@ -392,7 +392,7 @@
     }
 
 console.log(saveForm);
-     Common.ajax("POST", "/services/sim/srvItmSave.do", saveForm,
+      Common.ajax("POST", "/services/sim/srvItmSave.do", saveForm,
       function(result) {
         console.log(result);
         if (result.code == "00") {
@@ -403,7 +403,7 @@ console.log(saveForm);
           Common.alert(msg);
           fn_refresh(allRowItems);
        }
-      });
+      }); 0
   }
 
   function fn_excelDown() {
@@ -592,11 +592,11 @@ console.log(saveForm);
       <tr>
        <th scope="row"><spring:message code='log.title.text.cmGroup'/></th>
        <td>
-           <select class="w100p" id="cmgroup" onchange="fn_ChangeCMGroup()"></select>
+           <select class="w100p" id="cmgroup" onchange="fn_ChangeCMGroup()" disabled ></select>
        </td>
        <th scope="row"><spring:message code='sal.title.memberCode'/></th>
        <td>
-           <select class="w100p" id="member" name="member" ></select>
+           <select class="w100p" id="member" name="member" disabled></select>
        </td>
       </tr>
       <tr>

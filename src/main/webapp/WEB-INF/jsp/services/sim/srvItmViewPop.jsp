@@ -386,7 +386,7 @@
                 qty: $("#txtQty").val(),
                 rmk: $("#txtRmk").val(),
                 trxDt: $("#txtTrxDt").val(),
-                memId : $("#member").val(),
+                memId : $("#member").val() != null ? $("#member").val() : "",
                 refNo : $("#txtDocNo").val(),
                 cmgroup : $("#cmgroup").val(),
         };

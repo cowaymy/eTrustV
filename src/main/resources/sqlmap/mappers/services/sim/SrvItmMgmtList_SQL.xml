@@ -138,7 +138,7 @@
                              , T1.DEPT_CODE
                              FROM
                              LOG0090D T1
-                             JOIN ORG0001D T2 ON T2.MEM_ID = T1.MEM_ID
+                             LEFT JOIN ORG0001D T2 ON T2.MEM_ID = T1.MEM_ID
   )
     SELECT * FROM
       (SELECT H.CODE AS DSC,
