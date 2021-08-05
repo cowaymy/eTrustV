@@ -9,8 +9,8 @@
              , Extent1.PAY_AMT PAY_AMT
              , TO_CHAR(Extent1.CRT_DT, 'DD/MM/YYYY') SALES_DT
              , EXTENT3.NAME NAME
-             , CASE WHEN Extent1.PAY_MODE = '5698' THEN 'CASH'
-               ELSE 'CHQ'
+             , CASE WHEN Extent1.PAY_MODE = '5698' THEN 'CASH ' || Extent1.SLIP_NO
+               ELSE 'CHQ ' || Extent1.CHEQUE_NO
                END AS PAY_MODE
              , CASE WHEN Extent1.UPLOAD_IMG is null OR Extent1.SLIP_NO is null THEN 'NEW'
                ELSE 'PEND'
