@@ -30,7 +30,7 @@
            STK_CODE || ' - ' || STK_DESC AS CODE_NAME
     FROM SYS0026M
     WHERE STK_TYPE_ID IN ('1370', '2687')
-      AND STK_CTGRY_ID IN ('1362')
+      AND STK_CTGRY_ID IN ('1362', '1249','6433')
     ORDER BY STK_CODE ASC
   </select>
 
@@ -87,7 +87,7 @@
     </if>
 
      <if test="ctgryList != null and ctgryList != '' ">
-        and C.STK_TYPE_ID in
+        and C.STK_CTGRY_ID in
         <foreach item="item" collection="ctgryList" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>

@@ -186,7 +186,7 @@
         whereSql += " AND D.TYPE_ID IN (" + brTyp + ") ";
      }
     if (category !=  "") {
-        whereSql += " AND C.STK_TYPE_ID IN (" + category + ") ";
+        whereSql += " AND C.STK_CTGRY_ID IN (" + category + ") ";
      }
 
     var date = new Date();

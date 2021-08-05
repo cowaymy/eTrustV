@@ -17,7 +17,11 @@
 
   var myGridID;
 
-  var categoryData =  [{"codeId": "63","codeName": "Spare Part"},{"codeId": "2687","codeName": "Item Bank"}];
+  var categoryData =  [
+   {"codeId": "1249","codeName": "Item Bank"}
+  ,{"codeId": "1362","codeName": "Cody Tools"}
+  ,{"codeId": "6433","codeName": "Spare Part Tools"}
+  ];
 
   var funcUserDefine8= '${PAGE_AUTH.funcUserDefine8}';
 

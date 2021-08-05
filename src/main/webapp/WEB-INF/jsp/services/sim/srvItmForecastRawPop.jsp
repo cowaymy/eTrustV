@@ -97,7 +97,7 @@ $(document).ready( function() {
     }
 
     if ($("#cboCatStkRaw").val() != null) {
-        whereSql += " AND  I.STK_TYPE_ID IN (";
+        whereSql += " AND  I.STK_CTGRY_ID IN (";
         $('#cboCatStkRaw :selected').each(function(i, mul){
             if(runNo > 0){
                 whereSql += ",'"+$(mul).val()+"'";
