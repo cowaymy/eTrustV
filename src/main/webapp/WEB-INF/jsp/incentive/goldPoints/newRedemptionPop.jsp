@@ -144,15 +144,39 @@
 
     function submitRedemption() {
     	if (validateForm()) {
-    		Common.confirm("${rBasicInfo.memName} <br /> ${rBasicInfo.memCode} <br />" +
-    				$("#redemptionItemList option:selected").text() + "<br />Quantity : " + $("#qtySelected").val() + "<br />Total Gold Points : " +
-    				$("#totGoldPts").val() + "<br />Balance Gold Points : " + $("#balGoldPts").val() + "<br /><br />" +
-    				"Do you want to proceed with this redemption request?", saveRedemption());
+    		var confirmPrompt = "${rBasicInfo.memName} <br /> ${rBasicInfo.memCode} <br />" +
+            $("#redemptionItemList option:selected").text() + "<br />Quantity : " + $("#qtySelected").val() + "<br />Total Gold Points : " +
+            $("#totGoldPts").val() + "<br />Balance Gold Points : " + $("#balGoldPts").val() + "<br /><br />" +
+            "Do you want to proceed with this redemption request?";
+
+    		Common.confirm(confirmPrompt, proceedRedemption, '');
     	};
     }
 
-    function saveRedemption() {
-        console.log("Redemption saved."); //temp
+    function proceedRedemption() {
+
+    	var redeemInfo = {
+    			rdmItm : $("#redemptionItemList").val(),
+    			rdmQty : $("#qtySelected").val(),
+    			rdmColBrnch : $("#collectionBranchList").val(),
+    			rdmMemCode : "${rBasicInfo.memCode}"
+    	};
+
+    	Common.ajax("POST", "/incentive/goldPoints/createNewRedemption.do", redeemInfo, function(result) {
+
+            if(result.p1 == 1) {     //successful redemption processing
+
+            	Common.alert("Your Gold Points Redemption Request is successful. <br />Redemption No. : " + result.redemptionNo);
+
+                Common.ajax("GET", "/incentive/goldPoints/sendNotification.do", {redemptionNo:result.redemptionNo}, function(result) {
+                	console.log("notification.");
+                    console.log(result);
+                });
+
+            } else if (result.p1 == 99) {
+                Common.alert("Insufficient points for redemption.");
+            }
+    	});
     }
 
 </script>
@@ -207,7 +231,7 @@
     <aside class="title_line"><!-- title_line start -->
       <h3>Redeem Information:</h3>
     </aside><!-- title_line end -->
-    <form action="#" method="post" name="myForm" id="myForm">
+    <form action="#" method="post" name="redeemForm" id="redeemForm">
       <table class="type1"><!-- table start -->
         <caption>table</caption>
         <colgroup>

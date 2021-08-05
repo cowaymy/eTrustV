@@ -254,4 +254,45 @@
         </if>
     </select>
 
+    <select id="selectNextRedemptionId" resultType="int">
+            SELECT ICR0007M_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <select id="getNextRedemptionNo" resultType="String">
+            SELECT FN_GET_DOCNO('178') FROM DUAL
+    </select>
+
+    <insert id="insertNewRedemption" parameterType="Map">
+        INSERT INTO ICR0007M (
+            RDM_ID,
+            RDM_NO,
+            RDM_ITM_ID,
+            QTY,
+            COLLECT_BRNCH_ID,
+            MEM_CODE,
+            CRT_DT,
+            CRT_USER_ID,
+            STUS_ID
+        ) VALUES (
+            #{redemptionId},
+            #{redemptionNo},
+            #{rdmItm},
+            #{rdmQty},
+            #{rdmColBrnch},
+            #{rdmMemCode},
+            SYSDATE,
+            #{userId},
+            1
+        )
+    </insert>
+
+    <resultMap id="processRdmptnResultStus" type="egovMap"></resultMap>
+    <resultMap id="processRdmptnResultMsg" type="egovMap"></resultMap>
+
+    <update id="processRedemption" statementType="CALLABLE" parameterType="Map">
+        {call SP_GOLD_PTS_REDEEM(#{redemptionId}, #{userId},
+                                        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=processRdmptnResultStus},
+                                        #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=processRdmptnResultMsg})}
+    </update>
+
 </mapper>

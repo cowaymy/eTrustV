@@ -39,4 +39,12 @@ public interface GoldPointsMapper {
 
 	List<EgovMap> searchItemCategoryList(Map<String, Object> params);
 
+	int selectNextRedemptionId();
+
+	String getNextRedemptionNo();
+
+	int insertNewRedemption(Map<String, Object> params);
+
+	Map<String, Object> processRedemption(Map<String, Object> params);
+
 }

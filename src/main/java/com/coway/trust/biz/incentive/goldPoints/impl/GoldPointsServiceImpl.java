@@ -131,4 +131,40 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 		return goldPointsMapper.searchRedemptionItemList(params);
 	}
 
+	@Override
+	public Map<String, Object> createNewRedemption(Map<String, Object> params) {
+	    Map<String, Object> redeemProcessResult = new HashMap<>();
+
+		int redemptionSeq = goldPointsMapper.selectNextRedemptionId();
+		String redemptionNo = goldPointsMapper.getNextRedemptionNo();
+		params.put("redemptionId", redemptionSeq);
+		params.put("redemptionNo", redemptionNo);
+		goldPointsMapper.insertNewRedemption(params);
+
+		redeemProcessResult = goldPointsMapper.processRedemption(params);		//CALL SP_GOLD_PTS_REDEEM
+
+		return redeemProcessResult;
+	}
+
+	@Override
+	public int sendNotification(Map<String, Object> params) {
+		int smsResult = 0;
+		int emailResult = 0;
+
+		smsResult = sendSMS(params);
+		emailResult = sendEmail(params);
+
+		return smsResult + emailResult;
+	}
+
+	private int sendEmail(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	private int sendSMS(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

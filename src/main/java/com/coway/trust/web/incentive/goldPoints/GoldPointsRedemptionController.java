@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -144,6 +145,40 @@ public class GoldPointsRedemptionController {
 	public ResponseEntity<List<EgovMap>> searchRedemptionItemList(@RequestParam Map<String, Object> params, ModelMap model) {
 		List<EgovMap> result = goldPointsService.searchRedemptionItemList(params);
 		return ResponseEntity.ok(result);
+	}
+
+	@RequestMapping(value = "/createNewRedemption.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> createNewRedemption(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+		params.put("userId", sessionVO.getUserId());
+
+		LOGGER.debug("===== createNewRedemption.do =====");
+		LOGGER.debug("params : {}", params);
+
+		Map<String, Object> resultValue = goldPointsService.createNewRedemption(params);
+
+	    LOGGER.debug("resultValue : " + resultValue);
+
+	    return ResponseEntity.ok(resultValue);
+	}
+
+	@RequestMapping(value = "/sendNotification.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> sendNotification(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+		int result = goldPointsService.sendNotification(params);
+
+		ReturnMessage message = new ReturnMessage();
+
+	    if (result > 0) {
+	    	message.setMessage("Redemption notification successful.");
+	        message.setCode(AppConstants.SUCCESS);
+	    } else {
+	    	message.setMessage("Redemption notification failed.");
+	        message.setCode(AppConstants.FAIL);
+	    }
+
+	    return ResponseEntity.ok(message);
+
 	}
 
 }

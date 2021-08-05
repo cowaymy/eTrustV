@@ -25,4 +25,8 @@ public interface GoldPointsService {
 
 	List<EgovMap> searchRedemptionItemList(Map<String, Object> params);
 
+	Map<String, Object> createNewRedemption(Map<String, Object> params);
+
+	int sendNotification(Map<String, Object> params);
+
 }
