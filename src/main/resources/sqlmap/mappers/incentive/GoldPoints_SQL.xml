@@ -175,6 +175,8 @@
             JOIN SYS0013M S ON S.CODE_ID = O.MEM_TYPE
             JOIN SYS0038M T ON T.STUS_CODE_ID =  O.STUS
             WHERE 1=1
+            AND I.GP_BAL_PTS > 0
+            AND (SYSDATE BETWEEN I.GP_START_DT AND I.GP_END_DT)
 
             <if test=" null != memCode and '' != memCode">
                 AND I.MEM_CODE = #{memCode}
@@ -225,6 +227,8 @@
             JOIN ORG0001D O ON O.MEM_CODE = S.HR_CODE
             JOIN ICR0003D I ON I.MEM_CODE = O.MEM_CODE
             WHERE S.USER_ID = #{userId}
+            AND I.GP_BAL_PTS > 0
+            AND (SYSDATE BETWEEN I.GP_START_DT AND I.GP_END_DT)
             GROUP BY O.MEM_CODE, O.NAME, O.TEL_MOBILE, O.EMAIL
         )
     </select>

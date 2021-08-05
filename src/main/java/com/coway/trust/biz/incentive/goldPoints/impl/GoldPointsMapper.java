@@ -45,6 +45,6 @@ public interface GoldPointsMapper {
 
 	int insertNewRedemption(Map<String, Object> params);
 
-	Map<String, Object> processRedemption(Map<String, Object> params);
+	void processRedemption(Map<String, Object> params);
 
 }

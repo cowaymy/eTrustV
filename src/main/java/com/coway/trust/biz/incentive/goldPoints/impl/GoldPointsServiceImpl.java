@@ -133,7 +133,6 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 
 	@Override
 	public Map<String, Object> createNewRedemption(Map<String, Object> params) {
-	    Map<String, Object> redeemProcessResult = new HashMap<>();
 
 		int redemptionSeq = goldPointsMapper.selectNextRedemptionId();
 		String redemptionNo = goldPointsMapper.getNextRedemptionNo();
@@ -141,9 +140,9 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 		params.put("redemptionNo", redemptionNo);
 		goldPointsMapper.insertNewRedemption(params);
 
-		redeemProcessResult = goldPointsMapper.processRedemption(params);		//CALL SP_GOLD_PTS_REDEEM
+		goldPointsMapper.processRedemption(params);		//CALL SP_GOLD_PTS_REDEEM
 
-		return redeemProcessResult;
+		return params;	//return output SP_GOLD_PTS_REDEEM
 	}
 
 	@Override
