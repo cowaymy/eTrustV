@@ -199,8 +199,11 @@
             JOIN ORG0001D O ON O.MEM_CODE = I.MEM_CODE
             JOIN SYS0013M S ON S.CODE_ID = O.MEM_TYPE
             JOIN SYS0038M T ON T.STUS_CODE_ID =  O.STUS
-            WHERE S.CODE_MASTER_ID = 1
+            WHERE 1=1
+            AND I.GP_BAL_PTS > 0
+            AND (SYSDATE BETWEEN I.GP_START_DT AND I.GP_END_DT)
             AND I.MEM_CODE = #{memCode}
+            AND S.CODE_MASTER_ID = 1
             GROUP BY I.MEM_CODE, I.MEM_NAME, T.NAME, S.CODE_NAME
         )
     </select>
@@ -221,10 +224,15 @@
             SELECT T.*, (EARNED - REDEEMED_OR_EXPIRED) AS BAL_FOR_ROW FROM (
 
                 SELECT
-                    'CREDIT' AS TRX_TYPE,
-                    TO_CHAR(A.CRT_DT, 'DD/MM/YYYY') AS TRX_DT,
+                    TO_CHAR(A.GP_START_DT, 'DD/MM/YYYY') AS TRX_DT,
                     '-' AS REDEMPTION_NO,
                     A.GP_DESC AS ITEMS_DESC,
+                    TO_CHAR(A.GP_UPL_PTS) AS EARNED_DISPLAY,
+                    CASE WHEN SYSDATE > A.GP_END_DT THEN
+                        TO_CHAR(A.GP_BAL_PTS)
+                    ELSE
+                        '-'
+                    END AS RDM_OR_EXP_DISPLAY,
                     A.GP_UPL_PTS AS EARNED,
                     CASE WHEN SYSDATE > A.GP_END_DT THEN
                         A.GP_BAL_PTS
@@ -237,10 +245,11 @@
                 UNION
 
                 SELECT
-                    'REDEEM' AS TRX_TYPE,
                     TO_CHAR(B.CRT_DT, 'DD/MM/YYYY') AS TRX_DT,
                     B.RDM_NO AS REDEMPTION_NO,
                     C.ITM_CODE || '-' || C.ITM_DESC AS ITEMS_DESC,
+                    '-' AS EARNED_DISPLAY,
+                    TO_CHAR(B.QTY * C.GP_PER_UNIT) AS RDM_OR_EXP_DISPLAY,
                     0 AS EARNED,
                     (B.QTY * C.GP_PER_UNIT)  AS REDEEMED_OR_EXPIRED
                 FROM ICR0007M B

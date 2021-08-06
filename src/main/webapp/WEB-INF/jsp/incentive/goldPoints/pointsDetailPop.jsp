@@ -73,11 +73,11 @@
     	            headerText : "Items Description",
     	            width : "30%"
     	        }, {
-    	            dataField : "earned",
+    	            dataField : "earnedDisplay",
     	            headerText : "Earned",
     	            width : "10%"
     	        }, {
-    	            dataField : "redeemedOrExpired",
+    	            dataField : "rdmOrExpDisplay",
     	            headerText : "Redeemed / Expired",
     	            width : "20%"
     	        }, {
