@@ -12,6 +12,12 @@
     	 	ptsExpiryList = JSON.parse('${ptsExpiryList}');
     	}
 
+        if('${trxHistoryList}' == '' || '${trxHistoryList}' == null){
+            // Do nothing
+       }else{
+    	   trxHistoryList = JSON.parse('${trxHistoryList}');
+       }
+
         createExpiryAUIGrid();
         createTransactionAUIGrid();
     });
@@ -57,27 +63,27 @@
     	        {
     	            dataField : "trxDt",
     	            headerText : "Date",
-    	            width : "8%"
+    	            width : "10%"
     	        }, {
-    	            dataField : "rdmNo",
+    	            dataField : "redemptionNo",
     	            headerText : "Redemption Number",
-    	            width : "11%"
+    	            width : "20%"
     	        }, {
-    	            dataField : "rdmDesc",
+    	            dataField : "itemsDesc",
     	            headerText : "Items Description",
-    	            width : "28%"
+    	            width : "30%"
     	        }, {
     	            dataField : "earned",
     	            headerText : "Earned",
-    	            width : "28%"
+    	            width : "10%"
     	        }, {
-    	            dataField : "trxType",
+    	            dataField : "redeemedOrExpired",
     	            headerText : "Redeemed / Expired",
-    	            width : "15%"
+    	            width : "20%"
     	        }, {
-    	            dataField : "bal",
+    	            dataField : "runningBal",
     	            headerText : "Balance",
-    	            width : "15%"
+    	            width : "10%"
     	        }
     	    ];
 
@@ -88,7 +94,7 @@
               };
 
         trxGridID = GridCommon.createAUIGrid("trxGrid", trxColumnLayout, "", trxOptions);
-        //AUIGrid.setGridData(trxGridID, result);
+        AUIGrid.setGridData(trxGridID, trxHistoryList);
     }
 
 </script>
@@ -110,23 +116,23 @@
       <tbody>
         <tr>
           <th scope="row">HP Code</th>
-          <td><span>${trxHistory.memCode}</span></td>
+          <td><span>${memInfo.memCode}</span></td>
         </tr>
         <tr>
           <th scope="row">Member Name</th>
-          <td><span>${trxHistory.memName}</span></td>
+          <td><span>${memInfo.memName}</span></td>
           </tr>
         <tr>
           <th scope="row">Status</th>
-          <td><span>${trxHistory.status}</span></td>
+          <td><span>${memInfo.status}</span></td>
         </tr>
         <tr>
           <th scope="row">Position Desc.</th>
-          <td><span>${trxHistory.positionDesc}</span></td>
+          <td><span>${memInfo.positionDesc}</span></td>
         </tr>
         <tr>
           <th scope="row">Gold Points Available</th>
-          <td><span>${trxHistory.totBalPts}</span></td>
+          <td><span>${memInfo.totBalPts}</span></td>
         </tr>
       </tbody>
     </table><!-- table end -->

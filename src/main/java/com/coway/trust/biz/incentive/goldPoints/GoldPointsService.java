@@ -13,7 +13,7 @@ public interface GoldPointsService {
 
 	List<EgovMap> selectPointsSummaryList(Map<String, Object> params);
 
-	EgovMap selectTransactionHistory(Map<String, Object> params);
+	EgovMap selectMemInfo(Map<String, Object> params);
 
 	List<EgovMap> selectPointsExpiryList(Map<String, Object> params);
 
@@ -28,5 +28,7 @@ public interface GoldPointsService {
 	Map<String, Object> createNewRedemption(Map<String, Object> params);
 
 	int sendNotification(Map<String, Object> params);
+
+	List<EgovMap> selectTransactionHistoryList(Map<String, Object> params);
 
 }

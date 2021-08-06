@@ -102,8 +102,8 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 	}
 
 	@Override
-	public EgovMap selectTransactionHistory(Map<String, Object> params) {
-		return goldPointsMapper.selectTransactionHistory(params);
+	public EgovMap selectMemInfo(Map<String, Object> params) {
+		return goldPointsMapper.selectMemInfo(params);
 	}
 
 	@Override
@@ -164,6 +164,11 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 	private int sendSMS(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public List<EgovMap> selectTransactionHistoryList(Map<String, Object> params) {
+		return goldPointsMapper.selectTransactionHistoryList(params);
 	}
 
 }

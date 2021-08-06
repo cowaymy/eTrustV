@@ -135,9 +135,11 @@ public class GoldPointsSummaryController {
 	public String viewPointsDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		List<EgovMap> ptsExpiryList = goldPointsService.selectPointsExpiryList(params);
-		EgovMap trxHistory = goldPointsService.selectTransactionHistory(params);
+		EgovMap memInfo = goldPointsService.selectMemInfo(params);
+		List<EgovMap> trxHistoryList = goldPointsService.selectTransactionHistoryList(params);
 		model.put("ptsExpiryList", new Gson().toJson(ptsExpiryList));
-		model.put("trxHistory", trxHistory);
+		model.put("memInfo", memInfo);
+		model.put("trxHistoryList", new Gson().toJson(trxHistoryList));
 
 		return "incentive/goldPoints/pointsDetailPop";
 	}

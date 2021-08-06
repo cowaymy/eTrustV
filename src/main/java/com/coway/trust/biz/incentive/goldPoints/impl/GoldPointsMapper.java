@@ -27,7 +27,7 @@ public interface GoldPointsMapper {
 
 	List<EgovMap> selectPointsSummaryList(Map<String, Object> params);
 
-	EgovMap selectTransactionHistory(Map<String, Object> params);
+	EgovMap selectMemInfo(Map<String, Object> params);
 
 	List<EgovMap> selectPointsExpiryList(Map<String, Object> params);
 
@@ -46,5 +46,7 @@ public interface GoldPointsMapper {
 	int insertNewRedemption(Map<String, Object> params);
 
 	void processRedemption(Map<String, Object> params);
+
+	List<EgovMap> selectTransactionHistoryList(Map<String, Object> params);
 
 }
