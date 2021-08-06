@@ -45,17 +45,17 @@
 
     function createAUIGrid() {
         var columnLayout = [{
-            dataField : "redemptionNo",
+            dataField : "rdmNo",
             headerText : "Redemption No.",
-            width : "10%"
+            width : "11%"
         }, {
-            dataField : "keyInAt",
+            dataField : "crtDt",
             headerText : "Key-In-At",
             width : "10%"
         }, {
             dataField : "status",
-            headerText : "Order Status",
-            width : "10%"
+            headerText : "Status",
+            width : "6%"
         }, {
             dataField : "memCode",
             headerText : "Member Code",
@@ -63,35 +63,35 @@
         }, {
             dataField : "memName",
             headerText : "Member Name",
-            width : "30%"
+            width : "20%"
         }, {
-            dataField : "item",
+            dataField : "rdmItem",
             headerText : "Item",
             width : "20%"
         }, {
             dataField : "qty",
             headerText : "Qty",
-            width : "30%"
+            width : "5%"
         }, {
-            dataField : "totalGoldPoints",
+            dataField : "totalPts",
             headerText : "Total Gold Points",
-            width : "30%"
+            width : "10%"
         }, {
-            dataField : "collectionBranch",
+            dataField : "collectBrnch",
             headerText : "Collection Branch",
             width : "30%"
         }, {
             dataField : "updDt",
             headerText : "Last Update",
-            width : "30%"
+            width : "10%"
         }, {
-            dataField : "updUserId",
+            dataField : "updatorMemCode",
             headerText : "Update Status By",
-            width : "30%"
+            width : "10%"
         }, {
             dataField : "rem",
             headerText : "Remark",
-            width : "30%"
+            width : "5%"
         }];
 
         var gridOpt = {

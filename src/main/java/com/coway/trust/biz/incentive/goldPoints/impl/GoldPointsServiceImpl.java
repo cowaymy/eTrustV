@@ -171,4 +171,9 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 		return goldPointsMapper.selectTransactionHistoryList(params);
 	}
 
+	@Override
+	public List<EgovMap> selectRedemptionList(Map<String, Object> params) {
+		return goldPointsMapper.selectRedemptionList(params);
+	}
+
 }

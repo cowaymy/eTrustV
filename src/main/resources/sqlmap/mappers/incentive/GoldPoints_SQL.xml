@@ -322,6 +322,8 @@
             MEM_CODE,
             CRT_DT,
             CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID,
             STUS_ID
         ) VALUES (
             #{redemptionId},
@@ -330,6 +332,8 @@
             #{rdmQty},
             #{rdmColBrnch},
             #{rdmMemCode},
+            SYSDATE,
+            #{userId},
             SYSDATE,
             #{userId},
             1
@@ -344,5 +348,37 @@
                                         #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=processRdmptnResultStus},
                                         #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=processRdmptnResultMsg})}
     </update>
+
+    <select id="selectRedemptionList" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.RDM_ID,
+            A.RDM_NO,
+            TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH:MI:SS AM') AS CRT_DT,
+            B.NAME AS STATUS,
+            A.MEM_CODE,
+            C.NAME AS MEM_NAME,
+            D.ITM_CODE || '-' || D.ITM_DESC AS RDM_ITEM,
+            A.QTY,
+            E.TOTAL_PTS,
+            F.CODE || '-' || F.NAME AS COLLECT_BRNCH,
+            TO_CHAR(A.UPD_DT, 'DD/MM/YYYY HH:MI:SS AM') AS UPD_DT,
+            H.MEM_CODE AS UPDATOR_MEM_CODE,
+            A.REM
+        FROM ICR0007M A
+            JOIN SYS0038M B ON A.STUS_ID = B.STUS_CODE_ID
+            JOIN ORG0001D C ON C.MEM_CODE = A.MEM_CODE
+            JOIN ICR0006D D ON D.RI_ITM_ID = A.RDM_ITM_ID
+            JOIN (
+                SELECT
+                    RDM_ID,
+                    SUM(TRN_PTS_AMT) AS TOTAL_PTS
+                FROM ICR0008D
+                WHERE TRN_TYPE = 1
+                GROUP BY RDM_ID
+                ) E ON E.RDM_ID = A.RDM_ID
+            JOIN SYS0005M F ON F.BRNCH_ID = A.COLLECT_BRNCH_ID
+            JOIN SYS0047M G ON G.USER_ID = A.UPD_USER_ID
+            LEFT JOIN ORG0001D H ON H.MEM_CODE = G.HR_CODE
+    </select>
 
 </mapper>

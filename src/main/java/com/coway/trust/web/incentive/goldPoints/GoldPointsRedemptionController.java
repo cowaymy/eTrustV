@@ -68,6 +68,14 @@ public class GoldPointsRedemptionController {
 		return "incentive/goldPoints/redemptionList";
 	}
 
+	@RequestMapping(value = "/searchRedemptionList.do")
+	public ResponseEntity<List<EgovMap>> searchRedemptionList(@RequestParam Map<String, Object> params){
+
+		List<EgovMap> result = goldPointsService.selectRedemptionList(params);
+
+		return ResponseEntity.ok(result);
+	}
+
 	@RequestMapping(value = "/uploadRedemptionItemsPop.do")
 	public String uploadRedemptionItemsPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "incentive/goldPoints/uploadRedemptionItemsPop";
@@ -116,7 +124,6 @@ public class GoldPointsRedemptionController {
 	    }
 
 	    return ResponseEntity.ok(message);
-
 	}
 
 	@RequestMapping(value = "/newRedemptionPop.do")

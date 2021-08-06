@@ -31,4 +31,6 @@ public interface GoldPointsService {
 
 	List<EgovMap> selectTransactionHistoryList(Map<String, Object> params);
 
+	List<EgovMap> selectRedemptionList(Map<String, Object> params);
+
 }
