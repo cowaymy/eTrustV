@@ -51,7 +51,7 @@ public class EComApiForm {
     params.put("telH", ecomForm.getTelH());
     params.put("telF", ecomForm.getTelF());
 
-    params.put("sCntcName", ecomForm.getScntcName());
+    params.put("scntcName", ecomForm.getScntcName());
     params.put("email2", ecomForm.getEmail2());
     params.put("telM2", ecomForm.getTelM2());
     params.put("telO2", ecomForm.getTelO2());
