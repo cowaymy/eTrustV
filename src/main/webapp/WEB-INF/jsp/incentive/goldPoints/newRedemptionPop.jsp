@@ -166,7 +166,7 @@
 
             if(result.p1 == 1) {     //successful redemption processing
 
-            	Common.alert("Your Gold Points Redemption Request is successful. <br />Redemption No. : " + result.redemptionNo);
+            	Common.alert("Your Gold Points Redemption Request is successful. <br />Redemption No. : " + result.redemptionNo, fn_closePopAndReload);
 
                 Common.ajax("GET", "/incentive/goldPoints/sendNotification.do", {redemptionNo:result.redemptionNo}, function(result) {
                 	console.log("notification.");
@@ -174,9 +174,13 @@
                 });
 
             } else if (result.p1 == 99) {
-                Common.alert("Insufficient points for redemption.");
+                Common.alert("Insufficient points for redemption.", fn_closePopAndReload);
             }
     	});
+    }
+
+    function fn_closePopAndReload() {
+        window.location.reload();
     }
 
 </script>

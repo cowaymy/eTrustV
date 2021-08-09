@@ -14,9 +14,13 @@ function fn_uploadFile() {
 
     Common.ajaxFile("/incentive/goldPoints/csvUploadPoints.do", formData, function (result) {
         console.log(result);
-        Common.alert(result.message);
+        Common.alert(result.message, fn_closePopAndReload);
         });
     }
+}
+
+function fn_closePopAndReload() {
+    window.location.reload();
 }
 
 

@@ -172,11 +172,16 @@
     function fn_cancelRedemption() {
         Common.ajax("POST", "/incentive/goldPoints/cancelRedemption.do", {rdmId:$('#_rdmId').val()}, function(result) {
             if(result.p1 == 1) {     //successful cancelled redemption
-                Common.alert("Your Gold Points Redemption Request has been cancelled. <br />Redemption No. : " + $('#_rdmNo').val());
+                Common.alert("Your Gold Points Redemption Request has been cancelled. <br />Redemption No. : "
+                		+ $('#_rdmNo').val(), fn_reloadList);
             } else if (result.p1 == 99) {
-                Common.alert("Failed to Cancel. Redemption is not active");
+                Common.alert("Failed to Cancel. Redemption is not active", fn_reloadList);
             }
         });
+    }
+
+    function fn_reloadList() {
+        location.reload();
     }
 
 </script>
