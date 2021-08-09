@@ -162,7 +162,10 @@
                                        vC.MEM_TYPE ,
                                        vC.CUST_TYPE_ID ,
                                        vC.CORP_TYPE_ID ,
-                                       vC.EX_TRADE
+                                       vC.SALES_TYPE ,
+                                       vC.PRE_ORD_ID ,
+                                       vC.ECOMM_ORD_ID ,
+                                       vC.STK_CTGRY_ID
                                 FROM SAL1008V vC ) E1
 
                         <if test="contactNum != null and contactNum != ''">
@@ -409,11 +412,26 @@
                              </choose>
                           </if>
                           <if test="cmbSalesType != null and cmbSalesType != ''">
-                          AND E1.EX_TRADE IN
+                          AND E1.SALES_TYPE IN
                             <foreach item="item" collection="cmbSalesType" index="index" open="(" separator="," close=")">
                               #{item}
                             </foreach>
                         </if>
+                        <if test="cmbProductCtgry != null and cmbProductCtgry != ''">
+                          AND E1.STK_CTGRY_ID IN
+                            <foreach item="item" collection="cmbProductCtgry" index="index" open="(" separator="," close=")">
+                              #{item}
+                            </foreach>
+                        </if>
+
+
+
+                        <if test='isEKeyin != null and isEKeyin != ""'>
+                           AND NVL(E1.PRE_ORD_ID,0) > 0
+                         </if>
+                         <if test='isECommerce != null and isECommerce != ""'>
+                           AND NVL(E1.ECOMM_ORD_ID,0) > 0
+                         </if>
 
            ) F1
           <!--   LEFT JOIN ORG0001D MEM ON MEM.MEM_CODE = F1.MEM_CODE

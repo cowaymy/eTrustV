@@ -70,10 +70,11 @@ public class OrderColorGridController {
 		String[] cmbAppTypeList = request.getParameterValues("cmbAppType");
 		String[] cmbCustomerType = request.getParameterValues("cmbCustomerType"); // Customer Type
     String[] cmbCorpTypeId = request.getParameterValues("cmbCorpTypeId"); // Company Type
-    String[] cmbSalesType = request.getParameterValues("cmbSalesType"); // Company Type
+    String[] cmbSalesType = request.getParameterValues("cmbSalesType");
+    String[] cmbProductCtgry = request.getParameterValues("cmbProductCtgry");
 
-    String[] cmbProduct = request.getParameterValues("cmbProduct"); // Company Type
-    String[] cmbCondition = request.getParameterValues("cmbCondition"); // Company Type
+    String[] cmbProduct = request.getParameterValues("cmbProduct");
+    String[] cmbCondition = request.getParameterValues("cmbCondition");
 
     logger.info("Customer type:: " + Arrays.toString(cmbCustomerType));
     logger.info("Company type:: " + Arrays.toString(cmbCorpTypeId));
@@ -96,6 +97,7 @@ public class OrderColorGridController {
 		params.put("cmbSalesType", cmbSalesType);
 		params.put("cmbProduct", cmbProduct);
 		params.put("cmbCondition", cmbCondition);
+		params.put("cmbProductCtgry",cmbProductCtgry);
 
 		List<EgovMap> colorGridList = orderColorGridService.colorGridList(params);
 

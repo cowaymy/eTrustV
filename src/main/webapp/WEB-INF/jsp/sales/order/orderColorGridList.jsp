@@ -119,6 +119,7 @@
         doGetCombo('/common/selectCodeList.do', '95', '','cmbCorpTypeId', 'M' , 'f_multiCombo');     // Company Type Combo Box
         //CommonCombo.make('cmbCustomerType', '/common/selectCodeList.do', {groupCode : 8} , '', {type: 'M'});
         //CommonCombo.make('cmbCorpTypeId', '/common/selectCodeList.do', {groupCode : 95} , '', {type: 'M'});
+        doGetCombo('/sales/promotion/selectProductCategoryList.do', '', '', 'cmbProductCtgry', 'M','f_multiCombo'); //Category
     });
 
 	// 조회조건 combo box
@@ -152,6 +153,13 @@
             });
 
             $('#cmbProduct').change(function() {
+
+            }).multipleSelect({
+                selectAll: true, // 전체선택
+                width: '80%'
+            });
+
+            $('#cmbProductCtgry').change(function() {
 
             }).multipleSelect({
                 selectAll: true, // 전체선택
@@ -741,8 +749,24 @@ console.log("searchColorGrid");
         <option value="0">New Sales</option>
         <option value="1">Extrade Sales</option>
         <option value="2">I-Care Sales</option>
+        <option value="3">Combo Sales</option>
     </select>
      </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='sales.isEKeyin'/></th>
+    <td>
+    <input id="isEKeyin" name="isEKeyin" type="checkbox"/>
+    </td>
+    <th scope="row">is e-Commerce</th>
+    <td>
+    <input id="isECommerce" name="isECommerce" type="checkbox"/>
+    </td>
+    <th scope="row"><spring:message code="sal.title.text.productCategory" /></th>
+    <td>
+    <select class="w100p" id="cmbProductCtgry" name="cmbProductCtgry" multiple="multiple">
+    </select>
+    </td>
 </tr>
 <tr>
     <th scope="row" colspan="6" ><span class="must"> <spring:message code="sal.alert.msg.youMustKeyInatLeastOrdDateNetSales" /></span>  </th>
