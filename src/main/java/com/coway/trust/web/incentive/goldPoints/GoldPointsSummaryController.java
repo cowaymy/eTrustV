@@ -17,6 +17,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -142,6 +143,21 @@ public class GoldPointsSummaryController {
 		model.put("trxHistoryList", new Gson().toJson(trxHistoryList));
 
 		return "incentive/goldPoints/pointsDetailPop";
+	}
+
+	@RequestMapping(value = "/cancelRedemption.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> cancelRedemption(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+		params.put("userId", sessionVO.getUserId());
+
+		LOGGER.debug("===== cancelRedemption.do =====");
+		LOGGER.debug("params : {}", params);
+
+		Map<String, Object> resultValue = goldPointsService.cancelRedemption(params);
+
+	    LOGGER.debug("resultValue : " + resultValue);
+
+	    return ResponseEntity.ok(resultValue);
 	}
 
 }

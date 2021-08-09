@@ -61,7 +61,7 @@
     	var trxColumnLayout =
     	    [
     	        {
-    	            dataField : "trxDt",
+    	            dataField : "trxDtDisplay",
     	            headerText : "Date",
     	            width : "10%"
     	        }, {

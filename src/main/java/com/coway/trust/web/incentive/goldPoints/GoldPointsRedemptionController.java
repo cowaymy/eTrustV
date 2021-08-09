@@ -130,7 +130,7 @@ public class GoldPointsRedemptionController {
 	public String newRedemptionPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
 		//params.put("userId", sessionVO.getUserId());  	//temporarily comment out for testing
-		params.put("userId", 89940);		//temporarily set for testing
+		params.put("userId", 89197);		//temporarily set for testing
 
 		String memCode = goldPointsService.getOrgDtls(params);
 		params.put("memCode", memCode);

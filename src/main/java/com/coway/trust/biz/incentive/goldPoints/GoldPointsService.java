@@ -33,4 +33,6 @@ public interface GoldPointsService {
 
 	List<EgovMap> selectRedemptionList(Map<String, Object> params);
 
+	Map<String, Object> cancelRedemption(Map<String, Object> params);
+
 }

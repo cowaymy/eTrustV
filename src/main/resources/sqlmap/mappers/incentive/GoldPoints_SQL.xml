@@ -175,8 +175,7 @@
             JOIN SYS0013M S ON S.CODE_ID = O.MEM_TYPE
             JOIN SYS0038M T ON T.STUS_CODE_ID =  O.STUS
             WHERE 1=1
-            AND I.GP_BAL_PTS > 0
-            AND (SYSDATE BETWEEN I.GP_START_DT AND I.GP_END_DT)
+            AND (SYSDATE <![CDATA[>=]]> I.GP_START_DT AND SYSDATE <![CDATA[<]]> I.GP_END_DT)
 
             <if test=" null != memCode and '' != memCode">
                 AND I.MEM_CODE = #{memCode}
@@ -200,8 +199,7 @@
             JOIN SYS0013M S ON S.CODE_ID = O.MEM_TYPE
             JOIN SYS0038M T ON T.STUS_CODE_ID =  O.STUS
             WHERE 1=1
-            AND I.GP_BAL_PTS > 0
-            AND (SYSDATE BETWEEN I.GP_START_DT AND I.GP_END_DT)
+            AND (SYSDATE <![CDATA[>=]]> I.GP_START_DT AND SYSDATE <![CDATA[<]]> I.GP_END_DT)
             AND I.MEM_CODE = #{memCode}
             AND S.CODE_MASTER_ID = 1
             GROUP BY I.MEM_CODE, I.MEM_NAME, T.NAME, S.CODE_NAME
@@ -219,45 +217,69 @@
     </select>
 
     <select id="selectTransactionHistoryList" parameterType="Map" resultType="egovMap">
-        SELECT T2.*, SUM(BAL_FOR_ROW) OVER (ORDER BY ROWNUM) AS RUNNING_BAL FROM (
+        SELECT
+            T2.*, SUM(BAL_FOR_ROW) OVER (ORDER BY ROWNUM) AS RUNNING_BAL FROM (
 
-            SELECT T.*, (EARNED - REDEEMED_OR_EXPIRED) AS BAL_FOR_ROW FROM (
+                SELECT T.*,
+                           TO_CHAR(T.TRX_DT, 'DD/MM/YYYY') AS TRX_DT_DISPLAY,
+                           (EARNED - REDEEMED_OR_EXPIRED) AS BAL_FOR_ROW FROM (
 
-                SELECT
-                    TO_CHAR(A.GP_START_DT, 'DD/MM/YYYY') AS TRX_DT,
-                    '-' AS REDEMPTION_NO,
-                    A.GP_DESC AS ITEMS_DESC,
-                    TO_CHAR(A.GP_UPL_PTS) AS EARNED_DISPLAY,
-                    CASE WHEN SYSDATE > A.GP_END_DT THEN
-                        TO_CHAR(A.GP_BAL_PTS)
-                    ELSE
-                        '-'
-                    END AS RDM_OR_EXP_DISPLAY,
-                    A.GP_UPL_PTS AS EARNED,
-                    CASE WHEN SYSDATE > A.GP_END_DT THEN
-                        A.GP_BAL_PTS
-                    ELSE
-                        0
-                    END AS REDEEMED_OR_EXPIRED
-                FROM ICR0003D A
-                WHERE A.MEM_CODE = #{memCode}
+                    ( SELECT
+                        A.GP_START_DT AS TRX_DT,
+                        '-' AS REDEMPTION_NO,
+                        A.GP_DESC AS ITEMS_DESC,
+                        TO_CHAR(A.GP_UPL_PTS) AS EARNED_DISPLAY,
+                        CASE WHEN SYSDATE <![CDATA[>=]]> A.GP_END_DT THEN
+                            TO_CHAR(A.GP_BAL_PTS)
+                        ELSE
+                            '-'
+                        END AS RDM_OR_EXP_DISPLAY,
+                        A.GP_UPL_PTS AS EARNED,
+                        CASE WHEN SYSDATE <![CDATA[>=]]> A.GP_END_DT THEN
+                            A.GP_BAL_PTS
+                        ELSE
+                            0
+                        END AS REDEEMED_OR_EXPIRED
+                    FROM ICR0003D A
+                    WHERE A.MEM_CODE = #{memCode} )
 
-                UNION
+                    UNION ALL
 
-                SELECT
-                    TO_CHAR(B.CRT_DT, 'DD/MM/YYYY') AS TRX_DT,
-                    B.RDM_NO AS REDEMPTION_NO,
-                    C.ITM_CODE || '-' || C.ITM_DESC AS ITEMS_DESC,
-                    '-' AS EARNED_DISPLAY,
-                    TO_CHAR(B.QTY * C.GP_PER_UNIT) AS RDM_OR_EXP_DISPLAY,
-                    0 AS EARNED,
-                    (B.QTY * C.GP_PER_UNIT)  AS REDEEMED_OR_EXPIRED
-                FROM ICR0007M B
-                JOIN ICR0006D C ON B.RDM_ITM_ID = C.RI_ITM_ID where B.MEM_CODE = #{memCode}
+                    ( SELECT
+                        B.CRT_DT AS TRX_DT,
+                        B.RDM_NO AS REDEMPTION_NO,
+                        C.ITM_CODE || '-' || C.ITM_DESC AS ITEMS_DESC,
+                        '-' AS EARNED_DISPLAY,
+                        TO_CHAR(B.QTY * C.GP_PER_UNIT) AS RDM_OR_EXP_DISPLAY,
+                        0 AS EARNED,
+                        (B.QTY * C.GP_PER_UNIT)  AS REDEEMED_OR_EXPIRED
+                    FROM ICR0007M B
+                    JOIN ICR0006D C ON B.RDM_ITM_ID = C.RI_ITM_ID
+                    WHERE B.MEM_CODE = #{memCode} )
 
-            ) T ORDER BY TO_DATE(TRX_DT, 'DD/MM/YYYY HH24:MI:SS')
+                    UNION ALL
 
-        ) T2
+                    ( SELECT
+                        D.CRT_DT AS TRX_DT,
+                        B.RDM_NO || '-CNCL'  AS REDEMPTION_NO,
+                        C.ITM_CODE || '-' || C.ITM_DESC AS ITEMS_DESC,
+                        TO_CHAR(B.QTY * C.GP_PER_UNIT) AS EARNED_DISPLAY,
+                        '-' AS RDM_OR_EXP_DISPLAY,
+                        (B.QTY * C.GP_PER_UNIT)  AS EARNED,
+                        0  AS REDEEMED_OR_EXPIRED
+                    FROM ICR0007M B
+                    JOIN ICR0006D C ON B.RDM_ITM_ID = C.RI_ITM_ID
+                    JOIN (SELECT
+                                RDM_ID,
+                                MAX(CRT_DT) AS CRT_DT
+                            FROM ICR0008D
+                            WHERE TRN_TYPE = '2'
+                            GROUP BY RDM_ID) D ON D.RDM_ID = B.RDM_ID
+                    WHERE B.MEM_CODE = #{memCode} )
+
+                ) T ORDER BY TRX_DT
+
+            ) T2
     </select>
 
 
@@ -273,8 +295,7 @@
             JOIN ORG0001D O ON O.MEM_CODE = S.HR_CODE
             JOIN ICR0003D I ON I.MEM_CODE = O.MEM_CODE
             WHERE S.USER_ID = #{userId}
-            AND I.GP_BAL_PTS > 0
-            AND (SYSDATE BETWEEN I.GP_START_DT AND I.GP_END_DT)
+            AND (SYSDATE <![CDATA[>=]]> I.GP_START_DT AND SYSDATE <![CDATA[<]]> I.GP_END_DT)
             GROUP BY O.MEM_CODE, O.NAME, O.TEL_MOBILE, O.EMAIL
         )
     </select>
@@ -289,7 +310,10 @@
     </select>
 
     <select id="searchItemCategoryList" parameterType="Map" resultType="egovMap">
-        SELECT DISTINCT UPPER(ITM_CAT) ITM_CAT FROM ICR0006D WHERE SYSDATE BETWEEN RI_START_DT AND RI_END_DT
+        SELECT
+            DISTINCT UPPER(ITM_CAT) ITM_CAT
+        FROM ICR0006D
+        WHERE SYSDATE <![CDATA[>=]]> RI_START_DT AND SYSDATE <![CDATA[<]]> RI_END_DT
     </select>
 
     <select id="searchRedemptionItemList" parameterType="Map" resultType="egovMap">
@@ -298,7 +322,7 @@
             UPPER(ITM_CODE) || ' - ' || UPPER(ITM_DESC) AS ITM_DISPLAY_NAME,
             GP_PER_UNIT
         FROM ICR0006D
-        WHERE SYSDATE BETWEEN RI_START_DT AND RI_END_DT
+        WHERE (SYSDATE <![CDATA[>=]]> RI_START_DT AND SYSDATE <![CDATA[<]]> RI_END_DT)
         <if test=" null != category and '' != category">
             AND UPPER(ITM_CAT) = #{category}
         </if>
@@ -354,7 +378,11 @@
             A.RDM_ID,
             A.RDM_NO,
             TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH:MI:SS AM') AS CRT_DT,
-            B.NAME AS STATUS,
+            CASE WHEN (D.RI_END_DT <![CDATA[<=]]> SYSDATE) AND A.STUS_ID = 1 THEN
+                'In Progress'
+            ELSE
+                B.NAME
+            END AS STATUS,
             A.MEM_CODE,
             C.NAME AS MEM_NAME,
             D.ITM_CODE || '-' || D.ITM_DESC AS RDM_ITEM,
@@ -380,5 +408,14 @@
             JOIN SYS0047M G ON G.USER_ID = A.UPD_USER_ID
             LEFT JOIN ORG0001D H ON H.MEM_CODE = G.HR_CODE
     </select>
+
+    <resultMap id="cancelRdmptnResultStus" type="egovMap"></resultMap>
+    <resultMap id="cancelRdmptnResultMsg" type="egovMap"></resultMap>
+
+    <update id="cancelRedemption" statementType="CALLABLE" parameterType="Map">
+        {call SP_GOLD_PTS_CANCEL_REDEMPTN(#{rdmId}, #{userId},
+                                        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=cancelRdmptnResultStus},
+                                        #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=cancelRdmptnResultMsg})}
+    </update>
 
 </mapper>

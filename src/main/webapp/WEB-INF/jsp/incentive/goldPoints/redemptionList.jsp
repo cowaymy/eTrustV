@@ -8,6 +8,35 @@
     $(document).ready(function() {
         createAUIGrid();
 
+        AUIGrid.bind(gridID, "cellClick", function(event) {
+            $("#rdmId").val(event.item.rdmId);
+        });
+
+        $('#btnSearchRdm').click(function() {
+        	fn_search();
+        });
+
+        $('#btnNewRdm').click(function() {
+        	fn_newRedemption();
+        });
+
+        $('#btnCancelRdm').click(function() {
+            var selIdx = AUIGrid.getSelectedIndex(gridID)[0];
+
+            if (selIdx > -1) {
+            	var rdmStatus = AUIGrid.getCellValue(gridID, selIdx, "status");
+
+            	if (rdmStatus != "Active") {
+            		Common.alert('<spring:message code="incentive.alert.msg.rdmValidateCancel" />');
+            	} else {
+            	    fn_promptCancelConfirm(selIdx);
+            	}
+            }
+            else {
+                Common.alert('<spring:message code="incentive.alert.msg.rdmMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="incentive.alert.msg.noRdmSel" /></b>');
+            }
+        });
+
         if("${SESSION_INFO.userTypeId}" != "4") {
             if("${SESSION_INFO.memberLevel}" == "1") {
                 $("#orgCode").val("${orgCode}");
@@ -45,6 +74,10 @@
 
     function createAUIGrid() {
         var columnLayout = [{
+            dataField : "rdmId",
+            headerText : "Redemption ID.",
+            visible : false
+        },{
             dataField : "rdmNo",
             headerText : "Redemption No.",
             width : "11%"
@@ -106,8 +139,6 @@
     }
 
     function fn_search() {
-        console.log("fn_search");
-
         Common.ajax("GET", "/incentive/goldPoints/searchRedemptionList.do", $("#searchForm").serialize(), function(result) {
            AUIGrid.setGridData(gridID, result);
         });
@@ -119,6 +150,33 @@
 
     function fn_newRedemption() {
         Common.popupDiv("/incentive/goldPoints/newRedemptionPop.do", null, null, true, "newRedemptionPop");
+    }
+
+    function fn_promptCancelConfirm(selIdx) {
+        $('#_rdmId').val(AUIGrid.getCellValue(gridID, selIdx, "rdmId"));
+        $('#_rdmNo').val(AUIGrid.getCellValue(gridID, selIdx, "rdmNo"));
+
+        var memName = AUIGrid.getCellValue(gridID, selIdx, "memName");
+        var memCode = AUIGrid.getCellValue(gridID, selIdx, "memCode");
+        var rdmItem = AUIGrid.getCellValue(gridID, selIdx, "rdmItem");
+        var qty = AUIGrid.getCellValue(gridID, selIdx, "qty");
+        var totalPts = AUIGrid.getCellValue(gridID, selIdx, "totalPts");
+
+        var confirmCancelMsg = memName + "<br />" + memCode + "<br />" +
+        rdmItem + "<br />Quantity : " + qty + "<br />Total Gold Points : " +
+        totalPts + "<br /><br />" + "Do you want to cancel this redemption request?";
+
+        Common.confirm(confirmCancelMsg, fn_cancelRedemption);
+    }
+
+    function fn_cancelRedemption() {
+        Common.ajax("POST", "/incentive/goldPoints/cancelRedemption.do", {rdmId:$('#_rdmId').val()}, function(result) {
+            if(result.p1 == 1) {     //successful cancelled redemption
+                Common.alert("Your Gold Points Redemption Request has been cancelled. <br />Redemption No. : " + $('#_rdmNo').val());
+            } else if (result.p1 == 99) {
+                Common.alert("Failed to Cancel. Redemption is not active");
+            }
+        });
     }
 
 </script>
@@ -138,13 +196,16 @@
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_addItems();">Add Items</a></p></li>
             <li><p class="btn_blue"><a href="#">Update Status</a></p></li>
-            <li><p class="btn_blue"><a href="#">Cancel Request</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_newRedemption();">New</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_search();">Search</a></p></li>
+            <li><p class="btn_blue"><a id="btnCancelRdm" href="#">Cancel Request</a></p></li>
+            <li><p class="btn_blue"><a id="btnNewRdm" href="#">New</a></p></li>
+            <li><p class="btn_blue"><a id="btnSearchRdm" href="#">Search</a></p></li>
         </ul>
     </aside>
 
     <form action="#" id="searchForm" method="post">
+        <input id="_rdmId" name="rdmId" type="hidden" value="" />
+        <input id="_rdmNo" name="rdmNo" type="hidden" value="" />
+
         <table class="type1">
             <caption>table</caption>
             <colgroup>

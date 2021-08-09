@@ -149,7 +149,7 @@
             $("#totGoldPts").val() + "<br />Balance Gold Points : " + $("#balGoldPts").val() + "<br /><br />" +
             "Do you want to proceed with this redemption request?";
 
-    		Common.confirm(confirmPrompt, proceedRedemption, '');
+    		Common.confirm(confirmPrompt, proceedRedemption);
     	};
     }
 

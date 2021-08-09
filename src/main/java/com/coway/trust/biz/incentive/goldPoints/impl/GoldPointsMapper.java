@@ -51,4 +51,6 @@ public interface GoldPointsMapper {
 
 	List<EgovMap> selectRedemptionList(Map<String, Object> params);
 
+	void cancelRedemption(Map<String, Object> params);
+
 }
