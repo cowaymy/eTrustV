@@ -547,7 +547,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
     </select>
     </td>
     <th scope="row"> Name</th>
-    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="vendorEmail" name="email" value="${vendorInfo.contactName}"/></td>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="vendorName" name="email" value="${vendorInfo.contactName}"/></td>
 </tr>
 <tr>
     <th>Phone Number</th>

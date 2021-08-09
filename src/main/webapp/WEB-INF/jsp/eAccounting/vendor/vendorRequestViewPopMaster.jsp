@@ -54,7 +54,7 @@ $(document).ready(function () {
     var bankList = "${vendorInfo.bank}";
     var paymentMethod = "${vendorInfo.payType}";
     var designation = "${vendorInfo.contactDesignation}";
-   $("#keyDate").val("${vendorInfo.updDate}");
+    $("#keyDate").val("${vendorInfo.updDate}");
 
 
     $("#vendorCountry option[value='"+ vendorCountry +"']").attr("selected", true);
@@ -321,7 +321,7 @@ $(document).ready(function () {
     </select>
     </td>
     <th scope="row"> Name</th>
-    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="vendorEmail" name="email" value="${vendorInfo.contactName}"/></td>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly='readonly' id="vendorName" name="email" value="${vendorInfo.contactName}"/></td>
 </tr>
 <tr>
     <th>Phone Number</th>

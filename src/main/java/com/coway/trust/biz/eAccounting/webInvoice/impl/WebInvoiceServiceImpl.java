@@ -428,6 +428,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		for (int i = 0; i < invoAppvGridList.size(); i++) {
 			Map<String, Object> invoAppvInfo = (Map<String, Object>) invoAppvGridList.get(i);
 			String appvPrcssNo = (String) invoAppvInfo.get("appvPrcssNo");
+			String vendorClmNo = (String) invoAppvInfo.get("clmNo");
 			int appvLineCnt = webInvoiceMapper.selectAppvLineCnt(appvPrcssNo);
 			int appvLinePrcssCnt = webInvoiceMapper.selectAppvLinePrcssCnt(appvPrcssNo);
 			invoAppvInfo.put("appvLinePrcssCnt", appvLinePrcssCnt + 1);
@@ -435,6 +436,16 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 			invoAppvInfo.put("appvStus", "J");
 			invoAppvInfo.put("rejctResn", rejctResn);
 			invoAppvInfo.put("userId", params.get("userId"));
+			invoAppvInfo.put("userId", params.get("userId"));
+
+			LOGGER.debug("vendorClmNo =====================================>>  " + vendorClmNo);
+			if(vendorClmNo.substring(0, 2).equals("V1"))
+			{
+				EgovMap ntfDtls = (EgovMap) webInvoiceMapper.getClmDesc(invoAppvInfo);
+				String code = vendorClmNo.substring(0, 2);
+				invoAppvInfo.put("code", code);
+				invoAppvInfo.put("codeName", ntfDtls.get("codeDesc"));
+			}
 			LOGGER.debug("rejection invoAppvInfo =====================================>>  " + invoAppvInfo);
 			webInvoiceMapper.updateAppvInfo(invoAppvInfo);
 			webInvoiceMapper.updateAppvLine(invoAppvInfo);

@@ -64,13 +64,9 @@ $(document).ready(function () {
 
     $("#tempSave").click(fn_tempSave);
     $("#submitPop").click(fn_submit);
-    $("#remove_row").click(fn_removeRow);
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
 
-    fn_setNewGridEvent();
-
     fn_setKeyInDate();
-    fn_setPayDueDtEvent();
     fn_setCostCenterEvent();
     fn_setSupplierEvent();
 
@@ -467,7 +463,7 @@ $.fn.clearForm = function() {
 </tr>
 <tr>
 	<th colspan = 2 scope="row">Company Registration No/IC No<span class="must">*</span></th>
-    <td colspan="3"><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="regCompNo" name="regCompNo" maxlength = "50"/></td>
+    <td colspan="3"><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="regCompNo" name="regCompNo" maxlength = "18"/></td>
 </tr>
 <tr>
     <th colspan = 2 scope="row">Email Address (payment advice)<span class="must">*</span></th>
