@@ -3363,28 +3363,28 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     svc0004dmap.put("AS_ID", String.valueOf(seqMap.get("seq")).trim());
     svc0004dmap.put("AS_NO", String.valueOf(eMap.get("asno")).trim());
 
-    params.put("DOCNO", "21");
-    EgovMap eMap_result = ASManagementListMapper.getASEntryDocNo(params);
-    EgovMap seqMap_result = ASManagementListMapper.getResultASEntryId(params);
-    String AS_RESULT_ID = String.valueOf(seqMap_result.get("seq"));
-    String AS_RESULT_NO = String.valueOf(eMap_result.get("asno"));
+    //params.put("DOCNO", "21");
+    //EgovMap eMap_result = ASManagementListMapper.getASEntryDocNo(params);
+    //EgovMap seqMap_result = ASManagementListMapper.getResultASEntryId(params);
+    //String AS_RESULT_ID = String.valueOf(seqMap_result.get("seq"));
+    //String AS_RESULT_NO = String.valueOf(eMap_result.get("asno"));
 
     // 서비스 마스터
     int a = ASManagementListMapper.insertSVC0001D(svc0004dmap);
 
-    svc0004dmap.put("AS_RESULT_ID", AS_RESULT_ID);
-    svc0004dmap.put("AS_RESULT_NO", AS_RESULT_NO);
+    //svc0004dmap.put("AS_RESULT_ID", AS_RESULT_ID);
+    //svc0004dmap.put("AS_RESULT_NO", AS_RESULT_NO);
     svc0004dmap.put("AS_ENTRY_ID", String.valueOf(seqMap.get("seq")).trim());
     svc0004dmap.put("updator", sessionVO.getUserId());
 
     /// insert svc0004d
-    int c = asMgmtListService.insertInHouseSVC0004D(svc0004dmap);
+    //int c = asMgmtListService.insertInHouseSVC0004D(svc0004dmap);
 
     //List<EgovMap> addItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
-    asMgmtListService.insertSVC0005D(add, AS_RESULT_ID, String.valueOf(sessionVO.getUserId()));
+    //asMgmtListService.insertSVC0005D(add, AS_RESULT_ID, String.valueOf(sessionVO.getUserId()));
 
     ///////////////////////// 물류 호출//////////////////////
-    Map<String, Object> logPram = new HashMap<String, Object>();
+    /*Map<String, Object> logPram = new HashMap<String, Object>();
     logPram.put("ORD_ID", String.valueOf(eMap.get("asno")).trim());
     logPram.put("RETYPE", "COMPLET");
     logPram.put("P_TYPE", "OD03");
@@ -3402,7 +3402,14 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     EgovMap em = new EgovMap();
     em.put("AS_NO", String.valueOf(eMap.get("asno")).trim());
     em.put("AS_RESULT_NO", AS_RESULT_NO);
-    em.put("SP_MAP", logPram);
+    em.put("SP_MAP", logPram);*/
+
+    // call to insert AS_RESULT and charges
+    params.put("asResultM", svc0004dmap);
+    params.put("updator", sessionVO.getUserId());
+    params.put("add", add);
+
+    EgovMap em = asMgmtListService.asResult_insert(params);
 
     // insert Charge out filters only to SAL0289D -- Installation charge out filters
     try{

@@ -425,13 +425,14 @@ public class InstallationResultListController {
     List<EgovMap> lbrFeeChr = ASManagementListService.selectLbrFeeChr();
     model.addAttribute("lbrFeeChr", lbrFeeChr);
 
-    //List<EgovMap> fltPmtTyp = ASManagementListService.selectFltPmtTyp();
-    List<EgovMap> fltPmtTyp = new ArrayList<EgovMap>();
-    EgovMap pmtType = new EgovMap();
+  //List<EgovMap> fltPmtTyp = new ArrayList<EgovMap>();
+    List<EgovMap> fltPmtTyp = ASManagementListService.selectFltPmtTyp();
+
+    /*EgovMap pmtType = new EgovMap();
     pmtType.put("codeId", "FOC");
     pmtType.put("codeName", "Free of Charge");
+    fltPmtTyp.add(pmtType);*/
 
-    fltPmtTyp.add(pmtType);
     model.addAttribute("fltPmtTyp", fltPmtTyp);
 
     List<EgovMap> fltQty = ASManagementListService.selectFltQty();

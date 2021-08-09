@@ -1829,24 +1829,24 @@
                     <th scope="row"><spring:message code='service.text.asLbrChr' /></th>
                     <td><label><input type="checkbox" id='txtLabourch' name='txtLabourch' onChange="fn_LabourCharge_CheckedChanged(this)" /></label></td>
                     <th scope="row"><spring:message code='service.text.asLbrChr' /></th>
-                    <td><input type="text" id='txtLabourCharge' name='txtLabourCharge' value='0.00' disabled /></td>
+                    <td><input type="text" id='txtLabourCharge' name='txtLabourCharge' value='0.00' readonly /></td>
                   </tr>
                   <tr>
                     <th scope="row"><spring:message code='service.text.asLbrChr' /> (RM) <span id="fcm1" name="fcm1" class="must" style="display: none">*</span></th>
-                    <td><select id='cmbLabourChargeAmt' name='cmbLabourChargeAmt' onChange="fn_cmbLabourChargeAmt_SelectedIndexChanged()" disabled>
+                    <td><select id='cmbLabourChargeAmt' name='cmbLabourChargeAmt' onChange="fn_cmbLabourChargeAmt_SelectedIndexChanged()" readonly>
                         <option value=""><spring:message code='sal.combo.text.chooseOne' /></option>
                         <c:forEach var="list" items="${lbrFeeChr}" varStatus="status">
                           <option value="${list.codeId}">${list.codeName}</option>
                         </c:forEach>
                     </select></td>
                     <th scope="row"><spring:message code='service.text.asfltChr' /></th>
-                    <td><input type="text" id='txtFilterCharge' name='txtFilterCharge' value='0.00' disabled /></td>
+                    <td><input type="text" id='txtFilterCharge' name='txtFilterCharge' value='0.00' readonly /></td>
                   </tr>
                   <tr>
                     <th scope="row"></th>
                     <td></td>
                     <th scope="row"><b><spring:message code='service.text.asTtlChr' /></b></th>
-                    <td><input type="text" id='txtTotalCharge' name='txtTotalCharge' value='0.00' disabled /></td>
+                    <td><input type="text" id='txtTotalCharge' name='txtTotalCharge' value='0.00' readonly /></td>
                   </tr>
                   <tr>
                     <th scope="row"><spring:message code='service.grid.FilterCode' /><span id="fcm2" name="fcm2" class="must" style="display: none">*</span></th>
