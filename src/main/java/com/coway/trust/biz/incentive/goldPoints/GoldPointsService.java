@@ -35,4 +35,8 @@ public interface GoldPointsService {
 
 	Map<String, Object> cancelRedemption(Map<String, Object> params);
 
+	EgovMap selectRedemptionDetails(Map<String, Object> params);
+
+	int updateRedemption(Map<String, Object> params);
+
 }

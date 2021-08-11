@@ -182,4 +182,15 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 		return params;	//return output SP_GOLD_PTS_CANCEL_REDEMPTN
 	}
 
+	@Override
+	public EgovMap selectRedemptionDetails(Map<String, Object> params) {
+		return goldPointsMapper.selectRedemptionDetails(params);
+	}
+
+	@Override
+	public int updateRedemption(Map<String, Object> params) {
+        int result = goldPointsMapper.updateRedemption(params);
+		return result;
+	}
+
 }

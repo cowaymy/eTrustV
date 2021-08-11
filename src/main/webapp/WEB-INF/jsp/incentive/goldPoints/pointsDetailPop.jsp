@@ -22,12 +22,6 @@
         createTransactionAUIGrid();
     });
 
-    $(function(){
-        $('#btnPopClose').click(function() {
-            $('#trxHistoryPop').remove();
-        });
-    });
-
     function createExpiryAUIGrid() {
     	var expiryDtlColumnLayout =
     	    [

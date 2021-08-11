@@ -36,9 +36,6 @@
             recalculateTotAndBal();
         });
 
-        $('#btnPopClose').click(function() {
-            $('#trxHistoryPop').remove();
-        });
     });
 
     function createExpiryAUIGrid() {

@@ -282,7 +282,6 @@
             ) T2
     </select>
 
-
     <select id="selectRedemptionBasicInfo" parameterType="Map" resultType="egovMap">
         SELECT * FROM (
             SELECT
@@ -416,6 +415,31 @@
         {call SP_GOLD_PTS_CANCEL_REDEMPTN(#{rdmId}, #{userId},
                                         #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=cancelRdmptnResultStus},
                                         #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=cancelRdmptnResultMsg})}
+    </update>
+
+    <select id="selectRedemptionDetails" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.RDM_ID,
+            A.RDM_NO,
+            A.MEM_CODE,
+            B.NAME AS MEM_NAME,
+            B.NRIC,
+            C.ITM_CAT,
+            UPPER(C.ITM_CODE) || ' - ' || UPPER(C.ITM_DESC) AS ITM_DISPLAY_NAME,
+            A.QTY
+        FROM ICR0007M A
+        JOIN ORG0001D B ON B.MEM_CODE = A.MEM_CODE
+        JOIN ICR0006D C ON C.RI_ITM_ID = A.RDM_ITM_ID
+        WHERE A.RDM_ID = #{rdmId}
+    </select>
+
+    <update id="updateRedemption" parameterType="Map">
+        UPDATE ICR0007M
+            SET STUS_ID = #{rdmStatus},
+                REM = #{rdmRemark},
+                UPD_DT = SYSDATE,
+                UPD_USER_ID = #{userId}
+        WHERE RDM_ID = #{rdmId}
     </update>
 
 </mapper>

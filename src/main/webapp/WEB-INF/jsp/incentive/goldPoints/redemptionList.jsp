@@ -9,7 +9,9 @@
         createAUIGrid();
 
         AUIGrid.bind(gridID, "cellClick", function(event) {
-            $("#rdmId").val(event.item.rdmId);
+            $("#_rdmId").val(event.item.rdmId);
+            $('#_rdmNo').val(event.item.rdmNo);
+
         });
 
         $('#btnSearchRdm').click(function() {
@@ -31,6 +33,22 @@
             	} else {
             	    fn_promptCancelConfirm(selIdx);
             	}
+            }
+            else {
+                Common.alert('<spring:message code="incentive.alert.msg.rdmMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="incentive.alert.msg.noRdmSel" /></b>');
+            }
+        });
+
+        $('#btnUpdRdm').click(function() {
+            var selIdx = AUIGrid.getSelectedIndex(gridID)[0];
+            if(selIdx > -1) {
+                var rdmStatus = AUIGrid.getCellValue(gridID, selIdx, "status");
+
+                if (rdmStatus != "In Progress" && rdmStatus != "Ready For Collect") {
+                    Common.alert('<spring:message code="incentive.alert.msg.rdmValidateUpdate" />');
+                } else {
+                	Common.popupDiv("/incentive/goldPoints/updateRedemptionPop.do", { rdmId : $("#_rdmId").val() }, null , true, 'updateRedemptionPop');
+                }
             }
             else {
                 Common.alert('<spring:message code="incentive.alert.msg.rdmMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="incentive.alert.msg.noRdmSel" /></b>');
@@ -153,8 +171,6 @@
     }
 
     function fn_promptCancelConfirm(selIdx) {
-        $('#_rdmId').val(AUIGrid.getCellValue(gridID, selIdx, "rdmId"));
-        $('#_rdmNo').val(AUIGrid.getCellValue(gridID, selIdx, "rdmNo"));
 
         var memName = AUIGrid.getCellValue(gridID, selIdx, "memName");
         var memCode = AUIGrid.getCellValue(gridID, selIdx, "memCode");
@@ -200,7 +216,7 @@
         <h2>Points Summary</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_addItems();">Add Items</a></p></li>
-            <li><p class="btn_blue"><a href="#">Update Status</a></p></li>
+            <li><p class="btn_blue"><a id="btnUpdRdm" href="#">Update Status</a></p></li>
             <li><p class="btn_blue"><a id="btnCancelRdm" href="#">Cancel Request</a></p></li>
             <li><p class="btn_blue"><a id="btnNewRdm" href="#">New</a></p></li>
             <li><p class="btn_blue"><a id="btnSearchRdm" href="#">Search</a></p></li>

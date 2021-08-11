@@ -138,8 +138,8 @@ public class GoldPointsRedemptionController {
 		EgovMap rBasicInfo = goldPointsService.selectRedemptionBasicInfo(params);
 		List<EgovMap> ptsExpiryList = goldPointsService.selectPointsExpiryList(params);
 
-		model.put("rBasicInfo", rBasicInfo);
-		model.put("ptsExpiryList", new Gson().toJson(ptsExpiryList));
+		model.addAttribute("rBasicInfo", rBasicInfo);
+		model.addAttribute("ptsExpiryList", new Gson().toJson(ptsExpiryList));
 
 		return "incentive/goldPoints/newRedemptionPop";
 	}
@@ -188,6 +188,35 @@ public class GoldPointsRedemptionController {
 
 	    return ResponseEntity.ok(message);
 
+	}
+
+	@RequestMapping(value = "/updateRedemptionPop.do")
+	public String updateRedemptionPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO){
+
+		EgovMap rdmDetail = goldPointsService.selectRedemptionDetails(params);
+		model.put("rdmDetail", rdmDetail);
+
+		return "incentive/goldPoints/updateRedemptionPop";
+	}
+
+	@RequestMapping(value = "/updateRedemption.do", method = RequestMethod.POST)
+	public ResponseEntity updateRedemption(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO){
+
+		params.put("userId", sessionVO.getUserId());
+
+		int result = goldPointsService.updateRedemption(params);
+
+		ReturnMessage message = new ReturnMessage();
+
+	    if (result > 0) {
+	    	message.setMessage("Redemption update successful.");
+	        message.setCode(AppConstants.SUCCESS);
+	    } else {
+	    	message.setMessage("Redemption update failed.");
+	        message.setCode(AppConstants.FAIL);
+	    }
+
+	    return ResponseEntity.ok(message);
 	}
 
 }
