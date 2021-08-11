@@ -1200,7 +1200,7 @@ $(document).ready(function(){
 			}
 		}
 
-		if($("#cPromotionpac").val() == "32246" || $("#cPromotionpac").val() == "32247"){
+		if($("#cPromotionpac").val() == "32295" || $("#cPromotionpac").val() == "32296"){
 		        Common.ajaxSync("GET", "/sales/membership/mEligibleEVoucher", {
 		            ORD_NO : $("#ORD_NO").val()
 		        }, function(result) {
