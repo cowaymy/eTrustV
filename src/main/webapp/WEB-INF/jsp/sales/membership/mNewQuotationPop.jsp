@@ -1122,8 +1122,7 @@ $(document).ready(function(){
 				rtnMsg += "Subscription Year selected 1 year. "+"<spring:message code="sal.alert.msg.notAllowPromotion" /> <br>";
 				rtnValue = false;
 			}
-			if ($("#cYear").val() == "12" && $("#cPromotionpac").val() == "32247") {
-
+			if ($("#cYear").val() == "12" && $("#cPromotionpac").val() == "32296") {
                 rtnMsg += "Subscription Year selected 1 year. "+"<spring:message code="sal.alert.msg.notAllowPromotion" /> <br>";
                 rtnValue = false;
             }
