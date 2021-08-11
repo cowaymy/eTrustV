@@ -162,21 +162,27 @@ function fn_save(){
     //Ajax 호출
     Common.ajax("POST", "/payment/saveSrvMembershipBilling.do", data, function(result) {
     	var msg = '';
-    	if(result.message == 1){
-    		msg = "<spring:message code='pay.alert.quotationSuccess'/>";
-    	}else if (result.message == 99){
-    		msg = "<spring:message code='pay.alert.failedToInvoice'/>";
-        }else if (result.message == 98){
-        	msg = "<spring:message code='pay.alert.failedToConvert'/>";
-        }else if (result.message == 97){
-    	    msg = "<spring:message code='pay.alert.failedToSave'/>";
-        }else {
-    	    msg = "<spring:message code='pay.alert.failedToSave'/>";
-        }
 
-    	Common.alert(msg, function(){
-    		location.href = "/payment/initSrvMembershipBilling.do";
-        });
+    	if (result.message == -1){
+            Common.alert("Entered SVM No. had been used. Please try other SVM No.");
+            return false;
+        } else {
+	    	if(result.message == 1){
+	    		msg = "<spring:message code='pay.alert.quotationSuccess'/>";
+	    	}else if (result.message == 99){
+	    		msg = "<spring:message code='pay.alert.failedToInvoice'/>";
+	        }else if (result.message == 98){
+	        	msg = "<spring:message code='pay.alert.failedToConvert'/>";
+	        }else if (result.message == 97){
+	    	    msg = "<spring:message code='pay.alert.failedToSave'/>";
+	        }else {
+	        	msg = "<spring:message code='pay.alert.failedToSave'/>";
+	        }
+
+	    	Common.alert(msg, function(){
+	    		location.href = "/payment/initSrvMembershipBilling.do";
+	        });
+        }
     });
 }
 
@@ -330,6 +336,11 @@ function fn_save(){
                     <tr>
                         <th scope="row">PO/LO No.</th>
                         <td><input type="text" id="poNo" name="poNo" title="Purchase Order Number" placeholder="Purchase Order Number" class="w100p" /></td>
+                    </tr>
+                    <!-- Added Reference No. By Hui Ding, 2021-08-01 -->
+                    <tr>
+                        <th scope="row">Reference No.</th>
+                        <td><input type="text" id="refNo" name="refNo" title="Reference Number" placeholder="Reference Number" class="w100p" /></td>
                     </tr>
                     <tr>
                         <th scope="row">Remark</th>

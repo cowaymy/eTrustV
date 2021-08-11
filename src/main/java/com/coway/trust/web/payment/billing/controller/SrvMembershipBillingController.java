@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.billing.service.AdvRentalBillingService;
 import com.coway.trust.biz.payment.billing.service.SrvMembershipBillingService;
+import com.coway.trust.biz.sales.mambership.MembershipConvSaleService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
@@ -29,12 +30,15 @@ import com.coway.trust.cmmn.model.SessionVO;
 public class SrvMembershipBillingController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SrvMembershipBillingController.class);
-	
+
 	@Resource(name = "srvMembershipBillingService")
 	private SrvMembershipBillingService srvMembershipBillingService;
-	
+
+	@Resource(name = "membershipConvSaleService")
+	private MembershipConvSaleService membershipConvSaleService;
+
 	/**
-	 * Manual Billing - Membership 초기화 화면 
+	 * Manual Billing - Membership 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -43,29 +47,36 @@ public class SrvMembershipBillingController {
 	public String initBillingMgnt(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/billing/srvMembershipBilling";
 	}
-	
+
 	/**
-	 * Manual Billing - Membership save 처리 
+	 * Manual Billing - Membership save 처리
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/saveSrvMembershipBilling.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveSrvMembershipBilling(@RequestBody Map<String, Object> params, ModelMap model , SessionVO sessionVO) {	
+	public ResponseEntity<ReturnMessage> saveSrvMembershipBilling(@RequestBody Map<String, Object> params, ModelMap model , SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
-		
+
 		List<Object> gridList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
 		Map<String, Object> formData = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
-	
+
+		if (membershipConvSaleService.checkDuplicateRefNo(formData)){
+			message.setCode(AppConstants.FAIL);
+			message.setMessage("-1");
+
+			return ResponseEntity.ok(message);
+		}
+
 		int result = -1;
     	result = srvMembershipBillingService.saveSrvMembershipBilling(formData, gridList,  sessionVO);
-    	
+
     	message.setCode(AppConstants.SUCCESS);
     	message.setMessage(String.valueOf(result));
-    	
+
     	return ResponseEntity.ok(message);
 	}
-	
-			
-	
+
+
+
 }

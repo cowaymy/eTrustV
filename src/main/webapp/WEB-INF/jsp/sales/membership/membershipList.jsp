@@ -144,6 +144,7 @@
                {     dataField : "mbrshExprDt",  headerText  : "<spring:message code="sal.title.expireDate" />",   width       : 90,    editable    : false, dataType : "date", formatString : "dd/mm/yyyy"},
                {     dataField : "pacName",  headerText  : "<spring:message code="sal.title.package" />",  width       : 150, editable    : false},
                {     dataField : "mbrshDur", headerText  : "<spring:message code="sal.title.durationMth" />", width       : 75,   editable    : false},
+               {     dataField : "refNo", headerText  : "<spring:message code="sal.text.refNo" />", width       : 150,   editable    : false},
                {     dataField : "mbrshCrtDt",  headerText  : "<spring:message code="sal.title.crtDate" />",  width       : 90,  editable    : false,dataType : "date", formatString : "dd/mm/yyyy"},
                {     dataField : "mbrshCrtUserId",  headerText  : "<spring:message code="sal.title.creator" />", width       : 100, editable    : false},
                {     dataField : "mbrshId", visible : false },
@@ -414,6 +415,17 @@ function fn_clear(){
     </select>
 	</td>
 </tr>
+
+<!-- Added Reference No criteria by Hui Ding, 2021-08-11 -->
+<tr>
+    <th scope="row"><spring:message code="sal.text.refNo" /></th>
+    <td>
+    <input type="text" title=""  id="REF_NO"  name="REF_NO" placeholder="Reference No." class="w100p" />
+    </td>
+    <th></th><td></td>
+    <th></th><td></td>
+</tr>
+
 <tr>
     <th scope="row" colspan="6" ><span class="must"> <spring:message code="sal.alert.msg.keyInMemNoOrdNoCrtDt" /></span>  </th>
 </tr>

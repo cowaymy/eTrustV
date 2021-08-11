@@ -19,7 +19,8 @@
 		           A.MBRSH_DUR  ,
 		           TO_CHAR(A.MBRSH_OTSTND , 'FM9,990.00')  MBRSH_OTSTND,
 		           A.CUST_NAME  ,
-		           A.CUST_IC
+		           A.CUST_IC,
+		           A.REF_NO
 		   FROM SAL1004V A
 
 		   <if test='userTypeId =="1" or userTypeId == "2" '>
@@ -75,6 +76,10 @@
 
 	    <if test="MBRSH_CRT_DT != null and MBRSH_CRT_DT != ''">
 	        AND to_char(A.MBRSH_CRT_DT,'yyyymmdd') =  to_char(to_date (#{MBRSH_CRT_DT} ,'DD/MM/YYYY'),'yyyymmdd')
+	    </if>
+
+	    <if test="REF_NO != null and REF_NO != ''">
+	       AND A.REF_NO = #{REF_NO}
 	    </if>
 	    ORDER BY  A.ORD_NO, A.MBRSH_NO  ASC
 
