@@ -10,7 +10,7 @@
 <script type="text/javaScript">
   $(document).ready( function() {
     doGetCombo('/services/sim/getBchTyp.do', '', '${BR_TYP_ID}', 'cboBchTypRaw', 'S', 'fn_onChgBch'); // BRANCH TYPE
-    doDefCombo(categoryData, '' ,'', 'M', 'category_multiCombo');
+    doDefCombo(categoryData, '' ,'cboCatStkRaw', 'M', 'category_multiCombo');
 
     // SET TRIGGER FUNCTION HERE --
     $("#cboBchTypRaw").change(function() {
