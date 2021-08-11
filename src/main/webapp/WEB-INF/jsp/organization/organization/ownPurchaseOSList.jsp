@@ -153,6 +153,15 @@
         });
     }
 
+
+
+    function fn_gridExport(){
+
+        // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+        GridCommon.exportTo("grid_wrap", "xlsx", "Own Purchase Outstanding List");
+    }
+
+
 </script>
 
 <section id="content">
@@ -208,6 +217,16 @@
             </tbody>
         </table>
     </form>
+
+
+
+  <aside class="title_line"><!-- title_line start -->
+
+        <ul class="right_btns">
+                <li><p class="btn_grid"><a id="btnExcel" onclick="javascript:fn_gridExport('xlsx');">Generate</a></p></li>
+
+        </ul>
+    </aside><!-- title_line end -->
 
     <article class="grid_wrap" id="grid_wrap"></article>
 
