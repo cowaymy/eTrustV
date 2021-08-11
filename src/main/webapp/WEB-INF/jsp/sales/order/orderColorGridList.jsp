@@ -743,7 +743,7 @@ console.log("searchColorGrid");
        <select id="cmbCorpTypeId" name="cmbCorpTypeId" class="multy_select w100p" multiple="multiple">
         </select>
      </td>
-     <th scope="row"><spring:message code="sal.title.salesType" /></th>
+     <th scope="row"><spring:message code="sales.promo.promoType" /></th>
      <td>
        <select class="w100p" id="cmbSalesType" name="cmbSalesType" class="multy_select w100p" multiple="multiple">
         <option value="0">New Sales</option>
