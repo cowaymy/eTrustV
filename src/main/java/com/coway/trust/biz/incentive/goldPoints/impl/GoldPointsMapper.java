@@ -57,4 +57,10 @@ public interface GoldPointsMapper {
 
 	int updateRedemption(Map<String, Object> params);
 
+	String getEmailTitle(Map<String, Object> params);
+
+	String getEmailDetails(Map<String, Object> params);
+
+	EgovMap selectRedemptionDetailsEmail(Map<String, Object> params);
+
 }

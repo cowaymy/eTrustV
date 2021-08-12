@@ -406,6 +406,7 @@
             JOIN SYS0005M F ON F.BRNCH_ID = A.COLLECT_BRNCH_ID
             JOIN SYS0047M G ON G.USER_ID = A.UPD_USER_ID
             LEFT JOIN ORG0001D H ON H.MEM_CODE = G.HR_CODE
+        ORDER BY A.RDM_ID DESC
     </select>
 
     <resultMap id="cancelRdmptnResultStus" type="egovMap"></resultMap>
@@ -441,5 +442,58 @@
                 UPD_USER_ID = #{userId}
         WHERE RDM_ID = #{rdmId}
     </update>
+
+    <select id="getEmailTitle" parameterType="Map" resultType="String">
+        SELECT
+            REPLACE((SELECT MSG_EMAIL_TITLE FROM SYS0043D WHERE MSG_ID = 12 AND MSG_TYPE_ID = 6431),
+            '{1}',
+             #{redemptionNo})
+        FROM DUAL
+    </select>
+
+    <select id="getEmailDetails" parameterType="Map" resultType="String">
+        SELECT
+            REPLACE(
+                REPLACE(
+                    REPLACE(
+                        REPLACE(
+                            REPLACE(
+                                REPLACE(
+                                    REPLACE(
+                                        REPLACE(
+                            (SELECT MSG_EMAIL_DFN FROM SYS0043D WHERE MSG_ID = 12 AND MSG_TYPE_ID = 6431),
+                            '{1}',#{memName}),
+                            '{2}',#{redemptionNo}),
+                            '{3}',#{memCode}),
+                            '{4}',#{memName}),
+                            '{5}',#{itmDisplayName}),
+                            '{6}',#{qty}),
+                            '{7}',#{totalPts}),
+                            '{8}',#{collectBrnch})
+        FROM DUAL
+    </select>
+
+    <select id="selectRedemptionDetailsEmail" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.MEM_CODE,
+            B.NAME AS MEM_NAME,
+            UPPER(C.ITM_CODE) || ' - ' || UPPER(C.ITM_DESC) AS ITM_DISPLAY_NAME,
+            A.QTY,
+            D.CODE || '-' || D.NAME AS COLLECT_BRNCH,
+            E.TOTAL_PTS
+        FROM ICR0007M A
+        JOIN ORG0001D B ON B.MEM_CODE = A.MEM_CODE
+        JOIN ICR0006D C ON C.RI_ITM_ID = A.RDM_ITM_ID
+        JOIN SYS0005M D ON D.BRNCH_ID = A.COLLECT_BRNCH_ID
+        JOIN (
+                SELECT
+                    RDM_ID,
+                    SUM(TRN_PTS_AMT) AS TOTAL_PTS
+                FROM ICR0008D
+                WHERE TRN_TYPE = 1
+                GROUP BY RDM_ID
+        ) E ON E.RDM_ID = A.RDM_ID
+        WHERE A.RDM_NO = #{redemptionNo}
+    </select>
 
 </mapper>

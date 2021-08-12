@@ -8,10 +8,8 @@
 
     $(document).ready(function() {
 
-        if('${ptsExpiryList}' == '' || '${ptsExpiryList}' == null){
-             // Do nothing
-        }else{
-            ptsExpiryList = JSON.parse('${ptsExpiryList}');
+        if('${ptsExpiryList}' != '' || '${ptsExpiryList}' != null){
+        	ptsExpiryList = JSON.parse('${ptsExpiryList}');
         }
 
         createExpiryAUIGrid();
@@ -156,19 +154,15 @@
     			rdmItm : $("#redemptionItemList").val(),
     			rdmQty : $("#qtySelected").val(),
     			rdmColBrnch : $("#collectionBranchList").val(),
-    			rdmMemCode : "${rBasicInfo.memCode}"
+    			rdmMemCode : "${rBasicInfo.memCode}",
+    			mobileNo : "${rBasicInfo.telMobile}",
+    		    emailAddr : "${rBasicInfo.email}"
     	};
 
     	Common.ajax("POST", "/incentive/goldPoints/createNewRedemption.do", redeemInfo, function(result) {
 
             if(result.p1 == 1) {     //successful redemption processing
-
             	Common.alert("Your Gold Points Redemption Request is successful. <br />Redemption No. : " + result.redemptionNo, fn_closePopAndReload);
-
-                Common.ajax("GET", "/incentive/goldPoints/sendNotification.do", {redemptionNo:result.redemptionNo}, function(result) {
-                	console.log("notification.");
-                    console.log(result);
-                });
 
             } else if (result.p1 == 99) {
                 Common.alert("Insufficient points for redemption.", fn_closePopAndReload);

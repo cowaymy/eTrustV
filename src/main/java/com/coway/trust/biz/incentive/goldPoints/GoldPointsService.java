@@ -27,7 +27,7 @@ public interface GoldPointsService {
 
 	Map<String, Object> createNewRedemption(Map<String, Object> params);
 
-	int sendNotification(Map<String, Object> params);
+	void sendNotification(Map<String, Object> params);
 
 	List<EgovMap> selectTransactionHistoryList(Map<String, Object> params);
 

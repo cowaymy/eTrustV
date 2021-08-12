@@ -129,8 +129,7 @@ public class GoldPointsRedemptionController {
 	@RequestMapping(value = "/newRedemptionPop.do")
 	public String newRedemptionPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
-		//params.put("userId", sessionVO.getUserId());  	//temporarily comment out for testing
-		params.put("userId", 89197);		//temporarily set for testing
+		params.put("userId", sessionVO.getUserId());
 
 		String memCode = goldPointsService.getOrgDtls(params);
 		params.put("memCode", memCode);
@@ -164,30 +163,23 @@ public class GoldPointsRedemptionController {
 		LOGGER.debug("===== createNewRedemption.do =====");
 		LOGGER.debug("params : {}", params);
 
-		Map<String, Object> resultValue = goldPointsService.createNewRedemption(params);
+    	Map<String, Object> notificationMap = new HashMap<>();
+    	notificationMap.put("mobileNo", params.get("mobileNo"));
+    	notificationMap.put("emailAddr", params.get("emailAddr"));
+    	notificationMap.put("userId", sessionVO.getUserId());
 
+		Map<String, Object> resultValue = goldPointsService.createNewRedemption(params);
 	    LOGGER.debug("resultValue : " + resultValue);
 
-	    return ResponseEntity.ok(resultValue);
-	}
+	    if ((int) resultValue.get("p1") == 1) {
+			LOGGER.debug("===== sendNotification =====");
 
-	@RequestMapping(value = "/sendNotification.do", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> sendNotification(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	    	notificationMap.put("redemptionNo", resultValue.get("redemptionNo"));
 
-		int result = goldPointsService.sendNotification(params);
-
-		ReturnMessage message = new ReturnMessage();
-
-	    if (result > 0) {
-	    	message.setMessage("Redemption notification successful.");
-	        message.setCode(AppConstants.SUCCESS);
-	    } else {
-	    	message.setMessage("Redemption notification failed.");
-	        message.setCode(AppConstants.FAIL);
+	    	goldPointsService.sendNotification(notificationMap);
 	    }
 
-	    return ResponseEntity.ok(message);
-
+	    return ResponseEntity.ok(resultValue);
 	}
 
 	@RequestMapping(value = "/updateRedemptionPop.do")
@@ -200,7 +192,7 @@ public class GoldPointsRedemptionController {
 	}
 
 	@RequestMapping(value = "/updateRedemption.do", method = RequestMethod.POST)
-	public ResponseEntity updateRedemption(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO){
+	public ResponseEntity<ReturnMessage> updateRedemption(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO){
 
 		params.put("userId", sessionVO.getUserId());
 

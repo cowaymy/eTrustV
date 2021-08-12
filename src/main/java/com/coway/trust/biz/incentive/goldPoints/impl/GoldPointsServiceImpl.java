@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.incentive.goldPoints.GoldPointsService;
+import com.coway.trust.cmmn.model.EmailVO;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -146,24 +149,73 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 	}
 
 	@Override
-	public int sendNotification(Map<String, Object> params) {
-		int smsResult = 0;
-		int emailResult = 0;
-
-		smsResult = sendSMS(params);
-		emailResult = sendEmail(params);
-
-		return smsResult + emailResult;
+	public void sendNotification(Map<String, Object> params) {
+		sendSMS(params);
+		sendEmail(params);
 	}
 
-	private int sendEmail(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return 0;
+	private void sendEmail(Map<String, Object> params) {
+
+		String emailAddr = (String) params.get("emailAddr");
+		String rdmNo = (String) params.get("redemptionNo");
+
+		if (emailAddr != null && !emailAddr.equals("")
+				&& rdmNo != null && !rdmNo.equals("")) {
+
+			EgovMap redemptionDtl = new EgovMap();
+			redemptionDtl = goldPointsMapper.selectRedemptionDetailsEmail(params);
+
+			params.put("memCode", redemptionDtl.get("memCode"));
+			params.put("memName", redemptionDtl.get("memName"));
+			params.put("itmDisplayName", redemptionDtl.get("itmDisplayName"));
+			params.put("qty", redemptionDtl.get("qty"));
+			params.put("totalPts", redemptionDtl.get("totalPts"));
+			params.put("collectBrnch", redemptionDtl.get("collectBrnch"));
+
+		    EmailVO email = new EmailVO();
+		    String emailTitle = goldPointsMapper.getEmailTitle(params);
+		    String emailDetails = goldPointsMapper.getEmailDetails(params);
+
+		    email.setTo(emailAddr);
+		    email.setHtml(true);
+		    email.setSubject(emailTitle);
+		    email.setText(emailDetails);
+		    email.setHasInlineImage(false);
+
+		    boolean isResult = false;
+		    isResult = adaptorService.sendEmail(email, false);
+
+			logger.debug(" Email sent : " + isResult);
+		}
 	}
 
-	private int sendSMS(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return 0;
+	private void sendSMS(Map<String, Object> params) {
+
+		String mobileNumber = (String) params.get("mobileNo");
+		String rdmNo = (String) params.get("redemptionNo");
+
+		if (mobileNumber != null && !mobileNumber.equals("")
+				&& rdmNo != null && !rdmNo.equals("")) {
+
+			SmsVO sms = new SmsVO((int) params.get("userId"), 975);
+
+			String smsContent = "COWAY:Your Gold Point Redemption No is " + rdmNo + ". Login to eTrust system to check redemption status";
+
+			logger.debug(" Message Contents : " + smsContent);
+			logger.debug(" Mobile Phone Number : " + mobileNumber);
+
+			sms.setMessage(smsContent);
+			sms.setMobiles(mobileNumber);
+
+			//send SMS
+			SmsResult smsResult = adaptorService.sendSMS(sms);
+
+			logger.debug("getErrorCount : {}", smsResult.getErrorCount());
+			logger.debug("getFailCount : {}", smsResult.getFailCount());
+			logger.debug("getSuccessCount : {}", smsResult.getSuccessCount());
+			logger.debug("getFailReason : {}", smsResult.getFailReason());
+			logger.debug("getReqCount : {}", smsResult.getReqCount());
+		}
 	}
 
 	@Override
