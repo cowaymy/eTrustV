@@ -479,7 +479,7 @@
             B.NAME AS MEM_NAME,
             UPPER(C.ITM_CODE) || ' - ' || UPPER(C.ITM_DESC) AS ITM_DISPLAY_NAME,
             A.QTY,
-            D.CODE || '-' || D.NAME AS COLLECT_BRNCH,
+            D.CODE || ' - ' || D.NAME AS COLLECT_BRNCH,
             E.TOTAL_PTS
         FROM ICR0007M A
         JOIN ORG0001D B ON B.MEM_CODE = A.MEM_CODE
