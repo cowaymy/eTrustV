@@ -12,38 +12,16 @@
             fn_setDetail(gridID, event.rowIndex);
         });
 
-        if("${SESSION_INFO.userTypeId}" != "4") {
-            if("${SESSION_INFO.memberLevel}" == "1") {
-                $("#orgCode").val("${orgCode}");
-                $("#orgCode").attr("readonly", true);
+        if("${SESSION_INFO.userTypeId}" != "4" && "${SESSION_INFO.userTypeId}" != "6") {
+        	$("#orgCode").val("${orgCode}");
+            $("#grpCode").val("${grpCode}");
+            $("#deptCode").val("${deptCode}");
+            $("#memCode").val("${memCode}");
 
-            } else if("${SESSION_INFO.memberLevel}" == "2") {
-                $("#orgCode").val("${orgCode}");
-                $("#grpCode").val("${grpCode}");
-
-                $("#orgCode").attr("readonly", true);
-                $("#grpCode").attr("readonly", true);
-
-            } else if("${SESSION_INFO.memberLevel}" == "3") {
-                $("#orgCode").val("${orgCode}");
-                $("#grpCode").val("${grpCode}");
-                $("#deptCode").val("${deptCode}");
-
-                $("#orgCode").attr("readonly", true);
-                $("#grpCode").attr("readonly", true);
-                $("#deptCode").attr("readonly", true);
-
-            } else if("${SESSION_INFO.memberLevel}" == "4") {
-                $("#orgCode").val("${orgCode}");
-                $("#grpCode").val("${grpCode}");
-                $("#deptCode").val("${deptCode}");
-                $("#memCode").val("${memCode}");
-
-                $("#orgCode").attr("readonly", true);
-                $("#grpCode").attr("readonly", true);
-                $("#deptCode").attr("readonly", true);
-                $("#memCode").attr("readonly", true);
-            }
+            $("#orgCode").attr("readonly", true);
+            $("#grpCode").attr("readonly", true);
+            $("#deptCode").attr("readonly", true);
+            $("#memCode").attr("readonly", true);
         }
 
     });
