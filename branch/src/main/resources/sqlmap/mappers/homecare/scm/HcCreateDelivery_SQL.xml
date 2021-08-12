@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper">
+
+    <select id="selectPoListCnt" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectPoListCnt] - KR JIN */
+        SELECT COUNT(1) AS CNT
+          FROM HMC0004M A
+         WHERE 1 = 1
+           AND A.PO_STS_CD IN (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE IN ('30', '90'))
+           AND A.SUPP_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '438' AND CODE = '20')
+           AND A.PO_TY_CD  = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '428' AND CODE = 'PO')
+           AND A.USE_YN = 'Y'
+         <if test='sCdc != null and sCdc != ""'>
+           AND A.CDC = #{sCdc}
+         </if>
+         <if test="sPoDtFrom != null and sPoDtFrom !=''">
+           AND A.APPR_DT <![CDATA[>=]]> TO_DATE(#{sPoDtFrom}, 'YYYYMMDD')
+         </if>
+         <if test="sPoDtTo != null and sPoDtTo !=''">
+           AND A.APPR_DT <![CDATA[<=]]> TO_DATE(#{sPoDtTo}, 'YYYYMMDD') + 1
+         </if>
+         <if test="sMemAccId != null and sMemAccId !=''">
+           AND A.MEM_ACC_ID = #{sMemAccId}
+         </if>
+         <if test="sMemAcc != null and sMemAcc !=''">
+           AND 1 = 2
+         </if>
+         <if test="sPoNo != null and sPoNo !=''">
+           AND A.PO_NO = #{sPoNo}
+         </if>
+    </select>
+
+    <select id="selectPoList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectPoList] - KR JIN */
+        SELECT * FROM (
+            SELECT ROWNUM AS RNUM, T1.*
+              FROM (
+			        SELECT A.CDC
+					     , b.CDC_TEXT AS CDC_NAME
+					     , A.PO_NO
+					     , A.PO_TY_CD
+					     , (SELECT CODE_NAME
+					          FROM SYS0013M
+					         WHERE CODE_MASTER_ID = '428'
+					           AND CODE_ID = A.PO_TY_CD) AS PO_TY_NAME
+					     , A.PO_STS_CD
+					     , (SELECT CODE
+					          FROM SYS0013M
+					         WHERE CODE_MASTER_ID = '429'
+					           AND CODE_ID = A.PO_STS_CD) AS PO_STS_CODE
+					     , (SELECT CODE_NAME
+					          FROM SYS0013M
+					         WHERE CODE_MASTER_ID = '429'
+					           AND CODE_ID = A.PO_STS_CD) AS PO_STS_NAME
+					     , A.SUPP_STS_CD
+					     , (SELECT CODE
+					          FROM SYS0013M
+					         WHERE CODE_MASTER_ID = '438'
+					            AND CODE_ID = A.SUPP_STS_CD) AS SUPP_STS_CODE
+					     , (SELECT CODE_NAME
+					          FROM SYS0013M
+					         WHERE CODE_MASTER_ID = '438'
+					           AND CODE_ID = A.SUPP_STS_CD) AS SUPP_STS_NAME
+					     , A.MEM_ACC_ID
+					     , (SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = A.MEM_ACC_ID) AS MEM_ACC_NAME
+					     , A.APPR_DT AS PO_DT
+					     , TO_DATE(A.CDC_DUE_DT, 'YYYYMMDD') AS CDC_DUE_DT
+					     , B.ADDRESS AS ADDRESS
+					     , B.TEL
+					     , A.RM
+					  FROM HMC0004M A
+					     , (
+                            SELECT A.WH_LOC_ID    AS CDC
+                                 , A.WH_LOC_DESC  AS CDC_TEXT
+                                 , B.STATE ||' '|| B.CITY ||' '|| B.AREA ||' '|| A.STREET ||' '|| A.ADDR_DTL  AS ADDRESS
+                                 , NVL(A.WH_LOC_TEL1, A.WH_LOC_TEL2 ) AS TEL
+                              FROM SYS0028M A
+                                 , SYS0064M B
+                             WHERE A.AREA_ID = B.AREA_ID(+)
+                               --AND A.WH_LOC_CODE IN ('3010', '3020', '3030')
+                               AND A.HC_CHK = 'Y'
+                           ) B  -- CDC MASTER
+					 WHERE A.CDC = B.CDC (+)
+					   AND A.PO_STS_CD IN (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '429' AND CODE IN ('30', '90'))
+					   AND A.SUPP_STS_CD = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '438' AND CODE = '20')
+					   AND A.PO_TY_CD  = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '428' AND CODE = 'PO')
+					   AND A.USE_YN = 'Y'
+					 <if test='sCdc != null and sCdc != ""'>
+			           AND A.CDC = #{sCdc}
+					 </if>
+					 <if test="sPoDtFrom != null and sPoDtFrom !=''">
+					   AND A.APPR_DT <![CDATA[>=]]> TO_DATE(#{sPoDtFrom}, 'YYYYMMDD')
+					 </if>
+					 <if test="sPoDtTo != null and sPoDtTo !=''">
+					   AND A.APPR_DT <![CDATA[<=]]> TO_DATE(#{sPoDtTo}, 'YYYYMMDD') + 1
+					 </if>
+					 <if test="sMemAccId != null and sMemAccId !=''">
+					   AND A.MEM_ACC_ID = #{sMemAccId}
+					 </if>
+					 <if test="sMemAcc != null and sMemAcc !=''">
+                       AND 1 = 2
+                     </if>
+					 <if test="sPoNo != null and sPoNo !=''">
+					   AND A.PO_NO = #{sPoNo}
+					 </if>
+                    ORDER BY
+                    <choose>
+                        <when test='sort != null and sort.size != 0'>
+                            <foreach item="item" index="index" collection="sort" open="" separator="," close="">
+                                <choose>
+                                    <when test='item.field == "cdc"'>CDC <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "cdcName"'>CDC_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "poNo"'>A.PO_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "poTyCd"'>A.PO_TY_CD <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "poTyName"'>PO_TY_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "poStsCd"'>A.PO_STS_CD <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "poStsCode"'>PO_STS_CODE <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "poStsName"'>PO_STS_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "suppStsCd"'>A.SUPP_STS_CD <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "suppStsCode"'>SUPP_STS_CODE <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "suppStsName"'>SUPP_STS_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "memAccId"'>MEM_ACC_ID <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "memAccName"'>MEM_ACC_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "poDt"'>PO_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "cdcDueDt"'>CDC_DUE_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "address"'>ADDRESS <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "tel"'>B.TEL <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "rm"'>A.RM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <otherwise>
+                                        PO_NO DESC
+                                    </otherwise>
+                                </choose>
+                            </foreach>
+                        </when>
+                        <otherwise>
+                            PO_NO DESC
+                        </otherwise>
+                     </choose>
+                 ) T1
+            <where>
+                <if test='firstIndex != -1 and lastIndex != -1'>
+                    ROWNUM <![CDATA[<=]]> #{lastIndex}
+                </if>
+            </where>
+            )
+        <where>
+            <if test='firstIndex != -1 and lastIndex != -1'>
+                RNUM > #{firstIndex}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPoDetailList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectPoDetailList] - KR JIN */
+        SELECT A.PO_NO
+             , A.PO_DTL_NO
+             , A.STOCK_ID
+             , A.STOCK_CODE
+             , (SELECT STK_DESC FROM SYS0026M WHERE STK_ID = A.STOCK_ID AND STK_CODE = A.STOCK_CODE) AS STOCK_NAME
+             , A.SUPLY_ITEM_CD
+             --, A.PO_QTY
+             , A.CONFIRM_QTY
+             , NVL(D.ACTUAL_QTY, 0) AS ACTUAL_QTY
+             , NVL(B.EXT_QTY, 0) AS EXT_QTY
+             , NVL(C.QC_FAIL_QTY, 0) AS QC_FAIL_QTY
+             , ( NVL(D.ACTUAL_QTY, 0) - NVL(B.EXT_QTY, 0) + NVL(C.QC_FAIL_QTY, 0) ) AS AVAILABLE_QTY
+             , 0 AS DO_QTY
+             , A.UOM
+             , (SELECT CODE_NAME
+                  FROM SYS0013M
+                 WHERE CODE_MASTER_ID = '42'
+                   AND CODE_ID = A.UOM) AS UOM_NAME
+             , A.PO_UPRC
+             , A.SUPLY_PRC
+             , A.TAX
+             , A.TAX_CD
+             , (SELECT CODE_NAME
+                  FROM SYS0013M
+                 WHERE CODE_MASTER_ID = '430'
+                   AND CODE_ID = A.TAX_CD) AS TAX_NAME
+             , A.LOCAL_AMT
+             , (A.SUPLY_PRC+A.TAX) AS TOTAL
+          FROM HMC0005D A
+	         , (
+	            SELECT PO_NO
+	                 , PO_DTL_NO
+	                 , SUM(DELVRY_QTY) AS EXT_QTY
+	              FROM HMC0008D
+	             WHERE PO_NO = #{sPoNo}
+	               AND USE_YN = 'Y'
+	             GROUP BY PO_NO, PO_DTL_NO
+	           ) B
+	        , (
+	           SELECT PO_NO
+	                , PO_DTL_NO
+                    , SUM(QC_FAIL_QTY) AS QC_FAIL_QTY
+				 FROM HMC0010D
+				WHERE 1 = 1
+				  AND PO_NO = #{sPoNo}
+				  AND USE_YN = 'Y'
+				GROUP BY PO_NO, PO_DTL_NO
+	          ) C
+	        , (
+	           SELECT PO_NO
+				    , PO_DTL_NO
+				    , SUM(ACTUAL_QTY) AS ACTUAL_QTY
+				 FROM HMC0006D
+				WHERE 1 = 1
+				  AND PO_NO = #{sPoNo}
+			    GROUP BY PO_NO, PO_DTL_NO
+	          ) D
+        WHERE A.PO_NO = B.PO_NO (+)
+          AND A.PO_DTL_NO = B.PO_DTL_NO (+)
+          AND A.PO_NO = C.PO_NO (+)
+          AND A.PO_DTL_NO = C.PO_DTL_NO (+)
+          AND A.PO_NO = D.PO_NO (+)
+          AND A.PO_DTL_NO = D.PO_DTL_NO (+)
+          AND A.PO_NO = #{sPoNo}
+          AND A.USE_YN = 'Y'
+        ORDER BY A.PO_NO, A.PO_DTL_NO
+    </select>
+
+    <select id="selectDeliveryList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectDeliveryList] - KR JIN */
+        SELECT ROWNUM AS RNUM
+             , A.HMC_DELVRY_NO
+		     , B.HMC_DELVRY_NO_DTL_NO
+		     , B.STOCK_ID
+		     , B.STOCK_CODE
+		     , (SELECT STK_DESC FROM SYS0026M WHERE STK_ID = B.STOCK_ID AND STK_CODE = B.STOCK_CODE) AS STOCK_NAME
+		     , B.DELVRY_QTY
+		     , B.PO_NO
+		     , B.PO_DTL_NO
+		     , TO_DATE(A.DELVRY_DT, 'YYYYMMDD') AS DELVRY_DT
+		     , A.DELVRY_GI_DT AS DELVRY_GI_DT
+		     , A.DELVRY_STATUS
+             , (SELECT CODE
+                  FROM SYS0013M
+                 WHERE CODE_MASTER_ID = '432'
+                   AND CODE_ID = A.DELVRY_STATUS) AS DELVRY_STATUS_CODE
+             , DECODE(A.DELVRY_GI_DT, NULL, 'N', 'Y') AS PRINT_YN
+		  FROM HMC0007M A
+		     , HMC0008D B
+		 WHERE A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
+		   AND A.PO_NO = B.PO_NO
+		   AND A.USE_YN = 'Y'
+		   AND B.USE_YN = 'Y'
+           AND A.PO_NO = #{sPoNo}
+         ORDER BY A.HMC_DELVRY_NO ASC, B.HMC_DELVRY_NO_DTL_NO ASC
+    </select>
+
+    <select id="selectHmcDelvryNo" resultType="String">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectHmcDelvryNo] - KR JIN */
+        SELECT 'HDVR'||TO_CHAR(SYSDATE, 'YYMMDD')|| LPAD(NVL(MAX(TO_NUMBER(SUBSTR(HMC_DELVRY_NO , 11))), 0)+1, 5, '0') AS DELVRY_NO
+          FROM HMC0007M
+         WHERE HMC_DELVRY_NO LIKE 'HDVR'||TO_CHAR(SYSDATE, 'YYMMDD')||'%'
+    </select>
+
+    <insert id="insertHcCreateDeliveryMain" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.insertHcCreateDelivery] - KR JIN */
+		INSERT
+		  INTO HMC0007M    -- Delivery Header
+		(
+			   HMC_DELVRY_NO        --HomeCare Delivery Number
+			 , DELVRY_DT            --Delivery Date
+			 , DELVRY_GI_DT         --Delivery GI Date
+
+			 , DELVRY_STATUS        --Delivery Status(432)
+			 , MEM_ACC_ID           --Supplier
+			 , RM                   --Remark
+			 , PO_NO                --PO No Key Value
+			 , USE_YN               --USE_YN
+			 , CRT_DT               --Create Date
+			 , CRT_USER_ID          --Create User Id
+			 , UPD_DT               --Update Date
+			 , UPD_USER_ID          --Update User Id
+
+	   )VALUES(
+			   #{delvryNo}         --HomeCare Delivery Number
+			 , TO_CHAR(SYSDATE, 'YYYYMMDD')
+			 , NULL
+
+			 , (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '432' AND CODE = '10')
+			 , (SELECT MEM_ACC_ID FROM HMC0004M WHERE PO_NO = #{poNo})
+			 , NULL
+			 , #{poNo}                --PO No Key Value
+			 , 'Y'
+			 , SYSDATE
+			 , #{crtUserId}           --Create User Id
+			 , SYSDATE
+			 , #{updUserId}           --Update User Id
+	   )
+    </insert>
+
+    <insert id="insertHcCreateDeliveryDetail" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.insertHcCreateDeliveryDetail] - KR JIN */
+	    INSERT
+	      INTO HMC0008D    --  Delivery Detail
+		(
+			   HMC_DELVRY_NO               --Delivery Number
+			 , HMC_DELVRY_NO_DTL_NO        --Delivery Detail Number
+			 , STOCK_ID                    --Material
+			 , STOCK_CODE                  --Material Code
+			 , DELVRY_QTY                  --Delivery Qty
+			 , PO_NO                       --PO No
+			 , PO_DTL_NO                   --Po Detail No
+			 , USE_YN                      --USE_YN
+			 , CRT_DT                      --Create Date
+			 , CRT_USER_ID                 --Create User Id
+			 , UPD_DT                      --Update Date
+			 , UPD_USER_ID                 --Update User Id
+	   )VALUES(
+			   #{delvryNo}                   --Delivery Number
+			 , (SELECT NVL(MAX(HMC_DELVRY_NO_DTL_NO), 0)+1 FROM HMC0008D WHERE HMC_DELVRY_NO = #{delvryNo})
+			 , #{stockId}                    --Material
+			 , #{stockCode}                  --Material Code
+			 , #{doQty}                      --Delivery Qty
+			 , #{poNo}                       --PO No
+			 , #{poDtlNo}                    --Po Detail No
+			 , 'Y'
+			 , SYSDATE
+			 , #{crtUserId}                  --Create User Id
+			 , SYSDATE
+			 , #{updUserId}                  --Update User Id
+	  )
+    </insert>
+
+    <select id="selectIsDeleteSearch" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectIsDeleteSearch] - KR JIN */
+        SELECT COUNT(1) AS CNT
+		  FROM HMC0007M
+		 WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+		   AND DELVRY_GI_DT IS NULL
+    </select>
+
+    <update id="deleteHcCreateDeliveryDetail" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.deleteHcCreateDeliveryDetail] - KR JIN */
+        UPDATE HMC0008D
+           SET USE_YN = 'N'
+             , UPD_DT = SYSDATE
+             , UPD_USER_ID = #{updUserId}
+         WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+    </update>
+
+    <update id="deleteHcCreateDeliveryMain" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.deleteHcCreateDeliveryMain] - KR JIN */
+        UPDATE HMC0007M
+           SET USE_YN = 'N'
+             , UPD_DT = SYSDATE
+             , UPD_USER_ID = #{updUserId}
+         WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+    </update>
+
+    <update id="updateDeliveryMain" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.updateDeliveryMain] - KR JIN */
+        UPDATE HMC0007M
+           SET DELVRY_GI_DT = SYSDATE
+             , DELVRY_STATUS = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '432' AND CODE = '20')
+             , UPD_DT = SYSDATE
+             , UPD_USER_ID = #{updUserId}
+         WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+    </update>
+
+    <select id="selectProductionCompar" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectProductionCompar] - KR JIN */
+        SELECT A.PO_NO
+		     , A.PO_DTL_NO
+		     , NVL(B.ACTUAL_QTY, 0) AS ACTUAL_QTY
+		     , NVL(C.DELVRY_QTY, 0) AS DELVRY_QTY
+		  FROM HMC0005D A
+		     , (
+		        SELECT PO_NO
+		             , PO_DTL_NO
+		             , SUM(ACTUAL_QTY) AS ACTUAL_QTY
+		          FROM HMC0006D
+		         WHERE PO_NO = #{poNo}
+		         GROUP BY PO_NO, PO_DTL_NO
+		       ) B
+		     , (
+		         SELECT PO_NO
+		              , PO_DTL_NO
+		              , SUM(DELVRY_QTY) AS DELVRY_QTY
+		           FROM HMC0008D
+		          WHERE USE_YN = 'Y'
+		            AND PO_NO = #{poNo}
+		          GROUP BY PO_NO, PO_DTL_NO
+		       ) C
+		WHERE A.PO_NO = B.PO_NO (+)
+		  AND A.PO_DTL_NO = B.PO_DTL_NO (+)
+		  AND A.PO_NO = C.PO_NO (+)
+		  AND A.PO_DTL_NO = C.PO_DTL_NO (+)
+		  AND A.USE_YN = 'Y'
+		  AND A.PO_NO = #{poNo}
+		 ORDER BY PO_NO, PO_DTL_NO
+    </select>
+
+    <select id="selectGrCompleteCheck" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectGrCompleteCheck] - KR JIN */
+	    SELECT COUNT(1)
+		  FROM HMC0009M
+		 WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+		   AND GR_YN = 'Y'
+    </select>
+
+    <select id="selectCdcSerialChk" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectCdcSerialChk] - KR JIN */
+        SELECT DECODE(B.SERIAL_CHK, 'Y', 'Y', 'N') AS SERIAL_CHK
+             , B.STK_TYPE_ID
+		     , (SELECT CDC FROM HMC0004M WHERE PO_NO = A.PO_NO) AS CDC
+		  FROM HMC0008D A
+		     , SYS0026M B
+		 WHERE A.HMC_DELVRY_NO = #{hmcDelvryNo}
+		   AND A.STOCK_ID = B.STK_ID
+		   AND A.STOCK_CODE = B.STK_CODE
+    </select>
+
+    <select id="selectGrNoList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectGrNoList] - KR JIN */
+        SELECT HMC_GR_NO
+          FROM HMC0009M
+         WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+           AND USE_YN = 'Y'
+    </select>
+
+    <select id="selectSerialCountCheck" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.selectSerialCountCheck] - KR JIN */
+        SELECT COUNT(1)
+		  FROM (
+		        SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+		             , REQST_NO
+		          FROM LOG0099D
+		         WHERE REQST_NO = #{hmcGrNo}
+		       )
+		 WHERE RN = 1
+    </select>
+
+    <delete id="deleteDeliveryGrDetail" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.deleteDeliveryGrDetail] - KR JIN */
+	    DELETE FROM HMC0010D
+	     WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+    </delete>
+
+    <delete id="deleteDeliveryGrMain" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.deleteDeliveryGrMain] - KR JIN */
+        DELETE FROM HMC0009M
+         WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+    </delete>
+
+    <update id="updateInitDelivery" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcCreateDeliveryMapper.updateInitDelivery] - KR JIN */
+        UPDATE HMC0007M
+           SET DELVRY_GI_DT = NULL
+             , DELVRY_STATUS = (SELECT CODE_ID FROM SYS0013M WHERE CODE_MASTER_ID = '432' AND CODE = '10')
+             , UPD_USER_ID = #{updUserId}
+             , UPD_DT = SYSDATE
+         WHERE HMC_DELVRY_NO = #{hmcDelvryNo}
+    </update>
+
+</mapper>

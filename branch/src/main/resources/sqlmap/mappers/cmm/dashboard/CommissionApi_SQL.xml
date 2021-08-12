@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.cmm.dashboard.impl.CommissionApiMapper">
+
+
+
+<select id="selectCommissionDashbordHP" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.cmm.dashboard.impl.CommissionApiMapper.selectCommissionDashbordHP] 20191105 - KR JAEMAJEM */
+SELECT  TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'MM.YYYY')                             AS MM_YYYY
+    ,   A.BTN                                                                   AS BTN
+    ,   A.BTN_NM                                                                AS BTN_NM
+    ,   NVL(B.VAL, 0)                                                           AS VAL
+    ,   NVL(B.VAL_SUM, 0)                                                       AS VAL_SUM
+    ,   NVL(B.VAL_PERCENTAGE, 0)                                                AS VAL_PERCENTAGE
+FROM
+(
+        SELECT  'VAL01' AS BTN, 'Outright /Installment Sales'       AS BTN_NM FROM DUAL UNION ALL
+        SELECT  'VAL02' AS BTN, 'Rental Sales'                      AS BTN_NM FROM DUAL UNION ALL
+        SELECT  'VAL03' AS BTN, 'Bonus Commission'                  AS BTN_NM FROM DUAL UNION ALL
+        SELECT  'VAL04' AS BTN, 'Outright Plus Sales'               AS BTN_NM FROM DUAL UNION ALL
+        SELECT  'VAL05' AS BTN, 'Outright Membership Sales'         AS BTN_NM FROM DUAL UNION ALL
+        SELECT  'VAL06' AS BTN, 'Rental Membership Sales'           AS BTN_NM FROM DUAL UNION ALL
+        SELECT  'VAL07' AS BTN, 'Performance Incentive'             AS BTN_NM FROM DUAL UNION ALL
+        SELECT  'VAL08' AS BTN, 'Performance Allowance (Neo Pro)'   AS BTN_NM FROM DUAL UNION ALL
+        SELECT  'VAL09' AS BTN, 'MLP Activities Allowance'          AS BTN_NM FROM DUAL UNION ALL
+        SELECT  'VAL10' AS BTN, 'Adjust Amount'                     AS BTN_NM FROM DUAL UNION ALL
+        SELECT  'VAL11' AS BTN, 'SHI amount'                        AS BTN_NM FROM DUAL UNION ALL
+        SELECT  'VAL12' AS BTN, 'TBB Amount'                        AS BTN_NM FROM DUAL UNION ALL
+        SELECT  'VAL13' AS BTN, 'Own Purchase'                      AS BTN_NM FROM DUAL UNION ALL
+        SELECT  'VAL14' AS BTN, 'Compliance Amount'                 AS BTN_NM FROM DUAL
+) A
+LEFT OUTER JOIN
+(
+        SELECT  BTN
+            ,   VAL                                                             AS VAL
+            ,   SUM(VAL) OVER()                                                 AS VAL_SUM
+            ,   ROUND(RATIO_TO_REPORT(VAL) OVER() * 100)                        AS VAL_PERCENTAGE
+        FROM
+        (
+            SELECT  ROUND(NVL(C.R2, 0))                                         AS VAL01
+                ,   (
+                            ROUND(NVL(C.R3, 0))
+                        -   ROUND(NVL(C.R39, 0))
+                    )                                                           AS VAL02
+                ,   ROUND(NVL(C.R4, 0))                                         AS VAL03
+                ,   (
+                            ROUND(NVL(C.R39, 0))
+                        +    ROUND(NVL(C.R40, 0))
+                        +   ROUND(NVL(C.R41, 0))
+                        +   ROUND(NVL(C.R42, 0))
+                    )                                                           AS VAL04
+                ,   ROUND(NVL(C.R13, 0))                                        AS VAL05
+                ,   ROUND(NVL(C.R34, 0))                                        AS VAL06
+                ,   CASE WHEN D.EMPLY_LEV IN (3, 2) THEN ROUND(NVL(C.R20, 0))
+                                                    ELSE ROUND(NVL(C.R1, 0))
+                                                    END                         AS VAL07
+                ,   ROUND(NVL(C.R5, 0))                                         AS VAL08
+                ,   ROUND(NVL(C.R28, 0))                                        AS VAL09
+                ,   ROUND(NVL(C.R99, 0))                                        AS VAL10
+                ,   ROUND(NVL(C.R29, 0))                                        AS VAL11
+                ,   ROUND(NVL(C.R25, 0))                                        AS VAL12
+                ,   ROUND(NVL(C.R67, 0))                                        AS VAL13
+                ,   ROUND(NVL(C.R68, 0))                                        AS VAL14
+            FROM    SYS0047M A
+                    INNER JOIN ORG0001D B
+                        ON  A.HR_CODE = B.MEM_CODE
+                    INNER JOIN CMM0029D C
+                        ON  B.MEM_ID = C.EMPLY_ID
+                    INNER JOIN CMM0006T D
+                        ON  C.EMPLY_ID = D.EMPLY_ID
+                        AND C.TASK_ID = D.COMM_TASK_ID
+            WHERE   C.TASK_ID = ( TO_NUMBER(TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'MM')) + ( TO_NUMBER(TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY')) * 12 ) ) - 24157
+            AND     D.EMPLY_TYPE_ID = 1
+            AND     A.USER_ID = #{userId}
+        ) UNPIVOT ( VAL FOR BTN IN ( VAL01, VAL02, VAL03, VAL04, VAL05, VAL06, VAL07, VAL08, VAL09, VAL10, VAL11, VAL12, VAL13, VAL14 ) )
+) B
+    ON  A.BTN = B.BTN
+ORDER BY A.BTN ASC
+]]>
+</select>
+
+
+
+<select id="selectCommissionDashbordCD" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.cmm.dashboard.impl.CommissionApiMapper.selectCommissionDashbordCD] 20191105 - KR JAEMAJEM */
+SELECT  TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'MM.YYYY')                             AS MM_YYYY
+    ,   A.BTN                                                                   AS BTN
+    ,   A.BTN_NM                                                                AS BTN_NM
+    ,   NVL(B.VAL, 0)                                                           AS VAL
+    ,   NVL(B.VAL_SUM, 0)                                                       AS VAL_SUM
+    ,   NVL(B.VAL_PERCENTAGE, 0)                                                AS VAL_PERCENTAGE
+FROM
+(
+    SELECT  'VAL01' AS BTN, 'Performance Incentive'                                                 AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL02' AS BTN, 'Sales<br/>( Outright + Installment + Rental)'                              AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL03' AS BTN, 'Rental Collection Commission'                                          AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL04' AS BTN, 'Bonus Commission'                                                      AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL05' AS BTN, 'Outright Plus Sales'                                                   AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL06' AS BTN, 'Outright Membership Sales'                                             AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL07' AS BTN, 'Rental Membership Sales'                                               AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL08' AS BTN, 'PE Encourgement Fund'                                                  AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL09' AS BTN, 'Health Family Fund'                                                    AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL10' AS BTN, 'Newly Entering  Allowance'                                             AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL11' AS BTN, 'Incentive<br/>( 1W3s + Sales Incentive +<br/>Sales Encourgement Allowance)'    AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL12' AS BTN, 'Adjustment'                                                            AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL13' AS BTN, 'SHI amount'                                                            AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL14' AS BTN, 'Own Purchase'                                                          AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL15' AS BTN, 'Compliance Amount'                                                     AS BTN_NM FROM DUAL
+) A
+LEFT OUTER JOIN
+(
+        SELECT  BTN
+            ,   VAL                                                             AS VAL
+            ,   SUM(VAL) OVER()                                                 AS VAL_SUM
+            ,   ROUND(RATIO_TO_REPORT(VAL) OVER() * 100)                        AS VAL_PERCENTAGE
+        FROM
+        (
+            SELECT  ROUND(NVL(C.R1, 0))                                         AS VAL01
+                ,   (
+                            ROUND(NVL(C.R2, 0))
+                        +   ROUND(NVL(C.R3, 0))
+                        +   ROUND(NVL(C.R18, 0))
+                        +   ROUND(NVL(C.R19, 0))
+                        +   ROUND(NVL(C.R21, 0))
+                        +   ROUND(NVL(C.R22, 0))
+                    ) - (
+                            ROUND(NVL(C.R39, 0))
+                        +   ROUND(NVL(C.R40, 0))
+                        +   ROUND(NVL(C.R41, 0))
+                        +   ROUND(NVL(C.R42, 0))
+                    )                                                           AS VAL02
+                ,   ROUND(NVL(C.R6, 0))                                         AS VAL03
+                ,   ROUND(NVL(C.R4, 0))                                         AS VAL04
+                ,   (
+                            ROUND(NVL(C.R39, 0))
+                        +   ROUND(NVL(C.R40, 0))
+                        +   ROUND(NVL(C.R41, 0))
+                        +   ROUND(NVL(C.R42, 0))
+                    )                                                           AS VAL05
+                ,   ROUND(NVL(C.R13, 0))                                        AS VAL06
+                ,   ROUND(NVL(C.R34, 0))                                        AS VAL07
+                ,   ROUND(NVL(C.R7, 0))                                         AS VAL08
+                ,   ROUND(NVL(C.R8, 0))                                         AS VAL09
+                ,   ROUND(NVL(C.R10, 0))                                        AS VAL10
+                ,   (
+                            ROUND(NVL(C.R28, 0))
+                        +   ROUND(NVL(C.R5, 0))
+                    )                                                           AS VAL11
+                ,   ROUND(NVL(C.R99, 0))                                        AS VAL12
+                ,   ROUND(NVL(C.R29, 0))                                        AS VAL13
+                ,   ROUND(NVL(C.R67, 0))                                        AS VAL14
+                ,   ROUND(NVL(C.R68, 0))                                        AS VAL15
+            FROM    SYS0047M A
+                    INNER JOIN ORG0001D B
+                        ON  A.HR_CODE = B.MEM_CODE
+                    INNER JOIN CMM0029D C
+                        ON  B.MEM_ID = C.EMPLY_ID
+                    INNER JOIN CMM0006T D
+                        ON  C.EMPLY_ID = D.EMPLY_ID
+                        AND C.TASK_ID = D.COMM_TASK_ID
+            WHERE   C.TASK_ID = ( TO_NUMBER(TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'MM')) + ( TO_NUMBER(TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY')) * 12 ) ) - 24157
+            AND     D.EMPLY_TYPE_ID = 2
+            AND     A.USER_ID = #{userId}
+        ) UNPIVOT ( VAL FOR BTN IN ( VAL01, VAL02, VAL03, VAL04, VAL05, VAL06, VAL07, VAL08, VAL09, VAL10, VAL11, VAL12, VAL13, VAL14, VAL15 ) )
+) B
+    ON  A.BTN = B.BTN
+]]>
+ORDER BY A.BTN ASC
+</select>
+
+
+
+<select id="selectCommissionDashbordCT" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.cmm.dashboard.impl.CommissionApiMapper.selectCommissionDashbordCT] 20191105 - KR JAEMAJEM */
+SELECT  TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'MM.YYYY')                             AS MM_YYYY
+    ,   A.BTN                                                                   AS BTN
+    ,   A.BTN_NM                                                                AS BTN_NM
+    ,   NVL(B.VAL, 0)                                                           AS VAL
+    ,   NVL(B.VAL_SUM, 0)                                                       AS VAL_SUM
+    ,   NVL(B.VAL_PERCENTAGE, 0)                                                AS VAL_PERCENTAGE
+FROM
+(
+    SELECT  'VAL01' AS BTN, 'CTM or CT Basic + Allowance'                       AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL02' AS BTN, 'CTM or CTL Performance'                            AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL03' AS BTN, 'Gross Commission'                                  AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL04' AS BTN, 'Rental Collection Commission'                      AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL05' AS BTN, 'Seniority Amount'                                  AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL06' AS BTN, 'Adjustment Amount'                                 AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL07' AS BTN, 'Reward'                                            AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL08' AS BTN, 'CFF + Reward ( Seniority + Additional)'            AS BTN_NM FROM DUAL UNION ALL
+    SELECT  'VAL09' AS BTN, 'Membership Commission'                             AS BTN_NM FROM DUAL
+) A
+LEFT OUTER JOIN
+(
+    SELECT  BTN
+        ,   VAL                                                                 AS VAL
+        ,   SUM(VAL) OVER()                                                     AS VAL_SUM
+        ,   ROUND(RATIO_TO_REPORT(VAL) OVER() * 100)                            AS VAL_PERCENTAGE
+    FROM
+    (
+        SELECT  ROUND(NVL(C.R4, 0))                                             AS VAL01
+            ,   ROUND(NVL(C.R5, 0))                                             AS VAL02
+            ,   ROUND(NVL(C.R1, 0))                                             AS VAL03
+            ,   ROUND(NVL(C.R2, 0))                                             AS VAL04
+            ,   ROUND(NVL(C.R8, 0))                                             AS VAL05
+            ,   ROUND(NVL(C.R6, 0))                                             AS VAL06
+            ,   ROUND(NVL(C.R11, 0))                                            AS VAL07
+            ,   ROUND(NVL(C.R7, 0))                                             AS VAL08
+            ,   ROUND(NVL(C.R3, 0))                                             AS VAL09
+            ,   A.USER_NAME
+            ,   D.EMPLY_CODE
+        FROM    SYS0047M A
+                INNER JOIN ORG0001D B
+                    ON  A.HR_CODE = B.MEM_CODE
+                INNER JOIN CMM0029D C
+                    ON  B.MEM_ID = C.EMPLY_ID
+                INNER JOIN CMM0006T D
+                    ON  C.EMPLY_ID = D.EMPLY_ID
+                    AND C.TASK_ID = D.COMM_TASK_ID
+        WHERE   C.TASK_ID = ( TO_NUMBER(TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'MM')) + ( TO_NUMBER(TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY')) * 12 ) ) - 24157
+        AND     D.EMPLY_TYPE_ID = 3
+        AND     A.USER_ID = #{userId}
+    ) UNPIVOT ( VAL FOR BTN IN ( VAL01, VAL02, VAL03, VAL04, VAL05, VAL06, VAL07, VAL08, VAL09 ) )
+) B
+    ON  A.BTN = B.BTN
+]]>
+ORDER BY A.BTN ASC
+</select>
+</mapper>

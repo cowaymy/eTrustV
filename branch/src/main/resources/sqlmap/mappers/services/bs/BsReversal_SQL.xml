@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper
+     namespace="com.coway.trust.biz.services.bs.impl.BsReversalMapper">
+
+
+    <select id="selectOrderList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+            SELECT A.NO, B.SALES_ORD_NO, C.MEM_CODE, C.NAME, D.RESULT_CRT_DT, B.CUST_ID, A.STUS_CODE_ID,B.SALES_ORD_ID
+				FROM SVC0008D A, SAL0001D B, ORG0001D C, SVC0006D D
+				WHERE A.SALES_ORD_ID = B.SALES_ORD_ID 
+				AND   A.SCHDUL_ID = D.SCHDUL_ID
+				AND   D.CODY_ID = C.MEM_ID
+				AND A.NO =#{hsNo}
+          ]]>
+    </select>
+    
+    <select id="selectConfigBasicInfo" parameterType="Map" resultType="egovMap">
+            SELECT *
+              FROM ( SELECT Project1.ORD_ID ORD_ID  ,
+                            Project1.ORD_NO ORD_NO  ,
+                            Project1.APP_TYPE_CODE APP_TYPE_CODE  ,
+                            Project1.STOCK_CODE STOCK_CODE  ,
+                            Project1.STOCK_DESC STOCK_DESC  ,
+                            Project1.STOCK_CODE || '-' ||  Project1.STOCK_DESC  as stock ,
+                            Project1.CONFIG_BS_GEN CONFIG_BS_GEN  ,
+                            Project1.SRV_MEM_FREQ SRV_MEM_FREQ  ,
+                            Project1.C1 C1  ,
+                            Project1.C2 C2  ,
+                            Project1.C3 C3  ,
+                            Project1.C4 C4  ,
+                            Project1.CONFIG_BS_REM CONFIG_BS_REM  ,
+                            Project1.CONFIG_SETT_AS CONFIG_SETT_AS  ,
+                            Project1.CONFIG_SETT_BS CONFIG_SETT_BS  ,
+                            Project1.CONFIG_SETT_INS CONFIG_SETT_INS  ,
+                            Project1.CONFIG_BS_WEEK CONFIG_BS_WEEK  ,
+                            Project1.CUST_NAME CUST_NAME  ,
+                            Project1.CUST_NRIC CUST_NRIC  ,
+                            Project1.CONFIG_ID,
+                            Project1.CONFIG_BS_MEM_ID
+              FROM ( SELECT Extent1.ORD_ID ORD_ID  ,
+                            Extent1.ORD_NO ORD_NO  ,
+                            Extent1.APP_TYPE_CODE APP_TYPE_CODE  ,
+                            Extent1.STOCK_CODE STOCK_CODE  ,
+                            Extent1.STOCK_DESC STOCK_DESC  ,
+                            Extent1.CUST_NAME CUST_NAME  ,
+                            Extent1.CUST_NRIC CUST_NRIC  ,
+                            CASE
+                                 WHEN ( Extent3.MEM_ID IS NOT NULL ) THEN Extent3.MEM_ID
+                            ELSE 0
+                               END C1  ,
+                            CASE
+                                 WHEN ( Extent3.MEM_ID IS NOT NULL ) THEN Extent3.MEM_CODE
+                            ELSE ''
+                               END C2  ,
+                            CASE
+                                 WHEN ( Extent3.MEM_ID IS NOT NULL ) THEN Extent3.NAME
+                            ELSE ''
+                               END C3  ,
+                            to_char (Extent4.SETL_DT,'DD/MM/YYYY') C4,
+                            Extent2.CONFIG_SETT_INS CONFIG_SETT_INS  ,
+                            Extent2.CONFIG_SETT_BS CONFIG_SETT_BS  ,
+                            Extent2.CONFIG_SETT_AS CONFIG_SETT_AS  ,
+                            Extent2.CONFIG_BS_GEN CONFIG_BS_GEN  ,
+                            Extent2.CONFIG_BS_WEEK CONFIG_BS_WEEK  ,
+                            Extent2.CONFIG_BS_REM CONFIG_BS_REM  ,
+                            Extent2.SRV_MEM_FREQ SRV_MEM_FREQ  ,
+                            Extent2.CONFIG_ID,
+                            Extent2.CONFIG_BS_MEM_ID
+                     FROM ( SELECT vOrderBasicInfo.ORD_ID ORD_ID  ,
+                                   vOrderBasicInfo.ORD_NO ORD_NO  ,
+                                   vOrderBasicInfo.RENTAL_STUS RENTAL_STUS  ,
+                                   vOrderBasicInfo.ORD_STUS_ID ORD_STUS_ID  ,
+                                   vOrderBasicInfo.ORD_STUS_CODE ORD_STUS_CODE  ,
+                                   vOrderBasicInfo.ORD_STUS_NAME ORD_STUS_NAME  ,
+                                   vOrderBasicInfo.ORD_DT ORD_DT  ,
+                                   vOrderBasicInfo.INSTLMT_PRIOD INSTLMT_PRIOD  ,
+                                   vOrderBasicInfo.ORD_AMT ORD_AMT  ,
+                                   vOrderBasicInfo.ORD_MTH_RENTAL ORD_MTH_RENTAL  ,
+                                   vOrderBasicInfo.ORD_PV ORD_PV  ,
+                                   vOrderBasicInfo.ORD_PV_MONTH ORD_PV_MONTH  ,
+                                   vOrderBasicInfo.ORD_PV_YEAR ORD_PV_YEAR  ,
+                                   vOrderBasicInfo.ORD_REF_NO ORD_REF_NO  ,
+                                   vOrderBasicInfo.ORD_PO_NO ORD_PO_NO  ,
+                                   vOrderBasicInfo.ORD_DEPT_CODE ORD_DEPT_CODE  ,
+                                   vOrderBasicInfo.ORD_GRP_CODE ORD_GRP_CODE  ,
+                                   vOrderBasicInfo.ORD_ORG_CODE ORD_ORG_CODE  ,
+                                   vOrderBasicInfo.ORD_CRT_USER_ID ORD_CRT_USER_ID  ,
+                                   vOrderBasicInfo.ORD_CRT_DT ORD_CRT_DT  ,
+                                   vOrderBasicInfo.APP_TYPE_ID APP_TYPE_ID  ,
+                                   vOrderBasicInfo.APP_TYPE_CODE APP_TYPE_CODE  ,
+                                   vOrderBasicInfo.APP_TYPE_DESC APP_TYPE_DESC  ,
+                                   vOrderBasicInfo.STOCK_ID STOCK_ID  ,
+                                   vOrderBasicInfo.STOCK_CODE STOCK_CODE  ,
+                                   vOrderBasicInfo.STOCK_DESC STOCK_DESC  ,
+                                   vOrderBasicInfo.CUST_ID CUST_ID  ,
+                                   vOrderBasicInfo.CUST_TYPE CUST_TYPE  ,
+                                   vOrderBasicInfo.CUST_NAME CUST_NAME  ,
+                                   vOrderBasicInfo.CUST_NRIC CUST_NRIC  ,
+                                   vOrderBasicInfo.CUST_DOB CUST_DOB  ,
+                                   vOrderBasicInfo.CUST_NATION CUST_NATION  ,
+                                   vOrderBasicInfo.CUST_GENDER CUST_GENDER  ,
+                                   vOrderBasicInfo.CUST_RACE CUST_RACE  ,
+                                   vOrderBasicInfo.CUST_EMAIL CUST_EMAIL  ,
+                                   vOrderBasicInfo.CUST_VA_NO CUST_VA_NO  ,
+                                   vOrderBasicInfo.CUST_PASSPORT_EXPR CUST_PASSPORT_EXPR  ,
+                                   vOrderBasicInfo.CUST_VISA_EXPR CUST_VISA_EXPR  ,
+                                   vOrderBasicInfo.ORD_PROMO_ID ORD_PROMO_ID  ,
+                                   vOrderBasicInfo.ORD_PROMO_CODE ORD_PROMO_CODE  ,
+                                   vOrderBasicInfo.ORD_PROMO_DESC ORD_PROMO_DESC  ,
+                                   vOrderBasicInfo.ORD_MEM_ID ORD_MEM_ID  ,
+                                   vOrderBasicInfo.ORD_MEM_CODE ORD_MEM_CODE  ,
+                                   vOrderBasicInfo.ORD_MEM_NAME ORD_MEM_NAME  ,
+                                   vOrderBasicInfo.ORD_MEM_NRIC ORD_MEM_NRIC  ,
+                                   vOrderBasicInfo.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID  ,
+                                   vOrderBasicInfo.ORD_MEM_TYPE_CODE ORD_MEM_TYPE_CODE  ,
+                                   vOrderBasicInfo.ORD_MEM_TYPE_NAME ORD_MEM_TYPE_NAME  ,
+                                   vOrderBasicInfo.COOL_OFF_PRIOD COOL_OFF_PRIOD  ,
+                                   vOrderBasicInfo.KEYIN_BRNCH_ID KEYIN_BRNCH_ID  ,
+                                   vOrderBasicInfo.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE  ,
+                                   vOrderBasicInfo.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME  ,
+                                   vOrderBasicInfo.ORD_REM ORD_REM  ,
+                                   vOrderBasicInfo.RENT_CHK_ID RENT_CHK_ID  ,
+                                   vOrderBasicInfo.ORD_HM_ID ORD_HM_ID  ,
+                                   vOrderBasicInfo.ORD_SM_ID ORD_SM_ID  ,
+                                   vOrderBasicInfo.ORD_GM_ID ORD_GM_ID  ,
+                                   vOrderBasicInfo.ORD_ADDR_ID ORD_ADDR_ID  ,
+                                   vOrderBasicInfo.ORD_CNTC_ID ORD_CNTC_ID  ,
+                                   vOrderBasicInfo.ORD_PROMO_RELATED_NO ORD_PROMO_RELATED_NO  ,
+                                   vOrderBasicInfo.UPD_DT UPD_DT  ,
+                                   vOrderBasicInfo.UPD_USER_ID UPD_USER_ID  ,
+                                   vOrderBasicInfo.JOM_PAY_REF JOM_PAY_REF  ,
+                                   vOrderBasicInfo.STK_CTGRY_ID STK_CTGRY_ID  ,
+                                   vOrderBasicInfo.STK_CTGRY_NAME STK_CTGRY_NAME  ,
+                                   vOrderBasicInfo.CUST_TYPE_ID CUST_TYPE_ID  ,
+                                   vOrderBasicInfo.CUST_BILL_ID CUST_BILL_ID  ,
+                                   vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR
+                            FROM SAL1006V vOrderBasicInfo ) Extent1
+                            LEFT JOIN ( SELECT vOrderSrvMemConfigInfo.ORD_ID ORD_ID  ,
+                                               vOrderSrvMemConfigInfo.CONFIG_ID CONFIG_ID  ,
+                                               vOrderSrvMemConfigInfo.CONFIG_SETT_INS CONFIG_SETT_INS  ,
+                                               vOrderSrvMemConfigInfo.CONFIG_SETT_BS CONFIG_SETT_BS  ,
+                                               vOrderSrvMemConfigInfo.CONFIG_SETT_AS CONFIG_SETT_AS  ,
+                                               vOrderSrvMemConfigInfo.CONFIG_BS_GEN CONFIG_BS_GEN  ,
+                                               vOrderSrvMemConfigInfo.CONFIG_BS_MEM_ID CONFIG_BS_MEM_ID  ,
+                                               vOrderSrvMemConfigInfo.CONFIG_BS_WEEK CONFIG_BS_WEEK  ,
+                                               vOrderSrvMemConfigInfo.CONFIG_BS_REM CONFIG_BS_REM  ,
+                                               vOrderSrvMemConfigInfo.SRV_MEM_ID SRV_MEM_ID  ,
+                                               vOrderSrvMemConfigInfo.SRV_MEM_NO SRV_MEM_NO  ,
+                                               vOrderSrvMemConfigInfo.SRV_MEM_BILL_NO SRV_MEM_BILL_NO  ,
+                                               vOrderSrvMemConfigInfo.SRV_MEM_PAC_ID SRV_MEM_PAC_ID  ,
+                                               vOrderSrvMemConfigInfo.SRV_MEM_PAC_CODE SRV_MEM_PAC_CODE  ,
+                                               vOrderSrvMemConfigInfo.SRV_MEM_PAC_NAME SRV_MEM_PAC_NAME  ,
+                                               vOrderSrvMemConfigInfo.SRV_MEM_START_DT SRV_MEM_START_DT  ,
+                                               vOrderSrvMemConfigInfo.SRV_MEM_EXPR_DT SRV_MEM_EXPR_DT  ,
+                                               vOrderSrvMemConfigInfo.SRV_MEM_FREQ SRV_MEM_FREQ  ,
+                                               vOrderSrvMemConfigInfo.SRV_MEM_DUR SRV_MEM_DUR  ,
+                                               vOrderSrvMemConfigInfo.SRV_MEM_SALESMAN_CODE SRV_MEM_SALESMAN_CODE  ,
+                                               vOrderSrvMemConfigInfo.SRV_MEM_SALESMAN_NAME SRV_MEM_SALESMAN_NAME  ,
+                                               vOrderSrvMemConfigInfo.LAST_SRV_MEM_ID LAST_SRV_MEM_ID  ,
+                                               vOrderSrvMemConfigInfo.LAST_SRV_MEM_START_DATE LAST_SRV_MEM_START_DATE  ,
+                                               vOrderSrvMemConfigInfo.LAST_SRV_MEM_EXPR_DATE LAST_SRV_MEM_EXPR_DATE
+                                        FROM SAL1014V vOrderSrvMemConfigInfo ) Extent2   ON Extent1.ORD_ID = Extent2.ORD_ID
+                            LEFT JOIN ORG0001D Extent3   ON Extent2.CONFIG_BS_MEM_ID = Extent3.MEM_ID
+                            LEFT JOIN SVC0006D Extent4   ON ( Extent1.ORD_ID = Extent4.SALES_ORD_ID )
+                            AND ( 4 = Extent4.RESULT_STUS_CODE_ID )
+                      WHERE  Extent1.ORD_ID = #{salesOrdId} ) Project1
+              ORDER BY Project1.C4 DESC )
+   <![CDATA[                              WHERE ROWNUM <= 1 ]]>
+    </select>
+    
+    <select id="selectReverseReason" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    select resn_id,code,resn_desc 
+	  from sys0032m
+	  where resn_type_id = 726
+	    and stus_code_id = 1
+    ]]>
+    </select>
+    
+    <select id="selectFailReason" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    select resn_id,code,resn_desc 
+      from sys0032m
+      where resn_type_id = 172
+        and stus_code_id = 1
+    ]]>
+    </select>
+
+    </mapper>

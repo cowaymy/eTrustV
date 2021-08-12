@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.inbound.impl.InboundMapper">
+
+	<select id="inBoundList" parameterType="map" resultType="EgovMap">
+
+<![CDATA[
+			SELECT   ROWNUM RNUM
+				        ,S28.WH_LOC_ID
+				        ,S28.WH_LOC_CODE
+				        ,S28.WH_LOC_DESC
+				        ,L83.PLANT
+				        ,L83.BL_NO
+				        ,CASE WHEN L83.SHIP_DT= '00000000' THEN L83.SHIP_DT  ELSE TO_CHAR(TO_DATE(L83.SHIP_DT, 'YYYY/MM/DD')) END shipDt
+                ,CASE WHEN L83.GR_DT= '00000000' THEN L83.GR_DT  ELSE TO_CHAR(TO_DATE(L83.GR_DT, 'YYYY/MM/DD')) END grDt
+				        ,L83.AP_CMPLT
+				        ,L83.GR_CMPLT
+				        ,L84.PUR_DOC_NO
+				        ,L83.ACC_NO
+				        ,L84.ITM_SEQ
+				        ,L84.MATRL_NO
+				        ,S26.STK_TYPE_ID
+				        , (SELECT CODE_NAME
+				                      FROM SYS0013M
+				                      WHERE CODE_ID = S26.STK_TYPE_ID) TYPENAME
+				        ,S26.STK_CTGRY_ID
+				        , (SELECT CODE_NAME
+				                      FROM SYS0013M
+				                      WHERE CODE_ID = S26.STK_CTGRY_ID) CTGRYNAME
+				        ,S26.STK_DESC STKDESC
+				        ,S26.STK_ID STKID
+				        ,L84.QTY
+				        ,NVL (REQ.REQST_QTY, 0) REQED_QTY
+				        , (L84.QTY - NVL (REQ.REQST_QTY, 0) ) AVRQTY
+				        ,L84.UOM
+				        , (SELECT CODE_NAME
+				                    FROM SYS0013M
+				                    WHERE CODE_ID = L84.UOM) UOMNM
+			    FROM LOG0083M L83
+				        ,LOG0084D L84
+				        ,SYS0026M S26
+				        ,SYS0028M S28
+				        , (SELECT   L48.ITM_CODE
+				                   ,SUM (L48.REQST_QTY) REQST_QTY
+				                   ,L48.BL_NO
+				                   ,L48.BL_ITM_SEQ
+				               FROM LOG0047M L47, LOG0048D L48
+				              WHERE L47.REQST_NO = L48.REQST_NO
+				                AND NVL (L47.REQST_DEL, 'N') <> 'Y'
+				                AND L48.BL_NO IS NOT NULL
+				                AND L48.BL_ITM_SEQ IS NOT NULL
+				           GROUP BY L48.ITM_CODE, L48.BL_NO, L48.BL_ITM_SEQ) REQ
+			   WHERE L83.AP_CMPLT = 'X'
+				     AND L83.GR_CMPLT = 'X'
+				     AND NVL (L83.DEL_FLAG, 'Y') <> 'X'
+]]>
+				     AND S28.WH_LOC_GB = '06'
+				     AND L83.BL_NO = L84.BL_NO
+				     AND L83.INV_NO = L84.INV_NO
+				     AND L84.MATRL_NO = S26.STK_CODE
+				     AND L83.PLANT = S28.PLANT
+				     AND L84.BL_NO = REQ.BL_NO(+)
+				     AND L84.ITM_SEQ = REQ.BL_ITM_SEQ(+)
+				     AND L84.MATRL_NO = REQ.ITM_CODE(+)
+				     <if test="invno != null and invno != ''">
+				     AND L83.INV_NO LIKE #{invno}||'%'
+                    </if>
+				     <if test="blno != null and blno != ''">
+				     AND L83.BL_NO LIKE #{blno}||'%'
+                    </if>
+                    <if test="pono != null and pono != ''">
+                     AND L84.PUR_DOC_NO = #{pono}
+                    </if>
+                    <if test="vendorno != null and vendorno != ''">
+                     AND L83.ACC_NO = #{vendorno}
+                    </if>
+				     <if test="location != null and location != ''">
+				     AND S28.WH_LOC_ID =  #{location}
+                    </if>
+				     <if test="grsdt != null and grsdt != '' and gredt != null and gredt != ''">
+				     AND L83.GR_DT BETWEEN TO_CHAR(TO_DATE(#{grsdt},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{gredt},'DD/MM/YYYY'),'YYYYMMDD')
+                    </if>
+				     <if test="blsdt != null and blsdt != '' and bledt != null and bledt != ''">
+				     AND L83.SHIP_DT BETWEEN TO_CHAR(TO_DATE(#{blsdt},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{bledt},'DD/MM/YYYY'),'YYYYMMDD')
+                    </if>
+                    <if test="materialcode != null and materialcode != '' ">
+                    AND L84.MATRL_NO = #{materialcode}
+                    </if>
+                    <if test="smattype !=null">
+                        and s26.STK_TYPE_ID in
+                        <foreach item="item" collection="smattype" index="index" open="(" separator="," close=")">
+                               #{item}
+                        </foreach>
+                    </if>
+                    <if test="smatcate !=null">
+                        and s26.STK_CTGRY_ID in
+                        <foreach item="item" collection="smatcate" index="index" open="(" separator="," close=")">
+                               #{item}
+                        </foreach>
+                    </if>
+			ORDER BY L83.BL_NO, L84.ITM_SEQ
+	</select>
+
+	<select id="inboundLocation" parameterType="map" resultType="EgovMap">
+		SELECT
+	             WH_LOC_ID CODE_ID
+		        ,WH_LOC_CODE
+		        ,WH_LOC_DESC CODE_NAME
+	    FROM SYS0028M
+	    WHERE WH_LOC_GB IN
+		      <choose>
+		          <when test="groupCode eq 'port'.toString()">
+		          ('06')
+		          </when>
+		          <otherwise>
+		          ('01', '05', '07')
+		          </otherwise>
+		      </choose>
+		      AND WH_LOC_DESC  not LIKE ('%_B')
+		      AND WH_LOC_STUS_ID = 1
+	      ORDER BY WH_LOC_ID
+	</select>
+ <select id="receiptList" parameterType="Map" resultType="EgovMap">
+        SELECT Rownum rnum , T.* FROM (
+        select
+               l47.reqst_no reqstno
+             , l55.delvry_no delyno
+             , l48.BL_NO blno
+             , l55.delvry_no_itm
+             , (l47.trnsc_type || ' - ' || tran.code_name) ttype
+             , (l47.trnsc_type_dtl || ' - ' || trand.code_name) mtype
+             , l47.ref_doc_no docno
+             , TO_CHAR(TO_DATE(l54.delvry_dt, 'YYYY/MM/DD'), 'YYYY/MM/DD') delydt
+             , TO_CHAR(TO_DATE(l54.delvry_gi_dt, 'YYYY/MM/DD'), 'YYYY/MM/DD') gidt
+             , TO_CHAR(TO_DATE(l54.delvry_gr_dt, 'YYYY/MM/DD'), 'YYYY/MM/DD') grdt
+             , l48.itm_code itmcd
+             , l48.itm_name itmname
+             , l55.delvry_qty delyqty
+             , l48.uom uom
+             , uomt.code_name uomnm
+             , l47.RCIV_CDC_RDC rcvloc
+             , (s28c.wh_loc_code || ' - ' || DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000)) rcvlocnm
+             , l47.reqst_cdc_rdc reqloc
+             , (s28q.wh_loc_code || ' - ' || DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000)) reqlocnm
+             , l48.reqst_no_itm ritmno
+             , nvl(l55.rcipt_qty , 0) rciptqty
+             , NVL (L54.DELVRY_GR_CMPLT , 'N') grcmplt
+             , NVL (L54.DELVRY_GI_CMPLT , 'N') gicmplt
+             , S26.SERIAL_CHK serialchk
+             , S28Q.SERIAL_REQUIRE_CHK_YN SERIAL_REQUIRE_CHK_YN
+          from log0047m l47
+             , log0048d l48
+             , log0054m l54
+             , log0055d l55
+             , (select * from sys0013m where code_master_id = 306) tran
+             , (select * from sys0013m where code_master_id = 308) trand
+             , (select * from sys0013m where code_master_id = 42) uomt
+             , sys0028m s28c
+             , sys0028m s28q
+             , SYS0026M S26
+         where 1 = 1
+           and l47.trnsc_type     = tran.code
+           and l47.trnsc_type_dtl = trand.code
+           and l47.rciv_cdc_rdc   = s28c.wh_loc_id(+)
+           and l47.reqst_cdc_rdc  = s28q.wh_loc_id(+)
+           and l48.uom            = uomt.code_id
+           and l48.itm_code  = l55.itm_code
+           and l54.delvry_no = l55.delvry_no
+           and l48.reqst_no  = l55.reqst_no
+           AND L48.REQST_NO_ITM = L55.DELVRY_NO_ITM
+           and l47.reqst_no  = l48.reqst_no
+           AND S26.STK_code  = l55.itm_code
+            and l47.REQST_TYPE = 'PO'
+            <if test="seldelno != null and seldelno != ''">
+              and l54.delvry_no  = #{seldelno}
+           </if>
+            <if test="flocation !=null and flocation !=''">
+              and l47.rciv_cdc_rdc = #{flocation}
+           </if>
+           <if test="tlocation !=null and tlocation !=''">
+              and l47.reqst_cdc_rdc = #{tlocation}
+           </if>
+           <if test="blno !=null and blno !=''">
+              and l48.BL_NO = #{blno}
+           </if>
+            <if test="reqstsdt !=null and reqstsdt !=''">
+              and l54.DELVRY_GI_DT <![CDATA[>=]]> to_char(to_date(#{reqstsdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="reqstedt !=null and reqstedt !=''">
+              and l54.DELVRY_GI_DT <![CDATA[<=]]> to_char(to_date(#{reqstedt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="rcivsdt !=null and rcivsdt !=''">
+              and l54.DELVRY_GR_DT <![CDATA[>=]]> to_char(to_date(#{rcivsdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="rcivedt !=null and rcivedt !=''">
+              and l54.DELVRY_GR_DT <![CDATA[<=]]> to_char(to_date(#{rcivedt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+            <if test="status !=null and status !=''">
+              and L54.DELVRY_GR_CMPLT = #{status}
+           </if>
+<!--            <if test="reqstno != null and reqstno != ''">
+              and l47.reqst_no  = #{reqstno}
+           </if>
+           <if test="seldelno != null and seldelno != ''">
+              and l54.delvry_no  = #{seldelno}
+           </if>
+           <if test="smtype !=null and smtype !=''">
+              and l47.REQST_TYPE_DTL = #{smtype}
+           </if>
+           <if test="sttype !=null and sttype !=''">
+              and l47.REQST_TYPE = #{sttype}
+           </if>
+           <if test="flocation !=null and flocation !=''">
+              and l47.rciv_cdc_rdc = #{flocation}
+           </if>
+           <if test="tlocation !=null and tlocation !=''">
+              and l47.reqst_cdc_rdc = #{tlocation}
+           </if>
+           <if test="smvpath !=null and smvpath !=''">
+              and l47.PRIDIC_FRQNCY = #{smvpath}
+           </if>
+           <if test="crtsdt !=null and crtsdt !=''">
+              and l55.DELVRY_DT <![CDATA[>=]]> to_char(to_date(#{crtsdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="crtedt !=null and crtedt !=''">
+              and l55.DELVRY_DT <![CDATA[<=]]> to_char(to_date(#{crtedt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="gtype !=null and gtype =='receipt'">
+              and L54.DELVRY_GI_CMPLT <![CDATA[=]]> 'Y'
+           </if>
+           <if test="gtype !=null and gtype =='receiptList'">
+              and L54.DELVRY_GR_CMPLT <![CDATA[=]]> 'Y'
+           </if> -->
+           ORDER BY l54.delvry_no desc
+           ) T
+    </select>
+ <select id="searchSMO" parameterType="Map" resultType="EgovMap">
+         SELECT
+                    L47.REQST_NO,
+                    L47.TRNSC_TYPE,
+                    L47.TRNSC_TYPE_DTL,
+                    L47.PRIDIC_FRQNCY,
+                    TO_CHAR(L47.REQST_CRT_DT,'DD/MM/YYYY') REQST_CRT_DT,
+                    TO_CHAR(L47.REQST_REQUIRE_DT,'DD/MM/YYYY') REQST_REQUIRE_DT,
+                    L47.REF_DOC_NO,
+                    L47.DOC_HDER_TXT,
+                    L47.GOODS_RCIPT,
+                    L47.RCIV_CDC_RDC,
+                    (SELECT WH_LOC_DESC FROM SYS0028M WHERE WH_LOC_ID=L47.RCIV_CDC_RDC) RCIV_CDC_RDC2,
+                    L47.REQST_CDC_RDC,
+                    (SELECT WH_LOC_DESC FROM SYS0028M WHERE WH_LOC_ID=L47.REQST_CDC_RDC) REQST_CDC_RDC2,
+                    L47.REQST_REM_,
+                    L47.RETN_DEFECT_RESN,
+                    L47.RETN_PRSN_CT_CODY,
+                    L47.CRT_USER_ID,
+                    TO_CHAR(L47.CRT_DT,'DD/MM/YYYY') CRT_DT,
+                    L47.REQST_STUS,
+                    L47.REQST_DEL,
+                    L47.REQST_TYPE,
+                    L47.REQST_TYPE_DTL,
+                    L48.REQST_NO,
+                    L48.REQST_NO_ITM,
+                    L48.ITM_CODE,
+                    L48.ITM_NAME,
+                    L48.REQST_QTY,
+                    L48.UOM,
+                    (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=L48.UOM ) UOMNAME,
+                    L48.ITM_TXT,
+                    L48.REQST_DEL,
+                    L48.FINAL_CMPLT,
+                    L48.CRT_USER_ID,
+                    TO_CHAR(L48.CRT_DT,'DD/MM/YYYY') CRT_DT,
+                    L48.UPD_USER_ID,
+                    L48.UPD_DT,
+                    L48.RCIPT_QTY,
+                    L48.BL_NO
+			FROM  LOG0047M L47, LOG0048D L48
+			WHERE  1=1
+				AND L47.REQST_NO=L48.REQST_NO
+				AND L47.REQST_TYPE='PO'
+	            AND L47.RCIV_CDC_RDC =#{whLocId}
+	            AND L48.BL_NO = #{blNo}
+	            AND L48.ITM_CODE =#{matrlNo}
+	            AND L48.BL_ITM_SEQ=#{itmSeq}
+			ORDER BY   L47.REQST_NO
+    </select>
+
+    <select id="selectStockTransferSeq" resultType="String">
+<!--         SELECT -->
+<!-- 			       'SMO' -->
+<!-- 			       ||TO_CHAR (SYSDATE, 'YYMMDD') -->
+<!-- 			       || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO -->
+<!-- 		   FROM LOG0047M -->
+<!-- 		  WHERE SUBSTR (REQST_NO, 1, 9) =  'SMO'||TO_CHAR (SYSDATE, 'YYMMDD') -->
+    SELECT  'SMO'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(SMO_SEQ.NEXTVAL, 5, '0') FROM  DUAL
+    </select>
+
+    <update id="CreateReqM" parameterType="Map">
+        MERGE INTO LOG0047M  a
+             USING dual
+                on (a.REQST_NO=#{reqNo})
+              WHEN MATCHED THEN
+                   UPDATE SET
+                          a.REQST_CRT_DT    =   to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss')
+                       ,  a.CRT_USER_ID     =   #{userId}
+                       ,  a.CRT_DT          =   SYSDATE
+              WHEN NOT MATCHED THEN
+                       INSERT (
+                              REQST_NO,
+                              TRNSC_TYPE,
+                              TRNSC_TYPE_DTL,
+                              PRIDIC_FRQNCY,
+                              REQST_CRT_DT,
+                              REQST_REQUIRE_DT,
+                              RCIV_CDC_RDC,
+                              REQST_CDC_RDC,
+                              REQST_STUS,
+                              CRT_USER_ID,
+                              CRT_DT,
+                              REQST_TYPE,
+                              REQST_TYPE_DTL
+                              )
+                            VALUES (
+                                   #{reqNo}
+                                    , 'UM'
+                                    , 'UM03'
+                                    , 'M'
+                                    , SYSDATE
+                                    , SYSDATE
+                                    , #{flocation}
+                                    , #{tlocation}
+                                    , 'O'
+                                    , #{userId}
+                                    , SYSDATE
+                                    , 'PO'
+                                    ,  'PO03'
+                                    )
+    </update>
+
+    <insert id="CreateReqD" parameterType="Map">
+        MERGE INTO LOG0048D A
+             USING DUAL
+                ON (A.REQST_NO = #{reqNo} and REQST_NO_ITM = #{resnoitm})
+            WHEN MATCHED THEN
+                UPDATE SET
+                       A.REQST_QTY = #{reqQty}
+                     , A.UOM       = #{uom}
+                     , A.CRT_USER_ID = #{userId}
+                     , A.CRT_DT      = SYSDATE
+            WHEN NOT MATCHED THEN
+                INSERT (
+                            REQST_NO,
+                            REQST_NO_ITM,
+                            ITM_CODE,
+                            ITM_NAME,
+                            REQST_QTY,
+                            UOM,
+                            CRT_USER_ID,
+                            CRT_DT,
+                            BL_NO,
+                            BL_ITM_SEQ
+                            )
+                VALUES (
+                            #{reqNo} ,
+                            (SELECT DECODE(COUNT(REQST_NO_ITM) , 0 , 1 , MAX(REQST_NO_ITM +1)) FROM LOG0048D WHERE REQST_NO = #{reqNo})
+                            ,#{matrlNo} ,
+                            #{stkdesc},
+                            #{reqQty} ,
+                            #{uom} ,
+                            #{userId} ,
+                             SYSDATE,
+                             #{blNo},
+                             #{itmSeq}
+                             )
+    </insert>
+
+    <update id="updateReqStatus" parameterType="String">
+        UPDATE LOG0047M
+           SET REQST_STUS = 'P'
+         WHERE REQST_NO = #{param}
+     </update>
+     <select id="selectDeliverySeq" resultType="String">
+<!--        SELECT -->
+<!-- 		       'DVR' -->
+<!-- 		       ||TO_CHAR (SYSDATE, 'YYMMDD') -->
+<!-- 		       || NVL (TO_CHAR (MAX (SUBSTR (DELVRY_NO, 10, 5) + 1), 'FM00000'), '00001') AS DELVRY_NO -->
+<!-- 		FROM LOG0054M -->
+<!-- 	WHERE SUBSTR (DELVRY_NO, 4, 6) = TO_CHAR (SYSDATE, 'YYMMDD') -->
+        SELECT  'DVR'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(DVL_SEQ.NEXTVAL, 5, '0') FROM  DUAL
+    </select>
+    <insert id="CreateDeliveryM" parameterType="Map">
+                     INSERT INTO LOG0054M
+                     (
+                                DELVRY_NO
+                              , TRNSC_TYPE
+                              , TRNSC_TYPE_DTL
+                              , DELVRY_DT
+                              , CRT_USER_ID
+                              , CRT_DT
+                     )
+                            SELECT
+		                                #{deliveryNo}
+		                              , TRNSC_TYPE
+		                              , TRNSC_TYPE_DTL
+		                              , TO_CHAR(SYSDATE , 'YYYYMMDD')
+		                              , #{userId}
+		                              , SYSDATE
+		                              FROM LOG0047M
+                              WHERE REQST_NO= #{reqNo}
+    </insert>
+    <select id="selectDeliveryList"  parameterType="Map" resultType="EgovMap">
+      SELECT
+		      REQST_NO,
+		      REQST_NO_ITM,
+		      ITM_CODE
+    FROM  LOG0048D
+    WHERE REQST_NO= #{reqNo}
+    </select>
+    <insert id="CreateDeliveryD" parameterType="Map">
+                     INSERT  INTO LOG0055D
+                                (
+                                DELVRY_NO,
+                                DELVRY_NO_ITM,
+                                ITM_CODE,
+                                ITM_NAME,
+                                DELVRY_QTY,
+                                REQST_NO,
+                                CRT_USER_ID,
+                                CRT_DT,
+                                REQST_NO_ITM
+                                )
+                     SELECT
+                                #{deliveryNo} ,
+                                (SELECT DECODE(COUNT(DELVRY_NO_ITM) , 0 , 1 , MAX(DELVRY_NO_ITM +1)) FROM LOG0055D WHERE DELVRY_NO = #{deliveryNo}),
+                               ITM_CODE ,
+                               ITM_NAME,
+                               REQST_QTY ,
+                               REQST_NO ,
+                               #{userId} ,
+                               SYSDATE,
+                               #{reqstNoItm}
+                     FROM LOG0048D
+                     WHERE REQST_NO= #{reqstNo}
+                         AND REQST_NO_ITM = #{reqstNoItm}
+                         AND ITM_CODE = #{itmCode}
+    </insert>
+    <insert id="insertLocSerial" parameterType="Map">
+                    INSERT INTO LOG0063D
+									(
+									SERIAL_NO,
+									MATNR,
+									LOC_ID,
+									CRT_DT,
+									CRT_USER_ID
+									)
+						SELECT
+						            #{serial},
+									L55.ITM_CODE,
+									L47.REQST_CDC_RDC,
+									SYSDATE,
+									#{userId}
+						FROM LOG0055D L55,LOG0047M L47,SYS0026M S26
+						WHERE 1=1
+						AND L55.REQST_NO=L47.REQST_NO
+						AND S26.STK_CODE= L55.ITM_CODE
+						AND S26.SERIAL_CHK='Y'
+						AND L55.DELVRY_NO=#{delno}
+						AND L55.ITM_CODE=#{itmcd}
+    </insert>
+        <resultMap id="BLISSUE" type="egovMap" />
+    <select id="CreateIssue"  statementType="CALLABLE" parameterType="Map">
+             { call SP_LOGISTIC_DELIVERY
+                     (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=BLISSUE} )
+             }
+     </select>
+<!--      <resultMap id="BLISSUECACELL" type="egovMap" />
+     <select id="StockTransferCancelIssue"  statementType="CALLABLE" parameterType="Map">
+             { call SP_LOGISTIC_DELIVERY_CANCEL
+                     (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=BLISSUECACELL} )
+             }
+     </select>  -->
+	<select id="selectDeliverydupCheck" parameterType="Map" resultType="egovMap">
+		SELECT
+		         BL_NO
+		        ,BL_ITM_SEQ
+		        ,ITM_CODE
+		        ,SUM (REQST_QTY) REQST_QTY
+		        ,NVL (SUM (RCIPT_QTY), 0) RCIPT_QTY
+		    FROM LOG0048D
+		   WHERE BL_NO = #{blNo}
+		       AND BL_ITM_SEQ = #{itmSeq}
+		       AND ITM_CODE = #{matrlNo}
+		GROUP BY BL_NO, BL_ITM_SEQ, ITM_CODE
+		ORDER BY BL_NO, BL_ITM_SEQ, ITM_CODE
+	</select>
+
+    <resultMap id="INBOUNDSERIALDATA" type="egovMap" />
+    <select id="CreateIssueSerial"  statementType="CALLABLE" parameterType="Map">
+        /* [com.coway.trust.biz.logistics.inbound.impl.InboundMapper.CreateIssueSerial] KR_HAN */
+             { call SP_LOGISTIC_DELIVERY_SERIAL
+                     (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId}
+                     ,#{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=INBOUNDSERIALDATA} )
+             }
+    </select>
+
+    <resultMap id="INBOUNDRETURNDATA" type="egovMap" />
+    <select id="callSaveBarcodeScan" parameterType="Map"  statementType="CALLABLE">
+        /* [com.coway.trust.biz.logistics.inbound.impl.InboundMapper.callSaveBarcodeScan] KR_HAN */
+        {CALL SP_LOGISTIC_BARCODE_SAVE(#{sGrDate}, #{rstNo}, #{dryNo}, #{zTrnscType}, #{zIoType}, #{updUserId}
+                    , #{errCode, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=INBOUNDRETURNDATA}
+                    , #{errMsg, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=INBOUNDRETURNDATA})
+         }
+    </select>
+</mapper>
+

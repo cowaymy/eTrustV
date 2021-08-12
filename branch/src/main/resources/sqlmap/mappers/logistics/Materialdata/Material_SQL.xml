@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.materialdata.impl.MaterialMapper">
+<!--    <resultMap id="NonItemClobMap" type="EgovMap">
+        <result property="attach_img_loc" column="ATTACH_IMG_LOC" jdbcType="CLOB" javaType="java.lang.String"/>
+        <result property="itm_desc" column="ITM_DESC" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap> -->
+
+   <select id="selectStockMstList" parameterType="Map" resultType="egovMap">
+	   SELECT itemid , itemname , itemcode ,cateid, catename, statusname
+	   <if test="gubun =='item'">
+       , description
+       </if>
+       <if test="gubun =='stock' or gubun =='stocklist'">
+	   , typename,typeid , uom , serialchk
+	   </if>
+	   from (
+        <if test="gubun =='item'">
+		  SELECT
+		      ITM_ID  itemid ,
+		       ITM_NAME  itemname,
+		       ITM_CODE  itemcode,
+		       CTGRY_ID  cateid,
+		       STUS_CODE_ID stateid,
+		       DBMS_LOB.SUBSTR (ITM_DESC, 4000)  description,
+			   (SELECT code_name
+				  FROM SYS0013M
+				 WHERE code_master_id = 63
+				   and code_id = CTGRY_ID) catename,
+               (SELECT SYS0038M.NAME
+                  FROM SYS0038M
+                 WHERE SYS0038M.STUS_CODE_ID = MSC0039D.STUS_CODE_ID) statusname
+		  FROM MSC0039D
+		 where 1 = 1
+		 </if>
+		 <if test="gubun =='stock' or gubun =='stocklist'">
+		 SELECT STK_ID  itemid
+		     , STK_CODE itemcode
+		     , STK_DESC itemname
+		     , STK_CTGRY_ID cateid
+		     , STK_TYPE_ID typeid
+		     , STUS_CODE_ID stateid
+		     , UOM uom
+		     , SERIAL_CHK serialchk
+		     ,(SELECT CODE_NAME
+		          FROM SYS0013M
+		         WHERE CODE_ID = SYS0026M.STK_CTGRY_ID)
+		          catename,
+		       (SELECT CODE_NAME
+		          FROM SYS0013M
+		         WHERE CODE_ID = SYS0026M.STK_TYPE_ID)
+		          typename,
+               (SELECT SYS0038M.NAME
+                  FROM SYS0038M
+                 WHERE SYS0038M.STUS_CODE_ID = SYS0026M.STUS_CODE_ID) statusname
+		 FROM SYS0026M
+		WHERE 1 = 1
+		 </if>
+      )
+      where 1 = 1
+       <if test="scode != null and scode !=''">
+            and itemcode like  #{scode}||'%'
+       </if>
+       <if test="sname != null and sname !=''">
+            and itemname like '%'|| #{sname} ||'%'
+       </if>
+       <if test="cateid != null and cateid !=''">
+            and cateid =  #{cateid}
+       </if>
+       <if test="typeid != null and typeid !=''">
+            and typeid =  #{typeid}
+       </if>
+       <if test="catelist != null and catelist != ''">
+            AND cateid in
+            <foreach item="item" collection="catelist" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+       <if test="typelist != null and typelist != ''">
+            AND typeid in
+            <foreach item="item" collection="typelist" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+       <if test="stateid != null and stateid !=''">
+            and stateid =  #{stateid}
+       </if>
+       <if test="statlist != null and statlist != ''">
+            AND stateid in
+            <foreach item="item" collection="statlist" index="index" open="(" separator="," close=")">
+            #{item}
+            </foreach>
+       </if>
+	</select>
+
+	<select id="selectMaterialMstItemList" parameterType="Map"  resultType="egovMap">
+       SELECT T1.ITM_ID,
+       T1.ITM_CODE,
+       T1.ITM_NAME,
+       T1.ATTACH_IMG_LOC,
+       T1.CTGRY_ID,
+       T1.SEQ,
+       T1.PRC,
+       T1.PRC_REM,
+       T1.ITM_DESC,
+       T1.CRT_DT,
+       T1.CRT_USER_ID,
+       T1.UPD_DT,
+       T1.UPD_USER_ID,
+       T1.STUS_CODE_ID,
+       T1.IS_ATTACH_IMG,
+       T1.IS_HOT_ITM,
+       T1.IS_NW_ITM,
+       T1.IS_PROMO_ITM,
+       T1.PROMO_NORMAL_PRC,
+       T1.CURRENCY,
+       S94.CODE_DESC CURRENCYNM,
+       T1.UOM,
+       S42.CODE_DESC UOMNAME,
+       T1.ITEM_TYPE,
+       T1.OLD_STK_ID,
+       S63.CODE_ID,
+       S63.CODE_NAME
+  FROM (SELECT M39D.ITM_ID,
+               M39D.ITM_CODE,
+               M39D.ITM_NAME,
+               M39D.ATTACH_IMG_LOC,
+               M39D.CTGRY_ID,
+               M39D.SEQ,
+               M39D.PRC,
+               M39D.PRC_REM,
+               M39D.ITM_DESC,
+               M39D.CRT_DT,
+               M39D.CRT_USER_ID,
+               M39D.UPD_DT,
+               M39D.UPD_USER_ID,
+               M39D.STUS_CODE_ID,
+               M39D.IS_ATTACH_IMG,
+               M39D.IS_HOT_ITM,
+               M39D.IS_NW_ITM,
+               M39D.IS_PROMO_ITM,
+               M39D.PROMO_NORMAL_PRC,
+               M39D.CURRENCY,
+               M39D.UOM,
+               M39D.ITEM_TYPE,
+               M39D.OLD_STK_ID
+          FROM MSC0039D M39D
+         WHERE 1 = 1
+         <if test="svalue != null and svalue !=''">
+           AND ITM_CODE = #{svalue}
+        </if>
+        <if test="spgroup != null and spgroup !=''">
+           AND CTGRY_ID = #{spgroup}
+        </if>
+        <if test="sused != null and sused !=''">
+           AND STUS_CODE_ID = #{sused}
+        </if>
+       ) T1,
+       (SELECT *
+          FROM SYS0013M
+         WHERE CODE_MASTER_ID = 63) S63,
+       (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 42) S42,
+       (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 94) S94
+ WHERE T1.CTGRY_ID = S63.CODE_ID(+)
+   AND T1.UOM       = S42.CODE_ID(+)
+   AND T1.CURRENCY  = S94.CODE_ID(+)
+    </select>
+    <select id="selectNonItemType" resultType="egovMap">
+        select * from
+		(SELECT code_name , code_id
+		           FROM SYS0013M
+		          WHERE CODE_MASTER_ID = '63')
+		          PIVOT (MAX (code_id)
+		                      FOR code_name
+		                      IN ('Product Display – Dummy Set','Cody Tools','HR Item','Finance Item','Misc Item','Uniform','Merchandise Item','Kiosk Item'))
+    </select>
+
+    <update id="updateMaterialItemType" parameterType="Map">
+       UPDATE MSC0039D
+          SET ITM_NAME     = #{itmName}
+            , PRC          = #{prc}
+            , ITM_DESC     = #{itmDesc}
+            , STUS_CODE_ID = #{stusCodeId}
+            , CTGRY_ID     = #{ctgryId}
+            , OLD_STK_ID   = #{oldStkId}
+            , CURRENCY     = #{currency}
+            , UOM          = #{uom}
+            , ITEM_TYPE    = #{itemType}
+            , UPD_DT       = SYSDATE
+            , UPD_USER_ID  = #{updUserId}
+        WHERE ITM_ID       = #{itmId}
+    </update>
+
+    <insert id="insertMaterialItemType" parameterType="Map">
+	    INSERT INTO MSC0039D(
+	    ITM_ID
+	   ,SEQ
+	   ,ITM_CODE
+	   ,ITM_NAME
+	   ,PRC
+	   ,ITM_DESC
+	   ,CRT_DT
+	   ,CRT_USER_ID
+	   ,STUS_CODE_ID
+	   ,CTGRY_ID
+	   ,OLD_STK_ID
+	   ,CURRENCY
+	   ,UOM
+	   ,ITEM_TYPE
+	    )
+	    VALUES (
+	    #{itmidseq}
+	   ,#{itemtypeseq}
+	   ,MSC0039D_SEQ.nextval
+	   ,#{insitmname}
+	   ,#{insprice}
+	   ,#{insitmdesc}
+	   ,SYSDATE
+	   ,#{loginId}
+	   ,#{insstuscode}
+	   ,#{inscateid}
+	   ,#{insolditemid}
+	   ,#{inscurrency}
+	   ,#{insuom}
+	   ,#{insitemtype}
+	    )
+    </insert>
+
+    <delete id="deleteMaterialItemType" parameterType="Map">
+       DELETE FROM MSC0039D
+       WHERE ITM_ID = #{itmId}
+    </delete>
+
+    <select id="materialItmIdSeq" parameterType="Map" resultType="Integer">
+        SELECT NVL(MAX(ITM_ID),0) + 1 from MSC0039D
+    </select>
+    <select id="materialItemTypeSeq" parameterType="Map" resultType="Integer">
+        SELECT NVL(MAX(SEQ),0) + 1 from MSC0039D
+    </select>
+
+</mapper>

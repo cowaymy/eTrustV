@@ -1,0 +1,444 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
+<script type="text/javaScript">
+	var rotID, rotNo, rotOrdId, rotOrdNo, ccpID;
+	var rootGridID;
+	var ownershipTransferColumn = [ {
+		dataField : "rotId",
+		visible : false
+	}, {
+		dataField : "rotOrdId",
+		visible : false
+	}, {
+		dataField : "ccpId",
+		visible : false
+	}, {
+		dataField : "rotNo",
+		headerText : "ROT No",
+		width : 140
+	}, {
+		dataField : "rotOrdNo",
+		headerText : "Order No",
+		width : 140
+	}, {
+		dataField : "rotAppType",
+		headerText : "Application Type",
+		width : 150
+	}, {
+		dataField : "rotOldCustId",
+		headerText : "Original CID",
+		width : 140
+	}, {
+		dataField : "oldCustName",
+		headerText : "Original Customer Name"
+	}, {
+		dataField : "rotNewCustId",
+		headerText : "New CID",
+		width : 140
+	}, {
+		dataField : "newCustName",
+		headerText : "New Customer Name"
+	}, {
+		dataField : "rotStus",
+		headerText : "Status",
+		width : 120
+	}, {
+		dataField : "rotReqDt",
+		headerText : "Request Date",
+		width : 140
+	} ];
+
+	var ownershipTransferGridPros = {
+		usePaging : true,
+		pageRowCount : 20,
+		editable : false,
+		showRowNumColumn : true,
+		showStateColumn : false
+	};
+
+	$(document).ready(
+			function() {
+				console.log("ready :: rotList");
+				//rootGridID = GridCommon.createAUIGrid("grid_wrap", ownershipTransferColumn, '', ownershipTransferGridPros);
+				rootGridID = AUIGrid.create("#grid_wrap",
+						ownershipTransferColumn, ownershipTransferGridPros);
+
+				doGetComboSepa('/common/selectBranchCodeList.do', '1', ' - ',
+						'', 'rotReqBrnch', 'M', 'fn_multiCombo'); //Branch Code
+				doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',
+						'', 'rotAppType', 'M', 'fn_multiCombo'); //Common Code
+				doGetComboOrder('/sales/ownershipTransfer/selectStatusCode.do',
+						'', '', '', 'rotStus', 'M', 'fn_multiCombo'); //Status Code
+
+				$("#search").click(fn_searchROT);
+				$("#requestROT").click(fn_requestROTSearchOrder);
+				$("#updateROT").click(fn_updateROT);
+				$("#search_requestor_btn").click(fn_supplierSearchPop);
+				$("#newAS").click(fn_newAS);
+
+				fn_setGridEvent();
+			});
+
+	function fn_setGridEvent() {
+		AUIGrid.bind(rootGridID, "cellClick", function(e) {
+			console.log("rootList :: cellClick :: rowIndex :: " + e.rowIndex);
+			console.log("rootList :: cellClick :: rotId :: " + e.item.rotId);
+			console.log("rootList :: cellClick :: rotNo :: " + e.item.rotNo);
+			rotId = e.item.rotId;
+			rotNo = e.item.rotNo;
+			rotOrdId = e.item.rotOrdId;
+			rotOrdNo = e.item.rotOrdNo;
+			ccpID = e.item.ccpId;
+		});
+	}
+
+	function fn_multiCombo() {
+		$('#rotReqBrnch').change(function() {
+			//console.log($(this).val());
+		}).multipleSelect({
+			selectAll : true, // 전체선택
+			width : '100%'
+		});
+
+		$('#rotAppType').change(function() {
+			//console.log($(this).val());
+		}).multipleSelect({
+			selectAll : true, // 전체선택
+			width : '100%'
+		});
+		$('#rotAppType').multipleSelect("checkAll");
+
+		$('#rotStus').change(function() {
+			//console.log($(this).val());
+		}).multipleSelect({
+			selectAll : true, // 전체선택
+			width : '100%'
+		});
+	}
+
+	function fn_supplierSearchPop() {
+		Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {
+			accGrp : "VM10"
+		}, null, true, "supplierSearchPop");
+	}
+
+	function fn_setSupplier() {
+		$("#requestorID").val($("#search_memAccId").val());
+		$("#requestorName").val($("#search_memAccName").val());
+		$("#requestorInfo").val(
+				$("#search_memAccId").val() + " - "
+						+ $("#search_memAccName").val());
+	}
+
+	// Button functions - Start
+	function fn_searchROT() {
+		Common.ajax("GET", "/sales/ownershipTransfer/selectRootList.do", $(
+				"#searchForm").serialize(), function(result) {
+			console.log(result);
+			AUIGrid.setGridData(rootGridID, result);
+		});
+	}
+
+	function fn_requestROT(salesOrderId) {
+		console.log("fn_requestROT");
+		Common.popupDiv("/sales/ownershipTransfer/requestROT.do", {
+			salesOrderId : salesOrderId
+		}, null, true, "requestROTPop");
+		$("#ordSearch_popup").remove();
+	}
+
+	function fn_requestROTSearchOrder() {
+		console.log("fn_requestROT");
+		Common.popupDiv("/sales/ownershipTransfer/requestROTSearchOrder.do",
+				null, null, true, "rotOrdNoSearchPop");
+	}
+
+	function fn_requestROT_d(salesOrderId) {
+		Common.popupDiv("/sales/ownershipTransfer/requestROT_d.do", {
+			salesOrderId : salesOrderId
+		}, null, true, "requestROT");
+		$("#ordSearch_popup").remove();
+	}
+
+	function fn_updateROT() {
+		console.log("fn_updateROT");
+		if (rotId != "" && rotId != null) {
+			var data = {
+				rotId : rotId,
+				rotNo : rotNo,
+				salesOrdId : rotOrdId,
+				salesOrdNo : rotOrdNo,
+				ccpId : ccpID
+			};
+
+			Common.popupDiv("/sales/ownershipTransfer/updateROT.do", data,
+					null, true, "fn_updateROT");
+		}
+	}
+
+	function fn_newAS() {
+		console.log("fn_newAS");
+		if (FormUtil.isNotEmpty(rotId)) {
+			console.log("fn_newAS :: rotNo :: " + rotNo);
+			console.log("fn_newAS :: rotOrdNo :: " + rotOrdNo);
+
+			// Common.popupDiv("/services/as/ASReceiveEntryPop.do", {in_ordNo : rotOrdNo}, null, true, '_NewEntryPopDiv1');
+
+			Common
+					.ajax(
+							"GET",
+							"/services/as/searchOrderNo",
+							{
+								orderNo : rotOrdNo
+							},
+							function(result) {
+								if (result == null) {
+									Common
+											.alert("<spring:message code='service.msg.asOrdNtFound' />");
+									$("#Panel_AS")
+											.attr("style", "display:none");
+									return;
+								} else {
+									var msg = fn_checkASReceiveEntry();
+
+									if (msg == "") {
+										fn_resultASPop(result.ordId,
+												result.ordNo);
+									} else {
+										msg += "<br/> <spring:message code='service.msg.doPrc' /> <br/>";
+
+										Common.confirm(
+												"<spring:message code='service.title.asRecvEntConf' />"
+														+ DEFAULT_DELIMITER
+														+ "<b>" + msg + "</b>",
+												fn_resultASPop(result.ordId,
+														result.ordNo));
+									}
+								}
+							});
+
+		} else {
+			Common.alert("No record selected!");
+			return false;
+		}
+	}
+
+	function fn_checkASReceiveEntry() {
+		Common.ajaxSync("GET", "/services/as/checkASReceiveEntry.do", {
+			salesOrderNo : $("#entry_orderNo").val()
+		}, function(result) {
+			msg = result.message;
+		});
+		return msg;
+	}
+
+	// Callback function for new AS
+	function fn_resultASPop(ordId, ordNo) {
+		var selectedItems = AUIGrid.getCheckedRowItems(rootGridID);
+		var mafuncId = "";
+		var mafuncResnId = "";
+		var asId = "";
+
+		if (selectedItems.length > 0) {
+			mafuncId = selectedItems[0].item.asMalfuncId;
+			mafuncResnId = selectedItems[0].item.asMalfuncResnId;
+			asId = selectedItems[0].item.asId;
+		}
+
+		var pram = "?salesOrderId=" + ordId + "&ordNo=" + ordNo + "&mafuncId="
+				+ mafuncId + "&mafuncResnId=" + mafuncResnId + "&AS_ID=" + asId
+				+ "&IND= 1";
+
+		Common.popupDiv("/services/as/resultASReceiveEntryPop.do" + pram, null,
+				null, true, '_resultNewEntryPopDiv1');
+	}
+	// Button functions - End
+
+	/*
+	function fn_resetRotGrid() {
+	    console.log("fn_resetRotGrid");
+	    if(AUIGrid.isCreated("#grid_wrap")) {
+	        AUIGrid.destroy("#grid_wrap");
+	        rootGridID = null;
+	        rootGridID = AUIGrid.create("#grid_wrap", ownershipTransferColumn, ownershipTransferGridPros);
+	        fn_setEvent();
+	    }
+	}
+
+	function fn_back(popup) {
+	    console.log("fn_back");
+
+	    if(popup == "req" || popup == "reqc") {
+	        $("#reqPopup").remove();
+	    } else if(popup == "ordNoSearch") {
+	        $("#ordSearch_popup").remove();
+	    }
+
+	    fn_resetRotGrid();
+	    fn_searchROT();
+	}
+	 */
+</script>
+
+<section id="content">
+	<ul class="path">
+		<li><img
+			src="${pageContext.request.contextPath}/resources/images/common/path_home.gif"
+			alt="Home" /></li>
+		<li>Sales</li>
+		<li>CCP</li>
+		<li>ROOT Request</li>
+	</ul>
+
+	<!-- title_line start -->
+	<aside class="title_line">
+		<p class="fav">
+			<a href="#" class="click_add_on">My menu</a>
+		</p>
+		<h2>Rental Outright Ownership Transfer</h2>
+		<ul class="right_btns">
+			<li><p class="btn_blue">
+					<a href="#" id="search"><span class="search"></span>
+					<spring:message code="sal.btn.search" /></a>
+				</p></li>
+			<li><p class="btn_blue">
+					<a href="#" id="requestROT">Request</a>
+				</p></li>
+			<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+				<li><p class="btn_blue">
+						<a href="#" id="updateROT">Update</a>
+					</p></li>
+			</c:if>
+			<li><p class="btn_blue type2">
+					<a href="#" onclick="javascript:$('#searchForm').clearForm();"><span
+						class="clear"></span>
+					<spring:message code="sal.btn.clear" /></a>
+				</p></li>
+		</ul>
+	</aside>
+	<!-- title_line end -->
+
+	<!-- search_table start -->
+	<section class="search_table">
+		<form id="searchForm" name="searchForm" action="#" method="post">
+			<input type="hidden" id="requestorName" name="requestorName">
+			<input type="hidden" id="requestorID" name="requestorID">
+
+			<!-- table start -->
+			<table class="type1">
+				<caption>table</caption>
+				<colgroup>
+					<col style="width: 140px" />
+					<col style="width: *" />
+					<col style="width: 140px" />
+					<col style="width: *" />
+					<col style="width: 140px" />
+					<col style="width: *" />
+				</colgroup>
+				<tbody>
+					<tr>
+						<th scope="row">Order Number</th>
+						<td><input type="text" title="Order Number" id="rotOrdNo"
+							name="rotOrdNo" placeholder="Order Number" class="w100p" /></td>
+						<th scope="row">Application Type</th>
+						<td><select id="rotAppType" name="rotAppType" class="w100p"></select>
+						</td>
+						<th scope="row">Status</th>
+						<td><select id="rotStus" name="rotStus" class="w100p"></select>
+							<!--
+                        <select class="multy_select w100p" multiple="multiple" id="rotStus" name="rotStus">
+                            <option value="1" selected="selected">Active</option>
+                            <option value="5" selected="selected">Approved</option>
+                            <option value="6" selected="selected">Rejected</option>
+                        </select>
+                         --></td>
+					</tr>
+					<tr>
+						<th scope="row">Original Customer ID</th>
+						<td><input type="text" title="Existing Customer ID"
+							id="oriCustID" name="oriCustID"
+							placeholder="Existing Customer ID" class="w100p" /></td>
+						<th scope="row">Transfer Customer ID</th>
+						<td><input type="text" title="New Customer ID" id="newCustID"
+							name="newCustID" placeholder="New Customer ID" class="w100p" />
+						</td>
+						<th scope="row">Request Date</th>
+						<td>
+							<!-- date_set start -->
+							<div class="date_set w100p">
+								<p>
+									<input type="text" title="Request Start Date"
+										placeholder="DD/MM/YYYY" class="j_date" id="reqStartDt"
+										name="reqStartDt" />
+								</p>
+								<span>To</span>
+								<p>
+									<input type="text" title="Request End Date"
+										placeholder="DD/MM/YYYY" class="j_date" id="reqEndDt"
+										name="reqEndDt" />
+								</p>
+							</div> <!-- date_set end -->
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">ROT No</th>
+						<td><input type="text" title="ROT No" id="rotNo" name="rotNo"
+							placeholder="ROT No" class="w100p" /></td>
+						<th scope="row">ROT Requestor</th>
+						<td><input type="text" title="" placeholder="Requestor ID"
+							class="" style="width: 93%" id="requestorInfo" name="reqInfo"
+							readonly /> <a href="#" class="search_btn"
+							id="search_requestor_btn"><img
+								src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
+								alt="search" /></a></td>
+						<th scope="row">Requestor Branch</th>
+						<td><select id="rotReqBrnch" name="rotReqBrnch" class="w100p"></select>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- table end -->
+		</form>
+	</section>
+	<!-- search_table end -->
+
+	<!-- Link Wrap Start -->
+	<article class="link_btns_wrap">
+		<p class="show_btn">
+			<a href="#"><img
+				src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif"
+				alt="link show" /></a>
+		</p>
+		<dl class="link_list">
+			<dt>
+				<spring:message code="sal.title.text.link" />
+			</dt>
+			<dd>
+				<ul class="btns">
+					<li><p class="link_btn">
+							<a href="#" id="newAS">New AS</a>
+						</p></li>
+				</ul>
+				<p class="hide_btn">
+					<a href="#"><img
+						src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
+						alt="hide" /></a>
+				</p>
+			</dd>
+		</dl>
+	</article>
+	<!-- Link Wrap End -->
+
+	<!-- search_result start -->
+	<section class="search_result">
+		<!-- grid_wrap start -->
+		<article class="grid_wrap">
+			<div id="grid_wrap"
+				style="width: 100%; height: 480px; margin: 0 auto;"></div>
+		</article>
+		<!-- grid_wrap end -->
+	</section>
+	<!-- search_result end -->
+</section>
+<!-- content end -->

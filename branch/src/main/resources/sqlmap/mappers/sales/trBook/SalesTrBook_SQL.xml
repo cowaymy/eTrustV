@@ -1,0 +1,1233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.trBook.impl.SalesTrBookMapper">
+
+  <select id="selectTrBookList" parameterType="map" resultType="EgovMap">
+	  SELECT TR_BOOK_ID ,
+			       TR_BOOK_NO ,
+			       TR_BOOK_STUS_ID ,
+			       TR_BOOK_STUS_CODE ,
+			       TR_HOLDER ,
+			       TR_HOLDER_TYPE ,
+			       TR_BOOK_PREFIX ,
+			       TR_BOOK_NO_START ,
+			       TR_BOOK_NO_END ,
+			       TR_BOOK_PGE ,
+			       TO_CHAR(TR_BOOK_CRT_DT, 'dd/mm/yyyy') TR_BOOK_CRT_DT,
+			       TR_BOOK_CRT_USER_ID ,
+			       TR_BOOK_CRT_USER_NAME ,
+			       BOX_ID ,
+			       BOX_NO
+		  FROM MSC1001V
+		 WHERE 1=1
+		      <if test ="assignHTrBookId != null and assignHTrBookId!='' ">
+		      AND TR_BOOK_ID = #{assignHTrBookId}
+		      </if>
+	         <if test="branch != null and branch != '' ">
+	          AND ( TR_HOLDER = #{branch}
+	          OR TR_HOLDER_TYPE = 'Member' )
+	          </if>
+	          <if test="trBookNo != null and trBookNo != '' ">
+	          AND TR_BOOK_NO = #{trBookNo}
+	          </if>
+	          <if test="trBookCrtDt != null and trBookCrtDt != '' ">
+                AND TO_CHAR(TR_BOOK_CRT_DT, 'ddmmyyyy') = REPLACE ( #{trBookCrtDt} , '/', '')
+	          </if>
+              <if test="trBookCrtUser != null and trBookCrtUser != '' ">
+              AND TR_BOOK_CRT_USER_NAME = #{trBookCrtUser}
+	          </if>
+               <if test="trBookHolder != null and trBookHolder != '' ">
+               AND TR_HOLDER = #{trBookHolder}
+	          </if>
+              <if test="trHolderType != null and trHolderType != '' ">
+              AND TR_HOLDER_TYPE = #{trHolderType}
+	          </if>
+              <if test="trBookNoStart != null and trBookNoStart != '' ">
+              AND #{trBookNoStart} <![CDATA[>= ]]>TR_BOOK_NO_START
+	          </if>
+              <if test="trBookNoEnd != null and trBookNoEnd != '' ">
+               AND #{trBookNoEnd} <![CDATA[<= ]]>TR_BOOK_NO_END
+	          </if>
+              <if test="stutusId != null and stutusId != '' ">
+               AND TR_BOOK_STUS_ID = #{stutusId}
+	          </if>
+	          <if test="stutus != null and stutus != '' ">
+               AND TR_BOOK_STUS_ID IN
+	            <choose>
+	                <when test="Close != null and Close != ''">
+	                   <foreach item="item" collection="stutus" index="index" open="(" separator="," close=" ">
+	                     #{item}
+	                     </foreach>
+	                     ,68)
+	                </when>
+	                <otherwise>
+	                   <foreach item="item" collection="stutus" index="index" open="(" separator="," close=")">
+	                     #{item}
+	                     </foreach>
+	                </otherwise>
+	            </choose>
+	           </if>
+	            <choose>
+		          <when test="orderValue !=null and orderValue !=''">
+		              ORDER BY ${orderValue}
+                  </when>
+		          <otherwise>
+                    ORDER BY TR_BOOK_NO ASC
+		          </otherwise>
+		        </choose>
+
+  </select>
+
+  <select id="selectTrBookDetailInfo" parameterType="map" resultType="EgovMap">
+		  SELECT TR_BOOK_ID ,
+			       TR_BOOK_NO ,
+			       TR_BOOK_STUS_ID ,
+			       TR_BOOK_STUS_CODE ,
+			       TR_HOLDER ,
+			       TR_HOLDER_TYPE ,
+			       TR_BOOK_PREFIX ,
+			       TR_BOOK_NO_START ,
+			       TR_BOOK_NO_END ,
+			       TR_BOOK_PGE ,
+			       TO_CHAR(TO_DATE(TR_BOOK_CRT_DT), 'dd-mm-yyyy') TR_BOOK_CRT_DT  ,
+			       TR_BOOK_CRT_USER_ID ,
+			       TR_BOOK_CRT_USER_NAME ,
+			       BOX_ID ,
+			       BOX_NO
+			  FROM MSC1001V
+			 WHERE TR_BOOK_ID = #{trBookId}
+			     AND ROWNUM = 1
+  </select>
+
+  <select id="selectTrBookDup" parameterType="map" resultType="int">
+		  SELECT COUNT(-1) CNT
+			  FROM MSC0029D
+			 WHERE  8 <![CDATA[<>]]>TR_STUS_ID
+		          AND  TR_RECIPT_NO <![CDATA[>=]]> #{trNoFrom}
+		          AND  TR_RECIPT_NO <![CDATA[<=]]> #{trNoTo}
+		          AND  LENGTH(TR_RECIPT_NO) = LENGTH(#{trNoFrom})
+  </select>
+
+  <select id="selectBranch" parameterType="map" resultType="EgovMap">
+		  SELECT BRNCH_ID,
+		             CODE   ,
+				     CODE || ' - ' || NAME NAME
+				  FROM SYS0005M
+				 WHERE  1 = STUS_ID
+				 <if test ="branchId != null and branchId !='' ">
+			         AND ( BRNCH_ID = #{branchId}
+			         OR TYPE_ID = 47 )
+				 </if>
+				  ORDER BY CODE ASC
+  </select>
+
+  <select id="selectCourier" parameterType="map" resultType="EgovMap">
+		SELECT CURIER_ID   ,
+		       CURIER_CODE   ,
+		       CURIER_CODE || ' - ' || CURIER_NAME   CURIER_NAME
+		  FROM SYS0016M
+		 WHERE  1 = CURIER_STUS_ID
+		  ORDER BY CURIER_CODE ASC
+  </select>
+
+  <select id="selectMember" parameterType="map" resultType="EgovMap">
+		   SELECT MEM_ID   ,
+		              MEM_CODE   ,
+                      MEM_CODE|| ' - ' || NAME   NAME
+		     FROM ORG0001D
+		   WHERE  1 = STUS
+		       AND  MEM_TYPE = #{memberType}
+		       AND  MEM_ID = #{memId}
+		    ORDER BY MEM_CODE ASC
+  </select>
+
+    <resultMap id="trBookDetailList" type="egovMap" ></resultMap>
+    <select id="selectTrBookDetailList"  statementType="CALLABLE"   parameterType="Map">
+        <![CDATA[
+        {
+              call SP_TR_RECIPT_MTCHG ( #{trBookId} , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=trBookDetailList})
+        }
+        ]]>
+    </select>
+
+    <select id="getDocNo" parameterType="Map" resultType="String">
+        SELECT  FN_GET_DOCNO(#{docNoId}) FROM DUAL
+    </select>
+
+    <insert id="insertTrBookM" parameterType="Map">
+        <selectKey keyProperty="trBookId" resultType="int" order="BEFORE">
+            (SELECT DECODE(COUNT(TR_BOOK_ID),0 , 1 , MAX(TR_BOOK_ID)+1) FROM MSC0028D )
+        </selectKey>
+ 		INSERT INTO MSC0028D (
+ 		         TR_BOOK_ID,
+ 		         TR_BOOK_PREFIX_NO,
+                 TR_BOOK_NO,
+                 TR_RECIPT_NO_STR,
+                 TR_RECIPT_NO_END,
+                 TR_BOOK_STUS_ID,
+                 TR_BOOK_ATTACH,
+                 TR_BOOK_CRT_DT,
+                 TR_BOOK_CRT_USER_ID,
+                 TR_BOOK_UPD_DT,
+                 TR_BOOK_UPD_USER_ID,
+                 TR_BOOK_QTY,
+                 TR_BOOK_CRT_BRNCH_CODE)
+		     VALUES (
+		          #{trBookId},
+		          #{prefix},    /*TR_BOOK_PREFIX_NO*/
+                   #{docNo} ,     /*TR_BOOK_NO*/
+	               #{trNoFrom},     /*TR_RECIPT_NO_STR*/
+	               #{trNoTo},      /*TR_RECIPT_NO_END*/
+	               1,      /*TR_BOOK_STUS_ID*/
+	               '',      /*TR_BOOK_ATTACH*/
+	               SYSDATE,      /*TR_BOOK_CRT_DT*/
+	               #{userId},      /*TR_BOOK_CRT_USER_ID*/
+	               SYSDATE,      /*TR_BOOK_UPD_DT*/
+	               #{userId},      /*TR_BOOK_UPD_USER_ID*/
+	               #{trBookPage},      /*TR_BOOK_QTY*/
+	               #{branch}     /*TR_BOOK_CRT_BRNCH_CODE*/
+	             )
+
+    </insert>
+
+    <insert id="insertTrRecord" parameterType="Map">
+        <selectKey keyProperty="trRcordId" resultType="int" order="BEFORE">
+            SELECT MSC0036D_TR_RCORD_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+	 		INSERT INTO MSC0036D (
+	 		      TR_RCORD_ID,
+	              TR_BOOK_ID,
+	              TR_TYPE_ID,
+	              TR_LOC_CODE,
+	              TR_RCORD_DT_TM,
+	              TR_RCORD_STUS_ID,
+	              TR_RCORD_CRT_DT,
+	              TR_RCORD_CRT_USER_ID,
+	              TR_RCORD_QTY,
+	              TR_REF_NO
+	              )
+	     VALUES (
+	             #{trRcordId},
+	             #{trBookId},
+	             #{trTypeId},
+	             #{trLocCode},
+	             SYSDATE,
+	             1,
+	             SYSDATE,
+	             #{userId},
+	             #{trRcordQyt},
+	             #{docNo}
+	             )
+
+    </insert>
+
+
+    <insert id="insertTrBookD" parameterType="Map">
+        <selectKey keyProperty="trBookItmId" resultType="int" order="BEFORE">
+            SELECT MSC0029D_TR_BOOK_ITM_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+ 		INSERT INTO MSC0029D (
+ 		         TR_BOOK_ITM_ID,
+ 		         TR_BOOK_ID,
+                 TR_BOOK_REF_DCF_ID,
+                 TR_RECIPT_NO,
+                 TR_STUS_ID,
+                 TR_BOOK_ITM_CRT_DT,
+                 TR_BOOK_ITM_CRT_USER_ID,
+                 TR_BOOK_ITM_UPD_DT,
+                 TR_BOOK_ITM_UPD_USER_ID,
+                 TR_BOOK_ITM_IS_MNL_PUMP
+                 )
+		     VALUES
+		     (
+		            #{trBookItmId},
+		            #{trBookId},
+		            0,
+		            #{trReciptNo},
+		            1,
+		            SYSDATE,
+		            #{userId},
+		            SYSDATE,
+		            #{userId},
+		            0
+		            )
+
+    </insert>
+
+    <select id="selectTrBookDupBulk" parameterType="map" resultType="int">
+		SELECT COUNT(-1) CNT
+			  FROM MSC0027D
+			 WHERE   1 = TR_BOOK_BK_REQ_STUS_ID
+	           AND  ( ( TR_BOOK_BK_REQ_START_RECIPT_NO <![CDATA[>=]]> #{trNoFrom}   AND  TR_BOOK_BK_REQ_START_RECIPT_NO <![CDATA[<=]]> #{trNoTo} )
+	            OR  ( TR_BOOK_BK_REQ_END_RECIPT_NO <![CDATA[>=]]> #{trNoFrom} AND  TR_BOOK_BK_REQ_END_RECIPT_NO <![CDATA[<=]]> #{trNoTo})  )
+	          AND LENGTH(TR_BOOK_BK_REQ_START_RECIPT_NO) = LENGTH(#{trNoFrom})
+    </select>
+
+
+    <insert id="insertTrBookBulk" parameterType="Map">
+    <selectKey keyProperty="trBookBkReqId" resultType="int" order="BEFORE">
+        SELECT MSC0027D_TR_BOOK_BK_REQ_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+	      INSERT INTO MSC0027D
+	        (
+	          TR_BOOK_BK_REQ_ID,
+	          TR_BOOK_BK_REQ_NO,
+	          TR_BOOK_BK_REQ_STUS_ID,
+	          TR_BOOK_BK_REQ_BRNCH_ID,
+	          TR_BOOK_BK_REQ_PREFIX,
+	          TR_BOOK_BK_REQ_QTY,
+	          TR_BOOK_BK_REQ_PGE_PER_BOOK,
+	          TR_BOOK_BK_REQ_START_RECIPT_NO,
+	          TR_BOOK_BK_REQ_END_RECIPT_NO,
+	          TR_BOOK_BK_REQ_CRT_DT,
+	          TR_BOOK_BK_REQ_CRT_USER_ID,
+	          TR_BOOK_BK_REQ_UPD_DT,
+	          TR_BOOK_BK_REQ_UPD_USER_ID,
+	          TR_BOOK_BK_REQ_IS_SYNC,
+	          TR_BOOK_NO_START,
+	          TR_BOOK_NO_END
+	          )
+	     VALUES (
+	        #{trBookBkReqId},
+	        #{reqNo},
+	         1,
+	         #{branch},
+	         #{prefix},
+	         #{trBookQuan},
+	         #{trBookPage},
+	         #{trNoFrom},
+	         #{trNoTo},
+	         SYSDATE,
+	         #{userId},
+	         SYSDATE,
+	         #{userId},
+	         0,
+	         '',
+	         ''
+	        )
+    </insert>
+
+    <insert id="insertTrTransitM" parameterType="Map">
+        <selectKey keyProperty="trTrnsitId" resultType="int" order="BEFORE">
+        SELECT MSC0037D_TR_TRNSIT_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+
+        INSERT INTO MSC0037D (
+                TR_TRNSIT_ID,
+                TR_TRNSIT_TYPE_ID,
+                TR_TRNSIT_DT,
+                TR_TRNSIT_FROM,
+                TR_TRNSIT_TO,
+                TR_CURIER_CODE,
+                TR_TRNSIT_CRT_DT,
+                TR_TRNSIT_CRT_USER_ID,
+                TR_TRNSIT_UPD_DT,
+                TR_TRNSIT_UPD_USER_ID,
+                TR_TRNSIT_STUS_ID,
+                TR_TRNSIT_REF_NO,
+                TR_TRNSIT_CLOS_DT
+                )
+        VALUES
+		     (
+		             #{trTrnsitId},
+		             #{trTrnsitTypeId},
+		             SYSDATE,
+		             #{trTrnsitFrom},
+		             #{trTrnsitTo},
+		             #{trCurierCode},
+		             SYSDATE,
+		             #{userId},
+		             SYSDATE,
+		             #{userId},
+		             #{trTrnsitStusId},
+		             #{docNo},
+		             <choose>
+		                  <when test="closDt !=null and closDt !=''">
+		                    TO_DATE(#{closDt}, 'yyyy-mm-dd')
+		                  </when>
+		                  <otherwise>
+		                    SYSDATE
+		                  </otherwise>
+		            </choose>
+
+		    )
+    </insert>
+
+    <insert id="insertTrTransitD" parameterType="Map">
+        <selectKey keyProperty="trTrnsitDetId" resultType="int" order="BEFORE">
+        SELECT MSC0038D_TR_TRNSIT_DET_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+
+        INSERT INTO MSC0038D
+	       (
+			       TR_TRNSIT_DET_ID,
+			       TR_TRNSIT_ID,
+	               TR_TRNSIT_BOOK_ID,
+	               TR_TRNSIT_STUS_ID,
+	               TR_TRNSIT_RESULT_STUS_ID,
+	               TR_TRNSIT_CRT_DT,
+	               TR_TRNSIT_CRT_USER_ID,
+	               TR_CLOS_DT,
+	               TR_TRNSIT_UPD_DT,
+	               TR_TRNSIT_UPD_USER_ID
+	      )
+	     VALUES
+	     (
+	             #{trTrnsitDetId},
+	             #{trTrnsitId},
+	             #{trBookId},
+	             1,
+	             #{trTrnsitResultStusId},
+	             SYSDATE,
+	             #{userId},
+	             SYSDATE,
+	             SYSDATE,
+	             #{userId}
+	      )
+    </insert>
+
+    <select id="selectTrBookInfo" parameterType="map" resultType="EgovMap">
+         SELECT TR_BOOK_ID   ,
+		            TR_BOOK_NO   ,
+		            TR_BOOK_STUS_ID   ,
+		            TR_BOOK_STUS_CODE   ,
+		            TR_HOLDER   ,
+		            TR_HOLDER_TYPE   ,
+		            TR_BOOK_PREFIX   ,
+		            TR_BOOK_NO_START   ,
+		            TR_BOOK_NO_END   ,
+		            TR_BOOK_PGE   ,
+		            TR_BOOK_CRT_DT   ,
+		            TR_BOOK_CRT_USER_ID   ,
+		            TR_BOOK_CRT_USER_NAME   ,
+		            BOX_ID   ,
+		            BOX_NO
+		    FROM MSC1001V
+		    WHERE 1=1
+		    <choose>
+                  <when test="return !=null and return !=''">
+                    AND  TR_BOOK_NO = #{bookNo}
+                  </when>
+                  <otherwise>
+                    AND  TR_BOOK_ID = #{trBookId}
+                  </otherwise>
+            </choose>
+		 AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <select id="selectMemberInfoByCode" parameterType="map" resultType="EgovMap">
+         SELECT DISTINCT C1  ,
+		            MEM_ID,
+	                MEM_CODE,
+	                NAME MEM_NAME,
+	                NRIC MEM_NRIC,
+	                CODE_NAME MEM_TYPE
+		 FROM (
+		         SELECT 1 C1  ,
+		              MEM_ID  ,
+		              MEM_CODE   ,
+		              NAME   ,
+		              NRIC   ,
+		              CODE_NAME
+		        FROM ORG0001D A
+		              JOIN SYS0013M B   ON B.CODE_ID = A.MEM_TYPE
+		        WHERE  A.MEM_CODE = #{trHolder}
+		        UNION ALL
+		        SELECT 1 C1  ,
+		              C.USER_ID   ,
+		              C.USER_NAME   ,
+		              C.USER_NAME   ,
+		              C.USER_NRIC   ,
+		              'Staff' C2
+		        FROM SYS0047M C
+		        WHERE  C.USER_NAME = #{trHolder} )
+		 WHERE ROWNUM <![CDATA[<=]]> 1
+    </select>
+    <select id="selectBranchInfoByCode" parameterType="map" resultType="EgovMap">
+         SELECT A.BRNCH_ID MEM_ID
+			        ,A.CODE MEM_CODE
+			        ,A.NAME MEM_NAME
+			        ,'' NRIC MEM_NRIC
+			        ,B.CODE_NAME MEM_TYPE
+			 FROM SYS0005M A JOIN
+			SYS0013M B ON A.TYPE_ID = B.CODE_ID
+			WHERE A.CODE = #{trHolder}
+    </select>
+
+    <select id="selectFeedBackCode" parameterType="map" resultType="EgovMap">
+         SELECT RESN_ID RESN_ID  ,
+		            CODE CODE  ,
+		            CODE || ' - ' || RESN_DESC VALUE
+		  FROM SYS0032M
+		WHERE RESN_TYPE_ID = 539
+		     AND STUS_CODE_ID = 1
+		     ORDER BY CODE
+    </select>
+
+    <select id="selectTrBookDetails" parameterType="map" resultType="int">
+          SELECT COUNT(-1) CNT
+				  FROM MSC0029D
+				 WHERE  TR_BOOK_ITM_ID = #{trBookItmId}
+				     AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <update id="update_MSC0029D" parameterType="Map">
+		  UPDATE MSC0029D
+		   SET TR_STUS_ID = #{trStusId},
+		       TR_BOOK_ITM_UPD_DT = SYSDATE,
+		       TR_BOOK_ITM_UPD_USER_ID = #{userId}
+	       <choose>
+                  <when test="dcfUpdate !=null and dcfUpdate !=''">
+           WHERE  TR_BOOK_ID = #{trBookId}
+               AND  TR_RECIPT_NO = #{trReceiptNo}
+                  </when>
+                  <otherwise>
+            WHERE  TR_BOOK_ITM_ID = #{trBookItmId}
+                  </otherwise>
+            </choose>
+    </update>
+
+
+    <select id="selectTrBookM" parameterType="map" resultType="EgovMap">
+          SELECT TR_BOOK_ID   ,
+                       TR_BOOK_PREFIX_NO   ,
+                       TR_BOOK_NO   ,
+                       TR_RECIPT_NO_STR   ,
+                       TR_RECIPT_NO_END   ,
+                       TR_BOOK_STUS_ID   ,
+                       TR_BOOK_ATTACH   ,
+                       TR_BOOK_CRT_DT   ,
+                       TR_BOOK_CRT_USER_ID   ,
+                       TR_BOOK_UPD_DT   ,
+                       TR_BOOK_UPD_USER_ID   ,
+                       TR_BOOK_QTY   ,
+                       TR_BOOK_CRT_BRNCH_CODE
+                  FROM MSC0028D
+                 WHERE  TR_BOOK_ID = #{trBookId}
+                     AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <update id="updateTrBookM" parameterType="Map">
+		UPDATE MSC0028D
+		   SET TR_BOOK_STUS_ID = #{trTrnsitStusId},
+		       TR_BOOK_UPD_DT = SYSDATE,
+		       TR_BOOK_UPD_USER_ID = #{userId}
+		 WHERE  TR_BOOK_ID = #{trBookId}
+    </update>
+
+    <select id="selectTrBookDetailsList" parameterType="map" resultType="EgovMap">
+          SELECT TR_BOOK_ITM_ID   ,
+		            TR_BOOK_ID   ,
+		            TR_BOOK_REF_DCF_ID   ,
+		            TR_RECIPT_NO   ,
+		            TR_STUS_ID   ,
+		            TR_BOOK_ITM_CRT_DT   ,
+		            TR_BOOK_ITM_CRT_USER_ID   ,
+		            TR_BOOK_ITM_UPD_DT   ,
+		            TR_BOOK_ITM_UPD_USER_ID   ,
+		            TR_BOOK_ITM_IS_MNL_PUMP
+		   FROM MSC0029D
+		 WHERE TR_BOOK_ID = #{trBookId}
+		 <if test="trReceiptNo != null and trReceiptNo != '' ">
+		     AND TR_RECIPT_NO = #{trReceiptNo}
+		 </if>
+             AND TR_STUS_ID = 1
+    </select>
+
+    <insert id="insertRequestMaster" parameterType="Map">
+        <selectKey keyProperty="dcfReqEntryId" resultType="int" order="BEFORE">
+        SELECT LOG0064M_DCF_REQ_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+
+        INSERT INTO LOG0064M
+        (
+                      DCF_REQ_ENTRY_ID,
+                      DCF_REQ_NO,
+                      DCF_REQ_USER_ID,
+                      DCF_REQ_RCIPT_GRP_ID,
+                      DCF_REQ_TYPE_ID,
+                      DCF_REQ_CAT_ID,
+                      DCF_REQ_SUB_ID,
+                      DCF_REQ_STUS_ID,
+                      DCF_REQ_PRO_STUS_ID,
+                      DCF_REQ_SETL_DT,
+                      DCF_REQ_DESC,
+                      DCF_REQ_REM,
+                      DCF_PRIOR_LVL,
+                      DCF_REQ_HAS_ATTACH,
+                      DCF_REQ_ATTACH_FILE_NAME,
+                      DCF_REQ_RCV_FDBCK,
+                      DCF_REQ_CRT_DT,
+                      DCF_REQ_CRT_USER_ID,
+                      DCF_REQ_UPD_DT,
+                      DCF_REQ_UPD_USER_ID,
+                      DCF_REQ_RESN_ID,
+                      DCF_REQ_APPV_USER_ID,
+                      DCF_REQ_APPV_DT,
+                      DCF_REQ_APPV_REM,
+                      DCF_REQ_APPV_STUS_ID,
+                      DCF_REQ_BRNCH_ID,
+                      DCF_REQ_DEPT_ID,
+                      DCF_REQ_APPV_REQ_RESN_ID,
+                      DCF_REQ_ON_BEHALF
+                      )
+		     VALUES
+		     (
+		            #{dcfReqEntryId},
+		            #{docNo},
+		             #{userId},
+		             3,               /*DCF_REQ_RCIPT_GRP_ID*/
+		             1,                /*DCF_REQ_TYPE_ID*/
+		             16,               /*DCF_REQ_CAT_ID*/
+		             81,               /*DCF_REQ_SUB_ID*/
+		             33,                /*DCF_REQ_STUS_ID*/
+		             59,              /*DCF_REQ_PRO_STUS_ID*/
+		             SYSDATE,      /*DCF_REQ_SETL_DT*/
+		             #{description},   /*DCF_REQ_DESC*/
+		             #{remark},                   /*DCF_REQ_REM*/
+		             0,                    /*DCF_PRIOR_LVL*/
+		             #{hasAttach},                    /*DCF_REQ_HAS_ATTACH*/
+		             #{fileName},                    /*DCF_REQ_ATTACH_FILE_NAME*/
+		             0,                    /*DCF_REQ_RCV_FDBCK*/
+		             SYSDATE,          /*DCF_REQ_CRT_DT*/
+		             #{userId},       /*DCF_REQ_CRT_USER_ID*/
+		             SYSDATE,         /*DCF_REQ_UPD_DT*/
+		             #{userId},        /*DCF_REQ_UPD_USER_ID*/
+		             #{feedback},     /*DCF_REQ_RESN_ID*/
+		             0,                       /*DCF_REQ_APPV_USER_ID*/
+                     TO_DATE('1900-01-01', 'yyyy-mm-dd'), /*DCF_REQ_APPV_DT*/
+		             '',                      /*DCF_REQ_APPV_REM*/
+		             0,                       /*DCF_REQ_APPV_STUS_ID*/
+		             #{branchId},         /*DCF_REQ_BRNCH_ID*/
+		             #{deptId},           /*DCF_REQ_DEPT_ID*/
+		             0,                       /*DCF_REQ_APPV_REQ_RESN_ID*/
+		             ''                       /*DCF_REQ_ON_BEHALF*/
+		             )
+    </insert>
+
+    <insert id="insertRequestDet" parameterType="Map">
+        <selectKey keyProperty="dcfReqDetId" resultType="int" order="BEFORE">
+        SELECT LOG0067D_DCF_REQ_DET_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+
+            INSERT INTO LOG0067D
+            (
+                      DCF_REQ_DET_ID,
+                      DCF_REQ_ENTRY_ID,
+                      DCF_REQ_DET_FILD_CHG,
+                      DCF_REQ_DET_OLD_DATA,
+                      DCF_REQ_DET_NW_DATA,
+                      DCF_REQ_DET_STUS_ID,
+                      DCF_REQ_DET_RESULT_STUS_ID,
+                      DCF_REQ_DET_CRT_DT,
+                      DCF_REQ_DET_CRT_USER_ID,
+                      DCF_REQ_DET_UPD_DT,
+                      DCF_REQ_DET_UPD_USER_ID,
+                      DCF_REQ_DET_REM,
+                      DCF_REQ_DET_SETL_DT
+                      )
+		     VALUES
+		     (
+		             #{dcfReqDetId},
+		             #{dcfReqEntryId},
+		             #{trNo},
+		             'Active',
+		             'Lost',
+		             1,
+		             44,
+		             SYSDATE,
+		             #{userId},
+		             SYSDATE,
+		             #{userId},
+		             '',
+		             TO_DATE('1900-01-01', 'yyyy-mm-dd')
+		             )
+    </insert>
+
+    <insert id="insertRequestComField" parameterType="Map">
+        <selectKey keyProperty="dcfReqComFildId" resultType="int" order="BEFORE">
+        SELECT LOG0068M_DCF_REQ_COM_FILD_ID.NEXTVAL FROM DUAL
+        </selectKey>
+
+            INSERT INTO LOG0068M
+            (
+                      DCF_REQ_COM_FILD_ID,
+                      DCF_REQ_ENTRY_ID,
+                      DCF_COM_FILD_TYPE_ID,
+                      DCF_REQ_COM_FILD_REF_NO,
+                      DCF_REQ_COM_FILD_STUS_ID,
+                      DCF_REQ_COM_FILD_CRT_DT,
+                      DCF_REQ_COM_FILD_CRT_USER_ID,
+                      DCF_REQ_COM_FILD_UPD_DT,
+                      DCF_REQ_COM_FILD_UPD_USER_ID
+                      )
+	     VALUES
+	     (
+	             #{dcfReqComFildId},
+	             #{dcfReqEntryId},
+	             #{typeId},
+	             #{refNo},
+	             #{stusId},
+	             SYSDATE,
+	             #{userId},
+	             SYSDATE,
+	             #{userId}
+	             )
+    </insert>
+
+    <select id="selectRequestMaster" parameterType="map" resultType="EgovMap">
+          SELECT DCF_REQ_ENTRY_ID   ,
+			       DCF_REQ_NO   ,
+			       DCF_REQ_USER_ID   ,
+			       DCF_REQ_RCIPT_GRP_ID   ,
+			       DCF_REQ_TYPE_ID   ,
+			       DCF_REQ_CAT_ID   ,
+			       DCF_REQ_SUB_ID   ,
+			       DCF_REQ_STUS_ID   ,
+			       DCF_REQ_PRO_STUS_ID   ,
+			       TO_CHAR(DCF_REQ_SETL_DT, 'yyyymmdd')  DCF_REQ_SETL_DT ,
+			       DCF_REQ_DESC   ,
+			       DCF_REQ_REM   ,
+			       DCF_PRIOR_LVL   ,
+			       DCF_REQ_HAS_ATTACH   ,
+			       DCF_REQ_ATTACH_FILE_NAME   ,
+			       DCF_REQ_RCV_FDBCK   ,
+			       DCF_REQ_CRT_DT   ,
+			       DCF_REQ_CRT_USER_ID   ,
+			       DCF_REQ_UPD_DT   ,
+			       DCF_REQ_UPD_USER_ID   ,
+			       DCF_REQ_RESN_ID   ,
+			       DCF_REQ_APPV_USER_ID   ,
+			       DCF_REQ_APPV_DT   ,
+			       DCF_REQ_APPV_REM   ,
+			       DCF_REQ_APPV_STUS_ID   ,
+			       DCF_REQ_BRNCH_ID   ,
+			       DCF_REQ_DEPT_ID   ,
+			       DCF_REQ_APPV_REQ_RESN_ID   ,
+			       DCF_REQ_ON_BEHALF
+			  FROM LOG0064M
+			 WHERE  DCF_REQ_ENTRY_ID =  #{dcfReqEntryId}
+			      AND ROWNUM <![CDATA[<=]]>  1
+    </select>
+
+    <select id="selectDCFCompulsoryFieldListByRequestID" parameterType="map" resultType="EgovMap">
+          SELECT A.DCF_REQ_COM_FILD_ID   ,
+			       A.DCF_REQ_ENTRY_ID   ,
+			       A.DCF_COM_FILD_TYPE_ID   ,
+			       A.DCF_REQ_COM_FILD_REF_NO   ,
+			       A.DCF_REQ_COM_FILD_UPD_USER_ID   ,
+			       B.DCF_COM_FILD_TYPE_NAME   ,
+			       CASE WHEN A.DCF_REQ_COM_FILD_CRT_DT IS NOT NULL  THEN TO_CHAR(A.DCF_REQ_COM_FILD_CRT_DT, 'yyyy-mm-dd hh24:mi:ss')       ELSE '1900-01-01 00:00:00'          END CRT_DT  ,
+			       CASE WHEN A.DCF_REQ_COM_FILD_CRT_USER_ID IS NOT NULL  THEN A.DCF_REQ_COM_FILD_CRT_USER_ID ELSE 0 END CRT_USER_ID  ,
+			       CASE WHEN A.DCF_REQ_COM_FILD_UPD_DT IS NOT NULL  THEN TO_CHAR(A.DCF_REQ_COM_FILD_UPD_DT  , 'yyyy-mm-dd hh24:mi:ss')     ELSE '1900-01-01 00:00:00'          END UPD_DT
+			  FROM LOG0068M A
+			         JOIN LOG0069M B   ON B.DCF_COM_FILD_TYPE_ID = A.DCF_COM_FILD_TYPE_ID
+			 WHERE  A.DCF_REQ_COM_FILD_STUS_ID = 1
+			     AND  A.DCF_REQ_ENTRY_ID = #{dcfReqEntryId}
+			  ORDER BY DCF_REQ_COM_FILD_ID ASC
+    </select>
+
+    <select id="selectDCFChangeItemListByRequestID" parameterType="map" resultType="EgovMap">
+          SELECT A.DCF_REQ_DET_ID   ,
+			       A.DCF_REQ_ENTRY_ID   ,
+			       A.DCF_REQ_DET_FILD_CHG   ,
+			       A.DCF_REQ_DET_OLD_DATA   ,
+			       A.DCF_REQ_DET_NW_DATA   ,
+			       A.DCF_REQ_DET_RESULT_STUS_ID   ,
+			       A.DCF_REQ_DET_CRT_USER_ID   ,
+			       A.DCF_REQ_DET_UPD_USER_ID   ,
+			       A.DCF_REQ_DET_REM   ,
+			       CASE
+			            WHEN A.DCF_REQ_DET_CRT_DT IS NOT NULL THEN TO_CHAR(A.DCF_REQ_DET_CRT_DT, 'yyyy-mm-dd hh24:mi:ss' )
+			       ELSE '1900-01-01 00:00:00'
+			          END CRT_DT  ,
+			       CASE
+			            WHEN  B.STUS_CODE_ID IS NOT NULL THEN B.CODE
+			       ELSE ' '
+			          END RESULT_STUS_CODE  ,
+			       CASE
+			            WHEN B.STUS_CODE_ID IS NOT NULL THEN B.NAME
+			       ELSE ' '
+			          END RESULT_STUS_NAME  ,
+			       CASE
+			            WHEN A.DCF_REQ_DET_SETL_DT IS NOT NULL THEN TO_CHAR(A.DCF_REQ_DET_SETL_DT,'yyyy-mm-dd hh24:mi:ss' )
+			       ELSE '1900-01-01 00:00:00'
+			          END SETL_DT  ,
+			       CASE
+			            WHEN ( A.DCF_REQ_DET_UPD_DT IS NOT NULL ) THEN TO_CHAR(A.DCF_REQ_DET_UPD_DT,'yyyy-mm-dd hh24:mi:ss' )
+			       ELSE '1900-01-01 00:00:00'
+			          END UPD_DT
+			  FROM LOG0067D A
+			         LEFT JOIN SYS0038M B   ON B.STUS_CODE_ID = A.DCF_REQ_DET_RESULT_STUS_ID
+			 WHERE  A.DCF_REQ_DET_STUS_ID = 1
+			          AND A.DCF_REQ_ENTRY_ID = #{dcfReqEntryId}
+			  ORDER BY DCF_REQ_DET_ID ASC
+    </select>
+
+    <update id="updateDCFRequestMs" parameterType="Map">
+        UPDATE LOG0064M
+		     SET DCF_REQ_STUS_ID = 34,
+			       DCF_REQ_PRO_STUS_ID = 36,
+			       DCF_REQ_SETL_DT = SYSDATE,
+			       DCF_REQ_UPD_DT = SYSDATE,
+			       DCF_REQ_APPV_USER_ID = #{userId},
+			       DCF_REQ_APPV_DT = SYSDATE,
+			       DCF_REQ_APPV_REM = #{dcfReqAppvRem},
+			       DCF_REQ_APPV_STUS_ID = 36,
+			       DCF_REQ_APPV_REQ_RESN_ID = #{feedback}
+		 WHERE  DCF_REQ_ENTRY_ID =  #{dcfReqEntryId}
+    </update>
+
+    <insert id="insertDCFResponseLogs" parameterType="Map">
+        <selectKey keyProperty="dcfRespnsId" resultType="int" order="BEFORE">
+        SELECT LOG0070D_DCF_RESPNS_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+
+			INSERT INTO LOG0070D
+			(
+			         DCF_RESPNS_ID,
+			         DCF_REQ_ENTRY_ID,
+                     DCF_RESPNS_STUS_ID,
+                     DCF_RESPNS_MSG,
+                     DCF_RESPNS_CRT_DT,
+                     DCF_RESPNS_CRT_USER_ID,
+                     DCF_RESPNS_UPD_DT,
+                     DCF_RESPNS_UPD_USER_ID,
+                     DCF_SETL_DT
+                     )
+		     VALUES
+		     (
+		             #{dcfRespnsId},
+		             #{dcfReqEntryId},
+		             1,
+		             #{remark},
+		             SYSDATE,
+		             #{userId},
+		             SYSDATE,
+		             #{userId},
+		             SYSDATE
+		             )
+    </insert>
+
+
+    <select id="getOrgCodeListByMemTypeStaff" parameterType="Map" resultType="egovMap">
+		    SELECT Project2.C1 C1 ,
+					   Project2.MEM_ID CODE_ID ,
+					   Project2.C2 CODE_NAME
+			FROM
+					  (SELECT Distinct1.MEM_ID MEM_ID ,
+					               Distinct1.C1 C1 ,
+					               Distinct1.C2 C2
+					  FROM
+						    ( SELECT DISTINCT Extent2.MEM_ID MEM_ID ,
+						                  1 C1 ,
+						                  Extent1.MEM_CODE || ' - ' || Extent1.NAME C2
+						    FROM ORG0001D Extent1
+								    JOIN ORG0005D Extent2
+								    ON Extent1.MEM_ID      = Extent2.MEM_ID
+						    WHERE ( 1 = Extent1.STUS )
+								    AND ( Extent2.MEM_LVL  = #{memLvl} )
+								    AND ( Extent1.MEM_TYPE = #{memType} )
+						    ) Distinct1
+					  ) Project2
+			ORDER BY Project2.C2 ASC
+    </select>
+
+    <select id="getOrgCodeListByMemType" parameterType="Map" resultType="egovMap">
+    	 SELECT Distinct1.C1 C1 ,
+				  Distinct1.MEM_UP_ID MEM_UP_ID ,
+				  Distinct1.MEM_ID CODE_ID ,
+				  Distinct1.C2 CODE_NAME
+		 FROM
+				  ( SELECT DISTINCT Extent2.MEM_ID MEM_ID ,
+				               Extent2.MEM_UP_ID MEM_UP_ID ,
+				               1 C1 ,
+				               Extent2.DEPT_CODE || ' - ' || Extent1.NAME C2
+				   FROM ORG0001D Extent1
+							  JOIN ORG0005D Extent2
+							  ON Extent1.MEM_ID = Extent2.MEM_ID
+				  WHERE ( 1  = Extent1.STUS )
+							  AND ( Extent2.MEM_LVL   = #{memLvl} )
+							  AND ( Extent1.MEM_TYPE  = #{memType} )
+
+					          <if test=" null != parentIDArray and parentIDArray.size > 0">
+                                    AND Extent2.MEM_UP_ID IN
+                                    <foreach collection="parentIDArray" item="item" open="(" separator="," close=")">
+                                        #{item}
+                                    </foreach>
+                              </if>
+				  ) Distinct1
+    </select>
+
+
+
+    <select id="selectTransitInfoList" parameterType="map" resultType="EgovMap">
+          SELECT A.TR_BOOK_ID   ,
+			         C.TR_TRNSIT_ID   ,
+			         C.TR_TRNSIT_FROM   ,
+			         C.TR_TRNSIT_TO   ,
+			         D.CODE_NAME   ,
+			         E.CURIER_NAME   ,
+			         F.CODE   ,
+			         CASE WHEN C.TR_TRNSIT_DT IS NOT NULL THEN TO_CHAR(C.TR_TRNSIT_DT, 'dd-mm-yyyy') ELSE '01-01-1900' END TR_TRNSIT_DT,
+			         CASE WHEN C.TR_TRNSIT_CLOS_DT IS NOT NULL THEN TO_CHAR(C.TR_TRNSIT_CLOS_DT, 'dd-mm-yyyy') ELSE '01-01-1900' END TR_TRNSIT_CLOS_DT
+			  FROM MSC1001V A
+		       JOIN MSC0038D B   ON B.TR_TRNSIT_BOOK_ID = A.TR_BOOK_ID
+		       JOIN MSC0037D C   ON C.TR_TRNSIT_ID = B.TR_TRNSIT_ID
+		       LEFT JOIN SYS0013M D   ON D.CODE_ID = C.TR_TRNSIT_TYPE_ID
+		       LEFT JOIN SYS0016M E   ON E.CURIER_CODE = C.TR_CURIER_CODE
+		       LEFT JOIN SYS0038M F   ON F.STUS_CODE_ID = C.TR_TRNSIT_STUS_ID
+		    WHERE  A.TR_BOOK_ID = #{trBookId}
+    </select>
+
+    <select id="getCreateByList" resultType="EgovMap">
+	    SELECT DISTINCT tm.TR_BOOK_CRT_USER_ID CODE_ID,
+	                            tm.TR_BOOK_CRT_USER_ID||'-'||USER_FULL_NAME CODE_NAME
+	    FROM MSC0028D tm
+	            JOIN SYS0047M usr
+	            ON usr.USER_ID = tm.TR_BOOK_CRT_USER_ID
+    </select>
+
+    <select id="selelctRequestBahchList" parameterType="map" resultType="EgovMap">
+         SELECT DISTINCT 1 C1  ,
+		             CASE WHEN  A.TR_BOOK_BK_REQ_CRT_DT IS NOT NULL THEN TO_CHAR(A.TR_BOOK_BK_REQ_CRT_DT , 'dd/mm/yyyy') ELSE NULL END TR_BOOK_BK_REQ_CRT_DT  ,
+		             A.TR_BOOK_BK_REQ_CRT_USER_ID   ,
+		             CASE WHEN D.USER_ID IS NOT NULL THEN D.USER_NAME ELSE ' 'END CRT_USER  ,
+		             CASE WHEN A.TR_BOOK_NO_END IS NOT NULL  THEN A.TR_BOOK_NO_END ELSE ' ' END TR_BOOK_NO_END  ,
+		             A.TR_BOOK_BK_REQ_END_RECIPT_NO   ,
+		             A.TR_BOOK_BK_REQ_IS_SYNC   ,
+		             A.TR_BOOK_BK_REQ_PGE_PER_BOOK   ,
+		             A.TR_BOOK_BK_REQ_QTY   ,
+		             A.TR_BOOK_BK_REQ_BRNCH_ID   ,
+		             C.CODE CODE  ,
+		             C.NAME NAME  ,
+		             A.TR_BOOK_BK_REQ_ID   ,
+		             A.TR_BOOK_BK_REQ_NO   ,
+		             A.TR_BOOK_BK_REQ_PREFIX   ,
+		             A.TR_BOOK_BK_REQ_STUS_ID   ,
+		             B.CODE CODE1  ,
+		             B.NAME NAME1  ,
+		             CASE WHEN A.TR_BOOK_NO_START IS NOT NULL THEN A.TR_BOOK_NO_START ELSE ' ' END TR_BOOK_NO_START  ,
+		             A.TR_BOOK_BK_REQ_START_RECIPT_NO TR_BOOK_BK_REQ_START_RECIPT_NO  ,
+		             CASE WHEN A.TR_BOOK_BK_REQ_UPD_DT IS NOT NULL THEN TO_CHAR(A.TR_BOOK_BK_REQ_UPD_DT , 'dd/mm/yyyy') ELSE NULL END TR_BOOK_BK_REQ_UPD_DT  ,
+		             A.TR_BOOK_BK_REQ_UPD_USER_ID TR_BOOK_BK_REQ_UPD_USER_ID  ,
+		             CASE WHEN  F.USER_ID IS NOT NULL THEN F.USER_NAME ELSE ' ' END UPD_USER
+		FROM MSC0027D A
+		    JOIN SYS0038M B   ON B.STUS_CODE_ID = A.TR_BOOK_BK_REQ_STUS_ID
+		    JOIN SYS0005M C   ON C.BRNCH_ID = A.TR_BOOK_BK_REQ_BRNCH_ID
+		    LEFT JOIN SYS0047M D   ON D.USER_ID = A.TR_BOOK_BK_REQ_CRT_USER_ID
+		    LEFT JOIN SYS0047M F   ON F.USER_ID = A.TR_BOOK_BK_REQ_UPD_USER_ID
+		WHERE 1=1
+         <if test="batchStatus != null and batchStatus != '' ">
+		   AND A.TR_BOOK_BK_REQ_STUS_ID IN
+              <foreach collection="batchStatus" item="item" open="(" separator="," close=")">
+                  #{item}
+              </foreach>
+		 </if>
+		 <if test="batchNo != null and batchNo != '' ">
+		   AND A.TR_BOOK_BK_REQ_NO = #{batchNo}
+		 </if>
+		 <if test="reqBranch != null and reqBranch != '' ">
+		   AND A.TR_BOOK_BK_REQ_BRNCH_ID = #{reqBranch}
+		 </if>
+		 <if test="batchCrtDt != null and batchCrtDt != '' ">
+		   AND TO_CHAR(A.TR_BOOK_BK_REQ_CRT_DT, 'yyyymmdd') = to_char(to_date (#{batchCrtDt} ,'DD/MM/YYYY'),'yyyymmdd')
+		</if>
+		<if test="userNm != null and userNm != '' ">
+		   AND D.USER_NAME = #{userNm}
+		</if>
+		ORDER BY TR_BOOK_BK_REQ_ID ASC
+    </select>
+
+    <select id="selelctRequestBahchInfo" parameterType="map" resultType="EgovMap">
+        SELECT A.TR_BOOK_BK_REQ_ID  REQ_ID ,
+                A.TR_BOOK_BK_REQ_NO  REQ_NO ,
+                A.TR_BOOK_BK_REQ_STUS_ID   STUS_ID,
+                A.TR_BOOK_BK_REQ_BRNCH_ID  BRNCH_ID ,
+                A.TR_BOOK_BK_REQ_PREFIX   PREFIX,
+                A.TR_BOOK_BK_REQ_QTY   QTY,
+                A.TR_BOOK_BK_REQ_PGE_PER_BOOK  PGE_PER_BOOK ,
+                A.TR_BOOK_BK_REQ_START_RECIPT_NO START_RECIPT_NO  ,
+                A.TR_BOOK_BK_REQ_END_RECIPT_NO  END_RECIPT_NO ,
+                A.TR_BOOK_BK_REQ_CRT_USER_ID CRT_USER_ID   ,
+                A.TR_BOOK_BK_REQ_UPD_USER_ID UPD_USER_ID   ,
+                A.TR_BOOK_BK_REQ_IS_SYNC   IS_SYNC,
+                B.CODE CODE  ,
+                B.NAME NAME  ,
+                C.CODE CODE1  ,
+                C.NAME NAME1  ,
+                CASE WHEN A.TR_BOOK_BK_REQ_CRT_DT IS NOT NULL THEN TO_CHAR(A.TR_BOOK_BK_REQ_CRT_DT, 'dd/mm/yyyy hh24:mi:ss AM')  ELSE NULL END CRT_DT  ,
+                CASE WHEN D.USER_ID IS NOT NULL THEN D.USER_NAME ELSE ' ' END CRT_USER  ,
+                CASE WHEN A.TR_BOOK_NO_END IS NOT NULL THEN A.TR_BOOK_NO_END ELSE ' ' END TR_BOOK_NO_END  ,
+                CASE WHEN A.TR_BOOK_NO_START IS NOT NULL THEN A.TR_BOOK_NO_START ELSE ' ' END TR_BOOK_NO_START  ,
+                CASE WHEN A.TR_BOOK_BK_REQ_UPD_DT IS NOT NULL THEN TO_CHAR(A.TR_BOOK_BK_REQ_UPD_DT,  'dd/mm/yyyy hh24:mi:ss AM')  ELSE NULL END UPD_DT  ,
+                CASE WHEN E.USER_ID IS NOT NULL THEN E.USER_NAME ELSE ' ' END UPD_USER
+         FROM MSC0027D A
+                JOIN SYS0038M B   ON B.STUS_CODE_ID = A.TR_BOOK_BK_REQ_STUS_ID
+                JOIN SYS0005M C   ON C.BRNCH_ID = A.TR_BOOK_BK_REQ_BRNCH_ID
+                LEFT JOIN SYS0047M D   ON D.USER_ID = A.TR_BOOK_BK_REQ_CRT_USER_ID
+                LEFT JOIN SYS0047M E   ON E.USER_ID = A.TR_BOOK_BK_REQ_UPD_USER_ID
+          WHERE  A.TR_BOOK_BK_REQ_ID = #{reqId}
+          AND ROWNUM <![CDATA[<= ]]>1
+    </select>
+
+    <update id="updateBkReqStus" parameterType="Map">
+      UPDATE MSC0027D
+		   SET TR_BOOK_BK_REQ_STUS_ID = 8,
+		         TR_BOOK_BK_REQ_UPD_DT = SYSDATE
+		 WHERE  TR_BOOK_BK_REQ_ID = #{reqId}
+	</update>
+
+	<select id="selelctMemberInfoByCode" parameterType="map" resultType="EgovMap">
+        SELECT A.C1 ,
+                   A.MEM_ID ,
+                   A.MEM_CODE ,
+                   A.NAME ,
+                   A.NRIC ,
+                   A.CODE_NAME
+              FROM ( SELECT DISTINCT UNI.C1   ,
+                                     UNI.MEM_ID   ,
+                                     UNI.MEM_CODE   ,
+                                     UNI.NAME   ,
+                                     UNI.NRIC   ,
+                                     UNI.CODE_NAME
+                     FROM ( SELECT 1 C1  ,
+                                   A.MEM_ID   ,
+                                   A.MEM_CODE   ,
+                                   A.NAME   ,
+                                   A.NRIC   ,
+                                   B.CODE_NAME
+                            FROM ORG0001D A
+                                   JOIN SYS0013M B   ON B.CODE_ID = A.MEM_TYPE
+                             WHERE  A.MEM_CODE = #{trHolder}
+                            UNION ALL
+                            SELECT 1 C1  ,
+                                   C.USER_ID   ,
+                                   C.USER_NAME   ,
+                                   C.USER_NAME   ,
+                                   C.USER_NRIC   ,
+                                   'Staff' C2
+                            FROM SYS0047M C
+                             WHERE  C.USER_NAME = #{trHolder}
+                             ) UNI
+                       ) A
+                       WHERE ROWNUM  <![CDATA[<= ]]>1
+    </select>
+
+	 <select id="selelctUnderDCFRequest" parameterType="map" resultType="EgovMap">
+	     SELECT DCF_REQ_NO
+	         FROM LOG0068M A
+	                JOIN LOG0064M B   ON  B.DCF_REQ_ENTRY_ID = A.DCF_REQ_ENTRY_ID
+	                AND B.DCF_REQ_STUS_ID IN ( 33,60 )
+	          WHERE  1 = A.DCF_REQ_COM_FILD_STUS_ID
+	              AND A.DCF_COM_FILD_TYPE_ID = 7
+	              AND A.DCF_REQ_COM_FILD_REF_NO = #{trBookNo}
+	        ORDER BY A.DCF_REQ_ENTRY_ID ASC
+	  </select>
+
+	 <select id="selelctDcfMaster" parameterType="map" resultType="EgovMap">
+	     SELECT A.DCF_REQ_ENTRY_ID   ,
+			       A.DCF_REQ_NO   ,
+			       A.DCF_REQ_USER_ID   ,
+			       A.DCF_REQ_RCIPT_GRP_ID   ,
+			       A.DCF_REQ_TYPE_ID   ,
+			       A.DCF_REQ_CAT_ID   ,
+			       A.DCF_REQ_SUB_ID   ,
+			       A.DCF_REQ_STUS_ID   ,
+			       A.DCF_REQ_PRO_STUS_ID   ,
+			       A.DCF_REQ_SETL_DT   ,
+			       A.DCF_REQ_DESC   ,
+			       A.DCF_REQ_REM   ,
+			       A.DCF_PRIOR_LVL   ,
+			       A.DCF_REQ_HAS_ATTACH   ,
+			       A.DCF_REQ_ATTACH_FILE_NAME   ,
+			       A.DCF_REQ_RCV_FDBCK   ,
+			       A.DCF_REQ_CRT_DT   ,
+			       A.DCF_REQ_CRT_USER_ID   ,
+			       A.DCF_REQ_UPD_DT   ,
+			       A.DCF_REQ_UPD_USER_ID   ,
+			       A.DCF_REQ_RESN_ID   ,
+			       A.DCF_REQ_APPV_USER_ID   ,
+			       A.DCF_REQ_APPV_DT   ,
+			       A.DCF_REQ_APPV_REM   ,
+			       A.DCF_REQ_APPV_STUS_ID   ,
+			       A.DCF_REQ_BRNCH_ID   ,
+			       A.DCF_REQ_DEPT_ID   ,
+			       A.DCF_REQ_APPV_REQ_RESN_ID   ,
+			       A.DCF_REQ_ON_BEHALF
+			  FROM LOG0064M A
+			         JOIN LOG0068M B   ON ( B.DCF_REQ_ENTRY_ID = A.DCF_REQ_ENTRY_ID )
+			         AND ( 1 = B.DCF_REQ_COM_FILD_STUS_ID )
+			         AND ( 7 = B.DCF_COM_FILD_TYPE_ID )
+			 WHERE  ( 81 = A.DCF_REQ_SUB_ID )
+			          AND ( 33 = A.DCF_REQ_STUS_ID )
+			          AND ( B.DCF_REQ_COM_FILD_REF_NO = #{trBookNo} )
+			          AND ROWNUM <![CDATA[<= ]]> 1
+	  </select>
+
+    <update id="updateFileName" parameterType="Map">
+		  UPDATE LOG0064M
+			   SET DCF_REQ_HAS_ATTACH = #{hasAttach},
+			       DCF_REQ_ATTACH_FILE_NAME = #{fileName},
+			       DCF_REQ_UPD_DT = SYSDATE
+			 WHERE  DCF_REQ_ENTRY_ID =  #{dcfReqEntryId}
+	 </update>
+
+	 <select id="selelctBoxList" parameterType="map" resultType="EgovMap">
+          SELECT BOX_ID   ,
+			           BOX_NO   ,
+			           BOX_STUS_ID   ,
+			           BOX_STUS_CODE   ,
+			           BOX_STUS_NAME   ,
+			           BOX_HOLDER   ,
+			           BOX_OPEN_DT   ,
+			           BOX_SCRAP_DT   ,
+			           BOX_CRT_BRNCH_ID   ,
+			           BOX_CRT_BRNCH_CODE   ,
+			           BOX_CRT_BRNCH_NAME   ,
+			           BOX_CRT_DT   ,
+			           BOX_CRT_USER_ID   ,
+			           BOX_CRT_USER_NAME   ,
+			           BOX_BOOK_QTY
+			  FROM MSC1003V
+			WHERE  BOX_HOLDER = #{boxHolder}
+			<if test="boxNo != null and boxNo != '' ">
+			     AND BOX_NO = #{boxNo}
+			</if>
+			  ORDER BY BOX_NO ASC
+      </select>
+
+    <insert id="insertKeepIntoBoxD" parameterType="Map">
+        <selectKey keyProperty="trBoxDetId" resultType="int" order="BEFORE">
+        <!--SELECT MSC0032D_TR_BOX_DET_ID_SEQ.NEXTVAL FROM DUAL  -->
+         (SELECT DECODE(COUNT(TR_BOX_DET_ID),0 , 1 , MAX(TR_BOX_DET_ID)+1) FROM MSC0032D )
+        </selectKey>
+
+            INSERT INTO MSC0032D
+            (
+                TR_BOX_DET_ID,
+                TR_BOX_ID,
+                TR_BOOK_ID,
+                TR_BOX_ITM_STUS_ID,
+                TR_BOOK_INSERT_DT_TM,
+                TR_BOOK_CRT_DT,
+                TR_BOOK_CRT_USER_ID,
+                TR_BOOK_UPD_DT,
+                TR_BOOK_UPD_USER_ID
+             )
+		     VALUES
+		     (
+		         #{trBoxDetId},
+		         #{trBoxId},
+	             #{trBookId},
+	             1,
+	             SYSDATE,
+	             SYSDATE,
+	             #{userId},
+	             SYSDATE,
+	             #{userId}
+	         )
+    </insert>
+
+    <insert id="insertKeepIntoBox" parameterType="Map">
+        <selectKey keyProperty="trBoxId" resultType="int" order="BEFORE">
+        <!-- SELECT MSC0031D_TR_BOX_ID_SEQ.NEXTVAL FROM DUAL -->
+         (SELECT DECODE(COUNT(TR_BOX_ID),0 , 1 , MAX(TR_BOX_ID)+1) FROM MSC0031D )
+        </selectKey>
+
+		INSERT INTO MSC0031D
+		(
+		      TR_BOX_ID,
+		      TR_BOX_NO,
+              TR_BOX_STUS_ID,
+              TR_BOX_OPEN_DT_TM,
+              TR_BOX_SCRAP_DT_TM,
+              TR_BOX_BRNCH_ID,
+              TR_BOX_CRT_DT,
+              TR_BOX_CRT_USER_ID,
+              TR_BOX_UPD_DT,
+              TR_BOX_UPD_USER_ID
+        )
+        VALUES
+        (
+            #{trBoxId},
+		    #{docNo},
+             1,
+             SYSDATE,
+             SYSDATE,
+             #{branchId},
+             SYSDATE,
+             #{userId},
+             SYSDATE,
+             #{userId}
+        )
+    </insert>
+
+     <insert id="insertKeepIntoBoxRcord" parameterType="Map">
+        <selectKey keyProperty="trRcordId" resultType="int" order="BEFORE">
+        <!--SELECT MSC0033D_TR_RCORD_ID_SEQ.NEXTVAL FROM DUAL  -->
+        (SELECT DECODE(COUNT(TR_RCORD_ID),0 , 1 , MAX(TR_RCORD_ID)+1) FROM MSC0033D )
+        </selectKey>
+
+        INSERT INTO MSC0033D
+        (
+            TR_RCORD_ID,
+            TR_BOX_ID,
+            TR_TYPE_ID,
+            TR_LOC_CODE,
+            TR_RCORD_DT_TM,
+            TR_RCORD_STUS_ID,
+            TR_RCORD_CRT_DT,
+            TR_RCORD_CRT_USER_ID,
+            TR_RCORD_QTY,
+            TR_REF_NO
+        )
+        VALUES
+        (
+            #{trRcordId},
+            #{trBoxId},
+             767,
+             #{branchCode},
+             SYSDATE,
+             1,
+             SYSDATE,
+             #{userId},
+             1,
+             #{docNo}
+             )
+    </insert>
+
+        <select id="selectTrBookListByMem" parameterType="map" resultType="EgovMap">
+      SELECT TR_BOOK_ID ,
+                   TR_BOOK_NO ,
+                   TR_BOOK_STUS_ID ,
+                   TR_BOOK_STUS_CODE ,
+                   TR_HOLDER ,
+                   TR_HOLDER_TYPE ,
+                   TR_BOOK_PREFIX ,
+                   TR_BOOK_NO_START ,
+                   TR_BOOK_NO_END ,
+                   TR_BOOK_PGE ,
+                   TO_CHAR(TR_BOOK_CRT_DT, 'dd/mm/yyyy') TR_BOOK_CRT_DT,
+                   TR_BOOK_CRT_USER_ID ,
+                   TR_BOOK_CRT_USER_NAME ,
+                   BOX_ID ,
+                   BOX_NO
+          FROM MSC1001V
+         WHERE 1=1
+              <if test ="assignMemCode != null and assignMemCode!='' ">
+              AND TR_HOLDER = #{assignMemCode}
+              </if>
+              <choose>
+                  <when test="orderValue !=null and orderValue !=''">
+                      ORDER BY ${orderValue}
+                  </when>
+                  <otherwise>
+                    ORDER BY TR_BOOK_NO ASC
+                  </otherwise>
+                </choose>
+
+  </select>
+
+
+</mapper>

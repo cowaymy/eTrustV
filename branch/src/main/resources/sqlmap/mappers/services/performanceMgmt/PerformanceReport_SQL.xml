@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.performanceMgmt.impl.PerformanceReportMapper">
+
+
+
+    <select id="selectPfReportRejoin"  parameterType="Map" resultType="egovMap">
+		 <![CDATA[ 	select memOrg.LAST_ORG_CODE ,memOrg.LAST_GRP_CODE , memOrg.LAST_DEPT_CODE, ' ' AS REJOIN_TARGET_PERCENT ,COUNT(PeriodExp.SRV_PRD_ID) AS TOTAL_EXPIRED, (count(svm.SRV_MEM_ID) + COUNT(svc.SRV_CNTRCT_ID)) AS TOTAL_SVM,COUNT(som.SALES_ORD_ID) AS TOTAL_EXTRADE, (count(svm.SRV_MEM_ID) + COUNT(som.SALES_ORD_ID)) AS TOTAL_REJOIN,' ' REJOIN_PERCENT
+			from SVC0008D sch
+			left join SVC0009D config on config.SALES_ORD_ID = sch.SALES_ORD_ID
+			left join SAL0088D cfgPeriod on cfgPeriod.SRV_CONFIG_ID = config.ID  
+			left join SAL0088D PeriodExp on PeriodExp.SRV_PRD_ID = cfgPeriod.SRV_PRD_ID AND TO_CHAR(PeriodExp.SRV_PRD_EXPR_DT,'MM') = TO_CHAR(SYSDATE,'MM') AND TO_CHAR(PeriodExp.SRV_PRD_EXPR_DT,'YYYY')=TO_CHAR(SYSDATE,'YYYY')
+			left join SAL0095D svm on svm.SRV_SALES_ORD_ID = config.SALES_ORD_ID and svm.SRV_MEM_PAC_ID NOT IN (2,3,4) AND svm.SRV_STUS_CODE_ID = 4
+			left join SAL0077D svc on svc.SRV_CNTRCT_ORD_ID = config.SALES_ORD_ID AND SRV_CNTRCT_STUS_ID = 4
+			join ORG0005D memOrg on memOrg.MEM_ID = sch.CODY_ID AND memOrg.ORG_STUS_CODE_ID = 1 and memOrg.LAST_DEPT_CODE <> ' '
+			left join SAL0001D som on som.SALES_ORD_ID = sch.SALES_ORD_ID and (som.BINDING_NO IS NOT NULL OR som.BINDING_NO <> ' ') AND SALES_ORD_ID_OLD > 0
+			where sch.MONTH = to_char(to_date(#{myBSMonth},'mm/yyyy'),'mm')
+			AND sch.YEAR =    to_char(to_date(#{myBSMonth},'mm/yyyy'),'yyyy')
+            ]]>
+			<if test="cmdBranchCode != null and cmdBranchCode != ''">
+			 and memOrg.BRNCH_ID =  #{cmdBranchCode}
+			</if> 
+			 <if test="cmdCdManager != null and cmdCdManager != ''">
+			 and memOrg.LAST_DEPT_CODE  IN   ( SELECT  A.DEPT_CODE
+                                            FROM ORG0005D A,
+                                                 ORG0001D B,
+                                                 SYS0005M C
+                                           WHERE A.MEM_ID = B.MEM_ID
+                                                 AND A.BRNCH_ID =  C.BRNCH_ID
+                                                 AND A.DEPT_CODE  IS NOT NULL
+                                                 AND B.STUS IN (1, 8)
+                                                 AND B.MEM_TYPE = 2
+                                                 AND A.BRNCH_ID = #{cmdBranchCode}
+                                                 and a.MEM_ID = #{cmdCdManager}
+									             <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+									             and a.LAST_DEPT_CODE = #{txtAssigncodyCode}
+									             </if>
+                                                                                            )
+			 </if>
+			 <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+			 and memOrg.LAST_DEPT_CODE = #{txtAssigncodyCode}
+			 </if>
+			GROUP BY memOrg.LAST_ORG_CODE ,memOrg.LAST_GRP_CODE , memOrg.LAST_DEPT_CODE
+
+
+    </select>
+
+
+
+
+    <select id="selectPfReportCollection"  parameterType="Map" resultType="egovMap">
+		 <![CDATA[ 
+		 select LAST_ORG_CODE,
+            LAST_GRP_CODE,
+            LAST_DEPT_CODE,
+            collection_target_percent,
+            NO_OF_ACCT,
+            TARGET,
+            COLLECTION,
+            COLLECTION_PERCENT,
+            to_char(ADD_PERCENT, 'FM90D00') as ADD_PERCENT
+	from (select memOrg.LAST_ORG_CODE ,memOrg.LAST_GRP_CODE , memOrg.LAST_DEPT_CODE, ' ' AS collection_target_percent
+			, count(accDept.ACC_DEBT_ORD_ID) AS NO_OF_ACCT, SUM(accDept_sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET) TARGET,SUM(accDept_sub.ACC_DEBT_CURR_TOT_COLCT ) as COLLECTION 
+			,(case WHEN (SUM(accDept_sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET) >0) then (SUM(accDept_sub.ACC_DEBT_CURR_TOT_COLCT )/SUM(accDept_sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET)*100) ELSE 0 END) AS COLLECTION_PERCENT
+			,(CASE WHEN count(PD1.PAY_ITM_ID) >0 THEN (count(PD.PAY_ITM_ID)/count(PD1.PAY_ITM_ID) * 100) ELSE 0 END) ADD_PERCENT
+			from PAY0052S accDept
+			join PAY0053S accDept_sub on accDept_sub.ACC_DEBT_ORD_ID = accDept.ACC_DEBT_ORD_ID
+			join SVC0008D sch on sch.SALES_ORD_ID =accDept.ACC_DEBT_ORD_ID 
+			join ORG0005D memOrg on memOrg.MEM_ID = sch.CODY_ID AND memOrg.ORG_STUS_CODE_ID = 1 and memOrg.LAST_DEPT_CODE <> ' '
+			left join PAY0064D PM on PM.SALES_ORD_ID = accDept.ACC_DEBT_ORD_ID
+			left join PAY0065D PD on PD.PAY_ID = PM.PAY_ID AND PD.PAY_ITM_MODE_ID IN (106,107,108)
+			left join PAY0065D PD1 ON PD1.PAY_ID = PM.PAY_ID 
+			WHERE sch.MONTH = to_char(to_date(#{myBSMonth},'mm/yyyy'),'mm')
+	          AND sch.YEAR = to_char(to_date(#{myBSMonth},'mm/yyyy'),'yyyy')
+	           ]]>
+	           <if test="cmdBranchCode != null and cmdBranchCode != ''">
+	             and memOrg.BRNCH_ID =  #{cmdBranchCode}
+	            </if> 
+	             <if test="cmdCdManager != null and cmdCdManager != ''">
+	             and memOrg.LAST_DEPT_CODE  IN   ( SELECT  A.DEPT_CODE
+	                                            FROM ORG0005D A,
+	                                                 ORG0001D B,
+	                                                 SYS0005M C
+	                                           WHERE A.MEM_ID = B.MEM_ID
+	                                                 AND A.BRNCH_ID =  C.BRNCH_ID
+	                                                 AND A.DEPT_CODE  IS NOT NULL
+	                                                 AND B.STUS IN (1, 8)
+	                                                 AND B.MEM_TYPE = 2
+	                                                 AND A.BRNCH_ID = #{cmdBranchCode}
+	                                                 and a.MEM_ID = #{cmdCdManager}
+			                                         <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+			                                          and a.LAST_DEPT_CODE = #{txtAssigncodyCode}
+			                                         </if>
+	                                                                                            )
+	             </if>
+	             <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+	              and memOrg.LAST_DEPT_CODE = #{txtAssigncodyCode}
+	             </if>
+			group by memOrg.LAST_ORG_CODE ,memOrg.LAST_GRP_CODE , memOrg.LAST_DEPT_CODE
+			)
+    </select>
+    
+    
+
+
+
+    <select id="selectPfReportHeartService"  parameterType="Map" resultType="egovMap">
+			 <![CDATA[ 
+			 select SCM,CM,CODY,No_of_Acct,Active,Complete,Fail,Cancel,Other
+		        ,to_char(Complete_percent, 'FM90D00')
+		from (
+        select  
+			f.mem_code as SCM,
+			d.mem_code as CM,
+			(case when b.mem_lvl = 4 then c.mem_code  else null end ) as CODY, 
+			Count(a.schdul_id) as No_of_Acct ,
+			Count(case when a.stus_code_id = 1 then 1 else null end ) as Active ,
+			Count(case when a.stus_code_id = 4 then 1 else null end ) as Complete ,
+			count(case when a.stus_code_id =21 then 1 else null end ) as Fail ,
+			count(case when a.stus_code_id =10 then 1 else null end ) as Cancel,
+			count(case when a.stus_code_id not in (1,4, 21,10) then 1 else null end ) as Other,
+			round((Count(case when a.stus_code_id = 4 then 1 else null end )/
+			(Count(case when a.stus_code_id = 1 then 1 else null end ) +
+			Count(case when a.stus_code_id = 4 then 1 else null end )  +
+			count(case when a.stus_code_id =21 then 1 else null end )  )*100) ,0)as Complete_percent
+			from svc0008D a
+			join org0005d b on b.mem_id = a.cody_id
+			join org0001D c on b.mem_id = c.mem_id
+			join org0001D d on d.mem_id = b.mem_up_ID
+			join org0005d e on e.mem_id = d.mem_id
+			join org0001D f on f.mem_id = e.mem_up_ID
+			where a.year = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
+			and a.month = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
+			 ]]>
+			 <if test="cmdBranchCode != null and cmdBranchCode != ''">
+             and b.BRNCH_ID =  #{cmdBranchCode}
+            </if> 
+             <if test="cmdCdManager != null and cmdCdManager != ''">
+             and b.LAST_DEPT_CODE  IN   ( SELECT  A.DEPT_CODE
+                                            FROM ORG0005D A,
+                                                 ORG0001D B,
+                                                 SYS0005M C
+                                           WHERE A.MEM_ID = B.MEM_ID
+                                                 AND A.BRNCH_ID =  C.BRNCH_ID
+                                                 AND A.DEPT_CODE  IS NOT NULL
+                                                 AND B.STUS IN (1, 8)
+                                                 AND B.MEM_TYPE = 2
+                                                 AND A.BRNCH_ID = #{cmdBranchCode}
+                                                 and a.MEM_UP_ID = #{cmdCdManager}
+		                                         <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+		                                         and a.LAST_DEPT_CODE = #{txtAssigncodyCode}
+		                                         </if>
+                                                                                            )
+             </if>
+             <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+             and b.LAST_DEPT_CODE = #{txtAssigncodyCode}
+             </if>
+			group by b.mem_lvl,c.mem_code,d.mem_code, f.mem_code
+			)
+    </select>
+    
+    
+    
+    
+    
+    
+    <select id="selectPfReportSales"  parameterType="Map" resultType="egovMap">
+			<![CDATA[ 
+			
+			select 
+			g.mem_code as "SCM",
+			e.mem_code as "CM",
+			a.mem_id ,
+			b.mem_code as "CODY",
+			0 as "SALES TARGET",
+			Count(a.sales_ord_no) as Key_In, 
+			count(t.sales_ord_id) as "YS",
+			count(h.sales_ord_no)as "NET_SALES",
+			count(i.sales_ord_no)as "Extrade",
+			0 as "sales_Percent"
+			from SAL0001D a 
+			join org0001D b on b.mem_id = a.mem_id
+			join SYS0013M c on c.code_id = b.mem_type
+			join org0005d d on d.mem_id = b.mem_id
+			join org0001D e on e.mem_id = d.mem_up_ID
+			join org0005d f on f.mem_id = e.mem_id
+			join org0001D g on g.mem_id = f.mem_up_ID
+			left join SAL0001D h on a.sales_ord_id = h.sales_ord_id and h.pv_month <> 0 and h.pv_year <> 0
+			left join SAL0001D i on a.sales_ord_id = i.sales_ord_id and i.binding_no is not null
+			left join (select q.* 
+			from SAL0001D q
+			join SAL0046D w 
+			on q.sales_ord_id = w.sales_ord_id 
+			and w.stus_code_id = 4 
+			and q.pv_month = 0 
+			and q.pv_year = 0 
+			where q.mem_id='590')t on a.sales_ord_id = t.sales_ord_id
+			where TO_CHAR(a.sales_dt, 'yyyy') = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
+			and to_char(a.sales_dt,'mm') = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')        ]]>
+			AND a.stus_code_id=4 
+			and c.code_id = 2
+
+             <if test="cmdBranchCode != null and cmdBranchCode != ''">
+             and f.BRNCH_ID =  #{cmdBranchCode}
+            </if> 
+             <if test="cmdCdManager != null and cmdCdManager != ''">
+             and f.LAST_DEPT_CODE  IN   ( SELECT  A.DEPT_CODE
+                                            FROM ORG0005D A,
+                                                 ORG0001D B,
+                                                 SYS0005M C
+                                           WHERE A.MEM_ID = B.MEM_ID
+                                                 AND A.BRNCH_ID =  C.BRNCH_ID
+                                                 AND A.DEPT_CODE  IS NOT NULL
+                                                 AND B.STUS IN (1, 8)
+                                                 AND B.MEM_TYPE = 2
+                                                 AND A.BRNCH_ID = #{cmdBranchCode}
+                                                 and a.MEM_UP_ID = #{cmdCdManager}
+		                                         <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+		                                         and a.LAST_DEPT_CODE = #{txtAssigncodyCode}
+		                                         </if>
+                                                                                            )
+             </if>		
+             <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+             and f.LAST_DEPT_CODE = #{txtAssigncodyCode}
+             </if>	
+			group by b.mem_code, a.mem_id, g.mem_code, e.mem_code ,a.mem_id
+			order by b.mem_code
+
+    </select>        
+
+
+
+
+    <select id="selectBranchList" parameterType="Map" resultType="egovMap">
+
+        SELECT s005m.brnch_id AS CODE_ID
+                , s005m.code || '-' || s005m.name AS CODE_NAME
+            from SYS0005M s005m
+                    ,SYS0013M s0013m
+            where s005m.type_id = s0013m.code_id
+            and s005m.type_id in ( 42)
+            order by s005m.CODE ASC
+
+    </select>
+
+
+
+
+
+
+
+</mapper>

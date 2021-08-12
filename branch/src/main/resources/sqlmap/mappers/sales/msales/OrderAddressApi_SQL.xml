@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.msales.impl.OrderAddressApiMapper">
+
+    <select id="orderAddressList" parameterType="Map" resultType="egovMap">
+            SELECT 
+	                AREA_ID,
+	                ISO,
+	                COUNTRY,
+	                STATE,
+	                CITY,
+	                POSTCODE as post_Code,
+	                AREA
+               FROM SYS0064M
+             WHERE ISO = 'MY'
+                 AND STATUS_ID = 1
+              <if test="searchAreaKeyword != null and searchAreaKeyword !=''">
+                 AND UPPER(AREA) LIKE UPPER('%'|| #{searchAreaKeyword} || '%')
+              </if>
+              <if test="searchPostCode != null and searchPostCode !=''">
+                 AND POSTCODE LIKE '%'|| #{searchPostCode} || '%'
+              </if>
+              
+    </select>
+</mapper>

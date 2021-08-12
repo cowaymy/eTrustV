@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.trBook.impl.SalesTrBookRecvMapper">
+
+    <select id="selectTrBookRecvList" parameterType="map" resultType="EgovMap">
+        SELECT A.TRNSIT_ID   ,
+               A.TRNSIT_NO   ,
+               TO_CHAR(A.TRNSIT_DT, 'dd/mm/yyyy')  TRNSIT_DT ,
+               A.TRNSIT_FROM   ,
+               A.TRNSIT_TO   ,
+               A.TRNSIT_CURIER   ,
+               A.TRNSIT_STUS_ID   ,
+               A.TRNSIT_STUS_CODE   ,
+               A.TRNSIT_STUS_NAME   ,
+               A.TRNSIT_CLOS_DT   ,
+               A.TRNSIT_CRT_USER_ID   ,
+               A.TRNSIT_TOT_BOOK
+          FROM MSC1002V A
+          <if test="trBookNo != null and trBookNo != '' ">
+                 JOIN ( SELECT B.TR_TRNSIT_ID   ,
+                               B.TR_TRNSIT_STUS_ID   ,
+                               C.TR_BOOK_NO
+                        FROM MSC0038D B
+                               JOIN MSC0028D C   ON B.TR_TRNSIT_BOOK_ID = C.TR_BOOK_ID
+                 ) Join1   ON A.TRNSIT_ID = Join1.TR_TRNSIT_ID
+          </if>
+         WHERE   1=1
+              <if test="trnsitNo != null and trnsitNo != '' ">
+                  AND A.TRNSIT_NO = #{trnsitNo}
+              </if>
+              <if test="trnsitDt != null and trnsitDt != '' ">
+                  AND  TO_CHAR(A.TRNSIT_DT, 'dd-mm-yyyy') = #{trnsitDt}
+              </if>
+              <if test="crtuserId != null and crtuserId != '' ">
+                  AND  A.TRNSIT_CRT_USER_ID = #{crtuserId}
+              </if>
+              <if test='trnsitStusId != "1"'>
+                  AND  A.TRNSIT_STUS_ID = #{trnsitStusId}
+               </if>
+              <if test='trnsitStusId == "1"'>
+                  AND  A.TRNSIT_STUS_ID IN (#{trnsitStusId}, '44' )
+               </if>
+ <!--              <if test="trnsitTo != null and trnsitTo != '' ">
+                 AND  A.TRNSIT_TO = #{trnsitTo}
+               </if>    -->
+          <if test="trBookNo != null and trBookNo != '' ">
+                  AND  1 = Join1.TR_TRNSIT_STUS_ID
+                  AND  Join1.TR_BOOK_NO = #{trBookNo}
+          </if>
+          ORDER BY TRNSIT_NO ASC
+    </select>
+
+    <select id="selectTransitInfo" parameterType="map" resultType="EgovMap">
+        SELECT A.TRNSIT_ID ,
+                   A.TRNSIT_NO ,
+                   TO_CHAR(A.TRNSIT_DT, 'dd-mm-yyyy') TRNSIT_DT,
+                   A.TRNSIT_FROM ,
+                   A.TRNSIT_TO ,
+                   A.TRNSIT_CURIER ,
+                   A.TRNSIT_STUS_ID ,
+                   A.TRNSIT_STUS_CODE ,
+                   A.TRNSIT_STUS_NAME ,
+                   TO_CHAR(A.TRNSIT_CLOS_DT, 'dd-mm-yyyy') TRNSIT_CLOS_DT,
+                   A.TRNSIT_CRT_USER_ID ,
+                   A.TRNSIT_TOT_BOOK ,
+                   B.BRNCH_ID ,
+                   CASE WHEN ( B.BRNCH_ID IS NOT NULL ) THEN B.NAME ELSE '' END TRNSIT_FROM_NAME ,
+                   CASE WHEN ( B.BRNCH_ID IS NOT NULL ) THEN C.NAME ELSE '' END TRNSIT_TO_NAME ,
+                   CASE WHEN ( D.CURIER_ID IS NOT NULL ) THEN D.CURIER_NAME ELSE '' END TRNSIT_CURIER_NAME
+              FROM MSC1002V A
+                     LEFT JOIN SYS0005M B   ON TRNSIT_FROM = B.CODE
+                     LEFT JOIN SYS0005M C   ON TRNSIT_TO = C.CODE
+                     LEFT JOIN SYS0016M D   ON TRNSIT_CURIER = D.CURIER_CODE
+             WHERE  A.TRNSIT_ID = #{trnsitId}
+                 AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <select id="selectTransitList" parameterType="map" resultType="EgovMap">
+        SELECT A.TR_TRNSIT_DET_ID   ,
+                   B.TR_BOOK_ID   ,
+                   B.TR_BOOK_NO   ,
+                   C.CODE   ,
+                   A.TR_TRNSIT_RESULT_STUS_ID   ,
+                   B.TR_BOOK_QTY   ,
+                   B.TR_BOOK_PREFIX_NO   ,
+                   A.TR_TRNSIT_ID   ,
+                   B.TR_RECIPT_NO_STR   ,
+                   B.TR_RECIPT_NO_END
+          FROM MSC0038D A
+                 JOIN MSC0028D B   ON A.TR_TRNSIT_BOOK_ID = B.TR_BOOK_ID
+                 JOIN SYS0038M C   ON A.TR_TRNSIT_RESULT_STUS_ID = C.STUS_CODE_ID
+         WHERE  8 <![CDATA[<>]]> A.TR_TRNSIT_STUS_ID
+                  AND A.TR_TRNSIT_ID = #{trnsitId}
+                  <if test = "trTrnsitResultStusId != null and trTrnsitResultStusId != '' ">
+                  AND A.TR_TRNSIT_RESULT_STUS_ID = #{trTrnsitResultStusId}
+                  </if>
+    </select>
+
+    <select id="selectTransitDetailInfo" parameterType="map" resultType="EgovMap">
+        SELECT TR_TRNSIT_DET_ID   ,
+                   TR_TRNSIT_ID   ,
+                   TR_TRNSIT_BOOK_ID   ,
+                   TR_TRNSIT_STUS_ID   ,
+                   TR_TRNSIT_RESULT_STUS_ID   ,
+                   TR_TRNSIT_CRT_DT   ,
+                   TR_TRNSIT_CRT_USER_ID   ,
+                   TR_CLOS_DT   ,
+                   TR_TRNSIT_UPD_DT   ,
+                   TR_TRNSIT_UPD_USER_ID
+          FROM MSC0038D
+        <if test="detail !=null and detail !='' ">
+             WHERE TR_TRNSIT_DET_ID = #{trTrnsitDetId}
+        </if>
+        <if test="detail ==null or detail =='' ">
+             WHERE TR_TRNSIT_ID = #{trnsitId}
+                 AND  8 <![CDATA[<>]]> TR_TRNSIT_STUS_ID
+                 AND 44 = TR_TRNSIT_RESULT_STUS_ID
+        </if>
+             AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <select id="selectTransitM" parameterType="map" resultType="EgovMap">
+        SELECT TR_TRNSIT_ID,
+                TR_TRNSIT_TYPE_ID,
+                TR_TRNSIT_DT,
+                TR_TRNSIT_FROM,
+                TR_TRNSIT_TO,
+                TR_CURIER_CODE,
+                TR_TRNSIT_CRT_DT,
+                TR_TRNSIT_CRT_USER_ID,
+                TR_TRNSIT_UPD_DT,
+                TR_TRNSIT_UPD_USER_ID,
+                TR_TRNSIT_STUS_ID,
+                TR_TRNSIT_REF_NO,
+                TR_TRNSIT_CLOS_DT
+          FROM MSC0037D
+         WHERE TR_TRNSIT_ID = #{trnsitId}
+             AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <update id="updateTransitDetail" parameterType="Map">
+          UPDATE MSC0038D
+               SET TR_TRNSIT_RESULT_STUS_ID = #{status},
+                   TR_CLOS_DT = SYSDATE,
+                   TR_TRNSIT_UPD_DT = SYSDATE,
+                   TR_TRNSIT_UPD_USER_ID = #{userId}
+             WHERE TR_TRNSIT_DET_ID = #{trTrnsitDetId}
+    </update>
+
+    <update id="updateTransitM" parameterType="Map">
+        UPDATE MSC0037D
+           SET TR_TRNSIT_UPD_DT = SYSDATE,
+               TR_TRNSIT_UPD_USER_ID = #{userId},
+               TR_TRNSIT_STUS_ID = #{trTrnsitStusId}
+         WHERE  TR_TRNSIT_ID = #{trnsitId}
+    </update>
+
+    <!-- Report -->
+    <select id="getbrnchList" resultType="egovMap">
+        SELECT
+                Extent1.BRNCH_ID,
+                Extent1.CODE  CODE_ID,
+                Extent1.NAME ,
+                Extent1.CODE||'-'||Extent1.NAME CODE_NAME
+        FROM
+                SYS0005M Extent1
+        WHERE
+                1 = Extent1.STUS_ID
+        ORDER BY
+                Extent1.CODE ASC
+    </select>
+
+    <select id="getTransitListByTransitNo" parameterType="Map" resultType="egovMap">
+        SELECT
+                Project1.TR_TRNSIT_ID CODE_ID  ,
+                Project1.TR_TRNSIT_REF_NO CODE_NAME
+        FROM ( SELECT
+                       Extent1.TR_TRNSIT_ID   ,
+                       Extent1.TR_TRNSIT_REF_NO
+                 FROM
+                       MSC0037D Extent1
+                WHERE
+                       750 = Extent1.TR_TRNSIT_TYPE_ID
+                  AND
+                       Extent1.TR_TRNSIT_TO = #{trTrnsitTo}
+            ) Project1
+        ORDER BY Project1.TR_TRNSIT_ID ASC
+    </select>
+
+    <select id="trBookSummaryListing"  parameterType="Map" resultType="egovMap">
+			  SELECT Project1.TR_TRNSIT_ID   ,
+			       TO_CHAR(Project1.TR_CLOS_DT, 'DD/MM/YYYY') TR_CLOS_DT  ,
+			       Project1.TR_BOOK_NO   ,
+			       Project1.TR_RECIPT_NO_STR   ,
+			       Project1.TR_RECIPT_NO_END   ,
+			       Project1.TR_TRNSIT_FROM   ,
+			       Project1.TR_TRNSIT_TO
+			  FROM ( SELECT Project1.TR_TRNSIT_ID   ,
+			                Project1.TR_TRNSIT_FROM   ,
+			                Project1.TR_TRNSIT_TO   ,
+			                Project1.TR_CLOS_DT   ,
+			                Project1.TR_BOOK_NO   ,
+			                Project1.TR_RECIPT_NO_STR   ,
+			                Project1.TR_RECIPT_NO_END
+
+			         FROM ( SELECT Filter1.TR_TRNSIT_ID  ,
+			                       Filter1.TR_TRNSIT_FROM   ,
+			                       Filter1.TR_TRNSIT_TO   ,
+			                       Filter1.TR_CLOS_DT   ,
+			                       Extent3.TR_BOOK_NO   ,
+			                       Extent3.TR_RECIPT_NO_STR   ,
+			                       Extent3.TR_RECIPT_NO_END
+			                FROM ( SELECT Extent1.TR_TRNSIT_ID   ,
+			                              Extent1.TR_TRNSIT_FROM   ,
+			                              Extent1.TR_TRNSIT_TO   ,
+			                              Extent2.TR_TRNSIT_BOOK_ID   ,
+			                              Extent2.TR_CLOS_DT
+			                       FROM MSC0037D Extent1
+			                              LEFT JOIN MSC0038D Extent2   ON Extent1.TR_TRNSIT_ID = Extent2.TR_TRNSIT_ID
+			                        WHERE  750 = Extent1.TR_TRNSIT_TYPE_ID ) Filter1
+			                       LEFT JOIN MSC0028D Extent3   ON Filter1.TR_TRNSIT_BOOK_ID = Extent3.TR_BOOK_ID
+			                 WHERE  ( Filter1.TR_TRNSIT_TO = #{trnsitTo} )
+			                          AND ( Filter1.TR_TRNSIT_ID = #{trTrnsitId}) ) Project1 ) Project1
+			  ORDER BY Project1.TR_BOOK_NO DESC
+    </select>
+</mapper>

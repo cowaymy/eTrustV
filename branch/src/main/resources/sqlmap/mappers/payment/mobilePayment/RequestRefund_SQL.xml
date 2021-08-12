@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.mobilePayment.impl.RequestRefundMapper">
+
+
+
+<sql id="prefixSql">
+<if test="pageSize >= 0">
+SELECT  *
+FROM
+(
+    SELECT  *
+    FROM
+    (
+        SELECT  ROWNUM                                                          AS RNUM
+            ,   Z.*
+        FROM
+        (
+</if>
+</sql>
+
+
+
+<sql id="suffixSql">
+<if test="pageSize >= 0">
+<![CDATA[
+        ) Z
+    )
+    WHERE   RNUM <= #{pageNo} * #{pageSize}
+)
+WHERE   RNUM >= (#{pageNo} - 1) * #{pageSize} + 1
+]]>
+</if>
+</sql>
+
+
+
+<select id="selectTicketStatusCode" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestRefundMapper.selectTicketStatusCode] 20191023 - KR JAEMAJEM */
+SELECT  STUS_CODE_ID                                                            AS CODE
+    ,   NAME                                                                    AS CODE_NAME
+FROM    SYS0038M
+WHERE   STUS_CODE_ID IN (1, 5, 6, 10)
+]]>
+</select>
+
+
+
+<sql id="selectRequestFundTransferTalbe">
+<![CDATA[
+FROM    PAY0298D A                                                              --Mobile Request Fund Transfer
+        INNER JOIN MOB0001D B
+            ON  B.MOB_TICKET_NO = A.MOB_TICKET_NO
+        INNER JOIN SYS0038M C
+            ON  C.STUS_CODE_ID = B.TICKET_STUS_ID
+        INNER JOIN SYS0032M D
+            ON  D.RESN_TYPE_ID = 5692
+            AND D.RESN_ID = A.REF_RESN
+        LEFT OUTER JOIN SYS0070M E
+            ON  E.CHENAL_TYPE = 'M'
+            AND E.ATCH_FILE_GRP_ID = A.REF_ATTCH_IMG
+        LEFT OUTER JOIN SYS0071D F
+            ON  F.ATCH_FILE_ID = E.ATCH_FILE_ID
+        INNER JOIN SYS0005M G                                                   --Branch Info master table .
+            ON G.BRNCH_ID = B.CRT_USER_BRNCH
+        INNER JOIN SYS0047M H
+            ON  A.CRT_USER_ID = H.USER_ID
+        INNER JOIN SYS0004M I
+            ON  I.STUS_CODE_ID = 1
+            AND I.BANK_ID = A.ISSU_BANK_ID
+        INNER JOIN SYS0047M J
+            ON  A.UPD_USER_ID = J.USER_ID
+WHERE   TO_CHAR(B.CRT_DT, 'YYYYMMDD') BETWEEN TO_CHAR(TO_DATE(#{fromReqDt}, 'DD/MM/YYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{toReqDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
+]]>
+<if test="mobTicketNo != null and mobTicketNo != '' ">
+AND     A.MOB_TICKET_NO = #{mobTicketNo}
+</if>
+<if test="ordNo != null and ordNo != '' ">
+AND     A.ORD_NO = #{ordNo}
+</if>
+<if test="ticketStusId != null and ticketStusId != '' ">
+AND     B.TICKET_STUS_ID = #{ticketStusId}
+</if>
+<if test="brnchCode != null and brnchCode != '' ">
+AND     G.CODE = #{brnchCode}
+</if>
+<if test="memCode != null and memCode != '' ">
+AND     H.HR_CODE = #{memCode}
+</if>
+</sql>
+
+
+
+
+
+
+<select id="selectRequestFundTransferCount" parameterType="Map" resultType="int">
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestInvoiceMapper.selectRequestFundTransferCount] 20191023 - KR JAEMAJEM */
+SELECT  COUNT(1)                                                                AS CNT
+]]>
+<include refid="selectRequestFundTransferTalbe"/>
+</select>
+
+
+
+<select id="selectRequestRefundList" parameterType="Map" resultType="egovMap">
+<if test='gu.equals("LIST")'>
+    <include refid="prefixSql"/>
+</if>
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestRefundMapper.selectRequestRefundList] 20191023 - KR JAEMAJEM */
+SELECT  B.MOB_TICKET_NO                                                         AS MOB_TICKET_NO
+    ,   TO_CHAR(B.CRT_DT, 'DD/MM/YYYY')                                         AS REQ_DT
+    ,   C.NAME                                                                  AS TICKET_STUS_NM
+    ,   A.ORD_NO                                                                AS ORD_NO
+    ,   A.CUST_NAME                                                             AS CUST_NAME
+    ,   A.WOR_NO                                                                AS WOR_NO
+    ,   A.AMT                                                                   AS AMT
+    ,   I.NAME                                                                  AS ISSU_BANK_NAME
+    ,   A.CUST_ACC_NO                                                           AS CUST_ACC_NO
+    ,   D.RESN_DESC                                                             AS REF_RESN_NAME
+    ,   A.REF_ATTCH_IMG                                                         AS REF_ATTCH_IMG
+    ,   CASE WHEN A.REF_ATTCH_IMG IS NOT NULL THEN 'DOWN'
+                                                ELSE NULL
+                                                END                             AS REF_ATTCH_IMG_URL
+    ,   CASE WHEN A.REF_ATTCH_IMG IS NOT NULL THEN F.FILE_SUB_PATH
+                                                ELSE NULL
+                                                END                             AS FILE_SUB_PATH
+    ,   A.REM                                                                   AS REM
+    ,   G.CODE                                                                  AS BRNCH_CODE
+    ,   H.HR_CODE                                                               AS MEM_CODE
+    ,   J.USER_NAME                                                             AS UPD_USER_ID
+    ,   TO_CHAR(A.UPD_DT, 'DD/MM/YYYY HH24:MI:SS')                              AS UPD_DT
+    ,   A.REF_REQ_ID                                                            AS REF_REQ_ID
+    ,   B.TICKET_STUS_ID                                                        AS TICKET_STUS_ID
+    ,   A.REF_RESN                                                              AS REF_RESN
+    ,   F.ATCH_FILE_NAME                                                        AS ATCH_FILE_NAME
+    ,   F.PHYSICL_FILE_NAME                                                     AS PHYSICL_FILE_NAME
+    ,   A.ISSU_BANK_ID                                                          AS ISSU_BANK_ID
+]]>
+<include refid="selectRequestFundTransferTalbe"/>
+<if test='gu.equals("LIST")'>
+    <include refid="suffixSql"/>
+</if>
+ORDER BY MOB_TICKET_NO DESC
+</select>
+
+
+
+<update id="updateApprovedPAY0298D" parameterType="Map">
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestRefundMapper.updateApprovedPAY0298D] 20191023 - KR JAEMAJEM */
+UPDATE  PAY0298D A                                                              --Mobile Request Refund
+SET     A.REF_STUS_ID = 5                                                       --Refund Status
+    ,   A.UPD_USER_ID = #{userId}                                               --Update User Id
+    ,   A.UPD_DT = SYSDATE                                                      --Update Date
+WHERE   A.REF_REQ_ID = #{refReqId}                                              --mobile request refund seq : pk
+AND     A.REF_STUS_ID = 1                                                       --Refund Status
+]]>
+</update>
+
+
+
+<update id="updateRejectedPAY0298D" parameterType="Map">
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestRefundMapper.updateRejectedPAY0298D] 20191023 - KR JAEMAJEM */
+UPDATE  PAY0298D A                                                              --Mobile Request Refund
+SET     A.REF_STUS_ID = 6                                                       --Refund Status
+    ,   A.REM = #{rem}                                                          --Remarks
+    ,   A.UPD_USER_ID = #{userId}                                               --Update User Id
+    ,   A.UPD_DT = SYSDATE                                                      --Update Date
+WHERE   A.REF_REQ_ID = #{refReqId}                                              --mobile request refund seq : pk
+AND     A.REF_STUS_ID = 1                                                       --Refund Status
+]]>
+</update>
+</mapper>

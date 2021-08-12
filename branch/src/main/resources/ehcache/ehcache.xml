@@ -1,0 +1,32 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="true" monitoring="autodetect" dynamicConfig="true">
+    <diskStore path="${ehcache.diskStore}"/>
+    <cache name="menu_cache"
+           maxEntriesLocalHeap="70"
+           maxEntriesLocalDisk="80"
+           diskExpiryThreadIntervalSeconds="300"
+           timeToIdleSeconds="180"
+           timeToLiveSeconds="0"
+           overflowToDisk="true"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <cache name="my_menu_cache"
+           maxEntriesLocalHeap="70"
+           maxEntriesLocalDisk="80"
+           diskExpiryThreadIntervalSeconds="300"
+           timeToIdleSeconds="180"
+           timeToLiveSeconds="0"
+           overflowToDisk="true"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+    <cache name="periodical_cache"
+           maxEntriesLocalHeap="10"
+           maxEntriesLocalDisk="15"
+           diskExpiryThreadIntervalSeconds="600"
+           timeToLiveSeconds="0"
+           overflowToDisk="true"
+           memoryStoreEvictionPolicy="FIFO">
+    </cache>
+</ehcache>

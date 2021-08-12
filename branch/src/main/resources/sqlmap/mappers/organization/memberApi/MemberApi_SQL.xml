@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.memberApi.impl.MemberApiMapper">
+
+  <select id="selectMemberList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+    /* [com.coway.trust.biz.organization.memberApi.impl.MemberApiMapper] 20190909 - KR JAEMAJEM */
+    SELECT A.NAME AS NAME
+             , A.MEM_CODE AS MEM_CODE
+             , B.CODE_NAME AS CODE_NAME
+             , D.MEM_ORG_DESC AS MEM_ORG_DESC
+             , E.CODE AS BRNCH_CODE
+             , E.NAME AS BRNCH_NAME
+             , CASE WHEN TRIM(C.DEPT_CODE) IS NULL THEN NULL
+                       ELSE C.DEPT_CODE END AS DEPT_CODE
+             , A.MEM_TYPE AS MEM_TYPE
+             , A.MEM_ID AS MEM_ID
+    ]]>
+
+    <if test='selectDivision.equals("DETAIL")'>
+      , CASE WHEN A.MEM_TYPE = 1 THEN 'Normal HP'
+                ELSE '' END AS HP_TYPE
+      , CASE WHEN H.MEM_CODE IS NOT NULL AND H.NAME IS NOT NULL THEN G.DEPT_CODE||' - '|| H.MEM_CODE||' - '||H.NAME
+                ELSE C.DEPT_CODE END AS DEPARTMENT
+      , TO_CHAR(A.DOB, 'DD/MM/YYYY') AS DOB
+      , CASE WHEN A.GENDER = 'M' THEN 'Male'
+                ELSE 'Female' END AS GENDER
+      , NVL(I.COUNTRY, J.NAME) AS COUNTRY_NAME
+      , F.CODE_NAME AS RACE_NAME
+      , A.TEL_MOBILE AS TEL_MOBILE
+      , A.TEL_OFFICE AS TEL_OFFICE
+      , A.TEL_HUSE AS TEL_HUSE
+      , A.EMAIL AS EMAIL
+    </if>
+
+    <![CDATA[
+      FROM  ORG0001D A
+      INNER JOIN SYS0013M B ON  A.MEM_TYPE = B.CODE_ID
+      INNER JOIN ORG0005D C ON A.MEM_ID = C.MEM_ID
+                                        AND C.DEPT_CODE = ( SELECT B.DEPT_CODE
+                                                                        FROM ORG0001D A
+                                                                        JOIN ORG0005D B ON A.MEM_ID = B.MEM_ID
+                                                                        WHERE A.MEM_CODE = #{userName})
+      INNER JOIN ORG0012D D ON A.MEM_TYPE = D.MEM_TYPE_ID
+                                        AND C.MEM_LVL = D.MEM_ORG_LVL
+      INNER JOIN SYS0005M E ON  A.BRNCH = E.BRNCH_ID
+    ]]>
+
+    <if test='selectDivision.equals("DETAIL")'>
+      LEFT OUTER JOIN SYS0013M F ON  A.RACE = F.CODE_ID
+      INNER JOIN ORG1001V G ON  A.MEM_ID = G.MEM_ID
+      LEFT OUTER JOIN ORG0001D H ON  G.LVL3_UP_ID = H.MEM_ID
+      LEFT OUTER JOIN SYS0064M I ON  I.AREA_ID = A.AREA_ID
+      LEFT OUTER JOIN SYS0015M J ON  A.COUNTRY = J.CNTY_ID
+    </if>
+
+    WHERE A.STUS = 1
+        AND A.MEM_TYPE = #{memType}
+
+    <if test='selectDivision.equals("DETAIL")'>
+      AND A.MEM_ID = #{memId}
+    </if>
+
+    <if test="selectType != null and selectType != '' ">
+      <choose>
+        <when test='selectType.equals("1")'>
+          AND UPPER(REPLACE(A.NAME, ' ', '')) LIKE '%'||UPPER(REPLACE(#{selectKeyword}, ' ', ''))||'%'
+        </when>
+
+        <when test='selectType.equals("2")'>
+          AND A.MEM_CODE LIKE '%'||#{selectKeyword}||'%'
+        </when>
+
+        <when test='selectType.equals("3")'>
+          AND A.TEL_MOBILE LIKE '%'||#{selectKeyword}||'%'
+        </when>
+      </choose>
+    </if>
+  </select>
+</mapper>

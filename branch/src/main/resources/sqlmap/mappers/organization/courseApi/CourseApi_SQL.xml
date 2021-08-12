@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.courseApi.impl.CourseApiMapper">
+
+
+
+<select id="selectCourse" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.organization.courseApi.impl.CourseApiMapper.selectCourse] 20190905 - KR JAEMAJEM */
+SELECT  COURS_CODE                                                              AS COURS_CODE
+    ,   COURS_NAME                                                              AS COURS_NAME
+    ,   COURS_TYPE_NAME                                                         AS COURS_TYPE_NAME
+    ,   COURS_LOCATION                                                          AS COURS_LOCATION
+    ,   TO_CHAR(COURS_FROM_DATE,'DD/MM/YYYY')                                   AS COURS_FROM_DATE
+    ,   TO_CHAR(COURS_TO_DATE, 'DD/MM/YYYY')                                    AS COURS_TO_DATE
+    ,   TO_CHAR(COURS_CLS_DT, 'DD/MM/YYYY')                                     AS COURS_CLS_DT
+    ,   COURS_JOIN_CNT                                                          AS COURS_JOIN_CNT
+    ,   COURS_LIMIT                                                             AS COURS_LIMIT
+    ,   COURS_ID                                                                AS COURS_ID
+    ,   CASE WHEN COURS_ITM_ID IS NULL     AND ( COURS_LIMIT <= COURS_LIMIT_CNT OR TO_CHAR(COURS_CLS_DT, 'YYYYMMDD') < TO_CHAR(SYSDATE, 'YYYYMMDD') ) THEN '4'
+             WHEN COURS_ITM_ID IS NOT NULL AND ( COURS_LIMIT <= COURS_LIMIT_CNT OR TO_CHAR(COURS_CLS_DT, 'YYYYMMDD') < TO_CHAR(SYSDATE, 'YYYYMMDD') ) THEN '5'
+                                                                                    ELSE COURS_STATUS
+                                                                                    END AS COURS_STATUS
+    ,   MEM_ID                                                                  AS MEM_ID
+    ,   NRIC                                                                    AS NRIC
+    ,   NAME                                                                    AS NAME
+    ,   SAVE_FLAG                                                               AS SAVE_FLAG
+    ,   COURS_ITM_ID                                                            AS COURS_ITM_ID
+FROM
+(
+    SELECT  A.COURS_CODE                                                        AS COURS_CODE
+        ,   A.COURS_NAME                                                        AS COURS_NAME
+        ,   B.CODE_NAME                                                         AS COURS_TYPE_NAME
+        ,   A.COURS_LOC                                                         AS COURS_LOCATION
+        ,   A.COURS_START                                                       AS COURS_FROM_DATE
+        ,   A.COURS_END                                                         AS COURS_TO_DATE
+        ,   A.COURS_CLS_DT                                                      AS COURS_CLS_DT
+        ,   NVL(
+                    (
+                        SELECT  COUNT(COURS_ID) AS CNT
+                        FROM    MSC0009D A1
+                        WHERE   A1.COURS_ID = A.COURS_ID
+                        AND     A1.COURS_MEM_STUS_ID = 1
+                    ), 0
+            )                                                                   AS COURS_JOIN_CNT
+        ,   NVL(
+                    (
+                        SELECT  COUNT(COURS_ID) AS CNT
+                        FROM    MSC0009D A1
+                        WHERE   A1.COURS_ID = A.COURS_ID
+                        AND     A1.COURS_MEM_STUS_ID = 1
+                        AND     A1.COURS_MEM_ID <> NVL(D.COURS_MEM_ID, 0)
+                    ), 0
+            )                                                                   AS COURS_LIMIT_CNT
+        ,   A.COURS_LIMIT                                                       AS COURS_LIMIT
+        ,   A.COURS_ID                                                          AS COURS_ID
+        ,   CASE WHEN A.COURS_ATTEND_OWNER = '2316' THEN CASE WHEN D.COURS_ITM_ID IS NOT NULL AND D.COURS_MEM_STUS_ID = '8' THEN '1'    --SYS0038M:8(Inactive)
+                                                              WHEN D.COURS_ITM_ID IS NOT NULL AND D.COURS_MEM_STUS_ID = '1' THEN '2'    --SYS0038M:1(Active)
+                                                                                                                            ELSE '1'
+                                                                                                                            END
+                 WHEN A.COURS_ATTEND_OWNER = '2315' THEN CASE WHEN D.COURS_ITM_ID IS NOT NULL AND D.COURS_MEM_STUS_ID = '8' THEN '4'    --SYS0038M:8(Inactive)
+                                                              WHEN D.COURS_ITM_ID IS NOT NULL AND D.COURS_MEM_STUS_ID = '1' THEN '3'    --SYS0038M:1(Active)
+                                                                                                                            ELSE '4'
+                                                                                                                            END
+                 ELSE 'E'
+                 END                                                            AS COURS_STATUS
+        ,   C.MEM_ID                                                            AS MEM_ID
+        ,   C.NRIC                                                              AS NRIC
+        ,   C.NAME                                                              AS NAME
+        ,   CASE WHEN D.COURS_ITM_ID IS     NULL                               THEN 'I'
+                 WHEN D.COURS_ITM_ID IS NOT NULL AND D.COURS_MEM_STUS_ID = '8' THEN 'U'
+                                                                               ELSE 'D'
+                                                                               END AS SAVE_FLAG
+        ,   D.COURS_ITM_ID                                                      AS COURS_ITM_ID
+    FROM    MSC0008D A
+            INNER JOIN SYS0013M B
+                ON  A.COURS_TYPE_CODE_ID = B.CODE_ID
+            INNER JOIN ORG0001D C
+                ON  C.MEM_CODE = #{userId}
+                AND C.MEM_TYPE = A.COURS_MEM_TYPE_ID
+            LEFT OUTER JOIN MSC0009D D
+                ON  D.COURS_ID = A.COURS_ID
+                AND D.COURS_MEM_ID = C.MEM_ID
+    WHERE   A.COURS_MEM_YN_ID = 2318                                            --SYS0013M(2318:Y)
+    AND     A.COURS_ATTEND_OWNER = 2316                                         --SYS0013M(2316:EMP)
+    AND     TO_CHAR(A.COURS_END, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+]]>
+<choose>
+    <when test="coursId != null and coursId !=''">
+        AND     A.COURS_ID = #{coursId}
+     </when>
+    <otherwise>
+        AND     A.COURS_STUS_ID = 1
+    </otherwise>
+</choose>
+<![CDATA[
+)
+]]>
+ORDER BY    COURS_ID DESC
+</select>
+
+
+
+<insert id="insertCourse" parameterType="Map">
+<![CDATA[
+/* [com.coway.trust.biz.organization.courseApi.impl.CourseApiMapper.insertCourse] 20190905 - KR JAEMAJEM */
+INSERT
+INTO    MSC0009D                                                                --
+(
+        COURS_ITM_ID                                                            -- ASIS_COLUMN : CourseItemID
+    ,   COURS_ID                                                                -- ASIS_COLUMN : CourseID
+    ,   COURS_MEM_ID                                                            -- ASIS_COLUMN : CourseMemID
+    ,   COURS_TEST_RESULT                                                       -- ASIS_COLUMN : CourseTestResult
+    ,   COURS_MEM_STUS_ID                                                       -- ASIS_COLUMN : CourseMemStatusID
+    ,   COURS_D_UPD_USER_ID                                                     -- ASIS_COLUMN : CourseDUpdateBy
+    ,   COURS_D_UPD_DT                                                          -- ASIS_COLUMN : CourseDUpdateAt
+    ,   COURS_MEM_SHIRT_SIZE                                                    -- ASIS_COLUMN : CourseMemShirtSize
+    ,   COURS_ITM_MEM_IS_VEGE                                                   -- ASIS_COLUMN : CourseItemMemIsVege
+    ,   COURS_ITM_MEM_PUP                                                       -- ASIS_COLUMN : CourseItemMemPUP
+    ,   COURS_D_MEM_NAME                                                        -- ASIS_COLUMN : CourseDMemName
+    ,   COURS_D_MEM_NRIC                                                        -- ASIS_COLUMN : CourseDMemNRIC
+    ,   COURS_ATTEND_DAY                                                        -- Course Attend Day
+)VALUES(
+        MSC0009D_COURS_ITM_ID_SEQ.NEXTVAL                                       -- ASIS_COLUMN : CourseItemID
+    ,   #{coursId}                                                              -- ASIS_COLUMN : CourseID
+    ,   #{coursMemId}                                                           -- ASIS_COLUMN : CourseMemID
+    ,   NULL                                                                    -- ASIS_COLUMN : CourseTestResult
+    ,   1                                                                       -- ASIS_COLUMN : CourseMemStatusID
+    ,   #{coursDUpdUserId}                                                      -- ASIS_COLUMN : CourseDUpdateBy
+    ,   SYSDATE                                                                 -- ASIS_COLUMN : CourseDUpdateAt
+    ,   NULL                                                                    -- ASIS_COLUMN : CourseMemShirtSize
+    ,   NULL                                                                    -- ASIS_COLUMN : CourseItemMemIsVege
+    ,   NULL                                                                    -- ASIS_COLUMN : CourseItemMemPUP
+    ,   #{coursDMemName}                                                        -- ASIS_COLUMN : CourseDMemName
+    ,   #{coursDMemNric}                                                        -- ASIS_COLUMN : CourseDMemNRIC
+    ,   0                                                                       -- Course Attend Day
+)
+]]>
+</insert>
+
+
+
+<update id="updateCourse" parameterType="Map">
+<![CDATA[
+/* [com.coway.trust.biz.organization.courseApi.impl.CourseApiMapper.updateCourse] 20190905 - KR JAEMAJEM */
+UPDATE  MSC0009D
+SET     COURS_MEM_STUS_ID = 1                                                   --SYS0038M:1(Active)
+    ,   COURS_D_UPD_USER_ID = #{coursDUpdUserId}
+    ,   COURS_D_UPD_DT = SYSDATE
+WHERE   COURS_MEM_STUS_ID = 8                                                   --SYS0038M:8(Inactive)
+AND     COURS_ITM_ID = #{coursItmId}
+AND     COURS_ID = #{coursId}
+AND     COURS_MEM_ID = #{coursMemId}
+]]>
+</update>
+
+
+
+<delete id="deleteCourse" parameterType="Map">
+<![CDATA[
+/* [com.coway.trust.biz.organization.courseApi.impl.CourseApiMapper.deleteCourse] 20190905 - KR JAEMAJEM */
+DELETE
+FROM    MSC0009D
+WHERE   COURS_MEM_STUS_ID = 1                                                   --SYS0038M:1(Active)
+AND     COURS_ITM_ID = #{coursItmId}
+AND     COURS_ID = #{coursId}
+AND     COURS_MEM_ID = #{coursMemId}
+]]>
+</delete>
+
+
+
+</mapper>

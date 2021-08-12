@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.ScmCommonMapper">
+
+<select id="selectScmTotalPeriod" parameterType="Map" resultType="egovMap">
+SELECT CASE WHEN A.SCM_MONTH = 12 AND MIN(A.SCM_WEEK) = 1 THEN A.SCM_YEAR + 1 ELSE A.SCM_YEAR END AS SCM_YEAR
+     , CASE WHEN A.SCM_MONTH = 12 AND MIN(A.SCM_WEEK) = 1 THEN 1 ELSE A.SCM_MONTH END AS SCM_MONTH
+     , MIN(A.SCM_WEEK) AS SCM_WEEK
+  FROM SCM0018M A
+ WHERE TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYY-MM-DD') BETWEEN A.SCM_WEEK_START AND A.SCM_WEEK_END
+ GROUP BY A.SCM_YEAR, A.SCM_MONTH
+</select>
+
+<select id="selectScmYear" parameterType="Map" resultType="egovMap">
+SELECT TO_CHAR(SYSDATE - 730, 'YYYY') AS ID, TO_CHAR(SYSDATE - 730, 'YYYY') AS NAME FROM DUAL
+UNION ALL
+SELECT TO_CHAR(SYSDATE - 365, 'YYYY') AS ID, TO_CHAR(SYSDATE - 365, 'YYYY') AS NAME FROM DUAL
+UNION ALL
+SELECT TO_CHAR(SYSDATE, 'YYYY') AS ID, TO_CHAR(SYSDATE, 'YYYY') AS NAME FROM DUAL
+UNION ALL
+SELECT TO_CHAR(SYSDATE + 365, 'YYYY') AS ID, TO_CHAR(SYSDATE + 365, 'YYYY') AS NAME FROM DUAL
+</select>
+
+<select id="selectScmWeek" parameterType="Map" resultType="egovMap">
+SELECT A.SCM_YEAR
+     , A.SCM_WEEK || DECODE(LENGTH(A.SCM_WEEK), 1, '  [', '[') || TO_CHAR(A.SCM_WEEK_START, 'DD/MM/YYYY') || ' ~ ]' AS NAME
+     , A.SCM_MONTH
+     , A.SCM_WEEK AS ID
+  FROM (
+        SELECT Z.CAL_ID, Z.SCM_YEAR, 1 AS SCM_MONTH, Z.SCM_WEEK, Z.SCM_WEEK_START
+          FROM SCM0018M Z
+         WHERE Z.SCM_YEAR = #{scmYear} - 1
+           AND Z.SCM_MONTH = 12
+           AND Z.SCM_WEEK = 1
+           AND Z.USE_YN = 'Y'
+        UNION ALL
+        SELECT X.CAL_ID, X.SCM_YEAR, X.SCM_MONTH, X.SCM_WEEK, X.SCM_WEEK_START
+          FROM (
+                SELECT DISTINCT SCM_YEAR, SCM_WEEK
+                  FROM SCM0018M
+                 WHERE SCM_YEAR = #{scmYear}
+                   AND USE_YN = 'Y'
+                ) Z
+          LEFT OUTER JOIN SCM0018M X ON (Z.SCM_YEAR = X.SCM_YEAR AND Z.SCM_WEEK = X.SCM_WEEK AND X.SCM_WEEK_SEQ = 1)
+         WHERE X.SCM_MONTH || X.SCM_WEEK != '121' /* 매년 12월에 1주차값이 들어있는 것을 콤보박스 생성을 위해서 제외 */
+        ) A
+ ORDER BY A.CAL_ID
+</select>
+
+<select id="selectScmTeam" parameterType="Map" resultType="egovMap">
+SELECT A.CODE AS ID
+     , A.CODE_NAME AS NAME
+  FROM SYS0013M A
+ WHERE A.CODE_MASTER_ID = 337
+   AND A.DISAB = 0
+ ORDER BY A.CODE_ID
+</select>
+
+<select id="selectScmCdc" parameterType="Map" resultType="egovMap">
+SELECT A.CODE AS ID
+     , A.CODE_DESC AS ID2
+     , A.CODE_NAME AS NAME
+  FROM SYS0013M A
+ WHERE A.CODE_MASTER_ID = 349
+   AND A.DISAB = 0
+ ORDER BY A.CODE
+</select>
+
+<select id="selectScmIfType" parameterType="Map" resultType="egovMap">
+SELECT A.CODE AS ID
+     , A.CODE_DESC AS ID2
+     , A.CODE_NAME AS NAME
+  FROM SYS0013M A
+ WHERE A.CODE_MASTER_ID = 352
+   AND A.DISAB = 0
+ ORDER BY DECODE(A.CODE, '163', 1, '162', 2, '161', 3, '165', 4, '164', 5, '151', 6, '152', 7, '153', 8, '156', 9, '160', 10, '166', 11)
+</select>
+
+<select id="selectScmIfStatus" parameterType="Map" resultType="egovMap">
+SELECT A.CODE AS ID
+     , A.CODE_DESC AS ID2
+     , A.CODE_NAME AS NAME
+  FROM SYS0013M A
+ WHERE A.CODE_MASTER_ID = 400
+   AND A.DISAB = 0
+ ORDER BY A.CODE_ID
+</select>
+
+<select id="selectScmIfErrCode" parameterType="Map" resultType="egovMap">
+SELECT A.CODE AS ID
+     , A.CODE_DESC AS ID2
+     , A.CODE_NAME AS NAME
+  FROM SYS0013M A
+ WHERE A.CODE_MASTER_ID = 401
+   AND A.DISAB = 0
+ ORDER BY A.CODE_ID
+</select>
+
+<select id="selectScmStockCategory" parameterType="Map" resultType="egovMap">
+SELECT DISTINCT C.CODE_ID AS ID
+     , C.CODE_NAME AS NAME
+  FROM SCM0008M A
+  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_ID = B.STK_ID)
+  LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
+ WHERE A.STUS_CODE_ID = 1
+   AND B.STUS_CODE_ID = 1
+   AND B.IS_NCV = 0
+   AND C.DISAB = 0
+ ORDER BY C.CODE_ID
+</select>
+
+<select id="selectScmStockType" parameterType="Map" resultType="egovMap">
+SELECT DISTINCT A.ID
+     , A.NAME
+  FROM (
+        SELECT DISTINCT 'DST' AS TEAM
+             , C.CODE_ID AS ID
+             , C.CODE_NAME AS NAME
+          FROM SCM0008M A
+          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_ID = B.STK_ID)
+          LEFT OUTER JOIN SYS0013M C ON (B.STK_TYPE_ID = C.CODE_ID AND C.CODE_MASTER_ID = 15)
+         WHERE A.STUS_CODE_ID = 1
+           AND B.STUS_CODE_ID = 1
+           AND B.IS_NCV = 0
+           AND C.DISAB = 0
+           AND C.CODE_ID = 61
+        UNION ALL
+        SELECT DISTINCT 'CODY' AS TEAM
+             , C.CODE_ID AS ID
+             , C.CODE_NAME AS NAME
+          FROM SCM0008M A
+          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_ID = B.STK_ID)
+          LEFT OUTER JOIN SYS0013M C ON (B.STK_TYPE_ID = C.CODE_ID AND C.CODE_MASTER_ID = 15)
+         WHERE A.STUS_CODE_ID = 1
+           AND B.STUS_CODE_ID = 1
+           AND B.IS_NCV = 0
+           AND C.DISAB = 0
+           AND C.CODE_ID IN (61, 62, 1370)
+        UNION ALL
+        SELECT DISTINCT 'CS' AS TEAM
+             , C.CODE_ID AS ID
+             , C.CODE_NAME AS NAME
+          FROM SCM0008M A
+          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_ID = B.STK_ID)
+          LEFT OUTER JOIN SYS0013M C ON (B.STK_TYPE_ID = C.CODE_ID AND C.CODE_MASTER_ID = 15)
+         WHERE A.STUS_CODE_ID = 1
+           AND B.STUS_CODE_ID = 1
+           AND B.IS_NCV = 0
+           AND C.DISAB = 0
+           AND C.CODE_ID IN (62, 63, 64)
+        ) A
+	<if test="scmTeamCbBox != null and scmTeamCbBox != ''">
+ WHERE A.TEAM = #{scmTeamCbBox}
+	</if>
+ ORDER BY A.ID
+</select>
+
+<select id="selectScmStockCode" parameterType="Map" resultType="egovMap">
+SELECT A.ID
+     , A.NAME
+     , A.TYPE
+  FROM (
+        SELECT '' AS ID, 'None' AS NAME, 0 AS TYPE FROM DUAL
+        UNION ALL
+        SELECT A.STK_CODE AS ID
+             , A.STK_CODE || ' - ' || A.STK_DESC AS NAME
+             , A.STK_TYPE_ID AS TYPE
+          FROM SYS0026M A
+         WHERE A.IS_NCV = 0
+           AND A.STUS_CODE_ID = 1
+	<if test="scmStockType != null and scmStockType != ''">
+           AND B.STK_TYPE_ID IN (SELECT REGEXP_SUBSTR (#{scmStockType}, '[^,]+', 1, LEVEL) FROM DUAL CONNECT BY REGEXP_SUBSTR (#{scmStockType}, '[^,]+', 1, LEVEL) IS NOT NULL)
+	</if>
+	<if test="scmStockCategory != null and scmStockCategory != ''">
+           AND B.STK_CTGRY_ID IN (SELECT REGEXP_SUBSTR (#{scmStockCategory}, '[^,]+', 1, LEVEL) FROM DUAL CONNECT BY REGEXP_SUBSTR (#{scmStockCategory}, '[^,]+', 1, LEVEL) IS NOT NULL)
+	</if>
+        ) A
+ ORDER BY A.ID DESC
+</select>
+
+<select id="selectScmStockCodeForMulti" parameterType="Map" resultType="egovMap">
+SELECT B.STK_CODE AS STK_ID
+     , B.STK_CODE || ' - ' || B.STK_DESC AS C1
+     , B.STK_DESC AS CODE_NAME
+  FROM SCM0008M A
+  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_ID = B.STK_ID)
+ WHERE A.IS_TRGET = 1
+   AND A.STUS_CODE_ID = 1
+   AND B.IS_NCV = 0
+   AND B.STUS_CODE_ID = 1
+	<if test="scmStockType != null and scmStockType != ''">
+   AND B.STK_TYPE_ID IN (SELECT REGEXP_SUBSTR (#{scmStockType}, '[^,]+', 1, LEVEL) FROM DUAL CONNECT BY REGEXP_SUBSTR (#{scmStockType}, '[^,]+', 1, LEVEL) IS NOT NULL)
+	</if>
+	<if test="scmStockCategory != null and scmStockCategory != ''">
+   AND B.STK_CTGRY_ID IN (SELECT REGEXP_SUBSTR (#{scmStockCategory}, '[^,]+', 1, LEVEL) FROM DUAL CONNECT BY REGEXP_SUBSTR (#{scmStockCategory}, '[^,]+', 1, LEVEL) IS NOT NULL)
+	</if>
+ ORDER BY B.STK_CODE
+</select>
+
+<select id="selectScmTotalInfo" parameterType="Map" resultType="egovMap">
+SELECT A.PLAN_YEAR  /* 수립주차가 포함된 년 */
+     , A.PLAN_MONTH /* 수립주차가 포함된 월 */
+     , A.PLAN_WEEK  /* 수립주차 */
+     , A.PLAN_FST_WEEK      /* 수립주차가 포함된 월의 첫째주차 : 스플릿 아닌 첫째주차 */
+     , A.PLAN_FST_SPLT_WEEK /* 수립주차가 포함된 월의 첫째주차 : 스플릿 첫째주차 */
+     , A.PLAN_LST_WEEK /* 수립주차가 포함된 월의 마지막 주차 */
+     , A.PLAN_YEAR_LST_WEEK /* 수립주차가 포함된 년의 마지막 주차 */
+     , A.PLAN_WEEK_SPLT_CNT /* 수립주차가 스플릿인지 여부 : 2(스플릿), 1(스플릿아님) */
+     , A.PLAN_WEEK_TH /* 수립주차가 해당 월에서 몇번째 주차인지 순서 : 스플릿주차로 계산 */
+     , A.FST_WEEK_SPLT_YN /* 수립주차가 포함된 월의 첫째주차가 스플릿인지 여부 : 1(스플릿), 0(스플릿아님) */
+     , A.BEF_WEEK_YEAR  /* 수립주차의 바로전 주차가 포함된 년 */
+     , CASE WHEN A.PLAN_WEEK = 1 THEN 12
+            ELSE CASE WHEN A.FST_WEEK_SPLT_YN = 0 THEN CASE WHEN A.PLAN_FST_WEEK = A.PLAN_FST_SPLT_WEEK AND A.PLAN_WEEK = A.PLAN_FST_WEEK THEN A.PLAN_MONTH - 1
+                                                            ELSE A.PLAN_MONTH
+                                                            END
+                      ELSE CASE WHEN A.PLAN_MONTH = 1 AND A.PLAN_WEEK = 2 THEN A.PLAN_MONTH
+                                ELSE CASE WHEN A.PLAN_WEEK = A.PLAN_FST_WEEK THEN A.PLAN_MONTH - 1
+                                          ELSE A.PLAN_MONTH
+                                          END
+                                END
+                      END
+            END AS BEF_WEEK_MONTH /* 수립주차의 바로전 주차가 포함된 월 */
+     , A.BEF_WEEK_WEEK  /* 수립주차의 바로전 주차가 포함된 주차 */
+     , A.BEF_YEAR  /* 수립주차가 포함된 년의 바로전 년 */
+     , A.BEF_MONTH /* 수립주차가 포함된 월의 바로전 월 */
+     , A.BEF_WEEK  /* 수립주차가 포함된 주차의 바로전 주차 : 실질적으로 BEF_WEEK_WEEK랑 같음 */
+     , TO_NUMBER(A.PLAN_GR_YEAR) AS PLAN_GR_YEAR   /* PO발행 시 계획수량을 갖고올 주차가 포함된 년 */
+     , TO_NUMBER(A.PLAN_GR_MONTH) AS PLAN_GR_MONTH /* PO발행 시 계획수량을 갖고올 주차가 포함된 월 */
+     , TO_NUMBER(A.PLAN_GR_WEEK) AS PLAN_GR_WEEK   /* PO발행 시 계획수량을 갖고올 주차가 포함된 주차 */
+     , (SELECT COUNT(*) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_GR_YEAR AND Z.SCM_WEEK = A.PLAN_GR_WEEK) AS PLAN_GR_WEEK_SPLT_YN /* PO주차가 스플릿인지 여부 : 2(스플릿), 1(스플릿아님) */
+     , CASE WHEN A.FST_WEEK_SPLT_YN = 1 THEN (SELECT COUNT(*)
+                                                FROM SCM0018M Z
+                                               WHERE Z.SCM_YEAR || LPAD(Z.SCM_WEEK, 2, '0') BETWEEN A.PLAN_YEAR || LPAD(A.PLAN_WEEK + 1, 2, '0') AND A.PLAN_GR_YEAR || LPAD((A.PLAN_GR_WEEK - 1), 2, '0')
+                                                 AND Z.SCM_WEEK_SEQ = 2)
+            ELSE (SELECT COUNT(*)
+                    FROM SCM0018M Z
+                   WHERE Z.SCM_YEAR || LPAD(Z.SCM_WEEK, 2, '0') BETWEEN A.PLAN_YEAR || LPAD(A.PLAN_WEEK, 2, '0') AND A.PLAN_GR_YEAR || LPAD((A.PLAN_GR_WEEK - 1), 2, '0')
+                     AND Z.SCM_WEEK_SEQ = 2)
+            END AS FROM_PLAN_TO_PO_SPLT_CNT /* 수립주차 ~ (PO주차 - 1) 사이의 주차 중 스플릿 주차 갯수 */
+     , A.LEAD_TM
+     , A.CLOSE_YEAR
+     , A.CLOSE_MONTH
+     , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), -3), 'YYYYMM') || '01' AS ISS_DT_FROM /* PLAN_MONTH 기준 -3개월 년월 */
+     , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), -1), 'YYYYMM') || '31' AS ISS_DT_TO   /* PLAN_MONTH 기준 -1개월 년월 */
+     , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), -1), 'YYYYMM') || '01' AS ORD_DT_FROM /* PLAN_MONTH 기준 -1개월 년월01일 */
+     , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), -1), 'YYYYMM') || '31' AS ORD_DT_TO   /* PLAN_MONTH 기준 -1개월 년월31일 */
+     , TO_CHAR(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 'YYYYMM') || '01' AS M0_DT_FROM
+     , TO_CHAR(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 'YYYYMM') || '31' AS M0_DT_TO
+     , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 0), 'YYYYMM') AS HEAD_FROM /* PLAN HEADER를 만들때 사용될 FROM 년월 */
+     , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 4), 'YYYYMM') AS HEAD_TO   /* PLAN HEADER를 만들때 사용될 TO 년월 */
+     , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), -3), 'YYYYMM') || '01' AS MON_FROM3
+     , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), -3), 'YYYYMM') || '31' AS MON_TO3
+     , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), -2), 'YYYYMM') || '01' AS MON_FROM2
+     , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), -2), 'YYYYMM') || '31' AS MON_TO2
+     , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), -1), 'YYYYMM') || '01' AS MON_FROM1
+     , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), -1), 'YYYYMM') || '31' AS MON_TO1
+     , A.MM1_WEEK_CNT
+     , A.PLAN_WEEK_CNT AS M0_WEEK_CNT
+     , A.M1_WEEK_CNT
+     , A.M2_WEEK_CNT
+     , A.M3_WEEK_CNT
+     , A.M4_WEEK_CNT
+     , A.M0_FST_WEEK
+     , A.M1_FST_WEEK
+     , A.M2_FST_WEEK
+     , A.M3_FST_WEEK
+     , A.M4_FST_WEEK
+     , A.M0_FST_SPLT_WEEK
+     , A.M1_FST_SPLT_WEEK
+     , A.M2_FST_SPLT_WEEK
+     , A.M3_FST_SPLT_WEEK
+     , A.M4_FST_SPLT_WEEK
+     , DECODE(A.M0_MON, 1, 'JAN', 2, 'FEB', 3, 'MAR', 4, 'APR', 5, 'MAY', 6, 'JUN', 7, 'JUL', 8, 'AUG', 9, 'SEP', 10, 'OCT', 11, 'NOV', 12, 'DEC') AS M0_MON
+     , DECODE(A.M1_MON, 1, 'JAN', 2, 'FEB', 3, 'MAR', 4, 'APR', 5, 'MAY', 6, 'JUN', 7, 'JUL', 8, 'AUG', 9, 'SEP', 10, 'OCT', 11, 'NOV', 12, 'DEC') AS M1_MON
+     , DECODE(A.M2_MON, 1, 'JAN', 2, 'FEB', 3, 'MAR', 4, 'APR', 5, 'MAY', 6, 'JUN', 7, 'JUL', 8, 'AUG', 9, 'SEP', 10, 'OCT', 11, 'NOV', 12, 'DEC') AS M2_MON
+     , DECODE(A.M3_MON, 1, 'JAN', 2, 'FEB', 3, 'MAR', 4, 'APR', 5, 'MAY', 6, 'JUN', 7, 'JUL', 8, 'AUG', 9, 'SEP', 10, 'OCT', 11, 'NOV', 12, 'DEC') AS M3_MON
+     , DECODE(A.M4_MON, 1, 'JAN', 2, 'FEB', 3, 'MAR', 4, 'APR', 5, 'MAY', 6, 'JUN', 7, 'JUL', 8, 'AUG', 9, 'SEP', 10, 'OCT', 11, 'NOV', 12, 'DEC') AS M4_MON
+     , A.END_DT
+  FROM (
+        SELECT A.*
+             , CASE WHEN A.PLAN_MONTH = 1 THEN A.PLAN_YEAR - 1 ELSE A.PLAN_YEAR END AS CLOSE_YEAR
+             , CASE WHEN A.PLAN_MONTH = 1 THEN 12 ELSE A.PLAN_MONTH - 1 END AS CLOSE_MONTH
+             , A.PLAN_WEEK - A.PLAN_FST_SPLT_WEEK AS PLAN_WEEK_TH
+             , CASE WHEN A.PLAN_FST_WEEK = A.PLAN_FST_SPLT_WEEK THEN 0 ELSE 1 END AS FST_WEEK_SPLT_YN
+             , CASE WHEN A.PLAN_WEEK = 1 THEN A.PLAN_YEAR - 1
+                    ELSE A.PLAN_YEAR
+                    END AS BEF_WEEK_YEAR
+             , CASE WHEN A.PLAN_WEEK = 1 THEN (SELECT MAX(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR - 1)
+                    ELSE A.PLAN_WEEK - 1
+                    END AS BEF_WEEK_WEEK
+             , A.PLAN_YEAR - 1 AS BEF_YEAR
+             , CASE WHEN A.PLAN_MONTH = 1 THEN 12 ELSE A.PLAN_MONTH - 1 END AS BEF_MONTH
+             , CASE WHEN A.PLAN_WEEK = 1 THEN (SELECT MAX(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR - 1) ELSE A.PLAN_WEEK - 1 END AS BEF_WEEK
+             , CASE WHEN A.PLAN_WEEK + A.LEAD_TM <![CDATA[ < ]]> A.PLAN_YEAR_LST_WEEK THEN TO_CHAR(A.PLAN_YEAR)
+                    ELSE TO_CHAR(A.PLAN_YEAR + 1)
+                    END AS PLAN_GR_YEAR
+             , CASE WHEN A.PLAN_WEEK + A.LEAD_TM <![CDATA[ <= ]]> A.PLAN_YEAR_LST_WEEK THEN (SELECT TO_CHAR(MIN(Z.SCM_MONTH)) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR AND Z.SCM_WEEK = A.PLAN_WEEK + A.LEAD_TM)
+                    ELSE (SELECT TO_CHAR(MIN(Z.SCM_MONTH)) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR + 1 AND Z.SCM_WEEK = A.PLAN_WEEK + A.LEAD_TM - A.PLAN_YEAR_LST_WEEK)
+                    END AS PLAN_GR_MONTH
+             , CASE WHEN A.PLAN_WEEK + A.LEAD_TM <![CDATA[ <= ]]> A.PLAN_YEAR_LST_WEEK THEN TO_CHAR(A.PLAN_WEEK + A.LEAD_TM)
+                    ELSE TO_CHAR(A.PLAN_WEEK + A.LEAD_TM - A.PLAN_YEAR_LST_WEEK)
+                    END AS PLAN_GR_WEEK
+             , (SELECT COUNT(*) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), -1), 'YYYYMM')) AS MM1_WEEK_CNT
+             , (SELECT COUNT(*) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 1), 'YYYYMM')) AS M1_WEEK_CNT
+             , (SELECT COUNT(*) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 2), 'YYYYMM')) AS M2_WEEK_CNT
+             , (SELECT COUNT(*) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 3), 'YYYYMM')) AS M3_WEEK_CNT
+             , (SELECT COUNT(*) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 4), 'YYYYMM')) AS M4_WEEK_CNT
+             , (SELECT MIN(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 0), 'YYYYMM') AND Z.SCM_MONTH || Z.SCM_WEEK != '121') AS M0_FST_WEEK
+             , (SELECT MIN(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 1), 'YYYYMM') AND Z.SCM_MONTH || Z.SCM_WEEK != '121') AS M1_FST_WEEK
+             , (SELECT MIN(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 2), 'YYYYMM') AND Z.SCM_MONTH || Z.SCM_WEEK != '121') AS M2_FST_WEEK
+             , (SELECT MIN(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 3), 'YYYYMM') AND Z.SCM_MONTH || Z.SCM_WEEK != '121') AS M3_FST_WEEK
+             , (SELECT MIN(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 4), 'YYYYMM') AND Z.SCM_MONTH || Z.SCM_WEEK != '121') AS M4_FST_WEEK
+             , (SELECT MIN(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 0), 'YYYYMM') AND Z.SCM_MONTH || Z.SCM_WEEK != '121' AND Z.SCM_WEEK_SEQ = 1) AS M0_FST_SPLT_WEEK
+             , (SELECT MIN(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 1), 'YYYYMM') AND Z.SCM_MONTH || Z.SCM_WEEK != '121' AND Z.SCM_WEEK_SEQ = 1) AS M1_FST_SPLT_WEEK
+             , (SELECT MIN(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 2), 'YYYYMM') AND Z.SCM_MONTH || Z.SCM_WEEK != '121' AND Z.SCM_WEEK_SEQ = 1) AS M2_FST_SPLT_WEEK
+             , (SELECT MIN(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 3), 'YYYYMM') AND Z.SCM_MONTH || Z.SCM_WEEK != '121' AND Z.SCM_WEEK_SEQ = 1) AS M3_FST_SPLT_WEEK
+             , (SELECT MIN(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 4), 'YYYYMM') AND Z.SCM_MONTH || Z.SCM_WEEK != '121' AND Z.SCM_WEEK_SEQ = 1) AS M4_FST_SPLT_WEEK
+             , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 0), 'MM') AS M0_MON
+             , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 1), 'MM') AS M1_MON
+             , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 2), 'MM') AS M2_MON
+             , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 3), 'MM') AS M3_MON
+             , TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 4), 'MM') AS M4_MON
+          FROM (
+                SELECT A.PLAN_YEAR
+                     , A.PLAN_MONTH
+                     , A.PLAN_WEEK
+                     , A.LEAD_TM
+                     , (SELECT COUNT(*) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR AND Z.SCM_MONTH = A.PLAN_MONTH) AS PLAN_WEEK_CNT
+                     , (SELECT COUNT(*) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR AND Z.SCM_WEEK = A.PLAN_WEEK) AS PLAN_WEEK_SPLT_CNT
+                     , CASE WHEN A.PLAN_MONTH = 1 THEN (SELECT MIN(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR AND Z.SCM_MONTH = A.PLAN_MONTH AND Z.SCM_WEEK_SEQ = 1)
+                            ELSE (SELECT MIN(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR AND Z.SCM_MONTH = A.PLAN_MONTH AND Z.SCM_WEEK != 1 AND Z.SCM_WEEK_SEQ = 1)
+                            END AS PLAN_FST_WEEK
+                     , CASE WHEN A.PLAN_MONTH = 1 THEN (SELECT MIN(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR AND Z.SCM_MONTH = A.PLAN_MONTH)
+                            ELSE (SELECT MIN(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR AND Z.SCM_MONTH = A.PLAN_MONTH AND Z.SCM_WEEK != 1)
+                            END AS PLAN_FST_SPLT_WEEK
+                     , (SELECT MAX(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR AND Z.SCM_MONTH = A.PLAN_MONTH) AS PLAN_LST_WEEK
+                     , (SELECT MAX(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR) AS PLAN_YEAR_LST_WEEK
+                     , (SELECT TO_CHAR(MAX(Z.SCM_WEEK_END), 'YYYYMMDD') FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR AND Z.SCM_WEEK = A.PLAN_WEEK) AS END_DT
+                  FROM (
+                        SELECT TO_NUMBER(#{scmYearCbBox}) AS PLAN_YEAR
+                             , (SELECT MIN(Z.SCM_MONTH) FROM SCM0018M Z WHERE Z.SCM_YEAR = TO_NUMBER(#{scmYearCbBox}) AND Z.SCM_WEEK = TO_NUMBER(#{scmWeekCbBox})) AS PLAN_MONTH
+                             , TO_NUMBER(#{scmWeekCbBox}) AS PLAN_WEEK
+                             , (SELECT MIN(Z.LEAD_TM) FROM SCM0008M Z WHERE Z.LEAD_TM IS NOT NULL AND Z.LEAD_TM <![CDATA[ > ]]> 0) AS LEAD_TM
+                          FROM DUAL
+                        ) A
+                ) A
+        ) A
+</select>
+
+</mapper>

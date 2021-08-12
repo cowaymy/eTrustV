@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.mobilePayment.impl.RequestInvoiceMapper">
+
+
+
+<sql id="prefixSql">
+<if test="pageSize >= 0">
+SELECT  *
+FROM
+(
+    SELECT  *
+    FROM
+    (
+        SELECT  ROWNUM                                                          AS RNUM
+            ,   Z.*
+        FROM
+        (
+</if>
+</sql>
+
+
+
+<sql id="suffixSql">
+<if test="pageSize >= 0">
+<![CDATA[
+        ) Z
+    )
+    WHERE   RNUM <= #{pageNo} * #{pageSize}
+)
+WHERE   RNUM >= (#{pageNo} - 1) * #{pageSize} + 1
+]]>
+</if>
+</sql>
+
+
+
+<select id="selectTicketStatusCode" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestInvoiceMapper.selectTicketStatusCode] 20191016 - KR JAEMAJEM */
+SELECT  STUS_CODE_ID                                                            AS CODE
+    ,   NAME                                                                    AS CODE_NAME
+FROM    SYS0038M
+WHERE   STUS_CODE_ID IN (1, 5, 6, 10)
+]]>
+</select>
+
+
+
+<select id="selectInvoiceType" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestInvoiceMapper.selectInvoiceType] 20191016 - KR JAEMAJEM */
+--SELECT  CODE_ID                                                                 AS CODE
+--    ,   CODE_NAME                                                               AS CODE_NAME
+--FROM    SYS0013M
+--WHERE   CODE_ID IN (1267, 1268, 67, 68)
+--UNION ALL
+--SELECT  CODE_MASTER_ID                                                          AS CODE
+--    ,   CODE_MASTER_NAME                                                        AS CODE_NAME
+--FROM    SYS0012M
+--WHERE   CODE_MASTER_ID IN (117, 118, 119, 121, 122, 123, 124, 125, 142, 408)
+--ORDER BY CODE_NAME ASC
+SELECT  CODE                                                                    AS CODE
+    ,   CODE_NAME                                                               AS CODE_NAME
+FROM    SYS0013M
+WHERE   CODE_MASTER_ID = 442
+]]>
+</select>
+
+
+
+
+
+<sql id="selectRequestInvoiceListTalbe">
+FROM    PAY0300D A                                                              --Request to Invoice on mobile_Header
+        INNER JOIN PAY0301D B                                                   --Request to Invoice on mobile_Detail
+            ON  A.REQ_INVC_NO = B.REQ_INVC_NO
+        INNER JOIN SYS0038M C
+            ON  C.STUS_CODE_ID = A.REQ_STUS_ID
+        INNER JOIN SYS0013M D
+            ON  D.CODE_MASTER_ID = 442
+            AND D.CODE = A.INVC_TYPE
+        LEFT OUTER JOIN SYS0070M E
+            ON  E.CHENAL_TYPE = 'M'
+            AND E.ATCH_FILE_GRP_ID = B.INVC_ITM_PO_IMG
+        LEFT OUTER JOIN SYS0071D F
+            ON  F.ATCH_FILE_ID = E.ATCH_FILE_ID
+        INNER JOIN MOB0001D G
+            ON  G.MOB_TICKET_NO = A.MOB_TICKET_NO
+            AND G.SALES_ORD_NO = B.INVC_ITM_ORD_NO
+        INNER JOIN SYS0005M H                                                   --Branch Info master table .
+            ON H.BRNCH_ID = G.CRT_USER_BRNCH
+        INNER JOIN SYS0047M I
+            ON  A.CRT_USER_ID = I.USER_ID
+        INNER JOIN SYS0047M J
+            ON  A.UPD_USER_ID = J.USER_ID
+WHERE   A.REQ_DT BETWEEN TO_CHAR(TO_DATE(#{fromReqDt}, 'DD/MM/YYYY'), 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{toReqDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
+
+<if test="mobTicketNo != null and mobTicketNo != '' ">
+AND     A.MOB_TICKET_NO = #{mobTicketNo}
+</if>
+
+<if test="salesOrdNo != null and salesOrdNo != '' ">
+AND     G.SALES_ORD_NO = #{salesOrdNo}
+</if>
+
+<if test="ticketStusId != null and ticketStusId != '' ">
+AND     G.TICKET_STUS_ID = #{ticketStusId}
+</if>
+
+<if test="brnchCode != null and brnchCode != '' ">
+AND     H.CODE = #{brnchCode}
+</if>
+
+<if test="memCode != null and memCode != '' ">
+AND     I.HR_CODE = #{memCode}
+</if>
+
+<if test="invcType != null and invcType != '' ">
+AND     A.INVC_TYPE = #{invcType}
+</if>
+</sql>
+
+
+
+
+
+
+<select id="selectRequestInvoiceCount" parameterType="Map" resultType="int">
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestInvoiceMapper.selectRequestInvoiceList] 20191016 - KR JAEMAJEM */
+SELECT  COUNT(1)                                                                AS CNT
+]]>
+<include refid="selectRequestInvoiceListTalbe"/>
+</select>
+
+
+
+
+
+
+<select id="selectRequestInvoiceList" parameterType="Map" resultType="egovMap">
+<if test='gu.equals("LIST")'>
+    <include refid="prefixSql"/>
+</if>
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestInvoiceMapper.selectRequestInvoiceList] 20191016 - KR JAEMAJEM */
+SELECT  A.MOB_TICKET_NO                                                         AS MOB_TICKET_NO
+    ,   TO_CHAR(TO_DATE(A.REQ_DT, 'YYYYMMDD'), 'DD/MM/YYYY')                    AS REQ_DT
+    ,   C.NAME                                                                  AS REQ_STUS_ID_NM
+    ,   D.CODE_NAME                                                             AS INVC_TYPE_NM
+    ,   B.INVC_ITM_ORD_NO                                                       AS INVC_ITM_ORD_NO
+    ,   B.TAX_INVC_ID                                                           AS TAX_INVC_ID
+    ,   B.TAX_INVC_REF_NO                                                       AS TAX_INVC_REF_NO
+    ,   B.EMAIL                                                                 AS EMAIL
+    ,   B.EMAIL2                                                                AS EMAIL2
+    ,   B.INVC_ADV_PRD                                                          AS INVC_ADV_PRD
+    ,   CASE    WHEN B.REQ_INVC_MONTH IS NULL OR B.REQ_INVC_YEAR IS NULL    THEN NULL
+                                                                            ELSE B.REQ_INVC_MONTH||'/'||B.REQ_INVC_YEAR
+                                                                            END AS REQ_INVC_MONTH_YEAR
+    ,   B.INVC_ITM_DISC_RATE                                                    AS INVC_ITM_DISC_RATE
+    ,   B.INVC_ITM_EXG_AMT                                                      AS INVC_ITM_EXG_AMT
+    ,   B.INVC_ITM_TOT_AMT                                                      AS INVC_ITM_TOT_AMT
+    ,   B.INVC_CNTC_PERSON                                                      AS INVC_CNTC_PERSON
+    ,   B.INVC_ITM_PO_NO                                                        AS INVC_ITM_PO_NO
+    ,   B.INVC_ITM_PO_IMG                                                       AS INVC_ITM_PO_IMG
+    ,   CASE WHEN B.INVC_ITM_PO_IMG IS NOT NULL THEN 'DOWN'
+                                                ELSE NULL
+                                                END                             AS INVC_ITM_PO_IMG_URL
+    ,   CASE WHEN B.INVC_ITM_PO_IMG IS NOT NULL THEN F.FILE_SUB_PATH
+                                                ELSE NULL
+                                                END                             AS FILE_SUB_PATH
+    ,   TO_CHAR(B.UPD_DT, 'DD/MM/YYYY HH24:MI:SS')                              AS UPD_DT
+    ,   J.USER_NAME                                                             AS UPD_USER_ID
+    ,   A.REQ_STUS_ID                                                           AS REQ_STUS_ID
+    ,   A.INVC_TYPE                                                             AS INVC_TYPE
+    ,   A.REQ_INVC_NO                                                           AS REQ_INVC_NO
+    ,   B.REQ_INDEX                                                             AS REQ_INDEX
+    ,   B.INVC_ITM_RENTAL_FEE                                                   AS INVC_ITM_RENTAL_FEE
+    ,   F.ATCH_FILE_NAME                                                        AS ATCH_FILE_NAME
+    ,   F.PHYSICL_FILE_NAME                                                     AS PHYSICL_FILE_NAME
+    ,   A.REM                                                                   AS REM
+    ,   H.CODE                                                                  AS BRANCH_CODE
+    ,   I.HR_CODE                                                               AS MEMBER_CODE
+]]>
+<include refid="selectRequestInvoiceListTalbe"/>
+<if test='gu.equals("LIST")'>
+    <include refid="suffixSql"/>
+</if>
+ORDER BY    MOB_TICKET_NO DESC
+        ,   TAX_INVC_ID ASC
+</select>
+
+
+
+<update id="saveRequestInvoiceArrpove" parameterType="Map">
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestInvoiceMapper.saveRequestInvoiceArrpove] 20191017 - KR JAEMAJEM */
+UPDATE  PAY0300D A                                                              --Request to Invoice on mobile_Header
+SET     A.REQ_STUS_ID = 5                                                       --Request Status
+    ,   A.UPD_DT = SYSDATE                                                      --Update Date
+    ,   A.UPD_USER_ID = #{userId}                                               --Update User Id
+WHERE   A.REQ_INVC_NO = #{reqInvcNo}                                            --Request Number
+AND     A.REQ_STUS_ID = 1                                                       --Request Status
+]]>
+</update>
+
+
+
+<update id="saveRequestInvoiceReject" parameterType="Map">
+<![CDATA[
+/* [com.coway.trust.biz.payment.mobilePayment.impl.RequestInvoiceMapper.saveRequestInvoiceReject] 20191017 - KR JAEMAJEM */
+UPDATE  PAY0300D A                                                              --Request to Invoice on mobile_Header
+SET     A.REQ_STUS_ID = 6                                                       --Request Status
+    ,   A.REM = #{rem}
+    ,   A.UPD_DT = SYSDATE                                                      --Update Date
+    ,   A.UPD_USER_ID = #{userId}                                               --Update User Id
+WHERE   A.REQ_INVC_NO = #{reqInvcNo}                                            --Request Number
+AND     A.REQ_STUS_ID = 1                                                       --Request Status
+]]>
+</update>
+
+<select id="selectInvoiceDetails" parameterType="Map" resultType="egovMap">
+
+SELECT DISTINCT
+    P301.TAX_INVC_ID  AS invoiceId
+    , TAX_INVC_CUST_NAME AS customerName
+     , CASE WHEN P301.EMAIL2 IS NOT NULL THEN
+        CASE WHEN P301.EMAIL2 <![CDATA[<>]]> P301.EMAIL THEN P301.EMAIL || '; ' || P301.EMAIL2
+            ELSE P301.EMAIL END
+        ELSE P301.EMAIL END AS customerEmail
+    , TO_CHAR(TO_DATE(TAX_INVC_CRT_DT, 'DD/MM/YYYY'), 'MON')  || ' ' || EXTRACT (YEAR FROM TAX_INVC_CRT_DT) AS invoiceDate
+        , TO_CHAR(TAX_INVC_CHRG, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS currentCharges
+        , TO_CHAR(TAX_INVC_OVERDU, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS previousBalance
+        , TO_CHAR(TAX_INVC_AMT_DUE, 'L99,999,990.00', 'NLS_CURRENCY = ''RM''') AS outstanding
+    , TAX_INVC_CUST_VA_NO AS virtualAccount
+    , R99.TAX_INVC_REF_NO AS invoiceNumber
+    , '9928' AS billerCode
+    , TAX_INVC_BILL_PAY_REF_NO1 AS refNumber1
+    , R99.TAX_INVC_REF_NO AS refNumber2
+    , 'billing@coway.com.my' AS cowayEmail
+    FROM PAY0301D P301
+    JOIN REP0099D R99 ON R99.TAX_INVC_ID = P301.TAX_INVC_ID
+    WHERE
+    P301.TAX_INVC_ID = #{taxInvcId}
+    ORDER BY P301.TAX_INVC_ID
+
+    --AND EXTRACT (YEAR FROM TAX_INVC_CRT_DT) = '2020'
+    --AND EXTRACT (MONTH FROM TAX_INVC_CRT_DT) = '5'
+
+</select>
+
+</mapper>

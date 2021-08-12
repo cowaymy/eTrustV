@@ -1,0 +1,167 @@
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+
+	<!-- Layout(Templates) start -->
+
+    <!-- MOBILE WEB -->
+
+    <definition name="m.layout.default" template="/WEB-INF/tiles/layout/mobile/default.jsp">
+        <put-attribute name="head" value="" />
+        <put-attribute name="css" value="" />
+        <put-attribute name="script" value="/WEB-INF/tiles/view/mobile/script.jsp" />
+        <put-attribute name="bodyClass" value="" />
+        <put-attribute name="header" value="/WEB-INF/tiles/view/mobile/header.jsp" />
+        <put-attribute name="left" value="/WEB-INF/tiles/view/mobile/left.jsp" />
+        <put-attribute name="body" value="" />
+        <put-attribute name="footer" value="/WEB-INF/tiles/view/mobile/footer.jsp" />
+        <put-attribute name="var" value="/WEB-INF/tiles/view/mobile/var.jsp" />
+    </definition>
+
+    <definition name="m.layout.empty.script" template="/WEB-INF/tiles/layout/mobile/emptyScript.jsp">
+        <put-attribute name="var" value="/WEB-INF/tiles/view/mobile/var.jsp" />
+        <put-attribute name="script" value="/WEB-INF/tiles/view/mobile/script.jsp" />
+        <put-attribute name="body" value="" />
+    </definition>
+
+    <definition name="m.layout.empty" template="/WEB-INF/tiles/layout/mobile/empty.jsp">
+        <put-attribute name="body" value="" />
+    </definition>
+
+
+
+    <!-- WEB -->
+
+    <definition name="layout.default" template="/WEB-INF/tiles/layout/default.jsp">
+        <put-attribute name="head" value="" />
+        <put-attribute name="css" value="" />
+        <put-attribute name="script" value="/WEB-INF/tiles/view/script.jsp" />
+        <put-attribute name="bodyClass" value="" />
+        <put-attribute name="header" value="/WEB-INF/tiles/view/header.jsp" />
+        <put-attribute name="left" value="/WEB-INF/tiles/view/left.jsp" />
+        <put-attribute name="body" value="" />
+        <put-attribute name="footer" value="/WEB-INF/tiles/view/footer.jsp" />
+        <put-attribute name="var" value="/WEB-INF/tiles/view/var.jsp" />
+    </definition>
+
+    <definition name="layout.empty.script" template="/WEB-INF/tiles/layout/emptyScript.jsp">
+        <put-attribute name="var" value="/WEB-INF/tiles/view/var.jsp" />
+        <put-attribute name="script" value="/WEB-INF/tiles/view/script.jsp" />
+    	<put-attribute name="body" value="" />
+    </definition>
+
+    <definition name="layout.empty" template="/WEB-INF/tiles/layout/empty.jsp">
+        <put-attribute name="body" value="" />
+    </definition>
+
+    <!-- [Woongjin Jun] Tab -->
+    <definition name="layout.default2" template="/WEB-INF/tiles/layout/default2.jsp">
+        <put-attribute name="head" value="" />
+        <put-attribute name="css" value="" />
+        <put-attribute name="script" value="/WEB-INF/tiles/view/script.jsp" />
+        <put-attribute name="bodyClass" value="" />
+        <put-attribute name="header" value="/WEB-INF/tiles/view/header2.jsp" />
+        <put-attribute name="body" value="" />
+        <put-attribute name="footer" value="/WEB-INF/tiles/view/footer.jsp" />
+        <put-attribute name="var" value="/WEB-INF/tiles/view/var.jsp" />
+    </definition>
+    <!-- [Woongjin Jun] Tab -->
+
+    <!-- Layout(Templates) end -->
+
+    <!-- ==================================================== -->
+
+    <!-- Content start -->
+
+    <!-- MOBILE WEB -->
+
+    <definition name="mobile/login" extends="m.layout.empty.script">
+        <put-attribute name="body" value="/WEB-INF/jsp/mobile/login.jsp" />
+    </definition>
+
+    <definition name="mobile/*/*Pop" extends="m.layout.empty.script">
+        <put-attribute name="body" value="/WEB-INF/jsp/mobile/{1}/{2}Pop.jsp" />
+    </definition>
+
+    <definition name="mobile/*/*/*Pop" extends="m.layout.empty.script">
+        <put-attribute name="body" value="/WEB-INF/jsp/mobile/{1}/{2}/{3}Pop.jsp" />
+    </definition>
+
+    <definition name="mobile/*" extends="m.layout.default">
+        <put-attribute name="body" value="/WEB-INF/jsp/mobile/{1}.jsp" />
+    </definition>
+
+    <definition name="mobile/*/*" extends="m.layout.default">
+        <put-attribute name="body" value="/WEB-INF/jsp/mobile/{1}/{2}.jsp" />
+    </definition>
+
+    <definition name="mobile/*/*/*" extends="m.layout.default">
+        <put-attribute name="body" value="/WEB-INF/jsp/mobile/{1}/{2}/{3}.jsp" />
+    </definition>
+
+
+    <!-- WEB -->
+
+    <definition name="error/nomenu/*" extends="layout.empty">
+        <put-attribute name="body" value="/WEB-INF/jsp/error/nomenu/{1}.jsp" />
+    </definition>
+
+    <definition name="message/*" extends="layout.empty">
+        <put-attribute name="body" value="/WEB-INF/jsp/message/{1}.jsp" />
+    </definition>
+
+    <definition name="login/*" extends="layout.empty.script">
+        <put-attribute name="body" value="/WEB-INF/jsp/login/{1}.jsp" />
+    </definition>
+
+    <definition name="report/**" extends="layout.empty">
+    </definition>
+
+    <definition name="*/*Pop" extends="layout.empty.script">
+        <put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}Pop.jsp" />
+    </definition>
+
+    <definition name="*/*/*Pop" extends="layout.empty.script">
+        <put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}/{3}Pop.jsp" />
+    </definition>
+
+    <!-- SH-KR - 20191210 -->
+    <definition name="*/*/*/*Pop" extends="layout.empty.script">
+        <put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}Pop.jsp" />
+    </definition>
+    <!-- END -->
+
+    <definition name="sample/*" extends="layout.default">
+    	<!-- <put-attribute name="head" value="" />  -->
+        <put-attribute name="body" value="/WEB-INF/jsp/sample/{1}.jsp" />
+    </definition>
+
+    <!-- [Woongjin Jun] Tab -->
+    <definition name="common/main" extends="layout.default">
+        <put-attribute name="body" value="/WEB-INF/jsp/common/main.jsp" />
+    </definition>
+
+    <definition name="common/mainExternal" extends="layout.default">
+        <put-attribute name="body" value="/WEB-INF/jsp/common/mainExternal.jsp" />
+    </definition>
+
+    <!-- [Woongjin Jun] Tab -->
+
+	<definition name="/*" extends="layout.default">
+		<put-attribute name="body" value="/WEB-INF/jsp/{1}.jsp" />
+	</definition>
+
+	<definition name="*/*" extends="layout.default2">
+		<put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}.jsp" />
+	</definition>
+
+	<definition name="*/*/*" extends="layout.default2">
+		<put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}/{3}.jsp" />
+	</definition>
+
+    <!-- SH-KR - 20191210 -->
+    <definition name="*/*/*/*" extends="layout.default2">
+        <put-attribute name="body" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}.jsp" />
+    </definition>
+    <!-- Content end -->
+
+</tiles-definitions>

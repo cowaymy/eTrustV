@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.otherpayment.service.impl.ConfirmBankChargeMapper">
+    
+    <!-- <select id="selectNorKeyInList" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.GROUP_SEQ,
+            TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY') AS PAY_ITM_REF_DT,
+            A.PAY_ITM_MODE_ID,
+            E.CODE AS PAY_ITM_MODE_NM,
+            NVL(SUM (A.PAY_ITM_AMT),0) AS TOT_AMT,
+            NVL(MAX (C.PAY_ITM_BANK_CHRG_AMT),0) AS BANK_CHG_AMT,
+            MAX (C.PAY_ITM_BANK_IN_SLIP_NO) AS PAY_ITM_BANK_IN_SLIP_NO,
+            MAX (B.REF_DTL) AS REF_DTL,
+            MAX (C.PAY_ITM_BANK_ACC_ID) AS PAY_ITM_BANK_ACC_ID,
+            MAX (D.ACC_DESC) AS PAY_ITM_BANK_ACC_NM          
+        FROM 
+            PAY0252T A
+            JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+            JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID
+            LEFT JOIN SYS0001M D ON C.PAY_ITM_BANK_ACC_ID = D.ACC_ID
+            LEFT JOIN SYS0013M E ON A.PAY_ITM_MODE_ID = E.CODE_ID
+        WHERE 
+            A.BANK_CHG_MAPPING_STUS_ID = 1
+            AND A.REV_STUS_ID IS NULL
+            AND A.GROUP_SEQ IN (
+                SELECT 
+                    DISTINCT A.GROUP_SEQ
+                FROM 
+                    PAY0252T A
+                    JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID                    
+                    JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID
+                    JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID    
+                WHERE
+                    C.PAY_ITM_REF_DT <![CDATA[   >= ]]> TO_DATE(#{transDateFr},'DD/MM/YYYY')
+                    AND C.PAY_ITM_REF_DT <![CDATA[   < ]]> TO_DATE(#{transDateTo},'DD/MM/YYYY') + 1
+                    <if test="bankAcc != null and bankAcc != '' ">
+                        AND C.PAY_ITM_BANK_ACC_ID = #{bankAcc}
+                    </if>
+                    <if test="payType != null and payType != '' ">
+                    AND C.PAY_ITM_MODE_ID = #{payType} 
+                    </if>
+                    <if test="vaAccount != null and vaAccount != '' ">  
+                    AND B.VA_ACC_NO = #{vaAccount}       
+                    </if>
+                    AND A.KEY_IN_SCRN = 'NOR'
+            )
+        GROUP BY 
+            A.GROUP_SEQ,
+            TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY'),
+            A.PAY_ITM_MODE_ID,
+            E.CODE 
+        
+    </select> -->
+    
+    <select id="selectBankStateMatchList" parameterType="Map" resultType="egovMap">
+        SELECT 
+		        B.F_TRNSC_ID AS F_TRNSC_ID,
+            A.BANK_ID AS BANK_ID,
+            C.NAME AS BANK_NAME,
+            A.F_BANK_JRNL_ACC_ID AS BANK_ACC,
+            D.ACC_CODE || ' - ' ||  D.ACC_DESC AS BANK_ACC_NAME,
+            D.ACC_CODE,
+            B.F_TRNSC_DT,
+            B.F_TRNSC_REF_CHQ_NO,
+            B.F_TRNSC_REF_VA_NO,
+            B.F_TRNSC_REF3,
+            B.F_TRNSC_REF1,
+            B.F_TRNSC_REF4,
+            B.F_TRNSC_REF2,
+            B.F_TRNSC_REF6,
+            B.F_TRNSC_REM,
+            B.F_TRNSC_DEBT_AMT,
+            B.F_TRNSC_CRDIT_AMT,
+            B.F_TRNSC_TELLER_ID,
+            B.F_TRNSC_NEW_CHQ_NO,
+            (SELECT COUNT(1) FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID AND CRC_MAPPING_STUS_ID =1 
+                AND OTH_KEYIN_STUS_ID =1 
+                AND OTH_KEYIN_BC_STUS_ID = 1) AS COUNT
+        FROM 
+            PAY0079D A 
+            JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID 
+            LEFT JOIN SYS0004M C ON A.BANK_ID = C.BANK_ID
+            LEFT JOIN SYS0001M D ON A.F_BANK_JRNL_ACC_ID = D.ACC_ID AND D.IS_PAY_CASH = 1
+            LEFT JOIN SYS0047M E ON A.F_BANK_JRNL_CRT_USER_ID = E.USER_ID               
+        WHERE 1=1
+            <if test="tranDateFr != null and tranDateFr != '' and tranDateTo != null and tranDateTo != '' ">
+            AND A.TRNSC_DT BETWEEN TO_DATE(#{tranDateFr} ,'DD/MM/YYYY') AND TO_DATE(#{tranDateTo} ,'DD/MM/YYYY')
+            </if>
+            <if test="bankAccount != null and bankAccount != '' ">
+            AND A.F_BANK_JRNL_ACC_ID = #{bankAccount}
+            </if>
+            <if test="uploadDateFr != null and uploadDateFr != '' and uploadDateTo != null and uploadDateTo != '' ">
+            AND A.F_BANK_JRNL_CRT_DT <![CDATA[  >= ]]> TO_DATE(#{uploadDateFr} ,'DD/MM/YYYY') 
+            AND A.F_BANK_JRNL_CRT_DT <![CDATA[  < ]]> TO_DATE(#{uploadDateTo} ,'DD/MM/YYYY') + 1
+            </if>
+            <if test="uploadUserNm != null and uploadUserNm != '' ">
+            AND E.USER_NAME LIKE  #{uploadUserNm} || '%'            
+            </if>
+            AND B.OTH_KEYIN_BC_STUS_ID = 1
+            ORDER BY B.F_TRNSC_ID DESC
+    </select>    
+    
+    <!-- <update id="mappingBankChgGroupPayment" parameterType="Map">
+        UPDATE PAY0252T SET
+            BANK_CHG_MAPPING_ID  = #{fTrnscId},
+            BANK_CHG_MAPPING_STUS_ID = 4,
+            BANK_CHG_MAPPING_USER_ID = #{userId},
+            BANK_CHG_MAPPING_DT = SYSDATE
+        WHERE
+            GROUP_SEQ = #{groupSeq}
+    </update>     -->
+    
+    <update id="mappingBankStatementBankChg" parameterType="Map">
+        UPDATE PAY0081D SET
+            OTH_KEYIN_BC_STUS_ID = 4,
+            OTH_KEYIN_BC_MAPPING_DT = SYSDATE,
+            OTH_KEYIN_BC_MAPPING_USER_ID = #{userId},
+            OTH_KEYIN_STUS_ID = 4, 
+            OTH_KEYIN_MAPPING_DT = SYSDATE, 
+            OTH_KEYIN_MAPPING_USER_ID = #{userId}
+        WHERE
+            F_TRNSC_ID = #{fTrnscId}
+    </update>
+    
+    <insert id="insertConfBankChargeIF" parameterType="EgovMap">
+        INSERT INTO ITF0942M (
+        IF_KEY,
+        SEQ,
+        IF_TYPE,
+        TRAN_STATUS_CD,
+        RGST_DT,
+        RGST_TM,
+        RGST_ID,
+        PAY_DT,
+        BANK_SEQ,
+        <!-- GRP_SEQ, -->
+        <!-- ORD_NO, -->
+        <!-- WOR_NO, -->
+        BANK_ID,
+        BANKAC,
+        <!-- ADV_AMT,      --> 
+        DIFF_TYPE,
+        DIFF_AMT
+         ) VALUES (
+            FN_CRT_IFKEY('942'),
+            1,
+            '942',
+            '10',
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            TO_CHAR(SYSDATE,'HHMMSS'),  
+            #{userId},
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            #{bankSeq},
+            <!-- #{groupSeq}, -->
+            <!-- #{salesOrdNo}, -->
+            <!-- #{orNo}, -->
+            #{fTrnscId},
+            #{accCode},
+            <!-- #{advAmt},         --> 
+            'AC001',
+            NVL(#{fTrnscDebtAmt},0)
+        )            
+    </insert>
+    
+</mapper>

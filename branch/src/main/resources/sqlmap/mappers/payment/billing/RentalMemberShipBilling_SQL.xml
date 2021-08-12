@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.billing.service.impl.RentalMemberShipBillingMapper">
+    
+    <select id="selectCustBillOrderList_M" parameterType="Map" resultType="egovMap">
+   <!--  <![CDATA[
+       SELECT 
+		       Distinct1.SALES_ORD_ID SALES_ORD_ID  ,
+		       Distinct1.SALES_ORD_NO SALES_ORD_NO  ,
+		       Distinct1.REF_NO REF_NO  ,
+		       TO_CHAR(Distinct1.SALESDATE1 ,  'DD/MM/YYYY') SALES_DT,
+		       Distinct1.NAME NAME  ,
+		       Distinct1.CODE_DESC CODE_DESC  ,
+		       Distinct1.STK_DESC STK_DESC  ,
+		       Distinct1.NAME1 NAME1  ,
+		       Distinct1.CUST_BILL_ID CUST_BILL_ID  
+		  FROM ( SELECT DISTINCT Filter2.CUSTBILLID1 CUST_BILL_ID  ,
+		                         Filter2.SALESORDERID1 SALES_ORD_ID  ,
+		                         Filter2.SALESORDERNO1 SALES_ORD_NO  ,
+		                         Filter2.REFNO1 REF_NO  ,
+		                         Filter2.STK_DESC STK_DESC  ,
+		                         Filter2.NAME1 NAME  ,
+		                         Filter2.CODE_DESC CODE_DESC  ,
+		                         Filter2.NAME2 NAME1  ,
+		                         TO_DATE(Filter2.SALESDATE1) SALESDATE1  
+		         FROM ( SELECT Filter1.CUSTBILLID1 ,
+		                       Filter1.SALESORDERID1 ,
+		                       Filter1.SALESORDERNO1 ,
+		                       Filter1.REFNO1 ,
+		                       Filter1.SALESDATE1 ,
+		                       Filter1.CUSTOMERID1 ,
+		                       Filter1.APPTYPEID1 ,
+		                       Filter1.STATUSCODEID1 ,
+		                       Extent6.STK_DESC STK_DESC  ,
+		                       Extent7.NAME NAME1  ,
+		                       Extent8.CODE_DESC CODE_DESC  ,
+		                       Extent9.NAME NAME2  
+		                FROM ( SELECT Extent1.CUST_BILL_ID CUSTBILLID1  ,
+		                              Extent2.SALES_ORD_ID SALESORDERID1  ,
+		                              Extent2.SALES_ORD_NO SALESORDERNO1  ,
+		                              Extent2.REF_NO REFNO1  ,
+		                              Extent2.SALES_DT SALESDATE1  ,
+		                              Extent2.CUST_ID CUSTOMERID1  ,
+		                              Extent2.APP_TYPE_ID APPTYPEID1  ,
+		                              Extent2.STUS_CODE_ID STATUSCODEID1  
+		                       FROM SAL0001D Extent1
+		                              JOIN SAL0001D Extent2   ON ( Extent1.CUST_BILL_ID = Extent2.CUST_BILL_ID )
+		                              OR ( ( Extent1.CUST_BILL_ID IS NULL )
+		                              AND ( Extent2.CUST_BILL_ID IS NULL ) )
+		                              JOIN SAL0071D Extent3   ON Extent2.SALES_ORD_ID = Extent3.SALES_ORD_ID
+		                        WHERE  ( 0 <> Extent1.CUST_BILL_ID )
+		                                 AND ( 4 = Extent2.STUS_CODE_ID )
+		                                 AND ( Extent3.STUS_CODE_ID IN ( 'REG','INV','SUS' )
+		                                ) ) Filter1
+		                       JOIN SAL0070D Extent4   ON Filter1.SALESORDERID1 = Extent4.SALES_ORD_ID
+		                       JOIN SAL0002D Extent5   ON Filter1.SALESORDERID1 = Extent5.SALES_ORD_ID
+		                       JOIN SYS0026M Extent6   ON Extent5.ITM_STK_ID = Extent6.STK_ID
+		                       JOIN SYS0038M Extent7   ON Filter1.STATUSCODEID1 = Extent7.STUS_CODE_ID
+		                       JOIN SYS0013M Extent8   ON Filter1.APPTYPEID1 = Extent8.CODE_ID
+		                       JOIN SAL0029D Extent9   ON Filter1.CUSTOMERID1 = Extent9.CUST_ID
+		                 WHERE  1 = TO_NUMBER(Extent4.RENT_INST_NO) ) Filter2
+		                JOIN SAL0077D Extent10   ON Filter2.SALESORDERID1 = Extent10.SRV_CNTRCT_ORD_ID
+		          WHERE  Extent10.SRV_CNTRCT_ID = #{srvCntrctId} ) Distinct1
+	          ]]> -->
+	          <![CDATA[
+       SELECT 
+               Distinct1.SALES_ORD_ID SALES_ORD_ID  ,
+               Distinct1.SALES_ORD_NO SALES_ORD_NO  ,
+               Distinct1.REF_NO REF_NO  ,
+               TO_CHAR(Distinct1.SALESDATE1 ,  'DD/MM/YYYY') SALES_DT,
+               Distinct1.NAME NAME  ,
+               Distinct1.CODE_DESC CODE_DESC  ,
+               Distinct1.STK_DESC STK_DESC  ,
+               Distinct1.NAME1 NAME1  ,
+               Distinct1.CUST_BILL_ID CUST_BILL_ID  
+          FROM ( SELECT DISTINCT Filter2.CUSTBILLID1 CUST_BILL_ID  ,
+                                 Filter2.SALESORDERID1 SALES_ORD_ID  ,
+                                 Filter2.SALESORDERNO1 SALES_ORD_NO  ,
+                                 Filter2.REFNO1 REF_NO  ,
+                                 Filter2.STK_DESC STK_DESC  ,
+                                 Filter2.NAME1 NAME  ,
+                                 Filter2.CODE_DESC CODE_DESC  ,
+                                 Filter2.NAME2 NAME1  ,
+                                 TO_DATE(Filter2.SALESDATE1) SALESDATE1  
+                 FROM ( SELECT Filter1.CUSTBILLID1 ,
+                               Filter1.SALESORDERID1 ,
+                               Filter1.SALESORDERNO1 ,
+                               Filter1.REFNO1 ,
+                               Filter1.SALESDATE1 ,
+                               Filter1.CUSTOMERID1 ,
+                               Filter1.APPTYPEID1 ,
+                               Filter1.STATUSCODEID1 ,
+                               Extent6.STK_DESC STK_DESC  ,
+                               Extent7.NAME NAME1  ,
+                               Extent8.CODE_DESC CODE_DESC  ,
+                               Extent9.NAME NAME2  
+                        FROM ( SELECT Extent1.CUST_BILL_ID CUSTBILLID1  ,
+                                      Extent2.SALES_ORD_ID SALESORDERID1  ,
+                                      Extent2.SALES_ORD_NO SALESORDERNO1  ,
+                                      Extent2.REF_NO REFNO1  ,
+                                      Extent2.SALES_DT SALESDATE1  ,
+                                      Extent2.CUST_ID CUSTOMERID1  ,
+                                      Extent2.APP_TYPE_ID APPTYPEID1  ,
+                                      Extent2.STUS_CODE_ID STATUSCODEID1  
+                               FROM SAL0001D Extent1
+                                      JOIN SAL0001D Extent2   ON ( Extent1.CUST_BILL_ID = Extent2.CUST_BILL_ID )
+                                      OR ( ( Extent1.CUST_BILL_ID IS NULL )
+                                      AND ( Extent2.CUST_BILL_ID IS NULL ) )
+                                WHERE  ( 0 <> Extent1.CUST_BILL_ID )
+                                         AND ( 4 = Extent2.STUS_CODE_ID )
+                                        ) Filter1                         
+                               JOIN SAL0002D Extent5   ON Filter1.SALESORDERID1 = Extent5.SALES_ORD_ID
+                               JOIN SYS0026M Extent6   ON Extent5.ITM_STK_ID = Extent6.STK_ID
+                               JOIN SYS0038M Extent7   ON Filter1.STATUSCODEID1 = Extent7.STUS_CODE_ID
+                               JOIN SYS0013M Extent8   ON Filter1.APPTYPEID1 = Extent8.CODE_ID
+                               JOIN SAL0029D Extent9   ON Filter1.CUSTOMERID1 = Extent9.CUST_ID                  
+                         ) Filter2
+                        JOIN SAL0077D Extent10   ON Filter2.SALESORDERID1 = Extent10.SRV_CNTRCT_ORD_ID
+                        JOIN SAL0078D Extent11   ON Extent10.SRV_CNTRCT_ID = Extent11.SRV_CNTRCT_ID AND Extent11.CNTRCT_RENTAL_STUS IN ( 'REG','INV' )
+                        JOIN SAL0085D Extent12   ON Extent10.SRV_CNTRCT_ID = Extent12.SRV_PAY_CNTRCT_ID
+                  WHERE  Extent10.SRV_CNTRCT_ID = #{srvCntrctId} ) Distinct1
+                  ]]>
+    </select>
+    
+    <select id="selectRentalMembershipBillingSchedule" parameterType="Map" resultType="egovMap">
+        SELECT 
+		       Extent1.SRV_PAY_SCHDUL_ID SRV_PAY_SCHDUL_ID  ,
+		       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+		       Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+		       Extent1.INSTALLMENT INSTALLMENT  ,
+		       Extent1.BILL_TYPE BILL_TYPE  ,
+		       TO_CHAR(Extent1.SCHDUL_DT ,  'DD/MM/YYYY') SCHDUL_DT,
+		       Extent1.BILL_AMT BILL_AMT  ,
+		       Extent1.BILL_NO BILL_NO  ,
+		       Extent1.BILLING_STUS BILLING_STUS  ,
+		       Extent1.UPD_USER_ID UPD_USER_ID  ,
+		       Extent1.UPD_DT UPD_DT  
+		  FROM ( SELECT RentalMembershipBillingSchedul.SRV_PAY_SCHDUL_ID SRV_PAY_SCHDUL_ID  ,
+		                RentalMembershipBillingSchedul.SALES_ORD_ID SALES_ORD_ID  ,
+		                RentalMembershipBillingSchedul.SALES_ORD_NO SALES_ORD_NO  ,
+		                RentalMembershipBillingSchedul.INSTALLMENT INSTALLMENT  ,
+		                RentalMembershipBillingSchedul.BILL_TYPE BILL_TYPE  ,
+		                RentalMembershipBillingSchedul.SCHDUL_DT SCHDUL_DT  ,
+		                RentalMembershipBillingSchedul.BILL_AMT BILL_AMT  ,
+		                RentalMembershipBillingSchedul.BILL_NO BILL_NO  ,
+		                RentalMembershipBillingSchedul.BILLING_STUS BILLING_STUS  ,
+		                RentalMembershipBillingSchedul.UPD_USER_ID UPD_USER_ID  ,
+		                RentalMembershipBillingSchedul.UPD_DT UPD_DT  
+		         FROM PAY1003V RentalMembershipBillingSchedul ) Extent1
+		 WHERE  Extent1.SALES_ORD_ID = #{salesOrdId}
+         AND Extent1.BILLING_STUS = 'Active'
+         AND Extent1.SCHDUL_DT  BETWEEN Extent1.SCHDUL_DT AND TO_DATE(TO_CHAR(SYSDATE,'YYYYMM')||'01', 'YYYY/MM/DD')
+         ORDER BY Extent1.INSTALLMENT
+    </select>
+    
+    <select id="getTaskIdSeq_M"  resultType="int">
+        SELECT PAY0047D_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="selectSalesOrderMs_M" parameterType="Map" resultType="egovMap">
+        SELECT 
+		       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+		       Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+		       Extent1.REF_NO REF_NO  ,
+		       Extent1.SALES_DT SALES_DT  ,
+		       Extent1.CUST_ID CUST_ID  ,
+		       Extent1.CUST_CNT_ID CUST_CNT_ID  ,
+		       Extent1.CUST_ADD_ID CUST_ADD_ID  ,
+		       Extent1.MEM_ID MEM_ID  ,
+		       Extent1.BRNCH_ID BRNCH_ID  ,
+		       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+		       Extent1.TOT_AMT TOT_AMT  ,
+		       Extent1.PROMO_ID PROMO_ID  ,
+		       Extent1.BINDING_NO BINDING_NO  ,
+		       Extent1.CC_PROMO_ID CC_PROMO_ID  ,
+		       Extent1.TOT_PV TOT_PV  ,
+		       Extent1.REM REM  ,
+		       Extent1.PV_MONTH PV_MONTH  ,
+		       Extent1.PV_YEAR PV_YEAR  ,
+		       Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+		       Extent1.UPD_DT UPD_DT  ,
+		       Extent1.UPD_USER_ID UPD_USER_ID  ,
+		       Extent1.SYNC_CHK SYNC_CHK  ,
+		       Extent1.CUST_PO_NO CUST_PO_NO  ,
+		       Extent1.REN_CHK_ID REN_CHK_ID  ,
+		       Extent1.INST_PRIOD INST_PRIOD  ,
+		       Extent1.DO_NO DO_NO  ,
+		       Extent1.DEPT_CODE DEPT_CODE  ,
+		       Extent1.GRP_CODE GRP_CODE  ,
+		       Extent1.ORG_CODE ORG_CODE  ,
+		       Extent1.SALES_ORD_ID_OLD SALES_ORD_ID_OLD  ,
+		       Extent1.EDIT_TYPE_ID EDIT_TYPE_ID  ,
+		       Extent1.CUST_BILL_ID CUST_BILL_ID  ,
+		       Extent1.MTH_RENT_AMT MTH_RENT_AMT  ,
+		       Extent1.LOK LOK  ,
+		       Extent1.AEON_STUS_ID AEON_STUS_ID  ,
+		       Extent1.COMM_DT COMM_DT  ,
+		       Extent1.CRT_USER_ID CRT_USER_ID  ,
+		       Extent1.CRT_DT CRT_DT  ,
+		       Extent1.PAY_COM_DT PAY_COM_DT  ,
+		       Extent1.DEF_RENT_AMT DEF_RENT_AMT  ,
+		       Extent1.REF_DOC_ID REF_DOC_ID  ,
+		       Extent1.SALES_HM_ID SALES_HM_ID  ,
+		       Extent1.SALES_SM_ID SALES_SM_ID  ,
+		       Extent1.SALES_GM_ID SALES_GM_ID  ,
+		       Extent1.ADV_BILL ADV_BILL  ,
+		       Extent1.CNVR_SCHEME_ID CNVR_SCHEME_ID  ,
+		       Extent1.CUST_CARE_CNT_ID CUST_CARE_CNT_ID  
+		  FROM SAL0001D Extent1
+		 WHERE  Extent1.SALES_ORD_ID = #{salesOrdId} 
+		 AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+    
+    <insert id="insBillTaskLog_M" parameterType="Map">
+        INSERT INTO PAY0047D
+		(TASK_ID, 
+		TASK_TYPE, 
+		BILLING_YEAR, 
+		BILLING_MONTH, 
+		TOT_CNT, 
+		TOT_AMT, 
+		START_DT, 
+		STUS, 
+		END_DT, 
+		IS_CNFM, 
+		IS_INVC_GENRT, 
+		CRT_DT, 
+		CRT_USER_ID, 
+		UPD_DT, 
+		UPD_USER_ID, 
+		TASK_REM )
+		VALUES( 
+		#{newTaskId}, 
+		#{taskType}, 
+		#{billingYear}, 
+		#{billingMonth}, 
+		#{taskCount}, 
+		#{taskTotalAmount}, 
+		SYSDATE, 
+		#{status}, 
+		SYSDATE, 
+		#{isConfirmed}, 
+		#{isInvoiceGenerate}, 
+		SYSDATE, 
+		#{createdBy}, 
+		SYSDATE, 
+		#{updatedBy}, 
+		#{taskBillRemark} 
+		)
+    </insert>
+    
+    <insert id="insTaskLogOrder_M" parameterType="Map">
+        INSERT INTO PAY0048D
+		(TASK_ID, 
+		TASK_BILL_SO_ID, 
+		TASK_REF_NO, 
+		TASK_BILL_TYPE_ID, 
+		TASK_REF_DT_TM, 
+		TASK_BILL_AMT, 
+		TASK_BILL_INST_NO, 
+		TASK_BILL_BATCH_NO, 
+		TASK_BILL_GRP_ID, 
+		TASK_BILL_REM, 
+		TASK_BILL_UPD_DT, 
+		TASK_BILL_UPD_USER_ID, 
+		TASK_BILL_ZR_LOC_ID, 
+		TASK_BILL_RLIEF_CRTFCAT_ID, 
+		TASK_BILL_RENTAL_RLIEF_ID, 
+		TASK_BILL_CNTRCT_ID )
+		VALUES(
+		#{newTaskId}, 
+		#{salesOrdId}, 
+		#{taskReferenceNo}, 
+		#{taskBillTypeId}, 
+		SYSDATE, 
+		#{taskBillAmt}, 
+		#{taskBillInstNo}, 
+		#{taskBillBatchNo}, 
+		#{taskBillGroupId}, 
+		#{taskBillRemark}, 
+		SYSDATE, 
+		#{taskBillUpdateBy}, 
+		#{taskBillZRLocationId}, 
+		#{taskBillReliefCertificateId}, 
+		#{taskBillRentalReliefId}, 
+		#{taskBillCnrctId}
+		)     
+    </insert>
+    
+    <resultMap id="cTaxesManualBillRentalMbrsh" type="egovMap"></resultMap>
+    <select id="confirmTaxesManualBillRentalMbrsh" statementType="CALLABLE" parameterType="Map">
+        {call SP_GEN_BILL_GST_MNL_RENT_MBRSH(#{taskId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=cTaxesManualBillRentalMbrsh})}
+    </select>
+    
+    
+    
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.ChartMapper">
+
+    <resultMap id="commonChartMap" type="egovMap"></resultMap>
+    <select id="selectSalesKeyInAnalysis" parameterType="Map"  statementType="CALLABLE">
+        {
+        call  SP_GET_KEY_IN_ANLYS(#{pYear}, #{chartData, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=commonChartMap})
+        }
+    </select>
+
+    <select id="selectNetSalesChart" parameterType="Map"  statementType="CALLABLE">
+        {
+        call  SP_GET_APP_TYPE_ANLYS(#{pYear}, #{chartData, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=commonChartMap})
+        }
+    </select>
+
+    <select id="getSalesMonth" parameterType="Map" resultType="egovMap">
+        SELECT
+               CASE WHEN YEAR IS NULL AND MONTH IS NULL THEN TO_CHAR(SYSDATE, 'YYYY-MM') ELSE YEAR || '-' || (
+                   CASE WHEN LENGTH(MONTH) = 1 THEN '0' || MONTH ELSE TO_CHAR(MONTH) END
+               )
+               END AS SALES_MTH
+          FROM REP0110T
+         WHERE SYSDATE BETWEEN START_DT AND END_DT
+    </select>
+
+    <select id="getWpSales" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.STK_DESC PRODUCT,
+            NVL(B.SALES_CNT, 0) SALES_CNT,
+            NVL(C.NET_CNT, 0) NET_CNT
+            FROM SYS0026M A
+            LEFT JOIN (
+                SELECT B.ITM_STK_ID, COUNT(*) SALES_CNT
+                FROM SAL0001D A
+                JOIN SAL0002D B
+                ON A.SALES_ORD_ID = B.SALES_ORD_ID
+                WHERE A.SALES_DT BETWEEN (
+                    SELECT CASE WHEN START_DT IS NULL THEN TO_DATE(TO_CHAR(SYSDATE, 'YYYYMM'), 'YYYYMM') ELSE START_DT END
+                      FROM REP0110T
+                     WHERE SYSDATE BETWEEN START_DT AND END_DT
+                    )
+                AND (
+                    SELECT CASE WHEN END_DT IS NULL THEN LAST_DAY(SYSDATE) ELSE END_DT END
+                      FROM REP0110T
+                     WHERE SYSDATE BETWEEN START_DT AND END_DT
+                    )
+                GROUP BY B.ITM_STK_ID
+            ) B
+            ON A.STK_ID = B.ITM_STK_ID
+            LEFT JOIN (
+                SELECT B.ITM_STK_ID, COUNT(*) NET_CNT
+                FROM SAL0001D A
+                JOIN SAL0002D B
+                ON A.SALES_ORD_ID = B.SALES_ORD_ID
+                WHERE TO_CHAR(A.PV_MONTH) = (
+                    SELECT CASE WHEN MONTH IS NULL THEN TO_CHAR(SYSDATE, 'MM') ELSE TO_CHAR(MONTH) END
+                      FROM REP0110T
+                     WHERE SYSDATE BETWEEN START_DT AND END_DT
+                  )
+                AND TO_CHAR(A.PV_YEAR) = (
+                    SELECT CASE WHEN YEAR IS NULL THEN TO_CHAR(SYSDATE, 'YYYY') ELSE TO_CHAR(YEAR) END
+                      FROM REP0110T
+                     WHERE SYSDATE BETWEEN START_DT AND END_DT
+                  )
+                GROUP BY B.ITM_STK_ID
+            ) C
+            ON A.STK_ID = C.ITM_STK_ID
+            WHERE STK_CTGRY_ID = 54
+            AND STK_TYPE_ID = 61
+            AND STUS_CODE_ID = 1
+            AND (B.SALES_CNT IS NOT NULL OR C.NET_CNT IS NOT NULL)
+            ORDER BY A.STK_ID DESC
+    </select>
+
+</mapper>

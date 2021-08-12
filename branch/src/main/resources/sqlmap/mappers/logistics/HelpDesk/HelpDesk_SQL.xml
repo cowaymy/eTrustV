@@ -1,0 +1,960 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.helpdesk.impl.HelpDeskMapper">
+
+<select id="selectEmailaddr" parameterType="int" resultType="EgovMap"> 
+SELECT Extent1.USER_ID USER_ID  ,
+       Extent1.USER_NAME USER_NAME  ,
+       Extent1.USER_PASSWD USER_PASSWD  ,
+       Extent1.USER_FULL_NAME USER_FULL_NAME  ,
+       Extent1.USER_EMAIL USER_EMAIL  ,
+       Extent1.USER_STUS_ID USER_STUS_ID  ,
+       Extent1.USER_BRNCH_ID USER_BRNCH_ID  ,
+       Extent1.USER_DEPT_ID USER_DEPT_ID  ,
+       Extent1.USER_UPD_USER_ID USER_UPD_USER_ID  ,
+       Extent1.USER_UPD_DT USER_UPD_DT  ,
+       Extent1.USER_SYNC_CHK USER_SYNC_CHK  ,
+       Extent1.USER_NRIC USER_NRIC  ,
+       Extent1.USER_DT_JOIN USER_DT_JOIN  ,
+       Extent1.USER_GSEC_SYN_CHK USER_GSEC_SYN_CHK  ,
+       Extent1.USER_PASSWD_LAST_UPD_DT USER_PASSWD_LAST_UPD_DT  ,
+       Extent1.USER_TYPE_ID USER_TYPE_ID  ,
+       Extent1.USER_DFLT_PASSWD USER_DFLT_PASSWD  ,
+       Extent1.USER_VAL_ID_FROM USER_VAL_ID_FROM  ,
+       Extent1.USER_VAL_ID_TO USER_VAL_ID_TO  ,
+       Extent1.USER_SEC_QUES_ID USER_SEC_QUES_ID  ,
+       Extent1.USER_SEC_QUES_ANS USER_SEC_QUES_ANS  ,
+       Extent1.USER_WORK_NO USER_WORK_NO  ,
+       Extent1.USER_MOBILE_NO USER_MOBILE_NO  ,
+       Extent1.USER_EXT_NO USER_EXT_NO  ,
+       Extent1.USER_IS_PART_TM USER_IS_PART_TM  ,
+       Extent1.USER_DEPT_ID USER_DEPT_ID  ,
+       Extent1.USER_IS_EXTRNL USER_IS_EXTRNL  
+  FROM SYS0047M Extent1
+ WHERE  Extent1.USER_ID = #{loginId}
+</select>    
+
+<select id="selectDataChangeList" parameterType="Map" resultType="EgovMap">  
+SELECT DTAB.DCFReqEntryID AS DCFReqEntryID,
+         DTAB.DCFReqNo AS DCFReqNo,
+         DTAB.DCFReqUserID AS DCFReqUserID,
+         DTAB.DCFReqRecipientGrpID AS DCFReqRecipientGrpID,
+         DTAB.DCFReqTypeID AS DCFReqTypeID,
+         DTAB.DCFReqCatID AS DCFReqCatID,
+         DTAB.DCFReqSubID AS DCFReqSubID,
+         DTAB.DCFReqStatusID AS DCFReqStatusID,
+         DTAB.DCFReqProStatusID AS DCFReqProStatusID,
+         DTAB.DCFReqDesc AS DCFReqDesc,
+         DTAB.DCFReqRemark AS DCFReqRemark,
+         DTAB.DCFPriorLvl AS DCFPriorLvl,
+         DTAB.DCFReqHasAttachment AS DCFReqHasAttachment,
+         DTAB.DCFReqRcvFeedback AS DCFReqRcvFeedback,
+         DTAB.DCFReqCreateBy AS DCFReqCreateBy,
+         DTAB.DCFReqUpdateBy AS DCFReqUpdateBy,
+         DTAB.DCFReqReasonID AS DCFReqReasonID,
+         DTAB.DCFReqApproveBy AS DCFReqApproveBy,
+         DTAB.DCFReqApproveRemark AS DCFReqApproveRemark,
+         DTAB.DCFReqBranchID AS DCFReqBranchID,
+         DTAB.DCFReqApproveReqReasonID AS DCFReqApproveReqReasonID,
+         DTAB.DCFSupTypeDesc AS DCFSupTypeDesc,
+         DTAB.DCFSupTypeDesc1 AS DCFSupTypeDesc1,
+         DTAB.DCFSupTypeDesc2 AS DCFSupTypeDesc2,
+         DTAB.DCFRecipientGrpName AS DCFRecipientGrpName,
+         DTAB.Code AS Code,
+         DTAB.Name AS Name,
+         DTAB.C1 AS C1,
+         DTAB.C2 AS C2,
+         DTAB.C3 AS C3,
+         DTAB.ReasonDesc1 AS ReasonDesc1,
+         DTAB.C5 AS C5,
+         DTAB.C6 AS C6,
+         DTAB.C7 AS C7,
+         DTAB.C8 AS C8,
+         DTAB.C9 AS C9,
+         DTAB.C10 AS C10,
+         DTAB.C11 AS C11,
+         DTAB.C12 AS C12,
+         DTAB.C13 AS C13,
+         DTAB.C14 AS C14,
+         DTAB.C15 AS C15,
+         DTAB.C16 AS C16,
+         DTAB.C17 AS C17,
+         DTAB.C18 AS C18,
+         DTAB.C19 AS C19,
+         DTAB.C20 AS C20,
+         DTAB.C21 AS C21,
+         DTAB.C22 AS C22,
+         DTAB.C23 AS C23,
+         ROW_NUMBER () OVER (ORDER BY DTAB.DCFReqEntryID ASC) AS ROW_NUMBER
+    FROM (SELECT DISTINCT
+                 DCFReqEntryID AS DCFReqEntryID,
+                 DCFReqNo AS DCFReqNo,
+                 DCFReqUserID AS DCFReqUserID,
+                 DCFReqRecipientGrpID AS DCFReqRecipientGrpID,
+                 DCFReqTypeID AS DCFReqTypeID,
+                 DCFReqCatID AS DCFReqCatID,
+                 DCFReqSubID AS DCFReqSubID,
+                 DCFReqStatusID AS DCFReqStatusID,
+                 DCFReqProStatusID AS DCFReqProStatusID,
+                 DCFReqDesc AS DCFReqDesc,
+                 DCFReqRemark AS DCFReqRemark,
+                 DCFPriorLvl AS DCFPriorLvl,
+                 DCFReqHasAttachment AS DCFReqHasAttachment,
+                 DCFReqRcvFeedback AS DCFReqRcvFeedback,
+                 DCFReqCreateBy AS DCFReqCreateBy,
+                 DCFReqUpdateBy AS DCFReqUpdateBy,
+                 DCFReqReasonID AS DCFReqReasonID,
+                 DCFReqApproveBy AS DCFReqApproveBy,
+                 DCFReqApproveRemark AS DCFReqApproveRemark,
+                 DCFReqBranchID AS DCFReqBranchID,
+                 DCFReqApproveReqReasonID AS DCFReqApproveReqReasonID,
+                 DCFSupTypeDesc3 AS DCFSupTypeDesc,
+                 DCFSupTypeDesc4 AS DCFSupTypeDesc1,
+                 DCFSupTypeDesc5 AS DCFSupTypeDesc2,
+                 DCFRecipientGrpName AS DCFRecipientGrpName,
+                 Code1 AS Code,
+                 Name1 AS Name,
+                 1 AS C1,
+                 CASE
+                    WHEN (DCFReqApproveAt IS NOT NULL)
+                    THEN
+                       TO_CHAR (DCFReqApproveAt, 'YYYY-MM-DD HH24:MI:SS')
+                    ELSE
+                       '1900-01-01 00:00:00'
+                 END
+                    AS C2,
+                 CASE WHEN (UserID1 IS NOT NULL) THEN UserName1 ELSE 'N' END
+                    AS C3,
+                 CASE
+                    WHEN (ReasonID1 IS NOT NULL) THEN ReasonDesc1
+                    ELSE ' '
+                 END
+                    AS ReasonDesc1,
+                 CASE
+                    WHEN (DCFReqApproveStatusID IS NOT NULL)
+                    THEN
+                       DCFReqApproveStatusID
+                    ELSE
+                       0
+                 END
+                    AS C5,
+                 CASE WHEN (StatusCodeID1 IS NOT NULL) THEN Code2 ELSE ' ' END
+                    AS C6,
+                 CASE WHEN (StatusCodeID1 IS NOT NULL) THEN Name2 ELSE ' ' END
+                    AS C7,
+                 CASE
+                    WHEN (DCFReqAttachmentFilename IS NOT NULL)
+                    THEN
+                       DCFReqAttachmentFilename
+                    ELSE
+                       'N'
+                 END
+                    AS C8,
+                 CASE WHEN (BranchID IS NOT NULL) THEN Code3 ELSE 'N' END AS C9,
+                 CASE WHEN (BranchID IS NOT NULL) THEN Name3 ELSE 'N' END
+                    AS C10,
+                 CASE
+                    WHEN (DCFReqCreateAt IS NOT NULL)
+                    THEN
+                       TO_CHAR (DCFReqCreateAt, 'YYYY-MM-DD HH24:MI:SS')
+                    ELSE
+                       '1900-01-01 00:00:00'
+                 END
+                    AS C11,
+                 CASE WHEN (UserID2 IS NOT NULL) THEN UserName2 ELSE 'N' END
+                    AS C12,
+                 CASE
+                    WHEN (DCFReqDeptID IS NOT NULL) THEN DCFReqDeptID
+                    ELSE 0
+                 END
+                    AS C13,
+                 CASE WHEN (DeptID IS NOT NULL) THEN DeptName ELSE 'N' END
+                    AS C14,
+                 CASE WHEN (StatusCodeID2 IS NOT NULL) THEN Name4 ELSE 'N' END
+                    AS C15,
+                 CASE WHEN (StatusCodeID3 IS NOT NULL) THEN Code4 ELSE 'N' END
+                    AS C16,
+                 CASE WHEN (StatusCodeID3 IS NOT NULL) THEN Name5 ELSE 'N' END
+                    AS C17,
+                 CASE
+                    WHEN (ReasonID2 IS NOT NULL) THEN ReasonDesc2
+                    ELSE 'N'
+                 END
+                    AS C18,
+                 CASE
+                    WHEN (DCFReqOnBehalf IS NOT NULL) THEN DCFReqOnBehalf
+                    ELSE 'N'
+                 END
+                    AS C19,
+                 CASE WHEN (UserID3 IS NOT NULL) THEN UserName3 ELSE 'N' END
+                    AS C20,
+                 CASE
+                    WHEN (DCFReqSettleDate IS NOT NULL)
+                    THEN
+                       TO_CHAR (DCFReqSettleDate, 'YYYY-MM-DD HH24:MI:SS')
+                    ELSE
+                       '1900-01-01 00:00:00'
+                 END
+                    AS C21,
+                 CASE
+                    WHEN (DCFReqUpdateAt IS NOT NULL)
+                    THEN
+                       TO_CHAR (DCFReqUpdateAt, 'YYYY-MM-DD HH24:MI:SS')
+                    ELSE
+                       '1900-01-01 00:00:00'
+                 END
+                    AS C22,
+                 CASE
+                    WHEN (S47.USER_ID IS NOT NULL) THEN S47.USER_NAME
+                    ELSE 'N'
+                 END
+                    AS C23
+            FROM (SELECT L64.DCF_REQ_ENTRY_ID AS DCFReqEntryID,
+                         L64.DCF_REQ_NO AS DCFReqNo,
+                         L64.DCF_REQ_USER_ID AS DCFReqUserID,
+                         L64.DCF_REQ_RCIPT_GRP_ID AS DCFReqRecipientGrpID,
+                         L64.DCF_REQ_TYPE_ID AS DCFReqTypeID,
+                         L64.DCF_REQ_CAT_ID AS DCFReqCatID,
+                         L64.DCF_REQ_SUB_ID AS DCFReqSubID,
+                         L64.DCF_REQ_STUS_ID AS DCFReqStatusID,
+                         L64.DCF_REQ_PRO_STUS_ID AS DCFReqProStatusID,
+                         L64.DCF_REQ_SETL_DT AS DCFReqSettleDate,
+                         L64.DCF_REQ_DESC AS DCFReqDesc,
+                         L64.DCF_REQ_REM AS DCFReqRemark,
+                         L64.DCF_PRIOR_LVL AS DCFPriorLvl,
+                         L64.DCF_REQ_HAS_ATTACH AS DCFReqHasAttachment,
+                         L64.DCF_REQ_ATTACH_FILE_NAME
+                            AS DCFReqAttachmentFilename,
+                         L64.DCF_REQ_RCV_FDBCK AS DCFReqRcvFeedback,
+                         L64.DCF_REQ_CRT_DT AS DCFReqCreateAt,
+                         L64.DCF_REQ_CRT_USER_ID AS DCFReqCreateBy,
+                         L64.DCF_REQ_UPD_DT AS DCFReqUpdateAt,
+                         L64.DCF_REQ_UPD_USER_ID AS DCFReqUpdateBy,
+                         L64.DCF_REQ_RESN_ID AS DCFReqReasonID,
+                         L64.DCF_REQ_APPV_USER_ID AS DCFReqApproveBy,
+                         L64.DCF_REQ_APPV_DT AS DCFReqApproveAt,
+                         L64.DCF_REQ_APPV_REM AS DCFReqApproveRemark,
+                         L64.DCF_REQ_APPV_STUS_ID AS DCFReqApproveStatusID,
+                         L64.DCF_REQ_BRNCH_ID AS DCFReqBranchID,
+                         L64.DCF_REQ_DEPT_ID AS DCFReqDeptID,
+                         L64.DCF_REQ_APPV_REQ_RESN_ID
+                            AS DCFReqApproveReqReasonID,
+                         L64.DCF_REQ_ON_BEHALF AS DCFReqOnBehalf,
+                         L651.DCF_SUP_TYPE_DESC AS DCFSupTypeDesc3,
+                         L652.DCF_SUP_TYPE_DESC AS DCFSupTypeDesc4,
+                         L653.DCF_SUP_TYPE_DESC AS DCFSupTypeDesc5,
+                         L66.DCF_RCIPT_GRP_NAME AS DCFRecipientGrpName,
+                         S38.CODE AS Code1,
+                         S38.NAME AS Name1,
+                         S47.USER_ID AS UserID1,
+                         S47.USER_NAME AS UserName1,
+                         S32.RESN_ID AS ReasonID1,
+                         S32.RESN_DESC AS ReasonDesc1,
+                         S381.STUS_CODE_ID AS StatusCodeID1,
+                         S381.CODE AS Code2,
+                         S381.NAME AS Name2,
+                         S05.BRNCH_ID AS BranchID,
+                         S05.CODE AS Code3,
+                         S05.NAME AS Name3,
+                         S471.USER_ID AS UserID2,
+                         S471.USER_NAME AS UserName2,
+                         S40.DEPT_ID AS DeptID,
+                         S40.DEPT_NAME AS DeptName,
+                         S382.STUS_CODE_ID AS StatusCodeID2,
+                         S382.NAME AS Name4,
+                         S383.STUS_CODE_ID AS StatusCodeID3,
+                         S383.NAME AS Code4,
+                         S383.CODE AS Name5,
+                         S321.RESN_ID AS ReasonID2,
+                         S321.RESN_DESC AS ReasonDesc2,
+                         S472.USER_ID AS UserID3,
+                         S472.USER_NAME AS UserName3
+                    FROM LOG0064M L64,
+                         LOG0065M L651,
+                         LOG0065M L652,
+                         LOG0065M L653,
+                         LOG0066M L66,
+                         SYS0038M S38,
+                         SYS0047M S47,
+                         SYS0032M S32,
+                         SYS0038M S381,
+                         SYS0005M S05,
+                         SYS0047M S471,
+                         SYS0040M S40,
+                         SYS0038M S382,
+                         SYS0038M S383,
+                         SYS0032M S321,
+                         SYS0047M S472
+                   WHERE     1 = 1
+                         AND L64.DCF_REQ_USER_ID = S472.USER_ID(+)
+                         AND L64.DCF_REQ_RESN_ID = S321.RESN_ID(+)
+                         AND L64.DCF_REQ_PRO_STUS_ID = S383.STUS_CODE_ID(+)
+                         AND L64.DCF_PRIOR_LVL = S382.STUS_CODE_ID(+)
+                         AND L64.DCF_REQ_DEPT_ID = S40.DEPT_ID(+)
+                         AND L64.DCF_REQ_CRT_USER_ID = S471.USER_ID(+)
+                         AND L64.DCF_REQ_BRNCH_ID = S05.BRNCH_ID(+)
+                         AND L64.DCF_REQ_APPV_STUS_ID = S381.STUS_CODE_ID(+)
+                         AND L64.DCF_REQ_APPV_REQ_RESN_ID = S32.RESN_ID(+)
+                         AND L64.DCF_REQ_APPV_USER_ID = S47.USER_ID(+)
+                         AND L64.DCF_REQ_TYPE_ID = L651.DCF_SUP_TYPE_ID
+                         AND L64.DCF_REQ_CAT_ID = L652.DCF_SUP_TYPE_ID
+                         AND L64.DCF_REQ_SUB_ID = L653.DCF_SUP_TYPE_ID
+                         AND L64.DCF_REQ_RCIPT_GRP_ID = L66.DCF_RCIPT_GRP_ID
+                         AND L64.DCF_REQ_STUS_ID = S38.STUS_CODE_ID
+                     <choose>
+		             <when test="searchApprovalStatus != null and searchApprovalStatus !=''">
+		                  AND NVL(L64.DCF_REQ_APPV_STUS_ID , 0) in
+		            <foreach item="item" collection="searchApprovalStatus" index="index" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>        
+		             </when>
+		              <otherwise>
+		                 AND L64.DCF_REQ_APPV_STUS_ID=0
+		              </otherwise>
+                      </choose>
+                         <!-- AND (   NVL (L64.DCF_REQ_APPV_STUS_ID, 0) = 0 OR NVL (L64.DCF_REQ_APPV_STUS_ID, 0) = 61) -->
+                    <if test="searchDcfNo != null and searchDcfNo !=''">
+                     AND L64.DCF_REQ_NO = #{searchDcfNo}
+                    </if>
+                    <if test="searchRequestor != null and searchRequestor !=''">
+                     AND S472.USER_NAME = #{searchRequestor}
+                    </if>
+<!--                    <if test="searchApprovalStatus != null and searchApprovalStatus != ''"> -->
+<!--                     AND NVL(L64.DCF_REQ_APPV_STUS_ID , 0) in -->
+<!--                     <foreach item="item" collection="searchApprovalStatus" index="index" open="(" separator="," close=")"> -->
+<!--                     #{item} -->
+<!--                     </foreach> -->
+<!--                     </if>            -->
+                    <if test="searchRequestBranch != null and searchRequestBranch != ''">
+                    AND L64.DCF_REQ_BRNCH_ID in 
+		            <foreach item="item" collection="searchRequestBranch" index="index" open="(" separator="," close=")">
+		            #{item}
+		            </foreach>
+		            </if>  
+		            <if test="searchRequestDepartment != null and searchRequestDepartment != ''">
+                    AND NVL(L64.DCF_REQ_DEPT_ID, 0) in 
+                    <foreach item="item" collection="searchRequestDepartment" index="index" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+                    </if>                       
+                 ) T1,
+                 SYS0047M S47
+           WHERE T1.DCFReqUpdateBy = S47.USER_ID(+)AND T1.DCFReqTypeID =#{cmbType} AND T1.DCFReqCatID =#{cmbCategory} AND T1.DCFReqSubID =#{cmbSubject} ) DTAB
+ORDER BY DCFReqEntryID ASC
+</select>   
+
+<select id="selectDcfRequestM" parameterType="Map" resultType="EgovMap"> 
+SELECT Extent1.DCF_REQ_ENTRY_ID DCF_REQ_ENTRY_ID  ,
+       Extent1.DCF_REQ_NO DCF_REQ_NO  ,
+       Extent1.DCF_REQ_USER_ID DCF_REQ_USER_ID  ,
+       Extent1.DCF_REQ_RCIPT_GRP_ID DCF_REQ_RCIPT_GRP_ID  ,
+       Extent1.DCF_REQ_TYPE_ID DCF_REQ_TYPE_ID  ,
+       Extent1.DCF_REQ_CAT_ID DCF_REQ_CAT_ID  ,
+       Extent1.DCF_REQ_SUB_ID DCF_REQ_SUB_ID  ,
+       Extent1.DCF_REQ_STUS_ID DCF_REQ_STUS_ID  ,
+       Extent1.DCF_REQ_PRO_STUS_ID DCF_REQ_PRO_STUS_ID  ,
+       Extent1.DCF_REQ_SETL_DT DCF_REQ_SETL_DT  ,
+       Extent1.DCF_REQ_DESC DCF_REQ_DESC  ,
+       Extent1.DCF_REQ_REM DCF_REQ_REM  ,
+       Extent1.DCF_PRIOR_LVL DCF_PRIOR_LVL  ,
+       Extent1.DCF_REQ_HAS_ATTACH DCF_REQ_HAS_ATTACH  ,
+       Extent1.DCF_REQ_ATTACH_FILE_NAME DCF_REQ_ATTACH_FILE_NAME  ,
+       Extent1.DCF_REQ_RCV_FDBCK DCF_REQ_RCV_FDBCK  ,
+       Extent1.DCF_REQ_CRT_DT DCF_REQ_CRT_DT  ,
+       Extent1.DCF_REQ_CRT_USER_ID DCF_REQ_CRT_USER_ID  ,
+       Extent1.DCF_REQ_UPD_DT DCF_REQ_UPD_DT  ,
+       Extent1.DCF_REQ_UPD_USER_ID DCF_REQ_UPD_USER_ID  ,
+       Extent1.DCF_REQ_RESN_ID DCF_REQ_RESN_ID  ,
+       Extent1.DCF_REQ_APPV_USER_ID DCF_REQ_APPV_USER_ID  ,
+       Extent1.DCF_REQ_APPV_DT DCF_REQ_APPV_DT  ,
+       Extent1.DCF_REQ_APPV_REM DCF_REQ_APPV_REM  ,
+       Extent1.DCF_REQ_APPV_STUS_ID DCF_REQ_APPV_STUS_ID  ,
+       Extent1.DCF_REQ_BRNCH_ID DCF_REQ_BRNCH_ID  ,
+       Extent1.DCF_REQ_DEPT_ID DCF_REQ_DEPT_ID  ,
+       Extent1.DCF_REQ_APPV_REQ_RESN_ID DCF_REQ_APPV_REQ_RESN_ID  ,
+       Extent1.DCF_REQ_ON_BEHALF DCF_REQ_ON_BEHALF  
+  FROM LOG0064M Extent1
+ WHERE  Extent1.DCF_REQ_ENTRY_ID =#{reqId}
+</select> 
+
+<select id="selectDcfCompulsoryFieldList" parameterType="Map" resultType="EgovMap"> 
+SELECT Project1.DCF_REQ_COM_FILD_ID DCF_REQ_COM_FILD_ID  ,
+       Project1.C1 C1  ,
+       Project1.C2 C2  ,
+       Project1.DCF_COM_FILD_TYPE_ID DCF_COM_FILD_TYPE_ID  ,
+       Project1.DCF_COM_FILD_TYPE_NAME DCF_COM_FILD_TYPE_NAME  ,
+       Project1.DCF_REQ_COM_FILD_REF_NO DCF_REQ_COM_FILD_REF_NO  ,
+       Project1.DCF_REQ_ENTRY_ID DCF_REQ_ENTRY_ID  ,
+       Project1.C3 C3  ,
+       Project1.DCF_REQ_COM_FILD_UPD_USER_ID DCF_REQ_COM_FILD_UPD_USER_ID  
+  FROM ( SELECT Extent1.DCF_REQ_COM_FILD_ID DCF_REQ_COM_FILD_ID  ,
+                Extent1.DCF_REQ_ENTRY_ID DCF_REQ_ENTRY_ID  ,
+                Extent1.DCF_COM_FILD_TYPE_ID DCF_COM_FILD_TYPE_ID  ,
+                Extent1.DCF_REQ_COM_FILD_REF_NO DCF_REQ_COM_FILD_REF_NO  ,
+                Extent1.DCF_REQ_COM_FILD_UPD_USER_ID DCF_REQ_COM_FILD_UPD_USER_ID  ,
+                Extent2.DCF_COM_FILD_TYPE_NAME DCF_COM_FILD_TYPE_NAME  ,
+                CASE 
+                     WHEN ( Extent1.DCF_REQ_COM_FILD_CRT_DT IS NOT NULL ) THEN Extent1.DCF_REQ_COM_FILD_CRT_DT
+                ELSE TO_DATE('1900-01-01 00:00:00')
+                   END C1  ,
+                CASE 
+                     WHEN ( Extent1.DCF_REQ_COM_FILD_CRT_USER_ID IS NOT NULL ) THEN Extent1.DCF_REQ_COM_FILD_CRT_USER_ID
+                ELSE 0
+                   END C2  ,
+                CASE 
+                     WHEN ( Extent1.DCF_REQ_COM_FILD_UPD_DT IS NOT NULL ) THEN Extent1.DCF_REQ_COM_FILD_UPD_DT
+                ELSE TO_DATE('1900-01-01 00:00:00')
+                   END C3  
+         FROM LOG0068M Extent1
+                JOIN LOG0069M Extent2   ON Extent2.DCF_COM_FILD_TYPE_ID = Extent1.DCF_COM_FILD_TYPE_ID
+          WHERE  ( 1 = Extent1.DCF_REQ_COM_FILD_STUS_ID )
+                   AND ( Extent1.DCF_REQ_ENTRY_ID = #{reqId} ) ) Project1
+  ORDER BY Project1.DCF_REQ_COM_FILD_ID ASC
+</select> 
+
+<select id="getTrBookId" parameterType="String" resultType="EgovMap"> 
+<![CDATA[SELECT Extent1.TR_BOOK_ID TR_BOOK_ID  ,
+       Extent1.TR_BOOK_NO TR_BOOK_NO  ,
+       Extent1.TR_BOOK_STUS_ID TR_BOOK_STUS_ID  ,
+       Extent1.TR_BOOK_STUS_CODE TR_BOOK_STUS_CODE  ,
+       Extent1.TR_HOLDER TR_HOLDER  ,
+       Extent1.TR_HOLDER_TYPE TR_HOLDER_TYPE  ,
+       Extent1.TR_BOOK_PREFIX TR_BOOK_PREFIX  ,
+       Extent1.TR_BOOK_NO_START TR_BOOK_NO_START  ,
+       Extent1.TR_BOOK_NO_END TR_BOOK_NO_END  ,
+       Extent1.TR_BOOK_PGE TR_BOOK_PGE  ,
+       Extent1.TR_BOOK_CRT_DT TR_BOOK_CRT_DT  ,
+       Extent1.TR_BOOK_CRT_USER_ID TR_BOOK_CRT_USER_ID  ,
+       Extent1.TR_BOOK_CRT_USER_NAME TR_BOOK_CRT_USER_NAME  ,
+       Extent1.BOX_NO BOX_NO  ,
+       Extent1.BOX_ID BOX_ID  
+  FROM ( SELECT vTRBookInfo.TR_BOOK_ID TR_BOOK_ID  ,
+                vTRBookInfo.TR_BOOK_NO TR_BOOK_NO  ,
+                vTRBookInfo.TR_BOOK_STUS_ID TR_BOOK_STUS_ID  ,
+                vTRBookInfo.TR_BOOK_STUS_CODE TR_BOOK_STUS_CODE  ,
+                vTRBookInfo.TR_HOLDER TR_HOLDER  ,
+                vTRBookInfo.TR_HOLDER_TYPE TR_HOLDER_TYPE  ,
+                vTRBookInfo.TR_BOOK_PREFIX TR_BOOK_PREFIX  ,
+                vTRBookInfo.TR_BOOK_NO_START TR_BOOK_NO_START  ,
+                vTRBookInfo.TR_BOOK_NO_END TR_BOOK_NO_END  ,
+                vTRBookInfo.TR_BOOK_PGE TR_BOOK_PGE  ,
+                vTRBookInfo.TR_BOOK_CRT_DT TR_BOOK_CRT_DT  ,
+                vTRBookInfo.TR_BOOK_CRT_USER_ID TR_BOOK_CRT_USER_ID  ,
+                vTRBookInfo.TR_BOOK_CRT_USER_NAME TR_BOOK_CRT_USER_NAME  ,
+                vTRBookInfo.BOX_ID BOX_ID  ,
+                vTRBookInfo.BOX_NO BOX_NO  
+         FROM MSC1001V vTRBookInfo ) Extent1
+ WHERE  Extent1.TR_BOOK_NO = #{CompulsoryField} AND ROWNUM <= 1]]>
+</select> 
+
+
+<select id="getTrBookList" parameterType="int" resultType="EgovMap"> 
+    SELECT Extent1.TR_BOOK_ID TR_BOOK_ID  ,
+       Extent1.TR_BOOK_PREFIX_NO TR_BOOK_PREFIX_NO  ,
+       Extent1.TR_BOOK_NO TR_BOOK_NO  ,
+       Extent1.TR_RECIPT_NO_STR TR_RECIPT_NO_STR  ,
+       Extent1.TR_RECIPT_NO_END TR_RECIPT_NO_END  ,
+       Extent1.TR_BOOK_STUS_ID TR_BOOK_STUS_ID  ,
+       Extent1.TR_BOOK_ATTACH TR_BOOK_ATTACH  ,
+       Extent1.TR_BOOK_CRT_DT TR_BOOK_CRT_DT  ,
+       Extent1.TR_BOOK_CRT_USER_ID TR_BOOK_CRT_USER_ID  ,
+       Extent1.TR_BOOK_UPD_DT TR_BOOK_UPD_DT  ,
+       Extent1.TR_BOOK_UPD_USER_ID TR_BOOK_UPD_USER_ID  ,
+       Extent1.TR_BOOK_QTY TR_BOOK_QTY  ,
+       Extent1.TR_BOOK_CRT_BRNCH_CODE TR_BOOK_CRT_BRNCH_CODE  
+  FROM MSC0028D Extent1
+    WHERE  Extent1.TR_BOOK_ID = #{TrBookId}
+</select>
+
+
+<select id="getTrBookItem" parameterType="int" resultType="EgovMap"> 
+    <![CDATA[SELECT Extent1.TR_BOOK_ITM_ID TR_BOOK_ITM_ID  ,
+       Extent1.TR_BOOK_ID TR_BOOK_ID  ,
+       Extent1.TR_BOOK_REF_DCF_ID TR_BOOK_REF_DCF_ID  ,
+       Extent1.TR_RECIPT_NO TR_RECIPT_NO  ,
+       Extent1.TR_STUS_ID TR_STUS_ID  ,
+       Extent1.TR_BOOK_ITM_CRT_DT TR_BOOK_ITM_CRT_DT  ,
+       Extent1.TR_BOOK_ITM_CRT_USER_ID TR_BOOK_ITM_CRT_USER_ID  ,
+       Extent1.TR_BOOK_ITM_UPD_DT TR_BOOK_ITM_UPD_DT  ,
+       Extent1.TR_BOOK_ITM_UPD_USER_ID TR_BOOK_ITM_UPD_USER_ID  ,
+       Extent1.TR_BOOK_ITM_IS_MNL_PUMP TR_BOOK_ITM_IS_MNL_PUMP  
+  FROM MSC0029D Extent1
+ WHERE  Extent1.TR_BOOK_ID = #{TrBookId} 
+ AND ROWNUM <= 1]]>
+</select>
+
+
+
+
+<select id="detailDataChangeList" parameterType="Map" resultType="EgovMap">  
+<![CDATA[ SELECT Limit1.DCF_REQ_ENTRY_ID DCF_REQ_ENTRY_ID  ,
+       Limit1.C1 C1  ,
+       Limit1.C2 C2  ,
+       Limit1.C3 C3  ,
+       Limit1.DCF_REQ_APPV_REQ_RESN_ID DCF_REQ_APPV_REQ_RESN_ID  ,
+       Limit1.DCF_REQ_APPV_REM DCF_REQ_APPV_REM  ,
+       Limit1.DCF_REQ_APPV_USER_ID DCF_REQ_APPV_USER_ID  ,
+       Limit1.C4 C4  ,
+       Limit1.C5 C5  ,
+       Limit1.C6 C6  ,
+       Limit1.C7 C7  ,
+       Limit1.DCF_REQ_BRNCH_ID DCF_REQ_BRNCH_ID  ,
+       Limit1.C8 C8  ,
+       Limit1.C9 C9  ,
+       Limit1.DCF_REQ_CAT_ID DCF_REQ_CAT_ID  ,
+       Limit1.DCFSUPTYPEDESC1 DCF_SUP_TYPE_DESC  ,
+       Limit1.C10 C10  ,
+       Limit1.DCF_REQ_CRT_USER_ID DCF_REQ_CRT_USER_ID  ,
+       Limit1.C11 C11  ,
+       Limit1.C12 C12  ,
+       Limit1.C13 C13  ,
+       Limit1.DCF_REQ_DESC DCF_REQ_DESC  ,
+       Limit1.DCF_REQ_HAS_ATTACH DCF_REQ_HAS_ATTACH  ,
+       Limit1.DCF_REQ_RCV_FDBCK DCF_REQ_RCV_FDBCK  ,
+       Limit1.DCF_PRIOR_LVL DCF_PRIOR_LVL  ,
+       Limit1.C14 C14  ,
+       Limit1.DCF_REQ_PRO_STUS_ID DCF_REQ_PRO_STUS_ID  ,
+       Limit1.C15 C15  ,
+       Limit1.C16 C16  ,
+       Limit1.DCF_REQ_RESN_ID DCF_REQ_RESN_ID  ,
+       Limit1.C17 C17  ,
+       Limit1.DCF_REQ_RCIPT_GRP_ID DCF_REQ_RCIPT_GRP_ID  ,
+       Limit1.DCF_RCIPT_GRP_NAME DCF_RCIPT_GRP_NAME  ,
+       Limit1.DCF_REQ_REM DCF_REQ_REM  ,
+       Limit1.DCF_REQ_NO DCF_REQ_NO  ,
+       Limit1.C18 C18  ,
+       Limit1.DCF_REQ_STUS_ID DCF_REQ_STUS_ID  ,
+       Limit1.CODE CODE  ,
+       Limit1.NAME NAME  ,
+       Limit1.DCF_REQ_USER_ID DCF_REQ_USER_ID  ,
+       Limit1.C19 C19  ,
+       Limit1.C20 C20  ,
+       Limit1.DCF_REQ_SUB_ID DCF_REQ_SUB_ID  ,
+       Limit1.DCFSUPTYPEDESC2 DCFSUPTYPEDESC1  ,
+       Limit1.DCF_REQ_TYPE_ID DCF_REQ_TYPE_ID  ,
+       Limit1.DCF_SUP_TYPE_DESC DCFSUPTYPEDESC2  ,
+       Limit1.DCF_REQ_UPD_USER_ID DCF_REQ_UPD_USER_ID  ,
+       Limit1.C21 C21  ,
+       Limit1.C22 C22  
+  FROM ( SELECT Extent1.DCF_REQ_ENTRY_ID DCF_REQ_ENTRY_ID  ,
+                Extent1.DCF_REQ_NO DCF_REQ_NO  ,
+                Extent1.DCF_REQ_USER_ID DCF_REQ_USER_ID  ,
+                Extent1.DCF_REQ_RCIPT_GRP_ID DCF_REQ_RCIPT_GRP_ID  ,
+                Extent1.DCF_REQ_TYPE_ID DCF_REQ_TYPE_ID  ,
+                Extent1.DCF_REQ_CAT_ID DCF_REQ_CAT_ID  ,
+                Extent1.DCF_REQ_SUB_ID DCF_REQ_SUB_ID  ,
+                Extent1.DCF_REQ_STUS_ID DCF_REQ_STUS_ID  ,
+                Extent1.DCF_REQ_PRO_STUS_ID DCF_REQ_PRO_STUS_ID  ,
+                Extent1.DCF_REQ_DESC DCF_REQ_DESC  ,
+                Extent1.DCF_REQ_REM DCF_REQ_REM  ,
+                Extent1.DCF_PRIOR_LVL DCF_PRIOR_LVL  ,
+                Extent1.DCF_REQ_HAS_ATTACH DCF_REQ_HAS_ATTACH  ,
+                Extent1.DCF_REQ_RCV_FDBCK DCF_REQ_RCV_FDBCK  ,
+                Extent1.DCF_REQ_CRT_USER_ID DCF_REQ_CRT_USER_ID  ,
+                Extent1.DCF_REQ_UPD_USER_ID DCF_REQ_UPD_USER_ID  ,
+                Extent1.DCF_REQ_RESN_ID DCF_REQ_RESN_ID  ,
+                Extent1.DCF_REQ_APPV_USER_ID DCF_REQ_APPV_USER_ID  ,
+                Extent1.DCF_REQ_APPV_REM DCF_REQ_APPV_REM  ,
+                Extent1.DCF_REQ_BRNCH_ID DCF_REQ_BRNCH_ID  ,
+                Extent1.DCF_REQ_APPV_REQ_RESN_ID DCF_REQ_APPV_REQ_RESN_ID  ,
+                Extent2.DCF_SUP_TYPE_DESC DCF_SUP_TYPE_DESC  ,
+                Extent3.DCF_SUP_TYPE_DESC DCFSUPTYPEDESC1  ,
+                Extent4.DCF_SUP_TYPE_DESC DCFSUPTYPEDESC2  ,
+                Extent5.DCF_RCIPT_GRP_NAME DCF_RCIPT_GRP_NAME  ,
+                Extent6.CODE CODE  ,
+                Extent6.NAME NAME  ,
+                CASE 
+                     WHEN ( Extent1.DCF_REQ_APPV_DT IS NOT NULL ) THEN TO_CHAR(Extent1.DCF_REQ_APPV_DT,'YYYY-MM-DD')
+                ELSE '19000101'
+                   END C1  ,
+                CASE 
+                     WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME
+                ELSE ' '
+                   END C2  ,
+                CASE 
+                     WHEN ( Extent8.RESN_ID IS NOT NULL ) THEN Extent8.RESN_DESC
+                ELSE ' '
+                   END C3  ,
+                CASE 
+                     WHEN ( Extent1.DCF_REQ_APPV_STUS_ID IS NOT NULL ) THEN Extent1.DCF_REQ_APPV_STUS_ID
+                ELSE 0
+                   END C4  ,
+                CASE 
+                     WHEN ( Extent9.STUS_CODE_ID IS NOT NULL ) THEN Extent9.CODE
+                ELSE ' '
+                   END C5  ,
+                CASE 
+                     WHEN ( Extent9.STUS_CODE_ID IS NOT NULL ) THEN Extent9.NAME
+                ELSE ' '
+                   END C6  ,
+                CASE 
+                     WHEN ( Extent1.DCF_REQ_ATTACH_FILE_NAME IS NOT NULL ) THEN Extent1.DCF_REQ_ATTACH_FILE_NAME
+                ELSE ' '
+                   END C7  ,
+                CASE 
+                     WHEN ( Extent10.BRNCH_ID IS NOT NULL ) THEN Extent10.CODE
+                ELSE ' '
+                   END C8  ,
+                CASE 
+                     WHEN ( Extent10.BRNCH_ID IS NOT NULL ) THEN Extent10.NAME
+                ELSE ' '
+                   END C9  ,
+                CASE 
+                     WHEN ( Extent1.DCF_REQ_CRT_DT IS NOT NULL ) THEN TO_CHAR(Extent1.DCF_REQ_CRT_DT,'YYYY-MM-DD')
+                ELSE  '19000101'
+                   END C10  ,
+                CASE 
+                     WHEN ( Extent11.USER_ID IS NOT NULL ) THEN Extent11.USER_NAME
+                ELSE ' '
+                   END C11  ,
+                CASE 
+                     WHEN ( Extent1.DCF_REQ_DEPT_ID IS NOT NULL ) THEN Extent1.DCF_REQ_DEPT_ID
+                ELSE 0
+                   END C12  ,
+                CASE 
+                     WHEN ( Extent12.DEPT_ID IS NOT NULL ) THEN Extent12.DEPT_NAME
+                ELSE ' '
+                   END C13  ,
+                CASE 
+                     WHEN ( Extent13.STUS_CODE_ID IS NOT NULL ) THEN Extent13.NAME
+                ELSE ' '
+                   END C14  ,
+                CASE 
+                     WHEN ( Extent14.STUS_CODE_ID IS NOT NULL ) THEN Extent14.CODE
+                ELSE ' '
+                   END C15  ,
+                CASE 
+                     WHEN ( Extent14.STUS_CODE_ID IS NOT NULL ) THEN Extent14.NAME
+                ELSE ' '
+                   END C16  ,
+                CASE 
+                     WHEN ( Extent15.RESN_ID IS NOT NULL ) THEN Extent15.RESN_DESC
+                ELSE ' '
+                   END C17  ,
+                CASE 
+                     WHEN ( Extent1.DCF_REQ_ON_BEHALF IS NOT NULL ) THEN Extent1.DCF_REQ_ON_BEHALF
+                ELSE ' '
+                   END C18  ,
+                CASE 
+                     WHEN ( Extent16.USER_ID IS NOT NULL ) THEN Extent16.USER_NAME
+                ELSE ' '
+                   END C19  ,
+                CASE 
+                     WHEN ( Extent1.DCF_REQ_SETL_DT IS NOT NULL ) THEN TO_CHAR(Extent1.DCF_REQ_SETL_DT,'YYYY-MM-DD')
+                ELSE  '19000101'
+                   END C20  ,
+                CASE 
+                     WHEN ( Extent1.DCF_REQ_UPD_DT IS NOT NULL ) THEN TO_CHAR(Extent1.DCF_REQ_UPD_DT,'YYYY-MM-DD')
+                ELSE  '19000101'
+                   END C21  ,
+                CASE 
+                     WHEN ( Extent17.USER_ID IS NOT NULL ) THEN Extent17.USER_NAME
+                ELSE ' '
+                   END C22  
+         FROM LOG0064M Extent1
+                JOIN LOG0065M Extent2   ON Extent2.DCF_SUP_TYPE_ID = Extent1.DCF_REQ_TYPE_ID
+                JOIN LOG0065M Extent3   ON Extent3.DCF_SUP_TYPE_ID = Extent1.DCF_REQ_CAT_ID
+                JOIN LOG0065M Extent4   ON Extent4.DCF_SUP_TYPE_ID = Extent1.DCF_REQ_SUB_ID
+                JOIN LOG0066M Extent5   ON Extent5.DCF_RCIPT_GRP_ID = Extent1.DCF_REQ_RCIPT_GRP_ID
+                JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.DCF_REQ_STUS_ID
+                LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.DCF_REQ_APPV_USER_ID
+                LEFT JOIN SYS0032M Extent8   ON Extent8.RESN_ID = Extent1.DCF_REQ_APPV_REQ_RESN_ID
+                LEFT JOIN SYS0038M Extent9   ON Extent9.STUS_CODE_ID = Extent1.DCF_REQ_APPV_STUS_ID
+                LEFT JOIN SYS0005M Extent10   ON Extent10.BRNCH_ID = Extent1.DCF_REQ_BRNCH_ID
+                LEFT JOIN SYS0047M Extent11   ON Extent11.USER_ID = Extent1.DCF_REQ_CRT_USER_ID
+                LEFT JOIN SYS0040M Extent12   ON Extent12.DEPT_ID = Extent1.DCF_REQ_DEPT_ID
+                LEFT JOIN SYS0038M Extent13   ON Extent13.STUS_CODE_ID = Extent1.DCF_PRIOR_LVL
+                LEFT JOIN SYS0038M Extent14   ON Extent14.STUS_CODE_ID = Extent1.DCF_REQ_PRO_STUS_ID
+                LEFT JOIN SYS0032M Extent15   ON Extent15.RESN_ID = Extent1.DCF_REQ_RESN_ID
+                LEFT JOIN SYS0047M Extent16   ON Extent16.USER_ID = Extent1.DCF_REQ_USER_ID
+                LEFT JOIN SYS0047M Extent17   ON Extent17.USER_ID = Extent1.DCF_REQ_UPD_USER_ID
+          WHERE  Extent1.DCF_REQ_ENTRY_ID = #{dcfreqentryid}
+          AND ROWNUM <= 1 ) Limit1]]>
+</select>   
+
+<select id="CompulsoryList" parameterType="Map" resultType="EgovMap">
+SELECT Project1.DCF_REQ_COM_FILD_ID DCF_REQ_COM_FILD_ID  ,
+       Project1.C1 C1  ,
+       Project1.C2 C2  ,
+       Project1.DCF_COM_FILD_TYPE_ID DCF_COM_FILD_TYPE_ID  ,
+       Project1.DCF_COM_FILD_TYPE_NAME DCF_COM_FILD_TYPE_NAME  ,
+       Project1.DCF_REQ_COM_FILD_REF_NO DCF_REQ_COM_FILD_REF_NO  ,
+       Project1.DCF_REQ_ENTRY_ID DCF_REQ_ENTRY_ID  ,
+       Project1.C3 C3  ,
+       Project1.DCF_REQ_COM_FILD_UPD_USER_ID DCF_REQ_COM_FILD_UPD_USER_ID  
+  FROM ( SELECT Project1.DCF_REQ_COM_FILD_ID DCF_REQ_COM_FILD_ID  ,
+                Project1.DCF_REQ_ENTRY_ID DCF_REQ_ENTRY_ID  ,
+                Project1.DCF_COM_FILD_TYPE_ID DCF_COM_FILD_TYPE_ID  ,
+                Project1.DCF_REQ_COM_FILD_REF_NO DCF_REQ_COM_FILD_REF_NO  ,
+                Project1.DCF_REQ_COM_FILD_UPD_USER_ID DCF_REQ_COM_FILD_UPD_USER_ID  ,
+                Project1.DCF_COM_FILD_TYPE_NAME DCF_COM_FILD_TYPE_NAME  ,
+                Project1.C1 C1  ,
+                Project1.C2 C2  ,
+                Project1.C3 C3  ,
+                ROW_NUMBER() OVER ( ORDER BY Project1.DCF_REQ_COM_FILD_ID ASC  ) ROW_NUMBER  
+         FROM ( SELECT Extent1.DCF_REQ_COM_FILD_ID DCF_REQ_COM_FILD_ID  ,
+                       Extent1.DCF_REQ_ENTRY_ID DCF_REQ_ENTRY_ID  ,
+                       Extent1.DCF_COM_FILD_TYPE_ID DCF_COM_FILD_TYPE_ID  ,
+                       Extent1.DCF_REQ_COM_FILD_REF_NO DCF_REQ_COM_FILD_REF_NO  ,
+                       Extent1.DCF_REQ_COM_FILD_UPD_USER_ID DCF_REQ_COM_FILD_UPD_USER_ID  ,
+                       Extent2.DCF_COM_FILD_TYPE_NAME DCF_COM_FILD_TYPE_NAME  ,
+                       CASE 
+                            WHEN ( Extent1.DCF_REQ_COM_FILD_CRT_DT IS NOT NULL ) THEN TO_CHAR(Extent1.DCF_REQ_COM_FILD_CRT_DT,'YYYY-MM-DD HH24:MI:SS')
+                       ELSE '1900-01-01 00:00:00'
+                          END C1  ,
+                       CASE 
+                            WHEN ( Extent1.DCF_REQ_COM_FILD_CRT_USER_ID IS NOT NULL ) THEN Extent1.DCF_REQ_COM_FILD_CRT_USER_ID
+                       ELSE 0
+                          END C2  ,
+                       CASE 
+                            WHEN ( Extent1.DCF_REQ_COM_FILD_UPD_DT IS NOT NULL ) THEN TO_CHAR(Extent1.DCF_REQ_COM_FILD_UPD_DT,'YYYY-MM-DD HH24:MI:SS')
+                       ELSE '1900-01-01 00:00:00'
+                          END C3  
+                FROM LOG0068M Extent1
+                       JOIN LOG0069M Extent2   ON Extent2.DCF_COM_FILD_TYPE_ID = Extent1.DCF_COM_FILD_TYPE_ID
+                 WHERE  ( 1 = Extent1.DCF_REQ_COM_FILD_STUS_ID )
+                          AND ( Extent1.DCF_REQ_ENTRY_ID = #{dcfreqentryid} ) ) Project1 ) Project1
+ WHERE  Project1.ROW_NUMBER > 0
+  ORDER BY Project1.DCF_REQ_COM_FILD_ID ASC
+</select>  
+
+
+<select id="ChangeItemList" parameterType="Map" resultType="EgovMap">
+<![CDATA[SELECT Project1.DCF_REQ_DET_ID DCF_REQ_DET_ID  ,
+       Project1.DCF_REQ_DET_FILD_CHG DCF_REQ_DET_FILD_CHG  ,
+       Project1.DCF_REQ_DET_OLD_DATA DCF_REQ_DET_OLD_DATA  ,
+       Project1.DCF_REQ_DET_NW_DATA DCF_REQ_DET_NW_DATA  ,
+       Project1.C1 C1  ,
+       Project1.DCF_REQ_DET_CRT_USER_ID DCF_REQ_DET_CRT_USER_ID  ,
+       Project1.DCF_REQ_DET_REM DCF_REQ_DET_REM  ,
+       Project1.DCF_REQ_ENTRY_ID DCF_REQ_ENTRY_ID  ,
+       Project1.DCF_REQ_DET_RESULT_STUS_ID DCF_REQ_DET_RESULT_STUS_ID  ,
+       Project1.C2 C2  ,
+       Project1.C3 C3  ,
+       Project1.C4 C4  ,
+       Project1.C5 C5  ,
+       Project1.DCF_REQ_DET_UPD_USER_ID DCF_REQ_DET_UPD_USER_ID  
+  FROM ( SELECT Project1.DCF_REQ_DET_ID DCF_REQ_DET_ID  ,
+                Project1.DCF_REQ_ENTRY_ID DCF_REQ_ENTRY_ID  ,
+                Project1.DCF_REQ_DET_FILD_CHG DCF_REQ_DET_FILD_CHG  ,
+                Project1.DCF_REQ_DET_OLD_DATA DCF_REQ_DET_OLD_DATA  ,
+                Project1.DCF_REQ_DET_NW_DATA DCF_REQ_DET_NW_DATA  ,
+                Project1.DCF_REQ_DET_RESULT_STUS_ID DCF_REQ_DET_RESULT_STUS_ID  ,
+                Project1.DCF_REQ_DET_CRT_USER_ID DCF_REQ_DET_CRT_USER_ID  ,
+                Project1.DCF_REQ_DET_UPD_USER_ID DCF_REQ_DET_UPD_USER_ID  ,
+                Project1.DCF_REQ_DET_REM DCF_REQ_DET_REM  ,
+                Project1.C1 C1  ,
+                Project1.C2 C2  ,
+                Project1.C3 C3  ,
+                Project1.C4 C4  ,
+                Project1.C5 C5  ,
+                ROW_NUMBER() OVER ( ORDER BY Project1.DCF_REQ_DET_ID ASC  ) ROW_NUMBER  
+         FROM ( SELECT Extent1.DCF_REQ_DET_ID DCF_REQ_DET_ID  ,
+                       Extent1.DCF_REQ_ENTRY_ID DCF_REQ_ENTRY_ID  ,
+                       Extent1.DCF_REQ_DET_FILD_CHG DCF_REQ_DET_FILD_CHG  ,
+                       Extent1.DCF_REQ_DET_OLD_DATA DCF_REQ_DET_OLD_DATA  ,
+                       Extent1.DCF_REQ_DET_NW_DATA DCF_REQ_DET_NW_DATA  ,
+                       Extent1.DCF_REQ_DET_RESULT_STUS_ID DCF_REQ_DET_RESULT_STUS_ID  ,
+                       Extent1.DCF_REQ_DET_CRT_USER_ID DCF_REQ_DET_CRT_USER_ID  ,
+                       Extent1.DCF_REQ_DET_UPD_USER_ID DCF_REQ_DET_UPD_USER_ID  ,
+                       Extent1.DCF_REQ_DET_REM DCF_REQ_DET_REM  ,
+                       CASE 
+                            WHEN ( Extent1.DCF_REQ_DET_CRT_DT IS NOT NULL ) THEN TO_CHAR(Extent1.DCF_REQ_DET_CRT_DT,'YYYY-MM-DD HH24:MI:SS')
+                       ELSE '1900-01-01 00:00:00'
+                          END C1  ,
+                       CASE 
+                            WHEN ( Extent2.STUS_CODE_ID IS NOT NULL ) THEN Extent2.CODE
+                       ELSE ''
+                          END C2  ,
+                       CASE 
+                            WHEN ( Extent2.STUS_CODE_ID IS NOT NULL ) THEN Extent2.NAME
+                       ELSE ''
+                          END C3  ,
+                       CASE 
+                            WHEN ( Extent1.DCF_REQ_DET_SETL_DT IS NOT NULL ) THEN  TO_CHAR(Extent1.DCF_REQ_DET_SETL_DT,'YYYY-MM-DD HH24:MI:SS')
+                       ELSE '1900-01-01 00:00:00'
+                          END C4  ,
+                       CASE 
+                            WHEN ( Extent1.DCF_REQ_DET_UPD_DT IS NOT NULL ) THEN TO_CHAR(Extent1.DCF_REQ_DET_UPD_DT,'YYYY-MM-DD HH24:MI:SS')
+                       ELSE '1900-01-01 00:00:00'                               
+                          END C5                        
+                FROM LOG0067D Extent1
+                       LEFT JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.DCF_REQ_DET_RESULT_STUS_ID
+                 WHERE  ( 1 = Extent1.DCF_REQ_DET_STUS_ID )
+                          AND ( Extent1.DCF_REQ_ENTRY_ID = #{dcfreqentryid} ) ) Project1 ) Project1
+ WHERE  Project1.ROW_NUMBER > 0
+  ORDER BY Project1.DCF_REQ_DET_ID ASC]]>
+</select>  
+
+<select id="RespondList" parameterType="Map" resultType="EgovMap">
+<![CDATA[SELECT Project1.DCF_RESPNS_ID DCF_RESPNS_ID  ,
+       Project1.C1 C1  ,
+       Project1.DCF_RESPNS_CRT_USER_ID DCF_RESPNS_CRT_USER_ID  ,
+       Project1.C2 C2  ,
+       Project1.DCF_RESPNS_MSG DCF_RESPNS_MSG  ,
+       Project1.DCF_REQ_ENTRY_ID DCF_REQ_ENTRY_ID  ,
+       Project1.DCF_RESPNS_STUS_ID DCF_RESPNS_STUS_ID  ,
+       Project1.CODE CODE  ,
+       Project1.NAME NAME  ,
+       Project1.C3 C3  ,
+       Project1.DCF_RESPNS_UPD_USER_ID DCF_RESPNS_UPD_USER_ID  
+  FROM ( SELECT Project1.DCF_RESPNS_ID DCF_RESPNS_ID  ,
+                Project1.DCF_REQ_ENTRY_ID DCF_REQ_ENTRY_ID  ,
+                Project1.DCF_RESPNS_STUS_ID DCF_RESPNS_STUS_ID  ,
+                Project1.DCF_RESPNS_MSG DCF_RESPNS_MSG  ,
+                Project1.DCF_RESPNS_CRT_USER_ID DCF_RESPNS_CRT_USER_ID  ,
+                Project1.DCF_RESPNS_UPD_USER_ID DCF_RESPNS_UPD_USER_ID  ,
+                Project1.CODE CODE  ,
+                Project1.NAME NAME  ,
+                Project1.C1 C1  ,
+                Project1.C2 C2  ,
+                Project1.C3 C3  ,
+                ROW_NUMBER() OVER ( ORDER BY Project1.DCF_RESPNS_ID ASC  ) ROW_NUMBER  
+         FROM ( SELECT Extent1.DCF_RESPNS_ID DCF_RESPNS_ID  ,
+                       Extent1.DCF_REQ_ENTRY_ID DCF_REQ_ENTRY_ID  ,
+                       Extent1.DCF_RESPNS_STUS_ID DCF_RESPNS_STUS_ID  ,
+                       Extent1.DCF_RESPNS_MSG DCF_RESPNS_MSG  ,
+                       Extent1.DCF_RESPNS_CRT_USER_ID DCF_RESPNS_CRT_USER_ID  ,
+                       Extent1.DCF_RESPNS_UPD_USER_ID DCF_RESPNS_UPD_USER_ID  ,
+                       Extent2.CODE CODE  ,
+                       Extent2.NAME NAME  ,
+                       CASE 
+                            WHEN ( Extent1.DCF_RESPNS_CRT_DT IS NOT NULL ) THEN TO_CHAR(Extent1.DCF_RESPNS_CRT_DT,'YYYY-MM-DD HH24:MI:SS')
+                       ELSE '1900-01-01 00:00:00'
+                          END C1  ,
+                       CASE 
+                            WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME
+                       ELSE ''
+                          END C2  ,
+                       CASE 
+                            WHEN ( Extent1.DCF_RESPNS_UPD_DT IS NOT NULL ) THEN TO_CHAR(Extent1.DCF_RESPNS_UPD_DT,'YYYY-MM-DD HH24:MI:SS') 
+                       ELSE '1900-01-01 00:00:00'
+                          END C3  
+                FROM LOG0070D Extent1
+                       JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.DCF_RESPNS_STUS_ID
+                       LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.DCF_RESPNS_CRT_USER_ID
+                 WHERE  Extent1.DCF_REQ_ENTRY_ID = #{dcfreqentryid} ) Project1 ) Project1
+ WHERE  Project1.ROW_NUMBER > 0
+  ORDER BY Project1.DCF_RESPNS_ID ASC]]>
+</select>  
+
+
+<select id="selectReasonList" parameterType="Map" resultType="EgovMap">
+     SELECT Extent1.RESN_ID CODE_ID  ,
+	       Extent1.CODE CODE  ,
+	       Extent1.CODE || ' - ' || Extent1.RESN_DESC CODE_NAME  
+	  FROM SYS0032M Extent1
+	 WHERE  ( Extent1.RESN_TYPE_ID = 539 )
+	          AND ( Extent1.STUS_CODE_ID = 1 )
+</select> 
+
+
+<update id="updateDcfRequestM" parameterType="Map">
+     UPDATE LOG0064M  
+		   SET 
+	           <if test="DCFReqStatusID !=null and DCFReqStatusID !=''">
+		       DCF_REQ_STUS_ID =#{DCFReqStatusID},
+	           </if>	
+	           <if test="DCFReqProStatusID !=null and DCFReqProStatusID !=''">
+		       DCF_REQ_PRO_STUS_ID = #{DCFReqProStatusID},
+	           </if>   
+	           <if test="insReason !=null and insReason !=''">
+		       DCF_REQ_APPV_REQ_RESN_ID=#{insReason},     
+	           </if>   
+		       DCF_REQ_UPD_DT =  SYSDATE,
+		       DCF_REQ_UPD_USER_ID = #{upuser_id} ,
+		       DCF_REQ_APPV_USER_ID = #{crtuser_id} ,
+		       DCF_REQ_APPV_DT =  SYSDATE,
+		       DCF_REQ_APPV_REM = #{dcfReqAppvRem} ,
+		       DCF_REQ_APPV_STUS_ID = #{insApprovalStatus}
+               WHERE  ( DCF_REQ_ENTRY_ID = #{reqId})
+</update>  
+
+<insert id="insertDcfResponseLog" parameterType="Map">
+	INSERT INTO LOG0070D
+	  ( 
+	  DCF_RESPNS_ID,
+	  DCF_REQ_ENTRY_ID, 
+	  DCF_RESPNS_STUS_ID, 
+	  DCF_RESPNS_MSG, 
+	  DCF_RESPNS_CRT_DT, 
+	  DCF_RESPNS_CRT_USER_ID, 
+	  DCF_RESPNS_UPD_DT, 
+	  DCF_RESPNS_UPD_USER_ID, 
+	  DCF_SETL_DT  
+	  )
+	  VALUES(
+	   #{respnsIdCreateSeq}
+      ,#{DCFReqEntryID}
+      ,#{DCFResponseStatusID}
+      ,#{DCFResponseMsg}
+      ,SYSDATE
+      ,#{crtuser_id}
+      ,SYSDATE
+      ,#{upuser_id}
+      ,TO_DATE(#{DCFSettleDate},'YYYY-MM-DD') 
+	      )
+</insert> 
+
+
+<update id="updateTRBookM" parameterType="Map">
+   UPDATE MSC0028D
+       SET TR_BOOK_STUS_ID =#{TRStatusID} ,
+       TR_BOOK_UPD_DT = SYSDATE ,
+       TR_BOOK_UPD_USER_ID = #{upuser_id}
+    WHERE  ( TR_BOOK_ID = #{TrBookId})   
+</update>  
+
+<insert id="insertTrRecordCard" parameterType="Map">
+INSERT INTO MSC0036D
+  ( 
+  TR_RCORD_ID,
+  TR_BOOK_ID, 
+  TR_TYPE_ID, 
+  TR_LOC_CODE, 
+  TR_RCORD_DT_TM, 
+  TR_RCORD_STUS_ID, 
+  TR_RCORD_CRT_DT, 
+  TR_RCORD_CRT_USER_ID, 
+  TR_RCORD_QTY, 
+  TR_REF_NO 
+  )
+  VALUES 
+  (  
+    #{trRcordIdCreateSeq}
+   ,#{TrBookId}
+   ,#{TRTypeID}
+   ,#{TRLocationCode}
+   ,SYSDATE
+   ,#{TRRecordStatusID}
+   ,SYSDATE
+   ,#{crtuser_id}
+   ,#{TRRecordQuantity}
+   ,#{dcfReqNo}
+  )
+</insert>  
+
+<update id="updateTRBookD" parameterType="Map">
+   UPDATE MSC0029D
+   SET
+    TR_STUS_ID = #{TRStatusID} ,
+    TR_BOOK_ITM_UPD_USER_ID = #{upuser_id},
+    TR_BOOK_ITM_UPD_DT = SYSDATE
+ WHERE  ( TR_BOOK_ITM_ID = #{trBookItmId})
+</update>  
+
+
+
+
+
+<select id="respnsIdCreateSeq" resultType="Integer">
+     SELECT NVL(MAX(DCF_RESPNS_ID),0) + 1 from LOG0070D
+</select>
+
+<select id="trRcordIdCreateSeq" resultType="Integer">
+     <!-- SELECT NVL(MAX(TR_RCORD_ID),0) + 1 from MSC0036D -->
+     SELECT MSC0036D_TR_RCORD_ID_SEQ.NEXTVAL FROM DUAL 
+</select>
+
+        
+</mapper>

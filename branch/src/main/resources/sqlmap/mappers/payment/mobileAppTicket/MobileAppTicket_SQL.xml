@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.mobileAppTicket.service.impl.MobileAppTicketMapper">
+
+  <select id="selectMobileAppTicketList" parameterType="Map" resultType="egovMap">
+    SELECT /* [com.coway.trust.biz.payment.mobileAppTicket.service.impl.MobileAppTicketMapper.selectMobileAppTicketList] 20191016 - KR HAN */
+               T1.MOB_TICKET_NO MOB_TICKET_NO,
+               T1.SALES_ORD_NO SALES_ORD_NO,
+               T1.TICKET_TYPE_ID TICKET_TYPE_ID,
+               T2.CODE_NAME TICKET_TYPE_NM,
+               T1.TICKET_STUS_ID TICKET_STUS_ID,
+               T3.NAME TICKET_STUS_NM,
+               T1.CRT_USER_BRNCH CRT_USER_BRNCH,
+               T4.CODE CRT_USER_BRNCH_CD,
+               T4.NAME CRT_USER_BRNCH_NM,
+               TO_CHAR(T1.CRT_DT, 'DD-MM-YYYY HH24:MI:SS') CRT_DT,
+               T1.CRT_USER_ID CRT_USER_ID,
+               TO_CHAR(T1.UPD_DT, 'DD-MM-YYYY HH24:MI:SS') UPD_DT,
+               T1.UPD_USER_ID UPD_USER_ID,
+               T10.USER_NAME UPD_USER_NM
+    FROM MOB0001D T1
+    LEFT JOIN SYS0013M T2 ON T2.CODE_ID = T1.TICKET_TYPE_ID
+                           AND T2.CODE_MASTER_ID = 435
+    LEFT JOIN SYS0038M T3 ON T3.STUS_CODE_ID = T1.TICKET_STUS_ID
+    LEFT JOIN SYS0047M T10 ON T10.USER_ID = T1.CRT_USER_ID
+    LEFT JOIN SYS0005M T4 ON T10.USER_BRNCH_ID = T4.BRNCH_ID
+
+    <where>
+      <if test="_reqstStartDt != null and _reqstStartDt != '' ">
+        AND TO_CHAR (T1.CRT_DT, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{_reqstStartDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+      </if>
+
+      <if test="_reqstEndDt != null and _reqstEndDt != '' ">
+        AND TO_CHAR (T1.CRT_DT, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{_reqstEndDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+      </if>
+
+      <if test="ticketNo != null and ticketNo != '' ">
+        AND T1.MOB_TICKET_NO = #{ticketNo}
+      </if>
+
+      <if test="ticketType != null and ticketType != '' ">
+        AND T1.TICKET_TYPE_ID = #{ticketType}
+      </if>
+
+       <if test="ticketStatus != null and ticketStatus != '' ">
+         AND T1.TICKET_STUS_ID = #{ticketStatus}
+       </if>
+
+       <if test="branchCode != null and branchCode != '' ">
+         AND T4.CODE = #{branchCode}
+       </if>
+
+       <if test="memberCode != null and memberCode != '' ">
+         AND T10.USER_NAME = #{memberCode}
+       </if>
+
+       <if test="orderNo != null and orderNo != '' ">
+         AND T1.SALES_ORD_NO = #{orderNo}
+       </if>
+      </where>
+
+    ORDER BY T1.CRT_DT DESC
+  </select>
+
+  <select id="selectMobileAppTicketStatus" parameterType="Map" resultType="egovMap">
+    SELECT /* [com.coway.trust.biz.payment.mobileAppTicket.service.impl.MobileAppTicketMapper.selectMobileAppTicketStatus] 20191017 - KR HAN */
+               STUS_CODE_ID CODE_ID,
+               CODE CODE,
+               NAME CODE_NAME,
+               '' DESCRIPTION
+    FROM SYS0038M
+    WHERE STUS_CODE_ID IN ('1', '5', '6', '10')
+  </select>
+
+</mapper>

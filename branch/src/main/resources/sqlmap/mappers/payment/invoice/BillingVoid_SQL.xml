@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.invoice.service.impl.BillingVoidMapper">
+    
+    <select id="selectStatementView" parameterType="Map" resultType="egovMap">
+        SELECT 
+	       Distinct1.BR_NO BR_NO  ,
+	       TO_CHAR(Distinct1.START_DT, 'DD-MM-YYYY') START_DT,
+	       Distinct1.CUST_NAME CUST_NAME  ,
+	       Distinct1.CNTC_PERSON CNTC_PERSON  ,
+	       Distinct1.ADDR1 ADDR1  ,
+	       Distinct1.ADDR2 ADDR2  ,
+	       Distinct1.ADDR3 ADDR3  ,
+	       Distinct1.POST_CODE POST_CODE  ,
+	       Distinct1.STATE_NAME STATE_NAME  ,
+	       Distinct1.CNTY CNTY  ,
+	       Distinct1.CURR_CHRG CURR_CHRG  ,
+	       Distinct1.BILL_ID BILL_ID  
+	  FROM ( SELECT DISTINCT 
+	                         UnionAll2.BR_NO BR_NO  ,
+	                         UnionAll2.START_DT START_DT  ,
+	                         UnionAll2.CUST_NAME CUST_NAME  ,
+	                         UnionAll2.CNTC_PERSON CNTC_PERSON  ,
+	                         UnionAll2.ADDR1 ADDR1  ,
+	                         UnionAll2.ADDR2 ADDR2  ,
+	                         UnionAll2.ADDR3 ADDR3  ,
+	                         UnionAll2.POST_CODE POST_CODE  ,
+	                         UnionAll2.STATE_NAME STATE_NAME  ,
+	                         UnionAll2.CNTY CNTY  ,
+	                         UnionAll2.CURR_CHRG CURR_CHRG  ,
+	                         UnionAll2.BILL_ID BILL_ID  
+	         FROM ( SELECT 
+	                       UnionAll1.BR_NO BR_NO  ,
+	                       UnionAll1.START_DT START_DT  ,
+	                       UnionAll1.CUST_NAME CUST_NAME  ,
+	                       UnionAll1.CNTC_PERSON CNTC_PERSON  ,
+	                       UnionAll1.ADDR1 ADDR1  ,
+	                       UnionAll1.ADDR2 ADDR2  ,
+	                       UnionAll1.ADDR3 ADDR3  ,
+	                       UnionAll1.POST_CODE POST_CODE  ,
+	                       UnionAll1.STATE_NAME STATE_NAME  ,
+	                       UnionAll1.CNTY CNTY  ,
+	                       UnionAll1.CURR_CHRG CURR_CHRG  ,
+	                       UnionAll1.BILL_ID BILL_ID  
+	                FROM ( SELECT 
+	                              Extent1.BR_NO BR_NO  ,
+	                              TO_DATE(Extent1.START_DT) START_DT  ,
+	                              Extent1.CUST_NAME CUST_NAME  ,
+	                              Extent1.CNTC_PERSON CNTC_PERSON  ,
+	                              Extent1.ADDR1 ADDR1  ,
+	                              Extent1.ADDR2 ADDR2  ,
+	                              Extent1.ADDR3 ADDR3  ,
+	                              Extent1.POST_CODE POST_CODE  ,
+	                              Extent1.STATE_NAME STATE_NAME  ,
+	                              Extent1.CNTY CNTY  ,
+	                              Extent1.CURR_CHRG CURR_CHRG  ,
+	                              Extent1.BILL_ID BILL_ID  
+	                       FROM PAY0084D Extent1
+	                        WHERE  ( Extent1.BR_NO = #{statementNo} )
+	                                 AND ( TO_NUMBER(Extent1.STUS_CODE_ID) = '1' )
+	                       UNION ALL 
+	                       SELECT 
+	                              Extent2.BR_NO BR_NO  ,
+	                              TO_DATE(Extent2.START_DT) C2  ,
+	                              Extent2.CUST_NAME CUST_NAME  ,
+	                              Extent2.CNTC_PERSON CNTC_PERSON  ,
+	                              Extent2.ADDR1 ADDR1  ,
+	                              Extent2.ADDR2 ADDR2  ,
+	                              Extent2.ADDR3 ADDR3  ,
+	                              Extent2.POST_CODE POST_CODE  ,
+	                              Extent2.STATE_NAME STATE_NAME  ,
+	                              Extent2.CNTY CNTY  ,
+	                              UTILS.CONVERT_TO_FLOAT(0,53) C3  ,
+	                              Extent2.BILL_ID BILL_ID  
+	                       FROM PAY0062S Extent2
+	                        WHERE  ( Extent2.BR_NO = #{statementNo} )
+	                                 AND ( TO_NUMBER(Extent2.STUS_CODE_ID) = '1' ) ) UnionAll1
+	                UNION ALL 
+	                SELECT 
+	                       Extent3.TAX_INVC_REF_NO TAX_INVC_REF_NO  ,
+	                       TO_DATE(Extent3.TAX_INVC_REF_DT) C2  ,
+	                       Extent3.TAX_INVC_CUST_NAME TAX_INVC_CUST_NAME  ,
+	                       Extent3.TAX_INVC_CNTC_PERSON TAX_INVC_CNTC_PERSON  ,
+	                       Extent3.TAX_INVC_ADDR1 TAX_INVC_ADDR1  ,
+	                       Extent3.TAX_INVC_ADDR2 TAX_INVC_ADDR2  ,
+	                       Extent3.TAX_INVC_ADDR3 TAX_INVC_ADDR3  ,
+	                       Extent3.TAX_INVC_POST_CODE TAX_INVC_POST_CODE  ,
+	                       Extent3.TAX_INVC_STATE_NAME TAX_INVC_STATE_NAME  ,
+	                       Extent3.TAX_INVC_CNTY TAX_INVC_CNTY  ,
+	                       UTILS.CONVERT_TO_FLOAT(0,53) C3  ,
+	                       Extent3.TAX_INVC_GRP_ID TAX_INVC_GRP_ID  
+	                FROM PAY0029D Extent3
+	                 WHERE  ( Extent3.TAX_INVC_REF_NO = #{statementNo} )
+	                 AND ( TO_NUMBER(Extent3.TAX_INVC_STUS_ID) = '1' ) ) UnionAll2 ) Distinct1
+    </select>
+    
+    <select id="selectInvoiceDetailList" parameterType="Map" resultType="egovMap">
+        SELECT 
+	       Distinct1.ACC_BILL_ID ACC_BILL_ID  ,
+	       Distinct1.ACC_BILL_ORD_ID ACC_BILL_ORD_ID  ,
+	       Distinct1.ACC_BILL_ORD_NO ACC_BILL_ORD_NO  ,
+	       Distinct1.ACC_BILL_SCHDUL_PRIOD ACC_BILL_SCHDUL_PRIOD  ,
+	       Distinct1.ACC_BILL_REF_NO ACC_BILL_REF_NO  ,
+	       Distinct1.ACC_BILL_TYPE_ID ACC_BILL_TYPE_ID  ,
+	       Distinct1.CODE_NAME CODE_NAME  ,
+	       Distinct1.ACC_BILL_MODE_ID ACC_BILL_MODE_ID  ,
+	       Distinct1.CODENAME1 CODENAME1  ,
+	       TO_CHAR(Distinct1.ACC_BILL_SCHDUL_AMT , 'FM9999999999990.00') ACC_BILL_SCHDUL_AMT  , 
+	       TO_CHAR(Distinct1.ACC_BILL_ADJ_AMT , 'FM9999999999990.00') ACC_BILL_ADJ_AMT  , 
+	       TO_CHAR(Distinct1.ACC_BILL_NET_AMT , 'FM9999999999990.00') ACC_BILL_NET_AMT
+	  FROM ( SELECT DISTINCT Extent3.ACC_BILL_ID ACC_BILL_ID  ,
+	                         Extent3.ACC_BILL_REF_NO ACC_BILL_REF_NO  ,
+	                         Extent3.ACC_BILL_ORD_ID ACC_BILL_ORD_ID  ,
+	                         Extent3.ACC_BILL_ORD_NO ACC_BILL_ORD_NO  ,
+	                         Extent3.ACC_BILL_TYPE_ID ACC_BILL_TYPE_ID  ,
+	                         Extent3.ACC_BILL_MODE_ID ACC_BILL_MODE_ID  ,
+	                         Extent3.ACC_BILL_SCHDUL_PRIOD ACC_BILL_SCHDUL_PRIOD  ,
+	                         Extent3.ACC_BILL_SCHDUL_AMT ACC_BILL_SCHDUL_AMT  ,
+	                         Extent3.ACC_BILL_ADJ_AMT ACC_BILL_ADJ_AMT  ,
+	                         Extent3.ACC_BILL_NET_AMT ACC_BILL_NET_AMT  ,
+	                         Extent4.CODE_NAME CODE_NAME  ,
+	                         Extent5.CODE_NAME CODENAME1  
+	         FROM PAY0029D Extent1
+	                JOIN PAY0030D Extent2   ON Extent1.TAX_INVC_ID = Extent2.TAX_INVC_ID
+	                JOIN PAY0016D Extent3   ON ( Extent1.TAX_INVC_TASK_ID = Extent3.ACC_BILL_TASK_ID )
+	                AND ( Extent3.ACC_BILL_GRP_ID = Extent1.TAX_INVC_GRP_ID )
+	                AND ( Extent1.TAX_INVC_REF_NO = Extent3.ACC_BILL_REM )
+	                LEFT JOIN SYS0013M Extent4   ON Extent3.ACC_BILL_TYPE_ID = Extent4.CODE_ID
+	                LEFT JOIN SYS0013M Extent5   ON Extent3.ACC_BILL_MODE_ID = Extent5.CODE_ID
+	          WHERE  ( Extent1.TAX_INVC_REF_NO = #{statementNo} )
+	          AND ( Extent3.ACC_BILL_REM = #{statementNo} ) ) Distinct1
+    </select>
+    
+    <select id="saveInvoiceVoidResult" statementType="CALLABLE" parameterType="Map">
+        {call SP_INST_VOID_INVC_STATE_TAX(#{statementNo}, #{remark},#{userId})}
+    </select>
+    
+</mapper>

@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper">
+
+  <select id="selectInvoiceList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      /* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.selectInvoiceList] 20190927 - KR JAEMAJEM */
+      SELECT  #{selectInvoiceType} AS SELECT_INVOICE_TYPE
+                , #{salesDt} AS TAX_INVC_REF_DT
+                , B.CODE_ID AS APP_TYPE_ID
+                , B.CODE_NAME AS APP_TYPE_ID_NAME
+                , C.CUST_ID AS CUST_ID
+                , C.NAME AS CUST_ID_NAME
+                , A.SALES_ORD_NO AS SALES_ORD_NO
+                , TO_CHAR(A.SALES_DT, 'DD/MM/YYYY') AS SALES_DT
+                , E.STK_CODE AS STK_CODE
+                , E.STK_DESC AS STK_DESC
+                , C.EMAIL AS EMAIL
+      FROM SAL0001D A
+      INNER JOIN SYS0013M B ON  B.CODE_ID = A.APP_TYPE_ID
+      INNER JOIN SAL0029D C ON  C.CUST_ID = A.CUST_ID
+      INNER JOIN SAL0002D D ON  D.SALES_ORD_ID = A.SALES_ORD_ID
+      INNER JOIN SYS0026M E ON  E.STK_ID = D.ITM_STK_ID
+      WHERE A.STUS_CODE_ID NOT IN (8, 10) --SYS0038M : 8(Inactive), 10(Cancelled)
+          AND EXISTS ( SELECT  1
+                              FROM PAY0016D PAY
+                              WHERE PAY.ACC_BILL_ORD_ID = A.SALES_ORD_ID
+                                  AND TO_CHAR(PAY.ACC_BILL_REF_DT, 'YYYYMM') = #{salesDt}
+                            )
+      ]]>
+      <choose>
+        <when test='selectType.equals("1")'>
+           AND A.SALES_ORD_NO = #{selectKeyword}
+        </when>
+        <when test='selectType.equals("2")'>
+          AND UPPER(C.NAME) LIKE UPPER(#{selectKeyword})||'%'
+        </when>
+      </choose>
+  </select>
+
+  <select id="selectAdvanceInvoiceList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      /* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.selectAdvanceInvoiceList] 20190927 - KR JAEMAJEM */
+      SELECT #{selectInvoiceType} AS SELECT_INVOICE_TYPE
+             , B.CODE_ID AS APP_TYPE_ID
+             , B.CODE_NAME  AS APP_TYPE_ID_NAME
+             , C.CUST_ID AS CUST_ID
+             , C.NAME AS CUST_ID_NAME
+             , A.SALES_ORD_NO AS SALES_ORD_NO
+             , TO_CHAR(A.SALES_DT, 'DD/MM/YYYY') AS SALES_DT
+             , E.STK_CODE AS STK_CODE
+             , E.STK_DESC AS STK_DESC
+             , C.EMAIL AS EMAIL
+             , (A.MTH_RENT_AMT - NVL(F.REBATE_AMT_PER_INSTLMT, 0)) AS MTH_RENT_AMT
+             , C.TYPE_ID AS TYPE_ID
+      FROM SAL0001D A
+      INNER JOIN SYS0013M B ON B.CODE_ID = A.APP_TYPE_ID
+                                         AND B.CODE_MASTER_ID = 10
+                                         AND B.CODE IN ('REN')
+      INNER JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+      INNER JOIN SAL0002D D ON D.SALES_ORD_ID = A.SALES_ORD_ID
+      INNER JOIN SYS0026M E ON E.STK_ID = D.ITM_STK_ID
+      LEFT JOIN PAY0286D F ON F.ORD_ID = A.SALES_ORD_ID AND F.STUS_ID = 1
+      WHERE A.STUS_CODE_ID NOT IN (8, 10) --SYS0038M : 8(Inactive), 10(Cancelled)
+    ]]>
+    <choose>
+      <when test='selectType.equals("1")'>
+        AND A.SALES_ORD_NO = #{selectKeyword}
+      </when>
+      <when test='selectType.equals("2")'>
+        AND UPPER(C.NAME) LIKE UPPER(#{selectKeyword})||'%'
+      </when>
+    </choose>
+   </select>
+
+<select id="selectRequestInvoiceList" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.selectRequestInvoiceList] 20191001 - KR JAEMAJEM */
+SELECT  --■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□
+        --TaxInvoice[133(Rental]
+        --TaxInvoice[134(Rental Membership]
+        'A'                                                                     AS GU
+    ,   C.TAX_INVC_REF_NO                                                       AS TAX_INVC_REF_NO
+    ,   B.INVC_ITM_ORD_NO                                                       AS INVC_ITM_ORD_NO
+    ,   C.TAX_INVC_TYPE                                                         AS INVC_TYPE
+    ,   D.CODE_MASTER_NAME                                                      AS INVC_TYPE_NAME
+    ,   TO_CHAR(C.TAX_INVC_REF_DT, 'DD/MM/YYYY')                                AS TAX_INVC_REF_DT
+    ,   C.TAX_INVC_ID                                                           AS TAX_INVC_ID
+    ,   B.INVC_ITM_ID                                                           AS INVC_ITM_ID
+    ,   E.CUST_BILL_GRP_NO                                                      AS CUST_BILL_GRP_NO
+FROM    SAL0001D A
+        INNER JOIN PAY0030D B
+            ON  B.INVC_ITM_ORD_NO = A.SALES_ORD_NO
+        INNER JOIN PAY0029D C
+            ON  C.TAX_INVC_ID = B.TAX_INVC_ID
+            AND (
+                    (
+                            C.TAX_INVC_TYPE IN (1267, 1268)                     --1267(Company Type Invoice), 1268(Individual Type Invoice)
+                        AND C.TAX_INVC_BILL_TYPE = 133
+                    )OR(
+                        C.TAX_INVC_BILL_TYPE = 134
+                    )
+                )
+        INNER JOIN SYS0012M D
+            ON  D.CODE_MASTER_ID = C.TAX_INVC_BILL_TYPE
+        INNER JOIN SAL0024D E
+            ON  A.CUST_BILL_ID = E.CUST_BILL_ID
+WHERE   A.CUST_ID = #{custId}
+AND     TO_CHAR(C.TAX_INVC_REF_DT, 'YYYYMM') = #{taxInvcRefDt}
+AND     NOT EXISTS
+        (
+            SELECT  1
+            FROM    PAY0017D Z
+            WHERE   Z.ACC_INV_VOID_INVC_NO = C.TAX_INVC_REF_NO
+            AND     Z.ACC_INV_VOID_ID IS NULL
+        )
+UNION ALL
+SELECT  --■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■
+        --TaxInvoice[67(Outright)]
+        --TaxInvoice[68(Installment)]
+        'B'                                                                     AS GU
+    ,   C.TAX_INVC_REF_NO                                                       AS TAX_INVC_REF_NO
+    ,   B.INVC_ITM_ORD_NO                                                       AS INVC_ITM_ORD_NO
+    ,   A.APP_TYPE_ID                                                           AS INVC_TYPE
+    ,   D.CODE_NAME                                                             AS INVC_TYPE_NAME
+    ,   TO_CHAR(C.TAX_INVC_REF_DT, 'DD/MM/YYYY')                                AS TAX_INVC_REF_DT
+    ,   C.TAX_INVC_ID                                                           AS TAX_INVC_ID
+    ,   B.INVC_ITM_ID                                                           AS INVC_ITM_ID
+    ,   E.CUST_BILL_GRP_NO                                                      AS CUST_BILL_GRP_NO
+FROM    SAL0001D A
+        INNER JOIN PAY0034D B
+            ON  B.INVC_ITM_ORD_NO = A.SALES_ORD_NO
+        INNER JOIN PAY0033D C
+            ON  C.TAX_INVC_ID = B.TAX_INVC_ID
+        INNER JOIN SYS0013M D
+            ON  D.CODE_ID = A.APP_TYPE_ID
+        INNER JOIN SAL0024D E
+            ON  A.CUST_BILL_ID = E.CUST_BILL_ID
+WHERE   A.CUST_ID = #{custId}
+AND     TO_CHAR(C.TAX_INVC_REF_DT, 'YYYYMM') = #{taxInvcRefDt}
+AND     A.APP_TYPE_ID IN(67, 68)
+UNION ALL
+SELECT  --■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■□■
+        --TaxInvoice[117(HP Registration Invoice (BR64))]
+        --TaxInvoice[118(AS Invoice (BR62))]
+        --TaxInvoice[119(Service Membership Invoice)]
+        --TaxInvoice[121(POS Invoice (BR66))]
+        --TaxInvoice[122(Item Bank Invoice (BR65))]
+        --TaxInvoice[123(WholeSales Invoice (BR63))]
+        --TaxInvoice[124(Product Lost Invoice (BR56))]
+        --TaxInvoice[125(Early Termination Invoice (BR52))]
+        --TaxInvoice[142(POS Invoice (BR68))]
+        --TaxInvoice[408(Care Service Invoice (BR71))]
+        'C'                                                                     AS GU
+    ,   C.TAX_INVC_REF_NO                                                       AS TAX_INVC_REF_NO
+    ,   B.INVC_ITM_ORD_NO                                                       AS INVC_ITM_ORD_NO
+    ,   C.TAX_INVC_TYPE                                                         AS INVC_TYPE
+    ,   D.CODE_MASTER_NAME                                                      AS INVC_TYPE_NAME
+    ,   TO_CHAR(C.TAX_INVC_REF_DT, 'DD/MM/YYYY')                                AS TAX_INVC_REF_DT
+    ,   C.TAX_INVC_ID                                                           AS TAX_INVC_ID
+    ,   B.INVC_ITM_ID                                                           AS INVC_ITM_ID
+    ,   E.CUST_BILL_GRP_NO                                                      AS CUST_BILL_GRP_NO
+FROM    SAL0001D A
+        INNER JOIN PAY0032D B
+            ON  B.INVC_ITM_ORD_NO = A.SALES_ORD_NO
+        INNER JOIN PAY0031D C
+            ON  C.TAX_INVC_ID = B.TAX_INVC_ID
+            AND C.TAX_INVC_TYPE IN (117, 118, 119, 121, 122, 123, 124, 125, 142, 408)
+        INNER JOIN SYS0012M D
+            ON  D.CODE_MASTER_ID = C.TAX_INVC_TYPE
+        INNER JOIN SAL0024D E
+            ON  A.CUST_BILL_ID = E.CUST_BILL_ID
+WHERE   A.CUST_ID = #{custId}
+AND     TO_CHAR(C.TAX_INVC_REF_DT, 'YYYYMM') = #{taxInvcRefDt}
+--Statement Company(Rental)
+--ProformaInvoice
+ORDER BY    CUST_BILL_GRP_NO ASC                                                --★☆★☆정렬 기준 바꾸면 안됨.화면에서 CHECK BOX ROWSPAN 기준.
+]]>
+</select>
+
+
+
+<select id="selectRequestInvoiceStusCheck" parameterType="Map" resultType="int">
+<![CDATA[
+/* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.selectRequestInvoiceStusCheck] 20191001 - KR JAEMAJEM */
+SELECT  COUNT(1)
+FROM    PAY0300D A
+        INNER JOIN PAY0301D B
+            ON  A.REQ_INVC_NO = B.REQ_INVC_NO
+WHERE   B.TAX_INVC_ID = #{taxInvcId}
+AND     REQ_STUS_ID = 1
+]]>
+</select>
+
+
+
+<select id="selectRequestAdvanceInvoiceCheck" parameterType="Map" resultType="int">
+<![CDATA[
+/* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.selectRequestAdvanceInvoiceCheck] 20191104 - KR JAEMAJEM */
+SELECT  COUNT(1)
+FROM    PAY0300D A
+        INNER JOIN PAY0301D B
+            ON  A.REQ_INVC_NO = B.REQ_INVC_NO
+WHERE   A.INVC_TYPE = #{invcType}
+AND     B.INVC_ITM_ORD_NO = #{invcItmOrdNo}
+AND     REQ_STUS_ID = 1
+]]>
+</select>
+
+
+
+<insert id="insertPay0300D" parameterType="Map">
+<selectKey keyProperty="reqInvcNo" resultType="int" order="BEFORE">
+SELECT  PAY0300D_SEQ.NEXTVAL AS reqInvcNo
+FROM    DUAL
+</selectKey>
+<![CDATA[
+/* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.insertPay0300D] 20191001 - KR JAEMAJEM */
+INSERT
+INTO    PAY0300D                                                                --Request to Invoice on mobile_Header
+(
+        REQ_INVC_NO                                                             --Request Number
+    ,   REQ_DT                                                                  --Request Date
+    ,   REQ_STUS_ID                                                             --Request Status
+    ,   INVC_TYPE                                                               --Invoice Type : Normal / Advance
+    ,   MOB_TICKET_NO                                                           --Mobile Ticket Number
+    ,   CRT_DT                                                                  --Create Date
+    ,   CRT_USER_ID                                                             --Create User Id
+    ,   UPD_DT                                                                  --Update Date
+    ,   UPD_USER_ID                                                             --Update User Id
+)VALUES(
+        #{reqInvcNo}                                                            --Request Number
+    ,   TO_CHAR(SYSDATE,'YYYYMMDD')                                             --Request Date
+    ,   1                                                                       --Request Status
+    ,   #{invcType}                                                             --Invoice Type : Normal / Advance
+    ,   #{mobTicketNo}                                                          --Mobile Ticket Number
+    ,   SYSDATE                                                                 --Create Date
+    ,   #{crtUserId}                                                            --Create User Id
+    ,   SYSDATE                                                                 --Update Date
+    ,   #{updUserId}                                                            --Update User Id
+)
+]]>
+</insert>
+
+
+
+<insert id="insertPay0301D" parameterType="Map">
+<selectKey keyProperty="reqIndex" resultType="int" order="BEFORE">
+SELECT  NVL(MAX(REQ_INDEX), 0) + 1
+FROM    PAY0301D
+WHERE   REQ_INVC_NO = #{reqInvcNo}
+</selectKey>
+<![CDATA[
+/* [com.coway.trust.biz.payment.invoiceApi.impl.InvoiceApiMapper.insertPay0301D] 20191001 - KR JAEMAJEM */
+INSERT
+INTO    PAY0301D                                                                --Request to Invoice on mobile_Detail
+(
+        REQ_INVC_NO                                                             --Request Number
+    ,   REQ_INDEX                                                               --Sequence
+    ,   INVC_ITM_ORD_NO                                                         --InvoiceItemOrderNo
+    ,   TAX_INVC_ID                                                             --Only Normal : previously issued invoice ID
+    ,   TAX_INVC_REF_NO
+    ,   INVC_ITM_PO_NO                                                          --Only Advance : Purchase Order No.
+    ,   INVC_ITM_PO_IMG                                                         --Only Advance : Purchase Order Image
+    ,   INVC_ADV_PRD                                                            --Only Advance : Number of months in advance
+    ,   INVC_ITM_RENTAL_FEE                                                     --Only Advance : Monthly Rental Fee
+    ,   INVC_ITM_DISC_RATE                                                      --Only Advance : Discount Rate
+    ,   INVC_ITM_EXG_AMT                                                        --Only Advance : Existing Amount
+    ,   INVC_ITM_TOT_AMT                                                        --Only Advance : Total Amount
+    ,   REQ_INVC_YEAR                                                           --Only Advance : The year of the beginning of the period
+    ,   REQ_INVC_MONTH                                                          --Only Advance : The month of the beginning of the period
+    ,   INVC_CNTC_PERSON                                                        --Only Advance : Invoice Contact Person Name
+    ,   EMAIL                                                                   --Only Advance : Order Contact Email1
+    ,   EMAIL2                                                                  --Only Advance : Order Contact Email2
+    ,   CRT_DT                                                                  --Create Date
+    ,   CRT_USER_ID                                                             --Create User Id
+    ,   UPD_DT                                                                  --Update Date
+    ,   UPD_USER_ID                                                             --Update User Id
+)VALUES(
+        #{reqInvcNo}                                                            --Request Number
+    ,   #{reqIndex}                                                             --Sequence
+    ,   #{invcItmOrdNo}                                                         --InvoiceItemOrderNo
+    ,   #{taxInvcId}                                                            --Only Normal : previously issued invoice ID
+    ,   #{taxInvcRefNo}
+    ,   #{invcItmPoNo}                                                          --Only Advance : Purchase Order No.
+    ,   #{invcItmPoImg}                                                         --Only Advance : Purchase Order Image
+    ,   #{invcAdvPrd}                                                           --Only Advance : Number of months in advance
+    ,   #{invcItmRentalFee}                                                     --Only Advance : Monthly Rental Fee
+    ,   #{invcItmDiscRate}                                                      --Only Advance : Discount Rate
+    ,   #{invcItmExgAmt}                                                        --Only Advance : Existing Amount
+    ,   #{invcItmTotAmt}                                                        --Only Advance : Total Amount
+    ,   NVL2(#{reqInvcYearMonth}, TO_CHAR(TO_DATE(#{reqInvcYearMonth}, 'YYYYMM'), 'YYYY'), NULL )--Only Advance : The year of the beginning of the period
+    ,   NVL2(#{reqInvcYearMonth}, TO_CHAR(TO_DATE(#{reqInvcYearMonth}, 'YYYYMM'), 'MM'  ), NULL )--Only Advance : The month of the beginning of the period
+    ,   #{invcCntcPerson}                                                       --Only Advance : Invoice Contact Person Name
+    ,   #{email}                                                                --Only Advance : Order Contact Email1
+    ,   #{email2}                                                               --Only Advance : Order Contact Email2
+    ,   SYSDATE                                                                 --Create Date
+    ,   #{crtUserId}                                                            --Create User Id
+    ,   SYSDATE                                                                 --Update Date
+    ,   #{updUserId}                                                            --Update User Id
+)
+]]>
+</insert>
+
+
+
+</mapper>

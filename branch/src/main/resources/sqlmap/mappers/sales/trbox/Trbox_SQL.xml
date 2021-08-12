@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.trbox.impl.TrboxMapper">
+
+    <select id="selectTrboxManagementList" parameterType="Map" resultType="egovMap">
+        SELECT ROWNUM rnum,
+               BOX_ID boxid,
+		       BOX_NO boxno,
+		       BOX_STUS_ID statusid,
+		       BOX_STUS_CODE statuscd,
+		       BOX_STUS_NAME status,
+		       BOX_HOLDER holder,
+		       BOX_OPEN_DT opendt,
+		       BOX_SCRAP_DT scrapdt,
+		       to_char(BOX_OPEN_DT, 'dd/mm/yyyy') opendt2,
+		       to_char(BOX_SCRAP_DT, 'dd/mm/yyyy') scrapdt2,
+		       BOX_CRT_BRNCH_ID branchid,
+		       BOX_CRT_BRNCH_CODE branchcd,
+		       BOX_CRT_BRNCH_NAME branchnm,
+		       BOX_CRT_DT crtdt,
+		       to_char(BOX_CRT_DT , 'dd/mm/yyyy') crtdt2,
+		       BOX_CRT_USER_ID crtuser,
+		       BOX_CRT_USER_NAME crtname,
+		       BOX_BOOK_QTY bookqty
+		  FROM MSC1003V
+		  WHERE 1 = 1
+		    <if test="status!=null and status != ''">
+		      AND BOX_STUS_ID in
+		       <foreach item="item" collection="status" index="index" open="(" separator="," close=")">
+               #{item}
+               </foreach>
+		    </if>
+		    <if test='sdate != null and sdate != ""'>
+		      AND BOX_CRT_DT <![CDATA[>=]]> to_date(#{sdate}||'000000' , 'dd/mm/yyyyhh24miss')
+		    </if>
+		    <if test='edate != null and edate != ""'>
+              AND BOX_CRT_DT <![CDATA[<=]]> to_date(#{edate}||'235959' , 'dd/mm/yyyyhh24miss')
+            </if>
+            <if test="crtuser !=null and crtuser !=''">
+                AND (BOX_CRT_USER_NAME like '%'||#{ctruser}||'%' OR BOX_CRT_USER_ID = #{crtuser})
+            </if>
+            <if test='branchid != null and branchid !=""'>
+                AND BOX_CRT_BRNCH_ID = #{branchid}
+            </if>
+            <if test='trbxnumber != null and trbxnumber !=""'>
+                AND BOX_NO = #{trbxnumber}
+            </if>
+            <if test='trboxid != null and trboxid !=""'>
+                AND BOX_ID = #{trboxid}
+            </if>
+            <if test='bulkholder != null and bulkholder !=""'>
+                AND BOX_HOLDER = #{bulkholder}
+            </if>
+            <if test='boxno != null and boxno !=""'>
+                AND BOX_NO = #{boxno}
+            </if>
+		ORDER BY BOX_ID
+    </select>
+    <select id="selectTrboxManageDetailList"  parameterType="Map" resultType="egovMap">
+        SELECT M32.TR_BOX_DET_ID trbdetid
+             , M32.TR_BOOK_ID trbid
+		     , M32.TR_BOOK_CRT_DT crtdt
+		     , M28.TR_BOOK_NO  trbno
+		     , M28.TR_RECIPT_NO_STR reciptstr
+		     , M28.TR_RECIPT_NO_END reciptend
+		     , NVL(S47.USER_NAME , '')  crtnm
+		  FROM MSC0032D M32
+		     , MSC0028D M28
+		     , SYS0047M S47
+		 WHERE 1 = 1
+		   AND M32.TR_BOOK_CRT_USER_ID = S47.USER_ID(+)
+		   AND M32.TR_BOOK_ID = M28.TR_BOOK_ID
+		   AND M32.TR_BOX_ITM_STUS_ID IN (1 , 4)
+		   AND M32.TR_BOX_ID = #{trboxid}
+		   <if test='bookno != null and bookno !=""'>
+		      AND M28.TR_BOOK_NO = #{bookno}
+		   </if>
+		   <if test='receiptfr != null and receiptfr !=""'>
+                    AND M28.TR_RECIPT_NO_STR <![CDATA[>=]]> #{receiptfr}
+                 </if>
+                 <if test='receiptto != null and receiptto !=""'>
+                    AND M28.TR_RECIPT_NO_END <![CDATA[<=]]> #{receiptfr}
+                 </if>
+		 order by M28.TR_BOOK_NO
+	</select>
+	<select id="selectTrboxManageBoxNo" parameterType="Map" resultType="egovMap">
+	   select DOC_NO_ID docid
+	        , DOC_NO_PREFIX prefix, DOC_NO docno
+	        , DOC_NO_PREFIX || DOC_NO docfullno
+	        , lpad(to_number(DOC_NO)+1 , 7 , '0') nextdocno
+	        , to_char((SELECT DECODE( COUNT(TR_BOX_ID) , 0 , 1 , MAX(TR_BOX_ID)+1) FROM MSC0031D)) trboxid
+	        , to_char((SELECT DECODE( COUNT(TR_RCORD_ID) , 0 , 1 , MAX(TR_RCORD_ID)+1) FROM MSC0033D)) trrcordid
+	     from SYS0022C where doc_no_id=#{param}
+	</select>
+	<insert id="newTrboxManageInsert" parameterType="Map">
+	   INSERT INTO MSC0031D (
+							    TR_BOX_ID, TR_BOX_NO, TR_BOX_STUS_ID, TR_BOX_OPEN_DT_TM, TR_BOX_SCRAP_DT_TM, TR_BOX_BRNCH_ID, TR_BOX_CRT_DT, TR_BOX_CRT_USER_ID, TR_BOX_UPD_DT, TR_BOX_UPD_USER_ID
+		                    )
+		             VALUES ( #{boxid} , #{boxno} , 1 , SYSDATE , TO_DATE('19000101','yyyymmdd') , #{loginbranchid} , SYSDATE , #{userid} , SYSDATE , #{userid})
+	</insert>
+
+	<insert id="newTrboxRecordCardInsert" parameterType="Map">
+	   INSERT INTO MSC0033D (
+    							TR_RCORD_ID, TR_BOX_ID, TR_TYPE_ID, TR_LOC_CODE, TR_RCORD_DT_TM, TR_RCORD_STUS_ID, TR_RCORD_CRT_DT, TR_RCORD_CRT_USER_ID, TR_RCORD_QTY, TR_REF_NO
+							)
+					VALUES ( #{trrecordid} , #{boxid} , 767 , #{loginbranchcd} , SYSDATE , 1 , SYSDATE , #{userid} , 1 , #{boxno})
+	</insert>
+	<update id="trboxdocnoUpdate" parameterType="Map">
+	   UPDATE SYS0022C
+	      set DOC_NO = #{nextdocno}
+	    WHERE doc_no_id=#{docid}
+	      AND DOC_NO_PREFIX = #{prefix}
+	</update>
+
+	<update id="getUpdateKeepReleaseRemove" parameterType="Map">
+       UPDATE MSC0032D
+          set TR_BOX_ITM_STUS_ID = 8
+			, TR_BOOK_UPD_DT = sysdate
+			, TR_BOOK_UPD_USER_ID = #{userid}
+        WHERE TR_BOX_DET_ID=#{trbdetid}
+    </update>
+
+
+    <update id="getCloseReopn" parameterType="Map">
+       UPDATE MSC0031D
+          set TR_BOX_STUS_ID = #{statusid}
+            , TR_BOX_UPD_DT = sysdate
+            , TR_BOX_UPD_USER_ID = #{userid}
+        WHERE TR_BOX_ID=#{trboxid}
+    </update>
+
+    <update id="updateTrboxInfo" parameterType="Map">
+       UPDATE MSC0031D
+          set TR_BOX_SCRAP_DT_TM = to_date(#{scrapdt},'dd/mm/yyyy')
+            , TR_BOX_UPD_DT = sysdate
+            , TR_BOX_UPD_USER_ID = #{userid}
+        WHERE TR_BOX_ID=#{trboxid}
+    </update>
+
+    <select id="selectBranchList" parameterType="Map" resultType="egovMap">
+        SELECT BRNCH_ID CODE , CODE CODE_ID, CODE ||#{separator}|| NAME  CODE_NAME
+		  FROM SYS0005M
+		 WHERE STUS_ID = 1
+		 ORDER BY CODE_ID
+    </select>
+
+    <select id="selectCourierList" parameterType="Map" resultType="egovMap">
+        SELECT CURIER_ID CODE, CURIER_CODE CODE_ID, CURIER_CODE ||#{separator}|| CURIER_NAME CODE_NAME
+		  FROM SYS0016M
+		 WHERE CURIER_STUS_ID = 1
+	     ORDER BY CURIER_CODE
+    </select>
+
+    <select id="selectTransferId" parameterType="Map" resultType="String">
+        SELECT DECODE(COUNT(TR_TRNSIT_ID),0 , 1 , MAX(TR_TRNSIT_ID)+1) transferId FROM MSC0034D
+    </select>
+
+    <insert id="transferMaterInsert" parameterType="Map">
+        INSERT INTO MSC0034D (TR_TRNSIT_ID,
+						      TR_TRNSIT_TYPE_ID,
+						      TR_TRNSIT_DT,
+						      TR_TRNSIT_FROM,
+						      TR_TRNSIT_TO,
+						      TR_CURIER_CODE,
+						      TR_TRNSIT_CRT_DT,
+						      TR_TRNSIT_CRT_USER_ID,
+						      TR_TRNSIT_UPD_DT,
+						      TR_TRNSIT_UPD_USER_ID,
+						      TR_TRNSIT_STUS_ID,
+						      TR_TRNSIT_REF_NO,
+						      TR_TRNSIT_CLOS_DT)
+				      VALUES ( #{trsnid},#{typeid} , SYSDATE , #{tranholder} , #{tbrnch} , #{tcourier}
+				             , SYSDATE , #{userid} , SYSDATE , #{userid} , #{statusid}
+				             , #{refno} , TO_DATE(#{closedt} , 'YYYYMMDD')
+				      )
+    </insert>
+
+    <insert id="transferDetailInsert" parameterType="Map">
+        INSERT INTO MSC0035D (TR_TRNSIT_DET_ID,
+						      TR_TRNSIT_ID,
+						      TR_TRNSIT_BOX_ID,
+						      TR_TRNSIT_STUS_ID,
+						      TR_TRNSIT_RESULT_STUS_ID,
+						      TR_TRNSIT_CRT_DT,
+						      TR_TRNSIT_CRT_USER_ID,
+						      TR_CLOS_DT,
+						      TR_TRNSIT_UPD_DT,
+						      TR_TRNSIT_UPD_USER_ID)
+				      VALUES ( (SELECT DECODE(COUNT(TR_TRNSIT_DET_ID),0 , 1 , MAX(TR_TRNSIT_DET_ID)+1) FROM MSC0035D)
+				             , #{trsnid} , #{tranboxid} , #{statusid} , #{restatusid}
+				             , SYSDATE , #{userid} , TO_DATE(#{closedt} , 'YYYYMMDD') , SYSDATE , #{userid}
+				      )
+    </insert>
+
+    <insert id="transferRecordCardInsert" parameterType="Map">
+        INSERT INTO MSC0033D (TR_RCORD_ID,
+						      TR_BOX_ID,
+						      TR_TYPE_ID,
+						      TR_LOC_CODE,
+						      TR_RCORD_DT_TM,
+						      TR_RCORD_STUS_ID,
+						      TR_RCORD_CRT_DT,
+						      TR_RCORD_CRT_USER_ID,
+						      TR_RCORD_QTY,
+						      TR_REF_NO)
+					  VALUES ( (SELECT DECODE(COUNT(TR_RCORD_ID),0 , 1 , MAX(TR_RCORD_ID)+1) FROM MSC0033D)
+					         , #{tranboxid} , #{typeid} , #{locid} , SYSDATE
+					         , #{statusid} , SYSDATE , #{userid} , #{qty} , #{refno}
+					  )
+    </insert>
+
+    <select id="selectTrboxReceiveList" parameterType="Map" resultType="egovMap">
+        SELECT TRNSIT_ID trnsitid
+		     , TRNSIT_NO trnsitno
+		     , TRNSIT_DT trnsitdt
+		     , TO_CHAR(TRNSIT_DT , 'DD/MM/YYYY') trnsitdt2
+		     , TRNSIT_FROM trnsitfr
+		     , TRNSIT_TO trnsitto
+		     , TRNSIT_CURIER trnsitcur
+		     , TRNSIT_STUS_ID trnsitstid
+		     , TRNSIT_STUS_CODE trnsitstcd
+		     , TRNSIT_STUS_NAME trnsitstnm
+		     , TRNSIT_CLOS_DT trnsitcldt
+		     , TO_CHAR(TRNSIT_CLOS_DT , 'DD/MM/YYYY') trnsitcldt2
+		     , TRNSIT_CRT_USER_ID  trnsitcrtid
+		     , TRNSIT_TOT_BOX trnsittotbox
+		     , TR_TRNSIT_ID trtrnsitid
+		     , TR_TRNSIT_STUS_ID trtrnsitstid
+		     , TR_BOX_NO trboxno
+		  FROM MSC1004V MV
+		     , (SELECT M35.TR_TRNSIT_ID
+		             , M35.TR_TRNSIT_STUS_ID
+		             , M31.TR_BOX_NO
+		          FROM MSC0035D M35
+		             , MSC0031D M31
+		         WHERE 1 = 1
+		           AND M35.TR_TRNSIT_BOX_ID = M31.TR_BOX_ID) JT
+		 WHERE MV.TRNSIT_ID = JT.TR_TRNSIT_ID
+		   AND JT.TR_TRNSIT_STUS_ID = 1
+		   <if test="trnsitno != null and trnsitno !=''">
+		      AND MV.TRNSIT_NO = #{trnsitno}
+		   </if>
+		   <if test="crtdt !=null and crtdt !=''">
+		      AND MV.TRNSIT_DT BETWEEN TO_DATE(#{crtdt}||'000000' , 'YYYYMMDDHH24MISS')
+		                           AND TO_DATE(#{crtdt}||'235959' , 'YYYYMMDDHH24MISS')
+		   </if>
+		   <if test="status !=null and status !=''">
+		      <if test="status == '1'">
+		          AND MV.TRNSIT_STUS_ID IN ( 1 , 44)
+		      </if>
+		      <if test="status != '1'">
+		          AND MV.TRNSIT_STUS_ID = #{status}
+              </if>
+           </if>
+           <if test="crtuser != null and crtuser !=''">
+              AND MV.TRNSIT_CRT_USER_ID = ${crtuser}
+           </if>
+           <if test="branchid != null and branchid !=''">
+              AND MV.TRNSIT_TO = #{branchid}
+           </if>
+           <if test="boxno != null and boxno !=''">
+		      AND JT.TR_BOX_NO = #{boxno}
+		   </if>
+        ORDER BY TRNSIT_NO ASC
+    </select>
+    <select id="selectReceiveViewData" parameterType="Map" resultType="egovMap">
+        SELECT MV.TRNSIT_ID trnid
+		     , MV.TRNSIT_NO trnno
+		     , MV.TRNSIT_DT trndate
+		     , TO_CHAR(MV.TRNSIT_DT , 'DD/MM/YYYY') trndt
+		     , MV.TRNSIT_FROM trnfr
+		     , BF.NAME        trnfrnm
+		     , MV.TRNSIT_TO   trnto
+		     , BT.NAME        trntonm
+		     , MV.TRNSIT_CURIER trncur
+		     , CR.CURIER_NAME   trncurnm
+		     , MV.TRNSIT_STUS_ID trnstusid
+		     , MV.TRNSIT_STUS_CODE trnstuscd
+		     , MV.TRNSIT_STUS_NAME trnstusnm
+		     , MV.TRNSIT_CLOS_DT   trnclodate
+		     , TO_CHAR(MV.TRNSIT_CLOS_DT , 'DD/MM/YYYY') trnclodt
+		     , MV.TRNSIT_CRT_USER_ID trncrtuser
+		     , MV.TRNSIT_TOT_BOX  trntotbox
+		     , BF.BRNCH_ID   frbrnchid
+		     , BT.BRNCH_ID   tobrnchid
+		     , CR.CURIER_ID  courierid
+		  FROM MSC1004V MV
+		     , SYS0005M BF
+		     , SYS0005M BT
+		     , SYS0016M CR
+		 WHERE 1 = 1
+		   AND MV.TRNSIT_FROM   = BF.CODE (+)
+		   AND MV.TRNSIT_TO     = BT.CODE (+)
+		   AND MV.TRNSIT_CURIER = CR.CURIER_CODE (+)
+		   AND MV.TRNSIT_ID     = #{trnsitid}
+    </select>
+    <select id ="selectReceiveViewCnt" resultType="Map" parameterType="Map">
+        SELECT nvl(DECODE (MAX(TR_TRNSIT_RESULT_STUS_ID) , 4  , COUNT(1) ) , 0) RECEIPTCNT
+		     , nvl(DECODE (MAX(TR_TRNSIT_RESULT_STUS_ID) , 44 , COUNT(1) ) , 0) PENDINGCNT
+		     , nvl(DECODE (MAX(TR_TRNSIT_RESULT_STUS_ID) , 50 , COUNT(1) ) , 0) NOTRECEIPTCNT
+		  FROM (
+		        SELECT M35.TR_TRNSIT_DET_ID , M35.TR_TRNSIT_ID ,  M35.TR_TRNSIT_RESULT_STUS_ID
+		             , M31.TR_BOX_ID , M31.TR_BOX_NO
+		             , S38.CODE
+		          FROM MSC0035D M35
+		             , MSC0031D M31
+		             , SYS0038M S38
+		         WHERE 1 = 1
+		           AND M35.TR_TRNSIT_BOX_ID = M31.TR_BOX_ID
+		           AND M35.TR_TRNSIT_RESULT_STUS_ID = S38.STUS_CODE_ID
+		           AND M35.TR_TRNSIT_STUS_ID <![CDATA[<>]]> 8
+		       ) T1
+		     ,  (SELECT * FROM MSC0032D WHERE TR_BOX_ITM_STUS_ID = 1)M32
+		 WHERE 1 = 1
+		   AND T1.TR_BOX_ID = M32.TR_BOX_ID(+)
+		   AND T1.TR_TRNSIT_ID = #{trnsitid}
+	  GROUP BY TR_TRNSIT_RESULT_STUS_ID
+    </select>
+    <select id="selectReceiveViewList" resultType="Map" parameterType="Map">
+        SELECT  T1.TR_TRNSIT_DET_ID ttdi , T1.TR_TRNSIT_RESULT_STUS_ID ttrsi , T1.TR_BOX_ID tbi , T1.TR_BOX_NO tbn , T1.CODE code
+             , COUNT(1) CNT
+          FROM (
+                SELECT M35.TR_TRNSIT_DET_ID , M35.TR_TRNSIT_ID ,  M35.TR_TRNSIT_RESULT_STUS_ID
+                     , M31.TR_BOX_ID , M31.TR_BOX_NO
+                     , S38.CODE
+                  FROM MSC0035D M35
+                     , MSC0031D M31
+                     , SYS0038M S38
+                 WHERE 1 = 1
+                   AND M35.TR_TRNSIT_BOX_ID = M31.TR_BOX_ID
+                   AND M35.TR_TRNSIT_RESULT_STUS_ID = S38.STUS_CODE_ID
+                   AND M35.TR_TRNSIT_STUS_ID <![CDATA[<>]]> 8
+               ) T1
+             ,  (SELECT * FROM MSC0032D WHERE TR_BOX_ITM_STUS_ID = 1)M32
+         WHERE 1 = 1
+           AND T1.TR_BOX_ID = M32.TR_BOX_ID(+)
+           AND T1.TR_TRNSIT_ID = #{trnsitid}
+           <if test="statuschk != null and statuschk !=''">
+            AND T1.TR_TRNSIT_RESULT_STUS_ID  = #{statuschk}
+           </if>
+           <if test="boxno != null and boxno !=''">
+            AND T1.TR_BOX_NO  = #{boxno}
+           </if>
+        GROUP BY T1.TR_TRNSIT_DET_ID , T1.TR_TRNSIT_RESULT_STUS_ID , T1.TR_BOX_ID , T1.TR_BOX_NO , T1.CODE
+    </select>
+    <select id="selectTrBoxTransitDsCnt" resultType="int" parameterType="String">
+        SELECT count(1) cnt
+		  FROM MSC0035D
+		 WHERE TR_TRNSIT_DET_ID = #{param}
+		   and TR_TRNSIT_STUS_ID != 8
+		   and TR_TRNSIT_RESULT_STUS_ID = 44
+    </select>
+
+    <update id="TRBoxTransitMasterUpdate" parameterType="Map">
+        update MSC0034D
+		   set TR_TRNSIT_STUS_ID = #{status}
+		     , TR_TRNSIT_UPD_DT = sysdate
+		     , TR_TRNSIT_UPD_USER_ID = #{userid}
+		     <if test='status != null and status == 36'>
+		     , TR_TRNSIT_CLOS_DT = sysdate
+		     </if>
+		  where TR_TRNSIT_ID = #{trnsitid}
+    </update>
+
+    <insert id="receiveTrboxRecordCardInsert" parameterType="Map">
+       INSERT INTO MSC0033D (
+                                TR_RCORD_ID, TR_BOX_ID, TR_TYPE_ID, TR_LOC_CODE, TR_RCORD_DT_TM, TR_RCORD_STUS_ID, TR_RCORD_CRT_DT, TR_RCORD_CRT_USER_ID, TR_RCORD_QTY, TR_REF_NO
+                            )
+                    VALUES ( (SELECT DECODE(COUNT(TR_RCORD_ID),0 , 1 , MAX(TR_RCORD_ID)+1) FROM MSC0033D )
+                           , #{trboxid} , #{trtypeid} , #{trlocation} , SYSDATE , #{trstatusid} , SYSDATE , #{userid} , ${trqty} , #{refno})
+    </insert>
+
+    <update id="updateTrboxTransitDetail" parameterType="Map">
+        UPDATE MSC0035D
+		   SET TR_TRNSIT_RESULT_STUS_ID  = #{resultstaus}
+		     , TR_CLOS_DT                = SYSDATE
+		     , TR_TRNSIT_UPD_DT          = SYSDATE
+		     , TR_TRNSIT_UPD_USER_ID     = #{userid}
+		 WHERE TR_TRNSIT_DET_ID          = #{transitditid}
+    </update>
+
+        <select id="selectUnkeepTRBookList" parameterType="Map" resultType="egovMap">
+        SELECT TR_BOOK_ID trbookid,
+        TR_BOOK_NO trbookno,
+        TR_BOOK_STUS_ID statusid,
+        TR_BOOK_STUS_CODE statuscode,
+        TR_HOLDER trholder,
+        TR_HOLDER_TYPE trholdertype,
+        TR_BOOK_PREFIX trprefixno,
+        TR_BOOK_NO_START receiptnofrom,
+        TR_BOOK_NO_END receiptnoto,
+        TR_BOOK_PGE trbookpage
+          FROM MSC1001V
+          WHERE 1 = 1
+          AND BOX_ID = 0
+          AND TR_BOOK_STUS_ID IN (1, 36, 68)
+            <if test="status!=null and status != ''">
+              AND TR_BOOK_STUS_ID = #{status}
+            </if>
+
+            <if test='addTRbookno != null and addTRbookno !=""'>
+                AND TR_BOOK_NO = #{addTRbookno}
+            </if>
+            <if test='addTRreceiptNo != null and addTRreceiptNo !=""'>
+                AND #{addTRreceiptNo} BETWEEN TR_BOOK_NO_START AND TR_BOOK_NO_END
+            </if>
+
+        ORDER BY TR_BOOK_NO
+    </select>
+
+    <insert id="KeepAddTRBookInsert" parameterType="Map">
+       INSERT INTO MSC0032D (
+                                TR_BOX_DET_ID, TR_BOX_ID, TR_BOOK_ID, TR_BOX_ITM_STUS_ID, TR_BOOK_INSERT_DT_TM, TR_BOOK_CRT_DT, TR_BOOK_CRT_USER_ID, TR_BOOK_UPD_DT, TR_BOOK_UPD_USER_ID
+                            )
+                    VALUES ( (SELECT DECODE(COUNT(TR_BOX_DET_ID),0 , 1 , MAX(TR_BOX_DET_ID)+1) FROM MSC0032D )
+                           , #{trboxid} , #{trbookid} , 1 , SYSDATE, SYSDATE , #{userid} , SYSDATE , #{userid})
+    </insert>
+
+</mapper>

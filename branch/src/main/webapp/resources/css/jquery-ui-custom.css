@@ -1,0 +1,64 @@
+/*
+ * jQuery UI 플러그인 커스텀
+ * ::: Issue :::
+ * 2017.11.03 Autocomplete 기능
+ * by 이수연
+ */
+
+/* Helper Hidden
+----------------------------------*/
+.ui-helper-hidden-accessible {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+.ui-autocomplete {
+	position: absolute;
+	top: 0;
+	left: 0;
+	cursor: default;
+	z-index: 100
+}
+/* Component containers
+----------------------------------*/
+.ui-menu {
+	list-style: none;
+	margin: 0;
+	display: block;
+	outline: 0;
+	border: 1px solid #dddddd;
+	background: #ffffff;
+	color: #333333;
+	padding:5px;
+}
+.ui-menu .ui-menu {
+	position: absolute;
+}
+.ui-menu .ui-menu-item {
+	margin: 0;
+	cursor: pointer;
+	/* support: IE10, see #8844 */
+	list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
+}
+.ui-menu .ui-menu-item-wrapper {
+	position: relative;
+	padding: 3px 1em 3px .4em;
+}
+.ui-menu .ui-menu-divider {
+	margin: 5px 0;
+	height: 0;
+	font-size: 0;
+	line-height: 0;
+	border-width: 1px 0 0 0;
+}
+.ui-menu .ui-state-focus,
+.ui-menu .ui-state-active {
+	background:#25527c;
+	padding: 3px;
+	color: #fff
+}

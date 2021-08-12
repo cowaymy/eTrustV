@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.po.impl.HcConfirmPoMapper">
+
+    <select id="selectUserSupplierId" parameterType="Map" resultType="egovMap">
+        SELECT MAX(MEM_ACC_ID) AS MEM_ACC_ID
+          FROM SYS0047M
+         WHERE USER_ID = #{sUserId}
+    </select>
+
+    <select id="selectHcConfirmPoMainListCnt" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.homecare.po.impl.HcConfirmPoMapper.selectHcConfirmPoMainListCnt] - KR JIN */
+        SELECT COUNT(1) AS CNT
+          FROM HMC0004M A
+         WHERE 1 = 1
+           AND A.USE_YN = 'Y'
+           AND A.PO_STS_CD IN ( SELECT CODE_ID FROM SYS0013M
+                                 WHERE CODE_MASTER_ID = '429'
+                                   AND CODE IN ('30')
+                              )
+       <if test='sCdc != null and sCdc != ""'>
+           AND A.CDC = #{sCdc}
+       </if>
+       <if test="sPoDtFrom != null and sPoDtFrom !=''">
+           AND A.APPR_DT <![CDATA[>=]]> TO_DATE(#{sPoDtFrom}, 'YYYYMMDD')
+       </if>
+       <if test="sPoDtTo != null and sPoDtTo !=''">
+           AND A.APPR_DT <![CDATA[<=]]> TO_DATE(#{sPoDtTo}, 'YYYYMMDD') + 1
+       </if>
+       <if test="sMemAccId != null and sMemAccId !=''">
+          AND A.MEM_ACC_ID = #{sMemAccId}
+       </if>
+       <if test="sMemAcc != null and sMemAcc !=''">
+           AND 1 = 2
+       </if>
+       <if test="sPoTyCd != null and sPoTyCd !=''">
+          AND A.PO_TY_CD = #{sPoTyCd}
+       </if>
+       <if test="sPoStsCd != null and sPoStsCd !=''">
+          AND A.PO_STS_CD = #{sPoStsCd}
+       </if>
+       <if test="sSuppStsCd != null and sSuppStsCd !=''">
+          AND A.SUPP_STS_CD = #{sSuppStsCd}
+       </if>
+       <if test="sPoNo != null and sPoNo !=''">
+          AND A.PO_NO = #{sPoNo}
+       </if>
+    </select>
+
+    <select id="selectHcConfirmPoMainList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcConfirmPoMapper.selectHcConfirmPoMainList] - KR JIN */
+        SELECT * FROM (
+            SELECT ROWNUM AS RNUM, T1.*
+              FROM (
+
+			        SELECT A.PO_NO
+						 , A.PO_TY_CD
+						 , (SELECT CODE_NAME
+						      FROM SYS0013M
+						     WHERE CODE_MASTER_ID = '428'
+						        AND CODE_ID = A.PO_TY_CD) AS PO_TY_NAME
+						 , A.CDC
+						 , B.CDC_TEXT
+						 , A.PO_STS_CD
+						 , (SELECT CODE
+			                  FROM SYS0013M
+			                 WHERE CODE_MASTER_ID = '429'
+			                    AND CODE_ID = A.PO_STS_CD) AS PO_STS_CODE
+						 , (SELECT CODE_NAME
+						      FROM SYS0013M
+						     WHERE CODE_MASTER_ID = '429'
+						        AND CODE_ID = A.PO_STS_CD) AS PO_STS_NAME
+						 , A.SUPP_STS_CD
+                         , (SELECT CODE
+                              FROM SYS0013M
+                             WHERE CODE_MASTER_ID = '438'
+                                AND CODE_ID = A.SUPP_STS_CD) AS SUPP_STS_CODE
+                         , (SELECT CODE_NAME
+                              FROM SYS0013M
+                             WHERE CODE_MASTER_ID = '438'
+                                AND CODE_ID = A.SUPP_STS_CD) AS SUPP_STS_NAME
+						 , A.MEM_ACC_ID
+						 , (SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = A.MEM_ACC_ID) AS MEM_ACC_NAME
+						 , A.APPR_DT AS APPR_DT
+						 , TO_DATE(A.CDC_DUE_DT, 'YYYYMMDD') AS CDC_DUE_DT
+						 , B.ADDRESS AS ADDRESS
+						 , B.TEL_NO AS TEL
+						 , A.USE_YN
+						 , A.RM
+						 , A.CRT_DT
+						 , A.CRT_USER_ID
+			          FROM HMC0004M A
+			             , (
+                            SELECT A.WH_LOC_ID    AS CDC
+                                 , A.WH_LOC_DESC  AS CDC_TEXT
+                                 , B.STATE ||' '|| B.CITY ||' '|| B.AREA ||' '|| A.STREET ||' '|| A.ADDR_DTL  AS ADDRESS
+                                 , NVL(A.WH_LOC_TEL1, A.WH_LOC_TEL2 ) AS TEL_NO
+                              FROM SYS0028M A
+                                 , SYS0064M B
+                             WHERE A.AREA_ID = B.AREA_ID(+)
+                               --AND A.WH_LOC_CODE IN ('3010', '3020', '3030')
+                               AND A.HC_CHK = 'Y'
+                           ) B  -- CDC MASTER
+			         WHERE 1 = 1
+			           AND A.CDC = B.CDC (+)
+			           AND A.USE_YN = 'Y'
+			           AND A.PO_STS_CD IN ( SELECT CODE_ID FROM SYS0013M
+			                                 WHERE CODE_MASTER_ID = '429'
+			                                   AND CODE IN ('30')
+			                              )
+			       <if test='sCdc != null and sCdc != ""'>
+			           AND A.CDC = #{sCdc}
+			       </if>
+			       <if test="sPoDtFrom != null and sPoDtFrom !=''">
+			           AND A.APPR_DT <![CDATA[>=]]> TO_DATE(#{sPoDtFrom}, 'YYYYMMDD')
+			       </if>
+			       <if test="sPoDtTo != null and sPoDtTo !=''">
+			           AND A.APPR_DT <![CDATA[<=]]> TO_DATE(#{sPoDtTo}, 'YYYYMMDD') + 1
+			       </if>
+			       <if test="sMemAcc != null and sMemAcc !=''">
+			           AND 1 = 2
+			       </if>
+			       <if test="sMemAccId != null and sMemAccId !=''">
+			          AND A.MEM_ACC_ID = #{sMemAccId}
+			       </if>
+			       <if test="sPoTyCd != null and sPoTyCd !=''">
+			          AND A.PO_TY_CD = #{sPoTyCd}
+			       </if>
+			       <if test="sPoStsCd != null and sPoStsCd !=''">
+			          AND A.PO_STS_CD = #{sPoStsCd}
+			       </if>
+			       <if test="sSuppStsCd != null and sSuppStsCd !=''">
+			          AND A.SUPP_STS_CD = #{sSuppStsCd}
+			       </if>
+			       <if test="sPoNo != null and sPoNo !=''">
+			          AND A.PO_NO = #{sPoNo}
+			       </if>
+
+                   ORDER BY
+                    <choose>
+                        <when test='sort != null and sort.size != 0'>
+                            <foreach item="item" index="index" collection="sort" open="" separator="," close="">
+                                <choose>
+                                    <when test='item.field == "poNo"'>A.PO_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "poTyCd"'>A.PO_TY_CD <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "poTyName"'>PO_TY_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "cdc"'>A.CDC <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "cdcText"'>B.CDC_TEXT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "poStsCd"'>A.PO_STS_CD <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "poStsCode"'>PO_STS_CODE <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "poStsName"'>PO_STS_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "memAccId"'>A.MEM_ACC_ID <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "memAccName"'>MEM_ACC_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "apprDt"'>APPR_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "cdcDueDt"'>A.CDC_DUE_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "address"'>ADDRESS <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "tel"'>B.TEL_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "useYn"'>A.USE_YN <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "rm"'>A.RM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "crtDt"'>A.CRT_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "crtUserId"'>A.CRT_USER_ID <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <otherwise>
+                                        A.UPD_DT DESC
+                                    </otherwise>
+                                </choose>
+                            </foreach>
+                        </when>
+                        <otherwise>
+                            A.UPD_DT DESC
+                        </otherwise>
+                     </choose>
+                 ) T1
+            <where>
+                <if test='firstIndex != -1 and lastIndex != -1'>
+                    ROWNUM <![CDATA[<=]]> #{lastIndex}
+                </if>
+            </where>
+            )
+        <where>
+            <if test='firstIndex != -1 and lastIndex != -1'>
+                RNUM > #{firstIndex}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="selectHcConfirmPoSubList" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcConfirmPoMapper.selectHcConfirmPoSubList] - KR JIN */
+        SELECT PO_NO
+             , PO_DTL_NO
+             , STOCK_ID
+             , STOCK_CODE
+             , (SELECT STK_DESC FROM SYS0026M WHERE STK_ID = A.STOCK_ID AND STK_CODE = A.STOCK_CODE) as STOCK_NAME
+             , SUPLY_ITEM_CD
+             , PO_QTY
+             , PO_QTY AS CONFIRM_QTY
+             , UOM
+             , PO_UPRC
+             , SUPLY_PRC
+             , TAX
+             , TAX_CD
+             , LOCAL_AMT
+             , (SUPLY_PRC+TAX) AS TOTAL
+             , CUR
+             , PO_DTL_STS_CD
+             , FREX_AMT
+             , RM
+             , USE_YN
+             , CRT_DT
+             , CRT_USER_ID
+             , UPD_DT
+             , UPD_USER_ID
+          FROM HMC0005D A
+         WHERE PO_NO = #{sPoNo}
+           and USE_YN = 'Y'
+    </select>
+
+    <update id="updateConfirmPoStat" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcConfirmPoMapper.updateConfirmPoStat] - KR JIN */
+        UPDATE HMC0004M A
+           SET A.SUPP_STS_CD = #{suppStsCd}
+             , A.rm = (SELECT Z.RM || #{sRm} FROM HMC0004M Z  WHERE Z.PO_NO = A.PO_NO)
+             , A.UPD_USER_ID = #{updUserId}
+             , A.UPD_DT  = SYSDATE
+         WHERE A.PO_NO = #{poNo}
+    </update>
+
+    <update id="updateConfirmPoDetail" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcConfirmPoMapper.updateConfirmPoDetail] - KR JIN */
+        UPDATE HMC0005D
+           SET CONFIRM_QTY = PO_QTY
+             , UPD_DT = SYSDATE
+             , UPD_USER_ID = #{updUserId}
+         WHERE PO_NO = #{poNo}
+    </update>
+
+</mapper>

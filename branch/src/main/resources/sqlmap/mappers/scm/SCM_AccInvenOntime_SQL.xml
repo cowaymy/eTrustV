@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.AccInvenOntimeMapper"> 
+
+  <!-- ON Time Delivery -->
+  <select id="selectOnTimeMonthly" parameterType="Map" resultType="egovMap">
+			SELECT * 
+				FROM ( 
+							WITH MONTHLY
+							  AS 
+							    ( SELECT 
+							             SCM_MONTH 
+							           , TRIM(DT_TYPE) DT_TYPE 
+							           , ROUND(DT_VALU) DT_VALU   
+							        FROM SCM0057V 
+							       <choose>
+							         <when test='scmYearCbBox != null and scmYearCbBox != ""'>
+							                WHERE SCM_YEAR = #{scmYearCbBox}
+							         </when>
+							         <otherwise>
+							                WHERE SCM_YEAR = ( SELECT EXTRACT(YEAR FROM SYSDATE) SCM_YEAR FROM DUAL)
+							         </otherwise>
+							       </choose>
+							    )
+							    SELECT * 
+							      FROM MONTHLY 
+							    PIVOT ( MAX(DT_VALU) FOR SCM_MONTH IN (1 AS M1,2 AS M2,3 AS M3,4 AS M4,5 AS M5,6 AS M6,7 AS M7,8 AS M8,9 AS M9,10 AS M10,11 AS M11,12 AS M12)) 
+				     )  ORDER BY DT_TYPE 
+  </select> 
+  
+  <select id="selectOnTimeWeeklyStartPoint" parameterType="Map" resultType="egovMap">
+     SELECT DISTINCT
+            COUNT(*) OVER(PARTITION BY DELVRY_YEAR,DELVRY_MONTH ) HEAD_CNT
+           ,FIRST_VALUE(DELVRY_WEEK) OVER(PARTITION BY DELVRY_YEAR,DELVRY_MONTH ORDER BY DELVRY_WEEK ASC) FIRST_VAL
+
+      FROM SCM0060V  
+     WHERE DELVRY_YEAR  = #{scmYearCbBox}
+       AND DELVRY_MONTH = #{scmMonthCbBox}
+     GROUP BY DELVRY_YEAR,DELVRY_MONTH,DELVRY_WEEK
+  </select> 
+  
+  <select id="selectOnTimeWeeklyList" parameterType="Map" resultType="egovMap">
+		  SELECT * 
+		    FROM ( 
+								WITH WEEKLY
+								 AS 
+								   (
+								    SELECT   
+								           DELVRY_YEAR   
+								         , DELVRY_MONTH   
+								         , DELVRY_WEEK   
+								         , TRIM(DT_TYPE) DT_TYPE 
+								         , ROUND(DT_VALU) DT_VALU   
+								     FROM SCM0060V  
+								    WHERE DELVRY_YEAR  = #{scmYearCbBox}
+								      AND DELVRY_MONTH = #{scmMonthCbBox}
+								)
+								SELECT * 
+								  FROM WEEKLY
+								  
+								  PIVOT ( MAX(DT_VALU)  FOR DELVRY_WEEK IN ( 1 w1 ,2 w2,3 w3,4 w4,5 w5,6 w6,7 w7,8 w8,9 w9,10 w10,11 w11,12 w12,13 w13,14 w14,15 w15,16 w16
+								                                            ,17 w17 ,18 w18 ,19 w19 ,20 w20 ,21 w21 ,22 w22 ,23 w23 ,24 w24 ,25 w25 ,26 w26 ,27 w27 ,28 w28 
+								                                            ,29 w29 ,30 w30 ,31 w31 ,32 w32 ,33 w33 ,34 w34 ,35 w35 ,36 w36 ,37 w37 ,38 w38 ,39 w39 ,40 w40
+								                                            ,41 w41 ,42 w42 ,43 w43 ,44 w44 ,45 w45 ,46 w46 ,47 w47 ,48 w48 ,49 w49 ,50 w50 ,51 w51 ,52 w52
+								                                           )
+								       )
+			       )  ORDER BY DT_TYPE 
+  </select> 
+  
+  <select id="selectOnTimeCalculStatus" parameterType="Map" resultType="egovMap">
+		WITH CALCUL_STATUS
+		     AS 
+		     (
+		       SELECT 
+		             (SELECT COUNT(SN)  FROM SCM0059V WHERE DELVRY_YEAR  = #{scmYearCbBox}  AND DELVRY_MONTH = #{scmMonthCbBox} AND IS_CMPLT_ON_TM = '1' ) COMPLETE_CNT
+		            ,(SELECT COUNT(SN)  FROM SCM0059V WHERE DELVRY_YEAR  = #{scmYearCbBox}  AND DELVRY_MONTH = #{scmMonthCbBox} ) TOTAL_CNT
+		         FROM DUAL
+		     )
+		  , RATES
+		    AS
+		    (
+		      SELECT  ROUND((COMPLETE_CNT /  TOTAL_CNT)*100,1) RATING FROM CALCUL_STATUS
+		    )
+		SELECT COMPLETE_CNT
+		      ,TOTAL_CNT 
+		      ,(SELECT RATING FROM RATES ) RATING 
+		  FROM CALCUL_STATUS 
+  </select> 
+  
+  <select id="selectOnTimeDeliverySearch" parameterType="Map" resultType="egovMap">
+			SELECT
+			       SN   
+			      ,PO_NO   
+			      ,PO_ITM_NO  
+            ,STK_TYPE_ID 			       
+			      ,STOCK_ID   
+			      ,STOCK_CODE   
+			      ,STOCK_NAME   
+			      ,PO_ISSU_DT   
+			      ,DELVRY_YEAR   
+			      ,DELVRY_MONTH   
+			      ,DELVRY_WEEK   
+			      ,DELVRY_DT   
+			      ,PO_QTY   
+			      ,FIRST_GR_DT   
+			      ,LAST_GR_DT   
+			      ,GR_QTY   
+			      ,ON_TM_DELVRY_QTY   
+			      ,IS_CMPLT_ON_TM   
+			      ,ETC   
+			 FROM SCM0059V 
+			WHERE DELVRY_YEAR    = #{scmYearCbBox}
+			  AND DELVRY_MONTH   = #{scmMonthCbBox}
+		 <if test='viewCbBox != null and viewCbBox !=""'>
+			  AND IS_CMPLT_ON_TM = #{viewCbBox} 
+		 </if>
+		 
+      <choose>
+        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+         AND  STK_TYPE_ID IN
+            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </when>
+      </choose>
+	 
+		  ORDER BY PO_NO 
+			        ,PO_ITM_NO 
+ 
+  </select> 
+
+
+<!-- Inventory Report -->
+   <select id="selectInvenRptTotalStatus" parameterType="Map" resultType="egovMap">
+			SELECT 
+					   TRGET_YEAR
+					  ,TRGET_MONTH
+					  ,ROUND(TOT_AMT,2) TOT_STOCK_AMT
+					  ,ROUND(DAY_IN_INVNTRY,1) DAY_IN_INVENTORY
+					  ,ROUND(AGING_AMT,2) AGING_AMT
+			 FROM SCM0053V
+			WHERE TRGET_YEAR = #{scmYearCbBox}  
+			ORDER BY TRGET_MONTH ASC  
+  </select> 
+  
+   <select id="selectPreviosMonth" parameterType="Map" resultType="egovMap">
+	SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox}||LPAD(#{scmMonthCbBox},2,'0')||'01','YYYYMMDD'),-1), 'MM/YYYY') PREVIOUS_MONTH
+			  ,TO_CHAR(LPAD(#{scmMonthCbBox},2,'0') ||'/'||#{scmYearCbBox}) CURRENT_MONTH
+		    FROM DUAL
+  </select> 
+  
+   <select id="selectInvenMainAmountList" parameterType="Map" resultType="egovMap">
+				SELECT 
+				      STOCK_TYPE
+				     , 'detail' VIEW_DETAIL   
+				     , YYYYMM 
+				            
+				      /*total*/
+				     , (IS_AMT_PREV + OH_AMT_PREV + SB_AMT_PREV) TOTAL_AMT_PREVIOUS   
+				     , (IS_AMT_CURR + OH_AMT_CURR + SB_AMT_CURR) TOTAL_AMT_CURRENT         
+				     , (IS_AMT_PREV + OH_AMT_PREV + SB_AMT_PREV - IS_AMT_CURR - OH_AMT_CURR - SB_AMT_CURR ) TOTAL_AMT_GAP
+				
+				     /*In Transit*/
+				     , IS_AMT_PREV  IN_TRANSIT_PREVIOUS
+				     , IS_AMT_CURR  IN_TRANSIT_CURRENT
+				     , (IS_AMT_PREV - IS_AMT_CURR) IN_TRANSIT_GAP
+				
+				     /*On Hand*/
+				     , OH_AMT_PREV  ON_HAND_PREVIOUS
+				     , OH_AMT_CURR  ON_HAND_CURRENT
+				     , (OH_AMT_PREV - OH_AMT_CURR) ON_HAND_GAP
+				
+				     /*Stock B*/
+				     , SB_AMT_PREV  STOCKB_PREVIOUS
+				     , SB_AMT_CURR  STOCKB_CURRENT
+				     , (SB_AMT_PREV - SB_AMT_CURR) STOCKB_GAP
+				
+				     /*Days In Inventory*/
+				      , ROUND(NVL(DII_PREV,0))  DII_PREVIOUS  
+				      , ROUND(NVL(DII_CURR,0))  DII_CURRENT
+				      , ROUND( NVL(DII_PREV,0) - NVL(DII_CURR,0) ) DII_GAP
+				
+				     /*Aging*/
+				      , ROUND(AGING_AMT_PREV,2) AGING_AMT_PREV
+				      , ROUND(AGING_AMT_CURR,2) AGING_AMT_CURR
+				      , ROUND( (AGING_AMT_PREV - AGING_AMT_CURR), 2) AGING_AMT_GAP
+				
+				FROM SCM0054V
+				WHERE YYYYMM = (SELECT #{scmYearCbBox} || LPAD(#{scmMonthCbBox},2,'0') FROM DUAL )
+				
+      <choose>
+        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+         AND  STOCK_TYPE IN
+            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </when>
+      </choose>				
+
+				ORDER BY STOCK_TYPE ASC  
+  </select> 
+  
+   <select id="selectInvenMainQtyList" parameterType="Map" resultType="egovMap">
+			SELECT 
+			       STOCK_TYPE        
+			      , 'detail' VIEW_DETAIL   
+			      , YYYYMM     
+			         
+			     /* Total Stock Quantity */
+			      , (IS_QTY_PREV + OH_QTY_PREV + SB_QTY_PREV) TOTAL_QTY_PREVIOUS
+			      , (IS_QTY_CURR + OH_QTY_CURR + SB_QTY_CURR) TOTAL_QTY_CURRENT
+			      , (IS_QTY_PREV + OH_QTY_PREV + SB_QTY_PREV - IS_QTY_CURR - OH_QTY_CURR - SB_QTY_CURR) TOTAL_QTY_GAP
+			
+			      /* In Transit Quantity */
+			      , IS_QTY_PREV  IN_TRANSIT_QTY_PREVIOUS
+			      , IS_QTY_CURR  IN_TRANSIT_QTY_CURRENT
+			      , (IS_QTY_PREV - IS_QTY_CURR) IN_TRANSIT_QTY_GAP
+			
+			     /* On Hand Quantity */
+			      , OH_QTY_PREV  ON_HAND_QTY_PREVIOUS
+			      , OH_QTY_CURR  ON_HAND_QTY_CURRENT
+			      , (OH_QTY_PREV - OH_QTY_CURR) ON_HAND_QTY_GAP
+			
+			      /* Stock B */
+			      , SB_QTY_PREV  STOCKB_QTY_PREVIOUS
+			      , SB_QTY_CURR  STOCKB_QTY_CURRENT
+			      , (SB_QTY_PREV - SB_QTY_CURR) STOCKB_QTY_GAP
+			
+			      /* Days In Inventory */
+			      , ROUND(NVL(DII_PREV,0))  DII_QTY_PREVIOUS  
+			      , ROUND(NVL(DII_CURR,0))  DII_QTY_CURRENT
+			      , ROUND( NVL(DII_PREV,0) - NVL(DII_CURR,0) ) DII_QTY_GAP			      
+
+			      /* Aging Quantity */
+			      , ROUND(AGING_QTY_PREV,2) AGING_QTY_PREVIOUS
+			      , ROUND(AGING_QTY_CURR,2) AGING_QTY_CURRENT
+			      , ROUND((AGING_QTY_PREV - AGING_QTY_CURR),2) AGING_QTY_GAP
+			  
+			FROM SCM0054V
+			WHERE YYYYMM = (SELECT #{scmYearCbBox} || LPAD(#{scmMonthCbBox},2,'0') FROM DUAL )    
+      <choose>
+        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+         AND  STOCK_TYPE IN
+            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </when>
+      </choose>
+      
+			ORDER BY STOCK_TYPE ASC
+  </select> 
+  
+   <select id="selectDetailAmountList" parameterType="Map" resultType="egovMap">
+			SELECT 
+			       STOCK_TYPE /*NEW ADD*/ 
+			      ,STOCK_CODE        
+			      ,STOCK_NAME     
+			      
+			      /* CURRENT_MONTH_AMOUNT */
+			      ,(IS_AMT_CURR + OH_AMT_CURR +SB_AMT_CURR)  CURRENT_TOTAL_STOCK 
+			      ,IS_AMT_CURR      
+			      ,OH_AMT_CURR   
+			      ,DII_CURR   DYAS_IN_CURR
+			      ,AGING_AMT_CURR   
+			      ,SB_AMT_CURR           
+			      ,M3_AMT_CURR  
+			      ,M2_AMT_CURR   
+			      ,M1_AMT_CURR  
+			      ,M0_AMT_CURR    
+			      
+			      /* PREVIOUS MONTH */
+			      ,(IS_AMT_PREV+OH_AMT_PREV+SB_AMT_PREV) PREVIOUS_TOTAL_STOCK
+			      ,IS_AMT_PREV
+			      ,OH_AMT_PREV
+			      ,DII_PREV   DYAS_IN_PREV   
+			      ,AGING_AMT_PREV    
+			      ,SB_AMT_PREV    
+			  FROM SCM0055V
+			 WHERE CURR_YYYYMM = (SELECT #{scmYearCbBox} || LPAD(#{scmMonthCbBox},2,'0') FROM DUAL )
+      <choose>
+        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+         AND  STOCK_TYPE IN
+            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </when>
+      </choose>			 
+			  AND ((OH_QTY_CURR <![CDATA[>]]> 0) OR (IS_QTY_CURR <![CDATA[>]]> 0) OR (SB_QTY_CURR <![CDATA[>]]> 0))
+			ORDER BY M1_AMT_CURR   
+  </select> 
+  
+  <select id="selectDetailQuantityList" parameterType="Map" resultType="egovMap">
+			SELECT 
+			       STOCK_TYPE
+			      ,STOCK_CODE        
+			      ,STOCK_NAME 
+			       
+			      /*CURR_MONTH_QUANTITY*/
+			      ,(IS_QTY_CURR + OH_QTY_CURR + SB_QTY_CURR )  CURRENT_QTY_TOTAL_STOCK     
+			      ,IS_QTY_CURR
+			      ,OH_QTY_CURR 
+			      ,DII_CURR   DYAS_IN_QTY_CURR       
+			      ,AGING_QTY_CURR 
+			      ,SB_QTY_CURR 
+			      ,M3_QTY_CURR  
+			      ,M2_QTY_CURR  
+			      ,M1_QTY_CURR  
+			      ,M0_QTY_CURR   
+			       
+			      /*PREVIOUS MONTH_QUANTITY*/
+			      ,(IS_QTY_PREV+OH_QTY_PREV+SB_QTY_PREV  ) PREVIOUS_QTY_TOTAL_MONTH         
+			      ,IS_QTY_PREV        
+			      ,OH_QTY_PREV
+			      ,DII_PREV DYAS_IN_QTY_PREVIOUS
+			      ,AGING_QTY_PREV
+			      ,SB_QTY_PREV            
+			  FROM SCM0055V
+			 WHERE CURR_YYYYMM = (SELECT #{scmYearCbBox} || LPAD(#{scmMonthCbBox},2,'0') FROM DUAL )
+      <choose>
+        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+         AND  STOCK_TYPE IN
+            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </when>
+      </choose> 
+			   AND ((OH_QTY_CURR <![CDATA[>]]> 0) OR (IS_QTY_CURR <![CDATA[>]]> 0) OR (SB_QTY_CURR <![CDATA[>]]> 0))
+			ORDER BY M1_AMT_CURR			
+  
+  </select>
+  
+</mapper>

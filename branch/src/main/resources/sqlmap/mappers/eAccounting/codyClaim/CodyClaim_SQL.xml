@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.eAccounting.codyClaim.impl.CodyClaimMapper">
+
+<select id="selectCodyClaimList" parameterType="Map" resultType="egovMap">
+/* codyClaimMapper.selectCodyClaimList */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T.CLM_NO, 
+       T.MEM_ACC_ID, 
+       T.MEM_ACC_NAME, 
+       TO_DATE(T.CLM_MONTH, 'YYYYMM') AS CLM_MONTH, 
+       T.REQST_DT, 
+       'MYR' AS CUR, 
+       T.TOT_AMT, 
+       T.APPV_PRCSS_NO,
+       T.APPV_PRCSS_STUS_CODE, 
+       T.APPV_PRCSS_STUS, 
+       T.APPV_PRCSS_DT 
+FROM   (SELECT T1.CLM_NO, 
+               T1.MEM_ACC_ID, 
+               T2.MEM_ACC_NAME, 
+               T1.CLM_MONTH, 
+               T1.TOT_AMT, 
+               T1.APPV_PRCSS_NO, 
+               T4.REQST_DT, 
+               Nvl (T4.APPV_PRCSS_STUS, 'T')   AS APPV_PRCSS_STUS_CODE, 
+               Nvl (( CASE T4.APPV_PRCSS_STUS 
+                        WHEN 'R' THEN 'Request' 
+                        WHEN 'P' THEN 'Approve In-Progress' 
+                        WHEN 'A' THEN 'Approved' 
+                        WHEN 'J' THEN 'Rejected' 
+                      END ), 'Temporary Save') AS APPV_PRCSS_STUS, 
+               T4.APPV_PRCSS_DT 
+        FROM   FCM0019M T1 
+               LEFT JOIN FCM0006M T2 
+                      ON T1.MEM_ACC_ID = T2.MEM_ACC_ID 
+               LEFT JOIN FCM0004M T4 
+                      ON T1.APPV_PRCSS_NO = T4.APPV_PRCSS_NO WHERE CLM_TYPE = 'J7'
+          <if test="loginUserId != null and loginUserId != ''">
+            AND T1.CRT_USER_ID = #{loginUserId}
+          </if>
+            ) T
+       WHERE 1=1
+<if test="clmMonth != null and clmMonth != ''">
+<![CDATA[ 
+AND T.CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
+]]>
+</if>       
+<if test="memAccId != null and memAccId != ''">
+AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccId})
+</if>
+<if test="clmNo != null and clmNo != ''">
+AND UPPER(T.CLM_NO) = UPPER(#{clmNo})
+</if>
+<if test="appvPrcssStus != null and appvPrcssStus != ''">
+AND T.APPV_PRCSS_STUS_CODE IN
+<foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+#{item}
+</foreach>
+</if>  
+ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT          
+</select>
+
+<select id="selectTaxCodeCodyClaimFlag" resultType="egovMap">
+/* codyClaimMapper.selectTaxCodeCodyClaimFlag */
+    SELECT TAX_CODE ,
+                INDUSTRY_CODE||' '||'('||TAX_NAME||')' AS TAX_NAME
+    FROM FCM0007C
+    WHERE CODY_CLM_FLAG = 'X'
+</select>
+
+<select id="selectNextClmNo" resultType="String">
+/* codyClaimMapper.selectNextClmNo */
+    SELECT    'J7'
+       || TO_CHAR (SYSDATE, 'yymm')
+       || NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
+    FROM FCM0019M
+    WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')  AND CLM_TYPE = 'J7'
+</select>
+
+<insert id="insertCodyClaimExp" parameterType="Map">
+/* codyClaimMapper.insertCodyClaimExp */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0019M
+   (
+        CLM_NO
+        ,CLM_TYPE
+        ,COST_CENTR
+        ,COST_CENTR_NAME
+        ,MEM_ACC_ID
+        ,BANK_CODE
+        ,BANK_ACC_NO
+        ,CLM_MONTH
+        ,TOT_AMT
+        ,APPV_PRCSS_NO
+        ,CRT_DT
+        ,CRT_USER_ID
+        ,UPD_DT
+        ,UPD_USER_ID
+    )
+    values
+    (
+        #{clmNo}
+       ,'J7'
+       ,UPPER(#{costCentr})
+       ,NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{costCentr})))
+       ,UPPER(#{memAccId})
+       ,#{bankCode}
+       ,#{bankAccNo}
+       ,TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
+       ,#{allTotAmt}
+       ,#{appvPrcssNo}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<select id="selectNextClmSeq" parameterType="String" resultType="int">
+/* codyClaimMapper.selectNextClmSeq */
+    SELECT NVL(MAX(CLM_SEQ) + 1, 1) AS CLM_SEQ FROM FCM0020D WHERE CLM_NO = #{clmNo}
+</select>
+
+<insert id="insertCodyClaimExpItem" parameterType="Map">
+/* codyClaimMapper.insertCodyClaimExpItem */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0020D
+   (
+        CLM_NO
+        ,CLM_SEQ
+        ,INVC_DT
+        ,INVC_TYPE
+        ,INVC_NO
+        ,SUPPLIR
+        ,GST_RGIST_NO
+        ,INVC_REM
+        ,EXP_TYPE
+        ,EXP_TYPE_NAME
+        ,GL_ACC_CODE
+        ,GL_ACC_CODE_NAME
+        ,BUDGET_CODE
+        ,BUDGET_CODE_NAME
+        ,TAX_CODE
+        ,NET_AMT
+        ,TAX_AMT
+        ,TAX_NON_CLM_AMT
+        ,TOT_AMT
+        ,ATCH_FILE_GRP_ID
+        ,EXP_DESC
+        ,CLAM_UN
+        ,EXP_GRP
+        ,CRT_DT
+        ,CRT_USER_ID
+        ,UPD_DT
+        ,UPD_USER_ID
+    )
+    values
+    (
+        #{clmNo}
+       ,#{clmSeq}
+       ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
+       ,#{invcType}
+       ,#{invcNo}
+       ,#{supplirName}
+       ,#{gstRgistNo}
+       ,#{invcRem}
+       ,#{expType}
+       ,#{expTypeName}
+       ,#{glAccCode}
+       ,#{glAccCodeName}
+       ,#{budgetCode}
+       ,#{budgetCodeName}
+       ,#{taxCode}
+       ,#{gstBeforAmt}
+       ,#{gstAmt}
+       ,#{taxNonClmAmt}
+       ,#{totAmt}
+       ,#{atchFileGrpId}
+       ,#{expDesc}
+       ,#{clamUn}
+       ,#{expGrp}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<insert id="insertCodyClaimExpMileage" parameterType="Map">
+/* codyClaimMapper.insertCodyClaimExpMileage */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0021D
+   (
+        CLM_NO
+        ,CLM_SEQ
+        ,CAR_MILAG_DT
+        ,LOC_FROM
+        ,LOC_TO
+        ,CAR_MILAG
+        ,CAR_MILAG_AMT
+        ,TOLL_AMT
+        ,PARKING_AMT
+        ,PURPOSE
+        ,CRT_DT
+        ,CRT_USER_ID
+        ,UPD_DT
+        ,UPD_USER_ID
+    )
+    values
+    (
+        #{clmNo}
+       ,#{clmSeq}
+       ,TO_DATE(#{carMilagDt}, 'YYYY/MM/DD')
+       ,#{locFrom}
+       ,#{locTo}
+       ,#{carMilag}
+       ,#{carMilagAmt}
+       ,#{tollAmt}
+       ,#{parkingAmt}
+       ,#{purpose}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<select id="selectCodyClaimItems" parameterType="String" resultType="egovMap">
+/* codyClaimMapper.selectCodyClaimItems */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ,
+       T3.COST_CENTR, 
+       T3.COST_CENTR_NAME, 
+       T3.MEM_ACC_ID, 
+       T1.EXP_TYPE, 
+       T1.EXP_TYPE_NAME, 
+       T1.GL_ACC_CODE, 
+       T1.GL_ACC_CODE_NAME, 
+       T1.BUDGET_CODE, 
+       T1.BUDGET_CODE_NAME, 
+       T4.MEM_ACC_ID AS SUPPLIR,
+       T1.SUPPLIR AS SUPPLIR_NAME, 
+       T1.INVC_TYPE, 
+       ( CASE T1.INVC_TYPE 
+           WHEN 'F' THEN 'Full Tax invoice' 
+           WHEN 'S' THEN 'Simplified Tax invoice' 
+         END )     AS INVC_TYPE_NAME, 
+       T1.INVC_NO, 
+       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY')                   AS INVC_DT,  
+       T1.GST_RGIST_NO, 
+       T1.TAX_CODE, 
+       T2.TAX_NAME, 
+       'MYR'       AS CUR, 
+       T1.NET_AMT AS GST_BEFOR_AMT, 
+       T1.TAX_AMT AS GST_AMT, 
+       T1.TAX_NON_CLM_AMT,
+       T1.TOT_AMT, 
+       T1.ATCH_FILE_GRP_ID, 
+       T1.EXP_DESC, 
+       T1.CLAM_UN, 
+       T1.EXP_GRP,  
+       T3.TOT_AMT  AS ALL_TOT_AMT, 
+       T3.APPV_PRCSS_NO 
+FROM   FCM0020D T1 
+       LEFT JOIN FCM0007C T2 
+              ON T1.TAX_CODE = T2.TAX_CODE 
+       LEFT JOIN FCM0019M T3 
+              ON T1.CLM_NO = T3.CLM_NO
+       LEFT JOIN FCM0006M T4 
+              ON T1.SUPPLIR = T4.MEM_ACC_NAME
+WHERE  T1.CLM_NO = #{clmNo} 
+ORDER  BY T1.CLM_SEQ
+</select>
+
+<select id="selectCodyClaimInfo" parameterType="Map" resultType="egovMap">
+/* codyClaimMapper.selectCodyClaimInfo */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ, 
+       T3.COST_CENTR, 
+       T3.COST_CENTR_NAME, 
+       T3.MEM_ACC_ID, 
+       T4.MEM_ACC_NAME, 
+       T3.BANK_CODE, 
+       T4.BANK_NAME,
+       T3.BANK_ACC_NO, 
+       TO_CHAR(TO_DATE(T3.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH, 
+       T3.TOT_AMT                                          AS ALL_TOT_AMT, 
+       T1.EXP_GRP, 
+       T3.APPV_PRCSS_NO,
+       T1.EXP_TYPE, 
+       T1.EXP_TYPE_NAME, 
+       T1.GL_ACC_CODE, 
+       T1.GL_ACC_CODE_NAME, 
+       T1.BUDGET_CODE, 
+       T1.BUDGET_CODE_NAME, 
+       T5.MEM_ACC_ID                                       AS SUPPLIR, 
+       T1.SUPPLIR                                          AS SUPPLIR_NAME, 
+       T1.INVC_TYPE, 
+       T1.INVC_NO, 
+       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY')                   AS INVC_DT, 
+       T1.GST_RGIST_NO, 
+       T1.TAX_CODE, 
+       'MYR'                                               AS CUR, 
+       T1.NET_AMT                                          AS GST_BEFOR_AMT, 
+       T1.TAX_AMT                                          AS GST_AMT, 
+       T1.TAX_NON_CLM_AMT, 
+       T1.TOT_AMT, 
+       T1.ATCH_FILE_GRP_ID, 
+       T1.EXP_DESC
+FROM   FCM0020D T1 
+       LEFT JOIN FCM0019M T3 
+              ON T1.CLM_NO = T3.CLM_NO 
+       LEFT JOIN FCM0006M T4 
+              ON T3.MEM_ACC_ID = T4.MEM_ACC_ID 
+       LEFT JOIN FCM0006M T5 
+              ON T1.SUPPLIR = T4.MEM_ACC_NAME
+WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
+</select>
+
+<select id="selectCodyClaimItemGrp" parameterType="Map" resultType="egovMap">
+/* codyClaimMapper.selectCodyClaimItemGrp */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ, 
+       T1.EXP_TYPE, 
+       T1.EXP_TYPE_NAME, 
+       T1.GL_ACC_CODE, 
+       T1.GL_ACC_CODE_NAME, 
+       T1.BUDGET_CODE, 
+       T1.BUDGET_CODE_NAME, 
+       T1.TAX_CODE, 
+       T2.TAX_NAME, 
+       T2.TAX_RATE, 
+       'MYR' AS CUR, 
+       T1.NET_AMT AS GST_BEFOR_AMT, 
+       T1.TAX_AMT AS GST_AMT, 
+       T1.TAX_NON_CLM_AMT, 
+       T1.TOT_AMT, 
+       T1.CLAM_UN,
+       T1.ATCH_FILE_GRP_ID,
+       T3.CAR_MILAG_DT, 
+       T3.LOC_FROM, 
+       T3.LOC_TO, 
+       T3.CAR_MILAG, 
+       T3.CAR_MILAG_AMT, 
+       T3.TOLL_AMT, 
+       T3.PARKING_AMT, 
+       T3.PURPOSE,
+       T1.EXP_DESC 
+FROM   FCM0020D T1 
+       LEFT JOIN FCM0007C T2 
+              ON T1.TAX_CODE = T2.TAX_CODE 
+       LEFT JOIN FCM0021D T3 
+              ON T1.CLM_NO = T3.CLM_NO AND T1.CLM_SEQ = T3.CLM_SEQ 
+WHERE  T1.CLM_NO = #{clmNo} 
+       AND CLAM_UN = #{clamUn}
+</select>
+
+<select id="selectAttachList" parameterType="String" resultType="egovMap">
+/* codyClaimMapper.selectAttachList */
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+          ORDER BY T1.ATCH_FILE_ID         
+</select>
+
+<update id="updateCodyClaimExp" parameterType="Map">
+/* codyClaimMapper.updateCodyClaimExp */
+   UPDATE FCM0019M
+   SET COST_CENTR = UPPER(#{costCentr})
+       ,COST_CENTR_NAME = NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{costCentr})))
+       ,MEM_ACC_ID = UPPER(#{memAccId})
+       ,BANK_CODE = #{bankCode}
+       ,BANK_ACC_NO = #{bankAccNo}
+       ,CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
+       ,TOT_AMT = #{allTotAmt}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}       
+</update>
+
+<update id="updateCodyClaimExpItem" parameterType="Map">
+/* codyClaimMapper.updateCodyClaimExpItem */
+   UPDATE FCM0020D
+   SET INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY')
+       ,INVC_TYPE = #{invcType}
+       ,INVC_NO = #{invcNo}
+       ,SUPPLIR = #{supplirName}
+       ,GST_RGIST_NO = #{gstRgistNo}
+       ,INVC_REM = #{invcRem}
+       ,EXP_TYPE = #{expType}
+       ,EXP_TYPE_NAME = #{expTypeName}
+       ,GL_ACC_CODE = #{glAccCode}
+       ,GL_ACC_CODE_NAME = #{glAccCodeName}
+       ,BUDGET_CODE = #{budgetCode}
+       ,BUDGET_CODE_NAME = #{budgetCodeName}
+       ,TAX_CODE = #{taxCode}
+       ,NET_AMT = #{gstBeforAmt}
+       ,TAX_AMT = #{gstAmt}
+       ,TAX_NON_CLM_AMT = #{taxNonClmAmt}
+       ,TOT_AMT = #{totAmt}
+       ,EXP_DESC = #{expDesc}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}     
+    AND CLM_SEQ = #{clmSeq}  
+</update>
+
+<update id="updateCodyClaimExpMileage" parameterType="Map">
+/* codyClaimMapper.updateCodyClaimExpMileage */
+   UPDATE FCM0021D
+   SET CAR_MILAG_DT = TO_DATE(#{carMilagDt}, 'YYYY/MM/DD')
+       ,LOC_FROM = #{locFrom}
+       ,LOC_TO = #{locTo}
+       ,CAR_MILAG = #{carMilag}
+       ,CAR_MILAG_AMT = #{carMilagAmt}
+       ,TOLL_AMT = #{tollAmt}
+       ,PARKING_AMT = #{parkingAmt}
+       ,PURPOSE = #{purpose}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}     
+    AND CLM_SEQ = #{clmSeq}  
+</update>
+
+<insert id="insertApproveItems" parameterType="Map">
+/* codyClaimMapper.insertApproveItems */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0015D
+   (
+        APPV_PRCSS_NO
+       ,APPV_ITM_SEQ
+       ,INVC_NO
+       ,INVC_DT
+       ,INVC_TYPE
+       ,MEM_ACC_ID
+       ,SUPPLIR
+       ,PAY_DUE_DT
+       ,EXP_TYPE
+       ,EXP_TYPE_NAME
+       ,COST_CENTR
+       ,COST_CENTR_NAME
+       ,GL_ACC_CODE
+       ,GL_ACC_CODE_NAME
+       ,BUDGET_CODE
+       ,BUDGET_CODE_NAME
+       ,TAX_CODE
+       ,NET_AMT
+       ,TAX_AMT
+       ,TAX_NON_CLM_AMT
+       ,APPV_AMT
+       ,EXP_DESC
+       ,ATCH_FILE_GRP_ID
+       ,CLAM_UN
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+    )
+    values
+    (
+        #{appvPrcssNo}
+       ,#{clmSeq}
+       ,#{invcNo}
+       ,NVL(TO_DATE(#{invcDt}, 'DD/MM/YYYY'), SYSDATE)
+       ,#{invcType}
+       ,#{memAccId}
+       ,#{supplirName}
+       ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
+       ,#{expType}
+       ,#{expTypeName}
+       ,#{costCentr}
+       ,#{costCentrName}
+       ,#{glAccCode}
+       ,#{glAccCodeName}
+       ,#{budgetCode}
+       ,#{budgetCodeName}
+       ,#{taxCode}
+       ,#{gstBeforAmt}
+       ,#{gstAmt}
+       ,#{taxNonClmAmt}
+       ,#{totAmt}
+       ,#{expDesc}
+       ,#{atchFileGrpId}
+       ,#{clamUn}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<update id="updateAppvPrcssNo" parameterType="Map">
+/* codyClaimMapper.updateAppvPrcssNo */
+   UPDATE FCM0019M
+   SET APPV_PRCSS_NO = #{appvPrcssNo}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}       
+</update>
+
+<delete id="deleteCodyClaimExpItem" parameterType="Map">
+/* codyClaimMapper.deleteCodyClaimExpItem */
+   DELETE FROM FCM0020D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq} 
+</delete>
+
+<delete id="deleteCodyClaimExpMileage" parameterType="Map">
+/* codyClaimMapper.deleteCodyClaimExpMileage */
+   DELETE FROM FCM0021D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq} 
+</delete>
+
+<update id="updateCodyClaimExpTotAmt" parameterType="Map">
+/* codyClaimMapper.updateCodyClaimExpTotAmt */
+   UPDATE FCM0019M SET TOT_AMT = #{allTotAmt} WHERE CLM_NO = #{clmNo}
+</update>
+
+<select id="selectSchemaOfMemType" parameterType="String" resultType="egovMap">
+/* codyClaimMapper.selectSchemaOfMemType */
+SELECT SCHEM_ID                           SCHEM_ID, 
+       CASE 
+         WHEN MEM_TYPE = 2 THEN 'CODY' 
+         ELSE 'CT' 
+       END                                MEM_TYPE, 
+       RANGE_FROM                         RANGE_FROM, 
+       RANGE_TO                           RANGE_TO, 
+       MILEAGE_AMT                        MILEAGE_AMT, 
+       DEDUCT_FLAG                        DEDUCT_FLAG, 
+       MULTI_RATE                         MULTI_RATE, 
+       EXT_CHARG                          EXT_CHARG, 
+       TO_CHAR(PERIOD_FROM, 'YYYY-MM-DD') APPLY_FROM, 
+       TO_CHAR(PERIOD_TO, 'YYYY-MM-DD')   APPLY_TO, 
+       ( ( #{carMilag} - NVL(DEDUCT_FLAG, 0) ) * NVL(MULTI_RATE, 0) + NVL(EXT_CHARG, 0) + NVL( MILEAGE_AMT, 0) )                CAR_MILAG_AMT 
+FROM   SVC0033M 
+WHERE  1 = 1 
+       AND MEM_TYPE = #{memType} 
+       AND RANGE_FROM <![CDATA[ <= ]]> #{carMilag} 
+       AND RANGE_TO <![CDATA[ >= ]]> #{carMilag}          
+</select>
+
+
+</mapper>

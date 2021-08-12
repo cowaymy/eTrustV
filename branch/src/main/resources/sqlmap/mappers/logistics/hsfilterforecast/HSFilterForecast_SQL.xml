@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.hsfilterforecast.impl.HSFilterForecastMapper">
+
+<!-- @author Adrian C. -->
+
+    <!-- <select id="selectHSFilterForecastList" parameterType="Map"  resultType="EgovMap">
+		SELECT
+		s26.STK_CODE AS stkcode,
+		s26.STK_DESC AS stkdesc,
+
+		SUM(CASE WHEN (TO_CHAR(ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD), 'mm/yyyy') = TO_CHAR(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 'mm/yyyy'))
+                AND (s88.SRV_PRD_EXPR_DT > TO_DATE(#{fcastDate}, 'dd/mm/yyyy'))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth1,
+
+        <if test="mth2 != 0">
+		SUM(CASE WHEN (TO_CHAR(ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD), 'mm/yyyy') = TO_CHAR(ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 1), 'mm/yyyy'))
+		        AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 1))
+		        THEN NVL(l44.COMPNT_QTY,0)
+		        ELSE 0 END) AS mth2,
+        </if>
+
+        <if test="mth3 != 0">
+        SUM(CASE WHEN (TO_CHAR(ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD), 'mm/yyyy') = TO_CHAR(ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 2), 'mm/yyyy'))
+                AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 2))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth3,
+        </if>
+
+        <if test="mth4 != 0">
+        SUM(CASE WHEN (TO_CHAR(ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD), 'mm/yyyy') = TO_CHAR(ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 3), 'mm/yyyy'))
+                AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 3))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth4,
+        </if>
+
+        <if test="mth5 != 0">
+        SUM(CASE WHEN (TO_CHAR(ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD), 'mm/yyyy') = TO_CHAR(ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 4), 'mm/yyyy'))
+                AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 4))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth5,
+        </if>
+
+        <if test="mth6 != 0">
+        SUM(CASE WHEN (TO_CHAR(ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD), 'mm/yyyy') = TO_CHAR(ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 5), 'mm/yyyy'))
+                AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 5))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth6,
+        </if>
+
+        <if test="mth7 != 0">
+        SUM(CASE WHEN (TO_CHAR(ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD), 'mm/yyyy') = TO_CHAR(ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 6), 'mm/yyyy'))
+                AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 6))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth7,
+        </if>
+
+        <if test="mth8 != 0">
+        SUM(CASE WHEN (TO_CHAR(ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD), 'mm/yyyy') = TO_CHAR(ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 7), 'mm/yyyy'))
+                AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 7))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth8,
+        </if>
+
+        <if test="mth9 != 0">
+        SUM(CASE WHEN (TO_CHAR(ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD), 'mm/yyyy') = TO_CHAR(ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 8), 'mm/yyyy'))
+                AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 8))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth9,
+        </if>
+
+        <if test="mth10 != 0">
+        SUM(CASE WHEN (TO_CHAR(ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD), 'mm/yyyy') = TO_CHAR(ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 9), 'mm/yyyy'))
+                AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 9))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth10,
+        </if>
+
+        <if test="mth11 != 0">
+        SUM(CASE WHEN (TO_CHAR(ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD), 'mm/yyyy') = TO_CHAR(ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 10), 'mm/yyyy'))
+                AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 10))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth11,
+        </if>
+
+        <if test="mth12 != 0">
+        SUM(CASE WHEN (TO_CHAR(ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD), 'mm/yyyy') = TO_CHAR(ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 11), 'mm/yyyy'))
+                AND (s88.SRV_PRD_EXPR_DT > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 11))
+			    THEN NVL(l44.COMPNT_QTY,0)
+			    ELSE 0 END) AS mth12,
+        </if>
+
+        s26.STK_ID
+		FROM SAL0087D s87
+		JOIN SYS0026M s26 ON s87.SRV_FILTER_STK_ID = s26.STK_ID
+		LEFT JOIN LOG0044D l44 ON s26.STK_CODE = l44.BOM_COMPNT
+		JOIN SAL0090D s90 ON s87.SRV_CONFIG_ID = s90.SRV_CONFIG_ID
+		JOIN SAL0088D s88 ON s90.SRV_CONFIG_ID = s88.SRV_CONFIG_ID
+		JOIN SAL0001D s1 ON s90.SRV_SO_ID = s1.SALES_ORD_ID
+        LEFT JOIN SAL0071D s71 ON s1.SALES_ORD_ID = s71.SALES_ORD_ID AND s1.APP_TYPE_ID = 66
+
+		WHERE s87.SRV_FILTER_STUS_ID = 1
+		            AND l44.COMPNT_QTY > 0
+			        AND s1.STUS_CODE_ID = 4
+			        AND ((s1.APP_TYPE_ID = 66 AND s71.STUS_CODE_ID = 'REG') OR s1.APP_TYPE_ID != 66)
+
+        <if test="itmCode !=null and itmCode !=''">
+            AND s26.STK_CODE = #{itmCode}
+        </if>
+
+         <if test="searchCtgry !=null and searchCtgry !=''">
+            AND s26.STK_CTGRY_ID = #{searchCtgry}
+        </if>
+
+        GROUP BY s26.STK_CODE, s26.STK_DESC, s26.STK_ID
+        ORDER BY s26.STK_CODE
+    </select> -->
+
+    <!-- 180319 Edit by HanYi -->
+    <select id="selectHSFilterForecastList" parameterType="Map"  resultType="EgovMap">
+    <![CDATA[
+        WITH MEM AS
+		(
+		  SELECT DISTINCT * FROM (
+		    SELECT TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 0),'YYYYMM')  MON,
+		                                som.SALES_ORD_ID ORD_ID  ,
+		                                 (CASE
+		                                       WHEN som.APP_TYPE_ID = 66 THEN NVL(rs.STUS_CODE_ID, ' ')
+		                                 ELSE 'REG'
+		                                    END) RENT_STUS
+		                          FROM SAL0001D som
+		                                 JOIN SAL0002D sod   ON sod.SALES_ORD_ID = som.SALES_ORD_ID
+		                                 JOIN SYS0026M stk   ON stk.STK_ID = sod.ITM_STK_ID
+		                                 JOIN SAL0090D cg   ON cg.SRV_SO_ID = som.SALES_ORD_ID
+		                                 AND cg.SRV_STUS_ID = 1
+		                                 AND cg.SRV_BS_GEN = 1
+		                                 JOIN SAL0095D sm   ON sm.SRV_SALES_ORD_ID = som.SALES_ORD_ID
+		                                 AND sm.SRV_STUS_CODE_ID = 4
+		                                 AND sm.SRV_MEM_ID = ( SELECT SRV_MEM_ID
+		                                                                         FROM SAL0095D
+		                                                                          WHERE  SRV_SALES_ORD_ID = som.SALES_ORD_ID
+		                                                                                   AND SRV_STUS_CODE_ID = 4
+		                                                                                   and  ROWNUM <= 1
+		                                                                                    AND TO_CHAR( SRV_EXPR_DT ,'YYYYMM')  >= TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 0),'YYYYMM')
+		                                                                            )
+		                                 LEFT JOIN SAL0071D rs   ON rs.SALES_ORD_ID = som.SALES_ORD_ID
+		                                 AND som.APP_TYPE_ID = 66
+		                           WHERE  som.STUS_CODE_ID = 4
+		                                    AND stk.STK_CTGRY_ID <> 924
+		                                    AND sm.SRV_FREQ > 0
+		    UNION ALL
+		                      SELECT TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 0),'YYYYMM')  MON,
+		                                som.SALES_ORD_ID ORD_ID  ,
+		                                SS.CNTRCT_RENTAL_STUS
+		                      FROM SAL0001D som
+		                             JOIN SAL0002D sod   ON sod.SALES_ORD_ID = som.SALES_ORD_ID
+		                             JOIN SYS0026M stk   ON stk.STK_ID = sod.ITM_STK_ID
+		                             JOIN SAL0090D cg   ON cg.SRV_SO_ID = som.SALES_ORD_ID
+		                             AND cg.SRV_STUS_ID = 1
+		                             AND cg.SRV_BS_GEN = 1
+		                             JOIN SAL0088D SP   ON SP.SRV_PRD_ID = ( SELECT MAX(P.SRV_PRD_ID)
+		                                                                                              FROM SAL0088D P
+		                                                                                               WHERE  P.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
+		                                                                                                        AND P.SRV_PRD_STUS_ID = 1
+		                                                                                                        AND P.SRV_PRD_CNTRCT_ID <> 0
+		                                                                                                        AND TO_CHAR( P.SRV_PRD_EXPR_DT ,'YYYYMM')  >= TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 0),'YYYYMM')
+		                                                                                            )
+		                      JOIN SAL0078D SS   ON SS.SRV_CNTRCT_ID = SP.SRV_PRD_CNTRCT_ID
+		                       WHERE  som.STUS_CODE_ID = 4
+		]]>
+		    <!-- MON0 -->
+		<![CDATA[
+		    UNION
+		    SELECT TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 1),'YYYYMM')  MON,
+		                                som.SALES_ORD_ID ORD_ID  ,
+		                                 (CASE
+		                                       WHEN som.APP_TYPE_ID = 66 THEN NVL(rs.STUS_CODE_ID, ' ')
+		                                 ELSE 'REG'
+		                                    END) RENT_STUS
+		                          FROM SAL0001D som
+		                                 JOIN SAL0002D sod   ON sod.SALES_ORD_ID = som.SALES_ORD_ID
+		                                 JOIN SYS0026M stk   ON stk.STK_ID = sod.ITM_STK_ID
+		                                 JOIN SAL0090D cg   ON cg.SRV_SO_ID = som.SALES_ORD_ID
+		                                 AND cg.SRV_STUS_ID = 1
+		                                 AND cg.SRV_BS_GEN = 1
+		                                 JOIN SAL0095D sm   ON sm.SRV_SALES_ORD_ID = som.SALES_ORD_ID
+		                                 AND sm.SRV_STUS_CODE_ID = 4
+		                                 AND sm.SRV_MEM_ID = ( SELECT SRV_MEM_ID
+		                                                                         FROM SAL0095D
+		                                                                          WHERE  SRV_SALES_ORD_ID = som.SALES_ORD_ID
+		                                                                                   AND SRV_STUS_CODE_ID = 4
+		                                                                                   and  ROWNUM <= 1
+		                                                                                    AND TO_CHAR( SRV_EXPR_DT ,'YYYYMM')  >= TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 1),'YYYYMM')
+		                                                                            )
+		                                 LEFT JOIN SAL0071D rs   ON rs.SALES_ORD_ID = som.SALES_ORD_ID
+		                                 AND som.APP_TYPE_ID = 66
+		                           WHERE  som.STUS_CODE_ID = 4
+		                                    AND stk.STK_CTGRY_ID <> 924
+		                                    AND sm.SRV_FREQ > 0
+		    UNION ALL
+		                      SELECT TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 1),'YYYYMM')  MON,
+		                                som.SALES_ORD_ID ORD_ID  ,
+		                                SS.CNTRCT_RENTAL_STUS
+		                      FROM SAL0001D som
+		                             JOIN SAL0002D sod   ON sod.SALES_ORD_ID = som.SALES_ORD_ID
+		                             JOIN SYS0026M stk   ON stk.STK_ID = sod.ITM_STK_ID
+		                             JOIN SAL0090D cg   ON cg.SRV_SO_ID = som.SALES_ORD_ID
+		                             AND cg.SRV_STUS_ID = 1
+		                             AND cg.SRV_BS_GEN = 1
+		                             JOIN SAL0088D SP   ON SP.SRV_PRD_ID = ( SELECT MAX(P.SRV_PRD_ID)
+		                                                                                              FROM SAL0088D P
+		                                                                                               WHERE  P.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
+		                                                                                                        AND P.SRV_PRD_STUS_ID = 1
+		                                                                                                        AND P.SRV_PRD_CNTRCT_ID <> 0
+		                                                                                                        AND TO_CHAR( P.SRV_PRD_EXPR_DT ,'YYYYMM')  >= TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 1),'YYYYMM')
+		                                                                                            )
+		                      JOIN SAL0078D SS   ON SS.SRV_CNTRCT_ID = SP.SRV_PRD_CNTRCT_ID
+		                       WHERE  som.STUS_CODE_ID = 4
+		]]>
+		    <!-- MON1 -->
+		<![CDATA[
+		    UNION
+		    SELECT                      TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 2),'YYYYMM')  MON ,
+		                                som.SALES_ORD_ID ORD_ID  ,
+		                                 (CASE
+		                                       WHEN som.APP_TYPE_ID = 66 THEN NVL(rs.STUS_CODE_ID, ' ')
+		                                 ELSE 'REG'
+		                                    END) RENT_STUS
+		                          FROM SAL0001D som
+		                                 JOIN SAL0002D sod   ON sod.SALES_ORD_ID = som.SALES_ORD_ID
+		                                 JOIN SYS0026M stk   ON stk.STK_ID = sod.ITM_STK_ID
+		                                 JOIN SAL0090D cg   ON cg.SRV_SO_ID = som.SALES_ORD_ID
+		                                 AND cg.SRV_STUS_ID = 1
+		                                 AND cg.SRV_BS_GEN = 1
+		                                 JOIN SAL0095D sm   ON sm.SRV_SALES_ORD_ID = som.SALES_ORD_ID
+		                                 AND sm.SRV_STUS_CODE_ID = 4
+		                                 AND sm.SRV_MEM_ID = ( SELECT SRV_MEM_ID
+		                                                                         FROM SAL0095D
+		                                                                          WHERE  SRV_SALES_ORD_ID = som.SALES_ORD_ID
+		                                                                                   AND SRV_STUS_CODE_ID = 4
+		                                                                                   and  ROWNUM <= 1
+		                                                                                    AND TO_CHAR( SRV_EXPR_DT ,'YYYYMM')  >= TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 2),'YYYYMM')
+		                                                                            )
+		                                 LEFT JOIN SAL0071D rs   ON rs.SALES_ORD_ID = som.SALES_ORD_ID
+		                                 AND som.APP_TYPE_ID = 66
+		                           WHERE  som.STUS_CODE_ID = 4
+		                                    AND stk.STK_CTGRY_ID <> 924
+		                                    AND sm.SRV_FREQ > 0
+		    UNION ALL
+		                      SELECT TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 2),'YYYYMM')  MON,
+		                                som.SALES_ORD_ID ORD_ID  ,
+		                                SS.CNTRCT_RENTAL_STUS
+		                      FROM SAL0001D som
+		                             JOIN SAL0002D sod   ON sod.SALES_ORD_ID = som.SALES_ORD_ID
+		                             JOIN SYS0026M stk   ON stk.STK_ID = sod.ITM_STK_ID
+		                             JOIN SAL0090D cg   ON cg.SRV_SO_ID = som.SALES_ORD_ID
+		                             AND cg.SRV_STUS_ID = 1
+		                             AND cg.SRV_BS_GEN = 1
+		                             JOIN SAL0088D SP   ON SP.SRV_PRD_ID = ( SELECT MAX(P.SRV_PRD_ID)
+		                                                                                              FROM SAL0088D P
+		                                                                                               WHERE  P.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
+		                                                                                                        AND P.SRV_PRD_STUS_ID = 1
+		                                                                                                        AND P.SRV_PRD_CNTRCT_ID <> 0
+		                                                                                                        AND TO_CHAR( P.SRV_PRD_EXPR_DT ,'YYYYMM')  >= TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 2),'YYYYMM')
+		                                                                                            )
+		                      JOIN SAL0078D SS   ON SS.SRV_CNTRCT_ID = SP.SRV_PRD_CNTRCT_ID
+		                       WHERE  som.STUS_CODE_ID = 4
+		]]>
+		    <!-- MON2 -->
+		<![CDATA[
+		    UNION
+		    SELECT                      TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 3),'YYYYMM')  MON,
+		                                som.SALES_ORD_ID ORD_ID  ,
+		                                 (CASE
+		                                       WHEN som.APP_TYPE_ID = 66 THEN NVL(rs.STUS_CODE_ID, ' ')
+		                                 ELSE 'REG'
+		                                    END) RENT_STUS
+		                          FROM SAL0001D som
+		                                 JOIN SAL0002D sod   ON sod.SALES_ORD_ID = som.SALES_ORD_ID
+		                                 JOIN SYS0026M stk   ON stk.STK_ID = sod.ITM_STK_ID
+		                                 JOIN SAL0090D cg   ON cg.SRV_SO_ID = som.SALES_ORD_ID
+		                                 AND cg.SRV_STUS_ID = 1
+		                                 AND cg.SRV_BS_GEN = 1
+		                                 JOIN SAL0095D sm   ON sm.SRV_SALES_ORD_ID = som.SALES_ORD_ID
+		                                 AND sm.SRV_STUS_CODE_ID = 4
+		                                 AND sm.SRV_MEM_ID = ( SELECT SRV_MEM_ID
+		                                                                         FROM SAL0095D
+		                                                                          WHERE  SRV_SALES_ORD_ID = som.SALES_ORD_ID
+		                                                                                   AND SRV_STUS_CODE_ID = 4
+		                                                                                   and  ROWNUM <= 1
+		                                                                                    AND TO_CHAR( SRV_EXPR_DT ,'YYYYMM')  >= TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 3),'YYYYMM')
+		                                                                            )
+		                                 LEFT JOIN SAL0071D rs   ON rs.SALES_ORD_ID = som.SALES_ORD_ID
+		                                 AND som.APP_TYPE_ID = 66
+		                           WHERE  som.STUS_CODE_ID = 4
+		                                    AND stk.STK_CTGRY_ID <> 924
+		                                    AND sm.SRV_FREQ > 0
+		    UNION ALL
+		                      SELECT TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 3),'YYYYMM')  MON,
+		                                som.SALES_ORD_ID ORD_ID  ,
+		                                SS.CNTRCT_RENTAL_STUS
+		                      FROM SAL0001D som
+		                             JOIN SAL0002D sod   ON sod.SALES_ORD_ID = som.SALES_ORD_ID
+		                             JOIN SYS0026M stk   ON stk.STK_ID = sod.ITM_STK_ID
+		                             JOIN SAL0090D cg   ON cg.SRV_SO_ID = som.SALES_ORD_ID
+		                             AND cg.SRV_STUS_ID = 1
+		                             AND cg.SRV_BS_GEN = 1
+		                             JOIN SAL0088D SP   ON SP.SRV_PRD_ID = ( SELECT MAX(P.SRV_PRD_ID)
+		                                                                                              FROM SAL0088D P
+		                                                                                               WHERE  P.SRV_CONFIG_ID = cg.SRV_CONFIG_ID
+		                                                                                                        AND P.SRV_PRD_STUS_ID = 1
+		                                                                                                        AND P.SRV_PRD_CNTRCT_ID <> 0
+		                                                                                                        /*AND ( sysdate BETWEEN FN_GET_FIRST_DAY_MONTH(SRV_PRD_START_DT) AND FN_GET_LAST_DAY_MONTH(p.SRV_PRD_EXPR_DT) )*/
+		                                                                                                        AND TO_CHAR( P.SRV_PRD_EXPR_DT ,'YYYYMM')  >= TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY') , 3),'YYYYMM')
+		                                                                                            )
+		                      JOIN SAL0078D SS   ON SS.SRV_CNTRCT_ID = SP.SRV_PRD_CNTRCT_ID
+		                       WHERE  som.STUS_CODE_ID = 4
+		]]>
+		    <!-- MON3 -->
+		  ) T1
+		  WHERE T1.RENT_STUS = 'REG'
+		) <!-- Forecast Month+0,+1,+2,+3 HS available ORDER -->
+		select
+		  s26.STK_CODE AS stkcode,
+		  s26.STK_DESC      AS stkdesc,
+		  SUM(
+		  CASE
+		    WHEN (MEM.MON = TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY'), 0),'YYYYMM') )
+		    THEN NVL(l44.COMPNT_QTY,0)
+		    ELSE 0
+		  END) AS mth0,
+		  SUM(
+		  CASE
+		    WHEN (MEM.MON = TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY'), 1),'YYYYMM') )
+		    THEN NVL(l44.COMPNT_QTY,0)
+		    ELSE 0
+		  END) AS mth1,
+		  SUM(
+		  CASE
+		    WHEN (MEM.MON = TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY'), 2),'YYYYMM') )
+		    THEN NVL(l44.COMPNT_QTY,0)
+		    ELSE 0
+		  END) AS mth2,
+		  SUM(
+		  CASE
+		    WHEN (MEM.MON = TO_CHAR( ADD_MONTHS (TO_DATE(NVL(#{fcastDate}, TO_CHAR(SYSDATE, 'MM/YYYY')), 'MM/YYYY'), 3),'YYYYMM') )
+		    THEN NVL(l44.COMPNT_QTY,0)
+		    ELSE 0
+		  END) AS mth3,
+		  s26.STK_ID
+		from MEM
+		JOIN SAL0090D S90 ON MEM.ORD_ID  = S90.SRV_SO_ID
+		JOIN SAL0087D S87 ON S87.SRV_CONFIG_ID = S90.SRV_CONFIG_ID
+		JOIN SYS0026M S26 ON S87.SRV_FILTER_STK_ID = S26.STK_ID  <!-- Filter ID => Code -->
+		JOIN SAL0002D S2 ON MEM.ORD_ID = S2.SALES_ORD_ID <!-- Order Number => Product -->
+		JOIN SYS0026M S26_ST ON S2.ITM_STK_ID = S26_ST.STK_ID <!-- Product ID => Code -->
+		JOIN LOG0043M L43 ON S26_ST.STK_CODE = L43.MATRL_NO <!-- Product => BOM -->
+		JOIN LOG0044D L44 ON L43.BOM = L44.BOM <!-- BOM => Product's Filter  -->
+		                  AND S26.STK_CODE = L44.BOM_COMPNT <!-- CONFIG_FILTER's BOM Info (QTY)  -->
+		WHERE TO_CHAR(ADD_MONTHS(S87.SRV_FILTER_PRV_CHG_DT, S87.SRV_FILTER_PRIOD),'YYYYMM') = MEM.MON <!-- Forecast Month+0,+1,+2,+3 filter change case -->
+		AND S87.SRV_FILTER_STUS_ID = '1'
+		<if test="itmCode !=null and itmCode !=''">
+            AND s26.STK_CODE = #{itmCode}
+        </if>
+         <if test="searchCtgry !=null and searchCtgry !=''">
+            AND s26.STK_CTGRY_ID = #{searchCtgry}
+        </if>
+		GROUP BY s26.STK_CODE,
+		         s26.STK_DESC,
+		         s26.STK_ID
+        ORDER BY s26.STK_CODE
+    </select>
+
+    <select id="selectForecastDetailsList" parameterType="Map"  resultType="EgovMap">
+        SELECT
+        s26.STK_CODE AS stkcode,
+        s26.STK_DESC AS stkdesc,
+        s1.SALES_ORD_NO AS orderno,
+        s5.CODE AS brnchcode,
+        s5.NAME AS brnchdesc,
+        NVL(l44.COMPNT_QTY,0) AS qty,
+        TO_CHAR(TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy'), 'dd/mm/yyyy') AS filterexp
+
+        FROM SAL0087D s87
+        JOIN SYS0026M s26 ON s87.SRV_FILTER_STK_ID = s26.STK_ID
+        LEFT JOIN LOG0044D l44 ON s26.STK_CODE = l44.BOM_COMPNT
+        JOIN LOG0043M l43 ON l44.BOM = l43.BOM
+        JOIN SAL0090D s90 ON s87.SRV_CONFIG_ID = s90.SRV_CONFIG_ID
+        JOIN SAL0088D s88 ON s90.SRV_CONFIG_ID = s88.SRV_CONFIG_ID
+        JOIN SAL0001D s1 ON s90.SRV_SO_ID = s1.SALES_ORD_ID
+        LEFT JOIN SAL0071D s71 ON s1.SALES_ORD_ID = s71.SALES_ORD_ID AND s1.APP_TYPE_ID = 66
+        JOIN SAL0045D INS ON INS.SALES_ORD_ID = s1.SALES_ORD_ID
+        JOIN SAL0023D s23 ON s23.CUST_ADD_ID = INS.ADD_ID
+        AND s23.CUST_ID = s1.CUST_ID
+        JOIN SYS0064M s64 ON s23.AREA_ID = s64.AREA_ID
+        JOIN SYS0005M s5 ON s64.CODY_BRNCH_CODE = s5.CODE
+        JOIN SYS0013M s13 ON s5.TYPE_ID = s13.CODE_ID
+
+        WHERE s87.SRV_FILTER_STUS_ID = 1
+                    AND s1.STUS_CODE_ID = 4
+                    AND ((s1.APP_TYPE_ID = 66 AND s71.STUS_CODE_ID = 'REG') OR s1.APP_TYPE_ID != 66)
+
+        <if test="selectedMth == 0">
+                AND TO_CHAR(ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD), 'mm/yyyy') = TO_CHAR(TO_DATE(#{hiddenfcastDate}, 'dd/mm/yyyy'), 'mm/yyyy')
+                AND s88.SRV_PRD_EXPR_DT > TO_DATE(#{hiddenfcastDate}, 'dd/mm/yyyy')
+        </if>
+
+        <if test="selectedMth > 0">
+                AND TO_CHAR(ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD), 'mm/yyyy') = TO_CHAR(ADD_MONTHS(TO_DATE(#{hiddenfcastDate}, 'dd/mm/yyyy'), #{selectedMth}), 'mm/yyyy')
+                AND s88.SRV_PRD_EXPR_DT > ADD_MONTHS(TO_DATE(#{hiddenfcastDate}, 'dd/mm/yyyy'), #{selectedMth})
+        </if>
+
+        <if test="detailStkCode != null and detailStkCode !=''">
+            AND s26.STK_CODE = #{detailStkCode}
+        </if>
+
+         <if test="loctype != null">
+            AND s13.CODE IN
+            <foreach item="item" collection="locList" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+         <if test="brnch != null">
+            AND s5.BRNCH_ID IN
+            <foreach item="item" collection="brnchList" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.mobileAuthorization.impl.MobileMenuMapper">
+
+	<insert id="insertMobileMenu" parameterType="Map">
+		INSERT   /* [com.coway.trust.biz.common.mobileAuthorization.impl.MobileMenuMapper.insertMobileMenu] 20191028 - KR HAN */
+					INTO MOB0002M
+					(
+						MENU_CODE
+						,MENU_NAME
+						,PGM_CODE
+						,PGM_NAME
+						,MENU_LVL
+						,MENU_ORDER
+						,UPPER_MENU_CODE
+						,MENU_ICON_NM
+						,PAGE_PATH
+						,USE_YN
+						,CRT_USER_ID
+						,CRT_DT
+						,UPD_USER_ID
+						,UPD_DT
+					)
+					VALUES
+					(
+
+	                     CASE WHEN #{upperMenuCode} IS NULL THEN
+					       ( SELECT 'MOB' || LPAD( NVL(SUBSTR(MAX(MENU_CODE), 4, 2), 0)+1 , 2, 0)  || '00' FROM MOB0002M WHERE MENU_CODE != 'MOB9999' )
+					     ELSE
+					       ( SELECT 'MOB' || LPAD( NVL(SUBSTR(MAX(MENU_CODE), 4, 2), 0) , 2, 0)  || LPAD( NVL(SUBSTR(MAX(MENU_CODE), 6, 2), 0)+1 , 2, 0) FROM MOB0002M
+					           WHERE  UPPER_MENU_CODE = #{upperMenuCode} AND MENU_CODE != 'MOB9999'  )
+					     END
+						,#{menuName}
+						,#{pgmCode}
+						,#{pgmName}
+						,#{menuLvl}
+						,LPAD( #{menuOrder}, 3, 0)
+						,#{upperMenuCode}
+						,#{menuIconNm}
+						,#{pagePath}
+						,#{useYn}
+						,#{crtUserId}
+						,SYSDATE
+						,#{updUserId}
+						,SYSDATE
+					)
+	</insert>
+
+	<select id="selectMobileMenuList" parameterType="Map" resultType="egovMap">
+		SELECT   /* [com.coway.trust.biz.common.mobileAuthorization.impl.MobileMenuMapper.selectMobileMenuList] 20191028 - KR HAN */
+					 'Lvl'||MENU_LVL DIV
+					,MENU_CODE
+					,MENU_NAME
+					,PGM_CODE
+					,PGM_NAME
+					,MENU_LVL
+					,MENU_ORDER
+					,UPPER_MENU_CODE
+					,MENU_ICON_NM
+					,PAGE_PATH
+					,USE_YN
+					,CRT_USER_ID
+					,CRT_DT
+					,UPD_USER_ID
+		            ,CASE WHEN (User2.USER_ID IS NOT NULL) THEN User2.USER_NAME ELSE '' END AS UPD_USER_NM
+					,TO_CHAR(UPD_DT, 'DD/MM/YYYY HH24:MI:SS') UPD_DT
+		FROM    MOB0002M t1
+		              LEFT OUTER JOIN SYS0047M User2
+		                  ON User2.USER_ID = t1.UPD_USER_ID
+		<where>
+			<if test='menuCode !=null and menuCode != "" '>
+			   AND (UPPER(MENU_CODE) LIKE  UPPER(#{menuCode}) || '%' OR
+			            UPPER(MENU_NAME) LIKE '%' || UPPER(#{menuCode}) || '%')
+			</if>
+			<if test='pgmCode !=null and pgmCode !="" '>
+			   AND (UPPER(PGM_CODE) LIKE  UPPER(#{pgmCode}) || '%' OR
+			            UPPER(PGM_NAME) LIKE '%' || UPPER(#{pgmCode}) || '%')
+			</if>
+			<if test='useYn !=null and useYn !="" '>
+			   AND USE_YN = #{useYn}
+			</if>
+		</where>
+        START WITH t1.UPPER_MENU_CODE IS NULL
+        CONNECT BY PRIOR t1.MENU_CODE = t1.UPPER_MENU_CODE
+        ORDER SIBLINGS BY t1.MENU_ORDER
+<!-- 	    ORDER BY MENU_LVL, MENU_CODE -->
+       </select>
+
+    <select id="selectMobileMenuPopList" parameterType="Map" resultType="egovMap">
+		SELECT  /* [com.coway.trust.biz.common.mobileAuthorization.impl.MobileMenuMapper.selectMobileMenuPopList] 20191028 - KR HAN */
+					DISTINCT MENU_CODE
+					            , MENU_NAME
+                                , PGM_CODE
+                                , PGM_NAME
+                                , MENU_LVL
+		FROM    MOB0002M
+		<where>
+		     <if test='menuLvl !=null and  menuLvl !=""'>
+                 AND MENU_LVL = #{menuLvl}
+             </if>
+		     <if test='menuSelectBox == "01"  and  ( menuCdNm !=null and menuCdNm !="" ) '>
+		         AND UPPER(MENU_CODE) LIKE UPPER(#{menuCdNm}) || '%'
+		     </if>
+		     <if test='menuSelectBox == "02" and  ( menuCdNm !=null and menuCdNm !="" ) '>
+		         AND UPPER(MENU_NAME) LIKE UPPER(#{menuCdNm}) || '%'
+		     </if>
+		     <if test='authCd !=null and authCd !="" '>
+		         AND MENU_CODE NOT IN (
+														SELECT
+														            MENU_CODE
+														FROM    MOB0003M
+														WHERE   AUTH_CODE = #{authCd}
+		                                            )
+             </if>
+        </where>
+         ORDER BY MENU_CODE
+  </select>
+
+    <update id="updateMobileMenu" parameterType="Map">
+		UPDATE  /* [com.coway.trust.biz.common.mobileAuthorization.impl.MobileMenuMapper.updateMobileMenu] 20191028 - KR HAN */
+		            MOB0002M SET
+					MENU_NAME = #{menuName}
+                    ,UPPER_MENU_CODE = #{upperMenuCode}
+					,PGM_CODE = #{pgmCode}
+					,PGM_NAME = #{pgmName}
+					,MENU_LvL = #{menuLvl}
+					,MENU_ORDER = LPAD( #{menuOrder}, 3, 0)
+					,MENU_ICON_NM   = #{menuIconNm}
+					,PAGE_PATH = #{pagePath}
+					,USE_YN = #{useYn}
+					,UPD_USER_ID  = #{updUserId}
+					,UPD_DT = SYSDATE
+		WHERE MENU_CODE    =  UPPER(#{menuCode})
+    </update>
+
+  <delete id="deleteMobileMenu" parameterType="Map">
+      DELETE    /* [com.coway.trust.biz.common.mobileAuthorization.impl.MobileMenuMapper.deleteMobileMenu] 20191028 - KR HAN */
+                    MOB0002M
+      WHERE     MENU_CODE    =  UPPER(#{menuCode})
+  </delete>
+
+    <select id="selectUpperMobileMenuCount" parameterType="Map" resultType="Integer">
+        SELECT  /* [com.coway.trust.biz.common.mobileAuthorization.impl.MobileMenuMapper.selectUpperMobileMenuCount] 20191028 - KR HAN */
+                    COUNT(1)
+        FROM     MOB0002M
+        WHERE   UPPER_MENU_CODE =UPPER(#{menuCode})
+  </select>
+
+
+
+</mapper>

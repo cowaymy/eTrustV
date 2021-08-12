@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.memorandumApi.impl.MemorandumApiMapper">
+
+
+
+<resultMap id="clobMap" type="EgovMap">
+    <result property="MEMO_CNTNT" column="MEMO_CNTNT" jdbcType="CLOB"  javaType="java.lang.String" />
+</resultMap>
+
+
+
+<select id="selectMemorandumList" parameterType="Map" resultMap="clobMap">
+<![CDATA[
+/* [com.coway.trust.biz.logistics.memorandumApi.impl.MemorandumApiMapper.selectMemorandumList] 20190905 - KR JAEMAJEM */
+SELECT  A.MEMO_ID                                                               AS MEMO_ID
+    ,   A.STUS_CODE_ID                                                          AS STUS_CODE_ID
+    ,   A.MEMO_TITLE                                                            AS MEMO_TITLE
+    ,   A.MEMO_CNTNT                                                            AS MEMO_CNTNT
+    ,   A.IS_STAFF_MEMO                                                         AS IS_STAFF_MEMO
+    ,   A.IS_CODY_MEMO                                                          AS IS_CODY_MEMO
+    ,   A.IS_HP_MEMO                                                            AS IS_HP_MEMO
+    ,   A.IS_HT_MEMO                                                            AS IS_HT_MEMO
+    ,   A.CRT_DEPT_ID                                                           AS CRT_DEPT_ID
+    ,   CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M',A.CRT_DEPT_ID)                    AS CRT_DEPT_ID_NM
+    ,   A.CRT_USER_ID                                                           AS CRT_USER_ID
+    ,   TO_CHAR(A.CRT_DT, 'DD/MM/YYYY')                                         AS CRT_DT
+    ,   A.UPD_USER_ID                                                           AS UPD_USER_ID
+    ,   TO_CHAR(A.UPD_DT, 'DD/MM/YYYY')                                         AS UPD_DT
+    ,   CRTUSER.USER_NAME                                                       AS CRT_USER_ID_NM
+    ,   UPDUSER.USER_NAME                                                       AS UPD_USER_ID_NM
+    ,   B.CODE                                                                  AS CODE
+    ,   B.NAME                                                                  AS NAME
+FROM    MSC0010D A
+        INNER JOIN SYS0038M B
+            ON  A.STUS_CODE_ID = B.STUS_CODE_ID
+        LEFT OUTER JOIN SYS0047M CRTUSER
+            ON  A.CRT_USER_ID = CRTUSER.USER_ID
+        LEFT OUTER JOIN SYS0047M UPDUSER
+            ON  A.UPD_USER_ID = UPDUSER.USER_ID
+WHERE   A.STUS_CODE_ID = 1
+--일단 보류 AND     A.CRT_DEPT_ID = crtDeptId
+AND     TO_CHAR(A.CRT_DT, 'YYYYMMDD') BETWEEN #{crtDtFrom} AND #{crtDtTo}
+]]>
+<if test="selectType != null and selectType != '' ">
+<choose>
+    <when test='selectType.equals("1")'>
+        AND    UPPER(A.MEMO_TITLE) LIKE UPPER('%'||#{selectKeyword}||'%')
+    </when>
+    <otherwise>
+        AND    UPPER(CRTUSER.USER_NAME) LIKE UPPER('%'||#{selectKeyword}||'%')
+    </otherwise>
+</choose>
+</if>
+<choose>
+    <when test='userTypeId == 1'>
+        AND    A.IS_HP_MEMO = 1
+    </when>
+    <when test='userTypeId == 2'>
+        AND    A.IS_CODY_MEMO = 1
+    </when>
+    <when test='userTypeId == 7'>
+        AND    A.IS_HT_MEMO = 1
+    </when>
+    <otherwise>
+        AND     1 = 2
+    </otherwise>
+</choose>
+ORDER BY    A.MEMO_ID DESC
+</select>
+</mapper>

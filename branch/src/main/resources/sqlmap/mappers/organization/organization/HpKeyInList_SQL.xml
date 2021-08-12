@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.organization.impl.HpKeyInListMapper">
+
+    <!-- 
+        CLOB 컬럼을 사용하기 위해서는 아래와 같이 resultMap을 선언 후
+         <select id="selectClobData" parameterType="Map"  resultMap="clobMap"> 와 같이
+          resultMap="clobMap" 을 사용해야 함.
+    -->
+    <resultMap id="clobMap" type="EgovMap">
+        <result property="typeDesc" column="type_Desc" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>    
+    
+    
+   <resultMap id="clobMap_1" type="EgovMap">
+        <result property="rem" column="rem" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>    
+    
+    
+    
+        <select id="reqPersonComboList" parameterType="Map" resultType="egovMap">
+        
+			       <![CDATA[
+							SELECT Extent1.USER_ID USER_ID  ,
+							       Extent1.USER_NAME USER_NAME  ,
+							       Extent1.USER_PASSWD USER_PASSWD  ,
+							       Extent1.USER_FULL_NAME USER_FULL_NAME  ,
+							       Extent1.USER_EMAIL USER_EMAIL  ,
+							       Extent1.USER_STUS_ID USER_STUS_ID  ,
+							       Extent1.USER_BRNCH_ID USER_BRNCH_ID  ,
+							       Extent1.USER_DEPT_ID USER_DEPT_ID  ,
+							       Extent1.USER_UPD_USER_ID USER_UPD_USER_ID  ,
+							       Extent1.USER_UPD_DT USER_UPD_DT  ,
+							       Extent1.USER_SYNC_CHK USER_SYNC_CHK  ,
+							       Extent1.USER_NRIC USER_NRIC  ,
+							       Extent1.USER_DT_JOIN USER_DT_JOIN  ,
+							       Extent1.USER_GSEC_SYN_CHK USER_GSEC_SYN_CHK  ,
+							       Extent1.USER_PASSWD_LAST_UPD_DT USER_PASSWD_LAST_UPD_DT  ,
+							       Extent1.USER_TYPE_ID USER_TYPE_ID  ,
+							       Extent1.USER_DFLT_PAS_SWD USER_DFLT_PAS_SWD  ,
+							       Extent1.USER_VAL_ID_FROM USER_VAL_ID_FROM  ,
+							       Extent1.USER_VAL_ID_TO USER_VAL_ID_TO  ,
+							       Extent1.USER_SEC_QUES_ID USER_SEC_QUES_ID  ,
+							       Extent1.USER_SEC_QUES_ANS USER_SEC_QUES_ANS  ,
+							       Extent1.USER_WORK_NO USER_WORK_NO  ,
+							       Extent1.USER_MOBILE_NO USER_MOBILE_NO  ,
+							       Extent1.USER_EXT_NO USER_EXT_NO  ,
+							       Extent1.USER_IS_PART_TM USER_IS_PART_TM  ,
+							       Extent1.USER_DEPT_ID USER_DEPT_ID  ,
+							       Extent1.USER_IS_EXTRNL USER_IS_EXTRNL  
+							  FROM SYS0047M Extent1
+							 WHERE  ( 1 = Extent1.USER_STUS_ID )
+							          AND ( 1 <> Extent1.USER_TYPE_ID )
+							          AND ( 2 <> Extent1.USER_TYPE_ID )
+							          AND ( 3 <> Extent1.USER_TYPE_ID )
+							  ORDER BY Extent1.USER_NAME ASC
+
+			        ]]>
+			    </select>
+    
+    
+    
+    
+    
+    
+    
+            <select id="branchComboList" parameterType="Map" resultType="egovMap">
+                    
+                    SELECT Project1.BRNCH_ID BRNCH_ID  ,
+						       Project1.C1 C1  
+						  FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
+						                Extent1.CODE || 'N' || Extent1.NAME C1  
+						         FROM SYS0005M Extent1
+						          WHERE  1 = Extent1.STUS_ID ) Project1
+						  ORDER BY Project1.C1 ASC
+
+                </select>
+                
+                
+                
+                
+                
+                
+               <select id="selectHpKeyInListing_Excel" parameterType="Map" resultMap="clobMap">
+                
+                    SELECT GroupBy1.A1 C1  
+					  FROM ( SELECT COUNT(1)  A1  
+					         FROM ( SELECT Vw_NeoSales.SALES_ORD_ID SALES_ORD_ID  ,
+					                       Vw_NeoSales.SALES_ORD_NO SALES_ORD_NO  ,
+					                       Vw_NeoSales.REF_NO REF_NO  ,
+					                       Vw_NeoSales.SALES_DT SALES_DT  ,
+					                       Vw_NeoSales.CUST_ID CUST_ID  ,
+					                       Vw_NeoSales.CUST_CNT_ID CUST_CNT_ID  ,
+					                       Vw_NeoSales.CUST_ADD_ID CUST_ADD_ID  ,
+					                       Vw_NeoSales.MEM_ID MEM_ID  ,
+					                       Vw_NeoSales.BRNCH_ID BRNCH_ID  ,
+					                       Vw_NeoSales.APP_TYPE_ID APP_TYPE_ID  ,
+					                       Vw_NeoSales.DSCNT_AMT DSCNT_AMT  ,
+					                       Vw_NeoSales.TAX_AMT TAX_AMT  ,
+					                       Vw_NeoSales.TOT_AMT TOT_AMT  ,
+					                       Vw_NeoSales.PROMO_ID PROMO_ID  ,
+					                       Vw_NeoSales.BINDING_NO BINDING_NO  ,
+					                       Vw_NeoSales.CC_PROMO_ID CC_PROMO_ID  ,
+					                       Vw_NeoSales.TOT_PV TOT_PV  ,
+					                       Vw_NeoSales.REM REM  ,
+					                       Vw_NeoSales.PV_MONTH PV_MONTH  ,
+					                       Vw_NeoSales.PV_YEAR PV_YEAR  ,
+					                       Vw_NeoSales.STUS_CODE_ID STUS_CODE_ID  ,
+					                       Vw_NeoSales.UPD_DT UPD_DT  ,
+					                       Vw_NeoSales.UPD_USER_ID UPD_USER_ID  ,
+					                       Vw_NeoSales.SYNC_CHK SYNC_CHK  ,
+					                       Vw_NeoSales.CUST_PO_NO CUST_PO_NO  ,
+					                       Vw_NeoSales.REN_CHK_ID REN_CHK_ID  ,
+					                       Vw_NeoSales.INST_PRIOD INST_PRIOD  ,
+					                       Vw_NeoSales.DO_NO DO_NO  ,
+					                       Vw_NeoSales.DEPT_CODE DEPT_CODE  ,
+					                       Vw_NeoSales.GRP_CODE GRP_CODE  ,
+					                       Vw_NeoSales.ORG_CODE ORG_CODE  ,
+					                       Vw_NeoSales.SALES_ORD_ID_OLD SALES_ORD_ID_OLD  ,
+					                       Vw_NeoSales.EDIT_TYPE_ID EDIT_TYPE_ID  ,
+					                       Vw_NeoSales.CUST_BILL_ID CUST_BILL_ID  ,
+					                       Vw_NeoSales.MTH_RENT_AMT MTH_RENT_AMT  ,
+					                       Vw_NeoSales.LOK LOK  ,
+					                       Vw_NeoSales.AEON_STUS_ID AEON_STUS_ID  ,
+					                       Vw_NeoSales.COMM_DT COMM_DT  ,
+					                       Vw_NeoSales.CRT_USER_ID CRT_USER_ID  ,
+					                       Vw_NeoSales.CRT_DT CRT_DT  ,
+					                       Vw_NeoSales.PAY_COM_DT PAY_COM_DT  ,
+					                       Vw_NeoSales.DEF_RENT_AMT DEF_RENT_AMT  ,
+					                       Vw_NeoSales.REF_DOC_ID REF_DOC_ID  ,
+					                       Vw_NeoSales.RENT_PROMO_ID RENT_PROMO_ID  ,
+					                       Vw_NeoSales.SALES_HM_ID SALES_HM_ID  ,
+					                       Vw_NeoSales.SALES_SM_ID SALES_SM_ID  ,
+					                       Vw_NeoSales.SALES_GM_ID SALES_GM_ID  ,
+					                       Vw_NeoSales.ADV_BILL ADV_BILL  ,
+					                       Vw_NeoSales.CNVR_SCHEME_ID CNVR_SCHEME_ID  ,
+					                       Vw_NeoSales.CUST_CARE_CNT_ID CUST_CARE_CNT_ID  
+					                FROM SAL1058V Vw_NeoSales ) Extent1 ) GroupBy1
+                
+    </select>               
+                
+                
+    
+    </mapper>

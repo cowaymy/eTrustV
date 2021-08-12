@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>email</title>
+</head>
+<body>
+<table style="font-size:12px;font-family:Verdana,Dotum,sans-serif;border-collapse:collapse; border-spacing:0;">
+<tr>
+	<td style="font-weight:bold;">Attention to: ${attentionTo}</td>
+</tr>
+<tr>
+	<td style="padding:10px 0 10px 0">Dear Sir/Madam,</td>
+</tr>
+<tr>
+	<td style="padding:10px 0 10px 0">This final reminder is written regarding your outstanding rental payment outlined below as of the date hereof :-</td>
+</tr>
+<tr>
+	<td style="padding:0 0 0 30px">Order no. : ${orderNo}<br />Total overdue amount : ${totalOverdueAmount}<br />Rental Product : ${product}</td>
+</tr>
+<tr>
+	<td style="padding:10px 0 0 0">Kindly pay the total outstanding amount within seven (7) days from the date hereof. Should the payment is not received within the period, the product will be repossessed and our lawyer will take over this account for collection proceedings against you without further notice.<br /><br />
+	We regret the necessity for this action and urge you to make the payment immediately and email the payment slip to rchelp@coway.com.my. For any queries, kindly contact us at any time. Thank you for your prompt action and reply. <br />Thank you.</td>
+</tr>
+<tr>
+	<td style="padding:10px 0 5px 0">Credit Control Department</td>
+</tr>
+<tr>
+	<td style="padding:5px 0 10px 0">Coway (M) Sdn Bhd Suite 6-3, Level 6, Wisma UOA II, No 21, Jalan Pinang, 50450 Kuala Lumpur, Malaysia</td>
+</tr>
+<tr>
+	<td style="padding:5px 0 10px 0"><a href="www.coway.com.my">www.coway.com.my</a></td>
+</tr>
+<tr>
+	<td style="padding:10px 0 5px 0">How to make payment to Coway (M) Sdn Bhd</td>
+</tr>
+<tr>
+	<td style="padding:20px 0 20px 0;">
+		<table style="width:100%;border-collapse:collapse; border-spacing:0;">
+			<colgroup>
+				<col style="width:33.3%" />
+				<col style="width:33.3%" />
+				<col style="width:33.3%" />
+			</colgroup>
+			<tr>
+				<td style="height:150px; vertical-align:middle; border:1px solid #333;">Payment methods to Coway (M) Sdn Bhd quote order no. in your transaction</td>
+				<td style="height:150px; vertical-align:middle; border:1px solid #333;">
+					<table>
+						<tr>	
+							<td style="font-weight:bold; padding:0 0 20px 0;">Counter</td>
+						</tr>
+						<tr>	
+							<td>
+								CIMB virtual account:<br />
+								${virtualAccount}
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td style="height:150px; vertical-align:middle; border:1px solid #333;">
+					<table>
+						<tr>	
+							<td style="font-weight:bold; padding:0 0 20px 0;">On Line</td>
+						</tr>
+						<tr>	
+							<td>
+								<a href="www.cimbclicks.com.my">www.cimbclicks.com.my</a><br />
+								<a href="www.maybank2u.com.my">www.maybank2u.com.my</a>
+							</td>
+						</tr>
+						<tr>	
+							<td style="padding:20px 0 0 30px;">
+								Biller Code:  ${billerCode}<br />
+								Ref-1: ${ref}
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</td>
+</tr>
+<tr>
+	<td style="padding:10px 0 5px 0">Please quote Order no. at your payment. Email bank slip to <a href="mailto:rchelp@coway.com.my">rchelp@coway.com.my</td>
+</tr>
+</table>
+</body>
+</html>

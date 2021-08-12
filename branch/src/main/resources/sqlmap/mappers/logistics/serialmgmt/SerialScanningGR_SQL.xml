@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.serialmgmt.impl.SerialScanningGRMapper">
+    <select id="serialScanningGRCommonCode" parameterType="Map" resultType="EgovMap">
+        /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialScanningGRMapper.serialScanningGRCommonCode] - KR JUN */
+        SELECT CODE_ID
+                 , CODE_MASTER_ID
+                 , CODE
+                 , CODE_NAME
+                 , CODE_DESC
+          FROM SYS0013M
+         WHERE CODE_MASTER_ID = #{codeMasterId}
+    </select>
+
+    <select id="selectDefLocationType" parameterType="Map" resultType="String">
+        /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialScanningGRMapper.selectDefLocationType] - KR OHK */
+        SELECT WH_LOC_GB
+          FROM SYS0028M
+         WHERE 1 = 1
+            AND WH_LOC_STUS_ID = 1
+        <if test="userBrnchId != null and userBrnchId != ''">
+             AND WH_LOC_BRNCH_ID = #{userBrnchId}
+        </if>
+        <if test="locgb != null and locgb != ''">
+             AND WH_LOC_GB = #{locgb}
+        </if>
+             AND ROWNUM = 1
+    </select>
+
+    <select id="selectDefLocationCode" parameterType="Map" resultType="String">
+        /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialScanningGRMapper.selectDefLocationCode] - KR OHK */
+        SELECT LISTAGG(WH_LOC_ID, '|!|') WITHIN GROUP (ORDER BY WH_LOC_ID) WH_LOC_ID
+          FROM SYS0028M
+         WHERE 1 = 1
+             AND WH_LOC_STUS_ID = 1
+        <if test="locgb != null and locgb != ''">
+              AND WH_LOC_GB = #{locgb}
+        </if>
+        <if test="userName != null and userName != ''">
+              AND WH_LOC_CODE = #{userName}
+        </if>
+        <if test="userBrnchId != null and userBrnchId != ''">
+             AND WH_LOC_BRNCH_ID = #{userBrnchId}
+        </if>
+    </select>
+
+    <select id="serialScanningGRDataList" parameterType="Map" resultType="EgovMap">
+        /* [com.coway.trust.biz.logistics.serialmgmt.impl.SerialScanningGRMapper.serialScanningGRDataList] - KR JUN */
+        SELECT l55.DELVRY_NO AS delno
+                 --, l55.REQST_NO AS reqstno
+                 --, TO_CHAR(l47.REQST_CRT_DT, 'dd/mm/yyyy') AS reqstdt
+                 , L47.REQST_TYPE AS reqsttype
+                 , l47.TRNSC_TYPE AS trnsctype
+                 , l47.TRNSC_TYPE_DTL AS trnsctypedtl
+                 , DBMS_LOB.SUBSTR (s28c.WH_LOC_DESC, 4000) AS frmloc
+                 , l47.RCIV_CDC_RDC AS frmlocid
+                 , l47.REQST_CDC_RDC AS tolocid
+                 , NVL(TO_CHAR(TO_DATE(l54.DELVRY_DT, 'yyyymmdd'), 'dd/mm/yyyy'), '-') AS deldate
+                 , SUM(l55.DELVRY_QTY) AS delqty
+                 , l54.CRT_USER_ID AS crt
+                 , TO_CHAR(l54.CRT_DT, 'dd/mm/yyyy') AS crtdt
+                 , l47.REF_DOC_NO
+                 , s1.SALES_ORD_NO ordno
+                 , H11.BNDL_NO
+           FROM LOG0047M l47
+                 , LOG0055D l55
+                 , LOG0054M l54
+                 , SYS0028M s28c
+                 , sys0028m s28q
+                 , sal0046d s46
+                 , sal0001d s1
+                 , HMC0011D H11
+         WHERE l47.REQST_NO = l55.REQST_NO
+             AND l54.DELVRY_NO = l55.DELVRY_NO
+             AND l47.RCIV_CDC_RDC = s28c.WH_LOC_ID(+)
+             and l47.reqst_cdc_rdc  = s28q.wh_loc_id(+)
+             AND l47.REF_DOC_NO = s46.INSTALL_ENTRY_NO (+)
+             AND s46.SALES_ORD_ID = s1.SALES_ORD_ID (+)
+             AND S1.BNDL_ID = H11.ORD_SEQ_NO(+)
+             AND L54.DELVRY_DT  <![CDATA[ >= ]]>  to_char(to_date(#{searchDeliverySDate},'dd/mm/yyyy'),'yyyymmdd')   -- FROM
+             AND L54.DELVRY_DT  <![CDATA[ <= ]]>  to_char(to_date(#{searchDeliveryEDate},'dd/mm/yyyy'),'yyyymmdd')   -- TO
+             AND (1, l47.REQST_CDC_RDC) IN
+             <foreach item="item" collection="locCode" index="index" open="(" separator="," close=")">
+                 (1, #{item})
+             </foreach>
+             <if test="locCodeFrom !=null">
+             AND (1, l47.RCIV_CDC_RDC) IN
+             <foreach item="item" collection="locCodeFrom" index="index" open="(" separator="," close=")">
+                 (1, #{item})
+             </foreach>
+             </if>
+             AND l47.trnsc_type IN ('US','UM')
+             AND l54.DELVRY_GI_CMPLT = 'Y'
+             AND NVL(l54.DEL_FLAG, 'N') = 'N'
+             AND NVL(l54.DELVRY_GR_CMPLT, 'N') = 'N'
+             AND NVL(l55.del_flag,'N')  <![CDATA[ <> ]]>  'Y'
+             AND s28q.SERIAL_REQUIRE_CHK_YN = 'Y'
+        <if test="searchDeliveryOrRequestNo !=null and searchDeliveryOrRequestNo != ''">
+            AND (l55.DELVRY_NO = #{searchDeliveryOrRequestNo} OR l55.REQST_NO = #{searchDeliveryOrRequestNo})
+        </if>
+        <if test="searchRequestNo2 !=null and searchRequestNo2 != ''">
+            AND (s1.SALES_ORD_NO = #{searchRequestNo2} OR H11.BNDL_NO = #{searchRequestNo2} OR l47.REF_DOC_NO = #{searchRequestNo2})
+        </if>
+             GROUP BY l55.DELVRY_NO, L47.REQST_TYPE, l47.TRNSC_TYPE, l47.TRNSC_TYPE_DTL, s28c.WH_LOC_DESC,
+                            l47.RCIV_CDC_RDC, l47.REQST_CDC_RDC, l54.DELVRY_DT, l54.CRT_USER_ID, l54.CRT_DT, l47.REF_DOC_NO, s1.SALES_ORD_NO, H11.BNDL_NO
+             ORDER BY l55.DELVRY_NO DESC
+    </select>
+</mapper>

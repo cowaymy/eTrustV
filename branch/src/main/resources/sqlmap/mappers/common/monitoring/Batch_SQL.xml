@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.monitoring.impl.BatchMapper">
+
+    <select id="selectJobNames" parameterType="Map" resultType="egovMap">
+        SELECT   JOB_NAME
+        FROM BATCH_JOB_INSTANCE
+        GROUP BY JOB_NAME
+    </select>
+
+
+    <select id="selectBatchMonitoring" parameterType="Map" resultType="egovMap">
+        SELECT   A.JOB_INSTANCE_ID
+            ,A.JOB_NAME
+            ,B.JOB_EXECUTION_ID
+            ,TO_CHAR(B.START_TIME, 'DD-MM-YYYY HH24:MI:SS') AS START_TIME
+            ,TO_CHAR(B.END_TIME, 'DD-MM-YYYY HH24:MI:SS') AS END_TIME
+            ,B.STATUS
+            ,C.EXIT_CODE
+            ,C.EXIT_MESSAGE
+            ,C.STEP_NAME
+            ,C.STEP_EXECUTION_ID
+            , (SELECT COUNT (1) CNT
+               FROM SYS0084M D
+               WHERE TO_CHAR(C.STEP_EXECUTION_ID) = D.STEP_EXECUTION_ID) MESSAGE_COUNT
+        FROM BATCH_JOB_INSTANCE A
+                ,BATCH_JOB_EXECUTION B
+                ,BATCH_STEP_EXECUTION C
+        WHERE A.JOB_INSTANCE_ID = B.JOB_INSTANCE_ID
+        AND B.JOB_EXECUTION_ID = C.JOB_EXECUTION_ID
+        AND A.JOB_NAME = nvl(#{jobName}, A.JOB_NAME)
+
+        <if test='status !=null and status != "" '>
+        AND B.STATUS IN (SELECT     REGEXP_SUBSTR (#{status}, '[^,]+', 1, LEVEL)
+                                                              FROM DUAL
+                                                        CONNECT BY REGEXP_SUBSTR (#{status}, '[^,]+', 1, LEVEL) IS NOT NULL)
+        </if>
+
+        <if test='exitCode !=null and exitCode != "" '>
+        AND C.EXIT_CODE IN (SELECT     REGEXP_SUBSTR (#{exitCode}, '[^,]+', 1, LEVEL)
+                                                              FROM DUAL
+                                                        CONNECT BY REGEXP_SUBSTR (#{exitCode}, '[^,]+', 1, LEVEL) IS NOT NULL)
+        </if>
+
+        <![CDATA[
+        AND B.START_TIME >= TO_DATE(#{searchStartDt}, 'DD/MM/YYYY')
+        AND B.START_TIME < TO_DATE(#{searchEndDt}, 'DD/MM/YYYY') + 1
+        ]]>
+        ORDER BY A.JOB_INSTANCE_ID DESC, B.JOB_EXECUTION_ID DESC
+    </select>
+
+    <select id="selectBatchDetailMonitoring" parameterType="string" resultType="egovMap">
+        SELECT
+              STEP_EXECUTION_ID
+              ,SEQ
+              ,JOB_PROC_NAME
+              ,STEP_PROC_NAME
+              ,PROCEDURE_NAME
+              ,MSG
+              ,CRT_USER_ID
+              ,TO_CHAR(CRT_DT, 'DD-MM-YYYY HH24:MI:SS') AS CRT_DT
+          FROM SYS0084M
+          WHERE STEP_EXECUTION_ID = #{stepexecutionid}
+          ORDER BY SEQ
+    </select>
+
+</mapper>

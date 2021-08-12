@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=1280px,user-scalable=yes,target-densitydpi=device-dpi" name="viewport"/>
+<title>eTrust system</title>
+<link rel="stylesheet" type="text/css" href="../css/master.css" />
+<link rel="stylesheet" type="text/css" href="../css/common.css" />
+<link rel="stylesheet" type="text/css" href="../css/multiple-select.css" />
+<script type="text/javascript" src="../js/jquery-2.2.4.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../js/jquery.ui.core.min.js"></script>
+<script type="text/javascript" src="../js/jquery.ui.datepicker.min.js"></script>
+<script type="text/javascript" src="../js/common_pub.js"></script>
+<script type="text/javascript" src="../js/multiple-select.js"></script>
+</head>
+<body>
+
+<div id="popup_wrap"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>Record Select</h1>
+<ul class="right_opt">
+	<li><p class="btn_blue2"><a href="#">COPY</a></p></li>
+	<li><p class="btn_blue2"><a href="#">EDIT</a></p></li>
+	<li><p class="btn_blue2"><a href="#">NEW</a></p></li>
+	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+<form action="#" method="post">
+
+<h2>Account Information</h2>
+
+<table summary="search table" class="type1"><!-- table start -->
+<caption>search table</caption>
+<colgroup>
+	<col style="width:138px" />
+	<col style="width:*" />
+	<col style="width:138px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Member Type</th>
+	<td>
+	<select  class="w100p">
+		<option value="">Coway Lady</option>
+	</select>
+	</td>
+	<th scope="row">Member Code</th>
+	<td><input type="text" title="Member Code" class="w100p" /></td>
+</tr>
+<tr>
+	<th scope="row">Member Name</th>
+	<td><input type="text" title="Member Name" class="w100p" /></td>
+	<th scope="row">IC Number</th>
+	<td><input type="text" title="IC Number" class="w100p" /></td>
+</tr>
+<tr>
+	<th scope="row">Branch</th>
+	<td colspan="3"><input type="text" title="Branch" class="w100p" /></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<ul class="right_btns">
+	<li><p class="btn_gray"><a href="#"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_gray"><a href="#"><span class="clear"></span>Clear</a></p></li>
+</ul>
+
+<div class="page_size"><!-- page_size start -->
+<p>Page size</p>
+<select>
+	<option value="">10</option>
+</select>
+</div><!-- page_size end -->
+
+<table class="type2 gray"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:55px" />
+	<col style="width:180px" />
+	<col style="width:200px" />
+	<col style="width:*" />
+	<col style="width:195px" />
+</colgroup>
+<thead>
+<tr>
+	<th scope="col">No</th>
+	<th scope="col">Member ID</th>
+	<th scope="col">Member Code</th>
+	<th scope="col">Member Name</th>
+	<th scope="col">Member IC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td><span>1</span></td>
+	<td><span>tewetewt</span></td>
+	<td><span>CD100031</span></td>
+	<td class="al_left"><span>Lim Lee Bin</span></td>
+	<td><span>770607075596</span></td>
+</tr>
+<tr>
+	<td><span>1</span></td>
+	<td><span>tewetewt</span></td>
+	<td><span>CD100031</span></td>
+	<td class="al_left"><span>Lim Lee Bin</span></td>
+	<td><span>770607075596</span></td>
+</tr>
+<tr>
+	<td><span>1</span></td>
+	<td><span>tewetewt</span></td>
+	<td><span>CD100031</span></td>
+	<td class="al_left"><span>Lim Lee Bin</span></td>
+	<td><span>770607075596</span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+<p class="table_bottom_info"><span>2377</span> times in <span>238</span> pages</p>
+
+<div class="pag"><!-- pag start -->
+<p class="first"><a href="#">first</a></p>
+<p class="prev"><a href="#">prev</a></p>
+<ol>
+	<li><a href="#" class="on">1</a></li>
+	<li><a href="#">2</a></li>
+	<li><a href="#">3</a></li>
+	<li><a href="#">4</a></li>
+	<li><a href="#">5</a></li>
+	<li><a href="#">6</a></li>
+	<li><a href="#">7</a></li>
+	<li><a href="#">8</a></li>
+	<li><a href="#">9</a></li>
+	<li><a href="#">10</a></li>
+</ol>
+<p class="next"><a href="#">next</a></p>
+<p class="last"><a href="#">last</a></p>
+</div><!-- pag end -->
+
+</form>
+</section><!-- pop_body end -->
+
+</div><!-- popup_wrap end -->
+</body>
+</html>

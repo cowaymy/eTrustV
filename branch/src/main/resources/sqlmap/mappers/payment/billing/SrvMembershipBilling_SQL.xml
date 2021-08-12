@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.billing.service.impl.SrvMembershipBillingMapper">
+
+    <resultMap id="srvMembershipBill" type="egovMap"></resultMap>
+    <select id="confirmSrvMembershipBilll" statementType="CALLABLE" parameterType="Map">
+        {call SP_GEN_BILL_GST_SVC_MBRSH(#{taskId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=srvMembershipBill})}
+    </select>
+    
+    <resultMap id="taxInvcBill" type="egovMap"></resultMap>
+    <select id="createTaxInvoice" statementType="CALLABLE" parameterType="Map">
+        {call SP_GEN_TAX_INVC_CMPNY(#{taskId}, #{userId}, #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=taxInvcBill})}
+    </select>
+    
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.impl.MemberRawDataMapper">
+
+    <!-- 
+        CLOB 컬럼을 사용하기 위해서는 아래와 같이 resultMap을 선언 후
+         <select id="selectClobData" parameterType="Map"  resultMap="clobMap"> 와 같이
+          resultMap="clobMap" 을 사용해야 함.
+    -->
+    <resultMap id="clobMap" type="EgovMap">
+        <result property="typeDesc" column="type_Desc" jdbcType="CLOB" javaType="java.lang.String"/>
+    </resultMap>    
+    
+        <select id="selectOrganizationEventList" parameterType="Map" resultMap="clobMap">
+                       <![CDATA[
+          SELECT * 
+              FROM (
+                 SELECT Project1.PROMO_ID PROMO_ID  ,
+                            Project1.REQST_NO REQST_NO  ,
+                            Project1.TYPE_DESC TYPE_DESC  ,
+                            Project1.CODE_ID CODE_ID  ,
+                            Project1.CODE CODE  ,
+                            Project1.MEM_CODE MEM_CODE  ,
+                            Project1.NAME NAME  ,
+                            Project1.C2 C1  ,
+                            Project1.C3 C2  ,
+                            Project1.USER_NAME USER_NAME  ,
+                            TO_CHAR (Project1.CRT_DT, 'DD-MM-YYYY') CRT_DT,
+                            Project1.STUS_ID STUS_ID  ,
+                            Project1.NAME1 NAME1  ,
+                            Project1.C1 C3  
+              FROM ( SELECT Project1.C1 C1  ,
+                            Project1.PROMO_ID PROMO_ID  ,
+                            Project1.REQST_NO REQST_NO  ,
+                            Project1.STUS_ID STUS_ID  ,
+                            Project1.CRT_DT CRT_DT  ,
+                            Project1.CODE_ID CODE_ID  ,
+                            Project1.CODE CODE  ,
+                            Project1.TYPE_DESC TYPE_DESC  ,
+                            Project1.MEM_CODE MEM_CODE  ,
+                            Project1.NAME NAME  ,
+                            Project1.NAME1 NAME1  ,
+                            Project1.USER_NAME USER_NAME  ,
+                            Project1.C2 C2  ,
+                            Project1.C3 C3  ,
+                            ROW_NUMBER() OVER ( ORDER BY Project1.PROMO_ID DESC  ) ROW_NUMBER  
+                     FROM ( SELECT GroupBy1.A1 C1  ,
+                                   Extent1.PROMO_ID PROMO_ID  ,
+                                   Extent1.REQST_NO REQST_NO  ,
+                                   Extent1.STUS_ID STUS_ID  ,
+                                   Extent1.CRT_DT CRT_DT  ,
+                                   Extent2.CODE_ID CODE_ID  ,
+                                   Extent2.CODE CODE  ,
+                                   Extent3.CODE_DESC TYPE_DESC  ,
+                                   Extent4.MEM_CODE MEM_CODE  ,
+                                   Extent4.NAME NAME  ,
+                                   Extent5.NAME NAME1  ,
+                                   Extent9.USER_NAME USER_NAME  ,
+                                   Extent6.MEM_ORG_LVL || N'(' || Extent6.MEM_ORG_DESC_CODE || N')' C2  ,
+                                   Extent7.MEM_ORG_LVL || N'(' || Extent7.MEM_ORG_DESC_CODE || N')' C3  
+                            FROM ORG0007D Extent1
+                                   JOIN SYS0013M Extent2   ON Extent1.MEM_TYPE_ID = Extent2.CODE_ID
+                                   JOIN SYS0013M Extent3   ON Extent1.PROMO_TYPE_ID = Extent3.CODE_ID
+                                   JOIN ORG0001D Extent4   ON Extent1.MEM_ID = Extent4.MEM_ID
+                                   JOIN SYS0038M Extent5   ON Extent1.STUS_ID = Extent5.STUS_CODE_ID
+                                   JOIN ORG0012D Extent6   ON ( Extent1.MEM_LVL_FROM = Extent6.MEM_ORG_LVL )
+                                   AND ( Extent6.MEM_TYPE_ID = Extent1.MEM_TYPE_ID )
+                                   JOIN ORG0012D Extent7   ON ( Extent1.MEM_LVL_TO = Extent7.MEM_ORG_LVL )
+                                   AND ( Extent7.MEM_TYPE_ID = Extent1.MEM_TYPE_ID )
+                                   LEFT JOIN ORG0001D Extent8   ON Extent1.PARENT_ID_TO = Extent8.MEM_ID
+                                   JOIN SYS0047M Extent9   ON Extent1.CRT_USER_ID = Extent9.USER_ID
+                                   CROSS JOIN ( SELECT COUNT(1)  A1  
+                                                FROM ORG0007D Extent10
+                                                       JOIN SYS0013M Extent11   ON Extent10.MEM_TYPE_ID = Extent11.CODE_ID
+                                                       JOIN SYS0013M Extent12   ON Extent10.PROMO_TYPE_ID = Extent12.CODE_ID
+                                                       JOIN ORG0001D Extent13   ON Extent10.MEM_ID = Extent13.MEM_ID
+                                                       JOIN SYS0038M Extent14   ON Extent10.STUS_ID = Extent14.STUS_CODE_ID
+                                                       JOIN ORG0012D Extent15   ON ( Extent10.MEM_LVL_FROM = Extent15.MEM_ORG_LVL )
+                                                       AND ( Extent15.MEM_TYPE_ID = Extent10.MEM_TYPE_ID )
+                                                       JOIN ORG0012D Extent16   ON ( Extent10.MEM_LVL_TO = Extent16.MEM_ORG_LVL )
+                                                       AND ( Extent16.MEM_TYPE_ID = Extent10.MEM_TYPE_ID )
+                                                       LEFT JOIN ORG0001D Extent17   ON Extent10.PARENT_ID_TO = Extent17.MEM_ID
+                                                       JOIN SYS0047M Extent18   ON Extent10.CRT_USER_ID = Extent18.USER_ID
+                                                 WHERE  8 <> Extent10.STUS_ID ) GroupBy1
+                             WHERE  8 <> Extent1.STUS_ID ) Project1 ) Project1
+             WHERE  Project1.ROW_NUMBER > 0
+                             ]]>     
+                             
+        </select>
+        
+        
+</mapper>        

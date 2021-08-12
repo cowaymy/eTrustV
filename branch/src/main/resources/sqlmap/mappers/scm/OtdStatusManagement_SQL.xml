@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.OtdStatusManagementMapper">
+
+<select id="selectOtdStatus" parameterType="Map" resultType="egovMap">
+SELECT MOD(DENSE_RANK() OVER (ORDER BY A.PO_DT DESC, A.PO_NO), 2) AS DIV_ODD
+     , MOD(DENSE_RANK() OVER (ORDER BY A.PO_DT DESC, A.PO_NO, A.PO_ITEM_NO), 2) AS PO_DIV_ODD
+     , A.PO_NO, A.PO_ITEM_NO
+     , A.STOCK_CODE, A.NAME, A.TYPE_ID, A.TYPE
+     , A.PO_QTY, A.PO_ITEM_STUS_ID, A.PO_ITEM_STUS_NAME
+     , CASE WHEN A.PO_DT IS NULL OR A.PO_DT = '00000000' THEN '' ELSE TO_CHAR(TO_DATE(A.PO_DT, 'YYYY-MM-DD'), 'DD/MM/YYYY') END AS PO_DT
+     , A.SO_NO, A.SO_ITEM_NO, A.SO_QTY
+     , A.SO_DT
+     , SUM(A.PP_PLAN_QTY) AS PP_PLAN_QTY
+     , SUM(A.PP_PROD_QTY) AS PP_PROD_QTY
+     , CASE WHEN MIN(A.PP_PROD_START_DT) = '99999999' THEN '' ELSE MIN(A.PP_PROD_START_DT) END AS PP_PROD_START_DT
+     , MAX(A.PP_PROD_END_DT) AS PP_PROD_END_DT
+     , A.GI_QTY
+     , A.GI_DT
+     , A.CI_NO
+     , A.SAP_PO_NO, A.SAP_PO_ITEM_NO, A.SAP_AP_QTY
+     , CASE WHEN A.SAP_GR_QTY = B.SUM_GR_QTY THEN A.SAP_GR_QTY ELSE B.SUM_GR_QTY END AS SAP_GR_QTY
+     , A.GR_DT
+  FROM (
+        SELECT A.PO_NO, A.PO_ITEM_NO
+             , A.STOCK_CODE, E.STK_DESC AS NAME, E.STK_TYPE_ID AS TYPE_ID, F.CODE_NAME AS TYPE
+             , A.PO_QTY, A.PO_ITEM_STUS_ID, G.NAME AS PO_ITEM_STUS_NAME
+             , A.PO_DT
+             , A.SO_NO, A.SO_ITEM_NO, A.SO_QTY
+             , CASE WHEN A.SO_DT IS NULL OR A.SO_DT = '00000000' THEN '' ELSE TO_CHAR(TO_DATE(A.SO_DT, 'YYYY-MM-DD'), 'DD/MM/YYYY') END AS SO_DT
+             , B.PP_PLAN_QTY, B.PP_PROD_QTY
+             , CASE WHEN B.PP_PROD_START_DT IS NULL OR B.PP_PROD_START_DT = '00000000' THEN '' ELSE TO_CHAR(TO_DATE(B.PP_PROD_START_DT, 'YYYY-MM-DD'), 'DD/MM/YYYY') END AS PP_PROD_START_DT
+             , CASE WHEN B.PP_PROD_END_DT   IS NULL OR B.PP_PROD_END_DT   = '00000000' THEN '' ELSE TO_CHAR(TO_DATE(B.PP_PROD_END_DT,   'YYYY-MM-DD'), 'DD/MM/YYYY') END AS PP_PROD_END_DT
+             , C.GI_QTY
+             , CASE WHEN C.GI_DT IS NULL OR C.GI_DT = '00000000' THEN '' ELSE TO_CHAR(TO_DATE(C.GI_DT, 'YYYY-MM-DD'), 'DD/MM/YYYY') END AS GI_DT
+             , A.SAP_PO_NO, A.SAP_PO_ITEM_NO, D.AP_QTY AS SAP_AP_QTY, D.GR_QTY AS SAP_GR_QTY
+             , CASE WHEN D.GR_DT IS NULL OR D.GR_DT = '00000000' THEN '' ELSE TO_CHAR(TO_DATE(D.GR_DT, 'YYYY-MM-DD'), 'DD/MM/YYYY') END AS GR_DT
+             , D.CI_NO, D.DELV_NO, D.DELV_ITEM_NO, D.BL_NO
+             , E.STK_TYPE_ID
+          FROM SCM0039M A
+          LEFT OUTER JOIN SCM0014D B ON (A.PO_NO = B.PO_NO AND A.SO_NO = B.SO_NO AND A.STOCK_CODE = B.STOCK_CODE)
+          LEFT OUTER JOIN SCM0013D C ON (A.PO_NO = C.PO_NO AND A.SO_NO = C.SO_NO AND A.STOCK_CODE = C.STOCK_CODE)
+          LEFT OUTER JOIN SCM0012D D ON (A.SAP_PO_NO = D.SAP_PO_NO AND A.STOCK_CODE = D.STOCK_CODE AND C.DELV_NO = D.DELV_NO AND C.DELV_ITEM_NO = D.DELV_ITEM_NO)
+          LEFT OUTER JOIN SYS0026M E ON (A.STOCK_CODE = E.STK_CODE)
+          LEFT OUTER JOIN SYS0013M F ON (E.STK_TYPE_ID = F.CODE_ID AND F.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+          LEFT OUTER JOIN SYS0038M G ON (A.PO_ITEM_STUS_ID = G.STUS_CODE_ID)
+        ) A
+  LEFT OUTER JOIN (
+                   SELECT A.PO_NO, A.STOCK_CODE
+                        , SUM(NVL(B.GR_QTY, 0)) AS SUM_GR_QTY
+                     FROM SCM0039M A
+                     LEFT OUTER JOIN SCM0012D B ON (A.SAP_PO_NO = B.SAP_PO_NO AND A.STOCK_CODE = B.STOCK_CODE)
+                    GROUP BY A.PO_NO, A.STOCK_CODE
+                   ) B ON (A.PO_NO = B.PO_NO AND A.STOCK_CODE = B.STOCK_CODE)
+ WHERE 1 = 1
+   AND A.PO_NO LIKE '%' || #{poNo} || '%'
+	<if test="soNo != null and soNo != ''">
+   AND A.SO_NO LIKE '%' || #{soNo} || '%'
+	</if>
+	<if test="sapPoNo != null and sapPoNo != ''">
+   AND A.SAP_PO_NO LIKE '%' || #{sapPoNo} || '%'
+	</if>
+	<if test="startDate != null and startDate != ''">
+   AND A.PO_DT BETWEEN #{startDate} AND #{endDate}
+	</if>
+	<if test="scmStockTypeCbBox != null and ! scmStockTypeCbBox.isEmpty">
+   AND A.STK_TYPE_ID IN
+		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+ 	<if test="scmStockCodeCbBox != null and ! scmStockCodeCbBox.isEmpty">
+   AND A.STOCK_CODE IN
+		<foreach item="item" collection="scmStockCodeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+	<if test="ciNo != null and ciNo != ''">
+   AND A.CI_NO LIKE '%' || #{ciNo} || '%'
+	</if>
+	<if test="delvNo != null and delvNo != ''">
+   AND A.DELV_NO LIKE '%' || #{delvNo} || '%'
+	</if>
+	<if test="blNo != null and blNo != ''">
+   AND A.BL_NO LIKE '%' || #{blNo} || '%'
+	</if>
+ GROUP BY A.PO_NO, A.PO_ITEM_NO, A.STOCK_CODE, A.NAME, A.TYPE_ID, A.TYPE, A.PO_QTY, A.PO_ITEM_STUS_ID, A.PO_ITEM_STUS_NAME, A.PO_DT, A.SO_NO, A.SO_ITEM_NO, A.SO_QTY, A.SO_DT
+        , A.GI_QTY, A.GI_DT, A.CI_NO, A.SAP_PO_NO, A.SAP_PO_ITEM_NO, A.SAP_AP_QTY, A.SAP_GR_QTY, B.SUM_GR_QTY, A.GR_DT, A.DELV_NO, A.DELV_ITEM_NO
+ ORDER BY A.PO_DT DESC, A.PO_NO, A.PO_ITEM_NO, A.SO_NO, A.SO_ITEM_NO, A.SAP_PO_NO, A.SAP_PO_ITEM_NO, A.SO_QTY, A.GI_QTY, A.GI_DT, A.SAP_GR_QTY
+</select>
+
+</mapper>

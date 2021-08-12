@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.reconciliation.service.impl.CRCStatementMapper">
+      
+    <!--CRC Statement Transaction 리스트 조회  -->
+    <select id="selectCRCStatementTranList" parameterType="Map" resultType="egovMap">
+        SELECT 
+            Extent1.CRC_STATE_ID,            
+            Extent1.CRC_STATE_REF_NO,
+            Extent1.CRC_STATE_RUNNG_NO,
+            Extent1.CRC_STATE_ACC_ID,
+            Extent1.CRC_STATE_REM,
+            Extent1.CRC_STATE_ADJ,
+            Extent1.CRC_STATE_REFUND,
+            Extent1.CRC_STATE_CRT_USER_ID,
+            Extent1.CRC_STATE_TOT,
+            Extent1.CRC_STATE_REF_DT,
+            Extent1.CRC_STATE_CRT_DT,
+            Extent2.ACC_CODE,
+            Extent2.ACC_DESC,
+            Extent3.USER_NAME,
+            Extent4.STUS_CODE_ID,
+            Extent4.NAME,
+            Extent5.CRC_TRNSC_ID,
+            Extent5.CRC_TRNSC_DT,
+            Extent5.CRC_TRNSC_NO,
+            Extent5.CRC_TRNSC_APPV,
+            Extent5.CRC_TRNSC_MID,
+            Extent5.CRC_TRNSC_REF_NO,
+            Extent5.CRC_TRNSC_AMT            
+        FROM
+            PAY0075D Extent1
+            LEFT OUTER JOIN PAY0076D Extent5 ON Extent1.CRC_STATE_ID = Extent5.CRC_STATE_ID
+            LEFT OUTER JOIN SYS0001M Extent2 ON Extent1.CRC_STATE_ACC_ID = Extent2.ACC_ID
+            LEFT OUTER JOIN SYS0047M Extent3 ON Extent1.CRC_STATE_CRT_USER_ID = Extent3.USER_ID
+            LEFT OUTER JOIN SYS0038M Extent4 ON Extent1.CRC_STATE_STUS_ID = Extent4.STUS_CODE_ID    
+        WHERE 
+            1=1
+            <if test="refNo != '' ">
+                AND Extent1.CRC_STATE_REF_NO = #{refNo}         /* reference no. */
+            </if>            
+            <if test="status != '' ">
+                <if test="status == 'ALL'">    
+                AND Extent4.STUS_CODE_ID IN ('1','36')                /* status (1: active / 36:inactive) */
+                </if>
+                <if test="status != 'ALL'">    
+                AND Extent4.STUS_CODE_ID = #{status}              /* status (1: active / 36:inactive) */
+                </if>
+            </if>            
+            <if test="account != ''">
+                AND Extent1.CRC_STATE_ACC_ID = #{account}      /*  Account accID */
+            </if>            
+            <if test="updateDt1 != '' and updateDt2 != '' ">
+                AND Extent1.CRC_STATE_CRT_DT &gt;= TO_DATE(TO_CHAR(TO_DATE(#{updateDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')               /* upload date */                
+                AND Extent1.CRC_STATE_CRT_DT  &lt; TO_DATE(TO_CHAR(TO_DATE(#{updateDt2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1               /* upload date */
+            </if>             
+            /* 
+            --AND Extent1.CRC_STATE_REM LIKE ''     --remark  화면 조건 없음 
+            --AND Extent3.USER_NAME LIKE ''         -- 화면 조건 없음
+            */              
+    </select>
+     
+    <!--CRC Statement Transaction 정보 수정  --> 
+    <update id="updateCRCStatementTranList" parameterType="Map">
+            UPDATE PAY0076D SET
+                CRC_TRNSC_MID = #{crcTrnscMid}
+                , CRC_TRNSC_REF_NO =#{crcTrnscRefNo}
+                , CRC_TRNSC_AMT =#{crcTrnscAmt}
+                , CRC_TRNSC_UPD_DT = SYSDATE
+            WHERE 
+                CRC_TRNSC_ID = #{crcTrnscId}
+    </update>
+    
+     <!-- CRCStatementRunningNo 가져오기  -->
+    <select id="getCRCStatementRunningNo" resultType="string">
+        SELECT  
+            TO_CHAR(SYSDATE,'YYMM') || '_' ||LPAD(SUBSTR(NVL(MAX(CRC_STATE_RUNNG_NO),'0000'),-4,4) + 1,4,'0') AS runningNO
+        FROM 
+            PAY0075D WHERE CRC_STATE_ID = (SELECT MAX(CRC_STATE_ID) AS MAXVAL FROM PAY0075D)
+            AND SUBSTR(CRC_STATE_RUNNG_NO,-9,4) = TO_CHAR(SYSDATE,'YYMM')
+    </select>
+    
+    <!-- CRCStatement Sequence 가져오기  -->
+    <select id="getCRCStatementSEQ" resultType="int">
+        SELECT PAY0075D_SEQ.NEXTVAL FROM DUAL
+    </select>    
+    
+    <!--CRC Statement 정보 등록  --> 
+    <update id="insertCRCStatement" parameterType="Map">
+            INSERT INTO PAY0075D (
+				CRC_STATE_ID,
+				CRC_STATE_REF_DT,
+				CRC_STATE_REF_NO,
+				CRC_STATE_RUNNG_NO,
+				CRC_STATE_ACC_ID,
+				CRC_STATE_REM,
+				CRC_STATE_STUS_ID,
+				CRC_STATE_ADJ,
+				CRC_STATE_REFUND,
+				CRC_STATE_CRT_DT,
+				CRC_STATE_CRT_USER_ID,
+				CRC_STATE_UPLOAD_DT,
+				CRC_STATE_UPLOAD_USER_ID,
+				CRC_STATE_TOT)
+			VALUES 
+			(
+				#{crcStateId},				
+				TO_CHAR(TO_DATE(#{crcStateRefDt},'DD/MM/YYYY'),'YYYY-MM-DD'),
+				FN_GET_DOCNO('110'),
+				#{crcStateRunngNo},
+				#{crcStateAccId},
+				'',
+				1,
+				0,
+				0,
+				SYSDATE,
+				#{userId},
+				SYSDATE,
+	            #{userId},
+	            #{crcStateTot}
+			)
+    </update>
+    
+    <!--CRC Transaction 정보 등록  --> 
+    <update id="insertCRCTransaction" parameterType="Map">
+        <selectKey keyProperty="crcTrnscId" resultType="int" order="BEFORE">
+            SELECT PAY0076D_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+            INSERT INTO PAY0076D (
+                CRC_TRNSC_ID,
+				CRC_STATE_ID,
+				CRC_TRNSC_DT,
+				CRC_TRNSC_NO,
+				CRC_TRNSC_APPV,
+				CRC_TRNSC_MID,
+				CRC_TRNSC_REF_NO,
+				CRC_TRNSC_AMT,				
+				CRC_TRNSC_IS_MTCH,
+				CRC_TRNSC_UPD_DT,
+				CRC_TRNSC_UPD_USER_ID
+            )
+            VALUES 
+            (
+                #{crcTrnscId},
+                #{crcStateId},
+                #{crcTrnscDt},
+                #{crcTrnscNo},
+                #{crcTrnscAppv},
+                #{crcTrnscMid},
+                #{crcTrnscRefNo},
+                #{crcTrnsAmt},
+                0,
+                SYSDATE,
+                #{userId}
+            )            
+    </update>
+    
+    
+    
+    <resultMap id="testMap" type="egovMap" />
+    <!-- testCallStoredProcedure  -->
+    <select id="testCallStoredProcedure" statementType="CALLABLE" parameterType="Map">
+        {
+        call SP_INST_RSC_ENRL(2,'20100616','20100616',#{userId},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=testMap})
+        }
+    </select>
+
+</mapper>

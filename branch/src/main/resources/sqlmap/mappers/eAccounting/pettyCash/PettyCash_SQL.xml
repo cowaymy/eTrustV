@@ -1,0 +1,1244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.eAccounting.pettyCash.impl.PettyCashMapper">
+
+<select id="selectCustodianList" parameterType="Map" resultType="egovMap">
+/* pettyCashMapper.selectCustodianList */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+			SELECT T.COST_CENTR,
+			       T.COST_CENTR_NAME,
+			       T.MEM_ACC_ID,
+			       T.MEM_ACC_NAME,
+			       T.HEAD_DEPT_FLAG,
+			       T.ATCH_FILE_GRP_ID,
+			       T.ATCH_FILE_ID,
+			       T.ATCH_FILE_NAME,
+			       T.FILE_EXTSN,
+			       T.FILE_CNT,
+			       T.CRT_DT,
+			       T.UPD_DT,
+			       T.CRT_USER_ID,
+			       T.USER_NAME,
+			       T.UPD_USER_ID,
+			       T.UPD_USER_NAME
+			FROM   (SELECT T1.COST_CENTR,
+			               T2.COST_CENTER_TEXT               AS COST_CENTR_NAME,
+			               T1.CUSTDN                         AS MEM_ACC_ID,
+			               T3.MEM_ACC_NAME,
+			               T1.HEAD_DEPT_FLAG,
+			               T4.ATCH_FILE_GRP_ID,
+			               T4.ATCH_FILE_ID,
+			               T4.ATCH_FILE_NAME,
+			               T4.FILE_EXTSN,
+			               T4.FILE_CNT,
+			               T1.CRT_DT,
+			               T1.UPD_DT,
+			               T1.CRT_USER_ID,
+			               T5.USER_NAME,
+			               T1.UPD_USER_ID,
+			               (SELECT USER_NAME
+			                FROM   SYS0047M
+			                WHERE  USER_ID = T1.UPD_USER_ID) AS UPD_USER_NAME
+			        FROM   FCM0011M T1
+			               LEFT JOIN FCM0008M T2
+			                      ON T1.COST_CENTR = T2.COST_CENTER
+			               LEFT JOIN FCM0006M T3
+			                      ON T1.CUSTDN = T3.MEM_ACC_ID
+			               LEFT JOIN (SELECT *
+			                          FROM   (SELECT ROW_NUMBER ()
+			                                           OVER (
+			                                             PARTITION BY F1.ATCH_FILE_GRP_ID
+			                                             ORDER BY F1.ATCH_FILE_GRP_ID,
+			                                           F2.ATCH_FILE_ID) AS
+			                                         RNUM,
+			                                         F1.ATCH_FILE_GRP_ID,
+			                                         F2.ATCH_FILE_ID,
+			                                         F2.ATCH_FILE_NAME,
+			                                         F2.FILE_EXTSN,
+			                                         COUNT (F1.ATCH_FILE_ID)
+			                                           OVER (
+			                                             PARTITION BY F1.ATCH_FILE_GRP_ID)
+			                                         FILE_CNT
+			                                  FROM   SYS0070M F1
+			                                         LEFT JOIN SYS0071D F2
+			                                                ON F1.ATCH_FILE_ID =
+			                                                   F2.ATCH_FILE_ID) F
+			                          WHERE  F.RNUM = 1) T4
+			                      ON T1.ATCH_FILE_GRP_ID = T4.ATCH_FILE_GRP_ID
+			               LEFT JOIN SYS0047M T5
+			                      ON T1.CRT_USER_ID = T5.USER_ID
+			    <if test="loginUserId != null and loginUserId != ''">
+			        WHERE T1.CRT_USER_ID = #{loginUserId}
+                </if>
+			        ORDER  BY T1.CRT_DT,
+			                  T1.UPD_DT) T
+			WHERE  1 = 1
+        <if test="startDt != null and startDt != ''">
+        <![CDATA[
+             AND T.UPD_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
+        ]]>
+        </if>
+        <if test="endDt != null and endDt != ''">
+        <![CDATA[
+             AND T.UPD_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
+        ]]>
+        </if>
+        <if test="memAccId != null and memAccId != ''">
+             AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccId})
+        </if>
+        <if test="costCentr != null and costCentr != ''">
+             AND UPPER(T.COST_CENTR) = UPPER(#{costCentr})
+        </if>
+        <if test="crtUserId != null and crtUserId != ''">
+             AND UPPER(T.UPD_USER_NAME) = UPPER(#{crtUserId})
+        </if>
+</select>
+
+<select id="selectUserNric" parameterType="String" resultType="String">
+/* pettyCashMapper.selectUserNric */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT USER_NRIC FROM SYS0047M WHERE UPPER(USER_NAME) = UPPER(#{memAccId})
+</select>
+
+<insert id="insertCustodian" parameterType="Map">
+/* pettyCashMapper.insertCustodian */
+   INSERT INTO FCM0011M
+   (
+        COST_CENTR
+       ,CUSTDN
+       ,HEAD_DEPT_FLAG
+       ,BANK_CODE
+       ,BANK_ACC_NO
+       ,CUSTDN_NRIC
+       ,APPV_CASH_AMT
+       ,ATCH_FILE_GRP_ID
+       ,CUSTDN_REM
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+    )
+    values
+    (
+        UPPER(#{costCentr})
+       ,UPPER(#{memAccId})
+       ,#{headDeptFlag}
+       ,#{bankCode}
+       ,#{bankAccNo}
+       ,#{custdnNric}
+       ,#{appvCashAmt}
+       ,#{fileGroupKey}
+       ,#{custdnRem}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<select id="selectCustodianInfo" parameterType="Map" resultType="egovMap">
+/* pettyCashMapper.selectCustodianInfo */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.COST_CENTR
+      ,T2.COST_CENTER_TEXT AS COST_CENTR_NAME
+      ,T1.CUSTDN AS MEM_ACC_ID
+      ,T3.MEM_ACC_NAME
+      ,T3.BANK_CODE
+      ,T3.BANK_NAME
+      ,T3.BANK_ACC_NO
+      ,T1.HEAD_DEPT_FLAG
+      ,T1.CUSTDN_NRIC
+      ,T1.APPV_CASH_AMT
+      ,T1.ATCH_FILE_GRP_ID
+      ,T1.CUSTDN_REM
+      ,T1.CRT_USER_ID
+      ,T4.USER_NAME
+  FROM FCM0011M T1 LEFT JOIN FCM0008M T2 ON T1.COST_CENTR = T2.COST_CENTER
+       LEFT JOIN FCM0006M T3 ON T1.CUSTDN = T3.MEM_ACC_ID
+       LEFT JOIN SYS0047M T4 ON T1.CRT_USER_ID = T4.USER_ID
+  WHERE 1=1
+        <if test="memAccId != null and memAccId != ''">
+             AND UPPER(T1.CUSTDN) = UPPER(#{memAccId})
+        </if>
+        <if test="costCentr != null and costCentr != ''">
+             AND UPPER(T1.COST_CENTR) = UPPER(#{costCentr})
+        </if>
+</select>
+
+<update id="updateCustodian" parameterType="Map">
+/* pettyCashMapper.updateCustodian */
+   UPDATE FCM0011M
+   SET APPV_CASH_AMT = #{appvCashAmt}
+       ,CUSTDN_REM = #{custdnRem}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE COST_CENTR = #{costCentr} AND CUSTDN = #{memAccId}
+</update>
+
+<delete id="deleteCustodian" parameterType="Map">
+/* pettyCashMapper.deleteCustodian */
+   DELETE FROM FCM0011M WHERE COST_CENTR = #{costCentr} AND CUSTDN = #{memAccId}
+</delete>
+
+<select id="selectRequestList" parameterType="Map" resultType="egovMap">
+/* pettyCashMapper.selectRequestList */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T.CLM_NO,
+       T.COST_CENTR,
+       T.COST_CENTR_NAME,
+       T.MEM_ACC_ID,
+       T.MEM_ACC_NAME,
+       'MYR' AS CUR,
+       T.APPV_CASH_AMT,
+       T.REQST_AMT,
+       T.REQST_NO,
+       T.CRT_DT,
+       T.REQST_DT,
+       T.APPV_PRCSS_NO,
+       T.ATCH_FILE_GRP_ID,
+       T.ATCH_FILE_ID,
+       T.ATCH_FILE_NAME,
+       T.FILE_EXTSN,
+       T.FILE_CNT,
+       T.APPV_PRCSS_STUS_CODE,
+       T.APPV_PRCSS_STUS,
+       T.APPV_PRCSS_DT
+FROM   (SELECT T1.CLM_NO,
+               T1.COST_CENTR,
+               T1.COST_CENTR_NAME,
+               T1.MEM_ACC_ID,
+               T2.MEM_ACC_NAME,
+               T1.APPV_CASH_AMT,
+               T1.REQST_AMT,
+               T1.CLM_NO AS REQST_NO,
+               T1.CRT_DT,
+               T4.REQST_DT,
+               T1.APPV_PRCSS_NO,
+               T1.ATCH_FILE_GRP_ID,
+               T3.ATCH_FILE_ID,
+               T3.ATCH_FILE_NAME,
+               T3.FILE_EXTSN,
+               T3.FILE_CNT,
+               Nvl (T4.APPV_PRCSS_STUS, 'T')   AS APPV_PRCSS_STUS_CODE,
+               Nvl (( CASE T4.APPV_PRCSS_STUS
+                        WHEN 'R' THEN 'Request'
+                        WHEN 'P' THEN 'Approve In-Progress'
+                        WHEN 'A' THEN 'Approved'
+                        WHEN 'J' THEN 'Rejected'
+                      END ), 'Temporary Save') AS APPV_PRCSS_STUS,
+               T4.APPV_PRCSS_DT
+        FROM   FCM0012D T1
+               LEFT JOIN FCM0006M T2
+                      ON T1.MEM_ACC_ID = T2.MEM_ACC_ID
+               LEFT JOIN (SELECT *
+                          FROM   (SELECT Row_number ()
+                                           OVER (
+                                             PARTITION BY F1.ATCH_FILE_GRP_ID
+                                             ORDER BY F1.ATCH_FILE_GRP_ID
+                                           , F2.ATCH_FILE_ID) AS
+                                         RNUM,
+                                         F1.ATCH_FILE_GRP_ID,
+                                         F2.ATCH_FILE_ID,
+                                         F2.ATCH_FILE_NAME,
+                                         F2.FILE_EXTSN,
+                                         Count (F1.ATCH_FILE_ID)
+                                           OVER (
+                                             PARTITION BY F1.ATCH_FILE_GRP_ID)
+                                         AS
+                                         FILE_CNT
+                                  FROM   SYS0070M F1
+                                         LEFT JOIN SYS0071D F2
+                                                ON F1.ATCH_FILE_ID =
+                                                   F2.ATCH_FILE_ID) F
+                          WHERE  F.RNUM = 1) T3
+                      ON T1.ATCH_FILE_GRP_ID = T3.ATCH_FILE_GRP_ID
+               LEFT JOIN FCM0004M T4
+                      ON T1.APPV_PRCSS_NO = T4.APPV_PRCSS_NO
+    <if test="loginUserId != null and loginUserId != ''">
+        WHERE T1.CRT_USER_ID = #{loginUserId}
+    </if>
+        ) T
+WHERE  1 = 1
+<if test="startDt != null and startDt != ''">
+<![CDATA[
+AND T.CRT_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
+]]>
+</if>
+<if test="endDt != null and endDt != ''">
+<![CDATA[
+AND T.CRT_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
+]]>
+</if>
+<if test="memAccId != null and memAccId != ''">
+AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccId})
+</if>
+<if test="costCentr != null and costCentr != ''">
+AND UPPER(T.COST_CENTR) = UPPER(#{costCentr})
+</if>
+<if test="appvPrcssStus != null and appvPrcssStus != ''">
+AND T.APPV_PRCSS_STUS_CODE IN
+<foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+#{item}
+</foreach>
+</if>
+ORDER BY T.CLM_NO, T.REQST_DT
+</select>
+
+<select id="selectNextRqstClmNo" resultType="String">
+/* pettyCashMapper.selectNextClmNo */
+    SELECT    'R1'
+       || TO_CHAR (SYSDATE, 'yymm')
+       || NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
+    FROM FCM0012D
+    WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
+</select>
+
+<insert id="insertPettyCashReqst" parameterType="Map">
+/* pettyCashMapper.insertPettyCashReqst */
+   INSERT INTO FCM0012D
+   (
+        CLM_NO
+       ,CLM_TYPE
+       ,COST_CENTR
+       ,COST_CENTR_NAME
+       ,MEM_ACC_ID
+       ,BANK_CODE
+       ,BANK_ACC_NO
+       ,CUSTDN_NRIC
+       ,APPV_CASH_AMT
+       ,REQST_AMT
+       ,PAY_DUE_DT
+       ,ATCH_FILE_GRP_ID
+       ,REQST_REM
+       ,APPV_PRCSS_NO
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+    )
+    values
+    (
+        #{clmNo}
+       ,'R1'
+       ,UPPER(#{costCentr})
+       ,NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{costCentr})))
+       ,UPPER(#{memAccId})
+       ,#{bankCode}
+       ,#{bankAccNo}
+       ,#{custdnNric}
+       ,#{appvCashAmt}
+       ,#{reqstAmt}
+       ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
+       ,#{fileGroupKey}
+       ,#{reqstRem}
+       ,#{appvPrcssNo}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<select id="selectRequestInfo" parameterType="Map" resultType="egovMap">
+/* pettyCashMapper.selectRequestInfo */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT    T1.CLM_NO,
+          T1.COST_CENTR,
+          T1.COST_CENTR_NAME,
+          T1.MEM_ACC_ID,
+          T2.MEM_ACC_NAME,
+          T1.BANK_CODE,
+          T2.BANK_NAME,
+          T1.BANK_ACC_NO,
+          T1.CUSTDN_NRIC,
+          T1.APPV_CASH_AMT,
+          T1.REQST_AMT,
+          TO_CHAR(T1.PAY_DUE_DT, 'DD/MM/YYYY') AS PAY_DUE_DT,
+          T1.ATCH_FILE_GRP_ID,
+          T1.REQST_REM,
+          T1.APPV_PRCSS_NO,
+          T1.CRT_USER_ID,
+          T3.USER_NAME
+FROM      FCM0012D T1
+LEFT JOIN FCM0006M T2
+ON        T1.MEM_ACC_ID = T2.MEM_ACC_ID
+LEFT JOIN SYS0047M T3
+ON        T1.CRT_USER_ID = T3.USER_ID
+WHERE T1.CLM_NO = #{clmNo}
+</select>
+
+<update id="updatePettyCashReqst" parameterType="Map">
+/* pettyCashMapper.updatePettyCashReqst */
+   UPDATE FCM0012D
+   SET COST_CENTR = UPPER(#{costCentr})
+       ,COST_CENTR_NAME = NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{costCentr})))
+       ,MEM_ACC_ID = UPPER(#{memAccId})
+       ,BANK_CODE = #{bankCode}
+       ,BANK_ACC_NO = #{bankAccNo}
+       ,CUSTDN_NRIC = #{custdnNric}
+       ,APPV_CASH_AMT = #{appvCashAmt}
+       ,REQST_AMT = #{reqstAmt}
+       ,PAY_DUE_DT = TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
+       ,REQST_REM = #{reqstRem}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}
+</update>
+
+<insert id="insertRqstApproveItems" parameterType="Map">
+/* pettyCashMapper.insertApproveItems */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0015D
+   (
+        APPV_PRCSS_NO
+       ,APPV_ITM_SEQ
+       ,INVC_NO
+       ,INVC_DT
+       ,INVC_TYPE
+       ,MEM_ACC_ID
+       ,PAY_DUE_DT
+       ,EXP_TYPE
+       ,EXP_TYPE_NAME
+       ,COST_CENTR
+       ,COST_CENTR_NAME
+       ,GL_ACC_CODE
+       ,GL_ACC_CODE_NAME
+       ,BUDGET_CODE
+       ,BUDGET_CODE_NAME
+       ,TAX_CODE
+       ,NET_AMT
+       ,TAX_AMT
+       ,APPV_AMT
+       ,EXP_DESC
+       ,ATCH_FILE_GRP_ID
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+       ,INVC_CUR
+    )
+    values
+    (
+        #{appvPrcssNo}
+       ,#{appvItmSeq}
+       ,#{invcNo}
+       ,SYSDATE
+       ,#{invcType}
+       ,#{memAccId}
+       ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
+       ,#{expType}
+       ,#{expTypeName}
+       ,#{costCentr}
+       ,#{costCentrName}
+       ,#{glAccCode}
+       ,#{glAccCodeName}
+       ,#{budgetCode}
+       ,#{budgetCodeName}
+       ,'VB'
+       ,#{reqstAmt}
+       ,0
+       ,#{reqstAmt}
+       ,#{expDesc}
+       ,#{atchFileGrpId}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+       ,'MYR'
+    )
+</insert>
+
+<update id="updateRqstAppvPrcssNo" parameterType="Map">
+/* pettyCashMapper.updateAppvPrcssNo */
+   UPDATE FCM0012D
+   SET APPV_PRCSS_NO = #{appvPrcssNo}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}
+</update>
+
+<select id="selectExpenseList" parameterType="Map" resultType="egovMap">
+/* pettyCashMapper.selectExpenseList */
+SELECT T.CLM_NO,
+       T.COST_CENTR,
+       T.COST_CENTR_NAME,
+       T.MEM_ACC_ID,
+       T.MEM_ACC_NAME,
+       T.CLM_MONTH,
+       T.REQST_DT,
+       'MYR' AS CUR,
+       T.TOT_AMT,
+       T.APPV_PRCSS_NO,
+       T.APPV_PRCSS_STUS_CODE,
+       T.APPV_PRCSS_STUS,
+       T.APPV_PRCSS_DT
+FROM   (SELECT T1.CLM_NO,
+               T1.COST_CENTR,
+               T1.COST_CENTR_NAME,
+               T1.MEM_ACC_ID,
+               T2.MEM_ACC_NAME,
+               TO_CHAR(TO_DATE(T1.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH,
+               T3.REQST_DT,
+               T1.TOT_AMT,
+               T1.APPV_PRCSS_NO,
+               Nvl (T3.APPV_PRCSS_STUS, 'T')   AS APPV_PRCSS_STUS_CODE,
+               Nvl (( CASE T3.APPV_PRCSS_STUS
+                        WHEN 'R' THEN 'Request'
+                        WHEN 'P' THEN 'Approve In-Progress'
+                        WHEN 'A' THEN 'Approved'
+                        WHEN 'J' THEN 'Rejected'
+                      END ), 'Temporary Save') AS APPV_PRCSS_STUS,
+               T3.APPV_PRCSS_DT
+        FROM   FCM0013M T1
+               LEFT JOIN FCM0006M T2
+                      ON T1.MEM_ACC_ID = T2.MEM_ACC_ID
+               LEFT JOIN FCM0004M T3
+                      ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
+         <if test="loginUserId != null and loginUserId != ''">
+             WHERE T1.CRT_USER_ID = #{loginUserId}
+         </if>
+         ) T
+WHERE  1 = 1
+<if test="clmMonth != null and clmMonth != ''">
+<![CDATA[
+AND T.CLM_MONTH = #{clmMonth}
+]]>
+</if>
+<if test="memAccId != null and memAccId != ''">
+AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccId})
+</if>
+<if test="costCenter != null and costCenter != ''">
+AND UPPER(T.COST_CENTR) = UPPER(#{costCenter})
+</if>
+<if test="clmNo != null and clmNo != ''">
+AND UPPER(T.CLM_NO) = UPPER(#{clmNo})
+</if>
+<if test="appvPrcssStus != null and appvPrcssStus != ''">
+AND T.APPV_PRCSS_STUS_CODE IN
+<foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+#{item}
+</foreach>
+</if>
+ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
+</select>
+
+<select id="selectTaxCodePettyCashFlag" resultType="egovMap">
+/* pettyCashMapper.selectTaxCodePettyCashFlag */
+    SELECT TAX_CODE ,
+                INDUSTRY_CODE||' '||'('||TAX_NAME||')' AS TAX_NAME
+    FROM FCM0007C
+    WHERE PETTY_CASH_FLAG = 'X'
+</select>
+
+<select id="selectNextExpClmNo" resultType="String">
+/* pettyCashMapper.selectNextClmNo */
+    SELECT    'J2'
+       || TO_CHAR (SYSDATE, 'yymm')
+       || NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
+    FROM FCM0013M
+    WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
+</select>
+
+<insert id="insertPettyCashExp" parameterType="Map">
+/* pettyCashMapper.insertPettyCashExp */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0013M
+   (
+        CLM_NO
+        ,CLM_TYPE
+        ,COST_CENTR
+        ,COST_CENTR_NAME
+        ,MEM_ACC_ID
+        ,CUSTDN_NRIC
+        ,BANK_CODE
+        ,BANK_ACC_NO
+        ,CLM_MONTH
+        ,TOT_AMT
+        ,APPV_PRCSS_NO
+        ,CRT_DT
+        ,CRT_USER_ID
+        ,UPD_DT
+        ,UPD_USER_ID
+    )
+    values
+    (
+        #{clmNo}
+       ,'J2'
+       ,UPPER(#{costCentr})
+       ,NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{costCentr})))
+       ,UPPER(#{memAccId})
+       ,#{custdnNric}
+       ,#{bankCode}
+       ,#{bankAccNo}
+       ,TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
+       ,#{allTotAmt}
+       ,#{appvPrcssNo}
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<select id="selectNextExpClmSeq" parameterType="String" resultType="int">
+/* pettyCashMapper.selectNextExpClmSeq */
+    SELECT NVL(MAX(CLM_SEQ) + 1, 1) AS CLM_SEQ FROM FCM0014D WHERE CLM_NO = #{clmNo}
+</select>
+
+<insert id="insertPettyCashExpItem" parameterType="Map">
+/* pettyCashMapper.insertPettyCashExpItem */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0014D
+   (
+        CLM_NO
+        ,CLM_SEQ
+        ,EXP_TYPE
+        ,EXP_TYPE_NAME
+        ,GL_ACC_CODE
+        ,GL_ACC_CODE_NAME
+        ,BUDGET_CODE
+        ,BUDGET_CODE_NAME
+        ,SUPPLIER
+        ,INVC_TYPE
+        ,INVC_NO
+        ,INVC_DT
+        ,TAX_CODE
+        ,GST_BEFOR_AMT
+        ,GST_AMT
+        ,NON_CLM_GST_AMT
+        ,TOT_AMT
+        ,ATCH_FILE_GRP_ID
+        ,EXP_DESC
+        ,CLAM_UN
+        ,UTIL_NO
+        ,J_PAY_NO
+        ,BIL_PERIOD_F
+        ,BIL_PERIOD_T
+        ,CRT_DT
+        ,CRT_USER_ID
+        ,UPD_DT
+        ,UPD_USER_ID
+    )
+    values
+    (
+        #{clmNo}
+       ,#{clmSeq}
+       ,#{expType}
+       ,#{expTypeName}
+       ,#{glAccCode}
+       ,#{glAccCodeName}
+       ,#{budgetCode}
+       ,#{budgetCodeName}
+       ,#{sMemAccName}
+       ,#{invcType}
+       ,#{invcNo}
+       ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
+       ,'VB'
+       ,#{totAmt}
+       ,'0'
+       ,'0'
+       ,#{totAmt}
+       ,#{atchFileGrpId}
+       ,REGEXP_REPLACE(#{expDesc}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
+       ,#{clamUn}
+       ,REGEXP_REPLACE(#{utilNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
+       ,REGEXP_REPLACE(#{jPayNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
+       ,TO_DATE(#{bilPeriodF}, 'DD/MM/YYYY')
+       ,TO_DATE(#{bilPeriodT}, 'DD/MM/YYYY')
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+    )
+</insert>
+
+<select id="selectExpenseItems" parameterType="String" resultType="egovMap">
+/* pettyCashMapper.selectExpenseItems */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ,
+       T3.COST_CENTR,
+       T3.COST_CENTR_NAME,
+       T3.MEM_ACC_ID,
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
+       T1.SUPPLIER AS S_MEM_ACC_NAME,
+       MAX(T4.MEM_ACC_ID) AS S_MEM_ACC_ID,
+       T1.INVC_TYPE,
+       ( CASE T1.INVC_TYPE
+           WHEN 'F' THEN 'Full Tax invoice'
+           WHEN 'S' THEN 'Simplified Tax invoice'
+         END )     AS INVC_TYPE_NAME,
+       REGEXP_REPLACE(T1.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_NO,
+       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT,
+       REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) GST_RGIST_NO,
+       T1.TAX_CODE,
+       T2.TAX_NAME,
+       'MYR'       AS CUR,
+       T1.GST_BEFOR_AMT,
+       T1.GST_AMT,
+       T1.NON_CLM_GST_AMT,
+       T1.TOT_AMT,
+       T1.ATCH_FILE_GRP_ID,
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
+       T1.CLAM_UN,
+       REGEXP_REPLACE(T1.UTIL_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) UTIL_NO,
+       T3.TOT_AMT  AS ALL_TOT_AMT,
+       T3.APPV_PRCSS_NO
+FROM   FCM0014D T1
+       LEFT JOIN FCM0007C T2
+              ON T1.TAX_CODE = T2.TAX_CODE
+       LEFT JOIN FCM0013M T3
+              ON T1.CLM_NO = T3.CLM_NO
+       LEFT JOIN FCM0006M T4
+              ON T1.SUPPLIER = T4.MEM_ACC_NAME
+WHERE  T1.CLM_NO = #{clmNo}
+GROUP BY
+    t1.clm_seq,
+    t3.cost_centr,
+    t3.cost_centr_name,
+    t3.mem_acc_id,
+    t1.exp_type,
+    t1.exp_type_name,
+    t1.gl_acc_code,
+    t1.gl_acc_code_name,
+    t1.budget_code,
+    t1.budget_code_name,
+    t1.supplier,
+    REGEXP_REPLACE(T1.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+    t1.invc_dt,
+    t1.invc_type,
+    REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+    t1.tax_code,
+    t2.tax_name,
+      t1.gst_befor_amt,
+    t1.gst_amt,
+    t1.non_clm_gst_amt,
+    t1.tot_amt,
+    t1.atch_file_grp_id,
+    REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+    t1.clam_un,
+    REGEXP_REPLACE(T1.UTIL_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+    t3.tot_amt,
+    t3.appv_prcss_no
+ORDER  BY T1.CLM_SEQ
+</select>
+
+<select id="selectExpenseInfo" parameterType="Map" resultType="egovMap">
+/* pettyCashMapper.selectExpenseInfo */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ,
+       T2.COST_CENTR,
+       T2.COST_CENTR_NAME,
+       T2.MEM_ACC_ID,
+       T3.MEM_ACC_NAME,
+       T2.CUSTDN_NRIC,
+       T2.BANK_CODE,
+       T3.BANK_NAME,
+       T2.BANK_ACC_NO,
+       TO_CHAR(TO_DATE(T2.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH,
+       T2.TOT_AMT  AS ALL_TOT_AMT,
+       T2.APPV_PRCSS_NO,
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
+       T1.SUPPLIER AS S_MEM_ACC_NAME,
+       MAX(T4.MEM_ACC_ID) AS S_MEM_ACC_ID,
+       T1.INVC_TYPE,
+       REGEXP_REPLACE(T1.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_NO,
+       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT,
+       REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) GST_RGIST_NO,
+       T1.TAX_CODE,
+       'MYR'       AS CUR,
+       T1.GST_BEFOR_AMT,
+       T1.GST_AMT,
+       T1.NON_CLM_GST_AMT,
+       T1.TOT_AMT,
+       T1.ATCH_FILE_GRP_ID,
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
+       REGEXP_REPLACE(T1.UTIL_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) UTIL_NO,
+       REGEXP_REPLACE(T1.J_PAY_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) J_PAY_NO,
+       TO_CHAR(T1.BIL_PERIOD_F, 'DD/MM/YYYY') AS BIL_PERIOD_F,
+       TO_CHAR(T1.BIL_PERIOD_T, 'DD/MM/YYYY') AS BIL_PERIOD_T,
+       T2.CRT_USER_ID,
+       T5.USER_NAME
+FROM   FCM0014D T1
+       LEFT JOIN FCM0013M T2
+              ON T1.CLM_NO = T2.CLM_NO
+       LEFT JOIN FCM0006M T3
+              ON T2.MEM_ACC_ID = T3.MEM_ACC_ID
+       LEFT JOIN FCM0006M T4
+              ON T1.SUPPLIER = T4.MEM_ACC_NAME
+       LEFT JOIN SYS0047M T5
+              ON T2.CRT_USER_ID = T5.USER_ID
+WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
+GROUP BY
+       T1.CLM_SEQ,
+       T2.COST_CENTR,
+       T2.COST_CENTR_NAME,
+       T2.MEM_ACC_ID,
+       T3.MEM_ACC_NAME,
+       T2.CUSTDN_NRIC,
+       T2.BANK_CODE,
+       T3.BANK_NAME,
+       T2.BANK_ACC_NO,
+       T2.CLM_MONTH,
+       T2.TOT_AMT,
+       T2.APPV_PRCSS_NO,
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
+       T1.SUPPLIER,
+       T4.MEM_ACC_ID,
+       T1.INVC_TYPE,
+       REGEXP_REPLACE(T1.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+       T1.INVC_DT,
+       REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+       T1.TAX_CODE,
+       T1.GST_BEFOR_AMT,
+       T1.GST_AMT,
+       T1.NON_CLM_GST_AMT,
+       T1.TOT_AMT,
+       T1.ATCH_FILE_GRP_ID,
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+       REGEXP_REPLACE(T1.UTIL_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+       REGEXP_REPLACE(T1.J_PAY_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+       T1.BIL_PERIOD_F,
+       T1.BIL_PERIOD_T,
+       T2.CRT_USER_ID,
+       T5.USER_NAME
+</select>
+
+<select id="selectExpenseInfoForAppv" parameterType="Map" resultType="egovMap">
+/* pettyCashMapper.selectExpenseInfoForAppv */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ,
+       T2.COST_CENTR,
+       T2.COST_CENTR_NAME,
+       T2.MEM_ACC_ID,
+       T3.MEM_ACC_NAME,
+       T2.CUSTDN_NRIC,
+       T2.BANK_CODE,
+       T3.BANK_NAME,
+       T2.BANK_ACC_NO,
+       TO_CHAR(TO_DATE(T2.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH,
+       T2.TOT_AMT  AS ALL_TOT_AMT,
+       T2.APPV_PRCSS_NO,
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
+       T1.SUPPLIER,
+       MAX(T4.MEM_ACC_ID) AS S_MEM_ACC_ID,
+       (CASE T1.INVC_TYPE
+            WHEN 'F'
+               THEN 'Full Tax invoice'
+            WHEN 'S'
+               THEN 'Simplified Tax invoice'
+         END
+        ) AS INVC_TYPE,
+       REGEXP_REPLACE(T1.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_NO,
+       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT,
+       REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) GST_RGIST_NO,
+       T1.TAX_CODE,
+       'MYR'       AS CUR,
+       T1.GST_BEFOR_AMT,
+       T1.GST_AMT,
+       T1.NON_CLM_GST_AMT,
+       T1.TOT_AMT,
+       T1.ATCH_FILE_GRP_ID,
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
+       REGEXP_REPLACE(T1.UTIL_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) UTIL_NO,
+       REGEXP_REPLACE(T1.J_PAY_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL) J_PAY_NO,
+       TO_CHAR(T1.BIL_PERIOD_F, 'DD/MM/YYYY') AS BIL_PERIOD_F,
+       TO_CHAR(T1.BIL_PERIOD_T, 'DD/MM/YYYY') AS BIL_PERIOD_T,
+       T2.CRT_USER_ID,
+       T5.USER_NAME
+FROM   FCM0014D T1
+       LEFT JOIN FCM0013M T2
+              ON T1.CLM_NO = T2.CLM_NO
+       LEFT JOIN FCM0006M T3
+              ON T2.MEM_ACC_ID = T3.MEM_ACC_ID
+       LEFT JOIN FCM0006M T4
+              ON T1.SUPPLIER = T4.MEM_ACC_NAME
+       LEFT JOIN SYS0047M T5
+              ON T2.CRT_USER_ID = T5.USER_ID
+WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
+GROUP BY
+       T1.CLM_SEQ,
+       T2.COST_CENTR,
+       T2.COST_CENTR_NAME,
+       T2.MEM_ACC_ID,
+       T3.MEM_ACC_NAME,
+       T2.CUSTDN_NRIC,
+       T2.BANK_CODE,
+       T3.BANK_NAME,
+       T2.BANK_ACC_NO,
+       T2.CLM_MONTH,
+       T2.TOT_AMT,
+       T2.APPV_PRCSS_NO,
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
+       T1.SUPPLIER,
+       T4.MEM_ACC_ID,
+       T1.INVC_TYPE,
+       REGEXP_REPLACE(T1.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+       T1.INVC_DT,
+       REGEXP_REPLACE(T1.GST_RGIST_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+       T1.TAX_CODE,
+       T1.GST_BEFOR_AMT,
+       T1.GST_AMT,
+       T1.NON_CLM_GST_AMT,
+       T1.TOT_AMT,
+       T1.ATCH_FILE_GRP_ID,
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+       REGEXP_REPLACE(T1.UTIL_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+       REGEXP_REPLACE(T1.J_PAY_NO, '(^[[:space:]]+)|([[:space:]]+$)', NULL),
+       T1.BIL_PERIOD_F,
+       T1.BIL_PERIOD_T,
+       T2.CRT_USER_ID,
+       T5.USER_NAME
+</select>
+
+<select id="selectExpenseItemGrp" parameterType="Map" resultType="egovMap">
+/* pettyCashMapper.selectExpenseItemGrp */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ,
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
+       T1.TAX_CODE,
+       T2.TAX_NAME,
+       T2.TAX_RATE,
+       'MYR' AS CUR,
+       T1.GST_BEFOR_AMT,
+       T1.GST_AMT,
+       T1.NON_CLM_GST_AMT,
+       T1.TOT_AMT,
+       T1.CLAM_UN,
+       T1.ATCH_FILE_GRP_ID
+FROM   FCM0014D T1
+       LEFT JOIN FCM0007C T2
+              ON T1.TAX_CODE = T2.TAX_CODE
+WHERE  T1.CLM_NO = #{clmNo}
+       AND CLAM_UN = #{clamUn}
+</select>
+
+<select id="selectExpenseItemGrpForAppv" parameterType="Map" resultType="egovMap">
+/* pettyCashMapper.selectExpenseItemGrpForAppv */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ,
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
+       T1.TAX_CODE,
+       NVL2(T1.TAX_CODE, T2.INDUSTRY_CODE||' '||'('||T2.TAX_NAME||')', '') AS TAX_NAME,
+       T2.TAX_RATE,
+       'MYR' AS CUR,
+       T1.GST_BEFOR_AMT,
+       T1.GST_AMT,
+       T1.NON_CLM_GST_AMT AS TAX_NON_CLM_AMT,
+       T1.TOT_AMT,
+       T1.CLAM_UN,
+       T1.ATCH_FILE_GRP_ID
+FROM   FCM0014D T1
+       LEFT JOIN FCM0007C T2
+              ON T1.TAX_CODE = T2.TAX_CODE
+WHERE  T1.CLM_NO = #{clmNo}
+       AND CLAM_UN = #{clamUn}
+</select>
+
+<select id="selectAttachList" parameterType="String" resultType="egovMap">
+/* pettyCashMapper.selectAttachList */
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+          ORDER BY T1.ATCH_FILE_ID
+</select>
+
+<update id="updatePettyCashExp" parameterType="Map">
+/* pettyCashMapper.updatePettyCashExp */
+   UPDATE FCM0013M
+   SET COST_CENTR = UPPER(#{costCentr})
+       ,COST_CENTR_NAME = NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{costCentr})))
+       ,MEM_ACC_ID = UPPER(#{memAccId})
+       ,CUSTDN_NRIC = #{custdnNric}
+       ,BANK_CODE = #{bankCode}
+       ,BANK_ACC_NO = #{bankAccNo}
+       ,CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
+       ,TOT_AMT = #{allTotAmt}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}
+</update>
+
+<update id="updatePettyCashExpItem" parameterType="Map">
+/* pettyCashMapper.updatePettyCashExpItem */
+   UPDATE FCM0014D
+   SET EXP_TYPE = #{expType}
+       ,EXP_TYPE_NAME = #{expTypeName}
+       ,GL_ACC_CODE = #{glAccCode}
+       ,GL_ACC_CODE_NAME = #{glAccCodeName}
+       ,BUDGET_CODE = #{budgetCode}
+       ,BUDGET_CODE_NAME = #{budgetCodeName}
+       ,SUPPLIER = #{sMemAccName}
+       ,INVC_NO = #{invcNo}
+       ,INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY')
+       ,TOT_AMT = #{totAmt}
+       ,EXP_DESC = #{expDesc}
+       ,UTIL_NO = #{utilNo}
+       ,J_PAY_NO = #{jPayNo}
+       ,BIL_PERIOD_F = TO_DATE(#{bilPeriodF}, 'DD/MM/YYYY')
+       ,BIL_PERIOD_T = TO_DATE(#{bilPeriodT}, 'DD/MM/YYYY')
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}
+    AND CLM_SEQ = #{clmSeq}
+</update>
+
+<insert id="insertExpApproveItems" parameterType="Map">
+/* pettyCashMapper.insertApproveItems */
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO FCM0015D
+   (
+        APPV_PRCSS_NO
+       ,APPV_ITM_SEQ
+       ,INVC_NO
+       ,INVC_DT
+       ,INVC_TYPE
+       ,MEM_ACC_ID
+       ,SUPPLIR
+       ,PAY_DUE_DT
+       ,EXP_TYPE
+       ,EXP_TYPE_NAME
+       ,COST_CENTR
+       ,COST_CENTR_NAME
+       ,GL_ACC_CODE
+       ,GL_ACC_CODE_NAME
+       ,BUDGET_CODE
+       ,BUDGET_CODE_NAME
+       ,TAX_CODE
+       ,NET_AMT
+       ,TAX_AMT
+       ,TAX_NON_CLM_AMT
+       ,APPV_AMT
+       ,EXP_DESC
+       ,ATCH_FILE_GRP_ID
+       ,CLAM_UN
+       ,UTIL_NO
+       ,J_PAY_NO
+       ,BIL_PERIOD_F
+       ,BIL_PERIOD_T
+       ,CRT_DT
+       ,CRT_USER_ID
+       ,UPD_DT
+       ,UPD_USER_ID
+       ,INVC_CUR
+    )
+    values
+    (
+        #{appvPrcssNo}
+       ,#{clmSeq}
+       ,REGEXP_REPLACE(#{invcNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
+       ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
+       ,#{invcType}
+       ,#{memAccId}
+       ,#{sMemAccName}
+       ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
+       ,#{expType}
+       ,#{expTypeName}
+       ,#{costCentr}
+       ,#{costCentrName}
+       ,#{glAccCode}
+       ,#{glAccCodeName}
+       ,#{budgetCode}
+       ,#{budgetCodeName}
+       ,'VB'
+       ,#{totAmt}
+       ,'0'
+       ,'0'
+       ,#{totAmt}
+       ,REGEXP_REPLACE(#{expDesc}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
+       ,#{atchFileGrpId}
+       ,#{clamUn}
+       ,REGEXP_REPLACE(#{utilNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
+       ,REGEXP_REPLACE(#{jPayNo}, '(^[[:space:]]+)|([[:space:]]+$)', NULL)
+       ,TO_DATE(#{bilPeriodF}, 'DD/MM/YYYY')
+       ,TO_DATE(#{bilPeriodT}, 'DD/MM/YYYY')
+       ,SYSDATE
+       ,#{userId}
+       ,SYSDATE
+       ,#{userId}
+       ,'MYR'
+    )
+</insert>
+
+<update id="updateExpAppvPrcssNo" parameterType="Map">
+/* pettyCashMapper.updateAppvPrcssNo */
+   UPDATE FCM0013M
+   SET APPV_PRCSS_NO = #{appvPrcssNo}
+       ,UPD_DT = SYSDATE
+       ,UPD_USER_ID = #{userId}
+    WHERE CLM_NO = #{clmNo}
+</update>
+
+<delete id="deletePettyCashExpItem" parameterType="Map">
+/* pettyCashMapper.deletePettyCashExpItem */
+   DELETE FROM FCM0014D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq}
+</delete>
+
+<update id="updatePettyCashExpTotAmt" parameterType="Map">
+/* pettyCashMapper.updatePettyCashExpTotAmt */
+   UPDATE FCM0013M SET TOT_AMT = #{allTotAmt} WHERE CLM_NO = #{clmNo}
+</update>
+
+<select id="getOldDisClamUn" parameterType="Map" resultType="egovMap">
+    SELECT
+        CLAM_UN
+    FROM FCM0014D
+    WHERE CLM_NO = #{clmNo}
+    GROUP BY CLAM_UN
+</select>
+
+<update id="updateExistingClamUn" parameterType="Map">
+    UPDATE FCM0014D
+    SET CLAM_UN = #{newClamUn}
+    WHERE CLM_NO = #{clmNo}
+    and CLAM_UN = #{oldClamUn}
+</update>
+
+<insert id="insertRejectM" parameterType="Map">
+    INSERT INTO FCM0013M (
+        CLM_NO,
+        CLM_TYPE,
+        COST_CENTR,
+        COST_CENTR_NAME,
+        MEM_ACC_ID,
+        CUSTDN_NRIC,
+        BANK_CODE,
+        BANK_ACC_NO,
+        CLM_MONTH,
+        TOT_AMT,
+        /* APPV_PRCSS_NO */
+        CRT_DT,
+        CRT_USER_ID,
+        UPD_DT,
+        UPD_USER_ID,
+        PREV_CLM_NO
+    )
+    SELECT
+        #{newClmNo},
+        CLM_TYPE,
+        COST_CENTR,
+        COST_CENTR_NAME,
+        MEM_ACC_ID,
+        CUSTDN_NRIC,
+        BANK_CODE,
+        BANK_ACC_NO,
+        CLM_MONTH,
+        TOT_AMT,
+        /* APPV_PRCSS_NO */
+        SYSDATE,
+        #{userId},
+        SYSDATE,
+        #{userId},
+        CLM_NO AS PREV_CLM_NO
+    FROM FCM0013M
+    WHERE CLM_NO = #{clmNo}
+</insert>
+
+<insert id="insertRejectD" parameterType="Map">
+    INSERT INTO FCM0014D (
+        CLM_NO,
+        CLM_SEQ,
+        EXP_TYPE,
+        EXP_TYPE_NAME,
+        GL_ACC_CODE,
+        GL_ACC_CODE_NAME,
+        BUDGET_CODE,
+        BUDGET_CODE_NAME,
+        SUPPLIER,
+        INVC_TYPE,
+        INVC_NO,
+        INVC_DT,
+        GST_RGIST_NO,
+        TAX_CODE,
+        GST_BEFOR_AMT,
+        GST_AMT,
+        NON_CLM_GST_AMT,
+        TOT_AMT,
+        ATCH_FILE_GRP_ID,
+        EXP_DESC,
+        CLAM_UN,
+        CRT_DT,
+        CRT_USER_ID,
+        UPD_DT,
+        UPD_USER_ID,
+        UTIL_NO,
+        J_PAY_NO,
+        BIL_PERIOD_F,
+        BIL_PERIOD_T
+    )
+    SELECT
+        #{newClmNo},
+        CLM_SEQ,
+        EXP_TYPE,
+        EXP_TYPE_NAME,
+        GL_ACC_CODE,
+        GL_ACC_CODE_NAME,
+        BUDGET_CODE,
+        BUDGET_CODE_NAME,
+        SUPPLIER,
+        INVC_TYPE,
+        INVC_NO,
+        INVC_DT,
+        GST_RGIST_NO,
+        'VB',
+        TOT_AMT,
+        GST_AMT,
+        NON_CLM_GST_AMT,
+        TOT_AMT,
+        ATCH_FILE_GRP_ID,
+        EXP_DESC,
+        CLAM_UN,
+        SYSDATE,
+        #{userId},
+        SYSDATE,
+        #{userId},
+        UTIL_NO,
+        J_PAY_NO,
+        BIL_PERIOD_F,
+        BIL_PERIOD_T
+    FROM FCM0014D
+    WHERE CLM_NO = #{clmNo}
+</insert>
+
+<select id="checkCustodian" parameterType="String" resultType="String">
+select distinct CUSTDN from FCM0011M WHERE CUSTDN = UPPER(#{memAccId})
+</select>
+</mapper>

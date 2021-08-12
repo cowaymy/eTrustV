@@ -1,0 +1,1269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.document.service.impl.AdminMgmtMapper">
+    
+    <!-- DOC NO  채번 -->
+    <select id="selectDocNo" parameterType="String" resultType="String">
+        SELECT FN_GET_DOCNO(#{value}) FROM DUAL
+    </select>
+    
+    <select id="getPAY0170MSEQ" resultType="int">
+        SELECT PAY0170M_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="getPAY0097DSEQ" resultType="int">
+        SELECT PAY0097D_SEQ.NEXTVAL FROM DUAL
+    </select>
+    
+    <select id="selectWaitingItemList" parameterType="Map" resultType="egovMap">
+        SELECT 
+		       Project2.TRX_ID TRX_ID  ,
+		       Project2.C2 C1  ,
+		       Project2.C3 C2  ,
+		       Project2.C4 C3  ,
+		       Project2.C5 C4  ,
+		       Project2.C6 AMOUNT  ,
+		       Project2.PAY_MODE_ID PAY_MODE_ID  ,
+		       Project2.CODE CODE  ,
+		       Project2.IS_ONLINE IS_ONLINE  ,
+		       Project2.ORI_CC_NO ORI_CC_NO  ,
+		       Project2.CC_TYPE_ID CC_TYPE_ID  ,
+		       Project2.C7 CRC_TYPE  ,
+		       Project2.CC_EXPR CC_EXPR  ,
+		       Project2.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+		       Project2.BANK_ID BANK_ID  ,
+		       Project2.C8 BANK  ,
+		       TO_CHAR(Project2.C9 , 'DD-MM-YY') AS REF_DATE,
+		       Project2.REF_NO REF_NO  ,
+		       Project2.APPV_NO APPV_NO  ,
+		       Project2.MID MID  ,
+		       Project2.BRNCH_ID BRNCH_ID  ,
+		       TO_CHAR(Project2.C1 , 'DD-MM-YY') AS PAY_DATE,
+		       Project2.ACC_CODE ACC_CODE  ,
+		       Project2.ACC_ID ACC_ID  
+		  FROM ( SELECT Project2.TRX_ID TRX_ID  ,
+		                Project2.PAY_MODE_ID PAY_MODE_ID  ,
+		                Project2.IS_ONLINE IS_ONLINE  ,
+		                Project2.ORI_CC_NO ORI_CC_NO  ,
+		                Project2.CC_TYPE_ID CC_TYPE_ID  ,
+		                Project2.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+		                Project2.CC_EXPR CC_EXPR  ,
+		                Project2.BANK_ID BANK_ID  ,
+		                Project2.APPV_NO APPV_NO  ,
+		                Project2.REF_NO REF_NO  ,
+		                Project2.BRNCH_ID BRNCH_ID  ,
+		                Project2.MID MID  ,
+		                Project2.ACC_ID ACC_ID  ,
+		                Project2.ACC_CODE ACC_CODE  ,
+		                Project2.C1 C1  ,
+		                Project2.CODE CODE  ,
+		                Project2.C2 C2  ,
+		                Project2.C3 C3  ,
+		                Project2.C4 C4  ,
+		                Project2.C5 C5  ,
+		                Project2.C6 C6  ,
+		                Project2.C7 C7  ,
+		                Project2.C8 C8  ,
+		                Project2.C9 C9  ,
+		                ROW_NUMBER() OVER ( ORDER BY Project2.TRX_ID ASC  ) ROW_NUMBER  
+		         FROM ( SELECT GroupBy1.K1 TRX_ID  ,
+		                       GroupBy1.K2 PAY_MODE_ID  ,
+		                       GroupBy1.K3 IS_ONLINE  ,
+		                       GroupBy1.K4 ORI_CC_NO  ,
+		                       GroupBy1.K5 CC_TYPE_ID  ,
+		                       GroupBy1.K6 CC_HOLDER_NAME  ,
+		                       GroupBy1.K7 CC_EXPR  ,
+		                       GroupBy1.K8 BANK_ID  ,
+		                       GroupBy1.K9 APPV_NO  ,
+		                       GroupBy1.K10 REF_NO  ,
+		                       GroupBy1.K11 BRNCH_ID  ,
+		                       GroupBy1.K12 MID  ,
+		                       GroupBy1.K13 ACC_ID  ,
+		                       GroupBy1.K14 ACC_CODE  ,
+		                       GroupBy1.K16 C1  ,
+		                       Extent2.CODE CODE  ,
+		                       0 C2  ,
+		                       0 C3  ,
+		                       1 C4  ,
+		                       ' ' C5  ,
+		                       CASE 
+		                            WHEN ( GroupBy1.A1 IS NOT NULL ) THEN GroupBy1.A1
+		                       ELSE UTILS.CONVERT_TO_FLOAT(0,53)
+		                          END C6  ,
+		                       CASE 
+		                            WHEN ( Extent3.CODE_ID IS NOT NULL ) THEN Extent3.CODE_NAME
+		                       ELSE ' '
+		                          END C7  ,
+		                       CASE 
+		                            WHEN ( Extent4.BANK_ID IS NOT NULL ) THEN Extent4.CODE
+		                       ELSE ' '
+		                          END C8  ,
+		                       CASE 
+		                            WHEN ( GroupBy1.K15 IS NOT NULL ) THEN TO_DATE(GroupBy1.K15)
+		                       ELSE TO_DATE('1900/01/01')
+		                          END C9  
+		                FROM ( SELECT Project1.TRX_ID K1  ,
+		                              Project1.PAY_MODE_ID K2  ,
+		                              Project1.IS_ONLINE K3  ,
+		                              Project1.ORI_CC_NO K4  ,
+		                              Project1.CC_TYPE_ID K5  ,
+		                              Project1.CC_HOLDER_NAME K6  ,
+		                              Project1.CC_EXPR K7  ,
+		                              Project1.BANK_ID K8  ,
+		                              Project1.APPV_NO K9  ,
+		                              Project1.REF_NO K10  ,
+		                              Project1.BRNCH_ID K11  ,
+		                              Project1.MID K12  ,
+		                              Project1.ACC_ID K13  ,
+		                              Project1.ACC_CODE K14  ,
+		                              Project1.C1 K15  ,
+		                              Project1.C2 K16  ,
+		                              SUM(Project1.AMT)  A1  
+		                       FROM ( SELECT Extent1.TRX_ID TRX_ID  ,
+		                                     Extent1.PAY_MODE_ID PAY_MODE_ID  ,
+		                                     Extent1.IS_ONLINE IS_ONLINE  ,
+		                                     Extent1.ORI_CC_NO ORI_CC_NO  ,
+		                                     Extent1.CC_TYPE_ID CC_TYPE_ID  ,
+		                                     Extent1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+		                                     Extent1.CC_EXPR CC_EXPR  ,
+		                                     Extent1.BANK_ID BANK_ID  ,
+		                                     Extent1.APPV_NO APPV_NO  ,
+		                                     Extent1.REF_NO REF_NO  ,
+		                                     Extent1.BRNCH_ID BRNCH_ID  ,
+		                                     Extent1.MID MID  ,
+		                                     Extent1.AMT AMT  ,
+		                                     Extent1.ACC_ID ACC_ID  ,
+		                                     Extent1.ACC_CODE ACC_CODE  ,
+		                                     CASE 
+		                                          WHEN ( Extent1.REF_DT IS NOT NULL ) THEN TO_DATE(Extent1.REF_DT)
+											ELSE TO_DATE('1900/01/01')
+											   END C1  ,
+											CASE 
+											     WHEN ( Extent1.PAY_DT IS NOT NULL ) THEN TO_DATE(Extent1.PAY_DT)
+											ELSE TO_DATE('1900/01/01')
+											   END C2  
+		                              FROM ( SELECT vPayDocumentControlWaitingItem.TRX_ID TRX_ID  ,
+		                                            vPayDocumentControlWaitingItem.PAY_MODE_ID PAY_MODE_ID  ,
+		                                            vPayDocumentControlWaitingItem.IS_ONLINE IS_ONLINE  ,
+		                                            vPayDocumentControlWaitingItem.ORI_CC_NO ORI_CC_NO  ,
+		                                            vPayDocumentControlWaitingItem.CC_TYPE_ID CC_TYPE_ID  ,
+		                                            vPayDocumentControlWaitingItem.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+		                                            vPayDocumentControlWaitingItem.CC_EXPR CC_EXPR  ,
+		                                            vPayDocumentControlWaitingItem.BANK_ID BANK_ID  ,
+		                                            vPayDocumentControlWaitingItem.REF_DT REF_DT  ,
+		                                            vPayDocumentControlWaitingItem.APPV_NO APPV_NO  ,
+		                                            vPayDocumentControlWaitingItem.REF_NO REF_NO  ,
+		                                            vPayDocumentControlWaitingItem.BRNCH_ID BRNCH_ID  ,
+		                                            vPayDocumentControlWaitingItem.MID MID  ,
+		                                            vPayDocumentControlWaitingItem.AMT AMT  ,
+		                                            vPayDocumentControlWaitingItem.PAY_DT PAY_DT  ,
+		                                            vPayDocumentControlWaitingItem.ACC_ID ACC_ID  ,
+		                                            vPayDocumentControlWaitingItem.ACC_CODE ACC_CODE  
+		                                     FROM PAY1010V vPayDocumentControlWaitingItem ) Extent1
+		                               WHERE 1=1 
+		                                        <if test="payModeWaiting != ''"> 
+			                                        AND Extent1.PAY_MODE_ID = #{payModeWaiting}
+			                                    </if>
+		                                        <if test="isOnlineWaiting != null">
+		                                             AND Extent1.IS_ONLINE IN
+		                                            <foreach collection="isOnlineWaiting" item="item" open="(" close=")" separator="," >
+		                                                #{item}
+		                                            </foreach>
+		                                        </if>
+		                                        <if test="merchantIdWaiting != ''"> 
+                                                    AND Extent1.MID = #{merchantIdWaiting}
+                                                </if>
+                                                <if test="refDateWaiting != ''"> 
+                                                    AND ( (CASE 
+	                                                            WHEN ( Extent1.REF_DT IS NOT NULL ) THEN TO_DATE(Extent1.REF_DT)
+	                                                 ELSE TO_DATE('1900/01/01')
+	                                                 END) = TO_DATE(#{refDateWaiting}, 'DD/MM/YYYY') )
+                                                </if>
+		                                         <if test="crcNoWaiting != ''"> 
+                                                    AND Extent1.ORI_CC_NO LIKE '%' || #{crcNoWaiting} || '%' ESCAPE '~' 
+                                                </if>
+		                                        <if test="holderNameWaiting != ''"> 
+                                                    AND Extent1.CC_HOLDER_NAME LIKE '%' || #{holderNameWaiting} || '%' ESCAPE '~' 
+                                                </if>
+		                                        <if test="appNoWaiting != ''"> 
+                                                    AND Extent1.APPV_NO = #{appNoWaiting} 
+                                                </if>
+		                                        <if test="crcTypeWaiting != ''"> 
+                                                    AND Extent1.CC_TYPE_ID = #{crcTypeWaiting} 
+                                                </if>
+		                                        <if test="bankWaiting != '' and bankWaiting != null"> 
+                                                    AND Extent1.BANK_ID = #{bankWaiting} 
+                                                </if>
+		                                        <if test="keyBranchWaiting != ''and keyBranchWaiting != null"> 
+                                                    AND Extent1.BRNCH_ID = #{keyBranchWaiting}
+                                                </if>
+                                                <if test="payDateFrWaiting != null and payDateToWaiting != null and payDateFrWaiting != '' and payDateToWaiting != ''" > 
+			                                        AND ( (CASE 
+			                                                    WHEN ( Extent1.PAY_DT IS NOT NULL ) THEN TO_DATE(Extent1.PAY_DT)
+				                                      ELSE TO_DATE('1900/01/01')
+				                                         END) <![CDATA[>= ]]> TO_DATE(#{payDateFrWaiting},'DD/MM/YYYY') )
+				                                    AND ( (CASE 
+				                                                    WHEN ( Extent1.PAY_DT IS NOT NULL ) THEN TO_DATE(Extent1.PAY_DT)+1
+				                                      ELSE TO_DATE('1900/01/01')
+				                                         END) <![CDATA[<= ]]> TO_DATE(#{payDateToWaiting},'DD/MM/YYYY') )
+		                                        </if>
+		                                        <if test="settleAccWaiting != '' and settleAccWaiting != null">
+                                                    AND Extent1.ACC_ID = #{settleAccWaiting}
+                                                </if>
+		                                        ) Project1
+		                         GROUP BY Project1.TRX_ID,Project1.PAY_MODE_ID,Project1.IS_ONLINE,Project1.ORI_CC_NO,Project1.CC_TYPE_ID,Project1.CC_HOLDER_NAME,Project1.CC_EXPR,Project1.BANK_ID,Project1.APPV_NO,Project1.REF_NO,Project1.BRNCH_ID,Project1.MID,Project1.ACC_ID,Project1.ACC_CODE,Project1.C1,Project1.C2 ) GroupBy1
+		                       JOIN SYS0013M Extent2   ON Extent2.CODE_ID = GroupBy1.K2
+		                       LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = GroupBy1.K5
+		                       LEFT JOIN SYS0004M Extent4   ON Extent4.BANK_ID = GroupBy1.K8 ) Project2 ) Project2
+		 WHERE  Project2.ROW_NUMBER > 0
+		  ORDER BY Project2.TRX_ID ASC
+    </select>
+    
+    <select id="selectReviewItemList" parameterType="Map" resultType="egovMap">
+        SELECT 
+		       Project1.ITM_ID ITM_ID  ,
+		       Project1.ACC_ID ACC_ID  ,
+		       Project1.C1 C1  ,
+		       Project1.AMT AMT  ,
+		       Project1.APPV_NO APPV_NO  ,
+		       Project1.C2 C2  ,
+		       Project1.BANK_ID BANK_ID  ,
+		       Project1.BATCH_ID BATCH_ID  ,
+		       Project1.BATCH_NO BATCH_NO  ,
+		       Project1.C3 C3  ,
+		       Project1.BRNCH_ID BRNCH_ID  ,
+		       Project1.BATCH_STUS_ID BATCH_STUS_ID  ,
+		       Project1.CC_EXPR CC_EXPR  ,
+		       Project1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+		       Project1.C4 C4  ,
+		       Project1.C5 C5  ,
+		       TO_CHAR(Project1.CRT_DT , 'DD-MM-YY') AS CRT_DT,
+		       Project1.CRT_USER_ID CRT_USER_ID  ,
+		       Project1.C6 C6  ,
+		       TO_CHAR(Project1.UPD_DT , 'DD-MM-YY') AS UPD_DT,
+		       Project1.UPD_USER_ID UPD_USER_ID  ,
+		       Project1.C7 C7  ,
+		       Project1.IS_ONLINE IS_ONLINE  ,
+		       Project1.ITM_STUS_ID ITM_STUS_ID  ,
+		       Project1.NAME NAME  ,
+		       Project1.MID MID  ,
+		       Project1.ORI_CC_NO ORI_CC_NO  ,
+		       Project1.PAY_MODE_ID PAY_MODE_ID  ,
+		       Project1.CODE CODE  ,
+		       Project1.C8 C8  ,
+		       Project1.REF_NO REF_NO  ,
+		       Project1.TRX_ID TRX_ID  ,
+		       TO_CHAR(Project1.PAY_DT , 'DD-MM-YY') AS PAY_DT
+		  FROM ( SELECT Project1.ITM_ID ITM_ID  ,
+		                Project1.BATCH_ID BATCH_ID  ,
+		                Project1.ITM_STUS_ID ITM_STUS_ID  ,
+		                Project1.TRX_ID TRX_ID  ,
+		                Project1.AMT AMT  ,
+		                Project1.PAY_MODE_ID PAY_MODE_ID  ,
+		                Project1.IS_ONLINE IS_ONLINE  ,
+		                Project1.ORI_CC_NO ORI_CC_NO  ,
+		                Project1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+		                Project1.CC_EXPR CC_EXPR  ,
+		                Project1.BANK_ID BANK_ID  ,
+		                Project1.APPV_NO APPV_NO  ,
+		                Project1.REF_NO REF_NO  ,
+		                Project1.UPD_DT UPD_DT  ,
+		                Project1.UPD_USER_ID UPD_USER_ID  ,
+		                Project1.MID MID  ,
+		                Project1.BRNCH_ID BRNCH_ID  ,
+		                Project1.PAY_DT PAY_DT  ,
+		                Project1.ACC_ID ACC_ID  ,
+		                Project1.BATCH_NO BATCH_NO  ,
+		                Project1.BATCH_STUS_ID BATCH_STUS_ID  ,
+		                Project1.CRT_DT CRT_DT  ,
+		                Project1.CRT_USER_ID CRT_USER_ID  ,
+		                Project1.NAME NAME  ,
+		                Project1.CODE CODE  ,
+		                Project1.C1 C1  ,
+		                Project1.C2 C2  ,
+		                Project1.C3 C3  ,
+		                Project1.C4 C4  ,
+		                Project1.C5 C5  ,
+		                Project1.C6 C6  ,
+		                Project1.C7 C7  ,
+		                Project1.C8 C8  ,
+		                ROW_NUMBER() OVER ( ORDER BY Project1.ITM_ID ASC  ) ROW_NUMBER  
+		         FROM ( SELECT Filter1.ITM_ID ITM_ID  ,
+		                       Filter1.BATCHID1 BATCH_ID  ,
+		                       Filter1.ITM_STUS_ID ITM_STUS_ID  ,
+		                       Filter1.TRX_ID TRX_ID  ,
+		                       Filter1.AMT AMT  ,
+		                       Filter1.PAY_MODE_ID PAY_MODE_ID  ,
+		                       Filter1.IS_ONLINE IS_ONLINE  ,
+		                       Filter1.ORI_CC_NO ORI_CC_NO  ,
+		                       Filter1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+		                       Filter1.CC_EXPR CC_EXPR  ,
+		                       Filter1.BANKID1 BANK_ID  ,
+		                       Filter1.APPV_NO APPV_NO  ,
+		                       Filter1.REF_NO REF_NO  ,
+		                       Filter1.UPDATED1 UPD_DT  ,
+		                       Filter1.UPDATOR1 UPD_USER_ID  ,
+		                       Filter1.MID MID  ,
+		                       Filter1.BRANCHID1 BRNCH_ID  ,
+		                       Filter1.PAY_DT PAY_DT  ,
+		                       Filter1.ACC_ID ACC_ID  ,
+		                       Filter1.BATCH_NO BATCH_NO  ,
+		                       Filter1.BATCH_STUS_ID BATCH_STUS_ID  ,
+		                       Filter1.CREATED1 CRT_DT  ,
+		                       Filter1.CREATOR1 CRT_USER_ID  ,
+		                       Filter1.NAME1 NAME  ,
+		                       Filter1.CODE1 CODE  ,
+		                       CASE 
+		                            WHEN ( Extent10.ACC_ID IS NOT NULL ) THEN Extent10.ACC_CODE
+		                       ELSE ' '
+		                          END C1  ,
+		                       CASE 
+		                            WHEN ( Filter1.BANKID2 IS NOT NULL ) THEN Filter1.CODE2
+		                       ELSE ' '
+		                          END C2  ,
+		                       Filter1.CODE3 || '-' || Filter1.NAME2 C3  ,
+		                       CASE 
+		                            WHEN ( Filter1.CC_TYPE_ID IS NOT NULL ) THEN Filter1.CC_TYPE_ID
+		                       ELSE 0
+		                          END C4  ,
+		                       CASE 
+		                            WHEN ( Filter1.CODEID1 IS NOT NULL ) THEN Filter1.CODENAME1
+		                       ELSE ' '
+		                          END C5  ,
+		                       CASE 
+		                            WHEN ( Filter1.USERID1 IS NOT NULL ) THEN Filter1.USERNAME1
+		                       ELSE ' '
+		                          END C6  ,
+		                       CASE 
+		                            WHEN ( Filter1.USERID2 IS NOT NULL ) THEN Filter1.USERNAME2
+		                       ELSE ' '
+		                          END C7  ,
+		                       CASE 
+		                            WHEN ( Filter1.REF_DT IS NOT NULL ) THEN TO_DATE(Filter1.REF_DT)
+		                       ELSE TO_DATE('1900/01/01')
+		                          END C8  
+		                FROM ( SELECT Extent1.ITM_ID ITM_ID  ,
+		                              Extent1.BATCH_ID BATCHID1  ,
+		                              Extent1.ITM_STUS_ID ITM_STUS_ID  ,
+		                              Extent1.TRX_ID TRX_ID  ,
+		                              Extent1.AMT AMT  ,
+		                              Extent1.PAY_MODE_ID PAY_MODE_ID  ,
+		                              Extent1.IS_ONLINE IS_ONLINE  ,
+		                              Extent1.ORI_CC_NO ORI_CC_NO  ,
+		                              Extent1.CC_TYPE_ID CC_TYPE_ID  ,
+		                              Extent1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+		                              Extent1.CC_EXPR CC_EXPR  ,
+		                              Extent1.BANK_ID BANKID1  ,
+		                              Extent1.REF_DT REF_DT  ,
+		                              Extent1.APPV_NO APPV_NO  ,
+		                              Extent1.REF_NO REF_NO  ,
+		                              Extent1.UPD_DT UPDATED1  ,
+		                              Extent1.UPD_USER_ID UPDATOR1  ,
+		                              Extent1.MID MID  ,
+		                              Extent1.BRNCH_ID BRANCHID1  ,
+		                              Extent1.PAY_DT PAY_DT  ,
+		                              Extent1.ACC_ID ACC_ID  ,
+		                              Extent2.BATCH_NO BATCH_NO  ,
+		                              Extent2.BATCH_STUS_ID BATCH_STUS_ID  ,
+		                              Extent2.CRT_DT CREATED1  ,
+		                              Extent2.CRT_USER_ID CREATOR1  ,
+		                              Extent3.NAME NAME1  ,
+		                              Extent4.CODE CODE1  ,
+		                              Extent5.CODE CODE3  ,
+		                              Extent5.NAME NAME2  ,
+		                              Extent6.BANK_ID BANKID2  ,
+		                              Extent6.CODE CODE2  ,
+		                              Extent7.CODE_ID CODEID1  ,
+		                              Extent7.CODE_NAME CODENAME1  ,
+		                              Extent8.USER_ID USERID1  ,
+		                              Extent8.USER_NAME USERNAME1  ,
+		                              Extent9.USER_ID USERID2  ,
+		                              Extent9.USER_NAME USERNAME2  
+		                       FROM PAY0097D Extent1
+		                              JOIN PAY0170M Extent2   ON Extent2.BATCH_ID = Extent1.BATCH_ID
+		                              JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.ITM_STUS_ID
+		                              JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent1.PAY_MODE_ID
+		                              JOIN SYS0005M Extent5   ON Extent5.BRNCH_ID = Extent1.BRNCH_ID
+		                              LEFT JOIN SYS0004M Extent6   ON Extent6.BANK_ID = Extent1.BANK_ID
+		                              LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent1.CC_TYPE_ID
+		                              LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Extent2.CRT_USER_ID
+		                              LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent1.UPD_USER_ID
+		                        WHERE 1=1
+		                                 
+		                                 <if test="isOnlineReview != null">
+                                                     AND Extent1.IS_ONLINE IN
+                                                    <foreach collection="isOnlineReview" item="item" open="(" close=")" separator="," >
+                                                        #{item}
+                                                    </foreach>
+                                        </if>
+		                                 AND 1 = Extent2.BATCH_STUS_ID 
+		                                 AND 53 = Extent1.ITM_STUS_ID
+		                                 ) Filter1
+		                       LEFT JOIN SYS0001M Extent10   ON Extent10.ACC_ID = Filter1.ACC_ID
+		                 WHERE 1=1
+		                          <if test="payModeReview != ''"> 
+                                        AND Filter1.PAY_MODE_ID = #{payModeReview}
+                                  </if>
+                                  <if test="merchantIdReview != ''"> 
+                                        AND Filter1.MID = #{merchantIdReview}
+                                  </if>
+                                  <if test="refDateReview != ''"> 
+			                          AND (CASE 
+				                                      WHEN ( Filter1.REF_DT IS NOT NULL ) THEN TO_DATE(Filter1.REF_DT)
+				                        ELSE TO_DATE('1900/01/01')
+				                           END) = TO_DATE(#{refDateReview}, 'DD/MM/YYYY')
+			                      </if>
+			                      <if test="crcNoReview != ''"> 
+                                        AND Filter1.ORI_CC_NO LIKE '%' || #{crcNoReview} || '%' ESCAPE '~' 
+                                  </if>
+                                  <if test="holderNameReview != ''"> 
+                                        AND Filter1.CC_HOLDER_NAME LIKE '%' || #{holderNameReview} || '%' ESCAPE '~' 
+                                  </if>
+                                  <if test="appNoReview != ''"> 
+                                        AND Filter1.APPV_NO = #{appNoReview} 
+                                  </if>
+                                  <if test="crcTypeReview != ''"> 
+			                          AND (CASE 
+			                                      WHEN ( Filter1.CC_TYPE_ID IS NOT NULL ) THEN Filter1.CC_TYPE_ID
+				                        ELSE 0
+				                           END) = #{crcTypeReview}
+			                      </if>
+			                      <if test="bankReview != '' and bankReview != null"> 
+                                        AND Filter1.BANKID1 = #{bankReview}
+                                  </if>
+                                  <if test="keyBranchReview != '' and keyBranchReview != null"> 
+                                        AND Filter1.BRANCHID1 = #{keyBranchReview}
+                                  </if>
+                                  <if test="payDateFrReview != null and payDateToReview != null and payDateFrReview != '' and payDateToReview != ''" > 
+			                             AND Filter1.PAY_DT <![CDATA[>= ]]> TO_DATE(#{payDateFrReview}, 'DD/MM/YYYY')
+			                             AND Filter1.PAY_DT <![CDATA[<= ]]> TO_DATE(#{payDateToReview}, 'DD/MM/YYYY') +1
+		                          </if>
+		                          <if test="batchNoReview != ''"> 
+                                        AND Filter1.BATCH_NO = #{batchNoReview}
+                                  </if>
+		                          <if test="batchCreDateFrReview != null and batchCreDateToReview != null and batchCreDateFrReview != '' and batchCreDateToReview != ''" > 
+                                        AND Filter1.CREATED1 <![CDATA[>= ]]> TO_DATE(#{batchCreDateFrReview}, 'DD/MM/YYYY')
+                                        AND Filter1.CREATED1 <![CDATA[<= ]]> TO_DATE(#{batchCreDateToReview}, 'DD/MM/YYYY') +1
+                                  </if>
+                                  <if test="batchCreatorReview != ''"> 
+                                        AND (CASE 
+                                              WHEN ( Filter1.USERID1 IS NOT NULL ) THEN Filter1.USERNAME1
+		                                ELSE ''
+		                                   END) = #{batchCreatorReview}
+                                  </if>
+		                          <if test="settleAccReview != '' and settleAccReview != null">
+		                                  AND Filter1.ACC_ID = #{settleAccReview}
+		                          </if>
+		                          ) Project1 ) Project1
+		 WHERE  Project1.ROW_NUMBER > 0
+		  ORDER BY Project1.ITM_ID ASC
+    </select>
+    
+    <select id="selectDocItemPayDetailList" parameterType="Map" resultType="egovMap">
+        SELECT 
+		       Project2.C9 C1  ,
+		       Project2.PAY_ID PAY_ID  ,
+		       Project2.PAY_ITM_ID PAY_ITM_ID  ,
+		       Project2.OR_NO OR_NO  ,
+		       Project2.C10 C2  ,
+		       Project2.CODE_NAME CODE_NAME  ,
+		       Project2.C11 C3  ,
+		       Project2.C12 C4  ,
+		       Project2.C7 C5  ,
+		       Project2.C13 C6  ,
+		       Project2.C14 C7  ,
+		       Project2.C5 C8  ,
+		       Project2.C4 C9  ,
+		       Project2.C3 C10  ,
+		       Project2.C1 C11  ,
+		       Project2.C8 C12  ,
+		       Project2.C2 C13  ,
+		       Project2.C15 C14  ,
+		       Project2.C6 C15  ,
+		       Project2.C16 C16  
+		  FROM ( SELECT Distinct1.OR_NO OR_NO  ,
+		                Distinct1.PAY_ITM_ID PAY_ITM_ID  ,
+		                Distinct1.PAY_ID PAY_ID  ,
+		                Distinct1.C1 C1  ,
+		                Distinct1.C2 C2  ,
+		                Distinct1.C3 C3  ,
+		                Distinct1.C4 C4  ,
+		                Distinct1.C5 C5  ,
+		                Distinct1.C6 C6  ,
+		                Distinct1.C7 C7  ,
+		                Distinct1.C8 C8  ,
+		                Distinct1.CODE_NAME CODE_NAME  ,
+		                Distinct1.C9 C9  ,
+		                Distinct1.C10 C10  ,
+		                Distinct1.C11 C11  ,
+		                Distinct1.C12 C12  ,
+		                Distinct1.C13 C13  ,
+		                Distinct1.C14 C14  ,
+		                Distinct1.C15 C15  ,
+		                Distinct1.C16 C16  
+		         FROM ( SELECT DISTINCT Extent1.OR_NO OR_NO  ,
+		                                Extent2.PAY_ITM_ID PAY_ITM_ID  ,
+		                                Extent2.PAY_ID PAY_ID  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_IS_ONLINE IS NOT NULL ) THEN Extent2.PAY_ITM_IS_ONLINE
+		                                ELSE 0
+		                                   END C1  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent2.PAY_ITM_ORI_CC_NO
+		                                ELSE ' '
+		                                   END C2  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_CC_TYPE_ID IS NOT NULL ) THEN Extent2.PAY_ITM_CC_TYPE_ID
+		                                ELSE 0
+		                                   END C3  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_CC_HOLDER_NAME IS NOT NULL ) THEN Extent2.PAY_ITM_CC_HOLDER_NAME
+		                                ELSE ' '
+		                                   END C4  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_CC_EXPR_DT IS NOT NULL ) THEN Extent2.PAY_ITM_CC_EXPR_DT
+		                                ELSE ' '
+		                                   END C5  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_REF_DT IS NOT NULL ) THEN TO_DATE(Extent2.PAY_ITM_REF_DT)
+		                                ELSE TO_DATE('1900/01/01')
+		                                   END C6  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_APPV_NO IS NOT NULL ) THEN Extent2.PAY_ITM_APPV_NO
+		                                ELSE ' '
+		                                   END C7  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_MID IS NOT NULL ) THEN Extent2.PAY_ITM_MID
+		                                ELSE ' '
+		                                   END C8  ,
+		                                Extent3.CODE_NAME CODE_NAME  ,
+		                                1 C9  ,
+		                                CASE 
+		                                     WHEN ( Extent1.TYPE_ID IS NOT NULL ) THEN Extent1.TYPE_ID
+		                                ELSE 0
+		                                   END C10  ,
+		                                CASE 
+		                                     WHEN ( Extent4.SALES_ORD_ID IS NOT NULL ) THEN Extent4.SALES_ORD_NO
+		                                     WHEN ( Extent6.SALES_ORD_ID IS NOT NULL ) THEN Extent6.SALES_ORD_NO
+		                                ELSE Extent7.MEM_CODE
+		                                   END C11  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_AMT IS NOT NULL ) THEN Extent2.PAY_ITM_AMT
+		                                ELSE UTILS.CONVERT_TO_FLOAT(0,53)
+		                                   END C12  ,
+		                                CASE 
+		                                     WHEN ( CASE 
+		                                                 WHEN ( Extent2.PAY_ITM_ISSU_BANK_ID IS NOT NULL ) THEN Extent2.PAY_ITM_ISSU_BANK_ID
+		                                     ELSE 0
+		                                        END IS NOT NULL ) THEN CASE 
+		                                                                    WHEN ( Extent2.PAY_ITM_ISSU_BANK_ID IS NOT NULL ) THEN Extent2.PAY_ITM_ISSU_BANK_ID
+		                                     ELSE 0
+		                                        END
+		                                ELSE 0
+		                                   END C13  ,
+		                                CASE 
+		                                     WHEN ( CASE 
+		                                                 WHEN ( Extent1.BRNCH_ID IS NOT NULL ) THEN Extent1.BRNCH_ID
+		                                     ELSE 0
+		                                        END IS NOT NULL ) THEN CASE 
+		                                                                    WHEN ( Extent1.BRNCH_ID IS NOT NULL ) THEN Extent1.BRNCH_ID
+		                                     ELSE 0
+		                                        END
+		                                ELSE 0
+		                                   END C14  ,
+		                                CASE 
+		                                     WHEN ( CASE 
+		                                                 WHEN ( Extent2.PAY_ITM_MODE_ID IS NOT NULL ) THEN Extent2.PAY_ITM_MODE_ID
+		                                     ELSE 0
+		                                        END IS NOT NULL ) THEN CASE 
+		                                                                    WHEN ( Extent2.PAY_ITM_MODE_ID IS NOT NULL ) THEN Extent2.PAY_ITM_MODE_ID
+		                                     ELSE 0
+		                                        END
+		                                ELSE 0
+		                                   END C15  ,
+		                                CASE 
+		                                     WHEN ( CASE 
+		                                                 WHEN ( Extent1.TRX_ID IS NOT NULL ) THEN Extent1.TRX_ID
+		                                     ELSE 0
+		                                        END IS NOT NULL ) THEN CASE 
+		                                                                    WHEN ( Extent1.TRX_ID IS NOT NULL ) THEN Extent1.TRX_ID
+		                                     ELSE 0
+		                                        END
+		                                ELSE 0
+		                                   END C16  
+		                FROM PAY0064D Extent1
+		                       JOIN PAY0065D Extent2   ON ( Extent1.PAY_ID = Extent2.PAY_ID )
+		                       AND ( Extent2.PAY_ID = Extent1.PAY_ID )
+		                       JOIN SYS0013M Extent3   ON Extent1.TYPE_ID = Extent3.CODE_ID
+		                       LEFT JOIN SAL0001D Extent4   ON ( Extent1.SALES_ORD_ID = Extent4.SALES_ORD_ID )
+		                       AND ( Extent1.SALES_ORD_ID > 0 )
+		                       LEFT JOIN PAY0007D Extent5   ON ( Extent1.BILL_ID = Extent5.BILL_ID )
+		                       AND ( Extent1.BILL_ID > 0 )
+		                       LEFT JOIN SAL0001D Extent6   ON ( Extent5.BILL_SO_ID = Extent6.SALES_ORD_ID )
+		                       AND ( Extent5.BILL_SO_ID > 0 )
+		                       LEFT JOIN ORG0001D Extent7   ON ( Extent5.BILL_MEM_ID = Extent7.MEM_ID )
+		                       AND ( Extent5.BILL_MEM_ID > 0 )
+		                 WHERE  1=1
+		                          <if test="trxId != ''">
+		                              AND Extent1.TRX_ID = #{trxId}
+		                          </if>
+		                          <if test="payModeId != ''">
+                                      AND ( (CASE 
+		                                      WHEN ( Extent2.PAY_ITM_MODE_ID IS NOT NULL ) THEN Extent2.PAY_ITM_MODE_ID
+		                                ELSE 0
+		                                   END) = #{payModeId} )
+                                  </if>
+		                          <if test="isOnline != ''">
+                                      AND ( (CASE 
+                                              WHEN ( Extent2.PAY_ITM_IS_ONLINE IS NOT NULL ) THEN Extent2.PAY_ITM_IS_ONLINE
+		                                ELSE 0
+		                                   END) = #{isOnline} )
+                                  </if>
+                                  <if test="oriCcNo != ''">
+                                      AND ( (CASE 
+                                              WHEN ( Extent2.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent2.PAY_ITM_ORI_CC_NO
+		                                ELSE ' '
+		                                   END) = #{oriCcNo} ) 
+                                  </if>
+		                          <if test="ccTypeId != ''">
+                                      AND ( (CASE 
+                                              WHEN ( Extent2.PAY_ITM_CC_TYPE_ID IS NOT NULL ) THEN Extent2.PAY_ITM_CC_TYPE_ID
+		                                ELSE 0
+		                                   END) = #{ccTypeId} )
+                                  </if>
+		                          <if test="ccHolderName != ''">
+                                      AND ( (CASE 
+                                              WHEN ( Extent2.PAY_ITM_CC_HOLDER_NAME IS NOT NULL ) THEN Extent2.PAY_ITM_CC_HOLDER_NAME
+		                                ELSE ''
+		                                   END) = #{ccHolderName} )
+                                  </if>
+		                         <if test="ccExpr != ''">
+                                      AND ( (CASE 
+                                              WHEN ( Extent2.PAY_ITM_CC_EXPR_DT IS NOT NULL ) THEN Extent2.PAY_ITM_CC_EXPR_DT
+		                                ELSE ' '
+		                                   END) = #{ccExpr} )
+                                  </if>
+		                          <if test="bankId != ''">
+                                      AND ( (CASE 
+                                              WHEN ( Extent2.PAY_ITM_ISSU_BANK_ID IS NOT NULL ) THEN Extent2.PAY_ITM_ISSU_BANK_ID
+		                                ELSE 0
+		                                   END) = #{bankId} )
+                                  </if>
+		                          <if test="refDate != ''">
+                                      AND ( (CASE 
+                                              WHEN ( Extent2.PAY_ITM_REF_DT IS NOT NULL ) THEN TO_DATE(Extent2.PAY_ITM_REF_DT)
+		                                ELSE TO_DATE('1900/01/01')
+		                                   END) = TO_CHAR(TO_DATE(#{refDate}, 'DD/MM/YY'), 'YYYY/MM/DD') )
+                                  </if>
+		                          <if test="appvNo != ''">
+                                      AND ( (CASE 
+                                              WHEN ( Extent2.PAY_ITM_APPV_NO IS NOT NULL ) THEN Extent2.PAY_ITM_APPV_NO
+		                                ELSE ' '
+		                                   END) = #{appvNo} )
+                                  </if>
+		                          <if test="mid != ''">
+                                      AND ( (CASE 
+                                              WHEN ( Extent2.PAY_ITM_MID IS NOT NULL ) THEN Extent2.PAY_ITM_MID
+		                                ELSE ' '
+		                                   END) = #{mid} )
+                                  </if>
+		                          <if test="brnchId != ''">
+                                      AND ( (CASE 
+                                              WHEN ( Extent1.BRNCH_ID IS NOT NULL ) THEN Extent1.BRNCH_ID
+		                                ELSE 0
+		                                   END) = #{brnchId} )
+                                  </if>
+		                          <if test="refNo != ''">
+                                      AND ( (CASE 
+                                              WHEN ( Extent2.PAY_ITM_REF_NO IS NOT NULL ) THEN Extent2.PAY_ITM_REF_NO
+		                                ELSE ' '
+		                                   END) = #{refNo} )
+                                  </if>
+		                           ) Distinct1 ) Project2
+		  ORDER BY Project2.PAY_ITM_ID ASC
+    </select>
+    
+    <insert id="insertPayDocMaster" parameterType="Map">
+        INSERT INTO PAY0170M
+		(
+		BATCH_ID, 
+		BATCH_NO, 
+		BATCH_STUS_ID, 
+		BATCH_RESULT_STUS_ID, 
+		BATCH_PAY_MODE_ID, 
+		BATCH_PAY_IS_ONLINE, 
+		BATCH_TOT_ITM, 
+		BATCH_TOT_CMPLT, 
+		BATCH_TOT_INCMPT, 
+		BATCH_TOT_PENDING, 
+		CRT_DT, 
+		CRT_USER_ID, 
+		UPD_DT, 
+		UPD_USER_ID, 
+		BATCH_TOT_REVIW, 
+		BATCH_TOT_NW, 
+		BATCH_TOT_RESEND
+		)
+		VALUES ( 
+		#{batchId}, 
+		#{batchNo}, 
+		#{batchStatusId}, 
+		#{batchResultStatusId}, 
+		#{batchPaymodeId}, 
+		#{batchPayIsOnline}, 
+		#{batchTotalItem}, 
+		#{batchTotalComplete}, 
+		#{batchTotalIncomplete}, 
+		#{batchTotalPending}, 
+		SYSDATE, 
+		#{creator}, 
+		SYSDATE, 
+		#{updator}, 
+		#{batchTotalReview}, 
+		#{batchTotalNew}, 
+		#{batchTotalResend} 
+		)
+    </insert>
+    
+    <insert id="insertPayDocDetail" parameterType="Map">
+        INSERT INTO PAY0097D
+		(
+		ITM_ID, 
+		BATCH_ID, 
+		ITM_STUS_ID, 
+		TRX_ID, 
+		AMT, 
+		PAY_MODE_ID, 
+		IS_ONLINE, 
+		ORI_CC_NO, 
+		CC_TYPE_ID, 
+		CC_HOLDER_NAME, 
+		CC_EXPR, 
+		BANK_ID, 
+		REF_DT, 
+		APPV_NO, 
+		REF_NO, 
+		CRT_DT, 
+		CRT_USER_ID, 
+		UPD_DT, 
+		UPD_USER_ID, 
+		MID, 
+		BRNCH_ID, 
+		PAY_DT, 
+		ACC_ID
+		)
+		VALUES ( 
+		PAY0097D_SEQ.NEXTVAL, 
+		#{batchId}, 
+		#{itemStatusId}, 
+		#{trxId}, 
+		#{amount}, 
+		#{payModeId}, 
+		#{isOnline}, 
+		#{oriCcNo}, 
+		#{ccTypeId}, 
+		#{ccHolderName}, 
+		#{ccExpr}, 
+		#{bankId}, 
+		TO_CHAR(TO_DATE(#{refDate},'DD/MM/YY'),'YYYY/MM/DD'),
+		#{appvNo}, 
+		#{refNo}, 
+		SYSDATE, 
+		#{creator}, 
+		SYSDATE, 
+		#{updator}, 
+		#{mid}, 
+		#{brnchId}, 
+		TO_CHAR(TO_DATE(#{payDate},'DD/MM/YY'),'YYYY/MM/DD'),
+		#{accId}
+		)
+    </insert>
+    
+    <insert id="insertPayDocLogs" parameterType="Map">
+        INSERT INTO PAY0171D
+		(
+		LOG_ID,
+		ITM_ID, 
+		REM, 
+		CRT_DT, 
+		CRT_USER_ID, 
+		SEND_DT, 
+		CMPLT_DT, 
+		REVIW_DT, 
+		STUS_CODE_ID, 
+		INCMPT_DT 
+		)
+		VALUES ( 
+		PAY0171D_SEQ.NEXTVAL, 
+		#{itemId}, 
+		#{remark}, 
+		SYSDATE, 
+		#{creator}, 
+		SYSDATE, 
+		TO_DATE('1900/01/01'), 
+		TO_DATE('1900/01/01'), 
+		#{itemStatusId}, 
+		TO_DATE('1900/01/01') 
+		)
+    </insert>
+    
+    <select id="selectDocPaymentItem" parameterType="Map" resultType="egovMap">
+        SELECT 
+		       Project2.C9 C1  ,
+		       Project2.PAY_ID PAY_ID  ,
+		       Project2.PAY_ITM_ID PAY_ITM_ID  ,
+		       Project2.OR_NO OR_NO  ,
+		       Project2.C10 C2  ,
+		       Project2.CODE_NAME CODE_NAME  ,
+		       Project2.C11 C3  ,
+		       Project2.C12 C4  ,
+		       Project2.C7 C5  ,
+		       Project2.C13 C6  ,
+		       Project2.C14 C7  ,
+		       Project2.C5 C8  ,
+		       Project2.C4 C9  ,
+		       Project2.C3 C10  ,
+		       Project2.C1 C11  ,
+		       Project2.C8 C12  ,
+		       Project2.C2 C13  ,
+		       Project2.C15 C14  ,
+		       Project2.C6 C15  ,
+		       Project2.C16 C16  
+		  FROM ( SELECT Distinct1.OR_NO OR_NO  ,
+		                Distinct1.PAY_ITM_ID PAY_ITM_ID  ,
+		                Distinct1.PAY_ID PAY_ID  ,
+		                Distinct1.C1 C1  ,
+		                Distinct1.C2 C2  ,
+		                Distinct1.C3 C3  ,
+		                Distinct1.C4 C4  ,
+		                Distinct1.C5 C5  ,
+		                Distinct1.C6 C6  ,
+		                Distinct1.C7 C7  ,
+		                Distinct1.C8 C8  ,
+		                Distinct1.CODE_NAME CODE_NAME  ,
+		                Distinct1.C9 C9  ,
+		                Distinct1.C10 C10  ,
+		                Distinct1.C11 C11  ,
+		                Distinct1.C12 C12  ,
+		                Distinct1.C13 C13  ,
+		                Distinct1.C14 C14  ,
+		                Distinct1.C15 C15  ,
+		                Distinct1.C16 C16  
+		         FROM ( SELECT DISTINCT Extent1.OR_NO OR_NO  ,
+		                                Extent2.PAY_ITM_ID PAY_ITM_ID  ,
+		                                Extent2.PAY_ID PAY_ID  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_IS_ONLINE IS NOT NULL ) THEN Extent2.PAY_ITM_IS_ONLINE
+		                                ELSE 0
+		                                   END C1  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent2.PAY_ITM_ORI_CC_NO
+		                                ELSE ' '
+		                                   END C2  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_CC_TYPE_ID IS NOT NULL ) THEN Extent2.PAY_ITM_CC_TYPE_ID
+		                                ELSE 0
+		                                   END C3  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_CC_HOLDER_NAME IS NOT NULL ) THEN Extent2.PAY_ITM_CC_HOLDER_NAME
+		                                ELSE ' '
+		                                   END C4  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_CC_EXPR_DT IS NOT NULL ) THEN Extent2.PAY_ITM_CC_EXPR_DT
+		                                ELSE ' '
+		                                   END C5  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_REF_DT IS NOT NULL ) THEN TO_DATE(Extent2.PAY_ITM_REF_DT)
+		                                ELSE TO_DATE('1900/01/01')
+		                                   END C6  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_APPV_NO IS NOT NULL ) THEN Extent2.PAY_ITM_APPV_NO
+		                                ELSE ' '
+		                                   END C7  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_MID IS NOT NULL ) THEN Extent2.PAY_ITM_MID
+		                                ELSE ' '
+		                                   END C8  ,
+		                                Extent3.CODE_NAME CODE_NAME  ,
+		                                1 C9  ,
+		                                CASE 
+		                                     WHEN ( Extent1.TYPE_ID IS NOT NULL ) THEN Extent1.TYPE_ID
+		                                ELSE 0
+		                                   END C10  ,
+		                                CASE 
+		                                     WHEN ( Extent4.SALES_ORD_ID IS NOT NULL ) THEN Extent4.SALES_ORD_NO
+		                                     WHEN ( Extent6.SALES_ORD_ID IS NOT NULL ) THEN Extent6.SALES_ORD_NO
+		                                ELSE Extent7.MEM_CODE
+		                                   END C11  ,
+		                                CASE 
+		                                     WHEN ( Extent2.PAY_ITM_AMT IS NOT NULL ) THEN Extent2.PAY_ITM_AMT
+		                                ELSE UTILS.CONVERT_TO_FLOAT(0,53)
+		                                   END C12  ,
+		                                CASE 
+		                                     WHEN ( CASE 
+		                                                 WHEN ( Extent2.PAY_ITM_ISSU_BANK_ID IS NOT NULL ) THEN Extent2.PAY_ITM_ISSU_BANK_ID
+		                                     ELSE 0
+		                                        END IS NOT NULL ) THEN CASE 
+		                                                                    WHEN ( Extent2.PAY_ITM_ISSU_BANK_ID IS NOT NULL ) THEN Extent2.PAY_ITM_ISSU_BANK_ID
+		                                     ELSE 0
+		                                        END
+		                                ELSE 0
+		                                   END C13  ,
+		                                CASE 
+		                                     WHEN ( CASE 
+		                                                 WHEN ( Extent1.BRNCH_ID IS NOT NULL ) THEN Extent1.BRNCH_ID
+		                                     ELSE 0
+		                                        END IS NOT NULL ) THEN CASE 
+		                                                                    WHEN ( Extent1.BRNCH_ID IS NOT NULL ) THEN Extent1.BRNCH_ID
+		                                     ELSE 0
+		                                        END
+		                                ELSE 0
+		                                   END C14  ,
+		                                CASE 
+		                                     WHEN ( CASE 
+		                                                 WHEN ( Extent2.PAY_ITM_MODE_ID IS NOT NULL ) THEN Extent2.PAY_ITM_MODE_ID
+		                                     ELSE 0
+		                                        END IS NOT NULL ) THEN CASE 
+		                                                                    WHEN ( Extent2.PAY_ITM_MODE_ID IS NOT NULL ) THEN Extent2.PAY_ITM_MODE_ID
+		                                     ELSE 0
+		                                        END
+		                                ELSE 0
+		                                   END C15  ,
+		                                CASE 
+		                                     WHEN ( CASE 
+		                                                 WHEN ( Extent1.TRX_ID IS NOT NULL ) THEN Extent1.TRX_ID
+		                                     ELSE 0
+		                                        END IS NOT NULL ) THEN CASE 
+		                                                                    WHEN ( Extent1.TRX_ID IS NOT NULL ) THEN Extent1.TRX_ID
+		                                     ELSE 0
+		                                        END
+		                                ELSE 0
+		                                   END C16  
+		                FROM PAY0064D Extent1
+		                       JOIN PAY0065D Extent2   ON ( Extent1.PAY_ID = Extent2.PAY_ID )
+		                       AND ( Extent2.PAY_ID = Extent1.PAY_ID )
+		                       JOIN SYS0013M Extent3   ON Extent1.TYPE_ID = Extent3.CODE_ID
+		                       LEFT JOIN SAL0001D Extent4   ON ( Extent1.SALES_ORD_ID = Extent4.SALES_ORD_ID )
+		                       AND ( Extent1.SALES_ORD_ID > 0 )
+		                       LEFT JOIN PAY0007D Extent5   ON ( Extent1.BILL_ID = Extent5.BILL_ID )
+		                       AND ( Extent1.BILL_ID > 0 )
+		                       LEFT JOIN SAL0001D Extent6   ON ( Extent5.BILL_SO_ID = Extent6.SALES_ORD_ID )
+		                       LEFT JOIN ORG0001D Extent7   ON ( Extent5.BILL_MEM_ID = Extent7.MEM_ID )
+		                       AND ( Extent5.BILL_MEM_ID > 0 )
+		                 WHERE  ( Extent1.TRX_ID = #{trxId} )
+		                          AND ( (CASE 
+		                                      WHEN ( Extent2.PAY_ITM_MODE_ID IS NOT NULL ) THEN Extent2.PAY_ITM_MODE_ID
+		                        ELSE 0
+		                           END) = #{payModeId} )
+		                          AND ( (CASE 
+		                                      WHEN ( Extent2.PAY_ITM_IS_ONLINE IS NOT NULL ) THEN Extent2.PAY_ITM_IS_ONLINE
+		                        ELSE 0
+		                           END) = #{isOnline} )
+		                          AND ( (CASE 
+		                                      WHEN ( Extent2.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent2.PAY_ITM_ORI_CC_NO
+		                        ELSE ' '
+		                           END) = #{oriCcNo} )
+		                          AND ( (CASE 
+		                                      WHEN ( Extent2.PAY_ITM_CC_TYPE_ID IS NOT NULL ) THEN Extent2.PAY_ITM_CC_TYPE_ID
+		                        ELSE 0
+		                           END) = #{ccTypeId} )
+		                          AND ( (CASE 
+		                                      WHEN ( Extent2.PAY_ITM_CC_HOLDER_NAME IS NOT NULL ) THEN Extent2.PAY_ITM_CC_HOLDER_NAME
+		                        ELSE ' '
+		                           END) = #{ccHolderName} )
+		                          AND ( (CASE 
+		                                      WHEN ( Extent2.PAY_ITM_CC_EXPR_DT IS NOT NULL ) THEN Extent2.PAY_ITM_CC_EXPR_DT
+		                        ELSE ' '
+		                           END) = #{ccExpr} )
+		                          AND ( (CASE 
+		                                      WHEN ( Extent2.PAY_ITM_ISSU_BANK_ID IS NOT NULL ) THEN Extent2.PAY_ITM_ISSU_BANK_ID
+		                        ELSE 0
+		                           END) = #{bankId} )
+		                          AND ( (CASE 
+		                                      WHEN ( Extent2.PAY_ITM_REF_DT IS NOT NULL ) THEN TO_DATE(Extent2.PAY_ITM_REF_DT)
+		                        ELSE TO_DATE('1900/01/01')
+		                           END) = TO_CHAR(TO_DATE(#{refDate},'DD/MM/YY'),'YYYY/MM/DD') )
+		                          AND ( (CASE 
+		                                      WHEN ( Extent2.PAY_ITM_APPV_NO IS NOT NULL ) THEN Extent2.PAY_ITM_APPV_NO
+		                        ELSE ' '
+		                           END) = #{appvNo} )
+		                          AND ( (CASE 
+		                                      WHEN ( Extent2.PAY_ITM_MID IS NOT NULL ) THEN Extent2.PAY_ITM_MID
+		                        ELSE ' '
+		                           END) = #{mid} )
+		                          AND ( (CASE 
+		                                      WHEN ( Extent1.BRNCH_ID IS NOT NULL ) THEN Extent1.BRNCH_ID
+		                        ELSE 0
+		                           END) = #{brnchId} )
+		                          AND ( (CASE 
+		                                      WHEN ( Extent2.PAY_ITM_REF_NO IS NOT NULL ) THEN Extent2.PAY_ITM_REF_NO
+		                        ELSE ' '
+		                           END) = #{refNo} ) 
+		                       ) Distinct1 ) Project2
+		  ORDER BY Project2.PAY_ITM_ID ASC
+    </select>
+    
+    <update id="updPayItemIsLock" parameterType="String">
+        UPDATE PAY0065D
+		   SET PAY_ITM_IS_LOK = '1'
+		WHERE  PAY_ITM_ID = #{value}
+    </update>
+    
+    <insert id="insertPayDocRelateds" parameterType="Map">
+        INSERT INTO PAY0098M
+	    (
+	    RELATED_ID,
+	    PAY_ITM_ID, 
+	    STUS_ID, 
+	    CRT_DT, 
+	    CRT_USER_ID, 
+	    UPD_DT, 
+	    UPD_USER_ID, 
+	    ITM_ID 
+	    )
+	    VALUES 
+	    ( 
+	    PAY0098M_SEQ.NEXTVAL, 
+	    #{payItmId}, 
+	    '1', 
+	    SYSDATE, 
+	    #{creator}, 
+	    SYSDATE, 
+	    #{updator}, 
+	    #{itemId} 
+	    )
+    </insert>
+    
+    <select id="selectPaymentDs" parameterType="String" resultType="egovMap">
+        SELECT 
+		       Extent1.PAY_ITM_ID PAY_ITM_ID  ,
+		       Extent1.PAY_ID PAY_ID  ,
+		       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
+		       Extent1.PAY_ITM_REF_NO PAY_ITM_REF_NO  ,
+		       Extent1.PAY_ITM_CC_NO PAY_ITM_CC_NO  ,
+		       Extent1.PAY_ITM_ORI_CC_NO PAY_ITM_ORI_CC_NO  ,
+		       Extent1.PAY_ITM_ENCRYPT_CC_NO PAY_ITM_ENCRYPT_CC_NO  ,
+		       Extent1.PAY_ITM_CC_TYPE_ID PAY_ITM_CC_TYPE_ID  ,
+		       Extent1.PAY_ITM_CHQ_NO PAY_ITM_CHQ_NO  ,
+		       Extent1.PAY_ITM_ISSU_BANK_ID PAY_ITM_ISSU_BANK_ID  ,
+		       Extent1.PAY_ITM_AMT PAY_ITM_AMT  ,
+		       Extent1.PAY_ITM_IS_ONLINE PAY_ITM_IS_ONLINE  ,
+		       Extent1.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID  ,
+		       Extent1.PAY_ITM_REF_DT PAY_ITM_REF_DT  ,
+		       Extent1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO  ,
+		       Extent1.PAY_ITM_REM PAY_ITM_REM  ,
+		       Extent1.PAY_ITM_STUS_ID PAY_ITM_STUS_ID  ,
+		       Extent1.PAY_ITM_IS_LOK PAY_ITM_IS_LOK  ,
+		       Extent1.PAY_ITM_CC_HOLDER_NAME PAY_ITM_CC_HOLDER_NAME  ,
+		       Extent1.PAY_ITM_CC_EXPR_DT PAY_ITM_CC_EXPR_DT  ,
+		       Extent1.PAY_ITM_BANK_CHRG_AMT PAY_ITM_BANK_CHRG_AMT  ,
+		       Extent1.PAY_ITM_IS_THRD_PARTY PAY_ITM_IS_THRD_PARTY  ,
+		       Extent1.PAY_ITM_THRD_PARTY_IC PAY_ITM_THRD_PARTY_IC  ,
+		       Extent1.PAY_ITM_BANK_BRNCH_ID PAY_ITM_BANK_BRNCH_ID  ,
+		       Extent1.PAY_ITM_BANK_IN_SLIP_NO PAY_ITM_BANK_IN_SLIP_NO  ,
+		       Extent1.PAY_ITM_EFT_NO PAY_ITM_EFT_NO  ,
+		       Extent1.PAY_ITM_CHQ_DEP_RECIPT_NO PAY_ITM_CHQ_DEP_RECIPT_NO  ,
+		       Extent1.ETC1 ETC1  ,
+		       Extent1.ETC2 ETC2  ,
+		       Extent1.ETC3 ETC3  ,
+		       Extent1.PAY_ITM_MID PAY_ITM_MID  ,
+		       Extent1.PAY_ITM_GRP_ID PAY_ITM_GRP_ID  ,
+		       Extent1.PAY_ITM_REF_ITM_ID PAY_ITM_REF_ITM_ID  ,
+		       Extent1.PAY_ITM_BANK_CHRG_ACC_ID PAY_ITM_BANK_CHRG_ACC_ID  ,
+		       Extent1.PAY_ITM_RUNNG_NO PAY_ITM_RUNNG_NO  ,
+		       Extent1.UPD_USER_ID UPD_USER_ID  ,
+		       Extent1.UPD_DT UPD_DT  ,
+		       Extent1.IS_FUND_TRNSFR IS_FUND_TRNSFR  ,
+		       Extent1.SKIP_RECON SKIP_RECON  ,
+		       Extent1.PAY_ITM_CARD_TYPE_ID PAY_ITM_CARD_TYPE_ID  ,
+		       Extent1.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID  
+		  FROM PAY0065D Extent1
+		 WHERE  Extent1.PAY_ITM_ID = #{value} 
+		 AND ROWNUM <![CDATA[<= ]]> 1
+    </select>
+    
+    <select id="selectDocItemPayReviewDetailList" parameterType="Map" resultType="egovMap">
+        SELECT 
+		       Project2.C1 C1  ,
+		       Project2.PAY_ID PAY_ID  ,
+		       Project2.PAY_ITM_ID PAY_ITM_ID  ,
+		       Project2.OR_NO OR_NO  ,
+		       Project2.C2 C2  ,
+		       Project2.CODE_NAME CODE_NAME  ,
+		       Project2.C3 C3  ,
+		       Project2.C4 C4  ,
+		       Project2.APPV_NO APPV_NO  ,
+		       Project2.BANK_ID BANK_ID  ,
+		       Project2.BRNCH_ID BRNCH_ID  ,
+		       Project2.CC_EXPR CC_EXPR  ,
+		       Project2.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+		       Project2.C5 C5  ,
+		       Project2.IS_ONLINE IS_ONLINE  ,
+		       Project2.MID MID  ,
+		       Project2.ORI_CC_NO ORI_CC_NO  ,
+		       Project2.PAY_MODE_ID PAY_MODE_ID  ,
+		       Project2.C6 C6  ,
+		       Project2.TRX_ID TRX_ID  
+		  FROM ( SELECT Distinct1.TRX_ID TRX_ID  ,
+		                Distinct1.PAY_MODE_ID PAY_MODE_ID  ,
+		                Distinct1.IS_ONLINE IS_ONLINE  ,
+		                Distinct1.ORI_CC_NO ORI_CC_NO  ,
+		                Distinct1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+		                Distinct1.CC_EXPR CC_EXPR  ,
+		                Distinct1.BANK_ID BANK_ID  ,
+		                Distinct1.APPV_NO APPV_NO  ,
+		                Distinct1.MID MID  ,
+		                Distinct1.BRNCH_ID BRNCH_ID  ,
+		                Distinct1.PAY_ITM_ID PAY_ITM_ID  ,
+		                Distinct1.PAY_ID PAY_ID  ,
+		                Distinct1.OR_NO OR_NO  ,
+		                Distinct1.CODE_NAME CODE_NAME  ,
+		                Distinct1.C1 C1  ,
+		                Distinct1.C2 C2  ,
+		                Distinct1.C3 C3  ,
+		                Distinct1.C4 C4  ,
+		                Distinct1.C5 C5  ,
+		                Distinct1.C6 C6  
+		         FROM ( SELECT DISTINCT Extent1.TRX_ID TRX_ID  ,
+		                                Extent1.PAY_MODE_ID PAY_MODE_ID  ,
+		                                Extent1.IS_ONLINE IS_ONLINE  ,
+		                                Extent1.ORI_CC_NO ORI_CC_NO  ,
+		                                Extent1.CC_HOLDER_NAME CC_HOLDER_NAME  ,
+		                                Extent1.CC_EXPR CC_EXPR  ,
+		                                Extent1.BANK_ID BANK_ID  ,
+		                                Extent1.APPV_NO APPV_NO  ,
+		                                Extent1.MID MID  ,
+		                                Extent1.BRNCH_ID BRNCH_ID  ,
+		                                Extent3.PAY_ITM_ID PAY_ITM_ID  ,
+		                                Extent3.PAY_ID PAY_ID  ,
+		                                Extent4.OR_NO OR_NO  ,
+		                                Extent5.CODE_NAME CODE_NAME  ,
+		                                1 C1  ,
+		                                CASE 
+		                                     WHEN ( Extent4.TYPE_ID IS NOT NULL ) THEN Extent4.TYPE_ID
+		                                ELSE 0
+		                                   END C2  ,
+		                                CASE 
+		                                     WHEN ( Extent6.SALES_ORD_ID IS NOT NULL ) THEN Extent6.SALES_ORD_NO
+		                                     WHEN ( Extent8.SALES_ORD_ID IS NOT NULL ) THEN Extent8.SALES_ORD_NO
+		                                ELSE Extent9.MEM_CODE
+		                                   END C3  ,
+		                                CASE 
+		                                     WHEN ( Extent3.PAY_ITM_AMT IS NOT NULL ) THEN Extent3.PAY_ITM_AMT
+		                                ELSE UTILS.CONVERT_TO_FLOAT(0,53)
+		                                   END C4  ,
+		                                CASE 
+		                                     WHEN ( Extent1.CC_TYPE_ID IS NOT NULL ) THEN Extent1.CC_TYPE_ID
+		                                ELSE 0
+		                                   END C5  ,
+		                                CASE 
+		                                     WHEN ( Extent1.REF_DT IS NOT NULL ) THEN TO_DATE(Extent1.REF_DT)
+		                                ELSE TO_DATE('1900/01/01')
+		                                   END C6  
+		                FROM PAY0097D Extent1
+		                       JOIN PAY0098M Extent2   ON ( Extent2.ITM_ID = Extent1.ITM_ID )
+		                       AND ( 1 = Extent2.STUS_ID )
+		                       JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent2.PAY_ITM_ID
+		                       JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID
+		                       JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent4.TYPE_ID
+		                       LEFT JOIN SAL0001D Extent6   ON ( Extent6.SALES_ORD_ID = Extent4.SALES_ORD_ID )
+		                       AND ( Extent4.SALES_ORD_ID > 0 )
+		                       LEFT JOIN PAY0007D Extent7   ON ( Extent7.BILL_ID = Extent4.BILL_ID )
+		                       AND ( Extent4.BILL_ID > 0 )
+		                       LEFT JOIN SAL0001D Extent8   ON ( Extent8.SALES_ORD_ID = Extent7.BILL_SO_ID )
+		                       AND ( Extent7.BILL_SO_ID > 0 )
+		                       LEFT JOIN ORG0001D Extent9   ON ( Extent9.MEM_ID = Extent7.BILL_MEM_ID )
+		                       AND ( Extent7.BILL_MEM_ID > 0 )
+		                 WHERE  Extent1.ITM_ID = #{itemId} ) Distinct1 ) Project2
+		  ORDER BY Project2.PAY_ITM_ID ASC
+    </select>
+    
+    <select id="selectLoadItemLog" parameterType="Map" resultType="egovMap">
+        SELECT 
+		       Project1.LOG_ID LOG_ID  ,
+		       TO_CHAR(Project1.CRT_DT ,'DD-MM-YY hh:mi A.M.')  CRT_DT,   
+		       Project1.CRT_USER_ID CRT_USER_ID  ,
+		       Project1.C1 C1  ,
+		       Project1.ITM_ID ITM_ID  ,
+		       Project1.REM REM  
+		  FROM ( SELECT Extent1.LOG_ID LOG_ID  ,
+		                Extent1.ITM_ID ITM_ID  ,
+		                Extent1.REM REM  ,
+		                Extent1.CRT_DT CRT_DT  ,
+		                Extent1.CRT_USER_ID CRT_USER_ID  ,
+		                CASE 
+		                     WHEN ( Extent2.USER_ID IS NOT NULL ) THEN Extent2.USER_NAME
+		                ELSE ' '
+		                   END C1  
+		         FROM PAY0171D Extent1
+		                LEFT JOIN SYS0047M Extent2   ON Extent2.USER_ID = Extent1.CRT_USER_ID
+		          WHERE  Extent1.ITM_ID = #{itemId} ) Project1
+		  ORDER BY Project1.LOG_ID ASC
+    </select>
+    
+    <select id="selectPaymentDocMs" parameterType="String" resultType="egovMap">
+        SELECT 
+		       Limit1.BATCH_ID BATCH_ID  ,
+		       Limit1.BATCH_NO BATCH_NO  ,
+		       Limit1.BATCH_STUS_ID BATCH_STUS_ID  ,
+		       Limit1.NAME NAME  ,
+		       Limit1.BATCH_RESULT_STUS_ID BATCH_RESULT_STUS_ID  ,
+		       Limit1.C1 C1  ,
+		       TO_CHAR(Limit1.CRT_DT , 'DD-MM-YYYY') AS CRT_DT,
+		       Limit1.CRT_USER_ID CRT_USER_ID  ,
+		       Limit1.C2 C2  ,
+		       TO_CHAR(Limit1.UPD_DT , 'DD-MM-YYYY') AS UPD_DT,
+		       Limit1.UPD_USER_ID UPD_USER_ID  ,
+		       Limit1.C3 C3  ,
+		       Limit1.BATCH_PAY_IS_ONLINE BATCH_PAY_IS_ONLINE  ,
+		       Limit1.BATCH_PAY_MODE_ID BATCH_PAY_MODE_ID  ,
+		       Limit1.CODE_NAME CODE_NAME  ,
+		       Limit1.BATCH_TOT_ITM BATCH_TOT_ITM  ,
+		       Limit1.BATCH_TOT_CMPLT BATCH_TOT_CMPLT  ,
+		       Limit1.BATCH_TOT_INCMPT BATCH_TOT_INCMPT  ,
+		       Limit1.BATCH_TOT_PENDING BATCH_TOT_PENDING  ,
+		       Limit1.BATCH_TOT_NW BATCH_TOT_NW  ,
+		       Limit1.BATCH_TOT_REVIW BATCH_TOT_REVIW  ,
+		       Limit1.BATCH_TOT_RESEND BATCH_TOT_RESEND  
+		  FROM ( SELECT Extent1.BATCH_ID BATCH_ID  ,
+		                Extent1.BATCH_NO BATCH_NO  ,
+		                Extent1.BATCH_STUS_ID BATCH_STUS_ID  ,
+		                Extent1.BATCH_RESULT_STUS_ID BATCH_RESULT_STUS_ID  ,
+		                Extent1.BATCH_PAY_MODE_ID BATCH_PAY_MODE_ID  ,
+		                Extent1.BATCH_PAY_IS_ONLINE BATCH_PAY_IS_ONLINE  ,
+		                Extent1.BATCH_TOT_ITM BATCH_TOT_ITM  ,
+		                Extent1.BATCH_TOT_CMPLT BATCH_TOT_CMPLT  ,
+		                Extent1.BATCH_TOT_INCMPT BATCH_TOT_INCMPT  ,
+		                Extent1.BATCH_TOT_PENDING BATCH_TOT_PENDING  ,
+		                Extent1.CRT_DT CRT_DT  ,
+		                Extent1.CRT_USER_ID CRT_USER_ID  ,
+		                Extent1.UPD_DT UPD_DT  ,
+		                Extent1.UPD_USER_ID UPD_USER_ID  ,
+		                Extent1.BATCH_TOT_REVIW BATCH_TOT_REVIW  ,
+		                Extent1.BATCH_TOT_NW BATCH_TOT_NW  ,
+		                Extent1.BATCH_TOT_RESEND BATCH_TOT_RESEND  ,
+		                Extent2.NAME NAME  ,
+		                Extent3.CODE_NAME CODE_NAME  ,
+		                CASE 
+		                     WHEN ( Extent4.STUS_CODE_ID IS NOT NULL ) THEN Extent4.NAME
+		                ELSE ' '
+		                   END C1  ,
+		                CASE 
+		                     WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
+		                ELSE ' '
+		                   END C2  ,
+		                CASE 
+		                     WHEN ( Extent6.USER_ID IS NOT NULL ) THEN Extent6.USER_NAME
+		                ELSE ' '
+		                   END C3  
+		         FROM PAY0170M Extent1
+		                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.BATCH_STUS_ID
+		                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.BATCH_PAY_MODE_ID
+		                LEFT JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = Extent1.BATCH_RESULT_STUS_ID
+		                LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CRT_USER_ID
+		                LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.UPD_USER_ID
+		          WHERE  Extent1.BATCH_ID = #{batchId} 
+		          AND ROWNUM <![CDATA[<= ]]> 1 ) Limit1
+    </select>
+
+</mapper>

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.billing.service.impl.AdvBillingBatchMapper">
+    <select id="selectBillingBatch" parameterType="Map" resultType="egovMap">
+        SELECT Project1.ADV_BILL_BATCH_ID ADV_BILL_BATCH_ID  ,
+		       Project1.ADV_BILL_BATCH_REF_NO ADV_BILL_BATCH_REF_NO  ,
+		       Project1.ADV_BILL_BATCH_REM ADV_BILL_BATCH_REM  ,
+		       Project1.ADV_BILL_BATCH_URL ADV_BILL_BATCH_URL  ,
+		       Project1.ADV_BILL_BATCH_TOT ADV_BILL_BATCH_TOT  ,
+		       Project1.ADV_BILL_BATCH_TOT_DSCNT ADV_BILL_BATCH_TOT_DSCNT  ,
+		       Project1.ADV_BILL_BATCH_STUS_ID ADV_BILL_BATCH_STUS_ID  ,
+		       Project1.ADV_BILL_BATCH_CRT_DT ADV_BILL_BATCH_CRT_DT  ,
+		       Project1.ADV_BILL_BATCH_CRT_USER_ID ADV_BILL_BATCH_CRT_USER_ID  ,
+		       Project1.USER_NAME USER_NAME  ,
+		       Project1.CODE CODE  ,
+		       Project1.C1 C1  ,
+		       Project1.C2 C2  
+		  FROM ( SELECT Extent1.ADV_BILL_BATCH_ID ADV_BILL_BATCH_ID  ,
+		                Extent1.ADV_BILL_BATCH_REF_NO ADV_BILL_BATCH_REF_NO  ,
+		                Extent1.ADV_BILL_BATCH_REM ADV_BILL_BATCH_REM  ,
+		                Extent1.ADV_BILL_BATCH_URL ADV_BILL_BATCH_URL  ,
+		                Extent1.ADV_BILL_BATCH_TOT ADV_BILL_BATCH_TOT  ,
+		                Extent1.ADV_BILL_BATCH_TOT_DSCNT ADV_BILL_BATCH_TOT_DSCNT  ,
+		                Extent1.ADV_BILL_BATCH_STUS_ID ADV_BILL_BATCH_STUS_ID  ,
+		                Extent1.ADV_BILL_BATCH_CRT_DT ADV_BILL_BATCH_CRT_DT  ,
+		                Extent1.ADV_BILL_BATCH_CRT_USER_ID ADV_BILL_BATCH_CRT_USER_ID  ,
+		                Extent2.USER_NAME USER_NAME  ,
+		                Extent3.CODE CODE  ,
+		                CASE WHEN ( Extent1.ADV_BILL_BATCH_UPD_DT IS NOT NULL ) THEN TO_DATE(Extent1.ADV_BILL_BATCH_UPD_DT) ELSE TO_DATE('1900-01-01 00:00:00' , 'YYYY-MM-DD HH24:MI:SS')  END C1  ,
+		                CASE WHEN ( Extent1.ADV_BILL_BATCH_UPD_USER_ID IS NOT NULL ) THEN Extent1.ADV_BILL_BATCH_UPD_USER_ID ELSE 0 END C2 
+		         FROM PAY0004D Extent1
+		                JOIN SYS0047M Extent2   ON Extent1.ADV_BILL_BATCH_CRT_USER_ID = Extent2.USER_ID
+		                JOIN SYS0038M Extent3   ON Extent1.ADV_BILL_BATCH_STUS_ID = Extent3.STUS_CODE_ID
+		          WHERE 1=1
+		              <if test="batchId != '' ">  
+		                   AND ( Extent1.ADV_BILL_BATCH_ID = #{batchId} )
+		              </if>
+		              <if test="creator != '' ">
+		                   AND ( Extent2.USER_NAME = #{creator} )
+		              </if>
+		              <if test="uploadDtFr != '' and uploadDtTo != '' ">
+		                   AND ( (CASE WHEN ( Extent1.ADV_BILL_BATCH_UPD_DT IS NOT NULL ) THEN TO_DATE(Extent1.ADV_BILL_BATCH_UPD_DT) ELSE TO_DATE('1900-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS') END) 
+		                      <![CDATA[>=]]> TO_DATE(#{uploadDtFr}, 'DD/MM/YYYY'))
+		                   AND ( (CASE WHEN ( Extent1.ADV_BILL_BATCH_UPD_DT IS NOT NULL ) THEN TO_DATE(Extent1.ADV_BILL_BATCH_UPD_DT) ELSE TO_DATE('1900-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS') END) 
+		                      <![CDATA[<=]]> TO_DATE(#{uploadDtTo}, 'DD/MM/YYYY')+1 ) 
+		              </if>
+		                 ) Project1
+		 WHERE  ROWNUM > 0
+		 ORDER BY Project1.ADV_BILL_BATCH_ID DESC
+    </select>
+    
+    <select id="selectSalesOrderMaster" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+		       Extent1.SALES_ORD_NO SALES_ORD_NO  ,
+		       Extent1.REF_NO REF_NO  ,
+		       Extent1.SALES_DT SALES_DT  ,
+		       Extent1.CUST_ID CUST_ID  ,
+		       Extent1.CUST_CNT_ID CUST_CNT_ID  ,
+		       Extent1.CUST_ADD_ID CUST_ADD_ID  ,
+		       Extent1.MEM_ID MEM_ID  ,
+		       Extent1.BRNCH_ID BRNCH_ID  ,
+		       Extent1.APP_TYPE_ID APP_TYPE_ID  ,
+		       --Extent1.DSCNT_AMT DSCNT_AMT  ,
+		       --Extent1.TAX_AMT TAX_AMT  ,
+		       Extent1.TOT_AMT TOT_AMT  ,
+		       Extent1.PROMO_ID PROMO_ID  ,
+		       Extent1.BINDING_NO BINDING_NO  ,
+		       Extent1.CC_PROMO_ID CC_PROMO_ID  ,
+		       Extent1.TOT_PV TOT_PV  ,
+		       Extent1.REM REM  ,
+		       Extent1.PV_MONTH PV_MONTH  ,
+		       Extent1.PV_YEAR PV_YEAR  ,
+		       Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+		       Extent1.UPD_DT UPD_DT  ,
+		       Extent1.UPD_USER_ID UPD_USER_ID  ,
+		       Extent1.SYNC_CHK SYNC_CHK  ,
+		       Extent1.CUST_PO_NO CUST_PO_NO  ,
+		       Extent1.REN_CHK_ID REN_CHK_ID  ,
+		       Extent1.INST_PRIOD INST_PRIOD  ,
+		       Extent1.DO_NO DO_NO  ,
+		       Extent1.DEPT_CODE DEPT_CODE  ,
+		       Extent1.GRP_CODE GRP_CODE  ,
+		       Extent1.ORG_CODE ORG_CODE  ,
+		       Extent1.SALES_ORD_ID_OLD SALES_ORD_ID_OLD  ,
+		       Extent1.EDIT_TYPE_ID EDIT_TYPE_ID  ,
+		       Extent1.CUST_BILL_ID CUST_BILL_ID  ,
+		       Extent1.MTH_RENT_AMT MTH_RENT_AMT  ,
+		       Extent1.LOK LOK  ,
+		       Extent1.AEON_STUS_ID AEON_STUS_ID  ,
+		       Extent1.COMM_DT COMM_DT  ,
+		       Extent1.CRT_USER_ID CRT_USER_ID  ,
+		       Extent1.CRT_DT CRT_DT  ,
+		       Extent1.PAY_COM_DT PAY_COM_DT  ,
+		       Extent1.DEF_RENT_AMT DEF_RENT_AMT  ,
+		       Extent1.REF_DOC_ID REF_DOC_ID  ,
+		       --Extent1.RENT_PROMO_ID RENT_PROMO_ID  ,
+		       Extent1.SALES_HM_ID SALES_HM_ID  ,
+		       Extent1.SALES_SM_ID SALES_SM_ID  ,
+		       Extent1.SALES_GM_ID SALES_GM_ID  ,
+		       Extent1.ADV_BILL ADV_BILL  ,
+		       Extent1.CNVR_SCHEME_ID CNVR_SCHEME_ID  ,
+		       Extent1.CUST_CARE_CNT_ID CUST_CARE_CNT_ID  
+		  FROM SAL0001D Extent1
+		 WHERE  ( Extent1.SALES_ORD_NO = #{value} )
+		          AND ( 4 = Extent1.STUS_CODE_ID )
+		          AND ( 66 = Extent1.APP_TYPE_ID ) AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+
+    <insert id="insertAccAdvanceBillBatchM" parameterType="Map">
+        <selectKey keyProperty="advBillBatchId" resultType="int" order="BEFORE">
+            SELECT PAY0004D_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO PAY0004D
+		( 
+			  ADV_BILL_BATCH_ID,
+			  ADV_BILL_BATCH_REF_NO, 
+			  ADV_BILL_BATCH_REM, 
+			  ADV_BILL_BATCH_URL, 
+			  ADV_BILL_BATCH_TOT, 
+			  ADV_BILL_BATCH_TOT_DSCNT, 
+			  ADV_BILL_BATCH_STUS_ID, 
+			  ADV_BILL_BATCH_CRT_DT, 
+			  ADV_BILL_BATCH_CRT_USER_ID, 
+			  ADV_BILL_BATCH_UPD_DT, 
+			  ADV_BILL_BATCH_UPD_USER_ID 
+		)
+		VALUES 
+		( 
+			 #{advBillBatchId},
+			 #{advBillBatchRefNo}, 
+			 #{advBillBatchRemark}, 
+			 #{advBillBatchUrl}, 
+			 #{advBillBatchTotal}, 
+			 #{advBillBatchTotalDiscount}, 
+			 #{advBillBatchStatusId}, 
+			 TO_DATE(#{advBillBatchCreated}, 'YYYY-MM-DD HH24:MI:SS'), 
+			 #{advBillBatchCreator}, 
+			 TO_DATE(#{advBillBatchUpdated}, 'YYYY-MM-DD HH24:MI:SS'), 
+			 #{adbBillBatchUpdator}
+		)
+    </insert>
+    
+    <insert id="insertAccAdvanceBillBatchD" parameterType="Map">
+        INSERT INTO PAY0005D
+		( 
+		    ACC_BATCH_ITM_ID,
+		    ACC_BILL_BATCH_ID, 
+		    ACC_BATCH_ITM_ORD_NO, 
+		    ACC_BATCH_ITM_ORD_ID, 
+		    ACC_BATCH_ITM_BILL_START,
+		    ACC_BATCH_ITM_BILL_END, 
+		    ACC_BATCH_ITM_BILL_AMT, 
+		    ACC_BATCH_ITM_BILL_DSCNT, 
+		    ACC_BATCH_ITM_STUS, 
+		    ACC_BATCH_ITM_REM, 
+		    ACC_BATCH_ITM_UPD_DT, 
+		    ACC_BATCH_ITM_UPD_USER_ID 
+		)
+		VALUES 
+		( 
+		    PAY0005D_SEQ.NEXTVAL,
+		    #{accBillBatchId}, 
+		    #{accBatchItemOrderNo}, 
+		    #{accBatchItemOrderId}, 
+		    #{accBatchItemBillStart}, 
+		    #{accBatchItemBillEnd}, 
+		    #{accBatchItemBillAmount}, 
+		    #{accBatchItemBillDiscount}, 
+		    #{accBatchItemStatus}, 
+		    #{accBatchItemRemark}, 
+		    TO_DATE(#{accBatchItemUpdated}, 'YYYY-MM-DD HH24:MI:SS'), 
+		    #{accBatchItemUpdator} 
+		)
+    </insert>
+    
+    <update id="updateAccAdvanceBillBatchM" parameterType="Map">
+        UPDATE PAY0004D
+		     SET ADV_BILL_BATCH_TOT = #{advBillBatchTotal},
+		           ADV_BILL_BATCH_TOT_DSCNT = #{advBillBatchTotalDiscount}
+		WHERE ( ADV_BILL_BATCH_ID = #{advBillBatchId} )
+    </update>
+    
+    <select id="selectBatchMasterInfo"  parameterType="Map" resultType="egovMap">
+        SELECT Extent1.ADV_BILL_BATCH_ID ADV_BILL_BATCH_ID  ,
+			       Extent1.ADV_BILL_BATCH_REF_NO ADV_BILL_BATCH_REF_NO  ,
+			       Extent1.ADV_BILL_BATCH_REM ADV_BILL_BATCH_REM  ,
+			       Extent1.ADV_BILL_BATCH_URL ADV_BILL_BATCH_URL  ,
+			       Extent1.ADV_BILL_BATCH_TOT ADV_BILL_BATCH_TOT  ,
+			       Extent1.ADV_BILL_BATCH_TOT_DSCNT ADV_BILL_BATCH_TOT_DSCNT  ,
+			       Extent1.ADV_BILL_BATCH_STUS_ID ADV_BILL_BATCH_STUS_ID  ,
+			       TO_CHAR(Extent1.ADV_BILL_BATCH_CRT_DT, 'DD-MM-YYYY HH:MM AM') ADV_BILL_BATCH_CRT_DT  ,
+			       Extent1.ADV_BILL_BATCH_CRT_USER_ID ADV_BILL_BATCH_CRT_USER_ID  ,
+			       Extent2.USER_NAME USER_NAME  ,
+			       Extent3.CODE CODE  ,
+			       CASE WHEN ( Extent1.ADV_BILL_BATCH_UPD_DT IS NOT NULL ) THEN Extent1.ADV_BILL_BATCH_UPD_DT ELSE TO_DATE('1900-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS') END ADV_BILL_BATCH_UPD_DT  ,
+			       CASE WHEN ( Extent1.ADV_BILL_BATCH_UPD_USER_ID IS NOT NULL ) THEN Extent1.ADV_BILL_BATCH_UPD_USER_ID ELSE 0 END ADV_BILL_BATCH_UPD_USER_ID  
+		  FROM PAY0004D Extent1
+			       JOIN SYS0047M Extent2   ON Extent1.ADV_BILL_BATCH_CRT_USER_ID = Extent2.USER_ID
+			       JOIN SYS0038M Extent3   ON Extent1.ADV_BILL_BATCH_STUS_ID = Extent3.STUS_CODE_ID
+	   WHERE  Extent1.ADV_BILL_BATCH_ID = #{batchId} AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+    
+    <select id="selectBatchDetailInfo" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.ACC_BATCH_ITM_ID ACC_BATCH_ITM_ID,
+                   Extent1.ACC_BILL_BATCH_ID ACC_BILL_BATCH_ID  ,
+			       Extent1.ACC_BATCH_ITM_ORD_NO ACC_BATCH_ITM_ORD_NO  ,
+			       Extent1.ACC_BATCH_ITM_BILL_START ACC_BATCH_ITM_BILL_START  ,
+			       Extent1.ACC_BATCH_ITM_BILL_END ACC_BATCH_ITM_BILL_END  ,
+			       Extent1.ACC_BATCH_ITM_BILL_AMT ACC_BATCH_ITM_BILL_AMT  ,
+			       Extent1.ACC_BATCH_ITM_BILL_DSCNT ACC_BATCH_ITM_BILL_DSCNT  ,
+			       Extent1.ACC_BATCH_ITM_STUS ACC_BATCH_ITM_STUS  ,
+			       Extent1.ACC_BATCH_ITM_REM ACC_BATCH_ITM_REM  ,
+			       TO_CHAR(Extent1.ACC_BATCH_ITM_UPD_DT ,'DD-MM-YYYY') ACC_BATCH_ITM_UPD_DT ,
+			       Extent2.USER_NAME USER_NAME  ,
+			       Extent3.CODE CODE  
+		  FROM PAY0005D Extent1
+		   JOIN SYS0047M Extent2   ON Extent2.USER_ID = Extent1.ACC_BATCH_ITM_UPD_USER_ID
+		   JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.ACC_BATCH_ITM_STUS
+		WHERE Extent1.ACC_BILL_BATCH_ID = #{batchId}
+		    <if test="statusId != null and statusId != '' ">
+		    AND Extent1.ACC_BATCH_ITM_STUS = #{statusId}
+		    </if>
+	ORDER BY Extent1.ACC_BATCH_ITM_ORD_NO ASC
+    </select>
+    
+    <update id="updateAccAdvanceBillBatchM2" parameterType="Map">
+        UPDATE PAY0004D
+			 SET ADV_BILL_BATCH_STUS_ID = 8,
+			       ADV_BILL_BATCH_UPD_DT = TO_DATE(#{today}, 'YYYY-MM-DD HH24:MI:SS')
+	  WHERE  ( ADV_BILL_BATCH_ID = #{batchId} )
+    </update>
+    
+    <update id="updateAccAdvanceBillBatchD2" parameterType="Map">
+        UPDATE PAY0005D
+              SET ACC_BATCH_ITM_STUS = 8,
+                    ACC_BATCH_ITM_UPD_DT = TO_DATE(#{today}, 'YYYY-MM-DD HH24:MI:SS')
+         WHERE ( ACC_BATCH_ITM_ID = #{itemId} )
+    </update>
+    
+    <resultMap id="updBillBatchMap" type="egovMap"></resultMap>
+    <resultMap id="updBillBatchMap2" type="egovMap"></resultMap>
+    <select id="updBillBatchUpload" statementType="CALLABLE" parameterType="Map">
+        {call SP_UPD_BILL_BATCH_UPLOAD(#{batchId}, 
+        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=updBillBatchMap}, 
+        #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=updBillBatchMap2})}
+    </select>
+</mapper>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.sales.order.impl.HcOrderCancelMapper">
+
+    <!-- Homecare Order Cancellation List 데이터조회 -->
+    <select id="hcOrderCancellationList" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderCancelMapper.hcOrderCancellationList */
+        SELECT A.REQ_ID REQ_ID ,
+                   A.REQ_NO REQ_NO ,
+                   A.ORD_ID ORD_ID ,
+                   A.REQ_STUS_ID REQ_STUS_ID ,
+                   A.REQ_STUS_CODE REQ_STUS_CODE ,
+                   A.REQ_STUS_NAME REQ_STUS_NAME ,
+                   A.REQ_RESN_ID REQ_RESN_ID ,
+                   A.REQ_RESN_CODE REQ_RESN_CODE ,
+                   A.REQ_RESN_DESC REQ_RESN_DESC ,
+                   A.PREV_CALL_ENTRY_ID PREV_CALL ,
+                   A.CALL_ENTRY_ID CALL_ENTRY_ID ,
+                   A.REQ_STAGE_ID REQ_STAGE_ID ,
+                   A.REQ_STAGE REQ_STAGE ,
+                   A.STOCK_ID STOCK_ID ,
+                   A.STOCK_CODE STOCK_CODE ,
+                   A.STOCK_NAME STOCK_NAME ,
+                   A.CRT_USER_ID_ID CRT_USER_ID_ID ,
+                   A.CRT_USER_ID CRT_USER_ID ,
+                   A.UPD_USER_ID_ID UPD_USER_ID_ID ,
+                   A.UPD_USER_ID UPD_USER_ID ,
+                   A.APP_TYPE_ID APP_TYPE_ID ,
+                   A.APP_TYPE_CODE APP_TYPE_CODE ,
+                   A.APP_TYPE_NAME APP_TYPE_NAME ,
+                   A.ORD_AMT ORD_AMT ,
+                   A.ORD_PV ORD_PV ,
+                   A.ORD_RENT_AMT ORD_RENT_AMT ,
+                   A.ORD_OTSTND ORD_OTSTND ,
+                   A.PNALTY_AMT PNALTY_AMT ,
+                   A.ADJ_AMT ADJ_AMT ,
+                   A.GRAND_TOT GRAND_TOT ,
+                   A.OBLIGT_MTH OBLIGT_MTH ,
+                   A.USED_MTH USED_MTH ,
+                   A.IS_UNDER_COOL_PRIOD IS_UNDER_COOL_PRIOD ,
+                   A.REQSTER_ID REQSTER_ID ,
+                   A.REQSTER REQSTER ,
+                   A.CALL_STUS_ID CALL_STUS_ID ,
+                   A.CALL_STUS_CODE CALL_STUS_CODE ,
+                   A.CALL_STUS_NAME CALL_STUS_NAME ,
+                   A.CUST_ID CUST_ID ,
+                   A.CUST_NAME CUST_NAME ,
+                   A.CUST_IC CUST_IC ,
+                   A.ORD_NO ORD_NO ,
+                   A.REQ_REM REQ_REM ,
+                   A.BANK_ACC BANK_ACC ,
+                   A.ISS_BANK ISS_BANK ,
+                   A.ACC_NAME ACC_NAME ,
+                   A.ATTACH ATTACH ,
+                   CASE WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL )
+                            THEN A.ACTUAL_CANCL_DT
+                    ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END ACTUAL_CANCL_DT ,
+                   CASE WHEN ( A.APP_RETN_DT IS NOT NULL )
+                            THEN A.APP_RETN_DT
+                    ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END APP_RETN_DT ,
+                   CASE WHEN ( A.CALL_RECALL_DT IS NOT NULL )
+                            THEN A.CALL_RECALL_DT
+                    ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END CALL_RECALL_DT ,
+                   CASE WHEN ( A.CRT_DT IS NOT NULL )
+                            THEN TO_DATE(A.CRT_DT, 'dd/mm/yyyy')
+                    ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END CRT_DT ,
+                   CASE WHEN ( A.DSC_BRNCH_ID IS NOT NULL )
+                            THEN A.DSC_BRNCH_ID
+                    ELSE 0 END DSC_BRNCH_ID ,
+                   CASE WHEN ( A.UPD_DT IS NOT NULL )
+                            THEN A.UPD_DT
+                    ELSE TO_DATE('01/01/1900', 'dd/mm/yyyy') END UPD_DT,
+                   A.TYPE_ID,
+                   A.DOC_ID,
+                   A.REF_ID,
+                   A.RSO_STUS AS RSO_STUS_ID,
+                   ( SELECT CODE FROM SYS0038M WHERE STUS_CODE_ID =  A.RSO_STUS) RSO_STUS,
+                   A.PRD_RTN_LST_UPD,
+                   CASE WHEN ( A.APP_DT IS NOT NULL )
+                            THEN A.APP_DT
+                    ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END APP_DT,
+                   A.ASSIGN_CT,
+                   A.RCD_TMS,
+                   B.CODE AS DSC,
+                   A.BNDL_NO
+         FROM (
+            SELECT V.REQ_ID ,
+                       V.REQ_NO ,
+                       V.ORD_ID ,
+                       V.REQ_STUS_ID ,
+                       V.REQ_STUS_CODE ,
+                       V.REQ_STUS_NAME ,
+                       V.REQ_RESN_ID ,
+                       V.REQ_RESN_CODE ,
+                       V.REQ_RESN_DESC ,
+                       V.PREV_CALL_ENTRY_ID ,
+                       V.CALL_ENTRY_ID ,
+                       V.REQ_STAGE_ID ,
+                       V.REQ_STAGE ,
+                       V.STOCK_ID ,
+                       V.STOCK_CODE ,
+                       V.STOCK_NAME ,
+                       V.CRT_DT ,
+                       V.CRT_USER_ID_ID ,
+                       V.CRT_USER_ID ,
+                       V.UPD_DT ,
+                       V.UPD_USER_ID_ID ,
+                       V.UPD_USER_ID ,
+                       V.APP_TYPE_ID ,
+                       V.APP_TYPE_CODE ,
+                       V.APP_TYPE_NAME ,
+                       V.ORD_AMT ,
+                       V.ORD_PV ,
+                       V.ORD_RENT_AMT ,
+                       V.ORD_OTSTND ,
+                       V.PNALTY_AMT ,
+                       V.ADJ_AMT ,
+                       V.GRAND_TOT ,
+                       V.OBLIGT_MTH ,
+                       V.USED_MTH ,
+                       V.IS_UNDER_COOL_PRIOD ,
+                       V.ACTUAL_CANCL_DT ,
+                       V.REQSTER_ID ,
+                       V.REQSTER ,
+                       V.APP_RETN_DT ,
+                       V.CALL_STUS_ID ,
+                       V.CALL_STUS_CODE ,
+                       V.CALL_STUS_NAME ,
+                       V.CALL_RECALL_DT ,
+                       V.DSC_BRNCH_ID ,
+                       V.CUST_ID ,
+                       V.CUST_NAME ,
+                       V.CUST_IC ,
+                       V.ORD_NO ,
+                       V.REQ_REM ,
+                       V.BANK_ACC ,
+                       V.ISS_BANK ,
+                       V.ACC_NAME ,
+                       V.ATTACH ,
+                       V.TYPE_ID ,
+                       V.DOC_ID ,
+                       V.REF_ID ,
+                       V.RSO_STUS,
+                       NVL(V.PRD_RTN_LST_UPD, '-') AS PRD_RTN_LST_UPD,
+                       V.APP_DT AS APP_DT,
+                       V.ASSIGN_CT,
+                       V.RCD_TMS,
+                       V.STK_CTGRY_ID,
+                       D1.BNDL_NO
+             FROM SAL1007V V
+        LEFT JOIN HMC0011D D1 ON V.BNDL_ID = D1.ORD_SEQ_NO
+             ) A
+    LEFT JOIN SYS0005M B ON B.BRNCH_ID = A.DSC_BRNCH_ID
+        WHERE A.STK_CTGRY_ID IN (SELECT AA.CODE_ID FROM SYS0013M AA, SYS0094M BB
+                                               WHERE AA.CODE = BB.CODE
+                                                   AND AA.CODE_MASTER_ID = 11 AND BB.IND = 'HOMECARE') /* STKCATEGORYID_HOMECARE */
+	    <if test="typeIdList != null and typeIdList != ''">
+	        AND A.APP_TYPE_ID IN
+	        <foreach item="item" collection="typeIdList" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+	    </if>
+
+	    <if test="stusIdList != null and stusIdList != ''">
+	        AND A.CALL_STUS_ID IN
+	        <foreach item="item" collection="stusIdList" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+	    </if>
+
+	    <if test="reqStageList != null and reqStageList != ''">
+	        AND A.REQ_STAGE_ID IN
+	        <foreach item="item" collection="reqStageList" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+	    </if>
+
+	    <if test="branchList != null and branchList != ''">
+	        AND A.DSC_BRNCH_ID IN
+	        <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+	    </if>
+
+	    <if test="ordNo != null and ordNo != ''">
+	        AND A.ORD_NO = #{ordNo}
+	    </if>
+	    <if test="reqNo != null and reqNo != ''">
+	        AND UPPER(A.REQ_NO) = UPPER(#{reqNo})
+	    </if>
+	    <if test="crtUserId != null and crtUserId != ''">
+	        AND UPPER(A.CRT_USER_ID) like '%'|| UPPER(#{crtUserId}) ||'%'
+	    </if>
+	    <if test="custId != null and custId != ''">
+	        AND UPPER(A.CUST_ID) = UPPER(#{custId})
+	    </if>
+	    <if test="custName != null and custName != ''">
+	        AND UPPER(A.CUST_NAME) like '%'|| UPPER(#{custName}) ||'%'
+	    </if>
+	    <if test="custIc != null and custIc != ''">
+	        AND UPPER(A.CUST_IC) = UPPER(#{custIc})
+	    </if>
+	    <if test="startCrtDt != null and startCrtDt != '' ">
+	        AND CRT_DT <![CDATA[ >= ]]>  TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+	    </if>
+	    <if test="endCrtDt != null and endCrtDt != ''">
+	        AND CRT_DT <![CDATA[ <= ]]>  TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+	    </if>
+	    <if test="startRecallDt != null and startRecallDt != '' ">
+	        AND CALL_RECALL_DT <![CDATA[ >= ]]>  TO_DATE(#{startRecallDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+	    </if>
+	    <if test="endRecallDt != null and endRecallDt != '' ">
+	        AND CALL_RECALL_DT <![CDATA[ <= ]]>  TO_DATE(#{endRecallDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+	    </if>
+	    <if test="startAppDt != null and startAppDt != '' ">
+	        AND APP_DT <![CDATA[ >= ]]>  TO_DATE(#{startAppDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+	    </if>
+	    <if test="endAppDt != null and endAppDt != '' ">
+	        AND APP_DT <![CDATA[ <= ]]>  TO_DATE(#{endAppDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+	    </if>
+	    <if test='bndlNo != null and bndlNo != ""'>
+            AND UPPER(A.BNDL_NO) = UPPER(#{bndlNo})
+        </if>
+    </select>
+
+    <!-- Get CallEntryId -->
+    <select id="getCallEntryId" parameterType="Map" resultType="egovMap">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderCancelMapper.getCallEntryId */
+        SELECT V.CALL_ENTRY_ID
+                 , V.REQ_ID
+                 , V.REQ_NO
+                 , V.STOCK_ID
+                 , V.RETN_NO
+         FROM SAL1007V V
+        <where>
+            <if test="paramOrdId != null and paramOrdId != ''">
+		        AND V.ORD_ID = #{paramOrdId}
+		    </if>
+		    <if test="appTypeId != null and appTypeId != ''">
+                AND V.APP_TYPE_ID = #{appTypeId}
+            </if>
+        </where>
+
+  </select>
+
+</mapper>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.importbl.impl.ImportMapper">
+
+<select id="importBLList" parameterType="map" resultType="EgovMap">
+<![CDATA[
+            SELECT   ROWNUM RNUM
+                        ,S28.WH_LOC_ID
+                        ,S28.WH_LOC_CODE
+                        ,S28.WH_LOC_DESC
+                        ,L83.PLANT
+                        ,L83.BL_NO
+                        ,L84.ITM_SEQ
+                        ,L84.MATRL_NO
+                        ,S26.STK_TYPE_ID
+                        , (SELECT CODE_NAME
+                                      FROM SYS0013M
+                                      WHERE CODE_ID = S26.STK_TYPE_ID) TYPENAME
+                        ,S26.STK_CTGRY_ID
+                        , (SELECT CODE_NAME
+                                      FROM SYS0013M
+                                      WHERE CODE_ID = S26.STK_CTGRY_ID) CTGRYNAME
+                        ,S26.STK_DESC STKDESC
+                        ,S26.STK_ID STKID
+                        ,L84.QTY
+                        ,NVL (REQ.REQST_QTY, 0) REQED_QTY
+                        , (L84.QTY - NVL (REQ.REQST_QTY, 0) ) AVRQTY
+                        ,L84.UOM
+                        , (SELECT CODE_NAME
+                                    FROM SYS0013M
+                                    WHERE CODE_ID = L84.UOM) UOMNM
+                        , L83.SHIP_DT
+                        , L83.GR_DT
+                        , L83.AP_CMPLT
+                        , L83.GR_CMPLT
+                        , L84.PUR_DOC_NO
+                        , L83.ACC_NO
+                        , L84.FREE_ITM
+                        , L83.INV_CRT_DT
+                        , L83.DEL_FLAG
+                FROM LOG0083M L83
+                        ,LOG0084D L84
+                        ,SYS0026M S26
+                        ,SYS0028M S28
+                        , (SELECT   L48.ITM_CODE
+                                   ,SUM (L48.REQST_QTY) REQST_QTY
+                                   ,L48.BL_NO
+                                   ,L48.BL_ITM_SEQ
+                               FROM LOG0047M L47, LOG0048D L48
+                              WHERE L47.REQST_NO = L48.REQST_NO
+                                AND NVL (L47.REQST_DEL, 'N') <> 'Y'
+                                AND L48.BL_NO IS NOT NULL
+                                AND L48.BL_ITM_SEQ IS NOT NULL
+                           GROUP BY L48.ITM_CODE, L48.BL_NO, L48.BL_ITM_SEQ) REQ
+               WHERE
+                     NVL (L83.DEL_FLAG, 'Y') <> 'X'
+]]>
+                     AND S28.WH_LOC_GB = '06'
+                     AND L83.BL_NO = L84.BL_NO
+                     AND L83.INV_NO = L84.INV_NO
+                     AND L84.MATRL_NO = S26.STK_CODE
+                     AND L83.PLANT = S28.PLANT
+                     AND L84.BL_NO = REQ.BL_NO(+)
+                     AND L84.ITM_SEQ = REQ.BL_ITM_SEQ(+)
+                     AND L84.MATRL_NO = REQ.ITM_CODE(+)
+                     <if test="invno != null and invno != ''">
+                     AND L83.INV_NO LIKE #{invno}||'%'
+                    </if>
+                     <if test="blno != null and blno != ''">
+                     AND L83.BL_NO LIKE #{blno}||'%'
+                    </if>
+                    <if test="location !=null">
+                        and S28.WH_LOC_ID IN
+                        <foreach item="item" collection="location" index="index" open="(" separator="," close=")">
+                               #{item}
+                        </foreach>
+                    </if>
+                     <if test="grsdt != null and grsdt != '' and gredt != null and gredt != ''">
+                     AND L83.GR_DT BETWEEN TO_CHAR(TO_DATE(#{grsdt},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{gredt},'DD/MM/YYYY'),'YYYYMMDD')
+                    </if>
+                     <if test="blsdt != null and blsdt != '' and bledt != null and bledt != ''">
+                     AND L83.SHIP_DT BETWEEN TO_CHAR(TO_DATE(#{blsdt},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{bledt},'DD/MM/YYYY'),'YYYYMMDD')
+                    </if>
+                    <if test="pono != null and pono != '' ">
+                    AND L84.PUR_DOC_NO = #{pono}
+                    </if>
+                    <if test="materialcode != null and materialcode != '' ">
+                    AND L84.MATRL_NO = #{materialcode}
+                    </if>
+                    <if test="status !=null and status =='CMPLT'">
+                    AND L83.AP_CMPLT <![CDATA[=]]> 'X'
+                    AND L83.GR_CMPLT <![CDATA[=]]> 'X'
+                    </if>
+                    <if test="status !=null and status =='AP'">
+                    AND L83.AP_CMPLT <![CDATA[=]]> 'X'
+                    </if>
+                    <if test="status !=null and status =='GR'">
+                    AND L83.GR_CMPLT <![CDATA[=]]> 'X'
+                    </if>
+                    <if test="smattype !=null and smattype !=''">
+			            and s26.STK_TYPE_ID in
+			            <foreach item="item" collection="smattype" index="index" open="(" separator="," close=")">
+			                   #{item}
+			            </foreach>
+			        </if>
+			        <if test="smatcate !=null and smatcate !=''">
+			            and s26.STK_CTGRY_ID in
+			            <foreach item="item" collection="smatcate" index="index" open="(" separator="," close=")">
+			                   #{item}
+			            </foreach>
+			        </if>
+            ORDER BY L83.BL_NO, L84.ITM_SEQ
+    </select>
+
+    <select id="importLocationList" parameterType="map" resultType="EgovMap">
+        SELECT
+                 WH_LOC_ID CODE_ID
+                ,WH_LOC_CODE
+                ,WH_LOC_DESC CODE_NAME
+        FROM SYS0028M
+        WHERE WH_LOC_GB IN
+              <choose>
+                  <when test="groupCode eq 'port'.toString()">
+                  ('06')
+                  </when>
+                  <otherwise>
+                  ('01', '05')
+                  </otherwise>
+              </choose>
+          ORDER BY WH_LOC_ID
+    </select>
+
+     <select id="searchSMO" parameterType="Map" resultType="EgovMap">
+         SELECT
+                    L47.REQST_NO,
+                    L47.TRNSC_TYPE,
+                    L47.TRNSC_TYPE_DTL,
+                    L47.PRIDIC_FRQNCY,
+                    TO_CHAR(L47.REQST_CRT_DT,'DD/MM/YYYY') REQST_CRT_DT,
+                    TO_CHAR(L47.REQST_REQUIRE_DT,'DD/MM/YYYY') REQST_REQUIRE_DT,
+                    L47.REF_DOC_NO,
+                    L47.DOC_HDER_TXT,
+                    L47.GOODS_RCIPT,
+                    L47.RCIV_CDC_RDC,
+                    (SELECT WH_LOC_DESC FROM SYS0028M WHERE WH_LOC_ID=L47.RCIV_CDC_RDC) RCIV_CDC_RDC2,
+                    L47.REQST_CDC_RDC,
+                    (SELECT WH_LOC_DESC FROM SYS0028M WHERE WH_LOC_ID=L47.REQST_CDC_RDC) REQST_CDC_RDC2,
+                    L47.REQST_REM_,
+                    L47.RETN_DEFECT_RESN,
+                    L47.RETN_PRSN_CT_CODY,
+                    L47.CRT_USER_ID,
+                    TO_CHAR(L47.CRT_DT,'DD/MM/YYYY') CRT_DT,
+                    L47.REQST_STUS,
+                    L47.REQST_DEL,
+                    L47.REQST_TYPE,
+                    L47.REQST_TYPE_DTL,
+                    L48.REQST_NO,
+                    L48.REQST_NO_ITM,
+                    L48.ITM_CODE,
+                    L48.ITM_NAME,
+                    L48.REQST_QTY,
+                    L48.UOM,
+                    (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=L48.UOM ) UOMNAME,
+                    L48.ITM_TXT,
+                    L48.REQST_DEL,
+                    L48.FINAL_CMPLT,
+                    L48.CRT_USER_ID,
+                    TO_CHAR(L48.CRT_DT,'DD/MM/YYYY') CRT_DT,
+                    L48.UPD_USER_ID,
+                    L48.UPD_DT,
+                    L48.RCIPT_QTY,
+                    L48.BL_NO
+            FROM  LOG0047M L47, LOG0048D L48
+            WHERE  1=1
+                AND L47.REQST_NO=L48.REQST_NO
+                AND L47.REQST_TYPE='PO'
+                AND L47.RCIV_CDC_RDC =#{whLocId}
+                AND L48.BL_NO = #{blNo}
+                AND L48.ITM_CODE =#{matrlNo}
+                AND L48.BL_ITM_SEQ=#{itmSeq}
+            ORDER BY   L47.REQST_NO
+    </select>
+
+   </mapper>

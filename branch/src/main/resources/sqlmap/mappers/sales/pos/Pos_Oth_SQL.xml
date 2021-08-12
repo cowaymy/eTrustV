@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.pos.impl.PosOthMapper">
+
+    <select id="selectPOthItmTypeList" resultType="egovMap">
+			  SELECT 
+			       Extent2.CODE_ID   ,
+			       Extent2.CODE_NAME   
+			  FROM LOG0025M Extent1
+			         JOIN SYS0013M Extent2   ON ( Extent2.CODE_ID = Extent1.ITM_BANK_TYPE_ID )
+			         AND ( 0 = Extent2.DISAB )
+			 WHERE  ( 539 = Extent1.CR_ACC_ID )
+			          AND ( 548 = Extent1.DR_ACC_ID )
+			          AND ( 1 = Extent1.STUS_ID )
+    </select>
+
+    <!-- <select id="selectPOthItmList" parameterType="Map" resultType="egovMap">
+				  SELECT Project1.ITM_ID   CODE_ID,
+				       Project1.ITM_ID STK_ID  ,
+				       Project1.ITM_CODE  STK_CODE ,
+				       Project1.ITM_CODE || ' - ' || Project1.ITM_DESC CODE_NAME,
+				       Project1.ITM_DESC  STK_DESC ,
+				       NVL(Project1.ITM_PRC , 0)  AMT,
+				       Project1.ALLOW_SALES,
+				       100 QTY
+				  FROM ( SELECT Extent1.ITM_ID   ,
+				                Extent1.ITM_CODE   ,
+				                Extent1.ITM_DESC   ,
+				                Extent1.ALLOW_SALES   ,
+				                Extent2.ITM_PRC   
+				         FROM LOG0026D Extent1
+				                JOIN LOG0027D Extent2   ON Extent2.ITM_ID = Extent1.ITM_ID
+				          WHERE  ( 1 = Extent1.STUS_CODE_ID )
+				               <if test=" null != itemType and '' != itemType">
+                               AND  Extent1.ITM_TYPE_ID = #{itemType} 
+                               </if>
+				               <if test=" null != itmIdArray    and    itmIdArray.length > 0">
+                                    AND Extent1.ITM_ID IN
+                                    <foreach collection="itmIdArray" item = "item" open = "(" separator="," close=")">
+                                        #{item}
+                                    </foreach>
+                               </if>    
+				              ) Project1
+				  ORDER BY Project1.ITM_CODE
+    </select> -->
+    
+    <select id="chkAllowSalesKeyInPrc" parameterType="Map" resultType="java.lang.Integer"> 
+				SELECT 
+                    Extent1.ALLOW_SALES_KEY_IN_PRC   
+                FROM 
+                    SYS0026M Extent1
+                 WHERE 
+                     Extent1.STK_ID = #{stkId}
+                <![CDATA[     
+                 AND ROWNUM <= 1
+                 ]]>
+    </select>
+    
+    <select id="posReversalOthDetail" parameterType="Map" resultType="egovMap">
+                SELECT 
+                        T1.POS_ID,
+                        T1.POS_NO,
+                        T1.POS_BILL_ID,
+                        T1.POS_CUST_NAME,
+                        TO_CHAR(T1.POS_DT, 'DD/MM/YYYY') POS_DT,
+                        T1.POS_TYPE_ID,
+                        T1.POS_MODULE_TYPE_ID,
+                        T1.POS_TOT_AMT,
+                        T1.POS_TOT_CHRG,
+                        T1.POS_TOT_TXS,
+                        T1.POS_TOT_DSCNT,
+                        T1.POS_WH_ID,
+                        T1.POS_REM,
+                        T1.POS_MEM_ID,
+                        T2.MEM_CODE, 
+                        T1.POS_RESN_ID,
+                        T1.BRNCH_ID,
+                        T1.CR_ACC_ID, 
+                        T1.DR_ACC_ID,
+                        T1.STUS_ID,
+                        T1.POS_RCV_DT,
+                        T3.CODE,
+                        T1.AREA_ID,
+                        T1.ADDR_DTL,
+                        T1.STREET                       
+                    FROM
+                        SAL0057D T1 
+                    LEFT JOIN ORG0001D T2 ON T2.MEM_ID = T1.POS_MEM_ID
+                    LEFT JOIN SYS0005M T3 ON T3.BRNCH_ID = T2.BRNCH
+                    WHERE
+                        POS_ID = #{posId}
+                    AND
+                    <![CDATA[
+                        ROWNUM <= 1
+                     ]]>        
+    </select>
+    
+    <select id="getAddressDetails" parameterType="Map" resultType="egovMap">
+				SELECT 
+				    AREA_ID,
+				    STATE,
+				    REGION2,
+				    CITY,
+				    POSTCODE,
+				    AREA
+				FROM 
+				    SYS0064M
+				WHERE 
+				    AREA_ID = #{areaId}
+				<![CDATA[
+				AND ROWNUM <= 1
+				]]>
+    </select>
+</mapper>

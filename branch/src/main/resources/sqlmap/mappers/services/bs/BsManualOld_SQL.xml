@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.bs.impl.HsManualOldMapper">
+
+	<select id="selectHsOldConfigList" parameterType="Map" resultType="egovMap">
+SELECT
+ Extent1.SALES_ORD_ID,
+ Extent1.SALES_ORD_NO,
+ Extent1.SALES_DT,
+ Extent1.APP_TYPE_ID,
+ Extent1.APP_TYPE,
+ Extent1.CUST_NM,
+ Extent1.NRIC,
+ Extent1.ORD_STUS,
+ Extent1.SRV_CODY_ID,
+ Extent1.MEM_CODE,
+ Extent1.MEM_NM,
+ Extent1.MEM_STUS,
+ Extent1.SRV_BS_GEN,
+ Extent1.SRV_CONFIG_ID,
+ V2.INST_AREA,
+ V2.INST_STATE,
+ TO_CHAR(TO_DATE(V2.FIRST_INSTALL_DT,'DD/MM/YYYY'),'DD/MM/YYYY') FIRST_INSTALL_DT
+FROM (
+SELECT
+        SOM.SALES_ORD_ID,
+        SOM.SALES_ORD_NO,
+        TO_CHAR(TO_DATE(SOM.SALES_DT),'DD/MM/YYYY') SALES_DT,
+        SOM.APP_TYPE_ID,
+        CD.CODE APP_TYPE,
+        C.NAME CUST_NM,
+        C.NRIC,
+        S.CODE as ORD_STUS,
+        CG.SRV_CODY_ID,
+        MEM.MEM_CODE,
+        MEM.NAME MEM_NM,
+        MEM.STUS MEM_STUS,
+        CG.SRV_BS_GEN,
+        CG.SRV_CONFIG_ID
+    FROM SAL0001D SOM
+        JOIN SYS0013M CD ON CD.CODE_ID = SOM.APP_TYPE_ID
+        JOIN SAL0029D C ON C.CUST_ID = SOM.CUST_ID
+        JOIN SYS0038M S ON S.STUS_CODE_ID = SOM.STUS_CODE_ID
+        JOIN SAL0090D CG ON CG.SRV_SO_ID = SOM.SALES_ORD_ID AND CG.SRV_STUS_ID = 1
+        LEFT JOIN ORG0001D MEM ON MEM.MEM_ID = CG.SRV_CODY_ID
+        WHERE 1= 1
+        <if test="salesOrdNo != null and salesOrdNo != ''">
+            AND SOM.SALES_ORD_NO= #{salesOrdNo}
+        </if>
+        <if test="appType != null and appType != ''">
+            AND SOM.APP_TYPE_ID = #{appType}
+        </if>
+        <if test="CustNm != null and CustNm != ''">
+            AND C.NAME = #{CustNm}
+        </if>
+        <if test="NRIC != null and NRIC != ''">
+            AND C.NRIC = #{NRIC}
+        </if>
+        <if test="bSService != null and bSService != ''">
+            AND CG.SRV_BS_GEN = 1
+        </if>
+        <if test="codyAssign != null and codyAssign != ''">
+            AND (CG.SRV_CODY_ID = 0 OR    MEM.STUS = 3 OR    MEM.STUS = 51)
+        </if>
+        <if test="inchargeMem != null and inchargeMem != ''">
+            AND MEM.MEM_CODE = #{inchargeMem}
+        </if>
+
+        ) Extent1
+        LEFT JOIN SAL1010V_V2 V2 ON V2.ORD_ID = Extent1.SALES_ORD_ID
+        WHERE 1=1
+          <if test="instState != null and instState != ''">
+            AND UPPER(V2.INST_STATE) = UPPER(#{instState})
+        </if>
+         <if test="instArea != null and instArea != ''">
+            AND UPPER(V2.INST_AREA) LIKE UPPER(#{instArea})
+        </if>
+        <if test="instMonth != null and instMonth != ''">
+            AND TO_CHAR(TO_DATE(V2.FIRST_INSTALL_DT,'DD/MM/YYYY'),'MM/YYYY') = #{instMonth}
+        </if>
+
+	    ORDER BY SALES_ORD_NO
+    </select>
+
+	<select id="selectStateList" parameterType="Map" resultType="egovMap">
+		SELECT NAME CODE_NAME, NAME CODE_NAME
+		FROM SYS0035M
+		WHERE STUS_CODE_ID = 1
+		<if test="groupCode != null and groupCode != ''">
+			AND CNTY_ID = #{groupCode}
+		</if>
+	</select>
+
+	<select id="selectAreaList" parameterType="Map" resultType="egovMap">
+		SELECT area_name CODE_NAME, area_name CODE_NAME
+		FROM SYS0039M
+		WHERE AREA_STUS_ID = 1
+		GROUP BY AREA_NAME
+		ORDER BY AREA_NAME
+		<if test="groupCode != null and groupCode != ''">
+			AND AREA_STATE_ID = #{groupCode}
+		</if>
+	</select>
+
+    <select id="selectOrderInstallationInfoByOrdID" parameterType="Map" resultType="egovMap">
+		SELECT
+			INSTALL_ID ,
+			ORD_ID ,
+			INST_ADDR_DTL ,
+			INST_STREET ,
+			INST_AREA ,
+			INST_POSTCODE ,
+			INST_STATE ,
+			INST_COUNTRY ,
+			INST_CNT_NAME ,
+			INST_CNT_NRIC ,
+			INST_CNT_EMAIL ,
+			INST_CNT_TEL_M ,
+			INST_CNT_TEL_O ,
+			INST_CNT_TEL_R ,
+			INST_CNT_TEL_F ,
+			INST_CNT_GENDER ,
+			FIRST_INSTALL_NO ,
+			FIRST_INSTALL_CT_CODE ,
+			FIRST_INSTALL_CT_NAME ,
+			FIRST_INSTALL_DT ,
+			FIRST_INSTALL_REM ,
+			FIRST_INSTALL_SIRIM_NO ,
+			FIRST_INSTALL_SERIAL_NO ,
+			LAST_INSTALL_NO ,
+			LAST_INSTALL_CT_CODE ,
+			LAST_INSTALL_CT_NAME ,
+			LAST_INSTALL_DT ,
+			LAST_INSTALL_REM ,
+			LAST_INSTALL_SIRIM_NO ,
+			LAST_INSTALL_SERIAL_NO ,
+			DSC_ID ,
+			DSC_CODE ,
+			DSC_NAME ,
+			INSTCT ,
+			PREFER_INST_DT ,
+			PREFER_INST_TM ,
+			INSTALL_ADDR_ID ,
+			INSTALL_CNTC_ID ,
+			INST_CNT_DEPT ,
+			INST_CNT_POST ,
+			VRIFY_REM
+		FROM SAL1010V_V2 WHERE ORD_ID = #{salesOrdId}
+    </select>
+
+    <select id="selectBSOrderServiceSetting" parameterType="Map" resultType="egovMap">
+	SELECT
+		ORD_ID,
+		ORD_NO,
+		APP_TYPE_CODE,
+		STOCK_CODE,
+		STOCK_DESC,
+		CONFIG_BS_GEN,
+		SRV_MEM_FREQ,
+		MEM_ID,
+		MEM_CODE,
+		NAME,
+		SETL_DT,
+		CONFIG_BS_REM,
+		CONFIG_SETT_AS,
+		CONFIG_SETT_BS,
+		CONFIG_SETT_INS,
+		CONFIG_BS_WEEK,
+		CUST_NAME,
+		CUST_NRIC,
+		CONFIG_ID
+	FROM
+	(
+        SELECT
+			V.ORD_ID,
+			V.ORD_NO,
+			V.APP_TYPE_CODE,
+			V.STOCK_CODE,
+			V.STOCK_DESC,
+			VS.CONFIG_BS_GEN,
+			VS.SRV_MEM_FREQ,
+			M.MEM_ID,
+			M.MEM_CODE,
+			M.NAME,
+			TO_CHAR(TO_DATE(R.SETL_DT),'DD/MM/YYYY') SETL_DT,
+			VS.CONFIG_BS_REM,
+			VS.CONFIG_SETT_AS,
+			VS.CONFIG_SETT_BS,
+			VS.CONFIG_SETT_INS,
+			VS.CONFIG_BS_WEEK,
+			VS.CONFIG_ID,
+			V.CUST_NAME,
+			V.CUST_NRIC
+        FROM SAL1006V V
+        LEFT JOIN SAL1014V VS ON V.ORD_ID = VS.ORD_ID
+        LEFT JOIN ORG0001D M ON VS.CONFIG_BS_MEM_ID = M.MEM_ID
+        LEFT JOIN SVC0006D R ON V.ORD_ID = R.SALES_ORD_ID AND R.RESULT_STUS_CODE_ID = 4
+        WHERE V.ORD_ID = #{salesOrdId}
+        ORDER BY R.SETL_DT DESC ) X
+	WHERE ROWNUM = 1
+    </select>
+
+	<select id="selectHSCodyOldList" parameterType="Map" resultType="egovMap">
+	   SELECT
+            ORG01.MEM_CODE CODE_ID, ORG01.MEM_CODE || '-' ||  ORG01.NAME CODE_NAME
+        FROM
+          ORG0001D ORG01
+          LEFT JOIN ORG0005D ORG05 ON ORG01.MEM_ID = ORG05.MEM_ID
+        WHERE
+          (ORG01.MEM_TYPE = 2 OR ORG01.MEM_TYPE = 3)
+          AND ORG01.STUS = 1
+          AND ORG05.MEM_LVL = 4
+        ORDER BY
+          ORG01.MEM_CODE
+	</select>
+
+</mapper>

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.organization.impl.GroupMapper">
+
+	<select id="selectGroupMstList" parameterType="Map" resultType="egovMap">
+
+		SELECT
+		distinct A.GROUP_BATCH_ID
+		,A.GROUP_BATCH_DT
+		,A.GROUP_STUS_ID
+		,A.GROUP_REM
+		,D.GROUP_MEMBER_TYPE
+		,A.CRT_USER_ID
+		,A.CRT_DT
+		,A.UPD_USER_ID
+		,A.UPD_DT
+		,A.GROUP_TOT_ITM
+		,A.GROUP_TOT_SUCCES
+		,A.GROUP_TOT_FAIL
+		,B.USER_NAME
+		,C.NAME STUS_CODE
+		FROM ORG0034D A
+		LEFT JOIN SYS0047M B ON
+		A.CRT_USER_ID = B.USER_ID
+		LEFT JOIN SYS0038M C ON A.GROUP_STUS_ID =
+		C.STUS_CODE_ID
+		JOIN ORG0035D D ON A.GROUP_BATCH_ID = D.GROUP_BATCH_ID
+		WHERE
+		1=1
+		<if test="groupBatchId != null and groupBatchId != ''">
+			AND A.GROUP_BATCH_ID = #{groupBatchId}
+		</if>
+
+		<if test="crtUserName != null and crtUserName != ''">
+			AND B.USER_NAME LIKE '%'||#{crtUserName}||'%'
+		</if>
+
+		<if test="groupBatchStus != null and groupBatchStus != ''">
+			AND A.GROUP_STUS_ID LIKE '%'||#{groupBatchStus}||'%'
+		</if>
+
+		<if test="groupMemberType != null and groupMemberType != ''">
+			AND D.GROUP_MEMBER_TYPE LIKE '%'||#{groupMemberType}||'%'
+		</if>
+
+		<if test=" '' != uploadDateF and null != uploadDateF">
+			AND A.CRT_DT >= TO_DATE(#{uploadDateF}||' 00:00:00',
+			'DD-MM-YYYY
+			HH24:MI:SS')
+		</if>
+
+		<if test=" '' != uploadDateT and null != uploadDateT">
+                             <![CDATA[
+                             AND  A.CRT_DT <= TO_DATE(#{uploadDateT} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+                             ]]>
+		</if>
+
+		ORDER BY A.GROUP_BATCH_DT DESC
+	</select>
+
+
+	<select id="selectNextBatchId" resultType="int">
+		SELECT
+		NVL(MAX(GROUP_BATCH_ID) + 1, 1) AS BATCH_ID FROM ORG0034D
+	</select>
+
+	<select id="selectNextDetId" resultType="int">
+		SELECT
+		NVL(MAX(LOYALTY_HP_DTL_ID) + 1, 1) AS DET_ID FROM ORG0035D
+	</select>
+
+	<insert id="insertGroupMst" parameterType="Map">
+		INSERT INTO ORG0034D (
+		GROUP_BATCH_ID
+		,GROUP_BATCH_DT
+		,GROUP_STUS_ID
+		,GROUP_REM
+		,CRT_USER_ID
+		,CRT_DT
+		,UPD_USER_ID
+		,UPD_DT
+		,GROUP_TOT_ITM
+		,GROUP_TOT_SUCCES
+		,GROUP_TOT_FAIL
+
+		) VALUES (
+		#{groupBatchId}
+		,SYSDATE
+		,1
+		,#{groupRem}
+		,#{crtUserId}
+		,SYSDATE
+		,#{crtUserId}
+		,SYSDATE
+		,#{groupTotItm}
+		,#{groupTotSuccess}
+		,#{groupTotFail}
+		)
+
+	</insert>
+
+	<insert id="insertGroupDtl" parameterType="Map">
+		<!-- INSERT INTO SAL0273D( LOYALTY_HP_DTL_ID ,LOYALTY_HP_BATCH_ID ,SALES_ORD_NO 
+			,HP_CODE ,HP_VIEW_START_DT ,HP_VIEW_END_DT ,CRT_USER_ID ,CRT_DT ,UPD_USER_ID 
+			,UPD_DT ) -->
+
+		INSERT INTO ORG0035D(
+		GROUP_DTL_ID
+		,GROUP_BATCH_ID
+		,FROM_TRANS
+		,TO_TRANS
+		,CRT_USER_ID
+		,CRT_DT
+		,UPD_USER_ID
+		,UPD_DT
+		,MEMBER_CODE
+		,MEMBER_LEVEL
+		,TRANS_DATE
+		,MEMBER_CODE_TO
+		,GROUP_MEMBER_TYPE
+		)
+
+		SELECT
+		ORG0035D_SEQ.NEXTVAL , groupBatchId , fromTrans , toTrans ,crtUserId
+		,
+		crtDt , updUserId , updDt, memberCode, memberLevel, transDate ,
+		memberCodeTo, groupMemberType FROM (
+		<foreach collection="list" item="item" index="index"
+			separator=" UNION ALL ">
+			SELECT
+			#{groupBatchId} groupBatchId
+			,#{item.fromTrans}
+			fromTrans
+			,#{item.toTrans} toTrans
+			,#{item.crtUserId} crtUserId
+			,SYSDATE crtDt
+			,#{item.updUserId} updUserId
+			,SYSDATE updDt
+			,#{item.memberCode} memberCode
+			,#{item.memberLevel} memberLevel
+			,TO_DATE(#{item.transDate},'DD/MM/YYYY') transDate
+			,#{item.memberCodeTo} memberCodeTo
+			,#{item.groupMemberType}
+			groupMemberType
+			FROM DUAL
+		</foreach>
+
+		<!-- SELECT SAL0273D_SEQ.NEXTVAL , loyaltyHpBatchId , salesOrdNo , hpCode 
+			, startDate, endDate, crtUserId , crtDt , updUserId , updDt FROM ( <foreach 
+			collection="list" item="item" index="index" separator=" UNION ALL "> SELECT 
+			#{loyaltyHpBatchId} loyaltyHpBatchId ,#{item.salesOrdNo} salesOrdNo ,#{item.hpCode} 
+			hpCode ,TO_DATE(#{item.startDate},'DD/MM/YYYY') startDate ,TO_DATE(#{item.endDate},'DD/MM/YYYY') 
+			endDate ,#{item.crtUserId} crtUserId ,SYSDATE crtDt ,#{item.updUserId} updUserId 
+			,SYSDATE updDt FROM DUAL </foreach> -->
+		)
+	</insert>
+
+	<select id="selectGroupDetailInfo" parameterType="Map"
+		resultType="egovMap">
+
+		SELECT
+		A.GROUP_BATCH_ID,
+		A.GROUP_STUS_ID,
+		A.GROUP_TOT_ITM,
+		B.FROM_TRANS,
+		B.TO_TRANS,
+		B.MEMBER_CODE,
+		B.MEMBER_LEVEL,
+		TO_CHAR(B.TRANS_DATE,
+		'DD/MM/YYYY') TRANS_DATE,
+		B.MEMBER_CODE_TO,
+		C.NAME STUS_NAME
+		FROM
+		ORG0034D A
+		JOIN ORG0035D B ON A.GROUP_BATCH_ID = B.GROUP_BATCH_ID
+		LEFT
+		JOIN SYS0038M C ON A.GROUP_STUS_ID = C.STUS_CODE_ID
+		WHERE
+		A.GROUP_BATCH_ID = #{groupBatchId}
+  <![CDATA[
+        AND ROWNUM <= 20000
+ ]]>
+	</select>
+
+	<select id="selectGroupMasterInfo" parameterType="Map"
+		resultType="egovMap">
+		SELECT
+		distinct A.GROUP_BATCH_ID
+		,A.GROUP_BATCH_DT
+		,A.GROUP_STUS_ID
+		,A.GROUP_REM
+		,D.GROUP_MEMBER_TYPE
+		,A.CRT_USER_ID
+		,A.CRT_DT
+		,A.UPD_USER_ID
+		,A.UPD_DT
+		,A.GROUP_TOT_ITM
+		,A.GROUP_TOT_SUCCES
+		,A.GROUP_TOT_FAIL
+		,B.USER_NAME
+		,C.NAME STUS_CODE
+		FROM ORG0034D A
+		LEFT JOIN
+		SYS0047M B ON A.CRT_USER_ID = B.USER_ID
+		LEFT JOIN SYS0038M C ON
+		A.GROUP_STUS_ID = C.STUS_CODE_ID
+		JOIN ORG0035D D ON A.GROUP_BATCH_ID =
+		D.GROUP_BATCH_ID
+		WHERE
+		1=1 AND
+		A.GROUP_BATCH_ID = #{groupBatchId}
+
+	</select>
+
+	<update id="callBatchGroupUpd" statementType="CALLABLE"
+		parameterType="Map">
+		{call SP_BATCH_GROUP_TRANS(#{groupBatchId},#{loginId},
+		#{
+		v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{
+		v_sqlcont,mode=OUT,jdbcType=VARCHAR})}
+	</update>
+
+	<update id="updateGroupMasterStus" parameterType="Map">
+		UPDATE ORG0034D
+		SET GROUP_STUS_ID = 8
+		,UPD_USER_ID = #{loginId}
+		,UPD_DT = SYSDATE
+		WHERE
+		GROUP_BATCH_ID = #{groupBatchId}
+	</update>
+
+
+</mapper>

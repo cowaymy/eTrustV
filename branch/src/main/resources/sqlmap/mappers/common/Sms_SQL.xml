@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.SmsMapper">
+
+    <insert id="insertSmsEntry" parameterType="Map">
+        <selectKey keyProperty="smsId" resultType="int" order="BEFORE">
+            SELECT MSC0015D_SEQ.NEXTVAL smsId
+            FROM DUAL
+        </selectKey>
+
+        INSERT INTO MSC0015D (
+        SMS_ID
+        , SMS_MSG
+        , SMS_MSISDN
+        , SMS_TYPE_ID
+        , SMS_PRIO
+        , SMS_REF_NO
+        , SMS_BATCH_UPLOAD_ID
+        , SMS_REM
+        , SMS_START_DT
+        , SMS_EXPR_DT
+        , SMS_STUS_ID
+        , SMS_RETRY
+        , SMS_CRT_DT
+        , SMS_CRT_USER_ID
+        , SMS_UPD_DT
+        , SMS_UPD_USER_ID
+        , SMS_VENDOR_ID
+        )VALUES (
+        #{smsId}
+        , #{smsMsg}
+        , #{smsMsisdn}
+        , #{smsTypeId}
+        , #{smsPrio}
+        , #{smsRefNo}
+        , #{smsBatchUploadId}
+        , #{smsRem}
+        , TO_DATE(#{smsStartDt}, 'YYYYMMDD')
+        , TO_DATE(#{smsExprDt}, 'YYYYMMDD')
+        , #{smsStusId}
+        , #{smsRetry}
+        , SYSDATE
+        , #{userId}
+        , SYSDATE
+        , #{userId}
+        , #{smsVendorId}
+        )
+    </insert>
+
+    <insert id="insertGatewayReply" parameterType="Map">
+
+        <selectKey keyProperty="replyId" resultType="int" order="BEFORE">
+            SELECT MSC0017D_REPLY_ID_SEQ.NEXTVAL replyId
+            FROM DUAL
+        </selectKey>
+
+        INSERT INTO MSC0017D (
+        REPLY_ID
+        , SMS_ID
+        , REPLY_CODE
+        , REPLY_REM
+        , REPLY_CRT_DT
+        , REPLY_CRT_USER_ID
+        , REPLY_FDBCK_ID
+        )VALUES (
+        #{replyId}
+        , #{smsId}
+        , #{replyCode}
+        , #{replyRem}
+        , SYSDATE
+        , #{userId}
+        ,#{replyFdbckId}
+        )
+    </insert>
+
+    <select id="selectFailList" parameterType="string" resultType="egovMap">
+        SELECT
+            SMS.SMS_ID
+            , SMS.SMS_MSG
+            , SMS.SMS_MSISDN
+            , SMS.SMS_TYPE_ID
+            , SMS.SMS_PRIO
+            , SMS.SMS_REF_NO
+            , SMS.SMS_BATCH_UPLOAD_ID
+            , SMS.SMS_REM
+            , SMS.SMS_START_DT
+            , SMS.SMS_EXPR_DT
+            , SMS.SMS_STUS_ID
+            , SMS.SMS_RETRY
+            , SMS.SMS_VENDOR_ID
+            , RESULT.REPLY_ID
+            , RESULT.REPLY_CODE
+            , RESULT.REPLY_REM
+            , RESULT.REPLY_FDBCK_ID
+        FROM MSC0015D SMS, MSC0017D RESULT
+        WHERE SMS.SMS_ID = RESULT.SMS_ID
+              AND SMS.SMS_STUS_ID = 1
+              AND RESULT.REPLY_FDBCK_ID  IN (
+                                        SELECT     REGEXP_SUBSTR (#{msgIds}, '[^,]+', 1, LEVEL)
+                                        FROM DUAL
+                                        CONNECT BY REGEXP_SUBSTR (#{msgIds}, '[^,]+', 1, LEVEL) IS NOT NULL)
+    </select>
+</mapper>

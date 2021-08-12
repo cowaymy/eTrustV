@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipPackageMMapper">
+
+
+ <select id="selectList" parameterType="Map" resultType="egovMap">
+
+                    SELECT S.SRV_CNTRCT_PAC_ID   ,
+                               S.SRV_CNTRCT_PAC_CODE   ,
+                               S.SRV_CNTRCT_PAC_DESC   ,
+                               S.SRV_CNTRCT_PAC_DUR   ,
+                               S.SRV_CNTRCT_PAC_STUS_ID  code ,
+                               S.PAC_TYPE ,
+                               S.OBLIGT_PRIOD ,
+                               S.RCO_PRIOD ,
+                               to_char(S.C1,'yyyy/mm/dd')  c1   ,
+                               S.USER_NAME   ,
+                               to_char(S.SRV_CNTRCT_PAC_START_DT,'yyyy/mm/dd') SRV_CNTRCT_PAC_START_DT  ,
+                               to_char(S.SRV_CNTRCT_PAC_END_DT,'yyyy/mm/dd')    SRV_CNTRCT_PAC_END_DT
+                          FROM ( SELECT F.SRV_CNTRCT_PAC_ID   ,
+                                        F.SRV_CNTRCT_PAC_CODE   ,
+                                        F.SRV_CNTRCT_PAC_DESC   ,
+                                        F.SRV_CNTRCT_PAC_DUR   ,
+                                        F.SRV_CNTRCT_PAC_STUS_ID   ,
+                                        F.SRV_CNTRCT_PAC_START_DT   ,
+                                        F.SRV_CNTRCT_PAC_END_DT   ,
+                                        F.PAC_TYPE   ,
+                                        F.OBLIGT_PRIOD   ,
+                                        F.RCO_PRIOD   ,
+                                        U.USER_NAME   ,
+                                        CASE
+                                             WHEN ( F.SRV_CNTRCT_PAC_CRT_DT IS NOT NULL ) THEN  F.SRV_CNTRCT_PAC_CRT_DT
+                                              ELSE  TO_DATE('1900/01/01 00:00:00')
+                                         END C1
+                     FROM ( SELECT D.SRV_CNTRCT_PAC_ID   ,
+                                   D.SRV_CNTRCT_PAC_CODE   ,
+                                   D.SRV_CNTRCT_PAC_DESC   ,
+                                   D.SRV_CNTRCT_PAC_DUR   ,
+                                   D.SRV_CNTRCT_PAC_STUS_ID   ,
+                                   D.SRV_CNTRCT_PAC_CRT_DT   ,
+                                   D.SRV_CNTRCT_PAC_CRT_USER_ID   ,
+                                   D.SRV_CNTRCT_PAC_START_DT   ,
+                                   D.SRV_CNTRCT_PAC_END_DT   ,
+                                   D.PAC_TYPE,
+                                   D.OBLIGT_PRIOD,
+                                   D.RCO_PRIOD
+                            FROM SAL0081D D
+                             WHERE   1=1
+                               <if test="SRV_CNTRCT_PAC_STUS_ID != null and SRV_CNTRCT_PAC_STUS_ID != ''">
+                                    AND D.SRV_CNTRCT_PAC_STUS_ID IN
+                                     <foreach item="item" collection="SRV_CNTRCT_PAC_STUS_ID" index="index" open="(" separator="," close=")">
+                                        #{item}
+                                   </foreach>
+                               </if>
+                               <if test="PAC_TYPE != null and PAC_TYPE != ''">
+                               AND D.PAC_TYPE  IN
+                                <foreach item="item" collection="PAC_TYPE" index="index" open="(" separator="," close=")">
+                                   #{item}
+                              </foreach>
+                          </if>
+                           ) F
+                            JOIN SYS0047M  U   ON U.USER_ID = F.SRV_CNTRCT_PAC_CRT_USER_ID
+                      WHERE    1=1
+
+                          <if test="SRV_CNTRCT_PAC_CODE != null and SRV_CNTRCT_PAC_CODE != ''">
+                                                AND (F.SRV_CNTRCT_PAC_CODE    LIKE '%'|| #{SRV_CNTRCT_PAC_CODE} ||'%')
+                          </if>
+
+                          <if test="SRV_CNTRCT_PAC_DESC != null and SRV_CNTRCT_PAC_DESC != ''">
+                                                AND (F.SRV_CNTRCT_PAC_DESC    LIKE '%'|| #{SRV_CNTRCT_PAC_DESC} ||'%')
+                          </if>
+
+                          <if test="SRV_CNTRCT_PAC_DUR != null and SRV_CNTRCT_PAC_DUR != ''">
+                                                AND (F.SRV_CNTRCT_PAC_DUR  = #{SRV_CNTRCT_PAC_DUR})
+                          </if>
+                        ) S
+              ORDER BY S.SRV_CNTRCT_PAC_ID ASC
+  </select>
+
+
+
+
+
+ <select id="selectPopDetailList" parameterType="Map" resultType="egovMap">
+             <![CDATA[
+                    SELECT S.SRV_PAC_ITM_ID   ,
+                           S.SRV_CNTRCT_PAC_ID   ,
+                           S.SRV_PAC_ITM_PRODUCT_ID   ,
+                           S.STK_CODE   ,
+                           S.STK_DESC   ,
+                           S.CODE_NAME   ,
+                           S.SRV_PAC_ITM_RENTAL   ,
+                           S.SRV_PAC_ITM_SVC_FREQ   ,
+                           S.SRV_PAC_ITM_STUS_ID   ,
+                           S.CODE   ,
+                           S.SRV_PAC_ITM_UPD_DT   ,
+                           S.USER_NAME
+                      FROM ( SELECT D.SRV_PAC_ITM_ID   ,
+                                    D.SRV_CNTRCT_PAC_ID   ,
+                                    D.SRV_PAC_ITM_PRODUCT_ID   ,
+                                    D.SRV_PAC_ITM_SVC_FREQ   ,
+                                    D.SRV_PAC_ITM_RENTAL   ,
+                                    D.SRV_PAC_ITM_STUS_ID   ,
+                                    D.SRV_PAC_ITM_UPD_DT   ,
+                                    E.STK_CODE   ,
+                                    E.STK_DESC   ,
+                                    Extent3.CODE_NAME   ,
+                                    Extent4.CODE   ,
+                                    Extent5.USER_NAME
+                             FROM SAL0082D D
+                                    JOIN SYS0026M E   ON ( E.STK_ID = D.SRV_PAC_ITM_PRODUCT_ID )
+                                    AND ( 1 = E.STUS_CODE_ID )
+                                    JOIN SYS0013M Extent3   ON Extent3.CODE_ID = E.STK_CTGRY_ID
+                                    JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = D.SRV_PAC_ITM_STUS_ID
+                                    JOIN SYS0047M Extent5   ON Extent5.USER_ID = D.SRV_PAC_ITM_UPD_USER_ID
+                              WHERE  ( D.SRV_CNTRCT_PAC_ID = #{SRV_CNTRCT_PAC_ID} )
+                                       AND ( D.SRV_PAC_ITM_STUS_ID = #{SRV_PAC_ITM_STUS_ID} )
+                              ) S
+                      ORDER BY S.STK_DESC ASC
+        ]]>
+  </select>
+
+
+ <select id="selectPopDetail" parameterType="Map" resultType="egovMap">
+
+             <![CDATA[
+                    SELECT S.SRV_PAC_ITM_ID   ,
+                           S.SRV_CNTRCT_PAC_ID   ,
+                           S.SRV_PAC_ITM_PRODUCT_ID   ,
+                           S.STK_CODE   ,
+                           S.STK_DESC   ,
+                           S.CODE_NAME   ,
+                           S.SRV_PAC_ITM_RENTAL   ,
+                           S.SRV_PAC_ITM_SVC_FREQ   ,
+                           S.SRV_PAC_ITM_STUS_ID   ,
+                           S.CODE   ,
+                           S.SRV_PAC_ITM_UPD_DT   ,
+                           S.USER_NAME ,
+                           S.SRV_PAC_ITM_REM ,
+                           S.DISCONTINUE
+                      FROM ( SELECT D.SRV_PAC_ITM_ID   ,
+                                    D.SRV_CNTRCT_PAC_ID   ,
+                                    D.SRV_PAC_ITM_PRODUCT_ID   ,
+                                    D.SRV_PAC_ITM_SVC_FREQ   ,
+                                    D.SRV_PAC_ITM_RENTAL   ,
+                                    D.SRV_PAC_ITM_STUS_ID   ,
+                                    D.SRV_PAC_ITM_UPD_DT   ,
+                                    D.SRV_PAC_ITM_REM,
+                                    E.STK_CODE   ,
+                                    E.STK_DESC   ,
+                                    Extent3.CODE_NAME   ,
+                                    Extent4.CODE   ,
+                                    Extent5.USER_NAME   ,
+                                    D.DISCONTINUE
+                             FROM SAL0082D D
+                                    JOIN SYS0026M E   ON ( E.STK_ID = D.SRV_PAC_ITM_PRODUCT_ID )
+                                    AND ( 1 = E.STUS_CODE_ID )
+                                    JOIN SYS0013M Extent3   ON Extent3.CODE_ID = E.STK_CTGRY_ID
+                                    JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = D.SRV_PAC_ITM_STUS_ID
+                                    JOIN SYS0047M Extent5   ON Extent5.USER_ID = D.SRV_PAC_ITM_UPD_USER_ID
+                              WHERE  ( D.SRV_CNTRCT_PAC_ID = #{SRV_CNTRCT_PAC_ID} )
+                                       AND ( D.SRV_PAC_ITM_STUS_ID = #{SRV_PAC_ITM_STUS_ID} )
+                              ) S
+                      ORDER BY S.STK_DESC ASC
+        ]]>
+  </select>
+
+ <select id="selectPopUpList" parameterType="Map" resultType="egovMap">
+
+          SELECT E.SRV_PAC_ITM_ID   ,
+		             E.SRV_CNTRCT_PAC_ID   ,
+		             E.SRV_PAC_ITM_PRODUCT_ID   ,
+		             S.STK_CODE   ,
+		             S.STK_DESC   ,
+		             M.CODE_NAME   ,
+		             TO_CHAR( E.SRV_PAC_ITM_RENTAL,'FM9999999999990.00') SRV_PAC_ITM_RENTAL  ,
+		             E.SRV_PAC_ITM_SVC_FREQ   ,
+		             E.SRV_PAC_ITM_STUS_ID   ,
+		             Extent4.CODE   ,
+		             E.SRV_PAC_ITM_UPD_DT   ,
+		             U.USER_NAME,
+		             A.PAC_TYPE,
+		             E.DISCONTINUE
+             FROM SAL0082D E
+                JOIN SAL0081D  A ON E.SRV_CNTRCT_PAC_ID = A.SRV_CNTRCT_PAC_ID
+                JOIN SYS0026M S   ON ( S.STK_ID = E.SRV_PAC_ITM_PRODUCT_ID )
+                AND ( 1 = S.STUS_CODE_ID )
+                JOIN SYS0013M M   ON M.CODE_ID = S.STK_CTGRY_ID
+                JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = E.SRV_PAC_ITM_STUS_ID
+                JOIN SYS0047M U   ON U.USER_ID = E.SRV_PAC_ITM_UPD_USER_ID
+        WHERE  E.SRV_PAC_ITM_ID = #{SRV_PAC_ITM_ID}  AND ROWNUM    <![CDATA[<  ]]> = 1
+
+
+  </select>
+
+
+
+
+
+   <insert id="SAL0081D_update" parameterType="Map" >
+        UPDATE SAL0081D
+        SET
+               SRV_CNTRCT_PAC_CODE        = #{srvCntrctPacCode},
+               SRV_CNTRCT_PAC_DESC        = #{srvCntrctPacDesc},
+               SRV_CNTRCT_PAC_DUR          = #{srvCntrctPacDur},
+               SRV_CNTRCT_PAC_STUS_ID   =  decode(#{code},1,1,8) ,
+               SRV_CNTRCT_PAC_START_DT = decode (INSTR(#{srvCntrctPacStartDt} , '/') ,5 , to_date(#{srvCntrctPacStartDt},'yyyy/mm/dd') ,to_date(#{srvCntrctPacStartDt},'dd/mm/yyyy')) ,
+               SRV_CNTRCT_PAC_END_DT     = decode (INSTR(#{srvCntrctPacEndDt} , '/') ,5 , to_date(#{srvCntrctPacEndDt},'yyyy/mm/dd') ,to_date(#{srvCntrctPacEndDt},'dd/mm/yyyy')  ),
+               PAC_TYPE                           = #{pacType} ,
+               OBLIGT_PRIOD                      = #{obligtPriod} ,
+               RCO_PRIOD                         = #{rcoPriod}
+        WHERE  SRV_CNTRCT_PAC_ID        = #{srvCntrctPacId}
+   </insert>
+
+
+
+
+
+   <insert id="SAL0081D_insert" parameterType="Map">
+
+			INSERT INTO SAL0081D ( SRV_CNTRCT_PAC_ID,
+                                               SRV_CNTRCT_PAC_CODE,
+                                               SRV_CNTRCT_PAC_DESC,
+											   SRV_CNTRCT_PAC_DUR,
+											   SRV_CNTRCT_PAC_STUS_ID,
+											   SRV_CNTRCT_PAC_CRT_DT,
+											   SRV_CNTRCT_PAC_CRT_USER_ID,
+											   SRV_CNTRCT_PAC_START_DT,
+											   SRV_CNTRCT_PAC_END_DT,
+											   PAC_TYPE,
+											   OBLIGT_PRIOD,
+                                               RCO_PRIOD
+											)
+			VALUES (
+				             #{SRV_CNTRCT_PAC_ID} ,
+	                         #{SRV_CNTRCT_PAC_CODE},
+	                         #{SRV_CNTRCT_PAC_DESC} ,
+							 #{SRV_CNTRCT_PAC_DUR},
+							 1 ,
+							 sysdate,
+							 #{updator},
+							 to_date(#{SRV_CNTRCT_PAC_START_DT},'dd/mm/yyyy')  ,
+							 to_date(#{SRV_CNTRCT_PAC_END_DT},'dd/mm/yyyy')  ,
+							 #{pacType},
+							 #{OBLIGT_PRIOD} ,
+                             #{RCO_PRIOD}
+						 )
+
+   </insert>
+
+
+
+
+
+   <insert id="SAL0082D_insert" parameterType="Map" >
+            INSERT INTO SAL0082D (
+                               SRV_PAC_ITM_ID, SRV_CNTRCT_PAC_ID, SRV_PAC_ITM_PRODUCT_ID,
+                               SRV_PAC_ITM_SVC_FREQ, SRV_PAC_ITM_RENTAL, SRV_PAC_ITM_PV,
+                               SRV_PAC_ITM_REM, SRV_PAC_ITM_STUS_ID, SRV_PAC_ITM_UPD_DT,
+                               SRV_PAC_ITM_UPD_USER_ID, DISCONTINUE)
+            VALUES (   SAL0082D_SRV_PAC_ITM_ID_SEQ.NEXTVAL , #{srvContractPacID} ,  #{srvPacItemProductID},
+                           #{srvPacItemServiceFreq} , #{srvPacItemRental} , 0,
+                           #{srvPacItemRemark} , #{srvPacItemStatusID} ,sysdate, #{updator}, #{discontinue}
+                       )
+   </insert>
+
+   <insert id="SAL0082D_update" parameterType="Map" >
+
+            UPDATE  SAL0082D
+            SET
+                       SRV_CNTRCT_PAC_ID       = #{srvContractPacID},
+                       SRV_PAC_ITM_PRODUCT_ID  =  #{srvPacItemProductID},
+                       SRV_PAC_ITM_SVC_FREQ    = #{srvPacItemServiceFreq},
+                       SRV_PAC_ITM_RENTAL      =  #{srvPacItemRental},
+                       SRV_PAC_ITM_PV          = #{srvPacItemPV},
+                       SRV_PAC_ITM_REM         = #{srvPacItemRemark},
+                       SRV_PAC_ITM_STUS_ID     = #{srvPacItemStatusID},
+                       SRV_PAC_ITM_UPD_DT      = SYSDATE,
+                       SRV_PAC_ITM_UPD_USER_ID =  #{updator},
+                       DISCONTINUE = #{discontinue}
+            WHERE  SRV_PAC_ITM_ID          = #{srvPacItemID}
+   </insert>
+
+
+
+
+
+ <select id="selectGroupCode" parameterType="Map" resultType="egovMap">
+            SELECT
+               distinct  A.STK_ID  CodeId,
+                A.STK_CODE||'-'||A.STK_DESC  CodeName,
+                C.CODE_NAME      GroupCd ,
+                COUNT(CODE_NAME) OVER (PARTITION BY CODE_NAME) overcnt
+             FROM SYS0026M  A  ,
+                          SAL0016M  B  ,
+                          SYS0013M  C
+               WHERE A.STK_ID  = B.STK_ID
+                 AND A.STK_CTGRY_ID  = C.CODE_ID
+                 AND A.IS_NCV !=1
+                 AND A.STUS_CODE_ID =1
+                 AND A.STK_TYPE_ID =61
+                 AND B.AMT >0
+              order by GroupCd , CodeName
+
+  </select>
+
+
+
+
+ <select id="selectGroupCodeGroupby" parameterType="Map" resultType="egovMap">
+              SELECT   CODE_NAME
+                      FROM(
+                         SELECT
+                            C.CODE_NAME
+                         FROM SYS0026M  A  ,
+                                      SAL0016M  B  ,
+                                      SYS0013M  C
+                           WHERE A.STK_ID  = B.STK_ID
+                             AND A.STK_CTGRY_ID  = C.CODE_ID
+                             AND A.IS_NCV !=1
+                             AND A.STUS_CODE_ID =1
+                             AND A.STK_TYPE_ID =61
+                             AND B.AMT >0
+                            ORDER BY  CODE_NAME
+                       )
+                         group by CODE_NAME
+  </select>
+
+
+
+
+      <insert id="SAL0082D_delete" parameterType="Map" >
+                 UPDATE SAL0082D
+                   SET SRV_PAC_ITM_STUS_ID =  #{SRV_PAC_ITM_STUS_ID} ,
+                       SRV_PAC_ITM_UPD_DT = sysdate
+                 WHERE  ( SRV_PAC_ITM_ID = #{SRV_PAC_ITM_ID} )
+     </insert>
+
+
+
+
+    <select id="getSAL0081D_SEQ" parameterType="Map" resultType="egovMap">
+                 <![CDATA[
+                          SELECT SAL0081D_SRV_CNTRCT_PAC_ID_SEQ.NEXTVAL   seq  FROM DUAL
+                 ]]>
+    </select>
+
+
+
+     <select id="IsExistSVMPackage" parameterType="Map" resultType="egovMap">
+                   SELECT Extent1.SRV_CNTRCT_PAC_ID
+                  FROM SAL0081D Extent1
+                 WHERE   upper(Extent1.SRV_CNTRCT_PAC_CODE)  =  upper(#{SRV_CNTRCT_PAC_CODE}) AND ROWNUM <![CDATA[<  ]]> = 1
+      </select>
+
+	<select id="selectFilterList" parameterType="Map" resultType="egovMap">
+		SELECT #{productName} PRODUCT_NAME
+		          ,C.SRV_FILTER_ID
+		          ,C.SRV_PAC_TYPE
+		          ,C.SRV_PAC_ID
+		          ,CASE WHEN C.SRV_ITM_STK_ID IS NULL THEN #{srvItmStkId} ELSE C.SRV_ITM_STK_ID END SRV_ITM_STK_ID
+		          ,CASE WHEN C.BOM IS NULL THEN A.BOM ELSE C.BOM END BOM
+		          ,CASE WHEN C.BOM_COMPNT IS NULL THEN A.BOM_COMPNT ELSE C.BOM_COMPNT END BOM_COMPNT
+		          ,CASE WHEN C.BOM_COMPNT_DESC IS NULL THEN B.STK_DESC ELSE C.BOM_COMPNT_DESC  END BOM_COMPNT_DESC
+		          ,CASE WHEN C.COMPNT_QTY IS NULL THEN A.COMPNT_QTY ELSE C.COMPNT_QTY END COMPNT_QTY
+		          ,A.LEAD_TM_OFFSET_N LEAD_TM_OFFSET
+		          ,C.LEAD_TM_OFFSET CHANGE_PREIOD
+	  	  FROM LOG0044D A
+		   JOIN SYS0026M B ON A.BOM_COMPNT = B.STK_CODE
+		   LEFT OUTER JOIN SAL0203D C ON A.BOM = C.BOM
+            AND  A.BOM_COMPNT = C.BOM_COMPNT
+            AND C.SRV_PAC_TYPE = #{srvPacType}
+            AND C.SRV_PAC_ID = #{srvPacId}
+		WHERE  A.BOM = (SELECT BOM FROM LOG0043M WHERE MATRL_NO =#{matrlNo} )
+		     <![CDATA[
+		    AND VALID_FROM_DT <= SYSDATE
+		    AND VALID_TO_DT >= SYSDATE
+		    ]]>
+		    AND B.STK_TYPE_ID = '62'
+		    AND B. STUS_CODE_ID = '1'
+	</select>
+
+	 <update id="saveFilterInfo" parameterType="Map">
+
+		   MERGE INTO SAL0203D A
+		            USING (SELECT #{srvFilterId} AS SRV_FILTER_ID ,
+		                                  #{srvPacType} AS SRV_PAC_TYPE ,
+		                                  #{srvPacId} AS SRV_PAC_ID ,
+		                                  #{srvItmStkId} AS SRV_ITM_STK_ID
+		                         FROM dual)b
+		            ON (
+		                      A.SRV_FILTER_ID = B.SRV_FILTER_ID
+		               AND A.SRV_PAC_TYPE = B.SRV_PAC_TYPE
+		               AND A.SRV_PAC_ID = B.SRV_PAC_ID
+		               AND A.SRV_ITM_STK_ID = B.SRV_ITM_STK_ID
+		            )
+		       WHEN MATCHED THEN
+		    UPDATE  SET
+		               A.LEAD_TM_OFFSET = #{changePreiod},
+		               A.UPD_DT = SYSDATE,
+		               A.UPD_USER_ID = #{userId}
+		    WHEN NOT MATCHED THEN
+		           INSERT
+		           (
+		                SRV_FILTER_ID
+		               ,SRV_PAC_TYPE
+		               ,SRV_PAC_ID
+		               ,SRV_ITM_STK_ID
+		               ,BOM
+		               ,BOM_COMPNT
+		               ,BOM_COMPNT_DESC
+		               ,COMPNT_QTY
+		               ,LEAD_TM_OFFSET
+		               ,CRT_DT
+		               ,CRT_USER_ID
+		               ,UPD_DT
+		               ,UPD_USER_ID
+		           )
+		         VALUES
+		           (
+		                SAL0203D_SRV_FILTER_ID_SEQ.nextval
+		               ,#{srvPacType}
+		               ,#{srvPacId}
+		               ,#{srvItmStkId}
+		               ,#{bom}
+		               ,#{bomCompnt}
+		               ,#{bomCompntDesc}
+		               ,#{compntQty}
+		               ,#{changePreiod}
+		               ,SYSDATE
+		               ,#{userId}
+		               ,SYSDATE
+		               ,#{userId}
+		           )
+    </update>
+
+	 <select id="selectStkCode" parameterType="Map" resultType="String">
+	   SELECT STK_CODE
+		  FROM SYS0026M
+		  where STK_ID = #{stkId}
+	 </select>
+</mapper>

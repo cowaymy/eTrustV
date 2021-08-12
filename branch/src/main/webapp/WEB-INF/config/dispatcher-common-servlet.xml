@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+    <context:component-scan base-package="com.coway.trust.config">
+		<context:include-filter type="annotation"
+			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan>
+
+    <bean id="excelXlsView" class="com.coway.trust.cmmn.view.ExcelXlsView" />
+    <bean id="excelXlsxView" class="com.coway.trust.cmmn.view.ExcelXlsxView" />
+    <bean id="excelXlsxStreamingView" class="com.coway.trust.cmmn.view.ExcelXlsxStreamingView" />
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="webBindingInitializer">
+            <bean class="com.coway.trust.cmmn.web.EgovBindingInitializer"/>
+        </property>
+        <property name="customArgumentResolvers">
+            <list>
+                <bean class="com.coway.trust.config.SessionVOArgumentResolver" />
+            </list>
+        </property>
+    </bean>
+    
+    <!-- 쿠키를 이용한 Locale 이용 -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="defaultLocale" value="en"/>
+    </bean>
+    <!-- session을 이용한 Locale 이용 -->    
+     <!-- <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" /> -->
+    
+    <!--  controller 프로퍼티 -->
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:properties/application-#{systemProperties['spring.profiles.active']}.properties</value>
+            </list>
+        </property>
+    </bean>
+    
+    <mvc:interceptors>
+        <!-- 
+                로그인 체크가 필요한 URL과 로그인 여부를 체크해준다
+        -->
+        <mvc:interceptor>
+            <!--
+            <mvc:mapping path="/sample/**"/>
+            <mvc:mapping path="/account/**"/>
+            <mvc:mapping path="/authorization/**"/>
+            <mvc:mapping path="/general/**"/>
+            <mvc:mapping path="/menu/**"/>
+            <mvc:mapping path="/program/**"/>
+            <mvc:mapping path="/status/**"/>
+            <mvc:mapping path="/test/**"/>
+            -->
+            <mvc:mapping path="/**"/>
+
+            <!-- WEB -->
+            <mvc:exclude-mapping path="/login/*.do"/>
+            <mvc:exclude-mapping path="/resources/**"/>
+            <mvc:exclude-mapping path="/help/**"/>
+            <mvc:exclude-mapping path="/report/**"/>
+
+            <!-- eamil confirm -->
+            <mvc:exclude-mapping path="/payment/initbillGroupMngEstmConfirm.do"/>
+
+            <!-- swagger -->
+            <mvc:exclude-mapping path="/swagger-ui.html"/>
+            <mvc:exclude-mapping path="/swagger-resources/**"/>
+            <mvc:exclude-mapping path="/webjars/**"/>
+            <mvc:exclude-mapping path="/v2/**"/>
+            <mvc:exclude-mapping path="/configuration/**"/>
+
+            <mvc:exclude-mapping path="/sample/**"/>
+
+            <mvc:exclude-mapping path="/**/api/**"/>
+            <!-- MOBILE WEB -->
+            <mvc:exclude-mapping path="/mobileWeb/**"/>
+
+            <bean class="com.coway.trust.cmmn.interceptor.AuthenticInterceptor" />
+        </mvc:interceptor>
+
+
+        <!-- callcenter Interceptor : check token, create session info. -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+
+            <!-- MOBILE WEB -->
+            <mvc:exclude-mapping path="/mobileWeb/**"/>
+            <mvc:exclude-mapping path="/**/api/**"/>
+
+            <bean class="com.coway.trust.cmmn.interceptor.CallCenterAuthenticInterceptor" />
+        </mvc:interceptor>
+
+
+
+        <!-- mobile web Interceptor-->
+        <mvc:interceptor>
+            <mvc:mapping path="/mobileWeb/**"/>
+
+            <mvc:exclude-mapping path="/mobileWeb/login.do"/>
+            <mvc:exclude-mapping path="/**/api/**"/>
+
+            <bean class="com.coway.trust.cmmn.interceptor.MobileWebAuthenticInterceptor" />
+        </mvc:interceptor>
+
+        <!-- locale 설정 처리. -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+	        <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		        <property name="paramName" value="language" />
+		    </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    
+    <!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory-->
+	<mvc:resources mapping="/help/**" location="/help/" />
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:resources mapping="/swagger-ui.html" location="classpath:/META-INF/resources/" />
+	<mvc:resources mapping="/swagger-resources/**" location="classpath:/META-INF/resources/" />
+	<mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/" />
+
+    <alias alias="multipartResolver" name="spring.RegularCommonsMultipartResolver"/>
+    
+    <!-- multipart resolvers -->
+    <bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="spring.RegularCommonsMultipartResolver">
+        <property name="maxUploadSize" value="600000000"/>          <!-- bytes -->
+        <property name="maxInMemorySize" value="100000000"/>     <!-- bytes -->
+    </bean>
+    
+    <!-- Configure to plugin JSON as request and response in method handler
+    <bean
+        class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="jsonMessageConverter" />
+            </list>
+        </property>
+    </bean>
+     -->
+     
+    <!-- Configure bean to convert JSON to POJO and vice versa 
+    <bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+    </bean>
+     -->
+</beans>

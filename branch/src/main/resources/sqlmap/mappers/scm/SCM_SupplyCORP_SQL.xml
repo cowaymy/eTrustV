@@ -1,0 +1,737 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.SalesPlanMngementMapper">
+
+<!-- Supply CDC -->
+<select id="selectComboSupplyCDC" parameterType="Map" resultType="egovMap">
+SELECT A.CODE
+     , A.CODE_ID
+     , A.CODE_NAME
+  FROM SYS0013M A
+ WHERE A.CODE_MASTER_ID = #{codeMasterId}
+   AND A.DISAB = 0
+ ORDER BY A.CODE
+</select>
+  <!-- Supply-CDC -->
+  <select id="selectSupplyCDC" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT
+          PLAN_ID CODE_VALUE
+        , CDC     CODE_VIEW
+    FROM SCM0005M
+   WHERE PLAN_YEAR  = #{planYear}
+   <if test="planMonth != null and planMonth !=''">
+     AND PLAN_MONTH = #{planMonth}
+   </if>
+     AND PLAN_WEEK  = #{planWeek}
+     AND PLAN_STUS  = 4
+   ORDER BY PLAN_ID
+  </select>
+<!-- 
+  <select id="selectComboSupplyCDC" parameterType="Map" resultType="egovMap">
+    SELECT CODE
+         , CODE_NAME
+         , CODE_ID
+     FROM SYS0013M
+    WHERE CODE_MASTER_ID = #{codeMasterId}
+  </select>
+ -->
+  <select id="selectSupplyPlanMaster" parameterType="Map" resultType="egovMap">
+     SELECT
+           PLAN_ID
+          ,PLAN_YEAR
+          ,PLAN_WEEK
+          ,CDC
+          ,PLAN_MONTH
+          ,PLAN_STUS
+          ,PLAN_CRT_DT
+          ,LAST_UP_DT
+          ,VER_NO
+          ,VER_DT
+      FROM SCM0005M
+     WHERE PLAN_YEAR = #{scmYearCbBox}
+       AND PLAN_WEEK = #{scmPeriodCbBox}
+       AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+
+  </select>
+
+  <select id="selectSalesPlanMaster" parameterType="Map" resultType="egovMap">
+      SELECT
+           PLAN_ID
+          ,PLAN_YEAR
+          ,PLAN_MONTH
+          ,PLAN_WEEK
+          ,TEAM
+          ,PLAN_STUS_ID
+          ,CRT_DT
+          ,STUS_DT
+          ,CRT_USER_ID
+      FROM SCM0001M
+     WHERE PLAN_YEAR  = #{scmYearCbBox}
+       AND PLAN_MONTH = ( SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox}  AND week_th = #{scmPeriodCbBox}  AND WEEK_TH_SN = 1)
+       AND PLAN_WEEK  = #{scmPeriodCbBox}
+       AND PLAN_STUS_ID = 4
+  </select>
+
+  <!--  미저장이 있는 경우 RED -->
+  <select id="selectSupplyCdcSaveFlag" parameterType="Map" resultType="egovMap">
+    SELECT DECODE(COUNT(PLAN_MASTER_ID) ,0,'B','R' ) SAVE_FLAG
+      FROM SCM0006D
+     WHERE PLAN_MASTER_ID = ( SELECT PLAN_ID
+                                FROM SCM0005M
+                               WHERE PLAN_YEAR = #{scmYearCbBox}
+                                 AND PLAN_WEEK = #{scmPeriodCbBox}
+                                 AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+                             )
+       AND CMPLT = 0
+  </select>
+
+<select id="selectSupplyCdcMainList" parameterType="Map" resultType="egovMap">
+	     SELECT
+	               MOD( DENSE_RANK() OVER ( ORDER BY STOCK_CTGRY ,SCM06D.STOCK_CODE),2) DIV_ODD
+	             , CMPLT IS_SAVED
+	             , LAST_UPD_COLUMN
+	             , PSI_ID
+	             , PSI_NAME   PSI
+	             , SYS26m.STK_CODE CODE
+	             , STOCK_CTGRY CATEGORY
+	             , STOCK_NAME  NAME
+	             , SYS26M.STK_TYPE_ID
+	             , PLAN_MASTER_ID
+	             , SUPPLY_BY_CDC.*
+	             <!-- , ROUND(OVERDUE) OVERDUE -->
+<!-- 	             ,(case when PSI_ID=1 then nvl((select qty from SCM0028S scm28s where scm28s.CLOS_YEAR=SUPPLY_BY_CDC.PLAN_YEAR and SUPPLY_BY_CDC.PLAN_MONTH = SCM28S.CLOS_MONTH and SUPPLY_BY_CDC.CDC = SCM28S.CDC and SCM28S.STOCK_CODE=SYS26m.STK_CODE),0) else 0 end) OVERDUE -->
+                 ,(CASE
+		             WHEN PSI_ID =1
+		             THEN
+		                NVL (
+		                   (SELECT qty
+		                      FROM SCM0028S scm28s
+		                    WHERE    1=1
+		                             AND to_char( add_months(to_date(SUPPLY_BY_CDC.PLAN_YEAR||SUPPLY_BY_CDC.PLAN_MONTH,'YYYYMM'),-1),'YYYYMM')  =  to_char(to_date(scm28s.CLOS_YEAR||SCM28S.CLOS_MONTH,'YYYYMM'),'YYYYMM')
+		                             AND SUPPLY_BY_CDC.CDC = SCM28S.CDC
+		                             AND SCM28S.STOCK_CODE = SYS26m.STK_CODE
+		                           ) , 0)                       
+			             ELSE
+			                0
+			          END)
+		            OVERDUE
+	             , ROUND(WS0) BEF_1_WEEK_TH
+	             , ROUND(WS1) BEF_2_WEEK_TH
+	             , ROUND(WS2) BEF_3_WEEK_TH
+	             , ROUND(WS3) BEF_4_WEEK_TH
+	             , ROUND(SCM06D.M0_PLAN) M0_PLAN_ORDER
+	             , ROUND(SCM06D.M1) M1
+	             , ROUND(SCM06D.M2) M2
+	             , ROUND(SCM06D.M3) M3
+	             , ROUND(SCM06D.M4) M4
+	             , ROUND(W00) W00
+	             , ROUND(W01) W01
+	             , ROUND(W02) W02
+	             , ROUND(W03) W03
+	             , ROUND(W04) W04
+	             , ROUND(W05) W05
+	             , ROUND(W06) W06
+	             , ROUND(W07) W07
+	             , ROUND(W08) W08
+	             , ROUND(W09) W09
+	             , ROUND(W10) W10
+	             , ROUND(W11) W11
+	             , ROUND(W12) W12
+	             , ROUND(W13) W13
+	             , ROUND(W14) W14
+	             , ROUND(W15) W15
+	             , ROUND(W16) W16
+	             , ROUND(W17) W17
+	             , ROUND(W18) W18
+	             , ROUND(W19) W19
+	             , ROUND(W20) W20
+	             , ROUND(W21) W21
+	             , ROUND(W22) W22
+	             , ROUND(W23) W23
+	             , ROUND(W24) W24
+	             , ROUND(W25) W25
+	             , ROUND(W26) W26
+	             , ROUND(W27) W27
+	             , ROUND(W28) W28
+	             , ROUND(W29) W29
+	             , ROUND(W30) W30
+
+         FROM (
+               SELECT  *
+                  FROM SCM0005M SCM05M
+                 WHERE SCM05M.PLAN_YEAR  = #{scmYearCbBox}
+                   AND SCM05M.PLAN_MONTH = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = 1 )
+                   AND SCM05M.PLAN_WEEK = #{scmPeriodCbBox}
+                   AND SCM05M.CDC         = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+            ) SUPPLY_BY_CDC
+
+            LEFT OUTER JOIN SCM0006D SCM06D ON SUPPLY_BY_CDC.PLAN_ID = SCM06D.PLAN_MASTER_ID
+            LEFT OUTER JOIN SYS0026M SYS26M ON SCM06D.STOCK_CODE  = SYS26M.STK_CODE
+            LEFT OUTER JOIN SYS0013M SYS13M ON SYS26M.STK_CTGRY_ID = SYS13M.CODE_ID
+
+      WHERE 1 = 1
+
+     <choose>
+       <when test='stkCodes != null and !stkCodes.isEmpty '>
+        AND SCM06D.STOCK_CODE IN
+           <foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
+               #{item}
+           </foreach>
+       </when>
+     </choose>
+
+     <choose>
+       <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+         AND  STK_TYPE_ID IN
+           <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+               #{item}
+           </foreach>
+       </when>
+     </choose>
+
+     ORDER BY STOCK_CTGRY
+             ,SCM06D.STOCK_CODE
+             ,PSI_ID
+</select>
+
+<select id="selectPlanDatePlanByCdc" parameterType="Map" resultType="egovMap">
+  SELECT PLAN_YEAR || LPAD(PLAN_MONTH,2,'0') || '01' PLAN_DATE
+    FROM SCM0005M
+   WHERE PLAN_YEAR = #{paramYear}
+     AND PLAN_WEEK = #{paramWeekTh}
+     AND CDC = DECODE(#{paramCdc},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC', #{paramCdc})
+</select>
+
+<select id="selectSupplyCdcPop" parameterType="Map" resultType="egovMap">
+      WITH ALIST
+             AS(
+                SELECT STOCK_CODE,STOCK_NAME,CDC,M3,M2,M1,ROUND(((M3+M2+M1)/3),0) AVG
+                FROM(
+                      SELECT DECODE(CDC,'ALL','TOT',STOCK_CODE) STOCK_CODE
+                            ,STOCK_NAME
+                            ,NVL(CDC,'ALL') CDC
+                            ,SUM(M_3) M3
+                            ,SUM(M_2) M2
+                            ,SUM(M_1) M1
+                      FROM(
+                            SELECT T0.STOCK_CODE
+                                 ,STK.STK_DESC AS STOCK_NAME
+                                 ,T0.CDC
+                                 ,NVL(T3.M3_TOTAL,0) AS M_3
+                                 ,NVL(T2.M2_TOTAL,0) AS M_2
+                                 ,NVL(T1.M1_TOTAL,0) AS M_1
+                             FROM (
+                                     SELECT DISTINCT T0.CDC_CODE AS CDC,T1.STOCK_CODE
+                                     FROM SCM0016M T0
+                                     CROSS JOIN SCM0008M T1
+                                     CROSS JOIN (SELECT DISTINCT SCM_YEAR, SCM_MONTH FROM SCM0031S T1
+                                                  WHERE (T1.SCM_YEAR= EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-1))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-1))))
+                                                     OR (T1.SCM_YEAR= EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-2))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-2))))
+                                                     OR (T1.SCM_YEAR= EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-3))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-3))))
+                                                ) T2
+                                  ) T0
+                             LEFT JOIN (
+                                 SELECT SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE,M_1 AS M1_TOTAL
+                                 FROM SCM0030S T1
+                                 WHERE T1.SCM_YEAR=EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),0))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),0)))
+                             ) T1 ON T1.CDC=T0.CDC AND T1.STOCK_CODE=T0.STOCK_CODE
+                             LEFT JOIN (
+                                 SELECT SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE,M_2 AS M2_TOTAL
+                                 FROM SCM0030S T1
+                                 WHERE T1.SCM_YEAR=EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),0))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),0)))
+                             ) T2 ON T2.CDC=T0.CDC AND T2.STOCK_CODE=T0.STOCK_CODE
+                             LEFT JOIN (
+                                 SELECT SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE,M_3 AS M3_TOTAL
+                                 FROM SCM0030S T1
+                                 WHERE T1.SCM_YEAR=EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),0))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),0)))
+                             ) T3 ON T3.CDC=T0.CDC AND T3.STOCK_CODE=T0.STOCK_CODE
+                             JOIN SYS0026M STK ON STK.STK_CODE=T0.STOCK_CODE
+                             WHERE T0.STOCK_CODE= #{paramStockCode}
+                       )
+                       GROUP BY ROLLUP (STOCK_CODE,STOCK_NAME,CDC)
+                       HAVING GROUPING(STOCK_CODE) = 0 AND STOCK_NAME IS NOT NULL
+                      )
+              )
+                SELECT A.*
+                      ,DECODE(A.AVG,0,0,ROUND(((A.AVG / (SELECT  B.AVG FROM ALIST B WHERE A.STOCK_CODE = B.STOCK_CODE AND CDC ='ALL')) * 100),2)) RATING
+                FROM ALIST A
+               WHERE CDC != 'ALL'
+</select>
+
+<select id="selectSalesPlanMstId" parameterType="Map" resultType="egovMap">
+      SELECT SCM0005M_PLAN_ID_SEQ.NEXTVAL seq FROM DUAL
+</select>
+
+<insert id="insertSalesPlanMstCdc" parameterType="Map">
+        INSERT INTO SCM0005M
+               (
+                 PLAN_ID
+                ,PLAN_YEAR
+                ,PLAN_WEEK
+                ,CDC
+                ,PLAN_MONTH
+                ,PLAN_STUS
+                ,VER_DT
+               )
+         VALUES
+              (
+                 #{salesPlanMstCdcSeq}
+               , #{scmYearCbBox}
+               , #{scmPeriodCbBox}
+               , DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC', #{cdcCbBox})
+               , (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = 1 )
+               , 4
+               , SYSDATE
+              )
+</insert>
+
+<insert id="insertSalesCdcDetail" parameterType="Map">
+INSERT INTO SCM0006D
+            ( PLAN_DTL_ID ,PLAN_MASTER_ID ,PSI_ID ,STOCK_CODE ,CMPLT ,LAST_UPD_COLUMN ,PSI_NAME,STOCK_CTGRY ,STOCK_NAME
+             ,M_3 ,M_2 ,M_1 ,M3_ISSU_AVG  ,SALES_PLAN_PRCNTAG ,M0_ORD ,M0_PLAN
+             ,M1  ,M2  ,M3  ,M4 ,OVERDUE  ,WS0 ,WS1 ,WS2 ,WS3
+             ,W00 ,W01 ,W02 ,W03 ,W04 ,W05 ,W06 ,W07 ,W08 ,W09 ,W10 ,W11 ,W12 ,W13 ,W14 ,W15
+             ,W16 ,W17 ,W18 ,W19 ,W20 ,W21 ,W22 ,W23 ,W24 ,W25 ,W26 ,W27 ,W28 ,W29 ,W30
+            )
+
+           SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL PLAN_DTL_ID
+                  ,#{salesPlanMstCdcSeq} PLAN_MASTER_ID
+                  ,NVL(PSI_ID,0) PSI_ID
+                  ,STOCK_CODE
+                  ,CMPLT
+                  ,LAST_UPD_COLUMN
+                  ,PSI_NAME
+                  ,STOCK_CTGRY
+                  ,STOCK_NAME
+
+                  ,NVL2(S6D_STOK_CODE,M_3               ,0) M_3
+                  ,NVL2(S6D_STOK_CODE,M_2               ,0) M_2
+                  ,NVL2(S6D_STOK_CODE,M_1               ,0) M_1
+                  ,NVL(NVL2(S6D_STOK_CODE,M3_ISSU_AVG       ,0),0) M3_ISSU_AVG
+                  ,NVL(NVL2(S6D_STOK_CODE,SALES_PLAN_PRCNTAG,0),0) SALES_PLAN_PRCNTAG
+                  ,NVL2(S6D_STOK_CODE,M0_ORD            ,0) M0_ORD
+                  ,NVL2(S6D_STOK_CODE,M0_PLAN           ,0) M0_PLAN
+                  ,NVL2(S6D_STOK_CODE,M1                ,0) M1
+                  ,NVL2(S6D_STOK_CODE,M2                ,0) M2
+                  ,NVL2(S6D_STOK_CODE,M3                ,0) M3
+                  ,NVL2(S6D_STOK_CODE,M4                ,0) M4
+                  ,NVL2(S6D_STOK_CODE,OVERDUE           ,0) OVERDUE
+                  ,NVL2(S6D_STOK_CODE,WS0               ,0) WS0
+                  ,NVL2(S6D_STOK_CODE,WS1               ,0) WS1
+                  ,NVL2(S6D_STOK_CODE,WS2               ,0) WS2
+                  ,NVL2(S6D_STOK_CODE,WS3               ,0) WS3
+
+
+                  ,NVL2(S6D_STOK_CODE,W00               ,0) W00
+                  ,NVL2(S6D_STOK_CODE,W01               ,0) W01
+                  ,NVL2(S6D_STOK_CODE,W02               ,0) W02
+                  ,NVL2(S6D_STOK_CODE,W03               ,0) W03
+                  ,NVL2(S6D_STOK_CODE,W04               ,0) W04
+                  ,NVL2(S6D_STOK_CODE,W05               ,0) W05
+                  ,NVL2(S6D_STOK_CODE,W06               ,0) W06
+                  ,NVL2(S6D_STOK_CODE,W07               ,0) W07
+                  ,NVL2(S6D_STOK_CODE,W08               ,0) W08
+                  ,NVL2(S6D_STOK_CODE,W09               ,0) W09
+                  ,NVL2(S6D_STOK_CODE,W10               ,0) W10
+
+                  ,NVL2(S6D_STOK_CODE,W11               ,0) W11
+                  ,NVL2(S6D_STOK_CODE,W12               ,0) W12
+                  ,NVL2(S6D_STOK_CODE,W13               ,0) W13
+                  ,NVL2(S6D_STOK_CODE,W14               ,0) W14
+                  ,NVL2(S6D_STOK_CODE,W15               ,0) W15
+                  ,NVL2(S6D_STOK_CODE,W16               ,0) W16
+                  ,NVL2(S6D_STOK_CODE,W17               ,0) W17
+                  ,NVL2(S6D_STOK_CODE,W18               ,0) W18
+                  ,NVL2(S6D_STOK_CODE,W19               ,0) W19
+                  ,NVL2(S6D_STOK_CODE,W20               ,0) W20
+
+                  ,NVL2(S6D_STOK_CODE,W21               ,0) W21
+                  ,NVL2(S6D_STOK_CODE,W22               ,0) W22
+                  ,NVL2(S6D_STOK_CODE,W23               ,0) W23
+                  ,NVL2(S6D_STOK_CODE,W24               ,0) W24
+                  ,NVL2(S6D_STOK_CODE,W25               ,0) W25
+                  ,NVL2(S6D_STOK_CODE,W26               ,0) W26
+                  ,NVL2(S6D_STOK_CODE,W27               ,0) W27
+                  ,NVL2(S6D_STOK_CODE,W28               ,0) W28
+                  ,NVL2(S6D_STOK_CODE,W29               ,0) W29
+                  ,NVL2(S6D_STOK_CODE,W30               ,0) W30
+
+              FROM(
+
+                    SELECT  NVL(CMPLT,0) CMPLT ,LAST_UPD_COLUMN ,M0_ORD ,M0_PLAN ,M1 ,M2 ,M3 ,M3_ISSU_AVG ,M4 ,M_1 ,M_2 ,M_3 ,OVERDUE,PLAN_DTL_ID ,PLAN_MASTER_ID ,PSI_ID ,PSI_NAME
+                           ,SALES_PLAN_PRCNTAG ,SCM08M.STOCK_CODE ,CODE S6D_STOK_CODE, STK_TYPE_ID ,NAME STOCK_NAME  ,CATEGORY STOCK_CTGRY
+                           ,WS0 ,WS1 ,WS2 ,WS3 ,W00 ,W01 ,W02 ,W03 ,W04 ,W05 ,W06 ,W07 ,W08 ,W09 ,W10 ,W11 ,W12 ,W13 ,W14 ,W15 ,W16 ,W17 ,W18 ,W19 ,W20
+                           ,W21 ,W22 ,W23 ,W24 ,W25 ,W26 ,W27 ,W28 ,W29 ,W30
+
+                      FROM SCM0008M SCM08M
+                           LEFT OUTER JOIN(
+
+                                           SELECT
+                                                 MOD( DENSE_RANK() OVER ( ORDER BY STOCK_CTGRY ,SUPPLY_BY_CDC.CODE),2) DIV_ODD
+                                               , CMPLT
+                                               , LAST_UPD_COLUMN
+                                               , PSI_ID
+                                               , PSI_NAME
+                                               , STOCK_CTGRY CATEGORY
+                                               , STOCK_NAME  NAME
+                                               , SYS26M.STK_TYPE_ID
+                                               , SCM06D.PLAN_DTL_ID
+                                               , PLAN_MASTER_ID
+                                               , SALES_PLAN_PRCNTAG
+                                               , SUPPLY_BY_CDC.*
+                                               , ROUND(OVERDUE) OVERDUE
+                                               , ROUND(WS0) WS0
+                                               , ROUND(WS1) WS1
+                                               , ROUND(WS2) WS2
+                                               , ROUND(WS3) WS3
+                                               , ROUND(W00) W00
+                                               , ROUND(W01) W01
+                                               , ROUND(W02) W02
+                                               , ROUND(W03) W03
+                                               , ROUND(W04) W04
+                                               , ROUND(W05) W05
+                                               , ROUND(W06) W06
+                                               , ROUND(W07) W07
+                                               , ROUND(W08) W08
+                                               , ROUND(W09) W09
+                                               , ROUND(W10) W10
+                                               , ROUND(W11) W11
+                                               , ROUND(W12) W12
+                                               , ROUND(W13) W13
+                                               , ROUND(W14) W14
+                                               , ROUND(W15) W15
+                                               , ROUND(W16) W16
+                                               , ROUND(W17) W17
+                                               , ROUND(W18) W18
+                                               , ROUND(W19) W19
+                                               , ROUND(W20) W20
+                                               , ROUND(W21) W21
+                                               , ROUND(W22) W22
+                                               , ROUND(W23) W23
+                                               , ROUND(W24) W24
+                                               , ROUND(W25) W25
+                                               , ROUND(W26) W26
+                                               , ROUND(W27) W27
+                                               , ROUND(W28) W28
+                                               , ROUND(W29) W29
+                                               , ROUND(W30) W30
+
+                                           FROM (
+                                                 SELECT  SCM05M.PLAN_STUS ,SCM05M.PLAN_ID ,SCM30S.SCM_YEAR ,SCM30S.SCM_MONTH ,SCM30S.SCM_WEEK_TH ,SCM30S.STOCK_CODE CODE ,SCM30S.CDC
+                                                        ,SUM(PRE_M3_AVG_ORDED_RATE) PRE_M3_AVG_ORDED_RATE
+                                                        ,SUM(PRE_M3_AVG_ISSU_RATE) PRE_M3_AVG_ISSU_RATE
+                                                        ,SUM(PRE_M3_AVG_ORDED) PRE_M3_AVG_ORDED
+                                                        ,SUM(PRE_M3_AVG_ISSU) M3_ISSU_AVG
+                                                        ,SUM(M1_ORD) M1_ORD
+                                                        ,SUM(M2_ORD) M2_ORD
+                                                        ,SUM(M3_ORD) M3_ORD
+
+                                                        ,SUM(M_3) M_3
+                                                        ,SUM(M_2) M_2
+                                                        ,SUM(M_1) M_1
+                                                        ,SUM(M0_PLAN) M0_PLAN
+                                                        ,SUM(M0_ORD) M0_ORD
+
+                                                        ,SUM(M1) M1
+                                                        ,SUM(M2) M2
+                                                        ,SUM(M3) M3
+                                                        ,SUM(M4) M4
+
+                                                    FROM SCM0030S SCM30S
+                                                        ,SCM0005M SCM05M
+                                                   WHERE SCM30S.SCM_YEAR  = (CASE WHEN (TO_NUMBER(#{scmPeriodCbBox}) = 1) THEN (TO_NUMBER(#{scmYearCbBox}) -1) ELSE (TO_NUMBER(#{scmYearCbBox}) ) END)
+                                                     AND SCM30S.SCM_MONTH = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = CASE WHEN (TO_NUMBER(#{scmPeriodCbBox}) = 1) THEN (TO_NUMBER(#{scmYearCbBox}) -1) ELSE (TO_NUMBER(#{scmYearCbBox})) END AND  WEEK_TH  = CASE WHEN (TO_NUMBER(#{scmPeriodCbBox}) = 1) THEN 52 ELSE (TO_NUMBER(#{scmPeriodCbBox}) -1) END  AND WEEK_TH_SN = 1  AND NVL(USE_YN,'Y')='Y')
+                                                     AND SCM30S.SCM_WEEK_TH = (CASE WHEN (TO_NUMBER(#{scmPeriodCbBox}) = 1) THEN 52 ELSE (TO_NUMBER(#{scmPeriodCbBox}) -1) END)
+                                                     AND SCM30S.CDC         = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+                                                     AND SCM30S.SCM_YEAR    = SCM05M.PLAN_YEAR
+                                                     AND SCM30S.SCM_MONTH   = SCM05M.PLAN_MONTH
+                                                     AND SCM30S.SCM_WEEK_TH = SCM05M.PLAN_WEEK
+                                                     AND SCM30S.SCM_WEEK_TH_SN = 1
+                                                     AND SCM30S.CDC = SCM05M.CDC
+
+                                                   GROUP BY SCM05M.PLAN_STUS
+                                                           ,SCM05M.PLAN_ID
+                                                           ,SCM30S.SCM_YEAR
+                                                           ,SCM30S.SCM_MONTH
+                                                           ,SCM30S.SCM_WEEK_TH
+                                                           ,SCM30S.STOCK_CODE
+                                                           ,SCM30S.CDC
+
+
+                                                ) SUPPLY_BY_CDC
+
+                                                LEFT OUTER JOIN SCM0006D SCM06D ON SUPPLY_BY_CDC.CODE = SCM06D.STOCK_CODE
+                                                                                AND SUPPLY_BY_CDC.PLAN_ID = SCM06D.PLAN_MASTER_ID
+                                                LEFT OUTER JOIN SYS0026M SYS26M ON SUPPLY_BY_CDC.CODE  = SYS26M.STK_CODE
+                                                LEFT OUTER JOIN SYS0013M SYS13M ON SYS26M.STK_CTGRY_ID = SYS13M.CODE_ID
+
+                           )  S30SMAIN ON S30SMAIN.CODE = SCM08M.STOCK_CODE
+              )  WHERE STK_TYPE_ID IS NOT NULL
+</insert>
+
+
+<insert id="updatePlanByCDC" parameterType="Map">
+      UPDATE SCM0006D
+         SET PLAN_MASTER_ID = #{planMasterId}
+
+         <if test='w00 != null and w00 !="" '>
+               , W00 = #{w00}
+         </if>
+         <if test='w01 != null and w01 !="" '>
+               , W01 = #{w01}
+         </if>
+         <if test='w02 != null and w02 !="" '>
+               , W02 = #{w02}
+         </if>
+         <if test='w03 != null and w03 !="" '>
+               , W03 = #{w03}
+         </if>
+         <if test='w04 != null and w04 !="" '>
+               , W04 = #{w04}
+         </if>
+         <if test='w05 != null and w05 !="" '>
+               , W05 = #{w05}
+         </if>
+
+         <if test='w06 != null and w06 !="" '>
+               , W06 = #{w06}
+         </if>
+         <if test='w07 != null and w07 !="" '>
+               , W07 = #{w07}
+         </if>
+         <if test='w08 != null and w08 !="" '>
+               , W08 = #{w08}
+         </if>
+         <if test='w09 != null and w09 !="" '>
+               , W09 = #{w09}
+         </if>
+         <if test='w10 != null and w10 !="" '>
+               , W10 = #{w10}
+         </if>
+
+         <if test='w11 != null and w11 !="" '>
+               , W11 = #{w11}
+         </if>
+         <if test='w12 != null and w12 !="" '>
+               , W12 = #{w12}
+         </if>
+         <if test='w13 != null and w13 !="" '>
+               , W13 = #{w13}
+         </if>
+         <if test='w14 != null and w14 !="" '>
+               , W14 = #{w14}
+         </if>
+         <if test='w15 != null and w15 !="" '>
+               , W15 = #{w15}
+         </if>
+         <if test='w16 != null and w16 !="" '>
+               , W16 = #{w16}
+         </if>
+         <if test='w17 != null and w17 !="" '>
+               , W17 = #{w17}
+         </if>
+         <if test='w18 != null and w18 !="" '>
+               , W18 = #{w18}
+         </if>
+         <if test='w19 != null and w19 !="" '>
+               , W19 = #{w19}
+         </if>
+         <if test='w20 != null and w20 !="" '>
+               , W20 = #{w20}
+         </if>
+
+         <if test='w21 != null and w21 !="" '>
+               , W21 = #{w21}
+         </if>
+         <if test='w22 != null and w22 !="" '>
+               , W22 = #{w22}
+         </if>
+         <if test='w23 != null and w23 !="" '>
+               , W23 = #{w23}
+         </if>
+         <if test='w24 != null and w24 !="" '>
+               , W24 = #{w24}
+         </if>
+         <if test='w25 != null and w25 !="" '>
+               , W25 = #{w25}
+         </if>
+         <if test='w26 != null and w26 !="" '>
+               , W26 = #{w26}
+         </if>
+         <if test='w27 != null and w27 !="" '>
+               , W27 = #{w27}
+         </if>
+         <if test='w28 != null and w28 !="" '>
+               , W28 = #{w28}
+         </if>
+         <if test='w29 != null and w29 !="" '>
+               , W29 = #{w29}
+         </if>
+         <if test='w30 != null and w30 !="" '>
+               , W30 = #{w30}
+         </if>
+
+       WHERE PLAN_MASTER_ID = #{planMasterId}
+         AND PSI_ID  = #{psiId}
+         AND STOCK_CODE = #{code}
+
+</insert>
+
+<select id="selectPlanIdByCdc" parameterType="Map" resultType="egovMap">
+    SELECT
+          PLAN_ID
+         ,PLAN_YEAR
+         ,PLAN_WEEK
+         ,CDC
+         ,PLAN_MONTH
+         ,PLAN_STUS
+     FROM SCM0005M
+    WHERE PLAN_YEAR = #{scmYearCbBox}
+      AND PLAN_WEEK = #{scmPeriodCbBox}
+      AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC', #{cdcCbBox})
+</select>
+
+<select id="selectMonthPlanByCdc" parameterType="Map" resultType="egovMap">
+    SELECT
+          PLAN_ID
+         ,PLAN_YEAR
+         ,PLAN_WEEK
+         ,PLAN_MONTH
+         ,CDC
+         ,PLAN_STUS
+     FROM SCM0005M
+    WHERE PLAN_YEAR = #{scmYearCbBox}
+      AND PLAN_WEEK = #{scmPeriodCbBox}
+</select>
+
+  <!-- Supply-CORP -->
+  <select id="selectSupplyCorpList" parameterType="Map" resultType="egovMap">
+     SELECT MOD( DENSE_RANK() OVER ( ORDER BY STOCK_CTGRY,STOCK_CODE ),2 ) DIV_ODD
+           ,PLAN_YEAR
+           ,PLAN_MONTH
+           ,PLAN_WEEK
+           ,STOCK_CTGRY CATEGORY
+           ,STOCK_CODE  CODE
+           ,STOCK_NAME  NAME
+           ,STK_TYPE_ID
+           ,PSI_ID
+           ,PSI_NAME    PSI
+           ,ROUND(M0_ORD)  M0_ORD
+           ,ROUND(M0_PLAN) M0_PLAN_ORDER
+           ,ROUND(M1) M1
+           ,ROUND(M2) M2
+           ,ROUND(M3) M3
+           ,ROUND(M4) M4
+           ,ROUND(OVERDUE) OVERDUE
+           ,ROUND(WS0) BEF_1_WEEK_TH
+           ,ROUND(WS1) BEF_2_WEEK_TH
+           ,ROUND(WS2) BEF_3_WEEK_TH
+           ,ROUND(WS3) BEF_4_WEEK_TH
+           ,ROUND(W00) W00
+           ,ROUND(W01) W01
+           ,ROUND(W02) W02
+           ,ROUND(W03) W03
+           ,ROUND(W04) W04
+           ,ROUND(W05) W05
+           ,ROUND(W06) W06
+           ,ROUND(W07) W07
+           ,ROUND(W08) W08
+           ,ROUND(W09) W09
+           ,ROUND(W10) W10
+           ,ROUND(W11) W11
+           ,ROUND(W12) W12
+           ,ROUND(W13) W13
+           ,ROUND(W14) W14
+           ,ROUND(W15) W15
+           ,ROUND(W16) W16
+           ,ROUND(W17) W17
+           ,ROUND(W18) W18
+           ,ROUND(W19) W19
+           ,ROUND(W20) W20
+           ,ROUND(W21) W21
+           ,ROUND(W22) W22
+           ,ROUND(W23) W23
+           ,ROUND(W24) W24
+           ,ROUND(W25) W25
+           ,ROUND(W26) W26
+           ,ROUND(W27) W27
+           ,ROUND(W28) W28
+           ,ROUND(W29) W29
+           ,ROUND(W30) W30
+      FROM SCM0040V
+     WHERE PLAN_YEAR  = #{scmYearCbBox}
+       AND PLAN_WEEK  = #{scmPeriodCbBox}
+      <choose>
+       <when test='stkCodes != null and !stkCodes.isEmpty '>
+       AND STOCK_CODE IN
+           <foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
+               #{item}
+           </foreach>
+       </when>
+      </choose>
+
+      <choose>
+       <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+       AND  STK_TYPE_ID IN
+         <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+             #{item}
+         </foreach>
+       </when>
+      </choose>
+     ORDER BY STOCK_CTGRY
+             ,STOCK_CODE
+             ,PSI_ID
+  </select>
+
+<resultMap id="supplyPlanOrderSummayMap" type="egovMap"></resultMap>
+<select id="callSpCreateSupplyPlanSummary" statementType="CALLABLE" parameterType="Map">
+    { call SP_SCM_PLAN_BY_CDC_INS (
+                                     #{scmYearCbBox}
+                                   , #{planMonth}
+                                   , #{scmPeriodCbBox}
+                                   , #{crtUserId}
+                                   , #{rtnVal, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=supplyPlanOrderSummayMap}
+                                  )
+    }
+
+</select>
+
+<insert id="insConfirmPlanByCDC" parameterType="Map" >
+        INSERT INTO SCM0011D(
+                PRE_YEAR,
+                PRE_MONTH,
+                PRE_WEEK_TH,
+                PRE_STOCK_CODE,
+                PRE_CDC,
+                PRE_QTY,
+                PRE_CRT_DT,
+                PRE_PO_ITM_STUS,
+                PRE_PO_ITM_STUS_DT,
+                PO_QTY
+                )
+        VALUES (
+                #{scmYearCbBox},
+                 (select SCM_MONTH from scm0018m where scm_year =#{scmYearCbBox} and week_th = #{scmPeriodCbBox} and week_th_sn ='1'),
+                 #{scmPeriodCbBox},
+                 #{code},
+                 (select DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC') from dual),
+                 #{w08},
+                 TO_DATE(TO_CHAR(SYSDATE,'YYYY/MM/DD'),'YYYY/MM/DD'),
+                 1,
+                 TO_DATE(TO_CHAR(SYSDATE,'YYYY/MM/DD'),'YYYY/MM/DD'),
+                0
+                )
+    </insert>
+    
+    
+    <select id="supplyPlancheck" parameterType="Map" resultType="int">
+        select count(*) From scm0005m where PLAN_YEAR=#{scmYearCbBox}and PLAN_WEEK=#{scmPeriodCbBox} and PLAN_MONTH=(SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox}  AND WEEK_TH_SN = 1)
+    </select>
+    
+     <select id="SelectConfirmPlanCheck" parameterType="Map" resultType="int">
+        select count(*) from SCM0011D where PRE_YEAR=#{planYear} and PRE_MONTH=#{planMonth} and PRE_WEEK_TH=#{planWeek} and PRE_STOCK_CODE=#{code} and PRE_CDC=(select DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC') from dual)
+    </select>
+    
+
+
+</mapper>

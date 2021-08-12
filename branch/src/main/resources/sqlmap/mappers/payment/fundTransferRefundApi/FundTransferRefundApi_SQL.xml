@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.fundTransferRefundApi.impl.FundTransferRefundApiMapper">
+
+
+
+<select id="selectFundTransferRefundList" parameterType="Map" resultType="egovMap">
+/* [com.coway.trust.biz.payment.fundTransferRefundApi.impl.FundTransferRefundApiMapper.selectFundTransferRefundList] 20191010 - KR JAEMAJEM */
+SELECT  #{type}                                                                 AS TYPE
+    ,   SEQ                                                                     AS SEQ
+    ,   PAY_ID                                                                  AS PAY_ID
+    ,   CUST_ID                                                                 AS CUST_ID
+    ,   CUST_NM                                                                 AS CUST_NM
+    ,   SALES_ORD_NO                                                            AS SALES_ORD_NO
+    ,   APP_TYPE                                                                AS APP_TYPE
+    ,   TRANSACTION_DATE                                                        AS TRANSACTION_DATE
+    ,   PAY_MODE                                                                AS PAY_MODE
+    ,   OR_NO                                                                   AS OR_NO
+    ,   TOT_AMT                                                                 AS TOT_AMT
+    ,   STUS_CODE_NAME                                                          AS STUS_CODE_NAME
+    ,   PRODUCT_NAME                                                            AS PRODUCT_NAME
+    ,   APP_TYPE_ID                                                             AS APP_TYPE_ID
+    ,   PAY_ITM_MODE_ID                                                         AS PAY_ITM_MODE_ID
+FROM
+(
+    SELECT  A.GROUP_SEQ                                                         AS SEQ
+        ,   A.PAY_ID                                                            AS PAY_ID
+        ,   E.CUST_ID                                                           AS CUST_ID
+        ,   E.NAME                                                              AS CUST_NM
+        ,   D.SALES_ORD_NO                                                      AS SALES_ORD_NO
+        ,   CASE    WHEN A.LDGR_TYPE = 1    THEN 'RENTAL'
+                    WHEN A.LDGR_TYPE = 2    THEN 'OUT'
+                    WHEN A.LDGR_TYPE = 3    THEN 'MEMBERSHIP'
+                    WHEN A.LDGR_TYPE = 4    THEN 'AS'
+                    WHEN A.LDGR_TYPE = 5    THEN 'OUT_MEM'
+                    WHEN A.LDGR_TYPE = 0    THEN 'HP'
+                                            ELSE NULL
+                                            END                                 AS APP_TYPE
+        ,   TO_CHAR(C.PAY_ITM_REF_DT, 'DD/MM/YYYY')                             AS TRANSACTION_DATE
+        ,   F.CODE_NAME                                                         AS PAY_MODE
+        ,   B.OR_NO                                                             AS OR_NO
+        ,   A.TOT_AMT                                                           AS TOT_AMT
+        ,   G.NAME                                                              AS STUS_CODE_NAME
+        ,   I.STK_DESC                                                          AS PRODUCT_NAME
+        ,   D.APP_TYPE_ID                                                       AS APP_TYPE_ID
+        ,   C.PAY_ITM_MODE_ID                                                   AS PAY_ITM_MODE_ID
+    FROM    PAY0252T A
+            INNER JOIN PAY0064D B
+                ON  B.PAY_ID = A.PAY_ID
+            INNER JOIN PAY0065D C
+                ON  C.PAY_ITM_ID = A.PAY_ITM_ID
+            INNER JOIN SAL0001D D
+                ON  D.SALES_ORD_ID = B.SALES_ORD_ID
+            INNER JOIN SAL0029D E
+                ON  E.CUST_ID = D.CUST_ID
+            LEFT OUTER JOIN SYS0013M F
+                ON  F.CODE_ID = C.PAY_ITM_MODE_ID
+            LEFT OUTER JOIN SYS0038M G
+                ON  G.STUS_CODE_ID = D.STUS_CODE_ID
+            INNER JOIN SAL0002D H                                               --  ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : SalesOrderD
+                ON  H.SALES_ORD_ID = D.SALES_ORD_ID
+            INNER JOIN SYS0026M I
+                ON  I.STK_ID = H.ITM_STK_ID
+    WHERE   A.FT_STUS_ID IS NULL
+    AND     TO_CHAR(C.PAY_ITM_REF_DT, 'YYYYMMDD') BETWEEN #{transactionDateFrom} AND #{transactionDateTo}
+    <choose>
+    <when test='selectType.equals("1")'>
+    AND     D.SALES_ORD_NO = #{selectKeyword}
+    </when>
+    <when test='selectType.equals("2")'>
+    AND     UPPER(E.NAME) LIKE UPPER(#{selectKeyword})||'%'
+    </when>
+    </choose>
+    UNION
+    SELECT  A.GROUP_SEQ                                                         AS SEQ
+        ,   A.PAY_ID                                                            AS PAY_ID
+        ,   F.CUST_ID                                                           AS CUST_ID
+        ,   F.NAME                                                              AS CUST_NM
+        ,   E.SALES_ORD_NO                                                      AS SALES_ORD_NO
+        ,   CASE    WHEN A.LDGR_TYPE = 1    THEN 'RENTAL'
+                    WHEN A.LDGR_TYPE = 2    THEN 'OUT'
+                    WHEN A.LDGR_TYPE = 3    THEN 'MEMBERSHIP'
+                    WHEN A.LDGR_TYPE = 4    THEN 'AS'
+                    WHEN A.LDGR_TYPE = 5    THEN 'OUT_MEM'
+                    WHEN A.LDGR_TYPE = 0    THEN 'HP'
+                                            ELSE NULL
+                                            END                                 AS APP_TYPE
+        ,   TO_CHAR(C.PAY_ITM_REF_DT, 'DD/MM/YYYY')                             AS TRANSACTION_DATE
+        ,   G.CODE_NAME                                                         AS PAY_MODE
+        ,   B.OR_NO                                                             AS OR_NO
+        ,   A.TOT_AMT                                                           AS TOT_AMT
+        ,   H.NAME                                                              AS STUS_CODE_NAME
+        ,   J.STK_DESC                                                          AS PRODUCT_NAME
+        ,   E.APP_TYPE_ID                                                       AS APP_TYPE_ID
+        ,   C.PAY_ITM_MODE_ID                                                   AS PAY_ITM_MODE_ID
+    FROM    PAY0252T A
+            INNER JOIN PAY0064D B
+                ON  B.PAY_ID = A.PAY_ID
+            INNER JOIN PAY0065D C
+                ON  C.PAY_ITM_ID = A.PAY_ITM_ID
+            INNER JOIN PAY0007D D
+                ON  D.BILL_ID = B.BILL_ID
+            INNER JOIN SAL0001D E
+                ON  E.SALES_ORD_ID = D.BILL_SO_ID
+            INNER JOIN SAL0029D F
+                ON  F.CUST_ID = E.CUST_ID
+            LEFT OUTER JOIN SYS0013M G
+                ON  G.CODE_ID = C.PAY_ITM_MODE_ID
+            LEFT OUTER JOIN SYS0038M H
+                ON  H.STUS_CODE_ID = E.STUS_CODE_ID
+            INNER JOIN SAL0002D I
+                ON  I.SALES_ORD_ID = E.SALES_ORD_ID
+            INNER JOIN SYS0026M J
+                ON  J.STK_ID = I.ITM_STK_ID
+    WHERE   A.FT_STUS_ID IS NULL
+    AND     TO_CHAR(C.PAY_ITM_REF_DT, 'YYYYMMDD') BETWEEN #{transactionDateFrom} AND #{transactionDateTo}
+    <choose>
+    <when test='selectType.equals("1")'>
+    AND     E.SALES_ORD_NO = #{selectKeyword}
+    </when>
+    <when test='selectType.equals("2")'>
+    AND     UPPER(F.NAME) LIKE UPPER(#{selectKeyword})||'%'
+    </when>
+    </choose>
+)
+ORDER BY    SALES_ORD_NO
+</select>
+</mapper>

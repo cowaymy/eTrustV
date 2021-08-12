@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.codystock.impl.CodyStockMapper">
+
+	<select id="selectBranchList" parameterType="Map" resultType="egovMap">
+		select BRNCH_ID code,code || '-' || NAME CODE_NAME
+		from sys0005m where
+		TYPE_ID in (42 , 43) ORDER BY CODE_NAME
+	</select>
+
+	<select id="getDeptCodeList" parameterType="Map" resultType="egovMap">
+		SELECT Extent1.MEM_ID CODE_ID ,
+		Extent2.DEPT_CODE || ' - ' ||
+		Extent1.NAME CODE_NAME
+		FROM ORG0001D Extent1
+		JOIN
+		(SELECT
+		vMemberOrg.MEM_ID MEM_ID ,
+		vMemberOrg.MEM_CODE MEM_CODE ,
+		vMemberOrg.MEM_LVL MEM_LVL ,
+		vMemberOrg.DEPT_CODE DEPT_CODE ,
+		vMemberOrg.GRP_CODE GRP_CODE ,
+		vMemberOrg.ORG_CODE ORG_CODE ,
+		vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE ,
+		vMemberOrg.MEM_UP_ID MEM_UP_ID ,
+		vMemberOrg.LVL3_UP_ID LVL3_UP_ID ,
+		vMemberOrg.LVL2_UP_ID LVL2_UP_ID ,
+		vMemberOrg.LVL1_UP_ID LVL1_UP_ID ,
+		vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+		FROM ORG1001V vMemberOrg
+		) Extent2
+		ON ( Extent2.MEM_ID = Extent1.MEM_ID
+		)
+		AND ( Extent2.MEM_LVL = #{memLvl} )
+		WHERE ( 1 = Extent1.STUS )
+		AND (
+		Extent1.MEM_TYPE = #{memType} )
+		ORDER BY Extent2.DEPT_CODE
+	</select>
+
+	<select id="getCodyCodeList" parameterType="Map" resultType="egovMap">
+		SELECT Extent1.MEM_ID CODE_ID ,
+		Extent1.MEM_CODE MEM_CODE ,
+		Extent1.NAME NAME ,
+		Extent1.MEM_CODE || ' - ' || Extent1.NAME CODE_NAME ,
+		Extent2.DEPT_CODE DEPT_CODE ,
+		Extent2.GRP_CODE GRP_CODE ,
+		Extent2.ORG_CODE ORG_CODE
+		FROM ORG0001D Extent1
+		JOIN
+		(SELECT vMemberOrg.MEM_ID MEM_ID ,
+		vMemberOrg.MEM_CODE MEM_CODE ,
+		vMemberOrg.MEM_LVL MEM_LVL ,
+		vMemberOrg.DEPT_CODE DEPT_CODE ,
+		vMemberOrg.GRP_CODE GRP_CODE ,
+		vMemberOrg.ORG_CODE ORG_CODE ,
+		vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE ,
+		vMemberOrg.MEM_UP_ID MEM_UP_ID ,
+		vMemberOrg.LVL3_UP_ID LVL3_UP_ID ,
+		vMemberOrg.LVL2_UP_ID LVL2_UP_ID ,
+		vMemberOrg.LVL1_UP_ID LVL1_UP_ID ,
+		vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+		FROM ORG1001V vMemberOrg
+		) Extent2
+		ON ( Extent2.MEM_ID = Extent1.MEM_ID )
+		AND ( Extent2.MEM_LVL = #{memLvl} )
+		WHERE ( 1 = Extent1.STUS )
+		AND ( Extent1.MEM_TYPE = #{memType} )
+		AND ( Extent2.MEM_UP_ID = #{upperLineMemberID} )
+		ORDER BY Extent1.MEM_CODE
+	</select>
+	
+	<select id="selectCMGroupList" parameterType="Map" resultType="egovMap">
+		SELECT Project1.MEM_ID CODE_ID ,
+		Project1.MEM_CODE MEM_CODE ,
+		Project1.NAME NAME ,
+		Project1.C1 CODE_NAME ,
+		Project1.LAST_DEPT_CODE LAST_DEPT_CODE ,
+		Project1.LAST_GRP_CODE LAST_GRP_CODE ,
+		Project1.LAST_ORG_CODE LAST_ORG_CODE
+		FROM ( SELECT Extent1.MEM_ID MEM_ID ,
+		Extent1.MEM_CODE MEM_CODE ,
+		Extent1.NAME NAME ,
+		Extent2.LAST_DEPT_CODE LAST_DEPT_CODE ,
+		Extent2.LAST_GRP_CODE LAST_GRP_CODE ,
+		Extent2.LAST_ORG_CODE LAST_ORG_CODE ,
+		Extent2.DEPT_CODE || ' - ' || Extent1.NAME C1
+		FROM ORG0001D Extent1
+		JOIN ORG0005D Extent2 ON ( Extent2.MEM_ID = Extent1.MEM_ID )
+		AND ( 3 = Extent2.MEM_LVL )
+		AND ( Extent2.BRNCH_ID = #{groupCode} )
+		WHERE ( 1 = Extent1.STUS )
+		AND ( 2 = Extent1.MEM_TYPE ) ) Project1
+
+</select>
+
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.mobileMenu.impl.MobileMenuApiMapper">
+
+    <select id="selectMobileMenuList" parameterType="Map" resultType="egovMap">
+        SELECT   /* [com.coway.trust.biz.common.mobileMenu.impl.MobileMenuApiMapper.selectMobileMenuList] 20191031 - KR HAN */
+                     t1.MENU_CODE   MENU_CODE
+                    ,t1.MENU_NAME  MENU_NAME
+                    ,t1.PGM_CODE   PGM_CODE
+                    ,t1.PGM_NAME   PGM_NAME
+                    ,t1.MENU_LVL   MENU_LVL
+                    ,t1.MENU_ORDER MENU_ORDER
+                    ,t1.MENU_ICON_NM   MENU_ICON_NM
+                    ,t1.PAGE_PATH  PAGE_PATH
+                    ,t1.UPPER_MENU_CODE    UPPER_MENU_CODE
+                    ,CONNECT_BY_ISLEAF IS_LEAF
+        FROM (
+				SELECT
+							DISTINCT t1.MENU_CODE   MENU_CODE
+							,t1.MENU_NAME  MENU_NAME
+							,t1.PGM_CODE   PGM_CODE
+							,t1.PGM_NAME   PGM_NAME
+							,t1.MENU_LVL   MENU_LVL
+							,t1.MENU_ORDER MENU_ORDER
+							,t1.MENU_ICON_NM   MENU_ICON_NM
+							,t1.PAGE_PATH  PAGE_PATH
+			                ,t1.UPPER_MENU_CODE    UPPER_MENU_CODE
+		        FROM    MOB0002M t1
+		                        JOIN MOB0003M t2 ON t1.MENU_CODE = t2.MENU_CODE
+		                                AND      t2.AUTH_CODE IN
+		                                            (
+		                                            SELECT
+		                                                  D.AUTH_CODE
+		                                            FROM (
+				                                                  SELECT
+						                                                      B.USER_ID
+						                                                      ,A.ROLE_ID
+				                                                  FROM    SYS0044M A
+				                                                             , SYS0045M B
+				                                                  WHERE  A.ROLE_ID = B.ROLE_ID(+)
+				                                                  AND      B.USER_ID = #{userId}
+			                                                  ) C
+			                                                  ,SYS0054M D
+		                                            WHERE C.ROLE_ID = D.ROLE_ID
+		                                            )
+		        WHERE  t1.USE_YN = 'Y'
+                ) t1
+        START WITH t1.UPPER_MENU_CODE IS NULL
+        CONNECT BY PRIOR t1.MENU_CODE = t1.UPPER_MENU_CODE
+        ORDER SIBLINGS  BY t1.MENU_ORDER
+    </select>
+
+</mapper>

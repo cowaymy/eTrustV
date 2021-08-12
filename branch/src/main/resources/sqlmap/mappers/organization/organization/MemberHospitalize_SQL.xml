@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.organization.organization.impl.MemberHospitalizeMapper">
+
+  <select id="selectHospitalizeUploadList" parameterType="Map" resultType="egovMap">
+  WITH D AS (
+      SELECT
+          UPLOAD_ID ,
+          COUNT(*) TOTAL_UPLOAD ,
+          SUM(CASE WHEN VALID_STUS_ID = 4 THEN 1 ELSE 0 END) TOTAL_VALID ,
+          SUM(CASE WHEN VALID_STUS_ID <![CDATA[ <> ]]> 4 THEN 1 ELSE 0 END) TOTAL_INVALID
+      FROM ORG0039D
+      GROUP BY UPLOAD_ID
+  )
+    SELECT
+            t1.UPLOAD_ID  UPLOAD_ID,
+            t1.UPLOAD_TYPE_ID UPLOAD_TYPE_ID,
+            t1.STUS_ID AS STUS_ID,
+            D.TOTAL_UPLOAD,
+            D.TOTAL_VALID,
+            D.TOTAL_INVALID,
+            to_char(t1.ACTN_DT,'mm-yyyy') AS ACTN_DT,
+            to_char(t1.CRT_DT,'DD-MM-YYYY HH24:MI:SS') AS CRT_DT,
+            t1.CRT_USER_ID AS CRT_USER_ID,
+            to_char(t1.UPD_DT,'DD-MM-YYYY HH24:MI:SS') AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.MEM_TYPE_ID AS MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            t2.NAME AS NAME,
+            t3.CODE_NAME AS CODE_NAME,
+            t4.CODE_NAME AS CODENAME1,
+            CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS C1,
+            CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS C2
+        FROM  ORG0038D  t1
+            JOIN D ON D.UPLOAD_ID = T1.UPLOAD_ID
+            JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+            JOIN SYS0013M  t3 ON t3.CODE_ID = t1.UPLOAD_TYPE_ID
+            JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+            LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+            LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+        WHERE 1=1
+    <if test="uploadId != null and uploadId != ''">
+           AND t1.UPLOAD_ID= #{uploadId}
+        </if>
+        <if test='status != null and status != ""'>
+           AND t1.STUS_ID IN
+           <foreach item="item" collection="status" index="index" open="(" separator="," close=")">
+           #{item}
+           </foreach>
+        </if>
+        <if test='type != null and type != ""'>
+           AND t1.UPLOAD_TYPE_ID IN
+           <foreach item="item" collection="type" index="index" open="(" separator="," close=")">
+           #{item}
+           </foreach>
+        </if>
+        <if test="actionDate != null and actionDate != ''">
+            AND t1.ACTN_DT = to_date(#{actionDate},'mm-yyyy')
+        </if>
+        <if test="uploadDateFr != null and uploadDateFr != ''">
+            <![CDATA[AND t1.CRT_DT >= TO_DATE(#{uploadDateFr},'dd/mm/yyyy')]]>
+        </if>
+        <if test="uploadDateTo != null and uploadDateTo != ''">
+            <![CDATA[ AND t1.CRT_DT <  TO_DATE(#{uploadDateTo},'dd/mm/yyyy') + 1 ]]>
+        </if>
+        <if test="creator != null and creator != ''">
+            AND t6.USER_NAME = #{creator}
+        </if>
+        <if test='memberType != null and memberType != ""'>
+           AND t1.MEM_TYPE_ID IN
+           <foreach item="item" collection="memberType" index="index" open="(" separator="," close=")">
+           #{item}
+           </foreach>
+        </if>
+            ORDER BY t1.UPLOAD_ID DESC
+  </select>
+
+  <select id="selectHospitalizeDetails" parameterType="Map" resultType="egovMap">
+    SELECT
+        UPLOAD_DET_ID ,
+        UPLOAD_ID ,
+        T1.USER_MEM_CODE ,
+        T3.NAME MEM_NM,
+        T4.CODE_NAME MEM_TYPE ,
+        T2.NAME STUS ,
+        T3.NAME VALID_STUS ,
+        T1.VALID_REM
+    FROM ORG0039D T1
+    JOIN SYS0038M T2 ON T2.STUS_CODE_ID = T1.VALID_STUS_ID
+    LEFT JOIN ORG0001D T3 ON T3.MEM_ID = T1.SYS_MEM_ID
+    LEFT JOIN SYS0013M T4 ON T4.CODE_ID = T3.MEM_TYPE
+    WHERE UPLOAD_ID = #{uploadId}
+        <if test='statusId != null and statusId != ""'>
+           AND t1.VALID_STUS_ID = #{statusId}
+        </if>
+  </select>
+
+  <select id="cntUploadBatch" parameterType="Map" resultType="int">
+  SELECT
+    COUNT(*) CNT
+  FROM ORG0038D t1
+  WHERE 1=1
+    <if test="statusId != null and statusId != ''">
+        AND t1.STUS_ID = #{statusId}
+    </if>
+    <if test="cmbType != null and cmbType != ''">
+        AND t1.UPLOAD_TYPE_ID = #{cmbType}
+    </if>
+    <if test="cmbMemberType != null and cmbMemberType != ''">
+        AND t1.MEM_TYPE_ID = #{cmbMemberType}
+    </if>
+    <if test="uploadId != null and uploadId != ''">
+        AND t1.UPLOAD_ID = #{uploadId}
+    </if>
+  </select>
+
+    <insert id="insertHospitalizeMaster" parameterType="Map" >
+      <selectKey keyProperty="seq" resultType="int" order="BEFORE">
+        SELECT ORG0038D_UPLOAD_ID_SEQ.nextval FROM DUAL
+      </selectKey>
+      INSERT INTO ORG0038D
+          ( UPLOAD_ID
+          , UPLOAD_TYPE_ID
+          , STUS_ID
+          , ACTN_DT
+          , CRT_DT
+          , CRT_USER_ID
+          , UPD_DT
+          , UPD_USER_ID
+          , MEM_TYPE_ID)
+      VALUES
+          (
+                #{seq}
+              , #{uploadID}
+              , #{statusID}
+              , to_date(#{actionDate},'YYYYMM')
+              , sysdate
+              , #{creator}
+              , sysdate
+              , #{updator}
+              , #{memberTypeID}
+          )
+   </insert>
+
+
+<insert id="insertHospitalizeDetails" parameterType="Map" >
+        INSERT INTO ORG0039D(
+               UPLOAD_DET_ID
+             , UPLOAD_ID
+             , STUS_ID
+             , VALID_STUS_ID
+             , VALID_REM
+             , USER_MEM_CODE
+             , SYS_MEM_ID
+             , UPD_DT
+             , UPD_USER_ID
+             , SYS_MEM_TYPE_ID)
+        (
+        SELECT
+               ORG0039D_UPLOAD_DET_ID_SEQ.nextval
+               , #{seq}
+               , CASE WHEN O.MEM_ID IS NULL THEN 21 ELSE 1 END
+               , CASE WHEN O.MEM_ID IS NULL THEN 21 ELSE 4 END
+               , CASE WHEN O.MEM_ID IS NULL THEN 'Invalid MemberCode or MemberType Uploaded' END
+               , D.MEMCODE
+               , O.MEM_ID
+               , SYSDATE
+               , #{updator}
+               , O.MEM_TYPE
+            FROM
+            (
+                <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+                SELECT #{item.memberCode} MEMCODE FROM DUAL
+                </foreach>
+
+             ) D
+            LEFT JOIN ORG0001D O ON O.MEM_CODE = D.MEMCODE AND MEM_TYPE = #{memberTypeID}
+
+            )
+   </insert>
+
+
+    <select id="callCnfmHsptalize" parameterType="Map">
+        {call  SP_HSPTALIZE_CONFIRM_VERIFY(#{uploadId},#{userId})}
+    </select>
+
+    <update id="deactivateHspitalize" parameterType="Map">
+        UPDATE ORG0038D
+        SET
+            STUS_ID = #{statusId},
+            UPD_DT = sysdate,
+            UPD_USER_ID = #{userId}
+        WHERE UPLOAD_ID = #{uploadId}
+    </update>
+</mapper>

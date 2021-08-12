@@ -1,0 +1,476 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
+<!--
+ DATE        BY     VERSION        REMARK
+ ----------------------------------------------------------------
+ 09/04/2019  ONGHC  1.0.0          RE-STRUCTURE JSP.
+ 14/10/2019  ONGHC  1.0.1          Amend Layout
+ 15/10/2019  ONGHC  1.0.2          Amend branch Condition
+ 11/12/2019  ONGHC  1.0.3          To Fix CT Listing without ' symbol
+ -->
+
+<script type="text/javaScript">
+  $(document).ready(
+    function() {
+      $('.multy_select').on("change", function() {
+      }).multipleSelect({});
+
+      doGetCombo('/common/selectCodeList.do', '10', '', 'appliType', 'M', 'fn_multiCombo');
+      //doGetComboSepa("/common/selectBranchCodeList.do", 5, '-', '', 'branch', 'S', '');
+      doGetCombo('/services/holiday/selectBranchWithNM', 43, '', 'branch', 'S', ''); // DSC BRANCH
+      CommonCombo.make('state', "/sales/customer/selectMagicAddressComboList", '' , '');
+
+      $("#branch").change(
+        function() {
+          doGetCombo('/services/as/selectCTByDSC.do', $("#branch").val(), '', 'CTCode', 'M', 'fn_multiCombo');
+        });
+    });
+
+  function fn_multiCombo() {
+    $('#CTCode').change(function() {
+    }).multipleSelect({
+      selectAll : true, // 전체선택
+      width : '100%'
+    });
+
+    $('#appliType').change(function() {
+    }).multipleSelect({
+      selectAll : false, // 전체선택
+      width : '100%'
+    }).multipleSelect("checkAll"); ;
+  }
+
+  function fn_validation() {
+    var msg = "";
+    var text = "";
+
+    // INSTALLATION TYPE
+    if ($("#instalType option:selected").length < 1) {
+      text = "<spring:message code='service.title.InstallationType' />";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+    }
+    // INSTALL DATE FROM
+    if ($("#instalDtFrom").val() == '') {
+      text = "<spring:message code='service.title.InstallDate' />";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+    } else if ($("#instalDtTo").val() == '') {  // INSTALL DATE TO
+      text = "<spring:message code='service.title.InstallDate' />";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+    }
+    // INSTALL STATUS
+    if ($("#instalStatus").val() == '') {
+      text = "<spring:message code='service.title.InstallStatus' />";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+    }
+
+    // SKIP DSC CHECKING WHILE MCO
+    if("${SESSION_INFO.userName}" != "SHUIAN") {
+      // DSC BRANCH
+      if ($("#branch").val() == '') {
+        text = "<spring:message code='service.title.DSCBranch' />";
+        msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+      }
+    }
+    // SORT BY
+    if ($("#sortType").val() == '') {
+      text = "<spring:message code='service.title.SortBy' />";
+      msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+    }
+
+    if (msg != '') {
+      Common.alert(msg);
+      return false;
+    }
+
+    msg = "";
+    text = "";
+
+    /*if ($("#orderNoFrom").val() != '' || $("#orderNoTo").val() != '') {
+      if ($("#orderNoFrom").val() == '' || $("#orderNoTo").val() == '') {
+        msg += "* <spring:message code='sys.common.alert.validation' arguments='Order Number (From & To)' htmlEscape='false'/> ";
+      }
+    }*/
+
+    /*if ($("#instalNoFrom").val() != '' || $("#instalNoTo").val() != '') {
+      if ($("#instalNoFrom").val() == '' || $("#instalNoTo").val() == '') {
+        msg += "* <spring:message code='sys.common.alert.validation' arguments='Installation Number (From & To)' htmlEscape='false'/> ";
+      }
+    }*/
+
+    if ($("#instalDtFrom").val() != '' || $("#instalDtTo").val() != '') {
+      if ($("#instalDtFrom").val() == '' || $("#instalDtTo").val() == '') {
+        text = "<spring:message code='service.title.InstallDate' />";
+        msg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
+      }
+    }
+
+    /*if ($("#CTCodeFrom").val() != '' || $("#CTCodeTo").val() != '') {
+      if ($("#CTCodeFrom").val() == '' || $("#CTCodeTo").val() == '') {
+        msg += "* <spring:message code='sys.common.alert.validation' arguments='CT code (From & To)' htmlEscape='false'/>";
+      }
+    }*/
+
+    if (msg != '') {
+      Common.alert(msg);
+      return false;
+    }
+
+    return true;
+  }
+
+  function fn_openReport() {
+    if (fn_validation()) {
+      var date = new Date();
+      var installStatus = $("#instalStatus").val();
+      var SelectSql = "";
+      var whereSeq = "";
+      var whereSeq2 = "";
+      var orderBySql = "";
+      var FullSql = "";
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+
+      if (date.getDate() < 10) {
+        day = "0" + date.getDate();
+      }
+
+      if ($("#instalStatus").val() != '' && $("#instalStatus").val() != null) {
+        whereSeq += "AND B.STUS_CODE_ID IN (" + $("#instalStatus").val() + ") ";
+      }
+
+      if ($("#orderNoPop").val() != '' && $("#orderNoPop").val() != null) {
+        whereSeq += "AND A.SALES_ORD_NO = '" + $("#orderNoPop").val() + "' ";
+      }
+
+      if ($("#instalDtFrom").val() != '' && $("#instalDtTo").val() != '' && $("#instalDtFrom").val() != null && $("#instalDtTo").val() != null) {
+        whereSeq += "AND (B.INSTALL_DT >= TO_DATE('" + $("#instalDtFrom").val() + "' , 'DD/MM/YYYY') AND B.INSTALL_DT <= TO_DATE('" + $("#instalDtTo").val() + "', 'DD/MM/YYYY')) ";
+      }
+
+      if ($("#appliType").val() != '' && $("#appliType").val() != null) {
+        whereSeq += "AND A.APP_TYPE_ID IN (" + $("#appliType").val() + ") ";
+      }
+
+      if ($("#instalNo").val() != '' && $("#instalNo").val() != null) {
+        whereSeq += "AND B.INSTALL_ENTRY_NO = '" + $("#instalNo").val() + "' ";
+      }
+
+      // Homecare Remove(except)
+      whereSeq += " AND A.BNDL_ID IS NULL ";
+
+      //if ($("#CTCode").val() != '' && $("#CTCode").val() != null) {
+        //whereSeq2 += "AND CTMEM.MEM_CODE IN (" + $("#CTCode").val() + ") ";
+      //}
+
+      var ctCodeLst = "";
+      var ctCode = $("#CTCode").val();
+      if ($("#CTCode").val() != '' && $("#CTCode").val() != null) {
+        for (var a = 0; a < ctCode.length; a++) {
+          if (a == 0) {
+            ctCodeLst += "'" + ctCode[a] + "'"
+          } else {
+            ctCodeLst += ", '" + ctCode[a] + "'"
+          }
+        }
+        whereSeq2 += "AND CTMEM.MEM_CODE IN (" + ctCodeLst + ") ";
+      }
+
+      if ($("#instalType").val() != '' && $("#instalType").val() != null) {
+        whereSeq2 += "AND CE.TYPE_ID IN (" + $("#instalType").val() + ") ";
+      }
+
+      if ($("#branch").val() != '' && $("#branch").val() != null) {
+        whereSeq2 += "AND INSTALL.BRNCH_ID = (SELECT BRNCH_ID FROM SYS0005M WHERE CODE = '" + $("#branch").val() + "' AND STUS_ID = 1) ";
+      }
+
+      if ($("#city").val() != '' && $("#city").val() != null) {
+    	  var cityLs = "";
+          var cityCode = $("#city").val();
+          if ($("#city").val() != '' && $("#city").val() != null) {
+            for (var a = 0; a < cityCode.length; a++) {
+              if (a == 0) {
+            	  cityLs += "'" + cityCode[a] + "'"
+              } else {
+            	  cityLs += ", '" + cityCode[a] + "'"
+              }
+            }
+            whereSeq2 += "AND A.CITY IN (" + cityLs + ") ";
+          }
+      }
+
+      if ($("#postCd").val() != '' && $("#postCd").val() != null) {
+    	  whereSeq2 += "AND A.POSTCODE IN (" + $("#postCd").val() + ") ";
+      }
+
+      if ($("#sortType").val() == "2") {
+        orderBySql = "ORDER BY CTMEM.MEM_CODE ";
+      } else if ($("#sortType").val() == "1") {
+        orderBySql = "ORDER BY MAIN.INSTALL_ENTRY_ID ";
+      } else if ($("#sortType").val() == "3") {
+        orderBySql = "ORDER BY STK.STK_CODE ";
+      } else if ($("#sortType").val() == "4") {
+        orderBySql = "ORDER BY MAIN.SALES_ORD_NO ";
+      } else if ($("#sortType").val() == "5") {
+        orderBySql = "ORDER BY A.POSTCODE ";
+      }
+
+      console.log(whereSeq);
+      console.log(whereSeq2);
+      console.log(orderBySql);
+
+      $("#installationNoteForm #V_WHERESQL").val(whereSeq);
+      $("#installationNoteForm #V_WHERESQL2").val(whereSeq2);
+      $("#installationNoteForm #V_INSTALLSTATUS").val(installStatus);
+      $("#installationNoteForm #V_ORDERBYSQL").val(orderBySql);
+      $("#installationNoteForm #V_SELECTSQL").val(SelectSql);
+      $("#installationNoteForm #V_FULLSQL").val(FullSql);
+      $("#installationNoteForm #reportFileName").val('/services/InstallationNote_WithOldOrderNo.rpt');
+      $("#installationNoteForm #viewType").val("PDF");
+      $("#installationNoteForm #reportDownFileName").val("InstallationNote_" + day + month + date.getFullYear());
+
+      var option = {
+        isProcedure : true,
+      };
+
+      Common.report("installationNoteForm", option);
+    }
+  }
+
+  function fn_clear() {
+    $("#instalStatus").val('');
+    $("#orderNoPop").val('');
+    $("#instalDtFrom").val('');
+    $("#instalDtTo").val('');
+    $("#appliType").val('');
+    $("#branch").val('');
+    $("#instalNo").val('');
+    $("#CTCode").val('');
+    $("#instalType").val('');
+    $("#sortType").val('1');
+    $("#V_WHERESQL").val('');
+    $("#V_WHERESQL2").val('');
+    $("#V_INSTALLSTATUS").val('');
+    $("#V_ORDERBYSQL").val('');
+    $("#V_SELECTSQL").val('');
+    $("#V_FULLSQL").val('');
+    $("#reportFileName").val('');
+    $("#viewType").val('');
+
+    doGetCombo('/services/as/selectCTByDSC.do', '-', '', 'CTCode', 'M', 'fn_multiCombo');
+  }
+
+  function fn_selectState(selVal){
+	  if(!FormUtil.isEmpty(selVal)){
+          $("#city").attr({"disabled" : false  , "class" : "w100p"});
+
+          var cityJson = {state : selVal}; //Condition
+          CommonCombo.make('city', "/sales/customer/selectMagicAddressComboList", cityJson, '',{type: 'M'});
+      }else{
+    	  $('#city').val('');
+          $("#city").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+
+    	  $('#postCd').val('');
+    	  $("#postCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+      }
+  }
+
+  function fn_selectCity(selVal){
+	  if(!FormUtil.isEmpty(selVal)){
+           $("#postCd").attr({"disabled" : false  , "class" : "w100p"});
+
+          //Call ajax
+          var postCodeJson = {state : $("#state").val() , city : selVal}; //Condition
+          CommonCombo.make('postCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, '', {type: 'M'});
+      }else{
+    	  $('#postCd').val('');
+          $("#postCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+      }
+
+  }
+
+</script>
+<div id="popup_wrap" class="popup_wrap">
+ <!-- popup_wrap start -->
+ <header class="pop_header">
+  <!-- pop_header start -->
+  <h1>
+   <spring:message code='service.title.InstallationNote' />
+  </h1>
+  <ul class="right_opt">
+   <li><p class="btn_blue2">
+     <a href="#"><spring:message code='expense.CLOSE' /></a>
+    </p></li>
+  </ul>
+ </header>
+ <!-- pop_header end -->
+ <section class="pop_body">
+  <!-- pop_body start -->
+  <section class="search_table">
+   <!-- search_table start -->
+   <table class="type1">
+    <!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+     <col style="width: 150px" />
+     <col style="width: *" />
+     <col style="width: 160px" />
+     <col style="width: *" />
+    </colgroup>
+    <tbody>
+     <tr>
+      <th scope="row"><spring:message code='service.title.InstallationType' /><span name="m1" id="m1" class="must">*</span></th>
+      <td>
+       <select class="multy_select w100p" multiple="multiple" id="instalType" name="instalType">
+       <c:forEach var="list" items="${instTypeList}" varStatus="status">
+         <option value="${list.codeId}" selected>${list.codeName}</option>
+        </c:forEach>
+       </select>
+      </td>
+      <th scope="row"><spring:message code='service.title.OrderNumber' /></th>
+      <td>
+
+       <!-- <div class="date_set">
+        <p>
+         <input type="text" title="" placeholder="From" class="w100p"
+          id="orderNoFrom" name="orderNoFrom" />
+        </p>
+        <span>To</span>
+        <p>
+         <input type="text" title="" placeholder="To" class="w100p"
+          id="orderNoTo" name="orderNoTo" />
+        </p>
+       </div> -->
+
+       <input type="text" title="" placeholder="<spring:message code='service.title.OrderNumber' />" class="w100p" id="orderNoPop" name="orderNoPop" />
+      </td>
+     </tr>
+     <tr>
+      <th scope="row"><spring:message code='service.title.ApplicationType' /></th>
+      <td>
+       <select id="appliType" name="appType" class="multy_select w100p"></select>
+      </td>
+      <th scope="row"><spring:message code='service.title.InstallationNo' /></th>
+      <td>
+
+       <!-- <div class="date_set">
+        <p>
+         <input type="text" title="" placeholder="From" class="w100p"
+          id="instalNoFrom" name="instalNoFrom" />
+        </p>
+        <span>To</span>
+        <p>
+         <input type="text" title="" placeholder="To" class="w100p"
+          id="instalNoTo" name="instalNoTo" />
+        </p>
+       </div> -->
+
+       <input type="text" title="" placeholder="<spring:message code='service.title.InstallationNo' />" class="w100p" id="instalNo" name="instalNo" />
+      </td>
+     </tr>
+     <tr>
+      <th scope="row"><spring:message code='service.title.InstallDate' /><span name="m2" id="m2" class="must">*</span></th>
+      <td>
+       <div class="date_set">
+        <p>
+         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="instalDtFrom" name="instalDtFrom" />
+        </p>
+        <span>To</span>
+        <p>
+         <input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="instalDtTo" name="instalDtTo" />
+        </p>
+       </div>
+      </td>
+      <th scope="row"><spring:message code='service.title.InstallStatus' /> <span name="m3" id="m3" class="must">*</span></th>
+      <td><select id="instalStatus" name="instalStatus" class="multy_select w100p">
+        <c:forEach var="list" items="${installStatus }" varStatus="status">
+         <c:choose>
+          <c:when test="${list.codeId=='1'}">
+            <option value="${list.codeId}" selected>${list.codeName}</option>
+          </c:when>
+          <c:otherwise>
+            <option value="${list.codeId}">${list.codeName}</option>
+          </c:otherwise>
+         </c:choose>
+        </c:forEach>
+      </select></td>
+     </tr>
+     <tr>
+      <th scope="row"><spring:message code='service.title.DSCBranch' /> <span name="m4" id="m4" class="must">*</span></th>
+      <td>
+       <select id="branch" name="branch" class="w100p"></select>
+      </td>
+
+      <!-- <th scope="row"><spring:message code='service.title.CTCode' /></th>
+      <td>
+       <div class="date_set">
+        <p>
+         <input type="text" title="" placeholder="From" class="w100p"
+          id="CTCodeFrom" name="CTCodeFrom" />
+        </p>
+        <span>To</span>
+        <p>
+         <input type="text" title="" placeholder="To" class="w100p"
+          id="CTCodeTo" name="CTCodeTo" />
+        </p>
+       </div>
+      </td> -->
+      <th scope="row"><spring:message code='service.grid.CTCode' /></th>
+       <td>
+        <select id="CTCode" name="CTCode" class="multy_select w100p" multiple="multiple">
+        </select>
+       </td>
+     </tr>
+
+     <tr>
+          <th scope="row"><spring:message code="service.title.State" /></th>
+            <td><select class="w100p" id="state"  name="state" onchange="javascript : fn_selectState(this.value)" ></select></td>
+          <th scope="row"><spring:message code="sys.city" /></th>
+            <td><select class="w100p disabled" id="city"  name="city" disabled  onchange="javascript : fn_selectCity(this.value)"></select></td>
+      </tr>
+
+     <tr>
+     <th scope="row"><spring:message code='service.title.postCode' /></th>
+      <td><select class="w100p disabled" id="postCd"  name="postCd" disabled></select></td>
+      <th scope="row"><spring:message code='service.title.SortBy' /> <span name="m5" id="m5" class="must">*</span></th>
+      <td><select id="sortType" name="sortType">
+        <option value=""><spring:message code='sal.combo.text.chooseOne'/></option>
+        <option value="1">Installation Number</option>
+        <option value="2" selected>CT Code</option>
+        <option value="3">Product</option>
+        <option value="4">Sales Order Number</option>
+        <option value="5">Post Code</option>
+      </select></td>
+     </tr>
+    </tbody>
+   </table>
+   <!-- table end -->
+   <form method="post" id="installationNoteForm"
+    name="installationNoteForm">
+    <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" />
+    <input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" />
+    <input type="hidden" id="V_INSTALLSTATUS" name="V_INSTALLSTATUS" /> <input
+     type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> <input
+     type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" /> <input
+     type="hidden" id="V_FULLSQL" name="V_FULLSQL" />
+    <!--reportFileName,  viewType 모든 레포트 필수값 -->
+    <input type="hidden" id="reportFileName" name="reportFileName" /> <input
+     type="hidden" id="viewType" name="viewType" /> <input
+     type="hidden" id="reportDownFileName" name="reportDownFileName"
+     value="DOWN_FILE_NAME" />
+   </form>
+  </section>
+  <!-- search_table end -->
+  <ul class="center_btns">
+   <li><p class="btn_blue2 big">
+     <a href="#" onclick="javascript:fn_openReport()"><spring:message
+       code='service.btn.Generate' /></a>
+    </p></li>
+   <li><p class="btn_blue2 big">
+     <a href="#" onclick="javascript:fn_clear()"><spring:message
+       code='service.btn.Clear' /></a>
+    </p></li>
+  </ul>
+ </section>
+ <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.orderList.impl.OrderListApiMapper">
+
+
+
+
+
+
+<select id="selectOrderList" parameterType="Map" resultType="egovMap">
+/* [com.coway.trust.biz.sales.orderList.impl.OrderListApiMapper.selectOrderList] 20191223 - KR JAEMAJEM */
+SELECT  SALES_ORD_NO
+    ,   CUST_ID
+    ,   CUST_ID_NAME
+    ,   SALES_DT
+    ,   STUS_CODE_ID
+    ,   STUS_CODE_ID_NAME
+    ,   STK_CODE
+    ,   STK_DESC
+    ,   PRGRS
+    ,   MEM_ID
+    ,   APP_TYPE_ID
+    ,   APP_TYPE_ID_NAME
+    ,   HC_GU
+FROM
+(
+    SELECT  A.SALES_ORD_NO                                                          AS SALES_ORD_NO
+        ,   A.CUST_ID                                                               AS CUST_ID
+        ,   C.NAME                                                                  AS CUST_ID_NAME
+        ,   TO_CHAR(A.SALES_DT, 'DD/MM/YYYY')                                       AS SALES_DT
+        ,   A.STUS_CODE_ID                                                          AS STUS_CODE_ID
+        ,   D.NAME                                                                  AS STUS_CODE_ID_NAME
+        ,   E.STK_CODE                                                              AS STK_CODE
+        ,   E.STK_DESC                                                              AS STK_DESC
+        ,   G.PRGRS                                                                 AS PRGRS
+        ,   ROW_NUMBER() OVER(PARTITION BY F.SALES_ORD_ID ORDER BY F.LOG_ID DESC)   AS RN
+        ,   A.MEM_ID                                                                AS MEM_ID
+        ,   A.APP_TYPE_ID                                                           AS APP_TYPE_ID
+        ,   H.CODE_NAME                                                             AS APP_TYPE_ID_NAME
+        ,   CASE WHEN A.BNDL_ID IS NOT NULL AND A.BNDL_ID != 0  THEN 'HC'
+                                                                ELSE ''
+                                                                END                 AS HC_GU
+    FROM    SAL0001D A                                                              -- ASIS_DB : WebDB ASIS_SCHEMA : dbo ASIS_TABLE : SalesOrderM
+            INNER JOIN SAL0002D B
+                ON  A.SALES_ORD_ID = B.SALES_ORD_ID
+            INNER JOIN SAL0029D C
+                ON  A.CUST_ID = C.CUST_ID
+            INNER JOIN SYS0038M D
+                ON  A.STUS_CODE_ID = D.STUS_CODE_ID
+            INNER JOIN SYS0026M E
+                ON  B.ITM_STK_ID = E.STK_ID
+            LEFT OUTER JOIN SAL0009D F
+                ON  A.SALES_ORD_ID = F.SALES_ORD_ID
+            LEFT OUTER JOIN SAL0010M G
+                ON  F.PRGRS_ID = G.PRGRS_ID
+            INNER JOIN SYS0013M H
+                ON  H.CODE_MASTER_ID = 10
+                AND A.APP_TYPE_ID = H.CODE_ID
+    WHERE   A.MEM_ID = #{memId}
+    AND     TO_CHAR(A.SALES_DT, 'YYYYMMDD') BETWEEN #{salesDtFrom} AND #{salesDtTo}
+        <choose>
+       <when test='selectType.equals("1") and selectKeyword != null and selectKeyword != ""'>
+    AND     A.SALES_ORD_NO = #{selectKeyword}
+        </when>
+        <when test='selectType.equals("2") and selectKeyword != null and selectKeyword != ""'>
+    AND     UPPER(C.NAME) LIKE UPPER(#{selectKeyword})||'%'
+        </when>
+        </choose>
+)
+WHERE   RN = 1
+ORDER BY SALES_ORD_NO DESC
+</select>
+
+
+
+
+
+
+</mapper>

@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.eAccounting.paymentUpload.impl.BulkUploadMapper">
+
+    <select id="getSupplierDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            MEM_ACC_ID,
+            MEM_ACC_NAME
+        FROM FCM0006M
+        WHERE MEM_ACC_ID LIKE '%' || #{supplier} || '%'
+    </select>
+
+    <select id="getCcDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            COST_CENTER_TEXT
+        FROM FCM0008M
+        WHERE COST_CENTER = #{costCentr}
+            AND END_DT >= SYSDATE
+    </select>
+
+    <select id="getBgtDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            BUDGET_CODE,
+            BUDGET_CODE_TEXT
+        FROM FCM0010M
+        WHERE BUDGET_CODE LIKE '%' || #{bgtCd} || '%'
+            AND END_DT >= SYSDATE
+    </select>
+
+    <select id="getGLDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            FCM0104D.GL_ACC_CODE,
+            FCM0009M.GL_ACC_DESC,
+            FCM0104D.CNTRL_TYPE
+        FROM FCM0104D
+        INNER JOIN FCM0009M
+            ON FCM0104D.GL_ACC_CODE = FCM0009M.GL_ACC_CODE
+        WHERE FCM0104D.COST_CENTR = #{costCentr}
+            AND FCM0104D.BUDGET_CODE LIKE '%' || #{bgtCd} || '%'
+    </select>
+
+    <update id="clearBulkInvcTemp" parameterType="Map">
+        DELETE FROM FCM0024T where SEQ = #{seq}
+    </update>
+
+    <insert id="insertBulkInvc" parameterType="java.util.List">
+        INSERT INTO FCM0024T (
+            SEQ,
+            GRP_SEQ,
+            CLM_SEQ,
+            COST_CENTER,
+            COST_CENTER_NAME,
+            SUPPLIER,
+            SUPPLIER_NAME,
+            INVC_NO,
+            INVC_DT,
+            PAY_DT,
+            BILL_PERIOD_FR,
+            BILL_PERIOD_TO,
+            BUDGET_CODE,
+            BUDGET_NAME,
+            GL_ACC_NO,
+            GL_ACC_NAME,
+            AMT,
+            EXP_DESC,
+            UTIL_NO,
+            JPAY_NO,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID
+        )
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT
+                #{seq},
+                #{item.grpSeq},
+                #{item.clmSeq},
+                #{item.costCentr},
+                #{item.costCentrNm},
+                #{item.supplier},
+                #{item.supplierNm},
+                #{item.invcNo},
+                TO_DATE(#{item.invcDt}, 'YYYYMMDD'),
+                TO_DATE(#{item.payDueDt}, 'YYYYMMDD'),
+                TO_DATE(NVL(#{item.billPeriodFr}, ''), 'YYYYMMDD'),
+                TO_DATE(NVL(#{item.billPeriodTo}, ''), 'YYYYMMDD'),
+                #{item.bgtCd},
+                #{item.bgtNm},
+                #{item.glAccNo},
+                #{item.glAccNm},
+                #{item.amt},
+                #{item.expDesc},
+                #{item.utilNo},
+                #{item.jPayNo},
+                SYSDATE,
+                #{userId},
+                SYSDATE,
+                #{userId}
+            FROM DUAL
+        </foreach>
+    </insert>
+
+    <select id="getUploadSeq" parameterType="Map" resultType="egovMap">
+        SELECT FCM0024T_ID_SEQ.nextval SEQ FROM DUAL
+    </select>
+
+    <select id="selectUploadResultList" parameterType="Map" resultType="egovMap">
+        SELECT
+            <if test="batchId == null or batchId == ''">
+                '-' CLM_NO,
+            </if>
+            <if test="seq == null or seq == ''">
+                CLM_NO,
+            </if>
+            COST_CENTER || ' - ' || COST_CENTER_NAME COST_CENTER,
+            SUPPLIER || ' - ' || SUPPLIER_NAME SUPPLIER,
+            INVC_NO,
+            TO_CHAR(INVC_DT, 'DD-MM-YYYY') INVC_DT,
+            TO_CHAR(PAY_DT, 'DD-MM-YYYY') PAY_DT,
+            NVL(TO_CHAR(BILL_PERIOD_FR, 'DD-MM-YYYY'), '-') BILL_PERIOD_FR,
+            NVL(TO_CHAR(BILL_PERIOD_TO, 'DD-MM-YYYY'), '-') BILL_PERIOD_TO,
+            BUDGET_CODE || ' - ' || BUDGET_NAME BUDGET,
+            GL_ACC_NO || ' - ' || GL_ACC_NAME GL_ACC,
+            AMT,
+            EXP_DESC,
+            UTIL_NO,
+            JPAY_NO
+        <if test="batchId == null or batchId == ''">
+            FROM FCM0024T
+            WHERE SEQ = #{seq}
+            ORDER BY GRP_SEQ, CLM_SEQ
+        </if>
+        <if test="seq == null or seq == ''">
+            FROM FCM0026D
+            WHERE FCM0026D.BATCH_ID = #{batchId}
+            ORDER BY CLM_NO, CLM_SEQ
+        </if>
+    </select>
+
+    <select id="getBatchSeq" parameterType="Map" resultType="egovMap">
+        SELECT FCM0025M_ID_SEQ.nextval SEQ FROM DUAL
+    </select>
+
+    <select id="getBulkDetails" parameterType="Map" resultType="egovMap">
+        SELECT
+            SEQ BATCH_ID,
+            GRP_SEQ,
+            COST_CENTER,
+            COST_CENTER_NAME,
+            SUPPLIER,
+            SUPPLIER_NAME,
+            INVC_NO,
+            INVC_DT,
+            PAY_DT,
+            BILL_PERIOD_FR,
+            BILL_PERIOD_TO,
+            BUDGET_CODE,
+            BUDGET_NAME,
+            GL_ACC_NO,
+            GL_ACC_NAME,
+            AMT,
+            EXP_DESC,
+            UTIL_NO,
+            JPAY_NO
+        FROM FCM0024T
+        WHERE SEQ = #{seq}
+        order by GRP_SEQ, CLM_SEQ
+    </select>
+
+    <insert id="insertBulkMaster" parameterType="Map">
+        INSERT INTO FCM0025M (
+            BATCH_ID,
+            TOTAL_CLAIMS,
+            APPV_PRCSS_NO,
+            ATCH_FILE_GRP_ID,
+            REM,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID
+        ) VALUES (
+            #{batchId},
+            #{totCnt},
+            #{appvPrcssNo},
+            #{atchFileGrpId},
+            #{rem},
+            SYSDATE,
+            #{userId},
+            SYSDATE,
+            #{userId}
+        )
+    </insert>
+
+    <insert id="insertBulkDetail" parameterType="Map">
+        INSERT INTO FCM0026D (
+            BATCH_ID,
+            CLM_NO,
+            CLM_SEQ,
+            COST_CENTER,
+            COST_CENTER_NAME,
+            SUPPLIER,
+            SUPPLIER_NAME,
+            INVC_NO,
+            INVC_DT,
+            PAY_DT,
+            BILL_PERIOD_FR,
+            BILL_PERIOD_TO,
+            BUDGET_CODE,
+            BUDGET_NAME,
+            GL_ACC_NO,
+            GL_ACC_NAME,
+            AMT,
+            EXP_DESC,
+            UTIL_NO,
+            JPAY_NO,
+            CLAM_UN,
+            REM,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID
+        )VALUES (
+            #{batchId},
+            #{clmNo},
+            #{seq},
+            #{costCenter},
+            #{costCenterName},
+            #{supplier},
+            #{supplierName},
+            #{invcNo},
+            TO_DATE(#{invcDt}, 'YYYY-MM-DD'),
+            TO_DATE(#{payDt}, 'YYYY-MM-DD'),
+            NVL(TO_DATE(#{billPeriodFr}, 'YYYY-MM-DD'), ''),
+            NVL(TO_DATE(#{billPeriodTo}, 'YYYY-MM-DD'), ''),
+            #{budgetCode},
+            #{budgetName},
+            #{glAccNo},
+            #{glAccName},
+            #{amt},
+            #{expDesc},
+            #{utilNo},
+            #{jpayNo},
+            #{clamUn},
+            #{rem},
+            SYSDATE,
+            #{userId},
+            SYSDATE,
+            #{userId}
+        )
+    </insert>
+
+    <insert id="insertApproveLineDetail" parameterType="Map">
+       INSERT INTO FCM0005D
+       (
+            APPV_PRCSS_NO
+           ,APPV_LINE_SEQ
+           ,APPV_LINE_USER_ID
+           ,APPV_DT
+           ,APPV_STUS
+           ,CRT_DT
+           ,CRT_USER_ID
+           ,UPD_DT
+           ,UPD_USER_ID
+        )
+        values
+        (
+            #{appvPrcssNo}
+           ,#{approveNo}
+           ,#{memCode}
+           ,#{appvDt}
+           <choose>
+           <when test="approveNo == 1">
+           ,'R'
+           </when>
+           <otherwise>
+           ,'T'
+           </otherwise>
+           </choose>
+           ,SYSDATE
+           ,#{userId}
+           ,SYSDATE
+           ,#{userId}
+        )
+    </insert>
+
+     <insert id="insertApproveManagement" parameterType="Map">
+       INSERT INTO FCM0004M
+       (
+            APPV_PRCSS_NO
+           ,APPV_REQ_KEY_NO
+           ,REQST_DT
+           ,REQST_USER_ID
+           ,APPV_PRCSS_STUS
+           ,APPV_LINE_CNT
+           ,APPV_LINE_PRCSS_CNT
+           ,APPV_PRCSS_DESC
+           ,CRT_DT
+           ,CRT_USER_ID
+           ,UPD_DT
+           ,UPD_USER_ID
+        )
+        values
+        (
+            #{appvPrcssNo}
+           ,#{clmNo}
+           ,SYSDATE
+           ,#{userName}
+           ,'R'
+           ,#{appvLineCnt}
+           ,0
+           ,#{appvPrcssDesc}
+           ,SYSDATE
+           ,#{userId}
+           ,SYSDATE
+           ,#{userId}
+        )
+    </insert>
+
+    <select id="selectBulkInvcList" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.BATCH_ID,
+            CASE
+                WHEN B.APPV_PRCSS_STUS = 'P' THEN 'Approval-In-Progress'
+                WHEN B.APPV_PRCSS_STUS = 'A' THEN 'Approved'
+                WHEN B.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
+                WHEN B.APPV_PRCSS_STUS = 'R' THEN 'Request'
+            END BATCH_STUS_ID,
+            B.APPV_PRCSS_STUS,
+            A.TOTAL_CLAIMS,
+            C1.AMT,
+            TO_CHAR(A.CRT_DT, 'DD-MM-YYYY') CRT_DT,
+            D.USER_NAME CRT_USER,
+            CASE
+                WHEN B.APPV_PRCSS_STUS NOT IN ('A', 'J') THEN '-' ELSE TO_CHAR(B.APPV_PRCSS_DT, 'DD-MM-YYYY')
+            END CNFM_DT,
+            CASE
+                WHEN B.APPV_PRCSS_STUS NOT IN ('A', 'J') THEN '-' ELSE E.USER_NAME
+            END CNFM_USER_ID,
+            ATCH_FILE_GRP_ID,
+            A.APPV_PRCSS_NO
+        FROM FCM0025M A
+        INNER JOIN FCM0004M B
+            ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+        INNER JOIN FCM0026D C
+            ON A.BATCH_ID = C.BATCH_ID
+        INNER JOIN (
+            SELECT
+                BATCH_ID,
+                SUM(AMT) AMT
+            FROM FCM0026D
+            GROUP BY BATCH_ID
+        ) C1
+            ON C.BATCH_ID = C1.BATCH_ID
+        LEFT JOIN SYS0047M D
+            ON A.CRT_USER_ID = D.USER_ID
+        LEFT JOIN SYS0047M E
+            ON B.UPD_USER_ID = E.USER_ID
+        WHERE 1=1
+        <if test="bchIdStart != null and bchIdStart != ''">
+            <![CDATA[
+                 AND A.BATCH_ID >= #{bchIdStart}
+            ]]>
+        </if>
+        <if test="bchIdEnd != null and bchIdEnd != ''">
+            <![CDATA[
+                 AND A.BATCH_ID <= #{bchIdEnd}
+            ]]>
+        </if>
+        <if test="appvPrcssStus != null and appvPrcssStus != ''">
+             AND B.APPV_PRCSS_STUS IN
+         <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+             #{item}
+         </foreach>
+        </if>
+        <if test="startDt != null and startDt != ''">
+            <![CDATA[
+                 AND A.CRT_DT >= TO_CHAR(#{startDt}, 'DD/MM/YYYY')
+            ]]>
+        </if>
+        <if test="endDt != null and endDt != ''">
+            <![CDATA[
+                 AND A.CRT_DT <= TO_CHAR(#{endDt}, 'DD/MM/YYYY')
+            ]]>
+        </if>
+        GROUP BY
+            A.BATCH_ID,
+            B.APPV_PRCSS_STUS,
+            CASE
+                WHEN B.APPV_PRCSS_STUS = 'P' THEN 'Approval-In-Progress'
+                WHEN B.APPV_PRCSS_STUS = 'A' THEN 'Approved'
+                WHEN B.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
+                WHEN B.APPV_PRCSS_STUS = 'R' THEN 'Request'
+            END,
+            A.TOTAL_CLAIMS,
+            C1.AMT,
+            TO_CHAR(A.CRT_DT, 'DD-MM-YYYY'),
+            D.USER_NAME,
+            CASE
+                WHEN B.APPV_PRCSS_STUS NOT IN ('A', 'J') THEN '-' ELSE TO_CHAR(B.APPV_PRCSS_DT, 'DD-MM-YYYY')
+            END,
+            CASE
+                WHEN B.APPV_PRCSS_STUS NOT IN ('A', 'J') THEN '-' ELSE E.USER_NAME
+            END,
+            ATCH_FILE_GRP_ID,
+            A.APPV_PRCSS_NO
+        ORDER BY A.BATCH_ID
+    </select>
+
+    <select id="getApprDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.APPV_PRCSS_STUS,
+            A.APPV_PRCSS_DT,
+            A.APPV_LINE_CNT,
+            A.APPV_LINE_PRCSS_CNT,
+            B.APPV_LINE_SEQ,
+            B.APPV_DT,
+            B.APPV_STUS
+        FROM FCM0004M A
+        INNER JOIN FCM0005D B
+            ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+            AND B.APPV_STUS = 'R'
+        WHERE A.APPV_PRCSS_NO = #{appvPrcssNo}
+           /*AND (A.APPV_LINE_PRCSS_CNT + 1) = b.APPV_LINE_SEQ*/
+        ORDER BY B.APPV_LINE_SEQ
+    </select>
+
+    <select id="getApprDtl" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.REQST_USER_ID,
+            TO_CHAR(A.REQST_DT, 'DD/MM/YYYY') REQST_DT,
+            A.APPV_PRCSS_STUS,
+            A.APPV_PRCSS_DT,
+            A.APPV_LINE_CNT,
+            A.APPV_LINE_PRCSS_CNT,
+            B.APPV_LINE_SEQ,
+            NVL(TO_CHAR(B.APPV_DT, 'DD/MM/YYYY'), '-') APPV_DT,
+            B.APPV_STUS,
+            B.APPV_LINE_USER_ID,
+            C.USER_NAME APPV_LINE_USER_NAME,
+            CASE
+                WHEN D.APPV_STUS = 'A' THEN 'Approval By ' || F.NAME || ' [' || TO_CHAR(D.APPV_DT, 'DD/MM/YYYY') || ']'
+                WHEN D.APPV_STUS = 'J' THEN 'Reject By ' || F.NAME || ' [' || TO_CHAR(D.APPV_DT, 'DD/MM/YYYY') || ']'
+                ELSE '' END FINAL_APPR
+        FROM FCM0025M M
+        INNER JOIN FCM0004M A
+            ON M.APPV_PRCSS_NO = A.APPV_PRCSS_NO
+        INNER JOIN FCM0005D B
+            ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+        INNER JOIN SYS0047M C
+            ON B.APPV_LINE_USER_ID = C.HR_CODE
+        LEFT JOIN FCM0005D D
+            ON A.APPV_PRCSS_NO = D.APPV_PRCSS_NO
+            AND A.APPV_LINE_PRCSS_CNT = D.APPV_LINE_SEQ
+        LEFT JOIN SYS0047M E
+            ON D.UPD_USER_ID = E.USER_ID
+        LEFT JOIN ORG0001D F
+            ON E.HR_CODE = F.MEM_CODE
+        WHERE M.BATCH_ID = #{batchId}
+        ORDER BY B.APPV_LINE_SEQ
+    </select>
+
+    <update id="updateMasterAppr" parameterType="Map">
+        UPDATE FCM0004M SET
+            APPV_PRCSS_STUS = #{appvPrcssStus},
+            APPV_PRCSS_DT = SYSDATE,
+            APPV_LINE_PRCSS_CNT = #{appvLinePrcssCnt},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{userId}
+        WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+    </update>
+
+    <update id="updateDetailAppr" parameterType="Map">
+        UPDATE FCM0005D SET
+            APPV_STUS = #{appvStus},
+            APPV_DT = SYSDATE,
+            REJCT_RESN = #{rejctResn},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{userId}
+        WHERE APPV_PRCSS_NO = #{appvPrcssNo}
+        AND APPV_LINE_SEQ = #{appvLineSeq}
+    </update>
+
+    <select id="getBulkItfDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.CLM_NO DOCENTRY,
+            SUBSTR(B.CLM_NO, 1, 2) DOCETY,
+            TO_CHAR(C.REQST_DT, 'YYYYMMDD') REQDATE,
+            C.REQST_USER_ID REQPERNM,
+            B.COST_CENTER_NAME REQDEPTNM,
+            TO_CHAR(B.INVC_DT, 'YYYYMMDD') DOCDATE,
+            B.SUPPLIER CARDCODE,
+            B.CLM_SEQ LINEID,
+            B.INVC_NO INVONO,
+            B.CLAM_UN CLAM_UN,
+            B.CLM_NO REGINO,
+            TO_CHAR(B.PAY_DT, 'YYYYMMDD') REFDATE,
+            B.EXP_DESC LINEMEMO,
+            B.GL_ACC_NO ACCTCODE,
+            B.GL_ACC_NAME ACCTNAME,
+            B.AMT,
+            0 VATAMT,
+            0 VAT_NON,
+            B.AMT TAMT,
+            'VB' VATCODE,
+            B.COST_CENTER DIMENSION1,
+            B.BUDGET_CODE DIMENSION2,
+            C.APPV_PRCSS_STUS STATUS,
+            B.JPAY_NO JOMPNO,
+            B.UTIL_NO UTLACNO
+        FROM FCM0025M A
+        INNER JOIN FCM0026D B
+            ON A.BATCH_ID = B.BATCH_ID
+        INNER JOIN FCM0004M C
+            ON A.APPV_PRCSS_NO = C.APPV_PRCSS_NO
+        WHERE A.APPV_PRCSS_NO = #{appvPrcssNo}
+        ORDER BY B.CLM_NO, B.CLM_SEQ
+    </select>
+
+    <insert id="insertBulkItf" parameterType="Map">
+    <!-- insert into ITF0700M -->
+        INSERT INTO ITF0700M (
+            IF_KEY,
+            SEQ,
+            IF_TYPE,
+            TRAN_STATUS_CD,
+            RGST_DT,
+            RGST_TM,
+            RGST_ID,
+            DOCENTRY,
+            DOCETY,
+            REQDATE,
+            REQPERNM,
+            REQDEPTNM,
+            DOCDATE,
+            DUEDATE,
+            CARDCODE,
+            LINEID,
+            INVONO,
+            CLAM_UN,
+            REGINO,
+            REFDATE,
+            LINEMEMO,
+            ACCTCODE,
+            ACCTNAME,
+            AMT,
+            VATAMT,
+            VAT_NON,
+            TAMT,
+            VATCODE,
+            DIMENSION1,
+            DIMENSION2,
+            STATUS,
+            JOMPNO,
+            UTLACNO
+        ) VALUES (
+            #{ifKey},
+            1,
+            '700',
+            '10',
+            TO_CHAR(SYSDATE, 'YYYYMMDD'),
+            TO_CHAR(SYSDATE, 'HH24MISS'),
+            #{userId},
+            #{docentry},
+            #{docety},
+            #{reqdate},
+            #{reqpernm},
+            #{reqdeptnm},
+            #{docdate},
+            TO_CHAR(SYSDATE, 'YYYYMMDD'),
+            #{cardcode},
+            #{lineid},
+            #{invono},
+            #{clamUn},
+            #{regino},
+            #{refdate},
+            #{linememo},
+            #{acctcode},
+            #{acctname},
+            #{amt},
+            0,
+            0,
+            #{tamt},
+            'VB',
+            #{dimension1},
+            #{dimension2},
+            #{status},
+            #{jompno},
+            #{utlacno}
+        )
+    </insert>
+
+    <select id="getErrorCnt" parameterType="String" resultType="int">
+        SELECT CODE FROM SYS0094M WHERE IND = 'BULK_INVC'
+    </select>
+
+    <select id="getBatchClmNos" parameterType="Map" resultType="egovMap">
+        SELECT
+            DISTINCT CLM_NO
+        FROM FCM0026D
+        WHERE BATCH_ID = #{batchId}
+    </select>
+
+    <select id="selectBulkInvcDtlList" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.BATCH_ID,
+            CASE
+                WHEN B.APPV_PRCSS_STUS = 'P' THEN 'Approval-In-Progress'
+                WHEN B.APPV_PRCSS_STUS = 'A' THEN 'Approved'
+                WHEN B.APPV_PRCSS_STUS = 'J' THEN 'Rejected'
+                WHEN B.APPV_PRCSS_STUS = 'R' THEN 'Request'
+            END BATCH_STUS_ID,
+            C.CLM_NO,
+            <if test="excelFlag == 0">
+                D.USER_NAME CRT_USER,
+                C.COST_CENTER || ' - ' || C.COST_CENTER_NAME COST_CENTER,
+                C.SUPPLIER || ' - ' || C.SUPPLIER_NAME SUPPLIER,
+            </if>
+            <if test="excelFlag == 1">
+                C.SUPPLIER,
+                C.SUPPLIER_NAME,
+                C.COST_CENTER,
+                C.COST_CENTER_NAME,
+            </if>
+            C.INVC_NO,
+            TO_CHAR(C.INVC_DT, 'DD-MM-YYYY') INVC_DT,
+            TO_CHAR(C.PAY_DT, 'DD-MM-YYYY') PAY_DT,
+            TO_CHAR(B.REQST_DT, 'DD-MM-YYYY') REQST_DT,
+            B.REQST_USER_ID,
+            C.BUDGET_CODE,
+            C.BUDGET_NAME,
+            C.GL_ACC_NO,
+            C.GL_ACC_NAME,
+            C.AMT,
+            C.UTIL_NO,
+            C.JPAY_NO,
+            TO_CHAR(C.BILL_PERIOD_FR, 'DD-MM-YYYY') BILL_PERIOD_FR,
+            TO_CHAR(C.BILL_PERIOD_TO, 'DD-MM-YYYY') BILL_PERIOD_TO,
+            C.EXP_DESC,
+            TO_CHAR(B.APPV_PRCSS_DT, 'DD/MM/YYYY') APPR_PRCSS_DT
+        FROM FCM0025M A
+        INNER JOIN FCM0004M B
+            ON A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+        INNER JOIN FCM0026D C
+            ON A.BATCH_ID = C.BATCH_ID
+        LEFT JOIN SYS0047M D
+            ON A.CRT_USER_ID = D.USER_ID
+        LEFT JOIN SYS0047M E
+            ON B.UPD_USER_ID = E.USER_ID
+        WHERE 1=1
+        <if test="clmNoStart != null and clmNoStart != ''">
+            <![CDATA[
+                 AND C.CLM_NO >= #{clmNoStart}
+            ]]>
+        </if>
+        <if test="clmNoEnd != null and clmNoEnd != ''">
+            <![CDATA[
+                 AND C.CLM_NO <= #{clmNoEnd}
+            ]]>
+        </if>
+        <if test="invcNo != null and invcNo != ''">
+            AND C.INVC_NO LIKE '%' || UPPER(#{invcNo}) || '%'
+        </if>
+        <if test="costCenter != null and costCenter != ''">
+            AND C.COST_CENTER = #{costCenter}
+        </if>
+        <if test="memAccId != null and memAccId != ''">
+            AND C.SUPPLIER = #{memAccId}
+        </if>
+        <if test="utilNo != null and utilNo != ''">
+            AND C.UTIL_NO LIKE '%' || UPPER(#{utilNo}) || '%'
+        </if>
+        <if test="appvPrcssStus != null and appvPrcssStus != ''">
+             AND B.APPV_PRCSS_STUS IN
+            <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="appStartDt != null and appStartDt != ''">
+            <![CDATA[
+                 AND A.CRT_DT >= TO_CHAR(#{appStartDt}, 'DD/MM/YYYY')
+            ]]>
+        </if>
+        <if test="appEndDt != null and appEndDt != ''">
+            <![CDATA[
+                 AND A.CRT_DT <= TO_CHAR(#{appEndDt}, 'DD/MM/YYYY')
+            ]]>
+        </if>
+        <if test="expDesc != null and expDesc != ''">
+            AND UPPER(C.EXP_DESC) LIKE '%' || UPPER(#{expDesc}) || '%'
+        </if>
+        ORDER BY
+            A.BATCH_ID,
+            C.CLM_NO,
+            C.COST_CENTER,
+            C.SUPPLIER,
+            C.UTIL_NO
+    </select>
+
+    <select id="getRejectRsn" parameterType="Map" resultType="String">
+        SELECT
+            REJCT_RESN
+        FROM FCM0004M A,
+                FCM0005D B
+        WHERE A.APPV_PRCSS_NO = B.APPV_PRCSS_NO
+            AND A.APPV_PRCSS_NO = #{appvPrcssNo}
+            AND A.APPV_LINE_PRCSS_CNT = B.APPV_LINE_SEQ
+    </select>
+
+</mapper>

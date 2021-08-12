@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.order.impl.OrderRentalMapper">
+
+<select id="getPayTerm"  parameterType="Map" resultType="egovMap">
+    SELECT Extent1.RENT_PAY_MODE_CODE   ,
+       Extent1.RENT_PAY_MODE_DESC   ,
+       Extent1.RENT_PAY_APPLY_DT   ,
+       Extent1.RENT_PAY_SUBMIT_DT   ,
+       Extent1.RENT_PAY_START_DT   ,
+       Extent1.RENT_PAY_REJCT_DT   ,
+       Extent1.RENT_PAY_REJCT_CODE   ,
+       Extent1.RENT_PAY_REJCT_DESC   ,
+       Extent1.RENT_PAY_ISS_BANK_CODE   ,
+       Extent1.RENT_PAY_ISS_BANK_NAME   ,
+       Extent1.RENT_PAY_ACC_NO   ,
+       Extent1.RENT_PAY_ACC_OWNER   ,
+       Extent1.RENT_PAY_CRC_NO   ,
+       Extent1.RENT_PAY_CR_OWNER   ,
+       Extent1.RENT_PAY_CRC_EXPR   ,
+       Extent1.ORD_ID   ,
+       Extent1.ISSU_NRIC   ,
+       Extent1.CLM_LIMIT   ,
+       Extent1.CLM_DT   ,
+       Extent1.CLM_DD_MODE   ,
+       Extent1.IS_3PARTY   ,
+       Extent1.PAYER_CUST_ID   ,
+       Extent1.PAY_MODE_ID   ,
+       Extent1.CRC_ID   ,
+       Extent1.BANK_ACC_ID   ,
+       Extent1.ISSU_BANK_ID   ,
+       Extent1.FAIL_RESN_ID   ,
+       Extent1.OLD_IC   ,
+       Extent1.PAY_TRM   ,
+       Extent1.CARD_TYPE   ,
+       Extent1.CARD_TYPE_ID   
+  FROM ( SELECT vOrderRentPaySetInfo.ORD_ID   ,
+                vOrderRentPaySetInfo.RENT_PAY_MODE_CODE   ,
+                vOrderRentPaySetInfo.RENT_PAY_MODE_DESC   ,
+                vOrderRentPaySetInfo.RENT_PAY_APPLY_DT   ,
+                vOrderRentPaySetInfo.RENT_PAY_SUBMIT_DT   ,
+                vOrderRentPaySetInfo.RENT_PAY_START_DT   ,
+                vOrderRentPaySetInfo.RENT_PAY_REJCT_DT   ,
+                vOrderRentPaySetInfo.RENT_PAY_REJCT_CODE   ,
+                vOrderRentPaySetInfo.RENT_PAY_REJCT_DESC   ,
+                vOrderRentPaySetInfo.RENT_PAY_ISS_BANK_CODE   ,
+                vOrderRentPaySetInfo.RENT_PAY_ISS_BANK_NAME   ,
+                vOrderRentPaySetInfo.RENT_PAY_ACC_NO   ,
+                vOrderRentPaySetInfo.RENT_PAY_ACC_OWNER   ,
+                vOrderRentPaySetInfo.RENT_PAY_CRC_NO   ,
+                vOrderRentPaySetInfo.RENT_PAY_CR_OWNER   ,
+                vOrderRentPaySetInfo.RENT_PAY_CRC_EXPR   ,
+                vOrderRentPaySetInfo.ISSU_NRIC   ,
+                vOrderRentPaySetInfo.CLM_LIMIT   ,
+                vOrderRentPaySetInfo.CLM_DT   ,
+                vOrderRentPaySetInfo.CLM_DD_MODE   ,
+                vOrderRentPaySetInfo.IS_3PARTY   ,
+                vOrderRentPaySetInfo.PAYER_CUST_ID   ,
+                vOrderRentPaySetInfo.PAY_MODE_ID   ,
+                vOrderRentPaySetInfo.CRC_ID   ,
+                vOrderRentPaySetInfo.BANK_ACC_ID   ,
+                vOrderRentPaySetInfo.ISSU_BANK_ID   ,
+                vOrderRentPaySetInfo.FAIL_RESN_ID   ,
+                vOrderRentPaySetInfo.OLD_IC   ,
+                vOrderRentPaySetInfo.PAY_TRM   ,
+                vOrderRentPaySetInfo.CARD_TYPE   ,
+                vOrderRentPaySetInfo.CARD_TYPE_ID   
+         FROM PAY1009V vOrderRentPaySetInfo ) Extent1
+         <![CDATA[
+ WHERE  Extent1.ORD_ID = #{salesOrdId} AND ROWNUM <= 1
+ ]]>
+</select>
+
+<select id="getRentPayInfo" parameterType="Map" resultType="egovMap">
+    SELECT Extent1.RENT_PAY_ID   ,
+       Extent1.SALES_ORD_ID   ,
+       Extent1.MODE_ID   ,
+       Extent1.CUST_CRC_ID   ,
+       Extent1.BANK_ID   ,
+       Extent1.CUST_ACC_ID   ,
+       Extent1.DD_APPLY_DT   ,
+       Extent1.DD_SUBMIT_DT   ,
+       Extent1.DD_START_DT   ,
+       Extent1.DD_REJCT_DT   ,
+       Extent1.UPD_USER_ID   ,
+       Extent1.UPD_DT   ,
+       Extent1.STUS_CODE_ID   ,
+       Extent1.IS_3RD_PARTY   ,
+       Extent1.CUST_ID   ,
+       Extent1.EDIT_TYPE_ID   ,
+       Extent1.NRIC_OLD   ,
+       Extent1.FAIL_RESN_ID   ,
+       Extent1.ISSU_NRIC   ,
+       Extent1.AEON_CNVR   ,
+       Extent1.REM   ,
+       Extent1.LAST_APPLY_USER   ,
+       Extent1.PAY_TRM   ,
+       Extent1.SVC_CNTRCT_ID   
+  FROM SAL0074D Extent1
+ WHERE  Extent1.SALES_ORD_ID = #{termSalesOrdId}
+ <![CDATA[ 
+ AND ROWNUM <= 1
+ ]]>
+</select>
+
+<update id="updatePayChannel"  parameterType="Map">
+    UPDATE SAL0074D
+        SET UPD_USER_ID = #{userId},
+        UPD_DT = SYSDATE,
+        PAY_TRM = #{payTerm}
+    WHERE RENT_PAY_ID = #{rentPayId}
+</update>
+
+</mapper>

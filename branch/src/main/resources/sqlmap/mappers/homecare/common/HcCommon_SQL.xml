@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.common.impl.HcCommonMapper">
+
+    <select id="selectSearchOrderNo" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.common.impl.HcCommonMapper.selectSearchOrderNo] - KR.JIN */
+            SELECT
+                  Distinct1.C1 C1 ,
+                  Distinct1.ORD_ID ,
+                  Distinct1.ORD_NO, TO_CHAR(Distinct1.ORD_DT, 'DD-MM-YYYY') ORD_DT,
+                  Distinct1.ORD_STUS_CODE ,
+                  Distinct1.CUST_NAME ,
+                  Distinct1.CUST_NRIC ,
+                  Distinct1.APP_TYPE_CODE ,
+                  Distinct1.STOCK_CODE ,
+                  Distinct1.STOCK_DESC,
+                  Distinct1.ORD_PV_MONTH,
+                  Distinct1.ORD_PV_YEAR,
+                  Distinct1.APP_TYPE_ID
+              FROM ( SELECT DISTINCT Extent1.ORD_ID ORD_ID ,
+                                     Extent1.ORD_NO ORD_NO ,
+                                     Extent1.ORD_STUS_CODE  ,
+                                     Extent1.APP_TYPE_CODE  ,
+                                     Extent1.STOCK_CODE  ,
+                                     Extent1.STOCK_DESC  ,
+                                     Extent1.CUST_NAME  ,
+                                     Extent1.CUST_NRIC  , 1 C1,
+                                     Extent1.ORD_DT,
+                                     Extent1.ORD_PV_MONTH,
+                                     Extent1.ORD_PV_YEAR,
+                                     Extent1.APP_TYPE_ID
+                                     FROM (
+                                          SELECT vOrderBasicInfo.ORD_ID  ,
+                                          vOrderBasicInfo.ORD_NO ORD_NO ,
+                                          vOrderBasicInfo.RENTAL_STUS RENTAL_STUS ,
+                                          vOrderBasicInfo.ORD_STUS_ID ORD_STUS_ID ,
+                                          vOrderBasicInfo.ORD_STUS_CODE ORD_STUS_CODE ,
+                                          vOrderBasicInfo.ORD_STUS_NAME ORD_STUS_NAME ,
+                                          vOrderBasicInfo.ORD_DT ORD_DT ,
+                                          vOrderBasicInfo.INSTLMT_PRIOD INSTLMT_PRIOD ,
+                                          vOrderBasicInfo.ORD_AMT ORD_AMT ,
+                                          vOrderBasicInfo.ORD_MTH_RENTAL ORD_MTH_RENTAL ,
+                                          vOrderBasicInfo.ORD_PV ORD_PV ,
+                                          vOrderBasicInfo.ORD_PV_MONTH ORD_PV_MONTH ,
+                                          vOrderBasicInfo.ORD_PV_YEAR ORD_PV_YEAR ,
+                                          vOrderBasicInfo.ORD_REF_NO ORD_REF_NO ,
+                                          vOrderBasicInfo.ORD_PO_NO ORD_PO_NO ,
+                                          vOrderBasicInfo.ORD_DEPT_CODE ORD_DEPT_CODE ,
+                                          vOrderBasicInfo.ORD_GRP_CODE ORD_GRP_CODE ,
+                                          vOrderBasicInfo.ORD_ORG_CODE ORD_ORG_CODE ,
+                                          vOrderBasicInfo.ORD_CRT_USER_ID ORD_CRT_USER_ID ,
+                                          vOrderBasicInfo.ORD_CRT_DT ORD_CRT_DT ,
+                                          vOrderBasicInfo.APP_TYPE_ID APP_TYPE_ID ,
+                                          vOrderBasicInfo.APP_TYPE_CODE APP_TYPE_CODE ,
+                                          vOrderBasicInfo.APP_TYPE_DESC APP_TYPE_DESC ,
+                                          vOrderBasicInfo.STOCK_ID STOCK_ID ,
+                                          vOrderBasicInfo.STOCK_CODE STOCK_CODE ,
+                                          vOrderBasicInfo.STOCK_DESC STOCK_DESC ,
+                                          vOrderBasicInfo.CUST_ID CUST_ID ,
+                                          vOrderBasicInfo.CUST_TYPE CUST_TYPE ,
+                                          vOrderBasicInfo.CUST_NAME CUST_NAME ,
+                                          vOrderBasicInfo.CUST_NRIC CUST_NRIC ,
+                                          vOrderBasicInfo.CUST_DOB CUST_DOB ,
+                                          vOrderBasicInfo.CUST_NATION CUST_NATION ,
+                                          vOrderBasicInfo.CUST_GENDER CUST_GENDER ,
+                                          vOrderBasicInfo.CUST_RACE CUST_RACE ,
+                                          vOrderBasicInfo.CUST_EMAIL CUST_EMAIL ,
+                                          vOrderBasicInfo.CUST_VA_NO CUST_VA_NO ,
+                                          vOrderBasicInfo.CUST_PASSPORT_EXPR CUST_PASSPORT_EXPR ,
+                                          vOrderBasicInfo.CUST_VISA_EXPR CUST_VISA_EXPR ,
+                                          vOrderBasicInfo.ORD_PROMO_ID ORD_PROMO_ID ,
+                                          vOrderBasicInfo.ORD_PROMO_CODE ORD_PROMO_CODE ,
+                                          vOrderBasicInfo.ORD_PROMO_DESC ORD_PROMO_DESC ,
+                                          vOrderBasicInfo.ORD_MEM_ID ORD_MEM_ID ,
+                                          vOrderBasicInfo.ORD_MEM_CODE ORD_MEM_CODE ,
+                                          vOrderBasicInfo.ORD_MEM_NAME ORD_MEM_NAME ,
+                                          vOrderBasicInfo.ORD_MEM_NRIC ORD_MEM_NRIC ,
+                                          vOrderBasicInfo.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID ,
+                                          vOrderBasicInfo.ORD_MEM_TYPE_CODE ORD_MEM_TYPE_CODE ,
+                                          vOrderBasicInfo.ORD_MEM_TYPE_NAME ORD_MEM_TYPE_NAME ,
+                                          vOrderBasicInfo.COOL_OFF_PRIOD COOL_OFF_PRIOD ,
+                                          vOrderBasicInfo.KEYIN_BRNCH_ID KEYIN_BRNCH_ID ,
+                                          vOrderBasicInfo.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE ,
+                                          vOrderBasicInfo.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME ,
+                                          vOrderBasicInfo.ORD_REM ORD_REM ,
+                                          vOrderBasicInfo.RENT_CHK_ID RENT_CHK_ID ,
+                                          vOrderBasicInfo.ORD_HM_ID ORD_HM_ID ,
+                                          vOrderBasicInfo.ORD_SM_ID ORD_SM_ID ,
+                                          vOrderBasicInfo.ORD_GM_ID ORD_GM_ID ,
+                                          vOrderBasicInfo.ORD_ADDR_ID ORD_ADDR_ID ,
+                                          vOrderBasicInfo.ORD_CNTC_ID ORD_CNTC_ID ,
+                                          vOrderBasicInfo.ORD_PROMO_RELATED_NO ORD_PROMO_RELATED_NO ,
+                                          vOrderBasicInfo.UPD_DT UPD_DT ,
+                                          vOrderBasicInfo.UPD_USER_ID UPD_USER_ID ,
+                                          vOrderBasicInfo.JOM_PAY_REF JOM_PAY_REF ,
+                                          vOrderBasicInfo.STK_CTGRY_ID STK_CTGRY_ID ,
+                                          vOrderBasicInfo.STK_CTGRY_NAME STK_CTGRY_NAME ,
+                                          vOrderBasicInfo.CUST_TYPE_ID CUST_TYPE_ID ,
+                                          vOrderBasicInfo.CUST_BILL_ID CUST_BILL_ID ,
+                                          vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR
+                                     FROM SAL1006V vOrderBasicInfo ) Extent1
+                        WHERE  ( 'IACT' <![CDATA[<>]]> Extent1.ORD_STUS_CODE )
+                          AND EXISTS (SELECT 1
+                                        FROM SAL0001D Z
+                                       WHERE Z.SALES_ORD_ID = EXTENT1.ORD_ID
+                                         AND Z.BNDL_ID IS NOT NULL
+                                     )
+                         <if test=" '' != searchOrdNo and null != searchOrdNo">
+                              AND ( Extent1.ORD_NO = #{searchOrdNo})
+                         </if>
+                         <if test=" '' != searchOrdDate and null != searchOrdDate">
+                              AND Extent1.ORD_DT <![CDATA[>=]]> TO_DATE(#{searchOrdDate}, 'DD/MM/YYYY')
+                              AND Extent1.ORD_DT <![CDATA[<]]> TO_DATE(#{searchOrdDate}, 'DD/MM/YYYY')+1
+                         </if>
+                         <if test=" '' != searchOrdCustName and null != searchOrdCustName">
+                              AND ( (UTILS.CONVERT_TO_NUMBER(INSTR(UPPER(Extent1.CUST_NAME), UPPER(#{searchOrdCustName})),10,0)) > 0 )
+                         </if>
+                         <if test=" '' != searchOrdCustNric and null != searchOrdCustNric">
+                              AND ( (UTILS.CONVERT_TO_NUMBER(INSTR(UPPER(Extent1.CUST_NRIC), UPPER(#{searchOrdCustNric})),10,0)) > 0 )
+                         </if>
+                         <if test=" null != appType and appType.length > 0">
+                              AND Extent1.APP_TYPE_ID  IN
+                              <foreach collection="appType" item="item" open="(" separator="," close=")">
+                                  #{item}
+                              </foreach>
+                         </if>
+              ) Distinct1
+
+     </select>
+
+</mapper>

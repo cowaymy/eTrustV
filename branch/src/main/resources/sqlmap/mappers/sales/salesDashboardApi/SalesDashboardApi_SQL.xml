@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.salesDashboardApi.impl.SalesDashboardApiMapper">
+
+
+
+
+
+
+<select id="selectSalesDashboard" parameterType="Map" resultType="egovMap">
+<![CDATA[
+/* [com.coway.trust.biz.sales.salesDashboardApi.impl.SalesDashboardApiMapper.selectSalesDashboard] 20191223 - KR JAEMAJEM */
+SELECT  A.ID                                                                    AS ID
+    ,   A.MEM_ID                                                                AS MEM_ID
+    ,   A.MEM_CODE                                                              AS MEM_CODE
+    ,   A.MEM_TYPE                                                              AS MEM_TYPE
+    ,   A.YEAR                                                                  AS YEAR
+    ,   A.MONTH                                                                 AS MONTH
+    ,   NVL(A.TOT_SALES, 0)                                                     AS TOT_SALES
+    ,   NVL(A.NET_SALES, 0)                                                     AS NET_SALES
+    ,   NVL(A.SHI, 0)                                                           AS SHI
+    ,   NVL(A.PV_TOT, 0)                                                        AS PV_TOT
+    ,   NVL(A.OWN_PURCHASE, 0)                                                  AS OWN_PURCHASE
+    ,   NVL(A.HS_SUCCESS_RATE, 0)                                               AS HS_SUCCESS_RATE
+    ,   NVL(A.COLLECTION_RATE, 0)                                               AS COLLECTION_RATE
+    ,   NVL(A.REJOIN, 0)                                                        AS REJOIN
+    ,   NVL(A.MEMBERSHIP, 0)                                                    AS MEMBERSHIP
+    ,   A.UPD_USER_ID                                                           AS UPD_USER_ID
+    ,   TO_CHAR(A.UPD_DT, 'DD.MM.YYYY')                                         AS UPD_DT
+FROM    REP0102T A
+WHERE   A.MEM_ID = #{memId}
+AND     A.YEAR = TO_CHAR(SYSDATE, 'YYYY')
+AND     A.MONTH = TO_CHAR(SYSDATE, 'MM')
+]]>
+</select>
+
+
+
+
+
+
+</mapper>

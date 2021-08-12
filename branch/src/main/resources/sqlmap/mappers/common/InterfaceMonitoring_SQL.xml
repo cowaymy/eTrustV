@@ -1,0 +1,2103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.common.impl.InterfaceMonitoringMapper">
+<!--
+                                        BIZ_COL                                  CHK_COL
+
+1   BILLING                         INVOICE_NO(BR_NO,4DIGITS)      NET_AMT
+2   COLLECTION                   WOR_NO(3DIGITS)                    CUST_AMT
+3   CUSTOMER                     N/A                                        N/A                          This interface is not made as monitoring result because user updated customer data is composed.
+4   DEFFERED_OUTMEM         START_DT(YYYYMM)                 SRV_MEM_AMT
+5   INSTALLATION_RESULT    APP_TYPE_ID                           N/A
+6   RENTAL_ORDER_STATUS  STATUS_CODE                          N/A
+7   UNBILLED_REV                INSTALL_DT(YYYYMM)               UNBILLED_AMT
+8   BANK_CHARGE                BANK_ACC                                ADV_AMT+DIFF_AMT   This procedure is not target of interface.
+9   BRANCH                         N/A                                        N/A
+
+ -->
+<select id="selectInterfaceMonitoringList" parameterType="Map" resultType="egovMap">
+  <choose>
+    <when test="ifType.equals('200')">
+
+	/* Monitoring by Interface Type */
+	SELECT NVL(MAX(X.IF_TYPE),'200') AS IF_TYPE
+	     , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+	     , MAX(X.CHK_COL) AS CHK_COL
+	     , MAX(SND_CNT) AS SND_CNT
+	     , MAX(RCV_CNT) AS RCV_CNT
+	     , SUM(Z.NET_AMT) AS SND_CHK_VAL
+	     , SUM(X.NET_AMT) AS RCV_CHK_VAL
+	     , NVL(MAX(X.IF_TYPE),'200') AS ROW_ID
+	  FROM ( /*Business Table of Billing (Rental, Outright, Membership, Others)*/
+	       SELECT A.ACC_BILL_REM
+	            , A.ACC_BILL_REF_NO
+	            , COUNT(*) OVER() AS SND_CNT
+	            , SUM(A.ACC_BILL_NET_AMT) AS NET_AMT
+	         FROM PAY0016D A
+	        WHERE 1=1
+	        <![CDATA[
+	          AND A.ACC_BILL_NET_AMT <> 0
+	          ]]>
+	         AND TO_CHAR(ACC_BILL_REF_DT,'YYYYMM') = #{searchDate}
+	        GROUP BY A.ACC_BILL_REM, A.ACC_BILL_REF_NO
+	       ) Z ,
+	       ( /* Interface Table of Billing (Rental, Outright, Membership, Others) */
+	       SELECT A.INVOICE_NO ,
+	              A.BILL_NO ,
+	              MAX(A.IF_TYPE) AS IF_TYPE ,
+	              MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+	              MAX(B.CHK_COL) AS CHK_COL ,
+	              COUNT(*) OVER() AS RCV_CNT ,
+	              SUM(ACC_AMT2) AS NET_AMT
+	         FROM ITF0200M A , ITF0001M B
+	        WHERE A.IF_TYPE = B.IF_TYPE (+)
+	          <![CDATA[
+	          AND ACC_CD <> 'CNDN'
+	          ]]>
+              <if test="tranStatusCd != null and tranStatusCd !=''">
+              AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+              </if>
+	          AND SUBSTR(CONT_DT,0,6) = #{searchDate}
+	          AND A.BUZEI = 1
+	        GROUP BY INVOICE_NO,BILL_NO
+	       ) X
+	 WHERE Z.ACC_BILL_REM = X.INVOICE_NO(+)
+	   AND Z.ACC_BILL_REF_NO = X.BILL_NO(+)
+
+     UNION ALL
+
+    SELECT NVL(MAX(X.IF_TYPE),'200')||'CNDN' AS IF_TYPE
+         , MAX(X.IF_TYPE_NM)||' CNDN' AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , MAX(SND_CNT) AS SND_CNT
+         , MAX(RCV_CNT) AS RCV_CNT
+         , SUM(Z.NET_AMT) AS SND_CHK_VAL
+         , SUM(X.NET_AMT) AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'200')||'CNDN' AS ROW_ID
+      FROM ( /* Business Table of Billing (CN_DN) */
+           SELECT B.MEMO_ADJ_INVC_NO,
+                  B.MEMO_ADJ_REF_NO ,
+                  COUNT(*) OVER() AS SND_CNT ,
+                  SUM(CASE WHEN SUBSTR(B.MEMO_ADJ_REF_NO,0,1) = 'C'
+                           THEN A.MEMO_ITM_AMT * -1
+                           ELSE A.MEMO_ITM_AMT END ) AS NET_AMT
+             FROM PAY0012D A ,
+                  PAY0011D B
+            WHERE A.MEMO_ADJ_ID = B.MEMO_ADJ_ID
+              AND TO_CHAR(B.MEMO_ADJ_UPD_DT,'YYYYMM') = #{searchDate}
+              AND MEMO_ADJ_STUS_ID = 4
+            GROUP BY B.MEMO_ADJ_INVC_NO, B.MEMO_ADJ_REF_NO
+           ) Z ,
+           ( /* Interface Table of Billing (CN_DN) */
+             SELECT INVOICE_NO ,
+                    BILL_NO ,
+                    MAX(A.IF_TYPE) AS IF_TYPE ,
+                    MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+                    MAX(B.CHK_COL) AS CHK_COL ,
+                    COUNT(*) OVER() AS RCV_CNT ,
+                    SUM(CASE WHEN BUZEI = 1 THEN ACC_AMT2 ELSE 0 END) AS NET_AMT
+               FROM ITF0200M A , ITF0001M B
+              WHERE A.IF_TYPE = B.IF_TYPE(+)
+                AND ACC_CD = 'CNDN'
+                <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+                AND SUBSTR(CONT_DT,0,6) = #{searchDate}
+              GROUP BY INVOICE_NO, BILL_NO
+           ) X
+     WHERE Z.MEMO_ADJ_INVC_NO = X.INVOICE_NO(+)
+       AND Z.MEMO_ADJ_REF_NO = X.BILL_NO(+)
+
+    </when>
+
+    <when test="ifType.equals('910')">
+
+    SELECT NVL(MAX(X.IF_TYPE),'910') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , MAX(SND_CNT) AS SND_CNT
+         , MAX(RCV_CNT) AS RCV_CNT
+         , SUM(Z.CUST_AMT) AS SND_CHK_VAL
+         , SUM(X.CUST_AMT) AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'910') AS ROW_ID
+      FROM (
+           SELECT A.WOR_NO ,
+                  COUNT(*) OVER() AS SND_CNT ,
+                  SUM(A.CUST_AMT) AS CUST_AMT
+             FROM (
+                  SELECT A.OR_NO AS WOR_NO
+                        , H.PAY_ITM_AMT AS CUST_AMT
+                     FROM PAY0064D A
+                        , PAY0065D B
+                        , PAY0252T H /* PAYMENT GROUP _ ADD ORDER*/
+                    WHERE A.PAY_ID = B.PAY_ID
+                      AND A.PAY_ID = H.PAY_ID
+                      AND B.PAY_ITM_ID = H.PAY_ITM_ID
+                      AND TO_CHAR(A.CRT_DT,'YYYYMM') = #{searchDate}
+                    UNION ALL
+                   SELECT A.OR_NO AS WOR_NO
+                        , A.TOT_AMT AS CUST_AMT
+                     FROM PAY0064D A
+                        , PAY0065D B
+                    WHERE A.PAY_ID = B.PAY_ID
+                      AND SUBSTR(A.OR_NO,0,3) = 'EOR'
+                      AND TO_CHAR(A.CRT_DT,'YYYYMM') = #{searchDate}
+                    UNION ALL
+                   SELECT A.OR_NO AS WOR_NO
+                        , A.TOT_AMT AS CUST_AMT
+                     FROM PAY0064D A
+                        , PAY0065D B
+                        , PAY0064D H
+                    WHERE A.PAY_ID = B.PAY_ID
+                      AND A.MTCH_ID = H.PAY_ID
+                      AND SUBSTR(A.OR_NO,0,3) = 'ROR'
+                      AND TO_CHAR(A.CRT_DT,'YYYYMM') = #{searchDate}
+                  ) A
+           GROUP BY A.WOR_NO
+           ) Z ,
+           ( /* Interface Table */
+           SELECT A.WOR_NO ,
+                  MAX(A.IF_TYPE) AS IF_TYPE ,
+                  MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+                  MAX(B.CHK_COL) AS CHK_COL ,
+                  COUNT(*) OVER() AS RCV_CNT ,
+                  SUM(A.CUST_AMT) AS CUST_AMT
+             FROM ITF0910M A , ITF0001M B
+            WHERE A.IF_TYPE = B.IF_TYPE (+)
+                <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+              AND SUBSTR(PAY_DATE,0,6) = #{searchDate}
+            GROUP BY WOR_NO
+           ) X
+     WHERE Z.WOR_NO = X.WOR_NO(+)
+    </when>
+
+    <when test="ifType.equals('110')">
+
+    /* Monitoring by Interface Type */
+    SELECT NVL(MAX(X.IF_TYPE),'110') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , MAX(Z.SND_CNT) AS SND_CNT
+         , MAX(X.RCV_CNT) AS RCV_CNT
+         , NULL AS SND_CHK_VAL
+         , NULL AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'110') AS ROW_ID
+      FROM 
+           (
+           SELECT A.CUST_NO ,
+                  COUNT(*) OVER() AS SND_CNT
+             FROM (    
+            SELECT TO_CHAR(a.cust_id) AS CUST_NO  
+              FROM SAL0029D a
+                 , SYS0013M b
+                 , SAL0023D c
+                 , SYS0064M d
+             WHERE a.TYPE_ID = b.CODE_ID
+               AND a.CUST_ID = c.CUST_ID
+               AND c.STUS_CODE_ID = 9      
+               AND c.AREA_ID = d.AREA_ID(+)
+               AND TO_CHAR(a.UPD_DT,'YYYYMM') = #{searchDate}
+            UNION ALL
+            SELECT CASE WHEN MEM_TYPE = '1' THEN 'HP'||MEM_CODE
+                        ELSE TO_CHAR(MEM_CODE) END AS CUST_NO
+              FROM ORG0001D A 
+                 , SYS0047M B
+             WHERE 1=1
+               AND A.MEM_CODE = B.HR_CODE
+               AND MEM_CODE IS NOT NULL
+               AND USER_STUS_ID = 1   
+               AND TO_CHAR(a.UPD_DT,'YYYYMM') = #{searchDate}
+            UNION ALL
+            SELECT 'D'|| A.DEALER_ID AS CUST_NO
+              FROM SAL0030D A
+                 , SAL0031D B
+                 , SYS0064M C
+             WHERE 1=1    
+               AND A.DEALER_ID = B.DEALER_ID
+               AND B.AREA_ID = C.AREA_ID         
+               AND TO_CHAR(a.UPD_DT,'YYYYMM') = #{searchDate}
+               ) A
+           ) Z, 
+           ( /* Interface Table of Billing (Rental, Outright, Membership, Others) */
+           SELECT A.CUST_NO ,
+                  A.IF_TYPE ,
+                  B.IF_TYPE_NM ,
+                  B.CHK_COL ,
+                  COUNT(*) OVER() AS RCV_CNT
+             FROM ITF0110M A , ITF0001M B
+            WHERE A.IF_TYPE = B.IF_TYPE (+)
+               <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+              AND SUBSTR(RGST_DT,0,6) = #{searchDate}
+           ) X
+           WHERE Z.CUST_NO = X.CUST_NO(+)
+    </when>
+
+    <when test="ifType.equals('950')">
+
+     /* Defferedd Outright Membership */
+    SELECT NVL(MAX(X.IF_TYPE),'950') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , SUM(Z.SND_CNT) AS SND_CNT
+         , SUM(X.RCV_CNT) AS RCV_CNT
+         , SUM(Z.MEM_AMOUNT) AS SND_CHK_VAL
+         , SUM(X.MEM_AMOUNT) AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'950') AS ROW_ID
+      FROM (
+           SELECT MEM_START
+                , SUM(SND_CNT) AS SND_CNT
+                , SUM(MEM_AMOUNT) AS MEM_AMOUNT
+             FROM (
+                  SELECT TO_CHAR(MEM.SRV_START_DT,'YYYYMM') AS MEM_START
+                       , COUNT(1) AS SND_CNT
+                       , SUM(PD.ACC_BILL_NET_AMT - PD.ACC_BILL_TXS_AMT) AS MEM_AMOUNT
+                    FROM SAL0095D MEM
+                    JOIN SAL0091M PAC ON MEM.SRV_MEM_PAC_ID = PAC.SRV_MEM_PAC_ID
+                    JOIN SAL0001D SOM ON MEM.SRV_SALES_ORD_ID = SOM.SALES_ORD_ID
+                    JOIN PAY0016D PD  ON PD.ACC_BILL_ORD_ID = SOM.SALES_ORD_ID
+                                     AND ACC_BILL_MODE_ID = 1143
+                    JOIN SAL0093D QUT ON MEM.SRV_MEM_QUOT_ID = QUT.SRV_MEM_QUOT_ID
+                    JOIN PAY0031D INV ON QUT.SRV_MEM_QUOT_NO = INV.TAX_INVC_SVC_NO
+                                     AND INV.TAX_INVC_REF_NO = PD.ACC_BILL_REM
+                   WHERE MEM.SRV_STUS_CODE_ID = 4
+                     AND PAC.PAC_TYPE = 1
+                     AND SOM.STUS_CODE_ID = 4
+                     AND TO_CHAR(MEM.SRV_START_DT,'YYYYMM') = #{searchDate}
+                   GROUP BY TO_CHAR(MEM.SRV_START_DT,'YYYYMM')                                    
+                  )
+             GROUP BY MEM_START
+           ) Z ,
+           ( /* Interface Table */
+           SELECT SUBSTR(A.MEM_START,0,6) AS MEM_START ,
+                  MAX(A.IF_TYPE) AS IF_TYPE ,
+                  MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+                  MAX(B.CHK_COL) AS CHK_COL ,
+                  COUNT(*) AS RCV_CNT ,
+                  SUM(A.MEM_AMOUNT) AS MEM_AMOUNT
+             FROM ITF0950M A , ITF0001M B
+            WHERE A.IF_TYPE = B.IF_TYPE (+)
+               <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+               AND SUBSTR(RGST_DT,0,6) = TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM')
+              <![CDATA[
+              AND SUBSTR(A.MEM_START,0,6) = #{searchDate}
+              ]]>
+            GROUP BY SUBSTR(A.MEM_START,0,6)
+           ) X
+     WHERE Z.MEM_START = X.MEM_START(+)
+    </when>
+    <when test="ifType.equals('210')">
+
+    SELECT NVL(MAX(X.IF_TYPE),'210') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , SUM(Z.SND_CNT) AS SND_CNT
+         , SUM(X.RCV_CNT) AS RCV_CNT
+         , NULL AS SND_CHK_VAL
+         , NULL AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'210') AS ROW_ID
+      FROM (
+           SELECT A.APP_TYPE_ID
+                , COUNT(1) AS SND_CNT
+             FROM SAL0001D A
+                , SAL0046D B
+                , SAL0047D C
+                , SAL0002D D
+                , SYS0026M E
+                , SYS0005M F
+            WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+              AND B.INSTALL_ENTRY_ID = C.ENTRY_ID
+              AND B.STUS_CODE_ID = 4
+              AND C.STUS_CODE_ID = 4
+              AND A.SALES_ORD_ID = D.SALES_ORD_ID
+              AND D.ITM_STK_ID = E.STK_ID
+              AND A.BRNCH_ID = F.BRNCH_ID
+              AND TO_CHAR(C.INSTALL_DT,'YYYYMM') = #{searchDate}
+            GROUP BY A.APP_TYPE_ID
+           ) Z ,
+           ( /* Interface Table of Billing (CN_DN) */
+             SELECT A.APP_TYPE AS APP_TYPE_ID ,
+                    MAX(A.IF_TYPE) AS IF_TYPE ,
+                    MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+                    MAX(B.CHK_COL) AS CHK_COL ,
+                    COUNT(1) AS RCV_CNT
+               FROM ITF0210M A , ITF0001M B
+              WHERE A.IF_TYPE = B.IF_TYPE(+)
+               <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+                AND SUBSTR(A.INSTALL_DATE,0,6) = #{searchDate}
+              GROUP BY A.APP_TYPE
+           ) X
+     WHERE Z.APP_TYPE_ID = X.APP_TYPE_ID(+)
+    </when>
+    <when test="ifType.equals('960')">
+
+    /* Rental Order Status */
+    SELECT NVL(MAX(X.IF_TYPE),'960') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , SUM(Z.SND_CNT) AS SND_CNT
+         , SUM(X.RCV_CNT) AS RCV_CNT
+         , NULL AS SND_CHK_VAL
+         , NULL AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'960') AS ROW_ID
+      FROM (
+           SELECT A.STATUS
+                , COUNT(1) AS SND_CNT
+             FROM (
+                   SELECT D.SALES_ORD_NO AS ORDER_NO
+                        , MAX(A.ACC_DEBT_OPNG_RENTAL_STUS) AS STATUS
+                     FROM PAY0052S A JOIN PAY0150D B ON A.ACC_DEBT_ORD_ID = B.ACC_DEBT_ORD_ID
+                                                    AND A.ACC_DEBT_OPNG_APP_TYPE_ID = 66
+                                     JOIN SAL0071D C ON A.ACC_DEBT_ORD_ID = C.SALES_ORD_ID
+                                     JOIN SAL0001D D ON A.ACC_DEBT_ORD_ID = D.SALES_ORD_ID
+                                     JOIN SYS0038M E ON A.ACC_DEBT_OPNG_RENTAL_STUS = E.CODE
+                    WHERE 1=1
+                      
+                      AND A.ACC_DEBT_YEAR  = ABS(SUBSTR(TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM'),0,4))
+                      AND A.ACC_DEBT_MONTH = ABS(SUBSTR(TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM'),5,2))
+                      
+                      AND B.ACC_DEBT_YEAR = ABS(SUBSTR(#{searchDate},0,4))
+                      AND B.ACC_DEBT_MONTH = ABS(SUBSTR(#{searchDate},5,2))
+                      
+                      AND D.APP_TYPE_ID = 66
+                      <![CDATA[
+                      AND A.ACC_DEBT_OPNG_RENTAL_STUS <> B.ACC_DEBT_OPNG_RENTAL_STUS
+                      ]]>
+                    GROUP BY D.SALES_ORD_NO
+                  ) A
+            GROUP BY A.STATUS
+           ) Z ,
+           ( /* Interface Table of Billing (CN_DN) */
+           SELECT A.STATUS AS STATUS ,
+                  MAX(A.IF_TYPE) AS IF_TYPE ,
+                  MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+                  MAX(B.CHK_COL) AS CHK_COL ,
+                  COUNT(1) AS RCV_CNT
+             FROM ITF0960M A , ITF0001M B
+            WHERE A.IF_TYPE = B.IF_TYPE(+)
+               <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+              AND SUBSTR(A.RGST_DT,0,6) = TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM')
+            GROUP BY A.STATUS
+           ) X
+     WHERE Z.STATUS = X.STATUS(+)
+    </when>
+    <when test="ifType.equals('963')">
+
+    /* Unbilled Revenue */
+    SELECT NVL(MAX(X.IF_TYPE),'963') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , SUM(Z.SND_CNT) AS SND_CNT
+         , SUM(X.RCV_CNT) AS RCV_CNT
+         , SUM(Z.UNBILL) AS SND_CHK_VAL
+         , SUM(X.UNBILL) AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'963') AS ROW_ID
+      FROM (
+           SELECT INSTALL_DT ,
+                  COUNT(1) AS SND_CNT ,
+                  SUM(UNBILL) AS UNBILL
+             FROM (
+                  SELECT TO_CHAR(IR.INSTALL_DT,'YYYYMM') AS INSTALL_DT
+                       , ROUND(ROUND((TO_NUMBER(TO_CHAR(LAST_DAY(IR.INSTALL_DT),'DD')) - TO_NUMBER(TO_CHAR(IR.INSTALL_DT,'DD')) + 1),2)
+                             / ROUND(TO_NUMBER(TO_CHAR(LAST_DAY(IR.INSTALL_DT),'DD')),2)
+                             * (CASE WHEN EC.EURC_ID IS NOT NULL
+                                     THEN M.MTH_RENT_AMT
+                                     ELSE ( CASE WHEN RR.RLIEF_ID IS NOT NULL
+                                                 THEN M.MTH_RENT_AMT
+                                                 ELSE ROUND(M.MTH_RENT_AMT,2) * 100 / 106
+                                                 END )
+                                     END )
+                              ,2) AS UNBILL
+                    FROM SAL0001D M
+                         JOIN SAL0002D D ON D.SALES_ORD_ID = M.SALES_ORD_ID
+                         JOIN SYS0026M STK ON STk.STK_ID = D.ITM_STK_ID
+                         JOIN SYS0013M CD ON CODE_ID = STK.STK_CTGRY_ID
+                         JOIN SAL0046D T ON T.INSTALL_ENTRY_ID = (SELECT MIN(INSTALL_ENTRY_ID)
+                                                                    FROM SAL0046D F
+                                                                   WHERE F.SALES_ORD_ID = M.SALES_ORD_ID
+                                                                     AND F.STUS_CODE_ID = 4)
+                         JOIN SAL0047D IR ON IR.RESULT_ID = (SELECT MAX(TT.RESULT_ID)
+                                                               FROM SAL0047D TT
+                                                              WHERE TT.ENTRY_ID = T.INSTALL_ENTRY_ID)
+                         JOIN SAL0071D SS ON SS.SALES_ORD_ID = M.SALES_ORD_ID
+                         LEFT JOIN SAL0042D EC ON EC.EURC_SALES_ORD_ID = M.SALES_ORD_ID
+                         LEFT JOIN SAL0043D RR ON RR.RLIEF_ORD_ID = M.SALES_ORD_ID
+                         /**/
+                         LEFT JOIN PAY0016D PD ON PD.ACC_BILL_ORD_ID = M.SALES_ORD_ID
+                                              AND TO_CHAR(PD.ACC_BILL_REF_DT,'YYYYMM') = #{searchDate}
+                         LEFT JOIN SAL0002D H ON M.SALES_ORD_ID = H.SALES_ORD_ID
+                         LEFT JOIN ORG0001D G ON M.MEM_ID = G.MEM_ID
+                         LEFT JOIN SYS0005M I ON G.BRNCH = I.BRNCH_ID
+                         LEFT JOIN SYS0026M J ON H.ITM_STK_ID = J.STK_ID
+                         LEFT JOIN SYS0046D K ON K.CODE_ID = PD.ACC_BILL_TAX_CODE_ID
+                           /**/
+                   WHERE M.APP_TYPE_ID = 66
+                     AND M.SALES_ORD_NO like '2%'
+                     AND T.STUS_CODE_ID = 4
+                     AND SS.STUS_CODE_ID NOT IN ('TER','RET','WOF')
+                     AND TO_CHAR(IR.INSTALL_DT,'YYYYMM') = #{searchDate}
+                   GROUP BY M.SALES_ORD_NO
+                       , IR.INSTALL_DT
+                       , SS.STUS_CODE_ID
+                       , EC.EURC_ID
+                       , M.MTH_RENT_AMT
+                       , RR.RLIEF_ID
+                       , CD.CODE_NAME
+                       , M.APP_TYPE_ID
+                       , I.CODE
+                       , G.MEM_CODE
+                       , M.ORG_CODE
+                       , M.DEPT_CODE
+                       , G.MEM_TYPE
+                       , J.STK_CTGRY_ID
+                       , K.CODE
+                       , J.STK_CODE
+                       , M.CUST_ID
+                       , I.REGN_ID
+                       , M.BRNCH_ID
+                       , G.BRNCH
+                 )
+           GROUP BY INSTALL_DT
+           ) Z ,
+           ( /* Interface Table */
+           SELECT SUBSTR(A.INST_DATE,0,6) AS INSTALL_DT ,
+                  MAX(A.IF_TYPE) AS IF_TYPE ,
+                  MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+                  MAX(B.CHK_COL) AS CHK_COL ,
+                  COUNT(*) AS RCV_CNT ,
+                  SUM(A.UNBILL) AS UNBILL
+             FROM ITF0963M A , ITF0001M B
+            WHERE A.IF_TYPE = B.IF_TYPE (+)
+               <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+              AND SUBSTR(A.INST_DATE,0,6) = #{searchDate}
+            GROUP BY SUBSTR(A.INST_DATE,0,6)
+           ) X
+     WHERE Z.INSTALL_DT = X.INSTALL_DT(+)
+    </when>
+    <when test="ifType.equals('942')">
+
+    SELECT NVL(MAX(X.IF_TYPE),'942') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , NULL AS SND_CNT
+         , MAX(RCV_CNT) AS RCV_CNT
+         , NULL AS SND_CHK_VAL
+         , SUM(NET_AMT) AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'942') AS ROW_ID
+      FROM ( /* Interface Table of Billing (Rental, Outright, Membership, Others) */
+           SELECT A.BANKAC ,
+                  A.IF_TYPE ,
+                  B.IF_TYPE_NM ,
+                  B.CHK_COL ,
+                  (A.ADV_AMT+A.DIFF_AMT) AS NET_AMT,
+                  COUNT(*) OVER() AS RCV_CNT
+             FROM ITF0942M A , ITF0001M B
+            WHERE A.IF_TYPE = B.IF_TYPE (+)
+               <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+              AND SUBSTR(A.PAY_DT,0,6) = #{searchDate}
+           ) X
+    </when>
+    <when test="ifType.equals('771')">
+
+    SELECT NVL(MAX(X.IF_TYPE),'771') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , NULL AS SND_CNT
+         , MAX(RCV_CNT) AS RCV_CNT
+         , NULL AS SND_CHK_VAL
+         , NULL AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'771') AS ROW_ID
+      FROM ( /* Interface Table of Billing (Rental, Outright, Membership, Others) */
+           SELECT A.BRNCH_CODE ,
+                  A.IF_TYPE ,
+                  B.IF_TYPE_NM ,
+                  B.CHK_COL ,
+                  COUNT(*) OVER() AS RCV_CNT
+             FROM ITF0771M A , ITF0001M B
+            WHERE A.IF_TYPE = B.IF_TYPE (+)
+               <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+              AND SUBSTR(RGST_DT,0,6) = TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM')
+           ) X
+    </when>
+
+    <when test="ifType == ''" >
+
+    /* Monitoring by Interface Type */
+    SELECT NVL(MAX(X.IF_TYPE),'200') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , MAX(SND_CNT) AS SND_CNT
+         , MAX(RCV_CNT) AS RCV_CNT
+         , SUM(Z.NET_AMT) AS SND_CHK_VAL
+         , SUM(X.NET_AMT) AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'200') AS ROW_ID
+      FROM ( /*Business Table of Billing (Rental, Outright, Membership, Others)*/
+           SELECT A.ACC_BILL_REM
+                , A.ACC_BILL_REF_NO
+                , COUNT(*) OVER() AS SND_CNT
+                , SUM(A.ACC_BILL_NET_AMT) AS NET_AMT
+             FROM PAY0016D A
+            WHERE 1=1
+            <![CDATA[
+              AND A.ACC_BILL_NET_AMT <> 0
+              ]]>
+             AND TO_CHAR(ACC_BILL_REF_DT,'YYYYMM') = #{searchDate}
+            GROUP BY A.ACC_BILL_REM, A.ACC_BILL_REF_NO
+           ) Z ,
+           ( /* Interface Table of Billing (Rental, Outright, Membership, Others) */
+           SELECT A.INVOICE_NO ,
+                  A.BILL_NO ,
+                  MAX(A.IF_TYPE) AS IF_TYPE ,
+                  MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+                  MAX(B.CHK_COL) AS CHK_COL ,
+                  COUNT(*) OVER() AS RCV_CNT ,
+                  SUM(ACC_AMT2) AS NET_AMT
+             FROM ITF0200M A , ITF0001M B
+            WHERE A.IF_TYPE = B.IF_TYPE (+)
+              <![CDATA[
+              AND ACC_CD <> 'CNDN'
+              ]]>
+              <if test="tranStatusCd != null and tranStatusCd !=''">
+              AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+              </if>
+              AND SUBSTR(CONT_DT,0,6) = #{searchDate}
+              AND A.BUZEI = 1
+            GROUP BY INVOICE_NO,BILL_NO
+           ) X
+     WHERE Z.ACC_BILL_REM = X.INVOICE_NO(+)
+       AND Z.ACC_BILL_REF_NO = X.BILL_NO(+)
+
+     UNION ALL
+
+    SELECT NVL(MAX(X.IF_TYPE),'200')||'CNDN' AS IF_TYPE
+         , MAX(X.IF_TYPE_NM)||' CNDN' AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , MAX(SND_CNT) AS SND_CNT
+         , MAX(RCV_CNT) AS RCV_CNT
+         , SUM(Z.NET_AMT) AS SND_CHK_VAL
+         , SUM(X.NET_AMT) AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'200')||'CNDN' AS ROW_ID
+      FROM ( /* Business Table of Billing (CN_DN) */
+           SELECT B.MEMO_ADJ_INVC_NO,
+                  B.MEMO_ADJ_REF_NO ,
+                  COUNT(*) OVER() AS SND_CNT ,
+                  SUM(CASE WHEN SUBSTR(B.MEMO_ADJ_REF_NO,0,1) = 'C'
+                           THEN A.MEMO_ITM_AMT * -1
+                           ELSE A.MEMO_ITM_AMT END ) AS NET_AMT
+             FROM PAY0012D A ,
+                  PAY0011D B
+            WHERE A.MEMO_ADJ_ID = B.MEMO_ADJ_ID
+              AND TO_CHAR(B.MEMO_ADJ_UPD_DT,'YYYYMM') = #{searchDate}
+              AND MEMO_ADJ_STUS_ID = 4
+            GROUP BY B.MEMO_ADJ_INVC_NO, B.MEMO_ADJ_REF_NO
+           ) Z ,
+           ( /* Interface Table of Billing (CN_DN) */
+             SELECT INVOICE_NO ,
+                    BILL_NO ,
+                    MAX(A.IF_TYPE) AS IF_TYPE ,
+                    MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+                    MAX(B.CHK_COL) AS CHK_COL ,
+                    COUNT(*) OVER() AS RCV_CNT ,
+                    SUM(CASE WHEN BUZEI = 1 THEN ACC_AMT2 ELSE 0 END) AS NET_AMT
+               FROM ITF0200M A , ITF0001M B
+              WHERE A.IF_TYPE = B.IF_TYPE(+)
+                AND ACC_CD = 'CNDN'
+                <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+                AND SUBSTR(CONT_DT,0,6) = #{searchDate}
+              GROUP BY INVOICE_NO, BILL_NO
+           ) X
+     WHERE Z.MEMO_ADJ_INVC_NO = X.INVOICE_NO(+)
+       AND Z.MEMO_ADJ_REF_NO = X.BILL_NO(+)
+
+         UNION ALL
+
+    SELECT NVL(MAX(X.IF_TYPE),'910') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , MAX(SND_CNT) AS SND_CNT
+         , MAX(RCV_CNT) AS RCV_CNT
+         , SUM(Z.CUST_AMT) AS SND_CHK_VAL
+         , SUM(X.CUST_AMT) AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'910') AS ROW_ID
+      FROM (
+           SELECT A.WOR_NO ,
+                  COUNT(*) OVER() AS SND_CNT ,
+                  SUM(A.CUST_AMT) AS CUST_AMT
+             FROM (
+                  SELECT A.OR_NO AS WOR_NO
+                        , H.PAY_ITM_AMT AS CUST_AMT
+                     FROM PAY0064D A
+                        , PAY0065D B
+                        , PAY0252T H /* PAYMENT GROUP _ ADD ORDER*/
+                    WHERE A.PAY_ID = B.PAY_ID
+                      AND A.PAY_ID = H.PAY_ID
+                      AND B.PAY_ITM_ID = H.PAY_ITM_ID
+                      AND TO_CHAR(A.CRT_DT,'YYYYMM') = #{searchDate}
+                    UNION ALL
+                   SELECT A.OR_NO AS WOR_NO
+                        , A.TOT_AMT AS CUST_AMT
+                     FROM PAY0064D A
+                        , PAY0065D B
+                    WHERE A.PAY_ID = B.PAY_ID
+                      AND SUBSTR(A.OR_NO,0,3) = 'EOR'
+                      AND TO_CHAR(A.CRT_DT,'YYYYMM') = #{searchDate}
+                    UNION ALL
+                   SELECT A.OR_NO AS WOR_NO
+                        , A.TOT_AMT AS CUST_AMT
+                     FROM PAY0064D A
+                        , PAY0065D B
+                        , PAY0064D H
+                    WHERE A.PAY_ID = B.PAY_ID
+                      AND A.MTCH_ID = H.PAY_ID
+                      AND SUBSTR(A.OR_NO,0,3) = 'ROR'
+                      AND TO_CHAR(A.CRT_DT,'YYYYMM') = #{searchDate}
+                  ) A
+           GROUP BY A.WOR_NO
+           ) Z ,
+           ( /* Interface Table */
+           SELECT A.WOR_NO ,
+                  MAX(A.IF_TYPE) AS IF_TYPE ,
+                  MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+                  MAX(B.CHK_COL) AS CHK_COL ,
+                  COUNT(*) OVER() AS RCV_CNT ,
+                  SUM(A.CUST_AMT) AS CUST_AMT
+             FROM ITF0910M A , ITF0001M B
+            WHERE A.IF_TYPE = B.IF_TYPE (+)
+                <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+              AND SUBSTR(PAY_DATE,0,6) = #{searchDate}
+            GROUP BY WOR_NO
+           ) X
+     WHERE Z.WOR_NO = X.WOR_NO(+)
+
+         UNION ALL
+
+    /* Monitoring by Interface Type */
+    SELECT NVL(MAX(X.IF_TYPE),'110') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , MAX(Z.SND_CNT) AS SND_CNT
+         , MAX(X.RCV_CNT) AS RCV_CNT
+         , NULL AS SND_CHK_VAL
+         , NULL AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'110') AS ROW_ID
+      FROM
+           (
+           SELECT A.CUST_NO ,
+                  COUNT(*) OVER() AS SND_CNT
+             FROM (    
+		    SELECT TO_CHAR(a.cust_id) AS CUST_NO  
+		      FROM SAL0029D a
+		         , SYS0013M b
+		         , SAL0023D c
+		         , SYS0064M d
+		     WHERE a.TYPE_ID = b.CODE_ID
+		       AND a.CUST_ID = c.CUST_ID
+		       AND c.STUS_CODE_ID = 9      
+		       AND c.AREA_ID = d.AREA_ID(+)
+		       AND TO_CHAR(a.UPD_DT,'YYYYMM') = #{searchDate}
+		    UNION ALL
+		    SELECT CASE WHEN MEM_TYPE = '1' THEN 'HP'||MEM_CODE
+		                ELSE TO_CHAR(MEM_CODE) END AS CUST_NO
+		      FROM ORG0001D A 
+		         , SYS0047M B
+		     WHERE 1=1
+		       AND A.MEM_CODE = B.HR_CODE
+		       AND MEM_CODE IS NOT NULL
+		       AND USER_STUS_ID = 1   
+		       AND TO_CHAR(a.UPD_DT,'YYYYMM') = #{searchDate}
+		    UNION ALL
+		    SELECT 'D'|| A.DEALER_ID AS CUST_NO
+		      FROM SAL0030D A
+		         , SAL0031D B
+		         , SYS0064M C
+		     WHERE 1=1    
+		       AND A.DEALER_ID = B.DEALER_ID
+		       AND B.AREA_ID = C.AREA_ID         
+		       AND TO_CHAR(a.UPD_DT,'YYYYMM') = #{searchDate}
+		       ) A
+		   ) Z, 
+           ( /* Interface Table of Billing (Rental, Outright, Membership, Others) */
+           SELECT A.CUST_NO ,
+                  A.IF_TYPE ,
+                  B.IF_TYPE_NM ,
+                  B.CHK_COL ,
+                  COUNT(*) OVER() AS RCV_CNT
+             FROM ITF0110M A , ITF0001M B
+            WHERE A.IF_TYPE = B.IF_TYPE (+)
+               <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+              AND SUBSTR(RGST_DT,0,6) = #{searchDate}
+           ) X
+           WHERE Z.CUST_NO = X.CUST_NO(+)
+
+         UNION ALL
+
+
+     /* Defferedd Outright Membership */
+    SELECT NVL(MAX(X.IF_TYPE),'950') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , SUM(Z.SND_CNT) AS SND_CNT
+         , SUM(X.RCV_CNT) AS RCV_CNT
+         , SUM(Z.MEM_AMOUNT) AS SND_CHK_VAL
+         , SUM(X.MEM_AMOUNT) AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'950') AS ROW_ID
+      FROM (
+           SELECT MEM_START
+                , SUM(SND_CNT) AS SND_CNT
+                , SUM(MEM_AMOUNT) AS MEM_AMOUNT
+             FROM (
+                  SELECT TO_CHAR(MEM.SRV_START_DT,'YYYYMM') AS MEM_START
+                       , COUNT(1) AS SND_CNT
+                       , SUM(PD.ACC_BILL_NET_AMT - PD.ACC_BILL_TXS_AMT) AS MEM_AMOUNT
+                    FROM SAL0095D MEM
+                    JOIN SAL0091M PAC ON MEM.SRV_MEM_PAC_ID = PAC.SRV_MEM_PAC_ID
+                    JOIN SAL0001D SOM ON MEM.SRV_SALES_ORD_ID = SOM.SALES_ORD_ID
+                    JOIN PAY0016D PD  ON PD.ACC_BILL_ORD_ID = SOM.SALES_ORD_ID
+                                     AND ACC_BILL_MODE_ID = 1143
+                    JOIN SAL0093D QUT ON MEM.SRV_MEM_QUOT_ID = QUT.SRV_MEM_QUOT_ID
+                    JOIN PAY0031D INV ON QUT.SRV_MEM_QUOT_NO = INV.TAX_INVC_SVC_NO
+                                     AND INV.TAX_INVC_REF_NO = PD.ACC_BILL_REM
+                   WHERE MEM.SRV_STUS_CODE_ID = 4
+                     AND PAC.PAC_TYPE = 1
+                     AND SOM.STUS_CODE_ID = 4
+                     AND TO_CHAR(MEM.SRV_START_DT,'YYYYMM') = #{searchDate}
+                   GROUP BY TO_CHAR(MEM.SRV_START_DT,'YYYYMM')                   
+                  )
+             GROUP BY MEM_START
+           ) Z ,
+           ( /* Interface Table */
+           SELECT SUBSTR(A.MEM_START,0,6) AS MEM_START ,
+                  MAX(A.IF_TYPE) AS IF_TYPE ,
+                  MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+                  MAX(B.CHK_COL) AS CHK_COL ,
+                  COUNT(*) AS RCV_CNT ,
+                  SUM(A.MEM_AMOUNT) AS MEM_AMOUNT
+             FROM ITF0950M A , ITF0001M B
+            WHERE A.IF_TYPE = B.IF_TYPE (+)
+               <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+               AND SUBSTR(RGST_DT,0,6) = TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM')
+              <![CDATA[
+              AND SUBSTR(A.MEM_START,0,6) = #{searchDate}
+              ]]>
+            GROUP BY SUBSTR(A.MEM_START,0,6)
+           ) X
+     WHERE Z.MEM_START = X.MEM_START(+)
+
+         UNION ALL
+
+
+    SELECT NVL(MAX(X.IF_TYPE),'210') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , SUM(Z.SND_CNT) AS SND_CNT
+         , SUM(X.RCV_CNT) AS RCV_CNT
+         , NULL AS SND_CHK_VAL
+         , NULL AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'210') AS ROW_ID
+      FROM (
+           SELECT A.APP_TYPE_ID
+                , COUNT(1) AS SND_CNT
+             FROM SAL0001D A
+                , SAL0046D B
+                , SAL0047D C
+                , SAL0002D D
+                , SYS0026M E
+                , SYS0005M F
+            WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+              AND B.INSTALL_ENTRY_ID = C.ENTRY_ID
+              AND B.STUS_CODE_ID = 4
+              AND C.STUS_CODE_ID = 4
+              AND A.SALES_ORD_ID = D.SALES_ORD_ID
+              AND D.ITM_STK_ID = E.STK_ID
+              AND A.BRNCH_ID = F.BRNCH_ID
+              AND TO_CHAR(C.INSTALL_DT,'YYYYMM') = #{searchDate}
+            GROUP BY A.APP_TYPE_ID
+           ) Z ,
+           ( /* Interface Table of Billing (CN_DN) */
+             SELECT A.APP_TYPE AS APP_TYPE_ID ,
+                    MAX(A.IF_TYPE) AS IF_TYPE ,
+                    MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+                    MAX(B.CHK_COL) AS CHK_COL ,
+                    COUNT(1) AS RCV_CNT
+               FROM ITF0210M A , ITF0001M B
+              WHERE A.IF_TYPE = B.IF_TYPE(+)
+               <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+                AND SUBSTR(A.INSTALL_DATE,0,6) = #{searchDate}
+              GROUP BY A.APP_TYPE
+           ) X
+     WHERE Z.APP_TYPE_ID = X.APP_TYPE_ID(+)
+
+         UNION ALL
+
+    /* Rental Order Status */
+    SELECT NVL(MAX(X.IF_TYPE),'960') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , SUM(Z.SND_CNT) AS SND_CNT
+         , SUM(X.RCV_CNT) AS RCV_CNT
+         , NULL AS SND_CHK_VAL
+         , NULL AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'960') AS ROW_ID
+      FROM (
+           SELECT A.STATUS
+                , COUNT(1) AS SND_CNT
+             FROM (
+                   SELECT D.SALES_ORD_NO AS ORDER_NO
+                        , MAX(A.ACC_DEBT_OPNG_RENTAL_STUS) AS STATUS
+                     FROM PAY0052S A JOIN PAY0150D B ON A.ACC_DEBT_ORD_ID = B.ACC_DEBT_ORD_ID
+                                                    AND A.ACC_DEBT_OPNG_APP_TYPE_ID = 66
+                                     JOIN SAL0071D C ON A.ACC_DEBT_ORD_ID = C.SALES_ORD_ID
+                                     JOIN SAL0001D D ON A.ACC_DEBT_ORD_ID = D.SALES_ORD_ID
+                                     JOIN SYS0038M E ON A.ACC_DEBT_OPNG_RENTAL_STUS = E.CODE
+                    WHERE 1=1
+                      AND B.ACC_DEBT_YEAR = ABS(SUBSTR(#{searchDate},0,4))
+                      AND B.ACC_DEBT_MONTH = ABS(SUBSTR(#{searchDate},5,2))
+                      AND A.ACC_DEBT_YEAR  = ABS(SUBSTR(TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM'),0,4))
+                      AND A.ACC_DEBT_MONTH = ABS(SUBSTR(TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM'),5,2))
+                      AND D.APP_TYPE_ID = 66
+                      <![CDATA[
+                      AND A.ACC_DEBT_OPNG_RENTAL_STUS <> B.ACC_DEBT_OPNG_RENTAL_STUS
+                      ]]>
+                    GROUP BY D.SALES_ORD_NO
+                  ) A
+            GROUP BY A.STATUS
+           ) Z ,
+           ( /* Interface Table of Billing (CN_DN) */
+           SELECT A.STATUS AS STATUS ,
+                  MAX(A.IF_TYPE) AS IF_TYPE ,
+                  MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+                  MAX(B.CHK_COL) AS CHK_COL ,
+                  COUNT(1) AS RCV_CNT
+             FROM ITF0960M A , ITF0001M B
+            WHERE A.IF_TYPE = B.IF_TYPE(+)
+               <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+              AND SUBSTR(A.RGST_DT,0,6) = TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM')
+            GROUP BY A.STATUS
+           ) X
+     WHERE Z.STATUS = X.STATUS(+)
+
+         UNION ALL
+
+    /* Unbilled Revenue */
+    SELECT NVL(MAX(X.IF_TYPE),'963') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , SUM(Z.SND_CNT) AS SND_CNT
+         , SUM(X.RCV_CNT) AS RCV_CNT
+         , SUM(Z.UNBILL) AS SND_CHK_VAL
+         , SUM(X.UNBILL) AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'963') AS ROW_ID
+      FROM (
+           SELECT INSTALL_DT ,
+                  COUNT(1) AS SND_CNT ,
+                  SUM(UNBILL) AS UNBILL
+             FROM (
+                  SELECT TO_CHAR(IR.INSTALL_DT,'YYYYMM') AS INSTALL_DT
+                       , ROUND(ROUND((TO_NUMBER(TO_CHAR(LAST_DAY(IR.INSTALL_DT),'DD')) - TO_NUMBER(TO_CHAR(IR.INSTALL_DT,'DD')) + 1),2)
+                             / ROUND(TO_NUMBER(TO_CHAR(LAST_DAY(IR.INSTALL_DT),'DD')),2)
+                             * (CASE WHEN EC.EURC_ID IS NOT NULL
+                                     THEN M.MTH_RENT_AMT
+                                     ELSE ( CASE WHEN RR.RLIEF_ID IS NOT NULL
+                                                 THEN M.MTH_RENT_AMT
+                                                 ELSE ROUND(M.MTH_RENT_AMT,2) * 100 / 106
+                                                 END )
+                                     END )
+                              ,2) AS UNBILL
+                    FROM SAL0001D M
+                         JOIN SAL0002D D ON D.SALES_ORD_ID = M.SALES_ORD_ID
+                         JOIN SYS0026M STK ON STk.STK_ID = D.ITM_STK_ID
+                         JOIN SYS0013M CD ON CODE_ID = STK.STK_CTGRY_ID
+                         JOIN SAL0046D T ON T.INSTALL_ENTRY_ID = (SELECT MIN(INSTALL_ENTRY_ID)
+                                                                    FROM SAL0046D F
+                                                                   WHERE F.SALES_ORD_ID = M.SALES_ORD_ID
+                                                                     AND F.STUS_CODE_ID = 4)
+                         JOIN SAL0047D IR ON IR.RESULT_ID = (SELECT MAX(TT.RESULT_ID)
+                                                               FROM SAL0047D TT
+                                                              WHERE TT.ENTRY_ID = T.INSTALL_ENTRY_ID)
+                         JOIN SAL0071D SS ON SS.SALES_ORD_ID = M.SALES_ORD_ID
+                         LEFT JOIN SAL0042D EC ON EC.EURC_SALES_ORD_ID = M.SALES_ORD_ID
+                         LEFT JOIN SAL0043D RR ON RR.RLIEF_ORD_ID = M.SALES_ORD_ID
+                         /**/
+                         LEFT JOIN PAY0016D PD ON PD.ACC_BILL_ORD_ID = M.SALES_ORD_ID
+                                              AND TO_CHAR(PD.ACC_BILL_REF_DT,'YYYYMM') = #{searchDate}
+                         LEFT JOIN SAL0002D H ON M.SALES_ORD_ID = H.SALES_ORD_ID
+                         LEFT JOIN ORG0001D G ON M.MEM_ID = G.MEM_ID
+                         LEFT JOIN SYS0005M I ON G.BRNCH = I.BRNCH_ID
+                         LEFT JOIN SYS0026M J ON H.ITM_STK_ID = J.STK_ID
+                         LEFT JOIN SYS0046D K ON K.CODE_ID = PD.ACC_BILL_TAX_CODE_ID
+                           /**/
+                   WHERE M.APP_TYPE_ID = 66
+                     AND M.SALES_ORD_NO like '2%'
+                     AND T.STUS_CODE_ID = 4
+                     AND SS.STUS_CODE_ID NOT IN ('TER','RET','WOF')
+                     AND TO_CHAR(IR.INSTALL_DT,'YYYYMM') = #{searchDate}
+                   GROUP BY M.SALES_ORD_NO
+                       , IR.INSTALL_DT
+                       , SS.STUS_CODE_ID
+                       , EC.EURC_ID
+                       , M.MTH_RENT_AMT
+                       , RR.RLIEF_ID
+                       , CD.CODE_NAME
+                       , M.APP_TYPE_ID
+                       , I.CODE
+                       , G.MEM_CODE
+                       , M.ORG_CODE
+                       , M.DEPT_CODE
+                       , G.MEM_TYPE
+                       , J.STK_CTGRY_ID
+                       , K.CODE
+                       , J.STK_CODE
+                       , M.CUST_ID
+                       , I.REGN_ID
+                       , M.BRNCH_ID
+                       , G.BRNCH
+                 )
+           GROUP BY INSTALL_DT
+           ) Z ,
+           ( /* Interface Table */
+           SELECT SUBSTR(A.INST_DATE,0,6) AS INSTALL_DT ,
+                  MAX(A.IF_TYPE) AS IF_TYPE ,
+                  MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+                  MAX(B.CHK_COL) AS CHK_COL ,
+                  COUNT(*) AS RCV_CNT ,
+                  SUM(A.UNBILL) AS UNBILL
+             FROM ITF0963M A , ITF0001M B
+            WHERE A.IF_TYPE = B.IF_TYPE (+)
+               <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+              AND SUBSTR(A.INST_DATE,0,6) = #{searchDate}
+            GROUP BY SUBSTR(A.INST_DATE,0,6)
+           ) X
+     WHERE Z.INSTALL_DT = X.INSTALL_DT(+)
+
+         UNION ALL
+
+    SELECT NVL(MAX(X.IF_TYPE),'942') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , NULL AS SND_CNT
+         , MAX(RCV_CNT) AS RCV_CNT
+         , NULL AS SND_CHK_VAL
+         , SUM(NET_AMT) AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'942') AS ROW_ID
+      FROM ( /* Interface Table of Billing (Rental, Outright, Membership, Others) */
+           SELECT A.BANKAC ,
+                  A.IF_TYPE ,
+                  B.IF_TYPE_NM ,
+                  B.CHK_COL ,
+                  (A.ADV_AMT+A.DIFF_AMT) AS NET_AMT,
+                  COUNT(*) OVER() AS RCV_CNT
+             FROM ITF0942M A , ITF0001M B
+            WHERE A.IF_TYPE = B.IF_TYPE (+)
+               <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+              AND SUBSTR(A.PAY_DT,0,6) = #{searchDate}
+           ) X
+
+         UNION ALL
+
+    SELECT NVL(MAX(X.IF_TYPE),'771') AS IF_TYPE
+         , MAX(X.IF_TYPE_NM) AS IF_TYPE_NM
+         , MAX(X.CHK_COL) AS CHK_COL
+         , MAX(Z.SND_CNT) AS SND_CNT
+         , MAX(X.RCV_CNT) AS RCV_CNT
+         , NULL AS SND_CHK_VAL
+         , NULL AS RCV_CHK_VAL
+         , NVL(MAX(X.IF_TYPE),'771') AS ROW_ID
+      FROM 
+           (
+           SELECT A.CODE AS BRNCH_CODE,
+                  COUNT(*) OVER() AS SND_CNT                  
+             FROM SYS0005M A                              
+            ) Z ,
+           ( /* Interface Table of Billing (Rental, Outright, Membership, Others) */
+           SELECT A.BRNCH_CODE ,
+                  A.IF_TYPE ,
+                  B.IF_TYPE_NM ,
+                  B.CHK_COL ,
+                  COUNT(*) OVER() AS RCV_CNT
+             FROM ITF0771M A , ITF0001M B
+            WHERE A.IF_TYPE = B.IF_TYPE (+)
+               <if test="tranStatusCd != null and tranStatusCd !=''">
+                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+               </if>
+              AND SUBSTR(RGST_DT,0,6) = TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM')
+           ) X
+           WHERE Z.BRNCH_CODE = X.BRNCH_CODE(+)
+    </when>
+    <otherwise>
+     /* Temporarily conduct a job before ECC Connection complete. by mun,do-hyun*/
+    SELECT 'empty' AS IF_TYPE FROM DUAL
+    </otherwise>
+  </choose>
+</select>
+
+<select id="selectInterfaceMonitoringDtmList" parameterType="Map" resultType="egovMap">
+
+  <choose>
+    <when test="ifType.equals('200')">
+	/* Monitoring of billing (Rental, Outright, Membership, Others) */
+	SELECT Z.PREFIX_BRNO AS BIZ_COL
+	     , Z.CNT AS SND_CNT
+	     , X.CNT AS RCV_CNT
+	     , Z.NET_AMT AS SND_CHK_VAL
+	     , X.NET_AMT AS RCV_CHK_VAL
+	     , Z.PREFIX_BRNO||ROWNUM AS ROW_ID
+	  FROM (/* Business Table of Billing (Rental, Outright, Membership, Others) */
+	       SELECT PREFIX_BRNO ,
+	              COUNT(1) AS CNT ,
+	              SUM(ACC_BILL_NET_AMT) AS NET_AMT
+	       FROM (
+	       <![CDATA[
+	       SELECT CASE WHEN SUBSTR(A.ACC_BILL_REM,0,2) <> 'BR' THEN A.ACC_BILL_REM
+	                   ELSE SUBSTR(A.ACC_BILL_REM,0,4) END AS PREFIX_BRNO ,
+	              A.ACC_BILL_NET_AMT
+	         FROM PAY0016D A
+	        WHERE 1=1
+	          AND TO_CHAR(ACC_BILL_REF_DT,'YYYYMM') = #{searchDate}
+	          AND A.ACC_BILL_NET_AMT <> 0
+	       )
+	       GROUP BY PREFIX_BRNO
+	       ) Z ,
+	       ]]>
+	       (
+	       /* Interface Table of Billing (Rental, Outright, Membership, Others) */
+
+	       SELECT PREFIX_BRNO,
+	              COUNT(*) AS CNT,
+	              SUM(NET) AS NET_AMT
+	         FROM (
+	               <![CDATA[
+	              SELECT CASE WHEN SUBSTR(A.INVOICE_NO,0,2) <> 'BR' THEN A.INVOICE_NO
+	                          ELSE SUBSTR(A.INVOICE_NO,0,4) END AS PREFIX_BRNO ,
+	                     A.BILL_NO ,
+	                     SUM(CASE WHEN A.BUZEI = 1 THEN A.ACC_AMT2 ELSE 0 END) AS NET
+	                FROM ITF0200M A
+	               WHERE A.ACC_CD <> 'CNDN'
+	               ]]>
+		               <if test="tranStatusCd != null and tranStatusCd !=''">
+		                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+		               </if>
+	                 AND SUBSTR(A.CONT_DT,0,6) = #{searchDate}
+	               GROUP BY A.INVOICE_NO,A.BILL_NO
+	               )
+	               GROUP BY PREFIX_BRNO
+	       ) X
+	 WHERE Z.PREFIX_BRNO = X.PREFIX_BRNO(+)
+	 ORDER BY Z.PREFIX_BRNO
+    </when>
+    <when test="ifType.equals('200CNDN')">
+	/* Monitoring CNDN */
+	SELECT Z.PREFIX_BRNO AS BIZ_COL
+	     , Z.CNT AS SND_CNT
+	     , X.CNT AS RCV_CNT
+	     , Z.NET_AMT AS SND_CHK_VAL
+	     , X.NET_AMT AS RCV_CHK_VAL
+	     , Z.PREFIX_BRNO||ROWNUM AS ROW_ID
+	  FROM (/* Business Table of Billing (CN_DN) */
+	       SELECT PREFIX_BRNO ,
+	              COUNT(*) AS CNT ,
+	              SUM(CASE WHEN SUBSTR(A.MEMO_ADJ_REF_NO,0,1) = 'C'
+	                       THEN A.MEMO_ITM_AMT * -1
+	                       ELSE A.MEMO_ITM_AMT END) AS NET_AMT
+	         FROM (
+	              SELECT SUBSTR(B.MEMO_ADJ_INVC_NO,0,4) AS PREFIX_BRNO ,
+	                     B.MEMO_ADJ_REF_NO ,
+	                     SUM(A.MEMO_ITM_AMT) AS MEMO_ITM_AMT
+	                FROM PAY0012D A ,
+	                     PAY0011D B
+	               WHERE A.MEMO_ADJ_ID = B.MEMO_ADJ_ID
+	                 AND TO_CHAR(B.MEMO_ADJ_UPD_DT,'YYYYMM') = #{searchDate}
+	                 AND MEMO_ADJ_STUS_ID = 4
+	               GROUP BY B.MEMO_ADJ_INVC_NO,B.MEMO_ADJ_REF_NO
+	              ) A
+	        GROUP BY PREFIX_BRNO
+	       ) Z ,
+	       (/* Interface Table of Billing (CN_DN) */
+	       SELECT SUBSTR(INVOICE_NO,0,4) AS PREFIX_BRNO ,
+	              COUNT(*) AS CNT ,
+	              SUM(NET) AS NET_AMT
+	        FROM (
+	             SELECT INVOICE_NO ,
+	                    BILL_NO ,
+	                    SUM(CASE WHEN BUZEI = 1 THEN ACC_AMT2 ELSE 0 END) AS NET
+	               FROM ITF0200M A
+	              WHERE ACC_CD = 'CNDN'
+	               <if test="tranStatusCd != null and tranStatusCd !=''">
+	                AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+	               </if>
+	                /* January */
+	                AND SUBSTR(CONT_DT,0,6) = #{searchDate}
+	              GROUP BY INVOICE_NO,BILL_NO
+	             )
+	       GROUP BY SUBSTR(INVOICE_NO,0,4)
+	       ) X
+	  WHERE Z.PREFIX_BRNO = X.PREFIX_BRNO(+)
+	  ORDER BY Z.PREFIX_BRNO
+    </when>
+    <when test="ifType.equals('910')">
+	/* Monitoring Collection */
+	SELECT Z.WOR_NO AS BIZ_COL
+	     , SND_CNT AS SND_CNT
+	     , RCV_CNT AS RCV_CNT
+	     , Z.CUST_AMT AS SND_CHK_VAL
+	     , X.CUST_AMT AS RCV_CHK_VAL
+	     , Z.WOR_NO||ROWNUM AS ROW_ID
+	  FROM (
+	       SELECT SUBSTR(A.WOR_NO,0,3) AS WOR_NO ,
+	              COUNT(1) AS SND_CNT ,
+	              SUM(A.CUST_AMT) AS CUST_AMT
+	         FROM (
+	              SELECT A.OR_NO AS WOR_NO
+	                   , H.PAY_ITM_AMT AS CUST_AMT
+	                FROM PAY0064D A
+	                   , PAY0065D B
+	                   , PAY0252T H /* PAYMENT GROUP _ ADD ORDER*/
+	               WHERE A.PAY_ID = B.PAY_ID
+	                 AND A.PAY_ID = H.PAY_ID
+	                 AND B.PAY_ITM_ID = H.PAY_ITM_ID
+	                 AND TO_CHAR(A.CRT_DT,'YYYYMM') = #{searchDate}
+	               UNION ALL
+	              SELECT A.OR_NO AS WOR_NO
+	                   , A.TOT_AMT AS CUST_AMT
+	                FROM PAY0064D A
+	                   , PAY0065D B
+	               WHERE A.PAY_ID = B.PAY_ID
+	                 AND SUBSTR(A.OR_NO,0,3) = 'EOR'
+	                 AND TO_CHAR(A.CRT_DT,'YYYYMM') = #{searchDate}
+	               UNION ALL
+	              SELECT A.OR_NO AS WOR_NO
+	                   , A.TOT_AMT AS CUST_AMT
+	                FROM PAY0064D A
+	                   , PAY0065D B
+	                   , PAY0064D H
+	               WHERE A.PAY_ID = B.PAY_ID
+	                 AND A.MTCH_ID = H.PAY_ID
+	                 AND SUBSTR(A.OR_NO,0,3) = 'ROR'
+	                 AND TO_CHAR(A.CRT_DT,'YYYYMM') = #{searchDate}
+	             ) A
+	       GROUP BY SUBSTR(A.WOR_NO,0,3)
+	       ) Z ,
+	       ( /* Interface Table */
+	       SELECT SUBSTR(A.WOR_NO,0,3) AS WOR_NO ,
+	              MAX(A.IF_TYPE) AS IF_TYPE ,
+	              MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+	              COUNT(1) AS RCV_CNT ,
+	              SUM(A.CUST_AMT) AS CUST_AMT
+	         FROM ITF0910M A , ITF0001M B
+	        WHERE A.IF_TYPE = B.IF_TYPE (+)
+             <if test="tranStatusCd != null and tranStatusCd !=''">
+              AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+             </if>
+	          AND SUBSTR(PAY_DATE,0,6) = #{searchDate}
+	        GROUP BY SUBSTR(A.WOR_NO,0,3)
+	       ) X
+	 WHERE Z.WOR_NO = X.WOR_NO(+)
+    </when>
+    <when test="ifType.equals('110')">
+    </when>
+    <when test="ifType.equals('950')">
+/* Defferedd Outright Membership */
+SELECT Z.MEM_START AS BIZ_COL
+     , SND_CNT AS SND_CNT
+     , RCV_CNT AS RCV_CNT
+     , Z.MEM_AMOUNT AS SND_CHK_VAL
+     , X.MEM_AMOUNT AS RCV_CHK_VAL
+     , Z.MEM_START||ROWNUM AS ROW_ID
+  FROM (
+       SELECT MEM_START
+            , SUM(SND_CNT) AS SND_CNT
+            , SUM(MEM_AMOUNT) AS MEM_AMOUNT
+         FROM (
+              SELECT TO_CHAR(MEM.SRV_START_DT,'YYYYMM') AS MEM_START
+                   , COUNT(1) AS SND_CNT
+                   , SUM(PD.ACC_BILL_NET_AMT - PD.ACC_BILL_TXS_AMT) AS MEM_AMOUNT
+                FROM SAL0095D MEM
+                JOIN SAL0091M PAC ON MEM.SRV_MEM_PAC_ID = PAC.SRV_MEM_PAC_ID
+                JOIN SAL0001D SOM ON MEM.SRV_SALES_ORD_ID = SOM.SALES_ORD_ID
+                JOIN PAY0016D PD  ON PD.ACC_BILL_ORD_ID = SOM.SALES_ORD_ID
+                                 AND ACC_BILL_MODE_ID = 1143
+                JOIN SAL0093D QUT ON MEM.SRV_MEM_QUOT_ID = QUT.SRV_MEM_QUOT_ID
+                JOIN PAY0031D INV ON QUT.SRV_MEM_QUOT_NO = INV.TAX_INVC_SVC_NO
+                                 AND INV.TAX_INVC_REF_NO = PD.ACC_BILL_REM
+               WHERE MEM.SRV_STUS_CODE_ID = 4
+                 AND PAC.PAC_TYPE = 1
+                 AND SOM.STUS_CODE_ID = 4
+                 AND TO_CHAR(MEM.SRV_START_DT,'YYYYMM') = #{searchDate}
+               GROUP BY TO_CHAR(MEM.SRV_START_DT,'YYYYMM')               
+              )
+         GROUP BY MEM_START
+       ) Z ,
+       ( /* Interface Table */
+       SELECT SUBSTR(A.MEM_START,0,6) AS MEM_START ,
+              MAX(A.IF_TYPE) AS IF_TYPE ,
+              MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+              COUNT(*) AS RCV_CNT ,
+              SUM(A.MEM_AMOUNT) AS MEM_AMOUNT
+         FROM ITF0950M A , ITF0001M B
+        WHERE A.IF_TYPE = B.IF_TYPE (+)
+         <if test="tranStatusCd != null and tranStatusCd !=''">
+          AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+         </if>
+          AND SUBSTR(RGST_DT,0,6) = TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM')
+              <![CDATA[
+              AND SUBSTR(A.MEM_START,0,6) = #{searchDate}
+              ]]>
+        GROUP BY SUBSTR(A.MEM_START,0,6)
+       ) X
+ WHERE Z.MEM_START = X.MEM_START(+)
+    </when>
+    <when test="ifType.equals('210')">
+	/* Installation Result */
+	SELECT Z.APP_TYPE_ID AS BIZ_COL
+	     , Z.SND_CNT AS SND_CNT
+	     , X.RCV_CNT AS RCV_CNT
+	     , NULL AS SND_CHK_VAL
+	     , NULL AS RCV_CHK_VAL
+	     , Z.APP_TYPE_ID||ROWNUM AS ROW_ID
+	  FROM (
+	       SELECT A.APP_TYPE_ID
+	            , COUNT(1) AS SND_CNT
+	         FROM SAL0001D A
+	            , SAL0046D B
+	            , SAL0047D C
+	            , SAL0002D D
+	            , SYS0026M E
+	            , SYS0005M F
+	        WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+	          AND B.INSTALL_ENTRY_ID = C.ENTRY_ID
+	          AND B.STUS_CODE_ID = 4
+	          AND C.STUS_CODE_ID = 4
+	          AND A.SALES_ORD_ID = D.SALES_ORD_ID
+	          AND D.ITM_STK_ID = E.STK_ID
+	          AND A.BRNCH_ID = F.BRNCH_ID
+	          AND TO_CHAR(C.INSTALL_DT,'YYYYMM') = #{searchDate}
+	        GROUP BY A.APP_TYPE_ID
+	       ) Z ,
+	       ( /* Interface Table of Billing (CN_DN) */
+	       SELECT A.APP_TYPE AS APP_TYPE_ID ,
+	              MAX(A.IF_TYPE) AS IF_TYPE ,
+	              MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+	              COUNT(1) AS RCV_CNT
+	         FROM ITF0210M A , ITF0001M B
+	        WHERE A.IF_TYPE = B.IF_TYPE(+)
+             <if test="tranStatusCd != null and tranStatusCd !=''">
+              AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+             </if>
+	          AND SUBSTR(A.INSTALL_DATE,0,6) = #{searchDate}
+	        GROUP BY A.APP_TYPE
+	       ) X
+	 WHERE Z.APP_TYPE_ID = X.APP_TYPE_ID(+)
+    </when>
+    <when test="ifType.equals('960')">
+	/* Rental Order Status */
+	SELECT Z.STATUS AS BIZ_COL
+	     , Z.SND_CNT AS SND_CNT
+	     , X.RCV_CNT AS RCV_CNT
+	     , NULL AS SND_CHK_VAL
+	     , NULL AS RCV_CHK_VAL
+	     , Z.STATUS||ROWNUM AS ROW_ID
+	  FROM (
+	       SELECT A.STATUS
+	            , COUNT(1) AS SND_CNT
+	         FROM (
+	               SELECT D.SALES_ORD_NO AS ORDER_NO
+	                    , MAX(A.ACC_DEBT_OPNG_RENTAL_STUS) AS STATUS
+	                 FROM PAY0052S A JOIN PAY0150D B ON A.ACC_DEBT_ORD_ID = B.ACC_DEBT_ORD_ID
+	                                                AND A.ACC_DEBT_OPNG_APP_TYPE_ID = 66
+	                                 JOIN SAL0071D C ON A.ACC_DEBT_ORD_ID = C.SALES_ORD_ID
+	                                 JOIN SAL0001D D ON A.ACC_DEBT_ORD_ID = D.SALES_ORD_ID
+	                                 JOIN SYS0038M E ON A.ACC_DEBT_OPNG_RENTAL_STUS = E.CODE
+	                WHERE 1=1
+	                  AND B.ACC_DEBT_YEAR = ABS(SUBSTR(#{searchDate},0,4))
+	                  AND B.ACC_DEBT_MONTH = ABS(SUBSTR(#{searchDate},5,2))
+	                  AND A.ACC_DEBT_YEAR  = ABS(SUBSTR(TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM'),0,4))
+	                  AND A.ACC_DEBT_MONTH = ABS(SUBSTR(TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM'),5,2))
+	                  AND D.APP_TYPE_ID = 66
+	                  <![CDATA[
+	                  AND A.ACC_DEBT_OPNG_RENTAL_STUS <> B.ACC_DEBT_OPNG_RENTAL_STUS
+	                  ]]>
+	                GROUP BY D.SALES_ORD_NO
+	              ) A
+	        GROUP BY A.STATUS
+	       ) Z ,
+	       (
+	       SELECT A.STATUS AS STATUS ,
+	              MAX(A.IF_TYPE) AS IF_TYPE ,
+	              MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+	              COUNT(1) AS RCV_CNT
+	         FROM ITF0960M A , ITF0001M B
+	        WHERE A.IF_TYPE = B.IF_TYPE(+)
+             <if test="tranStatusCd != null and tranStatusCd !=''">
+              AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+             </if>
+	          AND SUBSTR(A.RGST_DT,0,6) = TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM')
+	        GROUP BY A.STATUS
+	       ) X
+	 WHERE Z.STATUS = X.STATUS(+)
+    </when>
+    <when test="ifType.equals('963')">
+	 /* Unbilled Revenue */
+	SELECT Z.INSTALL_DT AS BIZ_COL
+	     , SND_CNT AS SND_CNT
+	     , RCV_CNT AS RCV_CNT
+	     , Z.UNBILL AS SND_CHK_VAL
+	     , X.UNBILL AS RCV_CHK_VAL
+	     , Z.INSTALL_DT||ROWNUM AS ROW_ID
+	  FROM (
+	       SELECT INSTALL_DT ,
+	              COUNT(1) AS SND_CNT ,
+	              SUM(UNBILL) AS UNBILL
+	         FROM (
+	              SELECT TO_CHAR(IR.INSTALL_DT,'YYYYMM') AS INSTALL_DT
+	                   , ROUND(ROUND((TO_NUMBER(TO_CHAR(LAST_DAY(IR.INSTALL_DT),'DD')) - TO_NUMBER(TO_CHAR(IR.INSTALL_DT,'DD')) + 1),2)
+	                         / ROUND(TO_NUMBER(TO_CHAR(LAST_DAY(IR.INSTALL_DT),'DD')),2)
+	                         * (CASE WHEN EC.EURC_ID IS NOT NULL
+	                                 THEN M.MTH_RENT_AMT
+	                                 ELSE ( CASE WHEN RR.RLIEF_ID IS NOT NULL
+	                                             THEN M.MTH_RENT_AMT
+	                                             ELSE ROUND(M.MTH_RENT_AMT,2) * 100 / 106
+	                                             END )
+	                                 END )
+	                          ,2) AS UNBILL
+	                FROM SAL0001D M
+	                     JOIN SAL0002D D ON D.SALES_ORD_ID = M.SALES_ORD_ID
+	                     JOIN SYS0026M STK ON STk.STK_ID = D.ITM_STK_ID
+	                     JOIN SYS0013M CD ON CODE_ID = STK.STK_CTGRY_ID
+	                     JOIN SAL0046D T ON T.INSTALL_ENTRY_ID = (SELECT MIN(INSTALL_ENTRY_ID)
+	                                                                FROM SAL0046D F
+	                                                               WHERE F.SALES_ORD_ID = M.SALES_ORD_ID
+	                                                                 AND F.STUS_CODE_ID = 4)
+	                     JOIN SAL0047D IR ON IR.RESULT_ID = (SELECT MAX(TT.RESULT_ID)
+	                                                           FROM SAL0047D TT
+	                                                          WHERE TT.ENTRY_ID = T.INSTALL_ENTRY_ID)
+	                     JOIN SAL0071D SS ON SS.SALES_ORD_ID = M.SALES_ORD_ID
+	                     LEFT JOIN SAL0042D EC ON EC.EURC_SALES_ORD_ID = M.SALES_ORD_ID
+	                     LEFT JOIN SAL0043D RR ON RR.RLIEF_ORD_ID = M.SALES_ORD_ID
+	                     /**/
+	                     LEFT JOIN PAY0016D PD ON PD.ACC_BILL_ORD_ID = M.SALES_ORD_ID
+	                                          AND TO_CHAR(PD.ACC_BILL_REF_DT,'YYYYMM') = #{searchDate}
+	                     LEFT JOIN SAL0002D H ON M.SALES_ORD_ID = H.SALES_ORD_ID
+	                     LEFT JOIN ORG0001D G ON M.MEM_ID = G.MEM_ID
+	                     LEFT JOIN SYS0005M I ON G.BRNCH = I.BRNCH_ID
+	                     LEFT JOIN SYS0026M J ON H.ITM_STK_ID = J.STK_ID
+	                     LEFT JOIN SYS0046D K ON K.CODE_ID = PD.ACC_BILL_TAX_CODE_ID
+	                       /**/
+	               WHERE M.APP_TYPE_ID = 66
+	                 AND M.SALES_ORD_NO like '2%'
+	                 AND T.STUS_CODE_ID = 4
+	                 AND SS.STUS_CODE_ID NOT IN ('TER','RET','WOF')
+	                 AND TO_CHAR(IR.INSTALL_DT,'YYYYMM') = #{searchDate}
+	               GROUP BY M.SALES_ORD_NO
+	                   , IR.INSTALL_DT
+	                   , SS.STUS_CODE_ID
+	                   , EC.EURC_ID
+	                   , M.MTH_RENT_AMT
+	                   , RR.RLIEF_ID
+	                   , CD.CODE_NAME
+	                   , M.APP_TYPE_ID
+	                   , I.CODE
+	                   , G.MEM_CODE
+	                   , M.ORG_CODE
+	                   , M.DEPT_CODE
+	                   , G.MEM_TYPE
+	                   , J.STK_CTGRY_ID
+	                   , K.CODE
+	                   , J.STK_CODE
+	                   , M.CUST_ID
+	                   , I.REGN_ID
+	                   , M.BRNCH_ID
+	                   , G.BRNCH
+	             )
+	       GROUP BY INSTALL_DT
+	       ) Z ,
+	       ( /* Interface Table */
+	       SELECT SUBSTR(A.INST_DATE,0,6) AS INSTALL_DT ,
+	              MAX(A.IF_TYPE) AS IF_TYPE ,
+	              MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+	              COUNT(*) AS RCV_CNT ,
+	              SUM(A.UNBILL) AS UNBILL
+	         FROM ITF0963M A , ITF0001M B
+	        WHERE A.IF_TYPE = B.IF_TYPE (+)
+             <if test="tranStatusCd != null and tranStatusCd !=''">
+              AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+             </if>
+	          AND SUBSTR(A.INST_DATE,0,6) = #{searchDate}
+	        GROUP BY SUBSTR(A.INST_DATE,0,6)
+	       ) X
+	 WHERE Z.INSTALL_DT = X.INSTALL_DT(+)
+    </when>
+    <when test="ifType.equals('942')">
+    /* Bank Charge */
+	SELECT X.BANKAC AS BIZ_COL
+	     , NULL AS SND_CNT
+	     , X.RCV_CNT AS RCV_CNT
+	     , NULL AS SND_CHK_VAL
+	     , X.NET_AMT AS RCV_CHK_VAL
+	     , X.BANKAC||ROWNUM AS ROW_ID
+	  FROM ( /* Interface Table of Billing (CN_DN) */
+	       SELECT A.BANKAC AS BANKAC ,
+	              MAX(A.IF_TYPE) AS IF_TYPE ,
+	              MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+	              SUM(A.ADV_AMT+A.DIFF_AMT) AS NET_AMT,
+	              COUNT(1) AS RCV_CNT
+	         FROM ITF0942M A , ITF0001M B
+	        WHERE A.IF_TYPE = B.IF_TYPE(+)
+             <if test="tranStatusCd != null and tranStatusCd !=''">
+              AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+             </if>
+	          AND SUBSTR(A.PAY_DT,0,6) = #{searchDate}
+	        GROUP BY A.BANKAC
+	       ) X
+    </when>
+    <when test="ifType.equals('771')">
+    </when>
+    <otherwise>
+    /* Temporarily conduct a job before ECC Connection complete. by mun,do-hyun*/
+    SELECT 'empty' AS IF_TYPE FROM DUAL
+    </otherwise>
+  </choose>
+
+</select>
+
+<select id="selectInterfaceMonitoringKeyList" parameterType="Map" resultType="egovMap">
+
+  <choose>
+    <when test="ifType.equals('200')">
+	SELECT * FROM ( /* BR41은 1일자 제외하는 로직 추가*/
+	SELECT B.IF_TYPE ,
+	       C.IF_TYPE_NM ,
+	       B.TRAN_STATUS_CD ,
+	       B.RGST_DT ,
+	       C.BIZ_COL ,
+	       A.ACC_BILL_REM AS SND_CHK_COL,
+	       B.INVOICE_NO AS RCV_CHK_COL,
+	       C.CHK_COL ,
+	       A.ACC_BILL_NET_AMT AS SND_CHK_VAL ,
+	       B.ACC_AMT2 AS RCV_CHK_VAL ,
+	       <![CDATA[
+	       CASE WHEN A.ACC_BILL_NET_AMT <> B.ACC_AMT2 THEN 0
+	            ELSE ROWNUM END AS ORDER_SEQ ,
+	       ]]>
+	       B.IF_TYPE||B.CONT_DT||ROWNUM as ROW_ID
+	  FROM PAY0016D A ,
+	       ITF0200M B ,
+	       ITF0001M C
+	 WHERE A.ACC_BILL_REM = B.INVOICE_NO(+)
+	   AND A.ACC_BILL_REF_NO = B.BILL_NO(+)
+	   AND B.IF_TYPE = C.IF_TYPE(+)
+<![CDATA[
+	   AND SUBSTR(A.ACC_BILL_REM,0,4) = #{searchParam}
+	   AND A.ACC_BILL_NET_AMT <> 0
+	   AND TO_CHAR(A.ACC_BILL_REF_DT,'YYYYMM') = #{searchDate}
+
+	   AND B.ACC_CD <> 'CNDN'
+	   AND SUBSTR(B.CONT_DT,0,6) = #{searchDate}
+	   AND B.BUZEI = 1
+]]>
+      <if test="searchParam.equals('BR41')">
+       AND TO_CHAR(A.ACC_BILL_REF_DT,'YYYYMMDD') != #{searchDate}||'01'
+      </if>
+      <if test="tranStatusCd != null and tranStatusCd !=''">
+       AND B.TRAN_STATUS_CD =  #{tranStatusCd}
+      </if>
+	 ORDER BY B.CONT_DT
+	)
+	ORDER BY ORDER_SEQ
+    </when>
+    <when test="ifType.equals('200CNDN')">
+	SELECT * FROM (
+	SELECT B.IF_TYPE ,
+	       C.IF_TYPE_NM ,
+	       B.TRAN_STATUS_CD ,
+	       B.RGST_DT ,
+	       C.BIZ_COL ,
+	       A.MEMO_ADJ_INVC_NO AS SND_CHK_COL ,
+	       B.INVOICE_NO AS RCV_CHK_COL ,
+	       C.CHK_COL ,
+	       A.MEMO_ITM_AMT AS SND_CHK_VAL,
+	       B.ACC_AMT2 AS RCV_CHK_VAL ,
+	       <![CDATA[
+	       CASE WHEN A.MEMO_ITM_AMT <> B.ACC_AMT2 THEN 0
+	            ELSE ROWNUM END AS ORDER_SEQ ,
+	       ]]>
+	       B.IF_TYPE||B.CONT_DT||ROWNUM as ROW_ID
+	  FROM (
+	       SELECT B.MEMO_ADJ_INVC_NO ,
+	              B.MEMO_ADJ_REF_NO ,
+	              SUM(CASE WHEN SUBSTR(B.MEMO_ADJ_REF_NO,0,1) = 'C'
+	                       THEN A.MEMO_ITM_AMT * -1
+	                       ELSE A.MEMO_ITM_AMT END ) AS MEMO_ITM_AMT
+	         FROM PAY0012D A ,
+	              PAY0011D B
+	        WHERE A.MEMO_ADJ_ID = B.MEMO_ADJ_ID
+	          AND TO_CHAR(B.MEMO_ADJ_UPD_DT,'YYYYMM') = #{searchDate}
+	          AND MEMO_ADJ_STUS_ID = 4
+	          AND SUBSTR(B.MEMO_ADJ_INVC_NO,0,4) = #{searchParam}
+	        GROUP BY B.MEMO_ADJ_INVC_NO, B.MEMO_ADJ_REF_NO
+	       ) A ,
+	       (
+	       SELECT IF_TYPE ,
+	              CONT_DT ,
+	              INVOICE_NO ,
+	              TRAN_STATUS_CD ,
+	              RGST_DT ,
+	              BILL_NO ,
+	              SUM(ACC_AMT2) AS ACC_AMT2
+	         FROM ITF0200M
+	        WHERE ACC_CD = 'CNDN'
+		      <if test="tranStatusCd != null and tranStatusCd !=''">
+		       AND TRAN_STATUS_CD =  #{tranStatusCd}
+		      </if>
+	          AND SUBSTR(CONT_DT,0,6) = #{searchDate}
+	          AND SUBSTR(INVOICE_NO,0,4) = #{searchParam}
+	          AND BUZEI = 1
+	        GROUP BY IF_TYPE,CONT_DT,INVOICE_NO,BILL_NO, TRAN_STATUS_CD,RGST_DT
+	       ) B ,
+	       ITF0001M C
+	 WHERE A.MEMO_ADJ_INVC_NO = B.INVOICE_NO(+)
+	   AND A.MEMO_ADJ_REF_NO =  B.BILL_NO(+)
+	   AND B.IF_TYPE = C.IF_TYPE(+)
+	)
+	ORDER BY ORDER_SEQ
+    </when>
+    <when test="ifType.equals('910')">
+	/* Monitoring Collection */
+	SELECT * FROM (
+	SELECT B.IF_TYPE ,
+	       C.IF_TYPE_NM ,
+	       B.TRAN_STATUS_CD ,
+	       B.RGST_DT ,
+	       C.BIZ_COL ,
+	       A.WOR_NO AS SND_CHK_COL ,
+	       B.WOR_NO AS RCV_CHK_COL ,
+	       C.CHK_COL ,
+	       A.CUST_AMT AS SND_CHK_VAL ,
+	       B.CUST_AMT AS RCV_CHK_VAL ,
+	       <![CDATA[
+	       CASE WHEN A.CUST_AMT <> B.CUST_AMT THEN 0
+	            ELSE ROWNUM END AS ORDER_SEQ ,
+           ]]>
+	       B.IF_TYPE||B.WOR_NO||ROWNUM as ROW_ID
+	  FROM (
+	       SELECT A.WOR_NO AS WOR_NO ,
+	              SUM(A.CUST_AMT) AS CUST_AMT
+	         FROM (
+	              SELECT A.OR_NO AS WOR_NO
+	                   , H.PAY_ITM_AMT AS CUST_AMT
+	                FROM PAY0064D A
+	                   , PAY0065D B
+	                   , PAY0252T H /* PAYMENT GROUP _ ADD ORDER*/
+	               WHERE A.PAY_ID = B.PAY_ID
+	                 AND A.PAY_ID = H.PAY_ID
+	                 AND B.PAY_ITM_ID = H.PAY_ITM_ID
+	                 AND TO_CHAR(A.CRT_DT,'YYYYMM') = #{searchDate}
+	               UNION ALL
+	              SELECT A.OR_NO AS WOR_NO
+	                   , A.TOT_AMT AS CUST_AMT
+	                FROM PAY0064D A
+	                   , PAY0065D B
+	               WHERE A.PAY_ID = B.PAY_ID
+	                 AND SUBSTR(A.OR_NO,0,3) = 'EOR'
+	                 AND TO_CHAR(A.CRT_DT,'YYYYMM') = #{searchDate}
+	               UNION ALL
+	              SELECT A.OR_NO AS WOR_NO
+	                   , A.TOT_AMT AS CUST_AMT
+	                FROM PAY0064D A
+	                   , PAY0065D B
+	                   , PAY0064D H
+	               WHERE A.PAY_ID = B.PAY_ID
+	                 AND A.MTCH_ID = H.PAY_ID
+	                 AND SUBSTR(A.OR_NO,0,3) = 'ROR'
+	                 AND TO_CHAR(A.CRT_DT,'YYYYMM') = #{searchDate}
+	             ) A
+	       WHERE SUBSTR(A.WOR_NO,0,3) = #{searchParam}
+	       GROUP BY A.WOR_NO
+	       ) A ,
+	       ( /* Interface Table */
+	       SELECT A.WOR_NO AS WOR_NO ,
+	              MAX(A.IF_TYPE) AS IF_TYPE ,
+	              MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+	              A.TRAN_STATUS_CD AS TRAN_STATUS_CD ,
+	              A.RGST_DT ,
+	              SUM(A.CUST_AMT) AS CUST_AMT
+	         FROM ITF0910M A , ITF0001M B
+	        WHERE A.IF_TYPE = B.IF_TYPE (+)
+              <if test="tranStatusCd != null and tranStatusCd !=''">
+               AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+              </if>
+	          AND SUBSTR(PAY_DATE,0,6) = #{searchDate}
+	          AND SUBSTR(A.WOR_NO,0,3) = #{searchParam}
+	        GROUP BY A.WOR_NO,A.TRAN_STATUS_CD,A.RGST_DT
+	       ) B ,
+	       ITF0001M C
+	 WHERE A.WOR_NO = B.WOR_NO(+)
+	   AND B.IF_TYPE = C.IF_TYPE(+)
+	)
+	ORDER BY ORDER_SEQ
+    </when>
+    <when test="ifType.equals('110')">
+	/* Interface Customer Add */
+	SELECT * FROM (
+	SELECT B.IF_TYPE ,
+	       C.IF_TYPE_NM ,
+	       B.TRAN_STATUS_CD ,
+	       B.RGST_DT ,
+	       C.BIZ_COL ,
+	       A.CUST_NO AS SND_CHK_COL,
+	       B.CUST_NO AS RCV_CHK_COL,
+	       C.CHK_COL ,
+	       NULL AS SND_CHK_VAL ,
+	       NULL AS RCV_CHK_VAL ,
+	       ROWNUM AS ORDER_SEQ ,
+	       B.IF_TYPE||B.CUST_NO||ROWNUM as ROW_ID
+	  FROM (
+            SELECT TO_CHAR(a.cust_id) AS CUST_NO  
+              FROM SAL0029D a
+                 , SYS0013M b
+                 , SAL0023D c
+                 , SYS0064M d
+             WHERE a.TYPE_ID = b.CODE_ID
+               AND a.CUST_ID = c.CUST_ID
+               AND c.STUS_CODE_ID = 9      
+               AND c.AREA_ID = d.AREA_ID(+)
+               AND TO_CHAR(a.UPD_DT,'YYYYMM') = #{searchDate}
+            UNION ALL
+            SELECT CASE WHEN MEM_TYPE = '1' THEN 'HP'||MEM_CODE
+                        ELSE TO_CHAR(MEM_CODE) END AS CUST_NO
+              FROM ORG0001D A 
+                 , SYS0047M B
+             WHERE 1=1
+               AND A.MEM_CODE = B.HR_CODE
+               AND MEM_CODE IS NOT NULL
+               AND USER_STUS_ID = 1   
+               AND TO_CHAR(a.UPD_DT,'YYYYMM') = #{searchDate}
+            UNION ALL
+            SELECT 'D'|| A.DEALER_ID AS CUST_NO
+              FROM SAL0030D A
+                 , SAL0031D B
+                 , SYS0064M C
+             WHERE 1=1    
+               AND A.DEALER_ID = B.DEALER_ID
+               AND B.AREA_ID = C.AREA_ID         
+               AND TO_CHAR(a.UPD_DT,'YYYYMM') = #{searchDate}
+	       ) A , 
+	       ITF0110M B ,
+	       ITF0001M C
+	 WHERE A.CUST_NO = B.CUST_NO(+)
+	    AND B.IF_TYPE = C.IF_TYPE(+)
+       <if test="tranStatusCd != null and tranStatusCd !=''">
+        AND B.TRAN_STATUS_CD =  #{tranStatusCd}
+       </if>
+	   AND SUBSTR(B.RGST_DT,0,6) = #{searchDate}
+	 ORDER BY B.CUST_NO
+	)
+	ORDER BY ORDER_SEQ
+    </when>
+    <when test="ifType.equals('950')">
+	/* Defferedd Outright Membership */
+	SELECT * FROM (
+	SELECT B.IF_TYPE ,
+	       C.IF_TYPE_NM ,
+	       B.TRAN_STATUS_CD ,
+	       B.RGST_DT ,
+	       C.BIZ_COL ,
+	       A.MEM_START AS SND_CHK_COL ,
+	       B.MEM_START AS RCV_CHK_COL ,
+	       C.CHK_COL ,
+	       A.MEM_AMOUNT AS SND_CHK_VAL ,
+	       B.MEM_AMOUNT AS RCV_CHK_VAL ,
+	       <![CDATA[
+	       CASE WHEN A.MEM_AMOUNT <> B.MEM_AMOUNT THEN 0
+	            ELSE ROWNUM END AS ORDER_SEQ ,
+	       ]]>
+	       B.IF_TYPE||B.MEM_START||ROWNUM as ROW_ID
+	  FROM (
+	       SELECT MEM_START
+	            , SUM(MEM_AMOUNT) AS MEM_AMOUNT
+	         FROM (
+	              SELECT TO_CHAR(MEM.SRV_START_DT,'YYYYMMDD') AS MEM_START
+	                   , SUM(PD.ACC_BILL_NET_AMT - PD.ACC_BILL_TXS_AMT) AS MEM_AMOUNT
+	                FROM SAL0095D MEM
+	                JOIN SAL0091M PAC ON MEM.SRV_MEM_PAC_ID = PAC.SRV_MEM_PAC_ID
+	                JOIN SAL0001D SOM ON MEM.SRV_SALES_ORD_ID = SOM.SALES_ORD_ID
+	                JOIN PAY0016D PD  ON PD.ACC_BILL_ORD_ID = SOM.SALES_ORD_ID
+	                                 AND ACC_BILL_MODE_ID = 1143
+	                JOIN SAL0093D QUT ON MEM.SRV_MEM_QUOT_ID = QUT.SRV_MEM_QUOT_ID
+	                JOIN PAY0031D INV ON QUT.SRV_MEM_QUOT_NO = INV.TAX_INVC_SVC_NO
+	                                 AND INV.TAX_INVC_REF_NO = PD.ACC_BILL_REM
+	               WHERE MEM.SRV_STUS_CODE_ID = 4
+	                 AND PAC.PAC_TYPE = 1
+	                 AND SOM.STUS_CODE_ID = 4
+	                 AND TO_CHAR(MEM.SRV_START_DT,'YYYYMM') = #{searchDate}
+	               GROUP BY TO_CHAR(MEM.SRV_START_DT,'YYYYMMDD')
+	               UNION ALL
+	              SELECT TO_CHAR(MEM.SRV_START_DT,'YYYYMMDD') AS MEM_START
+	                   , SUM(PD.ACC_BILL_NET_AMT - PD.ACC_BILL_TXS_AMT) AS MEM_AMOUNT
+	                FROM SAL0095D MEM
+	                JOIN SAL0093D QUT ON MEM.SRV_MEM_QUOT_ID = QUT.SRV_MEM_QUOT_ID
+	                JOIN PAY0031D INV ON QUT.SRV_MEM_QUOT_NO = INV.TAX_INVC_SVC_NO
+	                /**/
+	                JOIN PAY0016D PD ON PD.ACC_BILL_REM = INV.TAX_INVC_REF_NO
+	                                AND TO_CHAR(PD.ACC_BILL_REF_DT,'YYYYMM') = #{searchDate}
+	                                AND ACC_BILL_MODE_ID = 1143
+	                JOIN SAL0001D SOM ON SOM.SALES_ORD_ID = PD.ACC_BILL_ORD_ID
+	                /**/
+	               WHERE 1=1
+	                 AND SOM.STUS_CODE_ID = 4
+	                 AND PD.ACC_BILL_MODE_ID = 1143
+	                 <![CDATA[
+	                 AND ( TO_CHAR(MEM.SRV_START_DT,'YYYYMMDD') = '19000101' OR TO_CHAR(MEM.SRV_START_DT,'YYYYMM') >= #{searchDate} )
+	                 ]]>
+	               GROUP BY TO_CHAR(MEM.SRV_START_DT,'YYYYMMDD')
+	              )
+	         GROUP BY MEM_START
+	       ) A ,
+	       ( /* Interface Table */
+	       SELECT A.MEM_START AS MEM_START ,
+	              MAX(A.IF_TYPE) AS IF_TYPE ,
+	              MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+	              A.TRAN_STATUS_CD ,
+	              A.RGST_DT ,
+	              SUM(A.MEM_AMOUNT) AS MEM_AMOUNT
+	         FROM ITF0950M A , ITF0001M B
+	        WHERE A.IF_TYPE = B.IF_TYPE (+)
+              <if test="tranStatusCd != null and tranStatusCd !=''">
+               AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+              </if>
+              <![CDATA[
+	          AND (SUBSTR(A.MEM_START,0,6) >= #{searchDate} OR SUBSTR(A.INVOICE_DT,0,6) = #{searchDate})
+	          ]]>
+	        GROUP BY A.MEM_START,A.TRAN_STATUS_CD,A.RGST_DT
+	       ) B ,
+	       ITF0001M C
+	 WHERE A.MEM_START = B.MEM_START(+)
+	   AND B.IF_TYPE = C.IF_TYPE(+)
+	)
+	ORDER BY ORDER_SEQ
+    </when>
+    <when test="ifType.equals('960')">
+	/* Rental Order Status */
+	SELECT * FROM (
+	SELECT B.IF_TYPE ,
+	       B.IF_TYPE_NM ,
+	       B.TRAN_STATUS_CD ,
+	       B.RGST_DT ,
+	       B.BIZ_COL ,
+	       A.SALES_ORD_NO||'_'||A.APP_TYPE_ID AS SND_CHK_COL ,
+	       B.SALES_ORD_NO||'_'||B.APP_TYPE_ID AS RCV_CHK_COL ,
+	       B.CHK_COL ,
+	       NULL AS SND_CHK_VAL ,
+	       NULL AS RCV_CHK_VAL ,
+	       <![CDATA[
+	       CASE WHEN A.APP_TYPE_ID <> B.APP_TYPE_ID THEN 0
+	            ELSE ROWNUM END AS ORDER_SEQ ,
+	       ]]>
+	       B.IF_TYPE||B.APP_TYPE_ID||ROWNUM as ROW_ID
+	  FROM (
+	       SELECT D.SALES_ORD_NO AS ORDER_NO
+	            , MAX(A.ACC_DEBT_OPNG_RENTAL_STUS) AS STATUS
+	         FROM PAY0052S A JOIN PAY0150D B ON A.ACC_DEBT_ORD_ID = B.ACC_DEBT_ORD_ID
+	                                        AND A.ACC_DEBT_OPNG_APP_TYPE_ID = 66
+	                         JOIN SAL0071D C ON A.ACC_DEBT_ORD_ID = C.SALES_ORD_ID
+	                         JOIN SAL0001D D ON A.ACC_DEBT_ORD_ID = D.SALES_ORD_ID
+	                         JOIN SYS0038M E ON A.ACC_DEBT_OPNG_RENTAL_STUS = E.CODE
+	        WHERE 1=1
+	          AND B.ACC_DEBT_YEAR = ABS(SUBSTR(#{searchDate},0,4))
+	          AND B.ACC_DEBT_MONTH = ABS(SUBSTR(#{searchDate},5,2))
+	          AND A.ACC_DEBT_YEAR  = ABS(SUBSTR(TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM'),0,4))
+	          AND A.ACC_DEBT_MONTH = ABS(SUBSTR(TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM'),5,2))
+	          AND D.APP_TYPE_ID = 66
+	          <![CDATA[
+	          AND A.ACC_DEBT_OPNG_RENTAL_STUS <> B.ACC_DEBT_OPNG_RENTAL_STUS
+	          ]]>
+	        GROUP BY D.SALES_ORD_NO
+	       ) A ,
+	       (
+	       SELECT A.STATUS AS STATUS ,
+	              A.ORDER_NO AS SALES_ORD_NO,
+	              A.IF_TYPE AS IF_TYPE ,
+	              A.TRAN_STATUS_CD ,
+	              A.RGST_DT ,
+	              B.IF_TYPE_NM AS IF_TYPE_NM ,
+	              B.BIZ_COL AS BIZ_COL ,
+	              B.CHK_COL AS CHK_COL
+	         FROM ITF0960M A , ITF0001M B
+	        WHERE A.IF_TYPE = B.IF_TYPE(+)
+              <if test="tranStatusCd != null and tranStatusCd !=''">
+               AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+              </if>
+	          AND SUBSTR(A.RGST_DT,0,6) = TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM')
+	       ) B
+	 WHERE A.APP_TYPE_ID = B.APP_TYPE_ID(+)
+	   AND A.SALES_ORD_NO = B.SALES_ORD_NO(+)
+	)
+	ORDER BY ORDER_SEQ
+    </when>
+    <when test="ifType.equals('210')">
+	/* Installation Result. */
+	SELECT * FROM (
+	SELECT B.IF_TYPE ,
+	       B.IF_TYPE_NM ,
+	       B.TRAN_STATUS_CD ,
+	       B.RGST_DT ,
+	       B.BIZ_COL ,
+	       A.SALES_ORD_NO||'_'||A.APP_TYPE_ID AS SND_CHK_COL ,
+	       B.SALES_ORD_NO||'_'||B.APP_TYPE_ID AS RCV_CHK_COL ,
+	       B.CHK_COL ,
+	       NULL AS SND_CHK_VAL ,
+	       NULL AS RCV_CHK_VAL ,
+	       <![CDATA[
+	       CASE WHEN A.APP_TYPE_ID <> B.APP_TYPE_ID THEN 0
+	            ELSE ROWNUM END AS ORDER_SEQ ,
+	       ]]>
+	       B.IF_TYPE||B.APP_TYPE_ID||ROWNUM as ROW_ID
+	  FROM (
+	       SELECT A.APP_TYPE_ID
+	            , A.SALES_ORD_NO
+	         FROM SAL0001D A
+	            , SAL0046D B
+	            , SAL0047D C
+	            , SAL0002D D
+	            , SYS0026M E
+	            , SYS0005M F
+	        WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+	          AND B.INSTALL_ENTRY_ID = C.ENTRY_ID
+	          AND B.STUS_CODE_ID = 4
+	          AND C.STUS_CODE_ID = 4
+	          AND A.SALES_ORD_ID = D.SALES_ORD_ID
+	          AND D.ITM_STK_ID = E.STK_ID
+	          AND A.BRNCH_ID = F.BRNCH_ID
+	          AND TO_CHAR(C.INSTALL_DT,'YYYYMM') = #{searchDate}
+	       ) A ,
+	       (
+	         SELECT A.APP_TYPE AS APP_TYPE_ID ,
+	                A.ORDER_NO AS SALES_ORD_NO,
+	                A.IF_TYPE AS IF_TYPE ,
+	                A.TRAN_STATUS_CD ,
+	                A.RGST_DT ,
+	                B.IF_TYPE_NM AS IF_TYPE_NM ,
+	                B.BIZ_COL AS BIZ_COL ,
+	                B.CHK_COL AS CHK_COL
+	           FROM ITF0210M A , ITF0001M B
+	          WHERE A.IF_TYPE = B.IF_TYPE(+)
+              <if test="tranStatusCd != null and tranStatusCd !=''">
+               AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+              </if>
+	            AND SUBSTR(A.INSTALL_DATE,0,6) = #{searchDate}
+	       ) B
+	 WHERE A.APP_TYPE_ID = B.APP_TYPE_ID(+)
+	   AND A.SALES_ORD_NO = B.SALES_ORD_NO(+)
+	)
+	ORDER BY ORDER_SEQ
+    </when>
+    <when test="ifType.equals('963')">
+	/* Unbilled Revenue */
+	SELECT * FROM (
+	SELECT B.IF_TYPE ,
+	       B.IF_TYPE_NM ,
+	       B.TRAN_STATUS_CD ,
+	       B.RGST_DT ,
+	       B.BIZ_COL ,
+	       A.INSTALL_DT AS SND_CHK_COL ,
+	       B.INSTALL_DT AS RCV_CHK_COL ,
+	       B.CHK_COL ,
+	       A.UNBILL AS SND_CHK_VAL,
+	       B.UNBILL AS RCV_CHK_VAL ,
+	       <![CDATA[
+	       CASE WHEN A.UNBILL <> B.UNBILL THEN 0
+	            ELSE RANK() OVER(ORDER BY A.INSTALL_DT) END AS ORDER_SEQ ,
+	       ]]>
+	       B.IF_TYPE||B.INSTALL_DT||ROWNUM as ROW_ID
+	  FROM (
+	       SELECT INSTALL_DT ,
+	              COUNT(1) AS SND_CNT ,
+	              SUM(UNBILL) AS UNBILL
+	         FROM (
+	              SELECT TO_CHAR(IR.INSTALL_DT,'YYYYMMDD') AS INSTALL_DT
+	                   , ROUND(ROUND((TO_NUMBER(TO_CHAR(LAST_DAY(IR.INSTALL_DT),'DD')) - TO_NUMBER(TO_CHAR(IR.INSTALL_DT,'DD')) + 1),2)
+	                         / ROUND(TO_NUMBER(TO_CHAR(LAST_DAY(IR.INSTALL_DT),'DD')),2)
+	                         * (CASE WHEN EC.EURC_ID IS NOT NULL
+	                                 THEN M.MTH_RENT_AMT
+	                                 ELSE ( CASE WHEN RR.RLIEF_ID IS NOT NULL
+	                                             THEN M.MTH_RENT_AMT
+	                                             ELSE ROUND(M.MTH_RENT_AMT,2) * 100 / 106
+	                                             END )
+	                                 END )
+	                          ,2) AS UNBILL
+	                FROM SAL0001D M
+	                     JOIN SAL0002D D ON D.SALES_ORD_ID = M.SALES_ORD_ID
+	                     JOIN SYS0026M STK ON STk.STK_ID = D.ITM_STK_ID
+	                     JOIN SYS0013M CD ON CODE_ID = STK.STK_CTGRY_ID
+	                     JOIN SAL0046D T ON T.INSTALL_ENTRY_ID = (SELECT MIN(INSTALL_ENTRY_ID)
+	                                                                FROM SAL0046D F
+	                                                               WHERE F.SALES_ORD_ID = M.SALES_ORD_ID
+	                                                                 AND F.STUS_CODE_ID = 4)
+	                     JOIN SAL0047D IR ON IR.RESULT_ID = (SELECT MAX(TT.RESULT_ID)
+	                                                           FROM SAL0047D TT
+	                                                          WHERE TT.ENTRY_ID = T.INSTALL_ENTRY_ID)
+	                     JOIN SAL0071D SS ON SS.SALES_ORD_ID = M.SALES_ORD_ID
+	                     LEFT JOIN SAL0042D EC ON EC.EURC_SALES_ORD_ID = M.SALES_ORD_ID
+	                     LEFT JOIN SAL0043D RR ON RR.RLIEF_ORD_ID = M.SALES_ORD_ID
+	                     /**/
+	                     LEFT JOIN PAY0016D PD ON PD.ACC_BILL_ORD_ID = M.SALES_ORD_ID
+	                                          AND TO_CHAR(PD.ACC_BILL_REF_DT,'YYYYMM') = #{searchDate}
+	                     LEFT JOIN SAL0002D H ON M.SALES_ORD_ID = H.SALES_ORD_ID
+	                     LEFT JOIN ORG0001D G ON M.MEM_ID = G.MEM_ID
+	                     LEFT JOIN SYS0005M I ON G.BRNCH = I.BRNCH_ID
+	                     LEFT JOIN SYS0026M J ON H.ITM_STK_ID = J.STK_ID
+	                     LEFT JOIN SYS0046D K ON K.CODE_ID = PD.ACC_BILL_TAX_CODE_ID
+	                       /**/
+	               WHERE M.APP_TYPE_ID = 66
+	                 AND M.SALES_ORD_NO like '2%'
+	                 AND T.STUS_CODE_ID = 4
+	                 AND SS.STUS_CODE_ID NOT IN ('TER','RET','WOF')
+	                 AND TO_CHAR(IR.INSTALL_DT,'YYYYMM') = #{searchDate}
+	               GROUP BY M.SALES_ORD_NO
+	                   , IR.INSTALL_DT
+	                   , SS.STUS_CODE_ID
+	                   , EC.EURC_ID
+	                   , M.MTH_RENT_AMT
+	                   , RR.RLIEF_ID
+	                   , CD.CODE_NAME
+	                   , M.APP_TYPE_ID
+	                   , I.CODE
+	                   , G.MEM_CODE
+	                   , M.ORG_CODE
+	                   , M.DEPT_CODE
+	                   , G.MEM_TYPE
+	                   , J.STK_CTGRY_ID
+	                   , K.CODE
+	                   , J.STK_CODE
+	                   , M.CUST_ID
+	                   , I.REGN_ID
+	                   , M.BRNCH_ID
+	                   , G.BRNCH
+	             )
+	       GROUP BY INSTALL_DT
+	       ) A ,
+	       ( /* Interface Table */
+	       SELECT A.INST_DATE AS INSTALL_DT ,
+	                  A.TRAN_STATUS_CD ,
+	                  A.RGST_DT ,
+	              MAX(A.IF_TYPE) AS IF_TYPE ,
+	              MAX(B.IF_TYPE_NM) AS IF_TYPE_NM ,
+	              MAX(B.BIZ_COL) AS BIZ_COL ,
+	              MAX(B.CHK_COL) AS CHK_COL ,
+	              COUNT(*) AS RCV_CNT ,
+	              SUM(A.UNBILL) AS UNBILL
+	         FROM ITF0963M A , ITF0001M B
+	        WHERE A.IF_TYPE = B.IF_TYPE (+)
+              <if test="tranStatusCd != null and tranStatusCd !=''">
+               AND A.TRAN_STATUS_CD =  #{tranStatusCd}
+              </if>
+	          AND SUBSTR(A.INST_DATE,0,6) = #{searchDate}
+	        GROUP BY A.INST_DATE,A.TRAN_STATUS_CD,A.RGST_DT
+	       ) B
+	 WHERE A.INSTALL_DT = B.INSTALL_DT(+)
+	)
+	ORDER BY ORDER_SEQ
+    </when>
+    <when test="ifType.equals('942')">
+	/* Bank Charge */
+	SELECT * FROM (
+	SELECT B.IF_TYPE ,
+	       C.IF_TYPE_NM ,
+	       B.TRAN_STATUS_CD ,
+	       B.RGST_DT ,
+	       C.BIZ_COL ,
+	       NULL AS SND_CHK_COL,
+	       B.BANKAC AS RCV_CHK_COL,
+	       C.CHK_COL ,
+	       NULL AS SND_CHK_VAL ,
+	       B.ADV_AMT+B.DIFF_AMT AS RCV_CHK_VAL ,
+	       ROWNUM AS ORDER_SEQ ,
+	       B.IF_TYPE||B.BANKAC||ROWNUM as ROW_ID
+	  FROM ITF0942M B , ITF0001M C
+	 WHERE B.IF_TYPE = C.IF_TYPE(+)
+      <if test="tranStatusCd != null and tranStatusCd !=''">
+       AND B.TRAN_STATUS_CD =  #{tranStatusCd}
+      </if>
+	   AND SUBSTR(B.PAY_DT,0,6) = #{searchDate}
+	 ORDER BY B.BANKAC
+	)
+	ORDER BY ORDER_SEQ
+    </when>
+    <when test="ifType.equals('771')">
+	/* Interface Branch Code */
+	SELECT * FROM (
+	SELECT B.IF_TYPE ,
+	       C.IF_TYPE_NM ,
+	       B.TRAN_STATUS_CD ,
+	       B.RGST_DT ,
+	       C.BIZ_COL ,
+	       A.CODE AS SND_CHK_COL,
+	       B.BRNCH_CODE AS RCV_CHK_COL,
+	       C.CHK_COL ,
+	       NULL AS SND_CHK_VAL ,
+	       NULL AS RCV_CHK_VAL ,
+	       ROWNUM AS ORDER_SEQ ,
+	       B.IF_TYPE||B.BRNCH_CODE||ROWNUM as ROW_ID
+	  FROM SYS0005M A, 
+	       ITF0771M B ,
+	       ITF0001M C
+	 WHERE A.CODE = B.BRNCH_CODE(+)
+	   AND B.IF_TYPE = C.IF_TYPE(+)
+      <if test="tranStatusCd != null and tranStatusCd !=''">
+       AND B.TRAN_STATUS_CD =  #{tranStatusCd}
+      </if>
+	   AND SUBSTR(B.RGST_DT,0,6) = TO_CHAR(ADD_MONTHS(TO_DATE(#{searchDate},'YYYYMM'),1),'YYYYMM')
+	 ORDER BY B.BRNCH_CODE
+	)
+	ORDER BY ORDER_SEQ
+    </when>
+    <otherwise>
+    /* Temporarily conduct a job before ECC Connection complete. by mun,do-hyun*/
+	SELECT 'empty' AS IF_TYPE FROM DUAL
+    </otherwise>
+  </choose>
+
+</select>
+
+<select id="selectCommonCodeStatusList"  parameterType="Map" resultType="egovMap">
+    SELECT code
+             , code_name as value
+      FROM SYS0013M
+     WHERE CODE_MASTER_ID = 332
+</select>
+
+<select id="selectInterfaceTypeList"  parameterType="Map" resultType="egovMap">
+    SELECT IF_TYPE
+             , IF_TYPE_NM
+       FROM ITF0001M
+</select>
+</mapper>

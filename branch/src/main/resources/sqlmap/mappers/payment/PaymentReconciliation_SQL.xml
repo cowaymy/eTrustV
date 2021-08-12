@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.reconciliation.service.impl.PaymentReconciliationMapper">
+    
+    <sql id="pagingStart">
+        SELECT *
+        FROM (SELECT ROWNUM AS RNUM
+                                ,Z.*
+                    FROM (  
+    </sql>
+    
+    <sql id="pagingEnd">
+         ) Z
+                    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) )
+        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+    </sql>
+    
+    <select id="selectReconciliationMasterList" parameterType="Map" resultType="egovMap">
+        <include refid="pagingStart" />    
+        SELECT 
+               Project1.F_DEP_RECON_ID F_DEP_RECON_ID  ,
+               Project1.F_DEP_RECON_REF_NO F_DEP_RECON_REF_NO  ,
+               Project1.F_DEPOST_ID F_DEPOST_ID  ,
+               Project1.F_DEPOST_ACC_ID F_DEPOST_ACC_ID  ,
+               TO_CHAR(Project1.F_DEPOST_PAY_DT , 'DD-MM-YYYY') AS F_DEPOST_PAY_DT,
+               Project1.F_DEPOST_BRNCH_ID F_DEPOST_BRNCH_ID  ,
+               Project1.CODE CODE  ,
+               Project1.ACC_CODE ACC_CODE  ,
+               Project1.ACC_DESC ACC_DESC  ,
+               Project1.F_DEP_RECON_STUS_ID F_DEP_RECON_STUS_ID  ,
+               Project1.CODE1 CODE1  ,
+               Project1.REMARK REMARK  ,
+               TO_CHAR(Project1.F_DEP_RECON_CRT_DT , 'DD-MM-YYYY hh:mi:ss A.M.') AS F_DEP_RECON_CRT_DT,
+               Project1.F_DEP_RECON_CRT_USER_ID F_DEP_RECON_CRT_USER_ID  ,
+               Project1.USER_NAME USER_NAME  ,
+               TO_CHAR(Project1.F_DEP_RECON_UPD_DT , 'DD-MM-YYYY hh:mi:ss A.M.') AS F_DEP_RECON_UPD_DT,
+               Project1.F_DEP_RECON_UPD_USER_ID F_DEP_RECON_UPD_USER_ID  ,
+               Project1.USERNAME1 USERNAME1  
+          FROM ( SELECT Project1.F_DEP_RECON_ID F_DEP_RECON_ID  ,
+                        Project1.F_DEPOST_ID F_DEPOST_ID  ,
+                        Project1.F_DEP_RECON_REF_NO F_DEP_RECON_REF_NO  ,
+                        Project1.F_DEP_RECON_STUS_ID F_DEP_RECON_STUS_ID  ,
+                        Project1.F_DEP_RECON_CRT_USER_ID F_DEP_RECON_CRT_USER_ID  ,
+                        Project1.F_DEP_RECON_UPD_USER_ID F_DEP_RECON_UPD_USER_ID  ,
+                        Project1.REMARK REMARK  ,
+                        Project1.F_DEP_RECON_CRT_DT F_DEP_RECON_CRT_DT  ,
+                        Project1.F_DEP_RECON_UPD_DT F_DEP_RECON_UPD_DT  ,
+                        Project1.F_DEPOST_PAY_DT F_DEPOST_PAY_DT  ,
+                        Project1.F_DEPOST_ACC_ID F_DEPOST_ACC_ID  ,
+                        Project1.F_DEPOST_BRNCH_ID F_DEPOST_BRNCH_ID  ,
+                        Project1.CODE CODE  ,
+                        Project1.CODE1 CODE1  ,
+                        Project1.ACC_CODE ACC_CODE  ,
+                        Project1.ACC_DESC ACC_DESC  ,
+                        Project1.USER_NAME USER_NAME  ,
+                        Project1.USERNAME1 USERNAME1  ,
+                        ROW_NUMBER() OVER ( ORDER BY Project1.F_DEP_RECON_ID DESC  ) ROW_NUMBER  
+                 FROM ( SELECT Filter1.F_DEP_RECON_ID F_DEP_RECON_ID  ,
+                               Filter1.FDEPOSITID1 F_DEPOST_ID  ,
+                               Filter1.F_DEP_RECON_REF_NO F_DEP_RECON_REF_NO  ,
+                               Filter1.F_DEP_RECON_STUS_ID F_DEP_RECON_STUS_ID  ,
+                               Filter1.F_DEP_RECON_CRT_USER_ID F_DEP_RECON_CRT_USER_ID  ,
+                               Filter1.F_DEP_RECON_UPD_USER_ID F_DEP_RECON_UPD_USER_ID  ,
+                               CASE 
+                                    WHEN ( 'RJT' = Filter1.CODE2 ) THEN Filter1.F_DEP_RECON_RESN
+                               ELSE Filter1.F_DEP_RECON_REM
+                                  END REMARK  ,
+                               TO_DATE(Filter1.F_DEP_RECON_CRT_DT) F_DEP_RECON_CRT_DT  ,
+                               TO_DATE(Filter1.F_DEP_RECON_UPD_DT) F_DEP_RECON_UPD_DT  ,
+                               Filter1.F_DEPOST_PAY_DT F_DEPOST_PAY_DT  ,
+                               Filter1.F_DEPOST_ACC_ID F_DEPOST_ACC_ID  ,
+                               Filter1.F_DEPOST_BRNCH_ID F_DEPOST_BRNCH_ID  ,
+                               Filter1.CODE3 CODE  ,
+                               Filter1.CODE2 CODE1  ,
+                               Filter1.ACC_CODE ACC_CODE  ,
+                               Filter1.ACC_DESC ACC_DESC  ,
+                               Filter1.USER_NAME USER_NAME  ,
+                               Extent7.USER_NAME USERNAME1  
+                        FROM ( SELECT Extent1.F_DEP_RECON_ID F_DEP_RECON_ID  ,
+                                      Extent1.F_DEPOST_ID FDEPOSITID1  ,
+                                      Extent1.F_DEP_RECON_REF_NO F_DEP_RECON_REF_NO  ,
+                                      Extent1.F_DEP_RECON_STUS_ID F_DEP_RECON_STUS_ID  ,
+                                      Extent1.F_DEP_RECON_REM F_DEP_RECON_REM  ,
+                                      Extent1.F_DEP_RECON_RESN F_DEP_RECON_RESN  ,
+                                      Extent1.F_DEP_RECON_CRT_DT F_DEP_RECON_CRT_DT  ,
+                                      Extent1.F_DEP_RECON_CRT_USER_ID F_DEP_RECON_CRT_USER_ID  ,
+                                      Extent1.F_DEP_RECON_UPD_DT F_DEP_RECON_UPD_DT  ,
+                                      Extent1.F_DEP_RECON_UPD_USER_ID F_DEP_RECON_UPD_USER_ID  ,
+                                      Extent2.F_DEPOST_PAY_DT F_DEPOST_PAY_DT  ,
+                                      Extent2.F_DEPOST_ACC_ID F_DEPOST_ACC_ID  ,
+                                      Extent2.F_DEPOST_BRNCH_ID F_DEPOST_BRNCH_ID  ,
+                                      Extent3.CODE CODE3  ,
+                                      Extent4.CODE CODE2  ,
+                                      Extent5.ACC_CODE ACC_CODE  ,
+                                      Extent5.ACC_DESC ACC_DESC  ,
+                                      Extent6.USER_NAME USER_NAME  
+                               FROM PAY0073D Extent1
+                                      LEFT JOIN PAY0077D Extent2   ON Extent1.F_DEPOST_ID = Extent2.F_DEPOST_ID
+                                      LEFT JOIN SYS0005M Extent3   ON Extent2.F_DEPOST_BRNCH_ID = Extent3.BRNCH_ID
+                                      LEFT JOIN SYS0038M Extent4   ON Extent1.F_DEP_RECON_STUS_ID = Extent4.STUS_CODE_ID
+                                      LEFT JOIN SYS0001M Extent5   ON Extent2.F_DEPOST_ACC_ID = Extent5.ACC_ID
+                                      LEFT JOIN SYS0047M Extent6   ON Extent1.F_DEP_RECON_CRT_USER_ID = Extent6.USER_ID
+                                WHERE  1=1
+                                    <if test="statusId != null">
+                                      AND Extent1.F_DEP_RECON_STUS_ID IN
+                                                    <foreach collection="statusId" item="item" open="(" close=")" separator="," >
+                                                        #{item}
+                                                    </foreach>   
+                                    </if>
+                                ) Filter1
+                               LEFT JOIN SYS0047M Extent7   ON Filter1.F_DEP_RECON_UPD_USER_ID = Extent7.USER_ID
+                         WHERE 1=1
+                                  
+                                  <if test="transNo != ''"> 
+                                    AND Filter1.F_DEP_RECON_REF_NO LIKE '%' || #{transNo} || '%' ESCAPE '~' 
+                                  </if>
+                                  <if test="accountId != ''"> 
+                                    AND Filter1.F_DEPOST_ACC_ID = #{accountId} 
+                                  </if>
+                                  <if test="branchId != ''"> 
+                                    AND Filter1.F_DEPOST_BRNCH_ID = #{branchId}
+                                  </if>
+                                  <if test="paymentDateFr != null and paymentDateTo != null and paymentDateFr != '' and paymentDateTo != ''" > 
+	                                  AND Filter1.F_DEPOST_PAY_DT <![CDATA[>= ]]> TO_DATE(#{paymentDateFr}, 'DD/MM/YYYY')
+	                                  AND Filter1.F_DEPOST_PAY_DT <![CDATA[<= ]]> TO_DATE(#{paymentDateTo}, 'DD/MM/YYYY') +1
+                                  </if>
+                                  ) Project1 ) Project1
+          WHERE  Project1.ROW_NUMBER > 0
+          ORDER BY Project1.F_DEP_RECON_ID DESC
+          <include refid="pagingEnd" />
+    </select>
+    
+    <select id="selectReconciliationMasterListCount" parameterType="Map" resultType="int">
+        SELECT 
+          COUNT(1) AS CNT
+          FROM ( SELECT Project1.F_DEP_RECON_ID F_DEP_RECON_ID  ,
+                        Project1.F_DEPOST_ID F_DEPOST_ID  ,
+                        Project1.F_DEP_RECON_REF_NO F_DEP_RECON_REF_NO  ,
+                        Project1.F_DEP_RECON_STUS_ID F_DEP_RECON_STUS_ID  ,
+                        Project1.F_DEP_RECON_CRT_USER_ID F_DEP_RECON_CRT_USER_ID  ,
+                        Project1.F_DEP_RECON_UPD_USER_ID F_DEP_RECON_UPD_USER_ID  ,
+                        Project1.REMARK REMARK  ,
+                        Project1.F_DEP_RECON_CRT_DT F_DEP_RECON_CRT_DT  ,
+                        Project1.F_DEP_RECON_UPD_DT F_DEP_RECON_UPD_DT  ,
+                        Project1.F_DEPOST_PAY_DT F_DEPOST_PAY_DT  ,
+                        Project1.F_DEPOST_ACC_ID F_DEPOST_ACC_ID  ,
+                        Project1.F_DEPOST_BRNCH_ID F_DEPOST_BRNCH_ID  ,
+                        Project1.CODE CODE  ,
+                        Project1.CODE1 CODE1  ,
+                        Project1.ACC_CODE ACC_CODE  ,
+                        Project1.ACC_DESC ACC_DESC  ,
+                        Project1.USER_NAME USER_NAME  ,
+                        Project1.USERNAME1 USERNAME1  ,
+                        ROW_NUMBER() OVER ( ORDER BY Project1.F_DEP_RECON_ID DESC  ) ROW_NUMBER  
+                 FROM ( SELECT Filter1.F_DEP_RECON_ID F_DEP_RECON_ID  ,
+                               Filter1.FDEPOSITID1 F_DEPOST_ID  ,
+                               Filter1.F_DEP_RECON_REF_NO F_DEP_RECON_REF_NO  ,
+                               Filter1.F_DEP_RECON_STUS_ID F_DEP_RECON_STUS_ID  ,
+                               Filter1.F_DEP_RECON_CRT_USER_ID F_DEP_RECON_CRT_USER_ID  ,
+                               Filter1.F_DEP_RECON_UPD_USER_ID F_DEP_RECON_UPD_USER_ID  ,
+                               CASE 
+                                    WHEN ( 'RJT' = Filter1.CODE2 ) THEN Filter1.F_DEP_RECON_RESN
+                               ELSE Filter1.F_DEP_RECON_REM
+                                  END REMARK  ,
+                               TO_DATE(Filter1.F_DEP_RECON_CRT_DT) F_DEP_RECON_CRT_DT  ,
+                               TO_DATE(Filter1.F_DEP_RECON_UPD_DT) F_DEP_RECON_UPD_DT  ,
+                               Filter1.F_DEPOST_PAY_DT F_DEPOST_PAY_DT  ,
+                               Filter1.F_DEPOST_ACC_ID F_DEPOST_ACC_ID  ,
+                               Filter1.F_DEPOST_BRNCH_ID F_DEPOST_BRNCH_ID  ,
+                               Filter1.CODE3 CODE  ,
+                               Filter1.CODE2 CODE1  ,
+                               Filter1.ACC_CODE ACC_CODE  ,
+                               Filter1.ACC_DESC ACC_DESC  ,
+                               Filter1.USER_NAME USER_NAME  ,
+                               Extent7.USER_NAME USERNAME1  
+                        FROM ( SELECT Extent1.F_DEP_RECON_ID F_DEP_RECON_ID  ,
+                                      Extent1.F_DEPOST_ID FDEPOSITID1  ,
+                                      Extent1.F_DEP_RECON_REF_NO F_DEP_RECON_REF_NO  ,
+                                      Extent1.F_DEP_RECON_STUS_ID F_DEP_RECON_STUS_ID  ,
+                                      Extent1.F_DEP_RECON_REM F_DEP_RECON_REM  ,
+                                      Extent1.F_DEP_RECON_RESN F_DEP_RECON_RESN  ,
+                                      Extent1.F_DEP_RECON_CRT_DT F_DEP_RECON_CRT_DT  ,
+                                      Extent1.F_DEP_RECON_CRT_USER_ID F_DEP_RECON_CRT_USER_ID  ,
+                                      Extent1.F_DEP_RECON_UPD_DT F_DEP_RECON_UPD_DT  ,
+                                      Extent1.F_DEP_RECON_UPD_USER_ID F_DEP_RECON_UPD_USER_ID  ,
+                                      Extent2.F_DEPOST_PAY_DT F_DEPOST_PAY_DT  ,
+                                      Extent2.F_DEPOST_ACC_ID F_DEPOST_ACC_ID  ,
+                                      Extent2.F_DEPOST_BRNCH_ID F_DEPOST_BRNCH_ID  ,
+                                      Extent3.CODE CODE3  ,
+                                      Extent4.CODE CODE2  ,
+                                      Extent5.ACC_CODE ACC_CODE  ,
+                                      Extent5.ACC_DESC ACC_DESC  ,
+                                      Extent6.USER_NAME USER_NAME  
+                               FROM PAY0073D Extent1
+                                      LEFT JOIN PAY0077D Extent2   ON Extent1.F_DEPOST_ID = Extent2.F_DEPOST_ID
+                                      LEFT JOIN SYS0005M Extent3   ON Extent2.F_DEPOST_BRNCH_ID = Extent3.BRNCH_ID
+                                      LEFT JOIN SYS0038M Extent4   ON Extent1.F_DEP_RECON_STUS_ID = Extent4.STUS_CODE_ID
+                                      LEFT JOIN SYS0001M Extent5   ON Extent2.F_DEPOST_ACC_ID = Extent5.ACC_ID
+                                      LEFT JOIN SYS0047M Extent6   ON Extent1.F_DEP_RECON_CRT_USER_ID = Extent6.USER_ID
+                                WHERE  1=1
+                                    <if test="statusId != null">
+                                      AND Extent1.F_DEP_RECON_STUS_ID IN
+                                                    <foreach collection="statusId" item="item" open="(" close=")" separator="," >
+                                                        #{item}
+                                                    </foreach>   
+                                    </if>
+                                ) Filter1
+                               LEFT JOIN SYS0047M Extent7   ON Filter1.F_DEP_RECON_UPD_USER_ID = Extent7.USER_ID
+                         WHERE 1=1
+                                  
+                                  <if test="transNo != ''"> 
+                                    AND Filter1.F_DEP_RECON_REF_NO LIKE '%' || #{transNo} || '%' ESCAPE '~' 
+                                  </if>
+                                  <if test="accountId != ''"> 
+                                    AND Filter1.F_DEPOST_ACC_ID = #{accountId} 
+                                  </if>
+                                  <if test="branchId != ''"> 
+                                    AND Filter1.F_DEPOST_BRNCH_ID = #{branchId}
+                                  </if>
+                                  <if test="paymentDateFr != null and paymentDateTo != null and paymentDateFr != '' and paymentDateTo != ''" > 
+                                      AND Filter1.F_DEPOST_PAY_DT <![CDATA[>= ]]> TO_DATE(#{paymentDateFr}, 'DD/MM/YYYY')
+                                      AND Filter1.F_DEPOST_PAY_DT <![CDATA[<= ]]> TO_DATE(#{paymentDateTo}, 'DD/MM/YYYY') +1
+                                  </if>
+                                  ) Project1 ) Project1
+          WHERE  Project1.ROW_NUMBER > 0
+          ORDER BY Project1.F_DEP_RECON_ID DESC
+    </select>
+    
+    <select id="selectDepositList" parameterType="Map" resultType="egovMap">
+        SELECT 
+		       Project1.F_DEP_RECON_ID F_DEP_RECON_ID  ,
+		       Project1.F_DEP_ITM_ID F_DEP_ITM_ID  ,
+		       Project1.F_DEPOST_ID F_DEPOST_ID  ,
+		       Project1.F_DEP_ITM_SLIP_NO F_DEP_ITM_SLIP_NO  ,
+		       Project1.CODE_NAME CODE_NAME  ,
+		       Project1.F_DEP_ITM_MODE_ID F_DEP_ITM_MODE_ID  ,
+		       TO_CHAR(Project1.F_DEP_ITM_AMT , 'FM9999,999,999,990.00') F_DEP_ITM_AMT,
+		       TO_CHAR(Project1.F_DEP_ITM_DEPOST_DT , 'DD-MM-YYYY') AS F_DEP_ITM_DEPOST_DT,
+		       Project1.F_DEP_ITM_REM F_DEP_ITM_REM  ,
+		       Project1.F_DEP_ITM_IS_MTCH F_DEP_ITM_IS_MTCH  
+		  FROM ( SELECT Project1.F_DEP_RECON_ID F_DEP_RECON_ID  ,
+		                Project1.F_DEPOST_ID F_DEPOST_ID  ,
+		                Project1.F_DEP_ITM_ID F_DEP_ITM_ID  ,
+		                Project1.F_DEP_ITM_MODE_ID F_DEP_ITM_MODE_ID  ,
+		                Project1.F_DEP_ITM_SLIP_NO F_DEP_ITM_SLIP_NO  ,
+		                Project1.F_DEP_ITM_AMT F_DEP_ITM_AMT  ,
+		                Project1.F_DEP_ITM_REM F_DEP_ITM_REM  ,
+		                Project1.F_DEP_ITM_IS_MTCH F_DEP_ITM_IS_MTCH  ,
+		                Project1.CODE_NAME CODE_NAME  ,
+		                Project1.F_DEP_ITM_DEPOST_DT F_DEP_ITM_DEPOST_DT  ,
+		                ROW_NUMBER() OVER ( ORDER BY Project1.F_DEP_ITM_SLIP_NO DESC  ) ROW_NUMBER  
+		         FROM ( SELECT Extent1.F_DEP_RECON_ID F_DEP_RECON_ID  ,
+		                       Extent1.F_DEPOST_ID F_DEPOST_ID  ,
+		                       Extent2.F_DEP_ITM_ID F_DEP_ITM_ID  ,
+		                       Extent2.F_DEP_ITM_MODE_ID F_DEP_ITM_MODE_ID  ,
+		                       Extent2.F_DEP_ITM_SLIP_NO F_DEP_ITM_SLIP_NO  ,
+		                       Extent2.F_DEP_ITM_AMT F_DEP_ITM_AMT  ,
+		                       Extent2.F_DEP_ITM_REM F_DEP_ITM_REM  ,
+		                       Extent2.F_DEP_ITM_IS_MTCH F_DEP_ITM_IS_MTCH  ,
+		                       Extent3.CODE_NAME CODE_NAME  ,
+		                       TO_DATE(Extent2.F_DEP_ITM_DEPOST_DT) F_DEP_ITM_DEPOST_DT  
+		                FROM PAY0073D Extent1
+		                       JOIN PAY0078D Extent2   ON Extent1.F_DEPOST_ID = Extent2.F_DEPOST_ID
+		                       JOIN SYS0013M Extent3   ON Extent2.F_DEP_ITM_MODE_ID = Extent3.CODE_ID
+		                 WHERE  Extent1.F_DEP_RECON_ID = #{reconId} ) Project1 ) Project1
+		 WHERE  Project1.ROW_NUMBER > 0
+		  ORDER BY Project1.F_DEP_ITM_SLIP_NO DESC
+    </select>
+    
+    <select id="selectDepositView" parameterType="Map" resultType="egovMap">
+        SELECT 
+		       Project1.F_DEP_RECON_ID F_DEP_RECON_ID  ,
+		       Project1.F_DEP_RECON_REF_NO F_DEP_RECON_REF_NO  ,
+		       Project1.F_DEPOST_ID F_DEPOST_ID  ,
+		       Project1.F_DEPOST_ACC_ID F_DEPOST_ACC_ID  ,
+		       TO_CHAR(Project1.F_DEPOST_PAY_DT , 'DD-MM-YYYY') AS F_DEPOST_PAY_DT,
+		       Project1.F_DEPOST_BRNCH_ID F_DEPOST_BRNCH_ID  ,
+		       Project1.CODE CODE  ,
+		       Project1.ACC_CODE ACC_CODE  ,
+		       Project1.ACC_DESC ACC_DESC  ,
+		       Project1.F_DEP_RECON_STUS_ID F_DEP_RECON_STUS_ID  ,
+		       Project1.CODE1 CODE1  ,
+		       Project1.REMARK REMARK  ,
+		       TO_CHAR(Project1.F_DEP_RECON_CRT_DT , 'DD-MM-YYYY') AS F_DEP_RECON_CRT_DT,
+		       Project1.F_DEP_RECON_CRT_USER_ID F_DEP_RECON_CRT_USER_ID  ,
+		       Project1.USER_NAME USER_NAME  ,
+		       TO_CHAR(Project1.F_DEP_RECON_UPD_DT , 'DD-MM-YYYY') AS F_DEP_RECON_UPD_DT,
+		       Project1.F_DEP_RECON_UPD_USER_ID F_DEP_RECON_UPD_USER_ID  ,
+		       Project1.USERNAME1 USERNAME1  
+		  FROM ( SELECT Project1.F_DEP_RECON_ID F_DEP_RECON_ID  ,
+		                Project1.F_DEPOST_ID F_DEPOST_ID  ,
+		                Project1.F_DEP_RECON_REF_NO F_DEP_RECON_REF_NO  ,
+		                Project1.F_DEP_RECON_STUS_ID F_DEP_RECON_STUS_ID  ,
+		                Project1.F_DEP_RECON_CRT_USER_ID F_DEP_RECON_CRT_USER_ID  ,
+		                Project1.F_DEP_RECON_UPD_USER_ID F_DEP_RECON_UPD_USER_ID  ,
+		                Project1.REMARK REMARK  ,
+		                Project1.F_DEP_RECON_CRT_DT F_DEP_RECON_CRT_DT  ,
+		                Project1.F_DEP_RECON_UPD_DT F_DEP_RECON_UPD_DT  ,
+		                Project1.F_DEPOST_PAY_DT F_DEPOST_PAY_DT  ,
+		                Project1.F_DEPOST_ACC_ID F_DEPOST_ACC_ID  ,
+		                Project1.F_DEPOST_BRNCH_ID F_DEPOST_BRNCH_ID  ,
+		                Project1.CODE CODE  ,
+		                Project1.CODE1 CODE1  ,
+		                Project1.ACC_CODE ACC_CODE  ,
+		                Project1.ACC_DESC ACC_DESC  ,
+		                Project1.USER_NAME USER_NAME  ,
+		                Project1.USERNAME1 USERNAME1  ,
+		                ROW_NUMBER() OVER ( ORDER BY Project1.F_DEP_RECON_ID DESC  ) ROW_NUMBER  
+		         FROM ( SELECT Extent1.F_DEP_RECON_ID F_DEP_RECON_ID  ,
+		                       Extent1.F_DEPOST_ID F_DEPOST_ID  ,
+		                       Extent1.F_DEP_RECON_REF_NO F_DEP_RECON_REF_NO  ,
+		                       Extent1.F_DEP_RECON_STUS_ID F_DEP_RECON_STUS_ID  ,
+		                       Extent1.F_DEP_RECON_CRT_USER_ID F_DEP_RECON_CRT_USER_ID  ,
+		                       Extent1.F_DEP_RECON_UPD_USER_ID F_DEP_RECON_UPD_USER_ID  ,
+		                       CASE 
+		                            WHEN ( 'RJT' = Extent4.CODE ) THEN Extent1.F_DEP_RECON_RESN
+		                       ELSE Extent1.F_DEP_RECON_REM
+		                          END REMARK  ,
+		                       TO_DATE(Extent1.F_DEP_RECON_CRT_DT) F_DEP_RECON_CRT_DT  ,
+		                       TO_DATE(Extent1.F_DEP_RECON_UPD_DT) F_DEP_RECON_UPD_DT  ,
+		                       Extent2.F_DEPOST_PAY_DT F_DEPOST_PAY_DT  ,
+		                       Extent2.F_DEPOST_ACC_ID F_DEPOST_ACC_ID  ,
+		                       Extent2.F_DEPOST_BRNCH_ID F_DEPOST_BRNCH_ID  ,
+		                       Extent3.CODE CODE  ,
+		                       Extent4.CODE CODE1  ,
+		                       Extent5.ACC_CODE ACC_CODE  ,
+		                       Extent5.ACC_DESC ACC_DESC  ,
+		                       Extent6.USER_NAME USER_NAME  ,
+		                       Extent7.USER_NAME USERNAME1  
+		                FROM PAY0073D Extent1
+		                       LEFT JOIN PAY0077D Extent2   ON Extent1.F_DEPOST_ID = Extent2.F_DEPOST_ID
+		                       LEFT JOIN SYS0005M Extent3   ON Extent2.F_DEPOST_BRNCH_ID = Extent3.BRNCH_ID
+		                       LEFT JOIN SYS0038M Extent4   ON Extent1.F_DEP_RECON_STUS_ID = Extent4.STUS_CODE_ID
+		                       LEFT JOIN SYS0001M Extent5   ON Extent2.F_DEPOST_ACC_ID = Extent5.ACC_ID
+		                       LEFT JOIN SYS0047M Extent6   ON Extent1.F_DEP_RECON_CRT_USER_ID = Extent6.USER_ID
+		                       LEFT JOIN SYS0047M Extent7   ON Extent1.F_DEP_RECON_UPD_USER_ID = Extent7.USER_ID
+		                 WHERE  Extent1.F_DEP_RECON_ID = #{reconId} ) Project1 ) Project1
+		 WHERE  Project1.ROW_NUMBER > 0
+		  ORDER BY Project1.F_DEP_RECON_ID DESC
+    </select>
+    
+    <update id="updDepositItem" parameterType="Map">
+        UPDATE PAY0078D
+		   SET 
+		       <if test="fDepItmDepostDt != null and fDepItmDepostDt != ''">
+		          F_DEP_ITM_DEPOST_DT = DECODE (INSTR(#{fDepItmDepostDt} , '-') ,5 , TO_DATE(#{fDepItmDepostDt},'YYYY/MM/DD') ,TO_DATE(#{fDepItmDepostDt},'DD/MM/YYYY'))  , 
+		       </if>
+		       <if test="fDepItmModeId != null and fDepItmModeId != ''">
+		          F_DEP_ITM_MODE_ID = #{fDepItmModeId},
+		       </if>
+		       <if test="remark != null and remark != ''">
+		          F_DEP_ITM_REM = #{remark},
+		       </if>
+		       F_DEP_ITM_SLIP_NO = #{fDepItmSlipNo}
+		WHERE F_DEP_ITM_ID = #{fDepItmId}
+    </update>
+    
+    <update id="updReconDepositDs" parameterType="Map">
+        UPDATE PAY0078D
+		   SET F_DEP_ITM_REM = #{remark},
+		       F_DEP_ITM_IS_MTCH = '1'
+		WHERE F_DEP_ITM_ID = #{fDepItmId}
+    </update>
+    
+    <update id="updReconDepositMs" parameterType="Map">
+        UPDATE PAY0077D
+		   SET F_DEPOST_UPD_DT = SYSDATE
+		WHERE F_DEPOST_ID = #{fDepostId}
+    </update>
+    
+</mapper>

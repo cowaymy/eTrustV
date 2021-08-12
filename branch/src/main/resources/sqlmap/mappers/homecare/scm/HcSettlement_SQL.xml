@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.homecare.po.impl.HcSettlementMapper">
+
+    <select id="selectHcSettlementMainCnt" parameterType="Map" resultType="int">
+    /* [com.coway.trust.biz.homecare.po.impl.HcSettlementMapper.selectHcSettlementMainCnt] - KR JIN */
+        SELECT COUNT(1) AS CNT
+          FROM HMC0009M A      -- GR HEADER
+             , (
+                SELECT A.PO_NO
+                     , A.HMC_DELVRY_NO
+                     , A.HMC_GR_NO
+                     , SUM(A.RCIPT_QTY ) AS RCIPT_QTY
+                     , SUM(A.RCIPT_QTY * B.PO_UPRC) AS PO_UPRC
+                     , SUM(A.RCIPT_QTY *(B.TAX/B.PO_QTY) ) AS TAX
+                     , SUM((A.RCIPT_QTY * B.PO_UPRC) + (A.RCIPT_QTY *(B.TAX/B.PO_QTY)) ) AS TOTAL
+                     , MAX(B.CUR)   AS CUR_ID
+                  FROM HMC0010D A
+                     , HMC0005D B
+                 WHERE A.PO_NO = B.PO_NO
+                   AND A.PO_DTL_NO = B.PO_DTL_NO
+                   AND A.RCIPT_QTY <![CDATA[>]]> 0
+                   AND A.USE_YN = 'Y'
+                   AND B.USE_YN = 'Y'
+                  GROUP BY A.HMC_GR_NO, A.PO_NO, A.HMC_DELVRY_NO
+             ) B               -- GR DETAIL
+             , (
+                SELECT A.SETTL_NO
+                     , A.SETTL_STATUS
+                     , A.AMOUNT
+                     , A.RQST_DT
+                     , A.CNFM_DT
+                     , A.SETTL_DT
+                     , B.HMC_GR_NO
+                     , B.HMC_DELVRY_NO
+                     , B.PO_NO
+                  FROM HMC0012M A
+                     , (
+                       SELECT SETTL_NO, HMC_GR_NO, HMC_DELVRY_NO, PO_NO
+                         FROM HMC0013D
+                        GROUP BY SETTL_NO, HMC_GR_NO, HMC_DELVRY_NO, PO_NO
+                     ) B
+                 WHERE A.SETTL_NO = B.SETTL_NO
+             ) C               -- SETTLEMENT HEADER
+             , HMC0004M D
+         WHERE A.HMC_GR_NO = B.HMC_GR_NO
+           AND A.PO_NO = B.PO_NO
+           AND A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
+        <if test='sGubun == null'>
+           AND A.PO_NO = C.PO_NO (+)
+           AND A.HMC_DELVRY_NO = C.HMC_DELVRY_NO (+)
+           AND A.HMC_GR_NO = C.HMC_GR_NO (+)
+        </if>
+        <if test='sGubun != null and sGubun == "supply"'>
+           AND A.PO_NO = C.PO_NO
+           AND A.HMC_DELVRY_NO = C.HMC_DELVRY_NO
+           AND A.HMC_GR_NO = C.HMC_GR_NO
+        </if>
+           AND A.PO_NO = D.PO_NO
+           AND A.GR_YN = 'Y'
+           AND A.USE_YN = 'Y'
+           AND D.USE_YN = 'Y'
+           AND B.TOTAL <![CDATA[>]]> 0
+       <if test='sCdc != null and sCdc != ""'>
+           AND A.CDC = #{sCdc}
+       </if>
+       <if test="sGrDtFrom != null and sGrDtFrom !=''">
+           AND A.GR_DT <![CDATA[>=]]> #{sGrDtFrom}
+       </if>
+       <if test="sGrDtTo != null and sGrDtTo !=''">
+           AND A.GR_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{sGrDtTo}, 'YYYYMMDD') + 1, 'YYYYMMDD')
+       </if>
+       <if test="sMemAccId != null and sMemAccId !=''">
+          AND D.MEM_ACC_ID = #{sMemAccId}
+       </if>
+       <if test="sMemAcc != null and sMemAcc !=''">
+           AND 1 = 2
+       </if>
+       <if test="sHmcGrNo != null and sHmcGrNo !=''">
+          AND A.HMC_GR_NO LIKE '%'||#{sHmcGrNo}||'%'
+       </if>
+       <if test="sSettlNo != null and sSettlNo !=''">
+          AND C.SETTL_NO LIKE '%'||#{sSettlNo}||'%'
+       </if>
+    </select>
+
+    <select id="selectHcSettlementMain" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcSettlementMapper.selectHcSettlementMain] - KR JIN */
+        SELECT * FROM (
+            SELECT ROWNUM AS RNUM, T1.*
+              FROM (
+                    SELECT A.HMC_GR_NO
+					     , A.HMC_DELVRY_NO
+					     , A.PO_NO
+					     , C.SETTL_DT
+					     , C.SETTL_STATUS AS PO_SETTL_STATUS
+					     , NVL((SELECT CODE AS CODE
+					          FROM SYS0013M
+					         WHERE CODE_MASTER_ID = '443' AND CODE_ID = C.SETTL_STATUS
+					       ), '-1') AS PO_SETTL_STATUS_CD
+					     , (SELECT CODE_NAME
+					          FROM SYS0013M
+					         WHERE CODE_MASTER_ID = '443' AND CODE_ID = C.SETTL_STATUS
+					       ) AS PO_SETTL_STATUS_NM
+					     , C.SETTL_NO
+					     , B.TOTAL AS AMOUNT
+					     , C.AMOUNT AS SETTLEMENT_AMOUNT
+					     , B.CUR_ID
+					     , (SELECT CODE_NAME
+					          FROM SYS0013M
+					         WHERE CODE_MASTER_ID = '94' AND CODE_ID = B.CUR_ID
+					       ) AS CUR_NM
+					     , D.MEM_ACC_ID
+					     , (SELECT MEM_ACC_NAME FROM FCM0006M WHERE MEM_ACC_ID = D.MEM_ACC_ID) AS MEM_ACC_NAME
+					  FROM HMC0009M A      -- GR HEADER
+					     , (
+					        SELECT A.PO_NO
+					             , A.HMC_DELVRY_NO
+					             , A.HMC_GR_NO
+					             , SUM(A.RCIPT_QTY ) AS RCIPT_QTY
+					             , SUM(A.RCIPT_QTY * B.PO_UPRC) AS PO_UPRC
+					             , SUM(A.RCIPT_QTY *(B.TAX/B.PO_QTY) ) AS TAX
+					             , SUM((A.RCIPT_QTY * B.PO_UPRC) + (A.RCIPT_QTY *(B.TAX/B.PO_QTY)) ) AS TOTAL
+					             , MAX(B.CUR)   AS CUR_ID
+					          FROM HMC0010D A
+					             , HMC0005D B
+					         WHERE A.PO_NO = B.PO_NO
+					           AND A.PO_DTL_NO = B.PO_DTL_NO
+					           AND A.RCIPT_QTY <![CDATA[>]]> 0
+					           AND A.USE_YN = 'Y'
+					           AND B.USE_YN = 'Y'
+					          GROUP BY A.HMC_GR_NO, A.PO_NO, A.HMC_DELVRY_NO
+					     ) B               -- GR DETAIL
+					     , (
+					        SELECT A.SETTL_NO
+					             , A.SETTL_STATUS
+					             , A.AMOUNT
+					             , A.RQST_DT
+					             , A.CNFM_DT
+					             , TO_CHAR(TO_DATE(A.SETTL_DT, 'YYYYMMDD'), 'YYYY/MM/DD') AS SETTL_DT
+					             , B.HMC_GR_NO
+					             , B.HMC_DELVRY_NO
+					             , B.PO_NO
+					          FROM HMC0012M A
+					             , (
+					               SELECT SETTL_NO, HMC_GR_NO, HMC_DELVRY_NO, PO_NO
+					                 FROM HMC0013D
+					                GROUP BY SETTL_NO, HMC_GR_NO, HMC_DELVRY_NO, PO_NO
+					             ) B
+					         WHERE A.SETTL_NO = B.SETTL_NO
+					     ) C               -- SETTLEMENT HEADER
+					     , HMC0004M D
+					 WHERE A.HMC_GR_NO = B.HMC_GR_NO
+					   AND A.PO_NO = B.PO_NO
+					   AND A.HMC_DELVRY_NO = B.HMC_DELVRY_NO
+					<if test='sGubun == null'>
+					   AND A.PO_NO = C.PO_NO (+)
+					   AND A.HMC_DELVRY_NO = C.HMC_DELVRY_NO (+)
+					   AND A.HMC_GR_NO = C.HMC_GR_NO (+)
+					</if>
+					<if test='sGubun != null and sGubun == "supply"'>
+					   AND A.PO_NO = C.PO_NO
+                       AND A.HMC_DELVRY_NO = C.HMC_DELVRY_NO
+                       AND A.HMC_GR_NO = C.HMC_GR_NO
+					</if>
+					   AND A.PO_NO = D.PO_NO
+					   AND A.USE_YN = 'Y'
+                       AND D.USE_YN = 'Y'
+					   AND A.GR_YN = 'Y'
+					   AND B.TOTAL <![CDATA[>]]> 0
+			       <if test='sCdc != null and sCdc != ""'>
+			           AND A.CDC = #{sCdc}
+			       </if>
+			       <if test="sGrDtFrom != null and sGrDtFrom !=''">
+			           AND A.GR_DT <![CDATA[>=]]> #{sGrDtFrom}
+			       </if>
+			       <if test="sGrDtTo != null and sGrDtTo !=''">
+			           AND A.GR_DT <![CDATA[<=]]> TO_CHAR(TO_DATE(#{sGrDtTo}, 'YYYYMMDD') + 1, 'YYYYMMDD')
+			       </if>
+			       <if test="sMemAccId != null and sMemAccId !=''">
+			          AND D.MEM_ACC_ID = #{sMemAccId}
+			       </if>
+			       <if test="sMemAcc != null and sMemAcc !=''">
+			           AND 1 = 2
+			       </if>
+			       <if test="sHmcGrNo != null and sHmcGrNo !=''">
+			          AND A.HMC_GR_NO LIKE '%'||#{sHmcGrNo}||'%'
+			       </if>
+			       <if test="sSettlNo != null and sSettlNo !=''">
+			          AND C.SETTL_NO LIKE '%'||#{sSettlNo}||'%'
+			       </if>
+
+                   ORDER BY
+                    <choose>
+                        <when test='sort != null and sort.size != 0'>
+                            <foreach item="item" index="index" collection="sort" open="" separator="," close="">
+                                <choose>
+                                    <when test='item.field == "hmcGrNo"'>A.HMC_GR_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "hmcDelvryNo"'>A.HMC_DELVRY_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "poNo"'>A.PO_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "settlDt"'>C.SETTL_DT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+									<when test='item.field == "poSettlStatusNm"'>PO_SETTL_STATUS_NM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+									<when test='item.field == "settlNo"'>C.SETTL_NO <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "amount"'>AMOUNT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "settlementAmount"'>SETTLEMENT_AMOUNT <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "curId"'>B.CUR_ID <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "curNm"'>CUR_NM <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "memAccId"'>D.MEM_ACC_ID <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <when test='item.field == "memAccName"'>MEM_ACC_NAME <choose><when test='item.dir == "asc"'>ASC</when><otherwise>DESC</otherwise></choose></when>
+                                    <otherwise>
+                                       C.SETTL_NO DESC, A.HMC_GR_NO DESC
+                                    </otherwise>
+                                </choose>
+                            </foreach>
+                        </when>
+                        <otherwise>
+                            C.SETTL_NO DESC, A.HMC_GR_NO DESC
+                        </otherwise>
+                     </choose>
+                 ) T1
+            <where>
+                <if test='firstIndex != -1 and lastIndex != -1'>
+                    ROWNUM <![CDATA[<=]]> #{lastIndex}
+                </if>
+            </where>
+            )
+        <where>
+            <if test='firstIndex != -1 and lastIndex != -1'>
+                RNUM > #{firstIndex}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="selectHcSettlementSub" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcSettlementMapper.selectHcSettlementSub] - KR JIN */
+        SELECT A.SETTL_NO
+		     , A.HMC_GR_NO
+		     , A.HMC_GR_NO_DTL_NO
+		     , A.STOCK_ID
+		     , A.STOCK_CODE
+		     , (SELECT STK_DESC FROM SYS0026M WHERE STK_ID = A.STOCK_ID AND STK_CODE = A.STOCK_CODE) AS STOCK_NAME
+		     , B.UOM
+		     , (
+		        SELECT CODE_NAME
+		          FROM SYS0013M
+		         WHERE CODE_MASTER_ID = '42'
+		           AND CODE_ID = B.UOM
+		       ) AS UOM_NM
+		     , A.RCIPT_QTY
+		     , A.PO_UPRC
+		     , A.SUPLY_PRC
+		     , A.TAX
+		     , A.TAX_CD
+		     , (
+		        SELECT CODE_NAME
+		          FROM SYS0013M
+		         WHERE CODE_MASTER_ID = '430'
+		           AND CODE_ID = A.TAX_CD
+		       ) AS TAX_NM
+		     , A.LOCAL_AMT
+		     , (A.SUPLY_PRC + A.TAX) AS TOTAL
+		     , B.CUR
+		     , (
+		        SELECT CODE_NAME
+		          FROM SYS0013M
+		         WHERE CODE_MASTER_ID = '94'
+		           AND CODE_ID = B.CUR
+		       ) AS CUR_NM
+		     , A.PO_NO
+             , A.PO_DTL_NO
+             , A.HMC_DELVRY_NO
+             , A.HMC_DELVRY_NO_DTL_NO
+		  FROM HMC0013D A
+		     , HMC0005D B
+		 WHERE A.PO_NO = B.PO_NO
+		   AND A.PO_DTL_NO = B.PO_DTL_NO
+		   AND A.SETTL_NO = #{sSettlNo}
+         ORDER BY A.SETTL_NO, A.HMC_GR_NO, A.HMC_GR_NO_DTL_NO
+    </select>
+
+    <update id="updateGrStateChange" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcSettlementMapper.updateGrStateChange] - KR JIN */
+        UPDATE HMC0009M
+           SET PO_SETTL_STATUS = (SELECT MAX(CODE_ID) FROM SYS0013M WHERE CODE_MASTER_ID = '443' AND DISAB = 0 AND CODE = #{poSettlStatus})
+             , UPD_DT = SYSDATE
+             , UPD_USER_ID = #{updUserId}
+         WHERE HMC_GR_NO = #{hmcGrNo}
+    </update>
+
+    <select id="selectSettlementDetailInfo" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcSettlementMapper.selectSettlementDetailInfo] - KR JIN */
+        SELECT A.PO_NO
+		     , A.PO_DTL_NO
+		     , A.HMC_DELVRY_NO
+		     , A.HMC_DELVRY_NO_DTL_NO
+		     , A.HMC_GR_NO
+		     , A.HMC_GR_NO_DTL_NO
+		     , A.STOCK_ID
+		     , A.STOCK_CODE
+		     , A.RCIPT_QTY
+		     , B.PO_UPRC
+		     , (A.RCIPT_QTY * B.PO_UPRC ) AS SUPLY_PRC
+		     , (A.RCIPT_QTY * (B.TAX/B.PO_QTY) ) AS TAX
+		     , B.TAX_CD
+		     , B.LOCAL_AMT
+		     , ( (A.RCIPT_QTY * B.PO_UPRC) + (A.RCIPT_QTY * (B.TAX/B.PO_QTY)) ) AS AMOUNT
+		     , B.CUR
+		  FROM HMC0010D A
+		     , HMC0005D B
+		 WHERE A.PO_NO = B.PO_NO
+		   AND A.PO_DTL_NO = B.PO_DTL_NO
+		   AND A.USE_YN = 'Y'
+		   AND B.USE_YN = 'Y'
+		   AND A.RCIPT_QTY <![CDATA[>]]> 0
+		   AND A.HMC_GR_NO = #{hmcGrNo}
+    </select>
+
+
+    <insert id="insertSettlementMain" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcSettlementMapper.insertSettlementMain] - KR JIN */
+        <selectKey keyProperty="settlNo" resultType="String" order="BEFORE">
+            SELECT 'HSTL'||TO_CHAR(SYSDATE, 'YYMMDD')|| LPAD(NVL(MAX(TO_NUMBER(SUBSTR(SETTL_NO, 11))), 0)+1, 5, '0') AS SETTL_NO
+              FROM HMC0012M
+             WHERE SETTL_NO LIKE 'HSTL'||TO_CHAR(SYSDATE, 'YYMMDD') || '%'
+        </selectKey>
+        INSERT
+          INTO HMC0012M
+       (
+			   SETTL_NO            --Settlement No
+			 , SETTL_STATUS        --Settlement Status 443
+			 , AMOUNT              --Amount
+			 , RQST_DT             --Requested Date
+			 , CNFM_DT             --Supplier's Approved/Rejected Date
+			 , SETTL_DT            --Settlement Date
+			 , CRT_DT              --Create Date
+			 , CRT_USER_ID         --Create User Id
+			 , UPD_DT              --Update Date
+			 , UPD_USER_ID         --Update User Id
+      )VALUES(
+			   #{settlNo}            --Settlement No
+			 , (SELECT MAX(CODE_ID) FROM SYS0013M WHERE CODE_MASTER_ID = '443' AND DISAB = 0 AND CODE = '10')
+			 , #{amount}             --Amount
+			 , TO_CHAR(SYSDATE, 'YYYYMMDD')
+			 , NULL
+			 , NULL
+			 , SYSDATE
+			 , #{crtUserId}          --Create User Id
+			 , SYSDATE
+			 , #{updUserId}          --Update User Id
+     )
+    </insert>
+
+    <insert id="insertSettlementDetail" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcSettlementMapper.insertSettlementDetail] - KR JIN */
+        INSERT
+          INTO HMC0013D
+        (
+			   SETTL_NO                    --Settlement No
+			 , HMC_GR_NO                   --HomeCare GR Number
+			 , HMC_GR_NO_DTL_NO            --HomeCare GR Detail Number
+			 , STOCK_ID                    --Material
+			 , STOCK_CODE                  --Material Code
+			 , RCIPT_QTY                   --Quantity Received
+			 , PO_UPRC                     --Base PO Price
+			 , SUPLY_PRC                   --Supply Price
+			 , TAX                         --SST Amount
+			 , TAX_CD                      --Tax Code(430)
+			 , LOCAL_AMT                   --Local Amount
+			 , HMC_DELVRY_NO               --Delivery Number
+			 , HMC_DELVRY_NO_DTL_NO        --Delivery Detail Number
+			 , PO_NO                       --PO No
+			 , PO_DTL_NO                   --Po Detail No
+			 , CRT_DT                      --Create Date
+			 , CRT_USER_ID                 --Create User Id
+			 , UPD_DT                      --Update Date
+			 , UPD_USER_ID                 --Update User Id
+       )VALUES(
+			   #{settlNo}                    --Settlement No
+			 , #{hmcGrNo}                    --HomeCare GR Number
+			 , #{hmcGrNoDtlNo}               --HomeCare GR Detail Number
+			 , #{stockId}                    --Material
+			 , #{stockCode}                  --Material Code
+			 , #{rciptQty}                   --Quantity Received
+			 , #{poUprc}                     --Base PO Price
+			 , #{suplyPrc}                   --Supply Price
+			 , #{tax}                        --SST Amount
+			 , #{taxCd}                      --Tax Code(430)
+			 , #{localAmt}                   --Local Amount
+			 , #{hmcDelvryNo}                --Delivery Number
+			 , #{hmcDelvryNoDtlNo}           --Delivery Detail Number
+			 , #{poNo}                       --PO No
+			 , #{poDtlNo}                    --Po Detail No
+			 , SYSDATE
+			 , #{crtUserId}                  --Create User Id
+			 , SYSDATE
+			 , #{updUserId}                  --Update User Id
+		)
+    </insert>
+
+    <update id="updateSettlementState" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcSettlementMapper.updateSettlementState] - KR JIN */
+        UPDATE HMC0012M
+           SET UPD_DT = SYSDATE
+             , UPD_USER_ID = #{updUserId}
+           <if test='settlStatus == "30"'>
+             , SETTL_DT = TO_CHAR(TO_DATE(#{settlDt}, 'YYYY/MM/DD'), 'YYYYMMDD')
+             , SETTL_STATUS = (SELECT MAX(CODE_ID) FROM SYS0013M WHERE CODE_MASTER_ID = '443' AND DISAB = 0 AND CODE = #{settlStatus})
+           </if>
+           <if test='settlStatus != "30"'>
+             , CNFM_DT = TO_CHAR(SYSDATE, 'YYYYMMDD')
+             , SETTL_STATUS = (SELECT MAX(CODE_ID) FROM SYS0013M WHERE CODE_MASTER_ID = '443' AND DISAB = 0 AND CODE = #{settlStatus})
+           </if>
+         WHERE SETTL_NO = #{settlNo}
+    </update>
+
+    <update id="updateSettlementStateRejectComplete" parameterType="Map">
+        UPDATE HMC0012M
+           SET UPD_DT = SYSDATE
+             , UPD_USER_ID = #{updUserId}
+             , SETTL_STATUS = (SELECT MAX(CODE_ID) FROM SYS0013M WHERE CODE_MASTER_ID = '443' AND DISAB = 0 AND CODE = #{settlStatus})
+         WHERE SETTL_NO = #{settlNo}
+    </update>
+
+</mapper>

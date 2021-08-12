@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.customer.impl.LoyaltyHpReportMapper">
+
+    <select id="selectBatchUploadNumbers" parameterType="Map" resultType="egovMap">
+        SELECT
+            LOYALTY_HP_BATCH_ID AS CODE_ID,
+            LOYALTY_HP_BATCH_ID AS CODE_NAME
+        FROM SAL0272D
+         WHERE LOYALTY_HP_STUS_ID = 4
+        ORDER BY LOYALTY_HP_BATCH_ID DESC
+    </select>
+
+</mapper>
