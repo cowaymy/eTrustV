@@ -116,8 +116,10 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Points Summary</h2>
         <ul class="right_btns">
+          <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_creditPoints();">Credit Points</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_search();">Search</a></p></li>
+          </c:if>
+          <li><p class="btn_blue"><a href="javascript:fn_search();">Search</a></p></li>
         </ul>
     </aside>
 

@@ -215,10 +215,18 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Points Summary</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_addItems();">Add Items</a></p></li>
-            <li><p class="btn_blue"><a id="btnUpdRdm" href="#">Update Status</a></p></li>
-            <li><p class="btn_blue"><a id="btnCancelRdm" href="#">Cancel Request</a></p></li>
-            <li><p class="btn_blue"><a id="btnNewRdm" href="#">New</a></p></li>
+            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+                <li><p class="btn_blue"><a href="javascript:fn_addItems();">Add Items</a></p></li>
+            </c:if>
+            <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+                <li><p class="btn_blue"><a id="btnUpdRdm" href="#">Update Status</a></p></li>
+            </c:if>
+            <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+                <li><p class="btn_blue"><a id="btnCancelRdm" href="#">Cancel Request</a></p></li>
+            </c:if>
+            <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+                <li><p class="btn_blue"><a id="btnNewRdm" href="#">New</a></p></li>
+            </c:if>
             <li><p class="btn_blue"><a id="btnSearchRdm" href="#">Search</a></p></li>
         </ul>
     </aside>

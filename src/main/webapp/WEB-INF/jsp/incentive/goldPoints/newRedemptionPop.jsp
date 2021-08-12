@@ -124,7 +124,7 @@
             return false;
         }
 
-    	if ($("#qtySelected").val() == '' || $("#qtySelected").val() == '0') {
+    	if ($("#qtySelected").val() == '' || $("#qtySelected").val() == '0' || $("#qtySelected").val() == null) {
     		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Quantity' htmlEscape='false'/>");
     		return false;
     	}
