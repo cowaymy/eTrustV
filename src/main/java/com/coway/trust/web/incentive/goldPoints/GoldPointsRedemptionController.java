@@ -53,17 +53,25 @@ public class GoldPointsRedemptionController {
 	private CsvReadComponent csvReadComponent;
 
 	@RequestMapping(value = "/redemptionList.do")
-	public String redemptionList(@RequestParam Map<String, Object> params, ModelMap model) {
-
-		LOGGER.info("===== redemptionList.do =====");
+	public String redemptionList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
 		params.put("groupCode",1);
-
 		List<EgovMap> memberType = commonService.selectCodeList(params);
+
 		List<EgovMap> status = memberListService.selectStatus();
 
 		model.addAttribute("memberType", memberType);
 		model.addAttribute("status", status);
+
+        if(sessionVO.getUserTypeId() != 4 && sessionVO.getUserTypeId() != 6) {
+            params.put("userId", sessionVO.getUserId());
+            EgovMap orgDtls = (EgovMap) goldPointsService.getOrgDtls(params);
+
+            model.addAttribute("memCode", (String) orgDtls.get("memCode"));
+            model.addAttribute("orgCode", (String) orgDtls.get("orgCode"));
+            model.addAttribute("grpCode", (String) orgDtls.get("grpCode"));
+            model.addAttribute("deptCode", (String) orgDtls.get("deptCode"));
+        }
 
 		return "incentive/goldPoints/redemptionList";
 	}
@@ -131,8 +139,8 @@ public class GoldPointsRedemptionController {
 
 		params.put("userId", sessionVO.getUserId());
 
-		String memCode = goldPointsService.getOrgDtls(params);
-		params.put("memCode", memCode);
+		EgovMap orgDtls = (EgovMap) goldPointsService.getOrgDtls(params);
+		params.put("memCode", (String) orgDtls.get("memCode"));
 
 		EgovMap rBasicInfo = goldPointsService.selectRedemptionBasicInfo(params);
 		List<EgovMap> ptsExpiryList = goldPointsService.selectPointsExpiryList(params);

@@ -120,7 +120,7 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 	}
 
 	@Override
-	public String getOrgDtls(Map<String, Object> params) {
+	public EgovMap getOrgDtls(Map<String, Object> params) {
 		return goldPointsMapper.getOrgDtls(params);
 	}
 

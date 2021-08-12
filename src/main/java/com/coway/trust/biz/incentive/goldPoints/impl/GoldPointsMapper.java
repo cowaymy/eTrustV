@@ -33,7 +33,7 @@ public interface GoldPointsMapper {
 
 	EgovMap selectRedemptionBasicInfo(Map<String, Object> params);
 
-	String getOrgDtls(Map<String, Object> params);
+	EgovMap getOrgDtls(Map<String, Object> params);
 
 	List<EgovMap> searchRedemptionItemList(Map<String, Object> params);
 

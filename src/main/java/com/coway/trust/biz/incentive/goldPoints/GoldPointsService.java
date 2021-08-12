@@ -19,7 +19,7 @@ public interface GoldPointsService {
 
 	EgovMap selectRedemptionBasicInfo(Map<String, Object> params);
 
-	String getOrgDtls(Map<String, Object> params);
+	EgovMap getOrgDtls(Map<String, Object> params);
 
 	List<EgovMap> searchItemCategoryList(Map<String, Object> params);
 

@@ -61,17 +61,25 @@ public class GoldPointsSummaryController {
 	private CsvReadComponent csvReadComponent;
 
 	@RequestMapping(value = "/pointsSummaryList.do")
-	public String pointsSummaryList(@RequestParam Map<String, Object> params, ModelMap model) {
-
-		LOGGER.info("===== pointsSummaryList.do =====");
+	public String pointsSummaryList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
 		params.put("groupCode",1);
-
 		List<EgovMap> memberType = commonService.selectCodeList(params);
+
 		List<EgovMap> status = memberListService.selectStatus();
 
 		model.addAttribute("memberType", memberType);
 		model.addAttribute("status", status);
+
+        if(sessionVO.getUserTypeId() != 4 && sessionVO.getUserTypeId() != 6) {
+            params.put("userId", sessionVO.getUserId());
+            EgovMap orgDtls = (EgovMap) goldPointsService.getOrgDtls(params);
+
+            model.addAttribute("memCode", (String) orgDtls.get("memCode"));
+            model.addAttribute("orgCode", (String) orgDtls.get("orgCode"));
+            model.addAttribute("grpCode", (String) orgDtls.get("grpCode"));
+            model.addAttribute("deptCode", (String) orgDtls.get("deptCode"));
+        }
 
 		return "incentive/goldPoints/pointsSummaryList";
 	}
