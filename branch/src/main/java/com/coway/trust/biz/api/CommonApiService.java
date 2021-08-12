@@ -11,6 +11,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONObject;
+
 import com.coway.trust.api.project.common.CommonApiForm;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -21,5 +23,7 @@ public interface CommonApiService {
 
   EgovMap rtnRespMsg(HttpServletRequest request, String code, String msg, String respTm, Map<String, Object> reqPrm,
       Map<String, Object> respPrm, String apiUserId) ;
+
+  String decodeJson(HttpServletRequest request) throws Exception;
 
 }

@@ -1,5 +1,9 @@
 package com.coway.trust.biz.api.impl;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,15 +18,22 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.coway.trust.biz.api.CommonApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.gson.Gson;
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.project.LMS.LMSApiForm;
 import com.coway.trust.api.project.common.CommonApiDto;
 import com.coway.trust.api.project.common.CommonApiForm;
 
@@ -103,5 +114,25 @@ public class CommonApiServiceImpl extends EgovAbstractServiceImpl implements Com
 
     return data;
   }
+
+  @Override
+  public String decodeJson(HttpServletRequest request) throws Exception{
+		JSONParser parser = new JSONParser();
+		String data = IOUtils.toString(request.getInputStream(), "UTF-8");
+
+
+//		String testing = getBody(request);
+
+//		Object obj = parser.parse(data);
+//		JSONObject jo = (JSONObject) obj;
+
+//		Gson g = new Gson();
+//		LMSApiForm p = g.fromJson(data, LMSApiForm.class);
+
+//		String key = request.getHeader("key");
+//		jo.put("key", key);
+	    return data;
+	  }
+
 
 }
