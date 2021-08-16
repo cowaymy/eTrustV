@@ -249,7 +249,7 @@ function fn_setSearchAttr() {
 function fn_setMemTypeVisibility() {
 	var userType = '${SESSION_INFO.userTypeId}';
 
-	if(userType == 4) { //Staff view
+	if(userType == 4 || userType == 6) {       //Staff || Sales Admin
 	    $("#rowMemType").show();
 	} else {
 		$("#calMemType").val(userType);
