@@ -136,8 +136,6 @@ $(document).ready(function () {
 
     $("#tempSave").click(fn_tempSave);
     $("#submitPop").click(fn_submit);
-    $("#add_row").click(fn_addRow);
-    $("#delete_row").click(fn_removeRow);
     $("#supplier_search_btn").click(fn_popSupplierSearchPop);
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
 
