@@ -139,11 +139,6 @@ $(document).ready(function () {
     $("#supplier_search_btn").click(fn_popSupplierSearchPop);
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
 
-
-    fn_setNewGridEvent();
-
-    fn_setKeyInDate();
-    fn_setPayDueDtEvent();
     fn_setCostCenterEvent();
     fn_setSupplierEvent();
 
