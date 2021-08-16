@@ -201,13 +201,15 @@
     function newUploadPop(){
 
     	var today = new Date().getDate();
-    	if(today < 6){
-	        doDefCombo(memType, '' ,'cmbMemberType', 'S', '');
-	        doGetComboOrder('/common/selectCodeList.do', '470', 'CODE_ID',   '', 'cmbType', 'S', '');
-	        $('#popup_wrap').show();
+    	/* if(today < 6){
+
 	    }else{
 	    	Common.alert("No upload allowed after 5th day of the month.");
-	    }
+	    } */
+
+        doDefCombo(memType, '' ,'cmbMemberType', 'S', '');
+        doGetComboOrder('/common/selectCodeList.do', '470', 'CODE_ID',   '', 'cmbType', 'S', '');
+        $('#popup_wrap').show();
     }
 
     function confirmUploadPop(){
