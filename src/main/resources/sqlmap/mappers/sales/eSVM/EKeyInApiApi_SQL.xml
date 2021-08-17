@@ -6,8 +6,12 @@
         <![CDATA[
         /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selecteKeyInList] 20191209 - KR JAEMAJEM */
         SELECT
+            A.SRV_MEM_QUOT_ID SVM_QUOT_ID,
+            E.PSM_ID,
+            B.SALES_ORD_ID,
             C.NAME CUST_NAME,
             B.SALES_ORD_NO,
+            TO_CHAR(A.SRV_CRT_DT, 'DD/MM/YYYY') REQST_DT,
             A.SRV_MEM_QUOT_NO QUOT_NO,
             NVL(E.PSM_NO, '-') PSM_NO,
             DESC1.CODE_NAME ORDER_TYPE,

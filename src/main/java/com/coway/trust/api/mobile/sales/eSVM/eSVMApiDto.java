@@ -15,14 +15,42 @@ public class eSVMApiDto {
       return BeanConverter.toBean(egvoMap, eSVMApiDto.class);
     }
 
+    private int svmQuotId;
+    private int psmId;
+    private int salesOrdId;
     private String regId;
     private String custName;
     private String salesOrdNo;
+    private String reqstDt;
     private String quotNo;
     private String psmNo;
     private String orderType;
     private String custType;
     private String status;
+
+    public int getSvmQuotId() {
+        return svmQuotId;
+    }
+
+    public void setSvmQuotId(int svmQuotId) {
+        this.svmQuotId = svmQuotId;
+    }
+
+    public int getPsmId() {
+        return psmId;
+    }
+
+    public void setPsmId(int psmId) {
+        this.psmId = psmId;
+    }
+
+    public int getSalesOrdId() {
+        return salesOrdId;
+    }
+
+    public void setSalesOrdId(int salesOrdId) {
+        this.salesOrdId = salesOrdId;
+    }
 
     public String getRegId() {
         return regId;
@@ -46,6 +74,14 @@ public class eSVMApiDto {
 
     public void setSalesOrdNo(String salesOrdNo) {
         this.salesOrdNo = salesOrdNo;
+    }
+
+    public String getReqstDt() {
+        return reqstDt;
+    }
+
+    public void setReqstDt(String reqstDt) {
+        this.reqstDt = reqstDt;
     }
 
     public String getQuotNo() {
