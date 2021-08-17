@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.eSVM.impl.eSVMApiMapper">
+
+    <select id="selectQuotationList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selecteKeyInList] 20191209 - KR JAEMAJEM */
+        SELECT
+            C.NAME CUST_NAME,
+            B.SALES_ORD_NO,
+            A.SRV_MEM_QUOT_NO QUOT_NO,
+            NVL(E.PSM_NO, '-') PSM_NO,
+            DESC1.CODE_NAME ORDER_TYPE,
+            DESC2.CODE_NAME CUST_TYPE,
+            CASE WHEN A.SRV_QUOT_STUS_ID = 1 THEN 'Active Quotation'
+                 WHEN A.SRV_QUOT_STUS_ID = 4 THEN 'Old Completed Quotation'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 1) THEN 'Active Pre-Sales'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 5) THEN 'Complete'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 6) THEN 'Pre-Sales Rejected'
+                 WHEN A.SRV_QUOT_STUS_ID = 8 THEN 'Inactive Quotation'
+                 WHEN A.SRV_QUOT_STUS_ID = 10 THEN 'Cancelled Quotation'
+            END STATUS
+        FROM SAL0093D A
+        JOIN SAL0001D B
+            ON A.SRV_SALES_ORD_ID = B.SALES_ORD_ID
+        JOIN SAL0029D C
+            ON B.CUST_ID = C.CUST_ID
+        JOIN SYS0026M D
+            ON A.SRV_ORD_STK_ID = D.STK_ID
+        LEFT JOIN SAL0298D E
+            ON A.SRV_MEM_QUOT_ID = E.SVM_QUOT_ID
+        JOIN SYS0013M DESC1
+            ON B.APP_TYPE_ID = DESC1.CODE_ID
+            AND DESC1.CODE_MASTER_ID = 10
+        JOIN SYS0013M DESC2
+            ON C.TYPE_ID = DESC2.CODE_ID
+            AND DESC2.CODE_MASTER_ID = 8
+        WHERE A.SRV_CRT_USER_ID = #{regId}
+        ]]>
+        <if test="reqstDtFrom != null and reqstDtFrom != '' and reqstDtTo != null and reqstDtTo != ''">
+            AND TO_CHAR(A.SRV_CRT_DT, 'YYYYMMDD') BETWEEN #{reqstDtFrom} AND #{reqstDtTo}
+        </if>
+        <if test="selectType != null and selectType != '' ">
+            <choose>
+                <when test='selectType.equals("1") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(B.SALES_ORD_NO) = UPPER(#{selectKeyword})
+                </when>
+                <when test='selectType.equals("2") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(C.NAME) LIKE UPPER('%'||#{selectKeyword}||'%')
+                </when>
+                <when test='selectType.equals("3") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(C.NRIC) LIKE UPPER('%'||#{selectKeyword}||'%')
+                </when>
+                <when test='selectType.equals("4") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(A.SRV_QUOT_STUS_ID) = #{selectKeyword}
+                </when>
+                <when test='selectType.equals("4") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(E.STUS) = #{selectKeyword}
+                </when>
+            </choose>
+        </if>
+        ORDER BY A.SRV_MEM_QUOT_ID DESC
+    </select>
+
+</mapper>
