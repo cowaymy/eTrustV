@@ -39,7 +39,7 @@
         JOIN SYS0013M DESC2
             ON C.TYPE_ID = DESC2.CODE_ID
             AND DESC2.CODE_MASTER_ID = 8
-        WHERE A.SRV_CRT_USER_ID = #{regId}
+        WHERE A.SRV_CRT_USER_ID = (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{regId})
         ]]>
         <if test="reqstDtFrom != null and reqstDtFrom != '' and reqstDtTo != null and reqstDtTo != ''">
             AND TO_CHAR(A.SRV_CRT_DT, 'YYYYMMDD') BETWEEN #{reqstDtFrom} AND #{reqstDtTo}
