@@ -96,11 +96,11 @@
 	 // 리스트 조회.
     function fn_selectListAjax() {
 
-        if( $("#MBRSH_NO").val() ==""  &&  $("#ORD_NO").val() ==""  &&  $("#MBRSH_CRT_DT").val() ==""  ){
+	        if( $("#MBRSH_NO").val() ==""  &&  $("#ORD_NO").val() ==""  &&  $("#MBRSH_CRT_DT").val() =="" && $("#REF_NO").val() == "" ){
 
-            Common.alert("<spring:message code="sal.alert.msg.keyInMemNoOrdNoCrtDt" />");
-             return ;
-         }
+	            Common.alert("<spring:message code="sal.alert.msg.keyInMemNoOrdNoCrtDt" />");
+	             return ;
+	         }
 
         Common.ajax("GET", "/sales/membership/selectMembershipList", $("#listSForm").serialize(), function(result) {
 
@@ -418,7 +418,7 @@ function fn_clear(){
 
 <!-- Added Reference No criteria by Hui Ding, 2021-08-11 -->
 <tr>
-    <th scope="row"><spring:message code="sal.text.refNo" /></th>
+    <th scope="row"><spring:message code="sal.text.refNo" /><span class="must">*</span></th>
     <td>
     <input type="text" title=""  id="REF_NO"  name="REF_NO" placeholder="Reference No." class="w100p" />
     </td>
