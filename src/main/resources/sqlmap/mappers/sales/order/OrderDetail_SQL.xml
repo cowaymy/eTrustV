@@ -108,6 +108,7 @@
                            , V8.REDEEM_MTH
                            , V8.REDEEM_YEAR
                            , V8.REDEEM_WARRANTY
+                           , V1.ADV_DISC
     FROM SAL1006V V1
     LEFT JOIN SAL0001D V2 ON V2.SALES_ORD_ID = V1.ORD_ID
     LEFT JOIN SAL0029D V3 ON V3.CUST_ID = V1.CUST_ID
@@ -450,6 +451,7 @@
              , V1.LAST_INSTALL_NO
              , V1.LAST_INSTALL_CT_CODE
              , V1.LAST_INSTALL_CT_NAME
+             , V1.LAST_INSTALL_CT_MOBILENO
              , V1.LAST_INSTALL_DT
              , V1.LAST_INSTALL_REM
              , V1.LAST_INSTALL_SIRIM_NO

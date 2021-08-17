@@ -32,13 +32,13 @@
             // APPLICATION CODE
             doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '', 'listAppType', 'M', 'fn_multiCombo'); //Common Code
             // DSC CODE
-            doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'listDSCCode', 'S', 'fn_multiCombo'); //Branch Code
+            doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'listDSCCode', 'M', 'fn_multiCombo'); //Branch Code
             // STATE CODE
             doGetCombo('/callCenter/getstateList.do', '', '', 'ordStatus', 'S', '');
             // AREA CODE
             doDefCombo(emptyData, '', 'ordArea', 'S', '');
             //PRODUCT
-              doGetComboOrder('/callCenter/selectProductList.do', '', 'CODE_ID', '', 'callLogProductList', 'M', 'fn_multiCombo'); //Common Code
+            doGetComboOrder('/callCenter/selectProductList.do', '', 'CODE_ID', '', 'callLogProductList', 'M', 'fn_multiCombo'); //Common Code
             // PROMOTION
             doGetComboOrder('/callCenter/selectPromotionList.do', '', 'CODE_ID', '', 'callLogPromotionList', 'M', 'fn_multiCombo'); //Common Code
 
@@ -121,6 +121,18 @@
     });
 
     $('#callLogPromotionList').change(function() {
+    }).multipleSelect({
+      selectAll : true, // 전체선택
+      width : '100%'
+    });
+
+    $('#listDSCCode').change(function() {
+    }).multipleSelect({
+      selectAll : true, // 전체선택
+      width : '100%'
+    });
+
+    $('#searchFeedBackCode').change(function() {
     }).multipleSelect({
       selectAll : true, // 전체선택
       width : '100%'
@@ -547,7 +559,7 @@
         </c:forEach> --%>
       </select></td>
       <th scope="row">Feedback Code</th>
-      <td><select class="w100p" id="searchFeedBackCode" name="searchFeedBackCode">
+      <td><select class="w100p" id="searchFeedBackCode" name="searchFeedBackCode" multiple>
             <option value=""><spring:message code='service.title.FeedbackCode' /></option>
 	        <c:forEach var="list" items="${callStatus}" varStatus="status">
 	           <option value="${list.resnId}">${list.c1}</option>

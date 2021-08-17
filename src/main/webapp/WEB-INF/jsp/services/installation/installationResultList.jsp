@@ -291,6 +291,10 @@
         headerText : '<spring:message code="service.title.OfficeNo" />',
         width : 130
     },{
+        dataField : "remark",
+        headerText : '<spring:message code="service.title.Remark" />',
+        width : 500
+    },{
         dataField : "addrDtl",
         headerText : '<spring:message code="sal.text.addressDetail" />',
         width : 200

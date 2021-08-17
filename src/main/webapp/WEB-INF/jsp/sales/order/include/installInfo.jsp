@@ -65,7 +65,7 @@
 </tr>
 <tr>
   <th scope="row"><spring:message code="sal.text.instImg" /></th>
-  <td colspan="5">
+  <td colspan="">
     <ul class="btns">
       <li>
         <p class="btn_grid">
@@ -75,6 +75,8 @@
        </li>
       </ul>
     </td>
+    <th scope="row"><spring:message code="sal.text.ctMobileNo" /></th>
+    <td colspan="3"><span>${orderDetail.installationInfo.lastInstallCtMobileno}</span></td>
 </tr>
 <tr>
   <th scope="row"><spring:message code="service.title.PSILMPRcd" /></th>

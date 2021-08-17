@@ -178,7 +178,10 @@
       </foreach>
     </if>
     <if test="DSCCode != null and DSCCode != '' ">
-      AND Extent1.DSC_BRNCH_ID = #{DSCCode}
+      AND Extent1.DSC_BRNCH_ID  IN
+      <foreach item="item" collection="DSCCode" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
     <if test="createDate != '' and endDate == '' ">
       <![CDATA[ AND TO_DATE(Extent1.SALES_ORD_DT) >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
@@ -206,7 +209,10 @@
     </if>
     <!-- Added feedback code criteria by Hui Ding, 12-04-2021 -->
     <if test="searchFeedBackCode != null and searchFeedBackCode !=''">
-      AND Extent1.CALL_FDBCK_ID = TRIM(#{searchFeedBackCode})
+      AND Extent1.CALL_FDBCK_ID IN
+      <foreach item="item" collection="searchFeedBackCode" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
     </if>
     <if test='isECommerce != null and isECommerce != ""'>
        AND Extent1.ECOMM_ORD_ID > 0
@@ -873,7 +879,7 @@
                         , APPNT_DT
                         ,SESION_CODE
                         ,GRADE
-    ) VALUES (SAL0046D_INSTALL_ENTRY_ID_SEQ.NEXTVAL
+    ) VALUES (#{installEntryId}
             , #{installEntryNo}
             , #{salesOrderId}
             , #{statusCodeId}

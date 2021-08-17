@@ -86,6 +86,11 @@
 	        if (result.code == "99") {
 	            Common.alert(result.message);
 	        } else {
+	        	console.log("/homecare/services/install/hcAddInstallationPopup.do?isPop=true&installEntryId="+ installEntryId
+                        + "&codeId=" + codeid1
+                        + "&salesOrderId=" + salesOrderId
+                        + "&salesOrderNO=" + salesOrdNo1, "", null,
+                        "false", "addInstallationPopupId");
 	            if (statusCode == "ACT") {
 		            if (codeid1 == 257) { // INSTALLATION
 		                Common.popupDiv("/homecare/services/install/hcAddInstallationPopup.do?isPop=true&installEntryId="+ installEntryId
@@ -134,6 +139,7 @@
 	        {dataField : "telM1",headerText : '<spring:message code="service.title.MobileNo" />',width : 130},
 	        {dataField : "telO",headerText : '<spring:message code="service.title.ResidenceNo" />',width : 130},
 	        {dataField : "telR",headerText : '<spring:message code="service.title.OfficeNo" />',width : 130},
+	        {dataField : "remark",headerText : '<spring:message code="service.title.Remark" />',width : 500},
 	        {dataField : "addrDtl",headerText : '<spring:message code="sal.text.addressDetail" />',width : 200},
 	        {dataField : "street",headerText : '<spring:message code="sal.text.street" />',width : 200},
 	        {dataField : "area",headerText : '<spring:message code="sys.area" />',width : 200},
