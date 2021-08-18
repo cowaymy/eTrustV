@@ -119,6 +119,15 @@ function fn_viewAtachPop(){
     window.open("<c:url value='/file/fileDown.do?fileId="+  $("#itemRejAttchGrpId").val()+ "'/>");
 
 }
+
+
+function fn_gridExport(){
+
+    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+    GridCommon.exportTo("grid_wrap", "xlsx", "Movement Information");
+}
+
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -186,7 +195,7 @@ function fn_viewAtachPop(){
 
 <section class="search_result"><!-- search_result start -->
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="javascript:void(0);" onclick="fn_excelDown()">Excel Download</a></p></li>
+    <li><p class="btn_grid"><a href="javascript:void(0);" onclick="fn_gridExport()">Excel Download</a></p></li>
 </ul>
 
    <article class="grid_wrap">
