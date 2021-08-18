@@ -14,21 +14,62 @@
 </style>
 <script type="text/javascript">
 
+
+var keyValueList = [{"code":"", "value":"Choose One"} ,{"code":"D", "value":"Defect/Damage"}, {"code":"B", "value":"Broken"}, {"code":"OTH", "value":"Others"}];
+
+
 var columnLayout = [
                     {dataField: "itemCode",headerText :"Item Code"           ,width:  100   ,height:30 , visible:false, editable : false},
                     {dataField: "itemDesc",headerText :"Item Description"     ,width: 280    ,height:30 , visible:true, editable : false},
                     {dataField: "itemInvtQty" ,headerText :"Quantity"                ,width:120   ,height:30 , visible:true, editable : true,dataType : "numeric", formatString : "#,##0"},
-                    {dataField: "itemReqQty" ,headerText :"Additional Quantity"                ,width:140   ,height:30 , visible:true, editable : true,dataType : "numeric", formatString : "#,##0"},
+                    {dataField: "itemReqQty" ,headerText :"Return Quantity"                ,width:140   ,height:30 , visible:true, editable : true,dataType : "numeric", formatString : "#,##0"},
                     {dataField: "itemType" ,headerText :"itemType"                ,width:120   ,height:30 , visible:false, editable : false},
                     {dataField: "itemPurhOrdNo" ,headerText :"itemPoOrdNo"                ,width:120   ,height:30 , visible:false, editable : false},
                     {dataField: "scnFromLocId" ,headerText :"itemFromBrnchId"                ,width:120   ,height:30 , visible:false, editable : false},
                     {dataField: "itemCtgryId" ,headerText :"itemCategory"                ,width:120   ,height:30 , visible:false, editable : false},
+                    {dataField: "atchFileName",headerText :"Attachement"      ,width:180   ,height:30 , visible:true,editable : false,
+                        renderer :
+                        {
+                              type : "IconRenderer",
+                              iconWidth : 23, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+                              iconHeight : 23,
+                              iconPosition : "aisleRight",
+                              iconFunction : function(rowIndex, columnIndex, value, item)
+                              {
+                                return "${pageContext.request.contextPath}/resources/images/common/normal_search.png";
+                              } ,// end of iconFunction
+                              onclick : function(rowIndex, columnIndex, value, item) {
+                            	  deleteAttachUpLoad(rowIndex, columnIndex, value, item);
+                              }
+                          } // IconRenderer
+                       }
+
+
+                    ,{dataField: "itemRtnReason",headerText :"Reason"  ,width:120    ,height:30 , visible:true ,
+                        renderer : {
+                            type : "DropDownListRenderer",
+                            list : keyValueList, //key-value Object 로 구성된 리스트
+                            keyField : "code", // key 에 해당되는 필드명
+                            valueField : "value" // value 에 해당되는 필드명
+                        }
+                    }
+                    ,{dataField: "itemRejAttchGrpId",headerText :"Reject AttachementId"      ,width:120   ,height:30 , visible:false}
+                    ,{dataField: "physiclFileName",headerText :"Reject physiclFileName"      ,width:120   ,height:30 , visible:false}
+                    ,{dataField: "atchFileId",headerText :"atchFileId"      ,width:120   ,height:30 , visible:false}
+                    ,{dataField: "fileSubPath",headerText :"fileSubPath"      ,width:120   ,height:30 , visible:false}
 
 
 
 
  ];
 
+function deleteAttachUpLoad(rowIndex, columnIndex, value, item){
+
+   // if (AUIGrid.getCellValue(myRecivedGridIDPOS, rowIndex, "itemStatus") == "R" ){
+           attchIndex = rowIndex;
+            $("#uploadfile").click();
+   // }
+}
 
 //그리드 속성 설정
 var gridProsPOS = {
@@ -58,8 +99,7 @@ $(document).ready(function () {
 
 
 
-    CommonCombo.make('fromAddBrnchId', "/sales/pos/selectWhSOBrnchList", '' , '', '');
-
+    CommonCombo.make('fromAddBrnchId', "/sales/pos/selectWhSOBrnchList", '' , '', '',initCallback);
 
     //Itm List
     var itmType = {itemType : 1346 , posItm : 1};
@@ -70,6 +110,42 @@ $(document).ready(function () {
 
 });
 
+function initCallback(){
+
+
+    $('#fromAddBrnchId').val('${branchId}');
+
+}
+
+var attchIndex =0;
+
+$(function() {
+
+         $("#uploadfile").change(function(e){
+
+      //  alert($('input[type=file]')[0].files[0].name); //파일이름
+     //       alert($("#m_file")[0].files[0].type); // 파일 타임
+     //      alert($("#m_file")[0].files[0].size); // 파일 크기
+     //  $('input[type=file]')[0].files[0].name;
+     //  $("#imgUpload")[0].files[0].type;
+     //  $("#imgUpload")[0].files[0].size;
+
+
+            var formData = Common.getFormData("fileUploadForm");
+            formData.append("param01", $("#param01").val());
+
+            Common.ajaxFile("/sales/posstock/rejectFilleUpload.do", formData, function(result) {
+                        console.log(result);
+
+                        $("#uploadfile").val("");
+                        AUIGrid.setCellValue(myGridIDPOS, attchIndex, "atchFileName",result.files[0].atchFileName);
+                        AUIGrid.setCellValue(myGridIDPOS, attchIndex, "physiclFileName",result.files[0].physiclFileName);
+                        AUIGrid.setCellValue(myGridIDPOS, attchIndex, "itemRejAttchGrpId",result.atchFileGrpId);
+                        Common.alert(result.message);
+                        attchIndex=0;           });
+
+          });
+    });
 
 
 
@@ -82,7 +158,7 @@ function itemCategoryChange(){
 
 
 function itemCodeChange(){
-	$("#poOrdNo").val("");
+	//$("#poOrdNo").val("");
 	selectInventoryQty();
 }
 
@@ -92,7 +168,8 @@ function itemCodeChange(){
 function selectInventoryQty(){
 
       //it is going to get  inventory qty
-             $("#itemInvtQty").val(0);
+
+      $("#itemInvtQty").val(0);
 
 
       var param ={ "itemCode" : $("#purcItems").val() , "locId" : $("#fromAddBrnchId").val()  };
@@ -134,10 +211,10 @@ function addRow() {
     item.itemInvtQty      = $("#itemInvtQty").val();
 
 
-
-
-
-
+    if($("#itemInvtQty").val()  <= 0 ) {
+        Common.alert("Please Check inventory.");
+        return false;
+    }
     if($("#purcItems").val() == ""   || $("#fromAddBrnchId").val() =="" || $("#itemAddQty").val() =="") {
         Common.alert("Branch/Item/Inventory  is required.");
         return false;
@@ -182,7 +259,7 @@ function transFromBrnchChange(){
 
 function fn_saveGrid(){
 
-    Common.ajax("POST", "/sales/posstock/insertPosStock.do", GridCommon.getEditData(myGridIDPOS), function(result) {
+    Common.ajax("POST", "/sales/posstock/insertRetrunPosStock.do", GridCommon.getEditData(myGridIDPOS), function(result) {
         //resetUpdatedItems(); // 초기화
         console.log( result);
         Common.alert('SCN Number is : '+result.data);
@@ -211,7 +288,7 @@ function fn_saveGrid(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Movement Information</h1>
+<h1>Return Information</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="javascript:void(0);" onclick="javascript:fn_close()">CLOSE</a></p></li>
 </ul>
@@ -222,7 +299,7 @@ function fn_saveGrid(){
 
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Stock In Information</h2>
+<h2>Return In Information</h2>
 </aside><!-- title_line end -->
 
 
@@ -280,26 +357,20 @@ function fn_saveGrid(){
 
 </tr>
 
-<tr>
-   <th scope="row">Purchase Order No</th>
-    <td>
-           <input type="text" title="" placeholder="" class="w100p"  id="poOrdNo"  name="poOrdNo"  />
-
-    </td>
-    <th scope="row">Addition Quantity</th>
-
-    <td>
-         <input type="text" title="" placeholder="" class="w100p"  id="itemAddQty"  name="itemAddQty"  />
-    </td>
-
-</tr>
-
 
 
 </tbody>
 </table><!-- table end -->
 
 </form>
+
+
+  <div style="display:none" >
+            <form id="fileUploadForm" method="post" enctype="multipart/form-data" action="">
+               <input type="file" title="file add"  id="uploadfile" name="uploadfile"/>
+            </form>
+        </div>
+
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
@@ -316,7 +387,7 @@ function fn_saveGrid(){
 </section><!-- search_result end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="_addconfirm" onclick="javascript:fn_saveGrid()"  >SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_addconfirm" onclick="javascript:fn_saveGrid()"  >Request</a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

@@ -13,27 +13,50 @@
 
 </style>
 <script type="text/javascript">
-
-
 var keyValueList = [{"code":"", "value":"Choose One"} ,{"code":"SUR", "value":"Surplus"}, {"code":"SHO", "value":"Shortage"}];
 
+var keyStateValueList = [{"code":"", "value":"Choose One"} ,{"code":"C", "value":"Completed"}, {"code":"R", "value":"Reject"}];
+
 var columnLayout = [
-                    {dataField: "itemCode",headerText :"Item Code"                   ,width:  100   ,height:30 , visible:true, editable : false},
+                    {dataField: "stkCode",headerText :"Item Code"           ,width:  100   ,height:30 , visible:true, editable : false},
+                    {dataField: "itemCode",headerText :"Item Code"                   ,width:  100   ,height:30 , visible:false, editable : false},
                     {dataField: "itemDesc",headerText :"Item Description"           ,width: 280    ,height:30 , visible:true, editable : false},
                     {dataField: "itemCtgryCode",headerText :"Item Category"      ,width: 180    ,height:30 , visible:false, editable : false},
-                    {dataField: "itemReqQty",headerText :"Request Qty"             ,width:120   ,height:30 , visible:true, editable : false,dataType : "numeric", formatString : "#,##0"},
-                    {dataField: "itemRecvQty",headerText :"Received Qty"          ,width:120   ,height:30 , visible:true, editable : true,dataType : "numeric", formatString : "#,##0"},
-                    {dataField: "itemVarianceQty",headerText :"Variance Qty"      ,width:120   ,height:30 , visible:true, editable : false,dataType : "numeric", formatString : "#,##0"},
-                    {dataField: "itemStatus",headerText :"itemStatus "      ,width:120   ,height:30 , visible:false, editable : false},
+                    {dataField: "itemReqQty",headerText :"Transfer Quantity"             ,width:120   ,height:30 , visible:true, editable : false,dataType : "numeric", formatString : "#,##0"},
+                    {dataField: "itemRecvQty",headerText :"Received Qty"          ,width:120   ,height:30 , visible:false, editable : true,dataType : "numeric", formatString : "#,##0"},
+                    {dataField: "itemVarianceQty",headerText :"Variance Qty"      ,width:120   ,height:30 , visible:false, editable : false,dataType : "numeric", formatString : "#,##0"},
                     {dataField: "scnMoveType",headerText :"scnMoveType"      ,width:120   ,height:30 , visible:false, editable : false},
-                    {dataField: "itemReason",headerText :"Reason"  ,width:120    ,height:30 , visible:true ,
-                    	renderer : {
-                    	    type : "DropDownListRenderer",
-                    	    list : keyValueList, //key-value Object 로 구성된 리스트
-                    	    keyField : "code", // key 에 해당되는 필드명
-                    	    valueField : "value" // value 에 해당되는 필드명
-                    	}
+
+                    {dataField: "itemStatus",headerText :"Item Status"  ,width:120    ,height:30 , visible:true ,
+                        renderer : {
+                            type : "DropDownListRenderer",
+                            list : keyStateValueList, //key-value Object 로 구성된 리스트
+                            keyField : "code", // key 에 해당되는 필드명
+                            valueField : "value" // value 에 해당되는 필드명
+                        }
                     }
+                   ,{dataField: "itemRejRemark",headerText :"Reject Reason"      ,width:220   ,height:30 , visible:true, editable : true}
+                   ,{dataField: "atchFileName",headerText :"Reject Attachement"      ,width:180   ,height:30 , visible:true,editable : false,
+                	 renderer :
+                     {
+                           type : "IconRenderer",
+                           iconWidth : 23, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
+                           iconHeight : 23,
+                           iconPosition : "aisleRight",
+                           iconFunction : function(rowIndex, columnIndex, value, item)
+                           {
+                             return "${pageContext.request.contextPath}/resources/images/common/normal_search.png";
+                           } ,// end of iconFunction
+                           onclick : function(rowIndex, columnIndex, value, item) {
+                        	    rejectAttachUpLoad(rowIndex, columnIndex, value, item);
+                           }
+                       } // IconRenderer
+                    }
+                    ,{dataField: "itemRejAttchGrpId",headerText :"Reject AttachementId"      ,width:120   ,height:30 , visible:false}
+                    ,{dataField: "physiclFileName",headerText :"Reject physiclFileName"      ,width:120   ,height:30 , visible:false}
+                    ,{dataField: "atchFileId",headerText :"atchFileId"      ,width:120   ,height:30 , visible:false}
+                    ,{dataField: "fileSubPath",headerText :"fileSubPath"      ,width:120   ,height:30 , visible:false}
+
  ];
 
 
@@ -57,6 +80,23 @@ $(document).ready(function () {
 
     AUIGrid.bind(myRecivedGridIDPOS, ["cellEditBegin", "cellEditEndBefore", "cellEditEnd", "cellEditCancel"], auiRecivedCellEditingHandler);
 
+
+    // cellClick event.
+    AUIGrid.bind(myRecivedGridIDPOS, "cellDoubleClick", function( event ) {
+        console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+        console.log(event);
+
+        if(event.dataField =="atchFileName" ){
+           if(event.value !=""){
+                   var fileSubPath = event.item.fileSubPath;
+                   var fileName =  event.item.atchFileName;
+                   var orignlFileNm =event.item.physiclFileName;
+
+                   window.open("<c:url value='/file/fileDown.do?fileId="+event.item.atchFileId+ "'/>");
+        	}
+        }
+    });
+
 });
 
 
@@ -72,8 +112,6 @@ function fn_close(){
 
 function auiRecivedCellEditingHandler(event) {
 
-    console.log(event)
-
     if(event.type == "cellEditBegin") {
      //   document.getElementById("editBeginDesc").innerHTML = "에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value;
     } else if(event.type == "cellEditEnd") {
@@ -87,6 +125,12 @@ function auiRecivedCellEditingHandler(event) {
                 AUIGrid.setCellValue(myRecivedGridIDPOS, event.rowIndex, 7,  $("#moveReceivedTypeId").val());
             }
          }
+
+    	 if(event.dataField=="itemStatus"){
+    		 if(event.value !="C"){
+    	            AUIGrid.setCellValue(myRecivedGridIDPOS, event.rowIndex, "itemRecvQty",0);
+             }
+    	 }
 
 
     //    document.getElementById("editBeginEnd").innerHTML = "에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value;
@@ -121,6 +165,9 @@ Common.ajax("GET", "/sales/posstock/selectPosStockMgmtReceivedInfo.do?scnNo="+'$
    $("#toReceivedBrnchDesc").val(result.dataInfo.scnToLocDesc);
    $("#createDate").val(result.dataInfo.scnMoveDate);
    $("#totalItemCount").val(result.dataInfo.totalcnt);
+
+   $("#ctotalItemCount").val(result.dataInfo.ctotalcnt);
+   $("#rtotalItemCount").val(result.dataInfo.rtotalcnt);
 });
 }
 
@@ -138,8 +185,8 @@ function fn_saveRecivedGrid(){
     	for(var i = 0 ; i < checkList.all.length ; i++){
             var itemReqQty  = checkList.all[i].itemRecvQty;
 
-            if(checkList.all[i].itemRecvQty == 0 ||checkList.all[i].itemRecvQty ==null ){
-                Common.alert('* List has "0" Recevied Qty item(s). ');
+            if(checkList.all[i].itemStatus == "" ||checkList.all[i].itemStatus ==null ){
+                Common.alert('* List status has "" Recevied  item(s). ');
                 return ;
             }
         }
@@ -164,6 +211,71 @@ function fn_saveRecivedGrid(){
 }
 
 
+
+function itemStatusChange(){
+
+	var checkedItems = AUIGrid.getCheckedRowItems(myRecivedGridIDPOS);
+
+    if(checkedItems.length <= 0) {
+        return;
+    }
+
+    var str = "";
+    var rowItem;
+    for(var i=0, len = checkedItems.length; i<len; i++) {
+        rowItem = checkedItems[i];
+        AUIGrid.setCellValue(myRecivedGridIDPOS, rowItem.rowIndex, "itemStatus",  $("#itemStatus").val());
+
+        if($("#itemStatus").val() =="C"){
+            AUIGrid.setCellValue(myRecivedGridIDPOS, rowItem.rowIndex, "itemRecvQty",rowItem.item.itemReqQty);
+        }else{
+            AUIGrid.setCellValue(myRecivedGridIDPOS, rowItem.rowIndex, "itemRecvQty",0);
+        }
+    }
+
+}
+
+
+function rejectAttachUpLoad(rowIndex, columnIndex, value, item){
+
+	if (AUIGrid.getCellValue(myRecivedGridIDPOS, rowIndex, "itemStatus") == "R" ){
+		   attchIndex = rowIndex;
+		    $("#uploadfile").click();
+	}
+}
+
+
+
+var attchIndex =0;
+
+$(function() {
+
+	     $("#uploadfile").change(function(e){
+
+	  //  alert($('input[type=file]')[0].files[0].name); //파일이름
+   	 //       alert($("#m_file")[0].files[0].type); // 파일 타임
+	 //      alert($("#m_file")[0].files[0].size); // 파일 크기
+	 //  $('input[type=file]')[0].files[0].name;
+	 //  $("#imgUpload")[0].files[0].type;
+	 //  $("#imgUpload")[0].files[0].size;
+
+
+		    var formData = Common.getFormData("fileUploadForm");
+	        formData.append("param01", $("#param01").val());
+
+		    Common.ajaxFile("/sales/posstock/rejectFilleUpload.do", formData, function(result) {
+	                    console.log(result);
+
+	                    $("#uploadfile").val("");
+	                    AUIGrid.setCellValue(myRecivedGridIDPOS, attchIndex, "atchFileName",result.files[0].atchFileName);
+	                    AUIGrid.setCellValue(myRecivedGridIDPOS, attchIndex, "physiclFileName",result.files[0].physiclFileName);
+	                    AUIGrid.setCellValue(myRecivedGridIDPOS, attchIndex, "itemRejAttchGrpId",result.atchFileGrpId);
+                        Common.alert(result.message);
+                        attchIndex=0;	        });
+
+	      });
+	});
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -186,6 +298,9 @@ function fn_saveRecivedGrid(){
 <form action="#" method="post" id="form_view">
 <!-- <input type="hidden" id="search_costCentr">
 <input type="hidden" id="search_costCentrName"> -->
+
+
+
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -237,12 +352,13 @@ function fn_saveRecivedGrid(){
     <th scope="row">Total Item</th>
     <td><input type="text" title="" placeholder="" class="w100p disabled"  id="totalItemCount"  name="totalItemCount" disabled="disabled" /> </td>
 
-   <th scope="row"></th>
-    <td>
+    <th scope="row">Total Completed</th>
+    <td><input type="text" title="" placeholder="" class="w100p disabled"  id="ctotalItemCount"  name="ctotalItemCount" disabled="disabled" /> </td>
 
 
-    <th scope="row"></th>
-    <td>
+    <th scope="row">Total Reject</th>
+    <td><input type="text" title="" placeholder="" class="w100p disabled"  id="rtotalItemCount"  name="rtotalItemCount" disabled="disabled" /> </td>
+
 
     </td>
 
@@ -275,14 +391,22 @@ function fn_saveRecivedGrid(){
 <tr>
    <th scope="row">Item Status</th>
     <td>
-             <select class="w100p" id="itemStatus" name="itemStatus"  >
+
+
+             <select class="w100p" id="itemStatus" name="itemStatus"  onchange="itemStatusChange()" >
+                <option value="">Choose One</option>
                 <option value="C">Completed</option>
-                <option value="I">InComplete</option>
                 <option value="R">Reject</option>
             </select>
     </td>
       <th scope="row"></th>
     <td>
+        <div style="display: none" >
+	        <form id="fileUploadForm" method="post" enctype="multipart/form-data" action="">
+	           <input type="file" title="file add"  id="uploadfile" name="uploadfile"/>
+	        </form>
+        </div>
+
     </td>
 </tr>
 

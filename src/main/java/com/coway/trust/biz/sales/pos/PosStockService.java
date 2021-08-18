@@ -17,6 +17,9 @@ public interface PosStockService {
 	Map<String, Object> updateRecivedPosStock(Map<String, Object> params) throws Exception;
 	Map<String, Object> updateAdjPosStock(Map<String, Object> params) throws Exception;
 
+	Map<String, Object> updateApprovalPosStock(Map<String, Object> params) throws Exception;
+
+
 
 
 
@@ -28,5 +31,8 @@ public interface PosStockService {
 	List<EgovMap> selectPosStockMgmtList(Map<String, Object> params) throws Exception;
 
 	List<EgovMap>  selectPosStockMgmtViewList(Map<String, Object> params)throws Exception;
+
+	List<EgovMap>  selectPosItmList(Map<String, Object> params)throws Exception;
+
 
 }

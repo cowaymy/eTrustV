@@ -82,6 +82,11 @@ public Map<String, Object> insertPosStock(Map<String, Object> params) throws Exc
 		      LOGGER.debug(" addList===>"+addMap.toString());
 		      addMap.put("scnNo", sal0293Seq);
 		      addMap.put("userId", params.get("userId"));
+
+		      //return
+		      if(params.get("scnMoveType").equals("R")){
+		    	  addMap.put("itemRtnQty", addMap.get("itemReqQty"));
+		      }
 		      posMapper.insertSAL0294D(addMap);
 
 		 }
@@ -186,51 +191,65 @@ public Map<String, Object> updateRecivedPosStock(Map<String, Object> params) thr
     String scnNo = params.get("scnNo").toString();
 
     upHMap.put("scnNo",scnNo);
-    upHMap.put("scnMoveStat",params.get("itemStatus"));
+    upHMap.put("scnMoveStat","C");
     upHMap.put("userId", params.get("userId"));
 
 
     params.put("scnNo", scnNo);
     EgovMap  master = posMapper.selectPosStockMgmtViewInfo(params);
 
-    if ("R".equals(params.get("itemStatus").toString())){
+   // if ("R".equals(params.get("itemStatus").toString())){
 
-	      posMapper.updateReceviedRejectSAL0294D(upHMap);
-	      posMapper.updateReceviedRejectSAL0293M(upHMap);
+  //	      posMapper.updateReceviedRejectSAL0294D(upHMap);
+  //	      posMapper.updateReceviedRejectSAL0293M(upHMap);
 
-    }else{
+  //  }else{
 
-    	String scnMoveType = ((Map<String, Object>)upList.get(0)).get("scnMoveType").toString();
+    	//String scnMoveType = ((Map<String, Object>)upList.get(0)).get("scnMoveType").toString();
 
         for (int i = 0; i < upList.size(); i++) {
-      	      Map<String, Object> upMap = (Map<String, Object>)upList.get(i);
-      	      upMap.put("userId", params.get("userId"));
-      	      posMapper.updateReceviedSAL0294D(upMap);
+        	  Map<String, Object> upMap = (Map<String, Object>)upList.get(i);
+
+        	  	if ("R".equals(upMap.get("itemStatus").toString())){
+        	  	   posMapper.updateReceviedRejectSAL0294D(upMap);
+
+        	  	}else{
 
 
-      	      //Stock In  STOCK IN (I) ,STOCK TRANSFER (T), ADJUSTMENT(A)
-      	      if((master.get("scnMoveType")).toString().equals("I") || master.get("scnMoveType").toString().equals("A")  ){
-
-      	    	  upMap.put("logId", master.get("scnFromLocId"));
-      	    	  upMap.put("itemInvQty", upMap.get("itemRecvQty"));
-      	    	  posMapper.updateMergeLOG0106M(upMap);	  //create stock.
-
-      	      //transfer
-      	      }else if((master.get("scnMoveType")).toString().equals("T")){
-      	    	  upMap.put("logId", master.get("scnToLocId"));
-      	    	  upMap.put("itemInvQty", upMap.get("itemRecvQty"));
-      	    	  posMapper.updateMergeLOG0106M(upMap);	   //stock in.
+        	  		    /******************중요***********************/
+        	  			upMap.put("itemRecvQty", upMap.get("itemReqQty"));
+        	  		    /**************************************/
 
 
-      	    	  upMap.put("logId", master.get("scnFromLocId")); //stock out
-      	    	  upMap.put("itemInvQty", upMap.get("itemRecvQty"));
-      	    	  posMapper.updateOutStockLOG0106M(upMap);
+        	  			upMap.put("userId", params.get("userId"));
+        	  			posMapper.updateReceviedSAL0294D(upMap);
 
-      	      }
-      	     //posMapper.updateMergeLOG0106M(upMap);
-      	 }
+                	    //Stock In  STOCK IN (I) ,STOCK TRANSFER (T), ADJUSTMENT(A)
+                  	    if((master.get("scnMoveType")).toString().equals("I") || master.get("scnMoveType").toString().equals("A")  ){
+
+                  	    	  upMap.put("logId", master.get("scnFromLocId"));
+                  	    	  upMap.put("itemInvQty", upMap.get("itemRecvQty"));
+                  	    	  posMapper.updateMergeLOG0106M(upMap);	  //create stock.
+
+                  	      //transfer
+                  	    }else if((master.get("scnMoveType")).toString().equals("T")){
+                  	    	  upMap.put("logId", master.get("scnToLocId"));
+                  	    	  upMap.put("itemInvQty", upMap.get("itemRecvQty"));
+
+                  	    	  posMapper.updateMergeLOG0106M(upMap);	   //stock in.
+
+
+                  	    	  upMap.put("logId", master.get("scnFromLocId")); //stock out
+                  	    	  upMap.put("itemInvQty", upMap.get("itemRecvQty"));
+                  	    	  posMapper.updateOutStockLOG0106M(upMap);
+
+                  	    }
+                  	     //posMapper.updateMergeLOG0106M(upMap);
+        	  		 }
+        	  	}
+
        	posMapper.updateReceviedSAL0293M(upHMap);
-    }
+  //  }
 
 
 
@@ -239,6 +258,67 @@ public Map<String, Object> updateRecivedPosStock(Map<String, Object> params) thr
 
 	return rtnMap;
 }
+
+
+
+
+
+@Override
+public Map<String, Object> updateApprovalPosStock(Map<String, Object> params) throws Exception {
+
+	List<Object> upList = (List<Object>) params.get("update");
+
+    Map<String, Object> upHMap = new HashMap<String, Object>();
+
+    String scnNo = params.get("scnNo").toString();
+
+    upHMap.put("scnNo",scnNo);
+    upHMap.put("scnMoveStat","C");
+    upHMap.put("userId", params.get("userId"));
+
+
+    params.put("scnNo", scnNo);
+    EgovMap  master = posMapper.selectPosStockMgmtViewInfo(params);
+
+
+
+        for (int i = 0; i < upList.size(); i++) {
+        	  Map<String, Object> upMap = (Map<String, Object>)upList.get(i);
+
+        	  	if ("R".equals(upMap.get("itemStatus").toString())){
+        	  	   posMapper.updateReceviedRejectSAL0294D(upMap);
+
+        	  	}else{
+
+        	  		    /******************중요***********************/
+        	  			//upMap.put("itemRecvQty", upMap.get("itemReqQty"));
+        	  		    /**************************************/
+
+
+        	  			upMap.put("userId", params.get("userId"));
+        	  			posMapper.updateApprovalSAL0294D(upMap);
+
+
+        	  		    upMap.put("logId", master.get("scnFromLocId")); //stock out
+          	    	    //upMap.put("itemInvQty", upMap.get("itemRtnQty"));
+          	  	        upMap.put("itemRecvQty", upMap.get("itemRtnQty"));
+          	    	    posMapper.updateOutStockLOG0106M(upMap);
+
+                  	     //posMapper.updateMergeLOG0106M(upMap);
+        	  		 }
+        }
+
+       			posMapper.updateReceviedSAL0293M(upHMap);
+  //  }
+
+
+
+	Map<String, Object> rtnMap = new HashMap<String, Object>();
+    rtnMap.put("isOk", "OK");
+
+	return rtnMap;
+}
+
 
 
 @Override
@@ -292,6 +372,14 @@ public EgovMap selectItemInvtQty(Map<String, Object> params) throws Exception {
 
 
 	return   posMapper.selectItemInvtQty(params);
+}
+
+
+
+@Override
+public List<EgovMap> selectPosItmList(Map<String, Object> params) throws Exception {
+
+	return 	(List<EgovMap>) posMapper.selectPosItmList(params);
 }
 
 }

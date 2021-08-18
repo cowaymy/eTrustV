@@ -15,15 +15,25 @@
 <script type="text/javascript">
 
 
-var keyValueList = [{"code":"", "value":"Choose One"} ,{"code":"SUR", "value":"Surplus"}, {"code":"SHO", "value":"Shortage"}, {"code":"DEF", "value":"Defect/Damage"}, {"code":"OTH", "value":"Others"}];
+var keyValueList = [{"code":"", "value":"Choose One"} ,{"code":"IDR", "value":"Internal Dept. Request"}, {"code":"EVU", "value":"Events use"}, {"code":"OTH", "value":"Others"}];
 
 var columnLayout = [
-                    {dataField: "itemCode",headerText :"Item Code"                   ,width:  100   ,height:30 , visible:true, editable : false},
+                    {dataField: "stkCode",headerText :"Item Code"           ,width:  100   ,height:30 , visible:true, editable : false},
+                    {dataField: "itemCode",headerText :"Item Code"                   ,width:  100   ,height:30 , visible:false, editable : false},
                     {dataField: "itemDesc",headerText :"Item Description"           ,width: 280    ,height:30 , visible:true, editable : false},
                     {dataField: "itemCtgryCode",headerText :"Item Category"      ,width: 180    ,height:30 , visible:false, editable : false},
-                    {dataField: "itemToInvtQty",headerText :"Stock In Qty"             ,width:120   ,height:30 , visible:true, editable : false,dataType : "numeric", formatString : "#,##0"},
-                    {dataField: "itemAdjQty",headerText :"Adjustment Qty"          ,width:120   ,height:30 , visible:true, editable : true,dataType : "numeric", formatString : "#,##0"},
-                    {dataField: "itemVarianceQty",headerText :"Variance Qty"      ,width:120   ,height:30 , visible:true, editable : false ,dataType : "numeric", formatString : "#,##0"},
+                    {dataField: "itemToInvtQty",headerText :"Stock In Qty"             ,width:120   ,height:30 , visible:false, editable : false,dataType : "numeric", formatString : "#,##0"},
+                    {dataField: "itemAdjQty",headerText :"Adjustment Qty"          ,width:120   ,height:30 , visible:true, editable : true,dataType : "numeric", formatString : "#,##0",
+                    	renderer : {
+                            type : "NumberStepRenderer",
+                            min : -99999999,
+                            max : 99999999,
+                            step : 1,
+                            inputHeight : 28, // input 높이 지정
+                            textEditable : true
+                        }
+                    },
+                    {dataField: "itemVarianceQty",headerText :"Variance Qty"      ,width:120   ,height:30 , visible:false, editable : false ,dataType : "numeric", formatString : "#,##0"},
                     {dataField: "itemStatus",headerText :"itemStatus Qty"      ,width:120   ,height:30 , visible:false, editable : false},
 
                     {dataField: "itemReason",headerText :"Reason"  ,width:120    ,height:30 , visible:true ,
@@ -33,7 +43,10 @@ var columnLayout = [
                             keyField : "code", // key 에 해당되는 필드명
                             valueField : "value" // value 에 해당되는 필드명
                         }
-                    }
+                    },
+
+                   {dataField: "itemRejRemark",headerText :"Remark"      ,width: 180    ,height:30 , visible:true, editable : true},
+
  ];
 
 
@@ -74,14 +87,15 @@ function auiAdjCellEditingHandler(event) {
      //   document.getElementById("editBeginDesc").innerHTML = "에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value;
     } else if(event.type == "cellEditEnd") {
 
-         if(event.dataField=="itemAdjQty"){
+        /*
+    	if(event.dataField=="itemAdjQty"){
             if(event.value>0){
                 var reqQty =event.item.itemInvtQty;
                 AUIGrid.setCellValue(myAdjGridIDPOS, event.rowIndex, 5, event.value - reqQty);
                 AUIGrid.setCellValue(myAdjGridIDPOS, event.rowIndex, 6,  $("#itemStatus").val());
             }
          }
-
+        */
 
     //    document.getElementById("editBeginEnd").innerHTML = "에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value;
     } else if(event.type == "cellEditCancel") {
@@ -132,10 +146,10 @@ function fn_saveAdjGrid(){
     for(var i = 0 ; i < checkList.all.length ; i++){
         var itemAdjQty  = checkList.all[i].itemAdjQty;
 
-        if(checkList.all[i].itemAdjQty == 0 ||checkList.all[i].itemAdjQty ==null ){
-            Common.alert('* List has "0" Adjustment Qty item(s). ');
-            return ;
-        }
+        //if(checkList.all[i].itemAdjQty == 0 ||checkList.all[i].itemAdjQty ==null ){
+        //    Common.alert('* List has "0" Adjustment Qty item(s). ');
+        //    return ;
+        //  }
     }
 
 

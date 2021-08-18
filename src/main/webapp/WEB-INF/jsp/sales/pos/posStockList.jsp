@@ -47,7 +47,7 @@ $(document).ready(function(){
     CommonCombo.make('scnToLocId', "/sales/pos/selectWhSOBrnchList", '' , '', '');
 
 
-    var stockMoveTypecomboData = [ {"codeId": "T","codeName": "Stock Transfer"} ,{"codeId": "I","codeName": "Stock In"} ,{"codeId": "A","codeName": "Adjustment"}  ];
+    var stockMoveTypecomboData = [ {"codeId": "T","codeName": "Stock Transfer"} ,{"codeId": "I","codeName": "Stock In"} ,{"codeId": "A","codeName": "Adjustment"},{"codeId": "R","codeName": "Retrun"}   ];
     doDefCombo(stockMoveTypecomboData, '' ,'scnMoveType', 'S', '');
 
 
@@ -71,6 +71,11 @@ var columnLayout = [
                     {dataField: "scnMoveStatCode",headerText :"Status"          ,width:120   ,height:30 , visible:true, editable : false},
                     {dataField: "scnMoveDate",headerText :"Create Date"          ,width:140   ,height:30 , visible:true ,editable : false},
                     {dataField: "updDate",headerText :"Update Date"          ,width:120   ,height:30 , visible:true,editable : false},
+                    {dataField: "scnMoveStat",headerText :"scnMoveStat"          ,width:120   ,height:30 , visible:false ,editable : false},
+                    {dataField: "scnMoveType",headerText :"scnMoveType"          ,width:120   ,height:30 , visible:false,editable : false},
+
+
+
 
            ];
 
@@ -158,15 +163,23 @@ fn_selectPosStockMgmtAddPop =function (){
 }
 
 
+
+
+fn_selectPosStockMgmtRetrunPop =function (){
+    Common.popupDiv("/sales/posstock/selectPosStockMgmtReturnList.do", '' , null , true , "_insDiv");
+}
+
+
 fn_selectPosStockMgmtAdjPop =function (){
+
 
 	 var selectedItems = AUIGrid.getSelectedItems(mstGridID);
      if(selectedItems.length <= 0) return;
 
 
      console.log(selectedItems.item);
-     if(selectedItems[0].item.scnMoveStatCode !="COM"){
-         Common.alert('* Please check the status \n "COM" status is only available');
+     if(selectedItems[0].item.scnMoveStatCode !="R"  && selectedItems[0].item.scnMoveStatCode !="A"){
+         Common.alert('* Please check the Movement type \n "Return & Adjust"  is available only' );
          return ;
      }
 
@@ -189,11 +202,41 @@ fn_selectPosStockMgmtTransPop =function (){
 
 
 
+fn_selectPosStockMgmtApprovalPop =function (){
+
+    var selectedItems = AUIGrid.getSelectedItems(mstGridID);
+    if(selectedItems.length <= 0) return;
+
+
+    if(selectedItems[0].item.scnMoveStat  !="A"){
+        Common.alert('* Please check the status \n "ACT" status is only available');
+        return ;
+    }
+
+
+    var scnNo = selectedItems[0].item.scnNo;
+    Common.popupDiv("/sales/posstock/selectPosStockMgmtApprovalList.do?scnNo="+scnNo, '' , null , true , "_insDiv");
+
+}
+
 fn_selectPosStockMgmtReceivedPop=function (){
 
 	 var selectedItems = AUIGrid.getSelectedItems(mstGridID);
 	 if(selectedItems.length <= 0) return;
 
+     console.log(selectedItems[0].item);
+
+
+     if(selectedItems[0].item.scnMoveType  =="R"){
+         Common.alert('* Please Use the approval button ');
+         return ;
+     }
+
+
+     if(selectedItems[0].item.scnMoveStat  !="A"){
+         Common.alert('* Please check the status \n "ACT" status is only available');
+         return ;
+     }
 
 	 var scnNo = selectedItems[0].item.scnNo;
      Common.popupDiv("/sales/posstock/selectPosStockMgmtReceivedList.do?scnNo="+scnNo, '' , null , true , "_insDiv");
@@ -227,12 +270,16 @@ fn_selectPosStockMgmtReceivedPop=function (){
 
        <li><p class="btn_blue"><a id="addItemBtn"  onclick="javascript:fn_selectPosStockMgmtAddPop();" ><span class="add"></span>ADD</a></p></li>
 
-      <li><p class="btn_blue"><a id="adjItemBtn"  onclick="javascript:fn_selectPosStockMgmtNewAdjPop();" ><span class="edit"></span>NEW ADJUST</a></p></li>
 
-      <li><p class="btn_blue"><a id="adjItemBtn"  onclick="javascript:fn_selectPosStockMgmtAdjPop();" ><span class="edit"></span>ADJUST</a></p></li>
+      <li><p class="btn_blue"><a id="adjItemBtn"  onclick="javascript:fn_selectPosStockMgmtNewAdjPop();" ><span class="edit"></span> ADJUST</a></p></li>
+
+    <!--   <li><p class="btn_blue"><a id="adjItemBtn"  onclick="javascript:fn_selectPosStockMgmtAdjPop();" ><span class="edit"></span>ADJUST</a></p></li> -->
+
+            <li><p class="btn_blue"><a id="rtnItemBtn"  onclick="javascript:fn_selectPosStockMgmtRetrunPop();" ><span class="edit"></span>RETRUN</a></p></li>
 
       <li><p class="btn_blue"><a id="transItemBtn"  onclick="javascript:fn_selectPosStockMgmtTransPop();" ><span class="edit"></span>TRANSFER</a></p></li>
 
+      <li><p class="btn_blue"><a id="rtnItemBtn"  onclick="javascript:fn_selectPosStockMgmtApprovalPop();" ><span class="edit"></span>APRROVAL</a></p></li>
       <li><p class="btn_blue"><a id="search" onclick="javascript:fn_getDataListAjax();"  ><span class="search"   ></span>Search</a></p></li>
       <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
     </ul>

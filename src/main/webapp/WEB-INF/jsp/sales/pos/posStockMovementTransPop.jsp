@@ -15,7 +15,7 @@
 <script type="text/javascript">
 
 var columnLayout = [
-                    {dataField: "itemCode",headerText :"Item Code"           ,width:  100   ,height:30 , visible:true, editable : false},
+                    {dataField: "itemCode",headerText :"Item Code"           ,width:  100   ,height:30 , visible:false, editable : false},
                     {dataField: "itemDesc",headerText :"Item Description"     ,width: 280    ,height:30 , visible:true, editable : false},
                     {dataField: "itemInvtQty" ,headerText :"Quantity(F)"                ,width:120   ,height:30 , visible:true, editable : false ,dataType : "numeric", formatString : "#,##0"},
                     {dataField: "itemToInvtQty" ,headerText :"Quantity(T)"                ,width:120   ,height:30 , visible:false, editable : false ,dataType : "numeric", formatString : "#,##0"},
@@ -64,14 +64,14 @@ $(document).ready(function () {
 
     //branch List
     var selVal = '${branchId}';
-    CommonCombo.make('fromTransBrnchId', "/sales/pos/selectWhBrnchList", '' , '','' );
+    CommonCombo.make('fromTransBrnchId', "/sales/pos/selectWhBrnchList", '' , '','' ,initCallback);
    // CommonCombo.make('fromTransBrnchId', "/sales/pos/selectWhSOBrnchList", '' , '','', initCallback);
     CommonCombo.make('toTransBrnchId', "/sales/pos/selectWhSOBrnchList", '' , '', '');
 
 
     //Itm List
     var itmType = {itemType : 1346 , posItm : 1};
-    CommonCombo.make('purcItems', "/sales/pos/selectPosFlexiItmList", itmType , '', ItmOption);
+    CommonCombo.make('purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
 
 
     myGridIDPOS = GridCommon.createAUIGrid("#grid_wrapPOS", columnLayout, gridProsPOS);
@@ -94,7 +94,7 @@ function initCallback(){
 function itemCategoryChange(){
     var val = $("#category").val();
     var itmType = {itemType : val , posItm : 1};
-    CommonCombo.make('purcItems', "/sales/pos/selectPosFlexiItmList", itmType , '', ItmOption);
+    CommonCombo.make('purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
 
 }
 
@@ -111,6 +111,7 @@ function selectInventoryQty(){
 
 	  //it is going to get  inventory qty
 
+      $("#itemQty").val(0);
 
 	  var param ={ "itemCode" : $("#purcItems").val() , "locId" : $("#fromTransBrnchId").val()  };
 

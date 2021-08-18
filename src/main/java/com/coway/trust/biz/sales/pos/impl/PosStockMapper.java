@@ -12,6 +12,9 @@ public interface PosStockMapper {
 	List<EgovMap> selectPosStockMgmtList(Map<String, Object> params);
 	List<EgovMap> selectPosStockMgmtViewList(Map<String, Object> params);
 
+	List<EgovMap> selectPosItmList(Map<String, Object> params);
+
+
 	EgovMap  selectPosStockMgmtViewInfo(Map<String, Object> params);
 	EgovMap  selectItemInvtQty(Map<String, Object> params);
 
@@ -33,6 +36,10 @@ public interface PosStockMapper {
 
     void updateReceviedRejectSAL0294D(Map<String, Object> params);
     void updateReceviedRejectSAL0293M(Map<String, Object> params);
+    void updateApprovalSAL0294D(Map<String, Object> params);
+
+
+
 
 	void  updateMergeLOG0106M(Map<String, Object> params);
 	void  updateLOG0106M(Map<String, Object> params);

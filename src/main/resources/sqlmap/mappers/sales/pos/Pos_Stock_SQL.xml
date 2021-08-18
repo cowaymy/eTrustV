@@ -55,6 +55,9 @@
 		        ,CRT_USER_ID
 		        ,CRT_DT
 		        ,ITEM_ADJ_QTY
+		        ,ITEM_RTN_REASON
+		        ,ITEM_REJ_ATTCH_GRP_ID
+		        ,ITEM_RTN_QTY
 		)VALUES (
 		         #{scnNo}
 		        ,#{itemCode}
@@ -72,13 +75,17 @@
 		        ,#{crtUserId}
 		        ,#{crtDt}
 		        ,#{itemAdjQty}
+		        ,#{itemRtnReason}
+		        ,#{itemRejAttchGrpId}
+		        ,#{itemRtnQty}
 		)
 
  </insert>
 
 
    <select id="selectPosStockMgmtList" parameterType="Map" resultType="egovMap">
-	SELECT  SCN_NO
+	SELECT
+	         SCN_NO
             ,SCN_MOVE_TYPE_CODE
             ,SCN_FROM_LOC_ID
             ,SCN_FROM_LOC_DESC
@@ -86,14 +93,16 @@
             ,SCN_TO_LOC_DESC
             ,SCN_MOVE_STAT_CODE
             ,SCN_MOVE_DATE
+            ,SCN_MOVE_TYPE
+            ,SCN_MOVE_STAT
             ,UPD_DATE
             ,UPD_USER_ID
       FROM (
-		SELECT
+		SELECT S.STK_CODE ,
 		            A.SCN_NO ,
 				    B.ITEM_CODE ,
 				    B.ITEM_DESC ,
-				    DECODE (A.SCN_MOVE_TYPE ,'I','STOCK IN','T','STOCK TRANSFER','A','ADJUSTMENT') AS SCN_MOVE_TYPE_CODE,
+				    DECODE (A.SCN_MOVE_TYPE ,'I','STOCK IN','T','STOCK TRANSFER','A','ADJUSTMENT' ,'R','RETURN') AS SCN_MOVE_TYPE_CODE,
 				    A.SCN_FROM_LOC_ID ,
 				    (SELECT CODE||'-'||NAME FROM SYS0005M  WHERE BRNCH_ID  = A.SCN_FROM_LOC_ID) AS SCN_FROM_LOC_DESC ,
 				    A.SCN_TO_LOC_ID ,
@@ -101,9 +110,12 @@
 				    DECODE (A.SCN_MOVE_STAT,'A','ACT','C','COM','R','REJECT') AS SCN_MOVE_STAT_CODE,
 				    TO_CHAR(A.SCN_MOVE_DATE,'dd-mm-yyyy')AS SCN_MOVE_DATE ,
 				    TO_CHAR(A.UPD_DT,'dd-mm-yyyy')AS UPD_DATE ,
-				    A.UPD_USER_ID
-		FROM SAL0293M A , SAL0294D B
+				    A.UPD_USER_ID,
+				    A.SCN_MOVE_TYPE,
+                    A.SCN_MOVE_STAT
+		FROM SAL0293M A , SAL0294D B ,SYS0026M S
 		WHERE A.SCN_NO  =B.SCN_NO
+		        AND B.ITEM_CODE  = S.STK_ID
            <if test="scnNo != nul and scnNo != '' ">
                     AND A.SCN_NO = #{scnNo}
           </if>
@@ -136,6 +148,8 @@
             ,SCN_TO_LOC_DESC
             ,SCN_MOVE_STAT_CODE
             ,SCN_MOVE_DATE
+            ,SCN_MOVE_TYPE
+            ,SCN_MOVE_STAT
             ,UPD_DATE
             ,UPD_USER_ID
             ORDER BY SCN_NO DESC
@@ -145,7 +159,7 @@
 <select id="selectPosStockMgmtViewInfo" parameterType="Map" resultType="egovMap">
          SELECT
                     A.SCN_NO ,
-                    DECODE (A.SCN_MOVE_TYPE ,'I','STOCK IN','T','STOCK TRANSFER','A','ADJUSTMENT') AS SCN_MOVE_TYPE_CODE,
+                    DECODE (A.SCN_MOVE_TYPE ,'I','STOCK IN','T','STOCK TRANSFER','A','ADJUSTMENT' ,'R' ,'RETURN') AS SCN_MOVE_TYPE_CODE,
                     A.SCN_MOVE_TYPE,
                     A.SCN_FROM_LOC_ID ,
                     (SELECT CODE||'-'||NAME FROM SYS0005M  WHERE BRNCH_ID  = A.SCN_FROM_LOC_ID) AS SCN_FROM_LOC_DESC ,
@@ -156,7 +170,9 @@
                     TO_CHAR(A.UPD_DT,'dd-mm-yyyy')AS UPD_DATE ,
                     A.UPD_USER_ID,
                     (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = A.CRT_USER_ID) AS USER_NAME,
-                    (SELECT COUNT (*) FROM SAL0294D WHERE SCN_NO = A.SCN_NO ) TOTALCNT
+                    (SELECT COUNT (*) FROM SAL0294D WHERE SCN_NO = A.SCN_NO ) TOTALCNT,
+                    (SELECT COUNT (*) FROM SAL0294D WHERE SCN_NO = A.SCN_NO   AND ITEM_STATUS  ='C') CTOTALCNT,
+                    (SELECT COUNT (*) FROM SAL0294D WHERE SCN_NO = A.SCN_NO   AND ITEM_STATUS  ='R')  RTOTALCNT
         FROM SAL0293M A
         WHERE A.SCN_NO = #{scnNo}
 </select>
@@ -164,11 +180,29 @@
 
   <update id="updateReceviedRejectSAL0294D" parameterType="Map">
               UPDATE SAL0294D
-                SET ITEM_STATUS  = #{scnMoveStat}
-                     ,UPD_USER_ID  = #{userId}
+                SET ITEM_STATUS  = #{itemStatus}
+                     ,UPD_USER_ID  = #{updUserId}
                      ,UPD_DT       = SYSDATE
+                     ,ITEM_REJ_ATTCH_GRP_ID  =#{itemRejAttchGrpId}
+                     ,ITEM_REJ_REMARK  = #{itemRejRemark}
             WHERE SCN_NO =  #{scnNo}
+               AND ITEM_CODE =#{itemCode}
     </update>
+
+
+
+
+    <update id="updateApprovalSAL0294D" parameterType="Map">
+              UPDATE SAL0294D
+                SET ITEM_STATUS         = #{itemStatus}
+                     ,UPD_USER_ID         =  #{updUserId}
+                     ,UPD_DT                 = SYSDATE
+                     , ITEM_RTN_QTY       = #{itemRtnQty}
+                     ,ITEM_REJ_REMARK  = #{itemRejRemark}
+            WHERE SCN_NO =  #{scnNo}
+               AND ITEM_CODE =#{itemCode}
+    </update>
+
 
     <update id="updateReceviedRejectSAL0293M" parameterType="Map">
               UPDATE SAL0293M
@@ -199,8 +233,9 @@
 
  <update id="updateAdjSAL0294D" parameterType="Map">
               UPDATE SAL0294D
-                SET  ITEM_ADJ_QTY = #{itemAdjQty}
-                     ,ITEM_REASON    = #{itemReason}
+                SET  ITEM_ADJ_QTY  = #{itemAdjQty}
+                     , ITEM_REASON    = #{itemReason}
+                     , ITEM_REJ_REMARK    = #{itemRejRemark}
                      ,UPD_USER_ID     = #{userId}
                      ,UPD_DT       = SYSDATE
             WHERE SCN_NO =  #{scnNo}
@@ -225,7 +260,7 @@
             ON ( C.LOC_ID = N.LOC_ID AND  C.ITEM_CODE =N.ITEM_CODE)
             WHEN MATCHED THEN
             UPDATE
-            SET C.ITEM_INV_QTY = C.ITEM_INV_QTY + N.ITEM_INV_QTY
+            SET C.ITEM_INV_QTY = NVL(C.ITEM_INV_QTY,0) +( N.ITEM_INV_QTY)
               , C.CRT_USER_ID  = N.USER_ID
               , C.CRT_DT       = SYSDATE
             WHEN NOT MATCHED THEN
@@ -263,7 +298,7 @@ MERGE INTO LOG0106M C
             ON ( C.LOC_ID = N.LOC_ID AND  C.ITEM_CODE =N.ITEM_CODE)
             WHEN MATCHED THEN
             UPDATE
-            SET C.ITEM_INV_QTY = N.ITEM_INV_QTY
+            SET C.ITEM_INV_QTY =  NVL(C.ITEM_INV_QTY,0)  +(N.ITEM_INV_QTY)
                   , C.UPD_USER_ID  = N.USER_ID
                   , C.UPD_DT       = SYSDATE
             WHEN NOT MATCHED THEN
@@ -289,7 +324,7 @@ MERGE INTO LOG0106M C
 
  <update id="updateOutStockLOG0106M" parameterType="Map">
     Update  LOG0106M
-        SET  ITEM_INV_QTY = ITEM_INV_QTY - #{itemRecvQty}
+        SET  ITEM_INV_QTY = NVL(ITEM_INV_QTY,0) - #{itemRecvQty}
              , UPD_USER_ID  = #{userId}
              , UPD_DT       = SYSDATE
      WHERE  LOC_ID   = #{logId}
@@ -298,8 +333,116 @@ MERGE INTO LOG0106M C
 
 
 
+
+ <select id="selectPosItmList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+			SELECT
+			    Project1.StkID AS CODE_ID,
+			    Project1.StkCode AS CODE_NAME
+			FROM
+			    (
+			    SELECT
+			        stk.STK_ID AS StkID, stk.STK_CODE AS StkCode, stk.STK_DESC AS StkDesc, stk.STK_CTGRY_ID AS StkCategoryID, stk.STK_TYPE_ID AS StkTypeID, stk.STUS_CODE_ID AS StatusCodeID, stk.IS_SIRIM AS IsSirim, stk.IS_NCV AS IsNCV, stk.SERIAL_CHK AS serialchk, stk.QTY_PER_CARTON AS QtyPerCarton, stk.UPD_USER_ID AS Updator, stk.UPD_DT AS Updated, stk.NET_WT AS NetWeight, stk.GROS_WT AS GrossWeight, stk.MEASURE_CBM AS MeasurementCBM, stk.STK_GRAD AS StkGrade, stk.BS_POINT AS BSPoint, stk.UNIT_VALU AS UnitValue, stk.STK_OLD_CODE AS StkOldCd, stk.stk_ext_type AS stkexttype, stk.stk_lch_dt AS stklchdt, stk.is_stock_audit AS isstockaudit, stk.stk_size, stk.is_smo, stk.is_serial_replc, (
+			        SELECT
+			            CODE_NAME
+			        FROM
+			            SYS0013M
+			        WHERE
+			            CODE_ID = stk.STK_CTGRY_ID) CodeName, (
+			        SELECT
+			            CODE_NAME
+			        FROM
+			            SYS0013M
+			        WHERE
+			            CODE_ID = stk.STK_TYPE_ID) CodeName1, (
+			        SELECT
+			            NAME
+			        FROM
+			            SYS0038M
+			        WHERE
+			            STUS_CODE_ID = stk.STUS_CODE_ID) Name,
+			    CASE
+			            WHEN (usr.USER_ID IS NOT NULL) THEN usr.USER_NAME
+			            ELSE 'N'
+			        END AS C1, (
+			        SELECT
+			            CODE_ID
+			        FROM
+			            SYS0013M
+			        WHERE
+			            CODE_ID = stk.UOM) C2, (
+			        SELECT
+			            CODE_NAME
+			        FROM
+			            SYS0013M
+			        WHERE
+			            CODE_ID = stk.UOM) C3,
+			    CASE
+			            WHEN (61 = stk.STK_TYPE_ID) THEN
+			        CASE
+			                WHEN (sp1.AMT IS NOT NULL) THEN sp1.AMT
+			                ELSE CAST (0 AS FLOAT (53))
+			            END
+			            WHEN (sp2.AMT IS NOT NULL) THEN sp2.AMT
+			            ELSE CAST (0 AS FLOAT (53))
+			        END AS C4,
+			    CASE
+			            WHEN (stk.MASTER_STK_ID IS NOT NULL) THEN stk.MASTER_STK_ID
+			            ELSE 0
+			        END AS C5,
+			    CASE
+			            WHEN (stk.STK_COMM_AS IS NOT NULL) THEN stk.STK_COMM_AS
+			            ELSE CAST (0 AS FLOAT (53))
+			        END AS C6,
+			    CASE
+			            WHEN (stk.STK_COMM_OS_AS IS NOT NULL) THEN stk.STK_COMM_OS_AS
+			            ELSE CAST (0 AS FLOAT (53))
+			        END AS C7,
+			    CASE
+			            WHEN (stk.STK_COMM_BS IS NOT NULL) THEN stk.STK_COMM_BS
+			            ELSE CAST (0 AS FLOAT (53))
+			        END AS C8,
+			    CASE
+			            WHEN (stk.STK_COMM_OS_BS IS NOT NULL) THEN stk.STK_COMM_OS_BS
+			            ELSE CAST (0 AS FLOAT (53))
+			        END AS C9,
+			    CASE
+			            WHEN (stk.STK_COMM_INS IS NOT NULL) THEN stk.STK_COMM_INS
+			            ELSE CAST (0 AS FLOAT (53))
+			        END AS C10,
+			    CASE
+			            WHEN (stk.STK_COMM_OS_INS IS NOT NULL) THEN stk.STK_COMM_OS_INS
+			            ELSE CAST (0 AS FLOAT (53))
+			        END AS C11
+			    FROM
+			        SYS0026M stk
+			    LEFT OUTER JOIN SYS0047M usr ON
+			        usr.USER_ID = stk.UPD_USER_ID
+			    LEFT OUTER JOIN SAL0016M sp1 ON
+			        (67 = sp1.APP_TYPE_ID)
+			        AND (61 = stk.STK_TYPE_ID)
+			        AND (sp1.STK_ID = stk.STK_ID)
+			        AND (0 = sp1.MEM_PAC_ID)
+			        AND (1 = sp1.STUS_CODE_ID)
+			    LEFT OUTER JOIN SAL0016M sp2 ON
+			        (61 <> stk.STK_TYPE_ID)
+			        AND (sp2.STK_ID = stk.STK_ID)
+			        AND (0 = sp2.MEM_PAC_ID)
+			        AND (1 = sp2.STUS_CODE_ID) ) Project1
+			WHERE
+			    1 = 1
+			              ]]>
+			              <if test="itmType != nul and itmType != '' ">
+			       AND stkCategoryID = #{itmType}
+			             </if>
+
+			ORDER BY
+			    StkCode
+
+     </select>
+
 <select id="selectPosStockMgmtViewList" parameterType="Map" resultType="egovMap">
-        SELECT
+        SELECT S.STK_CODE ,
                     A.SCN_NO ,
                     B.ITEM_CODE,
 					B.ITEM_DESC,
@@ -312,16 +455,29 @@ MERGE INTO LOG0106M C
 					B.ITEM_RECV_QTY,
 					B.ITEM_VARI_QTY,
 					B.ITEM_ADJ_QTY,
+					B.ITEM_RTN_QTY,
 					B.ITEM_REASON,
 					B.ITEM_STATUS,
 					B.CRT_USER_ID,
 					B.CRT_DT,
 					B.UPD_USER_ID,
 					B.UPD_DT,
-                    DECODE (A.SCN_MOVE_TYPE , 'I', B.ITEM_REQ_QTY,'T',B.ITEM_TRAN_QTY,'A',B.ITEM_ADJ_QTY) AS ITEM_REQ_QTY
-                 FROM SAL0293M A , SAL0294D B
+                    DECODE (A.SCN_MOVE_TYPE , 'I', B.ITEM_REQ_QTY,'T',B.ITEM_TRAN_QTY,'A',B.ITEM_ADJ_QTY ,'R',B.ITEM_RTN_QTY) AS ITEM_REQ_QTY,
+                    B.ITEM_REJ_REMARK ,
+				    B.ITEM_REJ_ATTCH_GRP_ID ,
+				    FD.ATCH_FILE_ID,
+				    FD.ATCH_FILE_NAME,
+				    FD.FILE_SUB_PATH,
+				    FD.PHYSICL_FILE_NAME,
+				    DECODE (B.ITEM_RTN_REASON  ,'D' ,'Defect/Damage' ,'B','Broken','O','Others') AS ITEM_RTN_REASON,
+				    (SELECT CODE_DESC  FROM SYS0013M WHERE CODE_MASTER_ID =11 AND CODE_ID = B.ITEM_CTGRY_ID ) AS ITEM_CTGRY_DESC,
+                    DECODE (B.ITEM_STATUS , 'C', 'Completed','R','Rejected') AS ITEM_STATUS_DESC
+				 FROM SAL0293M A , SAL0294D B  ,SYS0026M S ,SYS0070M F , SYS0071D FD
         WHERE A.SCN_NO  =B.SCN_NO
                  AND A.SCN_NO = #{scnNo}
+                 AND B.ITEM_CODE  = S.STK_ID
+                 AND B.ITEM_REJ_ATTCH_GRP_ID  = F.ATCH_FILE_GRP_ID (+)
+                 AND F.ATCH_FILE_ID = FD.ATCH_FILE_ID (+)
 </select>
 
 

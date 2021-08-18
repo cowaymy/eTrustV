@@ -13,30 +13,42 @@
 
 </style>
 <script type="text/javascript">
-var keyValueList = [{"code":"", "value":"Choose One"} ,{"code":"SUR", "value":"Surplus"}, {"code":"SHO", "value":"Shortage"}, {"code":"DEF", "value":"Defect/Damage"}, {"code":"OTH", "value":"Others"}];
-var columnLayout = [
-                    {dataField: "itemCode",headerText :"Item Code"           ,width:  100   ,height:30 , visible:true, editable : false},
-                    {dataField: "itemDesc",headerText :"Item Description"     ,width: 280    ,height:30 , visible:true, editable : false},
-                    {dataField: "itemInvtQty" ,headerText :"Stock In"                ,width:120   ,height:30 , visible:true, editable : false,dataType : "numeric", formatString : "#,##0"},
-                    {dataField: "itemAdjQty" ,headerText :"Adjustment"                ,width:120   ,height:30 , visible:true, editable : true,dataType : "numeric", formatString : "#,##0"},
-                    {dataField: "itemVariQty" ,headerText :"Variance"                ,width:120   ,height:30 , visible:false, editable : false},
-                    {dataField: "itemType" ,headerText :"itemType"                ,width:120   ,height:30 , visible:false, editable : false},
-                    {dataField: "scnFromLocId" ,headerText :"itemFromBrnchId"                ,width:120   ,height:30 , visible:false, editable : false},
-                    {dataField: "itemCtgryId" ,headerText :"itemCategory"                ,width:120   ,height:30 , visible:false, editable : false},
-                    {dataField: "itemReason",headerText :"Reason"  ,width:120    ,height:30 , visible:true ,
 
-                    	editRenderer : {
-                            type : "ComboBoxRenderer",
+
+var keyValueList = [{"code":"", "value":"Choose One"} ,{"code":"IDR", "value":"Internal Dept. Request"}, {"code":"EVU", "value":"Events use"}, {"code":"OTH", "value":"Others"}];
+
+var columnLayout = [
+                    {dataField: "stkCode",headerText :"Item Code"           ,width:  100   ,height:30 , visible:true, editable : false},
+                    {dataField: "itemCode",headerText :"Item Code"                   ,width:  100   ,height:30 , visible:false, editable : false},
+                    {dataField: "itemDesc",headerText :"Item Description"           ,width: 280    ,height:30 , visible:true, editable : false},
+                    {dataField: "itemCtgryCode",headerText :"Item Category"      ,width: 180    ,height:30 , visible:false, editable : false},
+                    {dataField: "itemToInvtQty",headerText :"Stock In Qty"             ,width:120   ,height:30 , visible:false, editable : false,dataType : "numeric", formatString : "#,##0"},
+                    {dataField: "itemAdjQty",headerText :"Adjustment Qty"          ,width:120   ,height:30 , visible:true, editable : true,dataType : "numeric", formatString : "#,##0",
+                        renderer : {
+                            type : "NumberStepRenderer",
+                            min : -99999999,
+                            max : 99999999,
+                            step : 1,
+                            inputHeight : 28, // input 높이 지정
+                            textEditable : true
+                        }
+                    },
+                    {dataField: "itemVarianceQty",headerText :"Variance Qty"      ,width:120   ,height:30 , visible:false, editable : false ,dataType : "numeric", formatString : "#,##0"},
+                    {dataField: "itemStatus",headerText :"itemStatus Qty"      ,width:120   ,height:30 , visible:false, editable : false},
+
+                    {dataField: "itemReason",headerText :"Reason"  ,width:120    ,height:30 , visible:true ,
+                        renderer : {
+                            type : "DropDownListRenderer",
                             list : keyValueList, //key-value Object 로 구성된 리스트
                             keyField : "code", // key 에 해당되는 필드명
                             valueField : "value" // value 에 해당되는 필드명
                         }
+                    },
 
-
-                    }
-
+                   {dataField: "itemRejRemark",headerText :"Remark"      ,width: 180    ,height:30 , visible:true, editable : true},
 
  ];
+
 
 
 //그리드 속성 설정
@@ -72,7 +84,7 @@ $(document).ready(function () {
 
     //Itm List
     var itmType = {itemType : 1346 , posItm : 1};
-    CommonCombo.make('purcItems', "/sales/pos/selectPosFlexiItmList", itmType , '', ItmOption);
+    CommonCombo.make('purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
 
 
     myNewAjGridIDPOS = GridCommon.createAUIGrid("#grid_wrapPOS", columnLayout, gridProsPOS);
@@ -88,7 +100,7 @@ $(document).ready(function () {
 function itemCategoryChange(){
 	var val = $("#category").val();
 	var itmType = {itemType : val , posItm : 1};
-    CommonCombo.make('purcItems', "/sales/pos/selectPosFlexiItmList", itmType , '', ItmOption);
+    CommonCombo.make('purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
 
 }
 
