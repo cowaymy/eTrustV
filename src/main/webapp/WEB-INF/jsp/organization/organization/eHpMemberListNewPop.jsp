@@ -80,7 +80,7 @@ function fn_memberSave(){
                     eHPspouseOcc : $("#eHPspouseOcc").val(),
                     eHPspouseDob : $("#eHPspouseDob").val(),
                     eHPspouseContat : $("#eHPspouseContat").val(),
-                    eHPorientation : $("#course").val(),
+                    //eHPorientation : $("#course").val(),
                     atchFileGrpId : atchFileGrpId
             };
             // jsonObj.form = $("#memberAddForm").serializeJSON();
@@ -507,6 +507,8 @@ console.log("ready");
     //doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
     doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'eHPmeetingPoint', 'S', '');
 
+    $("#orientationTbl").hide();
+
     //$("#issuedBank option[value='MBF']").remove();
     //$("#issuedBank option[value='OTH']").remove();
 
@@ -649,7 +651,7 @@ console.log("ready");
         fmtNumber("#eHPmobileNo"); // 2018-07-06 - LaiKW - Removal of special characters from mobile no
      });
 
-    Common.ajax("GET", "/organization/selectHPOrientation.do", "", function(result) {
+    /* Common.ajax("GET", "/organization/selectHPOrientation.do", "", function(result) {
 
         $("#course").find('option').each(function() {
             $(this).remove();
@@ -661,7 +663,7 @@ console.log("ready");
                 $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
             }
         }
-    });
+    }); */
 });
 
 // 2018-06-20 - LaiKW - Removal of MBF Bank and Others from Issued Bank drop down box
@@ -839,10 +841,10 @@ console.log("validation");
             return false;
         }
 
-        if($("#course").val() == "") {
+        /* if($("#course").val() == "") {
             Common.alert("Please select orientation date");
             return false;
-        }
+        } */
 
     }
 
@@ -1651,9 +1653,9 @@ function fn_validFile() {
                 </tbody>
                 </table><!-- table end -->
 
-                <aside class="title_line">
+                <!-- <aside class="title_line">
                     <h2>Orientation</h2>
-                </aside>
+                </aside> -->
 
                 <table class="type1" id="orientationTbl">
                     <caption>table</caption>
@@ -1664,8 +1666,8 @@ function fn_validFile() {
 
                     <tbody>
                         <tr>
-                            <th scope="row">Orientation</th>
-                            <td>
+                            <th scope="row" class="hideContent">Orientation</th>
+                            <td class="hideContent">
                                 <select class="w100p" id="course" name="course">
                             </td>
                         </tr>

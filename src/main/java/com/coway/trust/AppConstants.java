@@ -196,4 +196,7 @@ public class AppConstants {
 	public static final String RESPONSE_DESC_FORBIDDEN = "Forbidden";
 	public static final String RESPONSE_DESC_NOT_FOUND = "User not found";
 
+	public static final String DESC_SUCCESS = "Success";
+	public static final String DESC_FAILED = "Failed";
+
 }
