@@ -75,12 +75,12 @@
        </li>
       </ul>
     </td>
-    <th scope="row"><spring:message code="sal.text.ctMobileNo" /></th>
-    <td colspan="3"><span>${orderDetail.installationInfo.lastInstallCtMobileno}</span></td>
+    <th scope="row"><spring:message code="service.title.AssignedCT" /></th>
+    <td colspan="3"><span>${orderDetail.installationInfo.assignedCt}</span></td>
 </tr>
 <tr>
   <th scope="row"><spring:message code="service.title.PSILMPRcd" /></th>
-  <td colspan="5">
+  <td colspan="">
     <ul class="btns">
       <li>
         <p class="btn_grid">
@@ -90,6 +90,8 @@
        </li>
       </ul>
     </td>
+    <th scope="row"><spring:message code="service.title.AssignedCTMobileNo" /></th>
+    <td colspan="3"><span>${orderDetail.installationInfo.assignedCtMobileno}</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
