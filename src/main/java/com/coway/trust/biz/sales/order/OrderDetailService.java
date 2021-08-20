@@ -56,4 +56,6 @@ public interface OrderDetailService {
 
   public List<EgovMap> selectMCORemarkList(Map<String, Object> params);
 
+  public List<EgovMap> selectFmcoEvoucherList(Map<String, Object> params);
+
 }

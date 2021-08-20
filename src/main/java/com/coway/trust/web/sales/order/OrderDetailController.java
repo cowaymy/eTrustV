@@ -295,4 +295,16 @@ public class OrderDetailController {
     return ResponseEntity.ok(mcoRemarkList);
   }
 
+  @RequestMapping(value = "/selectFmcoEvoucherList.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectFmcoEvoucherList(@RequestParam Map<String, Object> params, ModelMap model) {
+
+    logger.debug("!@##############################################################################");
+    logger.debug("!@###### salesOrderId : " + params.get("salesOrderId"));
+    logger.debug("!@##############################################################################");
+
+    List<EgovMap> fmcoEvoucherList = orderDetailService.selectFmcoEvoucherList(params);
+
+    // 데이터 리턴.
+    return ResponseEntity.ok(fmcoEvoucherList);
+  }
 }

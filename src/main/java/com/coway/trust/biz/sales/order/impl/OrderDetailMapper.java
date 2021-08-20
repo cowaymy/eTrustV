@@ -112,4 +112,6 @@ public interface OrderDetailMapper {
 
   List<EgovMap> selectMCORemarkList(Map<String, Object> params);
 
+  List<EgovMap> selectFmcoEvoucherList(Map<String, Object> params);
+
 }

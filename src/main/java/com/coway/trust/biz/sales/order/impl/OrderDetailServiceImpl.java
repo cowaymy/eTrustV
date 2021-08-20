@@ -611,4 +611,8 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     return orderDetailMapper.selectMCORemarkList(params);
   }
 
+  @Override
+  public List<EgovMap> selectFmcoEvoucherList(Map<String, Object> params) {
+    return orderDetailMapper.selectFmcoEvoucherList(params);
+  }
 }

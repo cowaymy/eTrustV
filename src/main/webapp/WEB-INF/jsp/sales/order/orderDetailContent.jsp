@@ -87,6 +87,12 @@
 	            	fn_selectMCORemarkList();
                 }
                 break;
+            case 'fmcoEvoucher' :
+                AUIGrid.resize(fmcoEvoucherGridID, 942, 380);
+                if(AUIGrid.getRowCount(fmcoEvoucherGridID) <= 0) {
+                	fn_selectMCORemarkList();
+                }
+                break;
         };
     }
 </script>
@@ -114,6 +120,7 @@
 	<li><a href="#" onClick="javascript:chgTab('discountInfo');"><spring:message code="sal.title.text.discount" /></a></li>
 	<li><a href="#" onClick="javascript:chgTab('gstRebateInfo');"><spring:message code="sal.title.text.gstRebate" /></a></li>
 	<li><a href="#" onClick="javascript:chgTab('mcoRemark');">MCO Remark</a></li>
+	<li><a href="#" onClick="javascript:chgTab('fmcoEvoucher');">FMCO E-Voucher</a></li>
 </ul>
 <!------------------------------------------------------------------------------
     Basic Info
@@ -192,5 +199,9 @@
     MCO Remark
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/order/include/mcoRemark.jsp" %>
+<!------------------------------------------------------------------------------
+    MCO Remark
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/fmcoEvoucher.jsp" %>
 </section><!-- tap_wrap end -->
 
