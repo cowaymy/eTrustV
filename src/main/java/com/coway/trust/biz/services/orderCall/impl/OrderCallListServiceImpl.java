@@ -240,6 +240,8 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
           callEntId = Integer.parseInt(installMaster.get("callEntryId").toString());
         }
 
+        logger.debug("### callEntryId: " + callEntId);
+
         // IF installMaster NOT EMPTY AND INSIDE installMaster CONTAIN CALL ENTRY ID
         if (installMaster != null && callEntId > 0) {
           // PRE INSERT INSTALL ENTRY
@@ -641,7 +643,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
         	  // INSERT INSTALL ENTRY
         	  installNo = getDocNo("9");
         	  docNo = CommonUtils.nvl(installNo.get("docNo"));
-        	  callEntId = CommonUtils.intNvl(installMaster.get("callEntryId"));
+        	  callEntId = CommonUtils.intNvl(installMaster.get("callEntryId").toString());
 
         	  String nextDocNo = getNextDocNo("INS", docNo);
         	  installNo.put("nextDocNo", nextDocNo);
@@ -652,8 +654,9 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
               installMaster.put("installEntryNo", docNo);
 
               // IF installMaster NOT EMPTY AND INSIDE installMaster CONTAIN CALL ENTRY ID
-              if (installMaster != null && callEntId > 0) {
+              if (installMaster != null && Integer.compare(callEntId, 0) > 0) {
             	  // PRE INSERT INSTALL ENTRY
+                  installMaster.put("installEntryId",orderCallListMapper.installEntryIdSeq());
             	  orderCallListMapper.insertInstallEntry(installMaster);
               }
 
