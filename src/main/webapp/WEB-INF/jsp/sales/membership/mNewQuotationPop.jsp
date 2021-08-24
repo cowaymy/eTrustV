@@ -530,7 +530,8 @@ $(document).ready(function(){
 							$("#txtPackagePrice").html("");
 							// $("#txtPackagePrice").html(  (oriprice -  Math.floor(  ( oriprice * ( promoPrcPrcnt /100 )) - promoAddDiscPrc  )) );
 
-							var t1 = Math.floor(oriprice - (oriprice * (promoPrcPrcnt / 100))) * pacYear;
+							//var t1 = Math.floor(oriprice - (oriprice * (promoPrcPrcnt / 100))) * pacYear;
+							var t1 = Math.floor((oriprice * pacYear) * ((100 - promoPrcPrcnt)/100));
 							var t2 = 0;
 							if ($("#eurCertYn").val() == "N") {
 								//t2 =    (t1 -  promoAddDiscPrc) * 100 /106; -- without GST 6% edited by TPY 23/05/2018
