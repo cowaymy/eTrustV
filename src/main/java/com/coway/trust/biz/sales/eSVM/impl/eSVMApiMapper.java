@@ -11,4 +11,10 @@ public interface eSVMApiMapper {
 
     List<EgovMap> selectQuotationList(Map<String, Object> params);
 
+    EgovMap selectSvmOrdNo(Map<String, Object> params);
+    
+    List<EgovMap> selectProductFilterList(Map<String, Object> params);
+
+    EgovMap selectOrderMemInfo(Map<String, Object> params);
+
 }

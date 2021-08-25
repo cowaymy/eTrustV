@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.eSVM.impl.eSVMApiMapper">
+
+    <select id="selectQuotationList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selecteKeyInList] 20191209 - KR JAEMAJEM */
+        SELECT
+            A.SRV_MEM_QUOT_ID SVM_QUOT_ID,
+            E.PSM_ID,
+            B.SALES_ORD_ID,
+            C.NAME CUST_NAME,
+            B.SALES_ORD_NO,
+            TO_CHAR(A.SRV_CRT_DT, 'DD/MM/YYYY') REQST_DT,
+            A.SRV_MEM_QUOT_NO QUOT_NO,
+            NVL(E.PSM_NO, '-') PSM_NO,
+            DESC1.CODE_NAME ORDER_TYPE,
+            DESC2.CODE_NAME CUST_TYPE,
+            CASE WHEN A.SRV_QUOT_STUS_ID = 1 THEN 'Active Quotation'
+                 WHEN A.SRV_QUOT_STUS_ID = 4 THEN 'Old Completed Quotation'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 1) THEN 'Active Pre-Sales'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 5) THEN 'Complete'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 6) THEN 'Pre-Sales Rejected'
+                 WHEN A.SRV_QUOT_STUS_ID = 8 THEN 'Inactive Quotation'
+                 WHEN A.SRV_QUOT_STUS_ID = 10 THEN 'Cancelled Quotation'
+            END STATUS
+        FROM SAL0093D A
+        JOIN SAL0001D B
+            ON A.SRV_SALES_ORD_ID = B.SALES_ORD_ID
+        JOIN SAL0029D C
+            ON B.CUST_ID = C.CUST_ID
+        JOIN SYS0026M D
+            ON A.SRV_ORD_STK_ID = D.STK_ID
+        LEFT JOIN SAL0298D E
+            ON A.SRV_MEM_QUOT_ID = E.SVM_QUOT_ID
+        JOIN SYS0013M DESC1
+            ON B.APP_TYPE_ID = DESC1.CODE_ID
+            AND DESC1.CODE_MASTER_ID = 10
+        JOIN SYS0013M DESC2
+            ON C.TYPE_ID = DESC2.CODE_ID
+            AND DESC2.CODE_MASTER_ID = 8
+        WHERE A.SRV_CRT_USER_ID = (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{regId})
+        ]]>
+        <if test="reqstDtFrom != null and reqstDtFrom != '' and reqstDtTo != null and reqstDtTo != ''">
+            AND TO_CHAR(A.SRV_CRT_DT, 'YYYYMMDD') BETWEEN #{reqstDtFrom} AND #{reqstDtTo}
+        </if>
+        <if test="selectType != null and selectType != '' ">
+            <choose>
+                <when test='selectType.equals("1") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(B.SALES_ORD_NO) = UPPER(#{selectKeyword})
+                </when>
+                <when test='selectType.equals("2") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(C.NAME) LIKE UPPER('%'||#{selectKeyword}||'%')
+                </when>
+                <when test='selectType.equals("3") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(C.NRIC) LIKE UPPER('%'||#{selectKeyword}||'%')
+                </when>
+                <when test='selectType.equals("4") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(A.SRV_QUOT_STUS_ID) = #{selectKeyword}
+                </when>
+                <when test='selectType.equals("4") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(E.STUS) = #{selectKeyword}
+                </when>
+            </choose>
+        </if>
+        ORDER BY A.SRV_MEM_QUOT_ID DESC
+    </select>
+
+    <select id="selectSvmOrdNo" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.SALES_ORD_ID,
+            A.SALES_ORD_NO,
+            B.ITM_STK_ID STK_ID
+        FROM SAL0001D A
+        LEFT JOIN SAL0002D B
+            ON B.SALES_ORD_ID = A.SALES_ORD_ID
+        WHERE A.STUS_CODE_ID IN ('1',' '4')
+            AND A.SALES_ORD_NO = #{ordNo}
+    </select>
+
+    <select id="selectOrderMemInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            EXT.*,
+            <![CDATA[
+            CASE WHEN EXT.EXPINT <= 0 THEN 'Under membership'
+                 WHEN (EXT.EXPINT > 0 AND EXT.COOLING_PRD >= EXT.EXPINT) THEN 'Under cooling off period'
+                 ELSE 'Passed cooling off period'
+            END TRM
+            ]]>
+        FROM (
+            SELECT
+                /* Order Info */
+                A.SALES_ORD_ID,
+                A.SALES_ORD_NO ORD_NO,
+                D.NAME CUST_NAME,
+                D.NRIC,
+                DESC1.CODE_DESC ORDER_TYPE,
+                UTILS.CONVERT_TO_NUMBER(
+                (CASE WHEN A.APP_TYPE_ID = 66 THEN H.ORD_OTDSTND
+                     WHEN (A.APP_TYPE_ID = 67 OR A.APP_TYPE_ID = 68) THEN I.ORD_OTDSTND
+                     ELSE 0
+                END), 12, 2) ORD_OTDSTND,
+                NVL(J.AS_OTSTND, 0) AS_OTSTND,
+                E.ADD1 || ' ' || E.ADD2 || ' ' || E.ADD3 || ' ' || F.POSTCODE || ' ' || F.CITY || ', ' || F.STATE INST_ADDRESS,
+                C.STK_DESC STK_NAME,
+                TO_CHAR(G.LAST_SRV_MEM_EXPR_DATE, 'DD/MM/YYYY') MEM_EXPR_DATE,
+                MONTHS_BETWEEN(TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, 12), 'YYYYMM') || '01', 'YYYYMMDD'), TO_DATE(TO_CHAR(ADD_MONTHS(G.LAST_SRV_MEM_EXPR_DATE, 12), 'YYYYMM') || '01', 'YYYYMMDD')) EXPINT,
+                K.SRV_MEM_COOL_PRIOD_MTH COOLING_PRD,
+                G.SRV_MEM_FREQ HS_FREQ
+            FROM SAL0001D A
+            JOIN SAL0002D B
+                ON A.SALES_ORD_ID = B.SALES_ORD_ID
+            JOIN SYS0026M C
+                ON B.ITM_STK_ID = C.STK_ID
+            JOIN SAL0029D D
+                ON A.CUST_ID = D.CUST_ID
+            JOIN SAL0023D E
+                ON A.CUST_ADD_ID = E.CUST_ADD_ID
+            JOIN SYS0064M F
+                ON E.AREA_ID = F.AREA_ID
+            LEFT JOIN SAL1014V G
+                ON A.SALES_ORD_ID = G.ORD_ID
+            LEFT JOIN ( /* Rental Outstanding */
+                SELECT
+                    RENT_SO_ID ORD_ID,
+                    SUM(RENT_AMT) ORD_OTDSTND
+                FROM PAY0022D
+                WHERE RENT_SO_ID = #{salesOrdId}
+                GROUP BY RENT_SO_ID
+            ) H
+                ON A.SALES_ORD_ID = H.ORD_ID
+            LEFT JOIN ( /* Outright or Instalment Oustanding */
+                SELECT
+                    TRADE_SO_ID ORD_ID,
+                    SUM(TRADE_AMT) ORD_OTDSTND
+                FROM PAY0035D
+                WHERE TRADE_SO_ID = #{salesOrdId}
+                GROUP BY TRADE_SO_ID
+            ) I
+                ON A.SALES_ORD_ID = I.ORD_ID
+            LEFT JOIN ( /* AS Outstanding */
+                SELECT
+                    AS_SO_NO ORD_NO,
+                    AS_RESULT_NO,
+                    SUM(AS_LG_AMT) AS_OTSTND
+                FROM PAY0006D
+                WHERE AS_RESULT_NO LIKE 'ASR%'
+                AND AS_SO_NO = #{salesOrdNo}
+                GROUP BY AS_SO_NO, AS_RESULT_NO
+            ) J
+                ON A.SALES_ORD_NO = J.ORD_NO
+            LEFT JOIN SVC0010D K
+                ON K.CTGRY_ID = C.STK_CTGRY_ID
+                AND K.SRV_MEM_COOL_PRIOD_STUS_ID = 1
+            JOIN SYS0013M DESC1
+                ON A.APP_TYPE_ID = DESC1.CODE_ID
+                AND DESC1.CODE_MASTER_ID = 10
+            WHERE A.SALES_ORD_ID = #{salesOrdId}
+        ) EXT
+    </select>
+
+    <select id="selectProductFilterList" parameterType="Map" resultType="egovMap">
+        SELECT
+            SRV_FILTER_ID,
+            SRV_FILTER_STK_ID,
+            STK_CODE,
+            STK_DESC,
+            C2,
+            C3,
+            SRV_FILTER_STUS_ID,
+            SRV_FILTER_PRV_CHG_DT,
+            SRV_FILTER_PRIOD,
+            CODE,
+            C5,
+            C6,
+            EXPIREDATEINT,
+            TODAYDATEINT,
+            MONTHS_BETWEEN(TO_DATE(TODAYDATEINT || '01', 'yyyymmdd'), TO_DATE(EXPIREDATEINT || '01', 'yyyymmdd')) EXPINT
+        FROM
+            (
+                SELECT
+                    R.C1,
+                    R.SRV_FILTER_ID,
+                    R.SRV_FILTER_STK_ID,
+                    R.STK_CODE,
+                    R.STK_DESC,
+                    R.C2,
+                    R.C3,
+                    R.SRV_FILTER_STUS_ID,
+                    TO_CHAR(R.SRV_FILTER_PRV_CHG_DT, 'dd-mm-yyyy') SRV_FILTER_PRV_CHG_DT,
+                    R.SRV_FILTER_PRIOD,
+                    R.C4 CODE,
+                    R.C5,
+                    R.C6,
+                    TO_CHAR(ADD_MONTHS(R.SRV_FILTER_PRV_CHG_DT, 12), 'yyyymm') EXPIREDATEINT,
+                    TO_CHAR(ADD_MONTHS(SYSDATE, 12), 'yyyymm') TODAYDATEINT
+                FROM
+                    (
+                        SELECT DISTINCT
+                            A87D.SRV_FILTER_ID,
+                            A87D.SRV_FILTER_STK_ID,
+                            A87D.SRV_FILTER_PRIOD,
+                            A87D.SRV_FILTER_PRV_CHG_DT,
+                            A87D.SRV_FILTER_STUS_ID,
+                            A26M.STK_CODE,
+                            A26M.STK_DESC,
+                            1 C1,
+                            CASE WHEN (A87D.SRV_FILTER_UPD_DT IS NOT NULL) THEN A87D.SRV_FILTER_UPD_DT END C2,
+                            CASE WHEN (S47M.USER_NAME IS NOT NULL) THEN S47M.USER_NAME ELSE ' - ' END C3,
+                            CASE WHEN (S13M.CODE IS NOT NULL) THEN S13M.CODE ELSE ' - ' END C4,
+                            UTILS.CONVERT_TO_NUMBER(0, 1, 0) C5,
+                            0 C6
+                        FROM
+                            SAL0090D S90D
+                            JOIN SAL0002D S02D
+                                ON S90D.SRV_SO_ID = S02D.SALES_ORD_ID
+                            JOIN SAL0087D A87D
+                                ON S90D.SRV_CONFIG_ID = A87D.SRV_CONFIG_ID
+                            JOIN SYS0026M A26M
+                                ON A87D.SRV_FILTER_STK_ID = A26M.STK_ID
+                            LEFT JOIN SYS0047M S47M
+                                ON A87D.SRV_FILTER_UPD_USER_ID = S47M.USER_ID
+                            LEFT JOIN LOG0001M SL01M
+                                ON (A87D.SRV_FILTER_STK_ID = SL01M.BOM_PART_ID)
+                                AND ((S02D.ITM_STK_ID = SL01M.BOM_STK_ID) OR ((S02D.ITM_STK_ID IS NULL) AND (SL01M.BOM_STK_ID IS NULL)))
+                            LEFT JOIN SYS0013M S13M
+                                ON SL01M.BOM_PART_TYPE_ID = S13M.CODE_ID
+                        WHERE 1 = S90D.SRV_STUS_ID
+                            AND 1 = A87D.SRV_FILTER_STUS_ID
+                            AND S90D.SRV_SO_ID = #{salesOrdId}
+                    ) R
+            ) SEL
+    </select>
+
+</mapper>

@@ -40,12 +40,36 @@ public class eSVMApiController {
     @ApiOperation(value = "selectQuotationList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/selectQuotationList", method = RequestMethod.GET)
     public ResponseEntity<List<eSVMApiDto>> selecteQuotationist(@ModelAttribute eSVMApiForm param) throws Exception {
-      List<EgovMap> selecteQuotationist = eSVMApiService.selectQuotationList(param);
+      List<EgovMap> selectQuotationist = eSVMApiService.selectQuotationList(param);
       if (LOGGER.isDebugEnabled()) {
-        for (int i = 0; i < selecteQuotationist.size(); i++) {
-          LOGGER.debug("selecteKeyInList    값 : {}", selecteQuotationist.get(i));
+        for (int i = 0; i < selectQuotationist.size(); i++) {
+          LOGGER.debug("selecteQuotationist : {}", selectQuotationist.get(i));
         }
       }
-      return ResponseEntity.ok(selecteQuotationist.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList()));
+      return ResponseEntity.ok(selectQuotationist.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList()));
+    }
+
+    @ApiOperation(value = "selectSvmOrdNo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/selectSvmOrdNo", method = RequestMethod.GET)
+    public ResponseEntity<eSVMApiDto> selectSvmOrdNo(@ModelAttribute eSVMApiForm param) throws Exception {
+      return ResponseEntity.ok(eSVMApiService.selectSvmOrdNo(param));
+    }
+    
+    @ApiOperation(value = "selectProductFilterList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/selectProductFilterList", method = RequestMethod.GET)
+    public ResponseEntity<List<eSVMApiDto>> selectProductFilterList(@ModelAttribute eSVMApiForm param) throws Exception {
+      List<EgovMap> selectProductFilterList = eSVMApiService.selectProductFilterList(param);
+      if (LOGGER.isDebugEnabled()) {
+        for (int i = 0; i < selectProductFilterList.size(); i++) {
+          LOGGER.debug("selecteKeyInList    값 : {}", selectProductFilterList.get(i));
+        }
+      }
+      return ResponseEntity.ok(selectProductFilterList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList()));
+    }
+
+    @ApiOperation(value = "selectOrderMemInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/selectOrderMemInfo", method = RequestMethod.GET)
+    public ResponseEntity<eSVMApiDto> selectOrderMemInfo(@ModelAttribute eSVMApiForm param) throws Exception {
+      return ResponseEntity.ok(eSVMApiService.selectOrderMemInfo(param));
     }
 }

@@ -27,6 +27,34 @@ public class eSVMApiDto {
     private String orderType;
     private String custType;
     private String status;
+    private int stkId;
+    private String ordNo;
+    private String nric;
+    private String ordOtdstnd;
+    private String asOtstnd;
+    private String address;
+    private String stkName;
+    private String memExprDate;
+    private int expint;
+    private String coolingPrd;
+    private String hsFreq;
+    private String trm;
+
+    /* New Quotation - Filter Listing */
+    private int srvFilterId;
+    private int srvFilterStkId;
+    private String stkCode;
+    private String stkDesc;
+    private String c2;
+    private String c3;
+    private String srvFilterStusId;
+    private String srvFilterPrvChgDt;
+    private String srvFilterPriod;
+    private String code;
+    private String c5;
+    private String c6;
+    private String expiredateint;
+    private String todaydateint;
 
     public int getSvmQuotId() {
         return svmQuotId;
@@ -122,5 +150,213 @@ public class eSVMApiDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getStkId() {
+        return stkId;
+    }
+
+    public void setStkId(int stkId) {
+        this.stkId = stkId;
+    }
+
+    public String getOrdNo() {
+        return ordNo;
+    }
+
+    public void setOrdNo(String ordNo) {
+        this.ordNo = ordNo;
+    }
+
+    public String getNric() {
+        return nric;
+    }
+
+    public void setNric(String nric) {
+        this.nric = nric;
+    }
+
+    public String getOrdOtdstnd() {
+        return ordOtdstnd;
+    }
+
+    public void setOrdOtdstnd(String ordOtdstnd) {
+        this.ordOtdstnd = ordOtdstnd;
+    }
+
+    public String getAsOtstnd() {
+        return asOtstnd;
+    }
+
+    public void setAsOtstnd(String asOtstnd) {
+        this.status = asOtstnd;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getStkName() {
+        return stkName;
+    }
+
+    public void setStkName(String stkName) {
+        this.stkName = stkName;
+    }
+
+    public String getMemExprDate() {
+        return memExprDate;
+    }
+
+    public void setMemExprDate(String memExprDate) {
+        this.memExprDate = memExprDate;
+    }
+
+    public int getExpint() {
+        return expint;
+    }
+
+    public void setExpint(int expint) {
+        this.expint = expint;
+    }
+
+    public String getCoolingPrd() {
+        return coolingPrd;
+    }
+
+    public void setCoolingPrd(String coolingPrd) {
+        this.coolingPrd = coolingPrd;
+    }
+
+    public String getHsFreq() {
+        return hsFreq;
+    }
+
+    public void setHsFreq(String hsFreq) {
+        this.hsFreq = hsFreq;
+    }
+
+    public String getTrm() {
+        return trm;
+    }
+
+    public void setTrm(String trm) {
+        this.trm = trm;
+    }
+
+    public int getSrvFilterId() {
+        return srvFilterId;
+    }
+
+    public void setSrvFilterId(int srvFilterId) {
+        this.srvFilterId = srvFilterId;
+    }
+
+    public int getSrvFilterStkId() {
+        return srvFilterStkId;
+    }
+
+    public void setSrvFilterStkId(int srvFilterStkId) {
+        this.srvFilterStkId = srvFilterStkId;
+    }
+
+    public String getStkCode() {
+        return stkCode;
+    }
+
+    public void setStkCode(String stkCode) {
+        this.stkCode = stkCode;
+    }
+
+    public String getStkDesc() {
+        return stkDesc;
+    }
+
+    public void setStkDesc(String stkDesc) {
+        this.stkDesc = stkDesc;
+    }
+
+    public String getC2() {
+        return c2;
+    }
+
+    public void setC2(String c2) {
+        this.c2 = c2;
+    }
+
+    public String getC3() {
+        return c3;
+    }
+
+    public void setC3(String c3) {
+        this.c3 = c3;
+    }
+
+    public String getSrvFilterStusId() {
+        return srvFilterStusId;
+    }
+
+    public void setSrvFilterStusId(String srvFilterStusId) {
+        this.srvFilterStusId = srvFilterStusId;
+    }
+
+    public String getSrvFilterPrvChgDt() {
+        return srvFilterPrvChgDt;
+    }
+
+    public void setSrvFilterPrvChgDt(String srvFilterPrvChgDt) {
+        this.srvFilterPrvChgDt = srvFilterPrvChgDt;
+    }
+
+    public String getSrvFilterPriod() {
+        return srvFilterPriod;
+    }
+
+    public void setSrvFilterPriod(String srvFilterPriod) {
+        this.srvFilterPriod = srvFilterPriod;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getC5() {
+        return c5;
+    }
+
+    public void setC5(String c5) {
+        this.c5 = c5;
+    }
+
+    public String getC6() {
+        return c6;
+    }
+
+    public void setC6(String c6) {
+        this.c6 = c6;
+    }
+
+    public String getExpiredateint() {
+        return expiredateint;
+    }
+
+    public void setExpiredateint(String expiredateint) {
+        this.expiredateint = expiredateint;
+    }
+
+    public String getTodaydateint() {
+        return todaydateint;
+    }
+
+    public void setTodaydateint(String todaydateint) {
+        this.trm = todaydateint;
     }
 }
