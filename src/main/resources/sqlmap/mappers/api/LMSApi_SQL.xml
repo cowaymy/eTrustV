@@ -4,8 +4,8 @@
 
 <!--
 **************************************
- * Author                  Date                    Remark
- * Chew Kah Kit        2020/12/18           API for Ecommerce
+ * Date                Author         Description
+ * 2021. 08. 19.    MY-HLTANG   API for LMS
 **************************************
  -->
 
@@ -99,5 +99,11 @@
         ]]>
 
     </select>
+
+
+<select id="cntCourseCheck" parameterType="Map" resultType="integer">
+        SELECT
+        COUNT(*) cnt FROM MSC0008D WHERE COURS_CODE = #{coursCode}
+</select>
 
 </mapper>

@@ -126,10 +126,11 @@ public class CommonApiServiceImpl extends EgovAbstractServiceImpl implements Com
       data.put("code", code);
       data.put("message", msg);
       data.put("status", (code.equals("200")||code.equals("201"))?AppConstants.DESC_SUCCESS:AppConstants.DESC_FAILED);
-      data.put("data", respPrm);
+      if(respPrm != null && !respPrm.isEmpty()){
+    	  data.put("data", respPrm);
+      }
 
-
-    return data;
+      return data;
   }
 
   @Override

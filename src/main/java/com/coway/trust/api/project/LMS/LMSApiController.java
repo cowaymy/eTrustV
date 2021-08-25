@@ -37,7 +37,7 @@ import org.json.JSONObject;
  *                              <pre>
  * Date                Author         Description
  * -------------       -----------      -------------
- * 2020. 12. 16.    MY-KAHKIT   First creation
+ * 2021. 08. 19.    MY-HLTANG   First creation
  *                              </pre>
  */
 

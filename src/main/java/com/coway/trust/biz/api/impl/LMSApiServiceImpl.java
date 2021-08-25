@@ -12,7 +12,7 @@ import java.util.Locale;
 
 /**************************************
  * Author                  Date                    Remark
- * Chew Kah Kit        2020/12/16           API for Common
+ * Tang Hui Ling        2021/08/19           API for LMS
  ***************************************/
 
 import java.util.Map;
@@ -128,43 +128,71 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
         reqPrm.put("apiUserId", apiUserId);
         reqPrm.put("sysUserId", sysUserId);
 
-        //course info
-        Map<String, Object> courseInfo = new HashMap<String, Object>();
-        int coursId = trainingService.selectNextCoursId();
+        //validation
+        String courseTitle = p.getCourseTitle().toString();
+        String codeId = p.getCourseType().toString();
+        String coursCode = p.getCourseCode().toString();
+        String coursLoc = p.getCourseLocation().toString();
+        String coursStart = p.getCourseStartDt().toString();
+        String coursEnd = p.getCourseEndDt().toString();
+        String coursLimit = String.valueOf(p.getCourseLimit());
+        String courseClsDt = p.getCourseCloseDt().toString();
+        String memType = String.valueOf(p.getMemberType());
 
-        courseInfo.put("coursId", coursId);
-        courseInfo.put("coursName", p.getCourseTitle());
-        courseInfo.put("codeId", p.getCourseType());
-        courseInfo.put("coursCode", p.getCourseCode());
-        courseInfo.put("coursLoc", p.getCourseLocation());
-        courseInfo.put("coursStart", p.getCourseStartDt());
-        courseInfo.put("coursEnd", p.getCourseEndDt());
-        courseInfo.put("coursLimit", p.getCourseLimit());
-        courseInfo.put("courseClsDt", p.getCourseCloseDt());
-        courseInfo.put("userId", reqPrm.get("sysUserId").toString());
+        if (!StringUtils.isBlank(courseTitle) ){
+        	Map<String, Object> selectCourseId = new HashMap<String, Object>();
+            selectCourseId.put("coursCode", p.getCourseCode());
+            int isExist = lmsApiMapper.cntCourseCheck(selectCourseId);
 
-//        String isMem = "";
-//        if(("Y").equals(p.getIsMember())){
-//        	isMem= "2318";
-//        }
-//        else if(("N").equals(p.getIsMember())){
-//        	isMem= "2319";
-//        }
-        courseInfo.put("generalCode", "2318");
-        courseInfo.put("memType", p.getMemberType());
-        courseInfo.put("attendance", "2315");//EDU team
+        	if(isExist > 0){
+        		code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+  	          	message = AppConstants.RESPONSE_DESC_DUP;
+        	}
+        	else{
+        		if ( !StringUtils.isBlank(codeId) || !StringUtils.isBlank(coursCode) || !StringUtils.isBlank(coursLoc) || !StringUtils.isBlank(coursStart)
+                		|| !StringUtils.isBlank(coursEnd) || !StringUtils.isBlank(coursLimit) || !StringUtils.isBlank(courseClsDt) || !StringUtils.isBlank(memType)){
+                	//course info
+                    Map<String, Object> courseInfo = new HashMap<String, Object>();
+                    int coursId = trainingService.selectNextCoursId();
 
-        trainingMapper.insertCourse(courseInfo);
+                    courseInfo.put("coursId", coursId);
+                    courseInfo.put("coursName", courseTitle);
+                    courseInfo.put("codeId", codeId);
+                    courseInfo.put("coursCode", coursCode);
+                    courseInfo.put("coursLoc", coursLoc);
+                    courseInfo.put("coursStart", coursStart);
+                    courseInfo.put("coursEnd", coursEnd);
+                    courseInfo.put("coursLimit", coursLimit);
+                    courseInfo.put("courseClsDt", courseClsDt);
+                    courseInfo.put("userId", reqPrm.get("sysUserId").toString());
 
-        created = 1;
-      }
-      if(created > 0){
-          code = String.valueOf(AppConstants.RESPONSE_CODE_CREATED);
-          message = AppConstants.RESPONSE_DESC_CREATED;
-        }else{
-          code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
-          message = AppConstants.RESPONSE_DESC_INVALID;
+//                    String isMem = "";
+//                    if(("Y").equals(p.getIsMember())){
+//                    	isMem= "2318";
+//                    }
+//                    else if(("N").equals(p.getIsMember())){
+//                    	isMem= "2319";
+//                    }
+                    courseInfo.put("generalCode", "2318");
+                    courseInfo.put("memType", memType);
+                    courseInfo.put("attendance", "2315");//EDU team
+
+                    trainingMapper.insertCourse(courseInfo);
+
+                    created = 1;
+                }
+
+        		if(created > 0){
+    	          code = String.valueOf(AppConstants.RESPONSE_CODE_CREATED);
+    	          message = AppConstants.RESPONSE_DESC_CREATED;
+    	        }else{
+    	          code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+    	          message = AppConstants.RESPONSE_DESC_INVALID;
+    	        }
+        	}
         }
+      }
+
     } catch(Exception e){
       code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
       message = StringUtils.substring(e.getMessage(), 0, 4000);
@@ -212,55 +240,63 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
         Map<String, Object> courseInfo = new HashMap<String, Object>();
         Map<String, Object> selectCourseId = new HashMap<String, Object>();
         selectCourseId.put("coursCode", p.getCourseCode());
-        EgovMap codeId = lmsApiMapper.selectCourseId(selectCourseId);
 
-        courseInfo.put("coursId", codeId.get("coursId").toString());
-        if(p.getCourseTitle() !=null && !p.getCourseTitle().isEmpty()){
-        	courseInfo.put("coursName", p.getCourseTitle());
-        }
-        if(p.getCourseType() !=null && !p.getCourseType().isEmpty()){
-        	courseInfo.put("codeId", p.getCourseType());
-        }
-        //courseInfo.put("coursCode", p.getCourseCode());
-        if(p.getCourseLocation() !=null && !p.getCourseLocation().isEmpty()){
-        	courseInfo.put("coursLoc", p.getCourseLocation());
-        }
-        if(p.getCourseStartDt() !=null && !p.getCourseStartDt().isEmpty()){
-        	courseInfo.put("coursStart", p.getCourseStartDt());
-        }
-        if(p.getCourseEndDt() !=null && !p.getCourseEndDt().isEmpty()){
-        	courseInfo.put("coursEnd", p.getCourseEndDt());
-        }
-        if(String.valueOf(p.getCourseLimit()) !=null && !String.valueOf(p.getCourseLimit()).isEmpty()){
-        	courseInfo.put("coursLimit", p.getCourseLimit());
-        }
-        if(p.getCourseCloseDt() !=null && !p.getCourseCloseDt().isEmpty()){
-        	courseInfo.put("courseClsDt", p.getCourseCloseDt());
-        }
-        if(String.valueOf(p.getCourseStatus()) !=null && !String.valueOf(p.getCourseStatus()).isEmpty()){
-        	courseInfo.put("stusCodeId", p.getCourseStatus());
-        }
+        //validation
+        String coursCode = p.getCourseCode().toString();
+        if (!StringUtils.isBlank(coursCode) ){
+        	int isExist = lmsApiMapper.cntCourseCheck(selectCourseId);
 
-        courseInfo.put("userId", reqPrm.get("sysUserId").toString());
+        	if(isExist > 0){
+        		EgovMap codeId = lmsApiMapper.selectCourseId(selectCourseId);
 
-//        String isMem = "";
-//        if(("Y").equals(p.getIsMember())){
-//        	isMem= "2318";
-//        }
-//        else if(("N").equals(p.getIsMember())){
-//        	isMem= "2319";
-//        }
-//        courseInfo.put("generalCode", "2318");
+                courseInfo.put("coursId", codeId.get("coursId").toString());
+                if(p.getCourseTitle() !=null && !p.getCourseTitle().isEmpty()){
+                	courseInfo.put("coursName", p.getCourseTitle());
+                }
+                if(p.getCourseType() !=null && !p.getCourseType().isEmpty()){
+                	courseInfo.put("codeId", p.getCourseType());
+                }
+                //courseInfo.put("coursCode", p.getCourseCode());
+                if(p.getCourseLocation() !=null && !p.getCourseLocation().isEmpty()){
+                	courseInfo.put("coursLoc", p.getCourseLocation());
+                }
+                if(p.getCourseStartDt() !=null && !p.getCourseStartDt().isEmpty()){
+                	courseInfo.put("coursStart", p.getCourseStartDt());
+                }
+                if(p.getCourseEndDt() !=null && !p.getCourseEndDt().isEmpty()){
+                	courseInfo.put("coursEnd", p.getCourseEndDt());
+                }
+                if(String.valueOf(p.getCourseLimit()) !=null && !String.valueOf(p.getCourseLimit()).isEmpty()){
+                	courseInfo.put("coursLimit", p.getCourseLimit());
+                }
+                if(p.getCourseCloseDt() !=null && !p.getCourseCloseDt().isEmpty()){
+                	courseInfo.put("courseClsDt", p.getCourseCloseDt());
+                }
+                if(String.valueOf(p.getCourseStatus()) !=null && !String.valueOf(p.getCourseStatus()).isEmpty()){
+                	courseInfo.put("stusCodeId", p.getCourseStatus());
+                }
 
-        if(String.valueOf(p.getMemberType()) !=null && !String.valueOf(p.getMemberType()).isEmpty()){
-        	courseInfo.put("memType", p.getMemberType());
+                courseInfo.put("userId", reqPrm.get("sysUserId").toString());
+
+//                String isMem = "";
+//                if(("Y").equals(p.getIsMember())){
+//                	isMem= "2318";
+//                }
+//                else if(("N").equals(p.getIsMember())){
+//                	isMem= "2319";
+//                }
+//                courseInfo.put("generalCode", "2318");
+
+                if(String.valueOf(p.getMemberType()) !=null && !String.valueOf(p.getMemberType()).isEmpty()){
+                	courseInfo.put("memType", p.getMemberType());
+                }
+                courseInfo.put("attendance", 2315);//EDU team
+
+                trainingMapper.updateCourse(courseInfo);
+
+                created = 1;
+        	}
         }
-        courseInfo.put("attendance", 2315);//EDU team
-
-        trainingMapper.updateCourse(courseInfo);
-
-        created = 1;
-
       }
 
       if(created > 0){
@@ -505,44 +541,37 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 		Date endDay      = sfd.parse(endDateString);
 
 		if(currentDay.before(startDay) || currentDay.after(endDay)){
-				selectHpBillNo =getDocNo("5");
+			selectHpBillNo =getDocNo("5");
 
-//				logger.debug("selectHpBillNo : {}",selectHpBillNo);
-				hpBillNo=(String)selectHpBillNo.get("docNo");
-				int hPBillID=5;
-				String nextDocNo = getNextDocNo("HPB", selectHpBillNo.get("c1").toString());
-//				logger.debug("nextDocNo : {}",nextDocNo);
-				selectHpBillNo.put("nextDocNo", nextDocNo);
-//				logger.debug("selectHpBillNo : {}",selectHpBillNo);
-				if(Integer.parseInt(selectHpBillNo.get("docNoId").toString()) == hPBillID){
-//					logger.debug("update 문 탈 예정");
-					memberListMapper.updateDocNo(selectHpBillNo);
-				}
-				params.put("hpBillNo", hpBillNo);
+			hpBillNo=(String)selectHpBillNo.get("docNo");
+			int hPBillID=5;
+			String nextDocNo = getNextDocNo("HPB", selectHpBillNo.get("c1").toString());
+			selectHpBillNo.put("nextDocNo", nextDocNo);
+			if(Integer.parseInt(selectHpBillNo.get("docNoId").toString()) == hPBillID){
+				memberListMapper.updateDocNo(selectHpBillNo);
+			}
+			params.put("hpBillNo", hpBillNo);
 
-				Map<String, Object> accBill = new HashMap<String, Object>();
-				accBill.put("billId", 0);
-				accBill.put("billINo", hpBillNo);
-				accBill.put("billTypeId", 222);
-				accBill.put("billSOID", 0);
-				accBill.put("billMemId", MemberId);
-				accBill.put("billASID", 0);
-				accBill.put("billPayTypeId", 224);
-				accBill.put("billMemberShipNo", "");
-				accBill.put("billDate", new Date());
-				accBill.put("billAmt", 120);
-				accBill.put("billRemark", "");
-				accBill.put("billIsPaid", false);
-				accBill.put("billIsComm", true);
-				accBill.put("updator", params.get("updator"));
-				accBill.put("updated", new Date());
-				accBill.put("syncCheck", true);
-				accBill.put("courseId", 0);
-				accBill.put("statusId", 1);
-
-//				logger.debug("accBill : {}",accBill);
-				memberListMapper.insertAccBill(accBill);
-
+			Map<String, Object> accBill = new HashMap<String, Object>();
+			accBill.put("billId", 0);
+			accBill.put("billINo", hpBillNo);
+			accBill.put("billTypeId", 222);
+			accBill.put("billSOID", 0);
+			accBill.put("billMemId", MemberId);
+			accBill.put("billASID", 0);
+			accBill.put("billPayTypeId", 224);
+			accBill.put("billMemberShipNo", "");
+			accBill.put("billDate", new Date());
+			accBill.put("billAmt", 120);
+			accBill.put("billRemark", "");
+			accBill.put("billIsPaid", false);
+			accBill.put("billIsComm", true);
+			accBill.put("updator", params.get("updator"));
+			accBill.put("updated", new Date());
+			accBill.put("syncCheck", true);
+			accBill.put("courseId", 0);
+			accBill.put("statusId", 1);
+			memberListMapper.insertAccBill(accBill);
 
   			//AccOrderBill Save
   			Map<String, Object> accOrderBill = new HashMap<String, Object>();
@@ -558,7 +587,6 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
   			accOrderBill.put("accBillAdjustmentId", 0);
   			accOrderBill.put("accBillScheduleAmount", 120);
   			accOrderBill.put("accBillAdjustmentAmount", 0);
-  			//accOrderBill.put("accBillTaxesAmount",String.format("%.2f", 120 - ((120) * 100 / (double)106))); -- without GST 6% edited by TPY 24/05/2018
   			accOrderBill.put("accBillTaxesAmount",0);
   			accOrderBill.put("accBillNetAmount", String.format("%.2f",(double)120));
   			accOrderBill.put("accBillStatus", 1);
@@ -567,12 +595,10 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
   			accOrderBill.put("accBillCreateBy", params.get("creator"));
   			accOrderBill.put("accBillGroupId", 0);
   			accOrderBill.put("accBillTaxCodeId", 32);
-  			//accOrderBill.put("accBillTaxRate", 6); -- without GST 6% edited by TPY 24/05/2018
   			accOrderBill.put("accBillTaxRate", 0);
   			accOrderBill.put("accBillAcctConversion", 0);
   			accOrderBill.put("accBillContractId", 0);
 
-//  			logger.debug("accOrderBill : {}",accOrderBill);
   			 memberListMapper.insertAccOrderBill(accOrderBill);
 
   			//GST 2015-01-06
@@ -582,105 +608,96 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
   			EgovMap org001dInfo = null;
   			org001dInfo = memberListMapper.selectORG001DInfo(MemberId) ;
 
-  			//if (org001dInfo != null) {
-
-//  				logger.debug("org001dInfo : {}",org001dInfo);
-
-  				Map<String, Object> selectMiscValue = new HashMap<String, Object>();
-  				selectMiscValue.put("memberId", MemberId);
-  				selectMiscValue.put("memberName", org001dInfo.get("memberNm"));
-  				selectMiscValue.put("membetFullName", org001dInfo.get("fulllName"));
-  				selectMiscValue.put("address1", org001dInfo.get("address1"));
-  				selectMiscValue.put("address2", org001dInfo.get("address2"));
-  				selectMiscValue.put("address3", org001dInfo.get("address3"));
-  				selectMiscValue.put("address4", org001dInfo.get("address4"));
-  				selectMiscValue.put("memberNirc", org001dInfo.get("nric"));
+			Map<String, Object> selectMiscValue = new HashMap<String, Object>();
+			selectMiscValue.put("memberId", MemberId);
+			selectMiscValue.put("memberName", org001dInfo.get("memberNm"));
+			selectMiscValue.put("membetFullName", org001dInfo.get("fulllName"));
+			selectMiscValue.put("address1", org001dInfo.get("address1"));
+			selectMiscValue.put("address2", org001dInfo.get("address2"));
+			selectMiscValue.put("address3", org001dInfo.get("address3"));
+			selectMiscValue.put("address4", org001dInfo.get("address4"));
+			selectMiscValue.put("memberNirc", org001dInfo.get("nric"));
 
 
-  				EgovMap selectMiscList = null;
-  				selectMiscList = memberListMapper.selectMiscList(selectMiscValue) ;
+			EgovMap selectMiscList = null;
+			selectMiscList = memberListMapper.selectMiscList(selectMiscValue) ;
 
-  				if(selectMiscList != null){
-  					Map<String, Object>  InvMISC = new HashMap<String, Object>();
+			if(selectMiscList != null){
+				Map<String, Object>  InvMISC = new HashMap<String, Object>();
 
-  					InvMISC.put("taxInvoiceRefNo", selectInvoiceNo.get("docNo"));
-  					InvMISC.put("taxInvoiceRefDate", new Date());
-  					InvMISC.put("taxInvoiceServiceNo",memberCode);
-  					InvMISC.put("taxInvoiceType", 117);
-  					InvMISC.put("taxInvoiceCustName",selectMiscList.get("c1"));
-  					InvMISC.put("taxInvoiceContactPerson",selectMiscList.get("c1"));
-  					InvMISC.put("taxInvoiceAddress1",selectMiscList.get("c3"));
-  					InvMISC.put("taxInvoiceAddress2",selectMiscList.get("c4"));
-  					InvMISC.put("taxInvoiceAddress3",selectMiscList.get("c5"));
-  					InvMISC.put("taxInvoiceAddress4",selectMiscList.get("c6"));
-  					InvMISC.put("taxInvoicePostCode",selectMiscList.get("postCode"));
-  					InvMISC.put("taxInvoiceStateName",selectMiscList.get("name"));
-  					InvMISC.put("taxInvoiceCountry",selectMiscList.get("name1"));
-  					InvMISC.put("taxInvoiceTaskID",0);
-  					InvMISC.put("taxInvoiceRemark","");
-  					//InvMISC.put("taxInvoiceCharges",String.format("%.2f",(double)120.00 * 100 / 106)); -- without GST 6% edited by TPY 24/05/2018
-  					//InvMISC.put("taxInvoiceTaxes",String.format("%.2f",(120 - ((double)120.00 * 100 / 106)))); -- without GST 6% edited by TPY 24/05/2018
-  					InvMISC.put("taxInvoiceCharges",120);
-  					InvMISC.put("taxInvoiceTaxes",0);
-  					InvMISC.put("taxInvoiceAmountDue",String.format("%.2f",(double)120));
-  					InvMISC.put("taxInvoiceCreated",new Date());
-  					InvMISC.put("areaId",selectMiscList.get("areaId"));
-  					InvMISC.put("addrDtl",selectMiscList.get("addrDtl"));
-  					InvMISC.put("street",selectMiscList.get("street"));
-  					InvMISC.put("taxInvoiceCreator",Integer.parseInt(params.get("creator").toString()));
+				InvMISC.put("taxInvoiceRefNo", selectInvoiceNo.get("docNo"));
+				InvMISC.put("taxInvoiceRefDate", new Date());
+				InvMISC.put("taxInvoiceServiceNo",memberCode);
+				InvMISC.put("taxInvoiceType", 117);
+				InvMISC.put("taxInvoiceCustName",selectMiscList.get("c1"));
+				InvMISC.put("taxInvoiceContactPerson",selectMiscList.get("c1"));
+				InvMISC.put("taxInvoiceAddress1",selectMiscList.get("c3"));
+				InvMISC.put("taxInvoiceAddress2",selectMiscList.get("c4"));
+				InvMISC.put("taxInvoiceAddress3",selectMiscList.get("c5"));
+				InvMISC.put("taxInvoiceAddress4",selectMiscList.get("c6"));
+				InvMISC.put("taxInvoicePostCode",selectMiscList.get("postCode"));
+				InvMISC.put("taxInvoiceStateName",selectMiscList.get("name"));
+				InvMISC.put("taxInvoiceCountry",selectMiscList.get("name1"));
+				InvMISC.put("taxInvoiceTaskID",0);
+				InvMISC.put("taxInvoiceRemark","");
+				//InvMISC.put("taxInvoiceCharges",String.format("%.2f",(double)120.00 * 100 / 106)); -- without GST 6% edited by TPY 24/05/2018
+				//InvMISC.put("taxInvoiceTaxes",String.format("%.2f",(120 - ((double)120.00 * 100 / 106)))); -- without GST 6% edited by TPY 24/05/2018
+				InvMISC.put("taxInvoiceCharges",120);
+				InvMISC.put("taxInvoiceTaxes",0);
+				InvMISC.put("taxInvoiceAmountDue",String.format("%.2f",(double)120));
+				InvMISC.put("taxInvoiceCreated",new Date());
+				InvMISC.put("areaId",selectMiscList.get("areaId"));
+				InvMISC.put("addrDtl",selectMiscList.get("addrDtl"));
+				InvMISC.put("street",selectMiscList.get("street"));
+				InvMISC.put("taxInvoiceCreator",Integer.parseInt(params.get("creator").toString()));
 
-//  					logger.debug("InvMISC : {}",InvMISC);
-  					memberListMapper.insertInvMISC(InvMISC);
+				memberListMapper.insertInvMISC(InvMISC);
 
-  					EgovMap selectOrganization = null;
-  					selectOrganization = memberListMapper.selectOrganization(params);
+				EgovMap selectOrganization = null;
+				selectOrganization = memberListMapper.selectOrganization(params);
 
-  					CodeMap.put("code", "tax");
-  					String taxInvId = memberListMapper.selectMemberId(CodeMap);
-  					Map<String, Object>  InvMISCD = new HashMap<String, Object>();
-  					InvMISCD.put("taxInvoiceID",taxInvId );//위에 insert할때 값 가져와서 넣어줘야함
-  					InvMISCD.put("invoiceItemType",  1260);
-  					InvMISCD.put("invoiceItemOrderNo", "");
-  					InvMISCD.put("invoiceItemPONo", "");
-  					InvMISCD.put("invoiceItemCode", selectOrganization.get("deptCode"));
-  					InvMISCD.put("invoiceItemDescription1",selectMiscList.get("c1"));
-  					InvMISCD.put("invoiceItemDescription2",selectMiscList.get("c7"));
-  					InvMISCD.put("invoiceItemSerialNo","");
-  					InvMISCD.put("invoiceItemQuantity",1);
-  					//InvMISCD.put("invoiceItemGSTRate",6); -- without GST 6% edited by TPY 24/05/2018
-  					//InvMISCD.put("invoiceItemGSTTaxes",String.format("%.2f",(120 - ((double)120.00 * 100 / 106)))); -- without GST 6% edited by TPY 24/05/2018
-  					//InvMISCD.put("invoiceItemCharges",String.format("%.2f",((double)120.00) * 100 / 106)); -- without GST 6% edited by TPY 24/05/2018
-  					InvMISCD.put("invoiceItemGSTRate",0);
-  					InvMISCD.put("invoiceItemGSTTaxes",0);
-  					InvMISCD.put("invoiceItemCharges",120);
-  					InvMISCD.put("invoiceItemAmountDue",String.format("%.2f",(double)120));
-  					InvMISCD.put("invoiceItemAdd1","");
-  					InvMISCD.put("invoiceItemAdd2","");
-  					InvMISCD.put("invoiceItemAdd3","");
-  					InvMISCD.put("invoiceItemPostCode","");
-  					InvMISCD.put("invoiceItemStateName","");
-  					InvMISCD.put("invoiceItemCountry","");
-  					InvMISCD.put("invoiceItemBillRefNo","");
-  					InvMISCD.put("areaId",selectMiscList.get("areaId"));
-  					InvMISCD.put("addrDtl",selectMiscList.get("addrDtl"));
-  					InvMISCD.put("street",selectMiscList.get("street"));
+				CodeMap.put("code", "tax");
+				String taxInvId = memberListMapper.selectMemberId(CodeMap);
+				Map<String, Object>  InvMISCD = new HashMap<String, Object>();
+				InvMISCD.put("taxInvoiceID",taxInvId );//위에 insert할때 값 가져와서 넣어줘야함
+				InvMISCD.put("invoiceItemType",  1260);
+				InvMISCD.put("invoiceItemOrderNo", "");
+				InvMISCD.put("invoiceItemPONo", "");
+				InvMISCD.put("invoiceItemCode", selectOrganization.get("deptCode"));
+				InvMISCD.put("invoiceItemDescription1",selectMiscList.get("c1"));
+				InvMISCD.put("invoiceItemDescription2",selectMiscList.get("c7"));
+				InvMISCD.put("invoiceItemSerialNo","");
+				InvMISCD.put("invoiceItemQuantity",1);
+				//InvMISCD.put("invoiceItemGSTRate",6); -- without GST 6% edited by TPY 24/05/2018
+				//InvMISCD.put("invoiceItemGSTTaxes",String.format("%.2f",(120 - ((double)120.00 * 100 / 106)))); -- without GST 6% edited by TPY 24/05/2018
+				//InvMISCD.put("invoiceItemCharges",String.format("%.2f",((double)120.00) * 100 / 106)); -- without GST 6% edited by TPY 24/05/2018
+				InvMISCD.put("invoiceItemGSTRate",0);
+				InvMISCD.put("invoiceItemGSTTaxes",0);
+				InvMISCD.put("invoiceItemCharges",120);
+				InvMISCD.put("invoiceItemAmountDue",String.format("%.2f",(double)120));
+				InvMISCD.put("invoiceItemAdd1","");
+				InvMISCD.put("invoiceItemAdd2","");
+				InvMISCD.put("invoiceItemAdd3","");
+				InvMISCD.put("invoiceItemPostCode","");
+				InvMISCD.put("invoiceItemStateName","");
+				InvMISCD.put("invoiceItemCountry","");
+				InvMISCD.put("invoiceItemBillRefNo","");
+				InvMISCD.put("areaId",selectMiscList.get("areaId"));
+				InvMISCD.put("addrDtl",selectMiscList.get("addrDtl"));
+				InvMISCD.put("street",selectMiscList.get("street"));
 
-//  					logger.debug("InvMISCD : {}",InvMISCD);
-  					memberListMapper.insertInvMISCD(InvMISCD);
+				memberListMapper.insertInvMISCD(InvMISCD);
 
-
-  					accOrderBill.put("accBillRemark",selectInvoiceNo.get("docNo"));
-  					memberListMapper.updateBillRem(accOrderBill);
-  				}
-				}
+				accOrderBill.put("accBillRemark",selectInvoiceNo.get("docNo"));
+				memberListMapper.updateBillRem(accOrderBill);
+			}
+		}
 
 		// SP_DAY_USER_CRT 프로시저 호출
 		Map<String, Object>  userPram = new HashMap<String, Object>();
 		userPram.put("IN_MEMCODE", memberCode);
-//		logger.debug("SP_DAY_USER_CRT 프로시저 호출 PRAM ===>"+ userPram.toString());
 		memberListMapper.SP_DAY_USER_CRT(userPram);
 		userPram.put("P_STATUS", userPram.get("p1"));
-//		logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" +userPram);
 
 		//call sms
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
@@ -695,16 +712,10 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 		Map<String, Object> userInfo = new HashMap<String, Object>();
 		userInfo.put("memberId", MemberId);
 		userInfo.put("src", "member");
-
 		EgovMap hpCtc = new EgovMap();
 		hpCtc = memberListMapper.getHPCtc(userInfo);
 
 		smsInfo.put("rTelNo", hpCtc.get("mobile"));
-//		ASManagementListController as = new ASManagementListController();
-//		HttpServletRequest request = null;
-//		ModelMap model = new ModelMap();
-//		as.sendSMS(smsInfo, request, model, sessionVO);
-//		AdaptorService adaptorService = null;
 
 		SmsVO sms = new SmsVO(userId, 975);
 	    sms.setMessage(CommonUtils.nvl(smsInfo.get("msg")));
@@ -718,7 +729,6 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 		int tmp = Integer.parseInt(docNoId);
 		String docNo = "";
 		EgovMap selectDocNo = memberListMapper.selectDocNo(docNoId);
-//		logger.debug("selectDocNo : {}",selectDocNo);
 		String prefix = "";
 
 		if(Integer.parseInt((String) selectDocNo.get("docNoId").toString()) == tmp){
@@ -729,8 +739,6 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 				prefix = "";
 			}
 			docNo = prefix.trim()+(String) selectDocNo.get("c1");
-			//prefix = (selectDocNo.get("c2")).toString();
-//			logger.debug("prefix : {}",prefix);
 			selectDocNo.put("docNo", docNo);
 			selectDocNo.put("prefix", prefix);
 		}
@@ -753,16 +761,11 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 				docNo = docNo.replace(prefixNo, "");
 
 				docNo.substring(2);
-//				logger.debug(">>>>>>>>>docNo >>>>>>>>>>>>>>>>>>>>>>>>" +docNo );
-//				logger.debug(">>>>>>>>>docNo >>>>>>>>>>>>>>>>>>>>>>>>" +docNo.substring(2) );
 			}
 		}
 
-//		logger.debug(">>>>>>>>>docNo >>>>>>>>>>>>>>>>>>>>>>>>" +docNo );
-
 		int nextNo = Integer.parseInt(docNo) + 1;
 		nextDocNo = String.format("%0"+docNoLength+"d", nextNo);
-//		logger.debug("nextDocNo : {}",nextDocNo);
 		return nextDocNo;
 	}
 
@@ -770,18 +773,15 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 		int tmp = Integer.parseInt(docNoId);
 		String docNo = "";
 		EgovMap selectDocNo = memberListMapper.selectDocNo(docNoId);
-//		logger.debug("selectDocNo : {}",selectDocNo);
 
 		if(docNoId.equals("130") && Integer.parseInt((String) selectDocNo.get("docNoId").toString()) == tmp){
 			docNo = (String) selectDocNo.get("c2")+(String) selectDocNo.get("c1");
-//			logger.debug("docNo : {}",docNo);
 			selectDocNo.put("docNo", docNo);
 		}
 		return selectDocNo;
 	}
 	public void updateDocNoNumber(String docNoId){//코드값에 따라 자리수 다르게
 		EgovMap selectDocNoNumber = memberListMapper.selectDocNo(docNoId);
-//		logger.debug("selectDocNoNumber : {}",selectDocNoNumber);
 		int nextDocNoNumber = Integer.parseInt((String)selectDocNoNumber.get("c1")) + 1;
 		String nextDocNo="";
 		if(docNoId.equals("145") || docNoId.equals("12")){
@@ -790,7 +790,6 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 		nextDocNo = String.format("%08d", nextDocNoNumber);
 		}
 		selectDocNoNumber.put("nextDocNo", nextDocNo);
-//		logger.debug("selectDocNoNumber last : {}",selectDocNoNumber);
 		memberListMapper.updateDocNo(selectDocNoNumber);
 	}
 }

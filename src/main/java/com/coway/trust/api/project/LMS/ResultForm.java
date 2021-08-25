@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModel;
  * <pre>
  * Date             Author          Description
  * -------------    -----------     -------------
- * 2020. 12. 17.    MY-KAHKIT   First creation
+ * 2021. 08. 19.    MY-HLTANG   First creation
  * </pre>
  */
 @ApiModel(value = "ResultForm", description = "ResultForm")

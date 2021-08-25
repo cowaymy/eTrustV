@@ -1,5 +1,11 @@
 package com.coway.trust.biz.organization.organization.impl;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -18,6 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.project.LMS.LMSApiForm;
+import com.coway.trust.api.project.LMS.LMSApiRespForm;
+import com.coway.trust.biz.api.CommonApiService;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.organization.organization.vo.DocSubmissionVO;
 import com.coway.trust.biz.organization.organization.vo.MemberListVO;
@@ -26,6 +35,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.organization.organization.MemberListController;
+import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -255,6 +265,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
                 memCode = doSaveMember(params, docType);
 
             }
+
+            if(memCode !=null && !memCode.isEmpty()){
+            	String memid = memberListMapper.getUserID(memCode);
+            	Map<String, Object> memMap = new HashMap<String, Object>();
+            	memMap.put("MemberID", memid);
+            	lmsMemberListInsertUpdate(memMap);
+            }
+
             return memCode;
         }
 
@@ -999,18 +1017,18 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				memberListMapper.insertinvWH(invWH);
 			}
 
-			if(params.get("memberType").toString().equals("5")  &&  !params.get("course").equals("")) {
-				if (params.get("traineeType1").toString().equals("2") || params.get("traineeType1").toString().equals("3") || params.get("traineeType1").toString().equals("7") || params.get("traineeType1").toString().equals("5758") ){ // ADDED HOMECARE AS TRAINEE TYPE -- BY TOMMY
-
-    					logger.debug("=============================================================================================================");
-    					logger.debug("=====================  memberType {}  traineeType {} ", params.get("memberType").toString(), params.get("traineeType").toString() );
-    					logger.debug("=============================================================================================================");
-
-						params.put("MemberId", MemberId);
-
-						memberListMapper.traineeInsertInfor(params);
-				}
-			}
+//			if(params.get("memberType").toString().equals("5")  &&  !params.get("course").equals("")) {
+//				if (params.get("traineeType1").toString().equals("2") || params.get("traineeType1").toString().equals("3") || params.get("traineeType1").toString().equals("7") || params.get("traineeType1").toString().equals("5758") ){ // ADDED HOMECARE AS TRAINEE TYPE -- BY TOMMY
+//
+//    					logger.debug("=============================================================================================================");
+//    					logger.debug("=====================  memberType {}  traineeType {} ", params.get("memberType").toString(), params.get("traineeType").toString() );
+//    					logger.debug("=============================================================================================================");
+//
+//						params.put("MemberId", MemberId);
+//
+//						memberListMapper.traineeInsertInfor(params);
+//				}
+//			}
 
 
 			success=true;
@@ -1295,6 +1313,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					resultValue.put("message", " Demote request successfully saved.<br />"
 		    				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
 				}
+
+				//call lms to update user details
+            	Map<String, Object> memMap = new HashMap<String, Object>();
+            	memMap.put("MemberID", params.get("requestMemberId").toString());
+            	lmsMemberListInsertUpdate(memMap);
+
 			}else{
 				resultValue.put("message", "<b>Failed to save. Please try again later.</b>");
 
@@ -1409,6 +1433,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         					memberListMapper.updateUser(selectUserName);
         				}
         			}
+
+        			//call lms to deactivate user
+                	Map<String, Object> memMap = new HashMap<String, Object>();
+                	memMap.put("username", selectMember.get("memCode").toString());
+                	lmsMemberListDeact(memMap);
         		}
         		if(Integer.parseInt(params.get("action").toString()) == 757){
     				resultValue.put("message", "Terminate request successfully saved.<br />"
@@ -1508,6 +1537,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         Map<String, Object> paramM = new HashMap<String, Object>();
         Map<String, Object> resultValue = new HashMap<String, Object>(); // 팝업 결과값 가져가는 map
 
+        String oldMemCode = params.get("memberCode").toString();
+        String epochStr = "";
+
         if("2".equals(params.get("traineeType"))) {
             try{
                 String joinDate = "";
@@ -1518,6 +1550,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
                 cal.setTime(cDt);
                 cal.add(Calendar.MONTH, 1);
 
+                long epoch = new SimpleDateFormat("yyyyddmm").parse(strDt).getTime();
+                epochStr = String.valueOf(epoch);
                 joinDate = new SimpleDateFormat("dd-MMM-yyyy").format(cal.getTime());
 
                 params.put("joinDt", joinDate);
@@ -1564,6 +1598,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         trDtls = (EgovMap) memberListMapper.getHPCtc(params);
 
         resultValue.put("telMobile", trDtls.get("mobile"));
+
+        //call LMS to update member code
+    	Map<String, Object> memMap = new HashMap<String, Object>();
+    	memMap.put("username",oldMemCode);
+    	memMap.put("newusername",paramM.get("memCode"));
+    	memMap.put("memberType",params.get("traineeType"));
+    	memMap.put("joinDt",epochStr);
+		lmsMemberListUpdateMemCode(memMap);
 
         return resultValue;
     }
@@ -1837,7 +1879,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			EgovMap selectOrganization = null;
 			if(a> 0){
 			    // 2021-04-07 - LaiKW - Insert MSC0009D for HP Orientation
-			    memberListMapper.insertHPorientation(params);
+			    //memberListMapper.insertHPorientation(params);
 
 				Map<String, Object> memOrg = new HashMap<String, Object>();
 				CodeMap.put("code", "mem");
@@ -2090,6 +2132,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	    			//}
 
+	    				//call LMS API create user
+	    				lmsMemberListInsertUpdate(params);
 			}
 
 		} else {
@@ -2595,5 +2639,177 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	public int updateOrgUserPW(Map<String, Object> params) {
 	    return memberListMapper.updateOrgUserPW(params);
+	}
+
+	@Override
+	public Map<String, Object> lmsMemberListInsertUpdate(Map<String, Object> params){
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		EgovMap selectMemListlms = memberListMapper.selectMemberListView(params);
+		List<EgovMap> selectcoursListlms = memberListMapper.selectTraining(params);
+
+		EgovMap MemListTolms = new EgovMap();
+
+		MemListTolms.put("secretkey","");
+		MemListTolms.put("username",selectMemListlms.get("memCode"));
+		MemListTolms.put("email",selectMemListlms.get("email"));
+		MemListTolms.put("firstname",selectMemListlms.get("name1"));
+		MemListTolms.put("idnumber",selectMemListlms.get("nric"));
+		MemListTolms.put("institution","Coway Malaysia");
+		MemListTolms.put("department",selectMemListlms.get("c41"));
+		MemListTolms.put("phone1",selectMemListlms.get("telMobile"));
+		String addr = selectMemListlms.get("addrdtl") + " "+ selectMemListlms.get("street");
+		MemListTolms.put("profile_field_address",addr);//
+		MemListTolms.put("city",selectMemListlms.get("city"));
+		MemListTolms.put("country",selectMemListlms.get("country"));
+		MemListTolms.put("profile_field_postcode",selectMemListlms.get("postcode"));
+		MemListTolms.put("profile_field_gender",selectMemListlms.get("gender"));
+		MemListTolms.put("profile_field_dob",selectMemListlms.get("c29"));
+		MemListTolms.put("profile_field_trainingbatch",selectcoursListlms.get(0).get("c_date"));
+		MemListTolms.put("profile_field_position",selectMemListlms.get("c57"));
+		MemListTolms.put("profile_field_branchcode",selectMemListlms.get("c4"));
+		MemListTolms.put("profile_field_branchname",selectMemListlms.get("c5"));
+		MemListTolms.put("profile_field_region",selectMemListlms.get("memCode"));//
+		MemListTolms.put("profile_field_organizationcode",selectMemListlms.get("c43"));
+		MemListTolms.put("profile_field_groupcode",selectMemListlms.get("c42"));
+		MemListTolms.put("profile_field_MemberStatus",selectMemListlms.get("name"));
+		MemListTolms.put("profile_field_MemberType",selectMemListlms.get("codeName"));
+		MemListTolms.put("profile_field_ManagerName",selectMemListlms.get("c23"));
+		MemListTolms.put("profile_field_ManagerId",selectMemListlms.get("c22"));
+		MemListTolms.put("profile_field_SeniorManagerName",selectMemListlms.get("c18"));
+		MemListTolms.put("profile_field_SeniorManagerID",selectMemListlms.get("c17"));
+		MemListTolms.put("profile_field_GeneralManagerName",selectMemListlms.get("c13"));
+		MemListTolms.put("profile_field_GeneralManagerID",selectMemListlms.get("c12"));
+		//MemListTolms.put("profile_field_batch",selectMemListlms.get(""));
+		MemListTolms.put("profile_field_TrainingVenue",selectcoursListlms.get(0).get("coursLoc"));
+		MemListTolms.put("profile_field_TRNo",selectMemListlms.get("memId"));
+
+		//call LMS to insert user
+		System.out.println("Start Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
+//		String lmsUrl = "http://localhost:8080/web/api/v1/LMS/updateCourse";
+		String lmsUrl = "http://localhost:8080/modernlms-api/api/add/user/";
+
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(MemListTolms);
+
+		EgovMap reqInfo = new EgovMap();
+		reqInfo.put("jsonString", jsonString);
+		reqInfo.put("lmsUrl", lmsUrl);
+
+		lmsReqApi(reqInfo);
+
+		logger.debug("End Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
+
+		return resultValue;
+	}
+
+	@Override
+	public Map<String, Object> lmsMemberListUpdateMemCode(Map<String, Object> params){
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+
+		EgovMap MemListTolms = new EgovMap();
+
+		MemListTolms.put("secretkey","");
+		MemListTolms.put("username",params.get("username"));
+		MemListTolms.put("newusername",params.get("newusername"));
+		MemListTolms.put("memberType",params.get("memberType"));
+		MemListTolms.put("joinDt",params.get("joinDt"));
+
+		//call LMS to update member code
+		String lmsUrl = "http://localhost:8080/modernlms-api/api/updated/user/";
+
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(MemListTolms);
+
+		EgovMap reqInfo = new EgovMap();
+		reqInfo.put("jsonString", jsonString);
+		reqInfo.put("lmsUrl", lmsUrl);
+
+		lmsReqApi(reqInfo);
+
+		return resultValue;
+	}
+
+	@Override
+	public Map<String, Object> lmsMemberListDeact(Map<String, Object> params){
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+
+		EgovMap MemListTolms = new EgovMap();
+
+		MemListTolms.put("secretkey","");
+		MemListTolms.put("username",params.get("username"));
+
+		//call LMS to deactivate member
+		String lmsUrl = "http://localhost:8080/modernlms-api/api/delete/user/";
+
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(MemListTolms);
+
+		EgovMap reqInfo = new EgovMap();
+		reqInfo.put("jsonString", jsonString);
+		reqInfo.put("lmsUrl", lmsUrl);
+
+		lmsReqApi(reqInfo);
+
+		return resultValue;
+	}
+
+	@Override
+	public Map<String, Object> lmsReqApi(Map<String, Object> params) {
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+
+		String lmsUrl = params.get("lmsUrl").toString();
+		String jsonString = params.get("jsonString").toString();
+
+		try{
+			URL url = new URL(lmsUrl);
+
+			//insert to api0004m
+			//
+
+	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	        conn.setDoOutput(true);
+	        conn.setRequestMethod("POST");
+	        conn.setRequestProperty("Content-Type", "application/json");
+	        OutputStream os = conn.getOutputStream();
+	        os.write(jsonString.getBytes());
+	        os.flush();
+
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+				BufferedReader br = new BufferedReader(new InputStreamReader(
+		                (conn.getInputStream())));
+				conn.getResponseMessage();
+				String output1 = "";
+		        String output = "";
+		        logger.debug("Output from Server .... \n");
+		        while ((output = br.readLine()) != null) {
+		        	output1 = output;
+		        	logger.debug(output);
+		        }
+
+		        Gson g = new Gson();
+		        LMSApiRespForm p = g.fromJson(output1, LMSApiRespForm.class);
+//				if(result.get(0).equals(RESULT.SUCCESS_CODE)){
+//					resVO.setResponseCode(result.get(0));
+//					resVO.setStatus(result.get(1));
+//					if(result.size()==4)
+//						resVO.setResult(result.get(3));
+//					resVO.setResponseMsg(msg);
+//				}else{
+//					resultValue.put(arg0, arg1)
+//					resVO.setResponseCode(result.get(0));
+//					resVO.setStatus(EXCEPTION.EXCEPTION);
+//					resVO.setResponseMsg(msg);
+//				}
+				conn.disconnect();
+			}else{
+				resultValue.put("status", "Failed");
+				resultValue.put("message", "No Response");
+			}
+		}catch(Exception e){
+			logger.error("Timeout:");
+			logger.error("[lmsMemberListInsertUpdate] - Caught Exception: " + e);
+		}
+
+		return resultValue;
 	}
 }

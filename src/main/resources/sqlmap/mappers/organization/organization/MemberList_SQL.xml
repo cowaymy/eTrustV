@@ -5142,7 +5142,8 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 	             WHEN B.COURS_TEST_RESULT = 'AB' THEN 'ABSENT'
 	             WHEN B.COURS_TEST_RESULT = 'F' THEN 'FAILED'
 	             ELSE '-'
-	        END RESULT
+	        END RESULT,
+            C.COURS_LOC
 	    FROM ORG0001D A
 	    LEFT JOIN MSC0009D B
 	        ON A.MEM_ID = B.COURS_MEM_ID
@@ -5273,4 +5274,11 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             S.NRIC
         )
     </update>
+
+    <select id="getUserID" parameterType="String" resultType="String">
+        SELECT
+            MEM_ID
+        FROM ORG0001D
+        WHERE MEM_CODE = #{memberCode}
+    </select>
 </mapper>

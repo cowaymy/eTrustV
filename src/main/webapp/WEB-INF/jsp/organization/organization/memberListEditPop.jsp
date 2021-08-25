@@ -169,7 +169,7 @@ $(document).ready(function() {
     doGetCombo('/common/selectCodeList.do', '5', '','educationLvl', 'S' , '');
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '')
 
-    if($("#traineeType").val() == "2" || $("#traineeType").val() == "3"){
+    /* if($("#traineeType").val() == "2" || $("#traineeType").val() == "3"){
         var groupCode  = {groupCode : $("#traineeType").val()};
         Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
 
@@ -184,7 +184,7 @@ $(document).ready(function() {
                 }
             }
         });
-    }
+    } */
 
     doGetCombo('/organization/selectBusinessType.do', '', '','businessType', 'S' , '');
 
@@ -430,11 +430,11 @@ $(document).ready(function() {
     //
 
     //
-    $('#course').change(function() {
+    /* $('#course').change(function() {
         $("#courseUpd").remove();
         $("#memberUpdForm").append("<input type='hidden' name='courseUpd' id='courseUpd'>");
         $("#courseUpd").val($("#course").val());
-    });
+    }); */
     //
 
     //
@@ -697,7 +697,7 @@ function fn_setMemInfo(data){
 
 	    //$("#inputSubDept option[value='"+ data.subDept +"']").attr("selected", true);
 
-	    $("#course option[value='"+ data.course +"']").attr("selected", true);
+	    //$("#course option[value='"+ data.course +"']").attr("selected", true);
 
 	    $("#selectBranch option[value='"+ data.c3 +"']").attr("selected", true);
 
@@ -1788,11 +1788,11 @@ function checkBankAccNo() {
                                 </td>
                             </tr>
                             <tr id="editRow1_12">
-                                <th scope="row">Training Course</th>
+                                <!-- <th scope="row">Training Course</th>
                                 <td colspan="2">
                                     <select class="w100p" id="course" name="course">
                                 </select>
-                                </td>
+                                </td> -->
                                 <th scope="row">Total Vacation</th>
                                 <td colspan="2">
                                     <input type="text" title="" placeholder="Total Vacation" class="w100p" />

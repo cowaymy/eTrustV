@@ -2,8 +2,9 @@ package com.coway.trust.biz.api.impl;
 
 
 /**************************************
- * Author                  Date                    Remark
- * Chew Kah Kit        2020/12/16           API for Common
+ * Date                Author         Description
+ * -------------       -----------      -------------
+ * 2021. 08. 19.    MY-HLTANG   First creation
  ***************************************/
 
 import java.util.Map;
@@ -27,4 +28,5 @@ public interface LMSApiMapper {
 
 	EgovMap selectDocNoMap(Map<String, Object> params);
 
+	int cntCourseCheck(Map<String, Object> params);
 }
