@@ -74,7 +74,7 @@
         FROM SAL0001D A
         LEFT JOIN SAL0002D B
             ON B.SALES_ORD_ID = A.SALES_ORD_ID
-        WHERE A.STUS_CODE_ID IN ('1',' '4')
+        WHERE A.STUS_CODE_ID IN ('1','4')
             AND A.SALES_ORD_NO = #{ordNo}
     </select>
 
@@ -155,7 +155,13 @@
             JOIN SYS0013M DESC1
                 ON A.APP_TYPE_ID = DESC1.CODE_ID
                 AND DESC1.CODE_MASTER_ID = 10
-            WHERE A.SALES_ORD_ID = #{salesOrdId}
+            WHERE 1=1
+            <if test="salesOrdId != null and salesOrdId != '' ">
+                AND A.SALES_ORD_ID = #{salesOrdId}
+            </if>
+            <if test="ordNo != null and ordNo != '' ">
+                AND A.SALES_ORD_NO = #{ordNo}
+            </if>
         ) EXT
     </select>
 
