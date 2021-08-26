@@ -126,7 +126,7 @@ public class SrvItmMgmtListController {
     String itmDesc =  SrvItmMgmtListService.getItmDesc(params.get("cboItm").toString());
 
     List<EgovMap> srvItmList = SrvItmMgmtListService.searchSrvItmLst(params);
-    String qty = srvItmList.get(0).get("qty").toString();
+    String qty = srvItmList.size() > 0 ? srvItmList.get(0).get("qty").toString() : "0";
 
     model.put("BR_TYP", (String) params.get("cboBchTyp"));
     model.put("BR_TYP_DESC", brTyp);
