@@ -99,6 +99,8 @@ function fn_report(viewType){
 	var branchRegion = "";
 	var keyInBranch = "";
 	var paymode = "";
+	var applyDateFrom = "";
+    var applyDateTo = "";
 	var sortBy = "";
 	var whereSQL = "";
 	var extraWhereSQL = "";
@@ -163,6 +165,13 @@ function fn_report(viewType){
             orderBySQL = " ORDER BY Issued_Bank, som.SALES_ORD_NO";
         }
 	}
+
+	if(!($("#dpApplyDateFr").val() == null || $("#dpApplyDateFr").val().length == 0) || !($("#dpApplyDateTo").val() == null || $("#dpApplyDateTo").val().length == 0)){
+		applyDateFrom = $("#dpApplyDateFr").val();
+		applyDateTo = $("#dpApplyDateTo").val();
+
+        whereSQL += " AND (r.DD_APPLY_DT BETWEEN TO_DATE('"+applyDateFrom+"', 'dd/MM/YY') AND TO_DATE('"+applyDateTo+"', 'dd/MM/YY'))";
+    }
 
     $("#reportDownFileName").val("OrderDDCRCList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 
@@ -250,6 +259,21 @@ CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
     <td>
     <select class="w100p" id="cmbKeyBranch"></select>
     </td>
+    <th scope="row"><spring:message code="sal.text.applyDate" /></th>
+    <td>
+    <div class="date_set w100p"><!-- date_set start -->
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpApplyDateFr"/></p>
+    <span><spring:message code="sal.title.to" /></span>
+    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpApplyDateTo"/></p>
+    </div><!-- date_set end -->
+    </td>
+
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.keyInUser" /></th>
+    <td>
+    <select class="w100p" id="cmbUser"></select>
+    </td>
     <th scope="row"><spring:message code="sal.text.ordNum" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
@@ -260,10 +284,6 @@ CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.keyInUser" /></th>
-    <td>
-    <select class="w100p" id="cmbUser"></select>
-    </td>
     <th scope="row"><spring:message code="sal.title.text.sorting" /></th>
     <td>
     <select class="w100p" id="cmbSorting">
@@ -273,6 +293,8 @@ CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
         <option value="5"><spring:message code="sal.combo.text.byIssuedBank" /></option>
     </select>
     </td>
+    <th></th>
+    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->
