@@ -88,28 +88,12 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         }
         return rtn;
     }
-    
+
     @Override
     public List<EgovMap> selectProductFilterList(eSVMApiForm param) throws Exception {
 
         if (null == param) {
             throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
-        }
-
-        if (CommonUtils.isEmpty(param.getReqstDtFrom()) || CommonUtils.isEmpty(param.getReqstDtTo())) {
-            throw new ApplicationException(AppConstants.FAIL, " Request Date  does not exist.");
-        }
-
-        if (CommonUtils.isEmpty(param.getSelectType())) {
-            throw new ApplicationException(AppConstants.FAIL, "Select Type value does not exist.");
-        } else {
-            if (("2").equals(param.getSelectType()) && param.getSelectKeyword().length() < 5) {
-                throw new ApplicationException(AppConstants.FAIL, "Please enter at least 5 characters.");
-            }
-        }
-
-        if (CommonUtils.isEmpty(param.getRegId())) {
-            throw new ApplicationException(AppConstants.FAIL, "User ID value does not exist.");
         }
 
         return eSVMApiMapper.selectProductFilterList(eSVMApiForm.createMap(param));
