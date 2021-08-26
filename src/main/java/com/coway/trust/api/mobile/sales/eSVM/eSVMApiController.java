@@ -54,10 +54,11 @@ public class eSVMApiController {
     public ResponseEntity<eSVMApiDto> selectSvmOrdNo(@ModelAttribute eSVMApiForm param) throws Exception {
       return ResponseEntity.ok(eSVMApiService.selectSvmOrdNo(param));
     }
-    
+
     @ApiOperation(value = "selectProductFilterList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/selectProductFilterList", method = RequestMethod.GET)
     public ResponseEntity<List<eSVMApiDto>> selectProductFilterList(@ModelAttribute eSVMApiForm param) throws Exception {
+      LOGGER.info("========== selectProductFilterList ==========");
       List<EgovMap> selectProductFilterList = eSVMApiService.selectProductFilterList(param);
       if (LOGGER.isDebugEnabled()) {
         for (int i = 0; i < selectProductFilterList.size(); i++) {
