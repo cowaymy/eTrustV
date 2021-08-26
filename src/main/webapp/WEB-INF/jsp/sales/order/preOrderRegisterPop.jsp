@@ -1050,15 +1050,20 @@
             isValid = false;
             msg += "* Please key in NRIC/Company No.<br>";
         }else{
-            var dob = Number($('#nric').val().substr(0,2));
-            var nowDt = new Date();
-            var nowDtY = Number(nowDt.getFullYear().toString().substr(-2));
-            var age = nowDtY- dob < 0 ? nowDtY- dob + 100 : nowDtY- dob ;
-            console.log(age);
-            if(age < 18) {
-                Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Member must 18 years old and above.</b>");
-                $('#scPreOrdArea').addClass("blind");
-                return false;
+        	//check if NRIC is Numeric, else company number (includes alphabet)
+        	var nric_trim = $("#nric").val().replace(/ |-|_/g,'');
+            console.log ("nric_trim :: "+ nric_trim);
+            if($.isNumeric($("#nric_trim").val())){
+                var dob = Number($('#nric').val().substr(0,2));
+                var nowDt = new Date();
+                var nowDtY = Number(nowDt.getFullYear().toString().substr(-2));
+                var age = nowDtY- dob < 0 ? nowDtY- dob + 100 : nowDtY- dob ;
+                console.log(age);
+                if(age < 18) {
+                    Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Member must 18 years old and above.</b>");
+                    $('#scPreOrdArea').addClass("blind");
+                    return false;
+                }
             }
         }
         if(FormUtil.checkReqValue($('#sofNo'))) {
