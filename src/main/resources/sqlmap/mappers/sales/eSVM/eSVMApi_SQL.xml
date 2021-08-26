@@ -105,8 +105,8 @@
                 C.STK_DESC STK_NAME,
                 TO_CHAR(G.LAST_SRV_MEM_EXPR_DATE, 'DD/MM/YYYY') MEM_EXPR_DATE,
                 MONTHS_BETWEEN(TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, 12), 'YYYYMM') || '01', 'YYYYMMDD'), TO_DATE(TO_CHAR(ADD_MONTHS(G.LAST_SRV_MEM_EXPR_DATE, 12), 'YYYYMM') || '01', 'YYYYMMDD')) EXPINT,
-                K.SRV_MEM_COOL_PRIOD_MTH COOLING_PRD,
-                G.SRV_MEM_FREQ HS_FREQ
+                TO_CHAR(K.SRV_MEM_COOL_PRIOD_MTH) COOLING_PRD,
+                TO_CHAR(G.SRV_MEM_FREQ) HS_FREQ
             FROM SAL0001D A
             JOIN SAL0002D B
                 ON A.SALES_ORD_ID = B.SALES_ORD_ID
@@ -125,7 +125,7 @@
                     RENT_SO_ID ORD_ID,
                     SUM(RENT_AMT) ORD_OTDSTND
                 FROM PAY0022D
-                WHERE RENT_SO_ID = #{salesOrdId}
+                WHERE RENT_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo})
                 GROUP BY RENT_SO_ID
             ) H
                 ON A.SALES_ORD_ID = H.ORD_ID
@@ -134,7 +134,7 @@
                     TRADE_SO_ID ORD_ID,
                     SUM(TRADE_AMT) ORD_OTDSTND
                 FROM PAY0035D
-                WHERE TRADE_SO_ID = #{salesOrdId}
+                WHERE TRADE_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo})
                 GROUP BY TRADE_SO_ID
             ) I
                 ON A.SALES_ORD_ID = I.ORD_ID
@@ -145,7 +145,7 @@
                     SUM(AS_LG_AMT) AS_OTSTND
                 FROM PAY0006D
                 WHERE AS_RESULT_NO LIKE 'ASR%'
-                AND AS_SO_NO = #{salesOrdNo}
+                AND AS_SO_NO = #{ordNo}
                 GROUP BY AS_SO_NO, AS_RESULT_NO
             ) J
                 ON A.SALES_ORD_NO = J.ORD_NO

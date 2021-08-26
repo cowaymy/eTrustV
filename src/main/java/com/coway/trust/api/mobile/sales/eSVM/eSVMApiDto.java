@@ -30,8 +30,8 @@ public class eSVMApiDto {
     private int stkId;
     private String ordNo;
     private String nric;
-    private String ordOtdstnd;
-    private String asOtstnd;
+    private int ordOtdstnd;
+    private int asOtstnd;
     private String address;
     private String stkName;
     private String memExprDate;
@@ -176,20 +176,20 @@ public class eSVMApiDto {
         this.nric = nric;
     }
 
-    public String getOrdOtdstnd() {
+    public int getOrdOtdstnd() {
         return ordOtdstnd;
     }
 
-    public void setOrdOtdstnd(String ordOtdstnd) {
+    public void setOrdOtdstnd(int ordOtdstnd) {
         this.ordOtdstnd = ordOtdstnd;
     }
 
-    public String getAsOtstnd() {
+    public int getAsOtstnd() {
         return asOtstnd;
     }
 
-    public void setAsOtstnd(String asOtstnd) {
-        this.status = asOtstnd;
+    public void setAsOtstnd(int asOtstnd) {
+        this.asOtstnd = asOtstnd;
     }
 
     public String getAddress() {
