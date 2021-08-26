@@ -15,6 +15,7 @@
  05/10/2020  FARUQ   1.0.9         Amend the default next call date when failed
  12/03/2021  ALEX      1.0.10       Add Turbidity Level for NEO PLUS involved both COMPLETE and FAIL
  09/04/2021  H.Ding   1.1.0         Add INS AS creation for spare parts/ filters auto charge out
+ 25/08/2021  YONGJH 1.1.1         Add validation feature for LUCY PLUS when completed, and when failed
  -->
 <script type="text/javaScript">
   $(document).ready(function() {
@@ -467,6 +468,11 @@
               msg += validationForGlazeWhenCompleted();
       }
 
+      //stkId for LUCY PLUS = 1907
+      if("${installResult.installStkId}" == 1907 && "${orderInfo.appTypeId}" != "144"){
+              msg += validationForLucyPlusWhenCompleted();
+      }
+
       var addedRowItems;
       // Added for INS AS filter/ spare part list
       if ($("#chkCrtAS").prop('checked')){
@@ -504,6 +510,11 @@
           if("${installResult.installStkId}" == 1737){
               msg += validationForGlazeWhenFail();
             }
+
+        //stkId for LUCY PLUS = 1907
+          if("${installResult.installStkId}" == 1907){
+        	  msg += validationForLucyPlusWhenFail();
+          }
 
           if ( $("#psiRcd").val() == "") {
             msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
@@ -666,6 +677,36 @@
 	    return msg;
 	  }
 
+  function validationForLucyPlusWhenCompleted() {
+	  var msg = "";
+
+	  if ( !($("#psiRcd").val() >=7 && $("#psiRcd").val() <=120) ) {
+		    msg += "* <spring:message code='sys.msg.range' arguments='Water Pressure (PSI),7,120' htmlEscape='false'/> </br>";
+      }
+
+	  if ( !($("#volt").val() >=187 && $("#volt").val() <=264) ) {
+	        msg += "* <spring:message code='sys.msg.range' arguments='Voltage,187,264' htmlEscape='false'/> </br>";
+	  }
+
+	  if ( !($("#waterSourceTemp").val() >=5 && $("#waterSourceTemp").val() <=35) ) {
+		  msg += "* <spring:message code='sys.msg.range' arguments='Water Source Temperature,5,35' htmlEscape='false'/> </br>";
+	  }
+
+	  if ( !($("#roomTemp").val() <=35) ) {
+	        msg += "* <spring:message code='sys.msg.LessThnEql' arguments='Room Temperature,35' htmlEscape='false'/> </br>";
+	  }
+
+      if( !$("#turbLvl").val() == "" ){
+          if ( !($("#turbLvl").val() <= 5) ) {
+        	msg += "* <spring:message code='sys.msg.LessThnEql' arguments='Turbidity Level,5' htmlEscape='false'/> </br>";
+          }
+      } else if ($("#turbLvl").val() == "" ){
+            msg += "* <spring:message code='sys.msg.invalid' arguments='Turbidity Level' htmlEscape='false'/> </br>";
+      }
+
+	  return msg;
+  }
+
   function validationForKecikWhenFail(){
     var msg = "";
 
@@ -738,6 +779,54 @@
 	      }
 
 	    return msg;
+  }
+
+  function validationForLucyPlusWhenFail() {
+	    var msg = "";
+
+	    if( $("#failReasonCode").val() == 8002 || $("#failReasonCode").val() == 250 || $("#failReasonCode").val() == 1790 || $("#failReasonCode").val() == 8001) {
+	      if( !$("#psiRcd").val() == ""){
+	        if( ($("#psiRcd").val() < 7 || $("#psiRcd").val() > 120) && !$("#psiRcd").val() == "" ){
+	        } else{
+	          msg += "* <spring:message code='sys.msg.notInRange' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
+	        }
+	      }
+	    }
+
+	    if($("#failReasonCode").val() == 8008){
+	      if( !$("#volt").val() == "" ){
+	        if ( ($("#volt").val() < 187 || $("#volt").val() > 264) && !$("#volt").val() == "" ) {
+	        } else{
+	          msg += "* <spring:message code='sys.msg.notInRange' arguments='Voltage' htmlEscape='false'/> </br>";
+	        }
+	      }
+	    }
+
+	    if( !$("#waterSourceTemp").val() == "" ){
+	      if ( ($("#waterSourceTemp").val() < 5 || $("#waterSourceTemp").val() > 35) && !$("#waterSourceTemp").val() == "" ) {
+	      } else{
+	        msg += "* <spring:message code='sys.msg.notInRange' arguments='Water Source Temperature' htmlEscape='false'/> </br>";
+	      }
+	    }
+
+	    if( !$("#roomTemp").val() == "" ){
+	      if ( $("#roomTemp").val() > 35 && !$("#roomTemp").val() == "" ) {
+	      } else{
+	        msg += "* <spring:message code='sys.msg.notInRange' arguments='Room Temperature' htmlEscape='false'/> </br>";
+	      }
+	    }
+
+	    if($("#failReasonCode").val() == 8009){
+	      if( !$("#turbLvl").val() == "" ){
+	        if ( $("#turbLvl").val() > 5 && !$("#turbLvl").val() == "") {
+	        } else {
+	          msg += "* <spring:message code='sys.msg.notInRange' arguments='Turbidity Level' htmlEscape='false'/> </br>";
+	        }
+	      }
+	    }
+
+	    return msg;
+
   }
 
   function createInstallationViewAUIGrid() {
