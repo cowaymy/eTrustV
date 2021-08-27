@@ -2,6 +2,7 @@ package com.coway.trust.biz.sales.eSVM.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -85,6 +86,27 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
             }
 
             rtn = eSVMApiDto.create(eSVMApiMapper.selectOrderMemInfo(eSVMApiForm.createMap(param)));
+
+            // [Filter Tab]
+            List<EgovMap> selectProductFilterList = eSVMApiMapper.selectProductFilterList(eSVMApiForm.createMap(param));
+            List<eSVMApiDto> productFilterList = selectProductFilterList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
+            rtn.setProductFilterList(productFilterList);
+
+            // [Membership Tab]
+            // Type of Package
+            List<EgovMap> selectComboPackageList = eSVMApiMapper.selectComboPackageList(eSVMApiForm.createMap(param));
+            List<eSVMApiDto> comboPackageList = selectComboPackageList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
+            rtn.setPackageComboList(comboPackageList);
+
+            // Package Promotion
+            List<EgovMap> selectPackagePromoList = eSVMApiMapper.selectPackagePromo(eSVMApiForm.createMap(param));
+            List<eSVMApiDto> packagePromoList = selectPackagePromoList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
+            rtn.setPackagePromoList(packagePromoList);
+
+            // Filter Promotion
+            List<EgovMap> selectFilterPromoList = eSVMApiMapper.selectFilterPromo(eSVMApiForm.createMap(param));
+            List<eSVMApiDto> filterPromoList = selectFilterPromoList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
+            rtn.setFilterPromoList(filterPromoList);
         }
         return rtn;
     }
@@ -112,4 +134,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         eSVMApiDto selectOrderMemDetail = eSVMApiDto.create(eSVMApiMapper.selectOrderMemInfo(eSVMApiForm.createMap(param)));
         return selectOrderMemDetail;
     }
+
+    // TO-DO
+    // Query Promotion package on change for employee dropdown/checkbox
 }

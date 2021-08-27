@@ -238,4 +238,69 @@
             ) SEL
     </select>
 
+    <select id="selectComboPackageList" parameterType="Map" resultType="egovMap">
+        SELECT
+            C.SRV_MEM_PAC_ID PKG_COMBO_ID,
+            C.SRV_MEM_DESC PKG_COMBO_NAME
+        FROM SAL0002D A, SAL0092M B, SAL0091M C
+        WHERE 1=1
+            AND A.ITM_STK_ID = B.SRV_MEM_ITM_STK_ID
+            AND B.SRV_MEM_PAC_ID = C.SRV_MEM_PAC_ID
+            AND B.SRV_MEM_ITM_STUS_ID = '1'
+            AND C.SRV_MEM_STUS_ID  = 1
+            AND C.PAC_TYPE = '1'
+            AND A.SALES_ORD_ID = #{salesOrdId}
+        ORDER BY C. SRV_MEM_CODE ASC
+    </select>
+
+    <select id="selectPackagePromo" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        SELECT DISTINCT
+            A.PROMO_ID PACKAGE_PROMO_ID ,
+            A.PROMO_CODE||'-'||A.PROMO_DESC PACKAGE_PROMO_NAME,
+            A.PROMO_DISC_TYPE,
+            A.PROMO_RPF_DISC_AMT
+        FROM SAL0017D A, SAL0018D B, SAL0002D C, SAL0001D D, SAL0029D E, SAL0289T F
+        WHERE 1=1
+            AND A.PROMO_ID = B.PROMO_ID
+            AND A.PROMO_STUS_ID = '1'
+            AND B.PROMO_ITM_STUS_ID = '1'
+            AND A.PROMO_TYPE_ID = '2282'
+            AND A.PROMO_APP_TYPE_ID = '2288'
+            AND TO_CHAR(A.PROMO_DT_FROM,'yyyymmdd') <= TO_CHAR(SYSDATE,'yyyymmdd')
+            AND TO_CHAR(A.PROMO_DT_END,'yyyymmdd') >= TO_CHAR(SYSDATE ,'yyyymmdd')
+            AND B.PROMO_ITM_STK_ID = C.ITM_STK_ID
+            AND C.SALES_ORD_ID = #{salesOrdId}
+            AND A.PROMO_SRV_MEM_PAC_ID = '9'
+            AND C.SALES_ORD_ID = D.SALES_ORD_ID
+            AND D.CUST_ID = E.CUST_ID
+            AND (
+                    ((A.PROMO_ID in ('32295','32296')) AND (F.SALES_ORD_ID = D.SALES_ORD_ID))
+                    OR
+                    (F.SALES_ORD_ID not in D.SALES_ORD_ID and A.PROMO_ID not in ('32295','32296'))
+                )
+            AND (A.PROMO_CUST_TYPE = E.TYPE_ID OR A.PROMO_CUST_TYPE = 0)
+        ]]>
+        <if test="employee != null and employee != '' ">
+            AND A.EMP_CHK = #{employee}
+        </if>
+    </select>
+
+    <select id="selectFilterPromo" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        SELECT DISTINCT
+            A.PROMO_ID FILTER_PROMO_ID,
+            A.PROMO_CODE || '-' || A.PROMO_DESC FILTER_PROMO_NAME
+        FROM SAL0017D A
+        WHERE A.PROMO_SRV_MEM_PAC_ID = #{PROMO_SRV_MEM_PAC_ID}
+            AND A.PROMO_APP_TYPE_ID = '2290'
+            AND TO_CHAR( A.PROMO_DT_FROM, 'yyyymmdd') <= TO_CHAR(SYSDATE, 'yyyymmdd')
+            AND TO_CHAR(A.PROMO_DT_END, 'yyyymmdd') >= TO_CHAR(SYSDATE, 'yyyymmdd')
+            AND A.PROMO_STUS_ID = '1'
+        ]]>
+        <if test="employee != null and employee != ''">
+            AND A.EMP_CHK = #{employee}
+        </if>
+    </select>
+
 </mapper>

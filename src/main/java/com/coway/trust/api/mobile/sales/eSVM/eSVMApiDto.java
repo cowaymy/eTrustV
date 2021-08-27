@@ -1,5 +1,8 @@
 package com.coway.trust.api.mobile.sales.eSVM;
 
+import java.util.List;
+
+import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.util.BeanConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -40,7 +43,7 @@ public class eSVMApiDto {
     private String hsFreq;
     private String trm;
 
-    /* New Quotation - Filter Listing */
+    /* Filter Listing */
     private int srvFilterId;
     private int srvFilterStkId;
     private String stkCode;
@@ -55,6 +58,25 @@ public class eSVMApiDto {
     private String c6;
     private String expiredateint;
     private String todaydateint;
+
+    /* Type of Package */
+    private int pkgComboId;
+    private String pkgComboName;
+
+    /* Package Promotion */
+    private int packagePromoId;
+    private String packagePromoName;
+    private int promoDiscType;
+    private int promoRpfDiscAmt;
+
+    /* Filter Promotion */
+    private int filterPromoId;
+    private String filterPromoName;
+
+    private List<eSVMApiDto> productFilterList;
+    private List<eSVMApiDto> packageComboList;
+    private List<eSVMApiDto> packagePromoList;
+    private List<eSVMApiDto> filterPromoList;
 
     public int getSvmQuotId() {
         return svmQuotId;
@@ -358,5 +380,101 @@ public class eSVMApiDto {
 
     public void setTodaydateint(String todaydateint) {
         this.trm = todaydateint;
+    }
+
+    public List<eSVMApiDto> getProductFilterList() {
+        return productFilterList;
+    }
+
+    public void setProductFilterList(List<eSVMApiDto> productFilterList) {
+        this.productFilterList = productFilterList;
+    }
+
+    public int getPkgComboId() {
+        return pkgComboId;
+    }
+
+    public void setPkgComboId(int pkgComboId) {
+        this.pkgComboId = pkgComboId;
+    }
+
+    public String getPkgComboName() {
+        return pkgComboName;
+    }
+
+    public void setPkgComboName(String pkgComboName) {
+        this.pkgComboName = pkgComboName;
+    }
+
+    public List<eSVMApiDto> getPackageComboList() {
+        return packageComboList;
+    }
+
+    public void setPackageComboList(List<eSVMApiDto> packageComboList) {
+        this.packageComboList = packageComboList;
+    }
+
+    public int getPackagePromoId() {
+        return packagePromoId;
+    }
+
+    public void setPackagePromoId(int packagePromoId) {
+        this.packagePromoId = packagePromoId;
+    }
+
+    public String getPackagePromoName() {
+        return packagePromoName;
+    }
+
+    public void setPackagePromoName(String packagePromoName) {
+        this.packagePromoName = packagePromoName;
+    }
+
+    public int getPromoDiscType() {
+        return promoDiscType;
+    }
+
+    public void setPromoDiscType(int promoDiscType) {
+        this.promoDiscType = promoDiscType;
+    }
+
+    public int getPromoRpfDiscAmt() {
+        return promoRpfDiscAmt;
+    }
+
+    public void setPromoRpfDiscAmt(int promoRpfDiscAmt) {
+        this.promoRpfDiscAmt = promoRpfDiscAmt;
+    }
+
+    public List<eSVMApiDto> getPackagePromoList() {
+        return packagePromoList;
+    }
+
+    public void setPackagePromoList(List<eSVMApiDto> packagePromoList) {
+        this.packagePromoList = packagePromoList;
+    }
+
+    public int getFilterPromoId() {
+        return filterPromoId;
+    }
+
+    public void setFilterPromoId(int filterPromoId) {
+        this.filterPromoId = filterPromoId;
+    }
+
+    public String getFilterPromoName() {
+        return filterPromoName;
+    }
+
+    public void setFilterPromoName(String filterPromoName) {
+        this.filterPromoName = filterPromoName;
+    }
+
+    public List<eSVMApiDto> getFilterPromoList() {
+        return filterPromoList;
+    }
+
+    public void setFilterPromoList(List<eSVMApiDto> filterPromoList) {
+        this.filterPromoList = filterPromoList;
     }
 }
