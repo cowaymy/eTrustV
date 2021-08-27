@@ -29,8 +29,35 @@
     var otherFileName2 = "";
     var otherFileName3 = "";
 
+    var MEM_TYPE = '${SESSION_INFO.userTypeId}';
+
     $(document).ready(function(){
 
+    	if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7" ){
+
+    		var elements = document.getElementsByClassName("attach_mod");
+            for(var i = 0; i < elements.length; i++) {
+                elements[i].style.display="none";
+            }
+            $("#btnSave").hide();
+            /* if("${SESSION_INFO.memberLevel}" =="1"){
+
+            	 $("#btnSave").hide();
+
+            }else if("${SESSION_INFO.memberLevel}" =="2"){
+            	$("#attach_mod").hide();
+            	 $("#btnSave").hide();
+
+            }else if("${SESSION_INFO.memberLevel}" =="3"){
+            	$("#attach_mod").hide();
+            	 $("#btnSave").hide();
+
+            }else if("${SESSION_INFO.memberLevel}" =="4"){
+            	$("#attach_mod").hide();
+                $("#btnSave").hide();
+
+            } */
+        }
         /* doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '${preOrderInfo.appTypeId}', 'appType',     'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '${preOrderInfo.rentPayModeId}', 'rentPayMode', 'S', ''); //Common Code
         doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code

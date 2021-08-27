@@ -28,6 +28,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.mambership.MembershipESvmApplication;
 import com.coway.trust.biz.sales.mambership.MembershipESvmService;
 import com.coway.trust.biz.sales.order.PreOrderApplication;
@@ -53,6 +54,9 @@ public class MembershipESvmController {
 	@Autowired
 	private SessionHandler sessionHandler;
 
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
+
 	@Resource(name = "membershipESvmService")
 	private MembershipESvmService membershipESvmService;
 
@@ -60,7 +64,18 @@ public class MembershipESvmController {
 	private MembershipESvmApplication membershipESvmApplication;
 
 	@RequestMapping(value = "/membershipESvmList.do")
-	public String membershipESvmList(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String membershipESvmList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2 || sessionVO.getUserTypeId() == 7){
+
+			params.put("userId", sessionVO.getUserId());
+			EgovMap result =  salesCommonService.getUserInfo(params);
+
+			model.put("orgCode", result.get("orgCode"));
+			model.put("grpCode", result.get("grpCode"));
+			model.put("deptCode", result.get("deptCode"));
+			model.put("memCode", result.get("memCode"));
+		}
 
 		return "sales/membership/membershipESvmList";
 	}

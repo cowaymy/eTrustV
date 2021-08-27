@@ -18,9 +18,9 @@
             <input type='file' title='file add'  id='svmFrFile' accept='image/*''/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='svmFrFileTxt'  name=''/>
-                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
             </label>
-            <span class='label_text'><a href='#' onclick='fn_removeFile("FRO")'>Remove</a></span>
+            <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("FRO")'>Remove</a></span>
         </div>
     </td>
 </tr>
@@ -31,9 +31,9 @@
             <input type="file" title="file add" id="svmTncFile" accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='svmTncFileTxt'  name=''/>
-                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
             </label>
-            <span class='label_text'><a href='#' onclick='fn_removeFile("TNC")'>Remove</a></span>
+            <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("TNC")'>Remove</a></span>
         </div>
     </td>
 </tr>
@@ -44,9 +44,9 @@
             <input type='file' title='file add' id='poFile' accept='image/*''/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='poFileTxt'  name=''/>
-                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
             </label>
-            <span class='label_text'><a href='#' onclick='fn_removeFile("POF")'>Remove</a></span>
+            <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("POF")'>Remove</a></span>
         </div>
     </td>
 </tr>
@@ -57,9 +57,9 @@
                 <input type='file' title='file add' id='nricFrFile' accept='image/*''/>
                 <label>
                     <input type='text' class='input_text' readonly='readonly' id='nricFrFileTxt' name=''/>
-                    <span class='label_text'><a href='#'>Upload</a></span>
+                    <span class='label_text attach_mod'><a href='#'>Upload</a></span>
                 </label>
-                <span class='label_text'><a href='#' onclick='fn_removeFile("ICF")'>Remove</a></span>
+                <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("ICF")'>Remove</a></span>
         </div>
     </td>
 </tr>
@@ -70,9 +70,9 @@
                 <input type='file' title='file add' id='nricBcFile' accept='image/*''/>
                 <label>
                     <input type='text' class='input_text' readonly='readonly' id='nricBcFileTxt' name=''/>
-                    <span class='label_text'><a href='#'>Upload</a></span>
+                    <span class='label_text attach_mod'><a href='#'>Upload</a></span>
                 </label>
-                <span class='label_text'><a href='#' onclick='fn_removeFile("ICB")'>Remove</a></span>
+                <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("ICB")'>Remove</a></span>
         </div>
     </td>
 </tr>
@@ -83,9 +83,9 @@
                 <input type='file' title='file add' id='slipFile' accept='image/*''/>
                 <label>
                     <input type='text' class='input_text' readonly='readonly' id='slipFileTxt' name=''/>
-                    <span class='label_text'><a href='#'>Upload</a></span>
+                    <span class='label_text attach_mod'><a href='#'>Upload</a></span>
                 </label>
-                <span class='label_text'><a href='#' onclick='fn_removeFile("SLP")'>Remove</a></span>
+                <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("SLP")'>Remove</a></span>
         </div>
     </td>
 </tr>
@@ -96,9 +96,9 @@
                 <input type='file' title='file add' id='chqFile' accept='image/*''/>
                 <label>
                     <input type='text' class='input_text' readonly='readonly' id='chqFileTxt' name=''/>
-                    <span class='label_text'><a href='#'>Upload</a></span>
+                    <span class='label_text attach_mod'><a href='#'>Upload</a></span>
                 </label>
-                <span class='label_text'><a href='#' onclick='fn_removeFile("CHQ")'>Remove</a></span>
+                <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("CHQ")'>Remove</a></span>
         </div>
     </td>
 </tr>
@@ -110,9 +110,9 @@
             <input type='file' title='file add'  id='otherFile' accept='image/*''/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='otherFileTxt'/>
-                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
             </label>
-            <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span>
+            <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span>
         </div>
     </td>
 </tr>
@@ -124,9 +124,9 @@
             <input type="file" title="file add" id="otherFile2" accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='otherFileTxt2'/>
-                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
             </label>
-            <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
+            <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
         </div>
     </td>
 </tr>
@@ -138,9 +138,9 @@
             <input type="file" title="file add" id="otherFile3" accept="image/*"/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='otherFileTxt3'/>
-                <span class='label_text'><a href='#'>Upload</a></span>
+                <span class='label_text attach_mod'><a href='#'>Upload</a></span>
             </label>
-            <span class='label_text'><a href='#' onclick='fn_removeFile("OTH3")'>Remove</a></span>
+            <span class='label_text attach_mod'><a href='#' onclick='fn_removeFile("OTH3")'>Remove</a></span>
         </div>
     </td>
 </tr>

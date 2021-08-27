@@ -105,7 +105,7 @@ console.log("preOrderList");
         //excel Download
         $('#excelDown').click(function() {
             var excelProps = {
-                fileName     : "eKey-in",
+                fileName     : "eSVM",
                exceptColumnFields : AUIGrid.getHiddenColumnDataFields(excelListGridID)
             };
             AUIGrid.exportToXlsx(excelListGridID, excelProps);
@@ -202,32 +202,17 @@ console.log("preOrderList");
 
         //AUIGrid 칼럼 설정
         var excelColumnLayout = [
-           { headerText : "eKey-in Date",  dataField : "requestDt",  editable : false, width:100}
-          , { headerText : "eKey-in Time",  dataField : "requestTm",  editable : false, width:100}
-          , { headerText : "eKey-in Entry Point",  dataField : "channel",  editable : false, width:100}
-          , { headerText : "SOF No.",         dataField : "sofNo",      editable : false, width:100}
-          , { headerText : "Order Number", dataField : "salesOrdNo",       editable : false, width:100}
-          , { headerText : "Status",          dataField : "stusName",     editable : false,width:150}
-          , { headerText : "PV Month", dataField : "pvMonth",   editable : false,width:200}
-          , { headerText : "PV Month", dataField : "pvYear",   editable : false,width:200}
-          , { headerText : "Customer Name",   dataField : "custNm",     editable : false,width:300}
-          , { headerText : "Area",             dataField : "area",     editable : false,width:450}
-          , { headerText : "Posting Branch",             dataField : "soBrnchCode",     editable : false,width:100}
-          , { headerText : "Doc Submit",             dataField : "docSubmit",     editable : false,width:100}
-          , { headerText : "Submit Branch",             dataField : "submitBranch",     editable : false,width:100}
-          , { headerText : "Branch Location",             dataField : "branchLocation",     editable : false,width:300}
-          , { headerText : "Product",         dataField : "product",    editable : false,width:450}
-          , { headerText : "Promo Code", dataField : "promoCode",   editable : false,width:200}
-          , { headerText : "Promotion Description ", dataField : "promoDesc",   editable : false,width:400}
-          , { headerText : "Fail Reason Code", dataField : "rem1",     editable : false,width:500}
-          , { headerText : "Fail Remark",         dataField : "rem2",     editable : false,width:750}
-          , { headerText : "Sales By", dataField : "salesUserId",   editable : false,width:100}
-          , { headerText : "Creator",         dataField : "crtName",   editable : false,width:100}
-          , { headerText : "HP Name", dataField : "hpName",   editable : false,width:400}
-          , { headerText : "Organization Code", dataField : "orgCode",   editable : false,width:200}
-          , { headerText : "Group Code", dataField : "grpCode",   editable : false,width:200}
-          , { headerText : "Dept Code", dataField : "deptCode",   editable : false,width:200}
-          , { headerText : "Last Update At (By)", dataField : "lastUpd",   editable : false,width:400}
+		{dataField : "psmNo", headerText : '<spring:message code="sal.title.text.preSalesNo" />', width : 100 , editable : false},
+		{dataField : "saRefNo", headerText : '<spring:message code="sal.title.text.saRefNo" />', width : 100 , editable : false},
+		{dataField : "salesOrdNo", headerText : '<spring:message code="sales.OrderNo" />', width : 100 , editable : false},
+		{dataField : "crtDt", headerText :'<spring:message code="sal.title.text.eSvmKeyInDt" />', width : 100 , editable : false},
+		{dataField : "crtTm", headerText : '<spring:message code="sal.title.text.eSvmKeyInTm" />', width : 100 , editable : false},
+		{dataField : "status", headerText : '<spring:message code="sal.title.text.preSalSts" />', width : 100 , editable : false},
+		{dataField : "psmSrvMemNo", headerText : '<spring:message code="sales.MembershipNo" />', width : 100 , editable : false},
+		{dataField : "custName", headerText : '<spring:message code="sal.text.custName" />', width : 250 , editable : false},
+		{dataField : "crtUser", headerText : '<spring:message code="sales.Creator" />', width : 100 , editable : false},
+		{dataField : "updDt", headerText : '<spring:message code="sal.text.lastUpdate" />', width : 150 , editable : false},
+		{dataField : "stusRem", headerText : '<spring:message code="sal.title.text.specialInstruction" />', width : 300 , editable : false}
             ];
 
         //그리드 속성 설정
@@ -237,6 +222,8 @@ console.log("preOrderList");
              enableFilter : true,
              showStateColumn : true,
              displayTreeOpen : true,
+             headerHeight        : 40,
+             wordWrap : true,
              noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
              groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
              exportURL : "/common/exportGrid.do"
@@ -565,7 +552,7 @@ console.log("preOrderList");
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
-<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#" id="excelDown">GENERATE</a></p></li>
 </ul>
