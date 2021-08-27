@@ -560,7 +560,28 @@ function fn_vendorValidation(ts){
             }
             else
             {
-                if($("#sameReqNo").val() == 0)
+            	if(appvPrcssStusCode == 'A' && vendorAccId != '' && vendorAccId != null)
+                {
+
+                    //fn_attachmentUpload("");
+                    //var gridObj = AUIGrid.getSelectedItems(vendorManagementGridID);
+                    //var reqNo = gridObj[0].item.reqNo;
+                    Common.ajax("POST", "/eAccounting/vendor/editApproved.do", obj, function(result1) {
+                        console.log(result1);
+                        var newClmNo = result1.data.newClmNo;
+                        obj.newClmNo = newClmNo;
+                        $("#newClmNo").val(newClmNo);
+                        console.log('newClmNo: ' + $("#newClmNo"));
+                        if(FormUtil.isEmpty($("#newReqNo").val())) {
+                            Common.popupDiv("/eAccounting/vendor/approveLinePop.do", obj, null, true, "approveLineSearchPop");
+                        } else {
+                            // update
+                            Common.popupDiv("/eAccounting/vendor/approveLinePop.do", obj, null, true, "approveLineSearchPop");
+                        }
+                        //fn_editVendorPop(result1.data.newClmNo, flg, vendorAccId, appvPrcssStusCode);
+                    });
+                }
+            	else if($("#sameReqNo").val() == 0)
                 {
                     //update
                     fn_attachmentUpdate("");
