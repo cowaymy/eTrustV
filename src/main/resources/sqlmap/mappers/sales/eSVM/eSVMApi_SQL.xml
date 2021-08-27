@@ -190,7 +190,7 @@
                     R.SRV_FILTER_STK_ID,
                     R.STK_CODE,
                     R.STK_DESC,
-                    R.C2,
+                    TO_CHAR(R.C2, 'dd-mm-yyyy') C2,
                     R.C3,
                     R.SRV_FILTER_STUS_ID,
                     TO_CHAR(R.SRV_FILTER_PRV_CHG_DT, 'dd-mm-yyyy') SRV_FILTER_PRV_CHG_DT,
