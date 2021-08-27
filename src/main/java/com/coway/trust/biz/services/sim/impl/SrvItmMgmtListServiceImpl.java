@@ -184,15 +184,16 @@ public class SrvItmMgmtListServiceImpl extends EgovAbstractServiceImpl implement
         log89M.put("refDocNo", itmAdd.get("refNo").toString());
         log89M.put("memId", itmAdd.get("memId").toString());
         log89M.put("deptCode", itmAdd.get("cmgroup").toString());
-      }
-      LOGGER.debug("= Total Quantity " + totalQty);
 
-      log89M.put("log91DseqNo", log91DseqNo);
+        LOGGER.debug("= Total Quantity " + totalQty);
 
-      if (totalQty > 0) { // INSERT SUB DATA LOG0090D
-        for (int x = 0; x < totalQty; x++) {
+        log89M.put("log91DseqNo", log91DseqNo);
 
-          int noRowAffected = SrvItmMgmtListMapper.insertLog90D(log89M);
+        if (totalQty > 0) { // INSERT SUB DATA LOG0090D
+          for (int x = 0; x < totalQty; x++) {
+
+            noRowAffected = SrvItmMgmtListMapper.insertLog90D(log89M);
+          }
         }
       }
 
