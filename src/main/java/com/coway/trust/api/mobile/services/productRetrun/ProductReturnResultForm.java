@@ -64,6 +64,8 @@ public class ProductReturnResultForm {
 
 	private String serialRequireChkYn;
 
+	private String retnCodeFailRemark;
+
 	public String getSerialRequireChkYn() {
 		return serialRequireChkYn;
 	}
@@ -239,6 +241,13 @@ public class ProductReturnResultForm {
 		this.fraSerialNo = fraSerialNo;
 	}
 
+	public String getRetnCodeFailRemark() {
+		return retnCodeFailRemark;
+	}
+
+	public void setRetnCodeFailRemark(String retnCodeFailRemark) {
+		this.retnCodeFailRemark = retnCodeFailRemark;
+	}
 
 	public static  List<Map<String, Object>>   createMaps(ProductReturnResultForm productReturnResultForm) {
 
@@ -269,6 +278,7 @@ public class ProductReturnResultForm {
 				map.put("transactionId", productReturnResultForm.getTransactionId());
 				map.put("scanSerial", productReturnResultForm.getScanSerial());
 				map.put("fraSerialNo", productReturnResultForm.getFraSerialNo());
+				map.put("retnCodeFailRemark", productReturnResultForm.getRetnCodeFailRemark());
 
 
 				list.add(map);

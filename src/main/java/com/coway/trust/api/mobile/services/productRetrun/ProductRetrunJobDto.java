@@ -219,7 +219,10 @@ public class ProductRetrunJobDto {
 	@ApiModelProperty(value = "fraProductName")
 	private String fraProductName;
 
+	private String retnCodeFailRemark;
+
 	private String serialChk;
+
 	public String getSerialChk() {
 		return serialChk;
 	}
@@ -803,7 +806,12 @@ public class ProductRetrunJobDto {
 	    this.fraProductName = fraProductName;
 	}
 
-
+	public String getRetnCodeFailRemark() {
+		return retnCodeFailRemark;
+	}
+	public void setRetnCodeFailRemark(String retnCodeFailRemark) {
+		this.retnCodeFailRemark = retnCodeFailRemark;
+	}
 
 	public static ProductRetrunJobDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, ProductRetrunJobDto.class);
