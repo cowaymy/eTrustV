@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiDto;
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiForm;
 import com.coway.trust.biz.login.impl.LoginMapper;
@@ -89,8 +90,9 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
 
             // [Filter Tab]
             List<EgovMap> selectProductFilterList = eSVMApiMapper.selectProductFilterList(eSVMApiForm.createMap(param));
-            List<eSVMApiDto> productFilterList = selectProductFilterList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
-            rtn.setProductFilterList(productFilterList);
+//            List<eSVMApiDto> productFilterList = selectProductFilterList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
+//            rtn.setProductFilterList(productFilterList);
+            rtn.setProductFilterList(selectProductFilterList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList()));
 
             // [Membership Tab]
             // Type of Package
