@@ -35,7 +35,7 @@ public class eSVMApiDto {
     private String nric;
     private int ordOtdstnd;
     private int asOtstnd;
-    private String address;
+    private String instAddress;
     private String stkName;
     private String memExprDate;
     private int expint;
@@ -214,12 +214,12 @@ public class eSVMApiDto {
         this.asOtstnd = asOtstnd;
     }
 
-    public String getAddress() {
-        return address;
+    public String getInstAddress() {
+        return instAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setInstAddress(String instAddress) {
+        this.instAddress = instAddress;
     }
 
     public String getStkName() {

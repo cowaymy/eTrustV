@@ -254,7 +254,7 @@
             AND B.SRV_MEM_ITM_STUS_ID = '1'
             AND C.SRV_MEM_STUS_ID  = 1
             AND C.PAC_TYPE = '1'
-            <if test="ordNo != null and ordNo != '' ">
+            <if test="salesOrdId != null and salesOrdId != '' ">
                 AND A.SALES_ORD_ID = #{salesOrdId}
             </if>
             <if test="ordNo != null and ordNo != '' ">
@@ -281,7 +281,7 @@
             AND TO_CHAR(A.PROMO_DT_END,'yyyymmdd') >= TO_CHAR(SYSDATE ,'yyyymmdd')
             ]]>
             AND B.PROMO_ITM_STK_ID = C.ITM_STK_ID
-            <if test="ordNo != null and ordNo != '' ">
+            <if test="salesOrdId != null and salesOrdId != '' ">
                 AND C.SALES_ORD_ID = #{salesOrdId}
             </if>
             <if test="ordNo != null and ordNo != '' ">
@@ -307,7 +307,7 @@
             A.PROMO_ID FILTER_PROMO_ID,
             A.PROMO_CODE || '-' || A.PROMO_DESC FILTER_PROMO_NAME
         FROM SAL0017D A
-        WHERE A.PROMO_SRV_MEM_PAC_ID = #{PROMO_SRV_MEM_PAC_ID}
+        WHERE A.PROMO_SRV_MEM_PAC_ID = 9
             AND A.PROMO_APP_TYPE_ID = '2290'
             AND TO_CHAR( A.PROMO_DT_FROM, 'yyyymmdd') <= TO_CHAR(SYSDATE, 'yyyymmdd')
             AND TO_CHAR(A.PROMO_DT_END, 'yyyymmdd') >= TO_CHAR(SYSDATE, 'yyyymmdd')
