@@ -1127,6 +1127,10 @@ $(document).ready(function(){
                 rtnMsg += "Subscription Year selected 1 year. "+"<spring:message code="sal.alert.msg.notAllowPromotion" /> <br>";
                 rtnValue = false;
             }
+			if ($("#cYear").val() != "12" && $("#cPromotionpac").val() == "32302") {
+                rtnMsg += "Subscription Year selected more than 1 year. "+"<spring:message code="sal.alert.msg.notAllowPromotionMore1y" /> <br>";
+                rtnValue = false;
+            }
 		}
 
 		if ($("#packpro").prop("checked")) {
@@ -1201,7 +1205,7 @@ $(document).ready(function(){
 			}
 		}
 
-		if($("#cPromotionpac").val() == "32295" || $("#cPromotionpac").val() == "32296"){
+		if($("#cPromotionpac").val() == "32295" || $("#cPromotionpac").val() == "32296" || $("#cPromotionpac").val() == "32302"){
 		        Common.ajaxSync("GET", "/sales/membership/mEligibleEVoucher", {
 		            ORD_NO : $("#ORD_NO").val()
 		        }, function(result) {
