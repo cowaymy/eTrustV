@@ -50,12 +50,12 @@ public class eSVMApiDto {
     private String stkDesc;
     private String c2;
     private String c3;
-    private String srvFilterStusId;
+    private int srvFilterStusId;
     private String srvFilterPrvChgDt;
-    private String srvFilterPriod;
+    private int srvFilterPriod;
     private String code;
-    private String c5;
-    private String c6;
+    private int c5;
+    private int c6;
     private String expiredateint;
     private String todaydateint;
 
@@ -318,11 +318,11 @@ public class eSVMApiDto {
         this.c3 = c3;
     }
 
-    public String getSrvFilterStusId() {
+    public int getSrvFilterStusId() {
         return srvFilterStusId;
     }
 
-    public void setSrvFilterStusId(String srvFilterStusId) {
+    public void setSrvFilterStusId(int srvFilterStusId) {
         this.srvFilterStusId = srvFilterStusId;
     }
 
@@ -334,11 +334,11 @@ public class eSVMApiDto {
         this.srvFilterPrvChgDt = srvFilterPrvChgDt;
     }
 
-    public String getSrvFilterPriod() {
+    public int getSrvFilterPriod() {
         return srvFilterPriod;
     }
 
-    public void setSrvFilterPriod(String srvFilterPriod) {
+    public void setSrvFilterPriod(int srvFilterPriod) {
         this.srvFilterPriod = srvFilterPriod;
     }
 
@@ -350,19 +350,19 @@ public class eSVMApiDto {
         this.code = code;
     }
 
-    public String getC5() {
+    public int getC5() {
         return c5;
     }
 
-    public void setC5(String c5) {
+    public void setC5(int c5) {
         this.c5 = c5;
     }
 
-    public String getC6() {
+    public int getC6() {
         return c6;
     }
 
-    public void setC6(String c6) {
+    public void setC6(int c6) {
         this.c6 = c6;
     }
 
