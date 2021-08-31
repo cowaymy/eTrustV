@@ -21,25 +21,38 @@ import io.swagger.annotations.ApiModel;
 @ApiModel(value = "CourseForm", description = "CourseForm")
 public class CourseForm {
 
-	private String id;
-	private List<AttendForm> attendence;
+	//private String id;
+	//private List<AttendForm> attendence;
 
-	public String getId() {
-		return id;
+	private String username;
+	private String shirtSize;
+	private String action;
+	private String courseCode;
+
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getShirtSize() {
+		return shirtSize;
+	}
+	public void setShirtSize(String shirtSize) {
+		this.shirtSize = shirtSize;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public String getAction() {
+		return action;
 	}
-
-	public List<AttendForm> getAttendence() {
-		return attendence;
+	public void setAction(String action) {
+		this.action = action;
 	}
-
-	public void setAttendence(List<AttendForm> attendence) {
-		this.attendence = attendence;
+	public String getCourseCode() {
+		return courseCode;
 	}
-
-
+	public void setCourseCode(String courseCode) {
+		this.courseCode = courseCode;
+	}
 
 }

@@ -22,20 +22,14 @@ import io.swagger.annotations.ApiModel;
 public class LMSAttendApiForm {
 
 
-	private List<CourseForm> courseCode;
+	private List<CourseForm> assignCourse;
 
-
-	public List<CourseForm> getCourseCode() {
-		return courseCode;
+	public List<CourseForm> getAssignCourse() {
+		return assignCourse;
 	}
 
 
-	public void setCourseCode(List<CourseForm> courseCode) {
-		this.courseCode = courseCode;
+	public void setAssignCourse(List<CourseForm> assignCourse) {
+		this.assignCourse = assignCourse;
 	}
-
-
-
-
-
 }

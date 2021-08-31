@@ -11,10 +11,27 @@
 
 <select id="selectCourseId" parameterType="Map" resultType="egovMap">
     SELECT COURS_ID FROM MSC0008D WHERE COURS_CODE = #{coursCode}
+    <if test="status != null and status != ''">
+        AND COURS_STUS_ID = #{status}
+    </if>
 </select>
 
-<select id="selectMemId" parameterType="Map" resultType="egovMap">
-    SELECT MEM_ID,MEM_CODE,FULL_NAME,NRIC,MEM_TYPE FROM ORG0001D WHERE MEM_CODE = #{memCode}
+<select id="selectMemIdByCourse" parameterType="Map" resultType="egovMap">
+    SELECT MEM_ID,MEM_CODE,FULL_NAME,NRIC,MEM_TYPE, COURSE.*
+    FROM ORG0001D O LEFT JOIN
+        (SELECT D.COURS_ID, COURS_CODE, COURS_NAME, COURS_LOC, COURS_STUS_ID, COURS_MEM_TYPE_ID, COURS_ITM_ID,
+            COURS_MEM_ID, COURS_TEST_RESULT, COURS_MEM_STUS_ID, COURS_D_MEM_NAME, COURS_D_MEM_NRIC, COURS_CDP_POINT
+            FROM MSC0008D D JOIN MSC0009D C ON D.COURS_ID = C.COURS_ID
+            WHERE D.COURS_CODE = #{coursCode}) COURSE
+    ON O.MEM_ID = COURSE.COURS_MEM_ID
+    WHERE 1=1
+    <if test="memCode != null and memCode != ''">
+        AND O.MEM_CODE = #{memCode}
+    </if>
+    <if test="memStatus != null and memStatus != ''">
+        AND O.STUS = #{memStatus}
+    </if>
+
 </select>
 
 <select id="selectAplicantId" parameterType="Map" resultType="egovMap">
@@ -22,11 +39,31 @@
      FROM ORG0003D WHERE APLICNT_CODE = #{memCode}
 </select>
 
+<select id="selectCourseByMem" parameterType="Map" resultType="egovMap">
+    SELECT C.COURS_ID, C.COURS_ITM_ID, C.COURS_MEM_ID, O.MEM_CODE, C.COURS_MEM_STUS_ID, CM.COURS_CODE
+    FROM MSC0009D C
+        JOIN MSC0008D CM ON C.COURS_ID = CM.COURS_ID
+        JOIN ORG0001D O ON O.MEM_ID = C.COURS_MEM_ID
+    WHERE 1 = 1
+
+    <if test="coursCode != null and coursCode != ''">
+        AND CM.COURS_CODE = #{coursCode}
+    </if>
+
+    <if test="memId != null and memId != ''">
+        AND C.COURS_MEM_ID = #{memId}
+    </if>
+
+    <if test="memCode != null and memCode != ''">
+        AND O.MEM_CODE = #{memCode}
+    </if>
+</select>
+
 <update id="registerCourse" parameterType="Map">
         MERGE
          INTO MSC0009D
         USING DUAL
-           ON (COURS_ID = #{coursId} AND COURS_MEM_ID = #{memId})
+           ON (COURS_ID = #{coursId} AND COURS_MEM_ID = #{coursMemId})
          WHEN MATCHED THEN
               UPDATE
                  SET COURS_MEM_STUS_ID = 1
@@ -64,22 +101,35 @@
     SET
         COURS_D_UPD_USER_ID = #{userId}
        ,COURS_D_UPD_DT = SYSDATE
-        <!--
-        COURS_MEM_ID = #{coursMemId}
+
+        <!-- COURS_MEM_ID = #{coursMemId} -->
+       <if test="coursMemStusId != null and coursMemStusId != ''">
        ,COURS_MEM_STUS_ID = #{coursMemStusId}
-       ,COURS_ITM_MEM_IS_VEGE = #{coursItmMemIsVege}
+       </if>
+
+       <!-- ,COURS_ITM_MEM_IS_VEGE = #{coursItmMemIsVege}
        ,COURS_ITM_MEM_PUP = #{coursItmMemPup}
        ,COURS_D_MEM_NAME = #{coursDMemName}
        ,COURS_D_MEM_NRIC = #{coursDMemNric}
         -->
+
+       <if test="coursTestResult != null and coursTestResult != ''">
        ,COURS_TEST_RESULT = #{coursTestResult}
+       </if>
+
        <if test="coursCdpPoint != null and coursCdpPoint != ''">
        ,COURS_CDP_POINT = #{coursCdpPoint}
        </if>
        <if test="coursAttendDay != null and coursAttendDay != ''">
            , COURS_ATTEND_DAY = #{coursAttendDay}
        </if>
-    WHERE COURS_ID = #{coursId}
+       <if test="shirtSize != null and shirtSize != ''">
+       , COURS_MEM_SHIRT_SIZE = #{shirtSize}
+       </if>
+
+    WHERE 1 = 1
+
+    AND COURS_ID = #{coursId}
     AND COURS_MEM_ID = #{coursMemId}
 </update>
 

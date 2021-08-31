@@ -18,7 +18,9 @@ public interface LMSApiMapper {
 
 	EgovMap selectCourseId(Map<String, Object> params);
 
-	EgovMap selectMemId(Map<String, Object> params);
+	EgovMap selectMemIdByCourse(Map<String, Object> params);
+
+	EgovMap selectCourseByMem(Map<String, Object> params);
 
 	EgovMap selectAplicantId(Map<String, Object> params);
 

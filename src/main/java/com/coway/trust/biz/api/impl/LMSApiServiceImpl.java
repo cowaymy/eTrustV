@@ -1,14 +1,9 @@
 package com.coway.trust.biz.api.impl;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
 
 /**************************************
  * Author                  Date                    Remark
@@ -16,57 +11,33 @@ import java.util.Locale;
  ***************************************/
 
 import java.util.Map;
-import java.util.Objects;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.jsoup.helper.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
+import com.coway.trust.AppConstants;
+import com.coway.trust.api.project.LMS.CourseForm;
+import com.coway.trust.api.project.LMS.LMSApiForm;
+import com.coway.trust.api.project.LMS.LMSAttendApiForm;
+import com.coway.trust.api.project.LMS.LMSResultApiForm;
 import com.coway.trust.biz.api.CommonApiService;
 import com.coway.trust.biz.api.LMSApiService;
 import com.coway.trust.biz.common.AdaptorService;
-import com.coway.trust.biz.organization.memberApi.impl.MemberApiMapper;
-import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.organization.organization.impl.MemberListServiceImpl;
 import com.coway.trust.biz.organization.training.TrainingService;
 import com.coway.trust.biz.organization.training.impl.TrainingMapper;
-import com.coway.trust.biz.sales.customer.CustomerService;
-import com.coway.trust.biz.sales.order.OrderRegisterService;
-import com.coway.trust.biz.sales.order.vo.AccClaimAdtVO;
-import com.coway.trust.biz.sales.order.vo.CustBillMasterVO;
-import com.coway.trust.biz.sales.order.vo.DocSubmissionVO;
-import com.coway.trust.biz.sales.order.vo.EStatementReqVO;
-import com.coway.trust.biz.sales.order.vo.InstallationVO;
-import com.coway.trust.biz.sales.order.vo.OrderVO;
-import com.coway.trust.biz.sales.order.vo.RentPaySetVO;
-import com.coway.trust.biz.sales.order.vo.RentalSchemeVO;
-import com.coway.trust.biz.sales.order.vo.SalesOrderDVO;
-import com.coway.trust.biz.sales.order.vo.SalesOrderMVO;
-import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
-import com.coway.trust.web.services.as.ASManagementListController;
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
-import com.coway.trust.AppConstants;
-import com.coway.trust.api.project.LMS.AttendForm;
-import com.coway.trust.api.project.LMS.LMSApiDto;
-import com.coway.trust.api.project.LMS.LMSApiForm;
-import com.coway.trust.api.project.LMS.LMSAttendApiForm;
-import com.coway.trust.api.project.LMS.LMSResultApiForm;
-import com.coway.trust.api.project.common.CommonApiController;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -324,9 +295,9 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 
     String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0",sysUserId = "0";
 
-    StopWatch stopWatch = new StopWatch();
+    /*StopWatch stopWatch = new StopWatch();
     stopWatch.reset();
-    stopWatch.start();
+    stopWatch.start();*/
 
     String data = commonApiService.decodeJson(request);
     Gson g = new Gson();
@@ -352,32 +323,125 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
           reqPrm.put("apiUserId", apiUserId);
           reqPrm.put("sysUserId", sysUserId);
 
-          for(int course = 0; course <p.getCourseCode().size(); course++){
-        	  String coursCode = p.getCourseCode().get(course).getId();
-        	  Map<String, Object> courseInfo = new HashMap<String, Object>();
-        	  courseInfo.put("coursCode", coursCode);
-        	  EgovMap codeId = lmsApiMapper.selectCourseId(courseInfo);
-        	  for(int attend = 0; attend <p.getCourseCode().get(course).getAttendence().size(); attend++){
-        		  String username = p.getCourseCode().get(course).getAttendence().get(attend).getUsername();
-        		  Map<String, Object> userInfo = new HashMap<String, Object>();
-        		  userInfo.put("memCode", username);
+          if (p.getAssignCourse() != null && p.getAssignCourse().size() > 0){
 
-        		  EgovMap userId = new EgovMap();
-        		  userId = lmsApiMapper.selectMemId(userInfo);
+              for(int i = 0; i <p.getAssignCourse().size(); i++){
 
-        		  String shirtSize = p.getCourseCode().get(course).getAttendence().get(attend).getShirtSize();
-            	  //Attendee List
-                  Map<String, Object> attendeeInfo = new HashMap<String, Object>();
-                  attendeeInfo.put("coursId", codeId.get("coursId"));
-                  attendeeInfo.put("coursMemId", userId.get("memId"));
-                  attendeeInfo.put("userId", reqPrm.get("sysUserId").toString());
-                  attendeeInfo.put("coursDMemName", userId.get("fullName"));
-                  attendeeInfo.put("coursDMemNric", userId.get("nric"));
-                  attendeeInfo.put("coursMemShirtSize", shirtSize);
-                  lmsApiMapper.registerCourse(attendeeInfo);
-        	  }
+            	  Map<String, Object> enrollInfo = new HashMap<String, Object>();
+
+            	  CourseForm courseForm = p.getAssignCourse().get(i);
+
+            	  if (courseForm != null){
+
+            		  if (StringUtil.isBlank(courseForm.getUsername())){
+    					  Exception e3 = new Exception("username is required");
+    					  throw e3;
+    				  }
+
+    				  if (StringUtil.isBlank(courseForm.getCourseCode())){
+    					  Exception e4= new Exception("courseCode is required");
+    					  throw e4;
+    				  }
+
+            		  if (!StringUtil.isBlank(courseForm.getAction())){
+            			  if (courseForm.getAction().equalsIgnoreCase("1")){ // 1. enroll course
+
+            				  enrollInfo.put("coursCode", courseForm.getCourseCode().trim());
+            				  enrollInfo.put("status", 1);// active course only
+            				  EgovMap codeId = lmsApiMapper.selectCourseId(enrollInfo);
+
+            				  if (codeId != null){
+            					  enrollInfo.put("memCode", courseForm.getUsername().trim());
+            					  enrollInfo.put("coursStatus", 1); // active member only
+            					  EgovMap userInfo = lmsApiMapper.selectMemIdByCourse(enrollInfo);
+
+            					  if (userInfo != null){
+
+            						  if (userInfo.get("coursCode") != null && userInfo.get("coursMemStusId").toString().equals("1")){
+            							  Exception e7 = new Exception("username [" + courseForm.getUsername() + "] already enrolled with course = [" + userInfo.get("coursCode") + "]");
+            							  throw e7;
+            						  }
+
+            						 //assign username to course
+            	                      Map<String, Object> attendeeInfo = new HashMap<String, Object>();
+            	                      attendeeInfo.put("coursId", codeId.get("coursId"));
+            	                      attendeeInfo.put("coursMemId", userInfo.get("memId"));
+            	                      attendeeInfo.put("userId", reqPrm.get("sysUserId").toString());
+            	                      attendeeInfo.put("coursDMemName", userInfo.get("fullName"));
+            	                      attendeeInfo.put("coursDMemNric", userInfo.get("nric"));
+            	                      //attendeeInfo.put("coursMemShirtSize", shirtSize);
+            	                      lmsApiMapper.registerCourse(attendeeInfo);
+
+            					  } else {
+            						  Exception e6 = new Exception ("username not found [" + courseForm.getUsername() + "]");
+                        			  throw e6;
+            					  }
+
+            				  } else {
+            					  Exception e5 = new Exception ("course code not found [" + courseForm.getCourseCode() + "]");
+                    			  throw e5;
+            				  }
+
+            			  } else if (courseForm.getAction().equalsIgnoreCase("2")) { // 2. delete enrolled course
+
+            				  // select course info by username
+            				  enrollInfo.put("coursCode", courseForm.getCourseCode().trim());
+            				  enrollInfo.put("memCode", courseForm.getUsername().trim());
+            				  EgovMap enrolledCourseMem = lmsApiMapper.selectCourseByMem(enrollInfo);
+
+            				  if (enrolledCourseMem == null){
+            					  Exception e5 = new Exception("Cannot not find username [" + courseForm.getUsername().trim() + "] with course = [" + courseForm.getCourseCode().trim() + " ]");
+            					  throw e5;
+            				  } else {
+            					  // update enrolled course to inactive;
+            					  Map<String, Object> attendeeInfo = new HashMap<String, Object>();
+        	                      attendeeInfo.put("coursId", enrolledCourseMem.get("coursId"));
+        	                      attendeeInfo.put("coursMemId", enrolledCourseMem.get("coursMemId"));
+        	                      attendeeInfo.put("userId", reqPrm.get("sysUserId").toString());
+        	                      attendeeInfo.put("coursMemStusId", 8); //set to inactive
+        	                      lmsApiMapper.updateAttendee(attendeeInfo);
+
+            				  }
+
+            			  } else if (courseForm.getAction().equalsIgnoreCase("3")) { // 3. update T-shirt size
+
+            				  if (StringUtil.isBlank(courseForm.getShirtSize())){
+            					  Exception e4= new Exception("shirtSize is required");
+            					  throw e4;
+            				  }
+
+            				  // select course info by username
+            				  enrollInfo.put("coursCode", courseForm.getCourseCode().trim());
+            				  enrollInfo.put("memCode", courseForm.getUsername().trim());
+            				  EgovMap enrolledCourseMem = lmsApiMapper.selectCourseByMem(enrollInfo);
+
+            				  if (enrolledCourseMem == null){
+            					  Exception e5 = new Exception("Cannot not find username [" + courseForm.getUsername().trim() + "] with course = [" + courseForm.getCourseCode().trim() + " ]");
+            					  throw e5;
+            				  }
+
+            				  	  // update t-shirt size to enrolled course user
+            				  Map<String, Object> tshirtInfo = new HashMap<String, Object>();
+            				  tshirtInfo.put("shirtSize", courseForm.getShirtSize().trim());
+            				  tshirtInfo.put("coursId", enrolledCourseMem.get("coursId"));
+            				  tshirtInfo.put("coursMemId", enrolledCourseMem.get("coursMemId"));
+
+            				  lmsApiMapper.updateAttendee(tshirtInfo);
+
+            			  }
+            		  } else { // action is null
+
+            			  Exception e2 = new Exception ("action is required");
+            			  throw e2;
+            		  }
+            	  }
+              }
+
+              created = 1;
+          } else {
+        	  Exception e1 = new Exception("Assign Course is required");
+        	  throw e1;
           }
-          created = 1;
       }
 
       if(created > 0){
@@ -390,12 +454,14 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
     }catch(Exception e){
       code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
       message = StringUtils.substring(e.getMessage(), 0, 4000);
+      throw e;
     } finally{
-      stopWatch.stop();
-      respTm = stopWatch.toString();
+     // stopWatch.stop();
+     // respTm = stopWatch.toString();
+    	return commonApiService.rtnRespMsg(request, code, message, respTm, data, null ,apiUserId);
     }
 
-    return commonApiService.rtnRespMsg(request, code, message, respTm, data, null ,apiUserId);
+    //return commonApiService.rtnRespMsg(request, code, message, respTm, data, null ,apiUserId);
   }
 
   @Override
@@ -430,72 +496,81 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 	          reqPrm.put("apiUserId", apiUserId);
 	          reqPrm.put("sysUserId", sysUserId);
 
-	          for(int user = 0; user <p.getUserResult().size(); user++){
-	        	  String coursCode = p.getUserResult().get(user).getCourseCode();
-	        	  Map<String, Object> courseInfo = new HashMap<String, Object>();
-	        	  courseInfo.put("coursCode", coursCode);
-	        	  EgovMap codeId = lmsApiMapper.selectCourseId(courseInfo);
+	          if (p.getUserResult() != null || p.getUserResult().size() > 0){
 
-	        	  String username = p.getUserResult().get(user).getUsername();
-        		  Map<String, Object> userInfo = new HashMap<String, Object>();
-        		  userInfo.put("memCode", username);
+    	          for(int user = 0; user <p.getUserResult().size(); user++){
 
-        		  EgovMap userId = new EgovMap();
-        		  userId = lmsApiMapper.selectMemId(userInfo);
 
-            	  //Attendee List
-                  Map<String, Object> attendeeInfo = new HashMap<String, Object>();
-                  attendeeInfo.put("coursId", codeId.get("coursId"));
-                  attendeeInfo.put("coursMemId", userId.get("memId"));
-                  attendeeInfo.put("userId", reqPrm.get("sysUserId").toString());
-                  attendeeInfo.put("coursTestResult", p.getUserResult().get(user).getTrainingResult());
-                  if(!p.getUserResult().get(user).getCdpPoint().isEmpty()){
-                	  attendeeInfo.put("coursCdpPoint", p.getUserResult().get(user).getCdpPoint());
-                  }
-                  if(!p.getUserResult().get(user).getAttendDay().isEmpty()){
-                	  attendeeInfo.put("coursAttendDay", p.getUserResult().get(user).getAttendDay());
-                  }
-                  lmsApiMapper.updateAttendee(attendeeInfo);
 
-                  //when HP, call to trigger open sales
-                  if(userId.get("memType").toString().equals("1")){
-                	  MemberListServiceImpl memberListServiceImpl = new MemberListServiceImpl();
-                      SessionVO sessionVo = new SessionVO();
-                      Map<String, Object> params = new HashMap<>();
 
-                      params.put("MemberID", userId.get("memId"));
-                      params.put("memberId", userId.get("memId"));
-                      params.put("memberCode", userId.get("memCode"));
-                      params.put("memberType", userId.get("memType"));
-                      params.put("nric", userId.get("nric"));
+    	        	  String coursCode = p.getUserResult().get(user).getCourseCode();
+    	        	  Map<String, Object> courseInfo = new HashMap<String, Object>();
+    	        	  courseInfo.put("coursCode", coursCode);
+    	        	  EgovMap codeId = lmsApiMapper.selectCourseId(courseInfo);
 
-                      sessionVo.setUserId(Integer.parseInt(sysUserId));
-                      //sessionVo.setUserBranchId(Integer.parseInt(userId.get("collctBrnch").toString()));
+    	        	  String username = p.getUserResult().get(user).getUsername();
+            		  Map<String, Object> userInfo = new HashMap<String, Object>();
+            		  userInfo.put("memCode", username);
 
-                      Map<String, Object> resultValue = new HashMap<String, Object>();
-                      resultValue = hpMemUpdatePay(params,sessionVo);
+           		   		EgovMap userId = lmsApiMapper.selectMemIdByCourse(userInfo);
 
-//                      if(resultValue.size() > 0){
-//              			if (resultValue.get("duplicMemCode") != null) {
-//              				respPrm.put("registered", respPrm.get("registered").toString()
-//              						+ resultValue.get("duplicMemCode").toString());
-////              				message = "This member is already registered<br/>as member code : "
-////              						+ resultValue.get("duplicMemCode").toString();
-//              			} else {
-//              				//Doc Update
-//              				params.put("hpMemId",  resultValue.get("memId").toString());
-//              				memberListServiceImpl.updateDocSubWhenAppr(params , sessionVo);
-//              				created = 1;
-//              			}
-//              		} else if (resultValue.size() == 0) {
-//              				respPrm.put("invalid",userId.get("memId"));
-////              			message = "There is no address information to the HP applicant code";
-//              		}
-                      //if HP pass the test, call LMS API to direct convert to StaffId
-//                      String newMemCode = (String)resultValue.get("memCode");
-                  }
-	          }
-	          created = 1;
+                	  //Attendee List
+                      Map<String, Object> attendeeInfo = new HashMap<String, Object>();
+                      attendeeInfo.put("coursId", codeId.get("coursId"));
+                      attendeeInfo.put("coursMemId", userId.get("memId"));
+                      attendeeInfo.put("userId", reqPrm.get("sysUserId").toString());
+                      attendeeInfo.put("coursTestResult", p.getUserResult().get(user).getTrainingResult());
+                      if(!p.getUserResult().get(user).getCdpPoint().isEmpty()){
+                    	  attendeeInfo.put("coursCdpPoint", p.getUserResult().get(user).getCdpPoint());
+                      }
+                      if(!p.getUserResult().get(user).getAttendDay().isEmpty()){
+                    	  attendeeInfo.put("coursAttendDay", p.getUserResult().get(user).getAttendDay());
+                      }
+                      lmsApiMapper.updateAttendee(attendeeInfo);
+
+                      //when HP, call to trigger open sales
+                      if(userId.get("memType").toString().equals("1")){
+                    	  MemberListServiceImpl memberListServiceImpl = new MemberListServiceImpl();
+                          SessionVO sessionVo = new SessionVO();
+                          Map<String, Object> params = new HashMap<>();
+
+                          params.put("MemberID", userId.get("memId"));
+                          params.put("memberId", userId.get("memId"));
+                          params.put("memberCode", userId.get("memCode"));
+                          params.put("memberType", userId.get("memType"));
+                          params.put("nric", userId.get("nric"));
+
+                          sessionVo.setUserId(Integer.parseInt(sysUserId));
+                          //sessionVo.setUserBranchId(Integer.parseInt(userId.get("collctBrnch").toString()));
+
+                          Map<String, Object> resultValue = new HashMap<String, Object>();
+                          resultValue = hpMemUpdatePay(params,sessionVo);
+
+    //                      if(resultValue.size() > 0){
+    //              			if (resultValue.get("duplicMemCode") != null) {
+    //              				respPrm.put("registered", respPrm.get("registered").toString()
+    //              						+ resultValue.get("duplicMemCode").toString());
+    ////              				message = "This member is already registered<br/>as member code : "
+    ////              						+ resultValue.get("duplicMemCode").toString();
+    //              			} else {
+    //              				//Doc Update
+    //              				params.put("hpMemId",  resultValue.get("memId").toString());
+    //              				memberListServiceImpl.updateDocSubWhenAppr(params , sessionVo);
+    //              				created = 1;
+    //              			}
+    //              		} else if (resultValue.size() == 0) {
+    //              				respPrm.put("invalid",userId.get("memId"));
+    ////              			message = "There is no address information to the HP applicant code";
+    //              		}
+                          //if HP pass the test, call LMS API to direct convert to StaffId
+    //                      String newMemCode = (String)resultValue.get("memCode");
+                      }
+    	          }
+    	          created = 1;
+    	      } else { // empty UserResult list
+    	    	  Exception e1 = new Exception("UserResult is required");
+    	    	  throw e1;
+    	      }
 	      }
 
 	      if(created > 0){
