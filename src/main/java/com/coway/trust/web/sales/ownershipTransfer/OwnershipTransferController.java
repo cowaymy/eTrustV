@@ -89,10 +89,12 @@ public class OwnershipTransferController {
 		String rotAppType[] = request.getParameterValues("rotAppType");
 		String rotStus[] = request.getParameterValues("rotStus");
 		String rotReqBrnch[] = request.getParameterValues("rotReqBrnch");
+		String rotFeedbackCode[] = request.getParameterValues("rotFeedbackCode");
 
 		params.put("rotAppType", rotAppType);
 		params.put("rotStus", rotStus);
 		params.put("rotReqBrnch", rotReqBrnch);
+		params.put("rotFeedbackCode", rotFeedbackCode);
 
 		List<EgovMap> list = ownershipTransferService.selectRootList(params);
 		return ResponseEntity.ok(list);

@@ -27,7 +27,8 @@
 		B.ROT_NEW_CUST_ID,
 		D.NAME NEW_CUST_NAME,
 		E.NAME ROT_STUS,
-		TO_CHAR(A.ROT_REQ_DT, 'DD/MM/YYYY') ROT_REQ_DT
+		TO_CHAR(A.ROT_REQ_DT, 'DD/MM/YYYY') ROT_REQ_DT,
+		I.CODE || ' - ' || I.RESN_DESC ROT_FEEDBACK_CODE
 		FROM SAL0275M A
 		JOIN SAL0276D B
 		ON A.ROT_ID = B.ROT_ID
@@ -44,6 +45,8 @@
 		AND G.CODE_MASTER_ID = 10
 		JOIN SAL0277D H
 		ON A.ROT_ID = H.ROT_ID
+		LEFT JOIN SYS0032M I
+		ON H.CCP_RESN_ID = I.RESN_ID
 		WHERE 1=1
 		<if test="rotOrdNo != null and rotOrdNo != '' ">
 			AND A.ROT_ORD_NO = #{rotOrdNo}
@@ -88,6 +91,13 @@
 				#{item}
 			</foreach>
 		</if>
+		<if test="(rotFeedbackCode != null and rotFeedbackCode != '') ">
+            AND H.CCP_RESN_ID IN
+            <foreach item="item" collection="rotFeedbackCode" index="index"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
 		ORDER BY A.ROT_ID DESC
 	</select>
 

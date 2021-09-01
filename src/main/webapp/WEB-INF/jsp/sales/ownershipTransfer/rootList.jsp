@@ -47,6 +47,10 @@
 		dataField : "rotReqDt",
 		headerText : "Request Date",
 		width : 140
+	}, {
+		dataField : "rotFeedbackCode",
+		headerText : "ROT FB Code",
+		width : 140
 	} ];
 
 	var ownershipTransferGridPros = {
@@ -70,6 +74,8 @@
 						'', 'rotAppType', 'M', 'fn_multiCombo'); //Common Code
 				doGetComboOrder('/sales/ownershipTransfer/selectStatusCode.do',
 						'', '', '', 'rotStus', 'M', 'fn_multiCombo'); //Status Code
+				doGetComboCodeId('/common/selectReasonCodeList.do',
+						{typeId : '6242', separator : ' - ', inputId : ''}, '', 'rotFeedbackCode', 'M', 'fn_multiCombo'); //Feedback Code
 
 				$("#search").click(fn_searchROT);
 				$("#requestROT").click(fn_requestROTSearchOrder);
@@ -115,6 +121,13 @@
 			selectAll : true, // 전체선택
 			width : '100%'
 		});
+
+	    $('#rotFeedbackCode').change(function() {
+	        //console.log($(this).val());
+	    }).multipleSelect({
+	        selectAll : true, // 전체선택
+	        width : '100%'
+	    });
 	}
 
 	function fn_supplierSearchPop() {
@@ -395,6 +408,15 @@
 						<th scope="row">Requestor Branch</th>
 						<td><select id="rotReqBrnch" name="rotReqBrnch" class="w100p"></select>
 						</td>
+					</tr>
+					<tr>
+					   <th scope="row">ROT Feedback Code</th>
+					   <td><select id="rotFeedbackCode" name="rotFeedbackCode" class="w100p"></select></td>
+					   <th scope="row">Last Update User</th>
+					   <td><input type="text" title="Last Update User" id="lastUpdateUser" name="lastUpdateUser"
+					               placeholder="Last Update User" class="w100p" /></td>
+					   <th scope="row"></th>
+                        <td></td>
 					</tr>
 				</tbody>
 			</table>
