@@ -359,7 +359,7 @@
                         ,HS_LOSE_ITEM_OPR_YN
                         ,HS_LOSE_CDB_ID
                         ,HS_LOSE_CDC_CODE
-                         HS_LOSE_RCD_ID
+                        , HS_LOSE_RCD_ID
                         ,CRT_USER_ID
                         ,CRT_DT
                    )

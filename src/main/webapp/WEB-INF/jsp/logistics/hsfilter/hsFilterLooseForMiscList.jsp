@@ -68,6 +68,20 @@ var columnLayout = [
            ];
 
 
+
+var sample_columnLayout = [
+
+                    {dataField: "hsLoseRcdCode",headerText :"RDC"      ,width:100   ,height:30 , visible:true,editable : false},
+
+                    {dataField: "hsLoseItemCode",headerText :"Code"      ,width:100   ,height:30 , visible:true,editable : false},
+                    {dataField: "hsLoseItemUom",headerText :"Uom"          ,width:100   ,height:30 , visible:true,editable : false},
+                    {dataField: "hsLoseItemOprYn",headerText :"LooseYn"          ,width:100   ,height:30 , visible:true,editable : false},
+                    {dataField: "hsLoseItemDeliverQty",headerText :"Deliver Qty"          ,width:100   ,height:30 , visible:true,editable : false}
+
+  ];
+
+
+
 createAUIGrid =function(columnLayout ){
 
     var auiGridProps = {
@@ -91,7 +105,7 @@ createAUIGrid =function(columnLayout ){
     // 실제로 #grid_wrap 에 그리드 생성
     mstGridID = AUIGrid.create("#main_grid_wrap", columnLayout, auiGridProps);
 
-    //mstGridID2 = AUIGrid.create("#sub_grid_wrap", columnLayout2, auiGridProps);
+    mstGridID2 = AUIGrid.create("#sample_grid_wrap", sample_columnLayout, auiGridProps);
 
 }
 
@@ -183,6 +197,16 @@ createAUIGrid =function(columnLayout ){
 
        // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
        GridCommon.exportTo("main_grid_wrap", "xlsx", "Hs Filter Loose List");
+   }
+
+
+
+
+
+   function fn_gridSamppleExport(){
+
+       // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+       GridCommon.exportTo("sample_grid_wrap", "xlsx", "Hs Filter Loose List for Miss");
    }
 
 
@@ -463,6 +487,8 @@ function to_json(workbook) {
 
 
         <ul class="right_btns">
+
+                <li><p class="btn_grid"><a id="sampleBt_upload"  onclick="javascript:fn_gridSamppleExport();"    >SampleFile Dw</a></p></li>
                 <li><p class="btn_grid"><a id="mainBt_upload"  >Upload</a></p></li>
                 <li><p class="btn_grid"><a id="mainBt_dw"onclick="javascript:fn_gridExport();" >Excel Dw</a></p></li>
          </ul>
@@ -470,6 +496,11 @@ function to_json(workbook) {
          <article class="grid_wrap"><!-- grid_wrap start -->
                <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
          </article><!-- grid_wrap end -->
+
+
+      <article class="grid_wrap"><!-- grid_wrap start -->
+               <div id="sample_grid_wrap" class="autoGridHeight" style="display:none"></div>
+         </article><!-- grid_wrap end --
 
 
 <!--
