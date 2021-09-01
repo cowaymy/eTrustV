@@ -1,5 +1,6 @@
 /**
  * @author Adrian C.
+
  **/
 package com.coway.trust.web.logistics.hsfilterforecast;
 
@@ -39,7 +40,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 import opennlp.tools.coref.mention.Parse;
 
 @Controller
-@RequestMapping(value = "/logistics/HSFilterForecast")
+@RequestMapping(value = "/logistics/hsfilterforecast")
 public class HSFilterForecastController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());

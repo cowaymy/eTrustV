@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.hsfilter.impl.HsFilterDeliveryMapper">
+
+
+<select id="selectHSFilterDeliveryBranchList" parameterType="Map"  resultType="EgovMap">
+
+	 SELECT
+	    WH_LOC_ID CODE_ID,
+	    WH_LOC_CODE CODE ,
+	    WH_LOC_CODE || ' - ' || WH_LOC_DESC CODE_NAME
+	FROM
+	    SYS0028M ra
+	WHERE
+	    RA.WH_LOC_GB = '02'
+	    AND RA.WH_LOC_STK_GRAD = 'A'
+	    AND RA.wh_loc_stus_id = 1
+
+        <if test="searchBranch != null  and searchBranch !=''">
+             AND CDC_CODE = #{searchBranch}
+       </if>
+
+	ORDER BY CODE
+</select>
+
+
+
+<select id="selectHSFilterDeliveryList" parameterType="Map"  resultType="EgovMap">
+
+		SELECT
+		             HS_LOSE_YYYY
+		            ,HS_LOSE_MM
+		            ,HS_LOSE_LOCL_CODE
+		            ,HS_LOSE_LOCL_DESC
+		            ,HS_LOSE_ITEM_CODE
+		            ,HS_LOSE_ITEM_DESC
+		            ,HS_LOSE_ITEM_UOM
+		            ,HS_LOSE_ITEM_OPR_YN
+		            ,HS_LOSE_ITEM_FCAST_QTY
+		            ,AVAILABLE_QTY
+		            ,DELIVER_QTY
+		            ,CASE  WHEN   HS_LOSE_ITEM_OPR_YN ='Y' THEN   TRUNC(ROUND(DELIVER_QTY/HS_LOSE_ITEM_UOM,1) )
+		             ELSE  CEIL(DELIVER_QTY/HS_LOSE_ITEM_UOM)
+		             END  BOX
+		            ,CASE  WHEN   HS_LOSE_ITEM_OPR_YN ='Y' THEN   MOD(DELIVER_QTY,HS_LOSE_ITEM_UOM)
+		             ELSE  0
+		             END  Loose
+		FROM (
+		<![CDATA[
+		     SELECT  A.HS_LOSE_YYYY
+		            ,A.HS_LOSE_MM
+		            ,A.HS_LOSE_LOCL_CODE
+		            ,A.HS_LOSE_LOCL_DESC
+		            ,A.HS_LOSE_ITEM_CODE
+		            ,A.HS_LOSE_ITEM_DESC
+		            ,B.HS_LOSE_ITEM_UOM
+		            ,B.HS_LOSE_ITEM_OPR_YN
+		            ,A.HS_LOSE_ITEM_FCAST_QTY
+		            ,L56.QTY -NVL(L75.BOOKING_QTY , 0) AVAILABLE_QTY
+		            ,CASE  WHEN  (HS_LOSE_ITEM_FCAST_QTY -  (L56.QTY -NVL(L75.BOOKING_QTY , 0))) > 0  THEN (HS_LOSE_ITEM_FCAST_QTY -  (L56.QTY -NVL(L75.BOOKING_QTY , 0)))
+		                   ELSE 0 END  AS DELIVER_QTY
+		    FROM   LOG0108M A
+		            ,LOG0107M B
+		            ,LOG0056M L56
+		            ,(
+		                SELECT
+		                    l75.loc_id, l75.itm_code, SUM (reqst_qty) - SUM (NVL (mov_qty, 0)) AS booking_qty
+		                FROM
+		                    log0075m l75
+		                WHERE
+		                    NVL (l75.final_cmplt, 'N') <> 'Y'
+		                    AND l75.reqst_no IN (
+		                    SELECT
+		                        reqst_no
+		                    FROM
+		                        log0047m
+		                    WHERE
+		                        NVL (REQST_DEL, 'N') <> 'Y')
+		                GROUP BY
+		                    l75.loc_id, l75.itm_code
+		        ) L75
+		    WHERE   A.HS_LOSE_ITEM_CODE  =B.HS_LOSE_ITEM_CODE
+		     AND  A.HS_LOSE_LOCL_ID  =L56.LOC_ID
+		     AND  L56.STK_CODE  = A.HS_LOSE_ITEM_CODE
+		     AND  A.HS_LOSE_LOCL_ID  =l75.LOC_ID (+)
+		     AND  A.HS_LOSE_ITEM_CODE =l75.ITM_CODE (+)
+		     AND  A.HS_LOSE_YYYY=#{yyyy}
+		     AND  A.HS_LOSE_MM=#{mm}
+
+	]]>	    <if test="searchCDC != null and searchCDC != ''">
+                  AND A.HS_LOSE_CDC_CODE = #{searchCDC}
+                    </if>
+                 <if test="searchBranchCb != null and searchBranchCb != ''">
+                        AND A.HS_LOSE_RDC_CODE = #{searchBranchCb}
+                 </if>
+
+<![CDATA[
+        UNION ALL
+            SELECT
+                 #{yyyy}  AS HS_LOSE_YYYY
+                ,#{mm}    AS HS_LOSE_MM
+                , HS_LOSE_RCD_CODE
+                , ( SELECT WH_LOC_DESC  FROM SYS0028M WHERE WH_LOC_CODE  =HS_LOSE_RCD_CODE )  AS HS_LOSE_LOCL_DESC
+                , HS_LOSE_ITEM_CODE
+                ,B.STK_DESC AS  HS_LOSE_ITEM_DESC
+                ,A.HS_LOSE_ITEM_UOM
+                ,A.HS_LOSE_ITEM_OPR_YN
+                ,A.HS_LOSE_ITEM_DELIVER_QTY
+                ,NVL(L56.QTY -NVL(L75.BOOKING_QTY , 0),0) AVAILABLE_QTY
+                ,CASE
+                    WHEN (HS_LOSE_ITEM_DELIVER_QTY - (NVL(L56.QTY,0) -NVL(L75.BOOKING_QTY , 0))) > 0 THEN (HS_LOSE_ITEM_DELIVER_QTY - (NVL(L56.QTY,0) -NVL(L75.BOOKING_QTY , 0)))
+                    ELSE 0
+                END AS DELIVER_QTY
+            FROM  log0109m A , SYS0026M B ,(
+                                SELECT
+                                    l75.loc_id, l75.itm_code, SUM (reqst_qty) - SUM (NVL (mov_qty, 0)) AS booking_qty
+                                FROM
+                                    log0075m l75
+                                WHERE
+                                    NVL (l75.final_cmplt, 'N') <> 'Y'
+                                    AND l75.reqst_no IN (
+                                    SELECT
+                                        reqst_no
+                                    FROM
+                                        log0047m
+                                    WHERE
+                                        NVL (REQST_DEL, 'N') <> 'Y')
+                                GROUP BY
+                                    l75.loc_id, l75.itm_code
+            ) L75,LOG0056M L56
+        WHERE A.HS_LOSE_ITEM_CODE  = B.STK_CODE
+             AND HS_LOSE_RCD_ID =L56.LOC_ID (+)
+             AND HS_LOSE_ITEM_CODE =L56.STK_CODE(+)
+             AND HS_LOSE_RCD_ID = l75.LOC_ID (+)
+             AND A.HS_LOSE_ITEM_CODE = l75.ITM_CODE (+)
+ ]]>
+             <if test="searchCDC != null and searchCDC != ''">
+                          AND A.HS_LOSE_CDC_CODE = #{searchCDC}
+             </if>
+             <if test="searchBranchCb != null and searchBranchCb != ''">
+                       AND HS_LOSE_RCD_CODE = #{searchBranchCb}
+             </if>
+		)
+        WHERE  1=1
+             <if test="deliverqty != null and deliverqty != ''">
+               DELIVER_QTY >0
+            </if>
+
+</select>
+
+
+
+
+
+
+<select id="selectHSFilterDeliveryPickingList" parameterType="Map"  resultType="EgovMap">
+<![CDATA[
+        SELECT
+                     HS_LOSE_YYYY
+                    ,HS_LOSE_MM
+                    ,HS_LOSE_LOCL_CODE
+                    ,HS_LOSE_LOCL_DESC
+                    ,HS_LOSE_ITEM_CODE
+                    ,HS_LOSE_ITEM_DESC
+                    ,HS_LOSE_ITEM_UOM
+                    ,HS_LOSE_ITEM_OPR_YN
+                    ,HS_LOSE_ITEM_FCAST_QTY
+                    ,AVAILABLE_QTY
+                    ,DELIVER_QTY
+                    ,CASE  WHEN   HS_LOSE_ITEM_OPR_YN ='Y' THEN   TRUNC(ROUND(DELIVER_QTY/HS_LOSE_ITEM_UOM,1) )
+                     ELSE  CEIL(DELIVER_QTY/HS_LOSE_ITEM_UOM)
+                     END  BOX
+                    ,CASE  WHEN   HS_LOSE_ITEM_OPR_YN ='Y' THEN   MOD(DELIVER_QTY,HS_LOSE_ITEM_UOM)
+                     ELSE  0
+                     END  Loose
+        FROM (
+             SELECT  A.HS_LOSE_YYYY
+                    ,A.HS_LOSE_MM
+                    ,A.HS_LOSE_LOCL_CODE
+                    ,A.HS_LOSE_LOCL_DESC
+                    ,A.HS_LOSE_ITEM_CODE
+                    ,A.HS_LOSE_ITEM_DESC
+                    ,B.HS_LOSE_ITEM_UOM
+                    ,B.HS_LOSE_ITEM_OPR_YN
+                    ,A.HS_LOSE_ITEM_FCAST_QTY
+                    ,L56.QTY -NVL(L75.BOOKING_QTY , 0) AVAILABLE_QTY
+                    ,CASE  WHEN  (HS_LOSE_ITEM_FCAST_QTY -  (L56.QTY -NVL(L75.BOOKING_QTY , 0))) > 0  THEN (HS_LOSE_ITEM_FCAST_QTY -  (L56.QTY -NVL(L75.BOOKING_QTY , 0)))
+                           ELSE 0 END  AS DELIVER_QTY
+            FROM   LOG0108M A
+                    ,LOG0107M B
+                    ,LOG0056M L56
+                    ,(
+                        SELECT
+                            l75.loc_id, l75.itm_code, SUM (reqst_qty) - SUM (NVL (mov_qty, 0)) AS booking_qty
+                        FROM
+                            log0075m l75
+                        WHERE
+                            NVL (l75.final_cmplt, 'N') <> 'Y'
+                            AND l75.reqst_no IN (
+                            SELECT
+                                reqst_no
+                            FROM
+                                log0047m
+                            WHERE
+                                NVL (REQST_DEL, 'N') <> 'Y')
+                        GROUP BY
+                            l75.loc_id, l75.itm_code
+                ) L75
+            WHERE A.HS_LOSE_ITEM_CODE  =B.HS_LOSE_ITEM_CODE
+             AND  A.HS_LOSE_LOCL_ID  =L56.LOC_ID
+             AND  L56.STK_CODE  = A.HS_LOSE_ITEM_CODE
+             AND  A.HS_LOSE_LOCL_ID  =l75.LOC_ID (+)
+             AND  A.HS_LOSE_ITEM_CODE =l75.ITM_CODE (+)
+             AND  A.HS_LOSE_YYYY=#{yyyy}
+             AND  A.HS_LOSE_MM=#{mm}
+
+    ]]>           <if test="searchCDC != null and searchCDC != ''">
+                  AND A.HS_LOSE_CDC_CODE = #{searchCDC}
+                    </if>
+                 <if test="searchBranchCb != null and searchBranchCb != ''">
+                        AND A.HS_LOSE_RDC_CODE = #{searchBranchCb}
+                 </if>
+<![CDATA[
+        UNION ALL
+	        SELECT
+	             #{yyyy}  AS HS_LOSE_YYYY
+	            ,#{mm}    AS HS_LOSE_MM
+	            , HS_LOSE_RCD_CODE
+	            , ( SELECT WH_LOC_DESC  FROM SYS0028M WHERE WH_LOC_CODE  =HS_LOSE_RCD_CODE )  AS HS_LOSE_LOCL_DESC
+	            , HS_LOSE_ITEM_CODE
+	            ,B.STK_DESC AS  HS_LOSE_ITEM_DESC
+	            ,A.HS_LOSE_ITEM_UOM
+	            ,A.HS_LOSE_ITEM_OPR_YN
+	            ,A.HS_LOSE_ITEM_DELIVER_QTY
+	            ,NVL(L56.QTY -NVL(L75.BOOKING_QTY , 0),0) AVAILABLE_QTY
+	            ,CASE
+	                WHEN (HS_LOSE_ITEM_DELIVER_QTY - (NVL(L56.QTY,0) -NVL(L75.BOOKING_QTY , 0))) > 0 THEN (HS_LOSE_ITEM_DELIVER_QTY - (NVL(L56.QTY,0) -NVL(L75.BOOKING_QTY , 0)))
+	                ELSE 0
+	            END AS DELIVER_QTY
+	        FROM  log0109m A , SYS0026M B ,(
+	                            SELECT
+	                                l75.loc_id, l75.itm_code, SUM (reqst_qty) - SUM (NVL (mov_qty, 0)) AS booking_qty
+	                            FROM
+	                                log0075m l75
+	                            WHERE
+	                                NVL (l75.final_cmplt, 'N') <> 'Y'
+	                                AND l75.reqst_no IN (
+	                                SELECT
+	                                    reqst_no
+	                                FROM
+	                                    log0047m
+	                                WHERE
+	                                    NVL (REQST_DEL, 'N') <> 'Y')
+	                            GROUP BY
+	                                l75.loc_id, l75.itm_code
+	        ) L75,LOG0056M L56
+	    WHERE A.HS_LOSE_ITEM_CODE  = B.STK_CODE
+	         AND HS_LOSE_RCD_ID =L56.LOC_ID (+)
+	         AND HS_LOSE_ITEM_CODE =L56.STK_CODE(+)
+	         AND HS_LOSE_RCD_ID = l75.LOC_ID (+)
+	         AND A.HS_LOSE_ITEM_CODE = l75.ITM_CODE (+)
+ ]]>
+             <if test="searchCDC != null and searchCDC != ''">
+                          AND A.HS_LOSE_CDC_CODE = #{searchCDC}
+             </if>
+             <if test="searchBranchCb != null and searchBranchCb != ''">
+                       AND HS_LOSE_RCD_CODE = #{searchBranchCb}
+             </if>
+
+        )  WHERE   DELIVER_QTY >0
+          ORDER BY HS_LOSE_ITEM_CODE
+
+</select>
+
+</mapper>
