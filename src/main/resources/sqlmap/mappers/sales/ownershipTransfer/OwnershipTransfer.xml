@@ -27,8 +27,10 @@
 		B.ROT_NEW_CUST_ID,
 		D.NAME NEW_CUST_NAME,
 		E.NAME ROT_STUS,
-		TO_CHAR(A.ROT_REQ_DT, 'DD/MM/YYYY') ROT_REQ_DT,
-		I.CODE || ' - ' || I.RESN_DESC ROT_FEEDBACK_CODE
+		TO_CHAR(A.ROT_REQ_DT, 'DD/MM/YYYY AM HH:MI:SS') || ' (' || F.USER_NAME || ') ' ROT_REQ_DT,
+		I.CODE || ' - ' || I.RESN_DESC ROT_FEEDBACK_CODE,
+		H.CCP_REM,
+		TO_CHAR(A.ROT_UPD_DT, 'DD/MM/YYYY AM HH:MI:SS') || ' (' || J.USER_NAME || ') ' ROT_UPD_DT
 		FROM SAL0275M A
 		JOIN SAL0276D B
 		ON A.ROT_ID = B.ROT_ID
@@ -47,6 +49,8 @@
 		ON A.ROT_ID = H.ROT_ID
 		LEFT JOIN SYS0032M I
 		ON H.CCP_RESN_ID = I.RESN_ID
+		JOIN SYS0047M J
+		ON A.ROT_UPD_USER_ID = J.USER_ID
 		WHERE 1=1
 		<if test="rotOrdNo != null and rotOrdNo != '' ">
 			AND A.ROT_ORD_NO = #{rotOrdNo}
@@ -97,6 +101,9 @@
                 open="(" separator="," close=")">
                 #{item}
             </foreach>
+        </if>
+        <if test="lastUpdateUser != null and lastUpdateUser != '' ">
+            AND J.USER_NAME = #{lastUpdateUser}
         </if>
 		ORDER BY A.ROT_ID DESC
 	</select>

@@ -45,11 +45,19 @@
 		width : 120
 	}, {
 		dataField : "rotReqDt",
-		headerText : "Request Date",
+		headerText : "Request Date (By)",
 		width : 140
 	}, {
 		dataField : "rotFeedbackCode",
 		headerText : "ROT FB Code",
+		width : 140
+	}, {
+		dataField : "ccpRem",
+		headerText : "Special Remark",
+		width : 140
+	}, {
+		dataField : "rotUpdDt",
+		headerText : "Last Update At (By)",
 		width : 140
 	} ];
 
