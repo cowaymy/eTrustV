@@ -3,6 +3,9 @@ package com.coway.trust.api.project.LMS;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jsoup.helper.StringUtil;
+
+import antlr.StringUtils;
 import io.swagger.annotations.ApiModel;
 
 
@@ -33,6 +36,7 @@ public class LMSApiForm {
 	private String courseCloseDt;
 	private String isMember;
 	private int memberType;
+
 	public String getKey() {
 		return key;
 	}

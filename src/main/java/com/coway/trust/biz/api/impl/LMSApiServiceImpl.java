@@ -73,6 +73,10 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
   public EgovMap insertCourse(HttpServletRequest request, Map<String, Object> lmsApiForm) throws Exception {
     String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0", sysUserId = "0";
 
+    // default courseCloseDt
+    String currentDate = CommonUtils.getNowDate();
+    String defaultCloseDt = CommonUtils.getAddDay(currentDate, 60, "YYYYMMDD"); // defaultly added 60 days to close date
+
     StopWatch stopWatch = new StopWatch();
     stopWatch.reset();
     stopWatch.start();
@@ -101,41 +105,72 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 
         //validation
         String courseTitle = p.getCourseTitle().toString();
-        String codeId = p.getCourseType().toString();
+        String courseType = p.getCourseType().toString();
         String coursCode = p.getCourseCode().toString();
         String coursLoc = p.getCourseLocation().toString();
         String coursStart = p.getCourseStartDt().toString();
         String coursEnd = p.getCourseEndDt().toString();
-        String coursLimit = String.valueOf(p.getCourseLimit());
-        String courseClsDt = p.getCourseCloseDt().toString();
+        String coursLimit = String.valueOf(p.getCourseLimit()) != null ? String.valueOf(p.getCourseLimit()) : "20";
+        String courseClsDt = p.getCourseCloseDt().toString() != null ? p.getCourseCloseDt().toString() : defaultCloseDt;
         String memType = String.valueOf(p.getMemberType());
 
-        if (!StringUtils.isBlank(courseTitle) ){
-        	Map<String, Object> selectCourseId = new HashMap<String, Object>();
-            selectCourseId.put("coursCode", p.getCourseCode());
-            int isExist = lmsApiMapper.cntCourseCheck(selectCourseId);
+        Exception e1 = null;
 
-        	if(isExist > 0){
-        		code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
-  	          	message = AppConstants.RESPONSE_DESC_DUP;
-        	}
-        	else{
-        		if ( !StringUtils.isBlank(codeId) || !StringUtils.isBlank(coursCode) || !StringUtils.isBlank(coursLoc) || !StringUtils.isBlank(coursStart)
-                		|| !StringUtils.isBlank(coursEnd) || !StringUtils.isBlank(coursLimit) || !StringUtils.isBlank(courseClsDt) || !StringUtils.isBlank(memType)){
-                	//course info
-                    Map<String, Object> courseInfo = new HashMap<String, Object>();
-                    int coursId = trainingService.selectNextCoursId();
+        if (StringUtils.isBlank(courseTitle)){
+        	e1 = new Exception("courseTitle is required");
+        	throw e1;
+        }
+        if (StringUtils.isBlank(courseType)){
+        	e1 = new Exception("courseType is required");
+        	throw e1;
+        }
+        if (StringUtils.isBlank(coursCode)){
+        	e1 = new Exception("courseCode is required");
+        	throw e1;
+        }
+        if (StringUtils.isBlank(coursLoc)){
+        	e1 = new Exception("courseLocation is required");
+        	throw e1;
+        }
+        if (StringUtils.isBlank(coursStart)){
+        	e1 = new Exception("courseStartDt is required");
+        	throw e1;
+        }
+        if (StringUtils.isBlank(coursEnd)){
+        	e1 = new Exception("courseEndDt is required");
+        	throw e1;
+        }
+        if (StringUtils.isBlank(memType)){
+        	e1 = new Exception("memType is required");
+        	throw e1;
+        }
 
-                    courseInfo.put("coursId", coursId);
-                    courseInfo.put("coursName", courseTitle);
-                    courseInfo.put("codeId", codeId);
-                    courseInfo.put("coursCode", coursCode);
-                    courseInfo.put("coursLoc", coursLoc);
-                    courseInfo.put("coursStart", coursStart);
-                    courseInfo.put("coursEnd", coursEnd);
-                    courseInfo.put("coursLimit", coursLimit);
-                    courseInfo.put("courseClsDt", courseClsDt);
-                    courseInfo.put("userId", reqPrm.get("sysUserId").toString());
+    	Map<String, Object> selectCourseId = new HashMap<String, Object>();
+        selectCourseId.put("coursCode", p.getCourseCode());
+        int isExist = lmsApiMapper.cntCourseCheck(selectCourseId);
+
+    	if(isExist > 0){
+    		//code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+    		e1 = new Exception(AppConstants.RESPONSE_DESC_DUP);
+    		throw e1;
+    	}
+
+		if ( !StringUtils.isBlank(courseType) || !StringUtils.isBlank(coursCode) || !StringUtils.isBlank(coursLoc) || !StringUtils.isBlank(coursStart)
+        		|| !StringUtils.isBlank(coursEnd) || !StringUtils.isBlank(coursLimit) || !StringUtils.isBlank(courseClsDt) || !StringUtils.isBlank(memType)){
+        	//course info
+            Map<String, Object> courseInfo = new HashMap<String, Object>();
+            int coursId = trainingService.selectNextCoursId();
+
+            courseInfo.put("coursId", coursId);
+            courseInfo.put("coursName", courseTitle);
+            courseInfo.put("codeId", courseType);
+            courseInfo.put("coursCode", coursCode);
+            courseInfo.put("coursLoc", coursLoc);
+            courseInfo.put("coursStart", coursStart);
+            courseInfo.put("coursEnd", coursEnd);
+            courseInfo.put("coursLimit", coursLimit);
+            courseInfo.put("courseClsDt", courseClsDt);
+            courseInfo.put("userId", reqPrm.get("sysUserId").toString());
 
 //                    String isMem = "";
 //                    if(("Y").equals(p.getIsMember())){
@@ -144,23 +179,21 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 //                    else if(("N").equals(p.getIsMember())){
 //                    	isMem= "2319";
 //                    }
-                    courseInfo.put("generalCode", "2318");
-                    courseInfo.put("memType", memType);
-                    courseInfo.put("attendance", "2315");//EDU team
+            courseInfo.put("generalCode", "2318");
+            courseInfo.put("memType", memType);
+            courseInfo.put("attendance", "2315");//EDU team
 
-                    trainingMapper.insertCourse(courseInfo);
+            trainingMapper.insertCourse(courseInfo);
 
-                    created = 1;
-                }
+            created = 1;
+        }
 
-        		if(created > 0){
-    	          code = String.valueOf(AppConstants.RESPONSE_CODE_CREATED);
-    	          message = AppConstants.RESPONSE_DESC_CREATED;
-    	        }else{
-    	          code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
-    	          message = AppConstants.RESPONSE_DESC_INVALID;
-    	        }
-        	}
+		if(created > 0){
+          code = String.valueOf(AppConstants.RESPONSE_CODE_CREATED);
+          message = AppConstants.RESPONSE_DESC_CREATED;
+        }else{
+          code = String.valueOf(AppConstants.RESPONSE_CODE_INVALID);
+          message = AppConstants.RESPONSE_DESC_INVALID;
         }
       }
 
@@ -352,7 +385,7 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 
             				  if (codeId != null){
             					  enrollInfo.put("memCode", courseForm.getUsername().trim());
-            					  enrollInfo.put("coursStatus", 1); // active member only
+            					  enrollInfo.put("coursStatus", 1); // active course only
             					  EgovMap userInfo = lmsApiMapper.selectMemIdByCourse(enrollInfo);
 
             					  if (userInfo != null){
@@ -420,7 +453,7 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
             					  throw e5;
             				  }
 
-            				  	  // update t-shirt size to enrolled course user
+            				  // update t-shirt size to enrolled course user
             				  Map<String, Object> tshirtInfo = new HashMap<String, Object>();
             				  tshirtInfo.put("shirtSize", courseForm.getShirtSize().trim());
             				  tshirtInfo.put("coursId", enrolledCourseMem.get("coursId"));
@@ -500,19 +533,36 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 
     	          for(int user = 0; user <p.getUserResult().size(); user++){
 
-
-
-
     	        	  String coursCode = p.getUserResult().get(user).getCourseCode();
+    	        	  if(StringUtil.isBlank(coursCode)){
+    	        		  Exception e2 = new Exception("CourseCode is required");
+    	        		  throw e2;
+    	        	  }
+
     	        	  Map<String, Object> courseInfo = new HashMap<String, Object>();
     	        	  courseInfo.put("coursCode", coursCode);
     	        	  EgovMap codeId = lmsApiMapper.selectCourseId(courseInfo);
 
+    	        	  if (codeId == null){
+    	        		  Exception e3 = new Exception("courseCode [" + coursCode +"] not found");
+    	        		  throw e3;
+    	        	  }
+
     	        	  String username = p.getUserResult().get(user).getUsername();
+    	        	  if(StringUtil.isBlank(username)){
+    	        		  Exception e4 = new Exception("username is required");
+    	        		  throw e4;
+    	        	  }
+
             		  Map<String, Object> userInfo = new HashMap<String, Object>();
             		  userInfo.put("memCode", username);
 
-           		   		EgovMap userId = lmsApiMapper.selectMemIdByCourse(userInfo);
+           		   	  EgovMap userId = lmsApiMapper.selectMemIdByCourse(userInfo);
+
+           		   	  if (userId == null){
+           		   		  Exception e5 = new Exception("username [" + username +"] not found");
+           		   		  throw e5;
+           		   	  }
 
                 	  //Attendee List
                       Map<String, Object> attendeeInfo = new HashMap<String, Object>();
