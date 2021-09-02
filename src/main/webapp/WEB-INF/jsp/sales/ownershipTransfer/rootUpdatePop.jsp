@@ -531,6 +531,7 @@
 		var ficoScre = '${ccpInfoMap.ccpFico}'; //FICO SCORE
 		var bankrupt = '${ccpInfoMap.ctosBankrupt}'; //BANKRUPT  //CTOS_BANKRUPT
 		var ccpHold = '${ccpInfoMap.ccpIsHold}'; // 0 , 1
+		var ccpResnId = '${ccpInfoMap.ccpResnId}';    //FEEDBACK CODE
 
 		console.log("ccpStus : " + ccpStus + ", ficoScre : " + ficoScre
 				+ " , bankrupt : " + bankrupt + ", ccpHold : " + ccpHold);
@@ -544,6 +545,9 @@
 			$("#_ficoScore").val("0");
 			$("#_ficoScore").attr("disabled", "disabled");
 		}
+
+		//bind Feedback Code
+		$("#_reasonCodeEdit").val(ccpResnId);
 
 		//bind and Setting by CcpStatus
 		if (ccpStus == "1") {

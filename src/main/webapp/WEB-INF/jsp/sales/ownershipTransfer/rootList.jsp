@@ -58,7 +58,7 @@
 	}, {
 		dataField : "rotUpdDt",
 		headerText : "Last Update At (By)",
-		width : 140
+		width : 220
 	} ];
 
 	var ownershipTransferGridPros = {
