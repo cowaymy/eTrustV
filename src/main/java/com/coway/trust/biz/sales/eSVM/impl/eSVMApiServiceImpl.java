@@ -213,7 +213,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
             // mNewQuotationPop.jsp :: fn_setDefaultFilterPromo
             // mNewQuotationPop.jsp :: fn_getFilterChargeList
             if(!"0".equals(param.getHiddenIsCharge().toString())) {
-                if("Y".equals(param.getEmployee())) {
+                if(param.getEmployee() == "1") {
                     param.setGroupCode("466");
                     param.setCodeName("FIL_MEM_DEFAULT_PROMO_EMP");
                 } else {
@@ -226,6 +226,8 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
                 param.setPromoId(promoId);
                 rtn.setFilterPromoId(promoId);
 
+                logger.debug("========== getFilterChargeList_m ==========");
+                logger.debug("param : {}", eSVMApiForm.createMap(param));
                 rtn.setFilterCharge(this.getFilterChargeList_m(eSVMApiForm.createMap(param)));
             }
         }
