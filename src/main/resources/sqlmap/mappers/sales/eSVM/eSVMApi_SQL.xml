@@ -396,7 +396,7 @@
     <select id="getSVMFilterCharge" parameterType="Map" statementType="CALLABLE">
         <![CDATA[
         {
-            SP_GET_ORD_MBRSH_FILTER_CHRG (#{ORD_ID}, #{PROMO_ID}, '', #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=svmFilterCharge})
+            SP_GET_ORD_MBRSH_FILTER_CHRG (#{salesOrdId}, #{promoId}, '', #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=svmFilterCharge})
         }
         ]]>
     </select>
