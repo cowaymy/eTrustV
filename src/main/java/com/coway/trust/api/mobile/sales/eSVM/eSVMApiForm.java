@@ -22,6 +22,9 @@ public class eSVMApiForm {
         params.put("selectType", vo.getSelectType());
         params.put("selectKeyword", vo.getSelectKeyword());
         params.put("regId", vo.getRegId());
+        params.put("svmQuotId", vo.getSvmQuotId());
+        params.put("psmId", vo.getPsmId());
+        params.put("salesOrdId", vo.getSalesOrdId());
         params.put("custName", vo.getCustName());
         params.put("salesOrdNo", vo.getSalesOrdNo());
         params.put("quotNo", vo.getQuotNo());
