@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -95,10 +96,11 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
             param.setFlag("Y");
             List<EgovMap> selectProductFilterList = eSVMApiMapper.selectProductFilterList(eSVMApiForm.createMap(param));
             String hiddenHasFilterCharge = "";
-            Set<String> value = selectProductFilterList.get(0).keySet();
-            Iterator<String> it = value.iterator();
+            Map<String, String> listItem = selectProductFilterList.get(0);
+            Iterator<Entry<String, String>> it = listItem.entrySet().iterator();
             while(it.hasNext()) {
-                hiddenHasFilterCharge = it.next();
+                Map.Entry pair = (Map.Entry)it.next();
+                hiddenHasFilterCharge = pair.getValue().toString();
             }
             logger.debug("hiddenHasFilterCharge.HiddenHasFilterCharge :: " + hiddenHasFilterCharge);
             rtn.setHiddenHasFilterCharge(Integer.parseInt(hiddenHasFilterCharge));
