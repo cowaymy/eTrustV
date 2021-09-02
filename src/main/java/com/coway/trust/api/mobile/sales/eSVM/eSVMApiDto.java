@@ -42,6 +42,8 @@ public class eSVMApiDto {
     private String coolingPrd;
     private String hsFreq;
     private String trm;
+    private int hiddenIsCharge;
+    private int hiddenHasFilterCharge;
 
     /* Filter Listing */
     private int srvFilterId;
@@ -72,6 +74,17 @@ public class eSVMApiDto {
     /* Filter Promotion */
     private int filterPromoId;
     private String filterPromoName;
+
+    /* Membership Tab values */
+    private int hiddenHasPackage;
+    private String bsFreq;
+    private int hiddenNormalPrice;
+    private int packagePrice;
+    private String zeroRatYn;
+    private String eurCertYn;
+    private String hiddenBsFreq;
+    private int srvMemPacId;
+    private int filterCharge;
 
     private List<eSVMApiDto> productFilterList;
     private List<eSVMApiDto> packageComboList;
@@ -268,6 +281,22 @@ public class eSVMApiDto {
 
     public void setTrm(String trm) {
         this.trm = trm;
+    }
+
+    public int getHiddenIsCharge() {
+        return hiddenIsCharge;
+    }
+
+    public void setHiddenIsCharge(int hiddenIsCharge) {
+        this.hiddenIsCharge = hiddenIsCharge;
+    }
+
+    public int getHiddenHasFilterCharge() {
+        return hiddenHasFilterCharge;
+    }
+
+    public void setHiddenHasFilterCharge(int hiddenHasFilterCharge) {
+        this.hiddenHasFilterCharge = hiddenHasFilterCharge;
     }
 
     public int getSrvFilterId() {
@@ -476,5 +505,77 @@ public class eSVMApiDto {
 
     public void setFilterPromoList(List<eSVMApiDto> filterPromoList) {
         this.filterPromoList = filterPromoList;
+    }
+
+    public int getHiddenHasPackage() {
+        return hiddenHasPackage;
+    }
+
+    public void setHiddenHasPackage(int hiddenHasPackage) {
+        this.hiddenHasPackage = hiddenHasPackage;
+    }
+
+    public String getBsFreq() {
+        return bsFreq;
+    }
+
+    public void setBsFreq(String bsFreq) {
+        this.bsFreq = bsFreq;
+    }
+
+    public int getHiddenNormalPrice() {
+        return hiddenNormalPrice;
+    }
+
+    public void setHiddenNormalPrice(int hiddenNormalPrice) {
+        this.hiddenNormalPrice = hiddenNormalPrice;
+    }
+
+    public int getPackagePrice() {
+        return packagePrice;
+    }
+
+    public void setPackagePrice(int packagePrice) {
+        this.packagePrice = packagePrice;
+    }
+
+    public String getZeroRatYn() {
+        return zeroRatYn;
+    }
+
+    public void setZeroRatYn(String zeroRatYn) {
+        this.zeroRatYn = zeroRatYn;
+    }
+
+    public String getEurCertYn() {
+        return eurCertYn;
+    }
+
+    public void setEurCertYn(String eurCertYn) {
+        this.eurCertYn = eurCertYn;
+    }
+
+    public String getHiddenBsFreq() {
+        return hiddenBsFreq;
+    }
+
+    public void setHiddenBsFreq(String hiddenBsFreq) {
+        this.hiddenBsFreq = hiddenBsFreq;
+    }
+
+    public int getSrvMemPacId() {
+        return srvMemPacId;
+    }
+
+    public void setSrvMemPacId(int srvMemPacId) {
+        this.srvMemPacId = srvMemPacId;
+    }
+
+    public int getFilterCharge() {
+        return filterCharge;
+    }
+
+    public void setFilterCharge(int filterCharge) {
+        this.filterCharge = filterCharge;
     }
 }

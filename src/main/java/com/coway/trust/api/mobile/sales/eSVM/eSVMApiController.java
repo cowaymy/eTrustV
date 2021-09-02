@@ -62,10 +62,16 @@ public class eSVMApiController {
       List<EgovMap> selectProductFilterList = eSVMApiService.selectProductFilterList(param);
       if (LOGGER.isDebugEnabled()) {
         for (int i = 0; i < selectProductFilterList.size(); i++) {
-          LOGGER.debug("selecteKeyInList    값 : {}", selectProductFilterList.get(i));
+          LOGGER.debug("selectProductFilterList : {}", selectProductFilterList.get(i));
         }
       }
       return ResponseEntity.ok(selectProductFilterList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList()));
+    }
+
+    @ApiOperation(value = "selectPackageFilter", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/selectPackageFilter", method = RequestMethod.GET)
+    public ResponseEntity<eSVMApiDto> selectPackageFilter(@ModelAttribute eSVMApiForm param) throws Exception {
+      return ResponseEntity.ok(eSVMApiService.selectPackageFilter(param));
     }
 
     @ApiOperation(value = "selectOrderMemInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

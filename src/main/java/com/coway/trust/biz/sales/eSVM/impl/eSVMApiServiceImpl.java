@@ -1,7 +1,10 @@
 package com.coway.trust.biz.sales.eSVM.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -88,11 +91,17 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
 
             rtn = eSVMApiDto.create(eSVMApiMapper.selectOrderMemInfo(eSVMApiForm.createMap(param)));
 
-            // [Filter Tab]
+            // Set hiddenHasFilterCharge from ProductFilterList
+            param.setFlag("Y");
             List<EgovMap> selectProductFilterList = eSVMApiMapper.selectProductFilterList(eSVMApiForm.createMap(param));
-//            List<eSVMApiDto> productFilterList = selectProductFilterList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
-//            rtn.setProductFilterList(productFilterList);
-            rtn.setProductFilterList(selectProductFilterList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList()));
+            int hiddenHasFilterCharge = 0;
+            Set<String> value = selectProductFilterList.get(0).keySet();
+            Iterator<String> it = value.iterator();
+            while(it.hasNext()) {
+                hiddenHasFilterCharge = Integer.parseInt(it.next());
+            }
+            logger.debug("hiddenHasFilterCharge.HiddenHasFilterCharge :: " + Integer.toString(hiddenHasFilterCharge));
+            rtn.setHiddenHasFilterCharge(hiddenHasFilterCharge);
 
             // [Membership Tab]
             // Type of Package
@@ -116,6 +125,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
     @Override
     public List<EgovMap> selectProductFilterList(eSVMApiForm param) throws Exception {
 
+        logger.info("===== selectProductFilterList =====");
         if (null == param) {
             throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
         }
@@ -137,6 +147,107 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         return selectOrderMemDetail;
     }
 
-    // TO-DO
-    // Query Promotion package on change for employee dropdown/checkbox
+    @Override
+    public eSVMApiDto selectPackageFilter(eSVMApiForm param) throws Exception {
+
+        if(null == param) {
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+
+        eSVMApiDto rtn = new eSVMApiDto();
+
+        // Package Promotion
+        List<EgovMap> selectPackagePromoList = eSVMApiMapper.selectPackagePromo(eSVMApiForm.createMap(param));
+        List<eSVMApiDto> packagePromoList = selectPackagePromoList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
+        rtn.setPackagePromoList(packagePromoList);
+
+        // Filter Promotion
+        List<EgovMap> selectFilterPromoList = eSVMApiMapper.selectFilterPromo(eSVMApiForm.createMap(param));
+        List<eSVMApiDto> filterPromoList = selectFilterPromoList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
+        rtn.setFilterPromoList(filterPromoList);
+
+        // Get default package info
+        // mNewQuotationPop.jsp :: fn_getMembershipPackageInfo(_id)
+        String zeroRatYn = "Y";
+        String eurCertYn = "Y";
+
+        int zeroRat = eSVMApiMapper.selectGSTZeroRateLocation(eSVMApiForm.createMap(param));
+        if(zeroRat > 0) zeroRatYn = "N";
+        param.setZeroRatYn(zeroRatYn);
+
+        int eurCert = eSVMApiMapper.selectGSTEURCertificate(eSVMApiForm.createMap(param));
+        if(eurCert > 0) eurCertYn = "N";
+        param.setEurCertYn(eurCertYn);
+
+        EgovMap packageInfo = eSVMApiMapper.mPackageInfo(eSVMApiForm.createMap(param));
+
+        if(CommonUtils.isEmpty(packageInfo.get("srvMemPacId"))) {
+            rtn.setHiddenHasPackage(0);
+            rtn.setBsFreq("");
+            rtn.setPackagePrice(0);
+            rtn.setHiddenNormalPrice(0);
+        } else {
+
+            int year = Integer.parseInt(param.getSubYear(), 10) /12;
+            int pkgPrice = Math.round(Integer.parseInt(packageInfo.get("srvMemItmPrc").toString()) * year);
+            rtn.setZeroRatYn(zeroRatYn);
+            rtn.setEurCertYn(eurCertYn);
+
+            rtn.setHiddenHasPackage(1);
+            rtn.setBsFreq(packageInfo.get("srvMemItmPriod").toString() + " month(s)");
+            rtn.setHiddenBsFreq(packageInfo.get("srvMemItmPriod").toString());
+
+            rtn.setHiddenNormalPrice(pkgPrice);
+            rtn.setSrvMemPacId(Integer.parseInt(packageInfo.get("srvMemPacId").toString()));
+
+            if("N".equals(eurCertYn)) {
+                rtn.setPackagePrice((int)Math.floor(pkgPrice));
+                rtn.setHiddenNormalPrice((int)Math.floor(pkgPrice));
+            } else {
+                rtn.setPackagePrice(pkgPrice);
+                rtn.setHiddenNormalPrice(pkgPrice);
+            }
+
+            // mNewQuotationPop.jsp :: fn_setDefaultFilterPromo
+            // mNewQuotationPop.jsp :: fn_getFilterChargeList
+            if(!"0".equals(param.getHiddenIsCharge().toString())) {
+                if("Y".equals(param.getEmployee())) {
+                    param.setGroupCode("466");
+                    param.setCodeName("FIL_MEM_DEFAULT_PROMO_EMP");
+                } else {
+                    param.setGroupCode("466");
+                    param.setCodeName("FIL_MEM_DEFAULT_PROMO_N_EMP");
+                }
+
+                int promoId = eSVMApiMapper.getDfltPromo(eSVMApiForm.createMap(param));
+                param.setPromoId(promoId);
+                rtn.setFilterPromoId(promoId);
+
+                rtn.setFilterCharge(this.getFilterChargeList_m(eSVMApiForm.createMap(param)));
+            }
+        }
+
+        return rtn;
+    }
+
+    private int getFilterChargeList_m(Map<String, Object> param) {
+        // mNewQuotationPop.jsp :: fn_getFilterChargeList
+        // MembershipQuotationServiceImpl.getFilterChargeListSum
+        int filterChargeSum = 0;
+
+        eSVMApiMapper.getSVMFilterCharge(param);
+        List<EgovMap> list = (List<EgovMap>) param.get("p1");
+
+        for(EgovMap result : list) {
+            double prc = Math.floor(Double.parseDouble(result.get("prc").toString()));
+
+            if ("N".equals(param.get("zeroRatYn")) || "N".equals(param.get("eurCertYn"))) {
+                filterChargeSum += Math.floor((double) (prc));
+            } else {
+                filterChargeSum += prc;
+            }
+        }
+
+        return filterChargeSum;
+    }
 }

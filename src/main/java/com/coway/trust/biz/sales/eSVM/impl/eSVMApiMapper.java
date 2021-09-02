@@ -21,6 +21,16 @@ public interface eSVMApiMapper {
 
     List<EgovMap> selectFilterPromo(Map<String, Object> params); // Filter Promotion
 
+    int selectGSTZeroRateLocation(Map<String, Object> params);
+
+    int selectGSTEURCertificate(Map<String, Object> params);
+
+    EgovMap mPackageInfo(Map<String, Object> params);
+
     EgovMap selectOrderMemInfo(Map<String, Object> params);
+
+    int getDfltPromo(Map<String, Object> params); // Default Promo ID for Filter Details
+
+    EgovMap getSVMFilterCharge(Map<String, Object> params); // Filter Details
 
 }

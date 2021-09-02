@@ -85,7 +85,11 @@
             CASE WHEN EXT.EXPINT <= 0 THEN 'Under membership'
                  WHEN (EXT.EXPINT > 0 AND EXT.COOLING_PRD >= EXT.EXPINT) THEN 'Under cooling off period'
                  ELSE 'Passed cooling off period'
-            END TRM
+            END TRM,
+            CASE WHEN EXT.EXPINT <= 0 THEN 0
+                 WHEN (EXT.EXPINT > 0 AND EXT.COOLING_PRD >= EXT.EXPINT) THEN 0
+                 ELSE 1
+            END HIDDEN_IS_CHARGE
             ]]>
         FROM (
             SELECT
@@ -166,6 +170,9 @@
     </select>
 
     <select id="selectProductFilterList" parameterType="Map" resultType="egovMap">
+        <if test="flag != null and flag != '' ">
+            SELECT HIDDEN_HAS_FILTER_CHARGE FROM (
+        </if>
         SELECT
             SRV_FILTER_ID,
             SRV_FILTER_STK_ID,
@@ -181,7 +188,12 @@
             C6,
             EXPIREDATEINT,
             TODAYDATEINT,
-            MONTHS_BETWEEN(TO_DATE(TODAYDATEINT || '01', 'yyyymmdd'), TO_DATE(EXPIREDATEINT || '01', 'yyyymmdd')) EXPINT
+            MONTHS_BETWEEN(TO_DATE(TODAYDATEINT || '01', 'yyyymmdd'), TO_DATE(EXPIREDATEINT || '01', 'yyyymmdd')) EXPINT,
+            <![CDATA[
+            CASE WHEN (SRV_FILTER_PRIOD > 0 AND (MONTHS_BETWEEN(TO_DATE(TODAYDATEINT || '01', 'yyyymmdd'), TO_DATE(EXPIREDATEINT || '01', 'yyyymmdd')) > SRV_FILTER_PRIOD)) THEN 1
+                ELSE 0
+            END HIDDEN_HAS_FILTER_CHARGE
+            ]]>
         FROM
             (
                 SELECT
@@ -241,6 +253,11 @@
                             </if>
                     ) R
             ) SEL
+        <if test="flag != null and flag != '' ">
+            )
+            WHERE HIDDEN_HAS_FILTER_CHARGE = 1
+            AND ROWNUM = 1
+        </if>
     </select>
 
     <select id="selectComboPackageList" parameterType="Map" resultType="egovMap">
@@ -266,7 +283,7 @@
     <select id="selectPackagePromo" parameterType="Map" resultType="egovMap">
         SELECT DISTINCT
             A.PROMO_ID PACKAGE_PROMO_ID ,
-            A.PROMO_CODE||'-'||A.PROMO_DESC PACKAGE_PROMO_NAME,
+            A.PROMO_CODE || '-' || A.PROMO_DESC PACKAGE_PROMO_NAME,
             A.PROMO_DISC_TYPE,
             A.PROMO_RPF_DISC_AMT
         FROM SAL0017D A, SAL0018D B, SAL0002D C, SAL0001D D, SAL0029D E, SAL0289T F
@@ -316,6 +333,70 @@
         <if test="employee != null and employee != ''">
             AND A.EMP_CHK = #{employee}
         </if>
+    </select>
+
+    <select id="selectGSTZeroRateLocation"  parameterType="Map" resultType="Integer">
+        SELECT
+            COUNT(-1) CNT
+        FROM SAL0001D A, SAL0023D B, SYS0064M C
+        WHERE 1=1
+            AND A.CUST_ADD_ID =  B.CUST_ADD_ID
+            AND B.AREA_ID = C.AREA_ID
+            AND C.GST_CHK =1
+            AND A.SALES_ORD_NO = #{ordNo}
+    </select>
+
+    <select id="selectGSTEURCertificate"  parameterType="Map" resultType="Integer">
+        SELECT
+            COUNT(-1) CNT
+        FROM SAL0042D
+        WHERE EURC_SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo})
+            AND  1 = EURC_STUS_CODE_ID
+    </select>
+
+    <select id="mPackageInfo" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        SELECT
+            S.SRV_MEM_PAC_ID,
+            S.SRV_MEM_ITM_STK_ID,
+            S.SRV_MEM_ITM_PRIOD,
+            CASE WHEN (S.SRV_MEM_DUR IS NOT NULL) THEN S.SRV_MEM_DUR ELSE 0 END C1,
+            S.SRV_MEM_ITM_PRC,
+            S.SRV_MEM_ITM_PV
+        FROM (
+            SELECT
+                V.SRV_MEM_PAC_ID,
+                V.SRV_MEM_DUR,
+                M.SRV_MEM_ITM_STK_ID,
+                M.SRV_MEM_ITM_PRC,
+                M.SRV_MEM_ITM_PV,
+                M.SRV_MEM_ITM_PRIOD
+            FROM SAL0091M V
+            JOIN SAL0092M M
+                ON V.SRV_MEM_PAC_ID = M.SRV_MEM_PAC_ID
+                AND 1 = M.SRV_MEM_ITM_STUS_ID
+                AND M.SRV_MEM_ITM_STK_ID = (SELECT B.ITM_STK_ID FROM SAL0001D A, SAL0002D B WHERE A.SALES_ORD_ID = B.SALES_ORD_ID AND A.SALES_ORD_NO = #{ordNo})
+            WHERE V.SRV_MEM_PAC_ID = 9
+                AND ROWNUM <= 1
+        ) S
+        ]]>
+    </select>
+
+    <select id="getDfltPromo" parameterType="Map" resultType="Integer">
+        SELECT
+            CODE
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = #{groupCode}
+        AND CODE_NAME = #{codeName}
+    </select>
+
+    <resultMap id="svmFilterCharge" type="egovMap"></resultMap>
+    <select id="getSVMFilterCharge" parameterType="Map" statementType="CALLABLE">
+        <![CDATA[
+        {
+            SP_GET_ORD_MBRSH_FILTER_CHRG (#{ORD_ID}, #{PROMO_ID}, '', #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=svmFilterCharge})
+        }
+        ]]>
     </select>
 
 </mapper>

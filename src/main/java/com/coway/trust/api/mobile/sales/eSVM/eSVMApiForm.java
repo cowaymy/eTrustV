@@ -40,6 +40,9 @@ public class eSVMApiForm {
         params.put("coolingPrd", vo.getCoolingPrd());
         params.put("hsFreq", vo.getHsFreq());
         params.put("trm", vo.getTrm());
+        params.put("hiddenIsCharge", vo.getHiddenIsCharge());
+        params.put("hiddenHasFilterCharge", vo.getHiddenHasFilterCharge());
+        params.put("employee", vo.getEmployee());
         params.put("srvFilterId", vo.getSrvFilterId());
         params.put("srvFilterStkId", vo.getSrvFilterStkId());
         params.put("stkCode", vo.getStkCode());
@@ -54,8 +57,16 @@ public class eSVMApiForm {
         params.put("c6", vo.getC6());
         params.put("expiredateint", vo.getExpiredateint());
         params.put("todaydateint", vo.getTodaydateint());
+        params.put("zeroRatYn", vo.getZeroRatYn());
+        params.put("eurCertYn", vo.getEurCertYn());
+        params.put("subYear", vo.getSubYear());
+        params.put("promoId", vo.getPromoId());
+        params.put("groupCode", vo.getGroupCode());
+        params.put("codeName", vo.getCodeName());
         return params;
     }
+
+    private String flag;
 
     private String reqstDtFrom;
     private String reqstDtTo;
@@ -85,6 +96,9 @@ public class eSVMApiForm {
     private String coolingPrd;
     private String hsFreq;
     private String trm;
+    private String hiddenIsCharge;
+    private String hiddenHasFilterCharge;
+    private String employee;
 
     /* New Quotation - Filter Listing */
     private int srvFilterId;
@@ -101,6 +115,22 @@ public class eSVMApiForm {
     private String c6;
     private String expiredateint;
     private String todaydateint;
+
+    /* Defaulting values after initial criteria selection */
+    private String zeroRatYn;
+    private String eurCertYn;
+    private String subYear;
+    private int promoId;
+    private String groupCode;
+    private String codeName;
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
 
     public int getSvmQuotId() {
         return svmQuotId;
@@ -326,6 +356,30 @@ public class eSVMApiForm {
         this.trm = trm;
     }
 
+    public String getHiddenIsCharge() {
+        return hiddenIsCharge;
+    }
+
+    public void setHiddenIsCharge(String hiddenIsCharge) {
+        this.hiddenIsCharge = hiddenIsCharge;
+    }
+
+    public String getHiddenHasFilterCharge() {
+        return hiddenHasFilterCharge;
+    }
+
+    public void setHiddenHasFilterCharge(String hiddenHasFilterCharge) {
+        this.hiddenHasFilterCharge = hiddenHasFilterCharge;
+    }
+
+    public String getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(String employee) {
+        this.employee = employee;
+    }
+
     public int getSrvFilterId() {
         return srvFilterId;
     }
@@ -436,5 +490,53 @@ public class eSVMApiForm {
 
     public void setTodaydateint(String todaydateint) {
         this.trm = todaydateint;
+    }
+
+    public String getZeroRatYn() {
+        return zeroRatYn;
+    }
+
+    public void setZeroRatYn(String zeroRatYn) {
+        this.zeroRatYn = zeroRatYn;
+    }
+
+    public String getEurCertYn() {
+        return eurCertYn;
+    }
+
+    public void setEurCertYn(String eurCertYn) {
+        this.eurCertYn = eurCertYn;
+    }
+
+    public String getSubYear() {
+        return subYear;
+    }
+
+    public void setSubYear(String subYear) {
+        this.subYear = subYear;
+    }
+
+    public int getPromoId() {
+        return promoId;
+    }
+
+    public void setPromoId(int promoId) {
+        this.promoId = promoId;
+    }
+
+    public String getGroupCode() {
+        return groupCode;
+    }
+
+    public void setGroupCode(String groupCode) {
+        this.groupCode = groupCode;
+    }
+
+    public String getCodeName() {
+        return codeName;
+    }
+
+    public void setCodeName(String codeName) {
+        this.codeName = codeName;
     }
 }
