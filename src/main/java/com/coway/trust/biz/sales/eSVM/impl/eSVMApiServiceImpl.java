@@ -222,6 +222,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
                 }
 
                 int promoId = eSVMApiMapper.getDfltPromo(eSVMApiForm.createMap(param));
+                logger.debug("promoId :: " + Integer.toString(promoId));
                 param.setPromoId(promoId);
                 rtn.setFilterPromoId(promoId);
 
