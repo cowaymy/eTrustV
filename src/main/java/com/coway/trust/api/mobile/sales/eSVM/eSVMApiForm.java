@@ -120,7 +120,7 @@ public class eSVMApiForm {
     /* Defaulting values after initial criteria selection */
     private String zeroRatYn;
     private String eurCertYn;
-    private String subYear;
+    private int subYear;
     private int promoId;
     private String groupCode;
     private String codeName;
@@ -509,11 +509,11 @@ public class eSVMApiForm {
         this.eurCertYn = eurCertYn;
     }
 
-    public String getSubYear() {
+    public int getSubYear() {
         return subYear;
     }
 
-    public void setSubYear(String subYear) {
+    public void setSubYear(int subYear) {
         this.subYear = subYear;
     }
 

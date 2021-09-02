@@ -190,7 +190,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
             rtn.setHiddenNormalPrice(0);
         } else {
 
-            int year = Integer.parseInt(param.getSubYear()) /12;
+            int year = param.getSubYear() /12;
             int pkgPrice = Math.round(Integer.parseInt(packageInfo.get("srvMemItmPrc").toString()) * year);
             rtn.setZeroRatYn(zeroRatYn);
             rtn.setEurCertYn(eurCertYn);
