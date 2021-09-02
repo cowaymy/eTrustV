@@ -110,13 +110,42 @@ public class CommonApiServiceImpl extends EgovAbstractServiceImpl implements Com
 
     EgovMap data = new EgovMap();
     Map<String, Object> params = new HashMap<>();
-    String pgmPath = StringUtils.defaultString(request.getRequestURI());
+    String pgmPath = "";
+    pgmPath = StringUtils.defaultString(request.getRequestURI());
+
 
       params.put("respCde", code);
       params.put("errMsg", msg);
       params.put("reqParam", reqPrm);
-      params.put("ipAddr", CommonUtils.getClientIp(request));
+	  params.put("ipAddr", CommonUtils.getClientIp(request));
       params.put("prgPath", pgmPath);
+      params.put("respTm", respTm);
+      params.put("respParam", respPrm != null ? respPrm.toString().length() >= 4000 ? respPrm.toString().substring(0,4000) : respPrm.toString() : respPrm);
+      params.put("apiUserId", apiUserId);
+
+      commonApiMapper.insertApiAccessLog(params);
+
+      data.put("code", code);
+      data.put("message", msg);
+      data.put("status", (code.equals("200")||code.equals("201"))?AppConstants.DESC_SUCCESS:AppConstants.DESC_FAILED);
+      if(respPrm != null && !respPrm.isEmpty()){
+    	  data.put("data", respPrm);
+      }
+
+      return data;
+  }
+
+  @Override
+  public EgovMap rtnRespMsg(String pgmPath, String code, String msg, String respTm, String reqPrm, Map<String, Object> respPrm, String apiUserId) {
+
+    EgovMap data = new EgovMap();
+    Map<String, Object> params = new HashMap<>();
+
+      params.put("respCde", code);
+      params.put("errMsg", msg);
+      params.put("reqParam", reqPrm);
+      params.put("ipAddr", "");
+      params.put("prgPath", respPrm != null ? pgmPath : " ");
       params.put("respTm", respTm);
       params.put("respParam", respPrm != null ? respPrm.toString().length() >= 4000 ? respPrm.toString().substring(0,4000) : respPrm.toString() : respPrm);
       params.put("apiUserId", apiUserId);

@@ -18,12 +18,14 @@ import java.util.Random;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.callcenter.common.CommonConstants;
 import com.coway.trust.api.project.LMS.LMSApiForm;
 import com.coway.trust.api.project.LMS.LMSApiRespForm;
 import com.coway.trust.biz.api.CommonApiService;
@@ -50,6 +52,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	@Resource(name = "memberListMapper")
 	private MemberListMapper memberListMapper;
 
+	@Resource(name = "commonApiService")
+	  private CommonApiService commonApiService;
 
 	//private SessionHandler sessionHandler;
 	/**
@@ -2649,7 +2653,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		EgovMap MemListTolms = new EgovMap();
 
-		MemListTolms.put("secretkey","");
+		MemListTolms.put("secretkey",CommonConstants.lmsSecretKeyDev);
 		MemListTolms.put("username",selectMemListlms.get("memCode"));
 		MemListTolms.put("email",selectMemListlms.get("email"));
 		MemListTolms.put("firstname",selectMemListlms.get("name1"));
@@ -2657,7 +2661,27 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		MemListTolms.put("institution","Coway Malaysia");
 		MemListTolms.put("department",selectMemListlms.get("c41"));
 		MemListTolms.put("phone1",selectMemListlms.get("telMobile"));
-		String addr = selectMemListlms.get("addrdtl") + " "+ selectMemListlms.get("street");
+		String addrdtl = "";
+		String street = "";
+		String addr ="";
+		if(selectMemListlms.get("addrdtl") == null){
+			if(selectMemListlms.get("street") == null) {
+				addr = "";
+			}else{
+				street = selectMemListlms.get("street").toString();
+				addr = street;
+			}
+		}else{
+			if(selectMemListlms.get("street") == null) {
+				addrdtl = selectMemListlms.get("addrdtl").toString();
+				street ="";
+				addr = addrdtl;
+			}else{
+				addrdtl = selectMemListlms.get("addrdtl").toString();
+				street = selectMemListlms.get("street").toString();
+				addr = addrdtl + " "+ street;
+			}
+		}
 		MemListTolms.put("profile_field_address",addr);//
 		MemListTolms.put("city",selectMemListlms.get("city"));
 		MemListTolms.put("country",selectMemListlms.get("country"));
@@ -2665,10 +2689,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		MemListTolms.put("profile_field_gender",selectMemListlms.get("gender"));
 		MemListTolms.put("profile_field_dob",selectMemListlms.get("c29"));
 		MemListTolms.put("profile_field_trainingbatch",selectcoursListlms.get(0).get("c_date"));
-		MemListTolms.put("profile_field_position",selectMemListlms.get("c57"));
+		MemListTolms.put("profile_field_position",selectMemListlms.get("c57"));//
 		MemListTolms.put("profile_field_branchcode",selectMemListlms.get("c4"));
 		MemListTolms.put("profile_field_branchname",selectMemListlms.get("c5"));
-		MemListTolms.put("profile_field_region",selectMemListlms.get("memCode"));//
+		MemListTolms.put("profile_field_region","");//
 		MemListTolms.put("profile_field_organizationcode",selectMemListlms.get("c43"));
 		MemListTolms.put("profile_field_groupcode",selectMemListlms.get("c42"));
 		MemListTolms.put("profile_field_MemberStatus",selectMemListlms.get("name"));
@@ -2686,7 +2710,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		//call LMS to insert user
 		System.out.println("Start Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
 //		String lmsUrl = "http://localhost:8080/web/api/v1/LMS/updateCourse";
-		String lmsUrl = "http://localhost:8080/modernlms-api/api/add/user/";
+		String lmsUrl = CommonConstants.lmsApiDevUrl + "modernlms-api/api/add/user/";
 
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(MemListTolms);
@@ -2708,14 +2732,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		EgovMap MemListTolms = new EgovMap();
 
-		MemListTolms.put("secretkey","");
+		MemListTolms.put("secretkey",CommonConstants.lmsSecretKeyDev);
 		MemListTolms.put("username",params.get("username"));
 		MemListTolms.put("newusername",params.get("newusername"));
 		MemListTolms.put("memberType",params.get("memberType"));
 		MemListTolms.put("joinDt",params.get("joinDt"));
 
 		//call LMS to update member code
-		String lmsUrl = "http://localhost:8080/modernlms-api/api/updated/user/";
+		String lmsUrl = CommonConstants.lmsApiDevUrl + "modernlms-api/api/updated/user/";
 
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(MemListTolms);
@@ -2735,11 +2759,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		EgovMap MemListTolms = new EgovMap();
 
-		MemListTolms.put("secretkey","");
+		MemListTolms.put("secretkey",CommonConstants.lmsSecretKeyDev);
 		MemListTolms.put("username",params.get("username"));
 
 		//call LMS to deactivate member
-		String lmsUrl = "http://localhost:8080/modernlms-api/api/delete/user/";
+		String lmsUrl = CommonConstants.lmsApiDevUrl + "modernlms-api/api/delete/user/";
 
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(MemListTolms);
@@ -2759,7 +2783,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		String lmsUrl = params.get("lmsUrl").toString();
 		String jsonString = params.get("jsonString").toString();
-
+		String output1 = "";
+		LMSApiRespForm p = new LMSApiRespForm();
 		try{
 			URL url = new URL(lmsUrl);
 
@@ -2778,7 +2803,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				BufferedReader br = new BufferedReader(new InputStreamReader(
 		                (conn.getInputStream())));
 				conn.getResponseMessage();
-				String output1 = "";
+
 		        String output = "";
 		        logger.debug("Output from Server .... \n");
 		        while ((output = br.readLine()) != null) {
@@ -2787,7 +2812,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		        }
 
 		        Gson g = new Gson();
-		        LMSApiRespForm p = g.fromJson(output1, LMSApiRespForm.class);
+		        p = g.fromJson(output1, LMSApiRespForm.class);
 //				if(result.get(0).equals(RESULT.SUCCESS_CODE)){
 //					resVO.setResponseCode(result.get(0));
 //					resVO.setStatus(result.get(1));
@@ -2808,6 +2833,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}catch(Exception e){
 			logger.error("Timeout:");
 			logger.error("[lmsMemberListInsertUpdate] - Caught Exception: " + e);
+			p.setStatus(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+			p.setMessage("Timeout" + e.toString());
+		}finally{
+			commonApiService.rtnRespMsg(lmsUrl, p.getStatus().toString(), p.getMessage().toString(), output1, jsonString, null ,"3");
 		}
 
 		return resultValue;
