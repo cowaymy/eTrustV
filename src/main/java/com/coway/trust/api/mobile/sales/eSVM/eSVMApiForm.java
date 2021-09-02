@@ -16,6 +16,7 @@ public class eSVMApiForm {
 
     public static Map<String, Object> createMap(eSVMApiForm vo) {
         Map<String, Object> params = new HashMap<>();
+        params.put("flag", vo.getFlag());
         params.put("reqstDtFrom", vo.getReqstDtFrom());
         params.put("reqstDtTo", vo.getReqstDtTo());
         params.put("selectType", vo.getSelectType());
