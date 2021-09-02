@@ -171,7 +171,9 @@
 
     <select id="selectProductFilterList" parameterType="Map" resultType="egovMap">
         <if test="flag != null and flag != '' ">
-            SELECT HIDDEN_HAS_FILTER_CHARGE FROM (
+            SELECT
+                TO_CHAR(HIDDEN_HAS_FILTER_CHARGE) HIDDEN_HAS_FILTER_CHARGE
+            FROM (
         </if>
         SELECT
             SRV_FILTER_ID,

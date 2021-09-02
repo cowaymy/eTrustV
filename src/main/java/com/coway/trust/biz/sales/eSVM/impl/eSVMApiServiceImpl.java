@@ -94,14 +94,14 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
             // Set hiddenHasFilterCharge from ProductFilterList
             param.setFlag("Y");
             List<EgovMap> selectProductFilterList = eSVMApiMapper.selectProductFilterList(eSVMApiForm.createMap(param));
-            int hiddenHasFilterCharge = 0;
+            String hiddenHasFilterCharge = "";
             Set<String> value = selectProductFilterList.get(0).keySet();
             Iterator<String> it = value.iterator();
             while(it.hasNext()) {
-                hiddenHasFilterCharge = Integer.parseInt(it.next());
+                hiddenHasFilterCharge = it.next();
             }
-            logger.debug("hiddenHasFilterCharge.HiddenHasFilterCharge :: " + Integer.toString(hiddenHasFilterCharge));
-            rtn.setHiddenHasFilterCharge(hiddenHasFilterCharge);
+            logger.debug("hiddenHasFilterCharge.HiddenHasFilterCharge :: " + hiddenHasFilterCharge);
+            rtn.setHiddenHasFilterCharge(Integer.parseInt(hiddenHasFilterCharge));
 
             // [Membership Tab]
             // Type of Package
