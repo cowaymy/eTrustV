@@ -3932,7 +3932,7 @@ SELECT MST.*
                           STK_RETN_REM,
                           STK_RETN_RESN_ID,
                           STK_RETN_CC_ID,
-                          <!-- RETN_CODE_FAIL_REMARK, -->
+                          RETN_CODE_FAIL_REMARK,
                           STK_RETN_CRT_DT,
                           STK_RETN_CRT_USER_ID,
                           STK_RETN_UPD_DT,
