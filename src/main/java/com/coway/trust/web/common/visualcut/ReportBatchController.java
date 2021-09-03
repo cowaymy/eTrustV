@@ -26,6 +26,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.ReportBatchService;
@@ -1664,30 +1665,42 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/CSP_Raw_Data_Excel.do")
-  //@Scheduled(cron = "0 0 6 * * *")//Daily (4:00am)
-  public void CSP_Raw_Data_Excel() {
+  //@Scheduled(cron = "0 30 3 * * *")//Daily (3:30am)
+  public void CSP_Raw_Data_Excel(@RequestParam Map<String, Object> params) {
+    LOGGER.info("[START] CSP_Raw_Data_Excel...");
 
-    int currentYear = LocalDate.now().getYear();
-
-    for(int year= 2018;year <= currentYear; year++){
-      LOGGER.info("[START] CSP_Raw_Data_Excel...");
-      Map<String, Object> params = new HashMap<>();
-      params.put(REPORT_FILE_NAME, "/visualcut/CSPRawData.rpt");// visualcut
-                                                                                    // rpt
-                                                                                    // file
-                                                                                    // name.
-      params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-      params.put("V_TEMP", "TEMP");// parameter
-      params.put("V_YEAR", year);// parameter
+    if(CommonUtils.nvl(params.get("V_YEAR")) != ""){
+      params.put(REPORT_FILE_NAME, "/visualcut/CSPRawData.rpt");
+      params.put(REPORT_VIEW_TYPE, "EXCEL");
+      params.put("V_TEMP", "TEMP");
+      params.put("V_YEAR", params.get("V_YEAR").toString());
       params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-          "CSP" + File.separator + "CSP_Raw_Data_" + year + "_" + CommonUtils.getNowDate() + ".xls");
+      "CSP" + File.separator + "CSP_Raw_Data_" + params.get("V_YEAR").toString() + "_" + CommonUtils.getNowDate() + ".xls");
 
       this.viewProcedure(null, null, params);
-      LOGGER.info("[END] CSP_Raw_Data_Excel...");
+    }else{
+      int minYear = 2018;
+
+      for(int year= LocalDate.now().getYear();year >= minYear; year--){
+
+        params.put(REPORT_FILE_NAME, "/visualcut/CSPRawData.rpt");// visualcut
+                                                                                      // rpt
+                                                                                      // file
+                                                                                      // name.
+        params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+        params.put("V_TEMP", "TEMP");// parameter
+        params.put("V_YEAR", year);// parameter
+        params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+            "CSP" + File.separator + "CSP_Raw_Data_" + year + "_" + CommonUtils.getNowDate() + ".xls");
+
+        this.viewProcedure(null, null, params);
+      }
     }
+
+    LOGGER.info("[END] CSP_Raw_Data_Excel...");
   }
 
-  @RequestMapping(value = "/CSP_Raw_Data_Excel_2019.do")
+/*  @RequestMapping(value = "/CSP_Raw_Data_Excel_2019.do")
   //@Scheduled(cron = "0 30 3 * * *")//Daily (3:30am)
   public void CSP_Raw_Data_Excel_2019() {
     LOGGER.info("[START] CSP_Raw_Data_Excel...");
@@ -1723,7 +1736,7 @@ public class ReportBatchController {
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] CSP_Raw_Data_Excel...");
-  }
+  }*/
 
   @RequestMapping(value = "/SST_Agreement_Raw_Data_Excel.do")
   //@Scheduled(cron = "0 0 4 * * *")//Daily (4:00am)
