@@ -802,17 +802,21 @@
 	      }
 	    }
 
-	    if( !$("#waterSourceTemp").val() == "" ){
-	      if ( ($("#waterSourceTemp").val() < 5 || $("#waterSourceTemp").val() > 35) && !$("#waterSourceTemp").val() == "" ) {
-	      } else{
-	        msg += "* <spring:message code='sys.msg.notInRange' arguments='Water Source Temperature' htmlEscape='false'/> </br>";
+	    if($("#failReasonCode").val() == 8021) {
+	      if( !$("#waterSourceTemp").val() == "" ){
+	        if ( ($("#waterSourceTemp").val() < 5 || $("#waterSourceTemp").val() > 35) && !$("#waterSourceTemp").val() == "" ) {
+	        } else{
+	          msg += "* <spring:message code='sys.msg.notInRange' arguments='Water Source Temperature' htmlEscape='false'/> </br>";
+	        }
 	      }
 	    }
 
-	    if( !$("#roomTemp").val() == "" ){
-	      if ( $("#roomTemp").val() > 35 && !$("#roomTemp").val() == "" ) {
-	      } else{
-	        msg += "* <spring:message code='sys.msg.notInRange' arguments='Room Temperature' htmlEscape='false'/> </br>";
+	    if($("#failReasonCode").val() == 8022) {
+	      if( !$("#roomTemp").val() == "" ) {
+	        if ( $("#roomTemp").val() > 35 && !$("#roomTemp").val() == "" ) {
+	        } else{
+	          msg += "* <spring:message code='sys.msg.notInRange' arguments='Room Temperature' htmlEscape='false'/> </br>";
+	        }
 	      }
 	    }
 
