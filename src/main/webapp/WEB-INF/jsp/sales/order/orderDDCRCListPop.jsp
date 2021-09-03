@@ -44,9 +44,10 @@ function validRequiredField(){
 	var valid = true;
 	var message = "";
 
-	if(($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) || ($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
+	if ((($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) || ($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0))
+	&& (($("#dpApplyDateFr").val() == null || $("#dpApplyDateFr").val().length == 0) || ($("#dpApplyDateTo").val() == null || $("#dpApplyDateTo").val().length == 0))){
 		   valid = false;
-		   message += '<spring:message code="sal.alert.msg.keyInOrdDateFromTo" />';
+		   message += '<spring:message code="sal.alert.msg.keyInDate" />';
 	}
 
 	if($('#cmbPaymode :selected').length < 1){
