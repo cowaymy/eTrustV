@@ -75,7 +75,7 @@ public class ServiceApiPRServiceImpl extends EgovAbstractServiceImpl implements 
 		    cvMp.put("stkRetnRem", String.valueOf(paramsTran.get("resultRemark")));
 		    cvMp.put("stkRetnResnId", paramsTran.get("resultCode"));
 		    cvMp.put("stkRetnCcId", paramsTran.get("ccCode"));
-		    //cvMp.put("retnCodeFailRemark", paramsTran.get("retnCodeFailRemark"));
+		    cvMp.put("retnCodeFailRemark", paramsTran.get("retnCodeFailRemark"));
 		    cvMp.put("stkRetnCrtUserId", paramsTran.get("userId"));
 		    cvMp.put("stkRetnUpdUserId", paramsTran.get("userId"));
 		    cvMp.put("stkRetnResultIsSynch", "0");
