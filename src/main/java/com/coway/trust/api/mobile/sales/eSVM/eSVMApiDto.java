@@ -606,4 +606,68 @@ public class eSVMApiDto {
     public void setPromoAddDiscPrc(int promoAddDiscPrc) {
         this.promoAddDiscPrc = promoAddDiscPrc;
     }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public String getFilterId() {
+        return filterId;
+    }
+
+    public void setFilterId(String filterId) {
+        this.filterId = filterId;
+    }
+
+    public String getPrc() {
+        return prc;
+    }
+
+    public void setPrc(String prc) {
+        this.prc = prc;
+    }
+
+    public String getOriPrc() {
+        return oriPrc;
+    }
+
+    public void setOriPrc(String oriPrc) {
+        this.oriPrc = oriPrc;
+    }
+
+    public String getLifePriod() {
+        return lifePriod;
+    }
+
+    public void setLifePriod(String lifePriod) {
+        this.lifePriod = lifePriod;
+    }
+
+    public String getLastChngDt() {
+        return lastChngDt;
+    }
+
+    public void setLastChngDt(String lastChngDt) {
+        this.lastChngDt = lastChngDt;
+    }
+
+    public String getFilterCode() {
+        return filterCode;
+    }
+
+    public void setFilterCode(String filterCode) {
+        this.filterCode = filterCode;
+    }
+
+    public String getFilterDesc() {
+        return filterDesc;
+    }
+
+    public void setFilterDesc(String filterDesc) {
+        this.filterDesc = filterDesc;
+    }
 }
