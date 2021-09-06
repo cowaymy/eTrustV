@@ -183,6 +183,8 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
 
         EgovMap packageInfo = eSVMApiMapper.mPackageInfo(eSVMApiForm.createMap(param));
 
+        logger.debug("srvMemPacId :: " + packageInfo.get("srvMemPacId").toString());
+
         if(CommonUtils.isEmpty(packageInfo.get("srvMemPacId"))) {
             rtn.setHiddenHasPackage(0);
             rtn.setBsFreq("");
@@ -190,10 +192,15 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
             rtn.setHiddenNormalPrice(0);
         } else {
 
+            logger.debug("srvMemItmPrc :: " + packageInfo.get("srvMemItmPrc").toString());
+
             int year = param.getSubYear() /12;
             int pkgPrice = Math.round(Integer.parseInt(packageInfo.get("srvMemItmPrc").toString()) * year);
             rtn.setZeroRatYn(zeroRatYn);
             rtn.setEurCertYn(eurCertYn);
+
+            logger.debug("year :: " + Integer.toString(year));
+            logger.debug("pkgPrice :: " + Integer.toString(pkgPrice));
 
             rtn.setHiddenHasPackage(1);
             rtn.setBsFreq(packageInfo.get("srvMemItmPriod").toString() + " month(s)");
