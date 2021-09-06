@@ -43,7 +43,7 @@ public class eSVMApiController {
       List<EgovMap> selectQuotationist = eSVMApiService.selectQuotationList(param);
       if (LOGGER.isDebugEnabled()) {
         for (int i = 0; i < selectQuotationist.size(); i++) {
-          LOGGER.debug("selecteQuotationist : {}", selectQuotationist.get(i));
+          LOGGER.debug("selectQuotationList : {}", selectQuotationist.get(i));
         }
       }
       return ResponseEntity.ok(selectQuotationist.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList()));
@@ -89,10 +89,11 @@ public class eSVMApiController {
     @ApiOperation(value = "selectFilterList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/selectFilterList", method = RequestMethod.GET)
     public ResponseEntity<List<eSVMApiDto>> selectFilterList(@ModelAttribute eSVMApiForm param) throws Exception {
+      LOGGER.info("========== selectFilterList ==========");
       List<EgovMap> selectFilterList = eSVMApiService.selectFilterList(param);
       if (LOGGER.isDebugEnabled()) {
         for (int i = 0; i < selectFilterList.size(); i++) {
-          LOGGER.debug("selecteQuotationist : {}", selectFilterList.get(i));
+          LOGGER.debug("selectFilterList : {}", selectFilterList.get(i));
         }
       }
       return ResponseEntity.ok(selectFilterList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList()));

@@ -282,9 +282,11 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
 
     @Override
     public List<EgovMap> selectFilterList(eSVMApiForm param) throws Exception {
-
+        logger.debug("serviceImpl :: selectFilterList");
         Map<String, Object> map = eSVMApiForm.createMap(param);
         eSVMApiMapper.getSVMFilterCharge(map);
-        return (List<EgovMap>) map.get("p1");
+        List<EgovMap> list = (List<EgovMap>) map.get("p1");
+
+        return list;
     }
 }
