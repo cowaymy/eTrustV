@@ -1,5 +1,6 @@
 package com.coway.trust.api.mobile.sales.eSVM;
 
+import java.util.Date;
 import java.util.List;
 
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
@@ -94,7 +95,7 @@ public class eSVMApiDto {
     private int prc;
     private int oriPrc;
     private int lifePriod;
-    private String lastChngDt;
+    private Date lastChngDt;
     private String filterCode;
     private String filterDesc;
 
@@ -647,11 +648,11 @@ public class eSVMApiDto {
         this.lifePriod = lifePriod;
     }
 
-    public String getLastChngDt() {
+    public Date getLastChngDt() {
         return lastChngDt;
     }
 
-    public void setLastChngDt(String lastChngDt) {
+    public void setLastChngDt(Date lastChngDt) {
         this.lastChngDt = lastChngDt;
     }
 
