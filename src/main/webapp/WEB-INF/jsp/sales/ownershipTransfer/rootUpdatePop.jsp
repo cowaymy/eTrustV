@@ -99,6 +99,14 @@
 		wordWrap : true
 	};
 
+    var viewLedgerOption = {
+            winName : "popup",
+            width : "950px",   // 창 가로 크기
+            height : "700px",    // 창 세로 크기
+            resizable : "yes", // 창 사이즈 변경. (yes/no)(default : yes)
+            scrollbars : "yes" // 스크롤바. (yes/no)(default : yes)
+    };
+
 	$(document)
 			.ready(
 					function() {
@@ -364,6 +372,23 @@
 							$("#rotCL_add_btn").hide();
 							$("#save_rotCLbtn").hide();
 						}
+
+						// For viewing ledgers 1 and 2 - start
+						$('#_ordId').val(salesOrdID);
+
+				        $('#view_ledger1btn')
+				                .click(
+				                		function() {
+				                			Common.popupWin('_frmLedger', "/sales/order/orderLedgerViewPop.do", viewLedgerOption);
+				                	  });
+
+                        $('#view_ledger2btn')
+                                .click(
+                                	    function() {
+                                	        Common.popupWin('_frmLedger', "/sales/order/orderLedger2ViewPop.do", viewLedgerOption);
+                                	  });
+                        // For viewing ledgers 1 and 2 - end
+
 					});
 
 	// General Functions - Start
@@ -1223,6 +1248,11 @@
 			<!-- CCP Tab - Start -->
 			<!-- ********************************************************************************** -->
 			<article class="tap_area">
+			     <!-- Ledger Form -->
+                <form id="_frmLedger" name="frmLedger" action="#" method="post">
+                    <input id="_ordId" name="ordId" type="hidden" value="" />
+                </form>
+
 				<form action="#" id="ccpForm" method="post">
 					<input type="hidden" name="editCcpId" id="_editCcpId"
 						value="${ccpId}" />
@@ -1338,6 +1368,15 @@
 						<h3>
 							<spring:message code="sal.title.text.ccpScorePoint" />
 						</h3>
+
+						<ul class="right_btns">
+						  <li><p class="btn_blue">
+                            <a id="view_ledger1btn" href="#">View Ledger (1)</a>
+                            </p></li>
+                          <li><p class="btn_blue">
+                            <a id="view_ledger2btn" href="#">View Ledger (2)</a>
+                            </p></li>
+						</ul>
 					</article>
 
 					<table class="type1">
