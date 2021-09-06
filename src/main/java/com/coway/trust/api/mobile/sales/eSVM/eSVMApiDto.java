@@ -42,6 +42,8 @@ public class eSVMApiDto {
     private int expint;
     private String coolingPrd;
     private String hsFreq;
+    private String cvtLastSrvMemExprDate;
+    private String cvtNowDate;
     private String trm;
     private int hiddenIsCharge;
     private int hiddenHasFilterCharge;
@@ -286,6 +288,22 @@ public class eSVMApiDto {
 
     public void setHsFreq(String hsFreq) {
         this.hsFreq = hsFreq;
+    }
+
+    public String getCvtLastSrvMemExprDate() {
+        return cvtLastSrvMemExprDate;
+    }
+
+    public void setCvtLastSrvMemExprDate(String cvtLastSrvMemExprDate) {
+        this.cvtLastSrvMemExprDate = cvtLastSrvMemExprDate;
+    }
+
+    public String getCvtNowDate() {
+        return cvtNowDate;
+    }
+
+    public void setCvtNowDate(String cvtNowDate) {
+        this.cvtNowDate = cvtNowDate;
     }
 
     public String getTrm() {
