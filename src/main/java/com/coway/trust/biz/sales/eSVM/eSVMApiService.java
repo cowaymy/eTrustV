@@ -17,6 +17,12 @@ public interface eSVMApiService {
 
     eSVMApiDto selectPackageFilter(eSVMApiForm param) throws Exception;
 
+    eSVMApiDto getPromoDisc(eSVMApiForm param) throws Exception;
+
+    eSVMApiDto getFilterChargeSum(eSVMApiForm param) throws Exception;
+
+    List<EgovMap> selectFilterList(eSVMApiForm param) throws Exception;
+
     eSVMApiDto selectOrderMemInfo(eSVMApiForm param) throws Exception;
 
 }

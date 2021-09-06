@@ -33,4 +33,6 @@ public interface eSVMApiMapper {
 
     EgovMap getSVMFilterCharge(Map<String, Object> params); // Filter Details
 
+    EgovMap getPromoDisc(Map<String, Object> params); // On change package information get discount
+
 }

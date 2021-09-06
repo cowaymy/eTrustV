@@ -74,6 +74,30 @@ public class eSVMApiController {
       return ResponseEntity.ok(eSVMApiService.selectPackageFilter(param));
     }
 
+    @ApiOperation(value = "getPromoDisc", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/getPromoDisc", method = RequestMethod.GET)
+    public ResponseEntity<eSVMApiDto> getPromoDisc(@ModelAttribute eSVMApiForm param) throws Exception {
+      return ResponseEntity.ok(eSVMApiService.getPromoDisc(param));
+    }
+
+    @ApiOperation(value = "getFilterChargeSum", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/getFilterChargeSum", method = RequestMethod.GET)
+    public ResponseEntity<eSVMApiDto> getFilterChargeSum(@ModelAttribute eSVMApiForm param) throws Exception {
+      return ResponseEntity.ok(eSVMApiService.getFilterChargeSum(param));
+    }
+
+    @ApiOperation(value = "selectFilterList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/selectFilterList", method = RequestMethod.GET)
+    public ResponseEntity<List<eSVMApiDto>> selectFilterList(@ModelAttribute eSVMApiForm param) throws Exception {
+      List<EgovMap> selectFilterList = eSVMApiService.selectFilterList(param);
+      if (LOGGER.isDebugEnabled()) {
+        for (int i = 0; i < selectFilterList.size(); i++) {
+          LOGGER.debug("selecteQuotationist : {}", selectFilterList.get(i));
+        }
+      }
+      return ResponseEntity.ok(selectFilterList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList()));
+    }
+
     @ApiOperation(value = "selectOrderMemInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/selectOrderMemInfo", method = RequestMethod.GET)
     public ResponseEntity<eSVMApiDto> selectOrderMemInfo(@ModelAttribute eSVMApiForm param) throws Exception {

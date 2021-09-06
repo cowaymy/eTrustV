@@ -86,6 +86,18 @@ public class eSVMApiDto {
     private int srvMemPacId;
     private int filterCharge;
 
+    /* Package change/Filter change */
+    private int promoPrcPrcnt;
+    private int promoAddDiscPrc;
+    private String productId;
+    private String filterId;
+    private String prc;
+    private String oriPrc;
+    private String lifePriod;
+    private String lastChngDt;
+    private String filterCode;
+    private String filterDesc;
+
     private List<eSVMApiDto> productFilterList;
     private List<eSVMApiDto> packageComboList;
     private List<eSVMApiDto> packagePromoList;
@@ -577,5 +589,21 @@ public class eSVMApiDto {
 
     public void setFilterCharge(int filterCharge) {
         this.filterCharge = filterCharge;
+    }
+
+    public int getPromoPrcPrcnt() {
+        return promoPrcPrcnt;
+    }
+
+    public void setPromoPrcPrcnt(int promoPrcPrcnt) {
+        this.promoPrcPrcnt = promoPrcPrcnt;
+    }
+
+    public int getPromoAddDiscPrc() {
+        return promoAddDiscPrc;
+    }
+
+    public void setPromoAddDiscPrc(int promoAddDiscPrc) {
+        this.promoAddDiscPrc = promoAddDiscPrc;
     }
 }

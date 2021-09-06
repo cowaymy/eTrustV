@@ -199,9 +199,6 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
             rtn.setZeroRatYn(zeroRatYn);
             rtn.setEurCertYn(eurCertYn);
 
-            logger.debug("year :: " + Integer.toString(year));
-            logger.debug("pkgPrice :: " + Integer.toString(pkgPrice));
-
             rtn.setHiddenHasPackage(1);
             rtn.setBsFreq(packageInfo.get("srvMemItmPriod").toString() + " month(s)");
             rtn.setHiddenBsFreq(packageInfo.get("srvMemItmPriod").toString());
@@ -261,5 +258,33 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         }
 
         return filterChargeSum;
+    }
+
+    @Override
+    public eSVMApiDto getPromoDisc(eSVMApiForm param) throws Exception {
+        if(null == param) {
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+        return eSVMApiDto.create(eSVMApiMapper.getPromoDisc(eSVMApiForm.createMap(param)));
+    }
+
+    @Override
+    public eSVMApiDto getFilterChargeSum(eSVMApiForm param) throws Exception {
+        if(null == param) {
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+
+        eSVMApiDto rtn = new eSVMApiDto();
+        rtn.setFilterCharge(this.getFilterChargeList_m(eSVMApiForm.createMap(param)));
+
+        return rtn;
+    }
+
+    @Override
+    public List<EgovMap> selectFilterList(eSVMApiForm param) throws Exception {
+
+        Map<String, Object> map = eSVMApiForm.createMap(param);
+        eSVMApiMapper.getSVMFilterCharge(map);
+        return (List<EgovMap>) map.get("p1");
     }
 }

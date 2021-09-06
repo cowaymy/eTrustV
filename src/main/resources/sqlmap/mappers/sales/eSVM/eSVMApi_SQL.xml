@@ -401,4 +401,13 @@
         ]]>
     </select>
 
+    <select id="getPromoDisc" parameterType="Map" resultType="egovMap">
+        SELECT
+            PROMO_PRC_PRCNT,
+            PROMO_DISC_TYPE,
+            PROMO_ADD_DISC_PRC
+        FROM SAL0017D
+        WHERE PROMO_ID = #{promoId}
+    </select>
+
 </mapper>
