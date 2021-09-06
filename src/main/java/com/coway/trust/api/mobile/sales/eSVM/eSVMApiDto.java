@@ -89,11 +89,11 @@ public class eSVMApiDto {
     /* Package change/Filter change */
     private int promoPrcPrcnt;
     private int promoAddDiscPrc;
-    private String productId;
-    private String filterId;
-    private String prc;
-    private String oriPrc;
-    private String lifePriod;
+    private int productId;
+    private int filterId;
+    private int prc;
+    private int oriPrc;
+    private int lifePriod;
     private String lastChngDt;
     private String filterCode;
     private String filterDesc;
@@ -607,43 +607,43 @@ public class eSVMApiDto {
         this.promoAddDiscPrc = promoAddDiscPrc;
     }
 
-    public String getProductId() {
+    public int getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setProductId(int productId) {
         this.productId = productId;
     }
 
-    public String getFilterId() {
+    public int getFilterId() {
         return filterId;
     }
 
-    public void setFilterId(String filterId) {
+    public void setFilterId(int filterId) {
         this.filterId = filterId;
     }
 
-    public String getPrc() {
+    public int getPrc() {
         return prc;
     }
 
-    public void setPrc(String prc) {
+    public void setPrc(int prc) {
         this.prc = prc;
     }
 
-    public String getOriPrc() {
+    public int getOriPrc() {
         return oriPrc;
     }
 
-    public void setOriPrc(String oriPrc) {
+    public void setOriPrc(int oriPrc) {
         this.oriPrc = oriPrc;
     }
 
-    public String getLifePriod() {
+    public int getLifePriod() {
         return lifePriod;
     }
 
-    public void setLifePriod(String lifePriod) {
+    public void setLifePriod(int lifePriod) {
         this.lifePriod = lifePriod;
     }
 
