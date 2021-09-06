@@ -6,17 +6,17 @@
     //AUIGrid 생성 후 반환 ID
     var listGridID;
     var listStckGridID, listGiftGridID;
-    
+
     var keyValueList = [];
 
     var timerId = null;
-    
+
     var AUTH_CHNG = "${PAGE_AUTH.funcChange}";
 
     $(document).ready(function(){
-        
+
         fn_statusCodeSearch();
-        
+
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         createAUIGridStk();
@@ -25,37 +25,37 @@
         AUIGrid.bind(listGridID, "cellDoubleClick", function(event) {
             Common.popupDiv("/sales/promotion/promotionModifyPop.do", { promoId : AUIGrid.getCellValue(listGridID, event.rowIndex, "promoId") });
         });
-        
+
         // 셀 클릭 이벤트 바인딩
         AUIGrid.bind(listGridID, "selectionChange", auiGridSelectionChangeHandler);
-        
+
         doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', '', 'list_promoAppTypeId', 'M', 'fn_multiCombo'); //Common Code
         doGetCombo('/common/selectCodeList.do',  '76', '', 'list_promoTypeId',    'M', 'fn_multiCombo'); //Promo Type
         doGetComboDataStatus('/status/selectStatusCategoryCdList.do',  {selCategoryId : 3, parmDisab : 0}, '', 'list_promoStusId', 'M', 'fn_multiCombo'); //Promo Type
     });
 
-    function auiGridSelectionChangeHandler(event) { 
-    
+    function auiGridSelectionChangeHandler(event) {
+
         // 200ms 보다 빠르게 그리드 선택자가 변경된다면 데이터 요청 안함
         if(timerId) {
             clearTimeout(timerId);
         }
-        
+
         timerId = setTimeout(function() {
             var selectedItems = event.selectedItems;
             if(selectedItems.length <= 0)
                 return;
-            
+
             var rowItem = selectedItems[0].item; // 행 아이템들
             var promoId = rowItem.promoId; // 선택한 행의 고객 ID 값
             var promoAppTypeId = rowItem.promoAppTypeId; // 선택한 행의 고객 ID 값
-            
+
             fn_selectPromotionPrdListForList2(promoId, promoAppTypeId);
             fn_selectPromotionFreeGiftListForList2(promoId);
-            
+
         }, 200);  // 현재 200ms 민감도....환경에 맞게 조절하세요.
     };
-    
+
     function fn_calcPvVal(num1) {
         var num2 = parseFloat(num1/10);
         var num3 = Math.floor(num2);
@@ -66,7 +66,7 @@
         else {
             num4 = num3;
         }
-        
+
         return (num4*10);
     }
 
@@ -84,7 +84,7 @@
             }
         });
     }
-    
+
     function fn_statusCodeSearch(){
         Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do", {selCategoryId : 3, parmDisab : 0}, function(result) {
             keyValueList = result;
@@ -92,17 +92,18 @@
     }
 
     function createAUIGrid() {
-        
+
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "<spring:message code='sales.AppType2'/>",        dataField : "promoAppTypeName", editable : false,   width : 100 }
+            { headerText : "<spring:message code='sal.text.promotionId'/>",        dataField : "promoId", editable : false,   width : 100 }
+          , { headerText : "<spring:message code='sales.AppType2'/>",        dataField : "promoAppTypeName", editable : false,   width : 100 }
           , { headerText : "<spring:message code='sales.promo.promoType'/>", dataField : "promoTypeName",    editable : false,   width : 100 }
           , { headerText : "<spring:message code='sales.promo.promoCd'/>",   dataField : "promoCode",        editable : false,   width : 140 }
           , { headerText : "<spring:message code='sales.promo.promoNm'/>",   dataField : "promoDesc",        editable : false }
           , { headerText : "<spring:message code='sales.StartDate'/>",       dataField : "promoDtFrom",      editable : false,   width : 100 }
           , { headerText : "<spring:message code='sales.EndDate'/>",         dataField : "promoDtEnd",       editable : false,   width : 100 }
           , { headerText : "<spring:message code='sales.Status'/>",          dataField : "promoStusId",      editable : true,    width : 80
-            , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+            , labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
                                   var retStr = "";
                                   for(var i=0,len=keyValueList.length; i<len; i++) {
                                       if(keyValueList[i]["stusCodeId"] == value) {
@@ -125,35 +126,35 @@
         //그리드 속성 설정
         var gridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : true,            
-            fixedColumnCount    : 1,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-          //selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : true,
+            fixedColumnCount    : 1,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+          //selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             noDataMessage       : "No order found.",
             groupingMessage     : "Here groupping"
         };
-        
+
         listGridID = GridCommon.createAUIGrid("list_promo_grid_wrap", columnLayout, "", gridPros);
     }
 
     function createAUIGridStk() {
-        
+
         //AUIGrid 칼럼 설정
         var columnLayoutPrd = [
             { headerText : "<spring:message code='sales.prodCd'/>", dataField : "itmcd",   width : 100 }
           , { headerText : "<spring:message code='sales.prodNm'/>", dataField : "itmname"              }
-          , { headerText : "<spring:message code='sales.normal'/>" 
+          , { headerText : "<spring:message code='sales.normal'/>"
             , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "amt",         width : 100 }
                           , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "prcRpf",      width : 100 }
                           , { headerText : "<spring:message code='sales.pv'/>",        dataField : "prcPv",       width : 100 }]}
-          , { headerText : "<spring:message code='sales.title.Promotion'/>" 
+          , { headerText : "<spring:message code='sales.title.Promotion'/>"
             , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmt",    width : 100 }
                           , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "promoPrcRpf", width : 100 }
                           , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  width : 100 }]}
@@ -173,39 +174,39 @@
         //그리드 속성 설정
         var listGridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
-            fixedColumnCount    : 1,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-          //selectionMode       : "singleRow",  //"multipleCells", 
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 1,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+          //selectionMode       : "singleRow",  //"multipleCells",
             softRemoveRowMode   : false,
-            headerHeight        : 30,       
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             noDataMessage       : "No order found.",
             groupingMessage     : "Here groupping"
         };
-        
+
         listStckGridID = GridCommon.createAUIGrid("pop_list_stck_grid_wrap", columnLayoutPrd, "", listGridPros);
         listGiftGridID = GridCommon.createAUIGrid("pop_list_gift_grid_wrap", columnLayoutGft, "", listGridPros);
     }
-    
+
     // 컬럼 선택시 상세정보 세팅.
     function fn_setDetail(gridID, rowIdx){
         console.log('cellDoubleClick');
         Common.popupDiv("/sales/promotion/promotionModifyPop.do", { promoId : AUIGrid.getCellValue(gridID, rowIdx, "promoId") });
     }
-    
+
     // 컬럼 선택시 상세정보 세팅.
     function fn_setDetail2(gridID, rowIdx){
         console.log('cellClick');
         fn_selectPromotionPrdListForList2(AUIGrid.getCellValue(gridID, rowIdx, "promoId"), AUIGrid.getCellValue(gridID, rowIdx, "promoAppTypeId"));
         fn_selectPromotionFreeGiftListForList2(AUIGrid.getCellValue(gridID, rowIdx, "promoId"));
     }
-    
+
     // 리스트 조회.
     function fn_selectPromoListAjax() {
         console.log('fn_selectPromoListAjax START');
@@ -216,17 +217,17 @@
 
     function fn_doSaveStatus() {
         console.log('!@# fn_doSaveStatus START');
-        
-        var promotionVO = {            
+
+        var promotionVO = {
             salesPromoMGridDataSetList : GridCommon.getEditData(listGridID)
         };
-        
+
         Common.ajax("POST", "/sales/promotion/updatePromoStatus.do", promotionVO, function(result) {
 
             Common.alert("<spring:message code='sales.promo.msg1'/>" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
-            
+
             fn_selectPromoListAjax();
-            
+
         },  function(jqXHR, textStatus, errorThrown) {
             try {
                 console.log("status : " + jqXHR.status);
@@ -244,7 +245,7 @@
 //          alert("Fail : " + jqXHR.responseJSON.message);
         });
     }
-    
+
     $(function(){
         $('#btnNew').click(function() {
             Common.popupDiv("/sales/promotion/promotionRegisterPop.do");
@@ -266,7 +267,7 @@
             AUIGrid.setGridData(listStckGridID, result);
         });
     }
-    
+
     function fn_selectPromotionFreeGiftListForList2(promoId) {
         console.log('fn_selectPromotionFreeGiftListAjax START');
         Common.ajax("GET", "/sales/promotion/selectPromotionFreeGiftList.do", { promoId : promoId }, function(result) {
@@ -278,25 +279,25 @@
         $('#list_promoAppTypeId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
-            selectAll: true, // 전체선택 
+            selectAll: true, // 전체선택
             width: '100%'
         });
         $('#list_promoAppTypeId').multipleSelect("checkAll");
         $('#list_promoTypeId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
-            selectAll: true, // 전체선택 
+            selectAll: true, // 전체선택
             width: '100%'
         });
         $('#list_promoTypeId').multipleSelect("checkAll");
         $('#list_promoStusId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
-            selectAll: true, // 전체선택 
+            selectAll: true, // 전체선택
             width: '100%'
         });
         $('#list_promoStusId').multipleSelect("checkAll");
-        
+
         fn_delApptype2();
     }
 
@@ -316,7 +317,7 @@
         });
     };
 </script>
-        
+
 <!--****************************************************************************
     CONTENT START
 *****************************************************************************-->
