@@ -19,6 +19,7 @@ import java.util.Random;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -2780,6 +2781,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	@Override
 	public Map<String, Object> lmsReqApi(Map<String, Object> params) {
 		Map<String, Object> resultValue = new HashMap<String, Object>();
+		String respTm = null;
+
+		StopWatch stopWatch = new StopWatch();
+	    stopWatch.reset();
+	    stopWatch.start();
 
 		String lmsUrl = params.get("lmsUrl").toString();
 		String jsonString = params.get("jsonString").toString();
@@ -2813,7 +2819,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		        Gson g = new Gson();
 		        p = g.fromJson(output1, LMSApiRespForm.class);
-		        if(p.getCode().equals("true")){
+		        if(p.getStatus() ==null || p.getStatus().isEmpty()){
+		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+		        }else if(p.getStatus().equals("true")){
 		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS));
 		        }else{
 		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
@@ -2831,7 +2839,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			p.setStatus(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
 			p.setMessage("Timeout" + e.toString());
 		}finally{
-			commonApiService.rtnRespMsg(lmsUrl, p.getStatus().toString(), p.getMessage().toString(), output1, jsonString, null ,"3");
+			stopWatch.stop();
+		    respTm = stopWatch.toString();
+			commonApiService.rtnRespMsg(lmsUrl, p.getCode().toString(), p.getMessage().toString(),respTm , jsonString, null ,"3");
 		}
 
 		return resultValue;
