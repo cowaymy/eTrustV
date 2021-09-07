@@ -2790,7 +2790,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 			//insert to api0004m
 			//
-
+			System.out.println("Start Calling LMS API ...." + lmsUrl + "......\n");
 	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 	        conn.setDoOutput(true);
 	        conn.setRequestMethod("POST");
@@ -2813,22 +2813,17 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		        Gson g = new Gson();
 		        p = g.fromJson(output1, LMSApiRespForm.class);
-//				if(result.get(0).equals(RESULT.SUCCESS_CODE)){
-//					resVO.setResponseCode(result.get(0));
-//					resVO.setStatus(result.get(1));
-//					if(result.size()==4)
-//						resVO.setResult(result.get(3));
-//					resVO.setResponseMsg(msg);
-//				}else{
-//					resultValue.put(arg0, arg1)
-//					resVO.setResponseCode(result.get(0));
-//					resVO.setStatus(EXCEPTION.EXCEPTION);
-//					resVO.setResponseMsg(msg);
-//				}
+		        if(p.getCode().equals("true")){
+		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS));
+		        }else{
+		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+		        }
 				conn.disconnect();
 			}else{
 				resultValue.put("status", "Failed");
 				resultValue.put("message", "No Response");
+				p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+				p.setMessage("No Response");
 			}
 		}catch(Exception e){
 			logger.error("Timeout:");
