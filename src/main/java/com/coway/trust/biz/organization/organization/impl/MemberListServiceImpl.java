@@ -275,7 +275,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             	String memid = memberListMapper.getUserID(memCode);
             	Map<String, Object> memMap = new HashMap<String, Object>();
             	memMap.put("MemberID", memid);
-            	lmsMemberListInsertUpdate(memMap);
+            	lmsMemberListInsert(memMap);
             }
 
             return memCode;
@@ -1322,7 +1322,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				//call lms to update user details
             	Map<String, Object> memMap = new HashMap<String, Object>();
             	memMap.put("MemberID", params.get("requestMemberId").toString());
-            	lmsMemberListInsertUpdate(memMap);
+            	lmsMemberListUpdate(memMap);
 
 			}else{
 				resultValue.put("message", "<b>Failed to save. Please try again later.</b>");
@@ -2138,7 +2138,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    			//}
 
 	    				//call LMS API create user
-	    				lmsMemberListInsertUpdate(params);
+	    				lmsMemberListInsert(params);
 			}
 
 		} else {
@@ -2647,7 +2647,88 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 
 	@Override
-	public Map<String, Object> lmsMemberListInsertUpdate(Map<String, Object> params){
+	public Map<String, Object> lmsMemberListInsert(Map<String, Object> params){
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		EgovMap selectMemListlms = memberListMapper.selectMemberListView(params);
+		List<EgovMap> selectcoursListlms = memberListMapper.selectTraining(params);
+
+		EgovMap MemListTolms = new EgovMap();
+
+		MemListTolms.put("secretkey",CommonConstants.lmsSecretKeyDev);
+		MemListTolms.put("username",selectMemListlms.get("memCode"));
+		MemListTolms.put("email",selectMemListlms.get("email"));
+		MemListTolms.put("firstname",selectMemListlms.get("name1"));
+		MemListTolms.put("idnumber",selectMemListlms.get("nric"));
+		MemListTolms.put("institution","Coway Malaysia");
+		MemListTolms.put("department",selectMemListlms.get("c41"));
+		MemListTolms.put("phone1",selectMemListlms.get("telMobile"));
+		String addrdtl = "";
+		String street = "";
+		String addr ="";
+		if(selectMemListlms.get("addrdtl") == null){
+			if(selectMemListlms.get("street") == null) {
+				addr = "";
+			}else{
+				street = selectMemListlms.get("street").toString();
+				addr = street;
+			}
+		}else{
+			if(selectMemListlms.get("street") == null) {
+				addrdtl = selectMemListlms.get("addrdtl").toString();
+				street ="";
+				addr = addrdtl;
+			}else{
+				addrdtl = selectMemListlms.get("addrdtl").toString();
+				street = selectMemListlms.get("street").toString();
+				addr = addrdtl + " "+ street;
+			}
+		}
+		MemListTolms.put("profile_field_address",addr);//
+		MemListTolms.put("city",selectMemListlms.get("city"));
+		MemListTolms.put("country",selectMemListlms.get("country"));
+		MemListTolms.put("profile_field_postcode",selectMemListlms.get("postcode"));
+		MemListTolms.put("profile_field_gender",selectMemListlms.get("gender"));
+		MemListTolms.put("profile_field_dob",selectMemListlms.get("c29"));
+		MemListTolms.put("profile_field_trainingbatch",selectcoursListlms.get(0).get("c_date"));
+		MemListTolms.put("profile_field_position",selectMemListlms.get("c57"));//
+		MemListTolms.put("profile_field_branchcode",selectMemListlms.get("c4"));
+		MemListTolms.put("profile_field_branchname",selectMemListlms.get("c5"));
+		MemListTolms.put("profile_field_region","");//
+		MemListTolms.put("profile_field_organizationcode",selectMemListlms.get("c43"));
+		MemListTolms.put("profile_field_groupcode",selectMemListlms.get("c42"));
+		MemListTolms.put("profile_field_MemberStatus",selectMemListlms.get("name"));
+		MemListTolms.put("profile_field_MemberType",selectMemListlms.get("codeName"));
+		MemListTolms.put("profile_field_ManagerName",selectMemListlms.get("c23"));
+		MemListTolms.put("profile_field_ManagerId",selectMemListlms.get("c22"));
+		MemListTolms.put("profile_field_SeniorManagerName",selectMemListlms.get("c18"));
+		MemListTolms.put("profile_field_SeniorManagerID",selectMemListlms.get("c17"));
+		MemListTolms.put("profile_field_GeneralManagerName",selectMemListlms.get("c13"));
+		MemListTolms.put("profile_field_GeneralManagerID",selectMemListlms.get("c12"));
+		//MemListTolms.put("profile_field_batch",selectMemListlms.get(""));
+		MemListTolms.put("profile_field_TrainingVenue",selectcoursListlms.get(0).get("coursLoc"));
+		MemListTolms.put("profile_field_TRNo",selectMemListlms.get("memId"));
+
+		//call LMS to insert user
+		System.out.println("Start Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
+//		String lmsUrl = "http://localhost:8080/web/api/v1/LMS/updateCourse";
+		String lmsUrl = CommonConstants.lmsApiDevUrl + "modernlms-api/api/add/user/";
+
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(MemListTolms);
+
+		EgovMap reqInfo = new EgovMap();
+		reqInfo.put("jsonString", jsonString);
+		reqInfo.put("lmsUrl", lmsUrl);
+
+		lmsReqApi(reqInfo);
+
+		logger.debug("End Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
+
+		return resultValue;
+	}
+
+	@Override
+	public Map<String, Object> lmsMemberListUpdate(Map<String, Object> params){
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		EgovMap selectMemListlms = memberListMapper.selectMemberListView(params);
 		List<EgovMap> selectcoursListlms = memberListMapper.selectTraining(params);

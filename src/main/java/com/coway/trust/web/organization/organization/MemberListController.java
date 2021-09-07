@@ -1036,7 +1036,7 @@ public class MemberListController {
 //                    formMap.put("coursItmId", trainingItem.get("coursItmId"));
 //                    u5 = memberListService.memberListUpdate_MSC09(formMap);
 //                }
-            	memberListService.lmsMemberListInsertUpdate(formMap);
+            	memberListService.lmsMemberListUpdate(formMap);
             }
 
             if(formMap.get("memberType").toString().equals("7")) {
