@@ -81,7 +81,7 @@ public class StaffClaimController {
 
 		String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
 		if(!"A1101".equals(costCentr)) {
-	         if(!"54547".equals(Integer.toString(sessionVO.getUserId()))) {
+	         if(!"144140".equals(Integer.toString(sessionVO.getUserId())) && !"79286".equals(Integer.toString(sessionVO.getUserId()))) {
 	                params.put("loginUserId", sessionVO.getUserId());
 	         }
 		}
