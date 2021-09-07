@@ -102,9 +102,12 @@ function fn_report(viewType){
 	var paymode = "";
 	var applyDateFrom = "";
     var applyDateTo = "";
+    var submitBranch = "";
 	var sortBy = "";
 	var whereSQL = "";
 	var extraWhereSQL = "";
+    var orderBySQL = "";
+    var extraWhereSQL = "";
     var orderBySQL = "";
 
     var runNo = 0;
@@ -174,6 +177,11 @@ function fn_report(viewType){
         whereSQL += " AND (r.DD_APPLY_DT BETWEEN TO_DATE('"+applyDateFrom+"', 'dd/MM/YY') AND TO_DATE('"+applyDateTo+"', 'dd/MM/YY'))";
     }
 
+	if($("#cmbSubmitBranch :selected").index() > 0){
+        submitBranch = $("#cmbSubmitBranch :selected").text();
+        whereSQL += " AND sm.BRNCH_ID = '"+$("#cmbSubmitBranch :selected").val()+"'";
+    }
+
     $("#reportDownFileName").val("OrderDDCRCList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 
     if(viewType == "PDF"){
@@ -197,6 +205,9 @@ function fn_report(viewType){
     $("#form #V_EXTRAWHERESQL").val(extraWhereSQL);
     $("#form #V_ORDERBYSQL").val(orderBySQL);
     $("#form #V_FULLSQL").val("");
+    $("#form #V_APPLYDATEFROM").val(applyDateFrom);
+    $("#form #V_APPLYDATETO").val(applyDateTo);
+    $("#form #V_SUBMITBRANCH").val(submitBranch);
 
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
@@ -208,6 +219,7 @@ function fn_report(viewType){
 }
 
 CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
+CommonCombo.make('cmbSubmitBranch', '/sales/ccp/getBranchCodeList', '' , '');
 CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
 </script>
 
@@ -260,6 +272,17 @@ CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
     <td>
     <select class="w100p" id="cmbKeyBranch"></select>
     </td>
+    <th scope="row"><spring:message code="sal.text.keyInUser" /></th>
+    <td>
+    <select class="w100p" id="cmbUser"></select>
+    </td>
+
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.submitBranch" /></th>
+    <td>
+    <select class="w100p" id="cmbSubmitBranch"></select>
+    </td>
     <th scope="row"><spring:message code="sal.text.applyDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
@@ -268,13 +291,8 @@ CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpApplyDateTo"/></p>
     </div><!-- date_set end -->
     </td>
-
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.keyInUser" /></th>
-    <td>
-    <select class="w100p" id="cmbUser"></select>
-    </td>
     <th scope="row"><spring:message code="sal.text.ordNum" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
@@ -283,8 +301,6 @@ CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
     <p><input type="text" title="" placeholder="" class="w100p" id="txtOrderNoTo"/></p>
     </div><!-- date_set end -->
     </td>
-</tr>
-<tr>
     <th scope="row"><spring:message code="sal.title.text.sorting" /></th>
     <td>
     <select class="w100p" id="cmbSorting">
@@ -294,8 +310,6 @@ CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
         <option value="5"><spring:message code="sal.combo.text.byIssuedBank" /></option>
     </select>
     </td>
-    <th></th>
-    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -323,7 +337,9 @@ CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
 <input type="hidden" id="V_EXTRAWHERESQL" name="V_EXTRAWHERESQL" value="" />
 <input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" value="" />
 <input type="hidden" id="V_FULLSQL" name="V_FULLSQL" value="" />
-
+<input type="hidden" id="V_APPLYDATEFROM" name="V_APPLYDATEFROM" value="" />
+<input type="hidden" id="V_APPLYDATETO" name="V_APPLYDATETO" value="" />
+<input type="hidden" id="V_SUBMITBRANCH" name="V_SUBMITBRANCH" value="" />
 </form>
 
 </section><!-- content end -->
