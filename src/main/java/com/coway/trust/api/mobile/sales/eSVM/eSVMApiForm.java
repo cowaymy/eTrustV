@@ -47,6 +47,8 @@ public class eSVMApiForm {
         params.put("hiddenIsCharge", vo.getHiddenIsCharge());
         params.put("hiddenHasFilterCharge", vo.getHiddenHasFilterCharge());
         params.put("employee", vo.getEmployee());
+        params.put("appTypeId", vo.getAppTypeId());
+        params.put("rentalStus", vo.getRentalStus());
         params.put("srvFilterId", vo.getSrvFilterId());
         params.put("srvFilterStkId", vo.getSrvFilterStkId());
         params.put("stkCode", vo.getStkCode());
@@ -129,6 +131,8 @@ public class eSVMApiForm {
     private String hiddenIsCharge;
     private String hiddenHasFilterCharge;
     private String employee;
+    private int appTypeId;
+    private String rentalStus;
 
     /* New Quotation - Filter Listing */
     private int srvFilterId;
@@ -436,6 +440,22 @@ public class eSVMApiForm {
 
     public void setEmployee(String employee) {
         this.employee = employee;
+    }
+
+    public int getAppTypeId() {
+        return appTypeId;
+    }
+
+    public void setAppTypeId(int appTypeId) {
+        this.appTypeId = appTypeId;
+    }
+
+    public String getRentalStus() {
+        return rentalStus;
+    }
+
+    public void setRentalStus(String rentalStus) {
+        this.rentalStus = rentalStus;
     }
 
     public int getSrvFilterId() {

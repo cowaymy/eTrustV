@@ -116,7 +116,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
             billParam.put("salesOrdId", rtn.getSalesOrdId());
             billParam.put("appTypeId", rtn.getAppTypeId());
             billParam.put("rentalStus", rtn.getRentalStus());
-            String checkRentalBillMonth = this.checkRentalBillMonth(eSVMApiForm.createMap(param));
+            String checkRentalBillMonth = this.checkRentalBillMonth(billParam);
 
             if(!checkRentalBillMonth.isEmpty()) {
                 throw new ApplicationException(AppConstants.FAIL, "Order has outstanding, membership purchase not allowed.");
