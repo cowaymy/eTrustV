@@ -329,6 +329,7 @@ console.log("preOrderList");
           , { headerText : "Fail Remark",         dataField : "rem2",     editable : false,width:750}
           , { headerText : "Sales By", dataField : "salesUserId",   editable : false,width:100}
           , { headerText : "Creator",         dataField : "crtName",   editable : false,width:100}
+          , { headerText : "Cody User Branch",  dataField : "branchName",  editable : false, width:300}
           , { headerText : "HP Name", dataField : "hpName",   editable : false,width:400}
           , { headerText : "Organization Code", dataField : "orgCode",   editable : false,width:200}
           , { headerText : "Group Code", dataField : "grpCode",   editable : false,width:200}
