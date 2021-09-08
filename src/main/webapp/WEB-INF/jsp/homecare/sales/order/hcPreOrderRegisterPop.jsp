@@ -1515,7 +1515,7 @@
                 if(result.rookie == 1) {
                     if(result.rcPrct != null) {
                         if(result.opCnt == 0 && result.rcPrct <= 50) {
-                            Common.alert(memRc.name + " (" + memRc.memCode + ") is not allowed to key in due to Individual SHI below 50%");
+                            Common.alert(result.memCode + " (" + result.memCode + ") is not allowed to key in due to Individual SHI below 50%");
                             return false;
                         } else if(result.opCnt > 0) {
                             // Own Purchase
@@ -1531,7 +1531,7 @@
                         }
                     }
                 } else {
-                    Common.alert(memRc.name + " (" + memRc.memCode + ") is still a rookie, no key in is allowed.");
+                    Common.alert(result.memCode + " (" + result.memCode + ") is still a rookie, no key in is allowed.");
                     return false;
                 }
             }
