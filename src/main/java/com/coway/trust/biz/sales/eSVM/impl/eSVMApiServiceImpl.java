@@ -94,7 +94,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
             // fn_isActiveMembershipQuotationInfoByOrderNo
             // membershipQuotationController.mActiveQuoOrder
             EgovMap hasActiveQuot = eSVMApiMapper.checkActiveQuot(eSVMApiForm.createMap(param));
-            if(!hasActiveQuot.isEmpty()) {
+            if(Integer.parseInt(hasActiveQuot.get("cnt").toString()) > 0) {
                 throw new ApplicationException(AppConstants.FAIL, "This order already has an active quotation.<br />Quotation number : " + hasActiveQuot.get("srvMemQuotNo").toString());
             }
 

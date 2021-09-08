@@ -80,6 +80,8 @@
 
     <select id="checkActiveQuot" parameterType="Map" resultType="egovMap">
         SELECT
+            COUNT(*) CNT
+        /*
             S.SRV_MEM_QUOT_ID,
             S.SRV_SALES_ORD_ID,
             S.SRV_MEM_QUOT_NO,
@@ -108,6 +110,7 @@
             S.SRV_ORD_STK_ID,
             S.SRV_FREQ,
             S.SRV_PAC_PROMO_ID
+        */
         FROM SAL0093D S
         JOIN SAL0001D A
             ON S.SRV_SALES_ORD_ID = A.SALES_ORD_ID
