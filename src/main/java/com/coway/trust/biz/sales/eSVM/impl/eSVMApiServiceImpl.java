@@ -344,6 +344,9 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         EgovMap billMonthMap = new EgovMap();
         billMonthMap = eSVMApiMapper.getOrderCurrentBillMonth(params);
 
+        boolean billMonthBool = billMonthMap.isEmpty();
+        logger.debug("billMonthBool :: " + String.valueOf(billMonthBool));
+
         if(!billMonthMap.isEmpty()) {
             if(Integer.parseInt(billMonthMap.get("nowDate").toString()) > Integer.parseInt(billMonthMap.get("rentInstDt").toString())) {
                 billMonth = 61;
