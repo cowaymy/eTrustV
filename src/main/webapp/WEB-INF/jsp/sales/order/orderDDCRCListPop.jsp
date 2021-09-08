@@ -135,7 +135,7 @@ function fn_report(viewType){
     	orderDateFrom = $("#dpOrderDateFr").val();
         orderDateTo = $("#dpOrderDateTo").val();
 
-        whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+orderDateFrom+"', 'dd/MM/YY') AND TO_DATE('"+orderDateTo+"', 'dd/MM/YY'))";
+        whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+orderDateFrom+"', 'dd/MM/YY') AND TO_DATE('"+orderDateTo+"', 'dd/MM/YY')+1 )";
     }
 
 	if($("#cmbKeyBranch :selected").index() > 0){
@@ -174,7 +174,7 @@ function fn_report(viewType){
 		applyDateFrom = $("#dpApplyDateFr").val();
 		applyDateTo = $("#dpApplyDateTo").val();
 
-        whereSQL += " AND (r.DD_APPLY_DT BETWEEN TO_DATE('"+applyDateFrom+"', 'dd/MM/YY') AND TO_DATE('"+applyDateTo+"', 'dd/MM/YY'))";
+        whereSQL += " AND (r.DD_APPLY_DT BETWEEN TO_DATE('"+applyDateFrom+"', 'dd/MM/YY') AND TO_DATE('"+applyDateTo+"', 'dd/MM/YY')+1 )";
     }
 
 	if($("#cmbSubmitBranch :selected").index() > 0){
