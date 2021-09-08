@@ -126,14 +126,14 @@
         SELECT
             EXT.*,
             <![CDATA[
-            CASE WHEN LAST_SRV_MEM_EXPR_DATE IS NOT NULL THEN (
+            CASE WHEN MEM_EXPR_DATE IS NOT NULL THEN (
                 CASE WHEN EXT.EXPINT <= 0 THEN 'Under membership'
                      WHEN (EXT.EXPINT > 0 AND EXT.COOLING_PRD >= EXT.EXPINT) THEN 'Under cooling off period'
                      ELSE 'Passed cooling off period'
                 END
             ) ELSE ' '
             END TRM,
-            CASE WHEN LAST_SRV_MEM_EXPR_DATE IS NOT NULL THEN (
+            CASE WHEN MEM_EXPR_DATE IS NOT NULL THEN (
                 CASE WHEN EXT.EXPINT <= 0 THEN 0
                      WHEN (EXT.EXPINT > 0 AND EXT.COOLING_PRD >= EXT.EXPINT) THEN 0
                      ELSE 1
