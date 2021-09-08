@@ -36,6 +36,7 @@ public class eSVMApiDto {
     private String nric;
     private int ordOtdstnd;
     private int asOtstnd;
+    private String areaId;
     private String instAddress;
     private String stkName;
     private String memExprDate;
@@ -47,6 +48,12 @@ public class eSVMApiDto {
     private String trm;
     private int hiddenIsCharge;
     private int hiddenHasFilterCharge;
+    private int billMonth;
+    private int appTypeId;
+    private String rentalStus;
+    private String msg;
+    private String strprmodt;
+    private int custCntId;
 
     /* Filter Listing */
     private int srvFilterId;
@@ -100,6 +107,19 @@ public class eSVMApiDto {
     private Date lastChngDt;
     private String filterCode;
     private String filterDesc;
+
+    /* SMQ Request Validations */
+    private int rentInstNo;
+    private String rentInstDt;
+    private int rentInstTypeId;
+    private int rentInstAmt;
+    private int rentInstInsertMonth;
+    private int rentInstInsertYear;
+    private int rentInstId;
+    private String nowDate;
+
+    /* SMQ Request Insert */
+    private String docno;
 
     private List<eSVMApiDto> productFilterList;
     private List<eSVMApiDto> packageComboList;
@@ -242,6 +262,14 @@ public class eSVMApiDto {
         this.asOtstnd = asOtstnd;
     }
 
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
+
     public String getInstAddress() {
         return instAddress;
     }
@@ -328,6 +356,54 @@ public class eSVMApiDto {
 
     public void setHiddenHasFilterCharge(int hiddenHasFilterCharge) {
         this.hiddenHasFilterCharge = hiddenHasFilterCharge;
+    }
+
+    public int getBillMonth() {
+        return billMonth;
+    }
+
+    public void setBillMonth(int billMonth) {
+        this.billMonth = billMonth;
+    }
+
+    public int getAppTypeId() {
+        return appTypeId;
+    }
+
+    public void setAppTypeId(int appTypeId) {
+        this.appTypeId = appTypeId;
+    }
+
+    public String getRentalStus() {
+        return rentalStus;
+    }
+
+    public void setRentalStus(String rentalStus) {
+        this.rentalStus = rentalStus;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public String getStrprmodt() {
+        return strprmodt;
+    }
+
+    public void setStrprmodt(String strprmodt) {
+        this.strprmodt = strprmodt;
+    }
+
+    public int getCustCntId() {
+        return custCntId;
+    }
+
+    public void setCustCntId(int custCntId) {
+        this.custCntId = custCntId;
     }
 
     public int getSrvFilterId() {
@@ -688,5 +764,77 @@ public class eSVMApiDto {
 
     public void setFilterDesc(String filterDesc) {
         this.filterDesc = filterDesc;
+    }
+
+    public int getRentInstNo() {
+        return rentInstNo;
+    }
+
+    public void setRentInstNo(int rentInstNo) {
+        this.rentInstNo = rentInstNo;
+    }
+
+    public String getRentInstDt() {
+        return rentInstDt;
+    }
+
+    public void setRentInstDt(String rentInstDt) {
+        this.rentInstDt = rentInstDt;
+    }
+
+    public int getRentInstTypeId() {
+        return rentInstTypeId;
+    }
+
+    public void setRentInstTypeId(int rentInstTypeId) {
+        this.rentInstTypeId = rentInstTypeId;
+    }
+
+    public int getRentInstAmt() {
+        return rentInstAmt;
+    }
+
+    public void setRentInstAmt(int rentInstAmt) {
+        this.rentInstAmt = rentInstAmt;
+    }
+
+    public int getRentInstInsertMonth() {
+        return rentInstInsertMonth;
+    }
+
+    public void setRentInstInsertMonth(int rentInstInsertMonth) {
+        this.rentInstInsertMonth = rentInstInsertMonth;
+    }
+
+    public int getRentInstInsertYear() {
+        return rentInstInsertYear;
+    }
+
+    public void setRentInstInsertYear(int rentInstInsertYear) {
+        this.rentInstInsertYear = rentInstInsertYear;
+    }
+
+    public int getRentInstId() {
+        return rentInstId;
+    }
+
+    public void setRentInstId(int rentInstId) {
+        this.rentInstId = rentInstId;
+    }
+
+    public String getNowDate() {
+        return nowDate;
+    }
+
+    public void setNowDate(String nowDate) {
+        this.nowDate = nowDate;
+    }
+
+    public String getDocno() {
+        return docno;
+    }
+
+    public void setDocno(String docno) {
+        this.docno = docno;
     }
 }

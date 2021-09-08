@@ -25,4 +25,7 @@ public interface eSVMApiService {
 
     eSVMApiDto selectOrderMemInfo(eSVMApiForm param) throws Exception;
 
+    eSVMApiDto getOrderCurrentBillMonth(eSVMApiForm param) throws Exception;
+
+    eSVMApiDto saveQuotationReq(eSVMApiForm param) throws Exception;
 }

@@ -13,6 +13,10 @@ public interface eSVMApiMapper {
 
     EgovMap selectSvmOrdNo(Map<String, Object> params);
 
+    String getMaxPeriodEarlyBirdPromo(Map<String, Object> params);
+
+    EgovMap checkActiveQuot(Map<String, Object> params);
+
     List<EgovMap> selectProductFilterList(Map<String, Object> params); // Product Filter List
 
     List<EgovMap> selectComboPackageList(Map<String, Object> params); // Type of Package
@@ -34,5 +38,19 @@ public interface eSVMApiMapper {
     EgovMap getSVMFilterCharge(Map<String, Object> params); // Filter Details
 
     EgovMap getPromoDisc(Map<String, Object> params); // On change package information get discount
+
+    EgovMap getOrderCurrentBillMonth(Map<String, Object> params);
+
+    EgovMap getOrdOtstnd(Map<String, Object> params);
+
+    EgovMap getOutrightMemLedge(Map<String, Object> params);
+
+    EgovMap getSMQDocNo(Map<String, Object> params);
+
+    String getSAL0093D_SEQ();
+
+    void insertSal93D(Map<String, Object> params);
+
+    void insertSal94D(Map<String, Object> params);
 
 }

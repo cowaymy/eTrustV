@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiDto;
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiForm;
 import com.coway.trust.biz.sales.eSVM.eSVMApiService;
@@ -97,6 +99,18 @@ public class eSVMApiController {
         }
       }
       return ResponseEntity.ok(selectFilterList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList()));
+    }
+
+    @ApiOperation(value = "getOrderCurrentBillMonth", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/getOrderCurrentBillMonth", method = RequestMethod.GET)
+    public ResponseEntity<eSVMApiDto> getOrderCurrentBillMonth(@ModelAttribute eSVMApiForm param) throws Exception {
+      return ResponseEntity.ok(eSVMApiService.getOrderCurrentBillMonth(param));
+    }
+
+    @ApiOperation(value = "saveQuotationReq", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/saveQuotationReq", method = RequestMethod.POST)
+    public ResponseEntity<eSVMApiDto> saveQuotationReq(@ModelAttribute eSVMApiForm param) throws Exception {
+      return ResponseEntity.ok(eSVMApiService.saveQuotationReq(param));
     }
 
     @ApiOperation(value = "selectOrderMemInfo", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

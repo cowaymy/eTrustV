@@ -1,6 +1,7 @@
 package com.coway.trust.biz.sales.eSVM.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiDto;
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiForm;
 import com.coway.trust.biz.login.impl.LoginMapper;
-import com.coway.trust.biz.sales.eKeyInApi.EKeyInApiService;
 import com.coway.trust.biz.sales.eSVM.eSVMApiService;
 import com.coway.trust.biz.sales.eSVM.impl.eSVMApiMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
@@ -73,11 +72,13 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
             throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
         }
 
+        // membershipController.selectMembershipFreeConF
         EgovMap svmOrdDet = eSVMApiMapper.selectSvmOrdNo(eSVMApiForm.createMap(param));
         eSVMApiDto rtn = new eSVMApiDto();
 
         if(svmOrdDet.isEmpty()) {
             throw new ApplicationException(AppConstants.FAIL, "No order found or this order is not under complete status or activation status");
+
         } else {
             int stkId = Integer.parseInt(svmOrdDet.get("stkId").toString());
             int[] discontinueStk = {1, 651, 218, 689, 216, 687, 3, 653};
@@ -90,7 +91,36 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
                 throw new ApplicationException(AppConstants.FAIL, "Product have been discontinued. Therefore, create new quotation is not allowed");
             }
 
+            // fn_isActiveMembershipQuotationInfoByOrderNo
+            // membershipQuotationController.mActiveQuoOrder
+            EgovMap hasActiveQuot = eSVMApiMapper.checkActiveQuot(eSVMApiForm.createMap(param));
+            if(!hasActiveQuot.isEmpty()) {
+                throw new ApplicationException(AppConstants.FAIL, "This order already has an active quotation.<br />Quotation number : " + hasActiveQuot.get("srvMemQuotNo").toString());
+            }
+
+            // fn_getDataInfo
             rtn = eSVMApiDto.create(eSVMApiMapper.selectOrderMemInfo(eSVMApiForm.createMap(param)));
+            // getMaxPeriodEarlyBirdPromo
+            if(!rtn.getMemExprDate().isEmpty()) {
+                String memExprDate = rtn.getMemExprDate();
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("memExprDt", memExprDate.substring(6) + memExprDate.substring(3, 5));
+                rtn.setStrprmodt(eSVMApiMapper.getMaxPeriodEarlyBirdPromo(map));
+            }
+
+            param.setSalesOrdId(rtn.getSalesOrdId());
+
+            // membershipQuotationController.getOrderCurrentBillMonth
+            // Use billMonth to query for outstanding
+            Map<String, Object> billParam = new HashMap<String, Object>();
+            billParam.put("salesOrdId", rtn.getSalesOrdId());
+            billParam.put("appTypeId", rtn.getAppTypeId());
+            billParam.put("rentalStus", rtn.getRentalStus());
+            String checkRentalBillMonth = this.checkRentalBillMonth(eSVMApiForm.createMap(param));
+
+            if(!checkRentalBillMonth.isEmpty()) {
+                throw new ApplicationException(AppConstants.FAIL, "Order has outstanding, membership purchase not allowed.");
+            }
 
             // Set hiddenHasFilterCharge from ProductFilterList
             param.setFlag("Y");
@@ -282,11 +312,192 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
 
     @Override
     public List<EgovMap> selectFilterList(eSVMApiForm param) throws Exception {
-        logger.debug("serviceImpl :: selectFilterList");
         Map<String, Object> map = eSVMApiForm.createMap(param);
+
         eSVMApiMapper.getSVMFilterCharge(map);
         List<EgovMap> list = (List<EgovMap>) map.get("p1");
 
         return list;
     }
+
+    @Override
+    public eSVMApiDto getOrderCurrentBillMonth(eSVMApiForm param) throws Exception {
+        if(null == param) {
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+
+        eSVMApiDto rtn = new eSVMApiDto();
+
+        String msg = this.checkRentalBillMonth(eSVMApiForm.createMap(param));
+        logger.debug("getOrderCurrentBillMonth :: msg :: " + msg);
+        rtn.setMsg(msg);
+
+        return rtn;
+    }
+
+    private String checkRentalBillMonth(Map<String, Object> params) {
+        logger.debug("checkRentalBillMonth :: params :: {}", params);
+
+        int billMonth = 0;
+        String msg = "";
+
+        EgovMap billMonthMap = new EgovMap();
+        billMonthMap = eSVMApiMapper.getOrderCurrentBillMonth(params);
+
+        if(Integer.parseInt(billMonthMap.get("nowDate").toString()) > Integer.parseInt(billMonthMap.get("rentInstDt").toString())) {
+            billMonth = 61;
+        } else {
+            params.put("RENT_INST_DT", "SYSDATE");
+            billMonthMap = eSVMApiMapper.getOrderCurrentBillMonth(params);
+
+            if(!billMonthMap.isEmpty()) {
+                billMonth = Integer.parseInt(billMonthMap.get("rentInstNo").toString());
+            }
+        }
+
+        // fn_checkRentalOrder(BillMonth)
+        if("66".equals(params.get("appTypeId").toString())) {
+            if("REG".equals(params.get("rentalStus").toString()) || "INV".equals(params.get("rentalStus").toString())) {
+                if(billMonth > 60) {
+                    eSVMApiMapper.getOrdOtstnd(params);
+                    EgovMap map = (EgovMap) ((ArrayList)params.get("p1")).get(0);
+
+                    if(Integer.parseInt(map.get("ordTotOtstnd").toString()) > 0) {
+                        msg = "hasOtstnd";
+
+                    } else {
+                        EgovMap outrightMemLedge = eSVMApiMapper.getOutrightMemLedge(params);
+                        if(!outrightMemLedge.isEmpty()) {
+                            if(Integer.parseInt(outrightMemLedge.get("amt").toString()) > 0) {
+                                msg = "hasOtstnd";
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            EgovMap outrightMemLedge = eSVMApiMapper.getOutrightMemLedge(params);
+            if(!outrightMemLedge.isEmpty()) {
+                if(Integer.parseInt(outrightMemLedge.get("amt").toString()) > 0) {
+                    msg = "hasOtstnd";
+                }
+            }
+        }
+
+        return msg;
+    }
+
+    @Override
+    public eSVMApiDto saveQuotationReq(eSVMApiForm param) throws Exception {
+        if(null == param) {
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+        logger.debug("param :: {}", param);
+
+        eSVMApiDto rtn = new eSVMApiDto();
+        Map<String, Object> preInsMap = new HashMap<String, Object>();
+
+        // MembershipQuotationServiceImpl.insertQuotationInfo
+        boolean boolEurCert = "Y".equals(param.getEurCertYn()) ? true : false;
+        boolean boolZeroRat = "Y".equals(param.getZeroRatYn()) ? true : false;
+
+        if(!boolEurCert) {
+            param.setSrvMemPacTaxes("0");
+
+        } else {
+            double srvMemPacAmt = 0;
+            double srvMemPacNetAmt = 0;
+            double cvtMemPacNetAmt = 0;
+
+            srvMemPacAmt = CommonUtils.intNvl(param.getSrvMemPacAmt());
+            srvMemPacNetAmt = CommonUtils.intNvl(param.getSrvMemPacNetAmt());
+
+            srvMemPacNetAmt = srvMemPacAmt * 100;
+            cvtMemPacNetAmt = Math.round(srvMemPacNetAmt);
+
+            srvMemPacNetAmt = cvtMemPacNetAmt / 100;
+
+            param.setSrvMemPacNetAmt(String.valueOf(srvMemPacNetAmt));
+            param.setSrvMemPacTaxes(String.valueOf(srvMemPacAmt - srvMemPacNetAmt));
+        }
+
+        if(!boolEurCert || !boolZeroRat) {
+            param.setSrvMemBsTaxes("0");
+
+        } else {
+            double srvMemBsNetAmt = 0;
+            double srvMemBsAmt = 0;
+
+            srvMemBsNetAmt = CommonUtils.intNvl(param.getSrvMemBSNetAmt());
+            srvMemBsAmt = CommonUtils.intNvl(param.getSrvMemBSAmt());
+
+            srvMemBsNetAmt = Math.round((double)(srvMemBsAmt) * 100) / 100;
+            param.setSrvMemBSNetAmt(String.valueOf(srvMemBsNetAmt));
+            param.setSrvMemBsTaxes(String.valueOf(srvMemBsAmt - srvMemBsNetAmt));
+        }
+
+        // Get SMQ No
+        preInsMap.put("DOCNO", "20");
+        EgovMap docNoMap = eSVMApiMapper.getSMQDocNo(preInsMap);
+        param.setSrvMemQuotNo(docNoMap.get("docno").toString());
+        rtn.setDocno(docNoMap.get("docno").toString());
+
+        // Get SAL0093D ID
+        String SAL0093D_SEQ = eSVMApiMapper.getSAL0093D_SEQ();
+        if(null == SAL0093D_SEQ) {
+            throw new ApplicationException(AppConstants.FAIL, "Failed to obtain sequence number.");
+        }
+        param.setSal93Seq(SAL0093D_SEQ);
+
+        // insertQuotationInfo
+        eSVMApiMapper.insertSal93D(eSVMApiForm.createMap(param));
+
+        if("TRUE".equals(param.getIsFilterCharge())) {
+            Map<String, Object> spFilterMap = new HashMap<String, Object>();
+            spFilterMap.put("salesOrdId", param.getSrvSalesOrderId());
+            spFilterMap.put("promoId", param.getSrvPromoId());
+
+            eSVMApiMapper.getSVMFilterCharge(spFilterMap);
+            List<EgovMap> list = (List<EgovMap>) spFilterMap.get("p1");
+
+            EgovMap eFilterMap = null;
+
+            if(list.size() > 0) {
+                for(int i = 0; i < list.size(); i++) {
+                    eFilterMap = new EgovMap();
+                    Map rMap = (Map) list.get(i);
+
+                    eFilterMap.put("srvMemQuotFilterID", SAL0093D_SEQ);
+                    eFilterMap.put("stkID", rMap.get("filterId"));
+                    eFilterMap.put("stkPeriod", rMap.get("lifePriod"));
+                    eFilterMap.put("stkLastChangeDate", rMap.get("lastChngDt"));
+                    eFilterMap.put("stkFilterPrice", rMap.get("oriPrc"));
+                    eFilterMap.put("stkChargePrice", Math.floor(Double.parseDouble(rMap.get("prc").toString())));
+
+                    if(!boolZeroRat || !boolEurCert) {
+                        double chargePrice = Math.floor(Double.parseDouble(rMap.get("prc").toString()));
+                        double stkNetAmt = Math.floor((float) chargePrice * 100) / 100;
+
+                        eFilterMap.put("stkChargePrice", stkNetAmt);
+                        eFilterMap.put("stkNetAmt", stkNetAmt);
+                        eFilterMap.put("stkTaxes", "0");
+
+                    } else {
+                        double chargePrice = Math.floor(Double.parseDouble(rMap.get("prc").toString()));
+                        double stkNetAmt = 0;
+
+                        stkNetAmt = Math.floor((float)chargePrice * 100) / 100;
+                        eFilterMap.put("stkNetAmt", stkNetAmt);
+                        eFilterMap.put("stkTaxes", chargePrice - stkNetAmt);
+                    }
+
+                    // insertSrvMembershipQuot_Filter
+                    eSVMApiMapper.insertSal94D(eFilterMap);
+                }
+            }
+        }
+
+        return rtn;
+    }
+
 }

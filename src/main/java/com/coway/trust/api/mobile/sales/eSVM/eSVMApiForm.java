@@ -67,6 +67,32 @@ public class eSVMApiForm {
         params.put("promoId", vo.getPromoId());
         params.put("groupCode", vo.getGroupCode());
         params.put("codeName", vo.getCodeName());
+        params.put("srvMemQuotId", vo.getSrvMemQuotId());
+        params.put("srvSalesOrderId", vo.getSrvSalesOrderId());
+        params.put("srvMemQuotNo", vo.getSrvMemQuotNo());
+        params.put("srvMemPacId", vo.getSrvMemPacId());
+        params.put("srvMemPacAmt", vo.getSrvMemPacAmt());
+        params.put("srvMemPacNetAmt", vo.getSrvMemPacNetAmt());
+        params.put("srvMemBSAmt", vo.getSrvMemBSAmt());
+        params.put("srvMemBSNetAmt", vo.getSrvMemBSNetAmt());
+        params.put("srvMemPv", vo.getSrvMemPv());
+        params.put("srvDuration", vo.getSrvDuration());
+        params.put("srvRemark", vo.getSrvRemark());
+        params.put("srvQuotStatusId", vo.getSrvQuotStatusId());
+        params.put("srvMemBS12Amt", vo.getSrvMemBS12Amt());
+        params.put("srvPacPromoId", vo.getSrvPacPromoId());
+        params.put("srvPromoId", vo.getSrvPromoId());
+        params.put("srvQuotCustCntId", vo.getSrvQuotCustCntId());
+        params.put("srvMemQty", vo.getSrvMemQty());
+        params.put("srvSalesMemId", vo.getSrvSalesMemId());
+        params.put("srvMemId", vo.getSrvMemId());
+        params.put("srvOrderStkId", vo.getSrvOrderStkId());
+        params.put("srvFreq", vo.getSrvFreq());
+        params.put("empChk", vo.getEmpChk());
+        params.put("isFilterCharge", vo.getIsFilterCharge());
+        params.put("srvMemPacTaxes", vo.getSrvMemPacTaxes());
+        params.put("srvMemBsTaxes", vo.getSrvMemBsTaxes());
+        params.put("sal93Seq", vo.getSal93Seq());
         return params;
     }
 
@@ -127,6 +153,34 @@ public class eSVMApiForm {
     private int promoId;
     private String groupCode;
     private String codeName;
+
+    /* SMQ Request */
+    private String srvMemQuotId;
+    private String srvSalesOrderId;
+    private String srvMemQuotNo;
+    private String srvMemPacId;
+    private String srvMemPacAmt;
+    private String srvMemPacNetAmt;
+    private String srvMemBSAmt;
+    private String srvMemBSNetAmt;
+    private String srvMemPv;
+    private String srvDuration;
+    private String srvRemark;
+    private String srvQuotStatusId;
+    private String srvMemBS12Amt;
+    private String srvPacPromoId;
+    private String srvPromoId;
+    private String srvQuotCustCntId;
+    private String srvMemQty;
+    private String srvSalesMemId;
+    private String srvMemId;
+    private String srvOrderStkId;
+    private String srvFreq;
+    private String empChk;
+    private String isFilterCharge;
+    private String srvMemPacTaxes;
+    private String srvMemBsTaxes;
+    private String sal93Seq;
 
     public String getFlag() {
         return flag;
@@ -542,5 +596,213 @@ public class eSVMApiForm {
 
     public void setCodeName(String codeName) {
         this.codeName = codeName;
+    }
+
+    public String getSrvMemQuotId() {
+        return srvMemQuotId;
+    }
+
+    public void setSrvMemQuotId(String srvMemQuotId) {
+        this.srvMemQuotId = srvMemQuotId;
+    }
+
+    public String getSrvSalesOrderId() {
+        return srvSalesOrderId;
+    }
+
+    public void setSrvSalesOrderId(String srvSalesOrderId) {
+        this.srvSalesOrderId = srvSalesOrderId;
+    }
+
+    public String getSrvMemQuotNo() {
+        return srvMemQuotNo;
+    }
+
+    public void setSrvMemQuotNo(String srvMemQuotNo) {
+        this.srvMemQuotNo = srvMemQuotNo;
+    }
+
+    public String getSrvMemPacId() {
+        return srvMemPacId;
+    }
+
+    public void setSrvMemPacId(String srvMemPacId) {
+        this.srvMemPacId = srvMemPacId;
+    }
+
+    public String getSrvMemPacAmt() {
+        return srvMemPacAmt;
+    }
+
+    public void setSrvMemPacAmt(String srvMemPacAmt) {
+        this.srvMemPacAmt = srvMemPacAmt;
+    }
+
+    public String getSrvMemPacNetAmt() {
+        return srvMemPacNetAmt;
+    }
+
+    public void setSrvMemPacNetAmt(String srvMemPacNetAmt) {
+        this.srvMemPacNetAmt = srvMemPacNetAmt;
+    }
+
+    public String getSrvMemBSAmt() {
+        return srvMemBSAmt;
+    }
+
+    public void setSrvMemBSAmt(String srvMemBSAmt) {
+        this.srvMemBSAmt = srvMemBSAmt;
+    }
+
+    public String getSrvMemBSNetAmt() {
+        return srvMemBSNetAmt;
+    }
+
+    public void setSrvMemBSNetAmt(String srvMemBSNetAmt) {
+        this.srvMemBSNetAmt = srvMemBSNetAmt;
+    }
+
+    public String getSrvMemPv() {
+        return srvMemPv;
+    }
+
+    public void setSrvMemPv(String srvMemPv) {
+        this.srvMemPv = srvMemPv;
+    }
+
+    public String getSrvDuration() {
+        return srvDuration;
+    }
+
+    public void setSrvDuration(String srvDuration) {
+        this.srvDuration = srvDuration;
+    }
+
+    public String getSrvRemark() {
+        return srvRemark;
+    }
+
+    public void setSrvRemark(String srvRemark) {
+        this.srvRemark = srvRemark;
+    }
+
+    public String getSrvQuotStatusId() {
+        return srvQuotStatusId;
+    }
+
+    public void setSrvQuotStatusId(String srvQuotStatusId) {
+        this.srvQuotStatusId = srvQuotStatusId;
+    }
+
+    public String getSrvMemBS12Amt() {
+        return srvMemBS12Amt;
+    }
+
+    public void setSrvMemBS12Amt(String srvMemBS12Amt) {
+        this.srvMemBS12Amt = srvMemBS12Amt;
+    }
+
+    public String getSrvPacPromoId() {
+        return srvPacPromoId;
+    }
+
+    public void setSrvPacPromoId(String srvPacPromoId) {
+        this.srvPacPromoId = srvPacPromoId;
+    }
+
+    public String getSrvPromoId() {
+        return srvPromoId;
+    }
+
+    public void setSrvPromoId(String srvPromoId) {
+        this.srvPromoId = srvPromoId;
+    }
+
+    public String getSrvQuotCustCntId() {
+        return srvQuotCustCntId;
+    }
+
+    public void setSrvQuotCustCntId(String srvQuotCustCntId) {
+        this.srvQuotCustCntId = srvQuotCustCntId;
+    }
+
+    public String getSrvMemQty() {
+        return srvMemQty;
+    }
+
+    public void setSrvMemQty(String srvMemQty) {
+        this.srvMemQty = srvMemQty;
+    }
+
+    public String getSrvSalesMemId() {
+        return srvSalesMemId;
+    }
+
+    public void setSrvSalesMemId(String srvSalesMemId) {
+        this.srvSalesMemId = srvSalesMemId;
+    }
+
+    public String getSrvMemId() {
+        return srvMemId;
+    }
+
+    public void setSrvMemId(String srvMemId) {
+        this.srvMemId = srvMemId;
+    }
+
+    public String getSrvOrderStkId() {
+        return srvOrderStkId;
+    }
+
+    public void setSrvOrderStkId(String srvOrderStkId) {
+        this.srvOrderStkId = srvOrderStkId;
+    }
+
+    public String getSrvFreq() {
+        return srvFreq;
+    }
+
+    public void setSrvFreq(String srvFreq) {
+        this.srvFreq = srvFreq;
+    }
+
+    public String getEmpChk() {
+        return empChk;
+    }
+
+    public void setEmpChk(String empChk) {
+        this.empChk = empChk;
+    }
+
+    public String getIsFilterCharge() {
+        return isFilterCharge;
+    }
+
+    public void setIsFilterCharge(String isFilterCharge) {
+        this.isFilterCharge = isFilterCharge;
+    }
+
+    public String getSrvMemPacTaxes() {
+        return srvMemPacTaxes;
+    }
+
+    public void setSrvMemPacTaxes(String srvMemPacTaxes) {
+        this.srvMemPacTaxes = srvMemPacTaxes;
+    }
+
+    public String getSrvMemBsTaxes() {
+        return srvMemBsTaxes;
+    }
+
+    public void setSrvMemBsTaxes(String srvMemBsTaxes) {
+        this.srvMemBsTaxes = srvMemBsTaxes;
+    }
+
+    public String getSal93Seq() {
+        return sal93Seq;
+    }
+
+    public void setSal93Seq(String sal93Seq) {
+        this.sal93Seq = sal93Seq;
     }
 }

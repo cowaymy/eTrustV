@@ -78,17 +78,64 @@
             AND A.SALES_ORD_NO = #{ordNo}
     </select>
 
+    <select id="checkActiveQuot" parameterType="Map" resultType="egovMap">
+        SELECT
+            S.SRV_MEM_QUOT_ID,
+            S.SRV_SALES_ORD_ID,
+            S.SRV_MEM_QUOT_NO,
+            S.SRV_MEM_PAC_ID,
+            S.SRV_MEM_PAC_NET_AMT,
+            S.SRV_MEM_PAC_TXS,
+            S.SRV_MEM_PAC_AMT,
+            S.SRV_MEM_BS_NET_AMT,
+            S.SRV_MEM_BS_TXS,
+            S.SRV_MEM_BS_AMT,
+            S.SRV_MEM_PV,
+            S.SRV_DUR SRV_DUR,
+            S.SRV_REM SRV_REM,
+            S.SRV_QUOT_VAL_ID,
+            S.SRV_CRT_DT,
+            S.SRV_CRT_USER_ID,
+            S.SRV_QUOT_STUS_ID,
+            S.SRV_UPD_USER_ID,
+            S.SRV_UPD_DT,
+            S.SRV_MEM_BS12_AMT,
+            S.SRV_QUOT_CUST_CNT_ID,
+            S.SRV_MEM_QTY,
+            S.SRV_PROMO_ID,
+            S.SRV_SALES_MEM_ID,
+            S.SRV_MEM_ID,
+            S.SRV_ORD_STK_ID,
+            S.SRV_FREQ,
+            S.SRV_PAC_PROMO_ID
+        FROM SAL0093D S
+        JOIN SAL0001D A
+            ON S.SRV_SALES_ORD_ID = A.SALES_ORD_ID
+        WHERE 1 = S.SRV_QUOT_STUS_ID
+            AND A.SALES_ORD_NO = #{ordNo}
+            <![CDATA[
+            AND TO_DATE(TO_CHAR(S.SRV_QUOT_VAL_ID, 'YYYYMMDD'), 'YYYYMMDD') >= TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD')
+            AND ROWNUM <= 1
+            ]]>
+    </select>
+
     <select id="selectOrderMemInfo" parameterType="Map" resultType="egovMap">
         SELECT
             EXT.*,
             <![CDATA[
-            CASE WHEN EXT.EXPINT <= 0 THEN 'Under membership'
-                 WHEN (EXT.EXPINT > 0 AND EXT.COOLING_PRD >= EXT.EXPINT) THEN 'Under cooling off period'
-                 ELSE 'Passed cooling off period'
+            CASE WHEN LAST_SRV_MEM_EXPR_DATE IS NOT NULL THEN (
+                CASE WHEN EXT.EXPINT <= 0 THEN 'Under membership'
+                     WHEN (EXT.EXPINT > 0 AND EXT.COOLING_PRD >= EXT.EXPINT) THEN 'Under cooling off period'
+                     ELSE 'Passed cooling off period'
+                END
+            ) ELSE ' '
             END TRM,
-            CASE WHEN EXT.EXPINT <= 0 THEN 0
-                 WHEN (EXT.EXPINT > 0 AND EXT.COOLING_PRD >= EXT.EXPINT) THEN 0
-                 ELSE 1
+            CASE WHEN LAST_SRV_MEM_EXPR_DATE IS NOT NULL THEN (
+                CASE WHEN EXT.EXPINT <= 0 THEN 0
+                     WHEN (EXT.EXPINT > 0 AND EXT.COOLING_PRD >= EXT.EXPINT) THEN 0
+                     ELSE 1
+                END
+            ) ELSE 0
             END HIDDEN_IS_CHARGE
             ]]>
         FROM (
@@ -96,6 +143,10 @@
                 /* Order Info */
                 A.SALES_ORD_ID,
                 A.SALES_ORD_NO ORD_NO,
+                A.APP_TYPE_ID APP_TYPE_ID,
+                NVL(L.STUS_CODE_ID, ' ') RENTAL_STUS,
+                A.CUST_CNT_ID,
+                B.ITM_STK_ID STK_ID,
                 D.NAME CUST_NAME,
                 D.NRIC,
                 DESC1.CODE_DESC ORDER_TYPE,
@@ -105,10 +156,14 @@
                      ELSE 0
                 END), 12, 2) ORD_OTDSTND,
                 NVL(J.AS_OTSTND, 0) AS_OTSTND,
+                F.AREA_ID,
                 E.ADD1 || ' ' || E.ADD2 || ' ' || E.ADD3 || ' ' || F.POSTCODE || ' ' || F.CITY || ', ' || F.STATE INST_ADDRESS,
                 C.STK_DESC STK_NAME,
-                TO_CHAR(G.LAST_SRV_MEM_EXPR_DATE, 'DD/MM/YYYY') MEM_EXPR_DATE,
-                MONTHS_BETWEEN(TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, 12), 'YYYYMM') || '01', 'YYYYMMDD'), TO_DATE(TO_CHAR(ADD_MONTHS(G.LAST_SRV_MEM_EXPR_DATE, 12), 'YYYYMM') || '01', 'YYYYMMDD')) EXPINT,
+                CASE WHEN G.LAST_SRV_MEM_EXPR_DATE IS NOT NULL THEN TO_CHAR(G.LAST_SRV_MEM_EXPR_DATE, 'DD/MM/YYYY') ELSE TO_CHAR(G.LAST_SRV_MEM_EXPR_DATE) END MEM_EXPR_DATE,
+                CASE WHEN G.LAST_SRV_MEM_EXPR_DATE IS NOT NULL
+                    THEN TO_CHAR(MONTHS_BETWEEN(TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, 12), 'YYYYMM') || '01', 'YYYYMMDD'), TO_DATE(TO_CHAR(ADD_MONTHS(G.LAST_SRV_MEM_EXPR_DATE, 12), 'YYYYMM') || '01', 'YYYYMMDD')))
+                    ELSE ''
+                END EXPINT,
                 TO_CHAR(K.SRV_MEM_COOL_PRIOD_MTH) COOLING_PRD,
                 TO_CHAR(G.SRV_MEM_FREQ) HS_FREQ,
                 TO_CHAR(G.LAST_SRV_MEM_EXPR_DATE, 'YYYYMMDD') CVT_LAST_SRV_MEM_EXPR_DATE,
@@ -158,6 +213,8 @@
             LEFT JOIN SVC0010D K
                 ON K.CTGRY_ID = C.STK_CTGRY_ID
                 AND K.SRV_MEM_COOL_PRIOD_STUS_ID = 1
+            LEFT JOIN SAL0071D L
+                ON A.SALES_ORD_ID = L.SALES_ORD_ID
             JOIN SYS0013M DESC1
                 ON A.APP_TYPE_ID = DESC1.CODE_ID
                 AND DESC1.CODE_MASTER_ID = 10
@@ -169,6 +226,12 @@
                 AND A.SALES_ORD_NO = #{ordNo}
             </if>
         ) EXT
+    </select>
+
+    <select id="getMaxPeriodEarlyBirdPromo" parameterType="Map" resultType="String">
+        SELECT
+            TO_CHAR(ADD_MONTHS(TO_DATE(#{memExprDt}, 'YYYYMM'), -3), 'YYYYMMDD') STRPRMODT
+        FROM DUAL
     </select>
 
     <select id="selectProductFilterList" parameterType="Map" resultType="egovMap">
@@ -412,4 +475,158 @@
         WHERE PROMO_ID = #{promoId}
     </select>
 
+    <select id="getOrderCurrentBillMonth" parameterType="Map" resultType="egovMap">
+        SELECT
+            *
+        FROM (
+            SELECT
+                S.SALES_ORD_ID,
+                S.RENT_INST_NO,
+                TO_CHAR(S.RENT_INST_DT, 'yyyymmdd') RENT_INST_DT,
+                S.RENT_INST_TYPE_ID,
+                S.RENT_INST_AMT,
+                S.RENT_INST_INSERT_MONTH,
+                S.RENT_INST_INSERT_YEAR,
+                S.RENT_INST_ID,
+                TO_CHAR(SYSDATE,'yyyymm')||'01' NOW_DATE
+            FROM (
+                SELECT
+                    R.SALES_ORD_ID,
+                    R.RENT_INST_NO,
+                    R.RENT_INST_DT,
+                    R.RENT_INST_TYPE_ID,
+                    R.RENT_INST_AMT,
+                    R.RENT_INST_INSERT_MONTH,
+                    R.RENT_INST_INSERT_YEAR,
+                    R.RENT_INST_ID
+                FROM SAL0070D R
+                WHERE R.SALES_ORD_ID = #{salesOrdId}
+                <if test="RENT_INST_DT != null and RENT_INST_DT != ''">
+                    AND RENT_INST_DT = SYSDATE
+                </if>
+            ) S
+            ORDER BY S.RENT_INST_NO DESC
+        )
+        WHERE ROWNUM <![CDATA[ <= ]]> 1
+    </select>
+
+    <resultMap id="OrdOtstnd" type="egovMap"></resultMap>
+    <select id="getOrdOtstnd" parameterType="Map" statementType="CALLABLE">
+        <![CDATA[
+        {
+            call SP_GET_ORD_OTSTND_INFO (#{salesOrdId}, #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=OrdOtstnd})
+        }
+        ]]>
+    </select>
+
+    <select id="getOutrightMemLedge" parameterType="Map" resultType="egovMap">
+        SELECT
+            SUM(ROUND(B.SRV_MEM_AMT, 2)) AS AMT
+        FROM PAY0024D B
+        JOIN SAL0095D A
+            ON A.SRV_MEM_ID = B.SRV_MEM_ID
+        WHERE A.SRV_SALES_ORD_ID = #{salesOrdId}
+    </select>
+
+    <select id="getSMQDocNo" parameterType="Map" resultType="egovMap">
+        SELECT
+            FN_GET_DOCNO(#{DOCNO})
+        FROM DUAL
+    </select>
+
+    <select id="getSAL0093D_SEQ" parameterType="Map" resultType="String">
+        SELECT
+            TO_CHAR(ORG0001D_MEM_ID_SEQ.NEXTVAL)
+        FROM DUAL
+    </select>
+
+    <insert id="insertSal93D" parameterType="Map">
+        INSERT INTO SAL0093D
+        (
+            SRV_MEM_QUOT_ID ,
+            SRV_SALES_ORD_ID,
+            SRV_MEM_QUOT_NO,
+            SRV_MEM_PAC_ID,
+            SRV_MEM_PAC_NET_AMT,
+            SRV_MEM_PAC_TXS,
+            SRV_MEM_PAC_AMT,
+            SRV_MEM_BS_NET_AMT,
+            SRV_MEM_BS_TXS,
+            SRV_MEM_BS_AMT,
+            SRV_MEM_PV,
+            SRV_DUR,
+            SRV_REM,
+            SRV_QUOT_VAL_ID,
+            SRV_CRT_DT,
+            SRV_CRT_USER_ID,
+            SRV_QUOT_STUS_ID,
+            SRV_UPD_USER_ID,
+            SRV_UPD_DT,
+            SRV_MEM_BS12_AMT,
+            SRV_QUOT_CUST_CNT_ID,
+            SRV_MEM_QTY,
+            SRV_PROMO_ID,
+            SRV_SALES_MEM_ID,
+            SRV_MEM_ID,
+            SRV_ORD_STK_ID,
+            SRV_FREQ,
+            SRV_PAC_PROMO_ID,
+            EMP_CHK
+        ) VALUES (
+            #{sal93Seq},
+            #{srvSalesOrderId},
+            #{srvMemQuotNo},
+            #{srvMemPacId},
+            #{srvMemPacNetAmt},
+            #{srvMemPacTaxes},
+            #{srvMemPacAmt},
+            #{srvMemBSNetAmt},
+            #{srvMemBSTaxes},
+            #{srvMemBSAmt},
+            #{srvMemPv},
+            #{srvDuration},
+            #{srvRemark},
+            LAST_DAY(SYSDATE),
+            SYSDATE,
+            #{srvCreateBy},
+            #{srvQuotStatusId},
+            #{srvCreateBy},
+            SYSDATE,
+            #{srvMemBS12Amt},
+            #{srvQuotCustCntId},
+            #{srvMemQty},
+            #{srvPromoId},
+            #{srvSalesMemId},
+            #{srvMemId},
+            #{srvOrderStkId},
+            #{srvFreq},
+            #{srvPacPromoId},
+            #{empChk}
+        )
+    </insert>
+
+    <insert id="insertSal94D" parameterType="Map">
+        INSERT INTO SAL0094D
+        (
+            SRV_MEM_QUOT_FILTER_ID,
+            SRV_MEM_QUOT_ID,
+            STK_ID,
+            STK_PRIOD,
+            STK_LAST_CHNG_DT,
+            STK_FILTER_PRC,
+            STK_NET_AMT,
+            STK_TXS,
+            STK_CHRG_PRC
+        ) VALUES (
+            SAL0094D_SRV_MEM_QUOT_FILTER.NEXTVAL,
+            #{srvMemQuotFilterID},
+            #{stkID},
+            #{stkPeriod},
+            #{stkLastChangeDate},
+            #{stkFilterPrice},
+            #{stkNetAmt},
+            #{stkTaxes},
+            #{stkChargePrice}
+        )
+    </insert>
 </mapper>
