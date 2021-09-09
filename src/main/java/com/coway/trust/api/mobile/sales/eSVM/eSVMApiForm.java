@@ -93,7 +93,7 @@ public class eSVMApiForm {
         params.put("empChk", vo.getEmpChk());
         params.put("isFilterCharge", vo.getIsFilterCharge());
         params.put("srvMemPacTaxes", vo.getSrvMemPacTaxes());
-        params.put("srvMemBsTaxes", vo.getSrvMemBSTaxes());
+        params.put("srvMemBSTaxes", vo.getSrvMemBSTaxes());
         params.put("sal93Seq", vo.getSal93Seq());
         return params;
     }
