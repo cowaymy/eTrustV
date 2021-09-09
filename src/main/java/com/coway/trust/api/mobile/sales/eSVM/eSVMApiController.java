@@ -108,7 +108,7 @@ public class eSVMApiController {
     }
 
     @ApiOperation(value = "saveQuotationReq", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @RequestMapping(value = "/saveQuotationReq", method = RequestMethod.POST)
+    @RequestMapping(value = "/saveQuotationReq", method = RequestMethod.GET)
     public ResponseEntity<eSVMApiDto> saveQuotationReq(@ModelAttribute eSVMApiForm param) throws Exception {
       return ResponseEntity.ok(eSVMApiService.saveQuotationReq(param));
     }
