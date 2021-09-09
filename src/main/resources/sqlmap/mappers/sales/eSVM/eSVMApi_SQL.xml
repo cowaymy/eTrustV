@@ -533,7 +533,7 @@
 
     <select id="getSMQDocNo" parameterType="Map" resultType="egovMap">
         SELECT
-            FN_GET_DOCNO(#{DOCNO})
+            FN_GET_DOCNO(#{DOCNO}) DOCNO
         FROM DUAL
     </select>
 
