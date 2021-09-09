@@ -428,7 +428,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         }
 
         if(!boolEurCert || !boolZeroRat) {
-            param.setSrvMemBsTaxes("0");
+            param.setSrvMemBSTaxes("0");
 
         } else {
             double srvMemBsNetAmt = 0;
@@ -439,7 +439,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
 
             srvMemBsNetAmt = Math.round((double)(srvMemBsAmt) * 100) / 100;
             param.setSrvMemBSNetAmt(String.valueOf(srvMemBsNetAmt));
-            param.setSrvMemBsTaxes(String.valueOf(srvMemBsAmt - srvMemBsNetAmt));
+            param.setSrvMemBSTaxes(String.valueOf(srvMemBsAmt - srvMemBsNetAmt));
         }
 
         // Get SMQ No
@@ -458,17 +458,20 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         // insertQuotationInfo
         eSVMApiMapper.insertSal93D(eSVMApiForm.createMap(param));
 
+        logger.debug("saveQuotationReq :: isFilterCharge :: " + param.getIsFilterCharge());
         if("TRUE".equals(param.getIsFilterCharge())) {
             Map<String, Object> spFilterMap = new HashMap<String, Object>();
             spFilterMap.put("salesOrdId", param.getSrvSalesOrderId());
             spFilterMap.put("promoId", param.getSrvPromoId());
 
+            logger.debug("saveQuotationReq :: call getSVMFilterCharge");
             eSVMApiMapper.getSVMFilterCharge(spFilterMap);
             List<EgovMap> list = (List<EgovMap>) spFilterMap.get("p1");
 
             EgovMap eFilterMap = null;
 
             if(list.size() > 0) {
+                logger.debug("saveQuotationReq :: eFilterMap List.size > 0");
                 for(int i = 0; i < list.size(); i++) {
                     eFilterMap = new EgovMap();
                     Map rMap = (Map) list.get(i);

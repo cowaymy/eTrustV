@@ -93,7 +93,7 @@ public class eSVMApiForm {
         params.put("empChk", vo.getEmpChk());
         params.put("isFilterCharge", vo.getIsFilterCharge());
         params.put("srvMemPacTaxes", vo.getSrvMemPacTaxes());
-        params.put("srvMemBsTaxes", vo.getSrvMemBsTaxes());
+        params.put("srvMemBsTaxes", vo.getSrvMemBSTaxes());
         params.put("sal93Seq", vo.getSal93Seq());
         return params;
     }
@@ -183,7 +183,7 @@ public class eSVMApiForm {
     private String empChk;
     private String isFilterCharge;
     private String srvMemPacTaxes;
-    private String srvMemBsTaxes;
+    private String srvMemBSTaxes;
     private String sal93Seq;
 
     public String getFlag() {
@@ -810,12 +810,12 @@ public class eSVMApiForm {
         this.srvMemPacTaxes = srvMemPacTaxes;
     }
 
-    public String getSrvMemBsTaxes() {
-        return srvMemBsTaxes;
+    public String getSrvMemBSTaxes() {
+        return srvMemBSTaxes;
     }
 
-    public void setSrvMemBsTaxes(String srvMemBsTaxes) {
-        this.srvMemBsTaxes = srvMemBsTaxes;
+    public void setSrvMemBSTaxes(String srvMemBSTaxes) {
+        this.srvMemBSTaxes = srvMemBSTaxes;
     }
 
     public String getSal93Seq() {

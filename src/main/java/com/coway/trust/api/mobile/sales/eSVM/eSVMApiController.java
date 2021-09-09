@@ -60,7 +60,6 @@ public class eSVMApiController {
     @ApiOperation(value = "selectProductFilterList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/selectProductFilterList", method = RequestMethod.GET)
     public ResponseEntity<List<eSVMApiDto>> selectProductFilterList(@ModelAttribute eSVMApiForm param) throws Exception {
-      LOGGER.info("========== selectProductFilterList ==========");
       List<EgovMap> selectProductFilterList = eSVMApiService.selectProductFilterList(param);
       if (LOGGER.isDebugEnabled()) {
         for (int i = 0; i < selectProductFilterList.size(); i++) {
@@ -91,7 +90,6 @@ public class eSVMApiController {
     @ApiOperation(value = "selectFilterList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/selectFilterList", method = RequestMethod.GET)
     public ResponseEntity<List<eSVMApiDto>> selectFilterList(@ModelAttribute eSVMApiForm param) throws Exception {
-      LOGGER.info("========== selectFilterList ==========");
       List<EgovMap> selectFilterList = eSVMApiService.selectFilterList(param);
       if (LOGGER.isDebugEnabled()) {
         for (int i = 0; i < selectFilterList.size(); i++) {
