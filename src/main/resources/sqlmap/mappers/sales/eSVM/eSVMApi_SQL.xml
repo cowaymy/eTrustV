@@ -539,7 +539,7 @@
 
     <select id="getSAL0093D_SEQ" parameterType="Map" resultType="String">
         SELECT
-            TO_CHAR(ORG0001D_MEM_ID_SEQ.NEXTVAL)
+            TO_CHAR(SAL0093D_SRV_MEM_QUOT_ID_SEQ.NEXTVAL)
         FROM DUAL
     </select>
 
