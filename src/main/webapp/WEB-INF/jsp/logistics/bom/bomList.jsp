@@ -475,6 +475,22 @@
 											class="j_date w100p" id="srchValid" name="srchValid" placeholder="DD/MM/YYYY"/>
 						</td>
 						</tr>
+
+
+						<tr>
+                            <th scope="row">Component Code</th>
+                            <td>
+                                <input id="srchcompnt" name="srchcompnt" type="text" title=""  class="w100p" />
+                                <!-- date_set end -->
+                            </td>
+                            <th scope="row"></th>
+                            <td>
+
+<th scope="row"></th>
+                            <td></td>
+
+                        </tr>
+
 					</tbody>
 				</table>
 				<!-- table end -->

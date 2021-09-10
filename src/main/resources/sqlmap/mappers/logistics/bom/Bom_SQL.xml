@@ -103,6 +103,11 @@
 	            <if test="srchValid != null and srchValid != ''">
                   AND TO_CHAR (TO_DATE (#{srchValid},   'DD/MM/YYYY'),'YYYYMMDD')   between TO_CHAR(d.VALID_FROM_DT, 'YYYYMMDD')  AND TO_CHAR(d.VALID_TO_DT, 'YYYYMMDD')
                </if>
+
+                 <if test="srchcompnt !=null and srchcompnt !=''">
+                    AND  d.BOM_COMPNT = #{srchcompnt}
+             </if>
+
               </otherwise>
              </choose>
                 ORDER BY m.BOM, d.BOM_ITM_NODE_NO
