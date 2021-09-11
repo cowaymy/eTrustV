@@ -675,11 +675,11 @@
 
     <select id="selectSvmFilter" parameterType="Map" resultType="egovMap">
         SELECT
-            B.STK_CODE,
-            B.STK_DESC,
-            A.STK_PRIOD,
-            A.STK_FILTER_PRC ORIGINAL_PRC,
-            A.STK_CHRG_PRC CHARGE_PRC
+            B.STK_CODE FILTER_CODE,
+            B.STK_DESC FILTER_DESC,
+            A.STK_PRIOD LIFE_PRIOD,
+            A.STK_FILTER_PRC ORI_PRC,
+            A.STK_CHRG_PRC PRC
         FROM SAL0094D A
         JOIN SYS0026M B
         ON A.STK_ID = B.STK_ID

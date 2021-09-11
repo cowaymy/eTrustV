@@ -130,10 +130,6 @@ public class eSVMApiDto {
     private String packageDesc;
     private String packageInfoDesc;
     private String filterPromoDesc;
-    /* SVM Filter List */
-    private int stkPriod;
-    private int originalPrc;
-    private int chargePrc;
 
     private List<eSVMApiDto> productFilterList;
     private List<eSVMApiDto> packageComboList;
@@ -915,30 +911,6 @@ public class eSVMApiDto {
 
     public void setFilterPromoDesc(String filterPromoDesc) {
         this.filterPromoDesc = filterPromoDesc;
-    }
-
-    public int getStkPriod() {
-        return stkPriod;
-    }
-
-    public void setStkPriod(int stkPriod) {
-        this.stkPriod = stkPriod;
-    }
-
-    public int getOriginalPrc() {
-        return originalPrc;
-    }
-
-    public void setOriginalPrc(int originalPrc) {
-        this.originalPrc = originalPrc;
-    }
-
-    public int getChargePrc() {
-        return chargePrc;
-    }
-
-    public void setChargePrc(int chargePrc) {
-        this.chargePrc = chargePrc;
     }
 
     public List<eSVMApiDto> getSvmFilterList() {
