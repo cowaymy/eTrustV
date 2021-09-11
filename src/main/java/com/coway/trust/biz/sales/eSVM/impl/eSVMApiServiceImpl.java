@@ -80,76 +80,115 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
             throw new ApplicationException(AppConstants.FAIL, "No order found or this order is not under complete status or activation status");
 
         } else {
-            int stkId = Integer.parseInt(svmOrdDet.get("stkId").toString());
-            int[] discontinueStk = {1, 651, 218, 689, 216, 687, 3, 653};
-            List<Object> discontinueList = new ArrayList<Object>();
-            for(int i = 0; i < discontinueStk.length; i++) {
-                discontinueList.add(discontinueStk[i]);
-            }
-
-            if(discontinueList.indexOf(stkId) >= 0) {
-                throw new ApplicationException(AppConstants.FAIL, "Product have been discontinued. Therefore, create new quotation is not allowed");
-            }
-
-            // fn_isActiveMembershipQuotationInfoByOrderNo
-            // membershipQuotationController.mActiveQuoOrder
-            EgovMap hasActiveQuot = eSVMApiMapper.checkActiveQuot(eSVMApiForm.createMap(param));
-            if(Integer.parseInt(hasActiveQuot.get("cnt").toString()) > 0) {
-                throw new ApplicationException(AppConstants.FAIL, "This order already has an active quotation.<br />Quotation number : " + hasActiveQuot.get("srvMemQuotNo").toString());
-            }
 
             // fn_getDataInfo
             rtn = eSVMApiDto.create(eSVMApiMapper.selectOrderMemInfo(eSVMApiForm.createMap(param)));
-            // getMaxPeriodEarlyBirdPromo
-            if(!rtn.getMemExprDate().isEmpty()) {
-                String memExprDate = rtn.getMemExprDate();
-                Map<String, Object> map = new HashMap<String, Object>();
-                map.put("memExprDt", memExprDate.substring(6) + memExprDate.substring(3, 5));
-                rtn.setStrprmodt(eSVMApiMapper.getMaxPeriodEarlyBirdPromo(map));
-            }
-
-            param.setSalesOrdId(rtn.getSalesOrdId());
-
-            // membershipQuotationController.getOrderCurrentBillMonth
-            // Use billMonth to query for outstanding
-            Map<String, Object> billParam = new HashMap<String, Object>();
-            billParam.put("salesOrdId", rtn.getSalesOrdId());
-            billParam.put("appTypeId", rtn.getAppTypeId());
-            billParam.put("rentalStus", rtn.getRentalStus());
-            String checkRentalBillMonth = this.checkRentalBillMonth(billParam);
-
-            if(!checkRentalBillMonth.isEmpty()) {
-                throw new ApplicationException(AppConstants.FAIL, "Order has outstanding, membership purchase not allowed.");
-            }
-
-            // Set hiddenHasFilterCharge from ProductFilterList
-            param.setFlag("Y");
-            List<EgovMap> selectProductFilterList = eSVMApiMapper.selectProductFilterList(eSVMApiForm.createMap(param));
-            String hiddenHasFilterCharge = "";
-            Map<String, String> listItem = selectProductFilterList.get(0);
-            Iterator<Entry<String, String>> it = listItem.entrySet().iterator();
-            while(it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
-                hiddenHasFilterCharge = pair.getValue().toString();
-            }
-            logger.debug("hiddenHasFilterCharge.HiddenHasFilterCharge :: " + hiddenHasFilterCharge);
-            rtn.setHiddenHasFilterCharge(Integer.parseInt(hiddenHasFilterCharge));
 
             // [Membership Tab]
-            // Type of Package
-            List<EgovMap> selectComboPackageList = eSVMApiMapper.selectComboPackageList(eSVMApiForm.createMap(param));
-            List<eSVMApiDto> comboPackageList = selectComboPackageList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
-            rtn.setPackageComboList(comboPackageList);
+            if("".equals(param.getMode())) {
+                // Mode :: New
+                int stkId = Integer.parseInt(svmOrdDet.get("stkId").toString());
+                int[] discontinueStk = {1, 651, 218, 689, 216, 687, 3, 653};
+                List<Object> discontinueList = new ArrayList<Object>();
+                for(int i = 0; i < discontinueStk.length; i++) {
+                    discontinueList.add(discontinueStk[i]);
+                }
 
-            // Package Promotion
-            List<EgovMap> selectPackagePromoList = eSVMApiMapper.selectPackagePromo(eSVMApiForm.createMap(param));
-            List<eSVMApiDto> packagePromoList = selectPackagePromoList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
-            rtn.setPackagePromoList(packagePromoList);
+                if(discontinueList.indexOf(stkId) >= 0) {
+                    throw new ApplicationException(AppConstants.FAIL, "Product have been discontinued. Therefore, create new quotation is not allowed");
+                }
 
-            // Filter Promotion
-            List<EgovMap> selectFilterPromoList = eSVMApiMapper.selectFilterPromo(eSVMApiForm.createMap(param));
-            List<eSVMApiDto> filterPromoList = selectFilterPromoList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
-            rtn.setFilterPromoList(filterPromoList);
+                // fn_isActiveMembershipQuotationInfoByOrderNo
+                // membershipQuotationController.mActiveQuoOrder
+                EgovMap hasActiveQuot = eSVMApiMapper.checkActiveQuot(eSVMApiForm.createMap(param));
+                if(Integer.parseInt(hasActiveQuot.get("cnt").toString()) > 0) {
+                    throw new ApplicationException(AppConstants.FAIL, "This order already has an active quotation.<br />Quotation number : " + hasActiveQuot.get("srvMemQuotNo").toString());
+                }
+
+                // getMaxPeriodEarlyBirdPromo
+                if(!rtn.getMemExprDate().isEmpty()) {
+                    String memExprDate = rtn.getMemExprDate();
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("memExprDt", memExprDate.substring(6) + memExprDate.substring(3, 5));
+                    rtn.setStrprmodt(eSVMApiMapper.getMaxPeriodEarlyBirdPromo(map));
+                }
+
+                param.setSalesOrdId(rtn.getSalesOrdId());
+
+                // membershipQuotationController.getOrderCurrentBillMonth
+                // Use billMonth to query for outstanding
+                Map<String, Object> billParam = new HashMap<String, Object>();
+                billParam.put("salesOrdId", rtn.getSalesOrdId());
+                billParam.put("appTypeId", rtn.getAppTypeId());
+                billParam.put("rentalStus", rtn.getRentalStus());
+                String checkRentalBillMonth = this.checkRentalBillMonth(billParam);
+
+                if(!checkRentalBillMonth.isEmpty()) {
+                    throw new ApplicationException(AppConstants.FAIL, "Order has outstanding, membership purchase not allowed.");
+                }
+
+                // Set hiddenHasFilterCharge from ProductFilterList
+                param.setFlag("Y");
+                List<EgovMap> selectProductFilterList = eSVMApiMapper.selectProductFilterList(eSVMApiForm.createMap(param));
+                String hiddenHasFilterCharge = "";
+                Map<String, String> listItem = selectProductFilterList.get(0);
+                Iterator<Entry<String, String>> it = listItem.entrySet().iterator();
+                while(it.hasNext()) {
+                    Map.Entry pair = (Map.Entry)it.next();
+                    hiddenHasFilterCharge = pair.getValue().toString();
+                }
+                logger.debug("hiddenHasFilterCharge.HiddenHasFilterCharge :: " + hiddenHasFilterCharge);
+                rtn.setHiddenHasFilterCharge(Integer.parseInt(hiddenHasFilterCharge));
+
+
+                // Type of Package
+                List<EgovMap> selectComboPackageList = eSVMApiMapper.selectComboPackageList(eSVMApiForm.createMap(param));
+                List<eSVMApiDto> comboPackageList = selectComboPackageList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
+                rtn.setPackageComboList(comboPackageList);
+
+                // Package Promotion
+                List<EgovMap> selectPackagePromoList = eSVMApiMapper.selectPackagePromo(eSVMApiForm.createMap(param));
+                List<eSVMApiDto> packagePromoList = selectPackagePromoList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
+                rtn.setPackagePromoList(packagePromoList);
+
+                // Filter Promotion
+                List<EgovMap> selectFilterPromoList = eSVMApiMapper.selectFilterPromo(eSVMApiForm.createMap(param));
+                List<eSVMApiDto> filterPromoList = selectFilterPromoList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
+                rtn.setFilterPromoList(filterPromoList);
+
+            } else {
+                // Mode :: Detail
+                // Get SMQ details (SAL0093D)
+                EgovMap smqDet = new EgovMap();
+                smqDet = eSVMApiMapper.selectSmqDetail(eSVMApiForm.createMap(param));
+                rtn.setSrvMemPacId(Integer.parseInt(smqDet.get("srvMemPacId").toString()));
+                rtn.setSrvDur(Integer.parseInt(smqDet.get("srvDur").toString()));
+                rtn.setEmpChk(smqDet.get("empChk").toString());
+//                rtn.setSrvPacPromoId(smqDet.get("srvPacPromoId"));
+//                rtn.setSrvPromoId(smqDet.get("srvPromoId"));
+                rtn.setSrvMemPacAmt(Integer.parseInt(smqDet.get("srvMemPacAmt").toString()));
+                rtn.setSrvMemBsAmt(Integer.parseInt(smqDet.get("srvMemBsAmt").toString()));
+                rtn.setPaymentAmt(Integer.parseInt(smqDet.get("paymentAmt").toString()));
+
+                // Get SMQ Filter details (SAL0094D)
+//                EgovMap smqFilterDet = new EgovMap();
+//                smqFilterDet = eSVMApiMapper.selectSmqFilterDetail(eSVMApiForm.createMap(param));
+//                rtn.setSmqFilterList
+
+                // Get Type of Package description
+                rtn.setPackageDesc(eSVMApiMapper.selectPackageDesc(smqDet)); // packageDesc
+
+                // Get Package Information description
+                rtn.setPackageInfoDesc(eSVMApiMapper.selectPackageInfoDesc(smqDet)); // packageInfoDesc
+
+                // Get Filter Promotion description
+                rtn.setFilterPromoDesc(eSVMApiMapper.selectFilterPromoDesc(smqDet)); // filterPromoDesc
+
+                List<EgovMap> selectSVMFilterList = eSVMApiMapper.selectSvmFilter(eSVMApiForm.createMap(param));
+                List<eSVMApiDto> svmFilterList = selectSVMFilterList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList());
+                rtn.setSvmFilterList(svmFilterList);
+            }
+
         }
         return rtn;
     }

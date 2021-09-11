@@ -632,4 +632,57 @@
             #{stkChargePrice}
         )
     </insert>
+
+    <select id="selectSmqDetail" parameterType="Map" resultType="egovMap">
+        SELECT
+            SRV_MEM_PAC_ID,
+            SRV_DUR/12 SRV_DUR,
+            CASE WHEN EMP_CHK = 1 THEN 'Yes' ELSE 'No' END EMP_CHK,
+            SRV_PAC_PROMO_ID,
+            SRV_PROMO_ID,
+            SRV_MEM_PAC_AMT,
+            SRV_MEM_BS_AMT,
+            (SRV_MEM_PAC_AMT + SRV_MEM_BS_AMT) PAYMENT_AMT
+        FROM SAL0093D
+        WHERE SRV_MEM_QUOT_ID = #{svmQuotId}
+    </select>
+
+    <select id="selectPackageDesc" parameterType="Map" resultType="String">
+        SELECT
+            SRV_MEM_DESC
+        FROM SAL0091M
+        WHERE SRV_MEM_PAC_ID = #{srvMemPacId}
+    </select>
+
+    <select id="selectPackageInfoDesc" parameterType="Map" resultType="String">
+        SELECT
+            PROMO_CODE || ' - ' || PROMO_DESC
+        FROM SAL0017D
+        WHERE PROMO_ID = #{srvPacPromoId}
+            AND PROMO_TYPE_ID = '2282'
+            AND PROMO_APP_TYPE_ID = '2288'
+            AND PROMO_SRV_MEM_PAC_ID = '9'
+    </select>
+
+    <select id="selectFilterPromoDesc" parameterType="Map" resultType="String">
+        SELECT
+            A.PROMO_CODE || '-' || A.PROMO_DESC FILTER_PROMO_NAME
+        FROM SAL0017D A
+        WHERE A.PROMO_SRV_MEM_PAC_ID = 9
+            AND A.PROMO_APP_TYPE_ID = '2290'
+            AND PROMO_ID = #{srvPromoId}
+    </select>
+
+    <select id="selectSvmFilter" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.STK_CODE,
+            B.STK_DESC,
+            A.STK_PRIOD,
+            A.STK_FILTER_PRC ORIGINAL_PRC,
+            A.STK_CHRG_PRC CHARGE_PRC
+        FROM SAL0094D A
+        JOIN SYS0026M B
+        ON A.STK_ID = B.STK_ID
+        WHERE A.SRV_MEM_QUOT_ID = #{svmQuotId}
+    </select>
 </mapper>

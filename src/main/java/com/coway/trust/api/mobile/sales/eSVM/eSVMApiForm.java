@@ -17,6 +17,7 @@ public class eSVMApiForm {
     public static Map<String, Object> createMap(eSVMApiForm vo) {
         Map<String, Object> params = new HashMap<>();
         params.put("flag", vo.getFlag());
+        params.put("mode", vo.getMode());
         params.put("reqstDtFrom", vo.getReqstDtFrom());
         params.put("reqstDtTo", vo.getReqstDtTo());
         params.put("selectType", vo.getSelectType());
@@ -100,6 +101,7 @@ public class eSVMApiForm {
 
     private String flag;
 
+    private String mode;
     private String reqstDtFrom;
     private String reqstDtTo;
     private String selectType;
@@ -192,6 +194,14 @@ public class eSVMApiForm {
 
     public void setFlag(String flag) {
         this.flag = flag;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 
     public int getSvmQuotId() {

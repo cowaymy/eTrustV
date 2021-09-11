@@ -53,4 +53,14 @@ public interface eSVMApiMapper {
 
     void insertSal94D(Map<String, Object> params);
 
+    EgovMap selectSmqDetail(Map<String, Object> params);
+
+    String selectPackageDesc(Map<String, Object> params);
+
+    String selectPackageInfoDesc(Map<String, Object> params);
+
+    String selectFilterPromoDesc(Map<String, Object> params);
+
+    List<EgovMap> selectSvmFilter(Map<String, Object> params);
+
 }

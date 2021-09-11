@@ -121,10 +121,25 @@ public class eSVMApiDto {
     /* SMQ Request Insert */
     private String docno;
 
+    /* SMQ retrive - Detail View */
+    private int srvDur;
+    private String empChk;
+    private int srvMemPacAmt;
+    private int srvMemBsAmt;
+    private int paymentAmt;
+    private String packageDesc;
+    private String packageInfoDesc;
+    private String filterPromoDesc;
+    /* SVM Filter List */
+    private int stkPriod;
+    private int originalPrc;
+    private int chargePrc;
+
     private List<eSVMApiDto> productFilterList;
     private List<eSVMApiDto> packageComboList;
     private List<eSVMApiDto> packagePromoList;
     private List<eSVMApiDto> filterPromoList;
+    private List<eSVMApiDto> svmFilterList;
 
     public int getSvmQuotId() {
         return svmQuotId;
@@ -836,5 +851,101 @@ public class eSVMApiDto {
 
     public void setDocno(String docno) {
         this.docno = docno;
+    }
+
+    public int getSrvDur() {
+        return srvDur;
+    }
+
+    public void setSrvDur(int srvDur) {
+        this.srvDur = srvDur;
+    }
+
+    public String getEmpChk() {
+        return empChk;
+    }
+
+    public void setEmpChk(String empChk) {
+        this.empChk = empChk;
+    }
+
+    public int getSrvMemPacAmt() {
+        return srvMemPacAmt;
+    }
+
+    public void setSrvMemPacAmt(int srvMemPacAmt) {
+        this.srvMemPacAmt = srvMemPacAmt;
+    }
+
+    public int getSrvMemBsAmt() {
+        return srvMemBsAmt;
+    }
+
+    public void setSrvMemBsAmt(int srvMemBsAmt) {
+        this.srvMemBsAmt = srvMemBsAmt;
+    }
+
+    public int getPaymentAmt() {
+        return paymentAmt;
+    }
+
+    public void setPaymentAmt(int paymentAmt) {
+        this.paymentAmt = paymentAmt;
+    }
+
+    public String getPackageDesc() {
+        return packageDesc;
+    }
+
+    public void setPackageDesc(String packageDesc) {
+        this.packageDesc = packageDesc;
+    }
+
+    public String getPackageInfoDesc() {
+        return packageInfoDesc;
+    }
+
+    public void setPackageInfoDesc(String packageInfoDesc) {
+        this.packageInfoDesc = packageInfoDesc;
+    }
+
+    public String getFilterPromoDesc() {
+        return filterPromoDesc;
+    }
+
+    public void setFilterPromoDesc(String filterPromoDesc) {
+        this.filterPromoDesc = filterPromoDesc;
+    }
+
+    public int getStkPriod() {
+        return stkPriod;
+    }
+
+    public void setStkPriod(int stkPriod) {
+        this.stkPriod = stkPriod;
+    }
+
+    public int getOriginalPrc() {
+        return originalPrc;
+    }
+
+    public void setOriginalPrc(int originalPrc) {
+        this.originalPrc = originalPrc;
+    }
+
+    public int getChargePrc() {
+        return chargePrc;
+    }
+
+    public void setChargePrc(int chargePrc) {
+        this.chargePrc = chargePrc;
+    }
+
+    public List<eSVMApiDto> getSvmFilterList() {
+        return svmFilterList;
+    }
+
+    public void setSvmFilterList(List<eSVMApiDto> svmFilterList) {
+        this.svmFilterList = svmFilterList;
     }
 }
