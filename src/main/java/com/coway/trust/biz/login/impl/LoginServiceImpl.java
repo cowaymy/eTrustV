@@ -392,7 +392,7 @@ public class LoginServiceImpl implements LoginService {
 		updParams.put("userId", userId);
 		updParams.put("memId", memId);
 
-		if (params.get("currVacStatus") == "" || (params.get("currVacStatus") != "" && params.get("currVacStatus").toString().equalsIgnoreCase("D"))){
+		if (params.get("currVacStatus") == null || params.get("currVacStatus") == "" || (params.get("currVacStatus") != "" && params.get("currVacStatus").toString().equalsIgnoreCase("D"))){
 			if (params.get("firstDoseChk") != ""){
         		if (params.get("firstDoseChk").toString().equalsIgnoreCase("yes")){
         			// insert org0040D
@@ -400,7 +400,7 @@ public class LoginServiceImpl implements LoginService {
         			updParams.put("firstDoseDt", params.get("1stDoseDt"));
         			updParams.put("typeOfVaccine", params.get("typeOfVaccine"));
 
-        			if (params.get("2ndDoseNo")!= "" && params.get("2ndDoseNo").toString().equalsIgnoreCase("on")){
+        			if (params.get("2ndDoseNo") != null && params.get("2ndDoseNo") != "" && params.get("2ndDoseNo").toString().equalsIgnoreCase("on")){
         				// set next pop date for 2nd dose info collection
         				updParams.put("nextPopDt", nextPopDt);
         				updParams.put("vaccineStatus", "P"); // P = Partial | C = Completed | D = Did not take vaccine
@@ -434,7 +434,7 @@ public class LoginServiceImpl implements LoginService {
 			}
 		} else {
 			if (params.get("currVacStatus").toString().equalsIgnoreCase("P")) { // update 2nd dose info only
-				if (params.get("2ndDoseNo")!= "" && params.get("2ndDoseNo").toString().equalsIgnoreCase("on")){
+				if (params.get("2ndDoseNo") != null && params.get("2ndDoseNo") != "" && params.get("2ndDoseNo").toString().equalsIgnoreCase("on")){
     				// set next pop date for 2nd dose info collection
     				updParams.put("nextPopDt", nextPopDt);
 				} else {
