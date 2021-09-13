@@ -238,7 +238,7 @@ public class eSVMApiDto {
         return statusId;
     }
 
-    public void setStatus(int statusId) {
+    public void setStatusId(int statusId) {
         this.statusId = statusId;
     }
 
