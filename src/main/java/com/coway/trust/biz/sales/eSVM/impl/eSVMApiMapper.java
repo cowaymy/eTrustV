@@ -63,4 +63,7 @@ public interface eSVMApiMapper {
 
     List<EgovMap> selectSvmFilter(Map<String, Object> params);
 
+    void cancelSal93(Map<String, Object> params);
+
+    void cancelSal298(Map<String, Object> params);
 }

@@ -694,4 +694,23 @@
         ON A.STK_ID = B.STK_ID
         WHERE A.SRV_MEM_QUOT_ID = #{svmQuotId}
     </select>
+
+    <update id="cancelSal93" parameterType="Map">
+        UPDATE SAL0093D
+        SET SRV_QUOT_STUS_ID = 21,
+            SRV_UPD_USER_ID = #{regId},
+            SRV_UPD_DT = SYSDATE
+        WHERE SRV_MEM_QUOT_ID = #{srvMemQuotId}
+            AND SRV_QUOT_STUS_ID = 1
+    </update>
+
+    <update id="cancelSal298" parameterType="Map">
+        UPDATE SAL0093D
+        SET STUS = 21,
+            UPD_USER_ID = #{regId},
+            UPD_DT = SYSDATE
+        WHERE PSM_ID = #{psmId}
+            AND SRV_MEM_QUOT_ID = #{srvMemQuotId}
+            AND STUS = 1
+    </update>
 </mapper>

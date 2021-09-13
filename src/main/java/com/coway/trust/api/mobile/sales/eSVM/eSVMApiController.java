@@ -116,4 +116,10 @@ public class eSVMApiController {
     public ResponseEntity<eSVMApiDto> selectOrderMemInfo(@ModelAttribute eSVMApiForm param) throws Exception {
       return ResponseEntity.ok(eSVMApiService.selectOrderMemInfo(param));
     }
+
+    @ApiOperation(value = "cancelSMQ", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/cancelSMQ", method = RequestMethod.POST)
+    public ResponseEntity<eSVMApiDto> cancelSMQ(@ModelAttribute eSVMApiForm param) throws Exception {
+      return ResponseEntity.ok(eSVMApiService.cancelSMQ(param));
+    }
 }

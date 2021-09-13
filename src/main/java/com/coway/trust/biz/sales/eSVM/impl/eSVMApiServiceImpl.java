@@ -159,6 +159,8 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
             } else {
                 // Mode :: Detail
                 // Get SMQ details (SAL0093D)
+                logger.debug("selectSvmOrdNo :: svmQuotId :: " + String.valueOf(param.getSvmQuotId()));
+
                 EgovMap smqDet = new EgovMap();
                 smqDet = eSVMApiMapper.selectSmqDetail(eSVMApiForm.createMap(param));
                 rtn.setSrvMemPacId(Integer.parseInt(smqDet.get("srvMemPacId").toString()));
@@ -543,6 +545,27 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
                     eSVMApiMapper.insertSal94D(eFilterMap);
                 }
             }
+        }
+
+        return rtn;
+    }
+
+    @Override
+    public eSVMApiDto cancelSMQ(eSVMApiForm param) throws Exception {
+        if(null == param) {
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+        logger.debug("param :: {}", param);
+
+        eSVMApiDto rtn = new eSVMApiDto();
+
+        // Deactivate SAL0093D - Update SRV_QUOT_STUS_ID = 21
+        eSVMApiMapper.cancelSal93(eSVMApiForm.createMap(param));
+
+        // Deactivate SAL0298D - Update STUS = 21 (If PSM exist)
+        if(param.getPsmId() != 0) {
+            logger.debug("psmId :: " + String.valueOf(param.getPsmId()));
+            eSVMApiMapper.cancelSal298(eSVMApiForm.createMap(param));
         }
 
         return rtn;
