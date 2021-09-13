@@ -121,7 +121,8 @@ public class eSVMApiController {
     @RequestMapping(value = "/cancelSMQ", method = RequestMethod.POST)
     public ResponseEntity<eSVMApiDto> cancelSMQ(@ModelAttribute eSVMApiForm param) throws Exception {
       LOGGER.debug("===== cancelSMQ =====");
-      LOGGER.debug("param : {}", param);
+      LOGGER.debug("param :: SVM_QUOT_MEM_ID", param.getSrvMemQuotId());
+      LOGGER.debug("param :: PSM_ID", param.getPsmId());
       return ResponseEntity.ok(eSVMApiService.cancelSMQ(param));
     }
 }
