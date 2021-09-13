@@ -23,6 +23,7 @@
                  WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 6) THEN 'Pre-Sales Rejected'
                  WHEN A.SRV_QUOT_STUS_ID = 8 THEN 'Inactive Quotation'
                  WHEN A.SRV_QUOT_STUS_ID = 10 THEN 'Cancelled Quotation'
+                 WHEN A.SRV_QUOT_STUS_ID = 21 THEN 'Failed Quotation'
             END STATUS,
             CASE WHEN A.SRV_QUOT_STUS_ID = 1 THEN 1
                  WHEN A.SRV_QUOT_STUS_ID = 4 AND E.STUS IS NULL THEN 4
