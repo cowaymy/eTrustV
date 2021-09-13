@@ -31,6 +31,7 @@ public class eSVMApiDto {
     private String orderType;
     private String custType;
     private String status;
+    private int statusId;
     private int stkId;
     private String ordNo;
     private String nric;
@@ -231,6 +232,14 @@ public class eSVMApiDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getStatusId() {
+        return statusId;
+    }
+
+    public void setStatus(int statusId) {
+        this.statusId = statusId;
     }
 
     public int getStkId() {
