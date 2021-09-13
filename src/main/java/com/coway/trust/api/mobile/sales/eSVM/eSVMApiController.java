@@ -119,7 +119,7 @@ public class eSVMApiController {
 
     @ApiOperation(value = "cancelSMQ", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/cancelSMQ", method = RequestMethod.POST)
-    public ResponseEntity<eSVMApiDto> cancelSMQ(@ModelAttribute eSVMApiForm param) throws Exception {
+    public ResponseEntity<eSVMApiDto> cancelSMQ(@RequestBody eSVMApiForm param) throws Exception {
       LOGGER.debug("===== cancelSMQ =====");
       LOGGER.debug("param :: SVM_QUOT_MEM_ID", param.getSrvMemQuotId());
       LOGGER.debug("param :: PSM_ID", param.getPsmId());
