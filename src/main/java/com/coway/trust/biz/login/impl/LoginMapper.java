@@ -62,4 +62,9 @@ public interface LoginMapper {
 	int checkConsent();
 	EgovMap getConsentDtls(Map<String, Object> params);
 	int loginPopAccept(Map<String, Object> params);
+
+	int selectNextFileId();
+	void insertFileDetail(Map<String, Object> flInfo);
+	int insertVacInfo(Map<String, Object> params);
+	EgovMap getVaccineInfo(Map<String, Object> params);
 }

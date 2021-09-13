@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,11 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.common.FileGroupVO;
+import com.coway.trust.biz.common.FileService;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.impl.FileMapper;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.login.LoginHistory;
 import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.cmmn.model.LoginSubAuthVO;
@@ -49,6 +55,12 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private AdaptorService adaptorService;
+
+	@Autowired
+    private FileService fileService;
+
+	@Autowired
+    private FileMapper fileMapper;
 
 	@Override
 	public LoginVO getLoginInfo(Map<String, Object> params) {
@@ -318,4 +330,136 @@ public class LoginServiceImpl implements LoginService {
 	public int loginPopAccept(Map<String, Object> params) {
 	    return loginMapper.loginPopAccept(params);
 	}
+
+	/**
+	 * upload vaccination doc
+	 *
+	 * @Date Sep 12, 2021
+	 * @Author HQIT-HUIDING
+	 * @param list
+	 * @param type
+	 * @param params
+	 * @param seqs
+	 */
+	@Override
+	public void insertAttachDoc(List<FileVO> list, FileType type, Map<String, Object> params, List<String> seqs) {
+		// TODO Auto-generated method stub
+		int fileGroupKey = fileMapper.selectFileGroupKey();
+		AtomicInteger i = new AtomicInteger(0); // get seq key.
+
+		list.forEach(r -> {this.insertFile(fileGroupKey, r, type, params, seqs.get(i.getAndIncrement()));});
+		params.put("fileGroupKey", fileGroupKey);
+	}
+
+	private void insertFile(int fileGroupKey, FileVO flVO, FileType flType, Map<String, Object> params,String seq) {
+        LOGGER.debug("login insertFile :: Start");
+
+        int atchFlId = loginMapper.selectNextFileId();
+
+        FileGroupVO fileGroupVO = new FileGroupVO();
+
+        Map<String, Object> flInfo = new HashMap<String, Object>();
+        flInfo.put("atchFileId", atchFlId);
+        flInfo.put("atchFileName", flVO.getAtchFileName());
+        flInfo.put("fileSubPath", flVO.getFileSubPath());
+        flInfo.put("physiclFileName", flVO.getPhysiclFileName());
+        flInfo.put("fileExtsn", flVO.getFileExtsn());
+        flInfo.put("fileSize", flVO.getFileSize());
+        flInfo.put("filePassword", flVO.getFilePassword());
+        flInfo.put("fileUnqKey", params.get("claimUn"));
+        flInfo.put("fileKeySeq", seq);
+
+        loginMapper.insertFileDetail(flInfo);
+
+        fileGroupVO.setAtchFileGrpId(fileGroupKey);
+        fileGroupVO.setAtchFileId(atchFlId);
+        fileGroupVO.setChenalType(flType.getCode());
+        fileGroupVO.setCrtUserId(Integer.parseInt(params.get("userId").toString()));
+        fileGroupVO.setUpdUserId(Integer.parseInt(params.get("userId").toString()));
+
+        fileMapper.insertFileGroup(fileGroupVO);
+
+        LOGGER.debug("login insertFile :: End");
+    }
+
+	@Override
+	public int insertVaccineInfo (Map<String, Object> params, int userId, String memId) {
+
+		Map<String,Object> updParams = new HashMap<String, Object>();
+		String nextPopDt = CommonUtils.getCalDate(21); // defaultly set 21days later to pop again
+		int update = 0;
+
+		updParams.put("userId", userId);
+		updParams.put("memId", memId);
+
+		if (params.get("currVacStatus") == "" || (params.get("currVacStatus") != "" && params.get("currVacStatus").toString().equalsIgnoreCase("D"))){
+			if (params.get("firstDoseChk") != ""){
+        		if (params.get("firstDoseChk").toString().equalsIgnoreCase("yes")){
+        			// insert org0040D
+        			updParams.put("firstDoseChk", "Y"); // completed 1st dose
+        			updParams.put("firstDoseDt", params.get("1stDoseDt"));
+        			updParams.put("typeOfVaccine", params.get("typeOfVaccine"));
+
+        			if (params.get("2ndDoseNo")!= "" && params.get("2ndDoseNo").toString().equalsIgnoreCase("on")){
+        				// set next pop date for 2nd dose info collection
+        				updParams.put("nextPopDt", nextPopDt);
+        				updParams.put("vaccineStatus", "P"); // P = Partial | C = Completed | D = Did not take vaccine
+        			} else {
+        				updParams.put("vaccineStatus", "C"); // P = Partial | C = Completed | D = Did not take vaccine
+
+        				if (!params.get("typeOfVaccine").toString().equals("6500")){ // johnson & johnson only take 1 dose
+        					updParams.put("secondDoseChk", "Y"); // completed 2nd dose
+        					updParams.put("secondDoseDt", params.get("2ndDoseDt"));
+        				}
+        			}
+
+        			updParams.put("yesAtchGrpId", params.get("atchFileGrpId"));
+
+        			//update  = loginMapper.insertVacInfo(updParams);
+
+        		} else {
+        			updParams.put("reasonId", params.get("reason"));
+        			updParams.put("vaccineStatus", "D"); // P = Partial | C = Completed | D = Did not take vaccine
+
+        			if (params.get("reason").equals("6501") ) // pregnancy
+        				updParams.put("reasonDtl", params.get("pregnancyWeek"));
+        			else if (params.get("reason").equals("6502")) // allergic
+        				updParams.put("reasonDtl", params.get("allergicType"));
+        			else
+        				updParams.put("reasonDtl", params.get("reasonDtl"));
+
+        			updParams.put("nextPopDt", nextPopDt);
+        			updParams.put("noAtchGrpId", params.get("atchFileGrpId"));
+        		}
+			}
+		} else {
+			if (params.get("currVacStatus").toString().equalsIgnoreCase("P")) { // update 2nd dose info only
+				if (params.get("2ndDoseNo")!= "" && params.get("2ndDoseNo").toString().equalsIgnoreCase("on")){
+    				// set next pop date for 2nd dose info collection
+    				updParams.put("nextPopDt", nextPopDt);
+				} else {
+    				updParams.put("vaccineStatus", "C"); // P = Partial | C = Completed | D = Did not take vaccine
+					updParams.put("secondDoseChk", "Y"); // completed 2nd dose
+					updParams.put("secondDoseDt", params.get("2ndDoseDt"));
+				}
+			}
+		}
+
+		update  = loginMapper.insertVacInfo(updParams);
+
+		return update;
+	}
+
+	@Override
+	public EgovMap getVaccineInfo (String memId){
+		EgovMap vacInfo = null;
+
+		if (memId != null){
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("memId", memId);
+			vacInfo = loginMapper.getVaccineInfo(params);
+		}
+		return vacInfo;
+	}
+
 }

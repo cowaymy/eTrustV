@@ -3,6 +3,8 @@ package com.coway.trust.biz.login;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.SessionVO;
 
@@ -51,4 +53,8 @@ public interface LoginService {
 	int checkConsent();
 	EgovMap getConsentDtls(Map<String, Object> params);
 	int loginPopAccept(Map<String, Object> params);
+
+	public void insertAttachDoc(List<FileVO> list, FileType type, Map<String, Object> params, List<String> seqs);
+	public int insertVaccineInfo (Map<String, Object> params, int userId, String memId);
+	public EgovMap getVaccineInfo (String memId);
 }

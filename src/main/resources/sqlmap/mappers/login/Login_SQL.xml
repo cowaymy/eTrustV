@@ -64,7 +64,7 @@
                                           ,SYS0054M D
                                      WHERE TBL.ROLE_ID = D.ROLE_ID
                                        AND D.AUTH_CODE = 'MGR') > 0 THEN 'Y' ELSE 'N' END AS mgrYn
-             , ORG.MEM_ID AS memId
+             , NVL(ORG.MEM_ID, ORG1.MEM_ID) AS memId
              , CASE WHEN ORG.SUB_DEPT IS NULL
                     THEN (SELECT MIN(COST_CENTR) FROM SVC0063C WHERE MAIN_DEPT_CODE = ORG.MAIN_DEPT)
                     ELSE (SELECT COST_CENTR FROM SVC0063C WHERE MAIN_DEPT_CODE = ORG.MAIN_DEPT AND SUB_DEPT_CODE = ORG.SUB_DEPT) END AS costCentr
@@ -73,13 +73,16 @@
              , ORG.MOBILE_USE_YN AS mobileUseYn
              , (SELECT SERIAL_REQUIRE_CHK_YN FROM SYS0028M WHERE WH_LOC_CODE = USR.USER_NAME AND ROWNUM=1 ) serialRequireChkYn
              , ORG.RANK
+             , VAC.VACCINE_STATUS as vacStatus
+             , (TRUNC(TO_DATE(VAC.NEXT_POP_DT, 'YYYYMMDD'),'dd')) - TRUNC(SYSDATE,'dd') diffVacDay
 	  FROM SYS0047M USR INNER JOIN SYS0038M STATUS ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID
            LEFT OUTER JOIN ORG0001D ORG ON USR.HR_CODE = ORG.MEM_CODE
            LEFT JOIN SYS0045M ROLET ON ROLET.USER_ID = USR.USER_ID
                               AND ROLET.STUS_ID = 1
-           LEFT OUTER JOIN ORG0001D ORG ON USR.HR_CODE = ORG.MEM_CODE
+           LEFT OUTER JOIN ORG0001D ORG1 ON USR.USER_NAME = ORG1.MEM_CODE
            LEFT OUTER JOIN SYS0005M BRANCH ON BRNCH_ID = ORG.BRNCH OR BRNCH_ID = USR.USER_BRNCH_ID
            LEFT JOIN ORG0003D EREGIS ON APLCTN_ID = ORG.APLICNT_ID
+           LEFT JOIN ORG0040D VAC ON VAC.MEM_ID = ORG1.MEM_ID
 	 WHERE 1 = 1
 	   AND USR.USER_NAME = #{userId} /* userId => user_name 임.*/
 	   AND USR.USER_PASSWD = #{password}
@@ -517,4 +520,110 @@
         INSERT (T.SEQ, T.USER_ID, T.MEM_ID, T.POP_ID, T.ACTION_DT)
         VALUES(ORG0036D_ID_SEQ.NEXTVAL, S.USER_ID, S.MEM_ID, S.POP_ID, SYSDATE)
     </update>
+
+    <select id="selectNextFileId" resultType="int">
+        SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
+    </select>
+
+    <insert id="insertFileDetail" parameterType="Map">
+        INSERT INTO SYS0071D (
+        ATCH_FILE_ID
+        , ATCH_FILE_NAME
+        , FILE_SUB_PATH
+        , PHYSICL_FILE_NAME
+        , FILE_EXTSN
+        , FILE_SIZE
+        , FILE_PASSWORD
+        , FILE_UNQ_KEY
+        , FILE_KEY_SEQ
+        )VALUES (
+        #{atchFileId}
+        ,#{atchFileName}
+        ,#{fileSubPath}
+        ,#{physiclFileName}
+        ,#{fileExtsn}
+        ,#{fileSize}
+        ,#{filePassword}
+        ,#{fileUnqKey}
+        ,#{fileKeySeq}
+        )
+    </insert>
+
+    <update id="insertVacInfo" parameterType="Map">
+        MERGE INTO ORG0040D D1  USING
+            (SELECT
+                #{memId} as MEM_ID, #{vaccineStatus} as VACCINE_STATUS, #{firstDoseChk} as FIRST_DOSE_CHK,
+                #{firstDoseDt} as FIRST_DOSE_DT, #{secondDoseChk} as SECOND_DOSE_CHK, #{secondDoseDt} as SECOND_DOSE_DT,
+                #{typeOfVaccine} as VACCINE_TYPE, #{reasonId} as REASON_ID, #{reasonDtl} as REASON_DTL, #{yesAtchGrpId} as YES_ATCH_FILE_GRP_ID,
+                #{noAtchGrpId} as NO_ATCH_FILE_GRP_ID, #{nextPopDt} as NEXT_POP_DT  from dual
+            ) Temp
+            on (D1.MEM_ID = Temp.MEM_ID)
+            when matched then
+            UPDATE SET D1.UPD_DT = SYSDATE
+            , UPD_USER_ID = #{userId}
+            <if test="vaccineStatus != null">
+                , D1.VACCINE_STATUS = #{vaccineStatus}
+            </if>
+            <if test="firstDoseChk != null">
+                , D1.FIRST_DOSE_CHK = #{firstDoseChk}
+            </if>
+            <if test="firstDoseDt != null">
+                , D1.FIRST_DOSE_DT = TO_DATE(#{firstDoseDt}, 'DD/MM/YYYY')
+            </if>
+            <if test="secondDoseChk != null">
+                , D1.SECOND_DOSE_CHK = #{secondDoseChk}
+            </if>
+            <if test="secondDoseDt != null">
+                , D1.SECOND_DOSE_DT = TO_DATE(#{secondDoseDt}, 'DD/MM/YYYY')
+            </if>
+            <if test="reasonId != null">
+                , D1.REASON_ID = #{reasonId}
+            </if>
+            <if test="reasonDtl != null">
+                , D1.REASON_DTL = #{reasonDtl}
+            </if>
+            <if test="yesAtchGrpId != null">
+                , D1.YES_ATCH_FILE_GRP_ID = #{yesAtchGrpId}
+            </if>
+            <if test="noAtchGrpId != null">
+                , D1.NO_ATCH_FILE_GRP_ID = #{noAtchGrpId}
+            </if>
+            <if test="nextPopDt != null">
+                , NEXT_POP_DT = #{nextPopDt}
+            </if>
+            when not matched then
+                INSERT
+                (MEM_ID, VACCINE_STATUS, FIRST_DOSE_CHK, FIRST_DOSE_DT,  SECOND_DOSE_CHK,  SECOND_DOSE_DT,
+                VACCINE_TYPE, REASON_ID, REASON_DTL, YES_ATCH_FILE_GRP_ID, NO_ATCH_FILE_GRP_ID, NEXT_POP_DT, CRT_DT, CRT_USER_ID)
+            values (
+                #{memId} , #{vaccineStatus} , #{firstDoseChk} , TO_DATE(#{firstDoseDt}, 'DD/MM/YYYY'), #{secondDoseChk} , TO_DATE(#{secondDoseDt}, 'DD/MM/YYYY') ,
+                #{typeOfVaccine}, #{reasonId} , #{reasonDtl}, #{yesAtchGrpId}, #{noAtchGrpId}, #{nextPopDt}, SYSDATE, #{userId}
+                )
+
+
+    </update>
+
+    <select id="getVaccineInfo" parameterType="Map"  resultType="egovMap">
+        SELECT MEM_ID ,
+                    VACCINE_STATUS ,
+                    NVL(FIRST_DOSE_CHK, 'N') FIRST_DOSE_CHK ,
+                    FIRST_DOSE_DT ,
+                    NVL(SECOND_DOSE_CHK, 'N') SECOND_DOSE_CHK ,
+                    SECOND_DOSE_DT ,
+                    VACCINE_TYPE ,
+                    REASON_ID ,
+                    REASON_DTL ,
+                    YES_ATCH_FILE_GRP_ID ,
+                    NO_ATCH_FILE_GRP_ID ,
+                    NEXT_POP_DT ,
+                    UPD_USER_ID ,
+                    UPD_DT ,
+                    CRT_USER_ID ,
+                    CRT_DT
+        FROM ORG0040D
+        WHERE 1 = 1
+        <if test="memId != null and memId != ''">
+            AND MEM_ID = #{memId}
+        </if>
+    </select>
 </mapper>

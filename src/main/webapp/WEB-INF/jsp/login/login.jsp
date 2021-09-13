@@ -96,6 +96,12 @@
     	Common.popupDiv("/logistics/survey/surveyForm.do", {"surveyTypeId":surveyTypeId,"inWeb":"0"}, null, false, '_surveyPop');
     }
 
+    // Added to collect Vaccination Information Collection. Hui Ding, 09-09-2021
+    function fn_goVaccineForm(){
+
+    		Common.popupDiv("/login/vaccineInfoPop.do", null, null, false, '_vaccineInfoPop');
+    	   //Common.popupDiv("/login/vaccineInfoPop.do", null, null, false, '_vaccineInfoPop');
+    }
 
     function fnFindIdPopUp() {
         var popUpObj = Common.popupDiv(
@@ -268,63 +274,85 @@
 
                     // HP, Cody, CT, Staff, Admin
                     if(result.data.userIsPartTime != "1" && result.data.userIsExternal != "1"){
+                    	//var vacPop = "${vaccinationPop}";
 
-                    	var noticePopResult = null;
-                    	var aResult = null;
-                    	var inQueue = 0;
+                    	var vacPop = "N";
+                    	if (result.data.diffVacDay == null  || (result.data.diffVacDay != null && parseInt(result.data.diffVacDay) <= 0 )){
+                    		vacPop ="Y";
+                    		if (result.data.vacStatus == null || (result.data.vacStatus != null && result.data.vacStatus != "C")){
+                    			  vacPop ="Y";
+                    		} else {
+                    			vacPop ="N";
+                    		}
+                    	}
+                    	console.log(result);
+                    	console.log(result.data.diffVacDay == null);
+                    	console.log("result.data.diffVacDay: " + result.data.diffVacDay);
+                    	console.log("vacPop: " + vacPop);
+                    	console.log("result.data.vacStatus: " + result.data.vacStatus);
 
-                    	// Added for displaying important Notice by Management to all HP, Cody, CT, Staff, Admin. By Hui Ding, 2020-09-28
-                    	/*
-                        Common.ajaxSync("GET", "/login/loginNoticePopCheck", {userId : userId, userTypeId : result.data.userTypeId}, function(noticePop) {
-                        	noticePopResult = noticePop;
-                        	console.log("noticePop");
-                        });
-                    	*/
+                    	if ( vacPop == "Y" && (result.data.userTypeId == "1" || result.data.userTypeId == "2" || result.data.userTypeId == "3" || result.data.userTypeId == "7")){// HP, CD, CT, HT
+                   			// collect vaccination info
+                            fn_goVaccineForm();
+                    	} else {
 
-	                    Common.ajaxSync("GET", "/login/loginPopCheck", {userId : userId, userTypeId : result.data.userTypeId}, function(aResultSet) {
-                            aResult = aResultSet;
-                            console.log("aResultSet");
-                        });
-                        //fn_goMain();
+	                    	var noticePopResult = null;
+	                    	var aResult = null;
+	                    	var inQueue = 0;
 
-                        if (aResult != null){
-                        	console.log(aResult);
-                            $("#loginUserType").val(result.data.userTypeId);
+	                    	// Added for displaying important Notice by Management to all HP, Cody, CT, Staff, Admin. By Hui Ding, 2020-09-28
+	                    	/*
+	                        Common.ajaxSync("GET", "/login/loginNoticePopCheck", {userId : userId, userTypeId : result.data.userTypeId}, function(noticePop) {
+	                        	noticePopResult = noticePop;
+	                        	console.log("noticePop");
+	                        });
+	                    	*/
 
-                            if(aResult.retMsg == "") {
-                                if((aResult.popExceptionMemroleCnt > 0 || aResult.popExceptionUserCnt > 0)
-                                    && (aResult.surveyTypeId <= 0 || aResult.verifySurveyStus >= 1)){
-                                	if (noticePopResult == null){
-                                		  fn_goMain();
-                                	}
-                                }
-                                else if (/* (aResult.popExceptionMemroleCnt <= 0 || aResult.popExceptionUserCnt <= 0)&& */
-                                        (aResult.surveyTypeId > 0 && aResult.verifySurveyStus <= 0) ){
-                                    $("#loginForm surveyTypeId").val(aResult.surveyTypeId);
-                                    fn_goSurveyForm(aResult.surveyTypeId);
-                                    inQueue = 1;
-                                }
-                                else {
-                                    inQueue = 1;
-                                    $("#popId").val(aResult.popId);
-                                    $("#loginPdf").val(aResult.popFlName);
-                                    $("#popType").val(aResult.popType);
-                                    $("#popAck1").val(aResult.popAck1);
-                                    $("#popAck2").val(aResult.popAck2);
-                                    $("#popRejectFlg").val(aResult.popRejectFlg);
-                                    $("#surveyStus").val(aResult.verifySurveyStus);
-                                    $("#loginForm surveyTypeId").val(aResult.surveyTypeId);
-                                    $("#verName").val(aResult.verName);
-                                    $("#verNRIC").val(aResult.verNRIC);
-                                    $("#verBankAccNo").val(aResult.verBankAccNo);
-                                    $("#verBankName").val(aResult.verBankName);
-                                    $("#consentFlg").val(aResult.consentFlg);
-                                    Common.popupDiv("/login/loginPop.do", $("#loginForm").serializeJSON(), null, false, '_loginPop');
-                                }
-                            } else {
-                                Common.alert(aResult.retMsg);
-                            }
-                        }
+		                    Common.ajaxSync("GET", "/login/loginPopCheck", {userId : userId, userTypeId : result.data.userTypeId}, function(aResultSet) {
+	                            aResult = aResultSet;
+	                            console.log("aResultSet");
+	                        });
+	                        //fn_goMain();
+
+	                        if (aResult != null){
+	                        	console.log(aResult);
+	                            $("#loginUserType").val(result.data.userTypeId);
+
+	                            if(aResult.retMsg == "") {
+	                                if((aResult.popExceptionMemroleCnt > 0 || aResult.popExceptionUserCnt > 0)
+	                                    && (aResult.surveyTypeId <= 0 || aResult.verifySurveyStus >= 1)){
+	                                	if (noticePopResult == null){
+	                                		  fn_goMain();
+	                                	}
+	                                }
+	                                else if (/* (aResult.popExceptionMemroleCnt <= 0 || aResult.popExceptionUserCnt <= 0)&& */
+	                                        (aResult.surveyTypeId > 0 && aResult.verifySurveyStus <= 0) ){
+	                                    $("#loginForm surveyTypeId").val(aResult.surveyTypeId);
+	                                    fn_goSurveyForm(aResult.surveyTypeId);
+	                                    inQueue = 1;
+	                                }
+	                                else {
+	                                    inQueue = 1;
+	                                    $("#popId").val(aResult.popId);
+	                                    $("#loginPdf").val(aResult.popFlName);
+	                                    $("#popType").val(aResult.popType);
+	                                    $("#popAck1").val(aResult.popAck1);
+	                                    $("#popAck2").val(aResult.popAck2);
+	                                    $("#popRejectFlg").val(aResult.popRejectFlg);
+	                                    $("#surveyStus").val(aResult.verifySurveyStus);
+	                                    $("#loginForm surveyTypeId").val(aResult.surveyTypeId);
+	                                    $("#verName").val(aResult.verName);
+	                                    $("#verNRIC").val(aResult.verNRIC);
+	                                    $("#verBankAccNo").val(aResult.verBankAccNo);
+	                                    $("#verBankName").val(aResult.verBankName);
+	                                    $("#consentFlg").val(aResult.consentFlg);
+	                                    Common.popupDiv("/login/loginPop.do", $("#loginForm").serializeJSON(), null, false, '_loginPop');
+	                                }
+	                            } else {
+	                                Common.alert(aResult.retMsg);
+	                            }
+	                        }
+                    	}
 
                         /*
                         if (noticePopResult != null && noticePopResult != ""){

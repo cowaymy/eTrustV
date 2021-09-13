@@ -1,39 +1,55 @@
 package com.coway.trust.web.login;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovFormBasedFileVo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.login.LoginHistory;
 import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.biz.logistics.survey.SurveyService;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.Precondition;
+import com.coway.trust.web.sales.SalesConstants;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -56,6 +72,9 @@ public class LoginController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
+	@Value("${web.resource.upload.file}")
+	private String uploadDir;
+
 	@RequestMapping(value = "/login.do")
 	public String login(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		model.addAttribute("languages", loginService.getLanguages());
@@ -75,6 +94,7 @@ public class LoginController {
 		LOGGER.debug("userID : {}", params.get("userId"));
 
 		LoginVO loginVO = loginService.getLoginInfo(params);
+		//LOGGER.info("###loginVO: " + loginVO.toString());
 		ReturnMessage message = new ReturnMessage();
 
 		if (loginVO == null || loginVO.getUserId() == 0) {
@@ -98,6 +118,26 @@ public class LoginController {
 			HttpSession session = sessionHandler.getCurrentSession();
 			session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
 			message.setData(loginVO);
+
+			// set vaccination checking
+			/*if (loginVO.getMemId() != null && (loginVO.getUserTypeId() == 1 || loginVO.getUserTypeId() == 2 || loginVO.getUserTypeId() == 3 || loginVO.getUserTypeId() == 7)){
+				EgovMap vacInfo = loginService.getVaccineInfo(loginVO.getMemId());
+				if (vacInfo != null){
+					if (CommonUtils.getDiffDate(vacInfo.get("nextPopDt").toString()) == 0){
+						session.setAttribute("vaccinationPop", "Y");
+						session.setAttribute("vacInfo", vacInfo);
+
+						if (vacInfo.get("VACCINE_STATUS").toString().equalsIgnoreCase("D")){
+							model.addAttribute("vaccinationPop", "Y");
+						} else if (vacInfo.get("VACCINE_STATUS").toString().equalsIgnoreCase("P")){
+							model.addAttribute("vaccinationPop", "Y");
+							model.addAttribute("vac2ndDosePop", "Y");
+						}
+					}
+				} else {
+					session.setAttribute("vaccinationPop", "Y");
+				}
+			}*/
 		}
 
 		return ResponseEntity.ok(message);
@@ -692,5 +732,102 @@ public class LoginController {
 	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 	    return ResponseEntity.ok(message);
+	}
+
+	/**
+	 * Added for Vaccination document upload
+	 *
+	 * @Date Sep 12, 2021
+	 * @Author HQIT-HUIDING
+	 * @param request
+	 * @param params
+	 * @param model
+	 * @param sessionVO
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/attachFileUpload.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> attachFileUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+
+		String err = "";
+		String code = "";
+		List<String> seqs = new ArrayList<>();
+
+		//LocalDate date = LocalDate.now();
+		//String year    = String.valueOf(date.getYear());
+		//String month   = String.format("%02d",date.getMonthValue());
+
+		String subPath = File.separator + "login"
+		               + File.separator + "vaccination";
+		               //+ File.separator + CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT3);
+
+		try{
+			 Set set = request.getFileMap().entrySet();
+			 Iterator i = set.iterator();
+
+			 while(i.hasNext()) {
+			     Map.Entry me = (Map.Entry)i.next();
+			     String key = (String)me.getKey();
+			     seqs.add(key);
+			 }
+
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadImageFilesWithCompress(request, uploadDir, subPath , AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+
+		LOGGER.debug("list.size : {}", list.size());
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+		loginService.insertAttachDoc(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs);
+
+		params.put("attachFiles", list);
+		code = AppConstants.SUCCESS;
+		}catch(ApplicationException e){
+			err = e.getMessage();
+			code = AppConstants.FAIL;
+		}
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(code);
+		message.setData(params);
+		message.setMessage(err);
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/vaccineInfoPop.do")
+	public String vaccineInfoPop (@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+		EgovMap vacInfo = loginService.getVaccineInfo(sessionVO.getMemId());
+
+		model.addAttribute("vacInfo", vacInfo);
+
+		return "/login/vaccineInfoPop";
+	}
+
+	@RequestMapping(value = "/vaccineInfoSave.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> vaccineInfoSave(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO)
+	          throws Exception {
+
+		LOGGER.info("####params: " + params.toString());
+		String memId = sessionVO.getMemId();
+		int userId = sessionVO.getUserId();
+
+		LOGGER.info("########memId: " + memId);
+		LOGGER.info("########userId: " + userId);
+
+		int result = loginService.insertVaccineInfo(params, userId, memId);
+
+
+		ReturnMessage message = new ReturnMessage();
+		if (result > 0){
+    	    message.setCode(AppConstants.SUCCESS);
+    	    message.setMessage("Successful");
+		} else {
+			message.setCode(AppConstants.FAIL);
+    	    message.setMessage("Failed");
+		}
+
+	    return ResponseEntity.ok(message);
+
 	}
 }
