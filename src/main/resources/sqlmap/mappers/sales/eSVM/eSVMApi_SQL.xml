@@ -4,7 +4,7 @@
 
     <select id="selectQuotationList" parameterType="Map" resultType="egovMap">
         <![CDATA[
-        /* [com.coway.trust.biz.sales.eKeyInApi.impl.EKeyInApiMapper.selecteKeyInList] 20191209 - KR JAEMAJEM */
+        /* [com.coway.trust.biz.sales.eSVMApi.impl.eSVMApiMapper.selectQuotationList] */
         SELECT
             A.SRV_MEM_QUOT_ID SVM_QUOT_ID,
             E.PSM_ID,
@@ -26,7 +26,7 @@
             END STATUS,
             CASE WHEN A.SRV_QUOT_STUS_ID = 1 THEN 1
                  WHEN A.SRV_QUOT_STUS_ID = 4 AND E.STUS IS NULL THEN 4
-                 WHEN A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 1 THEN 1
+                 WHEN A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 1 THEN 104
                  WHEN A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 5 THEN 4
                  WHEN A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 6 THEN 6
                  WHEN A.SRV_QUOT_STUS_ID = 8 THEN 8
