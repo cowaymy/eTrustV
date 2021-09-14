@@ -1024,4 +1024,89 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override public void cffItemInsert(Map<String, Object> params){ commissionCalculationMapper.cffItemInsert(params); }
 	@Override public void cffItemUpdate(Map<String, Object> params){ commissionCalculationMapper.cffItemUpdate(params); }
 	@Override public int deactivateCffCheck(String uploadId){return commissionCalculationMapper.deactivateCffCheck(uploadId);}
+
+	@Override
+	public List<EgovMap> nonIncentiveType(Map<String, Object> params) {
+		return commissionCalculationMapper.nonIncentiveType(params);
+	}
+	@Override
+	public List<EgovMap> nonIncentiveSample(Map<String, Object> params) {
+		return commissionCalculationMapper.nonIncentiveSample(params);
+	}
+	@Override
+	public void insertNonIncentiveMaster(Map<String, Object> params) {
+		commissionCalculationMapper.insertNonIncentiveMaster(params);
+	}
+	@Override
+	public String selectNonIncentiveUploadId(Map<String, Object> params) {
+		return commissionCalculationMapper.selectNonIncentiveUploadId(params);
+	}
+	@Override
+	public void insertNonIncentiveDetail(Map<String, Object> params) {
+		commissionCalculationMapper.insertNonIncentiveDetail(params);
+	}
+	@Override
+	public void callNonIncentiveDetail(int uploadId) {
+		commissionCalculationMapper.callNonIncentiveDetail(uploadId);
+	}
+	@Override
+	public List<EgovMap> nonIncentiveTargetList(Map<String, Object> params) {
+		return commissionCalculationMapper.nonIncentiveTargetList(params);
+	}
+	@Override
+	 public Map<String, Object> nonIncentiveMasterDetail(int uploadId){
+		return commissionCalculationMapper.nonIncentiveMasterDetail(uploadId);
+	}
+	@Override
+	 public int nonIncentiveItemCnt(Map<String, Object> params){
+		return commissionCalculationMapper.nonIncentiveItemCnt(params);
+	}
+	@Override
+	public List<EgovMap> nonIncentiveItemList(Map<String, Object> params) {
+		return commissionCalculationMapper.nonIncentiveItemList(params);
+	}
+	@Override
+	 public Map<String, Object> nonIncentiveItemAddMem(Map<String, Object> params){
+		return commissionCalculationMapper.nonIncentiveItemAddMem(params);
+	}
+	@Override
+	 public int cntNonIncentiveMem(Map<String, Object> params){
+		return commissionCalculationMapper.cntNonIncentiveMem(params);
+	}
+	@Override
+	 public int cntUploadNonIncentiveMemberCheck(Map<String, Object> params){
+		return commissionCalculationMapper.cntUploadNonIncentiveMemberCheck(params);
+	}
+	@Override
+	public Map<String, Object> nonIncentiveUploadMember(Map<String, Object> params){
+		return commissionCalculationMapper.nonIncentiveUploadMember(params);
+	}
+	@Override
+	public void nonIncentiveItemUpdate(Map<String, Object> params){
+		commissionCalculationMapper.nonIncentiveItemUpdate(params);
+	}
+	@Override
+	public void nonIncentiveItemInsert(Map<String, Object> params){
+		commissionCalculationMapper.nonIncentiveItemInsert(params);
+	}
+	@Override
+	public void removeNonIncentiveItem(Map<String, Object> params) {
+		commissionCalculationMapper.removeNonIncentiveItem(params);
+	}
+	@Override
+	public int nonIncentiveDeactivateCheck(String uploadId){
+		return commissionCalculationMapper.nonIncentiveDeactivateCheck(uploadId);
+	}
+	@Override
+	public void nonIncentiveDeactivate(Map<String, Object> params){
+		commissionCalculationMapper.nonIncentiveDeactivate(params);
+	}
+	@Override
+	public void callNonIncentiveConfirm(Map<String, Object> params){
+		commissionCalculationMapper.callNonIncentiveConfirm(params);
+	}
+	@Override
+	public int cntNonIncentiveUploadBatch(Map<String, Object> params) {
+		return commissionCalculationMapper.cntNonIncentiveUploadBatch(params);
+	}
 }

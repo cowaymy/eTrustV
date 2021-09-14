@@ -293,4 +293,26 @@ public interface CommissionCalculationService
     void cffItemInsert(Map<String, Object> params);
     void cffItemUpdate(Map<String, Object> params);
     int deactivateCffCheck(String uploadId);
+
+    List<EgovMap> nonIncentiveType(Map<String, Object> params);
+    List<EgovMap> nonIncentiveSample(Map<String, Object> params);
+    void insertNonIncentiveMaster(Map<String, Object> params);
+    String selectNonIncentiveUploadId(Map<String, Object> params);
+    void insertNonIncentiveDetail(Map<String, Object> params);
+    void callNonIncentiveDetail(int uploadId);
+    List<EgovMap> nonIncentiveTargetList(Map<String, Object> params);
+    Map<String, Object> nonIncentiveMasterDetail(int uploadId);
+    int nonIncentiveItemCnt(Map<String, Object> params);
+    List<EgovMap> nonIncentiveItemList(Map<String, Object> params);
+    Map<String, Object> nonIncentiveItemAddMem(Map<String, Object> params);
+    int cntNonIncentiveMem(Map<String, Object> params);
+    int cntUploadNonIncentiveMemberCheck(Map<String, Object> params);
+    Map<String, Object> nonIncentiveUploadMember(Map<String, Object> params);
+    void nonIncentiveItemUpdate(Map<String, Object> params);
+    void nonIncentiveItemInsert(Map<String, Object> params);
+    void removeNonIncentiveItem(Map<String, Object> params);
+    int nonIncentiveDeactivateCheck(String uploadId);
+    void nonIncentiveDeactivate(Map<String, Object> params);
+    void callNonIncentiveConfirm(Map<String, Object> params);
+    int cntNonIncentiveUploadBatch(Map<String, Object> params);
 }

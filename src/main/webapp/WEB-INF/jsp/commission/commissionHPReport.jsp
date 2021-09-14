@@ -20,7 +20,7 @@
 			var $reportForm = $("#reportForm")[0];
 			$($reportForm).empty(); //remove children
 			$("#mConfirm").hide(); //stat
-			if (val == "1") { //CodyComm_PDF.rpt
+			if (val == "1" || val == "7") { //CodyComm_PDF.rpt
 				$("#searchForm #confirmChk").val("N");
 				$("#searchForm #mConfirm").show();
 			}
@@ -217,9 +217,45 @@
                $("#reportForm #TaskID").val(taskID);
 
 
+            }else if (type == "7") {
+                var confirmChk = $("#searchForm [name=confirmChk]").val();
+                if (salesPersonCd == "") {
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='Member Code' htmlEscape='false'/>");
+                return;
+                }else   if (confirmChk != "Y") {
+                    //Common.alert("Please key in the HP Code before confirmation");
+                    Common.alert("<spring:message code='commission.alert.report.enterHpCode'/>");
+                    return;
+                }
+
+                 var d = new Date();
+                 var h = d.getDate();
+                 var i = d.getHours();
+                 if(h == 1 || h == 2 || h == 3){
+                     if(8 < i && i < 18){
+                         Common.alert("This report cannot be generated on 1st, 2nd, and 3rd day of every month during working hours from 9am - 6pm");
+                         return;
+                     }
+
+                 }
+
+                  option = {
+                          isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+                        };
+
+                reportFileName = "/commission/HPNonIncntRawData_Excel.rpt"; //reportFileName
+                $($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
+                reportDownFileName = "HPNonIncnt_" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+                $("#reportForm #Memcode").val(salesPersonCd);
+                $("#reportForm #Month").val(month);
+                $("#reportForm #Year").val(year);
+                $("#reportForm #TaskID").val(taskID);
             }
-
-
 
 			//report info
 			if (reportFileName == "" || reportDownFileName == "" || reportViewType == "") {
@@ -297,6 +333,7 @@
 									<option value="4">HP Comm Calculation</option>
 									<option value="5">HP SHI Index Raw</option>
 									<option value="6">HP Rental Commission Raw</option>
+									<option value="7">HP Non-Monetary Incentive</option>
 								</c:if>
 						</select></td>
 					</tr>

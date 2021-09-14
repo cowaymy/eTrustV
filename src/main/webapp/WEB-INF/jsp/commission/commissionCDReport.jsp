@@ -20,7 +20,7 @@
             var $reportForm = $("#reportForm")[0];
             $($reportForm).empty(); //remove children
             $("#mConfirm").hide(); //stat
-            if (val == "1") { //CodyComm_PDF.rpt
+            if (val == "1" || val == "11") { //CodyComm_PDF.rpt
                 $("#searchForm #confirmChk").val("N");
                 $("#searchForm #mConfirm").show();
             }
@@ -259,7 +259,42 @@ console.log(year);
               $("#reportForm #V_COMM_DT").val(cmmDt.substring(3)+cmmDt.substring(0, 2)+"01");
               $("#reportForm #V_TASK_ID").val(taskID);
 
-          }
+          }else if (type == "11") {
+                var confirmChk = $("#searchForm [name=confirmChk]").val();
+                if (salesPersonCd == "") {
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='Member Code' htmlEscape='false'/>");
+                return;
+              }else   if (confirmChk != "Y") {
+                  Common.alert("<spring:message code='commission.alert.report.enterCodyCode'/>");
+                    //Common.alert("Please key in the Cody Code before confirmation");
+                    return;
+                }
+
+                var d = new Date();
+                var h = d.getDate();
+                var i = d.getHours();
+                if(h == 1 || h == 2 || h == 3){
+                    if(8 < i && i < 18){
+                        Common.alert("This report cannot be generated on 1st, 2nd, and 3rd day of every month during working hours from 9am - 6pm");
+                        return;
+                    }
+
+                }
+                reportFileName = "/commission/CDNonIncntRawData_Excel.rpt"; //reportFileName
+                reportDownFileName = "CDNonIncnt_" + today; //report name
+                reportViewType = "EXCEL"; //viewType
+
+                //set parameters
+                $($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
+
+                $("#reportForm #Memcode").val(salesPersonCd);
+                $("#reportForm #Month").val(month);
+                $("#reportForm #Year").val(year);
+                $("#reportForm #TaskID").val(taskID);
+            }
 
             //report info
             if (reportFileName == "" || reportDownFileName == "" || reportViewType == "") {
@@ -272,10 +307,10 @@ console.log(year);
             $("#reportForm #reportDownFileName").val(reportDownFileName);
             $("#reportForm #viewType").val(reportViewType);
 
-            if(type != "10")
-            	var option = { isProcedure : false };
+            if(type == "10" || type == "11")
+            	var option = { isProcedure : true };
             else{
-            	var option = { isProcedure : true }
+            	var option = { isProcedure : false }
             }
 
             Common.report("reportForm", option);
@@ -343,6 +378,7 @@ console.log(year);
 	                                <option value="7">Cody SHI Index Raw</option>
 	                                <option value="8">Cody Manager SHI Index Raw</option>
 	                                <option value="10">Cody MBO Raw</option>
+	                                <option value="11">Cody Non-Monetary Incentive</option>
                                 </c:if>
                         </select></td>
                     </tr>

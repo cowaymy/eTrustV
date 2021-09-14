@@ -20,7 +20,7 @@
             var $reportForm = $("#reportForm")[0];
             $($reportForm).empty(); //remove children
             $("#mConfirm").hide(); //stat
-            if (val == "1") { //ctComm_PDF.rpt
+            if (val == "1" || val == "6") { //ctComm_PDF.rpt
                 $("#searchForm #confirmChk").val("N");
                 $("#searchForm #mConfirm").show();
             }
@@ -163,6 +163,32 @@
 
                 $("#reportForm #TaskID").val(taskID);
 
+           } else if (type == "6") {
+               var confirmChk = $("#searchForm [name=confirmChk]").val();
+
+               if (salesPersonCd == "") {
+                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='Member Code' htmlEscape='false'/>");
+                 return;
+               }else   if (confirmChk != "Y") {
+                   Common.alert("Please key in the HT Code before confirmation");
+                   //Common.alert("<spring:message code='commission.alert.report.enterCtCode'/>");
+                   return;
+               }
+
+               reportFileName = "/commission/HTNonIncntRawData_Excel.rpt"; //reportFileName
+               reportDownFileName = "HTNonIncnt" + today; //report name
+               reportViewType = "EXCEL"; //viewType
+
+               //set parameters
+               $($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');
+               $($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
+               $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
+               $($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
+
+               $("#reportForm #Memcode").val(salesPersonCd);
+               $("#reportForm #Month").val(month);
+               $("#reportForm #Year").val(year);
+               $("#reportForm #TaskID").val(taskID);
            }
 
             //report info
@@ -177,9 +203,12 @@
             $("#reportForm #viewType").val(reportViewType);
 
             //  report 호출
-            var option = {
-                isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
-            };
+            if(type == "6")
+                var option = { isProcedure : true };
+            else{
+                var option = { isProcedure : false }
+            }
+
             Common.report("reportForm", option);
             $("#searchForm #confirmChk").val("N");
 
@@ -240,6 +269,7 @@
                                     <option value="3">Homecare Technician Manager Commission</option>
                                     <option value="4">Homecare Technician Comm Calculation</option>
                                     <option value="5">Homecare Technician Manager Comm Calculation</option>
+                                    <option value="6">Homecare Technician Non-Monetary Incentive</option>
                                 </c:if>
                         </select></td>
                     </tr>

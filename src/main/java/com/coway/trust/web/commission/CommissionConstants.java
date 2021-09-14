@@ -170,4 +170,13 @@ public class CommissionConstants {
 
 	public static final int COMIS_INCO_YEAR = 2016; // commission Member IncomeStatement Start Year
 
+	public static final String COMIS_NONMON_SAMPLE_CD = "477";
+	public static final String COMIS_NONMON_SAMPLE_HP = "478";
+	public static final String COMIS_NONMON_SAMPLE_HT = "479";
+	public static final String COMIS_NONMON_INCENTIVE = "6465";
+	public static final String COMIS_NONMON_INCENTIVE_ACTIVE = "1";
+	public static final String COMIS_NONMON_INCENTIVE_REMOVE = "8";
+	public static final String COMIS_NONMON_INCENTIVE_VALID = "4";
+	public static final String COMIS_NONMON_INCENTIVE_INVALID = "21";
+
 }
