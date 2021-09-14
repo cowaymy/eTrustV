@@ -197,6 +197,11 @@ public class BudgetController {
         // Hardcode for Ivan Liew and Shawn to view Cody Planning - 20210517
         if(sessionVO.getUserId() == 379 || sessionVO.getUserId() == 22141) {
             params.put("costCentr2", "D1201");
+            
+            // Hardcode for Shaw to view Homecare (Changed to service innovation) (to remove end of 2021) - 20210914
+            if(sessionVO.getUserId() == 22141) {
+                params.put("costCentr3", "F1001");
+            }
         }
 
         // Hardcode for Ee Vonne and Lee Ting to view D1303 - 20210623
@@ -397,6 +402,11 @@ public class BudgetController {
         // Hardcode for Ivan Liew and Shawn to view Cody Planning - 20210517
         if(sessionVO.getUserId() == 379 || sessionVO.getUserId() == 22141) {
             params.put("costCentr2", "D1201");
+            
+            // Hardcode for Shaw to view Homecare (Changed to service innovation) (to remove end of 2021) - 20210914
+            if(sessionVO.getUserId() == 22141) {
+                params.put("costCentr3", "F1001");
+            }
         }
 
         // Hardcode for Ee Vonne and Lee Ting to view D1303 - 20210623
@@ -967,6 +977,11 @@ public class BudgetController {
         // Hardcode for Ivan Liew and Shawn to view Cody Planning - 20210517
         if(sessionVO.getUserId() == 379 || sessionVO.getUserId() == 22141) {
             params.put("costCentr2", "D1201");
+            
+            // Hardcode for Shaw to view Homecare (Changed to service innovation) (to remove end of 2021) - 20210914
+            if(sessionVO.getUserId() == 22141) {
+                params.put("costCentr3", "F1001");
+            }
         }
 
         // Hardcode for Ee Vonne and Lee Ting to view D1303 - 20210623
