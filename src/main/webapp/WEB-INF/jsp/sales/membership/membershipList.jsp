@@ -102,6 +102,19 @@
 	             return ;
 	         }
 
+	        if(FormUtil.isEmpty($('#MBRSH_CRT_DT').val()) || FormUtil.isEmpty($('#MBRSH_END_DT').val())) {
+	        	  Common.alert("<spring:message code="sal.alert.msg.keyInMemNoOrdNoCrtDt" />");
+	              return ;
+	        } else {
+                var diffDay = fn_diffDate($('#MBRSH_CRT_DT').val(), $('#MBRSH_END_DT').val());
+                if(diffDay > 31|| diffDay < 0) {
+                   Common.alert("<spring:message code="sal.alert.msg.srchPeriodDt" />");
+                   return;
+                }
+            }
+
+
+
         Common.ajax("GET", "/sales/membership/selectMembershipList", $("#listSForm").serialize(), function(result) {
 
         	 console.log("성공.");
@@ -109,6 +122,20 @@
 
             AUIGrid.setGridData(gridID, result);
         });
+    }
+
+
+    function fn_diffDate(startDt, endDt) {
+        var arrDt1 = startDt.split("/");
+        var arrDt2 = endDt.split("/");
+
+        var dt1 = new Date(arrDt1[2], arrDt1[1]-1, arrDt1[0]);
+        var dt2 = new Date(arrDt2[2], arrDt2[1]-1, arrDt2[0]);
+
+        var diff = new Date(dt2 - dt1);
+        var day = diff/1000/60/60/24;
+
+        return day;
     }
 
 
@@ -391,9 +418,17 @@ function fn_clear(){
 	<input type="text" title=""  id="ORD_NO"  name="ORD_NO" placeholder="Order Number" class="w100p" />
 	</td>
 	<th scope="row"><spring:message code="sal.text.createDate" /><span class="must">*</span></th>
-	<td>
-	<input type="text" title="Create start Date"   id="MBRSH_CRT_DT" name="MBRSH_CRT_DT" placeholder="DD/MM/YYYY" class="j_date w100p" />
-	</td>
+
+	   <td>
+    <div class="date_set w100p"><!-- date_set start -->
+    <p><input id="MBRSH_CRT_DT" name="MBRSH_CRT_DT" type="text" value="" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <span>To</span>
+    <p><input id="MBRSH_END_DT" name="MBRSH_END_DT" type="text" value="" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    </div><!-- date_set end -->
+    </td>
+
+
+
 </tr>
 <tr>
 	<th scope="row"><spring:message code="sal.text.createBy" /></th>
