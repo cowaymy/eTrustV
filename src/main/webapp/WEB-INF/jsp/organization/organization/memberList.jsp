@@ -1,6 +1,34 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<style type="text/css">
+
+/* 커스텀 행 스타일 */
+.my-yellow-style {
+    background:#FFE400;
+    font-weight:bold;
+    color:#22741C;
+}
+
+.my-blue-style {
+    background:#8FD1FF;
+    font-weight:bold;
+    color:#22741C;
+}
+
+.my-grey-style {
+    background:#9DACB7;
+    font-weight:bold;
+    color:#22741C;
+}
+
+.my-orange-style {
+    background:#FF9B1D;
+    font-weight:bold;
+    color:#22741C;
+}
+</style>
+
 <script type="text/javaScript">
 var myGridID;
 var grpOrgList = new Array(); // Group Organization List
@@ -41,6 +69,24 @@ function fn_memberListSearch(){
         } else {
             AUIGrid.setColumnProp( myGridID, 5, { width : 0, visible : false } );
         }
+
+        // change row color by its vaccination status. Hui Ding, 14/09/2021
+        AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item){
+        	if (item.vaccineStatus == "C") { // completed vaccine
+        		return "my-yellow-style";
+        	} else if (item.vaccineStatus == "D"){
+        		if (item.reasonId == '6504' || item.reasonId == '6505') {
+        			return "my-orange-style";
+        		} else {
+        			return "my-grey-style";
+        		}
+        	} else if (item.vaccineStatus == "P"){
+        		return "my-blue-style";
+        	} else {
+        		return "";
+        	}
+        });
+
 
         AUIGrid.setGridData(myGridID, result);
     });
@@ -988,6 +1034,13 @@ $(function() {
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
     <li><p class="btn_grid"><a href="#">ADD</a></p></li> -->
 </ul>
+
+<section>
+<span style="color:#8FD1FF;font-weight: bold; font-size:15px;"> Partially Completed Vaccination    </span> |
+<span style="color:#FFE400;font-weight: bold; font-size:15px;"> Completed Vaccination    </span> |
+<span style="color:#9DACB7;font-weight: bold; font-size:15px;"> Pregnant/Allergy/Pending    </span> |
+<span style="color:#FF9B1D;font-weight: bold; font-size:15px;"> Don't want/ Not ready    </span>
+</section>
 
 <article class="grid_wrap">
     <!-- grid_wrap start -->

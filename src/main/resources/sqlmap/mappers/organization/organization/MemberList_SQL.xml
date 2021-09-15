@@ -145,7 +145,10 @@
             project1.CRT_DT,
             project1.ADDRESS,
             project1.GRP_CODE,
-             project1.PV_YEAR   || ' / ' ||  TO_CHAR(project1.PV_MONTH,'00') AS LAST_ACT_DT
+             project1.PV_YEAR   || ' / ' ||  TO_CHAR(project1.PV_MONTH,'00') AS LAST_ACT_DT,
+
+             project1.VACCINE_STATUS,
+             project1.REASON_ID
 
             FROM ( SELECT Project1.C1 C1,
                      Project1.MEM_ID MEM_ID,
@@ -169,6 +172,9 @@
                     project1.GRP_CODE,
                     project1.PV_MONTH ,
                     project1.PV_YEAR ,
+
+                    project1.VACCINE_STATUS,
+                    project1.REASON_ID,
 
                      row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
 
@@ -215,7 +221,10 @@
                     as ADDRESS,
                     Extent12.GRP_CODE ,
                     B.PV_MONTH ,
-                    B.PV_YEAR
+                    B.PV_YEAR,
+                    /*vaccination information */
+                    V.VACCINE_STATUS,
+                    V.REASON_ID
 
                     FROM   ORG0001D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT*/
                     INNER JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
@@ -229,6 +238,7 @@
                     LEFT JOIN SYS0015M Extent13 ON Extent1.COUNTRY = Extent13.CNTY_ID
                     LEFT JOIN SYS0035M Extent14 ON Extent1.STATE = Extent14.STATE_ID
                     LEFT JOIN SYS0039M Extent15 ON Extent1.STATE = Extent15.AREA_STATE_ID AND Extent1.AREA = Extent15.AREA_ID
+                    LEFT JOIN ORG0040D V ON V.MEM_ID = Extent1.MEM_ID /* Vaccination info */
 
                     LEFT JOIN (SELECT * FROM (
                     SELECT B.* , ROW_NUMBER() OVER (PARTITION BY MEM_ID ORDER BY SALES_ORD_ID DESC) ITM_ROWS
