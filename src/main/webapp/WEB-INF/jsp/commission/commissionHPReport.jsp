@@ -20,7 +20,7 @@
 			var $reportForm = $("#reportForm")[0];
 			$($reportForm).empty(); //remove children
 			$("#mConfirm").hide(); //stat
-			if (val == "1" || val == "7") { //CodyComm_PDF.rpt
+			if (val == "1") { //CodyComm_PDF.rpt
 				$("#searchForm #confirmChk").val("N");
 				$("#searchForm #mConfirm").show();
 			}
@@ -218,15 +218,6 @@
 
 
             }else if (type == "7") {
-                var confirmChk = $("#searchForm [name=confirmChk]").val();
-                if (salesPersonCd == "") {
-                Common.alert("<spring:message code='sys.common.alert.validation' arguments='Member Code' htmlEscape='false'/>");
-                return;
-                }else   if (confirmChk != "Y") {
-                    //Common.alert("Please key in the HP Code before confirmation");
-                    Common.alert("<spring:message code='commission.alert.report.enterHpCode'/>");
-                    return;
-                }
 
                  var d = new Date();
                  var h = d.getDate();
@@ -244,14 +235,14 @@
                         };
 
                 reportFileName = "/commission/HPNonIncntRawData_Excel.rpt"; //reportFileName
-                $($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');
+                //$($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');
                 $($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
                 $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
                 $($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
                 reportDownFileName = "HPNonIncnt_" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
-                $("#reportForm #Memcode").val(salesPersonCd);
+                //$("#reportForm #Memcode").val(salesPersonCd);
                 $("#reportForm #Month").val(month);
                 $("#reportForm #Year").val(year);
                 $("#reportForm #TaskID").val(taskID);
