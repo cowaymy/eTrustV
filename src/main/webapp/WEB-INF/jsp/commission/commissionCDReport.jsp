@@ -298,7 +298,7 @@ console.log(year);
             $("#reportForm #reportDownFileName").val(reportDownFileName);
             $("#reportForm #viewType").val(reportViewType);
 
-            if(type == "10" || type == "11")
+            if(type == "10" || type == "11" || type == "1")
             	var option = { isProcedure : true };
             else{
             	var option = { isProcedure : false }
