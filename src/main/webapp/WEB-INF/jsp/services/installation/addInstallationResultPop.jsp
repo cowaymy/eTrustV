@@ -469,9 +469,9 @@
       }
 
       //stkId for LUCY PLUS = 1907
-      if("${installResult.installStkId}" == 1907 && "${orderInfo.appTypeId}" != "144"){
+     /*  if("${installResult.installStkId}" == 1907 && "${orderInfo.appTypeId}" != "144"){
               msg += validationForLucyPlusWhenCompleted();
-      }
+      } */
 
       var addedRowItems;
       // Added for INS AS filter/ spare part list
@@ -512,9 +512,9 @@
             }
 
         //stkId for LUCY PLUS = 1907
-          if("${installResult.installStkId}" == 1907){
+       /*    if("${installResult.installStkId}" == 1907){
         	  msg += validationForLucyPlusWhenFail();
-          }
+          } */
 
           if ( $("#psiRcd").val() == "") {
             msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
