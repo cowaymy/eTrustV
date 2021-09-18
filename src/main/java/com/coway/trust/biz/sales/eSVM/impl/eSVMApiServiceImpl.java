@@ -19,10 +19,13 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiDto;
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiForm;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.biz.sales.eSVM.eSVMApiService;
 import com.coway.trust.biz.sales.eSVM.impl.eSVMApiMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -571,4 +574,92 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         return rtn;
     }
 
+    @Override
+    public int insertUploadPaymentFile(List<FileVO> list, eSVMApiDto param) {
+        if(null == param) {
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+
+        if (CommonUtils.isEmpty(param.getUserId())) {
+            throw new ApplicationException(AppConstants.FAIL, "userId value does not exist.");
+        }
+
+        if (CommonUtils.isEmpty(param.getFileKeySeq())) {
+            throw new ApplicationException(AppConstants.FAIL, "fileKeySeq value does not exist.");
+        }
+
+        Map<String, Object> loginInfoMap = new HashMap<String, Object>();
+        loginInfoMap.put("_USER_ID", param.getUserId());
+        LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
+        if (null == loginVO || CommonUtils.isEmpty(loginVO.getUserId())) {
+            throw new ApplicationException(AppConstants.FAIL, "UserID is null.");
+        }
+
+        int fileGroupKey = 0;
+        if (CommonUtils.isEmpty(param.getAtchFileGrpId()) || param.getAtchFileGrpId() == 0) {
+            fileGroupKey = eSVMApiMapper.selectFileGroupKey();
+        } else {
+            fileGroupKey = param.getAtchFileGrpId();
+        }
+
+        for (FileVO data : list) {
+            Map<String, Object> sys0071D = new HashMap<String, Object>();
+            sys0071D.put("atchFileName", data.getAtchFileName());
+            sys0071D.put("fileSubPath", data.getFileSubPath());
+            sys0071D.put("physiclFileName", data.getPhysiclFileName());
+            sys0071D.put("fileExtsn", data.getFileExtsn());
+            sys0071D.put("fileSize", data.getFileSize());
+            sys0071D.put("filePassword", null);
+            sys0071D.put("fileUnqKey", null);
+            sys0071D.put("fileKeySeq", param.getFileKeySeq());
+
+            int saveCnt = eSVMApiMapper.insertSYS0071D(sys0071D);
+            if (saveCnt == 0) {
+                throw new ApplicationException(AppConstants.FAIL, "Insert Exception.");
+            }
+            if (CommonUtils.isEmpty(sys0071D.get("atchFileId"))) {
+                throw new ApplicationException(AppConstants.FAIL, "atchFileId value does not exist.");
+            }
+
+            Map<String, Object> sys0070M = new HashMap<String, Object>();
+            sys0070M.put("atchFileGrpId", fileGroupKey);
+            sys0070M.put("atchFileId", sys0071D.get("atchFileId"));
+            sys0070M.put("chenalType", FileType.MOBILE.getCode());
+            sys0070M.put("crtUserId", loginVO.getUserId());
+            sys0070M.put("updUserId", loginVO.getUserId());
+
+            saveCnt = eSVMApiMapper.insertSYS0070M(sys0070M);
+            if (saveCnt == 0) {
+                throw new ApplicationException(AppConstants.FAIL, "Insert Exception.");
+            }
+        }
+
+        return fileGroupKey;
+    }
+
+    @Override
+    public eSVMApiDto insertPSM(eSVMApiForm param) throws Exception {
+        if(null == param) {
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+        logger.debug("param :: {}", param);
+
+        // get PSM_ID, PSM_NO and set into DTO
+        int psmId = eSVMApiMapper.getSal298Seq();
+        param.setPsmId(psmId);
+
+        String psmDocNo = eSVMApiMapper.getPsmDocNo();
+        param.setPsmNo(psmDocNo);
+
+        // insert SAL0298D
+        eSVMApiMapper.insertSal298D(eSVMApiForm.createMap(param));
+
+        // insert PAY0312D
+        eSVMApiMapper.insertPay312D(eSVMApiForm.createMap(param));
+
+        eSVMApiDto rtn = new eSVMApiDto();
+        rtn.setPsmNo(psmDocNo);
+
+        return rtn;
+    }
 }

@@ -66,4 +66,18 @@ public interface eSVMApiMapper {
     void cancelSal93(Map<String, Object> params);
 
     void cancelSal298(Map<String, Object> params);
+
+    int selectFileGroupKey();
+
+    int insertSYS0071D(Map<String, Object> param);
+
+    int insertSYS0070M(Map<String, Object> param);
+
+    int getSal298Seq();
+
+    String getPsmDocNo();
+
+    void insertSal298D(Map<String, Object> param);
+
+    void insertPay312D(Map<String, Object> param);
 }

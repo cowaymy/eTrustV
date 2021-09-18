@@ -1,5 +1,6 @@
 package com.coway.trust.api.mobile.sales.eSVM;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class eSVMApiDto {
     private String msg;
     private String strprmodt;
     private int custCntId;
+    private String userId;
 
     /* Filter Listing */
     private int srvFilterId;
@@ -131,6 +133,11 @@ public class eSVMApiDto {
     private String packageDesc;
     private String packageInfoDesc;
     private String filterPromoDesc;
+
+    /* SMQ convert sales */
+    private int atchFileGrpId;
+    private String subPath;
+    private String fileKeySeq;
 
     private List<eSVMApiDto> productFilterList;
     private List<eSVMApiDto> packageComboList;
@@ -424,6 +431,14 @@ public class eSVMApiDto {
 
     public void setCustCntId(int custCntId) {
         this.custCntId = custCntId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public int getSrvFilterId() {
@@ -928,5 +943,29 @@ public class eSVMApiDto {
 
     public void setSvmFilterList(List<eSVMApiDto> svmFilterList) {
         this.svmFilterList = svmFilterList;
+    }
+
+    public int getAtchFileGrpId() {
+        return atchFileGrpId;
+    }
+
+    public void setAtchFileGrpId(int atchFileGrpId) {
+        this.atchFileGrpId = atchFileGrpId;
+    }
+
+    public String getSubPath() {
+        return subPath;
+    }
+
+    public void setSubPath(String subPath) {
+        this.subPath = subPath;
+    }
+
+    public String getFileKeySeq() {
+        return fileKeySeq;
+    }
+
+    public void setFileKeySeq(String fileKeySeq) {
+        this.fileKeySeq = fileKeySeq;
     }
 }

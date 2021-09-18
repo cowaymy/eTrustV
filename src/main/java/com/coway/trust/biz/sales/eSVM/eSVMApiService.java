@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiDto;
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiForm;
+import com.coway.trust.biz.common.FileVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -30,4 +31,8 @@ public interface eSVMApiService {
     eSVMApiDto saveQuotationReq(eSVMApiForm param) throws Exception;
 
     eSVMApiDto cancelSMQ(eSVMApiForm param) throws Exception;
+
+    int insertUploadPaymentFile(List<FileVO> list, eSVMApiDto param);
+
+    eSVMApiDto insertPSM(eSVMApiForm param) throws Exception;
 }

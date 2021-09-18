@@ -1,5 +1,6 @@
 package com.coway.trust.api.mobile.sales.eSVM;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,6 +97,28 @@ public class eSVMApiForm {
         params.put("srvMemPacTaxes", vo.getSrvMemPacTaxes());
         params.put("srvMemBSTaxes", vo.getSrvMemBSTaxes());
         params.put("sal93Seq", vo.getSal93Seq());
+        params.put("atchFileGrpId", vo.getAtchFileGrpId());
+        params.put("subPath", vo.getSubPath());
+        params.put("fileKeySeq", vo.getFileKeySeq());
+        params.put("payMode", vo.getPayMode());
+        params.put("otstndAmt", vo.getOtstndAmt());
+        params.put("payAmt", vo.getPayAmt());
+        params.put("slipNo", vo.getSlipNo());
+        params.put("issuBankId", vo.getIssuBankId());
+        params.put("chqDt", vo.getChqDt());
+        params.put("chqNo", vo.getChqNo());
+        params.put("sms1", vo.getSms1());
+        params.put("sms2", vo.getSms2());
+        params.put("email1", vo.getEmail1());
+        params.put("email2", vo.getEmail2());
+        params.put("cardNo", vo.getCardNo());
+        params.put("approvalNo", vo.getApprovalNo());
+        params.put("crcName", vo.getCrcName());
+        params.put("transactionDate", vo.getTransactionDate());
+        params.put("expiryDate", vo.getExpiryDate());
+        params.put("cardMode", vo.getCardMode());
+        params.put("merchantBank", vo.getMerchantBank());
+        params.put("cardBrand", vo.getCardBrand());
         return params;
     }
 
@@ -187,6 +210,32 @@ public class eSVMApiForm {
     private String srvMemPacTaxes;
     private String srvMemBSTaxes;
     private String sal93Seq;
+
+    /* SMQ convert sales */
+    private int atchFileGrpId;
+    private String subPath;
+    private String fileKeySeq;
+//    private eSVMApiDto saveData;
+
+    private int payMode;
+    private BigDecimal otstndAmt;
+    private BigDecimal payAmt;
+    private String slipNo;
+    private int issuBankId;
+    private String chqDt;
+    private String chqNo;
+    private String sms1;
+    private String sms2;
+    private String email1;
+    private String email2;
+    private String cardNo;
+    private String approvalNo;
+    private String crcName;
+    private String transactionDate;
+    private String expiryDate;
+    private String cardMode;
+    private String merchantBank;
+    private String cardBrand;
 
     public String getFlag() {
         return flag;
@@ -834,5 +883,189 @@ public class eSVMApiForm {
 
     public void setSal93Seq(String sal93Seq) {
         this.sal93Seq = sal93Seq;
+    }
+
+    public int getAtchFileGrpId() {
+        return atchFileGrpId;
+    }
+
+    public void setAtchFileGrpId(int atchFileGrpId) {
+        this.atchFileGrpId = atchFileGrpId;
+    }
+
+    public String getSubPath() {
+        return subPath;
+    }
+
+    public void setSubPath(String subPath) {
+        this.subPath = subPath;
+    }
+
+    public String getFileKeySeq() {
+        return fileKeySeq;
+    }
+
+    public void setFileKeySeq(String fileKeySeq) {
+        this.fileKeySeq = fileKeySeq;
+    }
+
+//    public eSVMApiDto getSaveData() {
+//        return saveData;
+//    }
+//
+//    public void setSaveData(eSVMApiDto saveData) {
+//        this.saveData = saveData;
+//    }
+
+    public int getPayMode() {
+        return payMode;
+    }
+
+    public void setPayMode(int payMode) {
+        this.payMode = payMode;
+    }
+
+    public BigDecimal getOtstndAmt() {
+        return otstndAmt;
+    }
+
+    public void setOtstndAmt(BigDecimal otstndAmt) {
+        this.otstndAmt = otstndAmt;
+    }
+
+    public BigDecimal getPayAmt() {
+        return payAmt;
+    }
+
+    public void setPayAmt(BigDecimal payAmt) {
+        this.payAmt = payAmt;
+    }
+
+    public String getSlipNo() {
+        return slipNo;
+    }
+
+    public void setSlipNo(String slipNo) {
+        this.slipNo = slipNo;
+    }
+
+    public int getIssuBankId() {
+        return issuBankId;
+    }
+
+    public void setIssuBankId(int issuBankId) {
+        this.issuBankId = issuBankId;
+    }
+
+    public String getChqDt() {
+        return chqDt;
+    }
+
+    public void setChqDt(String chqDt) {
+        this.chqDt = chqDt;
+    }
+
+    public String getChqNo() {
+        return chqNo;
+    }
+
+    public void setChqNo(String chqNo) {
+        this.chqNo = chqNo;
+    }
+
+    public String getSms1() {
+        return sms1;
+    }
+
+    public void setSms1(String sms1) {
+        this.sms1 = sms1;
+    }
+
+    public String getSms2() {
+        return sms2;
+    }
+
+    public void setSms2(String sms2) {
+        this.sms2 = sms2;
+    }
+
+    public String getEmail1() {
+        return email1;
+    }
+
+    public void setEmail1(String email1) {
+        this.email1 = email1;
+    }
+
+    public String getEmail2() {
+        return email2;
+    }
+
+    public void setEmail2(String email2) {
+        this.email2 = email2;
+    }
+
+    public String getCardNo() {
+        return cardNo;
+    }
+
+    public void setCardNo(String cardNo) {
+        this.cardNo = cardNo;
+    }
+
+    public String getApprovalNo() {
+        return approvalNo;
+    }
+
+    public void setApprovalNo(String approvalNo) {
+        this.approvalNo = approvalNo;
+    }
+
+    public String getCrcName() {
+        return crcName;
+    }
+
+    public void setCrcName(String crcName) {
+        this.crcName = crcName;
+    }
+
+    public String getTransactionDate() {
+        return transactionDate;
+    }
+
+    public void setTransactionDate(String transactionDate) {
+        this.transactionDate = transactionDate;
+    }
+
+    public String getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(String expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public String getCardMode() {
+        return cardMode;
+    }
+
+    public void setCardMode(String cardMode) {
+        this.cardMode = cardMode;
+    }
+
+    public String getMerchantBank() {
+        return merchantBank;
+    }
+
+    public void setMerchantBank(String merchantBank) {
+        this.merchantBank = merchantBank;
+    }
+
+    public String getCardBrand() {
+        return cardBrand;
+    }
+
+    public void setCardBrand(String cardBrand) {
+        this.cardBrand = cardBrand;
     }
 }

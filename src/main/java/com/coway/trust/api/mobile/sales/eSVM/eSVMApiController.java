@@ -15,16 +15,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.files.FileDto;
 import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiDto;
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiForm;
+import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.sales.eSVM.eSVMApiService;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
+import com.coway.trust.util.EgovFormBasedFileVo;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Api(value = "eSVMApiController", description = "eSVMApiController")
 @RestController(value = "eSVMApiController")
@@ -120,9 +126,22 @@ public class eSVMApiController {
     @ApiOperation(value = "cancelSMQ", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/cancelSMQ", method = RequestMethod.POST)
     public ResponseEntity<eSVMApiDto> cancelSMQ(@RequestBody eSVMApiForm param) throws Exception {
-      LOGGER.debug("===== cancelSMQ =====");
-      LOGGER.debug("param :: SVM_QUOT_MEM_ID", param.getSrvMemQuotId());
-      LOGGER.debug("param :: PSM_ID", param.getPsmId());
       return ResponseEntity.ok(eSVMApiService.cancelSMQ(param));
+    }
+
+    @ApiOperation(value = "insertUploadPaymentFile", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/insertUploadPaymentFile", method = RequestMethod.GET)
+    public ResponseEntity<FileDto> insertUploadPaymentFile(@ApiIgnore MultipartHttpServletRequest request, @ModelAttribute eSVMApiDto param) throws Exception {
+        List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, webUploadDir, param.getSubPath(), AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+
+        int fileGroupKey = eSVMApiService.insertUploadPaymentFile(FileVO.createList(list), param);
+        FileDto fileDto = FileDto.create(list, fileGroupKey);
+        return ResponseEntity.ok(fileDto);
+    }
+
+    @ApiOperation(value = "insertPSM", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/insertPSM", method = RequestMethod.POST)
+    public ResponseEntity<eSVMApiDto> insertPSM(@RequestBody eSVMApiForm param) throws Exception {
+        return ResponseEntity.ok(eSVMApiService.insertPSM(param));
     }
 }
