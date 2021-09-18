@@ -132,6 +132,7 @@ public class eSVMApiController {
     @ApiOperation(value = "insertUploadPaymentFile", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/insertUploadPaymentFile", method = RequestMethod.GET)
     public ResponseEntity<FileDto> insertUploadPaymentFile(@ApiIgnore MultipartHttpServletRequest request, @ModelAttribute eSVMApiDto param) throws Exception {
+        LOGGER.debug("eSVMApiController :: insertUploadPaymentFile");
         List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, webUploadDir, param.getSubPath(), AppConstants.UPLOAD_MIN_FILE_SIZE, true);
 
         int fileGroupKey = eSVMApiService.insertUploadPaymentFile(FileVO.createList(list), param);
@@ -142,6 +143,7 @@ public class eSVMApiController {
     @ApiOperation(value = "insertPSM", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/insertPSM", method = RequestMethod.POST)
     public ResponseEntity<eSVMApiDto> insertPSM(@RequestBody eSVMApiForm param) throws Exception {
+        LOGGER.debug("eSVMApiController :: insertPSM");
         return ResponseEntity.ok(eSVMApiService.insertPSM(param));
     }
 }
