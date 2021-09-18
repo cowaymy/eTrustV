@@ -1094,6 +1094,26 @@
         return isValid;
     }
 
+    function fn_checkProductQuota() {
+        var exceedQuota = false, msg = "";
+
+        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $("#ordProduct1").val() , promoId : $('#ordPromo1').val() }, function(result) {
+            if(result != null) {
+                exceedQuota = true;
+            }
+        });
+
+        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $("#ordProduct2").val() , promoId : $('#ordPromo2').val() }, function(result) {
+            if(result != null) {
+                exceedQuota = true;
+            }
+        });
+
+        if(exceedQuota == true) Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* This product has reached the quota.</b>");
+
+        return exceedQuota;
+    }
+
     // Confirm창에서 저장버튼을 눌렀을 경우.
     function fn_doSavePreOrder() {
         var vAppType    = $('#appType').val();

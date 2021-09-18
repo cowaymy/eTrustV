@@ -103,6 +103,13 @@
     <td>${orderDetail.basicInfo.ordPromoRelatedNo}</td>
 </tr>
 <tr>
+    <th scope="row"><spring:message code="sales.eligiAdvDisc" /></th>
+    <td colspan="5">
+        <c:if test="${orderDetail.basicInfo.advDisc == 1}">Yes</c:if>
+        <c:if test="${orderDetail.basicInfo.advDisc == 0}">No</c:if>
+    </td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sales.SeriacNo" /></th>
     <td>${orderDetail.installationInfo.lastInstallSerialNo}</td>
     <th scope="row"><spring:message code="sales.SirimNo" /></th>

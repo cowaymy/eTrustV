@@ -1099,6 +1099,24 @@
                 $("#promoDiscPeriod").val('');
 
                 return;
+            }else {
+                let stkId   = $('#ordProudct').val();
+                let pacId   = $('#srvPacId').val();
+                let appTypeId = $("#appType").val();
+
+                Common.ajaxSync("GET", "/sales/productMgmt/selectProductDiscontinued.do", {stkId: stkId ,pacId: pacId, appTypeId: appTypeId}, function(result) {
+                    if(result != null)
+                        Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + '<spring:message code="sales.msg.discontinuedProduct" />', "");
+                },  function(jqXHR, textStatus, errorThrown) {
+                    try {
+                        Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.failSaveOrd" /></b>');
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+
+                    alert("Fail : " + jqXHR.responseJSON.message);
+              });
             }
 
 //          $('#ordCampgn option').remove();
@@ -1779,8 +1797,8 @@ console.log("vBindingNo" + vBindingNo);
             },
             docSubmissionVOList         : GridCommon.getEditData(docGridID)
         };
-        console.log(orderVO.custBillMasterVO);
-         Common.ajax("POST", "/sales/order/registerOrder.do", orderVO, function(result) {
+        console.log(orderVO.docSubmissionVOList);
+          Common.ajax("POST", "/sales/order/registerOrder.do", orderVO, function(result) {
 
             Common.alert('<spring:message code="sal.alert.msg.ordSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>",fn_orderRegPopClose());
 
@@ -2205,6 +2223,18 @@ console.log("vBindingNo" + vBindingNo);
         return isValid;
     }
 
+    function fn_checkProductQuota() {
+        var exceedQuota = false, msg = "";
+
+        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $('#ordProudct').val() , promoId : $('#ordPromo').val() }, function(result) {
+            if(result != null) exceedQuota = true;
+        });
+
+        if(exceedQuota == true) Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* This product has reached the quota.</b>");
+
+        return exceedQuota;
+    }
+
 /*******************************************************************************
     Validation Check Logic [END]
 *******************************************************************************/
@@ -2416,6 +2446,21 @@ console.log("vBindingNo" + vBindingNo);
 
                 $("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
                 $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
+
+                /* $("#ordPrice").val(stkPriceInfo.orderPrice);
+                $("#ordPv").val(pvVal);
+                $("#ordPvGST").val(pvValGst);
+                $("#ordRentalFees").val(stkPriceInfo.orderRentalFees);
+                $("#ordPriceId").val(stkPriceInfo.priceId);
+
+                $("#orgOrdPrice").val(stkPriceInfo.orderPrice);
+                $("#orgOrdPv").val(stkPriceInfo.orderPV);
+                $("#orgOrdRentalFees").val(stkPriceInfo.orderRentalFees);
+                $("#orgOrdPriceId").val(stkPriceInfo.priceId);
+ */
+                $("#promoDiscPeriodTp").val('');
+                $("#promoDiscPeriod").val('');
+
             }
         });
     }

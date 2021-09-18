@@ -42,6 +42,8 @@
       $('#btnConfirm_RW').click(function() {
 	      console.log('!@# fn_doSaveOrder before call');
 
+	      if(fn_checkProductQuota()) return false;
+
 	      if(convToOrdYn == 'Y'){
 	          Common.ajax("GET", "/sales/order/selRcdTms.do", {preOrdId : preOrdId, rcdTms : rcdTms}, function(result) {
 	              if(result.code == "99"){

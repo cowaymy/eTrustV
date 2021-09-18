@@ -1143,6 +1143,19 @@
         return isValid;
     }
 
+    function fn_checkProductQuota() {
+        var exceedQuota = false, msg = "";
+
+        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $('#ordProudct').val() , promoId : $('#ordPromo').val() }, function(result) {
+        	if(result != null) exceedQuota = true;
+        });
+
+        if(exceedQuota == true) Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* This product has reached the quota.</b>");
+
+        return exceedQuota;
+    }
+
+
     function fn_doSavePreOrder() {
 
         var vAppType    = $('#appType').val();

@@ -58,6 +58,9 @@
     $(function(){
         $('#btnConfirm_RW').click(function() {
             if(fn_isExistESalesNo() == 'true') return false;
+
+            if(fn_checkProductQuota() == true) return false;
+
             fn_doSavePreOrder();
         });
     });

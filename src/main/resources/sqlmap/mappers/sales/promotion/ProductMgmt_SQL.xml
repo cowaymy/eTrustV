@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.promotion.impl.ProductMgmtMapper">
+
+    <select id="selectProductMgmtList" parameterType="Map" resultType="egovMap">
+      SELECT
+
+        STK_ID
+      , CASE WHEN IS_CTRL = 1 THEN 'Yes' ELSE 'No' END CONTROL
+      , NVL(DISCONTINUE,0) DISCONTINUED
+      , STK_CODE
+      , STK_DESC
+      , TO_CHAR(CTRL_START_DT,'DD/MM/YYYY') START_DATE
+      , TO_CHAR(CTRL_START_DT,'HH:MI AM') START_TIME
+      , TO_CHAR(CTRL_END_DT,'DD/MM/YYYY') END_DATE
+      , TO_CHAR(CTRL_END_DT,'HH:MI AM') END_TIME
+
+      FROM SYS0026M
+      WHERE
+          STK_TYPE_ID = 61
+          <if test='cmbControl != null and cmbControl !=""'>
+           AND IS_CTRL = #{cmbControl}
+         </if>
+         <if test='productCode != null and productCode !=""'>
+           AND UPPER(STK_CODE) LIKE '%'|| #{productCode} ||'%'
+         </if>
+         <if test='productName != null and productName !=""'>
+           AND UPPER(STK_DESC) LIKE '%'|| #{productName} ||'%'
+         </if>
+         <choose>
+            <when test='effectDt != null and effectDt !="" and effectTm != null and effectTm !="" '>
+                AND TO_DATE( #{effectDt} || #{effectTm} ,'DD/MM/YYYYHH:MI AM') BETWEEN CTRL_START_DT AND CTRL_END_DT
+            </when>
+            <when test='effectDt != null and effectDt !=""' >
+                AND TO_DATE( #{effectDt} ,'DD/MM/YYYY') BETWEEN CTRL_START_DT AND CTRL_END_DT
+            </when>
+         </choose>
+         <if test='stkId != null and stkId !=""'>
+           AND STK_ID = #{stkId}
+         </if>
+      ORDER BY STK_CTGRY_ID, STK_ID, STK_DESC
+    </select>
+
+    <select id="selectPromotionListByStkId" parameterType="Map" resultType="egovMap">
+      SELECT
+
+          PM.PROMO_ID
+        , PM.PROMO_CODE
+        , PM.PROMO_DESC
+        , PT.CODE_NAME APP_TYPE
+        , PD.CTRL_QUOTA
+        , PD.CTRL_FLAG
+
+      FROM SYS0026M S
+      JOIN SAL0018D PD ON PD.PROMO_ITM_STK_ID = S.STK_ID AND PD.PROMO_ITM_STUS_ID = 1
+      JOIN SAL0017D PM ON PM.PROMO_ID = PD.PROMO_ID
+      LEFT JOIN SYS0013M PT ON PT.CODE_ID = PM.PROMO_APP_TYPE_ID
+
+      WHERE SYSDATE BETWEEN PROMO_DT_FROM AND PROMO_DT_END
+        AND PM.PROMO_APP_TYPE_ID IN (2284,2285,2286)
+        AND STK_ID = #{stkId}
+        <if test='ctrlFlag != null and ctrlFlag != ""'>
+            AND PD.CTRL_FLAG = #{ctrlFlag}
+        </if>
+      ORDER BY PM.PROMO_APP_TYPE_ID, PM.PROMO_ID
+    </select>
+
+    <select id="selectProductDiscontinued" parameterType="Map" resultType="egovMap">
+      SELECT
+
+          STK_ID,
+          STK_CODE,
+          STK_DESC,
+          SRV_PAC_ID,
+          APP_TYPE
+
+      FROM
+      (
+          SELECT T1.STK_ID, T1.STK_CODE, T1.STK_DESC, T2.SRV_CNTRCT_PAC_ID SRV_PAC_ID, 66 APP_TYPE
+          FROM SYS0026M T1
+          JOIN SAL0082D T2 ON T2.SRV_PAC_ITM_PRODUCT_ID = T1.STK_ID AND T2.SRV_PAC_ITM_STUS_ID = 1
+          WHERE T1.STK_TYPE_ID = 61
+          AND T1.STUS_CODE_ID = 1
+          AND (T1.DISCONTINUE = 1 OR T2.DISCONTINUE = 1)
+          UNION
+          SELECT T1.STK_ID, T1.STK_CODE, T1.STK_DESC, T2.SRV_MEM_PAC_ID SRV_PAC_ID, 67 APP_TYPE
+          FROM SYS0026M T1
+          JOIN SAL0092M T2 ON T2.SRV_MEM_ITM_STK_ID = T1.STK_ID AND T2.SRV_MEM_ITM_STUS_ID = 1
+          WHERE T1.STK_TYPE_ID = 61
+          AND T1.STUS_CODE_ID = 1
+          AND (T1.DISCONTINUE = 1 OR T2.DISCONTINUE = 1)
+      ) WHERE 1 = 1
+
+      AND APP_TYPE = #{appTypeId}
+      AND SRV_PAC_ID = #{pacId}
+      AND STK_ID = #{stkId}
+    </select>
+
+    <select id="selectAdminKeyinCount" parameterType="Map" resultType="egovMap">
+      SELECT
+        COUNT(*) COUNT
+      FROM SAL0001D
+      JOIN SAL0002D ON SAL0002D.SALES_ORD_ID = SAL0001D.SALES_ORD_ID
+      WHERE NVL(SAL0001D.PRE_ORD_ID,0) = 0
+      AND SAL0001D.STUS_CODE_ID <![CDATA[ <> ]]> 8
+      AND SAL0002D.ITM_STK_ID = #{quota_stkId}
+      AND SAL0001D.SALES_DT
+        BETWEEN TO_DATE( #{quota_startDt} || #{quota_startTm} ,'DD/MM/YYYYHH:MI AM')
+            AND TO_DATE( #{quota_endDt}   || #{quota_endTm}   ,'DD/MM/YYYYHH:MI AM')
+        <if test='adminKeyinStus != null and adminKeyinStus != ""'>
+            AND SAL0001D.STUS_CODE_ID IN
+            <foreach item="item" collection="adminKeyinStus" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selecteKeyinCount" parameterType="Map" resultType="egovMap">
+      SELECT
+        COUNT(*) COUNT
+      FROM SAL0213M
+      WHERE STUS_ID <![CDATA[ <> ]]> 8
+      AND ITM_STK_ID = #{quota_stkId}
+      AND REQST_DT
+       BETWEEN TO_DATE( #{quota_startDt} || #{quota_startTm} ,'DD/MM/YYYY HH:MI AM')
+           AND TO_DATE( #{quota_endDt}   || #{quota_endTm}   ,'DD/MM/YYYY HH:MI AM')
+      <if test='ekeyinStus != null and ekeyinStus != ""'>
+        AND STUS_ID IN
+          <foreach item="item" collection="ekeyinStus" index="index" open="(" separator="," close=")">
+              #{item}
+          </foreach>
+      </if>
+    </select>
+
+    <select id="selectQuotaCount" parameterType="Map" resultType="egovMap">
+        WITH SOM AS(
+            SELECT SOM.SALES_ORD_ID, SOM.PROMO_ID, SOD.ITM_STK_ID,SOM.SALES_DT
+            FROM SAL0001D SOM
+            JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = SOM.SALES_ORD_ID
+            WHERE SOM.STUS_CODE_ID <![CDATA[ <> ]]> 8
+            AND NVL(SOM.PRE_ORD_ID,0) = 0
+        )
+        SELECT
+                  S.STK_ID
+                  , PD.PROMO_ID
+                  , PD.CTRL_QUOTA
+                  , COUNT(SOM.SALES_ORD_ID) + COUNT(EKEY.PRE_ORD_ID)+1 TOT2
+              FROM SYS0026M S
+              JOIN SAL0018D PD ON PD.PROMO_ITM_STK_ID = S.STK_ID
+              LEFT JOIN SOM ON SOM.ITM_STK_ID = S.STK_ID
+                                    AND SOM.PROMO_ID = PD.PROMO_ID
+                                    AND SOM.SALES_DT BETWEEN S.CTRL_START_DT AND S.CTRL_END_DT
+              LEFT JOIN SAL0213M EKEY ON EKEY.ITM_STK_ID = S.STK_ID
+                                    AND EKEY.PROMO_ID = PD.PROMO_ID
+                                    AND EKEY.REQST_DT BETWEEN S.CTRL_START_DT AND S.CTRL_END_DT
+                                    AND EKEY.STUS_ID   <![CDATA[ <> ]]> 8
+      WHERE S.STK_ID = #{stkId}
+      AND PD.PROMO_ID = #{promoId}
+      AND S.IS_CTRL = 1
+      AND SYSDATE BETWEEN CTRL_START_DT AND CTRL_END_DT
+      AND PD.CTRL_FLAG = 1
+      GROUP BY S.STK_ID, PD.PROMO_ID, PD.CTRL_QUOTA
+      HAVING (COUNT(SOM.SALES_ORD_ID) + COUNT(EKEY.PRE_ORD_ID))+1 > CTRL_QUOTA
+    </select>
+
+    <update id="updateProductCtrl" parameterType="Map">
+        UPDATE SYS0026M
+        SET
+        UPD_DT = SYSDATE
+        , UPD_USER_ID = #{userId}
+        , DISCONTINUE = #{modify_discontinue}
+        , IS_CTRL = #{modify_ctrl}
+        , CTRL_START_DT = TO_DATE(#{modify_startDt} || #{modify_startTm}, 'DD/MM/YYYYHH:MI AM')
+        , CTRL_END_DT = TO_DATE(#{modify_endDt} || #{modify_endTm}, 'DD/MM/YYYYHH:MI AM')
+        WHERE STK_ID = #{modify_stkId}
+    </update>
+
+    <update id="updatePromotionCtrl" parameterType="Map">
+        UPDATE SAL0018D
+        SET
+        PROMO_ITM_UPD_DT = SYSDATE
+        , PROMO_ITM_UPD_USER_ID = #{userId}
+        , CTRL_FLAG = #{ctrlFlag}
+        , CTRL_QUOTA = #{ctrlQuota}
+        WHERE PROMO_ID = #{promoId}
+        AND PROMO_ITM_STK_ID = #{stkId}
+    </update>
+</mapper>

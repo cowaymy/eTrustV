@@ -26,7 +26,8 @@
 
   $(function(){
     $('#btnConfirm_RW').click(function() {
-      console.log('!@# fn_doSaveOrder before call');
+
+      if(fn_checkProductQuota()) return false;
 
       if(convToOrdYn == 'Y'){
         Common.ajax("GET", "/sales/order/selRcdTms.do", {preOrdId : preOrdId, rcdTms : rcdTms}, function(result) {
@@ -51,7 +52,6 @@
             });
       }else{
     	  if(!$('#tabRC').hasClass("blind") && !FormUtil.checkReqValue($('#certRefFile'))) {
-              console.log("attach file start");
               var formData = Common.getFormData("fileUploadForm");
 
               Common.ajaxFile("/sales/order/gstEurCertUpload.do", formData, function(result) {

@@ -1037,7 +1037,24 @@
             if(FormUtil.isEmpty(_tagObj.val())) {
             	totSumPrice();   // 합계
                 return;
-            }
+            }else{
+                let stkId   = $("#ordProduct"+_tagNum).val();
+                let pacId   = $('#srvPacId').val();
+                let appTypeId = $("#appType").val();
+
+                Common.ajaxSync("GET", "/sales/productMgmt/selectProductDiscontinued.do", {stkId: stkId ,pacId: pacId, appTypeId: appTypeId}, function(result) {
+                    if(result != null)
+                        Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + '<spring:message code="sales.msg.discontinuedProduct" />', "");
+                },  function(jqXHR, textStatus, errorThrown) {
+                    try {
+                        Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.failSaveOrd" /></b>');
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+
+                    alert("Fail : " + jqXHR.responseJSON.message);
+              });}
 
             $('#trialNoChk').prop("checked", false).prop("disabled", true);
             $('#trialNo').addClass("readonly");
@@ -1439,6 +1456,8 @@
             Common.alert('<b>Invalid customer ID.</b>');
         }
     }
+
+
 /*******************************************************************************
     Save Logic [START]
 *******************************************************************************/
@@ -2107,6 +2126,26 @@ console.log(orderVO);
         return isValid;
     }
 
+    function fn_checkProductQuota() {
+        var exceedQuota = false, msg = "";
+
+        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $("#ordProduct1").val() , promoId : $('#ordPromo1').val() }, function(result) {
+            if(result != null) {
+                exceedQuota = true;
+            }
+        });
+
+        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $("#ordProduct2").val() , promoId : $('#ordPromo2').val() }, function(result) {
+            if(result != null) {
+                exceedQuota = true;
+            }
+        });
+
+        if(exceedQuota == true) Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* This product has reached the quota.</b>");
+
+        return exceedQuota;
+    }
+
 /*******************************************************************************
     Validation Check Logic [END]
 *******************************************************************************/
@@ -2353,6 +2392,8 @@ console.log(orderVO);
     // 합계
     function totSumPrice() {
     	// 합계
+    	console.log($("#orgOrdRentalFees1").val())
+    	console.log($("#orgOrdRentalFees2").val());
         var totOrdPrice = js.String.naNcheck($("#ordPrice1").val()) + js.String.naNcheck($("#ordPrice2").val());
         var totOrgOrdRentalFees = js.String.naNcheck($("#orgOrdRentalFees1").val()) + js.String.naNcheck($("#orgOrdRentalFees2").val());
         var totOrdRentalFees = js.String.naNcheck($("#ordRentalFees1").val()) + js.String.naNcheck($("#ordRentalFees2").val());
