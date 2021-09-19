@@ -19,13 +19,18 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiDto;
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiForm;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.EmailTemplateType;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.biz.sales.eSVM.eSVMApiService;
 import com.coway.trust.biz.sales.eSVM.impl.eSVMApiMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.LoginVO;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -41,6 +46,9 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
 
     @Autowired
     private LoginMapper loginMapper;
+
+    @Autowired
+    private AdaptorService adaptorService;
 
     @Override
     public List<EgovMap> selectQuotationList(eSVMApiForm param) throws Exception {
@@ -657,9 +665,78 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         // insert PAY0312D
         eSVMApiMapper.insertPay312D(eSVMApiForm.createMap(param));
 
+        // Skip Notifications if PO
+        if(!"6506".equals(String.valueOf(param.getPayMode()))) {
+            this.sendSms(eSVMApiForm.createMap(param));
+
+            try {
+                this.sendEmail(eSVMApiForm.createMap(param));
+            } catch (Exception e) {
+                logger.error("EMAIL SENDING PROCESS ENCOUNTERED ERROR: " + e.getMessage());
+            }
+        }
+
         eSVMApiDto rtn = new eSVMApiDto();
         rtn.setPsmNo(psmDocNo);
 
         return rtn;
+    }
+
+    public void sendSms(Map<String, Object> params) {
+        SmsVO sms = new SmsVO(Integer.parseInt(params.get("regId").toString()), 975);
+        String smsTemplate = eSVMApiMapper.getSmsTemplate(params);
+        String smsNo = "";
+
+        params.put("smsTemplate", smsTemplate);
+
+        if(!"".equals(CommonUtils.nvl(params.get("sms1")))) {
+            smsNo = CommonUtils.nvl(params.get("sms1"));
+        }
+
+        if(!"".equals(CommonUtils.nvl(params.get("sms2")))) {
+            if (!"".equals(CommonUtils.nvl(smsNo))) {
+                smsNo += "|!|" + CommonUtils.nvl(params.get("sms2"));
+            } else {
+                smsNo = CommonUtils.nvl(params.get("sms2"));
+            }
+        }
+
+        if(!"".equals(CommonUtils.nvl(smsNo))) {
+            sms.setMessage(CommonUtils.nvl(smsTemplate));
+            sms.setMobiles(CommonUtils.nvl(smsNo));
+            sms.setRemark("SMS E-SVM PAYMENT VIA MOBILE APPS");
+            sms.setRefNo(CommonUtils.nvl(params.get("mobTicketNo")));
+
+            SmsResult smsResult = adaptorService.sendSMS(sms);
+            logger.debug(" smsResult : {}", smsResult.toString());
+        }
+    }
+
+    public void sendEmail(Map<String, Object> params) {
+        EmailVO email = new EmailVO();
+        String emailTitle = eSVMApiMapper.getEmailTitle(params);
+
+        Map<String, Object> additionalParam = (Map<String, Object>) eSVMApiMapper.getEmailDetails(params);
+        params.putAll(additionalParam);
+
+        List<String> emailNo = new ArrayList<String>();
+
+        if(!"".equals(CommonUtils.nvl(params.get("email1")))) {
+            emailNo.add(CommonUtils.nvl(params.get("email1")));
+        }
+
+        if(!"".equals(CommonUtils.nvl(params.get("email2")))) {
+            emailNo.add(CommonUtils.nvl(params.get("email2")));
+        }
+
+        email.setTo(emailNo);
+        email.setHtml(true);
+        email.setSubject(emailTitle);
+        email.setHasInlineImage(true);
+
+        boolean isResult = false;
+        // TODO
+        // EmailTemplateType.E_TEMPORARY_RECEIPT
+        isResult = adaptorService.sendEmail(email, false, EmailTemplateType.E_TEMPORARY_RECEIPT, params);
     }
 }

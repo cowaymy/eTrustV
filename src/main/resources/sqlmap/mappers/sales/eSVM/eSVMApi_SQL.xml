@@ -867,4 +867,60 @@
         )
     </insert>
 
+    <select id="getCustName" parameterType="Map" resultType="String">
+        SELECT
+            NVL(B.NAME, 'Valued Customers') CUSTNAME
+        FROM SAL0001D A
+        JOIN SAL0029D B
+            ON A.CUST_ID = B.CUST_ID
+        WHERE A.SALES_ORD_ID = #{salesOrdId}
+            AND B.STUS_CODE_ID = 1
+    </select>
+
+    <select id="getSmsTemplate" parameterType="Map" resultType="String">
+        SELECT
+            REPLACE(REPLACE((SELECT MESSAGE FROM SYS0052M WHERE ID = 'mobile.msg.esvm.payment'), '{1}', #{salesOrdNo}), '{2}', #{payAmt})
+        FROM DUAL
+    </select>
+
+    <select id="getEmailTitle" parameterType="Map" resultType="String">
+        SELECT
+            REPLACE((SELECT MSG_EMAIL_TITLE FROM SYS0043D WHERE MSG_ID = 13 AND MSG_TYPE_ID = 6507),'{1}', #{psmNo})
+        FROM DUAL
+    </select>
+
+    <select id="getEmailDetails" parameterType="Map" resultType="egovMap">
+        SELECT
+            P.SALES_ORD_NO AS SALES_ORD_NO,
+            P.PAY_AMT AS PAY_AMT,
+            S47.USER_NAME AS COLLECTOR_CODE,
+            S47.USER_FULL_NAME AS COLLECTOR_NAME,
+            S26.STK_DESC AS STK_DESC,
+            TO_CHAR(SYSDATE, 'YYYY-MM-DD') AS RECEIPT_DT,
+            S13.CODE_NAME AS PYMT_MODE,
+            (SELECT
+                NVL (CA1.ADDR_DTL, ' ')  || ', ' ||
+                NVL (CA1.STREET, ' ')  || ', ' ||
+                NVL (MA1.AREA, ' ')  || ', ' ||
+                NVL (MA1.POSTCODE, ' ')  || ', ' ||
+                NVL (MA1.CITY, ' ')  || ', ' ||
+                NVL (MA1.STATE, ' ')  || ', ' ||
+                NVL (MA1.COUNTRY, ' ')
+                FROM SAL0001D SOM
+                    JOIN SAL0045D I
+                        ON I.SALES_ORD_ID = SOM.SALES_ORD_ID
+                    LEFT JOIN SAL0023D CA1
+                        ON CA1.CUST_ADD_ID = I.ADD_ID
+                    LEFT JOIN SYS0064M MA1
+                        ON MA1.AREA_ID = CA1.AREA_ID
+                    WHERE SOM.SALES_ORD_ID = S1.SALES_ORD_ID) AS INST_ADDRESS
+        FROM PAY0312D P
+            JOIN SAL0001D S1 ON S1.SALES_ORD_NO = P.SALES_ORD_NO
+            JOIN SAL0002D S2 ON S2.SALES_ORD_ID = S1.SALES_ORD_ID
+            JOIN SYS0026M S26 ON S26.STK_ID = S2.ITM_STK_ID
+            JOIN SYS0013M S13 ON S13.CODE_ID = P.PAY_MODE
+            JOIN SYS0047M S47 ON S47.USER_ID = P.CRT_USER_ID
+       WHERE P.SRV_MEM_QUOT_ID = #{srvMemQuotId}
+    </select>
+
 </mapper>

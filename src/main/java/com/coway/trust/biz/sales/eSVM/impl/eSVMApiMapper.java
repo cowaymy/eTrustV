@@ -80,4 +80,12 @@ public interface eSVMApiMapper {
     void insertSal298D(Map<String, Object> param);
 
     void insertPay312D(Map<String, Object> param);
+
+    String getCustName(Map<String, Object> param);
+
+    String getSmsTemplate(Map<String, Object> param);
+
+    String getEmailTitle(Map<String, Object> param);
+
+    EgovMap getEmailDetails(Map<String, Object> param);
 }
