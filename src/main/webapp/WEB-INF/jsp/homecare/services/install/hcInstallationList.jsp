@@ -128,6 +128,8 @@
 	        {dataField : "bndlNo",           headerText : 'Bundle No',                                                             editable : false,     width : 120},
 	        {dataField : "brnchCode",        headerText : '<spring:message code="service.grid.BranchCode" />',   editable : false,     width : 100},
 	        {dataField : "code1",            headerText : '<spring:message code="service.grid.Status" />',            width : 100},
+	        {dataField : "allowCommision",     headerText:'Allow Commision',width: 150},
+	        {dataField : "serialRequireChkYn",headerText : 'Serial Require Check Y/N',width : 180},
 	        {dataField : "lstUpd",           headerText : '<spring:message code="service.grid.UpdateBy" />',       width : 130},
 	        {dataField : "brnchId",          width : 0},
 	        {dataField : "installEntryId",   width : 0},
@@ -181,6 +183,7 @@
     }
 
     var brnchId = selectedItems[0].item.brnchId;
+    var serialRequireChkYn = selectedItems[0].item.serialRequireChkYn;
 
     if (brnchId == "") {
       Common.alert("<b>[" + selectedItems[i].item.installEntryNo
@@ -199,6 +202,11 @@
       if (brnchId != selectedItems[i].item.brnchId) {
         Common.alert("<b><spring:message code='service.msg.BranchCode'/></b>");
         return;
+      }
+
+      if (serialRequireChkYn != selectedItems[i].item.serialRequireChkYn) {
+          Common.alert("<b>Only the same 'Serial Require Chk Y/N' can be selected.</b>");
+          return;
       }
     }
 
