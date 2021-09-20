@@ -18,15 +18,19 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class OrderColorGridServiceImpl extends EgovAbstractServiceImpl implements OrderColorGridService{
 
 	private static final Logger logger = LoggerFactory.getLogger(OrderColorGridServiceImpl.class);
-	
+
 	@Resource(name = "orderColorGridMapper")
 	private OrderColorGridMapper orderColorGridMapper;
-	
+
 	public List<EgovMap> colorGridList(Map<String, Object> params) {
 		return orderColorGridMapper.colorGridList(params);
 	}
-	
+
 	public List<EgovMap> colorGridCmbProduct() {
 		return orderColorGridMapper.colorGridCmbProduct();
+	}
+
+	public String  getMemID(String string) {
+		return orderColorGridMapper.getMemID(string);
 	}
 }

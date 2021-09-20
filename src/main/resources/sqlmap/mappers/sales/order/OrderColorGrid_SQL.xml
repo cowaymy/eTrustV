@@ -120,7 +120,8 @@
                          E1.TOT_OTSTND  ,
                          E1.PROMO_CODE  ,
                          E1.PROMO_DESC ,
-                         1
+                         1,
+                         E1.MEM_ID
                     <!-- E2.MAIL_CNT_TEL_M  ,
                          E2.MAIL_CNT_TEL_O  ,
                          E2.MAIL_CNT_TEL_R  ,
@@ -165,7 +166,8 @@
                                        vC.SALES_TYPE ,
                                        vC.PRE_ORD_ID ,
                                        vC.ECOMM_ORD_ID ,
-                                       vC.STK_CTGRY_ID
+                                       vC.STK_CTGRY_ID,
+                                       vC.MEM_ID
                                 FROM SAL1008V vC ) E1
 
                         <if test="contactNum != null and contactNum != ''">
@@ -349,9 +351,12 @@
 				          <if test="deptCode != null and deptCode != ''">
 				            AND E1.DEPT_CODE = #{deptCode}
 				          </if>
-				          <if test="memCode != null and memCode != ''" >
-				            AND E1.MEM_CODE = #{memCode}
-				          </if>
+<!-- 				          <if test="memCode != null and memCode != ''" > -->
+<!-- 				            AND E1.MEM_CODE = #{memCode} -->
+<!-- 				          </if> -->
+                           <if test="memID != null and memID != ''">
+                            AND E1.MEM_ID = #{memID}
+                          </if>
 				          <if test="ordNo != null and ordNo != ''">
 				            AND E1.ORD_NO = #{ordNo}
 				          </if>
@@ -424,8 +429,6 @@
                             </foreach>
                         </if>
 
-
-
                         <if test='isEKeyin != null and isEKeyin != ""'>
                            AND NVL(E1.PRE_ORD_ID,0) > 0
                          </if>
@@ -462,5 +465,14 @@
              c.CODE_NAME
     ORDER BY c.CODE_NAME,
              s.STK_DESC
+  </select>
+
+  <select id="getMemID" resultType="egovMap">
+    SELECT E1.MEM_ID
+    FROM ORG0001D E1
+    WHERE
+     <if test="memCode != null and memCode != ''" >
+             E1.MEM_CODE = #{memCode}
+      </if>
   </select>
 </mapper>

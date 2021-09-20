@@ -10,6 +10,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface OrderColorGridMapper {
 
 	List<EgovMap> colorGridList(Map<String, Object> params);
-	
+
 	List<EgovMap> colorGridCmbProduct();
+
+	String getMemID(String string);
 }
