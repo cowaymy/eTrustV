@@ -774,7 +774,7 @@
     </select>
 
     <select id="getPsmDocNo" resultType="String">
-        SELECT FN_GET_DOCNO('17') FROM DUAL
+        SELECT FN_GET_DOCNO('179') FROM DUAL
     </select>
 
     <insert id="insertSal298D" parameterType="Map">
@@ -796,7 +796,7 @@
             #{srvMemQuotId},
             #{salesOrdId},
             1,
-            #{atchFileGrpId}
+            #{atchFileGrpId},
             #{regId},
             SYSDATE,
             #{regId},
@@ -898,28 +898,35 @@
             S26.STK_DESC AS STK_DESC,
             TO_CHAR(SYSDATE, 'YYYY-MM-DD') AS RECEIPT_DT,
             S13.CODE_NAME AS PYMT_MODE,
-            (SELECT
-                NVL (CA1.ADDR_DTL, ' ')  || ', ' ||
-                NVL (CA1.STREET, ' ')  || ', ' ||
-                NVL (MA1.AREA, ' ')  || ', ' ||
-                NVL (MA1.POSTCODE, ' ')  || ', ' ||
-                NVL (MA1.CITY, ' ')  || ', ' ||
-                NVL (MA1.STATE, ' ')  || ', ' ||
-                NVL (MA1.COUNTRY, ' ')
+            (
+                SELECT
+                    NVL (CA1.ADDR_DTL, ' ')  || ', ' ||
+                    NVL (CA1.STREET, ' ')  || ', ' ||
+                    NVL (MA1.AREA, ' ')  || ', ' ||
+                    NVL (MA1.POSTCODE, ' ')  || ', ' ||
+                    NVL (MA1.CITY, ' ')  || ', ' ||
+                    NVL (MA1.STATE, ' ')  || ', ' ||
+                    NVL (MA1.COUNTRY, ' ')
                 FROM SAL0001D SOM
-                    JOIN SAL0045D I
-                        ON I.SALES_ORD_ID = SOM.SALES_ORD_ID
-                    LEFT JOIN SAL0023D CA1
-                        ON CA1.CUST_ADD_ID = I.ADD_ID
-                    LEFT JOIN SYS0064M MA1
-                        ON MA1.AREA_ID = CA1.AREA_ID
-                    WHERE SOM.SALES_ORD_ID = S1.SALES_ORD_ID) AS INST_ADDRESS
+                JOIN SAL0045D I
+                    ON I.SALES_ORD_ID = SOM.SALES_ORD_ID
+                LEFT JOIN SAL0023D CA1
+                    ON CA1.CUST_ADD_ID = I.ADD_ID
+                LEFT JOIN SYS0064M MA1
+                    ON MA1.AREA_ID = CA1.AREA_ID
+                WHERE SOM.SALES_ORD_ID = S1.SALES_ORD_ID
+            ) AS INST_ADDRESS
         FROM PAY0312D P
-            JOIN SAL0001D S1 ON S1.SALES_ORD_NO = P.SALES_ORD_NO
-            JOIN SAL0002D S2 ON S2.SALES_ORD_ID = S1.SALES_ORD_ID
-            JOIN SYS0026M S26 ON S26.STK_ID = S2.ITM_STK_ID
-            JOIN SYS0013M S13 ON S13.CODE_ID = P.PAY_MODE
-            JOIN SYS0047M S47 ON S47.USER_ID = P.CRT_USER_ID
+        JOIN SAL0001D S1
+            ON S1.SALES_ORD_NO = P.SALES_ORD_NO
+        JOIN SAL0002D S2
+            ON S2.SALES_ORD_ID = S1.SALES_ORD_ID
+        JOIN SYS0026M S26
+            ON S26.STK_ID = S2.ITM_STK_ID
+        JOIN SYS0013M S13
+            ON S13.CODE_ID = P.PAY_MODE
+        JOIN SYS0047M S47
+            ON S47.USER_ID = P.CRT_USER_ID
        WHERE P.SRV_MEM_QUOT_ID = #{srvMemQuotId}
     </select>
 
