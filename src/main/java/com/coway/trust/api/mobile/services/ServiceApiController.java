@@ -218,7 +218,8 @@ public class ServiceApiController {
 
     Map<String, Object> params = HeartServiceJobForm.createMap(HeartServiceJobForm);
 
-    List<EgovMap> HeartServiceJobList = MSvcLogApiService.getHeartServiceJobList(params);
+    List<EgovMap> HeartServiceJobList = MSvcLogApiService.getHeartServiceJobList_b(params);
+
 
     LOGGER.debug(
         "==================================[MB]HEART SERVICE JOB LIST SEARCH====================================");
