@@ -193,7 +193,7 @@
             $("#reportForm #viewType").val(reportViewType);
 
             //  report 호출
-            if(type == "6")
+            if(type == "6" || type == "1")
                 var option = { isProcedure : true };
             else{
                 var option = { isProcedure : false }
