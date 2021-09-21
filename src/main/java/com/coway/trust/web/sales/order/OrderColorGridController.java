@@ -78,7 +78,6 @@ public class OrderColorGridController {
 		String[] cmbCondition = request.getParameterValues("cmbCondition");
 
 
-		logger.info("params:: " + params);
 		logger.info("Customer type:: " + Arrays.toString(cmbCustomerType));
 		logger.info("Company type:: " + Arrays.toString(cmbCorpTypeId));
 
@@ -95,11 +94,12 @@ public class OrderColorGridController {
 			params.put("cmbCustomerType", "");
 		}
 
-		if (request.getParameterValues("memCode").toString() != null) {
-			String memID = orderColorGridService.getMemID(request.getParameterValues("memCode").toString());
-			params.put("memID", memID);
-		} else {
-			params.put("memID", "");
+		if (params.get("mem_code") != null) {
+			String memID = orderColorGridService.getMemID(params.get("mem_code").toString());
+			params.put("mem_id", memID);
+		}
+		else {
+			params.put("mem_id", "");
 		}
 
 		params.put("cmbAppTypeList", cmbAppTypeList);
