@@ -88,4 +88,14 @@ public interface eSVMApiMapper {
     String getEmailTitle(Map<String, Object> param);
 
     EgovMap getEmailDetails(Map<String, Object> param);
+
+    List<EgovMap> selectPSMList(Map<String, Object> params);
+
+    List<EgovMap> selectESvmAttachment(Map<String, Object> param);
+
+    int deleteSYS0071D(Map<String, Object> param);
+
+    int updateSYS0071D(Map<String, Object> param);
+
+    int updateSYS0070M(Map<String, Object> param);
 }

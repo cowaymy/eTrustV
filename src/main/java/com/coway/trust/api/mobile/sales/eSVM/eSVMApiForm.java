@@ -119,6 +119,16 @@ public class eSVMApiForm {
         params.put("cardMode", vo.getCardMode());
         params.put("merchantBank", vo.getMerchantBank());
         params.put("cardBrand", vo.getCardBrand());
+        params.put("atchFileSvmF", vo.getAtchFileSvmF());
+        params.put("atchFileSvmTnc", vo.getAtchFileSvmTnc());
+        params.put("atchFilePo", vo.getAtchFilePo());
+        params.put("atchFileNricCrcF", vo.getAtchFileNricCrcF());
+        params.put("atchFileNricCrcB", vo.getAtchFileNricCrcB());
+        params.put("atchFileTrxSlip", vo.getAtchFileTrxSlip());
+        params.put("atchFileChqImg", vo.getAtchFileChqImg());
+        params.put("atchFileOther1", vo.getAtchFileOther1());
+        params.put("atchFileOther2", vo.getAtchFileOther2());
+        params.put("atchFileOther3", vo.getAtchFileOther3());
         return params;
     }
 
@@ -236,6 +246,18 @@ public class eSVMApiForm {
     private String cardMode;
     private String merchantBank;
     private String cardBrand;
+
+    /* PSM Attachment Update */
+    private int atchFileSvmF;
+    private int atchFileSvmTnc;
+    private int atchFilePo;
+    private int atchFileNricCrcF;
+    private int atchFileNricCrcB;
+    private int atchFileTrxSlip;
+    private int atchFileChqImg;
+    private int atchFileOther1;
+    private int atchFileOther2;
+    private int atchFileOther3;
 
     public String getFlag() {
         return flag;
@@ -1068,4 +1090,85 @@ public class eSVMApiForm {
     public void setCardBrand(String cardBrand) {
         this.cardBrand = cardBrand;
     }
+
+    public int getAtchFileSvmF() {
+        return atchFileSvmF;
+    }
+
+    public void setAtchFileSvmF(int atchFileSvmF) {
+        this.atchFileSvmF = atchFileSvmF;
+    }
+
+    public int getAtchFileSvmTnc() {
+        return atchFileSvmTnc;
+    }
+
+    public void setAtchFileSvmTnc(int atchFileSvmTnc) {
+        this.atchFileSvmTnc = atchFileSvmTnc;
+    }
+
+    public int getAtchFilePo() {
+        return atchFilePo;
+    }
+
+    public void setAtchFilePo(int atchFilePo) {
+        this.atchFilePo = atchFilePo;
+    }
+
+    public int getAtchFileNricCrcF() {
+        return atchFileNricCrcF;
+    }
+
+    public void setAtchFileNricCrcF(int atchFileNricCrcF) {
+        this.atchFileNricCrcF = atchFileNricCrcF;
+    }
+
+    public int getAtchFileNricCrcB() {
+        return atchFileNricCrcB;
+    }
+
+    public void setAtchFileNricCrcB(int atchFileNricCrcB) {
+        this.atchFileNricCrcB = atchFileNricCrcB;
+    }
+
+    public int getAtchFileTrxSlip() {
+        return atchFileTrxSlip;
+    }
+
+    public void setAtchFileTrxSlip(int atchFileTrxSlip) {
+        this.atchFileTrxSlip = atchFileTrxSlip;
+    }
+
+    public int getAtchFileChqImg() {
+        return atchFileChqImg;
+    }
+
+    public void setAtchFileChqImg(int atchFileChqImg) {
+        this.atchFileChqImg = atchFileChqImg;
+    }
+
+    public int getAtchFileOther1() {
+        return atchFileOther1;
+    }
+
+    public void setAtchFileOther1(int atchFileOther1) {
+        this.atchFileOther1 = atchFileOther1;
+    }
+
+    public int getAtchFileOther2() {
+        return atchFileOther2;
+    }
+
+    public void setAtchFileOther2(int atchFileOther2) {
+        this.atchFileOther2 = atchFileOther2;
+    }
+
+    public int getAtchFileOther3() {
+        return atchFileOther3;
+    }
+
+    public void setAtchFileOther3(int atchFileOther3) {
+        this.atchFileOther3 = atchFileOther3;
+    }
+
 }

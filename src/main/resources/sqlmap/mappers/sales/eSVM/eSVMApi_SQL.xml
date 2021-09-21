@@ -68,7 +68,7 @@
                 <when test='selectType.equals("4") and selectKeyword != null and selectKeyword != ""'>
                     AND UPPER(A.SRV_QUOT_STUS_ID) = #{selectKeyword}
                 </when>
-                <when test='selectType.equals("4") and selectKeyword != null and selectKeyword != ""'>
+                <when test='selectType.equals("5") and selectKeyword != null and selectKeyword != ""'>
                     AND UPPER(E.STUS) = #{selectKeyword}
                 </when>
             </choose>
@@ -930,4 +930,90 @@
        WHERE P.SRV_MEM_QUOT_ID = #{srvMemQuotId}
     </select>
 
+    <select id="selectPsmDetail" parameterType="Map" resultType="egovMap">
+    </select>
+
+    <select id="selectPSMList" parameterType="Map" resultType="egovMap">
+        /* [com.coway.trust.biz.sales.eSVMApi.impl.eSVMApiMapper.selectPSMList] */
+        SELECT
+            A.PSM_ID,
+            A.PSM_NO,
+            B.SALES_ORD_NO,
+            A.SVM_QUOT_ID,
+            A.STUS,
+            CASE WHEN A.STUS = 1 THEN 'Active'
+                 WHEN A.STUS = 5 THEN 'Complete'
+                 WHEN A.STUS = 6 THEN  'Rejected'
+            END STUS_NAME,
+            TO_CHAR(A.CRT_DT, 'DD/MM/YYYY') REQST_DT,
+            B.PAY_AMT TOTAL_AMT,
+            A.ATCH_FILE_GRP_ID,
+            D.NAME CUST_NAME,
+            NVL(E.RESN_DESC, '-') RESN
+        FROM SAL0298D A
+        JOIN PAY0312D B
+            ON A.SVM_QUOT_ID = B.SRV_MEM_QUOT_ID
+        JOIN SAL0001D C
+            ON B.SALES_ORD_NO = C.SALES_ORD_NO
+        JOIN SAL0029D D
+            ON C.CUST_ID = D.CUST_ID
+        LEFT JOIN SYS0032M E
+            ON A.APPV_REM = E.RESN_ID
+        WHERE A.SRV_CRT_USER_ID = (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{regId})
+        <if test="reqstDtFrom != null and reqstDtFrom != '' and reqstDtTo != null and reqstDtTo != ''">
+            AND TO_CHAR(A.CRT_DT, 'YYYYMMDD') BETWEEN #{reqstDtFrom} AND #{reqstDtTo}
+        </if>
+        <if test="selectType != null and selectType != '' ">
+            <choose>
+                <when test='selectType.equals("1") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(B.SALES_ORD_NO) = UPPER(#{selectKeyword})
+                </when>
+                <when test='selectType.equals("2") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(C.PSM_NO) LIKE UPPER('%'||#{selectKeyword}||'%')
+                </when>
+                <when test='selectType.equals("3") and selectKeyword != null and selectKeyword != ""'>
+                    AND UPPER(E.STUS) = #{selectKeyword}
+                </when>
+            </choose>
+        </if>
+        ORDER BY A.SVM_QUOT_ID DESC
+    </select>
+
+    <select id="selectESvmAttachment" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.ATCH_FILE_GRP_ID AS ATCH_FILE_GRP_ID,
+            B.ATCH_FILE_ID AS ATCH_FILE_ID,
+            B.ATCH_FILE_NAME AS ATCH_FILE_NAME,
+            B.FILE_SUB_PATH AS FILE_SUB_PATH,
+            B.PHYSICL_FILE_NAME AS PHYSICL_FILE_NAME,
+            B.FILE_EXTSN AS FILE_EXTSN,
+            B.FILE_KEY_SEQ AS FILE_KEY_SEQ
+        FROM SYS0070M A
+        INNER JOIN SYS0071D B
+            ON A.ATCH_FILE_ID = B.ATCH_FILE_ID
+        WHERE A.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+    </select>
+
+    <delete id="deleteSYS0071D" parameterType="Map">
+        DELETE FROM SYS0071D A
+        WHERE A.ATCH_FILE_ID = #{atchFileId}
+    </delete>
+
+    <update id="updateSYS0071D" parameterType="Map">
+        UPDATE SYS0071D A
+        SET A.ATCH_FILE_NAME = #{atchFileName},
+            A.FILE_SUB_PATH = #{fileSubPath},
+            A.PHYSICL_FILE_NAME = #{physiclFileName},
+            A.FILE_EXTSN = #{fileExtsn},
+            A.FILE_SIZE = #{fileSize}
+        WHERE A.ATCH_FILE_ID = #{atchFileId}
+      </update>
+
+    <update id="updateSYS0070M" parameterType="Map">
+        UPDATE SYS0070M A
+        SET A.UPD_USER_ID = #{updUserId},
+            A.UPD_DT = SYSDATE
+        WHERE A.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+            AND A.ATCH_FILE_ID = #{atchFileId}
+    </update>
 </mapper>

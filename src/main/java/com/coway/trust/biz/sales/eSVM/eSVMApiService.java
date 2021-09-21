@@ -35,4 +35,12 @@ public interface eSVMApiService {
     int insertUploadPaymentFile(List<FileVO> list, eSVMApiDto param);
 
     eSVMApiDto insertPSM(eSVMApiForm param) throws Exception;
+
+    List<EgovMap> selectPSMList(eSVMApiForm param) throws Exception;
+
+    List<EgovMap> selectESvmAttachment(eSVMApiForm param) throws Exception;
+
+    eSVMApiDto removePsmAttachment(eSVMApiForm param) throws Exception;
+
+    int updatePaymentUploadFile(List<FileVO> list, eSVMApiDto param);
 }

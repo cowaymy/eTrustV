@@ -57,6 +57,7 @@ public class eSVMApiDto {
     private String strprmodt;
     private int custCntId;
     private String userId;
+    private String resn;
 
     /* Filter Listing */
     private int srvFilterId;
@@ -139,11 +140,20 @@ public class eSVMApiDto {
     private String subPath;
     private String fileKeySeq;
 
+    /* PSM Attachment */
+    private int atchFileId;
+    private String atchFileName;
+    private String fileSubPath;
+    private String physiclFileName;
+    private String fileExtsn;
+    private String saveFlag;
+
     private List<eSVMApiDto> productFilterList;
     private List<eSVMApiDto> packageComboList;
     private List<eSVMApiDto> packagePromoList;
     private List<eSVMApiDto> filterPromoList;
     private List<eSVMApiDto> svmFilterList;
+    private List<eSVMApiDto> attachment;
 
     public int getSvmQuotId() {
         return svmQuotId;
@@ -439,6 +449,14 @@ public class eSVMApiDto {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getResn() {
+        return resn;
+    }
+
+    public void setResn(String resn) {
+        this.resn = resn;
     }
 
     public int getSrvFilterId() {
@@ -967,5 +985,61 @@ public class eSVMApiDto {
 
     public void setFileKeySeq(String fileKeySeq) {
         this.fileKeySeq = fileKeySeq;
+    }
+
+    public List<eSVMApiDto> getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(List<eSVMApiDto> attachment) {
+        this.attachment = attachment;
+    }
+
+    public int getAtchFileId() {
+        return atchFileId;
+    }
+
+    public void setAtchFileId(int atchFileId) {
+        this.atchFileId = atchFileId;
+    }
+
+    public String getAtchFileName() {
+        return atchFileName;
+    }
+
+    public void setAtchFileName(String atchFileName) {
+        this.atchFileName = atchFileName;
+    }
+
+    public String getFileSubPath() {
+        return fileSubPath;
+    }
+
+    public void setFileSubPath(String fileSubPath) {
+        this.fileSubPath = fileSubPath;
+    }
+
+    public String getPhysiclFileName() {
+        return physiclFileName;
+    }
+
+    public void setPhysiclFileName(String physiclFileName) {
+        this.physiclFileName = physiclFileName;
+    }
+
+    public String getFileExtsn() {
+        return fileExtsn;
+    }
+
+    public void setFileExtsn(String fileExtsn) {
+        this.fileExtsn = fileExtsn;
+    }
+
+    public String getSaveFlag() {
+        return saveFlag;
+    }
+
+    public void setSaveFlag(String saveFlag) {
+        this.saveFlag = saveFlag;
     }
 }

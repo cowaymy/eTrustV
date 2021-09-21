@@ -146,4 +146,46 @@ public class eSVMApiController {
         LOGGER.debug("eSVMApiController :: insertPSM");
         return ResponseEntity.ok(eSVMApiService.insertPSM(param));
     }
+
+    @ApiOperation(value = "selectPSMList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/selectPSMList", method = RequestMethod.GET)
+    public ResponseEntity<List<eSVMApiDto>> selectPSMList(@ModelAttribute eSVMApiForm param) throws Exception {
+      List<EgovMap> selectPSMList = eSVMApiService.selectPSMList(param);
+      if (LOGGER.isDebugEnabled()) {
+        for (int i = 0; i < selectPSMList.size(); i++) {
+          LOGGER.debug("selectQuotationList : {}", selectPSMList.get(i));
+        }
+      }
+      return ResponseEntity.ok(selectPSMList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList()));
+    }
+
+    @ApiOperation(value = "selectPsmAttachment", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/selectPsmAttachment", method = RequestMethod.GET)
+    public ResponseEntity<List<eSVMApiDto>> selectESvmAttachment(@ModelAttribute eSVMApiForm param) throws Exception {
+      List<EgovMap> svmAttachmentList = eSVMApiService.selectESvmAttachment(param);
+      if (LOGGER.isDebugEnabled()) {
+        for (int i = 0; i < svmAttachmentList.size(); i++) {
+          LOGGER.debug("selectQuotationList : {}", svmAttachmentList.get(i));
+        }
+      }
+      return ResponseEntity.ok(svmAttachmentList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList()));
+    }
+
+    @ApiOperation(value = "removePsmAttachment", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/removePsmAttachment", method = RequestMethod.POST)
+    public ResponseEntity<eSVMApiDto> removePsmAttachment(@RequestBody eSVMApiForm param) throws Exception {
+        LOGGER.debug("eSVMApiController :: removePsmAttachment");
+        return ResponseEntity.ok(eSVMApiService.removePsmAttachment(param));
+    }
+
+    @ApiOperation(value = "updatePaymentUploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(value = "/updatePaymentUploadFile", method = RequestMethod.POST)
+    public ResponseEntity<FileDto> updatePaymentUploadFile(@ApiIgnore MultipartHttpServletRequest request, @ModelAttribute eSVMApiDto param) throws Exception {
+      List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, webUploadDir, param.getSubPath(),
+          AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+
+      int fileGroupKey = eSVMApiService.updatePaymentUploadFile(FileVO.createList(list), param);
+      FileDto fileDto = FileDto.create(list, fileGroupKey);
+      return ResponseEntity.ok(fileDto);
+    }
 }

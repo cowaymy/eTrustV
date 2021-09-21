@@ -739,4 +739,259 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         // EmailTemplateType.E_TEMPORARY_RECEIPT
         isResult = adaptorService.sendEmail(email, false, EmailTemplateType.E_TEMPORARY_RECEIPT, params);
     }
+
+    @Override
+    public List<EgovMap> selectPSMList(eSVMApiForm param) throws Exception {
+
+        if(null == param) {
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+
+        if(CommonUtils.isEmpty(param.getReqstDtFrom()) || CommonUtils.isEmpty(param.getReqstDtTo())) {
+            throw new ApplicationException(AppConstants.FAIL, "Request Date  does not exist.");
+        }
+
+        if(CommonUtils.isEmpty(param.getSelectType())) {
+            throw new ApplicationException(AppConstants.FAIL, "Select Type value does not exist.");
+        } else {
+            if (("2").equals(param.getSelectType()) && param.getSelectKeyword().length() < 5) {
+                throw new ApplicationException(AppConstants.FAIL, "Please enter at least 5 characters.");
+            }
+        }
+
+        if(CommonUtils.isEmpty(param.getRegId())) {
+            throw new ApplicationException(AppConstants.FAIL, "User ID value does not exist.");
+        }
+
+        return eSVMApiMapper.selectPSMList(eSVMApiForm.createMap(param));
+    }
+
+    @Override
+    public List<EgovMap> selectESvmAttachment(eSVMApiForm param) throws Exception {
+        if(null == param) {
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+
+        if(CommonUtils.isEmpty(param.getAtchFileGrpId())) {
+            throw new ApplicationException(AppConstants.FAIL, "Attachment ID does not exist.");
+        }
+
+        return eSVMApiMapper.selectESvmAttachment(eSVMApiForm.createMap(param));
+    }
+
+    @Override
+    public eSVMApiDto removePsmAttachment(eSVMApiForm param) throws Exception {
+        if(null == param) {
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+
+        eSVMApiDto rtn = new eSVMApiDto();
+
+        if(CommonUtils.isNotEmpty(param.getAtchFileSvmF()) && param.getAtchFileSvmF() > 0) {
+            Map<String, Object> sys0071D = new HashMap<String, Object>();
+            sys0071D.put("atchFileId", param.getAtchFileSvmF());
+
+            int saveCnt = eSVMApiMapper.deleteSYS0071D(sys0071D);
+
+            if(saveCnt != 1) {
+                throw new ApplicationException(AppConstants.FAIL, "Delete Exception.");
+            }
+        }
+
+        if(CommonUtils.isNotEmpty(param.getAtchFileSvmTnc()) && param.getAtchFileSvmTnc() > 0) {
+            Map<String, Object> sys0071D = new HashMap<String, Object>();
+            sys0071D.put("atchFileId", param.getAtchFileSvmTnc());
+
+            int saveCnt = eSVMApiMapper.deleteSYS0071D(sys0071D);
+
+            if(saveCnt != 1) {
+                throw new ApplicationException(AppConstants.FAIL, "Delete Exception.");
+            }
+        }
+
+        if(CommonUtils.isNotEmpty(param.getAtchFilePo()) && param.getAtchFilePo() > 0) {
+            Map<String, Object> sys0071D = new HashMap<String, Object>();
+            sys0071D.put("atchFileId", param.getAtchFilePo());
+
+            int saveCnt = eSVMApiMapper.deleteSYS0071D(sys0071D);
+
+            if(saveCnt != 1) {
+                throw new ApplicationException(AppConstants.FAIL, "Delete Exception.");
+            }
+        }
+
+        if(CommonUtils.isNotEmpty(param.getAtchFileNricCrcF()) && param.getAtchFileNricCrcF() > 0) {
+            Map<String, Object> sys0071D = new HashMap<String, Object>();
+            sys0071D.put("atchFileId", param.getAtchFileNricCrcF());
+
+            int saveCnt = eSVMApiMapper.deleteSYS0071D(sys0071D);
+
+            if(saveCnt != 1) {
+                throw new ApplicationException(AppConstants.FAIL, "Delete Exception.");
+            }
+        }
+
+        if(CommonUtils.isNotEmpty(param.getAtchFileNricCrcB()) && param.getAtchFileNricCrcB() > 0) {
+            Map<String, Object> sys0071D = new HashMap<String, Object>();
+            sys0071D.put("atchFileId", param.getAtchFileNricCrcB());
+
+            int saveCnt = eSVMApiMapper.deleteSYS0071D(sys0071D);
+
+            if(saveCnt != 1) {
+                throw new ApplicationException(AppConstants.FAIL, "Delete Exception.");
+            }
+        }
+
+        if(CommonUtils.isNotEmpty(param.getAtchFileTrxSlip()) && param.getAtchFileTrxSlip() > 0) {
+            Map<String, Object> sys0071D = new HashMap<String, Object>();
+            sys0071D.put("atchFileId", param.getAtchFileTrxSlip());
+
+            int saveCnt = eSVMApiMapper.deleteSYS0071D(sys0071D);
+
+            if(saveCnt != 1) {
+                throw new ApplicationException(AppConstants.FAIL, "Delete Exception.");
+            }
+        }
+
+        if(CommonUtils.isNotEmpty(param.getAtchFileChqImg()) && param.getAtchFileChqImg() > 0) {
+            Map<String, Object> sys0071D = new HashMap<String, Object>();
+            sys0071D.put("atchFileId", param.getAtchFileChqImg());
+
+            int saveCnt = eSVMApiMapper.deleteSYS0071D(sys0071D);
+
+            if(saveCnt != 1) {
+                throw new ApplicationException(AppConstants.FAIL, "Delete Exception.");
+            }
+        }
+
+        if(CommonUtils.isNotEmpty(param.getAtchFileOther1()) && param.getAtchFileOther1() > 0) {
+            Map<String, Object> sys0071D = new HashMap<String, Object>();
+            sys0071D.put("atchFileId", param.getAtchFileOther1());
+
+            int saveCnt = eSVMApiMapper.deleteSYS0071D(sys0071D);
+
+            if(saveCnt != 1) {
+                throw new ApplicationException(AppConstants.FAIL, "Delete Exception.");
+            }
+        }
+
+        if(CommonUtils.isNotEmpty(param.getAtchFileOther2()) && param.getAtchFileOther2() > 0) {
+            Map<String, Object> sys0071D = new HashMap<String, Object>();
+            sys0071D.put("atchFileId", param.getAtchFileOther2());
+
+            int saveCnt = eSVMApiMapper.deleteSYS0071D(sys0071D);
+
+            if(saveCnt != 1) {
+                throw new ApplicationException(AppConstants.FAIL, "Delete Exception.");
+            }
+        }
+
+        if(CommonUtils.isNotEmpty(param.getAtchFileOther3()) && param.getAtchFileOther3() > 0) {
+            Map<String, Object> sys0071D = new HashMap<String, Object>();
+            sys0071D.put("atchFileId", param.getAtchFileOther3());
+
+            int saveCnt = eSVMApiMapper.deleteSYS0071D(sys0071D);
+
+            if(saveCnt != 1) {
+                throw new ApplicationException(AppConstants.FAIL, "Delete Exception.");
+            }
+        }
+
+        return rtn;
+    }
+
+    @Override
+    public int updatePaymentUploadFile(List<FileVO> list, eSVMApiDto param) {
+        if(null == param) {
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+
+        if(CommonUtils.isEmpty(param.getUserId())) {
+            throw new ApplicationException(AppConstants.FAIL, "userId value does not exist.");
+        }
+
+        if(CommonUtils.isEmpty(param.getAtchFileGrpId())) {
+            throw new ApplicationException(AppConstants.FAIL, "atchFileGrpId value does not exist.");
+        }
+
+        if(CommonUtils.isEmpty(param.getFileKeySeq())) {
+            throw new ApplicationException(AppConstants.FAIL, "fileKeySeq value does not exist.");
+        }
+
+        if(CommonUtils.isEmpty(param.getSaveFlag())) {
+            throw new ApplicationException(AppConstants.FAIL, "saveFlag value does not exist.");
+        }
+
+        Map<String, Object> loginInfoMap = new HashMap<String, Object>();
+        loginInfoMap.put("_USER_ID", param.getUserId());
+        LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
+
+        if(null == loginVO || CommonUtils.isEmpty(loginVO.getUserId())) {
+            throw new ApplicationException(AppConstants.FAIL, "UserID is null.");
+        }
+
+        for(FileVO data : list) {
+            Map<String, Object> sys0071D = new HashMap<String, Object>();
+            Map<String, Object> sys0070M = new HashMap<String, Object>();
+
+            if(param.getSaveFlag().equals("I")) {
+                sys0071D.put("atchFileName", data.getAtchFileName());
+                sys0071D.put("fileSubPath", data.getFileSubPath());
+                sys0071D.put("physiclFileName", data.getPhysiclFileName());
+                sys0071D.put("fileExtsn", data.getFileExtsn());
+                sys0071D.put("fileSize", data.getFileSize());
+                sys0071D.put("filePassword", null);
+                sys0071D.put("fileUnqKey", null);
+                sys0071D.put("fileKeySeq", param.getFileKeySeq());
+
+                int saveCnt = eSVMApiMapper.insertSYS0071D(sys0071D);
+                if(saveCnt == 0) {
+                    throw new ApplicationException(AppConstants.FAIL, "Insert SYS0071D Exception");
+                }
+
+                if(CommonUtils.isEmpty(sys0071D.get("atchFileId"))) {
+                    throw new ApplicationException(AppConstants.FAIL, "atchFileId value does not exist.");
+                }
+
+                sys0070M.put("atchFileGrpId", param.getAtchFileGrpId());
+                sys0070M.put("atchFileId", sys0071D.get("atchFileId"));
+                sys0070M.put("chenalType", FileType.MOBILE.getCode());
+                sys0070M.put("crtUserId", loginVO.getUserId());
+                sys0070M.put("updUserId", loginVO.getUserId());
+
+                saveCnt = eSVMApiMapper.insertSYS0070M(sys0070M);
+                if (saveCnt == 0) {
+                  throw new ApplicationException(AppConstants.FAIL, "Insert Exception.");
+                }
+            } else if(param.getSaveFlag().equals("U")) {
+                sys0071D.put("atchFileId", param.getAtchFileId());
+                sys0071D.put("atchFileName", data.getAtchFileName());
+                sys0071D.put("fileSubPath", data.getFileSubPath());
+                sys0071D.put("physiclFileName", data.getPhysiclFileName());
+                sys0071D.put("fileExtsn", data.getFileExtsn());
+                sys0071D.put("fileSize", data.getFileSize());
+
+                int saveCnt = eSVMApiMapper.updateSYS0071D(sys0071D);
+                if (saveCnt == 0) {
+                    throw new ApplicationException(AppConstants.FAIL, "Insert Exception.");
+                }
+
+                sys0070M.put("atchFileGrpId", param.getAtchFileGrpId());
+                sys0070M.put("atchFileId", param.getAtchFileId());
+                sys0070M.put("updUserId", loginVO.getUserId());
+
+                saveCnt = eSVMApiMapper.updateSYS0070M(sys0070M);
+                if (saveCnt == 0) {
+                    throw new ApplicationException(AppConstants.FAIL, "Insert Exception.");
+                }
+            } else if (param.getSaveFlag().equals("D")) {
+                throw new ApplicationException(AppConstants.FAIL, "saveFlag value does not exist.");
+
+            } else {
+                throw new ApplicationException(AppConstants.FAIL, "saveFlag value does not exist.");
+            }
+        }
+
+        return param.getAtchFileGrpId();
+    }
 }
