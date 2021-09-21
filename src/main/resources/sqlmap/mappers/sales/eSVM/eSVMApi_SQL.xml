@@ -947,6 +947,7 @@
             END STUS_NAME,
             TO_CHAR(A.CRT_DT, 'DD/MM/YYYY') REQST_DT,
             B.PAY_AMT TOTAL_AMT,
+            B.PAY_MODE,
             A.ATCH_FILE_GRP_ID,
             D.NAME CUST_NAME,
             NVL(E.RESN_DESC, '-') RESN
