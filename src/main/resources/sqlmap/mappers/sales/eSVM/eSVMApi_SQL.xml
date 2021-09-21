@@ -959,7 +959,7 @@
             ON C.CUST_ID = D.CUST_ID
         LEFT JOIN SYS0032M E
             ON A.APPV_REM = E.RESN_ID
-        WHERE A.SRV_CRT_USER_ID = (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{regId})
+        WHERE A.CRT_USER_ID = (SELECT USER_ID FROM SYS0047M WHERE USER_NAME = #{regId})
         <if test="reqstDtFrom != null and reqstDtFrom != '' and reqstDtTo != null and reqstDtTo != ''">
             AND TO_CHAR(A.CRT_DT, 'YYYYMMDD') BETWEEN #{reqstDtFrom} AND #{reqstDtTo}
         </if>
@@ -969,10 +969,10 @@
                     AND UPPER(B.SALES_ORD_NO) = UPPER(#{selectKeyword})
                 </when>
                 <when test='selectType.equals("2") and selectKeyword != null and selectKeyword != ""'>
-                    AND UPPER(C.PSM_NO) LIKE UPPER('%'||#{selectKeyword}||'%')
+                    AND UPPER(A.PSM_NO) LIKE UPPER('%'||#{selectKeyword}||'%')
                 </when>
                 <when test='selectType.equals("3") and selectKeyword != null and selectKeyword != ""'>
-                    AND UPPER(E.STUS) = #{selectKeyword}
+                    AND UPPER(A.STUS) = #{selectKeyword}
                 </when>
             </choose>
         </if>
