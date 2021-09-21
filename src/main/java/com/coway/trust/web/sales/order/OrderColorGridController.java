@@ -55,6 +55,10 @@ public class OrderColorGridController {
 			model.put("grpCode", getUserInfo.get("grpCode"));
 			model.put("deptCode", getUserInfo.get("deptCode"));
 			model.put("memCode", getUserInfo.get("memCode"));
+
+			String memID =orderColorGridService.getMemID(getUserInfo.get("memCode").toString());
+			model.put("memID",memID);
+
 			logger.info("memType ##### " + getUserInfo.get("memType"));
 		}
 
@@ -69,17 +73,16 @@ public class OrderColorGridController {
 
 		String[] cmbAppTypeList = request.getParameterValues("cmbAppType");
 		String[] cmbCustomerType = request.getParameterValues("cmbCustomerType"); // Customer Type
-    String[] cmbCorpTypeId = request.getParameterValues("cmbCorpTypeId"); // Company Type
-    String[] cmbSalesType = request.getParameterValues("cmbSalesType");
-    String[] cmbProductCtgry = request.getParameterValues("cmbProductCtgry");
+		String[] cmbCorpTypeId = request.getParameterValues("cmbCorpTypeId"); // Company Type
+		String[] cmbSalesType = request.getParameterValues("cmbSalesType");
+		String[] cmbProductCtgry = request.getParameterValues("cmbProductCtgry");
 
-    String[] cmbProduct = request.getParameterValues("cmbProduct");
-    String[] cmbCondition = request.getParameterValues("cmbCondition");
+		String[] cmbProduct = request.getParameterValues("cmbProduct");
+		String[] cmbCondition = request.getParameterValues("cmbCondition");
 
-    String[] memCode = request.getParameterValues("memCode");
 
-    logger.info("Customer type:: " + Arrays.toString(cmbCustomerType));
-    logger.info("Company type:: " + Arrays.toString(cmbCorpTypeId));
+		logger.info("Customer type:: " + Arrays.toString(cmbCustomerType));
+		logger.info("Company type:: " + Arrays.toString(cmbCorpTypeId));
 
     if(cmbCustomerType!= null){
         for(int i = 0; i < cmbCustomerType.length; i++){
@@ -100,9 +103,6 @@ public class OrderColorGridController {
 		params.put("cmbProduct", cmbProduct);
 		params.put("cmbCondition", cmbCondition);
 		params.put("cmbProductCtgry",cmbProductCtgry);
-
-		 String memID =orderColorGridService.getMemID(memCode.toString());
-		 params.put("memID",memID);
 
 		List<EgovMap> colorGridList = orderColorGridService.colorGridList(params);
 
