@@ -56,9 +56,6 @@ public class OrderColorGridController {
 			model.put("deptCode", getUserInfo.get("deptCode"));
 			model.put("memCode", getUserInfo.get("memCode"));
 
-			String memID =orderColorGridService.getMemID(getUserInfo.get("memCode").toString());
-			model.put("memID",memID);
-
 			logger.info("memType ##### " + getUserInfo.get("memType"));
 		}
 
@@ -81,21 +78,29 @@ public class OrderColorGridController {
 		String[] cmbCondition = request.getParameterValues("cmbCondition");
 
 
+		logger.info("params:: " + params);
 		logger.info("Customer type:: " + Arrays.toString(cmbCustomerType));
 		logger.info("Company type:: " + Arrays.toString(cmbCorpTypeId));
 
-    if(cmbCustomerType!= null){
-        for(int i = 0; i < cmbCustomerType.length; i++){
-        	int tmp = Integer.parseInt(cmbCustomerType[i].toString());
+		if (cmbCustomerType != null) {
+			for (int i = 0; i < cmbCustomerType.length; i++) {
+				int tmp = Integer.parseInt(cmbCustomerType[i].toString());
 
-        	if(tmp == 964){
-        	 	params.put("Individual","individual");
-        	}
-         }
-        params.put("cmbCustomerType", cmbCustomerType);
-    }else{
-    	params.put("cmbCustomerType", "");
-    }
+				if (tmp == 964) {
+					params.put("Individual", "individual");
+				}
+			}
+			params.put("cmbCustomerType", cmbCustomerType);
+		} else {
+			params.put("cmbCustomerType", "");
+		}
+
+		if (request.getParameterValues("memCode").toString() != null) {
+			String memID = orderColorGridService.getMemID(request.getParameterValues("memCode").toString());
+			params.put("memID", memID);
+		} else {
+			params.put("memID", "");
+		}
 
 		params.put("cmbAppTypeList", cmbAppTypeList);
 		params.put("cmbCorpTypeId", cmbCorpTypeId);
