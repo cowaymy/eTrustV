@@ -1276,7 +1276,7 @@
                      TO_CHAR (E.STK_RETN_CC_ID) AS cc_Code,
                      TO_CHAR (E.STK_RETN_RESN_ID) AS result_Code,
                      TO_CHAR (E.STK_RETN_REM) AS result_Remark,
-                     <!-- TO_CHAR (E.RETN_CODE_FAIL_REMARK) AS retn_code_fail_remark, -->
+                     -- TO_CHAR (E.RETN_CODE_FAIL_REMARK) AS retn_code_fail_remark,
                      NVL (TO_CHAR (E.OWNER_CODE), '') AS owner_Code,
                      NVL (FN_GET_COMMCD (376, TO_CHAR (E.OWNER_CODE)), '') AS owner_Code_Nm,
                      NVL (TO_CHAR (E.RESULT_CUST_NAME), '') AS result_Cust_Name,
@@ -1378,7 +1378,7 @@
          , TO_CHAR(CC_CODE             )         AS        cc_Code
          , TO_CHAR(RESULT_CODE         )         AS        result_Code
          , TO_CHAR(RESULT_REM          )         AS        result_Remark
-         <!-- , TO_CHAR(RETN_CODE_FAIL_REMARK)         AS        retn_code_fail_remark -->
+         -- , TO_CHAR(RETN_CODE_FAIL_REMARK)         AS        retn_code_fail_remark
          , TO_CHAR(OWNER_CODE          )         AS        owner_Code
          , TO_CHAR(OWNER_CODE_NM       )         AS        owner_Code_Nm
          , TO_CHAR(RESULT_CUST_NAME    )         AS        result_Cust_Name
@@ -3904,7 +3904,7 @@ SELECT MST.*
                           STK_RETN_REM,
                           STK_RETN_RESN_ID,
                           STK_RETN_CC_ID,
-                          <!-- RETN_CODE_FAIL_REMARK, -->
+                          -- RETN_CODE_FAIL_REMARK,
                           STK_RETN_CRT_DT,
                           STK_RETN_CRT_USER_ID,
                           STK_RETN_UPD_DT,
