@@ -76,16 +76,14 @@
         SELECT
             b.ROLE_ID,
             c.MEM_CODE,
-            d.LAST_ORG_CODE,
-            d.LAST_GRP_CODE,
-            d.DEPT_CODE
+            c.ORG_CODE AS LAST_ORG_CODE,
+            c.GRP_CODE AS LAST_GRP_CODE,
+            c.DEPT_CODE
         FROM SYS0047M a
         INNER JOIN SYS0045M b
             ON b.USER_ID = a.USER_ID
-        LEFT JOIN ORG0001D c
+        LEFT JOIN ORG1001V c
             ON c.MEM_CODE = a.USER_NAME
-        LEFT JOIN ORG0005D d
-            ON d.MEM_ID = c.MEM_ID
         WHERE
             a.USER_ID = #{userId}
     </select>
