@@ -951,6 +951,7 @@ logger.debug("param :: {}", param);
             Map<String, Object> sys0070M = new HashMap<String, Object>();
 
             if(param.getSaveFlag().equals("I")) {
+logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : I =====");
                 sys0071D.put("atchFileName", data.getAtchFileName());
                 sys0071D.put("fileSubPath", data.getFileSubPath());
                 sys0071D.put("physiclFileName", data.getPhysiclFileName());
@@ -980,6 +981,7 @@ logger.debug("param :: {}", param);
                   throw new ApplicationException(AppConstants.FAIL, "Insert Exception.");
                 }
             } else if(param.getSaveFlag().equals("U")) {
+logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
                 sys0071D.put("atchFileId", param.getAtchFileId());
                 sys0071D.put("atchFileName", data.getAtchFileName());
                 sys0071D.put("fileSubPath", data.getFileSubPath());

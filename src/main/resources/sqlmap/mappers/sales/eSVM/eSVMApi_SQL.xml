@@ -723,7 +723,7 @@
         <selectKey keyProperty="atchFileId" resultType="int" order="BEFORE">
             SELECT  SYS0071D_ATCH_FILE_ID_SEQ.NEXTVALFROM DUAL
         </selectKey>
-
+        /* eSVMApi_SQL.xml :: insertSYS0071D */
         INSERT INTO SYS0071D
         (
             ATCH_FILE_ID,
@@ -749,6 +749,7 @@
     </insert>
 
     <insert id="insertSYS0070M" parameterType="Map">
+        /* eSVMApi_SQL.xml :: insertSYS0070M */
         INSERT INTO SYS0070M
         (
             ATCH_FILE_GRP_ID
