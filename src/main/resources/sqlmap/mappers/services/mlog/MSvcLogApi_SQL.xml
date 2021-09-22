@@ -3,17 +3,7 @@
 <mapper namespace="com.coway.trust.biz.services.mlog.impl.MSvcLogApiMapper">
 
   <select id="getHeartServiceJobList" parameterType="Map" resultType="egovMap">
-    <!-- A.warranty,
-        /*SELECT C.SRV_SALES_ORD_ID,
-                      MAX (C.SRV_MEM_ID) AS SRV_MEM_ID
-           FROM SVC0008D A
-           INNER JOIN ORG0001D B ON A.CODY_ID = B.MEM_ID AND B.MEM_CODE = #{userId}
-           LEFT OUTER JOIN SAL0095D C ON A.SALES_ORD_ID = C.SRV_SALES_ORD_ID
-                                         AND SYSDATE BETWEEN C.SRV_START_DT AND C.SRV_EXPR_DT
-                                        AND C.SRV_STUS_CODE_ID = 4
-                    WHERE A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
-                      AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
-                    GROUP BY C.SRV_SALES_ORD_ID */ -->
+
     SELECT A.appointment_Date,
            A.service_No,
            A.job_Status,
@@ -36,7 +26,6 @@
            A.customer_Id,
            A.customer_Va_No,
            A.dsc_Code,
-           A.instruction,
            A.sirim_No,
            fn_get_order_serial(A.sales_Order_Id, A.product_Code) AS serial_No,
            A.result_Cust_Name,
@@ -67,8 +56,6 @@
            A.postcode,
            A.service_State,
            A.install_Address,
-           A.need_Filter,
-           TO_CHAR (NVL(A.warranty,0)) AS warranty,
            TO_CHAR (NVL(B.ACC_DEBT_SUB_CURR_OTSTND_AGING,0)) AS outstanding,
            A.SERIAL_CHK,
            A.HS_CHK_LST,
@@ -77,8 +64,13 @@
            A.REDEEM_WARRANTY,
            A.CODE_FAIL_REMARK,
            A.VOUCHER_REDEMPTION,
-           A.IS_VOUCHER
-    FROM ( SELECT appointment_Date,
+           A.IS_VOUCHER,
+           CASE WHEN EXISTS (
+            SELECT 1 FROM SAL0087D  WHERE TO_CHAR (ADD_MONTHS (SRV_FILTER_PRV_CHG_DT, SRV_FILTER_PRIOD), 'YYYYMM')   <![CDATA[ <= ]]>   TO_CHAR (SYSDATE, 'YYYYMM')
+           ) THEN  '1'  ELSE '0' END AS need_Filter ,
+           TO_CHAR( NVL((SELECT FAUCET_EXCH FROM SAL0090D WHERE SRV_STUS_ID = 1 AND sales_Order_Id = SRV_SO_ID GROUP BY SRV_SO_ID, FAUCET_EXCH ) ,0)) AS warranty ,
+          (SELECT SRV_REM FROM SAL0090D WHERE SRV_STUS_ID = 1 AND sales_Order_Id = SRV_SO_ID GROUP BY SRV_SO_ID, SRV_REM)  AS instruction
+        FROM ( SELECT appointment_Date,
                   service_No,
                   job_Status,
                   appointment_Time,
@@ -100,7 +92,6 @@
                   customer_Id,
                   customer_Va_No,
                   dsc_Code,
-                  instruction,
                   sirim_No,
                   serial_No,
                   result_Cust_Name,
@@ -131,9 +122,7 @@
                   postcode,
                   service_State,
                   install_Address,
-                  CASE WHEN FILT_CNT <![CDATA[ > ]]> 0 THEN '1' ELSE '0' END need_Filter,
                   srv_mem_cntrct_id,
-                  warranty,
                   SERIAL_CHK,
                   HS_CHKLIST AS HS_CHK_LST,
                   VOUCHER ,
@@ -164,7 +153,6 @@
                                   G.cust_id AS customer_Id,
                                   G.CUST_VA_NO AS customer_Va_No,
                                   H.BRNCH_ID AS dsc_Code,
-                                  Z.SRV_REM AS instruction,
                                   J.SIRIM_NO AS sirim_No,
                                   J.SERIAL_NO AS serial_No,
                                   J.RESULT_CUST_NAME AS result_Cust_Name,
@@ -186,7 +174,6 @@
                                   L.STK_DESC AS product_Name,
                                   L.STK_CODE AS product_Code,
                                   M.CUST_BILL_PAY_REF_NO1 AS customer_Jom_Pay_Ref_No,
-                                  /* P.CODE_NAME AS payment_ModeName, */
                                   CASE WHEN P.CODE_ID = '131' THEN X.CODE_NAME || ' (Auto Debit)' ELSE P.CODE_NAME END AS payment_ModeName,
                                   TO_CHAR (P.CODE_ID) AS payment_Mode,
                                   TO_CHAR (R.SRV_DUR) AS contract_Duration,
@@ -205,12 +192,7 @@
                                    FROM SYS0064M
                                    WHERE STATUS_ID = 1
                                      AND AREA_ID = Q.AREA_ID) install_Address,
-                                   U.SRV_CONFIG_ID,
-                                   /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'POST')  postcode, */
-                                   /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'STATE')  service_State, */
-                                   /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'FULL_ADDR')  install_Address */
                                    R.SRV_MEM_CNTRCT_ID,
-                                   U.FAUCET_EXCH AS warranty,
                                    NVL(L.SERIAL_CHK, 'N') AS SERIAL_CHK,
                                    B.HS_CHKLIST,
                                    B.CODE_FAIL_REMARK,
@@ -220,7 +202,16 @@
                                     CASE WHEN Y.REDEEM_HS = 0 OR Y.REDEEM_HS = '0' OR Y.REDEEM_HS = '' THEN ''
                                     ELSE TO_CHAR(Y.REDEEM_MTH || '-' || Y.REDEEM_YEAR) END AS REDEEM_DT,
                                     TO_CHAR(Y.REDEEM_WARRANTY) AS REDEEM_WARRANTY
-                  FROM (SELECT A.*
+                  FROM (SELECT
+                                 A.NO ,
+                                 A.STUS_CODE_ID ,
+                                 A.APPNT_TM ,
+                                 A.YEAR ,
+                                 A.MONTH ,
+                                 A.IS_VOUCHER,
+                                 A.SALES_ORD_ID,
+                                 A.SCHDUL_ID,
+                                 A.APPNT_DT
                         FROM SVC0008D A,
                         ORG0001D B
                         WHERE A.CODY_ID = B.MEM_ID
@@ -239,13 +230,7 @@
                   SAL0027D F,
                   SAL0029D G,
                   SAL0045D H,
-                  ( <!-- SELECT MAX (INSTALL_ENTRY_ID) AS INSTALL_ENTRY_ID,
-                           SALES_ORD_ID ,
-                           STUS_CODE_ID
-                    FROM SAL0046D WHERE STUS_CODE_ID = 4
-                    GROUP BY SALES_ORD_ID ,
-                             STUS_CODE_ID -->
-
+                  (
                                SELECT MAX (INSTALL_ENTRY_ID) AS INSTALL_ENTRY_ID ,
                                     A.SALES_ORD_ID ,
                                     A.STUS_CODE_ID
@@ -290,7 +275,6 @@
                   FROM SAL0095D A
                   INNER JOIN
                   (
-
                     SELECT Z.SRV_SALES_ORD_ID,
                                Z.SRV_MEM_ID FROM ( SELECT
                                                                 RANK() OVER (PARTITION BY SRV_SALES_ORD_ID ORDER BY SRV_EXPR_DT DESC ) AS RANK_NUM,
@@ -299,7 +283,7 @@
                     FROM SVC0008D A
                     INNER JOIN ORG0001D B ON A.CODY_ID = B.MEM_ID AND B.MEM_CODE = #{userId}
                     LEFT OUTER JOIN SAL0095D C ON A.SALES_ORD_ID = C.SRV_SALES_ORD_ID
-                                        /* AND SYSDATE BETWEEN C.SRV_START_DT AND C.SRV_EXPR_DT */
+
                                         AND C.SRV_STUS_CODE_ID = 4
                     WHERE A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
                       AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
@@ -310,12 +294,9 @@
                  ) R,
                  SAL0071D S,
                  SAL0017D T,
-                 (SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID, SRV_SO_ID, FAUCET_EXCH FROM SAL0090D WHERE SRV_STUS_ID = 1 GROUP BY SRV_SO_ID, FAUCET_EXCH) U,
                  SAL0028D W,
                  SYS0013M X ,
-                 SAL0261D Y ,
-                 (SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID, SRV_SO_ID, SRV_REM FROM SAL0090D WHERE SRV_STUS_ID = 1 GROUP BY SRV_SO_ID, SRV_REM) Z
-
+                 SAL0261D Y
                  WHERE A.SCHDUL_ID = B.SCHDUL_ID(+)
                     AND A.SALES_ORD_ID = B.SALES_ORD_ID(+)
                     AND A.SALES_ORD_ID = C.SALES_ORD_ID
@@ -328,9 +309,6 @@
                     AND C.SALES_ORD_ID = K.SALES_ORD_ID
                     AND K.ITM_STK_ID = L.STK_ID
                     AND C.CUST_BILL_ID = M.CUST_BILL_ID(+)
-
-                    --AND C.SALES_ORD_ID = O.SALES_ORD_ID(+)
-                    --AND C.SALES_ORD_ID = O.CUST_ID(+)
                     AND R.SRV_SALES_ORD_ID = O.SALES_ORD_ID(+)
                     AND R.SRV_MEM_CNTRCT_ID = O.SVC_CNTRCT_ID(+)
                     AND O.CUST_CRC_ID = W.CUST_CRC_ID(+)
@@ -342,20 +320,14 @@
                     AND C.SALES_ORD_ID = R.SRV_SALES_ORD_ID(+)
                     AND C.SALES_ORD_ID = S.SALES_ORD_ID(+)
                     AND C.PROMO_ID = T.PROMO_ID(+)
-                    AND C.SALES_ORD_ID = U.SRV_SO_ID
-                    AND C.SALES_ORD_ID = Z.SRV_SO_ID
+                    AND EXISTS  (
+                      SELECT MAX(SRV_CONFIG_ID) AS SRV_CONFIG_ID, SRV_SO_ID, FAUCET_EXCH FROM SAL0090D WHERE SRV_STUS_ID = 1 AND C.SALES_ORD_ID = SRV_SO_ID GROUP BY SRV_SO_ID, FAUCET_EXCH
+                    )
                     AND B.RESULT_IS_CURR(+) = 1
                     AND C.SALES_ORD_ID = Y.SALES_ORD_ID(+)
-                  )AA ,( SELECT SRV_CONFIG_ID ,
-                                COUNT(*) FILT_CNT
-                         FROM ( (SELECT *
-                                 FROM SAL0087D
-                                 WHERE TO_CHAR (ADD_MONTHS (SRV_FILTER_PRV_CHG_DT, SRV_FILTER_PRIOD), 'YYYYMM') <![CDATA[ <= ]]> TO_CHAR (SYSDATE, 'YYYYMM') )
-                         ) GROUP BY SRV_CONFIG_ID
-                  )S87D
-                  WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
-       ) A LEFT JOIN PAY0053S B ON B.ACC_DEBT_ORD_ID = A.SALES_ORDER_ID
-                               AND B.ACC_DEBT_SRV_CNTRCT_ID = A.SRV_MEM_CNTRCT_ID
+                  )AA
+       ) A LEFT JOIN PAY0053S B ON B.ACC_DEBT_ORD_ID = A.SALES_ORDER_ID AND B.ACC_DEBT_SRV_CNTRCT_ID = A.SRV_MEM_CNTRCT_ID
+
   </select>
 
   <select id="getHeartServiceJobList_b" parameterType="Map" resultType="egovMap">
