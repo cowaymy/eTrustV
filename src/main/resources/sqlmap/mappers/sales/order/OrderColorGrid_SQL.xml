@@ -120,8 +120,7 @@
                          E1.TOT_OTSTND  ,
                          E1.PROMO_CODE  ,
                          E1.PROMO_DESC ,
-                         1,
-                         E1.MEM_ID
+                         1
                     <!-- E2.MAIL_CNT_TEL_M  ,
                          E2.MAIL_CNT_TEL_O  ,
                          E2.MAIL_CNT_TEL_R  ,
@@ -166,8 +165,7 @@
                                        vC.SALES_TYPE ,
                                        vC.PRE_ORD_ID ,
                                        vC.ECOMM_ORD_ID ,
-                                       vC.STK_CTGRY_ID,
-                                       vC.MEM_ID
+                                       vC.STK_CTGRY_ID
                                 FROM SAL1008V vC ) E1
 
                         <if test="contactNum != null and contactNum != ''">
@@ -343,54 +341,51 @@
                         </if> -->
 
                          <if test="orgCode != null and orgCode != ''">
-				            AND E1.ORG_CODE = #{orgCode}
-				          </if>
-				          <if test="grpCode != null and grpCode != ''">
-				            AND E1.GRP_CODE = #{grpCode}
-				          </if>
-				          <if test="deptCode != null and deptCode != ''">
-				            AND E1.DEPT_CODE = #{deptCode}
-				          </if>
-<!-- 				          <if test="memCode != null and memCode != ''" > -->
-<!-- 				            AND E1.MEM_CODE = #{memCode} -->
-<!-- 				          </if> -->
-                           <if test="memID != null and memID != ''">
-                            AND E1.MEM_ID = #{memID}
+                            AND E1.ORG_CODE = #{orgCode}
                           </if>
-				          <if test="ordNo != null and ordNo != ''">
-				            AND E1.ORD_NO = #{ordNo}
-				          </if>
-				          <if test="custName != null and custName != ''">
-				            AND E1.CUST_NAME LIKE '%'|| #{custName} || '%'
-				          </if>
-				          <if test="custIc != null and custIc != ''">
-				            AND E1.CUST_IC LIKE '%'|| #{custIc} || '%'
-				          </if>
-				          <if test="createStDate != null and createStDate != ''">
-				            AND E1.ORD_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
-				          </if>
-				          <if test="createEnDate != null and createEnDate != ''">
-				            AND E1.ORD_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
-				          </if>
-				          <if test="cmbProduct != null and cmbProduct != ''">
-				            <!-- AND E1.STK_ID = #{cmbProduct} -->
+                          <if test="grpCode != null and grpCode != ''">
+                            AND E1.GRP_CODE = #{grpCode}
+                          </if>
+                          <if test="deptCode != null and deptCode != ''">
+                            AND E1.DEPT_CODE = #{deptCode}
+                          </if>
+                          <if test="memCode != null and memCode != ''" >
+                            AND E1.MEM_CODE = #{memCode}
+                          </if>
+                          <if test="ordNo != null and ordNo != ''">
+                            AND E1.ORD_NO = #{ordNo}
+                          </if>
+                          <if test="custName != null and custName != ''">
+                            AND E1.CUST_NAME LIKE '%'|| #{custName} || '%'
+                          </if>
+                          <if test="custIc != null and custIc != ''">
+                            AND E1.CUST_IC LIKE '%'|| #{custIc} || '%'
+                          </if>
+                          <if test="createStDate != null and createStDate != ''">
+                            AND E1.ORD_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+                          </if>
+                          <if test="createEnDate != null and createEnDate != ''">
+                            AND E1.ORD_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                          </if>
+                          <if test="cmbProduct != null and cmbProduct != ''">
+                            <!-- AND E1.STK_ID = #{cmbProduct} -->
                               AND E1.STK_ID IN
                               <foreach item="item" collection="cmbProduct" index="index" open="(" separator="," close=")">
                                     #{item}
                               </foreach>
-				          </if>
-				          <if test="netSalesMonth != null and netSalesMonth != ''">
-				          <!-- AND E1.PV_YEAR = #{pvYear}
-				               AND E1.PV_MONTH = #{pvMonth} -->
-				            AND E1.PV_YEAR = EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
-				            AND E1.PV_MONTH = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
-				          </if>
-				          <if test="salesmanCode != null and salesmanCode != ''">
-				            AND E1.SALESMAN_CODE = #{salesmanCode}
-				          </if>
-				          <if test="promoCode != null and promoCode != ''">
-				            AND E1.PROMO_CODE = #{promoCode}
-				          </if>
+                          </if>
+                          <if test="netSalesMonth != null and netSalesMonth != ''">
+                          <!-- AND E1.PV_YEAR = #{pvYear}
+                               AND E1.PV_MONTH = #{pvMonth} -->
+                            AND E1.PV_YEAR = EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+                            AND E1.PV_MONTH = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+                          </if>
+                          <if test="salesmanCode != null and salesmanCode != ''">
+                            AND E1.SALESMAN_CODE = #{salesmanCode}
+                          </if>
+                          <if test="promoCode != null and promoCode != ''">
+                            AND E1.PROMO_CODE = #{promoCode}
+                          </if>
                           <if test="memtype != null and memtype != ''">
                             AND E1.MEM_TYPE = #{memtype}
                           </if>
@@ -429,6 +424,8 @@
                             </foreach>
                         </if>
 
+
+
                         <if test='isEKeyin != null and isEKeyin != ""'>
                            AND NVL(E1.PRE_ORD_ID,0) > 0
                          </if>
@@ -438,8 +435,8 @@
 
            ) F1
           <!--   LEFT JOIN ORG0001D MEM ON MEM.MEM_CODE = F1.MEM_CODE
-    	   JOIN SYS0013M S13 ON S13.CODE_ID = MEM.MEM_TYPE AND CODE_MASTER_ID = 1
-    	   JOIN SAL0029D S29 ON S29.NRIC = F1.CUST_IC-->
+           JOIN SYS0013M S13 ON S13.CODE_ID = MEM.MEM_TYPE AND CODE_MASTER_ID = 1
+           JOIN SAL0029D S29 ON S29.NRIC = F1.CUST_IC-->
           WHERE 1 = 1
            <!-- <if test="memtype != null and memtype != ''">
             AND MEM_TYPE = #{memtype}
@@ -465,14 +462,5 @@
              c.CODE_NAME
     ORDER BY c.CODE_NAME,
              s.STK_DESC
-  </select>
-
-  <select id="getMemID" resultType="egovMap">
-    SELECT E1.MEM_ID
-    FROM ORG0001D E1
-    WHERE
-     <if test="memCode != null and memCode != ''" >
-             E1.MEM_CODE = #{memCode}
-      </if>
   </select>
 </mapper>
