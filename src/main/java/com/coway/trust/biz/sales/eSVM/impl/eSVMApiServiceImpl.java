@@ -785,9 +785,13 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
             throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
         }
 
+        logger.debug("===== serviceImpl.removePsmAttachment =====");
+        logger.debug("param :: {}", param);
+
         eSVMApiDto rtn = new eSVMApiDto();
 
         if(CommonUtils.isNotEmpty(param.getAtchFileSvmF()) && param.getAtchFileSvmF() > 0) {
+logger.debug("delete sys71 svmf cp");
             Map<String, Object> sys0071D = new HashMap<String, Object>();
             sys0071D.put("atchFileId", param.getAtchFileSvmF());
 
@@ -799,6 +803,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         }
 
         if(CommonUtils.isNotEmpty(param.getAtchFileSvmTnc()) && param.getAtchFileSvmTnc() > 0) {
+logger.debug("delete sys71 svmtnc cp");
             Map<String, Object> sys0071D = new HashMap<String, Object>();
             sys0071D.put("atchFileId", param.getAtchFileSvmTnc());
 
@@ -810,6 +815,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         }
 
         if(CommonUtils.isNotEmpty(param.getAtchFilePo()) && param.getAtchFilePo() > 0) {
+logger.debug("delete sys71 po cp");
             Map<String, Object> sys0071D = new HashMap<String, Object>();
             sys0071D.put("atchFileId", param.getAtchFilePo());
 
@@ -821,6 +827,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         }
 
         if(CommonUtils.isNotEmpty(param.getAtchFileNricCrcF()) && param.getAtchFileNricCrcF() > 0) {
+logger.debug("delete sys71 nriccrcf cp");
             Map<String, Object> sys0071D = new HashMap<String, Object>();
             sys0071D.put("atchFileId", param.getAtchFileNricCrcF());
 
@@ -832,6 +839,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         }
 
         if(CommonUtils.isNotEmpty(param.getAtchFileNricCrcB()) && param.getAtchFileNricCrcB() > 0) {
+logger.debug("delete sys71 nriccrcb cp");
             Map<String, Object> sys0071D = new HashMap<String, Object>();
             sys0071D.put("atchFileId", param.getAtchFileNricCrcB());
 
@@ -843,6 +851,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         }
 
         if(CommonUtils.isNotEmpty(param.getAtchFileTrxSlip()) && param.getAtchFileTrxSlip() > 0) {
+logger.debug("delete sys71 trxslip cp");
             Map<String, Object> sys0071D = new HashMap<String, Object>();
             sys0071D.put("atchFileId", param.getAtchFileTrxSlip());
 
@@ -854,6 +863,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         }
 
         if(CommonUtils.isNotEmpty(param.getAtchFileChqImg()) && param.getAtchFileChqImg() > 0) {
+logger.debug("delete sys71 chqimg cp");
             Map<String, Object> sys0071D = new HashMap<String, Object>();
             sys0071D.put("atchFileId", param.getAtchFileChqImg());
 
@@ -865,6 +875,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         }
 
         if(CommonUtils.isNotEmpty(param.getAtchFileOther1()) && param.getAtchFileOther1() > 0) {
+logger.debug("delete sys71 other1 cp");
             Map<String, Object> sys0071D = new HashMap<String, Object>();
             sys0071D.put("atchFileId", param.getAtchFileOther1());
 
@@ -876,6 +887,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         }
 
         if(CommonUtils.isNotEmpty(param.getAtchFileOther2()) && param.getAtchFileOther2() > 0) {
+logger.debug("delete sys71 other2 cp");
             Map<String, Object> sys0071D = new HashMap<String, Object>();
             sys0071D.put("atchFileId", param.getAtchFileOther2());
 
@@ -887,6 +899,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         }
 
         if(CommonUtils.isNotEmpty(param.getAtchFileOther3()) && param.getAtchFileOther3() > 0) {
+logger.debug("delete sys71 other3 cp");
             Map<String, Object> sys0071D = new HashMap<String, Object>();
             sys0071D.put("atchFileId", param.getAtchFileOther3());
 
@@ -921,6 +934,9 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         if(CommonUtils.isEmpty(param.getSaveFlag())) {
             throw new ApplicationException(AppConstants.FAIL, "saveFlag value does not exist.");
         }
+
+logger.debug("===== serviceImpl.updatePaymentUploadFile =====");
+logger.debug("param :: {}", param);
 
         Map<String, Object> loginInfoMap = new HashMap<String, Object>();
         loginInfoMap.put("_USER_ID", param.getUserId());
