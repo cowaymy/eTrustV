@@ -165,7 +165,7 @@ public class eSVMApiController {
       List<EgovMap> svmAttachmentList = eSVMApiService.selectESvmAttachment(param);
       if (LOGGER.isDebugEnabled()) {
         for (int i = 0; i < svmAttachmentList.size(); i++) {
-          LOGGER.debug("selectQuotationList : {}", svmAttachmentList.get(i));
+          LOGGER.debug("selectPsmAttachment : {}", svmAttachmentList.get(i));
         }
       }
       return ResponseEntity.ok(svmAttachmentList.stream().map(r -> eSVMApiDto.create(r)).collect(Collectors.toList()));
@@ -181,11 +181,13 @@ public class eSVMApiController {
     @ApiOperation(value = "updatePaymentUploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @RequestMapping(value = "/updatePaymentUploadFile", method = RequestMethod.POST)
     public ResponseEntity<FileDto> updatePaymentUploadFile(@ApiIgnore MultipartHttpServletRequest request, @ModelAttribute eSVMApiDto param) throws Exception {
-      List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, webUploadDir, param.getSubPath(),
-          AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+        LOGGER.debug("*************************************************************************************************************");
+        LOGGER.debug("***************************************updatePaymentUploadFile***********************************************");
+        LOGGER.debug("*************************************************************************************************************");
+        List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, webUploadDir, param.getSubPath(), AppConstants.UPLOAD_MIN_FILE_SIZE, true);
 
-      int fileGroupKey = eSVMApiService.updatePaymentUploadFile(FileVO.createList(list), param);
-      FileDto fileDto = FileDto.create(list, fileGroupKey);
-      return ResponseEntity.ok(fileDto);
+        int fileGroupKey = eSVMApiService.updatePaymentUploadFile(FileVO.createList(list), param);
+        FileDto fileDto = FileDto.create(list, fileGroupKey);
+        return ResponseEntity.ok(fileDto);
     }
 }
