@@ -29,8 +29,4 @@ public class OrderColorGridServiceImpl extends EgovAbstractServiceImpl implement
 	public List<EgovMap> colorGridCmbProduct() {
 		return orderColorGridMapper.colorGridCmbProduct();
 	}
-
-	public String  getMemID(String string) {
-		return orderColorGridMapper.getMemID(string);
-	}
 }
