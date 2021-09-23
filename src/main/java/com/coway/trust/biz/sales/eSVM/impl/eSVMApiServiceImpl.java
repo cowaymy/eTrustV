@@ -918,15 +918,19 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile =====");
         if(null == param) {
             throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
         }
-
+/*
         if(CommonUtils.isEmpty(param.getUserId())) {
             throw new ApplicationException(AppConstants.FAIL, "userId value does not exist.");
         }
-
+*/
         if(CommonUtils.isEmpty(param.getAtchFileGrpId())) {
             throw new ApplicationException(AppConstants.FAIL, "atchFileGrpId value does not exist.");
         }
 
+        if(CommonUtils.isEmpty(param.getCurAtchFileGrpId())) {
+            throw new ApplicationException(AppConstants.FAIL, "atchFileGrpId value does not exist.");
+        }
+/*
         if(CommonUtils.isEmpty(param.getFileKeySeq())) {
             throw new ApplicationException(AppConstants.FAIL, "fileKeySeq value does not exist.");
         }
@@ -934,6 +938,7 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile =====");
         if(CommonUtils.isEmpty(param.getSaveFlag())) {
             throw new ApplicationException(AppConstants.FAIL, "saveFlag value does not exist.");
         }
+*/
 
 logger.debug("param :: {}", param);
 
