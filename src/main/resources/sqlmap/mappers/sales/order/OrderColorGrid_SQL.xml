@@ -149,6 +149,7 @@
                               NVL (mo.GRP_CODE, ' ') GRP_CODE,
                               NVL (mo.DEPT_CODE, ' ') DEPT_CODE,
                               NVL (mo.MEM_CODE, ' ') MEM_CODE,
+                              NVL (mo.MEM_ID, ' ') MEM_ID,
                               (CASE WHEN NVL (som.PV_MONTH, 0) <![CDATA[>]]> 0 THEN 1 ELSE 0 END) IS_NET,
                               (CASE
                                   WHEN NVL (som.PV_MONTH, 0) <![CDATA[>]]> 0
@@ -266,8 +267,11 @@
                           <if test="deptCode != null and deptCode != ''">
                             AND NVL (mo.DEPT_CODE, ' ') = #{deptCode}
                           </if>
-                          <if test="memCode != null and memCode != ''" >
-                            AND NVL (mo.MEM_CODE, ' ') = #{memCode}
+<!--                           <if test="memCode != null and memCode != ''" > -->
+<!--                             AND NVL (mo.MEM_CODE, ' ') = #{memCode} -->
+<!--                           </if> -->
+                           <if test="memID!= null and memID != ''" >
+                            AND NVL (mo.MEM_ID, ' ') = #{memID}
                           </if>
                           <if test="ordNo != null and ordNo != ''">
                             AND som.SALES_ORD_NO = #{ordNo}
@@ -550,4 +554,15 @@
     ORDER BY c.CODE_NAME,
              s.STK_DESC
   </select>
+
+    <select id="getMemID" parameterType="Map" resultType="String">
+    SELECT E1.MEM_ID
+    FROM ORG0001D E1
+    WHERE 1=1
+     <if test="memCode != null and memCode != ''" >
+           AND  E1.MEM_CODE = #{memCode}
+      </if>
+  </select>
+
+
 </mapper>
