@@ -149,9 +149,9 @@
                               NVL (mo.GRP_CODE, ' ') GRP_CODE,
                               NVL (mo.DEPT_CODE, ' ') DEPT_CODE,
                               NVL (mo.MEM_CODE, ' ') MEM_CODE,
-                              (CASE WHEN NVL (som.PV_MONTH, 0) > 0 THEN 1 ELSE 0 END) IS_NET,
+                              (CASE WHEN NVL (som.PV_MONTH, 0) <![CDATA[>]]> 0 THEN 1 ELSE 0 END) IS_NET,
                               (CASE
-                                  WHEN NVL (som.PV_MONTH, 0) > 0
+                                  WHEN NVL (som.PV_MONTH, 0) <![CDATA[>]]> 0
                                   THEN
                                      (CASE
                                          WHEN NVL(som.PV_MONTH, 0) <![CDATA[<]]> 10
@@ -183,7 +183,9 @@
                               mem.MEM_TYPE,
                               C.TYPE_ID CUST_TYPE_ID,
                               C.CORP_TYPE_ID,
-                              0 SALES_TYPE,
+                              CASE
+                                WHEN NVL(som.PCKAGE_BINDING_NO,0) > 0 THEN 3
+                                ELSE NVL(SOM.EX_TRADE,0) END SALES_TYPE,
                               som.PRE_ORD_ID ,
                               som.ECOMM_ORD_ID
                              ,
@@ -326,12 +328,12 @@
                               </otherwise>
                              </choose>
                           </if>
-                          <!-- <if test="cmbSalesType != null and cmbSalesType != ''">
+                          <if test="cmbSalesType != null and cmbSalesType != ''">
                           AND E1.SALES_TYPE IN
                             <foreach item="item" collection="cmbSalesType" index="index" open="(" separator="," close=")">
                               #{item}
                             </foreach>
-                        </if> -->
+                        </if>
                         <if test="cmbProductCtgry != null and cmbProductCtgry != ''">
                           AND stk.STK_CTGRY_ID IN
                             <foreach item="item" collection="cmbProductCtgry" index="index" open="(" separator="," close=")">
