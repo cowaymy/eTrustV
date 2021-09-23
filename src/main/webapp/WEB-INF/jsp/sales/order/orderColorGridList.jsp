@@ -112,7 +112,8 @@
             }
         }
 
-        CommonCombo.make('cmbAppType', '/common/selectCodeList.do', {groupCode : 10} , '', {type: 'M'});
+        //CommonCombo.make('cmbAppType', '/common/selectCodeList.do', {groupCode : 10} , '', {type: 'M'});
+        doGetCombo('/common/selectCodeList.do', '10', '','cmbAppType', 'M' , 'f_multiCombo');
         doGetComboOrder('/sales/order/colorGridProductList.do', '', '', '', 'cmbProduct', 'M', 'f_multiCombo'); //Common Code
         //doGetComboWh('/sales/order/colorGridProductList.do', '', '', 'cmbProduct', '', '');
         doGetCombo('/common/selectCodeList.do', '8', '','cmbCustomerType', 'M' , 'f_multiCombo');            // Customer Type Combo Box
@@ -120,11 +121,23 @@
         //CommonCombo.make('cmbCustomerType', '/common/selectCodeList.do', {groupCode : 8} , '', {type: 'M'});
         //CommonCombo.make('cmbCorpTypeId', '/common/selectCodeList.do', {groupCode : 95} , '', {type: 'M'});
         doGetCombo('/sales/promotion/selectProductCategoryList.do', '', '', 'cmbProductCtgry', 'M','f_multiCombo'); //Category
+
+
     });
+
 
 	// 조회조건 combo box
     function f_multiCombo(){
         $(function() {
+
+        	$('#cmbAppType').change(function() {
+
+            }).multipleSelect({
+                selectAll: true, // 전체선택
+                width: '80%'
+            });
+
+
             $('#cmbCustomerType').change(function() {
 
             }).multipleSelect({
@@ -387,6 +400,7 @@ console.log("searchColorGrid");
         }
 */
 
+
           if(isValid == true){
         	var param =  $("#searchForm").serialize();
             var htMemberType = $('#memtype').find('option:selected').val();
@@ -395,6 +409,9 @@ console.log("searchColorGrid");
            			    param += "&memtype="+htMemberType;
         		 }
         	}
+
+
+
 
 
 	       	Common.ajax("GET", "/sales/order/orderColorGridJsonList", param, function(result) {

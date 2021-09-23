@@ -132,7 +132,7 @@
                          FROM (
 
                          <!-- SELECT FROM VIEW SUBSTITUE (SAL1008V) -->
-                         SELECT /*+first_rows*/ som.SALES_ORD_ID ORD_ID,
+                         SELECT  som.SALES_ORD_ID ORD_ID,
                               som.SALES_ORD_NO ORD_NO,
                               som.SALES_DT ORD_DT,
                               som.APP_TYPE_ID,
@@ -210,8 +210,9 @@
                               LEFT JOIN SYS0038M instStatus
                                  ON instStatus.STUS_CODE_ID = ir.STUS_CODE_ID
                               LEFT JOIN SYS0032M instReason ON instReason.RESN_ID = ir.FAIL_ID
-                        WHERE (som.STUS_CODE_ID <![CDATA[<>]]> 8) AND (som.APP_TYPE_ID IN (66, 67, 68, 1412))
 
+
+                        WHERE 1=1
                         <if test="cmbAppTypeList != null and cmbAppTypeList != ''">
                           AND som.APP_TYPE_ID IN
                             <foreach item="item" collection="cmbAppTypeList" index="index" open="(" separator="," close=")">
@@ -259,19 +260,19 @@
                         </if>
 
                         <if test="orgCode != null and orgCode != ''">
-                            AND NVL (mo.ORG_CODE, ' ') = #{orgCode}
+                            AND NVL (mo.ORG_CODE, '') = #{orgCode}
                           </if>
                           <if test="grpCode != null and grpCode != ''">
-                            AND NVL (mo.GRP_CODE, ' ') = #{grpCode}
+                            AND NVL (mo.GRP_CODE, '') = #{grpCode}
                           </if>
                           <if test="deptCode != null and deptCode != ''">
-                            AND NVL (mo.DEPT_CODE, ' ') = #{deptCode}
+                            AND NVL (mo.DEPT_CODE, '') = #{deptCode}
                           </if>
 <!--                           <if test="memCode != null and memCode != ''" > -->
 <!--                             AND NVL (mo.MEM_CODE, ' ') = #{memCode} -->
 <!--                           </if> -->
                            <if test="memID!= null and memID != ''" >
-                            AND NVL (mo.MEM_ID, ' ') = #{memID}
+                            AND NVL (mo.MEM_ID, '') = #{memID}
                           </if>
                           <if test="ordNo != null and ordNo != ''">
                             AND som.SALES_ORD_NO = #{ordNo}
@@ -302,10 +303,10 @@
                             AND NVL (som.PV_MONTH, 0) = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
                           </if>
                           <if test="salesmanCode != null and salesmanCode != ''">
-                            AND NVL (mem.MEM_CODE, ' ') = #{salesmanCode}
+                            AND NVL (mem.MEM_CODE, '') = #{salesmanCode}
                           </if>
                           <if test="promoCode != null and promoCode != ''">
-                            AND NVL (promo.PROMO_CODE, ' ') = #{promoCode}
+                            AND NVL (promo.PROMO_CODE, '') = #{promoCode}
                           </if>
                           <if test="memtype != null and memtype != ''">
                             AND mem.MEM_TYPE = #{memtype}

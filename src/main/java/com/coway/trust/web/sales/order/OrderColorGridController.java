@@ -80,14 +80,13 @@ public class OrderColorGridController {
     logger.info("Company type:: " + Arrays.toString(cmbCorpTypeId));
 
 
-		if (params.containsKey("memCode")) {
+		//if (params.containsKey("memCode")) {
+    	if (params.get("memCode") != null && !params.get("memCode").toString().equalsIgnoreCase("")){
 			logger.info("memCode:: " + params.get("memCode").toString());
 
 			String memID = orderColorGridService.getMemID(params);
 			params.put("memID", memID);
 			logger.info("memID:: " + memID);
-		} else {
-			params.put("memID", "");
 		}
 
 		if (cmbCustomerType != null) {
