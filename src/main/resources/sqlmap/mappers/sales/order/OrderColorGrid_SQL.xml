@@ -129,7 +129,224 @@
                          E3.INST_CNT_TEL_O ,
                          E3.INST_CNT_TEL_R ,
                          E3.INST_CNT_TEL_F  -->
-                         FROM ( SELECT vC.ORD_ID ,
+                         FROM (
+
+                         <!-- SELECT FROM VIEW SUBSTITUE (SAL1008V) -->
+                         SELECT /*+first_rows*/ som.SALES_ORD_ID ORD_ID,
+                              som.SALES_ORD_NO ORD_NO,
+                              som.SALES_DT ORD_DT,
+                              som.APP_TYPE_ID,
+                              apptype.CODE APP_TYPE_CODE,
+                              c.NAME CUST_NAME,
+                              c.NRIC CUST_IC,
+                              sod.ITM_STK_ID STK_ID,
+                              '( ' || stk.STK_CODE || ' ) ' || stk.STK_DESC STK_CODE,
+                              NVL (mem.MEM_CODE, ' ') SALESMAN_CODE,
+                              som.STUS_CODE_ID STUS_ID,
+                              S.CODE STUS_CODE,
+                              NVL (mo.TOP_ORG_CODE, ' ') TOP_ORG_CODE,
+                              NVL (mo.ORG_CODE, ' ') ORG_CODE,
+                              NVL (mo.GRP_CODE, ' ') GRP_CODE,
+                              NVL (mo.DEPT_CODE, ' ') DEPT_CODE,
+                              NVL (mo.MEM_CODE, ' ') MEM_CODE,
+                              (CASE WHEN NVL (som.PV_MONTH, 0) > 0 THEN 1 ELSE 0 END) IS_NET,
+                              (CASE
+                                  WHEN NVL (som.PV_MONTH, 0) > 0
+                                  THEN
+                                     (CASE
+                                         WHEN NVL (som.PV_MONTH, 0) <10
+                                         THEN
+                                               '0'
+                                            || NVL (som.PV_MONTH, 0)
+                                            || '/'
+                                            || NVL (som.PV_YEAR, 0)
+                                         ELSE
+                                            NVL (som.PV_MONTH, 0) || '/' || NVL (som.PV_YEAR, 0)
+                                      END)
+                                  ELSE
+                                     '-'
+                               END)
+                                 NET_MONTH,
+                              NVL (som.PV_MONTH, 0) PV_MONTH,
+                              NVL (som.PV_YEAR, 0) PV_YEAR,
+                              NVL (ie.STUS_CODE_ID, 0) INSTALL_STUS_ID,
+                              NVL (instStatus.CODE, '-') INSTALL_STUS,
+                              NVL (instReason.RESN_DESC, '-') INSTALL_FAIL_RESN,
+                              NVL (som.COMM_DT, TO_DATE ('01/01/1900', 'dd/mm/yyyy')) COM_DT,
+                              NVL (som.PAY_COM_DT, TO_DATE ('01/01/1900', 'dd/mm/yyyy'))
+                                 PAY_COM_DT,
+                              0 TOT_CNT,
+                              0 TOT_OTSTND,
+                              NVL (promo.PROMO_CODE, ' ') PROMO_CODE,
+                              NVL (promo.PROMO_DESC, ' ') PROMO_DESC,
+                              som.MEM_ID,
+                              mem.MEM_TYPE,
+                              C.TYPE_ID CUST_TYPE_ID,
+                              C.CORP_TYPE_ID,
+                              0 SALES_TYPE,
+                              som.PRE_ORD_ID ,
+                              som.ECOMM_ORD_ID
+                             ,
+                          stk.STK_CTGRY_ID
+
+                         FROM SAL0001D som
+                              JOIN SAL0002D sod ON som.SALES_ORD_ID = sod.SALES_ORD_ID
+                              JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID
+                              JOIN SYS0026M stk ON stk.STK_ID = sod.ITM_STK_ID
+                              JOIN SYS0013M apptype ON apptype.CODE_ID = som.APP_TYPE_ID
+                              JOIN SAL0029D c ON c.CUST_ID = som.CUST_ID
+                              JOIN ORG1001V mo ON mo.MEM_ID = som.MEM_ID
+                              LEFT JOIN ORG0001D mem ON mem.MEM_ID = som.MEM_ID
+                              LEFT JOIN SAL0017D promo ON promo.PROMO_ID = som.PROMO_ID
+                              LEFT JOIN
+                              SAL0046D ie
+                                 ON     ie.SALES_ORD_ID = som.SALES_ORD_ID
+                                    AND ie.INSTALL_ENTRY_ID =
+                                           FN_GET_SAL0046D_MAX_ID (som.SALES_ORD_ID, '3')
+                              LEFT JOIN SAL0047D ir ON ir.ENTRY_ID = ie.INSTALL_ENTRY_ID AND ir.STUS_CODE_ID <> 8
+                              LEFT JOIN SYS0038M instStatus
+                                 ON instStatus.STUS_CODE_ID = ir.STUS_CODE_ID
+                              LEFT JOIN SYS0032M instReason ON instReason.RESN_ID = ir.FAIL_ID
+                        WHERE (som.STUS_CODE_ID <> 8) AND (som.APP_TYPE_ID IN (66, 67, 68, 1412))
+
+                        <if test="cmbAppTypeList != null and cmbAppTypeList != ''">
+                          AND som.APP_TYPE_ID IN
+                            <foreach item="item" collection="cmbAppTypeList" index="index" open="(" separator="," close=")">
+                              #{item}
+                            </foreach>
+                        </if>
+                        <if test="cmbCondition != null and cmbCondition != ''">
+                        AND
+                        <foreach item="item" collection="cmbCondition" index="index" open="(" separator="OR" close=")">
+
+                          <if test="item == 1 ">
+                              ( som.STUS_CODE_ID = 1 )
+                          </if>
+                          <if test="item == 2 ">
+                              ( som.STUS_CODE_ID = 10 )
+                          </if>
+                          <if test="item == 3 ">
+                             (
+                                    som.STUS_CODE_ID = 4
+                                AND NVL (som.PV_YEAR, 0) <![CDATA[>]]> 0
+                                AND NVL (som.PV_MONTH, 0) <![CDATA[>]]> 0
+                              )
+                          </if>
+                          <if test="item == 4 ">
+                             (
+                                    som.STUS_CODE_ID = 4
+                                AND NVL (som.PV_YEAR, 0) = 0
+                                AND NVL (som.PV_MONTH, 0) = 0
+                              )
+                          </if>
+                          <if test="item == 5 ">
+                             (
+                                    NVL (ie.STUS_CODE_ID, 0) = 21
+                                som.STUS_CODE_ID != 10
+                              )
+                          </if>
+                          <if test="item == 6 ">
+                             (
+                                    NVL (ie.STUS_CODE_ID, 0) = 1
+                                som.STUS_CODE_ID != 10
+                              )
+                          </if>
+                        </foreach>
+
+                        </if>
+
+                        <if test="orgCode != null and orgCode != ''">
+                            AND NVL (mo.ORG_CODE, ' ') = #{orgCode}
+                          </if>
+                          <if test="grpCode != null and grpCode != ''">
+                            AND NVL (mo.GRP_CODE, ' ') = #{grpCode}
+                          </if>
+                          <if test="deptCode != null and deptCode != ''">
+                            AND NVL (mo.DEPT_CODE, ' ') = #{deptCode}
+                          </if>
+                          <if test="memCode != null and memCode != ''" >
+                            AND NVL (mo.MEM_CODE, ' ') = #{memCode}
+                          </if>
+                          <if test="ordNo != null and ordNo != ''">
+                            AND som.SALES_ORD_NO = #{ordNo}
+                          </if>
+                          <if test="custName != null and custName != ''">
+                            AND c.NAME LIKE '%'|| #{custName} || '%'
+                          </if>
+                          <if test="custIc != null and custIc != ''">
+                            AND c.NRIC LIKE '%'|| #{custIc} || '%'
+                          </if>
+                          <if test="createStDate != null and createStDate != ''">
+                            AND som.SALES_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+                          </if>
+                          <if test="createEnDate != null and createEnDate != ''">
+                            AND som.SALES_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
+                          </if>
+                          <if test="cmbProduct != null and cmbProduct != ''">
+                            <!-- AND E1.STK_ID = #{cmbProduct} -->
+                              AND sod.ITM_STK_ID IN
+                              <foreach item="item" collection="cmbProduct" index="index" open="(" separator="," close=")">
+                                    #{item}
+                              </foreach>
+                          </if>
+                          <if test="netSalesMonth != null and netSalesMonth != ''">
+                          <!-- AND E1.PV_YEAR = #{pvYear}
+                               AND E1.PV_MONTH = #{pvMonth} -->
+                            AND NVL (som.PV_YEAR, 0) = EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+                            AND NVL (som.PV_MONTH, 0) = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+                          </if>
+                          <if test="salesmanCode != null and salesmanCode != ''">
+                            AND NVL (mem.MEM_CODE, ' ') = #{salesmanCode}
+                          </if>
+                          <if test="promoCode != null and promoCode != ''">
+                            AND NVL (promo.PROMO_CODE, ' ') = #{promoCode}
+                          </if>
+                          <if test="memtype != null and memtype != ''">
+                            AND mem.MEM_TYPE = #{memtype}
+                          </if>
+                          <if test="cmbCustomerType != null and cmbCustomerType != ''">
+                              AND C.TYPE_ID IN
+                              <foreach item="item" collection="cmbCustomerType" index="index" open="(" separator="," close=")">
+                                    #{item}
+                              </foreach>
+                          </if>
+                          <if test="cmbCorpTypeId != null and cmbCorpTypeId != ''">
+                              AND C.CORP_TYPE_ID IN
+                              <choose>
+                              <when test="Individual !=null and Individual !=''">
+                                  <foreach item="item" collection="cmbCorpTypeId" index="index" open="(" separator="," close=" ">
+                                      #{item}
+                                  </foreach>
+                                   ,0)
+                              </when>
+                              <otherwise>
+                                  <foreach item="item" collection="cmbCorpTypeId" index="index" open="(" separator="," close=")">
+                                      #{item}
+                                 </foreach>
+                              </otherwise>
+                             </choose>
+                          </if>
+                          <!-- <if test="cmbSalesType != null and cmbSalesType != ''"> -- ALWAYS RETURN 0 - NEW SALES
+                          AND E1.SALES_TYPE IN
+                            <foreach item="item" collection="cmbSalesType" index="index" open="(" separator="," close=")">
+                              #{item}
+                            </foreach>
+                        </if> -->
+                        <if test="cmbProductCtgry != null and cmbProductCtgry != ''">
+                          AND stk.STK_CTGRY_ID IN
+                            <foreach item="item" collection="cmbProductCtgry" index="index" open="(" separator="," close=")">
+                              #{item}
+                            </foreach>
+                        </if>
+
+                        <if test='isEKeyin != null and isEKeyin != ""'>
+                           AND NVL(som.PRE_ORD_ID,0) > 0
+                         </if>
+                         <if test='isECommerce != null and isECommerce != ""'>
+                           AND NVL(som.ECOMM_ORD_ID,0) > 0
+                         </if>
+
+                         <!-- SELECT vC.ORD_ID ,
                                        vC.ORD_NO ,
                                        vC.ORD_DT ,
                                        vC.APP_TYPE_ID ,
@@ -166,7 +383,9 @@
                                        vC.PRE_ORD_ID ,
                                        vC.ECOMM_ORD_ID ,
                                        vC.STK_CTGRY_ID
-                                FROM SAL1008V vC ) E1
+                                FROM SAL1008V vC --> <!-- Optimization - change to direct call from sub query than from view. Hui Ding 2021-09-23-->
+
+                                 ) E1
 
                         <if test="contactNum != null and contactNum != ''">
                         /*
@@ -268,54 +487,10 @@
                                       vI.VRIFY_REM
                                 FROM SAL1010V vI ) E3 ON E3.ORD_ID = E1.ORD_ID -->
 
-                        WHERE  1 = 1
-                        <if test="cmbAppTypeList != null and cmbAppTypeList != ''">
-                          AND E1.APP_TYPE_ID IN
-                            <foreach item="item" collection="cmbAppTypeList" index="index" open="(" separator="," close=")">
-                              #{item}
-                            </foreach>
-                        </if>
-                        <if test="cmbCondition != null and cmbCondition != ''">
-                        AND
-                        <foreach item="item" collection="cmbCondition" index="index" open="(" separator="OR" close=")">
+                        <!--WHERE  1 = 1
 
-                          <if test="item == 1 ">
-                              ( E1.STUS_ID = 1 )
-                          </if>
-                          <if test="item == 2 ">
-                              ( E1.STUS_ID = 10 )
-                          </if>
-                          <if test="item == 3 ">
-                             (
-                                    E1.STUS_ID = 4
-                                AND E1.PV_YEAR <![CDATA[>]]> 0
-                                AND E1.PV_MONTH <![CDATA[>]]> 0
-                              )
-                          </if>
-                          <if test="item == 4 ">
-                             (
-                                    E1.STUS_ID = 4
-                                AND E1.PV_YEAR = 0
-                                AND E1.PV_MONTH = 0
-                              )
-                          </if>
-                          <if test="item == 5 ">
-                             (
-                                    E1.INSTALL_STUS_ID = 21
-                                AND E1.STUS_ID != 10
-                              )
-                          </if>
-                          <if test="item == 6 ">
-                             (
-                                    E1.INSTALL_STUS_ID = 1
-                                AND E1.STUS_ID != 10
-                              )
-                          </if>
-                        </foreach>
 
-                        </if>
-
-                        <!-- <if test="cmbCondition == 1 ">
+                         <if test="cmbCondition == 1 ">
                             AND E1.STUS_ID = 1
                         </if>
                         <if test="cmbCondition == 2 ">
@@ -340,98 +515,8 @@
                             AND E1.STUS_ID != 10
                         </if> -->
 
-                         <if test="orgCode != null and orgCode != ''">
-                            AND E1.ORG_CODE = #{orgCode}
-                          </if>
-                          <if test="grpCode != null and grpCode != ''">
-                            AND E1.GRP_CODE = #{grpCode}
-                          </if>
-                          <if test="deptCode != null and deptCode != ''">
-                            AND E1.DEPT_CODE = #{deptCode}
-                          </if>
-                          <if test="memCode != null and memCode != ''" >
-                            AND E1.MEM_CODE = #{memCode}
-                          </if>
-                          <if test="ordNo != null and ordNo != ''">
-                            AND E1.ORD_NO = #{ordNo}
-                          </if>
-                          <if test="custName != null and custName != ''">
-                            AND E1.CUST_NAME LIKE '%'|| #{custName} || '%'
-                          </if>
-                          <if test="custIc != null and custIc != ''">
-                            AND E1.CUST_IC LIKE '%'|| #{custIc} || '%'
-                          </if>
-                          <if test="createStDate != null and createStDate != ''">
-                            AND E1.ORD_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
-                          </if>
-                          <if test="createEnDate != null and createEnDate != ''">
-                            AND E1.ORD_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
-                          </if>
-                          <if test="cmbProduct != null and cmbProduct != ''">
-                            <!-- AND E1.STK_ID = #{cmbProduct} -->
-                              AND E1.STK_ID IN
-                              <foreach item="item" collection="cmbProduct" index="index" open="(" separator="," close=")">
-                                    #{item}
-                              </foreach>
-                          </if>
-                          <if test="netSalesMonth != null and netSalesMonth != ''">
-                          <!-- AND E1.PV_YEAR = #{pvYear}
-                               AND E1.PV_MONTH = #{pvMonth} -->
-                            AND E1.PV_YEAR = EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
-                            AND E1.PV_MONTH = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
-                          </if>
-                          <if test="salesmanCode != null and salesmanCode != ''">
-                            AND E1.SALESMAN_CODE = #{salesmanCode}
-                          </if>
-                          <if test="promoCode != null and promoCode != ''">
-                            AND E1.PROMO_CODE = #{promoCode}
-                          </if>
-                          <if test="memtype != null and memtype != ''">
-                            AND E1.MEM_TYPE = #{memtype}
-                          </if>
-                          <if test="cmbCustomerType != null and cmbCustomerType != ''">
-                              AND E1.CUST_TYPE_ID IN
-                              <foreach item="item" collection="cmbCustomerType" index="index" open="(" separator="," close=")">
-                                    #{item}
-                              </foreach>
-                          </if>
-                          <if test="cmbCorpTypeId != null and cmbCorpTypeId != ''">
-                              AND E1.CORP_TYPE_ID IN
-                              <choose>
-                              <when test="Individual !=null and Individual !=''">
-                                  <foreach item="item" collection="cmbCorpTypeId" index="index" open="(" separator="," close=" ">
-                                      #{item}
-                                  </foreach>
-                                   ,0)
-                              </when>
-                              <otherwise>
-                                  <foreach item="item" collection="cmbCorpTypeId" index="index" open="(" separator="," close=")">
-                                      #{item}
-                                 </foreach>
-                              </otherwise>
-                             </choose>
-                          </if>
-                          <if test="cmbSalesType != null and cmbSalesType != ''">
-                          AND E1.SALES_TYPE IN
-                            <foreach item="item" collection="cmbSalesType" index="index" open="(" separator="," close=")">
-                              #{item}
-                            </foreach>
-                        </if>
-                        <if test="cmbProductCtgry != null and cmbProductCtgry != ''">
-                          AND E1.STK_CTGRY_ID IN
-                            <foreach item="item" collection="cmbProductCtgry" index="index" open="(" separator="," close=")">
-                              #{item}
-                            </foreach>
-                        </if>
 
 
-
-                        <if test='isEKeyin != null and isEKeyin != ""'>
-                           AND NVL(E1.PRE_ORD_ID,0) > 0
-                         </if>
-                         <if test='isECommerce != null and isECommerce != ""'>
-                           AND NVL(E1.ECOMM_ORD_ID,0) > 0
-                         </if>
 
            ) F1
           <!--   LEFT JOIN ORG0001D MEM ON MEM.MEM_CODE = F1.MEM_CODE
