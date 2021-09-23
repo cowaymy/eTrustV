@@ -141,11 +141,13 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
                 param.setFlag("Y");
                 List<EgovMap> selectProductFilterList = eSVMApiMapper.selectProductFilterList(eSVMApiForm.createMap(param));
                 String hiddenHasFilterCharge = "";
-                Map<String, String> listItem = selectProductFilterList.get(0);
-                Iterator<Entry<String, String>> it = listItem.entrySet().iterator();
-                while(it.hasNext()) {
-                    Map.Entry pair = (Map.Entry)it.next();
-                    hiddenHasFilterCharge = pair.getValue().toString();
+                if(selectProductFilterList != null) {
+                    Map<String, String> listItem = selectProductFilterList.get(0);
+                    Iterator<Entry<String, String>> it = listItem.entrySet().iterator();
+                    while(it.hasNext()) {
+                        Map.Entry pair = (Map.Entry)it.next();
+                        hiddenHasFilterCharge = pair.getValue().toString();
+                    }
                 }
                 logger.debug("hiddenHasFilterCharge.HiddenHasFilterCharge :: " + hiddenHasFilterCharge);
                 rtn.setHiddenHasFilterCharge(Integer.parseInt(hiddenHasFilterCharge));
@@ -1053,5 +1055,61 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
         */
 
         return param.getAtchFileGrpId();
+    }
+
+    @Override
+    public eSVMApiDto updatePaymentUploadFile_1(eSVMApiForm param) throws Exception {
+        if(null == param) {
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+
+        if(CommonUtils.isEmpty(param.getAtchFileGrpId())) {
+            throw new ApplicationException(AppConstants.FAIL, "atchFileGrpId value does not exist.");
+        }
+
+        if(CommonUtils.isEmpty(param.getCurAtchFileGrpId())) {
+            throw new ApplicationException(AppConstants.FAIL, "atchFileGrpId value does not exist.");
+        }
+        logger.debug("param :: {}", param);
+
+        List<EgovMap> newFile = eSVMApiMapper.getNewUploads(param.getCurAtchFileGrpId()); // Newly uploaded file list
+
+        logger.debug("newFile List size :: " + String.valueOf(newFile.size()));
+
+        // Loop newly uploaded file list
+        for (int i = 0; i < newFile.size(); i++) {
+            // Remove File from existing
+            EgovMap nFile = newFile.get(i);
+            int fileSeq = Integer.parseInt(nFile.get("fileKeySeq").toString());
+            int fileId = Integer.parseInt(nFile.get("atchFileId").toString());
+
+            Map<String, Object> fileMap = new HashMap<String, Object>();
+            fileMap.put("eAtchFileGrpId", param.getAtchFileGrpId());
+            fileMap.put("nAtchFileGrpId", param.getCurAtchFileGrpId());
+            fileMap.put("fileSeq", fileSeq);
+            fileMap.put("nAtchFileId", fileId);
+
+            // Get Existing File ID by FILE_KEY_SEQ
+            EgovMap existFile = eSVMApiMapper.getOldUploads(fileMap);
+
+            if (existFile != null) {
+                // File sequence to replace with newer upload
+                fileMap.put("atchFileId", existFile.get("atchFileId"));
+
+                // Delete from SYS0070M
+                eSVMApiMapper.deleteSYS0070M(fileMap);
+                // Delete from SYS0071D
+                eSVMApiMapper.deleteSYS0071D(fileMap);
+            }
+
+            // Update New File's ATCH_FILE_GRP_ID in SYS0070M to Existing File's
+            // ATCH_FILE_GRP_ID
+            eSVMApiMapper.updateSYS0070M(fileMap);
+        }
+
+        eSVMApiDto rtn = new eSVMApiDto();
+        rtn.setAtchFileGrpId(param.getAtchFileGrpId());
+
+        return rtn;
     }
 }

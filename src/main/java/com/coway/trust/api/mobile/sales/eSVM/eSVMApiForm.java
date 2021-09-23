@@ -129,6 +129,7 @@ public class eSVMApiForm {
         params.put("atchFileOther1", vo.getAtchFileOther1());
         params.put("atchFileOther2", vo.getAtchFileOther2());
         params.put("atchFileOther3", vo.getAtchFileOther3());
+        params.put("curAtchFileGrpId", vo.getCurAtchFileGrpId());
         return params;
     }
 
@@ -258,6 +259,8 @@ public class eSVMApiForm {
     private int atchFileOther1;
     private int atchFileOther2;
     private int atchFileOther3;
+
+    private int curAtchFileGrpId;
 
     public String getFlag() {
         return flag;
@@ -1171,4 +1174,11 @@ public class eSVMApiForm {
         this.atchFileOther3 = atchFileOther3;
     }
 
+    public int getCurAtchFileGrpId() {
+        return curAtchFileGrpId;
+    }
+
+    public void setCurAtchFileGrpId(int curAtchFileGrpId) {
+        this.curAtchFileGrpId = curAtchFileGrpId;
+    }
 }

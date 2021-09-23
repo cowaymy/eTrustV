@@ -43,4 +43,6 @@ public interface eSVMApiService {
     eSVMApiDto removePsmAttachment(eSVMApiForm param) throws Exception;
 
     int updatePaymentUploadFile(List<FileVO> list, eSVMApiDto param);
+
+    eSVMApiDto updatePaymentUploadFile_1(eSVMApiForm param) throws Exception;
 }

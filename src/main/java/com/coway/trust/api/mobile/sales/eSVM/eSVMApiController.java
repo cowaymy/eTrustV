@@ -189,4 +189,11 @@ public class eSVMApiController {
         FileDto fileDto = FileDto.create(list, fileGroupKey);
         return ResponseEntity.ok(fileDto);
     }
+
+    @ApiOperation(value = "updatePaymentUploadFile_1", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/updatePaymentUploadFile_1", method = RequestMethod.POST)
+    public ResponseEntity<eSVMApiDto> updatePaymentUploadFile_1(@RequestBody eSVMApiForm param) throws Exception {
+        LOGGER.debug("eSVMApiController :: insertPSM");
+        return ResponseEntity.ok(eSVMApiService.updatePaymentUploadFile_1(param));
+    }
 }
