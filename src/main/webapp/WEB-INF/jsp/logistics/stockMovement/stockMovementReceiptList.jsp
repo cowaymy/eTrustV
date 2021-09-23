@@ -976,7 +976,9 @@ function fn_gradComb(){
 <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
 </c:if>
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
             <li><p class="btn_grid"><a id="gissue">Goods Receipt</a></p></li>
+</c:if>
             <li><p class="btn_grid"><a id="receiptcancel">Receipt Cancel</a></p></li>
             <li><p class="btn_grid"><a id="print"><spring:message code='sys.progmanagement.grid1.PRINT' /></a></p></li>
         </ul>
