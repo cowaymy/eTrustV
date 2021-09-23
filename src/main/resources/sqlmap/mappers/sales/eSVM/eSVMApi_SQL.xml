@@ -534,7 +534,7 @@
 
     <select id="getOutrightMemLedge" parameterType="Map" resultType="egovMap">
         SELECT
-            SUM(ROUND(B.SRV_MEM_AMT, 2)) AS AMT
+            NVL(SUM(ROUND(B.SRV_MEM_AMT, 2)), 0) AS AMT
         FROM PAY0024D B
         JOIN SAL0095D A
             ON A.SRV_MEM_ID = B.SRV_MEM_ID
