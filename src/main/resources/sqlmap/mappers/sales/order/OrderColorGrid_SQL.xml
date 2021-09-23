@@ -132,6 +132,7 @@
                          FROM (
 
                          <!-- SELECT FROM VIEW SUBSTITUE (SAL1008V) -->
+                         SELECT * FROM (
                          SELECT  som.SALES_ORD_ID ORD_ID,
                               som.SALES_ORD_NO ORD_NO,
                               som.SALES_DT ORD_DT,
@@ -149,7 +150,7 @@
                               NVL (mo.GRP_CODE, ' ') GRP_CODE,
                               NVL (mo.DEPT_CODE, ' ') DEPT_CODE,
                               NVL (mo.MEM_CODE, ' ') MEM_CODE,
-                              NVL (mo.MEM_ID, ' ') MEM_ID,
+
                               (CASE WHEN NVL (som.PV_MONTH, 0) <![CDATA[>]]> 0 THEN 1 ELSE 0 END) IS_NET,
                               (CASE
                                   WHEN NVL (som.PV_MONTH, 0) <![CDATA[>]]> 0
@@ -333,12 +334,7 @@
                               </otherwise>
                              </choose>
                           </if>
-                          <if test="cmbSalesType != null and cmbSalesType != ''">
-                          AND E1.SALES_TYPE IN
-                            <foreach item="item" collection="cmbSalesType" index="index" open="(" separator="," close=")">
-                              #{item}
-                            </foreach>
-                        </if>
+
                         <if test="cmbProductCtgry != null and cmbProductCtgry != ''">
                           AND stk.STK_CTGRY_ID IN
                             <foreach item="item" collection="cmbProductCtgry" index="index" open="(" separator="," close=")">
@@ -352,6 +348,13 @@
                          <if test='isECommerce != null and isECommerce != ""'>
                            AND NVL(som.ECOMM_ORD_ID,0) > 0
                          </if>
+                         ) E
+                         <if test="cmbSalesType != null and cmbSalesType != ''">
+                          WHERE E.SALES_TYPE IN
+                            <foreach item="item" collection="cmbSalesType" index="index" open="(" separator="," close=")">
+                              #{item}
+                            </foreach>
+                        </if>
 
                          <!-- SELECT vC.ORD_ID ,
                                        vC.ORD_NO ,
