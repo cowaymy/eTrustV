@@ -996,10 +996,41 @@
         WHERE A.ATCH_FILE_GRP_ID = #{atchFileGrpId}
     </select>
 
-    <delete id="deleteSYS0071D" parameterType="Map">
-        DELETE FROM SYS0071D A
-        WHERE A.ATCH_FILE_ID = #{atchFileId}
+    <delete id="deleteSYS0070M" parameterType="Map">
+        DELETE FROM SYS0070M
+        WHERE ATCH_FILE_ID = #{atchFileId}
     </delete>
+
+    <delete id="deleteSYS0071D" parameterType="Map">
+        DELETE FROM SYS0071D
+        WHERE ATCH_FILE_ID = #{atchFileId}
+    </delete>
+
+    <select id="getNewUploads" parameterType="Integer" resultType="egovMap">
+        SELECT
+            ATCH_FILE_ID,
+            FILE_KEY_SEQ
+        FROM SYS0071D
+        WHERE ATCH_FILE_ID IN (
+            SELECT
+                ATCH_FILE_ID
+            FROM SYS0070M
+            WHERE ATCH_FILE_GRP_ID = #{curAtchFileGrpId}
+        )
+    </select>
+
+    <select id="getOldUploads" parameterType="Map" resultType="egovMap">
+        SELECT
+            ATCH_FILE_ID
+        FROM SYS0071D
+        WHERE ATCH_FILE_ID IN (
+            SELECT
+                ATCH_FILE_ID
+            FROM SYS0070M
+            WHERE ATCH_FILE_GRP_ID = #{eAtchFileGrpId}
+        )
+        AND FILE_KEY_SEQ = #{fileSeq}
+    </select>
 
     <update id="updateSYS0071D" parameterType="Map">
         UPDATE SYS0071D A
@@ -1012,10 +1043,10 @@
       </update>
 
     <update id="updateSYS0070M" parameterType="Map">
-        UPDATE SYS0070M A
-        SET A.UPD_USER_ID = #{updUserId},
-            A.UPD_DT = SYSDATE
-        WHERE A.ATCH_FILE_GRP_ID = #{atchFileGrpId}
-            AND A.ATCH_FILE_ID = #{atchFileId}
+        UPDATE SYS0070M
+        SET ATCH_FILE_GRP_ID = #{eAtchFileGrpId},
+            UPD_DT = SYSDATE
+        WHERE ATCH_FILE_GRP_ID = #{nAtchFileGrpId}
+            AND ATCH_FILE_ID = #{nAtchFileId}
     </update>
 </mapper>

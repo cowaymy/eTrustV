@@ -95,7 +95,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
             rtn = eSVMApiDto.create(eSVMApiMapper.selectOrderMemInfo(eSVMApiForm.createMap(param)));
 
             // [Membership Tab]
-            if("".equals(param.getMode())) {
+            if("NEW".equals(param.getMode())) {
                 // Mode :: New
                 int stkId = Integer.parseInt(svmOrdDet.get("stkId").toString());
                 int[] discontinueStk = {1, 651, 218, 689, 216, 687, 3, 653};
@@ -945,6 +945,43 @@ logger.debug("param :: {}", param);
             throw new ApplicationException(AppConstants.FAIL, "UserID is null.");
         }
 
+        // SAL0903.js :: btnUpdate
+        // To remove existing's sequence and update newly uploaded files's sequence
+        List<EgovMap> newFile = eSVMApiMapper.getNewUploads(param.getCurAtchFileGrpId()); // Newly uploaded file list
+
+logger.debug("newFile List size :: " + String.valueOf(newFile.size()));
+
+        // Loop newly uploaded file list
+        for(int i = 0; i < newFile.size(); i++) {
+            // Remove File from existing
+            EgovMap nFile = newFile.get(i);
+            int fileSeq = Integer.parseInt(nFile.get("fileKeySeq").toString());
+            int fileId = Integer.parseInt(nFile.get("atchFileId").toString());
+
+            Map<String, Object> fileMap = new HashMap<String, Object>();
+            fileMap.put("eAtchFileGrpId", param.getAtchFileGrpId());
+            fileMap.put("nAtchFileGrpId", param.getCurAtchFileGrpId());
+            fileMap.put("fileSeq", fileSeq);
+            fileMap.put("nAtchFileId", fileId);
+
+            // Get Existing File ID by FILE_KEY_SEQ
+            EgovMap existFile = eSVMApiMapper.getOldUploads(fileMap);
+
+            if(existFile != null) {
+                // File sequence to replace with newer upload
+                fileMap.put("atchFileId", existFile.get("atchFileId"));
+
+                // Delete from SYS0070M
+                eSVMApiMapper.deleteSYS0070M(fileMap);
+                // Delete from SYS0071D
+                eSVMApiMapper.deleteSYS0071D(fileMap);
+            }
+
+            // Update New File's ATCH_FILE_GRP_ID in SYS0070M to Existing File's ATCH_FILE_GRP_ID
+            eSVMApiMapper.updateSYS0070M(fileMap);
+        }
+
+        /*
         for(FileVO data : list) {
             Map<String, Object> sys0071D = new HashMap<String, Object>();
             Map<String, Object> sys0070M = new HashMap<String, Object>();
@@ -1008,6 +1045,7 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
                 throw new ApplicationException(AppConstants.FAIL, "saveFlag value does not exist.");
             }
         }
+        */
 
         return param.getAtchFileGrpId();
     }

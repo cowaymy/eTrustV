@@ -93,7 +93,13 @@ public interface eSVMApiMapper {
 
     List<EgovMap> selectESvmAttachment(Map<String, Object> param);
 
+    int deleteSYS0070M(Map<String, Object> param);
+
     int deleteSYS0071D(Map<String, Object> param);
+
+    List<EgovMap> getNewUploads(int param);
+
+    EgovMap getOldUploads(Map<String, Object> param);
 
     int updateSYS0071D(Map<String, Object> param);
 
