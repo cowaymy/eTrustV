@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -915,6 +914,7 @@ logger.debug("delete sys71 other3 cp");
 
     @Override
     public int updatePaymentUploadFile(List<FileVO> list, eSVMApiDto param) {
+logger.debug("===== serviceImpl.updatePaymentUploadFile =====");
         if(null == param) {
             throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
         }
@@ -935,7 +935,6 @@ logger.debug("delete sys71 other3 cp");
             throw new ApplicationException(AppConstants.FAIL, "saveFlag value does not exist.");
         }
 
-logger.debug("===== serviceImpl.updatePaymentUploadFile =====");
 logger.debug("param :: {}", param);
 
         Map<String, Object> loginInfoMap = new HashMap<String, Object>();

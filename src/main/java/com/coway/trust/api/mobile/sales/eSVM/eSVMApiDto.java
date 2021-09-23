@@ -148,6 +148,7 @@ public class eSVMApiDto {
     private String physiclFileName;
     private String fileExtsn;
     private String saveFlag;
+    private int curAtchFileGrpId;
 
     private List<eSVMApiDto> productFilterList;
     private List<eSVMApiDto> packageComboList;
@@ -1051,5 +1052,13 @@ public class eSVMApiDto {
 
     public void setSaveFlag(String saveFlag) {
         this.saveFlag = saveFlag;
+    }
+
+    public int getCurAtchFileGrpId() {
+        return curAtchFileGrpId;
+    }
+
+    public void setCurAtchFileGrpId(int curAtchFileGrpId) {
+        this.curAtchFileGrpId = curAtchFileGrpId;
     }
 }

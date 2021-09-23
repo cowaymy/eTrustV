@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.files.FileDto;
-import com.coway.trust.api.mobile.sales.eKeyInApi.EKeyInApiDto;
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiDto;
 import com.coway.trust.api.mobile.sales.eSVM.eSVMApiForm;
 import com.coway.trust.biz.common.FileVO;
