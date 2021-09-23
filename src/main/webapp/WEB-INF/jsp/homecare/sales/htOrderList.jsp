@@ -50,34 +50,34 @@ $(document).ready(function(){
         }else if("${SESSION_INFO.memberLevel}" =="3"){
 
             $("#orgCode").val("${orgCode}");
-            /* $("#orgCode").attr("class", "w100p readonly");
-            $("#orgCode").attr("readonly", "readonly"); */
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
 
             $("#grpCode").val("${grpCode}");
-            /* $("#grpCode").attr("class", "w100p readonly");
-            $("#grpCode").attr("readonly", "readonly"); */
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
 
             $("#deptCode").val("${deptCode}");
-           /*  $("#deptCode").attr("class", "w100p readonly");
-            $("#deptCode").attr("readonly", "readonly"); */
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
 
         }else if("${SESSION_INFO.memberLevel}" =="4"){
 
             $("#orgCode").val("${orgCode}");
-            /* $("#orgCode").attr("class", "w100p readonly");
-            $("#orgCode").attr("readonly", "readonly"); */
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
 
             $("#grpCode").val("${grpCode}");
-            /* $("#grpCode").attr("class", "w100p readonly");
-            $("#grpCode").attr("readonly", "readonly"); */
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
 
             $("#deptCode").val("${deptCode}");
-            /* $("#deptCode").attr("class", "w100p readonly");
-            $("#deptCode").attr("readonly", "readonly"); */
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
 
             $("#memCode").val("${memCode}");
-            /* $("#memCode").attr("class", "w100p readonly");
-            $("#memCode").attr("readonly", "readonly"); */
+            $("#memCode").attr("class", "w100p readonly");
+            $("#memCode").attr("readonly", "readonly");
 
             $("#listSalesmanCode").val(salesmanCode);
             $("#listSalesmanCode").attr("readonly", true);
@@ -111,7 +111,7 @@ function fn_setDetail(gridID, rowIdx){
   function fn_selectListAjax() {
 
     //if(IS_3RD_PARTY == '1') $("#listAppType").removeAttr("disabled");
-
+console.log($("#listSearchForm").serialize());
     Common.ajax("GET", "/homecare/sales/selectHTOrderJsonList", $("#listSearchForm").serialize(), function(result) {
         AUIGrid.setGridData(listMyGridID, result);
     });
