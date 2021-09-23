@@ -154,7 +154,7 @@
                                   WHEN NVL (som.PV_MONTH, 0) > 0
                                   THEN
                                      (CASE
-                                         WHEN NVL (som.PV_MONTH, 0) <10
+                                         WHEN NVL(som.PV_MONTH, 0) <![CDATA[<]]> 10
                                          THEN
                                                '0'
                                             || NVL (som.PV_MONTH, 0)
@@ -203,11 +203,11 @@
                                  ON     ie.SALES_ORD_ID = som.SALES_ORD_ID
                                     AND ie.INSTALL_ENTRY_ID =
                                            FN_GET_SAL0046D_MAX_ID (som.SALES_ORD_ID, '3')
-                              LEFT JOIN SAL0047D ir ON ir.ENTRY_ID = ie.INSTALL_ENTRY_ID AND ir.STUS_CODE_ID <> 8
+                              LEFT JOIN SAL0047D ir ON ir.ENTRY_ID = ie.INSTALL_ENTRY_ID AND ir.STUS_CODE_ID <![CDATA[<>]]> 8
                               LEFT JOIN SYS0038M instStatus
                                  ON instStatus.STUS_CODE_ID = ir.STUS_CODE_ID
                               LEFT JOIN SYS0032M instReason ON instReason.RESN_ID = ir.FAIL_ID
-                        WHERE (som.STUS_CODE_ID <> 8) AND (som.APP_TYPE_ID IN (66, 67, 68, 1412))
+                        WHERE (som.STUS_CODE_ID <![CDATA[<>]]> 8) AND (som.APP_TYPE_ID IN (66, 67, 68, 1412))
 
                         <if test="cmbAppTypeList != null and cmbAppTypeList != ''">
                           AND som.APP_TYPE_ID IN
@@ -326,7 +326,7 @@
                               </otherwise>
                              </choose>
                           </if>
-                          <!-- <if test="cmbSalesType != null and cmbSalesType != ''"> -- ALWAYS RETURN 0 - NEW SALES
+                          <!-- <if test="cmbSalesType != null and cmbSalesType != ''">
                           AND E1.SALES_TYPE IN
                             <foreach item="item" collection="cmbSalesType" index="index" open="(" separator="," close=")">
                               #{item}
