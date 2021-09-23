@@ -998,7 +998,8 @@
 
     <delete id="deleteSYS0070M" parameterType="Map">
         DELETE FROM SYS0070M
-        WHERE ATCH_FILE_ID = #{atchFileId}
+        WHERE ATCH_FILE_GRP_ID = #{eAtchFileGrpId}
+            AND ATCH_FILE_ID = #{atchFileId}
     </delete>
 
     <delete id="deleteSYS0071D" parameterType="Map">

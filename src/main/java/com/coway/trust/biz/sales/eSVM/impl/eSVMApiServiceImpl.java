@@ -1080,8 +1080,8 @@ logger.debug("===== serviceImpl.updatePaymentUploadFile :: saveFlag : U =====");
         for (int i = 0; i < newFile.size(); i++) {
             // Remove File from existing
             EgovMap nFile = newFile.get(i);
-            int fileSeq = Integer.parseInt(nFile.get("fileKeySeq").toString());
-            int fileId = Integer.parseInt(nFile.get("atchFileId").toString());
+            String fileSeq = nFile.get("fileKeySeq").toString();
+            String fileId = nFile.get("atchFileId").toString();
 
             Map<String, Object> fileMap = new HashMap<String, Object>();
             fileMap.put("eAtchFileGrpId", param.getAtchFileGrpId());
