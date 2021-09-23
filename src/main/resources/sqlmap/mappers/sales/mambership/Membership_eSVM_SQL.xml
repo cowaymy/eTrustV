@@ -19,6 +19,11 @@
 		,TO_CHAR( ESVM.UPD_DT, 'dd/mm/yyyy HH24:MI:SS AM') || ' (' || UPDUSR.USER_NAME || ')' UPD_DT
 		,ESVM.STUS_REM
 		,ESVM.ATCH_FILE_GRP_ID
+		,ESVM.APPV_INSTRCT
+		,ESVM.SA_REF
+		,ESVM.PSM_SRV_MEM_NO
+		,DD.RESN_DESC
+		,ESVM.SVM_QUOT_ID
 		FROM SAL0298D ESVM
 		LEFT JOIN SAL0093D QUO ON QUO.SRV_MEM_QUOT_ID = ESVM.SVM_QUOT_ID
 		LEFT JOIN SAL0001D SAL ON SAL.SALES_ORD_ID = ESVM.PSM_SALES_ORD_ID
@@ -28,6 +33,7 @@
 		left join SYS0047M UPDUSR ON UPDUSR.USER_ID = ESVM.UPD_USER_ID
 		LEFT JOIN SAL0095D COVQOU ON COVQOU.SRV_MEM_QUOT_ID = QUO.SRV_MEM_QUOT_ID
 		LEFT JOIN ORG1001V T9 ON T9.MEM_CODE = CRTUSR.USER_NAME
+		LEFT JOIN SYS0032M DD ON DD.RESN_ID = ESVM.APPV_INSTRCT
 		WHERE 1 = 1
         <if test='_memCode != null and _memCode != ""'>
            AND CRTUSR.user_name = #{_memCode}
@@ -266,12 +272,19 @@
 		TO_CHAR(ESVM.UPD_DT, 'DD/MM/YYYY') UPD_DT,
 		ESVM.ATCH_FILE_GRP_ID,
 		QUO.SRV_MEM_QUOT_NO SMQ_NO,
+		QUO.SRV_MEM_QUOT_ID,
+		QUO.SRV_FREQ,
 		SAL.SALES_ORD_NO,
 		TO_CHAR(QUO.SRV_CRT_DT, 'DD/MM/YYYY') QUO_CRT_DT,
-		TO_CHAR(SAL.SALES_DT, 'DD/MM/YYYY') ORD_CRT_DT
+		TO_CHAR(SAL.SALES_DT, 'DD/MM/YYYY') ORD_CRT_DT,
+		DD.RESN_DESC,
+		ESVM.SA_REF,
+		ESVM.PO_NO,
+		ESVM.APPV_INSTRCT
 		from SAL0298D ESVM
 		LEFT JOIN SAL0093D QUO ON QUO.SRV_MEM_QUOT_ID = ESVM.SVM_QUOT_ID
 		LEFT JOIN SAL0001D SAL ON SAL.SALES_ORD_ID = ESVM.PSM_SALES_ORD_ID
+		LEFT JOIN SYS0032M DD ON DD.RESN_ID = ESVM.APPV_INSTRCT
 		WHERE PSM_ID = #{psmId}
     </select>
 
@@ -318,4 +331,312 @@
         ,#{fileKeySeq}
         )
     </insert>
+
+    <select id="getDocNo" parameterType="Map" resultType="java.lang.String">
+                 <![CDATA[
+                        SELECT FN_GET_DOCNO(#{docNoId})  docno  FROM DUAL
+                    ]]>
+    </select>
+
+    <select id="getSAL0095D_SEQ" parameterType="Map" resultType="egovMap">
+                 <![CDATA[
+                          SELECT SAL0095D_SRV_MEM_ID_SEQ.NEXTVAL  SEQ  FROM DUAL
+                 ]]>
+    </select>
+
+    <select id="selectActionOption" parameterType="Map" resultType="egovMap">
+        SELECT RESN_ID CODE, RESN_DESC CODE_NAME
+        FROM SYS0032M
+        WHERE 1=1
+        <if test="action == 6">
+            AND RESN_TYPE_ID = '6451'
+        </if>
+        <if test="action == 1">
+            AND RESN_TYPE_ID = '6452'
+        </if>
+    </select>
+
+    <select id="selectESvmPreSalesInfo" parameterType="Map" resultType="egovMap">
+        SELECT INFO.*,
+        <![CDATA[
+            CASE WHEN INFO.EXPINT <= 0 THEN 'Under membership'
+                 WHEN (INFO.EXPINT > 0 AND INFO.COOLING_PERIOD >= INFO.EXPINT) THEN 'Under cooling off period'
+                 ELSE 'Passed cooling off period'
+            END TERMS
+         ]]>
+        FROM
+	        (SELECT
+	        ESVM.PSM_ID,
+	        CUST.NAME CUST_NAME,
+	        CUST.NRIC CUST_NRIC,
+	        ESVM.PSM_NO,
+	        ESVM.SVM_QUOT_ID,
+	        ESVM.PSM_SALES_ORD_ID,
+	        SAL.APP_TYPE_ID,
+	        DESCP.CODE_DESC ORDER_TYPE,
+	        PAC1.SRV_MEM_DESC PACKAGE_TYPE,
+	        PAC1.SRV_MEM_DUR DURATION,
+	        QUO.SRV_DUR/12 || ' YEAR(S)' SUBSRIPTION,
+	        QUO.SRV_MEM_PAC_NET_AMT PACKAGE_AMT,
+	        PROMO.PROMO_CODE,
+	        PROMO.PROMO_DESC PACKAGE_PROMO,
+	        STK.STK_DESC STOCK_NAME,
+	        MEM.MEM_CODE SALESPERSON_CODE,
+	        MEM.NAME SALESPERSON_NAME,
+	        QUO.SRV_FREQ HS_FREQ,
+	        QUO.SRV_PROMO_ID FILTER_PROMO_ID,
+	        (SELECT PROMO_DESC FROM SAL0017D WHERE PROMO_ID = QUO.SRV_PROMO_ID) FILTER_PROMO_DESC,
+	        NVL(QUO.SRV_MEM_BS_AMT, 0) FILTER_AMT,
+	        UTILS.CONVERT_TO_NUMBER((CASE WHEN SAL.APP_TYPE_ID = 66 THEN NVL(H.ORD_OTSTND,0) /*RENTAL OUTSTANDING*/
+	              WHEN (SAL.APP_TYPE_ID = 67 or SAL.APP_TYPE_ID = 68) THEN NVL(I.ORD_OTSTND,0) /*OUTRIGHT OR INSTALLMENT OUTSTANDING*/
+	              ELSE 0
+	              END), 12, 2) ORD_OTSTND,
+	        NVL(J.AS_OTSTND,0) AS_OTSTND,
+	        ADDR.ADD1 || ' ' || ADDR.ADD2 || ' ' || ADDR.ADD3 || ' ' || AREA.POSTCODE || ' ' || AREA.CITY || ', ' || AREA.STATE || ', ' || AREA.COUNTRY INSTL_ADDR,
+	        TO_CHAR(SVC.SRV_MEM_COOL_PRIOD_MTH) COOLING_PERIOD,
+	        TO_CHAR(VIEW1.LAST_SRV_MEM_EXPR_DATE, 'DD/MM/YYYY') MEM_EXPR_DATE,
+	        MONTHS_BETWEEN(TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, 12), 'YYYYMM') || '01', 'YYYYMMDD'), TO_DATE(TO_CHAR(ADD_MONTHS(NVL(VIEW1.LAST_SRV_MEM_EXPR_DATE,VIEW1.SRV_MEM_EXPR_DT), 12), 'YYYYMM') || '01', 'YYYYMMDD')) EXPINT,
+	        ESVM.PSM_SRV_MEM_NO,
+	        ESVM.STUS,
+	        ESVM.STUS_REM,
+	        ESVM.APPV_USER_ID,
+	        ESVM.APPV_DT,
+	        ESVM.APPV_REM,
+	        ESVM.REM,
+	        ESVM.CRT_USER_ID,
+	        TO_CHAR(ESVM.CRT_DT, 'DD/MM/YYYY') CRT_DT,
+	        ESVM.UPD_USER_ID,
+	        TO_CHAR(ESVM.UPD_DT, 'DD/MM/YYYY') UPD_DT,
+	        ESVM.ATCH_FILE_GRP_ID,
+	        QUO.SRV_MEM_QUOT_NO SMQ_NO,
+	        SAL.SALES_ORD_NO,
+	        TO_CHAR(QUO.SRV_CRT_DT, 'DD/MM/YYYY') QUO_CRT_DT,
+	        TO_CHAR(SAL.SALES_DT, 'DD/MM/YYYY') ORD_CRT_DT
+	        FROM SAL0298D ESVM
+	        LEFT JOIN SAL0093D QUO ON QUO.SRV_MEM_QUOT_ID = ESVM.SVM_QUOT_ID
+	        LEFT JOIN SAL0001D SAL ON SAL.SALES_ORD_ID = ESVM.PSM_SALES_ORD_ID
+	        LEFT JOIN SAL0029D CUST ON SAL.CUST_ID = CUST.CUST_ID
+	        LEFT JOIN SAL0023D ADDR ON SAL.CUST_ADD_ID = ADDR.CUST_ADD_ID
+	        LEFT JOIN SYS0064M AREA ON AREA.AREA_ID = ADDR.AREA_ID
+	        LEFT JOIN SYS0013M DESCP  ON DESCP.CODE_ID = SAL.APP_TYPE_ID AND DESCP.CODE_MASTER_ID = '10'
+	        LEFT JOIN SAL0002D PAC  ON PAC.SALES_ORD_ID = ESVM.PSM_SALES_ORD_ID
+	        LEFT JOIN SAL0092M PAC2 ON PAC.ITM_STK_ID = PAC2.SRV_MEM_ITM_STK_ID
+	        LEFT JOIN SAL0091M PAC1 ON PAC2.SRV_MEM_PAC_ID = PAC1.SRV_MEM_PAC_ID
+	        LEFT JOIN SAL1014V VIEW1 ON VIEW1.ORD_ID = SAL.SALES_ORD_ID
+	        /*LEFT JOIN SAL0093D PAC3 ON PAC3.SRV_SALES_ORD_ID = ESVM.PSM_SALES_ORD_ID */
+	        LEFT JOIN SAL0017D PROMO ON PROMO.PROMO_ID = QUO.SRV_PAC_PROMO_ID
+	        LEFT JOIN SYS0026M STK ON STK.STK_ID = QUO.SRV_ORD_STK_ID
+	        LEFT JOIN ORG0001D MEM ON MEM.MEM_ID = QUO.SRV_SALES_MEM_ID
+	        LEFT JOIN SVC0010D SVC ON SVC.CTGRY_ID = STK.STK_CTGRY_ID AND SRV_MEM_COOL_PRIOD_STUS_ID = 1
+	        LEFT JOIN /*RENTAL OUTSTANDING*/
+	            (SELECT RENT_SO_ID ORD_ID, SUM(RENT_AMT) ORD_OTSTND FROM PAY0022D
+	                WHERE RENT_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo})
+	                GROUP BY RENT_SO_ID) H
+	        ON SAL.SALES_ORD_ID = H.ORD_ID
+	        LEFT JOIN /*OUTRIGHT OR INSTALLMENT OUTSTANDING*/
+	            (SELECT TRADE_SO_ID ORD_ID, SUM(TRADE_AMT) ORD_OTSTND FROM PAY0035D
+	                WHERE TRADE_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo})
+	                GROUP BY TRADE_SO_ID) I
+	        ON SAL.SALES_ORD_ID = I.ORD_ID
+	        LEFT JOIN /*AS OUTSTANDING*/
+	            (SELECT AS_SO_NO ORD_NO, AS_RESULT_NO, SUM(AS_LG_AMT) AS_OTSTND FROM PAY0006D
+	                WHERE AS_RESULT_NO LIKE 'ASR%' AND AS_SO_NO = #{ordNo}
+	                GROUP BY AS_SO_NO, AS_RESULT_NO) J
+	        ON SAL.SALES_ORD_NO = J.ORD_NO
+	        WHERE SAL.SALES_ORD_NO = #{ordNo}
+	        AND PAC1.PAC_TYPE = 1 AND PAC1.SRV_MEM_STUS_ID = 1) INFO
+    </select>
+
+    <select id="selectMembershipQuotInfo" parameterType="Map" resultType="egovMap">
+         <![CDATA[
+                    SELECT sList.QUOT_ID   ,
+                               sList.QTY_FILTER_CHRG   ,
+                               sList.QUOT_NO   ,
+                               sList.PAC_ID   ,
+                               sList.PAC_CODE   ,
+                               sList.PAC_DESC   ,
+                               sList.ORD_ID   ,
+                               sList.ORD_NO   ,
+                               sList.PAC_AMT   ,
+                               sList.FILTER_AMT   ,
+                               sList.TOT_AMT   ,
+                               sList.DUR DUR  ,
+                               sList.REM REM  ,
+                               to_char (sList.VALID_DT ,'dd-mm-yyyy' )  VALID_DT,
+                               to_char (sList.CRT_DT ,'dd-mm-yyyy' )  CRT_DT ,
+                               sList.CRT_USER_ID   ,
+                               sList.QUOT_STUS_ID   ,
+                               sList.QUOT_STUS_CODE   ,
+                               sList.UPD_DT UPD_DT  ,
+                               sList.UPD_USER_ID   ,
+                               sList.CNT_ID CNT_ID  ,
+                               sList.CNT_NAME   ,
+                               sList.CNT_NRIC   ,
+                               sList.CNT_TEL_MOB   ,
+                               sList.CNT_TEL_OFF   ,
+                               sList.CNT_TEL_FAX   ,
+                               sList.CNT_TEL_RES   ,
+                               sList.CNT_EMAIL   ,
+                               sList.CNT_GENDER   ,
+                               sList.CNT_RACE   ,
+                               sList.PAC_PROMO_ID   ,
+                               sList.PAC_PROMO_CODE   ,
+                               sList.PAC_PROMO_DESC   ,
+                               sList.PROMO_ID   ,
+                               sList.PROMO_CODE   ,
+                               sList.PROMO_DESC   ,
+                               sList.BS_FREQ   ,
+                               sList.MEM_ID   ,
+                               sList.MEM_CODE   ,
+                               sList.MEM_NAME   ,
+                               sList.VALID_STUS   ,
+                               sList.VALID_STUS_ID   ,
+                               sList.CNVR_MEM_ID   ,
+                               sList.CNVR_MEM_NO   ,
+                               sList.STK_ID   ,
+                               sList.STK_CODE   ,
+                               sList.STK_DESC   ,
+                               sList.CUST_NAME   ,
+                               sList.CUST_IC   ,
+                               sList.TOT_CNT   ,
+                               sList.REF_NO
+                          FROM ( SELECT qutinfo.QUOT_ID   ,
+                                        qutinfo.QTY_FILTER_CHRG   ,
+                                        qutinfo.QUOT_NO   ,
+                                        qutinfo.PAC_ID   ,
+                                        qutinfo.PAC_CODE   ,
+                                        qutinfo.PAC_DESC   ,
+                                        qutinfo.ORD_ID   ,
+                                        qutinfo.ORD_NO   ,
+                                        qutinfo.PAC_AMT   ,
+                                        qutinfo.FILTER_AMT   ,
+                                        qutinfo.TOT_AMT   ,
+                                        qutinfo.DUR DUR  ,
+                                        qutinfo.REM REM  ,
+                                        qutinfo.VALID_DT   ,
+                                        qutinfo.CRT_DT   ,
+                                        qutinfo.CRT_USER_ID   ,
+                                        qutinfo.QUOT_STUS_ID   ,
+                                        qutinfo.QUOT_STUS_CODE   ,
+                                        qutinfo.UPD_DT   ,
+                                        qutinfo.UPD_USER_ID   ,
+                                        qutinfo.CNT_ID   ,
+                                        qutinfo.CNT_NAME   ,
+                                        qutinfo.CNT_NRIC   ,
+                                        qutinfo.CNT_TEL_MOB   ,
+                                        qutinfo.CNT_TEL_OFF   ,
+                                        qutinfo.CNT_TEL_FAX   ,
+                                        qutinfo.CNT_TEL_RES   ,
+                                        qutinfo.CNT_EMAIL   ,
+                                        qutinfo.CNT_GENDER   ,
+                                        qutinfo.CNT_RACE   ,
+                                        qutinfo.PAC_PROMO_ID   ,
+                                        qutinfo.PAC_PROMO_CODE   ,
+                                        qutinfo.PAC_PROMO_DESC   ,
+                                        qutinfo.PROMO_ID   ,
+                                        qutinfo.PROMO_CODE   ,
+                                        qutinfo.PROMO_DESC   ,
+                                        qutinfo.BS_FREQ   ,
+                                        qutinfo.MEM_ID   ,
+                                        qutinfo.MEM_CODE   ,
+                                        qutinfo.MEM_NAME   ,
+                                        qutinfo.VALID_STUS   ,
+                                        qutinfo.VALID_STUS_ID   ,
+                                        qutinfo.CNVR_MEM_ID   ,
+                                        qutinfo.CNVR_MEM_NO   ,
+                                        qutinfo.STK_ID   ,
+                                        qutinfo.STK_CODE   ,
+                                        qutinfo.STK_DESC   ,
+                                        qutinfo.CUST_NAME   ,
+                                        qutinfo.CUST_IC   ,
+                                        qutinfo.TOT_CNT   ,
+                                        qutinfo.REF_NO
+                                 FROM SAL1005V qutinfo ) sList
+                         WHERE  sList.QUOT_ID = #{svmQuotId}   AND ROWNUM <= 1
+          ]]>
+    </select>
+
+    <select id="selectESvmPaymentInfo" parameterType="Map" resultType="egovMap">
+        SELECT *
+        FROM PAY0312D
+        WHERE PSM_ID = #{psmId}
+    </select>
+
+    <update id="updateAction" parameterType="Map">
+       UPDATE SAL0298D ESVM
+	   SET ESVM.STUS = #{action},
+		    ESVM.STUS_REM = #{statusRemark},
+		    ESVM.PSM_SRV_MEM_NO = #{docNo},
+		    ESVM.SA_REF = #{SARefNo},
+		    ESVM.PO_NO = #{PONo},
+		    ESVM.APPV_INSTRCT = #{specialInstruction},
+		    ESVM.APPV_DT = SYSDATE,
+		    ESVM.REM = #{remark},
+		    ESVM.APPV_USER_ID = #{userId},
+		    ESVM.UPD_DT = SYSDATE
+	   WHERE ESVM.PSM_ID = #{psmId}
+    </update>
+
+    <update id="updateTR" parameterType="Map">
+       UPDATE PAY0312D ESVMPAY
+       SET ESVMPAY.TRX_ID = #{trxId},
+       <if test='allowCommFlg != null and allowCommFlg != ""'>
+                   ESVMPAY.ALLOW_COMM = '1',
+       </if>
+            ESVMPAY.ALLOW_COMM = #{allowCommFlg},
+            ESVMPAY.TR_REF_NO = #{trRefNo},
+            ESVMPAY.TR_ISSUED_DT = #{trIssuedDt},
+            ESVMPAY.UPD_USER_ID = #{userId},
+            ESVMPAY.UPD_DT = SYSDATE
+       WHERE ESVMPAY.PSM_ID = #{psmId}
+    </update>
+
+    <insert id="SAL0095D_insert" parameterType="Map"  >
+           INSERT INTO SAL0095D (
+                                           SRV_MEM_ID, SRV_MEM_QUOT_ID, SRV_SALES_ORD_ID,
+                                           SRV_MEM_NO, SRV_MEM_BILL_NO, SRV_MEM_PAC_ID,
+                                           SRV_MEM_PAC_AMT, SRV_MEM_BS_AMT, SRV_MEM_PV,
+                                           SRV_FREQ, SRV_START_DT, SRV_EXPR_DT,
+                                           SRV_DUR, SRV_STUS_CODE_ID, SRV_REM,
+                                           SRV_CRT_DT, SRV_CRT_USER_ID, SRV_UPD_DT,
+                                           SRV_UPD_USER_ID, SRV_MEM_BS12_AMT, SRV_MEM_IS_SYNCH,
+                                           SRV_MEM_SALES_MEM_ID, SRV_MEM_CUST_CNT_ID, SRV_MEM_QTY,
+                                           SRV_BS_QTY, SRV_MEM_PROMO_ID, SRV_MEM_PV_MONTH,
+                                           SRV_MEM_PV_YEAR, SRV_MEM_IS_MNL, SRV_MEM_BRNCH_ID,
+                                           SRV_MEM_PAC_PROMO_ID, SRV_MEM_FORM_NO)
+                                        VALUES (
+                                                      #{srvMemId},
+                                                       #{srvMemQuotId},
+                                                       #{srvSalesOrdId},
+                                                       #{srvMemNo},
+                                                       #{srvMemBillNo},
+                                                       #{srvMemPacId},
+                                                       #{srvMemPacAmt},
+                                                       #{srvMemBsAmt},
+                                                       #{srvMemPv},
+                                                       #{srvFreq},
+                                                       #{srvStartDt},
+                                                       #{srvExprDt},
+                                                       #{srvDur},
+                                                       #{srvStusCodeId},
+                                                       #{srvRem},
+                                                       sysdate,
+                                                       #{userId},
+                                                       sysdate,
+                                                       #{userId},
+                                                       #{srvMemBs12Amt},
+                                                       #{srvMemIsSynch},
+                                                       #{srvMemSalesMemId},
+                                                       #{srvMemCustCntId},
+                                                       #{srvMemQty},
+                                                       #{srvBsQty},
+                                                       #{srvMemPromoId},
+                                                       #{srvMemPvMonth},
+                                                       #{srvMemPvYear},
+                                                       #{srvMemIsMnl},
+                                                       #{srvMemBrnchId},
+                                                       #{srvMemPacPromoId},
+                                                       #{srvMemFormNo}
+                                           )
+     </insert>
 </mapper>

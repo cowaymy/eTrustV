@@ -30,6 +30,9 @@
     var otherFileName3 = "";
 
     var MEM_TYPE = '${SESSION_INFO.userTypeId}';
+    var BranchId = '${SESSION_INFO.userBranchId}';
+    var SAFlg =  0; //0:No need to check
+    var SpecInstr =  0; //0:No need to check
 
     $(document).ready(function(){
 
@@ -40,52 +43,70 @@
                 elements[i].style.display="none";
             }
             $("#btnSave").hide();
-            /* if("${SESSION_INFO.memberLevel}" =="1"){
-
-            	 $("#btnSave").hide();
-
-            }else if("${SESSION_INFO.memberLevel}" =="2"){
-            	$("#attach_mod").hide();
-            	 $("#btnSave").hide();
-
-            }else if("${SESSION_INFO.memberLevel}" =="3"){
-            	$("#attach_mod").hide();
-            	 $("#btnSave").hide();
-
-            }else if("${SESSION_INFO.memberLevel}" =="4"){
-            	$("#attach_mod").hide();
-                $("#btnSave").hide();
-
-            } */
         }
-        /* doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '${preOrderInfo.appTypeId}', 'appType',     'S', ''); //Common Code
-        doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '${preOrderInfo.rentPayModeId}', 'rentPayMode', 'S', ''); //Common Code
-        doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
-        doGetComboSepa ('/common/selectBranchCodeList.do', '1',  ' - ', '', 'keyinBrnchId',  'S', ''); //Branch Code
-
-        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '${preOrderInfo.exTrade}', 'exTrade', 'S'); //EX-TRADE
-        doGetComboOrder('/common/selectCodeList.do', '415', 'CODE_ID',   '', 'corpCustType',     'S', ''); //Common Code
-        doGetComboOrder('/common/selectCodeList.do', '416', 'CODE_ID',   '', 'agreementType',     'S', ''); //Common Code
-
-        //Attach File
-        //$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>Upload</a></span></label>");
-        fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
-
-        if('${preOrderInfo.stusId}' == 4 || '${preOrderInfo.stusId}' == 10 ){
-            $('#scPreOrdArea').find("input,textarea,button,select").attr("disabled",true);
-            $("#scPreOrdArea").find("p.btn_grid").hide();
-            $('#btnSave').hide();
-            $(".input_text").attr('disabled',false).addClass("readonly");;
-        } */
 
     	if('${eSvmInfo.atchFileGrpId}' != 0){
             fn_loadAtchment('${eSvmInfo.atchFileGrpId}');
         }
 
+        var payMode = '${paymentInfo.payMode}';
+        if(payMode == '6506')
+        {
+        	$("#aTabPayment").hide();
+        }
+
+        //Go into uneditable state [s]
+        var stus = '${eSvmInfo.stus}';
+        var flg = '${paymentInfo.allowComm}';
+        var specialInst = '${eSvmInfo.appvInstrct}';
+        console.log('specialInst: ', specialInst);
+        console.log('stus: ', stus);
+        if(stus == '5')
+        {
+        	$("#payment_transactionID").replaceWith('<input id=payment_transactionID name="payment_transactionID" value="${paymentInfo.trxId}" type="text" title="" placeholder="" class="w100p readonly" readyonly />');
+        	$("#payment_trRefNo").replaceWith('<input id=payment_trRefNo name="payment_trRefNo" value="${paymentInfo.trRefNo}" type="text" title="" placeholder="" class="w100p readonly" readyonly />');
+        	$("#payment_trIssuedDt").replaceWith('<input id=payment_trIssuedDt name="payment_trIssuedDt" value="${paymentInfo.trIssuedDt}" type="text" title="" placeholder="" class="w100p readonly" readyonly />');
+        	if('${paymentInfo.allowComm}' == '1')
+        	{
+        		$("#payment_allowCommFlg").replaceWith('<input id=payment_allowCommFlg name="payment_allowCommFlg" type="checkBox" checked />');
+        		$("input:checkbox").click(function() { return false; });
+        	}
+        	$('#attchFrm .label_text').hide();
+        	$("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+        	$("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+        	$("#action").replaceWith('<input id=action name="action" value="${eSvmInfo.stusRem}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+        	$("#specialInstruction").replaceWith('<input id=specialInstruction name="specialInstruction" value="${eSvmInfo.appvInstrct}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+        	$("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.rem}</textarea>');
+        	$("#btnSave").hide();
+        }//Go into uneditable state [e]
+        else if(stus == '1' && specialInst != '')
+        {
+        	$('#action').val(stus);
+        	$('#specialInstruction').val('');
+        	$('#specialInstruction').val('${eSvmInfo.appvInstrct}');
+        	console.log('specialInstruction: ', $('#specialInstruction').val());
+        	$("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+            $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+            $("#action option[value='"+ stus +"']").attr("selected", true);
+            $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
+            $("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.rem}</textarea>');
+        }
+
+        if($("#action").val() == '5') //5:Approved
+            $("#specialInstruction").hide();
+
+        fn_displaySpecialInst();
+
     });
 
     $(function(){
         $('#btnSave').click(function() {
+
+        	console.log("btnSave clicked")
+        	var checkResult = fn_checkEmpty();
+        	 if(!checkResult){
+        	        return false;
+        	    }
 
             if(!fn_validFile()) {
                 $('#aTabFL').click();
@@ -96,8 +117,8 @@
             formData.append("atchFileGrpId", '${eSvmInfo.atchFileGrpId}');
             formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
             formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-            console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-            console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+            //console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+            //console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
             $.each(myFileCaches, function(n, v) {
                 console.log(v.file);
                 formData.append(n, v.file);
@@ -236,95 +257,98 @@
         var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
         var vStusId = ('${preOrderInfo.stusId}' != 1) ? 104 : 1;
 
-        var orderVO = {
-                /* preOrdId             : $('#frmPreOrdReg #hiddenPreOrdId').val().trim(),
-                sofNo                : $('#sofNo').val().trim(),
-                custPoNo             : $('#poNo').val().trim(),
-                appTypeId            : vAppType,
-                srvPacId             : $('#srvPacId').val(),
-                custId               : $('#hiddenCustId').val(),
-                empChk               : 0,
-                gstChk               : $('#gstChk').val(),
-                custCntcId           : $('#hiddenCustCntcId').val(),
-                keyinBrnchId         : $('#keyinBrnchId').val(),
-                instAddId            : $('#hiddenCustAddId').val(),
-                dscBrnchId           : $('#dscBrnchId').val(),
-                preDt                : $('#prefInstDt').val().trim(),
-                preTm                : $('#prefInstTm').val().trim(),
-                instct               : $('#speclInstct').val().trim(),
-                exTrade              : $('#exTrade').val(),
-                itmStkId             : $('#ordProudct').val(),
-                itmCompId          : $('#compType').val(),
-                promoId              : $('#ordPromo').val(),
-                mthRentAmt           : $('#ordRentalFees').val().trim(),
-                totAmt               : $('#ordPrice').val().trim(),
-                norAmt               : $('#normalOrdPrice').val().trim(),
-                discRntFee           : $('#ordRentalFees').val().trim(),
-                totPv                : $('#ordPv').val().trim(),
-                totPvGst             : $('#ordPvGST').val().trim(),
-                prcId                : $('#ordPriceId').val(),
-                memCode              : $('#salesmanCd').val(),
-                advBill              : $('input:radio[name="advPay"]:checked').val(),
-                custCrcId            : vCustCRCID,
-                bankId               : vBankID,
-                custAccId            : vCustAccID,
-                is3rdParty           : vIs3rdParty,
-                rentPayCustId        : vCustomerId,
-                rentPayModeId        : $('#rentPayMode').val(),
-                custBillId           : vCustBillId,
-                custBillCustId       : $('#hiddenCustId').val(),
-                custBillCntId        : $("#hiddenCustCntcId").val(),
-                custBillAddId        : $("#hiddenBillAddId").val(),
-                custBillEmail        : $('#billMthdEmailTxt1').val().trim(),
-                custBillIsSms        : $('#billMthdSms1').is(":checked") ? 1 : 0,
-                custBillIsPost       : $('#billMthdPost').is(":checked") ? 1 : 0,
-                custBillEmailAdd     : $('#billMthdEmailTxt2').val().trim(),
-                custBillIsWebPortal  : $('#billGrpWeb').is(":checked")   ? 1 : 0,
-                custBillWebPortalUrl : $('#billGrpWebUrl').val().trim(),
-                custBillIsSms2       : $('#billMthdSms2').is(":checked") ? 1 : 0,
-                custBillCustCareCntId: $("#hiddenBPCareId").val(),
-                stusId                     : vStusId,
-                corpCustType         : $('#corpCustType').val(),
-                agreementType         : $('#agreementType').val(),
-                salesOrdIdOld          : $('#txtOldOrderID').val(),
-                relatedNo               : $('#relatedNo').val()
-                */
-        		atchFileGrpId        : '${eSvmInfo.atchFileGrpId}'
-            };
+        /*var data = {
+                action : $('#action').val(),
+                specialInstruction : $('#specialInst').val(),
+                remark : $("#remark").val(),
+                srvMemQuotId :   '${eSvmInfo.srvMemQuotId}',
+        		atchFileGrpId        : '${eSvmInfo.atchFileGrpId}',
+        		SARefNo : $("#SARefNo").val(),
+        		PONo : $("#PONo").val(),
+        		psmId : '${eSvmInfo.psmId}'
+            };*/
+
+        var data={
+        		//Update Action Data
+        		action : $('#action').val(),
+                specialInstruction : $('#specialInstruction').val(),
+                remark : $("#remark").val(),
+                srvMemQuotId :   '${eSvmInfo.srvMemQuotId}',
+                atchFileGrpId        : '${eSvmInfo.atchFileGrpId}',
+                SARefNo : $("#SARefNo").val(),
+                PONo : $("#PONo").val(),
+                psmId : '${eSvmInfo.psmId}',
+
+                // Insert SAL0095D Data
+                srvMemQuotId :   '${eSvmInfo.srvMemQuotId}'  ,
+                srvSalesOrdId: '${quotInfo.ordId}' ,
+                srvSalesOrdNo: '${eSvmInfo.salesOrdNo}' ,
+                srvMemQuotNo: '${preSalesInfo.smqNo}',
+                srvMemQuotCntName:'${quotInfo.cntName}',
+                srvMemQuotCustName:'${preSalesInfo.custName}',
+                srvMemPacId: '${quotInfo.pacId}',
+                srvMemPacAmt: '${quotInfo.pacAmt}',
+                srvMemBsAmt: '${quotInfo.totAmt}',
+                srvMemPv: '0',
+                srvFreq: '${quotInfo.bsFreq}',
+                srvStartDt: '01/01/1900',
+                srvExprDt: '01/01/1900',
+                srvStusCodeId: '1',
+                srvDur: '${quotInfo.dur}',
+                srvRem: '',
+                srvMemBs12Amt: '0',
+                srvMemIsSynch : '0',
+                srvMemSalesMemId:'',
+                srvMemCustCntId: '${quotInfo.cntId}',
+                srvMemQty : Number('${quotInfo.dur}') / 12,
+                srvBsQty: ((12 / Number('${quotInfo.dur}') ) * ( Number('${quotInfo.dur}')  / 12)),
+                srvMemPromoId : '${quotInfo.promoId}',
+                srvMemPvMonth : '0',
+                srvMemPvYear : '0',
+                srvMemIsMnl : '0',
+                srvMemBrnchId : BranchId,
+                srvMemPacPromoId :'${quotInfo.pacPromoId}',
+                srvMemFormNo:'',
+                trType:  '' ,
+                srvStockCode :  '${quotInfo.stkCode}',
+                srvStockDesc :  '${quotInfo.stkDesc}',
+                poNo : $("#poNo").val(),
+                refNo : $("#refNo").val(),
+                trxId : $("#payment_transactionID").val(),
+                allowCommFlg : $("#payment_allowCommFlg").val(),
+                trRefNo : $("#payment_trRefNo").val(),
+                trIssuedDt : $("#payment_trIssuedDt").val()
+        }
 
         var formData = new FormData();
         formData.append("atchFileGrpId", '${eSvmInfo.atchFileGrpId}');
         formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
         formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-        console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-        console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
         $.each(myFileCaches, function(n, v) {
-            console.log(v.file);
             formData.append(n, v.file);
         });
 
         Common.ajaxFile("/sales/membership/attachESvmFileUpdate.do", formData, function(result) {
             if(result.code == 99){
                 Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
-                //myFileCaches = {};
             }else{
 
-                /* Common.ajax("POST", "/sales/membership/modifyPreOrder.do", orderVO, function(result) {
-                    Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdModPop);
-                },
-                function(jqXHR, textStatus, errorThrown) {
-                    try {
-                        Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
-                    }
-                    catch (e) {
-                        console.log(e);
-                    }
-                }); */
-                //myFileCaches = {};
+               // DO SAVE BUTTON ACTION
+               Common.popupDiv("/sales/membership/updateAction.do", data, function(result){
+            	   if(result.code == 00)
+            		   Common.alert('Membership successfully saved.' + "<b>" + result.psmSrvMemNo);
+            	   else{
+            		   Common.alert('Membership failed to save.');
+            	   }
+               });
             }
         },function(result){
             Common.alert(result.message+"<br/>Upload Failed. Please check with System Administrator.");
         });
+    }
+
+    function fn_close(){
+        $("#popup_wrap").remove();
     }
 
     function fn_closePreOrdModPop() {
@@ -390,15 +414,15 @@
                 atchFileId : fileId
         };
         Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-            console.log(result)
+            //console.log(result)
             var fileSubPath = result.fileSubPath;
             fileSubPath = fileSubPath.replace('\', '/'');
 
             if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
-                console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                //console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
                 window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
             } else {
-                console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                //console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
                 window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
             }
         });
@@ -406,7 +430,7 @@
 
     function fn_loadAtchment(atchFileGrpId) {
         Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId :atchFileGrpId} , function(result) {
-            console.log(result);
+            //console.log(result);
            if(result) {
                 if(result.length > 0) {
                     $("#attachTd").html("");
@@ -547,12 +571,68 @@
         return isValid;
     }
 
+    function fn_GetSpecialInstruction(){
+    	console.log('Action: ' + $("#action").val());
+    	console.log('spec: ' + $("#specialInstruction").val());
+    	var action =  $("#action").val();
+    	doGetComboData('/sales/membership/selectActionOption.do', {action : $("#action").val()}, '', 'specialInstruction', 'S', ''); //Special Instruction for Update Status page
+    }
+
+    function fn_displaySpecialInst(){
+    	fn_GetSpecialInstruction();
+    	if($("#action").val() == '5' || $("#action").val() == '') //5:Approved
+    	{
+    		$("#specialInstruction").hide();
+    		SpecInstr = 0;
+    		$("#SARefNo_header").replaceWith('<th id="SARefNo_header" scope="row">SA Reference No<span class="must">*</span></th>');
+    		SAFlg = 1;
+    	}
+    	else
+    	{
+    		$("#specialInstruction").show();
+    		$("#specialInst_header").replaceWith('<th id="specialInst_header" scope="row">Special Instruction<span class="must">*</span></th>');
+            SpecInstr = 1;
+    		$("#SARefNo_header").replaceWith('<th id="SARefNo_header" scope="row">SA Reference No</th>');
+    		SAFlg = 0;
+    	}
+    }
+
+    function fn_checkEmpty(){
+    	var checkResult = true;
+
+    	console.log("fn_checkEmpty");
+    	console.log("SARefNo: " + $("#SARefNo").val());
+    	console.log("Action: " + $("#action").val());
+    	console.log("specialInst: " + $("#specialInstruction").val());
+    	console.log("SAFlg: " + SAFlg);
+    	if(FormUtil.isEmpty($("#SARefNo").val()) && SAFlg == 1) {
+            Common.alert('Please enter SA Reference No.');
+            checkResult = false;
+            return checkResult;
+        }
+    	else if(FormUtil.isEmpty($("#PONo").val())) {
+            Common.alert('Please enter Purchase Order.');
+            checkResult = false;
+            return checkResult;
+        }
+    	else if(FormUtil.isEmpty($("#action").val())) {
+            Common.alert('Please choose an Action to proceed.');
+            checkResult = false;
+            return checkResult;
+        }else if(FormUtil.isEmpty($("#specialInstruction").val()) && SpecInstr == 1) {
+            Common.alert('Please choose a Special Instruction.');
+            checkResult = false;
+            return checkResult;
+        }
+    	return checkResult;
+    }
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>eKey-in</h1>
+<h1>eSVM Approval</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a id="btnPreOrdClose" onClick="javascript:fn_closePreOrdModPop2();" href="#">CLOSE | TUTUP</a></p></li>
 </ul>
@@ -606,7 +686,7 @@
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
     <li><a href="aTabSL" class="on">Pre Sales Info</a></li>
-    <li><a href="aTabPY" onClick="javascript:chgTab('ord');">Payment</a></li>
+    <li><a href="aTabPY" id="aTabPayment" onClick="javascript:chgTab('ord');">Payment</a></li>
     <li><a href="aTabFL" >Attachment</a></li>
     <li><a href="aTabST" onClick="javascript:chgTab('pay');">Update Status</a></li>
 </ul>
@@ -614,11 +694,11 @@
 <!------------------------------------------------------------------------------
                 Pre Sales Info
 ------------------------------------------------------------------------------->
-<%@ include file="/WEB-INF/jsp/sales/order/include/basicInfoIncludeViewLedger.jsp" %>
+<%@ include file="/WEB-INF/jsp/sales/membership/eSvmPreSalesInfoPop.jsp" %>
 <!------------------------------------------------------------------------------
                 Payment Info
 ------------------------------------------------------------------------------->
-<%@ include file="/WEB-INF/jsp/sales/order/include/basicInfoIncludeViewLedger.jsp" %>
+<%@ include file="/WEB-INF/jsp/sales/membership/eSvmPaymentPop.jsp" %>
 <!------------------------------------------------------------------------------
                 Attachment Area
 ------------------------------------------------------------------------------->
@@ -626,16 +706,14 @@
 <!------------------------------------------------------------------------------
                 Update Status Info
 ------------------------------------------------------------------------------->
-<%@ include file="/WEB-INF/jsp/sales/order/include/basicInfoIncludeViewLedger.jsp" %>
+<%@ include file="/WEB-INF/jsp/sales/membership/eSvmUpdateStatusPop.jsp" %>
 
 
 
 </section><!-- tap_wrap end -->
-
 <ul class="center_btns mt20">
     <li><p class="btn_blue2 big"><a id="btnSave" href="#">Save</a></p></li>
 </ul>
-
 </section>
 <!------------------------------------------------------------------------------
     Pre-Order Regist Content END

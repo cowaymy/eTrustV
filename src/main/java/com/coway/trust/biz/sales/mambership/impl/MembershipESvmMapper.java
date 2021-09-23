@@ -21,4 +21,21 @@ public interface MembershipESvmMapper {
 
 	void insertFileDetail(Map<String, Object> flInfo);
 
+	List<EgovMap> selectActionOption(Map<String, Object> params);
+
+	EgovMap selectESvmPreSalesInfo(Map<String, Object> params);
+
+	EgovMap selectESvmPaymentInfo(Map<String, Object> params);
+
+	String getDocNo(Map<String, Object> params);
+
+	void updateAction(Map<String, Object> params);
+
+	void updateTR(Map<String, Object> params);
+
+	EgovMap  getSAL0095D_SEQ(Map<String, Object> params);
+
+	int  SAL0095D_insert(Map<String, Object> params);
+
+	 EgovMap  selectMembershipQuotInfo(Map<String, Object> params);
 }

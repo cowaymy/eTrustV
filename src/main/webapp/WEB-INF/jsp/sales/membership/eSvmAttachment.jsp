@@ -10,7 +10,7 @@
     <col style="width:350px" />
     <col style="width:*" />
 </colgroup>
-<tbody>
+<tbody id="attchFrm">
 <tr>
     <th scope="row">SVM front copy</th>
     <td>

@@ -2,7 +2,6 @@ package com.coway.trust.web.sales.mambership;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,9 +29,9 @@ import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.common.SalesCommonService;
+import com.coway.trust.biz.sales.mambership.MembershipConvSaleService;
 import com.coway.trust.biz.sales.mambership.MembershipESvmApplication;
 import com.coway.trust.biz.sales.mambership.MembershipESvmService;
-import com.coway.trust.biz.sales.order.PreOrderApplication;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -51,6 +51,10 @@ public class MembershipESvmController {
 	@Value("${web.resource.upload.file}")
 	private String uploadDir;
 
+	// DataBase message accessor....
+    @Autowired
+    private MessageSourceAccessor messageAccessor;
+
 	@Autowired
 	private SessionHandler sessionHandler;
 
@@ -59,6 +63,9 @@ public class MembershipESvmController {
 
 	@Resource(name = "membershipESvmService")
 	private MembershipESvmService membershipESvmService;
+
+	@Resource(name = "membershipConvSaleService")
+	private MembershipConvSaleService membershipConvSaleService;
 
 	@Autowired
 	private MembershipESvmApplication membershipESvmApplication;
@@ -106,8 +113,20 @@ public class MembershipESvmController {
 	public String membershipESvmDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		EgovMap result = membershipESvmService.selectESvmInfo(params);
+		EgovMap preSalesInfo = membershipESvmService.selectESvmPreSalesInfo(params);
+		EgovMap paymentInfo = membershipESvmService.selectESvmPaymentInfo(params);
+		EgovMap quotInfo = membershipESvmService.selectMembershipQuotInfo(params);
 
 		model.put("eSvmInfo", result);
+		model.put("preSalesInfo", preSalesInfo);
+		model.put("paymentInfo", paymentInfo);
+		model.put("quotInfo", quotInfo);
+
+		logger.debug("params: ===========================>" + params);
+		logger.debug("eSvmInfo: ===========================>" + result);
+		logger.debug("PreSalesInfo: ===========================>" + preSalesInfo);
+		logger.debug("PaymentInfo: ===========================>" + paymentInfo);
+		logger.debug("QuotationInfo: ===========================>" + quotInfo);
 
 		return "sales/membership/membershipESvmDetailPop";
 	}
@@ -165,4 +184,62 @@ public class MembershipESvmController {
 
 		return ResponseEntity.ok(message);
 	}
+
+	@RequestMapping(value = "/selectActionOption.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectActionOption(@RequestParam Map<String, Object> params) {
+		List<EgovMap> specialInstruction = membershipESvmService.selectActionOption(params);
+		logger.debug("params: =====================>> " + params);
+		return ResponseEntity.ok(specialInstruction);
+
+	}
+
+	@RequestMapping(value = "/updateAction.do")
+	public ResponseEntity<EgovMap>updateAction(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+
+		params.put("userId", sessionVO.getUserId());
+		params.put("updator", sessionVO.getUserId());
+		params.put("docNoId", "12");
+		String docNo = membershipESvmService.selectDocNo(params);
+		params.put("docNo", docNo);
+		String statusRemark = "";
+		if(params.get("action").equals("5"))
+		{
+			statusRemark = "Approved";
+		}
+		else if(params.get("action").equals("6"))
+		{
+			statusRemark = "Rejected";
+		}
+		else if(params.get("action").equals("1") && !params.get("specialInstruction").equals(""))
+		{
+			statusRemark = "Active";
+		}
+		params.put("statusRemark", statusRemark);
+
+		logger.debug("params =====================================>>  " + params);
+
+		if(params.get("action").equals("5"))
+		{
+			//==== update SAL0298D eSVM ====
+			membershipESvmService.updateAction(params);
+
+			//==== insert membership ====
+			//membershipESvmService.SAL0095D_insert(params);
+			membershipConvSaleService.SAL0095D_insert(params);
+		}
+		else
+		{
+			membershipESvmService.updateAction(params);
+		}
+
+		//List<EgovMap> info = membershipESvmService.selectESvmInfo(params);
+		EgovMap result = membershipESvmService.selectESvmInfo(params);;
+		ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(params);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        result.put("messageCode", message.getCode());
+		return ResponseEntity.ok(result);
+		}
+
 }

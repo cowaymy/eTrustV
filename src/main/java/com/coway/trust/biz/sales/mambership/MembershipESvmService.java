@@ -15,4 +15,19 @@ public interface MembershipESvmService {
 
 	List<EgovMap> getESvmAttachList(Map<String, Object> params);
 
+	List<EgovMap> selectActionOption(Map<String, Object> params);
+
+	EgovMap selectESvmPreSalesInfo(Map<String, Object> params);
+
+	EgovMap selectESvmPaymentInfo(Map<String, Object> params);
+
+	void updateAction(Map<String, Object> params);
+
+	void updateTR(Map<String, Object> params);
+
+	String SAL0095D_insert(Map<String, Object> params);
+
+	String selectDocNo(Map<String, Object> params);
+
+	EgovMap selectMembershipQuotInfo(Map<String, Object> params);
 }

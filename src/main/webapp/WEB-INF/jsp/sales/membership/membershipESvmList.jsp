@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript" language="javascript">
-console.log("preOrderList");
+console.log("membershipESvmList");
     var listGridID;
     var excelListGridID;
     var keyValueList = [];
@@ -86,7 +86,7 @@ console.log("preOrderList");
         }
 
         AUIGrid.bind(listGridID , "cellClick", function( event ){
-            console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+            //console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
             selectRowIdx = event.rowIndex;
         });
 
@@ -96,11 +96,11 @@ console.log("preOrderList");
 
         });
 
-        doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
+        /*doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
-        doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code*/
         doDefCombo(memTypeData, '', 'memType', 'S', '');
-
+        doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
 
         //excel Download
         $('#excelDown').click(function() {
@@ -143,10 +143,10 @@ console.log("preOrderList");
     }
 
     function fn_setDetail(gridID, rowIdx){
-    	console.log("gridID"+ gridID);
-    	console.log("rowIdx"+ rowIdx);
+    	//console.log("gridID"+ gridID);
+    	//console.log("rowIdx"+ rowIdx);
         //(_url, _jsonObj, _callback, _isManualClose, _divId, _initFunc)
-        Common.popupDiv("/sales/membership/membershipESvmDetailPop.do", { psmId : AUIGrid.getCellValue(gridID, rowIdx, "psmId") }, null, true, "_divESvmSavePop");
+        Common.popupDiv("/sales/membership/membershipESvmDetailPop.do", { psmId : AUIGrid.getCellValue(gridID, rowIdx, "psmId"), ordNo : AUIGrid.getCellValue(gridID, rowIdx, "salesOrdNo"), svmQuotId : AUIGrid.getCellValue(gridID, rowIdx, "svmQuotId") }, null, true, "_divESvmSavePop");
     }
 
     function fn_setOptGrpClass() {
@@ -158,7 +158,7 @@ console.log("preOrderList");
         //AUIGrid 칼럼 설정
         var columnLayout = [
             {dataField : "psmNo", headerText : '<spring:message code="sal.title.text.preSalesNo" />', width : "7%" , editable : false, style : "aui-grid-link-renderer"},
-           {dataField : "saRefNo", headerText : '<spring:message code="sal.title.text.saRefNo" />', width : "10%" , editable : false},
+           {dataField : "saRef", headerText : '<spring:message code="sal.title.text.saRefNo" />', width : "10%" , editable : false},
            {dataField : "salesOrdNo", headerText : '<spring:message code="sales.OrderNo" />', width : "7%" , editable : false},
            {dataField : "crtDt", headerText :'<spring:message code="sal.title.text.eSvmKeyInDt" />', width : "10%" , editable : false},
            {dataField : "crtTm", headerText : '<spring:message code="sal.title.text.eSvmKeyInTm" />', width : "10%" , editable : false},
@@ -167,7 +167,8 @@ console.log("preOrderList");
            {dataField : "custName", headerText : '<spring:message code="sal.text.custName" />', width : "15%" , editable : false},
            {dataField : "crtUser", headerText : '<spring:message code="sales.Creator" />', width : "7%" , editable : false},
            {dataField : "updDt", headerText : '<spring:message code="sal.text.lastUpdate" />', width : "10%" , editable : false},
-           {dataField : "stusRem", headerText : '<spring:message code="sal.title.text.specialInstruction" />', width : "15%" , editable : false},
+           {dataField : "resnDesc", headerText : '<spring:message code="sal.title.text.specialInstruction" />', width : "15%" , editable : false},
+           {dataField : "svmQuotId", headerText : 'SVM Quotation ID', width : 300 , editable : false, visible  : false},
            {dataField : "psmId",headerText : "psmId", visible  : false },
            {dataField : "atchFileGrpId",headerText : "atchFileGrpId", visible  : false }
           , { headerText : "StatusId",          dataField : "stusId",     editable : false, visible  : false,  width : 100 }
@@ -203,7 +204,7 @@ console.log("preOrderList");
         //AUIGrid 칼럼 설정
         var excelColumnLayout = [
 		{dataField : "psmNo", headerText : '<spring:message code="sal.title.text.preSalesNo" />', width : 100 , editable : false},
-		{dataField : "saRefNo", headerText : '<spring:message code="sal.title.text.saRefNo" />', width : 100 , editable : false},
+		{dataField : "saRef", headerText : '<spring:message code="sal.title.text.saRefNo" />', width : 100 , editable : false},
 		{dataField : "salesOrdNo", headerText : '<spring:message code="sales.OrderNo" />', width : 100 , editable : false},
 		{dataField : "crtDt", headerText :'<spring:message code="sal.title.text.eSvmKeyInDt" />', width : 100 , editable : false},
 		{dataField : "crtTm", headerText : '<spring:message code="sal.title.text.eSvmKeyInTm" />', width : 100 , editable : false},
@@ -212,7 +213,8 @@ console.log("preOrderList");
 		{dataField : "custName", headerText : '<spring:message code="sal.text.custName" />', width : 250 , editable : false},
 		{dataField : "crtUser", headerText : '<spring:message code="sales.Creator" />', width : 100 , editable : false},
 		{dataField : "updDt", headerText : '<spring:message code="sal.text.lastUpdate" />', width : 150 , editable : false},
-		{dataField : "stusRem", headerText : '<spring:message code="sal.title.text.specialInstruction" />', width : 300 , editable : false}
+		{dataField : "resnDesc", headerText : '<spring:message code="sal.title.text.specialInstruction" />', width : 300 , editable : false},
+		{dataField : "svmQuotId", headerText : 'SVM Quotation ID', width : 300 , editable : false, visible  : false}
             ];
 
         //그리드 속성 설정
