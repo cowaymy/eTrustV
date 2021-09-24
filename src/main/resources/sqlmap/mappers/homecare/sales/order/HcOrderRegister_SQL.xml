@@ -168,4 +168,10 @@
         SELECT COUNT(ORD_SEQ_NO) FROM HMC0011D WHERE ORD_SEQ_NO = #{ordSeqNo}
     </select>
 
+    <!-- Get Product Category -->
+    <select id="getProductCategory" parameterType="string" resultType="string">
+        /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.getProductCategory */
+        SELECT STK_CTGRY_ID FROM SYS0026M WHERE STK_ID = #{product}
+    </select>
+
 </mapper>

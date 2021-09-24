@@ -22,10 +22,16 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.api.CommonApiService;
 import com.coway.trust.biz.api.EcommApiService;
+import com.coway.trust.biz.application.impl.FileApplicationImpl;
+import com.coway.trust.biz.homecare.sales.order.HcOrderRegisterService;
+import com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper;
+import com.coway.trust.biz.homecare.sales.order.vo.HcOrderVO;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.vo.AccClaimAdtVO;
@@ -52,6 +58,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("eCommApiService")
 public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements EcommApiService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl.class);
+
   @Resource(name = "EcommApiMapper")
   private EcommApiMapper ecommApiMapper;
 
@@ -66,6 +74,12 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
   @Resource(name = "customerService")
   private CustomerService customerService;
+
+  @Resource(name = "hcOrderRegisterService")
+	private HcOrderRegisterService hcOrderRegisterService;
+
+  @Resource(name = "hcOrderRegisterMapper")
+	private HcOrderRegisterMapper hcOrderRegisterMapper;
 
   @Override
   public EgovMap registerOrder(HttpServletRequest request, EComApiForm eComApiForm) throws Exception {
@@ -94,6 +108,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         int created = 0;
         String salesMenCode = CommonUtils.nvl(reqPrm.get("salesmanCode")) == "" ? "100334" : reqPrm.get("salesmanCode").toString();
 
+        LOGGER.debug("reqPrm=======================>" + reqPrm);
         ecommApiMapper.registerOrd(reqPrm);
         ecommApiMapper.getCustomerInfo(reqPrm);
 
@@ -249,8 +264,17 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         orderVO.setRentalSchemeVO(rentalSchemeVO);
 
 
-        orderRegisterService.registerOrder(orderVO, sessionVO);
+        // use product code to find product category. when product category is 5706/5707, insert into HMC0110D and setBundleID in SAL0001D with HMC0110D ord_seq_no
+        String prdCat = hcOrderRegisterMapper.getProductCategory(reqPrm.get("product").toString());
+        if(prdCat != null && (prdCat.equals("5706") || prdCat.equals("5607")))
+		{
+        	hcOrderRegisterService.hcRegisterOrder(orderVO, sessionVO);
+            HcOrderVO hcOrderVO = orderVO.getHcOrderVO();
+            salesOrderMVO.setBndlId(Integer.valueOf(hcOrderVO.getBndlNo().toString()));
+		}else{
 
+        orderRegisterService.registerOrder(orderVO, sessionVO);
+		}
         created = 1;
 
 

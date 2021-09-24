@@ -89,4 +89,6 @@ public interface HcOrderRegisterMapper {
 
 
 	public int getCountHcPreOrder(int orderSeqNo);
+
+	public String getProductCategory(String product);
 }

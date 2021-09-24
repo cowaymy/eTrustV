@@ -78,6 +78,7 @@ public class EComApiForm {
     params.put("salesmanCode", ecomForm.getSalesmanCode());
     params.put("instPriod", ecomForm.getInstalmentPeriod());
     params.put("cpntId", ecomForm.getComponentId());
+    params.put("bndlId", ecomForm.getBundleId());
 
     return params;
   }
@@ -136,6 +137,7 @@ public class EComApiForm {
   private String postcode;
   private String area;
   private String city;
+  private String bundleId;
 
   public String getKey() {
     return key;
@@ -507,5 +509,13 @@ public class EComApiForm {
   public void setCity(String city) {
     this.city = city;
   }
+
+public String getBundleId() {
+	return bundleId;
+}
+
+public void setBundleId(String bundleId) {
+	this.bundleId = bundleId;
+}
 
 }
