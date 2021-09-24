@@ -273,7 +273,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 //            salesOrderMVO.setBndlId(Integer.valueOf(hcOrderVO.getBndlNo().toString()));
 //		}else{
 //
-//        orderRegisterService.registerOrder(orderVO, sessionVO);
+        orderRegisterService.registerOrder(orderVO, sessionVO);
 //		}
         created = 1;
 
