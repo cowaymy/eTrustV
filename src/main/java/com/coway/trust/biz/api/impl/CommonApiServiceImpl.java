@@ -145,7 +145,7 @@ public class CommonApiServiceImpl extends EgovAbstractServiceImpl implements Com
       params.put("errMsg", msg);
       params.put("reqParam", reqPrm);
       params.put("ipAddr", "");
-      params.put("prgPath", respPrm != null ? pgmPath : " ");
+      params.put("prgPath", pgmPath != null ? pgmPath : " ");
       params.put("respTm", respTm);
       params.put("respParam", respPrm != null ? respPrm.toString().length() >= 4000 ? respPrm.toString().substring(0,4000) : respPrm.toString() : respPrm);
       params.put("apiUserId", apiUserId);
