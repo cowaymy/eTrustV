@@ -211,9 +211,9 @@
                               LEFT JOIN SYS0038M instStatus
                                  ON instStatus.STUS_CODE_ID = ir.STUS_CODE_ID
                               LEFT JOIN SYS0032M instReason ON instReason.RESN_ID = ir.FAIL_ID
+                              WHERE (som.STUS_CODE_ID <![CDATA[<>]]> 8)
 
 
-                        WHERE 1=1
                         <if test="cmbAppTypeList != null and cmbAppTypeList != ''">
                           AND som.APP_TYPE_ID IN
                             <foreach item="item" collection="cmbAppTypeList" index="index" open="(" separator="," close=")">
@@ -247,13 +247,13 @@
                           <if test="item == 5 ">
                              (
                                     NVL (ie.STUS_CODE_ID, 0) = 21
-                                som.STUS_CODE_ID != 10
+                                AND som.STUS_CODE_ID != 10
                               )
                           </if>
                           <if test="item == 6 ">
                              (
                                     NVL (ie.STUS_CODE_ID, 0) = 1
-                                som.STUS_CODE_ID != 10
+                                AND som.STUS_CODE_ID != 10
                               )
                           </if>
                         </foreach>
