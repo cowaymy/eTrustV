@@ -49,7 +49,7 @@
 		,
 		Extent1.POSTCODE
 		, Extent1.DSC_CODE
-		, Extent1.PROMO_ID
+<!-- 		, Extent1.PROMO_ID -->
 		, CASE WHEN (
 		Extent1.APP_TYPE_ID IS NOT NULL )
 		THEN
@@ -258,10 +258,10 @@
 		, Extent1.DSC_CODE
 		,
 		Extent1.CALL_LOG_DT
-		, Extent1.ECOMM_ORD_ID
-		, Extent1.PROMO_ID
+		, Extent1.ECOMM_ORD_ID <!-- Added by keyi  20210920-->
+		, Extent1.PROMO_ID <!-- Added by keyi  20210920-->
 		,
-		Extent1.CALL_FDBCK_CODE || ' - ' || Extent1.CALL_FDBCK_DESC FEED_BACK
+		Extent1.CALL_FDBCK_CODE || ' - ' || Extent1.CALL_FDBCK_DESC FEED_BACK <!-- Added by keyi  20210920-->
 		, CASE WHEN ( Extent1.APP_TYPE_ID IS NOT NULL )
 		THEN
 		Extent1.APP_TYPE_ID
@@ -355,7 +355,7 @@
 		vCallLogOrderCall.RCD_TMS RCD_TMS
 		, vCallLogOrderCall.UPD_DT UPD_DT
 		,
-		vCallLogOrderCall.PROMO_ID
+		vCallLogOrderCall.PROMO_ID <!-- Added by keyi  20210920-->
 		,
 		vCallLogOrderCall.VRIFY_FLG VRIFY_FLG
 		,
@@ -366,7 +366,7 @@
 		, DSC.CODE DSC_CODE
 		, HMC.BNDL_NO
 		,
-		NVL(sal.ECOMM_ORD_ID,0) ECOMM_ORD_ID
+		NVL(sal.ECOMM_ORD_ID,0) ECOMM_ORD_ID <!-- Added by keyi  20210920-->
 		FROM CCR1002V
 		vCallLogOrderCall
 		JOIN SYS0064M AREA ON AREA.AREA_ID =
