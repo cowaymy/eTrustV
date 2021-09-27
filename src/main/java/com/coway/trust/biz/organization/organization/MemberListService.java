@@ -234,4 +234,8 @@ public interface MemberListService {
 	Map<String, Object> lmsMemberListDeact(Map<String, Object> params);
 	Map<String, Object> lmsReqApi(Map<String, Object> params);
 
+	List<EgovMap> selectPromoDisHistory(Map<String, Object> params);
+
+	EgovMap getCurrOrgDtls(Map<String, Object> params);
+
 }
