@@ -2945,4 +2945,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		return resultValue;
 	}
+
+	@Override
+    public List<EgovMap> selectPromoDisHistory(Map<String, Object> params) {
+		return memberListMapper.selectPromoDisHistory(params);
+	}
+
+	@Override
+    public EgovMap getCurrOrgDtls(Map<String, Object> params) {
+        return memberListMapper.getCurrOrgDtls(params);
+    }
 }
