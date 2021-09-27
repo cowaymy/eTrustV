@@ -2691,7 +2691,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		lmsMemApiForm.setProfile_field_address(addr);
 		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender").toString());
 		lmsMemApiForm.setProfile_field_dob(selectMemListlms.get("c29").toString());
-		lmsMemApiForm.setProfile_field_position(".");//selectMemListlms.get("c57").toString());//
+		String position = selectMemListlms.get("c57").toString();
+		if(position == null && position.equals("")){
+			position = ".";
+		}
+		lmsMemApiForm.setProfile_field_position(position);
 		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4").toString());
 		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5").toString());
 		lmsMemApiForm.setProfile_field_region(".");
@@ -2768,7 +2772,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		lmsMemApiForm.setProfile_field_address(addr);
 		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender").toString());
 		lmsMemApiForm.setProfile_field_dob(selectMemListlms.get("c29").toString());
-		lmsMemApiForm.setProfile_field_position(".");//selectMemListlms.get("c57").toString());//
+		String position = selectMemListlms.get("c57").toString();
+		if(position == null && position.equals("")){
+			position = ".";
+		}
+		lmsMemApiForm.setProfile_field_position(position);
 		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4").toString());
 		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5").toString());
 		lmsMemApiForm.setProfile_field_region(".");
