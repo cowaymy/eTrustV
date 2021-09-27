@@ -36,6 +36,7 @@ import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.biz.logistics.organization.LocationService;
 import com.coway.trust.biz.organization.organization.HPMeetingPointUploadVO;
 import com.coway.trust.biz.organization.organization.MemberListService;
+import com.coway.trust.biz.organization.organization.eHPmemberListService;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
@@ -61,6 +62,9 @@ public class MemberListController {
 
 	@Resource(name = "memberListService")
 	private MemberListService memberListService;
+
+	@Resource(name = "eHPmemberListService")
+	private eHPmemberListService eHPmemberListService;
 
 	@Resource(name = "commonService")
 	private CommonService commonService;
@@ -2214,4 +2218,90 @@ logger.debug("params : {}", params);
 
         return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "/promoDisHistory.do")
+    public String eHpMemberList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+
+        params.put("groupCode",1);
+        params.put("userTypeId", sessionVO.getUserTypeId());
+
+        String type="";
+        if (params.get("userTypeId" ) == "4" ) {
+            type = memberListService.selectTypeGroupCode(params);
+        } else {
+            params.put("userTypeId", sessionVO.getUserTypeId());
+        }
+
+        logger.debug("type : {}", type);
+
+        if ( params.get("userTypeId" ) == "4"  && type == "42") {
+            params.put("userTypeId", "2");
+        } else if ( params.get("userTypeId" ) == "4"  && type == "43") {
+            params.put("userTypeId", "3");
+        } else if ( params.get("userTypeId" ) == "4"  && type == "45") {
+            params.put("userTypeId", "1");
+        } else if ( params.get("userTypeId" ) == "4"  && type.equals("")){
+            params.put("userTypeId", "");
+        }
+
+        List<EgovMap> memberType = commonService.selectCodeList(params);
+        params.put("mstCdId",2);
+        params.put("groupCode", 45);
+        params.put("separator", " - ");
+        List<EgovMap> user = memberListService.selectUser();
+
+
+        model.addAttribute("memberType", memberType);
+        model.addAttribute("user", user);
+
+        params.put("userId", sessionVO.getUserId());
+        EgovMap userRole = memberListService.getUserRole(params);
+        model.addAttribute("userRole", userRole.get("roleid"));
+
+        if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+            EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+            model.put("promoDisHismemTypeCom", getUserInfo.get("memType"));
+            model.put("orgCodeHd", getUserInfo.get("orgCode"));
+            model.put("grpCodeHd", getUserInfo.get("grpCode"));
+            model.put("deptCodeHd", getUserInfo.get("deptCode"));
+            model.put("promoDisHisCode", getUserInfo.get("memCode"));
+            logger.info("promoDisHismemTypeCom ##### " + getUserInfo.get("memType"));
+        }
+
+
+        return "organization/organization/promoDisHistory";
+    }
+
+    @RequestMapping(value = "/promoDisHistorySearch", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> promoDisHistorySearch(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+        logger.debug("memTypeCom : {}", params.get("promoDisHisMemTypeCom"));
+        logger.debug("promoDisHistorySearch - params : " + params);
+
+        logger.debug("memberLevel : {}", sessionVO.getMemberLevel());
+        logger.debug("userName : {}", sessionVO.getUserName());
+
+        params.put("memberLevel", sessionVO.getMemberLevel());
+        params.put("userName", sessionVO.getUserName());
+
+        List<EgovMap> memberList = null;
+
+        if (sessionVO.getUserTypeId() == 1) {
+            params.put("userId", sessionVO.getUserId());
+
+            EgovMap item = new EgovMap();
+            item = (EgovMap) memberListService.getCurrOrgDtls(params);
+
+            params.put("deptCodeHd", item.get("deptCode"));
+            params.put("grpCodeHd", item.get("grpCode"));
+            params.put("orgCodeHd", item.get("orgCode"));
+
+        }
+
+		memberList = memberListService.selectPromoDisHistory(params);
+
+		return ResponseEntity.ok(memberList);
+    }
+
 }
+
