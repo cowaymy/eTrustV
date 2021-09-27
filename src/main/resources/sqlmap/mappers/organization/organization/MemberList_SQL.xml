@@ -5291,4 +5291,137 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         FROM ORG0001D
         WHERE MEM_CODE = #{memberCode}
     </select>
+
+     <select id="getCurrOrgDtls" parameterType="Map" resultType="egovMap">
+       SELECT
+           C.MEM_LVL,
+           C.ORG_CODE AS ORG_CODE,
+           C.GRP_CODE AS GRP_CODE,
+           C.DEPT_CODE AS DEPT_CODE
+       FROM
+           SYS0047M A
+           LEFT JOIN ORG0001D B
+               ON A.USER_NAME = B.MEM_CODE
+           LEFT JOIN ORG0005D C
+               ON B.MEM_ID = C.MEM_ID
+       WHERE
+           A.USER_ID = #{userId}
+    </select>
+
+    <select id="selectPromoDisHistory" parameterType="Map" resultType="egovMap">
+        SELECT * FROM
+            (SELECT O1.MEM_CODE,
+            O3.CODE_NAME POSITION_NAME,
+            '' MEMBER_CODE_HISTORY, NAME NAME,
+            O2.ORG_CODE GMCODE,
+            O2.GRP_CODE SMCODE,
+            O2.DEPT_CODE HMCODE ,
+            '' MOTHER_MANAGER_CODE,
+            SPONS_CODE SPONS_CODE,
+            TO_CHAR(JOIN_DT,'YY/MM') PROMOTION_DATE,
+            4 MEM_LVL,
+            O2.ORG_CODE,
+            O2.GRP_CODE,
+            O2.DEPT_CODE
+        FROM ORG0001D O1
+        JOIN ORG1001V O2
+          ON O2.MEM_ID = O1.MEM_ID
+        JOIN SYS0013M O3
+          ON O3.CODE_ID = O1.MEM_TYPE
+        WHERE MEM_TYPE IN (1,2,3,7)
+        UNION
+        SELECT
+            EXTENT1.MEM_CODE,
+            EXTENT3.MEM_ORG_DESC POSITION_NAME,
+            EXTENT2.DEPT_CODE_TO MEMBER_CODE_HISTORY,
+            EXTENT1.NAME NAME,
+            CASE WHEN MEM_LVL_TO IN (2,3) THEN EXTENT2.LAST_ORG_CODE
+            END GMCODE,
+            CASE WHEN MEM_LVL_TO IN (3,4) THEN EXTENT2.LAST_GRP_CODE
+            END SMCODE,
+            CASE WHEN MEM_LVL_TO = 4 THEN EXTENT2.LAST_DEPT_CODE
+            END HMCODE,
+            EXTENT2.PR_CODE MOTHER_MANAGER_CODE,
+            EXTENT1.SPONS_CODE SPONS_CODE,
+            TO_CHAR(EXTENT2.CRT_DT,'YY/MM') PROMOTION_DATE,
+            MEM_LVL_TO,
+            EXTENT4.ORG_CODE, EXTENT4.GRP_CODE, EXTENT4.DEPT_CODE
+        FROM
+            ORG0001D EXTENT1
+            INNER JOIN ORG0007D EXTENT2
+                ON EXTENT2.MEM_ID = EXTENT1.MEM_ID
+            INNER JOIN ORG0012D EXTENT3
+                ON (EXTENT3.MEM_TYPE_ID = EXTENT2.MEM_TYPE_ID) AND (EXTENT3.MEM_ORG_LVL = EXTENT2.MEM_LVL_TO)
+            INNER JOIN ORG1001V EXTENT4
+                ON EXTENT1.MEM_CODE = EXTENT4.MEM_CODE
+            LEFT JOIN ORG0005D EXTENT8
+                ON EXTENT8.MEM_ID = EXTENT1.MEM_ID
+                 WHERE 1=1
+                 AND EXTENT2.PROMO_TYPE_ID = '747'
+
+                <if test="promoDisHismemTypeCom != null and promoDisHismemTypeCom != ''">
+                 AND   Extent1.MEM_TYPE =  #{promoDisHismemTypeCom}
+                </if>
+                <if test="promoDisHisCode != null and promoDisHisCode != ''">
+                  AND  UPPER(Extent1.MEM_CODE) =  UPPER(#{promoDisHisCode})
+                </if>
+                <if test="promoDisHisName != null and promoDisHisName != ''">
+                  AND  UPPER(Extent1.NAME) LIKE UPPER('%' || #{promoDisHisName} || '%')
+                </if>
+                <if test="promoDisHisIcNum != null and promoDisHisIcNum != ''">
+                  AND  Extent1.NRIC LIKE   '%' || #{promoDisHisIcNum} || '%'
+                </if>
+                 <if test="promoDisHisContact != null and promoDisHisContact != ''">
+                   AND  ((Extent1.TEL_HUSE LIKE '%' || #{promoDisHisContact}|| '%' ) OR ( Extent1.TEL_OFFICE LIKE '%' || #{promoDisHisContact}|| '%' ) OR ( Extent1.TEL_MOBILE LIKE '%' || #{promoDisHisContact}|| '%' ) ) AND ( Extent1.TEL_MOBILE = #{promoDisHisContact} OR Extent1.TEL_HUSE = #{promoDisHisContact} OR Extent1.TEL_OFFICE = #{promoDisHisContact})
+                </if>
+                <if test="promoDisHisSponsor != null and promoDisHisSponsor != ''">
+                   AND   UPPER(Extent1.SPONS_CODE) LIKE UPPER('%' || #{promoDisHisSponsor} || '%')
+                </if>
+                 <if test="position != null and position != ''">
+                   AND Extent8.MEM_LVL= #{position}
+                </if>
+                <if test="sessionTypeID != 4 and sessionTypeID != 6">
+                   <choose>
+                        <when test="memberLevel == 1">
+                          AND Extent4.ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+                       </when>
+                       <when test="memberLevel == 2">
+                           AND Extent4.GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )
+                        </when>
+                        <when test="memberLevel == 3">
+                           AND Extent4.DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+                         </when>
+                         <when test="memberLevel == 4">
+                               <if test="promoDisHisCode == null or promoDisHisCode == ''">
+                                    <if test="orgCodeHd != null and orgCodeHd != '' ">
+                                       AND Extent4.ORG_CODE = #{orgCodeHd}
+                                    </if>
+                                    <if test="grpCodeHd != null and grpCodeHd != '' ">
+                                       AND Extent4.GRP_CODE = #{grpCodeHd}
+                                    </if>
+                                    <if test="deptCodeHd != null and deptCodeHd != '' ">
+                                       AND Extent4.DEPT_CODE = #{deptCodeHd}
+                                    </if>
+                                     AND Extent1.MEM_CODE = #{promoDisHisCode}
+                               </if>
+                          </when>
+                      </choose>
+                   </if>
+               )
+              WHERE 1=1
+               <if test="promoDisHisCode != null and promoDisHisCode != ''">
+                  AND MEM_CODE =#{promoDisHisCode}
+               </if>
+               <if test="orgCodeHd != null and orgCodeHd != '' ">
+                  AND ORG_CODE =#{orgCodeHd}
+               </if>
+               <if test="grpCodeHd != null and grpCodeHd != '' ">
+                  AND GRP_CODE = #{grpCodeHd}
+               </if>
+               <if test="deptCodeHd != null and deptCodeHd != '' ">
+                  AND DEPT_CODE = #{deptCodeHd}
+               </if>
+
+                ORDER BY MEM_CODE, MEM_LVL DESC
+    </select>
 </mapper>
