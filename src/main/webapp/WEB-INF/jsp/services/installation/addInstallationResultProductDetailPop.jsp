@@ -449,6 +449,8 @@
     console.log("addInstallationResultProductDetailPop :: fn_saveInstall");
     var msg = "";
 
+    var addedRowItems;
+
     if ($("#addInstallForm #installStatus").val() == 4) {
       // COMPLETED
       if ($("#failLocCde").val() != 0 || $("#failReasonCode").val() != 0 || $("#nextCallDate").val() != "") {
@@ -580,13 +582,23 @@
       url = "/services/addInstallation_2.do";
     }
 
-    Common.ajax("POST", url, $("#addInstallForm").serializeJSON(),
+    var saveForm = {
+            "installForm" : $("#addInstallForm").serializeJSON(),
+            "add" : addedRowItems
+      }
+
+    //Common.ajax("POST", url, $("#addInstallForm").serializeJSON(),
+    Common.ajax("POST", url, saveForm,
       function(result) {
         Common.alert(result.message, fn_saveclose);
         $("#popup_wrap").remove();
         fn_installationListSearch();
       });
   }
+
+  function fn_saveclose() {
+	    addInstallationPopupId.remove();
+	  }
 
 
   function validationForKecikWhenCompleted() {
