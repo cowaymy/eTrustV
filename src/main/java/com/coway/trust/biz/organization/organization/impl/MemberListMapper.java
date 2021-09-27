@@ -331,4 +331,8 @@ public interface MemberListMapper {
     void insertHPorientation(Map<String, Object> params);
 
     String  getUserID(String params);
+
+    EgovMap getCurrOrgDtls(Map<String, Object> params);
+
+	List<EgovMap> selectPromoDisHistory(Map<String, Object> params);
 }
