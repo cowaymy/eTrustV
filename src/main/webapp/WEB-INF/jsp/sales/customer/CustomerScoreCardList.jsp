@@ -144,6 +144,12 @@
 	//Generate pdf report button
 	function fn_excelDown(result) {
 
+		if (FormUtil.isEmpty($("#custId").val())
+                && FormUtil.isEmpty($("#custIc").val())) {
+            Common
+                    .alert("<spring:message code='customer.alert.msg.customeridNricblank' />");
+            return;
+        }
 		if (result == null) {
 			Common
 					.alert("<spring:message code='customer.alert.msg.nodataingridview' />");
