@@ -148,116 +148,53 @@
 			Common
 					.alert("<spring:message code='customer.alert.msg.nodataingridview' />");
 		} else {
-			$("#reportFileName").val("");
+			/* $("#reportFileName").val("");
 			$("#reportDownFileName").val("");
 			$("#viewType").val("");
 
 			var custId = $("#custId").val().trim();
 			var custIc = $("#custIc").val().trim();
 
-			GridCommon.exportTo("grid_wrap", "xlsx", "Order Listing"); /*this jus for test have to change to PDF*/
+			GridCommon.exportTo("grid_wrap", "xlsx", "Order Listing"); //this jus for test have to change to PDF
+			 */
+			fn_report("PDF");
 		}
 	}
-	/* function fn_report(viewType){
+	function fn_report(viewType){
 
 	    $("#reportFileName").val("");
 	    $("#reportDownFileName").val("");
 	    $("#viewType").val("");
 
-	    var orderNoFrom = "";
-	    var orderNoTo = "";
-	    var orderDateFrom = "";
-	    var orderDateTo = "";
-	    var branchRegion = "";
-	    var keyInBranch = "";
-	    var appType = "";
-	    var sortBy = "";
-	    var whereSQL = "";
-	    var extraWhereSQL = "";
-	    var orderBySQL = "";
-	    var custName = "";
-	    var runNo = 0;
+	    var v_WhereSQL = "";
+	    var V_CUST_ID = $("#custId").val().trim();
+        var V_NRIC = $("#custIc").val().trim();
 
+        if(V_CUST_ID == null || V_CUST_ID.length == 0){
+        	V_CUST_ID = 0;
+        }
+	    if(V_NRIC == null || V_NRIC.length == 0){
+	    	v_WhereSQL = "and  A.CUST_ID = '"+V_CUST_ID+"'";
 
-	    if($('#cmbAppType :selected').length > 0){
-	        whereSQL += " AND (";
-
-	        $('#cmbAppType :selected').each(function(i, mul){
-	            if(runNo > 0){
-	                whereSQL += " OR som.APP_TYPE_ID = '"+$(mul).val()+"' ";
-	                appType += ", "+$(mul).text();
-
-	            }else{
-	                whereSQL += " som.APP_TYPE_ID = '"+$(mul).val()+"' ";
-	                appType += $(mul).text();
-
-	            }
-	            runNo += 1;
-	        });
-	        whereSQL += ") ";
 	    }
-	    runNo = 0;
-
-	    var txtOrderNoFr = $("#txtOrderNoFr").val().trim();
-	    var txtOrderNoTo = $("#txtOrderNoTo").val().trim();
-	    if(!(txtOrderNoFr == null || txtOrderNoFr.length == 0) && !(txtOrderNoTo == null || txtOrderNoTo.length == 0)){
-	        orderNoFrom = txtOrderNoFr;
-	        orderNoTo = txtOrderNoTo;
-	        whereSQL += " AND (som.SRV_ORD_NO BETWEEN '"+txtOrderNoFr+"' AND '"+txtOrderNoTo+"')";
-	    }
-	    if($("#cmbKeyBranch :selected").index() > 0){
-	        keyInBranch = $("#cmbKeyBranch :selected").val();
-	        whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";
-	    }
-	    if(!($("#txtCustName").val().trim() == null || $("#txtCustName").val().trim().length == 0)){
-	        custName = $("#txtCustName").val().trim();
-	        whereSQL += " AND cust.NAME LIKE '%"+custName.replace("'", "''")+"%' ";
-	    }
-	    if($("#cmbUser :selected").index() > 0){
-	        whereSQL += " AND som.CRT_USER_ID = '"+$("#cmbUser :selected").val()+"'";
-	    }
-	    if($("#cmbSort :selected").index() > -1){
-	        sortBy = $("#cmbSort :selected").text();
-
-	        if($("#cmbSort :selected").val() == "1"){
-	            orderBySQL = " ORDER BY t2.CODE_NAME, b.CODE, t.CODE_NAME, som.SRV_ORD_NO";
-	        }else if($("#cmbSort :selected").val() == "2"){
-	            orderBySQL = " ORDER BY b.CODE, t.CODE_NAME, som.SRV_ORD_NO";
-	        }else if($("#cmbSort :selected").val() == "3"){
-	            orderBySQL = " ORDER BY som.SALES_DT, t.CODE_NAME, som.SRV_ORD_NO";
-	        }else if($("#cmbSort :selected").val() == "4"){
-	            orderBySQL = " ORDER BY som.SRV_ORD_NO, t.CODE_NAME";
-	        }else if($("#cmbSort :selected").val() == "5"){
-	            orderBySQL = " ORDER BY cust.NAME, som.SRV_ORD_NO";
-	        }
+	    else{
+	    	v_WhereSQL = "and  A.NRIC = '"+V_NRIC+"'";
 	    }
 
+	    console.log( "v_WhereSQL" + v_WhereSQL );
+	    console.log( "V_CUST_ID" + V_CUST_ID);
+	    console.log( "V_NRIC" + V_NRIC);
 	    var date = new Date().getDate();
 	    if(date.toString().length == 1){
 	        date = "0" + date;
 	    }
-	    $("#reportDownFileName").val("CareServicePayListing_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+	    $("#reportDownFileName").val("CSPaymentListing_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+        $("#form #viewType").val("PDF");
+        $("#form #reportFileName").val("/sales/CSPaymentListing_PDF_New.rpt");
 
-
-	     if(viewType == "PDF"){
-	        $("#form #viewType").val("PDF");
-	        $("#form #reportFileName").val("/homecare/CSPaymentListing_PDF_New.rpt");
-	    }
-
-	    $("#form #V_ORDERNOFROM").val(orderNoFrom);
-	    $("#form #V_ORDERNOTO").val(orderNoTo);
-	    $("#form #V_ORDERDATEFROM").val(orderDateFrom);
-	    $("#form #V_ORDERDATETO").val(orderDateTo);
-	    $("#form #V_BRANCHREGION").val(branchRegion);
-	    $("#form #V_KEYINBRANCH").val(keyInBranch);
-	    $("#form #V_APPTYPE").val(appType);
-	    $("#form #V_CUSTNAME").val(custName);
-	    $("#form #V_SORTBY").val(sortBy);
-	    $("#form #V_WHERESQL").val(whereSQL);
-	    $("#form #V_ORDERBYSQL").val(orderBySQL);
-	    $("#form #V_SELECTSQL").val("");
-	    $("#form #V_FULLSQL").val("");
-
+	    $("#form #v_WhereSQL").val(v_WhereSQL);
+	    $("#form #V_CUST_ID").val(V_CUST_ID);
+	    $("#form #V_NRIC").val(V_NRIC);
 
 	    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
 	    var option = {
@@ -266,7 +203,7 @@
 
 	    Common.report("form", option);
 
-	} */
+	}
 </script>
 <section id="content">
 	<!-- content start -->
@@ -344,19 +281,14 @@
 			</p></li>
 	</ul>
 
+<form id="form">
 	<input type="hidden" id="reportFileName" name="reportFileName" value="" />
 	<input type="hidden" id="viewType" name="viewType" value="" />
 	<input type="hidden" id="reportDownFileName" name="reportDownFileName"	 value="" />
 	<input type="hidden" id="V_CUST_ID"	name="V_CUST_ID" value="" />
 	<input type="hidden" id="V_NRIC" name="V_NRIC" value="" />
-	<input type="hidden" id="V_ORDERDATEFROM" name="V_ORDERDATEFROM" value="" />
-    <input type="hidden" id="V_SORTBY" name="V_SORTBY" value="" />
-    <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
-    <input type="hidden" id="V_EXTRAWHERESQL" name="V_EXTRAWHERESQL" value="" />
-	<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" value="" />
-	<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" value="" />
-	<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" value="" />
-
+	<input type="hidden" id="v_WhereSQL" name="v_WhereSQL" value="" />
+</form>
 	<section class="search_result">
 		<!-- search_result start -->
 		<article class="grid_wrap">
