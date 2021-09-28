@@ -188,7 +188,7 @@
 	    if(date.toString().length == 1){
 	        date = "0" + date;
 	    }
-	    $("#reportDownFileName").val("CSPaymentListing_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+	    $("#reportDownFileName").val("CustomerScoreCardList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#form #viewType").val("PDF");
         $("#form #reportFileName").val("/sales/CustomerScoreCardList.rpt");
 
