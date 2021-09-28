@@ -122,6 +122,7 @@
 
 		if (FormUtil.isEmpty($("#custId").val())
 				&& FormUtil.isEmpty($("#custIc").val())) {
+			$('#searchForm').clearForm();
 			Common
 					.alert("<spring:message code='customer.alert.msg.customeridNricblank' />");
 			return;
@@ -146,10 +147,24 @@
 
 		if (FormUtil.isEmpty($("#custId").val())
                 && FormUtil.isEmpty($("#custIc").val())) {
+			AUIGrid.clearGridData(custGridID);
             Common
                     .alert("<spring:message code='customer.alert.msg.customeridNricblank' />");
             return;
         }
+		else{
+			Common.ajax("GET", "/sales/customer/customerScoreCardList", $(
+            "#searchForm").serialize(), function(result) {
+		        console.log("----------------------------");
+		        console.log(result);
+		        gridViewData = result;
+		        if (result != null && result.length == 0) {
+		            gridViewData = null;
+		        }
+		        AUIGrid.setGridData(custGridID, result);
+		    });
+		}
+
 		if (result == null) {
 			Common
 					.alert("<spring:message code='customer.alert.msg.nodataingridview' />");
