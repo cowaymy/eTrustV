@@ -169,13 +169,17 @@
                 I.MEM_NAME,
                 T.NAME STATUS,
                 S.CODE_NAME POSITION_DESC,
-                SUM(I.GP_BAL_PTS) TOT_BAL_PTS
+                CASE WHEN (SUM(U.GP_BAL_PTS) > 0 ) THEN SUM(U.GP_BAL_PTS)
+                    ELSE 0 END TOT_BAL_PTS
             FROM ICR0003D I
             JOIN ORG0001D O ON O.MEM_CODE = I.MEM_CODE
             JOIN SYS0013M S ON S.CODE_ID = O.MEM_TYPE
             JOIN SYS0038M T ON T.STUS_CODE_ID =  O.STUS
+            LEFT JOIN (
+                SELECT GP_ITM_ID, GP_BAL_PTS FROM ICR0003D
+                WHERE (SYSDATE <![CDATA[<=]]> GP_END_DT)
+                ) U ON U.GP_ITM_ID = I.GP_ITM_ID
             WHERE 1=1
-
             <if test=" null != memCode and '' != memCode">
                 AND I.MEM_CODE = #{memCode}
             </if>
@@ -192,13 +196,18 @@
                 I.MEM_NAME,
                 T.NAME STATUS,
                 S.CODE_NAME POSITION_DESC,
-                SUM(I.GP_BAL_PTS) TOT_BAL_PTS
+                CASE WHEN (SUM(U.GP_BAL_PTS) > 0 ) THEN SUM(U.GP_BAL_PTS)
+                    ELSE 0 END TOT_BAL_PTS
             FROM ICR0003D I
             JOIN ORG0001D O ON O.MEM_CODE = I.MEM_CODE
             JOIN SYS0013M S ON S.CODE_ID = O.MEM_TYPE
             JOIN SYS0038M T ON T.STUS_CODE_ID =  O.STUS
-            WHERE 1=1
-            AND I.MEM_CODE = #{memCode}
+            LEFT JOIN (
+                SELECT GP_ITM_ID, GP_BAL_PTS FROM ICR0003D
+                WHERE (SYSDATE <![CDATA[<=]]> GP_END_DT)
+                ) U ON U.GP_ITM_ID = I.GP_ITM_ID
+            WHERE
+            I.MEM_CODE = #{memCode}
             AND S.CODE_MASTER_ID = 1
             GROUP BY I.MEM_CODE, I.MEM_NAME, T.NAME, S.CODE_NAME
         )
@@ -211,6 +220,7 @@
             TO_CHAR(GP_END_DT, 'DD-MM-YYYY') GP_END_DT
         FROM ICR0003D
         WHERE MEM_CODE = #{memCode}
+        AND (SYSDATE <![CDATA[<=]]> GP_END_DT)
         ORDER BY GP_ITM_ID
     </select>
 
