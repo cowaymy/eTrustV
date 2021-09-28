@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipPaymentMapper">
 
-    
+
     <select id="selPaymentConfig" parameterType="Map" resultType="egovMap">
-			  <![CDATA[		    
+			  <![CDATA[
 					 SELECT sList.ORD_ID   ,
 							       sList.CONFIG_ID   ,
 							       sList.CONFIG_SETT_INS   ,
@@ -53,15 +53,15 @@
 							                cinfo.SRV_MEM_SALESMAN_NAME   ,
 							                cinfo.LAST_SRV_MEM_ID   ,
 							                cinfo.LAST_SRV_MEM_START_DATE   ,
-							                cinfo.LAST_SRV_MEM_EXPR_DATE   
+							                cinfo.LAST_SRV_MEM_EXPR_DATE
 							         FROM SAL1014V cinfo ) sList
 							 WHERE  sList.ORD_ID =#{PAY_ORD_ID} AND ROWNUM <= 1
 		          ]]>
 		 </select>
-		 
-	
-   
-    
+
+
+
+
     <select id="paymentLastMembership" parameterType="Map" resultType="egovMap">
 	    <![CDATA[
 	                SELECT stb.mbrsh_id , stb.mbrsh_no ,
@@ -69,7 +69,7 @@
 	                       stb.ord_no , stb.mbrsh_pac_amt ,
 	                       stb.mbrsh_filter_amt ,
 	                       stb.mbrsh_tot_amt , stb.mbrsh_otstnd ,
-	                       CASE WHEN ( stb.mbrsh_freq IS NOT NULL ) THEN stb.mbrsh_freq||' month(s)'  ELSE  stb.mbrsh_freq||'' END  mbrsh_freq,  
+	                       CASE WHEN ( stb.mbrsh_freq IS NOT NULL ) THEN stb.mbrsh_freq||' month(s)'  ELSE  stb.mbrsh_freq||'' END  mbrsh_freq,
 	                       CASE WHEN ( stb.mbrsh_dur IS NOT NULL ) THEN stb.mbrsh_dur||' month(s)'  ELSE  stb.mbrsh_dur||'' END  mbrsh_dur  ,
 	                       to_char(stb.mbrsh_start_dt,'dd-mm-yyyy' )   mbrsh_start_dt ,
 	                       to_char(stb.mbrsh_expr_dt,'dd-mm-yyyy' )    mbrsh_expr_dt ,
@@ -101,7 +101,7 @@
 	                       stb.pac_name , stb.quot_id ,
 	                       stb.quot_no , stb.bill_id_pckg ,
 	                       stb.bill_id_filter , stb.cust_name ,
-	                       stb.cust_ic 
+	                       stb.cust_ic
 	                  FROM (SELECT mfo.mbrsh_id mbrsh_id,
 	                               mfo.mbrsh_no mbrsh_no,
 	                               mfo.mbrsh_bill_no mbrsh_bill_no,
@@ -157,9 +157,9 @@
 	                          FROM sal1002v mfo) stb
 	                 WHERE stb.mbrsh_id = #{PAY_LAST_MBRSH_ID} AND ROWNUM <= 1
 	        ]]>
-  
+
     </select>
-    
+
         <select id="paymentInsAddress" parameterType="Map" resultType="egovMap">
       <![CDATA[
                     SELECT sList.ORD_ID ORD_ID  ,
@@ -169,7 +169,7 @@
                                sList.INST_POST_CODE INST_POST_CODE  ,
                                sList.INST_AREA INST_AREA  ,
                                sList.INST_STATE INST_STATE  ,
-                               sList.INST_CNTY INST_CNTY  
+                               sList.INST_CNTY INST_CNTY
                           FROM ( SELECT insinfo.ORD_ID ORD_ID  ,
                                         insinfo.INST_ADDR1 INST_ADDR1  ,
                                         insinfo.INST_ADDR2 INST_ADDR2  ,
@@ -210,16 +210,16 @@
                                         insinfo.INSTALL_CNTC_ID INSTALL_CNTC_ID  ,
                                         insinfo.INST_CNT_DEPT INST_CNT_DEPT  ,
                                         insinfo.INST_CNT_POST INST_CNT_POST  ,
-                                        insinfo.VRIFY_REM VRIFY_REM  
+                                        insinfo.VRIFY_REM VRIFY_REM
                                  FROM SAL1010V insinfo ) sList
-                         WHERE  sList.ORD_ID = #{PAY_ORD_ID}  
+                         WHERE  sList.ORD_ID = #{PAY_ORD_ID}
                               AND ROWNUM <= 1
           ]]>
     </select>
-    
-    
+
+
     <select id="paymentCollecterList" parameterType="Map" resultType="egovMap">
-		  
+
 					        SELECT  seL.MEM_ID,
 						                seL.MEM_CODE,
 						                seL.NAME,
@@ -227,47 +227,47 @@
 						                seL.CODE_NAME,
 						                to_char(sel.c1,'dd-mm-yyyy') C1,
 						                seL.C2,
-						                ROW_NUMBER() OVER ( ORDER BY seL.MEM_CODE ASC  ) ROW_NUMBER  
+						                ROW_NUMBER() OVER ( ORDER BY seL.MEM_CODE ASC  ) ROW_NUMBER
 					         FROM ( SELECT ord.MEM_ID MEM_ID  ,
 					                       ord.MEM_CODE MEM_CODE  ,
 					                       ord.NAME NAME  ,
 					                       ord.NRIC NRIC  ,
 					                       sys13.CODE_NAME CODE_NAME  ,
 					                       ord.JOIN_DT C1  ,
-					                       CASE 
+					                       CASE
 					                            WHEN ( ord.MEM_TYPE IS NOT NULL ) THEN ord.MEM_TYPE
 					                       ELSE 0
-					                          END C2  
+					                          END C2
 					                FROM ORG0001D ord
 					                       JOIN SYS0013M sys13   ON ord.MEM_TYPE = sys13.CODE_ID
 					                 WHERE  ( 1 = ord.STUS )
-					                 
-					                 <if test="MEM_CODE != null and MEM_CODE != ''">   
+
+					                 <if test="MEM_CODE != null and MEM_CODE != ''">
 					                     AND ( ord.MEM_CODE = #{MEM_CODE} )
 					                 </if>
-					                 
-					                  <if test="MEM_TYPE != null and MEM_TYPE != ''">   
-                                        AND ( (CASE   WHEN ( ord.MEM_TYPE IS NOT NULL ) THEN ord.MEM_TYPE  ELSE 0  END) = #{MEM_TYPE}) 
+
+					                  <if test="MEM_TYPE != null and MEM_TYPE != ''">
+                                        AND ( (CASE   WHEN ( ord.MEM_TYPE IS NOT NULL ) THEN ord.MEM_TYPE  ELSE 0  END) = #{MEM_TYPE})
                                      </if>
-                                     
-                                      <if test="JOIN_DATE != null and JOIN_DATE != ''">   
-                                          AND  ord.JOIN_DT  = to_char(to_char(  #{JOIN_DATE},'dd/mm/yyyy')) 
+
+                                      <if test="JOIN_DATE != null and JOIN_DATE != ''">
+                                          AND  ord.JOIN_DT  = to_char(to_char(  #{JOIN_DATE},'dd/mm/yyyy'))
                                      </if>
-                                                   
-									 <if test="MEM_NAME != null and MEM_NAME != ''">   
-                                            AND  UPPER(ord.NAME)  LIKE '%'||UPPER(#{MEM_NAME})||'%'   
+
+									 <if test="MEM_NAME != null and MEM_NAME != ''">
+                                            AND  UPPER(ord.NAME)  LIKE '%'||UPPER(#{MEM_NAME})||'%'
                                      </if>
-			                        <if test="NRIC != null and NRIC != ''">   
-			                                AND  UPPER(ord.NRIC)  LIKE '%'||UPPER(#{NRIC})||'%'   
-                                    </if>  
-					             ) seL 
-					        ORDER BY seL.MEM_CODE ASC 
-					        
+			                        <if test="NRIC != null and NRIC != ''">
+			                                AND  UPPER(ord.NRIC)  LIKE '%'||UPPER(#{NRIC})||'%'
+                                    </if>
+					             ) seL
+					        ORDER BY seL.MEM_CODE ASC
+
     </select>
-    
-    
+
+
      <select id="paymentColleConfirm" parameterType="Map" resultType="egovMap">
-          <![CDATA[  
+          <![CDATA[
                             SELECT seL.MEM_ID   ,
 								       seL.MEM_CODE   ,
 								       seL.MEM_TYPE   ,
@@ -313,53 +313,53 @@
 								       seL.MEM_IS_OUT_SRC   ,
 								       seL.APLICNT_ID   ,
 								       seL.BIZ_TYPE   ,
-								       seL.HSPTLZ   
+								       seL.HSPTLZ
 								  FROM ORG0001D seL
-								 WHERE  seL.MEM_CODE = #{COLL_MEM_CODE} AND ROWNUM <= 1
+								 WHERE  seL.MEM_CODE = #{COLL_MEM_CODE} AND seL.STUS = 1 AND ROWNUM <= 1
                 ]]>
     </select>
-    
+
      <select id="paymentGetAccountCode" parameterType="Map" resultType="egovMap">
-       
+
 					  SELECT sL.ACC_ID   code_Id ,
 					         sL.C1             code_Name ,
 					         sL.ACC_DESC,
-					         sL.ACC_CODE   
+					         sL.ACC_CODE
 					  FROM ( SELECT sys01mt.ACC_ID   ,
 					                sys01mt.ACC_CODE   ,
 					                sys01mt.ACC_DESC   ,
-					                sys01mt.ACC_CODE || ' - ' || sys01mt.ACC_DESC C1  
+					                sys01mt.ACC_CODE || ' - ' || sys01mt.ACC_DESC C1
 					         FROM SYS0001M sys01mt
 					          WHERE  ( 1 = sys01mt.ACC_STUS_ID )
-					          
+
 					                    <if test="CODE_TYPE == 'CASH' ">
-					                        AND ( 1 = sys01mt.IS_PAY_CASH ) 
+					                        AND ( 1 = sys01mt.IS_PAY_CASH )
 					                    </if>
-					                    
+
 					                    <if test="CODE_TYPE == 'ONLINE' ">
-                                             AND ( 1 = sys01mt.IS_PAY_ONLINE ) 
+                                             AND ( 1 = sys01mt.IS_PAY_ONLINE )
                                              AND  (sys01mt.ACC_ID  IN (102 , 105, 497 , 107))
                                         </if>
-                                        
+
                                         <if test="CODE_TYPE == 'CHQ' ">
-                                                AND ( 1 = sys01mt.IS_PAY_CHQ ) 
+                                                AND ( 1 = sys01mt.IS_PAY_CHQ )
                                         </if>
-                                         
+
                                          <if test="CODE_TYPE == 'CRC' ">
-                                                 AND ( 1 = sys01mt.IS_PAY_CRC ) 
+                                                 AND ( 1 = sys01mt.IS_PAY_CRC )
                                         </if>
 					        ) sL
 					  ORDER BY sL.ACC_CODE ASC
-					  
-    </select>  
-    
-    <resultMap id="mPaymemtMap" type="egovMap" />   
+
+    </select>
+
+    <resultMap id="mPaymemtMap" type="egovMap" />
     <select id="paymentCharges" parameterType="Map"  statementType="CALLABLE" >
-       <![CDATA[  
+       <![CDATA[
             {
                   call SP_GET_MBRSH_CHRG_INFO ( #{PAY_MBRSH_ID},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=mPaymemtMap})
             }
          ]]>
-      </select>     
-    
+      </select>
+
 </mapper>
