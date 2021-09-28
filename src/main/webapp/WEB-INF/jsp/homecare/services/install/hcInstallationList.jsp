@@ -128,8 +128,8 @@
 	        {dataField : "bndlNo",           headerText : 'Bundle No',                                                             editable : false,     width : 120},
 	        {dataField : "brnchCode",        headerText : '<spring:message code="service.grid.BranchCode" />',   editable : false,     width : 100},
 	        {dataField : "code1",            headerText : '<spring:message code="service.grid.Status" />',            width : 100},
-	        {dataField : "allowCommision",     headerText:'Allow Commision',width: 150},
-	        {dataField : "serialRequireChkYn",headerText : 'Serial Require Check Y/N',width : 180},
+ 	        {dataField : "allowCommision",     headerText:'Allow Commision',width: 150}, //Added by Keyi
+	        {dataField : "serialRequireChkYn",headerText : 'Serial Require Check Y/N',width : 180}, //Added by Keyi
 	        {dataField : "lstUpd",           headerText : '<spring:message code="service.grid.UpdateBy" />',       width : 130},
 	        {dataField : "brnchId",          width : 0},
 	        {dataField : "installEntryId",   width : 0},

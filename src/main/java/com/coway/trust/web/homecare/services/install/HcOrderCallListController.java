@@ -102,17 +102,17 @@ public class HcOrderCallListController {
 
 		String[] appTypeList = request.getParameterValues("appType");
 		String[] callLogTypeList = request.getParameterValues("callLogType");
-		String[] callLogStatusList = request.getParameterValues("callLogStatus");
+		String[] callLogStatusList = request.getParameterValues("callLogStatus");//added by keyi
 		String[] DSCCodeList = request.getParameterValues("DSCCode");
-		String[] promotionListSp = request.getParameterValues("promotion");
-		String[] searchFeedBackCode = request.getParameterValues("searchFeedBackCode");
+		String[] promotionListSp = request.getParameterValues("promotion"); //added by keyi
+		String[] searchFeedBackCode = request.getParameterValues("searchFeedBackCode"); //added by keyi
 
 		params.put("appTypeList", appTypeList);
 		params.put("callLogTypeList", callLogTypeList);
-		params.put("callLogStatusList", callLogStatusList);
+		params.put("callLogStatusList", callLogStatusList); //added by keyi
 		params.put("DSCCodeList", DSCCodeList);
-		params.put("promotionListSp", promotionListSp);
-		params.put("searchFeedBackCode", searchFeedBackCode);
+		params.put("promotionListSp", promotionListSp); //added by keyi
+		params.put("searchFeedBackCode", searchFeedBackCode); //added by keyi
 
 		List<EgovMap> orderCallList = hcOrderCallListService.searchHcOrderCallList(params);
 

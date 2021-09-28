@@ -160,13 +160,13 @@
 			width : '100%'
 		});
 
-		$('#callLogPromotionList').change(function() {
+		$('#callLogPromotionList').change(function() {//Added by Keyi
 		}).multipleSelect({
 			selectAll : true, // 전체선택
 			width : '100%'
 		});
 
-		$('#searchFeedBackCode').change(function() {
+		$('#searchFeedBackCode').change(function() { //Added by Keyi
 		}).multipleSelect({
 			selectAll : true, // 전체선택
 			width : '100%'
@@ -591,15 +591,15 @@
 						<td></td>
 					</tr>
 					<tr>
-						<th scope="row">Promotion Code</th>
+						<th scope="row">Promotion Code</th> <!-- Added by Keyi  -->
 						<td><select class="multy_select w100p" multiple="multiple"
 							id="callLogPromotionList" name="promotion">
-								<!--  <option value="">Choose One</option> -->
+
 								<%--    <c:forEach var="list" items="${promotionList}" varStatus="status">
          <option value="${list.promoId}">${list.c1}</option>
         </c:forEach> --%>
 						</select></td>
-						<th scope="row">Feedback Code</th>
+						<th scope="row">Feedback Code</th><!-- Added by Keyi  -->
 						<td><select class="w100p" id="searchFeedBackCode"
 							name="searchFeedBackCode" multiple>
 								<option value=""><spring:message
@@ -608,7 +608,7 @@
 									<option value="${list.resnId}">${list.c1}</option>
 								</c:forEach>
 						</select></td>
-						<th scope="row">is e-Commerce</th>
+						<th scope="row">is e-Commerce</th> <!-- Added by Keyi  -->
 						<td><input id="isECommerce" name="isECommerce"
 							type="checkbox" /></td>
 					</tr>
