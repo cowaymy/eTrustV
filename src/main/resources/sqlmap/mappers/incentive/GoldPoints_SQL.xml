@@ -175,7 +175,6 @@
             JOIN SYS0013M S ON S.CODE_ID = O.MEM_TYPE
             JOIN SYS0038M T ON T.STUS_CODE_ID =  O.STUS
             WHERE 1=1
-            AND (SYSDATE <![CDATA[>=]]> I.GP_START_DT AND SYSDATE <![CDATA[<]]> I.GP_END_DT)
 
             <if test=" null != memCode and '' != memCode">
                 AND I.MEM_CODE = #{memCode}
@@ -199,7 +198,6 @@
             JOIN SYS0013M S ON S.CODE_ID = O.MEM_TYPE
             JOIN SYS0038M T ON T.STUS_CODE_ID =  O.STUS
             WHERE 1=1
-            AND (SYSDATE <![CDATA[>=]]> I.GP_START_DT AND SYSDATE <![CDATA[<]]> I.GP_END_DT)
             AND I.MEM_CODE = #{memCode}
             AND S.CODE_MASTER_ID = 1
             GROUP BY I.MEM_CODE, I.MEM_NAME, T.NAME, S.CODE_NAME
