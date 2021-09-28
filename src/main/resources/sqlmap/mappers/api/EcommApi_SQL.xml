@@ -58,7 +58,7 @@
       CRT_DT ,
       CRT_USER_ID ,
       UPD_DT ,
-      UPD_USER_ID ,
+      UPD_USER_ID,
       BNDL_ID
   ) VALUES
   (
@@ -105,8 +105,7 @@
       SYSDATE ,
       #{apiUserId} ,
       SYSDATE ,
-      #{apiUserId} ,
-      /* #{bndlId} */
+      #{apiUserId},
       NULL
   )
 </insert>
