@@ -190,7 +190,7 @@
 	    }
 	    $("#reportDownFileName").val("CSPaymentListing_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#form #viewType").val("PDF");
-        $("#form #reportFileName").val("/sales/CSPaymentListing_PDF_New.rpt");
+        $("#form #reportFileName").val("/sales/CustScoreCard_PDF_New.rpt");
 
 	    $("#form #v_WhereSQL").val(v_WhereSQL);
 	    $("#form #V_CUST_ID").val(V_CUST_ID);
