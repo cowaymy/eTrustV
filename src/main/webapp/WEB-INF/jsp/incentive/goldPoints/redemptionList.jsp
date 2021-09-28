@@ -191,7 +191,7 @@
 
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>Points Summary</h2>
+        <h2>Redeem</h2>
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
                 <li><p class="btn_blue"><a href="javascript:fn_addItems();">Add Items</a></p></li>
