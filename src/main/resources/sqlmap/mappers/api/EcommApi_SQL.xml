@@ -58,8 +58,8 @@
       CRT_DT ,
       CRT_USER_ID ,
       UPD_DT ,
-      UPD_USER_ID /*,*/
-      /* BNDL_ID */
+      UPD_USER_ID ,
+      BNDL_ID
   ) VALUES
   (
       #{ecommOrdId} ,
@@ -105,8 +105,9 @@
       SYSDATE ,
       #{apiUserId} ,
       SYSDATE ,
-      #{apiUserId} /*, */
+      #{apiUserId} ,
       /* #{bndlId} */
+      NULL
   )
 </insert>
 
