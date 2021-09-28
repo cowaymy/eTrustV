@@ -75,16 +75,16 @@
             visible : false
         },{
             dataField : "rdmNo",
-            headerText : "Redemption No.",
-            width : "11%"
+            headerText : "<spring:message code='incentive.title.redemptionNo' />",
+            width : "9%"
         }, {
             dataField : "crtDt",
             headerText : "Key-In-At",
-            width : "10%"
+            width : "8%"
         }, {
             dataField : "status",
             headerText : "Status",
-            width : "6%"
+            width : "8%"
         }, {
             dataField : "memCode",
             headerText : "Member Code",
@@ -92,35 +92,35 @@
         }, {
             dataField : "memName",
             headerText : "Member Name",
-            width : "20%"
+            width : "10%"
         }, {
             dataField : "rdmItem",
             headerText : "Item",
-            width : "20%"
+            width : "10%"
         }, {
             dataField : "qty",
             headerText : "Qty",
-            width : "5%"
+            width : "3%"
         }, {
             dataField : "totalPts",
-            headerText : "Total Gold Points",
-            width : "10%"
+            headerText : "<spring:message code='incentive.title.totalPtsRdm' />",
+            width : "7%"
         }, {
             dataField : "collectBrnch",
-            headerText : "Collection Branch",
-            width : "30%"
-        }, {
-            dataField : "updDt",
-            headerText : "Last Update",
+            headerText : "<spring:message code='incentive.title.collectionBranch' />",
             width : "10%"
         }, {
-            dataField : "updatorMemCode",
-            headerText : "Update Status By",
+            dataField : "updDt",
+            headerText : "<spring:message code='incentive.title.lastUpdate' />",
+            width : "8%"
+        }, {
+            dataField : "updatorUserName",
+            headerText : "<spring:message code='incentive.title.lastUpdator' />",
             width : "10%"
         }, {
             dataField : "rem",
             headerText : "Remark",
-            width : "5%"
+            width : "8%"
         }];
 
         var gridOpt = {
@@ -128,7 +128,9 @@
                 pageRowCount : 20,
                 editable : false,
                 showStateColumn : false,
-                showRowNumColumn : true
+                showRowNumColumn : true,
+                wordWrap : true,
+                headerHeight : 45
         }
 
         gridID = AUIGrid.create("#grid_wrap", columnLayout, gridOpt);

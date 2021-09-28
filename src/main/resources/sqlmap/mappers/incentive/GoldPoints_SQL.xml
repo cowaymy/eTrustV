@@ -403,7 +403,7 @@
             E.TOTAL_PTS,
             F.CODE || '-' || F.NAME AS COLLECT_BRNCH,
             TO_CHAR(A.UPD_DT, 'DD/MM/YYYY HH:MI:SS AM') AS UPD_DT,
-            H.MEM_CODE AS UPDATOR_MEM_CODE,
+            G.USER_NAME AS UPDATOR_USER_NAME,
             A.REM
         FROM ICR0007M A
             JOIN SYS0038M B ON A.STUS_ID = B.STUS_CODE_ID
@@ -419,7 +419,6 @@
                 ) E ON E.RDM_ID = A.RDM_ID
             JOIN SYS0005M F ON F.BRNCH_ID = A.COLLECT_BRNCH_ID
             JOIN SYS0047M G ON G.USER_ID = A.UPD_USER_ID
-            LEFT JOIN ORG0001D H ON H.MEM_CODE = G.HR_CODE
         WHERE 1=1
 
         <if test=" null != memCode and '' != memCode">
