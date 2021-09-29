@@ -76,6 +76,8 @@
         	data.form = $('#modifyForm').serializeJSON();
         	data.grid = AUIGrid.getEditedRowItems(stckGridID);
 
+        	console.log(data);
+
         	Common.ajax("POST", "/sales/productMgmt/updateProductCtrl.do", data , function(result) {
         	    Common.alert("Saved",$('#btnClosePop').click());
         	});
@@ -130,6 +132,7 @@
 
     	$("#quota_ekeyin_stus").multipleSelect("enable");
     	$("#quota_admin_stus").multipleSelect("enable");
+        $("input[id=modify_stkId]").attr( 'disabled', false);
 
     }
 

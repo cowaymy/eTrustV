@@ -168,10 +168,16 @@
         SET
         UPD_DT = SYSDATE
         , UPD_USER_ID = #{userId}
-        , DISCONTINUE = #{modify_discontinue}
         , IS_CTRL = #{modify_ctrl}
+        <if test='modify_discontinue != null and modify_discontinue !=""'>
+        , DISCONTINUE = #{modify_discontinue}
+        </if>
+        <if test='modify_startDt != null and modify_startDt !=""'>
         , CTRL_START_DT = TO_DATE(#{modify_startDt} || #{modify_startTm}, 'DD/MM/YYYYHH:MI AM')
+        </if>
+        <if test='modify_endDt != null and modify_endDt !=""'>
         , CTRL_END_DT = TO_DATE(#{modify_endDt} || #{modify_endTm}, 'DD/MM/YYYYHH:MI AM')
+        </if>
         WHERE STK_ID = #{modify_stkId}
     </update>
 
