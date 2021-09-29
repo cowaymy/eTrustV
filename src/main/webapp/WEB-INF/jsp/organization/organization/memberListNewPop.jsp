@@ -1341,6 +1341,32 @@ function checkBankAccNo() {
     }
 }
 
+//@AMEER INCOME_TAX
+function checkIncomeTax() {
+    var jsonObj = {
+        "incomeTaxNo" : $("#incomeTaxNo").val()
+    };
+    if(event.keyCode == 13) {
+    	if($("#incomeTaxNo").val().length > 0 && $("#incomeTaxNo").val().length < 13) {
+            Common.alert("Invalid Income Tax Length!");
+            $("#incomeTaxNo").val("");
+            return false;
+        } else if( $("#incomeTaxNo").val().length == 13) {
+            Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
+                console.log(result);
+                if(result.cnt1 == "0" && result.cnt2 == "0") {
+                    return true;
+                } else {
+                    Common.alert("Income Tax No has been registered.");
+                    $("#incomeTaxNo").val("");
+                    return false;
+                }
+            });
+        }
+    }
+
+}
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -1708,6 +1734,15 @@ function checkBankAccNo() {
     <td>
     <input type="text" title="" placeholder="Bank Account No" class="w100p" id="bankAccNo"  name="bankAccNo" onKeyDown="checkBankAccNoEnter()"
     onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
+    </td>
+</tr>
+
+<!-- ADDED INCOME TAX NO @AMEER 2021-09-27 -->
+<tr>
+    <th scope="row">Income Tax No</th>
+    <td>
+    <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="incomeTaxNo"  name="incomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
+    onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;"/>
     </td>
 </tr>
 </tbody>

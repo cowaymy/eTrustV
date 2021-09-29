@@ -72,6 +72,7 @@ function fn_memberSave(){
                     //eHPtraineeType1 : $("#eHPtraineeType1").val(),
                     eHPissuedBank : $("#eHPissuedBank").val(),
                     eHPbankAccNo : $("#eHPbankAccNo").val(),
+                    eHPincomeTaxNo : $("#eHPincomeTaxNo").val(),
                     eHPcollectionBrnch : $("#eHPcollectionBranch").val(),
                     eHPcodyPaExpr : $("#eHPcodyPaExpr").val(),
                     eHPspouseCode : $("#eHPspouseCode").val(),
@@ -1212,6 +1213,32 @@ function checkBankAccNo() {
     }
 }
 
+//@AMEER INCOME_TAX
+function checkIncomeTax() {
+    var jsonObj = {
+        "incomeTaxNo" : $("#eHPincomeTaxNo").val()
+    };
+    if(event.keyCode == 13) {
+        if($("#eHPincomeTaxNo").val().length > 0 && $("#eHPincomeTaxNo").val().length < 13) {
+            Common.alert("Invalid Income Tax Length!");
+            $("#eHPincomeTaxNo").val("");
+            return false;
+        } else if( $("#eHPincomeTaxNo").val().length == 13) {
+            Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
+                console.log(result);
+                if(result.cnt1 == "0" && result.cnt2 == "0") {
+                    return true;
+                } else {
+                    Common.alert("Income Tax No has been registered.");
+                    $("#eHPincomeTaxNo").val("");
+                    return false;
+                }
+            });
+        }
+    }
+
+}
+
 
 function fn_removeFile(name){
     if(name == "PAY") {
@@ -1573,6 +1600,15 @@ function fn_validFile() {
                     onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
                     </td>
                 </tr>
+
+                <!-- ADDED INCOME TAX NO @AMEER 2021-09-27 -->
+				<tr>
+				    <th scope="row">Income Tax No</th>
+				    <td>
+				    <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="eHPincomeTaxNo"  name="eHPincomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
+				    onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;"/>
+				    </td>
+				</tr>
                 </tbody>
                 </table><!-- table end -->
 

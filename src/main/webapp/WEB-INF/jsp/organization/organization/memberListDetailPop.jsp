@@ -968,6 +968,13 @@ function fn_winClose(){
     </td>
 </tr>
 <tr>
+<!-- ADDED INCOME TAX NO @AMEER 2021-09-27 -->
+<th scope="row">Income Tax No</th>
+    <td>
+    <span><c:out value="${memberView.incTax}"/></span>
+    </td>
+</tr>
+<tr>
     <th scope="row">Education Lvl</th>
     <td>
     <span><c:out value="${memberView.c9}"/></span>
