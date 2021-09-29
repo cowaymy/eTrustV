@@ -79,6 +79,13 @@
         Common.popupDiv("/incentive/goldPoints/viewPointsDetailPop.do", { memCode : AUIGrid.getCellValue(gridID, rowIdx, "memCode") }, null, true, "viewPointsDetailPop");
     }
 
+    function fn_excelDownGoldPoints() {
+        // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+        GridCommon
+            .exportTo("grid_wrap", "xlsx",
+                "<spring:message code='incentive.title.goldPointsList'/>");
+    }
+
 </script>
 
 <section id="content">
@@ -165,6 +172,15 @@
             </tbody>
         </table>
     </form>
+
+    <br/>
+    <ul class="right_btns">
+        <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+            <li><p class="btn_grid">
+                <a href="#" onClick="fn_excelDownGoldPoints()"><spring:message code='service.btn.Generate' /></a>
+                </p></li>
+        </c:if>
+   </ul>
 
     <article class="grid_wrap" id="grid_wrap"></article>
 
