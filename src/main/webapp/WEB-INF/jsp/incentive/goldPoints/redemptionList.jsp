@@ -267,11 +267,13 @@
                     </td>
                     <th scope="row">Status</th>
                     <td>
-                        <select class="w100p" id="status" name="status">
-                            <option value="" selected>Select Account</option>
-                            <c:forEach var="list" items="${status }" varStatus="status">
-                                <option value="${list.statuscodeid}">${list.name}</option>
-                            </c:forEach>
+                        <select class="multy_select w100p" multiple="multiple" id="status" name="status">
+                            <option value="" selected>Select Status</option>
+                            <option value="1">Active</option>
+                            <option value="4">Completed</option>
+                            <option value="10">Cancelled</option>
+                            <option value="60">In Progress</option>
+                            <option value="110">Ready For Collect</option>
                         </select>
                     </td>
                 </tr>
@@ -286,8 +288,6 @@
                             <option value="" selected>Select Item</option>
                         </select>
                     </td>
-                </tr>
-                <tr>
                     <th scope="row">Collection Branch</th>
                     <td>
                         <select class="w100p" id="collectionBranch" name="collectionBranch">
