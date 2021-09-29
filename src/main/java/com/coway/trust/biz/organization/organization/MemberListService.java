@@ -238,4 +238,5 @@ public interface MemberListService {
 
 	EgovMap getCurrOrgDtls(Map<String, Object> params);
 
+	EgovMap checkIncomeTax(Map<String, Object> params);
 }
