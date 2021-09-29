@@ -616,9 +616,9 @@
     <select id="selectOrderSalesmanViewByOrderID" parameterType="Map"
         resultType="egovMap">
         SELECT T1.SRV_ORD_ID SALES_ORD_ID
-        , T1.DEPT_CODE DEPT_CODE
-        , T1.GRP_CODE GRP_CODE
-        , T1.ORG_CODE ORG_CODE
+        , T6.DEPT_CODE DEPT_CODE
+        , T6.GRP_CODE GRP_CODE
+        , T6.ORG_CODE ORG_CODE
         , T2.MEM_ID MEM_ID
         , T2.MEM_CODE MEM_CODE
         , T2.MEM_TYPE MEM_TYPE
@@ -652,6 +652,8 @@
         LEFT
         JOIN ORG0001D T5
         ON T5.MEM_ID = T1.SALES_HM_ID
+        LEFT JOIN ORG1001V T6
+        ON T6.MEM_CODE = T2.MEM_CODE
         WHERE T1.SRV_ORD_ID = #{salesOrderId}
     </select>
 
