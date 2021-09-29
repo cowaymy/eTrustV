@@ -335,4 +335,6 @@ public interface MemberListMapper {
     EgovMap getCurrOrgDtls(Map<String, Object> params);
 
 	List<EgovMap> selectPromoDisHistory(Map<String, Object> params);
+
+	EgovMap checkIncomeTax(Map<String, Object> params);
 }
