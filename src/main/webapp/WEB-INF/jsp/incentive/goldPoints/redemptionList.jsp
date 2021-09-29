@@ -180,6 +180,13 @@
         location.reload();
     }
 
+    function fn_excelDownRedemption() {
+        // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+        GridCommon
+            .exportTo("grid_wrap", "xlsx",
+                "<spring:message code='incentive.title.redemptionList'/>");
+    }
+
 </script>
 
 <section id="content">
@@ -306,6 +313,15 @@
             </tbody>
         </table>
     </form>
+
+    <br/>
+    <ul class="right_btns">
+        <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+            <li><p class="btn_grid">
+                <a href="#" onClick="fn_excelDownRedemption()"><spring:message code='service.btn.Generate' /></a>
+                </p></li>
+        </c:if>
+   </ul>
 
     <article class="grid_wrap" id="grid_wrap"></article>
 
