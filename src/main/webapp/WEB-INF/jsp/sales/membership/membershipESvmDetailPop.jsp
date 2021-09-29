@@ -55,6 +55,7 @@
         	$("#aTabPayment").hide();
         }
 
+        //fn_displaySpecialInst();
         //Go into uneditable state [s]
         var stus = '${eSvmInfo.stus}';
         var flg = '${paymentInfo.allowComm}';
@@ -75,28 +76,33 @@
         	$("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
         	$("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
         	$("#action").replaceWith('<input id=action name="action" value="${eSvmInfo.stusRem}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
-        	$("#specialInstruction").replaceWith('<input id=specialInstruction name="specialInstruction" value="${eSvmInfo.appvInstrct}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+        	//$("#specialInstruction").replaceWith('<input id=specialInstruction name="specialInstruction" value="${eSvmInfo.appvInstrct}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+        	$("#specInst").hide();
         	$("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.rem}</textarea>');
         	$("#btnSave").hide();
         }//Go into uneditable state [e]
-        else if(stus == '1' && specialInst != '')
+        else if(stus == '1')
         {
-        	$('#action').val(stus);
-        	$('#specialInstruction').val('');
-        	$('#specialInstruction').val('${eSvmInfo.appvInstrct}');
-        	console.log('specialInstruction: ', $('#specialInstruction').val());
-        	$("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
-            $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
-            $("#action option[value='"+ stus +"']").attr("selected", true);
-            $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
-            $("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.rem}</textarea>');
+        	if(specialInst != '')
+            {
+                $('#action').val(stus);
+                $('#specialInstruction').val('${eSvmInfo.appvInstrct}');
+                console.log('specialInstruction', $('#specialInstruction').val());
+                $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+                $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+                $("#action option[value='"+ stus +"']").attr("selected", true);
+                $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
+                $("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.rem}</textarea>');
+            }
+            else
+            {
+                $('#action').val(stus);
+                $("#action option[value='"+ stus +"']").attr("selected", true);
+            }
         }
 
-        if($("#action").val() == '5') //5:Approved
-            $("#specialInstruction").hide();
-
-        fn_displaySpecialInst();
-
+        //if($("#action").val() == '5') //5:Approved
+          //  $("#specInst").hide();
     });
 
     $(function(){
@@ -582,14 +588,14 @@
     	fn_GetSpecialInstruction();
     	if($("#action").val() == '5' || $("#action").val() == '') //5:Approved
     	{
-    		$("#specialInstruction").hide();
+    		$("#specInst").hide();
     		SpecInstr = 0;
     		$("#SARefNo_header").replaceWith('<th id="SARefNo_header" scope="row">SA Reference No<span class="must">*</span></th>');
     		SAFlg = 1;
     	}
     	else
     	{
-    		$("#specialInstruction").show();
+    		$("#specInst").show();
     		$("#specialInst_header").replaceWith('<th id="specialInst_header" scope="row">Special Instruction<span class="must">*</span></th>');
             SpecInstr = 1;
     		$("#SARefNo_header").replaceWith('<th id="SARefNo_header" scope="row">SA Reference No</th>');

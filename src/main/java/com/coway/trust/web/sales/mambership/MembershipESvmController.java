@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -116,11 +117,14 @@ public class MembershipESvmController {
 		EgovMap preSalesInfo = membershipESvmService.selectESvmPreSalesInfo(params);
 		EgovMap paymentInfo = membershipESvmService.selectESvmPaymentInfo(params);
 		EgovMap quotInfo = membershipESvmService.selectMembershipQuotInfo(params);
+		params.put("action", result.get("stus"));
+		List<EgovMap> specialInstruction = membershipESvmService.selectActionOption(params);
 
 		model.put("eSvmInfo", result);
 		model.put("preSalesInfo", preSalesInfo);
 		model.put("paymentInfo", paymentInfo);
 		model.put("quotInfo", quotInfo);
+		model.put("specialInstruction", specialInstruction);
 
 		logger.debug("params: ===========================>" + params);
 		logger.debug("eSvmInfo: ===========================>" + result);
@@ -193,9 +197,10 @@ public class MembershipESvmController {
 
 	}
 
-	@RequestMapping(value = "/updateAction.do")
-	public ResponseEntity<EgovMap>updateAction(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+	@RequestMapping(value = "/updateAction.do", method = RequestMethod.POST)
+	public ResponseEntity<EgovMap>updateAction(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 
+		logger.debug("params =====================================>>  " + params);
 		params.put("userId", sessionVO.getUserId());
 		params.put("updator", sessionVO.getUserId());
 		params.put("docNoId", "12");
@@ -221,6 +226,7 @@ public class MembershipESvmController {
 		if(params.get("action").equals("5"))
 		{
 			//==== update SAL0298D eSVM ====
+			params.put("specialInstruction","");
 			membershipESvmService.updateAction(params);
 
 			//==== insert membership ====

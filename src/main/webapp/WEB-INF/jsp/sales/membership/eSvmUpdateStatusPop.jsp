@@ -20,7 +20,7 @@
 <tr>
     <th scope="row">Action<span class="must">*</span></th>
     <td colspan='3'>
-         <select class="w100p"  id="action" name="action" onchange="fn_displaySpecialInst()">
+         <select class="w100p"  id="action" name="action" onclick="fn_displaySpecialInst()">
             <option value="5">Approved</option>
             <option value="6">Rejected</option>
             <option value="1">Active</option>
@@ -32,8 +32,9 @@
     <th scope="row" id="specialInst_header"><span>Special Instruction</span></th>
     <td colspan='3'>
     <select id="specialInstruction" name="specialInstruction" class="w100p" >
+        <option value="">Choose One</option>
         <c:forEach var="list" items="${specialInstruction}" varStatus="status">
-               <option value="${list.code}">${list.codeDesc}</option>
+               <option value="${list.code}">${list.codeName}</option>
         </c:forEach>
     </select></td>
 </tr>
