@@ -115,70 +115,83 @@
                   AND UPPER(F1.DEPT_CODE) = UPPER(#{deptCode})
               </if>
               <if test="salemanCode != null and salemanCode != ''">
-                  AND UPPER(F1.DEPT_CODE) = UPPER(#{salemanCode})
+                  AND UPPER(F1.MEM_CODE) = UPPER(#{salemanCode})
               </if>
 
-          UNION
+	UNION
 
-           SELECT DISTINCT
-          cd.CODE APP_TYPE_CODE,
-          som.APP_TYPE_ID,
-          cd.CODE_NAME APP_TYPE_NAME,
-          NVL (u.USER_NAME, ' ') CRT_USER_ID,
-          c.NRIC CUST_IC,
-          c.NAME CUST_NAME,
-          som.CUST_ID,
-          NVL (c.CUST_VA_NO, ' ') CUST_VA_NO,
-          NVL (som.BRNCH_ID, 0) KEYIN_BRNCH_ID,
-          NVL (TO_CHAR(som.SALES_DT,'DD/MM/YYYY'), '01/01/1900') ORD_DT,
-          som.SALES_DT,
-          som.SRV_ORD_ID ORD_ID,
-          som.SRV_ORD_NO ORD_NO,
-          S.CODE ORD_STUS_CODE,
-          som.STUS_CODE_ID ORD_STUS_ID,
-          NVL (som.CUST_PO_NO, ' ') PO_NO,
-          NVL (som.REF_NO, ' ') REF_NO,
-          NVL (som.MEM_ID, 0) SALESMAN_MEM_ID,
-          NVL (mem.MEM_CODE, ' ') SALESMAN_CODE,
-          NVL (mem.MEM_TYPE, 0) SALESMAN_MEM_TYPE_ID,
-          NVL (som.CUST_BILL_ID, 0) BILLING_GRP_ID,
-          cp2.TEL_M1 MAIL_TEL_MOB,
-          cp2.TELF MAIL_TEL_FAX,
-          cp2.TEL_O MAIL_TEL_OFF,
-          cp2.TEL_R MAIL_TEL_RES,
-          cp3.TELF INST_TEL_FAX,
-          cp3.TEL_M1 INST_TEL_MOB,
-          cp3.TEL_O INST_TEL_OFF,
-          cp3.TEL_R INST_TEL_RES,
-          som.PV_MONTH PV_MONTH,
-          som.PV_YEAR PV_YEAR,
-          NVL (pm.PROMO_CODE, ' ') PROMO_CODE,
-          NVL (TO_CHAR (pm.PROMO_DESC), ' ') PROMO_DESC,
-          NVL (som.BINDING_NO, ' ') RELATED_NO,
-          NVL (som.SALES_ORD_ID_OLD, 0) RELATED_ID,
-          NVL (SOM.SALES_PROD_BRD,'OTHER') BRAND,
-          som.SALES_PROD_SZ PRODUCT_NAME,
-          EXTENT10.MEMO_ADJ_REF_NO ADJNOTE,
-          F1.ORG_CODE ,
-          F1.GRP_CODE ,
-          F1.DEPT_CODE
-     FROM SAL0225D som
-          JOIN SYS0013M cd ON cd.CODE_ID = som.APP_TYPE_ID
-          JOIN SAL0029D c ON c.CUST_ID = som.CUST_ID
-          JOIN SAL0045D i ON i.SALES_ORD_ID = som.SRV_ORD_ID
-          JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID
-          LEFT JOIN SYS0047M u ON u.USER_ID = som.CRT_USER_ID
-          LEFT JOIN SAL0027D cp2 ON cp2.CUST_CNTC_ID = som.CUST_CNT_ID
-          LEFT JOIN SAL0027D cp3 ON cp3.CUST_CNTC_ID = i.CNT_ID
-          LEFT JOIN ORG0001D mem ON mem.MEM_ID = som.MEM_ID
-          LEFT JOIN SAL0017D pm ON pm.PROMO_ID = som.PROMO_ID
-          LEFT JOIN PAY0031D EXTENT7 ON EXTENT7.TAX_INVC_SVC_NO = SOM.SRV_ORD_NO
-          LEFT JOIN PAY0011D EXTENT10 ON EXTENT10.MEMO_ADJ_INVC_NO = EXTENT7.TAX_INVC_REF_NO
-                                   AND MEMO_ADJ_STUS_ID = 4
-          LEFT JOIN ORG1001V F1 ON SOM.MEM_ID = F1.MEM_ID
+	SELECT DISTINCT
+	cd.CODE APP_TYPE_CODE,
+	som.APP_TYPE_ID,
+	cd.CODE_NAME APP_TYPE_NAME,
+	NVL (u.USER_NAME, ' ') CRT_USER_ID,
+	c.NRIC CUST_IC,
+	c.NAME CUST_NAME,
+	som.CUST_ID,
+	NVL (c.CUST_VA_NO, ' ') CUST_VA_NO,
+	NVL (som.BRNCH_ID, 0) KEYIN_BRNCH_ID,
+	NVL (TO_CHAR(som.SALES_DT,'DD/MM/YYYY'), '01/01/1900') ORD_DT,
+	som.SALES_DT,
+	som.SRV_ORD_ID ORD_ID,
+	som.SRV_ORD_NO ORD_NO,
+	S.CODE ORD_STUS_CODE,
+	som.STUS_CODE_ID ORD_STUS_ID,
+	NVL (som.CUST_PO_NO, ' ') PO_NO,
+	NVL (som.REF_NO, ' ') REF_NO,
+	NVL (som.MEM_ID, 0) SALESMAN_MEM_ID,
+	NVL (mem.MEM_CODE, ' ') SALESMAN_CODE,
+	NVL (mem.MEM_TYPE, 0) SALESMAN_MEM_TYPE_ID,
+	NVL (som.CUST_BILL_ID, 0) BILLING_GRP_ID,
+	cp2.TEL_M1 MAIL_TEL_MOB,
+	cp2.TELF MAIL_TEL_FAX,
+	cp2.TEL_O MAIL_TEL_OFF,
+	cp2.TEL_R MAIL_TEL_RES,
+	cp3.TELF INST_TEL_FAX,
+	cp3.TEL_M1 INST_TEL_MOB,
+	cp3.TEL_O INST_TEL_OFF,
+	cp3.TEL_R INST_TEL_RES,
+	som.PV_MONTH PV_MONTH,
+	som.PV_YEAR PV_YEAR,
+	NVL (pm.PROMO_CODE, ' ') PROMO_CODE,
+	NVL (TO_CHAR (pm.PROMO_DESC), ' ') PROMO_DESC,
+	NVL (som.BINDING_NO, ' ') RELATED_NO,
+	NVL (som.SALES_ORD_ID_OLD, 0) RELATED_ID,
+	NVL (SOM.SALES_PROD_BRD,'OTHER') BRAND,
+	som.SALES_PROD_SZ PRODUCT_NAME,
+	EXTENT10.MEMO_ADJ_REF_NO ADJNOTE,
+	F1.ORG_CODE ,
+	F1.GRP_CODE ,
+	F1.DEPT_CODE
+	FROM SAL0225D som
+	JOIN SYS0013M cd ON cd.CODE_ID = som.APP_TYPE_ID
+	JOIN SAL0029D c ON c.CUST_ID = som.CUST_ID
+	JOIN SAL0045D i ON i.SALES_ORD_ID = som.SRV_ORD_ID
+	JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID
+	LEFT JOIN SYS0047M u ON u.USER_ID = som.CRT_USER_ID
+	LEFT JOIN SAL0027D cp2 ON cp2.CUST_CNTC_ID = som.CUST_CNT_ID
+	LEFT JOIN SAL0027D cp3 ON cp3.CUST_CNTC_ID = i.CNT_ID
+	LEFT JOIN ORG0001D mem ON mem.MEM_ID = som.MEM_ID
+	LEFT JOIN SAL0017D pm ON pm.PROMO_ID = som.PROMO_ID
+	LEFT JOIN PAY0031D EXTENT7 ON EXTENT7.TAX_INVC_SVC_NO = SOM.SRV_ORD_NO
+	LEFT JOIN PAY0011D EXTENT10 ON EXTENT10.MEMO_ADJ_INVC_NO =
+	EXTENT7.TAX_INVC_REF_NO
+	AND MEMO_ADJ_STUS_ID = 4
+	LEFT JOIN ORG1001V F1 ON SOM.MEM_ID = F1.MEM_ID
 
-          WHERE  1= 1
-                  AND SOM.APP_TYPE_ID IN (5701,5702)
+	WHERE 1= 1
+	AND SOM.APP_TYPE_ID IN (5701,5702)
+	<if test="orgCode != null and orgCode != ''">
+		AND UPPER(F1.ORG_CODE) = UPPER(#{orgCode})
+	</if>
+	<if test="grpCode != null and grpCode != ''">
+		AND UPPER(F1.GRP_CODE) = UPPER(#{grpCode})
+	</if>
+	<if test="deptCode != null and deptCode != ''">
+		AND UPPER(F1.DEPT_CODE) = UPPER(#{deptCode})
+	</if>
+	<if test="salemanCode != null and salemanCode != ''">
+		AND UPPER(F1.MEM_CODE) = UPPER(#{salemanCode})
+	</if>
 
         ) V1
 
