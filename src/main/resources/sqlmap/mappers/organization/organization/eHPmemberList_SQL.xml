@@ -575,6 +575,7 @@
        , COLLCT_BRNCH
        , ATCH_FILE_GRP_ID
        , COURS_ID
+       , APLICNT_INC_TAX
        )
       VALUES (
       ORG0003D_APLCTN_ID_SEQ.NEXTVAL
@@ -623,6 +624,7 @@
       , #{collectionBrnch}
       , #{atchFileGrpId}
       , #{coursId}
+      , #{applicantIncomeTaxNo}
       )
   </insert>
 
@@ -729,7 +731,9 @@
            , UPD_DT = SYSDATE
 
            , UPD_USER_ID = #{updUserId}
-
+            <if test="eHPincomeTaxNo != null and eHPincomeTaxNo != '' ">
+           , APLICNT_INC_TAX =#{eHPincomeTaxNo}
+           </if>
      where  APLCTN_ID = #{eHPMemberID}
      </update>
 
@@ -774,7 +778,8 @@
             B.POSTCODE ,
              C.NAME NATION ,
              A.CNFM ,
-             D.SEQ
+             D.SEQ,
+             A.APLICNT_INC_TAX
             FROM ORG0003D A
             LEFT JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID
             LEFT JOIN SYS0015M C ON A.APLICNT_NATION = C.CNTY_ID
@@ -827,7 +832,8 @@
             B.STATE,
             B.POSTCODE ,
              C.NAME NATION ,
-             A.CNFM
+             A.CNFM,
+             A.APLICNT_INC_TAX
             FROM ORG0003D A
             LEFT JOIN SYS0064M B ON A.AREA_ID = B.AREA_ID
             LEFT JOIN SYS0015M C ON A.APLICNT_NATION = C.CNTY_ID
@@ -1011,7 +1017,8 @@ SELECT Limit1.MEM_ID MEM_ID  ,
        Limit1.COLLCT_BRNCH ,
        Limit1.COLLCT_BRNCH_DESC,
        Limit1.HP_CODE ,
-       Limit1.HP_ID
+       Limit1.HP_ID,
+       Limit1.APLICNT_INC_TAX
   FROM (
 SELECT Extent1.APLCTN_ID MEM_ID  ,
                 Extent1.APLICNT_CODE MEM_CODE  ,
@@ -1305,7 +1312,8 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 EXTENT1.COLLCT_BRNCH ,
                EXTENT30.CODE || ' - ' || EXTENT30.NAME COLLCT_BRNCH_DESC ,
                Extent31.MEM_CODE HP_CODE ,
-               Extent31.MEM_ID HP_ID
+               Extent31.MEM_ID HP_ID,
+               Extent1.APLICNT_INC_TAX
          FROM ORG0003D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.APLICNT_TYPE
