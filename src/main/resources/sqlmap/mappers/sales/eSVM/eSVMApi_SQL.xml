@@ -178,7 +178,7 @@
                     ELSE ''
                 END EXPINT,
                 TO_CHAR(K.SRV_MEM_COOL_PRIOD_MTH) COOLING_PRD,
-                TO_CHAR(G.SRV_MEM_FREQ) HS_FREQ,
+                TO_CHAR(M.SRV_MEM_ITM_PRIOD) HS_FREQ,
                 TO_CHAR(G.LAST_SRV_MEM_EXPR_DATE, 'YYYYMMDD') CVT_LAST_SRV_MEM_EXPR_DATE,
                 TO_CHAR(SYSDATE, 'YYYYMMDD') CVT_NOW_DATE
             FROM SAL0001D A
@@ -228,6 +228,10 @@
                 AND K.SRV_MEM_COOL_PRIOD_STUS_ID = 1
             LEFT JOIN SAL0071D L
                 ON A.SALES_ORD_ID = L.SALES_ORD_ID
+            JOIN SAL0092M M
+                ON M.SRV_MEM_PAC_ID = 9
+                AND M.SRV_MEM_ITM_STUS_ID = 1
+                AND M.SRV_MEM_ITM_STK_ID = B.ITM_STK_ID
             JOIN SYS0013M DESC1
                 ON A.APP_TYPE_ID = DESC1.CODE_ID
                 AND DESC1.CODE_MASTER_ID = 10
