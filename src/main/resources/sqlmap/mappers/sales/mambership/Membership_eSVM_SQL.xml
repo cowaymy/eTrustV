@@ -557,9 +557,12 @@
     </select>
 
     <select id="selectESvmPaymentInfo" parameterType="Map" resultType="egovMap">
-        SELECT *
-        FROM PAY0312D
-        WHERE PSM_ID = #{psmId}
+        SELECT PAY.*, (SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID = PAY.CARD_MODE) CARD_MODE_DESC,
+			(SELECT NAME FROM SYS0004M WHERE BANK_ID = PAY.ISSU_BANK_ID) ISSU_BANK_DESC,
+			(SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID = PAY.CARD_BRAND) CARD_BRAND_DESC,
+			(SELECT ACC_DESC FROM SYS0001M WHERE ACC_ID = PAY.MERCHANT_BANK) MERCHANT_BANK_DESC
+		FROM PAY0312D PAY
+		WHERE PAY.PSM_ID = #{psmId}
     </select>
 
     <update id="updateAction" parameterType="Map">
