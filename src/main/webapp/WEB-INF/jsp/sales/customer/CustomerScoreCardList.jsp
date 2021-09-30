@@ -122,7 +122,6 @@
 
 		if (FormUtil.isEmpty($("#custId").val())
 				&& FormUtil.isEmpty($("#custIc").val())) {
-			$('#searchForm').clearForm();
 			Common
 					.alert("<spring:message code='customer.alert.msg.customeridNricblank' />");
 			return;
