@@ -769,7 +769,8 @@
 		,
 		LOC.SERIAL_REQUIRE_CHK_YN
 		, SOD.ITM_STK_ID STK_ID
-		,TO_CHAR(TO_DATE(hr.SETL_DT,'DD-MON-YY'),'DD/MM/YYYY') AS Complete_Dt <!--Added by Keyi 20210923 -->
+		,TO_CHAR(hr.SETL_DT,'DD/MM/YYYY') AS Complete_Dt <!--Added
+			by Keyi 20210923 -->
 		FROM SVC0008D hs
 		INNER JOIN SAL0001D so ON so.sales_ord_id =
 		hs.sales_ord_id and so.bndl_id
@@ -889,12 +890,10 @@
 			AND STUS = '1')
 		</if>
 
-		<if test="compStartDt != null and compStartDt != ''">
-        <![CDATA[ AND TO_DATE(hr.SETL_DT,'DD/MM/YYYY') >= TO_DATE(#{compStartDt}, 'DD/MM/YYYY') ]]>
+		<!-- Added by Keyi 20210923 -->
+		<if test="compStartDt != '' and compEndDt != '' ">
+      <![CDATA[ AND hr.SETL_DT BETWEEN TO_DATE(#{compStartDt}, 'DD/MM/YYYY') AND TO_DATE(#{compEndDt}, 'DD/MM/YYYY') ]]>
 		</if>
-        <if test="compEndDt != null and compEndDt != ''">
-        <![CDATA[ AND TO_DATE(hr.SETL_DT,'DD/MM/YYYY') <= TO_DATE(#{compEndDt}, 'DD/MM/YYYY')]]>
-        </if>
 		)Project2
 		) Project3
     <![CDATA[   ) WHERE DUM_SEQ = 1 AND ROWNUM <= 20000 ]]>
