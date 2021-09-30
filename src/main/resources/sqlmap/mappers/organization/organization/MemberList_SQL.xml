@@ -626,7 +626,7 @@
        Limit1.MOBILE_USE_YN,
        Limit1.NO_TBB,
        Limit1.INC_TAX,
-       Lilmit1.APLICNT_INC_TAX
+       Limit1.APLICNT_INC_TAX
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
