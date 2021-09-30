@@ -61,7 +61,7 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
         }
 
         //CALL PROCEDURE
-        goldPointsMapper.callGoldPointsConfirm(master); // MERGE INTO ICR0003D
+        //goldPointsMapper.callGoldPointsConfirm(master); // MERGE INTO ICR0003D
 
 		return masterSeq;
 	}
@@ -243,6 +243,20 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 	public int updateRedemption(Map<String, Object> params) {
         int result = goldPointsMapper.updateRedemption(params);
 		return result;
+	}
+
+	@Override
+	public List<EgovMap> selectPointsUploadList(Map<String, Object> params) {
+		return goldPointsMapper.selectPointsUploadList(params);
+	}
+
+	@Override
+	public EgovMap selectPointsBatchInfo(Map<String, Object> params) {
+		EgovMap pointsBatchInfo = goldPointsMapper.selectPointsBatchMaster(params);
+	    List<EgovMap> pointsBatchDtl = goldPointsMapper.selectPointsBatchDetail(params);
+
+	    pointsBatchInfo.put("pointsBatchDtl", pointsBatchDtl);
+	    return pointsBatchInfo;
 	}
 
 }

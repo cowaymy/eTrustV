@@ -39,4 +39,8 @@ public interface GoldPointsService {
 
 	int updateRedemption(Map<String, Object> params);
 
+	List<EgovMap> selectPointsUploadList(Map<String, Object> params);
+
+	EgovMap selectPointsBatchInfo(Map<String, Object> params);
+
 }

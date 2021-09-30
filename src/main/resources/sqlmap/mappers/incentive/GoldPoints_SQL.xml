@@ -515,4 +515,69 @@
         WHERE A.RDM_NO = #{redemptionNo}
     </select>
 
+    <select id="selectPointsUploadList" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.GP_BATCH_ID,
+            B.NAME AS STUS_CODE,
+            A.CRT_DT,
+            C.USER_NAME CRT_USER_NAME
+        FROM ICR0001M A
+        JOIN SYS0038M B ON B.STUS_CODE_ID = A.STUS_ID
+        JOIN SYS0047M C ON C.USER_ID = A.CRT_USER_ID
+        WHERE  1=1
+
+        <if test="gpBatchId != null and gpBatchId != ''">
+        AND A.GP_BATCH_ID = #{gpBatchId}
+        </if>
+
+        <if test="crtUserName != null and crtUserName != ''">
+        AND C.USER_NAME LIKE '%'||#{crtUserName}||'%'
+        </if>
+
+        <if test="gpUploadCreateStDate != null and gpUploadCreateStDate != '' ">
+        <![CDATA[
+        AND A.CRT_DT >= TO_DATE(#{gpUploadCreateStDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+        ]]>
+        </if>
+
+        <if test="gpUploadCreateEnDate != null and gpUploadCreateEnDate != '' ">
+        <![CDATA[
+        AND A.CRT_DT <= TO_DATE(#{gpUploadCreateEnDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+        ]]>
+        </if>
+
+        <if test="cmbBatchStatus != null and cmbBatchStatus != '' ">
+        AND A.STUS_ID = #{cmbBatchStatus}
+        </if>
+
+        ORDER BY A.CRT_DT DESC
+    </select>
+
+    <select id="selectPointsBatchMaster" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.GP_BATCH_ID,
+            B.USER_NAME,
+            C.NAME STUS_NAME
+        FROM
+        ICR0001M A
+        LEFT JOIN SYS0047M B ON A.CRT_USER_ID = B.USER_ID
+        LEFT JOIN SYS0038M C ON A.STUS_ID = C.STUS_CODE_ID
+        WHERE
+        A.GP_BATCH_ID = #{gpBatchId}
+    </select>
+
+    <select id="selectPointsBatchDetail" parameterType="Map" resultType="egovMap">
+        SELECT
+            GP_BATCH_ID,
+            MEM_CODE,
+            MEM_NAME,
+            GP_DESC,
+            GP_UPL_PTS,
+            TO_CHAR(GP_START_DT, 'DD/MM/YYYY') GP_START_DT,
+            TO_CHAR(GP_END_DT, 'DD/MM/YYYY') GP_END_DT
+        FROM
+        ICR0002D WHERE
+        GP_BATCH_ID = #{gpBatchId}
+    </select>
+
 </mapper>

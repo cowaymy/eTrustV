@@ -71,10 +71,6 @@
         });
     }
 
-    function fn_creditPoints() {
-        Common.popupDiv("/incentive/goldPoints/uploadPointsPop.do", null, null, true, "uploadPointsPop");
-    }
-
     function fn_setDetail(gridID, rowIdx){
         Common.popupDiv("/incentive/goldPoints/viewPointsDetailPop.do", { memCode : AUIGrid.getCellValue(gridID, rowIdx, "memCode") }, null, true, "viewPointsDetailPop");
     }
@@ -101,9 +97,6 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Points Summary</h2>
         <ul class="right_btns">
-          <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-            <li><p class="btn_blue"><a href="javascript:fn_creditPoints();">Credit Points</a></p></li>
-          </c:if>
           <li><p class="btn_blue"><a href="javascript:fn_search();">Search</a></p></li>
         </ul>
     </aside>

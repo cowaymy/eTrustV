@@ -84,56 +84,6 @@ public class GoldPointsSummaryController {
 		return "incentive/goldPoints/pointsSummaryList";
 	}
 
-	@RequestMapping(value = "/uploadPointsPop.do")
-	public String uploadPointsPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "incentive/goldPoints/uploadPointsPop";
-	}
-
-	@RequestMapping(value = "/csvUploadPoints.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> csvUploadPoints(MultipartHttpServletRequest request, SessionVO sessionVO) throws IOException, InvalidFormatException {
-
-		Map<String, MultipartFile> fileMap = request.getFileMap();
-		MultipartFile multipartFile = fileMap.get("csvFile");
-		List<GoldPointsVO> vos = csvReadComponent.readCsvToList(multipartFile, true, GoldPointsVO::create);
-
-		List<Map<String, Object>> detailList = new ArrayList<Map<String, Object>>();
-
-		for (GoldPointsVO vo : vos) {
-
-			HashMap<String, Object> hm = new HashMap<String, Object>();
-
-	        hm.put("memCode", vo.getMemCode());
-	        hm.put("memName", vo.getMemName());
-	        hm.put("ptsDesc", vo.getPtsDesc());
-	        hm.put("ptsEarned", vo.getPtsEarned());
-	        hm.put("startDate", vo.getStartDate());
-	        hm.put("endDate", vo.getEndDate());
-			hm.put("crtUserId", sessionVO.getUserId());
-			hm.put("updUserId", sessionVO.getUserId());
-
-			detailList.add(hm);
-		}
-
-		Map<String, Object> master = new HashMap<String, Object>();
-
-	    master.put("crtUserId", sessionVO.getUserId());
-	    master.put("updUserId", sessionVO.getUserId());
-
-	    int result = goldPointsService.saveCsvUpload(master, detailList);
-
-	    ReturnMessage message = new ReturnMessage();
-
-	    if (result > 0) {
-	    	message.setMessage("Gold Points successfully uploaded.");
-	        message.setCode(AppConstants.SUCCESS);
-	    } else {
-	    	message.setMessage("Failed to upload Gold Points. Please try again later.");
-	        message.setCode(AppConstants.FAIL);
-	    }
-
-	    return ResponseEntity.ok(message);
-	}
-
 	@RequestMapping(value = "/searchPointsSummary.do")
 	public ResponseEntity<List<EgovMap>> searchPointsSummary(@RequestParam Map<String, Object> params) {
 		List<EgovMap> pointsSummaryList = goldPointsService.selectPointsSummaryList(params);

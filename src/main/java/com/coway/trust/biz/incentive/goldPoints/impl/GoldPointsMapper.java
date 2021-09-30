@@ -63,4 +63,10 @@ public interface GoldPointsMapper {
 
 	EgovMap selectRedemptionDetailsEmail(Map<String, Object> params);
 
+	List<EgovMap> selectPointsUploadList(Map<String, Object> params);
+
+	EgovMap selectPointsBatchMaster(Map<String, Object> params);
+
+	List<EgovMap> selectPointsBatchDetail(Map<String, Object> params);
+
 }
