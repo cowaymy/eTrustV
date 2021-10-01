@@ -237,13 +237,13 @@
                         '-' AS REDEMPTION_NO,
                         A.GP_DESC AS ITEMS_DESC,
                         TO_CHAR(A.GP_UPL_PTS) AS EARNED_DISPLAY,
-                        CASE WHEN SYSDATE <![CDATA[>=]]> A.GP_END_DT THEN
+                        CASE WHEN SYSDATE <![CDATA[>]]> A.GP_END_DT THEN
                             TO_CHAR(A.GP_BAL_PTS)
                         ELSE
                             '-'
                         END AS RDM_OR_EXP_DISPLAY,
                         A.GP_UPL_PTS AS EARNED,
-                        CASE WHEN SYSDATE <![CDATA[>=]]> A.GP_END_DT THEN
+                        CASE WHEN SYSDATE <![CDATA[>]]> A.GP_END_DT THEN
                             A.GP_BAL_PTS
                         ELSE
                             0
@@ -302,7 +302,7 @@
             JOIN ORG0001D O ON O.MEM_CODE = S.HR_CODE
             JOIN ICR0003D I ON I.MEM_CODE = O.MEM_CODE
             WHERE S.USER_ID = #{userId}
-            AND (SYSDATE <![CDATA[>=]]> I.GP_START_DT AND SYSDATE <![CDATA[<]]> I.GP_END_DT)
+            AND (SYSDATE <![CDATA[>=]]> I.GP_START_DT AND SYSDATE <![CDATA[<=]]> I.GP_END_DT)
             GROUP BY O.MEM_CODE, O.NAME, O.TEL_MOBILE, O.EMAIL
         )
     </select>
@@ -326,7 +326,7 @@
         SELECT
             DISTINCT UPPER(ITM_CAT) ITM_CAT
         FROM ICR0006D
-        WHERE SYSDATE <![CDATA[>=]]> RI_START_DT AND SYSDATE <![CDATA[<]]> RI_END_DT
+        WHERE SYSDATE <![CDATA[>=]]> RI_START_DT AND SYSDATE <![CDATA[<=]]> RI_END_DT
     </select>
 
     <select id="searchRedemptionItemList" parameterType="Map" resultType="egovMap">
@@ -335,7 +335,7 @@
             UPPER(ITM_CODE) || ' - ' || UPPER(ITM_DESC) AS ITM_DISPLAY_NAME,
             GP_PER_UNIT
         FROM ICR0006D
-        WHERE (SYSDATE <![CDATA[>=]]> RI_START_DT AND SYSDATE <![CDATA[<]]> RI_END_DT)
+        WHERE (SYSDATE <![CDATA[>=]]> RI_START_DT AND SYSDATE <![CDATA[<=]]> RI_END_DT)
         <if test=" null != category and '' != category">
             AND UPPER(ITM_CAT) = #{category}
         </if>
@@ -391,7 +391,7 @@
             A.RDM_ID,
             A.RDM_NO,
             TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH:MI:SS AM') AS CRT_DT,
-            CASE WHEN (D.RI_END_DT <![CDATA[<=]]> SYSDATE) AND A.STUS_ID = 1 THEN
+            CASE WHEN (D.RI_END_DT <![CDATA[<]]> SYSDATE) AND A.STUS_ID = 1 THEN
                 'In Progress'
             ELSE
                 B.NAME
