@@ -126,8 +126,10 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
       int sal71dcnt = orderListMapper.updateState_SAL0071D(params);
       logger.debug("sal71dcnt==>" + sal71dcnt);
 
-      int sal299dcnt = orderListMapper.insert_SAL0299D(params);
-      logger.debug("sal299dcnt==>" + sal299dcnt);
+      if(params.get("stkRetnResnId").toString() != "1993"){
+        int sal299dcnt = orderListMapper.insert_SAL0299D(params);
+        logger.debug("sal299dcnt==>" + sal299dcnt);
+      }
     }
 
     params.put("P_SALES_ORD_NO", params.get("salesOrderNo"));
@@ -409,9 +411,12 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
       int sal71dcnt = orderListMapper.updateState_SAL0071D(params);
       logger.debug("sal71dcnt==>" + sal71dcnt);
 
-      int sal299dcnt = orderListMapper.insert_SAL0299D(params);
-      logger.debug("sal299dcnt==>" + sal299dcnt);
+      if(params.get("stkRetnResnId").toString() != "1993"){
+        int sal299dcnt = orderListMapper.insert_SAL0299D(params);
+        logger.debug("sal299dcnt==>" + sal299dcnt);
+      }
     }
+
 
     params.put("P_SALES_ORD_NO", params.get("salesOrderNo"));
     params.put("P_USER_ID", params.get("stkRetnCrtUserId"));
