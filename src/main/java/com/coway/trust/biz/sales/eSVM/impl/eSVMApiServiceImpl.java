@@ -421,13 +421,13 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
                     eSVMApiMapper.getOrdOtstnd(params);
                     EgovMap map = (EgovMap) ((ArrayList)params.get("p1")).get(0);
 
-                    if(Integer.parseInt(map.get("ordTotOtstnd").toString()) > 0) {
+                    if(Integer.parseInt(map.get("ordTotOtstnd").toString().replace(",", "")) > 0) {
                         msg = "hasOtstnd";
 
                     } else {
                         EgovMap outrightMemLedge = eSVMApiMapper.getOutrightMemLedge(params);
                         if(!outrightMemLedge.isEmpty()) {
-                            if(Integer.parseInt(outrightMemLedge.get("amt").toString()) > 0) {
+                            if(Integer.parseInt(outrightMemLedge.get("amt").toString().replace(",", "")) > 0) {
                                 msg = "hasOtstnd";
                             }
                         }
@@ -437,7 +437,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         } else {
             EgovMap outrightMemLedge = eSVMApiMapper.getOutrightMemLedge(params);
             if(!outrightMemLedge.isEmpty()) {
-                if(Integer.parseInt(outrightMemLedge.get("amt").toString()) > 0) {
+                if(Integer.parseInt(outrightMemLedge.get("amt").toString().replace(",", "")) > 0) {
                     msg = "hasOtstnd";
                 }
             }
