@@ -60,9 +60,6 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
             goldPointsMapper.insertGoldPointsDtl(goldPointsList); // INSERT INTO ICR0002D
         }
 
-        //CALL PROCEDURE
-        //goldPointsMapper.callGoldPointsConfirm(master); // MERGE INTO ICR0003D
-
 		return masterSeq;
 	}
 
@@ -257,6 +254,20 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 
 	    pointsBatchInfo.put("pointsBatchDtl", pointsBatchDtl);
 	    return pointsBatchInfo;
+	}
+
+	@Override
+	public void callPointsUploadConfirm(Map<String, Object> params) {
+        //CALL PROCEDURE
+        goldPointsMapper.callPointsUploadConfirm(params); // MERGE INTO ICR0003D
+
+	}
+
+	@Override
+	public int updPointsUploadReject(Map<String, Object> params) {
+        int result = goldPointsMapper.updPointsUploadReject(params);
+
+        return result;
 	}
 
 }

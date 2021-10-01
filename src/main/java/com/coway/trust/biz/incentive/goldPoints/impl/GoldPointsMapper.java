@@ -69,4 +69,8 @@ public interface GoldPointsMapper {
 
 	List<EgovMap> selectPointsBatchDetail(Map<String, Object> params);
 
+	void callPointsUploadConfirm(Map<String, Object> params);
+
+	int updPointsUploadReject(Map<String, Object> params);
+
 }

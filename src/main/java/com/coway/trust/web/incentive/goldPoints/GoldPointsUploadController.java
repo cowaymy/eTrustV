@@ -28,6 +28,7 @@ import com.coway.trust.biz.incentive.goldPoints.GoldPointsVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.csv.CsvReadComponent;
+import com.coway.trust.config.handler.SessionHandler;
 import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -37,6 +38,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class GoldPointsUploadController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GoldPointsUploadController.class);
+
+	@Autowired
+	private SessionHandler sessionHandler;
 
 	@Resource(name = "goldPointsService")
 	private GoldPointsService goldPointsService;
@@ -118,6 +122,44 @@ public class GoldPointsUploadController {
 	    model.addAttribute("pointsBatchInfo", pointsBatchInfo);
 	    model.addAttribute("pointsBatchDtl", new Gson().toJson(pointsBatchInfo.get("pointsBatchDtl")));
 	    return "incentive/goldPoints/confirmPointsPop";
+	}
+
+	@RequestMapping(value = "/pointsUploadConfirm")
+	public ResponseEntity<ReturnMessage> pointsUploadConfirm(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+		params.put("loginId", loginId);
+
+		goldPointsService.callPointsUploadConfirm(params);
+
+		String msg = null;
+		if (params.get("v_sqlcode") != null) {
+			msg = "("+ params.get("v_sqlcode") +")"+ params.get("v_sqlcont");
+		}
+
+		message.setMessage(msg);
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/pointsUploadReject")
+	public ResponseEntity<ReturnMessage> pointsUploadReject(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+		params.put("loginId", loginId);
+
+		int result = goldPointsService.updPointsUploadReject(params);
+
+	    if(result > 0) {
+	    	message.setMessage("Points Upload successfully rejected.<br />");
+		    message.setCode(AppConstants.SUCCESS);
+		} else {
+			message.setMessage("Failed to reject Points Upload. Please try again later.");
+		    message.setCode(AppConstants.FAIL);
+		}
+
+		return ResponseEntity.ok(message);
 	}
 
 }

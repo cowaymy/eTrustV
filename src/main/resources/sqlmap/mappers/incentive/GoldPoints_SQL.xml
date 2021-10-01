@@ -78,8 +78,8 @@
         )
     </insert>
 
-    <update id="callGoldPointsConfirm" statementType="CALLABLE" parameterType="Map">
-        {call SP_GOLD_PTS_CONFIRM(#{goldPtsBatchId})}
+    <update id="callPointsUploadConfirm" statementType="CALLABLE" parameterType="Map">
+        {call SP_GOLD_PTS_CONFIRM(#{gpBatchId},#{loginId}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR})}
     </update>
 
     <select id="selectNextRedemptionItemsBatchId" resultType="int">
@@ -579,5 +579,13 @@
         ICR0002D WHERE
         GP_BATCH_ID = #{gpBatchId}
     </select>
+
+    <update id = "updPointsUploadReject" parameterType="Map">
+        UPDATE ICR0001M
+        SET STUS_ID = 8
+              ,UPD_USER_ID = #{loginId}
+              ,UPD_DT = SYSDATE
+         WHERE GP_BATCH_ID = #{gpBatchId}
+   </update>
 
 </mapper>
