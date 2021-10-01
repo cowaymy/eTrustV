@@ -129,4 +129,6 @@ public interface OrderCancelService {
 
   int chkRcdTms (Map<String, Object> params);
 
+  EgovMap select3MonthBlockList(Map<String, Object> params);
+
 }
