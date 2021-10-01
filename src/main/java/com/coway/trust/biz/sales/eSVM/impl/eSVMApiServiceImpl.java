@@ -738,7 +738,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         boolean isResult = false;
         // TODO
         // EmailTemplateType.E_TEMPORARY_RECEIPT
-        isResult = adaptorService.sendEmail(email, false, EmailTemplateType.E_TEMPORARY_RECEIPT, params);
+        isResult = adaptorService.sendEmail(email, false, EmailTemplateType.E_SVM_RECEIPT, params);
     }
 
     @Override

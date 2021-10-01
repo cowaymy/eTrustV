@@ -895,14 +895,19 @@
     </select>
 
     <select id="getEmailDetails" parameterType="Map" resultType="egovMap">
-        SELECT
-            P.SALES_ORD_NO AS SALES_ORD_NO,
-            P.PAY_AMT AS PAY_AMT,
-            S47.USER_NAME AS COLLECTOR_CODE,
-            S47.USER_FULL_NAME AS COLLECTOR_NAME,
-            S26.STK_DESC AS STK_DESC,
-            TO_CHAR(SYSDATE, 'YYYY-MM-DD') AS RECEIPT_DT,
-            S13.CODE_NAME AS PYMT_MODE,
+       SELECT
+            D.SALES_ORD_NO,
+            B.PSM_NO,
+            B.PSM_SRV_MEM_NO,
+            F.SRV_MEM_DESC PACKAGE_TYPE,
+            E.NAME CUST_NM,
+            C.SRV_DUR / 12 SUB_YEAR,
+            C.SRV_MEM_PAC_AMT PACKAGE_PRICE,
+            C.SRV_MEM_BS_AMT FILTER_PRICE,
+            A.PAY_AMT,
+            G.CODE_NAME PAY_MODE,
+            I.NAME COLLECTOR_NAME,
+            I.MEM_CODE COLLECTOR_CODE,
             (
                 SELECT
                     NVL (CA1.ADDR_DTL, ' ')  || ', ' ||
@@ -919,20 +924,27 @@
                     ON CA1.CUST_ADD_ID = I.ADD_ID
                 LEFT JOIN SYS0064M MA1
                     ON MA1.AREA_ID = CA1.AREA_ID
-                WHERE SOM.SALES_ORD_ID = S1.SALES_ORD_ID
-            ) AS INST_ADDRESS
-        FROM PAY0312D P
-        JOIN SAL0001D S1
-            ON S1.SALES_ORD_NO = P.SALES_ORD_NO
-        JOIN SAL0002D S2
-            ON S2.SALES_ORD_ID = S1.SALES_ORD_ID
-        JOIN SYS0026M S26
-            ON S26.STK_ID = S2.ITM_STK_ID
-        JOIN SYS0013M S13
-            ON S13.CODE_ID = P.PAY_MODE
-        JOIN SYS0047M S47
-            ON S47.USER_ID = P.CRT_USER_ID
-       WHERE P.SRV_MEM_QUOT_ID = #{srvMemQuotId}
+                WHERE SOM.SALES_ORD_ID = D.SALES_ORD_ID
+            ) INST_ADDRESS,
+            TO_CHAR(A.CRT_DT, 'YYYY-MM-DD') RECEIPT_DT
+        FROM PAY0312D A
+        JOIN SAL0298D B
+            ON A.PSM_ID = B.PSM_ID
+        JOIN SAL0093D C
+            ON A.SRV_MEM_QUOT_ID = C.SRV_MEM_QUOT_ID
+        JOIN SAL0001D D
+            ON C.SRV_SALES_ORD_ID = D.SALES_ORD_ID
+        JOIN SAL0029D E
+            ON D.CUST_ID = E.CUST_ID
+        JOIN SAL0091M F
+            ON C.SRV_MEM_PAC_ID = F.SRV_MEM_PAC_ID
+        JOIN SYS0013M G
+            ON A.PAY_MODE = G.CODE_ID
+        JOIN SYS0047M H
+            ON A.CRT_USER_ID = H.USER_ID
+        JOIN ORG0001D I
+            ON H.HR_CODE = I.MEM_CODE
+        WHERE A.SRV_MEM_QUOT_ID = #{srvMemQuotId}
     </select>
 
     <select id="selectPsmDetail" parameterType="Map" resultType="egovMap">
