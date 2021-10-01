@@ -131,7 +131,7 @@
         $(function() {
 
         	$('#cmbAppType').change(function() {
-
+        		$(this).find('[value="5764"]').remove(); //2021/09/29 KAHKIT
             }).multipleSelect({
                 selectAll: true, // 전체선택
                 width: '80%'
