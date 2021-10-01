@@ -2942,6 +2942,9 @@
        ,UPD_USER_ID = #{userId}
         <if test='action == "EDIT"'>
           , NRIC = #{nric}
+          <if test='dob != null and dob !=""'>
+              , DOB = TO_DATE(#{dob}, 'DD/MM/YYYY')
+          </if>
         </if>
         <if test='action == "DEACTIVE"'>
           , STUS_CODE_ID = 8

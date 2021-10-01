@@ -29,62 +29,66 @@
         	}else{
 
         		var nric = $('#_editNric').val().trim();
+        		var dob = '${custInfo.codeName1}' == "Individual" ? nricToDob(nric) : null;
                 var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}.|\\":<>\?]/);
 
                 var nricObj = {nric:nric};
-                var custObj = {custId:'${custInfo.custId}', action:action, nric:nric, rcdTms:'${custInfo.updDt}'};
+                var custObj = {custId:'${custInfo.custId}', action:action, nric:nric, dob:dob, rcdTms:'${custInfo.updDt}'};
 
                 Common.ajaxSync("GET", "/sales/customer/validCustStatus.do", custObj, function(result) {
                     if(result != null){
                     	var isValid = result.isvalid == null ? true : false;
+                    	var valid = true;
 
                     	if(result.crtDtDiff > 9999){
                             Common.alert("Exceed allowable period" + DEFAULT_DELIMITER + "Exceed allowable period.<br/>Kindly refer to IT department");
                             return;
                         }else{
-                        	if(action == "EDIT" && !isValid){
+                        	if(action == "EDIT"){
                                 if (FormUtil.isEmpty(nric)) {
                                     Common.alert('<spring:message code="sal.alert.msg.plzKeyInCustNricComNo" />');
-                                    return;
+                                    valid = false;
                                 }else if(!isValid){
                                 	Common.alert('Edit Customer NRIC disallowed.<br/>Customer is having cancelled order(s) or order(s) pending for CCP');
-                                    return;
+                                	valid = false;
                                 }else{
                                     if (pattern.test(nric)) {
                                         Common.alert("Please ensure NRIC does not contains special characters<br/>");
-                                        return;
+                                        valid = false;
                                     }
 
                                     if('${custInfo.codeName1}' == "Individual"){
                                         var lastDigit = parseInt(nric.charAt(nric.length - 1));
                                         if (lastDigit != null) {
-                                              if ('${custInfo.gender}' == "F") {
-                                                if (lastDigit % 2 != 0) {
-                                                  Common.alert('<spring:message code="sal.alert.msg.invalidNric" />');
-                                                  return;
-                                                }
-                                              } else {
-                                                if (lastDigit % 2 == 0) {
-                                                  Common.alert('<spring:message code="sal.alert.msg.invalidNric" />');
-                                                  return;
-                                                }
+
+                                            if ('${custInfo.gender}' == "F") {
+                                              if (lastDigit % 2 != 0) {
+                                                Common.alert('<spring:message code="sal.alert.msg.invalidNric" />');
+                                                valid = false;
                                               }
+                                            } else {
+                                              if (lastDigit % 2 == 0) {
+                                                Common.alert('<spring:message code="sal.alert.msg.invalidNric" />');
+                                                valid = false;
+                                              }
+                                            }
                                           }
                                     }
 
                                     Common.ajaxSync("POST", "/sales/customer/nricDupChk.do", nricObj, function(result){
                                         if(result != null){
                                             Common.alert('<spring:message code="sal.alert.msg.existCustomerBrCustId" />' + result.custId);
-                                            return;
+                                            valid = false;
                                         }
                                     });
                                 }
                             }else if(action == "DEACTIVE" && !isValid){
                             	Common.alert("Deactivate not allowed.<br/>Customer is having order(s) in ACT/COM status.");
-                            	return;
-                            }else{
+                            	valid = false;
+                            }
+
+                        	if(valid){
                             	Common.confirm(action + ":" + " Cust ID - " + '${custInfo.custId}' +"? ", function(){
-                            		console.log(custObj);
                                     Common.ajax("POST","/sales/customer/updateCustStatus.do",custObj,
                                        function(result){ // Success
                                     	Common.alert(result.message);
@@ -96,7 +100,8 @@
                                        }
                                     )
                                 });
-                            }
+                        	}
+
                         }
                     }
                 });
@@ -105,6 +110,21 @@
         });
 
     });
+
+    function nricToDob(nric){
+    	let dob = "";
+
+    	let year  = nric.substr(0, 2);
+        let month = nric.substr(2, 2);
+        let day   = nric.substr(4, 2);
+
+        console.log(year);
+        console.log(month);
+        console.log(day);
+        dob = day + "/" + month + "/" + year;
+
+        return dob;
+    }
 
 </script>
 
@@ -120,6 +140,7 @@
 
     <!-- pop_body start -->
     <form name="updDeactForm" id="updDeactForm"  method="post">
+    <input type="hidden" id="_editDob" name="_editDob"/>
     <section class="pop_body">
         <!-- search_table start -->
         <section class="search_table">
@@ -148,7 +169,7 @@
 	                     <th scope="row">New <spring:message code="sal.title.text.nricCompNo" />
 	                           <span class="must">*</span>
 	                     </th>
-	                     <td><input type="text" title="_editNric" id="_editNric" name="_editNric"</td>
+	                     <td><input type="text" title="_editNric" id="_editNric" name="_editNric"/></td>
 	                 </tr>
                 </tbody>
             </table>
