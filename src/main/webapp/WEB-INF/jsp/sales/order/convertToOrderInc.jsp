@@ -10,7 +10,6 @@
         	$('#popup_wrap').find("input,textarea,button,select").attr("disabled",true);
             $("#popup_wrap").find("p.btn_grid").hide();
             $("#popup_wrap").find("a.search_btn").hide();
-
             if(result != null && result.length == 1) {
 
                 fn_tabOnOffSet('BIL_DTL', 'SHOW');
@@ -107,7 +106,9 @@
 
                 $('#empChk').val('${preOrderInfo.empChk}');
                 $('#gstChk').val('${preOrderInfo.gstChk}');
+
                 $('#exTrade').val('${preOrderInfo.exTrade}');
+
                 $('#relatedNo').val('${preOrderInfo.relatedNo}');
                 $('#txtOldOrderID').val('${preOrderInfo.salesOrdIdOld}');
                 $('#installDur').val('${preOrderInfo.instPriod}');
@@ -266,6 +267,8 @@
                 if(custInfo.codeName == 'Government') {
                     Common.alert('<spring:message code="sal.alert.msg.gvmtCust" />');
                 }
+
+                fn_check3monthBlockList();
             }
             else {
 //              Common.alert('<b>Customer not found.<br>Your input customer ID :'+$("#searchCustId").val()+'</b>');
@@ -339,4 +342,16 @@
         //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
         doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, srvPacId, 'srvPacId', 'S', ''); //APPLICATION SUBTYPE
     }
+
+	function fn_check3monthBlockList(){
+		let data = {
+			custId : '${preOrderInfo.custId}',
+			stkCtgryId : '${preOrderInfo.stkCtgryId}'
+		};
+
+		Common.ajaxSync("GET", "/sales/order/select3MonthBlockList.do", data , function(result) {
+			  if(result != null)
+				  Common.alert("Customer recently has returned product, please obtain RFD/RFA from GM/GCM and re-submit the order");
+		});
+	}
 </script>

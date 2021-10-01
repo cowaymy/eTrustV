@@ -120,6 +120,9 @@ $(document).ready(function() {
 
     });
 
+    // Check 3 Month Blocking List
+    fn_check3monthBlockList();
+
 });
 
 function fn_saveInstall(){
@@ -152,7 +155,7 @@ function fn_saveInstall(){
 
 	//
 	if( $("#serialRequireChkYn").val() == "N" ){
-	       Common.ajax("POST", "/sales/order/addProductReturn.do", $("#addInstallForm").serializeJSON(), function(result) {
+	        Common.ajax("POST", "/sales/order/addProductReturn.do", $("#addInstallForm").serializeJSON(), function(result) {
 	            console.log(result);
 	            Common.alert(result.message,fn_saveclose);
 
@@ -165,7 +168,6 @@ function fn_saveInstall(){
 		  var pRetnNo = AUIGrid.getCellValue(myGridID_view, 0, "retnNo");
 
 	    $("#addInstallForm #hidRefDocNo").val( pRetnNo ); // Retn No
-
         Common.ajax("POST", "/sales/order/addProductReturnSerial.do", $("#addInstallForm").serializeJSON(), function(result) {
             console.log(result);
             Common.alert(result.message,fn_saveclose);
@@ -254,6 +256,18 @@ function SearchListAjax(obj){
     $("#addInstallForm #beforeSerialNo").val( obj.beforeSerialNo );
     $("#addInstallForm #serialNo").val( obj.asIsSerialNo );
 	fn_viewInstallResultSearch(); //조회
+}
+
+function fn_check3monthBlockList(){
+    let data = {
+        custId : '${installResult.custId}',
+        stkCtgryId : '${orderInfo.stkCtgryId}'
+    };
+
+    Common.ajaxSync("GET", "/sales/order/select3MonthBlockList.do", data , function(result) {
+          if(result != null)
+              Common.alert("This order is under 3 Months Cooling Off Period. Kindly register into GOC");
+    });
 }
 
 function createInstallationViewAUIGrid() {

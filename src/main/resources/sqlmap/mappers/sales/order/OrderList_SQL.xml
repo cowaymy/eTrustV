@@ -1739,4 +1739,40 @@
       </if>
   </select>
 
+  <insert id="insert_SAL0299D" parameterType="Map">
+    INSERT INTO SAL0299D (
+        REF_ID ,
+        RETN_REF_ID ,
+        SALES_ORD_ID ,
+        APP_TYPE_ID ,
+        CUST_ID ,
+        STK_ID ,
+        STK_CTGRY_ID ,
+        UPD_USER_BRNCH_ID ,
+        UPD_USER_ID ,
+        STK_RETN_COOLING_START_DT ,
+        STK_RETN_COOLING_END_DT ,
+        REM ,
+        STUS_CODE_ID ,
+        CRT_USER_ID ,
+        CRT_DT
+      ) VALUES (
+        SAL0299D_REF_ID_SEQ.nextval,
+        (SELECT STK_RETN_ID FROM LOG0038D WHERE retn_no = #{serviceNo}) ,
+        #{salesOrderId} ,
+        #{appTypeId} ,
+        #{custId} ,
+        #{productId} ,
+        #{categoryId} ,
+        #{brnchId} ,
+        #{userId} ,
+        TO_DATE(#{signRegDt},'DD/MM/YYYY') ,
+        TO_DATE(#{signRegDt},'DD/MM/YYYY')+91 ,
+        NULL ,
+        1 ,
+        #{userId} ,
+        SYSDATE
+      )
+  </insert>
+
 </mapper>

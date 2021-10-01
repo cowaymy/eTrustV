@@ -478,6 +478,16 @@ public class OrderListController {
         	cvMp.put("userId",  sessionVO.getUserId());
         	cvMp.put("serviceNo",  String.valueOf(pReturnParam.get("retnNo")));
         	//cvMp.put("transactionId",  String.valueOf(paramsTran.get("transactionId")));
+
+
+        	// Data Preparation for 3 Month Cooling Off Block List
+        	cvMp.put("salesOrderId",  params.get("hidSalesOrderId"));
+          cvMp.put("appTypeId",  params.get("hidAppTypeId"));
+          cvMp.put("custId",  params.get("hidCustomerId"));
+          cvMp.put("productId",  params.get("hidProductId"));
+          cvMp.put("categoryId",  params.get("hidCategoryId"));
+          cvMp.put("brnchId",  sessionVO.getUserBranchId());
+
         	logger.debug("cvMp : {}", cvMp);
 
         		EgovMap  rtnValue = orderListService.productReturnResult(cvMp);
@@ -518,6 +528,7 @@ public class OrderListController {
 
 
 		params.put("userId", sessionVO.getUserId() );
+		params.put("brnchId", sessionVO.getUserBranchId() );
 
 		logger.debug("params : {}", params);
 

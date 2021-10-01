@@ -228,4 +228,6 @@ public interface OrderCancelMapper {
   EgovMap revMainCboPckage(Map<String, Object> params);
 
   void insertSAL0254D(Map<String, Object> params);
+
+  EgovMap select3MonthBlockList(Map<String, Object> params);
 }

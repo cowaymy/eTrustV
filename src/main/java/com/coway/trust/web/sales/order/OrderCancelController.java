@@ -530,4 +530,10 @@ public class OrderCancelController {
     return ResponseEntity.ok(message);
   }
 
+  @RequestMapping(value = "/select3MonthBlockList.do", method = RequestMethod.GET)
+  public ResponseEntity<EgovMap> select3MonthBlockList(@RequestParam Map<String, Object> params) {
+    EgovMap select3MonthBlockList = orderCancelService.select3MonthBlockList(params);
+    return ResponseEntity.ok(select3MonthBlockList);
+  }
+
 }

@@ -1478,4 +1478,31 @@
               #{chgRentAmt}
     )
   </insert>
+
+  <select id="select3MonthBlockList" parameterType="Map" resultType="egovMap">
+    SELECT
+      REF_ID ,
+      RETN_REF_ID ,
+      SALES_ORD_ID ,
+      APP_TYPE_ID ,
+      CUST_ID ,
+      STK_ID ,
+      STK_CTGRY_ID ,
+      UPD_USER_BRNCH_ID ,
+      UPD_USER_ID ,
+      STK_RETN_COOLING_START_DT ,
+      STK_RETN_COOLING_END_DT ,
+      REM ,
+      STUS_CODE_ID ,
+      CRT_USER_ID ,
+      CRT_DT
+    FROM SAL0299D
+    WHERE 1=1
+    AND SYSDATE BETWEEN STK_RETN_COOLING_START_DT AND STK_RETN_COOLING_END_DT
+    AND STUS_CODE_ID = 1
+    AND CUST_ID = #{custId}
+    AND STK_CTGRY_ID = #{stkCtgryId}
+    AND ROWNUM = 1
+  </select>
+
 </mapper>

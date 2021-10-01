@@ -115,4 +115,6 @@ public interface OrderListMapper {
   // 20210310 - LaiKW - Added 2 steps query before selectOrderList/selectOrderListCody
   int getSirimOrdID(Map<String, Object> params);
   int getMemberID(Map<String, Object> params);
+
+  int insert_SAL0299D(Map<String, Object> params);
 }

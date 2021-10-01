@@ -486,4 +486,8 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
     return orderCancelMapper.chkRcdTms(params);
   }
 
+  public EgovMap select3MonthBlockList(Map<String, Object> params) {
+    return orderCancelMapper.select3MonthBlockList(params);
+  }
+
 }

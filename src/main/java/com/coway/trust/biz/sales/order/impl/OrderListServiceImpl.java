@@ -125,6 +125,9 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
       logger.debug("sal20dcnt==>" + sal20dcnt);
       int sal71dcnt = orderListMapper.updateState_SAL0071D(params);
       logger.debug("sal71dcnt==>" + sal71dcnt);
+
+      int sal299dcnt = orderListMapper.insert_SAL0299D(params);
+      logger.debug("sal299dcnt==>" + sal299dcnt);
     }
 
     params.put("P_SALES_ORD_NO", params.get("salesOrderNo"));
@@ -297,6 +300,14 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
     	cvMp.put("userId",  params.get("userId"));
     	cvMp.put("serviceNo",  String.valueOf(pReturnParam.get("retnNo")));
     	//cvMp.put("transactionId",  String.valueOf(paramsTran.get("transactionId")));
+
+      // Data Preparation for 3 Month Cooling Off Block List
+      cvMp.put("salesOrderId",  params.get("hidSalesOrderId"));
+      cvMp.put("appTypeId",  params.get("hidAppTypeId"));
+      cvMp.put("custId",  params.get("hidCustomerId"));
+      cvMp.put("productId",  params.get("hidProductId"));
+      cvMp.put("categoryId",  params.get("hidCategoryId"));
+      cvMp.put("brnchId",  params.get("brnchId"));
     	logger.debug("cvMp : {}", cvMp);
 
     		// KR_HAN : Serial 변경
@@ -397,6 +408,9 @@ public class OrderListServiceImpl extends EgovAbstractServiceImpl implements Ord
       logger.debug("sal20dcnt==>" + sal20dcnt);
       int sal71dcnt = orderListMapper.updateState_SAL0071D(params);
       logger.debug("sal71dcnt==>" + sal71dcnt);
+
+      int sal299dcnt = orderListMapper.insert_SAL0299D(params);
+      logger.debug("sal299dcnt==>" + sal299dcnt);
     }
 
     params.put("P_SALES_ORD_NO", params.get("salesOrderNo"));
