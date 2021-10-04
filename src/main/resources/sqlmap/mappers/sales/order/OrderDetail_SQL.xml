@@ -315,18 +315,63 @@
                         WHERE 8 != T1.CALL_STUS_ID
                             AND T2.SALES_ORD_ID = #{salesOrderId}
 
+                        UNION ALL
+
+                        SELECT
+                                rotA.ROT_ORD_ID AS SALES_ORD_ID,
+                                0 AS CALL_ENTRY_ID,
+                                0 AS CALL_RESULT_ID,
+                                0 AS CALL_ROS_AMT,
+                                rotB.ROT_CALL_DT AS CALL_CRT_DT_2,
+                                TO_CHAR(rotB.CRT_DT, 'yyyy-MM-dd hh24:mi') AS CALL_CRT_DT,
+                                rotB.ROT_CALL_RESPD_ID AS CALL_CRT_USER_ID,
+                                TO_CLOB(rotB.ROT_REM) AS CALL_REM,
+                                0 AS TYPE_ID,
+                                '' AS CODE,
+                                'ROT REQUEST' AS CODE_NAME,
+                                0 AS CALL_FDBCK_ID,
+                                '' AS RESN_ID,
+                                '' AS RESN_DESC,
+                                s47.USER_NAME AS CALL_CRT_USER_NAME,
+                                0 AS STUS_CODE_ID,
+                                rotB.ROT_CALL_STUS AS STUS_CODE,
+                                CASE WHEN rotB.ROT_CALL_STUS = 'ACT' THEN 'Active'
+                                    WHEN rotB.ROT_CALL_STUS = 'VER' THEN 'Verification'
+                                    WHEN rotB.ROT_CALL_STUS = 'APP' THEN 'Approve'
+                                    WHEN rotB.ROT_CALL_STUS = 'ONH' THEN 'On-Hold'
+                                ELSE ''
+                                END AS STUS_NAME,
+                                0 AS ROS_MONTH,
+                                0 AS ROS_YEAR,
+                                0 AS ROS_CALLER_USER_ID,
+                                '' AS ROS_CALLER_USER_NAME,
+                                '' AS CALL_DT,
+                                '' AS CALL_TM,
+                                NULL AS INS_NO,
+                                NULL AS INS_STAT,
+                                0 AS BRANCH,
+                                '-' AS INS_FB,
+                                '' AS CL_FB,
+                                '' AS MEM_CODE,
+                                0 AS CURR_BRNCH
+                        FROM SAL0275M rotA
+                        LEFT JOIN SAL0278D rotB ON rotB.ROT_ID = rotA.ROT_ID
+                        LEFT JOIN SYS0047M s47 ON s47.USER_ID = rotB.ROT_CALL_RESPD_ID
+                        WHERE rotA.ROT_ORD_ID = #{salesOrderId}
+
                         <choose>
                           <when test='viewSort == 1'>
-                            ORDER BY T1.CALL_RESULT_ID DESC
+                            ORDER BY CALL_CRT_DT DESC
                           </when>
                           <when test='viewSort == 2 '>
-                            ORDER BY T1.CALL_RESULT_ID ASC
+                            ORDER BY CALL_RESULT_ID ASC
                           </when>
                           <otherwise>
-                            ORDER BY T1.CALL_RESULT_ID DESC
+                            ORDER BY  CALL_CRT_DT DESC
                           </otherwise>
                         </choose>
-             ) AAA
+
+                        ) AAA
 
     <if test="viewSort != null and viewSoft != '' ">
       WHERE ROWNUM <![CDATA[ <= ]]> 1
