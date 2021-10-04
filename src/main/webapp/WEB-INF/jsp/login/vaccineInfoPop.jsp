@@ -7,8 +7,8 @@
 var myFileCaches = {};
 
 $(document).ready(function(){
-	doGetCombo('/common/selectCodeList.do', 480, 'CODE', 'typeOfVaccine', 'S', 'fn_setDefault'); //Vaccine type
-	doGetCombo('/common/selectCodeList.do', 481, 'CODE', 'reason', 'S', ''); //reason type
+	doGetComboOrder('/common/selectCodeList.do', 480, 'CODE_ID', '','typeOfVaccine', 'S', 'fn_setDefault'); //Vaccine type
+	doGetComboOrder('/common/selectCodeList.do', 481, 'CODE_ID', '','reason', 'S', ''); //reason type
 
 	var vacStatus = "${vacInfo.vaccineStatus}";
 	console.log("vacStatus: " + vacStatus);
@@ -107,6 +107,23 @@ function fn_submit() {
             Common.alert("Please select [Vaccine Type]");
             return false;
         }
+
+		if ($("#typeOfVaccine :selected").val() != '6500' && $("#typeOfVaccine :selected").val() != '6511' && $("#typeOfVaccine :selected").val() != '6514'){
+			if ($("#2ndDoseDt").val() == ""){
+	            Common.alert("Please fill up [Second Dose Date]");
+	            return false;
+	        }
+		}
+
+		if ($("#typeOfVaccine :selected").val() == '6514' && $("#otherVacType").val() == "") {
+			Common.alert("Please fill up [Other Vaccine Type]");
+            return false;
+		}
+
+		if (!$("#declareChk").is(":checked")){
+			Common.alert("Please confirm the declaration ");
+            return false;
+		}
 
 		formData.append(1, myFileCaches[1].file);
 	} else {
@@ -222,7 +239,7 @@ $("#firstDoseNo").change(function(){
 })
 
 function fn_2ndDoseChk(chk){
-	if (chk.checked || $("#typeOfVaccine :selected").val() == '6500'){
+	if (chk.checked || $("#typeOfVaccine :selected").val() == '6500' || $("#typeOfVaccine :selected").val() == '6511'){ // johnson & johnson || CanSino
         //$("#2ndDoseDiv").hide();
         $("#2ndDoseDt").val("");
         $("#2ndDoseDt").prop("disabled", true);
@@ -234,15 +251,22 @@ function fn_2ndDoseChk(chk){
 
 function fn_vaccineTypeChange(type){
 
-	if (type.value == "6500") { // Johnson & Johnson
+	if (type.value == "6500" || type.value == '6511') { // Johnson & Johnson || CanSino
         $("#2ndDoseNo").prop("disabled", true);
         $("#2ndDoseDt").prop("disabled", true);
         $("#2ndDoseDt").val("");
+        $(".otherVac").attr("style", "display:none");
+
+	} else if (type.value == '6514') { // other vaccine type
+		$(".otherVac").attr("style", "display:block");
 
     } else {
     	$("#2ndDoseNo").prop("disabled", false);
+    	$(".otherVac").attr("style", "display:none");
+
     	if ($('#2ndDoseNo').is(':checked')){
             $("#2ndDoseDt").prop("disabled", true);
+
     	}else {
 	        $("#2ndDoseDt").prop("disabled", false);
     	}
@@ -268,6 +292,8 @@ function fn_vaccineTypeChange(type){
     z-index: 1001;
 }
 .submit{margin-top:10%; display:none;}
+
+.otherVac{display:none; margin-top:5px;}
 
 </style>
 
@@ -304,10 +330,13 @@ function fn_vaccineTypeChange(type){
                 </tr>
                 <tr>
 	                <th scope="row" class="firstDose">Type of Vaccine <span class="must">*</span></th>
-	                <td>
+	                <td style="margin:10px">
 	                   <select id="typeOfVaccine" name="typeOfVaccine" class="w100p" onchange="fn_vaccineTypeChange(this)"></select>
+
+	                   <p class="otherVac"><input id="otherVacType" name="otherVacType" type="text" value="" title="Other Type Of Vaccine" placeholder="Other Type Of Vaccine" class="w100p" /></p>
 	                </td>
 	            </tr>
+
 	           </tbody>
             </table>
 
@@ -400,6 +429,23 @@ function fn_vaccineTypeChange(type){
             </table>
         </div>
         <div id='sav_div' class="submit">
+            <p style="font-weight:bold; text-decoration: underline; margin-bottom: 5px;">Declaration and acknowledgement: </p>
+            <table>
+                <tr>
+                    <td rowspan="2" width="30px">
+                        <input type="checkbox" id="declareChk" name="declareChk" />
+                    </td>
+                    <td>
+                        <span> I hereby declare that the information provided is true and correct. I also understand that any willful dishonesty may render for disciplinary action including dismissal.</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <br/><span style="font-style:italic;"> Dengan ini saya mengaku bahawa segala maklumat yang dikongsi adalah betul dan benar. Saya faham akan tindakan disiplin akan diambil termasuklah pemberhentian kerja jika didapati bersalah memberikan maklumat yang tidak tepat.</span>
+                    </td>
+                </tr>
+            </table>
+            <br/><br/>
 	      <ul class="center_btns">
 	        <li><p class="btn_blue2">
 	            <a href="#" onclick="javascript:fn_submit()">Submit</a>

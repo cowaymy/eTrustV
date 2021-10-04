@@ -555,7 +555,7 @@
                 #{memId} as MEM_ID, #{vaccineStatus} as VACCINE_STATUS, #{firstDoseChk} as FIRST_DOSE_CHK,
                 #{firstDoseDt} as FIRST_DOSE_DT, #{secondDoseChk} as SECOND_DOSE_CHK, #{secondDoseDt} as SECOND_DOSE_DT,
                 #{typeOfVaccine} as VACCINE_TYPE, #{reasonId} as REASON_ID, #{reasonDtl} as REASON_DTL, #{yesAtchGrpId} as YES_ATCH_FILE_GRP_ID,
-                #{noAtchGrpId} as NO_ATCH_FILE_GRP_ID, #{nextPopDt} as NEXT_POP_DT  from dual
+                #{noAtchGrpId} as NO_ATCH_FILE_GRP_ID, #{nextPopDt} as NEXT_POP_DT, #{otherVacType} as OTHER_VAC, #{declareChk} as DECLARE_CHK  from dual
             ) Temp
             on (D1.MEM_ID = Temp.MEM_ID)
             when matched then
@@ -593,11 +593,22 @@
             </if>
             when not matched then
                 INSERT
-                (MEM_ID, VACCINE_STATUS, FIRST_DOSE_CHK, FIRST_DOSE_DT,  SECOND_DOSE_CHK,  SECOND_DOSE_DT,
-                VACCINE_TYPE, REASON_ID, REASON_DTL, YES_ATCH_FILE_GRP_ID, NO_ATCH_FILE_GRP_ID, NEXT_POP_DT, CRT_DT, CRT_USER_ID)
+                (MEM_ID, VACCINE_STATUS, FIRST_DOSE_CHK, FIRST_DOSE_DT,  SECOND_DOSE_CHK,
+                    SECOND_DOSE_DT,
+                VACCINE_TYPE, REASON_ID, REASON_DTL, YES_ATCH_FILE_GRP_ID, NO_ATCH_FILE_GRP_ID, NEXT_POP_DT, DECLARE_CHK, OTHER_VAC,
+                    CRT_DT, CRT_USER_ID)
             values (
-                #{memId} , #{vaccineStatus} , #{firstDoseChk} , TO_DATE(#{firstDoseDt}, 'DD/MM/YYYY'), #{secondDoseChk} , TO_DATE(#{secondDoseDt}, 'DD/MM/YYYY') ,
-                #{typeOfVaccine}, #{reasonId} , #{reasonDtl}, #{yesAtchGrpId}, #{noAtchGrpId}, #{nextPopDt}, SYSDATE, #{userId}
+                #{memId} , #{vaccineStatus} , #{firstDoseChk} , TO_DATE(#{firstDoseDt}, 'DD/MM/YYYY'), #{secondDoseChk} ,
+                <if test="secondDoseDt != null and secondDoseDt != ''">
+                    TO_DATE(#{secondDoseDt}, 'DD/MM/YYYY') ,
+                </if>
+
+                <if test="secondDoseDt == null or secondDoseDt == ''">
+                    NULL,
+                </if>
+
+                #{typeOfVaccine}, #{reasonId} , #{reasonDtl}, #{yesAtchGrpId}, #{noAtchGrpId}, #{nextPopDt}, #{declareChk}, #{otherVacType},
+                SYSDATE, #{userId}
                 )
 
 

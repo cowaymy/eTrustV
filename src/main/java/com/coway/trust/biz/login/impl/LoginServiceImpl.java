@@ -399,6 +399,7 @@ public class LoginServiceImpl implements LoginService {
         			updParams.put("firstDoseChk", "Y"); // completed 1st dose
         			updParams.put("firstDoseDt", params.get("1stDoseDt"));
         			updParams.put("typeOfVaccine", params.get("typeOfVaccine"));
+        			updParams.put("otherVacType", params.get("otherVacType"));
 
         			if (params.get("2ndDoseNo") != null && params.get("2ndDoseNo") != "" && params.get("2ndDoseNo").toString().equalsIgnoreCase("on")){
         				// set next pop date for 2nd dose info collection
@@ -407,7 +408,7 @@ public class LoginServiceImpl implements LoginService {
         			} else {
         				updParams.put("vaccineStatus", "C"); // P = Partial | C = Completed | D = Did not take vaccine
 
-        				if (!params.get("typeOfVaccine").toString().equals("6500")){ // johnson & johnson only take 1 dose
+        				if (!params.get("typeOfVaccine").toString().equals("6500") && !params.get("typeOfVaccine").toString().equals("6511")){ // johnson & johnson || CanSino only take 1 dose
         					updParams.put("secondDoseChk", "Y"); // completed 2nd dose
         					updParams.put("secondDoseDt", params.get("2ndDoseDt"));
         				}
@@ -443,6 +444,10 @@ public class LoginServiceImpl implements LoginService {
 					updParams.put("secondDoseDt", params.get("2ndDoseDt"));
 				}
 			}
+		}
+
+		if (params.get("declareChk").toString().equalsIgnoreCase("on")) {
+			updParams.put("declareChk", "Y");
 		}
 
 		update  = loginMapper.insertVacInfo(updParams);
