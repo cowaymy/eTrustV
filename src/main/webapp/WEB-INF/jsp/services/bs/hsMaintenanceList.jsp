@@ -365,7 +365,7 @@ var blockDtTo = "${hsBlockDtTo}";
   function fn_codyChangeHQ() {
     $("#_openGb").val("codyChange");
 
-    var todayDD = Number(TODAY_DD.substr(0, 2));
+    /* var todayDD = Number(TODAY_DD.substr(0, 2));
     var todayYY = Number(TODAY_DD.substr(6, 4));
 
     var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
@@ -379,7 +379,7 @@ var blockDtTo = "${hsBlockDtTo}";
          var msg = "Not allow to Assign CODY Transfer within period " + strBlockDtFrom + " to " + strBlockDtTo;
          Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
          return;
-     }
+     } */
 
 
     var radioVal = $("input:radio[name='searchDivCd']:checked").val();
