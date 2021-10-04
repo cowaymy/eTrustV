@@ -109,7 +109,7 @@ function fn_submit() {
         }
 
 		if ($("#typeOfVaccine :selected").val() != '6500' && $("#typeOfVaccine :selected").val() != '6511' && $("#typeOfVaccine :selected").val() != '6514'){
-			if ($("#2ndDoseDt").val() == ""){
+			if (!$("#2ndDoseNo").is(":checked") && $("#2ndDoseDt").val() == ""){
 	            Common.alert("Please fill up [Second Dose Date]");
 	            return false;
 	        }
@@ -129,11 +129,6 @@ function fn_submit() {
 	} else {
 
 		if ($("#reason :selected").val() != '6504' && $("#reason :selected").val() != '6505' ){
-            if ($("#upload2Desc").val() == ""){
-                Common.alert("supportive document is required.");
-                return false;
-            }
-
             if ($("#reason :selected").val() == '6501'){ // pregnancy
             	if ($("#pregnancyWeek").val() == ''){
             		Common.alert("Please fill in [Pregnancy Week]");
@@ -147,14 +142,25 @@ function fn_submit() {
                     return false;
                 }
             }
+
+            if ($("#upload2Desc").val() == ""){
+                Common.alert("supportive document is required.");
+                return false;
+            }
+
             formData.append(1, myFileCaches[2].file);
         } else {
-                if ($("#reasonDtl").val() == ''){
-                    Common.alert("Please fill in reason details");
-                    return false;
-                }
+            if ($("#reasonDtl").val() == ''){
+                Common.alert("Please fill in reason details");
+                return false;
             }
         }
+
+		if (!$("#declareChk").is(":checked")){
+            Common.alert("Please confirm the declaration ");
+            return false;
+        }
+    }
 
 
 	Common.ajaxFile("/login/attachFileUpload.do", formData, function(result) {
