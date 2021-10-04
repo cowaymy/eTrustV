@@ -6,10 +6,10 @@
 	var uploadId;
 	var stusId;
 	var typeId;
-	
- 	
+
+
 	$(document).ready(function() {
-        
+
        	//multiselect setting
         $(function(){
         	var mamData = [];
@@ -25,28 +25,28 @@
         			   statusData[i] = {"codeId" : result[i].stusCodeId, "codeName" : result[i].codeName};
         		 }
 		        doDefCombo(statusData, '' ,'statusList', 'M', 'status_multiCombo');
-            }); 
-            
-       		 
+            });
+
+
         });
         var typeData = [];
-        typeData = [{"codeId": "1062","codeName": "Cody/HP Incentive"},{"codeId": "1063","codeName": "Cody/HP Target"}];
+        typeData = [{"codeId": "1062","codeName": "Cody/HP/HT Incentive"},{"codeId": "1063","codeName": "Cody/HP/HT Target"}];
         doDefCombo(typeData, '' ,'typeList', 'M', 'type_multiCombo');
-        
-                
+
+
         createAUIGrid();
-        
+
 		AUIGrid.setSelectionMode(incenGridID, "singleRow");
         // cellClick event.
         AUIGrid.bind(incenGridID, "cellClick", function(event) {
-              console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");       
+              console.log("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
               uploadId = AUIGrid.getCellValue(incenGridID, event.rowIndex, "uploadId");
               stusId = AUIGrid.getCellValue(incenGridID, event.rowIndex, "stusId");
               typeId = AUIGrid.getCellValue(incenGridID, event.rowIndex, "memTypeId");
-        });  
-        
+        });
+
       //incentive List search
-        $("#search").click(function(){  
+        $("#search").click(function(){
             Common.ajax("POST", "/commission/calculation/selectIncentiveTargetList", $("#myForm").serializeJSON(), function(result) {
                 console.log("성공.");
                 console.log("data : " + result);
@@ -55,7 +55,7 @@
                 AUIGrid.setGridData(incenGridID, result);
             });
         });
-      
+
         $('#actionDate').on('click', function () {
         	$("#actionDate").val("");
         });
@@ -65,9 +65,9 @@
         $('#uploadDateTo').on('click', function () {
             $("#uploadDateTo").val("");
         });
-        
+
 	});
-	
+
 	function createAUIGrid() {
         var columnLayout = [ {
             dataField : "uploadId",
@@ -104,7 +104,7 @@
             style : "my-column",
             editable : false,
             visible : false
-           
+
        },{
            dataField : "memTypeId;",
            style : "my-column",
@@ -113,8 +113,8 @@
       }];
         // 그리드 속성 설정
         var gridPros = {
-            
-            // 페이징 사용       
+
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 20,
@@ -124,27 +124,27 @@
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : true
-            
+
         };
-        
+
         incenGridID = AUIGrid.create("#grid_wrap", columnLayout,gridPros);
    }
-	
+
 	//multiselect setting function
 	function mam_multiCombo() {
         $(function() {
             $('#memberTypeList').change(function() {
             }).multipleSelect({
-                selectAll : true, // 전체선택 
+                selectAll : true, // 전체선택
                 width : '80%'
-            }).multipleSelect("checkAll");       
+            }).multipleSelect("checkAll");
         });
     }
 	function status_multiCombo() {
         $(function() {
             $('#statusList').change(function() {
             }).multipleSelect({
-                selectAll : true, // 전체선택 
+                selectAll : true, // 전체선택
                 width : '80%'
             }).multipleSelect("setSelects", [1]);
         });
@@ -153,17 +153,17 @@
         $(function() {
             $('#typeList').change(function() {
             }).multipleSelect({
-                selectAll : true, // 전체선택 
+                selectAll : true, // 전체선택
                 width : '80%'
-            }).multipleSelect("checkAll");  
+            }).multipleSelect("checkAll");
         });
     }
-	
+
 	//incentive new upload pop
 	function newUploadPop(){
 		Common.popupDiv("/commission/calculation/incntivUploadNewPop.do");
 	}
-	
+
 	//incentive confirm pop
 	function confirmUploadPop(){
 		if(uploadId == null || uploadId == ""){
@@ -179,7 +179,7 @@
 	        }
 		}
 	}
-	
+
 	//incentive confirm view
 	function uploadViewPop(){
         if(uploadId == null || uploadId == ""){
@@ -256,7 +256,7 @@
 						<th><spring:message code='commission.text.search.targetMonth'/></th>
 						<td><input type="text" title="기준년월" placeholder="MM/YY" class="j_date2 w100p" name="actionDate" id="actionDate" /></td>
 						<th><spring:message code='commission.text.search.uploadDate'/></th>
-						<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " name="uploadDateFr" id="uploadDateFr" /> 
+						<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " name="uploadDateFr" id="uploadDateFr" />
 						<p>To</p> <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " name="uploadDateTo" id="uploadDateTo" /></td>
 						<th><spring:message code='commission.text.search.uploader'/></th>
 						<td><input type="text" title="" placeholder="Uploader (Username)" class="w100p" name="creator" id="creator" / maxlength="20"></td>
@@ -298,7 +298,7 @@
 										<a href="javascript:newUploadPop();">New Upload</a>
 									</p></li>
                             </c:if>
-						</ul> 
+						</ul>
 						<p class="hide_btn">
 							<a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a>
 						</p>
