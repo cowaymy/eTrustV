@@ -93,11 +93,6 @@ function fn_submit() {
     }); */
 
 	if ($("#firstDoseYes").is(":checked")){
-		if ($("#upload1Desc").val() == ""){
-			Common.alert("supportive document is required.");
-			return false;
-		}
-
 		if ($("#1stDoseDt").val() == ""){
 			Common.alert("Please fill up [First Dose Date]");
             return false;
@@ -119,6 +114,11 @@ function fn_submit() {
 			Common.alert("Please fill up [Other Vaccine Type]");
             return false;
 		}
+
+		if ($("#upload1Desc").val() == ""){
+            Common.alert("supportive document is required.");
+            return false;
+        }
 
 		if (!$("#declareChk").is(":checked")){
 			Common.alert("Please confirm the declaration ");
