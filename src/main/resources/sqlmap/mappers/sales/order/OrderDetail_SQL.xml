@@ -469,6 +469,7 @@
              , V1.VRIFY_FLG
              , V1.ASSIGNED_CT
              , V1.ASSIGNED_CT_MOBILENO
+             , V1.DSC_REGION
     FROM SAL1010V V1
     WHERE V1.ORD_ID = #{salesOrderId}
         AND ROWNUM &lt;= 1

@@ -47,15 +47,19 @@
     <th scope="row"><spring:message code="sal.text.instruct" /></th>
     <td colspan="5"><span>${orderDetail.installationInfo.instct}</span></td>
 </tr>
-<tr>
+<%-- <tr>
     <th scope="row"><spring:message code="sal.text.dscVerifiRem" /></th>
     <td colspan="5"><span>${orderDetail.installationInfo.vrifyRem}</span></td>
-</tr>
+</tr> --%>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.dscBrnch" /></th>
     <td colspan="3"><span>(${orderDetail.installationInfo.dscCode} )${orderDetail.installationInfo.dscName}</span></td>
-    <th scope="row"><spring:message code="sal.text.instDt" /></th>
-    <td><span>${orderDetail.installationInfo.firstInstallDt}</span></td>
+    <th scope="row"><spring:message code="sal.title.text.dscRegion" /></th>
+    <td ><span>${orderDetail.installationInfo.dscRegion}</span></td>
+</tr>
+<tr>
+<th scope="row"><spring:message code="sal.text.instDt" /></th>
+    <td colspan="5"><span>${orderDetail.installationInfo.firstInstallDt}</span></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.ctCd" /></th>
