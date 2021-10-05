@@ -972,7 +972,7 @@ public class MemberListController {
         // LaiKW - Comment ends here
 
         //ADDED INCOME TAX NO @AMEER 2021-09-27
-        formMap.put("incomeTaxNo", params.get("incomeTaxNo"));
+        //formMap.put("incomeTaxNo", params.get("incomeTaxNo"));
 
         String memCode = "";
         String memId = "";
@@ -1910,7 +1910,7 @@ logger.debug("params : {}", params);
     // Kit Wai - End - 20180428
 
     //@AMEER INCOME_TAX 20190928
-    @RequestMapping(value = "/checkIncomeTax", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/checkIncomeTax", method = RequestMethod.GET)
     public ResponseEntity<Map> checkIncomeTax(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
         logger.debug("==================== checkIncomeTax ====================");
@@ -1930,7 +1930,7 @@ logger.debug("params : {}", params);
         incomeTaxCheck.put("cnt2", item2.get("cnt"));
 
         return ResponseEntity.ok(incomeTaxCheck);
-    }
+    }*/
 
     // Kit Wai - Start - 20190314
     // Added bank account number length checking
