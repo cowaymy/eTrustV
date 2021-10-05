@@ -391,11 +391,7 @@
             A.RDM_ID,
             A.RDM_NO,
             TO_CHAR(A.CRT_DT, 'DD/MM/YYYY HH:MI:SS AM') AS CRT_DT,
-            CASE WHEN (D.RI_END_DT <![CDATA[<]]> SYSDATE) AND A.STUS_ID = 1 THEN
-                'In Progress'
-            ELSE
-                B.NAME
-            END AS STATUS,
+            B.NAME AS STATUS,
             A.MEM_CODE,
             C.NAME AS MEM_NAME,
             D.ITM_CODE || '-' || D.ITM_DESC AS RDM_ITEM,
