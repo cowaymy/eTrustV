@@ -19,7 +19,7 @@
 		SELECT COUNT(1) AS CNT
 		  FROM LOG0100M
 		 WHERE SERIAL_NO = #{barcode}
-		   AND STUS_CODE <![CDATA[<>]]> 'N'
+		   --AND STUS_CODE <![CDATA[<>]]> 'N'
     </select>
 
     <select id="selectHPScanInfoCheck" parameterType="Map" resultType="egovMap">
@@ -86,7 +86,7 @@
 			 , #{barcode}             --scan s/n > raw input after scan
 			 , #{barcode}             --box number
 			 , #{stockCode}             --Material code
-			 , 'C'
+			 , 'D'--'C'
 			 , #{docNo}              --request number
 			 , #{docNoItm}           --request item
 			 , TO_CHAR(SYSDATE, 'YYYYMMDD')
@@ -239,17 +239,14 @@
     /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.deleteSerialInfo] - KR JIN */
         DELETE FROM LOG0099D
          WHERE SERIAL_NO = #{boxno}
-           AND SCAN_NO = (SELECT MAX(SCAN_NO) FROM LOG0099D WHERE SERIAL_NO = #{boxno})
+          AND SCAN_NO = (SELECT SCAN_NO FROM LOG0099D WHERE SERIAL_NO = #{boxno})
     </delete>
 
-    <update id="deleteSerialMaster" parameterType="Map">
+    <delete id="deleteSerialMaster" parameterType="Map">
     /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.deleteSerialMaster] - KR JIN */
-        UPDATE LOG0100M
-           SET STUS_CODE = #{stusCode}      -- delete state
-             , UPD_USER_ID = #{updUserId}
-             , UPD_DT = SYSDATE
+        DELETE LOG0100M
          WHERE SERIAL_NO = #{boxno}
-    </update>
+    </delete>
 
     <insert id="copySerialMasterHistory" parameterType="Map">
     /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.copySerialMasterHistory] - KR JIN */

@@ -129,6 +129,24 @@ public class HcDeliveryGrServiceImpl extends EgovAbstractServiceImpl implements 
 			mainMap.put("crtUserId", sessionVO.getUserId());
 			mainMap.put("updUserId", sessionVO.getUserId());
 
+			//hui ling add
+			hcDeliveryGrMapper.updateDeliveryGrDetail(mainMap);//log0099m
+			hcDeliveryGrMapper.updateDeliveryGrMain(mainMap);//log0100m
+
+			List<EgovMap> grList = hcDeliveryGrMapper.selectDeliveryGrHist(mainMap);
+			Map<String, Object> oMap = null;
+			for(EgovMap info : grList){
+				oMap = new HashMap<String, Object>();
+				oMap.put("updUserId", sessionVO.getUserId());
+				oMap.put("crtUserId", sessionVO.getUserId());
+				oMap.put("serialNo", info.get("serialNo").toString());
+				oMap.put("seq", info.get("seq").toString());
+
+
+				hcDeliveryGrMapper.updateDeliveryGrHist(oMap);//log0101h
+			}
+
+
 			// 품목의 스캔여부 확인.
 			scanchk = hcDeliveryGrMapper.selectItemSerialChk(mainMap);
 
@@ -301,6 +319,7 @@ public class HcDeliveryGrServiceImpl extends EgovAbstractServiceImpl implements 
 		*/
 
 
+
 		// HP - 진행중인 GR의 serial 정보 조회
 		Map<String, Object> sMap = new HashMap<String, Object>();
 		sMap.put("reqstNo", (String)params.get("hmcGrNo"));
@@ -332,4 +351,5 @@ public class HcDeliveryGrServiceImpl extends EgovAbstractServiceImpl implements 
 	public String selectLocationSerialChk(Map<String, Object> obj) throws Exception{
 		return hcDeliveryGrMapper.selectLocationSerialChk(obj);
 	}
+
 }

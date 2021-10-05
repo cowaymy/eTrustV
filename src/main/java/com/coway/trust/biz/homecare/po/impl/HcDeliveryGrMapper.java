@@ -64,4 +64,9 @@ public interface HcDeliveryGrMapper {
 	public void deleteDeliveryGrDetailRow(Map<String, Object> obj) throws Exception;
 	public void updateDeliveryGrDetailRow(Map<String, Object> obj) throws Exception;
 
+	public void updateDeliveryGrDetail(Map<String, Object> obj) throws Exception;
+	public void updateDeliveryGrMain(Map<String, Object> obj) throws Exception;
+	public List<EgovMap> selectDeliveryGrHist(Map<String, Object> obj) throws Exception;
+	public void updateDeliveryGrHist(Map<String, Object> obj) throws Exception;
+
 }

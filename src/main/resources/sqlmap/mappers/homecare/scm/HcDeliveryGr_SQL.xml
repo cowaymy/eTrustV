@@ -561,4 +561,42 @@
            AND HMC_GR_NO_DTL_NO = #{hmcGrNoDtlNo}
     </update>
 
+    <update id="updateDeliveryGrDetail" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.updateDeliveryGrDetail] - Huiling */
+        update LOG0099D set scan_stus_code = 'C' where Scan_no in (
+        select SCAN_NO from (
+        SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+        ,SCAN_NO
+        FROM LOG0099D
+        WHERE REQST_NO = #{hmcGrNo}
+        AND ITM_CODE = #{stockCode}
+        )x where x.rn =1
+        )
+    </update>
+
+    <update id="updateDeliveryGrMain" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.updateDeliveryGrMain] - Huiling */
+        update LOG0100m set stus_code = 'I'
+        WHERE last_REQST_NO = #{hmcGrNo}
+        AND ITM_CODE = #{stockCode}
+    </update>
+
+    <select id="selectDeliveryGrHist" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.selectDeliveryGrHist] - Huiling */
+        select * from (
+        SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY seq DESC ) AS RN
+        ,SERIAL_NO
+        ,SEQ
+        FROM LOG0101h
+        WHERE last_REQST_NO = #{hmcGrNo}
+        AND ITM_CODE = #{stockCode}
+        )x where RN =1
+    </select>
+
+    <update id="updateDeliveryGrHist" parameterType="Map">
+    /* [com.coway.trust.biz.homecare.po.impl.HcDeliveryGrMapper.updateDeliveryGrHist] - Huiling */
+        update LOG0101H set stus_code = 'I'
+        WHERE serial_no = #{serialNo}
+        AND SEQ = #{seq}
+    </update>
 </mapper>

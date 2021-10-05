@@ -180,7 +180,8 @@ $(document).ready(function(){
         $("#transaction").val("HP");
         $("#fromLocCode").val("");
         $("#toLocCode").val("${url.grCdcId}");
-        $("#ioType").val("I");
+        //$("#ioType").val("I");
+        $("#ioType").val("N");
         $("#sVendorName").val("${url.vendor}");
         $("#vendorId").val("${url.vendorId}");
 
@@ -189,7 +190,8 @@ $(document).ready(function(){
         $("#transaction").val("HP");
         $("#fromLocCode").val("");
         $("#toLocCode").val($("#grCdcId").val());
-        $("#ioType").val("I");
+        //$("#ioType").val("I");
+        $("#ioType").val("N");
         $("#sVendorName").val($("#vendor").val());
 
         //alert("vendor name: " + $("#sVendorName").val());
