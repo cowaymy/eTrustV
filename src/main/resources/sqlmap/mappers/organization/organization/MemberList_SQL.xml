@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
-	namespace="com.coway.trust.biz.organization.organization.impl.MemberListMapper">
+    namespace="com.coway.trust.biz.organization.organization.impl.MemberListMapper">
 
-	<select id="getDocNo" parameterType="Map" resultType="egovMap">
+    <select id="getDocNo" parameterType="Map" resultType="egovMap">
         select FN_GET_DOCNO(#{docNo})  doc_No  , #{docNo} as doc_No_Id FROM DUAL
-	</select>
+    </select>
 
-	<!-- searchOrganization Gruop List -->
-	<select id="nationality" parameterType="Map" resultType="egovMap">
-		SELECT
-		Extent1.CNTY_ID CountryID,
-		Extent1.CODE Code,
-		Extent1.NAME Name,
-		Extent1.STUS_CODE_ID StatusCodeID,
-		Extent1.CRT_DT Created,
-		Extent1.CRT_USER_ID Creator,
-		Extent1.UPD_DT Updated,
-		Extent1.UPD_USER_ID Updator
-		FROM SYS0015M Extent1
-		ORDER BY Extent1.NAME ASC
-	</select>
-
-	<select id="selectStatus" parameterType="Map" resultType="egovMap">
+    <!-- searchOrganization Gruop List -->
+    <select id="nationality" parameterType="Map" resultType="egovMap">
         SELECT
-		Distinct1.StatusCodeID StatusCodeID,
-		Distinct1.Code Code,
-		Distinct1.Name Name
-		FROM ( SELECT DISTINCT
-	    Extent1.STUS_CODE_ID StatusCodeID,
-	    Extent1.CODE Code,
-	    Extent1.NAME Name
-	    FROM  SYS0038M Extent1
-	    INNER JOIN ORG0001D Extent2 ON Extent1.STUS_CODE_ID = Extent2.STUS
-	     union
+        Extent1.CNTY_ID CountryID,
+        Extent1.CODE Code,
+        Extent1.NAME Name,
+        Extent1.STUS_CODE_ID StatusCodeID,
+        Extent1.CRT_DT Created,
+        Extent1.CRT_USER_ID Creator,
+        Extent1.UPD_DT Updated,
+        Extent1.UPD_USER_ID Updator
+        FROM SYS0015M Extent1
+        ORDER BY Extent1.NAME ASC
+    </select>
+
+    <select id="selectStatus" parameterType="Map" resultType="egovMap">
+        SELECT
+        Distinct1.StatusCodeID StatusCodeID,
+        Distinct1.Code Code,
+        Distinct1.Name Name
+        FROM ( SELECT DISTINCT
+        Extent1.STUS_CODE_ID StatusCodeID,
+        Extent1.CODE Code,
+        Extent1.NAME Name
+        FROM  SYS0038M Extent1
+        INNER JOIN ORG0001D Extent2 ON Extent1.STUS_CODE_ID = Extent2.STUS
+         union
         SELECT DISTINCT
         Extent1.STUS_CODE_ID StatusCodeID,
         Extent1.CODE Code,
@@ -75,51 +75,51 @@
 
     <select id="selectUserBranch" parameterType="Map" resultType="egovMap">
         SELECT
-		Project1.BranchID AS BranchID,
-		Project1.C1 C1
-		FROM ( SELECT
-		    Extent1.BRNCH_ID BranchID,
-		    Extent1.CODE||' - '||Extent1.NAME C1
-		    FROM SYS0005M Extent1
-		    WHERE 1 = Extent1.STUS_ID
-		  )  Project1
+        Project1.BranchID AS BranchID,
+        Project1.C1 C1
+        FROM ( SELECT
+            Extent1.BRNCH_ID BranchID,
+            Extent1.CODE||' - '||Extent1.NAME C1
+            FROM SYS0005M Extent1
+            WHERE 1 = Extent1.STUS_ID
+          )  Project1
         ORDER BY Project1.C1 ASC
     </select>
 
      <select id="selectUser" parameterType="Map" resultType="egovMap">
         <![CDATA[
         SELECT
-		 Extent1 . USER_ID   UserID ,
-		 Extent1 . USER_NAME   UserName ,
-		 Extent1 . USER_PASSWD   UserPassword ,
-		 Extent1 . USER_FULL_NAME   UserFullName ,
-		 Extent1 . USER_EMAIL   UserEmail ,
-		 Extent1 . USER_STUS_ID   UserStatusID ,
-		 Extent1 . USER_BRNCH_ID   UserBranchID ,
-		 Extent1 . USER_DEPT_ID   UserDeptID ,
-		 Extent1 . USER_UPD_USER_ID   UserUpdateBy ,
-		 Extent1 . USER_UPD_DT   UserUpdateAt ,
-		 Extent1 . USER_SYNC_CHK   UserSyncCheck ,
-		 Extent1 . USER_NRIC   UserNRIC ,
-		 Extent1 . USER_DT_JOIN   UserDateJoin ,
-		 Extent1 . USER_GSEC_SYN_CHK   UserGsecSynCheck ,
-		 Extent1 . USER_PASSWD_LAST_UPD_DT   UserPasswdLastUpdateAt ,
-		 Extent1 . USER_TYPE_ID   UserTypeID ,
-		 Extent1 . USER_DFLT_PASSWD   UserDefaultPasswd ,
-		 Extent1 . USER_VAL_ID_FROM   UserValidFrom ,
-		 Extent1 . USER_VAL_ID_TO   UserValidTo ,
-		 Extent1 . USER_SEC_QUES_ID   UserSecQuesID ,
-		 Extent1 . USER_SEC_QUES_ANS   UserSecQuesAns ,
-		 Extent1 . USER_WORK_NO   UserWorkNo ,
-		 Extent1 . USER_MOBILE_NO   UserMobileNo ,
-		 Extent1 . USER_EXT_NO   UserExtNo ,
-		 Extent1 . USER_IS_PART_TM   UserIsPartTime ,
-		 Extent1 . USER_DEPT_ID   UserDepartmentID ,
-		 Extent1 . USER_IS_EXTRNL   UserIsExternal
-		FROM SYS0047M  Extent1
-		WHERE (1 =  Extent1 . USER_STUS_ID ) AND (1 <>  Extent1 . USER_TYPE_ID ) AND (2 <>  Extent1 . USER_TYPE_ID ) AND (3 <>  Extent1 . USER_TYPE_ID )
-		ORDER BY  Extent1 . USER_NAME  ASC
-		]]>
+         Extent1 . USER_ID   UserID ,
+         Extent1 . USER_NAME   UserName ,
+         Extent1 . USER_PASSWD   UserPassword ,
+         Extent1 . USER_FULL_NAME   UserFullName ,
+         Extent1 . USER_EMAIL   UserEmail ,
+         Extent1 . USER_STUS_ID   UserStatusID ,
+         Extent1 . USER_BRNCH_ID   UserBranchID ,
+         Extent1 . USER_DEPT_ID   UserDeptID ,
+         Extent1 . USER_UPD_USER_ID   UserUpdateBy ,
+         Extent1 . USER_UPD_DT   UserUpdateAt ,
+         Extent1 . USER_SYNC_CHK   UserSyncCheck ,
+         Extent1 . USER_NRIC   UserNRIC ,
+         Extent1 . USER_DT_JOIN   UserDateJoin ,
+         Extent1 . USER_GSEC_SYN_CHK   UserGsecSynCheck ,
+         Extent1 . USER_PASSWD_LAST_UPD_DT   UserPasswdLastUpdateAt ,
+         Extent1 . USER_TYPE_ID   UserTypeID ,
+         Extent1 . USER_DFLT_PASSWD   UserDefaultPasswd ,
+         Extent1 . USER_VAL_ID_FROM   UserValidFrom ,
+         Extent1 . USER_VAL_ID_TO   UserValidTo ,
+         Extent1 . USER_SEC_QUES_ID   UserSecQuesID ,
+         Extent1 . USER_SEC_QUES_ANS   UserSecQuesAns ,
+         Extent1 . USER_WORK_NO   UserWorkNo ,
+         Extent1 . USER_MOBILE_NO   UserMobileNo ,
+         Extent1 . USER_EXT_NO   UserExtNo ,
+         Extent1 . USER_IS_PART_TM   UserIsPartTime ,
+         Extent1 . USER_DEPT_ID   UserDepartmentID ,
+         Extent1 . USER_IS_EXTRNL   UserIsExternal
+        FROM SYS0047M  Extent1
+        WHERE (1 =  Extent1 . USER_STUS_ID ) AND (1 <>  Extent1 . USER_TYPE_ID ) AND (2 <>  Extent1 . USER_TYPE_ID ) AND (3 <>  Extent1 . USER_TYPE_ID )
+        ORDER BY  Extent1 . USER_NAME  ASC
+        ]]>
     </select>
 
     <select id="selectMemberList" parameterType="Map" resultType="egovMap">
@@ -624,9 +624,7 @@
        (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course,
        Limit1.APLICNT_MEETPOINT,
        Limit1.MOBILE_USE_YN,
-       Limit1.NO_TBB /*,
-       Limit1.INC_TAX,
-       Limit1.APLICNT_INC_TAX */
+       Limit1.NO_TBB
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -970,9 +968,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 BANK.NAME AS BANK_NAME,
                 EXTENT29.MEET_POINT_CODE || ' - ' || MEET_POINT_DESC APLICNT_MEETPOINT,
                 Extent1.MOBILE_USE_YN,
-                Extent1.NO_TBB /*,
-                Extent1.INC_TAX,
-                Extent28.APLICNT_INC_TAX */
+                Extent1.NO_TBB
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
@@ -1056,17 +1052,17 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
     <select id="selectDocSubmission" parameterType="Map" resultType="egovMap">
                   SELECT Project1.DOC_TYPE_ID DOC_TYPE_ID  ,
-			       Project1.CODE_NAME CODE_NAME  ,
-			       Project1.DOC_COPY_QTY DOC_COPY_QTY
-			        FROM ( SELECT Extent1.DOC_TYPE_ID DOC_TYPE_ID  ,
-			                Extent1.DOC_COPY_QTY DOC_COPY_QTY  ,
-			                Extent2.CODE_NAME CODE_NAME
-			       FROM ORG0010D Extent1
-			                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.DOC_TYPE_ID
-			       WHERE  ( 247 = Extent1.DOC_SUB_TYPE_ID )
-			                   AND ( Extent1.DOC_MEM_ID =  #{MemberID})
-			                   AND ( 1 = Extent1.STUS_ID ) ) Project1
-			         ORDER BY Project1.CODE_NAME ASC
+                   Project1.CODE_NAME CODE_NAME  ,
+                   Project1.DOC_COPY_QTY DOC_COPY_QTY
+                    FROM ( SELECT Extent1.DOC_TYPE_ID DOC_TYPE_ID  ,
+                            Extent1.DOC_COPY_QTY DOC_COPY_QTY  ,
+                            Extent2.CODE_NAME CODE_NAME
+                   FROM ORG0010D Extent1
+                            JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.DOC_TYPE_ID
+                   WHERE  ( 247 = Extent1.DOC_SUB_TYPE_ID )
+                               AND ( Extent1.DOC_MEM_ID =  #{MemberID})
+                               AND ( 1 = Extent1.STUS_ID ) ) Project1
+                     ORDER BY Project1.CODE_NAME ASC
     </select>
 
 
@@ -1109,23 +1105,23 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
     <select id="selectRenewalHistory" parameterType="Map" resultType="egovMap">
              SELECT Project1.AG_ID AG_ID  ,
-			       Project1.C1 C1  ,
-			       Project1.C2 C2  ,
-			       Project1.AG_EXPR_DT AG_EXPR_DT  ,
-			       Project1.AG_CRT_DT AG_CRT_DT  ,
-			       Project1.MEM_CODE MEM_CODE
-			  FROM ( SELECT Extent1.AG_ID AG_ID  ,
-			                TO_CHAR(Extent1.AG_EXPR_DT,'YYYY-MM-DD') AG_EXPR_DT  ,
+                   Project1.C1 C1  ,
+                   Project1.C2 C2  ,
+                   Project1.AG_EXPR_DT AG_EXPR_DT  ,
+                   Project1.AG_CRT_DT AG_CRT_DT  ,
+                   Project1.MEM_CODE MEM_CODE
+              FROM ( SELECT Extent1.AG_ID AG_ID  ,
+                            TO_CHAR(Extent1.AG_EXPR_DT,'YYYY-MM-DD') AG_EXPR_DT  ,
                             TO_CHAR(Extent1.AG_CRT_DT,'YYYY-MM-DD') AG_CRT_DT  ,
-			                Extent2.MEM_CODE MEM_CODE  ,
-			                'PA' C1,
-			                'PA Renewal' C2
-			         FROM ORG0002D Extent1
-			                JOIN ORG0001D Extent2   ON ( Extent2.MEM_ID = Extent1.MEM_ID )
-			                AND ( 1 = Extent1.AG_STUS_ID )
-			          WHERE  ( Extent1.MEM_ID = #{MemberID} )
-			                   AND ( Extent1.AG_TYPE_ID = 1416 ) ) Project1
-			  ORDER BY Project1.AG_ID ASC
+                            Extent2.MEM_CODE MEM_CODE  ,
+                            'PA' C1,
+                            'PA Renewal' C2
+                     FROM ORG0002D Extent1
+                            JOIN ORG0001D Extent2   ON ( Extent2.MEM_ID = Extent1.MEM_ID )
+                            AND ( 1 = Extent1.AG_STUS_ID )
+                      WHERE  ( Extent1.MEM_ID = #{MemberID} )
+                               AND ( Extent1.AG_TYPE_ID = 1416 ) ) Project1
+              ORDER BY Project1.AG_ID ASC
     </select>
 
     <resultMap id="clobMap2" type="EgovMap">
@@ -1135,64 +1131,64 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     <select id="selectDocSubmission2" parameterType="Map" resultType="egovMap">
     <![CDATA[
             SELECT Project1.TYPE_DT_SEQ TYPE_DT_SEQ  ,
-		       Project1.TYPE_ID TYPE_ID  ,
-		       Project1.CODE_DESC CODE_NAME  ,
-		       Project1.C1 DOC_COPY_QTY  ,
-		       Project1.C2 C2
-		  FROM ( SELECT Extent1.CODE_DESC CODE_DESC  ,
-		                Extent2.TYPE_ID TYPE_ID  ,
-		                Extent2.TYPE_DT_SEQ TYPE_DT_SEQ  ,
-		                CASE
-		                     WHEN ( Extent3.DOC_COPY_QTY IS NULL ) THEN 0
-		                ELSE Extent3.DOC_COPY_QTY
-		                   END C1  ,
-		                CASE
-		                     WHEN ( ( Extent3.DOC_COPY_QTY IS NOT NULL )
-		                       OR ( 0 <> Extent3.DOC_COPY_QTY ) ) THEN UTILS.CONVERT_TO_NUMBER(1,1,0)
-		                ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
-		                   END C2
-		         FROM SYS0013M Extent1
-		                JOIN ORG0013C Extent2   ON Extent1.CODE_ID = Extent2.TYPE_ID
-		                LEFT JOIN ORG0010D Extent3   ON ( Extent3.DOC_TYPE_ID = Extent2.TYPE_ID )
-		                AND ( Extent3.DOC_MEM_ID =  #{MemberID} )
-		                AND ( 1 = Extent3.STUS_ID )
-		          WHERE  ( 1 = Extent2.STUS_ID )
-		                   AND ( Extent2.TYPE_CODE_ID = 1417 )
-		                   AND ( Extent2.TYPE_GRP_ID = 1417 ) ) Project1
-		  ORDER BY Project1.TYPE_DT_SEQ ASC
-		    ]]>
+               Project1.TYPE_ID TYPE_ID  ,
+               Project1.CODE_DESC CODE_NAME  ,
+               Project1.C1 DOC_COPY_QTY  ,
+               Project1.C2 C2
+          FROM ( SELECT Extent1.CODE_DESC CODE_DESC  ,
+                        Extent2.TYPE_ID TYPE_ID  ,
+                        Extent2.TYPE_DT_SEQ TYPE_DT_SEQ  ,
+                        CASE
+                             WHEN ( Extent3.DOC_COPY_QTY IS NULL ) THEN 0
+                        ELSE Extent3.DOC_COPY_QTY
+                           END C1  ,
+                        CASE
+                             WHEN ( ( Extent3.DOC_COPY_QTY IS NOT NULL )
+                               OR ( 0 <> Extent3.DOC_COPY_QTY ) ) THEN UTILS.CONVERT_TO_NUMBER(1,1,0)
+                        ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
+                           END C2
+                 FROM SYS0013M Extent1
+                        JOIN ORG0013C Extent2   ON Extent1.CODE_ID = Extent2.TYPE_ID
+                        LEFT JOIN ORG0010D Extent3   ON ( Extent3.DOC_TYPE_ID = Extent2.TYPE_ID )
+                        AND ( Extent3.DOC_MEM_ID =  #{MemberID} )
+                        AND ( 1 = Extent3.STUS_ID )
+                  WHERE  ( 1 = Extent2.STUS_ID )
+                           AND ( Extent2.TYPE_CODE_ID = 1417 )
+                           AND ( Extent2.TYPE_GRP_ID = 1417 ) ) Project1
+          ORDER BY Project1.TYPE_DT_SEQ ASC
+            ]]>
     </select>
 
     <select id="selectIssuedBank" parameterType="Map" resultType="egovMap">
-		   SELECT Project1.BANK_ID BANK_ID  ,
-		       Project1.C1 C1
-		  FROM ( SELECT Extent1.BANK_ID BANK_ID  ,
-		                Extent1.CODE CODE  ,
-		                Extent1.CODE || ' - ' || Extent1.NAME C1
-		         FROM SYS0004M Extent1
-		                JOIN ORG0014D Extent2   ON Extent1.BANK_ID = Extent2.BANK_ID
-		          WHERE  ( 848 = Extent2.TYPE_ID )
-		                   AND ( 1 = Extent1.STUS_CODE_ID )
-		                   AND ( 1 = Extent2.STUS_CODE_ID ) ) Project1
-		  ORDER BY Project1.CODE ASC
+           SELECT Project1.BANK_ID BANK_ID  ,
+               Project1.C1 C1
+          FROM ( SELECT Extent1.BANK_ID BANK_ID  ,
+                        Extent1.CODE CODE  ,
+                        Extent1.CODE || ' - ' || Extent1.NAME C1
+                 FROM SYS0004M Extent1
+                        JOIN ORG0014D Extent2   ON Extent1.BANK_ID = Extent2.BANK_ID
+                  WHERE  ( 848 = Extent2.TYPE_ID )
+                           AND ( 1 = Extent1.STUS_CODE_ID )
+                           AND ( 1 = Extent2.STUS_CODE_ID ) ) Project1
+          ORDER BY Project1.CODE ASC
     </select>
 
      <select id="selectApplicantConfirm" parameterType="Map" resultType="egovMap">
      <![CDATA[
            SELECT Limit1.CNFM_DT CNFM_DT
-		  FROM ( SELECT TO_CHAR(Extent2.CNFM_DT,'YYYY-MM-DD') CNFM_DT
-		         FROM ORG0001D Extent1
-		         JOIN ORG0003D Extent2   ON Extent2.APLCTN_ID = Extent1.APLICNT_ID
-		          WHERE  ( Extent1.MEM_ID =  #{MemberID} )
-		           AND ROWNUM <= 1 ) Limit1
-		]]>
+          FROM ( SELECT TO_CHAR(Extent2.CNFM_DT,'YYYY-MM-DD') CNFM_DT
+                 FROM ORG0001D Extent1
+                 JOIN ORG0003D Extent2   ON Extent2.APLCTN_ID = Extent1.APLICNT_ID
+                  WHERE  ( Extent1.MEM_ID =  #{MemberID} )
+                   AND ROWNUM <= 1 ) Limit1
+        ]]>
     </select>
 
     <select id="selectCodyPAExpired" parameterType="Map" resultType="egovMap">
      <![CDATA[
           SELECT TO_CHAR(Extent1.AG_EXPR_DT, 'DD/MM/YYYY') AG_EXPR_DT
-		  FROM ORG0002D Extent1
-		 WHERE  ( Extent1.MEM_ID = #{MemberID} )
+          FROM ORG0002D Extent1
+         WHERE  ( Extent1.MEM_ID = #{MemberID} )
           AND ( 1 = Extent1.AG_STUS_ID ) AND ROWNUM <= 1
         ]]>
     </select>
@@ -1200,17 +1196,17 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
     <select id="selectDocNo" parameterType="String" resultType="egovMap">
      <![CDATA[
-		 SELECT Extent1.DOC_NO_ID DOC_NO_ID  ,
-		       CASE
-		            WHEN ( Extent1.DOC_NO IS NOT NULL ) THEN Extent1.DOC_NO
-		       ELSE ''
-		          END C1  ,
-		       CASE
-		            WHEN ( Extent1.DOC_NO_PREFIX IS NOT NULL ) THEN Extent1.DOC_NO_PREFIX
-		       ELSE ''
-		          END C2
-		  FROM SYS0022C Extent1
-		 WHERE  Extent1.DOC_NO_ID =#{docNoId}  AND ROWNUM <= 1
+         SELECT Extent1.DOC_NO_ID DOC_NO_ID  ,
+               CASE
+                    WHEN ( Extent1.DOC_NO IS NOT NULL ) THEN Extent1.DOC_NO
+               ELSE ''
+                  END C1  ,
+               CASE
+                    WHEN ( Extent1.DOC_NO_PREFIX IS NOT NULL ) THEN Extent1.DOC_NO_PREFIX
+               ELSE ''
+                  END C2
+          FROM SYS0022C Extent1
+         WHERE  Extent1.DOC_NO_ID =#{docNoId}  AND ROWNUM <= 1
         ]]>
     </select>
 
@@ -1279,7 +1275,6 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         ,SUB_DEPT
         , RELIGION
         , MOBILE_USE_YN
-        /*, INC_TAX*/
         )
             VALUES (
             ORG0001D_MEM_ID_SEQ.NEXTVAL
@@ -1342,34 +1337,33 @@ SELECT Extent1.MEM_ID MEM_ID  ,
              , #{searchSubDept}
              , #{religion}
              , NVL(#{mobileUseYn}, 'N')
-             /*, #{incomeTaxNo}*/
              )
     </insert>
 
     <select id="selectOranization" parameterType="Map" resultType="egovMap">
      <![CDATA[
          SELECT Extent1.MEM_ID MEM_ID  ,
-	       Extent1.MEM_UP_ID MEM_UP_ID  ,
-	       Extent1.MEM_LVL MEM_LVL  ,
-	       Extent1.DEPT_CODE DEPT_CODE  ,
-	       Extent1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
-	       Extent1.ORG_UPD_DT ORG_UPD_DT  ,
-	       Extent1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
-	       Extent1.PREV_GRP_CODE PREV_GRP_CODE  ,
-	       Extent1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
-	       Extent1.PREV_MEM_LVL PREV_MEM_LVL  ,
-	       Extent1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
-	       Extent1.PR_CODE PR_CODE  ,
-	       Extent1.PR_MEM_ID PR_MEM_ID  ,
-	       Extent1.GRAND_PR_CODE GRAND_PR_CODE  ,
-	       Extent1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
-	       Extent1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
-	       Extent1.LAST_GRP_CODE LAST_GRP_CODE  ,
-	       Extent1.LAST_ORG_CODE LAST_ORG_CODE  ,
-	       Extent1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
-	       Extent1.BRNCH_ID BRNCH_ID
-	  FROM ORG0005D Extent1
-	 WHERE  ( 3 = Extent1.MEM_LVL )
+           Extent1.MEM_UP_ID MEM_UP_ID  ,
+           Extent1.MEM_LVL MEM_LVL  ,
+           Extent1.DEPT_CODE DEPT_CODE  ,
+           Extent1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+           Extent1.ORG_UPD_DT ORG_UPD_DT  ,
+           Extent1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+           Extent1.PREV_GRP_CODE PREV_GRP_CODE  ,
+           Extent1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+           Extent1.PREV_MEM_LVL PREV_MEM_LVL  ,
+           Extent1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+           Extent1.PR_CODE PR_CODE  ,
+           Extent1.PR_MEM_ID PR_MEM_ID  ,
+           Extent1.GRAND_PR_CODE GRAND_PR_CODE  ,
+           Extent1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+           Extent1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+           Extent1.LAST_GRP_CODE LAST_GRP_CODE  ,
+           Extent1.LAST_ORG_CODE LAST_ORG_CODE  ,
+           Extent1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+           Extent1.BRNCH_ID BRNCH_ID
+      FROM ORG0005D Extent1
+     WHERE  ( 3 = Extent1.MEM_LVL )
           AND ( Extent1.DEPT_CODE =#{deptCode})
         ]]>
     </select>
@@ -1395,22 +1389,22 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 <select id="selectLastGroupCode" parameterType="Map" resultType="String">
 
      <!--   <choose>
-	    <when test="divParam == 1">
-	       SELECT distinct Dept_code FROM ORG0001D mem
+        <when test="divParam == 1">
+           SELECT distinct Dept_code FROM ORG0001D mem
            join ORG0005D memorg on memorg.MEM_ID = MEM.MEM_ID
            where MEMORG.mem_up_id = #{memberUpId}
-	    </when>
-	    SELECT distinct Dept_code FROM ORG0001D mem
+        </when>
+        SELECT distinct Dept_code FROM ORG0001D mem
            join ORG0005D memorg on memorg.MEM_ID = MEM.MEM_ID
            where MEMORG.Dept_code = #{memberUpId} and MEMORG.MEM_LVL = 3
-	    <when>
-	    </when>
-	    <otherwise>
-	       SELECT distinct Dept_code FROM ORG0001D mem
-	       join ORG0005D memorg on memorg.MEM_ID = MEM.MEM_ID
-	       where MEMORG.Dept_code = #{memberUpId} and MEMORG.MEM_LVL = 3
-	    </otherwise>
-	  </choose>-->
+        <when>
+        </when>
+        <otherwise>
+           SELECT distinct Dept_code FROM ORG0001D mem
+           join ORG0005D memorg on memorg.MEM_ID = MEM.MEM_ID
+           where MEMORG.Dept_code = #{memberUpId} and MEMORG.MEM_LVL = 3
+        </otherwise>
+      </choose>-->
     </select>
 
     <select id="selectHpDocSubmission" parameterType="Map" resultType="egovMap">
@@ -1433,7 +1427,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
 
 
-		SELECT DOCLIST.* ,NVL( MEMINFO.DOC_COPY_QTY , 0 ) DOC_QTY
+        SELECT DOCLIST.* ,NVL( MEMINFO.DOC_COPY_QTY , 0 ) DOC_QTY
             FROM (
                  SELECT Extent1.CODE_ID CODE_ID ,
                     Extent1.CODE_DESC CODE_NAME,
@@ -1487,46 +1481,46 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
 
   <select id="selectCodyDocSubmission" parameterType="Map" resultType="egovMap">
-		<!--         SELECT Project1.CODE_ID CODE_ID  ,
-		       Project1.TYPE_ID TYPE_ID  ,
-		       Project1.CODE_DESC CODE_NAME,
-		       Project1.C1 C1  ,
-		       Project1.C2 C2
-		  FROM ( SELECT Extent1.CODE_ID CODE_ID  ,
-		                Extent1.CODE_DESC CODE_DESC,
-		                Extent2.TYPE_ID TYPE_ID  ,
-		                Extent2.TYPE_DT_SEQ TYPE_DT_SEQ  ,
-		                0 C1  ,
-		                CASE
-		                     WHEN ( 252 = Extent1.CODE_ID ) THEN UTILS.CONVERT_TO_NUMBER(1,1,0)
-		                ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
-		                   END C2
-		         FROM SYS0013M Extent1
-		                JOIN ORG0013C Extent2   ON Extent1.CODE_ID = Extent2.TYPE_ID
-		          WHERE  ( Extent2.TYPE_CODE_ID = 1417 )
-		                   AND ( 1 = Extent2.STUS_ID )
-		                   AND ( Extent2.TYPE_GRP_ID = 1417 ) ) Project1
-		  ORDER BY Project1.TYPE_DT_SEQ ASC -->
-		  SELECT DOCLIST.* ,NVL( MEMINFO.DOC_COPY_QTY , 0 ) DOC_QTY
-			FROM (
-				 SELECT Extent1.CODE_ID CODE_ID ,
-				    Extent1.CODE_DESC CODE_NAME,
-				    Extent2.TYPE_ID TYPE_ID ,
-				    Extent2.TYPE_DT_SEQ TYPE_DT_SEQ
-				  FROM SYS0013M Extent1
-				  JOIN ORG0013C Extent2
-				  ON Extent1.CODE_ID           = Extent2.TYPE_ID
-				  WHERE ( Extent2.TYPE_CODE_ID = 1417 )
-				  AND ( 1                      = Extent2.STUS_ID )
-				  AND ( Extent2.TYPE_GRP_ID    = 1417 )
-				  ORDER BY Extent2.TYPE_DT_SEQ ASC
-				) DOCLIST , (
-				SELECT B.*
-				FROM ORG0001D A,
-				  ORG0010D B
-				WHERE A.MEM_ID    = B.DOC_MEM_ID
-				AND  A.MEM_ID    = #{memberID}) MEMINFO
-				WHERE DOCLIST.CODE_ID = MEMINFO.DOC_TYPE_ID(+)
+        <!--         SELECT Project1.CODE_ID CODE_ID  ,
+               Project1.TYPE_ID TYPE_ID  ,
+               Project1.CODE_DESC CODE_NAME,
+               Project1.C1 C1  ,
+               Project1.C2 C2
+          FROM ( SELECT Extent1.CODE_ID CODE_ID  ,
+                        Extent1.CODE_DESC CODE_DESC,
+                        Extent2.TYPE_ID TYPE_ID  ,
+                        Extent2.TYPE_DT_SEQ TYPE_DT_SEQ  ,
+                        0 C1  ,
+                        CASE
+                             WHEN ( 252 = Extent1.CODE_ID ) THEN UTILS.CONVERT_TO_NUMBER(1,1,0)
+                        ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
+                           END C2
+                 FROM SYS0013M Extent1
+                        JOIN ORG0013C Extent2   ON Extent1.CODE_ID = Extent2.TYPE_ID
+                  WHERE  ( Extent2.TYPE_CODE_ID = 1417 )
+                           AND ( 1 = Extent2.STUS_ID )
+                           AND ( Extent2.TYPE_GRP_ID = 1417 ) ) Project1
+          ORDER BY Project1.TYPE_DT_SEQ ASC -->
+          SELECT DOCLIST.* ,NVL( MEMINFO.DOC_COPY_QTY , 0 ) DOC_QTY
+            FROM (
+                 SELECT Extent1.CODE_ID CODE_ID ,
+                    Extent1.CODE_DESC CODE_NAME,
+                    Extent2.TYPE_ID TYPE_ID ,
+                    Extent2.TYPE_DT_SEQ TYPE_DT_SEQ
+                  FROM SYS0013M Extent1
+                  JOIN ORG0013C Extent2
+                  ON Extent1.CODE_ID           = Extent2.TYPE_ID
+                  WHERE ( Extent2.TYPE_CODE_ID = 1417 )
+                  AND ( 1                      = Extent2.STUS_ID )
+                  AND ( Extent2.TYPE_GRP_ID    = 1417 )
+                  ORDER BY Extent2.TYPE_DT_SEQ ASC
+                ) DOCLIST , (
+                SELECT B.*
+                FROM ORG0001D A,
+                  ORG0010D B
+                WHERE A.MEM_ID    = B.DOC_MEM_ID
+                AND  A.MEM_ID    = #{memberID}) MEMINFO
+                WHERE DOCLIST.CODE_ID = MEMINFO.DOC_TYPE_ID(+)
 
   </select>
 
@@ -1614,234 +1608,234 @@ SELECT Extent1.MEM_ID MEM_ID  ,
           , #{syncCheck}
           , #{courseId}
           , #{statusId}
-		 )
+         )
   </insert>
 
   <insert id="insertAccOrderBill" parameterType="Map">
-	   INSERT INTO PAY0016D
-	         ( ACC_BILL_ID
-	         , ACC_BILL_TASK_ID
-	         , ACC_BILL_REF_DT
-	         , ACC_BILL_REF_NO
-	         , ACC_BILL_ORD_ID
-	         , ACC_BILL_ORD_NO
-	         , ACC_BILL_TYPE_ID
-	         , ACC_BILL_MODE_ID
-	         , ACC_BILL_SCHDUL_ID
-	         , ACC_BILL_SCHDUL_PRIOD
-	         , ACC_BILL_ADJ_ID
-	         , ACC_BILL_SCHDUL_AMT
-	         , ACC_BILL_ADJ_AMT
-	         , ACC_BILL_TXS_AMT
-	         , ACC_BILL_NET_AMT
-	         , ACC_BILL_STUS
-	         , ACC_BILL_REM
-	         , ACC_BILL_CRT_DT
-	         , ACC_BILL_CRT_USER_ID
-	         , ACC_BILL_GRP_ID
-	         , ACC_BILL_TAX_CODE_ID
-	         , ACC_BILL_TAX_RATE
-	         , ACC_BILL_ACCT_CNVR
-	         , ACC_BILL_CNTRCT_ID )
-	           VALUES (
-	          PAY0016D_SEQ.NEXTVAL
-	           , #{accBillTaskId}
-	           ,  SYSDATE
-	           , #{accBillRefNo}
-	           , #{accBillOrderId}
-	           , #{accBillOrderNo}
-	           , #{accBillTypeId}
-	           , #{accBillModeId}
-	           , #{accBillScheduleId}
-	           , #{accBillSchedulePeriod}
-	           , #{accBillAdjustmentId}
-	           , #{accBillScheduleAmount}
-	           , #{accBillAdjustmentAmount}
-	           , #{accBillTaxesAmount}
-	           , #{accBillNetAmount}
-	           , #{accBillStatus}
-	           , #{accBillRemark}
-	           , SYSDATE
-	           , #{accBillCreateBy}
-	           , #{accBillGroupId}
-	           , #{accBillTaxCodeId}
-	           , #{accBillTaxRate}
-	           , #{accBillAcctConversion}
-	           , #{accBillContractId}
-	          )
+       INSERT INTO PAY0016D
+             ( ACC_BILL_ID
+             , ACC_BILL_TASK_ID
+             , ACC_BILL_REF_DT
+             , ACC_BILL_REF_NO
+             , ACC_BILL_ORD_ID
+             , ACC_BILL_ORD_NO
+             , ACC_BILL_TYPE_ID
+             , ACC_BILL_MODE_ID
+             , ACC_BILL_SCHDUL_ID
+             , ACC_BILL_SCHDUL_PRIOD
+             , ACC_BILL_ADJ_ID
+             , ACC_BILL_SCHDUL_AMT
+             , ACC_BILL_ADJ_AMT
+             , ACC_BILL_TXS_AMT
+             , ACC_BILL_NET_AMT
+             , ACC_BILL_STUS
+             , ACC_BILL_REM
+             , ACC_BILL_CRT_DT
+             , ACC_BILL_CRT_USER_ID
+             , ACC_BILL_GRP_ID
+             , ACC_BILL_TAX_CODE_ID
+             , ACC_BILL_TAX_RATE
+             , ACC_BILL_ACCT_CNVR
+             , ACC_BILL_CNTRCT_ID )
+               VALUES (
+              PAY0016D_SEQ.NEXTVAL
+               , #{accBillTaskId}
+               ,  SYSDATE
+               , #{accBillRefNo}
+               , #{accBillOrderId}
+               , #{accBillOrderNo}
+               , #{accBillTypeId}
+               , #{accBillModeId}
+               , #{accBillScheduleId}
+               , #{accBillSchedulePeriod}
+               , #{accBillAdjustmentId}
+               , #{accBillScheduleAmount}
+               , #{accBillAdjustmentAmount}
+               , #{accBillTaxesAmount}
+               , #{accBillNetAmount}
+               , #{accBillStatus}
+               , #{accBillRemark}
+               , SYSDATE
+               , #{accBillCreateBy}
+               , #{accBillGroupId}
+               , #{accBillTaxCodeId}
+               , #{accBillTaxRate}
+               , #{accBillAcctConversion}
+               , #{accBillContractId}
+              )
   </insert>
 
     <select id="selectMiscList" parameterType="Map" resultType="egovMap">
     <!--
      <![CDATA[
 
-		  SELECT Extent1.MEM_ID MEM_ID  ,
-		       #{memberName} C1  ,
-		       #{membetFullName} C2  ,
-		       #{address1} C3  ,
-		       #{address2} C4  ,
-		       #{address3} C5  ,
-		       #{address4} C6  ,
-		       Extent5.POST_CODE POST_CODE  ,
-		       Extent3.NAME NAME  ,
-		       Extent2.NAME NAME1  ,
-		       #{memberNirc} C7
-		  FROM ORG0001D Extent1
-		         JOIN SYS0015M Extent2   ON UTILS.CONVERT_TO_NUMBER(Extent1.CNTY,10,0) = Extent2.CNTY_ID
-		         LEFT JOIN SYS0035M Extent3   ON UTILS.CONVERT_TO_NUMBER(Extent1.STATE,10,0) = Extent3.STATE_ID
-		         LEFT JOIN SYS0039M Extent4   ON Extent1.AREAL = Extent4.AREA_ID
-		         LEFT JOIN SYS0030C Extent5   ON Extent1.POST_CODE = Extent5.POST_CODE_ID
-		 WHERE  Extent1.MEM_ID = #{memberId} AND ROWNUM <= 1
+          SELECT Extent1.MEM_ID MEM_ID  ,
+               #{memberName} C1  ,
+               #{membetFullName} C2  ,
+               #{address1} C3  ,
+               #{address2} C4  ,
+               #{address3} C5  ,
+               #{address4} C6  ,
+               Extent5.POST_CODE POST_CODE  ,
+               Extent3.NAME NAME  ,
+               Extent2.NAME NAME1  ,
+               #{memberNirc} C7
+          FROM ORG0001D Extent1
+                 JOIN SYS0015M Extent2   ON UTILS.CONVERT_TO_NUMBER(Extent1.CNTY,10,0) = Extent2.CNTY_ID
+                 LEFT JOIN SYS0035M Extent3   ON UTILS.CONVERT_TO_NUMBER(Extent1.STATE,10,0) = Extent3.STATE_ID
+                 LEFT JOIN SYS0039M Extent4   ON Extent1.AREAL = Extent4.AREA_ID
+                 LEFT JOIN SYS0030C Extent5   ON Extent1.POST_CODE = Extent5.POST_CODE_ID
+         WHERE  Extent1.MEM_ID = #{memberId} AND ROWNUM <= 1
         ]]>
         -->
-		SELECT A.MEM_ID MEM_ID  ,
-		             #{memberName} C1  ,
-		             #{membetFullName} C2  ,
-		             #{address1} C3  ,
-		             #{address2} C4  ,
-		             #{address3} C5  ,
-		             #{address4} C6  ,
-		               B.POSTCODE POST_CODE  ,
-		               B.STATE NAME  ,
-		               B.COUNTRY NAME1  ,
-		               #{memberNirc} C7,
-					   a.AREA_ID,
-					   a.ADDR_DTL,
-					   a.STREET
-		  FROM org0001d a, sys0064m b
-		 WHERE 1 = 1
-    	 AND a.area_id = b.area_id
-		 AND A.MEM_ID = #{memberId}
+        SELECT A.MEM_ID MEM_ID  ,
+                     #{memberName} C1  ,
+                     #{membetFullName} C2  ,
+                     #{address1} C3  ,
+                     #{address2} C4  ,
+                     #{address3} C5  ,
+                     #{address4} C6  ,
+                       B.POSTCODE POST_CODE  ,
+                       B.STATE NAME  ,
+                       B.COUNTRY NAME1  ,
+                       #{memberNirc} C7,
+                       a.AREA_ID,
+                       a.ADDR_DTL,
+                       a.STREET
+          FROM org0001d a, sys0064m b
+         WHERE 1 = 1
+         AND a.area_id = b.area_id
+         AND A.MEM_ID = #{memberId}
     </select>
 
       <insert id="insertInvMISC" parameterType="Map">
-		    INSERT INTO PAY0031D
-		  ( TAX_INVC_ID
-		  , TAX_INVC_REF_NO
-		  , TAX_INVC_REF_DT
-		  , TAX_INVC_SVC_NO
-		  , TAX_INVC_TYPE
-		  , TAX_INVC_CUST_NAME
-		  , TAX_INVC_CNTC_PERSON
-		  , TAX_INVC_ADDR1
-		  , TAX_INVC_ADDR2
-		  , TAX_INVC_ADDR3
-		  , TAX_INVC_ADDR4
-		  , TAX_INVC_POST_CODE
-		  , TAX_INVC_STATE_NAME
-		  , TAX_INVC_CNTY
-		  , TAX_INVC_TASK_ID
-		  , TAX_INVC_REM
-		  , TAX_INVC_CHRG
-		  , TAX_INVC_TXS
-		  , TAX_INVC_AMT_DUE
-		  , TAX_INVC_CRT_DT
-		  , TAX_INVC_CRT_USER_ID
-		  , AREA_ID
-		  , ADDR_DTL
-		  , STREET)
-		  VALUES (
-		  PAY0031D_SEQ.NEXTVAL
-		  , #{taxInvoiceRefNo}
-		  , SYSDATE
-		  , #{taxInvoiceServiceNo}
-		  , #{taxInvoiceType}
-		  , #{taxInvoiceCustName}
-		  , #{taxInvoiceContactPerson}
-		  , #{taxInvoiceAddress1}
-		  , #{taxInvoiceAddress2}
-		  , #{taxInvoiceAddress3}
-		  , #{taxInvoiceAddress4}
-		  , #{taxInvoicePostCode}
-		  , #{taxInvoiceStateName}
-		  , #{taxInvoiceCountry}
-		  , #{taxInvoiceTaskID}
-		  , #{taxInvoiceRemark}
-		  , #{taxInvoiceCharges}
-		  , #{taxInvoiceTaxes}
-		  , #{taxInvoiceAmountDue}
-		  , SYSDATE
-		  , #{taxInvoiceCreator}
+            INSERT INTO PAY0031D
+          ( TAX_INVC_ID
+          , TAX_INVC_REF_NO
+          , TAX_INVC_REF_DT
+          , TAX_INVC_SVC_NO
+          , TAX_INVC_TYPE
+          , TAX_INVC_CUST_NAME
+          , TAX_INVC_CNTC_PERSON
+          , TAX_INVC_ADDR1
+          , TAX_INVC_ADDR2
+          , TAX_INVC_ADDR3
+          , TAX_INVC_ADDR4
+          , TAX_INVC_POST_CODE
+          , TAX_INVC_STATE_NAME
+          , TAX_INVC_CNTY
+          , TAX_INVC_TASK_ID
+          , TAX_INVC_REM
+          , TAX_INVC_CHRG
+          , TAX_INVC_TXS
+          , TAX_INVC_AMT_DUE
+          , TAX_INVC_CRT_DT
+          , TAX_INVC_CRT_USER_ID
+          , AREA_ID
+          , ADDR_DTL
+          , STREET)
+          VALUES (
+          PAY0031D_SEQ.NEXTVAL
+          , #{taxInvoiceRefNo}
+          , SYSDATE
+          , #{taxInvoiceServiceNo}
+          , #{taxInvoiceType}
+          , #{taxInvoiceCustName}
+          , #{taxInvoiceContactPerson}
+          , #{taxInvoiceAddress1}
+          , #{taxInvoiceAddress2}
+          , #{taxInvoiceAddress3}
+          , #{taxInvoiceAddress4}
+          , #{taxInvoicePostCode}
+          , #{taxInvoiceStateName}
+          , #{taxInvoiceCountry}
+          , #{taxInvoiceTaskID}
+          , #{taxInvoiceRemark}
+          , #{taxInvoiceCharges}
+          , #{taxInvoiceTaxes}
+          , #{taxInvoiceAmountDue}
+          , SYSDATE
+          , #{taxInvoiceCreator}
           , #{areaId}
           , #{addrDtl}
           , #{street}
-		  )
+          )
       </insert>
       <insert id="insertInvMISCD" parameterType="Map">
-	      INSERT INTO PAY0032D
-	         ( INVC_ITM_ID
-	         , TAX_INVC_ID
-	         , INVC_ITM_TYPE
-	         , INVC_ITM_ORD_NO
-	         , INVC_ITM_PO_NO
-	         , INVC_ITM_CODE
-	         , INVC_ITM_DESC1
-	         , INVC_ITM_DESC2
-	         , INVC_ITM_SERIAL_NO
-	         , INVC_ITM_QTY
-	         , INVC_ITM_UNIT_PRC
-	         , INVC_ITM_GST_RATE
-	         , INVC_ITM_GST_TXS
-	         , INVC_ITM_CHRG
-	         , INVC_ITM_AMT_DUE
-	         , INVC_ITM_ADD1
-	         , INVC_ITM_ADD2
-	         , INVC_ITM_ADD3
-	         , INVC_ITM_ADD4
-	         , INVC_ITM_POST_CODE
-	         , INVC_ITM_AREA_NAME
-	         , INVC_ITM_STATE_NAME
-	         , INVC_ITM_CNTY
-	         , INVC_ITM_INSTALL_DT
-	         , INVC_ITM_RETN_DT
-	         , INVC_ITM_BILL_REF_NO
-	         , AREA_ID
-	         , ADDR_DTL
-	         , STREET
-	         )
-	           VALUES (
-	            PAY0032D_SEQ.NEXTVAL
-	           , #{taxInvoiceID}
-	           , #{invoiceItemType}
-	           , #{invoiceItemOrderNo}
-	           , #{invoiceItemPONo}
-	           , #{invoiceItemCode}
-	           , #{invoiceItemDescription1}
-	           , #{invoiceItemDescription2}
-	           , #{invoiceItemSerialNo}
-	           , #{invoiceItemQuantity}
-	           , 0
-	           , #{invoiceItemGSTRate}
-	           , #{invoiceItemGSTTaxes}
-	           , #{invoiceItemCharges}
-	           , #{invoiceItemAmountDue}
-	           , #{invoiceItemAdd1}
-	           , #{invoiceItemAdd2}
-	           , #{invoiceItemAdd3}
-	           , NULL
-	           , #{invoiceItemPostCode}
-	           , NULL
-	           , #{invoiceItemStateName}
-	           , #{invoiceItemCountry}
-	           , NULL
-	           , NULL
-	           , NULL
-	          , #{areaId}
-	          , #{addrDtl}
-	          , #{street}
-	            )
+          INSERT INTO PAY0032D
+             ( INVC_ITM_ID
+             , TAX_INVC_ID
+             , INVC_ITM_TYPE
+             , INVC_ITM_ORD_NO
+             , INVC_ITM_PO_NO
+             , INVC_ITM_CODE
+             , INVC_ITM_DESC1
+             , INVC_ITM_DESC2
+             , INVC_ITM_SERIAL_NO
+             , INVC_ITM_QTY
+             , INVC_ITM_UNIT_PRC
+             , INVC_ITM_GST_RATE
+             , INVC_ITM_GST_TXS
+             , INVC_ITM_CHRG
+             , INVC_ITM_AMT_DUE
+             , INVC_ITM_ADD1
+             , INVC_ITM_ADD2
+             , INVC_ITM_ADD3
+             , INVC_ITM_ADD4
+             , INVC_ITM_POST_CODE
+             , INVC_ITM_AREA_NAME
+             , INVC_ITM_STATE_NAME
+             , INVC_ITM_CNTY
+             , INVC_ITM_INSTALL_DT
+             , INVC_ITM_RETN_DT
+             , INVC_ITM_BILL_REF_NO
+             , AREA_ID
+             , ADDR_DTL
+             , STREET
+             )
+               VALUES (
+                PAY0032D_SEQ.NEXTVAL
+               , #{taxInvoiceID}
+               , #{invoiceItemType}
+               , #{invoiceItemOrderNo}
+               , #{invoiceItemPONo}
+               , #{invoiceItemCode}
+               , #{invoiceItemDescription1}
+               , #{invoiceItemDescription2}
+               , #{invoiceItemSerialNo}
+               , #{invoiceItemQuantity}
+               , 0
+               , #{invoiceItemGSTRate}
+               , #{invoiceItemGSTTaxes}
+               , #{invoiceItemCharges}
+               , #{invoiceItemAmountDue}
+               , #{invoiceItemAdd1}
+               , #{invoiceItemAdd2}
+               , #{invoiceItemAdd3}
+               , NULL
+               , #{invoiceItemPostCode}
+               , NULL
+               , #{invoiceItemStateName}
+               , #{invoiceItemCountry}
+               , NULL
+               , NULL
+               , NULL
+              , #{areaId}
+              , #{addrDtl}
+              , #{street}
+                )
 
-	  </insert>
+      </insert>
 
-	  <update id="updateBillRem" parameterType="Map">
-	  UPDATE PAY0016D
-	   SET ACC_BILL_REM = #{accBillRemark}
-	 WHERE  ( ( ACC_BILL_ID = (SELECT MAX(ACC_BILL_ID) FROM PAY0016D ))
-	  AND ( ACC_BILL_TASK_ID = #{accBillTaskId} ) )
-	  </update>
+      <update id="updateBillRem" parameterType="Map">
+      UPDATE PAY0016D
+       SET ACC_BILL_REM = #{accBillRemark}
+     WHERE  ( ( ACC_BILL_ID = (SELECT MAX(ACC_BILL_ID) FROM PAY0016D ))
+      AND ( ACC_BILL_TASK_ID = #{accBillTaskId} ) )
+      </update>
 
-	  <insert id="insertUser" parameterType="Map">
-	  INSERT INTO SYS0047M
+      <insert id="insertUser" parameterType="Map">
+      INSERT INTO SYS0047M
         ( USER_ID
         , USER_NAME
         , USER_PASSWD
@@ -1922,213 +1916,213 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         )
   </insert>
   <insert id="insertMemApp" parameterType="Map">
-	  INSERT INTO ORG0003D (
-	     APLCTN_ID
-	   , APLICNT_CODE
-	   , APLICNT_TYPE
-	   , APLICNT_NAME
-	   , APLICNT_FULL_NAME
-	   , APLICNT_IDNTFC
-	   , APLICNT_NRIC
-	   , APLICNT_DOB
-	   , APLICNT_GENDER
-	   , APLICNT_RACE
-	   , APLICNT_MARTL
-	   , APLICNT_NATION
-	   , APLICNT_TEL_OFFICE
-	   , APLICNT_TEL_HUSE
-	   , APLICNT_TEL_MOBILE
-	   , APLICNT_EMAIL
-	   , APLICNT_SPOUSE_CODE
-	   , APLICNT_SPOUSE_NAME
-	   , APLICNT_SPOUSE_NRIC
-	   , APLICNT_SPOUSE_OCPAT
-	   , APLICNT_SPOUSE_TEL_CNTC
-	   , APLICNT_SPOUSE_DOB
-	   , APLICNT_EDU_LEV
-	   , APLICNT_LANG
-	   , APLICNT_BANK_ID
-	   , APLICNT_BANK_ACC_NO
-	   , APLICNT_SPONS_CODE
-	   , APLICNT_TRNSPRT
-	   , REM, STUS_ID
-	   , CRT_DT
-	   , CRT_USER_ID
-	   , UPD_DT
-	   , UPD_USER_ID
-	   , CNFM
-	   , CNFM_DT
-	   , DEPT_CODE
-	   , AREA_ID
-	   , ADDR_DTL
-	   , STREET
-	   , MAIN_DEPT
+      INSERT INTO ORG0003D (
+         APLCTN_ID
+       , APLICNT_CODE
+       , APLICNT_TYPE
+       , APLICNT_NAME
+       , APLICNT_FULL_NAME
+       , APLICNT_IDNTFC
+       , APLICNT_NRIC
+       , APLICNT_DOB
+       , APLICNT_GENDER
+       , APLICNT_RACE
+       , APLICNT_MARTL
+       , APLICNT_NATION
+       , APLICNT_TEL_OFFICE
+       , APLICNT_TEL_HUSE
+       , APLICNT_TEL_MOBILE
+       , APLICNT_EMAIL
+       , APLICNT_SPOUSE_CODE
+       , APLICNT_SPOUSE_NAME
+       , APLICNT_SPOUSE_NRIC
+       , APLICNT_SPOUSE_OCPAT
+       , APLICNT_SPOUSE_TEL_CNTC
+       , APLICNT_SPOUSE_DOB
+       , APLICNT_EDU_LEV
+       , APLICNT_LANG
+       , APLICNT_BANK_ID
+       , APLICNT_BANK_ACC_NO
+       , APLICNT_SPONS_CODE
+       , APLICNT_TRNSPRT
+       , REM, STUS_ID
+       , CRT_DT
+       , CRT_USER_ID
+       , UPD_DT
+       , UPD_USER_ID
+       , CNFM
+       , CNFM_DT
+       , DEPT_CODE
+       , AREA_ID
+       , ADDR_DTL
+       , STREET
+       , MAIN_DEPT
        , SUB_DEPT
        , APLICNT_MEETPOINT
-	   )
-	  VALUES (
-	  ORG0003D_APLCTN_ID_SEQ.NEXTVAL
+       )
+      VALUES (
+      ORG0003D_APLCTN_ID_SEQ.NEXTVAL
         , #{applicantCode}
-	  , #{applicantType}
-	  , UPPER(#{applicantName})
-	  , UPPER(#{applicantFullName})
-	  , #{applicantIdentification}
-	  , #{applicantNRIC}
-	  , TO_DATE(#{applicantDOB},'dd-mm-yyyy')
-	  , #{applicantGender}
-	  , #{applicantRace}
-	  , #{applicantMarital}
-	  , #{applicantNationality}
-	  , #{applicantTelOffice}
-	  , #{applicantTelHouse}
-	  , #{applicantTelMobile}
-	  , #{applicantEmail}
-	  , #{applicantSpouseCode}
-	  , #{applicantSpouseName}
-	  , #{applicantSpouseNRIC}
-	  , #{applicantSpouseOccupation}
-	  , #{applicantSpouseTelContact}
-	  ,TO_DATE(#{applicantSpouseDOB},'dd-mm-yyyy')
-	  , #{applicantEduLevel}
-	  , #{applicantLanguage}
-	  , #{applicantBankID}
-	  , #{applicantBankAccNo}
-	  , #{applicantSponsorCode}
-	  , #{applicantTransport}
-	  , #{remark}
-	  , #{statusId}
-	  , SYSDATE
-	  , 52366
-	  , SYSDATE
-	  , 52366
-	  , #{confirmation}
-	  , TO_DATE(#{confirmDate},'DD-MM-YYYY')
-	  , #{deptCode}
-	  , #{areaId}
-	  , #{addrDtl}
-	  , #{streetDtl}
-	  , #{searchdepartment}
-	  , #{searchSubDept}
-	  , #{meetingPoint}
-	  )
+      , #{applicantType}
+      , UPPER(#{applicantName})
+      , UPPER(#{applicantFullName})
+      , #{applicantIdentification}
+      , #{applicantNRIC}
+      , TO_DATE(#{applicantDOB},'dd-mm-yyyy')
+      , #{applicantGender}
+      , #{applicantRace}
+      , #{applicantMarital}
+      , #{applicantNationality}
+      , #{applicantTelOffice}
+      , #{applicantTelHouse}
+      , #{applicantTelMobile}
+      , #{applicantEmail}
+      , #{applicantSpouseCode}
+      , #{applicantSpouseName}
+      , #{applicantSpouseNRIC}
+      , #{applicantSpouseOccupation}
+      , #{applicantSpouseTelContact}
+      ,TO_DATE(#{applicantSpouseDOB},'dd-mm-yyyy')
+      , #{applicantEduLevel}
+      , #{applicantLanguage}
+      , #{applicantBankID}
+      , #{applicantBankAccNo}
+      , #{applicantSponsorCode}
+      , #{applicantTransport}
+      , #{remark}
+      , #{statusId}
+      , SYSDATE
+      , 52366
+      , SYSDATE
+      , 52366
+      , #{confirmation}
+      , TO_DATE(#{confirmDate},'DD-MM-YYYY')
+      , #{deptCode}
+      , #{areaId}
+      , #{addrDtl}
+      , #{streetDtl}
+      , #{searchdepartment}
+      , #{searchSubDept}
+      , #{meetingPoint}
+      )
   </insert>
   <insert id="insertMemberAgr" parameterType="Map">
-	  INSERT INTO ORG0002D (
-	     AG_ID
-	   , AG_REF_NO
-	   , MEM_ID
-	   , AG_TYPE_ID
-	   , AG_STUS_ID
-	   , AG_REM
-	   , AG_START_DT
-	   , AG_EXPR_DT
-	   , AG_CRT_USER_ID
-	   , AG_CRT_DT
-	   , AG_UPD_USER_ID
-	   , AG_UPD_DT )
-	  VALUES (
-	  ORG0002D_AG_ID_SEQ.NEXTVAL
-	   , #{agreementRefNo}
-	   , #{memberID}
-	   , #{agreementTypeID}
-	   , #{agreementStatusID}
-	   , #{agreementRemark}
-	   , TO_DATE(#{agreementStartDate},'dd-mm-yyyy')
-	   ,  TO_DATE(#{agreementExpiryDate},'dd-mm-yyyy')
-	   , #{agreementCreator}
-	   , SYSDATE
-	   , NULL
-	   , SYSDATE )
+      INSERT INTO ORG0002D (
+         AG_ID
+       , AG_REF_NO
+       , MEM_ID
+       , AG_TYPE_ID
+       , AG_STUS_ID
+       , AG_REM
+       , AG_START_DT
+       , AG_EXPR_DT
+       , AG_CRT_USER_ID
+       , AG_CRT_DT
+       , AG_UPD_USER_ID
+       , AG_UPD_DT )
+      VALUES (
+      ORG0002D_AG_ID_SEQ.NEXTVAL
+       , #{agreementRefNo}
+       , #{memberID}
+       , #{agreementTypeID}
+       , #{agreementStatusID}
+       , #{agreementRemark}
+       , TO_DATE(#{agreementStartDate},'dd-mm-yyyy')
+       ,  TO_DATE(#{agreementExpiryDate},'dd-mm-yyyy')
+       , #{agreementCreator}
+       , SYSDATE
+       , NULL
+       , SYSDATE )
   </insert>
    <insert id="insertinvWH" parameterType="Map">
-	  INSERT INTO SYS0028M (
-	     WH_LOC_ID
-	   , WH_LOC_CODE
-	   , WH_LOC_DESC
-	  -- , WH_LOC_ADD1
-	   --, WH_LOC_ADD2
-	  -- , WH_LOC_ADD3
-	   --, WH_LOC_AREA_ID
-	   --, WH_LOC_POST_CODE_ID
-	   --, WH_LOC_STATE_ID
-	   --, WH_LOC_CNTY_ID
-	   , WH_LOC_TEL1
-	   , WH_LOC_TEL2
-	   , WH_LOC_BRNCH_ID
-	   , WH_LOC_TYPE_ID
-	   , WH_LOC_STK_GRAD
-	   , WH_LOC_STUS_ID
-	   , WH_LOC_UPD_USER_ID
-	   , WH_LOC_UPD_DT
-	   , CODE2
-	   , DESC2
-	   , WH_LOC_IS_SYNC
-	   , WH_LOC_MOBILE
-	   )
-	  VALUES (
-	  (SELECT MAX(WH_LOC_ID)+1 FROM SYS0028M)
-	  , #{WHLocCode}
-	  , #{WHLocDesc}
-	 <!--  , #{WHLocAdd1}
-	  , #{WHLocAdd2}
-	  , #{WHLocAdd3}
-	  , #{WHLocAreaId}
-	  , #{WHLocPostcodeID}
-	  , #{WHLocStateID}
-	  , #{WHLocCountryID} -->
-	  , #{WHLocTel1}
-	  , #{WHLocTel2}
-	  , #{WHLocBranchID}
-	  , #{WHLocTypeID}
-	  , #{WHLocStkGrade}
-	  , #{WHLocStatusID}
-	  , 52366
-	  , SYSDATE
-	  , #{Code2}
-	  , #{Desc2}
-	  , #{WHLocIsSync}
-	  , 0
-	  )
+      INSERT INTO SYS0028M (
+         WH_LOC_ID
+       , WH_LOC_CODE
+       , WH_LOC_DESC
+      -- , WH_LOC_ADD1
+       --, WH_LOC_ADD2
+      -- , WH_LOC_ADD3
+       --, WH_LOC_AREA_ID
+       --, WH_LOC_POST_CODE_ID
+       --, WH_LOC_STATE_ID
+       --, WH_LOC_CNTY_ID
+       , WH_LOC_TEL1
+       , WH_LOC_TEL2
+       , WH_LOC_BRNCH_ID
+       , WH_LOC_TYPE_ID
+       , WH_LOC_STK_GRAD
+       , WH_LOC_STUS_ID
+       , WH_LOC_UPD_USER_ID
+       , WH_LOC_UPD_DT
+       , CODE2
+       , DESC2
+       , WH_LOC_IS_SYNC
+       , WH_LOC_MOBILE
+       )
+      VALUES (
+      (SELECT MAX(WH_LOC_ID)+1 FROM SYS0028M)
+      , #{WHLocCode}
+      , #{WHLocDesc}
+     <!--  , #{WHLocAdd1}
+      , #{WHLocAdd2}
+      , #{WHLocAdd3}
+      , #{WHLocAreaId}
+      , #{WHLocPostcodeID}
+      , #{WHLocStateID}
+      , #{WHLocCountryID} -->
+      , #{WHLocTel1}
+      , #{WHLocTel2}
+      , #{WHLocBranchID}
+      , #{WHLocTypeID}
+      , #{WHLocStkGrade}
+      , #{WHLocStatusID}
+      , 52366
+      , SYSDATE
+      , #{Code2}
+      , #{Desc2}
+      , #{WHLocIsSync}
+      , 0
+      )
   </insert>
 
   <insert id="insertDocSubmission" parameterType="Map">
-	  INSERT INTO ORG0010D (
-	     DOC_SUB_ID
-	   , DOC_SUB_TYPE_ID
-	   , DOC_TYPE_ID
-	   , DOC_SO_ID
-	   , DOC_MEM_ID
-	   , DOC_SUB_DT
-	   , DOC_COPY_QTY
-	   , STUS_ID
-	   , CRT_USER_ID
-	   , CRT_DT
-	   , UPD_USER_ID
-	   , UPD_DT
-	   , DOC_SUB_BATCH_ID
-	   , DOC_SUB_BRNCH_ID
-	   )
-	  VALUES (
-	  ORG0010D_DOC_SUB_ID_SEQ.NEXTVAL
-	  , #{docSubTypeId}
-	  , #{docTypeID}
-	  , #{docSOID}
-	  , #{docMemId}
-	  , SYSDATE
-	  , #{docCopyQty}
-	  , #{statusID}
-	  , #{creator}
-	  , SYSDATE
-	  , #{creator}
-	  , SYSDATE
-	  , #{docSubBatchId}
-	  , #{docSubBrnchId}
-	  )
+      INSERT INTO ORG0010D (
+         DOC_SUB_ID
+       , DOC_SUB_TYPE_ID
+       , DOC_TYPE_ID
+       , DOC_SO_ID
+       , DOC_MEM_ID
+       , DOC_SUB_DT
+       , DOC_COPY_QTY
+       , STUS_ID
+       , CRT_USER_ID
+       , CRT_DT
+       , UPD_USER_ID
+       , UPD_DT
+       , DOC_SUB_BATCH_ID
+       , DOC_SUB_BRNCH_ID
+       )
+      VALUES (
+      ORG0010D_DOC_SUB_ID_SEQ.NEXTVAL
+      , #{docSubTypeId}
+      , #{docTypeID}
+      , #{docSOID}
+      , #{docMemId}
+      , SYSDATE
+      , #{docCopyQty}
+      , #{statusID}
+      , #{creator}
+      , SYSDATE
+      , #{creator}
+      , SYSDATE
+      , #{docSubBatchId}
+      , #{docSubBrnchId}
+      )
   </insert>
 
   <insert id="insertSmsEntry" parameterType="Map">
-	  INSERT INTO MSC0015D (
-	     SMS_ID
+      INSERT INTO MSC0015D (
+         SMS_ID
        , SMS_MSG
        , SMS_MSISDN
        , SMS_TYPE_ID
@@ -2168,28 +2162,28 @@ SELECT Extent1.MEM_ID MEM_ID  ,
    </insert>
 
    <insert id="insertSmsReply" parameterType="Map">
-	  INSERT INTO MSC0017D (
-	     REPLY_ID
-	   , SMS_ID
-	   , REPLY_CODE
-	   , REPLY_REM
-	   , REPLY_CRT_DT
-	   , REPLY_CRT_USER_ID
-	   , REPLY_FDBCK_ID
-	    )
-	  VALUES (
-	  MSC0017D_REPLY_ID_SEQ.NEXTVAL
-	  ,#{SMSID}
-	  , #{replyCode}
-	  , #{replyRemark}
-	  , SYSDATE
-	  , #{replyCreateBy}
-	  , #{replyFeedbackID}
-	  )
+      INSERT INTO MSC0017D (
+         REPLY_ID
+       , SMS_ID
+       , REPLY_CODE
+       , REPLY_REM
+       , REPLY_CRT_DT
+       , REPLY_CRT_USER_ID
+       , REPLY_FDBCK_ID
+        )
+      VALUES (
+      MSC0017D_REPLY_ID_SEQ.NEXTVAL
+      ,#{SMSID}
+      , #{replyCode}
+      , #{replyRemark}
+      , SYSDATE
+      , #{replyCreateBy}
+      , #{replyFeedbackID}
+      )
    </insert>
 
    <select id="selectMember" parameterType="Map" resultType="egovMap">
-	  SELECT Extent1.MEM_ID MEM_ID  ,
+      SELECT Extent1.MEM_ID MEM_ID  ,
            Extent1.MEM_CODE MEM_CODE  ,
            Extent1.MEM_TYPE MEM_TYPE  ,
            Extent1.NAME NAME  ,
@@ -2245,131 +2239,131 @@ SELECT Extent1.MEM_ID MEM_ID  ,
            Extent1.BIZ_TYPE BIZ_TYPE  ,
            Extent1.HSPTLZ HSPTLZ
       FROM ORG0001D Extent1
-	 WHERE  Extent1.MEM_ID = #{memberId}
+     WHERE  Extent1.MEM_ID = #{memberId}
    </select>
     <select id="selectOrganization" parameterType="Map" resultType="egovMap">
-		   SELECT Extent1.MEM_ID MEM_ID  ,
-		       Extent1.MEM_UP_ID MEM_UP_ID  ,
-		       Extent1.MEM_LVL MEM_LVL  ,
-		       Extent1.DEPT_CODE DEPT_CODE  ,
-		       Extent1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
-		       Extent1.ORG_UPD_DT ORG_UPD_DT  ,
-		       Extent1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
-		       Extent1.PREV_GRP_CODE PREV_GRP_CODE  ,
-		       Extent1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
-		       Extent1.PREV_MEM_LVL PREV_MEM_LVL  ,
-		       Extent1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
-		       Extent1.PR_CODE PR_CODE  ,
-		       Extent1.PR_MEM_ID PR_MEM_ID  ,
-		       Extent1.GRAND_PR_CODE GRAND_PR_CODE  ,
-		       Extent1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
-		       Extent1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
-		       Extent1.LAST_GRP_CODE LAST_GRP_CODE  ,
-		       Extent1.LAST_ORG_CODE LAST_ORG_CODE  ,
-		       Extent1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
-		       Extent1.BRNCH_ID BRNCH_ID
-		  FROM ORG0005D Extent1
-		 WHERE  Extent1.MEM_ID = #{memberId}
+           SELECT Extent1.MEM_ID MEM_ID  ,
+               Extent1.MEM_UP_ID MEM_UP_ID  ,
+               Extent1.MEM_LVL MEM_LVL  ,
+               Extent1.DEPT_CODE DEPT_CODE  ,
+               Extent1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+               Extent1.ORG_UPD_DT ORG_UPD_DT  ,
+               Extent1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+               Extent1.PREV_GRP_CODE PREV_GRP_CODE  ,
+               Extent1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+               Extent1.PREV_MEM_LVL PREV_MEM_LVL  ,
+               Extent1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+               Extent1.PR_CODE PR_CODE  ,
+               Extent1.PR_MEM_ID PR_MEM_ID  ,
+               Extent1.GRAND_PR_CODE GRAND_PR_CODE  ,
+               Extent1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+               Extent1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+               Extent1.LAST_GRP_CODE LAST_GRP_CODE  ,
+               Extent1.LAST_ORG_CODE LAST_ORG_CODE  ,
+               Extent1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+               Extent1.BRNCH_ID BRNCH_ID
+          FROM ORG0005D Extent1
+         WHERE  Extent1.MEM_ID = #{memberId}
  </select>
  <select id="selectMemberOrgs" parameterType="Map" resultType="egovMap">
-		 SELECT Extent1.MEM_ID MEM_ID  ,
-		       Extent1.MEM_CODE MEM_CODE  ,
-		       Extent1.MEM_LVL MEM_LVL  ,
-		       Extent1.DEPT_CODE DEPT_CODE  ,
-		       Extent1.GRP_CODE GRP_CODE  ,
-		       Extent1.ORG_CODE ORG_CODE  ,
-		       Extent1.TOP_ORG_CODE TOP_ORG_CODE  ,
-		       Extent1.MEM_UP_ID MEM_UP_ID  ,
-		       Extent1.LVL3_UP_ID LVL3_UP_ID  ,
-		       Extent1.LVL2_UP_ID LVL2_UP_ID  ,
-		       Extent1.LVL1_UP_ID LVL1_UP_ID  ,
-		       Extent1.LVL0_UP_ID LVL0_UP_ID
-		  FROM ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
-		                vMemberOrg.MEM_CODE MEM_CODE  ,
-		                vMemberOrg.MEM_LVL MEM_LVL  ,
-		                vMemberOrg.DEPT_CODE DEPT_CODE  ,
-		                vMemberOrg.GRP_CODE GRP_CODE  ,
-		                vMemberOrg.ORG_CODE ORG_CODE  ,
-		                vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
-		                vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
-		                vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
-		                vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
-		                vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
-		                vMemberOrg.LVL0_UP_ID LVL0_UP_ID
-		         FROM ORG1001V vMemberOrg ) Extent1
-		 WHERE  Extent1.MEM_ID = #{memberId}
+         SELECT Extent1.MEM_ID MEM_ID  ,
+               Extent1.MEM_CODE MEM_CODE  ,
+               Extent1.MEM_LVL MEM_LVL  ,
+               Extent1.DEPT_CODE DEPT_CODE  ,
+               Extent1.GRP_CODE GRP_CODE  ,
+               Extent1.ORG_CODE ORG_CODE  ,
+               Extent1.TOP_ORG_CODE TOP_ORG_CODE  ,
+               Extent1.MEM_UP_ID MEM_UP_ID  ,
+               Extent1.LVL3_UP_ID LVL3_UP_ID  ,
+               Extent1.LVL2_UP_ID LVL2_UP_ID  ,
+               Extent1.LVL1_UP_ID LVL1_UP_ID  ,
+               Extent1.LVL0_UP_ID LVL0_UP_ID
+          FROM ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+                        vMemberOrg.MEM_CODE MEM_CODE  ,
+                        vMemberOrg.MEM_LVL MEM_LVL  ,
+                        vMemberOrg.DEPT_CODE DEPT_CODE  ,
+                        vMemberOrg.GRP_CODE GRP_CODE  ,
+                        vMemberOrg.ORG_CODE ORG_CODE  ,
+                        vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+                        vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+                        vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+                        vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+                        vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+                        vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+                 FROM ORG1001V vMemberOrg ) Extent1
+         WHERE  Extent1.MEM_ID = #{memberId}
  </select>
  <update id="updateOrganization" parameterType="Map">
-	 UPDATE ORG0005D
-	   SET ORG_UPD_DT = SYSDATE,
-	       ORG_STUS_CODE_ID = #{orgStatusCodeID},
-	       LAST_TOP_ORG_CODE = #{lastTopOrgCode}
-	 WHERE  ( MEM_ID = #{memId} )
-	 </update>
-	 <insert id="insertPromoEntry" parameterType="Map">
-	   INSERT INTO ORG0007D (
-	         PROMO_ID
-		   , REQST_NO
-		   , STUS_ID
-		   , PROMO_TYPE_ID
-		   , MEM_TYPE_ID
-		   , MEM_ID
-		   , MEM_LVL_FROM
-		   , MEM_LVL_TO
-		   , CRT_DT
-		   , CRT_USER_ID
-		   , UPD_DT
-		   , UPD_USER_ID
-		   , DEPT_CODE_FROM
-		   , DEPT_CODE_TO
-		   , PARENT_ID_FROM
-		   , PARENT_ID_TO
-		   , STUS_ID_FROM
-		   , STUS_ID_TO
-		   , REM
-		   , PARENT_DEPT_CODE_FROM
-		   , PARENT_DEPT_CODE_TO
-		   , PR_CODE
-		   , PROMO_SYNC
-		   , LAST_DEPT_CODE
-		   , LAST_GRP_CODE
-		   , LAST_ORG_CODE
-		   , PR_MEM_ID
-		   , BRNCH_ID
-		   , EVT_APPLY_DT
+     UPDATE ORG0005D
+       SET ORG_UPD_DT = SYSDATE,
+           ORG_STUS_CODE_ID = #{orgStatusCodeID},
+           LAST_TOP_ORG_CODE = #{lastTopOrgCode}
+     WHERE  ( MEM_ID = #{memId} )
+     </update>
+     <insert id="insertPromoEntry" parameterType="Map">
+       INSERT INTO ORG0007D (
+             PROMO_ID
+           , REQST_NO
+           , STUS_ID
+           , PROMO_TYPE_ID
+           , MEM_TYPE_ID
+           , MEM_ID
+           , MEM_LVL_FROM
+           , MEM_LVL_TO
+           , CRT_DT
+           , CRT_USER_ID
+           , UPD_DT
+           , UPD_USER_ID
+           , DEPT_CODE_FROM
+           , DEPT_CODE_TO
+           , PARENT_ID_FROM
+           , PARENT_ID_TO
+           , STUS_ID_FROM
+           , STUS_ID_TO
+           , REM
+           , PARENT_DEPT_CODE_FROM
+           , PARENT_DEPT_CODE_TO
+           , PR_CODE
+           , PROMO_SYNC
+           , LAST_DEPT_CODE
+           , LAST_GRP_CODE
+           , LAST_ORG_CODE
+           , PR_MEM_ID
+           , BRNCH_ID
+           , EVT_APPLY_DT
             )
-		  VALUES (
-		  ORG0007D_PROMO_ID_SEQ.NEXTVAL
-		   , #{requestNo}
-		   , #{statusId}
-		   , #{promoTypeId}
-		   , #{memTypeId}
-		   , #{memberId}
-		   , #{memberLvlFrom}
-		   , #{memberLvlTo}
-		   , SYSDATE
-		   , #{creator} <!-- 52366 -->
-		   ,SYSDATE
-		   , #{updator} <!-- 52366 -->
-		   , #{deptCodeFrom}
-		   , #{deptCodeTo}
-		   , #{parentIdFrom}
-		   , #{parentIdTo}
-		   , #{statusIdFrom}
-		   , #{statusIdTo}
-		   , #{remark}
-		   , #{parentDeptCodeFrom}
-		   , #{parentDeptCodeTo}
-		   , #{PRCode}
-		   , #{promoSync}
-		   , #{lastDeptCode}
-		   , #{lastGrpCode}
-		   , #{lastOrgCode}
-		   , #{PRmemId}
-		   , #{branchId}
-		   ,  to_date(#{evtApplyDt} ,'dd/mm/yyyy')
-		    )
-	 </insert>
+          VALUES (
+          ORG0007D_PROMO_ID_SEQ.NEXTVAL
+           , #{requestNo}
+           , #{statusId}
+           , #{promoTypeId}
+           , #{memTypeId}
+           , #{memberId}
+           , #{memberLvlFrom}
+           , #{memberLvlTo}
+           , SYSDATE
+           , #{creator} <!-- 52366 -->
+           ,SYSDATE
+           , #{updator} <!-- 52366 -->
+           , #{deptCodeFrom}
+           , #{deptCodeTo}
+           , #{parentIdFrom}
+           , #{parentIdTo}
+           , #{statusIdFrom}
+           , #{statusIdTo}
+           , #{remark}
+           , #{parentDeptCodeFrom}
+           , #{parentDeptCodeTo}
+           , #{PRCode}
+           , #{promoSync}
+           , #{lastDeptCode}
+           , #{lastGrpCode}
+           , #{lastOrgCode}
+           , #{PRmemId}
+           , #{branchId}
+           ,  to_date(#{evtApplyDt} ,'dd/mm/yyyy')
+            )
+     </insert>
 
 
      <insert id="insertVacationEntry" parameterType="Map">
@@ -2411,66 +2405,66 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             )
      </insert>
 
-	 <update id="updateMember" parameterType="Map">
-	   UPDATE ORG0001D
-	   SET RESIGN_DT = to_date(#{resignDate},'dd-mm-yyyy'),
-	       TRM_DT =  to_date(#{termDate},'dd-mm-yyyy'),
-	       STUS =#{status},
-	       SYNC_CHK = NULL,
-	       UPD_DT = SYSDATE,
-	       UPD_USER_ID = #{updator}
-	 WHERE  ( MEM_ID =  #{memId} )
-	 </update>
-	 <select id="selectUserName" parameterType="Map" resultType="egovMap">
-			 SELECT Extent1.USER_ID USER_ID  ,
-		       Extent1.USER_NAME USER_NAME  ,
-		       Extent1.USER_PASSWD USER_PASSWD  ,
-		       Extent1.USER_FULL_NAME USER_FULL_NAME  ,
-		       Extent1.USER_EMAIL USER_EMAIL  ,
-		       Extent1.USER_STUS_ID USER_STUS_ID  ,
-		       Extent1.USER_BRNCH_ID USER_BRNCH_ID  ,
-		       Extent1.USER_DEPT_ID USER_DEPT_ID  ,
-		       Extent1.USER_UPD_USER_ID USER_UPD_USER_ID  ,
-		       Extent1.USER_UPD_DT USER_UPD_DT  ,
-		       Extent1.USER_SYNC_CHK USER_SYNC_CHK  ,
-		       Extent1.USER_NRIC USER_NRIC  ,
-		       Extent1.USER_DT_JOIN USER_DT_JOIN  ,
-		       Extent1.USER_GSEC_SYN_CHK USER_GSEC_SYN_CHK  ,
-		       Extent1.USER_PASSWD_LAST_UPD_DT USER_PASSWD_LAST_UPD_DT  ,
-		       Extent1.USER_TYPE_ID USER_TYPE_ID  ,
-		       Extent1.USER_DFLT_PASSWD USER_DFLT_PASSWD  ,
-		       Extent1.USER_VAL_ID_FROM USER_VAL_ID_FROM  ,
-		       Extent1.USER_VAL_ID_TO USER_VAL_ID_TO  ,
-		       Extent1.USER_SEC_QUES_ID USER_SEC_QUES_ID  ,
-		       Extent1.USER_SEC_QUES_ANS USER_SEC_QUES_ANS  ,
-		       Extent1.USER_WORK_NO USER_WORK_NO  ,
-		       Extent1.USER_MOBILE_NO USER_MOBILE_NO  ,
-		       Extent1.USER_EXT_NO USER_EXT_NO  ,
-		       Extent1.USER_IS_PART_TM USER_IS_PART_TM  ,
-		       Extent1.USER_DEPT_ID USER_DEPT_ID  ,
-		       Extent1.USER_IS_EXTRNL USER_IS_EXTRNL
-		  FROM SYS0047M Extent1
-		 WHERE  ( Extent1.USER_NAME = #{memCode} )
-		          AND ( Extent1.USER_TYPE_ID = #{memType}  )
-	 </select>
+     <update id="updateMember" parameterType="Map">
+       UPDATE ORG0001D
+       SET RESIGN_DT = to_date(#{resignDate},'dd-mm-yyyy'),
+           TRM_DT =  to_date(#{termDate},'dd-mm-yyyy'),
+           STUS =#{status},
+           SYNC_CHK = NULL,
+           UPD_DT = SYSDATE,
+           UPD_USER_ID = #{updator}
+     WHERE  ( MEM_ID =  #{memId} )
+     </update>
+     <select id="selectUserName" parameterType="Map" resultType="egovMap">
+             SELECT Extent1.USER_ID USER_ID  ,
+               Extent1.USER_NAME USER_NAME  ,
+               Extent1.USER_PASSWD USER_PASSWD  ,
+               Extent1.USER_FULL_NAME USER_FULL_NAME  ,
+               Extent1.USER_EMAIL USER_EMAIL  ,
+               Extent1.USER_STUS_ID USER_STUS_ID  ,
+               Extent1.USER_BRNCH_ID USER_BRNCH_ID  ,
+               Extent1.USER_DEPT_ID USER_DEPT_ID  ,
+               Extent1.USER_UPD_USER_ID USER_UPD_USER_ID  ,
+               Extent1.USER_UPD_DT USER_UPD_DT  ,
+               Extent1.USER_SYNC_CHK USER_SYNC_CHK  ,
+               Extent1.USER_NRIC USER_NRIC  ,
+               Extent1.USER_DT_JOIN USER_DT_JOIN  ,
+               Extent1.USER_GSEC_SYN_CHK USER_GSEC_SYN_CHK  ,
+               Extent1.USER_PASSWD_LAST_UPD_DT USER_PASSWD_LAST_UPD_DT  ,
+               Extent1.USER_TYPE_ID USER_TYPE_ID  ,
+               Extent1.USER_DFLT_PASSWD USER_DFLT_PASSWD  ,
+               Extent1.USER_VAL_ID_FROM USER_VAL_ID_FROM  ,
+               Extent1.USER_VAL_ID_TO USER_VAL_ID_TO  ,
+               Extent1.USER_SEC_QUES_ID USER_SEC_QUES_ID  ,
+               Extent1.USER_SEC_QUES_ANS USER_SEC_QUES_ANS  ,
+               Extent1.USER_WORK_NO USER_WORK_NO  ,
+               Extent1.USER_MOBILE_NO USER_MOBILE_NO  ,
+               Extent1.USER_EXT_NO USER_EXT_NO  ,
+               Extent1.USER_IS_PART_TM USER_IS_PART_TM  ,
+               Extent1.USER_DEPT_ID USER_DEPT_ID  ,
+               Extent1.USER_IS_EXTRNL USER_IS_EXTRNL
+          FROM SYS0047M Extent1
+         WHERE  ( Extent1.USER_NAME = #{memCode} )
+                  AND ( Extent1.USER_TYPE_ID = #{memType}  )
+     </select>
 
-	 <update id="updateUser" parameterType="Map">
-		    UPDATE SYS0047M
-		   SET USER_STUS_ID = #{userStatusID},
-		       USER_UPD_USER_ID = #{userUpdateBy},
-		       USER_UPD_DT = SYSDATE
-		 WHERE  ( USER_ID = #{userId} )
-	 </update>
-	 <select id="selectSuperiorTeam" parameterType="Map" resultType="egovMap">
-	 <![CDATA[
-		 SELECT
-		       Distinct1.C1 C1  ,
-	           Distinct1.MEM_ID CODE_ID  ,
-	           Distinct1.DEPT_CODE DEPT_CODE  ,
-	           Distinct1.C2 CODE_NAME
-	     FROM (
-	           SELECT
-	               DISTINCT Extent1.MEM_ID MEM_ID  ,
+     <update id="updateUser" parameterType="Map">
+            UPDATE SYS0047M
+           SET USER_STUS_ID = #{userStatusID},
+               USER_UPD_USER_ID = #{userUpdateBy},
+               USER_UPD_DT = SYSDATE
+         WHERE  ( USER_ID = #{userId} )
+     </update>
+     <select id="selectSuperiorTeam" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+         SELECT
+               Distinct1.C1 C1  ,
+               Distinct1.MEM_ID CODE_ID  ,
+               Distinct1.DEPT_CODE DEPT_CODE  ,
+               Distinct1.C2 CODE_NAME
+         FROM (
+               SELECT
+                   DISTINCT Extent1.MEM_ID MEM_ID  ,
                    Extent2.DEPT_CODE DEPT_CODE  ,
                    1 C1  ,
                    Extent2.DEPT_CODE || ' - ' || Extent1.NAME C2
@@ -2488,9 +2482,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         <!-- <if test="cmbSuperior != null and cmbSuperior != ''">
         WHERE Distinct1.MEM_ID = #{cmbSuperior}
         </if> -->
-	     </select>
-	     <select id="selectDeptCode" parameterType="Map" resultType="egovMap">
-		        SELECT Distinct1.C1 C1  ,
+         </select>
+         <select id="selectDeptCode" parameterType="Map" resultType="egovMap">
+                SELECT Distinct1.C1 C1  ,
        Distinct1.DEPT_CODE CODE_ID  ,
        Distinct1.C2 CODE_NAME
   FROM ( SELECT DISTINCT Extent1.DEPT_CODE DEPT_CODE  ,
@@ -2529,15 +2523,15 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
     <insert id="traineeUpdate" parameterType="Map" >
 
-		 UPDATE ORG0001D
-		  SET   MEM_CODE = DECODE ( TRAINEE_TYPE , '3' , FN_GET_DOCNO(7) , '2' ,FN_GET_DOCNO(6) , '7' , FN_GET_DOCNO(163) ,'5758' , FN_GET_DOCNO(171) ) ,
-		          MEM_TYPE = TRAINEE_TYPE,
-		          TRAINEE_CODE = MEM_CODE,
-		          UPD_DT     = SYSDATE
-		          <if test = "joinDt != null and joinDt != '' ">
-		          , JOIN_DT = #{joinDt}
-		          </if>
-		 WHERE  MEM_ID   = #{memberId}
+         UPDATE ORG0001D
+          SET   MEM_CODE = DECODE ( TRAINEE_TYPE , '3' , FN_GET_DOCNO(7) , '2' ,FN_GET_DOCNO(6) , '7' , FN_GET_DOCNO(163) ,'5758' , FN_GET_DOCNO(171) ) ,
+                  MEM_TYPE = TRAINEE_TYPE,
+                  TRAINEE_CODE = MEM_CODE,
+                  UPD_DT     = SYSDATE
+                  <if test = "joinDt != null and joinDt != '' ">
+                  , JOIN_DT = #{joinDt}
+                  </if>
+         WHERE  MEM_ID   = #{memberId}
     </insert>
 
    <select id="afterSelTrainee" resultType="egovMap">
@@ -2641,8 +2635,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
        (SELECT ID FROM SYS0105M WHERE MAIN_DEPT_CODE = Limit1.MAIN_DEPT AND SUB_DEPT_CODE = Limit1.SUB_DEPT) DEPT_ID,
        Limit1.RELIGION,
        (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course,
-       Limit1.MEETPOINT_ID/*,
-       Limit1.INC_TAX*/
+       Limit1.MEETPOINT_ID
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -2990,8 +2983,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                  Extent1.RELIGION,
                  EXTENT1.MAIN_DEPT,
                  EXTENT1.SUB_DEPT,
-                 EXTENT23.APLICNT_MEETPOINT MEETPOINT_ID/*,
-                 EXTENT1.INC_TAX*/
+                 EXTENT23.APLICNT_MEETPOINT MEETPOINT_ID
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
@@ -3163,9 +3155,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               BIZ_TYPE =#{businessType},
               </if>
               BRNCH =#{selectBranch},
-              MOBILE_USE_YN = NVL(#{mobileUseYn}, 'N')/*,
+              MOBILE_USE_YN = NVL(#{mobileUseYn}, 'N')
 
-              INC_TAX = #{incomeTaxNo}*/
+
 
         WHERE  ( MEM_ID = TO_NUMBER(TRIM(#{MemberID})) )
 
@@ -3204,59 +3196,59 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
 
     <insert id="hpMemRegister" parameterType="Map">
-		INSERT INTO ORG0001D
-		(
-		MEM_ID 		,MEM_CODE 		,MEM_TYPE 		,NAME 		,FULL_NAME
-		,NRIC 		,PASSWD           ,DOB 		,GENDER 		,RACE 		,MARTL
-		,NATION 		,TEL_OFFICE 		,TEL_HUSE 		,TEL_MOBILE 		,EMAIL
-		,SPUSE_CODE 		,SPOUSE_NAME 		,SPOUSE_NRIC 		,SPOUSE_OCPAT 		,SPOUSE_TEL_CNTC
-		,SPOUSE_DOB 		,EDC_LEV 		,LANG 		,BANK 		,BANK_ACC_NO
-		,SPONS_CODE 		,CRT_DT 		,CRT_USER_ID 		,UPD_DT 		,UPD_USER_ID,  stus, APLICNT_ID
-		,MAIN_DEPT , SUB_DEPT, JOIN_DT , AREA_ID, ADDR_DTL, STREET, BRNCH, MOBILE_USE_YN
-		)
-		select
-		        #{memId},
-		        #{memberCode}  AS MEM_CODE,
-		        '1'  AS MEM_TYPE,
-		        APLICNT_NAME AS NAME,
-		        APLICNT_FULL_NAME AS FULL_NAME,
+        INSERT INTO ORG0001D
+        (
+        MEM_ID      ,MEM_CODE       ,MEM_TYPE       ,NAME       ,FULL_NAME
+        ,NRIC       ,PASSWD           ,DOB      ,GENDER         ,RACE       ,MARTL
+        ,NATION         ,TEL_OFFICE         ,TEL_HUSE       ,TEL_MOBILE         ,EMAIL
+        ,SPUSE_CODE         ,SPOUSE_NAME        ,SPOUSE_NRIC        ,SPOUSE_OCPAT       ,SPOUSE_TEL_CNTC
+        ,SPOUSE_DOB         ,EDC_LEV        ,LANG       ,BANK       ,BANK_ACC_NO
+        ,SPONS_CODE         ,CRT_DT         ,CRT_USER_ID        ,UPD_DT         ,UPD_USER_ID,  stus, APLICNT_ID
+        ,MAIN_DEPT , SUB_DEPT, JOIN_DT , AREA_ID, ADDR_DTL, STREET, BRNCH, MOBILE_USE_YN
+        )
+        select
+                #{memId},
+                #{memberCode}  AS MEM_CODE,
+                '1'  AS MEM_TYPE,
+                APLICNT_NAME AS NAME,
+                APLICNT_FULL_NAME AS FULL_NAME,
 
-		        APLICNT_NRIC AS  NRIC,
-		        SUBSTR(APLICNT_NRIC, 7) AS PASSWD,
-		        APLICNT_DOB AS DOB,
-		        APLICNT_GENDER AS GENDER,
-		        APLICNT_RACE AS RACE,
-		        APLICNT_MARTL AS MARTL,
+                APLICNT_NRIC AS  NRIC,
+                SUBSTR(APLICNT_NRIC, 7) AS PASSWD,
+                APLICNT_DOB AS DOB,
+                APLICNT_GENDER AS GENDER,
+                APLICNT_RACE AS RACE,
+                APLICNT_MARTL AS MARTL,
 
-		        APLICNT_NATION AS NATION,
-		        APLICNT_TEL_OFFICE AS TEL_OFFICE,
-		        APLICNT_TEL_HUSE AS TEL_HUSE,
-		        APLICNT_TEL_MOBILE AS TEL_MOBILE,
-		        APLICNT_EMAIL AS EMAIL,
+                APLICNT_NATION AS NATION,
+                APLICNT_TEL_OFFICE AS TEL_OFFICE,
+                APLICNT_TEL_HUSE AS TEL_HUSE,
+                APLICNT_TEL_MOBILE AS TEL_MOBILE,
+                APLICNT_EMAIL AS EMAIL,
 
-		        APLICNT_SPOUSE_CODE AS SPOUSE_CODE,
-		        APLICNT_SPOUSE_NAME AS SPOUSE_NAME,
-		        APLICNT_SPOUSE_NRIC AS SPOUSE_NRIC,
-		        APLICNT_SPOUSE_OCPAT AS SPOUSE_OCPAT,
-		        APLICNT_SPOUSE_TEL_CNTC AS SPOUSE_TEL_CNTC,
+                APLICNT_SPOUSE_CODE AS SPOUSE_CODE,
+                APLICNT_SPOUSE_NAME AS SPOUSE_NAME,
+                APLICNT_SPOUSE_NRIC AS SPOUSE_NRIC,
+                APLICNT_SPOUSE_OCPAT AS SPOUSE_OCPAT,
+                APLICNT_SPOUSE_TEL_CNTC AS SPOUSE_TEL_CNTC,
 
-		        APLICNT_SPOUSE_DOB AS SPOUSE_DOB,
-		        APLICNT_EDU_LEV AS EDC_LEV,
-		        APLICNT_LANG AS LANG,
-		        APLICNT_BANK_ID AS BANK_ID,
-		        APLICNT_BANK_ACC_NO AS BANK_ACC_NO,
+                APLICNT_SPOUSE_DOB AS SPOUSE_DOB,
+                APLICNT_EDU_LEV AS EDC_LEV,
+                APLICNT_LANG AS LANG,
+                APLICNT_BANK_ID AS BANK_ID,
+                APLICNT_BANK_ACC_NO AS BANK_ACC_NO,
 
-		        APLICNT_SPONS_CODE AS SPONS_CODE,
-		        SYSDATE CRT_DT,
-		        #{userid},
-		        SYSDATE UPD_DT,
-		        #{userid},  '1' AS stus, APLCTN_ID
-		        ,MAIN_DEPT , SUB_DEPT
-		        ,SYSDATE JOIN_DT, AREA_ID, ADDR_DTL, STREET,
-		        #{branchId}
-		        ,'Y'
-		from ORG0003D   d
-		where 1=1 and APLCTN_ID = #{MemberID}
+                APLICNT_SPONS_CODE AS SPONS_CODE,
+                SYSDATE CRT_DT,
+                #{userid},
+                SYSDATE UPD_DT,
+                #{userid},  '1' AS stus, APLCTN_ID
+                ,MAIN_DEPT , SUB_DEPT
+                ,SYSDATE JOIN_DT, AREA_ID, ADDR_DTL, STREET,
+                #{branchId}
+                ,'Y'
+        from ORG0003D   d
+        where 1=1 and APLCTN_ID = #{MemberID}
     </insert>
 
 
@@ -3352,25 +3344,25 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
     <select id="getDeptCdListList"  resultType="egovMap">
          SELECT C.DEPT_CODE CODE_ID,  (SELECT DEPT_NAME FROM SYS0040M WHERE DEPT_STUS_ID = 1 AND DEPT_ID = B.USER_DEPT_ID) AS CODE_NAME
-		  FROM ORG0001D A,
-		       SYS0047M B,
-		       ORG0005D C
-		 WHERE A.MEM_CODE = B.USER_NAME
-		   AND A.MEM_ID = C.MEM_ID
-		   AND B.USER_NAME =  #{userName}
+          FROM ORG0001D A,
+               SYS0047M B,
+               ORG0005D C
+         WHERE A.MEM_CODE = B.USER_NAME
+           AND A.MEM_ID = C.MEM_ID
+           AND B.USER_NAME =  #{userName}
     </select>
 
 
     <select id="getSpouseInfoView"  resultType="egovMap">
-		SELECT A.MEM_CODE,
-		       A.NAME,
-		       A.NRIC,
-		       to_char(A.DOB, 'dd/mm/yyyy') DOB,
-		       A.TEL_MOBILE
-		  FROM ORG0001D A,
-		       SYS0047M B
-		 WHERE A.MEM_CODE = B.USER_NAME
-		   AND B.USER_NAME = #{userName}
+        SELECT A.MEM_CODE,
+               A.NAME,
+               A.NRIC,
+               to_char(A.DOB, 'dd/mm/yyyy') DOB,
+               A.TEL_MOBILE
+          FROM ORG0001D A,
+               SYS0047M B
+         WHERE A.MEM_CODE = B.USER_NAME
+           AND B.USER_NAME = #{userName}
 
     </select>
 
@@ -3802,36 +3794,36 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
          <choose>
             <when test="groupCode == 2">
             <![CDATA[
-			SELECT MS8.COURS_ID AS CODE_ID, MS8.COURS_NAME AS CODE_NAME
-			  FROM MSC0008D MS8,
-			       (SELECT   COURS_ID, COUNT (1) CNT
-			            FROM MSC0009D
-			           WHERE 1 = 1
-			                 AND COURS_MEM_STUS_ID = '1'
-			        GROUP BY COURS_ID) MS9
-			 WHERE 1 = 1
-			   AND MS8.COURS_ID = MS9.COURS_ID(+)
-			   AND COURS_MEM_TYPE_ID = '2'
-			   AND COURS_STUS_ID = '1'
-			   AND COURS_LIMIT > nvl (MS9.CNT, 0)
-			   AND COURS_START  BETWEEN to_date(#{startDay},'yyyymm') and to_date(#{endDay},'yyyymm')
+            SELECT MS8.COURS_ID AS CODE_ID, MS8.COURS_NAME AS CODE_NAME
+              FROM MSC0008D MS8,
+                   (SELECT   COURS_ID, COUNT (1) CNT
+                        FROM MSC0009D
+                       WHERE 1 = 1
+                             AND COURS_MEM_STUS_ID = '1'
+                    GROUP BY COURS_ID) MS9
+             WHERE 1 = 1
+               AND MS8.COURS_ID = MS9.COURS_ID(+)
+               AND COURS_MEM_TYPE_ID = '2'
+               AND COURS_STUS_ID = '1'
+               AND COURS_LIMIT > nvl (MS9.CNT, 0)
+               AND COURS_START  BETWEEN to_date(#{startDay},'yyyymm') and to_date(#{endDay},'yyyymm')
                AND COURS_CLS_DT >= TO_DATE(#{curDt}, 'yyyymmdd')
             ]]>
             </when>
             <when test="groupCode == 3">
             <![CDATA[
-			SELECT MS8.COURS_ID AS CODE_ID, MS8.COURS_NAME AS CODE_NAME
-			  FROM MSC0008D MS8,
-			       (SELECT   COURS_ID, COUNT (1) CNT
-			            FROM MSC0009D
-			           WHERE 1 = 1
-			                 AND COURS_MEM_STUS_ID = '1'
-			        GROUP BY COURS_ID) MS9
-			 WHERE 1 = 1
-			   AND MS8.COURS_ID = MS9.COURS_ID(+)
-			   AND COURS_MEM_TYPE_ID = '3'
-			   AND COURS_STUS_ID = '1'
-			   AND COURS_LIMIT > nvl (MS9.CNT, 0)
+            SELECT MS8.COURS_ID AS CODE_ID, MS8.COURS_NAME AS CODE_NAME
+              FROM MSC0008D MS8,
+                   (SELECT   COURS_ID, COUNT (1) CNT
+                        FROM MSC0009D
+                       WHERE 1 = 1
+                             AND COURS_MEM_STUS_ID = '1'
+                    GROUP BY COURS_ID) MS9
+             WHERE 1 = 1
+               AND MS8.COURS_ID = MS9.COURS_ID(+)
+               AND COURS_MEM_TYPE_ID = '3'
+               AND COURS_STUS_ID = '1'
+               AND COURS_LIMIT > nvl (MS9.CNT, 0)
                AND COURS_START  BETWEEN to_date(#{startDay},'yyyymm') and to_date(#{endDay},'yyyymm')
                AND COURS_END  BETWEEN to_date(#{startDay},'yyyymm') and to_date(#{endDay},'yyyymm')
                AND COURS_CLS_DT >= TO_DATE(#{curDt}, 'yyyymmdd')
@@ -3881,60 +3873,60 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
          </select>
 
-	     <select id="selectTypeGroupCode" parameterType="Map" resultType="String">
-	       SELECT B.TYPE_ID  FROM ORG0001D A, SYS0005M B WHERE   A.BRNCH = B.BRNCH_ID AND A.MEM_CODE = #{userName}
+         <select id="selectTypeGroupCode" parameterType="Map" resultType="String">
+           SELECT B.TYPE_ID  FROM ORG0001D A, SYS0005M B WHERE   A.BRNCH = B.BRNCH_ID AND A.MEM_CODE = #{userName}
 
-	    </select>
+        </select>
 
-	    <select id="selectORG001DInfo" parameterType="Map" resultType="egovMap">
+        <select id="selectORG001DInfo" parameterType="Map" resultType="egovMap">
            SELECT NAME AS MEMBER_NM,
-				      FULL_NAME AS FULL_NAME,
-				      ADDR_DTL AS ADDRESS1,
-				       B.STATE AS ADDRESS2,
-				       '' AS ADDRESS3,
-				       '' AS ADDRESS4,
-				       NRIC
-				FROM ORG0001D A, SYS0064M B
-				WHERE 1=1
-				AND MEM_ID = #{MemberId}
-				AND A.AREA_ID = B.AREA_ID
+                      FULL_NAME AS FULL_NAME,
+                      ADDR_DTL AS ADDRESS1,
+                       B.STATE AS ADDRESS2,
+                       '' AS ADDRESS3,
+                       '' AS ADDRESS4,
+                       NRIC
+                FROM ORG0001D A, SYS0064M B
+                WHERE 1=1
+                AND MEM_ID = #{MemberId}
+                AND A.AREA_ID = B.AREA_ID
         </select>
 
     <select id="selectDepartmentCodeLit"  resultType="egovMap">
-		SELECT B.DEPT_CODE AS CODE_ID, B.DEPT_CODE AS CODE_NAME
-		  FROM ORG0001D A, ORG0005D B
-		 WHERE A.MEM_ID = B.MEM_ID
-		   AND A.STUS = '1'
-		   AND A.MEM_TYPE = '1'
-		   AND B.MEM_LVL = '3'
+        SELECT B.DEPT_CODE AS CODE_ID, B.DEPT_CODE AS CODE_NAME
+          FROM ORG0001D A, ORG0005D B
+         WHERE A.MEM_ID = B.MEM_ID
+           AND A.STUS = '1'
+           AND A.MEM_TYPE = '1'
+           AND B.MEM_LVL = '3'
     </select>
 
     <select id="selectBranchCodeLit"  resultType="egovMap">
-		SELECT BRNCH_ID CODE_ID
-		       , CODE ||'-'|| NAME  CODE_NAME
-		FROM SYS0005M
-		WHERE TYPE_ID = '2841'
-		ORDER BY CODE_ID
+        SELECT BRNCH_ID CODE_ID
+               , CODE ||'-'|| NAME  CODE_NAME
+        FROM SYS0005M
+        WHERE TYPE_ID = '2841'
+        ORDER BY CODE_ID
     </select>
 
     <select id="selectLastCode" parameterType="Map" resultType="egovMap">
         SELECT LAST_DEPT_CODE,
-		  LAST_GRP_CODE,
-		  LAST_ORG_CODE,
-		  BRNCH_ID
-		FROM ORG0005D
-		WHERE DEPT_CODE = #{deptCodeTo}
-		AND MEM_LVL     = #{memberLvl}
+          LAST_GRP_CODE,
+          LAST_ORG_CODE,
+          BRNCH_ID
+        FROM ORG0005D
+        WHERE DEPT_CODE = #{deptCodeTo}
+        AND MEM_LVL     = #{memberLvl}
     </select>
 
     <select id="checkNRIC1"  parameterType="Map" resultType="egovMap">
     <![CDATA[
         SELECT *
-		FROM ORG0003D
-		WHERE APLICNT_NRIC = #{nric}
-		AND STUS_ID <> '6'
-		AND APLICNT_TYPE IN ('1', '2803')
-	]]>
+        FROM ORG0003D
+        WHERE APLICNT_NRIC = #{nric}
+        AND STUS_ID <> '6'
+        AND APLICNT_TYPE IN ('1', '2803')
+    ]]>
     </select>
 
     <select id="checkNRIC2"  parameterType="Map" resultType="egovMap">
@@ -3943,8 +3935,8 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             MEM_TYPE,
             TO_CHAR(RESIGN_DT, 'YYYYMMDD') RESIGN_DT,
             STUS
-		FROM ORG0001D
-		WHERE NRIC = #{nric}
+        FROM ORG0001D
+        WHERE NRIC = #{nric}
     ]]>
     </select>
 
@@ -3985,20 +3977,20 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </select>
 
     <select id="selectParentIdFrom"  resultType="egovMap">
-	    SELECT MEM_UP_ID FROM ORG0005D
-	   WHERE MEM_ID = #{memberId}
+        SELECT MEM_UP_ID FROM ORG0005D
+       WHERE MEM_ID = #{memberId}
     </select>
 
     <select id="selectParentDCFrom"  resultType="egovMap">
         SELECT B.DEPT_CODE
-		FROM ORG0005D A
-		JOIN ORG0005D B ON A.MEM_UP_ID = B.MEM_ID
-		WHERE A.MEM_ID = #{memberId}
+        FROM ORG0005D A
+        JOIN ORG0005D B ON A.MEM_UP_ID = B.MEM_ID
+        WHERE A.MEM_ID = #{memberId}
     </select>
 
      <select id="selectHpMemberView"  parameterType="Map" resultType="egovMap">
 
-	  SELECT
+      SELECT
         A.APLICNT_TYPE,
         A.APLICNT_NAME MEM_NAME,
         A.APLICNT_GENDER gender,
@@ -4031,24 +4023,24 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
      <select id="selectOneHPMember"  parameterType="Map" resultType="egovMap">
 
-		 SELECT
-			A.ADDR_DTL,
-			A.Street,
-			A.DEPT_CODE c41,
-		    to_char( A.APLICNT_DOB ,'DD/MM/YYYY' ) c29,
-			C.NAME c36,
-		    A.APLICNT_CODE Mem_Code,
-			B.AREA area_Id,
-			B.COUNTRY,
-			B.CITY,
-			B.STATE,
-			B.POSTCODE,
-			 to_char( SYSDATE ,'DD/MM/YYYY' ) c30
-			FROM ORG0003D A,  SYS0064M B
-			,SYS0015M C
-			WHERE A.AREA_ID = B.AREA_ID
-			 AND    A. APLICNT_NATION = C.CNTY_ID(+)
-			AND     A.APLCTN_ID = #{MemberID}
+         SELECT
+            A.ADDR_DTL,
+            A.Street,
+            A.DEPT_CODE c41,
+            to_char( A.APLICNT_DOB ,'DD/MM/YYYY' ) c29,
+            C.NAME c36,
+            A.APLICNT_CODE Mem_Code,
+            B.AREA area_Id,
+            B.COUNTRY,
+            B.CITY,
+            B.STATE,
+            B.POSTCODE,
+             to_char( SYSDATE ,'DD/MM/YYYY' ) c30
+            FROM ORG0003D A,  SYS0064M B
+            ,SYS0015M C
+            WHERE A.AREA_ID = B.AREA_ID
+             AND    A. APLICNT_NATION = C.CNTY_ID(+)
+            AND     A.APLCTN_ID = #{MemberID}
 
      </select>
 
@@ -4123,10 +4115,10 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
     <update id="updateMemberBranch" parameterType="Map" >
         UPDATE ORG0001D
-		   SET BRNCH = #{selectBranch}
-			    ,UPD_DT = SYSDATE
-	            ,UPD_USER_ID = #{user_id}
-		  WHERE MEM_ID = #{MemberID}
+           SET BRNCH = #{selectBranch}
+                ,UPD_DT = SYSDATE
+                ,UPD_USER_ID = #{user_id}
+          WHERE MEM_ID = #{MemberID}
     </update>
 
     <update id="updateMemberBranch2" parameterType="Map" >
@@ -4198,9 +4190,9 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </delete>
 
     <select id="selectNricExist"  parameterType="Map" resultType="egovMap">
-	    SELECT MEM_CODE FROM ORG0001D
-		WHERE NRIC = #{nric}
-		AND MEM_TYPE = '1'
+        SELECT MEM_CODE FROM ORG0001D
+        WHERE NRIC = #{nric}
+        AND MEM_TYPE = '1'
      </select>
 
     <update id="updateCodyPaDate" parameterType="Map">
@@ -4225,12 +4217,12 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
      <update id="updateHpApprovalReject" parameterType="Map">
 
-		UPDATE ORG0003D
-		SET STUS_ID = 6 ,
-		UPD_DT = SYSDATE ,
-		REM = 'HP REJECT' ,
-		UPD_USER_ID = #{UpdUserId}
-		where APLCTN_ID = #{memberId}
+        UPDATE ORG0003D
+        SET STUS_ID = 6 ,
+        UPD_DT = SYSDATE ,
+        REM = 'HP REJECT' ,
+        UPD_USER_ID = #{UpdUserId}
+        where APLCTN_ID = #{memberId}
 
      </update>
 
@@ -4418,25 +4410,25 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
      <select id="selectAreaInfo" parameterType="Map" resultType="egovMap">
                SELECT AREA_ID,
-						  ISO,
-						  COUNTRY,
-						  STATE,
-						  CITY,
-						  POSTCODE,
-						  AREA,
-						  AREA
-						  || ' '
-						  || POSTCODE
-						  || ' '
-						  || CITY
-						  || ' '
-						  || STATE
-						  || ' '
-						  || COUNTRY AS FULL_ADDRESS
-						FROM SYS0064M
-						WHERE ISO = 'MY'
-						AND AREA_ID = #{areaId}
-						AND STATUS_ID = 1
+                          ISO,
+                          COUNTRY,
+                          STATE,
+                          CITY,
+                          POSTCODE,
+                          AREA,
+                          AREA
+                          || ' '
+                          || POSTCODE
+                          || ' '
+                          || CITY
+                          || ' '
+                          || STATE
+                          || ' '
+                          || COUNTRY AS FULL_ADDRESS
+                        FROM SYS0064M
+                        WHERE ISO = 'MY'
+                        AND AREA_ID = #{areaId}
+                        AND STATUS_ID = 1
       </select>
 
       <update id="SP_SVC_LOG_SYS0028M" parameterType="Map"  statementType="CALLABLE" >
@@ -4447,15 +4439,15 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
      <select id="selectAllBranchCode" parameterType="Map" resultType="egovMap">
         SELECT
-			Project1.BranchID AS CODE_ID,
-			Project1.C1 CODE_NAME
-		FROM ( SELECT
-				    Extent1.BRNCH_ID BranchID,
-				    Extent1.CODE||' - '||Extent1.NAME C1
-				    FROM SYS0005M Extent1
-				    WHERE 1 = Extent1.STUS_ID
-				  )  Project1
-	    ORDER BY Project1.C1 ASC
+            Project1.BranchID AS CODE_ID,
+            Project1.C1 CODE_NAME
+        FROM ( SELECT
+                    Extent1.BRNCH_ID BranchID,
+                    Extent1.CODE||' - '||Extent1.NAME C1
+                    FROM SYS0005M Extent1
+                    WHERE 1 = Extent1.STUS_ID
+                  )  Project1
+        ORDER BY Project1.C1 ASC
     </select>
 
      <select id="validateHpStatus" parameterType="Map" resultType="egovMap">
@@ -4569,27 +4561,6 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 AND A.APLICNT_NRIC = #{nric}
             </if>
       </select>
-
-       /*<!-- @AMEER INCOME_TAX -->
-       <select id="checkIncomeTax" parameterType="Map" resultType="egovMap">
-        SELECT
-            COUNT(1) CNT
-        <if test="srcA != '' and srcA != null ">
-            <![CDATA[
-                FROM ORG0003D
-                WHERE APLICNT_INC_TAX = #{incomeTaxNo}
-                AND STUS_ID <> '6'
-            ]]>
-        </if>
-        <if test="srcM != '' and srcM != null ">
-            <![CDATA[
-                FROM ORG0001D
-                WHERE INC_TAX = #{incomeTaxNo}
-                AND STUS <> '51'
-                AND STUS <> '3'
-            ]]>
-        </if>
-      </select>*/
 
       <select id="checkBankAcc" parameterType="Map" resultType="egovMap">
         SELECT
@@ -4917,241 +4888,237 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
 <!-- LaiKW - Comment starts here -->
     <update id="memberListUpdate_SYS47" parameterType="Map">
-		UPDATE SYS0047M
-		SET USER_UPD_USER_ID = #{user_id}
-		  , USER_UPD_DT = SYSDATE
-		  <if test="selectBranchUpd != null and selectBranchUpd != '' ">
-		      , USER_BRNCH_ID = #{selectBranchUpd}
-		  </if>
-		  <if test="convStaffFlgUpd != null and convStaffFlgUpd != '' ">
-		      , HR_CODE = #{memberCodeUpd}
-		  </if>
-		WHERE HR_CODE = (
-		    SELECT MEM_CODE
-		    FROM ORG0001D
-		    WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
-		)
-	</update>
+        UPDATE SYS0047M
+        SET USER_UPD_USER_ID = #{user_id}
+          , USER_UPD_DT = SYSDATE
+          <if test="selectBranchUpd != null and selectBranchUpd != '' ">
+              , USER_BRNCH_ID = #{selectBranchUpd}
+          </if>
+          <if test="convStaffFlgUpd != null and convStaffFlgUpd != '' ">
+              , HR_CODE = #{memberCodeUpd}
+          </if>
+        WHERE HR_CODE = (
+            SELECT MEM_CODE
+            FROM ORG0001D
+            WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
+        )
+    </update>
 
-	<update id="memberListUpdate_ORG05" parameterType="Map">
-		UPDATE ORG0005D
-		SET ORG_UPD_USER_ID = #{user_id}
-		  , ORG_UPD_DT = SYSDATE
-		  , BRNCH_ID = #{selectBranchUpd}
-		WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
-	</update>
+    <update id="memberListUpdate_ORG05" parameterType="Map">
+        UPDATE ORG0005D
+        SET ORG_UPD_USER_ID = #{user_id}
+          , ORG_UPD_DT = SYSDATE
+          , BRNCH_ID = #{selectBranchUpd}
+        WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
+    </update>
 
-	<update id="memberListUpdate_ORG01" parameterType="Map">
-		UPDATE ORG0001D
-		SET UPD_USER_ID = #{user_id}
-		  , UPD_DT = SYSDATE
-		<if test="convStaffFlgUpd != null and convStaffFlgUpd != '' ">
-		  , MEM_TYPE = '4'
-		  <if test="memberCodeUpd != null and memberCodeUpd != ''">
-		    , MEM_CODE = #{memberCodeUpd}
-		  </if>
-		</if>
-		<if test="memberNmUpd != null and memberNmUpd != '' ">
-		  , NAME = UPPER(#{memberNmUpd})
-		  , FULL_NAME = UPPER(#{memberNmUpd})
-		</if>
-		<if test="cmbRaceUpd != null and cmbRaceUpd != '' ">
-		  , RACE = #{cmbRaceUpd}
-		</if>
-		<if test="marritalUpd != null and marritalUpd != '' ">
-		  , MARTL = #{marritalUpd}
-		</if>
-		<if test="officeNoUpd != null">
-		  , TEL_OFFICE = #{officeNoUpd}
-		</if>
-		<if test="residenceNoUpd != null ">
-		  , TEL_HUSE = #{residenceNoUpd}
-		</if>
-		<if test="mobileNoUpd != null and mobileNoUpd != '' ">
-		  , TEL_MOBILE = #{mobileNoUpd}
-		</if>
-		<if test="emailUpd != null and emailUpd != '' ">
-		  , EMAIL = #{emailUpd}
-		</if>
-		<if test="spouseCodeUpd != null">
-		  , SPUSE_CODE = #{spouseCodeUpd}
-		</if>
-		<if test="spouseNameUpd != null">
-		  , SPOUSE_NAME = UPPER(#{spouseNameUpd})
-		</if>
-		<if test="spouseNricUpd != null">
-		  , SPOUSE_NRIC = #{spouseNricUpd}
-		</if>
-		<if test="spouseOccUpd != null">
-		  , SPOUSE_OCPAT = #{spouseOccUpd}
-		</if>
-		<if test="spouseContatUpd != null">
-		  , SPOUSE_TEL_CNTC = #{spouseContatUpd}
-		</if>
-		<if test="spouseDobUpd != null">
-		  , SPOUSE_DOB = TO_DATE(#{spouseDobUpd},'DD/MM/YYYY')
-		</if>
-		<if test="educationLvlUpd != null and educationLvlUpd != '' ">
-		  , EDC_LEV = #{educationLvlUpd}
-		</if>
-		<if test="languageUpd != null and languageUpd != '' ">
-		  , LANG = #{languageUpd}
-		</if>
-		<if test="issuedBankUpd != null and issuedBankUpd != '' ">
-		  , BANK = #{issuedBankUpd}
-		</if>
-		<if test="bankAccNoUpd != null and bankAccNoUpd != '' ">
-		  , BANK_ACC_NO = #{bankAccNoUpd}
-		</if>
-		<if test="selectBranchUpd != null and selectBranchUpd != '' ">
-		  , BRNCH = #{selectBranchUpd}
-		</if>
-		<if test="transportCdUpd != null and transportCdUpd != '' ">
-		  , TRNSPRT = #{transportCdUpd}
-		</if>
-		<if test="trNoUpd != null and trNoUpd != '' ">
-		  , TR_NO = #{trNoUpd}
-		</if>
-		<if test="hsptlz != null and hsptlz != '' ">
-		  , HSPTLZ = #{hsptlz}
-		</if>
-		<if test="areaIdUpd != null and areaIdUpd != '' ">
-		  , AREA_ID = #{areaIdUpd}
-		</if>
-		<if test="addrDtlUpd != null and addrDtlUpd != '' ">
-		  , ADDR_DTL = #{addrDtlUpd}
-		</if>
-		<if test="streetDtlUpd != null and streetDtlUpd != '' ">
-		  , STREET = #{streetDtlUpd}
-		</if>
-		<if test="searchdepartmentUpd != null and searchdepartmentUpd != '' ">
-		  , MAIN_DEPT = (SELECT MAIN_DEPT_CODE FROM SYS0105M WHERE ID = #{searchdepartmentUpd})
-		</if>
-		<if test="inputSubDeptUpd != null and inputSubDeptUpd != '' ">
-		  , SUB_DEPT = (SELECT SUB_DEPT_CODE FROM SYS0105M WHERE ID = #{searchdepartmentUpd})
-		</if>
-		<if test="religionUpd != null and religionUpd != '' ">
-		  , RELIGION = #{religionUpd}
-		</if>
-		<if test="mobileUseYnUpd != null and mobileUseYnUpd != '' ">
-		  , MOBILE_USE_YN = #{mobileUseYnUpd}
-		</if>
-		<if test="noTBBChkboxUpd != null and noTBBChkboxUpd != '' ">
+    <update id="memberListUpdate_ORG01" parameterType="Map">
+        UPDATE ORG0001D
+        SET UPD_USER_ID = #{user_id}
+          , UPD_DT = SYSDATE
+        <if test="convStaffFlgUpd != null and convStaffFlgUpd != '' ">
+          , MEM_TYPE = '4'
+          <if test="memberCodeUpd != null and memberCodeUpd != ''">
+            , MEM_CODE = #{memberCodeUpd}
+          </if>
+        </if>
+        <if test="memberNmUpd != null and memberNmUpd != '' ">
+          , NAME = UPPER(#{memberNmUpd})
+          , FULL_NAME = UPPER(#{memberNmUpd})
+        </if>
+        <if test="cmbRaceUpd != null and cmbRaceUpd != '' ">
+          , RACE = #{cmbRaceUpd}
+        </if>
+        <if test="marritalUpd != null and marritalUpd != '' ">
+          , MARTL = #{marritalUpd}
+        </if>
+        <if test="officeNoUpd != null">
+          , TEL_OFFICE = #{officeNoUpd}
+        </if>
+        <if test="residenceNoUpd != null ">
+          , TEL_HUSE = #{residenceNoUpd}
+        </if>
+        <if test="mobileNoUpd != null and mobileNoUpd != '' ">
+          , TEL_MOBILE = #{mobileNoUpd}
+        </if>
+        <if test="emailUpd != null and emailUpd != '' ">
+          , EMAIL = #{emailUpd}
+        </if>
+        <if test="spouseCodeUpd != null">
+          , SPUSE_CODE = #{spouseCodeUpd}
+        </if>
+        <if test="spouseNameUpd != null">
+          , SPOUSE_NAME = UPPER(#{spouseNameUpd})
+        </if>
+        <if test="spouseNricUpd != null">
+          , SPOUSE_NRIC = #{spouseNricUpd}
+        </if>
+        <if test="spouseOccUpd != null">
+          , SPOUSE_OCPAT = #{spouseOccUpd}
+        </if>
+        <if test="spouseContatUpd != null">
+          , SPOUSE_TEL_CNTC = #{spouseContatUpd}
+        </if>
+        <if test="spouseDobUpd != null">
+          , SPOUSE_DOB = TO_DATE(#{spouseDobUpd},'DD/MM/YYYY')
+        </if>
+        <if test="educationLvlUpd != null and educationLvlUpd != '' ">
+          , EDC_LEV = #{educationLvlUpd}
+        </if>
+        <if test="languageUpd != null and languageUpd != '' ">
+          , LANG = #{languageUpd}
+        </if>
+        <if test="issuedBankUpd != null and issuedBankUpd != '' ">
+          , BANK = #{issuedBankUpd}
+        </if>
+        <if test="bankAccNoUpd != null and bankAccNoUpd != '' ">
+          , BANK_ACC_NO = #{bankAccNoUpd}
+        </if>
+        <if test="selectBranchUpd != null and selectBranchUpd != '' ">
+          , BRNCH = #{selectBranchUpd}
+        </if>
+        <if test="transportCdUpd != null and transportCdUpd != '' ">
+          , TRNSPRT = #{transportCdUpd}
+        </if>
+        <if test="trNoUpd != null and trNoUpd != '' ">
+          , TR_NO = #{trNoUpd}
+        </if>
+        <if test="hsptlz != null and hsptlz != '' ">
+          , HSPTLZ = #{hsptlz}
+        </if>
+        <if test="areaIdUpd != null and areaIdUpd != '' ">
+          , AREA_ID = #{areaIdUpd}
+        </if>
+        <if test="addrDtlUpd != null and addrDtlUpd != '' ">
+          , ADDR_DTL = #{addrDtlUpd}
+        </if>
+        <if test="streetDtlUpd != null and streetDtlUpd != '' ">
+          , STREET = #{streetDtlUpd}
+        </if>
+        <if test="searchdepartmentUpd != null and searchdepartmentUpd != '' ">
+          , MAIN_DEPT = (SELECT MAIN_DEPT_CODE FROM SYS0105M WHERE ID = #{searchdepartmentUpd})
+        </if>
+        <if test="inputSubDeptUpd != null and inputSubDeptUpd != '' ">
+          , SUB_DEPT = (SELECT SUB_DEPT_CODE FROM SYS0105M WHERE ID = #{searchdepartmentUpd})
+        </if>
+        <if test="religionUpd != null and religionUpd != '' ">
+          , RELIGION = #{religionUpd}
+        </if>
+        <if test="mobileUseYnUpd != null and mobileUseYnUpd != '' ">
+          , MOBILE_USE_YN = #{mobileUseYnUpd}
+        </if>
+        <if test="noTBBChkboxUpd != null and noTBBChkboxUpd != '' ">
           , NO_TBB = #{noTBBChkboxUpd}
         </if>
-        /*<!-- ADDED INCOME TAX NO @AMEER 2021-09-27 -->
-        <if test="incomeTaxNo != null and incomeTaxNo != '' ">
-          , INC_TAX = #{incomeTaxNo}
-        </if>*/
-		WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
-	</update>
+        WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
+    </update>
 
-	<update id="memberListUpdate_ORG03" parameterType="Map">
-		UPDATE ORG0003D
-		SET UPD_USER_ID = #{user_id}
-		  , UPD_DT = SYSDATE
-		<if test="memberNmUpd != null and memberNmUpd != '' ">
-		  , APLICNT_NAME = UPPER(#{memberNmUpd})
-		  , APLICNT_FULL_NAME = UPPER(#{memberNmUpd})
-		</if>
-		<if test="cmbRaceUpd != null and cmbRaceUpd != '' ">
-		  , APLICNT_RACE = #{cmbRaceUpd}
-		</if>
-		<if test="marritalUpd != null and marritalUpd != '' ">
-		  , APLICNT_MARTL = #{marritalUpd}
-		</if>
-		<if test="officeNoUpd != null">
-		  , APLICNT_TEL_OFFICE = #{officeNoUpd}
-		</if>
-		<if test="residenceNoUpd != null">
-		  , APLICNT_TEL_HUSE = #{residenceNoUpd}
-		</if>
-		<if test="mobileNoUpd != null and mobileNoUpd != '' ">
-		  , APLICNT_TEL_MOBILE = #{mobileNoUpd}
-		</if>
-		<if test="emailUpd != null and emailUpd != '' ">
-		  , APLICNT_EMAIL = #{emailUpd}
-		</if>
-		<if test="spouseCodeUpd != null">
-		  , APLICNT_SPUSE_CODE = #{spouseCodeUpd}
-		</if>
-		<if test="spouseNameUpd != null">
-		  , APLICNT_SPOUSE_NAME = UPPER(#{spouseNameUpd})
-		</if>
-		<if test="spouseNricUpd != null">
-		  , APLICNT_SPOUSE_NRIC = #{spouseNricUpd}
-		</if>
-		<if test="spouseOccUpd != null">
-		  , APLICNT_SPOUSE_OCPAT = #{spouseOccUpd}
-		</if>
-		<if test="spouseContatUpd != null">
-		  , APLICNT_SPOUSE_TEL_CNTC = #{spouseContatUpd}
-		</if>
-		<if test="spouseDobUpd != null">
-		  , APLICNT_SPOUSE_DOB = TO_DATE(#{spouseDobUpd},'DD/MM/YYYY')
-		</if>
-		<if test="educationLvlUpd != null and educationLvlUpd != '' ">
-		  , APLICNT_EDC_LEV = #{educationLvlUpd}
-		</if>
-		<if test="languageUpd != null and languageUpd != '' ">
-		  , APLICNT_LANG = #{languageUpd}
-		</if>
-		<if test="issuedBankUpd != null and issuedBankUpd != '' ">
-		  , APLICNT_BANK_ID = #{issuedBankUpd}
-		</if>
-		<if test="bankAccNoUpd != null and bankAccNoUpd != '' ">
-		  , APLICNT_BANK_ACC_NO = #{bankAccNoUpd}
-		</if>
-		<if test="transportCdUpd != null and transportCdUpd != '' ">
-		  , APLICNT_TRNSPRT = #{transportCdUpd}
-		</if>
-		<if test="areaIdUpd != null and areaIdUpd != '' ">
-		  , AREA_ID = #{areaIdUpd}
-		</if>
-		<if test="addrDtlUpd != null and addrDtlUpd != '' ">
-		  , ADDR_DTL = #{addrDtlUpd}
-		</if>
-		<if test="streetDtlUpd != null and streetDtlUpd != '' ">
-		  , STREET = #{streetDtlUpd}
-		</if>
-		<if test="searchdepartmentUpd != null and searchdepartmentUpd != '' ">
-		  , MAIN_DEPT = #{searchdepartmentUpd}
-		</if>
-		<if test="inputSubDeptUpd != null and inputSubDeptUpd != '' ">
-		  , SUB_DEPT = #{inputSubDeptUpd}
-		</if>
-		<if test="meetingPointUpd != null and meetingPointUpd != '' ">
-		  , APLICNT_MEETPOINT = #{meetingPointUpd}
-		</if>
-		WHERE APLCTN_ID = (
-		    SELECT APLICNT_ID
-		    FROM ORG0001D
-		    WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
-		)
-	</update>
+    <update id="memberListUpdate_ORG03" parameterType="Map">
+        UPDATE ORG0003D
+        SET UPD_USER_ID = #{user_id}
+          , UPD_DT = SYSDATE
+        <if test="memberNmUpd != null and memberNmUpd != '' ">
+          , APLICNT_NAME = UPPER(#{memberNmUpd})
+          , APLICNT_FULL_NAME = UPPER(#{memberNmUpd})
+        </if>
+        <if test="cmbRaceUpd != null and cmbRaceUpd != '' ">
+          , APLICNT_RACE = #{cmbRaceUpd}
+        </if>
+        <if test="marritalUpd != null and marritalUpd != '' ">
+          , APLICNT_MARTL = #{marritalUpd}
+        </if>
+        <if test="officeNoUpd != null">
+          , APLICNT_TEL_OFFICE = #{officeNoUpd}
+        </if>
+        <if test="residenceNoUpd != null">
+          , APLICNT_TEL_HUSE = #{residenceNoUpd}
+        </if>
+        <if test="mobileNoUpd != null and mobileNoUpd != '' ">
+          , APLICNT_TEL_MOBILE = #{mobileNoUpd}
+        </if>
+        <if test="emailUpd != null and emailUpd != '' ">
+          , APLICNT_EMAIL = #{emailUpd}
+        </if>
+        <if test="spouseCodeUpd != null">
+          , APLICNT_SPUSE_CODE = #{spouseCodeUpd}
+        </if>
+        <if test="spouseNameUpd != null">
+          , APLICNT_SPOUSE_NAME = UPPER(#{spouseNameUpd})
+        </if>
+        <if test="spouseNricUpd != null">
+          , APLICNT_SPOUSE_NRIC = #{spouseNricUpd}
+        </if>
+        <if test="spouseOccUpd != null">
+          , APLICNT_SPOUSE_OCPAT = #{spouseOccUpd}
+        </if>
+        <if test="spouseContatUpd != null">
+          , APLICNT_SPOUSE_TEL_CNTC = #{spouseContatUpd}
+        </if>
+        <if test="spouseDobUpd != null">
+          , APLICNT_SPOUSE_DOB = TO_DATE(#{spouseDobUpd},'DD/MM/YYYY')
+        </if>
+        <if test="educationLvlUpd != null and educationLvlUpd != '' ">
+          , APLICNT_EDC_LEV = #{educationLvlUpd}
+        </if>
+        <if test="languageUpd != null and languageUpd != '' ">
+          , APLICNT_LANG = #{languageUpd}
+        </if>
+        <if test="issuedBankUpd != null and issuedBankUpd != '' ">
+          , APLICNT_BANK_ID = #{issuedBankUpd}
+        </if>
+        <if test="bankAccNoUpd != null and bankAccNoUpd != '' ">
+          , APLICNT_BANK_ACC_NO = #{bankAccNoUpd}
+        </if>
+        <if test="transportCdUpd != null and transportCdUpd != '' ">
+          , APLICNT_TRNSPRT = #{transportCdUpd}
+        </if>
+        <if test="areaIdUpd != null and areaIdUpd != '' ">
+          , AREA_ID = #{areaIdUpd}
+        </if>
+        <if test="addrDtlUpd != null and addrDtlUpd != '' ">
+          , ADDR_DTL = #{addrDtlUpd}
+        </if>
+        <if test="streetDtlUpd != null and streetDtlUpd != '' ">
+          , STREET = #{streetDtlUpd}
+        </if>
+        <if test="searchdepartmentUpd != null and searchdepartmentUpd != '' ">
+          , MAIN_DEPT = #{searchdepartmentUpd}
+        </if>
+        <if test="inputSubDeptUpd != null and inputSubDeptUpd != '' ">
+          , SUB_DEPT = #{inputSubDeptUpd}
+        </if>
+        <if test="meetingPointUpd != null and meetingPointUpd != '' ">
+          , APLICNT_MEETPOINT = #{meetingPointUpd}
+        </if>
+        WHERE APLCTN_ID = (
+            SELECT APLICNT_ID
+            FROM ORG0001D
+            WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
+        )
+    </update>
 
-	<select id="selectMemCourse" parameterType="Map" resultType="egovMap">
-		SELECT
-		    COURS_ITM_ID,
-		    COURS_ID,
-		    COURS_TEST_RESULT,
-		    COURS_MEM_STUS_ID
-		FROM MSC0009D
-		WHERE COURS_MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
-		AND COURS_MEM_STUS_ID = 1
-		AND COURS_TEST_RESULT IS NULL
-	</select>
+    <select id="selectMemCourse" parameterType="Map" resultType="egovMap">
+        SELECT
+            COURS_ITM_ID,
+            COURS_ID,
+            COURS_TEST_RESULT,
+            COURS_MEM_STUS_ID
+        FROM MSC0009D
+        WHERE COURS_MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
+        AND COURS_MEM_STUS_ID = 1
+        AND COURS_TEST_RESULT IS NULL
+    </select>
 
-	<update id="memberListUpdate_MSC09" parameterType="Map">
-		UPDATE MSC0009D
-		SET COURS_D_UPD_USER_ID = #{user_id}
-		  , COURS_D_UPD_DT = SYSDATE
-		  , COURS_ID = #{courseUpd}
-		WHERE COURS_MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
-		AND COURS_ITM_ID = #{coursItmId}
-	</update>
+    <update id="memberListUpdate_MSC09" parameterType="Map">
+        UPDATE MSC0009D
+        SET COURS_D_UPD_USER_ID = #{user_id}
+          , COURS_D_UPD_DT = SYSDATE
+          , COURS_ID = #{courseUpd}
+        WHERE COURS_MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
+        AND COURS_ITM_ID = #{coursItmId}
+    </update>
 
-	<update id="memberListUpdate_ORG02" parameterType="Map">
+    <update id="memberListUpdate_ORG02" parameterType="Map">
     MERGE INTO ORG0002D
     USING DUAL
     ON (MEM_ID = #{MemberID} AND AG_STUS_ID = '1')
@@ -5167,33 +5134,33 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
     <select id="checkMemCode" parameterType="Map" resultType="int">
         SELECT COUNT(*) EXIST
-		FROM ORG0001D
-		WHERE EXISTS (
-		    SELECT *
-		    FROM SYS0047M
-		    WHERE ORG0001D.MEM_CODE = SYS0047M.USER_NAME
-		)
-		AND ORG0001D.MEM_CODE = #{username}
+        FROM ORG0001D
+        WHERE EXISTS (
+            SELECT *
+            FROM SYS0047M
+            WHERE ORG0001D.MEM_CODE = SYS0047M.USER_NAME
+        )
+        AND ORG0001D.MEM_CODE = #{username}
     </select>
 <!-- LaiKW - Comment ends here -->
 
     <select id="selectTraining" parameterType="Map" resultType="egovMap">
-	    SELECT
-	        C.COURS_CODE || ' - ' || C.COURS_NAME COURSE_CODE,
-	        TO_CHAR(C.COURS_START, 'DD/MM/YYYY') C_DATE,
-	        CASE WHEN B.COURS_TEST_RESULT = 'P' THEN 'PASS'
-	             WHEN B.COURS_TEST_RESULT = 'AB' THEN 'ABSENT'
-	             WHEN B.COURS_TEST_RESULT = 'F' THEN 'FAILED'
-	             ELSE '-'
-	        END RESULT,
+        SELECT
+            C.COURS_CODE || ' - ' || C.COURS_NAME COURSE_CODE,
+            TO_CHAR(C.COURS_START, 'DD/MM/YYYY') C_DATE,
+            CASE WHEN B.COURS_TEST_RESULT = 'P' THEN 'PASS'
+                 WHEN B.COURS_TEST_RESULT = 'AB' THEN 'ABSENT'
+                 WHEN B.COURS_TEST_RESULT = 'F' THEN 'FAILED'
+                 ELSE '-'
+            END RESULT,
             C.COURS_LOC
-	    FROM ORG0001D A
-	    LEFT JOIN MSC0009D B
-	        ON A.MEM_ID = B.COURS_MEM_ID
-	    LEFT JOIN MSC0008D C
-	        ON B.COURS_ID = C.COURS_ID
-	        AND C.COURS_STUS_ID = 1
-	    WHERE A.MEM_ID = #{MemberID}
+        FROM ORG0001D A
+        LEFT JOIN MSC0009D B
+            ON A.MEM_ID = B.COURS_MEM_ID
+        LEFT JOIN MSC0008D C
+            ON B.COURS_ID = C.COURS_ID
+            AND C.COURS_STUS_ID = 1
+        WHERE A.MEM_ID = #{MemberID}
     </select>
 
     <select id="getNextMPID" parameterType="Map" resultType="int">
