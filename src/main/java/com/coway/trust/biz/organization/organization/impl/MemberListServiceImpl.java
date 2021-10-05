@@ -2479,10 +2479,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     }
 
 	//@AMEER INCOME TAX 20210928
-	@Override
+	/*@Override
     public EgovMap checkIncomeTax(Map<String, Object> params) {
         return memberListMapper.checkIncomeTax(params);
-    }
+    }*/
 
 	@Override
 	public EgovMap getUserRole(Map<String, Object> params) {
@@ -2656,7 +2656,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	@Override
 	public Map<String, Object> lmsMemberListInsert(Map<String, Object> params){
 		Map<String, Object> resultValue = new HashMap<String, Object>();
-		if(true) return resultValue;
+		/*if(true) return resultValue;*/
 		EgovMap selectMemListlms = memberListMapper.selectMemberListView(params);
 		List<EgovMap> selectcoursListlms = memberListMapper.selectTraining(params);
 
@@ -2738,7 +2738,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	@Override
 	public Map<String, Object> lmsMemberListUpdate(Map<String, Object> params){
 		Map<String, Object> resultValue = new HashMap<String, Object>();
-		if(true) return resultValue;
+		/*if(true) return resultValue;*/
 		EgovMap selectMemListlms = memberListMapper.selectMemberListView(params);
 		List<EgovMap> selectcoursListlms = memberListMapper.selectTraining(params);
 
