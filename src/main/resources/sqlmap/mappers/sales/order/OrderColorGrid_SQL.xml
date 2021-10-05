@@ -212,7 +212,7 @@
                                  ON instStatus.STUS_CODE_ID = ir.STUS_CODE_ID
                               LEFT JOIN SYS0032M instReason ON instReason.RESN_ID = ir.FAIL_ID
                               WHERE (som.STUS_CODE_ID <![CDATA[<>]]> 8)
-
+                              AND som.APP_TYPE_ID <![CDATA[<>]]> 5764
 
                         <if test="cmbAppTypeList != null and cmbAppTypeList != ''">
                           AND som.APP_TYPE_ID IN
