@@ -624,9 +624,9 @@
        (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course,
        Limit1.APLICNT_MEETPOINT,
        Limit1.MOBILE_USE_YN,
-       Limit1.NO_TBB,
+       Limit1.NO_TBB /*,
        Limit1.INC_TAX,
-       Limit1.APLICNT_INC_TAX
+       Limit1.APLICNT_INC_TAX */
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -970,9 +970,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 BANK.NAME AS BANK_NAME,
                 EXTENT29.MEET_POINT_CODE || ' - ' || MEET_POINT_DESC APLICNT_MEETPOINT,
                 Extent1.MOBILE_USE_YN,
-                Extent1.NO_TBB,
+                Extent1.NO_TBB /*,
                 Extent1.INC_TAX,
-                Extent28.APLICNT_INC_TAX
+                Extent28.APLICNT_INC_TAX */
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
@@ -1279,7 +1279,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         ,SUB_DEPT
         , RELIGION
         , MOBILE_USE_YN
-        , INC_TAX
+        /*, INC_TAX*/
         )
             VALUES (
             ORG0001D_MEM_ID_SEQ.NEXTVAL
@@ -1342,7 +1342,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
              , #{searchSubDept}
              , #{religion}
              , NVL(#{mobileUseYn}, 'N')
-             , #{incomeTaxNo}
+             /*, #{incomeTaxNo}*/
              )
     </insert>
 
@@ -2641,8 +2641,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
        (SELECT ID FROM SYS0105M WHERE MAIN_DEPT_CODE = Limit1.MAIN_DEPT AND SUB_DEPT_CODE = Limit1.SUB_DEPT) DEPT_ID,
        Limit1.RELIGION,
        (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course,
-       Limit1.MEETPOINT_ID,
-       Limit1.INC_TAX
+       Limit1.MEETPOINT_ID/*,
+       Limit1.INC_TAX*/
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -2990,8 +2990,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                  Extent1.RELIGION,
                  EXTENT1.MAIN_DEPT,
                  EXTENT1.SUB_DEPT,
-                 EXTENT23.APLICNT_MEETPOINT MEETPOINT_ID,
-                 EXTENT1.INC_TAX
+                 EXTENT23.APLICNT_MEETPOINT MEETPOINT_ID/*,
+                 EXTENT1.INC_TAX*/
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
@@ -3163,9 +3163,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               BIZ_TYPE =#{businessType},
               </if>
               BRNCH =#{selectBranch},
-              MOBILE_USE_YN = NVL(#{mobileUseYn}, 'N'),
+              MOBILE_USE_YN = NVL(#{mobileUseYn}, 'N')/*,
 
-              INC_TAX = #{incomeTaxNo}
+              INC_TAX = #{incomeTaxNo}*/
 
         WHERE  ( MEM_ID = TO_NUMBER(TRIM(#{MemberID})) )
 
@@ -4570,7 +4570,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             </if>
       </select>
 
-       <!-- @AMEER INCOME_TAX -->
+       /*<!-- @AMEER INCOME_TAX -->
        <select id="checkIncomeTax" parameterType="Map" resultType="egovMap">
         SELECT
             COUNT(1) CNT
@@ -4589,7 +4589,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 AND STUS <> '3'
             ]]>
         </if>
-      </select>
+      </select>*/
 
       <select id="checkBankAcc" parameterType="Map" resultType="egovMap">
         SELECT
@@ -5039,10 +5039,10 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		<if test="noTBBChkboxUpd != null and noTBBChkboxUpd != '' ">
           , NO_TBB = #{noTBBChkboxUpd}
         </if>
-        <!-- ADDED INCOME TAX NO @AMEER 2021-09-27 -->
+        /*<!-- ADDED INCOME TAX NO @AMEER 2021-09-27 -->
         <if test="incomeTaxNo != null and incomeTaxNo != '' ">
           , INC_TAX = #{incomeTaxNo}
-        </if>
+        </if>*/
 		WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
 	</update>
 
