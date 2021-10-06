@@ -1037,13 +1037,13 @@ public class MemberListController {
             u4 = memberListService.memberListUpdate_ORG03(formMap);
 
             if(formMap.get("memberType").toString().equals("5")) {
-//                EgovMap trainingItem = memberListService.selectMemCourse(formMap);
-//
-//                if(!trainingItem.isEmpty()) {
-//                    formMap.put("coursItmId", trainingItem.get("coursItmId"));
-//                    u5 = memberListService.memberListUpdate_MSC09(formMap);
-//                }
-            	memberListService.lmsMemberListUpdate(formMap);
+                EgovMap trainingItem = memberListService.selectMemCourse(formMap);
+
+                if(!trainingItem.isEmpty()) {
+                    formMap.put("coursItmId", trainingItem.get("coursItmId"));
+                    u5 = memberListService.memberListUpdate_MSC09(formMap);
+                }
+            	//memberListService.lmsMemberListUpdate(formMap);
             }
 
             if(formMap.get("memberType").toString().equals("7")) {
