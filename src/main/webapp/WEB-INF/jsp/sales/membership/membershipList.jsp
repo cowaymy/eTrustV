@@ -96,23 +96,22 @@
 	 // 리스트 조회.
     function fn_selectListAjax() {
 
-	        if( $("#MBRSH_NO").val() ==""  &&  $("#ORD_NO").val() ==""  &&  $("#MBRSH_CRT_DT").val() =="" && $("#REF_NO").val() == "" ){
 
-	            Common.alert("<spring:message code="sal.alert.msg.keyInMemNoOrdNoCrtDt" />");
-	             return ;
-	        }
-	        else if(FormUtil.isEmpty($('#MBRSH_CRT_DT').val()) || FormUtil.isEmpty($('#MBRSH_END_DT').val())) {
-	        	  Common.alert("<spring:message code="sal.alert.msg.keyInMemNoOrdNoCrtDt" />");
-	              return ;
-	        } else {
-                var diffDay = fn_diffDate($('#MBRSH_CRT_DT').val(), $('#MBRSH_END_DT').val());
-                if(diffDay > 31|| diffDay < 0) {
-                   Common.alert("Please enter search period within 1 month.");
-                   return;
-                }
-            }
+	        if( $("#MBRSH_NO").val() ==""  &&  $("#ORD_NO").val() =="" && $("#REF_NO").val() == "" ){
 
+	        	if(FormUtil.isEmpty($('#MBRSH_CRT_DT').val()) || FormUtil.isEmpty($('#MBRSH_END_DT').val())) {
+	                  Common.alert("<spring:message code="sal.alert.msg.keyInMemNoOrdNoCrtDt" />");
+	                  return ;
+	            }
+	            else {
+	                var diffDay = fn_diffDate($('#MBRSH_CRT_DT').val(), $('#MBRSH_END_DT').val());
+	                if(diffDay > 31|| diffDay < 0) {
+	                   Common.alert("Please enter search period within ONE(1) months.");
+	                   return;
+	                }
+	            }
 
+	         }
 
         Common.ajax("GET", "/sales/membership/selectMembershipList", $("#listSForm").serialize(), function(result) {
 
