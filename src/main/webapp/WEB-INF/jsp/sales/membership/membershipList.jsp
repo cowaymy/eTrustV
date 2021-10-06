@@ -100,15 +100,14 @@
 
 	            Common.alert("<spring:message code="sal.alert.msg.keyInMemNoOrdNoCrtDt" />");
 	             return ;
-	         }
-
-	        if(FormUtil.isEmpty($('#MBRSH_CRT_DT').val()) || FormUtil.isEmpty($('#MBRSH_END_DT').val())) {
+	        }
+	        else if(FormUtil.isEmpty($('#MBRSH_CRT_DT').val()) || FormUtil.isEmpty($('#MBRSH_END_DT').val())) {
 	        	  Common.alert("<spring:message code="sal.alert.msg.keyInMemNoOrdNoCrtDt" />");
 	              return ;
 	        } else {
                 var diffDay = fn_diffDate($('#MBRSH_CRT_DT').val(), $('#MBRSH_END_DT').val());
                 if(diffDay > 31|| diffDay < 0) {
-                   Common.alert("<spring:message code="sal.alert.msg.srchPeriodDt" />");
+                   Common.alert("Please enter search period within 1 month.");
                    return;
                 }
             }
