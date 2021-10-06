@@ -219,4 +219,19 @@ public class GoldPointsRedemptionController {
 	    return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/cancelRedemption.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> cancelRedemption(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+		params.put("userId", sessionVO.getUserId());
+
+		LOGGER.debug("===== cancelRedemption.do =====");
+		LOGGER.debug("params : {}", params);
+
+		Map<String, Object> resultValue = goldPointsService.cancelRedemption(params);
+
+	    LOGGER.debug("resultValue : " + resultValue);
+
+	    return ResponseEntity.ok(resultValue);
+	}
+
 }
