@@ -39,6 +39,23 @@
             }
         });
 
+        $('#btnAdminCancelRdm').click(function() {
+            var selIdx = AUIGrid.getSelectedIndex(gridID)[0];
+
+            if (selIdx > -1) {
+                var rdmStatus = AUIGrid.getCellValue(gridID, selIdx, "status");
+
+                if ( (rdmStatus != "Active") && (rdmStatus != "In Progress") ) {
+                    Common.alert('<spring:message code="incentive.alert.msg.rdmValidateAdminCancel" />');
+                } else {
+                    fn_promptAdminCancelConfirm(selIdx);
+                }
+            }
+            else {
+                Common.alert('<spring:message code="incentive.alert.msg.rdmMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="incentive.alert.msg.noRdmSel" /></b>');
+            }
+        });
+
         $('#btnUpdRdm').click(function() {
             var selIdx = AUIGrid.getSelectedIndex(gridID)[0];
             if(selIdx > -1) {
@@ -165,6 +182,21 @@
         Common.confirm(confirmCancelMsg, fn_cancelRedemption);
     }
 
+    function fn_promptAdminCancelConfirm(selIdx) {
+
+        var memName = AUIGrid.getCellValue(gridID, selIdx, "memName");
+        var memCode = AUIGrid.getCellValue(gridID, selIdx, "memCode");
+        var rdmItem = AUIGrid.getCellValue(gridID, selIdx, "rdmItem");
+        var qty = AUIGrid.getCellValue(gridID, selIdx, "qty");
+        var totalPts = AUIGrid.getCellValue(gridID, selIdx, "totalPts");
+
+        var confirmCancelMsg = memName + "<br />" + memCode + "<br />" +
+        rdmItem + "<br />Quantity : " + qty + "<br />Total Gold Points : " +
+        totalPts + "<br /><br />" + "Do you want to cancel this redemption request?";
+
+        Common.confirm(confirmCancelMsg, fn_adminCancelRedemption);
+    }
+
     function fn_cancelRedemption() {
         Common.ajax("POST", "/incentive/goldPoints/cancelRedemption.do", {rdmId:$('#_rdmId').val()}, function(result) {
             if(result.p1 == 1) {     //successful cancelled redemption
@@ -172,6 +204,17 @@
                 		+ $('#_rdmNo').val(), fn_reloadList);
             } else if (result.p1 == 99) {
                 Common.alert("Failed to Cancel. Redemption is not active", fn_reloadList);
+            }
+        });
+    }
+
+    function fn_adminCancelRedemption() {
+        Common.ajax("POST", "/incentive/goldPoints/adminCancelRedemption.do", {rdmId:$('#_rdmId').val()}, function(result) {
+            if(result.p1 == 1) {     //successful cancelled redemption
+                Common.alert("Gold Points Redemption Request has been cancelled. <br />Redemption No. : "
+                        + $('#_rdmNo').val(), fn_reloadList);
+            } else if (result.p1 == 99) {
+                Common.alert("Failed to Cancel. Redemption is not In Progress", fn_reloadList);
             }
         });
     }
@@ -210,6 +253,9 @@
             </c:if>
             <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
                 <li><p class="btn_blue"><a id="btnCancelRdm" href="#">Cancel Request</a></p></li>
+            </c:if>
+            <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
+                <li><p class="btn_blue"><a id="btnAdminCancelRdm" href="#">Cancel Request (Admin)</a></p></li>
             </c:if>
             <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
                 <li><p class="btn_blue"><a id="btnNewRdm" href="#">New</a></p></li>

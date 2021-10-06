@@ -47,4 +47,6 @@ public interface GoldPointsService {
 
 	int updPointsUploadReject(Map<String, Object> params);
 
+	Map<String, Object> adminCancelRedemption(Map<String, Object> params);
+
 }

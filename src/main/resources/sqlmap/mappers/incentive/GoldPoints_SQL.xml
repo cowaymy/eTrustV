@@ -433,6 +433,12 @@
                                         #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=cancelRdmptnResultMsg})}
     </update>
 
+    <update id="adminCancelRedemption" statementType="CALLABLE" parameterType="Map">
+        {call SP_GOLD_PTS_ADM_CANCEL_RDM(#{rdmId}, #{userId},
+                                        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=cancelRdmptnResultStus},
+                                        #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=cancelRdmptnResultMsg})}
+    </update>
+
     <select id="selectRedemptionDetails" parameterType="Map" resultType="egovMap">
         SELECT
             A.RDM_ID,
@@ -582,6 +588,6 @@
               ,UPD_USER_ID = #{loginId}
               ,UPD_DT = SYSDATE
          WHERE GP_BATCH_ID = #{gpBatchId}
-   </update>
+    </update>
 
 </mapper>
