@@ -203,7 +203,7 @@
                 Common.alert("Your Gold Points Redemption Request has been cancelled. <br />Redemption No. : "
                 		+ $('#_rdmNo').val(), fn_reloadList);
             } else if (result.p1 == 99) {
-                Common.alert("Failed to Cancel. Redemption is not active", fn_reloadList);
+                Common.alert("Failed to Cancel. Redemption is neither active nor in-progress", fn_reloadList);
             }
         });
     }
