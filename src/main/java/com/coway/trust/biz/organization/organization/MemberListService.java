@@ -228,11 +228,11 @@ public interface MemberListService {
 	String getUpdUserID(Map<String, Object> params);
 	int updateOrgUserPW(Map<String, Object> params);
 
-	/*Map<String, Object> lmsMemberListInsert(Map<String, Object> params);
+	Map<String, Object> lmsMemberListInsert(Map<String, Object> params);
 	Map<String, Object> lmsMemberListUpdate(Map<String, Object> params);
 	Map<String, Object> lmsMemberListUpdateMemCode(Map<String, Object> params);
 	Map<String, Object> lmsMemberListDeact(Map<String, Object> params);
-	Map<String, Object> lmsReqApi(Map<String, Object> params);*/
+	Map<String, Object> lmsReqApi(Map<String, Object> params);
 
 	List<EgovMap> selectPromoDisHistory(Map<String, Object> params);
 
