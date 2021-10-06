@@ -118,9 +118,12 @@
         let month = nric.substr(2, 2);
         let day   = nric.substr(4, 2);
 
-        console.log(year);
-        console.log(month);
-        console.log(day);
+        if(year <= 99){
+            year = "19" + year;
+        }else{
+            year = "20" + year;
+        }
+
         dob = day + "/" + month + "/" + year;
 
         return dob;
