@@ -358,7 +358,8 @@
                 LEFT JOIN SYS0064M ma1
                     ON ma1.AREA_ID = ca1.AREA_ID
                 where som.sales_ord_id = s1.SALES_ORD_ID) AS INST_ADDRESS
-    FROM PAY0297D p
+    FROM
+        ( SELECT * FROM PAY0297D WHERE SALES_ORD_NO = #{salesOrdNo} ) p
         JOIN SAL0001D s1 ON s1.SALES_ORD_NO = p.SALES_ORD_NO
         JOIN SAL0002D s2 ON s2.SALES_ORD_ID = s1.SALES_ORD_ID
         JOIN SYS0026M s26 ON s26.STK_ID = s2.ITM_STK_ID
