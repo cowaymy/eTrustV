@@ -1634,7 +1634,8 @@
     <if test="basicTypeId == 964">
       <!-- DOB = TO_CHAR(TO_DATE(#{dob}, 'DD-MM-YYYY'), 'YYYY-MM-DD'), -->
       GENDER = #{basicGender},
-      RACE_ID = #{basicRaceId}
+      RACE_ID = #{basicRaceId},
+      DOB = #{basicDob}
     </if>
 
     <if test="basicTypeId == 965">

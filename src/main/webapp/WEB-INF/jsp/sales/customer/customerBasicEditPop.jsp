@@ -45,7 +45,7 @@ $(document).ready(function(){
         $("input[name='basicGender']").attr("disabled" , false);
         $("#basicCmdRaceTypeId").attr("disabled" , false);
         $("#basicCmdNationTypeId").attr("disabled" , "disabled");
-        $("#basicDob").attr("disabled" , "disabled");
+        //$("#basicDob").attr("disabled" , "disabled");
     }
     // company
     if(selCodeCustId == '965'){
@@ -111,12 +111,15 @@ $(document).ready(function(){
                 var isValid = true;
                 var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}.|\\":<>\?]/);
 
+                $("#basicDob").val(nricToDob(ic));
+
+
                 console.log('existNric:' + existNric);
                 console.log('lastDigit:' + lastDigit);
                 console.log('GenderCode:' + genderCode);
                 console.log('isValid:' + isValid);
                 console.log('ic_NO update to :' + ic);
-
+                console.log("" + $("#basicDob").val());
 
                if (pattern.test(ic)) {
             	   isValid = false;
@@ -192,6 +195,7 @@ $(document).ready(function(){
 
     //update
     function fn_getCustomerBasicAjax(){
+    	console.log($("#updForm").serializeJSON());
         Common.ajax("GET", "/sales/customer/updateCustomerBasicInfoAf.do",$("#updForm").serializeJSON(), function(result) {
             Common.alert(result.message, fn_reloadPage);
         });
@@ -283,6 +287,24 @@ $(document).ready(function(){
 
         return exCustNric;
       }
+
+    function nricToDob(nric){
+        let dob = "";
+
+        let year  = nric.substr(0, 2);
+        let month = nric.substr(2, 2);
+        let day   = nric.substr(4, 2);
+
+        if(year <= 99){
+            year = "19" + year;
+        }else{
+            year = "20" + year;
+        }
+
+        dob = day + "-" + month + "-" + year;
+
+        return dob;
+    }
 
 /////////////////////////////////////////////  NRIC validation ///////////////////////////////////////////////////////
 
@@ -564,7 +586,7 @@ $(document).ready(function(){
 <tr>
     <th scope="row"><spring:message code="sal.text.dob" /> <span class="brown_text">#</span></th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"   value="${result.dob}" name="basicDob" id="basicDob" readonly="readonly"/>
+    <input type="text" title="Create start Date" value="${result.dob}" name="basicDob" id="basicDob"  readonly="readonly"/>
     </td>
     <th scope="row"><spring:message code="sal.text.passportExpire" /></th>
     <td>
