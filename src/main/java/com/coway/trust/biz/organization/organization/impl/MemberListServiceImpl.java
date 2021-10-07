@@ -2698,8 +2698,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		lmsMemApiForm.setProfile_field_address(addr);
 		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender").toString());
 		lmsMemApiForm.setProfile_field_dob(selectMemListlms.get("c29").toString());
-		String position = selectMemListlms.get("c57").toString();
-		if(position == null && position.equals("")){
+		String position = selectMemListlms.get("c57") == null ? "" : selectMemListlms.get("c57").toString();
+		if(position.equals("")){
 			position = ".";
 		}
 		lmsMemApiForm.setProfile_field_position(position);
