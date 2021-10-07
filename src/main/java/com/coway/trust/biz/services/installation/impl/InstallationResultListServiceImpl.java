@@ -2891,24 +2891,12 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     Map<String, Object> resultValue = new HashMap<String, Object>();
     ReturnMessage message = new ReturnMessage();
 
-    logger.error("=========================insertInstallationResultSerial method (params)===========");
-    logger.error("params : {}", params);
-    logger.error("=========================insertInstallationResultSerial method (params)===========");
-
     if (sessionVO != null) {
 
     	List<EgovMap> add = (List<EgovMap>) params.get("add");
     	Map<String, Object> param = (Map)params.get("installForm");
 
-        logger.error("========================insertInstallationResultSerial method (param)===================");
-        logger.error("param : {}", param);
-        logger.error("========================insertInstallationResultSerial method (param)===================");
-
       int noRcd = chkRcdTms(param);
-
-      logger.error("========================insertInstallationResultSerial method (noRcd)===================");
-      logger.error("noRcd : {}", noRcd);
-      logger.error("========================insertInstallationResultSerial method (noRcd)===================");
 
       if (noRcd == 1) {
         EgovMap installResult = getInstallResultByInstallEntryID(param);

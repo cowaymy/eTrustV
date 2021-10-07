@@ -726,22 +726,10 @@ public class InstallationResultListController {
     logger.debug("params : {}", params);
     logger.debug("==========================/addInstallation_2.do=================================");
 
-    logger.error("==========================/addInstallation_2.do=================================");
-    logger.error("params : {}", params);
-    logger.error("==========================/addInstallation_2.do=================================");
-
     List<EgovMap> add = (List<EgovMap>) params.get("add");
     Map<String, Object> param = (Map)params.get("installForm");
 
-    logger.error("=====installationResultListService.chkRcdTms(param)===========");
-    logger.error("param : {}", param);
-    logger.error("=====installationResultListService.chkRcdTms(param)===========");
-
     int noRcd = installationResultListService.chkRcdTms(param);
-
-    logger.error("=====Value of noRcd===========");
-    logger.error("noRcd : {}", noRcd);
-    logger.error("=====Value of noRcd===========");
 
     if (noRcd == 1) {
       EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(param);
