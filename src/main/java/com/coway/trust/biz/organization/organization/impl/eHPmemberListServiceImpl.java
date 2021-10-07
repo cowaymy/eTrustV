@@ -214,7 +214,7 @@ public class eHPmemberListServiceImpl extends EgovAbstractServiceImpl implements
           MemApp.put("meetingPoint", params.get("eHPmeetingPoint").toString());
 
           MemApp.put("collectionBrnch", params.get("eHPcollectionBrnch").toString());
-          MemApp.put("coursId", params.get("eHPorientation").toString());
+//          MemApp.put("coursId", params.get("eHPorientation").toString());
 
           MemApp.put("atchFileGrpId", params.get("atchFileGrpId").toString());
 
