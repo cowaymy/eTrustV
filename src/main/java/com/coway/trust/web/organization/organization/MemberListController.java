@@ -138,12 +138,12 @@ public class MemberListController {
 		List<EgovMap> userBranch = memberListService.selectUserBranch();
 		List<EgovMap> user = memberListService.selectUser();
 		logger.debug("-------------controller------------");
-		logger.debug("nationality    " + nationality);
-		logger.debug("memberType    " + memberType);
-		logger.debug("race    " + race);
-		logger.debug("status    " + status);
-		logger.debug("userBranch    " + userBranch);
-		logger.debug("user    " + user);
+//		logger.debug("nationality    " + nationality);
+//		logger.debug("memberType    " + memberType);
+//		logger.debug("race    " + race);
+//		logger.debug("status    " + status);
+//		logger.debug("userBranch    " + userBranch);
+//		logger.debug("user    " + user);
 		model.addAttribute("nationality", nationality);
 		model.addAttribute("memberType", memberType);
 		model.addAttribute("race", race);
@@ -971,6 +971,9 @@ public class MemberListController {
         formMap.put("MemberID", formMap.get("MemberIDUpd"));
         // LaiKW - Comment ends here
 
+        //ADDED INCOME TAX NO @AMEER 2021-09-27
+        //formMap.put("incomeTaxNo", params.get("incomeTaxNo"));
+
         String memCode = "";
         String memId = "";
         String memberType = "";
@@ -1034,13 +1037,13 @@ public class MemberListController {
             u4 = memberListService.memberListUpdate_ORG03(formMap);
 
             if(formMap.get("memberType").toString().equals("5")) {
-//                EgovMap trainingItem = memberListService.selectMemCourse(formMap);
-//
-//                if(!trainingItem.isEmpty()) {
-//                    formMap.put("coursItmId", trainingItem.get("coursItmId"));
-//                    u5 = memberListService.memberListUpdate_MSC09(formMap);
-//                }
-            	memberListService.lmsMemberListUpdate(formMap);
+                EgovMap trainingItem = memberListService.selectMemCourse(formMap);
+
+                if(!trainingItem.isEmpty()) {
+                    formMap.put("coursItmId", trainingItem.get("coursItmId"));
+                    u5 = memberListService.memberListUpdate_MSC09(formMap);
+                }
+            	//memberListService.lmsMemberListUpdate(formMap);
             }
 
             if(formMap.get("memberType").toString().equals("7")) {
@@ -1905,6 +1908,29 @@ logger.debug("params : {}", params);
         return ResponseEntity.ok(bankAccCheck);
     }
     // Kit Wai - End - 20180428
+
+    //@AMEER INCOME_TAX 20190928
+    /*@RequestMapping(value = "/checkIncomeTax", method = RequestMethod.GET)
+    public ResponseEntity<Map> checkIncomeTax(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+        logger.debug("==================== checkIncomeTax ====================");
+
+        Map<String, Object> incomeTaxCheck = new HashMap();
+
+        EgovMap item = new EgovMap();
+        params.put("srcM", "1");
+        item = (EgovMap) memberListService.checkIncomeTax(params);
+        incomeTaxCheck.put("cnt1", item.get("cnt"));
+
+        params.remove("srcM");
+
+        EgovMap item2 = new EgovMap();
+        params.put("srcA", "1");
+        item2 = (EgovMap) memberListService.checkIncomeTax(params);
+        incomeTaxCheck.put("cnt2", item2.get("cnt"));
+
+        return ResponseEntity.ok(incomeTaxCheck);
+    }*/
 
     // Kit Wai - Start - 20190314
     // Added bank account number length checking
