@@ -1082,13 +1082,13 @@
        console.log ("schdulId is 123...:" + schdulId)
 
 
-       if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 6 ))  {
-        //if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 5 ))  { // temp change to 6th of the month. Hui Ding, 2021-10-06
+       if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 7 ))  {
+        //if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 5 ))  { // temp change to 8th of the month. Hui Ding, 2021-10-06
         	Common.alert('Either no data selected OR today date, ' + todayDD + ' is restricted for assign CT members');
            return;
         }
 
-        if (  todayDD >= 1  &&  todayDD <= 6 )  { // temp change to 6th of the month. Hui Ding, 2021-10-06
+        if (  todayDD >= 1  &&  todayDD <= 7 )  { // temp change to 7th of the month. Hui Ding, 2021-10-06
         //if (  todayDD >= 1  &&  todayDD <= 5 )  {
         	   if (schdulId.includes (undefined)){
         		    Common.alert("Please ensure a valid HS Period being selected during 1st to 5th of the month");

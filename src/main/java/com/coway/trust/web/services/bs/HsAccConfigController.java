@@ -1255,7 +1255,8 @@ public class HsAccConfigController {
 
     logger.debug("check 000:: " + params.get("TODAY_DD"));
 
-    if (params.get("TODAY_DD").equals("01") || params.get("TODAY_DD").equals("02") || params.get("TODAY_DD").equals("03") || params.get("TODAY_DD").equals("04") || params.get("TODAY_DD").equals("05")){
+    if (params.get("TODAY_DD").equals("01") || params.get("TODAY_DD").equals("02") || params.get("TODAY_DD").equals("03")
+    		|| params.get("TODAY_DD").equals("04") || params.get("TODAY_DD").equals("05") || params.get("TODAY_DD").equals("06") || params.get("TODAY_DD").equals("07")){
 
   	 hsAccConfigService.updateHsAccConfigBasicMultiple1_5(params, sessionVO);
 
