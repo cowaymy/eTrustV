@@ -53,15 +53,13 @@ public class IhrApiServiceImpl extends EgovAbstractServiceImpl implements IhrApi
 	@Override
 	public List<EgovMap> selectSyncIhr(SyncIhrApiForm param) {
 
-
-
    	 Map<String, Object> loginInfoMap = new HashMap<String, Object>();
      loginInfoMap.put("_USER_ID", param.getRegId());
-     LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
+     /*LoginVO loginVO = loginMapper.selectLoginInfoById(loginInfoMap);
      if( null == loginVO || CommonUtils.isEmpty(loginVO.getUserId()) ){
          throw new ApplicationException(AppConstants.FAIL, "Reg ID value does not exist.");
-     }
-     param.setWhLocId(loginVO.getUserId());
+     }*/
+     //param.setWhLocId(loginVO.getUserId());
 
 	//return royaltyCustomerListApiMapper.selectWsLoyaltyList();
 	return ihrApiServiceMapper.selectSyncIhr(SyncIhrApiForm.createMap(param));
