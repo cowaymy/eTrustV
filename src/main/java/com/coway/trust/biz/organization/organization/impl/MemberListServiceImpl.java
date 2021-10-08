@@ -3,6 +3,7 @@ package com.coway.trust.biz.organization.organization.impl;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -163,7 +163,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	@Transactional
     @Override
-    public String saveMember(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) {
+    public String saveMember(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws Exception{
 
         String appId = "";
         String memCode = "";
@@ -277,7 +277,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             	String memid = memberListMapper.getUserID(memCode);
             	Map<String, Object> memMap = new HashMap<String, Object>();
             	memMap.put("MemberID", memid);
-            	lmsMemberListInsert(memMap);
+
+            	//call LMS API create user
+				Map<String, Object> returnVal = lmsMemberListInsert(memMap);
+				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+					throw e1;
+				}
+            	//lmsMemberListInsert(memMap);
             }
 
             return memCode;
@@ -1048,7 +1055,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	@Transactional
 	@Override
-	public Map<String, Object> insertTerminateResign(Map<String, Object> params,SessionVO sessionVO) {
+	public Map<String, Object> insertTerminateResign(Map<String, Object> params,SessionVO sessionVO) throws Exception{
 		boolean success = false;
 		Map<String, Object>  member = new HashMap<String, Object>();
 		Map<String, Object>  promoEntry = new HashMap<String, Object>();
@@ -1324,7 +1331,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				//call lms to update user details
             	Map<String, Object> memMap = new HashMap<String, Object>();
             	memMap.put("MemberID", params.get("requestMemberId").toString());
-            	lmsMemberListUpdate(memMap);
+
+            	Map<String, Object> returnVal = lmsMemberListUpdate(memMap);
+				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+					throw e1;
+				}
 
 			}else{
 				resultValue.put("message", "<b>Failed to save. Please try again later.</b>");
@@ -1444,7 +1456,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         			//call lms to deactivate user
                 	Map<String, Object> memMap = new HashMap<String, Object>();
                 	memMap.put("username", selectMember.get("memCode").toString());
-                	lmsMemberListDeact(memMap);
+
+                	Map<String, Object> returnVal = lmsMemberListDeact(memMap);
+            		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+            			Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+            			throw e1;
+            		}
+
         		}
         		if(Integer.parseInt(params.get("action").toString()) == 757){
     				resultValue.put("message", "Terminate request successfully saved.<br />"
@@ -1539,7 +1557,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	@Transactional
 	@Override
-	public Map<String, Object> traineeUpdate(Map<String, Object> params,SessionVO sessionVO) {
+	public Map<String, Object> traineeUpdate(Map<String, Object> params,SessionVO sessionVO) throws Exception{
         boolean success = false;
         Map<String, Object> paramM = new HashMap<String, Object>();
         Map<String, Object> resultValue = new HashMap<String, Object>(); // 팝업 결과값 가져가는 map
@@ -1612,7 +1630,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     	memMap.put("newusername",paramM.get("memCode"));
     	memMap.put("memberType",params.get("traineeType"));
     	memMap.put("joinDt",epochStr);
-		lmsMemberListUpdateMemCode(memMap);
+
+    	Map<String, Object> returnVal = lmsMemberListUpdateMemCode(memMap);
+		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+			Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+			throw e1;
+		}
+
 
         return resultValue;
     }
@@ -1850,7 +1874,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 
 	@Override
-	public Map<String, Object> hpMemRegister(Map<String, Object> params,SessionVO sessionVO) throws ParseException {
+	public Map<String, Object> hpMemRegister(Map<String, Object> params,SessionVO sessionVO) throws Exception {
 		boolean success = false;
 		Map<String, Object> resultValue = new HashMap<String, Object>(); //팝업 결과값 가져가는 map
 		Map<String, Object> CodeMap = new HashMap<String, Object>();
@@ -2140,7 +2164,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    			//}
 
 	    				//call LMS API create user
-	    				lmsMemberListInsert(params);
+	    				Map<String, Object> returnVal = lmsMemberListInsert(params);
+	    				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+	    					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+	    					throw e1;
+	    				}
 			}
 
 		} else {
@@ -2698,23 +2726,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}
 		lmsMemApiForm.setProfile_field_address(addr);
 		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ? "" : selectMemListlms.get("gender").toString());
-		SimpleDateFormat originalFormat = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
-		SimpleDateFormat targetFormat = new SimpleDateFormat("dd-mm-yyyy");
-		Date date = null;
-		String formattedDate = "";
-		try {
-			date = originalFormat.parse(selectMemListlms.get("c29").toString());
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			formattedDate ="";
-		}
-		formattedDate = targetFormat.format(date);
-
-		lmsMemApiForm.setProfile_field_dob(formattedDate);
-		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ?  "" : selectMemListlms.get("c57").toString());
+		lmsMemApiForm.setProfile_field_dob(selectMemListlms.get("c29") == null ? "" : selectMemListlms.get("c29").toString());
+		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ? "." : selectMemListlms.get("c57").toString());
 		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ? "" : selectMemListlms.get("c4").toString());
 		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ? "" : selectMemListlms.get("c5").toString());
-		lmsMemApiForm.setProfile_field_region(selectMemListlms.get("state") == null ? "" : selectMemListlms.get("state").toString());
+		lmsMemApiForm.setProfile_field_region(".");
 		lmsMemApiForm.setProfile_field_organizationcode(selectMemListlms.get("c43") == null ? "" : selectMemListlms.get("c43").toString());
 		lmsMemApiForm.setProfile_field_groupcode(selectMemListlms.get("c42") == null ? "" : selectMemListlms.get("c42").toString());
 		//lmsMemApiForm.setProfile_field_MemberStatus(selectMemListlms.get("name") == null ? "" : selectMemListlms.get("name").toString());
@@ -2753,8 +2769,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		EgovMap reqInfo = new EgovMap();
 		reqInfo.put("jsonString", jsonString);
 		reqInfo.put("lmsUrl", lmsUrl);
+		reqInfo.put("refNo", selectMemListlms.get("nric") == null ? "" : selectMemListlms.get("nric").toString());
 
-		lmsReqApi(reqInfo);
+		resultValue = lmsReqApi(reqInfo);
 
 		logger.debug("End Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
 
@@ -2805,23 +2822,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}
 		lmsMemApiForm.setProfile_field_address(addr);
 		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ?  "" : selectMemListlms.get("gender").toString());
-		SimpleDateFormat originalFormat = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
-		SimpleDateFormat targetFormat = new SimpleDateFormat("dd-mm-yyyy");
-		Date date = null;
-		String formattedDate = "";
-		try {
-			date = originalFormat.parse(selectMemListlms.get("c29").toString());
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			formattedDate ="";
-		}
-		formattedDate = targetFormat.format(date);
-
-		lmsMemApiForm.setProfile_field_dob(formattedDate);
-		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ?  "" : selectMemListlms.get("c57").toString());
+		lmsMemApiForm.setProfile_field_dob(selectMemListlms.get("c29") == null ?  "" : selectMemListlms.get("c29").toString());
+		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ?  "." : selectMemListlms.get("c57").toString());
 		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ?  "" : selectMemListlms.get("c4").toString());
 		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ?  "" : selectMemListlms.get("c5").toString());
-		lmsMemApiForm.setProfile_field_region(selectMemListlms.get("state") == null ? "" : selectMemListlms.get("state").toString());
+		lmsMemApiForm.setProfile_field_region(".");
 		lmsMemApiForm.setProfile_field_organizationcode(selectMemListlms.get("c43") == null ?  "" : selectMemListlms.get("c43").toString());
 		lmsMemApiForm.setProfile_field_groupcode(selectMemListlms.get("c42") == null ?  "" : selectMemListlms.get("c42").toString());
 		//lmsMemApiForm.setProfile_field_MemberStatus(selectMemListlms.get("name") == null ?  "" : selectMemListlms.get("name").toString());
@@ -2871,8 +2876,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		EgovMap reqInfo = new EgovMap();
 		reqInfo.put("jsonString", jsonString);
 		reqInfo.put("lmsUrl", lmsUrl);
+		reqInfo.put("refNo", selectMemListlms.get("memCode").toString());
 
-		lmsReqApi(reqInfo);
+		resultValue = lmsReqApi(reqInfo);
 
 		logger.debug("End Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
 
@@ -2900,14 +2906,15 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		EgovMap reqInfo = new EgovMap();
 		reqInfo.put("jsonString", jsonString);
 		reqInfo.put("lmsUrl", lmsUrl);
+		reqInfo.put("refNo", params.get("username").toString());
 
-		lmsReqApi(reqInfo);
+		resultValue = lmsReqApi(reqInfo);
 
 		return resultValue;
 	}
 
 	@Override
-	public Map<String, Object> lmsMemberListDeact(Map<String, Object> params){
+	public Map<String, Object> lmsMemberListDeact(Map<String, Object> params) {
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 
 		LMSMemApiForm lmsMemApiForm = new LMSMemApiForm();
@@ -2924,8 +2931,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		EgovMap reqInfo = new EgovMap();
 		reqInfo.put("jsonString", jsonString);
 		reqInfo.put("lmsUrl", lmsUrl);
+		reqInfo.put("refNo", params.get("username").toString());
 
-		lmsReqApi(reqInfo);
+		resultValue = lmsReqApi(reqInfo);
 
 		return resultValue;
 	}
@@ -2934,6 +2942,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public Map<String, Object> lmsReqApi(Map<String, Object> params) {
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		String respTm = null;
+		String lmsApiUserId = "3";
 
 		StopWatch stopWatch = new StopWatch();
 	    stopWatch.reset();
@@ -2941,6 +2950,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		String lmsUrl = params.get("lmsUrl").toString();
 		String jsonString = params.get("jsonString").toString();
+		String refNo = params.get("refNo").toString();
 		String output1 = "";
 		LMSApiRespForm p = new LMSApiRespForm();
 		try{
@@ -2973,20 +2983,20 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		        p = g.fromJson(output1, LMSApiRespForm.class);
 		        if(p.getStatus() ==null || p.getStatus().isEmpty()){
 		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
-		        	resultValue.put("status", "Failed");
+		        	resultValue.put("status", AppConstants.FAIL);
 					resultValue.put("message", p.getMessage().toString());
 		        }else if(p.getStatus().equals("true")){
 		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS));
-		        	resultValue.put("status", "Success");
+		        	resultValue.put("status", AppConstants.SUCCESS);
 					resultValue.put("message", p.getMessage().toString());
 		        }else{
-		        	resultValue.put("status", "Failed");
+		        	resultValue.put("status", AppConstants.FAIL);
 					resultValue.put("message", p.getMessage().toString());
 		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
 		        }
 				conn.disconnect();
 			}else{
-				resultValue.put("status", "Failed");
+				resultValue.put("status", AppConstants.FAIL);
 				resultValue.put("message", "No Response");
 				p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
 				p.setMessage("No Response");
@@ -2994,12 +3004,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}catch(Exception e){
 			logger.error("Timeout:");
 			logger.error("[lmsMemberListInsertUpdate] - Caught Exception: " + e);
-			p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+			p.setStatus(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
 			p.setMessage("Timeout" + e.toString());
 		}finally{
 			stopWatch.stop();
 		    respTm = stopWatch.toString();
-			commonApiService.rtnRespMsg(lmsUrl, p.getCode().toString(), p.getMessage().toString(),respTm , jsonString, null ,"3");
+			commonApiService.rtnRespMsg(lmsUrl, p.getCode().toString(), p.getMessage().toString(),respTm , jsonString, output1 ,lmsApiUserId, refNo);
 		}
 
 		return resultValue;

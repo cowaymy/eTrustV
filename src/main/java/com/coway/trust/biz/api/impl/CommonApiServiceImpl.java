@@ -18,6 +18,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.api.CommonApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
@@ -149,6 +151,35 @@ public class CommonApiServiceImpl extends EgovAbstractServiceImpl implements Com
       params.put("respTm", respTm);
       params.put("respParam", respPrm != null ? respPrm.toString().length() >= 4000 ? respPrm.toString().substring(0,4000) : respPrm.toString() : respPrm);
       params.put("apiUserId", apiUserId);
+
+      commonApiMapper.insertApiAccessLog(params);
+
+      data.put("code", code);
+      data.put("message", msg);
+      data.put("status", (code.equals("200")||code.equals("201"))?AppConstants.DESC_SUCCESS:AppConstants.DESC_FAILED);
+      if(respPrm != null && !respPrm.isEmpty()){
+    	  data.put("data", respPrm);
+      }
+
+      return data;
+  }
+
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  @Override
+  public EgovMap rtnRespMsg(String pgmPath, String code, String msg, String respTm, String reqPrm, String respPrm, String apiUserId, String refNo) {
+
+    EgovMap data = new EgovMap();
+    Map<String, Object> params = new HashMap<>();
+
+      params.put("respCde", code);
+      params.put("errMsg", msg);
+      params.put("reqParam", reqPrm);
+      params.put("ipAddr", "");
+      params.put("prgPath", pgmPath != null ? pgmPath : " ");
+      params.put("respTm", respTm);
+      params.put("respParam", respPrm != null ? respPrm.toString().length() >= 4000 ? respPrm.toString().substring(0,4000) : respPrm.toString() : respPrm);
+      params.put("apiUserId", apiUserId);
+      params.put("refNo", refNo);
 
       commonApiMapper.insertApiAccessLog(params);
 

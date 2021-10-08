@@ -30,6 +30,9 @@ public interface CommonApiService {
   EgovMap rtnRespMsg(String pgmPath, String code, String msg, String respTm, String reqPrm,
 	      Map<String, Object> respPrm, String apiUserId) ;
 
+  EgovMap rtnRespMsg(String pgmPath, String code, String msg, String respTm, String reqPrm,
+	      String respPrm, String apiUserId, String refNo) ;
+
   String decodeJson(HttpServletRequest request) throws Exception;
 
 }

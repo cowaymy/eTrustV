@@ -55,13 +55,13 @@ public interface MemberListService {
 
 	EgovMap selectCodyPAExpired(Map<String, Object> params);
 
-	String saveMember(Map<String, Object> params, List<Object> docType, SessionVO sessionVO);
+	String saveMember(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws Exception;
 
 	List<EgovMap> selectCodyDocSubmission(Map<String, Object> params);
 
 	List<EgovMap> selectHpDocSubmission(Map<String, Object> params);
 
-	Map<String, Object> insertTerminateResign(Map<String, Object> params,SessionVO sessionVO);
+	Map<String, Object> insertTerminateResign(Map<String, Object> params,SessionVO sessionVO) throws Exception;
 
 	/* BY KV start Do Save Vacation Request*/
 	Map<String, Object> insertRequestVacation(Map<String, Object> params, SessionVO sessionVO);
@@ -73,9 +73,9 @@ public interface MemberListService {
 
 	List<EgovMap> selectCourse();
 
-	Map<String, Object> traineeUpdate(Map<String, Object> params,SessionVO sessionVO);
+	Map<String, Object> traineeUpdate(Map<String, Object> params,SessionVO sessionVO) throws Exception;
 
-	Map<String, Object> hpMemRegister(Map<String, Object> params,SessionVO sessionVO) throws ParseException;
+	Map<String, Object> hpMemRegister(Map<String, Object> params,SessionVO sessionVO) throws Exception;
 
 
 	List<EgovMap> getMemberListView(Map<String, Object> params);

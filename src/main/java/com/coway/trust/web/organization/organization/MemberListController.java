@@ -472,7 +472,7 @@ public class MemberListController {
 	@RequestMapping(value = "/memberSave", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveMemberl(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
 
-
+		ReturnMessage message = new ReturnMessage();
 		Boolean success = false;
 		String msg = "";
 		logger.debug("params : {}", params);
@@ -492,31 +492,35 @@ public class MemberListController {
 
 		logger.debug("udtList : {}", updList);
 		logger.debug("formMap : {}", formMap);
-		String memCode = "";
-		memCode = memberListService.saveMember(formMap, updList, sessionVO);
-		int userId = sessionVO.getUserId();
-		String memberType =String.valueOf(formMap.get("memberType"));
-		String trainType =String.valueOf(formMap.get("traineeType1"));
 
-		logger.debug(trainType + "train1111");
-		//doc 넣기
+		try {
+    		String memCode = "";
+    		memCode = memberListService.saveMember(formMap, updList, sessionVO);
+    		int userId = sessionVO.getUserId();
+    		String memberType =String.valueOf(formMap.get("memberType"));
+    		String trainType =String.valueOf(formMap.get("traineeType1"));
 
-		memberListService.insertDocSub(updList, memCode, userId, memberType, trainType);
+    		logger.debug(trainType + "train1111");
+    		//doc 넣기
 
-		logger.debug("memCode : {}", memCode);
-		// 결과 만들기.
-       	ReturnMessage message = new ReturnMessage();
-//        	message.setCode(AppConstants.SUCCESS);
-//        	message.setData(map);
-       	if(memCode.equals("") && memCode.equals(null)){
-       		message.setMessage("fail saved");
-       	}else{
-       		message.setMessage("Compelete to Create a Member Code : " +memCode);
-       	}
-       	logger.debug("message : {}", message);
+    		memberListService.insertDocSub(updList, memCode, userId, memberType, trainType);
 
-       	System.out.println("msg   " + success);
+    		logger.debug("memCode : {}", memCode);
+    		// 결과 만들기.
 
+    //        	message.setCode(AppConstants.SUCCESS);
+    //        	message.setData(map);
+           	if(memCode.equals("") && memCode.equals(null)){
+           		message.setMessage("fail saved");
+           	}else{
+           		message.setMessage("Compelete to Create a Member Code : " +memCode);
+           	}
+           	logger.debug("message : {}", message);
+
+		} catch (Exception e){
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(e.getMessage());
+		}
     	return ResponseEntity.ok(message);
 	}
 
@@ -600,23 +604,30 @@ public class MemberListController {
 	public ResponseEntity<ReturnMessage> insertTerminateResign(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 		Map<String, Object> resultValue = new HashMap<String, Object>();
-		if(sessionVO != null){
-			logger.debug("params : {}", params);
-			logger.debug("sessionVO : {}", sessionVO.getUserId());
-			boolean success = false;
-			if(params.get("codeValue").toString().equals("1")){
-	    		int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
-	    		params.put("MemberID", memberId);
-	    		resultValue = memberListService.insertTerminateResign(params,sessionVO);
-	    		message.setMessage(resultValue.get("message").toString());
+		try {
+    		if(sessionVO != null){
+    			logger.debug("params : {}", params);
+    			logger.debug("sessionVO : {}", sessionVO.getUserId());
+    			boolean success = false;
+    			if(params.get("codeValue").toString().equals("1")){
+    	    		int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
+    	    		params.put("MemberID", memberId);
+    	    		resultValue = memberListService.insertTerminateResign(params,sessionVO);
+    	    		message.setMessage(resultValue.get("message").toString());
 
-			}else{
-				int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
-	    		params.put("memberId", memberId);
-	    		resultValue = memberListService.insertTerminateResign(params,sessionVO);
-	    		message.setMessage(resultValue.get("message").toString());
-			}
+    			}else{
+    				int memberId = params.get("requestMemberId") != null ? Integer.parseInt(params.get("requestMemberId").toString()) : 0;
+    	    		params.put("memberId", memberId);
+    	    		resultValue = memberListService.insertTerminateResign(params,sessionVO);
+    	    		message.setMessage(resultValue.get("message").toString());
+    			}
+    		}
+
+		} catch (Exception e){
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(e.getMessage());
 		}
+
 		return ResponseEntity.ok(message);
 	}
 
@@ -821,16 +832,19 @@ public class MemberListController {
 		logger.debug("in...... traineeUpdate");
 		logger.debug("params : {}", params);
 
+		try {
+    		resultValue = memberListService.traineeUpdate(params,sessionVO);
 
-		resultValue = memberListService.traineeUpdate(params,sessionVO);
+    		if(null != resultValue){
+    		    trInfo.put("memCode", (String)resultValue.get("memCode"));
+    		    trInfo.put("telMobile", (String)resultValue.get("telMobile"));
 
-		if(null != resultValue){
-		    trInfo.put("memCode", (String)resultValue.get("memCode"));
-		    trInfo.put("telMobile", (String)resultValue.get("telMobile"));
-
-			//message.setMessage((String)resultValue.get("memCode"));
+    			//message.setMessage((String)resultValue.get("memCode"));
+    		}
+		} catch (Exception e){
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(e.getMessage());
 		}
-
 
 		return ResponseEntity.ok(trInfo);
 	}
@@ -1040,7 +1054,14 @@ public class MemberListController {
 //                    formMap.put("coursItmId", trainingItem.get("coursItmId"));
 //                    u5 = memberListService.memberListUpdate_MSC09(formMap);
 //                }
-            	memberListService.lmsMemberListUpdate(formMap);
+
+            	Map<String, Object> returnVal = memberListService.lmsMemberListUpdate(formMap);
+				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+					throw e1;
+				}
+
+            	//memberListService.lmsMemberListUpdate(formMap);
             }
 
             if(formMap.get("memberType").toString().equals("7")) {
@@ -1159,29 +1180,34 @@ public class MemberListController {
 		logger.debug("in...... hpMemRegister");
 		logger.debug("params : {}", params);
 
-		params.put("MemberID", Integer.parseInt((String) params.get("memberId")));
+		try {
+    		params.put("MemberID", Integer.parseInt((String) params.get("memberId")));
 
-		resultValue = memberListService.hpMemRegister(params,sessionVO);
+    		resultValue = memberListService.hpMemRegister(params,sessionVO);
 
-		logger.debug("in...... hpMemRegiste Result");
-		logger.debug("params : {}", params);
-		logger.debug("resultValue : {}", resultValue);
+    		logger.debug("in...... hpMemRegiste Result");
+    		logger.debug("params : {}", params);
+    		logger.debug("resultValue : {}", resultValue);
 
-		if(resultValue.size() > 0){
-			if (resultValue.get("duplicMemCode") != null) {
-				message.setMessage("This member is already registered<br/>as member code : "
-						+ resultValue.get("duplicMemCode").toString());
+    		if(resultValue.size() > 0){
+    			if (resultValue.get("duplicMemCode") != null) {
+    				message.setMessage("This member is already registered<br/>as member code : "
+    						+ resultValue.get("duplicMemCode").toString());
 
-			} else {
-				message.setMessage((String)resultValue.get("memCode"));
-				// doc UPdate
-				params.put("hpMemId",  resultValue.get("memId").toString());
-				logger.debug("params {}" , params);
-				memberListService.updateDocSubWhenAppr(params , sessionVO);
+    			} else {
+    				message.setMessage((String)resultValue.get("memCode"));
+    				// doc UPdate
+    				params.put("hpMemId",  resultValue.get("memId").toString());
+    				logger.debug("params {}" , params);
+    				memberListService.updateDocSubWhenAppr(params , sessionVO);
 
-			}
-		} else if (resultValue.size() == 0) {
-			message.setMessage("There is no address information to the HP applicant code");
+    			}
+    		} else if (resultValue.size() == 0) {
+    			message.setMessage("There is no address information to the HP applicant code");
+    		}
+		} catch (Exception e){
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(e.getMessage());
 		}
 
 		logger.debug("message : {}", message);

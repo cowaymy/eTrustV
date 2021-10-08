@@ -543,6 +543,8 @@ console.log("ready");
             $("#trNo").attr("disabled", true);
             doGetCombo('/organization/selectAccBank.do', '', '', 'issuedBank', 'S', '');
         } else if(memberType ==  "5") {
+        	$('#email').prop('required', true); // LMS - Added email as mandatory for Trainee & HP Applicant. Hui Ding, 2021-10-08
+        	$('#emailLbl').append("<span class='must'>*</span>");
             $('#mobileNo').prop('required', true);
             $('#mobileNoLbl').append("<span class='must'>*</span>");
         } else {
@@ -947,23 +949,31 @@ console.log("validation");
             }
         }
 
-        if($("#memberType").val() == "2803") {
-            if($("#email").val() == '') {
-                Common.alert("Please key in Email Address");
-                return false;
-            }
 
-            // 2018-07-26 - LaiKW - Added Meeting Point and Branch
-            if($('#meetingPoint').val() == '') {
-                Common.alert("Please select reporting branch");
-                return false;
-            }
+        if($("#memberType").val() == "2803"){
+        	 if($("#email").val() == '') {
+                 Common.alert("Please key in Email Address");
+                 return false;
+             }
+        	 if($("#memberType").val() == "2803") {
+                 // 2018-07-26 - LaiKW - Added Meeting Point and Branch
+                 if($('#meetingPoint').val() == '') {
+                     Common.alert("Please select reporting branch");
+                     return false;
+                 }
+             }
         }
 
+        // LMS - Change to check email as mandatory for HP Applicant, trainee. Hui Ding, 2021-10-08
         if($("#memberType").val() =='5'){
             if($("#traineeType1").val() ==''){
                    Common.alert("Please key in Trainee type");
                    return false;
+            }
+
+            if($("#email").val() == '') {
+                Common.alert("Please key in Email Address");
+                return false;
             }
 
             /* if($("#course").val() == ''){

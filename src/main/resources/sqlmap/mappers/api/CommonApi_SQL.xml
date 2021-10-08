@@ -29,6 +29,7 @@
        ,ERR_MSG
        ,CRT_DT
        ,API_USER_ID
+       ,REF_NO
     ) VALUES (
         API0004M_RESP_ID_SEQ.NEXTVAL
         , #{reqParam}
@@ -40,6 +41,7 @@
         , #{errMsg}
         , SYSDATE
         , #{apiUserId}
+        , #{refNo}
     )
 </insert>
 
