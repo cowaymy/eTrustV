@@ -150,8 +150,8 @@
             <tr>
                 <th scope="row"><spring:message code="sal.title.text.batchStus" /></th>
                 <td>
-                <select class="w100p" id="cmbBatchStatus" name="cmbBatchStatus" >
-                    <option value="1" selected><spring:message code="sal.combo.text.active" /></option>
+                <select id="cmbBatchStatus" name="cmbBatchStatus" class="multy_select w100p" multiple="multiple">
+                    <option value="1" ><spring:message code="sal.combo.text.active" /></option>
                     <option value="4" ><spring:message code="sal.combo.text.compl" /></option>
                     <option value="8"><spring:message code="sal.combo.text.inactive" /></option>
                 </select>

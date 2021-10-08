@@ -548,8 +548,11 @@
         ]]>
         </if>
 
-        <if test="cmbBatchStatus != null and cmbBatchStatus != '' ">
-        AND A.STUS_ID = #{cmbBatchStatus}
+        <if test="arrBatchStatus != null and arrBatchStatus != '' ">
+        AND A.STUS_ID IN
+            <foreach item="status" collection="arrBatchStatus" index="index" open="(" separator="," close=")">
+                #{status}
+            </foreach>
         </if>
 
         ORDER BY A.CRT_DT DESC

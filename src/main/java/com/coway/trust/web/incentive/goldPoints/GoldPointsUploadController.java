@@ -57,6 +57,10 @@ public class GoldPointsUploadController {
 	public ResponseEntity<List<EgovMap>> selectPointsUploadList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 	    LOGGER.debug("params =====================================>>  " + params);
 
+		String[] arrBatchStatus = request.getParameterValues("cmbBatchStatus");
+
+		params.put("arrBatchStatus", arrBatchStatus);
+
 	    List<EgovMap> list = goldPointsService.selectPointsUploadList(params);
 
 	    LOGGER.debug("list =====================================>>  " + list.toString());
