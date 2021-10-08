@@ -42,6 +42,8 @@ import com.coway.trust.api.mobile.services.as.AfterServicePartsForm;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultDetailForm;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultDto;
 import com.coway.trust.api.mobile.services.as.AfterServiceResultForm;
+import com.coway.trust.api.mobile.services.as.SyncIhrApiDto;
+import com.coway.trust.api.mobile.services.as.SyncIhrApiForm;
 import com.coway.trust.api.mobile.services.cancelSms.CanCelDto;
 import com.coway.trust.api.mobile.services.cancelSms.CanCelSmsForm;
 import com.coway.trust.api.mobile.services.heartService.HSFailJobRequestDto;
@@ -82,6 +84,7 @@ import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerForm;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.logistics.returnusedparts.ReturnUsedPartsService;
 import com.coway.trust.biz.services.as.ASManagementListService;
+import com.coway.trust.biz.services.as.IhrApiService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
@@ -210,6 +213,9 @@ public class ServiceApiController {
 
   @Resource(name = "serviceApiPRService")
   private ServiceApiPRService serviceApiPRService;
+
+  @Resource(name = "ihrApiService")
+  private IhrApiService ihrApiService;
 
   @ApiOperation(value = "Heart Service Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/heartServiceJobList", method = RequestMethod.GET)
@@ -2118,6 +2124,20 @@ public class ServiceApiController {
 
     return ResponseEntity.ok(CanCelDto.create(transactionId));
   }
+
+
+	 @ApiOperation(value = "selectSyncIhr", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	    @RequestMapping(value = "/selectSyncIhr", method = RequestMethod.GET)
+	    public ResponseEntity<List<SyncIhrApiDto>> selectSyncIhr(@ModelAttribute SyncIhrApiForm param) throws Exception {
+	        List<EgovMap>  selectSyncIhr = ihrApiService.selectSyncIhr(param);
+	        if(LOGGER.isErrorEnabled()){
+	            for (int i = 0; i < selectSyncIhr.size(); i++) {
+	                    LOGGER.debug("selectSyncIhr    값 : {}", selectSyncIhr.get(i));
+	            }
+	        }
+	        return ResponseEntity.ok(selectSyncIhr.stream().map(r -> SyncIhrApiDto.create(r)).collect(Collectors.toList()));
+	    }
+
 
   @ApiOperation(value = "Service History List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/serviceHistory", method = RequestMethod.POST)
