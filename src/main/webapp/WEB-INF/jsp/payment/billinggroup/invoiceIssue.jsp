@@ -7,7 +7,7 @@
 
 $(document).ready(function(){
 	fn_initGstCondition();
-	
+
     $('input[name=gstType]').change(function(){
     	fn_makeStatementList($(this).val());
     });
@@ -37,13 +37,14 @@ function fn_makeStatementList(type){
 		$("#statementList").append("<option value='initTaxInvoiceMiscellaneousPop.do'>TaxInvoice(Miscellaneous)</option>");
 		$("#statementList").append("<option value='initStatementCompanyRentalPop.do'>Statement Company(Rental)</option>");
 		$("#statementList").append("<option value='initProformaInvoicePop.do'>ProformaInvoice</option>");
+		$("#statementList").append("<option value='initSummaryOfInvoicePop.do'>Summary of Invoice</option>");
 	}
 }
 
-function fn_goSelectedPage() {        
+function fn_goSelectedPage() {
 	var url = "/payment/" + $('#statementList').val();
     Common.popupDiv(url, null, null, true,"");
-	
+
 }
 
 </script>
@@ -53,16 +54,16 @@ function fn_goSelectedPage() {
     <ul class="path">
         <li><img src="/resources/images/common/path_home.gif" alt="Home" /></li>
     </ul>
-    
+
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="javascript:;" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
-        <h2>Invoice Generate</h2>   
+        <h2>Invoice Generate</h2>
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a href="#" onclick ="javascript:fn_goSelectedPage()"><spring:message code='pay.btn.go'/></a></p></li>
-            </c:if>            
-        </ul>    
+            </c:if>
+        </ul>
     </aside>
     <!-- title_line end -->
 
@@ -92,6 +93,6 @@ function fn_goSelectedPage() {
                 </tr>
                 </tbody>
         </table>
-    </section>	
+    </section>
 </section>
 
