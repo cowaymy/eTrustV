@@ -159,6 +159,7 @@ public class CommissionConstants {
 
 	public static final String COMIS_SAMPLE_HP = "67";					//
 	public static final String COMIS_SAMPLE_CD = "66";					//
+	public static final String COMIS_SAMPLE_HT = "473";         //
 	public static final String COMIS_INCENTIVE = "1062";					//
 	public static final String COMIS_INCENTIVE_ACTIVE = "1";					//
 	public static final String COMIS_INCENTIVE_REMOVE = "8";					//

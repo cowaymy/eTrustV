@@ -2196,6 +2196,13 @@ public class CommissionCalculationController {
 		return ResponseEntity.ok(sampleList);
 	}
 
+	@RequestMapping(value = "/incntivSampleHtList")
+  public ResponseEntity<List<EgovMap>> incntivSampleHtList(@RequestParam Map<String, Object> params, ModelMap model) {
+    params.put("mstId",CommissionConstants.COMIS_SAMPLE_HT);
+    List sampleList = commissionCalculationService.incentiveSample(params);
+    return ResponseEntity.ok(sampleList);
+  }
+
 	/**
 	 * Csv File Overlap Count Search
 	 * @param params

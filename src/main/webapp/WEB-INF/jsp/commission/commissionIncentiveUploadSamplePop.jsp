@@ -15,21 +15,27 @@ var cdGridID;
     $(document).ready(function() {
     	createAUIGridHp();
     	createAUIGridCd();
-    	
+    	createAUIGridHt();
+
     	Common.ajax("GET","/commission/calculation/incntivSampleHpList","", function(result) {
             //console.log("성공.");
             console.log("data : " + result);
             AUIGrid.setGridData(hpGridID, result);
         });
-    	
+
     	Common.ajax("GET","/commission/calculation/incntivSampleCdList","", function(result) {
             //console.log("성공.");
             console.log("data : " + result);
             AUIGrid.setGridData(cdGridID, result);
         });
-    	
+
+    	Common.ajax("GET","/commission/calculation/incntivSampleHtList","", function(result) {
+
+            AUIGrid.setGridData(htGridID, result);
+        });
+
     });
-    
+
     function createAUIGridHp() {
         var columnLayout = [ {
             dataField : "code",
@@ -45,8 +51,8 @@ var cdGridID;
         }];
         // 그리드 속성 설정
         var gridPros = {
-            
-            // 페이징 사용       
+
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 20,
@@ -58,10 +64,10 @@ var cdGridID;
             showRowNumColumn : false,
             selectionMode : "singleRow"
         };
-        
+
         hpGridID = AUIGrid.create("#grid_wrap_hp", columnLayout,gridPros);
    }
-    
+
     function createAUIGridCd() {
         var columnLayout = [ {
             dataField : "code",
@@ -77,8 +83,8 @@ var cdGridID;
         }];
         // 그리드 속성 설정
         var gridPros = {
-            
-            // 페이징 사용       
+
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 20,
@@ -90,8 +96,40 @@ var cdGridID;
             showRowNumColumn : false,
             selectionMode : "singleRow",
         };
-        
+
         cdGridID = AUIGrid.create("#grid_wrap_cd", columnLayout,gridPros);
+   }
+
+    function createAUIGridHt() {
+        var columnLayout = [ {
+            dataField : "code",
+            headerText : "Code",
+            style : "my-column",
+            width : 60,
+            editable : false
+        },{
+            dataField : "codeName",
+            headerText : "Name",
+            style : "my-left-column",
+            editable : false
+        }];
+        // 그리드 속성 설정
+        var gridPros = {
+
+            // 페이징 사용
+            usePaging : true,
+            // 한 화면에 출력되는 행 개수 20(기본값:20)
+            pageRowCount : 20,
+            // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            skipReadonlyColumns : true,
+            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            wrapSelectionMove : true,
+            // 줄번호 칼럼 렌더러 출력
+            showRowNumColumn : false,
+            selectionMode : "singleRow"
+        };
+
+        htGridID = AUIGrid.create("#grid_wrap_ht", columnLayout,gridPros);
    }
 </script>
 
@@ -127,6 +165,24 @@ var cdGridID;
 	</div>
 
 </div><!-- divine_auto end -->
+
+
+<div class="divine_auto"><!-- divine_auto start -->
+
+    <div style="width:50%">
+        <aside class="title_line"><!-- title_line start -->
+        <h2><spring:message code='commission.text.type.homecareTechnician'/></h2>
+        </aside><!-- title_line end -->
+        <article class="grid_wrap"><!-- grid_wrap start -->
+          <div id="grid_wrap_ht" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+        </article><!-- grid_wrap end -->
+    </div>
+
+    <div style="width:50%">
+    </div>
+
+</div><!-- divine_auto end -->
+
 
 </section><!-- pop_body end -->
 
