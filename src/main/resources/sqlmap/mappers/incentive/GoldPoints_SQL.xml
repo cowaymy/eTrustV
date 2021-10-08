@@ -179,9 +179,31 @@
                 SELECT GP_ITM_ID, GP_BAL_PTS FROM ICR0003D
                 WHERE (SYSDATE <![CDATA[<=]]> GP_END_DT)
                 ) U ON U.GP_ITM_ID = I.GP_ITM_ID
+            JOIN ORG0005D O5 ON O5.MEM_ID = O.MEM_ID
             WHERE 1=1
             <if test=" null != memCode and '' != memCode">
                 AND I.MEM_CODE = #{memCode}
+            </if>
+            <if test="status != null and status != ''">
+                AND O.STUS = #{status}
+            </if>
+            <if test="icNum != null and icNum != ''">
+                AND O.NRIC LIKE   '%' || #{icNum} || '%'
+            </if>
+            <if test="memName != null and memName != ''">
+                AND UPPER(O.NAME) LIKE UPPER('%' || #{memName} || '%')
+            </if>
+            <if test="deptCode != null and deptCode != ''">
+                AND O5.LAST_DEPT_CODE = #{deptCode}
+            </if>
+            <if test="grpCode != null and grpCode != ''">
+                AND O5.LAST_GRP_CODE = #{grpCode}
+            </if>
+            <if test="orgCode != null and orgCode != ''">
+                AND O5.LAST_ORG_CODE = #{orgCode}
+            </if>
+            <if test="cmbMemType != null and cmbMemType != ''">
+                AND O.MEM_TYPE = #{cmbMemType}
             </if>
 
             AND S.CODE_MASTER_ID = 1
