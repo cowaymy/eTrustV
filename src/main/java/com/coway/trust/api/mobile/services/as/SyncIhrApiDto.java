@@ -17,8 +17,15 @@ public class SyncIhrApiDto {
 
 	private String salesOrdNo ;
 	//private String asSetlDt ;
-	private String defectCode;
-	private String defectDesc;
+	private String defectCodeDp;
+	private String defectDescDp;
+
+	private String defectCodeDd;
+	private String defectDescDd;
+
+	private String defectCodeDc;
+	private String defectDescDc;
+
 	private int asDefectPartId;
 	private int asDefectDtlResnId;
 	private int asDefectId;
@@ -30,18 +37,6 @@ public class SyncIhrApiDto {
 	}
 	public void setSalesOrdNo(String salesOrdNo) {
 		this.salesOrdNo = salesOrdNo;
-	}
-	public String getDefectCode() {
-		return defectCode;
-	}
-	public void setDefectCode(String defectCode) {
-		this.defectCode = defectCode;
-	}
-	public String getDefectDesc() {
-		return defectDesc;
-	}
-	public void setDefectDesc(String defectDesc) {
-		this.defectDesc = defectDesc;
 	}
 	public int getAsDefectPartId() {
 		return asDefectPartId;
@@ -66,6 +61,42 @@ public class SyncIhrApiDto {
 	}
 	public void setAsResultStusId(String asResultStusId) {
 		this.asResultStusId = asResultStusId;
+	}
+	public String getDefectCodeDp() {
+		return defectCodeDp;
+	}
+	public void setDefectCodeDp(String defectCodeDp) {
+		this.defectCodeDp = defectCodeDp;
+	}
+	public String getDefectDescDp() {
+		return defectDescDp;
+	}
+	public void setDefectDescDp(String defectDescDp) {
+		this.defectDescDp = defectDescDp;
+	}
+	public String getDefectCodeDd() {
+		return defectCodeDd;
+	}
+	public void setDefectCodeDd(String defectCodeDd) {
+		this.defectCodeDd = defectCodeDd;
+	}
+	public String getDefectDescDd() {
+		return defectDescDd;
+	}
+	public void setDefectDescDd(String defectDescDd) {
+		this.defectDescDd = defectDescDd;
+	}
+	public String getDefectCodeDc() {
+		return defectCodeDc;
+	}
+	public void setDefectCodeDc(String defectCodeDc) {
+		this.defectCodeDc = defectCodeDc;
+	}
+	public String getDefectDescDc() {
+		return defectDescDc;
+	}
+	public void setDefectDescDc(String defectDescDc) {
+		this.defectDescDc = defectDescDc;
 	}
 
 }
