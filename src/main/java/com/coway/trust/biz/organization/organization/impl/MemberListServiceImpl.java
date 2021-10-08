@@ -2994,7 +2994,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}catch(Exception e){
 			logger.error("Timeout:");
 			logger.error("[lmsMemberListInsertUpdate] - Caught Exception: " + e);
-			p.setStatus(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+			p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
 			p.setMessage("Timeout" + e.toString());
 		}finally{
 			stopWatch.stop();
