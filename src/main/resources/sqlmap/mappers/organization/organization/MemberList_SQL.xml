@@ -5424,4 +5424,42 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
                 ORDER BY MEM_CODE, MEM_LVL DESC
     </select>
+
+        <select id="validateVaccineDeclarationStatus" parameterType="Map" resultType="egovMap">
+        select count(*) cnt from ORG0042D
+        where
+        <if test="memberID != null and memberID != '' ">
+            mem_id = #{memberID}
+        </if>
+        and stus_id = 1
+
+      </select>
+
+      <select id="getVaccineDeclarationMemDetails" parameterType="Map" resultType="egovMap">
+        select
+        a.mem_id,
+        a.mem_code,
+        a.name,
+        a.nric,
+        a.tel_mobile,
+        a.email,
+        a.DOB,
+        c.mem_org_desc
+        from ORG0001D a
+        left join ORG0005D b on b.mem_id = a.mem_id
+        left join ORG0012D c on c.mem_type_id = a.mem_type and c.mem_org_lvl = b.mem_lvl
+        left join org0042d d on d.mem_id = a.mem_id
+        where a.mem_id =#{memberID}
+      </select>
+
+      <update id="updateVaccineDeclaration" parameterType="Map">
+        UPDATE ORG0042D
+         SET IS_SELECT = #{isSelect},
+               REASON = #{reason},
+               STUS_ID = 1,
+               UPLOAD_ID = #{atchFileGrpId},
+               UPD_USER_ID = #{userId},
+               UPD_DT = SYSDATE
+           WHERE  MEM_ID = #{memberID}
+     </update>
 </mapper>

@@ -239,4 +239,11 @@ public interface MemberListService {
 	EgovMap getCurrOrgDtls(Map<String, Object> params);
 
 	//EgovMap checkIncomeTax(Map<String, Object> params);
+
+	EgovMap validateVaccineDeclarationStatus(Map<String, Object> params);
+
+	EgovMap getVaccineDeclarationMemDetails(Map<String, Object> params);
+
+	void updateVaccineDeclaration(Map<String, Object> params) throws Exception;
+
 }

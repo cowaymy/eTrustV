@@ -2303,5 +2303,94 @@ logger.debug("params : {}", params);
 		return ResponseEntity.ok(memberList);
     }
 
+    @RequestMapping(value = "/vaccinationListing.do")
+    public String vaccinationListing(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+        logger.debug("==================== vaccinationListing.do ====================");
+
+        // Custom login checking based on URL input
+        Precondition.checkNotNull(params.get("MemberID"),
+                messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "Member ID" }));
+
+        String memCode = ((String) params.get("MemberID")).substring(6);
+        String memberID = ((String) params.get("MemberID")).substring(0, 6);
+
+        logger.debug("Applicant ID : {}", memberID);
+        logger.debug("User Type : {}", memCode);
+
+        params.put("MemberID", memberID);
+        params.put("MemCode", memCode);
+
+        LoginVO loginVO = loginService.getVaccineDeclarationAplcntInfo(params);
+
+        String message = "";
+        String status = "";
+
+        if (loginVO == null || loginVO.getUserId() == 0) {
+            status = "FAILED";
+            message = "Aplicant does not exist";
+        } else {
+            HttpSession session = sessionHandler.getCurrentSession();
+            session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
+
+            model.addAttribute("memberID", params.get("MemberID"));
+            model.addAttribute("identification", params.get("Identification"));
+        }
+
+        model.addAttribute("status", status);
+        model.addAttribute("message", message);
+        return "organization/organization/vaccinationDeclaration";
+    }
+
+    @RequestMapping(value = "/getVaccineSubmitInfo", method = RequestMethod.GET)
+    public ResponseEntity<Map> getVaccineSubmitInfo(@RequestParam Map<String, Object> params, HttpServletRequest request,
+            ModelMap model) {
+
+        logger.debug("==================== getVaccineSubmitInfo ====================");
+
+        EgovMap item = new EgovMap();
+        item = (EgovMap) memberListService.validateVaccineDeclarationStatus(params);
+
+        Map<String, Object> appDetails = new HashMap();
+        appDetails.put("cnt", item.get("cnt"));
+
+        if("0".equals(item.get("cnt").toString())) {
+            EgovMap item2 = new EgovMap();
+            item2 = (EgovMap) memberListService.getVaccineDeclarationMemDetails(params);
+
+            appDetails.put("memID", item2.get("memId"));
+            appDetails.put("memCode", item2.get("memCode"));
+            appDetails.put("name", item2.get("name"));
+            appDetails.put("nric", item2.get("nric"));
+            appDetails.put("telMobile", item2.get("telMobile"));
+            appDetails.put("email", item2.get("email"));
+            appDetails.put("position", item2.get("memOrgDesc"));
+         }
+
+        return ResponseEntity.ok(appDetails);
+    }
+
+    @RequestMapping(value = "/updateVaccineDeclaration.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> updateVaccineDeclaration(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO)
+	          throws Exception {
+
+    	logger.debug("==================== updateVaccineDeclaration.do ====================");
+
+    	        logger.debug("params {}", params);
+
+    	        // Session
+    	        sessionVO = sessionHandler.getCurrentSessionInfo();
+    	        params.put("userId", sessionVO.getUserId());
+
+    	        // service
+    	        memberListService.updateVaccineDeclaration(params);
+
+    	        ReturnMessage message = new ReturnMessage();
+    	        message.setCode(AppConstants.SUCCESS);
+    	        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+	    return ResponseEntity.ok(message);
+
+	}
 }
 

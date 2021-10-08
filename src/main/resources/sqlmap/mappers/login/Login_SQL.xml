@@ -637,4 +637,19 @@
             AND MEM_ID = #{memId}
         </if>
     </select>
+
+    <select id="getVaccineDeclarationAplcntInfo" parameterType="Map" resultType="loginVO">
+    select
+        a.mem_id USERID,
+        a.mem_code USERNAME,
+        a.full_name USERFULLNAME,
+        a.tel_mobile USERMOBILENO,
+        a.email USEREMAIL,
+        a.stus USERSTATUSID,
+        a.mem_type USERTYPEID
+        from ORG0001D a
+        left join org0042d b on b.mem_id = a.mem_id
+        where a.mem_id =#{MemberID}
+        and a.mem_Code = #{MemCode}
+    </select>
 </mapper>

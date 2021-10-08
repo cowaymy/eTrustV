@@ -67,4 +67,6 @@ public interface LoginMapper {
 	void insertFileDetail(Map<String, Object> flInfo);
 	int insertVacInfo(Map<String, Object> params);
 	EgovMap getVaccineInfo(Map<String, Object> params);
+
+	LoginVO getVaccineDeclarationAplcntInfo(Map<String, Object> params);
 }

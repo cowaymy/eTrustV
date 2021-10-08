@@ -467,4 +467,11 @@ public class LoginServiceImpl implements LoginService {
 		return vacInfo;
 	}
 
+	@Override
+    public LoginVO getVaccineDeclarationAplcntInfo(Map<String, Object> params) {
+        LOGGER.debug("getVaccineDeclarationAplcntInfo");
+        LoginVO loginVO = loginMapper.getVaccineDeclarationAplcntInfo(params);
+
+        return loginVO;
+    }
 }

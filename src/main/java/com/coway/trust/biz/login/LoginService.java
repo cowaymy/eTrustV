@@ -57,4 +57,6 @@ public interface LoginService {
 	public void insertAttachDoc(List<FileVO> list, FileType type, Map<String, Object> params, List<String> seqs);
 	public int insertVaccineInfo (Map<String, Object> params, int userId, String memId);
 	public EgovMap getVaccineInfo (String memId);
+
+	LoginVO getVaccineDeclarationAplcntInfo(Map<String, Object> params);
 }

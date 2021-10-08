@@ -2983,4 +2983,18 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     public EgovMap getCurrOrgDtls(Map<String, Object> params) {
         return memberListMapper.getCurrOrgDtls(params);
     }
+
+	public EgovMap validateVaccineDeclarationStatus(Map<String, Object> params) {
+	    return memberListMapper.validateVaccineDeclarationStatus(params);
+	}
+
+	@Override
+	public EgovMap getVaccineDeclarationMemDetails(Map<String, Object> params) {
+	    return memberListMapper.getVaccineDeclarationMemDetails(params);
+	}
+
+	@Override
+	public void updateVaccineDeclaration(Map<String, Object> params) throws Exception {
+	    memberListMapper.updateVaccineDeclaration(params);
+	}
 }
