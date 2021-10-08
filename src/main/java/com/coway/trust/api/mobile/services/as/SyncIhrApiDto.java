@@ -19,9 +19,9 @@ public class SyncIhrApiDto {
 	//private String asSetlDt ;
 	private String defectCode;
 	private String defectDesc;
-	private String asDefectPartId;
-	private String asDefectDtlResnId;
-	private String asDefectId;
+	private int asDefectPartId;
+	private int asDefectDtlResnId;
+	private int asDefectId;
 	private String asResultStusId;
 
 
@@ -43,22 +43,22 @@ public class SyncIhrApiDto {
 	public void setDefectDesc(String defectDesc) {
 		this.defectDesc = defectDesc;
 	}
-	public String getAsDefectPartId() {
+	public int getAsDefectPartId() {
 		return asDefectPartId;
 	}
-	public void setAsDefectPartId(String asDefectPartId) {
+	public void setAsDefectPartId(int asDefectPartId) {
 		this.asDefectPartId = asDefectPartId;
 	}
-	public String getAsDefectDtlResnId() {
+	public int getAsDefectDtlResnId() {
 		return asDefectDtlResnId;
 	}
-	public void setAsDefectDtlResnId(String asDefectDtlResnId) {
+	public void setAsDefectDtlResnId(int asDefectDtlResnId) {
 		this.asDefectDtlResnId = asDefectDtlResnId;
 	}
-	public String getAsDefectId() {
+	public int getAsDefectId() {
 		return asDefectId;
 	}
-	public void setAsDefectId(String asDefectId) {
+	public void setAsDefectId(int asDefectId) {
 		this.asDefectId = asDefectId;
 	}
 	public String getAsResultStusId() {
