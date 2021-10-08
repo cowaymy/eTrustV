@@ -26,15 +26,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class BillingInvoiceController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BillingInvoiceController.class);
-	
+
 	@Resource(name = "billingInvoiceService")
 	private BillingInvoiceService invoiceService;
-	
+
 	/******************************************************
 	 *   Company Statement
-	 *****************************************************/	
+	 *****************************************************/
 	/**
-	 * Company Statement초기화 화면 
+	 * Company Statement초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -43,129 +43,129 @@ public class BillingInvoiceController {
 	public String initCompanyInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/billinggroup/companyInvoicePop";
 	}
-	
+
 	@RequestMapping(value = "/selectInvoiceList.do")
-	public ResponseEntity<List<EgovMap>> selectInvoiceList(@RequestParam Map<String, Object> params, ModelMap model) {	
+	public ResponseEntity<List<EgovMap>> selectInvoiceList(@RequestParam Map<String, Object> params, ModelMap model) {
 		List<EgovMap> list = null;
-		
+
 		LOGGER.debug("params : {}", params);
-	
+
 		String brNumber = String.valueOf(params.get("brNumber")).trim();
 		String period = String.valueOf(params.get("period")).trim();
 		String orderNo = String.valueOf(params.get("orderNo")).trim();
 		String customerName = String.valueOf(params.get("customerName")).trim();
 		String custNRIC = String.valueOf(params.get("customerNRIC")).trim();
-		
+
 		int sMonth = 0;
 		int sYear = 0;
-		
+
 		if((!period.equals("null")) && (!period.equals(""))){
 			String tmp[] = period.split("/");
 			sMonth = Integer.parseInt(tmp[0]);
 			sYear = Integer.parseInt(tmp[1]);
 		}
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("billNo", brNumber);
 		map.put("orderNo", orderNo);
 		map.put("custName", customerName);
 		map.put("sMonth", sMonth);
 		map.put("sYear", sYear);
 		map.put("custNRIC", custNRIC);
-		
+
 		list = invoiceService.selectCompanyInvoice(map);
-		
+
 		return ResponseEntity.ok(list);
 	}
-	
+
 	/******************************************************
 	 *   Individual Statement
-	 *****************************************************/	
+	 *****************************************************/
 	/**
-	 * Individual Statement초기화 화면 
+	 * Individual Statement초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
 	 */
-	
+
 	@RequestMapping(value = "/initIndividualRentalStatementPop.do")
-	public String initIndividualRentalStatement(@RequestParam Map<String, Object> params, ModelMap model) {	
-	
+	public String initIndividualRentalStatement(@RequestParam Map<String, Object> params, ModelMap model) {
+
 		return "payment/billinggroup/individualRentalStatementPop";
 	}
-	
+
 	@RequestMapping(value = "/selectRentalList.do")
-	public ResponseEntity<List<EgovMap>> searchRentalList(@RequestParam Map<String, Object> params, ModelMap model) {	
+	public ResponseEntity<List<EgovMap>> searchRentalList(@RequestParam Map<String, Object> params, ModelMap model) {
 		List<EgovMap> list = null;
-		
+
 		String brNumber = String.valueOf(params.get("brNumber")).trim();
 		String period = String.valueOf(params.get("period")).trim();
 		String orderNo = String.valueOf(params.get("orderNo")).trim();
 		String customerName = String.valueOf(params.get("customerName")).trim();
 		String custNRIC = String.valueOf(params.get("customerNRIC")).trim();
-		
+
 		int sMonth = 0;
 		int sYear = 0;
-		
+
 		if((!period.equals("null")) && (!period.equals(""))){
 			String tmp[] = period.split("/");
 			sMonth = Integer.parseInt(tmp[0]);
 			sYear = Integer.parseInt(tmp[1]);
 		}
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("billNo", brNumber);
 		map.put("orderNo", orderNo);
 		map.put("custName", customerName);
 		map.put("sMonth", sMonth);
 		map.put("sYear", sYear);
 		map.put("custNRIC", custNRIC);
-		
+
 		list = invoiceService.selectRentalStatementList(map);
-		
+
 		return ResponseEntity.ok(list);
 	}
-	
+
 	/******************************************************
 	 *   Membership Invoice
-	 *****************************************************/	
+	 *****************************************************/
 	/**
-	 * Membership Invoice초기화 화면 
+	 * Membership Invoice초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
 	 */
-	
+
 	@RequestMapping(value = "/initMembershipInvoicePop.do")
-	public String initMembershipInvoice(@RequestParam Map<String, Object> params, ModelMap model) {	
-	
+	public String initMembershipInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
+
 		return "payment/billinggroup/membershipInvoicePop";
 	}
-	
+
 	@RequestMapping(value = "/selectMembershipList.do")
-	public ResponseEntity<List<EgovMap>> searchMembershipList(@RequestParam Map<String, Object> params, ModelMap model) {	
+	public ResponseEntity<List<EgovMap>> searchMembershipList(@RequestParam Map<String, Object> params, ModelMap model) {
 		List<EgovMap> list = null;
-		
+
 		String invoiceNo = String.valueOf(params.get("invoiceNo")).trim();
 		String period = String.valueOf(params.get("period")).trim();
 		String orderNo = String.valueOf(params.get("orderNo")).trim();
 		String custName = String.valueOf(params.get("custName")).trim();
 		String custNRIC = String.valueOf(params.get("custNRIC")).trim();
 		String quotationNo = String.valueOf(params.get("quotationNo")).trim();
-		
+
 		int sMonth = 0;
 		int sYear = 0;
-		
+
 		if((!period.equals("null")) && (!period.equals(""))){
 			String tmp[] = period.split("/");
 			sMonth = Integer.parseInt(tmp[0]);
 			sYear = Integer.parseInt(tmp[1]);
 		}
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("invoiceNo", invoiceNo);
 		map.put("sMonth", sMonth);
 		map.put("sYear", sYear);
@@ -173,68 +173,68 @@ public class BillingInvoiceController {
 		map.put("custName", custName);
 		map.put("custNRIC", custNRIC);
 		map.put("quotationNo", quotationNo);
-		
+
 		list = invoiceService.selectMembershipInvoiceList(map);
-		
+
 		return ResponseEntity.ok(list);
 	}
-	
+
 	/******************************************************
 	 *   Outright Invoice
-	 *****************************************************/	
+	 *****************************************************/
 	/**
-	 * Outright Invoice초기화 화면 
+	 * Outright Invoice초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/initOutrightInvoicePop.do")
-	public String initOutrightInvoice(@RequestParam Map<String, Object> params, ModelMap model) {	
-	
+	public String initOutrightInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
+
 		return "payment/billinggroup/outrightInvoicePop";
 	}
 
 	/**
-	 * Outright Invoice조회  
+	 * Outright Invoice조회
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/selectOutrightInvoiceList.do")
-	public ResponseEntity<Map<String, Object>> searchOutrightInvoiceList(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {	
+	public ResponseEntity<Map<String, Object>> searchOutrightInvoiceList(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		List<EgovMap> list = null;
 		String[] appType = request.getParameterValues("appType");
 		params.put("appType", appType);
 		list = invoiceService.selectOutrightInvoiceList(params);
 		int totalRowCount = invoiceService.selectOutrightInvoiceListCount(params);
-		
+
 		resultMap.put("list", list);
 		resultMap.put("totalRowCount", totalRowCount);
-		
+
 		return ResponseEntity.ok(resultMap);
 	}
-	
+
 	/******************************************************
 	 *   Proforma Invoice
-	 *****************************************************/	
+	 *****************************************************/
 	/**
-	 * Proforma Invoice초기화 화면 
+	 * Proforma Invoice초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
 	 */
-	
+
 	@RequestMapping(value = "/initProformaInvoicePop.do")
-	public String initProformaInvoice(@RequestParam Map<String, Object> params, ModelMap model) {	
-	
+	public String initProformaInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
+
 		return "payment/billinggroup/proformaInvoicePop";
 	}
-	
+
 	@RequestMapping(value = "/selectProformaInvoiceList.do")
-	public ResponseEntity<List<EgovMap>> searchOutrightInvoiceList(@ModelAttribute("searchForm")ProformaSearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {	
+	public ResponseEntity<List<EgovMap>> searchOutrightInvoiceList(@ModelAttribute("searchForm")ProformaSearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
 		List<EgovMap> list = null;
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("orderNo", searchVO.getOrderNo().trim());
@@ -251,7 +251,7 @@ public class BillingInvoiceController {
 		map.put("refNo", searchVO.getRefNo().trim());
 		map.put("poNo", searchVO.getPoNo().trim());
 		map.put("contactNo", searchVO.getContactNo());
-		
+
 		String orderDtFr = "";
 		String orderDtTo = "";
 		if(searchVO.getOrderDt1() != null && !searchVO.getOrderDt1().equals("")){
@@ -262,81 +262,81 @@ public class BillingInvoiceController {
 			String tempOrderDtTo[] = searchVO.getOrderDt2().split("/");
 			orderDtTo = tempOrderDtTo[2] + "-" + tempOrderDtTo[1] + "-" + tempOrderDtTo[0] + " 00:00:00";
 		}
-		
+
 		map.put("orderDateFrom", orderDtFr);
 		map.put("orderDateTo", orderDtTo);
-		
+
 		list = invoiceService.selectProformaInvoiceList(map);
 
 		return ResponseEntity.ok(list);
 	}
-	
+
 	/******************************************************
 	 *   Company Statement
-	 *****************************************************/	
+	 *****************************************************/
 	/**
-	 * Company Statement초기화 화면 
+	 * Company Statement초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
 	 */
-	
+
 	@RequestMapping(value = "/initCompanyStatementPop.do")
-	public String initCompanyStatement(@RequestParam Map<String, Object> params, ModelMap model) {	
-	
+	public String initCompanyStatement(@RequestParam Map<String, Object> params, ModelMap model) {
+
 		return "payment/billinggroup/companyStatementPop";
 	}
-	
+
 
 	@RequestMapping(value = "/selectCompStatementList")
-	public ResponseEntity<List<EgovMap>> selectCompStatementList(@RequestParam Map<String, Object> params, ModelMap model) {	
+	public ResponseEntity<List<EgovMap>> selectCompStatementList(@RequestParam Map<String, Object> params, ModelMap model) {
 		List<EgovMap> list = null;
 
-		
+
 		String brNumber = String.valueOf(params.get("brNumber")).trim();
 		String period = String.valueOf(params.get("period")).trim();
 		String orderNo = String.valueOf(params.get("orderNo")).trim();
 		String customerName = String.valueOf(params.get("customerName")).trim();
-		
+
 		int sMonth = 0;
 		int sYear = 0;
-		
+
 		if((!period.equals("null")) && (!period.equals(""))){
 			String tmp[] = period.split("/");
 			sMonth = Integer.parseInt(tmp[0]);
 			sYear = Integer.parseInt(tmp[1]);
 		}
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("billNo", brNumber);
 		map.put("orderNo", orderNo);
 		map.put("custName", customerName);
 		map.put("sMonth", sMonth);
 		map.put("sYear", sYear);
-		
+
 		list = invoiceService.selectCompanyStatementList(map);
-		
+
 		return ResponseEntity.ok(list);
 	}
-	
+
 	/******************************************************
 	 *   Penalty Invoice
-	 *****************************************************/	
+	 *****************************************************/
 	/**
-	 * Penalty Invoice초기화 화면 
+	 * Penalty Invoice초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
 	 */
-	
+
 	@RequestMapping(value = "/initPenaltyInvoicePop.do")
-	public String initPenaltyInvoice(@RequestParam Map<String, Object> params, ModelMap model) {	
+	public String initPenaltyInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/billinggroup/penaltyInvoicePop";
 	}
-	
+
 	/**
-	 * Penalty Invoice - Bill Date 조회 
+	 * Penalty Invoice - Bill Date 조회
 	 * @param searchVO
 	 * @param params
 	 * @param model
@@ -348,25 +348,54 @@ public class BillingInvoiceController {
 
 		LOGGER.debug("params : {} ", params);
         // 조회.
-        List<EgovMap> resultList = invoiceService.selectPenaltyBillDate(params);		
-        
+        List<EgovMap> resultList = invoiceService.selectPenaltyBillDate(params);
+
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultList);
 	}
-	
+
 	/******************************************************
 	 *   Invoice Issue
-	 *****************************************************/	
+	 *****************************************************/
 	/**
-	 * Company Statement초기화 화면 
+	 * Company Statement초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
 	 */
-	
+
 	@RequestMapping(value = "/initInvoiceIssue.do")
-	public String initInvoiceIssue(@RequestParam Map<String, Object> params, ModelMap model) {	
-	
+	public String initInvoiceIssue(@RequestParam Map<String, Object> params, ModelMap model) {
+
 		return "payment/billinggroup/invoiceIssue";
 	}
+
+	/******************************************************
+	 *   Summary Invoice
+	 *****************************************************/
+	/**
+	 * Summary Invoice초기화 화면
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+
+	@RequestMapping(value = "/initSummaryOfInvoicePop.do")
+	public String initSummaryInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		return "payment/billinggroup/summaryInvoicePop";
+	}
+
+	@RequestMapping(value = "/selectSummaryInvoiceList.do")
+	public ResponseEntity<List<EgovMap>> searchSummaryInvoiceList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+
+
+		List<EgovMap> searchSummaryInvoiceList = invoiceService.searchSummaryInvoiceList(params);
+
+		return ResponseEntity.ok(searchSummaryInvoiceList);
+
+	}
+
+
 }

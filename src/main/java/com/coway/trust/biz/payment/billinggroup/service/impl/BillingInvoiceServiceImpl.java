@@ -17,7 +17,7 @@ public class BillingInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 
 	@Resource(name = "billingInvoiceMapper")
 	private BillingInvoiceMapper invoiceMapper;
-	
+
 	@Override
 	public List<EgovMap> selectCompanyInvoice(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -35,7 +35,7 @@ public class BillingInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 		// TODO Auto-generated method stub
 		return invoiceMapper.selectRentalStatementList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectOutrightInvoiceList(Map<String, Object> params){
 		return invoiceMapper.selectOutrightInvoiceList(params);
@@ -52,16 +52,22 @@ public class BillingInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 		// TODO Auto-generated method stub
 		return invoiceMapper.selectProformaInvoiceList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectPenaltyBillDate(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return invoiceMapper.selectPenaltyBillDate(params);
 	}
-	
+
 	@Override
 	public int selectOutrightInvoiceListCount(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return invoiceMapper.selectOutrightInvoiceListCount(params);
+	}
+
+	@Override
+	public  List<EgovMap> searchSummaryInvoiceList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return invoiceMapper.searchSummaryInvoiceList(params);
 	}
 }

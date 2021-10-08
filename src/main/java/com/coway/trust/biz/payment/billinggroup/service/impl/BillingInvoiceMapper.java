@@ -28,53 +28,62 @@ public interface BillingInvoiceMapper {
 	 * @return
 	 */
 	List<EgovMap> selectCompanyInvoiceList(Map<String, Object> params);
-	
+
 	/**
 	 * RentalStatement List 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap>selectRentalStatementList(Map<String, Object> params);
-	
+
 	/**
 	 * MembershipInvoice List 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectMembershipInvoiceList(Map<String, Object> params);
-	
+
 	/**
 	 * OutrightInvoice List 조회
 	 * @param params
-	 * @return 
+	 * @return
 	 */
 	List<EgovMap> selectOutrightInvoiceList(Map<String, Object> params);
-	
+
 	/**
 	 * CompanyStatement List 조회
 	 * @param params
-	 * @return 
+	 * @return
 	 */
 	List<EgovMap> selectCompanyStatementList(Map<String, Object> params);
-	
+
 	/**
 	 * ProformaInvoice List 조회
 	 * @param params
-	 * @return 
+	 * @return
 	 */
 	List<EgovMap> selectProformaInvoiceList(Map<String, Object> params);
-	
+
 	/**
 	 * Penalty Invoice Bill Date 조회
 	 * @param params
-	 * @return 
+	 * @return
 	 */
 	List<EgovMap> selectPenaltyBillDate(Map<String, Object> params);
-	
+
 	/**
 	 * Outright Invoice List Count 조회
 	 * @param params
-	 * @return 
+	 * @return
 	 */
 	int selectOutrightInvoiceListCount(Map<String, Object> params);
+
+
+	/**
+	 * Summary Invoice List 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> searchSummaryInvoiceList(Map<String, Object> params);
+
 }
