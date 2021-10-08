@@ -60,7 +60,15 @@ public class LMSMemApiForm {
 	private String profile_field_dateJoin;
 	private String profile_field_dateResign;
 	private String newusername;
+	// Added for indicating sleeping HP
+	private String userstatus;
 
+	public String getUserstatus() {
+		return userstatus;
+	}
+	public void setUserstatus(String userstatus) {
+		this.userstatus = userstatus;
+	}
 	public String getSecretkey() {
 		return secretkey;
 	}
