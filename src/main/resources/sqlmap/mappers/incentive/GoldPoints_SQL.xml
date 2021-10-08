@@ -437,10 +437,54 @@
                 ) E ON E.RDM_ID = A.RDM_ID
             JOIN SYS0005M F ON F.BRNCH_ID = A.COLLECT_BRNCH_ID
             JOIN SYS0047M G ON G.USER_ID = A.UPD_USER_ID
+            JOIN ORG0005D H ON H.MEM_ID = C.MEM_ID
         WHERE 1=1
 
         <if test=" null != memCode and '' != memCode">
             AND A.MEM_CODE = #{memCode}
+        </if>
+        <if test=" null != cmbMemType and '' != cmbMemType">
+            AND C.MEM_TYPE = #{cmbMemType}
+        </if>
+        <if test="memName != null and memName != ''">
+            AND UPPER(C.NAME) LIKE UPPER('%' || #{memName} || '%')
+        </if>
+        <if test="icNum != null and icNum != ''">
+            AND C.NRIC LIKE   '%' || #{icNum} || '%'
+        </if>
+        <if test="deptCode != null and deptCode != ''">
+            AND H.LAST_DEPT_CODE = #{deptCode}
+        </if>
+        <if test="grpCode != null and grpCode != ''">
+            AND H.LAST_GRP_CODE = #{grpCode}
+        </if>
+        <if test="orgCode != null and orgCode != ''">
+            AND H.LAST_ORG_CODE = #{orgCode}
+        </if>
+        <if test="arrRdmStatus != null and arrRdmStatus != '' ">
+            AND A.STUS_ID IN
+            <foreach item="status" collection="arrRdmStatus" index="index" open="(" separator="," close=")">
+                #{status}
+            </foreach>
+        </if>
+        <if test="redemptionNo != null and redemptionNo != ''">
+            AND A.RDM_NO = #{redemptionNo}
+        </if>
+        <if test="redeemStDate != null and redeemStDate != '' ">
+            <![CDATA[
+            AND A.CRT_DT >= TO_DATE(#{redeemStDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
+            ]]>
+        </if>
+        <if test="redeemEnDate != null and redeemEnDate != '' ">
+            <![CDATA[
+            AND A.CRT_DT <= TO_DATE(#{redeemEnDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
+            ]]>
+        </if>
+        <if test="arrCollectionBrnch != null and arrCollectionBrnch != '' ">
+            AND A.COLLECT_BRNCH_ID IN
+            <foreach item="item" collection="arrCollectionBrnch" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
         </if>
 
         ORDER BY A.RDM_ID DESC

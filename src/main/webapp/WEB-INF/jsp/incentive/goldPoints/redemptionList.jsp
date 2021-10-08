@@ -7,6 +7,7 @@
 
     $(document).ready(function() {
         createAUIGrid();
+        populateCollectionBranches();
 
         AUIGrid.bind(gridID, "cellClick", function(event) {
             $("#_rdmId").val(event.item.rdmId);
@@ -15,7 +16,7 @@
         });
 
         $('#btnSearchRdm').click(function() {
-        	fn_search();
+        	fn_searchRedemptionList();
         });
 
         $('#btnNewRdm').click(function() {
@@ -153,7 +154,7 @@
         gridID = AUIGrid.create("#grid_wrap", columnLayout, gridOpt);
     }
 
-    function fn_search() {
+    function fn_searchRedemptionList() {
         Common.ajax("GET", "/incentive/goldPoints/searchRedemptionList.do", $("#searchForm").serialize(), function(result) {
            AUIGrid.setGridData(gridID, result);
         });
@@ -230,6 +231,21 @@
                 "<spring:message code='incentive.title.redemptionList'/>");
     }
 
+    function populateCollectionBranches() {
+        doGetComboSepa('/common/selectBranchCodeList.do', '45', ' - ', '', 'cmbCollectionBranch', 'M', 'f_multiCombo');
+    }
+
+    function f_multiCombo(){
+        $(function() {
+            $('#cmbCollectionBranch').change(function() {
+            }).multipleSelect({
+                selectAll: false,
+                width: '100%'
+            });
+
+        });
+    }
+
 </script>
 
 <section id="content">
@@ -273,7 +289,7 @@
             <colgroup>
                 <col style="width:130px" />
                 <col style="width:*" />
-                <col style="width:130px" />
+                <col style="width:110px" />
                 <col style="width:*" />
                 <col style="width:130px" />
                 <col style="width:*" />
@@ -318,10 +334,10 @@
                     <td>
                         <input type="text" title="Department Code" placeholder="Department Code" class="w100p" id="deptCode" name="deptCode" />
                     </td>
-                    <th scope="row">Status</th>
+                    <th scope="row">Redemption Status</th>
                     <td>
-                        <select class="multy_select w100p" multiple="multiple" id="status" name="status">
-                            <option value="" selected>Select Status</option>
+                        <select class="multy_select w100p" multiple="multiple" id="cmbRdmStatus" name="cmbRdmStatus">
+                            <option value="">Select Status</option>
                             <option value="1">Active</option>
                             <option value="4">Completed</option>
                             <option value="10">Cancelled</option>
@@ -343,9 +359,7 @@
                     </td>
                     <th scope="row">Collection Branch</th>
                     <td>
-                        <select class="w100p" id="collectionBranch" name="collectionBranch">
-                            <option value="" selected>Select Branch</option>
-                        </select>
+                        <select class="multy_select w100p" multiple="multiple" id="cmbCollectionBranch" name="cmbCollectionBranch"></select>
                     </td>
                     <th scope="row">Redeem Date</th>
                     <td>

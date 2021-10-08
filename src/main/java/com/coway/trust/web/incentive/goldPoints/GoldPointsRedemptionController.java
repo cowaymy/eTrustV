@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
@@ -77,7 +78,12 @@ public class GoldPointsRedemptionController {
 	}
 
 	@RequestMapping(value = "/searchRedemptionList.do")
-	public ResponseEntity<List<EgovMap>> searchRedemptionList(@RequestParam Map<String, Object> params){
+	public ResponseEntity<List<EgovMap>> searchRedemptionList(@RequestParam Map<String, Object> params, HttpServletRequest request){
+
+		String[] arrRdmStatus = request.getParameterValues("cmbRdmStatus");
+	    String[] arrCollectionBrnch = request.getParameterValues("cmbCollectionBranch");
+		params.put("arrRdmStatus", arrRdmStatus);
+		params.put("arrCollectionBrnch", arrCollectionBrnch);
 
 		List<EgovMap> result = goldPointsService.selectRedemptionList(params);
 
