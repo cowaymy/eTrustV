@@ -276,23 +276,24 @@ input {
                 </tr>
                 <tr>
                    <th scope="row"><b>Reason :</b><span class="must">*</span></th>
-                    <td><input type="text" title="Reason" placeholder="" id="reason" name="reason"  /></td>
+                    <td>
+                    <!-- <input type="text" title="Reason" placeholder="" id="reason" name="reason"  maxlength="200"/> -->
+                    <textarea cols="20" name="reason" id="reason" rows="5" placeholder="Reason" style="width: 250px;height: 80px;" maxlength="200"></textarea>
+                    </td>
                 </tr>
                 <tr>
-                            <th scope="row"><b>Supportive Doc. : </b><span class="must">*</span></th>
-                            <td>
-                               <div class="auto_file2">
-                                    <input type="file" title="file add" id="upload1" accept="image/*" />
-                                    <label>
-                                        <input type='text' class='input_text' id="upload1Desc" readonly='readonly' placeholder="Digital Certificate/ Vaccination Card"/>
-                                        <span class='label_text'><a href='#'>Upload</a></span>
-                                    </label>
-                                    <label>
-                                    <span class="sample1" style="font-style:italic; font-size:11px;">* Only allow picture format (JPG, PNG, JPEG) <img src="${pageContext.request.contextPath}/resources/images/common/top_btn_help.gif" alt="Sample"/></span>
-                                    </label>
-                                </div>
-                            </td>
-                        </tr>
+                      <th scope="row"><b>Supportive Doc. : </b><span class="must">*</span></th>
+                      <td>
+                         <div class="auto_file2">
+                              <input type="file" title="file add" id="upload1" accept="image/*" />
+                              <label>
+                                  <input type='text' class='input_text' id="upload1Desc" readonly='readonly' placeholder="Digital Certificate/ Vaccination Card"/>
+                                  <span class='label_text'><a href='#'>Upload</a></span>
+                                    <span class="sample1" style="font-style:italic; font-size:11px;">* Only allow picture format (JPG, PNG, JPEG) </span>
+                              </label>
+                          </div>
+                      </td>
+                </tr>
                 <tr>
                     <table>
 		                <tr>
