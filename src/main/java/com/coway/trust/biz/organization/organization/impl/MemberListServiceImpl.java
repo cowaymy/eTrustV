@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -2697,11 +2698,23 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}
 		lmsMemApiForm.setProfile_field_address(addr);
 		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ? "" : selectMemListlms.get("gender").toString());
-		lmsMemApiForm.setProfile_field_dob(selectMemListlms.get("c29") == null ? "" : selectMemListlms.get("c29").toString());
-		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ? "." : selectMemListlms.get("c57").toString());
+		SimpleDateFormat originalFormat = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
+		SimpleDateFormat targetFormat = new SimpleDateFormat("dd-mm-yyyy");
+		Date date = null;
+		String formattedDate = "";
+		try {
+			date = originalFormat.parse(selectMemListlms.get("c29").toString());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			formattedDate ="";
+		}
+		formattedDate = targetFormat.format(date);
+
+		lmsMemApiForm.setProfile_field_dob(formattedDate);
+		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ?  "" : selectMemListlms.get("c57").toString());
 		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ? "" : selectMemListlms.get("c4").toString());
 		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ? "" : selectMemListlms.get("c5").toString());
-		lmsMemApiForm.setProfile_field_region(".");
+		lmsMemApiForm.setProfile_field_region(selectMemListlms.get("state") == null ? "" : selectMemListlms.get("state").toString());
 		lmsMemApiForm.setProfile_field_organizationcode(selectMemListlms.get("c43") == null ? "" : selectMemListlms.get("c43").toString());
 		lmsMemApiForm.setProfile_field_groupcode(selectMemListlms.get("c42") == null ? "" : selectMemListlms.get("c42").toString());
 		//lmsMemApiForm.setProfile_field_MemberStatus(selectMemListlms.get("name") == null ? "" : selectMemListlms.get("name").toString());
@@ -2792,11 +2805,23 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}
 		lmsMemApiForm.setProfile_field_address(addr);
 		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ?  "" : selectMemListlms.get("gender").toString());
-		lmsMemApiForm.setProfile_field_dob(selectMemListlms.get("c29") == null ?  "" : selectMemListlms.get("c29").toString());
-		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ?  "." : selectMemListlms.get("c57").toString());
+		SimpleDateFormat originalFormat = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
+		SimpleDateFormat targetFormat = new SimpleDateFormat("dd-mm-yyyy");
+		Date date = null;
+		String formattedDate = "";
+		try {
+			date = originalFormat.parse(selectMemListlms.get("c29").toString());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			formattedDate ="";
+		}
+		formattedDate = targetFormat.format(date);
+
+		lmsMemApiForm.setProfile_field_dob(formattedDate);
+		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ?  "" : selectMemListlms.get("c57").toString());
 		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ?  "" : selectMemListlms.get("c4").toString());
 		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ?  "" : selectMemListlms.get("c5").toString());
-		lmsMemApiForm.setProfile_field_region(".");
+		lmsMemApiForm.setProfile_field_region(selectMemListlms.get("state") == null ? "" : selectMemListlms.get("state").toString());
 		lmsMemApiForm.setProfile_field_organizationcode(selectMemListlms.get("c43") == null ?  "" : selectMemListlms.get("c43").toString());
 		lmsMemApiForm.setProfile_field_groupcode(selectMemListlms.get("c42") == null ?  "" : selectMemListlms.get("c42").toString());
 		//lmsMemApiForm.setProfile_field_MemberStatus(selectMemListlms.get("name") == null ?  "" : selectMemListlms.get("name").toString());
