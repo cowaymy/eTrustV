@@ -77,7 +77,14 @@ public class GoldPointsUploadController {
 
 		List<Map<String, Object>> detailList = new ArrayList<Map<String, Object>>();
 
+		boolean isValidUpload = true;
+
 		for (GoldPointsVO vo : vos) {
+
+			if (vo.getPtsEarned() < 0 ) {		// negative points should not be uploaded
+				isValidUpload = false;
+				break;
+			}
 
 			HashMap<String, Object> hm = new HashMap<String, Object>();
 
@@ -93,22 +100,27 @@ public class GoldPointsUploadController {
 			detailList.add(hm);
 		}
 
-		Map<String, Object> master = new HashMap<String, Object>();
-
-	    master.put("crtUserId", sessionVO.getUserId());
-	    master.put("updUserId", sessionVO.getUserId());
-
-	    int result = goldPointsService.saveCsvUpload(master, detailList);
-
 	    ReturnMessage message = new ReturnMessage();
 
-	    if (result > 0) {
-	    	message.setMessage("Gold Points successfully uploaded.");
-	        message.setCode(AppConstants.SUCCESS);
-	    } else {
-	    	message.setMessage("Failed to upload Gold Points. Please try again later.");
+		if (isValidUpload) {
+			Map<String, Object> master = new HashMap<String, Object>();
+
+		    master.put("crtUserId", sessionVO.getUserId());
+		    master.put("updUserId", sessionVO.getUserId());
+
+		    int result = goldPointsService.saveCsvUpload(master, detailList);
+
+		    if (result > 0) {
+		    	message.setMessage("Gold Points successfully uploaded.");
+		        message.setCode(AppConstants.SUCCESS);
+		    } else {
+		    	message.setMessage("Failed to upload Gold Points. Please try again later.");
+		        message.setCode(AppConstants.FAIL);
+		    }
+		} else {
+			message.setMessage("Please remove negative values for Earned Points and retry.");
 	        message.setCode(AppConstants.FAIL);
-	    }
+		}
 
 	    return ResponseEntity.ok(message);
 	}
