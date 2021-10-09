@@ -12,7 +12,7 @@ setInputFile2();
 
 /* $(document).on(//인풋파일 추가
     "click", ".auto_file2 a:contains('Add')", function(){
-    
+
     $(".auto_file2:last-child").clone().insertAfter(".auto_file2:last-child");
     $(".auto_file2:last-child :file, .auto_file2:last-child :text").val("");
     return false;
@@ -45,7 +45,7 @@ $(document).on(//인풋파일 삭제
 		};
 	}
 
-	//csv file upload save 
+	//csv file upload save
 	function fn_uploadCsvFile(){
 		if(fn_uploadValid()){
 			Common.ajax("GET", "/commission/calculation/csvFileOverlapCnt", $("#newForm").serialize(), function(result) {
@@ -57,7 +57,7 @@ $(document).on(//인풋파일 삭제
 					formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
 			        formData.append("type", $("#cmbType").val());
 			        formData.append("memberType", $("#cmbMemberType").val());
-			        
+
 			        Common.ajaxFile("/commission/csv/upload", formData, function (result) {
 			        	$("#search").click();
 			        	document.newForm.reset();
@@ -69,7 +69,7 @@ $(document).on(//인풋파일 삭제
 			});
 		}
 	}
-	
+
 	function fn_uploadValid(){
 		if( $("#cmbType").val() == null || $("#cmbType").val() == ""){
 			Common.alert('<spring:message code="sys.msg.first.Select" arguments="upload type" htmlEscape="false"/>');
@@ -90,16 +90,16 @@ $(document).on(//인풋파일 삭제
 	}
 </script>
 <div id="popup_wrap" class="popup_wrap size_mid">
-	
+
 	<header class="pop_header">
 		<h1><spring:message code='commission.title.pop.head.incentiveNew'/></h1>
 		<ul class="right_opt">
 			<li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
 	</header>
-	
+
 	<section class="pop_body">
-	
+
 		<form id="newForm" name="newForm">
 		<table class="type1 mt10">
 			<caption>table</caption>
@@ -113,8 +113,8 @@ $(document).on(//인풋파일 삭제
 					<td>
 						<select class="" name="cmbType" id="cmbType">
 						   <option value=""></option>
-							<option value="1062">Cody/HP Incentive</option>
-							<option value="1063">Cody/HP Target</option>
+							<option value="1062">Cody/HP/HT Incentive</option>
+							<option value="1063">Cody/HP/HT Target</option>
 						</select>
 					</td>
 				</tr>
@@ -125,7 +125,7 @@ $(document).on(//인풋파일 삭제
 						   <option value=""></option>
 							<c:forEach var="list" items="${memType }">
 	                            <option value="${list.cdid}">${list.cdnm}(${list.cd})</option>
-	                        </c:forEach> 
+	                        </c:forEach>
 						</select>
 					</td>
 				</tr>
@@ -135,7 +135,7 @@ $(document).on(//인풋파일 삭제
 	   					 <div class="auto_file attachment_file "><!-- auto_file start -->
 	   					 <!-- <div class="auto_file"> --><!-- auto_file start -->
 	       					<input type="file" title="file add"  id="uploadfile" name="uploadfile"/>
-	   					 </div> 
+	   					 </div>
 					</td>
 				</tr>
 			</tbody>
@@ -146,7 +146,7 @@ $(document).on(//인풋파일 삭제
 			<li><p class="btn_blue"><a href="javascript:fn_sampleFormat($('#cmbType').val());"><spring:message code='commission.button.sampleFormat'/></a></p></li>
 			<li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/IncentiveTargetUploadFormat.csv"><spring:message code='commission.button.dwCsvFormat'/></a></p></li>
 		</ul>
-	
+
 	</section>
 
 </div>
