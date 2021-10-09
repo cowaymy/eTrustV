@@ -282,7 +282,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				Map<String, Object> returnVal = lmsMemberListInsert(memMap);
 				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
-					throw e1;
+					throw new RuntimeException(e1);
 				}
             	//lmsMemberListInsert(memMap);
             }
@@ -1335,7 +1335,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             	Map<String, Object> returnVal = lmsMemberListUpdate(memMap);
 				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
-					throw e1;
+					throw new RuntimeException(e1);
 				}
 
 			}else{
@@ -1460,7 +1460,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
                 	Map<String, Object> returnVal = lmsMemberListDeact(memMap);
             		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
             			Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
-            			throw e1;
+            			throw new RuntimeException(e1);
             		}
 
         		}
@@ -1634,7 +1634,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     	Map<String, Object> returnVal = lmsMemberListUpdateMemCode(memMap);
 		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 			Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
-			throw e1;
+			throw new RuntimeException(e1);
 		}
 
 
@@ -2164,10 +2164,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    			//}
 
 	    				//call LMS API create user
-	    				Map<String, Object> returnVal = lmsMemberListInsert(params);
+	    				Map<String, Object> returnVal = lmsEHPMemberListInsert(params,memberCode);
 	    				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 	    					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
-	    					throw e1;
+	    					throw new RuntimeException(e1);
 	    				}
 			}
 
@@ -2727,10 +2727,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		lmsMemApiForm.setProfile_field_address(addr);
 		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ? "" : selectMemListlms.get("gender").toString());
 		lmsMemApiForm.setProfile_field_dob(selectMemListlms.get("c29") == null ? "" : selectMemListlms.get("c29").toString());
-		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ? "." : selectMemListlms.get("c57").toString());
+		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ? "" : selectMemListlms.get("c57").toString());
 		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ? "" : selectMemListlms.get("c4").toString());
 		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ? "" : selectMemListlms.get("c5").toString());
-		lmsMemApiForm.setProfile_field_region(".");
+		lmsMemApiForm.setProfile_field_region(selectMemListlms.get("state") == null ? "" : selectMemListlms.get("state").toString());
 		lmsMemApiForm.setProfile_field_organizationcode(selectMemListlms.get("c43") == null ? "" : selectMemListlms.get("c43").toString());
 		lmsMemApiForm.setProfile_field_groupcode(selectMemListlms.get("c42") == null ? "" : selectMemListlms.get("c42").toString());
 		//lmsMemApiForm.setProfile_field_MemberStatus(selectMemListlms.get("name") == null ? "" : selectMemListlms.get("name").toString());
@@ -2823,10 +2823,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		lmsMemApiForm.setProfile_field_address(addr);
 		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ?  "" : selectMemListlms.get("gender").toString());
 		lmsMemApiForm.setProfile_field_dob(selectMemListlms.get("c29") == null ?  "" : selectMemListlms.get("c29").toString());
-		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ?  "." : selectMemListlms.get("c57").toString());
+		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ?  "" : selectMemListlms.get("c57").toString());
 		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ?  "" : selectMemListlms.get("c4").toString());
 		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ?  "" : selectMemListlms.get("c5").toString());
-		lmsMemApiForm.setProfile_field_region(".");
+		lmsMemApiForm.setProfile_field_region(selectMemListlms.get("state") == null ? "" : selectMemListlms.get("state").toString());
 		lmsMemApiForm.setProfile_field_organizationcode(selectMemListlms.get("c43") == null ?  "" : selectMemListlms.get("c43").toString());
 		lmsMemApiForm.setProfile_field_groupcode(selectMemListlms.get("c42") == null ?  "" : selectMemListlms.get("c42").toString());
 		//lmsMemApiForm.setProfile_field_MemberStatus(selectMemListlms.get("name") == null ?  "" : selectMemListlms.get("name").toString());
@@ -2854,11 +2854,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}
 		lmsMemApiForm.setProfile_field_MemberStatus(status);
 		lmsMemApiForm.setUserstatus(userStatus);
-		lmsMemApiForm.setProfile_field_trainingbatch("");
-		lmsMemApiForm.setProfile_field_batch("");
-		lmsMemApiForm.setProfile_field_TrainingVenue("");
-		lmsMemApiForm.setProfile_field_TRNo("");
-		lmsMemApiForm.setProfile_field_Tshirtsize("");
+//		lmsMemApiForm.setProfile_field_trainingbatch("");
+//		lmsMemApiForm.setProfile_field_batch("");
+//		lmsMemApiForm.setProfile_field_TrainingVenue("");
+//		lmsMemApiForm.setProfile_field_TRNo("");
+//		lmsMemApiForm.setProfile_field_Tshirtsize("");
 		lmsMemApiForm.setProfile_field_dateJoin(selectMemListlms.get("c30") == null ?  "" : selectMemListlms.get("c30").toString());
 		String resignDt = selectMemListlms.get("c48") == null ?  "" : selectMemListlms.get("c48").toString();
 		if(!resignDt.equals("1900-01-01")){
@@ -2877,6 +2877,102 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		reqInfo.put("jsonString", jsonString);
 		reqInfo.put("lmsUrl", lmsUrl);
 		reqInfo.put("refNo", selectMemListlms.get("memCode").toString());
+
+		resultValue = lmsReqApi(reqInfo);
+
+		logger.debug("End Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
+
+		return resultValue;
+	}
+
+	@Override
+	public Map<String, Object> lmsEHPMemberListInsert(Map<String, Object> params,String memberCode){
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		/*if(true) return resultValue;*/
+		EgovMap selectMemListlms = memberListMapper.getHPMemberListView(params);
+		List<EgovMap> selectcoursListlms = memberListMapper.selectTraining(params);
+
+		LMSMemApiForm lmsMemApiForm = new LMSMemApiForm();
+
+		lmsMemApiForm.setSecretkey(CommonConstants.lmsSecretKeyDev);
+		lmsMemApiForm.setUsername(memberCode);
+		lmsMemApiForm.setEmail(selectMemListlms.get("email") == null ? "" : selectMemListlms.get("email").toString());
+		lmsMemApiForm.setFirstname(selectMemListlms.get("name1") == null ? "" : selectMemListlms.get("name1").toString());
+		lmsMemApiForm.setLastname(".");
+		lmsMemApiForm.setIdnumber(selectMemListlms.get("nric") == null ? "" : selectMemListlms.get("nric").toString());
+		lmsMemApiForm.setInstitution("Coway Malaysia");
+		lmsMemApiForm.setDepartment(selectMemListlms.get("c41") == null ? "" : selectMemListlms.get("c41").toString());
+		lmsMemApiForm.setPhone1(selectMemListlms.get("telMobile") == null ? "" : selectMemListlms.get("telMobile").toString());
+		lmsMemApiForm.setCity(selectMemListlms.get("city") == null ? "" : selectMemListlms.get("city").toString());
+		lmsMemApiForm.setCountry(selectMemListlms.get("country") == null ? "" : selectMemListlms.get("country").toString());
+		lmsMemApiForm.setProfile_field_postcode(selectMemListlms.get("postcode") == null ? "" : selectMemListlms.get("postcode").toString());
+		//String addrdtl = "";
+		//String street = "";
+		String addr ="";
+		if(selectMemListlms.get("addrDtl") == null){
+			if(selectMemListlms.get("street") == null) {
+				addr = "";
+			}else{
+				addr = selectMemListlms.get("street").toString();
+				//addr = street;
+			}
+		}else{
+			if(selectMemListlms.get("street") == null) {
+				addr = selectMemListlms.get("addrDtl").toString();
+				//street ="";
+				//addr = addrdtl;
+			}else{
+				//addrdtl = selectMemListlms.get("addrDtl").toString();
+				//street = selectMemListlms.get("street").toString();
+				addr = selectMemListlms.get("addrDtl").toString() + " "+ selectMemListlms.get("street").toString();
+			}
+		}
+		lmsMemApiForm.setProfile_field_address(addr);
+		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ? "" : selectMemListlms.get("gender").toString());
+		lmsMemApiForm.setProfile_field_dob(selectMemListlms.get("c29") == null ? "" : selectMemListlms.get("c29").toString());
+		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ? "" : selectMemListlms.get("c57").toString());
+		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ? "" : selectMemListlms.get("c4").toString());
+		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ? "" : selectMemListlms.get("c5").toString());
+		lmsMemApiForm.setProfile_field_region(selectMemListlms.get("state") == null ? "" : selectMemListlms.get("state").toString());
+		lmsMemApiForm.setProfile_field_organizationcode(selectMemListlms.get("c43") == null ? "" : selectMemListlms.get("c43").toString());
+		lmsMemApiForm.setProfile_field_groupcode(selectMemListlms.get("c42") == null ? "" : selectMemListlms.get("c42").toString());
+		//lmsMemApiForm.setProfile_field_MemberStatus(selectMemListlms.get("name") == null ? "" : selectMemListlms.get("name").toString());
+		lmsMemApiForm.setProfile_field_MemberType(selectMemListlms.get("codeName") == null ? "" : selectMemListlms.get("codeName").toString());
+		lmsMemApiForm.setProfile_field_ManagerName(selectMemListlms.get("c23") == null ? "" : selectMemListlms.get("c23").toString());
+		lmsMemApiForm.setProfile_field_ManagerID(selectMemListlms.get("c22") == null ? "" : selectMemListlms.get("c22").toString());
+		lmsMemApiForm.setProfile_field_SeniorManagerName(selectMemListlms.get("c18") == null ? "" : selectMemListlms.get("c18").toString());
+		lmsMemApiForm.setProfile_field_SeniorManagerID(selectMemListlms.get("c17") == null ? "" : selectMemListlms.get("c17").toString());
+		lmsMemApiForm.setProfile_field_GeneralManagerName(selectMemListlms.get("c13") == null ? "" : selectMemListlms.get("c13").toString());
+		lmsMemApiForm.setProfile_field_GeneralManagerID(selectMemListlms.get("c12") == null ? "" : selectMemListlms.get("c12").toString());
+
+		// Edited to add Sleeping userstatus. Hui Ding, 2021-10-08
+		String status = "NO";
+		String userStatus = "";
+		if (selectMemListlms.get("name") != null){
+    		if(selectMemListlms.get("name").toString().equals("Approved")){
+    			status = "YES";
+    			if(selectMemListlms.get("c59") != null && selectMemListlms.get("c59").toString().equals("1366")){
+    				status = "NO";
+    				userStatus = "Sleeping";
+    			}
+    		} else {
+    			status = "NO";
+    		}
+		}
+		lmsMemApiForm.setProfile_field_MemberStatus(status);
+		lmsMemApiForm.setUserstatus(userStatus);
+
+		//call LMS to insert user
+		System.out.println("Start Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
+		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/add/user/";
+
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(lmsMemApiForm);
+
+		EgovMap reqInfo = new EgovMap();
+		reqInfo.put("jsonString", jsonString);
+		reqInfo.put("lmsUrl", lmsUrl);
+		reqInfo.put("refNo", selectMemListlms.get("nric") == null ? "" : selectMemListlms.get("nric").toString());
 
 		resultValue = lmsReqApi(reqInfo);
 
