@@ -1328,7 +1328,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		    				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
 				}
 
-				//call lms to update user details
+				/*//call lms to update user details
             	Map<String, Object> memMap = new HashMap<String, Object>();
             	memMap.put("MemberID", params.get("requestMemberId").toString());
 
@@ -1337,7 +1337,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
 					throw new RuntimeException(e1);
 				}
-
+*/
 			}else{
 				resultValue.put("message", "<b>Failed to save. Please try again later.</b>");
 
@@ -3091,6 +3091,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
 		        }
 				conn.disconnect();
+
+				br.close();
 			}else{
 				resultValue.put("status", AppConstants.FAIL);
 				resultValue.put("message", "No Response");
