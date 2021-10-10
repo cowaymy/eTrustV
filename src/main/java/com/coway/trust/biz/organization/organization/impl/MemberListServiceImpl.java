@@ -734,7 +734,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				}
 			}
 
-			/*EgovMap selectHpBillNo = null;
+			// change to receive LMS training result just concert HP to real HP. Hui Ding, 2021-10-10
+			EgovMap selectHpBillNo = null;
 			String hpBillNo="";
 			EgovMap selectInvoiceNo = null;
 			//AcBilling Save (for Hp)
@@ -884,7 +885,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     				memberListMapper.updateBillRem(accOrderBill);
     			}
 
-			}*/
+			} // end of amendment for convert HP to Real HP. Hui Ding, 2021-10-10
 
 			//Save DocSubmission (For HP)
 			if(params.get("memberType").toString().equals("1") && docType.size() > 0){
