@@ -2761,7 +2761,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		//call LMS to insert user
 		System.out.println("Start Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
-		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/add/user/";
+//		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/add/user/";
+		String lmsUrl = CommonConstants.lmsApiDevUrl + "add";
 
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(lmsMemApiForm);
@@ -2868,7 +2869,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		//call LMS to insert user
 		System.out.println("Start Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
-		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/updated/profile/";
+//		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/updated/profile/";
+		String lmsUrl = CommonConstants.lmsApiDevUrl + "update/profile";
 
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(lmsMemApiForm);
@@ -2964,7 +2966,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		//call LMS to insert user
 		System.out.println("Start Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
-		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/add/user/";
+//		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/add/user/";
+		String lmsUrl = CommonConstants.lmsApiDevUrl + "add";
 
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(lmsMemApiForm);
@@ -2994,7 +2997,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		lmsMemApiForm.setProfile_field_dateJoin(params.get("joinDt").toString());
 
 		//call LMS to update member code
-		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/updated/username/";
+//		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/updated/username/";
+		String lmsUrl = CommonConstants.lmsApiDevUrl + "update/username";
 
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(lmsMemApiForm);
@@ -3019,7 +3023,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		lmsMemApiForm.setUsername(params.get("username").toString());
 
 		//call LMS to deactivate member
-		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/delete/user/";
+//		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/delete/user/";
+		String lmsUrl = CommonConstants.lmsApiDevUrl + "suspend";
 
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(lmsMemApiForm);
