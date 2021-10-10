@@ -61,11 +61,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	@Resource(name = "commonApiService")
 	  private CommonApiService commonApiService;
 
-	@Value("${lms.api.username}")
+	/*@Value("${lms.api.username}")
 	private String LMSApiUser;
 
 	@Value("${lms.api.password}")
-	private String LMSApiPassword;
+	private String LMSApiPassword;*/
 
 	//private SessionHandler sessionHandler;
 	/**
@@ -3053,9 +3053,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		String respTm = null;
 		String lmsApiUserId = "3";
-		String auth = LMSApiUser + ":" + LMSApiPassword;
-		byte[] encodedAuth = 	Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
-		String authorization = "Basic " + new String(encodedAuth);
+		//String auth = LMSApiUser + ":" + LMSApiPassword;
+		//byte[] encodedAuth = 	Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
+		//String authorization = "Basic " + new String(encodedAuth);
 
 		StopWatch stopWatch = new StopWatch();
 	    stopWatch.reset();
@@ -3076,7 +3076,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	        conn.setDoOutput(true);
 	        conn.setRequestMethod("POST");
 	        conn.setRequestProperty("Content-Type", "application/json");
-	        conn.setRequestProperty("Authorization", authorization);
+	        //conn.setRequestProperty("Authorization", authorization);
 	        OutputStream os = conn.getOutputStream();
 	        os.write(jsonString.getBytes());
 	        os.flush();
