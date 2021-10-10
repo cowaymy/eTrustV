@@ -1602,13 +1602,13 @@ function fn_validFile() {
                 </tr>
 
                 <!-- ADDED INCOME TAX NO @AMEER 2021-09-27 -->
-				<tr>
+				<!-- <tr><!-- close temporary as lms project deploy first @HLTANG 2021-10-10 -->
 				    <th scope="row">Income Tax No</th>
 				    <td>
 				    <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="eHPincomeTaxNo"  name="eHPincomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
 				    onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;"/>
 				    </td>
-				</tr>
+				</tr> -->
                 </tbody>
                 </table><!-- table end -->
 
