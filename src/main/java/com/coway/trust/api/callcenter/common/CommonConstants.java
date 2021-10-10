@@ -8,7 +8,7 @@ public class CommonConstants {
 	public static final String USER_ID = "userId";
 
 //	public static final String lmsApiDevUrl = "http://cu2.modernlms.net/modernlmsapi/"; //DEV
-	public static final String lmsApiDevUrl = "https://api.cowayuniv.com/"; //PROD
+	public static final String lmsApiDevUrl = "https://api.cowayuniv.com/api/"; //PROD
 	//http://cu-dev.modernlms.net/modernlms-api/api/
 
 	//public static final String lmsSecretKeyDev = "qwer12345qergxcv3456789cvgbhnjmk34678cvtbyunim4f5gt6yhu5f6g7h8j";
