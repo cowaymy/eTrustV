@@ -278,7 +278,7 @@ function fn_departmentCode(value){
 
 		           //Training Course ajax콜 위치
 		           //doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
-                   /* var groupCode  = {groupCode : traineeType};
+                   var groupCode  = {groupCode : traineeType};
 		           Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
 
 			            $("#course").find('option').each(function() {
@@ -291,7 +291,7 @@ function fn_departmentCode(value){
 			                 $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
 			                }
 			             }
-		             }); */
+		             });
 
         	   }
         	   else if(traineeType == '3'){
@@ -310,7 +310,7 @@ function fn_departmentCode(value){
 
         		   //Training Course ajax콜 위치
         		   //doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
-        		   /* var groupCode  = {groupCode : traineeType};
+        		   var groupCode  = {groupCode : traineeType};
                    Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
 
                         $("#course").find('option').each(function() {
@@ -323,7 +323,7 @@ function fn_departmentCode(value){
                              $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
                             }
                          }
-                     }); */
+                     });
         	   }   else if(traineeType == '5758'){ // HOMECARE DELIVERY TECHNICIAN -- ADDED BY TOMMY
 
         		   doGetComboSepa("/common/selectBranchCodeList.do",'5758' , '-',''   , 'branch' , 'S', '');
@@ -339,7 +339,7 @@ function fn_departmentCode(value){
 
                    //Training Course ajax콜 위치
                    //doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
-                   /* var groupCode  = {groupCode : traineeType};
+                   var groupCode  = {groupCode : traineeType};
                    Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
 
                         $("#course").find('option').each(function() {
@@ -352,7 +352,7 @@ function fn_departmentCode(value){
                              $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
                             }
                          }
-                     }); */
+                     });
                } else if( traineeType == '7'){ // HOMECARE -- ADDED BY TOMMY
                     doGetComboSepa("/common/selectBranchCodeList.do",'48' , '-',''   , 'branch' , 'S', '');
 
@@ -368,7 +368,7 @@ function fn_departmentCode(value){
 
                    //Training Course ajax콜 위치
                    //doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
-                   /* var groupCode  = {groupCode : traineeType};
+                   var groupCode  = {groupCode : traineeType};
                    Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
 
                         $("#course").find('option').each(function() {
@@ -381,7 +381,7 @@ function fn_departmentCode(value){
                              $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
                             }
                          }
-                     }); */
+                     });
 
                }
            });
@@ -517,12 +517,12 @@ console.log("ready");
         $('span', '#emailLbl').empty().remove();
         $('span', '#mobileNoLbl').empty().remove();
         $('span', '#meetingPointLbl').empty().remove();
-        //$('span', '#courseLbl').empty().remove();
+        $('span', '#courseLbl').empty().remove();
 
         if ( memberType ==  "2803") {
             //$('#grid_wrap_doc').attr("hidden", true);
 
-            //$('#course').attr("disabled", true);
+            $('#course').attr("disabled", true);
             $('#email').prop('required', true);
             $('#mobileNo').prop('required', true);
             $('#emailLbl').append("<span class='must'>*</span>");
@@ -532,7 +532,7 @@ console.log("ready");
             $("#apprStusText").attr("disabled", true);
             $("#apprStusCombo").attr("disabled", true);
             $("#religion").attr("disabled", true);
-            //$("#course").attr("disabled", true);
+            $("#course").attr("disabled", true);
             $("#totalVacation").attr("disabled", true);
             $("#applicationStatus").attr("disabled", true);
             $("#remainVacation").attr("disabled", true);
@@ -548,7 +548,7 @@ console.log("ready");
             $('#mobileNo').prop('required', true);
             $('#mobileNoLbl').append("<span class='must'>*</span>");
         } else {
-            //$('#course').removeAttr('disabled');
+            $('#course').removeAttr('disabled');
         }
         fn_departmentCode(memberType);
      });
@@ -556,33 +556,33 @@ console.log("ready");
 	$("#traineeType1").click(function(){   // CHECK Trainee Type = Cody then Disable Main & Sub Department selection -- Added by Tommy
 		var traineeType = $("#traineeType1").val();
 
-	    //$('span', '#courseLbl').empty().remove();
+	    $('span', '#courseLbl').empty().remove();
 
 		if(traineeType == 2){
-			//$('#courseLbl').append("<span class='must'>*</span>");
+			$('#courseLbl').append("<span class='must'>*</span>");
             $("#searchdepartment").attr("disabled", true);
             $("#searchSubDept").attr("disabled", true);
             $("#joinDate").val($.datepicker.formatDate('dd/mm/yy', new Date()));
             $("#joinDate").attr("readOnly", true);
 
 		}else if(traineeType == 7 ||  traineeType == 5758){
-			//$('#courseLbl').append("<span class='must'>*</span>");
+			$('#courseLbl').append("<span class='must'>*</span>");
             $("#searchdepartment").attr("disabled", true);
             $("#searchSubDept").attr("disabled", true);
             $("#transportCd option[value=253]").attr('selected', 'selected');
             $("#joinDate").attr("readOnly", false);
 
 		}else{
-			//$('#courseLbl').append("<span class='must'>*</span>");
+			$('#courseLbl').append("<span class='must'>*</span>");
             $("#searchdepartment").attr("disabled", false);
             $("#searchSubDept").attr("disabled", false);
             $("#joinDate").val($.datepicker.formatDate('dd/mm/yy', new Date()));
             $("#joinDate").attr("readOnly", true);
 		}
 
-		/* if(traineeType == "" || traineeType == null) {
+		if(traineeType == "" || traineeType == null) {
 			$('span', '#courseLbl').empty().remove();
-		} */
+		}
 
 	});
 
@@ -966,7 +966,7 @@ console.log("validation");
 
         // LMS - Change to check email as mandatory for HP Applicant, trainee. Hui Ding, 2021-10-08
         if($("#memberType").val() =='5'){
-            if($("#traineeType1").val() ==''){
+            /* if($("#traineeType1").val() ==''){
                    Common.alert("Please key in Trainee type");
                    return false;
             }
@@ -974,12 +974,12 @@ console.log("validation");
             if($("#email").val() == '') {
                 Common.alert("Please key in Email Address");
                 return false;
-            }
+            } */
 
-            /* if($("#course").val() == ''){
+            if($("#course").val() == ''){
                 Common.alert("Please key  in Training Course");
                 return false;
-            } */
+            }
         }
     }
 	return true;
@@ -1655,11 +1655,11 @@ function checkIncomeTax() {
     </td>
 </tr>
 <tr>
-    <!-- <th id="courseLbl" scope="row">Training Course</th>
+    <th id="courseLbl" scope="row">Training Course</th>
     <td colspan="2">
     <select class="w100p" id="course" name="course">
     </select>
-    </td> -->
+    </td>
     <th scope="row">Total Vacation</th>
     <td colspan="2">
     <input type="text" id="totalVacation" name="totalVacation" title="" placeholder="Total Vacation" class="w100p" />

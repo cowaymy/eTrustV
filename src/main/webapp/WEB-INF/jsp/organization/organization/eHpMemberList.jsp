@@ -126,7 +126,7 @@ function fn_hpMemRegisPop(){
                      Common.alert(" Health Planner registration has been completed. <br/>Member Code : "+membercode+"  to  "+ result.message );
                      fn_memberListSearch();
 
-                     /* var newMemCode = result.message;
+                     var newMemCode = result.message;
 
                      var today = new Date();
                      var dd = today.getDate();
@@ -155,7 +155,7 @@ function fn_hpMemRegisPop(){
                              });
                          }
                      })
-                     */
+
                  }
              }
 

@@ -1050,18 +1050,18 @@ public class MemberListController {
             if(formMap.get("memberType").toString().equals("1") || formMap.get("memberType").toString().equals("2") ||
             		formMap.get("memberType").toString().equals("3") || formMap.get("memberType").toString().equals("5") ||
             		formMap.get("memberType").toString().equals("7") || formMap.get("memberType").toString().equals("2803")) {
-//                EgovMap trainingItem = memberListService.selectMemCourse(formMap);
-//
-//                if(!trainingItem.isEmpty()) {
-//                    formMap.put("coursItmId", trainingItem.get("coursItmId"));
-//                    u5 = memberListService.memberListUpdate_MSC09(formMap);
-//                }
+                EgovMap trainingItem = memberListService.selectMemCourse(formMap);
 
-            	Map<String, Object> returnVal = memberListService.lmsMemberListUpdate(formMap);
-				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
-					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
-					throw new RuntimeException(e1);
-				}
+                if(!trainingItem.isEmpty()) {
+                    formMap.put("coursItmId", trainingItem.get("coursItmId"));
+                    u5 = memberListService.memberListUpdate_MSC09(formMap);
+                }
+
+//            	Map<String, Object> returnVal = memberListService.lmsMemberListUpdate(formMap);
+//				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+//					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+//					throw new RuntimeException(e1);
+//				}
 
             	//memberListService.lmsMemberListUpdate(formMap);
             }
