@@ -16,7 +16,7 @@ public class SyncIhrApiDto {
 	}
 
 	private String salesOrdNo ;
-	//private String asSetlDt ;
+	private String asSetlDt ;
 	private String defectCodeDp;
 	private String defectDescDp;
 
@@ -97,6 +97,12 @@ public class SyncIhrApiDto {
 	}
 	public void setDefectDescDc(String defectDescDc) {
 		this.defectDescDc = defectDescDc;
+	}
+	public String getAsSetlDt() {
+		return asSetlDt;
+	}
+	public void setAsSetlDt(String asSetlDt) {
+		this.asSetlDt = asSetlDt;
 	}
 
 }
