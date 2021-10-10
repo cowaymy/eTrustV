@@ -5,7 +5,7 @@
   <select id="selectSyncIhr" parameterType="Map" resultType="egovMap">
 
    select distinct B.SALES_ORD_NO,
-   A.AS_SETL_DT,
+   TO_CHAR (A.AS_SETL_DT, 'YYYYMMDD') AS AS_SETL_DT,
    A.AS_DEFECT_PART_ID,
    C.DEFECT_CODE AS DEFECT_CODE_DP,
    C.DEFECT_DESC AS DEFECT_DESC_DP,
