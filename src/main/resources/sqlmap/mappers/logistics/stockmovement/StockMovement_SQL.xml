@@ -424,6 +424,7 @@
              , L54.DEL_FLAG
              , NVL(s28q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
              , H11.BNDL_NO
+             , s28c.WH_LOC_BRNCH_ID
           from log0047m l47
              , log0048d l48
              , log0054m l54
