@@ -15,6 +15,7 @@ var memLvlData = [ {"codeId": "1","codeName": "GCM"}
 							,{"codeId": "2","codeName": "SCM"}
 							,{"codeId": "3","codeName": "CM"}
 							,{"codeId": "4","codeName": "Cody"}];
+var today = '${today}'
 
 
 $(document).ready(function(){
@@ -122,6 +123,33 @@ $(document).ready(function(){
     function fn_excelDown() {
       GridCommon.exportTo("grid_wrap", "xlsx", "RejoinSummaryRaw");
     }
+
+      function fn_excelDown() {
+      GridCommon.exportTo("grid_wrap", "xlsx", "RejoinListingRaw");
+    }
+
+      hideViewPopup=function(val){
+        $(val).hide();
+    }
+
+     var today = '${today}'
+    function fn_openRawDataDownload(val){
+        $('#rawData_wrap').show();
+
+       if(val == "rejoinNet" ){
+            console.log("rejoinNet");
+            $("#rawDataHeader").text("Rejoin Net Raw Data");
+            $("#rawDataForm #reportFileName").val("/sales/RejoinNetRaw2.rpt");
+            $("#rawDataForm #reportDownFileName").val("RejoinNetRawData2_" + today + ".xls");
+        }
+    }
+
+     function fn_generate(){
+         var option = { isProcedure : true };
+         Common.report("rawDataForm", option);
+     }
+
+  //End Added
 </script>
 
 <!-- content start -->
@@ -179,6 +207,24 @@ $(document).ready(function(){
     </section>
     <!-- search_table end -->
 
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+    <dl class="link_list">
+      <dt>Link</dt>
+      <dd>
+      <ul class="btns">
+          <li><p class="link_btn">
+               <a href="javascript:fn_openRawDataDownload('rejoinNet');">Rejoin Net Raw Data</a>
+          </p></li>
+
+      </ul>
+        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+        </dd>
+    </dl>
+    </aside><!-- link_btns_wrap end -->
+ </c:if>
+
     <!-- link_btns_wrap end -->
     <ul class="right_btns">
         <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
@@ -196,3 +242,65 @@ $(document).ready(function(){
 
 </section>
 <!-- content end -->
+
+
+<!-------------------------------------------------------------------------------------
+    POP-UP (RAWDATA)
+-------------------------------------------------------------------------------------->
+<div class="popup_wrap size_small" id="rawData_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="new_pop_header">
+        <h1 id="rawDataHeader"></h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#rawData_wrap')">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+
+    <!-- pop_body start -->
+    <form name="rawDataForm" id="rawDataForm"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName"  />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" />
+    <input type="hidden" id="viewType" name="viewType" value="EXCEL"/>
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:165px" />
+                    <col style="width:*" />
+                </colgroup>
+
+                <tbody>
+                    <tr>
+                        <th scope="row"><spring:message code='sal.title.date'/></th>
+                        <td colspan="3"><input type="text" id="V_GENDATE" name="V_GENDATE" title="Date" class="j_date2" value="${dt}" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Org Code</th>
+                        <td colspan="3"><input type="text" id="V_ORGCODE" name="V_ORGCODE" title="OrgCode"  value="${OrgCode}" /></td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">Grp Code</th>
+                        <td colspan="3"><input type="text" id="V_GRPCODE" name="V_GRPCODE" title="GrpCode"  value="${GrpCode}" /></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Dept Code</th>
+                        <td colspan="3"><input type="text" id="V_DEPTCODE" name="V_DEPTCODE" title="DeptCode"  value="${DeptCode}" /></td>
+                    </tr>
+                   </tbody>
+            </table>
+        </section>
+        <!-- search_table end -->
+
+        <ul class="center_btns">
+            <li><p class="btn_blue2"><a href="javascript:fn_generate();"><spring:message code='sal.btn.generate'/></a></p></li>
+        </ul>
+    </section>
+    </form>
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->
