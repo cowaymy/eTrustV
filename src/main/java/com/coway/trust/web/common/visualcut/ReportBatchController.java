@@ -1293,6 +1293,7 @@ public class ReportBatchController {
     LOGGER.info("[END] TDBalanceReport...");
   }
 
+  /*
   @RequestMapping(value = "/OutrightPlusAging.do")
   //@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am) /*monthly - end of month
   // eg 31 @ 28 ...
@@ -1310,6 +1311,7 @@ public class ReportBatchController {
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] OutrightPlusAging...");
   }
+  */
 
   @RequestMapping(value = "/RentalInstallationReport.do")
   //@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am) /*monthly - end of month
@@ -1858,6 +1860,8 @@ public class ReportBatchController {
     LOGGER.info("[END] CustomerHealthScoreRaw_Excel...");
   }
 
+
+
   @RequestMapping(value = "/CustomerHealthScoreRaw_Excel_Manual.do")
   public void CustomerHealthScoreRaw_Excel_Manual(Map<String, Object> params) {
     LOGGER.info("[START] CustomerHealthScoreRaw_Excel_Manual...");
@@ -1878,6 +1882,55 @@ public class ReportBatchController {
     LOGGER.info("[END] CustomerHealthScoreRaw_Excel_Manual...");
   }
 
+  //Added by keyi 20211007
+  @RequestMapping(value = "/CompanyCustomerHealthScoreRaw_Excel.do")
+  //@Scheduled(cron = " 0 30 4 26 * ?")//Monthly (Day 26) 4:30am
+  public void CompanyCustomerHealthScoreRaw_Excel() {
+    LOGGER.info("[START] CompanyCustomerHealthScoreRaw_Excel...");
+
+    Map<String, Object> params = new HashMap<>();
+    int genYear = 4;
+    int currentYear = LocalDate.now().getYear();
+
+    for (int minYear = 2006; minYear <= currentYear; minYear+=(genYear+1) ) {
+
+      int maxYear = minYear+genYear;
+
+      params.put(REPORT_FILE_NAME, "/visualcut/CompanyCustHealthScoreRawData.rpt");
+      params.put(REPORT_VIEW_TYPE, "EXCEL");
+      params.put("V_TEMP", "TEMP");
+      params.put("V_STARTYEAR", minYear);
+      params.put("V_ENDYEAR", maxYear);
+      params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+          "CCP" + File.separator + "CompCustHealthScoreRawData_" + minYear + "-" + maxYear + "_" + CommonUtils.getNowDate() + ".xls");
+
+      this.viewProcedure(null, null, params);
+
+    }
+
+    LOGGER.info("[END] CompanyCustomerHealthScoreRaw_Excel...");
+  }
+
+  @RequestMapping(value = "/CompanyCustomerHealthScoreRaw_Excel_Manual.do")
+  public void CompanyCustomerHealthScoreRaw_Excel_Manual(Map<String, Object> params) {
+    LOGGER.info("[START] CompanyCustomerHealthScoreRaw_Excel_Manual...");
+
+    String startYear = params.get("V_STARTYEAR").toString();
+    String endYear   = params.get("V_ENDYEAR").toString();
+
+      params.put(REPORT_FILE_NAME, "/visualcut/CompanyCustHealthScoreRawData.rpt");
+      params.put(REPORT_VIEW_TYPE, "EXCEL");
+      params.put("V_TEMP", "TEMP");
+      params.put("V_STARTYEAR", startYear);
+      params.put("V_ENDYEAR", endYear);
+      params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+          "CCP" + File.separator + "CompCustHealthScoreRawData_" + startYear + "-" + endYear + "_" + CommonUtils.getNowDate() + ".xls");
+
+      this.viewProcedure(null, null, params);
+
+    LOGGER.info("[END] CompanyCustomerHealthScoreRaw_Excel_Manual...");
+  }
+
   @RequestMapping(value = "/RentalPaymentSettingRaw_Excel.do")
 //@Scheduled(cron = "0 30 5 * * *")//Daily (5:30am)
   public void RentalPaymentSettingRaw_Excel() {
@@ -1895,6 +1948,8 @@ public class ReportBatchController {
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] RentalPaymentSettingRaw_Excel...");
   }
+
+
 
   @RequestMapping(value = "/ColorGrid_Daily_2019_Jan_Dec_S.do")
   //@Scheduled(cron = "0 20 5 * * *")//Daily (5:20am)
