@@ -29,9 +29,9 @@
 <!--  only show when payment-mode == cash/cheque [s] -->
 <c:if test="${paymentInfo.payMode eq '6507' || paymentInfo.payMode eq '6508'}" >
 <tr>
-    <th scope="row">Transaction ID</th>
+    <th scope="row">Transaction ID<span class="must">*</span></th>
     <td colspan=1><input id=payment_transactionID name="payment_transactionID" type="text" title="" placeholder="" class="w100p" /></td>
-    <td colspan=2><input id=payment_allowCommFlg name="payment_allowCommFlg" type="checkBox" />Allow commission for this payment</td>
+    <td colspan=2><input id=payment_allowCommFlg name="payment_allowCommFlg" type="checkBox" checked/>Allow commission for this payment</td>
 </tr>
 <tr>
     <th scope="row">TR Ref No</th>

@@ -1,3 +1,6 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
 <article class="tap_area"><!-- tap_area start -->
 <aside class="title_line"><!-- title_line start -->
 <h3>Update Status</h3>
@@ -14,7 +17,12 @@
 <tr>
     <th scope="row" id="SARefNo_header">SA Reference No<span class="must">*</span></th>
     <td><input type="text" title="" id="SARefNo" name="SARefNo" placeholder="Key-in by Admin" class="w100p" /></td>
-    <th scope="row">Purchase Order<span class="must">*</span></th>
+    <c:if test="${preSalesInfo.custTypeCode eq '965'}" > <!-- Company -->
+        <th scope="row">Purchase Order<span class="must">*</span></th>
+    </c:if>
+    <c:if test="${preSalesInfo.custTypeCode eq '964'}" > <!-- Individual -->
+        <th scope="row">Purchase Order</th>
+    </c:if>
     <td><input type="text" title="" id="PONo" name="PONo" placeholder="Key-in by Admin" class="w100p" /></td>
 </tr>
 <tr>

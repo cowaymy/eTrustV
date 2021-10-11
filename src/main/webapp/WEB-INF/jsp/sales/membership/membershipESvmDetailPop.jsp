@@ -616,10 +616,12 @@
             checkResult = false;
             return checkResult;
         }
-    	else if(FormUtil.isEmpty($("#PONo").val())) {
+    	else if ('${preSalesInfo.custTypeDesc}' == '965') { //Company PO is mandatory
+    		if(FormUtil.isEmpty($("#PONo").val())) {
             Common.alert('Please enter Purchase Order.');
             checkResult = false;
             return checkResult;
+            }
         }
     	else if(FormUtil.isEmpty($("#action").val())) {
             Common.alert('Please choose an Action to proceed.');
@@ -629,7 +631,14 @@
             Common.alert('Please choose a Special Instruction.');
             checkResult = false;
             return checkResult;
+        }else if('${paymentInfo.payMode}' == '6507' || '${paymentInfo.payMode}' == '6508') {
+        	if(FormUtil.isEmpty($("#payment_transactionID").val())) {
+        		Common.alert('Please enter Transaction ID.');
+                checkResult = false;
+                return checkResult;
+        	}
         }
+
     	return checkResult;
     }
 
