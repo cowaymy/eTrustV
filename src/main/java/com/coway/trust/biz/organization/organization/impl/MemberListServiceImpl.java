@@ -1573,7 +1573,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         Map<String, Object> resultValue = new HashMap<String, Object>(); // 팝업 결과값 가져가는 map
 
         String oldMemCode = params.get("memberCode").toString();
-        String epochStr = "";
+        String formattedDate = "";
 
         if("2".equals(params.get("traineeType"))) {
             try{
@@ -1585,8 +1585,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
                 cal.setTime(cDt);
                 cal.add(Calendar.MONTH, 1);
 
-                long epoch = new SimpleDateFormat("yyyyddmm").parse(strDt).getTime();
-                epochStr = String.valueOf(epoch);
+    			formattedDate = new SimpleDateFormat("dd-MM-yyyy").format(cal.getTime());
+
                 joinDate = new SimpleDateFormat("dd-MMM-yyyy").format(cal.getTime());
 
                 params.put("joinDt", joinDate);
@@ -1639,7 +1639,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     	memMap.put("username",oldMemCode);
     	memMap.put("newusername",paramM.get("memCode"));
     	memMap.put("memberType",params.get("traineeType"));
-    	memMap.put("joinDt",epochStr);
+    	memMap.put("joinDt",formattedDate);
 
     	Map<String, Object> returnVal = lmsMemberListUpdateMemCode(memMap);
 		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
@@ -2736,7 +2736,18 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}
 		lmsMemApiForm.setProfile_field_address(addr);
 		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ? "" : selectMemListlms.get("gender").toString());
-		lmsMemApiForm.setProfile_field_dob(selectMemListlms.get("c29") == null ? "" : selectMemListlms.get("c29").toString());
+		String formattedDate = "";
+		if(selectMemListlms.get("c29") != null){
+			Date date = null;
+			try {
+				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c29").toString());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			formattedDate = new SimpleDateFormat("dd-mm-yyyy").format(date);
+		}
+		lmsMemApiForm.setProfile_field_dob(formattedDate);
 		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ? "" : selectMemListlms.get("c57").toString());
 		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ? "" : selectMemListlms.get("c4").toString());
 		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ? "" : selectMemListlms.get("c5").toString());
@@ -2833,7 +2844,18 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}
 		lmsMemApiForm.setProfile_field_address(addr);
 		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ?  "" : selectMemListlms.get("gender").toString());
-		lmsMemApiForm.setProfile_field_dob(selectMemListlms.get("c29") == null ?  "" : selectMemListlms.get("c29").toString());
+		String formattedDate = "";
+		if(selectMemListlms.get("c29") != null){
+			Date date = null;
+			try {
+				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c29").toString());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			formattedDate = new SimpleDateFormat("dd-mm-yyyy").format(date);
+		}
+		lmsMemApiForm.setProfile_field_dob(formattedDate);
 		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ?  "" : selectMemListlms.get("c57").toString());
 		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ?  "" : selectMemListlms.get("c4").toString());
 		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ?  "" : selectMemListlms.get("c5").toString());
@@ -2870,10 +2892,32 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 //		lmsMemApiForm.setProfile_field_TrainingVenue("");
 //		lmsMemApiForm.setProfile_field_TRNo("");
 //		lmsMemApiForm.setProfile_field_Tshirtsize("");
-		lmsMemApiForm.setProfile_field_dateJoin(selectMemListlms.get("c30") == null ?  "" : selectMemListlms.get("c30").toString());
+		String formattedDate1 = "";
+		if(selectMemListlms.get("c29") != null){
+			Date date = null;
+			try {
+				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c30").toString());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			formattedDate1 = new SimpleDateFormat("dd-mm-yyyy").format(date);
+		}
+		lmsMemApiForm.setProfile_field_dateJoin(formattedDate1);
 		String resignDt = selectMemListlms.get("c48") == null ?  "" : selectMemListlms.get("c48").toString();
 		if(!resignDt.equals("1900-01-01")){
-			lmsMemApiForm.setProfile_field_dateResign(resignDt);
+			String formattedDate2 = "";
+			if(selectMemListlms.get("c48") != null){
+				Date date = null;
+				try {
+					date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c48").toString());
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				formattedDate2 = new SimpleDateFormat("dd-mm-yyyy").format(date);
+			}
+			lmsMemApiForm.setProfile_field_dateResign(formattedDate2);
 		}
 
 
@@ -2941,7 +2985,18 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}
 		lmsMemApiForm.setProfile_field_address(addr);
 		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ? "" : selectMemListlms.get("gender").toString());
-		lmsMemApiForm.setProfile_field_dob(selectMemListlms.get("c29") == null ? "" : selectMemListlms.get("c29").toString());
+		String formattedDate = "";
+		if(selectMemListlms.get("c29") != null){
+			Date date = null;
+			try {
+				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c29").toString());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			formattedDate = new SimpleDateFormat("dd-mm-yyyy").format(date);
+		}
+		lmsMemApiForm.setProfile_field_dob(formattedDate);
 		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ? "" : selectMemListlms.get("c57").toString());
 		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ? "" : selectMemListlms.get("c4").toString());
 		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ? "" : selectMemListlms.get("c5").toString());
