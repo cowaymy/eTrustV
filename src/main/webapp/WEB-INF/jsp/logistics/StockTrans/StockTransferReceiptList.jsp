@@ -82,7 +82,8 @@
         {dataField: "grcmplt",           headerText :"<spring:message code='log.head.grcomplet'/>",                  width:120,      height:30,    visible:false},
         {dataField: "serialReqYn",      headerText :"Serial Chk",                                                                     width:100},
         {dataField: "serialchk",          headerText:"serialchk",                                                                        width:0},
-        {dataField: "delvryNoItm",          headerText:"delvry_no_itm",                                                                        width:0,visible:false}
+        {dataField: "delvryNoItm",          headerText:"delvry_no_itm",                                                                        width:0,visible:false},
+        {dataField: "whLocBrnchId",          headerText:"whLocBrnchId",                                                                        width:0,visible:false}
     ];
 
     var resop = {
@@ -96,6 +97,7 @@
     };
 
     $(document).ready(function() {
+
         /**********************************
         * Header Setting
         **********************************/
@@ -216,28 +218,38 @@
 
         $("#gissue").click(function() {
             var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+            console.log(checkedItems);
+
             // 현제 선택되어있는 것이 serialchk == Y 인 경우.
+
+            if(checkedItems.length > 0) {
             var serialchk = checkedItems[0].serialReqYn;
+            }
 
             var arrDelyNo = new Array();
             var arrDelyNoIdx = 0;
 
-            if(checkedItems.length <= 0) {
+            if(checkedItems.length <= 1 || checkedItems == undefined) {
                 Common.alert('No data selected.');
                 return false;
-            } else {
-                for (var i = 0 ; i < checkedItems.length ; i++) {
-                    if(checkedItems[i].grcmplt == 'Y') {
-                        Common.alert('Already processed.');
-                        return false;
-                        break;
-                    }
-                    if(arrDelyNo.indexOf(checkedItems[i].delyno) == -1) {
-                        arrDelyNo[arrDelyNoIdx] = checkedItems[i].delyno;
-                        ++arrDelyNoIdx;
-                    }
-                }
-            }
+            } else if("${SESSION_INFO.roleId}" == "256" && "${SESSION_INFO.userBranchId}" != "checkedItems[0].whLocBrnchId") {
+                Common.alert('GR location under Cody.' +"<br>"+' Not allow to proceed.');
+                return false;
+                } else {
+		                for (var i = 0 ; i < checkedItems.length ; i++) {
+
+
+		                    if(checkedItems[i].grcmplt == 'Y') {
+		                        Common.alert('Already processed.');
+		                        return false;
+		                        break;
+		                    }
+		                    if(arrDelyNo.indexOf(checkedItems[i].delyno) == -1) {
+		                        arrDelyNo[arrDelyNoIdx] = checkedItems[i].delyno;
+		                        ++arrDelyNoIdx;
+		                    }
+		                }
+		            }
 
             if(serialchk == 'N') {   // 시리얼 N인 경우 - 기존logic 호출
                 doSysdate(0 , 'giptdate');
