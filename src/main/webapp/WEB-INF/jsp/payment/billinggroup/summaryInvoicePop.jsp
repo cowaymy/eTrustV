@@ -76,6 +76,8 @@
 			else {
 				Common.ajax("GET", "/payment/selectSummaryInvoiceList.do", $(
 						"#searchForm").serialize(), function(result) {
+					gridViewData = result;
+					console.log('CustId!=empty: ',result);
 					AUIGrid.setGridData(myGridID, result);
 				});
 			}
@@ -85,6 +87,7 @@
 				console.log("----------------------------");
 				console.log(result);
 				gridViewData = result;
+				console.log('gridViewData', gridViewData);
 				if (result == null && result.length == 0) {
 					gridViewData = null;
 				}
@@ -118,10 +121,10 @@
 
 		if (V_CUST_ID != null && V_CUST_ID.length != 0) {
 			V_WhereSQL1 = " AND  CUST_ID = '" + V_CUST_ID + "'";
-			V_WhereSQL2 = " AND  A.CUST_ID = ' " + V_CUST_ID + "'";
+			V_WhereSQL2 = " AND  A.CUST_ID = '" + V_CUST_ID + "'";
 		}
 		if (V_MMYYYY != null && V_MMYYYY.length != 0) {
-			V_WhereSQL2 = " AND  TO_CHAR( TAX_INVC_REF_DT = TO_CHAR( TO_DATE('"
+			V_WhereSQL2 = V_WhereSQL2 + " AND  TO_CHAR(TAX_INVC_REF_DT,'MMYYYY') = TO_CHAR( TO_DATE('"
 					+ V_MMYYYY +"' , 'MM/YYYY'),'MMYYYY')";
 		}
 		if (V_REF_NO != null && V_REF_NO.length != 0) {
