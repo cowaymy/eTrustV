@@ -486,6 +486,12 @@
                 #{item}
             </foreach>
         </if>
+        <if test="arrRedemptionItem != null and arrRedemptionItem != '' ">
+            AND D.ITM_CODE IN
+            <foreach item="item" collection="arrRedemptionItem" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
 
         ORDER BY A.RDM_ID DESC
     </select>
@@ -658,5 +664,15 @@
               ,UPD_DT = SYSDATE
          WHERE GP_BATCH_ID = #{gpBatchId}
     </update>
+
+    <select id="selectRedemptionItemList" parameterType="Map" resultType="egovMap">
+         SELECT DISTINCT
+            ITM_CODE AS CODE_ID,
+            ITM_CODE ||#{separator}|| ITM_DESC  AS CODE_NAME,
+            ITM_DESC
+         FROM ICR0006D
+         WHERE STUS_ID = 1
+         ORDER BY ITM_CODE, ITM_DESC
+    </select>
 
 </mapper>

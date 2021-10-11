@@ -8,6 +8,7 @@
     $(document).ready(function() {
         createAUIGrid();
         populateCollectionBranches();
+        populateRedemptionItems();
 
         AUIGrid.bind(gridID, "cellClick", function(event) {
             $("#_rdmId").val(event.item.rdmId);
@@ -235,9 +236,19 @@
         doGetComboSepa('/common/selectBranchCodeList.do', '45', ' - ', '', 'cmbCollectionBranch', 'M', 'f_multiCombo');
     }
 
+    function populateRedemptionItems() {
+    	doGetComboSepa('/incentive/goldPoints/selectRedemptionItemList.do', '', ' - ', '', 'cmbRedemptionItem', 'M', 'f_multiCombo');
+    }
+
     function f_multiCombo(){
         $(function() {
             $('#cmbCollectionBranch').change(function() {
+            }).multipleSelect({
+                selectAll: false,
+                width: '100%'
+            });
+
+            $('#cmbRedemptionItem').change(function() {
             }).multipleSelect({
                 selectAll: false,
                 width: '100%'
@@ -353,9 +364,7 @@
                     </td>
                     <th scope="row">Item</th>
                     <td>
-                        <select class="w100p" id="item" name="item">
-                            <option value="" selected>Select Item</option>
-                        </select>
+                        <select class="multy_select w100p" multiple="multiple" id="cmbRedemptionItem" name="cmbRedemptionItem"></select>
                     </td>
                     <th scope="row">Collection Branch</th>
                     <td>

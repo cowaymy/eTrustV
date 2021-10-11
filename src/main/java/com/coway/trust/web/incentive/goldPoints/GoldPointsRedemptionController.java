@@ -82,8 +82,10 @@ public class GoldPointsRedemptionController {
 
 		String[] arrRdmStatus = request.getParameterValues("cmbRdmStatus");
 	    String[] arrCollectionBrnch = request.getParameterValues("cmbCollectionBranch");
+	    String[] arrRedemptionItem = request.getParameterValues("cmbRedemptionItem");
 		params.put("arrRdmStatus", arrRdmStatus);
 		params.put("arrCollectionBrnch", arrCollectionBrnch);
+		params.put("arrRedemptionItem", arrRedemptionItem);
 
 		List<EgovMap> result = goldPointsService.selectRedemptionList(params);
 
@@ -253,6 +255,12 @@ public class GoldPointsRedemptionController {
 	    LOGGER.debug("resultValue : " + resultValue);
 
 	    return ResponseEntity.ok(resultValue);
+	}
+
+	@RequestMapping(value = "/selectRedemptionItemList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectRedemptionItemList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> redemptionItemList = goldPointsService.selectRedemptionItemList(params);
+		return ResponseEntity.ok(redemptionItemList);
 	}
 
 }

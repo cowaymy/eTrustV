@@ -75,4 +75,6 @@ public interface GoldPointsMapper {
 
 	void adminCancelRedemption(Map<String, Object> params);
 
+	List<EgovMap> selectRedemptionItemList(Map<String, Object> params);
+
 }

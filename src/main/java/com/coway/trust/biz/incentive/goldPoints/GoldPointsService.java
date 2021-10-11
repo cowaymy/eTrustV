@@ -49,4 +49,6 @@ public interface GoldPointsService {
 
 	Map<String, Object> adminCancelRedemption(Map<String, Object> params);
 
+	List<EgovMap> selectRedemptionItemList(Map<String, Object> params);
+
 }
