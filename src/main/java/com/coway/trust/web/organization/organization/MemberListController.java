@@ -1057,11 +1057,11 @@ public class MemberListController {
                     u5 = memberListService.memberListUpdate_MSC09(formMap);
                 }
 
-//            	Map<String, Object> returnVal = memberListService.lmsMemberListUpdate(formMap);
-//				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
-//					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
-//					throw new RuntimeException(e1);
-//				}
+            	Map<String, Object> returnVal = memberListService.lmsMemberListUpdate(formMap);
+				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+					throw new RuntimeException(e1);
+				}
 
             	//memberListService.lmsMemberListUpdate(formMap);
             }

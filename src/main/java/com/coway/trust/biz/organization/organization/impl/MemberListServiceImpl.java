@@ -288,11 +288,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             	memMap.put("MemberID", memid);
 
             	//call LMS API create user
-//				Map<String, Object> returnVal = lmsMemberListInsert(memMap);
-//				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
-//					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
-//					throw new RuntimeException(e1);
-//				}
+				Map<String, Object> returnVal = lmsMemberListInsert(memMap);
+				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+					throw new RuntimeException(e1);
+				}
             	//lmsMemberListInsert(memMap);
             }
 
@@ -1464,14 +1464,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         			}
 
         			//call lms to deactivate user
-//                	Map<String, Object> memMap = new HashMap<String, Object>();
-//                	memMap.put("username", selectMember.get("memCode").toString());
-//
-//                	Map<String, Object> returnVal = lmsMemberListDeact(memMap);
-//            		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
-//            			Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
-//            			throw new RuntimeException(e1);
-//            		}
+                	Map<String, Object> memMap = new HashMap<String, Object>();
+                	memMap.put("username", selectMember.get("memCode").toString());
+
+                	Map<String, Object> returnVal = lmsMemberListDeact(memMap);
+            		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+            			Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+            			throw new RuntimeException(e1);
+            		}
 
         		}
         		if(Integer.parseInt(params.get("action").toString()) == 757){
@@ -1635,17 +1635,17 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         resultValue.put("telMobile", trDtls.get("mobile"));
 
         //call LMS to update member code
-//    	Map<String, Object> memMap = new HashMap<String, Object>();
-//    	memMap.put("username",oldMemCode);
-//    	memMap.put("newusername",paramM.get("memCode"));
-//    	memMap.put("memberType",params.get("traineeType"));
-//    	memMap.put("joinDt",epochStr);
-//
-//    	Map<String, Object> returnVal = lmsMemberListUpdateMemCode(memMap);
-//		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
-//			Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
-//			throw new RuntimeException(e1);
-//		}
+    	Map<String, Object> memMap = new HashMap<String, Object>();
+    	memMap.put("username",oldMemCode);
+    	memMap.put("newusername",paramM.get("memCode"));
+    	memMap.put("memberType",params.get("traineeType"));
+    	memMap.put("joinDt",epochStr);
+
+    	Map<String, Object> returnVal = lmsMemberListUpdateMemCode(memMap);
+		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+			Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+			throw new RuntimeException(e1);
+		}
 
 
         return resultValue;
@@ -2174,11 +2174,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    			//}
 
 	    				//call LMS API create user
-//	    				Map<String, Object> returnVal = lmsEHPMemberListInsert(params,memberCode);
-//	    				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
-//	    					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
-//	    					throw new RuntimeException(e1);
-//	    				}
+	    				Map<String, Object> returnVal = lmsEHPMemberListInsert(params,memberCode);
+	    				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+	    					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+	    					throw new RuntimeException(e1);
+	    				}
 			}
 
 		} else {
