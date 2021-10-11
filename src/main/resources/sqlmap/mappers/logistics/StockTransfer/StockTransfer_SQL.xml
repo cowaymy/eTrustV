@@ -373,6 +373,7 @@
              , NVL(S28C.SERIAL_REQUIRE_CHK_YN, 'N') AS RCV_SERIAL_REQUIRE_CHK_YN
              , NVL(s28q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQ_YN
              , l54.RCD_TMS
+             , s28c.WH_LOC_BRNCH_ID
           from log0047m l47
              , log0048d l48
              , log0054m l54
@@ -787,5 +788,12 @@
 	    UPDATE LOG0054M SET RCD_TMS = TO_CHAR(SYSTIMESTAMP,'ddmmyyyyHH24miss')
 	    WHERE DELVRY_NO = #{delvryNo}
 	  </update>
+
+	  <select id="getUserWarehouseLocation" parameterType="Map" resultType="int">
+        SELECT WH_LOC_ID
+        FROM SYS0028M
+        WHERE DELVRY_NO = #{delvryNo}
+            AND RCD_TMS = #{rcdTms}
+      </select>
 
 </mapper>
