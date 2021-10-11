@@ -966,7 +966,7 @@ console.log("validation");
 
         // LMS - Change to check email as mandatory for HP Applicant, trainee. Hui Ding, 2021-10-08
         if($("#memberType").val() =='5'){
-            /* if($("#traineeType1").val() ==''){
+            if($("#traineeType1").val() ==''){
                    Common.alert("Please key in Trainee type");
                    return false;
             }
@@ -974,7 +974,7 @@ console.log("validation");
             if($("#email").val() == '') {
                 Common.alert("Please key in Email Address");
                 return false;
-            } */
+            }
 
             if($("#course").val() == ''){
                 Common.alert("Please key  in Training Course");
