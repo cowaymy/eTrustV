@@ -125,8 +125,8 @@ var serialcolumnLayout2 =[
                                              }
                          },
                          {dataField:    "crtDt",headerText :"<spring:message code='log.head.createdate'/>"        ,width:   "13%"       ,height:30    ,editable : false           },
-                         {dataField:    "crtUserId",headerText :"<spring:message code='log.head.createuser'/>"        ,width:120   ,height:30   , visible:false      ,editable : false     }
-
+                         {dataField:    "crtUserId",headerText :"<spring:message code='log.head.createuser'/>"        ,width:120   ,height:30   , visible:false      ,editable : false     },
+                         {dataField:    "whLocBrnchId",headerText:"whLocBrnchId",width:0,visible:false}
                         ];
 
 
@@ -369,7 +369,10 @@ $(function(){
         if(checkedItems.length <= 0) {
         	Common.alert('No data selected.');
             return false;
-        }else{
+        } else if("${SESSION_INFO.roleId}" == "256" && "${SESSION_INFO.userBranchId}" != "checkedItems[0].whLocBrnchId") {
+            Common.alert('GR location under Cody.' +"<br>"+' Not allow to proceed.');
+            return false;
+            } else{
         	var checkedSmo = [];
 
         	for (var i = 0 ; i < checkedItems.length ; i++){
