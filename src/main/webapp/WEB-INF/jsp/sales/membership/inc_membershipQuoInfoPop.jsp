@@ -53,7 +53,7 @@
 			</tr>
 			<tr>
 				<th scope="row"><spring:message code="sales.filterPro" /></th>
-				<td colspan="3"><span id="inc_promeCode">${quotInfo.promeCode} ${quotInfo.promeDesc} </span></td>
+				<td colspan="3"><span id="inc_promeCode">${quotInfo.promoCode} ${quotInfo.promoDesc} </span></td>
 				<th scope="row"><spring:message code="sales.bsFre" /></th>
 				<td><span id="inc_bsFreq"> <c:if test="${not empty quotInfo.bsFreq}">  ${quotInfo.bsFreq} month(s)</c:if></span></td>
 			</tr>
