@@ -16,7 +16,7 @@
  17/12/2019  ONGHC  1.0.9          Add BS No. Column
  -->
 
-<script>
+    <script>
     document.write('<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js?v='+new Date().getTime()+'"><\/script>');
 </script>
 <script type="text/javaScript">
