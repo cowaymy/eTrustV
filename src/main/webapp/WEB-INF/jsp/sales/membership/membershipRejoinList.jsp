@@ -15,7 +15,7 @@ var memLvlData = [ {"codeId": "1","codeName": "GCM"}
 							,{"codeId": "2","codeName": "SCM"}
 							,{"codeId": "3","codeName": "CM"}
 							,{"codeId": "4","codeName": "Cody"}];
-var today = '${today}'
+
 
 
 $(document).ready(function(){
