@@ -200,7 +200,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 		smsVO.getMobiles().forEach(mobileNo -> {
 			String smsUrl;
 			try {
-				smsUrl = "https://" + gensuiteHost + gensuitePath + "?" + "ClientID=" + gensuiteClientId + "&Username="
+				smsUrl = "http://" + gensuiteHost + gensuitePath + "?" + "ClientID=" + gensuiteClientId + "&Username="
 						+ gensuiteUserName + "&Password=" + gensuitePassword + "&Type=" + gensuiteType + "&Message="
 						+ URLEncoder.encode("RM0.00 " + smsVO.getMessage(), StandardCharsets.UTF_8.name())
 //								.replaceAll("\\+", " ").replaceAll("%40", "@").replaceAll("%21", "!")
@@ -216,8 +216,6 @@ public class AdaptorServiceImpl implements AdaptorService {
 			} catch (UnsupportedEncodingException e) {
 				throw new ApplicationException(e, AppConstants.FAIL);
 			}
-
-			LOGGER.debug("SMS URL >>>>>>>>>>>>>>>>{}" ,smsUrl);
 
 			Client client = Client.create();
 			WebResource webResource = client.resource(smsUrl);
