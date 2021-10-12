@@ -16,33 +16,33 @@ function fn_memberSave(){
                     $('#memberType').attr("disabled", false);
                     $('#searchdepartment').attr("disabled", false);
                     $('#searchSubDept').attr("disabled", false);
-			    }
+                }
 
-	            $("#streetDtl1").val(insAddressForm.streetDtl.value);
-	            $("#addrDtl1").val(insAddressForm.addrDtl.value);
-	            $("#traineeType").val(($("#traineeType1").value));
-	            $("#subDept").val(($("#searchSubDept").value));
-			    var jsonObj =  GridCommon.getEditData(myGridID_Doc);
-			    jsonObj.form = $("#memberAddForm").serializeJSON();
+                $("#streetDtl1").val(insAddressForm.streetDtl.value);
+                $("#addrDtl1").val(insAddressForm.addrDtl.value);
+                $("#traineeType").val(($("#traineeType1").value));
+                $("#subDept").val(($("#searchSubDept").value));
+                var jsonObj =  GridCommon.getEditData(myGridID_Doc);
+                jsonObj.form = $("#memberAddForm").serializeJSON();
 
-			    console.log("-------------------------" + JSON.stringify(jsonObj));
-			    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
-			        console.log("message : " + result.message );
+                console.log("-------------------------" + JSON.stringify(jsonObj));
+                Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
+                    console.log("message : " + result.message );
 
-			        // Only applicable to HP Applicant
-			        if($("#memberType").val() == "2803") {
-			            $("#aplcntNRIC").val($("#nric").val());
-			            $("#aplcntName").val($("#memberNm").val());
-			            $("#aplcntMobile").val($("#mobileNo").val());
+                    // Only applicable to HP Applicant
+                    if($("#memberType").val() == "2803") {
+                        $("#aplcntNRIC").val($("#nric").val());
+                        $("#aplcntName").val($("#memberNm").val());
+                        $("#aplcntMobile").val($("#mobileNo").val());
 
-			            console.log("NRIC :: " + $("#aplcntNRIC").val());
-			            console.log("Name :: " + $("#aplcntName").val());
-			            console.log("Mobile :: " + $("#aplcntMobile").val());
+                        console.log("NRIC :: " + $("#aplcntNRIC").val());
+                        console.log("Name :: " + $("#aplcntName").val());
+                        console.log("Mobile :: " + $("#aplcntMobile").val());
 
-			            // Get ID and identification
-			            Common.ajax("GET", "/organization/getApplicantInfo", $("#applicantDtls").serialize(), function(result) {
-			                console.log("saving member details");
-			                console.log(result);
+                        // Get ID and identification
+                        Common.ajax("GET", "/organization/getApplicantInfo", $("#applicantDtls").serialize(), function(result) {
+                            console.log("saving member details");
+                            console.log(result);
 
                             var aplcntId = result.id;
                             var idntfc = result.idntfc;
@@ -73,9 +73,9 @@ function fn_memberSave(){
                                 })
                             }
 
-			            });
-			        /*}else if($("#memberType").val() == "5") {
-			            if($("#email").val() != "") {
+                        });
+                    /*}else if($("#memberType").val() == "5") {
+                        if($("#email").val() != "") {
                             var recipient = $("#email").val();
 
                             var url = "http://etrust.my.coway.com/";
@@ -86,13 +86,13 @@ function fn_memberSave(){
                                 console.log(result);
                             })
                         }*/
-			        }
-			        Common.alert(result.message,fn_close);
-		});
+                    }
+                    Common.alert(result.message,fn_close);
+        });
 }
 
 function fn_close(){
-	$("#popup_wrap").remove();
+    $("#popup_wrap").remove();
 }
 function fn_saveConfirm(){
 
@@ -109,8 +109,8 @@ function fn_saveConfirm(){
     }
 }
 function fn_docSubmission(){
-	    Common.ajax("GET", "/organization/selectHpDocSubmission", { memType : $("#memberType").serialize() , trainType : $("#traineeType1").val()}, function(result) {
-		console.log("성공.");
+        Common.ajax("GET", "/organization/selectHpDocSubmission", { memType : $("#memberType").serialize() , trainType : $("#traineeType1").val()}, function(result) {
+        console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID_Doc, result);
         AUIGrid.resize(myGridID_Doc,1000,400);
@@ -118,13 +118,13 @@ function fn_docSubmission(){
 }
 
 function fn_departmentCode(value){
-	 if($("#memberType").val() != 2){
-	        $("#hideContent").hide();
-	    }else{
-	    	$("#hideContent").show();
-	    }
-	 if($("#memberType").val() == 5){
-		  $("#trTrainee").show();
+     if($("#memberType").val() != 2){
+            $("#hideContent").hide();
+        }else{
+            $("#hideContent").show();
+        }
+     if($("#memberType").val() == 5){
+          $("#trTrainee").show();
      }else{
         $("#trTrainee").hide();
      }
@@ -147,9 +147,9 @@ function fn_departmentCode(value){
         $('#sponsorNm').val(spouseName);
         $('#sponsorNric').val(spouseNric);  */
 
-		$("#branch").find('option').each(function() {
-		    $(this).remove();
-		});
+        $("#branch").find('option').each(function() {
+            $(this).remove();
+        });
         $("#branch").append("<option value=''>Choose One</option>");
 
         $("#meetingPoint").attr("disabled", false);
@@ -209,17 +209,17 @@ function fn_departmentCode(value){
      }
 
 
-	var action = value;
-	console.log("fn_departmentCode >> " + action)
-	switch(action){
-	   case "1" :
-		   var jsonObj = {
-	            memberLvl : 3,
-	            flag :  "%CRS%"
-	    };
-		   doGetCombo("/organization/selectDeptCodeHp", jsonObj , ''   , 'deptCd' , 'S', '');
-		   break;
-	   case "2" :
+    var action = value;
+    console.log("fn_departmentCode >> " + action)
+    switch(action){
+       case "1" :
+           var jsonObj = {
+                memberLvl : 3,
+                flag :  "%CRS%"
+        };
+           doGetCombo("/organization/selectDeptCodeHp", jsonObj , ''   , 'deptCd' , 'S', '');
+           break;
+       case "2" :
            var jsonObj = {
                 memberLvl : 3,
                 flag :  "%CCS%"
@@ -228,7 +228,7 @@ function fn_departmentCode(value){
            doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
            break;
-	   case "3" :
+       case "3" :
            var jsonObj = {
                 memberLvl : 3,
                 flag :  "%CTS%"
@@ -238,7 +238,7 @@ function fn_departmentCode(value){
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
            break;
 
-	   case "4" :
+       case "4" :
            var jsonObj = {
                 memberLvl : 100,
                 flag :  "-"
@@ -246,7 +246,7 @@ function fn_departmentCode(value){
            doGetComboSepa("/common/selectBranchCodeList.do",100 , '-',''   , 'branch' , 'S', '');
            break;
 
-	   case "5" :
+       case "5" :
 
            $("#branch").find('option').each(function() {
                $(this).remove();
@@ -257,60 +257,28 @@ function fn_departmentCode(value){
 
            $("#traineeType1").change(function(){
 
-        	   var traineeType =  $("#traineeType1").val();
+               var traineeType =  $("#traineeType1").val();
 
-        	   fn_docSubmission()
-        	   console.log("fn_departmentCode traineeType>> " + traineeType)
+               fn_docSubmission()
+               console.log("fn_departmentCode traineeType>> " + traineeType)
 
-        	   if( traineeType == '2'){
-        		    doGetComboSepa("/common/selectBranchCodeList.do",'4' , '-',''   , 'branch' , 'S', '');
+               if( traineeType == '2'){
+                    doGetComboSepa("/common/selectBranchCodeList.do",'4' , '-',''   , 'branch' , 'S', '');
 
-		           $("#branch").change(function(){
-		               var jsonObj = {
-		                       memberLvl : 3,
-		                       flag :  "%CCS%",
-		                       flag2 : "%CM%",
-		                       branchVal : $("#branch").val()
-		               };
+                   $("#branch").change(function(){
+                       var jsonObj = {
+                               memberLvl : 3,
+                               flag :  "%CCS%",
+                               flag2 : "%CM%",
+                               branchVal : $("#branch").val()
+                       };
 
-		               doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
-		           });
+                       doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+                   });
 
-		           //Training Course ajax콜 위치
-		           //doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
+                   //Training Course ajax콜 위치
+                   //doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
                    var groupCode  = {groupCode : traineeType};
-		           Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
-
-			            $("#course").find('option').each(function() {
-			                $(this).remove();
-			            });
-			             console.log("-------------------------" + JSON.stringify(result));
-			             if (result!= null) {
-			             $("#course").append("<option value=''>Choose One</option>");
-			                for( var i=0; i< result.length; i++) {
-			                 $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
-			                }
-			             }
-		             });
-
-        	   }
-        	   else if(traineeType == '3'){
-
-		           $("#branch").change(function(){
-		               var jsonObj = {
-		                       memberLvl : 3,
-		                       flag :  "%CTS%",
-		                       branchVal : $("#branch").val()
-		               };
-
-		               doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
-		           });
-
-        		   doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'branch' , 'S', '');
-
-        		   //Training Course ajax콜 위치
-        		   //doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
-        		   var groupCode  = {groupCode : traineeType};
                    Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
 
                         $("#course").find('option').each(function() {
@@ -324,9 +292,41 @@ function fn_departmentCode(value){
                             }
                          }
                      });
-        	   }   else if(traineeType == '5758'){ // HOMECARE DELIVERY TECHNICIAN -- ADDED BY TOMMY
 
-        		   doGetComboSepa("/common/selectBranchCodeList.do",'5758' , '-',''   , 'branch' , 'S', '');
+               }
+               else if(traineeType == '3'){
+
+                   $("#branch").change(function(){
+                       var jsonObj = {
+                               memberLvl : 3,
+                               flag :  "%CTS%",
+                               branchVal : $("#branch").val()
+                       };
+
+                       doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+                   });
+
+                   doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'branch' , 'S', '');
+
+                   //Training Course ajax콜 위치
+                   //doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
+                   var groupCode  = {groupCode : traineeType};
+                   Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
+
+                        $("#course").find('option').each(function() {
+                            $(this).remove();
+                        });
+                         console.log("-------------------------" + JSON.stringify(result));
+                         if (result!= null) {
+                         $("#course").append("<option value=''>Choose One</option>");
+                            for( var i=0; i< result.length; i++) {
+                             $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
+                            }
+                         }
+                     });
+               }   else if(traineeType == '5758'){ // HOMECARE DELIVERY TECHNICIAN -- ADDED BY TOMMY
+
+                   doGetComboSepa("/common/selectBranchCodeList.do",'5758' , '-',''   , 'branch' , 'S', '');
                    $("#branch").change(function(){
                        var jsonObj = {
                                memberLvl : 3,
@@ -391,26 +391,26 @@ function fn_departmentCode(value){
 
         case "2803" :
 
-        	doGetComboSepa("/common/selectBranchCodeList.do",45 , '-',''   , 'branch' , 'S', '');
+            doGetComboSepa("/common/selectBranchCodeList.do",45 , '-',''   , 'branch' , 'S', '');
 
-	        if ( $("#userType").val() == "1" ) {
+            if ( $("#userType").val() == "1" ) {
 
-	            Common.ajax("GET", "/organization/selectDeptCodeHp", null, function(result) {
+                Common.ajax("GET", "/organization/selectDeptCodeHp", null, function(result) {
 
-					$("#deptCd").find('option').each(function() {
-					    $(this).remove();
-					});
+                    $("#deptCd").find('option').each(function() {
+                        $(this).remove();
+                    });
 
-					console.log("------selectDeptCodeHp-------------------" + JSON.stringify(result));
-					if (result!= null) {
-					   $("#deptCd").append("<option value="+result[0].codeId+">"+result[0].codeId+"</option>");
-					}
+                    console.log("------selectDeptCodeHp-------------------" + JSON.stringify(result));
+                    if (result!= null) {
+                       $("#deptCd").append("<option value="+result[0].codeId+">"+result[0].codeId+"</option>");
+                    }
 
-	            });
+                });
 
 
-	        } else {
-	           //doGetCombo('/organization/selectDepartmentCode', '', '','deptCd', '' , '');
+            } else {
+               //doGetCombo('/organization/selectDepartmentCode', '', '','deptCd', '' , '');
 
                 Common.ajax("GET", "/organization/selectDepartmentCode", null, function(result) {
 
@@ -427,10 +427,10 @@ function fn_departmentCode(value){
                     }
 
                 });
-	        }
+            }
 
-	        /*
-	        $("#branch").find('option').each(function() {
+            /*
+            $("#branch").find('option').each(function() {
                     $(this).remove();
                 });
 
@@ -447,22 +447,22 @@ function fn_departmentCode(value){
                     }
 
                 });
-	           */
+               */
         break;
 
-	/*     case "2803" :   // this is temp code  that   add by hgham
+    /*     case "2803" :   // this is temp code  that   add by hgham
 
-	    	     $("#deptCd option").remove();
-	             $("#deptCd option").remove();
+                 $("#deptCd option").remove();
+                 $("#deptCd option").remove();
                  $("#deptCd").append("<option value='CRS3001'>CRS3001</option>");
             break; */
-	}
+    }
 
 
 }
 $(document).ready(function() {
 console.log("ready");
-	//doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
+    //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
 
     //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','national', 'S', '');
 
@@ -481,37 +481,37 @@ console.log("ready");
     //$("#issuedBank option[value='OTH']").remove();
 
     $("#deptCd").change(function (){
-    	//modify hgham 2017-12-25  주석 처리
-    	//doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
+        //modify hgham 2017-12-25  주석 처리
+        //doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
     });
     createAUIGridDoc();
-	fn_docSubmission();
-	fn_departmentCode('2');  //modify  hgham 25-12 -2017    as is code  fn_departmentCode();
+    fn_docSubmission();
+    fn_departmentCode('2');  //modify  hgham 25-12 -2017    as is code  fn_departmentCode();
 
-	$("#state").change(function (){
-		var state = $("#state").val();
-		doGetComboAddr('/common/selectAddrSelCodeList.do', 'area' ,state ,'area', 'S', '');
-	});
-	$("#area").change(function (){
+    $("#state").change(function (){
+        var state = $("#state").val();
+        doGetComboAddr('/common/selectAddrSelCodeList.do', 'area' ,state ,'area', 'S', '');
+    });
+    $("#area").change(function (){
         var area = $("#area").val();
         doGetComboAddr('/common/selectAddrSelCodeList.do', 'post' ,area ,'','postCode', 'S', '');
     });
 
-	// Member Type 바꾸면 입력한 NRIC 비우기, doc 새로불러오기
-	$("#memberType").change(function (){
-		$("#nric").val('');
-		  fn_docSubmission();
-		  if ($("#memberType").val() == "4") {
-			  $("#memberCd").attr("disabled", false);
-		  } else {
-			  $("#memberCd").attr("disabled", true);
-		  }
+    // Member Type 바꾸면 입력한 NRIC 비우기, doc 새로불러오기
+    $("#memberType").change(function (){
+        $("#nric").val('');
+          fn_docSubmission();
+          if ($("#memberType").val() == "4") {
+              $("#memberCd").attr("disabled", false);
+          } else {
+              $("#memberCd").attr("disabled", true);
+          }
 
     });
 
-	$("#memberType").click(function (){
+    $("#memberType").click(function (){
 
-	console.log("================" +  $("#memberType").val());
+    console.log("================" +  $("#memberType").val());
         var memberType = $("#memberType").val();
 
         $('span', '#emailLbl').empty().remove();
@@ -543,8 +543,8 @@ console.log("ready");
             $("#trNo").attr("disabled", true);
             doGetCombo('/organization/selectAccBank.do', '', '', 'issuedBank', 'S', '');
         } else if(memberType ==  "5") {
-        	$('#email').prop('required', true); // LMS - Added email as mandatory for Trainee & HP Applicant. Hui Ding, 2021-10-08
-        	$('#emailLbl').append("<span class='must'>*</span>");
+            $('#email').prop('required', true); // LMS - Added email as mandatory for Trainee & HP Applicant. Hui Ding, 2021-10-08
+            $('#emailLbl').append("<span class='must'>*</span>");
             $('#mobileNo').prop('required', true);
             $('#mobileNoLbl').append("<span class='must'>*</span>");
         } else {
@@ -553,38 +553,38 @@ console.log("ready");
         fn_departmentCode(memberType);
      });
 
-	$("#traineeType1").click(function(){   // CHECK Trainee Type = Cody then Disable Main & Sub Department selection -- Added by Tommy
-		var traineeType = $("#traineeType1").val();
+    $("#traineeType1").click(function(){   // CHECK Trainee Type = Cody then Disable Main & Sub Department selection -- Added by Tommy
+        var traineeType = $("#traineeType1").val();
 
-	    $('span', '#courseLbl').empty().remove();
+        $('span', '#courseLbl').empty().remove();
 
-		if(traineeType == 2){
-			$('#courseLbl').append("<span class='must'>*</span>");
+        if(traineeType == 2){
+            $('#courseLbl').append("<span class='must'>*</span>");
             $("#searchdepartment").attr("disabled", true);
             $("#searchSubDept").attr("disabled", true);
             $("#joinDate").val($.datepicker.formatDate('dd/mm/yy', new Date()));
             $("#joinDate").attr("readOnly", true);
 
-		}else if(traineeType == 7 ||  traineeType == 5758){
-			$('#courseLbl').append("<span class='must'>*</span>");
+        }else if(traineeType == 7 ||  traineeType == 5758){
+            $('#courseLbl').append("<span class='must'>*</span>");
             $("#searchdepartment").attr("disabled", true);
             $("#searchSubDept").attr("disabled", true);
             $("#transportCd option[value=253]").attr('selected', 'selected');
             $("#joinDate").attr("readOnly", false);
 
-		}else{
-			$('#courseLbl').append("<span class='must'>*</span>");
+        }else{
+            $('#courseLbl').append("<span class='must'>*</span>");
             $("#searchdepartment").attr("disabled", false);
             $("#searchSubDept").attr("disabled", false);
             $("#joinDate").val($.datepicker.formatDate('dd/mm/yy', new Date()));
             $("#joinDate").attr("readOnly", true);
-		}
+        }
 
-		if(traineeType == "" || traineeType == null) {
-			$('span', '#courseLbl').empty().remove();
-		}
+        if(traineeType == "" || traineeType == null) {
+            $('span', '#courseLbl').empty().remove();
+        }
 
-	});
+    });
 
      $("#searchdepartment").change(function(){
 
@@ -608,18 +608,18 @@ console.log("ready");
      $('#memberType').trigger('click');
 
      $('#nric').blur(function() {
-    	 if ($('#nric').val().length == 12) {
-    		 checkNRIC();
-    		 /* if ($('#nric').val().length == 12) {
-    			 autofilledbyNRIC();
-    		 } */
+         if ($('#nric').val().length == 12) {
+             checkNRIC();
+             /* if ($('#nric').val().length == 12) {
+                 autofilledbyNRIC();
+             } */
          }
      });
 
      $('#sponsorCd').blur(function() {
-    	 if ($('#sponsorCd').val().length > 0) {
-    		 fn_sponsorCd();
-    	 }
+         if ($('#sponsorCd').val().length > 0) {
+             fn_sponsorCd();
+         }
      });
 
      if ($("#memberType").val() == "4") {
@@ -637,13 +637,13 @@ console.log("ready");
             console.log("5");
             console.log("bankaccno :: " + $("#bankAccNo").val());
             if($("#bankAccNo").val() != "-"){
-            	if(isNaN($("#bankAccNo").val())){  // validation the value of bank account number is numeric
-            		Common.alert("Bank account number must be numeric.");
+                if(isNaN($("#bankAccNo").val())){  // validation the value of bank account number is numeric
+                    Common.alert("Bank account number must be numeric.");
                     $("#bankAccNo").val("");
                     return false;
-            	}else{
-            	     checkBankAccNo();
-            	}
+                }else{
+                     checkBankAccNo();
+                }
             }
          }
      });
@@ -655,15 +655,15 @@ console.log("ready");
 
 // 2018-06-20 - LaiKW - Removal of MBF Bank and Others from Issued Bank drop down box
 function onclickIssuedBank() {
-	$("#issuedBank > option[value='22']").remove();
-	$("#issuedBank > option[value='24']").remove();
-	$("#issuedBank > option[value='42']").remove();
-	$("#issuedBank > option[value='43']").remove();
+    $("#issuedBank > option[value='22']").remove();
+    $("#issuedBank > option[value='24']").remove();
+    $("#issuedBank > option[value='42']").remove();
+    $("#issuedBank > option[value='43']").remove();
 }
 
 function onChangeIssuedBank(sel) {
-	issuedBankTxt = sel.options[sel.selectedIndex].text;
-	console.log("issuedBankTxt :: " + issuedBankTxt);
+    issuedBankTxt = sel.options[sel.selectedIndex].text;
+    console.log("issuedBankTxt :: " + issuedBankTxt);
 }
 
 function createAUIGridDoc() {
@@ -800,52 +800,52 @@ var gridPros = {
 //Validation Check
 function fn_saveValidation(){
 console.log("validation");
-	if($("#memberNm").val() == ''){
+    if($("#memberNm").val() == ''){
         Common.alert("Please key  in Member Name");
         return false;
     }
 
-	if($("#joinDate").val() == ''){
+    if($("#joinDate").val() == ''){
         Common.alert("Please select Joined Date");
         return false;
     }
 
-	if($("#sponsorCd").val() == ''){
+    if($("#sponsorCd").val() == ''){
         Common.alert("Please select 'Sponsor's Code'");
         return false;
     }
 
-	if($('input[name=gender]:checked', '#memberAddForm').val() == null){
-		  Common.alert("Please select Gender");
-	        return false;
-	}
+    if($('input[name=gender]:checked', '#memberAddForm').val() == null){
+          Common.alert("Please select Gender");
+            return false;
+    }
 
-/*	if($("#memberType").val() == 5){
-		if($("#traineeType").val() == 0){
-			  common.alert("Please select Trainee Type");
-			  return false;
-		}
-	}*/
+/*  if($("#memberType").val() == 5){
+        if($("#traineeType").val() == 0){
+              common.alert("Please select Trainee Type");
+              return false;
+        }
+    }*/
     /* if(!$("#gender").is(":radio")){
 
     } */
 
-	if($("#Birth").val() == ''){
+    if($("#Birth").val() == ''){
         Common.alert("Please select Date of Birth");
         return false;
     }
 
-	if($("#cmbRace").val() == ''){
+    if($("#cmbRace").val() == ''){
         Common.alert("Please select race");
         return false;
     }
 
-	if($("#national").val() == ''){
+    if($("#national").val() == ''){
         Common.alert("Please select Nationality");
         return false;
     }
 
-	if($("#nric").val() == ''){
+    if($("#nric").val() == ''){
         Common.alert("Please key  in NRIC");
         return false;
     }
@@ -855,57 +855,57 @@ console.log("validation");
         return false;
     }
 
-	if($("#marrital").val() == ''){
+    if($("#marrital").val() == ''){
         Common.alert("Please select marrital");
         return false;
     }
 
-	if($("#marrital").val() == '26'){
-	    if($("#spouseName").val() == '') {
+    if($("#marrital").val() == '26'){
+        if($("#spouseName").val() == '') {
             Common.alert("Please enter spouse name");
             return false;
         }
-	    if($("#spouseNric").val() == '') {
+        if($("#spouseNric").val() == '') {
             Common.alert("Please enter spouse NRIC/Passport No");
             return false;
         }
-	    if($("#spouseOcc").val() == '') {
+        if($("#spouseOcc").val() == '') {
             Common.alert("Please enter spouse occupation");
             return false;
         }
-	    if($("#spouseDob").val() == '') {
+        if($("#spouseDob").val() == '') {
             Common.alert("Please enter spouse date of birth");
             return false;
         }
-	    if($("#spouseContat").val() == '') {
+        if($("#spouseContat").val() == '') {
             Common.alert("Please enter spouse contact");
             return false;
         }
-	}
+    }
 
-	if($("#issuedBank").val() == ''){
+    if($("#issuedBank").val() == ''){
         Common.alert("Please select the issued bank");
         return false;
     }
 
-	if($("#bankAccNo").val() == ''){
+    if($("#bankAccNo").val() == ''){
         Common.alert("Please key in the bank account no");
         return false;
     }
 
 
-	//type 별로 다르게 해야됨
-	if($("#deptCd").val() == ''){
+    //type 별로 다르게 해야됨
+    if($("#deptCd").val() == ''){
         Common.alert("Please select the department code");
         return false;
     }
 
-	if($("#areaId").val() == ''){
+    if($("#areaId").val() == ''){
         Common.alert("Please key in the address.");
         return false;
     }
 
-	if($("#addrDtl").val() == ''){
+    if($("#addrDtl").val() == ''){
         Common.alert("Please key in the address detail.");
         return false;
     }
@@ -932,7 +932,7 @@ console.log("validation");
 
     if($("#memberType").val() == "2803" || $("#memberType").val() == "5") {
         if($("#mobileNo").val() == '') {
-        	Common.alert("Please key in Mobile No.");
+            Common.alert("Please key in Mobile No.");
             return false;
         }else{
             if($("#mobileNo").val().length < 10 || $("#mobileNo").val().length > 12){
@@ -951,11 +951,11 @@ console.log("validation");
 
 
         if($("#memberType").val() == "2803"){
-        	 if($("#email").val() == '') {
+             if($("#email").val() == '') {
                  Common.alert("Please key in Email Address");
                  return false;
              }
-        	 if($("#memberType").val() == "2803") {
+             if($("#memberType").val() == "2803") {
                  // 2018-07-26 - LaiKW - Added Meeting Point and Branch
                  if($('#meetingPoint').val() == '') {
                      Common.alert("Please select reporting branch");
@@ -982,7 +982,7 @@ console.log("validation");
             }
         }
     }
-	return true;
+    return true;
 }
 
 function fn_addrSearch(){
@@ -1149,81 +1149,81 @@ function fn_selectState(selVal){
 }
 
 function fn_sponsorCheck(){
-	if(event.keyCode == 13) {
-		fn_sponsorCd();
-	}
+    if(event.keyCode == 13) {
+        fn_sponsorCd();
+    }
 }
 
 function fn_sponsorCd(){
-	Common.ajax("GET", "/organization/checkSponsor.do", $("#memberAddForm").serializeJSON(), function(result) {
-		// add jgkim
+    Common.ajax("GET", "/organization/checkSponsor.do", $("#memberAddForm").serializeJSON(), function(result) {
+        // add jgkim
         console.log("checkSponsor.do Action");
         console.log(result);
         if (result.message != "ok") {
-        	Common.alert(result.message);
+            Common.alert(result.message);
         } else {
-        	// add jgkim
-        	$("#sponsorNm").val(result.data.name);
-        	$("#sponsorNric").val(result.data.nric);
+            // add jgkim
+            $("#sponsorNm").val(result.data.name);
+            $("#sponsorNric").val(result.data.nric);
         }
-	});
+    });
 }
 
 function checkNRICEnter(){
     if(event.keyCode == 13) {
-    	checkNRIC();
+        checkNRIC();
     }
 }
 
 
 
 function checkNRIC(){
-	var returnValue;
+    var returnValue;
 
-   	var jsonObj = { "nric" : $("#nric").val() };
+    var jsonObj = { "nric" : $("#nric").val() };
 
-   	if ($("#memberType").val() == '2803' || $("#memberType").val() == '4' || $("#memberType").val() == '5' || $("#memberType").val() == '7' || $("#memberType").val() == '5758' ) {
-	   	Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
-	           console.log("data : " + result);
-	           if (result.message != "pass") {
-	           	Common.alert(result.message);
-	           	$("#nric").val('');
-	           	returnValue = false;
-	           	return false;
-	           } else {    // 조건1 통과 -> 조건2 수행
+    if ($("#memberType").val() == '2803' || $("#memberType").val() == '4' || $("#memberType").val() == '5' || $("#memberType").val() == '7' || $("#memberType").val() == '5758' ) {
+        Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
+               console.log("data : " + result);
+               if (result.message != "pass") {
+                Common.alert(result.message);
+                $("#nric").val('');
+                returnValue = false;
+                return false;
+               } else {    // 조건1 통과 -> 조건2 수행
 
-	           	Common.ajax("GET", "/organization/checkNRIC1.do", jsonObj, function(result) {
-	                   console.log("data : " + result);
-	                   if (result.message != "pass") {
-	                       Common.alert(result.message);
-	                       $("#nric").val('');
-	                       returnValue = false;
-	                       return false;
-	                   } else {    // 조건2 통과 -> 조건3 수행
+                Common.ajax("GET", "/organization/checkNRIC1.do", jsonObj, function(result) {
+                       console.log("data : " + result);
+                       if (result.message != "pass") {
+                           Common.alert(result.message);
+                           $("#nric").val('');
+                           returnValue = false;
+                           return false;
+                       } else {    // 조건2 통과 -> 조건3 수행
 
-	                   	Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
-	                           console.log("data : " + result);
-	                           if (result.message != "pass") {
-	                               Common.alert(result.message);
-	                               $("#nric").val('');
-	                               returnValue = false;
-	                               return false;
-	                           } else {    // 조건3 통과 -> 끝
-	                           	//Common.alert("Available NRIC");
-	                           	autofilledbyNRIC();
-	                           	returnValue = true;
-	                               return true;
-	                           }
+                        Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
+                               console.log("data : " + result);
+                               if (result.message != "pass") {
+                                   Common.alert(result.message);
+                                   $("#nric").val('');
+                                   returnValue = false;
+                                   return false;
+                               } else {    // 조건3 통과 -> 끝
+                                //Common.alert("Available NRIC");
+                                autofilledbyNRIC();
+                                returnValue = true;
+                                   return true;
+                               }
 
-	                       });
-	                   }
+                           });
+                       }
 
-	           	});
-	           }
-	       });
-   	} else {
-   		autofilledbyNRIC();
-   	}
+                });
+               }
+           });
+    } else {
+        autofilledbyNRIC();
+    }
 
 
     return returnValue;
@@ -1233,44 +1233,44 @@ function checkNRIC(){
 function autofilledbyNRIC(){
 
     //if ($("#memberType").val() == '4') {
-    	var nric = $("#nric").val().replace('-', '');
-    	var autoGender = nric.substr(11,1);
-    	//var autoDOB = nric.substr(0,6);
-    	var autoDOB_year = nric.substr(0,2);
-    	var autoDOB_month = nric.substr(2,2);
-    	var autoDOB_date = nric.substr(4,2);
+        var nric = $("#nric").val().replace('-', '');
+        var autoGender = nric.substr(11,1);
+        //var autoDOB = nric.substr(0,6);
+        var autoDOB_year = nric.substr(0,2);
+        var autoDOB_month = nric.substr(2,2);
+        var autoDOB_date = nric.substr(4,2);
 
-    	if (parseInt(autoGender)%2 == 0) {
-    		$("input:radio[name='gender']:radio[value='F']").prop("checked", true);
-    	} else {
-    		$("input:radio[name='gender']:radio[value='M']").prop("checked", true);
-    	}
+        if (parseInt(autoGender)%2 == 0) {
+            $("input:radio[name='gender']:radio[value='F']").prop("checked", true);
+        } else {
+            $("input:radio[name='gender']:radio[value='M']").prop("checked", true);
+        }
 
-    	if (parseInt(autoDOB_year) < 20) {
+        if (parseInt(autoDOB_year) < 20) {
             $("#Birth").val(autoDOB_date+"/"+autoDOB_month+"/"+"20"+autoDOB_year);
         } else {
-        	$("#Birth").val(autoDOB_date+"/"+autoDOB_month+"/"+"19"+autoDOB_year);
+            $("#Birth").val(autoDOB_date+"/"+autoDOB_month+"/"+"19"+autoDOB_year);
         }
     //}
 
 }
 
 function fn_onchangeMarrital() {
-	if($("#marrital").val() != "26") {
-	    $("#spouseNameLbl").find("span").remove();
-	    $("#spouseNricLbl").find("span").remove();
-	    $("#spouseOccLbl").find("span").remove();
-	    $("#spouseDobLbl").find("span").remove();
-	    $("#spouseContatLbl").find("span").remove();
-	}
+    if($("#marrital").val() != "26") {
+        $("#spouseNameLbl").find("span").remove();
+        $("#spouseNricLbl").find("span").remove();
+        $("#spouseOccLbl").find("span").remove();
+        $("#spouseDobLbl").find("span").remove();
+        $("#spouseContatLbl").find("span").remove();
+    }
 
-	if($("#marrital").val() == "26") {
-	    $("#spouseNameLbl").append("<span class='must'>*</span>");
-	    $("#spouseNricLbl").append("<span class='must'>*</span>");
-	    $("#spouseOccLbl").append("<span class='must'>*</span>");
-	    $("#spouseDobLbl").append("<span class='must'>*</span>");
-	    $("#spouseContatLbl").append("<span class='must'>*</span>");
-	}
+    if($("#marrital").val() == "26") {
+        $("#spouseNameLbl").append("<span class='must'>*</span>");
+        $("#spouseNricLbl").append("<span class='must'>*</span>");
+        $("#spouseOccLbl").append("<span class='must'>*</span>");
+        $("#spouseDobLbl").append("<span class='must'>*</span>");
+        $("#spouseContatLbl").append("<span class='must'>*</span>");
+    }
 }
 
 function fn_checkMobileNo() {
@@ -1293,9 +1293,9 @@ function checkBankAccNoEnter() {
             fmtNumber("#bankAccNo"); // 2018-06-21 - LaiKW - Added removal of special characters from bank account number
             checkBankAccNo();
          } else if($("#memberType").val() == "5") {
-        	 console.log("bankaccno :: " + $("#bankAccNo").val());
+             console.log("bankaccno :: " + $("#bankAccNo").val());
              if($("#bankAccNo").val() != "-"){
-            	 if(isNaN($("#bankAccNo").val())){  // validation the value of bank account number is numeric
+                 if(isNaN($("#bankAccNo").val())){  // validation the value of bank account number is numeric
                      Common.alert("Bank account number must be numeric.");
                      $("#bankAccNo").val("");
                      return false;
@@ -1304,7 +1304,7 @@ function checkBankAccNoEnter() {
                  }
              }
          }
-	}
+    }
 }
 
 function checkBankAccNo() {
@@ -1337,17 +1337,17 @@ function checkBankAccNo() {
             }
         });
     } else {
-	        Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
-	            console.log(result);
-	            if(result.cnt1 == "0" && result.cnt2 == "0") {
-	                return true;
-	            } else {
-	                Common.alert("Bank account number has been registered.");
-	                //$("#issuedBank").val("");
-	                $("#bankAccNo").val("");
-	                return false;
-	            }
-	        });
+            Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
+                console.log(result);
+                if(result.cnt1 == "0" && result.cnt2 == "0") {
+                    return true;
+                } else {
+                    Common.alert("Bank account number has been registered.");
+                    //$("#issuedBank").val("");
+                    $("#bankAccNo").val("");
+                    return false;
+                }
+            });
     }
 }
 
@@ -1357,7 +1357,7 @@ function checkIncomeTax() {
         "incomeTaxNo" : $("#incomeTaxNo").val()
     };
     if(event.keyCode == 13) {
-    	if($("#incomeTaxNo").val().length >= 0 && $("#incomeTaxNo").val().length < 13) {
+        if($("#incomeTaxNo").val().length > 0 && $("#incomeTaxNo").val().length < 13) {
             Common.alert("Invalid Income Tax Length!");
             $("#incomeTaxNo").val("");
             return false;
@@ -1510,16 +1510,6 @@ function checkIncomeTax() {
     </select>
     </td>
 </tr>
-
-<!-- ADDED INCOME TAX NO @AMEER 2021-10-12 -->
-<tr>
-    <th scope="row">Income Tax No</th>
-    <td colspan="2">
-    <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="incomeTaxNo"  name="incomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
-    onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;"/>
-    </td>
-</tr>
-
 <%-- <tr>
     <th scope="row" rowspan="3">Address<span class="must">*</span></th>
     <td colspan="5">
@@ -1757,6 +1747,14 @@ function checkIncomeTax() {
     </td>
 </tr>
 
+<!-- ADDED INCOME TAX NO @AMEER 2021-09-27 -->
+<!-- <tr><!-- close temporary as lms project deploy first @HLTANG 2021-10-10 -->
+    <th scope="row">Income Tax No</th>
+    <td>
+    <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="incomeTaxNo"  name="incomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
+    onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;"/>
+    </td>
+</tr> -->
 </tbody>
 </table><!-- table end -->
 
