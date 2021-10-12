@@ -2518,10 +2518,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     }
 
 	//@AMEER INCOME TAX 20211012
-	@Override
+	/*@Override
     public EgovMap checkIncomeTax(Map<String, Object> params) {
         return memberListMapper.checkIncomeTax(params);
-    }
+    }*/
 
 	@Override
 	public EgovMap getUserRole(Map<String, Object> params) {
@@ -2918,18 +2918,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		lmsMemApiForm.setProfile_field_dateJoin(formattedDate1);
 		String resignDt = selectMemListlms.get("c48") == null ?  "" : selectMemListlms.get("c48").toString();
 		if(!resignDt.equals("1900-01-01")){
-			String formattedDate2 = "";
-			if(selectMemListlms.get("c48") != null){
-				Date date = null;
-				try {
-					date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c48").toString());
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				formattedDate2 = new SimpleDateFormat("dd-mm-yyyy").format(date);
-			}
-			lmsMemApiForm.setProfile_field_dateResign(formattedDate2);
+			lmsMemApiForm.setProfile_field_dateResign(resignDt);
 		}
 
 
