@@ -113,7 +113,7 @@ public class ReturnASUsedPartsController {
     String[] searchSltCde = request.getParameterValues("searchSltCde");
     String[] searchLoc = request.getParameterValues("searchLoc");
 
-    String asTyp = request.getParameter("asTyp");
+    	String asTyp = request.getParameter("asTyp");
 
     logger.debug("===================================================");
     logger.debug("= searchBranch  : {}", searchBranch);
