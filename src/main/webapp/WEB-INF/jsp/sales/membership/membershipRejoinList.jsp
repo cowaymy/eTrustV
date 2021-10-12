@@ -42,6 +42,14 @@ $(document).ready(function(){
         $("#grpCode").attr("class", "w100p readonly");
         $("#grpCode").attr("readonly", "readonly");
 
+        $("#V_ORGCODE").val("${orgCode}");
+        $("#V_ORGCODE").attr("class", "w100p readonly");
+        $("#V_ORGCODE").attr("readonly", "readonly");
+
+        $("#V_GRPCODE").val("${grpCode}");
+        $("#V_GRPCODE").attr("class", "w100p readonly");
+        $("#V_GRPCODE").attr("readonly", "readonly");
+
     }else if("${SESSION_INFO.memberLevel}" =="3"){
 
         $("#orgCode").val("${orgCode}");
@@ -55,6 +63,20 @@ $(document).ready(function(){
         $("#deptCode").val("${deptCode}");
         $("#deptCode").attr("class", "w100p readonly");
         $("#deptCode").attr("readonly", "readonly");
+
+        $("#V_ORGCODE").val("${orgCode}");
+        $("#V_ORGCODE").attr("class", "w100p readonly");
+        $("#V_ORGCODE").attr("readonly", "readonly");
+
+        $("#V_GRPCODE").val("${grpCode}");
+        $("#V_GRPCODE").attr("class", "w100p readonly");
+        $("#V_GRPCODE").attr("readonly", "readonly");
+
+        $("#V_DEPTCODE").val("${deptCode}");
+        $("#V_DEPTCODE").attr("class", "w100p readonly");
+        $("#V_DEPTCODE").attr("readonly", "readonly");
+
+
 
     }else if("${SESSION_INFO.memberLevel}" =="4"){
 
@@ -74,9 +96,20 @@ $(document).ready(function(){
         $("#memCode").attr("class", "w100p readonly");
         $("#memCode").attr("readonly", "readonly");
 
-
         $("#memLvl").attr("class", "w100p readonly");
         $("#memLvl").attr("readonly", "readonly");
+
+        $("#V_ORGCODE").val("${orgCode}");
+        $("#V_ORGCODE").attr("class", "w100p readonly");
+        $("#V_ORGCODE").attr("readonly", "readonly");
+
+        $("#V_GRPCODE").val("${grpCode}");
+        $("#V_GRPCODE").attr("class", "w100p readonly");
+        $("#V_GRPCODE").attr("readonly", "readonly");
+
+        $("#V_DEPTCODE").val("${deptCode}");
+        $("#V_DEPTCODE").attr("class", "w100p readonly");
+        $("#V_DEPTCODE").attr("readonly", "readonly");
     }
 
     var gridPros = {
@@ -276,20 +309,20 @@ $(document).ready(function(){
                 <tbody>
                     <tr>
                         <th scope="row"><spring:message code='sal.title.date'/></th>
-                        <td colspan="3"><input type="text" id="V_GENDATE" name="V_GENDATE" title="Date" class="j_date2" value="${dt}" /></td>
+                        <td colspan="3"><input type="text" id="V_GENDATE" name="V_GENDATE" title="Date" class="w100p " value="${dt}" /></td>
                     </tr>
                     <tr>
                         <th scope="row">Org Code</th>
-                        <td colspan="3"><input type="text" id="V_ORGCODE" name="V_ORGCODE" title="OrgCode"  value="${OrgCode}" /></td>
+                        <td colspan="3"><input type="text" id="V_ORGCODE" name="V_ORGCODE"  class="w100p " title="OrgCode" " /></td>
                     </tr>
 
                     <tr>
                         <th scope="row">Grp Code</th>
-                        <td colspan="3"><input type="text" id="V_GRPCODE" name="V_GRPCODE" title="GrpCode"  value="${GrpCode}" /></td>
+                        <td colspan="3"><input type="text" id="V_GRPCODE" name="V_GRPCODE"  class="w100p " title="GrpCode" " /></td>
                     </tr>
                     <tr>
                         <th scope="row">Dept Code</th>
-                        <td colspan="3"><input type="text" id="V_DEPTCODE" name="V_DEPTCODE" title="DeptCode"  value="${DeptCode}" /></td>
+                        <td colspan="3"><input type="text" id="V_DEPTCODE" name="V_DEPTCODE" class="w100p "  title="DeptCode" " /></td>
                     </tr>
                    </tbody>
             </table>
