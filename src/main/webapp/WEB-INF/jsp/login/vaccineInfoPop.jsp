@@ -24,7 +24,7 @@ $(document).ready(function(){
 
 	    $("#1stDoseDt").attr("disabled", true);
 	    $("#1stDoseDt").val("${vacInfo.firstDoseDt}");
-	    $("#typeOfVaccine").attr("disabled", true);
+	   // $("#typeOfVaccine").attr("disabled", true);
 
 	    /* var vacType = parseInt("${vacInfo.vaccineType}");
 

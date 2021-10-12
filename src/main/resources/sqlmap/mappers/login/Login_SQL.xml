@@ -561,6 +561,9 @@
             when matched then
             UPDATE SET D1.UPD_DT = SYSDATE
             , UPD_USER_ID = #{userId}
+            <if test="typeOfVaccine != null">
+                , D1.VACCINE_TYPE = #{typeOfVaccine}
+            </if>
             <if test="vaccineStatus != null">
                 , D1.VACCINE_STATUS = #{vaccineStatus}
             </if>

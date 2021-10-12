@@ -443,6 +443,10 @@ public class LoginServiceImpl implements LoginService {
 					updParams.put("secondDoseChk", "Y"); // completed 2nd dose
 					updParams.put("secondDoseDt", params.get("2ndDoseDt"));
 				}
+
+				if (params.get("typeOfVaccine") != null){
+					updParams.put("typeOfVaccine", params.get("typeOfVaccine"));
+				}
 			}
 		}
 
