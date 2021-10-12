@@ -58,6 +58,7 @@ public class eSVMApiDto {
     private int custCntId;
     private String userId;
     private String resn;
+    private int resnId;
     private int payMode;
 
     /* Filter Listing */
@@ -463,6 +464,14 @@ public class eSVMApiDto {
         this.resn = resn;
     }
 
+    public int getResnId() {
+        return resnId;
+    }
+
+    public void setResnId(int resnId) {
+        this.resnId = resnId;
+    }
+
     public int getPayMode() {
         return payMode;
     }
@@ -470,7 +479,6 @@ public class eSVMApiDto {
     public void setPayMode(int payMode) {
         this.payMode = payMode;
     }
-
 
     public int getSrvFilterId() {
         return srvFilterId;
