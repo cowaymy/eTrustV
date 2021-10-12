@@ -836,6 +836,14 @@ function fn_winClose(){
     <span><c:out value="${memberView.c28}"/></span>
     </td>
 </tr>
+
+<!-- ADDED INCOME TAX NO @AMEER 2021-10-12 -->
+<th scope="row">Income Tax No</th>
+    <td colspan="5">
+    <span><c:out value="${memberView.incTax}"/></span>
+    </td>
+</tr>
+
 <tr>
     <th scope="row">Branch</th>
     <td colspan="3">
@@ -968,12 +976,7 @@ function fn_winClose(){
     </td>
 </tr>
 <tr>
-<!-- ADDED INCOME TAX NO @AMEER 2021-09-27 -->
-<th scope="row">Income Tax No</th>
-    <td>
-    <span><c:out value="${memberView.incTax}"/></span>
-    </td>
-</tr>
+
 <tr>
     <th scope="row">Education Lvl</th>
     <td>
