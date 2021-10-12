@@ -113,6 +113,9 @@
       <if test="searchCustomer != null and searchCustomer !=''">
         AND D.NAME = #{searchCustomer}
       </if>
+       <if test="searchBranch != null and searchBranch !=''">
+        AND B.AS_BRNCH_ID = #{searchBranch}
+      </if>
       <if test="searchMaterialCode != null and searchMaterialCode !=''">
         AND E.STK_CODE = #{searchMaterialCode}
       </if>
@@ -239,6 +242,9 @@
       </if>
       <if test="searchCustomer != null and searchCustomer !=''">
         AND D.NAME = #{searchCustomer}
+      </if>
+       <if test="searchBranch != null and searchBranch !=''">
+        AND B.AS_BRNCH_ID = #{searchBranch}
       </if>
       <if test="searchMaterialCode != null and searchMaterialCode !=''">
         AND E.STK_CODE = #{searchMaterialCode}

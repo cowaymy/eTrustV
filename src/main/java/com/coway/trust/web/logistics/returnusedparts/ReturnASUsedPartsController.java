@@ -100,6 +100,8 @@ public class ReturnASUsedPartsController {
     String searchCustomer = request.getParameter("searchCustomer");
     String searchMaterialCode = request.getParameter("searchMaterialCode");
 
+    String searchBranch = request.getParameter("searchBranch");
+
     String servicesdt = request.getParameter("servicesdt");
     String serviceedt = request.getParameter("serviceedt");
     String returnsdt = request.getParameter("returnsdt");
@@ -114,7 +116,7 @@ public class ReturnASUsedPartsController {
     String asTyp = request.getParameter("asTyp");
 
     logger.debug("===================================================");
-    logger.debug("= searchOder  : {}", searchOder);
+    logger.debug("= searchBranch  : {}", searchBranch);
     logger.debug("= searchCustomer : {}", searchCustomer);
     logger.debug("= searchMaterialCode : {}", searchMaterialCode);
     logger.debug("= servicesdt : {}", servicesdt);
@@ -134,6 +136,7 @@ public class ReturnASUsedPartsController {
 
     smap.put("searchOder", searchOder);
     smap.put("searchCustomer", searchCustomer);
+    smap.put("searchBranch", searchBranch);
     smap.put("searchMaterialCode", searchMaterialCode);
     smap.put("servicesdt", servicesdt);
     smap.put("serviceedt", serviceedt);
