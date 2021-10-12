@@ -9,7 +9,7 @@
  06/03/2020  ONGHC  1.0.2          Remove Branch Search
  -->
 
-<style type="text/css">
+    <style type="text/css">
 
 /* 커스텀 칼럼 스타일 정의 */
 .aui-grid-user-custom-left {
