@@ -1747,8 +1747,7 @@ function checkIncomeTax() {
     </td>
 </tr>
 
-<!-- ADDED INCOME TAX NO @AMEER 2021-09-27 -->
-<!-- <tr><!-- close temporary as lms project deploy first @HLTANG 2021-10-10 -->
+<!-- ADDED INCOME TAX NO @AMEER 2021-09-27
     <th scope="row">Income Tax No</th>
     <td>
     <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="incomeTaxNo"  name="incomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
