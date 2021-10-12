@@ -874,7 +874,7 @@ function checkIncomeTax() {
         "incomeTaxNo" : $("#eHPincomeTaxNo").val()
     };
     if(event.keyCode == 13) {
-        if($("#eHPincomeTaxNo").val().length > 0 && $("#eHPincomeTaxNo").val().length < 13) {
+        if($("#eHPincomeTaxNo").val().length >= 0 && $("#eHPincomeTaxNo").val().length < 13) {
             Common.alert("Invalid Income Tax Length!");
             $("#eHPincomeTaxNo").val("");
             return false;
@@ -1399,6 +1399,16 @@ function fn_parentReload() {
     </select>
     </td>
 </tr>
+
+<!-- ADDED INCOME TAX NO @AMEER 2021-10-12 -->
+     <tr>
+         <th scope="row">Income Tax No</th>
+         <td colspan="5">
+         <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="eHPincomeTaxNo"  name="eHPincomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
+         onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;"/>
+         </td>
+     </tr>
+
 <tr>
     <th scope="row">Email</th>
     <td colspan="5">
@@ -1592,14 +1602,7 @@ function fn_parentReload() {
         onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
 </tr>
-<!-- ADDED INCOME TAX NO @AMEER 2021-09-27 -->
-     <tr>
-         <th scope="row">Income Tax No</th>
-         <td>
-         <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="eHPincomeTaxNo"  name="eHPincomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
-         onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;"/>
-         </td>
-     </tr>
+
 </tbody>
 </table><!-- table end -->
 

@@ -827,6 +827,15 @@ function fn_atchViewDown(fileGrpId, fileId) {
     <span><c:out value="${memberView.c28}"/></span>
     </td>
 </tr>
+
+ <!-- ADDED INCOME TAX NO @AMEER 2021-10-12 -->
+ <tr>
+     <th scope="row">Income Tax No</th>
+     <td colspan="5">
+    <span><c:out value="${memberView.aplicntIncTax}"/></span>
+    </td>
+ </tr>
+
 <tr>
     <th scope="row">Branch</th>
     <td colspan="3">
@@ -958,13 +967,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
     </select>--%>
     </td>
 </tr>
- <!-- ADDED INCOME TAX NO @AMEER 2021-09-27 -->
- <tr>
-     <th scope="row">Income Tax No</th>
-     <td>
-    <span><c:out value="${memberView.aplicntIncTax}"/></span>
-    </td>
- </tr>
+
 <tr>
     <th scope="row">Education Lvl</th>
     <td>
