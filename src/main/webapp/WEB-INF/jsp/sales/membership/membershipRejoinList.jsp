@@ -309,7 +309,7 @@ $(document).ready(function(){
                 <tbody>
                     <tr>
                         <th scope="row"><spring:message code='sal.title.date'/></th>
-                        <td colspan="3"><input type="text" id="V_GENDATE" name="V_GENDATE" title="Date" class="w100p " value="${dt}" /></td>
+                        <td colspan="3"><input type="text" id="V_GENDATE" name="V_GENDATE" title="Date" class="w100p j_date2" value="${dt}" /></td>
                     </tr>
                     <tr>
                         <th scope="row">Org Code</th>
