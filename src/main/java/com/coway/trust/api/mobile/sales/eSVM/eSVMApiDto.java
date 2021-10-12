@@ -75,6 +75,8 @@ public class eSVMApiDto {
     private int c6;
     private String expiredateint;
     private String todaydateint;
+    private int stus;
+    private String stusName;
 
     /* Type of Package */
     private int pkgComboId;
@@ -579,7 +581,23 @@ public class eSVMApiDto {
     }
 
     public void setTodaydateint(String todaydateint) {
-        this.trm = todaydateint;
+        this.todaydateint = todaydateint;
+    }
+
+    public int getStus() {
+        return stus;
+    }
+
+    public void setStus(int stus) {
+        this.stus = stus;
+    }
+
+    public String getStusName() {
+        return stusName;
+    }
+
+    public void setStusName(String stusName) {
+        this.stusName = stusName;
     }
 
     public List<eSVMApiDto> getProductFilterList() {
