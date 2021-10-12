@@ -1,6 +1,15 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<style type="text/css">
+
+.my-yellow-style {
+    background:#FFE400;
+    font-weight:bold;
+    color:#22741C;
+}
+
+</style>
 <script type="text/javaScript">
 var myGridID;
 var grpOrgList = new Array(); // Group Organization List
@@ -46,6 +55,15 @@ function fn_memberListSearch(){
 
     Common.ajax("GET", "/organization/promoDisHistorySearch", jsonObj, function(result) {
         AUIGrid.setGridData(myGridID, result);
+    });
+
+
+    AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item){
+    	if (item.main == "1") {
+    		   return "my-yellow-style";
+    	}else{
+            return "";
+        }
     });
 
 }
@@ -151,7 +169,7 @@ function createAUIGrid() {
             dataField : "positionName",
             headerText : "Position Desc",
             editable : false,
-            width : 130
+            width : 150
         }, {
             dataField : "memberCodeHistory",
             headerText : "Member Code History",
@@ -161,39 +179,48 @@ function createAUIGrid() {
             dataField : "name",
             headerText : "Name",
             editable : false,
-            width : 180
+            width : 250
         },{
             dataField : "gmcode",
             headerText : "GM Code",
             editable : false,
-            width : 180
+            width : 130
         },{
             dataField : "smcode",
             headerText : "SM Code",
             editable : false,
-            width : 180
+            width : 130
         },{
             dataField : "hmcode",
             headerText : "HM Code",
             editable : false,
-            width : 180
+            width : 130
         },{
             dataField : "motherManagerCode",
             headerText : "Mother Manager Code",
             editable : false,
             width : 180
         },{
+            dataField : "motherManagerName",
+            headerText : "Mother Manager Name",
+            editable : false,
+            width : 180
+        },{
             dataField : "sponsCode",
             headerText : "Sponsor Code",
             editable : false,
-            width : 180
+            width : 130
         },{
             dataField : "promotionDate",
             headerText : "Promotion Date",
             editable : false,
-            width : 180
+            width : 150
+        },{
+            dataField : "discontinueDate",
+            headerText : "Discontinue Date",
+            editable : false,
+            width : 150
         }];
-
 
         var gridPros = {
             usePaging           : true,
