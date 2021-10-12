@@ -291,9 +291,9 @@ public class eHPmemberListServiceImpl extends EgovAbstractServiceImpl implements
         return eHPmemberListMapper.selectHPOrientation(params);
     }
 
-  //@AMEER INCOME TAX 20211012
-  	@Override
+  //@AMEER INCOME TAX 20210928
+  	/*@Override
       public EgovMap checkIncomeTax(Map<String, Object> params) {
           return eHPmemberListMapper.checkIncomeTax(params);
-      }
+      }*/
 }

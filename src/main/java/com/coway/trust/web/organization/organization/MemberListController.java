@@ -970,9 +970,6 @@ public class MemberListController {
         logger.debug("udtList : {}", updList);
         logger.debug("formMap : {}", formMap);
 
-
-        formMap.put("incomeTaxNo", params.get("incomeTaxNo"));
-
         logger.debug("memberNm : {}", formMap.get("memberNm"));
         logger.debug("memberType : {}", formMap.get("memberType"));
         logger.debug("joinDate : {}", formMap.get("joinDate"));
@@ -1913,28 +1910,6 @@ logger.debug("params : {}", params);
 
         return ResponseEntity.ok(verAccess);
     }
-
-  //@AMEER INCOME_TAX 20211012
-    @RequestMapping(value = "/checkIncomeTax", method = RequestMethod.GET)
-    public ResponseEntity<Map> checkIncomeTax(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
-        logger.debug("==================== checkIncomeTax ====================");
-        Map<String, Object> incomeTaxCheck = new HashMap();
-
-        EgovMap item = new EgovMap();
-        params.put("srcM", "1");
-        item = (EgovMap) memberListService.checkIncomeTax(params);
-        incomeTaxCheck.put("cnt1", item.get("cnt"));
-        params.remove("srcM");
-
-        EgovMap item2 = new EgovMap();
-        params.put("srcA", "1");
-        item2 = (EgovMap) memberListService.checkIncomeTax(params);
-        incomeTaxCheck.put("cnt2", item2.get("cnt"));
-
-        return ResponseEntity.ok(incomeTaxCheck);
-    }
-
-
 
     @RequestMapping(value = "/checkBankAcc", method = RequestMethod.GET)
     public ResponseEntity<Map> checkBankAcc(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {

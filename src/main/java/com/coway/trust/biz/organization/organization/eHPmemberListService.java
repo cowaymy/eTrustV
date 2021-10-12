@@ -43,5 +43,4 @@ public interface eHPmemberListService {
 
   List<EgovMap> selectHPOrientation(Map<String, Object> params);
 
-  EgovMap checkIncomeTax(Map<String, Object> params);
 }

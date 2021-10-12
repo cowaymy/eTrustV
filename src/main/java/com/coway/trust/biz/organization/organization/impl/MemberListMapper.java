@@ -336,7 +336,7 @@ public interface MemberListMapper {
 
 	List<EgovMap> selectPromoDisHistory(Map<String, Object> params);
 
-	EgovMap checkIncomeTax(Map<String, Object> params);
+	//EgovMap checkIncomeTax(Map<String, Object> params);
 
 	EgovMap validateVaccineDeclarationStatus(Map<String, Object> params);
 
