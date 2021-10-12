@@ -284,6 +284,7 @@
                 SARefNo : $("#SARefNo").val(),
                 PONo : $("#PONo").val(),
                 psmId : '${eSvmInfo.psmId}',
+                psmSrvMemNo : '${eSvmInfo.psmSrvMemNo}',
 
                 // Insert SAL0095D Data
                 srvMemQuotId :   '${eSvmInfo.srvMemQuotId}'  ,
@@ -345,7 +346,10 @@
                Common.ajax("POST", "/sales/membership/updateAction.do", data, function(result1){
             	   console.log(result1);
             	   if(result1.messageCode == 00){
-            		   Common.alert('Membership successfully saved.' + "<b>" + result1.psmSrvMemNo);
+            		   if(result1.psmSrvMemNo == null)
+            			   Common.alert('Membership successfully saved.' + "<b>");
+            		   else
+            			   Common.alert('Membership successfully saved.' + "<b>" + result1.psmSrvMemNo);
             		   fn_close();
             	   }
             	   else{

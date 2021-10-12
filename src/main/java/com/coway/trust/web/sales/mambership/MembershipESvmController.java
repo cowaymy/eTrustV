@@ -203,9 +203,19 @@ public class MembershipESvmController {
 		logger.debug("params =====================================>>  " + params);
 		params.put("userId", sessionVO.getUserId());
 		params.put("updator", sessionVO.getUserId());
-		params.put("docNoId", "12");
-		String docNo = membershipESvmService.selectDocNo(params);
-		params.put("docNo", docNo);
+		String psmSrvMemNo = (String) params.get("psmSrvMemNo");
+		String docNo = "";
+		if(psmSrvMemNo != null && !psmSrvMemNo.equals(""))
+		{
+			docNo = psmSrvMemNo;
+		}
+		else
+		{
+			params.put("docNoId", "12");
+			docNo = membershipESvmService.selectDocNo(params);
+
+		}
+//		params.put("docNo", docNo);
 		String statusRemark = "";
 		if(params.get("action").equals("5"))
 		{
@@ -227,6 +237,7 @@ public class MembershipESvmController {
 		{
 			//==== update SAL0298D eSVM ====
 			params.put("specialInstruction","");
+			params.put("docNo", docNo);
 			membershipESvmService.updateAction(params);
 
 			//==== insert membership ====
