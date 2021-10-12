@@ -2778,6 +2778,18 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     		}
 		}
 		lmsMemApiForm.setProfile_field_MemberStatus(status);
+		String formattedDate1 = "";
+		if(selectMemListlms.get("c30") != null){
+			Date date = null;
+			try {
+				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c30").toString());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			formattedDate1 = new SimpleDateFormat("dd-mm-yyyy").format(date);
+		}
+		lmsMemApiForm.setProfile_field_dateJoin(formattedDate1);
 		lmsMemApiForm.setUserstatus(userStatus);
 
 		//call LMS to insert user
@@ -2893,7 +2905,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 //		lmsMemApiForm.setProfile_field_TRNo("");
 //		lmsMemApiForm.setProfile_field_Tshirtsize("");
 		String formattedDate1 = "";
-		if(selectMemListlms.get("c29") != null){
+		if(selectMemListlms.get("c30") != null){
 			Date date = null;
 			try {
 				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c30").toString());
