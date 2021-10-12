@@ -8,7 +8,7 @@
  19/12/2019  ONGHC  1.0.1          Add AS Type Selection
  -->
 
-<script type="text/javascript">
+    <script type="text/javascript">
   var locGrd = [ {
     "codeId" : "A",
     "codeName" : "A"
