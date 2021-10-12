@@ -29,7 +29,7 @@
     <th scope="row">Order Type</th>
     <td><input id="presales_orderType" name="presales_orderType" type="text" value="${preSalesInfo.orderType}" title="" placeholder="" class="w100p readonly" readonly /></td>
     <th scope="row">Subscription</th>
-    <td><input id="presales_subscription" name="presales_subscription" type="text" value="${preSalesInfo.subscription}" title="" placeholder="" class="w100p readonly" readonly /></td>
+    <td><input id="presales_subscription" name="presales_subscription" type="text" value="${preSalesInfo.subsription}" title="" placeholder="" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
     <th scope="row">Order Outstanding</th>

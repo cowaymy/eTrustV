@@ -78,7 +78,7 @@
         	$("#action").replaceWith('<input id=action name="action" value="${eSvmInfo.stusRem}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
         	//$("#specialInstruction").replaceWith('<input id=specialInstruction name="specialInstruction" value="${eSvmInfo.appvInstrct}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
         	$("#specInst").hide();
-        	$("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.rem}</textarea>');
+        	$("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.appvRem}</textarea>');
         	$("#btnSave").hide();
         }//Go into uneditable state [e]
         else if(stus == '1')
@@ -92,7 +92,7 @@
                 $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
                 $("#action option[value='"+ stus +"']").attr("selected", true);
                 $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
-                $("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.rem}</textarea>');
+                $("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.appvRem}</textarea>');
             }
             else
             {
@@ -335,14 +335,19 @@
         });
 
         Common.ajaxFile("/sales/membership/attachESvmFileUpdate.do", formData, function(result) {
-            if(result.code == 99){
+            console.log(result);
+        	if(result.code == 99){
                 Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
             }else{
 
                // DO SAVE BUTTON ACTION
-               Common.popupDiv("/sales/membership/updateAction.do", data, function(result){
-            	   if(result.code == 00)
-            		   Common.alert('Membership successfully saved.' + "<b>" + result.psmSrvMemNo);
+               //Common.popupDiv("/sales/membership/updateAction.do", data, function(result){
+               Common.ajax("POST", "/sales/membership/updateAction.do", data, function(result1){
+            	   console.log(result1);
+            	   if(result1.messageCode == 00){
+            		   Common.alert('Membership successfully saved.' + "<b>" + result1.psmSrvMemNo);
+            		   fn_close();
+            	   }
             	   else{
             		   Common.alert('Membership failed to save.');
             	   }

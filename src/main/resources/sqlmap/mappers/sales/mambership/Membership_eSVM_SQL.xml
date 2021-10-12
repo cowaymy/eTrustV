@@ -383,7 +383,7 @@
 	        PROMO.PROMO_CODE,
 	        PROMO.PROMO_DESC PACKAGE_PROMO,
 	        STK.STK_DESC STOCK_NAME,
-	        QUO.SRV_SALES_MEM_ID SALESPERSON_CODE,
+	        MEM1.HR_CODE SALESPERSON_CODE,
             MEM1.USER_FULL_NAME SALESPERSON_NAME,
 	        QUO.SRV_FREQ HS_FREQ,
 	        QUO.SRV_PROMO_ID FILTER_PROMO_ID,
@@ -571,13 +571,12 @@
     <update id="updateAction" parameterType="Map">
        UPDATE SAL0298D ESVM
 	   SET ESVM.STUS = #{action},
-		    ESVM.STUS_REM = #{statusRemark},
 		    ESVM.PSM_SRV_MEM_NO = #{docNo},
 		    ESVM.SA_REF = #{SARefNo},
 		    ESVM.PO_NO = #{PONo},
 		    ESVM.APPV_INSTRCT = #{specialInstruction},
 		    ESVM.APPV_DT = SYSDATE,
-		    ESVM.REM = #{remark},
+		    ESVM.APPV_REM = #{remark},
 		    ESVM.APPV_USER_ID = #{userId},
 		    ESVM.UPD_DT = SYSDATE
 	   WHERE ESVM.PSM_ID = #{psmId}
