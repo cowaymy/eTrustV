@@ -14,4 +14,7 @@ public interface HsFilterDeliveryMapper{
 	List<EgovMap> selectHSFilterDeliveryList(Map<String, Object> params);
 	List<EgovMap> selectHSFilterDeliveryPickingList(Map<String, Object> params);
 
+	String  selectLocId (String prams);
+	String  selectUomId (String prams);
+
 }

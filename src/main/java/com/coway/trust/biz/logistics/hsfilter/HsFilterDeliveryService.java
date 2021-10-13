@@ -13,5 +13,7 @@ public interface HsFilterDeliveryService{
 
 	List<EgovMap> selectHSFilterDeliveryPickingList(Map<String, Object> params);
 
+	String insertStockTransferInfo(Map<String, Object> params);
+
 
 }
