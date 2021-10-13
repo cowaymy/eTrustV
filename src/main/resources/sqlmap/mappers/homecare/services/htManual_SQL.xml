@@ -586,25 +586,37 @@ FROM
                 LEFT JOIN ORG0005D OG ON OG.MEM_ID = CD.MEM_ID
                 LEFT JOIN ORG0001D MEM3 ON OG.MEM_UP_ID = MEM3.MEM_ID
                 LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
-
+<!--                 LEFT JOIN ORG1001V C ON  C.MEM_ID = SO.MEM_ID -->
 
                 WHERE
                 CD.MEM_ID IS NOT NULL
-
-                <if test="cmdBranchCode != null and cmdBranchCode != ''">
-                  AND ( br.BRNCH_id = #{cmdBranchCode})
-                </if>
 
                 <if test="cmdCdManager != null and cmdCdManager != ''">
                   AND MEM3.MEM_ID =  #{cmdCdManager}
                 </if>
 
-                <if test="deptCode != null and deptCode != ''">
-                   AND OG.DEPT_CODE = #{deptCode}
-                </if>
+<!--                  <if test="salemanCode != null and salemanCode != ''"> -->
+<!--                    AND UPPER(F1.MEM_CODE) = UPPER(#{salemanCode}) -->
+<!--                  </if> -->
+
+<!--                 <if test="deptCode != null and deptCode != ''"> -->
+<!--                    AND SO.DEPT_CODE = #{deptCode} -->
+<!--                 </if> -->
 
                 <if test="userType == '3'.toString()">
                   AND MEM.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
+                </if>
+                <if test="cmdBranchCode != null and cmdBranchCode != ''">
+                  AND ( BR.BRNCH_id = #{cmdBranchCode})
+                </if>
+                 <if test="orgCode != null and orgCode != ''">
+                  AND UPPER(SO.ORG_CODE) = UPPER(#{orgCode})
+                 </if>
+                 <if test="grpCode != null and grpCode != ''">
+                   AND UPPER(SO.GRP_CODE) = UPPER(#{grpCode})
+                </if>
+                 <if test="deptCode != null and deptCode != ''">
+                   AND UPPER(SO.DEPT_CODE) = UPPER(#{deptCode})
                 </if>
 
 
@@ -658,6 +670,18 @@ FROM
 
                 WHERE
                   CD.MEM_ID IS NULL
+<!--                 <if test="cmdBranchCode != null and cmdBranchCode != ''"> -->
+<!--                   AND ( SO.BRNCH_id = #{cmdBranchCode}) -->
+<!--                 </if> -->
+                 <if test="orgCode != null and orgCode != ''">
+                  AND UPPER(SO.ORG_CODE) = UPPER(#{orgCode})
+                 </if>
+                 <if test="grpCode != null and grpCode != ''">
+                   AND UPPER(SO.GRP_CODE) = UPPER(#{grpCode})
+                </if>
+                 <if test="deptCode != null and deptCode != ''">
+                   AND UPPER(SO.DEPT_CODE) = UPPER(#{deptCode})
+                </if>
 
 
           )Project2
