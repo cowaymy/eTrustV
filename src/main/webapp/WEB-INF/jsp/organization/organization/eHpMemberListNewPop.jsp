@@ -116,12 +116,10 @@ function fn_memberSave(){
                         if($("#eHPmobileNo").val() != "") {
                             var rTelNo = $("#eHPmobileNo").val();
 
-                            /*
                             Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
                                 console.log("sms.");
                                 console.log( result);
                             });
-                            */
                         }
 
                         if($("#eHPemail").val() != "") {
