@@ -134,33 +134,44 @@
 
     <select id="selectQuotaCount" parameterType="Map" resultType="egovMap">
         WITH SOM AS(
-            SELECT SOM.SALES_ORD_ID, SOM.PROMO_ID, SOD.ITM_STK_ID,SOM.SALES_DT
+            SELECT SOM.SALES_ORD_ID, SOM.PROMO_ID, SOD.ITM_STK_ID,SOM.SALES_DT, SOM.STUS_CODE_ID
             FROM SAL0001D SOM
             JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = SOM.SALES_ORD_ID
-            WHERE SOM.STUS_CODE_ID <![CDATA[ <> ]]> 8
+            WHERE SOM.STUS_CODE_ID NOT IN (8,10)
             AND NVL(SOM.PRE_ORD_ID,0) = 0
         )
+      SELECT
+          STK_ID
+        , PROMO_ID
+        , CTRL_QUOTA
+        , EKEYIN_COUNT
+        , ADMIN_KEYIN_COUNT
+        , EKEYIN_COUNT + ADMIN_KEYIN_COUNT TOT2
+        FROM
+      (
         SELECT
                   S.STK_ID
                   , PD.PROMO_ID
                   , PD.CTRL_QUOTA
-                  , COUNT(SOM.SALES_ORD_ID) + COUNT(EKEY.PRE_ORD_ID)+1 TOT2
-              FROM SYS0026M S
-              JOIN SAL0018D PD ON PD.PROMO_ITM_STK_ID = S.STK_ID
-              LEFT JOIN SOM ON SOM.ITM_STK_ID = S.STK_ID
-                                    AND SOM.PROMO_ID = PD.PROMO_ID
-                                    AND SOM.SALES_DT BETWEEN S.CTRL_START_DT AND S.CTRL_END_DT
-              LEFT JOIN SAL0213M EKEY ON EKEY.ITM_STK_ID = S.STK_ID
+                  , (SELECT COUNT(*) FROM SAL0213M EKEY WHERE
+                                        EKEY.ITM_STK_ID = S.STK_ID
                                     AND EKEY.PROMO_ID = PD.PROMO_ID
                                     AND EKEY.REQST_DT BETWEEN S.CTRL_START_DT AND S.CTRL_END_DT
-                                    AND EKEY.STUS_ID   <![CDATA[ <> ]]> 8
+                                    AND EKEY.STUS_ID NOT IN (8,10)) EKEYIN_COUNT
+                 , (SELECT COUNT(*) FROM SOM WHERE
+                                        SOM.ITM_STK_ID = S.STK_ID
+                                    AND SOM.PROMO_ID = PD.PROMO_ID
+                                    AND SOM.SALES_DT BETWEEN S.CTRL_START_DT AND S.CTRL_END_DT
+                                    AND SOM.STUS_CODE_ID NOT IN (8,10)
+                    ) ADMIN_KEYIN_COUNT
+              FROM SYS0026M S
+              JOIN SAL0018D PD ON PD.PROMO_ITM_STK_ID = S.STK_ID
       WHERE S.STK_ID = #{stkId}
       AND PD.PROMO_ID = #{promoId}
       AND S.IS_CTRL = 1
       AND SYSDATE BETWEEN CTRL_START_DT AND CTRL_END_DT
       AND PD.CTRL_FLAG = 1
-      GROUP BY S.STK_ID, PD.PROMO_ID, PD.CTRL_QUOTA
-      HAVING (COUNT(SOM.SALES_ORD_ID) + COUNT(EKEY.PRE_ORD_ID))+1 > CTRL_QUOTA
+      ) WHERE (EKEYIN_COUNT + ADMIN_KEYIN_COUNT+1) > CTRL_QUOTA
     </select>
 
     <update id="updateProductCtrl" parameterType="Map">
@@ -169,9 +180,14 @@
         UPD_DT = SYSDATE
         , UPD_USER_ID = #{userId}
         , IS_CTRL = #{modify_ctrl}
-        <if test='modify_discontinue != null and modify_discontinue !=""'>
-        , DISCONTINUE = #{modify_discontinue}
-        </if>
+        <choose>
+            <when test='modify_discontinue != null and modify_discontinue !=""'>
+            , DISCONTINUE = 1
+            </when>
+            <otherwise>
+            , DISCONTINUE = 0
+            </otherwise>
+        </choose>
         <if test='modify_startDt != null and modify_startDt !=""'>
         , CTRL_START_DT = TO_DATE(#{modify_startDt} || #{modify_startTm}, 'DD/MM/YYYYHH:MI AM')
         </if>
