@@ -298,13 +298,21 @@ var TODAY_DD      = "${toDay}";
         }
       }
 
-      if ($("#userType").val() != "4" && $("#userType").val() != "6") {
-        if ($("#cmdBranchCode").val() == ''
-            || $("#cmdBranchCode").val() == null) {
-          Common.alert("Please Select 'HT Branch'");
-          return false;
+//       if ($("#userType").val() != "4" && $("#userType").val() != "6") {
+//         if ($("#cmdBranchCode").val() == ''
+//             || $("#cmdBranchCode").val() == null) {
+//           Common.alert("Please Select 'HT Branch'");
+//           return false;
+//         }
+//       }
+
+      if ($("#orgCode").val() =='' && $("#grpCode").val() =='' && $("#deptCode").val() =='') {
+          if ($("#cmdBranchCode").val() == ''
+              || $("#cmdBranchCode").val() == null) {
+            Common.alert("Please Select 'HT Branch'");
+            return false;
+          }
         }
-      }
 
       if ($("#userType").val() == "2") {
         if ($("#memberLevel").val() == "3"
@@ -816,6 +824,63 @@ var TODAY_DD      = "${toDay}";
               'w100p readonly ');
 
         }
+
+        console.log("SalesmanCode: " + '${SESSION_INFO.memberLevel}');
+
+        if("${SESSION_INFO.memberLevel}" =="1"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+        }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+
+        }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+
+        }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+
+            $("#memCode").val("${memCode}");
+            $("#memCode").attr("class", "w100p readonly");
+            $("#memCode").attr("readonly", "readonly");
+
+            $("#listSalesmanCode").val(salesmanCode);
+            $("#listSalesmanCode").attr("readonly", true);
+        }
+
+
+
       });
 
 
@@ -1072,7 +1137,7 @@ var TODAY_DD      = "${toDay}";
        </colgroup>
        <tbody>
         <tr>
-         <th scope="row">HT Branch<span class="must">*</span></th>
+         <th scope="row">HT Branch</th>
          <td><select id="cmdBranchCode" name="cmdBranchCode"
           class="w100p readOnly ">
            <option value="">Choose One</option>
@@ -1121,9 +1186,7 @@ var TODAY_DD      = "${toDay}";
           type="text" title="" placeholder="CS Order" class="w100p" />
          </td>
 
-         <th scope="row">Dept. Code</th>
-         <td><input id="deptCode" name="deptCode" type="text"
-          title="" placeholder="Dept. Code" class="w100p" /></td>
+
 
 
          <th scope="row"><spring:message code='sales.AppType2'/></th>
@@ -1137,8 +1200,22 @@ var TODAY_DD      = "${toDay}";
         <option value="67">Outright</option>
         <option value="68">Installment</option>
       </select></td>
-
+      <th scope="row"></th>
+      <td></td>
+      <th scope="row"></th>
+<td></td>
         </tr>
+        <th scope="row">Org. Code</th>
+         <td><input id="orgCode" name="orgCode" type="text"
+          title="" placeholder="Org. Code" class="w100p" /></td>
+          <th scope="row">Grp. Code</th>
+         <td><input id="grpCode" name="grpCode" type="text"
+          title="" placeholder="Grp. Code" class="w100p" /></td>
+          <th scope="row">Dept. Code</th>
+         <td><input id="deptCode" name="deptCode" type="text"
+          title="" placeholder="Dept. Code" class="w100p" /></td>
+        <th scope="row"></th>
+<td></td>
        </tbody>
       </table>
       <!-- table end -->
