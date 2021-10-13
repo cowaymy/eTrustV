@@ -162,7 +162,7 @@ createAUIGrid =function(columnLayout ){
 <tbody>
 
 <tr>
-    <th scope="row">Forecast Month</th>
+    <th scope="row"> Forecast Month <span class="must">*</span></th>
     <td>
     <input type="text" title="기준년월" class="j_date2" id="forecastMonth" name="forecastMonth"/>
     </td>

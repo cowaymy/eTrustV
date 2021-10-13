@@ -51,7 +51,7 @@ var columnLayout = [
                     {dataField: "hsLoseItemCtgryDesc",headerText :"Stock Category"          ,width:180   ,height:30 , visible:true,editable : false},
                     {dataField: "hsLoseItemTypeDesc",headerText :"Stock Type"      ,width:200   ,height:30 , visible:true,editable : false},
                      {dataField: "hsLoseItemFcastQty",headerText :"Forecast Quantity"      ,width:200   ,height:30 , visible:true,editable : false},
-                    {dataField: "hsLoseItemReordQty",headerText :"Reord(20%) Quantity"      ,width:200   ,height:30 , visible:true,editable : false}
+                    {dataField: "hsLoseItemReordQty",headerText :"Reorder(20%) Q'ty"      ,width:200   ,height:30 , visible:true,editable : false}
            ];
 
 
@@ -281,7 +281,7 @@ function searchlocationFunc(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>CDC vs CDB Mapping</h2>
+<h2>HS Forecast History</h2>
 
   <ul class="right_btns">
 
@@ -331,7 +331,7 @@ function searchlocationFunc(){
                    <td>
                         <select class="w100p" id="searchLoc" name="searchLoc" class="multy_select w100p"multiple="multiple"></select>
                    </td>
-                <th scope="row">Forecast Month</th>
+                <th scope="row" > Forecast Month <span class="must">*</span></th>
 			    <td>
 			    <input type="text" title="기준년월" class="j_date2" id="forecastMonth" name="forecastMonth"/>
 			    </td>

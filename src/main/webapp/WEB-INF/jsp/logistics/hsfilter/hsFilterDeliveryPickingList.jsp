@@ -45,10 +45,10 @@ var columnLayout = [
                     {dataField: "hsLoseLoclCode",headerText :"Cody Branch"          ,width:180   ,height:30 , visible:true, editable : false},
                     {dataField: "hsLoseItemCode",headerText :"Code"          ,width:120   ,height:30 , visible:true, editable : false},
                     {dataField: "hsLoseItemDesc",headerText :"Desc"          ,width:240   ,height:30 , visible:true ,editable : false},
-                    {dataField: "deliverQty",headerText :"Deliver Q'ty"          ,width:120   ,height:30 , visible:true,editable : false},
-                    {dataField: "hsLoseItemUom",headerText :"Uom"          ,width:100   ,height:30 , visible:true,editable : false},
-                    {dataField: "box",headerText :"Box"          ,width:120   ,height:30 , visible:true,editable : false},
-                    {dataField: "loose",headerText :"Loose"          ,width:120   ,height:30 , visible:true,editable : false}
+                    {dataField: "finalQty",headerText :"Deliver Q'ty"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric"} ,
+                    {dataField: "hsLoseItemUom",headerText :"UOM"          ,width:100   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric"},
+                    {dataField: "box",headerText :"Box"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric"},
+                    {dataField: "loose",headerText :"Loose"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric" }
            ];
 
 
@@ -169,7 +169,7 @@ createAUIGrid =function(columnLayout ){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>HS Filter Delivery</h2>
+<h2>HS Filter Delivery Picking List</h2>
 
   <ul class="right_btns">
 
@@ -181,10 +181,10 @@ createAUIGrid =function(columnLayout ){
 <section class="search_table"><!-- search_table start -->
 
   <form action="#" method="post" id="hsFilterForm">
-	<input type="hidden" id="v_cdc_code" name="v_cdc_code" value="2010" />
-	<input type="hidden" id="v_rdc_code" name="v_rdc_code" value="C010" />
-	<input type="hidden" id="v_mm" name="v_mm"  value="08" />
-	<input type="hidden" id="v_yyyy" name="v_yyyy"  value="2021"/>
+	<input type="hidden" id="v_cdc_code" name="v_cdc_code"  />
+	<input type="hidden" id="v_rdc_code" name="v_rdc_code" />
+	<input type="hidden" id="v_mm" name="v_mm"  />
+	<input type="hidden" id="v_yyyy" name="v_yyyy"  />
 
 	 <input type="hidden" id="memberLevel" name="memberLevel" value="${memberLevel}">
 	 <input type="hidden" id="userName" name="userName" value="${userName}">
@@ -203,17 +203,17 @@ createAUIGrid =function(columnLayout ){
 <tbody>
 
 <tr>
-    <th scope="row">Forecast Month</th>
+    <th scope="row">Forecast Month <span class="must">*</span></th>
     <td>
     <input type="text" title="기준년월" class="j_date2" id="forecastMonth" name="forecastMonth"/>
     </td>
 </tr>
- <th scope="row">CDC</th>
+ <th scope="row">CDC <span class="must">*</span> </th>
             <td>
                  <select  id="searchCDC" name="searchCDC"  onchange="fn_changeCDC()"> </select>
             </td>
 <tr>
-    <th scope="row">Branch</th>
+    <th scope="row">Branch <span class="must">*</span></th>
     <td>
         <select  id="searchBranchCb" name="searchBranchCb"  ></select>
     </td>

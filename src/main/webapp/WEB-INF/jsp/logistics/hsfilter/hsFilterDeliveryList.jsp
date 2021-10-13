@@ -47,13 +47,15 @@ var columnLayout = [
                     {dataField: "hsLoseLoclDesc",headerText :"Location Name"          ,width:150   ,height:30 , visible:true, editable : false},
                     {dataField: "hsLoseItemCode",headerText :"Code"          ,width:120   ,height:30 , visible:true, editable : false},
                     {dataField: "hsLoseItemDesc",headerText :"Desc"          ,width:140   ,height:30 , visible:true ,editable : false},
-                    {dataField: "hsLoseItemUom",headerText :"Uom"          ,width:100   ,height:30 , visible:true,editable : false},
-                    {dataField: "hsLoseItemOprYn",headerText :"LooseYn"          ,width:80   ,height:30 , visible:true,editable : false},
-                    {dataField: "hsLoseItemFcastQty",headerText :"Forecast Q'ty"          ,width:120   ,height:30 , visible:true,editable : false},
-                    {dataField: "availableQty",headerText :"Available Q'ty"          ,width:120   ,height:30 , visible:true,editable : false},
-                    {dataField: "deliverQty",headerText :"Deliver Q'ty"          ,width:120   ,height:30 , visible:true,editable : false},
-                    {dataField: "box",headerText :"Box"          ,width:120   ,height:30 , visible:true,editable : false},
-                    {dataField: "loose",headerText :"Loose"          ,width:120   ,height:30 , visible:true,editable : false}
+                    {dataField: "hsLoseItemUom",headerText :"UOM"          ,width:100   ,height:30 , visible:true,editable : false},
+                    {dataField: "hsLoseItemOprYn",headerText :"Loose Y/N"          ,width:80   ,height:30 , visible:true,editable : false},
+                    {dataField: "hsLoseItemFcastQty",headerText :"Forecast"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0" ,dataType : "numeric" },
+                    {dataField: "availableQty",headerText :"CDB Stock"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0" ,dataType : "numeric" },
+                    {dataField: "finalQty",headerText :"Delivery"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric" },
+                    {dataField: "box",headerText :"Box"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric" },
+                    {dataField: "loose",headerText :"Loose"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric" },
+                    {dataField: "cdcAvailableQty",headerText :"CDC Stock"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric" }
+
            ];
 
 
@@ -61,20 +63,67 @@ var columnLayout = [
 
 createAUIGrid =function(columnLayout ){
 
-    var auiGridProps = {
 
-            selectionMode : "multipleCells",
 
-            showRowNumColumn : true,
 
-            showRowCheckColumn : false,
+	var auiGridProps = {
 
-            showStateColumn : true,
+	            editable : true,
 
-            enableColumnResize : true,
+	            // 그룹핑 패널 사용
+	            useGroupingPanel : true,
 
-            enableMovingColumn : true
-        };
+	            // 필터 사용
+	            enableFilter : true,
+
+	            // 차례로 country, product, name 순으로 그룹핑을 합니다.
+	            // 즉, 각 나라별, 각 제품을 구매한 사용자로 그룹핑
+	            groupingFields : ["hsLoseItemCode"],
+
+	            // 합계(소계) 설정
+	            groupingSummary  : {
+	                // 합계 필드는 price 1개에 대하여 실시 합니다.
+	                dataFields : [ "finalQty"  ,"deliverQty"]
+	            },
+
+	            // 최초 보여질 때 모두 열린 상태로 출력 여부
+	            displayTreeOpen : true,
+
+	            // 그룹핑 후 셀 병합 실행
+	            enableCellMerge : true,
+
+	            // enableCellMerge 할 때 실제로 rowspan 적용 시킬지 여부
+	            // 만약 false 설정하면 실제 병합은 하지 않고(rowspan 적용 시키지 않고) 최상단에 값만 출력 시킵니다.
+	            cellMergeRowSpan : true,
+
+	            // 브랜치에 해당되는 행을 출력 여부
+	            showBranchOnGrouping : false,
+
+	            blankNumericToNullOnEditing: false,
+
+	            // 그리드 ROW 스타일 함수 정의
+	            rowStyleFunction : function(rowIndex, item) {
+
+	                if(item._$isGroupSumField) { // 그룹핑으로 만들어진 합계 필드인지 여부
+
+	                    // 그룹핑을 더 많은 필드로 하여 depth 가 많아진 경우는 그에 맞게 스타일을 정의하십시오.
+	                    // 현재 3개의 스타일이 기본으로 정의됨.(AUIGrid_style.css)
+	                    switch(item._$depth) {  // 계층형의 depth 비교 연산
+	                    case 2:
+	                        return "aui-grid-row-depth1-style";
+	                    case 3:
+	                        return "aui-grid-row-depth2-style";
+	                    case 4:
+	                        return "aui-grid-row-depth3-style";
+	                    default:
+	                        return "aui-grid-row-depth-default-style";
+	                    }
+	                }
+
+	                return null;
+	            } // end of rowStyleFunction
+	    };
+
 
     // 실제로 #grid_wrap 에 그리드 생성
     mstGridID = AUIGrid.create("#grid_wrap", columnLayout, auiGridProps);
@@ -177,7 +226,7 @@ createAUIGrid =function(columnLayout ){
 <tbody>
 
 <tr>
-    <th scope="row">Forecast Month</th>
+    <th scope="row">Forecast Month <span class="must">*</span></th>
     <td>
     <input type="text" title="기준년월" class="j_date2" id="forecastMonth" name="forecastMonth"/>
     </td>
