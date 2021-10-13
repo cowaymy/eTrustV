@@ -570,9 +570,9 @@ FROM
                               , CASE WHEN HS.CRT_USER_ID = '2222' THEN '' ELSE USR.USER_NAME END AS CRT_USER_ID
                               , SO.PV_MONTH
                               , SO.PV_YEAR
-                              ,SO.ORG_CODE AS orgCode
-                              ,SO.GRP_CODE AS grpCode
-                              ,SO.DEPT_CODE AS deptCode
+                              ,T6.ORG_CODE AS orgCode
+                              ,T6.GRP_CODE AS grpCode
+                              ,T6.DEPT_CODE AS deptCode
                 FROM SVC0008D HS
                 JOIN SAL0225D SO ON SO.SRV_ORD_ID = HS.SALES_ORD_ID
                 LEFT JOIN SAL0001D SOM ON HS.SALES_ORD_ID = SOM.SALES_ORD_ID AND BNDL_ID IS NOT NULL
@@ -590,7 +590,11 @@ FROM
                 LEFT JOIN ORG0005D OG ON OG.MEM_ID = CD.MEM_ID
                 LEFT JOIN ORG0001D MEM3 ON OG.MEM_UP_ID = MEM3.MEM_ID
                 LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
-<!--                 LEFT JOIN ORG1001V C ON  C.MEM_ID = SO.MEM_ID -->
+                LEFT JOIN ORG0001D T2 ON T2.MEM_ID = SO.MEM_ID
+                LEFT JOIN ORG0001D T3 ON T3.MEM_ID = SO.SALES_GM_ID
+                LEFT JOIN ORG0001D T4 ON T4.MEM_ID = SO.SALES_SM_ID
+                LEFT JOIN ORG0001D T5 ON T5.MEM_ID = SO.SALES_HM_ID
+                LEFT JOIN ORG1001V T6 ON T6.MEM_CODE = T2.MEM_CODE
 
                 WHERE
                 CD.MEM_ID IS NOT NULL
@@ -614,13 +618,13 @@ FROM
                   AND ( BR.BRNCH_id = #{cmdBranchCode})
                 </if>
                  <if test="orgCode != null and orgCode != ''">
-                  AND UPPER(SO.ORG_CODE) = UPPER(#{orgCode})
+                  AND UPPER(T6.ORG_CODE) = UPPER(#{orgCode})
                  </if>
                  <if test="grpCode != null and grpCode != ''">
-                   AND UPPER(SO.GRP_CODE) = UPPER(#{grpCode})
+                   AND UPPER(T6.GRP_CODE) = UPPER(#{grpCode})
                 </if>
                  <if test="deptCode != null and deptCode != ''">
-                   AND UPPER(SO.DEPT_CODE) = UPPER(#{deptCode})
+                   AND UPPER(T6.DEPT_CODE) = UPPER(#{deptCode})
                 </if>
 
 
@@ -654,9 +658,9 @@ FROM
                               , CASE WHEN HS.CRT_USER_ID = '2222' THEN '' ELSE USR.USER_NAME END AS CRT_USER_ID
                               , SO.PV_MONTH
                               , SO.PV_YEAR
-                              ,SO.ORG_CODE AS orgCode
-                              ,SO.GRP_CODE AS grpCode
-                              ,SO.DEPT_CODE AS deptCode
+                              ,T6.ORG_CODE AS orgCode
+                              ,T6.GRP_CODE AS grpCode
+                              ,T6.DEPT_CODE AS deptCode
                 FROM SVC0008D HS
                 JOIN SAL0225D SO ON SO.SRV_ORD_ID = HS.SALES_ORD_ID
                 LEFT JOIN SAL0001D SOM ON HS.SALES_ORD_ID = SOM.SALES_ORD_ID AND BNDL_ID IS NOT NULL
@@ -674,6 +678,11 @@ FROM
                 LEFT JOIN ORG0005D OG ON OG.MEM_ID = CD.MEM_ID
                 LEFT JOIN ORG0001D MEM3 ON OG.MEM_UP_ID = MEM3.MEM_ID
                 LEFT JOIN SYS0047M USR ON HS.CRT_USER_ID = USR.USER_ID
+                LEFT JOIN ORG0001D T2 ON T2.MEM_ID = SO.MEM_ID
+                LEFT JOIN ORG0001D T3 ON T3.MEM_ID = SO.SALES_GM_ID
+                LEFT JOIN ORG0001D T4 ON T4.MEM_ID = SO.SALES_SM_ID
+                LEFT JOIN ORG0001D T5 ON T5.MEM_ID = SO.SALES_HM_ID
+                LEFT JOIN ORG1001V T6 ON T6.MEM_CODE = T2.MEM_CODE
 
                 WHERE
                   CD.MEM_ID IS NULL
@@ -681,13 +690,13 @@ FROM
 <!--                   AND ( SO.BRNCH_id = #{cmdBranchCode}) -->
 <!--                 </if> -->
                  <if test="orgCode != null and orgCode != ''">
-                  AND UPPER(SO.ORG_CODE) = UPPER(#{orgCode})
+                  AND UPPER(T6.ORG_CODE) = UPPER(#{orgCode})
                  </if>
                  <if test="grpCode != null and grpCode != ''">
-                   AND UPPER(SO.GRP_CODE) = UPPER(#{grpCode})
+                   AND UPPER(T6.GRP_CODE) = UPPER(#{grpCode})
                 </if>
                  <if test="deptCode != null and deptCode != ''">
-                   AND UPPER(SO.DEPT_CODE) = UPPER(#{deptCode})
+                   AND UPPER(T6.DEPT_CODE) = UPPER(#{deptCode})
                 </if>
 
 
