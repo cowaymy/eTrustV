@@ -588,7 +588,6 @@
        <if test='allowCommFlg != null and allowCommFlg != ""'>
                    ESVMPAY.ALLOW_COMM = '1',
        </if>
-            ESVMPAY.ALLOW_COMM = #{allowCommFlg},
             ESVMPAY.TR_REF_NO = #{trRefNo},
             ESVMPAY.TR_ISSUED_DT = #{trIssuedDt},
             ESVMPAY.UPD_USER_ID = #{userId},
