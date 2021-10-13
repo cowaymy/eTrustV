@@ -535,7 +535,8 @@ FROM
                         , Project2.HT_BRNCH_CODE
                         , Project2.HT_MGR_CODE
                         , Project2.Result as Result
-                        , project2.dept_code
+<!--                         , project2.dept_code -->
+                        , project2.deptCode
                          , project2.crt_user_id
                          , Project2.APPTYPE
                          , Project2.SALES_PROD_SZ
@@ -569,6 +570,9 @@ FROM
                               , CASE WHEN HS.CRT_USER_ID = '2222' THEN '' ELSE USR.USER_NAME END AS CRT_USER_ID
                               , SO.PV_MONTH
                               , SO.PV_YEAR
+                              ,SO.ORG_CODE AS orgCode
+                              ,SO.GRP_CODE AS grpCode
+                              ,SO.DEPT_CODE AS deptCode
                 FROM SVC0008D HS
                 JOIN SAL0225D SO ON SO.SRV_ORD_ID = HS.SALES_ORD_ID
                 LEFT JOIN SAL0001D SOM ON HS.SALES_ORD_ID = SOM.SALES_ORD_ID AND BNDL_ID IS NOT NULL
@@ -647,9 +651,12 @@ FROM
                               , BR.CODE AS HT_BRNCH_CODE
                               , MEM3.MEM_CODE HT_MGR_CODE
                               , OG.DEPT_CODE
-                               , CASE WHEN HS.CRT_USER_ID = '2222' THEN '' ELSE USR.USER_NAME END AS CRT_USER_ID
-                               , SO.PV_MONTH
-                               , SO.PV_YEAR
+                              , CASE WHEN HS.CRT_USER_ID = '2222' THEN '' ELSE USR.USER_NAME END AS CRT_USER_ID
+                              , SO.PV_MONTH
+                              , SO.PV_YEAR
+                              ,SO.ORG_CODE AS orgCode
+                              ,SO.GRP_CODE AS grpCode
+                              ,SO.DEPT_CODE AS deptCode
                 FROM SVC0008D HS
                 JOIN SAL0225D SO ON SO.SRV_ORD_ID = HS.SALES_ORD_ID
                 LEFT JOIN SAL0001D SOM ON HS.SALES_ORD_ID = SOM.SALES_ORD_ID AND BNDL_ID IS NOT NULL
