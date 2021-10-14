@@ -57,27 +57,33 @@
     	        {
     	            dataField : "trxDtDisplay",
     	            headerText : "Date",
-    	            width : "10%"
+    	            width : "10%",
+    	            sortable : false
     	        }, {
     	            dataField : "redemptionNo",
     	            headerText : "Redemption Number",
-    	            width : "20%"
+    	            width : "20%",
+    	            sortable : false
     	        }, {
     	            dataField : "itemsDesc",
     	            headerText : "Items Description",
-    	            width : "30%"
+    	            width : "30%",
+    	            sortable : false
     	        }, {
     	            dataField : "earnedDisplay",
     	            headerText : "Earned",
-    	            width : "10%"
+    	            width : "10%",
+    	            sortable : false
     	        }, {
     	            dataField : "rdmOrExpDisplay",
     	            headerText : "Redeemed / Expired",
-    	            width : "20%"
+    	            width : "20%",
+    	            sortable : false
     	        }, {
     	            dataField : "runningBal",
     	            headerText : "Balance",
-    	            width : "10%"
+    	            width : "10%",
+    	            sortable : false
     	        }
     	    ];
 
