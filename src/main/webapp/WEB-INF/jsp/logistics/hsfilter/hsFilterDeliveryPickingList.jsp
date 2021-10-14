@@ -48,7 +48,8 @@ var columnLayout = [
                     {dataField: "finalQty",headerText :"Deliver Q'ty"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric"} ,
                     {dataField: "hsLoseItemUom",headerText :"UOM"          ,width:100   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric"},
                     {dataField: "box",headerText :"Box"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric"},
-                    {dataField: "loose",headerText :"Loose"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric" }
+                    {dataField: "loose",headerText :"Loose"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric" },
+                    {dataField: "refStoNo",headerText :"STO No"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric" }
            ];
 
 
@@ -165,32 +166,45 @@ createAUIGrid =function(columnLayout ){
            return false;
        }
 
+       Common.confirm("Do you want to generate STO?",function (){
 
-       for (var i = 0 ; i < rowCount ; i++){
-	           var reqty =AUIGrid.getCellValue(mstGridID , i , 'finalQty');
+    	   for (var i = 0 ; i < rowCount ; i++){
+               var refStoNo =AUIGrid.getCellValue(mstGridID , i , 'refStoNo');
+               console.log(refStoNo);
+               if( "" != refStoNo   &&   undefined != refStoNo){
+                   Common.alert("Please check it out, STO  already exists");
+                   return false;
+                 }
+           }
 
-	            if(""==reqty || null == reqty || 0>= reqty){
-	               Common.alert("Please Check Deliver Q'ty");
-	               return false;
-	             }
-        }
 
-        var dat = GridCommon.getGridData(mstGridID);
-              dat.form = $("#hsFilterForm").serializeJSON();
+           for (var i = 0 ; i < rowCount ; i++){
+                   var reqty =AUIGrid.getCellValue(mstGridID , i , 'finalQty');
 
-        Common.ajax("POST", "/logistics/HsFilterDelivery/saveSTOAdd.do", dat, function(result) {
-                  if (result.code == '99'){
-                                    AUIGrid.clearGridData(mstGridID);
-                                    Common.alert(result.message , fn_getDataListAjax);
-                   }else{
-                                       Common.alert(""+result.message+"</br> Created : "+result.data, "");
-                    }
+                    if(""==reqty || null == reqty || 0>= reqty){
+                       Common.alert("Please Check Deliver Q'ty");
+                       return false;
+                     }
+            }
 
-                    },
-                    function(jqXHR, textStatus, errorThrown) {
-                                 Common.alert("Fail : " + jqXHR.responseJSON.message);
-                    }
-          );
+            var dat = GridCommon.getGridData(mstGridID);
+                  dat.form = $("#hsFilterForm").serializeJSON();
+
+            Common.ajax("POST", "/logistics/HsFilterDelivery/saveSTOAdd.do", dat, function(result) {
+                      if (result.code == '99'){
+                                        AUIGrid.clearGridData(mstGridID);
+                                        Common.alert(result.message , fn_getDataListAjax);
+                       }else{
+                                           Common.alert(""+result.message+"</br> Created : "+result.data, fn_getDataListAjax);
+                        }
+
+                        },
+                        function(jqXHR, textStatus, errorThrown) {
+                                     Common.alert("Fail : " + jqXHR.responseJSON.message);
+                        }
+              );
+
+       });
    }
 
 

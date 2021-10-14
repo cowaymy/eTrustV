@@ -154,6 +154,21 @@ public class HsFilterDeliveryServiceImpl extends EgovAbstractServiceImpl impleme
 			stocktran.insertStockBooking(fMap);
 		}
 
+
+
+
+		//check   cdc stock qty
+		if (insList.size() > 0) {
+					for (int i = 0; i < insList.size(); i++) {
+						Map<String, Object> insMap = (Map<String, Object>) insList.get(i);
+
+						insMap.put("refStoNo", reqNo);
+						insMap.put("userId", params.get("userId"));
+						int iCnt = hsFilterDeliveryMapper.updateSTONo(insMap);
+					}
+		}
+
+
 		return reqNo;
 	}
 

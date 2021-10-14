@@ -17,4 +17,8 @@ public interface HsFilterDeliveryMapper{
 	String  selectLocId (String prams);
 	String  selectUomId (String prams);
 
+	int updateSTONo (Map<String, Object> params);
+
+
+
 }
