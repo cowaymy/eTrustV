@@ -99,7 +99,7 @@
 	//Generate pdf report button
 	function fn_pdfDown(result) {
 		console.log(result);
-		if (result == null) {
+		if (result.length == 0) {
 			Common
 					.alert("<spring:message code='customer.alert.msg.nodataingridview' />");
 		} else {
