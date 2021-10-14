@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.logistics.hsfilter.HsFilterDeliveryService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
@@ -113,4 +115,37 @@ public class HsFilterDeliveryController {
 
 		return ResponseEntity.ok(list);
 	}
+
+
+
+	@RequestMapping(value = "/saveSTOAdd.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveSTOAdd(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVo) {
+
+		int userId = sessionVo.getUserId();
+		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
+
+
+		LOGGER.debug(params.toString());
+
+		Map<String, Object> param = new HashMap();
+		params.put("userId", userId);
+		String reqNo = hsFilterDeliveryService.insertStockTransferInfo(params);
+
+		LOGGER.debug("reqNo!!!!! : {}", reqNo);
+
+		ReturnMessage message = new ReturnMessage();
+		if (reqNo != null && !"".equals(reqNo)){
+		// 결과 만들기 예.
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		message.setData(reqNo);
+		return ResponseEntity.ok(message);
+	}
+
+
+
 }

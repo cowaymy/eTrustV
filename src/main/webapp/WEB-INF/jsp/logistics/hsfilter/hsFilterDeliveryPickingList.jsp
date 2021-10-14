@@ -155,6 +155,47 @@ createAUIGrid =function(columnLayout ){
              };
          Common.report("hsFilterForm", option);
    }
+
+
+
+   function fn_doSave(){
+       var rowCount = AUIGrid.getRowCount(mstGridID);
+       if (rowCount ==  0){
+    	    //Common.alert("Please Check Deliver Q'ty ");
+           return false;
+       }
+
+
+       for (var i = 0 ; i < rowCount ; i++){
+	           var reqty =AUIGrid.getCellValue(mstGridID , i , 'finalQty');
+
+	            if(""==reqty || null == reqty || 0>= reqty){
+	               Common.alert("Please Check Deliver Q'ty");
+	               return false;
+	             }
+        }
+
+        var dat = GridCommon.getGridData(mstGridID);
+              dat.form = $("#hsFilterForm").serializeJSON();
+
+        Common.ajax("POST", "/logistics/HsFilterDelivery/saveSTOAdd.do", dat, function(result) {
+                  if (result.code == '99'){
+                                    AUIGrid.clearGridData(mstGridID);
+                                    Common.alert(result.message , fn_getDataListAjax);
+                   }else{
+                                       Common.alert(""+result.message+"</br> Created : "+result.data, "");
+                    }
+
+                    },
+                    function(jqXHR, textStatus, errorThrown) {
+                                 Common.alert("Fail : " + jqXHR.responseJSON.message);
+                    }
+          );
+   }
+
+
+
+
 </script>
 
 
@@ -228,8 +269,9 @@ createAUIGrid =function(columnLayout ){
     <section class="search_result"><!-- search_result start -->
 
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="download"  onclick="javascript:fn_openReport();" >Export for PDF</a></p></li>
-            <li><p class="btn_grid"><a id="exceldownload" onclick="javascript:fn_gridExport('xlsx');">Export for EXCEL</a></p></li>
+            <li><p class="btn_grid"><a id="download"  onclick="javascript:fn_doSave();" >To Generate STO </a></p></li>
+            <li><p class="btn_grid"><a id="download"  onclick="javascript:fn_openReport();" >Generate PDF</a></p></li>
+            <li><p class="btn_grid"><a id="exceldownload" onclick="javascript:fn_gridExport('xlsx');">Generate  EXCEL</a></p></li>
         </ul>
 
         <article class="grid_wrap"><!-- grid_wrap start -->
