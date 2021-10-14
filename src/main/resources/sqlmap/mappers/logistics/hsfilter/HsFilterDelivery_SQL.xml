@@ -237,6 +237,7 @@ SELECT
     HS_LOSE_ITEM_UOM ,
     HS_LOSE_ITEM_OPR_YN ,
     HS_LOSE_ITEM_FCAST_QTY ,
+    REF_STO_NO,
     AVAILABLE_QTY ,
     CDC_AVAILABLE_QTY,
     DELIVER_QTY,
@@ -254,6 +255,7 @@ SELECT
     HS_LOSE_ITEM_UOM ,
     HS_LOSE_ITEM_OPR_YN ,
     HS_LOSE_ITEM_FCAST_QTY ,
+    REF_STO_NO,
     AVAILABLE_QTY ,
     CDC_AVAILABLE_QTY,
     NVL(DELIVER_QTY,0) DELIVER_QTY,
@@ -275,6 +277,7 @@ SELECT
     HS_LOSE_ITEM_UOM ,
     HS_LOSE_ITEM_OPR_YN ,
     HS_LOSE_ITEM_FCAST_QTY ,
+    REF_STO_NO,
     NVL(AVAILABLE_QTY,0) AS AVAILABLE_QTY ,
     NVL(CDC_AVAILABLE_QTY,0) AS CDC_AVAILABLE_QTY ,
     NVL(DELIVER_QTY,0) AS DELIVER_QTY,
@@ -296,6 +299,7 @@ SELECT
                     ,HS_LOSE_ITEM_UOM
                     ,HS_LOSE_ITEM_OPR_YN
                     ,HS_LOSE_ITEM_FCAST_QTY
+                    ,REF_STO_NO
                     ,NVL(AVAILABLE_QTY,0) AS AVAILABLE_QTY
                     ,NVL(FN_GET_CDC_AVAILABLE_INVENTORY(#{searchCDC} ,HS_LOSE_ITEM_CODE),0) AS CDC_AVAILABLE_QTY
                     ,NVL(DELIVER_QTY,0) AS DELIVER_QTY
@@ -311,6 +315,7 @@ SELECT
                     ,B.HS_LOSE_ITEM_UOM
                     ,B.HS_LOSE_ITEM_OPR_YN
                     ,A.HS_LOSE_ITEM_FCAST_QTY
+                    ,REF_STO_NO
                     ,L56.QTY -NVL(L75.BOOKING_QTY , 0) AVAILABLE_QTY
                     ,CASE  WHEN  (HS_LOSE_ITEM_FCAST_QTY -  (L56.QTY -NVL(L75.BOOKING_QTY , 0))) > 0  THEN (HS_LOSE_ITEM_FCAST_QTY -  (L56.QTY -NVL(L75.BOOKING_QTY , 0)))
                            ELSE 0 END  AS DELIVER_QTY
@@ -362,6 +367,7 @@ SELECT
                 ,A.HS_LOSE_ITEM_UOM
                 ,A.HS_LOSE_ITEM_OPR_YN
                 ,A.HS_LOSE_ITEM_DELIVER_QTY
+                ,REF_STO_NO
                 ,NVL(L56.QTY -NVL(L75.BOOKING_QTY , 0),0) AVAILABLE_QTY
                 ,CASE
                     WHEN (HS_LOSE_ITEM_DELIVER_QTY - (NVL(L56.QTY,0) -NVL(L75.BOOKING_QTY , 0))) > 0 THEN (HS_LOSE_ITEM_DELIVER_QTY - (NVL(L56.QTY,0) -NVL(L75.BOOKING_QTY , 0)))
@@ -406,4 +412,16 @@ SELECT
 WHERE        FINAL_Qty > 0
 </select>
 
+ <update id="updateSTONo" parameterType="Map">
+
+      UPDATE LOG0108M
+        SET REF_STO_NO  =#{refStoNo}
+            ,UPD_DT  =sysdate
+            ,UPD_USER_ID =#{userId}
+     WHERE HS_LOSE_YYYY =#{hsLoseYyyy}
+      AND HS_LOSE_MM    =#{hsLoseMm}
+      AND HS_LOSE_LOCL_CODE =#{hsLoseLoclCode}
+      AND HS_LOSE_ITEM_CODE =#{hsLoseItemCode}
+
+ </update>
 </mapper>
