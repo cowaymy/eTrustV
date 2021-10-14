@@ -82,6 +82,8 @@ function fn_generateInvoice(){
         var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
         var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
 
+        var taxInvcRefDt = AUIGrid.getCellValue(myGridID,selectedGridValue, "taxInvcRefDt");  //Added by keyi 20211013
+
         switch (taxInvcType){
             case 117 :
                 if( parseInt(year)*100 + parseInt(month) >= 201809){
@@ -174,6 +176,15 @@ function fn_generateInvoice(){
             default:
                 break;
         }
+
+        //Added by keyi 20211013
+        var InvoiceDate = new Date(taxInvcRefDt);
+        var Day = (InvoiceDate.getDate() < 10) ? ('0' + InvoiceDate.getDate()):InvoiceDate.getDate();
+        var Month = InvoiceDate.getMonth() + 1;
+        Month = (Month < 10) ? ('0' + Month) : Month;
+
+        reportDownFileName = 'TaxInvoice_' + taxInvcSvcNo + '_InvoiceDate(' + Day + Month + InvoiceDate.getFullYear() + ')';
+        $("#reportPDFForm #reportDownFileName").val(reportDownFileName);
 
         $("#reportPDFForm #v_serviceNo").val(taxInvcSvcNo);
         $("#reportPDFForm #v_invoiceType").val(taxInvcType);
@@ -273,6 +284,7 @@ function fn_clear(){
 
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="" />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="v_serviceNo" name="v_serviceNo" />
     <input type="hidden" id="v_invoiceType" name="v_invoiceType" />

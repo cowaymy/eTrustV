@@ -32,6 +32,7 @@ $(document).ready(function(){
      { dataField:"taxInvcSvcNo" ,headerText:"<spring:message code='pay.head.serviceNo'/>",width: 180 , editable : false },
      { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>",width: 200, editable : false },
      { dataField:"taxInvcCustName" ,headerText:"<spring:message code='pay.head.custName'/>" , editable : false },
+     { dataField:"taxInvcCustId" ,headerText:"Customer ID", editable : false }, //added by keyi 20211013
      { dataField:"taxInvcRefDt" ,headerText:"<spring:message code='pay.head.invoiceDate'/>",width: 180 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
      { dataField:"invcItmAmtDue" ,headerText:"<spring:message code='pay.head.invoiceAmt'/>",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.00"},
      { dataField:"month" ,headerText:"Month",width: 100 , editable : false ,visible : false},
@@ -71,15 +72,28 @@ function fn_generateInvoice(){
         //report form에 parameter 세팅
         var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
         var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
+        var salesOrdNo = AUIGrid.getCellValue(myGridID,selectedGridValue, "salesOrdNo"); //Added by keyi 20211013
+        var taxInvcRefDt = AUIGrid.getCellValue(myGridID,selectedGridValue, "taxInvcRefDt"); //Added by keyi 20211013
+        var reportDownFileName = ""; //Added by keyi 20211013
 
         if( parseInt(year)*100 + parseInt(month) >= 201809){
             $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST.rpt');
         }else{
             $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF.rpt');
         }
+
         $("#reportPDFForm #v_serviceNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcSvcNo"));
         $("#reportPDFForm #v_invoiceType").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcType"));
         $("#reportPDFForm #v_invoiceNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcRefNo"));
+
+        //Added by keyi 20211013
+        var InvoiceDate = new Date(taxInvcRefDt);
+        var Day = (InvoiceDate.getDate() < 10) ? ('0' + InvoiceDate.getDate()):InvoiceDate.getDate();
+        var Month = InvoiceDate.getMonth() + 1;
+        Month = (Month < 10) ? ('0' + Month) : Month;
+
+        reportDownFileName = 'TaxInvoice_' + salesOrdNo + '_InvoiceDate(' + Day + Month + InvoiceDate.getFullYear() + ')';
+        $("#reportPDFForm #reportDownFileName").val(reportDownFileName);
 
         //report 호출
         var option = {
@@ -157,8 +171,12 @@ function fn_clear(){
                     </tr>
                     <tr>
                         <th scope="row">Customer Name</th>
-                        <td colspan="3">
+                        <td>
                             <input type="text" id="custName" name="custName" title="Customer Name" placeholder="Customer Name." class="w100p" />
+                        </td>
+                        <th scope="row">Customer ID</th>
+                         <td>
+                            <input type="text" id="custID" name="custID" title="Customer ID" placeholder="Customer ID" class="w100p" />
                         </td>
                     </tr>
                 </tbody>
@@ -179,6 +197,7 @@ function fn_clear(){
 <!-- content end -->
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="" />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="v_serviceNo" name="v_serviceNo" />
     <input type="hidden" id="v_invoiceType" name="v_invoiceType" />
