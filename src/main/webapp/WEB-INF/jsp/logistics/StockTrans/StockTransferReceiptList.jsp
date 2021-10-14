@@ -228,7 +228,7 @@
 
             var arrDelyNo = new Array();
             var arrDelyNoIdx = 0;
-            console.log ("brandID :" + "${SESSION_INFO.userBranchId}" + " whLocBranchId :" + (checkedItems[0].whLocBrnchId));
+
             if(checkedItems.length < 1 || checkedItems == undefined) {
                 Common.alert('No data selected.');
                 return false;
