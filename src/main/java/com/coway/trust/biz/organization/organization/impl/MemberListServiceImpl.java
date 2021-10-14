@@ -288,12 +288,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             	memMap.put("MemberID", memid);
 
             	//call LMS API create user
-				Map<String, Object> returnVal = lmsMemberListInsert(memMap);
+				/*Map<String, Object> returnVal = lmsMemberListInsert(memMap);
 				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
 					throw new RuntimeException(e1);
-				}
-            	//lmsMemberListInsert(memMap);
+				}*/
+            	lmsMemberListInsert(memMap);
             }
 
             return memCode;
@@ -2805,7 +2805,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		reqInfo.put("lmsUrl", lmsUrl);
 		reqInfo.put("refNo", selectMemListlms.get("nric") == null ? "" : selectMemListlms.get("nric").toString());
 
-		resultValue = lmsReqApi(reqInfo);
+		//resultValue = lmsReqApi(reqInfo);
+		lmsReqApi(reqInfo);
 
 		logger.debug("End Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
 
