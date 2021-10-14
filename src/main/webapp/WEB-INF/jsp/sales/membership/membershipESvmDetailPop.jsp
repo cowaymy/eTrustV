@@ -33,6 +33,7 @@
     var BranchId = '${SESSION_INFO.userBranchId}';
     var SAFlg =  0; //0:No need to check
     var SpecInstr =  0; //0:No need to check
+    var POFlg = 0; //0: No need to check
 
     $(document).ready(function(){
 
@@ -53,6 +54,7 @@
         if(payMode == '6506')
         {
         	$("#aTabPayment").hide();
+        	POFlg = 1;
         }
 
         //fn_displaySpecialInst();
@@ -625,7 +627,7 @@
             checkResult = false;
             return checkResult;
         }
-    	else if ('${preSalesInfo.custTypeDesc}' == '965') { //Company PO is mandatory
+    	else if ('${preSalesInfo.custTypeDesc}' == '965' || POFlg == 1) { //Company PO is mandatory or paymode = PO(6506)
     		if(FormUtil.isEmpty($("#PONo").val())) {
             Common.alert('Please enter Purchase Order.');
             checkResult = false;
