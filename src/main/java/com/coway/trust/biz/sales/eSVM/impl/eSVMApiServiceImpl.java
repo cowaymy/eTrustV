@@ -408,7 +408,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
                 params.put("RENT_INST_DT", "SYSDATE");
                 billMonthMap = eSVMApiMapper.getOrderCurrentBillMonth(params);
 
-                if(!billMonthMap.isEmpty()) {
+                if(billMonthMap.size() > 0) {
                     billMonth = Integer.parseInt(billMonthMap.get("rentInstNo").toString());
                 }
             }
