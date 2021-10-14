@@ -147,7 +147,7 @@ public class GoldPointsServiceImpl extends EgovAbstractServiceImpl implements Go
 
 	@Override
 	public void sendNotification(Map<String, Object> params) {
-		//sendSMS(params);
+		sendSMS(params);
 		sendEmail(params);
 	}
 
