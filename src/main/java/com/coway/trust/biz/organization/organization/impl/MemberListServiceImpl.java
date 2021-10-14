@@ -3153,17 +3153,19 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		        Gson g = new Gson();
 		        p = g.fromJson(output1, LMSApiRespForm.class);
+
+		        String msg = p.getMessage() != null ? "LMS: " + p.getMessage().toString() : "";
 		        if(p.getStatus() ==null || p.getStatus().isEmpty()){
 		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
 		        	resultValue.put("status", AppConstants.FAIL);
-					resultValue.put("message", p.getMessage().toString());
+					resultValue.put("message", msg);
 		        }else if(p.getStatus().equals("true")){
 		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS));
 		        	resultValue.put("status", AppConstants.SUCCESS);
-					resultValue.put("message", p.getMessage().toString());
+					resultValue.put("message", msg);
 		        }else{
 		        	resultValue.put("status", AppConstants.FAIL);
-					resultValue.put("message", p.getMessage().toString());
+					resultValue.put("message", msg);
 		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
 		        }
 				conn.disconnect();
