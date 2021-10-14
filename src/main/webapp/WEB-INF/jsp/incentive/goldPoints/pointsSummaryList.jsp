@@ -101,8 +101,8 @@
 
         $($reportForm).empty(); //remove children
 
-        var reportDownFileName = "GoldPointsRawData_" + day + month + date.getFullYear(); //report name
-        var reportFileName = "/misc/GoldPointsRawData_Excel.rpt"; //reportFileName
+        var reportDownFileName = "GpRawData_" + day + month + date.getFullYear(); //report name
+        var reportFileName = "/misc/GpRawData_Excel.rpt"; //reportFileName
         var reportViewType = "EXCEL"; //viewType
 
         //default input setting
