@@ -369,7 +369,7 @@ $(function(){
         if(checkedItems.length <= 0) {
         	Common.alert('No data selected.');
             return false;
-        } else if("${SESSION_INFO.roleId}" == "256" && "${SESSION_INFO.userBranchId}" != "checkedItems[0].whLocBrnchId") {
+        } else if("${SESSION_INFO.roleId}" == "256" && ("${SESSION_INFO.userBranchId}" != checkedItems[0].whLocBrnchId)) {
             Common.alert('GR location under Cody.' +"<br>"+' Not allow to proceed.');
             return false;
             } else{

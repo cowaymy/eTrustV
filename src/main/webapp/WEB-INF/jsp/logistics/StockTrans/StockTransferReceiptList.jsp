@@ -223,16 +223,16 @@
             // 현제 선택되어있는 것이 serialchk == Y 인 경우.
 
             if(checkedItems.length > 0) {
-            var serialchk = checkedItems[0].serialReqYn;
+            var serialchk = checkedItems[0].serialReqYn
             }
 
             var arrDelyNo = new Array();
             var arrDelyNoIdx = 0;
-
+            console.log ("brandID :" + "${SESSION_INFO.userBranchId}" + " whLocBranchId :" + (checkedItems[0].whLocBrnchId));
             if(checkedItems.length < 1 || checkedItems == undefined) {
                 Common.alert('No data selected.');
                 return false;
-            } else if("${SESSION_INFO.roleId}" == "256" && "${SESSION_INFO.userBranchId}" != "checkedItems[0].whLocBrnchId") {
+            } else if("${SESSION_INFO.roleId}" == "256" && ("${SESSION_INFO.userBranchId}" != checkedItems[0].whLocBrnchId)) {
                 Common.alert('GR location under Cody.' +"<br>"+' Not allow to proceed.');
                 return false;
                 } else {

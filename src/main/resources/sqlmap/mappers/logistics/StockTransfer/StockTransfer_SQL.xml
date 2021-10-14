@@ -373,7 +373,7 @@
              , NVL(S28C.SERIAL_REQUIRE_CHK_YN, 'N') AS RCV_SERIAL_REQUIRE_CHK_YN
              , NVL(s28q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQ_YN
              , l54.RCD_TMS
-             , s28c.WH_LOC_BRNCH_ID
+             , s28q.WH_LOC_BRNCH_ID
           from log0047m l47
              , log0048d l48
              , log0054m l54
