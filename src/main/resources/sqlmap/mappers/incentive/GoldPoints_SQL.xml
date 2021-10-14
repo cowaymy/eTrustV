@@ -307,7 +307,7 @@
                             GROUP BY RDM_ID) D ON D.RDM_ID = B.RDM_ID
                     WHERE B.MEM_CODE = #{memCode} )
 
-                ) T ORDER BY TRX_DT
+                ) T ORDER BY TRX_DT, REDEMPTION_NO
 
             ) T2
     </select>
