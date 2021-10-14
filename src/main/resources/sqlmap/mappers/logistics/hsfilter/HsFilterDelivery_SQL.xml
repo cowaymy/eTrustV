@@ -212,7 +212,14 @@ SELECT
 </select>
 
 
+<select id="selectLocId" parameterType="String"  resultType="String">
+        SELECT WH_LOC_ID  FROM SYS0028M  WHERE WH_LOC_CODE=#{code}
+</select>
 
+
+<select id="selectUomId" parameterType="String"  resultType="String">
+            SELECT UOM  FROM SYS0026M WHERE STK_CODE =#{code}
+</select>
 
 
 
