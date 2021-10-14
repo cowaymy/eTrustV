@@ -229,7 +229,7 @@
             var arrDelyNo = new Array();
             var arrDelyNoIdx = 0;
 
-            if(checkedItems.length <= 1 || checkedItems == undefined) {
+            if(checkedItems.length < 1 || checkedItems == undefined) {
                 Common.alert('No data selected.');
                 return false;
             } else if("${SESSION_INFO.roleId}" == "256" && "${SESSION_INFO.userBranchId}" != "checkedItems[0].whLocBrnchId") {
