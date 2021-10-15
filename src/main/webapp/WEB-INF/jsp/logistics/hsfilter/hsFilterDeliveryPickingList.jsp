@@ -49,7 +49,25 @@ var columnLayout = [
                     {dataField: "hsLoseItemUom",headerText :"UOM"          ,width:100   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric"},
                     {dataField: "box",headerText :"Box"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric"},
                     {dataField: "loose",headerText :"Loose"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric" },
-                    {dataField: "refStoNo",headerText :"STO No"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric" }
+                    {dataField: "refStoNo",headerText :"STO No"          ,width:120   ,height:30 , visible:true,editable : false ,formatString : "#,##0",dataType : "numeric" },
+                    {dataField: "check",headerText :"Check"  ,width:80    ,height:30 , visible:true ,
+
+                        renderer : {
+                            type : "CheckBoxEditRenderer",
+                            showLabel :false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                            editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
+                            checkValue : 1, // true, false 인 경우가 기본
+                            unCheckValue : 0,
+                            // 체크박스 disabled 함수
+                            disabledFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
+                            	if(item.refStoNo != "" && item.refStoNo != undefined )     return true; // true 반환하면 disabled 시킴
+
+                                return false;
+                            }
+                        }
+                    },
+
+
            ];
 
 
@@ -155,6 +173,8 @@ createAUIGrid =function(columnLayout ){
                isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
              };
          Common.report("hsFilterForm", option);
+
+         AUIGrid.setRendererProp( mstGridID, 9, { "editable": true } );
    }
 
 
@@ -169,14 +189,20 @@ createAUIGrid =function(columnLayout ){
        Common.confirm("Do you want to generate STO?",function (){
 
     	   for (var i = 0 ; i < rowCount ; i++){
+
                var refStoNo =AUIGrid.getCellValue(mstGridID , i , 'refStoNo');
                console.log(refStoNo);
                if( "" != refStoNo   &&   undefined != refStoNo){
                    Common.alert("Please check it out, STO  already exists");
                    return false;
-                 }
-           }
+                }
 
+               var check =AUIGrid.getCellValue(mstGridID , i , 'check');
+               if(check != 1){
+                   Common.alert("Please It can be generate STO after picking");
+                   return ;
+               }
+           }
 
            for (var i = 0 ; i < rowCount ; i++){
                    var reqty =AUIGrid.getCellValue(mstGridID , i , 'finalQty');
