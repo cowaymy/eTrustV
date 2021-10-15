@@ -997,6 +997,18 @@
     	}
     }
 
+
+    $('#_nric_').keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z0-9\s]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+            return true;
+        }
+        e.preventDefault();
+        return false;
+    });
+
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -1063,7 +1075,7 @@
         <tr>
             <th scope="row"><spring:message code="sal.title.text.nricCompNo" /><span class="must">*</span></th>
             <td>
-                <input type="text" title="" id="_nric_" name="nric" maxlength="18"  placeholder="NRIC/Company No" class="w100p" onblur="javascript: fn_nricChkAndSuggDob(this.value)" />
+                <input type="text" title="" id="_nric_" name="nric" maxlength="18"  "  placeholder="NRIC/Company No" class="w100p" onblur="javascript: fn_nricChkAndSuggDob(this.value)" />
             </td>
             <th scope="row"><spring:message code="sal.text.gstRegistrationNo" /></th>
             <td>
