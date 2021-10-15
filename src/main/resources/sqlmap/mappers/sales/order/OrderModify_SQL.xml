@@ -198,6 +198,9 @@
     <update id="updateNric" parameterType="Map">
         UPDATE SAL0029D
            SET NRIC = #{custNric}
+           <if test='custType == 964'>
+             , DOB = TO_DATE(#{custDob}, 'DD/MM/YYYY')
+           </if>
              , UPD_DT = SYSDATE
              , UPD_USER_ID = #{updUserId}
          WHERE CUST_ID = #{custId}

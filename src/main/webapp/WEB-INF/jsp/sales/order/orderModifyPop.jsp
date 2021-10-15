@@ -2022,6 +2022,8 @@
               }
             }
           }
+
+          $("#modCustDob").val(nricToDob(ic));
         }
       }
     }
@@ -2057,6 +2059,24 @@
     });
 
     return exCustId;
+  }
+
+  function nricToDob(nric){
+      let dob = "";
+
+      let year  = nric.substr(0, 2);
+      let month = nric.substr(2, 2);
+      let day   = nric.substr(4, 2);
+
+      if(year <= 99){
+          year = "19" + year;
+      }else{
+          year = "20" + year;
+      }
+
+      dob = day + "-" + month + "-" + year;
+
+      return dob;
   }
 
   function fn_validCert() {
@@ -3338,11 +3358,13 @@
    <section class="search_table">
     <!-- search_table start -->
     <form id="frmNric" method="post">
-     <input name="custId" value="${custId}" type="hidden" /> <input
-      id="modCustNricOld" name="custNricOld" type="hidden" /> <input
-      id="modCustGender" name="custGender" type="hidden" /> <input
-      id="modNationality" name="nationality" type="hidden" /> <input
-      id="modCustType" name="custType" type="hidden" />
+     <input name="custId" value="${custId}" type="hidden" />
+     <input id="modCustNricOld" name="custNricOld" type="hidden" />
+     <input id="modCustGender" name="custGender" type="hidden" />
+     <input id="modNationality" name="nationality" type="hidden" />
+     <input id="modCustType" name="custType" type="hidden" />
+     <input id="modCustDob" name="custDob" type="hidden" />
+
      <table class="type1">
       <!-- table start -->
       <caption>table</caption>
