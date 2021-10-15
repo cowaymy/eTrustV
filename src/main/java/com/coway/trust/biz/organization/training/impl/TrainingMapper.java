@@ -58,4 +58,6 @@ public interface TrainingMapper {
 	EgovMap getMemCodeForCourse(Map<String, Object> params);
 
 	void updateRookie(Map<String, Object> params);
+
+	EgovMap selectCourseTypeById(Map<String, Object> params);
 }

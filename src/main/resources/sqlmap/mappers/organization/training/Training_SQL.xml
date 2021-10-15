@@ -687,4 +687,11 @@ SELECT Extent1.COURS_ITM_ID   ,
         SET ROOKIE = 1
     </update>
 
+    <select id="selectCourseTypeById" parameterType="Map" resultType="egovMap">
+        SELECT CODE_ID, CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 22
+        <if test="courseTypeId != null and courseTypeId != ''">
+            AND CODE_ID = #{courseTypeId}
+        </if>
+    </select>
+
 </mapper>

@@ -199,8 +199,16 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
     		throw e1;
     	}
 
-		if ( !StringUtils.isBlank(courseType) || !StringUtils.isBlank(coursCode) || !StringUtils.isBlank(coursLoc) || !StringUtils.isBlank(coursStart)
-        		|| !StringUtils.isBlank(coursEnd) || !StringUtils.isBlank(coursLimit) || !StringUtils.isBlank(courseClsDt) || !StringUtils.isBlank(memType)){
+    	Map<String, Object> courseTypeParam = new HashMap<String, Object>();
+    	courseTypeParam.put("courseTypeId", courseType);
+    	EgovMap validateCourseType = trainingMapper.selectCourseTypeById(courseTypeParam);
+    	if (validateCourseType.isEmpty()) {
+    		e1 = new Exception("Invalid Course Type");
+        	throw e1;
+    	}
+
+		/*if ( !StringUtils.isBlank(courseType) || !StringUtils.isBlank(coursCode) || !StringUtils.isBlank(coursLoc) || !StringUtils.isBlank(coursStart)
+        		|| !StringUtils.isBlank(coursEnd) || !StringUtils.isBlank(coursLimit) || !StringUtils.isBlank(courseClsDt) || !StringUtils.isBlank(memType)){*/
         	//course info
             Map<String, Object> courseInfo = new HashMap<String, Object>();
             int coursId = trainingService.selectNextCoursId();
@@ -230,7 +238,7 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
             trainingMapper.insertCourse(courseInfo);
 
             created = 1;
-        }
+        //}
 
 		if(created > 0){
           code = String.valueOf(AppConstants.RESPONSE_CODE_CREATED);
