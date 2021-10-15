@@ -5144,6 +5144,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </select>
 <!-- LaiKW - Comment ends here -->
 
+<!-- HLTANG - add additional info for LMS project usage -->
     <select id="selectTraining" parameterType="Map" resultType="egovMap">
         SELECT
             C.COURS_CODE || ' - ' || C.COURS_NAME COURSE_CODE,
@@ -5153,7 +5154,12 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                  WHEN B.COURS_TEST_RESULT = 'F' THEN 'FAILED'
                  ELSE '-'
             END RESULT,
-            C.COURS_LOC
+            C.COURS_LOC,
+
+            C.COURS_CODE COURSE_CODE1,
+            C.COURS_NAME COURS_NAME1,
+            B.COURS_MEM_SHIRT_SIZE SHIRT_SIZE1,
+            A.trainee_code trainee_code1
         FROM ORG0001D A
         LEFT JOIN MSC0009D B
             ON A.MEM_ID = B.COURS_MEM_ID

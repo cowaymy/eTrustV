@@ -1,9 +1,15 @@
 package com.coway.trust.biz.api.impl;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**************************************
  * Author                  Date                    Remark
@@ -18,16 +24,25 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.jsoup.helper.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import org.apache.commons.codec.binary.Base64;
+import java.nio.charset.StandardCharsets;
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.callcenter.common.CommonConstants;
 import com.coway.trust.api.project.LMS.CourseForm;
 import com.coway.trust.api.project.LMS.LMSApiForm;
+import com.coway.trust.api.project.LMS.LMSApiRespForm;
 import com.coway.trust.api.project.LMS.LMSAttendApiForm;
+import com.coway.trust.api.project.LMS.LMSMemApiForm;
 import com.coway.trust.api.project.LMS.LMSResultApiForm;
 import com.coway.trust.biz.api.CommonApiService;
 import com.coway.trust.biz.api.LMSApiService;
+import com.coway.trust.biz.application.impl.FileApplicationImpl;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.organization.organization.impl.MemberListServiceImpl;
@@ -45,26 +60,55 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("LMSApiService")
 public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApiService {
 
-  @Resource(name = "LMSApiMapper")
-  private LMSApiMapper lmsApiMapper;
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl.class);
 
-  @Resource(name = "CommonApiMapper")
-  private CommonApiMapper commonApiMapper;
+	@Resource(name = "LMSApiMapper")
+	private LMSApiMapper lmsApiMapper;
 
-  @Resource(name = "commonApiService")
-  private CommonApiService commonApiService;
+	@Resource(name = "CommonApiMapper")
+	private CommonApiMapper commonApiMapper;
 
-  @Resource(name = "trainingService")
+	@Resource(name = "commonApiService")
+	private CommonApiService commonApiService;
+
+	@Resource(name = "trainingService")
 	private TrainingService trainingService;
 
-  @Resource(name = "trainingMapper")
+	@Resource(name = "trainingMapper")
 	private TrainingMapper trainingMapper;
 
-  @Resource(name = "memberListMapper")
+	@Resource(name = "memberListMapper")
 	private MemberListMapper memberListMapper;
 
-  @Autowired
-  private AdaptorService adaptorService;
+	@Value("${lms.api.username}")
+	private String LMSApiUser;
+
+	@Value("${lms.api.password}")
+	private String LMSApiPassword;
+
+	@Value("${lms.api.secretkey}")
+	private String LMSApiSecretkey;
+
+	@Value("${lms.api.url.domains}")
+	private String LMSApiDomains;
+
+	@Value("${lms.api.url.add}")
+	private String LMSApiUrlAdd;
+
+	@Value("${lms.api.url.update.profile}")
+	private String LMSApiUrlUpdateProfile;
+
+	@Value("${lms.api.url.update.username}")
+	private String LMSApiUrlUpdateUsername;
+
+	@Value("${lms.api.url.suspend}")
+	private String LMSApiUrlSuspend;
+
+	@Value("${lms.api.url.restore}")
+	private String LMSApiUrlRestore;
+
+	@Autowired
+	private AdaptorService adaptorService;
 
 //  @Resource(name = "memberListServiceImpl")
 //	private MemberListServiceImpl memberListServiceImpl;
@@ -328,9 +372,9 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 
     String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0",sysUserId = "0";
 
-    /*StopWatch stopWatch = new StopWatch();
+    StopWatch stopWatch = new StopWatch();
     stopWatch.reset();
-    stopWatch.start();*/
+    stopWatch.start();
 
     String data = commonApiService.decodeJson(request);
     Gson g = new Gson();
@@ -489,12 +533,12 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
       message = StringUtils.substring(e.getMessage(), 0, 4000);
       throw e;
     } finally{
-     // stopWatch.stop();
-     // respTm = stopWatch.toString();
-    	return commonApiService.rtnRespMsg(request, code, message, respTm, data, null ,apiUserId);
+      stopWatch.stop();
+      respTm = stopWatch.toString();
+//    	return commonApiService.rtnRespMsg(request, code, message, respTm, data, null ,apiUserId);
     }
 
-    //return commonApiService.rtnRespMsg(request, code, message, respTm, data, null ,apiUserId);
+    return commonApiService.rtnRespMsg(request, code, message, respTm, data, null ,apiUserId);
   }
 
   @Override
@@ -579,7 +623,7 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
                       lmsApiMapper.updateAttendee(attendeeInfo);
 
                       //when HP, call to trigger open sales
-                      if(userId.get("memType").toString().equals("1")){
+                      if(userId.get("memType").toString().equals("1") && attendeeInfo.get("coursTestResult").toString().equalsIgnoreCase("P")){
                     	  MemberListServiceImpl memberListServiceImpl = new MemberListServiceImpl();
                           SessionVO sessionVo = new SessionVO();
                           Map<String, Object> params = new HashMap<>();
@@ -916,5 +960,509 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 		}
 		selectDocNoNumber.put("nextDocNo", nextDocNo);
 		memberListMapper.updateDocNo(selectDocNoNumber);
+	}
+
+	@Override
+	public Map<String, Object> lmsMemberListInsert(Map<String, Object> params){
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		/*if(true) return resultValue;*/
+		EgovMap selectMemListlms = memberListMapper.selectMemberListView(params);
+		List<EgovMap> selectcoursListlms = memberListMapper.selectTraining(params);
+
+		LMSMemApiForm lmsMemApiForm = new LMSMemApiForm();
+
+		lmsMemApiForm.setSecretkey(LMSApiSecretkey);
+		lmsMemApiForm.setUsername(selectMemListlms.get("memCode").toString());
+		lmsMemApiForm.setEmail(selectMemListlms.get("email") == null ? "" : selectMemListlms.get("email").toString());
+		lmsMemApiForm.setFirstname(selectMemListlms.get("name1") == null ? "" : selectMemListlms.get("name1").toString());
+		lmsMemApiForm.setLastname(".");
+		lmsMemApiForm.setIdnumber(selectMemListlms.get("nric") == null ? "" : selectMemListlms.get("nric").toString());
+		lmsMemApiForm.setInstitution("Coway Malaysia");
+		lmsMemApiForm.setDepartment(selectMemListlms.get("c41") == null ? "" : selectMemListlms.get("c41").toString());
+		lmsMemApiForm.setPhone1(selectMemListlms.get("telMobile") == null ? "" : selectMemListlms.get("telMobile").toString());
+		lmsMemApiForm.setCity(selectMemListlms.get("city") == null ? "" : selectMemListlms.get("city").toString());
+		lmsMemApiForm.setCountry(selectMemListlms.get("country") == null ? "" : selectMemListlms.get("country").toString());
+		lmsMemApiForm.setProfile_field_postcode(selectMemListlms.get("postcode") == null ? "" : selectMemListlms.get("postcode").toString());
+		//String addrdtl = "";
+		//String street = "";
+		String addr ="";
+		if(selectMemListlms.get("addrDtl") == null){
+			if(selectMemListlms.get("street") == null) {
+				addr = "";
+			}else{
+				addr = selectMemListlms.get("street").toString();
+				//addr = street;
+			}
+		}else{
+			if(selectMemListlms.get("street") == null) {
+				addr = selectMemListlms.get("addrDtl").toString();
+				//street ="";
+				//addr = addrdtl;
+			}else{
+				//addrdtl = selectMemListlms.get("addrDtl").toString();
+				//street = selectMemListlms.get("street").toString();
+				addr = selectMemListlms.get("addrDtl").toString() + " "+ selectMemListlms.get("street").toString();
+			}
+		}
+		lmsMemApiForm.setProfile_field_address(addr);
+		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ? "" : selectMemListlms.get("gender").toString());
+		String formattedDate = "";
+		if(selectMemListlms.get("c30") != null){
+			Date date = null;
+			try {
+				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c30").toString());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			formattedDate = new SimpleDateFormat("dd-mm-yyyy").format(date);
+		}
+		lmsMemApiForm.setProfile_field_dob(formattedDate);
+		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ? "" : selectMemListlms.get("c57").toString());
+		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ? "" : selectMemListlms.get("c4").toString());
+		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ? "" : selectMemListlms.get("c5").toString());
+		lmsMemApiForm.setProfile_field_region(selectMemListlms.get("state") == null ? "" : selectMemListlms.get("state").toString());
+		lmsMemApiForm.setProfile_field_organizationcode(selectMemListlms.get("c43") == null ? "" : selectMemListlms.get("c43").toString());
+		lmsMemApiForm.setProfile_field_groupcode(selectMemListlms.get("c42") == null ? "" : selectMemListlms.get("c42").toString());
+		//lmsMemApiForm.setProfile_field_MemberStatus(selectMemListlms.get("name") == null ? "" : selectMemListlms.get("name").toString());
+		lmsMemApiForm.setProfile_field_MemberType(selectMemListlms.get("codeName") == null ? "" : selectMemListlms.get("codeName").toString());
+		lmsMemApiForm.setProfile_field_ManagerName(selectMemListlms.get("c23") == null ? "" : selectMemListlms.get("c23").toString());
+		lmsMemApiForm.setProfile_field_ManagerID(selectMemListlms.get("c22") == null ? "" : selectMemListlms.get("c22").toString());
+		lmsMemApiForm.setProfile_field_SeniorManagerName(selectMemListlms.get("c18") == null ? "" : selectMemListlms.get("c18").toString());
+		lmsMemApiForm.setProfile_field_SeniorManagerID(selectMemListlms.get("c17") == null ? "" : selectMemListlms.get("c17").toString());
+		lmsMemApiForm.setProfile_field_GeneralManagerName(selectMemListlms.get("c13") == null ? "" : selectMemListlms.get("c13").toString());
+		lmsMemApiForm.setProfile_field_GeneralManagerID(selectMemListlms.get("c12") == null ? "" : selectMemListlms.get("c12").toString());
+
+		// Edited to add Sleeping userstatus. Hui Ding, 2021-10-08
+		String status = "NO";
+		String userStatus = "";
+		if (selectMemListlms.get("name") != null){
+    		if(selectMemListlms.get("name").toString().equals("Active")){
+    			status = "YES";
+    			if(selectMemListlms.get("c59") != null && selectMemListlms.get("c59").toString().equals("1366")){
+    				status = "NO";
+    				userStatus = "Sleeping";
+    			}
+    		} else {
+    			status = "NO";
+    		}
+		}
+		lmsMemApiForm.setProfile_field_MemberStatus(status);
+		String formattedDate1 = "";
+		if(selectMemListlms.get("c30") != null){
+			Date date = null;
+			try {
+				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c30").toString());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			formattedDate1 = new SimpleDateFormat("dd-mm-yyyy").format(date);
+		}
+		lmsMemApiForm.setProfile_field_dateJoin(formattedDate1);
+		lmsMemApiForm.setUserstatus(userStatus);
+
+		//call LMS to insert user
+//		System.out.println("Start Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
+		String lmsUrl = LMSApiDomains + LMSApiUrlAdd;
+
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(lmsMemApiForm);
+
+		EgovMap reqInfo = new EgovMap();
+		reqInfo.put("jsonString", jsonString);
+		reqInfo.put("lmsUrl", lmsUrl);
+		reqInfo.put("refNo", selectMemListlms.get("nric") == null ? "" : selectMemListlms.get("nric").toString());
+
+		resultValue = lmsReqApi(reqInfo);
+
+		LOGGER.debug("End Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
+
+		return resultValue;
+	}
+
+	@Override
+	public Map<String, Object> lmsMemberListUpdate(Map<String, Object> params){
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		/*if(true) return resultValue;*/
+		EgovMap selectMemListlms = memberListMapper.selectMemberListView(params);
+		List<EgovMap> selectcoursListlms = memberListMapper.selectTraining(params);
+
+		LMSMemApiForm lmsMemApiForm = new LMSMemApiForm();
+
+		lmsMemApiForm.setSecretkey(LMSApiSecretkey);
+		lmsMemApiForm.setUsername(selectMemListlms.get("memCode") == null ? "" : selectMemListlms.get("memCode").toString());
+		lmsMemApiForm.setEmail(selectMemListlms.get("email") == null ? "" : selectMemListlms.get("email").toString());
+		lmsMemApiForm.setFirstname(selectMemListlms.get("name1") == null ? "" : selectMemListlms.get("name1").toString());
+		lmsMemApiForm.setLastname(".");
+		lmsMemApiForm.setIdnumber(selectMemListlms.get("nric") == null ? "" : selectMemListlms.get("nric").toString());
+		lmsMemApiForm.setInstitution("Coway Malaysia");
+		lmsMemApiForm.setDepartment(selectMemListlms.get("c41") == null ? "" : selectMemListlms.get("c41").toString());
+		lmsMemApiForm.setPhone1(selectMemListlms.get("telMobile") == null ? "" : selectMemListlms.get("telMobile").toString());
+		lmsMemApiForm.setCity(selectMemListlms.get("city") == null ? "" : selectMemListlms.get("city").toString());
+		lmsMemApiForm.setCountry(selectMemListlms.get("country") == null ? "" : selectMemListlms.get("country").toString());
+		lmsMemApiForm.setProfile_field_postcode(selectMemListlms.get("postcode") == null ? "" : selectMemListlms.get("postcode").toString());
+		//String addrdtl = "";
+		//String street = "";
+		String addr ="";
+		if(selectMemListlms.get("addrDtl") == null){
+			if(selectMemListlms.get("street") == null) {
+				addr = "";
+			}else{
+				addr = selectMemListlms.get("street").toString();
+				//addr = street;
+			}
+		}else{
+			if(selectMemListlms.get("street") == null) {
+				addr = selectMemListlms.get("addrDtl").toString();
+				//street ="";
+				//addr = addrdtl;
+			}else{
+				//addrdtl = selectMemListlms.get("addrDtl").toString();
+				//street = selectMemListlms.get("street").toString();
+				addr = selectMemListlms.get("addrDtl").toString() + " "+ selectMemListlms.get("street").toString();
+			}
+		}
+		lmsMemApiForm.setProfile_field_address(addr);
+		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ?  "" : selectMemListlms.get("gender").toString());
+		String formattedDate = "";
+		if(selectMemListlms.get("c29") != null){
+			Date date = null;
+			try {
+				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c29").toString());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			formattedDate = new SimpleDateFormat("dd-mm-yyyy").format(date);
+		}
+		lmsMemApiForm.setProfile_field_dob(formattedDate);
+		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ?  "" : selectMemListlms.get("c57").toString());
+		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ?  "" : selectMemListlms.get("c4").toString());
+		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ?  "" : selectMemListlms.get("c5").toString());
+		lmsMemApiForm.setProfile_field_region(selectMemListlms.get("state") == null ? "" : selectMemListlms.get("state").toString());
+		lmsMemApiForm.setProfile_field_organizationcode(selectMemListlms.get("c43") == null ?  "" : selectMemListlms.get("c43").toString());
+		lmsMemApiForm.setProfile_field_groupcode(selectMemListlms.get("c42") == null ?  "" : selectMemListlms.get("c42").toString());
+		//lmsMemApiForm.setProfile_field_MemberStatus(selectMemListlms.get("name") == null ?  "" : selectMemListlms.get("name").toString());
+		lmsMemApiForm.setProfile_field_MemberType(selectMemListlms.get("codeName") == null ?  "" : selectMemListlms.get("codeName").toString());
+		lmsMemApiForm.setProfile_field_ManagerName(selectMemListlms.get("c23") == null ?  "" : selectMemListlms.get("c23").toString());
+		lmsMemApiForm.setProfile_field_ManagerID(selectMemListlms.get("c22") == null ?  "" : selectMemListlms.get("c22").toString());
+		lmsMemApiForm.setProfile_field_SeniorManagerName(selectMemListlms.get("c18") == null ?  "" : selectMemListlms.get("c18").toString());
+		lmsMemApiForm.setProfile_field_SeniorManagerID(selectMemListlms.get("c17") == null ?  "" : selectMemListlms.get("c17").toString());
+		lmsMemApiForm.setProfile_field_GeneralManagerName(selectMemListlms.get("c13") == null ?  "" : selectMemListlms.get("c13").toString());
+		lmsMemApiForm.setProfile_field_GeneralManagerID(selectMemListlms.get("c12") == null ?  "" : selectMemListlms.get("c12").toString());
+
+		// Edited to add Sleeping userstatus. Hui Ding, 2021-10-08
+		String status = "NO";
+		String userStatus = "";
+		if (selectMemListlms.get("name") != null){
+    		if(selectMemListlms.get("name").toString().equals("Active")){
+    			status = "YES";
+    			if(selectMemListlms.get("c59") != null && selectMemListlms.get("c59").toString().equals("1366")){
+    				status = "NO";
+    				userStatus = "Sleeping";
+    			}
+    		} else {
+    			status = "NO";
+    		}
+		}
+		lmsMemApiForm.setProfile_field_MemberStatus(status);
+		lmsMemApiForm.setUserstatus(userStatus);
+		if(!selectcoursListlms.get(0).isEmpty()){
+			lmsMemApiForm.setProfile_field_trainingbatch(selectcoursListlms.get(0).get("codeName1") == null ? "" : selectcoursListlms.get(0).get("codeName1").toString());
+			lmsMemApiForm.setProfile_field_TrainingVenue(selectcoursListlms.get(0).get("coursLoc") == null ? "" : selectcoursListlms.get(0).get("coursLoc").toString());
+			lmsMemApiForm.setProfile_field_Tshirtsize(selectcoursListlms.get(0).get("shirtSize1") == null ? "" : selectcoursListlms.get(0).get("shirtSize").toString());
+			lmsMemApiForm.setProfile_field_TRNo(selectcoursListlms.get(0).get("traineeCode1") == null ? "" : selectcoursListlms.get(0).get("traineeCode1").toString());
+		}
+//		lmsMemApiForm.setProfile_field_batch("");
+		String formattedDate1 = "";
+		if(selectMemListlms.get("c30") != null){
+			Date date = null;
+			try {
+				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c30").toString());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			formattedDate1 = new SimpleDateFormat("dd-mm-yyyy").format(date);
+		}
+		lmsMemApiForm.setProfile_field_dateJoin(formattedDate1);
+		String resignDt = selectMemListlms.get("c48") == null ?  "" : selectMemListlms.get("c48").toString();
+		lmsMemApiForm.setProfile_field_dateResign(resignDt);
+
+
+		//call LMS to insert user
+		System.out.println("Start Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
+		String lmsUrl = LMSApiDomains + LMSApiUrlUpdateProfile;
+
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(lmsMemApiForm);
+
+		EgovMap reqInfo = new EgovMap();
+		reqInfo.put("jsonString", jsonString);
+		reqInfo.put("lmsUrl", lmsUrl);
+		reqInfo.put("refNo", selectMemListlms.get("memCode").toString());
+
+		resultValue = lmsReqApi(reqInfo);
+
+		LOGGER.debug("End Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
+
+		return resultValue;
+	}
+
+	@Override
+	public Map<String, Object> lmsEHPMemberListInsert(Map<String, Object> params,String memberCode){
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		/*if(true) return resultValue;*/
+		EgovMap selectMemListlms = memberListMapper.getHPMemberListView(params);
+		List<EgovMap> selectcoursListlms = memberListMapper.selectTraining(params);
+
+		LMSMemApiForm lmsMemApiForm = new LMSMemApiForm();
+
+		lmsMemApiForm.setSecretkey(LMSApiSecretkey);
+		lmsMemApiForm.setUsername(memberCode);
+		lmsMemApiForm.setEmail(selectMemListlms.get("email") == null ? "" : selectMemListlms.get("email").toString());
+		lmsMemApiForm.setFirstname(selectMemListlms.get("name1") == null ? "" : selectMemListlms.get("name1").toString());
+		lmsMemApiForm.setLastname(".");
+		lmsMemApiForm.setIdnumber(selectMemListlms.get("nric") == null ? "" : selectMemListlms.get("nric").toString());
+		lmsMemApiForm.setInstitution("Coway Malaysia");
+		lmsMemApiForm.setDepartment(selectMemListlms.get("c41") == null ? "" : selectMemListlms.get("c41").toString());
+		lmsMemApiForm.setPhone1(selectMemListlms.get("telMobile") == null ? "" : selectMemListlms.get("telMobile").toString());
+		lmsMemApiForm.setCity(selectMemListlms.get("city") == null ? "" : selectMemListlms.get("city").toString());
+		lmsMemApiForm.setCountry(selectMemListlms.get("country") == null ? "" : selectMemListlms.get("country").toString());
+		lmsMemApiForm.setProfile_field_postcode(selectMemListlms.get("postcode") == null ? "" : selectMemListlms.get("postcode").toString());
+		//String addrdtl = "";
+		//String street = "";
+		String addr ="";
+		if(selectMemListlms.get("addrDtl") == null){
+			if(selectMemListlms.get("street") == null) {
+				addr = "";
+			}else{
+				addr = selectMemListlms.get("street").toString();
+				//addr = street;
+			}
+		}else{
+			if(selectMemListlms.get("street") == null) {
+				addr = selectMemListlms.get("addrDtl").toString();
+				//street ="";
+				//addr = addrdtl;
+			}else{
+				//addrdtl = selectMemListlms.get("addrDtl").toString();
+				//street = selectMemListlms.get("street").toString();
+				addr = selectMemListlms.get("addrDtl").toString() + " "+ selectMemListlms.get("street").toString();
+			}
+		}
+		lmsMemApiForm.setProfile_field_address(addr);
+		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ? "" : selectMemListlms.get("gender").toString());
+		String formattedDate = "";
+		if(selectMemListlms.get("c29") != null){
+			Date date = null;
+			try {
+				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c29").toString());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			formattedDate = new SimpleDateFormat("dd-mm-yyyy").format(date);
+		}
+		lmsMemApiForm.setProfile_field_dob(formattedDate);
+		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ? "" : selectMemListlms.get("c57").toString());
+		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ? "" : selectMemListlms.get("c4").toString());
+		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ? "" : selectMemListlms.get("c5").toString());
+		lmsMemApiForm.setProfile_field_region(selectMemListlms.get("state") == null ? "" : selectMemListlms.get("state").toString());
+		lmsMemApiForm.setProfile_field_organizationcode(selectMemListlms.get("c43") == null ? "" : selectMemListlms.get("c43").toString());
+		lmsMemApiForm.setProfile_field_groupcode(selectMemListlms.get("c42") == null ? "" : selectMemListlms.get("c42").toString());
+		//lmsMemApiForm.setProfile_field_MemberStatus(selectMemListlms.get("name") == null ? "" : selectMemListlms.get("name").toString());
+		lmsMemApiForm.setProfile_field_MemberType(selectMemListlms.get("codeName") == null ? "" : selectMemListlms.get("codeName").toString());
+		lmsMemApiForm.setProfile_field_ManagerName(selectMemListlms.get("c23") == null ? "" : selectMemListlms.get("c23").toString());
+		lmsMemApiForm.setProfile_field_ManagerID(selectMemListlms.get("c22") == null ? "" : selectMemListlms.get("c22").toString());
+		lmsMemApiForm.setProfile_field_SeniorManagerName(selectMemListlms.get("c18") == null ? "" : selectMemListlms.get("c18").toString());
+		lmsMemApiForm.setProfile_field_SeniorManagerID(selectMemListlms.get("c17") == null ? "" : selectMemListlms.get("c17").toString());
+		lmsMemApiForm.setProfile_field_GeneralManagerName(selectMemListlms.get("c13") == null ? "" : selectMemListlms.get("c13").toString());
+		lmsMemApiForm.setProfile_field_GeneralManagerID(selectMemListlms.get("c12") == null ? "" : selectMemListlms.get("c12").toString());
+
+		// Edited to add Sleeping userstatus. Hui Ding, 2021-10-08
+		String status = "NO";
+		String userStatus = "";
+		if (selectMemListlms.get("name") != null){
+    		if(selectMemListlms.get("name").toString().equals("Approved")){
+    			status = "YES";
+    			if(selectMemListlms.get("c59") != null && selectMemListlms.get("c59").toString().equals("1366")){
+    				status = "NO";
+    				userStatus = "Sleeping";
+    			}
+    		} else {
+    			status = "NO";
+    		}
+		}
+		lmsMemApiForm.setProfile_field_MemberStatus(status);
+		String formattedDate1 = "";
+		if(selectMemListlms.get("c30") != null){
+			Date date = null;
+			try {
+				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c30").toString());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			formattedDate1 = new SimpleDateFormat("dd-mm-yyyy").format(date);
+		}
+		lmsMemApiForm.setProfile_field_dateJoin(formattedDate1);
+		lmsMemApiForm.setUserstatus(userStatus);
+
+		//call LMS to insert user
+		System.out.println("Start Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
+		String lmsUrl = LMSApiDomains + LMSApiUrlAdd;
+
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(lmsMemApiForm);
+
+		EgovMap reqInfo = new EgovMap();
+		reqInfo.put("jsonString", jsonString);
+		reqInfo.put("lmsUrl", lmsUrl);
+		reqInfo.put("refNo", selectMemListlms.get("nric") == null ? "" : selectMemListlms.get("nric").toString());
+
+		resultValue = lmsReqApi(reqInfo);
+
+		LOGGER.debug("End Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
+
+		return resultValue;
+	}
+
+	@Override
+	public Map<String, Object> lmsMemberListUpdateMemCode(Map<String, Object> params){
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+
+		LMSMemApiForm lmsMemApiForm = new LMSMemApiForm();
+
+		lmsMemApiForm.setSecretkey(LMSApiSecretkey);
+		lmsMemApiForm.setUsername(params.get("username").toString());
+		lmsMemApiForm.setNewusername(params.get("newusername").toString());
+		lmsMemApiForm.setProfile_field_MemberType(params.get("memberType").toString());
+		lmsMemApiForm.setProfile_field_dateJoin(params.get("joinDt").toString());
+
+		//call LMS to update member code
+		String lmsUrl = LMSApiDomains + LMSApiUrlUpdateUsername;
+
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(lmsMemApiForm);
+
+		EgovMap reqInfo = new EgovMap();
+		reqInfo.put("jsonString", jsonString);
+		reqInfo.put("lmsUrl", lmsUrl);
+		reqInfo.put("refNo", params.get("username").toString());
+
+		resultValue = lmsReqApi(reqInfo);
+
+		return resultValue;
+	}
+
+	@Override
+	public Map<String, Object> lmsMemberListDeact(Map<String, Object> params) {
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+
+		LMSMemApiForm lmsMemApiForm = new LMSMemApiForm();
+
+		lmsMemApiForm.setSecretkey(LMSApiSecretkey);
+		lmsMemApiForm.setUsername(params.get("username").toString());
+
+		//call LMS to deactivate member
+		String lmsUrl = LMSApiDomains + LMSApiUrlSuspend;
+
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(lmsMemApiForm);
+
+		EgovMap reqInfo = new EgovMap();
+		reqInfo.put("jsonString", jsonString);
+		reqInfo.put("lmsUrl", lmsUrl);
+		reqInfo.put("refNo", params.get("username").toString());
+
+		resultValue = lmsReqApi(reqInfo);
+
+		return resultValue;
+	}
+
+	@Override
+	public Map<String, Object> lmsReqApi(Map<String, Object> params) {
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		String respTm = null;
+		String lmsApiUserId = "3";
+		String auth = LMSApiUser + ":" + LMSApiPassword;
+		byte[] encodedAuth = 	Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
+		String authorization = "Basic " + new String(encodedAuth);
+
+		StopWatch stopWatch = new StopWatch();
+	    stopWatch.reset();
+	    stopWatch.start();
+
+		String lmsUrl = params.get("lmsUrl").toString();
+		String jsonString = params.get("jsonString").toString();
+		String refNo = params.get("refNo").toString();
+		String output1 = "";
+		LMSApiRespForm p = new LMSApiRespForm();
+		try{
+			URL url = new URL(lmsUrl);
+
+			//insert to api0004m
+			//
+			System.out.println("Start Calling LMS API ...." + lmsUrl + "......\n");
+	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	        conn.setDoOutput(true);
+	        conn.setRequestMethod("POST");
+	        conn.setRequestProperty("Content-Type", "application/json");
+	        conn.setRequestProperty("Authorization", authorization);
+	        OutputStream os = conn.getOutputStream();
+	        os.write(jsonString.getBytes());
+	        os.flush();
+
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
+				BufferedReader br = new BufferedReader(new InputStreamReader(
+		                (conn.getInputStream())));
+				conn.getResponseMessage();
+
+		        String output = "";
+		        LOGGER.debug("Output from Server .... \n");
+		        while ((output = br.readLine()) != null) {
+		        	output1 = output;
+		        	LOGGER.debug(output);
+		        }
+
+		        Gson g = new Gson();
+		        p = g.fromJson(output1, LMSApiRespForm.class);
+		        String msg = p.getMessage() != null ? "LMS: " + p.getMessage().toString() : "";
+		        if(p.getStatus() ==null || p.getStatus().isEmpty()){
+		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+		        	resultValue.put("status", AppConstants.FAIL);
+					resultValue.put("message", msg);
+		        }else if(p.getStatus().equals("true")){
+		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS));
+		        	resultValue.put("status", AppConstants.SUCCESS);
+					resultValue.put("message", msg);
+		        }else{
+		        	resultValue.put("status", AppConstants.FAIL);
+					resultValue.put("message", msg);
+		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+		        }
+				conn.disconnect();
+
+				br.close();
+			}else{
+				resultValue.put("status", AppConstants.FAIL);
+				resultValue.put("message", "No Response");
+				p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+				p.setMessage("No Response");
+			}
+		}catch(Exception e){
+			LOGGER.error("Timeout:");
+			LOGGER.error("[lmsMemberListInsertUpdate] - Caught Exception: " + e);
+			p.setStatus(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
+			p.setMessage("Timeout" + e.toString());
+		}finally{
+			stopWatch.stop();
+		    respTm = stopWatch.toString();
+			commonApiService.rtnRespMsg(lmsUrl, p.getCode().toString(), p.getMessage().toString(),respTm , jsonString, output1 ,lmsApiUserId, refNo);
+		}
+
+		return resultValue;
 	}
 }

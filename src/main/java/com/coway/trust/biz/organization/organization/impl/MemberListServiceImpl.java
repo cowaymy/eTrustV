@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,7 @@ import com.coway.trust.api.project.LMS.LMSApiForm;
 import com.coway.trust.api.project.LMS.LMSApiRespForm;
 import com.coway.trust.api.project.LMS.LMSMemApiForm;
 import com.coway.trust.biz.api.CommonApiService;
+import com.coway.trust.biz.api.LMSApiService;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.organization.organization.vo.DocSubmissionVO;
 import com.coway.trust.biz.organization.organization.vo.MemberListVO;
@@ -61,6 +63,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	@Resource(name = "commonApiService")
 	  private CommonApiService commonApiService;
 
+	@Autowired
+    private LMSApiService lmsApiService;
 	/*@Value("${lms.api.username}")
 	private String LMSApiUser;
 
@@ -288,12 +292,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             	memMap.put("MemberID", memid);
 
             	//call LMS API create user
-				/*Map<String, Object> returnVal = lmsMemberListInsert(memMap);
-				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+				Map<String, Object> returnVal = lmsApiService.lmsMemberListInsert(memMap);
+				/*if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
 					throw new RuntimeException(e1);
 				}*/
-            	lmsMemberListInsert(memMap);
+            	//lmsMemberListInsert(memMap);
             }
 
             return memCode;
@@ -735,7 +739,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			}
 
 			// change to receive LMS training result just concert HP to real HP. Hui Ding, 2021-10-10
-			EgovMap selectHpBillNo = null;
+			/*EgovMap selectHpBillNo = null;
 			String hpBillNo="";
 			EgovMap selectInvoiceNo = null;
 			//AcBilling Save (for Hp)
@@ -885,7 +889,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     				memberListMapper.updateBillRem(accOrderBill);
     			}
 
-			} // end of amendment for convert HP to Real HP. Hui Ding, 2021-10-10
+			}*/ // end of amendment for convert HP to Real HP. Hui Ding, 2021-10-10
 
 			//Save DocSubmission (For HP)
 			if(params.get("memberType").toString().equals("1") && docType.size() > 0){
@@ -1041,7 +1045,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				memberListMapper.insertinvWH(invWH);
 			}
 
-			if(params.get("memberType").toString().equals("5")  &&  !params.get("course").equals("")) {
+			/*if(params.get("memberType").toString().equals("5")  &&  !params.get("course").equals("")) { //20-10-2021 - HLTANG - close for LMS project
 				if (params.get("traineeType1").toString().equals("2") || params.get("traineeType1").toString().equals("3") || params.get("traineeType1").toString().equals("7") || params.get("traineeType1").toString().equals("5758") ){ // ADDED HOMECARE AS TRAINEE TYPE -- BY TOMMY
 
     					logger.debug("=============================================================================================================");
@@ -1052,7 +1056,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 						memberListMapper.traineeInsertInfor(params);
 				}
-			}
+			}*/
 
 
 			success=true;
@@ -1342,7 +1346,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             	Map<String, Object> memMap = new HashMap<String, Object>();
             	memMap.put("MemberID", params.get("requestMemberId").toString());
 
-            	Map<String, Object> returnVal = lmsMemberListUpdate(memMap);
+            	Map<String, Object> returnVal = lmsApiService.lmsMemberListUpdate(memMap);
 				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
 					throw new RuntimeException(e1);
@@ -1467,7 +1471,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
                 	Map<String, Object> memMap = new HashMap<String, Object>();
                 	memMap.put("username", selectMember.get("memCode").toString());
 
-                	Map<String, Object> returnVal = lmsMemberListDeact(memMap);
+                	Map<String, Object> returnVal = lmsApiService.lmsMemberListDeact(memMap);
             		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
             			Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
             			throw new RuntimeException(e1);
@@ -1641,7 +1645,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     	memMap.put("memberType",params.get("traineeType"));
     	memMap.put("joinDt",formattedDate);
 
-    	Map<String, Object> returnVal = lmsMemberListUpdateMemCode(memMap);
+    	Map<String, Object> returnVal = lmsApiService.lmsMemberListUpdateMemCode(memMap);
 		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 			Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
 			throw new RuntimeException(e1);
@@ -1920,7 +1924,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			EgovMap selectOrganization = null;
 			if(a> 0){
 			    // 2021-04-07 - LaiKW - Insert MSC0009D for HP Orientation
-			    memberListMapper.insertHPorientation(params);
+//			    memberListMapper.insertHPorientation(params);
 
 				Map<String, Object> memOrg = new HashMap<String, Object>();
 				CodeMap.put("code", "mem");
@@ -1967,192 +1971,192 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					memberListMapper.insertOrganization(memOrg);
 
 				}
-
-				EgovMap selectHpBillNo = null;
-				String hpBillNo="";
-				EgovMap selectInvoiceNo = null;
-				//AcBilling Save (for Hp)
-
-				int userId = sessionVO.getUserId();
-
-				params.put("creator", userId);
-				params.put("updator", userId);
-
-				//if(params.get("memberType").toString().equals("1")){
-
-				SimpleDateFormat sfd = new SimpleDateFormat("yyyy-MM-dd");
-				Date currentDay = new Date();
-
-				String startDateString = "2019-10-01";
-				String endDateString   = "2019-12-31";
-				Date startDay    = sfd.parse(startDateString);
-				Date endDay      = sfd.parse(endDateString);
-
-				if(currentDay.before(startDay) || currentDay.after(endDay)){
-    					selectHpBillNo = getDocNo("5");
-    					logger.debug("selectHpBillNo : {}",selectHpBillNo);
-    					hpBillNo=(String)selectHpBillNo.get("docNo");
-    					int hPBillID=5;
-    					String nextDocNo = getNextDocNo("HPB", selectHpBillNo.get("c1").toString());
-    					logger.debug("nextDocNo : {}",nextDocNo);
-    					selectHpBillNo.put("nextDocNo", nextDocNo);
-    					logger.debug("selectHpBillNo : {}",selectHpBillNo);
-    					if(Integer.parseInt(selectHpBillNo.get("docNoId").toString()) == hPBillID){
-    						logger.debug("update 문 탈 예정");
-    						memberListMapper.updateDocNo(selectHpBillNo);
-    					}
-    					params.put("hpBillNo", hpBillNo);
-
-    					Map<String, Object> accBill = new HashMap<String, Object>();
-    					accBill.put("billId", 0);
-    					accBill.put("billINo", hpBillNo);
-    					accBill.put("billTypeId", 222);
-    					accBill.put("billSOID", 0);
-    					accBill.put("billMemId", MemberId);
-    					accBill.put("billASID", 0);
-    					accBill.put("billPayTypeId", 224);
-    					accBill.put("billMemberShipNo", "");
-    					accBill.put("billDate", new Date());
-    					accBill.put("billAmt", 120);
-    					accBill.put("billRemark", "");
-    					accBill.put("billIsPaid", false);
-    					accBill.put("billIsComm", true);
-    					accBill.put("updator", params.get("updator"));
-    					accBill.put("updated", new Date());
-    					accBill.put("syncCheck", true);
-    					accBill.put("courseId", 0);
-    					accBill.put("statusId", 1);
-
-    					logger.debug("accBill : {}",accBill);
-    					memberListMapper.insertAccBill(accBill);
-
-
-    	    			//AccOrderBill Save
-    	    			Map<String, Object> accOrderBill = new HashMap<String, Object>();
-    	    			accOrderBill.put("accBillTaskId", 0);
-    	    			accOrderBill.put("accBillRefDate", new Date());
-    	    			accOrderBill.put("accBillRefNo", "1000");
-    	    			accOrderBill.put("accBillOrderId", 0);
-    	    			accOrderBill.put("accBillOrderNo", "");
-    	    			accOrderBill.put("accBillTypeId", 1159);
-    	    			accOrderBill.put("accBillModeId", 1171);
-    	    			accOrderBill.put("accBillScheduleId", 0);
-    	    			accOrderBill.put("accBillSchedulePeriod", 0);
-    	    			accOrderBill.put("accBillAdjustmentId", 0);
-    	    			accOrderBill.put("accBillScheduleAmount", 120);
-    	    			accOrderBill.put("accBillAdjustmentAmount", 0);
-    	    			//accOrderBill.put("accBillTaxesAmount",String.format("%.2f", 120 - ((120) * 100 / (double)106))); -- without GST 6% edited by TPY 24/05/2018
-    	    			accOrderBill.put("accBillTaxesAmount",0);
-    	    			accOrderBill.put("accBillNetAmount", String.format("%.2f",(double)120));
-    	    			accOrderBill.put("accBillStatus", 1);
-    	    			accOrderBill.put("accBillRemark",memberCode);
-    	    			accOrderBill.put("accBillCreateAt", new Date());
-    	    			accOrderBill.put("accBillCreateBy", params.get("creator"));
-    	    			accOrderBill.put("accBillGroupId", 0);
-    	    			accOrderBill.put("accBillTaxCodeId", 32);
-    	    			//accOrderBill.put("accBillTaxRate", 6); -- without GST 6% edited by TPY 24/05/2018
-    	    			accOrderBill.put("accBillTaxRate", 0);
-    	    			accOrderBill.put("accBillAcctConversion", 0);
-    	    			accOrderBill.put("accBillContractId", 0);
-
-    	    			logger.debug("accOrderBill : {}",accOrderBill);
-    	    			 memberListMapper.insertAccOrderBill(accOrderBill);
-
-    	    			//GST 2015-01-06
-    	    			selectInvoiceNo = getDocNoNumber("130");
-    	    			updateDocNoNumber("130");
-
-    	    			EgovMap org001dInfo = null;
-    	    			org001dInfo = memberListMapper.selectORG001DInfo(MemberId) ;
-
-    	    			//if (org001dInfo != null) {
-
-    	    				logger.debug("org001dInfo : {}",org001dInfo);
-
-    	    				Map<String, Object> selectMiscValue = new HashMap<String, Object>();
-    	    				selectMiscValue.put("memberId", MemberId);
-    	    				selectMiscValue.put("memberName", org001dInfo.get("memberNm"));
-    	    				selectMiscValue.put("membetFullName", org001dInfo.get("fulllName"));
-    	    				selectMiscValue.put("address1", org001dInfo.get("address1"));
-    	    				selectMiscValue.put("address2", org001dInfo.get("address2"));
-    	    				selectMiscValue.put("address3", org001dInfo.get("address3"));
-    	    				selectMiscValue.put("address4", org001dInfo.get("address4"));
-    	    				selectMiscValue.put("memberNirc", org001dInfo.get("nric"));
-
-
-    	    				EgovMap selectMiscList = null;
-    	    				selectMiscList = memberListMapper.selectMiscList(selectMiscValue) ;
-
-    	    				if(selectMiscList != null){
-    	    					Map<String, Object>  InvMISC = new HashMap<String, Object>();
-
-    	    					InvMISC.put("taxInvoiceRefNo", selectInvoiceNo.get("docNo"));
-    	    					InvMISC.put("taxInvoiceRefDate", new Date());
-    	    					InvMISC.put("taxInvoiceServiceNo",memberCode);
-    	    					InvMISC.put("taxInvoiceType", 117);
-    	    					InvMISC.put("taxInvoiceCustName",selectMiscList.get("c1"));
-    	    					InvMISC.put("taxInvoiceContactPerson",selectMiscList.get("c1"));
-    	    					InvMISC.put("taxInvoiceAddress1",selectMiscList.get("c3"));
-    	    					InvMISC.put("taxInvoiceAddress2",selectMiscList.get("c4"));
-    	    					InvMISC.put("taxInvoiceAddress3",selectMiscList.get("c5"));
-    	    					InvMISC.put("taxInvoiceAddress4",selectMiscList.get("c6"));
-    	    					InvMISC.put("taxInvoicePostCode",selectMiscList.get("postCode"));
-    	    					InvMISC.put("taxInvoiceStateName",selectMiscList.get("name"));
-    	    					InvMISC.put("taxInvoiceCountry",selectMiscList.get("name1"));
-    	    					InvMISC.put("taxInvoiceTaskID",0);
-    	    					InvMISC.put("taxInvoiceRemark","");
-    	    					//InvMISC.put("taxInvoiceCharges",String.format("%.2f",(double)120.00 * 100 / 106)); -- without GST 6% edited by TPY 24/05/2018
-    	    					//InvMISC.put("taxInvoiceTaxes",String.format("%.2f",(120 - ((double)120.00 * 100 / 106)))); -- without GST 6% edited by TPY 24/05/2018
-    	    					InvMISC.put("taxInvoiceCharges",120);
-    	    					InvMISC.put("taxInvoiceTaxes",0);
-    	    					InvMISC.put("taxInvoiceAmountDue",String.format("%.2f",(double)120));
-    	    					InvMISC.put("taxInvoiceCreated",new Date());
-    	    					InvMISC.put("areaId",selectMiscList.get("areaId"));
-    	    					InvMISC.put("addrDtl",selectMiscList.get("addrDtl"));
-    	    					InvMISC.put("street",selectMiscList.get("street"));
-    	    					InvMISC.put("taxInvoiceCreator",Integer.parseInt(params.get("creator").toString()));
-
-    	    					logger.debug("InvMISC : {}",InvMISC);
-    	    					memberListMapper.insertInvMISC(InvMISC);
-
-    	    					CodeMap.put("code", "tax");
-    	    					String taxInvId = memberListMapper.selectMemberId(CodeMap);
-    	    					Map<String, Object>  InvMISCD = new HashMap<String, Object>();
-    	    					InvMISCD.put("taxInvoiceID",taxInvId );//위에 insert할때 값 가져와서 넣어줘야함
-    	    					InvMISCD.put("invoiceItemType",  1260);
-    	    					InvMISCD.put("invoiceItemOrderNo", "");
-    	    					InvMISCD.put("invoiceItemPONo", "");
-    	    					InvMISCD.put("invoiceItemCode", selectOrganization.get("deptCode"));
-    	    					InvMISCD.put("invoiceItemDescription1",selectMiscList.get("c1"));
-    	    					InvMISCD.put("invoiceItemDescription2",selectMiscList.get("c7"));
-    	    					InvMISCD.put("invoiceItemSerialNo","");
-    	    					InvMISCD.put("invoiceItemQuantity",1);
-    	    					//InvMISCD.put("invoiceItemGSTRate",6); -- without GST 6% edited by TPY 24/05/2018
-    	    					//InvMISCD.put("invoiceItemGSTTaxes",String.format("%.2f",(120 - ((double)120.00 * 100 / 106)))); -- without GST 6% edited by TPY 24/05/2018
-    	    					//InvMISCD.put("invoiceItemCharges",String.format("%.2f",((double)120.00) * 100 / 106)); -- without GST 6% edited by TPY 24/05/2018
-    	    					InvMISCD.put("invoiceItemGSTRate",0);
-    	    					InvMISCD.put("invoiceItemGSTTaxes",0);
-    	    					InvMISCD.put("invoiceItemCharges",120);
-    	    					InvMISCD.put("invoiceItemAmountDue",String.format("%.2f",(double)120));
-    	    					InvMISCD.put("invoiceItemAdd1","");
-    	    					InvMISCD.put("invoiceItemAdd2","");
-    	    					InvMISCD.put("invoiceItemAdd3","");
-    	    					InvMISCD.put("invoiceItemPostCode","");
-    	    					InvMISCD.put("invoiceItemStateName","");
-    	    					InvMISCD.put("invoiceItemCountry","");
-    	    					InvMISCD.put("invoiceItemBillRefNo","");
-    	    					InvMISCD.put("areaId",selectMiscList.get("areaId"));
-    	    					InvMISCD.put("addrDtl",selectMiscList.get("addrDtl"));
-    	    					InvMISCD.put("street",selectMiscList.get("street"));
-
-    	    					logger.debug("InvMISCD : {}",InvMISCD);
-    	    					memberListMapper.insertInvMISCD(InvMISCD);
-
-
-    	    					accOrderBill.put("accBillRemark",selectInvoiceNo.get("docNo"));
-    	    					memberListMapper.updateBillRem(accOrderBill);
-    	    				}
-	    				}
+				 //20-10-2021 - HLTANG - close for LMS project start
+//				EgovMap selectHpBillNo = null;
+//				String hpBillNo="";
+//				EgovMap selectInvoiceNo = null;
+//				//AcBilling Save (for Hp)
+//
+//				int userId = sessionVO.getUserId();
+//
+//				params.put("creator", userId);
+//				params.put("updator", userId);
+//
+//				//if(params.get("memberType").toString().equals("1")){
+//
+//				SimpleDateFormat sfd = new SimpleDateFormat("yyyy-MM-dd");
+//				Date currentDay = new Date();
+//
+//				String startDateString = "2019-10-01";
+//				String endDateString   = "2019-12-31";
+//				Date startDay    = sfd.parse(startDateString);
+//				Date endDay      = sfd.parse(endDateString);
+//
+//				if(currentDay.before(startDay) || currentDay.after(endDay)){
+//    					selectHpBillNo = getDocNo("5");
+//    					logger.debug("selectHpBillNo : {}",selectHpBillNo);
+//    					hpBillNo=(String)selectHpBillNo.get("docNo");
+//    					int hPBillID=5;
+//    					String nextDocNo = getNextDocNo("HPB", selectHpBillNo.get("c1").toString());
+//    					logger.debug("nextDocNo : {}",nextDocNo);
+//    					selectHpBillNo.put("nextDocNo", nextDocNo);
+//    					logger.debug("selectHpBillNo : {}",selectHpBillNo);
+//    					if(Integer.parseInt(selectHpBillNo.get("docNoId").toString()) == hPBillID){
+//    						logger.debug("update 문 탈 예정");
+//    						memberListMapper.updateDocNo(selectHpBillNo);
+//    					}
+//    					params.put("hpBillNo", hpBillNo);
+//
+//    					Map<String, Object> accBill = new HashMap<String, Object>();
+//    					accBill.put("billId", 0);
+//    					accBill.put("billINo", hpBillNo);
+//    					accBill.put("billTypeId", 222);
+//    					accBill.put("billSOID", 0);
+//    					accBill.put("billMemId", MemberId);
+//    					accBill.put("billASID", 0);
+//    					accBill.put("billPayTypeId", 224);
+//    					accBill.put("billMemberShipNo", "");
+//    					accBill.put("billDate", new Date());
+//    					accBill.put("billAmt", 120);
+//    					accBill.put("billRemark", "");
+//    					accBill.put("billIsPaid", false);
+//    					accBill.put("billIsComm", true);
+//    					accBill.put("updator", params.get("updator"));
+//    					accBill.put("updated", new Date());
+//    					accBill.put("syncCheck", true);
+//    					accBill.put("courseId", 0);
+//    					accBill.put("statusId", 1);
+//
+//    					logger.debug("accBill : {}",accBill);
+//    					memberListMapper.insertAccBill(accBill);
+//
+//
+//    	    			//AccOrderBill Save
+//    	    			Map<String, Object> accOrderBill = new HashMap<String, Object>();
+//    	    			accOrderBill.put("accBillTaskId", 0);
+//    	    			accOrderBill.put("accBillRefDate", new Date());
+//    	    			accOrderBill.put("accBillRefNo", "1000");
+//    	    			accOrderBill.put("accBillOrderId", 0);
+//    	    			accOrderBill.put("accBillOrderNo", "");
+//    	    			accOrderBill.put("accBillTypeId", 1159);
+//    	    			accOrderBill.put("accBillModeId", 1171);
+//    	    			accOrderBill.put("accBillScheduleId", 0);
+//    	    			accOrderBill.put("accBillSchedulePeriod", 0);
+//    	    			accOrderBill.put("accBillAdjustmentId", 0);
+//    	    			accOrderBill.put("accBillScheduleAmount", 120);
+//    	    			accOrderBill.put("accBillAdjustmentAmount", 0);
+//    	    			//accOrderBill.put("accBillTaxesAmount",String.format("%.2f", 120 - ((120) * 100 / (double)106))); -- without GST 6% edited by TPY 24/05/2018
+//    	    			accOrderBill.put("accBillTaxesAmount",0);
+//    	    			accOrderBill.put("accBillNetAmount", String.format("%.2f",(double)120));
+//    	    			accOrderBill.put("accBillStatus", 1);
+//    	    			accOrderBill.put("accBillRemark",memberCode);
+//    	    			accOrderBill.put("accBillCreateAt", new Date());
+//    	    			accOrderBill.put("accBillCreateBy", params.get("creator"));
+//    	    			accOrderBill.put("accBillGroupId", 0);
+//    	    			accOrderBill.put("accBillTaxCodeId", 32);
+//    	    			//accOrderBill.put("accBillTaxRate", 6); -- without GST 6% edited by TPY 24/05/2018
+//    	    			accOrderBill.put("accBillTaxRate", 0);
+//    	    			accOrderBill.put("accBillAcctConversion", 0);
+//    	    			accOrderBill.put("accBillContractId", 0);
+//
+//    	    			logger.debug("accOrderBill : {}",accOrderBill);
+//    	    			 memberListMapper.insertAccOrderBill(accOrderBill);
+//
+//    	    			//GST 2015-01-06
+//    	    			selectInvoiceNo = getDocNoNumber("130");
+//    	    			updateDocNoNumber("130");
+//
+//    	    			EgovMap org001dInfo = null;
+//    	    			org001dInfo = memberListMapper.selectORG001DInfo(MemberId) ;
+//
+//    	    			//if (org001dInfo != null) {
+//
+//    	    				logger.debug("org001dInfo : {}",org001dInfo);
+//
+//    	    				Map<String, Object> selectMiscValue = new HashMap<String, Object>();
+//    	    				selectMiscValue.put("memberId", MemberId);
+//    	    				selectMiscValue.put("memberName", org001dInfo.get("memberNm"));
+//    	    				selectMiscValue.put("membetFullName", org001dInfo.get("fulllName"));
+//    	    				selectMiscValue.put("address1", org001dInfo.get("address1"));
+//    	    				selectMiscValue.put("address2", org001dInfo.get("address2"));
+//    	    				selectMiscValue.put("address3", org001dInfo.get("address3"));
+//    	    				selectMiscValue.put("address4", org001dInfo.get("address4"));
+//    	    				selectMiscValue.put("memberNirc", org001dInfo.get("nric"));
+//
+//
+//    	    				EgovMap selectMiscList = null;
+//    	    				selectMiscList = memberListMapper.selectMiscList(selectMiscValue) ;
+//
+//    	    				if(selectMiscList != null){
+//    	    					Map<String, Object>  InvMISC = new HashMap<String, Object>();
+//
+//    	    					InvMISC.put("taxInvoiceRefNo", selectInvoiceNo.get("docNo"));
+//    	    					InvMISC.put("taxInvoiceRefDate", new Date());
+//    	    					InvMISC.put("taxInvoiceServiceNo",memberCode);
+//    	    					InvMISC.put("taxInvoiceType", 117);
+//    	    					InvMISC.put("taxInvoiceCustName",selectMiscList.get("c1"));
+//    	    					InvMISC.put("taxInvoiceContactPerson",selectMiscList.get("c1"));
+//    	    					InvMISC.put("taxInvoiceAddress1",selectMiscList.get("c3"));
+//    	    					InvMISC.put("taxInvoiceAddress2",selectMiscList.get("c4"));
+//    	    					InvMISC.put("taxInvoiceAddress3",selectMiscList.get("c5"));
+//    	    					InvMISC.put("taxInvoiceAddress4",selectMiscList.get("c6"));
+//    	    					InvMISC.put("taxInvoicePostCode",selectMiscList.get("postCode"));
+//    	    					InvMISC.put("taxInvoiceStateName",selectMiscList.get("name"));
+//    	    					InvMISC.put("taxInvoiceCountry",selectMiscList.get("name1"));
+//    	    					InvMISC.put("taxInvoiceTaskID",0);
+//    	    					InvMISC.put("taxInvoiceRemark","");
+//    	    					//InvMISC.put("taxInvoiceCharges",String.format("%.2f",(double)120.00 * 100 / 106)); -- without GST 6% edited by TPY 24/05/2018
+//    	    					//InvMISC.put("taxInvoiceTaxes",String.format("%.2f",(120 - ((double)120.00 * 100 / 106)))); -- without GST 6% edited by TPY 24/05/2018
+//    	    					InvMISC.put("taxInvoiceCharges",120);
+//    	    					InvMISC.put("taxInvoiceTaxes",0);
+//    	    					InvMISC.put("taxInvoiceAmountDue",String.format("%.2f",(double)120));
+//    	    					InvMISC.put("taxInvoiceCreated",new Date());
+//    	    					InvMISC.put("areaId",selectMiscList.get("areaId"));
+//    	    					InvMISC.put("addrDtl",selectMiscList.get("addrDtl"));
+//    	    					InvMISC.put("street",selectMiscList.get("street"));
+//    	    					InvMISC.put("taxInvoiceCreator",Integer.parseInt(params.get("creator").toString()));
+//
+//    	    					logger.debug("InvMISC : {}",InvMISC);
+//    	    					memberListMapper.insertInvMISC(InvMISC);
+//
+//    	    					CodeMap.put("code", "tax");
+//    	    					String taxInvId = memberListMapper.selectMemberId(CodeMap);
+//    	    					Map<String, Object>  InvMISCD = new HashMap<String, Object>();
+//    	    					InvMISCD.put("taxInvoiceID",taxInvId );//위에 insert할때 값 가져와서 넣어줘야함
+//    	    					InvMISCD.put("invoiceItemType",  1260);
+//    	    					InvMISCD.put("invoiceItemOrderNo", "");
+//    	    					InvMISCD.put("invoiceItemPONo", "");
+//    	    					InvMISCD.put("invoiceItemCode", selectOrganization.get("deptCode"));
+//    	    					InvMISCD.put("invoiceItemDescription1",selectMiscList.get("c1"));
+//    	    					InvMISCD.put("invoiceItemDescription2",selectMiscList.get("c7"));
+//    	    					InvMISCD.put("invoiceItemSerialNo","");
+//    	    					InvMISCD.put("invoiceItemQuantity",1);
+//    	    					//InvMISCD.put("invoiceItemGSTRate",6); -- without GST 6% edited by TPY 24/05/2018
+//    	    					//InvMISCD.put("invoiceItemGSTTaxes",String.format("%.2f",(120 - ((double)120.00 * 100 / 106)))); -- without GST 6% edited by TPY 24/05/2018
+//    	    					//InvMISCD.put("invoiceItemCharges",String.format("%.2f",((double)120.00) * 100 / 106)); -- without GST 6% edited by TPY 24/05/2018
+//    	    					InvMISCD.put("invoiceItemGSTRate",0);
+//    	    					InvMISCD.put("invoiceItemGSTTaxes",0);
+//    	    					InvMISCD.put("invoiceItemCharges",120);
+//    	    					InvMISCD.put("invoiceItemAmountDue",String.format("%.2f",(double)120));
+//    	    					InvMISCD.put("invoiceItemAdd1","");
+//    	    					InvMISCD.put("invoiceItemAdd2","");
+//    	    					InvMISCD.put("invoiceItemAdd3","");
+//    	    					InvMISCD.put("invoiceItemPostCode","");
+//    	    					InvMISCD.put("invoiceItemStateName","");
+//    	    					InvMISCD.put("invoiceItemCountry","");
+//    	    					InvMISCD.put("invoiceItemBillRefNo","");
+//    	    					InvMISCD.put("areaId",selectMiscList.get("areaId"));
+//    	    					InvMISCD.put("addrDtl",selectMiscList.get("addrDtl"));
+//    	    					InvMISCD.put("street",selectMiscList.get("street"));
+//
+//    	    					logger.debug("InvMISCD : {}",InvMISCD);
+//    	    					memberListMapper.insertInvMISCD(InvMISCD);
+//
+//
+//    	    					accOrderBill.put("accBillRemark",selectInvoiceNo.get("docNo"));
+//    	    					memberListMapper.updateBillRem(accOrderBill);
+//    	    				}
+//	    				} //20-10-2021 - HLTANG - close for LMS project end
 
 	    				params.put("updUserId", sessionVO.getUserId());
 
@@ -2163,18 +2167,18 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    				// resultValue.put("memCode", afterSelTrainee 결과)
 	    				resultValue =	memberListMapper.afterSelTrainee(params);
 
-	    				// SP_DAY_USER_CRT 프로시저 호출
-	    	    		Map<String, Object>  userPram = new HashMap<String, Object>();
-	    	    		userPram.put("IN_MEMCODE", resultValue.get("memCode"));
-	    	    		logger.debug("SP_DAY_USER_CRT 프로시저 호출 PRAM ===>"+ userPram.toString());
-	    	    		memberListMapper.SP_DAY_USER_CRT(userPram);
-	    	    		userPram.put("P_STATUS", userPram.get("p1"));
-	    	    		logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" +userPram);
+	    				// SP_DAY_USER_CRT 프로시저 호출  //20-10-2021 - HLTANG - close for LMS project start
+//	    	    		Map<String, Object>  userPram = new HashMap<String, Object>();
+//	    	    		userPram.put("IN_MEMCODE", resultValue.get("memCode"));
+//	    	    		logger.debug("SP_DAY_USER_CRT 프로시저 호출 PRAM ===>"+ userPram.toString());
+//	    	    		memberListMapper.SP_DAY_USER_CRT(userPram);
+//	    	    		userPram.put("P_STATUS", userPram.get("p1"));
+//	    	    		logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" +userPram);
 
-	    			//}
+	    			//} //20-10-2021 - HLTANG - close for LMS project end
 
 	    				//call LMS API create user
-	    				Map<String, Object> returnVal = lmsEHPMemberListInsert(params,memberCode);
+	    				Map<String, Object> returnVal = lmsApiService.lmsEHPMemberListInsert(params,memberCode);
 	    				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 	    					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
 	    					throw new RuntimeException(e1);
@@ -2690,505 +2694,6 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	public int updateOrgUserPW(Map<String, Object> params) {
 	    return memberListMapper.updateOrgUserPW(params);
-	}
-
-	@Override
-	public Map<String, Object> lmsMemberListInsert(Map<String, Object> params){
-		Map<String, Object> resultValue = new HashMap<String, Object>();
-		/*if(true) return resultValue;*/
-		EgovMap selectMemListlms = memberListMapper.selectMemberListView(params);
-		List<EgovMap> selectcoursListlms = memberListMapper.selectTraining(params);
-
-		LMSMemApiForm lmsMemApiForm = new LMSMemApiForm();
-
-		lmsMemApiForm.setSecretkey(CommonConstants.lmsSecretKeyDev);
-		lmsMemApiForm.setUsername(selectMemListlms.get("memCode").toString());
-		lmsMemApiForm.setEmail(selectMemListlms.get("email") == null ? "" : selectMemListlms.get("email").toString());
-		lmsMemApiForm.setFirstname(selectMemListlms.get("name1") == null ? "" : selectMemListlms.get("name1").toString());
-		lmsMemApiForm.setLastname(".");
-		lmsMemApiForm.setIdnumber(selectMemListlms.get("nric") == null ? "" : selectMemListlms.get("nric").toString());
-		lmsMemApiForm.setInstitution("Coway Malaysia");
-		lmsMemApiForm.setDepartment(selectMemListlms.get("c41") == null ? "" : selectMemListlms.get("c41").toString());
-		lmsMemApiForm.setPhone1(selectMemListlms.get("telMobile") == null ? "" : selectMemListlms.get("telMobile").toString());
-		lmsMemApiForm.setCity(selectMemListlms.get("city") == null ? "" : selectMemListlms.get("city").toString());
-		lmsMemApiForm.setCountry(selectMemListlms.get("country") == null ? "" : selectMemListlms.get("country").toString());
-		lmsMemApiForm.setProfile_field_postcode(selectMemListlms.get("postcode") == null ? "" : selectMemListlms.get("postcode").toString());
-		//String addrdtl = "";
-		//String street = "";
-		String addr ="";
-		if(selectMemListlms.get("addrDtl") == null){
-			if(selectMemListlms.get("street") == null) {
-				addr = "";
-			}else{
-				addr = selectMemListlms.get("street").toString();
-				//addr = street;
-			}
-		}else{
-			if(selectMemListlms.get("street") == null) {
-				addr = selectMemListlms.get("addrDtl").toString();
-				//street ="";
-				//addr = addrdtl;
-			}else{
-				//addrdtl = selectMemListlms.get("addrDtl").toString();
-				//street = selectMemListlms.get("street").toString();
-				addr = selectMemListlms.get("addrDtl").toString() + " "+ selectMemListlms.get("street").toString();
-			}
-		}
-		lmsMemApiForm.setProfile_field_address(addr);
-		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ? "" : selectMemListlms.get("gender").toString());
-		String formattedDate = "";
-		if(selectMemListlms.get("c29") != null){
-			Date date = null;
-			try {
-				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c29").toString());
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			formattedDate = new SimpleDateFormat("dd-mm-yyyy").format(date);
-		}
-		lmsMemApiForm.setProfile_field_dob(formattedDate);
-		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ? "" : selectMemListlms.get("c57").toString());
-		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ? "" : selectMemListlms.get("c4").toString());
-		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ? "" : selectMemListlms.get("c5").toString());
-		lmsMemApiForm.setProfile_field_region(selectMemListlms.get("state") == null ? "" : selectMemListlms.get("state").toString());
-		lmsMemApiForm.setProfile_field_organizationcode(selectMemListlms.get("c43") == null ? "" : selectMemListlms.get("c43").toString());
-		lmsMemApiForm.setProfile_field_groupcode(selectMemListlms.get("c42") == null ? "" : selectMemListlms.get("c42").toString());
-		//lmsMemApiForm.setProfile_field_MemberStatus(selectMemListlms.get("name") == null ? "" : selectMemListlms.get("name").toString());
-		lmsMemApiForm.setProfile_field_MemberType(selectMemListlms.get("codeName") == null ? "" : selectMemListlms.get("codeName").toString());
-		lmsMemApiForm.setProfile_field_ManagerName(selectMemListlms.get("c23") == null ? "" : selectMemListlms.get("c23").toString());
-		lmsMemApiForm.setProfile_field_ManagerID(selectMemListlms.get("c22") == null ? "" : selectMemListlms.get("c22").toString());
-		lmsMemApiForm.setProfile_field_SeniorManagerName(selectMemListlms.get("c18") == null ? "" : selectMemListlms.get("c18").toString());
-		lmsMemApiForm.setProfile_field_SeniorManagerID(selectMemListlms.get("c17") == null ? "" : selectMemListlms.get("c17").toString());
-		lmsMemApiForm.setProfile_field_GeneralManagerName(selectMemListlms.get("c13") == null ? "" : selectMemListlms.get("c13").toString());
-		lmsMemApiForm.setProfile_field_GeneralManagerID(selectMemListlms.get("c12") == null ? "" : selectMemListlms.get("c12").toString());
-
-		// Edited to add Sleeping userstatus. Hui Ding, 2021-10-08
-		String status = "NO";
-		String userStatus = "";
-		if (selectMemListlms.get("name") != null){
-    		if(selectMemListlms.get("name").toString().equals("Active")){
-    			status = "YES";
-    			if(selectMemListlms.get("c59") != null && selectMemListlms.get("c59").toString().equals("1366")){
-    				status = "NO";
-    				userStatus = "Sleeping";
-    			}
-    		} else {
-    			status = "NO";
-    		}
-		}
-		lmsMemApiForm.setProfile_field_MemberStatus(status);
-		String formattedDate1 = "";
-		if(selectMemListlms.get("c30") != null){
-			Date date = null;
-			try {
-				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c30").toString());
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			formattedDate1 = new SimpleDateFormat("dd-mm-yyyy").format(date);
-		}
-		lmsMemApiForm.setProfile_field_dateJoin(formattedDate1);
-		lmsMemApiForm.setUserstatus(userStatus);
-
-		//call LMS to insert user
-		System.out.println("Start Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
-//		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/add/user/";
-		String lmsUrl = CommonConstants.lmsApiDevUrl + "add/";
-
-		Gson gson = new Gson();
-		String jsonString = gson.toJson(lmsMemApiForm);
-
-		EgovMap reqInfo = new EgovMap();
-		reqInfo.put("jsonString", jsonString);
-		reqInfo.put("lmsUrl", lmsUrl);
-		reqInfo.put("refNo", selectMemListlms.get("nric") == null ? "" : selectMemListlms.get("nric").toString());
-
-		//resultValue = lmsReqApi(reqInfo);
-		lmsReqApi(reqInfo);
-
-		logger.debug("End Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
-
-		return resultValue;
-	}
-
-	@Override
-	public Map<String, Object> lmsMemberListUpdate(Map<String, Object> params){
-		Map<String, Object> resultValue = new HashMap<String, Object>();
-		/*if(true) return resultValue;*/
-		EgovMap selectMemListlms = memberListMapper.selectMemberListView(params);
-		List<EgovMap> selectcoursListlms = memberListMapper.selectTraining(params);
-
-		LMSMemApiForm lmsMemApiForm = new LMSMemApiForm();
-
-		lmsMemApiForm.setSecretkey(CommonConstants.lmsSecretKeyDev);
-		lmsMemApiForm.setUsername(selectMemListlms.get("memCode") == null ? "" : selectMemListlms.get("memCode").toString());
-		lmsMemApiForm.setEmail(selectMemListlms.get("email") == null ? "" : selectMemListlms.get("email").toString());
-		lmsMemApiForm.setFirstname(selectMemListlms.get("name1") == null ? "" : selectMemListlms.get("name1").toString());
-		lmsMemApiForm.setLastname(".");
-		lmsMemApiForm.setIdnumber(selectMemListlms.get("nric") == null ? "" : selectMemListlms.get("nric").toString());
-		lmsMemApiForm.setInstitution("Coway Malaysia");
-		lmsMemApiForm.setDepartment(selectMemListlms.get("c41") == null ? "" : selectMemListlms.get("c41").toString());
-		lmsMemApiForm.setPhone1(selectMemListlms.get("telMobile") == null ? "" : selectMemListlms.get("telMobile").toString());
-		lmsMemApiForm.setCity(selectMemListlms.get("city") == null ? "" : selectMemListlms.get("city").toString());
-		lmsMemApiForm.setCountry(selectMemListlms.get("country") == null ? "" : selectMemListlms.get("country").toString());
-		lmsMemApiForm.setProfile_field_postcode(selectMemListlms.get("postcode") == null ? "" : selectMemListlms.get("postcode").toString());
-		//String addrdtl = "";
-		//String street = "";
-		String addr ="";
-		if(selectMemListlms.get("addrDtl") == null){
-			if(selectMemListlms.get("street") == null) {
-				addr = "";
-			}else{
-				addr = selectMemListlms.get("street").toString();
-				//addr = street;
-			}
-		}else{
-			if(selectMemListlms.get("street") == null) {
-				addr = selectMemListlms.get("addrDtl").toString();
-				//street ="";
-				//addr = addrdtl;
-			}else{
-				//addrdtl = selectMemListlms.get("addrDtl").toString();
-				//street = selectMemListlms.get("street").toString();
-				addr = selectMemListlms.get("addrDtl").toString() + " "+ selectMemListlms.get("street").toString();
-			}
-		}
-		lmsMemApiForm.setProfile_field_address(addr);
-		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ?  "" : selectMemListlms.get("gender").toString());
-		String formattedDate = "";
-		if(selectMemListlms.get("c29") != null){
-			Date date = null;
-			try {
-				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c29").toString());
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			formattedDate = new SimpleDateFormat("dd-mm-yyyy").format(date);
-		}
-		lmsMemApiForm.setProfile_field_dob(formattedDate);
-		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ?  "" : selectMemListlms.get("c57").toString());
-		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ?  "" : selectMemListlms.get("c4").toString());
-		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ?  "" : selectMemListlms.get("c5").toString());
-		lmsMemApiForm.setProfile_field_region(selectMemListlms.get("state") == null ? "" : selectMemListlms.get("state").toString());
-		lmsMemApiForm.setProfile_field_organizationcode(selectMemListlms.get("c43") == null ?  "" : selectMemListlms.get("c43").toString());
-		lmsMemApiForm.setProfile_field_groupcode(selectMemListlms.get("c42") == null ?  "" : selectMemListlms.get("c42").toString());
-		//lmsMemApiForm.setProfile_field_MemberStatus(selectMemListlms.get("name") == null ?  "" : selectMemListlms.get("name").toString());
-		lmsMemApiForm.setProfile_field_MemberType(selectMemListlms.get("codeName") == null ?  "" : selectMemListlms.get("codeName").toString());
-		lmsMemApiForm.setProfile_field_ManagerName(selectMemListlms.get("c23") == null ?  "" : selectMemListlms.get("c23").toString());
-		lmsMemApiForm.setProfile_field_ManagerID(selectMemListlms.get("c22") == null ?  "" : selectMemListlms.get("c22").toString());
-		lmsMemApiForm.setProfile_field_SeniorManagerName(selectMemListlms.get("c18") == null ?  "" : selectMemListlms.get("c18").toString());
-		lmsMemApiForm.setProfile_field_SeniorManagerID(selectMemListlms.get("c17") == null ?  "" : selectMemListlms.get("c17").toString());
-		lmsMemApiForm.setProfile_field_GeneralManagerName(selectMemListlms.get("c13") == null ?  "" : selectMemListlms.get("c13").toString());
-		lmsMemApiForm.setProfile_field_GeneralManagerID(selectMemListlms.get("c12") == null ?  "" : selectMemListlms.get("c12").toString());
-
-		// Edited to add Sleeping userstatus. Hui Ding, 2021-10-08
-		String status = "NO";
-		String userStatus = "";
-		if (selectMemListlms.get("name") != null){
-    		if(selectMemListlms.get("name").toString().equals("Active")){
-    			status = "YES";
-    			if(selectMemListlms.get("c59") != null && selectMemListlms.get("c59").toString().equals("1366")){
-    				status = "NO";
-    				userStatus = "Sleeping";
-    			}
-    		} else {
-    			status = "NO";
-    		}
-		}
-		lmsMemApiForm.setProfile_field_MemberStatus(status);
-		lmsMemApiForm.setUserstatus(userStatus);
-//		lmsMemApiForm.setProfile_field_trainingbatch("");
-//		lmsMemApiForm.setProfile_field_batch("");
-//		lmsMemApiForm.setProfile_field_TrainingVenue("");
-//		lmsMemApiForm.setProfile_field_TRNo("");
-//		lmsMemApiForm.setProfile_field_Tshirtsize("");
-		String formattedDate1 = "";
-		if(selectMemListlms.get("c30") != null){
-			Date date = null;
-			try {
-				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c30").toString());
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			formattedDate1 = new SimpleDateFormat("dd-mm-yyyy").format(date);
-		}
-		lmsMemApiForm.setProfile_field_dateJoin(formattedDate1);
-		String resignDt = selectMemListlms.get("c48") == null ?  "" : selectMemListlms.get("c48").toString();
-		if(!resignDt.equals("1900-01-01")){
-			lmsMemApiForm.setProfile_field_dateResign(resignDt);
-		}
-
-
-		//call LMS to insert user
-		System.out.println("Start Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
-//		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/updated/profile/";
-		String lmsUrl = CommonConstants.lmsApiDevUrl + "update/profile/";
-
-		Gson gson = new Gson();
-		String jsonString = gson.toJson(lmsMemApiForm);
-
-		EgovMap reqInfo = new EgovMap();
-		reqInfo.put("jsonString", jsonString);
-		reqInfo.put("lmsUrl", lmsUrl);
-		reqInfo.put("refNo", selectMemListlms.get("memCode").toString());
-
-		resultValue = lmsReqApi(reqInfo);
-
-		logger.debug("End Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
-
-		return resultValue;
-	}
-
-	@Override
-	public Map<String, Object> lmsEHPMemberListInsert(Map<String, Object> params,String memberCode){
-		Map<String, Object> resultValue = new HashMap<String, Object>();
-		/*if(true) return resultValue;*/
-		EgovMap selectMemListlms = memberListMapper.getHPMemberListView(params);
-		List<EgovMap> selectcoursListlms = memberListMapper.selectTraining(params);
-
-		LMSMemApiForm lmsMemApiForm = new LMSMemApiForm();
-
-		lmsMemApiForm.setSecretkey(CommonConstants.lmsSecretKeyDev);
-		lmsMemApiForm.setUsername(memberCode);
-		lmsMemApiForm.setEmail(selectMemListlms.get("email") == null ? "" : selectMemListlms.get("email").toString());
-		lmsMemApiForm.setFirstname(selectMemListlms.get("name1") == null ? "" : selectMemListlms.get("name1").toString());
-		lmsMemApiForm.setLastname(".");
-		lmsMemApiForm.setIdnumber(selectMemListlms.get("nric") == null ? "" : selectMemListlms.get("nric").toString());
-		lmsMemApiForm.setInstitution("Coway Malaysia");
-		lmsMemApiForm.setDepartment(selectMemListlms.get("c41") == null ? "" : selectMemListlms.get("c41").toString());
-		lmsMemApiForm.setPhone1(selectMemListlms.get("telMobile") == null ? "" : selectMemListlms.get("telMobile").toString());
-		lmsMemApiForm.setCity(selectMemListlms.get("city") == null ? "" : selectMemListlms.get("city").toString());
-		lmsMemApiForm.setCountry(selectMemListlms.get("country") == null ? "" : selectMemListlms.get("country").toString());
-		lmsMemApiForm.setProfile_field_postcode(selectMemListlms.get("postcode") == null ? "" : selectMemListlms.get("postcode").toString());
-		//String addrdtl = "";
-		//String street = "";
-		String addr ="";
-		if(selectMemListlms.get("addrDtl") == null){
-			if(selectMemListlms.get("street") == null) {
-				addr = "";
-			}else{
-				addr = selectMemListlms.get("street").toString();
-				//addr = street;
-			}
-		}else{
-			if(selectMemListlms.get("street") == null) {
-				addr = selectMemListlms.get("addrDtl").toString();
-				//street ="";
-				//addr = addrdtl;
-			}else{
-				//addrdtl = selectMemListlms.get("addrDtl").toString();
-				//street = selectMemListlms.get("street").toString();
-				addr = selectMemListlms.get("addrDtl").toString() + " "+ selectMemListlms.get("street").toString();
-			}
-		}
-		lmsMemApiForm.setProfile_field_address(addr);
-		lmsMemApiForm.setProfile_field_gender(selectMemListlms.get("gender") == null ? "" : selectMemListlms.get("gender").toString());
-		String formattedDate = "";
-		if(selectMemListlms.get("c29") != null){
-			Date date = null;
-			try {
-				date = new SimpleDateFormat("dd/mm/yyyy").parse(selectMemListlms.get("c29").toString());
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			formattedDate = new SimpleDateFormat("dd-mm-yyyy").format(date);
-		}
-		lmsMemApiForm.setProfile_field_dob(formattedDate);
-		lmsMemApiForm.setProfile_field_position(selectMemListlms.get("c57") == null ? "" : selectMemListlms.get("c57").toString());
-		lmsMemApiForm.setProfile_field_branchcode(selectMemListlms.get("c4") == null ? "" : selectMemListlms.get("c4").toString());
-		lmsMemApiForm.setProfile_field_branchname(selectMemListlms.get("c5") == null ? "" : selectMemListlms.get("c5").toString());
-		lmsMemApiForm.setProfile_field_region(selectMemListlms.get("state") == null ? "" : selectMemListlms.get("state").toString());
-		lmsMemApiForm.setProfile_field_organizationcode(selectMemListlms.get("c43") == null ? "" : selectMemListlms.get("c43").toString());
-		lmsMemApiForm.setProfile_field_groupcode(selectMemListlms.get("c42") == null ? "" : selectMemListlms.get("c42").toString());
-		//lmsMemApiForm.setProfile_field_MemberStatus(selectMemListlms.get("name") == null ? "" : selectMemListlms.get("name").toString());
-		lmsMemApiForm.setProfile_field_MemberType(selectMemListlms.get("codeName") == null ? "" : selectMemListlms.get("codeName").toString());
-		lmsMemApiForm.setProfile_field_ManagerName(selectMemListlms.get("c23") == null ? "" : selectMemListlms.get("c23").toString());
-		lmsMemApiForm.setProfile_field_ManagerID(selectMemListlms.get("c22") == null ? "" : selectMemListlms.get("c22").toString());
-		lmsMemApiForm.setProfile_field_SeniorManagerName(selectMemListlms.get("c18") == null ? "" : selectMemListlms.get("c18").toString());
-		lmsMemApiForm.setProfile_field_SeniorManagerID(selectMemListlms.get("c17") == null ? "" : selectMemListlms.get("c17").toString());
-		lmsMemApiForm.setProfile_field_GeneralManagerName(selectMemListlms.get("c13") == null ? "" : selectMemListlms.get("c13").toString());
-		lmsMemApiForm.setProfile_field_GeneralManagerID(selectMemListlms.get("c12") == null ? "" : selectMemListlms.get("c12").toString());
-
-		// Edited to add Sleeping userstatus. Hui Ding, 2021-10-08
-		String status = "NO";
-		String userStatus = "";
-		if (selectMemListlms.get("name") != null){
-    		if(selectMemListlms.get("name").toString().equals("Approved")){
-    			status = "YES";
-    			if(selectMemListlms.get("c59") != null && selectMemListlms.get("c59").toString().equals("1366")){
-    				status = "NO";
-    				userStatus = "Sleeping";
-    			}
-    		} else {
-    			status = "NO";
-    		}
-		}
-		lmsMemApiForm.setProfile_field_MemberStatus(status);
-		lmsMemApiForm.setUserstatus(userStatus);
-
-		//call LMS to insert user
-		System.out.println("Start Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
-//		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/add/user/";
-		String lmsUrl = CommonConstants.lmsApiDevUrl + "add/";
-
-		Gson gson = new Gson();
-		String jsonString = gson.toJson(lmsMemApiForm);
-
-		EgovMap reqInfo = new EgovMap();
-		reqInfo.put("jsonString", jsonString);
-		reqInfo.put("lmsUrl", lmsUrl);
-		reqInfo.put("refNo", selectMemListlms.get("nric") == null ? "" : selectMemListlms.get("nric").toString());
-
-		resultValue = lmsReqApi(reqInfo);
-
-		logger.debug("End Calling LMS API ...." + selectMemListlms.get("memCode") + "......\n");
-
-		return resultValue;
-	}
-
-	@Override
-	public Map<String, Object> lmsMemberListUpdateMemCode(Map<String, Object> params){
-		Map<String, Object> resultValue = new HashMap<String, Object>();
-
-		LMSMemApiForm lmsMemApiForm = new LMSMemApiForm();
-
-		lmsMemApiForm.setSecretkey(CommonConstants.lmsSecretKeyDev);
-		lmsMemApiForm.setUsername(params.get("username").toString());
-		lmsMemApiForm.setNewusername(params.get("newusername").toString());
-		lmsMemApiForm.setProfile_field_MemberType(params.get("memberType").toString());
-		lmsMemApiForm.setProfile_field_dateJoin(params.get("joinDt").toString());
-
-		//call LMS to update member code
-//		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/updated/username/";
-		String lmsUrl = CommonConstants.lmsApiDevUrl + "update/username/";
-
-		Gson gson = new Gson();
-		String jsonString = gson.toJson(lmsMemApiForm);
-
-		EgovMap reqInfo = new EgovMap();
-		reqInfo.put("jsonString", jsonString);
-		reqInfo.put("lmsUrl", lmsUrl);
-		reqInfo.put("refNo", params.get("username").toString());
-
-		resultValue = lmsReqApi(reqInfo);
-
-		return resultValue;
-	}
-
-	@Override
-	public Map<String, Object> lmsMemberListDeact(Map<String, Object> params) {
-		Map<String, Object> resultValue = new HashMap<String, Object>();
-
-		LMSMemApiForm lmsMemApiForm = new LMSMemApiForm();
-
-		lmsMemApiForm.setSecretkey(CommonConstants.lmsSecretKeyDev);
-		lmsMemApiForm.setUsername(params.get("username").toString());
-
-		//call LMS to deactivate member
-//		String lmsUrl = CommonConstants.lmsApiDevUrl + "api/delete/user/";
-		String lmsUrl = CommonConstants.lmsApiDevUrl + "suspend/";
-
-		Gson gson = new Gson();
-		String jsonString = gson.toJson(lmsMemApiForm);
-
-		EgovMap reqInfo = new EgovMap();
-		reqInfo.put("jsonString", jsonString);
-		reqInfo.put("lmsUrl", lmsUrl);
-		reqInfo.put("refNo", params.get("username").toString());
-
-		resultValue = lmsReqApi(reqInfo);
-
-		return resultValue;
-	}
-
-	@Override
-	public Map<String, Object> lmsReqApi(Map<String, Object> params) {
-		Map<String, Object> resultValue = new HashMap<String, Object>();
-		String respTm = null;
-		String lmsApiUserId = "3";
-		//String auth = LMSApiUser + ":" + LMSApiPassword;
-		//byte[] encodedAuth = 	Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
-		//String authorization = "Basic " + new String(encodedAuth);
-
-		StopWatch stopWatch = new StopWatch();
-	    stopWatch.reset();
-	    stopWatch.start();
-
-		String lmsUrl = params.get("lmsUrl").toString();
-		String jsonString = params.get("jsonString").toString();
-		String refNo = params.get("refNo").toString();
-		String output1 = "";
-		LMSApiRespForm p = new LMSApiRespForm();
-		try{
-			URL url = new URL(lmsUrl);
-
-			//insert to api0004m
-			//
-			System.out.println("Start Calling LMS API ...." + lmsUrl + "......\n");
-	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-	        conn.setDoOutput(true);
-	        conn.setRequestMethod("POST");
-	        conn.setRequestProperty("Content-Type", "application/json");
-	        //conn.setRequestProperty("Authorization", authorization);
-	        OutputStream os = conn.getOutputStream();
-	        os.write(jsonString.getBytes());
-	        os.flush();
-
-			if (conn.getResponseCode() != HttpURLConnection.HTTP_CREATED) {
-				BufferedReader br = new BufferedReader(new InputStreamReader(
-		                (conn.getInputStream())));
-				conn.getResponseMessage();
-
-		        String output = "";
-		        logger.debug("Output from Server .... \n");
-		        while ((output = br.readLine()) != null) {
-		        	output1 = output;
-		        	logger.debug(output);
-		        }
-
-		        Gson g = new Gson();
-		        p = g.fromJson(output1, LMSApiRespForm.class);
-
-		        String msg = p.getMessage() != null ? "LMS: " + p.getMessage().toString() : "";
-		        if(p.getStatus() ==null || p.getStatus().isEmpty()){
-		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
-		        	resultValue.put("status", AppConstants.FAIL);
-					resultValue.put("message", msg);
-		        }else if(p.getStatus().equals("true")){
-		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_SUCCESS));
-		        	resultValue.put("status", AppConstants.SUCCESS);
-					resultValue.put("message", msg);
-		        }else{
-		        	resultValue.put("status", AppConstants.FAIL);
-					resultValue.put("message", msg);
-		        	p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
-		        }
-				conn.disconnect();
-
-				br.close();
-			}else{
-				resultValue.put("status", AppConstants.FAIL);
-				resultValue.put("message", "No Response");
-				p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
-				p.setMessage("No Response");
-			}
-		}catch(Exception e){
-			logger.error("Timeout:");
-			logger.error("[lmsMemberListInsertUpdate] - Caught Exception: " + e);
-			p.setStatus(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
-			p.setMessage("Timeout" + e.toString());
-		}finally{
-			stopWatch.stop();
-		    respTm = stopWatch.toString();
-			commonApiService.rtnRespMsg(lmsUrl, p.getCode().toString(), p.getMessage().toString(),respTm , jsonString, output1 ,lmsApiUserId, refNo);
-		}
-
-		return resultValue;
 	}
 
 	@Override

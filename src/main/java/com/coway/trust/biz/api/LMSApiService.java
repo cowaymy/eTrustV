@@ -19,10 +19,17 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface LMSApiService {
 
-  EgovMap insertCourse(HttpServletRequest request,Map<String, Object> lmsApiForm) throws Exception;
-  EgovMap updateCourse(HttpServletRequest request,Map<String, Object> lmsApiForm) throws Exception;
-  EgovMap updateCourseAttend(HttpServletRequest request, Map<String, Object> lmsApiForm) throws Exception;
-  EgovMap updateAttendResult(HttpServletRequest request,Map<String, Object> lmsApiForm) throws Exception;
+	EgovMap insertCourse(HttpServletRequest request,Map<String, Object> lmsApiForm) throws Exception;
+	EgovMap updateCourse(HttpServletRequest request,Map<String, Object> lmsApiForm) throws Exception;
+	EgovMap updateCourseAttend(HttpServletRequest request, Map<String, Object> lmsApiForm) throws Exception;
+	EgovMap updateAttendResult(HttpServletRequest request,Map<String, Object> lmsApiForm) throws Exception;
 
- Map<String, Object> hpMemUpdatePay(Map<String, Object> params,SessionVO sessionVO) throws ParseException;
+	Map<String, Object> hpMemUpdatePay(Map<String, Object> params,SessionVO sessionVO) throws ParseException;
+
+ 	Map<String, Object> lmsMemberListInsert(Map<String, Object> params);
+	Map<String, Object> lmsMemberListUpdate(Map<String, Object> params);
+	Map<String, Object> lmsEHPMemberListInsert(Map<String, Object> params,String memberCode);
+	Map<String, Object> lmsMemberListUpdateMemCode(Map<String, Object> params);
+	Map<String, Object> lmsMemberListDeact(Map<String, Object> params);
+	Map<String, Object> lmsReqApi(Map<String, Object> params);
 }

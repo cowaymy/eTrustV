@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.api.LMSApiService;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.login.LoginService;
@@ -78,8 +79,11 @@ public class MemberListController {
   	@Resource(name="locationService")
   	private LocationService locationService;
 
-	@Autowired
+  	@Autowired
     private LoginService loginService;
+
+	@Autowired
+    private LMSApiService lmsApiService;
 
 	@Autowired
     private SessionHandler sessionHandler;
@@ -1057,7 +1061,7 @@ public class MemberListController {
                     u5 = memberListService.memberListUpdate_MSC09(formMap);
                 }
 
-            	Map<String, Object> returnVal = memberListService.lmsMemberListUpdate(formMap);
+            	Map<String, Object> returnVal = lmsApiService.lmsMemberListUpdate(formMap);
 				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
 					throw new RuntimeException(e1);

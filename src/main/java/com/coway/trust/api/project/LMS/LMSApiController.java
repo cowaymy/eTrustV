@@ -48,15 +48,15 @@ public class LMSApiController {
   @ApiOperation(value = "/insertCourse", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/insertCourse", method = RequestMethod.POST)
   public ResponseEntity<EgovMap> insertCourse(HttpServletRequest request,@RequestParam Map<String, Object> params) throws Exception {
-//    return ResponseEntity.ok(lmsApiService.insertCourse(request, params));
-    return ResponseEntity.ok(null);
+    return ResponseEntity.ok(lmsApiService.insertCourse(request, params));
+//    return ResponseEntity.ok(null);
   }
 
   @ApiOperation(value = "/updateCourse", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/updateCourse", method = RequestMethod.POST)
   public ResponseEntity<EgovMap> updateCourse(HttpServletRequest request,@RequestParam Map<String, Object> params) throws Exception {
-//    return ResponseEntity.ok(lmsApiService.updateCourse(request, params));
-	    return ResponseEntity.ok(null);
+    return ResponseEntity.ok(lmsApiService.updateCourse(request, params));
+//	    return ResponseEntity.ok(null);
   }
 
   @ApiOperation(value = "/updateCourseAttend", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,23 +65,23 @@ public class LMSApiController {
     //return ResponseEntity.ok(lmsApiService.updateCourseAttend(request, params));
 	  String respTm = null, code = AppConstants.FAIL, message = AppConstants.RESPONSE_DESC_INVALID, apiUserId = "0",sysUserId = "0";
 
-//	  StopWatch stopWatch = new StopWatch();
-//	  EgovMap rtn = commonApiService.rtnRespMsg(request, code, message, respTm, params, null ,apiUserId);
-//	  try {
-//		  stopWatch.reset();
-//		  stopWatch.start();
-//
-//		  rtn = lmsApiService.updateCourseAttend(request, params);
-//
-//	  } catch (Exception e){
-//
-//	  } finally {
-//		  stopWatch.stop();
-//	      respTm = stopWatch.toString();
-//	  }
+	  StopWatch stopWatch = new StopWatch();
+	  EgovMap rtn = commonApiService.rtnRespMsg(request, code, message, respTm, params, null ,apiUserId);
+	  try {
+		  stopWatch.reset();
+		  stopWatch.start();
 
-//	  return ResponseEntity.ok(rtn);
-	    return ResponseEntity.ok(null);
+		  rtn = lmsApiService.updateCourseAttend(request, params);
+
+	  } catch (Exception e){
+
+	  } finally {
+		  stopWatch.stop();
+	      respTm = stopWatch.toString();
+	  }
+
+	  return ResponseEntity.ok(rtn);
+//	    return ResponseEntity.ok(null);
 
 
   }
@@ -89,8 +89,8 @@ public class LMSApiController {
   @ApiOperation(value = "/updateAttendResult", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @RequestMapping(value = "/updateAttendResult", method = RequestMethod.POST)
   public ResponseEntity<EgovMap> updateAttendResult(HttpServletRequest request,@RequestParam Map<String, Object> params) throws Exception {
-//    return ResponseEntity.ok(lmsApiService.updateAttendResult(request, params));
-	    return ResponseEntity.ok(null);
+    return ResponseEntity.ok(lmsApiService.updateAttendResult(request, params));
+//	    return ResponseEntity.ok(null);
   }
 
 }
