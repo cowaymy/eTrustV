@@ -800,6 +800,7 @@ var gridPros = {
 //Validation Check
 function fn_saveValidation(){
 console.log("validation");
+var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     if($("#memberNm").val() == ''){
         Common.alert("Please key  in Member Name");
         return false;
@@ -975,6 +976,17 @@ console.log("validation");
                 Common.alert("Please key in Email Address");
                 return false;
             }
+
+          //region Check Email
+            if ((jQuery.trim($("#email").val())).length>0) //20-10-2021 - HLTANG - valid email validation
+            {
+                if (!regEmail.test($("#email").val()))
+                {
+                	Common.alert("Invalid contact person email");
+                	return false;
+                }
+            }
+            //endregion
 
             /* if($("#course").val() == ''){ //20-10-2021 - HLTANG - close for LMS project
                 Common.alert("Please key  in Training Course");
