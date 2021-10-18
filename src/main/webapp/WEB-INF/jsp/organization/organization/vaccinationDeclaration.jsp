@@ -94,9 +94,11 @@ function fn_SubmitAgreement() {
         return false;
     }
 
-    if ($("#upload1Desc").val() == ""){
-        Common.alert("* Supportive document is required.");
-        return false;
+    if($("input:radio[name='isSelect']:checked").val() == 'Y'){
+    	if ($("#upload1Desc").val() == ""){
+            Common.alert("* Supportive document(eg: MySejahtera Vaccine Registration) is required.");
+            return false;
+        }
     }
 
     if($("#ackMemInfoCheckbox").prop('checked') == false) {
@@ -108,7 +110,9 @@ function fn_SubmitAgreement() {
 
     var data = "",formData = new FormData();
 
-    formData.append(1, myFileCaches[1].file);
+    if($("input:radio[name='isSelect']:checked").val() == 'Y'){
+    	formData.append(1, myFileCaches[1].file);
+    }
 
     Common.ajax("GET", "/organization/getVaccineSubmitInfo", {memberID: memberID}, function(result){
         console.log(result);
@@ -118,43 +122,71 @@ function fn_SubmitAgreement() {
         if(cnt == "0" ) {
             Common.confirm("Are you sure want to confirm this application?", function() {
                 // Update applicant status
-            	Common.ajaxFile("/login/attachFileUpload.do", formData, function(result) {
-            		console.log("result" + result);
-                    if(result != 0 && result.code == 00){
-                        $("#form #atchFileGrpId").val(result.data.fileGroupKey);
-                        $("#atchFileGrpId").val(result.data.fileGroupKey);
-                        console.log("result.data.fileGroupKey" + result.data.fileGroupKey);
-                        console.log("atchFileGrpId " + $("#atchFileGrpId").val());
-                        Common.ajax("POST", "/organization/updateVaccineDeclaration.do", $("#agreementForm").serializeJSON(), function(result) {
-                        	if(result.message == "success.") {
-                                var successMsg = "Vaccination info updated successfully";
 
-                                // Redirect to login page
-                                Common.alert(successMsg, function(event) {
-                                    $("#agreementForm").attr({
-                                        action: "/login/login.do",
-                                        method: "POST"
-                                    }).submit();
-                                });
-                            }
+                if($("input:radio[name='isSelect']:checked").val() == 'Y'){
+                	Common.ajaxFile("/login/attachFileUpload.do", formData, function(result) {
+                        console.log("result" + result);
+                        if(result != 0 && result.code == 00){
+                            $("#form #atchFileGrpId").val(result.data.fileGroupKey);
+                            $("#atchFileGrpId").val(result.data.fileGroupKey);
+                            console.log("result.data.fileGroupKey" + result.data.fileGroupKey);
+                            console.log("atchFileGrpId " + $("#atchFileGrpId").val());
+                            Common.ajax("POST", "/organization/updateVaccineDeclaration.do", $("#agreementForm").serializeJSON(), function(result) {
+                                if(result.message == "success.") {
+                                    var successMsg = "Vaccination info updated successfully";
 
-                        },
-                        function(jqXHR, textStatus, errorThrown) {
-                            try {
-                                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to update vaccination info.</b>");
-                                Common.removeLoader();
-                            }
-                            catch (e) {
-                                console.log(e);
-                            }
-                        });
+                                    // Redirect to login page
+                                    Common.alert(successMsg, function(event) {
+                                        $("#agreementForm").attr({
+                                            action: "/login/login.do",
+                                            method: "POST"
+                                        }).submit();
+                                    });
+                                }
 
-                    }else{
-                        Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
-                    }
-                },function(result){
-                    Common.alert("Upload Failed. Please check with System Administrator.");
-                });
+                            },
+                            function(jqXHR, textStatus, errorThrown) {
+                                try {
+                                    Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to update vaccination info.</b>");
+                                    Common.removeLoader();
+                                }
+                                catch (e) {
+                                    console.log(e);
+                                }
+                            });
+
+                        }else{
+                            Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+                        }
+                    },function(result){
+                        Common.alert("Upload Failed. Please check with System Administrator.");
+                    });
+                }else{
+                	Common.ajax("POST", "/organization/updateVaccineDeclaration.do", $("#agreementForm").serializeJSON(), function(result) {
+                        if(result.message == "success.") {
+                            var successMsg = "Vaccination info updated successfully";
+
+                            // Redirect to login page
+                            Common.alert(successMsg, function(event) {
+                                $("#agreementForm").attr({
+                                    action: "/login/login.do",
+                                    method: "POST"
+                                }).submit();
+                            });
+                        }
+
+                    },
+                    function(jqXHR, textStatus, errorThrown) {
+                        try {
+                            Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to update vaccination info.</b>");
+                            Common.removeLoader();
+                        }
+                        catch (e) {
+                            console.log(e);
+                        }
+                    });
+                }
+
             })
         } else if(cnt == "1" ) {
             Common.alert("Member has already submitted declaration.");
@@ -298,7 +330,7 @@ input {
                       </td>
                 </tr> -->
                 <tr>
-                      <th scope="row"><b>Supportive Doc. : </b><span class="must">*</span></th>
+                      <th scope="row"><b>Supportive Doc. : </th>
                       <td>
                          <div id="uploadfiletest">
                               <input type="file" title="file add" id="upload1" accept="image/*" />
