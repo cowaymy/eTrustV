@@ -543,10 +543,10 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
     } finally{
       stopWatch.stop();
       respTm = stopWatch.toString();
-//    	return commonApiService.rtnRespMsg(request, code, message, respTm, data, null ,apiUserId);
+    	return commonApiService.rtnRespMsg(request, code, message, respTm, data, null ,apiUserId);
     }
 
-    return commonApiService.rtnRespMsg(request, code, message, respTm, data, null ,apiUserId);
+//    return commonApiService.rtnRespMsg(request, code, message, respTm, data, null ,apiUserId);
   }
 
   @Override
