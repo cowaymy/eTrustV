@@ -772,6 +772,19 @@ $(function() {
             Common.alert("Please select a member!");
         }
     });
+
+    $("#htPwReset").click(function() {
+        if(selRowIndex >= 0 && selRowIndex != null) {
+            if(memberType == "7") {
+                Common.popupDiv("/organization/resetOrgPW.do", {memberID : memberid,  memType : "7"}, null, true, 'editPWCD');
+            } else {
+                Common.alert("Only HT Member is allowed!");
+            }
+
+        } else {
+            Common.alert("Please select a member!");
+        }
+    });
 });
 
 </script>
@@ -1015,6 +1028,9 @@ $(function() {
             </c:if>
             <c:if test="${PAGE_AUTH.funcUserDefine14 == 'Y'}">
                 <li><p class="link_btn"><a href="#" id="cdPwReset">CD Password Reset</a></li>
+            </c:if>
+            <c:if test="${PAGE_AUTH.funcUserDefine15 == 'Y'}">
+                <li><p class="link_btn"><a href="#" id="htPwReset">HT Password Reset</a></li>
             </c:if>
         </ul>
         <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
