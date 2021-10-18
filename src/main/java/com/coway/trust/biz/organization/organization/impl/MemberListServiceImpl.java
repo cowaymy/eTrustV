@@ -293,10 +293,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
             	//call LMS API create user
 				Map<String, Object> returnVal = lmsApiService.lmsMemberListInsert(memMap);
-				/*if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
 					throw new RuntimeException(e1);
-				}*/
+				}
             	//lmsMemberListInsert(memMap);
             }
 
