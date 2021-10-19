@@ -1396,8 +1396,8 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 		String respTm = null;
 		String lmsApiUserId = "3";
 		String auth = LMSApiUser + ":" + LMSApiPassword;
-		byte[] encodedAuth = 	Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
-		String authorization = "Basic " + new String(encodedAuth);
+		/*byte[] encodedAuth = 	Base64.encodeBase64(auth.getBytes(StandardCharsets.UTF_8));
+		String authorization = "Basic " + new String(encodedAuth);*/
 
 		StopWatch stopWatch = new StopWatch();
 	    stopWatch.reset();
@@ -1418,7 +1418,7 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 	        conn.setDoOutput(true);
 	        conn.setRequestMethod("POST");
 	        conn.setRequestProperty("Content-Type", "application/json");
-	        conn.setRequestProperty("Authorization", authorization);
+	        //conn.setRequestProperty("Authorization", authorization);
 	        OutputStream os = conn.getOutputStream();
 	        os.write(jsonString.getBytes());
 	        os.flush();
