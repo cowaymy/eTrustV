@@ -261,6 +261,15 @@ $(document).ready(function () {
     courseGridID = AUIGrid.create("#course_grid_wrap", courseColumnLayout, courseGridPros);
     attendeeGridID = AUIGrid.create("#attendee_grid_wrap", attendeeColumnLayout, attendeeGridPros);
 
+    //20-10-2021 - HLTANG - close for LMS project start
+    $("#registration_btn").hide();
+    $("#result_btn").hide();
+    $("#addRow_btn").hide();
+    $("#delRow_btn").hide();
+    $("#attendee_save_btn").hide();
+    $("#course_Save_btn").hide();
+    //20-10-2021 - HLTANG - close for LMS project end
+
     fn_setAttendeeGridCheckboxEvent();
 
     // course status
