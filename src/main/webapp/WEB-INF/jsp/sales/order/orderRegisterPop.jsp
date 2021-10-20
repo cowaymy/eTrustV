@@ -2225,8 +2225,7 @@ console.log("vBindingNo" + vBindingNo);
 
     function fn_checkProductQuota() {
         var exceedQuota = false, msg = "";
-
-        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $('#ordProudct').val() , promoId : $('#ordPromo').val() }, function(result) {
+        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $('#ordProudct').val() , promoId : $('#ordPromo').val(), convToOrdYn : convToOrdYn }, function(result) {
             if(result != null) exceedQuota = true;
         });
 

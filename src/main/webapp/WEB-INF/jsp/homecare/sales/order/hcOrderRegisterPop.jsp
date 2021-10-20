@@ -2129,13 +2129,13 @@ console.log(orderVO);
     function fn_checkProductQuota() {
         var exceedQuota = false, msg = "";
 
-        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $("#ordProduct1").val() , promoId : $('#ordPromo1').val() }, function(result) {
+        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $("#ordProduct1").val() , promoId : $('#ordPromo1').val() , convToOrdYn : convToOrdYn}, function(result) {
             if(result != null) {
                 exceedQuota = true;
             }
         });
 
-        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $("#ordProduct2").val() , promoId : $('#ordPromo2').val() }, function(result) {
+        Common.ajaxSync("GET", "/sales/productMgmt/selectQuotaCount.do", {stkId : $("#ordProduct2").val() , promoId : $('#ordPromo2').val() , convToOrdYn : convToOrdYn}, function(result) {
             if(result != null) {
                 exceedQuota = true;
             }

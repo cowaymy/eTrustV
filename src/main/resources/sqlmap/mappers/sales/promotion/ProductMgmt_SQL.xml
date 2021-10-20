@@ -171,7 +171,17 @@
       AND S.IS_CTRL = 1
       AND SYSDATE BETWEEN CTRL_START_DT AND CTRL_END_DT
       AND PD.CTRL_FLAG = 1
-      ) WHERE (EKEYIN_COUNT + ADMIN_KEYIN_COUNT+1) > CTRL_QUOTA
+      )
+      WHERE 1 = 1
+      <choose>
+        <when test='convToOrdYn != null and convToOrdYn !=""'>
+            AND (EKEYIN_COUNT + ADMIN_KEYIN_COUNT) > CTRL_QUOTA
+        </when>
+        <otherwise>
+            AND (EKEYIN_COUNT + ADMIN_KEYIN_COUNT) +1 > CTRL_QUOTA
+        </otherwise>
+      </choose>
+
     </select>
 
     <update id="updateProductCtrl" parameterType="Map">
