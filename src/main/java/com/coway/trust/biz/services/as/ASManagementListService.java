@@ -41,6 +41,8 @@ public interface ASManagementListService {
 
   List<EgovMap> getBrnchId(Map<String, Object> params);
 
+  List<EgovMap> selectDefectEntry(Map<String, Object> params);
+
   EgovMap getMemberBymemberID(Map<String, Object> params);
 
   EgovMap selectOrderBasicInfo(Map<String, Object> params);
@@ -210,4 +212,5 @@ public interface ASManagementListService {
   public int insertSVC0005D(List<EgovMap> addItemList, String AS_RESULT_ID, String UPDATOR);
 
   public int insertInHouseSVC0004D(Map<String, Object> params);
+
 }

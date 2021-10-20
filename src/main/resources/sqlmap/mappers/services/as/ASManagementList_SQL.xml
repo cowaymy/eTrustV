@@ -4933,4 +4933,36 @@
   </select>
 
 
+   <!--added by keyi 20211015-->
+    <select id="selectDefectEntry" parameterType="Map" resultType="egovMap">
+       SELECT Extent1.*  FROM(
+            SELECT DISTINCT B.SALES_ORD_NO AS SALES_ORD_NO,
+               TO_CHAR (A.AS_SETL_DT, 'YYYYMMDD') AS AS_SETL_DT,
+               A.AS_DEFECT_PART_ID,
+               C.DEFECT_CODE AS DEFECT_CODE_DP,
+               C.DEFECT_DESC AS DEFECT_DESC_DP,
+               A.AS_DEFECT_DTL_RESN_ID,
+               D.DEFECT_CODE AS DEFECT_CODE_DD,
+               D.DEFECT_DESC AS DEFECT_DESC_DD,
+               A.AS_DEFECT_ID ,
+               E.DEFECT_CODE AS DEFECT_CODE_DC,
+               E.DEFECT_DESC AS DEFECT_DESC_DC
+
+               FROM SVC0109D A, SAL0001D B, SYS0100M C, SYS0100M D , SYS0100M E
+
+               WHERE A.AS_SO_ID = B.SALES_ORD_ID
+               AND A.AS_DEFECT_PART_ID = C.DEFECT_ID
+               AND A.AS_DEFECT_DTL_RESN_ID = D.DEFECT_ID
+               AND A.AS_DEFECT_ID = E.DEFECT_ID
+
+               AND (EXTRACT(MONTH FROM A.AS_SETL_DT) IN (SELECT EXTRACT(MONTH FROM SYSDATE) -1 FROM dual) OR EXTRACT(MONTH FROM A.AS_SETL_DT) IN (SELECT EXTRACT(MONTH FROM SYSDATE) FROM dual))
+               AND EXTRACT(YEAR FROM A.AS_SETL_DT) IN (SELECT EXTRACT(YEAR FROM SYSDATE) FROM dual)
+               AND A.AS_RESULT_STUS_ID = '4'
+               AND SALES_ORD_NO = #{ORD_NO}
+               ORDER BY AS_SETL_DT DESC
+        ) Extent1
+        where ROWNUM = 1
+
+  </select>
+
 </mapper>

@@ -3530,6 +3530,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
   }
 
   @Override
+public List<EgovMap> selectDefectEntry(Map<String, Object> params) {
+  return ASManagementListMapper.selectDefectEntry(params);
+}
+
+  @Override
   public EgovMap asResult_updateSerial(Map<String, Object> params) {
     // AS'S EDIT RESULT
     ArrayList<AsResultChargesViewVO> vewList = null;

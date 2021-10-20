@@ -338,6 +338,8 @@ public interface ASManagementListMapper {
 
   List<EgovMap> getDefectTypSCList(String params);
 
+  List<EgovMap> selectDefectEntry(Map<String, Object> params);
+
   String getSerialChk(Map<String, Object> params);
 
   int insertLOG0103M(Map<String, Object> params);
