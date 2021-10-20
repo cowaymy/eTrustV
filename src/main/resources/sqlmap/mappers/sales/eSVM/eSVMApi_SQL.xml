@@ -968,7 +968,8 @@
             A.ATCH_FILE_GRP_ID,
             D.NAME CUST_NAME,
             NVL(A.APPV_INSTRCT, 0) RESN_ID,
-            NVL(E.RESN_DESC, '-') RESN
+            NVL(E.RESN_DESC, '-') RESN,
+            NVL(A.APPV_REM, '-') APPV_REM
         FROM SAL0298D A
         JOIN PAY0312D B
             ON A.SVM_QUOT_ID = B.SRV_MEM_QUOT_ID

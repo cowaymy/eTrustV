@@ -60,6 +60,7 @@ public class eSVMApiDto {
     private String resn;
     private int resnId;
     private int payMode;
+    private String appvRem;
 
     /* Filter Listing */
     private int srvFilterId;
@@ -478,6 +479,14 @@ public class eSVMApiDto {
 
     public void setPayMode(int payMode) {
         this.payMode = payMode;
+    }
+
+    public String getAppvRem() {
+        return appvRem;
+    }
+
+    public void setAppvRem(String appvRem) {
+        this.appvRem = appvRem;
     }
 
     public int getSrvFilterId() {
