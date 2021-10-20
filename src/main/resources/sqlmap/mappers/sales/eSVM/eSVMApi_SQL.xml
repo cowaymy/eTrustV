@@ -16,9 +16,9 @@
             NVL(E.PSM_NO, '-') PSM_NO,
             DESC1.CODE_NAME ORDER_TYPE,
             DESC2.CODE_NAME CUST_TYPE,
-            CASE WHEN A.SRV_QUOT_STUS_ID = 1 THEN 'Active Quotation'
-                 WHEN A.SRV_QUOT_STUS_ID = 4 THEN 'Old Completed Quotation'
-                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 1) THEN 'Active Pre-Sales'
+            CASE WHEN (A.SRV_QUOT_STUS_ID = 1 AND E.PSM_ID IS NULL) THEN 'Active Quotation'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.PSM_ID IS NULL) THEN 'Old Completed Quotation'
+                 WHEN (A.SRV_QUOT_STUS_ID = 1 AND E.STUS = 1) THEN 'Active Pre-Sales'
                  WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 5) THEN 'Complete'
                  WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 6) THEN 'Pre-Sales Rejected'
                  WHEN A.SRV_QUOT_STUS_ID = 8 THEN 'Inactive Quotation'
@@ -34,6 +34,13 @@
                  WHEN A.SRV_QUOT_STUS_ID = 10 THEN 10
                  WHEN A.SRV_QUOT_STUS_ID = 21 THEN 21
             END STATUS_ID
+            /*
+            CASE WHEN (A.SRV_QUOT_STUS_ID = 1 AND E.PSM_ID IS NULL) THEN 'Active Quotation'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.PSM_ID IS NULL) THEN 'Old Completed Quotation'
+                 WHEN (A.SRV_QUOT_STUS_ID = 1 AND E.STUS = 1) THEN 'Active Pre-Sales'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 5) THEN 'Complete'
+                 WHEN (A.SRV_QUOT_STUS_ID = 4 AND E.STUS = 6) THEN 'Pre-Sales Rejected'
+            */
         FROM SAL0093D A
         JOIN SAL0001D B
             ON A.SRV_SALES_ORD_ID = B.SALES_ORD_ID
