@@ -52,6 +52,26 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
 	}
 
 	@Override
+	public List<EgovMap> selectCardMode(Map<String, Object> params) {
+		return membershipESvmMapper.selectCardMode(params);
+	}
+
+	@Override
+	public List<EgovMap> selectIssuedBank(Map<String, Object> params) {
+		return membershipESvmMapper.selectIssuedBank(params);
+	}
+
+	@Override
+	public List<EgovMap> selectCardType(Map<String, Object> params) {
+		return membershipESvmMapper.selectCardType(params);
+	}
+
+	@Override
+	public List<EgovMap> selectMerchantBank(Map<String, Object> params) {
+		return membershipESvmMapper.selectMerchantBank(params);
+	}
+
+	@Override
 	public EgovMap selectESvmPreSalesInfo(Map<String, Object> params) {
 		return membershipESvmMapper.selectESvmPreSalesInfo(params);
 	}

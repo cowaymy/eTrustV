@@ -62,8 +62,34 @@
         var stus = '${eSvmInfo.stus}';
         var flg = '${paymentInfo.allowComm}';
         var specialInst = '${eSvmInfo.appvInstrct}';
-        console.log('specialInst: ', specialInst);
-        console.log('stus: ', stus);
+        var cardModeCode = '${paymentInfo.cardModeCode}';
+        var issuBankCode = '${paymentInfo.issuBankCode}';
+        var cardBrandCode = '${paymentInfo.cardBrandCode}';
+        var merchantBankCode = '${paymentInfo.merchantBankCode}';
+
+        if(payMode == '6528')
+       	{
+        	if(stus == '5')
+        	{
+        		$("payment_cardNo").replaceWith('<input id=payment_cardNo name="payment_cardNo" type="text" title=""  value="${paymentInfo.cardNo}" placeholder="" class="w100p readonly" readyonly creditCardText" maxlength=19 />');
+        		$("payment_approvalNo").replaceWith('<input id=payment_approvalNo name="payment_approvalNo" type="text" title="" value="${paymentInfo.approvalNo}" placeholder="" class="w100p readonly" readyonly "  />');
+        		$("payment_expDt").replaceWith('<input id=payment_expDt name="payment_expDt" type="text" title="" value="${paymentInfo.expiryDate}" placeholder="" class="w100p readonly" readyonly maxlength=4  />');
+        		$("payment_transactionDt").replaceWith('<input id=payment_transactionDt name="payment_transactionDt" type="text" title="" value="${paymentInfo.transactionDate}" placeholder="" class="w100p readonly" readyonly  />');
+        		$("payment_ccHolderName").replaceWith('<input id=payment_ccHolderName name="payment_ccHolderName" type="text" title="" value="${paymentInfo.crcName}" placeholder="" class="w100p readonly" readyonly  />');
+        		$("#payment_cardMode").replaceWith('<input id=action name="payment_cardMode" value="${paymentInfo.cardModeDesc}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+        		$("#payment_issuedBank").replaceWith('<input id=action name="payment_issuedBank" value="${paymentInfo.issuBankDesc}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+        		$("#payment_cardType").replaceWith('<input id=action name="payment_cardType" value="${paymentInfo.cardBrandDesc}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+        		$("#payment_merchantBank").replaceWith('<input id=action name="payment_merchantBank" value="${paymentInfo.merchantBankDesc}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+
+        	}
+        	else
+        	{
+        		$("#payment_cardMode option[value='"+ cardModeCode +"']").attr("selected", true);
+                $("#payment_issuedBank option[value='"+ issuBankCode +"']").attr("selected", true);
+                $("#payment_cardType option[value='"+ cardBrandCode +"']").attr("selected", true);
+                $("#payment_merchantBank option[value='"+ merchantBankCode +"']").attr("selected", true);
+        	}
+       	}
         if(stus == '5')
         {
         	$("#payment_transactionID").replaceWith('<input id=payment_transactionID name="payment_transactionID" value="${paymentInfo.trxId}" type="text" title="" placeholder="" class="w100p readonly" readyonly />');
@@ -106,6 +132,14 @@
         //if($("#action").val() == '5') //5:Approved
           //  $("#specInst").hide();
     });
+
+    $('.creditCardText').keyup(function() {
+    	  var foo = $(this).val().split("-").join(""); // remove hyphens
+    	  if (foo.length > 0) {
+    	    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
+    	  }
+    	  $(this).val(foo);
+    	});
 
     $(function(){
         $('#btnSave').click(function() {
@@ -277,7 +311,7 @@
             };*/
 
         var data={
-        		//Update Action Data
+        		//Update SAL0298D & PAY0312D
         		action : $('#action').val(),
                 specialInstruction : $('#specialInstruction').val(),
                 remark : $("#remark").val(),
@@ -287,6 +321,16 @@
                 PONo : $("#PONo").val(),
                 psmId : '${eSvmInfo.psmId}',
                 psmSrvMemNo : '${eSvmInfo.psmSrvMemNo}',
+                payment_cardMode : $("#payment_cardMode").val(),
+                payment_cardNo : $("#payment_cardNo").val(),
+                payment_approvalNo : $("#payment_approvalNo").val(),
+                payment_expDt : $("#payment_expDt").val(),
+                payment_transactionDt : $("#payment_transactionDt").val(),
+                payment_ccHolderName : $("#payment_ccHolderName").val(),
+                payment_issuedBank : $("#payment_issuedBank").val(),
+                payment_cardType : $("#payment_cardType").val(),
+                payment_merchantBank : $("#payment_merchantBank").val(),
+
 
                 // Insert SAL0095D Data
                 srvMemQuotId :   '${eSvmInfo.srvMemQuotId}'  ,
@@ -648,7 +692,55 @@
                 checkResult = false;
                 return checkResult;
         	}
+        }else if('${paymentInfo.payMode}' == '6528') { //card=MOTO/IPP checking
+        	if((FormUtil.isEmpty($("#payment_cardMode").val()))){
+        		Common.alert('Please select Card Mode.');
+                checkResult = false;
+                return checkResult;
+        	}
+        	else if((FormUtil.isEmpty($("#payment_cardNo").val()))){
+        		Common.alert('Please enter Card No.');
+                checkResult = false;
+                return checkResult;
+        	}
+        	else if((FormUtil.isEmpty($("#payment_approvalNo").val()))){
+                Common.alert('Please enter Approval No.');
+                checkResult = false;
+                return checkResult;
+            }
+        	else if((FormUtil.isEmpty($("#payment_expDt").val()))){
+                Common.alert('Please enter Expiry Date (CVV).');
+                checkResult = false;
+                return checkResult;
+            }
+        	else if((FormUtil.isEmpty($("#payment_transactionDt").val()))){
+                Common.alert('Please enter Transaction Date.');
+                checkResult = false;
+                return checkResult;
+            }
+        	else if((FormUtil.isEmpty($("#payment_ccHolderName").val()))){
+                Common.alert('Please enter Credit Card Holder Name.');
+                checkResult = false;
+                return checkResult;
+            }
+        	else if((FormUtil.isEmpty($("#payment_issuedBank").val()))){
+                Common.alert('Please select a Issued Bank.');
+                checkResult = false;
+                return checkResult;
+            }
+        	else if((FormUtil.isEmpty($("#payment_cardType").val()))){
+                Common.alert('Please select a Card Type.');
+                checkResult = false;
+                return checkResult;
+            }
+        	else if((FormUtil.isEmpty($("#payment_merchantBank").val()))){
+                Common.alert('Please select a Merchant Bank.');
+                checkResult = false;
+                return checkResult;
+            }
+
         }
+
 
     	return checkResult;
     }

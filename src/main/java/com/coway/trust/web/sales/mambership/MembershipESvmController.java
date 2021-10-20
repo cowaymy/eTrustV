@@ -119,12 +119,20 @@ public class MembershipESvmController {
 		EgovMap quotInfo = membershipESvmService.selectMembershipQuotInfo(params);
 		params.put("action", result.get("stus"));
 		List<EgovMap> specialInstruction = membershipESvmService.selectActionOption(params);
+		List<EgovMap> payment_cardMode = membershipESvmService.selectCardMode(params);
+		List<EgovMap> payment_issuedBank = membershipESvmService.selectIssuedBank(params);
+		List<EgovMap> payment_cardType = membershipESvmService.selectCardType(params);
+		List<EgovMap> payment_merchantBank = membershipESvmService.selectMerchantBank(params);
 
 		model.put("eSvmInfo", result);
 		model.put("preSalesInfo", preSalesInfo);
 		model.put("paymentInfo", paymentInfo);
 		model.put("quotInfo", quotInfo);
 		model.put("specialInstruction", specialInstruction);
+		model.put("payment_cardMode", payment_cardMode);
+		model.put("payment_issuedBank", payment_issuedBank);
+		model.put("payment_cardType", payment_cardType);
+		model.put("payment_merchantBank", payment_merchantBank);
 
 		logger.debug("params: ===========================>" + params);
 		logger.debug("eSvmInfo: ===========================>" + result);

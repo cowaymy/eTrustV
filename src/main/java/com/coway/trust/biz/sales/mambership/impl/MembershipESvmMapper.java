@@ -23,6 +23,14 @@ public interface MembershipESvmMapper {
 
 	List<EgovMap> selectActionOption(Map<String, Object> params);
 
+	List<EgovMap> selectCardMode(Map<String, Object> params);
+
+	List<EgovMap> selectIssuedBank(Map<String, Object> params);
+
+	List<EgovMap> selectCardType(Map<String, Object> params);
+
+	List<EgovMap> selectMerchantBank(Map<String, Object> params);
+
 	EgovMap selectESvmPreSalesInfo(Map<String, Object> params);
 
 	EgovMap selectESvmPaymentInfo(Map<String, Object> params);

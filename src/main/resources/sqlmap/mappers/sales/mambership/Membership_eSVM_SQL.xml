@@ -356,6 +356,31 @@
         </if>
     </select>
 
+    <select id="selectCardMode" parameterType="Map" resultType="egovMap">
+       SELECT CODE_ID CODE, CODE_DESC CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 130
+    </select>
+
+    <select id="selectIssuedBank" parameterType="Map" resultType="egovMap">
+       SELECT BANK_ID CODE, NAME CODE_NAME FROM SYS0004M
+    </select>
+
+    <select id="selectCardType" parameterType="Map" resultType="egovMap">
+       SELECT CODE_ID CODE, CODE_DESC CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 21
+    </select>
+
+    <select id="selectMerchantBank" parameterType="Map" resultType="egovMap">
+       SELECT
+            ACC_ID AS CODE,
+            ACC_CODE,
+            ACC_DESC,
+            ACC_CODE || ' - ' ||  ACC_DESC AS CODE_NAME
+        FROM SYS0001M
+        WHERE ACC_STUS_ID = 1
+        AND IS_PAY_CRC = 1
+        AND ACC_ID IN (100,102,104,105,106,107,553,563)
+        ORDER BY ACC_CODE ASC
+    </select>
+
     <select id="selectESvmPreSalesInfo" parameterType="Map" resultType="egovMap">
         SELECT INFO.*,
         <![CDATA[
@@ -561,9 +586,13 @@
 
     <select id="selectESvmPaymentInfo" parameterType="Map" resultType="egovMap">
         SELECT PAY.*, (SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID = PAY.CARD_MODE) CARD_MODE_DESC,
+			(SELECT CODE_ID FROM SYS0013M WHERE CODE_ID = PAY.CARD_MODE) CARD_MODE_CODE,
 			(SELECT NAME FROM SYS0004M WHERE BANK_ID = PAY.ISSU_BANK_ID) ISSU_BANK_DESC,
+			(SELECT BANK_ID FROM SYS0004M WHERE BANK_ID = PAY.ISSU_BANK_ID) ISSU_BANK_CODE,
 			(SELECT CODE_DESC FROM SYS0013M WHERE CODE_ID = PAY.CARD_BRAND) CARD_BRAND_DESC,
-			(SELECT ACC_DESC FROM SYS0001M WHERE ACC_ID = PAY.MERCHANT_BANK) MERCHANT_BANK_DESC
+			(SELECT CODE_ID FROM SYS0013M WHERE CODE_ID = PAY.CARD_BRAND) CARD_BRAND_CODE,
+			(SELECT ACC_DESC FROM SYS0001M WHERE ACC_ID = PAY.MERCHANT_BANK) MERCHANT_BANK_DESC,
+			(SELECT ACC_ID FROM SYS0001M WHERE ACC_ID = PAY.MERCHANT_BANK) MERCHANT_BANK_CODE
 		FROM PAY0312D PAY
 		WHERE PAY.PSM_ID = #{psmId}
     </select>
@@ -590,6 +619,33 @@
        </if>
             ESVMPAY.TR_REF_NO = #{trRefNo},
             ESVMPAY.TR_ISSUED_DT = #{trIssuedDt},
+       <if test='payment_cardMode != null and payment_cardMode != ""'>
+                   ESVMPAY.CARD_MODE = #{payment_cardMode},
+       </if>
+       <if test='payment_cardNo != null and payment_cardNo != ""'>
+                   ESVMPAY.CARD_NO = #{payment_cardNo},
+       </if>
+       <if test='payment_approvalNo != null and payment_approvalNo != ""'>
+                   ESVMPAY.APPROVAL_NO = #{payment_approvalNo},
+       </if>
+       <if test='payment_expDt != null and payment_expDt != ""'>
+                   ESVMPAY.EXPIRY_DATE = #{payment_expDt},
+       </if>
+       <if test='payment_transactionDt != null and payment_transactionDt != ""'>
+                   ESVMPAY.TRANSACTION_DATE = #{payment_transactionDt},
+       </if>
+       <if test='payment_ccHolderName != null and payment_ccHolderName != ""'>
+                   ESVMPAY.CRC_NAME = #{payment_ccHolderName},
+       </if>
+       <if test='payment_issuedBank != null and payment_issuedBank != ""'>
+                   ESVMPAY.ISSU_BANK_ID = #{payment_issuedBank},
+       </if>
+       <if test='payment_cardType != null and payment_cardType != ""'>
+                   ESVMPAY.CARD_BRAND = #{payment_cardType},
+       </if>
+       <if test='payment_merchantBank != null and payment_merchantBank != ""'>
+                   ESVMPAY.MERCHANT_BANK = #{payment_merchantBank},
+       </if>
             ESVMPAY.UPD_USER_ID = #{userId},
             ESVMPAY.UPD_DT = SYSDATE
        WHERE ESVMPAY.PSM_ID = #{psmId}
