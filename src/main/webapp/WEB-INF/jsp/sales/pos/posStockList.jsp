@@ -208,6 +208,14 @@ fn_selectPosStockMgmtApprovalPop =function (){
     if(selectedItems.length <= 0) return;
 
 
+
+    if(selectedItems[0].item.scnMoveType  !="R"){
+        Common.alert('* Please check the Movement Type\n "Return"  Movement Type  is available only');
+        return ;
+    }
+
+
+
     if(selectedItems[0].item.scnMoveStat  !="A"){
         Common.alert('* Please check the status \n "ACT" status is only available');
         return ;
@@ -228,7 +236,7 @@ fn_selectPosStockMgmtReceivedPop=function (){
 
 
      if(selectedItems[0].item.scnMoveType  =="R"){
-         Common.alert('* Please Use the approval button ');
+         Common.alert('* Please  Using the approval button. ');
          return ;
      }
 
@@ -279,7 +287,7 @@ fn_selectPosStockMgmtReceivedPop=function (){
 
       <li><p class="btn_blue"><a id="transItemBtn"  onclick="javascript:fn_selectPosStockMgmtTransPop();" ><span class="edit"></span>TRANSFER</a></p></li>
 
-      <li><p class="btn_blue"><a id="rtnItemBtn"  onclick="javascript:fn_selectPosStockMgmtApprovalPop();" ><span class="edit"></span>APRROVAL</a></p></li>
+      <li><p class="btn_blue"><a id="rtnItemBtn"  onclick="javascript:fn_selectPosStockMgmtApprovalPop();" ><span class="edit"></span>APPROVAL</a></p></li>
       <li><p class="btn_blue"><a id="search" onclick="javascript:fn_getDataListAjax();"  ><span class="search"   ></span>Search</a></p></li>
       <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
     </ul>

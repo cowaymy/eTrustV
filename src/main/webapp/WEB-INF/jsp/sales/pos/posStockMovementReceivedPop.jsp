@@ -184,17 +184,50 @@ function fn_saveRecivedGrid(){
     if ($("#itemStatus").val() !="R"){
     	for(var i = 0 ; i < checkList.all.length ; i++){
             var itemReqQty  = checkList.all[i].itemRecvQty;
-
             if(checkList.all[i].itemStatus == "" ||checkList.all[i].itemStatus ==null ){
                 Common.alert('* List status has "" Recevied  item(s). ');
                 return ;
             }
-        }
+
+            if(checkList.all[i].itemStatus =="R"){
+                if(checkList.all[i].atchFileName  == null
+                		|| checkList.all[i].itemRejRemark  == null
+                		|| checkList.all[i].atchFileName  == ""
+                        || checkList.all[i].itemRejRemark  == ""   ){
+
+
+                	Common.alert('* In case of rejection, the reason and attachment are essential. ');
+                    return ;
+                }
+            }
+    	}
+    }else{
+
+    	for(var i = 0 ; i < checkList.all.length ; i++){
+	          if(checkList.all[i].itemStatus =="R"){
+	                if(checkList.all[i].atchFileName  == null
+	                        || checkList.all[i].itemRejRemark  == null
+	                        || checkList.all[i].atchFileName  == ""
+	                        || checkList.all[i].itemRejRemark  == ""   ){
+
+
+	                    Common.alert('* In case of rejection, the reason and attachment are essential. ');
+	                    return ;
+	                }
+	            }
+    	 }
     }
+
+
+
+
 
     var prams ={data:GridCommon.getEditData(myRecivedGridIDPOS) , itemStatus : $("#itemStatus").val() , scnNo:$("#scnReceivedNo").val()};
     Common.ajax("POST", "/sales/posstock/updateRecivedPosStock.do", prams, function(result) {
         Common.alert("<spring:message code='sys.msg.success' htmlEscape='false'/>");
+
+
+        fn_close();
     },  function(jqXHR, textStatus, errorThrown) {
         try {
             console.log("status : " + jqXHR.status);

@@ -17,7 +17,7 @@
 var columnLayout = [
                     {dataField: "itemCode",headerText :"Item Code"           ,width:  100   ,height:30 , visible:false, editable : false},
                     {dataField: "itemDesc",headerText :"Item Description"     ,width: 280    ,height:30 , visible:true, editable : false},
-                    {dataField: "itemInvtQty" ,headerText :"Quantity"                ,width:120   ,height:30 , visible:true, editable : true,dataType : "numeric", formatString : "#,##0"},
+                    {dataField: "itemInvtQty" ,headerText :"Quantity"                ,width:120   ,height:30 , visible:true, editable : true},
                     {dataField: "itemReqQty" ,headerText :"Additional Quantity"                ,width:140   ,height:30 , visible:true, editable : true,dataType : "numeric", formatString : "#,##0"},
                     {dataField: "itemType" ,headerText :"itemType"                ,width:120   ,height:30 , visible:false, editable : false},
                     {dataField: "itemPurhOrdNo" ,headerText :"itemPoOrdNo"                ,width:120   ,height:30 , visible:false, editable : false},
@@ -186,6 +186,8 @@ function fn_saveGrid(){
         //resetUpdatedItems(); // 초기화
         console.log( result);
         Common.alert('SCN Number is : '+result.data);
+
+        fn_close();
 
     }, function(jqXHR, textStatus, errorThrown) {
         try {
