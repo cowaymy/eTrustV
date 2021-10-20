@@ -504,7 +504,7 @@ function fn_vendorValidation(ts){
                     }
                     else
                     {
-                        Common.alert('Somthing is wrong. Please contact administrator2.');
+                        Common.alert('Somthing is wrong. Please contact administrator.');
                     }
                 }
 
@@ -588,7 +588,7 @@ function fn_vendorValidation(ts){
                 }
                 else
                 {
-                    Common.alert('Somthing is wrong. Please contact administrator2.');
+                    Common.alert('Somthing is wrong. Please contact administrator.');
                 }
             }
 
