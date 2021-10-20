@@ -160,7 +160,7 @@
 
 		Common.ajax("GET", "/services/as/getAsDefectEntry.do", jsonObj,
 				function(result) {
-					if (result) {
+			   	if (result) {
 						if (result.length > 0) {
 							fn_asDefectEntryHideSearch(result);
 						} else {
@@ -195,6 +195,16 @@
 					$("#def_code_text").val(result[0].defectDescDc);
 				}
 			});
+		} else {
+			$("#def_part").val("");
+			$("#def_part_id").val("");
+			$("#def_part_text").val("");
+			$("#def_def").val("");
+			$("#def_def_id").val("");
+			$("#def_def_text").val("");
+			$("#def_code").val("");
+			$("#def_code_id").val("");
+			$("#def_code_text").val("");
 		}
 	}
 
@@ -228,7 +238,8 @@
 
 	function fn_asDefectEntryNormal(indicator) {
 
-		if (indicator == 1) {
+// 		if (indicator == 1) {
+	    if (indicator != 2) { //3rd AS
 			//DP DEFETC PART
 			$("#def_part").val("");
 			$("#def_part_id").val("");
@@ -255,9 +266,6 @@
 			$("#solut_code_text").val("");
 			$("#SC").show();
 		} else {
-		}
-
-		if (indicator == 2) {
 			fn_getDefectEntry();
 		}
 	}
