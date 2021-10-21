@@ -1471,15 +1471,26 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         				}
         			}
 
-        			//call lms to deactivate user
                 	Map<String, Object> memMap = new HashMap<String, Object>();
                 	memMap.put("username", selectMember.get("memCode").toString());
 
-                	Map<String, Object> returnVal = lmsApiService.lmsMemberListDeact(memMap);
-            		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
-            			Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
-            			throw new RuntimeException(e1);
-            		}
+
+                	//close for resign using batch to update lms
+                	//update email to format(sysdate_email)
+//                	String emailToChange = selectMember.get("email").toString();
+//                	String strDt = CommonUtils.getNowDate();
+//
+//                	emailToChange = strDt + "_" + emailToChange;
+//                	memMap.put("email", emailToChange);
+//                	memMap.put("memberID", selectMember.get("memId").toString());
+//                	memberListMapper.updateMemberEmail(memMap);
+//
+//                	//update lms site
+//                	Map<String, Object> returnVal = lmsApiService.lmsMemberListDeact(memMap);
+//            		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+//            			Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+//            			throw new RuntimeException(e1);
+//            		}
 
         		}
         		if(Integer.parseInt(params.get("action").toString()) == 757){
@@ -1928,7 +1939,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			EgovMap selectOrganization = null;
 			if(a> 0){
 			    // 2021-04-07 - LaiKW - Insert MSC0009D for HP Orientation
-//			    memberListMapper.insertHPorientation(params);
+//			    memberListMapper.insertHPorientation(params);  //20-10-2021 - HLTANG - close for LMS project
 
 				Map<String, Object> memOrg = new HashMap<String, Object>();
 				CodeMap.put("code", "mem");
@@ -2725,4 +2736,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public void updateVaccineDeclaration(Map<String, Object> params) throws Exception {
 	    memberListMapper.updateVaccineDeclaration(params);
 	}
+
+	@Override
+    public List<EgovMap> selectTrApplByEmail(Map<String, Object> params) {
+        return memberListMapper.selectTrApplByEmail(params);
+    }
 }

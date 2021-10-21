@@ -240,4 +240,6 @@ public interface MemberListService {
 
 	void updateVaccineDeclaration(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectTrApplByEmail(Map<String, Object> params);
+
 }

@@ -635,18 +635,20 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
                     	  MemberListServiceImpl memberListServiceImpl = new MemberListServiceImpl();
                           SessionVO sessionVo = new SessionVO();
                           Map<String, Object> params = new HashMap<>();
-
                           params.put("MemberID", userId.get("memId"));
-                          params.put("memberId", userId.get("memId"));
-                          params.put("memberCode", userId.get("memCode"));
-                          params.put("memberType", userId.get("memType"));
-                          params.put("nric", userId.get("nric"));
 
-                          sessionVo.setUserId(Integer.parseInt(sysUserId));
+                          lmsApiMapper.updateRookieForHp(params);
+
+//                          params.put("memberId", userId.get("memId"));
+//                          params.put("memberCode", userId.get("memCode"));
+//                          params.put("memberType", userId.get("memType"));
+//                          params.put("nric", userId.get("nric"));
+//
+//                          sessionVo.setUserId(Integer.parseInt(sysUserId));
                           //sessionVo.setUserBranchId(Integer.parseInt(userId.get("collctBrnch").toString()));
 
-                          Map<String, Object> resultValue = new HashMap<String, Object>();
-                          resultValue = hpMemUpdatePay(params,sessionVo);
+//                          Map<String, Object> resultValue = new HashMap<String, Object>();
+                          //resultValue = hpMemUpdatePay(params,sessionVo);
 
     //                      if(resultValue.size() > 0){
     //              			if (resultValue.get("duplicMemCode") != null) {
@@ -1176,12 +1178,12 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 		}
 		lmsMemApiForm.setProfile_field_MemberStatus(status);
 		lmsMemApiForm.setUserstatus(userStatus);
-		if(!selectcoursListlms.get(0).isEmpty()){
+//		if(!selectcoursListlms.get(0).isEmpty()){
 			lmsMemApiForm.setProfile_field_trainingbatch(selectcoursListlms.get(0).get("codeName1") == null ? "" : selectcoursListlms.get(0).get("codeName1").toString());
 			lmsMemApiForm.setProfile_field_TrainingVenue(selectcoursListlms.get(0).get("coursLoc") == null ? "" : selectcoursListlms.get(0).get("coursLoc").toString());
 			lmsMemApiForm.setProfile_field_Tshirtsize(selectcoursListlms.get(0).get("shirtSize1") == null ? "" : selectcoursListlms.get(0).get("shirtSize").toString());
 			lmsMemApiForm.setProfile_field_TRNo(selectcoursListlms.get(0).get("traineeCode1") == null ? "" : selectcoursListlms.get(0).get("traineeCode1").toString());
-		}
+//		}
 //		lmsMemApiForm.setProfile_field_batch("");
 		String formattedDate1 = "";
 		if(selectMemListlms.get("c30") != null){
@@ -1373,9 +1375,38 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 
 		lmsMemApiForm.setSecretkey(LMSApiSecretkey);
 		lmsMemApiForm.setUsername(params.get("username").toString());
+		lmsMemApiForm.setEmail(params.get("email").toString());
+		lmsMemApiForm.setUserstatus("");
 
 		//call LMS to deactivate member
 		String lmsUrl = LMSApiDomains + LMSApiUrlSuspend;
+
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(lmsMemApiForm);
+
+		EgovMap reqInfo = new EgovMap();
+		reqInfo.put("jsonString", jsonString);
+		reqInfo.put("lmsUrl", lmsUrl);
+		reqInfo.put("refNo", params.get("username").toString());
+
+		resultValue = lmsReqApi(reqInfo);
+
+		return resultValue;
+	}
+
+	@Override
+	public Map<String, Object> lmsMemberListRestore(Map<String, Object> params) {
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+
+		LMSMemApiForm lmsMemApiForm = new LMSMemApiForm();
+
+		lmsMemApiForm.setSecretkey(LMSApiSecretkey);
+		lmsMemApiForm.setUsername(params.get("username").toString());
+		lmsMemApiForm.setEmail(params.get("email").toString());
+		lmsMemApiForm.setUserstatus("");
+
+		//call LMS to restore member
+		String lmsUrl = LMSApiDomains + LMSApiUrlRestore;
 
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(lmsMemApiForm);

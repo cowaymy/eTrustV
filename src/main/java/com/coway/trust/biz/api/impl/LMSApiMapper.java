@@ -31,4 +31,6 @@ public interface LMSApiMapper {
 	EgovMap selectDocNoMap(Map<String, Object> params);
 
 	int cntCourseCheck(Map<String, Object> params);
+
+	void updateRookieForHp(Map<String, Object> params);
 }

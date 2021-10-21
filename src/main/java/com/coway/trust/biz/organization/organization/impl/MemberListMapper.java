@@ -343,4 +343,7 @@ public interface MemberListMapper {
 	EgovMap getVaccineDeclarationMemDetails(Map<String, Object> params);
 
 	void updateVaccineDeclaration(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> selectTrApplByEmail(Map<String, Object> params);
+	void updateMemberEmail(Map<String, Object> params);
 }

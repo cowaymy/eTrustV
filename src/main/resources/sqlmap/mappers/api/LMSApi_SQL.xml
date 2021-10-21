@@ -156,4 +156,8 @@
         COUNT(*) cnt FROM MSC0008D WHERE COURS_CODE = #{coursCode}
 </select>
 
+<update id="updateRookieForHp" parameterType="Map">
+        update org0001d set rookie = '1' where mem_id = #{MemberID}
+</update>
+
 </mapper>

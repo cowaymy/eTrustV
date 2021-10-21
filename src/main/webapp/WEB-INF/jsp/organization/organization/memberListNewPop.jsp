@@ -29,65 +29,70 @@ function fn_memberSave(){
                 Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
                     console.log("message : " + result.message );
 
-                    // Only applicable to HP Applicant
-                    if($("#memberType").val() == "2803") {
-                        $("#aplcntNRIC").val($("#nric").val());
-                        $("#aplcntName").val($("#memberNm").val());
-                        $("#aplcntMobile").val($("#mobileNo").val());
+                    if(result.message == "Email has been used"){
+                        Common.alert(result.message);
+                    }else{
+                    	// Only applicable to HP Applicant
+                        if($("#memberType").val() == "2803") {
+                            $("#aplcntNRIC").val($("#nric").val());
+                            $("#aplcntName").val($("#memberNm").val());
+                            $("#aplcntMobile").val($("#mobileNo").val());
 
-                        console.log("NRIC :: " + $("#aplcntNRIC").val());
-                        console.log("Name :: " + $("#aplcntName").val());
-                        console.log("Mobile :: " + $("#aplcntMobile").val());
+                            console.log("NRIC :: " + $("#aplcntNRIC").val());
+                            console.log("Name :: " + $("#aplcntName").val());
+                            console.log("Mobile :: " + $("#aplcntMobile").val());
 
-                        // Get ID and identification
-                        Common.ajax("GET", "/organization/getApplicantInfo", $("#applicantDtls").serialize(), function(result) {
-                            console.log("saving member details");
-                            console.log(result);
+                            // Get ID and identification
+                            Common.ajax("GET", "/organization/getApplicantInfo", $("#applicantDtls").serialize(), function(result) {
+                                console.log("saving member details");
+                                console.log(result);
 
-                            var aplcntId = result.id;
-                            var idntfc = result.idntfc;
+                                var aplcntId = result.id;
+                                var idntfc = result.idntfc;
 
-                            // Construct Agreement URL via SMS
-                            var cnfmSms = " COWAY: COMPULSORY click " +
-                                                 "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
-                                                 " for confirmation of HP agreement. TQ!";
+                                // Construct Agreement URL via SMS
+                                var cnfmSms = " COWAY: COMPULSORY click " +
+                                                     "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
+                                                     " for confirmation of HP agreement. TQ!";
 
-                            if($("#mobileNo").val() != "") {
-                                var rTelNo = $("#mobileNo").val();
+                                if($("#mobileNo").val() != "") {
+                                    var rTelNo = $("#mobileNo").val();
 
-                                Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
-                                    console.log("sms.");
-                                    console.log( result);
-                                });
-                            }
+                                    Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
+                                        console.log("sms.");
+                                        console.log( result);
+                                    });
+                                }
 
+                                if($("#email").val() != "") {
+                                    var recipient = $("#email").val();
+
+                                    var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
+
+                                    // Send Email file, recipient
+                                    Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
+                                        console.log("email.");
+                                        console.log(result);
+                                    })
+                                }
+
+                            });
+                        /*}else if($("#memberType").val() == "5") {
                             if($("#email").val() != "") {
                                 var recipient = $("#email").val();
 
-                                var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
+                                var url = "http://etrust.my.coway.com/";
 
                                 // Send Email file, recipient
                                 Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
                                     console.log("email.");
                                     console.log(result);
                                 })
-                            }
-
-                        });
-                    /*}else if($("#memberType").val() == "5") {
-                        if($("#email").val() != "") {
-                            var recipient = $("#email").val();
-
-                            var url = "http://etrust.my.coway.com/";
-
-                            // Send Email file, recipient
-                            Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
-                                console.log("email.");
-                                console.log(result);
-                            })
-                        }*/
+                            }*/
+                        }
+                        Common.alert(result.message,fn_close);
                     }
-                    Common.alert(result.message,fn_close);
+
         });
 }
 

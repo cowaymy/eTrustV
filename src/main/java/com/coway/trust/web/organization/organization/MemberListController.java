@@ -499,6 +499,16 @@ public class MemberListController {
 
 		try {
     		String memCode = "";
+
+    		// To check email address uniqueness - LMS could only receive unique email address. Hui Ding, 2021-10-20
+	       if (formMap.get("email") != null){
+	    	   List<EgovMap> TrExist = memberListService.selectTrApplByEmail(formMap);
+	    	   if(TrExist.size() > 0){
+	    		   message.setMessage("Email has been used");
+	    		   return ResponseEntity.ok(message);
+	    	   }
+	       }
+
     		memCode = memberListService.saveMember(formMap, updList, sessionVO);
     		int userId = sessionVO.getUserId();
     		String memberType =String.valueOf(formMap.get("memberType"));

@@ -5537,4 +5537,15 @@ FROM
                UPD_DT = SYSDATE
            WHERE  MEM_ID = #{memberID}
      </update>
+
+
+     <!-- HLTANG - LMS project usage -->
+    <select id="selectTrApplByEmail" parameterType="Map" resultType="egovMap">
+        SELECT
+MEM_ID, MEM_CODE, EMAIL FROM ORG0001D WHERE EMAIL = #{email} AND STUS IN (1)
+    </select>
+
+    <update id="updateMemberEmail" parameterType="Map">
+     UPDATE ORG0001D SET EMAIL = #{email} WHERE MEM_ID = #{memberID}
+    </update>
 </mapper>

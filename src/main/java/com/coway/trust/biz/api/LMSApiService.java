@@ -31,5 +31,6 @@ public interface LMSApiService {
 	Map<String, Object> lmsEHPMemberListInsert(Map<String, Object> params,String memberCode);
 	Map<String, Object> lmsMemberListUpdateMemCode(Map<String, Object> params);
 	Map<String, Object> lmsMemberListDeact(Map<String, Object> params);
+	Map<String, Object> lmsMemberListRestore(Map<String, Object> params);
 	Map<String, Object> lmsReqApi(Map<String, Object> params);
 }
