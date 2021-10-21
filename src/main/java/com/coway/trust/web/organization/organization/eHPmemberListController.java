@@ -438,6 +438,11 @@ public class eHPmemberListController {
 
        String memCode = "";
 
+       // To check email address uniqueness - LMS could only receive unique email address. Hui Ding, 2021-10-20
+       if (params.get("eHPemail") != null){
+
+       }
+
        memCode = eHPmemberListService.saveEHPMember(params, sessionVO );
 
        logger.debug("memCode : {}", memCode);
