@@ -193,6 +193,20 @@
 					$("#def_code").val(result[0].defectCodeDc);
 					$("#def_code_id").val(result[0].asDefectId);
 					$("#def_code_text").val(result[0].defectDescDc);
+
+					$("#def_type").val(result[0].solutionLargeCode);
+			        $("#def_type_id").val(result[0].solutionLargeId);
+			        $("#def_type_text").val(result[0].solutionLargeDesc);
+			        $("#DT").hide();
+// 			        $("#def_type").attr("disabled", true);
+// 			        $("#def_type_text").attr("disabled", true);
+
+			        $("#solut_code").val(result[0].solutionSmallCode);
+			        $("#solut_code_id").val(result[0].solutionSmallId);
+			        $("#solut_code_text").val(result[0].solutionSmallDesc);
+			        $("#SC").hide();
+// 			        $("#solut_code").attr("disabled", true);
+//                     $("#solut_code_text").attr("disabled", true);
 				}
 			});
 		} else {
@@ -205,6 +219,12 @@
 			$("#def_code").val("");
 			$("#def_code_id").val("");
 			$("#def_code_text").val("");
+			$("#def_type").val("");
+            $("#def_type_id").val("");
+            $("#def_type_text").val("");
+            $("#solut_code").val("");
+            $("#solut_code_id").val("");
+            $("#solut_code_text").val("");
 		}
 	}
 

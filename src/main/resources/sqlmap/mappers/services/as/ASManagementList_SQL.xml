@@ -4935,7 +4935,7 @@
 
    <!--added by keyi 20211015-->
     <select id="selectDefectEntry" parameterType="Map" resultType="egovMap">
-       SELECT Extent1.*  FROM(
+      SELECT * from ( SELECT Extent1.*  FROM(
             SELECT DISTINCT B.SALES_ORD_NO AS SALES_ORD_NO,
                TO_CHAR (A.AS_SETL_DT, 'YYYYMMDD') AS AS_SETL_DT,
                A.AS_DEFECT_PART_ID,
@@ -4958,10 +4958,21 @@
                AND (EXTRACT(MONTH FROM A.AS_SETL_DT) IN (SELECT EXTRACT(MONTH FROM SYSDATE) -1 FROM dual) OR EXTRACT(MONTH FROM A.AS_SETL_DT) IN (SELECT EXTRACT(MONTH FROM SYSDATE) FROM dual))
                AND EXTRACT(YEAR FROM A.AS_SETL_DT) IN (SELECT EXTRACT(YEAR FROM SYSDATE) FROM dual)
                AND A.AS_RESULT_STUS_ID = '4'
-               AND SALES_ORD_NO = #{ORD_NO}
+               AND SALES_ORD_NO = '3381134'
                ORDER BY AS_SETL_DT DESC
-        ) Extent1
-        where ROWNUM = 1
+        ) Extent1  where ROWNUM = 1 )TABLE1 ,
+
+        (select
+        DEFECT_ID AS SOLUTION_LARGE_ID,
+        DEFECT_CODE AS SOLUTION_LARGE_CODE,
+        DEFECT_DESC AS SOLUTION_LARGE_DESC
+        from SYS0100M where DEFECT_TYP = 'DT' and DEFECT_CODE = '0800') TABLE2,
+
+        (select
+        DEFECT_ID AS SOLUTION_SMALL_ID,
+        DEFECT_CODE AS SOLUTION_SMALL_CODE,
+        DEFECT_DESC AS SOLUTION_SMALL_DESC
+        from SYS0100M where DEFECT_TYP = 'SC' and DEFECT_CODE = '0816') TABLE3
 
   </select>
 
