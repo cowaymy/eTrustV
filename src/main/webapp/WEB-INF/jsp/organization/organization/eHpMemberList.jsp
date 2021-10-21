@@ -126,7 +126,7 @@ function fn_hpMemRegisPop(){
                      Common.alert(" Health Planner registration has been completed. <br/>Member Code : "+membercode+"  to  "+ result.message );
                      fn_memberListSearch();
 
-                     /* var newMemCode = result.message;  //20-10-2021 - HLTANG - close for LMS project
+                      var newMemCode = result.message;  //20-10-2021 - HLTANG - close for LMS project
 
                      var today = new Date();
                      var dd = today.getDate();
@@ -154,7 +154,7 @@ function fn_hpMemRegisPop(){
                                  console.log( result);
                              });
                          }
-                     }) */
+                     })
 
                  }
              }
