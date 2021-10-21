@@ -607,6 +607,7 @@
 		    ESVM.APPV_DT = SYSDATE,
 		    ESVM.APPV_REM = #{remark},
 		    ESVM.APPV_USER_ID = #{userId},
+		    ESVM.UPD_USER_ID = #{userId},
 		    ESVM.UPD_DT = SYSDATE
 	   WHERE ESVM.PSM_ID = #{psmId}
     </update>

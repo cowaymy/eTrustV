@@ -87,11 +87,17 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 
 		if(hasBill == false){
 
+			logger.debug("params========>" +params);
+			if(!params.get("docNo").equals(""))
+			{
+				memNo = (String)params.get("docNo");
+			}else{
 			 params.put("DOCNO","12");
 			 memNo =  String.valueOf(membershipConvSaleMapper.getDocNo(params));
 
 			 params.put("DOCNO","19");
 			 memBillNo  = String.valueOf(membershipConvSaleMapper.getDocNo(params));
+			}
 
 			 params.put("srvMemNo", memNo);
 			 params.put("srvMemBillNo", memBillNo);

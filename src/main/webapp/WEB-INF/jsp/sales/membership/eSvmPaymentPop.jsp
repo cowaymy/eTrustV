@@ -48,7 +48,14 @@
 <c:if test="${paymentInfo.payMode eq '6509'}" >
 <tr>
     <th scope="row">Card Mode</th>
-    <td colspan=3><input id=payment_cardMode name="payment_cardMode" type="text" value="${paymentInfo.cardModeDesc}" title="" placeholder="" class="w100p readonly" readonly /></td>
+    <td colspan=3><!--  <input id=payment_cardMode name="payment_cardMode" type="text" value="${paymentInfo.cardModeDesc}" title="" placeholder="" class="w100p readonly" readonly />-->
+        <select id="payment_cardMode" name="payment_cardMode" class="w100p" disabled="true">
+            <option value="">Choose One</option>
+            <c:forEach var="list" items="${payment_cardMode}" varStatus="status">
+                   <option value="${list.code}">${list.codeName}</option>
+            </c:forEach>
+        </select>
+    </td>
 </tr>
 <tr>
     <th scope="row">Card No</th>
@@ -72,15 +79,36 @@
 </tr>
 <tr>
     <th scope="row">Issued Bank</th>
-    <td colspan=3><input id=payment_issuedBank name="payment_issuedBank" type="text" value="${paymentInfo.issuBankDesc}" title="" placeholder="" class="w100p readonly" readonly /></td>
+    <td colspan=3><!--  <input id=payment_issuedBank name="payment_issuedBank" type="text" value="${paymentInfo.issuBankDesc}" title="" placeholder="" class="w100p readonly" readonly />-->
+        <select id="payment_issuedBank" name="payment_issuedBank" class="w100p" disabled="true">
+            <option value="">Choose One</option>
+            <c:forEach var="list" items="${payment_issuedBank}" varStatus="status">
+                   <option value="${list.code}">${list.codeName}</option>
+            </c:forEach>
+        </select>
+    </td>
 </tr>
 <tr>
     <th scope="row">Card Type</th>
-    <td colspan=3><input id=payment_cardType name="payment_cardType" type="text" value="${paymentInfo.cardBrandDesc}" title="" placeholder="" class="w100p readonly" readonly /></td>
+    <td colspan=3><!-- <input id=payment_cardType name="payment_cardType" type="text" value="${paymentInfo.cardBrandDesc}" title="" placeholder="" class="w100p readonly" readonly /> -->
+        <select id="payment_cardType" name="payment_cardType" class="w100p" disabled="true">
+            <option value="">Choose One</option>
+            <c:forEach var="list" items="${payment_cardType}" varStatus="status">
+                   <option value="${list.code}">${list.codeName}</option>
+            </c:forEach>
+        </select>
+    </td>
 </tr>
 <tr>
     <th scope="row">Merchant Bank</th>
-    <td colspan=3><input id=payment_merchantBank name="payment_merchantBank" type="text" value="${paymentInfo.merchantBankDesc}" title="" placeholder="" class="w100p readonly" readonly /></td>
+    <td colspan=3><!--  <input id=payment_merchantBank name="payment_merchantBank" type="text" value="${paymentInfo.merchantBankDesc}" title="" placeholder="" class="w100p readonly" readonly />-->
+        <select id="payment_merchantBank" name="payment_merchantBank" class="w100p" disabled="true">
+            <option value="">Choose One</option>
+            <c:forEach var="list" items="${payment_merchantBank}" varStatus="status">
+                   <option value="${list.code}">${list.codeName}</option>
+            </c:forEach>
+        </select>
+    </td>
 </tr>
 </c:if>
 <!--  only show when payment-mode == card [e] -->

@@ -39,7 +39,7 @@
 <tr id="specInst">
     <th scope="row" id="specialInst_header"><span>Special Instruction</span></th>
     <td colspan='3'>
-    <select id="specialInstruction" name="specialInstruction" class="w100p" >
+    <select id="specialInstruction" name="specialInstruction" class="w100p">
         <option value="">Choose One</option>
         <c:forEach var="list" items="${specialInstruction}" varStatus="status">
                <option value="${list.code}">${list.codeName}</option>
