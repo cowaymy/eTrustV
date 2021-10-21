@@ -128,7 +128,10 @@
             INNER JOIN PAY0032D Extent2 ON Extent2.TAX_INVC_ID = Extent1.TAX_INVC_ID
             INNER JOIN SAL0001D Extent3 ON Extent2.INVC_ITM_ORD_NO = Extent3.SALES_ORD_NO
         WHERE
-            Extent1.TAX_INVC_TYPE = #{invoiceType}
+            1=1
+             <if test="invoiceNo != null and invoiceNo != '' ">
+            AND Extent1.TAX_INVC_TYPE = #{invoiceType}
+             </if>
             <if test="invoiceNo != null and invoiceNo != '' ">
             AND Extent1.TAX_INVC_REF_NO = #{invoiceNo}
             </if>
