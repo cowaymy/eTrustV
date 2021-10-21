@@ -425,6 +425,7 @@
              , NVL(s28q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
              , H11.BNDL_NO
              , s28q.WH_LOC_BRNCH_ID
+             , CASE WHEN (SELECT MEM_TYPE FROM ORG0001D OK WHERE s28q.wh_loc_code = OK.MEM_CODE) = '4' THEN  'Y' ELSE 'N' END AS ADMINCHECK
           from log0047m l47
              , log0048d l48
              , log0054m l54

@@ -228,17 +228,15 @@
 
             var arrDelyNo = new Array();
             var arrDelyNoIdx = 0;
-
+            console.log("noooo : " + checkedItems[0].admincheck);
             if(checkedItems.length < 1 || checkedItems == undefined) {
                 Common.alert('No data selected.');
                 return false;
-            } else if("${SESSION_INFO.roleId}" == "256" && ("${SESSION_INFO.userBranchId}" != checkedItems[0].whLocBrnchId)) {
+            } else if(("${SESSION_INFO.roleId}" == "256" && ("${SESSION_INFO.userBranchId}" != checkedItems[0].whLocBrnchId)) ||(checkedItems[0].admincheck  == "N" && "${SESSION_INFO.roleId}" == "256")) {
                 Common.alert('GR location under Cody.' +"<br>"+' Not allow to proceed.');
                 return false;
                 } else {
 		                for (var i = 0 ; i < checkedItems.length ; i++) {
-
-
 		                    if(checkedItems[i].grcmplt == 'Y') {
 		                        Common.alert('Already processed.');
 		                        return false;

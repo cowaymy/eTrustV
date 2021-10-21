@@ -369,10 +369,10 @@ $(function(){
         if(checkedItems.length <= 0) {
         	Common.alert('No data selected.');
             return false;
-        } else if("${SESSION_INFO.roleId}" == "256" && ("${SESSION_INFO.userBranchId}" != checkedItems[0].whLocBrnchId)) {
+        } else if(("${SESSION_INFO.roleId}" == "256" && ("${SESSION_INFO.userBranchId}" != checkedItems[0].whLocBrnchId)) ||(checkedItems[0].admincheck  == "N" && "${SESSION_INFO.roleId}" == "256")) {
             Common.alert('GR location under Cody.' +"<br>"+' Not allow to proceed.');
             return false;
-            } else{
+            } else {
         	var checkedSmo = [];
 
         	for (var i = 0 ; i < checkedItems.length ; i++){
