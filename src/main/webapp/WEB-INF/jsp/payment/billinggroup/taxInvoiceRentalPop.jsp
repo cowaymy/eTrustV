@@ -126,8 +126,8 @@
 		}
 
 		if (FormUtil.checkReqValue($("#brNo"))
-				&& FormUtil.checkReqValue($("#orderNo"))) {
-			Common.alert('* Please Input BR No OR Order No.<br/>');
+				&& FormUtil.checkReqValue($("#orderNo") && FormUtil.checkReqValue($("#custID")))) {
+		    Common.alert('* Please Input BR No OR Order No OR Customer ID.<br/>');
 			return;
 		}
 

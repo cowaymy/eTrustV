@@ -43,8 +43,9 @@ $(document).ready(function(){
 // 리스트 조회.
 function fn_getTaxInvoiceListAjax() {
 
-    if(FormUtil.checkReqValue($("#billingNo")) && FormUtil.checkReqValue($("#orderNo"))){
-    	Common.alert("<spring:message code='pay.alert.billNoOROrderNo'/>");
+    if(FormUtil.checkReqValue($("#billingNo")) && FormUtil.checkReqValue($("#orderNo"))&& FormUtil.checkReqValue($("#custID"))){
+    	//Common.alert("<spring:message code='pay.alert.billNoOROrderNo'/>");
+    	 Common.alert('* Please Input Billing No OR Order No OR Customer ID.<br/>');
         return;
     }
 

@@ -56,6 +56,9 @@
 			<if test="custName != null and custName != '' ">
 			AND Filter1.TAX_INVC_CUST_NAME LIKE '%' || #{custName} || '%'
 			</if>
+			<if test="custID != null and custID != '' ">
+            AND Filter1.TAX_INVC_CUST_ID = #{custID}
+            </if>
         --ORDER BY Filter1.INVC_ITM_ORD_NO DESC
 
 	</select>
@@ -73,7 +76,7 @@
             txs.INVC_ITM_AMT_DUE,
             TO_NUMBER(TO_CHAR(txm.TAX_INVC_REF_DT,'MM')) AS month,
             TO_NUMBER(TO_CHAR(txm.TAX_INVC_REF_DT,'YYYY')) AS year,
-             orm.CUST_ID TAX_INVC_CUST_ID  <!--Added by Keyi 20211013-->
+            orm.CUST_ID TAX_INVC_CUST_ID  <!--Added by Keyi 20211013-->
         FROM
             PAY0033D txm
             LEFT JOIN PAY0034D txs ON txm.TAX_INVC_ID = txs.TAX_INVC_ID
@@ -99,6 +102,9 @@
             <if test="invoicePeriod != null and invoicePeriod != '' ">
             AND txm.TAX_INVC_REF_DT  <![CDATA[   >= ]]> TO_DATE(#{invoicePeriod},'MM/YYYY')
             AND txm.TAX_INVC_REF_DT  <![CDATA[  < ]]>  LAST_DAY(TO_DATE(#{invoicePeriod},'MM/YYYY')) + 1
+            </if>
+            <if test="custID != null and custID != '' ">
+            AND orm.CUST_ID = #{custID}
             </if>
         ORDER BY txs.INVC_ITM_ORD_NO DESC
     </select>
@@ -139,6 +145,10 @@
             <if test="custName != null and custName != '' ">
             AND Extent1.TAX_INVC_CUST_NAME LIKE '%' || #{custName} || '%'
             </if>
+            <if test="custID != null and custID != '' ">
+            AND Extent3.CUST_ID = #{custID}
+            </if>
+
         ORDER BY Extent1.TAX_INVC_SVC_NO DESC
     </select>
 
@@ -260,6 +270,9 @@
                 </if>
                 <if test="custName != null and custName != '' ">
                 AND Extent1.STATE_CUST_NAME LIKE '%' || #{custName}  || '%'
+                </if>
+                <if test="custID != null and custID != '' ">
+                AND Extent3.CUST_ID = #{custID}
                 </if>
             ORDER BY Extent2.STATE_ITM_ORD_NO DESC
     </select>

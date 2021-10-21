@@ -68,8 +68,9 @@ function f_multiCombo() {
 // 리스트 조회.
 function fn_getTaxInvoiceListAjax() {
 
-    if(FormUtil.checkReqValue($("#orderNo")) &&  FormUtil.checkReqValue($("#invoiceNo"))){
-        Common.alert("<spring:message code='pay.alert.invoiceNoOROrderNo'/>");
+    if(FormUtil.checkReqValue($("#orderNo")) &&  FormUtil.checkReqValue($("#invoiceNo")) &&  FormUtil.checkReqValue($("#custID"))){
+        //Common.alert("<spring:message code='pay.alert.invoiceNoOROrderNo'/>");
+        Common.alert('* Please Input Order No OR Invoice No OR Customer ID.<br/>');
         return;
     }
 

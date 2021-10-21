@@ -53,8 +53,9 @@ $(document).ready(function(){
 // 리스트 조회.
 function fn_getTaxInvoiceListAjax() {
 
-    if(FormUtil.checkReqValue($("#invoiceType option:selected")) ){
-        Common.alert("<spring:message code='pay.alert.selectInvoiceType'/>");
+    if(FormUtil.checkReqValue($("#invoiceType option:selected")) &&  FormUtil.checkReqValue($("#custID")) ){
+        //Common.alert("<spring:message code='pay.alert.selectInvoiceType'/>");
+        Common.alert('* Please Input Invoice Type OR Customer ID.<br/>');
         return;
     }
 
