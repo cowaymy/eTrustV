@@ -90,51 +90,56 @@ function fn_memberSave(){
             Common.ajax("POST", "/organization/eHPmemberSave",  jsonObj , function(result) {
                 console.log("message : " + result.message );
 
-                // Only applicable to HP Applicant
-                if($("#eHPmemberType").val() == "2803") {
-                    $("#eHPaplcntNRIC").val($("#eHPnric").val());
-                    $("#eHPaplcntName").val($("#eHPmemberNm").val());
-                    $("#eHPaplcntMobile").val($("#eHPmobileNo").val());
+                if(result.message == "Email has been used"){
+                	Common.alert(result.message);
+                }else{
+                	// Only applicable to HP Applicant
+                    if($("#eHPmemberType").val() == "2803") {
+                        $("#eHPaplcntNRIC").val($("#eHPnric").val());
+                        $("#eHPaplcntName").val($("#eHPmemberNm").val());
+                        $("#eHPaplcntMobile").val($("#eHPmobileNo").val());
 
-                    console.log("NRIC :: " + $("#eHPaplcntNRIC").val());
-                    console.log("Name :: " + $("#eHPaplcntName").val());
-                    console.log("Mobile :: " + $("#eHPaplcntMobile").val());
+                        console.log("NRIC :: " + $("#eHPaplcntNRIC").val());
+                        console.log("Name :: " + $("#eHPaplcntName").val());
+                        console.log("Mobile :: " + $("#eHPaplcntMobile").val());
 
-                    // Get ID and identification
-                    Common.ajax("GET", "/organization/getApplicantInfo", $("#eHPapplicantDtls").serialize(), function(result) {
-                        console.log("saving member details");
-                        console.log(result);
+                        // Get ID and identification
+                        Common.ajax("GET", "/organization/getApplicantInfo", $("#eHPapplicantDtls").serialize(), function(result) {
+                            console.log("saving member details");
+                            console.log(result);
 
-                        var aplcntId = result.id;
-                        var idntfc = result.idntfc;
+                            var aplcntId = result.id;
+                            var idntfc = result.idntfc;
 
-                        // Construct Agreement URL via SMS
-                        var cnfmSms = " COWAY: COMPULSORY click " +
-                                      "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
-                                      " for confirmation of HP agreement. TQ!";
+                            // Construct Agreement URL via SMS
+                            var cnfmSms = " COWAY: COMPULSORY click " +
+                                          "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
+                                          " for confirmation of HP agreement. TQ!";
 
-                        if($("#eHPmobileNo").val() != "") {
-                            var rTelNo = $("#eHPmobileNo").val();
+                            if($("#eHPmobileNo").val() != "") {
+                                var rTelNo = $("#eHPmobileNo").val();
 
-                            Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
-                                console.log("sms.");
-                                console.log( result);
-                            });
-                        }
+                                Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
+                                    console.log("sms.");
+                                    console.log( result);
+                                });
+                            }
 
-                        if($("#eHPemail").val() != "") {
-                            var recipient = $("#eHPemail").val();
-                            var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
+                            if($("#eHPemail").val() != "") {
+                                var recipient = $("#eHPemail").val();
+                                var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
 
-                            // Send Email file, recipient
-                            Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
-                                console.log("email.");
-                                console.log(result);
-                            })
-                        }
-                    });
+                                // Send Email file, recipient
+                                Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
+                                    console.log("email.");
+                                    console.log(result);
+                                })
+                            }
+                        });
+                    }
+                    Common.alert(result.message,fn_close);
                 }
-                Common.alert(result.message,fn_close);
+
             });
         } else {
             Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);

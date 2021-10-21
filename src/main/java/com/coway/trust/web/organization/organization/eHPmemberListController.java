@@ -437,17 +437,21 @@ public class eHPmemberListController {
        logger.debug("eHPmemberSave - params : {}", params);
 
        String memCode = "";
-
+       ReturnMessage message = new ReturnMessage();
        // To check email address uniqueness - LMS could only receive unique email address. Hui Ding, 2021-10-20
        if (params.get("eHPemail") != null){
-
+    	   List<EgovMap> HpExist = eHPmemberListService.selectHpApplByEmail(params);
+    	   if(HpExist.size() > 0){
+    		   message.setMessage("Email has been used");
+    		   return ResponseEntity.ok(message);
+    	   }
        }
 
        memCode = eHPmemberListService.saveEHPMember(params, sessionVO );
 
        logger.debug("memCode : {}", memCode);
 
-       ReturnMessage message = new ReturnMessage();
+
 
        if(memCode.equals("") && memCode.equals(null)){
            message.setMessage("fail saved");

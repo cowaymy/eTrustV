@@ -1393,7 +1393,8 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </select>
 
     <select id="selectHpApplByEmail" parameterType="Map" resultType="egovMap">
-        SELECT APLCTN_ID, APLICNT_CODE, APLICNT_EMAIL FROM ORG0003D WHERE APLICNT_EMAIL = #{eHPemail} AND STUS_ID NOT IN (6,8,10)
+        SELECT
+        APLCTN_ID, APLICNT_CODE, APLICNT_EMAIL FROM ORG0003D WHERE APLICNT_EMAIL = #{eHPemail} AND STUS_ID NOT IN (6,8,10)
     </select>
 
     </mapper>

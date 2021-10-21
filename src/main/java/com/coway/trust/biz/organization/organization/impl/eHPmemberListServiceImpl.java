@@ -296,4 +296,10 @@ public class eHPmemberListServiceImpl extends EgovAbstractServiceImpl implements
       public EgovMap checkIncomeTax(Map<String, Object> params) {
           return eHPmemberListMapper.checkIncomeTax(params);
       }*/
+
+    @Override
+    public List<EgovMap> selectHpApplByEmail(Map<String, Object> params) {
+        return eHPmemberListMapper.selectHpApplByEmail(params);
+    }
+
 }
