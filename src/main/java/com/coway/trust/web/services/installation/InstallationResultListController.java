@@ -729,6 +729,8 @@ public class InstallationResultListController {
     List<EgovMap> add = (List<EgovMap>) params.get("add");
     Map<String, Object> param = (Map)params.get("installForm");
 
+    List<Map<String, Object>> addList = (List<Map<String, Object>>) params.get("add");
+
     int noRcd = installationResultListService.chkRcdTms(param);
 
     if (noRcd == 1) {
@@ -841,7 +843,7 @@ public class InstallationResultListController {
 
             		  logger.info("### appointment date after: " + installResult.get("appntDt"));
 
-            		  installationResultListService.saveInsAsEntry(add, param, installResult, sessionVO);
+            		  installationResultListService.saveInsAsEntry(addList, param, installResult, sessionVO.getUserId());
             	  }
               }
               // End of inserting charge out filters and spare parts at AS

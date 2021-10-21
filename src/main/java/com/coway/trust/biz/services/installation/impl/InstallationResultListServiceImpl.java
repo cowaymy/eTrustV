@@ -2893,7 +2893,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     if (sessionVO != null) {
 
-    	List<EgovMap> add = (List<EgovMap>) params.get("add");
+    	//List<EgovMap> add = (List<EgovMap>) params.get("add");
+    	List<Map<String, Object>> addList = (List<Map<String, Object>>) params.get("add");
     	Map<String, Object> param = (Map)params.get("installForm");
 
       int noRcd = chkRcdTms(param);
@@ -3002,7 +3003,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
                 if (resultValue.get("value") != null && resultValue.get("value").equals("Completed")){
 
               	  if (param.get("chkCrtAS") != null && (param.get("chkCrtAS").toString().equals("on") || param.get("chkCrtAS").toString().equals("Y"))){
-              		  saveInsAsEntry(add, param, installResult, sessionVO);
+              		  saveInsAsEntry(addList, param, installResult, sessionVO.getUserId());
               	  }
                 }
 
@@ -3263,7 +3264,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
    * @return
    */
   @Override
-  public EgovMap saveInsAsEntry(List<EgovMap> add, Map<String, Object> params, EgovMap installResult, SessionVO sessionVO) {
+  public EgovMap saveInsAsEntry(List<Map<String, Object>> add, Map<String, Object> params, EgovMap installResult, int userId) {
 
     Map svc0004dmap = new HashMap<String, Object>();
 
@@ -3375,7 +3376,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     //svc0004dmap.put("AS_RESULT_ID", AS_RESULT_ID);
     //svc0004dmap.put("AS_RESULT_NO", AS_RESULT_NO);
     svc0004dmap.put("AS_ENTRY_ID", String.valueOf(seqMap.get("seq")).trim());
-    svc0004dmap.put("updator", sessionVO.getUserId());
+    svc0004dmap.put("updator", userId);
 
     /// insert svc0004d
     //int c = asMgmtListService.insertInHouseSVC0004D(svc0004dmap);
@@ -3406,14 +3407,14 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     // call to insert AS_RESULT and charges
     params.put("asResultM", svc0004dmap);
-    params.put("updator", sessionVO.getUserId());
+    params.put("updator", userId);
     params.put("add", add);
 
     EgovMap em = asMgmtListService.asResult_insert(params);
 
     // insert Charge out filters only to SAL0289D -- Installation charge out filters
     try{
-    	insertChgOutFilters(add, installResult, sessionVO);
+    	insertChgOutFilters(add, installResult, userId);
     } catch (Exception e){
     	e.printStackTrace();
     }
@@ -3435,7 +3436,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 	  return installationResultListMapper.selectFilterSparePartList(params);
   }
 
-  public void insertChgOutFilters (List<EgovMap> addItemList, EgovMap installResult, SessionVO sessionVO) throws Exception{
+  public void insertChgOutFilters (List<Map<String, Object>> addItemList, EgovMap installResult, int userId) throws Exception{
 
 	  if (!addItemList.isEmpty()){
 		  EgovMap param = null;
@@ -3465,7 +3466,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     			  param.put("stkId", addItem.get("filterID"));
     			  param.put("qty", addItem.get("filterQty"));
     			  param.put("payMode", addItem.get("filterType"));
-    			  param.put("crtUserId", sessionVO.getUserId());
+    			  param.put("crtUserId", userId);
 
     			  installationResultListMapper.insertFilterChargeOut(param);
     			  seq++;

@@ -142,7 +142,7 @@ public interface InstallationResultListService {
 
   List<EgovMap> getProductListwithCategory(Map<String, Object> params);
 
-  EgovMap saveInsAsEntry(List<EgovMap> add, Map<String, Object> params, EgovMap installResult, SessionVO sessionVO);
+  EgovMap saveInsAsEntry(List<Map<String, Object>> add, Map<String, Object> params, EgovMap installResult, int userId);
 
   List<EgovMap> selectFilterSparePartList(Map<String, Object> params);
 

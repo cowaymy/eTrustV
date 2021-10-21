@@ -1,5 +1,6 @@
 package com.coway.trust.biz.services.installation.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -301,6 +302,28 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
               servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
             }
           }
+
+       // Added for inserting charge out filters and spare parts at AS. By Hui Ding, 06-04-2021
+    	  if (insApiresult.get("chkCrtAS") != null && insApiresult.get("chkCrtAS").toString().equals("1")){
+
+    		  // change format from
+    		  String appntDtFormatted = null;
+
+    		  logger.info("### appointment date before: " + installResult.get("appntDt"));
+
+    		  if (installResult.get("appntDt") != null){
+    			  Date appntDtOri = new SimpleDateFormat("yyyy-MM-dd").parse(installResult.get("appntDt").toString());
+    			  appntDtFormatted = CommonUtils.getFormattedString("dd/MM/yyyy", appntDtOri);
+    			  installResult.put("appntDt", appntDtFormatted); // format date (in string) to dd/MM/yyyy format
+    		  }
+
+    		  logger.info("### appointment date after: " + installResult.get("appntDt"));
+    		  logger.info("### INS AS (filter param) : " + paramsDetail.toString());
+
+    		  installationResultListService.saveInsAsEntry(paramsDetail, params, installResult, Integer.parseInt(userId));
+    	  }
+          // End of inserting charge out filters and spare parts at AS
+
         } catch (Exception e) {
           String procTransactionId = transactionId;
           String procName = "Installation";
