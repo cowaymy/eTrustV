@@ -298,21 +298,22 @@ var TODAY_DD      = "${toDay}";
         }
       }
 
-//       if ($("#userType").val() != "4" && $("#userType").val() != "6") {
-//         if ($("#cmdBranchCode").val() == ''
-//             || $("#cmdBranchCode").val() == null) {
-//           Common.alert("Please Select 'HT Branch'");
-//           return false;
-//         }
-//       }
+      if ($("#userType").val() != "4" && $("#userType").val() != "6") {
+        if ($("#cmdBranchCode").val() == ''
+            || $("#cmdBranchCode").val() == null) {
+          Common.alert("Please Select 'HT Branch'");
+          return false;
+        }
+      }
 
-      if ($("#orgCode").val() =='' && $("#grpCode").val() =='' && $("#deptCode").val() =='') {
+      if ($("#orgCode").val() =='' && $("#grpCode").val() =='' && $("#deptCode").val() =='' && $("#txtSalesOrder").val()=='') {
           if ($("#cmdBranchCode").val() == ''
               || $("#cmdBranchCode").val() == null) {
             Common.alert("Please Select 'HT Branch'");
             return false;
           }
         }
+
 
       if ($("#userType").val() == "2") {
         if ($("#memberLevel").val() == "3"
