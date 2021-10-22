@@ -366,11 +366,16 @@ $(function(){
 
     	var serialRequireChkYn = false;
 
+        //console.log("userroleId : " + "${SESSION_INFO.roleId}");
+        //console.log("userBranchId : " + "${SESSION_INFO.userBranchId}");
+        //console.log("whBranchId : " + checkedItems[0].whLocBrnchId);
+        //console.log("adminCheck : " + checkedItems[0].admincheck);
+
         if(checkedItems.length <= 0) {
         	Common.alert('No data selected.');
             return false;
         } else if(("${SESSION_INFO.roleId}" == "256" && ("${SESSION_INFO.userBranchId}" != checkedItems[0].whLocBrnchId)) ||(checkedItems[0].admincheck  == "N" && "${SESSION_INFO.roleId}" == "256")) {
-            Common.alert('GR location under Cody.' +"<br>"+' Not allow to proceed.');
+        	Common.alert('GR location under Cody.' +"<br>"+' Not allow to proceed.');
             return false;
             } else {
         	var checkedSmo = [];

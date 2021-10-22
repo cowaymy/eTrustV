@@ -226,14 +226,18 @@
             var serialchk = checkedItems[0].serialReqYn
             }
 
+           //console.log("userroleId : " + "${SESSION_INFO.roleId}");
+           //console.log("userBranchId : " + "${SESSION_INFO.userBranchId}");
+           //console.log("whBranchId : " + checkedItems[0].whLocBrnchId);
+           //console.log("adminCheck : " + checkedItems[0].admincheck);
+
             var arrDelyNo = new Array();
             var arrDelyNoIdx = 0;
-            console.log("noooo : " + checkedItems[0].admincheck);
             if(checkedItems.length < 1 || checkedItems == undefined) {
                 Common.alert('No data selected.');
                 return false;
             } else if(("${SESSION_INFO.roleId}" == "256" && ("${SESSION_INFO.userBranchId}" != checkedItems[0].whLocBrnchId)) ||(checkedItems[0].admincheck  == "N" && "${SESSION_INFO.roleId}" == "256")) {
-                Common.alert('GR location under Cody.' +"<br>"+' Not allow to proceed.');
+            	Common.alert('GR location under Cody.' +"<br>"+' Not allow to proceed.');
                 return false;
                 } else {
 		                for (var i = 0 ; i < checkedItems.length ; i++) {
