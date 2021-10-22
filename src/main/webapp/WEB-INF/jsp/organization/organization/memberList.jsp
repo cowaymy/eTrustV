@@ -457,14 +457,25 @@ $(document).ready(function() {
      AUIGrid.bind(myGridID, "cellClick", function(event) {
         selRowIndex = event.rowIndex;
         //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
-        memberid =  AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid");
+
+        /* memberid =  AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid");
         memberType = AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype");
         membercode = AUIGrid.getCellValue(myGridID, event.rowIndex, "membercode");
         statusName = AUIGrid.getCellValue(myGridID, event.rowIndex, "statusName");
         traineeType = AUIGrid.getCellValue(myGridID, event.rowIndex, "traineeType");
         nric = AUIGrid.getCellValue(myGridID, event.rowIndex, "nric");
         memberName = AUIGrid.getCellValue(myGridID, event.rowIndex, "name");
-        testResult = AUIGrid.getCellValue(myGridID, event.rowIndex, "testResult");
+        testResult = AUIGrid.getCellValue(myGridID, event.rowIndex, "testResult"); */
+
+        memberid =  event.item.memberid;
+        memberType = event.item.membertype;
+        membercode = event.item.membercode;
+        statusName = event.item.statusName;
+        traineeType = event.item.traineeType;
+        nric = event.item.nric;
+        memberName = event.item.name;
+        testResult = event.item.testResult;
+
         //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
     });
 
@@ -776,7 +787,7 @@ $(function() {
     $("#htPwReset").click(function() {
         if(selRowIndex >= 0 && selRowIndex != null) {
             if(memberType == "7") {
-                Common.popupDiv("/organization/resetOrgPW.do", {memberID : memberid,  memType : "7"}, null, true, 'editPWCD');
+                Common.popupDiv("/organization/resetOrgPW.do", {memberID : memberid,  memType : "7"}, null, true, 'editPWHT');
             } else {
                 Common.alert("Only HT Member is allowed!");
             }
