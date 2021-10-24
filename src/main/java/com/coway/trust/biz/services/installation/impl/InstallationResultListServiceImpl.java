@@ -3266,6 +3266,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
   @Override
   public EgovMap saveInsAsEntry(List<Map<String, Object>> add, Map<String, Object> params, EgovMap installResult, int userId) {
 
+	 logger.info("########## add : " + add.toString());
+
     Map svc0004dmap = new HashMap<String, Object>();
 
     String AS_NO = "";

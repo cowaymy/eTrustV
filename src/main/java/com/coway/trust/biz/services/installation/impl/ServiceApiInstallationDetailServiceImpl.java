@@ -303,6 +303,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
             }
           }
 
+          logger.info("###insApiresult.get(chkCrtAS): " + insApiresult.get("chkCrtAS"));
+
        // Added for inserting charge out filters and spare parts at AS. By Hui Ding, 06-04-2021
     	  if (insApiresult.get("chkCrtAS") != null && insApiresult.get("chkCrtAS").toString().equals("1")){
 
