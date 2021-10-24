@@ -306,13 +306,36 @@ var TODAY_DD      = "${toDay}";
         }
       }
 
-      if ($("#orgCode").val() =='' && $("#grpCode").val() =='' && $("#deptCode").val() =='' && $("#txtSalesOrder").val()=='') {
-          if ($("#cmdBranchCode").val() == ''
-              || $("#cmdBranchCode").val() == null) {
+
+      var searchFormElement = document.getElementById("hsManagement");
+      var arrInput = searchFormElement.getElementsByTagName("input");
+      var arrSelect = searchFormElement.getElementsByTagName("select");
+      var msgBox_Ind = 1;
+
+      for(var i = 0; i < arrInput.length; i++){
+    	   if(arrInput[i].id !="cmdBranchCode" && arrInput[i].id !="cmdCdManager" && arrInput[i].id !="myBSMonth" && arrInput[i].id !="cmblistAppType"){
+    		   if($("#"+arrInput[i].id).val() !='' && $("#"+arrInput[i].id).val() !=null) {
+    			   msgBox_Ind =0;
+    		 }
+    	  }
+      }
+
+      for(var j = 0; j < arrSelect.length; j++){
+    	    if(arrSelect[j].id !="cmdBranchCode" && arrSelect[j].id !="cmdCdManager" && arrSelect[j].id !="myBSMonth" && arrSelect[j].id !="cmblistAppType"){
+    	    	  if($("#"+arrSelect[j].id).val() !='' && $("#"+arrSelect[j].id).val() !=null) {
+                      msgBox_Ind =0;
+                }
+    	   }
+      }
+
+
+
+      if (msgBox_Ind==1) {
+          if ($("#cmdBranchCode").val() == '' || $("#cmdBranchCode").val() == null) {
             Common.alert("Please Select 'HT Branch'");
             return false;
           }
-        }
+       }
 
 
       if ($("#userType").val() == "2") {
