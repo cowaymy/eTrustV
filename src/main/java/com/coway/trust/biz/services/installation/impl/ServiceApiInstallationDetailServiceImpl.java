@@ -85,6 +85,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
         EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
         params.put("installEntryId", installResult.get("installEntryId"));
 
+        logger.debug("### insApiresult :  " + insApiresult.toString());
+
         // INST AS FILTER CHARGE PARTS 19/05/2021 ALEXXX
         List<Map<String, Object>> paramsDetail = InstallationResultDetailForm.createMaps((List<InstallationResultDetailForm>) insApiresult.get("partList"));
 		logger.debug("### INST AS PART INFO : " + paramsDetail.toString());
@@ -303,10 +305,10 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
             }
           }
 
-          logger.info("###insApiresult.get(chkCrtAS): " + insApiresult.get("chkCrtAS"));
+          logger.info("###insApiresult.get(chkCrtAs): " + insApiresult.get("chkCrtAs"));
 
        // Added for inserting charge out filters and spare parts at AS. By Hui Ding, 06-04-2021
-    	  if (insApiresult.get("chkCrtAS") != null && insApiresult.get("chkCrtAS").toString().equals("1")){
+    	  if (insApiresult.get("chkCrtAs") != null && insApiresult.get("chkCrtAs").toString().equals("1")){
 
     		  // change format from
     		  String appntDtFormatted = null;
