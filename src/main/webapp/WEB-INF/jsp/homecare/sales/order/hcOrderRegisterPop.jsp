@@ -6,6 +6,11 @@
 
 <script type="text/javaScript" language="javascript">
 
+    var TODAY_DD      = "${toDay}";
+    var BEFORE_DD = "${bfDay}";
+    var blockDtFrom = "${hsBlockDtFrom}";
+    var blockDtTo = "${hsBlockDtTo}";
+
     var convToOrdYn  = "${CONV_TO_ORD_YN}";
     var copyChangeYn = "${COPY_CHANGE_YN}";
     var bulkOrderYn  = "${BULK_ORDER_YN}";
@@ -2551,6 +2556,23 @@ console.log(orderVO);
 //              AUIGrid.resize(docGridID);
                 if(docDefaultChk == false) fn_checkDocList(true);
                 break;
+            case 'sal' :
+
+                var todayDD = Number(TODAY_DD.substr(0, 2));
+                var todayYY = Number(TODAY_DD.substr(6, 4));
+
+                var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
+                var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
+
+                console.log("todayDD: " + todayDD);
+                console.log("blockDtFrom : " + blockDtFrom);
+                console.log("blockDtTo : " + blockDtTo);
+
+                 if(todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
+                     var msg = "For Ex-trad sales key-in, if the order doesn't meet the period date (after clsoing until 2nd every month) need cancel and rekey-in.";
+                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+                     return;
+                 }
             default :
                 break;
         }
