@@ -2569,7 +2569,7 @@ console.log(orderVO);
                 console.log("blockDtTo : " + blockDtTo);
 
                  if(todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
-                     var msg = "For Ex-trad sales key-in, if the order doesn't meet the period date (after clsoing until 2nd every month) need cancel and rekey-in.";
+                     var msg = "Extrade sales key-in does not meet period date (Submission start on 3rd of every month)";
                      Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
                      return;
                  }
