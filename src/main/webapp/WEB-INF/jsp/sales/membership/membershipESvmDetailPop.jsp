@@ -73,7 +73,7 @@
         		$("#payment_cardNo").replaceWith('<input id=payment_cardNo name="payment_cardNo" type="text" title=""  value="${paymentInfo.cardNo}" placeholder="" class="w100p readonly" readyonly creditCardText" maxlength=19 />');
         		$("#payment_approvalNo").replaceWith('<input id=payment_approvalNo name="payment_approvalNo" type="text" title="" value="${paymentInfo.approvalNo}" placeholder="" class="w100p readonly" readyonly "  />');
         		$("#payment_expDt").replaceWith('<input id=payment_expDt name="payment_expDt" type="text" title="" value="${paymentInfo.expiryDate}" placeholder="" class="w100p readonly" readyonly maxlength=4  />');
-        		$("#payment_transactionDt").replaceWith('<input id=payment_transactionDt name="payment_transactionDt" type="text" title="" value="${paymentInfo.transactionDate}" placeholder="" class="w100p readonly" readyonly  />');
+        		//$("#payment_transactionDt").replaceWith('<input id=payment_transactionDt name="payment_transactionDt" type="text" title="" value="${paymentInfo.transactionDate}" placeholder="" class="w100p readonly" readyonly  />');
         		$("#payment_ccHolderName").replaceWith('<input id=payment_ccHolderName name="payment_ccHolderName" type="text" title="" value="${paymentInfo.crcName}" placeholder="" class="w100p readonly" readyonly  />');
         		$("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
                 $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
@@ -90,8 +90,16 @@
                 $("#payment_merchantBank").attr("disabled", true);
                 $("#specInst").hide();
                 $("#btnSave").hide();
+
+                var trxDt = $("#payment_transactionDt").val();
+                if(trxDt.length != 10)
+                {
+                    trxDt = trxDt.substr(0,2) + '/' + trxDt.substr(2,2) + '/' + trxDt.substr(4,4);
+                    $("#payment_transactionDt").val(trxDt);
+                }
+                $("#payment_transactionDt").attr("disabled", true);
         	}
-        	else
+        	else if(stus == '1')
         	{
         		$("#payment_cardMode option[value='"+ cardModeCode +"']").attr("selected", true);
                 $("#payment_issuedBank option[value='"+ issuBankCode +"']").attr("selected", true);
@@ -102,6 +110,24 @@
                 if(trxDt.length != 10)
                 {
                 	trxDt = trxDt.substr(0,2) + '/' + trxDt.substr(2,2) + '/' + trxDt.substr(4,4);
+                    $("#payment_transactionDt").val(trxDt);
+                }
+        	}
+        	else if(stus == '6')
+        	{
+        		$("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+                $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+                $("#action option[value='"+ stus +"']").attr("selected", true);
+                $("#action").attr("disabled", true);
+                $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
+                $("#specialInstruction").attr("disabled", true);
+                $("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.appvRem}</textarea>');
+                $("#btnSave").hide();
+
+                var trxDt = $("#payment_transactionDt").val();
+                if(trxDt != null && trxDt != "" && trxDt.length != 10)
+                {
+                    trxDt = trxDt.substr(0,2) + '/' + trxDt.substr(2,2) + '/' + trxDt.substr(4,4);
                     $("#payment_transactionDt").val(trxDt);
                 }
         	}
@@ -134,6 +160,13 @@
                 $("#payment_issuedBank").attr("disabled", true);
                 $("#payment_cardType").attr("disabled", true);
                 $("#payment_merchantBank").attr("disabled", true);
+
+                var trxDt = $("#payment_transactionDt").val();
+                if(trxDt != null && trxDt != "" && trxDt.length != 10)
+                {
+                    trxDt = trxDt.substr(0,2) + '/' + trxDt.substr(2,2) + '/' + trxDt.substr(4,4);
+                    $("#payment_transactionDt").val(trxDt);
+                }
 
 	        }
 	        else if(stus == '1')
@@ -173,6 +206,13 @@
                 $("#specialInstruction").attr("disabled", true);
                 $("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.appvRem}</textarea>');
                 $("#btnSave").hide();
+
+                var trxDt = $("#payment_transactionDt").val();
+                if(trxDt != null && trxDt != "" && trxDt.length != 10)
+                {
+                    trxDt = trxDt.substr(0,2) + '/' + trxDt.substr(2,2) + '/' + trxDt.substr(4,4);
+                    $("#payment_transactionDt").val(trxDt);
+                }
 	        }
        	}
 
