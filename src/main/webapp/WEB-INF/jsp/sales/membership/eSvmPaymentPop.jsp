@@ -66,7 +66,7 @@
     <td colspan=3><input id=payment_approvalNo name="payment_approvalNo" type="text" value="${paymentInfo.approvalNo}" title="" placeholder="" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
-    <th scope="row">Expiry Date (CVV)</th>
+    <th scope="row">Expiry Date</th>
     <td colspan=3><input id=payment_expDt name="payment_expDt" type="text" value="${paymentInfo.expiryDate}" title="" placeholder="" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
@@ -135,7 +135,7 @@
     <td colspan=3><input id=payment_approvalNo name="payment_approvalNo" type="text" title="" value="${paymentInfo.approvalNo}" placeholder="" class="w100p "  /></td>
 </tr>
 <tr>
-    <th scope="row">Expiry Date (CVV)<span class="must">*</span></th>
+    <th scope="row">Expiry Date<span class="must">*</span></th>
     <td colspan=3><input id=payment_expDt name="payment_expDt" type="text" title="" value="${paymentInfo.expiryDate}" placeholder="" class="w100p " maxlength=4 oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" /></td>
 </tr>
 <tr>
