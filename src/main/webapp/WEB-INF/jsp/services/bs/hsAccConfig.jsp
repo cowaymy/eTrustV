@@ -1088,8 +1088,8 @@
            return;
         }
 
-        if (  todayDD >= 1  &&  todayDD <= 7 )  { // temp change to 7th of the month. Hui Ding, 2021-10-06
-        //if (  todayDD >= 1  &&  todayDD <= 5 )  {
+        //if (  todayDD >= 1  &&  todayDD <= 7 )  { // temp change to 7th of the month. Hui Ding, 2021-10-06
+        if (  todayDD >= 1  &&  todayDD <= 5 )  {
         	   if (schdulId.includes (undefined)){
         		    Common.alert("Please ensure a valid HS Period being selected during 1st to 5th of the month");
         		    return;
