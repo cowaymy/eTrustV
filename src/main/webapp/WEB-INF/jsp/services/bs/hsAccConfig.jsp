@@ -1082,8 +1082,8 @@
        console.log ("schdulId is 123...:" + schdulId)
 
 
-       if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 7 ))  {
-        //if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 5 ))  { // temp change to 8th of the month. Hui Ding, 2021-10-06
+       //if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 7 ))  { // temp change to 8th of the month. Hui Ding, 2021-10-06
+       if (  checkedItems.length <= 0  || (  todayDD < 26  &&  todayDD > 5 ))  {
         	Common.alert('Either no data selected OR today date, ' + todayDD + ' is restricted for assign CT members');
            return;
         }
