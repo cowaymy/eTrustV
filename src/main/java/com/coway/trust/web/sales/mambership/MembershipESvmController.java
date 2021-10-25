@@ -211,6 +211,9 @@ public class MembershipESvmController {
 		logger.debug("params =====================================>>  " + params);
 		params.put("userId", sessionVO.getUserId());
 		params.put("updator", sessionVO.getUserId());
+		String fmtTrxDt = (String) params.get("payment_transactionDt");
+		fmtTrxDt = fmtTrxDt.replace("/", "");
+		params.put("payment_transactionDt", fmtTrxDt);
 		String psmSrvMemNo = (String) params.get("psmSrvMemNo");
 		String docNo = "";
 		if(psmSrvMemNo != null && !psmSrvMemNo.equals(""))

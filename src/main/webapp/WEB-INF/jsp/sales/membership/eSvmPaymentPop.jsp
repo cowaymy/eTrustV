@@ -140,7 +140,12 @@
 </tr>
 <tr>
     <th scope="row">Transaction Date<span class="must">*</span></th>
-    <td colspan=3><input id=payment_transactionDt name="payment_transactionDt" type="text" title="" value="${paymentInfo.transactionDate}" placeholder="" class="w100p"  /></td>
+    <td colspan=3>
+        <!--  <input id=payment_transactionDt name="payment_transactionDt" type="text" title="" value="${paymentInfo.transactionDate}" placeholder="" class="w100p"  />-->
+        <div class="date_set w100p">
+            <p><input type="text" title="Transaction Date" placeholder="DD/MM/YYYY" class="j_date" id="payment_transactionDt" value="${paymentInfo.transactionDate}" name="payment_transactionDt"/></p>
+        </div>
+    </td>
 </tr>
 <tr>
     <th scope="row">Credit Card Holder Name<span class="must">*</span></th>

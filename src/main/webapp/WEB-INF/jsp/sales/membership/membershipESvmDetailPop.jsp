@@ -58,7 +58,6 @@
         }
 
         //fn_displaySpecialInst();
-        //Go into uneditable state [s]
         var stus = '${eSvmInfo.stus}';
         var flg = '${paymentInfo.allowComm}';
         var specialInst = '${eSvmInfo.appvInstrct}';
@@ -71,16 +70,26 @@
        	{
         	if(stus == '5')
         	{
-        		$("payment_cardNo").replaceWith('<input id=payment_cardNo name="payment_cardNo" type="text" title=""  value="${paymentInfo.cardNo}" placeholder="" class="w100p readonly" readyonly creditCardText" maxlength=19 />');
-        		$("payment_approvalNo").replaceWith('<input id=payment_approvalNo name="payment_approvalNo" type="text" title="" value="${paymentInfo.approvalNo}" placeholder="" class="w100p readonly" readyonly "  />');
-        		$("payment_expDt").replaceWith('<input id=payment_expDt name="payment_expDt" type="text" title="" value="${paymentInfo.expiryDate}" placeholder="" class="w100p readonly" readyonly maxlength=4  />');
-        		$("payment_transactionDt").replaceWith('<input id=payment_transactionDt name="payment_transactionDt" type="text" title="" value="${paymentInfo.transactionDate}" placeholder="" class="w100p readonly" readyonly  />');
-        		$("payment_ccHolderName").replaceWith('<input id=payment_ccHolderName name="payment_ccHolderName" type="text" title="" value="${paymentInfo.crcName}" placeholder="" class="w100p readonly" readyonly  />');
-        		$("#payment_cardMode").replaceWith('<input id=action name="payment_cardMode" value="${paymentInfo.cardModeDesc}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
-        		$("#payment_issuedBank").replaceWith('<input id=action name="payment_issuedBank" value="${paymentInfo.issuBankDesc}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
-        		$("#payment_cardType").replaceWith('<input id=action name="payment_cardType" value="${paymentInfo.cardBrandDesc}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
-        		$("#payment_merchantBank").replaceWith('<input id=action name="payment_merchantBank" value="${paymentInfo.merchantBankDesc}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
-
+        		$("#payment_cardNo").replaceWith('<input id=payment_cardNo name="payment_cardNo" type="text" title=""  value="${paymentInfo.cardNo}" placeholder="" class="w100p readonly" readyonly creditCardText" maxlength=19 />');
+        		$("#payment_approvalNo").replaceWith('<input id=payment_approvalNo name="payment_approvalNo" type="text" title="" value="${paymentInfo.approvalNo}" placeholder="" class="w100p readonly" readyonly "  />');
+        		$("#payment_expDt").replaceWith('<input id=payment_expDt name="payment_expDt" type="text" title="" value="${paymentInfo.expiryDate}" placeholder="" class="w100p readonly" readyonly maxlength=4  />');
+        		$("#payment_transactionDt").replaceWith('<input id=payment_transactionDt name="payment_transactionDt" type="text" title="" value="${paymentInfo.transactionDate}" placeholder="" class="w100p readonly" readyonly  />');
+        		$("#payment_ccHolderName").replaceWith('<input id=payment_ccHolderName name="payment_ccHolderName" type="text" title="" value="${paymentInfo.crcName}" placeholder="" class="w100p readonly" readyonly  />');
+        		$("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+                $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+                $("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.appvRem}</textarea>');
+                $("#action option[value='"+ stus +"']").attr("selected", true);
+                $("#payment_cardMode option[value='"+ cardModeCode +"']").attr("selected", true);
+                $("#payment_issuedBank option[value='"+ issuBankCode +"']").attr("selected", true);
+                $("#payment_cardType option[value='"+ cardBrandCode +"']").attr("selected", true);
+                $("#payment_merchantBank option[value='"+ merchantBankCode +"']").attr("selected", true);
+                $("#action").attr("disabled", true);
+                $("#payment_cardMode").attr("disabled", true);
+                $("#payment_issuedBank").attr("disabled", true);
+                $("#payment_cardType").attr("disabled", true);
+                $("#payment_merchantBank").attr("disabled", true);
+                $("#specInst").hide();
+                $("#btnSave").hide();
         	}
         	else
         	{
@@ -88,6 +97,13 @@
                 $("#payment_issuedBank option[value='"+ issuBankCode +"']").attr("selected", true);
                 $("#payment_cardType option[value='"+ cardBrandCode +"']").attr("selected", true);
                 $("#payment_merchantBank option[value='"+ merchantBankCode +"']").attr("selected", true);
+
+                var trxDt = $("#payment_transactionDt").val();
+                if(trxDt.length != 10)
+                {
+                	trxDt = trxDt.substr(0,2) + '/' + trxDt.substr(2,2) + '/' + trxDt.substr(4,4);
+                    $("#payment_transactionDt").val(trxDt);
+                }
         	}
        	}else{
 	        if(stus == '5')
@@ -103,12 +119,23 @@
 	        	$('#attchFrm .label_text').hide();
 	        	$("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
 	        	$("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
-	        	$("#action").replaceWith('<input id=action name="action" value="${eSvmInfo.stusRem}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+	        	$("#action option[value='"+ stus +"']").attr("selected", true);
+                $("#action").attr("disabled", true);
 	        	//$("#specialInstruction").replaceWith('<input id=specialInstruction name="specialInstruction" value="${eSvmInfo.appvInstrct}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
 	        	$("#specInst").hide();
 	        	$("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.appvRem}</textarea>');
 	        	$("#btnSave").hide();
-	        }//Go into uneditable state [e]
+
+	        	$("#payment_cardMode option[value='"+ cardModeCode +"']").attr("selected", true);
+                $("#payment_issuedBank option[value='"+ issuBankCode +"']").attr("selected", true);
+                $("#payment_cardType option[value='"+ cardBrandCode +"']").attr("selected", true);
+                $("#payment_merchantBank option[value='"+ merchantBankCode +"']").attr("selected", true);
+                $("#payment_cardMode").attr("disabled", true);
+                $("#payment_issuedBank").attr("disabled", true);
+                $("#payment_cardType").attr("disabled", true);
+                $("#payment_merchantBank").attr("disabled", true);
+
+	        }
 	        else if(stus == '1')
 	        {
 	        	if(specialInst != '')
@@ -140,7 +167,7 @@
 	        {
 	        	$("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
                 $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
-                $("#action option[value='"+ stus +"']").attr("selected", true)
+                $("#action option[value='"+ stus +"']").attr("selected", true);
                 $("#action").attr("disabled", true);
                 $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
                 $("#specialInstruction").attr("disabled", true);
