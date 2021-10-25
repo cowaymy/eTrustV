@@ -11,30 +11,24 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "SyncIhrApiForm", description = "공통코드 Form")
 public class SyncIhrApiForm {
 
-	@ApiModelProperty(value = "userId [default : '' 전체] 예) CT100583 ", example = "1, 2, 3")
-	private String userId;
-
-	@ApiModelProperty(value = "requestDate [default : '' 전체] 예) 201705", example = "1, 2, 3")
-	private String requestDate;
-
-
 
 	public static Map<String, Object> createMap(SyncIhrApiForm vo){
 		Map<String, Object> params = new HashMap<>();
-
 		params.put("whLocId", vo.getWhLocId());
 		params.put("regId", vo.getRegId());
-
+		params.put("salesOrderNo", vo.getSalesOrderNo());
 		return params;
 	}
 
 
+	@ApiModelProperty(value = "userId [default : '' 전체] 예) CT100583 ", example = "1, 2, 3")
+	private String userId;
+	@ApiModelProperty(value = "requestDate [default : '' 전체] 예) 201705", example = "1, 2, 3")
+	private String requestDate;
 
 	private String regId;
 	private int WhLocId;
-
-
-
+	private String salesOrderNo ;
 
 
 	public String getUserId() {
@@ -69,9 +63,12 @@ public class SyncIhrApiForm {
 		WhLocId = whLocId;
 	}
 
+	public String getSalesOrderNo() {
+		return salesOrderNo;
+	}
 
-
-
-
+	public void setSalesOrderNo(String salesOrderNo) {
+		this.salesOrderNo = salesOrderNo;
+	}
 
 }
