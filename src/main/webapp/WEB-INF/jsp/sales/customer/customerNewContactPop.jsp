@@ -119,7 +119,15 @@ $(document).ready(function() {
                 }
             }
 
-        }// tel end
+        }
+
+        //telm(Mobile) is compulsory
+        if(FormUtil.isEmpty($("#cntcTelm").val())){
+            Common.alert('<spring:message code="sal.msg.keyInTelMComp" />');
+            return false;
+        }
+
+        // tel end
 
         //Ext
         if(""  != $("#cntcExtNo").val() && null != $("#cntcExtNo").val()){
