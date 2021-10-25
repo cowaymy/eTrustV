@@ -11,6 +11,7 @@ $(document).ready(function(){
     $('input[name=gstType]').change(function(){
     	fn_makeStatementList($(this).val());
     });
+
 });
 
 function fn_initGstCondition(){
@@ -37,7 +38,11 @@ function fn_makeStatementList(type){
 		$("#statementList").append("<option value='initTaxInvoiceMiscellaneousPop.do'>TaxInvoice(Miscellaneous)</option>");
 		$("#statementList").append("<option value='initStatementCompanyRentalPop.do'>Statement Company(Rental)</option>");
 		$("#statementList").append("<option value='initProformaInvoicePop.do'>ProformaInvoice</option>");
+
+        if ("${sessionRoleId}" == 130  || "${sessionRoleId}" == 193  || "${sessionRoleId}" == 192 || "${sessionRoleId}" == 191 || "${sessionRoleId}" == 89) {
+
 		$("#statementList").append("<option value='initSummaryOfInvoicePop.do'>Summary of Invoice</option>");
+		}
 	}
 }
 
