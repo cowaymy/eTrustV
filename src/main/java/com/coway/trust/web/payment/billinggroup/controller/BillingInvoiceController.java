@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.biz.payment.billinggroup.service.BillingInvoiceService;
 import com.coway.trust.biz.payment.billinggroup.service.impl.ProformaSearchVO;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -29,6 +32,9 @@ public class BillingInvoiceController {
 
 	@Resource(name = "billingInvoiceService")
 	private BillingInvoiceService invoiceService;
+
+	@Autowired
+	private SessionHandler sessionHandler;
 
 	/******************************************************
 	 *   Company Statement
@@ -366,6 +372,9 @@ public class BillingInvoiceController {
 
 	@RequestMapping(value = "/initInvoiceIssue.do")
 	public String initInvoiceIssue(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		SessionVO session = sessionHandler.getCurrentSessionInfo();
+		model.addAttribute("sessionRoleId", session.getRoleId());
 
 		return "payment/billinggroup/invoiceIssue";
 	}
