@@ -667,7 +667,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
         eSVMApiMapper.insertPay312D(eSVMApiForm.createMap(param));
 
         // Skip Notifications if PO
-        if(!"6506".equals(String.valueOf(param.getPayMode()))) {
+        if(!"6506".equals(String.valueOf(param.getPayMode())) && !"6528".equals(String.valueOf(param.getPayMode()))) {
             this.sendSms(eSVMApiForm.createMap(param));
 
             try {
