@@ -1,6 +1,7 @@
 package com.coway.trust.biz.services.installation.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -324,7 +325,29 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     		  logger.info("### appointment date after: " + installResult.get("appntDt"));
     		  logger.info("### INS AS (filter param) : " + paramsDetail.toString());
 
-    		  installationResultListService.saveInsAsEntry(paramsDetail, params, installResult, Integer.parseInt(userId));
+    		  List<Map<String, Object>> newPartList = new ArrayList<Map<String, Object>>();
+    		  Map<String, Object> newPart = new HashMap<String, Object>();
+    		  for (Map<String, Object> part : paramsDetail){
+    			  if (part != null){
+    				  if (part.get("chargesFoc") != null && part.get("chargesFoc").toString().equals("1")){
+    					  newPart.put("filterType", "CHG");
+    				  } else {
+    					  newPart.put("filterType", "FOC");
+    				  }
+
+    				  newPart.put("filterID", String.valueOf(part.get("filterCode")));
+    				  newPart.put("srvFilterLastSerial", String.valueOf(part.get("filterBarcdSerialNo")));
+    				  newPart.put("filterQty", String.valueOf(part.get("filterChangeQty")));
+    				  newPart.put("stockTypeId", String.valueOf(part.get("partsType")));
+    				  newPart.put("filterPrice", String.valueOf(part.get("salesPrice")));
+    				  newPart.put("filterTotal", String.valueOf(part.get("salesPrice")));
+
+    				  newPartList.add(newPart);
+    			  }
+    		  }
+
+
+    		  installationResultListService.saveInsAsEntry(newPartList, params, installResult, Integer.parseInt(userId));
     	  }
           // End of inserting charge out filters and spare parts at AS
 
