@@ -29,6 +29,8 @@ public class SyncIhrApiDto {
 	private int asDefectPartId;
 	private int asDefectDtlResnId;
 	private int asDefectId;
+	private int asDefectTypeId;
+	private int asSlutnResnId;
 	private String asResultStusId;
 
 
@@ -103,6 +105,18 @@ public class SyncIhrApiDto {
 	}
 	public void setAsSetlDt(String asSetlDt) {
 		this.asSetlDt = asSetlDt;
+	}
+	public int getAsDefectTypeId() {
+		return asDefectTypeId;
+	}
+	public void setAsDefectTypeId(int asDefectTypeId) {
+		this.asDefectTypeId = asDefectTypeId;
+	}
+	public int getAsSlutnResnId() {
+		return asSlutnResnId;
+	}
+	public void setAsSlutnResnId(int asSlutnResnId) {
+		this.asSlutnResnId = asSlutnResnId;
 	}
 
 }
