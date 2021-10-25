@@ -4,7 +4,10 @@
 <%@ include file="/WEB-INF/jsp/sales/order/copyChangeOrderInc.jsp" %>
 
 <script type="text/javaScript" language="javascript">
-
+var TODAY_DD      = "${toDay}";
+var BEFORE_DD = "${bfDay}";
+var blockDtFrom = "${hsBlockDtFrom}";
+var blockDtTo = "${hsBlockDtTo}";
 
     doGetComboData('/common/selectCodeList.do', {groupCode :'325',orderValue : 'CODE_ID'}, '0', 'exTrade', 'S'); //EX-TRADE
     var convToOrdYn  = "${CONV_TO_ORD_YN}";
@@ -1892,6 +1895,8 @@ console.log("vBindingNo" + vBindingNo);
         var srvPacVal  = $("#srvPacId").val();
         var custType = $("#typeId").val();
 
+
+
         if(appTypeIdx <= 0) {
             isValid = false;
             msg += '<spring:message code="sal.alert.msg.salAppType" /><br>';
@@ -2669,9 +2674,32 @@ console.log("vBindingNo" + vBindingNo);
 //              AUIGrid.resize(docGridID);
                 if(docDefaultChk == false) fn_checkDocList(true);
                 break;
+            case 'sal' :
+
+                var todayDD = Number(TODAY_DD.substr(0, 2));
+                var todayYY = Number(TODAY_DD.substr(6, 4));
+
+                var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
+                var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
+
+                console.log("todayDD: " + todayDD);
+                console.log("blockDtFrom : " + blockDtFrom);
+                console.log("blockDtTo : " + blockDtTo);
+
+                 if(todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
+                     var msg = "For Ex-trad sales key-in, if the order doesn't meet the period date (after clsoing until 2nd every month) need cancel and rekey-in.";
+                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+                     return;
+                 }
+
+                break;
             default :
                 break;
         }
+
+
+
+
         /*
         if(tabNm != 'ins') {
             if(!$('#pBtnCal').hasClass("blind")) {
