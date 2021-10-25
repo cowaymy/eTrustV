@@ -978,6 +978,9 @@ public class MemberListController {
         List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
         List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 
+        //@AMEER INCOME TAX 2021-10-25
+        formMap.put("incomeTaxNo", params.get("incomeTaxNo"));
+
         int userId = sessionVO.getUserId();
         formMap.put("user_id", userId);
         logger.debug("udtparam11111 : {}", params);
@@ -1897,6 +1900,28 @@ logger.debug("params : {}", params);
         hpCtc.put("email", item.get("email"));
 
         return ResponseEntity.ok(hpCtc);
+    }
+
+  //@AMEER INCOME_TAX 20190928
+    @RequestMapping(value = "/checkIncomeTax", method = RequestMethod.GET)
+    public ResponseEntity<Map> checkIncomeTax(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+        logger.debug("==================== checkIncomeTax ====================");
+        Map<String, Object> incomeTaxCheck = new HashMap();
+
+        EgovMap item = new EgovMap();
+        params.put("srcM", "1");
+        item = (EgovMap) memberListService.checkIncomeTax(params);
+        incomeTaxCheck.put("cnt1", item.get("cnt"));
+
+        params.remove("srcM");
+
+        EgovMap item2 = new EgovMap();
+        params.put("srcA", "1");
+        item2 = (EgovMap) memberListService.checkIncomeTax(params);
+        incomeTaxCheck.put("cnt2", item2.get("cnt"));
+
+        return ResponseEntity.ok(incomeTaxCheck);
+
     }
 
     @RequestMapping(value = "/verifyAccess", method = RequestMethod.GET)

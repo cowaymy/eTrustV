@@ -1428,14 +1428,14 @@ function fn_validFile() {
                         </td>
                     </tr>
 
-                    <!-- ADDED INCOME TAX NO @AMEER 2021-10-12
+                    <!-- ADDED INCOME TAX NO @AMEER 2021-10-25-->
                 <tr>
                     <th scope="row">Income Tax No</th>
                     <td colspan="2">
                     <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="eHPincomeTaxNo"  name="eHPincomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
                     onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;"/>
                     </td>
-                </tr>-->
+                </tr>
 
                     <tr>
                         <th scope="row" id="eHPemailLbl" name ="emailLbl">Email</th>

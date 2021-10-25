@@ -828,13 +828,13 @@ function fn_atchViewDown(fileGrpId, fileId) {
     </td>
 </tr>
 
- <!-- ADDED INCOME TAX NO @AMEER 2021-10-12
+ <!-- ADDED INCOME TAX NO @AMEER 2021-10-25-->
  <tr>
      <th scope="row">Income Tax No</th>
      <td colspan="5">
     <span><c:out value="${memberView.aplicntIncTax}"/></span>
     </td>
- </tr> -->
+ </tr>
 
 <tr>
     <th scope="row">Branch</th>

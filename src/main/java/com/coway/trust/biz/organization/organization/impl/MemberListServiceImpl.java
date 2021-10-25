@@ -2539,10 +2539,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     }
 
 	//@AMEER INCOME TAX 20211012
-	/*@Override
+	@Override
     public EgovMap checkIncomeTax(Map<String, Object> params) {
         return memberListMapper.checkIncomeTax(params);
-    }*/
+    }
 
 	@Override
 	public EgovMap getUserRole(Map<String, Object> params) {

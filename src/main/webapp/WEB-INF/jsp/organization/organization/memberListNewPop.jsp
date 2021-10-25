@@ -1581,6 +1581,13 @@ function checkIncomeTax() {
     <input type="text" title="" placeholder="Email" class="w100p" id="email" name="email" />
     </td>
 </tr>
+<!-- ADDED INCOME TAX NO @AMEER 2021-09-27-->
+    <th scope="row">Income Tax No</th>
+    <td colspan="5">
+    <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="incomeTaxNo"  name="incomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
+    onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;"/>
+    </td>
+</tr>
 <tr>
     <th scope="row" id="mobileNoLbl" name="mobileNoLbl">Mobile No.</th>
     <td>
@@ -1763,14 +1770,6 @@ function checkIncomeTax() {
     onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
 </tr>
-
-<!-- ADDED INCOME TAX NO @AMEER 2021-09-27
-    <th scope="row">Income Tax No</th>
-    <td>
-    <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="incomeTaxNo"  name="incomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
-    onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;"/>
-    </td>
-</tr> -->
 </tbody>
 </table><!-- table end -->
 
