@@ -58,7 +58,7 @@ var approveLineColumnLayout = [ {
         iconHeight : 12,
         onclick : function(rowIndex, columnIndex, value, item) {
         	var rowCount = AUIGrid.getRowCount(approveLineGridID);
-        	if (rowCount > 3) {
+        	if (rowCount > 4) {
         		Common.alert('<spring:message code="approveLine.appvLine.msg" />');
         	} else {
         		fn_appvLineGridAddRow();
