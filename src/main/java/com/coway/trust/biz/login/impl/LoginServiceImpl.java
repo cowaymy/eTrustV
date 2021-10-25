@@ -387,6 +387,7 @@ public class LoginServiceImpl implements LoginService {
 
 		Map<String,Object> updParams = new HashMap<String, Object>();
 		String nextPopDt = CommonUtils.getCalDate(21); // defaultly set 21days later to pop again
+		String secondNextPopDt = CommonUtils.getCalDate(7); // 2nd dose next pop date set to every 7 days
 		int update = 0;
 
 		updParams.put("userId", userId);
@@ -403,7 +404,7 @@ public class LoginServiceImpl implements LoginService {
 
         			if (params.get("2ndDoseNo") != null && params.get("2ndDoseNo") != "" && params.get("2ndDoseNo").toString().equalsIgnoreCase("on")){
         				// set next pop date for 2nd dose info collection
-        				updParams.put("nextPopDt", nextPopDt);
+        				updParams.put("nextPopDt", secondNextPopDt);
         				updParams.put("vaccineStatus", "P"); // P = Partial | C = Completed | D = Did not take vaccine
         			} else {
         				updParams.put("vaccineStatus", "C"); // P = Partial | C = Completed | D = Did not take vaccine
@@ -437,7 +438,7 @@ public class LoginServiceImpl implements LoginService {
 			if (params.get("currVacStatus").toString().equalsIgnoreCase("P")) { // update 2nd dose info only
 				if (params.get("2ndDoseNo") != null && params.get("2ndDoseNo") != "" && params.get("2ndDoseNo").toString().equalsIgnoreCase("on")){
     				// set next pop date for 2nd dose info collection
-    				updParams.put("nextPopDt", nextPopDt);
+    				updParams.put("nextPopDt", secondNextPopDt);
 				} else {
     				updParams.put("vaccineStatus", "C"); // P = Partial | C = Completed | D = Did not take vaccine
 					updParams.put("secondDoseChk", "Y"); // completed 2nd dose
