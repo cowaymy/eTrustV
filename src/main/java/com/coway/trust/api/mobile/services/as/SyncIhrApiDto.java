@@ -26,6 +26,12 @@ public class SyncIhrApiDto {
 	private String defectCodeDc;
 	private String defectDescDc;
 
+	private String defectCodeDt;
+	private String defectDescDt;
+
+	private String defectCodeSc;
+	private String defectDescSc;
+
 	private int asDefectPartId;
 	private int asDefectDtlResnId;
 	private int asDefectId;
@@ -117,6 +123,30 @@ public class SyncIhrApiDto {
 	}
 	public void setAsSlutnResnId(int asSlutnResnId) {
 		this.asSlutnResnId = asSlutnResnId;
+	}
+	public String getDefectCodeDt() {
+		return defectCodeDt;
+	}
+	public void setDefectCodeDt(String defectCodeDt) {
+		this.defectCodeDt = defectCodeDt;
+	}
+	public String getDefectDescDt() {
+		return defectDescDt;
+	}
+	public void setDefectDescDt(String defectDescDt) {
+		this.defectDescDt = defectDescDt;
+	}
+	public String getDefectCodeSc() {
+		return defectCodeSc;
+	}
+	public void setDefectCodeSc(String defectCodeSc) {
+		this.defectCodeSc = defectCodeSc;
+	}
+	public String getDefectDescSc() {
+		return defectDescSc;
+	}
+	public void setDefectDescSc(String defectDescSc) {
+		this.defectDescSc = defectDescSc;
 	}
 
 }
