@@ -2,6 +2,10 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript" language="javascript">
+var TODAY_DD      = "${toDay}";
+var BEFORE_DD = "${bfDay}";
+var blockDtFrom = "${hsBlockDtFrom}";
+var blockDtTo = "${hsBlockDtTo}";
 
     //AUIGrid 생성 후 반환 ID
     var listGiftGridID;
@@ -2029,6 +2033,23 @@
                 $('#advPayNo').prop("checked", true);
                 $('#poNo').prop("disabled", true);
 
+                var todayDD = Number(TODAY_DD.substr(0, 2));
+                var todayYY = Number(TODAY_DD.substr(6, 4));
+
+                var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
+                var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
+
+                console.log("todayDD: " + todayDD);
+                console.log("blockDtFrom : " + blockDtFrom);
+                console.log("blockDtTo : " + blockDtTo);
+
+                 if(todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
+                     var msg = "Extrade sales key-in does not meet period date (Submission start on 3rd of every month)";
+                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+                     return;
+                 }
+
+
                 break;
             case 'pay' :
                 if($('#appType').val() == '66'){
@@ -2037,6 +2058,7 @@
                     $('#rentPayMode').prop("disabled", true);
                     $('#thrdParty').prop("disabled", true);
                 }
+                break;
             default :
                 break;
         }
