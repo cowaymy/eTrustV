@@ -335,9 +335,9 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     				  newPart = new HashMap<String, Object>();
 
     				  if (part.get("chargesFoc") != null && part.get("chargesFoc").toString().equals("1")){
-    					  newPart.put("filterType", "CHG");
-    				  } else {
     					  newPart.put("filterType", "FOC");
+    				  } else {
+    					  newPart.put("filterType", "CHG");
     				  }
 
     				  newPart.put("filterID", String.valueOf(part.get("filterCode")));
