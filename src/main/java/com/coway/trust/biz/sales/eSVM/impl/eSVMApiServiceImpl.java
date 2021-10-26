@@ -141,7 +141,7 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
                 param.setFlag("Y");
                 List<EgovMap> selectProductFilterList = eSVMApiMapper.selectProductFilterList(eSVMApiForm.createMap(param));
                 String hiddenHasFilterCharge = "";
-                if(selectProductFilterList != null) {
+                if(selectProductFilterList.size() > 0) {
                     Map<String, String> listItem = selectProductFilterList.get(0);
                     Iterator<Entry<String, String>> it = listItem.entrySet().iterator();
                     while(it.hasNext()) {
