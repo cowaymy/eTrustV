@@ -18,8 +18,8 @@
     <select id="selectOrderList" parameterType="Map" resultType="egovMap">
     <!-- <include refid="pagingStart" /> -->
         SELECT
-            H.BANK_STATE_MAPPING_ID TRX_ID,
-            B.CRC_STATE_ID,
+            CASE WHEN SUBSTR(OR_NO, 0, 3) IN ('ROR','AER','AOR','BOR','EOR') THEN I.BANK_STATE_MAPPING_ID ELSE  H.BANK_STATE_MAPPING_ID END TRX_ID,
+            H.CRC_STATE_MAPPING_ID AS CRC_STATE_ID,
 			pay.TRX_DT,
 			pay.TRX_AMT,
 			pay.PAY_ID,
@@ -77,6 +77,8 @@
             LEFT JOIN (SELECT MAX(RSLT_SEQ),PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID
                                 FROM PAY0252T GROUP BY PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID) H ON pay.PAY_ID = H.PAY_ID
             LEFT JOIN PAY0076D B ON B.CRC_TRNSC_ID = H.CRC_STATE_MAPPING_ID
+            LEFT JOIN (SELECT MAX(RSLT_SEQ),PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID
+                                FROM PAY0252T GROUP BY PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID) I ON pay.MTCH_ID = I.PAY_ID
 	    WHERE
 	        1=1
 	        <if test="orderNo != '' and orderNo != null">
@@ -143,7 +145,7 @@
             AND H.BANK_STATE_MAPPING_ID = #{trxId}
             </if>
             <if test="crcStateId != '' and crcStateId != null">
-            AND B.CRC_STATE_ID = #{crcStateId}
+            AND H.CRC_STATE_MAPPING_ID = #{crcStateId}
             </if>
 
 			<if test="orderNo != '' and orderNo != null
@@ -269,7 +271,7 @@
 		    Extent5.ACC_DESC,
 		    Extent1.PAY_ITM_REF_DT,
 		    Extent1.PAY_ITM_APPV_NO,
-		    Extent1.PAY_ITM_REM,
+		    Extent9.FT_REM AS PAY_ITM_REM,
 		    Extent1.PAY_ITM_STUS_ID,
 		    Extent6.NAME AS NAME1,
 		    Extent1.PAY_ITM_IS_LOK,
@@ -301,6 +303,7 @@
 		    LEFT OUTER JOIN SYS0013M Extent7 ON Extent7.CODE_ID = Extent1.PAY_ITM_CARD_TYPE_ID
 		    LEFT OUTER JOIN SYS0013M CARDMODE ON Extent1.PAY_ITM_CARD_MODE_ID = CARDMODE.CODE_ID
 		    LEFT JOIN PAY0064D extent8 ON extent1.PAY_ID = extent8.PAY_ID
+		    LEFT JOIN PAY0260D Extent9 ON extent1.PAY_ID = Extent9.SRC_PAY_ID
 		WHERE
 		    Extent1.PAY_ITM_STUS_ID = 1
 		    AND Extent1.PAY_ID = #{payId}
