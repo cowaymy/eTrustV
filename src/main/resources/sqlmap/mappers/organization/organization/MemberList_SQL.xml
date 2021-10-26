@@ -5343,10 +5343,12 @@ FROM
             ORG_CODE,
             GRP_CODE,
             DEPT_CODE,
-            ROW_NUMBER() OVER(PARTITION BY MEM_ID
-                ORDER BY
-                    PROMO_ID DESC
-            ) MAIN,
+ROW_NUMBER() OVER(PARTITION BY MEM_ID ORDER BY PROMO_ID DESC),
+            CASE WHEN MEM_LVL_CURR = MEM_LVL AND MEM_LVL_CURR = 4 THEN 1
+                 WHEN MEM_LVL_CURR != 4 AND ROW_NUMBER() OVER(PARTITION BY MEM_ID ORDER BY PROMO_ID DESC) = 1 THEN 1
+                    ELSE 0 END MAIN,
+
+            MEM_LVL_CURR,
             PROMO_ID
         FROM
             (
@@ -5369,6 +5371,7 @@ FROM
                     O2.ORG_CODE,
                     O2.GRP_CODE,
                     O2.DEPT_CODE,
+                    O2.MEM_LVL MEM_LVL_CURR,
                     0 PROMO_ID
                 FROM
                          ORG0001D O1
@@ -5416,26 +5419,27 @@ FROM
                     EXTENT4.ORG_CODE,
                     EXTENT4.GRP_CODE,
                     EXTENT4.DEPT_CODE,
+                    EXTENT4.MEM_LVL MEM_LVL_CURR,
                     EXTENT2.PROMO_ID
                 FROM
                          ORG0001D EXTENT1
-                    INNER JOIN ORG0007D  EXTENT2 ON EXTENT2.MEM_ID = EXTENT1.MEM_ID
-                    INNER JOIN ORG0012D  EXTENT3 ON ( EXTENT3.MEM_TYPE_ID = EXTENT2.MEM_TYPE_ID )
+                     JOIN ORG0007D  EXTENT2 ON EXTENT2.MEM_ID = EXTENT1.MEM_ID
+                     JOIN ORG0012D  EXTENT3 ON ( EXTENT3.MEM_TYPE_ID = EXTENT2.MEM_TYPE_ID )
                                                    AND ( EXTENT3.MEM_ORG_LVL = EXTENT2.MEM_LVL_TO )
-                    INNER JOIN ORG1001V  EXTENT4 ON EXTENT1.MEM_CODE = EXTENT4.MEM_CODE
+                     JOIN ORG1001V  EXTENT4 ON EXTENT1.MEM_CODE = EXTENT4.MEM_CODE
                     LEFT JOIN ORG0005D  EXTENT8 ON EXTENT8.MEM_ID = EXTENT1.MEM_ID
                     LEFT JOIN ORG0007D  EXTENT7 ON ( EXTENT7.MEM_ID = EXTENT2.MEM_ID )
                                                   AND ( EXTENT7.DEPT_CODE_FROM = EXTENT2.DEPT_CODE_TO )
                                                   AND ( EXTENT7.PROMO_TYPE_ID IN (
-                        '747',
-                        '748'
+                        '747'
+
                     ) )
                     JOIN ORG0001D  EXTENT11 ON EXTENT11.MEM_ID = EXTENT2.PARENT_ID_FROM
                 WHERE
                         1 = 1
                     AND EXTENT2.PROMO_TYPE_ID IN (
-                        '747',
-                        '748'
+                        '747'
+
                     )
 
                 <if test="promoDisHismemTypeCom != null and promoDisHismemTypeCom != ''">
