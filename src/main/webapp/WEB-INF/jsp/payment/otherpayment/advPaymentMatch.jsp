@@ -97,8 +97,10 @@ var jompayMatchLayout = [
 $(document).ready(function(){
 
 	//CASH Bank Account combo box setting
-	doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
+	//doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
 	doGetCombo('/common/selectCodeList.do', '393' , ''   , 'accCode' , 'S', '');
+
+    fn_chgBankType();
 
 	//Branch Combo 생성
 	doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','branchId', 'S' , '');
@@ -118,15 +120,49 @@ $(document).ready(function(){
 
 });
 
+
+function fn_chgBankType(){
+
+	 if($("#bankType").val() == "2728")
+	    {
+	     $("#bankAcc option").remove();
+	     $("#bankAcc").append("<option value=''>Choose One</option>");
+	     $("#bankAcc").append("<option value='546'>2710/010C - CIMB 641</option>");
+	     $("#bankAcc").append("<option value='561'>2710/208 - ALB 2</option>");
+	     }
+	  else{
+	     $("#bankAcc option").remove();
+	      fn_payTypeChange();
+	     }
+}
+
 function fn_payTypeChange(){
 	var payType = $("#payType").val();
 
-	if(payType == '105'){
-		doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
-	}else if(payType == '106'){
-		doGetCombo('/common/getAccountList.do', 'CHQ','', 'bankAcc', 'S', '' );
-	}else if(payType == '108'){
-		doGetCombo('/common/getAccountList.do', 'ONLINE','', 'bankAcc', 'S', '' );
+	if($("#payType").val() == '105'){
+		   if($("#bankType").val() == "2728")
+	        {
+			 fn_chgBankType();
+	        }
+		    else{
+			 doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
+			}
+	}else if($("#payType").val() == '106'){
+		   if($("#bankType").val() == "2728")
+			{
+			 fn_chgBankType();
+			}
+		   else{
+        	 doGetCombo('/common/getAccountList.do', 'CHQ','', 'bankAcc', 'S', '' );
+        	}
+	}else if($("#payType").val() == '108'){
+		    if($("#bankType").val() == "2728")
+		    {
+             fn_chgBankType();
+            }
+		    else{
+		    doGetCombo('/common/getAccountList.do', 'ONLINE','', 'bankAcc', 'S', '' );
+            }
 	}
 }
 
@@ -135,21 +171,27 @@ function fn_bankChange(){
 	var bankType = $("#bankType").val();
 
 	$("#vaAccount").val('');
-	$("#bankAcc").val('');
+	//$("#bankAcc").val('');
 
-	if(bankType != "2730"){
+	if($("#bankType").val() != "2730"){
+
 		$("#vaAccount").addClass("readonly");
 		$("#vaAccount").attr('readonly', true);
 		$("#bankAcc").attr('disabled', false);
 		$("#bankAcc").removeClass("disabled");
+		fn_chgBankType();
+
 	}else{
 		$("#vaAccount").removeClass("readonly");
 		$("#vaAccount").attr('readonly', false);
 		$("#bankAcc").attr('disabled', true);
 		$("#bankAcc").addClass("w100p disabled");
+
+
 	}
 
 }
+
 
 function fn_bankAccChange(){
 
