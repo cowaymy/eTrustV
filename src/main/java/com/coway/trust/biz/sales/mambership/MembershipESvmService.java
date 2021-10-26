@@ -38,4 +38,6 @@ public interface MembershipESvmService {
 	String selectDocNo(Map<String, Object> params);
 
 	EgovMap selectMembershipQuotInfo(Map<String, Object> params);
+
+	EgovMap  getHasBill(Map<String, Object> params);
 }

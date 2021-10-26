@@ -211,9 +211,13 @@ public class MembershipESvmController {
 		logger.debug("params =====================================>>  " + params);
 		params.put("userId", sessionVO.getUserId());
 		params.put("updator", sessionVO.getUserId());
-		String fmtTrxDt = (String) params.get("payment_transactionDt");
-		fmtTrxDt = fmtTrxDt.replace("/", "");
-		params.put("payment_transactionDt", fmtTrxDt);
+		if(params.get("payment_transactionDt") != null && !params.get("payment_transactionDt").equals(""))
+		{
+			String fmtTrxDt = (String) params.get("payment_transactionDt");
+			fmtTrxDt = fmtTrxDt.replace("/", "");
+			params.put("payment_transactionDt", fmtTrxDt);
+		}
+
 		String psmSrvMemNo = (String) params.get("psmSrvMemNo");
 		String docNo = "";
 		if(psmSrvMemNo != null && !psmSrvMemNo.equals(""))
@@ -242,18 +246,17 @@ public class MembershipESvmController {
 		}
 		params.put("statusRemark", statusRemark);
 
-		logger.debug("params =====================================>>  " + params);
-
 		if(params.get("action").equals("5"))
 		{
 			//==== update SAL0298D eSVM ====
 			params.put("specialInstruction","");
 			params.put("docNo", docNo);
+			logger.debug("params =====================================>>  " + params);
 			membershipESvmService.updateAction(params);
 
 			//==== insert membership ====
 			//membershipESvmService.SAL0095D_insert(params);
-			membershipConvSaleService.SAL0095D_insert(params);
+			membershipESvmService.SAL0095D_insert(params);
 		}
 		else
 		{
