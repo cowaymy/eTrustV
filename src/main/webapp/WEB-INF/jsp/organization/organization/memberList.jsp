@@ -499,7 +499,7 @@ $(document).ready(function() {
        Common.ajax("POST", "/organization/getVaccineListing.do", {MemberID : username}, function(result){
            console.log(result);
 
-           if(result.message == "success.") {
+           if(result.message == "success." || result.message == "PENDING") {
                $("#getNonVaccineDeclare").show();
                console.log("non vaccine exist");
            }
@@ -867,7 +867,21 @@ $(function() {
             console.log("userId: " + userId);
             console.log("username: " + username);
 
-            btnGeneratePDF_Click(username);
+            Common.ajax("POST", "/organization/getVaccineListing.do", {MemberID : username}, function(result){
+                console.log(result);
+
+                if(result.message == "PENDING") {
+                    Common.alert("Pending user fill in declaration form.");
+                }
+                else if(result.message == "success.") {
+                	btnGeneratePDF_Click(username);
+                }else{
+                    Common.alert("No record found for this user.");
+                }
+
+
+             });
+
         }
 
 
@@ -1165,6 +1179,7 @@ $(function() {
             <c:if test="${PAGE_AUTH.funcUserDefine15 == 'Y'}">
                 <li><p class="link_btn"><a href="#" id="htPwReset">HT Password Reset</a></li>
             </c:if>
+            <li><p class="link_btn"><a href="#" id="getNonVaccineDeclare">Non-Vaccination Declaration Form</a></li>
         </ul>
         <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
         </dd>
