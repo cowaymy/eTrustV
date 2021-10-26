@@ -347,6 +347,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     				  newPart.put("filterPrice", String.valueOf(part.get("salesPrice")));
     				  newPart.put("filterTotal", String.valueOf(part.get("salesPrice")));
     				  newPart.put("filterDesc", "API");
+    				  newPart.put("filterExCode", 0);
+    				  newPart.put("filterRemark", "NA");
 
     				  totalPrice += (part.get("salesPrice") != null ? Double.parseDouble(part.get("salesPrice").toString()) : 0.00);
 
