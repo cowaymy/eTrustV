@@ -325,10 +325,21 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     		  logger.info("### appointment date after: " + installResult.get("appntDt"));
     		  logger.info("### INS AS (filter param) : " + paramsDetail.toString());
 
+    		  /** Added for INS AS. Hui Ding, 2021-10-26 **/
+    		  String totalPrice = "0";
+    		  if (insApiresult.get("salesPrice") != null) {
+    			  totalPrice =  String.valueOf(insApiresult.get("salesPrice"));
+    		  }
+
+    		  params.put("txtFilterCharge", totalPrice);
+			  params.put("txtTotalCharge", totalPrice);
+
     		  List<Map<String, Object>> newPartList = new ArrayList<Map<String, Object>>();
-    		  Map<String, Object> newPart = new HashMap<String, Object>();
+    		  Map<String, Object> newPart = null;
     		  for (Map<String, Object> part : paramsDetail){
     			  if (part != null){
+    				  newPart = new HashMap<String, Object>();
+
     				  if (part.get("chargesFoc") != null && part.get("chargesFoc").toString().equals("1")){
     					  newPart.put("filterType", "CHG");
     				  } else {
@@ -345,7 +356,6 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     				  newPartList.add(newPart);
     			  }
     		  }
-
 
     		  installationResultListService.saveInsAsEntry(newPartList, params, installResult, Integer.parseInt(userId));
     	  }
