@@ -38,16 +38,14 @@
             Common.ajax("POST", "/incentive/goldPoints/updateRedemption.do", updateRdmData, function(result) {
                 if(result.code == "00") {        //successful update
                 	Common.alert(" Update status successful for Redemption No: " + $("#_rdmNo").val()
-                			+ "<br />Status: " + $("#rdmStatus option:selected").text(), fn_closePopAndReload);
+                			+ "<br />Status: " + $("#rdmStatus option:selected").text());
                 } else {
-                    Common.alert(result.message, fn_closePopAndReload);
+                    Common.alert(result.message);
                 }
+                $("#updateRedemptionPop").remove();
+                fn_searchRedemptionList();
             });
         }
-    }
-
-    function fn_closePopAndReload() {
-        window.location.reload();
     }
 
 </script>
