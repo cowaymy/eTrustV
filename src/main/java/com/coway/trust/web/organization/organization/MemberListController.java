@@ -1069,7 +1069,7 @@ public class MemberListController {
             		formMap.get("memberType").toString().equals("7") || formMap.get("memberType").toString().equals("2803")) {
                 EgovMap trainingItem = memberListService.selectMemCourse(formMap);
 
-                if(!trainingItem.isEmpty()) {
+                if(trainingItem != null && !trainingItem.isEmpty()) {
                     formMap.put("coursItmId", trainingItem.get("coursItmId"));
                     u5 = memberListService.memberListUpdate_MSC09(formMap);
                 }
@@ -1910,14 +1910,14 @@ logger.debug("params : {}", params);
 
         EgovMap item = new EgovMap();
         params.put("srcM", "1");
-        item = (EgovMap) memberListService.checkIncomeTax(params);
+//        item = (EgovMap) memberListService.checkIncomeTax(params);
         incomeTaxCheck.put("cnt1", item.get("cnt"));
 
         params.remove("srcM");
 
         EgovMap item2 = new EgovMap();
         params.put("srcA", "1");
-        item2 = (EgovMap) memberListService.checkIncomeTax(params);
+//        item2 = (EgovMap) memberListService.checkIncomeTax(params);
         incomeTaxCheck.put("cnt2", item2.get("cnt"));
 
         return ResponseEntity.ok(incomeTaxCheck);
@@ -2459,5 +2459,45 @@ logger.debug("params : {}", params);
 	    return ResponseEntity.ok(message);
 
 	}
+
+    @RequestMapping(value = "/getVaccineListing", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> getVaccineListing(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO)
+    		throws Exception {
+
+        logger.debug("==================== getVaccineListing ====================");
+
+        String memCode = ((String) params.get("MemberID"));
+        String memberID = null;
+
+        logger.debug("Applicant ID : {}", memberID);
+        logger.debug("User Type : {}", memCode);
+
+        Map<String, Object> details = new HashMap();
+        //params.put("MemberID", memberID);
+        details.put("MemCode", memCode);
+
+        LoginVO loginVO = loginService.getVaccineDeclarationAplcntInfo(details);
+
+        EgovMap item = new EgovMap();
+        params.put("memberID", loginVO.getUserId());
+        item = (EgovMap) memberListService.validateVaccineDeclarationStatus(params);
+
+        ReturnMessage message = new ReturnMessage();
+        if(loginVO != null){
+        	if("0".equals(item.get("cnt").toString())) {
+        		message.setCode(AppConstants.SUCCESS);
+                message.setMessage("PENDING");
+        	}else{
+        		message.setCode(AppConstants.SUCCESS);
+                message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        	}
+        }else{
+        	message.setCode(AppConstants.FAIL);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        }
+
+
+        return ResponseEntity.ok(message);
+    }
 }
 

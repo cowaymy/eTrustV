@@ -481,11 +481,41 @@ $(document).ready(function() {
 
     $("#position").attr("disabled",true);
 
-    if($("#userRole").val() == "130" || $("#userRole").val() == "137" // Administrator
-      || $("#userRole").val() == "141" || $("#userRole").val() == "142" || $("#userRole").val() == "160" // HR
-    ) {
+    //20211020 - HLTANG - show non vaccine declaration form start
+    $("#getNonVaccineDeclare").hide();
+    var userRole = $('input:hidden[name="userRole"]').val();
+    console.log("userole" + $("#userRole").val());
+    if(userRole == "130 " || userRole == "137 " // Administrator
+        || userRole == "141 " || userRole == "142 " || userRole == "160 " // HR
+      ) {
+       console.log("userole1 " + userRole);
+       $("#getNonVaccineDeclare").show();
+   }else{
+      var userId = "${SESSION_INFO.userId}";
+      var username = "${SESSION_INFO.userName}";
+       console.log("userId: " + userId);
+       console.log("username: " + username);
 
+       Common.ajax("POST", "/organization/getVaccineListing.do", {MemberID : username}, function(result){
+           console.log(result);
+
+           if(result.message == "success.") {
+               $("#getNonVaccineDeclare").show();
+               console.log("non vaccine exist");
+           }
+
+
+        });
+   }
+  //20211020 - HLTANG - show non vaccine declaration form end
+
+
+    if($("#userRole").val() == "130 " || $("#userRole").val() == "137 " // Administrator
+      || $("#userRole").val() == "141 " || $("#userRole").val() == "142 " || $("#userRole").val() == "160 " // HR
+    ) {
     }
+
+
 
  });
 
@@ -796,6 +826,89 @@ $(function() {
             Common.alert("Please select a member!");
         }
     });
+
+    $("#getNonVaccineDeclare").click(function() {
+        /* if($("#code").val() == null){
+            Common.alert("Admin need to key in value for 'Code' value' ! ");
+        } */
+
+        var userRole = $('input:hidden[name="userRole"]').val();
+        var userId = "";
+        var username = "";
+        console.log("userole" + $("#userRole").val());
+        if(userRole == "130 " || userRole == "137 " // Administrator
+            || userRole == "141 " || userRole == "142 " || userRole == "160 " // HR
+          ) {
+
+            if(selRowIndex >= 0 && selRowIndex != null) {
+                Common.ajax("POST", "/organization/getVaccineListing.do", {MemberID : membercode}, function(result){
+                    console.log(result);
+
+                    if(result.message == "PENDING") {
+                        Common.alert("Pending user fill in declaration form.");
+                    }
+                    else if(result.message == "success.") {
+                        btnGeneratePDF_Click(membercode);
+                    }else{
+                        Common.alert("No record found for this user.");
+                    }
+
+
+                 });
+            }else{
+                Common.alert("Please select a member! ");
+            }
+
+
+        }
+        else{
+            userId = "${SESSION_INFO.userId}";
+            username = "${SESSION_INFO.userName}";
+            console.log("userId: " + userId);
+            console.log("username: " + username);
+
+            btnGeneratePDF_Click(username);
+        }
+
+
+    });
+
+    function btnGeneratePDF_Click(username){
+        console.log("report2: " + username);
+            var memType = "";
+            var whereSQL = "";
+            var orderBySQL = "";
+
+
+
+            var date = new Date().getDate();
+            if(date.toString().length == 1){
+                date = "0" + date;
+            }
+
+            /* $("#reportFileName").val("/organization/NonVaccinationReport_PDF.rpt");
+            $("#reportDownFileName").val("NoticeofSafetyComplianceforNon-VaccinatedIndividual"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+            $("#viewType").val("PDF"); */
+
+            $("#nonVaccineReport #viewType").val("PDF");
+            $("#nonVaccineReport #reportFileName").val("/organization/NonVaccinationReport_PDF.rpt");
+            $("#nonVaccineReport #reportDownFileName").val("NoticeofSafetyComplianceforNon-VaccinatedIndividual"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+
+            $("#nonVaccineReport #V_WHERESQL").val(whereSQL);
+            $("#nonVaccineReport #V_ORDERBYSQL").val(orderBySQL);
+            $("#nonVaccineReport #V_SELECTSQL").val("");
+            $("#nonVaccineReport #V_FULLSQL").val("");
+            $("#nonVaccineReport #username").val(username);
+
+
+            // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
+            var option = {
+                    isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+            };
+
+            Common.report("nonVaccineReport", option);
+
+    }
 });
 
 </script>
@@ -864,6 +977,15 @@ $(function() {
 
     <input type="hidden" id="v_dt1" name="v_dt1" value="" />
     <input type="hidden" id="v_dt2" name="v_dt2" value="" />
+</form>
+
+<form id="nonVaccineReport" name="nonVaccineReport">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+
+    <input type="hidden" id="username" name="username" value="" />
+
 </form>
 
 <section class="search_table"><!-- search_table start -->

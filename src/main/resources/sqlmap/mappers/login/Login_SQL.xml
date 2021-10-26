@@ -561,9 +561,6 @@
             when matched then
             UPDATE SET D1.UPD_DT = SYSDATE
             , UPD_USER_ID = #{userId}
-            <if test="typeOfVaccine != null">
-                , D1.VACCINE_TYPE = #{typeOfVaccine}
-            </if>
             <if test="vaccineStatus != null">
                 , D1.VACCINE_STATUS = #{vaccineStatus}
             </if>
@@ -651,8 +648,11 @@
         a.stus USERSTATUSID,
         a.mem_type USERTYPEID
         from ORG0001D a
-        left join org0042d b on b.mem_id = a.mem_id
-        where a.mem_id =#{MemberID}
-        and a.mem_Code = #{MemCode}
+        join org0042d b on b.mem_id = a.mem_id
+        where
+        a.mem_Code = #{MemCode}
+        <if test="MemberID != null and MemberID != ''">
+            AND a.mem_id =#{MemberID}
+        </if>
     </select>
 </mapper>
