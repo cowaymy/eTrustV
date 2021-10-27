@@ -139,9 +139,12 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
 
                 // Set hiddenHasFilterCharge from ProductFilterList
                 param.setFlag("Y");
-                List<EgovMap> selectProductFilterList = eSVMApiMapper.selectProductFilterList(eSVMApiForm.createMap(param));
+                // List<EgovMap> selectProductFilterList = eSVMApiMapper.selectProductFilterList(eSVMApiForm.createMap(param)); // 20211027
+                List<EgovMap> selectProductFilterList = new ArrayList<EgovMap>();
+                selectProductFilterList = eSVMApiMapper.selectProductFilterList(eSVMApiForm.createMap(param));
                 String hiddenHasFilterCharge = "";
-                if(selectProductFilterList.size() > 0) {
+                // if(selectProductFilterList.size() > 0) { // 20211027
+                if(selectProductFilterList != null) {
                     Map<String, String> listItem = selectProductFilterList.get(0);
                     Iterator<Entry<String, String>> it = listItem.entrySet().iterator();
                     while(it.hasNext()) {
@@ -409,7 +412,8 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
                 EgovMap billMonthMap_1 = new EgovMap();
                 billMonthMap_1 = eSVMApiMapper.getOrderCurrentBillMonth(params);
 
-                if(billMonthMap_1.size() > 0) {
+                // if(billMonthMap_1.size() > 0) {
+                if(billMonthMap_1 != null) {
                     billMonth = Integer.parseInt(billMonthMap.get("rentInstNo").toString());
                 }
             }
