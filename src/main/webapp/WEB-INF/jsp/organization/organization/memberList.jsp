@@ -484,13 +484,26 @@ $(document).ready(function() {
     //20211020 - HLTANG - show non vaccine declaration form start
     $("#getNonVaccineDeclare").hide();
     var userRole = $('input:hidden[name="userRole"]').val();
+    var username1 = "${SESSION_INFO.userName}";
     console.log("userole" + $("#userRole").val());
+    console.log("usertypeid" + "${SESSION_INFO.userTypeId}");
     if(userRole == "130 " || userRole == "137 " // Administrator
         || userRole == "141 " || userRole == "142 " || userRole == "160 " // HR
-      ) {
+    //|| userRole =="342 " || userRole =="343 " || userRole =="344 "
+    	|| username1 == "PSLEONG" || username1 == "SHAWN" || username1 == "WAZIEN01" ) {
        console.log("userole1 " + userRole);
        $("#getNonVaccineDeclare").show();
-   }else{
+   }else if("${SESSION_INFO.userTypeId}" == "4" || "${SESSION_INFO.userTypeId}" == "6" ){
+	   var memberID = "${SESSION_INFO.memId}";
+	   console.log("memberID: " + memberID);
+
+	   Common.ajax("GET", "/organization/getVaccineSubmitInfo", {memberID: memberID}, function(result){
+		   if(result != 0){
+			   $("#getNonVaccineDeclare").show();
+		   }
+	   });
+   }
+    else{
       var userId = "${SESSION_INFO.userId}";
       var username = "${SESSION_INFO.userName}";
        console.log("userId: " + userId);
@@ -832,17 +845,22 @@ $(function() {
             Common.alert("Admin need to key in value for 'Code' value' ! ");
         } */
 
+        console.log("{SESSION_INFO.userTypeId: " + "${SESSION_INFO.userTypeId}");
+
         var userRole = $('input:hidden[name="userRole"]').val();
         var userId = "";
         var username = "";
+        var username1 = "${SESSION_INFO.userName}";
         console.log("userole" + $("#userRole").val());
         if(userRole == "130 " || userRole == "137 " // Administrator
             || userRole == "141 " || userRole == "142 " || userRole == "160 " // HR
-          ) {
+            	//|| userRole =="342 " || userRole =="343 " || userRole =="344 "
+            	|| username1 == "PSLEONG" || username1 == "SHAWN" || username1 == "WAZIEN01"
+            	) {
 
             if(selRowIndex >= 0 && selRowIndex != null) {
                 Common.ajax("POST", "/organization/getVaccineListing.do", {MemberID : membercode}, function(result){
-                    console.log(result);
+                	console.log(result);
 
                     if(result.message == "PENDING") {
                         Common.alert("Pending user fill in declaration form.");
@@ -860,6 +878,20 @@ $(function() {
             }
 
 
+        }
+        else if("${SESSION_INFO.userTypeId}" == "4" || "${SESSION_INFO.userTypeId}" == "6"){
+            var memberID = "${SESSION_INFO.memId}";
+            console.log("memberID: " + memberID);
+
+            var username2;
+            Common.ajax("GET", "/organization/getVaccineSubmitInfo", {memberID: memberID}, function(result){
+                if(result.cnt == 1){
+                	username = "${SESSION_INFO.userName}";
+                	btnGeneratePDF_Click(username);
+                }else{
+                	Common.alert("Pending user fill in declaration form.");
+                }
+            });
         }
         else{
             userId = "${SESSION_INFO.userId}";
