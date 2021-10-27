@@ -5352,7 +5352,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		            WHERE
 		              o.MEM_ID = T.MEM_ID
 		          )
-		      ) = '747' THEN '-' ELSE DISCONTINUE_DATE END AS DISCONTINUE_DATE,
+		      ) IN ('747','749') THEN '-' ELSE DISCONTINUE_DATE END AS DISCONTINUE_DATE,
 		      MEM_LVL,
 		      ORG_CODE,
 		      GRP_CODE,
