@@ -583,6 +583,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     return em;
   }
 
+  @Override
   public Map<String, Object> setCCR000Data(Map<String, Object> params) {
 
     Map<String, Object> em = new HashMap<String, Object>();

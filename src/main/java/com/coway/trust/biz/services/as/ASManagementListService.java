@@ -213,4 +213,6 @@ public interface ASManagementListService {
 
   public int insertInHouseSVC0004D(Map<String, Object> params);
 
+  public Map<String, Object> setCCR000Data(Map<String, Object> params);
+
 }

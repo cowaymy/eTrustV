@@ -3366,6 +3366,14 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     svc0004dmap.put("AS_ID", String.valueOf(seqMap.get("seq")).trim());
     svc0004dmap.put("AS_NO", String.valueOf(eMap.get("asno")).trim());
 
+    // insert call log record
+    EgovMap ccrSeqMap = ASManagementListMapper.getCCR0006D_CALL_ENTRY_ID_SEQ(params);
+    params.put("AS_CALLLOG_ID", String.valueOf(ccrSeqMap.get("seq")).trim());
+    svc0004dmap.put("AS_CALLLOG_ID", String.valueOf(ccrSeqMap.get("seq")).trim());
+
+    int c6d = ASManagementListMapper.insertCCR0006D(asMgmtListService.setCCR000Data(svc0004dmap));
+    int c7d = ASManagementListMapper.insertCCR0007D(asMgmtListService.setCCR000Data(svc0004dmap));
+
     //params.put("DOCNO", "21");
     //EgovMap eMap_result = ASManagementListMapper.getASEntryDocNo(params);
     //EgovMap seqMap_result = ASManagementListMapper.getResultASEntryId(params);
