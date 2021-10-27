@@ -311,6 +311,9 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
        // Added for inserting charge out filters and spare parts at AS. By Hui Ding, 06-04-2021
     	  if (insApiresult.get("chkCrtAs") != null && insApiresult.get("chkCrtAs").toString().equals("1")){
 
+    		  // set CT_ID into installResult
+    		  installResult.put("ctId", String.valueOf(userId));
+
     		  // change format from
     		  String appntDtFormatted = null;
 
