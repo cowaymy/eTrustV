@@ -153,8 +153,9 @@ public class eSVMApiServiceImpl extends EgovAbstractServiceImpl implements eSVMA
                     }
                 }
                 logger.debug("hiddenHasFilterCharge.HiddenHasFilterCharge :: " + hiddenHasFilterCharge);
-                rtn.setHiddenHasFilterCharge(Integer.parseInt(hiddenHasFilterCharge));
-
+                if(hiddenHasFilterCharge != "") {
+                    rtn.setHiddenHasFilterCharge(Integer.parseInt(hiddenHasFilterCharge));
+                }
 
                 // Type of Package
                 List<EgovMap> selectComboPackageList = eSVMApiMapper.selectComboPackageList(eSVMApiForm.createMap(param));
