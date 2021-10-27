@@ -528,6 +528,7 @@
 
        $("#mobileRow").show();
        $("#smsReqBtn").show();
+       $("#smsMsgInfo").show(); //added by keyi 20211027
    }
 
 </script>

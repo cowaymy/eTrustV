@@ -62,6 +62,8 @@ $(document).ready(function() {
     $("#mobileRow").hide();
     $("#tempPwRow").hide();
     $("#smsReqBtn").hide();
+    $("#smsMsgInfo").hide(); //added by keyi 20211027
+
     $("#tempPwCheckBtn").hide();
 
     $("#userIdFindPopTxt").keydown(function(key) {
@@ -101,7 +103,7 @@ function fnReqSMS() {
            return false;
        } else {
     	   var userType = $("#searchLoginName").val().startsWith("CD") ? "user" : "HP";
-    	   
+
            Common.alert("Dear " + userType + ", temporary password has been sent to your registered number " + $("memberMobile").val() +
                    ". Kindly login to reset your password.", findIdPopUpClose);
 
@@ -216,11 +218,17 @@ function fnReqSMS() {
 				</tbody>
 			</table><!-- table end -->
 
+        <!--added by keyi 20211101-->
+        <ul class="left_btns">
+        <li id="smsMsgInfo"><p class= "blue_text bold_text">Dear user, please be reminded that there is a limit of maximum 3 times to request for temporary password within 7 days.</p></li>
+        <br />
+        </ul>
+
 		<ul class="center_btns">
 			<li id="backBtn"><p class="btn_blue2 big"><a onclick="fnBackStepPop();">Back</a></p></li>
 			<li id="secCheckBtn"><p class="btn_blue2 big"><a onclick="fnSecurityChkPop();">Submit</a></p></li>
 			<!-- 20210111 - LaiKW -->
-			<li id="smsReqBtn"><p class="btn_blue2 big"><a onclick="fnReqSMS();">Request SMS</a></p></li>
+            <li id="smsReqBtn"><p class="btn_blue2 big"><a onclick="fnReqSMS();">Request SMS</a></p></li>
 			<li id="tempPwCheckBtn"><p class="btn_blue2 big"><a onclick="fnCheckTempPW();">Submit</a></p></li>
 		</ul>
 		</article><!-- tap_area end -->
