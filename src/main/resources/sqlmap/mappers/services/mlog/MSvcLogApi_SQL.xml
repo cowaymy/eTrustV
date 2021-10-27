@@ -2281,6 +2281,7 @@ SELECT MST.*
              THEN Extent2.CT_ID
              ELSE 0 END C6  ,
            Extent15.MEM_CODE MEM_CODE  ,
+           Extent2.CT_ID ,
            Extent15.NAME NAME2  ,
            Extent16.WH_LOC_ID WH_LOC_ID  ,
            Extent4.DOC_ID DOC_ID  ,
