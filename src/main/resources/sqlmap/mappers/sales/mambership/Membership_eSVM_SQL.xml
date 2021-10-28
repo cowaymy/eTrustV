@@ -349,7 +349,7 @@
         FROM SYS0032M
         WHERE 1=1
         <if test="action == 6">
-            AND RESN_TYPE_ID = '6451'
+            AND RESN_TYPE_ID = '6453'
         </if>
         <if test="action == 1">
             AND RESN_TYPE_ID = '6452'
