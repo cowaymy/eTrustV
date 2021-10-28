@@ -334,7 +334,7 @@
 
     <select id="getDocNo" parameterType="Map" resultType="java.lang.String">
                  <![CDATA[
-                        SELECT FN_GET_DOCNO(#{docNoId})  docno  FROM DUAL
+                        SELECT FN_GET_DOCNO(#{DOCNO})  docno  FROM DUAL
                     ]]>
     </select>
 

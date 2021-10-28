@@ -226,7 +226,7 @@ public class MembershipESvmController {
 		}
 		else
 		{
-			params.put("docNoId", "12");
+			params.put("DOCNO", "12");
 			docNo = membershipESvmService.selectDocNo(params);
 
 		}
