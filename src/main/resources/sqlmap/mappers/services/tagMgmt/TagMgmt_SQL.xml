@@ -86,7 +86,7 @@
           -- Added cmgroup by Hui Ding, 2020-12-17
           LEFT JOIN sal0090D C on C.SRV_SO_ID = A.ord_id
           --JOIN ORG0001D T3 ON T3.MEM_ID = C.SRV_CODY_ID
-          JOIN ( SELECT V1.MEM_ID MEM_ID
+          LEFT JOIN ( SELECT V1.MEM_ID MEM_ID
                       , V1.MEM_CODE MEM_CODE
                       , V1.MEM_LVL MEM_LVL
                       , V1.DEPT_CODE DEPT_CODE
