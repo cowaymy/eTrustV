@@ -20,9 +20,10 @@ $(document).ready(function() {
         code1 = AUIGrid.getCellValue(myGridID, event.rowIndex, "code1");
         installEntryId = AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId");
         salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+        asNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "asNo");
         //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
 
-        selectrow(installEntryNo,salesOrdNo,installEntryId);
+        selectrow(installEntryNo,salesOrdNo,installEntryId, asNo);
     });
 
     //
@@ -32,7 +33,7 @@ $(document).ready(function() {
 
 });
 
-function selectrow(installEntryNo,salesOrdNo){
+function selectrow(installEntryNo,salesOrdNo, asNo){
 	$("#installEntryNo").val(installEntryNo);
 	$("#salesOrdNo").val(salesOrdNo);
 	$("#installEntryId").val(installEntryId);
@@ -161,7 +162,7 @@ function fn_setdetail(result){
 			$("#btnReverse").hide();
             $("#divResultReversal").hide();
 		}
-		if(result.list1.codeId == '67'){
+		/* if(result.list1.codeId == '67'){
 
 			errorM =   errorM + " OutRight Type is disallowed." ;
 			  $("#lblErrorMessage").show();
@@ -169,7 +170,7 @@ function fn_setdetail(result){
 	          $("#btnReverse").hide();
 	          $("#divResultReversal").hide();
 
-		}
+		} */
 
 	}else{
         $("#lblErrorMessage").show();
@@ -186,6 +187,8 @@ function fn_setdetail(result){
 	$("#hidInstallEntryNo").val(result.list1.installEntryNo);
 	$("#hidSerialNo").val(result.list1.serialNo);
 	$("#hidSalesOrderId").val(result.list1.salesOrdId);
+
+	$("#hidAsNo").val(asNo);
 
 }
 
@@ -213,6 +216,12 @@ function createAUIGrid() {
         dataField : "salesOrdNo",
         //headerText : "Order No",
         headerText : '<spring:message code="service.grid.OrderNo" />',
+        editable : false,
+        width : 130
+    }, {
+        dataField : "asNo",
+        headerText : "INS AS No",
+        //headerText : '<spring:message code="service.grid.OrderNo" />',
         editable : false,
         width : 130
     }, {
@@ -335,7 +344,11 @@ function save_confirm(){
 		Common.alert("<spring:message code='budget.msg.noData'/>");
         return false;
 	}
-    Common.confirm("Related Billing & Payment Data should be adjusted manually"  , fn_save );
+	if ($("#hidAsNo").val() != "") {
+		Common.confirm("INS AS No. " +$("#hidAsNo").val()+  " detected. Please reverse AS result at AS Management module manually. <br\> Related Billing & Payment Data should be adjusted manually"  , fn_save );
+	} else {
+	    Common.confirm("Related Billing & Payment Data should be adjusted manually"  , fn_save );
+	}
 }
 
 
@@ -640,6 +653,7 @@ function fn_close(){
 <input type="hidden"  id="hidInstallEntryNo" name="hidInstallEntryNo"/>
 <input type="hidden"  id="hidSalesOrderId" name="hidSalesOrderId"/>
 <input type="hidden"  id="hidSerialNo" name="hidSerialNo"/>
+<input type="hidden"  id="hidAsNo" name="hidAsNo"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

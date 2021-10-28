@@ -27,7 +27,8 @@
                 Project1.CUST_ID CUST_ID  ,
                 Project1.NRIC NRIC  ,
                 Project1.SIRIM_NO SIRIM_NO  ,
-                Project1.SERIAL_NO SERIAL_NO
+                Project1.SERIAL_NO SERIAL_NO,
+                Project1.AS_NO
   FROM ( SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
                 Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO  ,
                 Extent3.SALES_ORD_ID SALES_ORD_ID  ,
@@ -48,7 +49,8 @@
                 Extent8.NAME NAME  ,
                 Extent8.NRIC NRIC  ,
                 Extent9.STUS_CODE_ID STUS_CODE_ID  ,
-                Extent9.CODE CODE1
+                Extent9.CODE CODE1,
+                A.AS_NO
          FROM SAL0046D Extent1
                 LEFT JOIN SAL0047D Extent2   ON Extent1.CALL_ENTRY_ID = Extent2.ENTRY_ID
                 JOIN SAL0001D Extent3   ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
@@ -59,6 +61,7 @@
                 LEFT JOIN SAL0029D Extent8   ON Extent3.CUST_ID = Extent8.CUST_ID
                 LEFT JOIN SYS0038M Extent9   ON Extent1.STUS_CODE_ID = Extent9.STUS_CODE_ID
                 JOIN SAL0045D Extent10   ON Extent3.SALES_ORD_ID = Extent10.SALES_ORD_ID
+                LEFT JOIN SVC0001D A on A.AS_SO_ID = Extent1.SALES_ORD_ID and A.REF_REQST = Extent1.INSTALL_ENTRY_NO
           WHERE  ( NOT ( LTRIM(RTRIM(UPPER(Extent3.SALES_ORD_NO))) LIKE '%C%')
                    AND ( Extent3.SALES_ORD_NO = #{orderNo} ))
                    AND Extent3.BNDL_ID IS NULL      -- homecare Remove(except)
