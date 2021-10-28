@@ -50,7 +50,7 @@
                 Extent8.NRIC NRIC  ,
                 Extent9.STUS_CODE_ID STUS_CODE_ID  ,
                 Extent9.CODE CODE1,
-                A.AS_NO
+                NVL(A.AS_NO, '-') AS_NO
          FROM SAL0046D Extent1
                 LEFT JOIN SAL0047D Extent2   ON Extent1.CALL_ENTRY_ID = Extent2.ENTRY_ID
                 JOIN SAL0001D Extent3   ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
