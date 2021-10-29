@@ -625,7 +625,7 @@
        Limit1.APLICNT_MEETPOINT,
        Limit1.MOBILE_USE_YN,
        Limit1.NO_TBB
-       <!-- ,Limit1.INC_TAX -->
+       -- Limit1.INC_TAX
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -970,7 +970,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 EXTENT29.MEET_POINT_CODE || ' - ' || MEET_POINT_DESC APLICNT_MEETPOINT,
                 Extent1.MOBILE_USE_YN,
                 Extent1.NO_TBB
-                <!-- ,Extent1.INC_TAX -->
+                -- ,Extent1.INC_TAX
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
