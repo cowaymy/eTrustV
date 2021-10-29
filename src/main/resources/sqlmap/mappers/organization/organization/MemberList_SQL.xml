@@ -2640,7 +2640,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
        Limit1.RELIGION,
        (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course,
        Limit1.MEETPOINT_ID
-       <!-- ,Limit1.INC_TAX -->
+       -- ,Limit1.INC_TAX
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -2989,7 +2989,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                  EXTENT1.MAIN_DEPT,
                  EXTENT1.SUB_DEPT,
                  EXTENT23.APLICNT_MEETPOINT MEETPOINT_ID
-                 <!-- ,EXTENT1.INC_TAX -->
+                 -- ,EXTENT1.INC_TAX
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
