@@ -872,8 +872,8 @@
             AND b.SRV_MEM_LG_ID IS NULL
             AND a.SRV_QUOT_VAL_ID <![CDATA[>=]]> TRUNC(SYSDATE)
             /* AND g.TYPE_ID = 964  LaiKW - 20201026 */
-            <if test="orderNo != null and orderNo != ''">
-            AND c.SALES_ORD_NO = #{orderNo}
+            <if test="OrderNo != null and OrderNo != ''">
+            AND c.SALES_ORD_NO = #{OrderNo}  /*Edit by keyi 20211028 fix unable to search by OrdNo*/
             </if>
             <if test="membershipType != null and membershipType != ''">
             AND f.SRV_MEM_PAC_ID = #{membershipType}
