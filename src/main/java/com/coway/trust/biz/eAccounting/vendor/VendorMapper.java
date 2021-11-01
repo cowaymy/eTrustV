@@ -86,4 +86,6 @@ public interface VendorMapper {
 
 	void insertRejectM(Map<String, Object> params);
 	// Edit Rejected functions - 20210624 - End
+
+	EgovMap existingVendorValidation(Map<String, Object> params);
 }

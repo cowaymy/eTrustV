@@ -652,4 +652,14 @@ public class VendorManagementController {
         return ResponseEntity.ok(message);
     }
 
+    @RequestMapping(value = "/existingVendorValidation.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> existingVendorValidation(@RequestParam Map<String, Object> params,
+            HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+    	LOGGER.debug("params =====================================>> " + params);
+
+    	EgovMap existingVendor = vendorService.existingVendorValidation(params);
+    	LOGGER.debug("existingVendor =====================================>> " + existingVendor);
+        return ResponseEntity.ok(existingVendor);
+    }
 }

@@ -425,6 +425,31 @@ function fn_vendorValidation(ts){
     	if(flg == 'M')
     	{
     		var obj = $("#form_newVendor").serializeJSON();
+    		Common.ajax("GET", "/eAccounting/vendor/existingVendorValidation.do?_cacheId=" + Math.random(), obj, function(result) {
+
+    			console.log("result:"+  result.data);
+    			console.log("result.vendorAccId: "+ result.vendorAccId);
+    			console.log("vendorAccId: ", vendorAccId);
+    			console.log("result.vendorRegNoNric: "+ result.vendorRegNoNric);
+    			console.log("regCompNo: ", $("#regCompNo").val());
+    			if(result.vendorAccId == vendorAccId && result.vendorRegNoNric == $("#regCompNo").val())
+    			{
+    				if(FormUtil.isEmpty($("#newReqNo").val()))
+                    {
+                        fn_attachmentUpload("new");
+                    }
+                    else
+                    {
+                        fn_attachmentUpdate(callType);
+                    }
+    			}
+    			else
+    			{
+    				Common.alert('Somthing is wrong. Please contact administrator.');
+    			}
+    		})
+
+    		/* var obj = $("#form_newVendor").serializeJSON();
             console.log("fn_editVendorMaster_saveDraft");
             Common.ajax("GET", "/eAccounting/vendor/vendorValidation.do?_cacheId=" + Math.random(), obj, function(result){
                 $("#isReset").val(result.isReset);
@@ -454,7 +479,7 @@ function fn_vendorValidation(ts){
 
                 }
 
-            });
+            }); */
     	}
     	else if(appvPrcssStusCode == 'A' && vendorAccId != '' && vendorAccId != null){
     		var obj = $("#form_newVendor").serializeJSON();

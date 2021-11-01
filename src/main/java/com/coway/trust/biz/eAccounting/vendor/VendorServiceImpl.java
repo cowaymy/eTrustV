@@ -332,4 +332,10 @@ public class VendorServiceImpl implements VendorService {
         // Insert FCM0029D
         vendorMapper.insertApprovedDraft(params);
     }
+
+	@Override
+	public EgovMap existingVendorValidation(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return vendorMapper.existingVendorValidation(params);
+	}
 }

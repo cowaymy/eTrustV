@@ -56,4 +56,6 @@ public interface VendorService {
 	void editRejected(Map<String, Object> params);
 
 	void editApproved(Map<String, Object> params);
+
+	EgovMap existingVendorValidation(Map<String, Object> params);
 }

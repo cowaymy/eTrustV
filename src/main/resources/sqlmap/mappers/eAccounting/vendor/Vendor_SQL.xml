@@ -891,4 +891,8 @@
         WHERE VENDOR_REQ_NO = #{clmNo}
     </insert>
 
+    <select id="existingVendorValidation" parameterType="Map" resultType="egovMap">
+        SELECT * FROM FCM0031D WHERE VENDOR_REG_NO_NRIC = #{regCompNo}
+    </select>
+
 </mapper>
