@@ -248,9 +248,10 @@ public class ReturnUsedPartsController {
 		return ResponseEntity.ok(codyCodeList);
 	}
 	
-	@RequestMapping(value = "/selectBranchCodeList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectBranchCodeList(@RequestParam Map<String, Object> params) {
-		List<EgovMap> branchCodeList = returnUsedPartsService.selectBranchCodeList(params);
+
+	@RequestMapping(value = "/selectSelectedBranchCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectSelectedBranchCodeList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> branchCodeList = returnUsedPartsService.selectSelectedBranchCodeList(params);
 		return ResponseEntity.ok(branchCodeList);
 	}
 	

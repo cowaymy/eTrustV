@@ -30,5 +30,6 @@ public interface ReturnUsedPartsMapper {
 	List<EgovMap> getDeptCodeList(Map<String, Object> params);
 	
 	List<EgovMap> getCodyCodeList(Map<String, Object> params);
-	
+
+	List<EgovMap> selectSelectedBranchCodeList(Map<String, Object> params);
 }

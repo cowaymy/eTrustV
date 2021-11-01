@@ -306,4 +306,13 @@
 
 </select>
 
+<select id="selectSelectedBranchCodeList" parameterType="Map" resultType="egovMap">
+      select BRNCH_ID code,code || '-' || NAME CODE_NAME
+       from sys0005m where TYPE_ID in (42 , 43)
+       <if test="userBranchId != null and userBranchId != ''">
+       and BRNCH_ID = #{userBranchId}
+       </if>
+       ORDER BY CODE_NAME
+</select>
+
 </mapper>

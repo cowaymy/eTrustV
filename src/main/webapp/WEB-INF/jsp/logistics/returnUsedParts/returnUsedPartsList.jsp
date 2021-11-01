@@ -163,7 +163,18 @@ $(document).ready(function(){
     doDefCombo(comboData2, '' ,'searchlocgb', 'S', '');
 
 
-    doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
+    var ROLE_ID = "${SESSION_INFO.roleId}";
+    var access_auth1 = "${PAGE_AUTH.funcUserDefine1}";
+    console.log("ROLE_ID " + ROLE_ID);
+    console.log("access_auth1 " + access_auth1);
+    if(userRole == "130 " || userRole == "137 " // Administrator
+    		|| access_auth1 == 'Y'){
+    	doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
+    }else{
+    	doGetComboData('/logistics/returnusedparts/selectSelectedBranchCodeList.do',{userBranchId: '${SESSION_INFO.userBranchId}'}, '', 'searchBranch', 'S','');
+    	$("#complete").hide();
+    }
+
     //doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE' , Codeval : 'A'}, '', 'searchlocgrade', 'S','');
    // doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
    $("#servicesdt").val(today);
@@ -366,7 +377,16 @@ $(document).ready(function(){
         if ($('#searchlocgb').val() == null || $('#searchlocgb').val() == "" ){
 
         	Common.alert("Please select Location Type");
-        	doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
+        	var ROLE_ID = "${SESSION_INFO.roleId}";
+            var access_auth1 = "${PAGE_AUTH.funcUserDefine1}";
+            console.log("ROLE_ID " + ROLE_ID);
+            console.log("access_auth1 " + access_auth1);
+            if(userRole == "130 " || userRole == "137 " // Administrator
+                    || access_auth1 == 'Y'){
+                doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
+            }else{
+                doGetComboData('/logistics/returnusedparts/selectSelectedBranchCodeList.do',{userBranchId: '${SESSION_INFO.userBranchId}'}, '', 'searchBranch', 'S','');
+            }
         	return false;
         }
 
