@@ -2746,7 +2746,7 @@ console.log("vBindingNo" + vBindingNo);
             Common.ajax("GET", "/sales/order/selectEKeyinSofCheck.do", {sofNo : sofNo}, function(result) {
                 if(result != null){
                     Common.
-                    alert("<spring:message code='sal.alert.msg.sofUsed' arguments = '" + result.postingBrnch + " ; " + result.ekeyInStus + ";" + result.ordStus +"' htmlEscape='false' argumentSeparator=';' />");
+                    alert("<spring:message code='sal.alert.msg.sofUsed' arguments = '" + result.postingBrnch + " ; " + result.ekeyInStus + " ; " + result.ordStus + " ; " + result.keyIn + " ' htmlEscape='false' argumentSeparator=';' />");
                 }
             });
        }
