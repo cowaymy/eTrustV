@@ -179,8 +179,12 @@
 	                $('#action').val(stus);
 	                $('#specialInstruction').val('${eSvmInfo.appvInstrct}');
 	                console.log('specialInstruction', $('#specialInstruction').val());
-	                $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+	                $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p" />');
 	                $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+	                if(payMode == '6506') //Company PO allow to edit PO field
+	                    {
+	                        $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p" />');
+	                    }
 	                $("#action option[value='"+ stus +"']").attr("selected", true);
 	                $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
 	                $("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000">${eSvmInfo.appvRem}</textarea>');
@@ -773,13 +777,24 @@
             Common.alert('Please choose a Special Instruction.');
             checkResult = false;
             return checkResult;
-        }else if('${paymentInfo.payMode}' == '6507' || '${paymentInfo.payMode}' == '6508') {
+        }else if($("#action").val() != '6') { //rejected action no need to check transaction ID
+            if('${paymentInfo.payMode}' == '6507' || '${paymentInfo.payMode}' == '6508')
+            {
+            	if(FormUtil.isEmpty($("#payment_transactionID").val())) {
+                    Common.alert('Please enter Transaction ID.');
+                    checkResult = false;
+                    return checkResult;
+                }
+            }
+
+        }
+        /* else if('${paymentInfo.payMode}' == '6507' || '${paymentInfo.payMode}' == '6508') {
         	if(FormUtil.isEmpty($("#payment_transactionID").val())) {
         		Common.alert('Please enter Transaction ID.');
                 checkResult = false;
                 return checkResult;
         	}
-        }else if('${paymentInfo.payMode}' == '6528') { //card=MOTO/IPP checking
+        } */else if('${paymentInfo.payMode}' == '6528') { //card=MOTO/IPP checking
         	if((FormUtil.isEmpty($("#payment_cardMode").val()))){
         		Common.alert('Please select Card Mode.');
                 checkResult = false;
