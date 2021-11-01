@@ -427,11 +427,6 @@ function fn_vendorValidation(ts){
     		var obj = $("#form_newVendor").serializeJSON();
     		Common.ajax("GET", "/eAccounting/vendor/existingVendorValidation.do?_cacheId=" + Math.random(), obj, function(result) {
 
-    			console.log("result:"+  result.data);
-    			console.log("result.vendorAccId: "+ result.vendorAccId);
-    			console.log("vendorAccId: ", vendorAccId);
-    			console.log("result.vendorRegNoNric: "+ result.vendorRegNoNric);
-    			console.log("regCompNo: ", $("#regCompNo").val());
     			if(result.vendorAccId == vendorAccId && result.vendorRegNoNric == $("#regCompNo").val())
     			{
     				if(FormUtil.isEmpty($("#newReqNo").val()))
