@@ -167,7 +167,7 @@ $(document).ready(function(){
     var access_auth1 = "${PAGE_AUTH.funcUserDefine1}";
     console.log("ROLE_ID " + ROLE_ID);
     console.log("access_auth1 " + access_auth1);
-    if(userRole == "130 " || userRole == "137 " // Administrator
+    if(ROLE_ID == "130 " || ROLE_ID == "137 " // Administrator
     		|| access_auth1 == 'Y'){
     	doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
     }else{
@@ -381,7 +381,7 @@ $(document).ready(function(){
             var access_auth1 = "${PAGE_AUTH.funcUserDefine1}";
             console.log("ROLE_ID " + ROLE_ID);
             console.log("access_auth1 " + access_auth1);
-            if(userRole == "130 " || userRole == "137 " // Administrator
+            if(ROLE_ID == "130 " || ROLE_ID == "137 " // Administrator
                     || access_auth1 == 'Y'){
                 doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
             }else{
