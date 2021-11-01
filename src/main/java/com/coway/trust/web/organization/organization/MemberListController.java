@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -1067,20 +1068,28 @@ public class MemberListController {
             if(formMap.get("memberType").toString().equals("1") || formMap.get("memberType").toString().equals("2") ||
             		formMap.get("memberType").toString().equals("3") || formMap.get("memberType").toString().equals("5") ||
             		formMap.get("memberType").toString().equals("7") || formMap.get("memberType").toString().equals("2803")) {
-                EgovMap trainingItem = memberListService.selectMemCourse(formMap);
 
-                if(trainingItem != null && !trainingItem.isEmpty()) {
-                    formMap.put("coursItmId", trainingItem.get("coursItmId"));
-                    u5 = memberListService.memberListUpdate_MSC09(formMap);
-                }
+            	//specify field update, just will need to update LMS system - HLTANG 20211028
+            	if(formMap.containsKey("usernameUpd") || formMap.containsKey("memberNmUpd")
+            			|| formMap.containsKey("emailUpd") || formMap.containsKey("mobileNoUpd") || formMap.containsKey("residenceNoUpd")
+            			||formMap.containsKey("selectBranchUpd") || formMap.containsKey("meetingPointUpd")
+            			|| formMap.containsKey("courseUpd") || formMap.containsKey("searchdepartmentUpd") || formMap.containsKey("inputSubDeptUpd")
+            			|| formMap.containsKey("trNoUpd") || formMap.containsKey("areaIdUpd") || formMap.containsKey("addrDtlUpd")
+            			|| formMap.containsKey("streetDtlUpd"))
+            	{
+            		EgovMap trainingItem = memberListService.selectMemCourse(formMap);
 
-            	Map<String, Object> returnVal = lmsApiService.lmsMemberListUpdate(formMap);
-				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
-					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
-					throw new RuntimeException(e1);
-				}
+                    if(trainingItem != null && !trainingItem.isEmpty()) {
+                        formMap.put("coursItmId", trainingItem.get("coursItmId"));
+                        u5 = memberListService.memberListUpdate_MSC09(formMap);
+                    }
 
-            	//memberListService.lmsMemberListUpdate(formMap);
+                	Map<String, Object> returnVal = lmsApiService.lmsMemberListUpdate(formMap);
+    				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+    					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+    					throw new RuntimeException(e1);
+    				}
+            	}
             }
 
             if(formMap.get("memberType").toString().equals("7")) {
@@ -1910,14 +1919,14 @@ logger.debug("params : {}", params);
 
         EgovMap item = new EgovMap();
         params.put("srcM", "1");
-        item = (EgovMap) memberListService.checkIncomeTax(params);
+//        item = (EgovMap) memberListService.checkIncomeTax(params);
         incomeTaxCheck.put("cnt1", item.get("cnt"));
 
         params.remove("srcM");
 
         EgovMap item2 = new EgovMap();
         params.put("srcA", "1");
-        item2 = (EgovMap) memberListService.checkIncomeTax(params);
+//        item2 = (EgovMap) memberListService.checkIncomeTax(params);
         incomeTaxCheck.put("cnt2", item2.get("cnt"));
 
         return ResponseEntity.ok(incomeTaxCheck);
@@ -2479,8 +2488,10 @@ logger.debug("params : {}", params);
         LoginVO loginVO = loginService.getVaccineDeclarationAplcntInfo(details);
 
         EgovMap item = new EgovMap();
-        params.put("memberID", loginVO.getUserId());
-        item = (EgovMap) memberListService.validateVaccineDeclarationStatus(params);
+        if(loginVO != null){
+            params.put("memberID", loginVO.getUserId());
+            item = (EgovMap) memberListService.validateVaccineDeclarationStatus(params);
+        }
 
         ReturnMessage message = new ReturnMessage();
         if(loginVO != null){

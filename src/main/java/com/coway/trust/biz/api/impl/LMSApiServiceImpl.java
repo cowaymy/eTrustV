@@ -1181,7 +1181,7 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 //		if(!selectcoursListlms.get(0).isEmpty()){
 			lmsMemApiForm.setProfile_field_trainingbatch(selectcoursListlms.get(0).get("codeName1") == null ? "" : selectcoursListlms.get(0).get("codeName1").toString());
 			lmsMemApiForm.setProfile_field_TrainingVenue(selectcoursListlms.get(0).get("coursLoc") == null ? "" : selectcoursListlms.get(0).get("coursLoc").toString());
-			lmsMemApiForm.setProfile_field_Tshirtsize(selectcoursListlms.get(0).get("shirtSize1") == null ? "" : selectcoursListlms.get(0).get("shirtSize").toString());
+			lmsMemApiForm.setProfile_field_Tshirtsize(selectcoursListlms.get(0).get("shirtSize1") == null ? "" : selectcoursListlms.get(0).get("shirtSize1").toString());
 			lmsMemApiForm.setProfile_field_TRNo(selectcoursListlms.get(0).get("traineeCode1") == null ? "" : selectcoursListlms.get(0).get("traineeCode1").toString());
 //		}
 //		lmsMemApiForm.setProfile_field_batch("");

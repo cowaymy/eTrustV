@@ -1266,8 +1266,8 @@ function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
             $("#areaIdUpd").remove();
         }
 
-        $("#memberUpdForm").append("<input type='hidden' name='areaIdUpd' id='areaIdUpd'>");
-        $("#areaIdUpd").val(areaid);
+        //$("#memberUpdForm").append("<input type='hidden' name='areaIdUpd' id='areaIdUpd'>");
+        //$("#areaIdUpd").val(areaid);
 
         $("#_searchDiv").remove();
     }else{
@@ -1657,14 +1657,14 @@ function checkIncomeTax() {
                                 </td>
                             </tr>
 
-                            <!-- ADDED INCOME TAX NO @AMEER 2021-10-25 -->
+                            <!-- ADDED INCOME TAX NO @AMEER 2021-10-12
                              <tr>
                                 <th scope="row">Income Tax No</th>
                                 <td colspan="5">
                                 <input type="text" title="" placeholder="Income Tax No" class="w100p" id="incomeTaxNo"  name="incomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
                                 onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;" value="<c:out value="${memberView.incTax}"/>"/>
                                 </td>
-                            </tr>
+                            </tr> -->
 
                             <%-- <tr>
                                 <th scope="row" rowspan="3">Address<span class="must">*</span></th>
