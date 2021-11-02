@@ -461,7 +461,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/PreBSConfig.do")
-  //@Scheduled(cron = "0 24 8 * * MON,WED,FRI")//Weekly (Mon, Wed, Fri) 8:24am
+  //@Scheduled(cron = "0 20 8 * * MON,WED,FRI")//Weekly (Mon, Wed, Fri) 8:24am
   public void preBSConfig() {
     LOGGER.info("[START] PreBSConfig...");
     Map<String, Object> params = new HashMap<>();
@@ -782,7 +782,8 @@ public class ReportBatchController {
     LOGGER.info("[END] DailyCollectionRaw...");
   }
 
-  @RequestMapping(value = "/LCD_StockTransfer.do")
+/* REMOVED BY CHEW KAH KIT - 20211102 - RAW DATA NOT LONGER IN USE
+   @RequestMapping(value = "/LCD_StockTransfer.do")
   //@Scheduled(cron = "0 50 4 * * *")
   public void lcdStockTransfer() throws IOException {
     LOGGER.info("[START] LCD_StockTransfer...");
@@ -796,7 +797,7 @@ public class ReportBatchController {
 
     this.view(null, null, params);
     LOGGER.info("[END] LCD_StockTransfer...");
-  }
+  }*/
 
   /*
    * Split to rcmDailySimplified_1 and rcmDailySimplified_2
@@ -962,7 +963,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/CSRaw.do")
-  //@Scheduled(cron = "0 24 8 * * MON,WED,FRI")
+  //@Scheduled(cron = "0 40 8 * * MON,WED,FRI")
   public void csRaw() throws IOException {
     LOGGER.info("[START] csRaw...");
     Map<String, Object> params = new HashMap<>();
@@ -977,7 +978,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/CSRawPastMonth.do")
-  //@Scheduled(cron = "0 24 8 * * MON,WED,FRI")
+  //@Scheduled(cron = "0 40 8 * * MON,WED,FRI")
   public void CSRawPastMonth() throws IOException {
     LOGGER.info("[START] csRawPastMonth...");
     Map<String, Object> params = new HashMap<>();
@@ -992,7 +993,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/BSRawCurrent.do")
-  //@Scheduled(cron = "0 24 8 * * MON,WED,FRI")
+  //@Scheduled(cron = "0 20 8 * * MON,WED,FRI")
   public void bsRawCurrent() throws IOException {
     LOGGER.info("[START] BSRawCurrent...");
     Map<String, Object> params = new HashMap<>();
@@ -1007,7 +1008,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/BSRawCurrent_S1.do")
-  //@Scheduled(cron = "0 24 8 * * *")
+  //@Scheduled(cron = "0 20 8 * * *")
   public void bsRawCurrentS1() throws IOException {
     LOGGER.info("[START] BSRawCurrent_S1...");
     Map<String, Object> params = new HashMap<>();
@@ -1023,7 +1024,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/BSRawPrevious_S1.do")
-  //@Scheduled(cron = "0 24 8 * * MON,WED,FRI")
+  //@Scheduled(cron = "0 30 8 * * MON,WED,FRI")
   public void bsRawPreviousS1() throws IOException {
     LOGGER.info("[START] BSRawPrevious_S1...");
     Map<String, Object> params = new HashMap<>();
@@ -1039,7 +1040,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/BSRawCurrent_S.do")
-  //@Scheduled(cron = "0 24 8 * * MON,WED,FRI")
+  //@Scheduled(cron = "0 30 8 * * MON,WED,FRI")
   public void bsRawCurrentS() throws IOException {
     LOGGER.info("[START] BSRawCurrent_S...");
     Map<String, Object> params = new HashMap<>();
@@ -1157,6 +1158,7 @@ public class ReportBatchController {
     LOGGER.info("[END] VC_CTCommission_PDF_V2...");
   }
 
+/*  REMOVED BY CHEW KAH KIT - 20211102 - RAW DATA NOT LONGER IN USE
   @RequestMapping(value = "/RptReferralsRawData.do")
   //@Scheduled(cron = "0 35 4 * * *") // Daily (4:35am)
   public void rptReferralsRawData() throws IOException {
@@ -1172,7 +1174,7 @@ public class ReportBatchController {
 
     this.view(null, null, params);
     LOGGER.info("[END] RptReferralsRawData...");
-  }
+  }*/
 
   @RequestMapping(value = "/RptRorAorBor_16th.do")
   //@Scheduled(cron = " 0 30 3 17 * ?") // Monthly (Day 17) 3:30am
@@ -1960,7 +1962,7 @@ public class ReportBatchController {
                                                                                   // rpt
                                                                                   // file
                                                                                   // name.
-    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put(REPORT_VIEW_TYPE, "EXCEL");
     params.put("V_TEMP", "TEMP");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME,
         "ColorGrid" + File.separator + "ColorGrid_Daily_2019_Jan_Dec_S" + CommonUtils.getNowDate() + ".xls");
@@ -1988,7 +1990,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/ColorGrid_Daily_2020_Jan_Dec_S.do")
-  //@Scheduled(cron = "0 20 5 * * *")//Daily (5:20am)
+  //@Scheduled(cron = "0 30 5 * * *")//Daily (5:20am)
   public void colorGridDaily2020JanDecS() {
     LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
     Map<String, Object> params = new HashMap<>();
@@ -2006,7 +2008,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/HC_ColorGrid_Daily_2020_Jan_Dec_S.do")
-  //@Scheduled(cron = "0 20 5 * * *")//Daily (5:20am)
+  //@Scheduled(cron = "0 40 5 * * *")//Daily (5:20am)
   public void hcColorGridDaily2020JanDecS() {
     LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
     Map<String, Object> params = new HashMap<>();
@@ -2024,7 +2026,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/ColorGrid_Daily_2021_Jan_Dec_S.do")
-  //@Scheduled(cron = "0 20 5 * * *")//Daily (5:20am)
+  //@Scheduled(cron = "0 50 5 * * *")//Daily (5:20am)
   public void colorGridDaily2021JanDecS() {
     LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
     Map<String, Object> params = new HashMap<>();
@@ -2042,7 +2044,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/HC_ColorGrid_Daily_2021_Jan_Dec_S.do")
-  //@Scheduled(cron = "0 20 5 * * *")//Daily (5:20am)
+  //@Scheduled(cron = "0 10 6 * * *")//Daily (5:20am)
   public void hcColorGridDaily2021JanDecS() {
     LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
     Map<String, Object> params = new HashMap<>();
@@ -2406,6 +2408,25 @@ public class ReportBatchController {
     LOGGER.info("[END] RentalFinLeaseDetailsOthRaw_Excel...");
   }
 
+// GENERATION TIME : 09 00 START
+  @RequestMapping(value = "/ProductReturn3MBlockList.do")
+  //@Scheduled(cron = "0 0 9 * * *")//Daily (09:00am)
+  public void ProductReturn3MBlockList() {
+    LOGGER.info("[START] ProductReturn3MBlockList...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/ProductReturn3MBlockList_Excel.rpt");// visualcut rpt
+                                                               // file name.
+    params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+        "Compliance" + File.separator + "ProductReturn3MBlockList_Excel_" + CommonUtils.getNowDate() + ".xls");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] ProductReturn3MBlockList...");
+  }
+// GENERATION TIME :　09 00 END
+
+// GENERATION TIME : 23 45 START
   //Coway Mall SFTP file
  @RequestMapping(value = "/agentData_raw.do")
  //@Scheduled(cron = " 0 45 23 * * ?")//Daily 11:45pm
@@ -2440,7 +2461,7 @@ public class ReportBatchController {
    this.view(null, null, params);
    LOGGER.info("[END] magicAddress_raw...");
  }
-
+//GENERATION TIME : 23 45 END
 
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
