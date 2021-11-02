@@ -337,12 +337,6 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     			  if (part != null){
     				  newPart = new HashMap<String, Object>();
 
-    				  if (part.get("chargesFoc") != null && part.get("chargesFoc").toString().equals("1")){
-    					  newPart.put("filterType", "FOC");
-    				  } else {
-    					  newPart.put("filterType", "CHG");
-    				  }
-
     				  newPart.put("filterID", String.valueOf(part.get("filterCode")));
     				  newPart.put("srvFilterLastSerial", String.valueOf(part.get("filterBarcdSerialNo")));
     				  newPart.put("filterQty", String.valueOf(part.get("filterChangeQty")));
@@ -354,6 +348,13 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     				  newPart.put("filterRemark", "NA");
 
     				  totalPrice += (part.get("salesPrice") != null ? Double.parseDouble(part.get("salesPrice").toString()) : 0.00);
+
+    				  if (part.get("chargesFoc") != null && part.get("chargesFoc").toString().equals("1")){
+    					  newPart.put("filterType", "FOC");
+    					  totalPrice = 0.00;
+    				  } else {
+    					  newPart.put("filterType", "CHG");
+    				  }
 
     				  newPartList.add(newPart);
     			  }
