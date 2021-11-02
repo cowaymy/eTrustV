@@ -620,7 +620,7 @@
             #{srvQuotCustCntId},
             #{srvMemQty},
             #{srvPromoId},
-            #{srvSalesMemId},
+            (SELECT MEM_ID FROM SYS0047M A, ORG0001D B WHERE A.HR_CODE = B.MEM_CODE AND A.USER_ID = #{srvSalesMemId}),
             #{srvMemId},
             #{srvOrderStkId},
             #{srvFreq},
