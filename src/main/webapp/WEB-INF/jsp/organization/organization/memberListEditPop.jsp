@@ -39,7 +39,7 @@ function fn_memberSave(){
         $.extend(jsonObj, {'hsptlz' : '0'});
     }
 
-    //ADDED INCOME TAX NO @AMEER 2021-10-12
+    //ADDED INCOME TAX NO @AMEER 2021-11-02
     if($("#incomeTaxNo").val() != " " || $("#incomeTaxNo").val() != null){
     	$.extend(jsonObj,{'incomeTaxNo':$("#incomeTaxNo").val() });
     }
@@ -1657,14 +1657,14 @@ function checkIncomeTax() {
                                 </td>
                             </tr>
 
-                            <!-- ADDED INCOME TAX NO @AMEER 2021-10-12
+                            <!-- ADDED INCOME TAX NO @AMEER 2021-11-02 -->
                              <tr>
                                 <th scope="row">Income Tax No</th>
                                 <td colspan="5">
                                 <input type="text" title="" placeholder="Income Tax No" class="w100p" id="incomeTaxNo"  name="incomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
                                 onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;" value="<c:out value="${memberView.incTax}"/>"/>
                                 </td>
-                            </tr> -->
+                            </tr>
 
                             <%-- <tr>
                                 <th scope="row" rowspan="3">Address<span class="must">*</span></th>
