@@ -514,7 +514,7 @@
             (SELECT NVL(MAX(BANK_SEQ),0)+1 FROM ITF0942M WHERE PAY_DT = TO_CHAR(B.CRC_TRNSC_DT,'YYYYMMDD')),
             B.CRC_TRNSC_ID,
             (SELECT ACC_CODE FROM SYS0001M WHERE ACC_ID = A.CRC_STATE_ACC_ID),
-            'AC002',
+            'AC003',
             #{grosAmt}
         FROM
             PAY0075D A
