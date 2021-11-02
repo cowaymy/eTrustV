@@ -981,6 +981,8 @@ public class MemberListController {
 
         //@AMEER INCOME TAX 2021-10-25
         formMap.put("incomeTaxNo", params.get("incomeTaxNo"));
+        logger.debug("@@incomeTaxNo : {}", params.get("incomeTaxNo"));
+
 
         int userId = sessionVO.getUserId();
         formMap.put("user_id", userId);
