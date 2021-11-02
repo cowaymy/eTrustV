@@ -3351,7 +3351,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
 	svc0004dmap.put("AS_MEM_ID", CommonUtils.nvl(installResult.get("ctId")).toString());
 	svc0004dmap.put("AS_STUS_ID", 4); // default set to COMPLETE
-	svc0004dmap.put("AS_TYPE_ID", 6246); // default set to INS AS type
+	svc0004dmap.put("AS_TYPE_ID", 6302); // default set to INS AS type
 
 	svc0004dmap.put("AS_RESULT_REM", "[AUTO] Add installation parts during installation");
 
