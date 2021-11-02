@@ -365,4 +365,13 @@
     }
   </select>
 
+  <update id="updateDiffTypeDiffAmt" parameterType="Map">
+        UPDATE ITF0942M SET
+            DIFF_TYPE = NULL,
+            DIFF_AMT = '0'
+        WHERE IF_TYPE = '942' AND
+        TRAN_STATUS_CD = '10' AND
+        BANK_SEQ > 1
+  </update>
+
 </mapper>

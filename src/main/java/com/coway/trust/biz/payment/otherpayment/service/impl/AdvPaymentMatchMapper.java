@@ -75,4 +75,6 @@ public interface AdvPaymentMatchMapper {
 
 	EgovMap saveJompayPaymentMapping(Map<String, Object> params);
 
+	void updateDiffTypeDiffAmt(Map<String, Object> params);
+
 }

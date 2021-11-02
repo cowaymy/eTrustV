@@ -63,6 +63,7 @@ public class AdvPaymentMatchServiceImpl extends EgovAbstractServiceImpl implemen
 				ifMap.put("variance", params.get("variance"));
 				ifMap.put("userId", params.get("userId"));
 				advPaymentMatchMapper.insertAdvPaymentMatchIF(ifMap);
+				advPaymentMatchMapper.updateDiffTypeDiffAmt(ifMap);
 			}
 		}
 	}
