@@ -1220,6 +1220,11 @@ function fn_saveValidation(){
         }
     }
 
+  //@AMEER add INCOME TAX
+    if($("#incomeTaxNo").val() != "") {
+       valid = checkIncomeTaxLength();
+   }
+
     //Display Message
     if (!valid)
     {
@@ -1484,6 +1489,15 @@ function checkBankAccNo() {
 }
 
 //@AMEER INCOME_TAX
+function checkIncomeTaxLength() {
+	if($("#incomeTaxNo").val().length >= 0 && $("#incomeTaxNo").val().length < 13) {
+        Common.alert("Invalid Income Tax Length!");
+        $("#incomeTaxNo").val("");
+        return false;
+    }else{
+    	return true;
+    }
+}
 function checkIncomeTax() {
     var jsonObj = {
         "incomeTaxNo" : $("#incomeTaxNo").val()

@@ -999,6 +999,10 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
             } */
         }
     }
+  //@AMEER add INCOME TAX
+    if($("#incomeTaxNo").val() != "") {
+       return checkIncomeTaxLength();
+   }
     return true;
 }
 
@@ -1369,6 +1373,15 @@ function checkBankAccNo() {
 }
 
 //@AMEER INCOME_TAX
+function checkIncomeTaxLength() {
+    if($("#incomeTaxNo").val().length >= 0 && $("#incomeTaxNo").val().length < 13) {
+        Common.alert("Invalid Income Tax Length!");
+        $("#incomeTaxNo").val("");
+        return false;
+    }else{
+    	return true;
+    }
+}
 function checkIncomeTax() {
     var jsonObj = {
         "incomeTaxNo" : $("#incomeTaxNo").val()
