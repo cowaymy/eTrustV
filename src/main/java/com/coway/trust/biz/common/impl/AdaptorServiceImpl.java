@@ -281,7 +281,7 @@ public class AdaptorServiceImpl implements AdaptorService {
         smsVO.getMobiles().forEach(mobileNo -> {
             String smsUrl;
             try {
-                smsUrl = "http://" + gensuiteHost + gensuitePath + "?" + "ClientID=" + gensuiteClientId + "&Username="
+                smsUrl = "https://" + gensuiteHost + gensuitePath + "?" + "ClientID=" + gensuiteClientId + "&Username="
                         + gensuiteUserName + "&Password=" + gensuitePassword + "&Type=" + gensuiteType + "&Message="
                         + URLEncoder.encode("RM0.00 " + smsVO.getMessage(), StandardCharsets.UTF_8.name())
 //                              .replaceAll("\\+", " ").replaceAll("%40", "@").replaceAll("%21", "!")
