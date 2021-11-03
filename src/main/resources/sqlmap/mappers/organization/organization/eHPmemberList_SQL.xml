@@ -624,6 +624,7 @@
       , #{collectionBrnch}
       , #{atchFileGrpId}
       , #{coursId}
+      , #{eHPincomeTaxNo}
       )
   </insert>
 
@@ -731,7 +732,7 @@
 
            , UPD_USER_ID = #{updUserId}
 
-           , APLICNT_INC_TAX = #{incomeTaxNo}
+           , APLICNT_INC_TAX = #{eHPincomeTaxNo}
 
      where  APLCTN_ID = #{eHPMemberID}
      </update>

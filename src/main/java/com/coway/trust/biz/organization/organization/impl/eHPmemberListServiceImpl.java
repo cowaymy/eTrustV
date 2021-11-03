@@ -188,7 +188,7 @@ public class eHPmemberListServiceImpl extends EgovAbstractServiceImpl implements
           MemApp.put("applicantLanguage", params.get("eHPlanguage") != "" && params.get("eHPlanguage") != null ? Integer.parseInt(params.get("eHPlanguage").toString().trim()) : 0);
           MemApp.put("applicantBankID", Integer.parseInt(params.get("eHPissuedBank").toString()));
           MemApp.put("applicantBankAccNo", params.get("eHPbankAccNo").toString().trim());
-//          MemApp.put("applicantIncomeTaxNo", params.get("eHPincomeTaxNo").toString().trim());
+          MemApp.put("eHPincomeTaxNo", params.get("eHPincomeTaxNo").toString().trim());
           MemApp.put("applicantSponsorCode", params.get("eHPsponsorCd").toString().trim() != null ? params.get("eHPsponsorCd").toString().trim() : "");
           MemApp.put("applicantTransport", 0);
           MemApp.put("remark", "eHP registration");

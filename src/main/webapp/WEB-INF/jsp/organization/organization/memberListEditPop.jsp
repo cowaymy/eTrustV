@@ -899,6 +899,7 @@ function fn_saveValidation(){
 	var valid = true;
 	var defaultDate = new Date("01/01/1900");
 	var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+
 	//region Check Basic Info
 	/*
     if (dpUserValidDate.SelectedDate < DateTime.Now.Date)
@@ -1220,10 +1221,18 @@ function fn_saveValidation(){
         }
     }
 
-  //@AMEER add INCOME TAX
-    if($("#incomeTaxNo").val() != "") {
+    //@AMEER add INCOME TAX
+     var regIncTax = /^[a-zA-Z0-9]*$/;
+    if($("#eHPincomeTaxNo").val() != "") {
        valid = checkIncomeTaxLength();
-   }
+       if(valid){
+           if (!regIncTax.test($("#eHPincomeTaxNo").val()))
+           {
+               Common.alert("Invalid Income Tax Format");
+               valid = false;
+           }
+       }
+    }
 
     //Display Message
     if (!valid)
@@ -1520,7 +1529,6 @@ function checkIncomeTax() {
             });
         }
     }
-
 }
 </script>
 

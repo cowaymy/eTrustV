@@ -622,6 +622,19 @@ function fn_saveValidation(){
     }
     //endregion
 
+    //@AMEER add INCOME TAX
+    var regIncTax = /^[a-zA-Z0-9]*$/;
+    if($("#eHPincomeTaxNo").val() != "") {
+       valid = checkIncomeTaxLength();
+       if(valid){
+           if (!regIncTax.test($("#eHPincomeTaxNo").val()))
+           {
+               Common.alert("Invalid Income Tax Format");
+               valid = false;
+           }
+       }
+    }
+
         if(!fn_validFile()) {
         return false;
     }
@@ -869,6 +882,15 @@ function checkBankAccNo() {
 }
 
 //@AMEER INCOME_TAX
+function checkIncomeTaxLength() {
+    if($("#eHPincomeTaxNo").val().length >= 0 && $("#eHPincomeTaxNo").val().length < 13) {
+        Common.alert("Invalid Income Tax Length!");
+        $("#eHncomeTaxNo").val("");
+        return false;
+    }else{
+        return true;
+    }
+}
 function checkIncomeTax() {
     var jsonObj = {
         "incomeTaxNo" : $("#eHPincomeTaxNo").val()

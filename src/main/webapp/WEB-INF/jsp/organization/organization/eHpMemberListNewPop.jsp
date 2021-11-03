@@ -864,6 +864,19 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
 
     }
 
+    //@AMEER add INCOME TAX
+    var regIncTax = /^[a-zA-Z0-9]*$/;
+    if($("#eHPincomeTaxNo").val() != "") {
+       var valid = checkIncomeTaxLength();
+       if(valid){
+    	   if (!regIncTax.test($("#eHPincomeTaxNo").val()))
+           {
+               Common.alert("Invalid Income Tax Format");
+               return false;
+           }
+       }else{return false;}
+     }
+
     return true;
 }
 
@@ -1229,6 +1242,15 @@ function checkBankAccNo() {
 }
 
 //@AMEER INCOME_TAX
+function checkIncomeTaxLength() {
+    if($("#eHPincomeTaxNo").val().length >= 0 && $("#eHPincomeTaxNo").val().length < 13) {
+        Common.alert("Invalid Income Tax Length!");
+        $("#eHncomeTaxNo").val("");
+        return false;
+    }else{
+        return true;
+    }
+}
 function checkIncomeTax() {
     var jsonObj = {
         "incomeTaxNo" : $("#eHPincomeTaxNo").val()
@@ -1432,7 +1454,7 @@ function fn_validFile() {
                 <tr>
                     <th scope="row">Income Tax No</th>
                     <td colspan="2">
-                    <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="eHPincomeTaxNo"  name="eHPincomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
+                    <input type="text" title=""  placeholder="Income Tax No" class="w100p"  id="eHPincomeTaxNo"  name="eHPincomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
                     onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;"/>
                     </td>
                 </tr>

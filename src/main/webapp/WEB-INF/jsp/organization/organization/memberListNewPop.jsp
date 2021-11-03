@@ -999,10 +999,20 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
             } */
         }
     }
-  //@AMEER add INCOME TAX
+
+   //@AMEER add INCOME TAX
+    var regIncTax = /^[a-zA-Z0-9]*$/;
     if($("#incomeTaxNo").val() != "") {
-       return checkIncomeTaxLength();
-   }
+       var valid = checkIncomeTaxLength();
+       if(valid){
+           if (!regIncTax.test($("#incomeTaxNo").val()))
+           {
+               Common.alert("Invalid Income Tax Format");
+               return false;
+           }
+       }else{return false;}
+     }
+
     return true;
 }
 
