@@ -1223,10 +1223,10 @@ function fn_saveValidation(){
 
     //@AMEER add INCOME TAX
      var regIncTax = /^[a-zA-Z0-9]*$/;
-    if($("#eHPincomeTaxNo").val() != "") {
+    if($("#incomeTaxNo").val() != "") {
        valid = checkIncomeTaxLength();
        if(valid){
-           if (!regIncTax.test($("#eHPincomeTaxNo").val()))
+           if (!regIncTax.test($("#incomeTaxNo").val()))
            {
                Common.alert("Invalid Income Tax Format");
                valid = false;
