@@ -41,7 +41,8 @@ $(document).ready(function(){
     //그리드 생성
     fn_makeGrid();
 
-    if(roleId != '128' && roleId != '129' && roleId != '130') {
+    if(roleId != '128' && roleId != '129' && roleId != '130' &&
+       roleID != '358' && roleID != '359' && roleID != '360') {
         if(costCenter != 'A1101' || userId == "140139") {
             $("#stCostCentr").attr("disabled", "true");
             $("#stCostCenterSearchIcon").hide();
