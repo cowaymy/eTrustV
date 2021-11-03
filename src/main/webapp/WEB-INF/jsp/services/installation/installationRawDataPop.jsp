@@ -8,9 +8,9 @@
  07/10/2019  ONGHC  1.0.1          AMEND CONDITION OF ORDER START AND END DATE
  12/04/2021  TEOHHD 1.0.2          Added searching criteria (order status, DSC branch, Ins Status, Ins Date, Appt Date, Product Category, Product Code)
  -->
-<!-- <script>
+<script>
     document.write('<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/homecare-js-1.0.js?v='+new Date().getTime()+'"><\/script>');
-</script> -->
+</script>
 <script type="text/javaScript">
   $(document).ready(
       function() {
