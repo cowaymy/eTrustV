@@ -633,21 +633,37 @@
      </colgroup>
      <tbody>
       <tr>
-       <th scope="row"><spring:message code='service.grid.mainDept'/> <span class='must'>*</span></th>
-       <td><select class="w100p" id="inputMainDept"
-        name="inputMainDept"></select></td>
+       <th scope="row"><spring:message code='service.grid.mainDept'/><span class='must'>*</span></th>
+       <td>
+       <c:choose>
+       <c:when test="${tagMgmtDetail.status == 'Closed' || tagMgmtDetail.status == 'Cancelled' || tagMgmtDetail.status == 'Solved'}">
+       <select class="w100p" id="inputMainDept"name="inputMainDept" disabled="disabled"></select>
+       </c:when>
+       <c:otherwise>
+       <select class="w100p" id="inputMainDept"name="inputMainDept"></select>
+       </c:otherwise>
+       </c:choose>
+       </td>
       </tr>
       <tr>
        <th scope="row"><spring:message code='service.grid.subDept'/> <span class='must'>*</span></th>
-       <td><select class="w100p" id="inputSubDept"
-        name="inputSubDept">
-         <option value="" selected><spring:message code='sal.combo.text.chooseOne'/></option>
-        </select></td>
+       <td>
+       <c:choose>
+       <c:when test="${tagMgmtDetail.status == 'Closed' || tagMgmtDetail.status == 'Cancelled' || tagMgmtDetail.status == 'Solved'}">
+       <select class="w100p" id="inputSubDept"name="inputSubDept" disabled="disabled"><option value="" selected><spring:message code='sal.combo.text.chooseOne'/></option></select></td>
+       </c:when>
+       <c:otherwise>
+       <select class="w100p" id="inputSubDept"name="inputSubDept"><option value="" selected><spring:message code='sal.combo.text.chooseOne'/></option></select>
+       </c:otherwise>
+       </c:choose>
+       </td>
       </tr>
       <tr>
        <th scope="row"><spring:message code='service.grid.Status'/> <span class='must'>*</span></th>
-       <td><select id="status" name="status">
-         <option value="" selected><spring:message code='sal.combo.text.chooseOne'/></option>
+       <td>
+       <c:choose>
+       <c:when test="${tagMgmtDetail.status == 'Closed' || tagMgmtDetail.status == 'Cancelled' || tagMgmtDetail.status == 'Solved'}">
+       <select id="status" name="status" disabled="disabled"><option value="" selected><spring:message code='sal.combo.text.chooseOne'/></option>
          <c:forEach var="list" items="${tMgntStat}" varStatus="status">
            <option value="${list.code}">${list.codeName}</option>
           </c:forEach>
@@ -659,23 +675,56 @@
          <option value="36">Close</option>
          <option value="10">Cancel</option> -->
 
-       </select></td>
+       </select>
+       </c:when>
+       <c:otherwise>
+       <select id="status" name="status"><option value="" selected><spring:message code='sal.combo.text.chooseOne'/></option>
+         <c:forEach var="list" items="${tMgntStat}" varStatus="status">
+           <option value="${list.code}">${list.codeName}</option>
+          </c:forEach>
+
+         <!-- <option value="1">Active</option>
+         <option value="44">Pending</option>
+         <option value="34">Solve</option>
+         <option value="35">Not yet to solve</option>
+         <option value="36">Close</option>
+         <option value="10">Cancel</option> -->
+
+       </select>
+       </c:otherwise>
+       </c:choose>
+       </td>
       </tr>
 
       <tr>
        <th scope="row"><spring:message code='budget.Attathment' /></th>
        <td colspan="3">
-        <div class="auto_file attachment_file w100p">
+       <c:choose>
+         <c:when test="${tagMgmtDetail.status == 'Closed' || tagMgmtDetail.status == 'Cancelled' || tagMgmtDetail.status == 'Solved'}">
+         <input id="certRefFile" disabled="disabled"/></div>
+         </c:when>
+         <c:otherwise>
+          <div class="auto_file attachment_file w100p">
          <!-- auto_file start -->
-         <input id="certRefFile" name="certRefFile" type="file" title="file add" />
-        </div> <!-- auto_file end -->
+         <input id="certRefFile" name="certRefFile" type="file" title="file add" /></div>
+         <!-- auto_file end -->
+         </c:otherwise>
+        </c:choose>
        </td>
       </tr>
 
       <tr>
        <th scope="row"><spring:message code='service.grid.Remark'/></th>
-       <td><textarea name="remark" id="remark" cols="20" rows="5"
-         placeholder=""></textarea></td>
+       <td>
+       <c:choose>
+       <c:when test="${tagMgmtDetail.status == 'Closed' || tagMgmtDetail.status == 'Cancelled' || tagMgmtDetail.status == 'Solved'}">
+       <textarea name="remark" id="remark" cols="20" rows="5"placeholder="" disabled="disabled"></textarea>
+       </c:when>
+        <c:otherwise>
+        <textarea name="remark" id="remark" cols="20" rows="5"placeholder=""></textarea>
+        </c:otherwise>
+       </c:choose>
+       </td>
       </tr>
      </tbody>
 
