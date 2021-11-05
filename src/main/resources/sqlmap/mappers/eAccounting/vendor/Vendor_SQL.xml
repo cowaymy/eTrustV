@@ -288,7 +288,9 @@
 	        INSERT INTO FCM0029D
 		    (
 		        VENDOR_REQ_NO
+		        <if test="mem_acc_id != null and mem_acc_id != '' ">
 		       ,VENDOR_ACC_ID
+		       </if>
 		       ,VENDOR_GRP
 		       ,COST_CENTER
 		       ,COST_CENTER_NAME
@@ -325,7 +327,9 @@
 		    VALUES
 		    (
 		       #{reqNo}
-		       ,NULL
+		       <if test="mem_acc_id != null and mem_acc_id != '' ">
+		       ,#{mem_acc_id}
+		       </if>
 		       ,#{vendorGroup}
 		       ,#{costCentr}
 		       ,NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = #{costCentr}))

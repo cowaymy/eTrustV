@@ -425,7 +425,9 @@ function fn_vendorValidation(ts){
     	if(flg == 'M')
     	{
     		var obj = $("#form_newVendor").serializeJSON();
+    		console.log("fn_editVendorMaster_saveDraft");
     		Common.ajax("GET", "/eAccounting/vendor/existingVendorValidation.do?_cacheId=" + Math.random(), obj, function(result) {
+    			$("#mem_acc_id").val(result.vendorAccId);
 
     			if(result.vendorAccId == vendorAccId && result.vendorRegNoNric == $("#regCompNo").val())
     			{
@@ -534,9 +536,101 @@ function fn_vendorValidation(ts){
     }
     else // Submit
     {
-        var obj = $("#form_newVendor").serializeJSON();
-        console.log("Edit_fn_vendorValidation_submit");
-        Common.ajax("GET", "/eAccounting/vendor/vendorValidation.do?_cacheId=" + Math.random(), obj, function(result){
+        if(flg == 'M') //edit existing
+        {
+        	var obj = $("#form_newVendor").serializeJSON();
+            Common.ajax("GET", "/eAccounting/vendor/existingVendorValidation.do?_cacheId=" + Math.random(), obj, function(result) {
+            	$("#isReset").val(result.isReset);
+                $("#isPass").val(result.isPass);
+                $("#sameReqNo").val(result.sameReqNo);
+                $("#mem_acc_id").val(result.vendorAccId);
+                fn_attachmentUpload("");
+            })
+        }
+        else if(appvPrcssStusCode == 'A' && vendorAccId != '' && vendorAccId != null) //edit approved
+        {
+        	var obj = $("#form_newVendor").serializeJSON();
+        	Common.ajax("GET", "/eAccounting/vendor/vendorValidation.do?_cacheId=" + Math.random(), obj, function(result){
+        		$("#isReset").val(result.isReset);
+                $("#isPass").val(result.isPass);
+                $("#sameReqNo").val(result.sameReqNo);
+                $("#mem_acc_id").val(result.vendorAccId);
+                if($("#isReset").val() == 1 && $("#isPass").val() == 0)
+                {
+                    Common.ajax("POST", "/eAccounting/vendor/editApproved.do", obj, function(result1) {
+                        console.log(result1);
+                        var newClmNo = result1.data.newClmNo;
+                        obj.newClmNo = newClmNo;
+                        $("#newClmNo").val(newClmNo);
+                        console.log('newClmNo: ' + $("#newClmNo"));
+                        if(FormUtil.isEmpty($("#newReqNo").val())) {
+                            Common.popupDiv("/eAccounting/vendor/approveLinePop.do", obj, null, true, "approveLineSearchPop");
+                        } else {
+                            // update
+                            Common.popupDiv("/eAccounting/vendor/approveLinePop.do", obj, null, true, "approveLineSearchPop");
+                        }
+                    });
+                }
+                else
+                {
+                	{
+                        //fn_attachmentUpload("");
+                        //var gridObj = AUIGrid.getSelectedItems(vendorManagementGridID);
+                        //var reqNo = gridObj[0].item.reqNo;
+                        Common.ajax("POST", "/eAccounting/vendor/editApproved.do", obj, function(result1) {
+                            console.log(result1);
+                            var newClmNo = result1.data.newClmNo;
+                            obj.newClmNo = newClmNo;
+                            $("#newClmNo").val(newClmNo);
+                            console.log('newClmNo: ' + $("#newClmNo"));
+                            if(FormUtil.isEmpty($("#newReqNo").val())) {
+                                Common.popupDiv("/eAccounting/vendor/approveLinePop.do", obj, null, true, "approveLineSearchPop");
+                            } else {
+                                // update
+                                Common.popupDiv("/eAccounting/vendor/approveLinePop.do", obj, null, true, "approveLineSearchPop");
+                            }
+                            //fn_editVendorPop(result1.data.newClmNo, flg, vendorAccId, appvPrcssStusCode);
+                        });
+                    }
+                }
+        	});
+        }
+        else
+        {
+        	var obj = $("#form_newVendor").serializeJSON();
+        	Common.ajax("GET", "/eAccounting/vendor/vendorValidation.do?_cacheId=" + Math.random(), obj, function(result){
+        		$("#isReset").val(result.isReset);
+                $("#isPass").val(result.isPass);
+                $("#sameReqNo").val(result.sameReqNo);
+                $("#mem_acc_id").val(result.vendorAccId);
+                if($("#isReset").val() == 1 && $("#isPass").val() == 0)
+                {
+                	if(FormUtil.isEmpty($("#appvPrcssNo").val()))
+                    {
+                        fn_attachmentUpdate("");
+                    }
+                }
+                else
+                {
+                	if($("#sameReqNo").val() == 0)
+                    {
+                        //update
+                        fn_attachmentUpdate("");
+                    }
+                    else
+                    {
+                        Common.alert('Somthing is wrong. Please contact administrator.');
+                    }
+                }
+
+        	});
+        }
+    }
+}
+
+        //old
+        /* var obj = $("#form_newVendor").serializeJSON();
+            Common.ajax("GET", "/eAccounting/vendor/vendorValidation.do?_cacheId=" + Math.random(), obj, function(result){
             $("#isReset").val(result.isReset);
             $("#isPass").val(result.isPass);
             $("#sameReqNo").val(result.sameReqNo);
@@ -582,7 +676,6 @@ function fn_vendorValidation(ts){
             {
             	if(appvPrcssStusCode == 'A' && vendorAccId != '' && vendorAccId != null)
                 {
-
                     //fn_attachmentUpload("");
                     //var gridObj = AUIGrid.getSelectedItems(vendorManagementGridID);
                     //var reqNo = gridObj[0].item.reqNo;
@@ -611,11 +704,8 @@ function fn_vendorValidation(ts){
                     Common.alert('Somthing is wrong. Please contact administrator.');
                 }
             }
+        }); */
 
-
-        });
-    }
-}
 
 function fn_attachmentUpload(st) {
     var formData = Common.getFormData("form_newVendor");
