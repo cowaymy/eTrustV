@@ -299,11 +299,15 @@ var TODAY_DD      = "${toDay}";
       }
 
       if ($("#userType").val() != "4" && $("#userType").val() != "6") {
-        if ($("#cmdBranchCode").val() == ''
-            || $("#cmdBranchCode").val() == null) {
-          Common.alert("Please Select 'HT Branch'");
-          return false;
-        }
+
+      if($("#userType").val() == "7"){}else{
+    	  if ($("#cmdBranchCode").val() == ''
+              || $("#cmdBranchCode").val() == null) {
+            Common.alert("Please Select 'HT Branch'");
+            return false;
+          }
+      }
+
       }else{
 
     	  var searchFormElement = document.getElementById("hsManagement");
