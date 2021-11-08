@@ -55,13 +55,17 @@ $(document).ready(function(){
 
     // Master Grid 셀 클릭시 이벤트
     AUIGrid.bind(myGridID, "cellClick", function( event ){
+
     	selectedGridValue = event.rowIndex;
     	AUIGrid.destroy(subGridID);
     	// Payment (Slave Grid) 그리드 생성
         subGridID = GridCommon.createAUIGrid("grid_sub_wrap", slaveColumnLayout,null,gridPros);
 
-    	$("#payId").val(AUIGrid.getCellValue(myGridID , event.rowIndex , "payId"));
-    	$("#salesOrdId").val(AUIGrid.getCellValue(myGridID , event.rowIndex , "salesOrdId"));
+        $("#payId").val(AUIGrid.getCellValue(myGridID , event.rowIndex , "payId"));
+        $("#salesOrdId").val(AUIGrid.getCellValue(myGridID , event.rowIndex , "salesOrdId"));
+
+        $("#transId").val($("#trxId").val());
+        //$("#trxId").val(AUIGrid.getCellValue(myGridID , event.rowIndex , "trxId"));
 
     	fn_getPaymentListAjax();
 
@@ -166,6 +170,7 @@ function moveToPage(goPage){
 //상세 그리드 (Payment) 리스트 조회.
 function fn_getPaymentListAjax() {
     Common.ajax("GET", "/payment/selectPaymentList", $("#detailForm").serialize(), function(result) {
+    	console.log($("#detailForm").serialize());
         AUIGrid.setGridData(subGridID, result);
     });
 }
@@ -303,11 +308,16 @@ function fn_validSearch() {
 	&& FormUtil.isEmpty($('#chequeNo').val())
 	&& FormUtil.isEmpty($('#crcNo').val())
 	&& FormUtil.isEmpty($('#trxId').val())
-	&& FormUtil.isEmpty($('#trNo').val()) )
+	&& FormUtil.isEmpty($('#trNo').val()))
 	{
-		if(FormUtil.isEmpty($('#payDate1').val()) || FormUtil.isEmpty($('#payDate2').val())) {
+
+
+	 if(FormUtil.isEmpty($('#payDate1').val()) || FormUtil.isEmpty($('#payDate2').val())) {
             isValid = false;
             msg += '* <spring:message code="pay.alert.dateFormTo" /><br/>';
+            if($('#crcStateId').val() !=""||  $('#crcStateId').val() != null){
+            	isValid = true;
+            }
         } else{
         	var diffDay = fn_diffDate($('#payDate1').val(), $('#payDate2').val());
             var dayGap = 15 ;
@@ -528,6 +538,7 @@ function fn_diffDate(startDt, endDt) {
 <form name="detailForm" id="detailForm"  method="post">
     <input type="hidden" name="payId" id="payId" />
     <input type="hidden" name="salesOrdId" id="salesOrdId" />
+    <input type="hidden" name="transId" id="transId" />
 </form>
 
 <!-- content end -->
