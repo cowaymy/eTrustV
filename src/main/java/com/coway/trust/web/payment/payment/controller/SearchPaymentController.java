@@ -79,6 +79,8 @@ public class SearchPaymentController {
 	 */
 	@RequestMapping(value = "/initSearchPayment.do")
 	public String initSearchPayment(@RequestParam Map<String, Object> params, ModelMap model) {
+
+
 		return "payment/payment/searchPayment";
 	}
 
@@ -189,8 +191,16 @@ public class SearchPaymentController {
 	public ResponseEntity<Map<String, Object>> selectOrderList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
 				, @RequestParam Map<String, Object> params, ModelMap model) {
         // 조회.
+
         List<EgovMap> resultList = searchPaymentService.selectOrderList(params);
         int totalRowCount = searchPaymentService.selectOrderListCount(params);
+        List<EgovMap> resultList_OrNo = searchPaymentService.selectOrderList_OrNo(params);
+
+        if(resultList_OrNo!=null){
+        	params.put("mtchIDList", resultList_OrNo);
+        	 List<EgovMap> resultList2 = searchPaymentService.selectOrderList_aNoOrNo(params);
+             resultList.addAll(resultList2);
+        }
 
         Map<String, Object> result = new HashMap<String, Object>();
 
@@ -232,7 +242,7 @@ public class SearchPaymentController {
 				, @RequestParam Map<String, Object> params, ModelMap model) {
 
 		//검색 파라미터 확인.(화면 Form객체 입력값)
-        LOGGER.debug("payId : {}", params.get("payId"));
+        LOGGER.debug("payId22 : {}", params);
 
         // 조회.
         List<EgovMap> resultList = searchPaymentService.selectPaymentList(params);
