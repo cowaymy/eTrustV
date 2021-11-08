@@ -2,7 +2,7 @@
  *
  */
 package com.coway.trust.biz.sales.order.impl;
- 
+
 import java.util.List;
 import java.util.Map;
 
@@ -164,6 +164,10 @@ public interface OrderRequestMapper {
   EgovMap selectInstallResult(Map<String, Object> params);
 
   EgovMap selectPromoD(Map<String, Object> params);
+
+  EgovMap selectAnoStkPromoD(Map<String, Object> params);
+
+  String selectAnoStkIDWithBundleID(Map<String, Object> params);
 
   EgovMap selectAccRentLedger(Map<String, Object> params);
 
