@@ -27,45 +27,100 @@
 
         createAUIGrid();
 
+
+
         $("#orgCode").val($("#orgCode").val().trim());
 
-         if($("#memType").val() == 2){
-            if("${SESSION_INFO.memberLevel}" =="0"){
 
-                $("#memtype").val('${SESSION_INFO.userTypeId}');
-                $("#memtype").attr("class", "w100p readonly");
-                $('#memtype').attr('disabled','disabled').addClass("disabled");
+        if("${SESSION_INFO.memberLevel}" =="1"){
 
-            }else if("${SESSION_INFO.memberLevel}" =="1"){
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
 
-                $("#orgCode").val("${orgCode}".trim());
-                $("#orgCode").attr("class", "w100p readonly");
-                $("#orgCode").attr("readonly", "readonly");
+        }else if("${SESSION_INFO.memberLevel}" =="2"){
 
-            }else if("${SESSION_INFO.memberLevel}" =="2"){
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
 
-                $("#orgCode").val("${orgCode}".trim());
-                $("#orgCode").attr("class", "w100p readonly");
-                $("#orgCode").attr("readonly", "readonly");
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
 
-                $("#grpCode").val("${grpCode}");
-                $("#grpCode").attr("class", "w100p readonly");
-                $("#grpCode").attr("readonly", "readonly");
+        }else if("${SESSION_INFO.memberLevel}" =="3"){
 
-            }else if("${SESSION_INFO.memberLevel}" =="3"){
-                $("#orgCode").val("${orgCode}".trim());
-                $("#orgCode").attr("class", "w100p readonly");
-                $("#orgCode").attr("readonly", "readonly");
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
 
-                $("#grpCode").val("${grpCode}");
-                $("#grpCode").attr("class", "w100p readonly");
-                $("#grpCode").attr("readonly", "readonly");
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
 
-                $("#deptCode").val("${deptCode}");
-                $("#deptCode").attr("class", "w100p readonly");
-                $("#deptCode").attr("readonly", "readonly");
-            }
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+
+        }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+
+            $("#memCode").val("${memCode}");
+            $("#memCode").attr("class", "w100p readonly");
+            $("#memCode").attr("readonly", "readonly");
+
+            $("#listSalesmanCode").val(salesmanCode);
+            $("#listSalesmanCode").attr("readonly", true);
         }
+
+//          if($("#memType").val() == 2){
+//             if("${SESSION_INFO.memberLevel}" =="0"){
+
+//                 $("#memtype").val('${SESSION_INFO.userTypeId}');
+//                 $("#memtype").attr("class", "w100p readonly");
+//                 $('#memtype').attr('disabled','disabled').addClass("disabled");
+
+//             }else if("${SESSION_INFO.memberLevel}" =="1"){
+
+//                 $("#orgCode").val("${orgCode}".trim());
+//                 $("#orgCode").attr("class", "w100p readonly");
+//                 $("#orgCode").attr("readonly", "readonly");
+
+//             }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+//                 $("#orgCode").val("${orgCode}".trim());
+//                 $("#orgCode").attr("class", "w100p readonly");
+//                 $("#orgCode").attr("readonly", "readonly");
+
+//                 $("#grpCode").val("${grpCode}");
+//                 $("#grpCode").attr("class", "w100p readonly");
+//                 $("#grpCode").attr("readonly", "readonly");
+
+//             }else if("${SESSION_INFO.memberLevel}" =="3"){
+//                 $("#orgCode").val("${orgCode}".trim());
+//                 $("#orgCode").attr("class", "w100p readonly");
+//                 $("#orgCode").attr("readonly", "readonly");
+
+//                 $("#grpCode").val("${grpCode}");
+//                 $("#grpCode").attr("class", "w100p readonly");
+//                 $("#grpCode").attr("readonly", "readonly");
+
+//                 $("#deptCode").val("${deptCode}");
+//                 $("#deptCode").attr("class", "w100p readonly");
+//                 $("#deptCode").attr("readonly", "readonly");
+//             }
+//         }
 
     });
 
@@ -218,7 +273,21 @@
         }
 
         if(isValid == true){
+
+
+
             var param =  $("#searchForm").serialize();
+
+//             console.log(param);
+            var htMemberType = $('#memtype').find('option:selected').val();
+            if('${SESSION_INFO.memberLevel}' =="3" || '${SESSION_INFO.memberLevel}' =="4"){
+                 if(htMemberType == "7"){ // HTM & HT
+                        param += "&memtype="+htMemberType;
+                 }
+            }
+
+            console.log(param);
+
 
             Common.ajax("GET", "/sales/membership/membershipColorGridJsonList", param, function(result) {
                 AUIGrid.setGridData(myGridID, result);
@@ -371,7 +440,18 @@
     </td>
 </tr>
 <tr>
-    <th scope="row" colspan="6" ><span class="must"> <spring:message code="sal.alert.msg.youMustKeyInatLeastCrtDateNetSales" /></span>  </th>
+    <th scope="row" colspan="2" ><span class="must"> <spring:message code="sal.alert.msg.youMustKeyInatLeastCrtDateNetSales" /></span>  </th>
+    <th scope="row"><spring:message code="sal.text.memtype" /></th>
+    <td>
+    <select class="w100p" id="memtype" name="memtype">
+        <option value="">Choose One</option>
+        <option value="2"><spring:message code="sal.text.cowayLady" /></option>
+        <option value="3"><spring:message code="sal.text.cowayTechnician" /></option>
+        <option value="1"><spring:message code="sal.text.healthPlanner" /></option>
+        <option value="6">Sales Admin</option>
+        <option value="4"><spring:message code="sal.text.staff" /></option>
+    </select>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
