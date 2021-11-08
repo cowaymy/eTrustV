@@ -37,6 +37,11 @@ public interface SearchPaymentMapper {
 	 */
 	List<EgovMap> selectOrderList(Map<String, Object> params);
 
+    List<EgovMap> selectOrderList_OrNo(Map<String, Object> params);
+
+    List<EgovMap> selectOrderList_aNoOrNo(Map<String, Object> params);
+
+
 	/**
 	 * SearchPayment Order List(Master Grid) 전체 건수
 	 * @param params
@@ -50,6 +55,8 @@ public interface SearchPaymentMapper {
 	 * @return
 	 */
 	List<EgovMap> selectPaymentList(Map<String, Object> params);
+
+	List<EgovMap> selectPayId(Map<String, Object> params);
 
 	/**
 	 * RentalCollectionBySales(Slave Grid) 조회
