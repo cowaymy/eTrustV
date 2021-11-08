@@ -62,7 +62,7 @@
             B.F_TRNSC_CRDIT_AMT,
             B.F_TRNSC_TELLER_ID,
             B.F_TRNSC_NEW_CHQ_NO,
-            decode (B.OTH_KEYIN_STUS_ID, 4,'Mapped' , 'Unmap' ) AS Tranx_state,
+            decode (B.CRC_MAPPING_STUS_ID, 4,'Mapped' , 'Unmap' ) AS Tranx_state,
             (SELECT COUNT(1) FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID AND CRC_MAPPING_STUS_ID =1
                 AND OTH_KEYIN_STUS_ID =1
                 AND OTH_KEYIN_BC_STUS_ID = 1) AS COUNT
