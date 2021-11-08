@@ -84,6 +84,32 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	  return searchPaymentMapper.selectOrderList(params);
 	}
 
+	@Override
+	public List<EgovMap> selectOrderList_OrNo(Map<String, Object> params) {
+
+	  if(    ! "".equals(CommonUtils.nvl(params.get("chequeNo")))
+	      || ! "".equals(CommonUtils.nvl(params.get("crcNo")))
+	      || ! "".equals(CommonUtils.nvl(params.get("bankAccount")))){
+	    List<EgovMap> list =  searchPaymentMapper.getPayIdByType(params);
+
+	    List<String> payList = new ArrayList<String>();
+	    payList.add("0"); // Add PayID = 0
+	    for(EgovMap item:list){
+	      payList.add(item.get("payId").toString());
+	    }
+	    String[] payIdList = payList.stream().toArray(String[]::new);
+	    params.put("payIdList", payIdList);
+	  }
+
+	  return searchPaymentMapper.selectOrderList_OrNo(params);
+	}
+
+	@Override
+	public List<EgovMap> selectOrderList_aNoOrNo(Map<String, Object> params) {
+
+	  return searchPaymentMapper.selectOrderList_aNoOrNo(params);
+	}
+
 	/**
 	 * SearchPayment Order List(Master Grid) 전체 건수
 	 * @param params
@@ -102,6 +128,11 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public List<EgovMap> selectPaymentList(Map<String, Object> params) {
 		return searchPaymentMapper.selectPaymentList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectPayId(Map<String, Object> params) {
+		return searchPaymentMapper.selectPayId(params);
 	}
 
 	/**
