@@ -19,7 +19,7 @@
     <!-- <include refid="pagingStart" /> -->
         SELECT
             CASE WHEN SUBSTR(OR_NO, 0, 3) IN ('ROR','AER','AOR','BOR','EOR') THEN I.BANK_STATE_MAPPING_ID ELSE  H.BANK_STATE_MAPPING_ID END TRX_ID,
-            H.CRC_STATE_MAPPING_ID AS CRC_STATE_ID,
+<!--             H.CRC_STATE_MAPPING_ID AS CRC_STATE_ID, -->
 			pay.TRX_DT,
 			pay.TRX_AMT,
 			pay.PAY_ID,
@@ -171,6 +171,238 @@
 	    <!-- <include refid="pagingEnd" /> -->
     </select>
 
+    <select id="selectOrderList_OrNo" parameterType="Map" resultType="egovMap">
+    <!-- <include refid="pagingStart" /> -->
+        SELECT DISTINCT PAY_ID FROM
+        (SELECT
+            CASE WHEN SUBSTR(OR_NO, 0, 3) IN ('ROR','AER','AOR','BOR','EOR') THEN I.BANK_STATE_MAPPING_ID ELSE  H.BANK_STATE_MAPPING_ID END TRX_ID,
+<!--             H.CRC_STATE_MAPPING_ID AS CRC_STATE_ID, -->
+            pay.TRX_DT,
+            pay.TRX_AMT,
+            pay.PAY_ID,
+            pay.OR_NO,
+            pay.TR_NO,
+            pay.PAY_DT,
+            pay.LAST_UPD_DT,
+            pay.PAY_TYPE_ID,
+            pay.PAY_TYPE_NAME,
+            pay.LAST_UPD_USER_ID,
+            pay.LAST_UPD_USER_NAME,
+            pay.SALES_ORD_ID,
+            pay.SALES_ORD_NO,
+            pay.OR_AMT,
+            pay.PO_NO,
+            pay.CLCTR_BRNCH_ID,
+            pay.CLCTR_BRNCH_CODE,
+            pay.CLCTR_BRNCH_NAME,
+            pay.CUST_ID,
+            pay.CUST_NAME,
+            pay.CUST_IC,
+            pay.CUST_TYPE_ID,
+            pay.CUST_TYPE_NAME,
+            pay.PRODUCT_CTGRY_ID,
+            pay.PRODUCT_CTGRY_NAME,
+            pay.PRODUCT_ID,
+            pay.PRODUCT_CODE,
+            pay.PRODUCT_DESC,
+            pay.KEYIN_USER_ID,
+            pay.KEYIN_USER_NAME,
+            pay.APP_TYPE_ID,
+            pay.APP_TYPE_NAME,
+            pay.CLCTR_NAME,
+            pay.CLCTR_CODE,
+            pay.KEYIN_BRNCH_ID,
+            pay.KEYIN_BRNCH_CODE,
+            pay.KEYIN_BRNCH_NAME,
+            pay.DEBTOR_ACC_ID,
+            pay.DEBTOR_ACC_CODE,
+            pay.DEBTOR_ACC_DESC,
+            pay.SALES_MEM_ID,
+            pay.SALES_MEM_CODE,
+            pay.SALES_MEM_NAME,
+            pay.VIRTL_ACC_NO,
+            pay.HP_CODE,
+            pay.HP_NAME,
+            pay.HP_ID,
+            pay.CLCTR_ID,
+            pay.ALLOW_COMM,
+            pay.ADV_MONTH,
+            pay.TR_ISSU_DT,
+            pay.BATCH_PAY_ID
+        FROM
+            PAY1001V pay
+            LEFT JOIN (SELECT MAX(RSLT_SEQ),PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID
+                                FROM PAY0252T GROUP BY PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID) H ON pay.PAY_ID = H.PAY_ID
+            LEFT JOIN PAY0076D B ON B.CRC_TRNSC_ID = H.CRC_STATE_MAPPING_ID
+            LEFT JOIN (SELECT MAX(RSLT_SEQ),PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID
+                                FROM PAY0252T GROUP BY PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID) I ON pay.MTCH_ID = I.PAY_ID
+        WHERE
+            1=1
+            <if test="orderNo != '' and orderNo != null">
+              AND pay.SALES_ORD_NO = #{orderNo}
+            </if>
+            <if test="orderId != '' and orderId != null">
+              AND pay.SALES_ORD_ID = #{orderId}
+            </if>
+            <if test="payDate1 != '' and payDate2 != '' and payDate1 != null and payDate2 != null">
+                <!-- AND pay.PAY_DT  <![CDATA[   >= ]]> TO_DATE(TO_CHAR(TO_DATE(#{payDate1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                AND pay.PAY_DT  <![CDATA[  < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{payDate2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1 -->
+                AND pay.PAY_DT  <![CDATA[ >= ]]> TO_DATE(#{payDate1}||'00:00:00', 'DD/MM/YYYY HH24:MI:SS')
+                AND pay.PAY_DT  <![CDATA[ <  ]]> TO_DATE(#{payDate2}||'00:00:00', 'DD/MM/YYYY HH24:MI:SS') + 1
+            </if>
+            <if test="applicationType != '' and applicationType != null">
+            AND pay.APP_TYPE_ID = #{applicationType}
+            </if>
+            <if test="orNo != '' and orNo != null">
+            AND pay.OR_NO = #{orNo}
+            </if>
+            <if test="poNo != '' and poNo != null">
+            AND pay.PO_NO = #{poNo}
+            </if>
+            <if test="paymentType != '' and paymentType != null">
+            AND pay.PAY_TYPE_ID = #{paymentType}
+            </if>
+            <if test="customerId != '' and customerId != null">
+            AND pay.CUST_ID = #{customerId}
+            </if>
+            <if test="branchId != '' and branchId != null">
+            AND pay.KEYIN_BRNCH_ID = #{branchId}
+            </if>
+            <if test="userId != '' and userId != null">
+            AND pay.KEYIN_USER_ID = #{userId}
+            </if>
+            <if test="customerName != '' and customerName != null">
+            AND pay.CUST_NAME LIKE '%' || #{customerName} || '%'
+            </if>
+            <if test="customerIC != '' and customerIC != null">
+            AND pay.CUST_IC = #{customerIC}
+            </if>
+            <if test="trNo != '' and trNo != null">
+            AND pay.TR_NO = #{trNo}
+            </if>
+            <if test="payIdList != '' and payIdList != null">
+                AND pay.PAY_ID IN
+                <foreach item="item" collection="payIdList" index="index" open="(" separator="," close=")">
+                    #{item}
+                  </foreach>
+            </if>
+            <!-- <if test="chequeNo != '' and chequeNo != null">
+            AND pay.PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_CHQ_NO = #{chequeNo})
+            </if>
+            <if test="crcNo != '' and crcNo != null">
+            AND pay.PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_ORI_CC_NO = #{crcNo})
+            </if>
+            <if test="bankAccount != '' and bankAccount != null">
+            AND pay.PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_ISSU_BANK_ID = #{bankAccount})
+            </if> -->
+            <if test="batchPaymentId != '' and batchPaymentId != null">
+            AND pay.BATCH_PAY_ID = #{batchPaymentId}
+            </if>
+            <if test="trxId != '' and trxId != null">
+            AND H.BANK_STATE_MAPPING_ID = #{trxId}
+            </if>
+            <if test="crcStateId != '' and crcStateId != null">
+            AND H.CRC_STATE_MAPPING_ID = #{crcStateId}
+            </if>
+
+            <if test="orderNo != '' and orderNo != null
+                         or payDate1 != '' and payDate1 != null
+                         or payDate2 != '' and payDate2 != null
+                         or applicationType != '' and applicationType != null
+                         or orNo != '' and orNo != null
+                         or poNo != '' and poNo != null
+                         or paymentType != '' and paymentType != null
+                         or customerId != '' and customerId != null
+                         or branchId != '' and branchId != null
+                         or userId != '' and userId != null
+                         or customerName != '' and customerName != null
+                         or customerIC != '' and customerIC != null
+                         or trNo != '' and trNo != null
+                         or chequeNo != '' and chequeNo != null
+                         or crcNo != '' and crcNo != null
+                         or bankAccount != '' and bankAccount != null
+                         or batchPaymentId != '' and batchPaymentId != null
+                         or trxId != '' and trxId != null ">
+                ORDER BY PAY_ID
+            </if>
+            )
+        <!-- <include refid="pagingEnd" /> -->
+    </select>
+
+
+    <select id="selectOrderList_aNoOrNo" parameterType="Map" resultType="egovMap">
+        SELECT
+            CASE WHEN SUBSTR(OR_NO, 0, 3) IN ('ROR','AER','AOR','BOR','EOR') THEN I.BANK_STATE_MAPPING_ID ELSE  H.BANK_STATE_MAPPING_ID END TRX_ID,
+            pay.TRX_DT,
+            pay.TRX_AMT,
+            pay.PAY_ID,
+            pay.OR_NO,
+            pay.TR_NO,
+            pay.PAY_DT,
+            pay.LAST_UPD_DT,
+            pay.PAY_TYPE_ID,
+            pay.PAY_TYPE_NAME,
+            pay.LAST_UPD_USER_ID,
+            pay.LAST_UPD_USER_NAME,
+            pay.SALES_ORD_ID,
+            pay.SALES_ORD_NO,
+            pay.OR_AMT,
+            pay.PO_NO,
+            pay.CLCTR_BRNCH_ID,
+            pay.CLCTR_BRNCH_CODE,
+            pay.CLCTR_BRNCH_NAME,
+            pay.CUST_ID,
+            pay.CUST_NAME,
+            pay.CUST_IC,
+            pay.CUST_TYPE_ID,
+            pay.CUST_TYPE_NAME,
+            pay.PRODUCT_CTGRY_ID,
+            pay.PRODUCT_CTGRY_NAME,
+            pay.PRODUCT_ID,
+            pay.PRODUCT_CODE,
+            pay.PRODUCT_DESC,
+            pay.KEYIN_USER_ID,
+            pay.KEYIN_USER_NAME,
+            pay.APP_TYPE_ID,
+            pay.APP_TYPE_NAME,
+            pay.CLCTR_NAME,
+            pay.CLCTR_CODE,
+            pay.KEYIN_BRNCH_ID,
+            pay.KEYIN_BRNCH_CODE,
+            pay.KEYIN_BRNCH_NAME,
+            pay.DEBTOR_ACC_ID,
+            pay.DEBTOR_ACC_CODE,
+            pay.DEBTOR_ACC_DESC,
+            pay.SALES_MEM_ID,
+            pay.SALES_MEM_CODE,
+            pay.SALES_MEM_NAME,
+            pay.VIRTL_ACC_NO,
+            pay.HP_CODE,
+            pay.HP_NAME,
+            pay.HP_ID,
+            pay.CLCTR_ID,
+            pay.ALLOW_COMM,
+            pay.ADV_MONTH,
+            pay.TR_ISSU_DT,
+            pay.BATCH_PAY_ID
+        FROM
+            PAY1001V pay
+            LEFT JOIN (SELECT MAX(RSLT_SEQ),PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID
+                                FROM PAY0252T GROUP BY PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID) H ON pay.PAY_ID = H.PAY_ID
+            LEFT JOIN PAY0076D B ON B.CRC_TRNSC_ID = H.CRC_STATE_MAPPING_ID
+            LEFT JOIN (SELECT MAX(RSLT_SEQ),PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID
+                                FROM PAY0252T GROUP BY PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID) I ON pay.MTCH_ID = I.PAY_ID
+        WHERE
+            1=1
+            <if test="mtchIDList != null">
+                AND pay.MTCH_ID IN
+                <foreach item="item" collection="mtchIDList" index="index" open="(" separator="," close=")">
+                    #{item.payId}
+                  </foreach>
+            </if>
+
+    </select>
+
      <!--Search Payment Order List(Master Grid) 전체 건수  -->
 
     <select id="selectOrderListCount" parameterType="Map" resultType="int">
@@ -271,7 +503,9 @@
 		    Extent5.ACC_DESC,
 		    Extent1.PAY_ITM_REF_DT,
 		    Extent1.PAY_ITM_APPV_NO,
-		    Extent9.FT_REM AS PAY_ITM_REM,
+		     CASE WHEN SUBSTR(OR_NO, 0, 3) IN ('ROR') THEN  Extent1.PAY_ITM_REM ELSE  extent10.FT_APPV_REM END PAY_ITM_REM,
+<!-- 		    Extent9.FT_REM AS PAY_ITM_REM, -->
+<!-- 		       Extent1.PAY_ITM_REM, -->
 		    Extent1.PAY_ITM_STUS_ID,
 		    Extent6.NAME AS NAME1,
 		    Extent1.PAY_ITM_IS_LOK,
@@ -303,11 +537,18 @@
 		    LEFT OUTER JOIN SYS0013M Extent7 ON Extent7.CODE_ID = Extent1.PAY_ITM_CARD_TYPE_ID
 		    LEFT OUTER JOIN SYS0013M CARDMODE ON Extent1.PAY_ITM_CARD_MODE_ID = CARDMODE.CODE_ID
 		    LEFT JOIN PAY0064D extent8 ON extent1.PAY_ID = extent8.PAY_ID
-		    LEFT JOIN PAY0260D Extent9 ON extent1.PAY_ID = Extent9.SRC_PAY_ID
+            LEFT JOIN SAL0001D extent9 ON extent8.SALES_ORD_ID = extent9.SALES_ORD_ID
+            LEFT JOIN PAY0260D extent10 ON extent9.SALES_ORD_NO = extent10.FT_ORD_NO
 		WHERE
 		    Extent1.PAY_ITM_STUS_ID = 1
-		    AND Extent1.PAY_ID = #{payId}
+		    AND (Extent1.PAY_ID = #{payId})
 
+    </select>
+
+      <select id="selectPayId" parameterType="Map" resultType="egovMap">
+        SELECT PAY_ID
+        FROM PAY0065D
+        WHERE PAY_ITM_EFT_NO = #{payId}
     </select>
 
     <select id="selectSalesList" parameterType="Map" resultType="egovMap">
