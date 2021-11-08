@@ -1312,6 +1312,83 @@
       #{promoItmStkId} AND T1.PROMO_ITM_STUS_ID = 1 AND ROWNUM &lt;= 1 -->
   </select>
 
+  <select id="selectAnoStkPromoD" parameterType="Map" resultType="egovMap">
+    SELECT T1.PROMO_ITM_ID
+         , T1.PROMO_ID
+         , T1.PROMO_ITM_STK_ID
+         , T2.STK_CODE AS ITMCD
+         , T2.STK_DESC AS ITMNAME
+         , T1.PROMO_ITM_CUR_ID
+         , T4.AMT PROMO_ITM_PRC
+         , T4.PRC_RPF
+         , T4.PRC_PV
+         , CASE WHEN T4.APP_TYPE_ID IN (67,68)
+           THEN TRUNC(FLOOR(T4.AMT - DECODE(T3.PROMO_DISC_TYPE, 0, T4.AMT*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC),-1)
+           ELSE FLOOR(T4.AMT - DECODE(T3.PROMO_DISC_TYPE, 0, T4.AMT*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC)
+           END AS PROMO_AMT
+         , T4.PRC_RPF - T3.PROMO_RPF_DISC_AMT AS PROMO_PRC_RPF
+         , T1.PROMO_ITM_PV
+         , NVL(T1.PROMO_ITM_PV_GST, 0) AS PROMO_ITM_PV_GST
+         , T3.PROMO_APP_TYPE_ID
+    FROM SAL0018D T1
+    LEFT OUTER JOIN SYS0026M T2 ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+    LEFT OUTER JOIN SAL0017D T3 ON T1.PROMO_ID = T3.PROMO_ID
+    LEFT OUTER JOIN SAL0016M T4 ON T4.STK_ID = T1.PROMO_ITM_STK_ID
+                               AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
+    WHERE T4.MEM_PAC_ID = 0
+      AND T1.PROMO_ITM_STUS_ID = 1
+
+
+    <if test='promoItmStkId != null and promoItmStkId !=""'>
+      AND T1.PROMO_ITM_STK_ID = #{promoItmAnoStkId}
+    </if>
+    <if test='promoTypeId != null and promoTypeId !=""'>
+      AND T3.promo_type_id = #{promoTypeId}
+    </if>
+
+    <if test='promoAppTypeId != null and promoAppTypeId !=""'>
+      AND T3.promo_app_type_id = #{promoAppTypeId}
+    </if>
+
+    <if test='promoSrvMemPacId != null and promoSrvMemPacId !=""'>
+      AND T3.promo_srv_mem_pac_id = #{promoSrvMemPacId}
+    </if>
+
+    <if test='promoPrcPrcnt != null and promoPrcPrcnt !=""'>
+      AND T3.promo_prc_prcnt = #{promoPrcPrcnt}
+    </if>
+
+    <if test='promoRpfDiscAmt != null and promoRpfDiscAmt !=""'>
+      AND T3.promo_rpf_disc_amt = #{promoRpfDiscAmt}
+    </if>
+
+    <if test='promoAddDiscPrc != null and promoAddDiscPrc !=""'>
+      AND T3.PROMO_ADD_DISC_PRC = #{promoAddDiscPrc}
+    </if>
+
+    <if test='dateBetween != null and promoAddDiscPrc !=""'>
+      AND TO_DATE(T3.PROMO_DT_FROM) <![CDATA[<=]]>
+      SYSDATE AND TO_DATE(T3.PROMO_DT_END)  <![CDATA[>=]]>
+      SYSDATE
+    </if>
+
+    AND ROWNUM &lt;= 1
+
+  <!-- SELECT T1.PROMO_ITM_ID , T1.PROMO_ID , T1.PROMO_ITM_STK_ID , T1.PROMO_ITM_CUR_ID
+      , T1.PROMO_ITM_PRC , T1.PROMO_ITM_PV , T1.PROMO_ITM_STUS_ID , T1.PROMO_ITM_UPD_USER_ID
+      , T1.PROMO_ITM_UPD_DT , T1.PROMO_ITM_RENTAL , T1.PROMO_ITM_RENT_PRIOD , T1.PROMO_ITM_OBLIG_PRIOD
+      FROM SAL0018D T1 WHERE T1.PROMO_ID = #{promoId} AND T1.PROMO_ITM_STK_ID =
+      #{promoItmStkId} AND T1.PROMO_ITM_STUS_ID = 1 AND ROWNUM &lt;= 1 -->
+  </select>
+
+  <select id="selectAnoStkIDWithBundleID" parameterType="Map" resultType="String">
+  SELECT ITM_STK_ID
+  FROM SAL0002D
+  WHERE SALES_ORD_ID IN (
+  SELECT DISTINCT SALES_ORD_ID FROM SAL0001D WHERE BNDL_ID =(SELECT NVL(BNDL_ID,-1) from SAL0001D WHERE SALES_ORD_ID=#{salesOrdId})
+    AND  SALES_ORD_ID !=#{salesOrdId})
+  </select>
+
   <select id="selectAccRentLedger" parameterType="Map" resultType="egovMap">
     SELECT COUNT(1) AS CNT
          , SUM(RENT_AMT) AS RENT_AMT
