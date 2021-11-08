@@ -887,9 +887,9 @@ function checkIncomeTaxLength() {
         Common.alert("Invalid Income Tax Length!");
         $("#eHncomeTaxNo").val("");
         return false;
-    }else{
-        return true;
-    }
+    }else if($("#incomeTaxNo").val().length == 13){
+        return checkIncomeTax();
+    }else{return true;}
 }
 function checkIncomeTax() {
     var jsonObj = {
