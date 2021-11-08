@@ -196,7 +196,8 @@ public class SearchPaymentController {
         int totalRowCount = searchPaymentService.selectOrderListCount(params);
         List<EgovMap> resultList_OrNo = searchPaymentService.selectOrderList_OrNo(params);
 
-        if(resultList_OrNo!=null){
+
+        if(resultList_OrNo!=null && params.get("trxId") != null && !params.get("trxId").toString().equalsIgnoreCase("")){
         	params.put("mtchIDList", resultList_OrNo);
         	 List<EgovMap> resultList2 = searchPaymentService.selectOrderList_aNoOrNo(params);
              resultList.addAll(resultList2);
