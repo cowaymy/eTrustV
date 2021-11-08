@@ -4,6 +4,8 @@
 package com.coway.trust.biz.sales.order.impl;
 
 import java.math.BigDecimal;
+import java.math.*;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -73,6 +75,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
   @Resource(name = "orderRegisterMapper")
   private OrderRegisterMapper orderRegisterMapper;
+
+  @Resource(name = "orderRequestMapper")
+  private OrderRequestMapper orderRequestMapper;
 
   @Resource(name = "commonMapper")
   private CommonMapper commonMapper;
@@ -168,48 +173,69 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     return orderRegisterMapper.selectPromotionByAppTypeStockESales(params);
   }
 
-  @Override
+
+@Override
   public EgovMap selectProductPromotionPriceByPromoStockID(Map<String, Object> params) {
 
     BigDecimal orderPricePromo = BigDecimal.ZERO, orderPVPromo = BigDecimal.ZERO, orderPVPromoGST = BigDecimal.ZERO,
         orderRentalFeesPromo = BigDecimal.ZERO, normalRentalFees = BigDecimal.ZERO;
     logger.info("@@@@@@@@@@@@@@@@@@@@@@:: " + params.toString());
     EgovMap priceInfo = null;
+    EgovMap priceAnoStkIdInfo= null;
 
     int srvPacId = CommonUtils.intNvl(params.get("srvPacId"));
     int promoId = CommonUtils.intNvl(params.get("promoId"));
     int stkId = CommonUtils.intNvl(params.get("stkId"));
     int ordAppType =  CommonUtils.intNvl(params.get("orderAppType"));
+    String anoStkId = orderRequestMapper.selectAnoStkIDWithBundleID(params);
+
 
     if (!StringUtils.isEmpty(params.get("promoId"))) {
+
       EgovMap promoMap = orderRegisterMapper.selectPromoDesc(Integer.parseInt((String) params.get("promoId")));
 
       int isNew = CommonUtils.intNvl(promoMap.get("isNew"));
 
       if (isNew == 1) {
-
         if (srvPacId == 4) {
-          priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockIDNewCorp(params); // New
-                                                                                                    // Data(2018.01.01~)
+          priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockIDNewCorp(params); // New                                                                 // Data(2018.01.01~)
         } else {
           priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockIDNew(params); // New
-                                                                                                // Data(2018.01.01~)
+
+          if(anoStkId !=null){
+        	  params.put("anoStkId", anoStkId);
+              priceAnoStkIdInfo = orderRegisterMapper.selectProductPromotionPriceByPromoAnoStockIDNew(params);
+          }
         }
 
         if (priceInfo != null) {
           if (SalesConstants.PROMO_APP_TYPE_CODE_ID_REN == Integer
               .parseInt(String.valueOf((BigDecimal) priceInfo.get("promoAppTypeId")))) { // Rental
-            orderPricePromo = (BigDecimal) priceInfo.get("promoPrcRpf");
+
+        	 orderPricePromo = (BigDecimal) priceInfo.get("promoPrcRpf");
+
             orderPVPromo = (BigDecimal) priceInfo.get("promoItmPv");
             orderPVPromoGST = (BigDecimal) priceInfo.get("promoItmPvGst");
             orderRentalFeesPromo = (BigDecimal) priceInfo.get("promoAmt");
 
             normalRentalFees = (BigDecimal) priceInfo.get("amt");
           } else {
+
             if (promoId == 31834 && stkId == 892 && srvPacId == 0) {
               orderPricePromo = BigDecimal.valueOf(3540);
             } else {
               orderPricePromo = (BigDecimal) priceInfo.get("promoAmt");
+
+              if (priceInfo != null &&priceAnoStkIdInfo!=null) {
+              	BigDecimal b1, b2;
+              	 b1 =(BigDecimal) priceInfo.get("promoAmt") ;
+                 b2 = (BigDecimal) priceAnoStkIdInfo.get("promoAmt") ;
+                 int SumPrice = b1.intValue()+b2.intValue();
+                 orderPricePromo = BigDecimal.valueOf(SumPrice);
+              }
+              else{
+            	    orderPricePromo = (BigDecimal) priceInfo.get("promoAmt");
+              }
             }
             orderPVPromo = (BigDecimal) priceInfo.get("promoItmPv");
             orderPVPromoGST = (BigDecimal) priceInfo.get("promoItmPvGst");
@@ -227,10 +253,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
           priceInfo.put("normalRentalFees", new DecimalFormat("0.00").format(normalRentalFees));
 
         } else {
+
+
         	// App Type == AUX
         	if(ordAppType == SalesConstants.APP_TYPE_CODE_ID_AUX) {
         		priceInfo = new EgovMap();
-
+        	   	 logger.info("0000000");
         		priceInfo.put("orderPricePromo", "0.00");
                 priceInfo.put("orderPVPromo", "0.00");
                 priceInfo.put("orderPVPromoGST", "0.00");
@@ -245,7 +273,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                                                                                            // Data(~2017.12.31)
 
         if (priceInfo != null) {
-          orderPricePromo = (BigDecimal) priceInfo.get("promoItmPrc");
+
+      	orderPricePromo = (BigDecimal) priceInfo.get("promoItmPrc");
+
           orderPVPromo = (BigDecimal) priceInfo.get("promoItmPv");
           orderRentalFeesPromo = ((BigDecimal) priceInfo.get("promoItmRental")).compareTo(BigDecimal.ZERO) > 0
               ? (BigDecimal) priceInfo.get("promoItmRental") : BigDecimal.ZERO;
