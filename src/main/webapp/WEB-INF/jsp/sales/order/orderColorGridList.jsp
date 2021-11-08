@@ -121,7 +121,7 @@
         //CommonCombo.make('cmbCustomerType', '/common/selectCodeList.do', {groupCode : 8} , '', {type: 'M'});
         //CommonCombo.make('cmbCorpTypeId', '/common/selectCodeList.do', {groupCode : 95} , '', {type: 'M'});
         doGetCombo('/sales/promotion/selectProductCategoryList.do', '', '', 'cmbProductCtgry', 'M','f_multiCombo'); //Category
-
+        doGetCombo('/callCenter/getstateList.do', '', '', 'cmbState', 'S', ''); //Added by keyi 20211105
 
     });
 
@@ -178,7 +178,6 @@
                 selectAll: true, // 전체선택
                 width: '80%'
             });
-
         });
     }
 
@@ -287,7 +286,13 @@
             }, {
                 dataField : "ordId",
                 visible : false
-            }];
+            },{
+                dataField : "state",
+                headerText : "State",
+                width : 80,
+                editable : false,
+                style: 'left_style'
+            }]; //added by keyi 20211105
 
      // 그리드 속성 설정
         var gridPros = {
@@ -771,10 +776,10 @@ console.log("searchColorGrid");
      </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='sales.isEKeyin'/></th>
-    <td>
-    <input id="isEKeyin" name="isEKeyin" type="checkbox"/>
-    </td>
+	<th scope="row"><spring:message code='sales.isEKeyin'/></th>
+	<td>
+	<input id="isEKeyin" name="isEKeyin" type="checkbox"/>
+	</td>
     <th scope="row">is e-Commerce</th>
     <td>
     <input id="isECommerce" name="isECommerce" type="checkbox"/>
@@ -785,8 +790,15 @@ console.log("searchColorGrid");
     </select>
     </td>
 </tr>
+<tr> <!-- Added by keyi 20211105 -->
+    <th scope="row">State</th>
+    <td>
+    <select class="w100p" id="cmbState" name="cmbState">
+     </select>
+    </td>
+</tr>
 <tr>
-    <th scope="row" colspan="6" ><span class="must"> <spring:message code="sal.alert.msg.youMustKeyInatLeastOrdDateNetSales" /></span>  </th>
+    <th scope="row" colspan="6" ><spaxn class="must"> <spring:message code="sal.alert.msg.youMustKeyInatLeastOrdDateNetSales" /></span>  </th>
 </tr>
 </tbody>
 </table><!-- table end -->
