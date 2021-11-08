@@ -1,6 +1,8 @@
 package com.coway.trust.biz.sales.order.impl;
 
 import java.math.BigDecimal;
+import java.math.*;
+import java.io.*;
 import java.math.MathContext;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -2295,9 +2297,30 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 
         EgovMap opMap = orderRequestMapper.selectPromoD(params);
 
-        if (opMap != null) {
-          OutrightPrice = (BigDecimal) opMap.get("promoItmPrc");
+        EgovMap opMap_anoStkId =null;
+        String anoStkId = orderRequestMapper.selectAnoStkIDWithBundleID(params);
+
+
+        if(anoStkId !=null){
+        	 params.put("promoItmAnoStkId", anoStkId);
+        	 opMap_anoStkId = orderRequestMapper.selectAnoStkPromoD(params);
         }
+
+
+        logger.debug("opMap_anoStkId:" +opMap_anoStkId);
+
+        if (opMap != null &&opMap_anoStkId!=null) {
+        	BigDecimal b1, b2;
+        	 b1 =(BigDecimal) opMap.get("promoItmPrc") ;
+             b2 = (BigDecimal) opMap_anoStkId.get("promoItmPrc") ;
+             int SumPrice = b1.intValue()+b2.intValue();
+            OutrightPrice = BigDecimal.valueOf(SumPrice);
+        }
+        else{
+        	 OutrightPrice = (BigDecimal) opMap.get("promoItmPrc");
+        }
+
+
 
         // Get Order Ledger Record
         EgovMap rlMap = orderRequestMapper.selectAccRentLedger(params);
