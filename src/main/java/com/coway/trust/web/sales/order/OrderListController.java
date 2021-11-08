@@ -295,7 +295,7 @@ public class OrderListController {
 		List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
 		logger.debug("params : {}",params);
 		params.put("ststusCodeId", 1);
-		params.put("reasonTypeId", 172);
+		params.put("reasonTypeId", 174);
 		params.put("codeId", 257);
 
 		EgovMap installParam   = orderListService.selectInstallParam(params);
