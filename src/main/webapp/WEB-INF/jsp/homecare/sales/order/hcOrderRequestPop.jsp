@@ -1164,15 +1164,17 @@
         return true;
     }
 
+    //here
     function fn_loadPromotionPriceAexc(promoId, stkId, srvPacId) {
         var isNull1 = true;
         var isNull2 = true;
         var PromoItemPrice = 0;
         var PromoItemPV = 0;
 
-        Common.ajaxSync("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : srvPacId}, function(promoPriceInfo) {
+        Common.ajaxSync("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : srvPacId, salesOrdId: "${orderDetail.basicInfo.ordId}"}, function(promoPriceInfo) {
             if(promoPriceInfo != null) {
                 $("#txtPriceAexc").val(promoPriceInfo.orderPricePromo);
+                //alert(promoPriceInfo.orderPricePromo);
                 $("#txtPVAexc").val(promoPriceInfo.orderPVPromo);
                 $("#ordPvGSTAexc").val(promoPriceInfo.orderPVPromoGST);
                 $("#ordRentalFeesAexc").val(promoPriceInfo.orderRentalFeesPromo);
