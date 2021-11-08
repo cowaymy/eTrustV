@@ -491,7 +491,7 @@
 		    A.SRC_GRP_SEQ AS GROUP_SEQ,
 		    A.SRC_PAY_ID AS PAY_ID,
 		    A.FT_GRP_SEQ AS FT_GRP_SEQ,
-		    A.FT_ORD_NO AS FT_ORD_NO,
+		    A.SRC_ORD_NO AS FT_ORD_NO,
 		    A.SRC_ORD_NO AS SRC_ORD_NO,
 		    H.CODE  AS CODE,
 		    I.USER_NAME AS  FT_APPV_USER
@@ -519,7 +519,7 @@
             </if>
 
            <if test="ordNo != null and ordNo != '' ">
-            AND FT_ORD_NO = #{ordNo}
+            AND A.SRC_ORD_NO = #{ordNo}
             </if>
 
                 <if test="branchId != null and branchId != '' ">
