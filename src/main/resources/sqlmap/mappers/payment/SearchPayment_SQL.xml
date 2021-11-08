@@ -847,6 +847,8 @@
 		       Extent5.ACC_DESC ACC_DESC  ,
 		       Extent1.PAY_ITM_REF_DT PAY_ITM_REF_DT  ,
 		       Extent1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO  ,
+
+		       CASE WHEN SUBSTR(OR_NO, 0, 3) IN ('ROR') THEN  Extent1.PAY_ITM_REM ELSE  extent10.FT_APPV_REM END PAY_ITM_REM,
 		       Extent1.PAY_ITM_REM PAY_ITM_REM  ,
 		       Extent1.PAY_ITM_STUS_ID PAY_ITM_STUS_ID  ,
 		       Extent6.NAME NAME1  ,
@@ -893,6 +895,8 @@
 		         LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent1.PAY_ITM_CARD_TYPE_ID
 		         LEFT JOIN SYS0013M CARDMODE ON Extent1.PAY_ITM_CARD_MODE_ID = CARDMODE.CODE_ID
 		         LEFT JOIN PAY0064D Extent8   ON Extent1.PAY_ID = Extent8.PAY_ID
+		         LEFT JOIN SAL0001D extent9 ON extent8.SALES_ORD_ID = extent9.SALES_ORD_ID
+                 LEFT JOIN PAY0260D extent10 ON extent9.SALES_ORD_NO = extent10.FT_ORD_NO
 		 WHERE  ( 1 = Extent1.PAY_ITM_STUS_ID )
 		          AND ( Extent1.PAY_ID = #{payId} )
      </select>
