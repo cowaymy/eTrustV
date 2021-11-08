@@ -906,8 +906,8 @@ var TODAY_DD      = "${toDay}";
             $("#memCode").attr("class", "w100p readonly");
             $("#memCode").attr("readonly", "readonly");
 
-            $("#listSalesmanCode").val(salesmanCode);
-            $("#listSalesmanCode").attr("readonly", true);
+//             $("#listSalesmanCode").val(salesmanCode);
+//             $("#listSalesmanCode").attr("readonly", true);
         }
 
 
