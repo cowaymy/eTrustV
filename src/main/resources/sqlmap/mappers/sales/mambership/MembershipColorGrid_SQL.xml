@@ -87,6 +87,9 @@
         <if test="deptCode != null and deptCode != ''">
             AND mo.DEPT_CODE = #{deptCode}
         </if>
+        <if test="memtype != null and memtype != ''">
+            AND mem.MEM_TYPE = #{memtype}
+         </if>
 
         ) UNION ALL (
 
@@ -177,6 +180,9 @@
         </if>
         <if test="deptCode != null and deptCode != ''">
             AND mo.DEPT_CODE = #{deptCode}
+        </if>
+        <if test="memtype != null and memtype != ''">
+            AND mem.MEM_TYPE = #{memtype}
         </if>
 
         )
