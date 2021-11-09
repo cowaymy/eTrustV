@@ -1260,19 +1260,21 @@ function checkIncomeTax() {
             Common.alert("Invalid Income Tax Length!");
             $("#eHPincomeTaxNo").val("");
             return false;
-        } else if( $("#eHPincomeTaxNo").val().length == 13) {
-            Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
-                console.log(result);
-                if(result.cnt1 == "0" && result.cnt2 == "0") {
-                    return true;
-                } else {
-                    Common.alert("Income Tax No has been registered.");
-                    $("#eHPincomeTaxNo").val("");
-                    return false;
-                }
-            });
         }
     }
+    if($("#eHPincomeTaxNo").val().length == 13){
+    	 Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
+    	        console.log(result);
+    	        if(result.cnt1 == "0" && result.cnt2 == "0") {
+    	            return true;
+    	        } else {
+    	            Common.alert("Income Tax No has been registered.");
+    	            $("#eHPincomeTaxNo").val("");
+    	            return false;
+    	        }
+    	    });
+    }
+
 
 }
 
