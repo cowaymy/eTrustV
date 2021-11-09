@@ -115,9 +115,10 @@
                                     </choose>
                                           ) A on V1.ORD_ID = A.SALES_ORD_ID
                     </if>
+                    WHERE 1=1
                     /*
                     JOIN ORG0005D ORG ON V1.SALESMAN_MEM_ID = ORG.MEM_ID
-                    WHERE 1=1
+
                         <if test="memlvl == 4">
                             AND ORG.MEM_ID = #{memId}
                         </if>
