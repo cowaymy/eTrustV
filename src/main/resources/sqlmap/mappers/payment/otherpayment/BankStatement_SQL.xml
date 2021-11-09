@@ -11,7 +11,7 @@
             C.ACC_CODE || ' - ' ||  C.ACC_DESC AS BANK_ACC_NAME,
             A.TRNSC_DT,
             A.F_BANK_JRNL_CRT_DT AS UPD_DT,
-            (SELECT COUNT(1) FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID AND CRC_MAPPING_STUS_ID =1
+            (SELECT COUNT(1) FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID
                 AND OTH_KEYIN_STUS_ID =1
                 AND OTH_KEYIN_BC_STUS_ID = 1) AS COUNT,
             A.F_BANK_JRNL_REM AS REMARK
@@ -20,6 +20,7 @@
             LEFT JOIN SYS0004M B ON A.BANK_ID = B.BANK_ID
             LEFT JOIN SYS0001M C ON A.F_BANK_JRNL_ACC_ID = C.ACC_ID AND C.IS_PAY_CASH = 1
             LEFT JOIN SYS0047M D ON A.F_BANK_JRNL_CRT_USER_ID = D.USER_ID
+
         WHERE
             1=1
             <if test="bsNo != null and bsNo != '' ">
