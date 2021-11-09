@@ -57,6 +57,9 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
   @Resource(name = "servicesLogisticsPFCService")
   private ServicesLogisticsPFCService servicesLogisticsPFCService;
 
+  @Resource(name = "installationResultListMapper")
+  private InstallationResultListMapper installationResultListMapper;
+
   @Override
   public ResponseEntity<InstallationResultDto> installationResultProc(Map<String, Object> insApiresult)
       throws Exception {
@@ -311,8 +314,21 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
        // Added for inserting charge out filters and spare parts at AS. By Hui Ding, 06-04-2021
     	  if (insApiresult.get("chkCrtAs") != null && insApiresult.get("chkCrtAs").toString().equals("1")){
 
+    		  // user_id
+    		  int user_id_47 = 0;
+
     		  // set CT_ID into installResult
-    		  installResult.put("ctId", String.valueOf(userId));
+    		  installResult.put("ctId", String.valueOf(userId)); // mem_id
+
+    		  if (userId != null){ // get user_id from mem_code
+    			  Map<String, Object> p = new HashMap<String, Object>();
+    			  p.put("memId", String.valueOf(userId));
+    			  EgovMap userIdResult = installationResultListMapper.selectUserByMemId(p);
+
+    			  if (userIdResult != null ){
+    				  user_id_47 = (int) userIdResult.get("userId");
+    			  }
+    		  }
 
     		  // change format from
     		  String appntDtFormatted = null;
@@ -365,7 +381,7 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
 			  params.put("txtLabourCharge", 0.00); // temporary set foc
 
 
-    		  installationResultListService.saveInsAsEntry(newPartList, params, installResult, Integer.parseInt(userId));
+    		  installationResultListService.saveInsAsEntry(newPartList, params, installResult, user_id_47);
     	  }
           // End of inserting charge out filters and spare parts at AS
 
