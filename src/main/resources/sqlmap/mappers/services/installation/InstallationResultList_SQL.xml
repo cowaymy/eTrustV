@@ -5414,4 +5414,8 @@ AND J.CODE IN ('COM','FAL','CAN')
             , sysdate
         )
 </insert>
+
+<select id="selectUserByMemId" parameterType="Map" resultType="egovMap">
+    SELECT U.USER_ID, U.USER_NAME FROM ORG0001D M JOIN SYS0047M U ON M.MEM_CODE = U.USER_NAME WHERE M.MEM_ID = #{memId} AND M.STUS = 1 AND ROWNUM = 1;
+</select>
 </mapper>

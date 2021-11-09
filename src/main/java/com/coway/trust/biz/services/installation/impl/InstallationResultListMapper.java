@@ -310,4 +310,6 @@ public interface InstallationResultListMapper {
 
   void insertFilterChargeOut (Map<String, Object> params);
 
+  EgovMap selectUserByMemId (Map<String, Object> params);
+
 }
