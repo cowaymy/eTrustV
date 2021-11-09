@@ -1809,6 +1809,26 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
             AND V1 <> '0'
         ]]>
     </if>
+    <if test="clmType == 'R3' ">
+        <![CDATA[
+            AND R3 <> '0'
+        ]]>
+    </if>
+    <if test="clmType == 'R4' ">
+        <![CDATA[
+            AND R4 <> '0'
+        ]]>
+    </if>
+    <if test="clmType == 'A2' ">
+        <![CDATA[
+            AND A2 <> '0'
+        ]]>
+    </if>
+    <if test="clmType == 'A3' ">
+        <![CDATA[
+            AND A3 <> '0'
+        ]]>
+    </if>
 </select>
 
 <update id="insMissAppr" parameterType="Map">
