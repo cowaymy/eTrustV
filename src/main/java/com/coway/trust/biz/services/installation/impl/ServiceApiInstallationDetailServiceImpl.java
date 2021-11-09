@@ -325,8 +325,8 @@ public class ServiceApiInstallationDetailServiceImpl extends EgovAbstractService
     			  p.put("memId", String.valueOf(userId));
     			  EgovMap userIdResult = installationResultListMapper.selectUserByMemId(p);
 
-    			  if (userIdResult != null ){
-    				  user_id_47 = (int) userIdResult.get("userId");
+    			  if (userIdResult != null && userIdResult.get("userId") != null){
+    				  user_id_47 = Integer.valueOf(userIdResult.get("userId").toString());
     			  }
     		  }
 
