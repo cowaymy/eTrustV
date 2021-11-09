@@ -18,7 +18,7 @@
     <select id="selectOrderList" parameterType="Map" resultType="egovMap">
     <!-- <include refid="pagingStart" /> -->
         SELECT
-            CASE WHEN SUBSTR(OR_NO, 0, 3) IN ('ROR','AER','AOR','BOR','EOR') THEN I.BANK_STATE_MAPPING_ID ELSE  H.BANK_STATE_MAPPING_ID END TRX_ID,
+            CASE WHEN SUBSTR(OR_NO, 0, 3) IN ('ROR','AER','AOR','BOR','EOR') THEN I.CRC_STATE_MAPPING_ID ELSE  H.CRC_STATE_MAPPING_ID END TRX_ID,
 <!--             H.CRC_STATE_MAPPING_ID AS CRC_STATE_ID, -->
 			pay.TRX_DT,
 			pay.TRX_AMT,
