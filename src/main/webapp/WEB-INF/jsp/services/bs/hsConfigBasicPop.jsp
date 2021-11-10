@@ -31,8 +31,8 @@
                $("#entry_availability option[value="+configBsGen +"]").attr("selected", true);
 
 
-               var checkProduct = ${configBasicInfo.stockCode}
-               if(checkProduct != 112789){  // PRODUCT - OMBAK THEN DISPLAY FAUCET CHECKBOX
+               //var checkProduct = ${configBasicInfo.stockCode}
+               if('${configBasicInfo.stockCode}' != "112789"){  // PRODUCT - OMBAK THEN DISPLAY FAUCET CHECKBOX
             	   $('#faucetTitle').hide();
             	   $('#faucet_exch').hide();
 
