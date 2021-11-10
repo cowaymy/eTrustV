@@ -11,11 +11,16 @@
             C.ACC_CODE || ' - ' ||  C.ACC_DESC AS BANK_ACC_NAME,
             A.TRNSC_DT,
             A.F_BANK_JRNL_CRT_DT AS UPD_DT,
-            (
-            SELECT COUNT(1)  FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID
+            (SELECT COUNT(1) FROM (SELECT * FROM PAY0081D WHERE F_BANK_JRNL_ID = #{bsNo}
+                AND CRC_MAPPING_STUS_ID =1
                 AND OTH_KEYIN_STUS_ID =1
                 AND OTH_KEYIN_BC_STUS_ID = 1
-             )AS COUNT,
+                AND F_TRNSC_REM = 'CRC'
+            UNION
+            SELECT * FROM PAY0081D WHERE F_BANK_JRNL_ID = #{bsNo}
+                AND OTH_KEYIN_STUS_ID =1
+                AND OTH_KEYIN_BC_STUS_ID = 1
+                AND F_TRNSC_REM NOT IN ('CRC'))) AS COUNT,
             A.F_BANK_JRNL_REM AS REMARK
         FROM
             PAY0079D A
@@ -65,7 +70,7 @@
             B.F_TRNSC_CRDIT_AMT,
             B.F_TRNSC_TELLER_ID,
             B.F_TRNSC_NEW_CHQ_NO,
-            decode (B.OTH_KEYIN_STUS_ID, 4,'Mapped' , 'Unmap' ) AS Tranx_state,
+             CASE WHEN F_TRNSC_REM = 'CRC' THEN  decode (B.CRC_MAPPING_STUS_ID, 4,'Mapped' , 'Unmap' )ELSE decode (B.OTH_KEYIN_STUS_ID, 4,'Mapped' , 'Unmap' ) END AS Tranx_state,
             (SELECT COUNT(1) FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID AND CRC_MAPPING_STUS_ID =1
                 AND OTH_KEYIN_STUS_ID =1
                 AND OTH_KEYIN_BC_STUS_ID = 1) AS COUNT
