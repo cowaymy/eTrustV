@@ -1244,21 +1244,21 @@ function checkIncomeTax() {
         if (!regIncTax.test($("#eHPincomeTaxNo").val())){
             Common.alert("Invalid Income Tax Format");
             return false;
-        }else{return true;}
-        // 3. Check Exist in DB
-        var jsonObj = {
-            "incomeTaxNo" : $("#eHPincomeTaxNo").val()
-        };
-        Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
-            console.log("@@incomeTaxResult: "+JSON.stringify(result));
-            if(result.cnt1 == "0" && result.cnt2 == "0") {
-                return true;
-            } else {
-                Common.alert("Income Tax No has been registered.");
-                $("#eHPincomeTaxNo").val("");
-                return false;
-            }
-        });
+        }else{
+        	// 3. Check Exist in DB
+            var jsonObj = {
+                "incomeTaxNo" : $("#eHPincomeTaxNo").val()
+            };
+            Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
+                if(result.cnt1 == "0" && result.cnt2 == "0") {
+                    return true;
+                } else {
+                    Common.alert("Income Tax No has been registered.");
+                    $("#eHPincomeTaxNo").val("");
+                    return false;
+                }
+            });
+        }
     }else if($("#eHPincomeTaxNo").val().length == 0){
         return true; //do nothing
     }

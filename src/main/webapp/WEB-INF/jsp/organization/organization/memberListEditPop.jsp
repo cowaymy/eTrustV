@@ -9,6 +9,8 @@ var optionCity = {chooseMessage: "2. City"};
 var optionPostCode = {chooseMessage: "3. Post Code"};
 var optionArea = {chooseMessage: "4. Area"};
 
+var dup = false;
+
 //var jsonObj1;
 
 var myGridID_Doc;
@@ -1490,7 +1492,7 @@ function checkBankAccNo() {
 
 //@AMEER INCOME_TAX
 function checkIncomeTax() {
-	// 1. Check length
+    // 1. Check length
     if($("#incomeTaxNo").val().length >= 0 && $("#incomeTaxNo").val().length < 13) {
         Common.alert("Invalid Income Tax Length!");
         $("#incomeTaxNo").val("");
@@ -1501,21 +1503,22 @@ function checkIncomeTax() {
         if (!regIncTax.test($("#incomeTaxNo").val())){
             Common.alert("Invalid Income Tax Format");
             return false;
-        }else{return true;}
-        // 3. Check Exist in DB
-        var jsonObj = {
-            "incomeTaxNo" : $("#incomeTaxNo").val()
-        };
-        Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
-            console.log("@@incomeTaxResult: "+JSON.stringify(result));
-            if(result.cnt1 == "0" && result.cnt2 == "0") {
-                return true;
-            } else {
-                Common.alert("Income Tax No has been registered.");
-                $("#incomeTaxNo").val("");
-                return false;
-            }
-        });
+        }else{
+        	 // 3. Check Exist in DB
+        	  var jsonObj = {
+                        "incomeTaxNo" : $("#incomeTaxNo").val()
+                    };
+            Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
+                if(result.cnt1 == "0" && result.cnt2 == "0") {
+                    return true;
+                } else {
+                    Common.alert("Income Tax No has been registered.");
+                    $("#incomeTaxNo").val("");
+                    return false;
+                }
+            });
+            return true;
+        }
     }else if($("#incomeTaxNo").val().length == 0){
         return true; //do nothing
     }
