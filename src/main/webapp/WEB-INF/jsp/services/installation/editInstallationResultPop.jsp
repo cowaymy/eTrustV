@@ -351,7 +351,7 @@ function notMandatoryForAP(){
       msg += "* <spring:message code='sys.msg.necessary' arguments='Sirim No' htmlEscape='false'/> </br>";
     }
     // ADDED BOOSTER PUMP
-    if ($("#editInstallForm #boosterPump").val().trim() == '' || ("#editInstallForm #boosterPump") == null || $("#editInstallForm #boosterPump").val().trim() == '0') {
+    /* if ($("#editInstallForm #boosterPump").val().trim() == '' || ("#editInstallForm #boosterPump") == null || $("#editInstallForm #boosterPump").val().trim() == '0') {
         msg += "* <spring:message code='sys.msg.necessary' arguments='Booster Pump' htmlEscape='false'/> </br>";
       }
 
@@ -363,7 +363,7 @@ function notMandatoryForAP(){
         if ($("#editInstallForm #aftLpm").val().trim() == '' || $("#editInstallForm #aftLpm") == null ){
         msg += "* <spring:message code='sys.msg.necessary' arguments='After Pump LPM' htmlEscape='false'/> </br>";
       }
-    }
+    } */
 
 
     if ($("#editInstallForm #serialNo").val().trim() == '' || ("#editInstallForm #serialNo") == null) {
@@ -377,17 +377,17 @@ function notMandatoryForAP(){
 
   //stkId for kecil = 1735, petit = 298 (for testing in developmennt)
  // PSI CHECKING
-    if ( ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")
-    		//&& !($("#editInstallForm #hidStkId").val()  == 1735)) {
+
+/*     if ( ("${orderInfo.stkCtgryId}" == "54" || "${orderInfo.stkCtgryId}" == "400" || "${orderInfo.stkCtgryId}" == "57" || "${orderInfo.stkCtgryId}" == "56")
     	    && !(("${installResult.installStkId}" == 1735)  ||  ("${installResult.installStkId}" == 1737))) {
-      if ( $("#psiRcd").val() == "") {
+       if ( $("#psiRcd").val() == "") {
         msg += "* <spring:message code='sys.msg.invalid' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
       }
       if ( $("#lpmRcd").val() == "") {
         msg += "* <spring:message code='sys.msg.invalid' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
       }
       if ("${orderInfo.stkCtgryId}" == "54" ){
-  	  if ( $("#volt").val() == "") {
+  	   if ( $("#volt").val() == "") {
           msg += "* <spring:message code='sys.msg.invalid' arguments='Voltage' htmlEscape='false'/> </br>";
         }
         if ( $("#tds").val() == "") {
@@ -403,7 +403,7 @@ function notMandatoryForAP(){
           msg += "* <spring:message code='sys.msg.invalid' arguments='Adapter Used' htmlEscape='false'/> </br>";
         }
       }
-    }
+    } */
 
   //stkId for kecil = 1735, petit = 298 (for testing in developmennt)
     if($("#editInstallForm #hidStkId").val() == 1735){
@@ -676,7 +676,7 @@ function notMandatoryForAP(){
             </tr>
 
           <!--  /////////////////////////////////////////////// NEW ADDED COLUMN : BOOSTER PUMP //////////////////////////////////////////////////////// -->
-          
+
             <tr>
             <th scope="row">Attach Picture</th>
             <td>
