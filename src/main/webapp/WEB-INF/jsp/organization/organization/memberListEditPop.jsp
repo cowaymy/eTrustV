@@ -1222,17 +1222,8 @@ function fn_saveValidation(){
     }
 
     //@AMEER add INCOME TAX
-     var regIncTax = /^[a-zA-Z0-9]*$/;
-    if($("#incomeTaxNo").val() != "") {
-       valid = checkIncomeTaxLength();
-       if(valid){
-           if (!regIncTax.test($("#incomeTaxNo").val()))
-           {
-               Common.alert("Invalid Income Tax Format");
-               valid = false;
-           }
-       }
-    }
+    valid = checkIncomeTax();
+    console.log("@@validInc: "+valid)
 
     //Display Message
     if (!valid)
@@ -1498,30 +1489,25 @@ function checkBankAccNo() {
 }
 
 //@AMEER INCOME_TAX
-function checkIncomeTaxLength() {
-	if($("#incomeTaxNo").val().length >= 0 && $("#incomeTaxNo").val().length < 13) {
+function checkIncomeTax() {
+	// 1. Check length
+    if($("#incomeTaxNo").val().length >= 0 && $("#incomeTaxNo").val().length < 13) {
         Common.alert("Invalid Income Tax Length!");
         $("#incomeTaxNo").val("");
         return false;
     }else if($("#incomeTaxNo").val().length == 13){
-        return checkIncomeTax();
-    }else{return true;}
-}
-function checkIncomeTax() {
-    var jsonObj = {
-        "incomeTaxNo" : $("#incomeTaxNo").val()
-    };
-    if(event.keyCode == 13) {
-        if($("#incomeTaxNo").val().length >= 0 && $("#incomeTaxNo").val().length < 13) {
-            Common.alert("Invalid Income Tax Length!");
-            $("#incomeTaxNo").val("");
+        // 2. Check Special Char
+        var regIncTax = /^[a-zA-Z0-9]*$/;
+        if (!regIncTax.test($("#incomeTaxNo").val())){
+            Common.alert("Invalid Income Tax Format");
             return false;
-        }
-
-    }
-    if($("#incomeTaxNo").val().length == 13){
-    	Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
-            console.log(result);
+        }else{return true;}
+        // 3. Check Exist in DB
+        var jsonObj = {
+            "incomeTaxNo" : $("#incomeTaxNo").val()
+        };
+        Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
+            console.log("@@incomeTaxResult: "+JSON.stringify(result));
             if(result.cnt1 == "0" && result.cnt2 == "0") {
                 return true;
             } else {
@@ -1530,8 +1516,9 @@ function checkIncomeTax() {
                 return false;
             }
         });
+    }else if($("#incomeTaxNo").val().length == 0){
+        return true; //do nothing
     }
-
 }
 </script>
 
@@ -1686,7 +1673,7 @@ function checkIncomeTax() {
                              <tr>
                                 <th scope="row">Income Tax No</th>
                                 <td colspan="5">
-                                <input type="text" title="" placeholder="Income Tax No" class="w100p" id="incomeTaxNo"  name="incomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
+                                <input type="text" title="" placeholder="Income Tax No" class="w100p" id="incomeTaxNo"  name="incomeTaxNo"  maxlength="13"
                                 onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;" value="<c:out value="${memberView.incTax}"/>"/>
                                 </td>
                             </tr>

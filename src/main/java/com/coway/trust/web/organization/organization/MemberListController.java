@@ -1921,14 +1921,16 @@ logger.debug("params : {}", params);
 
         EgovMap item = new EgovMap();
         params.put("srcM", "1");
-//        item = (EgovMap) memberListService.checkIncomeTax(params);
+        item = (EgovMap) memberListService.checkIncomeTax(params);
+        logger.debug("@@: 0"+item);
         incomeTaxCheck.put("cnt1", item.get("cnt"));
 
         params.remove("srcM");
 
         EgovMap item2 = new EgovMap();
         params.put("srcA", "1");
-//        item2 = (EgovMap) memberListService.checkIncomeTax(params);
+        item2 = (EgovMap) memberListService.checkIncomeTax(params);
+        logger.debug("@@: 0"+item2);
         incomeTaxCheck.put("cnt2", item2.get("cnt"));
 
         return ResponseEntity.ok(incomeTaxCheck);

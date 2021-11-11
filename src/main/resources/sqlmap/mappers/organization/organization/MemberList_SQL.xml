@@ -4588,6 +4588,23 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         </if>
       </select>
 
+      <select id="checkIncomeTax" parameterType="Map" resultType="egovMap">
+      SELECT
+            COUNT(1) CNT
+        <if test="srcA != '' and srcA != null ">
+            <![CDATA[
+                FROM ORG0003D
+                WHERE APLICNT_INC_TAX = #{incomeTaxNo}
+            ]]>
+        </if>
+        <if test="srcM != '' and srcM != null ">
+            <![CDATA[
+                FROM ORG0001D
+                WHERE INC_TAX = #{incomeTaxNo}
+            ]]>
+        </if>
+      </select>
+
       <select id="checkAccLen" parameterType="Map" resultType="egovMap">
           SELECT
               ACC_LEN

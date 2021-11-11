@@ -1000,18 +1000,8 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
         }
     }
 
-   //@AMEER add INCOME TAX
-    var regIncTax = /^[a-zA-Z0-9]*$/;
-    if($("#incomeTaxNo").val() != "") {
-       var valid = checkIncomeTaxLength();
-       if(valid){
-           if (!regIncTax.test($("#incomeTaxNo").val()))
-           {
-               Common.alert("Invalid Income Tax Format");
-               return false;
-           }
-       }else{return false;}
-     }
+    //@AMEER add INCOME TAX
+    return checkIncomeTax();
 
     return true;
 }
@@ -1383,30 +1373,25 @@ function checkBankAccNo() {
 }
 
 //@AMEER INCOME_TAX
-function checkIncomeTaxLength() {
+function checkIncomeTax() {
+    // 1. Check length
     if($("#incomeTaxNo").val().length >= 0 && $("#incomeTaxNo").val().length < 13) {
         Common.alert("Invalid Income Tax Length!");
         $("#incomeTaxNo").val("");
         return false;
     }else if($("#incomeTaxNo").val().length == 13){
-    	return checkIncomeTax();
-    }else{return true;}
-}
-function checkIncomeTax() {
-    var jsonObj = {
-        "incomeTaxNo" : $("#incomeTaxNo").val()
-    };
-    if(event.keyCode == 13) {
-        if($("#incomeTaxNo").val().length > 0 && $("#incomeTaxNo").val().length < 13) {
-            Common.alert("Invalid Income Tax Length!");
-            $("#incomeTaxNo").val("");
+        // 2. Check Special Char
+        var regIncTax = /^[a-zA-Z0-9]*$/;
+        if (!regIncTax.test($("#incomeTaxNo").val())){
+            Common.alert("Invalid Income Tax Format");
             return false;
-        }
-
-    }
-    if($("#incomeTaxNo").val().length == 13){
-    	Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
-            console.log(result);
+        }else{return true;}
+        // 3. Check Exist in DB
+        var jsonObj = {
+            "incomeTaxNo" : $("#incomeTaxNo").val()
+        };
+        Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
+            console.log("@@incomeTaxResult: "+JSON.stringify(result));
             if(result.cnt1 == "0" && result.cnt2 == "0") {
                 return true;
             } else {
@@ -1415,7 +1400,10 @@ function checkIncomeTax() {
                 return false;
             }
         });
+    }else if($("#incomeTaxNo").val().length == 0){
+        return true; //do nothing
     }
+}
 
 
 }

@@ -865,17 +865,7 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
     }
 
     //@AMEER add INCOME TAX
-    var regIncTax = /^[a-zA-Z0-9]*$/;
-    if($("#eHPincomeTaxNo").val() != "") {
-       var valid = checkIncomeTaxLength();
-       if(valid){
-    	   if (!regIncTax.test($("#eHPincomeTaxNo").val()))
-           {
-               Common.alert("Invalid Income Tax Format");
-               return false;
-           }
-       }else{return false;}
-     }
+    return checkIncomeTax();
 
     return true;
 }
@@ -1242,40 +1232,36 @@ function checkBankAccNo() {
 }
 
 //@AMEER INCOME_TAX
-function checkIncomeTaxLength() {
+function checkIncomeTax() {
+    // 1. Check length
     if($("#eHPincomeTaxNo").val().length >= 0 && $("#eHPincomeTaxNo").val().length < 13) {
         Common.alert("Invalid Income Tax Length!");
-        $("#eHncomeTaxNo").val("");
+        $("#eHPincomeTaxNo").val("");
         return false;
-    }else if($("#incomeTaxNo").val().length == 13){
-        return checkIncomeTax();
-    }else{return true;}
-}
-function checkIncomeTax() {
-    var jsonObj = {
-        "incomeTaxNo" : $("#eHPincomeTaxNo").val()
-    };
-    if(event.keyCode == 13) {
-        if($("#eHPincomeTaxNo").val().length >= 0 && $("#eHPincomeTaxNo").val().length < 13) {
-            Common.alert("Invalid Income Tax Length!");
-            $("#eHPincomeTaxNo").val("");
+    }else if($("#eHPincomeTaxNo").val().length == 13){
+        // 2. Check Special Char
+        var regIncTax = /^[a-zA-Z0-9]*$/;
+        if (!regIncTax.test($("#eHPincomeTaxNo").val())){
+            Common.alert("Invalid Income Tax Format");
             return false;
-        }
+        }else{return true;}
+        // 3. Check Exist in DB
+        var jsonObj = {
+            "incomeTaxNo" : $("#eHPincomeTaxNo").val()
+        };
+        Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
+            console.log("@@incomeTaxResult: "+JSON.stringify(result));
+            if(result.cnt1 == "0" && result.cnt2 == "0") {
+                return true;
+            } else {
+                Common.alert("Income Tax No has been registered.");
+                $("#eHPincomeTaxNo").val("");
+                return false;
+            }
+        });
+    }else if($("#eHPincomeTaxNo").val().length == 0){
+        return true; //do nothing
     }
-    if($("#eHPincomeTaxNo").val().length == 13){
-    	 Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
-    	        console.log(result);
-    	        if(result.cnt1 == "0" && result.cnt2 == "0") {
-    	            return true;
-    	        } else {
-    	            Common.alert("Income Tax No has been registered.");
-    	            $("#eHPincomeTaxNo").val("");
-    	            return false;
-    	        }
-    	    });
-    }
-
-
 }
 
 
@@ -1456,7 +1442,7 @@ function fn_validFile() {
                 <tr>
                     <th scope="row">Income Tax No</th>
                     <td colspan="2">
-                    <input type="text" title=""  placeholder="Income Tax No" class="w100p"  id="eHPincomeTaxNo"  name="eHPincomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
+                    <input type="text" title=""  placeholder="Income Tax No" class="w100p"  id="eHPincomeTaxNo"  name="eHPincomeTaxNo"  maxlength="13"
                     onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;"/>
                     </td>
                 </tr>
