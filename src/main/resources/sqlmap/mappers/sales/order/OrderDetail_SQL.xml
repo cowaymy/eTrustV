@@ -905,11 +905,7 @@
              , T.BATCH_MODE
              , T.CODE
              , CASE WHEN t.ctrl_stus_id = 1 THEN '-'
-                       WHEN t.BANK_DTL_APPR_CODE IS NULL OR t.BANK_DTL_APPR_CODE = 00 THEN 'Success'
-                       WHEN t.BANK_DTL_APPR_CODE IN (05,51,61,65) THEN 'Insufficient Fund'
-                       WHEN t.BANK_DTL_APPR_CODE IN (14) THEN 'Return Pin / Invalid Card'
-                       WHEN t.BANK_DTL_APPR_CODE IN (999) THEN 'AD Return'
-                       ELSE (CASE WHEN t.CTRL_IS_CRC = 1 THEN 'Change Card' ELSE 'Change Account' END) END is_approve_str
+                       ELSE T.CODE_NAME END AS is_approve_str
     FROM ( SELECT T1.BANK_DTL_ID
                         , T1.BANK_DTL_AMT
                         , T2.CTRL_ID
@@ -923,10 +919,12 @@
                         , NVL(T1.BANK_APPV, 0) BANK_APPV
                         , NVL(t1.BANK_DTL_APPR_CODE,0) BANK_DTL_APPR_CODE
                         , T2.CTRL_IS_CRC CTRL_IS_CRC
+                        , T4.CODE_NAME CODE_NAME
                FROM PAY0042D T1
                JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID
                                         AND 8 != T2.CTRL_STUS_ID
                LEFT JOIN SYS0004M T3 ON T3.BANK_ID = T2.CTRL_BANK_ID
+               LEFT JOIN SYS0094M T4 ON T4.CODE = T1.BANK_DTL_APPR_CODE AND T4.IND IN ('SUCCESS','INSFUNDS','INVCARD','CHGCARD')
                WHERE T1.SALES_ORD_ID = #{salesOrderId}
     ) T ORDER BY T.BANK_DTL_ID DESC
   </select>
