@@ -1502,7 +1502,12 @@
 						            ELSE ' '
 						         END
 						            USER_NAME,
-						            Extent1.UPD_DT UPD_DT_1
+						            Extent1.UPD_DT UPD_DT_1,
+						         CASE
+                                    WHEN (Extent4.CUST_CRC_TOKEN IS NOT NULL) THEN Extent4.CUST_CRC_TOKEN
+                                  ELSE ' '
+                                END
+                                  TOKEN_ID
 						  FROM                           SAL0074D Extent1
 						                              JOIN
 						                                 SYS0013M Extent2
@@ -1675,7 +1680,12 @@
 						              ELSE ' '
 						           END
 						              USER_NAME,
-						              Ext1.UPD_DT UPD_DT_1
+						              Ext1.UPD_DT UPD_DT_1,
+						          CASE
+                                      WHEN (Ext4.CUST_CRC_TOKEN IS NOT NULL) THEN Ext4.CUST_CRC_TOKEN
+                                      ELSE ' '
+                                  END
+                                      TOKEN_ID
 						    FROM                           SAL0076D Ext1
 						                                JOIN
 						                                   SYS0013M Ext2

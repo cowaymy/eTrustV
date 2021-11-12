@@ -45,7 +45,11 @@
                 headerText : "<spring:message code="sal.title.crcAccNo" />",
                 width : 120,
                 editable : false
-            }, {
+            },{
+                dataField : "tokenId",
+                headerText : "<spring:message code="sal.title.tokenId" />",
+                editable : false
+            },{
                 dataField : "custCrcExpr",
                 headerText : "<spring:message code="sal.title.expiryDate" />",
                 editable : false
