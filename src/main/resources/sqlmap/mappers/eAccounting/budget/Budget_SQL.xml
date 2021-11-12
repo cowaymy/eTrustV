@@ -1219,7 +1219,7 @@ WHERE 1=1
                 OR A.COST_CENTR = #{costCentr2}
             </if>
             -->
-            <if test="(costCentr != null and costCentr != '') and (costCentr2 == null and costCentr2 == '')  and (costCentr3 == null and costCentr3 == '')" >
+            <if test="(costCentr != null and costCentr != '') and (costCentr2 == null or costCentr2 == '')  and (costCentr3 == null or costCentr3 == '')" >
                  AND A.COST_CENTR = #{costCentr}
             </if>
             <if test="(costCentr2 != null and costCentr2 != '') and (costCentr3 == null and costCentr3 == '')" >
