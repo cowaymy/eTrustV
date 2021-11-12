@@ -18,7 +18,7 @@
     <select id="selectOrderList" parameterType="Map" resultType="egovMap">
     <!-- <include refid="pagingStart" /> -->
         SELECT
-            CASE WHEN SUBSTR(OR_NO, 0, 3) IN ('ROR','AER','AOR','BOR','EOR') THEN I.BANK_STATE_MAPPING_ID ELSE  H.BANK_STATE_MAPPING_ID END TRX_ID,
+            CASE WHEN SUBSTR(OR_NO, 0, 3) IN ('ROR','AER','AOR','EOR') THEN I.BANK_STATE_MAPPING_ID ELSE  H.BANK_STATE_MAPPING_ID END TRX_ID,
             H.CRC_STATE_MAPPING_ID AS CRC_STATE_ID,
 			pay.TRX_DT,
 			pay.TRX_AMT,
@@ -332,7 +332,7 @@
 
     <select id="selectOrderList_aNoOrNo" parameterType="Map" resultType="egovMap">
         SELECT
-            CASE WHEN SUBSTR(OR_NO, 0, 3) IN ('ROR','AER','AOR','BOR','EOR') THEN I.BANK_STATE_MAPPING_ID ELSE  H.BANK_STATE_MAPPING_ID END TRX_ID,
+            CASE WHEN SUBSTR(OR_NO, 0, 3) IN ('ROR','AER','AOR','EOR') THEN I.BANK_STATE_MAPPING_ID ELSE  H.BANK_STATE_MAPPING_ID END TRX_ID,
             pay.TRX_DT,
             pay.TRX_AMT,
             pay.PAY_ID,
@@ -394,7 +394,8 @@
                                 FROM PAY0252T GROUP BY PAY_ID,BANK_STATE_MAPPING_ID,CRC_STATE_MAPPING_ID) I ON pay.MTCH_ID = I.PAY_ID
         WHERE
             1=1
-            <if test="mtchIDList != null">
+            <if test="mtchIDList != null" >
+<!--             <if test="mtchIDList != null and mtchIDList != '' "> -->
                 AND pay.MTCH_ID IN
                 <foreach item="item" collection="mtchIDList" index="index" open="(" separator="," close=")">
                     #{item.payId}
@@ -538,7 +539,7 @@
 		    LEFT OUTER JOIN SYS0013M CARDMODE ON Extent1.PAY_ITM_CARD_MODE_ID = CARDMODE.CODE_ID
 		    LEFT JOIN PAY0064D extent8 ON extent1.PAY_ID = extent8.PAY_ID
             LEFT JOIN SAL0001D extent9 ON extent8.SALES_ORD_ID = extent9.SALES_ORD_ID
-            LEFT JOIN PAY0260D extent10 ON extent9.SALES_ORD_NO = extent10.FT_ORD_NO
+            LEFT JOIN PAY0260D extent10 ON extent1.PAY_ID = extent10.SRC_PAY_ID
 		WHERE
 		    Extent1.PAY_ITM_STUS_ID = 1
 		    AND (Extent1.PAY_ID = #{payId})
