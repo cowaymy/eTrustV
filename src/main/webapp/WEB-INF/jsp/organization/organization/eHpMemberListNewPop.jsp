@@ -865,7 +865,7 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
     }
 
     //@AMEER add INCOME TAX
-    return checkIncomeTax();
+    //return checkIncomeTax();
 
     return true;
 }

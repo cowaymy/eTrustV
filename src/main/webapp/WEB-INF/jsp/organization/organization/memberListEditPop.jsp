@@ -1224,8 +1224,8 @@ function fn_saveValidation(){
     }
 
     //@AMEER add INCOME TAX
-    valid = checkIncomeTax();
-    console.log("@@validInc: "+valid)
+    //valid = checkIncomeTax();
+    //console.log("@@validInc: "+valid)
 
     //Display Message
     if (!valid)

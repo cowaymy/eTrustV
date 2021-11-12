@@ -1001,7 +1001,7 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
     }
 
     //@AMEER add INCOME TAX
-    return checkIncomeTax();
+    //return checkIncomeTax();
 
     return true;
 }
@@ -1598,7 +1598,7 @@ function checkIncomeTax() {
 <!-- ADDED INCOME TAX NO @AMEER 2021-09-27-->
     <th scope="row">Income Tax No</th>
     <td colspan="5">
-    <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="incomeTaxNo"  name="incomeTaxNo"  maxlength="13" onKeyDown="checkIncomeTax()"
+    <input type="text" title="" placeholder="Income Tax No" class="w100p"  id="incomeTaxNo"  name="incomeTaxNo"  maxlength="13"
     onkeyup="this.value = this.value.toUpperCase();" style = "IME-MODE:disabled;"/>
     </td>
 </tr>
