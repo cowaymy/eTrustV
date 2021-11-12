@@ -2182,11 +2182,11 @@
 <tbody>
 <tr>
     <th scope="row">DT Branch<span class="must">*</span></th>
-    <td colspan="3"><select id="dscBrnchId" name="dscBrnchId" class="w100p" ></select></td>
+    <td colspan="3"><select id="dscBrnchId" name="dscBrnchId" class="w100p" disabled></select></td>
 </tr>
 <tr>
     <th scope="row">Posting Branch<span class="must">*</span></th>
-    <td colspan="3"><select id="keyinBrnchId" name="keyinBrnchId" class="w100p" ></select></td>
+    <td colspan="3"><select id="keyinBrnchId" name="keyinBrnchId" class="w100p" disabled></select></td>
 </tr>
 <tr>
     <th scope="row">Prefer Install Date<span class="must">*</span></th>
