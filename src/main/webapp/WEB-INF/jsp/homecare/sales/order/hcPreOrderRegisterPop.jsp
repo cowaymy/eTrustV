@@ -62,7 +62,7 @@
         doDefCombo(codeList_19, '', 'rentPayMode', 'S', '');       // Common Code
         doDefCombo(codeList_415, '', 'corpCustType', 'S', '');     // Common Code
         doDefCombo(codeList_416, '', 'agreementType', 'S', '');  // Common Code
-        // doDefCombo(branchCdList_5, '', 'dscBrnchId', 'S', '');      // Branch Code
+        ///doDefCombo(branchCdList_5, '', 'dscBrnchId', 'S', '');      // Branch Code
         doDefCombo(branchCdList_1, '', 'keyinBrnchId', 'S', '');    // Branch Code
         doDefComboCode(codeList_325, '0', 'exTrade', 'S', '');    // EX-TRADE
 
@@ -2182,11 +2182,11 @@
 <tbody>
 <tr>
     <th scope="row">DT Branch<span class="must">*</span></th>
-    <td colspan="3"><select id="dscBrnchId" name="dscBrnchId" class="w100p" disabled></select></td>
+    <td colspan="3"><select id="dscBrnchId" name="dscBrnchId" class="w100p" ></select></td>
 </tr>
 <tr>
     <th scope="row">Posting Branch<span class="must">*</span></th>
-    <td colspan="3"><select id="keyinBrnchId" name="keyinBrnchId" class="w100p" disabled></select></td>
+    <td colspan="3"><select id="keyinBrnchId" name="keyinBrnchId" class="w100p" ></select></td>
 </tr>
 <tr>
     <th scope="row">Prefer Install Date<span class="must">*</span></th>
