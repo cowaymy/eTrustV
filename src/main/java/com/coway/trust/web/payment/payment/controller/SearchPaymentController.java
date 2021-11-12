@@ -194,14 +194,14 @@ public class SearchPaymentController {
 
         List<EgovMap> resultList = searchPaymentService.selectOrderList(params);
         int totalRowCount = searchPaymentService.selectOrderListCount(params);
-        List<EgovMap> resultList_OrNo = searchPaymentService.selectOrderList_OrNo(params);
+//        List<EgovMap> resultList_OrNo = searchPaymentService.selectOrderList_OrNo(params);
 
 
-        if(resultList_OrNo!=null && params.get("trxId") != null && !params.get("trxId").toString().equalsIgnoreCase("")){
-        	params.put("mtchIDList", resultList_OrNo);
-        	 List<EgovMap> resultList2 = searchPaymentService.selectOrderList_aNoOrNo(params);
-             resultList.addAll(resultList2);
-        }
+//        if(resultList_OrNo != null  && params.get("trxId") != null && !params.get("trxId").toString().equalsIgnoreCase("")){
+//        	params.put("mtchIDList", resultList_OrNo);
+//        	 List<EgovMap> resultList2 = searchPaymentService.selectOrderList_aNoOrNo(params);
+//             resultList.addAll(resultList2);
+//        }
 
         Map<String, Object> result = new HashMap<String, Object>();
 
