@@ -788,6 +788,7 @@
       AND S26.STK_CODE = L44.BOM_COMPNT
       AND L43.BOM = L44.BOM
       AND S26C.STK_CODE=L43.MATRL_NO
+      AND NVL(L44.DEL_INDICT , 'N')  <>  'Y'
 
     <if test="productCode != null and productCode !=''">
       AND L43.MATRL_NO  = #{productCode}
