@@ -126,9 +126,13 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 
 	@Override
 	public void updatePreOrderFailStatus(Map<String, Object> params, SessionVO sessionVO) {
+		params.put("crtUserId", sessionVO.getUserId()); //added by keyi 20211115
 		params.put("updUserId", sessionVO.getUserId());
 
 		preOrderMapper.updatePreOrderFailStatus(params);
+
+		preOrderMapper.InsertPreOrderFailStatus(params);
+
 	}
 
 	private void preprocPreOrder(PreOrderVO preOrderVO, SessionVO sessionVO) {
@@ -168,6 +172,11 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 	@Override
 	public List<EgovMap> getAttachList(Map<String, Object> params) {
 		return preOrderMapper.selectAttachList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectPreOrderFailStatus(Map<String, Object> params) {
+		return preOrderMapper.selectPreOrderFailStatus(params);
 	}
 
 	public int selRcdTms(Map<String, Object> params) {

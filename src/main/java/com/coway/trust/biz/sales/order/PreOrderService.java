@@ -32,6 +32,8 @@ public interface PreOrderService {
 
 	void updatePreOrderFailStatus(Map<String, Object> params, SessionVO sessionVO);
 
+	List<EgovMap> selectPreOrderFailStatus(Map<String, Object> params);
+
 	int selectExistingMember(Map<String, Object> params);
 
 	List<EgovMap> getAttachList(Map<String, Object> params);
@@ -43,4 +45,5 @@ public interface PreOrderService {
 	EgovMap checkOldOrderIdEKeyIn(Map<String, Object> params);
 
 	EgovMap checkOldOrderIdICareEKeyIn(Map<String, Object> params);
+
 }

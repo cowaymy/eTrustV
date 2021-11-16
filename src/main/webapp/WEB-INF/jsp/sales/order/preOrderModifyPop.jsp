@@ -9,6 +9,7 @@ var blockDtTo = "${hsBlockDtTo}";
 
     //AUIGrid 생성 후 반환 ID
     var listGiftGridID;
+    var FailedRemarkGridID;
     var update = new Array();
     var remove = new Array();
     var sofFileId = 0;
@@ -34,6 +35,9 @@ var blockDtTo = "${hsBlockDtTo}";
     $(document).ready(function(){
 
         createAUIGridStk();
+        createAUIGridFailedRemark();
+        fn_selectFailedRemarkList();
+
         doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '${preOrderInfo.appTypeId}', 'appType',     'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '${preOrderInfo.rentPayModeId}', 'rentPayMode', 'S', ''); //Common Code
       //doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
@@ -106,6 +110,35 @@ var blockDtTo = "${hsBlockDtTo}";
 
         /* listGiftGridID = GridCommon.createAUIGrid("pop_list_gift_grid_wrap", columnLayoutGft, "", listGridPros); */
     }
+
+ function createAUIGridFailedRemark() {
+
+	//AUIGrid 칼럼 설정
+     var columnLayout = [
+            { headerText : 'Status', dataField : "stus", width : 150}
+          , { headerText : 'Fail Reason', dataField : "rem1", width : 150}
+          , { headerText : 'Remark', dataField : "rem2", width : 355 }
+          , { headerText : 'Creator', dataField : "crtUserId",  width : 180 }
+          , { headerText : 'Create Date', dataField : "crtDt",  width : 180, dataType : "date", formatString : "dd/mm/yyyy"}
+     ];
+
+     var gridPros = {
+    	      usePaging : true,
+    	      pageRowCount : 10,
+    	      editable : false,
+    	      selectionMode : "singleRow",
+    	      showRowNumColumn : true,
+    	      showStateColumn : false
+     };
+
+     FailedRemarkGridID =  GridCommon.createAUIGrid("grid_FailedRemark_wrap", columnLayout, "", gridPros);
+ }
+
+ function fn_selectFailedRemarkList() {
+	 Common.ajax("GET", "/sales/order/selectPreOrderFailStatus.do", {preOrdId : $('#frmPreOrdReg #hiddenPreOrdId').val().trim()}, function(result) {
+		    AUIGrid.setGridData(FailedRemarkGridID, result);
+     });
+ }
 
     $(function(){
         $('#btnRltdNoEKeyIn').click(function() {
@@ -2275,6 +2308,7 @@ var blockDtTo = "${hsBlockDtTo}";
     <li><a href="aTabOI" onClick="javascript:chgTab('ord');">Order Info</a></li>
     <li><a href="aTabBD" onClick="javascript:chgTab('pay');">Payment Info</a></li>
     <li><a href="aTabFL" >Attachment</a></li>
+    <li><a href="aTabFR" >Failed Remark</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -3120,7 +3154,6 @@ var blockDtTo = "${hsBlockDtTo}";
 <h3>Attachment area</h3>
 </aside><!-- title_line end -->
 
-
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -3132,11 +3165,11 @@ var blockDtTo = "${hsBlockDtTo}";
     <th scope="row">Sales Order Form (SOF)<span class="must">*</span></th>
     <td>
         <div class='auto_file2 auto_file3'>
-	        <input type='file' title='file add'  id='sofFile' accept='image/*''/>
-	        <label>
-		        <input type='text' class='input_text' readonly='readonly' id='sofFileTxt'/>
-		        <span class='label_text'><a href='#'>Upload</a></span>
-	        </label>
+            <input type='file' title='file add'  id='sofFile' accept='image/*''/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' id='sofFileTxt'/>
+                <span class='label_text'><a href='#'>Upload</a></span>
+            </label>
         </div>
     </td>
 </tr>
@@ -3193,14 +3226,14 @@ var blockDtTo = "${hsBlockDtTo}";
 <tr>
     <th scope="row">Declaration letter/Others form</th>
     <td id="tdOtherFile">
-	    <div class='auto_file2 auto_file3'>
-	            <input type='file' title='file add' id='otherFile' accept='image/*''/>
-	            <label>
-	                <input type='text' class='input_text' readonly='readonly' id='otherFileTxt' name=''/>
-	                <span class='label_text'><a href='#'>Upload</a></span>
-	            </label>
-	            <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span>
-	    </div>
+        <div class='auto_file2 auto_file3'>
+                <input type='file' title='file add' id='otherFile' accept='image/*''/>
+                <label>
+                    <input type='text' class='input_text' readonly='readonly' id='otherFileTxt' name=''/>
+                    <span class='label_text'><a href='#'>Upload</a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span>
+        </div>
     </td>
 </tr>
 <tr>
@@ -3250,6 +3283,15 @@ var blockDtTo = "${hsBlockDtTo}";
 </tr>
 </tbody>
 </table>
+
+</article><!-- tap_area end -->
+
+
+<article class="tap_area"><!-- tap_area start -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+<div id="grid_FailedRemark_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
 

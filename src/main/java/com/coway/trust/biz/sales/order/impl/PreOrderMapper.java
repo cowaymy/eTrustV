@@ -41,6 +41,10 @@ public interface PreOrderMapper {
 
 	void updatePreOrderFailStatus(Map<String, Object> params);
 
+	void InsertPreOrderFailStatus(Map<String, Object> params);
+
+	List<EgovMap> selectPreOrderFailStatus(Map<String, Object> params);
+
 	int selectExistingMember(Map<String, Object> params);
 
 	List<EgovMap> selectAttachList(Map<String, Object> params);

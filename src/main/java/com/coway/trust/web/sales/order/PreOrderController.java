@@ -298,6 +298,7 @@ public class PreOrderController {
 
 	@RequestMapping(value = "/updateFailPreOrderStatus.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateFailPreOrderFailStatus(@RequestBody Map<String, Object> params, SessionVO sessionVO) {
+
 		preOrderService.updatePreOrderFailStatus(params, sessionVO);
 
 		String msg = "Order Status successfully updated.";
@@ -309,6 +310,14 @@ public class PreOrderController {
 		message.setMessage(msg);
 
 		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/selectPreOrderFailStatus.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPreOrderFailStatus( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> result = preOrderService.selectPreOrderFailStatus(params) ;
+
+		return ResponseEntity.ok(result);
 	}
 
 
@@ -435,8 +444,6 @@ public class PreOrderController {
 	   @RequestMapping(value = "/selRcdTms.do", method = RequestMethod.GET)
 	   public ResponseEntity<ReturnMessage> chkRcdTms(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 	     ReturnMessage message = new ReturnMessage();
-
-	     logger.debug("params : {}", params);
 
 	     int noRcd = preOrderService.selRcdTms(params);
 	     int cnt = preOrderService.selPreOrdId(params);

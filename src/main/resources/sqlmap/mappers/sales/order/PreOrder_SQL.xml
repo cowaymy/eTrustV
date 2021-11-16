@@ -445,10 +445,46 @@
            SET STUS_ID                = #{stusId}
              , UPD_USER_ID           = #{updUserId}
              , UPD_DT                   = SYSDATE
-             , REM1                       = #{failCode}
-             , REM2                       = #{remark}
          WHERE PRE_ORD_ID        = #{preOrdId}
     </update>
+
+    <insert id="InsertPreOrderFailStatus" parameterType="Map">
+         INSERT INTO SAL0302D (
+             FAIL_REM_ID
+             ,PRE_ORD_ID
+             , STUS_ID
+             , REM1
+             , REM2
+             , UPD_USER_ID
+             , UPD_DT
+             , CRT_USER_ID
+             , CRT_DT
+        )VALUES (
+	        SAL0302D_FAILED_REMARK_ID_SEQ.NEXTVAL
+	        ,#{preOrdId}
+	        ,#{stusId}
+	        ,#{failCode}
+	        ,#{remark}
+	        ,#{updUserId}
+	        ,SYSDATE
+	        ,#{crtUserId}
+	        ,SYSDATE
+        )
+    </insert>
+
+    <select id="selectPreOrderFailStatus" parameterType="Map" resultType="egovMap">
+    SELECT
+	    T2.NAME AS STUS
+	    , REM1
+	    , REM2
+	    , T3.USER_NAME AS CRT_USER_ID
+	    , CRT_DT
+    from SAL0302D T1
+	    join sys0038m T2 on T1.STUS_ID = T2.STUS_CODE_ID
+	    join sys0047m T3 on T1.CRT_USER_ID = T3.USER_ID
+    where PRE_ORD_ID = #{preOrdId}
+    ORDER BY CRT_DT DESC
+    </select>
 
     <select id="selectExistingMember" parameterType="Map" resultType="int">
 		SELECT COUNT(1) AS CNT
