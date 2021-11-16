@@ -47,7 +47,7 @@ $(document).ready(function(){
     CommonCombo.make('scnToLocId', "/sales/pos/selectWhSOBrnchList", '' , '', '');
 
 
-    var stockMoveTypecomboData = [ {"codeId": "T","codeName": "Stock Transfer"} ,{"codeId": "I","codeName": "Stock In"} ,{"codeId": "A","codeName": "Adjustment"},{"codeId": "R","codeName": "Retrun"}   ];
+    var stockMoveTypecomboData = [ {"codeId": "T","codeName": "Stock Transfer"} ,{"codeId": "I","codeName": "Stock In"} ,{"codeId": "A","codeName": "Adjustment"},{"codeId": "R","codeName": "Return"}   ];
     doDefCombo(stockMoveTypecomboData, '' ,'scnMoveType', 'S', '');
 
 
@@ -250,6 +250,9 @@ fn_selectPosStockMgmtReceivedPop=function (){
      Common.popupDiv("/sales/posstock/selectPosStockMgmtReceivedList.do?scnNo="+scnNo, '' , null , true , "_insDiv");
 }
 
+fn_stockCard = function (){
+	Common.popupDiv("/sales/posstock/posStockCardRawPop.do", '' , null , true , "_insDiv");
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -283,7 +286,7 @@ fn_selectPosStockMgmtReceivedPop=function (){
 
     <!--   <li><p class="btn_blue"><a id="adjItemBtn"  onclick="javascript:fn_selectPosStockMgmtAdjPop();" ><span class="edit"></span>ADJUST</a></p></li> -->
 
-            <li><p class="btn_blue"><a id="rtnItemBtn"  onclick="javascript:fn_selectPosStockMgmtRetrunPop();" ><span class="edit"></span>RETRUN</a></p></li>
+            <li><p class="btn_blue"><a id="rtnItemBtn"  onclick="javascript:fn_selectPosStockMgmtRetrunPop();" ><span class="edit"></span>RETURN</a></p></li>
 
       <li><p class="btn_blue"><a id="transItemBtn"  onclick="javascript:fn_selectPosStockMgmtTransPop();" ><span class="edit"></span>TRANSFER</a></p></li>
 
@@ -354,6 +357,32 @@ fn_selectPosStockMgmtReceivedPop=function (){
 
 
   </form>
+
+<aside class="link_btns_wrap">
+    <!-- link_btns_wrap start -->
+    <p class="show_btn">
+     <a href="#"><img
+      src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif"
+      alt="link show" /></a>
+    </p>
+    <dl class="link_list">
+     <dt>Link</dt>
+     <dd>
+      <ul class="btns">
+       <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+        <li><p class="link_btn type2">
+          <a href="#" onClick="fn_stockCard()">Stock Card</a>
+         </p></li>
+       </c:if>
+      </ul>
+      <p class="hide_btn">
+       <a href="#"><img
+        src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
+        alt="hide" /></a>
+      </p>
+     </dd>
+    </dl>
+   </aside>
 
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->

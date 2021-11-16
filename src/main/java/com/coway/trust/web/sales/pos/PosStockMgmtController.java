@@ -227,6 +227,11 @@ public class PosStockMgmtController {
     return "sales/pos/posStockMovementApprovalPop";
   }
 
+  @RequestMapping(value = "/posStockCardRawPop.do")
+  public String posStockCardRawPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+    return "sales/pos/posStockCardRawPop";
+  }
+
 
 
 
