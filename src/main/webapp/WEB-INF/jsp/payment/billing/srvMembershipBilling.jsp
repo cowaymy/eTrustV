@@ -217,8 +217,7 @@
 		var rowCount = AUIGrid.getRowCount(myGridID);
 
 		if (rowCount < 1) {
-			Common
-					.alert("<spring:message code='pay.alert.noRecordsGridView'/>");
+			Common.alert("<spring:message code='pay.alert.noRecordsGridView'/>");
 			return;
 		} else if (rowCount == 1) {
 			var custType = AUIGrid.getColumnValues(myGridID, "custType");
@@ -242,7 +241,7 @@
 				}
 			} else {
 
-			}
+			}console.log ("here 111 ");
 			fn_checkCustType();
 		}
 	}
@@ -254,6 +253,7 @@
 		if (custType.includes("IND")) {
 
 			if (boolDiff == true) {
+				console.log("start here");
 			    Common.alert("Fail to proceed due to diffirent Cust Name /Cust ID");
 				boolDiff = false;
 			} else {
@@ -261,21 +261,26 @@
 			}
 			return false;
 		} else {
-			$("#viewDetail_wrap").show();
-			AUIGrid.resize(myViewDetailGridID);
+			if (boolDiff == true) {
+                Common.alert("Fail to proceed due to diffirent Cust Name /Cust ID");
+                boolDiff = false;
+            } else {
+				$("#viewDetail_wrap").show();
+				AUIGrid.resize(myViewDetailGridID);
 
-			//그리드 복사
-			AUIGrid.setGridData(myViewDetailGridID, AUIGrid
-					.getGridData(myGridID));
+				//그리드 복사
+				AUIGrid.setGridData(myViewDetailGridID, AUIGrid
+						.getGridData(myGridID));
 
-			//Summary 값
-			var amtArray = AUIGrid.getColumnValues(myGridID, "totalAmt");
-			var sum = 0;
-			for (i = 0; i < amtArray.length; i++) {
-				sum += amtArray[i];
+				//Summary 값
+				var amtArray = AUIGrid.getColumnValues(myGridID, "totalAmt");
+				var sum = 0;
+				for (i = 0; i < amtArray.length; i++) {
+					sum += amtArray[i];
+				}
+				$('#view_count').text(AUIGrid.getRowCount(myGridID));
+				$('#view_total').text('RM ' + sum);
 			}
-			$('#view_count').text(AUIGrid.getRowCount(myGridID));
-			$('#view_total').text('RM ' + sum);
 		}
 	}
 
