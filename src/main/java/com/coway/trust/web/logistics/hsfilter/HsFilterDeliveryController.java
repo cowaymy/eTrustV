@@ -1,5 +1,6 @@
 package com.coway.trust.web.logistics.hsfilter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.logistics.hsfilter.HsFilterDeliveryService;
+import com.coway.trust.biz.logistics.stocktransfer.StockTransferService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
@@ -45,6 +47,9 @@ public class HsFilterDeliveryController {
 
   @Resource(name = "HsFilterDeliveryService")
   private HsFilterDeliveryService hsFilterDeliveryService;
+
+  @Resource(name = "stocktranService")
+  private StockTransferService stock;
 
 
   @RequestMapping(value = "/hsFilterDeliveryList.do")
@@ -127,11 +132,19 @@ public class HsFilterDeliveryController {
 
 		LOGGER.debug(params.toString());
 
-		Map<String, Object> param = new HashMap();
 		params.put("userId", userId);
-		String reqNo = hsFilterDeliveryService.insertStockTransferInfo(params);
 
-		LOGGER.debug("reqNo!!!!! : {}", reqNo);
+		String reqNo = hsFilterDeliveryService.insertStockTransferInfo(params); //SMO
+
+		params.put("reqNo", reqNo);
+
+		List<EgovMap> list = hsFilterDeliveryService.selectStockTransferRequestItem(params);
+
+		String data = hsFilterDeliveryService.StocktransferReqDelivery(list,userId);
+
+
+		LOGGER.info("reqNo"+reqNo);
+		LOGGER.info("data"+data);
 
 		ReturnMessage message = new ReturnMessage();
 		if (reqNo != null && !"".equals(reqNo)){
@@ -142,7 +155,8 @@ public class HsFilterDeliveryController {
 			message.setCode(AppConstants.FAIL);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 		}
-		message.setData(reqNo);
+		message.setData(reqNo + ' ' + data);
+
 		return ResponseEntity.ok(message);
 	}
 
