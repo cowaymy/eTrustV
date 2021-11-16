@@ -1,6 +1,7 @@
 
 package com.coway.trust.biz.logistics.hsfilter.impl;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,7 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("HsFilterDeliveryService")
-public class HsFilterDeliveryServiceImpl extends EgovAbstractServiceImpl implements HsFilterDeliveryService
+public  class HsFilterDeliveryServiceImpl extends EgovAbstractServiceImpl implements HsFilterDeliveryService
 {
 	private static final Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
@@ -75,9 +76,88 @@ public class HsFilterDeliveryServiceImpl extends EgovAbstractServiceImpl impleme
 
 	}
 
+	@Override
+	public List<EgovMap> selectStockTransferRequestItem(Map<String, Object> params) {
+
+		return hsFilterDeliveryMapper.selectStockTransferRequestItem(params);
+
+	}
+
+	@Override
+	public List<EgovMap> selectDeliverydupCheck(Map<String, Object> params ) {
+
+		return hsFilterDeliveryMapper.selectDeliverydupCheck(params);
+
+	}
 
 
+	@Override
+	public String StocktransferReqDelivery(List<EgovMap> params,int userid) {
 
+		String seq;
+		boolean dupCheck = true;
+		if (params.size() > 0) {
+			Map<String, Object> insMap = null;
+			for (int i = 0; i < params.size(); i++) {
+
+				List<EgovMap> list = hsFilterDeliveryMapper.selectDeliverydupCheck(params.get(i));
+				String ttmp1 = (String) params.get(i).get("reqstno");
+				String ttmp2 = (String) params.get(i).get("itmcd");
+
+				BigDecimal ttmp3 = (BigDecimal) params.get(i).get("reqstqty");
+				BigDecimal ttmp4 = (BigDecimal) params.get(i).get("delyqty");
+
+				//logger.info(" ttmp1 :ttmp2 : ttmp3 : ttmp4 {} : {} : {} : {}", ttmp1, ttmp2, ttmp3, ttmp4);
+				if (list.size() > 0) {
+					Map<String, Object> checkmap = null;
+					checkmap = list.get(0);
+					String tmp1 = (String) checkmap.get("reqstNo");
+					String tmp2 = (String) checkmap.get("itmCode");
+					BigDecimal tmp3 = (BigDecimal) checkmap.get("delvryQty");
+					BigDecimal sum = ttmp4.add(tmp3);
+					 int res;
+				     res = sum.compareTo(ttmp3);
+					if (ttmp1.equals(tmp1) && ttmp2.equals(tmp2) && (res==1)) {
+						dupCheck = false;
+					}
+				}
+
+			}
+		}
+		if (dupCheck) {
+			seq = hsFilterDeliveryMapper.selectDeliveryStockTransferSeq();
+			if (params.size() > 0) {
+				Map<String, Object> insMap = null;
+				for (int i = 0; i < params.size(); i++) {
+
+					insMap = (Map<String, Object>) params.get(i);
+					insMap.put("userId", userid);
+					insMap.put("delno", seq);
+					//insMap.put("userId", params.get(i).get("userId"));
+					hsFilterDeliveryMapper.deliveryStockTransferDetailIns(insMap);
+				}
+				hsFilterDeliveryMapper.deliveryStockTransferIns(insMap);
+
+				for (int i = 0; i < params.size(); i++) { // Added for when select more than two diff order by hltang, 8-7-2021
+					insMap = (Map<String, Object>) params.get(i);
+					String reqstNo = (String) insMap.get("reqstno");
+
+					hsFilterDeliveryMapper.updateRequestTransfer(reqstNo);
+				}
+			}
+		} else {
+			seq = "dup";
+		}
+		return seq;
+	}
+
+
+	@Override
+	public List<EgovMap> selectStockTransferList(Map<String, Object> params) {
+
+		return hsFilterDeliveryMapper.selectStockTransferList(params);
+
+	}
 
 	@Override
 	public String insertStockTransferInfo(Map<String, Object> params) {
