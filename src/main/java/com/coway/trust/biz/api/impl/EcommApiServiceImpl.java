@@ -266,7 +266,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
 
         // use product code to find product category. when product category is 5706/5707, insert into HMC0110D and setBundleID in SAL0001D with HMC0110D ord_seq_no
         String prdCat = hcOrderRegisterMapper.getProductCategory(reqPrm.get("product").toString());
-        if(prdCat != null && (prdCat.equals("5706") || prdCat.equals("5607")))
+        if(prdCat != null && (prdCat.equals("5706") || prdCat.equals("5707")))
 		{
         	hcOrderRegisterService.hcRegisterOrder(orderVO, sessionVO);
             HcOrderVO hcOrderVO = orderVO.getHcOrderVO();
