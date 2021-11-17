@@ -108,6 +108,20 @@ public class LoyaltyHPUploadController {
 		return ResponseEntity.ok(loyaltyActiveHPList);
 	}
 
+	@RequestMapping(value = "/selectLoyaltyHPUploadDetailListForMember", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectLoyaltyHPUploadDetailListForMember(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+		LOGGER.debug("selectLoyaltyHPUploadDetailListForMember.do");
+		LOGGER.debug("params :: " + params);
+
+		List<EgovMap> loyaltyActiveHPList = null;
+		loyaltyActiveHPList = loyaltyHPUploadService.selectLoyaltyHPUploadDetailListForMember(params);
+
+		return ResponseEntity.ok(loyaltyActiveHPList);
+	}
+
+
+
 
 	@RequestMapping(value = "/loyaltyHpUpload", method = RequestMethod.POST)
 	public ResponseEntity<String> loyaltyHpUpload(MultipartHttpServletRequest request) throws IOException, InvalidFormatException {

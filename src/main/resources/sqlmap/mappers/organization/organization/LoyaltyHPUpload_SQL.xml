@@ -185,6 +185,7 @@
     </select>
 
 
+
     <select id="selectLoyaltyHPUploadDetailList" parameterType="Map" resultType="egovMap">
 
 				   SELECT
@@ -209,6 +210,19 @@
                      </if>
 
     </select>
+
+
+    <select id="selectLoyaltyHPUploadDetailListForMember" parameterType="Map" resultType="egovMap">
+                      SELECT LOTY_YEAR
+                                ,LOTY_PERIOD
+                                ,LOTY_MEMBER_STATUS_CODE
+                                ,CSY.CODE_NAME
+                          FROM SAL0301D  , SYS0013M csy
+                           WHERE LOTY_MEMBER_CODE  =#{memberCode}
+                            AND CODE_MASTER_ID  ='487'
+                            AND LOTY_MEMBER_STATUS_CODE= CSY.CODE
+    </select>
+
 
 
 

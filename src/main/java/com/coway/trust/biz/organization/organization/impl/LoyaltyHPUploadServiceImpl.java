@@ -163,4 +163,11 @@ public class LoyaltyHPUploadServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 
+
+	@Override
+	public List<EgovMap> selectLoyaltyHPUploadDetailListForMember(Map<String, Object> params) {
+
+		return 	loyaltyHPUploadMapper.selectLoyaltyHPUploadDetailListForMember(params);
+	}
+
 }
