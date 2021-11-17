@@ -195,7 +195,7 @@
                               som.ECOMM_ORD_ID
                              ,
                           stk.STK_CTGRY_ID
-                            ,adr.STATE
+                            ,adr.NAME STATE
                          FROM SAL0001D som
                               JOIN SAL0002D sod ON som.SALES_ORD_ID = sod.SALES_ORD_ID
                               JOIN SYS0038M S ON S.STUS_CODE_ID = som.STUS_CODE_ID
@@ -216,7 +216,7 @@
                               LEFT JOIN SYS0032M instReason ON instReason.RESN_ID = ir.FAIL_ID
                               JOIN SAL0045D ins ON ins.sales_ord_id = som.sales_ord_id
                               JOIN SAL0023D cust ON cust.CUST_ADD_ID = ins.ADD_ID
-                              JOIN sys0064m adr ON adr.AREA_ID = cust.AREA_ID
+                              JOIN SYS0035M adr ON adr.STATE_ID = cust.STATEID
                               WHERE (som.STUS_CODE_ID <![CDATA[<>]]> 8)
                               AND som.APP_TYPE_ID <![CDATA[<>]]> 5764
 
@@ -355,7 +355,10 @@
                            AND NVL(som.ECOMM_ORD_ID,0) > 0
                          </if>
                          <if test="cmbState != null and cmbState != ''">
-                            AND UPPER(NVL (adr.state, '')) = #{cmbState}
+                            AND adr.STATE_ID IN <!-- ${cmbState} -->
+                              <foreach item="item" collection="cmbState" index="index" open="(" separator="," close=")">
+                              #{item}
+                            </foreach>
                           </if>
                          ) E
                          <if test="cmbSalesType != null and cmbSalesType != ''">
