@@ -7,6 +7,7 @@ var myGridID1;/* doc */
 var myGridID2;
 var myGridID3;
 var myGridID5; /* Training */
+var myGridID6;
 var grpOrgList = new Array(); // Group Organization List
 var orgList = new Array(); // Organization List
 
@@ -19,13 +20,14 @@ console.log("ter-res-pro-dem pop");
     createAUIGrid2();
     createAUIGrid3();
     createAUIGrid5();
+    createAUIGrid6();
 
     fn_selectPromote();
     fn_selectDocSubmission();
     fn_selectPaymentHistory();
     fn_selectRenewalHistory();
     fn_selectTraining();
-
+    fn_selectLoyaltyHPUploadDetailListForMember();
     doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
 
     //cody 를 제외하고 Pa Renewal History 와 Cody PA Expired 안보이기 숨긴다
@@ -558,6 +560,41 @@ function createAUIGrid5() {
     myGridID5 = AUIGrid.create("#grid_wrap5", columnLayout, gridPros);
 }
 
+
+
+
+function createAUIGrid6() {
+
+    var columnLayout = [ {
+        dataField : "codeName",
+        headerText : "HP Status",
+        editable : false
+    }, {
+        dataField : "lotyPeriod",
+        headerText : "Period",
+        editable : false,
+    }, {
+        dataField : "lotyYear",
+        headerText : "Year",
+        editable : false
+    }];
+
+    var gridPros = {
+        usePaging : true,
+        pageRowCount : 20,
+        editable : true,
+        showStateColumn : true,
+        displayTreeOpen : true,
+        headerHeight : 30,
+        skipReadonlyColumns : true,
+        wrapSelectionMove : true,
+        showRowNumColumn : true
+    };
+
+    myGridID6 = AUIGrid.create("#grid_wrap6", columnLayout, gridPros);
+}
+
+
 var gridPros = {
 
     // 페이징 사용
@@ -645,6 +682,30 @@ function fn_selectRenewalHistory(){
 
     });
 }
+
+
+
+function fn_selectLoyaltyHPUploadDetailListForMember(){
+
+    var jsonObj = {
+    		memberCode :'${memberView.memCode}'
+    };
+
+
+    Common.ajax("GET", "/organization/selectLoyaltyHPUploadDetailListForMember",jsonObj, function(result) {
+        console.log("성공.");
+        console.log("data : " + result);
+        AUIGrid.setGridData(myGridID6, result);
+        AUIGrid.resize(myGridID6,1000,400);
+
+    });
+}
+
+
+
+
+
+
 
 function fn_selectPromote(){
 
@@ -745,6 +806,7 @@ function fn_winClose(){
     <li><a href="#" >Promote/Demote History</a></li>
     <li id="hideContent" ><a href="#" >Pa Renewal History</a></li>
     <li><a href="#" >Training</a></li>
+        <li><a href="#" >HP Loyalty Status</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -1276,6 +1338,18 @@ function fn_winClose(){
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
+
+
+
+<article class="tap_area"><!-- tap_area start -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+<div id="grid_wrap6" style="width: 100%; height: 500px; margin: 0 auto;"></div>
+</article><!-- grid_wrap end -->
+
+</article><!-- tap_area end -->
+
+
 
 </section><!-- tap_wrap end -->
 <div id="requestTerminateResign" style="display:none">
