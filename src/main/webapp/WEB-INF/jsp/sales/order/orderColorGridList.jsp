@@ -121,7 +121,7 @@
         //CommonCombo.make('cmbCustomerType', '/common/selectCodeList.do', {groupCode : 8} , '', {type: 'M'});
         //CommonCombo.make('cmbCorpTypeId', '/common/selectCodeList.do', {groupCode : 95} , '', {type: 'M'});
         doGetCombo('/sales/promotion/selectProductCategoryList.do', '', '', 'cmbProductCtgry', 'M','f_multiCombo'); //Category
-        doGetCombo('/callCenter/getstateList.do', '', '', 'cmbState', 'S', ''); //Added by keyi 20211105
+        doGetCombo('/callCenter/getstateList.do', '', '', 'cmbState', 'M', 'f_multiCombo'); //Added by keyi 20211105
 
     });
 
@@ -173,6 +173,13 @@
             });
 
             $('#cmbProductCtgry').change(function() {
+
+            }).multipleSelect({
+                selectAll: true, // 전체선택
+                width: '80%'
+            });
+
+            $('#cmbState').change(function() {
 
             }).multipleSelect({
                 selectAll: true, // 전체선택
