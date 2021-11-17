@@ -272,7 +272,7 @@
                 </tbody>
             </table>
             <!-- table end -->
-<%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> --%>
+
             <aside class="link_btns_wrap">
                 <!-- link_btns_wrap start -->
                 <p class="show_btn">
@@ -282,9 +282,11 @@
                     <dt>Link</dt>
                     <dd>
                         <ul class="btns">
+                           <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
                                 <li><p class="link_btn">
                                         <a href="javascript:confirmUploadPop();">Confirm Upload</a>
                                     </p></li>
+                             </c:if>
                                 <li><p class="link_btn">
                                         <a href="javascript:uploadViewPop();">View Upload Batch</a>
                                     </p></li>
@@ -301,7 +303,7 @@
                 </dl>
             </aside>
             <!-- link_btns_wrap end -->
-<%-- </c:if> --%>
+
         </form>
     </section>
     <!-- search_table end -->

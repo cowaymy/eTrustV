@@ -211,8 +211,12 @@ var itemGridID;
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
+
+
     <li><p class="btn_blue"><a href="javascript:fn_confirm();"><spring:message code='commission.button.confirm'/></a></p></li>
     <li><p class="btn_blue"><a href="javascript:fn_deactivate();"><spring:message code='commission.button.deactivate'/></a></p></li>
+
+
 </ul>
 
 </section><!-- pop_body end -->
