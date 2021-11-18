@@ -535,8 +535,7 @@ FROM
                         , Project2.HT_BRNCH_CODE
                         , Project2.HT_MGR_CODE
                         , Project2.Result as Result
-<!--                         , project2.dept_code -->
-                        , project2.deptCode
+                        , project2.dept_code
                          , project2.crt_user_id
                          , Project2.APPTYPE
                          , Project2.SALES_PROD_SZ
