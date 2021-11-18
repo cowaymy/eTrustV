@@ -571,7 +571,15 @@ function createAUIGrid() {
             editable : false,
             width : 0,
             visible : false
+
         }, {
+            dataField : "neoProStatus",
+            headerText : "Neo Pro",
+            editable : false,
+            width : 130
+        },
+
+        {
             dataField : "updated",
             headerText : "Last Update",
             editable : false,
