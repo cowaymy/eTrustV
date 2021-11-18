@@ -23,6 +23,9 @@ public interface LoyaltyHPUploadMapper {
 	Map<String, Object>  selectLoyaltyHPUploadDetailInfo(Map<String, Object> params );
 	List<EgovMap>  selectLoyaltyHPUploadDetailList (Map<String, Object> params );
 
+	List<EgovMap>  selectLoyaltyHPUploadMemberStatusList (Map<String, Object> params );
+
+
 	int   insertSAL0300Master (Map<String, Object> params);
 	int   insertSAL0301Details (Map<String, Object> params);
 

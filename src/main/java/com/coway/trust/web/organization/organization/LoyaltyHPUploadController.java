@@ -93,6 +93,13 @@ public class LoyaltyHPUploadController {
 	}
 
 
+	@RequestMapping(value = "/selectLoyaltyHPUploadMemberStatusPop.do")
+	public String selectLoyaltyHPUploadMemberStatusPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		model.addAttribute("uploadId", params.get("uploadId"));
+		return "organization/organization/selectLoyaltyHPUploadMemberStatusPop";
+	}
+
 
 
 
@@ -107,6 +114,26 @@ public class LoyaltyHPUploadController {
 
 		return ResponseEntity.ok(loyaltyActiveHPList);
 	}
+
+
+
+
+	@RequestMapping(value = "/selectLoyaltyHPUploadMemberStatusList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectLoyaltyHPUploadMemberStatusList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+		LOGGER.debug("selectLoyaltyActiveHPList.do");
+		LOGGER.debug("params :: " + params);
+
+		List<EgovMap> loyaltyActiveHPList = null;
+		loyaltyActiveHPList = loyaltyHPUploadService.selectLoyaltyHPUploadMemberStatusList(params);
+
+		return ResponseEntity.ok(loyaltyActiveHPList);
+	}
+
+
+
+
+
 
 	@RequestMapping(value = "/selectLoyaltyHPUploadDetailListForMember", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectLoyaltyHPUploadDetailListForMember(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {

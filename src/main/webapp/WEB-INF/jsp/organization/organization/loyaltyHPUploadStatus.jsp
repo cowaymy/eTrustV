@@ -29,6 +29,20 @@
             });
         });
 
+
+
+        AUIGrid.bind(incenGridID, "cellDoubleClick", function(event) {
+
+        	console.log(event);
+
+        	if(event.dataField =="totCnt"){
+        	     var valTemp = {"uploadId" : event.item.lotyUploadId };
+                 Common.popupDiv("/organization/selectLoyaltyHPUploadMemberStatusPop.do",valTemp);
+        	}
+
+        });
+
+
         $('#uploadDateFr').click(function() {$("#uploadDateFr").val("");});
         $('#uploadDateTo').click(function() {$("#uploadDateTo").val("");});
 
@@ -118,6 +132,11 @@
         incenGridID = AUIGrid.create("#grid_wrap", columnLayout,gridPros);
    }
 
+
+
+
+
+
     //multiselect setting function
     function mam_multiCombo() {
         $(function() {
@@ -194,6 +213,9 @@
         }
 
     }
+
+
+
 
     //clear button
     function fn_clearSearchForm(){

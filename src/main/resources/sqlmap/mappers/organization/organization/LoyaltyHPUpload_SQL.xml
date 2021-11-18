@@ -223,7 +223,36 @@
                             AND LOTY_MEMBER_STATUS_CODE= CSY.CODE
     </select>
 
+    <select id="selectLoyaltyHPUploadMemberStatusList" parameterType="Map" resultType="egovMap">
 
+	    SELECT * FROM (
+	                            SELECT   COUNT(LOTY_MEMBER_STATUS_CODE) AS PAX
+	                                    , 'LH01'  AS LOTY_MEMBER_STATUS_CODE
+	                            FROM SAL0301D
+	                            WHERE LOTY_UPLOAD_ID =#{uploadId }
+	                            AND LOTY_MEMBER_STATUS_CODE ='LH01'
+	                            UNION
+	                            SELECT    COUNT(LOTY_MEMBER_STATUS_CODE) AS PAX
+	                                    , 'LH02'   AS LOTY_MEMBER_STATUS_CODE
+	                            FROM SAL0301D
+	                            WHERE LOTY_UPLOAD_ID =#{uploadId }
+	                            AND LOTY_MEMBER_STATUS_CODE ='LH02'
+	                            UNION
+	                            SELECT    COUNT(LOTY_MEMBER_STATUS_CODE) AS PAX
+	                                    , 'LH03'  AS LOTY_MEMBER_STATUS_CODE
+	                            FROM SAL0301D
+	                            WHERE LOTY_UPLOAD_ID =#{uploadId }
+	                            AND LOTY_MEMBER_STATUS_CODE ='LH03'
+	                            UNION
+	                            SELECT    COUNT(LOTY_MEMBER_STATUS_CODE) AS PAX
+	                                    , 'LH04'   AS LOTY_MEMBER_STATUS_CODE
+	                            FROM SAL0301D
+	                            WHERE LOTY_UPLOAD_ID =#{uploadId }
+	                            AND LOTY_MEMBER_STATUS_CODE ='LH04'
+	                       ) WHERE 1=1
+	                       ORDER BY LOTY_MEMBER_STATUS_CODE ASC
+
+   </select>
 
 
 

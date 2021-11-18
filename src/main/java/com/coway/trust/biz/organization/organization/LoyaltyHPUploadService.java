@@ -34,5 +34,10 @@ public interface LoyaltyHPUploadService {
 
 	List<EgovMap> selectLoyaltyHPUploadDetailListForMember(Map<String, Object> params);
 
+	List<EgovMap> selectLoyaltyHPUploadMemberStatusList(Map<String, Object> params);
+
+
+
+
 
 }
