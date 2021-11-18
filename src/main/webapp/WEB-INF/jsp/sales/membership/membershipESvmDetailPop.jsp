@@ -777,7 +777,7 @@
             Common.alert('Please choose a Special Instruction.');
             checkResult = false;
             return checkResult;
-        }else if($("#action").val() != '6') { //rejected action no need to check transaction ID
+        }else if($("#action").val() == '5') { //rejected and active with instruction action no need to check transaction ID
             if('${paymentInfo.payMode}' == '6507' || '${paymentInfo.payMode}' == '6508')
             {
             	if(FormUtil.isEmpty($("#payment_transactionID").val())) {
