@@ -34,16 +34,16 @@
 				     </if>
 
 				    <if test="createDateTo != null and createDateTo != ''">
-                         AND TO_CHAR(CRT_DT,'YYYYMMDD') BETWEEN  #{createDateTo}  AND #{createDateFr}
+                         AND TO_CHAR(CRT_DT,'dd/mm/yyyy') BETWEEN  #{createDateTo}  AND #{createDateFr}
                      </if>
 
                      <if test="creator != null and creator != ''">
                             AND csy.USER_NAME  LIKE '%' ||UPPER( #{creator} )|| '%'
                      </if>
 
-					 <if test='type != null and type != ""'>
+					 <if test='statusList != null and statusList != ""'>
 					            AND sm.LOTY_UPLOAD_STATUS_CODE  IN
-					               <foreach item="item" collection="type" index="index" open="(" separator="," close=")">
+					               <foreach item="item" collection="statusList" index="index" open="(" separator="," close=")">
 					           #{item}
 					           </foreach>
 					 </if>

@@ -103,11 +103,14 @@ public class LoyaltyHPUploadController {
 
 
 
-	@RequestMapping(value = "/selectLoyaltyHPUpload.do", method = RequestMethod.POST)
-	public ResponseEntity<List<EgovMap>> selectLoyaltyActiveHPList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+	@RequestMapping(value = "/selectLoyaltyHPUpload.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectLoyaltyActiveHPList(@RequestParam Map<String, Object> params , HttpServletRequest request, ModelMap model) {
 
 		LOGGER.debug("selectLoyaltyActiveHPList.do");
 		LOGGER.debug("params :: " + params);
+
+		String[] statusList = request.getParameterValues("statusList");
+		params.put("statusList", statusList);
 
 		List<EgovMap> loyaltyActiveHPList = null;
 		loyaltyActiveHPList = loyaltyHPUploadService.selectLoyaltyHPUploadList(params);

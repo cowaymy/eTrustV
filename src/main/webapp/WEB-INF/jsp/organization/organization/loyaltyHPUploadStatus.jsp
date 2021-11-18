@@ -9,9 +9,8 @@
 
 
     $(document).ready(function() {
+        doGetComboData('/common/selectCodeList.do', { groupCode : 486 , orderValue : 'CODE'}, '', 'statusList', 'M','type_multiCombo');
 
-
-    	doGetCombo('/common/selectCodeList.do', '486', '', 'statusList', 'M' ,'type_multiCombo');
 
         createAUIGrid();
 
@@ -20,7 +19,7 @@
 
 
         $("#search").click(function(){
-            Common.ajax("POST", "/organization/selectLoyaltyHPUpload.do", $("#myForm").serializeJSON(), function(result) {
+            Common.ajax("GET", "/organization/selectLoyaltyHPUpload.do", $("#myForm").serialize(), function(result) {
 
             	console.log(result);
             	uploadId = "";
@@ -153,16 +152,17 @@
             }).multipleSelect({
                 selectAll : true, // 전체선택
                 width : '80%'
-            }).multipleSelect("setSelects", [1]);
+            });
         });
     }
     function type_multiCombo() {
         $(function() {
-            $('#statusList').change(function() {
+        	$('#statusList').change(function() {
+                //console.log($(this).val());
             }).multipleSelect({
-                selectAll : true, // 전체선택
-                width : '80%'
-            }).multipleSelect("checkAll");
+                selectAll: true, // 전체선택
+                width: '100%'
+            });
         });
     }
 
@@ -270,7 +270,7 @@
                 <tbody>
                     <tr>
                         <th scope="row"><spring:message code='commission.text.search.batchId'/></th>
-                        <td><input type="text" title="" placeholder="Batch ID" class="w100p" name="uploadId" id="uploadId" ' maxlength="20"/></td>
+                        <td><input type="text" title="" placeholder="Batch ID" class="w100p" name="uploadId" id="uploadId" maxlength="20"/></td>
 
                         <th>createDate</th>
                         <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " name="createDateFr" id="createDateFr" />
@@ -281,8 +281,12 @@
 
                     <tr>
                        <th scope="row"><spring:message code='commission.text.search.batchStatus'/></th>
-                        <td><select class="multy_select w100p" multiple="multiple" name="statusList[]" id="statusList">
-                        </select>
+                        <td>
+
+    <select id="statusList" name="statusList" class="multy_select w100p" multiple="multiple"></select>
+
+
+
                         </td>
                         <th scope="row"></th>
                         <td></td>
