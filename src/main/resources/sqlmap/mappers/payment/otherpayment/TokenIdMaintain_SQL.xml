@@ -4,8 +4,8 @@
 
   <select id="selectTokenIdMaintain" parameterType="Map" resultType="egovMap">
   SELECT TOKEN_ID
-   ,EXT1.CARD_TYPE AS CARD_TYPE
-   ,EXT1.CREDIT_CARD_TYPE AS CREDIT_CARD_TYPE
+   ,EXT3.CODE_NAME AS CARD_TYPE
+   ,EXT4.CODE_NAME AS CREDIT_CARD_TYPE
    ,EXT1.RESPONSE_CODE
    ,EXT1.RESPONSE_DESC AS RESPONSE_DESC
    ,TO_CHAR(EXT1.UPD_DT,'DD/MM/YYYY')AS UPD_DT
@@ -15,13 +15,20 @@
    ,EXT1.REMARK AS REMARK
    FROM PAY0318D EXT1
    LEFT JOIN SYS0038M EXT2 ON EXT2.STUS_CODE_ID = EXT1.STATUS
+   LEFT JOIN SYS0013M EXT3 ON EXT3.CODE_ID = EXT1.CARD_TYPE
+   LEFT JOIN SYS0013M EXT4 ON EXT4.CODE_ID = EXT1.CREDIT_CARD_TYPE
     WHERE 1 = 1
-        AND STATUS = '1'
+    <if test="tokenIdSearch != null and tokenIdSearch != '' ">
+        AND TOKEN_ID = #{tokenIdSearch}
+    </if>
+    <if test="status != null and status != '' ">
+        AND STATUS = #{status}
+    </if>
     <if test="responseCode != null and responseCode != '' ">
       AND RESPONSE_CODE = #{responseCode}
     </if>
     <if test="creditCardType != null and creditCardType != '' ">
-      AND CREDIT_CARD_TYPE = #{creditCardType}
+      AND UPPER(CREDIT_CARD_TYPE) = UPPER(#{creditCardType})
     </if>
     ORDER BY EXT1.CUST_CRC_ID ASC
   </select>
@@ -34,8 +41,8 @@
        ,#{userId} AS USER_ID
        ,V.TOKEN_ID AS NEW_TOKEN_ID
        ,C.CUST_CRC_ID AS NEW_CUST_CRC_ID
-       ,V.CARD_TYPE AS NEW_CARD_TYPE
-       ,V.CREDIT_CARD_TYPE AS NEW_CREDIT_CARD_TYPE
+       ,C.CARD_TYPE_ID AS NEW_CARD_TYPE
+       ,C.CUST_CRC_TYPE_ID AS NEW_CREDIT_CARD_TYPE
        ,V.RESPONSE_CODE AS NEW_RESPONSE_CODE
        ,V.RESPONSE_DESC AS NEW_RESPONSE_DESC
        ,V.REMARK AS NEW_REMARK

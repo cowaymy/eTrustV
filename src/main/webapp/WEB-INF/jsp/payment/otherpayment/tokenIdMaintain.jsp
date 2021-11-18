@@ -14,6 +14,8 @@ $(document).ready(function(){
             editable            : false,
     };
 
+    doGetCombo('/common/selectCodeList.do','21', '', 'creditCardType', 'S', '');  //creditCardType
+
     var gridProse = {
             usePaging           : true,             //페이징 사용
             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
@@ -32,8 +34,8 @@ $(document).ready(function(){
         };
 
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-    batchDeductionItemId = GridCommon.createAUIGrid("#batchDeductionItem_grid_wrap", batchDeductionColumnLayout,null,gridProse);
-    AUIGrid.resize(batchDeductionItemId,945, $(".batchDeductionItem_grid_wrap").innerHeight());
+    tokenDetailsItemId = GridCommon.createAUIGrid("#tokenDetailsItem_grid_wrap", tokenDetailsColumnLayout,null,gridProse);
+    AUIGrid.resize(tokenDetailsItemId,945, $(".grid_wrap").innerHeight());
 
     AUIGrid.bind(myGridID, "cellClick", function( event ){
         selectedGridValue = event.rowIndex;
@@ -60,7 +62,7 @@ var columnLayout = [
     { dataField:"updUserId" ,headerText:'<spring:message code="pay.head.updator" />',width: '10%'},
     ];
 
-var batchDeductionColumnLayout= [
+var tokenDetailsColumnLayout= [
                                  {dataField : "custCrcToken", headerText : "Token ID", width : '20%'},
                                  {dataField : "salesOrdNo", headerText : "Sales Order No", width : '15%'},
                                  {dataField : "lastUpdateDate", headerText : "Last Update Date", width : '15%'},
@@ -130,7 +132,8 @@ function fn_openDivPop(val){
             if(val == "VIEW"){
 
             	Common.ajax("GET","/payment/selectTokenIdMaintainDetailPop.do", {"tokenId":tokenId,"custCrcId":custCrcId}, function(result){
-                    AUIGrid.setGridData(batchDeductionItemId, result);
+                    AUIGrid.setGridData(tokenDetailsItemId, result);
+                    AUIGrid.resize(tokenDetailsItemId,945, $(".grid_wrap").innerHeight());
                 });
 
             	$("#view_wrap").show();
@@ -184,7 +187,22 @@ function fn_openDivPop(val){
             <th scope="row">Response Code</th>
             <td><input id="responseCode" name="responseCode" type="text"/></td>
             <th scope="row">Credit Card Type</th>
-            <td><input id="creditCardType" name="creditCardType" type="text"/></td>
+             <td>
+                   <select class="w100p" id="creditCardType" name="creditCardType"></select>
+             </td>
+          </tr>
+          <tr>
+            <th scope="row">Status</th>
+            <td>
+                  <select class="" id="status" name="status">
+                      <option value="">Choose One</option>
+                      <option value="1">Active</option>
+                      <option value="8">Inactive</option>
+                  </select>
+              </td>
+            <th scope="row">Token ID</th>
+            <td><input id="tokenIdSearch" name="tokenIdSearch" type="text"/></td>
+          </tr>
         </tbody>
       </table>
       <!-- table end -->
@@ -275,7 +293,7 @@ function fn_openDivPop(val){
         <h1>Details</h1>
         <ul class="right_opt">
             <li><p class="btn_blue2">
-                    <a href="#" onclick="hideViewPopup('#view_wrap')">CLOSE</a>
+                    <a href="#" >CLOSE</a>
                 </p></li>
                   <!-- search_result start -->
 
@@ -284,7 +302,7 @@ function fn_openDivPop(val){
     </header>
 <section class="pop_body"><!-- pop_body start -->
     <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="batchDeductionItem_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+    <div id="tokenDetailsItem_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 
