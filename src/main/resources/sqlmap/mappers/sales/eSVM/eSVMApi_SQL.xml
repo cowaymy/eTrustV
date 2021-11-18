@@ -662,8 +662,8 @@
             SRV_PAC_PROMO_ID,
             SRV_PROMO_ID,
             SRV_MEM_PAC_AMT,
-            SRV_MEM_BS_AMT,
-            (SRV_MEM_PAC_AMT + SRV_MEM_BS_AMT) PAYMENT_AMT
+            NVL(SRV_MEM_BS_AMT, 0) SRV_MEM_BS_AMT,
+            (SRV_MEM_PAC_AMT + NVL(SRV_MEM_BS_AMT, 0)) PAYMENT_AMT
         FROM SAL0093D
         WHERE SRV_MEM_QUOT_ID = #{svmQuotId}
     </select>
