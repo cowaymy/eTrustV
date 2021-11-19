@@ -189,6 +189,9 @@
 	                $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
 	                $("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000">${eSvmInfo.appvRem}</textarea>');
 	                $("#payment_cardMode option[value='" + cardModeCode+ "']").attr("selected", true);
+	                $("#payment_issuedBank option[value='"+ issuBankCode +"']").attr("selected", true);
+                    $("#payment_cardType option[value='"+ cardBrandCode +"']").attr("selected", true);
+                    $("#payment_merchantBank option[value='"+ merchantBankCode +"']").attr("selected", true);
 	            }
 	            else
 	            {
@@ -457,7 +460,7 @@
                 srvStockCode :  '${quotInfo.stkCode}',
                 srvStockDesc :  '${quotInfo.stkDesc}',
                 poNo : $("#poNo").val(),
-                refNo : $("#refNo").val(),
+                refNo : $("#SARefNo").val(),
                 trxId : $("#payment_transactionID").val(),
                 allowCommFlg : $("#payment_allowCommFlg").val(),
                 trRefNo : $("#payment_trRefNo").val(),
@@ -794,7 +797,7 @@
                 checkResult = false;
                 return checkResult;
         	}
-        } */else if('${paymentInfo.payMode}' == '6528') { //card=MOTO/IPP checking
+        } */else if('${paymentInfo.payMode}' == '6528' && $("#action").val() == '5') { //card=MOTO/IPP checking only when approve action
         	if((FormUtil.isEmpty($("#payment_cardMode").val()))){
         		Common.alert('Please select Card Mode.');
                 checkResult = false;
