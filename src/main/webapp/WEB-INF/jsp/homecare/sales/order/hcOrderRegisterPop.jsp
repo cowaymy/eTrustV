@@ -1140,6 +1140,26 @@
             if($("#exTrade").val() == '1' || $("#exTrade").val() == '2') {
                 //$('#relatedNo').removeAttr("readonly").removeClass("readonly");
                 $('#btnRltdNo').removeClass("blind");
+
+                if($('#exTrade').val()=='1'){
+                    var todayDD = Number(TODAY_DD.substr(0, 2));
+                    var todayYY = Number(TODAY_DD.substr(6, 4));
+
+                    var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
+                    var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
+
+                    console.log("todayDD: " + todayDD);
+                    console.log("blockDtFrom : " + blockDtFrom);
+                    console.log("blockDtTo : " + blockDtTo);
+
+                     if(todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
+                         var msg = "Extrade sales key-in does not meet period date (Submission start on 3rd of every month)";
+                         Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+                         return;
+                     }
+               }
+
+
             } else {
                 //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
                 $('#relatedNo').val('');
@@ -2556,23 +2576,6 @@ console.log(orderVO);
 //              AUIGrid.resize(docGridID);
                 if(docDefaultChk == false) fn_checkDocList(true);
                 break;
-            case 'sal' :
-
-                var todayDD = Number(TODAY_DD.substr(0, 2));
-                var todayYY = Number(TODAY_DD.substr(6, 4));
-
-                var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
-                var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
-
-                console.log("todayDD: " + todayDD);
-                console.log("blockDtFrom : " + blockDtFrom);
-                console.log("blockDtTo : " + blockDtTo);
-
-                 if(todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
-                     var msg = "Extrade sales key-in does not meet period date (Submission start on 3rd of every month)";
-                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
-                     return;
-                 }
             default :
                 break;
         }
