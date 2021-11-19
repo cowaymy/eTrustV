@@ -473,17 +473,21 @@
     </insert>
 
     <select id="selectPreOrderFailStatus" parameterType="Map" resultType="egovMap">
+     <![CDATA[
     SELECT
 	    T2.NAME AS STUS
 	    , REM1
 	    , REM2
 	    , T3.USER_NAME AS CRT_USER_ID
 	    , CRT_DT
+	    ,CASE WHEN TO_CHAR(CRT_DT, 'HH12') < 12 THEN  TO_CHAR(CRT_DT, 'HH12:MI AM')
+         ELSE TO_CHAR(CRT_DT, 'HH12:MI PM') END AS CRT_TIME
     from SAL0302D T1
 	    join sys0038m T2 on T1.STUS_ID = T2.STUS_CODE_ID
 	    join sys0047m T3 on T1.CRT_USER_ID = T3.USER_ID
     where PRE_ORD_ID = #{preOrdId}
     ORDER BY CRT_DT DESC
+     ]]>
     </select>
 
     <select id="selectExistingMember" parameterType="Map" resultType="int">

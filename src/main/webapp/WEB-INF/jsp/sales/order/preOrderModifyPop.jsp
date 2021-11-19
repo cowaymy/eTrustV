@@ -120,6 +120,7 @@ var blockDtTo = "${hsBlockDtTo}";
           , { headerText : 'Remark', dataField : "rem2", width : 355 }
           , { headerText : 'Creator', dataField : "crtUserId",  width : 180 }
           , { headerText : 'Create Date', dataField : "crtDt",  width : 180, dataType : "date", formatString : "dd/mm/yyyy"}
+          , { headerText : 'Create Time', dataField : "crtTime",  width : 180}
      ];
 
      var gridPros = {
