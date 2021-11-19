@@ -294,9 +294,13 @@
 		var data = GridCommon.getGridData(myGridID);
 		data.form = $("#remarkForm").serializeJSON();
 
+		  if ($("#refNo").val() == "") {
+             Common.alert("Please Enter Reference No.");
+             return;
+         }
+		 else{
 		//Ajax 호출
-		Common
-				.ajax(
+		Common.ajax(
 						"POST",
 						"/payment/saveSrvMembershipBilling.do",
 						data,
@@ -328,6 +332,7 @@
 												});
 							}
 						});
+		 }
 	}
 </script>
 
@@ -509,7 +514,7 @@
 						</tr>
 						<!-- Added Reference No. By Hui Ding, 2021-08-01 -->
 						<tr>
-							<th scope="row">Reference No.</th>
+							<th scope="row">Reference No.<span name="m1" id="m1" class="must">*</span></th>
 							<td><input type="text" id="refNo" name="refNo"
 								title="Reference Number" placeholder="Reference Number"
 								class="w100p" /></td>
