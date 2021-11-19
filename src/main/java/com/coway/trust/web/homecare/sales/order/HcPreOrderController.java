@@ -266,7 +266,20 @@ public class HcPreOrderController {
     		frmOrderInfo = preOrderService.selectPreOrderInfo(params);
 		}
 
-		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+		//model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+
+		String dayFrom = "20"; // default 20-{month-1}
+		String dayTo = "02"; // default 2-{month}
+
+		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalMonth(-1), SalesConstants.DEFAULT_DATE_FORMAT3,
+					SalesConstants.DEFAULT_DATE_FORMAT1);
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+		model.put("hsBlockDtFrom", dayFrom);
+		model.put("hsBlockDtTo", dayTo);
+
+		model.put("bfDay", bfDay);
+		model.put("toDay", toDay);
 
 		model.put("preOrderInfo", preOrderInfo);
 		model.put("hcPreOrdInfo", hcPreOrdInfo);
