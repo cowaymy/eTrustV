@@ -62,6 +62,7 @@
      <if test="uploadStatus == '1'">
      JOIN SYS0094M K ON K.CODE = V.RESPONSE_CODE
      </if>
+     WHERE V.REMARK IS NOT NULL
      ) S ON  (S.NEW_CUST_CRC_ID = D.CUST_CRC_ID)
     WHEN MATCHED THEN UPDATE SET D.STATUS = S.STATUS
                                , D.UPD_DT = SYSDATE

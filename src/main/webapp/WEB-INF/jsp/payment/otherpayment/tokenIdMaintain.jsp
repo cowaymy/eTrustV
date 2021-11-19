@@ -146,6 +146,31 @@ function fn_openDivPop(val){
     }
 }
 
+function fn_excelDown(val){
+	genType = val;
+
+	var dd, mm, yy;
+
+    var today = new Date();
+    dd = today.getDate();
+    mm = today.getMonth() + 1;
+    yy = today.getFullYear();
+
+    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+    if(genType == 'MAIN'){
+    GridCommon.exportTo("grid_wrap", "xlsx", "TKM_Result" + "_" + yy + mm + dd );
+    }
+    else if(genType == 'DETAIL'){
+    GridCommon.exportTo("tokenDetailsItem_grid_wrap", "xlsx", "TKM_Details_Result" + "_" + yy + mm + dd );
+
+    }
+}
+
+/* function fn_excelDownDetails(){
+    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+
+} */
+
 </script>
 <!-- content start -->
 <section id="content">
@@ -166,6 +191,7 @@ function fn_openDivPop(val){
       <li><p class="btn_blue"><a id="btnUpload">Upload</a></p></li>
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
       <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
+      <li><p class="btn_blue"><a href="javascript:fn_excelDown('MAIN');">Generate</a></p></li>
 <%--       </c:if> --%>
     </ul>
   </aside>
@@ -224,7 +250,6 @@ function fn_openDivPop(val){
                 </dl>
             </aside>
             <!-- link_btns_wrap end -->
-
     </form>
   </section>
 
@@ -292,6 +317,7 @@ function fn_openDivPop(val){
     <header class="pop_header" id="pop_header">
         <h1>Details</h1>
         <ul class="right_opt">
+        <li><p class="btn_blue2"><a href="javascript:fn_excelDown('DETAIL');">GENERATE</a></p></li>
             <li><p class="btn_blue2">
                     <a href="#" >CLOSE</a>
                 </p></li>
