@@ -723,6 +723,27 @@ var blockDtTo = "${hsBlockDtTo}";
 
   });
 
+  $('#exTrade').change(function() {
+
+          if($('#exTrade').val()=='1'){
+              var todayDD = Number(TODAY_DD.substr(0, 2));
+              var todayYY = Number(TODAY_DD.substr(6, 4));
+
+              var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
+              var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
+
+              console.log("todayDD: " + todayDD);
+              console.log("blockDtFrom : " + blockDtFrom);
+              console.log("blockDtTo : " + blockDtTo);
+
+               if(todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
+                   var msg = "Extrade sales key-in does not meet period date (Submission start on 3rd of every month)";
+                   Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+                   return;
+               }
+         }
+  });
+
   function fn_loadBankAccountPop(bankAccId) {
     fn_clearRentPaySetDD();
     fn_loadBankAccount(bankAccId);
@@ -1994,22 +2015,6 @@ var blockDtTo = "${hsBlockDtTo}";
       $('[name="advPay"]').prop("disabled", true);
       $('#advPayNo').prop("checked", true);
       $('#poNo').prop("disabled", true);
-
-      var todayDD = Number(TODAY_DD.substr(0, 2));
-      var todayYY = Number(TODAY_DD.substr(6, 4));
-
-      var strBlockDtFrom = blockDtFrom + BEFORE_DD.substr(2);
-      var strBlockDtTo = blockDtTo + TODAY_DD.substr(2);
-
-      console.log("todayDD: " + todayDD);
-      console.log("blockDtFrom : " + blockDtFrom);
-      console.log("blockDtTo : " + blockDtTo);
-
-       if(todayDD >= blockDtFrom || todayDD <= blockDtTo) { // Block if date > 22th of the month
-           var msg = "Extrade sales key-in does not meet period date (Submission start on 3rd of every month)";
-           Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
-           return;
-       }
 
       break;
 
