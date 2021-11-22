@@ -36,6 +36,7 @@
 							{dataField: "stkdesc",headerText :"<spring:message code='log.head.materialname'/>"           ,width:350 ,height:30,style :  "aui-grid-user-custom-left" },
 							{dataField: "stkcategoryid",headerText :"<spring:message code='log.head.categoryid'/>"        ,width:120,height:30 , visible : false},
 							{dataField: "codename",headerText :"<spring:message code='log.head.category'/>"       ,width:140 ,height:30},
+						    {dataField: "c4",headerText :"Selling Price"       ,width:140 ,height:30},
 							{dataField: "stktypeid",headerText :"<spring:message code='log.head.typeid'/>"            ,width:120 ,height:30, visible : false},
 							{dataField: "codename1",headerText :"<spring:message code='log.head.type'/>"              ,width:120 ,height:30},
 							{dataField: "name",headerText :"<spring:message code='log.head.status'/>"       ,width:120 ,height:30},
