@@ -195,8 +195,10 @@
                 ON B.ITM_STK_ID = C.STK_ID
             JOIN SAL0029D D
                 ON A.CUST_ID = D.CUST_ID
+            JOIN SAL0045D M
+                ON A.SALES_ORD_ID = M.SALES_ORD_ID
             JOIN SAL0023D E
-                ON A.CUST_ADD_ID = E.CUST_ADD_ID
+                ON M.ADD_ID = E.CUST_ADD_ID
             JOIN SYS0064M F
                 ON E.AREA_ID = F.AREA_ID
             LEFT JOIN SAL1014V G
