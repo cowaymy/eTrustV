@@ -155,6 +155,7 @@ var columnLayout = [
     { dataField:"fileBatchUpdUserName" ,headerText:"Updator",width: 120 , visible : false, editable : false },
     { dataField:"fileBatchUpdDt" ,headerText:"Updated Date",width: 120 , visible : false, editable : false },
     { dataField:"fileBatchBankId" ,headerText:"File Batch Bank Id",width: 120 , visible : false, editable : false },
+    { dataField:"bankCode" ,headerText:"Bank Code" , visible : false, editable : false },
     ];
 
 var updResultColLayout = [
@@ -297,6 +298,7 @@ function fn_updateResult(val){
 function fn_resultFileUp(){
 	var fileBatchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchId");
 	var fileBatchBankId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchBankId");
+	var bankCode = AUIGrid.getCellValue(myGridID, selectedGridValue, "bankCode");
 
     //param data array
 /*     var data = {};
@@ -319,6 +321,7 @@ function fn_resultFileUp(){
     formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
     formData.append("fileBatchId", fileBatchId);
     formData.append("fileBatchBankId", fileBatchBankId);
+    formData.append("bankCode", bankCode);
 
     //Ajax 호출
     Common.ajaxFile("/payment/updateECashDeductionResultItemBulk.do", formData, function(result) {
