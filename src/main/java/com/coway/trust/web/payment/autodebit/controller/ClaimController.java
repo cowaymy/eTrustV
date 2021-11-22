@@ -47,6 +47,7 @@ import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.biz.payment.autodebit.service.ClaimService;
 import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
+import com.coway.trust.biz.payment.payment.service.ClaimResultScbUploadVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.exception.FileDownException;
 import com.coway.trust.cmmn.model.EmailVO;
@@ -446,6 +447,7 @@ public class ClaimController {
     LOGGER.debug("ctrlIsCrc : {}  ", request.getParameter("ctrlIsCrc"));
     LOGGER.debug("bankId : {}  ", request.getParameter("bankId"));
     LOGGER.debug("ddtChnl : {}  ", request.getParameter("ddtChnl"));
+    LOGGER.debug("bankCode : {}  ", request.getParameter("bankCode"));
 
     // Master 정보 세팅
     Map<String, Object> claimMap = new HashMap<String, Object>();
@@ -453,6 +455,7 @@ public class ClaimController {
     claimMap.put("ctrlIsCrc", request.getParameter("ctrlIsCrc"));
     claimMap.put("bankId", request.getParameter("bankId"));
     claimMap.put("ddtChnl", request.getParameter("ddtChnl"));
+    claimMap.put("bankCode", request.getParameter("bankCode"));
 
     // 기존 데이터 삭제
     claimService.deleteClaimResultItem(claimMap);
@@ -460,46 +463,93 @@ public class ClaimController {
     // CVS 파일 세팅
     Map<String, MultipartFile> fileMap = request.getFileMap();
     MultipartFile multipartFile = fileMap.get("csvFile");
-    List<ClaimResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile, false, ClaimResultUploadVO::create);
+    if( claimMap.get("bankCode").equals("SCB")){
+    	List<ClaimResultScbUploadVO> vos = csvReadComponent.readCsvToList(multipartFile, true, ClaimResultScbUploadVO::create);
 
-    // CVS 파일 객체 세팅
-    Map<String, Object> cvsParam = new HashMap<String, Object>();
-    cvsParam.put("voList", vos);
-    cvsParam.put("userId", sessionVO.getUserId());
+    	// CVS 파일 객체 세팅
+        Map<String, Object> cvsParam = new HashMap<String, Object>();
+        cvsParam.put("voList", vos);
+        cvsParam.put("userId", sessionVO.getUserId());
 
-    // 파일 내용 Insert
-    // claimService.updateClaimResultItemBulk3(claimMap, cvsParam);
-    // cvs 파일 저장 처리
-    List<ClaimResultUploadVO> vos2 = (List<ClaimResultUploadVO>) cvsParam.get("voList");
+        // 파일 내용 Insert
+        // claimService.updateClaimResultItemBulk3(claimMap, cvsParam);
+        // cvs 파일 저장 처리
 
-    List<Map> list = vos2.stream().map(r -> {
-      Map<String, Object> map = BeanConverter.toMap(r);
+        List<ClaimResultScbUploadVO> vos2 = (List<ClaimResultScbUploadVO>) cvsParam.get("voList");
 
-      map.put("refNo", r.getRefNo());
-      map.put("refCode", r.getRefCode());
-      map.put("id", claimMap.get("ctrlId"));
-      map.put("itemId", r.getItemId());
+        List<Map> list = vos2.stream().map(r -> {
+          Map<String, Object> map = BeanConverter.toMap(r);
 
-      return map;
-    }).collect(Collectors.toList());
+          map.put("refNo", r.getRefNo());
+          map.put("refCode", r.getRefCode());
+          map.put("id", claimMap.get("ctrlId"));
+          map.put("itemId", r.getItemId());
 
-    int size = 500;
-    int page = list.size() / size;
-    int start;
-    int end;
+          return map;
+        }).collect(Collectors.toList());
 
-    Map<String, Object> bulkMap = new HashMap<>();
-    for (int i = 0; i <= page; i++) {
-      start = i * size;
-      end = size;
+        int size = 500;
+        int page = list.size() / size;
+        int start;
+        int end;
 
-      if (i == page) {
-        end = list.size();
-      }
-      if(list.stream().skip(start).limit(end).count() != 0){
-          bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
-          claimService.updateClaimResultItemBulk4(bulkMap);
-      }
+        Map<String, Object> bulkMap = new HashMap<>();
+        for (int i = 0; i <= page; i++) {
+          start = i * size;
+          end = size;
+
+          if (i == page) {
+            end = list.size();
+          }
+          if(list.stream().skip(start).limit(end).count() != 0){
+              bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+              claimService.updateClaimResultItemBulk4(bulkMap);
+          }
+        }
+    }
+    else{
+        List<ClaimResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile, false, ClaimResultUploadVO::create);
+
+        // CVS 파일 객체 세팅
+        Map<String, Object> cvsParam = new HashMap<String, Object>();
+        cvsParam.put("voList", vos);
+        cvsParam.put("userId", sessionVO.getUserId());
+
+        // 파일 내용 Insert
+        // claimService.updateClaimResultItemBulk3(claimMap, cvsParam);
+        // cvs 파일 저장 처리
+
+        List<ClaimResultUploadVO> vos2 = (List<ClaimResultUploadVO>) cvsParam.get("voList");
+
+        List<Map> list = vos2.stream().map(r -> {
+          Map<String, Object> map = BeanConverter.toMap(r);
+
+          map.put("refNo", r.getRefNo());
+          map.put("refCode", r.getRefCode());
+          map.put("id", claimMap.get("ctrlId"));
+          map.put("itemId", r.getItemId());
+
+          return map;
+        }).collect(Collectors.toList());
+
+        int size = 500;
+        int page = list.size() / size;
+        int start;
+        int end;
+
+        Map<String, Object> bulkMap = new HashMap<>();
+        for (int i = 0; i <= page; i++) {
+          start = i * size;
+          end = size;
+
+          if (i == page) {
+            end = list.size();
+          }
+          if(list.stream().skip(start).limit(end).count() != 0){
+              bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+              claimService.updateClaimResultItemBulk4(bulkMap);
+          }
+        }
     }
 
     // 업로드된 값을 재정리 한다. REF_CODE / REF_NO LPAD 처리

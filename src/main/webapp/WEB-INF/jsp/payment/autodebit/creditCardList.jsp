@@ -169,6 +169,7 @@ function fn_openDivPop(val){
 	        var ctrlStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlStusId");
 	        var stusName = AUIGrid.getCellValue(myGridID, selectedGridValue, "stusName");
 	        var smsSend = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlFailSmsIsPump");
+	        var bankCode = AUIGrid.getCellValue(myGridID, selectedGridValue, "bankCode");
 
 	        if((val == "RESULT" || val == "RESULTNEXT") && ctrlStusId != 1){
                 Common.alert("<spring:message code='pay.alert.claimResult' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");
@@ -324,6 +325,7 @@ function fn_uploadFile(){
 	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
 	var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlIsCrc");
 	var bankId = AUIGrid.getCellValue(myGridID, selectedGridValue, "bankId");
+	var bankCode = AUIGrid.getCellValue(myGridID, selectedGridValue, "bankCode");
 
     var formData = new FormData();
 
@@ -331,6 +333,7 @@ function fn_uploadFile(){
 	formData.append("ctrlId", ctrlId);
 	formData.append("ctrlIsCrc", ctrlIsCrc);
 	formData.append("bankId", bankId);
+	formData.append("bankCode", bankCode);
 
 	Common.ajaxFile("/payment/updateClaimResultItemBulk.do", formData,
 		function(result){
@@ -477,6 +480,7 @@ function fn_uploadFile4(){
 	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
 	var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlIsCrc");
 	var bankId = AUIGrid.getCellValue(myGridID, selectedGridValue, "bankId");
+	var bankCode = AUIGrid.getCellValue(myGridID, selectedGridValue, "bankCode");
 
     var formData = new FormData();
 
@@ -484,6 +488,7 @@ function fn_uploadFile4(){
 	formData.append("ctrlId", ctrlId);
 	formData.append("ctrlIsCrc", ctrlIsCrc);
 	formData.append("bankId", bankId);
+	formData.append("bankCode", bankCode);
 
 	Common.ajaxFile("/payment/updateClaimResultItemBulk4.do", formData,
 		function(result){
