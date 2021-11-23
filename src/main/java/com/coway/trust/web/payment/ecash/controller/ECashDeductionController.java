@@ -882,7 +882,7 @@ public class ECashDeductionController {
 	    String today = df.format(date);
 
 		 if( request.getParameter("bankCode").equals("SCB")){
-		List<ECashResultScbUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,ECashResultScbUploadVO::create);
+		List<ECashResultScbUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,false ,ECashResultScbUploadVO::create);
 
 		//CVS 파일 객체 세팅
 		Map<String, Object> cvsParam = new HashMap<String, Object>();
