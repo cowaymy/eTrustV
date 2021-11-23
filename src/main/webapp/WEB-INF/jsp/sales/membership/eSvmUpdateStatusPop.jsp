@@ -48,9 +48,16 @@
 </tr>
 <tr>
     <th scope="row">Others Remark</th>
-    <td colspan='3'>
-        <textarea cols="40" rows="5"  id="remark" name="remark" placeholder="Others Remark" maxlength="1000"></textarea>
-    </td>
+    <c:if test="${eSvmInfo.stus eq '1'}">
+	    <td colspan='3'>
+	        <textarea cols="40" rows="5"  id="remark" name="remark" placeholder="Others Remark" maxlength="1000">${eSvmInfo.appvRem}</textarea>
+	    </td>
+    </c:if>
+    <c:if test="${eSvmInfo.stus ne '1'}">
+	    <td colspan='3'>
+	        <textarea cols="40" rows="5"  id="remark" name="remark" placeholder="Others Remark" maxlength="1000" readonly>${eSvmInfo.appvRem}</textarea>
+	    </td>
+    </c:if>
 </tr>
 </tbody>
 </table><!-- table end -->

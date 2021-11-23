@@ -77,7 +77,7 @@
         		$("#payment_ccHolderName").replaceWith('<input id=payment_ccHolderName name="payment_ccHolderName" type="text" title="" value="${paymentInfo.crcName}" placeholder="" class="w100p readonly" readyonly  />');
         		$("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
                 $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
-                $("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.appvRem}</textarea>');
+
                 $("#action option[value='"+ stus +"']").attr("selected", true);
                 $("#payment_cardMode option[value='"+ cardModeCode +"']").attr("selected", true);
                 $("#payment_issuedBank option[value='"+ issuBankCode +"']").attr("selected", true);
@@ -105,6 +105,8 @@
                 $("#payment_issuedBank option[value='"+ issuBankCode +"']").attr("selected", true);
                 $("#payment_cardType option[value='"+ cardBrandCode +"']").attr("selected", true);
                 $("#payment_merchantBank option[value='"+ merchantBankCode +"']").attr("selected", true);
+                $('#action').val(stus);
+                $("#action option[value='"+ stus +"']").attr("selected", true);
 
                 var trxDt = $("#payment_transactionDt").val();
                 if(trxDt.length != 10)
@@ -121,7 +123,7 @@
                 $("#action").attr("disabled", true);
                 $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
                 $("#specialInstruction").attr("disabled", true);
-                $("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.appvRem}</textarea>');
+
                 $("#btnSave").hide();
 
                 var trxDt = $("#payment_transactionDt").val();
@@ -149,7 +151,7 @@
                 $("#action").attr("disabled", true);
 	        	//$("#specialInstruction").replaceWith('<input id=specialInstruction name="specialInstruction" value="${eSvmInfo.appvInstrct}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
 	        	$("#specInst").hide();
-	        	$("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.appvRem}</textarea>');
+
 	        	$("#btnSave").hide();
 
 	        	$("#payment_cardMode option[value='"+ cardModeCode +"']").attr("selected", true);
@@ -187,7 +189,7 @@
 	                    }
 	                $("#action option[value='"+ stus +"']").attr("selected", true);
 	                $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
-	                $("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000">${eSvmInfo.appvRem}</textarea>');
+
 	                $("#payment_cardMode option[value='" + cardModeCode+ "']").attr("selected", true);
 	                $("#payment_issuedBank option[value='"+ issuBankCode +"']").attr("selected", true);
                     $("#payment_cardType option[value='"+ cardBrandCode +"']").attr("selected", true);
@@ -211,7 +213,7 @@
                 $("#action").attr("disabled", true);
                 $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
                 $("#specialInstruction").attr("disabled", true);
-                $("#remark").replaceWith('<textarea cols="40" rows="5"  id="remark" name="remark" maxlength="1000" readonly>${eSvmInfo.appvRem}</textarea>');
+
                 $("#btnSave").hide();
 
                 var trxDt = $("#payment_transactionDt").val();
