@@ -25,6 +25,7 @@ import com.coway.trust.api.mobile.logistics.stocktransfer.StockTransferConfirmGi
 import com.coway.trust.biz.logistics.mlog.MlogApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.exception.PreconditionException;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -453,6 +454,21 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		receiveMapBarcode.put("userId", userLoc);
 		receiveMapBarcode.put("ioType", "O");
 
+		//HLTANG 202111 - filter scan barcode
+		receiveMapBarcode.put("reqstNo", stockTransferConfirmGiMForm.get(0).getSmoNo());
+		receiveMapBarcode.put("zIoType", "O");
+        //update status 'D' to 'C'
+        SessionVO sessionVo = new SessionVO();
+        sessionVo.setUserId(Integer.valueOf(userLoc));
+
+        try {
+        	saveSerialNo(receiveMapBarcode, sessionVo);
+            } catch (Exception e) {
+            	// TODO Auto-generated catch block
+            	e.printStackTrace();
+            }
+		//HLTANG 202111 - filter scan barcode end
+
 		MlogApiMapper.LogisticBarcodeSave(receiveMapBarcode);
 
 		logger.debug("++++ stockMovementReqDeliveryScan LogisticBarcodeSave receiveMapBarcode 값 : {}", receiveMapBarcode);
@@ -541,6 +557,21 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		receiveMap.put("gipfdate", MlogApiMapper.dateParsing(confirmReceiveMForm.getRequestDate())); // 추가
 		receiveMap.put("giptdate", MlogApiMapper.dateParsing(confirmReceiveMForm.getRequestDate()));
 		logger.debug("stockMovementConfirmReceiveScan receiveMap : {}", receiveMap);
+
+		//HLTANG 202111 - filter scan barcode
+		receiveMap.put("reqstNo", confirmReceiveMForm.getSmoNo());
+		receiveMap.put("zIoType", "I");
+        //update status 'D' to 'C'
+        SessionVO sessionVo = new SessionVO();
+        sessionVo.setUserId(Integer.valueOf(userLoc));
+
+        try {
+        	saveSerialNo(receiveMap, sessionVo);
+            } catch (Exception e) {
+            	// TODO Auto-generated catch block
+            	e.printStackTrace();
+            }
+		//HLTANG 202111 - filter scan barcode end
 
 		MlogApiMapper.StockMovementIssueScan(receiveMap);
 
@@ -832,6 +863,21 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 				// MlogApiMapper.LogisticBarcodeScan(outScanMap);
 				MlogApiMapper.LogisticBarcodeScanUsum(outScanMap);
 
+				//HLTANG 202111 - filter scan barcode
+				//outScanMap.put("reqstNo", stockTransferConfirmGiMForm.get(0).getSmoNo());
+				outScanMap.put("zIoType", "O");
+		        //update status 'D' to 'C'
+		        SessionVO sessionVo = new SessionVO();
+		        sessionVo.setUserId(Integer.valueOf(userLoc));
+
+		        try {
+		        	saveSerialNo(outScanMap, sessionVo);
+		            } catch (Exception e) {
+		            	// TODO Auto-generated catch block
+		            	e.printStackTrace();
+		            }
+				//HLTANG 202111 - filter scan barcode end
+
 				String errcodeScan = (String)outScanMap.get("errcode");
 				String errmsgScan = (String)outScanMap.get("errmsg");
 				if(!errcodeScan.equals("000")){
@@ -912,4 +958,29 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		return MlogApiMapper.getStockTransferReqStatusDListScan(params);
 	}
 	/* Woongjin Han */
+
+	public void saveSerialNo(Map<String, Object> params, SessionVO sessionVo) throws Exception{ // HLTANG 202111 - filter barcode scan
+		List<EgovMap> grListmain = MlogApiMapper.selectSerialInfo(params);
+
+		Map<String, Object> mainMap = null;
+		for (Object obj : grListmain) {
+			mainMap = (Map<String, Object>) obj;
+			MlogApiMapper.updateDeliveryGrDetail(mainMap);//log0099m
+			MlogApiMapper.updateDeliveryGrMain(mainMap);//log0100m
+
+
+			List<EgovMap> grList1 = MlogApiMapper.selectDeliveryGrHist(mainMap);
+			Map<String, Object> oMap = null;
+			for(EgovMap info : grList1){
+				oMap = new HashMap<String, Object>();
+				oMap.put("updUserId", sessionVo.getUserId());
+				oMap.put("crtUserId", sessionVo.getUserId());
+				oMap.put("serialNo", info.get("serialNo").toString());
+				oMap.put("seq", info.get("seq").toString());
+				oMap.put("ioType", mainMap.get("ioType"));
+
+				MlogApiMapper.updateDeliveryGrHist(oMap);//log0101h
+			}
+		}
+	}
 }

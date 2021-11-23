@@ -167,4 +167,11 @@ public interface MlogApiMapper {
 	/* Woongjin Han */
 	List<EgovMap> getStockTransferReqStatusDListScan(Map<String, Object> params);
 	/* Woongjin Han */
+
+	//HLTANG 202111 - filter barcode scan
+	public List<EgovMap> selectSerialInfo(Map<String, Object> obj);
+	public void updateDeliveryGrDetail(Map<String, Object> obj);
+	public void updateDeliveryGrMain(Map<String, Object> obj);
+	public List<EgovMap> selectDeliveryGrHist(Map<String, Object> obj);
+	public void updateDeliveryGrHist(Map<String, Object> obj);
 }

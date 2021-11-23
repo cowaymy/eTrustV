@@ -9,7 +9,7 @@
 					, A.ITM_CODE    ITM_CODE
 		FROM    LOG0099D A
 				<where>
-					AND A.SCAN_STUS_CODE = 'C'
+					AND (A.SCAN_STUS_CODE = 'C' OR A.SCAN_STUS_CODE = 'D')
 					<if test="delvryNo !=null and delvryNo !='' ">
 					AND A.DELVRY_NO = #{delvryNo}
 					</if>
