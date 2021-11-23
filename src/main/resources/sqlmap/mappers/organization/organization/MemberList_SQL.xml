@@ -243,7 +243,7 @@
                     LEFT JOIN SYS0035M Extent14 ON Extent1.STATE = Extent14.STATE_ID
                     LEFT JOIN SYS0039M Extent15 ON Extent1.STATE = Extent15.AREA_STATE_ID AND Extent1.AREA = Extent15.AREA_ID
                     LEFT JOIN ORG0040D V ON V.MEM_ID = Extent1.MEM_ID /* Vaccination info */
-                    LEFT JOIN ORG0011D Extent16 ON Extent1.MEM_CODE =Extent16.HP_CODE AND PV_YEAR = TO_CHAR(SYSDATE,'YYYY') AND PV_MONTH = TO_CHAR(SYSDATE,'MM')
+                    LEFT JOIN ORG0011D Extent16 ON Extent1.MEM_CODE =Extent16.HP_CODE AND PV_YEAR = TO_CHAR(SYSDATE,'YYYY') AND PV_MONTH = TO_CHAR(SYSDATE,'MM') AND NVL(IS_NW,0)=0
 
                     LEFT JOIN (SELECT * FROM (
                     SELECT B.* , ROW_NUMBER() OVER (PARTITION BY MEM_ID ORDER BY SALES_ORD_ID DESC) ITM_ROWS
