@@ -244,7 +244,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             params.put("AgrmntNo", "");
             params.put("branch", params.get("branch") != null && params.get("branch") != "" ? Integer.parseInt(params.get("branch").toString().trim()) : 0);
             params.put("status", "1");
-            params.put("SyncCheck", false);
+            params.put("SyncCheck", 0);
             params.put("rank", rank);
             params.put("transportCd", params.get("transportCd") != null && params.get("transportCd") != "" ? Integer.parseInt(params.get("transportCd").toString().trim()) : 0);
             params.put("promoteDate", "01/01/1900");
@@ -255,10 +255,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             params.put("updated", new Date());
             // params.put("updator",52366);
             params.put("updator", sessionVO.getUserId());
-            params.put("memIsOutSource", false);
+            params.put("memIsOutSource", 0);
             params.put("applicantID", appId != null ? appId : 0);
             params.put("BusinessesType", 1375);
-            params.put("Hospitalization", false);
+            params.put("Hospitalization", 0);
             params.put("deptCode", params.get("deptCd") != null ? params.get("deptCd").toString().trim() : "");
             params.put("codyPaExpr", params.get("codyPaExpr") != null ? params.get("codyPaExpr").toString().trim() : "");
             params.put("religion", params.get("religion") != null ? params.get("religion") : "");
