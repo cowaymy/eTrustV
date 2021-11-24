@@ -85,72 +85,85 @@
             $($reportForm).append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
             $($reportForm).append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
 
-            if (type == "1") {
+            var userType = '${SESSION_INFO.userTypeId}';
 
-                reportFileName = "/organization/LoyaltyHPStatusGM.rpt"; //reportFileName
-                reportDownFileName = "LoyaltyHPStatusGM_" + today; //report name
-                reportViewType = "PDF"; //viewType
+            if(userType == 4 || userType == 6)
+            {
+            	 reportFileName = "/organization/LoyaltyHPStatus.rpt"; //reportFileName
+                 reportDownFileName = "LoyaltyHPStatus_" + today; //report name
+                 reportViewType = "PDF"; //viewType
 
-                //set parameters
-                $($reportForm).append('<input type="hidden" id="OrgCode" name="@OrgCode" value="" /> ');
+                 //  report 호출
+                 var option = {
+                     isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
+                 };
+            }else{
+	            if (type == "1") {
 
-                $("#reportForm #OrgCode").val("${orgCode}");
-                //  report 호출
-                var option = {
-                    isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
-                };
+	                reportFileName = "/organization/LoyaltyHPStatusGM.rpt"; //reportFileName
+	                reportDownFileName = "LoyaltyHPStatusGM_" + today; //report name
+	                reportViewType = "PDF"; //viewType
 
-            }else if (type == "2") {
-            	reportFileName = "/organization/LoyaltyHPStatusSM_Excel.rpt"; //reportFileName
-                reportDownFileName = "LoyaltyHPStatusSM_" + today; //report name
-                reportViewType = "EXCEL"; //viewType
+	                //set parameters
+	                $($reportForm).append('<input type="hidden" id="OrgCode" name="@OrgCode" value="" /> ');
 
-                //set parameters
-                $($reportForm).append('<input type="hidden" id="GrpCode" name="@GrpCode" value="" /> ');
+	                $("#reportForm #OrgCode").val("${orgCode}");
+	                //  report 호출
+	                var option = {
+	                    isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
+	                };
 
-                $("#reportForm #GrpCode").val("${grpCode}");
-                //  report 호출
-                var option = {
-                    isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
-                };
+	            }else if (type == "2") {
+	            	reportFileName = "/organization/LoyaltyHPStatusSM_Excel.rpt"; //reportFileName
+	                reportDownFileName = "LoyaltyHPStatusSM_" + today; //report name
+	                reportViewType = "EXCEL"; //viewType
+
+	                //set parameters
+	                $($reportForm).append('<input type="hidden" id="GrpCode" name="@GrpCode" value="" /> ');
+
+	                $("#reportForm #GrpCode").val("${grpCode}");
+	                //  report 호출
+	                var option = {
+	                    isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
+	                };
+	            }
+	            else if (type == "3") {
+	            	reportFileName = "/organization/LoyaltyHPStatusHM_Excel.rpt"; //reportFileName
+	                reportDownFileName = "LoyaltyHPStatusHM_" + today; //report name
+	                reportViewType = "EXCEL"; //viewType
+
+	                //set parameters
+	                $($reportForm).append('<input type="hidden" id="DeptCode" name="@DeptCode" value="" /> ');
+
+	                $("#reportForm #DeptCode").val("${deptCode}");
+
+	                //  report 호출
+	                var option = {
+	                    isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
+	                };
+	            }
+	            else if (type == "4") {
+
+	            	var ORGCODE = "";
+	                reportFileName = "/organization/LoyaltyHPStatusSGM.rpt"; //reportFileName
+	                reportDownFileName = "LoyaltyHPStatusSGM_" + today; //report name
+	                reportViewType = "PDF"; //viewType
+
+	                //set parameters
+
+	                if ($("#cmbOrgCode").val() != '' && $("#cmbOrgCode").val() != null) {
+	                    var MultiORGCode = $("#cmbOrgCode").val().toString().replace(/,/g, "','");
+	                    ORGCODE += MultiORGCode;
+	                }
+
+	                $($reportForm).append('<input type="hidden" id="V_ORGCODE" name="V_ORGCODE" value="" /> ');
+	                $("#reportForm #V_ORGCODE").val(ORGCODE);
+
+	                var option = {
+	                        isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+	                };
+	            }
             }
-            else if (type == "3") {
-            	reportFileName = "/organization/LoyaltyHPStatusHM_Excel.rpt"; //reportFileName
-                reportDownFileName = "LoyaltyHPStatusHM_" + today; //report name
-                reportViewType = "EXCEL"; //viewType
-
-                //set parameters
-                $($reportForm).append('<input type="hidden" id="DeptCode" name="@DeptCode" value="" /> ');
-
-                $("#reportForm #DeptCode").val("${deptCode}");
-
-                //  report 호출
-                var option = {
-                    isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
-                };
-            }
-            else if (type == "4") {
-
-            	var ORGCODE = "";
-                reportFileName = "/organization/LoyaltyHPStatusSGM.rpt"; //reportFileName
-                reportDownFileName = "LoyaltyHPStatusSGM_" + today; //report name
-                reportViewType = "PDF"; //viewType
-
-                //set parameters
-
-                if ($("#cmbOrgCode").val() != '' && $("#cmbOrgCode").val() != null) {
-                    var MultiORGCode = $("#cmbOrgCode").val().toString().replace(/,/g, "','");
-                    ORGCODE += MultiORGCode;
-                }
-
-                $($reportForm).append('<input type="hidden" id="V_ORGCODE" name="V_ORGCODE" value="" /> ');
-                $("#reportForm #V_ORGCODE").val(ORGCODE);
-
-                var option = {
-                        isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-                };
-            }
-
             //default setting
             $("#reportForm #reportFileName").val(reportFileName);
             $("#reportForm #reportDownFileName").val(reportDownFileName);
