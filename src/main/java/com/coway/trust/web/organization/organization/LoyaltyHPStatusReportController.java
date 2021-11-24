@@ -61,9 +61,6 @@ public class LoyaltyHPStatusReportController {
 	        model.put("deptCode", getUserInfo.get("deptCode"));
 	        model.put("memCode", getUserInfo.get("memCode"));
 	        LOGGER.info("memType ##### " + getUserInfo.get("memType"));
-	        LOGGER.info("orgCode ----" + getUserInfo.get("orgCode"));
-	        LOGGER.info("grpCode ##### " + getUserInfo.get("grpCode"));
-	        LOGGER.info("deptCode ##### " + getUserInfo.get("deptCode"));
 	    }
 	    return "organization/organization/LoyaltyHPStatusReport";
 	}
