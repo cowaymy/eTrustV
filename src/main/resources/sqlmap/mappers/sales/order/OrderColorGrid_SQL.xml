@@ -216,7 +216,7 @@
                               LEFT JOIN SYS0032M instReason ON instReason.RESN_ID = ir.FAIL_ID
                               JOIN SAL0045D ins ON ins.sales_ord_id = som.sales_ord_id
                               JOIN SAL0023D cust ON cust.CUST_ADD_ID = ins.ADD_ID
-                              JOIN SYS0035M adr ON adr.STATE_ID = cust.STATEID
+                              LEFT JOIN SYS0035M adr ON adr.STATE_ID = cust.STATEID
                               WHERE (som.STUS_CODE_ID <![CDATA[<>]]> 8)
                               AND som.APP_TYPE_ID <![CDATA[<>]]> 5764
 
