@@ -474,6 +474,7 @@
 	                GROUP BY AS_SO_NO, AS_RESULT_NO) J
 	        ON SAL.SALES_ORD_NO = J.ORD_NO
 	        WHERE SAL.SALES_ORD_NO = #{ordNo}
+	           AND ESVM.PSM_ID = #{psmId}
 	        AND PAC1.PAC_TYPE = 1 AND PAC1.SRV_MEM_STUS_ID = 1) INFO
     </select>
 
