@@ -22,6 +22,8 @@ import com.coway.trust.biz.payment.otherpayment.service.TokenIdMaintainVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.csv.CsvReadComponent;
+import com.coway.trust.util.CommonUtils;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
@@ -50,6 +52,10 @@ public class TokenIdMaintainController {
     ReturnMessage message = new ReturnMessage();
 
     String uploadStatus = request.getParameter("uploadStatus");
+    boolean blankRemark = false;
+    boolean blankResponseCode = false;
+    boolean blankResponseDesc = false;
+    boolean blankCreditCardType = false;
 
     Map<String, MultipartFile> fileMap = request.getFileMap();
     MultipartFile multipartFile = fileMap.get("csvFile");
@@ -58,6 +64,30 @@ public class TokenIdMaintainController {
     List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
     for (TokenIdMaintainVO vo : vos) {
       HashMap<String, Object> hm = new HashMap<String, Object>();
+
+      if(CommonUtils.nvl(vo.getResponseDesc()) == ""){
+    	  message.setMessage("Failed to upload Token Id Maintenance item(s) : Response Description not allowed blank ");
+    	  blankResponseDesc= true;
+      break;
+      }
+
+      if(CommonUtils.nvl(vo.getCreditCardType()) == ""){
+    	  message.setMessage("Failed to upload Token Id Maintenance item(s) : Credit Card Type not allowed blank ");
+    	  blankCreditCardType= true;
+      break;
+      }
+
+      if(CommonUtils.nvl(vo.getResponseCode()) == ""){
+    	  message.setMessage("Failed to upload Token Id Maintenance item(s) : Response Code not allowed blank ");
+    	  blankResponseCode= true;
+      break;
+      }
+
+      if(CommonUtils.nvl(vo.getRemark()) == ""){
+    	  message.setMessage("Failed to upload Token Id Maintenance item(s) : Remark not allowed blank ");
+    	  blankRemark= true;
+      break;
+      }
 
       hm.put("tokenId", vo.getTokenId());
       hm.put("cardType", vo.getCardType());
@@ -74,13 +104,17 @@ public class TokenIdMaintainController {
     params.put("userId", sessionVO.getUserId());
     params.put("uploadStatus", uploadStatus);
 
-    int result = tokenIdMaintainService.saveTokenIdMaintainUpload(params,list);
+    int result = 0;
+
+    if(blankRemark== false && blankResponseCode== false && blankResponseDesc== false && blankCreditCardType== false)
+    	result = tokenIdMaintainService.saveTokenIdMaintainUpload(params,list);
+
     if(result > 0){
         message.setMessage("Token Id Maintenance successfully uploaded.<br />Item(s) uploaded : "+result);
     }else{
-      message.setMessage("Failed to upload Token Id Maintenance item(s). Please try again later.");
+    	 if(blankRemark== false && blankResponseCode== false && blankResponseDesc== false && blankCreditCardType== false)
+    		 message.setMessage("Failed to upload Token Id Maintenance item(s). Please try again later.");
     }
-
 
     return ResponseEntity.ok(message);
   }
