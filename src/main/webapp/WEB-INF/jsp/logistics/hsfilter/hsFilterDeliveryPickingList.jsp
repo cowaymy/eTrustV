@@ -101,8 +101,15 @@ createAUIGrid =function(columnLayout ){
    });
 
 
+   function fn_checkAll()
+   {
 
+	   var rowCount = AUIGrid.getRowCount(mstGridID);
 
+       for (var i = 0 ; i < rowCount ; i++){
+    	    AUIGrid.setCellValue(mstGridID, i, "check", true);
+       }
+	}
 
     function fn_changeCDC(){
         doGetComboData('/logistics/HsFilterDelivery/selectHSFilterDeliveryBranchList.do', {searchBranch: $("#searchCDC").val()}, '', 'searchBranchCb', 'S','');
@@ -191,7 +198,7 @@ createAUIGrid =function(columnLayout ){
     	   for (var i = 0 ; i < rowCount ; i++){
 
                var refStoNo =AUIGrid.getCellValue(mstGridID , i , 'refStoNo');
-               console.log(refStoNo);
+			   console.log(refStoNo);
                if( "" != refStoNo   &&   undefined != refStoNo){
                    Common.alert("Please check it out, STO  already exists");
                    return false;
@@ -309,6 +316,7 @@ createAUIGrid =function(columnLayout ){
     <section class="search_result"><!-- search_result start -->
 
         <ul class="right_btns">
+            <li><p class="btn_grid"><a id="checkAll"  onclick="javascript:fn_checkAll();">Check All </a></p></li>
             <li><p class="btn_grid"><a id="download"  onclick="javascript:fn_doSave();" >To Generate STO </a></p></li>
             <li><p class="btn_grid"><a id="download"  onclick="javascript:fn_openReport();" >Generate PDF</a></p></li>
             <li><p class="btn_grid"><a id="exceldownload" onclick="javascript:fn_gridExport('xlsx');">Generate  EXCEL</a></p></li>
