@@ -23,7 +23,8 @@ var bankData = [{"codeId": "2","codeName": "Alliance Bank"},
                 {"codeId": "6","codeName": "Public Bank"},
                 {"codeId": "7","codeName": "RHB Bank"},
                 {"codeId": "9","codeName": "BSN Bank"},
-                {"codeId": "46","codeName": "My Clear"}
+                {"codeId": "46","codeName": "My Clear"},
+                {"codeId": "17","codeName": "HSBC Bank"}
                 ];
 
 //Issue Bank Combo Data for CRC
