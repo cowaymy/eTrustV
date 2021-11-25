@@ -55,7 +55,6 @@ public class TokenIdMaintainController {
     boolean blankRemark = false;
     boolean blankResponseCode = false;
     boolean blankResponseDesc = false;
-    boolean blankCreditCardType = false;
 
     Map<String, MultipartFile> fileMap = request.getFileMap();
     MultipartFile multipartFile = fileMap.get("csvFile");
@@ -68,12 +67,6 @@ public class TokenIdMaintainController {
       if(CommonUtils.nvl(vo.getResponseDesc()) == ""){
     	  message.setMessage("Failed to upload Token Id Maintenance item(s) : Response Description not allowed blank ");
     	  blankResponseDesc= true;
-      break;
-      }
-
-      if(CommonUtils.nvl(vo.getCreditCardType()) == ""){
-    	  message.setMessage("Failed to upload Token Id Maintenance item(s) : Credit Card Type not allowed blank ");
-    	  blankCreditCardType= true;
       break;
       }
 
@@ -106,13 +99,13 @@ public class TokenIdMaintainController {
 
     int result = 0;
 
-    if(blankRemark== false && blankResponseCode== false && blankResponseDesc== false && blankCreditCardType== false)
+    if(blankRemark== false && blankResponseCode== false && blankResponseDesc== false)
     	result = tokenIdMaintainService.saveTokenIdMaintainUpload(params,list);
 
     if(result > 0){
         message.setMessage("Token Id Maintenance successfully uploaded.<br />Item(s) uploaded : "+result);
     }else{
-    	 if(blankRemark== false && blankResponseCode== false && blankResponseDesc== false && blankCreditCardType== false)
+    	 if(blankRemark== false && blankResponseCode== false && blankResponseDesc== false)
     		 message.setMessage("Failed to upload Token Id Maintenance item(s). Please try again later.");
     }
 
