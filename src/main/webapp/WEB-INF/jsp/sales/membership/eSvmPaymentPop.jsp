@@ -40,7 +40,11 @@
 </tr>
 <tr>
     <th scope="row">TR Issue Date</th>
-    <td colspan=3><input id=payment_trIssuedDt name="payment_trIssuedDt" type="text" title="" placeholder="" class="w100p" /></td>
+    <td colspan=3>
+        <div class="date_set w100p">
+            <p><input id=payment_trIssuedDt name="payment_trIssuedDt" type="text" title="" placeholder="" class="j_date" /></p>
+        </div>
+    </td>
 </tr>
 </c:if>
 <!--  only show when payment-mode == cash/cheque [e] -->
