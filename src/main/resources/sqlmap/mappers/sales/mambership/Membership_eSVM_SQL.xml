@@ -622,7 +622,7 @@
                    ESVMPAY.ALLOW_COMM = '1',
        </if>
             ESVMPAY.TR_REF_NO = #{trRefNo},
-            ESVMPAY.TR_ISSUED_DT = #{trIssuedDt},
+            ESVMPAY.TR_ISSUED_DT = TO_CHAR(TO_DATE(#{trIssuedDt}, 'DD/MM/YYYY'), 'DD/MM/YYYY'),
        <if test='payment_cardMode != null and payment_cardMode != ""'>
                    ESVMPAY.CARD_MODE = #{payment_cardMode},
        </if>
