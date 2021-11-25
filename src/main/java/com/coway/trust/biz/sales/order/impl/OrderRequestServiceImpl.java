@@ -2312,7 +2312,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         if (opMap != null &&opMap_anoStkId!=null) {
         	BigDecimal b1, b2;
         	 b1 =(BigDecimal) opMap.get("promoItmPrc") ;
-             b2 = (BigDecimal) opMap_anoStkId.get("promoItmPrc") ;
+             b2 = (BigDecimal) opMap_anoStkId.get("promoAmt") ;
              int SumPrice = b1.intValue()+b2.intValue();
             OutrightPrice = BigDecimal.valueOf(SumPrice);
         }
