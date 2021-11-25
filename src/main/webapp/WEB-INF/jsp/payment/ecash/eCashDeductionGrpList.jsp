@@ -18,7 +18,8 @@ var statusData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeName"
 var bankData = [ /* {"codeId": "21","codeName": "Maybank"},
                              */
                              {"codeId": "3","codeName": "CIMB Bank"},
-                             {"codeId": "19","codeName": "Standard Chartered Bank"}
+                             {"codeId": "19","codeName": "Standard Chartered Bank"},
+                             {"codeId": "17","codeName": "HSBC Bank"}
                            ];
 
 var subPath = "/resources/WebShare/CRT";

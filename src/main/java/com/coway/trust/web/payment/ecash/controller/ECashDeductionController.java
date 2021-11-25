@@ -43,6 +43,8 @@ import com.coway.trust.biz.payment.ecash.service.ECashDeductionService;
 import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
 import com.coway.trust.biz.payment.payment.service.ECashResultUploadVO;
 import com.coway.trust.biz.payment.payment.service.ECashResultScbUploadVO;
+import com.coway.trust.biz.payment.payment.service.ECashResultCimbUploadVO;
+import com.coway.trust.biz.payment.payment.service.ECashResultHsbcUploadVO;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.EmailVO;
@@ -929,8 +931,8 @@ public class ECashDeductionController {
 		eCashMap.put("fileBatchId",request.getParameter("fileBatchId"));
 		eCashMap.put("fileBatchBankId",request.getParameter("fileBatchBankId"));
 
-		 }else{
-				List<ECashResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,ECashResultUploadVO::create);
+		 }else  if( request.getParameter("bankCode").equals("CIMB")){
+				List<ECashResultCimbUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,false ,ECashResultCimbUploadVO::create);
 
 				//CVS 파일 객체 세팅
 				Map<String, Object> cvsParam = new HashMap<String, Object>();
@@ -938,7 +940,7 @@ public class ECashDeductionController {
 				cvsParam.put("userId", sessionVO.getUserId());
 
 				// cvs 파일 저장 처리
-				List<ECashResultUploadVO> vos2 = (List<ECashResultUploadVO>) cvsParam.get("voList");
+				List<ECashResultCimbUploadVO> vos2 = (List<ECashResultCimbUploadVO>) cvsParam.get("voList");
 
 				List<Map> list = vos2.stream().map(r -> {
 					Map<String, Object> map = BeanConverter.toMap(r);
@@ -946,7 +948,7 @@ public class ECashDeductionController {
 					map.put("itmId", r.getItmId());
 					map.put("appvCode", r.getAppvCode());
 					map.put("respnsCode", r.getRespnsCode());
-					map.put("settleDate", today);
+					map.put("settleDate",today);
 					return map;
 				}).collect(Collectors.toList());
 
@@ -976,6 +978,102 @@ public class ECashDeductionController {
 				eCashMap.put("settleDate", list.get(0).get("settleDate").toString());
 				eCashMap.put("fileBatchId",request.getParameter("fileBatchId"));
 				eCashMap.put("fileBatchBankId",request.getParameter("fileBatchBankId"));
+
+		 }else if( request.getParameter("bankCode").equals("HSBC")){
+				List<ECashResultHsbcUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,false ,ECashResultHsbcUploadVO::create);
+
+				//CVS 파일 객체 세팅
+				Map<String, Object> cvsParam = new HashMap<String, Object>();
+				cvsParam.put("voList", vos);
+				cvsParam.put("userId", sessionVO.getUserId());
+
+				// cvs 파일 저장 처리
+				List<ECashResultHsbcUploadVO> vos2 = (List<ECashResultHsbcUploadVO>) cvsParam.get("voList");
+
+				List<Map> list = vos2.stream().map(r -> {
+					Map<String, Object> map = BeanConverter.toMap(r);
+					map.put("itmCnt", r.getItmCnt());
+					map.put("itmId", r.getItmId());
+					map.put("appvCode", r.getAppvCode());
+					map.put("respnsCode", r.getRespnsCode());
+					map.put("settleDate",today);
+					return map;
+				}).collect(Collectors.toList());
+
+				int size = 500;
+				int page = list.size() / size;
+				int start;
+				int end;
+
+				Map<String, Object> bulkMap = new HashMap<>();
+				eCashDeductionService.deleteECashDeductionResultItem(eCashMap);
+				for (int i = 0; i <= page; i++) {
+					start = i * size;
+					end = size;
+
+					if (i == page) {
+						end = list.size();
+					}
+					LOGGER.info("list ::" + list.stream().skip(start).limit(end).count());
+					if(list.stream().skip(start).limit(end).count() != 0){
+						bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+						eCashDeductionService.updateECashDeductionResultItemBulk(bulkMap);
+					}
+				}
+
+
+				eCashMap = eCashDeductionService.selectECashBankResult(eCashMap);
+				eCashMap.put("settleDate", list.get(0).get("settleDate").toString());
+				eCashMap.put("fileBatchId",request.getParameter("fileBatchId"));
+				eCashMap.put("fileBatchBankId",request.getParameter("fileBatchBankId"));
+
+				 }else{
+    				List<ECashResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,ECashResultUploadVO::create);
+
+    				//CVS 파일 객체 세팅
+    				Map<String, Object> cvsParam = new HashMap<String, Object>();
+    				cvsParam.put("voList", vos);
+    				cvsParam.put("userId", sessionVO.getUserId());
+
+    				// cvs 파일 저장 처리
+    				List<ECashResultUploadVO> vos2 = (List<ECashResultUploadVO>) cvsParam.get("voList");
+
+    				List<Map> list = vos2.stream().map(r -> {
+    					Map<String, Object> map = BeanConverter.toMap(r);
+    					map.put("itmCnt", r.getItmCnt());
+    					map.put("itmId", r.getItmId());
+    					map.put("appvCode", r.getAppvCode());
+    					map.put("respnsCode", r.getRespnsCode());
+    					map.put("settleDate", today);
+    					return map;
+    				}).collect(Collectors.toList());
+
+    				int size = 500;
+    				int page = list.size() / size;
+    				int start;
+    				int end;
+
+    				Map<String, Object> bulkMap = new HashMap<>();
+    				eCashDeductionService.deleteECashDeductionResultItem(eCashMap);
+    				for (int i = 0; i <= page; i++) {
+    					start = i * size;
+    					end = size;
+
+    					if (i == page) {
+    						end = list.size();
+    					}
+    					LOGGER.info("list ::" + list.stream().skip(start).limit(end).count());
+    					if(list.stream().skip(start).limit(end).count() != 0){
+    						bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+    						eCashDeductionService.updateECashDeductionResultItemBulk(bulkMap);
+    					}
+    				}
+
+
+    				eCashMap = eCashDeductionService.selectECashBankResult(eCashMap);
+    				eCashMap.put("settleDate", list.get(0).get("settleDate").toString());
+    				eCashMap.put("fileBatchId",request.getParameter("fileBatchId"));
+    				eCashMap.put("fileBatchBankId",request.getParameter("fileBatchBankId"));
 		 }
     	// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
