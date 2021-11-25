@@ -762,6 +762,7 @@
     	console.log("Action: " + $("#action").val());
     	console.log("specialInst: " + $("#specialInstruction").val());
     	console.log("SAFlg: " + SAFlg);
+    	console.log("payMode: " + '${paymentInfo.payMode}');
     	if(FormUtil.isEmpty($("#SARefNo").val()) && SAFlg == 1) {
             Common.alert('Please enter SA Reference No.');
             checkResult = false;
@@ -791,65 +792,56 @@
                     return checkResult;
                 }
             }
-
+            else if('${paymentInfo.payMode}' == '6528') //card=MOTO/IPP checking only when approve action
+           	{
+            	if((FormUtil.isEmpty($("#payment_cardMode").val()))){
+                    Common.alert('Please select Card Mode.');
+                    checkResult = false;
+                    return checkResult;
+                }
+                else if((FormUtil.isEmpty($("#payment_cardNo").val()))){
+                    Common.alert('Please enter Card No.');
+                    checkResult = false;
+                    return checkResult;
+                }
+                else if((FormUtil.isEmpty($("#payment_approvalNo").val()))){
+                    Common.alert('Please enter Approval No.');
+                    checkResult = false;
+                    return checkResult;
+                }
+                else if((FormUtil.isEmpty($("#payment_expDt").val()))){
+                    Common.alert('Please enter Expiry Date (CVV).');
+                    checkResult = false;
+                    return checkResult;
+                }
+                else if((FormUtil.isEmpty($("#payment_transactionDt").val()))){
+                    Common.alert('Please enter Transaction Date.');
+                    checkResult = false;
+                    return checkResult;
+                }
+                else if((FormUtil.isEmpty($("#payment_ccHolderName").val()))){
+                    Common.alert('Please enter Credit Card Holder Name.');
+                    checkResult = false;
+                    return checkResult;
+                }
+                else if((FormUtil.isEmpty($("#payment_issuedBank").val()))){
+                    Common.alert('Please select a Issued Bank.');
+                    checkResult = false;
+                    return checkResult;
+                }
+                else if((FormUtil.isEmpty($("#payment_cardType").val()))){
+                    Common.alert('Please select a Card Type.');
+                    checkResult = false;
+                    return checkResult;
+                }
+                else if((FormUtil.isEmpty($("#payment_merchantBank").val()))){
+                    Common.alert('Please select a Merchant Bank.');
+                    checkResult = false;
+                    return checkResult;
+                }
+           	}
         }
-        /* else if('${paymentInfo.payMode}' == '6507' || '${paymentInfo.payMode}' == '6508') {
-        	if(FormUtil.isEmpty($("#payment_transactionID").val())) {
-        		Common.alert('Please enter Transaction ID.');
-                checkResult = false;
-                return checkResult;
-        	}
-        } */else if('${paymentInfo.payMode}' == '6528' && $("#action").val() == '5') { //card=MOTO/IPP checking only when approve action
-        	if((FormUtil.isEmpty($("#payment_cardMode").val()))){
-        		Common.alert('Please select Card Mode.');
-                checkResult = false;
-                return checkResult;
-        	}
-        	else if((FormUtil.isEmpty($("#payment_cardNo").val()))){
-        		Common.alert('Please enter Card No.');
-                checkResult = false;
-                return checkResult;
-        	}
-        	else if((FormUtil.isEmpty($("#payment_approvalNo").val()))){
-                Common.alert('Please enter Approval No.');
-                checkResult = false;
-                return checkResult;
-            }
-        	else if((FormUtil.isEmpty($("#payment_expDt").val()))){
-                Common.alert('Please enter Expiry Date (CVV).');
-                checkResult = false;
-                return checkResult;
-            }
-        	else if((FormUtil.isEmpty($("#payment_transactionDt").val()))){
-                Common.alert('Please enter Transaction Date.');
-                checkResult = false;
-                return checkResult;
-            }
-        	else if((FormUtil.isEmpty($("#payment_ccHolderName").val()))){
-                Common.alert('Please enter Credit Card Holder Name.');
-                checkResult = false;
-                return checkResult;
-            }
-        	else if((FormUtil.isEmpty($("#payment_issuedBank").val()))){
-                Common.alert('Please select a Issued Bank.');
-                checkResult = false;
-                return checkResult;
-            }
-        	else if((FormUtil.isEmpty($("#payment_cardType").val()))){
-                Common.alert('Please select a Card Type.');
-                checkResult = false;
-                return checkResult;
-            }
-        	else if((FormUtil.isEmpty($("#payment_merchantBank").val()))){
-                Common.alert('Please select a Merchant Bank.');
-                checkResult = false;
-                return checkResult;
-            }
-
-        }
-
-
-    	return checkResult;
+	    	return checkResult;
     }
 
 </script>
