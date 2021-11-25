@@ -15,9 +15,9 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("loyaltyHPStatusReportService")
-public class LoyaltyHPStautusReportServiceImpl extends EgovAbstractServiceImpl implements LoyaltyHPStatusReportService {
+public class LoyaltyHPStatusReportServiceImpl extends EgovAbstractServiceImpl implements LoyaltyHPStatusReportService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LoyaltyHPStautusReportServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoyaltyHPStatusReportServiceImpl.class);
 
 	@Resource(name = "LoyaltyHPStatusReportMapper")
 	private LoyaltyHPStatusReportMapper LoyaltyHPStatusReportMapper;

@@ -8,4 +8,5 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface LoyaltyHPStatusReportService {
 
 	List<EgovMap> selectOrgCode(Map<String, Object> params);
+
 }
