@@ -295,12 +295,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             	Map<String, Object> memMap = new HashMap<String, Object>();
             	memMap.put("MemberID", memid);
 
-            	//call LMS API create user
-//				Map<String, Object> returnVal = lmsApiService.lmsMemberListInsert(memMap);
-//				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
-//					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
-//					throw new RuntimeException(e1);
-//				}
+            	//call LMS API create user --
+            	// DO NOT REMOVE/ COMMENT THIS CODE WHEN COMMITTING CODE INTO SVN -- HUI DING
+				Map<String, Object> returnVal = lmsApiService.lmsMemberListInsert(memMap);
+				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
+					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
+					throw new RuntimeException(e1);
+				}
             	//lmsMemberListInsert(memMap);
             }
 
@@ -1350,6 +1351,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             	Map<String, Object> memMap = new HashMap<String, Object>();
             	memMap.put("MemberID", params.get("requestMemberId").toString());
 
+				// DO NOT REMOVE/ COMMENT THIS CODE WHEN COMMITTING CODE INTO SVN -- HUI DING
             	Map<String, Object> returnVal = lmsApiService.lmsMemberListUpdate(memMap);
 				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
@@ -1486,6 +1488,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 //                	memberListMapper.updateMemberEmail(memMap);
 //
 //                	//update lms site
+                	// DO NOT REMOVE/ COMMENT THIS CODE WHEN COMMITTING CODE INTO SVN -- HUI DING
 //                	Map<String, Object> returnVal = lmsApiService.lmsMemberListDeact(memMap);
 //            		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 //            			Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
@@ -1660,6 +1663,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     	memMap.put("memberType",params.get("traineeType"));
     	memMap.put("joinDt",formattedDate);
 
+    	// DO NOT REMOVE/ COMMENT THIS CODE WHEN COMMITTING CODE INTO SVN -- HUI DING
     	Map<String, Object> returnVal = lmsApiService.lmsMemberListUpdateMemCode(memMap);
 		if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 			Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
@@ -2195,6 +2199,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    			//} //20-10-2021 - HLTANG - close for LMS project end
 
 	    				//call LMS API create user
+	    	    		// DO NOT REMOVE/ COMMENT THIS CODE WHEN COMMITTING CODE INTO SVN -- HUI DING
 	    				Map<String, Object> returnVal = lmsApiService.lmsEHPMemberListInsert(params,memberCode);
 	    				if (returnVal != null && returnVal.get("status").toString().equals(AppConstants.FAIL)){
 	    					Exception e1 = new Exception (returnVal.get("message") != null ? returnVal.get("message").toString() : "");
