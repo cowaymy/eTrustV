@@ -9,7 +9,7 @@
 
     $(document).ready(
     	    function() {
-    	    	createAUIGrid();
+    	    	//createAUIGrid();
 
                 $("#cmbbranchId").change(
                 	    function() {
@@ -18,9 +18,9 @@
 
                 var isF = true;
 
-                fn_getASOrderInfo(); // GET AS ORDER INFOR.
-                fn_getASEvntsInfo(); // GET AS EVENT INFOR.
-                fn_getASHistoryInfo(); // GET AS HISTORY INFOR
+                //fn_getASOrderInfo(); // GET AS ORDER INFOR.
+               // fn_getASEvntsInfo(); // GET AS EVENT INFOR.
+                //fn_getASHistoryInfo(); // GET AS HISTORY INFOR
 
                 fn_DisablePageControl(); // DISABLE ALL THE FIELD
                 $("#ddlStatus").attr("disabled", false); // ENABLE BACK STATUS
@@ -1155,7 +1155,7 @@
             <input  type="hidden" id='hidSerialChk' name='hidSerialChk' />
             <section class="pop_body">
                 <!-- pop_body start -->
-                <section class="tap_wrap">
+                <%-- <section class="tap_wrap">
                     <!-- tap_wrap start -->
                     <ul class="tap_type1">
                         <li><a href="#" class="on"><spring:message
@@ -1275,7 +1275,7 @@
                         <!------------------------------------------------------------------------------
           Order Detail Page Include START
          ------------------------------------------------------------------------------->
-                         <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
+                      <%@ include file="/WEB-INF/jsp/sales/order/orderDetailContent.jsp"%>
                         <!------------------------------------------------------------------------------
           Order Detail Page Include END
          ------------------------------------------------------------------------------->
@@ -1296,7 +1296,7 @@
                         <!-- grid_wrap end -->
                     </article>
                     <!-- tap_area end -->
-                </section>
+                </section> --%>
                 <!-- tap_wrap end -->
 	            <aside class="title_line">
                     <h3 class="red_text">

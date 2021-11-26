@@ -923,7 +923,7 @@
     $("#asData_AS_RESULT_NO").val(ops.AS_RESULT_NO);
     $("#requestMod").val(ops.MOD);
 
-    fn_getASRulstEditFilterInfo(); //AS_RESULT_NO
+    //fn_getASRulstEditFilterInfo(); //AS_RESULT_NO
     // fn_getASRulstSVC0004DInfo(); //AS_RESULT_NO
     // fn_setCTcodeValue();
 
@@ -1170,9 +1170,8 @@
               <td colspan="3">
                 <div id='newRno' style='display: none'>
                   <span id='newResultNo'> </span>
-                </div> <span id='reminder' style="color: red;
-  font-style: italic;
-  display: none"><spring:message code='service.alert.msg.AsEditPrdChk' /></span>
+                </div> <span id='reminder' style="color: red; font-style: italic;  display: none">
+                <spring:message code='service.alert.msg.AsEditPrdChk' /></span>
               </td>
             </tr>
             <tr>
