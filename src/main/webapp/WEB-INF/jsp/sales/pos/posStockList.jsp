@@ -34,7 +34,7 @@
 
 
 //AUIGrid  ID
-var mstGridID;
+var mstGridID, myGridID;
 
 
 
@@ -77,12 +77,28 @@ var columnLayout = [
                     {dataField: "scnMoveType",headerText :"scnMoveType"          ,width:120   ,height:30 , visible:false,editable : false},
            ];
 
+var excelLayout = [
+                    {dataField: "scnNo",headerText :"SCN No."                                         ,width:  180   ,height:30 , visible:true, editable : false},
+                    {dataField: "scnMoveTypeCode",headerText :"Movement Type"       ,width: 180    ,height:30 , visible:true, editable : false},
+                    {dataField: "scnMoveStatCode",headerText :"Movement Status"       ,width: 180    ,height:30 , visible:true, editable : false},
+                    {dataField: "codeName",headerText :"Category"       ,width: 180    ,height:30 , visible:true, editable : false},
+                    {dataField: "scnMoveType",headerText :"Item Type"          ,width:120   ,height:30 , visible:false,editable : false},
+                    {dataField: "itemDesc",headerText :"Item"          ,width:120   ,height:30 , visible:false,editable : false},
+                    {dataField: "itemInvtQty",headerText :"Quantity"          ,width:120   ,height:30 , visible:false,editable : false},
+                    {dataField: "itemInvtQty",headerText :"Quantity"          ,width:120   ,height:30 , visible:false,editable : false},
+                    {dataField: "scnFromLocDesc",headerText :"From Location"          ,width:220   ,height:30 , visible:true, editable : false},
+                    {dataField: "scnToLocDesc",headerText :"To Location"          ,width:220   ,height:30 , visible:true, editable : false},
+                    {dataField: "crtDt",headerText :"Create Date"          ,width:140   ,height:30 , visible:true ,editable : false},
+                    {dataField: "crtUserId",headerText :"Create ID"          ,width:140   ,height:30 , visible:true ,editable : false},
+                    {dataField: "updDate",headerText :"Update Date"          ,width:140   ,height:30 , visible:true ,editable : false},
+                    {dataField: "updUserId",headerText :"Update ID"          ,width:140   ,height:30 , visible:true ,editable : false},
+                    {dataField: "itemReason",headerText :"Reason"          ,width:120   ,height:30 , visible:true, editable : false},
+                    {dataField: "itemRejRemark",headerText :"Remark"          ,width:140   ,height:30 , visible:true ,editable : false},
+                    {dataField: "scnMoveDate",headerText :"Move Date"          ,width:140   ,height:30 , visible:true ,editable : false},
+                    {dataField: "keyInBranch",headerText :"Key In Branch"          ,width:140   ,height:30 , visible:true ,editable : false},
+           ];
 
-
-
-createAUIGrid =function(columnLayout ){
-
-
+createAUIGrid =function(columnLayout){
 
 
 	var auiGridProps = {
@@ -102,6 +118,7 @@ createAUIGrid =function(columnLayout ){
 
     // 실제로 #grid_wrap 에 그리드 생성
     mstGridID = AUIGrid.create("#grid_wrap", columnLayout, auiGridProps);
+    myGridID = AUIGrid.create("#grid_wrap_excel", excelLayout, auiGridProps);
 
 
 
@@ -147,6 +164,7 @@ fn_getDataListAjax  = function () {
         console.log("data : " + result);
        // console.log(result);
         AUIGrid.setGridData(mstGridID, result);
+        AUIGrid.setGridData(myGridID, result);
     });
 }
 
@@ -246,6 +264,11 @@ fn_selectPosStockMgmtReceivedPop=function (){
 
 	 var scnNo = selectedItems[0].item.scnNo;
      Common.popupDiv("/sales/posstock/selectPosStockMgmtReceivedList.do?scnNo="+scnNo, '' , null , true , "_insDiv");
+}
+
+function fn_excelDown(){
+    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+    GridCommon.exportTo("grid_wrap_excel", "xlsx", "Movement Raw Data_Stock Card");
 }
 
 fn_stockCard = function (){
@@ -384,16 +407,22 @@ fn_stockCard = function (){
 
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
+
         <ul class="right_btns">
 <!--<c:if test="${PAGE_AUTH.funcChange == 'Y'}"> -->
            <!--  <li><p class="btn_grid"><a id="re">Recalculate</a></p></li> -->
 
 <!-- </c:if> -->
             <li><p class="btn_grid"><a id="updateStatus" onclick="fn_selectPosStockMgmtReceivedPop();" >Update Status</a></p></li>
+
+            <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+            <li><p class="btn_grid"><a href="javascript:fn_excelDown();">GENERATE</a></p></li>
+            </c:if>
+
         </ul>
 
          <div id="grid_wrap" class="mt10" style="height:430px;"></div>
-
+         <div id="grid_wrap_excel" class="mt10" style="height:430px;display:none"></div>
 
          <ul class="center_btns mt20">
     </ul>
