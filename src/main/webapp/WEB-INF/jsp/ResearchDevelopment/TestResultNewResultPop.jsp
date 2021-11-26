@@ -9,8 +9,8 @@
 
     $(document).ready(
     	    function() {
-    	    	console.log("testing");
     	    	createAUIGrid();
+
                 $("#cmbbranchId").change(
                 	    function() {
                 	        doGetCombo('/services/as/selectCTByDSC.do', $("#cmbbranchId").val(), '', 'cmbctId', 'S','');
@@ -18,16 +18,14 @@
 
                 var isF = true;
 
-                doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '', 'ddlFilterExchangeCode', 'S', ''); // FITLER EXCHANGE CODE
-                doGetCombo('/services/as/getBrnchId', '', '', 'branchDSC', 'S', ''); // RECALL ENTRY DSC CODE
-                doGetCombo('/services/as/inHouseGetProductMasters.do', '', '', 'productGroup', 'S', ''); // IN HOUSE PRODUCT CODE
-
                 fn_getASOrderInfo(); // GET AS ORDER INFOR.
                 fn_getASEvntsInfo(); // GET AS EVENT INFOR.
                 fn_getASHistoryInfo(); // GET AS HISTORY INFOR
 
                 fn_DisablePageControl(); // DISABLE ALL THE FIELD
                 $("#ddlStatus").attr("disabled", false); // ENABLE BACK STATUS
+
+                AUIGrid.resize(myFltGrd10, 950, 200);
 
                 fn_getASRulstSVC0004DInfo();
                 fn_getASRulstEditFilterInfo();
@@ -38,9 +36,21 @@
 
                 if ('${IS_AUTO}' == "true") { // TO BE REMOVE
                     $("#inHouseRepair_div").attr("style", "display:none");
-                        }
+                }
 
     });
+
+    function fn_inHouseAutoClose() {
+        if ('${IS_AUTO}' == "true") {
+            $("#ddlStatus").attr("disabled", false);
+            $('#ddlStatus').val("4");
+            fn_doSave();
+
+            setTimeout(function() {
+                $("#_newASResultDiv1").remove();
+            }, 2000);
+        }
+    }
 
     function createAUIGrid() {
         var columnLayout = [ {
@@ -121,17 +131,7 @@
         });
     }
 
-    function fn_inHouseAutoClose() {
-        if ('${IS_AUTO}' == "true") {
-            $("#ddlStatus").attr("disabled", false);
-            $('#ddlStatus').val("4");
-            fn_doSave();
 
-            setTimeout(function() {
-                $("#_newASResultDiv1").remove();
-            }, 2000);
-        }
-    }
 
     function fn_getASRulstEditFilterInfo() {
         Common.ajax("GET", "/services/as/getASRulstEditFilterInfo", {
@@ -190,6 +190,59 @@
             });
     }
 
+    function fn_asDefectEntryHideSearch(result) {
+        //DP DEFETC PART
+        $("#def_part").val(result[0].defectCode);
+        $("#def_part_id").val(result[0].defectId);
+        $("#def_part_text").val(result[0].defectDesc);
+        $("#DP").hide();
+        //DD AS PROBLEM SYMPTOM LARGE
+        $("#def_def").val(result[1].defectCode);
+        $("#def_def_id").val(result[1].defectId);
+        $("#def_def_text").val(result[1].defectDesc);
+        $("#DD").hide();
+        //DC AS PROBLEM SYMPTOM SMALL
+        $("#def_code").val(result[2].defectCode);
+        $("#def_code_id").val(result[2].defectId);
+        $("#def_code_text").val(result[2].defectDesc);
+        $("#DC").hide();
+    }
+
+    function fn_asDefectEntryNormal(indicator) {
+
+//      if (indicator == 1) {
+        if (indicator != 2) { //3rd AS
+            //DP DEFETC PART
+            $("#def_part").val("");
+            $("#def_part_id").val("");
+            $("#def_part_text").val("");
+            $("#DP").show();
+            //DD AS PROBLEM SYMPTOM LARGE
+            $("#def_def").val("");
+            $("#def_def_id").val("");
+            $("#def_def_text").val("");
+            $("#DD").show();
+            //DC AS PROBLEM SYMPTOM SMALL
+            $("#def_code").val("");
+            $("#def_code_id").val("");
+            $("#def_code_text").val("");
+            $("#DC").show();
+        } else {
+            fn_getDefectEntry();
+        }
+    }
+
+    function fn_checkASEntryCommission() {
+        Common.ajax("GET", "/services/as/getASEntryCommission", $(
+                "#resultASForm").serialize(), function(result) {
+            if (result == "1") {
+                $("#iscommission").prop("checked", true);
+            } else {
+                $("#iscommission").prop("checked", false);
+            }
+        });
+    }
+
     function fn_setSVC0004dInfo(result) {
         console.log(result);
         $("#creator").val(result[0].c28);
@@ -202,18 +255,16 @@
 
         $("#ddlStatus").val(result[0].asResultStusId);
         $("#dpSettleDate").val(result[0].asSetlDt);
+        $("#ddlFailReason").val(result[0].c2);
         $("#tpSettleTime").val(result[0].asSetlTm);
         $("#ddlDSCCode").val(result[0].asBrnchId);
         $("#ddlDSCCodeText").val(result[0].c5);
-
-        asMalfuncResnId = result[0].asMalfuncResnId;
 
         $("#ddlCTCodeText").val(result[0].c12);
         $("#ddlCTCode").val(result[0].c11);
         $("#CTID").val(result[0].c11);
 
-        //$("#ddlWarehouse").val(result[0].asWhId);
-        $("#txtRemark").val(result[0].asResultRem);
+        $("#txtTestResultRemark").val(result[0].asResultRem);
 
         $('#def_code').val(result[0].c18);
         $('#def_code_text').val(result[0].c19);
@@ -234,7 +285,6 @@
         }
 
         $("#promisedDate").val(result[0].inHuseRepairPromisDt);
-        $("#productGroup").val(result[0].inHuseRepairGrpCode);
         $("#productCode").val(result[0].inHuseRepairProductCode);
         $("#serialNo").val(result[0].inHuseRepairSerialNo);
         $("#inHouseRemark").val(result[0].inHuseRepairRem);
@@ -259,6 +309,27 @@
 
     function fn_inHouseGetProductDetails() {
         $("#productCode").val(productCode);
+    }
+
+    function auiAddRowHandler(event) {
+
+    }
+
+    function auiRemoveRowHandler(event) {
+        if (event.items[0].filterType == "CHG") {
+            var fChage = Number($("#txtFilterCharge").val());
+            var totchrge = Number($("#txtTotalCharge").val());
+
+            if (fChage.toFixed(2) != "0.00") {
+                fChage = (fChage - Number(event.items[0].filterTotal))
+                        .toFixed(2);
+                totchrge = (totchrge - Number(event.items[0].filterTotal))
+                        .toFixed(2);
+
+                $("#txtFilterCharge").val(fChage);
+                $("#txtTotalCharge").val(totchrge);
+            }
+        }
     }
 
     function fn_getASOrderInfo() {
@@ -346,14 +417,29 @@
             CODE : reasonCode
         }, function(result) {
             if (result.length > 0) {
-                $("#" + _tobj + "_text")
-                        .val((result[0].resnDesc.trim()).trim());
+                $("#" + _tobj + "_text").val((result[0].resnDesc.trim()).trim());
                 $("#" + _tobj + "_id").val(result[0].resnId);
 
             } else {
                 $("#" + _tobj + "_text").val("<spring:message code='service.msg.NoDfctCode'/>");
             }
         });
+    }
+
+    function getASStockPrice(_PRC_ID) {
+        var ret = 0;
+        Common.ajaxSync("GET", "/services/as/getASStockPrice.do", {
+            PRC_ID : _PRC_ID
+        }, function(result) {
+            try {
+                ret = parseInt(result[0].amt, 10);
+            } catch (e) {
+                Common.alert("<spring:message code='service.msg.NoStkPrc'/>");
+                ret = 0;
+            }
+        });
+        return ret;
+
     }
 
     function fn_ddlStatus_SelectedIndexChanged(ind) {
@@ -364,10 +450,6 @@
         $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
         $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
         $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
-
-        if (selectedItems[0].item.asMalfuncId != "") {
-            asMalfuncResnId = selectedItems[0].item.asMalfuncResnId;
-        }
 
         switch ($("#ddlStatus").val()) {
         case "4":
@@ -381,18 +463,17 @@
 
             break;
 
-     /*    case "1":
+         case "1":
             // INHOUSE ACTIVE
             fn_openField_Complete();
             // RESET SECTION
             fn_rstRecall(); //RECALL
             //fn_rstDftEnt(); //DEFECT ENTRY
-            fn_rstChrFee(); //FEE CAHRGE
             $("#defEvt_div").attr("style", "display:block");
             $("#chrFee_div").attr("style", "display:none");
             $("#recall_div").attr("style", "display:none");
             break;
- */
+
         default:
             $("#m2").hide();
             $("#m4").hide();
@@ -407,9 +488,6 @@
     }
 
     function fn_rstRecall() {
-        $("#appDate").val("");
-        $("#CTSSessionCode").val("");
-        $("#branchDSC").val("");
         $("#CTCode").val("");
         $("#CTGroup").val("");
         $("#callRem").val("");
@@ -434,21 +512,40 @@
     function fn_openField_Complete() {
         // OPEN MANDATORY
         $("#m2").show();
+        $("#m3").hide();
         $("#m4").show();
         $("#m5").show();
+        $("#m6").show();
         $("#m7").show();
+        $("#m8").show();
+        $("#m9").show();
         $("#m10").show();
         $("#m11").show();
         $("#m12").show();
+        $("#m13").show();
         $("#m14").show();
+        $("#m15").show();
+        $("#m16").show();
 
         $("#btnSaveDiv").attr("style", "display:inline");
         $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
         $('#tpSettleTime').removeAttr("disabled").removeClass("readonly");
         $('#ddlDSCCode').removeAttr("disabled").removeClass("readonly");
         $('#ddlCTCode').removeAttr("disabled").removeClass("readonly");
-        $('#txtRemark').removeAttr("disabled").removeClass("readonly");
+        $('#txtTestResultRemark').removeAttr("disabled").removeClass("readonly");
 
+        if ($('#PROD_CAT').val() == "54" || $('#PROD_CAT').val() == "400"
+            || $('#PROD_CAT').val() == "57" || $('#PROD_CAT').val() == "56") {
+	        $("#m15").show();
+	        $("#psiRcd").attr("disabled", false);
+	        $("#m16").show();
+	        $("#lpmRcd").attr("disabled", false);
+        } else {
+	        $("#m15").hide();
+	        $("#psiRcd").attr("disabled", true);
+	        $("#m16").hide();
+	        $("#lpmRcd").attr("disabled", true);
+	    }
     }
 
     function fn_clearPageField() {
@@ -458,15 +555,7 @@
         $('#tpSettleTime').attr("disabled", true);
         $('#ddlDSCCode').attr("disabled", true);
         $('#ddlCTCode').attr("disabled", true);
-        //$('#ddlWarehouse').attr("disabled", true);
-        $('#txtRemark').attr("disabled", true);
-
-        $("#txtLabourCharge").val("0.00").attr("disabled", true);
-        $("#txtFilterCharge").val("0.00").attr("disabled", true);
-
-        $("#mInH1").hide();
-        $("#mInH2").hide();
-        $("#mInH3").hide();
+        $('#txtTestResultRemark').attr("disabled", true);
 
     }
 
@@ -508,10 +597,7 @@
         var editedRowItems = AUIGrid.getEditedRowItems(myFltGrd10); // FEE CHARGE EDIT SET
         var removedRowItems = AUIGrid.getRemovedItems(myFltGrd10); // FEE CHARGE DELETE SET
 
-        var _AS_DEFECT_TYPE_ID = 0;
-        var _AS_DEFECT_GRP_ID = 0;
         var _AS_DEFECT_ID = 0;
-        var _AS_DEFECT_PART_GRP_ID = 0;
         var _AS_DEFECT_PART_ID = 0;
         var _AS_DEFECT_DTL_RESN_ID = 0;
 
@@ -538,23 +624,18 @@
             AS_SETL_DT : $('#dpSettleDate').val(),
             AS_SETL_TM : $('#tpSettleTime').val(),
             AS_RESULT_STUS_ID : $('#ddlStatus').val(),
-            AS_REN_COLCT_ID : 0,
             AS_BRNCH_ID : $('#ddlDSCCode').val(),
-            AS_RESULT_REM : $('#txtRemark').val(),
+            AS_RESULT_REM : $('#txtTestResultRemark').val(),
 
             // AS RECALL ENTRY
             AS_APP_DT : $("#appDate").val(),
             AS_APP_SESS : $("#CTSSessionCode").val(),
-            AS_RCL_ASG_DSC : $("#branchDSC").val(),
             AS_RCL_ASG_CT : $("#CTCode").val(),
             AS_RCL_ASG_CT_GRP : $("#CTGroup").val(),
             AS_RCL_RMK : $("#callRem").val(),
 
             // AS DEFECT ENTRY
-            AS_DEFECT_TYPE_ID : _AS_DEFECT_TYPE_ID,
-            AS_DEFECT_GRP_ID : _AS_DEFECT_GRP_ID,
             AS_DEFECT_ID : _AS_DEFECT_ID,
-            AS_DEFECT_PART_GRP_ID : _AS_DEFECT_PART_GRP_ID,
             AS_DEFECT_PART_ID : _AS_DEFECT_PART_ID,
             AS_DEFECT_DTL_RESN_ID : _AS_DEFECT_DTL_RESN_ID,
 
@@ -633,7 +714,7 @@
         $("#tpSettleTime").attr("disabled", true);
         $("#ddlDSCCode").attr("disabled", true);
         $("#ddlCTCode").attr("disabled", true);
-        $("#txtRemark").attr("disabled", true);
+        $("#txtTestResultRemark").attr("disabled", true);
 
         $("#def_code").attr("disabled", true);
         $("#def_def").attr("disabled", true);
@@ -642,6 +723,10 @@
         $("#def_code_text").attr("disabled", true);
         $("#def_def_text").attr("disabled", true);
         $("#def_part_text").attr("disabled", true);
+
+        $("#def_code").attr("disabled", true);
+        $("#def_def_id").attr("disabled", true);
+        $("#def_part").attr("disabled", true);
 
         $("#def_code").attr("disabled", true);
         $("#def_def_id").attr("disabled", true);
@@ -738,10 +823,25 @@
                     rtnValue = false;
                 }
 
-                if (FormUtil.checkReqValue($("#txtRemark"))) {
+                if (FormUtil.checkReqValue($("#txtTestResultRemark"))) {
                     rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[AS Result Detail] Remark' htmlEscape='false'/> </br>";
                     rtnValue = false;
                 }
+
+                if ($('#PROD_CAT').val() == "54"
+                    || $('#PROD_CAT').val() == "400"
+                    || $('#PROD_CAT').val() == "57"
+                    || $('#PROD_CAT').val() == "56") {
+                if (FormUtil.checkReqValue($("#psiRcd"))) {
+                    rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
+                    rtnValue = false;
+                }
+
+                if (FormUtil.checkReqValue($("#lpmRcd"))) {
+                    rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
+                    rtnValue = false;
+                }
+            }
 
                 // KR-OHK Serial Check
                 if ($("#hidSerialRequireChkYn").val() == 'Y'
@@ -775,6 +875,27 @@
             }
         });
     };
+
+    function fn_doClear() {
+        $("#ddlStatus").val("");
+        $("#dpSettleDate").val("");
+        $("#ddlStatus").val("");
+        $("#tpSettleTime").val("");
+        $("#ddlDSCCode").val("");
+        $("#ddlCTCode").val("");
+        $("#txtTestResultRemark").val("");
+
+        $("#def_type").val("");
+        $("#def_code").val("");
+        $("#def_def").val("");
+        $("#def_part").val("");
+
+        $("#def_type_id").val("");
+        $("#def_code_id").val("");
+        $("#def_def_id").val("");
+        $("#def_part_id").val("");
+    }
+
 
     function fn_valDtFmt(val) {
         var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
@@ -811,6 +932,61 @@
         }
     }
 
+    function fn_doAllaction(obj) {
+        var ord_id = '${orderDetail.basicInfo.ordId}';
+
+        var vdte = $(obj).val();
+        var text = "";
+
+        if ($(obj).attr('id') == "requestDate") {
+            text = "<spring:message code='service.title.RequestDate' />";
+        } else {
+            text = "<spring:message code='service.grid.AppntDt' />";
+        }
+
+        var fmt = fn_valDtFmt(vdte);
+        if (!fmt) {
+            Common.alert("* " + text
+                    + " <spring:message code='service.msg.invalidDate' />");
+            $(obj).val("");
+            return;
+        }
+
+        var crtDt = new Date();
+        var apptDt = vdte;
+        var date = apptDt.substring(0, 2);
+        var month = apptDt.substring(3, 5);
+        var year = apptDt.substring(6, 10);
+
+        var dd = String(crtDt.getDate()).padStart(2, '0');
+        var mm = String(crtDt.getMonth() + 1).padStart(2, '0');
+        var yyyy = crtDt.getFullYear();
+
+        var strdate = yyyy + mm + dd;
+        var enddate = year + month + date;
+
+        if (enddate < strdate) {
+            Common.alert(text + " must be greater or equal to Current Date ");
+            $(obj).val("");
+            return;
+        }
+
+        var options = {
+            ORD_ID : ord_id,
+            S_DATE : vdte,
+            CTCodeObj : 'CTCodeObj',
+            CTIDObj : 'CTIDObj',
+            CTgroupObj : 'CTgroupObj'
+        }
+
+        Common.popupDiv("/organization/allocation/allocation.do", {
+            ORD_ID : ord_id,
+            S_DATE : vdte,
+            OPTIONS : options,
+            TYPE : 'AS'
+        }, null, true, '_doAllactionDiv');
+    }
+
     function fn_secChk(obj) {
 
         if (obj.id == "defEvt_dt" || obj.id == "chrFee_dt") {
@@ -819,6 +995,58 @@
                         .alert("This section only applicable for <b>Complete</b> status");
                 return;
             }
+        }
+    }
+
+    function fn_serialModifyPop() {
+        $("#serialNoChangeForm #pSerialNo").val($("#stockSerialNo").val()); // Serial No
+        $("#serialNoChangeForm #pSalesOrdId").val($("#ORD_ID").val()); // 주문 ID
+        $("#serialNoChangeForm #pSalesOrdNo").val($("#ORD_NO").val()); // 주문 번호
+        $("#serialNoChangeForm #pRefDocNo").val($("#AS_NO").val()); //
+        // $("#serialNoModifyForm #pItmCode").val( $("#stkCode").val()  ); // 제품 ID
+        $("#serialNoChangeForm #pCallGbn").val("AS");
+        $("#serialNoChangeForm #pMobileYn").val("N");
+
+        if (Common.checkPlatformType() == "mobile") {
+            popupObj = Common.popupWin("serialNoChangeForm",
+                    "/logistics/serialChange/serialNoChangePop.do", {
+                        width : "1000px",
+                        height : "1000px",
+                        height : "720",
+                        resizable : "no",
+                        scrollbars : "yes"
+                    });
+        } else {
+            Common.popupDiv("/logistics/serialChange/serialNoChangePop.do", $(
+                    "#serialNoChangeForm").serializeJSON(), null, true,
+                    '_serialNoChangePop');
+        }
+    }
+
+    function fn_chkDt2() {
+        var crtDt = new Date();
+        var apptDt = $("#appDate").val();
+        var date = apptDt.substring(0, 2);
+        var month = apptDt.substring(3, 5);
+        var year = apptDt.substring(6, 10);
+
+        var dd = String(crtDt.getDate()).padStart(2, '0');
+        var mm = String(crtDt.getMonth() + 1).padStart(2, '0');
+        var yyyy = crtDt.getFullYear();
+
+        var strdate = yyyy + mm + dd;
+        var enddate = year + month + date;
+
+        if (enddate < strdate) {
+            alert("Appointment Date must be greater or equal to Current Date ");
+            $("#appDate").val("");
+            $("#CTSSessionCode").val("");
+            $("#CTCode").val("");
+            $("#CTGroup").val("");
+            $("#callRem").val("");
+            return;
+        } else {
+            fn_doAllaction('#appDate');
         }
     }
 
@@ -912,7 +1140,7 @@
         <header class="pop_header">
             <!-- pop_header start -->
             <h1>
-                <spring:message code='service.btn.addtAs' />
+                Add PEX Text Result
             </h1>
             <ul class="right_opt">
                 <li><p class="btn_blue2">
@@ -1115,7 +1343,7 @@
                                         <span id='m2' name='m2' class="must" style="display: none">*</span></th>
                                         <td><input type="text" title="Create start Date" id='dpSettleDate' name='dpSettleDate'
                                             placeholder="DD/MM/YYYY" class="readonly j_date" disabled="disabled" onChange="fn_chkDt('#dpSettleDate')" /></td>
-                                        <th scope="row">
+                                       <th scope="row">
                                         <spring:message code='service.grid.SettleTm' />
                                         <span id='m4' name='m4' class="must" style="display: none">*</span></th>
                                         <td>
@@ -1132,41 +1360,40 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th scope="row">Product Genuine
-                                        <span id='m5' name='m5' class="must" style="display: none">*</span></th>
-                                        <td><select id='ddlProdGenuine' name='ddlProdGenuine' class="w100p">
-                                        <option value="">Choose One</option>
-                                        <option value="">Genuine</option>
-                                        <option value="">Non-Genuine</option>
-                                        </select></td>
                                         <th scope="row"><spring:message code='service.title.DSCCode' />
                                         <span id='m5' name='m5' class="must" style="display: none">*</span></th>
                                         <td>
                                           <input type="text" title="" placeholder="" class="readonly"
                                             disabled="disabled" id='ddlDSCCodeText' name='ddlDSCCodeText' />
                                         </td>
-                                    </tr>
-                                    <tr>
+                                        <th scope="row"><spring:message code='service.grid.CTCode' />
+                                            <span id='m7' name='m7' class="must" style="display: none">*</span></th>
+                                        <td>
+                                            <input type="hidden" title="" placeholder="<spring:message code='service.grid.CTCode' />" class="" id='ddlCTCode' name='ddlCTCode' />
+                                            <input type="text" title="" placeholder="" disabled="disabled" id='ddlCTCodeText' name='ddlCTCodeText' /></td>
+                                   </tr>
                                         <th scope="row">AMP Reading<span id='m7' name='m7' class="must" style="display: none">*</span></th>
                                         <td><input type="text" title="" placeholder="AMP Reading"
                                             class="" id='txtAMPReading' name='txtAMPReading' onkeypress='validate(event)' /></td>
-                                        <th scope="row"><spring:message code='service.grid.CTCode' />
-                                        <span id='m7' name='m7' class="must" style="display: none">*</span></th>
-                                        <td>
-                                        <input type="hidden" title="" placeholder="<spring:message code='service.grid.CTCode' />" class="" id='ddlCTCode' name='ddlCTCode' />
-                                        <input type="text" title="" placeholder="" disabled="disabled" id='ddlCTCodeText' name='ddlCTCodeText' /></td>
-                                    </tr>
-                                    <tr>
-                                    <th scope="row">Voltage<span id='m7' name='m7' class="must" style="display: none">*</span></th>
+                                        <th scope="row">Voltage<span id='m7' name='m7' class="must" style="display: none">*</span></th>
                                         <td><input type="text" title="" placeholder="Voltage"
                                             class="" id='txtVoltage' name='txtVoltage' onkeypress='validate(event)' /></td>
-                                       <th scope="row"></th><td></td>
                                     </tr>
+                                    <tr>
+                                        <th scope="row">Product Genuine
+                                            <span id='m5' name='m5' class="must" style="display: none">*</span></th>
+                                        <td><select id='ddlProdGenuine' name='ddlProdGenuine' class="w100p">
+                                            <option value="">Choose One</option>
+                                            <option value="">Genuine</option>
+                                            <option value="">Non-Genuine</option>
+                                        </select></td>
+                                        <th></th><td></td>
+                                        </tr>
                                     <tr>
                                         <th scope="row"><spring:message code='service.title.Remark' />
                                         <span id='m14' name='m14' class="must" style="display: none">*</span></th>
                                         <td colspan="3">
-                                        <textarea cols="20" rows="5" placeholder="Test result remark from RCT" id='txtRemark' name='txtRemark'></textarea></td>
+                                        <textarea cols="20" rows="5" placeholder="Test result remark from RCT" id='txtTestResultRemark' name='txtTestResultRemark'></textarea></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1218,7 +1445,7 @@
                                 </tbody>
                             </table>
                         </dd>
-                    </dl>
+                        </dl>
                 </article>
                 <ul class="center_btns mt20" id='btnSaveDiv'>
                     <li><p class="btn_blue2 big">

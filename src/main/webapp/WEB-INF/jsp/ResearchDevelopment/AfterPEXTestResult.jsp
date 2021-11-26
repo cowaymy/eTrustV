@@ -285,7 +285,7 @@
 		}
 
 		if (valid) {
-			Common.ajax("GET", "/services/as/searchASManagementList.do", $(
+			Common.ajax("GET", "/ResearchDevelopment/searchASManagementList.do", $(
 					"#ASForm").serialize(), function(result) {
 				AUIGrid.setGridData(myGridID, result);
 			});
@@ -314,20 +314,14 @@
 		var ordId = selectedItems[0].item.asSoId;
 
 		if (asStusId != "ACT") {
-			Common
-					.alert("AS Info Edit Restrict</br>"
-							+ DEFAULT_DELIMITER
-							+ "<b>["
-							+ AS_NO
-							+ "]  is not in active status.</br> AS information edit is disallowed.</b>");
+			Common.alert("AS Info Edit Restrict</br>" + DEFAULT_DELIMITER + "<b>[" + AS_NO +
+				    "]  is not in active status.</br> AS information edit is disallowed.</b>");
 			return;
 		}
 
 		Common.popupDiv(
-				"/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId="
-						+ ordId + "&ordNo=" + ordno + "&AS_NO=" + AS_NO
-						+ '&AS_ID=' + AS_ID, null, null, true,
-				'_viewEntryPopDiv1');
+				"/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId=" + ordId + "&ordNo=" + ordno + "&AS_NO=" + AS_NO
+				+ '&AS_ID=' + AS_ID, null, null, true, '_viewEntryPopDiv1');
 	}
 
 	function fn_newASResultPop() {
@@ -443,8 +437,8 @@
 		var lstUpdDt = selectedItems[0].item.asResultCrtDt;
 
 		if (asResultNo == "-") {
-			Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>"
-							+ asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+			Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>"	+ asNo +
+					"</b>' htmlEscape='false' argumentSeparator=';' />");
 			return;
 		}
 
@@ -535,7 +529,7 @@
 				var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId
 					+ "&mod=RESULTEDIT&as_Result_No=" + asResultNo + "&as_Result_Id=" + asResultId;
 
-				Common.popupDiv("/services/as/asResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
+				Common.popupDiv("/ResearchDevelopment/TestResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
 			}
 		});
 	}
@@ -670,7 +664,7 @@
 				var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId
 						+ "&mod=edit&as_Result_No=" + asResultNo + "&as_Result_Id=" + asResultId;
 
-				Common.popupDiv("/services/as/asResultEditBasicPop.do" + param, null, null, true, '_newASResultBasicDiv1');
+				Common.popupDiv("/ResearchDevelopment/TestResultEditBasicPop.do" + param, null, null, true, '_newASResultBasicDiv1');
 			}
 		});
 	}
@@ -707,22 +701,22 @@
 		<ul class="right_btns">
 			<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
 				<li><p class="btn_blue">
-						<a href="#" onclick="fn_newASResultPop()"><spring:message
-								code='service.btn.addtAs' /></a>
-					</p></li>
+				    <a href="#" onclick="fn_newASResultPop()">
+				    <spring:message code='service.btn.addtAs' /></a>
+				</p></li>
 			</c:if>
 			<!-- FUNCTION WHICH ALLOW EDIT RECORD WHICH MORE THAN 7 DAYS -->
 			<c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
 				<li><p class="btn_blue">
-						<a href="#" onclick="fn_asResultEditBasicPop(0)"><spring:message
-								code='service.btn.edtBsAs' /></a>
-					</p></li>
+				    <a href="#" onclick="fn_asResultEditBasicPop(0)">
+				    <spring:message code='service.btn.edtBsAs' /></a>
+				</p></li>
 			</c:if>
 			<c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
 				<li><p class="btn_blue">
-						<a href="#" onclick="fn_asResultEditPop(0)"><spring:message
-								code='service.btn.edtAs' /></a>
-					</p></li>
+				    <a href="#" onclick="fn_asResultEditPop(0)">
+					<spring:message code='service.btn.edtAs' /></a>
+				</p></li>
 			</c:if>
 			<!-- FUNCTION WHICH ALLOW EDIT RECORD WITHIN 7 DAYS -->
 			<%-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
@@ -739,20 +733,20 @@
 			</c:if> --%>
 			<c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
 				<li><p class="btn_blue">
-						<a href="#" onclick="fn_TestResultViewPop()"><spring:message
-								code='service.btn.viewAS' /></a>
-					</p></li>
+				    <a href="#" onclick="fn_TestResultViewPop()">
+				    <spring:message code='service.btn.viewAS' /></a>
+				</p></li>
 			</c:if>
 			<c:if test="${PAGE_AUTH.funcView == 'Y'}">
 				<li><p class="btn_blue">
-						<a href="#" onClick="fn_searchASManagement()">
-						<span class="search"></span> <spring:message code='sys.btn.search' /></a>
-					</p></li>
+				    <a href="#" onClick="fn_searchASManagement()">
+					<span class="search"></span> <spring:message code='sys.btn.search' /></a>
+				</p></li>
 			</c:if>
 			<li><p class="btn_blue">
-					<a href="#"><span class="clear"></span> <spring:message
-							code='service.btn.Clear' /></a>
-				</p></li>
+			    <a href="#"><span class="clear"></span>
+			    <spring:message code='service.btn.Clear' /></a>
+			</p></li>
 		</ul>
 	</aside>
 	<!-- title_line end -->
@@ -781,14 +775,10 @@
 						<td><select class="multy_select w100p" multiple="multiple"
 							id="cmbbranchId" name="cmbbranchId"></select></td>
 						<th scope="row"><spring:message code='service.title.Status' /></th>
-						<td><select class="multy_select w100p" multiple="multiple"
-							id="asStatus" name="asStatus">
+						<td><select class="multy_select w100p" multiple="multiple" id="asStatus" name="asStatus">
 								<c:forEach var="list" items="${asStat}" varStatus="status">
 									<c:choose>
-										<c:when test="${list.codeId=='1'}">
-											<option value="${list.codeId}" selected>${list.codeName}</option>
-										</c:when>
-										<c:when test="${list.codeId=='19'}">
+										<c:when test="${list.codeId=='4'}">
 											<option value="${list.codeId}" selected>${list.codeName}</option>
 										</c:when>
 										<c:otherwise>
@@ -804,33 +794,23 @@
 							</select></td>
 						<th scope="row"><spring:message code='service.grid.Product' /></th>
 						<td><select class="multy_select w100p" multiple="multiple" id="asProduct" name="asProduct">
-								<c:forEach var="list" items="${asProduct}" varStatus="status">
-									<option value="${list.stkId}">${list.stkDesc}</option>
-								</c:forEach>
+						  <c:forEach var="list" items="${asProduct}" varStatus="status">
+						      <option value="${list.stkId}">${list.stkDesc}</option>
+						  </c:forEach>
 						</select></td>
 						<th scope="row">Test Result Number</th>
-						<td><input type="text" title=""
-							placeholder="Test Result Number" class="w100p" id="TestResultNo"
-							name="TestResultNo" /></td>
+						<td>
+						<input type="text" title="" placeholder="Test Result Number" class="w100p" id="TestResultNo" name="TestResultNo" /></td>
 					</tr>
 					<tr>
-						<th scope="row"><spring:message
-								code='service.grid.SettleDate' /></th>
-						<td>
-							<div class="date_set w100p">
-								<p>
-									<input type="text" title="Create start Date"
-										placeholder="DD/MM/YYYY" class="j_date" id="settleDtFrm"
-										name="settleDtFrm" />
-								</p>
-								<span><spring:message code='pay.text.to' /></span>
-								<p>
-									<input type="text" title="Create end Date"
-										placeholder="DD/MM/YYYY" class="j_date" id="settleDtTo"
-										name="settleDtTo" />
-								</p>
-							</div>
-						</td>
+						<th scope="row"><spring:message code='service.grid.SettleDate' /></th>
+						<td><div class="date_set w100p"><p>
+						  <input type="text" title="Create start Date"
+							 placeholder="DD/MM/YYYY" class="j_date" id="settleDtFrm" name="settleDtFrm" /></p>
+						  <span><spring:message code='pay.text.to' /></span>
+						  <p><input type="text" title="Create end Date"
+							 placeholder="DD/MM/YYYY" class="j_date" id="settleDtTo" name="settleDtTo" /></p>
+						</div></td>
 						<th scope="row"></th>
 						<td></td>
 						<th scope="row"></th>

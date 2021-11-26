@@ -137,7 +137,7 @@ public class ResearchDevelopmentController {
 	      throws Exception {
 	    logger.debug("===========================/TestResultEditViewPop.do===============================");
 	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/asResultEditViewPop.do===============================");
+	    logger.debug("===========================/TestResultEditViewPop.do===============================");
 
 	    model.put("ORD_ID", (String) params.get("ord_Id"));
 	    model.put("ORD_NO", (String) params.get("ord_No"));
@@ -184,14 +184,6 @@ public class ResearchDevelopmentController {
 	    return "ResearchDevelopment/TestResultViewPop";
 	  }
 
-	  @RequestMapping(value = "/asResultInfo.do")
-	  public String asResultInfo(@RequestParam Map<String, Object> params, ModelMap model) {
-	    logger.debug("===========================/asResultInfo.do===============================");
-	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/asResultInfo.do===============================");
-	    return "services/as/inc_asResultInfoPop";
-	  }
-
 	  @RequestMapping(value = "/asResultInfoEdit.do")
 	  public String asResultInfoEdit(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 	    logger.debug("===========================/asResultInfoEdit.do===============================");
@@ -219,8 +211,87 @@ public class ResearchDevelopmentController {
 	    List<EgovMap> fltPmtTyp = ASManagementListService.selectFltPmtTyp();
 	    model.addAttribute("fltPmtTyp", fltPmtTyp);
 
-	    return "services/as/inc_asResultEditPop";
+	    return "ResearchDevelopment/inc_TestResultEditPop";
 	  }
+
+	  @RequestMapping(value = "/TestResultEditBasicPop.do")
+	  public String asResultEditBasicPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
+	      throws Exception {
+	    logger.debug("===========================/TestResultEditBasicPop.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/TestResultEditBasicPop.do===============================");
+
+	    model.put("ORD_ID", (String) params.get("ord_Id"));
+	    model.put("ORD_NO", (String) params.get("ord_No"));
+	    model.put("AS_NO", (String) params.get("as_No"));
+	    model.put("AS_ID", (String) params.get("as_Id"));
+	    model.put("AS_RESULT_NO", (String) params.get("as_Result_No"));
+	    model.put("AS_RESULT_ID", (String) params.get("as_Result_Id"));
+	    model.put("MOD", (String) params.get("mod"));
+
+	    model.put("USER_ID", sessionVO.getMemId());
+	    model.put("USER_NAME", sessionVO.getUserName());
+
+	    model.put("BRANCH_NAME", sessionVO.getBranchName());
+	    model.put("BRANCH_ID", sessionVO.getUserBranchId());
+
+	    List<EgovMap> asCrtStat = ASManagementListService.selectAsCrtStat();
+	    model.addAttribute("asCrtStat", asCrtStat);
+
+	    List<EgovMap> timePick = ASManagementListService.selectTimePick();
+	    model.addAttribute("timePick", timePick);
+
+	    EgovMap orderDetail;
+	    params.put("salesOrderId", (String) params.get("ord_Id"));
+
+	    orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+	    model.put("orderDetail", orderDetail);
+
+	    return "ResearchDevelopment/TestResultEditBasicPop";
+	  }
+
+	  @RequestMapping(value = "/searchASManagementList.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectASManagementList(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+	    logger.debug("===========================/searchASManagementList.do===============================");
+	    logger.debug("== params heres" + params.toString());
+
+	    String[] asTypeList = request.getParameterValues("asType");
+	    String[] asProductList = request.getParameterValues("asProduct");
+	    String[] asStatusList = request.getParameterValues("asStatus");
+	    String[] cmbbranchIdList = request.getParameterValues("cmbbranchId");
+
+	    // String cmbctId = request.getParameter("cmbctId");
+
+	    params.put("asTypeList", asTypeList);
+	    params.put("asStatusList", asStatusList);
+	    params.put("cmbbranchIdList", cmbbranchIdList);
+	    params.put("asProductList", asProductList);
+
+	    List<EgovMap> ASMList = ASManagementListService.selectASManagementList(params);
+
+	    // logger.debug("== ASMList : {}", ASMList);
+	    logger.debug("===========================/searchASManagementList.do===============================");
+	    return ResponseEntity.ok(ASMList);
+	  }
+
+
+
+
+
+
+
+
+
+	  @RequestMapping(value = "/asResultInfo.do")
+	  public String asResultInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+	    logger.debug("===========================/asResultInfo.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/asResultInfo.do===============================");
+	    return "services/as/inc_asResultInfoPop";
+	  }
+
+
 
 	  @RequestMapping(value = "/asInHouseEntryPop.do")
 	  public String asInHouseEntryPop(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -248,30 +319,7 @@ public class ResearchDevelopmentController {
 	    return ResponseEntity.ok(getAsDefectEntryList);
 	  }
 
-	  @RequestMapping(value = "/searchASManagementList.do", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> selectASManagementList(@RequestParam Map<String, Object> params,
-	      HttpServletRequest request, ModelMap model) {
-	    logger.debug("===========================/searchASManagementList.do===============================");
-	    logger.debug("== params heres" + params.toString());
 
-	    String[] asTypeList = request.getParameterValues("asType");
-	    String[] asProductList = request.getParameterValues("asProduct");
-	    String[] asStatusList = request.getParameterValues("asStatus");
-	    String[] cmbbranchIdList = request.getParameterValues("cmbbranchId");
-
-	    // String cmbctId = request.getParameter("cmbctId");
-
-	    params.put("asTypeList", asTypeList);
-	    params.put("asStatusList", asStatusList);
-	    params.put("cmbbranchIdList", cmbbranchIdList);
-	    params.put("asProductList", asProductList);
-
-	    List<EgovMap> ASMList = ASManagementListService.selectASManagementList(params);
-
-	    // logger.debug("== ASMList : {}", ASMList);
-	    logger.debug("===========================/searchASManagementList.do===============================");
-	    return ResponseEntity.ok(ASMList);
-	  }
 
 
 
@@ -407,41 +455,7 @@ public class ResearchDevelopmentController {
 	    return ResponseEntity.ok(sm);
 	  }
 
-	  @RequestMapping(value = "/asResultEditBasicPop.do")
-	  public String asResultEditBasicPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
-	      throws Exception {
-	    logger.debug("===========================/asResultEditBasicPop.do===============================");
-	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/asResultEditBasicPop.do===============================");
 
-	    model.put("ORD_ID", (String) params.get("ord_Id"));
-	    model.put("ORD_NO", (String) params.get("ord_No"));
-	    model.put("AS_NO", (String) params.get("as_No"));
-	    model.put("AS_ID", (String) params.get("as_Id"));
-	    model.put("AS_RESULT_NO", (String) params.get("as_Result_No"));
-	    model.put("AS_RESULT_ID", (String) params.get("as_Result_Id"));
-	    model.put("MOD", (String) params.get("mod"));
-
-	    model.put("USER_ID", sessionVO.getMemId());
-	    model.put("USER_NAME", sessionVO.getUserName());
-
-	    model.put("BRANCH_NAME", sessionVO.getBranchName());
-	    model.put("BRANCH_ID", sessionVO.getUserBranchId());
-
-	    List<EgovMap> asCrtStat = ASManagementListService.selectAsCrtStat();
-	    model.addAttribute("asCrtStat", asCrtStat);
-
-	    List<EgovMap> timePick = ASManagementListService.selectTimePick();
-	    model.addAttribute("timePick", timePick);
-
-	    EgovMap orderDetail;
-	    params.put("salesOrderId", (String) params.get("ord_Id"));
-
-	    orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
-	    model.put("orderDetail", orderDetail);
-
-	    return "services/as/asResultEditBasicPop";
-	  }
 
 	  @RequestMapping(value = "/getASHistoryList", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> getASHistoryList(@RequestParam Map<String, Object> params,

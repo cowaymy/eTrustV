@@ -407,7 +407,7 @@
    </aside>
    <!-- title_line end -->
    <!-- asResultInfo info tab  start...-->
-   <jsp:include page='${pageContext.request.contextPath}/services/as/asResultInfoEdit.do' />
+   <jsp:include page='${pageContext.request.contextPath}/ResearchDevelopment/asResultInfoEdit.do' />
    <!-- asResultInfo info tab  end...-->
    <script>
    </script>

@@ -1957,9 +1957,9 @@
            WHERE Extent1.AS_ID = #{AS_ID}
            AND ROWNUM  <![CDATA[ <= 1 ]]> ) S
   </select>
-
+<!--
   <resultMap id="asFilterClaimCheck" type="egovMap">
-  </resultMap>
+  </resultMap> -->
 
   <select id="spFilterClaimCheck" statementType="CALLABLE" parameterType="Map">
     <![CDATA[
