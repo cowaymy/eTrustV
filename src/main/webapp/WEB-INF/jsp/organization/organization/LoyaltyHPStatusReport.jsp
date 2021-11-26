@@ -158,7 +158,7 @@
                 var ORGCODE = "";
                 reportFileName = "/organization/LoyaltyHPStatus.rpt"; //reportFileName
                 reportDownFileName = "LoyaltyHPStatus_" + today; //report name
-                reportViewType = "PDF"; //viewType
+                reportViewType = "EXCEL"; //viewType
 
                 //set parameters
 
