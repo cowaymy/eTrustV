@@ -134,12 +134,8 @@ function addRow() {
     item.itemInvtQty      = $("#itemInvtQty").val();
 
 
-
-
-
-
-    if($("#purcItems").val() == ""   || $("#fromAddBrnchId").val() =="" || $("#itemAddQty").val() =="") {
-        Common.alert("Branch/Item/Inventory  is required.");
+    if($("#purcItems").val() == ""   || $("#fromAddBrnchId").val() =="" || $("#itemAddQty").val() =="" ||$("#poOrdNo").val() == "") {
+        Common.alert("Branch/Item/Inventory/purchase order no  is required.");
         return false;
     }
 
@@ -181,6 +177,9 @@ function transFromBrnchChange(){
 
 
 function fn_saveGrid(){
+
+
+
 
     Common.ajax("POST", "/sales/posstock/insertPosStock.do", GridCommon.getEditData(myGridIDPOS), function(result) {
         //resetUpdatedItems(); // 초기화

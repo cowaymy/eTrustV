@@ -18,7 +18,7 @@
 var keyValueList = [{"code":"", "value":"Choose One"} ,{"code":"IDR", "value":"Internal Dept. Request"}, {"code":"EVU", "value":"Events use"}, {"code":"OTH", "value":"Others"}];
 
 var columnLayout = [
-                    {dataField: "stkCode",headerText :"Item Code"           ,width:  100   ,height:30 , visible:true, editable : false},
+                    {dataField: "stkCode",headerText :"Item Code"           ,width:  100   ,height:30 , visible:false, editable : false},
                     {dataField: "itemCode",headerText :"Item Code"                   ,width:  100   ,height:30 , visible:false, editable : false},
                     {dataField: "itemDesc",headerText :"Item Description"           ,width: 280    ,height:30 , visible:true, editable : false},
                     {dataField: "itemCtgryCode",headerText :"Item Category"      ,width: 180    ,height:30 , visible:false, editable : false},
@@ -172,7 +172,8 @@ function addRow() {
    // item.itemPurhOrdNo   = $("#poOrdNo").val(),
     item.scnFromLocId    = $("#fromNewAddBrnchId").val(),
     item.itemCtgryId       = $("#category").val(),
-    item.itemType          = $("#itemType").val();
+    item.itemType          = $("#itemType").val(),
+    item.stkCode          = $("#purcItems").val() ;
 
     /*
     if($("#purcItems").val() == ""

@@ -96,7 +96,8 @@
             ,SCN_MOVE_TYPE
             ,SCN_MOVE_STAT
             ,UPD_DATE
-            ,UPD_USER_ID
+            ,UPD_NAME
+            ,CRD_NAME
       FROM (
 		SELECT S.STK_CODE ,
 		            A.SCN_NO ,
@@ -110,12 +111,15 @@
 				    DECODE (A.SCN_MOVE_STAT,'A','ACT','C','COM','R','REJECT') AS SCN_MOVE_STAT_CODE,
 				    TO_CHAR(A.SCN_MOVE_DATE,'dd-mm-yyyy')AS SCN_MOVE_DATE ,
 				    TO_CHAR(A.UPD_DT,'dd-mm-yyyy')AS UPD_DATE ,
-				    A.UPD_USER_ID,
+				    U.USER_NAME AS UPD_NAME ,
+                    C.USER_NAME AS CRD_NAME,
 				    A.SCN_MOVE_TYPE,
                     A.SCN_MOVE_STAT
-		FROM SAL0293M A , SAL0294D B ,SYS0026M S
+		FROM SAL0293M A , SAL0294D B ,SYS0026M S  , SYS0047M U, SYS0047M C
 		WHERE A.SCN_NO  =B.SCN_NO
 		        AND B.ITEM_CODE  = S.STK_ID
+		            AND A.UPD_USER_ID =U.USER_ID (+)
+                AND A.CRT_USER_ID  =C.USER_ID (+)
            <if test="scnNo != nul and scnNo != '' ">
                     AND A.SCN_NO = #{scnNo}
           </if>
@@ -151,7 +155,8 @@
             ,SCN_MOVE_TYPE
             ,SCN_MOVE_STAT
             ,UPD_DATE
-            ,UPD_USER_ID
+            ,UPD_NAME
+            ,CRD_NAME
             ORDER BY SCN_NO DESC
 </select>
 

@@ -183,8 +183,9 @@ function addRow() {
     if($("#purcItems").val() == ""
           || $("#fromTransBrnchId").val() ==""
           || $("#toTransBrnchId").val() ==""
-          || $("#itemTransQty").val() =="") {
-        Common.alert("Transfer to branch/Item/Transfer Quantity  is required.");
+          || $("#itemTransQty").val() ==""
+        	  || $("#itemCond").val() =="") {
+        Common.alert("Transfer to branch/Item/Transfer Quantity /itemCond is required.");
         return ;
     }
 

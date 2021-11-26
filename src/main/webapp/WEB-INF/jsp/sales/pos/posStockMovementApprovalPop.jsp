@@ -26,7 +26,7 @@ var columnLayout = [
                     {dataField: "itemCtgryCode",headerText :"Item Category"      ,width: 180    ,height:30 , visible:false, editable : false},
                     {dataField: "itemRtnQty",headerText :"Return Quantity"             ,width:120   ,height:30 , visible:true, editable : false,dataType : "numeric", formatString : "#,##0"},
                     {dataField: "itemRtnReason",headerText :"Reason"          ,width:120   ,height:30 , visible:true, editable : true},
-                    {dataField: "itemRejRemark",headerText :"Retrun Remark"      ,width:220   ,height:30 , visible:true, editable : true},
+                    {dataField: "itemRejRemark",headerText :"Return Remark"      ,width:220   ,height:30 , visible:true, editable : true},
                     {dataField: "scnMoveType",headerText :"scnMoveType"      ,width:120   ,height:30 , visible:false, editable : false},
                     {dataField: "itemStatus",headerText :"Result"  ,width:120    ,height:30 , visible:true ,
                         renderer : {

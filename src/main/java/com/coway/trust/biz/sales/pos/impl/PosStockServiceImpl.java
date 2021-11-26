@@ -191,7 +191,6 @@ public Map<String, Object> updateRecivedPosStock(Map<String, Object> params) thr
     String scnNo = params.get("scnNo").toString();
 
     upHMap.put("scnNo",scnNo);
-    upHMap.put("scnMoveStat","C");
     upHMap.put("userId", params.get("userId"));
 
 
@@ -207,12 +206,13 @@ public Map<String, Object> updateRecivedPosStock(Map<String, Object> params) thr
 
     	//String scnMoveType = ((Map<String, Object>)upList.get(0)).get("scnMoveType").toString();
 
+    int completCnt =0;
+
         for (int i = 0; i < upList.size(); i++) {
         	  Map<String, Object> upMap = (Map<String, Object>)upList.get(i);
 
         	  	if ("R".equals(upMap.get("itemStatus").toString())){
         	  	   posMapper.updateReceviedRejectSAL0294D(upMap);
-
         	  	}else{
 
 
@@ -245,8 +245,17 @@ public Map<String, Object> updateRecivedPosStock(Map<String, Object> params) thr
 
                   	    }
                   	     //posMapper.updateMergeLOG0106M(upMap);
+
+                  	  completCnt++;
         	  		 }
         	  	}
+
+
+        if (completCnt >0){
+        	 upHMap.put("scnMoveStat","C");
+        }else {
+          	 upHMap.put("scnMoveStat","R");
+        }
 
        	posMapper.updateReceviedSAL0293M(upHMap);
   //  }
@@ -280,6 +289,7 @@ public Map<String, Object> updateApprovalPosStock(Map<String, Object> params) th
     params.put("scnNo", scnNo);
     EgovMap  master = posMapper.selectPosStockMgmtViewInfo(params);
 
+    int completCnt =0;
 
 
         for (int i = 0; i < upList.size(); i++) {
@@ -304,11 +314,20 @@ public Map<String, Object> updateApprovalPosStock(Map<String, Object> params) th
           	  	        upMap.put("itemRecvQty", upMap.get("itemRtnQty"));
           	    	    posMapper.updateOutStockLOG0106M(upMap);
 
+          	     	  	 completCnt++;
+
                   	     //posMapper.updateMergeLOG0106M(upMap);
         	  		 }
         }
 
-       			posMapper.updateReceviedSAL0293M(upHMap);
+
+        if (completCnt >0){
+       	 upHMap.put("scnMoveStat","C");
+       }else {
+         	 upHMap.put("scnMoveStat","R");
+       }
+
+       	posMapper.updateReceviedSAL0293M(upHMap);
   //  }
 
 

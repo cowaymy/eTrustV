@@ -70,13 +70,11 @@ var columnLayout = [
                     {dataField: "scnToLocDesc",headerText :"TO"          ,width:220   ,height:30 , visible:true, editable : false},
                     {dataField: "scnMoveStatCode",headerText :"Status"          ,width:120   ,height:30 , visible:true, editable : false},
                     {dataField: "scnMoveDate",headerText :"Create Date"          ,width:140   ,height:30 , visible:true ,editable : false},
+                    {dataField: "crdName",headerText :"Create By"          ,width:140   ,height:30 , visible:true ,editable : false},
                     {dataField: "updDate",headerText :"Update Date"          ,width:120   ,height:30 , visible:true,editable : false},
+                    {dataField: "updName",headerText :"Update By"          ,width:140   ,height:30 , visible:true ,editable : false},
                     {dataField: "scnMoveStat",headerText :"scnMoveStat"          ,width:120   ,height:30 , visible:false ,editable : false},
                     {dataField: "scnMoveType",headerText :"scnMoveType"          ,width:120   ,height:30 , visible:false,editable : false},
-
-
-
-
            ];
 
 

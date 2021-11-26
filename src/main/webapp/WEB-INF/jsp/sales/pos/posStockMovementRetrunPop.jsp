@@ -259,6 +259,28 @@ function transFromBrnchChange(){
 
 function fn_saveGrid(){
 
+
+    var checkList = GridCommon.getGridData(myGridIDPOS);
+
+
+    for(var i = 0 ; i < checkList.all.length ; i++){
+        var itemRtnReason  = checkList.all[i].itemRtnReason;
+
+
+        console.log(checkList.all[i])
+        if( checkList.all[i].itemRtnReason ==""
+        		|| checkList.all[i].itemRtnReason ==null
+        		||checkList.all[i].atchFileName ==""
+        		|| checkList.all[i].atchFileName ==null
+                ||checkList.all[i].itemReqQty ==""
+                || checkList.all[i].itemReqQty ==null    ){
+            Common.alert('* List has " " itemRtnReason /atchFileName  item(s). ');
+            return ;
+          }
+    }
+
+
+
     Common.ajax("POST", "/sales/posstock/insertRetrunPosStock.do", GridCommon.getEditData(myGridIDPOS), function(result) {
         //resetUpdatedItems(); // 초기화
         console.log( result);
