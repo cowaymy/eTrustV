@@ -177,7 +177,8 @@
 	            {
 	        		$("#payment_transactionID").replaceWith('<input id=payment_transactionID name="payment_transactionID" value="${paymentInfo.trxId}" type="text" title="" placeholder="" class="w100p"  />');
 	                $("#payment_trRefNo").replaceWith('<input id=payment_trRefNo name="payment_trRefNo" value="${paymentInfo.trRefNo}" type="text" title="" placeholder="" class="w100p"  />');
-	                $("#payment_trIssuedDt").replaceWith('<input id=payment_trIssuedDt name="payment_trIssuedDt" value="${paymentInfo.trIssuedDt}" type="text" title="" placeholder="" class="w100p"  />');
+	                //$("#payment_trIssuedDt").replaceWith('<input id=payment_trIssuedDt name="payment_trIssuedDt" value="${paymentInfo.trIssuedDt}" type="text" title="" placeholder="" class="w100p"  />');
+	                $("#payment_trIssuedDt").replaceWith('<input id=payment_trIssuedDt name="payment_trIssuedDt" type="text" title="" placeholder="" class="j_date" />');
 	                $('#action').val(stus);
 	                $('#specialInstruction').val('${eSvmInfo.appvInstrct}');
 	                console.log('specialInstruction', $('#specialInstruction').val());
@@ -763,7 +764,13 @@
     	console.log("specialInst: " + $("#specialInstruction").val());
     	console.log("SAFlg: " + SAFlg);
     	console.log("payMode: " + '${paymentInfo.payMode}');
-    	if(FormUtil.isEmpty($("#SARefNo").val()) && SAFlg == 1) {
+    	if('${preSalesInfo.packageAmt}' == '0' || FormUtil.isEmpty($("#packageAmt").val()))
+    	{
+    		Common.alert('Please enter Package Amount.');
+            checkResult = false;
+            return checkResult;
+    	}
+    	else if(FormUtil.isEmpty($("#SARefNo").val()) && SAFlg == 1) {
             Common.alert('Please enter SA Reference No.');
             checkResult = false;
             return checkResult;
