@@ -1203,7 +1203,7 @@
             custPoNo             : $('#poNo').val().trim(),
             appTypeId            : vAppType,
             srvPacId             : $('#srvPacId').val(),
-//            instPriod            : $('#installDur').val().trim(),
+            instPriod            : $('#installDur').val().trim(),
             custId                 : $('#hiddenCustId').val(),
             empChk               : 0,
             gstChk                 : $('#gstChk').val(),
@@ -2433,10 +2433,10 @@
     <input id="txtOldOrderID" name="txtOldOrderID" type="hidden" />
     </td>
 </tr>
-<!-- <tr>
+<tr>
     <th scope="row">Installment Duration<span class="must">*</span></th>
     <td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36 Months)" class="w100p readonly" readonly/></td>
-</tr> -->
+</tr>
 <tr>
     <th scope="row">Price / RPF (RM)</th>
     <td><input id="ordPrice"    name="ordPrice"    type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
