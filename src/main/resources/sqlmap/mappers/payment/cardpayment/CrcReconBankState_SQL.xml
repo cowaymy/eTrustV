@@ -115,7 +115,7 @@
 		          WHERE 1=1
 		            AND D.CODE_MASTER_ID = 384
 		            AND KEYIN_STUS_ID = 4
-		            AND B.BANK_MAPPING_STUS_ID = 1
+		            AND B.BANK_MAPPING_STUS_ID = 4
 <if test="tranCrcDateFr != null and tranCrcDateFr != '' and tranCrcDateTo != null and tranCrcDateTo != '' ">
 AND B.CRC_TRNSC_DT BETWEEN TO_DATE(#{tranCrcDateFr},'DD/MM/YYYY') AND TO_DATE(#{tranCrcDateTo},'DD/MM/YYYY')
 </if>
@@ -141,7 +141,7 @@ AND B.CRC_TRNSC_DT BETWEEN TO_DATE(#{tranCrcDateFr},'DD/MM/YYYY') AND TO_DATE(#{
 		          JOIN SYS0013M D
 		            ON C.ACC_CODE = D.CODE
 		          WHERE B.F_TRNSC_REM = 'CRC'
-		            AND B.CRC_MAPPING_STUS_ID = 1
+		            AND B.CRC_MAPPING_STUS_ID = 4
 		            AND D.CODE_MASTER_ID = 384
 <if test="tranCrcDateFr != null and tranCrcDateFr != '' and tranCrcDateTo != null and tranCrcDateTo != '' ">
 AND B.F_TRNSC_DT BETWEEN TO_DATE(#{tranCrcDateFr},'DD/MM/YYYY') AND TO_DATE(#{tranCrcDateTo},'DD/MM/YYYY')
@@ -203,7 +203,7 @@ AND B.F_TRNSC_DT BETWEEN TO_DATE(#{tranCrcDateFr},'DD/MM/YYYY') AND TO_DATE(#{tr
 			      WHERE 1=1
 			        AND D.CODE_MASTER_ID = 384
 			        AND KEYIN_STUS_ID = 4
-			        AND B.BANK_MAPPING_STUS_ID = 1
+			        AND B.BANK_MAPPING_STUS_ID = 4
 <if test="tranCrcDateFr != null and tranCrcDateFr != '' and tranCrcDateTo != null and tranCrcDateTo != '' ">
 AND B.CRC_TRNSC_DT BETWEEN TO_DATE(#{tranCrcDateFr},'DD/MM/YYYY') AND TO_DATE(#{tranCrcDateTo},'DD/MM/YYYY')
 </if>
@@ -230,7 +230,7 @@ AND B.CRC_TRNSC_DT BETWEEN TO_DATE(#{tranCrcDateFr},'DD/MM/YYYY') AND TO_DATE(#{
 			      JOIN SYS0013M D
 			        ON C.ACC_CODE = D.CODE
 			      WHERE B.F_TRNSC_REM = 'CRC'
-			        AND B.CRC_MAPPING_STUS_ID = 1
+			        AND B.CRC_MAPPING_STUS_ID = 4
 			        AND D.CODE_MASTER_ID = 384
 <if test="tranDateFr != null and tranDateFr != '' and tranDateTo != null and tranDateTo != '' ">
 AND B.F_TRNSC_DT BETWEEN TO_DATE(#{tranDateFr}, 'DD/MM/YYYY') AND TO_DATE(#{tranDateTo}, 'DD/MM/YYYY')
