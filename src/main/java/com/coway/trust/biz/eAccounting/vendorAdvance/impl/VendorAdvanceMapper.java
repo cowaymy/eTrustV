@@ -3,6 +3,8 @@ package com.coway.trust.biz.eAccounting.vendorAdvance.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -57,4 +59,7 @@ public interface VendorAdvanceMapper {
     int updateAdvMst_FCM27M(Map<String, Object> params);
     int updateAdvDet_FCM28D(Map<String, Object> params);
     int deleteAdvDet_FCM28D(Map<String, Object> params);
+
+    // FCM0027M update - Manual Settlement for Advance Vendor Request (R4) - Web invoice requested by invoice number + supplier matching
+    int manualVendorAdvReqSettlement(Map<String, Object> params);
 }

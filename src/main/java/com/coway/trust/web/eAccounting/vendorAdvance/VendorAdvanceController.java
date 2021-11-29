@@ -364,4 +364,24 @@ public class VendorAdvanceController {
         }
         return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "/manualVendorAdvReqSettlement.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> manualVendorAdvReqSettlement(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+        LOGGER.debug("========== vendorAdvance.manualReqSettlement ==========");
+        LOGGER.debug("params =====================================>>  " + params);
+
+        int updCnt = vendorAdvanceService.manualVendorAdvReqSettlement(params, sessionVO);
+
+        ReturnMessage message = new ReturnMessage();
+        if(updCnt > 0) {
+            message.setCode(AppConstants.SUCCESS);
+            message.setData(updCnt);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        } else {
+            message.setCode(AppConstants.FAIL);
+            message.setData(updCnt);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        }
+        return ResponseEntity.ok(message);
+    }
 }

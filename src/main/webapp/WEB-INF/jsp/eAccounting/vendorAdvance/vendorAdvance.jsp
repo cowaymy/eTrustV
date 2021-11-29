@@ -384,7 +384,6 @@
             var oriFileName = div.find(":text").val();
 
             for(var i = 0; i < attachmentList.length; i++) {
-console.log("i :: " + i + ", atchFileName :: " + attachmentList[i].atchFileName);
                 if(attachmentList[i].atchFileName == oriFileName) {
                     update.push(attachmentList[i].atchFileId);
                 }
@@ -625,8 +624,6 @@ console.log("i :: " + i + ", atchFileName :: " + attachmentList[i].atchFileName)
         2. Grid Double Click Record
         */
         console.log("fn_advReqPop");
-        //Common.popupDiv("/eAccounting/webInvoice/newWebInvoicePop.do", {callType:'new'}, null, true, "newWebInvoicePop");
-        //Common.popupDiv("/eAccounting/vendorAdvance/vendorAdvRequest.do", {callType:'new'}, null, true, "newVendorAdvPop");
 
         if(advGridClmNo != "" && advGridClmNo != null) {
             $("#reqNewClmNo").val(advGridClmNo);
@@ -905,6 +902,16 @@ console.log("i :: " + i + ", atchFileName :: " + attachmentList[i].atchFileName)
         1. Common.ajax("POST", ) -- Update FCM0027M's ADV_REFD_NO, ADV_REFD_DT; Without inserting repayment/settlement record
         */
         console.log("fn_settlementUpdate");
+
+        if(advGridClmNo == "" || advGridClmNo == null) {
+            Common.alert("No advance request selected for manual settlement.");
+            return false;
+
+        } else {
+            Common.ajax("POST", "/eAccounting/vendorAdvance/manualVendorAdvReqSettlement.do", {clmNo : advGridClmNo}, function(result) {
+                console.log(result);
+            });
+        }
     }
     // Main Menu - Top Buttons - End
 
@@ -1431,36 +1438,6 @@ console.log("i :: " + i + ", atchFileName :: " + attachmentList[i].atchFileName)
 
     function fn_settlementAddRow() {
         console.log("fn_settlementAddRow");
-        /*
-        if(AUIGrid.getRowCount(settlementGridId) > 0) {
-            console.log("clamUn" + AUIGrid.getCellValue(settlementGridId, 0, "clamUn"));
-            AUIGrid.addRow(
-                settlementGridId,
-                {
-                    clamUn : AUIGrid.getCellValue(settlementGridId, 0, "clamUn"),
-                    taxCode:"OP (Purchase(0%):Out of scope)",
-                    cur : AUIGrid.getCellValue(settlementGridId, 0, "currency"),
-                    totAmt : 0
-                },
-                "last"
-            );
-
-        } else {
-            Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"A3"}, function(result) {
-                console.log(result);
-                AUIGrid.addRow(
-                    settlementGridId,
-                    {
-                        clamUn : result.clamUn,
-                        taxCode : "OP (Purchase(0%):Out of scope)",
-                        cur : "MYR",
-                        totAmt : 0
-                    },
-                    "last"
-                );
-            });
-        }
-        */
 
         Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"A3"}, function(result) {
             console.log(result);
@@ -1795,7 +1772,7 @@ console.log("i :: " + i + ", atchFileName :: " + attachmentList[i].atchFileName)
     </aside><!-- title_line end -->
 
     <section class="search_table"><!-- search_table start -->
-        <form action="#" method="post" id="form_webInvoice">
+        <form action="#" method="post" id="searchForm">
             <input type="hidden" id="memAccName" name="memAccName">
             <input type="hidden" id="costCenterText" name="costCenterText">
 

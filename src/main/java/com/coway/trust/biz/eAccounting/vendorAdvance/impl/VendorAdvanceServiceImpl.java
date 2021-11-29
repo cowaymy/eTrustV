@@ -349,4 +349,16 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
 
         return rtn;
     }
+
+    @Override
+    public int manualVendorAdvReqSettlement(Map<String, Object> params, SessionVO sessionVO) {
+        LOGGER.debug("========== vendorAdvance.manualVendorAdvReqSettlement ==========");
+        LOGGER.debug("vendorAdvance.manualVendorAdvReqSettlement :: params >>>>> ", params);
+
+        params.put("userId", sessionVO.getUserId());
+
+        int rtn = vendorAdvanceMapper.manualVendorAdvReqSettlement(params);
+
+        return rtn;
+    }
 }

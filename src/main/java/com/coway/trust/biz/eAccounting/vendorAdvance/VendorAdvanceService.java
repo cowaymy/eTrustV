@@ -38,4 +38,7 @@ public interface VendorAdvanceService {
 
     // FCM0027M + FCM0028D update - Advance Vendor Settlement (A3)
     int updateVendorAdvSettlement(Map<String, Object> params, SessionVO sessionVO);
+
+    // FCM0027M update - Manual Settlement for Advance Vendor Request (R4) - Web invoice requested by invoice number + supplier matching
+    int manualVendorAdvReqSettlement(Map<String, Object> params, SessionVO sessionVO);
 }
