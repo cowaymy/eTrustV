@@ -249,6 +249,7 @@ $(document).ready(function(){
 	        	   Common.alert(result.message);
 	           }
         	   if(result.code == "00"){
+        		   $("#ingGrNo").val('');
                    $("#btnClose").click();
                }
            });
@@ -397,15 +398,58 @@ function fn_smoIssueInListAjax() {
             AUIGrid.setGridData(scanInfoGridId, data.dataList);
         }
     });
+
+    $("#ingGrNo").val($("#zRstNo").val());
 }
 
 function fn_ClosePop(){
-	// Moblie Popup Setting
-    if(Common.checkPlatformType() == "mobile") {
-        opener.fn_PopSmoIssueClose();
-    } else {
-    	$('#_divSmoIssuePop').remove();
-    	SearchListAjax();
+	var ingGrNo = $("#ingGrNo").val();
+    var ioType =  $("#zIoType").val();
+    console.log('ingGrNo ' + $("#ingGrNo").val());
+    console.log('ioType ' + $("#zIoType").val());
+	    if(js.String.isEmpty($("#zRstNo").val())){
+		// Moblie Popup Setting
+	    if(Common.checkPlatformType() == "mobile") {
+	        opener.fn_PopSmoIssueClose();
+	    } else {
+	    	$('#_divSmoIssuePop').remove();
+	    	SearchListAjax();
+	    }
+    }else{
+        if(ingGrNo == ""){
+            $('#_divSmoIssuePop').remove();
+            $("#search").click();
+        }else{
+            Common.alert("Upon closing, all temporary scanned serial no. will be removed (If Any).");
+
+            Common.ajax("POST", "/logistics/stocktransfer/clearSerialNo.do"
+                    , {"reqstNo": ingGrNo, "ioType" : ioType}
+                    , function(result){
+                     //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+                     // Moblie Popup Setting
+                     if(Common.checkPlatformType() == "mobile") {
+                         if( typeof(opener.fn_PopClose) != "undefined" ){
+                             opener.fn_PopClose();
+                         }else{
+                             window.close();
+                         }
+                     } else {
+                         //$("#btnSearch").click();
+                         $('#_divSmoIssuePop').remove();
+                     }
+                              }
+                             , function(jqXHR, textStatus, errorThrown){
+                                 try{
+                                     console.log("Fail Status : " + jqXHR.status);
+                                     console.log("code : "        + jqXHR.responseJSON.code);
+                                     console.log("message : "     + jqXHR.responseJSON.message);
+                                     console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+                                 }catch (e){
+                                     console.log(e);
+                                 }
+                                 Common.alert("Fail : " + jqXHR.responseJSON.message);
+                     });
+        }
     }
 }
 
@@ -480,6 +524,8 @@ function fn_scanSearchPop(){
 	    <input type="hidden" name="pDeliveryNo" id="pDeliveryNo"/>
 	    <input type="hidden" name="pDeliveryItem"  id="pDeliveryItem"/>
 	    <input type="hidden" name="pStatus" id="pStatus"/>
+
+        <input type="hidden" name="ingGrNo" id="ingGrNo" />
 
         <table class="type1">
 	        <caption>search table</caption>

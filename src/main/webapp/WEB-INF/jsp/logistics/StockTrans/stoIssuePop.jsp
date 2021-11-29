@@ -173,6 +173,8 @@ $(document).ready(function(){
         	}
 
         });
+
+        $("#ingGrNo").val($("#zDelvryNo").val());
     });
 
     $("#btnClose").click(function(){
@@ -249,6 +251,7 @@ $(document).ready(function(){
 		               Common.alert(result.message + " <br/>"+ "MaterialDocumentNo : " + result.data);
 		         }
 		         if(result.code == "00"){
+		        	 $("#ingGrNo").val('');
 		             $("#btnClose").click();
 		         }
             }
@@ -322,6 +325,35 @@ $(document).ready(function(){
         }
     });
 
+    var ingGrNo = $("#zDelvryNo").val();
+    var ioType =  $("#zIoType").val();
+    Common.ajax("POST", "/logistics/stocktransfer/clearSerialNo.do"
+            , {"grNo": ingGrNo, "ioType" : ioType}
+            , function(result){
+             //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+             // Moblie Popup Setting
+             if(Common.checkPlatformType() == "mobile") {
+                 if( typeof(opener.fn_PopClose) != "undefined" ){
+                     opener.fn_PopClose();
+                 }else{
+                     window.close();
+                 }
+             } else {
+                 //$("#btnSearch").click();
+                 $('#_divStoIssuePop').remove();
+             }
+                      }
+                     , function(jqXHR, textStatus, errorThrown){
+                         try{
+                             console.log("Fail Status : " + jqXHR.status);
+                             console.log("code : "        + jqXHR.responseJSON.code);
+                             console.log("message : "     + jqXHR.responseJSON.message);
+                             console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+                         }catch (e){
+                             console.log(e);
+                         }
+                         Common.alert("Fail : " + jqXHR.responseJSON.message);
+             });
     $("#btnPopSearch").click();
 });
 
@@ -342,13 +374,54 @@ function fn_scanSearchPop(item){
 
 
 function fn_ClosePop(){
-	// Moblie Popup Setting
-    if(Common.checkPlatformType() == "mobile") {
-        opener.fn_PopStoIssueClose();
-    } else {
-    	$('#_divStoIssuePop').remove();
-    	$("#search").click();
-    }
+	var ingGrNo = $("#ingGrNo").val();
+	var ioType =  $("#zIoType").val();
+    console.log('ingGrNo ' + $("#ingGrNo").val());
+	if(js.String.isEmpty($("#zDelvryNo").val())){
+		// Moblie Popup Setting
+	    if(Common.checkPlatformType() == "mobile") {
+	        opener.fn_PopStoIssueClose();
+	    } else {
+	        $('#_divStoIssuePop').remove();
+	        $("#search").click();
+	    }
+	}else{
+		if(ingGrNo == ""){
+			$('#_divStoIssuePop').remove();
+	        $("#search").click();
+		}else{
+			Common.alert("Upon closing, all temporary scanned serial no. will be removed (If Any).");
+
+	        Common.ajax("POST", "/logistics/stocktransfer/clearSerialNo.do"
+	                , {"grNo": ingGrNo, "ioType" : ioType}
+	                , function(result){
+	                 //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+	                 // Moblie Popup Setting
+	                 if(Common.checkPlatformType() == "mobile") {
+	                     if( typeof(opener.fn_PopClose) != "undefined" ){
+	                         opener.fn_PopClose();
+	                     }else{
+	                         window.close();
+	                     }
+	                 } else {
+	                     //$("#btnSearch").click();
+	                     $('#_divStoIssuePop').remove();
+	                 }
+	                          }
+	                         , function(jqXHR, textStatus, errorThrown){
+	                             try{
+	                                 console.log("Fail Status : " + jqXHR.status);
+	                                 console.log("code : "        + jqXHR.responseJSON.code);
+	                                 console.log("message : "     + jqXHR.responseJSON.message);
+	                                 console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	                             }catch (e){
+	                                 console.log(e);
+	                             }
+	                             Common.alert("Fail : " + jqXHR.responseJSON.message);
+	                 });
+		}
+	}
+
 }
 
 function fn_PopSerialClose(){
@@ -378,6 +451,8 @@ function fn_PopSerialClose(){
         <input type="hidden" name="zIoType" id="zIoType" />
         <input type="hidden" name="zGtype" id="zGtype" />
         <input type="hidden" name="zPrgName" id="zPrgName" />
+
+        <input type="hidden" name="ingGrNo" id="ingGrNo" />
 
         <table class="type1">
 	        <caption>search table</caption>

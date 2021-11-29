@@ -683,13 +683,15 @@
 		                    , DELVRY_NO_ITM
 		                    , ITM_CODE
 		                    , SCAN_STUS_CODE
+                            , IO_TYPE
 		                 FROM LOG0099D
 		              ) Z1
 		       WHERE 1 = 1
 		         AND Z1.DELVRY_NO = B.DELVRY_NO
 		         AND Z1.DELVRY_NO_ITM = B. DELVRY_NO_ITM
 		         AND Z1.ITM_CODE = B.ITM_CODE
-		         AND Z1.SCAN_STUS_CODE = 'C'
+                 AND Z1.SCAN_STUS_CODE = 'D'
+                 AND Z1.IO_TYPE = 'O'
 		         AND Z1.RN = 1
 		       ) AS SCAN_QTY
 		     , NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
@@ -748,7 +750,28 @@
                                WHEN S26.STK_TYPE_ID= 62 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND  S28Q.SERIAL_FT_CHK = 'Y'  THEN 'Y' ELSE 'N' END
                                WHEN S26.STK_TYPE_ID= 63 THEN CASE WHEN S26.SERIAL_CHK = 'Y' AND  S28Q.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N' END
                         ELSE 'N' END SERIAL_CHK
-
+                      , (
+                SELECT COUNT(1)
+                  FROM (
+                       SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+                            , REQST_NO
+                            , REQST_NO_ITM
+                            , DELVRY_NO
+                            , DELVRY_NO_ITM
+                            , ITM_CODE
+                            , SCAN_STUS_CODE
+                            , IO_TYPE
+                         FROM LOG0099D
+                      ) Z1
+               WHERE 1 = 1
+                 AND Z1.DELVRY_NO = L55.DELVRY_NO
+                 AND Z1.DELVRY_NO_ITM = L55.DELVRY_NO_ITM
+                 AND Z1.ITM_CODE = L55.ITM_CODE
+                 AND Z1.SCAN_STUS_CODE = 'D'
+                 AND Z1.IO_TYPE = 'I'
+                 AND Z1.RN = 1
+               ) AS SCAN_QTY
+               , NVL(S28Q.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN
               FROM LOG0047M l47
                       , LOG0048D L48
                       , LOG0054M L54

@@ -480,4 +480,88 @@ public class SerialMgmtNewServiceImpl implements SerialMgmtNewService{
 
 		return check;
 	}
+
+	@Override
+	public String selectBoxSerialBarcode(Map<String, Object> params, SessionVO sessionVO) throws Exception{
+		String serialBarcode = "";
+		List<EgovMap> serialBarcodeList = serialMgmtNewMapper.selectBoxSerialBarcode(params);
+
+		for (EgovMap obj : serialBarcodeList) {
+			serialBarcode = serialBarcode + obj.get("serialNo").toString();
+		}
+
+		return serialBarcode;
+	}
+
+	@Override
+	public void saveSerialNo(Map<String, Object> params, SessionVO sessionVo) throws Exception{ // HLTANG 202111 - filter barcode scan
+		List<EgovMap> grListmain = serialMgmtNewMapper.selectSerialInfo(params);
+
+		Map<String, Object> mainMap = null;
+		for (Object obj : grListmain) {
+			mainMap = (Map<String, Object>) obj;
+			serialMgmtNewMapper.updateDeliveryGrDetail(mainMap);//log0099m
+			serialMgmtNewMapper.updateDeliveryGrMain(mainMap);//log0100m
+
+
+			List<EgovMap> grList1 = serialMgmtNewMapper.selectDeliveryGrHist(mainMap);
+			Map<String, Object> oMap = null;
+			for(EgovMap info : grList1){
+				oMap = new HashMap<String, Object>();
+				oMap.put("updUserId", sessionVo.getUserId());
+				oMap.put("crtUserId", sessionVo.getUserId());
+				oMap.put("serialNo", info.get("serialNo").toString());
+				oMap.put("seq", info.get("seq").toString());
+				oMap.put("ioType", mainMap.get("ioType"));
+
+				serialMgmtNewMapper.updateDeliveryGrHist(oMap);//log0101h
+			}
+		}
+	}
+
+	@Override
+	public int clearSerialNo(Map<String, Object> params, SessionVO sessionVO) throws Exception{ // HLTANG 202111 - filter barcode scan
+		int saveCnt = 0;
+		params.put("crtUserId", sessionVO.getUserId());
+		params.put("updUserId", sessionVO.getUserId());
+
+		Map<String, Object> sMap = new HashMap<String, Object>();
+		String reqstNo = params.get("reqstNo") != null ? params.get("reqstNo").toString() : "";
+		if(reqstNo.equals("")){
+			sMap.put("reqstNo", (String)params.get("grNo"));
+		}else{
+			sMap.put("reqstNo", (String)params.get("reqstNo"));
+		}
+		sMap.put("ioType", (String)params.get("ioType"));
+		List<EgovMap> infoList = serialMgmtNewMapper.selectSerialInfo(sMap);
+
+		Map<String, Object> oMap = null;
+		for(EgovMap info : infoList){
+			oMap = new HashMap<String, Object>();
+			oMap.put("updUserId", sessionVO.getUserId());
+			oMap.put("crtUserId", sessionVO.getUserId());
+			oMap.put("boxno", (String)info.get("serialNo"));
+			oMap.put("ioType", (String)params.get("ioType"));
+			oMap.put("scanNo", (String)params.get("scanNo"));
+			oMap.put("delvryNo", (String)info.get("delvryNo"));
+			oMap.put("scanNo", (String)info.get("scanNo"));
+			oMap.put("reqstNo", (String)info.get("reqstNo"));
+
+			// LOG0101H -- LOG0100M --
+			serialMgmtNewMapper.copySerialMasterHistory(oMap);
+
+			// LOG0099D
+			serialMgmtNewMapper.deleteSerialInfo(oMap);
+
+			// LOG0100M -- State : N - update
+			oMap.put("stusCode", "N");
+			serialMgmtNewMapper.deleteSerialMaster(oMap);
+
+			serialMgmtNewMapper.deleteTempSerialMaster(oMap);
+
+			saveCnt++;
+		}
+
+		return saveCnt;
+	}
 }

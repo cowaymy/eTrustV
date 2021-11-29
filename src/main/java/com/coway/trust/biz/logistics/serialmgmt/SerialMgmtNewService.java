@@ -43,4 +43,12 @@ public interface SerialMgmtNewService{
 	// Other GI/GR serial delete
 	public void deleteOgOiSerial(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 
+	// box serial barcode
+	public String selectBoxSerialBarcode(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
+	// Logistic save serial
+	public void saveSerialNo(Map<String, Object> params, SessionVO sessionVO) throws Exception;
+
+	// Logistic clear serial
+	public int clearSerialNo(Map<String, Object> params, SessionVO sessionVO) throws Exception;
 }

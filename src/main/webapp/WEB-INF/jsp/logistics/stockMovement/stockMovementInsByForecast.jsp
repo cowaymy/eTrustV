@@ -305,7 +305,9 @@
 
 	                if (selectedToLocation.indexOf("CDB") > 0){
 	                	$("#isCody").val('Y');
-	                	Common.confirm("Assignment to CODY will auto complete with GI process.", fn_save, null);
+	                	//Close for Filter Barcode Scan by HLTANG, 11-2021 - to remove auto GI when using forecast
+	                	//Common.confirm("Assignment to CODY will auto complete with GI process.", fn_save, null);
+	                	fn_save();
 	                } else {
 	                	fn_save();
 	                }

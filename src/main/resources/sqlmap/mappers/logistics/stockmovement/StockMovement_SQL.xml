@@ -1116,7 +1116,7 @@
                              WHERE Z1.REQST_NO = B.REQST_NO
                                  AND Z1.REQST_NO_ITM = B.REQST_NO_ITM
                                  AND Z1.ITM_CODE = B.ITM_CODE
-                                 AND Z1.SCAN_STUS_CODE = 'C'
+                                 AND (Z1.SCAN_STUS_CODE = 'D' OR Z1.SCAN_STUS_CODE = 'C')
                                  AND Z1.IO_TYPE = 'O'
                                  AND Z1.DELVRY_NO IS NULL
                           ) AS SCAN_QTY
@@ -1163,7 +1163,7 @@
                          WHERE Z1.DELVRY_NO = B.DELVRY_NO
                              AND Z1.DELVRY_NO_ITM = B.DELVRY_NO_ITM
                              AND Z1.ITM_CODE = B.ITM_CODE
-                             AND Z1.SCAN_STUS_CODE = 'C'
+                             AND (Z1.SCAN_STUS_CODE = 'D' OR Z1.SCAN_STUS_CODE = 'C')
                              AND Z1.IO_TYPE = 'I'
                       ) AS SCAN_QTY
 		             , NVL(S28.SERIAL_REQUIRE_CHK_YN, 'N') AS SERIAL_REQUIRE_CHK_YN

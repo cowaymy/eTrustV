@@ -53,4 +53,14 @@ public interface SerialMgmtNewMapper{
 
 	// Added to select by pass-able column checking for serial scanning. By Hui Ding 15-06-2020
 	public List<EgovMap> selectScanByPassItm(Map<String, Object> param) throws Exception;
+
+	//HLTANG 202111 - filter barcode scan
+	// Select box serial barcode
+	public List<EgovMap> selectBoxSerialBarcode(Map<String, Object> obj) throws Exception;
+	public List<EgovMap> selectSerialInfo(Map<String, Object> obj) throws Exception;
+	public void updateDeliveryGrDetail(Map<String, Object> obj) throws Exception;
+	public void updateDeliveryGrMain(Map<String, Object> obj) throws Exception;
+	public List<EgovMap> selectDeliveryGrHist(Map<String, Object> obj) throws Exception;
+	public void updateDeliveryGrHist(Map<String, Object> obj) throws Exception;
+	public int deleteTempSerialMaster(Map<String, Object> obj) throws Exception;
 }

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewService;
 import com.coway.trust.biz.logistics.stockmovement.StockMovementService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -41,6 +42,9 @@ public class StockMovementController {
 
   @Resource(name = "stockMovementService")
   private StockMovementService stockMovementService;
+
+  @Resource(name = "serialMgmtNewService")
+  private SerialMgmtNewService serialMgmtNewService;
 
   @Autowired
   private MessageSourceAccessor messageAccessor;
@@ -850,4 +854,17 @@ public class StockMovementController {
 
       return ResponseEntity.ok(list);
     }
+
+    @RequestMapping(value = "/clearSerialNo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> clearSerialNo(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
+
+		int totCnt = serialMgmtNewService.clearSerialNo(params, sessionVO);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(message);
+	}
 }

@@ -170,4 +170,16 @@ public class SerialMgmtNewController {
 		result.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		return ResponseEntity.ok(result);
 	}
+
+	// 2.Non Homecare serial delete
+	@RequestMapping(value = "/boxSerialBarcode.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> boxSerialBarcode(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
+
+		String serialBarcode = serialMgmtNewService.selectBoxSerialBarcode(params, sessionVO);
+
+		ReturnMessage result = new ReturnMessage();
+		result.setCode(AppConstants.SUCCESS);
+		result.setMessage(serialBarcode);
+		return ResponseEntity.ok(result);
+	}
 }

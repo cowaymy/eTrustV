@@ -123,7 +123,7 @@ var scanLayout = [
 		          }
 		      }
 		  }
-        , {dataField:"boxno", headerText :"Box Serial No.", width:180}
+        , {dataField:"boxno", headerText :"Serial No.", width:180}
         , {dataField:"status", visible:false}
         , {dataField:"stockId", visible:false}
         , {dataField:"stockCode", headerText:"Item Code", width:120}
@@ -328,65 +328,201 @@ function fn_splitBarcode(){
         var failSound = false;
         var rowData = {};
         var barInfo = [];
+        var boxInfo = [];
         var stockCode = "";
         var ExistingBarCodeArray = AUIGrid.getColumnValues(scanGridId, "boxno");
+
+        console.log("BarCodeArray " + BarCodeArray);
+        console.log("BarCodeArray.length " + BarCodeArray.length);
         for (var i = 0 ; i < BarCodeArray.length ; i++){
 
         	if (BarCodeArray[i].charAt(BarCodeArray[i].length - 5) == 'B'){
-                unitType = "Box";
-            }
+	              var BoxCodeString = "";
+	              if(i==0){
+	            	  Common.ajax("POST", "/logistics/serialMgmtNew/boxSerialBarcode.do"
+	                            , {"boxno":BarCodeArray[i]}
+	                            , function(result){
+	                                if(result.message != ""){
+	                                        console.log("result.message " + result.message);
 
-            //if(ExistingBarCodeArray.includes(BarCodeArray[i])){
-            if(jQuery.inArray(BarCodeArray[i], ExistingBarCodeArray) > 0){
-                //BarCodeArray[i] = BarCodeArray[i];
-                failSound = true;
-                rowData = {
-                		   "boxno":BarCodeArray[i]
-                         , "status":0
-                         , "stockName":"Serial No. (Duplicate)",
+	                                        BoxCodeString = result.message;
+
+	                                        console.log("BoxCodeString " + BoxCodeString);
+
+	                                        if(BoxCodeString != ""){
+	                                               var BoxCodeArray = "";
+	                                        BoxCodeArray = BoxCodeString.toUpperCase().match(/.{1,18}/g);
+	                                        console.log("BoxCodeArray " + BoxCodeArray);
+	                                        console.log("BoxCodeArray.length " + BoxCodeArray.length);
+	                                        for (var j = 0 ; j < BoxCodeArray.length ; j++){
+	                                            //if(ExistingBarCodeArray.includes(BarCodeArray[j])){
+	                                            if(jQuery.inArray(BoxCodeArray[j], ExistingBarCodeArray) > 0){
+	                                                //BarCodeArray[j] = BarCodeArray[j];
+	                                                failSound = true;
+	                                                rowData = {
+	                                                           "boxno":BoxCodeArray[j]
+	                                                         , "status":0
+	                                                         , "stockName":"Serial No. (Duplicate)",
+	                                                        };
+	                                                AUIGrid.addRow(scanGridId, rowData, "first");
+	                                                continue;
+	                                            }
+
+	                                            if( BoxCodeArray[j].length < 18 ){
+	                                                failSound = true;
+	                                                rowData = {
+	                                                            "boxno":BoxCodeArray[j]
+	                                                          , "status":0
+	                                                          , "stockName":"Serial No. Does Not Exist.",
+	                                                        };
+	                                                AUIGrid.addRow(scanGridId, rowData, "first");
+	                                                continue;
+	                                            }
+
+	                                            stockCode = (js.String.roughScale(BoxCodeArray[j].substr(3,5), 36)).toString();
+
+	                                            if(stockCode == "0"){
+	                                                failSound = true;
+	                                                rowData = {
+	                                                        "boxno":BoxCodeArray[j]
+	                                                      , "status":0
+	                                                      , "stockName":"Serial No. Does Not Exist.",
+	                                                    };
+	                                                AUIGrid.addRow(scanGridId, rowData, "first");
+	                                                continue;
+	                                            }
+
+	                                            console.log("BoxCodeArray[j]" + BoxCodeArray[j]);
+	                                            barInfo.push({   "barcode":BoxCodeArray[j]
+	                                                       , "stockCode":stockCode
+	                                                       , "crDate":BoxCodeArray[j].substr(8,5)
+	                                                       , "rstNo":$("#sRstNo").val()
+	                                                       , "dryNo":$("#sDryNo").val()
+	                                                       , "fromLocCode":$("#fromLocCode").val()
+	                                                       , "toLocCode":$("#toLocCode").val()
+	                                                       , "ioType":$("#ioType").val()
+	                                                       , "transactionType":$("#transaction").val()
+	                                                       , "scanNo":$("#scanNo").val()
+	                                                       , "unit":unitType
+	                                                     });
+	                                            }
+
+
+	                                    console.log("barInfo.length" + barInfo.length);
+	                                    if(barInfo.length > 0){
+	                                        Common.ajax("POST", "/logistics/serialMgmtNew/saveLogisticBarcode.do"
+	                                                , {"barList":barInfo}
+	                                                , function(result){
+	                                                    $.each(result.dataList, function(idx, row){
+	                                                        if(row.status == 0){
+	                                                            failSound = true;
+	                                                        }
+	                                                        if(js.String.isNotEmpty(row.scanNo)){
+	                                                            $("#scanNo").val(row.scanNo);
+	                                                        }
+	                                                        AUIGrid.addRow(scanGridId, row, "first");
+	                                                    });
+
+	                                                    if(!msIe){
+	                                                        if(failSound){
+	                                                            beep(999, 210, 800); beep(999, 500, 800);
+	                                                        }else{
+	                                                            beep(100, 520, 200);
+	                                                        }
+	                                                    }
+	                                                 }
+	                                                , function(jqXHR, textStatus, errorThrown){
+	                                                    try{
+	                                                        console.log("Fail Status : " + jqXHR.status);
+	                                                        console.log("code : "        + jqXHR.responseJSON.code);
+	                                                        console.log("message : "     + jqXHR.responseJSON.message);
+	                                                        console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	                                                    }catch (e){
+	                                                        console.log(e);
+	                                                    }
+	                                                    //Common.alert("Fail : " + jqXHR.responseJSON.message);
+	                                                });
+	                                    }else{
+	                                        // faile sound
+	                                        if(!msIe){
+	                                            beep(999, 210, 800); beep(999, 500, 800);
+	                                        }
+	                                    }
+
+	                                    $("#txtBarcode").val("");
+	                                    $("#txtBarcode").focus();
+	                                    }
+	                                }
+	                            }
+	                            , function(jqXHR, textStatus, errorThrown){
+	                                try{
+	                                    if (FormUtil.isNotEmpty(jqXHR.responseJSON)) {
+	                                        console.log("code : "  + jqXHR.responseJSON.code);
+	                                        Common.alert("Fail : " + jqXHR.responseJSON.message);
+	                                    }else{
+	                                        console.log("Fail Status : " + jqXHR.status);
+	                                        console.log("code : "        + jqXHR.responseJSON.code);
+	                                        console.log("message : "     + jqXHR.responseJSON.message);
+	                                        console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	                                    }
+	                                }catch (e){
+	                                    console.log(e);
+	                                }
+	                   });
+	              }
+            }else{
+            	//if(ExistingBarCodeArray.includes(BarCodeArray[i])){
+                if(jQuery.inArray(BarCodeArray[i], ExistingBarCodeArray) > 0){
+                    //BarCodeArray[i] = BarCodeArray[i];
+                    failSound = true;
+                    rowData = {
+                               "boxno":BarCodeArray[i]
+                             , "status":0
+                             , "stockName":"Serial No. (Duplicate)",
+                            };
+                    AUIGrid.addRow(scanGridId, rowData, "first");
+                    continue;
+                }
+
+                if( BarCodeArray[i].length < 18 ){
+                    failSound = true;
+                    rowData = {
+                                "boxno":BarCodeArray[i]
+                              , "status":0
+                              , "stockName":"Serial No. Does Not Exist.",
+                            };
+                    AUIGrid.addRow(scanGridId, rowData, "first");
+                    continue;
+                }
+
+                stockCode = (js.String.roughScale(BarCodeArray[i].substr(3,5), 36)).toString();
+
+                if(stockCode == "0"){
+                    failSound = true;
+                    rowData = {
+                            "boxno":BarCodeArray[i]
+                          , "status":0
+                          , "stockName":"Serial No. Does Not Exist.",
                         };
-                AUIGrid.addRow(scanGridId, rowData, "first");
-                continue;
+                    AUIGrid.addRow(scanGridId, rowData, "first");
+                    continue;
+                }
+
+                 barInfo.push({   "barcode":BarCodeArray[i]
+                               , "stockCode":stockCode
+                               , "crDate":BarCodeArray[i].substr(8,5)
+                               , "rstNo":$("#sRstNo").val()
+                               , "dryNo":$("#sDryNo").val()
+                               , "fromLocCode":$("#fromLocCode").val()
+                               , "toLocCode":$("#toLocCode").val()
+                               , "ioType":$("#ioType").val()
+                               , "transactionType":$("#transaction").val()
+                               , "scanNo":$("#scanNo").val()
+                               , "unit":unitType
+                             });
             }
-
-            if( BarCodeArray[i].length < 18 ){
-            	failSound = true;
-            	rowData = {
-	                        "boxno":BarCodeArray[i]
-	                      , "status":0
-	                      , "stockName":"Serial No. Does Not Exist.",
-                        };
-            	AUIGrid.addRow(scanGridId, rowData, "first");
-            	continue;
-            }
-
-            stockCode = (js.String.roughScale(BarCodeArray[i].substr(3,5), 36)).toString();
-
-            if(stockCode == "0"){
-            	failSound = true;
-            	rowData = {
-                        "boxno":BarCodeArray[i]
-                      , "status":0
-                      , "stockName":"Serial No. Does Not Exist.",
-                    };
-                AUIGrid.addRow(scanGridId, rowData, "first");
-                continue;
-            }
-
-             barInfo.push({   "barcode":BarCodeArray[i]
-                           , "stockCode":stockCode
-                           , "crDate":BarCodeArray[i].substr(8,5)
-                           , "rstNo":$("#sRstNo").val()
-                           , "dryNo":$("#sDryNo").val()
-                           , "fromLocCode":$("#fromLocCode").val()
-                           , "toLocCode":$("#toLocCode").val()
-                           , "ioType":$("#ioType").val()
-                           , "transactionType":$("#transaction").val()
-                           , "scanNo":$("#scanNo").val()
-                           , "unit":unitType
-                         });
         }
-
+        console.log("barInfo.length" + barInfo.length);
         if(barInfo.length > 0){
             Common.ajax("POST", "/logistics/serialMgmtNew/saveLogisticBarcode.do"
                     , {"barList":barInfo}
@@ -572,6 +708,9 @@ function fn_scanClosePop(){
                         <input type="text"  id="txtBarcode" name="txtBarcode" placeholder="Please select here before scanning." style="height:40px;width:99%; text-transform:uppercase;" />
                     </td>
                 </tr>
+                <h3>
+                * for box serial, maximum one box per scan
+                </h3>
              </tbody>
         </table><!-- table end -->
     <!-- </form> -->

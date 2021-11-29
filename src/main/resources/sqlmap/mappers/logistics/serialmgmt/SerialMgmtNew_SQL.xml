@@ -239,13 +239,39 @@
     /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.deleteSerialInfo] - KR JIN */
         DELETE FROM LOG0099D
          WHERE SERIAL_NO = #{boxno}
-          AND SCAN_NO = (SELECT SCAN_NO FROM LOG0099D WHERE SERIAL_NO = #{boxno})
+          AND SCAN_NO in (SELECT SCAN_NO FROM LOG0099D WHERE SERIAL_NO = #{boxno}
+          <if test="ioType !=null and ioType !=''">
+            AND IO_TYPE = #{ioType}
+           </if>
+           <if test="delvryNo !=null and delvryNo !=''">
+            AND DELVRY_NO = #{delvryNo}
+           </if>
+           <if test="reqstNo !=null and reqstNo !=''">
+            AND REQST_NO = #{reqstNo}
+           </if>
+          )
+
+
     </delete>
 
     <delete id="deleteSerialMaster" parameterType="Map">
     /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.deleteSerialMaster] - KR JIN */
         DELETE LOG0100M
          WHERE SERIAL_NO = #{boxno}
+         <if test="ioType !=null and ioType !=''">
+            AND (STUS_CODE = #{ioType} or STUS_CODE = 'D')
+           </if>
+           <if test="delvryNo !=null and delvryNo !=''">
+            AND LAST_DELVRY_NO = #{delvryNo}
+           </if>
+    </delete>
+
+    <delete id="deleteTempSerialMaster" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.deleteTempSerialMaster] - HLTANG */
+        UPDATE LOG0100M
+        SET TEMP_SCAN_NO = null
+         WHERE SERIAL_NO = #{boxno}
+         and TEMP_SCAN_NO = #{scanNo}
     </delete>
 
     <insert id="copySerialMasterHistory" parameterType="Map">
@@ -371,4 +397,93 @@
         SELECT CODE FROM SYS0094M WHERE IND = #{ind} AND DISB = #{disb}
 
     </select>
+
+    <select id="selectBoxSerialBarcode" parameterType="Map" resultType="egovMap">
+    /* Added to select all serial number by box number. By HLTANG 09-11-2021 */
+        SELECT SERIAL_NO FROM LOG0062M WHERE BOX_NO = #{boxno}
+    </select>
+
+    <select id="selectSerialInfo" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.selectSerialInfo] - HLTANG */
+            SELECT X.*
+              FROM (
+                    SELECT ROW_NUMBER() OVER (PARTITION BY A.SERIAL_NO ORDER BY A.SCAN_NO DESC ) AS RN
+                         , A.SERIAL_NO
+                         , A.SCAN_NO
+                         , A.ITM_CODE
+                         , A.SCAN_STUS_CODE
+                         , A.REQST_NO                   -- GR NO
+                         , A.REQST_NO_ITM               -- GR SEQ
+                         , NVL(A.DELVRY_NO,'') DELVRY_NO
+                         , A.DELVRY_NO_ITM
+                         , A.FROM_LOC_ID
+                         , A.TO_LOC_ID                  -- TO CDC
+                         , A.TRNSC_TYPE                 -- (HP)
+                         , A.IO_TYPE
+                      FROM LOG0099D A
+                   ) X
+              WHERE X.RN = 1
+                AND (X.DELVRY_NO = #{reqstNo} or X.REQST_NO = #{reqstNo})
+                <if test="zIoType !=null and zIoType !=''">
+                and X.IO_TYPE = #{zIoType}
+               </if>
+
+    </select>
+
+    <update id="updateDeliveryGrDetail" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.updateDeliveryGrDetail] - Huiling */
+        update LOG0099D set scan_stus_code = 'C' where Scan_no in (
+        select SCAN_NO from (
+        SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+        ,SCAN_NO
+        FROM LOG0099D
+        WHERE
+        <if test="delvryNo !=null and delvryNo !=''">
+            DELVRY_NO = #{delvryNo}
+        </if>
+        <if test="reqstNo !=null and reqstNo !='' and delvryNo ==null ">
+            REQST_NO = #{reqstNo}
+        </if>
+        AND ITM_CODE = #{itmCode}
+        )x where x.rn =1
+        )
+    </update>
+
+    <update id="updateDeliveryGrMain" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.updateDeliveryGrMain] - Huiling */
+        update LOG0100m set stus_code = #{ioType}
+        WHERE
+        <if test="delvryNo !=null and delvryNo !=''">
+            last_DELVRY_NO = #{delvryNo}
+        </if>
+        <if test="reqstNo !=null and reqstNo !='' and delvryNo ==null">
+            LAST_REQST_NO = #{reqstNo}
+        </if>
+        AND ITM_CODE = #{itmCode}
+    </update>
+
+    <select id="selectDeliveryGrHist" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.selectDeliveryGrHist] - Huiling */
+        select * from (
+        SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY seq DESC ) AS RN
+        ,SERIAL_NO
+        ,SEQ
+        FROM LOG0101h
+        WHERE
+        <if test="delvryNo !=null and delvryNo !=''">
+            last_DELVRY_NO = #{delvryNo}
+        </if>
+        <if test="reqstNo !=null and reqstNo !='' and delvryNo ==null">
+            LAST_REQST_NO = #{reqstNo}
+        </if>
+        AND ITM_CODE = #{itmCode}
+        )x where RN =1
+    </select>
+
+    <update id="updateDeliveryGrHist" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewMapper.updateDeliveryGrHist] - Huiling */
+        update LOG0101H set stus_code = #{ioType}
+        WHERE serial_no = #{serialNo}
+        AND SEQ = #{seq}
+    </update>
 </mapper>

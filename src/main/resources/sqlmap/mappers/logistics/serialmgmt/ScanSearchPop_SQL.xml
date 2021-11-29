@@ -17,7 +17,7 @@
            LEFT OUTER JOIN SYS0013M C ON B.STK_TYPE_ID = C.CODE_ID
            LEFT OUTER JOIN SYS0028M F ON A.FROM_LOC_ID = F.WH_LOC_ID
            LEFT OUTER JOIN SYS0028M T ON A.TO_LOC_ID = T.WH_LOC_ID
-        WHERE A.SCAN_STUS_CODE = 'C'
+        WHERE (A.SCAN_STUS_CODE = 'C' OR A.SCAN_STUS_CODE = 'D')
           AND (   A.DELVRY_NO = #{searchDeliveryNo}
                OR A.REQST_NO = #{searchRequestNo}
               )

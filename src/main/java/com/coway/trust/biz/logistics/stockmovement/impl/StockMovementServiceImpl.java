@@ -14,9 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewService;
 import com.coway.trust.biz.logistics.stockmovement.StockMovementService;
 import com.coway.trust.biz.logistics.stocktransfer.StockTransferService;
 import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -27,6 +29,9 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   @Resource(name = "stockMoveMapper")
   private StockMovementMapper stockMoveMapper;
+
+  @Resource(name = "serialMgmtNewService")
+  private SerialMgmtNewService serialMgmtNewService;
 
   @Resource(name = "stocktranService")
   private StockTransferService stock;
@@ -436,6 +441,18 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
       params.put("doctext", params.get("zDoctext"));
       params.put("gtype", params.get("ztype"));
 
+      //HLTANG 202111 - filter scan barcode
+      params.put("reqstNo", params.get("zRstNo"));
+      //update status 'D' to 'C'
+      SessionVO sessionVO = new SessionVO();
+      sessionVO.setUserId(Integer.valueOf(params.get("userId").toString()));
+      try {
+		serialMgmtNewService.saveSerialNo(params, sessionVO);
+        } catch (Exception e) {
+        	// TODO Auto-generated catch block
+        	e.printStackTrace();
+        }
+
       stockMoveMapper.StockMovementIssueSerial(params);
 
       String reVal = (String) params.get("rdata");
@@ -705,6 +722,18 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
   	    params.put("trnscType",params.get("zTrnscType"));
         params.put("ioType",params.get("zIoType"));
 
+        //HLTANG 202111 - filter scan barcode
+        params.put("reqstNo", params.get("zDelyNo"));
+        //update status 'D' to 'C'
+        SessionVO sessionVO = new SessionVO();
+        sessionVO.setUserId(Integer.valueOf(params.get("userId").toString()));
+        try {
+  		serialMgmtNewService.saveSerialNo(params, sessionVO);
+          } catch (Exception e) {
+          	// TODO Auto-generated catch block
+          	e.printStackTrace();
+          }
+
         stockMoveMapper.StockMovementIssueBarcodeSave(params);
 
         String errCode = (String)params.get("pErrcode");
@@ -913,66 +942,67 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
     logger.info("###isCody: " + fMap.get("isCody"));
 
     // Added for Direct GI after SMO key in enhancement by Hui Ding, 29-03-2020
-    if(fMap.get("isCody") != null && fMap.get("isCody").equals("Y")){
-        String deliSeq = stockMoveMapper.selectDeliveryStockMovementSeq();
-        String[] delvcd = { deliSeq };
-
-        Map<String, Object> insMapGi = null;
-
-        if (insList.size() > 0) {
-            for (int i = 0; i < insList.size(); i++) {
-
-            	int itmNo = i + 1;
-            	insMapGi = (Map<String, Object>) insList.get(i);
-
-            	insMapGi.put("delno", deliSeq);
-            	insMapGi.put("reqstno", reqNo);
-            	insMapGi.put("reqitmno", itmNo);
-            	insMapGi.put("indelyqty", insMapGi.get("itmfcastqty"));
-            	insMapGi.put("userId", params.get("userId"));
-
-            	stockMoveMapper.insertDeliveryStockMovementDetail(insMapGi);
-
-              }
-
-            insMapGi.put("ttype", fMap.get("sttype"));
-            insMapGi.put("mtype", fMap.get("smtype"));
-
-            stockMoveMapper.insertDeliveryStockMovement(insMapGi);
-        }
-
-        Map<String, Object> giMap = new HashMap<String, Object>();
-
-        giMap.put("parray", delvcd);
-        giMap.put("gtype", "GI");
-        giMap.put("userId", params.get("userId"));
-        giMap.put("prgnm", params.get("prgnm"));
-
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date currDate = new Date();
-        giMap.put("giptdate", formatter.format(currDate));
-
-        logger.info("###giMap content: " + giMap.toString());
-
-        stockMoveMapper.StockMovementIssue(giMap);
-
-        if (giMap.get("rdata") != null){
-        	String result = giMap.get("rdata").toString();
-        	logger.info("###giMap rdata: " + result);
-
-        	String returnValue[] = result.split("∈");
-            for (int i = 0; i < returnValue.length; i++) {
-              returnValue[i] = returnValue[i].replaceAll(" ", "");
-            }
-
-            if (returnValue[0].equals("000")){
-            	mdnNo = returnValue[1];
-            }
-
-        }
-        dvrNo = deliSeq;
-    }
-
+    // start Close for Filter Barcode Scan by HLTANG, 11-2021 - to remove auto GI when using forecast
+//    if(fMap.get("isCody") != null && fMap.get("isCody").equals("Y")){
+//        String deliSeq = stockMoveMapper.selectDeliveryStockMovementSeq();
+//        String[] delvcd = { deliSeq };
+//
+//        Map<String, Object> insMapGi = null;
+//
+//        if (insList.size() > 0) {
+//            for (int i = 0; i < insList.size(); i++) {
+//
+//            	int itmNo = i + 1;
+//            	insMapGi = (Map<String, Object>) insList.get(i);
+//
+//            	insMapGi.put("delno", deliSeq);
+//            	insMapGi.put("reqstno", reqNo);
+//            	insMapGi.put("reqitmno", itmNo);
+//            	insMapGi.put("indelyqty", insMapGi.get("itmfcastqty"));
+//            	insMapGi.put("userId", params.get("userId"));
+//
+//            	stockMoveMapper.insertDeliveryStockMovementDetail(insMapGi);
+//
+//              }
+//
+//            insMapGi.put("ttype", fMap.get("sttype"));
+//            insMapGi.put("mtype", fMap.get("smtype"));
+//
+//            stockMoveMapper.insertDeliveryStockMovement(insMapGi);
+//        }
+//
+//        Map<String, Object> giMap = new HashMap<String, Object>();
+//
+//        giMap.put("parray", delvcd);
+//        giMap.put("gtype", "GI");
+//        giMap.put("userId", params.get("userId"));
+//        giMap.put("prgnm", params.get("prgnm"));
+//
+//        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+//        Date currDate = new Date();
+//        giMap.put("giptdate", formatter.format(currDate));
+//
+//        logger.info("###giMap content: " + giMap.toString());
+//
+//        stockMoveMapper.StockMovementIssue(giMap);
+//
+//        if (giMap.get("rdata") != null){
+//        	String result = giMap.get("rdata").toString();
+//        	logger.info("###giMap rdata: " + result);
+//
+//        	String returnValue[] = result.split("∈");
+//            for (int i = 0; i < returnValue.length; i++) {
+//              returnValue[i] = returnValue[i].replaceAll(" ", "");
+//            }
+//
+//            if (returnValue[0].equals("000")){
+//            	mdnNo = returnValue[1];
+//            }
+//
+//        }
+//        dvrNo = deliSeq;
+//    }
+ // end Close for Filter Barcode Scan by HLTANG, 11-2021
     String result = "SMO No: " + reqNo ;
 
     if (mdnNo != null && !mdnNo.equals("")){

@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.logistics.serialmgmt.SerialMgmtNewService;
 import com.coway.trust.biz.logistics.stockmovement.StockMovementService;
 import com.coway.trust.biz.logistics.stocktransfer.StockTransferService;
 import com.coway.trust.cmmn.exception.PreconditionException;
@@ -56,6 +57,9 @@ public class StocktransferController {
 
 	@Resource(name = "stockMovementService")
 	private StockMovementService stockMovementService;
+
+	@Resource(name = "serialMgmtNewService")
+	private SerialMgmtNewService serialMgmtNewService;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -768,6 +772,11 @@ public class StocktransferController {
 			throw new PreconditionException(AppConstants.FAIL, "DelvryNO does not exist.");
 		}
 
+		//HLTANG 202111 - filter scan barcode
+		params.put("reqstNo", params.get("zDelvryNo"));
+		//update status 'D' to 'C'
+		serialMgmtNewService.saveSerialNo(params, sessionVo);
+
 		String grmplt =(String) grlist.get("DEL_GR_CMPLT");
 		String gimplt =(String) grlist.get("DEL_GI_CMPLT");
 		//logger.debug("grmplt    값 : {}", grmplt);
@@ -860,9 +869,27 @@ public class StocktransferController {
     		params.put("dryNo", delyno);
     		params.put("userId", CommonUtils.intNvl(sessionVo.getUserId()));
 
+    		//HLTANG 202111 - filter scan barcode
+    		params.put("reqstNo", params.get("delyno"));
+    		//update status 'D' to 'C'
+    		serialMgmtNewService.saveSerialNo(params, sessionVo);
+
     		message = stock.StockTransferDeliveryIssueSerial(params, sessionVo);
 		}
 
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/clearSerialNo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> clearSerialNo(@RequestBody Map<String, Object> params, SessionVO sessionVO) throws Exception {
+
+		int totCnt = serialMgmtNewService.clearSerialNo(params, sessionVO);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		return ResponseEntity.ok(message);
 	}
 

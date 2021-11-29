@@ -81,4 +81,9 @@
             )
         }
     </select>
+
+    <select id="selectBarcodeByBox" parameterType="Map" resultType="EgovMap">
+    /* [com.coway.trust.biz.logistics.barcodeRegister.impl.BarcodeRegisterApiMapper.selectBarcodeByBox] Added to select all serial number by box number. By HLTANG 09-11-2021 */
+        SELECT SERIAL_NO FROM LOG0062M WHERE BOX_NO = #{boxno}
+    </select>
 </mapper>
