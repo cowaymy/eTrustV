@@ -210,7 +210,7 @@ console.log("preOrderList");
     	Common.confirm("Confirm to " + name + " SOF : " + sof  + " ? " , function(){
 
     		Common.ajaxSync("GET", "/sales/order/selRcdTms.do", $("#updFailForm").serialize(), function(result) {
-                if(result.code == "99"){
+    			if(result.code == "99"){
                     Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+ result.message +"</b>", function(){
                         hideViewPopup('#updFail_wrap');
                         fn_getPreOrderList();
@@ -244,19 +244,19 @@ console.log("preOrderList");
     	//AUIGrid 칼럼 설정
         var columnLayout = [
             /* { headerText : "Channel",         dataField : "channel",    editable : false, width : 60  } ,*/
-           { headerText : "SOF No.",         dataField : "sofNo",      editable : false, width : '7%' }
+           { headerText : "SOF No.",         dataField : "sofNo",      editable : false, width : '10%' }
           /* , { headerText : "App Type",        dataField : "appType",    editable : false, width : 80  } */
-          , { headerText : "eKey-in Date",  dataField : "requestDt",  editable : false, width : '7%' }
-          , { headerText : "eKey-in Time",  dataField : "requestTm",  editable : false, width : '8%' }
-          , { headerText : "eKey-in Entry Point",  dataField : "channel",  editable : false, width : '8%' }
+          , { headerText : "eKey-in Date",  dataField : "requestDt",  editable : false, width : '10%' }
+          , { headerText : "eKey-in Time",  dataField : "requestTm",  editable : false, width : '10%' }
+          , { headerText : "eKey-in Entry Point",  dataField : "channel",  editable : false, width : '10%' }
           , { headerText : "Product",         dataField : "product",    editable : false, width : '10%'}
-          , { headerText : "Customer Name",   dataField : "custNm",     editable : false, width : '8%'  }
+          , { headerText : "Customer Name",   dataField : "custNm",     editable : false, width : '10%'  }
           /* , { headerText : "Customer Type",   dataField : "custType",   editable : false, width : 80  } */
-          , { headerText : "Creator",         dataField : "crtName",   editable : false, width : '8%' }
-          , { headerText : "Status",          dataField : "stusName",     editable : false,  width : '8%' }
-          , { headerText : "Order Number", dataField : "salesOrdNo",       editable : false, width : '8%' }
-          , { headerText : "Fail Reason Code", dataField : "rem1",     editable : false,  width : '9%' }
-          , { headerText : "Fail Remark",         dataField : "rem2",     editable : false,  width : '9%' }
+          , { headerText : "Creator",         dataField : "crtName",   editable : false, width : '10%' }
+          , { headerText : "Status",          dataField : "stusName",     editable : false,  width : '10%' }
+          , { headerText : "Order Number", dataField : "salesOrdNo",       editable : false, width : '10%' }
+          , { headerText : "Fail Reason Code", dataField : "rem1",     editable : false,  width : '9%',visible : false }
+          , { headerText : "Fail Remark",         dataField : "rem2",     editable : false,  width : '9%' ,visible : false}
           , { headerText : "Last Update At (By)", dataField : "lastUpd",   editable : false, width : '18%' }
           , { headerText : "StatusId",          dataField : "stusId",     editable : false, visible  : false,  width : 100 }
           /* { headerText : "Status",          dataField : "stusId",     editable : true,  width : 100 ,
