@@ -288,7 +288,11 @@ public class OrderCallListController {
 
       EgovMap orderCall = orderCallListService.getOrderCall(params);
       String productCode = orderCall.get("productCode").toString();
+      String telM = orderCall.get("installTelM").toString();
+      String appType = orderCall.get("appTypeName").toString();
       params.put("productCode", productCode);
+      params.put("telM", telM);
+      params.put("appType", appType);
 
       EgovMap rdcStock = orderCallListService.selectRdcStock(params);
 

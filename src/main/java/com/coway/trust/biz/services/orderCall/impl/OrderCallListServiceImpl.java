@@ -9,14 +9,18 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.orderCall.OrderCallListService;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.services.installation.InstallationResultListController;
 
@@ -33,6 +37,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements OrderCallListService {
 
   private static final Logger logger = LoggerFactory.getLogger(InstallationResultListController.class);
+
+  @Autowired
+  private AdaptorService adaptorService;
 
   @Resource(name = "orderCallListMapper")
   private OrderCallListMapper orderCallListMapper;
@@ -216,6 +223,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
       boolean stat = false;
       String pType = "";
       String pPrgm = "";
+      String smsMessage = "";
 
       if (Integer.parseInt(params.get("callStatus").toString()) == 20) {
         installMaster = getSaveInstallMaster(params, sessionVO);
@@ -284,6 +292,17 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
           stat = true;
           servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(logPram);
         }
+
+        smsMessage = "COWAY:Dear Customer, Ur Appt for  *Installation/After Service/Product collection is set on "+ installMaster.get("appDate") +". For Enquiry 1-800-1000.";
+
+        Map<String, Object> smsList = new HashMap<>();
+        smsList.put("userId", sessionVO.getUserId());
+        smsList.put("smsType", 975);
+        smsList.put("smsMessage", smsMessage);
+        smsList.put("smsMobileNo", params.get("telM").toString());
+
+        sendSms(smsList);
+
       } else {
         stat = true; // RECALL / WAITING FOR CANCEL
       }
@@ -635,6 +654,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
           String pPrgm = "";
           String docNo = "";
           int callEntId = 0;
+          String smsMessage = "";
 
           if (CommonUtils.intNvl(params.get("callStatus")) == 20) {
         	  installMaster = getSaveInstallMaster(params, sessionVO);
@@ -693,6 +713,18 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
             	  stat = true;
             	  servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST_SERIAL(logPram);
               }
+
+              if(params.get("appType").toString() != "EDU" && params.get("appType").toString() != "TRL" && params.get("appType").toString() != "AUX"){
+                smsMessage = "COWAY:Dear Customer, Ur Appt for Installation is set on "+ installMaster.get("appDate") +".For Enquiry 1-800-1000.";
+
+                Map<String, Object> smsList = new HashMap<>();
+                smsList.put("userId", sessionVO.getUserId());
+                smsList.put("smsType", 975);
+                smsList.put("smsMessage", smsMessage);
+                smsList.put("smsMobileNo", params.get("telM").toString());
+
+                sendSms(smsList);
+              }
           } else {
         	  stat = true; // RECALL / WAITING FOR CANCEL
           }
@@ -712,6 +744,17 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
   @Override
   public List<EgovMap> selectPromotionList() {
     return orderCallListMapper.selectPromotionList();
+  }
+
+  @Override
+  public void sendSms(Map<String, Object> smsList){
+    int userId = (int) smsList.get("userId");
+    SmsVO sms = new SmsVO(userId, 975);
+
+    sms.setMessage(smsList.get("smsMessage").toString());
+    sms.setMobiles(smsList.get("smsMobileNo").toString());
+    //send SMS
+    SmsResult smsResult = adaptorService.sendSMS(sms);
   }
 
 

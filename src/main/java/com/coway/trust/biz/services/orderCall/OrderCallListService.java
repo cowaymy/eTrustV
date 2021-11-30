@@ -51,4 +51,6 @@ public interface OrderCallListService {
   Map<String, Object> insertCallResultSerial(Map<String, Object> params, SessionVO sessionVO);
 
   List<EgovMap> selectPromotionList();
+
+  void sendSms(Map<String, Object> smsList);
 }

@@ -15,9 +15,11 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.logistics.stocks.impl.StockMapper;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.sales.mambership.impl.MembershipConvSaleMapper;
@@ -30,6 +32,8 @@ import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 import com.coway.trust.web.services.installation.InstallationResultListController;
@@ -46,6 +50,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     implements InstallationResultListService {
   private static final Logger logger = LoggerFactory.getLogger(InstallationResultListController.class);
+
+  @Autowired
+  private AdaptorService adaptorService;
 
   @Resource(name = "installationResultListMapper")
   private InstallationResultListMapper installationResultListMapper;
@@ -1783,6 +1790,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     installResult.put("aftLpm", CommonUtils.nvl(params.get("aftLpm")).toString());
     installResult.put("turbLvl", CommonUtils.nvl(params.get("turbLvl")).toString());
 
+    installResult.put("smsMobileNo", CommonUtils.nvl(params.get("hidCustomerContact")).toString());
+    installResult.put("ctCode", CommonUtils.nvl(params.get("ctCode")).toString());
+
     // installResult.put("failId", CommonUtils.nvl(params.get("failChild")).toString());
     // installResult.put("failLct", CommonUtils.nvl(params.get("failParent")).toString());
 
@@ -2570,6 +2580,22 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     // INSERT HAPPY CALL CCR0001D
     installationResultListMapper.insertHappyCall(happyCall);
+
+    // INSERT SMS FOR APPOINTMENT - KAHKIT - 2021/11/19
+    String smsMessage = "";
+
+    if(installResult.get("statusCodeId").toString().equals("4")){
+      smsMessage = "COWAY:Dear Customer, Your Installation/Product collection is completed by "+ installResult.get("ctCode").toString() +" on " + installResult.get("installDate").toString() + ". Pls fill in survey : https://bit.ly/CowaySVC";
+    }else{
+      smsMessage = "COWAY:Dear Customer, Your Appointment for Installation/Product collection has failed due to "+ installResult.get("failId").toString() +".Will call to set new appointment.";
+    }
+    Map<String, Object> smsList = new HashMap<>();
+    smsList.put("userId", installResult.get("creator"));
+    smsList.put("smsType", 975);
+    smsList.put("smsMessage", smsMessage);
+    smsList.put("smsMobileNo", installResult.get("smsMobileNo").toString());
+
+    sendSms(smsList);
 
     return true;
   }
@@ -3487,6 +3513,17 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
   public EgovMap selectStkCatType (Map<String, Object> params){
 	  return stockMapper.selectStkCatType(params);
+  }
+
+  @Override
+  public void sendSms(Map<String, Object> smsList){
+    int userId = (int) smsList.get("userId");
+    SmsVO sms = new SmsVO(userId, 975);
+
+    sms.setMessage(smsList.get("smsMessage").toString());
+    sms.setMobiles(smsList.get("smsMobileNo").toString());
+    //send SMS
+    SmsResult smsResult = adaptorService.sendSMS(sms);
   }
 
 }
