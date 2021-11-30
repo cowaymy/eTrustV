@@ -269,7 +269,11 @@ function fn_generateReport(){
             else{
             	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF.rpt');
             }
+        }else if(invoiceType == 128) {
+
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_ServiceCare_PDF_SST.rpt');
         }
+
     }
 
     $("#reportPDFForm #v_adjid").val(memoAdjId);
