@@ -129,7 +129,8 @@ var blockDtTo = "${hsBlockDtTo}";
     	      editable : false,
     	      selectionMode : "singleRow",
     	      showRowNumColumn : true,
-    	      showStateColumn : false
+    	      showStateColumn : false,
+    	      wordWrap : true
      };
 
      FailedRemarkGridID =  GridCommon.createAUIGrid("grid_FailedRemark_wrap", columnLayout, "", gridPros);
