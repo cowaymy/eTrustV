@@ -577,7 +577,7 @@ $.fn.clearForm = function() {
         </select>
     </td>
     <th id="bankAccHolderHeader" scope="row">Account Holder<span class="must">*</span></th>
-    <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="bankAccHolder" name="bankAccHolder" maxlength = "100"/></td>
+    <td><input style="text-transform: uppercase" type="text" title="" placeholder="" class="w100p" id="bankAccHolder" name="bankAccHolder" maxlength = "60"/></td>
 </tr>
 <tr>
     <th id="bankListHeader" scope="row"> Bank<span class="must">*</span></th>

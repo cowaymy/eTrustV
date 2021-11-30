@@ -775,13 +775,6 @@
             checkResult = false;
             return checkResult;
         }
-    	else if ('${preSalesInfo.custTypeDesc}' == '965' || POFlg == 1) { //Company PO is mandatory or paymode = PO(6506)
-    		if(FormUtil.isEmpty($("#PONo").val())) {
-            Common.alert('Please enter Purchase Order.');
-            checkResult = false;
-            return checkResult;
-            }
-        }
     	else if(FormUtil.isEmpty($("#action").val())) {
             Common.alert('Please choose an Action to proceed.');
             checkResult = false;
@@ -847,6 +840,13 @@
                     return checkResult;
                 }
            	}
+            else if ('${preSalesInfo.custTypeDesc}' == '965' || POFlg == 1) { //Company PO is mandatory or paymode = PO(6506)
+                if(FormUtil.isEmpty($("#PONo").val())) {
+                Common.alert('Please enter Purchase Order.');
+                checkResult = false;
+                return checkResult;
+                }
+            }
         }
 	    	return checkResult;
     }
