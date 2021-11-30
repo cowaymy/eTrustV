@@ -764,7 +764,8 @@
     	console.log("specialInst: " + $("#specialInstruction").val());
     	console.log("SAFlg: " + SAFlg);
     	console.log("payMode: " + '${paymentInfo.payMode}');
-    	if('${preSalesInfo.packageAmt}' == '0' || FormUtil.isEmpty($("#packageAmt").val()))
+    	console.log("payMode: " + '${preSalesInfo.packageAmt}');
+    	if('${preSalesInfo.packageAmt}' == '0')
     	{
     		Common.alert('Please enter Package Amount.');
             checkResult = false;
