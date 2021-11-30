@@ -279,6 +279,8 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
     String key = request.getHeader("key");
     reqPrm.put("key", key);
 
+    Exception e1 = null;
+
     try{
     	int created = 0;
       access = commonApiMapper.checkAccess(reqPrm);
@@ -295,10 +297,10 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
         //course info
         Map<String, Object> courseInfo = new HashMap<String, Object>();
         Map<String, Object> selectCourseId = new HashMap<String, Object>();
-        selectCourseId.put("coursCode", p.getCourseCode());
 
         //validation
-        String coursCode = p.getCourseCode().toString();
+        String coursCode = p.getCourseCode().toString().trim();
+        selectCourseId.put("coursCode", coursCode);
         if (!StringUtils.isBlank(coursCode) ){
         	int isExist = lmsApiMapper.cntCourseCheck(selectCourseId);
 
@@ -352,6 +354,9 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 
                 created = 1;
         	}
+        } else {
+        	e1 = new Exception("courseCode is required");
+        	throw e1;
         }
       }
 
