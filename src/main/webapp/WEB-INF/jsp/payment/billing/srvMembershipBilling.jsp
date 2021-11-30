@@ -231,7 +231,7 @@
 			if (rowCount > 1) {
 				var custId = AUIGrid.getColumnValues(myGridID, "custId");
 
-				for (i = 0; i <= custId.length - 1; i++) {
+				for (i = 0; i < custId.length - 1; i++) {
 					if (custId[i] != custId[i + 1]) {
 						boolDiff = true;
 						break;
@@ -241,7 +241,7 @@
 				}
 			} else {
 
-			}console.log ("here 111 ");
+			}
 			fn_checkCustType();
 		}
 	}
