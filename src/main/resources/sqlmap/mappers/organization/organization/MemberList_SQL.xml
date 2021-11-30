@@ -323,7 +323,11 @@
                         LEFT JOIN (  SELECT *
                                           FROM (SELECT A.*, ROW_NUMBER() OVER (PARTITION BY COURS_MEM_ID
                                                                              ORDER BY COURS_ITM_ID DESC) ITM_ROWS
-                                                FROM MSC0009D A WHERE COURS_MEM_STUS_ID <![CDATA[  <>  ]]> 8)
+                                                FROM MSC0009D A
+                                                left join MSC0008d b on b.cours_id = a.cours_id
+                                                WHERE COURS_MEM_STUS_ID <![CDATA[  <>  ]]> 8
+                                                and b.cours_stus_id not in (3,8)
+                                                )
                                           WHERE ITM_ROWS = 1 ) Extend8 ON Extent1.MEM_ID = Extend8.COURS_MEM_ID
 
                         WHERE 1=1
