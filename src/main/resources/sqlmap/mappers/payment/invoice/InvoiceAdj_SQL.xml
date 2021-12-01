@@ -87,11 +87,12 @@
 	                                   </if>
 	                                   <if test="apprGrp != null and apprGrp != '' ">
 	                                       AND extent232.MEMO_APPV_STUS = 'R'
-	                                       AND extent232.MEMO_APPR_USER_ID IN (
+                                         JOIN FCM0023M F ON F.APPR_MEM_CODE = extent232.MEMO_APPR_USER_ID AND APPR_GRP = #{apprGrp}
+	                                       <!-- AND extent232.MEMO_APPR_USER_ID IN (
 	                                           SELECT APPR_MEM_CODE
 	                                           FROM FCM0023M
 	                                           WHERE APPR_GRP = #{apprGrp}
-	                                       )
+	                                       ) -->
 	                                   </if>
 			                       </if>
 			                WHERE 1=1
@@ -166,11 +167,12 @@
 	                                   </if>
 	                                   <if test="apprGrp != null and apprGrp != '' ">
 	                                       AND extent233.MEMO_APPV_STUS = 'R'
-	                                       AND extent233.MEMO_APPR_USER_ID IN (
+                                         JOIN FCM0023M F ON F.APPR_MEM_CODE = extent233.MEMO_APPR_USER_ID AND APPR_GRP = #{apprGrp}
+	                                       <!-- AND extent233.MEMO_APPR_USER_ID IN (
 	                                           SELECT APPR_MEM_CODE
 	                                           FROM FCM0023M
 	                                           WHERE APPR_GRP = #{apprGrp}
-	                                       )
+	                                       ) -->
 	                                   </if>
                                    </if>
 			                 WHERE 1=1
@@ -243,11 +245,12 @@
 	                            </if>
 	                            <if test="apprGrp != null and apprGrp != '' ">
 	                               AND extent234.MEMO_APPV_STUS = 'R'
-	                                AND extent234.MEMO_APPR_USER_ID IN (
+                                 JOIN FCM0023M F ON F.APPR_MEM_CODE = extent234.MEMO_APPR_USER_ID AND APPR_GRP = #{apprGrp}
+	                                <!-- AND extent234.MEMO_APPR_USER_ID IN (
 	                                           SELECT APPR_MEM_CODE
 	                                           FROM FCM0023M
 	                                           WHERE APPR_GRP = #{apprGrp}
-	                                       )
+	                                       ) -->
 	                            </if>
                             </if>
                     WHERE 1=1
@@ -324,11 +327,12 @@
 	                            </if>
 	                            <if test="apprGrp != null and apprGrp != '' ">
 	                                AND extent235.MEMO_APPV_STUS = 'R'
-	                                AND extent235.MEMO_APPR_USER_ID IN (
+                                  JOIN FCM0023M F ON F.APPR_MEM_CODE = extent235.MEMO_APPR_USER_ID AND APPR_GRP = #{apprGrp}
+	                                <!-- AND extent235.MEMO_APPR_USER_ID IN (
 	                                           SELECT APPR_MEM_CODE
 	                                           FROM FCM0023M
 	                                           WHERE APPR_GRP = #{apprGrp}
-	                                       )
+	                                       ) -->
 	                            </if>
                             </if>
 			        WHERE 1=1
