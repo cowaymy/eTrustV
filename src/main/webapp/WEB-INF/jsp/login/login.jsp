@@ -260,7 +260,7 @@
                 returnUserInfo = result.data;
 
                 if(returnUserInfo.rank == "1366" && returnUserInfo.userTypeId == "1") {
-                    Common.alert("Dear user, your account has not been activated for more than 3 months. Please refer to your manager or administrative for more details.");
+                    Common.alert("Dear user, your account has not been activated for more than 2 months. Please refer to your manager or administrative for more details.");
                     return false;
                 }
 
