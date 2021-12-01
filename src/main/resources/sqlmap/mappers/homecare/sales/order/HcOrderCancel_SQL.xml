@@ -181,6 +181,18 @@
 	            #{item}
 	        </foreach>
 	    </if>
+	       <if test="productRetReasonList != null and productRetReasonList != ''">
+      AND A.REQ_RESN_ID IN
+        <foreach item="item" collection="productRetReasonList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+    </if>
+     <if test="rsoStatusList != null and rsoStatusList != ''">
+      AND A.RSO_STUS IN
+        <foreach item="item" collection="rsoStatusList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+    </if>
 
 	    <if test="ordNo != null and ordNo != ''">
 	        AND A.ORD_NO = #{ordNo}
