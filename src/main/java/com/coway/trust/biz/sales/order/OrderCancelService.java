@@ -47,7 +47,8 @@ public interface OrderCancelService {
    * @exception Exception
    */
   List<EgovMap> dscBranch(Map<String, Object> params);
-
+  List<EgovMap> productRetReason(Map<String, Object> params);
+  List<EgovMap> rsoStatus(Map<String, Object> params);
   /**
    * Cancellation Request Information.
    *
