@@ -66,7 +66,14 @@ public class OrderCancelController {
     model.put("toDay", toDay);
 
     List<EgovMap> dscBranchList = orderCancelService.dscBranch(params);
+
+    List<EgovMap> productRetReasonList = orderCancelService.productRetReason(params);
+
+    List<EgovMap> rsoStatusList = orderCancelService.rsoStatus(params);
+
     model.addAttribute("dscBranchList", dscBranchList);
+    model.addAttribute("productRetReasonList", productRetReasonList);
+    model.addAttribute("rsoStatusList", rsoStatusList);
 
     return "sales/order/orderCancelList";
   }
@@ -122,11 +129,15 @@ public class OrderCancelController {
     String[] callStusId = request.getParameterValues("callStusId");
     String[] reqStageId = request.getParameterValues("reqStageId");
     String[] dscBranchId = request.getParameterValues("cmbDscBranchId");
+    String[] productRetReasonId = request.getParameterValues("cmbproductRetReasonId");
+    String[] rsoStatusId = request.getParameterValues("cmbrsoStatusId");
 
     params.put("typeIdList", appTypeId);
     params.put("stusIdList", callStusId);
     params.put("reqStageList", reqStageId);
     params.put("branchList", dscBranchId);
+    params.put("productRetReasonList", productRetReasonId);
+    params.put("rsoStatusList", rsoStatusId);
     // String stDate = (String)params.get("startCrtDt");
     // if(stDate != null && stDate != ""){
     // String createStDate = stDate.substring(6) + "-" + stDate.substring(3, 5)
