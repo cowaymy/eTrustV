@@ -75,6 +75,14 @@
 	          editable : false
 	        },
 	        {
+	            dataField : "crtDt",
+	            headerText : "Request Date",
+	            dataType:"date",
+	            formatString:"dd/mm/yyyy",
+	            width : 140,
+	            editable : false
+	          },
+	        {
 	          dataField : "reqStusCode",
 	          headerText : "<spring:message code='sal.title.status' />",
 	          width : 100,
@@ -94,6 +102,12 @@
 	          editable : false
 	        },
 	        {
+	            dataField : "stockName",
+	            headerText : "Product",
+	            width : 120,
+	            editable : false
+	          },
+	        {
 	          dataField : "custName",
 	          headerText : "<spring:message code='sal.title.text.customer' />",
 	          editable : false
@@ -104,6 +118,12 @@
 	          width : 170,
 	          editable : false
 	        },
+	        {
+	            dataField : "reqResnDesc",
+	            headerText : "Product Return Reason",
+	            width : 170,
+	            editable : false
+	          },
 	        {
 	          dataField : "reqStage",
 	          headerText : "<spring:message code='sal.title.text.requestStage' />",
@@ -518,9 +538,26 @@
 						<td><input type="text" title="" id="crtUserId" name="crtUserId" placeholder="Creator(UserName)" class="w100p" /></td>
                         <th scope="row">Bundle Number</th>
                         <td><input type="text" title="bndlNo" id="bndlNo" name="bndlNo" placeholder="Bundle Number" class="w100p" /></td>
-                        <th scope="row"></th>
-                        <td></td>
+
+                        <th scope="row">Product Return Reason</th>
+                        <td><select id="cmbproductRetReasonId" name="cmbproductRetReasonId" class="multy_select w100p" multiple="multiple">
+                        <c:forEach var="list" items="${productRetReasonList }">
+                        <option value="${list.resnId }">${list.resnDesc }</option>
+                        </c:forEach>
+                        </select></td>
 					</tr>
+					<tr>
+                    <th scope="row">RSO Status</th>
+                    <td><select id="cmbrsoStatusId" name="cmbrsoStatusId" class="multy_select w100p" multiple="multiple">
+                    <c:forEach var="list" items="${rsoStatusList }">
+                    <option value="${list.stusCodeId }">${list.name }</option>
+                    </c:forEach>
+                    </select></td>
+                    <th scope="row"></th>
+                     <td></td>
+                     <th scope="row"></th>
+                      <td></td>
+                    </tr>
 				</tbody>
 			</table>
 			<!-- table end -->
