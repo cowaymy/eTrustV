@@ -193,6 +193,18 @@
         <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
           #{item}
         </foreach>
+     </if>
+     <if test="productRetReasonList != null and productRetReasonList != ''">
+      AND A.REQ_RESN_ID IN
+        <foreach item="item" collection="productRetReasonList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+    </if>
+     <if test="rsoStatusList != null and rsoStatusList != ''">
+      AND A.RSO_STUS IN
+        <foreach item="item" collection="rsoStatusList" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
     </if>
 
     <if test="ordNo != null and ordNo != ''">
@@ -274,6 +286,25 @@
              AND ( Extent1.TYPE_ID IN ( 40,43 )
     ) ) Project1
     ORDER BY Project1.BRNCH_NAME ASC
+  </select>
+
+    <select id="productRetReason" parameterType="Map" resultType="egovMap">
+    SELECT RESN_ID,
+        CODE,
+        RESN_DESC
+    FROM SYS0032M
+    WHERE RESN_TYPE_ID IN (536,5785)
+    AND STUS_CODE_ID =1
+    ORDER BY RESN_DESC
+  </select>
+
+     <select id="rsoStatus" parameterType="Map" resultType="egovMap">
+    SELECT STUS_CODE_ID,
+        CODE,
+        NAME
+    FROM SYS0038M
+    WHERE STUS_CODE_ID in (SELECT DISTINCT STUS_CODE_ID FROM LOG0038D)
+    ORDER by NAME
   </select>
 
   <select id="callLogStat" parameterType="Map" resultType="egovMap">
