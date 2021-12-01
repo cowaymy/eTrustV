@@ -89,6 +89,14 @@ public class OrderCancelServiceImpl extends EgovAbstractServiceImpl implements O
     return orderCancelMapper.dscBranch(params);
   }
 
+  public List<EgovMap> productRetReason(Map<String, Object> params) {
+	    return orderCancelMapper.productRetReason(params);
+	  }
+
+  public List<EgovMap> rsoStatus(Map<String, Object> params) {
+	    return orderCancelMapper.rsoStatus(params);
+	  }
+
   @Override
   public EgovMap cancelReqInfo(Map<String, Object> params) {
 
