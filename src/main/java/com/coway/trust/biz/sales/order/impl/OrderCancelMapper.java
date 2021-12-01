@@ -230,4 +230,7 @@ public interface OrderCancelMapper {
   void insertSAL0254D(Map<String, Object> params);
 
   EgovMap select3MonthBlockList(Map<String, Object> params);
+
+List<EgovMap> productRetReason(Map<String, Object> params);
+List<EgovMap> rsoStatus(Map<String, Object> params);
 }
