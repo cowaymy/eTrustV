@@ -10,7 +10,9 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.logistics.barcodeRegister.BarcodeRegisterApiForm;
@@ -18,6 +20,8 @@ import com.coway.trust.biz.login.impl.LoginMapper;
 import com.coway.trust.biz.logistics.barcodeRegister.BarcodeRegisterApiService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.LoginVO;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -192,4 +196,17 @@ public class BarcodeRegisterApiServiceImple extends EgovAbstractServiceImpl impl
             throw new ApplicationException(AppConstants.FAIL, "serialNo value does not exist.");
         }
     }
+
+    /**
+	 * selectBarcodeByBox
+	 * @Author MY-HLTANG
+	 * @Date 2021. 11. 24.
+	 * @param barcodeRegisterApiForm
+	 * @throws Exception
+	 */
+    @Override
+    public List<EgovMap> selectBarcodeByBox(Map<String, Object> params) throws Exception {
+
+    	return barcodeRegisterApiMapper.selectBarcodeByBox(params);
+	}
 }

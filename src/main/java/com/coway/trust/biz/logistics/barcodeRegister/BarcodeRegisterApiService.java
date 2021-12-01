@@ -55,4 +55,13 @@ public interface BarcodeRegisterApiService {
     * @throws Exception
     */
 	List<BarcodeRegisterApiForm> adMobileCheckBarcode(BarcodeRegisterApiForm barcodeRegisterApiForm) throws Exception;
+
+	/**
+	 * selectBarcodeByBox
+	 * @Author MY-HLTANG
+	 * @Date 2021. 11. 24.
+	 * @param barcodeRegisterApiForm
+	 * @throws Exception
+	 */
+	List<EgovMap> selectBarcodeByBox(Map<String, Object> params) throws Exception;
 }

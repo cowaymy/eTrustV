@@ -110,4 +110,31 @@ public class BarcodeRegisterApiController {
    public ResponseEntity<List<BarcodeRegisterApiForm>> adMobileCheckBarcode(@RequestBody BarcodeRegisterApiForm barcodeRegisterApiForm) throws Exception {
        return ResponseEntity.ok(barcodeRegisterApiService.adMobileCheckBarcode(barcodeRegisterApiForm));
    }
+
+   /**
+	 * searchSerialNoByBoxNo
+	 * @Author KR-HAN
+	 * @Date 2019. 12. 19.
+	 * @param barcodeRegisterApiForm
+	 * @throws Exception
+	 */
+	@ApiOperation(value = "Box Barcode ", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/selectBarcodeByBox", method = RequestMethod.GET)
+	public ResponseEntity<List<BarcodeRegisterApiDto>> selectBarcodeByBox(@RequestBody BarcodeRegisterApiForm barcodeRegisterApiForm) throws Exception {
+
+		LOGGER.debug("++++ selectBarcodeByBox barcodeRegisterApiForm ::" + barcodeRegisterApiForm );
+
+		Map<String, Object> params = BarcodeRegisterApiForm.createMap(barcodeRegisterApiForm);
+
+		LOGGER.debug("++++ selectBarcodeByBox barcodeRegisterApiForm box No::" + params.get("serialNo").toString() );
+		params.put("boxno", params.get("serialNo").toString());
+		List<EgovMap> BarcodeRegisterList = barcodeRegisterApiService.selectBarcodeByBox(params);
+
+		LOGGER.debug("++++ selectBarcodeByBox barcodeRegisterApiForm serialListBtBox::" + BarcodeRegisterList.size() );
+
+		List<BarcodeRegisterApiDto> list = BarcodeRegisterList.stream().map(r -> BarcodeRegisterApiDto.create(r))
+    				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
 }

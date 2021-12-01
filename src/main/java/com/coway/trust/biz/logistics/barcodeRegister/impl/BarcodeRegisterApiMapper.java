@@ -53,4 +53,12 @@ public interface BarcodeRegisterApiMapper {
     */
    void adMobileCheckBarcode(Map<String, Object> formMap);
 
+   /**
+    * selectBarcodeByBox
+    * @Author MY-HLTANG
+    * @Date 2021. 11. 24.
+    * @param formMap
+    */
+   List<EgovMap> selectBarcodeByBox(Map<String, Object> params);
+
 }
