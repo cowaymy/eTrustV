@@ -42,7 +42,7 @@
                 B.APPV_PRCSS_DT APPV_DT,
                 B.REQST_DT RQST_DT,
                 NVL(B.APPV_PRCSS_STUS, 'T') APPV_PRCSS_STUS,
-                CASE WHEN A.ADV_TYPE = '1' OR A.ADV_TYPE = '3' THEN (
+                CASE WHEN A.ADV_TYPE = '1' THEN (
                     CASE WHEN A.APPV_PRCSS_NO IS NOT NULL THEN (
                         <![CDATA[
                         CASE WHEN (B.APPV_PRCSS_STUS = 'A' AND C.CLM_NO IS NULL AND SYSDATE <= A.ADV_REFD_DT) OR

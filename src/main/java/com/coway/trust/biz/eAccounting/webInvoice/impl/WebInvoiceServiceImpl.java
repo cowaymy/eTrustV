@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.AppConstants;
 import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.eAccounting.vendor.VendorMapper;
+import com.coway.trust.biz.eAccounting.staffBusinessActivity.impl.staffBusinessActivityMapper;
+import com.coway.trust.biz.eAccounting.vendorAdvance.impl.VendorAdvanceMapper;
 import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
 import com.coway.trust.biz.sample.impl.SampleServiceImpl;
 import com.coway.trust.util.CommonUtils;
@@ -39,6 +41,12 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 
 	@Resource(name = "vendorMapper")
     private VendorMapper vendorMapper;
+
+	@Resource(name = "staffBusinessActivityMapper")
+	private staffBusinessActivityMapper staffBusinessActivityMapper;
+
+	@Resource(name = "VendorAdvanceMapper")
+	private VendorAdvanceMapper VendorAdvanceMapper;
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
@@ -414,6 +422,253 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				} else if("V1".equals(clmType)) {
 				    LOGGER.debug("insertVendorInterface :: ", invoAppvInfo);
 				    vendorMapper.insertVendorInterface(invoAppvInfo);
+				}
+				else if("R3".equals(clmType) || "A2".equals(clmType))
+				{
+					List<EgovMap> appvInfoAndItems = staffBusinessActivityMapper.selectAdvInfoAndItems(invoAppvInfo); //itemize record
+					Map<String, Object> appvSettlementInfo = null;
+					Map<String, Object> refundRecordInfo = null;
+
+					int diffAmt = 0; //initiate as 0, 0=no outstanding and balance
+					boolean diffAmtFlg = false; // false: No need to insert (request<exp)
+				    for(int j = 0; j < appvInfoAndItems.size(); j++) {
+                        String ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
+                        Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
+                        invoAppvItems.put("ifKey", ifKey);
+                        invoAppvItems.put("userId", "");
+
+
+                        if("3".equals(invoAppvItems.get("advType").toString()) || "4".equals(invoAppvItems.get("advType").toString())) {
+                            invoAppvItems.put("grandAmt", invoAppvItems.get("netAmt"));
+                            invoAppvItems.put("taxAmt", 0);
+                            invoAppvItems.put("nonTaxAmt", 0);
+                            invoAppvItems.put("taxCode", "");
+
+                            if("3".equals(invoAppvItems.get("advType").toString())) {
+                                invoAppvItems.put("docDt", invoAppvItems.get("reqstDt"));
+                                invoAppvItems.put("dueDt", invoAppvItems.get("reqstDt"));//APPV_PRCSS_DT
+                            }
+
+                            if("4".equals(invoAppvItems.get("advType").toString())) {
+                            	invoAppvItems.put("expAmt", 0);
+                            	invoAppvItems.put("balAmt", 0);
+                                invoAppvItems.put("docDt", invoAppvItems.get("invcDt"));
+                                invoAppvItems.put("dueDt", invoAppvItems.get("appvPrcssDt"));
+                                invoAppvItems.put("totAmt", invoAppvItems.get("netAmt"));
+                                invoAppvItems.put("glCode", invoAppvItems.get("glCode"));
+                                invoAppvItems.put("memAccId", "");
+
+                                int reqAmt, expAmt;
+                                reqAmt = Integer.valueOf(invoAppvItems.get("reqAmt").toString());
+                                expAmt = Integer.valueOf(invoAppvItems.get("totAmt").toString());
+                                diffAmt = reqAmt - expAmt;
+                                if(diffAmt < 0)
+                                {
+                                	//insert settlement request with itemize total as 1 record
+                                	//insert balance amt 1 line
+                                	diffAmtFlg = true;
+                                }
+                            }
+                        }
+
+                        LOGGER.debug("insertAppvInterface =====================================>>  " + invoAppvItems);
+
+                        staffBusinessActivityMapper.insertBusinessActAdvInterface(invoAppvItems);
+                    }
+				    String ifKey;
+				    if(diffAmt < 0) //expenses more than advance
+				    {
+				    	//itemize total as 1 record
+				    	appvSettlementInfo = staffBusinessActivityMapper.selectSettlementInfo(invoAppvInfo); //main record
+				    	ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
+				    	appvSettlementInfo.put("ifKey", ifKey);
+				    	appvSettlementInfo.put("userId", params.get("userId"));
+				    	appvSettlementInfo.put("glCode", "12400200");
+				    	appvSettlementInfo.put("grandAmt", appvSettlementInfo.get("reqAmt"));
+				    	appvSettlementInfo.put("totAmt", appvSettlementInfo.get("reqAmt"));
+				    	appvSettlementInfo.put("docDt", appvSettlementInfo.get("invcDt"));
+				    	appvSettlementInfo.put("dueDt", appvSettlementInfo.get("appvPrcssDt"));
+				    	staffBusinessActivityMapper.insertBusinessActAdvInterface(appvSettlementInfo);
+//
+				    	// insert balance amount as 1 record
+				    	invoAppvInfo.put("flg", "0");
+				    	refundRecordInfo = staffBusinessActivityMapper.selectBalanceInfo(invoAppvInfo); //balance refund record
+				    	ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
+				    	refundRecordInfo.put("ifKey", ifKey);
+				    	refundRecordInfo.put("userId", params.get("userId"));
+				    	refundRecordInfo.put("totAmt", refundRecordInfo.get("balAmt"));
+				    	refundRecordInfo.put("balAmt", refundRecordInfo.get("balAmt"));
+				    	refundRecordInfo.put("glCode", "22200400");
+				    	refundRecordInfo.put("docDt", refundRecordInfo.get("invcDt"));
+				    	refundRecordInfo.put("dueDt", refundRecordInfo.get("appvPrcssDt"));
+				    	staffBusinessActivityMapper.insertBusinessActAdvInterface(refundRecordInfo);
+
+				    	LOGGER.debug("appvSettlementInfo =====================================>>  " + appvSettlementInfo);
+                        LOGGER.debug("refundRecordInfo =====================================>>  " + refundRecordInfo);
+				    }
+				    else if(diffAmt > 0) //advance more than expenses
+				    {
+
+				    	//itemize total as 1 record
+				    	appvSettlementInfo = staffBusinessActivityMapper.selectSettlementInfo(invoAppvInfo); //main record
+				    	ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
+				    	appvSettlementInfo.put("ifKey", ifKey);
+				    	appvSettlementInfo.put("userId", params.get("userId"));
+				    	appvSettlementInfo.put("grandAmt", appvSettlementInfo.get("reqAmt"));
+				    	appvSettlementInfo.put("glCode", "12400200");
+				    	appvSettlementInfo.put("totAmt", appvSettlementInfo.get("reqAmt"));
+				    	appvSettlementInfo.put("docDt", appvSettlementInfo.get("invcDt"));
+				    	appvSettlementInfo.put("dueDt", appvSettlementInfo.get("appvPrcssDt"));
+				    	staffBusinessActivityMapper.insertBusinessActAdvInterface(appvSettlementInfo);
+
+				    	// insert balance amount as 1 record
+				    	invoAppvInfo.put("flg", "1");
+				    	refundRecordInfo = staffBusinessActivityMapper.selectBalanceInfo(invoAppvInfo); //balance refund record
+				    	ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
+				    	refundRecordInfo.put("ifKey", ifKey);
+				    	refundRecordInfo.put("userId", params.get("userId"));
+				    	refundRecordInfo.put("totAmt", refundRecordInfo.get("balAmt"));
+				    	refundRecordInfo.put("glCode", "22200400");
+				    	refundRecordInfo.put("memAccId", "");
+				    	refundRecordInfo.put("grandAmt", refundRecordInfo.get("balAmt"));
+				    	refundRecordInfo.put("docDt", refundRecordInfo.get("invcDt"));
+				    	refundRecordInfo.put("dueDt", refundRecordInfo.get("appvPrcssDt"));
+				    	refundRecordInfo.put("balAmt", "0");
+				    	refundRecordInfo.put("expAmt", "0");
+				    	refundRecordInfo.put("taxAmt", "0");
+				    	refundRecordInfo.put("nonTaxAmt", "0");
+				    	staffBusinessActivityMapper.insertBusinessActAdvInterface(refundRecordInfo);
+
+				    	LOGGER.debug("appvSettlementInfo =====================================>>  " + appvSettlementInfo);
+                        LOGGER.debug("refundRecordInfo =====================================>>  " + refundRecordInfo);
+				    }
+
+				}
+				else if("R4".equals(clmType) || "A3".equals(clmType))
+				{
+					//EgovMap appvInfoAndItems = VendorAdvanceMapper.selectVendorAdvanceDetails(invoAppvInfo.get("clmNo").toString());
+					List<EgovMap> appvInfoAndItems = VendorAdvanceMapper.selectVendorAdvanceDetailsList(invoAppvInfo); //itemize record
+					Map<String, Object> appvSettlementInfo = null;
+					Map<String, Object> refundRecordInfo = null;
+
+					int diffAmt = 0; //initiate as 0, 0=no outstanding and balance
+					boolean diffAmtFlg = false; // false: No need to insert (request<exp)
+				    for(int j = 0; j < appvInfoAndItems.size(); j++) {
+                        String ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
+                        Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
+                        invoAppvItems.put("ifKey", ifKey);
+                        invoAppvItems.put("userId", "");
+
+                        if("5".equals(invoAppvItems.get("advType").toString()) || "6".equals(invoAppvItems.get("advType").toString())) {
+                            invoAppvItems.put("grandAmt", invoAppvItems.get("totAmt"));
+                            invoAppvItems.put("taxAmt", 0);
+                            invoAppvItems.put("nonTaxAmt", 0);
+                            invoAppvItems.put("taxCode", "");
+
+                            if("5".equals(invoAppvItems.get("advType").toString())) {
+                                invoAppvItems.put("docDt", invoAppvItems.get("crtDt"));
+                                invoAppvItems.put("dueDt", invoAppvItems.get("appvPrcssDt"));//APPV_PRCSS_DT
+                                invoAppvItems.put("reqstUserId", invoAppvItems.get("userName"));
+                                invoAppvItems.put("reqstDt", invoAppvItems.get("crtDt"));
+                                invoAppvItems.put("costCentrName", invoAppvItems.get("costCenterNm"));
+
+                            }
+
+                            if("6".equals(invoAppvItems.get("advType").toString())) {
+                                invoAppvItems.put("docDt", invoAppvItems.get("invcDt"));
+                                invoAppvItems.put("dueDt", invoAppvItems.get("appvPrcssDt"));
+                                invoAppvItems.put("glCode", invoAppvItems.get("glAccNo"));
+                                invoAppvItems.put("costCentrName", invoAppvItems.get("costCenterNm"));
+                                invoAppvItems.put("memAccId", "");
+
+                                int reqAmt, expAmt;
+                                reqAmt = Integer.valueOf(invoAppvItems.get("grandAmt").toString());
+                                expAmt = Integer.valueOf(invoAppvItems.get("expAmt").toString());
+                                diffAmt = reqAmt - expAmt;
+                                invoAppvItems.put("expAmt", 0);
+                                invoAppvItems.put("balAmt", 0);
+                                if(diffAmt < 0)
+                                {
+                                	//insert settlement request with itemize total as 1 record
+                                	//insert balance amt 1 line
+                                	diffAmtFlg = true;
+                                }
+                            }
+                        }
+
+                        LOGGER.debug("insertAppvInterface =====================================>>  " + invoAppvItems);
+
+                        VendorAdvanceMapper.insertVendorAdvInterface(invoAppvItems);
+
+				    }
+
+				    String ifKey;
+				    if(diffAmt < 0) //expenses more than advance
+				    {
+				    	//itemize total as 1 record
+				    	appvSettlementInfo = VendorAdvanceMapper.selectSettlementInfo(invoAppvInfo); //main record
+				    	ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
+				    	appvSettlementInfo.put("ifKey", ifKey);
+				    	appvSettlementInfo.put("userId", params.get("userId"));
+				    	appvSettlementInfo.put("glCode", "12400200");
+				    	appvSettlementInfo.put("grandAmt", appvSettlementInfo.get("reqAmt"));
+				    	appvSettlementInfo.put("totAmt", appvSettlementInfo.get("reqAmt"));
+				    	appvSettlementInfo.put("docDt", appvSettlementInfo.get("invcDt"));
+				    	appvSettlementInfo.put("dueDt", appvSettlementInfo.get("appvPrcssDt"));
+				    	VendorAdvanceMapper.insertVendorAdvInterface(appvSettlementInfo);
+//
+				    	// insert balance amount as 1 record
+				    	invoAppvInfo.put("flg", "0");
+				    	refundRecordInfo = VendorAdvanceMapper.selectBalanceInfo(invoAppvInfo); //balance refund record
+				    	ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
+				    	refundRecordInfo.put("ifKey", ifKey);
+				    	refundRecordInfo.put("userId", params.get("userId"));
+				    	refundRecordInfo.put("totAmt", refundRecordInfo.get("balAmt"));
+				    	refundRecordInfo.put("balAmt", refundRecordInfo.get("balAmt"));
+				    	refundRecordInfo.put("glCode", "22200400");
+				    	refundRecordInfo.put("docDt", refundRecordInfo.get("invcDt"));
+				    	refundRecordInfo.put("dueDt", refundRecordInfo.get("appvPrcssDt"));
+				    	VendorAdvanceMapper.insertVendorAdvInterface(refundRecordInfo);
+
+				    	LOGGER.debug("appvSettlementInfo =====================================>>  " + appvSettlementInfo);
+                        LOGGER.debug("refundRecordInfo =====================================>>  " + refundRecordInfo);
+				    }
+				    else if(diffAmt > 0) //advance more than expenses
+				    {
+
+				    	//itemize total as 1 record
+				    	appvSettlementInfo = VendorAdvanceMapper.selectSettlementInfo(invoAppvInfo); //main record
+				    	ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
+				    	appvSettlementInfo.put("ifKey", ifKey);
+				    	appvSettlementInfo.put("userId", params.get("userId"));
+				    	appvSettlementInfo.put("grandAmt", appvSettlementInfo.get("reqAmt"));
+				    	appvSettlementInfo.put("glCode", "12400200");
+				    	appvSettlementInfo.put("totAmt", appvSettlementInfo.get("reqAmt"));
+				    	appvSettlementInfo.put("docDt", appvSettlementInfo.get("invcDt"));
+				    	appvSettlementInfo.put("dueDt", appvSettlementInfo.get("appvPrcssDt"));
+				    	VendorAdvanceMapper.insertVendorAdvInterface(appvSettlementInfo);
+
+				    	// insert balance amount as 1 record
+				    	invoAppvInfo.put("flg", "1");
+				    	refundRecordInfo = VendorAdvanceMapper.selectBalanceInfo(invoAppvInfo); //balance refund record
+				    	ifKey = webInvoiceMapper.selectNextAdvAppvIfKey();
+				    	refundRecordInfo.put("ifKey", ifKey);
+				    	refundRecordInfo.put("userId", params.get("userId"));
+				    	refundRecordInfo.put("totAmt", refundRecordInfo.get("balAmt"));
+				    	refundRecordInfo.put("glCode", "22200400");
+				    	refundRecordInfo.put("memAccId", "");
+				    	refundRecordInfo.put("grandAmt", refundRecordInfo.get("balAmt"));
+				    	refundRecordInfo.put("docDt", refundRecordInfo.get("invcDt"));
+				    	refundRecordInfo.put("dueDt", refundRecordInfo.get("appvPrcssDt"));
+				    	refundRecordInfo.put("balAmt", "0");
+				    	refundRecordInfo.put("expAmt", "0");
+				    	refundRecordInfo.put("taxAmt", "0");
+				    	refundRecordInfo.put("nonTaxAmt", "0");
+				    	VendorAdvanceMapper.insertVendorAdvInterface(refundRecordInfo);
+
+				    	LOGGER.debug("appvSettlementInfo =====================================>>  " + appvSettlementInfo);
+                        LOGGER.debug("refundRecordInfo =====================================>>  " + refundRecordInfo);
+				    }
 				}
 			}
 		}

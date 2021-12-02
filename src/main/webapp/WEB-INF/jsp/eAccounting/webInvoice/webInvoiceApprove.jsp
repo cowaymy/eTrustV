@@ -482,6 +482,14 @@ function fn_webInvoiceAppvViewPop() {
         url = "/eAccounting/vendor/vendorRqstViewPop.do";
 
         $.extend(data, {reqNo : clmNo, viewType : "APPV"});
+    } else if(clmType == "R3" || clmType == "A2") {
+        url = "/eAccounting/staffBusinessActivity/staffBusActApproveViewPop.do";
+
+        $.extend(data, {reqNo : clmNo, viewType : "APPV"});
+    } else if(clmType == "R4" || clmType == "A3") {
+        url = "/eAccounting/staffBusinessActivity/staffBusActApproveViewPop.do";
+
+        $.extend(data, {reqNo : clmNo, viewType : "APPV"});
     }else {
         url = "/eAccounting/webInvoice/webInvoiceAppvViewPop.do";
     }
