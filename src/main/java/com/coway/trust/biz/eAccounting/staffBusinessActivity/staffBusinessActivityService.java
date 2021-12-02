@@ -58,4 +58,6 @@ public interface staffBusinessActivityService {
     EgovMap selectClamUn(Map<String, Object> params);
 
     void updateClamUn(Map<String, Object> params);
+
+    void insertNotification(Map<String, Object> params);
 }

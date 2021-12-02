@@ -375,7 +375,7 @@ public class StaffBusinessActivityController {
 
             LOGGER.debug("ntf =====================================>>  " + ntf);
 
-            //staffAdvanceService.insertNotification(ntf);
+            staffBusinessActivityService.insertNotification(ntf);
         }
 
         LOGGER.debug("businessActivityAdvance :: insert approval details");

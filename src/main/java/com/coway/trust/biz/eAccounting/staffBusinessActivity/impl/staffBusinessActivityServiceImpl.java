@@ -232,4 +232,9 @@ public class staffBusinessActivityServiceImpl implements staffBusinessActivitySe
     	staffBusinessActivityMapper.insertRefund(params);
     }
 
+    @Override
+    public void insertNotification(Map<String, Object> params) {
+        webInvoiceMapper.insertNotification(params);
+    }
+
 }
