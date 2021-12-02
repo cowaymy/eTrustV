@@ -138,6 +138,9 @@
         2.Password cannot contains your login ID. -->pswdContainLoginId
         3.New password cannot same to current password.  --> sys.login.pswdSameNotPrevious
       */
+
+        var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+
         if ($("#newPasswordConfirmTxt").val().length < 6 || $("#newPasswordConfirmTxt").val().length > 20) {
             Common.alert("<spring:message code='sys.login.passWordLength'/>");
             return false;
@@ -155,6 +158,12 @@
                 return false;
             }
 
+            // LaiKW - 20211202 - ITGC Password configuration, special character required for new passwords
+            if(!format.test($("#newPasswordConfirmTxt").val())) {
+                Common.alert("A single special character is required.");
+                return false;
+            }
+
             if ($("#password").val() == $("#newPasswordConfirmTxt").val()) {
                 Common.alert("<spring:message code='sys.login.pswdSameNotPrevious'/>");
                 return false;
@@ -166,6 +175,12 @@
         {
             if ($("#newPasswordConfirmTxt").val().indexOf($("#searchLoginName").val()) >= 0) {
                 Common.alert("<spring:message code='sys.login.pswdContainLoginId'/>");
+                return false;
+            }
+
+            // LaiKW - 20211202 - ITGC Password configuration, special character required for new passwords
+            if(!format.test($("#newPasswordConfirmTxt").val())) {
+                Common.alert("A single special character is required.");
                 return false;
             }
 
