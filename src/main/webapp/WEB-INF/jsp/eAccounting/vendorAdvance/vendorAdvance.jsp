@@ -443,6 +443,7 @@
         advAppvPrcssNo = null;
         advGridAppvPrcssStus = null;
         advGridRepayStus = null;
+        attachmentList = new Array();
 
         if(type == "M") {
             if($("#advReqPop").is(":visible")) {
@@ -639,6 +640,7 @@
             Common.ajax("GET", "/eAccounting/vendorAdvance/selectVendorAdvanceDetails.do", data, function(result) {
                 console.log(result);
 
+                console.log("advGridAppvPrcssStus: " , advGridAppvPrcssStus);
                 if(advGridAppvPrcssStus == "A" || advGridAppvPrcssStus == "J" || advGridAppvPrcssStus == "R" || advGridAppvPrcssStus == "P") {
                     // Approved, Rejected, Request, Pending
                     // Fields are not editable
@@ -696,6 +698,7 @@
                 $("#totalAdv").val(result.data.totAmt);
                 $("#advOccasion option[value='" + result.data.advOcc + "']").attr('selected', true);
                 $("#advRem").val(result.data.rem);
+                $("#reqCrtUserName").val(result.data.userName);
 
                 // Request file selector
                 gAtchFileGrpId = result.data.attachList[0].atchFileGrpId;
@@ -778,6 +781,8 @@
             Common.ajax("GET", "/eAccounting/vendorAdvance/selectVendorAdvanceDetails.do", data, function(result) {
                 console.log(result);
 
+                console.log("advGridAppvPrcssStus: ", advGridAppvPrcssStus);
+                console.log("advGridAdvType: ", advGridAdvType);
                 if(advGridAdvType == "5") {
                     if(advGridAppvPrcssStus == "A") {
                         // Approved Vendor Advance Request
@@ -828,9 +833,11 @@
 
                     } else {
                         // Settlement Claim Type + Approved/Rejected/Pending Approval/Request = Allow view
-                        $("h1_settlement").text("Vendor Advance Settlement - View");
+                        //$("#h1_settlement").text("Vendor Advance Settlement - View");
+                        $("#h1_settlement").replaceWith('<h1 id="h1_settlement">Vendor Advance Settlement - View</h1>');
 
                         AUIGrid.setProp(settlementGridId, {"editable" : "false"});
+
 
                         $("#eventStartDt").addClass("readonly");
                         $("#eventEndDt").addClass("readonly");
@@ -843,9 +850,15 @@
                         $("#settlementMode").attr("readonly", "readonly");
                         $("#bankRef").attr("readonly", "readonly");
                         $("#settlementRem").attr("readonly", "readonly");
+                        $("#settlementKeyDate").attr("disabled", "disabled");
+
+                        $("#settlementDraft").hide();
+                        $("#settlementSubmit").hide();
+                        $("#settlement_add_row").hide();
+                        $("#settlement_remove_row").hide();
                     }
 
-                    // Set queried values
+                    //set queried values
                     $("#settlementMemAccId").val();
                     $("#settlementMemAccName").val();
                     $("#eventStartDt").val(result.data.advPrdFr);

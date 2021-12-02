@@ -36,6 +36,7 @@ public interface VendorAdvanceMapper {
     int insertApproveLineDetail(Map<String, Object> params);
     int insMissAppr(Map<String, Object> params);
     int insertNotification(Map<String, Object> params);
+    void insertAppvDetails(Map<String, Object> params);
 
     void updateAppvPrcssNo(Map<String, Object> params);
 
@@ -47,6 +48,7 @@ public interface VendorAdvanceMapper {
      * 4. Approval details (If claim is in Approved/Rejected/Approval in Progress/Requested status)
      */
     EgovMap selectVendorAdvanceDetails(String clmNo);
+    List<EgovMap> selectVendorAdvanceDetailsList(Map<String, Object> params);
     List<EgovMap> selectVendorAdvanceItems(String clmNo);
 
     EgovMap getAppvInfo(String appvPrcssNo);
@@ -62,4 +64,9 @@ public interface VendorAdvanceMapper {
 
     // FCM0027M update - Manual Settlement for Advance Vendor Request (R4) - Web invoice requested by invoice number + supplier matching
     int manualVendorAdvReqSettlement(Map<String, Object> params);
+
+    //Insert into Interface table
+    void insertVendorAdvInterface(Map<String, Object> params);
+    EgovMap selectSettlementInfo(Map<String, Object> params);
+    EgovMap selectBalanceInfo(Map<String, Object> params);
 }

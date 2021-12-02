@@ -172,6 +172,7 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
         params.put("userName", sessionVO.getUserName());
 
         List<Object> apprGridList = (List<Object>) params.get("apprGridList");
+        params.put("appvLineCnt", apprGridList.size());
 
         fcm4m_ins = vendorAdvanceMapper.insertApproveManagement(params);
 
@@ -221,6 +222,38 @@ public class VendorAdvanceServiceImpl implements VendorAdvanceService {
             ntf.put("rejctResn", "Pending Approval.");
 
             sys92_ins = vendorAdvanceMapper.insertNotification(ntf);
+
+            if(params.containsKey("clmNo")) {
+                params.put("clmType", params.get("clmNo").toString().substring(0, 2));
+            } else if(params.containsKey("reqNewClmNo")) {
+                params.put("clmType", params.get("reqNewClmNo").toString().substring(0, 2));
+                params.put("clmNo", params.get("reqNewClmNo"));
+            }
+            params.put("appvItmSeq", "1");
+
+
+            if(params.containsKey("reqAdvType") && params.get("reqAdvType") != null && params.get("reqAdvType").equals("5"))
+            {
+            	params.put("expType", params.get("reqAdvType"));
+            	params.put("expTypeNm", "Vendor Advance Expenses");
+            	params.put("costCenter", params.get("reqCostCentr"));
+                params.put("expDesc", params.get("advRem"));
+                params.put("amt", params.get("totalAdv"));
+                params.put("atchFileGrpId", params.get("reqAtchFileGrpId"));
+            }
+            else if(params.containsKey("settlementType") && params.get("settlementType") != null && params.get("settlementType").equals("6"))
+            {
+            	params.put("expTypeNm", "Vendor Advance Expenses Refund");
+            	params.put("expType", params.get("settlementType"));
+            	params.put("costCenter", params.get("settlementCostCenter"));
+            	params.put("amt", params.get("settlementTotalAdv"));
+            	params.put("expDesc", params.get("settlementRem"));
+            	params.put("atchFileGrpId", params.get("settlementAtchFileGrpId"));
+            	params.put("advCurr", "MYR");
+            	params.put("memAccId", params.get("settlementMemAccId"));
+            }
+
+            vendorAdvanceMapper.insertAppvDetails(params);
         }
 
         vendorAdvanceMapper.updateAppvPrcssNo(params);
