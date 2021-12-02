@@ -120,7 +120,7 @@ public class BarcodeRegisterApiController {
 	 */
 	@ApiOperation(value = "Box Barcode ", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/selectBarcodeByBox", method = RequestMethod.GET)
-	public ResponseEntity<List<BarcodeRegisterApiDto>> selectBarcodeByBox(@RequestBody BarcodeRegisterApiForm barcodeRegisterApiForm) throws Exception {
+	public ResponseEntity<List<BarcodeRegisterApiDto>> selectBarcodeByBox(@ModelAttribute BarcodeRegisterApiForm barcodeRegisterApiForm) throws Exception {
 
 		LOGGER.debug("++++ selectBarcodeByBox barcodeRegisterApiForm ::" + barcodeRegisterApiForm );
 
