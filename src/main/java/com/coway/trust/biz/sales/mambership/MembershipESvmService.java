@@ -3,6 +3,8 @@ package com.coway.trust.biz.sales.mambership;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface MembershipESvmService {
@@ -40,4 +42,8 @@ public interface MembershipESvmService {
 	EgovMap selectMembershipQuotInfo(Map<String, Object> params);
 
 	EgovMap  getHasBill(Map<String, Object> params);
+
+	int genSrvMembershipBilling(Map<String, Object> params, SessionVO sessionVO);
+
+	String getPOSm(Map<String, Object> params);
 }

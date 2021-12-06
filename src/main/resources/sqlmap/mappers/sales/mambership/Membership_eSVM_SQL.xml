@@ -255,37 +255,37 @@
 
     <select id="selectESvmInfo" parameterType="Map" resultType="egovMap">
         select
-		ESVM.PSM_ID,
-		ESVM.PSM_NO,
-		ESVM.SVM_QUOT_ID,
-		ESVM.PSM_SALES_ORD_ID,
-		ESVM.PSM_SRV_MEM_NO,
-		ESVM.STUS,
-		ESVM.STUS_REM,
-		ESVM.APPV_USER_ID,
-		ESVM.APPV_DT,
-		REGEXP_REPLACE(ESVM.APPV_REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL) APPV_REM,
-		ESVM.REM,
-		ESVM.CRT_USER_ID,
-		TO_CHAR(ESVM.CRT_DT, 'DD/MM/YYYY') CRT_DT,
-		ESVM.UPD_USER_ID,
-		TO_CHAR(ESVM.UPD_DT, 'DD/MM/YYYY') UPD_DT,
-		ESVM.ATCH_FILE_GRP_ID,
-		QUO.SRV_MEM_QUOT_NO SMQ_NO,
-		QUO.SRV_MEM_QUOT_ID,
-		QUO.SRV_FREQ,
-		SAL.SALES_ORD_NO,
-		TO_CHAR(QUO.SRV_CRT_DT, 'DD/MM/YYYY') QUO_CRT_DT,
-		TO_CHAR(SAL.SALES_DT, 'DD/MM/YYYY') ORD_CRT_DT,
-		DD.RESN_DESC,
-		ESVM.SA_REF,
-		ESVM.PO_NO,
-		ESVM.APPV_INSTRCT
-		from SAL0298D ESVM
-		LEFT JOIN SAL0093D QUO ON QUO.SRV_MEM_QUOT_ID = ESVM.SVM_QUOT_ID
-		LEFT JOIN SAL0001D SAL ON SAL.SALES_ORD_ID = ESVM.PSM_SALES_ORD_ID
-		LEFT JOIN SYS0032M DD ON DD.RESN_ID = ESVM.APPV_INSTRCT
-		WHERE PSM_ID = #{psmId}
+            ESVM.PSM_ID,
+            ESVM.PSM_NO,
+            ESVM.SVM_QUOT_ID,
+            ESVM.PSM_SALES_ORD_ID,
+            ESVM.PSM_SRV_MEM_NO,
+            ESVM.STUS,
+            ESVM.STUS_REM,
+            ESVM.APPV_USER_ID,
+            ESVM.APPV_DT,
+            REGEXP_REPLACE(ESVM.APPV_REM, '(^[[:space:]]+)|([[:space:]]+$)', NULL) APPV_REM,
+            ESVM.REM,
+            ESVM.CRT_USER_ID,
+            TO_CHAR(ESVM.CRT_DT, 'DD/MM/YYYY') CRT_DT,
+            ESVM.UPD_USER_ID,
+            TO_CHAR(ESVM.UPD_DT, 'DD/MM/YYYY') UPD_DT,
+            ESVM.ATCH_FILE_GRP_ID,
+            QUO.SRV_MEM_QUOT_NO SMQ_NO,
+            QUO.SRV_MEM_QUOT_ID,
+            QUO.SRV_FREQ,
+            SAL.SALES_ORD_NO,
+            TO_CHAR(QUO.SRV_CRT_DT, 'DD/MM/YYYY') QUO_CRT_DT,
+            TO_CHAR(SAL.SALES_DT, 'DD/MM/YYYY') ORD_CRT_DT,
+            DD.RESN_DESC,
+            ESVM.SA_REF,
+            ESVM.PO_NO,
+            ESVM.APPV_INSTRCT
+        from SAL0298D ESVM
+        LEFT JOIN SAL0093D QUO ON QUO.SRV_MEM_QUOT_ID = ESVM.SVM_QUOT_ID
+        LEFT JOIN SAL0001D SAL ON SAL.SALES_ORD_ID = ESVM.PSM_SALES_ORD_ID
+        LEFT JOIN SYS0032M DD ON DD.RESN_ID = ESVM.APPV_INSTRCT
+        WHERE PSM_ID = #{psmId}
     </select>
 
     <select id="selectESvmAttachList" parameterType="Map" resultType="egovMap">
@@ -1085,62 +1085,68 @@
                         )
       </insert>
 
-      <select id="getFilterListData" parameterType="Map" resultType="egovMap">
-                             SELECT
-                                          #{taxInvcId}           AS TAX_INVC_ID,
-                                          '1265'                     AS INVC_ITM_TYPE,
-                                          #{srvSalesOrdNo}     AS INVC_ITM_ORD_NO ,
-                                          sList.STK_CODE        AS INVC_ITM_CODE ,
-                                          sList.STK_DESC        AS INVC_ITM_DESC1,
-                                          '1'                          AS INVC_ITM_QTY,
-                                          #{taxRate}            AS INVC_ITM_GST_RATE,
-                                      '0' AS INVC_ITM_GST_TXS  ,
-                                       STK_CHRG_PRC AS INVC_ITM_CHRG,
+    <select id="getFilterListData" parameterType="Map" resultType="egovMap">
+        SELECT
+            #{taxInvcId}        AS TAX_INVC_ID,
+            '1265'              AS INVC_ITM_TYPE,
+            #{srvSalesOrdNo}    AS INVC_ITM_ORD_NO ,
+            sList.STK_CODE      AS INVC_ITM_CODE ,
+            sList.STK_DESC      AS INVC_ITM_DESC1,
+            '1'                 AS INVC_ITM_QTY,
+            #{taxRate}          AS INVC_ITM_GST_RATE,
+            '0'                 AS INVC_ITM_GST_TXS  ,
+            STK_CHRG_PRC        AS INVC_ITM_CHRG,
+            STK_CHRG_PRC        AS INVC_ITM_AMT_DUE
+        FROM (
+            SELECT
+                Extent1.SRV_MEM_QUOT_FILTER_ID,
+                Extent1.STK_ID,
+                Extent1.STK_PRIOD,
+                Extent1.STK_LAST_CHNG_DT,
+                Extent1.STK_FILTER_PRC,
+                Extent1.STK_CHRG_PRC,
+                Extent2.STK_CODE,
+                Extent2.STK_DESC
+            FROM SAL0094D Extent1
+            JOIN SYS0026M Extent2
+                ON Extent1.STK_ID = Extent2.STK_ID
+            WHERE 1=1
+                AND Extent1.SRV_MEM_QUOT_ID = #{srvMemQuotId}
+            ) sList
+        ORDER BY sList.SRV_MEM_QUOT_FILTER_ID ASC
+    </select>
 
-                                          STK_CHRG_PRC    AS INVC_ITM_AMT_DUE
-                              FROM ( SELECT Extent1.SRV_MEM_QUOT_FILTER_ID   ,
-                                            Extent1.STK_ID   ,
-                                            Extent1.STK_PRIOD   ,
-                                            Extent1.STK_LAST_CHNG_DT   ,
-                                            Extent1.STK_FILTER_PRC   ,
-                                            Extent1.STK_CHRG_PRC   ,
-                                            Extent2.STK_CODE   ,
-                                            Extent2.STK_DESC
-                                     FROM SAL0094D Extent1
-                                            JOIN SYS0026M Extent2   ON Extent1.STK_ID = Extent2.STK_ID
-                                      WHERE 1=1
-                                        AND  Extent1.SRV_MEM_QUOT_ID = #{srvMemQuotId}
-                                       ) sList
-                              ORDER BY sList.SRV_MEM_QUOT_FILTER_ID  ASC
-      </select>
+    <insert id="PAY0032DFilter_insert" parameterType="Map" >
+        INSERT INTO  PAY0032D(
+            INVC_ITM_ID,
+            TAX_INVC_ID,
+            INVC_ITM_TYPE,
+            INVC_ITM_ORD_NO,
+            INVC_ITM_CODE,
+            INVC_ITM_DESC1,
+            INVC_ITM_QTY,
+            INVC_ITM_GST_RATE,
+            INVC_ITM_GST_TXS,
+            INVC_ITM_CHRG,
+            INVC_ITM_AMT_DUE
+        ) VALUES (
+            PAY0032D_SEQ.NEXTVAL,
+            #{taxInvcId},
+            #{invcItmType},
+            #{invcItmOrdNo},
+            #{invcItmCode},
+            #{invcItmDesc1},
+            #{invcItmQty},
+            #{invcItmGstRate},
+            #{invcItmGstTxs},
+            #{invcItmChrg},
+            #{invcItmAmtDue}
+        )
+    </insert>
 
-      <insert id="PAY0032DFilter_insert" parameterType="Map" >
-
-             INSERT INTO  PAY0032D(
-                                INVC_ITM_ID,
-                                TAX_INVC_ID,
-                                INVC_ITM_TYPE,
-                                INVC_ITM_ORD_NO,
-                                INVC_ITM_CODE,
-                                INVC_ITM_DESC1,
-                                INVC_ITM_QTY,
-                                INVC_ITM_GST_RATE,
-                                INVC_ITM_GST_TXS,
-                                INVC_ITM_CHRG,
-                                INVC_ITM_AMT_DUE
-             )VALUES(
-                           PAY0032D_SEQ.NEXTVAL,
-                            #{taxInvcId},
-                            #{invcItmType},
-                            #{invcItmOrdNo},
-                            #{invcItmCode},
-                            #{invcItmDesc1},
-                            #{invcItmQty},
-                            #{invcItmGstRate},
-                            #{invcItmGstTxs},
-                            #{invcItmChrg},
-                            #{invcItmAmtDue}
-             )
-
-      </insert>
+    <select id="getPOSm" parameterType="Map" resultType="String">
+        SELECT SRV_MEM_NO
+        FROM SAL0095D
+        WHERE SRV_MEM_QUOT_ID = #{srvMemQuotId}
+    </select>
 </mapper>

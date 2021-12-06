@@ -36,25 +36,25 @@
     var POFlg = 0; //0: No need to check
 
     $(document).ready(function(){
-
-    	if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7" ){
-
-    		var elements = document.getElementsByClassName("attach_mod");
+console.log("esvmDetailPop");
+        if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7") {
+            var elements = document.getElementsByClassName("attach_mod");
             for(var i = 0; i < elements.length; i++) {
                 elements[i].style.display="none";
             }
             $("#btnSave").hide();
         }
 
-    	if('${eSvmInfo.atchFileGrpId}' != 0){
+        if('${eSvmInfo.atchFileGrpId}' != 0){
             fn_loadAtchment('${eSvmInfo.atchFileGrpId}');
         }
 
         var payMode = '${paymentInfo.payMode}';
-        if(payMode == '6506')
-        {
-        	$("#aTabPayment").hide();
-        	POFlg = 1;
+        if(payMode == '6506') {
+            $("#aTabPayment").hide();
+            POFlg = 1;
+        } else {
+            $("#aTabBilling").hide();
         }
 
         //fn_displaySpecialInst();
@@ -66,16 +66,14 @@
         var cardBrandCode = '${paymentInfo.cardBrandCode}';
         var merchantBankCode = '${paymentInfo.merchantBankCode}';
 
-        if(payMode == '6528')
-       	{
-        	if(stus == '5')
-        	{
-        		$("#payment_cardNo").replaceWith('<input id=payment_cardNo name="payment_cardNo" type="text" title=""  value="${paymentInfo.cardNo}" placeholder="" class="w100p readonly" readyonly creditCardText" maxlength=19 />');
-        		$("#payment_approvalNo").replaceWith('<input id=payment_approvalNo name="payment_approvalNo" type="text" title="" value="${paymentInfo.approvalNo}" placeholder="" class="w100p readonly" readyonly "  />');
-        		$("#payment_expDt").replaceWith('<input id=payment_expDt name="payment_expDt" type="text" title="" value="${paymentInfo.expiryDate}" placeholder="" class="w100p readonly" readyonly maxlength=4  />');
-        		//$("#payment_transactionDt").replaceWith('<input id=payment_transactionDt name="payment_transactionDt" type="text" title="" value="${paymentInfo.transactionDate}" placeholder="" class="w100p readonly" readyonly  />');
-        		$("#payment_ccHolderName").replaceWith('<input id=payment_ccHolderName name="payment_ccHolderName" type="text" title="" value="${paymentInfo.crcName}" placeholder="" class="w100p readonly" readyonly  />');
-        		$("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+        if(payMode == '6528') {
+            if(stus == '5') {
+                $("#payment_cardNo").replaceWith('<input id=payment_cardNo name="payment_cardNo" type="text" title=""  value="${paymentInfo.cardNo}" placeholder="" class="w100p readonly" readyonly creditCardText" maxlength=19 />');
+                $("#payment_approvalNo").replaceWith('<input id=payment_approvalNo name="payment_approvalNo" type="text" title="" value="${paymentInfo.approvalNo}" placeholder="" class="w100p readonly" readyonly "  />');
+                $("#payment_expDt").replaceWith('<input id=payment_expDt name="payment_expDt" type="text" title="" value="${paymentInfo.expiryDate}" placeholder="" class="w100p readonly" readyonly maxlength=4  />');
+                //$("#payment_transactionDt").replaceWith('<input id=payment_transactionDt name="payment_transactionDt" type="text" title="" value="${paymentInfo.transactionDate}" placeholder="" class="w100p readonly" readyonly  />');
+                $("#payment_ccHolderName").replaceWith('<input id=payment_ccHolderName name="payment_ccHolderName" type="text" title="" value="${paymentInfo.crcName}" placeholder="" class="w100p readonly" readyonly  />');
+                $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
                 $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
 
                 $("#action option[value='"+ stus +"']").attr("selected", true);
@@ -92,16 +90,14 @@
                 $("#btnSave").hide();
 
                 var trxDt = $("#payment_transactionDt").val();
-                if(trxDt.length != 10)
-                {
+                if(trxDt.length != 10) {
                     trxDt = trxDt.substr(0,2) + '/' + trxDt.substr(2,2) + '/' + trxDt.substr(4,4);
                     $("#payment_transactionDt").val(trxDt);
                 }
                 $("#payment_transactionDt").attr("disabled", true);
-        	}
-        	else if(stus == '1')
-        	{
-        		$("#payment_cardMode option[value='"+ cardModeCode +"']").attr("selected", true);
+
+            } else if(stus == '1') {
+                $("#payment_cardMode option[value='"+ cardModeCode +"']").attr("selected", true);
                 $("#payment_issuedBank option[value='"+ issuBankCode +"']").attr("selected", true);
                 $("#payment_cardType option[value='"+ cardBrandCode +"']").attr("selected", true);
                 $("#payment_merchantBank option[value='"+ merchantBankCode +"']").attr("selected", true);
@@ -109,15 +105,12 @@
                 $("#action option[value='"+ stus +"']").attr("selected", true);
 
                 var trxDt = $("#payment_transactionDt").val();
-                if(trxDt.length != 10)
-                {
-                	trxDt = trxDt.substr(0,2) + '/' + trxDt.substr(2,2) + '/' + trxDt.substr(4,4);
+                if(trxDt.length != 10) {
+                    trxDt = trxDt.substr(0,2) + '/' + trxDt.substr(2,2) + '/' + trxDt.substr(4,4);
                     $("#payment_transactionDt").val(trxDt);
                 }
-        	}
-        	else if(stus == '6')
-        	{
-        		$("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+            } else if(stus == '6') {
+                $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
                 $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
                 $("#action option[value='"+ stus +"']").attr("selected", true);
                 $("#action").attr("disabled", true);
@@ -127,34 +120,31 @@
                 $("#btnSave").hide();
 
                 var trxDt = $("#payment_transactionDt").val();
-                if(trxDt != null && trxDt != "" && trxDt.length != 10)
-                {
+                if(trxDt != null && trxDt != "" && trxDt.length != 10) {
                     trxDt = trxDt.substr(0,2) + '/' + trxDt.substr(2,2) + '/' + trxDt.substr(4,4);
                     $("#payment_transactionDt").val(trxDt);
                 }
-        	}
-       	}else{
-	        if(stus == '5')
-	        {
-	        	$("#payment_transactionID").replaceWith('<input id=payment_transactionID name="payment_transactionID" value="${paymentInfo.trxId}" type="text" title="" placeholder="" class="w100p readonly" readyonly />');
-	        	$("#payment_trRefNo").replaceWith('<input id=payment_trRefNo name="payment_trRefNo" value="${paymentInfo.trRefNo}" type="text" title="" placeholder="" class="w100p readonly" readyonly />');
-	        	$("#payment_trIssuedDt").replaceWith('<input id=payment_trIssuedDt name="payment_trIssuedDt" value="${paymentInfo.trIssuedDt}" type="text" title="" placeholder="" class="w100p readonly" readyonly />');
-	        	if('${paymentInfo.allowComm}' == '1')
-	        	{
-	        		$("#payment_allowCommFlg").replaceWith('<input id=payment_allowCommFlg name="payment_allowCommFlg" type="checkBox" checked />');
-	        		$("input:checkbox").click(function() { return false; });
-	        	}
-	        	$('#attchFrm .label_text').hide();
-	        	$("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
-	        	$("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
-	        	$("#action option[value='"+ stus +"']").attr("selected", true);
+            }
+        } else {
+            if(stus == '5') {
+                $("#payment_transactionID").replaceWith('<input id=payment_transactionID name="payment_transactionID" value="${paymentInfo.trxId}" type="text" title="" placeholder="" class="w100p readonly" readyonly />');
+                $("#payment_trRefNo").replaceWith('<input id=payment_trRefNo name="payment_trRefNo" value="${paymentInfo.trRefNo}" type="text" title="" placeholder="" class="w100p readonly" readyonly />');
+                $("#payment_trIssuedDt").replaceWith('<input id=payment_trIssuedDt name="payment_trIssuedDt" value="${paymentInfo.trIssuedDt}" type="text" title="" placeholder="" class="w100p readonly" readyonly />');
+                if('${paymentInfo.allowComm}' == '1') {
+                    $("#payment_allowCommFlg").replaceWith('<input id=payment_allowCommFlg name="payment_allowCommFlg" type="checkBox" checked />');
+                    $("input:checkbox").click(function() { return false; });
+                }
+                $('#attchFrm .label_text').hide();
+                $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+                $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+                $("#action option[value='"+ stus +"']").attr("selected", true);
                 $("#action").attr("disabled", true);
-	        	//$("#specialInstruction").replaceWith('<input id=specialInstruction name="specialInstruction" value="${eSvmInfo.appvInstrct}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
-	        	$("#specInst").hide();
+                //$("#specialInstruction").replaceWith('<input id=specialInstruction name="specialInstruction" value="${eSvmInfo.appvInstrct}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+                $("#specInst").hide();
 
-	        	$("#btnSave").hide();
+                $("#btnSave").hide();
 
-	        	$("#payment_cardMode option[value='"+ cardModeCode +"']").attr("selected", true);
+                $("#payment_cardMode option[value='"+ cardModeCode +"']").attr("selected", true);
                 $("#payment_issuedBank option[value='"+ issuBankCode +"']").attr("selected", true);
                 $("#payment_cardType option[value='"+ cardBrandCode +"']").attr("selected", true);
                 $("#payment_merchantBank option[value='"+ merchantBankCode +"']").attr("selected", true);
@@ -164,51 +154,43 @@
                 $("#payment_merchantBank").attr("disabled", true);
 
                 var trxDt = $("#payment_transactionDt").val();
-                if(trxDt != null && trxDt != "" && trxDt.length != 10)
-                {
+                if(trxDt != null && trxDt != "" && trxDt.length != 10) {
                     trxDt = trxDt.substr(0,2) + '/' + trxDt.substr(2,2) + '/' + trxDt.substr(4,4);
                     $("#payment_transactionDt").val(trxDt);
                 }
 
-	        }
-	        else if(stus == '1')
-	        {
-	        	if(specialInst != '')
-	            {
-	        		$("#payment_transactionID").replaceWith('<input id=payment_transactionID name="payment_transactionID" value="${paymentInfo.trxId}" type="text" title="" placeholder="" class="w100p"  />');
-	                $("#payment_trRefNo").replaceWith('<input id=payment_trRefNo name="payment_trRefNo" value="${paymentInfo.trRefNo}" type="text" title="" placeholder="" class="w100p"  />');
-	                //$("#payment_trIssuedDt").replaceWith('<input id=payment_trIssuedDt name="payment_trIssuedDt" value="${paymentInfo.trIssuedDt}" type="text" title="" placeholder="" class="w100p"  />');
-	                $("#payment_trIssuedDt").replaceWith('<input id=payment_trIssuedDt name="payment_trIssuedDt" type="text" title="" placeholder="" class="j_date" />');
-	                $('#action').val(stus);
-	                $('#specialInstruction').val('${eSvmInfo.appvInstrct}');
-	                console.log('specialInstruction', $('#specialInstruction').val());
-	                $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p" />');
-	                $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
-	                if(payMode == '6506') //Company PO allow to edit PO field
-	                    {
-	                        $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p" />');
-	                    }
-	                $("#action option[value='"+ stus +"']").attr("selected", true);
-	                $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
+            } else if(stus == '1') {
+                if(specialInst != '') {
+                    $("#payment_transactionID").replaceWith('<input id=payment_transactionID name="payment_transactionID" value="${paymentInfo.trxId}" type="text" title="" placeholder="" class="w100p"  />');
+                    $("#payment_trRefNo").replaceWith('<input id=payment_trRefNo name="payment_trRefNo" value="${paymentInfo.trRefNo}" type="text" title="" placeholder="" class="w100p"  />');
+                    //$("#payment_trIssuedDt").replaceWith('<input id=payment_trIssuedDt name="payment_trIssuedDt" value="${paymentInfo.trIssuedDt}" type="text" title="" placeholder="" class="w100p"  />');
+                    $("#payment_trIssuedDt").replaceWith('<input id=payment_trIssuedDt name="payment_trIssuedDt" type="text" title="" placeholder="" class="j_date" />');
+                    $('#action').val(stus);
+                    $('#specialInstruction').val('${eSvmInfo.appvInstrct}');
+                    console.log('specialInstruction', $('#specialInstruction').val());
+                    $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p" />');
+                    $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+                    if(payMode == '6506') { //Company PO allow to edit PO field
+                        $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p" />');
+                    }
+                    $("#action option[value='"+ stus +"']").attr("selected", true);
+                    $("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
 
-	                $("#payment_cardMode option[value='" + cardModeCode+ "']").attr("selected", true);
-	                $("#payment_issuedBank option[value='"+ issuBankCode +"']").attr("selected", true);
+                    $("#payment_cardMode option[value='" + cardModeCode+ "']").attr("selected", true);
+                    $("#payment_issuedBank option[value='"+ issuBankCode +"']").attr("selected", true);
                     $("#payment_cardType option[value='"+ cardBrandCode +"']").attr("selected", true);
                     $("#payment_merchantBank option[value='"+ merchantBankCode +"']").attr("selected", true);
-	            }
-	            else
-	            {
-	                $('#action').val(stus);
-	                $("#action option[value='"+ stus +"']").attr("selected", true);
-	                $("#payment_cardMode option[value='" + cardModeCode+ "']").attr("selected", true);
-	                $("#payment_issuedBank option[value='"+ issuBankCode +"']").attr("selected", true);
-	                $("#payment_cardType option[value='"+ cardBrandCode +"']").attr("selected", true);
-	                $("#payment_merchantBank option[value='"+ merchantBankCode +"']").attr("selected", true);
-	            }
-	        }
-	        else if (stus == '6')
-	        {
-	        	$("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
+
+                } else {
+                    $('#action').val(stus);
+                    $("#action option[value='"+ stus +"']").attr("selected", true);
+                    $("#payment_cardMode option[value='" + cardModeCode+ "']").attr("selected", true);
+                    $("#payment_issuedBank option[value='"+ issuBankCode +"']").attr("selected", true);
+                    $("#payment_cardType option[value='"+ cardBrandCode +"']").attr("selected", true);
+                    $("#payment_merchantBank option[value='"+ merchantBankCode +"']").attr("selected", true);
+                }
+            } else if (stus == '6') {
+                $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
                 $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p readonly" readonly />');
                 $("#action option[value='"+ stus +"']").attr("selected", true);
                 $("#action").attr("disabled", true);
@@ -218,34 +200,33 @@
                 $("#btnSave").hide();
 
                 var trxDt = $("#payment_transactionDt").val();
-                if(trxDt != null && trxDt != "" && trxDt.length != 10)
-                {
+                if(trxDt != null && trxDt != "" && trxDt.length != 10){
                     trxDt = trxDt.substr(0,2) + '/' + trxDt.substr(2,2) + '/' + trxDt.substr(4,4);
                     $("#payment_transactionDt").val(trxDt);
                 }
-	        }
-       	}
+            }
+           }
 
         //if($("#action").val() == '5') //5:Approved
           //  $("#specInst").hide();
     });
 
     $('.creditCardText').keyup(function() {
-    	  var foo = $(this).val().split("-").join(""); // remove hyphens
-    	  if (foo.length > 0) {
-    	    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
-    	  }
-    	  $(this).val(foo);
-    	});
+          var foo = $(this).val().split("-").join(""); // remove hyphens
+          if (foo.length > 0) {
+            foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
+          }
+          $(this).val(foo);
+    });
 
     $(function(){
         $('#btnSave').click(function() {
 
-        	console.log("btnSave clicked")
-        	var checkResult = fn_checkEmpty();
-        	 if(!checkResult){
-        	        return false;
-        	    }
+            console.log("btnSave clicked")
+            var checkResult = fn_checkEmpty();
+            if(!checkResult) {
+                return false;
+            }
 
             if(!fn_validFile()) {
                 $('#aTabFL').click();
@@ -268,29 +249,29 @@
         });
         $('#svmFrFile').change( function(evt) {
             var file = evt.target.files[0];
-             if(file.name != svmFrFileName){
+             if(file.name != svmFrFileName) {
                  myFileCaches[1] = {file:file};
-                 if(svmFrFileName != ""){
+                 if(svmFrFileName != "") {
                      update.push(svmFrFileId);
                  }
              }
         });
         $('#svmTncFile').change( function(evt) {
             var file = evt.target.files[0];
-            if(file.name != svmTncFileName){
+            if(file.name != svmTncFileName) {
                 myFileCaches[2] = {file:file};
-                if(svmTncFileName != ""){
+                if(svmTncFileName != "") {
                     update.push(svmTncFileId);
                 }
             }
         });
         $('#poFile').change(function(evt) {
             var file = evt.target.files[0];
-            if(file == null){
+            if(file == null) {
                 remove.push(poFileId);
-            }else if(file.name != poFileName){
+            } else if(file.name != poFileName) {
                 myFileCaches[3] = {file:file};
-                if(poFileName != ""){
+                if(poFileName != "") {
                     update.push(poFileId);
                 }
             }
@@ -298,12 +279,11 @@
 
         $('#nricFrFile').change(function(evt) {
             var file = evt.target.files[0];
-
-            if(file == null){
+            if(file == null) {
                 remove.push(nricFrFileId);
-            }else if(file.name != nricFrFileName){
+            } else if(file.name != nricFrFileName) {
                 myFileCaches[4] = {file:file};
-                if(nricFrFileName != ""){
+                if(nricFrFileName != "") {
                     update.push(nricFrFileId);
                }
             }
@@ -311,11 +291,11 @@
 
         $('#nricBcFile').change(function(evt) {
             var file = evt.target.files[0];
-            if(file == null){
+            if(file == null) {
                 remove.push(nricBcFileId);
-            }else if(file.name != nricBcFileName){
+            } else if(file.name != nricBcFileName) {
                 myFileCaches[5] = {file:file};
-                if(nricBcFileName != ""){
+                if(nricBcFileName != "") {
                     update.push(nricBcFileId);
                 }
             }
@@ -323,11 +303,11 @@
 
         $('#slipFile').change(function(evt) {
             var file = evt.target.files[0];
-            if(file == null){
+            if(file == null) {
                 remove.push(slipFileId);
-            }else if(file.name != slipFileName){
+            } else if(file.name != slipFileName) {
                 myFileCaches[6] = {file:file};
-                if(slipFileName != ""){
+                if(slipFileName != "") {
                     update.push(slipFileId);
                 }
             }
@@ -335,11 +315,11 @@
 
         $('#chqFile').change(function(evt) {
             var file = evt.target.files[0];
-            if(file == null){
+            if(file == null) {
                 remove.push(chqFileId);
-            }else if(file.name != chqFileName){
+            } else if(file.name != chqFileName) {
                 myFileCaches[7] = {file:file};
-                if(chqFileName != ""){
+                if(chqFileName != "") {
                     update.push(chqFileId);
                 }
             }
@@ -347,11 +327,11 @@
 
         $('#otherFile').change( function(evt) {
             var file = evt.target.files[0];
-            if(file == null){
+            if(file == null) {
                 remove.push(otherFileId);
-            }else if(file.name != otherFileName){
+            } else if(file.name != otherFileName) {
                  myFileCaches[8] = {file:file};
-                 if(otherFileName != ""){
+                 if(otherFileName != "") {
                      update.push(otherFileId);
                  }
              }
@@ -359,11 +339,11 @@
 
         $('#otherFile2').change( function(evt) {
             var file = evt.target.files[0];
-            if(file == null){
+            if(file == null) {
                 remove.push(otherFileId2);
-            }else if(file.name != otherFileName2){
+            } else if(file.name != otherFileName2) {
                  myFileCaches[8] = {file:file};
-                 if(otherFileName2 != ""){
+                 if(otherFileName2 != "") {
                      update.push(otherFileId2);
                  }
              }
@@ -371,11 +351,11 @@
 
         $('#otherFile3').change( function(evt) {
             var file = evt.target.files[0];
-            if(file == null){
+            if(file == null) {
                 remove.push(otherFileId3);
-            }else if(file.name != otherFileName3){
+            } else if(file.name != otherFileName3) {
                  myFileCaches[8] = {file:file};
-                 if(otherFileName3 != ""){
+                 if(otherFileName3 != "") {
                      update.push(otherFileId3);
                  }
              }
@@ -401,15 +381,15 @@
                 specialInstruction : $('#specialInst').val(),
                 remark : $("#remark").val(),
                 srvMemQuotId :   '${eSvmInfo.srvMemQuotId}',
-        		atchFileGrpId        : '${eSvmInfo.atchFileGrpId}',
-        		SARefNo : $("#SARefNo").val(),
-        		PONo : $("#PONo").val(),
-        		psmId : '${eSvmInfo.psmId}'
+                atchFileGrpId        : '${eSvmInfo.atchFileGrpId}',
+                SARefNo : $("#SARefNo").val(),
+                PONo : $("#PONo").val(),
+                psmId : '${eSvmInfo.psmId}'
             };*/
 
-        var data={
-        		//Update SAL0298D & PAY0312D
-        		action : $('#action').val(),
+        var data = {
+                //Update SAL0298D & PAY0312D
+                action : $('#action').val(),
                 specialInstruction : $('#specialInstruction').val(),
                 remark : $("#remark").val(),
                 srvMemQuotId :   '${eSvmInfo.srvMemQuotId}',
@@ -428,6 +408,11 @@
                 payment_cardType : $("#payment_cardType").val(),
                 payment_merchantBank : $("#payment_merchantBank").val(),
 
+                // LaiKW - Added Payment Mode for PO
+                payment_mode : '${paymentInfo.payMode}',
+                mnlBill_refNo : $("#advBilRemRefNo").val(),
+                mnlBill_remark : $("#advBilRemRemark").val(),
+                mnlBill_invcRemark : $("#advBilRemInvcRemark").val(),
 
                 // Insert SAL0095D Data
                 srvMemQuotId :   '${eSvmInfo.srvMemQuotId}'  ,
@@ -468,7 +453,9 @@
                 allowCommFlg : $("#payment_allowCommFlg").val(),
                 trRefNo : $("#payment_trRefNo").val(),
                 trIssuedDt : $("#payment_trIssuedDt").val()
-        }
+        };
+
+        console.log(data);
 
         var formData = new FormData();
         formData.append("atchFileGrpId", '${eSvmInfo.atchFileGrpId}');
@@ -480,32 +467,37 @@
 
         Common.ajaxFile("/sales/membership/attachESvmFileUpdate.do", formData, function(result) {
             console.log(result);
-        	if(result.code == 99){
+            if(result.code == 99){
                 Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
-            }else{
 
+            } else {
                // DO SAVE BUTTON ACTION
                //Common.popupDiv("/sales/membership/updateAction.do", data, function(result){
-               Common.ajax("POST", "/sales/membership/updateAction.do", data, function(result1){
-            	   console.log(result1);
-            	   if(result1.messageCode == 00){
-            		   if(result1.psmSrvMemNo == null)
-            			   Common.alert('Membership successfully saved.' + "<b>");
-            		   else
-            			   Common.alert('Membership successfully saved.' + "<b>" + result1.psmSrvMemNo);
-            		   fn_close();
-            	   }
-            	   else{
-            		   Common.alert('Membership failed to save.');
-            	   }
+               Common.ajax("POST", "/sales/membership/updateAction.do", data, function(result1) {
+                   console.log("result1 :: " + result1);
+                   if('${paymentInfo.payMode}' != "6506") {
+                       if(result1.messageCode == 00){
+                           if(result1.data.psmSrvMemNo == null)
+                               Common.alert('Membership successfully saved.' + "<b>");
+                           else
+                               Common.alert('Membership successfully saved.' + "<b>" + result1.psmSrvMemNo);
+                           fn_close();
+
+                       } else {
+                           Common.alert('Membership failed to save.');
+                       }
+                   } else {
+                       Common.alert(result1.message);
+                   }
+
                });
             }
-        },function(result){
+        }, function(result) {
             Common.alert(result.message+"<br/>Upload Failed. Please check with System Administrator.");
         });
     }
 
-    function fn_close(){
+    function fn_close() {
         $("#popup_wrap").remove();
     }
 
@@ -517,7 +509,7 @@
         $('#_divESvmSavePop').remove();
     }
 
-    function fn_closePreOrdModPop2(){
+    function fn_closePreOrdModPop2() {
         myFileCaches = {};
         delete update;
         delete remove;
@@ -595,13 +587,13 @@
                     for ( var i = 0 ; i < result.length ; i++ ) {
                         switch (result[i].fileKeySeq){
                         case '1':
-                        	svmFrId = result[i].atchFileId;
-                        	svmFrName = result[i].atchFileName;
+                            svmFrId = result[i].atchFileId;
+                            svmFrName = result[i].atchFileName;
                             $(".input_text[id='svmFrFileTxt']").val(svmFrName);
                             break;
                         case '2':
-                        	svmTncFileId = result[i].atchFileId;
-                        	svmTncFileName = result[i].atchFileName;
+                            svmTncFileId = result[i].atchFileId;
+                            svmTncFileName = result[i].atchFileName;
                             $(".input_text[id='svmTncFileTxt']").val(svmTncFileName);
                             break;
                         case '3':
@@ -610,28 +602,28 @@
                             $(".input_text[id='poFileTxt']").val(poFileName);
                             break;
                         case '4':
-                        	nricFrFileId = result[i].atchFileId;
-                        	nricFrFileName = result[i].atchFileName;
+                            nricFrFileId = result[i].atchFileId;
+                            nricFrFileName = result[i].atchFileName;
                             $(".input_text[id='nricFrFileTxt']").val(nricFrFileName);
                             break;
                         case '5':
-                        	nricBcFileId = result[i].atchFileId;
-                        	nricBcFileName = result[i].atchFileName;
+                            nricBcFileId = result[i].atchFileId;
+                            nricBcFileName = result[i].atchFileName;
                             $(".input_text[id='nricBcFileTxt']").val(nricBcFileName);
                             break;
                         case '6':
-                        	slipFileId = result[i].atchFileId;
+                            slipFileId = result[i].atchFileId;
                             slipFileName = result[i].atchFileName;
                             $(".input_text[id='slipFileTxt']").val(slipFileName);
                             break;
                         case '7':
-                        	chqFileId = result[i].atchFileId;
-                        	chqFileName = result[i].atchFileName;
+                            chqFileId = result[i].atchFileId;
+                            chqFileName = result[i].atchFileName;
                             $(".input_text[id='chqFileTxt']").val(chqFileName);
                             break;
                         case '8':
-                        	otherFileId = result[i].atchFileId;
-                        	otherFileName = result[i].atchFileName;
+                            otherFileId = result[i].atchFileId;
+                            otherFileName = result[i].atchFileName;
                             $(".input_text[id='otherFileTxt']").val(otherFileName);
                             break;
                         case '9':
@@ -669,7 +661,7 @@
 
     function fn_removeFile(name){
         if(name == "FRO") {
-        	console.log("FRO in");
+            console.log("FRO in");
              $("#svmFrFile").val("");
              $(".input_text[id='svmFrFileTxt']").val("");
              $('#svmFrFile').change();
@@ -730,126 +722,130 @@
     }
 
     function fn_GetSpecialInstruction(){
-    	console.log('Action: ' + $("#action").val());
-    	console.log('spec: ' + $("#specialInstruction").val());
-    	var action =  $("#action").val();
-    	doGetComboData('/sales/membership/selectActionOption.do', {action : $("#action").val()}, '', 'specialInstruction', 'S', ''); //Special Instruction for Update Status page
+        console.log('Action: ' + $("#action").val());
+        console.log('spec: ' + $("#specialInstruction").val());
+        var action =  $("#action").val();
+        doGetComboData('/sales/membership/selectActionOption.do', {action : $("#action").val()}, '', 'specialInstruction', 'S', ''); //Special Instruction for Update Status page
     }
 
     function fn_displaySpecialInst(){
-    	fn_GetSpecialInstruction();
-    	if($("#action").val() == '5' || $("#action").val() == '') //5:Approved
-    	{
-    		$("#specInst").hide();
-    		SpecInstr = 0;
-    		$("#SARefNo_header").replaceWith('<th id="SARefNo_header" scope="row">SA Reference No<span class="must">*</span></th>');
-    		SAFlg = 1;
-    	}
-    	else
-    	{
-    		$("#specInst").show();
-    		$("#specialInst_header").replaceWith('<th id="specialInst_header" scope="row">Special Instruction<span class="must">*</span></th>');
+        fn_GetSpecialInstruction();
+        if($("#action").val() == '5' || $("#action").val() == '') { //5:Approved
+            $("#specInst").hide();
+            SpecInstr = 0;
+            $("#SARefNo_header").replaceWith('<th id="SARefNo_header" scope="row">SA Reference No<span class="must">*</span></th>');
+            SAFlg = 1;
+        } else {
+            $("#specInst").show();
+            $("#specialInst_header").replaceWith('<th id="specialInst_header" scope="row">Special Instruction<span class="must">*</span></th>');
             SpecInstr = 1;
-    		$("#SARefNo_header").replaceWith('<th id="SARefNo_header" scope="row">SA Reference No</th>');
-    		SAFlg = 0;
-    	}
+            $("#SARefNo_header").replaceWith('<th id="SARefNo_header" scope="row">SA Reference No</th>');
+            SAFlg = 0;
+        }
     }
 
     function fn_checkEmpty(){
-    	var checkResult = true;
+        var checkResult = true;
 
-    	console.log("fn_checkEmpty");
-    	console.log("SARefNo: " + $("#SARefNo").val());
-    	console.log("Action: " + $("#action").val());
-    	console.log("specialInst: " + $("#specialInstruction").val());
-    	console.log("SAFlg: " + SAFlg);
-    	console.log("payMode: " + '${paymentInfo.payMode}');
-    	console.log("payMode: " + '${preSalesInfo.packageAmt}');
-    	if('${preSalesInfo.packageAmt}' == '0')
-    	{
-    		Common.alert('Please enter Package Amount.');
+        console.log("fn_checkEmpty");
+        console.log("SARefNo: " + $("#SARefNo").val());
+        console.log("Action: " + $("#action").val());
+        console.log("specialInst: " + $("#specialInstruction").val());
+        console.log("SAFlg: " + SAFlg);
+        console.log("payMode: " + '${paymentInfo.payMode}');
+        console.log("payMode: " + '${preSalesInfo.packageAmt}');
+
+        if('${preSalesInfo.packageAmt}' == '0') {
+            Common.alert('Please enter Package Amount.');
             checkResult = false;
             return checkResult;
-    	}
-    	else if(FormUtil.isEmpty($("#SARefNo").val()) && SAFlg == 1) {
+
+        } else if(FormUtil.isEmpty($("#SARefNo").val()) && SAFlg == 1) {
             Common.alert('Please enter SA Reference No.');
             checkResult = false;
             return checkResult;
-        }
-    	else if(FormUtil.isEmpty($("#action").val())) {
+
+        } else if(FormUtil.isEmpty($("#action").val())) {
             Common.alert('Please choose an Action to proceed.');
             checkResult = false;
             return checkResult;
-        }else if(FormUtil.isEmpty($("#specialInstruction").val()) && SpecInstr == 1) {
+
+        } else if(FormUtil.isEmpty($("#specialInstruction").val()) && SpecInstr == 1) {
             Common.alert('Please choose a Special Instruction.');
             checkResult = false;
             return checkResult;
-        }else if($("#action").val() == '5') { //rejected and active with instruction action no need to check transaction ID
-            if('${paymentInfo.payMode}' == '6507' || '${paymentInfo.payMode}' == '6508')
-            {
-            	if(FormUtil.isEmpty($("#payment_transactionID").val())) {
+
+        } else if($("#action").val() == '5') { //rejected and active with instruction action no need to check transaction ID
+            if('${paymentInfo.payMode}' == '6507' || '${paymentInfo.payMode}' == '6508') {
+                if(FormUtil.isEmpty($("#payment_transactionID").val())) {
                     Common.alert('Please enter Transaction ID.');
                     checkResult = false;
                     return checkResult;
                 }
-            }
-            else if('${paymentInfo.payMode}' == '6528') //card=MOTO/IPP checking only when approve action
-           	{
-            	if((FormUtil.isEmpty($("#payment_cardMode").val()))){
+
+                // LaiKW - 20211201 - New tab validation for PO
+                if('${paymentInfo.payMode}' == '6506') {
+                    if(FormUtil.isEmpty($("#advBilRemRefNo").val())) {
+                        Common.alert("Advance Billing - Reference Number is required.");
+                        checkResult = false;
+                        return checkResult;
+                    }
+                }
+            } else if('${paymentInfo.payMode}' == '6528') { // card=MOTO/IPP checking only when approve action
+                if((FormUtil.isEmpty($("#payment_cardMode").val()))) {
                     Common.alert('Please select Card Mode.');
                     checkResult = false;
                     return checkResult;
-                }
-                else if((FormUtil.isEmpty($("#payment_cardNo").val()))){
+
+                } else if((FormUtil.isEmpty($("#payment_cardNo").val()))) {
                     Common.alert('Please enter Card No.');
                     checkResult = false;
                     return checkResult;
-                }
-                else if((FormUtil.isEmpty($("#payment_approvalNo").val()))){
+
+                } else if((FormUtil.isEmpty($("#payment_approvalNo").val()))) {
                     Common.alert('Please enter Approval No.');
                     checkResult = false;
                     return checkResult;
-                }
-                else if((FormUtil.isEmpty($("#payment_expDt").val()))){
+
+                } else if((FormUtil.isEmpty($("#payment_expDt").val()))) {
                     Common.alert('Please enter Expiry Date (CVV).');
                     checkResult = false;
                     return checkResult;
-                }
-                else if((FormUtil.isEmpty($("#payment_transactionDt").val()))){
+
+                } else if((FormUtil.isEmpty($("#payment_transactionDt").val()))) {
                     Common.alert('Please enter Transaction Date.');
                     checkResult = false;
                     return checkResult;
-                }
-                else if((FormUtil.isEmpty($("#payment_ccHolderName").val()))){
+
+                } else if((FormUtil.isEmpty($("#payment_ccHolderName").val()))) {
                     Common.alert('Please enter Credit Card Holder Name.');
                     checkResult = false;
                     return checkResult;
-                }
-                else if((FormUtil.isEmpty($("#payment_issuedBank").val()))){
+
+                } else if((FormUtil.isEmpty($("#payment_issuedBank").val()))) {
                     Common.alert('Please select a Issued Bank.');
                     checkResult = false;
                     return checkResult;
-                }
-                else if((FormUtil.isEmpty($("#payment_cardType").val()))){
+
+                } else if((FormUtil.isEmpty($("#payment_cardType").val()))) {
                     Common.alert('Please select a Card Type.');
                     checkResult = false;
                     return checkResult;
-                }
-                else if((FormUtil.isEmpty($("#payment_merchantBank").val()))){
+
+                } else if((FormUtil.isEmpty($("#payment_merchantBank").val()))) {
                     Common.alert('Please select a Merchant Bank.');
                     checkResult = false;
                     return checkResult;
                 }
-           	}
-            else if ('${preSalesInfo.custTypeDesc}' == '965' || POFlg == 1) { //Company PO is mandatory or paymode = PO(6506)
+            } else if ('${preSalesInfo.custTypeDesc}' == '965' || POFlg == 1) { //Company PO is mandatory or paymode = PO(6506)
                 if(FormUtil.isEmpty($("#PONo").val())) {
-                Common.alert('Please enter Purchase Order.');
-                checkResult = false;
-                return checkResult;
+	                Common.alert('Please enter Purchase Order.');
+	                checkResult = false;
+	                return checkResult;
                 }
             }
         }
-	    	return checkResult;
+        return checkResult;
     }
 
 </script>
@@ -913,6 +909,7 @@
     <li><a href="aTabSL" class="on">Pre Sales Info</a></li>
     <li><a href="aTabPY" id="aTabPayment" onClick="javascript:chgTab('ord');">Payment</a></li>
     <li><a href="aTabFL" >Attachment</a></li>
+    <li><a href="aTabBL" id="aTabBilling">Advance Billing Remark</a></li>
     <li><a href="aTabST" onClick="javascript:chgTab('pay');">Update Status</a></li>
 </ul>
 
@@ -928,6 +925,10 @@
                 Attachment Area
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/membership/eSvmAttachment.jsp" %>
+<!------------------------------------------------------------------------------
+                Update Status Info
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/membership/eSvmPOAdvBilling.jsp" %>
 <!------------------------------------------------------------------------------
                 Update Status Info
 ------------------------------------------------------------------------------->
