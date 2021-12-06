@@ -15,12 +15,6 @@
 
         <tbody>
             <tr>
-                <th scope="row">Reference No.<span class="must">*</span></th>
-                <td>
-                    <input type="text" id="advBilRemRefNo" name="advBilRemRefNo" title="Reference Number" placeholder="Reference Number" class="w100p" />
-                </td>
-            </tr>
-            <tr>
                 <th scope="row">Remark</th>
                 <td>
                     <textarea cols="20" rows="5" id="advBilRemRemark" name="advBilRemRemark" title="Remark" placeholder="Remark"></textarea>
