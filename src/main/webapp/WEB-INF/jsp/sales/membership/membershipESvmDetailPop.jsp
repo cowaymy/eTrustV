@@ -410,7 +410,7 @@ console.log("esvmDetailPop");
 
                 // LaiKW - Added Payment Mode for PO
                 payment_mode : '${paymentInfo.payMode}',
-                mnlBill_refNo : $("#advBilRemRefNo").val(),
+                mnlBill_refNo : $("#SARefNo").val(),
                 mnlBill_remark : $("#advBilRemRemark").val(),
                 mnlBill_invcRemark : $("#advBilRemInvcRemark").val(),
 
@@ -786,7 +786,7 @@ console.log("esvmDetailPop");
 
                 // LaiKW - 20211201 - New tab validation for PO
                 if('${paymentInfo.payMode}' == '6506') {
-                    if(FormUtil.isEmpty($("#advBilRemRefNo").val())) {
+                    if(FormUtil.isEmpty($("#SARefNo").val())) {
                         Common.alert("Advance Billing - Reference Number is required.");
                         checkResult = false;
                         return checkResult;
