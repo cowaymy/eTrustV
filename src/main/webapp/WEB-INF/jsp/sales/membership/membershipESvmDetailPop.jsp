@@ -488,6 +488,7 @@ console.log("esvmDetailPop");
                        }
                    } else {
                        Common.alert(result1.message);
+                       fn_close();
                    }
 
                });

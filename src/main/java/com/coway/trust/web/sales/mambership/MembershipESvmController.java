@@ -217,7 +217,7 @@ public class MembershipESvmController {
 
         // LaiKW - PO Payment Mode Handling - Mimic Manual Billing > Membership
         int resultVal = 0;
-        if("6506".equals(params.get("payment_mode").toString())) {
+        if("6506".equals(params.get("payment_mode").toString()) && params.get("action").equals("5")) {
             resultVal = membershipESvmService.genSrvMembershipBilling(params, sessionVO);
 
         } else {
