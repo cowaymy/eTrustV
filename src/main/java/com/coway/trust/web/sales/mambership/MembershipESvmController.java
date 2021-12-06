@@ -271,6 +271,9 @@ public class MembershipESvmController {
             membershipESvmService.updateAction(params);
         }
 
+        // Payment Mode :: PO, Status :: 1 (Active) set result value 2
+        if("6506".equals(params.get("payment_mode").toString()) && !params.get("action").equals("5")) resultVal = 2;
+
         //List<EgovMap> info = membershipESvmService.selectESvmInfo(params);
         EgovMap result = membershipESvmService.selectESvmInfo(params);;
         ReturnMessage message = new ReturnMessage();
@@ -285,6 +288,10 @@ public class MembershipESvmController {
             case 1:
                 message.setCode(AppConstants.SUCCESS);
                 message.setMessage("<b>Pre-Sales successfully converted to membership sales.");
+                break;
+            case 2:
+                message.setCode(AppConstants.SUCCESS);
+                message.setMessage("<b>Pre-Sales status successfully updated.");
                 break;
             case 99:
                 message.setCode(AppConstants.FAIL);
