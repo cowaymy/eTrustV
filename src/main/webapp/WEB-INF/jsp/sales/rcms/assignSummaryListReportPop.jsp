@@ -63,7 +63,7 @@ function fn_genReport(){
 
          runNo = 0;
     }
-console.log($("#_companyType").val());
+
     if($("#_companyType").val()  != null){
         whereSql += " AND  EXTENT6.CORP_TYPE_ID IN (";
         $('#_companyType :selected').each(function(i, mul){
@@ -97,7 +97,7 @@ console.log($("#_companyType").val());
         runNo = 0;
     }
 
-    if($("#_rentalStusType").val() != null || $("#_rentalStusType").val() != ''){
+    if($("#_rentalStusType").val() != null){
         whereSql += " AND  EXTENT5.ASSIGN_REN_STUS IN (";
         $('#_rentalStusType :selected').each(function(i, mul){
             if(runNo > 0){
@@ -134,7 +134,8 @@ console.log($("#_companyType").val());
     $("#reportDownFileName").val(title); //Download File Name
     $("#V_WHERESQL").val(whereSql);// Procedure Param
     $("#V_ASSIGNDT").val(assignDt);
-
+    console.log($("#V_WHERESQL").val());
+    console.log($("#V_ASSIGNDT").val());
     //Make Report
     var option = {
             isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
