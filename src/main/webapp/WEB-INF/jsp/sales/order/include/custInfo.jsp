@@ -11,17 +11,19 @@
         fn_selectOrderSameRentalGroupOrderList();
 
         // Masking pen (display last 4)
-        var nricLast4 = oriNric.substr(-4);
-        var maskedNric = oriNric.substr(-4).padStart(oriNric.length, '*');
-        $("#spanNric").html(maskedNric);
         if('${orderDetail.basicInfo.custType}' == "Individual") {
+            var maskedNric = oriNric.substr(-4).padStart(oriNric.length, '*');
+            $("#spanNric").html(maskedNric);
             // Appear NRIC on hover over field
             $("#spanNric").hover(function() {
                 $("#spanNric").html(oriNric);
             }).mouseout(function() {
                 $("#spanNric").html(maskedNric);
             });
+        } else {
+            $("#spanNric").html(oriNric);
         }
+
     });
 
     function createAUIGrid() {
