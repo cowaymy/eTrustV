@@ -2,16 +2,30 @@
 
     //AUIGrid 생성 후 반환 ID
     var custInfoGridID;
-    
+    var oriNric = '${orderDetail.basicInfo.custNric}';
+
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
-        
+
         fn_selectOrderSameRentalGroupOrderList();
+
+        // Masking pen (display last 4)
+        var nricLast4 = oriNric.substr(-4);
+        var maskedNric = oriNric.substr(-4).padStart(oriNric.length, '*');
+        $("#spanNric").html(maskedNric);
+        if('${orderDetail.basicInfo.custType}' == "Individual") {
+            // Appear NRIC on hover over field
+            $("#spanNric").hover(function() {
+                $("#spanNric").html(oriNric);
+            }).mouseout(function() {
+                $("#spanNric").html(maskedNric);
+            });
+        }
     });
-    
+
     function createAUIGrid() {
-        
+
         //AUIGrid 칼럼 설정
         var columnLayout = [
             { headerText : '<spring:message code="sal.text.ordNo" />',         dataField : "salesOrdNo", width   : 100   }
@@ -22,17 +36,17 @@
           , { headerText : '<spring:message code="sal.text.nricCompanyNo" />', dataField : "nric",       width   : 150   }
           , { headerText : "salesOrdId",                                       dataField : "salesOrdId", visible : false }
           ];
-        
+
         custInfoGridID = GridCommon.createAUIGrid("grid_custInfo_wrap", columnLayout, "", gridPros);
     }
-    
+
     // 리스트 조회.
-    function fn_selectOrderSameRentalGroupOrderList() {        
+    function fn_selectOrderSameRentalGroupOrderList() {
         Common.ajax("GET", "/sales/order/selectSameRentalGrpOrderJsonList.do", {salesOrderId : '${orderDetail.basicInfo.ordId}'}, function(result) {
             AUIGrid.setGridData(custInfoGridID, result);
         });
     }
-    
+
 </script>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -58,7 +72,7 @@
     <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td><span>${orderDetail.basicInfo.custType}</span></td>
     <th scope="row"><spring:message code="sal.text.nricCompanyNo" /></th>
-    <td><span>${orderDetail.basicInfo.custNric}</span></td>
+    <td><span id="spanNric"></span></td>
     <th scope="row"><spring:message code="sal.text.jomPayRef1" /></th>
     <td><span>${orderDetail.basicInfo.jomPayRef}</span></td>
 </tr>
