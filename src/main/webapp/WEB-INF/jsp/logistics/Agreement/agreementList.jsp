@@ -23,6 +23,9 @@ $(document).ready(function() {
     if($("#userRole").val() == 97 || $("#userRole").val() == 98 || $("#userRole").val() == 99 || $("#userRole").val() == 100 || // SO Branch
             $("#userRole").val() == 103 || $("#userRole").val() == 104 || $("#userRole").val() == 105 || // DST Support
             $("#userRole").val() == 128 || $("#userRole").val() == 129 || $("#userRole").val() == 130 || // Administrator
+            $("#userRole").val() == 421 || $("#userRole").val() == 420 || $("#userRole").val() == 402 || // Administrator New (ITGC)
+            $("#userRole").val() == 403 || $("#userRole").val() == 405 || $("#userRole").val() == 406 || // Administrator New (ITGC)
+            $("#userRole").val() == 415 || $("#userRole").val() == 414 ||                                            // Administrator New (ITGC)
             $("#userRole").val() == 166 || $("#userRole").val() == 167 || $("#userRole").val() == 261 || // DST Planning
             $("#userRole").val() == 335 || $("#userRole").val() == 336 || $("#userRole").val() == 337 || // Sales Care
             $("#userRole").val() == 243 || // Compliance
@@ -429,6 +432,9 @@ function fn_downloadAgreement() {
     if($("#userRole").val() == 97 || $("#userRole").val() == 98 || $("#userRole").val() == 99 || $("#userRole").val() == 100 || // SO Branch
             $("#userRole").val() == 103 || $("#userRole").val() == 104 || $("#userRole").val() == 105 || // DST Support
             $("#userRole").val() == 128 || $("#userRole").val() == 129 || $("#userRole").val() == 130 || // Administrator
+            $("#userRole").val() == 421 || $("#userRole").val() == 420 || $("#userRole").val() == 402 || // Administrator New (ITGC)
+            $("#userRole").val() == 403 || $("#userRole").val() == 405 || $("#userRole").val() == 406 || // Administrator New (ITGC)
+            $("#userRole").val() == 415 || $("#userRole").val() == 414 ||                                            // Administrator New (ITGC)
             $("#userRole").val() == 166 || $("#userRole").val() == 167 || $("#userRole").val() == 261 ||
             $("#userRole").val() == 339 || $("#userRole").val() == 341 || $("#userRole").val() == 343  // HT Leader
             ){
