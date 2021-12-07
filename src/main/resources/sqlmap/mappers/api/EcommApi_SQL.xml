@@ -59,7 +59,8 @@
       CRT_USER_ID ,
       UPD_DT ,
       UPD_USER_ID,
-      BNDL_ID
+      BNDL_ID,
+      PROD_CAT
   ) VALUES
   (
       #{ecommOrdId} ,
@@ -106,7 +107,8 @@
       #{apiUserId} ,
       SYSDATE ,
       #{apiUserId},
-      #{bndlId}
+      #{bndlId},
+      #{prodCat}
   )
 </insert>
 

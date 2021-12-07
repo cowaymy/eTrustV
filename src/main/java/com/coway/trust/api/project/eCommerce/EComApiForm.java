@@ -79,6 +79,9 @@ public class EComApiForm {
     params.put("instPriod", ecomForm.getInstalmentPeriod());
     params.put("cpntId", ecomForm.getComponentId());
     params.put("bndlId", ecomForm.getBundleId());
+    params.put("prodCat", ecomForm.getProdCat());
+    params.put("ref1", ecomForm.getRef1());
+    params.put("ref2", ecomForm.getRef2());
 
     return params;
   }
@@ -138,6 +141,9 @@ public class EComApiForm {
   private String area;
   private String city;
   private String bundleId;
+  private String prodCat;
+  private String ref1;
+  private String ref2;
 
   public String getKey() {
     return key;
@@ -516,6 +522,30 @@ public String getBundleId() {
 
 public void setBundleId(String bundleId) {
 	this.bundleId = bundleId;
+}
+
+public String getProdCat() {
+	return prodCat;
+}
+
+public void setProdCat(String prodCat) {
+	this.prodCat = prodCat;
+}
+
+public String getRef1() {
+	return ref1;
+}
+
+public void setRef1(String ref1) {
+	this.ref1 = ref1;
+}
+
+public String getRef2() {
+	return ref2;
+}
+
+public void setRef2(String ref2) {
+	this.ref2 = ref2;
 }
 
 }

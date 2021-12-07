@@ -165,7 +165,10 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 
 		// 홈케어 주문관리 테이블 insert - HMC0011D
 		HcOrderVO hcOrderVO = new HcOrderVO();
+
+		String ecommBndlId = orderVO.getSalesOrderMVO().geteCommBndlId().toString();
 		int cntHcOrder = hcOrderRegisterMapper.getCountHcPreOrder(ordSeqNo);
+		int cntHcExisted = hcOrderRegisterMapper.getCountExistBndlId(ecommBndlId);
 		String bndlNo = hcOrderRegisterMapper.getBndlNo(ordSeqNo);
 
 		hcOrderVO.setCustId(custId);                     // 고객번호
@@ -176,11 +179,21 @@ public class HcOrderRegisterServiceImpl extends EgovAbstractServiceImpl implemen
 		hcOrderVO.setOrdSeqNo(ordSeqNo);
 		hcOrderVO.setBndlNo(bndlNo);
 		hcOrderVO.setSrvOrdId(matOrdId);
+		if(cntHcExisted > 0)
+		{
+			hcOrderVO.setOrdSeqNo(ordSeqNo);
+		}
 
 		// Pre Order 인 경우.
 		if(cntHcOrder > 0) {
 			rtnCnt = hcOrderRegisterMapper.updateHcPreOrder(hcOrderVO);
-		} else {
+		}else if(cntHcExisted > 1)
+		{
+			int eCommOrdSeq = hcOrderRegisterMapper.getPrevOrdSeq(ecommBndlId);
+			hcOrderVO.setOrdSeqNo(eCommOrdSeq);
+			rtnCnt = hcOrderRegisterMapper.updateHcPreOrder(hcOrderVO);
+		}
+		else {
 			rtnCnt = hcOrderRegisterMapper.insertHcRegisterOrder(hcOrderVO);
 		}
 

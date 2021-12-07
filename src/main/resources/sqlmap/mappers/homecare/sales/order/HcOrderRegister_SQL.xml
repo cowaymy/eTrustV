@@ -168,6 +168,22 @@
         SELECT COUNT(ORD_SEQ_NO) FROM HMC0011D WHERE ORD_SEQ_NO = #{ordSeqNo}
     </select>
 
+    <select id="getCountExistBndlId" parameterType="String" resultType="int">
+        SELECT COUNT(BNDL_ID) FROM API0005D WHERE BNDL_ID = #{bndlId}
+    </select>
+
+    <select id="getPrevOrdSeq" parameterType="String" resultType="int">
+        SELECT A.ORD_SEQ_NO
+		FROM HMC0011D A
+		JOIN SAL0001D B ON A.ORD_SEQ_NO = B.BNDL_ID
+		JOIN API0005D C ON C.ECOMM_ORD_ID = B.ECOMM_ORD_ID AND B.SALES_ORD_ID = C.SALES_ORD_ID
+		WHERE C.BNDL_ID = #{bndlId}
+    </select>
+
+    <select id="getPrevOrdId" parameterType="Map" resultType="int">
+        SELECT SALES_ORD_ID FROM API0005D WHERE BNDL_ID = #{ecommBndlId} AND ECOMM_ORD_ID != #{ecommOrdId}
+    </select>
+
     <!-- Get Product Category -->
     <select id="getProductCategory" parameterType="string" resultType="string">
         /* com.coway.trust.biz.homecare.sales.order.impl.HcOrderRegisterMapper.getProductCategory */

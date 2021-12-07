@@ -264,16 +264,52 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         orderVO.setRentalSchemeVO(rentalSchemeVO);
 
 
-        // use product code to find product category. when product category is 5706/5707, insert into HMC0110D and setBundleID in SAL0001D with HMC0110D ord_seq_no
-        String prdCat = hcOrderRegisterMapper.getProductCategory(reqPrm.get("product").toString());
-        if(prdCat != null && (prdCat.equals("5706") || prdCat.equals("5707")))
+        // Celeste: when product category is 5706/5707, insert into HMC0110D and setBundleID in SAL0001D with HMC0110D ord_seq_no
+        String prdCat = reqPrm.get("prodCat").toString();
+        String stkCat = hcOrderRegisterMapper.getProductCategory(reqPrm.get("product").toString());
+        if(prdCat != null && (prdCat.equals("MT")))
 		{
-        	hcOrderRegisterService.hcRegisterOrder(orderVO, sessionVO);
             HcOrderVO hcOrderVO = orderVO.getHcOrderVO();
-            salesOrderMVO.setBndlId(Integer.valueOf(hcOrderVO.getBndlNo().toString()));
-		}else{
+            //salesOrderMVO.setBndlId(Integer.valueOf(hcOrderVO.getBndlNo().toString()));
+            SalesOrderMVO salesOrderMVO1 = new SalesOrderMVO();
+            SalesOrderMVO salesOrderMVO2 = new SalesOrderMVO();
+            SalesOrderDVO salesOrderDVO1 = new SalesOrderDVO(); //MATTRESS
+            SalesOrderDVO salesOrderDVO2 = new SalesOrderDVO(); //FRAME
+            if(stkCat.equals("5706"))
+            {
+            	salesOrderDVO1 = orderVO.getSalesOrderDVO();
+            }
+            if(stkCat.equals("5707"))
+            {
+            	salesOrderDVO2 = orderVO.getSalesOrderDVO();
+            }
+            salesOrderMVO.seteCommBndlId(reqPrm.get("bndlId").toString());
+            orderVO.setSalesOrderMVO(salesOrderMVO);
+        	orderVO.setSalesOrderDVO1(salesOrderDVO1);
+            orderVO.setSalesOrderDVO2(salesOrderDVO2);
+            salesOrderMVO1 = orderVO.getSalesOrderMVO();
+            salesOrderMVO2 = orderVO.getSalesOrderMVO();
+            orderVO.setSalesOrderMVO1(salesOrderMVO1);
+            orderVO.setSalesOrderMVO2(salesOrderMVO2);
 
-        orderRegisterService.registerOrder(orderVO, sessionVO);
+            hcOrderRegisterService.hcRegisterOrder(orderVO, sessionVO);
+		}else{
+			//check if bundleId in API0005D existed before
+
+			String ecommBndlId = reqPrm.get("bndlId").toString();
+			int ecommOrdId = salesOrderMVO.getEcommOrdId();
+			int cntHAExisted = hcOrderRegisterMapper.getCountExistBndlId(ecommBndlId);
+			if(cntHAExisted > 1)
+			{
+				Map<String, Object> HAObj = new HashMap<String, Object>();
+				HAObj.put("ecommBndlId", ecommBndlId);
+				HAObj.put("ecommOrdId", ecommOrdId);
+				int prevHAOrderId =  hcOrderRegisterMapper.getPrevOrdId(HAObj);
+				salesOrderMVO.setComboOrdBind(prevHAOrderId);
+				orderVO.setSalesOrderMVO(salesOrderMVO);
+			}
+
+			orderRegisterService.registerOrder(orderVO, sessionVO);
 		}
         created = 1;
 
