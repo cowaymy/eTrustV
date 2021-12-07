@@ -48,6 +48,7 @@ $(document).ready(function() {
 function fn_genReport(){
 
     var whereSql = '';
+    var whereSql2 = '';
     var runNo = 0;
 
 	//Validation
@@ -55,16 +56,16 @@ function fn_genReport(){
 		Common.alert('<spring:message code="sal.alert.msg.assignType" />');
 		return;
 	}else{
-		whereSql += " AND  EXTENT5.AGENT_TYP_UPL_ID IN (";
+		whereSql2 += " AND  AGENT_TYP_UPL_ID IN (";
         $('#_assignUploadType :selected').each(function(i, mul){
             if(runNo > 0){
-                whereSql += ",'"+$(mul).val()+"'";
+            	whereSql2 += ",'"+$(mul).val()+"'";
             }else{
-                whereSql += "'"+$(mul).val()+"'";
+            	whereSql2 += "'"+$(mul).val()+"'";
             }
             runNo += 1;
         });
-        whereSql += ") ";
+        whereSql2 += ") ";
 
         runNo = 0;
 	}
@@ -91,16 +92,16 @@ function fn_genReport(){
         Common.alert('<spring:message code="sal.alert.msg.plzSelRentalStusType" />');
         return;
     }else{
-    	whereSql += " AND  EXTENT5.ASSIGN_REN_STUS IN (";
+    	whereSql2 += " AND  RC_ITM_REN_STUS IN (";
         $('#_rentalStusType :selected').each(function(i, mul){
             if(runNo > 0){
-                whereSql += ",'"+$(mul).val()+"'";
+            	whereSql2 += ",'"+$(mul).val()+"'";
             }else{
-                whereSql += "'"+$(mul).val()+"'";
+            	whereSql2 += "'"+$(mul).val()+"'";
             }
             runNo += 1;
         });
-        whereSql += ") ";
+        whereSql2 += ") ";
 
     	runNo = 0;
     }
@@ -117,10 +118,10 @@ function fn_genReport(){
 
 	    var frArr = $("#listStartDt").val().split("/");
 	    var toArr = $("#listEndDt").val().split("/");
-	    var assignDtFrom = frArr[1]+"/"+frArr[0]+"/"+frArr[2]; // MM/dd/yyyy
-	    var assignDtTo = toArr[1]+"/"+toArr[0]+"/"+toArr[2];
+	    var assignDtFrom = frArr[2]+"/"+frArr[1]+"/"+frArr[0]; // MM/dd/yyyy
+	    var assignDtTo = toArr[2]+"/"+toArr[1]+"/"+toArr[0];
 
-	    whereSql += " AND (EXTENT5.CURR_ASSIGN_DT BETWEEN TO_DATE('"+assignDtFrom+" 00:00:00', 'MM/dd/YY HH24:MI:SS') AND TO_DATE('"+assignDtTo+" 23:59:59', 'MM/dd/YY HH24:MI:SS'))";
+	    whereSql2 += " AND (RC_ITM_UPD_DT BETWEEN TO_DATE('"+assignDtFrom+"', 'yyyy/mm/dd') AND TO_DATE('"+assignDtTo+"', 'yyyy/mm/dd')+1)";
 	}
 
 	$("#reportFileName").val('/sales/AssignListingRaw.rpt');  //Rpt File Name
@@ -132,9 +133,12 @@ function fn_genReport(){
         date = "0" + date;
     }
 
+   console.log(whereSql);
+   console.log(whereSql2);
     var title = "AssignmentListing_"+date+(new Date().getMonth()+1)+new Date().getFullYear();
     $("#reportDownFileName").val(title); //Download File Name
     $("#V_WHERESQL").val(whereSql);// Procedure Param
+    $("#V_WHERESQL2").val(whereSql2);// Procedure Param
 
 	//Make Report
 	var option = {
@@ -168,6 +172,7 @@ function fn_genReport(){
 <input type="hidden" id="reportDownFileName" name="reportDownFileName"  />
 <!-- Params -->
 <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" />
+<input type="hidden" id="V_WHERESQL2" name="V_WHERESQL2" />
 
 </form>
 
