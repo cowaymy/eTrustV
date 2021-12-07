@@ -306,9 +306,10 @@
                     	console.log("vacPop: " + vacPop);
                     	console.log("result.data.vacStatus: " + result.data.vacStatus);
 
-                    	if ( vacPop == "Y" && (result.data.userTypeId == "1" || result.data.userTypeId == "2" || result.data.userTypeId == "3" || result.data.userTypeId == "7")){// HP, CD, CT, HT
-                   			// collect vaccination info
-                            fn_goVaccineForm();
+                    	if ( vacPop == "Y" && (result.data.userTypeId == "1" || result.data.userTypeId == "2" || result.data.userTypeId == "3" || result.data.userTypeId == "7") && // HP, CD, CT, HT
+                    			result.data.userId != '83353' ) { // manually by pass this CTM A.K.A STAFF user
+                    		// collect vaccination info
+                                fn_goVaccineForm();
                     	} else {
 
 	                    	var noticePopResult = null;
