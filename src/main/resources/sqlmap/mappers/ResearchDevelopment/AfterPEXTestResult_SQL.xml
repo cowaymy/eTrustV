@@ -8,230 +8,157 @@
   </resultMap>
 
  <!-- SELECT START -->
-  <select id="selectASManagementList" parameterType="Map" resultType="egovMap">
-    SELECT S.AS_ID ,
-           S.AS_NO ,
-           S.AS_SO_ID ,
-           S.AS_REQST_DT ,
-           S.AS_APPNT_DT,
-           S.AS_STUS_ID ,
-           S.AS_TYPE_ID ,
-           S.CODE ,
-           S.CODE1 ,
-           S.SALES_ORD_NO ,
-           S.CODE2,
-           S.NAME ,
-           S.NRIC ,
-           S.C1 ,
-           S.C2 ,
-           S.C3 ,
-           S.C4 ,
-           S.C5 ,
-           S.AS_RESULT_ID ,
-           S.AS_BRNCH_ID ,
-           S.AS_MEM_ID,
-           NVL((SELECT CODE FROM SYS0005M H WHERE H.BRNCH_ID = AS_BRNCH_ID), '-') BRNCH_CODE,
-           S.AS_SLUTN_RESN_ID,
-           S.IN_HUSE_REPAIR_REPLACE_YN,
-           S.REF_REQST,
-           S.AS_MALFUNC_ID,
-           S.AS_MALFUNC_RESN_ID,
-           NVL(DECODE(S.AS_IF_FLAG, 'E' ,'logistics err' ,''), '-') AS_IF_FLAG,
-           NVL(MEM_CODE, '-') MEM_CODE,
-           S.RCD_TMS,
-           S.AS_SETL_DT,
-           S.STK_DESC,
-           S.AS_CRT_DT,
-           S.AS_RESULT_CRT_DT,
-           S.CMS AS CMS,
-           S.AS_RESULT_CRT_USER_ID,
-           NVL(X.TOTAL_AS, 0) TOTAL_AS,
-           NVL(Z.NO, '-') AS BS_NO
-    FROM ( SELECT DISTINCT E.AS_ID AS_ID ,
-                           E.AS_NO AS_NO ,
-                           E.ASSOID1 AS_SO_ID ,
-                           E.AS_REQST_DT AS_REQST_DT ,
-                           E.AS_APPNT_DT AS_APPNT_DT,
-                           E.AS_STUS_ID AS_STUS_ID ,
-                           E.AS_TYPE_ID AS_TYPE_ID ,
-                           E.CODE3 CODE ,
-                           E.CODE4 CODE1 ,
-                           E.SALES_ORD_NO SALES_ORD_NO ,
-                           E.CODE5 CODE2 ,
-                           E.NAME1 NAME ,
-                           E.NRIC NRIC ,
-                           1 C1 ,
-                           CASE
-                             WHEN ( E.AS_RESULT_ID IS NOT NULL )
-                               THEN E.AS_RESULT_ID
-                             ELSE 0
-                           END C2 ,
-                           CASE
-                             WHEN ( E.AS_RESULT_ID IS NOT NULL )
-                               THEN E.AS_RESULT_NO
-                             ELSE '-'
-                           END C3 ,
-                           CASE
-                             WHEN ( Extent8.USER_ID IS NOT NULL )
-                               THEN Extent8.USER_NAME
-                             ELSE '-'
-                           END C4 ,
-                           CASE
-                             WHEN ( E.AS_RESULT_ID IS NOT NULL )
-                               THEN E.AS_TOT_AMT
-                             ELSE UTILS.CONVERT_TO_FLOAT(0,53)
-                           END C5 ,
-                           E.AS_RESULT_ID ,
-                           E.AS_BRNCH_ID,
-                           E.AS_MEM_ID,
-                           E.AS_SLUTN_RESN_ID,
-                           E.IN_HUSE_REPAIR_REPLACE_YN,
-                           E.REF_REQST,
-                           E.AS_MALFUNC_ID,
-                           E.AS_MALFUNC_RESN_ID,
-                           E.AS_IF_FLAG,
-                           E.MEM_CODE,
-                           E.RCD_TMS,
-                           E.AS_SETL_DT,
-                           E.STK_DESC,
-                           E.AS_CRT_DT,
-                           E.AS_RESULT_CRT_DT,
-                           E.CMS,
-                           E.AS_RESULT_CRT_USER_ID,
-                           E.HSR_NO
-           FROM ( SELECT Extent1.AS_ID AS_ID ,
-                         Extent1.AS_NO AS_NO ,
-                         Extent1.AS_SO_ID ASSOID1 ,
-                         Extent1.AS_REQST_DT AS_REQST_DT ,
-                         Extent1.AS_APPNT_DT AS_APPNT_DT ,
-                         Extent1.AS_STUS_ID AS_STUS_ID ,
-                         Extent1.AS_CRT_USER_ID AS_CRT_USER_ID ,
-                         Extent1.AS_TYPE_ID AS_TYPE_ID ,
-                         Extent2.CODE CODE3 ,
-                         Extent3.CODE CODE4 ,
-                         Extent4.SALES_ORD_NO SALES_ORD_NO ,
-                         Extent5.CODE CODE5 ,
-                         Extent6.NAME NAME1 ,
-                         Extent6.NRIC NRIC ,
-                         Extent7.AS_RESULT_ID AS_RESULT_ID ,
-                         Extent7.AS_RESULT_NO AS_RESULT_NO ,
-                         Extent7.AS_TOT_AMT AS_TOT_AMT ,
-                         Extent1.AS_BRNCH_ID,
-                         Extent1.AS_MEM_ID ,
-                         Extent7.AS_SLUTN_RESN_ID,
-                         Extent7.IN_HUSE_REPAIR_REPLACE_YN,
-                         Extent1.REF_REQST ,
-                         Extent1.AS_MALFUNC_ID,
-                         Extent1.AS_MALFUNC_RESN_ID,
-                         Extent1.AS_IF_FLAG ,
-                         Extent8.MEM_CODE ,
-                         Extent1.RCD_TMS ,
-                         Extent7.AS_SETL_DT ,
-                         Extent7.AS_RESULT_CRT_DT,
-                         CASE WHEN Extent7.AS_CMMS IS NULL THEN Extent1.AS_ALLOW_COMM
-                         ELSE Extent7.AS_CMMS END AS CMS,
-                         Extent7.USER_NAME AS AS_RESULT_CRT_USER_ID,
-                         Extent1.NO AS HSR_NO,
-                         Extent1.AS_CRT_DT,
-                         Extent11.STK_CODE || ' - ' || STK_DESC AS STK_DESC
-                  FROM SVC0001D Extent1
-                  JOIN SYS0013M Extent2 ON Extent1.AS_TYPE_ID = Extent2.CODE_ID
-                  JOIN SYS0038M Extent3 ON Extent1.AS_STUS_ID = Extent3.STUS_CODE_ID
-                  JOIN SAL0001D Extent4 ON Extent1.AS_SO_ID = Extent4.SALES_ORD_ID
-                  JOIN SYS0013M Extent5 ON Extent4.APP_TYPE_ID = Extent5.CODE_ID
-                  JOIN SAL0029D Extent6 ON Extent4.CUST_ID = Extent6.CUST_ID
-                  LEFT JOIN ORG0001D Extent8 ON Extent1.AS_MEM_ID = Extent8.MEM_ID
-                  LEFT JOIN SYS0005M Extent9 ON Extent9.BRNCH_ID = Extent8.BRNCH
-                  LEFT JOIN ( SELECT AS_RESULT_ID,
-                                     AS_RESULT_NO,
-                                     AS_TOT_AMT,
-                                     AS_SLUTN_RESN_ID,
-                                     IN_HUSE_REPAIR_REPLACE_YN,
-                                     AS_ENTRY_ID,
-                                     AS_RESULT_TYPE_ID,
-                                     AS_RESULT_IS_CURR,
-                                     AS_SETL_DT,
-                                     AS_RESULT_CRT_DT,
-                                     AS_CMMS,
-                                     NVL(USER_NAME, '-') as USER_NAME
-                              FROM ( SELECT (ROW_NUMBER() OVER (PARTITION BY AS_ENTRY_ID ORDER BY AS_RESULT_ID DESC)) AS ranking,
-                                             AS_RESULT_ID,
-                                             AS_RESULT_NO,
-                                             AS_TOT_AMT,
-                                             AS_SLUTN_RESN_ID,
-                                             IN_HUSE_REPAIR_REPLACE_YN,
-                                             AS_ENTRY_ID,
-                                             AS_RESULT_TYPE_ID,
-                                             AS_RESULT_IS_CURR,
-                                             AS_SETL_DT,
-                                             AS_RESULT_CRT_DT,
-                                             AS_CMMS,
-                                             B.USER_NAME
-                                     FROM SVC0004D A
-                                     LEFT JOIN SYS0047M B on A.AS_RESULT_CRT_USER_ID = B.USER_ID
-                                     WHERE ( 1 = as_result_is_curr ) ) WHERE ranking = 1
-                  ) Extent7 ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
-                              AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
-                              AND ( 1 = Extent7.AS_RESULT_IS_CURR )
-                 JOIN SAL0002D Extent10 ON Extent4.SALES_ORD_ID = Extent10.SALES_ORD_ID
-                 LEFT JOIN SYS0026M Extent11 ON Extent10.ITM_STK_ID = Extent11.STK_ID
-                 LEFT JOIN SYS0013M Extent12 ON Extent12.CODE_ID = Extent11.STK_CTGRY_ID
-                 WHERE ( 8 <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
-                   AND Extent4.BNDL_ID IS NULL       -- homecare Remove(except)
-                 <if test="asStatusList != null and asStatusList != '' ">
-                   AND Extent1.AS_STUS_ID IN
-                   <foreach item="item" collection="asStatusList" index="index" open="(" separator="," close=")">
-                     #{item}
-                   </foreach>
-                 </if>
+  <select id="searchPEXTestResultList" parameterType="Map" resultType="egovMap">
+    SELECT DISTINCT
 
-                 <if test="cmbbranchIdList != null and cmbbranchIdList != '' ">
-                   AND Extent9.CODE IN
-                   <foreach item="item" collection="cmbbranchIdList" index="index" open="(" separator="," close=")">
-                     #{item}
-                   </foreach>
-                 </if>
-
-                 <if test="cmbCategoryList != null and cmbCategoryList != '' ">
-                   AND SUBSTR(Extent11.STK_CODE, 0, INSTR(Extent11.STK_CODE, '-')-1) IN
-                   <foreach item="item" collection="cmbCategoryList" index="index" open="(" separator="," close=")">
-                     #{item}
-                   </foreach>
-                 </if>
-
-                 <if test="asProductList != null and asProductList != '' ">
-                   AND Extent11.STK_ID IN
-                   <foreach item="item" collection="asProductList" index="index" open="(" separator="," close=")">
-                     #{item}
-                   </foreach>
-                 </if>
+        A.SO_EXCHG_ID AS SO_EXCHG_ID,
+        A.SO_ID AS SO_ID,
+        L.TEST_RESULT_STUS AS PEX_STUS_ID,
+        L.TEST_RESULT_ID AS TEST_RESULT_ID,
+        L.RCD_TMS AS RCD_TMS,
+		B.SALES_ORD_NO AS ORDER_NO,
+		N.CODE AS PEX_TEST_RESULT_STUS,
+		O.CODE_NAME AS PRODUCT_CATEGORY,
+		D.STK_CODE AS PRODUCT_CODE,
+		D.STK_DESC AS PRODUCT_NAME,
+		E.LAST_INSTALL_SERIAL_NO AS PROD_SERIAL_NO,
+		E.FIRST_INSTALL_DT AS PEX_DATE,
+		NVL(FLOOR(MONTHS_BETWEEN(A.SO_EXCHG_CRT_DT, TO_DATE(E.FIRST_INSTALL_DT,'DD/MM/YYYY'))),'0') AS AS_AGING ,
+		E.LAST_INSTALL_CT_CODE AS CT_CODE,
+		E.LAST_INSTALL_CT_NAME AS CT_NAME,
+		E.DSC_CODE,
+		E.DSC_NAME,
+		G.DEFECT_DESC AS Problem_Symptom_Large ,
+		H.DEFECT_DESC AS Problem_Symptom_Small ,
+		I.DEFECT_DESC AS Defect_Part_Large ,
+		I.DEFECT_RMK AS Defect_Part_Small ,
+		J.CODE || '-' || J.RESN_DESC AS PEX_REASON,
+		A.SO_EXCHG_REM AS PEX_REM,
+		K.SVC_NO AS RET_NO,
+		C.INSTALL_ENTRY_NO AS PEX_INS_NO,
+		L.TEST_RESULT_NO,
+		M.NAME AS CUST_NAME ,
+		L.TEST_RESULT_REM ,
+		L.TEST_SETTLE_DT,
+		L.AMP,
+		L.VOLTAGE,
+		E.INST_STATE,
+		E.INST_CITY,
+		E.INST_AREA,
+		L.PROD_GENUINE
 
 
-          ) E LEFT JOIN SYS0047M Extent8 ON E.AS_CRT_USER_ID = Extent8.USER_ID
+	FROM SAL0004D A
+	JOIN SAL0001D B ON B.SALES_ORD_ID = A.SO_ID
+	JOIN SAL0046D C ON C.INSTALL_ENTRY_ID = A.INSTALL_ENTRY_ID
+	LEFT JOIN SYS0026M D ON D.STK_ID = C.INSTALL_STK_ID
+	LEFT JOIN SAL1010V E ON E.ORD_ID = A.SO_ID
+	LEFT JOIN SAL0265D F ON F.SO_EXCHG_ID = A.SO_EXCHG_ID
+	LEFT JOIN SYS0100M G ON G.DEFECT_ID = F.PEX_DEFECT_DTL_RESN_ID AND G.DEFECT_TYP = 'DD'
+	LEFT JOIN SYS0100M H ON H.DEFECT_ID = F.PEX_DEFECT_ID AND H.DEFECT_TYP = 'DC'
+	LEFT JOIN SYS0100M I ON I.DEFECT_ID = F.PEX_DEFECT_PART_ID AND I.DEFECT_TYP = 'DP'
+	LEFT JOIN SYS0032M J ON J.RESN_ID = A.SO_EXCHG_RESN_ID
+	LEFT JOIN SVC0026T K ON K.SALES_ORD_ID = A.SO_ID
+	JOIN SVC0125D L ON L.SO_EXCHG_ID = A.SO_EXCHG_ID
+	LEFT JOIN SAL0029D M ON M.CUST_ID = B.CUST_ID
+	LEFT JOIN SYS0038M N ON N.STUS_CODE_ID = L.TEST_RESULT_STUS
+	LEFT JOIN SYS0013M O ON O.CODE_ID = D.STK_CTGRY_ID AND O.CODE_MASTER_ID = 11
 
-          WHERE 1=1
+        WHERE 1=1
+        AND L.TEST_RESULT_STUS != '8'
+        <if test="PEXTRStatus != null and PEXTRStatus != '' ">
+            AND L.TEST_RESULT_STUS IN
+            <foreach item="item" collection="PEXTRStatus" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
 
-          <if test=" settleDtFrm  != null  and settleDtFrm !=''  ">
-            <![CDATA[ AND ( TO_CHAR(E.AS_SETL_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE( #{settleDtFrm},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
-          </if>
-          <if test="settleDtTo != null   and settleDtTo != '' ">
-            <![CDATA[ AND ( TO_CHAR(E.AS_SETL_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{settleDtTo},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
-          </if>
+        <if test="cmbbranchIdList != null and cmbbranchIdList != '' ">
+            AND E.DSC_CODE IN
+            <foreach item="item" collection="cmbbranchIdList" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
 
-          <if test="orderNum != null and orderNum != '' ">
-            AND ( E.SALES_ORD_NO = #{orderNum} )
-          </if>
+       <if test="cmbCategoryList != null and cmbCategoryList != '' ">
+            AND D.STK_CTGRY_ID IN
+            <foreach item="item" collection="cmbCategoryList" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+       </if>
+
+       <if test="ProductList != null and ProductList != '' ">
+            AND D.STK_CODE IN
+            <foreach item="item" collection="ProductList" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+       </if>
+
+       <if test=" settleDtFrm  != null  and settleDtFrm !=''  ">
+            <![CDATA[ AND ( TO_CHAR(L.TEST_SETTLE_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE( #{settleDtFrm},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+       </if>
+       <if test="settleDtTo != null   and settleDtTo != '' ">
+            <![CDATA[ AND ( TO_CHAR(L.TEST_SETTLE_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE( #{settleDtTo},'dd/mm/yyyy'), 'YYYYMMDD') )]]>
+       </if>
+       <if test="orderNum != null and orderNum != '' ">
+            AND  B.SALES_ORD_NO = #{orderNum}
+       </if>
+       <if test="TestResultNo != null and TestResultNo != '' ">
+            AND  L.TEST_RESULT_NO = #{TestResultNo}
+       </if>
+  </select>
+
+  <select id="getDTAIL_DEFECT_List" parameterType="Map" resultType="egovMap">
+    <![CDATA[ SELECT CODE AS  CODE_ID
+                   , CODE_DESC AS CODE_NAME
+              FROM SVC0060C
+    ]]>
+  </select>
+
+  <select id="getDEFECT_PART_List" parameterType="Map" resultType="egovMap">
+   <![CDATA[
+     SELECT CONDI_CODE AS CODE_ID
+          , DTL AS CODE_NAME
+     FROM SVC0059M
+    ]]>
+  </select>
+
+  <select id="getDEFECT_CODE_List" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT DEFECT_CODE AS CODE_ID
+           , DEFECT_DESC AS CODE_NAME
+      FROM SVC0058C
+    ]]>
+  </select>
+
+  <select id="selRcdTms" parameterType="Map" resultType="int">
+  SELECT COUNT(*) COUNT
+    FROM SVC0125D
+    WHERE TEST_RESULT_ID = #{testResultId}
+      AND TEST_RESULT_NO = #{testResultNo}
+      AND SO_EXCHG_ID = #{soExchgId}
+      AND RCD_TMS = #{rcdTms}
+  </select>
 
 
 
-    )S LEFT JOIN (SELECT AS_ENTRY_ID,
-                            SUM(AS_LG_AMT) TOTAL_AS
-                     FROM PAY0006D A
-                     JOIN SVC0004D B ON A.AS_RESULT_NO = B.AS_RESULT_NO
-                     GROUP BY AS_ENTRY_ID) X ON X.AS_ENTRY_ID = S.AS_ID
-       LEFT JOIN SVC0006D Y ON Y.NO = S.HSR_NO
-       LEFT JOIN SVC0008D Z ON Z.SCHDUL_ID = Y.SCHDUL_ID
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <select id="getCustAddressInfo" parameterType="Map" resultType="java.lang.String">
+    <![CDATA[ SELECT FN_GET_SVC_BILL_MADDRESS( #{SALES_ORD_NO},'FULL_ADDR') FROM DUAL ]]>
   </select>
 
    <select id="getAsDefectEntry" parameterType="Map" resultType="egovMap">
@@ -259,7 +186,8 @@
         END
 
   </select>
-  <select id="selectASManagementList2" parameterType="Map" resultType="egovMap">
+
+ <!--  <select id="selectASManagementList2" parameterType="Map" resultType="egovMap">
     <![CDATA[ SELECT D.CODE,
                      C.AS_NO,
                      C.AS_REQST_DT,
@@ -329,9 +257,9 @@
     <if test="createStrDate != '' and createEndDate != '' ">
       <![CDATA[ AND C.AS_REQST_DT BETWEEN TO_DATE(#{createStrDate}, 'DD/MM/YYYY') AND TO_DATE(#{createEndDate}, 'DD/MM/YYYY') ]]>
     </if>
-  </select>
+  </select> -->
 
-  <select id="selectOrderBasicInfo" parameterType="Map" resultType="egovMap">
+  <!-- <select id="selectOrderBasicInfo" parameterType="Map" resultType="egovMap">
     <![CDATA[ SELECT Extent1.ORD_ID ORD_ID ,
                      Extent1.ORD_NO ORD_NO ,
                      Extent1.RENTAL_STUS RENTAL_STUS ,
@@ -479,12 +407,12 @@
                                  FROM SAL0001D Z
                                 WHERE Z.SALES_ORD_ID = EXTENT1.ORD_ID
                                   AND Z.BNDL_ID IS NOT NULL
-                              )             -- homecare Remove(except)
+                              )              homecare Remove(except)
                 AND ( Extent1.ORD_STUS_ID = 4 ) AND (Extent1.RENTAL_STUS NOT IN ('WOF','SUS','RET'))
                 AND ((Extent2.CCP_STUS_ID = 5 OR Extent2.CCP_STUS_ID IS NULL) OR (Extent3.PRGRS_ID = 5))
                 AND ROWNUM <= 1
     ]]>
-  </select>
+  </select> -->
 
   <select id="getASHistoryList" parameterType="Map" resultType="egovMap">
     SELECT S.C1 ,
@@ -1446,239 +1374,87 @@
            ) S ORDER BY S.ASR_ITM_ID ASC
   </select>
 
-  <select id="getASRulstSVC0004DInfo" parameterType="Map" resultType="egovMap">
-    SELECT S.AS_RESULT_ID ,
-           S.AS_RESULT_NO ,
-           S.AS_RESULT_STUS_ID ,
-           S.CODE ,
-           TO_CHAR(AS_SETL_DT,'dd/mm/yyyy' ) AS_SETL_DT ,
-           S.AS_SETL_TM ,
-           CASE WHEN ( S.AS_FAIL_RESN_ID IS NOT NULL )
-                  THEN S.AS_FAIL_RESN_ID
-                  ELSE 0
-           END C2 ,
-           CASE WHEN ( S.RESN_ID IS NOT NULL )
-                  THEN S.CODE1
-                  ELSE ' '
-           END C3 ,
-           CASE WHEN ( S.RESN_ID IS NOT NULL )
-                  THEN S.RESN_DESC
-                  ELSE ' '
-           END C4 ,
-           S.AS_BRNCH_ID AS_BRNCH_ID ,
-           CASE WHEN ( S.BRNCH_ID IS NOT NULL )
-                  THEN S.CODE2
-                  ELSE ' '
-           END C5 ,
-           CASE WHEN ( S.BRNCH_ID IS NOT NULL )
-                  THEN S.NAME
-                  ELSE ' '
-           END C6 ,
-           S.AS_MALFUNC_ID AS_MALFUNC_ID ,
-           CASE WHEN ( S.REASONID1 IS NOT NULL )
-                  THEN S.CODE3
-                  ELSE ' '
-           END C7 ,
-           CASE WHEN ( S.REASONID1 IS NOT NULL )
-                  THEN S.REASONDESC1
-                  ELSE ' '
-           END C8 ,
-           S.AS_MALFUNC_RESN_ID AS_MALFUNC_RESN_ID ,
-           CASE WHEN ( S.REASONID2 IS NOT NULL )
-                  THEN S.CODE4
-                  ELSE ' '
-           END C9 ,
-           CASE WHEN ( S.REASONID2 IS NOT NULL )
-                  THEN S.REASONDESC2
-                  ELSE ' '
-           END C10 ,
-           CASE WHEN ( S.AS_CT_ID IS NOT NULL )
-                  THEN S.AS_CT_ID
-                  ELSE 0
-           END C11 ,
-           CASE WHEN ( S.MEM_ID IS NOT NULL )
-                  THEN S.MEM_CODE
-                  ELSE ' '
-           END C12 ,
-           CASE WHEN ( S.MEM_ID IS NOT NULL )
-                  THEN S.NAME1
-                  ELSE ' '
-           END C13 ,
-           S.AS_WH_ID AS_WH_ID ,
-           CASE WHEN ( S.WH_LOC_ID IS NOT NULL )
-                  THEN S.WH_LOC_CODE
-                  ELSE ' '
-           END C14 ,
-           CASE WHEN ( S.WH_LOC_ID IS NOT NULL )
-                  THEN S.WH_LOC_DESC
-                  ELSE ' '
-           END C15 ,
-           S.AS_RESULT_REM AS_RESULT_REM ,
-           S.AS_DEFECT_TYPE_ID AS_DEFECT_TYPE_ID ,
-           CASE WHEN ( S.REASONID3 IS NOT NULL )
-                  THEN S.CODE5
-                  ELSE ' '
-           END C16 ,
-           CASE WHEN ( S.REASONID3 IS NOT NULL )
-                  THEN S.REASONDESC3
-                  ELSE ' '
-           END C17 ,
-           S.AS_DEFECT_ID AS_DEFECT_ID ,
-           CASE WHEN ( S.REASONID4 IS NOT NULL )
-                  THEN S.CODE6
-                  ELSE ' '
-           END C18 ,
-           CASE WHEN ( S.REASONID4 IS NOT NULL )
-                  THEN S.REASONDESC4
-                  ELSE ' '
-           END C19 ,
-           S.AS_DEFECT_PART_ID
-           AS_DEFECT_PART_ID ,
-           CASE WHEN ( S.REASONID5 IS NOT NULL )
-                  THEN S.CODE7
-                  ELSE ' '
-           END C20 ,
-           CASE WHEN ( S.REASONID5 IS NOT NULL )
-                  THEN S.REASONDESC5
-                  ELSE ' '
-           END C21 ,
-           S.AS_DEFECT_DTL_RESN_ID
-           AS_DEFECT_DTL_RESN_ID ,
-           CASE WHEN ( S.REASONID6 IS NOT NULL )
-                  THEN S.CODE8
-                  ELSE ' '
-           END C22 ,
-           CASE WHEN ( S.REASONID6 IS NOT NULL )
-                  THEN S.REASONDESC6
-                  ELSE ' '
-           END C23 ,
-           CASE WHEN ( S.AS_SLUTN_RESN_ID IS NOT NULL )
-                  THEN S.AS_SLUTN_RESN_ID
-                  ELSE 0
-           END C24 ,
-           CASE WHEN ( S.REASONID7 IS NOT NULL )
-                  THEN S.CODE9
-                  ELSE ' '
-           END C25 ,
-           CASE WHEN ( S.REASONID7 IS NOT NULL )
-                  THEN S.REASONDESC7
-                  ELSE ' '
-           END C26 ,
-           S.AS_TOT_AMT ,
-           CASE WHEN ( S.AS_CMMS IS NOT NULL )
-                THEN S.AS_CMMS
-                ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
-           END C27 ,
-           S.AS_WORKMNSH AS_WORKMNSH ,
-           S.AS_FILTER_AMT AS_FILTER_AMT ,
-           S.AS_RESULT_CRT_USER_ID
-           AS_RESULT_CRT_USER_ID ,
-           CASE WHEN ( S.USER_ID IS NOT NULL )
-                  THEN S.USER_NAME
-                  ELSE ' '
-           END C28 ,
-           TO_CHAR(S.AS_RESULT_CRT_DT, 'dd/mm/yyyy') AS_RESULT_CRT_DT ,
-           S.IN_HUSE_REPAIR_REM,
-           S.IN_HUSE_REPAIR_REPLACE_YN,
-           TO_CHAR(S.IN_HUSE_REPAIR_PROMIS_DT, 'dd/mm/yyyy')
-           IN_HUSE_REPAIR_PROMIS_DT ,
-           S.IN_HUSE_REPAIR_GRP_CODE,
-           S.IN_HUSE_REPAIR_PRODUCT_CODE,
-           S.IN_HUSE_REPAIR_SERIAL_NO,
-           TO_CHAR((SELECT AS_APPNT_DT FROM SVC0001D X WHERE X.AS_ID =S.AS_ENTRY_ID ) , 'dd/mm/yyyy') APPNT_DT,
-           CASE WHEN ( S.AS_RESULT_STUS_ID ='4' )
-                  THEN TO_CHAR(S.AS_RESULT_UPD_DT,'dd/mm/yyyy')
-                  ELSE '-'
-           END AS AS_RESULT_DT,
-           S.PSI,
-           S.LPM
-    FROM ( SELECT E.AS_RESULT_ID AS_RESULT_ID ,
-                  E.AS_RESULT_NO AS_RESULT_NO ,
-                  E.AS_ENTRY_ID ,
-                  E.AS_CT_ID AS_CT_ID ,
-                  E.AS_SETL_DT AS_SETL_DT ,
-                  E.AS_SETL_TM AS_SETL_TM ,
-                  E.AS_RESULT_STUS_ID AS_RESULT_STUS_ID ,
-                  E.AS_FAIL_RESN_ID AS_FAIL_RESN_ID ,
-                  E.AS_CMMS AS_CMMS ,
-                  E.AS_BRNCH_ID AS_BRNCH_ID ,
-                  E.AS_WH_ID AS_WH_ID ,
-                  E.AS_RESULT_REM AS_RESULT_REM ,
-                  E.AS_RESULT_CRT_DT AS_RESULT_CRT_DT ,
-                  E.AS_RESULT_CRT_USER_ID AS_RESULT_CRT_USER_ID ,
-                  E.AS_MALFUNC_ID AS_MALFUNC_ID ,
-                  E.AS_MALFUNC_RESN_ID AS_MALFUNC_RESN_ID ,
-                  E.AS_DEFECT_TYPE_ID AS_DEFECT_TYPE_ID ,
-                  E.AS_DEFECT_ID AS_DEFECT_ID ,
-                  E.AS_DEFECT_PART_ID AS_DEFECT_PART_ID ,
-                  E.AS_DEFECT_DTL_RESN_ID AS_DEFECT_DTL_RESN_ID ,
-                  E.AS_SLUTN_RESN_ID AS_SLUTN_RESN_ID ,
-                  E.AS_WORKMNSH AS_WORKMNSH ,
-                  E.AS_FILTER_AMT AS_FILTER_AMT ,
-                  E.AS_TOT_AMT AS_TOT_AMT ,
-                  Extent2.CODE CODE ,
-                  Extent3.RESN_ID RESN_ID ,
-                  Extent3.CODE CODE1 ,
-                  Extent3.RESN_DESC RESN_DESC ,
-                  Extent4.BRNCH_ID BRNCH_ID ,
-                  Extent4.CODE CODE2 ,
-                  Extent4.NAME NAME ,
-                  Extent5.RESN_ID REASONID1 ,
-                  Extent5.CODE CODE3 ,
-                  Extent5.RESN_DESC REASONDESC1 ,
-                  Extent6.RESN_ID REASONID2 ,
-                  Extent6.CODE CODE4 ,
-                  Extent6.RESN_DESC REASONDESC2 ,
-                  Extent7.MEM_ID MEM_ID ,
-                  Extent7.MEM_CODE MEM_CODE ,
-                  Extent7.NAME NAME1 ,
-                  Extent8.WH_LOC_ID WH_LOC_ID ,
-                  Extent8.WH_LOC_CODE WH_LOC_CODE ,
-                  Extent8.WH_LOC_DESC WH_LOC_DESC ,
-                  Extent9.DEFECT_ID REASONID3 ,
-                  Extent9.DEFECT_CODE CODE5 ,
-                  Extent9.DEFECT_DESC REASONDESC3 ,
-                  E0.DEFECT_ID REASONID4 ,
-                  E0.DEFECT_CODE CODE6 ,
-                  E0.DEFECT_DESC REASONDESC4 ,
-                  E1.DEFECT_ID REASONID5 ,
-                  E1.DEFECT_CODE CODE7 ,
-                  E1.DEFECT_DESC REASONDESC5 ,
-                  E2.DEFECT_ID REASONID6 ,
-                  E2.DEFECT_CODE CODE8 ,
-                  E2.DEFECT_DESC REASONDESC6 ,
-                  E3.DEFECT_ID REASONID7 ,
-                  E3.DEFECT_CODE CODE9 ,
-                  E3.DEFECT_DESC REASONDESC7 ,
-                  E4.USER_ID USER_ID ,
-                  E4.USER_NAME USER_NAME ,
-                  E.IN_HUSE_REPAIR_REM,
-                  E.IN_HUSE_REPAIR_REPLACE_YN,
-                  E.IN_HUSE_REPAIR_PROMIS_DT,
-                  E.IN_HUSE_REPAIR_GRP_CODE,
-                  E.IN_HUSE_REPAIR_PRODUCT_CODE,
-                  E.IN_HUSE_REPAIR_SERIAL_NO,
-                  E.APPNT_DT,
-                  E.AS_RESULT_UPD_DT,
-                  E.PSI,
-                  E.LPM
-           FROM SVC0004D E JOIN SYS0038M Extent2 ON Extent2.STUS_CODE_ID = E.AS_RESULT_STUS_ID
-           LEFT JOIN SYS0032M Extent3 ON Extent3.RESN_ID = E.AS_FAIL_RESN_ID
-           LEFT JOIN SYS0005M Extent4 ON Extent4.BRNCH_ID = E.AS_BRNCH_ID
-           LEFT JOIN SYS0032M Extent5 ON Extent5.RESN_ID = E.AS_MALFUNC_ID
-           LEFT JOIN SYS0032M Extent6 ON Extent6.RESN_ID = E.AS_MALFUNC_RESN_ID
-           LEFT JOIN ORG0001D Extent7 ON Extent7.MEM_ID = E.AS_CT_ID
-           LEFT JOIN SYS0028M Extent8 ON Extent8.WH_LOC_ID = E.AS_WH_ID
-           LEFT JOIN SYS0100M Extent9 ON Extent9.DEFECT_ID = E.AS_DEFECT_TYPE_ID AND Extent9.DEFECT_TYP = 'DT'
-           LEFT JOIN SYS0100M E0 ON E0.DEFECT_ID = E.AS_DEFECT_ID AND E0.DEFECT_TYP = 'DC'
-           LEFT JOIN SYS0100M E1 ON E1.DEFECT_ID = E.AS_DEFECT_PART_ID AND E1.DEFECT_TYP = 'DP'
-           LEFT JOIN SYS0100M E2 ON E2.DEFECT_ID = E.AS_DEFECT_DTL_RESN_ID AND E2.DEFECT_TYP = 'DD'
-           LEFT JOIN SYS0100M E3 ON E3.DEFECT_ID = E.AS_SLUTN_RESN_ID AND E3.DEFECT_TYP = 'SC'
-           LEFT JOIN SYS0047M E4 ON E4.USER_ID = E.AS_RESULT_CRT_USER_ID
-           WHERE E.AS_RESULT_ID = NVL( #{REF_REQST}, (SELECT AS_RESULT_ID
-                                                      FROM SVC0004D
-                                                      WHERE AS_RESULT_NO = #{AS_RESULT_NO}) )
-                                                        AND ROWNUM   <![CDATA[<= ]]> 1 ) S
+  <select id="getPEXTestResultInfo" parameterType="Map" resultType="egovMap">
+    SELECT
+    S.SO_EXCHG_ID SO_EXCHG_ID,
+    S.SO_ID SO_ID,
+    S.PEX_STUS_ID PEX_STUS_ID,
+    S.TEST_RESULT_ID TEST_RESULT_ID,
+    S.TEST_RESULT_NO TEST_RESULT_NO,
+    S.TEST_RESULT_REM TEST_RESULT_REM,
+    S.TEST_SETTLE_DT TEST_SETTLE_DT,
+    S.TEST_SETTLE_TIME TEST_SETTLE_TIME,
+    S.PEX_INS_ID PEX_INS_ID,
+    S.AMP AMP ,
+    S.VOLTAGE VOLTAGE,
+    S.PROD_GENUINE PROD_GENUINE,
+    S.TEST_RESULT_STUS TEST_RESULT_STUS,
+    S.CT_CODE AS CT_CODE,
+    S.CT_NAME AS CT_NAME,
+    S.DSC_CODE,
+    S.DSC_NAME,
+    S.CRT_USER_ID CRT_USER_ID,
+    S.CRT_DT CRT_DT,
+    S.UPD_USER_ID UPD_USER_ID,
+    S.UPD_DT UPD_DT,
+    S.PROB_LARGE_ID PROB_LARGE_ID,
+    S.PROB_LARGE_CODE PROB_LARGE_CODE,
+    S.Problem_Symptom_Large Problem_Symptom_Large ,
+    S.PROB_SMALL_ID PROB_SMALL_ID,
+    S.PROB_SMALL_CODE PROB_SMALL_CODE,
+    S.Problem_Symptom_Small Problem_Symptom_Small ,
+    S.DEF_LARGE_ID DEF_LARGE_ID,
+    S.DEF_LARGE_CODE DEF_LARGE_CODE,
+    S.Defect_Part_Large Defect_Part_Large ,
+    S.RCD_TMS
+
+    FROM ( SELECT
+
+        A.SO_EXCHG_ID SO_EXCHG_ID,
+        B.SO_ID SO_ID,
+        A.TEST_RESULT_STUS PEX_STUS_ID,
+        A.TEST_RESULT_ID TEST_RESULT_ID,
+        A.TEST_RESULT_NO TEST_RESULT_NO,
+        A.TEST_RESULT_REM TEST_RESULT_REM,
+        A.TEST_SETTLE_DT TEST_SETTLE_DT,
+        A.TEST_SETTLE_TIME TEST_SETTLE_TIME,
+        A.PEX_INS_ID PEX_INS_ID,
+        A.AMP AMP ,
+        A.VOLTAGE VOLTAGE,
+        A.PROD_GENUINE PROD_GENUINE,
+        A.TEST_RESULT_STUS TEST_RESULT_STUS,
+        E.LAST_INSTALL_CT_CODE AS CT_CODE,
+        E.LAST_INSTALL_CT_NAME AS CT_NAME,
+        E.DSC_CODE,
+        E.DSC_NAME,
+        A.CRT_USER_ID CRT_USER_ID,
+        A.CRT_DT CRT_DT,
+        A.UPD_USER_ID UPD_USER_ID,
+        A.UPD_DT UPD_DT,
+        G.DEFECT_ID AS PROB_LARGE_ID,
+        G.DEFECT_CODE AS PROB_LARGE_CODE,
+        G.DEFECT_DESC AS Problem_Symptom_Large ,
+        H.DEFECT_ID AS PROB_SMALL_ID,
+        H.DEFECT_CODE AS PROB_SMALL_CODE,
+        H.DEFECT_DESC AS Problem_Symptom_Small ,
+        I.DEFECT_ID AS DEF_LARGE_ID,
+        I.DEFECT_CODE AS DEF_LARGE_CODE,
+        I.DEFECT_DESC AS Defect_Part_Large ,
+        A.RCD_TMS RCD_TMS
+
+           FROM SVC0125D A
+           JOIN SAL0004D B ON B.SO_EXCHG_ID = A.SO_EXCHG_ID
+           LEFT JOIN SYS0038M C ON C.STUS_CODE_ID = A.TEST_RESULT_STUS
+           LEFT JOIN SAL1010V E ON E.ORD_ID = B.SO_ID
+           LEFT JOIN SAL0265D F ON F.SO_EXCHG_ID = B.SO_EXCHG_ID
+           LEFT JOIN SYS0100M G ON G.DEFECT_ID = F.PEX_DEFECT_DTL_RESN_ID AND G.DEFECT_TYP = 'DD'
+           LEFT JOIN SYS0100M H ON H.DEFECT_ID = F.PEX_DEFECT_ID AND H.DEFECT_TYP = 'DC'
+           LEFT JOIN SYS0100M I ON I.DEFECT_ID = F.PEX_DEFECT_PART_ID AND I.DEFECT_TYP = 'DP'
+
+
+           WHERE
+           A.TEST_RESULT_ID = #{TEST_RESULT_NO}
+           AND ROWNUM   <![CDATA[<= ]]> 1 ) S
   </select>
 
   <select id="getCCR0006D_CALL_ENTRY_ID_SEQ" parameterType="Map" resultType="egovMap">
@@ -2309,7 +2085,9 @@
     ]]>
   </select>
 
-  <select id="getErrMstList" parameterType="Map" resultType="egovMap">
+
+
+  <!-- <select id="getErrMstList" parameterType="Map" resultType="egovMap">
     <![CDATA[ SELECT DEFECT_TYPE_CODE AS CODE_ID
                   ,  DEFECT_TYPE_CODE_DESC    AS CODE_NAME
                   ,  PRODUCT_CTGRY_CODE
@@ -2350,6 +2128,16 @@
              DEFECT_DTL_CODE,
              DEFECT_DTL_CODE_DESC
     ]]>
+  </select> -->
+
+
+
+  <!-- <select id="getDEFECT_TYPE_List" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+      SELECT DEFECT_TYPE_CODE AS CODE_ID
+           , DEFECT_TYPE_CODE_DESC AS CODE_NAME
+      FROM SVC0057C
+    ]]>
   </select>
 
   <select id="getSLUTN_CODE_List" parameterType="Map" resultType="egovMap">
@@ -2358,42 +2146,7 @@
           ,  SLUTN_CODE_DESC AS CODE_NAME
       FROM SVC0061C
     ]]>
-  </select>
-
-  <select id="getCustAddressInfo" parameterType="Map" resultType="java.lang.String">
-    <![CDATA[ SELECT FN_GET_SVC_BILL_MADDRESS( #{SALES_ORD_NO},'FULL_ADDR') FROM DUAL ]]>
-  </select>
-
-  <select id="getDTAIL_DEFECT_List" parameterType="Map" resultType="egovMap">
-    <![CDATA[ SELECT CODE AS  CODE_ID
-                   , CODE_DESC AS CODE_NAME
-              FROM SVC0060C
-    ]]>
-  </select>
-
-  <select id="getDEFECT_PART_List" parameterType="Map" resultType="egovMap">
-   <![CDATA[
-     SELECT CONDI_CODE AS CODE_ID
-          , DTL AS CODE_NAME
-     FROM SVC0059M
-    ]]>
-  </select>
-
-  <select id="getDEFECT_CODE_List" parameterType="Map" resultType="egovMap">
-    <![CDATA[
-      SELECT DEFECT_CODE AS CODE_ID
-           , DEFECT_DESC AS CODE_NAME
-      FROM SVC0058C
-    ]]>
-  </select>
-
-  <select id="getDEFECT_TYPE_List" parameterType="Map" resultType="egovMap">
-    <![CDATA[
-      SELECT DEFECT_TYPE_CODE AS CODE_ID
-           , DEFECT_TYPE_CODE_DESC AS CODE_NAME
-      FROM SVC0057C
-    ]]>
-  </select>
+  </select> -->
 
   <select id="isInHouseB8Update" parameterType="Map" resultType="java.lang.Integer">
     SELECT COUNT(AS_NO)
@@ -2708,14 +2461,7 @@
       AND DISB = 0
   </select>
 
-  <select id="selRcdTms" parameterType="Map" resultType="int">
-    SELECT COUNT(*) COUNT
-    FROM SVC0001D
-    WHERE AS_ID = #{asId}
-      AND AS_NO = #{asNo}
-      AND AS_SO_ID = #{salesOrderId}
-      AND RCD_TMS = #{rcdTms}
-  </select>
+
 
   <select id="chkPmtMap" parameterType="Map" resultType="int">
     SELECT COUNT(*) COUNT

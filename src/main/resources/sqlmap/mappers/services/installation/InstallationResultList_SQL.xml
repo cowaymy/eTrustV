@@ -3390,6 +3390,12 @@
     ]]>
   </select>
 
+   <select id="checkOrderID" parameterType="Map" resultType="egovMap">
+    SELECT B.SO_EXCHG_ID FROM SAL0001D A
+    JOIN SAL0004D B ON A.SALES_ORD_ID = B.SO_ID
+    WHERE A.SALES_ORD_ID= #{salesOrderId}
+  </select>
+
   <select id="checkExchangeCollLog" parameterType="Map" resultType="egovMap">
     SELECT *
     FROM CCR0006D
@@ -4670,6 +4676,15 @@
                       , UPD_USER_ID = #{creator}
                       , INSTALL_DT = TO_DATE(#{installDate},'DD-MM-YYYY')
     WHERE ( INSTALL_ENTRY_ID = #{installEntryId} )
+  </update>
+
+  <update id="updatePEXTestResultStatus" parameterType="Map">
+    UPDATE SVC0125D
+    SET PEX_INS_ID = #{installEntryId}
+        , TEST_RESULT_STUS = #{testResultStus}
+        , UPD_USER_ID = #{updator}
+        , UPD_DT = SYSDATE
+    WHERE ( SO_EXCHG_ID = (SELECT DISTINCT SO_EXCHG_ID FROM SAL0004D WHERE SO_ID = #{salesOrderId} ))
   </update>
 
   <update id="updateInstallEntry_2" parameterType="Map">

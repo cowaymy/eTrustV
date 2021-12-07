@@ -1,7 +1,7 @@
 package com.coway.trust.web.common;
 
 public class DocTypeConstants {
-	
+
 	public static final int HP_CODE                     = 1  ;
 	public static final int SALES_NO                    = 2  ;
 	public static final int PAY_ENTRY                   = 3  ;
@@ -56,5 +56,5 @@ public class DocTypeConstants {
 	public static final int RENT_CONV_TAX_INV_NO      = 125;
 	public static final int CASE_NO                     = 148;
 	public static final int COD_NO                      = 151;
-	
+	public static final int PTR_NO                      = 180;
 }

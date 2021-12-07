@@ -10,19 +10,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface AfterPEXTestResultListService {
 
-	List<EgovMap> selectASManagementList(Map<String, Object> params);
-
-	  List<EgovMap> getAsDefectEntry(Map<String, Object> params);
-
-	  List<EgovMap> getASHistoryList(Map<String, Object> params);
-
-	  List<EgovMap> selectASDataInfo(Map<String, Object> params);
-
-	  List<EgovMap> getErrMstList(Map<String, Object> params);
-
-	  List<EgovMap> getErrDetilList(Map<String, Object> params);
-
-	  List<EgovMap> getSLUTN_CODE_List(Map<String, Object> params);
+	  List<EgovMap> searchPEXTestResultList(Map<String, Object> params);
 
 	  List<EgovMap> getDTAIL_DEFECT_List(Map<String, Object> params);
 
@@ -30,7 +18,28 @@ public interface AfterPEXTestResultListService {
 
 	  List<EgovMap> getDEFECT_CODE_List(Map<String, Object> params);
 
-	  List<EgovMap> getDEFECT_TYPE_List(Map<String, Object> params);
+	  int selRcdTms(Map<String, Object> params);
+
+	  int chkRcdTms(Map<String, Object> params);
+
+	  List<EgovMap> getPEXTestResultInfo(Map<String, Object> params);
+
+
+
+
+	  List<EgovMap> getAsDefectEntry(Map<String, Object> params);
+
+	  List<EgovMap> getASHistoryList(Map<String, Object> params);
+
+	  List<EgovMap> selectASDataInfo(Map<String, Object> params);
+
+	 /* List<EgovMap> getErrMstList(Map<String, Object> params);
+
+	  List<EgovMap> getErrDetilList(Map<String, Object> params);
+
+	  List<EgovMap> getSLUTN_CODE_List(Map<String, Object> params);
+
+	  List<EgovMap> getDEFECT_TYPE_List(Map<String, Object> params);*/
 
 	  List<EgovMap> getBSHistoryList(Map<String, Object> params);
 
@@ -54,7 +63,7 @@ public interface AfterPEXTestResultListService {
 
 	  EgovMap saveASInHouseEntry(Map<String, Object> params);
 
-	  EgovMap spFilterClaimCheck(Map<String, Object> params);
+	 /* EgovMap spFilterClaimCheck(Map<String, Object> params);*/
 
 	  EgovMap updateASEntry(Map<String, Object> params);
 
@@ -68,11 +77,11 @@ public interface AfterPEXTestResultListService {
 
 	  List<EgovMap> getASHistoryInfo(Map<String, Object> params);
 
-	  List<EgovMap> getASStockPrice(Map<String, Object> params);
+	  /*List<EgovMap> getASStockPrice(Map<String, Object> params);
 
 	  List<EgovMap> getASFilterInfo(Map<String, Object> params);
 
-	  List<EgovMap> getASFilterInfoOld(Map<String, Object> params);
+	  List<EgovMap> getASFilterInfoOld(Map<String, Object> params);*/
 
 	  List<EgovMap> getASReasonCode(Map<String, Object> params);
 
@@ -80,11 +89,9 @@ public interface AfterPEXTestResultListService {
 
 	  List<EgovMap> getASReasonCode2(Map<String, Object> params);
 
-	  List<EgovMap> getCallLog(Map<String, Object> params);
+	  /*List<EgovMap> getCallLog(Map<String, Object> params);
 
-	  List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params);
-
-	  List<EgovMap> getASRulstEditFilterInfo(Map<String, Object> params);
+	 List<EgovMap> getASRulstEditFilterInfo(Map<String, Object> params);*/
 
 	  boolean insertASNo(Map<String, Object> params, SessionVO sessionVO);
 
@@ -128,14 +135,14 @@ public interface AfterPEXTestResultListService {
 
 	  List<EgovMap> selectSVC0026T(Map<String, Object> params);
 
-	  EgovMap getStockPricebyStkID(Map<String, Object> params);
+	/*  EgovMap getStockPricebyStkID(Map<String, Object> params);
 
 	  // ONGHC ADD FUNCTION FOR OMBAK MINERAL
 	  boolean insertOptFlt(Map<String, Object> params);
 
 	  List<EgovMap> getfltConfLst();
 
-	  int getFilterCount(Map<String, Object> params);
+	  int getFilterCount(Map<String, Object> params);*/
 
 	  int getSAL87ConfigId(String params);
 
@@ -155,11 +162,7 @@ public interface AfterPEXTestResultListService {
 
 	  String getInHseLmtDy();
 
-	  int selRcdTms(Map<String, Object> params);
-
 	  int chkPmtMap(Map<String, Object> params);
-
-	  int chkRcdTms(Map<String, Object> params);
 
 	  String getSearchDtRange();
 
@@ -173,13 +176,13 @@ public interface AfterPEXTestResultListService {
 
 	  List<EgovMap> selectTimePick();
 
-	  List<EgovMap> selectLbrFeeChr();
+	/*  List<EgovMap> selectLbrFeeChr();
 
 	  List<EgovMap> selectFltQty();
 
 	  List<EgovMap> selectFltPmtTyp();
 
-	  List<EgovMap> getASEntryCommission(Map<String, Object> params);
+	  List<EgovMap> getASEntryCommission(Map<String, Object> params);*/
 
 	  int saveASEntryInHouse(Map<String, Object> params);
 

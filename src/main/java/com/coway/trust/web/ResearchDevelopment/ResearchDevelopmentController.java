@@ -45,6 +45,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class ResearchDevelopmentController {
 	 private static final Logger logger = LoggerFactory.getLogger(ResearchDevelopmentController.class);
 
+	 @Resource(name = "AfterPEXTestResultListService")
+	  private AfterPEXTestResultListService AfterPEXTestResultListService;
+
 	 @Resource(name = "ASManagementListService")
 	  private ASManagementListService ASManagementListService;
 
@@ -69,18 +72,18 @@ public class ResearchDevelopmentController {
 	  @RequestMapping(value = "/AfterPEXTestResult.do")
 	  public String initASManagementList(@RequestParam Map<String, Object> params, ModelMap model) {
 	    logger.debug("===========================/AfterPEXTestResult.do===============================");
-	    logger.debug("== params " + params.toString());
+	    logger.debug("== params1111 " + params.toString());
 	    logger.debug("===========================/AfterPEXTestResult.do===============================");
 
 	    // GET SEARCH DATE RANGE
-	    String range = ASManagementListService.getSearchDtRange();
+	    String range = AfterPEXTestResultListService.getSearchDtRange();
 
-	    List<EgovMap> asStat = ASManagementListService.selectAsStat();
-	    List<EgovMap> asProduct = ASManagementListService.asProd();
+	    List<EgovMap> PEXTRStatus = AfterPEXTestResultListService.selectAsStat();
+	    List<EgovMap> Product = AfterPEXTestResultListService.asProd();
 
 	    model.put("DT_RANGE", CommonUtils.nvl(range));
-	    model.put("asStat", asStat);
-	    model.put("asProduct", asProduct);
+	    model.put("PEXTRStatus", PEXTRStatus);
+	    model.put("Product", Product);
 
 	    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3,
 	        SalesConstants.DEFAULT_DATE_FORMAT1);
@@ -97,36 +100,25 @@ public class ResearchDevelopmentController {
 	    logger.debug("== params " + params.toString());
 	    logger.debug("===========================/TestResultNewResultPop.do===============================");
 
-	    model.put("ORD_ID", (String) params.get("ord_Id"));
-	    model.put("ORD_NO", (String) params.get("ord_No"));
-	    model.put("AS_NO", (String) params.get("as_No"));
-	    model.put("AS_ID", (String) params.get("as_Id"));
-	    //model.put("REF_REQST", CommonUtils.nvl((String) params.get("refReqst")));
-	    //model.put("AS_RESULT_NO", (String) params.get("as_Rst"));
-	    model.put("IS_AUTO", (String) params.get("isAuto"));
-
-	    model.put("USER_ID", sessionVO.getMemId());
-	    model.put("USER_NAME", sessionVO.getUserName());
-
-	    model.put("BRANCH_NAME", sessionVO.getBranchName());
-	    model.put("BRANCH_ID", sessionVO.getUserBranchId());
+	    model.put("TEST_RESULT_ID", (String) params.get("testResultId"));
+	    model.put("TEST_RESULT_NO", (String) params.get("testResultNo"));
+	    model.put("SO_EXCHG_ID", (String) params.get("soExchgId"));
 	    model.put("RCD_TMS", (String) params.get("rcdTms"));
 
-	    params.put("salesOrderId", params.get("ord_Id"));
+	    params.put("testResultId", params.get("testResultId"));
 
-	    EgovMap orderDetail = null;
-	    // basicinfo = hsManualService.selectHsViewBasicInfo(params);
+	   /* EgovMap orderDetail = null;
 	    try {
 	      orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
 	    } catch (Exception e) {
 	      e.printStackTrace();
-	    }
-	    model.addAttribute("orderDetail", orderDetail);
+	    }*/
+	    //model.addAttribute("orderDetail", orderDetail);
 
-	    List<EgovMap> asCrtStat = ASManagementListService.selectAsCrtStat();
+	    List<EgovMap> asCrtStat = AfterPEXTestResultListService.selectAsCrtStat();
 	    model.addAttribute("asCrtStat", asCrtStat);
 
-	    List<EgovMap> timePick = ASManagementListService.selectTimePick();
+	    List<EgovMap> timePick = AfterPEXTestResultListService.selectTimePick();
 	    model.addAttribute("timePick", timePick);
 
 	    return "ResearchDevelopment/TestResultNewResultPop";
@@ -174,21 +166,23 @@ public class ResearchDevelopmentController {
 	    model.put("AS_ID", (String) params.get("as_Id"));
 	    model.put("AS_NO", (String) params.get("as_No"));
 
-	    EgovMap AsEventInfo = ASManagementListService.getAsEventInfo(params);
-	    model.put("AsEventInfo", AsEventInfo);
+	 /*   EgovMap AsEventInfo = AfterPEXTestResultListService.getAsEventInfo(params);
+	    model.put("AsEventInfo", AsEventInfo);*/
 
-	    EgovMap orderDetail = null;
+	    /*EgovMap orderDetail = null;
 	    orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
-	    model.addAttribute("orderDetail", orderDetail);
+	    model.addAttribute("orderDetail", orderDetail);*/
+
+
 
 	    return "ResearchDevelopment/TestResultViewPop";
 	  }
 
-	  @RequestMapping(value = "/asResultInfoEdit.do")
+	  @RequestMapping(value = "/TestResultInfoEdit.do")
 	  public String asResultInfoEdit(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-	    logger.debug("===========================/asResultInfoEdit.do===============================");
+	    logger.debug("===========================/TestResultInfoEdit.do===============================");
 	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/asResultInfoEdit.do===============================");
+	    logger.debug("===========================/TestResultInfoEdit.do===============================");
 
 	    model.put("USER_ID", sessionVO.getMemId());
 	    model.put("USER_NAME", sessionVO.getUserName());
@@ -196,20 +190,20 @@ public class ResearchDevelopmentController {
 	    model.put("BRANCH_ID", sessionVO.getUserBranchId());
 	    model.put("ORD_NO", params.get("ord_No"));
 
-	    List<EgovMap> asCrtStat = ASManagementListService.selectAsCrtStat();
+	    List<EgovMap> asCrtStat = AfterPEXTestResultListService.selectAsCrtStat();
 	    model.addAttribute("asCrtStat", asCrtStat);
 
-	    List<EgovMap> timePick = ASManagementListService.selectTimePick();
+	    List<EgovMap> timePick = AfterPEXTestResultListService.selectTimePick();
 	    model.addAttribute("timePick", timePick);
 
-	    List<EgovMap> lbrFeeChr = ASManagementListService.selectLbrFeeChr();
+	   /* List<EgovMap> lbrFeeChr = AfterPEXTestResultListService.selectLbrFeeChr();
 	    model.addAttribute("lbrFeeChr", lbrFeeChr);
 
-	    List<EgovMap> fltQty = ASManagementListService.selectFltQty();
+	    List<EgovMap> fltQty = AfterPEXTestResultListService.selectFltQty();
 	    model.addAttribute("fltQty", fltQty);
 
-	    List<EgovMap> fltPmtTyp = ASManagementListService.selectFltPmtTyp();
-	    model.addAttribute("fltPmtTyp", fltPmtTyp);
+	    List<EgovMap> fltPmtTyp = AfterPEXTestResultListService.selectFltPmtTyp();
+	    model.addAttribute("fltPmtTyp", fltPmtTyp);*/
 
 	    return "ResearchDevelopment/inc_TestResultEditPop";
 	  }
@@ -235,10 +229,10 @@ public class ResearchDevelopmentController {
 	    model.put("BRANCH_NAME", sessionVO.getBranchName());
 	    model.put("BRANCH_ID", sessionVO.getUserBranchId());
 
-	    List<EgovMap> asCrtStat = ASManagementListService.selectAsCrtStat();
+	    List<EgovMap> asCrtStat = AfterPEXTestResultListService.selectAsCrtStat();
 	    model.addAttribute("asCrtStat", asCrtStat);
 
-	    List<EgovMap> timePick = ASManagementListService.selectTimePick();
+	    List<EgovMap> timePick = AfterPEXTestResultListService.selectTimePick();
 	    model.addAttribute("timePick", timePick);
 
 	    EgovMap orderDetail;
@@ -250,29 +244,95 @@ public class ResearchDevelopmentController {
 	    return "ResearchDevelopment/TestResultEditBasicPop";
 	  }
 
-	  @RequestMapping(value = "/searchASManagementList.do", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> selectASManagementList(@RequestParam Map<String, Object> params,
+	  @RequestMapping(value = "/searchPEXTestResultList.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> searchPEXTestResultList(@RequestParam Map<String, Object> params,
 	      HttpServletRequest request, ModelMap model) {
-	    logger.debug("===========================/searchASManagementList.do===============================");
+	    logger.debug("===========================/searchPEXTestResultList.do===============================");
 	    logger.debug("== params heres" + params.toString());
 
-	    String[] asTypeList = request.getParameterValues("asType");
-	    String[] asProductList = request.getParameterValues("asProduct");
-	    String[] asStatusList = request.getParameterValues("asStatus");
+	    String[] PEXTRStatus = request.getParameterValues("PEXTRStatus");
+	    String[] cmbCategoryList = request.getParameterValues("cmbCategory");
+	    String[] ProductList = request.getParameterValues("Product");
+
 	    String[] cmbbranchIdList = request.getParameterValues("cmbbranchId");
 
-	    // String cmbctId = request.getParameter("cmbctId");
-
-	    params.put("asTypeList", asTypeList);
-	    params.put("asStatusList", asStatusList);
+	    params.put("PEXTRStatus", PEXTRStatus);
+	    params.put("cmbCategoryList", cmbCategoryList);
 	    params.put("cmbbranchIdList", cmbbranchIdList);
-	    params.put("asProductList", asProductList);
+	    params.put("ProductList", ProductList);
 
-	    List<EgovMap> ASMList = ASManagementListService.selectASManagementList(params);
+	    List<EgovMap> ASMList = AfterPEXTestResultListService.searchPEXTestResultList(params);
 
-	    // logger.debug("== ASMList : {}", ASMList);
-	    logger.debug("===========================/searchASManagementList.do===============================");
+	    logger.debug("===========================/searchPEXTestResultList.do===============================");
 	    return ResponseEntity.ok(ASMList);
+	  }
+
+	  @RequestMapping(value = "/selRcdTms.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> chkRcdTms(@RequestBody Map<String, Object> params, ModelMap model,
+	      SessionVO sessionVO) {
+	    ReturnMessage message = new ReturnMessage();
+
+	    logger.debug("==================/selRcdTms.do=======================");
+	    logger.debug("params : {}", params);
+
+	    int noRcd = AfterPEXTestResultListService.selRcdTms(params);
+	    logger.debug("noRcd : ", noRcd);
+	    logger.debug("==================/selRcdTms.do=======================");
+	    if (noRcd == 1) {
+	      message.setMessage("OK");
+	      message.setCode("1");
+	    } else {
+	      message.setMessage(
+	          "Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+	      message.setCode("99");
+	    }
+
+	    return ResponseEntity.ok(message);
+	  }
+
+	  @RequestMapping(value = "/getDTAIL_DEFECT_List.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> getDTAIL_DEFECT_List(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+	    logger.debug("===========================/getDTAIL_DEFECT_List.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/getDTAIL_DEFECT_List.do===============================");
+
+	    List<EgovMap> getDTAIL_DEFECT_List = ASManagementListService.getDTAIL_DEFECT_List(params);
+	    return ResponseEntity.ok(getDTAIL_DEFECT_List);
+	  }
+
+	  @RequestMapping(value = "/getDEFECT_PART_List.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> getDEFECT_PART_List(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+	    logger.debug("===========================/getDEFECT_PART_List.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/getDEFECT_PART_List.do===============================");
+
+	    List<EgovMap> getDEFECT_PART_List = ASManagementListService.getDEFECT_PART_List(params);
+	    return ResponseEntity.ok(getDEFECT_PART_List);
+	  }
+
+	  @RequestMapping(value = "/getDEFECT_CODE_List.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> getDEFECT_CODE_List(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+	    logger.debug("===========================/getDEFECT_CODE_List.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/getDEFECT_CODE_List.do===============================");
+
+	    List<EgovMap> getDEFECT_CODE_List = ASManagementListService.getDEFECT_CODE_List(params);
+	    return ResponseEntity.ok(getDEFECT_CODE_List);
+	  }
+
+	  @RequestMapping(value = "/getPEXTestResultInfo", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> getPEXTestResultInfo(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+	    logger.debug("===========================/getPEXTestResultInfo.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/getPEXTestResultInfo.do===============================");
+
+	    List<EgovMap> list = AfterPEXTestResultListService.getPEXTestResultInfo(params);
+
+	    return ResponseEntity.ok(list);
 	  }
 
 
@@ -280,20 +340,59 @@ public class ResearchDevelopmentController {
 
 
 
+	  /*@RequestMapping(value = "/getDEFECT_TYPE_List.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> getDEFECT_TYPE_List(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+	    logger.debug("===========================/getDEFECT_TYPE_List.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/getDEFECT_TYPE_List.do===============================");
 
+	    List<EgovMap> getDEFECT_TYPE_List = ASManagementListService.getDEFECT_TYPE_List(params);
+	    return ResponseEntity.ok(getDEFECT_TYPE_List);
+	  }
 
+	  @RequestMapping(value = "/getSLUTN_CODE_List.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> getSLUTN_CODE_List(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+	    logger.debug("===========================/getSLUTN_CODE_List.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/getSLUTN_CODE_List.do===============================");
 
-	  @RequestMapping(value = "/asResultInfo.do")
+	    List<EgovMap> getSLUTN_CODE_List = ASManagementListService.getSLUTN_CODE_List(params);
+	    return ResponseEntity.ok(getSLUTN_CODE_List);
+	  }*/
+
+	  /*@RequestMapping(value = "/getErrMstList.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> getErrMstList(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+	    logger.debug("===========================/getErrMstList.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/getErrMstList.do===============================");
+
+	    List<EgovMap> getErrMstList = ASManagementListService.getErrMstList(params);
+	    return ResponseEntity.ok(getErrMstList);
+	  }
+
+	  @RequestMapping(value = "/getErrDetilList.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> getErrDetilList(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+	    logger.debug("===========================/getErrDetilList.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/getErrDetilList.do===============================");
+
+	    List<EgovMap> getErrDetilList = ASManagementListService.getErrDetilList(params);
+	    return ResponseEntity.ok(getErrDetilList);
+	  }*/
+
+	  /*@RequestMapping(value = "/asResultInfo.do")
 	  public String asResultInfo(@RequestParam Map<String, Object> params, ModelMap model) {
 	    logger.debug("===========================/asResultInfo.do===============================");
 	    logger.debug("== params " + params.toString());
 	    logger.debug("===========================/asResultInfo.do===============================");
 	    return "services/as/inc_asResultInfoPop";
-	  }
+	  }*/
 
-
-
-	  @RequestMapping(value = "/asInHouseEntryPop.do")
+	  /*@RequestMapping(value = "/asInHouseEntryPop.do")
 	  public String asInHouseEntryPop(@RequestParam Map<String, Object> params, ModelMap model) {
 	    logger.debug("===========================/asInHouseEntryPop.do===============================");
 	    logger.debug("== params " + params.toString());
@@ -304,9 +403,9 @@ public class ResearchDevelopmentController {
 	    model.put("AS_ID", (String) params.get("as_Id"));
 	    model.put("AS_NO", (String) params.get("as_No"));
 	    return "services/as/asInHouseEntryPop";
-	  }
+	  }*/
 
-	  @RequestMapping(value = "/getAsDefectEntry.do", method = RequestMethod.GET)
+	  /*@RequestMapping(value = "/getAsDefectEntry.do", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> getAsDefectEntry(@RequestParam Map<String, Object> params,
 	      HttpServletRequest request, ModelMap model) {
 	    logger.debug("===========================/getAsDefectEntry.do===============================");
@@ -317,11 +416,7 @@ public class ResearchDevelopmentController {
 	    logger.debug("== getAsDefectEntryList : {}" + getAsDefectEntryList);
 	    logger.debug("===========================/getAsDefectEntry.do===============================");
 	    return ResponseEntity.ok(getAsDefectEntryList);
-	  }
-
-
-
-
+	  }*/
 
 	  @RequestMapping(value = "/searchOrderNo", method = RequestMethod.GET)
 	  public ResponseEntity<EgovMap> selectOrderNo(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -687,17 +782,7 @@ public class ResearchDevelopmentController {
 	    return ResponseEntity.ok(list);
 	  }
 
-	  @RequestMapping(value = "/getASRulstSVC0004DInfo", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> getASRulstSVC0004DInfo(@RequestParam Map<String, Object> params,
-	      HttpServletRequest request, ModelMap model) {
-	    logger.debug("===========================/getASRulstSVC0004DInfo.do===============================");
-	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/getASRulstSVC0004DInfo.do===============================");
 
-	    List<EgovMap> list = ASManagementListService.getASRulstSVC0004DInfo(params);
-
-	    return ResponseEntity.ok(list);
-	  }
 
 	  @RequestMapping(value = "/getASRulstEditFilterInfo", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> getASRulstEditFilterInfo(@RequestParam Map<String, Object> params,
@@ -1075,82 +1160,9 @@ public class ResearchDevelopmentController {
 	    return ResponseEntity.ok(message);
 	  }
 
-	  @RequestMapping(value = "/getErrMstList.do", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> getErrMstList(@RequestParam Map<String, Object> params,
-	      HttpServletRequest request, ModelMap model) {
-	    logger.debug("===========================/getErrMstList.do===============================");
-	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/getErrMstList.do===============================");
 
-	    List<EgovMap> getErrMstList = ASManagementListService.getErrMstList(params);
-	    return ResponseEntity.ok(getErrMstList);
-	  }
 
-	  @RequestMapping(value = "/getErrDetilList.do", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> getErrDetilList(@RequestParam Map<String, Object> params,
-	      HttpServletRequest request, ModelMap model) {
-	    logger.debug("===========================/getErrDetilList.do===============================");
-	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/getErrDetilList.do===============================");
 
-	    List<EgovMap> getErrDetilList = ASManagementListService.getErrDetilList(params);
-	    return ResponseEntity.ok(getErrDetilList);
-	  }
-
-	  @RequestMapping(value = "/getSLUTN_CODE_List.do", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> getSLUTN_CODE_List(@RequestParam Map<String, Object> params,
-	      HttpServletRequest request, ModelMap model) {
-	    logger.debug("===========================/getSLUTN_CODE_List.do===============================");
-	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/getSLUTN_CODE_List.do===============================");
-
-	    List<EgovMap> getSLUTN_CODE_List = ASManagementListService.getSLUTN_CODE_List(params);
-	    return ResponseEntity.ok(getSLUTN_CODE_List);
-	  }
-
-	  @RequestMapping(value = "/getDTAIL_DEFECT_List.do", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> getDTAIL_DEFECT_List(@RequestParam Map<String, Object> params,
-	      HttpServletRequest request, ModelMap model) {
-	    logger.debug("===========================/getDTAIL_DEFECT_List.do===============================");
-	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/getDTAIL_DEFECT_List.do===============================");
-
-	    List<EgovMap> getDTAIL_DEFECT_List = ASManagementListService.getDTAIL_DEFECT_List(params);
-	    return ResponseEntity.ok(getDTAIL_DEFECT_List);
-	  }
-
-	  @RequestMapping(value = "/getDEFECT_PART_List.do", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> getDEFECT_PART_List(@RequestParam Map<String, Object> params,
-	      HttpServletRequest request, ModelMap model) {
-	    logger.debug("===========================/getDEFECT_PART_List.do===============================");
-	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/getDEFECT_PART_List.do===============================");
-
-	    List<EgovMap> getDEFECT_PART_List = ASManagementListService.getDEFECT_PART_List(params);
-	    return ResponseEntity.ok(getDEFECT_PART_List);
-	  }
-
-	  @RequestMapping(value = "/getDEFECT_CODE_List.do", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> getDEFECT_CODE_List(@RequestParam Map<String, Object> params,
-	      HttpServletRequest request, ModelMap model) {
-	    logger.debug("===========================/getDEFECT_CODE_List.do===============================");
-	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/getDEFECT_CODE_List.do===============================");
-
-	    List<EgovMap> getDEFECT_CODE_List = ASManagementListService.getDEFECT_CODE_List(params);
-	    return ResponseEntity.ok(getDEFECT_CODE_List);
-	  }
-
-	  @RequestMapping(value = "/getDEFECT_TYPE_List.do", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> getDEFECT_TYPE_List(@RequestParam Map<String, Object> params,
-	      HttpServletRequest request, ModelMap model) {
-	    logger.debug("===========================/getDEFECT_TYPE_List.do===============================");
-	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/getDEFECT_TYPE_List.do===============================");
-
-	    List<EgovMap> getDEFECT_TYPE_List = ASManagementListService.getDEFECT_TYPE_List(params);
-	    return ResponseEntity.ok(getDEFECT_TYPE_List);
-	  }
 
 	  @RequestMapping(value = "/sendSMS.do", method = RequestMethod.GET)
 	  public ResponseEntity<EgovMap> sendSMS(@RequestParam Map<String, Object> params, HttpServletRequest request,

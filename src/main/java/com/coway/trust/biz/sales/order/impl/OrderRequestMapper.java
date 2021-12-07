@@ -80,6 +80,8 @@ public interface OrderRequestMapper {
 
   void insertSalesOrderExchange(SalesOrderExchangeVO salesOrderExchangeVO);
 
+  void insertPEXTestResult(SalesOrderExchangeVO salesOrderExchangeVO);
+
   void updateSalesOrderExchangeNwCall(SalesOrderExchangeVO salesOrderExchangeVO);
 
   void updateSoExchgStkRetMovId(SalesOrderExchangeVO salesOrderExchangeVO);

@@ -551,6 +551,21 @@
     )
   </insert>
 
+  <insert id="insertPEXTestResult" parameterType="salesOrderExchangeVO">
+    INSERT INTO SVC0125D
+    ( TEST_RESULT_ID
+    , TEST_RESULT_NO
+    , TEST_RESULT_STUS
+    , SO_EXCHG_ID
+    )
+    VALUES
+    ( SVC0125D_TEST_RESULT_ID_SEQ.NEXTVAL
+    , #{PTRNo}
+    , #{PTRStusId}
+    , #{soExchgId}
+    )
+  </insert>
+
   <select id="selecLastInstall" parameterType="Map" resultType="egovMap">
     SELECT T.INSTALL_ENTRY_ID
          , T.INSTALL_DT

@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * The persistent class for the SAL0095D database table.
- * 
+ *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SalesOrderExchangeVO implements Serializable {
@@ -52,7 +52,9 @@ public class SalesOrderExchangeVO implements Serializable {
 	private int soExchgOldCustId;
 	private int soExchgNwCustId;
 	private String soExchgFormNo;
-	
+	private int PTRStusId;
+	private String PTRNo;
+
 	public int getSoExchgId() {
 		return soExchgId;
 	}
@@ -76,6 +78,18 @@ public class SalesOrderExchangeVO implements Serializable {
 	}
 	public void setSoExchgStusId(int soExchgStusId) {
 		this.soExchgStusId = soExchgStusId;
+	}
+	public int getPTRStusId() {
+		return PTRStusId;
+	}
+	public void setPTRStusId(int PTRStusId) {
+		this.PTRStusId = PTRStusId;
+	}
+	public String getPTRNo() {
+		return PTRNo;
+	}
+	public void setPTRNo(String PTRNo) {
+		this.PTRNo = PTRNo;
 	}
 	public int getSoExchgResnId() {
 		return soExchgResnId;

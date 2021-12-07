@@ -18,12 +18,9 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.ResearchDevelopment.AfterPEXTestResultListService;
-import com.coway.trust.biz.sales.customer.impl.CustomerServiceImpl;
 import com.coway.trust.biz.sales.mambership.impl.MembershipRentalQuotationMapper;
 import com.coway.trust.biz.sales.pos.impl.PosMapper;
-import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.as.impl.ASManagementListMapper;
-import com.coway.trust.biz.services.as.impl.ASManagementListServiceImpl;
 import com.coway.trust.biz.services.as.impl.AsResultChargesViewVO;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.cmmn.exception.ApplicationException;
@@ -40,6 +37,9 @@ public class AfterPEXTestResultListServiceImpl extends EgovAbstractServiceImpl i
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AfterPEXTestResultListServiceImpl.class);
 
+	@Resource(name = "AfterPEXTestResultListMapper")
+	  private AfterPEXTestResultListMapper AfterPEXTestResultListMapper;
+
 	 @Resource(name = "ASManagementListMapper")
 	  private ASManagementListMapper ASManagementListMapper;
 
@@ -53,9 +53,36 @@ public class AfterPEXTestResultListServiceImpl extends EgovAbstractServiceImpl i
 	  private PosMapper posMapper;
 
 	  @Override
-	  public List<EgovMap> selectASManagementList(Map<String, Object> params) {
-	    return ASManagementListMapper.selectASManagementList(params);
+	  public List<EgovMap> searchPEXTestResultList(Map<String, Object> params) {
+	    return AfterPEXTestResultListMapper.searchPEXTestResultList(params);
 	  }
+
+	  @Override
+	  public int selRcdTms(Map<String, Object> params) {
+	    return AfterPEXTestResultListMapper.selRcdTms(params);
+	  }
+
+	  @Override
+	  public int chkRcdTms(Map<String, Object> params) {
+	    return AfterPEXTestResultListMapper.chkRcdTms(params);
+	  }
+
+	  @Override
+	  public String getSearchDtRange() {
+	    return AfterPEXTestResultListMapper.getSearchDtRange();
+	  }
+
+	  @Override
+	  public List<EgovMap> getPEXTestResultInfo(Map<String, Object> params) {
+	    return AfterPEXTestResultListMapper.getPEXTestResultInfo(params);
+	  }
+
+
+
+
+
+
+
 
 	  @Override
 	  public List<EgovMap> getAsDefectEntry(Map<String, Object> params) {
@@ -67,7 +94,7 @@ public class AfterPEXTestResultListServiceImpl extends EgovAbstractServiceImpl i
 	    return ASManagementListMapper.getASHistoryList(params);
 	  }
 
-	  @Override
+	 /* @Override
 	  public List<EgovMap> getASStockPrice(Map<String, Object> params) {
 	    return ASManagementListMapper.getASStockPrice(params);
 	  }
@@ -80,7 +107,7 @@ public class AfterPEXTestResultListServiceImpl extends EgovAbstractServiceImpl i
 	  @Override
 	  public List<EgovMap> getASFilterInfoOld(Map<String, Object> params) {
 	    return ASManagementListMapper.getASFilterInfoOld(params);
-	  }
+	  }*/
 
 	  @Override
 	  public List<EgovMap> getASReasonCode(Map<String, Object> params) {
@@ -107,7 +134,7 @@ public class AfterPEXTestResultListServiceImpl extends EgovAbstractServiceImpl i
 	    return ASManagementListMapper.getBrnchId(params);
 	  }
 
-	  @Override
+	  /*@Override
 	  public List<EgovMap> getCallLog(Map<String, Object> params) {
 	    return ASManagementListMapper.getCallLog(params);
 	  }
@@ -125,14 +152,11 @@ public class AfterPEXTestResultListServiceImpl extends EgovAbstractServiceImpl i
 	  @Override
 	  public EgovMap getStockPricebyStkID(Map<String, Object> params) {
 	    return ASManagementListMapper.selectStkPriceByStkID(params);
-	  }
+	  }*/
 
-	  @Override
-	  public List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params) {
-	    return ASManagementListMapper.getASRulstSVC0004DInfo(params);
-	  }
 
-	  @Override
+
+	  /*@Override
 	  public List<EgovMap> getErrMstList(Map<String, Object> params) {
 	    return ASManagementListMapper.getErrMstList(params);
 	  }
@@ -146,6 +170,11 @@ public class AfterPEXTestResultListServiceImpl extends EgovAbstractServiceImpl i
 	  public List<EgovMap> getSLUTN_CODE_List(Map<String, Object> params) {
 	    return ASManagementListMapper.getSLUTN_CODE_List(params);
 	  }
+
+	    @Override
+	  public List<EgovMap> getDEFECT_TYPE_List(Map<String, Object> params) {
+	    return ASManagementListMapper.getDEFECT_TYPE_List(params);
+	  }*/
 
 	  @Override
 	  public List<EgovMap> getDTAIL_DEFECT_List(Map<String, Object> params) {
@@ -162,10 +191,7 @@ public class AfterPEXTestResultListServiceImpl extends EgovAbstractServiceImpl i
 	    return ASManagementListMapper.getDEFECT_CODE_List(params);
 	  }
 
-	  @Override
-	  public List<EgovMap> getDEFECT_TYPE_List(Map<String, Object> params) {
-	    return ASManagementListMapper.getDEFECT_TYPE_List(params);
-	  }
+
 
 	  @Override
 	  public List<EgovMap> selectASDataInfo(Map<String, Object> params) {
@@ -264,7 +290,7 @@ public class AfterPEXTestResultListServiceImpl extends EgovAbstractServiceImpl i
 	    return rtnValue;
 	  }
 
-	  @Override
+	 /* @Override
 	  public boolean insertOptFlt(Map<String, Object> params) {
 	    LOGGER.debug(" ============= START INSERT MINERAL RECORD ============= ");
 	    Map mp = (Map) params.get("asResultM");
@@ -337,7 +363,7 @@ public class AfterPEXTestResultListServiceImpl extends EgovAbstractServiceImpl i
 	  @Override
 	  public List<EgovMap> getfltConfLst() {
 	    return ASManagementListMapper.getfltConfLst();
-	  }
+	  }*/
 
 	  @Override
 	  public int getSAL87ConfigId(String params) {
@@ -3303,25 +3329,14 @@ public class AfterPEXTestResultListServiceImpl extends EgovAbstractServiceImpl i
 	    return ASManagementListMapper.getInHseLmtDy();
 	  }
 
-	  @Override
-	  public int selRcdTms(Map<String, Object> params) {
-	    return ASManagementListMapper.selRcdTms(params);
-	  }
+
 
 	  @Override
 	  public int chkPmtMap(Map<String, Object> params) {
 	    return ASManagementListMapper.chkPmtMap(params);
 	  }
 
-	  @Override
-	  public int chkRcdTms(Map<String, Object> params) {
-	    return ASManagementListMapper.chkRcdTms(params);
-	  }
 
-	  @Override
-	  public String getSearchDtRange() {
-	    return ASManagementListMapper.getSearchDtRange();
-	  }
 
 	  @Override
 	  public List<EgovMap> selectAsTyp() {
@@ -3348,7 +3363,7 @@ public class AfterPEXTestResultListServiceImpl extends EgovAbstractServiceImpl i
 	    return ASManagementListMapper.selectTimePick();
 	  }
 
-	  @Override
+	 /* @Override
 	  public List<EgovMap> selectLbrFeeChr() {
 	    return ASManagementListMapper.selectLbrFeeChr();
 	  }
@@ -3366,7 +3381,7 @@ public class AfterPEXTestResultListServiceImpl extends EgovAbstractServiceImpl i
 	  @Override
 	  public List<EgovMap> getASEntryCommission(Map<String, Object> params) {
 	    return ASManagementListMapper.getASEntryCommission(params);
-	  }
+	  }*/
 
 	  @Override
 	  public List<EgovMap> getDftTyp(Map<String, Object> params) {
@@ -3421,7 +3436,7 @@ public class AfterPEXTestResultListServiceImpl extends EgovAbstractServiceImpl i
 	          }
 
 	          // ONGHC ADD FOR OPTIONAL FILTER
-	          boolean rst = this.insertOptFlt(params);
+	          //boolean rst = this.insertOptFlt(params);
 
 	          // KR-OHK Barcode Save Start
 	          Map<String, Object> setmap = new HashMap();
@@ -4108,7 +4123,7 @@ public class AfterPEXTestResultListServiceImpl extends EgovAbstractServiceImpl i
 	    EgovMap returnemp = this.asResult_insert(params);
 	    returnemp.put("NEW_AS_RESULT_NO", NEW_AS_RESULT_NO);
 
-	    boolean rst = this.insertOptFlt(params);
+	    //boolean rst = this.insertOptFlt(params);
 
 	    // KR-OHK Barcode Save Start
 	    Map<String, Object> setmapEdit = new HashMap();

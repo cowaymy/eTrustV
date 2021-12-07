@@ -1648,6 +1648,18 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     // START INSERT SELAS ORDER EXCHANGE RECORD
     orderRequestMapper.insertSalesOrderExchange(orderExchangeMasterVO);
 
+    //ADDED BY KEYI 20211201 AFTER PEX TEXT RESULT
+    // IF PEX REASON CODE = SOEXC002 SOEXC014 SOEXC015 SOEXC017, INSERT TO PEX TEST RESULT
+    if(orderExchangeMasterVO.getSoExchgResnId() == 254 || orderExchangeMasterVO.getSoExchgResnId() == 3344
+    		|| orderExchangeMasterVO.getSoExchgResnId() == 3345 || orderExchangeMasterVO.getSoExchgResnId() == 3347)
+    {
+    	int PTRStusId = 8; //PEX TEST RESULT STATUS INACTIVE, TURN ACTIVE AFTER INSTALLATION COMPLETE
+    	String PTRNo = orderRegisterMapper.selectDocNo(DocTypeConstants.PTR_NO); //GET PEX_TEST_RESULT_NO
+    	orderExchangeMasterVO.setPTRStusId(PTRStusId);
+    	orderExchangeMasterVO.setPTRNo(PTRNo);
+    	orderRequestMapper.insertPEXTestResult(orderExchangeMasterVO); //INSERT TO SVC0125D
+    }
+
     if (orderExchangeMasterVO.getSoCurStusId() == 24) { // BEFORE INSTALLATION
       params.put("callEntryId", orderExchangeMasterVO.getSoExchgOldCallEntryId()); // SET OLD CALL ENTRY ID
 

@@ -10,17 +10,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("AfterPEXTestResultListMapper")
 public interface AfterPEXTestResultListMapper {
 
-	  List<EgovMap> selectASManagementList(Map<String, Object> params);
+	  List<EgovMap> searchPEXTestResultList(Map<String, Object> params);
 
 	  List<EgovMap> getAsDefectEntry(Map<String, Object> params);
 
 	  EgovMap selectOrderBasicInfo(Map<String, Object> params);
 
-	  List<EgovMap> getErrMstList(Map<String, Object> params);
+	  int selRcdTms(Map<String, Object> params);
 
-	  List<EgovMap> getErrDetilList(Map<String, Object> params);
-
-	  List<EgovMap> getSLUTN_CODE_List(Map<String, Object> params);
+	  int chkRcdTms(Map<String, Object> params);
 
 	  List<EgovMap> getDTAIL_DEFECT_List(Map<String, Object> params);
 
@@ -28,7 +26,21 @@ public interface AfterPEXTestResultListMapper {
 
 	  List<EgovMap> getDEFECT_CODE_List(Map<String, Object> params);
 
-	  List<EgovMap> getDEFECT_TYPE_List(Map<String, Object> params);
+	  List<EgovMap> getPEXTestResultInfo(Map<String, Object> params);
+
+
+
+
+
+
+
+	/*  List<EgovMap> getErrMstList(Map<String, Object> params);
+
+	  List<EgovMap> getErrDetilList(Map<String, Object> params);
+
+	  List<EgovMap> getSLUTN_CODE_List(Map<String, Object> params);
+
+	  List<EgovMap> getDEFECT_TYPE_List(Map<String, Object> params);*/
 
 	  List<EgovMap> selectASDataInfo(Map<String, Object> params);
 
@@ -40,9 +52,9 @@ public interface AfterPEXTestResultListMapper {
 
 	  EgovMap getMemberBymemberID(Map<String, Object> params);
 
-	  EgovMap spFilterClaimCheck(Map<String, Object> params);
+	/*  EgovMap spFilterClaimCheck(Map<String, Object> params);
 
-	  EgovMap selectStkPriceByStkID(Map<String, Object> params);
+	  EgovMap selectStkPriceByStkID(Map<String, Object> params);*/
 
 	  EgovMap selASEntryView(Map<String, Object> params);
 
@@ -70,11 +82,11 @@ public interface AfterPEXTestResultListMapper {
 
 	  List<EgovMap> getASHistoryInfo(Map<String, Object> params);
 
-	  List<EgovMap> getASStockPrice(Map<String, Object> params);
+	 /* List<EgovMap> getASStockPrice(Map<String, Object> params);
 
 	  List<EgovMap> getASFilterInfo(Map<String, Object> params);
 
-	  List<EgovMap> getASFilterInfoOld(Map<String, Object> params);
+	  List<EgovMap> getASFilterInfoOld(Map<String, Object> params);*/
 
 	  List<EgovMap> getASReasonCode(Map<String, Object> params);
 
@@ -82,15 +94,15 @@ public interface AfterPEXTestResultListMapper {
 
 	  List<EgovMap> getASReasonCode2(Map<String, Object> params);
 
-	  List<EgovMap> getCallLog(Map<String, Object> params);
+	  /*List<EgovMap> getCallLog(Map<String, Object> params);
 
-	  List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params);
+	  List<EgovMap> getASRulstEditFilterInfo(Map<String, Object> params);*/
 
-	  List<EgovMap> getASRulstEditFilterInfo(Map<String, Object> params);
+
 
 	  EgovMap asResult_insert(Map<String, Object> params);
 
-	  int update_Filter_SAL0087D(Map<String, Object> params);
+	  /*int update_Filter_SAL0087D(Map<String, Object> params);*/
 
 	  int insertSVC0004D(Map<String, Object> params);
 
@@ -296,8 +308,6 @@ public interface AfterPEXTestResultListMapper {
 
 	  String getInHseLmtDy();
 
-	  int selRcdTms(Map<String, Object> params);
-
 	  int chkPmtMap(Map<String, Object> params);
 
 	  int bckupPAY0252T(Map<String, Object> params);
@@ -305,8 +315,6 @@ public interface AfterPEXTestResultListMapper {
 	  int rmvPAY0252T(Map<String, Object> params);
 
 	  int updPAY0081D(Map<String, Object> params);
-
-	  int chkRcdTms(Map<String, Object> params);
 
 	  String getFltNm(String params);
 
@@ -322,13 +330,13 @@ public interface AfterPEXTestResultListMapper {
 
 	  List<EgovMap> selectTimePick();
 
-	  List<EgovMap> selectLbrFeeChr();
+	/*  List<EgovMap> selectLbrFeeChr();
 
 	  List<EgovMap> selectFltQty();
 
 	  List<EgovMap> selectFltPmtTyp();
 
-	  List<EgovMap> getASEntryCommission(Map<String, Object> params);
+	  List<EgovMap> getASEntryCommission(Map<String, Object> params);*/
 
 	  List<EgovMap> getDftTyp(Map<String, Object> params);
 
