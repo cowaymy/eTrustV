@@ -66,15 +66,15 @@ var columnLayout = [
                     {dataField: "matcd",headerText :"Mat.Code"          ,width:120   ,height:30 , visible:true, editable : false},
                     {dataField: "matname",headerText :"Mat.Name"          ,width:220   ,height:30 , visible:true, editable : false},
                     {dataField: "basicqty",headerText :"Basic Qty"          ,width:120   ,height:30 , visible:true, editable : true},
-                    {dataField: "reoderpoint",headerText :"ReOrderPoint (%)"          ,width:140   ,height:30 , visible:true ,editable : true},
-                    {dataField: "additional",headerText :"Additional"          ,width:120   ,height:30 , visible:false,editable : true},
-                    {dataField: "loclevl",headerText :"Location Level"  ,width:120   ,height:30 , visible:false ,
+                    {dataField: "reoderpoint",headerText :"ReOrderPoint"          ,width:140   ,height:30 , visible:true ,editable : true},
+                    //{dataField: "additional",headerText :"Additional"          ,width:120   ,height:30 , visible:false,editable : true},
+                    /* {dataField: "loclevl",headerText :"Location Level"  ,width:120   ,height:30 , visible:false ,
                         editRenderer : {
                             type : "ComboBoxRenderer",
                             showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                             list : groupList
                         }
-                    },
+                    } ,*/
                     {dataField: "useyn",headerText :"Use YN"  ,width:80   ,height:30 , visible:true ,
                         editRenderer : {
                             type : "ComboBoxRenderer",
@@ -349,8 +349,11 @@ if(AUIGrid.isCreated(mstGridID)) {
 	   if( $.trim(n)  =='Mat.Name')            fil="matname";
 	   if($.trim(n)  =='Basic Qty')             fil="basicqty";
 	   if( $.trim(n) =='ReOrderPoint')         fil="reoderpoint";
-	   if( $.trim(n) =='Additional')             fil="additional";
-	   if( $.trim(n) =='Location Level')       fil="loclevl";
+	  // if( $.trim(n) =='Additional')             fil="additional";
+	  // if( $.trim(n) =='Location Level')       fil="loclevl";
+	   if( $.trim(n) =='Use YN')                fil="useyn";
+
+
 
 
 	   if  ($.trim(n)  !='No.'){
@@ -376,8 +379,9 @@ if(AUIGrid.isCreated(mstGridID)) {
           cvtJsonData  = cvtJsonData.replace(/Mat.Name/g, 'matname' );
           cvtJsonData  = cvtJsonData.replace(/Basic Qty/g, 'basicqty' );
           cvtJsonData  = cvtJsonData.replace(/ReOrderPoint/g, 'reoderpoint' );
-          cvtJsonData  = cvtJsonData.replace(/Additional/g, 'additional' );
-          cvtJsonData  = cvtJsonData.replace(/Location Level/g, 'loclevl' );
+          //cvtJsonData  = cvtJsonData.replace(/Additional/g, 'additional' );
+         // cvtJsonData  = cvtJsonData.replace(/Location Level/g, 'loclevl' );
+          cvtJsonData  = cvtJsonData.replace(/Use YN/g, 'useyn' );
 
    // 그리드에 데이터 삽입
    AUIGrid.setGridData(mstGridID, JSON.parse(cvtJsonData));
