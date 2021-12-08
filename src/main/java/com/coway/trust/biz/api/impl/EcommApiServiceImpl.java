@@ -267,7 +267,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         // Celeste: when product category is 5706/5707, insert into HMC0110D and setBundleID in SAL0001D with HMC0110D ord_seq_no
         String prdCat = reqPrm.get("prodCat").toString();
         String stkCat = hcOrderRegisterMapper.getProductCategory(reqPrm.get("product").toString());
-        if(prdCat != null && (prdCat.equals("MT")))
+        if(prdCat != null && (prdCat.equals("Matteress")))
 		{
             HcOrderVO hcOrderVO = orderVO.getHcOrderVO();
             //salesOrderMVO.setBndlId(Integer.valueOf(hcOrderVO.getBndlNo().toString()));
