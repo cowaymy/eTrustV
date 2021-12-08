@@ -86,6 +86,12 @@ function fn_updateUserPasswd(){
 	    Common.alert("New Password cannot be same.");
 	    return;
 	}
+	// LaiKW - 20211202 - ITGC Password configuration, special character required for new passwords
+    var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    if(!format.test($("#passwordForm #newPasswd").val())) {
+        Common.alert("Special character is required.");
+        return;
+    }
     if($("#passwordForm #newPasswd").val() == "" || typeof($("#passwordForm #newPasswd").val()) == "undefined"){
         Common.alert("<spring:message code='sys.msg.necessary' arguments='Password' htmlEscape='false'/>");
         return;
