@@ -40,7 +40,7 @@
                     AND A.HS_LOSE_CDC_CODE = #{searchCDC}
                     </if>
                  <if test="searchBranchCb != null and searchBranchCb != ''">
-                        AND A.HS_LOSE_LOCL_ID = #{searchBranchCb}
+                        AND A.HS_LOSE_LOCL_CODE = #{searchBranchCb}
                  </if>
 
 		)
