@@ -197,7 +197,7 @@ public class BudgetController {
         // Hardcode for Ivan Liew and Shawn to view Cody Planning - 20210517
         if(sessionVO.getUserId() == 379 || sessionVO.getUserId() == 22141) {
             params.put("costCentr2", "D1201");
-            
+
             // Hardcode for Shaw to view Homecare (Changed to service innovation) (to remove end of 2021) - 20210914
             if(sessionVO.getUserId() == 22141) {
                 params.put("costCentr3", "F1001");
@@ -218,6 +218,14 @@ public class BudgetController {
             } else {
                 params.put("flg", "0");
             }
+        }
+
+        if(!params.containsKey("costCentr2")) {
+            params.put("costCentr2", "");
+        }
+
+        if(!params.containsKey("costCentr3")) {
+            params.put("costCentr3", "");
         }
 
         LOGGER.debug("budgetController :: selectMonthlyBudgetList");
@@ -402,7 +410,7 @@ public class BudgetController {
         // Hardcode for Ivan Liew and Shawn to view Cody Planning - 20210517
         if(sessionVO.getUserId() == 379 || sessionVO.getUserId() == 22141) {
             params.put("costCentr2", "D1201");
-            
+
             // Hardcode for Shaw to view Homecare (Changed to service innovation) (to remove end of 2021) - 20210914
             if(sessionVO.getUserId() == 22141) {
                 params.put("costCentr3", "F1001");
@@ -429,6 +437,14 @@ public class BudgetController {
 		}
 
 		List<EgovMap> adjustmentList = null;
+
+		if(!params.containsKey("costCentr2")) {
+            params.put("costCentr2", "");
+        }
+
+        if(!params.containsKey("costCentr3")) {
+            params.put("costCentr3", "");
+        }
 
 		adjustmentList= budgetService.selectAdjustmentList(params);
 
@@ -977,7 +993,7 @@ public class BudgetController {
         // Hardcode for Ivan Liew and Shawn to view Cody Planning - 20210517
         if(sessionVO.getUserId() == 379 || sessionVO.getUserId() == 22141) {
             params.put("costCentr2", "D1201");
-            
+
             // Hardcode for Shaw to view Homecare (Changed to service innovation) (to remove end of 2021) - 20210914
             if(sessionVO.getUserId() == 22141) {
                 params.put("costCentr3", "F1001");
@@ -987,6 +1003,14 @@ public class BudgetController {
         // Hardcode for Ee Vonne and Lee Ting to view D1303 - 20210623
         if(sessionVO.getUserId() == 18748 || sessionVO.getUserId() == 14384) {
             params.put("costCentr2", "D1303");
+        }
+
+        if(!params.containsKey("costCentr2")) {
+            params.put("costCentr2", "");
+        }
+
+        if(!params.containsKey("costCentr3")) {
+            params.put("costCentr3", "");
         }
 
 		LOGGER.debug("params =====================================>>  " + params);
