@@ -340,10 +340,11 @@ WHEN NOT MATCHED THEN
     WHERE A.BUDGET_PLAN_YEAR =#{budgetPlanYear}
     <!-- Default cost center values with cost center disabled on screen -->
     <if test="stCostCentr == null or stCostCentr == '' ">
-        <if test="(costCentr != null and costCentr != '') and (costCentr2 == null or costCentr2 == '') and (costCentr3 == null and costCentr3 == '')" >
+    /* stCostCentr == null or stCostCentr == '' */
+        <if test="(costCentr != null and costCentr != '') and (costCentr2 == null or costCentr2 == '') and (costCentr3 == null or costCentr3 == '')" >
 	        AND A.COST_CENTR = #{costCentr}
 	    </if>
-	    <if test="(costCentr2 != null and costCentr2 != '') and (costCentr3 == null and costCentr3 == '')" >
+	    <if test="(costCentr2 != null and costCentr2 != '') and (costCentr3 == null or costCentr3 == '')" >
 	        AND A.COST_CENTR in (#{costCentr}, #{costCentr2})
 	    </if>
 	    <if test="costCentr3 != null and costCentr3 != '' " >
@@ -351,6 +352,7 @@ WHEN NOT MATCHED THEN
         </if>
     </if>
     <if test="(costCentr == null or costCentr == '') and flg == 1 ">
+    /* (costCentr == null or costCentr == '') and flg == 1 */
         <if test="stCostCentr != null and stCostCentr != '' " >
 	        <if test="edCostCentr != null and edCostCentr != '' ">
 	            AND A.COST_CENTR BETWEEN #{stCostCentr} AND #{edCostCentr}
