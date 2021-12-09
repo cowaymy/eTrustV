@@ -466,10 +466,15 @@ console.log(saveForm);
 		  var todayYY = Number(TODAY_DD.substr(6, 4));
 
 
-		  if((Number($("#txtTrxDt").val().substr(3, 2)) !=todayMM) || (Number($("#txtTrxDt").val().substr(6, 4)) !=todayYY)){
+		  if((Number($("#txtTrxDt").val().substr(3, 2)) !=todayMM) && (Number($("#txtTrxDt").val().substr(6, 4)) ==todayYY)){
 			  $("#txtTrxDt").val("");
 			  var msg = "Transaction Date only can choose with current month. ";
 			    Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+		  }
+		  else if((Number($("#txtTrxDt").val().substr(6, 4)) !=todayYY)){
+			  $("#txtTrxDt").val("");
+              var msg = "Transaction Date only can choose with current year. ";
+                Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
 		  }
 
 
