@@ -19,6 +19,7 @@
 <script type="text/javaScript">
   var myGridIDPop;
   var myGridIDPopAdd;
+  var TODAY_DD      = "${toDay}";
 
   var deleteRowIdx,deleteRow;
 
@@ -457,6 +458,23 @@ console.log(saveForm);
   } */
 
   $(function(){
+
+
+	  $('#txtTrxDt').change(function (event) {
+
+		  var todayMM = Number(TODAY_DD.substr(3, 2));
+		  var todayYY = Number(TODAY_DD.substr(6, 4));
+
+
+		  if((Number($("#txtTrxDt").val().substr(3, 2)) !=todayMM) || (Number($("#txtTrxDt").val().substr(6, 4)) !=todayYY)){
+			  $("#txtTrxDt").val("");
+			  var msg = "Transaction Date only can choose with current month. ";
+			    Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", '');
+		  }
+
+
+	   });
+
       $('#cboMovTyp').change(function(){
           //fn_checkQty();
           if($('#cboMovTyp').val() == ""){
