@@ -735,7 +735,7 @@
             TO_CHAR(A.ADV_PRD_TO, 'DD/MM/YYYY') ADV_PRD_TO,
             TO_CHAR(A.CRT_DT, 'DD/MM/YYYY') CRT_DT,
             TO_CHAR(E.INVC_DT, 'DD/MM/YYYY') INVC_DT,
-            TO_CHAR(D.REQST_DT, 'DD/MM/YYYY') REQST_DT
+            TO_CHAR(D.REQST_DT, 'DD/MM/YYYY') REQST_DT,
             A.CRT_USER_ID,
             D.REQST_USER_ID,
             B.USER_NAME,
