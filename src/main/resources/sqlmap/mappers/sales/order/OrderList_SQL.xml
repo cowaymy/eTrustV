@@ -188,7 +188,9 @@
     SELECT T.APP_TYPE_CODE
          , T.APP_TYPE_NAME
          , T.CRT_USER_ID
-         , T.CUST_IC
+         , CASE WHEN LENGTH(T.CUST_IC) = 12 THEN REGEXP_REPLACE(SUBSTR(T.CUST_IC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(T.CUST_IC, 9,12)
+            ELSE T.CUST_IC
+            END CUST_IC
          , T.CUST_NAME
          , T.CUST_VA_NO
          , T.DSC_BRNCH_ID
@@ -1464,7 +1466,9 @@
     SELECT T.APP_TYPE_CODE
          , T.APP_TYPE_NAME
          , T.CRT_USER_ID
-         , T.CUST_IC
+         , CASE WHEN LENGTH(T.CUST_IC) = 12 THEN REGEXP_REPLACE(SUBSTR(T.CUST_IC, 0,8),'[A-Za-z0-9]','x') || SUBSTR(T.CUST_IC, 9,12)
+            ELSE T.CUST_IC
+            END CUST_IC
          , T.CUST_NAME
          , T.CUST_VA_NO
          , T.DSC_BRNCH_ID

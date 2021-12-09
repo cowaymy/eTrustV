@@ -1,3 +1,168 @@
+<script type="text/javaScript" language="javascript">
+	//Masking pen (display last 4)
+	var oriNric = '${orderDetail.mailingInfo.mailCntNric}';
+	var oriMobileNo = '${orderDetail.mailingInfo.mailCntTelM}';
+	var oriEmail = '${orderDetail.mailingInfo.mailCntEmail}';
+	var oriFaxNo = '${orderDetail.mailingInfo.mailCntTelF}';
+	var oriOfficeNo = '${orderDetail.mailingInfo.mailCntTelO}';
+	var oriHouseNo = '${orderDetail.mailingInfo.mailCntTelR}';
+	var oriMainEmail = '${orderDetail.mailingInfo.mailCntEmail}';
+	var oriAddEmail = '${orderDetail.mailingInfo.mailCntEmailAdd}';
+
+	$(document).ready(function(){
+
+	    var maskedNric = oriNric.substr(-4).padStart(oriNric.length, '*');
+	    var maskedMobileNo = oriMobileNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
+	    var maskedEmail = "";
+
+	    var prefix= oriEmail.substring(0, oriEmail .lastIndexOf("@"));
+	    var postfix= oriEmail.substring(oriEmail .lastIndexOf("@"));
+	    for(var i=0; i<prefix.length; i++){
+	        if(i == 0 || i == prefix.length - 1) {
+	            maskedEmail = maskedEmail + prefix[i].toString();
+	        }
+	        else {
+	            maskedEmail = maskedEmail + "*";
+	        }
+	    }
+	    maskedEmail =maskedEmail +postfix;
+
+	    var maskedFaxNo = oriFaxNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
+	    var maskedOfficeNo= oriOfficeNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
+	    var maskedHouseNo= oriHouseNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
+	    var maskedMainEmail = "";
+
+	    var prefix= oriMainEmail.substring(0, oriMainEmail .lastIndexOf("@"));
+        var postfix= oriMainEmail.substring(oriMainEmail .lastIndexOf("@"));
+        for(var i=0; i<prefix.length; i++){
+            if(i == 0 || i == prefix.length - 1) {
+            	maskedMainEmail = maskedMainEmail + prefix[i].toString();
+            }
+            else {
+            	maskedMainEmail = maskedMainEmail + "*";
+            }
+        }
+        maskedMainEmail =maskedMainEmail +postfix;
+
+        var maskedAddEmail = "";
+
+        var prefix= oriAddEmail.substring(0, oriAddEmail .lastIndexOf("@"));
+        var postfix= oriAddEmail.substring(oriAddEmail .lastIndexOf("@"));
+        for(var i=0; i<prefix.length; i++){
+            if(i == 0 || i == prefix.length - 1) {
+            	maskedAddEmail = maskedAddEmail + prefix[i].toString();
+            }
+            else {
+            	maskedAddEmail = maskedAddEmail + "*";
+            }
+        }
+        maskedAddEmail =maskedAddEmail +postfix;
+
+        if(oriNric.replace(/\s/g,"") != "")
+        {
+        	$("#spanMailNric").html(maskedNric);
+            // Appear NRIC on hover over field
+            $("#spanMailNric").hover(function() {
+                $("#spanMailNric").html(oriNric);
+            }).mouseout(function() {
+                $("#spanMailNric").html(maskedNric);
+            });
+        }
+        else{
+        	$("#imgHoverNric").hide();
+        }
+        if(oriMobileNo.replace(/\s/g,"") != "")
+        {
+        	$("#spanMailMobileNo").html(maskedMobileNo);
+            // Appear Mobile No on hover over field
+            $("#spanMailMobileNo").hover(function() {
+                $("#spanMailMobileNo").html(oriMobileNo);
+            }).mouseout(function() {
+                $("#spanMailMobileNo").html(maskedMobileNo);
+            });
+        }else{
+            $("#imgHoverMobileNo").hide();
+        }
+        if(oriEmail.replace(/\s/g,"") != "")
+        {
+        	$("#spanMailEmail").html(maskedEmail);
+            // Appear Email on hover over field
+            $("#spanMailEmail").hover(function() {
+                $("#spanMailEmail").html(oriEmail);
+            }).mouseout(function() {
+                $("#spanMailEmail").html(maskedEmail);
+            });
+        }else{
+            $("#imgHoverEmail").hide();
+        }
+        if(oriFaxNo.replace(/\s/g,"") != "")
+        {
+        	$("#spanMailFaxNo").html(maskedFaxNo);
+            // Appear Fax No on hover over field
+            $("#spanMailFaxNo").hover(function() {
+                $("#spanMailFaxNo").html(oriFaxNo);
+            }).mouseout(function() {
+                $("#spanMailFaxNo").html(maskedFaxNo);
+            });
+        }
+        else{
+       	   $("#imgHoverFax").hide();
+        }
+        if(oriOfficeNo.replace(/\s/g,"") != "")
+        {
+		    $("#spanMailOfficeNo").html(maskedOfficeNo);
+		    // Appear Office No on hover over field
+		    $("#spanMailOfficeNo").hover(function() {
+		        $("#spanMailOfficeNo").html(oriOfficeNo);
+		    }).mouseout(function() {
+		        $("#spanMailOfficeNo").html(maskedOfficeNo);
+		    });
+        }
+        else{
+        	$("#imgHoverOfficeNo").hide();
+        }
+        if(oriHouseNo.replace(/\s/g,"") != "")
+        {
+		    $("#spanMailHouseNo").html(maskedHouseNo);
+		    // Appear House No on hover over field
+		    $("#spanMailHouseNo").hover(function() {
+		        $("#spanMailHouseNo").html(oriHouseNo);
+		    }).mouseout(function() {
+		        $("#spanMailHouseNo").html(maskedHouseNo);
+		    });
+        }
+        else{
+                $("#imgHoverHouseNo").hide();
+        }
+        if(oriMainEmail.replace(/\s/g,"") != "")
+        {
+		    $("#spanMailMainEmail").html(maskedMainEmail);
+		    // Appear House No on hover over field
+		    $("#spanMailMainEmail").hover(function() {
+		        $("#spanMailMainEmail").html(oriMainEmail);
+		    }).mouseout(function() {
+		        $("#spanMailMainEmail").html(maskedMainEmail);
+		    });
+        }
+        else{
+        	$("#imgHoverMainEmail").hide();
+        }
+        if(oriAddEmail.replace(/\s/g,"") != "")
+        {
+		    $("#spanMailAddEmail").html(maskedAddEmail);
+		    // Appear House No on hover over field
+		    $("#spanMailAddEmail").hover(function() {
+		        $("#spanMailAddEmail").html(oriAddEmail);
+		    }).mouseout(function() {
+		        $("#spanMailAddEmail").html(maskedAddEmail);
+		    });
+        }
+        else{
+        	$("#imgHoverAddEmail").hide();
+        }
+	});
+</script>
+
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -76,9 +241,13 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.email" /></th>
-    <td><span>${orderDetail.mailingInfo.mailCntEmail}</span></td>
+    <td><a href="#" class="search_btn" id="imgHoverMainEmail"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id=spanMailMainEmail>${orderDetail.mailingInfo.mailCntEmail}</span>
+    </td>
     <th scope="row"><spring:message code="pay.head.additionalEmail" /></th>
-    <td><span>${orderDetail.mailingInfo.mailCntEmailAdd}</span></td>
+    <td><a href="#" class="search_btn" id="imgHoverAddEmail"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id="spanMailAddEmail">${orderDetail.mailingInfo.mailCntEmailAdd}</span>
+    </td>
     <th scope="row"></th>
     <td></td>
 </tr>
@@ -104,19 +273,30 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.contactNRIC" /></th>
-    <td><span>${orderDetail.mailingInfo.mailCntNric}</span></td>
+    <td><a href="#" class="search_btn" id="imgHoverNric"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id="spanMailNric">${orderDetail.mailingInfo.mailCntNric}</span>
+    </td>
     <th scope="row"><spring:message code="sal.text.email" /></th>
-    <td><span>${orderDetail.mailingInfo.mailCntEmail}</span></td>
+    <td><a href="#" class="search_btn" id="imgHoverEmail"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id="spanMailEmail">${orderDetail.mailingInfo.mailCntEmail}</span>
+    </td>
     <th scope="row"><spring:message code="sal.text.faxNo" /></th>
-    <td><span>${orderDetail.mailingInfo.mailCntTelF}</span></td>
+    <td><a href="#" class="search_btn" id="imgHoverFax"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id="spanMailFaxNo">${orderDetail.mailingInfo.mailCntTelF}</span>
+    </td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.mobileNo" /></th>
-    <td><span>${orderDetail.mailingInfo.mailCntTelM}</span></td>
+    <td><a href="#" class="search_btn" id="imgHoverMobileNo"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id="spanMailMobileNo">${orderDetail.mailingInfo.mailCntTelM}</span>
+    </td>
     <th scope="row"><spring:message code="sal.text.officeNo" /></th>
-    <td><span>${orderDetail.mailingInfo.mailCntTelO}</span></td>
+        <td><a href="#" class="search_btn" id="imgHoverOfficeNo"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+    <span id="spanMailOfficeNo">${orderDetail.mailingInfo.mailCntTelO}</span>
+    </td>
     <th scope="row"><spring:message code="sal.title.text.houseNo" /></th>
-    <td><span>${orderDetail.mailingInfo.mailCntTelR}</span></td>
+    <td><a href="#" class="search_btn" id="imgHoverHouseNo"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id="spanMailHouseNo">${orderDetail.mailingInfo.mailCntTelR}</span></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.post" /></th>

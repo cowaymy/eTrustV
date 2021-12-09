@@ -1,3 +1,116 @@
+<script type="text/javaScript" language="javascript">
+	//Masking pen (display last 4)
+	var oriNric = '${orderDetail.installationInfo.instCntNric}';
+	var oriMobileNo = '${orderDetail.installationInfo.instCntTelM}';
+	var oriEmail = '${orderDetail.installationInfo.instCntEmail}';
+	var oriFaxNo = '${orderDetail.installationInfo.instCntTelF}';
+	var oriOfficeNo = '${orderDetail.installationInfo.instCntTelO}';
+	var oriHouseNo = '${orderDetail.installationInfo.instCntTelR}';
+
+	$(document).ready(function(){
+
+	    var maskedNric = oriNric.substr(-4).padStart(oriNric.length, '*');
+	    var maskedMobileNo = oriMobileNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
+	    var maskedEmail = "";
+
+	    var prefix= oriEmail.substring(0, oriEmail .lastIndexOf("@"));
+	    var postfix= oriEmail.substring(oriEmail .lastIndexOf("@"));
+	    for(var i=0; i<prefix.length; i++){
+	        if(i == 0 || i == prefix.length - 1) {
+	            maskedEmail = maskedEmail + prefix[i].toString();
+	        }
+	        else {
+	            maskedEmail = maskedEmail + "*";
+	        }
+	    }
+	    maskedEmail =maskedEmail +postfix;
+
+	    var maskedFaxNo = oriFaxNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
+	    var maskedOfficeNo= oriOfficeNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
+	    var maskedHouseNo= oriHouseNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
+
+	    if(oriNric.replace(/\s/g,"") != "")
+        {
+		    $("#spanInstNric").html(maskedNric);
+		    // Appear NRIC on hover over field
+		    $("#spanInstNric").hover(function() {
+		        $("#spanInstNric").html(oriNric);
+		    }).mouseout(function() {
+		        $("#spanInstNric").html(maskedNric);
+		    });
+        }
+	    else{
+	    	$("#imgHoverInstNric").hide();
+	    }
+	    if(oriMobileNo.replace(/\s/g,"") != "")
+        {
+		    $("#spanInstMobileNo").html(maskedMobileNo);
+		    // Appear Mobile No on hover over field
+		    $("#spanInstMobileNo").hover(function() {
+		        $("#spanInstMobileNo").html(oriMobileNo);
+		    }).mouseout(function() {
+		        $("#spanInstMobileNo").html(maskedMobileNo);
+		    });
+        }
+	    else{
+	    	$("#imgHoverInstMobileNo").hide();
+	    }
+	    if(oriEmail.replace(/\s/g,"") != "")
+        {
+		    $("#spanInstEmail").html(maskedEmail);
+		    // Appear Email on hover over field
+		    $("#spanInstEmail").hover(function() {
+		        $("#spanInstEmail").html(oriEmail);
+		    }).mouseout(function() {
+		        $("#spanInstEmail").html(maskedEmail);
+		    });
+        }
+	    else{
+	    	$("#imgHoverInstEmail").hide();
+	    }
+	    if(oriFaxNo.replace(/\s/g,"") != "")
+        {
+		    $("#spanInstFaxNo").html(maskedFaxNo);
+		    // Appear Fax No on hover over field
+		    $("#spanInstFaxNo").hover(function() {
+		        $("#spanInstFaxNo").html(oriFaxNo);
+		    }).mouseout(function() {
+		        $("#spanInstFaxNo").html(maskedFaxNo);
+		    });
+        }
+	    else{
+	    	$("#imgHoverInstFaxNo").hide();
+	    }
+	    if(oriOfficeNo.replace(/\s/g,"") != "")
+        {
+		    $("#spanInstOfficeNo").html(maskedOfficeNo);
+		    // Appear Office No on hover over field
+		    $("#spanInstOfficeNo").hover(function() {
+		        $("#spanInstOfficeNo").html(oriOfficeNo);
+		    }).mouseout(function() {
+		        $("#spanInstOfficeNo").html(maskedOfficeNo);
+		    });
+        }
+	    else{
+	    	$("#imgHoverInstOfficeNo").hide();
+	    }
+	    if(oriHouseNo.replace(/\s/g,"") != "")
+        {
+		    $("#spanInstHouseNo").html(maskedHouseNo);
+		    // Appear House No on hover over field
+		    $("#spanInstHouseNo").hover(function() {
+		        $("#spanInstHouseNo").html(oriHouseNo);
+		    }).mouseout(function() {
+		        $("#spanInstHouseNo").html(maskedHouseNo);
+		    });
+        }
+	    else{
+	    	$("#imgHoverInstHouseNo").hide();
+	    }
+
+	});
+</script>
+
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -119,19 +232,25 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.contactNRIC" /></th>
-    <td><span>${orderDetail.installationInfo.instCntNric}</span></td>
+    <td><a href="#" class="search_btn" id="imgHoverInstNric"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id="spanInstNric">${orderDetail.installationInfo.instCntNric}</span></td>
     <th scope="row"><spring:message code="sal.text.email" /></th>
-    <td><span>${orderDetail.installationInfo.instCntEmail}</span></td>
+    <td><a href="#" class="search_btn" id="imgHoverInstEmail"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id="spanInstEmail">${orderDetail.installationInfo.instCntEmail}</span></td>
     <th scope="row"><spring:message code="sal.text.faxNo" /></th>
-    <td><span>${orderDetail.installationInfo.instCntTelF}</span></td>
+    <td><a href="#" class="search_btn" id="imgHoverInstFaxNo"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id="spanInstFaxNo">${orderDetail.installationInfo.instCntTelF}</span></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.mobileNo" /></th>
-    <td><span>${orderDetail.installationInfo.instCntTelM}</span></td>
+    <td><a href="#" class="search_btn" id="imgHoverInstMobileNo"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id=spanInstMobileNo>${orderDetail.installationInfo.instCntTelM}</span></td>
     <th scope="row"><spring:message code="sal.text.officeNo" /></th>
-    <td><span>${orderDetail.installationInfo.instCntTelO}</span></td>
+    <td><a href="#" class="search_btn" id="imgHoverInstOfficeNo"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id="spanInstOfficeNo">${orderDetail.installationInfo.instCntTelO}</span></td>
     <th scope="row"><spring:message code="sal.title.text.houseNo" /></th>
-    <td><span>${orderDetail.installationInfo.instCntTelR}</span></td>
+    <td><a href="#" class="search_btn" id="imgHoverInstHouseNo"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id="spanInstHouseNo">${orderDetail.installationInfo.instCntTelR}</span></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.post" /></th>
