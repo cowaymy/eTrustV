@@ -124,9 +124,9 @@ SELECT
 		            ,A.HS_LOSE_ITEM_DESC
 		            ,B.HS_LOSE_ITEM_UOM
 		            ,B.HS_LOSE_ITEM_OPR_YN
-		            ,A.HS_LOSE_ITEM_FCAST_QTY
+		            ,A.HS_LOSE_ITEM_REORD_QTY AS HS_LOSE_ITEM_FCAST_QTY
 		            ,L56.QTY -NVL(L75.BOOKING_QTY , 0) AVAILABLE_QTY
-		            ,CASE  WHEN  (HS_LOSE_ITEM_FCAST_QTY -  (L56.QTY -NVL(L75.BOOKING_QTY , 0))) > 0  THEN (HS_LOSE_ITEM_FCAST_QTY -  (L56.QTY -NVL(L75.BOOKING_QTY , 0)))
+		            ,CASE  WHEN  (HS_LOSE_ITEM_REORD_QTY -  (L56.QTY -NVL(L75.BOOKING_QTY , 0))) > 0  THEN (HS_LOSE_ITEM_REORD_QTY -  (L56.QTY -NVL(L75.BOOKING_QTY , 0)))
 		                   ELSE 0 END  AS DELIVER_QTY
 		             ,A.HS_LOSE_CDC_CODE
 		    FROM   LOG0108M A
@@ -480,10 +480,10 @@ SELECT
                     ,A.HS_LOSE_ITEM_DESC
                     ,B.HS_LOSE_ITEM_UOM
                     ,B.HS_LOSE_ITEM_OPR_YN
-                    ,A.HS_LOSE_ITEM_FCAST_QTY
+                    ,A.HS_LOSE_ITEM_REORD_QTY  AS HS_LOSE_ITEM_FCAST_QTY
                     ,REF_STO_NO
                     ,L56.QTY -NVL(L75.BOOKING_QTY , 0) AVAILABLE_QTY
-                    ,CASE  WHEN  (HS_LOSE_ITEM_FCAST_QTY -  (L56.QTY -NVL(L75.BOOKING_QTY , 0))) > 0  THEN (HS_LOSE_ITEM_FCAST_QTY -  (L56.QTY -NVL(L75.BOOKING_QTY , 0)))
+                    ,CASE  WHEN  (HS_LOSE_ITEM_REORD_QTY -  (L56.QTY -NVL(L75.BOOKING_QTY , 0))) > 0  THEN (HS_LOSE_ITEM_REORD_QTY -  (L56.QTY -NVL(L75.BOOKING_QTY , 0)))
                            ELSE 0 END  AS DELIVER_QTY
                     ,A.HS_LOSE_CDC_CODE
             FROM   LOG0108M A
