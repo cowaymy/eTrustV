@@ -30,6 +30,7 @@ import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -124,6 +125,7 @@ public class SrvItmMgmtListController {
     String br =  SrvItmMgmtListService.getBchDesc(params.get("cboBch").toString());
     String itmCde =  SrvItmMgmtListService.getItmCde(params.get("cboItm").toString());
     String itmDesc =  SrvItmMgmtListService.getItmDesc(params.get("cboItm").toString());
+    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
     List<EgovMap> srvItmList = SrvItmMgmtListService.searchSrvItmLst(params);
     String qty = srvItmList.size() > 0 ? srvItmList.get(0).get("qty").toString() : "0";
@@ -136,6 +138,7 @@ public class SrvItmMgmtListController {
     model.put("ITM_STK_CDE", itmCde);
     model.put("ITM_STK_DESC", itmDesc);
     model.put("QTY", qty);
+	model.put("toDay", toDay);
 
     return "services/sim/srvItmAddPop";
   }
