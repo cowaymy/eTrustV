@@ -111,7 +111,8 @@ $(document).ready(function(){
                 var isValid = true;
                 var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}.|\\":<>\?]/);
 
-                $("#basicDob").val(nricToDob(ic));
+                if('${result.nation}' == '1')
+	                $("#basicDob").val(nricToDob(ic));
 
 
                 console.log('existNric:' + existNric);
