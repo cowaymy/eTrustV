@@ -174,7 +174,7 @@ function fn_report(viewType){
 		applyDateFrom = $("#dpApplyDateFr").val();
 		applyDateTo = $("#dpApplyDateTo").val();
 
-        whereSQL += " AND (r.DD_APPLY_DT BETWEEN TO_DATE('"+applyDateFrom+"', 'dd/MM/YY') AND TO_DATE('"+applyDateTo+"', 'dd/MM/YY')+1 )";
+        whereSQL += " AND (r.DD_APPLY_DT BETWEEN TO_DATE('"+applyDateFrom+"', 'dd/MM/YY') AND TO_DATE('"+applyDateTo+"', 'dd/MM/YY') )";
     }
 
 	if($("#cmbSubmitBranch :selected").index() > 0){
