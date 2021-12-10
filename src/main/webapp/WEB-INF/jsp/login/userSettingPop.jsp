@@ -27,10 +27,18 @@ function chkPwd(str){
     var regPwd = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
     //var regPwd =/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/;
     if(regPwd.test(str)){
-        return true;
+        // LaiKW - 20211202 - ITGC Password configuration, special character required for new passwords
+        var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+        if(format.test(str)) {
+            return true;
+        } else {
+            Common.alert("Special character is required.");
+            return false;
+        }
+    } else {
+        Common.alert("6 ~ 20 digits in English and numbers");
+        return false;
     }
-
-    return false;
 }
 function chkEmail(str){
     var regStr = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
@@ -86,12 +94,6 @@ function fn_updateUserPasswd(){
 	    Common.alert("New Password cannot be same.");
 	    return;
 	}
-	// LaiKW - 20211202 - ITGC Password configuration, special character required for new passwords
-    var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
-    if(!format.test($("#passwordForm #newPasswd").val())) {
-        Common.alert("Special character is required.");
-        return;
-    }
     if($("#passwordForm #newPasswd").val() == "" || typeof($("#passwordForm #newPasswd").val()) == "undefined"){
         Common.alert("<spring:message code='sys.msg.necessary' arguments='Password' htmlEscape='false'/>");
         return;
@@ -105,7 +107,6 @@ function fn_updateUserPasswd(){
         return;
     }
     if(chkPwd($("#passwordForm #confirmPasswd").val()) == false){
-        Common.alert("6 ~ 20 digits in English and numbers");
         return;
     }
 
