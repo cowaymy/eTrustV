@@ -104,16 +104,10 @@ public class ResearchDevelopmentController {
 	    model.put("TEST_RESULT_NO", (String) params.get("testResultNo"));
 	    model.put("SO_EXCHG_ID", (String) params.get("soExchgId"));
 	    model.put("RCD_TMS", (String) params.get("rcdTms"));
+	    model.put("PROD_CDE", (String) params.get("prodCde"));
+	    model.put("PROD_CAT", (String) params.get("prodCat"));
 
 	    params.put("testResultId", params.get("testResultId"));
-
-	   /* EgovMap orderDetail = null;
-	    try {
-	      orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
-	    } catch (Exception e) {
-	      e.printStackTrace();
-	    }*/
-	    //model.addAttribute("orderDetail", orderDetail);
 
 	    List<EgovMap> asCrtStat = AfterPEXTestResultListService.selectAsCrtStat();
 	    model.addAttribute("asCrtStat", asCrtStat);
@@ -122,6 +116,50 @@ public class ResearchDevelopmentController {
 	    model.addAttribute("timePick", timePick);
 
 	    return "ResearchDevelopment/TestResultNewResultPop";
+	  }
+
+	  @RequestMapping(value = "/TestResultEditBasicPop.do")
+	  public String asResultEditBasicPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
+	      throws Exception {
+	    logger.debug("===========================/TestResultEditBasicPop.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/TestResultEditBasicPop.do===============================");
+
+	    model.put("TEST_RESULT_ID", (String) params.get("testResultId"));
+	    model.put("TEST_RESULT_NO", (String) params.get("testResultNo"));
+	    model.put("SO_EXCHG_ID", (String) params.get("soExchgId"));
+	    model.put("ORDER_NO", (String) params.get("orderNo"));
+	    model.put("RCD_TMS", (String) params.get("rcdTms"));
+	    model.put("PROD_CDE", (String) params.get("prodCde"));
+	    model.put("PROD_CAT", (String) params.get("prodCat"));
+
+	   /* model.put("ORD_ID", (String) params.get("ord_Id"));
+	    model.put("ORD_NO", (String) params.get("ord_No"));
+	    model.put("AS_NO", (String) params.get("as_No"));
+	    model.put("AS_ID", (String) params.get("as_Id"));
+	    model.put("AS_RESULT_NO", (String) params.get("as_Result_No"));
+	    model.put("AS_RESULT_ID", (String) params.get("as_Result_Id"));
+	    model.put("MOD", (String) params.get("mod"));*/
+
+	    model.put("USER_ID", sessionVO.getMemId());
+	    model.put("USER_NAME", sessionVO.getUserName());
+
+	  /*  model.put("BRANCH_NAME", sessionVO.getBranchName());
+	    model.put("BRANCH_ID", sessionVO.getUserBranchId());*/
+
+	    List<EgovMap> asCrtStat = AfterPEXTestResultListService.selectAsCrtStat();
+	    model.addAttribute("asCrtStat", asCrtStat);
+
+	    List<EgovMap> timePick = AfterPEXTestResultListService.selectTimePick();
+	    model.addAttribute("timePick", timePick);
+
+	   /* EgovMap orderDetail;
+	    params.put("salesOrderId", (String) params.get("ord_Id"));
+
+	    orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+	    model.put("orderDetail", orderDetail);*/
+
+	    return "ResearchDevelopment/TestResultEditBasicPop";
 	  }
 
 	  @RequestMapping(value = "/TestResultEditViewPop.do")
@@ -166,15 +204,6 @@ public class ResearchDevelopmentController {
 	    model.put("AS_ID", (String) params.get("as_Id"));
 	    model.put("AS_NO", (String) params.get("as_No"));
 
-	 /*   EgovMap AsEventInfo = AfterPEXTestResultListService.getAsEventInfo(params);
-	    model.put("AsEventInfo", AsEventInfo);*/
-
-	    /*EgovMap orderDetail = null;
-	    orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
-	    model.addAttribute("orderDetail", orderDetail);*/
-
-
-
 	    return "ResearchDevelopment/TestResultViewPop";
 	  }
 
@@ -196,53 +225,10 @@ public class ResearchDevelopmentController {
 	    List<EgovMap> timePick = AfterPEXTestResultListService.selectTimePick();
 	    model.addAttribute("timePick", timePick);
 
-	   /* List<EgovMap> lbrFeeChr = AfterPEXTestResultListService.selectLbrFeeChr();
-	    model.addAttribute("lbrFeeChr", lbrFeeChr);
-
-	    List<EgovMap> fltQty = AfterPEXTestResultListService.selectFltQty();
-	    model.addAttribute("fltQty", fltQty);
-
-	    List<EgovMap> fltPmtTyp = AfterPEXTestResultListService.selectFltPmtTyp();
-	    model.addAttribute("fltPmtTyp", fltPmtTyp);*/
-
 	    return "ResearchDevelopment/inc_TestResultEditPop";
 	  }
 
-	  @RequestMapping(value = "/TestResultEditBasicPop.do")
-	  public String asResultEditBasicPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO)
-	      throws Exception {
-	    logger.debug("===========================/TestResultEditBasicPop.do===============================");
-	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/TestResultEditBasicPop.do===============================");
 
-	    model.put("ORD_ID", (String) params.get("ord_Id"));
-	    model.put("ORD_NO", (String) params.get("ord_No"));
-	    model.put("AS_NO", (String) params.get("as_No"));
-	    model.put("AS_ID", (String) params.get("as_Id"));
-	    model.put("AS_RESULT_NO", (String) params.get("as_Result_No"));
-	    model.put("AS_RESULT_ID", (String) params.get("as_Result_Id"));
-	    model.put("MOD", (String) params.get("mod"));
-
-	    model.put("USER_ID", sessionVO.getMemId());
-	    model.put("USER_NAME", sessionVO.getUserName());
-
-	    model.put("BRANCH_NAME", sessionVO.getBranchName());
-	    model.put("BRANCH_ID", sessionVO.getUserBranchId());
-
-	    List<EgovMap> asCrtStat = AfterPEXTestResultListService.selectAsCrtStat();
-	    model.addAttribute("asCrtStat", asCrtStat);
-
-	    List<EgovMap> timePick = AfterPEXTestResultListService.selectTimePick();
-	    model.addAttribute("timePick", timePick);
-
-	    EgovMap orderDetail;
-	    params.put("salesOrderId", (String) params.get("ord_Id"));
-
-	    orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
-	    model.put("orderDetail", orderDetail);
-
-	    return "ResearchDevelopment/TestResultEditBasicPop";
-	  }
 
 	  @RequestMapping(value = "/searchPEXTestResultList.do", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> searchPEXTestResultList(@RequestParam Map<String, Object> params,
@@ -335,10 +321,83 @@ public class ResearchDevelopmentController {
 	    return ResponseEntity.ok(list);
 	  }
 
+	  @RequestMapping(value = "/newPEXTestResultAdd.do", method = RequestMethod.POST)
+	  public ResponseEntity<ReturnMessage> newASInHouseAdd(@RequestBody Map<String, Object> params, Model model,
+	      HttpServletRequest request, SessionVO sessionVO) {
+	    logger.debug("===========================/newPEXTestResultAdd.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/newPEXTestResultAdd.do===============================");
+
+	    params.put("updator", sessionVO.getUserId());
+	    ReturnMessage message = new ReturnMessage();
+
+	    HashMap<String, Object> mp = new HashMap<String, Object>();
+	    Map<?, ?> svc0125map = (Map<?, ?>) params.get("PEXResultM");
+	    mp.put("TEST_RESULT_NO", svc0125map.get("TEST_RESULT_NO"));
+
+	    params.put("testResultId", svc0125map.get("TEST_RESULT_ID"));
+	    params.put("testResultNo", svc0125map.get("TEST_RESULT_NO"));
+	    params.put("rcdTms", svc0125map.get("RCD_TMS"));
+
+	    int noRcd = AfterPEXTestResultListService.chkRcdTms(params);
+
+	    if (noRcd == 1) { // RECORD ABLE TO UPDATE
+	      int isPEXCnt = AfterPEXTestResultListService.isPEXAlreadyResult(mp);
+	      logger.debug("== isPEXCnt " + isPEXCnt);
+
+	      if (isPEXCnt == 0) {
+	        EgovMap rtnValue = AfterPEXTestResultListService.PEXResult_Update(params);
+	        logger.debug("==/// rtnValue " + rtnValue);
+
+	        message.setCode(AppConstants.SUCCESS);
+	        message.setData(rtnValue.get("testResultNo"));
+	        message.setMessage("");
+
+	      } else {
+	        message.setCode("98");
+	        message.setData(svc0125map.get("TEST_RESULT_NO"));
+	        message.setMessage("Result already exist with Complete Status.");
+	      }
+	    } else {
+	      message.setMessage(
+	          "Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+	      message.setCode("99");
+	    }
+
+	    return ResponseEntity.ok(message);
+	  }
 
 
 
 
+
+
+
+
+
+
+
+	  /*@RequestMapping(value = "/getPEXReasonCode2", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> getPEXReasonCode2(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+	    logger.debug("===========================/getPEXReasonCode2.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/getPEXReasonCode2.do===============================");
+
+	    List<EgovMap> list = AfterPEXTestResultListService.getPEXReasonCode2(params);
+
+	    return ResponseEntity.ok(list);
+	  }
+
+	  @RequestMapping(value = "/dftTypPop.do")
+	  public String dftTypPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	    model.put("callPrgm", params.get("callPrgm"));
+	    model.put("prodCde", params.get("prodCde"));
+	    model.put("ddCde", params.get("ddCde"));
+	    model.put("dtCde", params.get("dtCde"));
+	    logger.debug("== params - dftTypPop : " + params.toString());
+	    return "ResearchDevelopment/dftTypPop";
+	  }*/
 
 	  /*@RequestMapping(value = "/getDEFECT_TYPE_List.do", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> getDEFECT_TYPE_List(@RequestParam Map<String, Object> params,
@@ -709,7 +768,7 @@ public class ResearchDevelopmentController {
 	    return ResponseEntity.ok(list);
 	  }
 
-	  @RequestMapping(value = "/getASFilterInfo", method = RequestMethod.GET)
+	 /* @RequestMapping(value = "/getASFilterInfo", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> getASFilterInfo(@RequestParam Map<String, Object> params,
 	      HttpServletRequest request, ModelMap model) {
 	    logger.debug("===========================/getASFilterInfo.do===============================");
@@ -744,19 +803,9 @@ public class ResearchDevelopmentController {
 	    logger.debug("== ASManagementListService.getASReasonCode " + list.toString());
 
 	    return ResponseEntity.ok(list);
-	  }
+	  }*/
 
-	  @RequestMapping(value = "/getASReasonCode2", method = RequestMethod.GET)
-	  public ResponseEntity<List<EgovMap>> getASReasonCode2(@RequestParam Map<String, Object> params,
-	      HttpServletRequest request, ModelMap model) {
-	    logger.debug("===========================/getASReasonCode2.do===============================");
-	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/getASReasonCode2.do===============================");
 
-	    List<EgovMap> list = ASManagementListService.getASReasonCode2(params);
-
-	    return ResponseEntity.ok(list);
-	  }
 
 	  @RequestMapping(value = "/getASMember", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> getASMember(@RequestParam Map<String, Object> params, HttpServletRequest request,
@@ -784,7 +833,7 @@ public class ResearchDevelopmentController {
 
 
 
-	  @RequestMapping(value = "/getASRulstEditFilterInfo", method = RequestMethod.GET)
+	 /* @RequestMapping(value = "/getASRulstEditFilterInfo", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> getASRulstEditFilterInfo(@RequestParam Map<String, Object> params,
 	      HttpServletRequest request, ModelMap model) {
 	    logger.debug("===========================/getASRulstEditFilterInfo.do===============================");
@@ -794,7 +843,7 @@ public class ResearchDevelopmentController {
 	    List<EgovMap> list = ASManagementListService.getASRulstEditFilterInfo(params);
 
 	    return ResponseEntity.ok(list);
-	  }
+	  }*/
 
 	  @RequestMapping(value = "/selectASDataInfo", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> selectASDataInfo(@RequestParam Map<String, Object> params,
@@ -1100,70 +1149,6 @@ public class ResearchDevelopmentController {
 	    return ResponseEntity.ok(isAbStck);
 	  }
 
-	  @RequestMapping(value = "/newASInHouseAdd.do", method = RequestMethod.POST)
-	  public ResponseEntity<ReturnMessage> newASInHouseAdd(@RequestBody Map<String, Object> params, Model model,
-	      HttpServletRequest request, SessionVO sessionVO) {
-	    logger.debug("===========================/newASInHouseAdd.do===============================");
-	    logger.debug("== params " + params.toString());
-	    logger.debug("===========================/newASInHouseAdd.do===============================");
-
-	    params.put("updator", sessionVO.getUserId());
-	    ReturnMessage message = new ReturnMessage();
-
-	    HashMap<String, Object> mp = new HashMap<String, Object>();
-	    Map<?, ?> svc0004dmap = (Map<?, ?>) params.get("asResultM");
-	    mp.put("serviceNo", svc0004dmap.get("AS_NO"));
-
-	    params.put("asNo", svc0004dmap.get("AS_NO"));
-	    params.put("asEntryId", svc0004dmap.get("AS_ENTRY_ID"));
-	    params.put("asSoId", svc0004dmap.get("AS_SO_ID"));
-	    params.put("rcdTms", svc0004dmap.get("RCD_TMS"));
-
-	    int noRcd = ASManagementListService.chkRcdTms(params);
-
-	    if (noRcd == 1) { // RECORD ABLE TO UPDATE
-	      int isAsCnt = ASManagementListService.isAsAlreadyResult(mp);
-	      logger.debug("== isAsCnt " + isAsCnt);
-
-	      if (isAsCnt == 0) {
-	        EgovMap rtnValue = ASManagementListService.asResult_insert(params);
-	        if (null != rtnValue) {
-	          HashMap spMap = (HashMap) rtnValue.get("spMap");
-	          logger.debug("spMap :" + spMap.toString());
-	          if (!spMap.isEmpty()) {
-	            if (!"000".equals(spMap.get("P_RESULT_MSG"))) {
-	              rtnValue.put("logerr", "Y");
-	            }
-	            servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-	            logger.debug("SP_SVC_LOGISTIC_REQUEST===> " + spMap.toString());
-	          }
-
-	          // ONGHC ADD FOR OPTIONAL FILTER
-	          boolean rst = ASManagementListService.insertOptFlt(params);
-	        }
-
-	        message.setCode(AppConstants.SUCCESS);
-	        message.setData(rtnValue.get("asNo"));
-	        message.setMessage("");
-
-	      } else {
-	        message.setCode("98");
-	        message.setData(svc0004dmap.get("AS_NO"));
-	        message.setMessage("Result already exist with Complete Status.");
-	      }
-	    } else {
-	      message.setMessage(
-	          "Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
-	      message.setCode("99");
-	    }
-
-	    return ResponseEntity.ok(message);
-	  }
-
-
-
-
-
 	  @RequestMapping(value = "/sendSMS.do", method = RequestMethod.GET)
 	  public ResponseEntity<EgovMap> sendSMS(@RequestParam Map<String, Object> params, HttpServletRequest request,
 	      ModelMap model, SessionVO session) {
@@ -1388,7 +1373,7 @@ public class ResearchDevelopmentController {
 	    return ResponseEntity.ok(message);
 	  }
 
-	  @RequestMapping(value = "/getASEntryCommission", method = RequestMethod.GET)
+	  /*@RequestMapping(value = "/getASEntryCommission", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> getASEntryCommission(@RequestParam Map<String, Object> params,
 	      HttpServletRequest request, ModelMap model) {
 	    logger.debug("===========================/getASEntryCommission.do===============================");
@@ -1398,19 +1383,11 @@ public class ResearchDevelopmentController {
 	    List<EgovMap> list = ASManagementListService.getASEntryCommission(params);
 
 	    return ResponseEntity.ok(list);
-	  }
+	  }*/
 
-	  @RequestMapping(value = "/dftTypPop.do")
-	  public String dftTypPop(@RequestParam Map<String, Object> params, ModelMap model) {
-	    model.put("callPrgm", params.get("callPrgm"));
-	    model.put("prodCde", params.get("prodCde"));
-	    model.put("ddCde", params.get("ddCde"));
-	    model.put("dtCde", params.get("dtCde"));
-	    logger.debug("== params - dftTypPop : " + params.toString());
-	    return "services/as/dftTypPop";
-	  }
 
-	  @RequestMapping(value = "/getDftTyp.do", method = RequestMethod.GET)
+
+	  /*@RequestMapping(value = "/getDftTyp.do", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> getDftTyp(@RequestParam Map<String, Object> params, HttpServletRequest request,
 	      ModelMap model) {
 	    logger.debug("===========================/getDftTyp.do===============================");
@@ -1422,8 +1399,8 @@ public class ResearchDevelopmentController {
 	    logger.debug("===========================/getDftTyp.do===============================");
 	    return ResponseEntity.ok(dftCde);
 	  }
-
-	  @RequestMapping(value = "/newASInHouseAddSerial.do", method = RequestMethod.POST)
+*/
+	 /* @RequestMapping(value = "/newASInHouseAddSerial.do", method = RequestMethod.POST)
 	  public ResponseEntity<ReturnMessage> newASInHouseAddSerial(@RequestBody Map<String, Object> params, Model model,
 	      HttpServletRequest request, SessionVO sessionVO) {
 	    logger.debug("===========================/newASInHouseAddSerial.do===============================");
@@ -1507,7 +1484,7 @@ public class ResearchDevelopmentController {
 	    EgovMap custInfo = ASManagementListService.selectCustomerInstallationAddress(params);
 
 	    return ResponseEntity.ok(custInfo);
-	  }
+	  }*/
 
 	  @RequestMapping(value = "/selectDefectEntry.do", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> selectDefectEntry(@RequestParam Map<String, Object> params,

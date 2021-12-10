@@ -8,9 +8,9 @@
 
     createAUIGrid();
 
-    fn_getASOrderInfo();
+    /* fn_getASOrderInfo();
     fn_getASEvntsInfo();
-    fn_getCallLog();
+    fn_getCallLog(); */
   });
 
   function createAUIGrid() {

@@ -3,8 +3,8 @@
 
 <!-- AS ORDER > AS MANAGEMENT > EDIT BASIC AS ENTRY -->
 <script type="text/javaScript">
-	var regGridID;
-	var myFltGrd10;
+	/* var regGridID;
+	var myFltGrd10; */
 
 	var productCode;
 	var asMalfuncResnId;
@@ -16,96 +16,77 @@
 	$(document).ready(function() {
 		//createAUIGrid();
 
-		fn_getASOrderInfo();
+		/* fn_getASOrderInfo();
 		fn_getASEvntsInfo();
-		fn_getASHistoryInfo();
+		fn_getASHistoryInfo(); */
 
-		fn_getASRulstSVC0004DInfo();
+		fn_getPEXTestResultInfo();
 	});
 
 	function fn_setCTcodeValue() {
 		$("#ddlCTCode").val($("#CTID").val());
 	}
 
-	function fn_getASRulstSVC0004DInfo() {
-		Common.ajax("GET", "/services/as/getASRulstSVC0004DInfo", $(
-				"#resultASForm").serialize(), function(result) {
+	function fn_getPEXTestResultInfo() {
+		Common.ajax("GET", "/ResearchDevelopment/getPEXTestResultInfo", $(
+				"#resultPEXTestResultForm").serialize(), function(result) {
 			if (result != "") {
-				fn_setSVC0004dInfo(result);
+				fn_setPEXTestResultInfo(result);
 			}
 		});
 	}
 
-	function fn_setSVC0004dInfo(result) {
-		$("#creator").val(result[0].c28);
-		$("#creatorat").val(result[0].asResultCrtDt);
-		$("#txtResultNo").val(result[0].asResultNo);
-		$("#ddlStatus").val(result[0].asResultStusId);
-		$("#dpSettleDate").val(result[0].asSetlDt);
-		//failRsn = result[0].c2
-		$("#tpSettleTime").val(result[0].asSetlTm);
+	function fn_setPEXTestResultInfo(result) {
+
+		 console.log(result[0]);
+		 $("#creator").val(result[0].updUserId);
+	     $("#creatorat").val(result[0].updDt);
+	     $("#txtResultNo").val(result[0].testResultNo);
+	     $("#ddlStatus").val(result[0].testResultStus);
+
+	     $("#dpSettleDate").val(result[0].testSettleDt);
+	     $("#tpSettleTime").val(result[0].testSettleTime);
+
+	     $("#ddlDSCCode").val(result[0].dscId);
+	     $("#ddlDSCCodeText").val(result[0].dscCode);
+
+	     $("#ddlCTCodeText").val(result[0].ctCode);
+	     $("#ddlCTCode").val(result[0].ctId);
+	     $("#CTID").val(result[0].ctId);
+
+	     $("#txtAMPReading").val(result[0].amp);
+	     $("#txtVoltage").val(result[0].voltage);
+
+	     $("#ddlProdGenuine").val(result[0].prodGenuine);
+
+	     $("#txtTestResultRemark").val(result[0].testResultRem);
 
 		var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-		$("#ddlCTCode").val(selectedItems[0].item.asMemId);
-		$("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
-		$("#ddlCTCodeText").val(selectedItems[0].item.memCode);
-		$("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
-		$("#CTID").val(result[0].c11);
+	    console.log(selectedItems[0]);
 
-		$("#txtRemark").val(result[0].asResultRem);
+        $('#def_part').val(result[0].defLargeCode);
+        $('#def_part_text').val(result[0].defectPartLarge);
+        $('#def_part_id').val(result[0].defLargeId);
 
-		$('#def_code').val(String(result[0].c18).trim());
-		$('#def_code_text').val(String(result[0].c19).trim());
-		$('#def_code_id').val(String(result[0].asDefectId).trim());
+        $('#def_code').val(result[0].probLargeCode);
+        $('#def_code_text').val(result[0].problemSymptomLarge);
+        $('#def_code_id').val(result[0].probLargeId);
 
-		$('#def_def').val(String(result[0].c22).trim());
-		$('#def_def_text').val(String(result[0].c23).trim());
-		$('#def_def_id').val(String(result[0].asDefectDtlResnId).trim());
+        $('#def_def').val(result[0].probSmallCode);
+        $('#def_def_text').val(result[0].problemSymptomSmall);
+        $('#def_def_id').val(result[0].probSmallId);
 
-		$('#def_part').val(String(result[0].c20).trim());
-		$('#def_part_text').val(String(result[0].c21).trim());
-		$('#def_part_id').val(String(result[0].asDefectPartId).trim());
-
-	    $('#solut_code').val(String(result[0].c25).trim());
-	    $('#solut_code_text').val(String(result[0].c26).trim());
-	    $('#solut_code_id').val(String(result[0].c24).trim());
+        $("#PROD_CDE").val(result[0].prodCde);
 
 		fn_ddlStatus_SelectedIndexChanged();
 
-		/* if (result[0].inHuseRepairReplaceYn == "1") {
-			$("input:radio[name='replacement']:radio[value='1']").attr(
-					'checked', true); // 원하는 값(Y)을 체크
-		} else if (result[0].inHuseRepairReplaceYn == "0") {
-			$("input:radio[name='replacement']:radio[value='0']").attr(
-					'checked', true); // 원하는 값(Y)을 체크
-		}
-
-		$("#promisedDate").val(result[0].inHuseRepairPromisDt);
-		$("#productGroup").val(result[0].inHuseRepairGrpCode);
-		$("#productCode").val(result[0].inHuseRepairProductCode);
-		$("#serialNo").val(result[0].inHuseRepairSerialNo);
-		$("#inHouseRemark").val(result[0].inHuseRepairRem);
-		$("#APPNT_DT").val(result[0].appntDt);
-		$("#asResultCrtDt").val(result[0].asResultCrtDt);
-
-		productCode = result[0].inHuseRepairProductCode;
-
-		if (typeof (productCode) != "undefined") {
-			doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID='
-					+ result[0].inHuseRepairGrpCode, '', '', 'productCode',
-					'S', 'fn_inHouseGetProductDetails');
-		} */
-
-		/* if (result[0].c25 == "B8") { //인하우스 데이터만 수정 가능함.
-		} */
-
 	}
 
-	function fn_inHouseGetProductDetails() {
+/* 	function fn_inHouseGetProductDetails() {
 		$("#productCode").val(productCode);
-	}
+	} */
 
-	function createAUIGrid() {
+	/* function createAUIGrid() {
 		var columnLayout = [ {
 			dataField : "asNo",
 			headerText : "<spring:message code='service.grid.ASTyp'/>",
@@ -174,7 +155,7 @@
 		};
 		regGridID = GridCommon.createAUIGrid("reg_grid_wrap", columnLayout, "",
 				gridPros);
-	}
+	} */
 
 	function fn_asDefectEntryHideSearch(result) {
 		//DP DEFETC PART
@@ -216,8 +197,8 @@
 		}
 	}
 
-	function fn_getASOrderInfo() {
-		Common.ajax("GET", "/services/as/getASOrderInfo.do", $("#resultASForm")
+	/* function fn_getASOrderInfo() {
+		Common.ajax("GET", "/services/as/getASOrderInfo.do", $("#resultPEXTestResultForm")
 				.serialize(), function(result) {
 
 			$("#txtASNo").text($("#AS_NO").val());
@@ -253,10 +234,10 @@
 			$("#PROD_CAT").val(result[0].c2code);
 
 		});
-	}
+	} */
 
-	function fn_getASEvntsInfo() {
-		Common.ajax("GET", "/services/as/getASEvntsInfo.do", $("#resultASForm")
+	/* function fn_getASEvntsInfo() {
+		Common.ajax("GET", "/services/as/getASEvntsInfo.do", $("#resultPEXTestResultForm")
 				.serialize(), function(result) {
 
 			$("#txtASStatus").text(result[0].code);
@@ -283,13 +264,13 @@
 			}
 		});
 	}
-
-	function fn_getASHistoryInfo() {
+ */
+	/* function fn_getASHistoryInfo() {
 		Common.ajax("GET", "/services/as/getASHistoryInfo.do", $(
-				"#resultASForm").serialize(), function(result) {
+				"#resultPEXTestResultForm").serialize(), function(result) {
 			AUIGrid.setGridData(regGridID, result);
 		});
-	}
+	} */
 
 	function fn_getASReasonCode2(_obj, _tobj, _v) {
 		var reasonCode = $(_obj).val();
@@ -343,7 +324,7 @@
 			// GENERAL
 			AS_MALFUNC_ID : $('#ddlErrorCode').val(),
 			AS_MALFUNC_RESN_ID : $('#ddlErrorDesc').val(),
-			AS_RESULT_REM : $('#txtRemark').val(),
+			AS_RESULT_REM : $('#txtTestResultRemark').val(),
 			AS_CMMS : $("#iscommission").prop("checked") ? '1' : '0',
 			AS_FAIL_RSN : $('#ddlFailReason').val(),
 
@@ -409,7 +390,7 @@
 		$('#ddlCTCode').removeAttr("disabled").removeClass("readonly");
 		$('#ddlErrorCode').removeAttr("disabled").removeClass("readonly");
 		$('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");
-		$('#txtRemark').removeAttr("disabled").removeClass("readonly");
+		$('#txtTestResultRemark').removeAttr("disabled").removeClass("readonly");
 		$('#iscommission').removeAttr("disabled").removeClass("readonly");
 
 		$('#def_code_id').removeAttr("disabled").removeClass("readonly");
@@ -425,7 +406,7 @@
 		$("#tpSettleTime").attr("disabled", true);
 		$("#ddlDSCCode").attr("disabled", true);
 		$("#ddlCTCode").attr("disabled", true);
-		$("#txtRemark").attr("disabled", true);
+		$("#txtTestResultRemark").attr("disabled", true);
 
 		$("#def_code").attr("disabled", true);
 		$("#def_def").attr("disabled", true);
@@ -570,7 +551,7 @@
 		$("#tpSettleTime").val("");
 		$("#ddlDSCCode").val("");
 		$("#ddlCTCode").val("");
-		$("#txtRemark").val("");
+		$("#txtTestResultRemark").val("");
 
 		$("#def_code").val("");
 		$("#def_def").val("");
@@ -590,10 +571,10 @@
 			fn_openField_Complete();
 			break;
 
-		case "10":
+	/* 	case "10":
 			// CANCEL
 			fn_openField_Cancel();
-			break;
+			break; */
 
 		default:
 			$("#m2").hide();
@@ -628,15 +609,15 @@
 		$("#m13").show();
 
 		$("#btnSaveDiv").attr("style", "display:inline");
-		$('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
-		$('#tpSettleTime').removeAttr("disabled").removeClass("readonly");
-		$('#ddlDSCCode').removeAttr("disabled").removeClass("readonly");
-		$('#ddlCTCode').removeAttr("disabled").removeClass("readonly");
-		$('#txtRemark').removeAttr("disabled").removeClass("readonly");
+		/* $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
+		$('#tpSettleTime').removeAttr("disabled").removeClass("readonly"); */
+		/* $('#ddlDSCCode').removeAttr("disabled").removeClass("readonly");
+		$('#ddlCTCode').removeAttr("disabled").removeClass("readonly"); */
+		$('#txtTestResultRemark').removeAttr("disabled").removeClass("readonly");
 
 	}
 
-	function fn_openField_Cancel() {
+	/* function fn_openField_Cancel() {
 		// OPEN MANDATORY
 		$("#m2").hide();
 		$("#m3").show();
@@ -658,10 +639,10 @@
 		$("#dpSettleDate").val("");
 		$("#tpSettleTime").val("");
 
-		$('#txtRemark').removeAttr("disabled").removeClass("readonly");
+		$('#txtTestResultRemark').removeAttr("disabled").removeClass("readonly");
 
 		$("#btnSaveDiv").attr("style", "display:inline");
-	}
+	} */
 
 	function fn_dftTyp(dftTyp) {
 		var ddCde = "";
@@ -708,26 +689,21 @@
 				name="pCallGbn" id="pCallGbn" /> <input type="hidden"
 				name="pMobileYn" id="pMobileYn" />
 		</form>
-		<form id="resultASForm" method="post">
+		<form id="resultPEXTestResultForm" method="post">
 			<div style="display: none">
-				<input type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" /> <input
-					type="text" name="ORD_NO" id="ORD_NO" value="${ORD_NO}" /> <input
-					type="text" name="AS_NO" id="AS_NO" value="${AS_NO}" /> <input
-					type="text" name="AS_ID" id="AS_ID" value="${AS_ID}" /> <input
-					type="text" name="MOD" id="MOD" value="${MOD}" /> <input
-					type="text" name="AS_RESULT_NO" id="AS_RESULT_NO"
-					value="${AS_RESULT_NO}" /> <input type="text" name="AS_RESULT_ID"
-					id="AS_RESULT_ID" value="${AS_RESULT_ID}" /> <input type="text"
-					name="PROD_CDE" id="PROD_CDE" /> <input type="text"
-					name="PROD_CAT" id="PROD_CAT" /> <input type="hidden"
-					id="hidSerialRequireChkYn" name="hidSerialRequireChkYn" /> <input
-					type="hidden" id='hidStockSerialNo' name='hidStockSerialNo' />
+			    <input type="text" name="TEST_RESULT_ID" id="TEST_RESULT_ID" value="${TEST_RESULT_ID}" />
+                <input type="text" name="TEST_RESULT_NO" id="TEST_RESULT_NO" value="${TEST_RESULT_NO}" />
+                <input type="text" name="SO_EXCHG_ID" id="SO_EXCHG_ID" value="${SO_EXCHG_ID}" />
+                <input type="text" name="RCD_TMS" id="RCD_TMS" value="${RCD_TMS}" />
+                <input type="text" name="PROD_CDE" id="PROD_CDE" />
+                <input type="text" name="PROD_CAT" id="PROD_CAT" />
+                <input type="text" name="MOD" id="MOD" value="${MOD}" />
 			</div>
 		</form>
 		<header class="pop_header">
 			<!-- pop_header start -->
 			<h1>
-				<spring:message code='service.title.asEdtBscRst' />
+				Edit PEX Test Result Basic Info
 			</h1>
 			<ul class="right_opt">
 				<li><p class="btn_blue2">
@@ -892,7 +868,7 @@
 				<dl>
 					<!-- GENERAL -->
 					<dt class="click_add_on on">
-						<a href="#"><spring:message code='service.title.asRstDtl' /></a>
+						<a href="#">PEX Test Result Detail</a>
 					</dt>
 					<dd>
 						<table class="type1">
@@ -924,22 +900,20 @@
 									</select></td>
 								</tr>
 								<tr>
-									<th scope="row"><spring:message
-											code='service.grid.SettleDate' /><span id='m2' name='m2'
-										class="must">*</span></th>
-									<td><input type="text" title="Create start Date"
-										class="readonly w100p" id='dpSettleDate' name='dpSettleDate'
-										placeholder="DD/MM/YYYY" class="readonly j_date"
-										disabled="disabled" /></td>
+									<th scope="row"><spring:message code='service.grid.SettleDate' />
+									<span id='m2' name='m2' class="must">*</span></th>
+									<td><input type="text" class="readonly w100p" id='dpSettleDate' name='dpSettleDate'
+										placeholder="DD/MM/YYYY" class="readonly j_date" disabled="disabled" /></td>
+
+
 									<th scope="row"><spring:message
 											code='service.grid.SettleTm' /><span id='m4' name='m4'
 										class="must">*</span></th>
 									<td>
 										<div class="time_picker">
 											<!-- time_picker start -->
-											<input type="text" title="" placeholder="" id='tpSettleTime'
-												name='tpSettleTime' class="readonly time_date w100p"
-												disabled="disabled" />
+											<input type="text" title="" placeholder="" id='tpSettleTime' name='tpSettleTime'
+											class="readonly time_date w100p" disabled="disabled" />
 											<ul>
 												<li><spring:message code='service.text.timePick' /></li>
 												<c:forEach var="list" items="${timePick}" varStatus="status">
@@ -983,8 +957,8 @@
 										class="must" style="display: none">*</span></th>
 									<td><select id='ddlProdGenuine' name='ddlProdGenuine' class="w100p">
                                             <option value="">Choose One</option>
-                                            <option value="">Genuine</option>
-                                            <option value="">Non-Genuine</option>
+                                            <option value="G">Genuine</option>
+                                            <option value="NG">Non-Genuine</option>
                                         </select></td>
 									<th></th>
 									<td></td>
@@ -994,7 +968,7 @@
 											code='service.title.Remark' /></th>
 									<td colspan="3"><textarea cols="20" rows="5"
 											placeholder="<spring:message code='service.title.Remark' />"
-											id='txtRemark' name='txtRemark'></textarea></td>
+											id='txtTestResultRemark' name='txtTestResultRemark'></textarea></td>
 								</tr>
 								<tr>
 									<th scope="row"><spring:message code='service.grid.CrtBy' /></th>
@@ -1012,7 +986,7 @@
 					</dd>
 					<!-- DEFECTIVE EVENT -->
 					<dt class="click_add_on on">
-						<a href="#"><spring:message code='service.title.asDefEnt' /></a>
+						<a href="#">PEX Defect Entry</a>
 					</dt>
 					<dd>
 						<table class="type1">

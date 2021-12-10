@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.aspectj.apache.bcel.classfile.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1041,7 +1042,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
       resultValue = this.runInstSp(params, sessionVO, "1");
 
       if (null != resultValue) {
-        HashMap spMap = (HashMap) resultValue.get("spMap");
+        HashMap<String, Object> spMap = (HashMap<String, Object>) resultValue.get("spMap");
         logger.debug("spMap :" + spMap.toString());
         if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))
             && !"741".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
@@ -1068,7 +1069,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
                   resultValue = this.runInstSp(params, sessionVO, "2");
 
                   if (null != resultValue) {
-                    spMap = (HashMap) resultValue.get("spMap");
+                    spMap = (HashMap<String, Object>) resultValue.get("spMap");
                     logger.debug("spMap :" + spMap.toString());
                     if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))
                         && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
@@ -1142,12 +1143,12 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     String strOutrightTotalPrice = CommonUtils.nvl(params.get("hidOutright_Price"));
     String callTypeId = CommonUtils.nvl(params.get("hidCallType"));
 
-    Map tradeamount = new HashMap();
+    Map<String, Object> tradeamount = new HashMap<String, Object>();
     tradeamount.put("TRADE_SO_ID", Integer.parseInt(params.get("hidSalesOrderId").toString()));
-    Map outRightAmount35d = installationResultListMapper.getTradeAmount(tradeamount); // 35d
+    Map<?, ?> outRightAmount35d = installationResultListMapper.getTradeAmount(tradeamount); // 35d
                                                                                       // amt
 
-    Map ordTamtPram = new HashMap();
+    Map<String, Object> ordTamtPram = new HashMap<String, Object>();
 
     String t_hidEntryId = "";
     if (null == CommonUtils.nvl(params.get("hidEntryId")).toString()) {
@@ -1183,7 +1184,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     double outrightSubBalance = 0;
 
     // get outright refno
-    Map invoiceNum = new HashMap();
+    Map<String, Object> invoiceNum = new HashMap<String, Object>();
     invoiceNum.put("DocNo", "119");
     String invoiceNo = installationResultListMapper.getInvoiceNum(invoiceNum);
     // set Date params
@@ -1317,7 +1318,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
         isBillAvb = true;
 
         ///////////////////////////// PAY0039D////////////////////////////////////////////
-        Map<String, Object> accTRXMinus = new HashMap();
+        Map<String, Object> accTRXMinus = new HashMap<String, Object>();
         accTRXMinus.put("TRXItemNo", 1);
         accTRXMinus.put("TRXGLAccID", 166);
         accTRXMinus.put("TRXGLDept", "0");
@@ -1341,7 +1342,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
         accTRXMinus.put("TRXIsSynch", 0);
         installationReversalMapper.addAccTRXes(accTRXMinus);
 
-        Map<String, Object> accTRXPlus = new HashMap();
+        Map<String, Object> accTRXPlus = new HashMap<String, Object>();
         accTRXPlus.put("TRXItemNo", 2);
         accTRXPlus.put("TRXGLAccID", 38);
         accTRXPlus.put("TRXGLDept", "0");
@@ -2228,7 +2229,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     return resultValue;
   }
 
-  private boolean insertInstallation(int statusId, String ApptypeID, Map<String, Object> installResult,
+  @SuppressWarnings("unchecked")
+private boolean insertInstallation(int statusId, String ApptypeID, Map<String, Object> installResult,
       Map<String, Object> callEntry, Map<String, Object> callResult, Map<String, Object> orderLog,
       Map<String, Object> TaxinvoiceCompany, Map<String, Object> AccTradeLedger, Map<String, Object> AccOrderBill,
       Map<String, Object> taxInvoiceOutright, Map<String, Object> taxInvoiceOutrightSub,
@@ -2314,11 +2316,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
       if (isExchange != null) {
         installationResultListMapper.updateSal0004d(orderLog);
       }
-
       if ("66".equals(ApptypeID)) {
         installationResultListMapper.updateRentalStatus(orderLog);
       }
-
     }
 
     // Fail
@@ -2339,7 +2339,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
         callEntry.put("callEntryId", maxId);
         installationResultListMapper.updateCallEntry(callEntry);
 
-        Map m = new HashMap();
+        Map<String, Object> m = new HashMap<String, Object>();
         m.put("installEntryId", CommonUtils.nvl(installResult.get("entryId")));
         m.put("stusCodeId", "21");
         m.put("creator", installResult.get("creator"));
@@ -2474,6 +2474,17 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
         isExchange.put("salesOrderId", orderLog.get("salesOrderId"));
         installationResultListMapper.updateSal0004d_2(isExchange);
         // installationResultListMapper.updateLog0038d_2(isExchange);
+
+        //UPDATE SVC0125D IF INSTALLATION COMPLETE
+        EgovMap svc0125DStus = new EgovMap();
+        svc0125DStus.put("installEntryId", installResult.get("entryId"));
+        svc0125DStus.put("testResultStus", SalesConstants.STATUS_ACTIVE);
+        svc0125DStus.put("updator", installResult.get("creator"));
+        //Object so_id = orderLog.get("salesOrderId");
+        svc0125DStus.put("salesOrderId", orderLog.get("salesOrderId"));//installationResultListMapper.checkOrderID(orderLog));
+        //logger.debug("hello soexchgid : /////", orderLog.get("salesOrderId"));
+        installationResultListMapper.updatePEXTestResultStatus(svc0125DStus);
+        logger.debug("updateSVC0125DStatus : /////", svc0125DStus);
 
         // INSERT LOG0038D RESULT
         installResult.put("salesOrderId", orderLog.get("salesOrderId"));
@@ -2625,7 +2636,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     if (updateItemList.size() > 0) {
       logger.debug("=======================updateAssignCT - START===========================");
       for (int i = 0; i < updateItemList.size(); i++) {
-        Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
+        Map<String, Object> updateMap = updateItemList.get(i);
 
         logger.debug(" ITEM (" + i + ")" + updateMap.toString());
 
@@ -2921,7 +2932,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     	//List<EgovMap> add = (List<EgovMap>) params.get("add");
     	List<Map<String, Object>> addList = (List<Map<String, Object>>) params.get("add");
-    	Map<String, Object> param = (Map)params.get("installForm");
+    	Map<String, Object> param = (Map<String, Object>)params.get("installForm");
 
       int noRcd = chkRcdTms(param);
 
@@ -2960,7 +2971,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
             }
 
             if (null != resultValue) {
-              HashMap spMap = (HashMap) resultValue.get("spMap");
+              HashMap<String, Object> spMap = (HashMap<String, Object>) resultValue.get("spMap");
               logger.debug("spMap :" + spMap.toString());
               if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))
                   && !"741".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
@@ -2995,7 +3006,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
                         resultValue = runInstSp(param, sessionVO, "2");
 
                         if (null != resultValue) {
-                          spMap = (HashMap) resultValue.get("spMap");
+                          spMap = (HashMap<String, Object>) resultValue.get("spMap");
                           logger.debug("spMap :" + spMap.toString());
                           if (!"000".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))
                               && !"".equals(CommonUtils.nvl(spMap.get("P_RESULT_MSG")))) { // FAIL
@@ -3047,7 +3058,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
                 // KR-OHK Barcode Save Start
                 if ("Y".equals(param.get("hidSerialRequireChkYn"))) {
-                  Map<String, Object> setmap = new HashMap();
+                  Map<String, Object> setmap = new HashMap<String, Object>();
                   setmap.put("serialNo", param.get("serialNo"));
                   setmap.put("salesOrdId", param.get("hidSalesOrderId"));
                   setmap.put("reqstNo", param.get("hiddeninstallEntryNo"));
@@ -3108,7 +3119,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
     // KR-OHK Barcode Save Start(serial change)
     if ("Y".equals(params.get("hidSerialRequireChkYn")) && !params.get("hidSerialNo").equals(params.get("serialNo"))) {
-      Map<String, Object> setmap = new HashMap();
+      Map<String, Object> setmap = new HashMap<String, Object>();
       setmap.put("serialNo", params.get("serialNo"));
       setmap.put("beforeSerialNo", params.get("hidSerialNo"));
       setmap.put("salesOrdId", params.get("hidSalesOrderId"));
@@ -3150,7 +3161,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
     if (updateItemList.size() > 0) {
       logger.debug("=======================updateAssignCTSerial - START===========================");
       for (int i = 0; i < updateItemList.size(); i++) {
-        Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
+        Map<String, Object> updateMap = updateItemList.get(i);
 
         logger.debug(" ITEM (" + i + ")" + updateMap.toString());
 
@@ -3294,7 +3305,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
 	 logger.info("########## add : " + add.toString());
 
-    Map svc0004dmap = new HashMap<String, Object>();
+    Map<String, Object> svc0004dmap = new HashMap<String, Object>();
 
     String AS_NO = "";
 
@@ -3489,7 +3500,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl
 
 		//  if (!filterList.isEmpty()){
     	  for (int i = 0; i < addItemList.size(); i++){
-    		  Map<String, Object> addItem = (Map<String, Object>) addItemList.get(i);
+    		  Map<String, Object> addItem = addItemList.get(i);
     		  logger.info("addItem.get(stockTypeId) : " + addItem.get("stockTypeId"));
     		  if (addItem.get("stockTypeId").toString().equals("62")){
     			  logger.info("### is filter ###");

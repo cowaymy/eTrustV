@@ -108,6 +108,8 @@ public interface InstallationResultListMapper {
 
   void updateInstallEntry(Map<String, Object> params);
 
+  void updatePEXTestResultStatus(Map<String, Object> params);
+
   void updateInstallEntry_2(Map<String, Object> params);
 
   void updateExchangeEntry_2(Map<String, Object> params);
@@ -252,6 +254,8 @@ public interface InstallationResultListMapper {
 
   void updateLog0038d_2(Map<String, Object> orderLog);
 
+  EgovMap checkOrderID (Object object);
+
   EgovMap checkExchangeCollLog(Map<String, Object> orderLog);
 
   EgovMap checkExchangeCollLog_2(Map<String, Object> orderLog);
@@ -261,6 +265,8 @@ public interface InstallationResultListMapper {
   String selectPrevAssignCt(Map<String, Object> updateMap);
 
   int insResultSync(Map<String, Object> params);
+
+
 
   List<EgovMap> getProductList(Map<String, Object> params);
 

@@ -2,10 +2,10 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
-    var regGridID;
-    var myFltGrd10;
+    /* var regGridID;
+    var myFltGrd10; */
     var productCode;
-    var asMalfuncResnId;
+    //var asMalfuncResnId;
 
     $(document).ready(
     	    function() {
@@ -25,18 +25,18 @@
                 fn_DisablePageControl(); // DISABLE ALL THE FIELD
                 $("#ddlStatus").attr("disabled", false); // ENABLE BACK STATUS
 
-                AUIGrid.resize(myFltGrd10, 950, 200);
+                //AUIGrid.resize(myFltGrd10, 950, 200);
 
-                fn_getASRulstSVC0004DInfo();
-                fn_getASRulstEditFilterInfo();
+                fn_getPEXTestResultInfo();
+                //fn_getASRulstEditFilterInfo();
 
-                if ('${REF_REQST}' > 0) { // TO BE REMOVE
+               /*  if ('${REF_REQST}' > 0) { // TO BE REMOVE
                     $("#IN_HOUSE_CLOSE").val("Y");
                 }
 
                 if ('${IS_AUTO}' == "true") { // TO BE REMOVE
                     $("#inHouseRepair_div").attr("style", "display:none");
-                }
+                } */
 
     });
 
@@ -47,7 +47,7 @@
             fn_doSave();
 
             setTimeout(function() {
-                $("#_newASResultDiv1").remove();
+                $("#_newPEXTestResultDiv1").remove();
             }, 2000);
         }
     }
@@ -126,7 +126,7 @@
 
     function fn_getASHistoryInfo() {
         Common.ajax("GET", "/services/as/getASHistoryInfo.do", $(
-                "#resultASForm").serialize(), function(result) {
+                "#resultPEXTestResultForm").serialize(), function(result) {
             AUIGrid.setGridData(regGridID, result);
         });
     }
@@ -148,11 +148,11 @@
         });
     }
 
-    function fn_getASRulstSVC0004DInfo() {
-        Common.ajax("GET", "/services/as/getASRulstSVC0004DInfo", $(
-                "#resultASForm").serialize(), function(result) {
+    function fn_getPEXTestResultInfo() {
+        Common.ajax("GET", "/ResearchDevelopment/getPEXTestResultInfo", $(
+                "#resultPEXTestResultForm").serialize(), function(result) {
             if (result != "") {
-                fn_setSVC0004dInfo(result);
+                fn_setPEXTestResultInfo(result);
             }
         });
     }
@@ -232,107 +232,49 @@
         }
     }
 
-    function fn_checkASEntryCommission() {
-        Common.ajax("GET", "/services/as/getASEntryCommission", $(
-                "#resultASForm").serialize(), function(result) {
-            if (result == "1") {
-                $("#iscommission").prop("checked", true);
-            } else {
-                $("#iscommission").prop("checked", false);
-            }
-        });
-    }
+    function fn_setPEXTestResultInfo(result) {
 
-    function fn_setSVC0004dInfo(result) {
-        console.log(result);
-        $("#creator").val(result[0].c28);
-        $("#creatorat").val(result[0].asResultCrtDt);
-        $("#txtResultNo").text(result[0].asResultNo);
+        $("#creator").val(result[0].crtUserId);
+        $("#creatorat").val(result[0].crtDt);
+        $("#txtResultNo").text(result[0].testResultNo);
 
-        if ('${REF_REQST}' > 0) {
-            $("#txtResultNo").text("");
-        }
+        $("#ddlStatus").val(result[0].testResultStus);
+        $("#dpSettleDate").val(result[0].testSettleDt);
+        $("#tpSettleTime").val(result[0].testSettleTime);
+        $("#ddlDSCCode").val(result[0].dscId);
+        $("#ddlDSCCodeText").val(result[0].dscCode);
 
-        $("#ddlStatus").val(result[0].asResultStusId);
-        $("#dpSettleDate").val(result[0].asSetlDt);
-        $("#ddlFailReason").val(result[0].c2);
-        $("#tpSettleTime").val(result[0].asSetlTm);
-        $("#ddlDSCCode").val(result[0].asBrnchId);
-        $("#ddlDSCCodeText").val(result[0].c5);
+        $("#ddlCTCodeText").val(result[0].ctCode);
+        $("#ddlCTCode").val(result[0].ctId);
+        $("#CTID").val(result[0].ctId);
 
-        $("#ddlCTCodeText").val(result[0].c12);
-        $("#ddlCTCode").val(result[0].c11);
-        $("#CTID").val(result[0].c11);
+        $("#txtAMPReading").val(result[0].amp);
+        $("#txtVoltage").val(result[0].voltage);
+        $("#ddlProdGenuine").val(result[0].prodGenuine);
+        $("#txtTestResultRemark").val(result[0].testResultRem);
 
-        $("#txtTestResultRemark").val(result[0].asResultRem);
+        $('#def_part').val(result[0].defLargeCode);
+        $('#def_part_text').val(result[0].defectPartLarge);
+        $('#def_part_id').val(result[0].defLargeId);
 
-        $('#def_code').val(result[0].c18);
-        $('#def_code_text').val(result[0].c19);
-        $('#def_code_id').val(result[0].asDefectId);
+        $('#def_code').val(result[0].probLargeCode);
+        $('#def_code_text').val(result[0].problemSymptomLarge);
+        $('#def_code_id').val(result[0].probLargeId);
 
-        $('#def_def').val(result[0].c22);
-        $('#def_def_text').val(result[0].c23);
-        $('#def_def_id').val(result[0].asDefectDtlResnId);
+        $('#def_def').val(result[0].probSmallCode);
+        $('#def_def_text').val(result[0].problemSymptomSmall);
+        $('#def_def_id').val(result[0].probSmallId);
 
-        $('#def_part').val(result[0].c20);
-        $('#def_part_text').val(result[0].c21);
-        $('#def_part_id').val(result[0].asDefectPartId);
-
-        $('#asInHouseComDt').val(result[0].asResultDt);
-
-        if (result[0].c25 == "B8" || result[0].c25 == "B6") {
-            $("#inHouseRepair_div").attr("style", "display:inline");
-        }
-
-        $("#promisedDate").val(result[0].inHuseRepairPromisDt);
-        $("#productCode").val(result[0].inHuseRepairProductCode);
-        $("#serialNo").val(result[0].inHuseRepairSerialNo);
-        $("#inHouseRemark").val(result[0].inHuseRepairRem);
-        $("#APPNT_DT").val(result[0].appntDt);
-        $("#asResultCrtDt").val(result[0].asResultCrtDt);
-
-        productCode = result[0].inHuseRepairProductCode;
-
-        if (typeof (productCode) != "undefined") {
-            doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID='
-                    + result[0].inHuseRepairGrpCode, '', '', 'productCode',
-                    'S', 'fn_inHouseGetProductDetails');
-        }
-
+        $("#PROD_CDE").val(result[0].prodCde);
 
         fn_ddlStatus_SelectedIndexChanged("Y");
-
-        setTimeout(function() {
-            fn_inHouseAutoClose();
-        }, 2000);
     }
 
     function fn_inHouseGetProductDetails() {
         $("#productCode").val(productCode);
     }
 
-    function auiAddRowHandler(event) {
-
-    }
-
-    function auiRemoveRowHandler(event) {
-        if (event.items[0].filterType == "CHG") {
-            var fChage = Number($("#txtFilterCharge").val());
-            var totchrge = Number($("#txtTotalCharge").val());
-
-            if (fChage.toFixed(2) != "0.00") {
-                fChage = (fChage - Number(event.items[0].filterTotal))
-                        .toFixed(2);
-                totchrge = (totchrge - Number(event.items[0].filterTotal))
-                        .toFixed(2);
-
-                $("#txtFilterCharge").val(fChage);
-                $("#txtTotalCharge").val(totchrge);
-            }
-        }
-    }
-
-    function fn_getASOrderInfo() {
+     function fn_getASOrderInfo() {
         Common.ajax("GET", "/services/as/getASOrderInfo.do", $("#resultASForm").serialize(), function(result) {
 
         	$("#txtASNo").text($("#AS_NO").val());
@@ -373,7 +315,7 @@
         });
     }
 
-    function fn_getASEvntsInfo() {
+    /* function fn_getASEvntsInfo() {
         Common.ajax("GET", "/services/as/getASEvntsInfo.do", $("#resultASForm").serialize(), function(result) {
             $("#txtASStatus").text(result[0].code);
             $("#txtRequestDate").text(result[0].asReqstDt);
@@ -402,7 +344,7 @@
                 $('#pLocationCode').val(result[0].ctWhLocId);
             }
         });
-    }
+    } */
 
     function fn_getASReasonCode2(_obj, _tobj, _v) {
         var reasonCode = $(_obj).val();
@@ -426,7 +368,108 @@
         });
     }
 
-    function getASStockPrice(_PRC_ID) {
+    function fn_loadDftCde(itm, prgmCde) {
+        if (itm != null) {
+            if (prgmCde == 'DC') {
+                $("#def_code").val(itm.code);
+                $("#def_code_id").val(itm.id);
+                $("#def_code_text").val(itm.descp);
+            } else if (prgmCde == 'DP') {
+                $("#def_part").val(itm.code);
+                $("#def_part_id").val(itm.id);
+                $("#def_part_text").val(itm.descp);
+
+                if (itm.id == "5299" || itm.id == "5300" || itm.id == "5301"
+                        || itm.id == "5302" || itm.id == "5321"
+                        || itm.id == "5332") {
+                    if ($("#def_type_id").val() == "7059") {
+                        var text1 = "<spring:message code='service.text.defTyp' />";
+                        var text2 = $("#def_type_text").val();
+                        var text3 = itm.descp;
+                        var text4 = "<spring:message code='service.text.defPrt' />";
+                        var text = text1 + ";" + text2 + ";" + text3;
+                        var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+                        $("#def_part").val("");
+                        $("#def_part_id").val("");
+                        $("#def_part_text").val("");
+
+                        Common.alert(msg);
+                        return false;
+                    }
+
+                    if ($("#def_type_id").val() == "7072") {
+                        var text1 = "<spring:message code='service.text.defTyp' />";
+                        var text2 = $("#def_type_text").val();
+                        var text3 = itm.descp;
+                        var text4 = "<spring:message code='service.text.defPrt' />";
+                        var text = text1 + ";" + text2 + ";" + text3;
+                        var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+                        $("#def_part").val("");
+                        $("#def_part_id").val("");
+                        $("#def_part_text").val("");
+
+                        Common.alert(msg);
+                        return false;
+                    }
+                }
+            } else if (prgmCde == 'DD') {
+                $("#def_def").val(itm.code);
+                $("#def_def_id").val(itm.id);
+                $("#def_def_text").val(itm.descp);
+
+                // DEPENDENCY
+                $("#def_code").val("");
+                $("#def_code_id").val("");
+                $("#def_code_text").val("");
+
+                if (itm.id == "6041" || itm.id == "6042" || itm.id == "6043"
+                        || itm.id == "6044" || itm.id == "6045"
+                        || itm.id == "6046") {
+                    if ($("#def_type_id").val() == "7059") {
+                        var text1 = "<spring:message code='service.text.defTyp' />";
+                        var text2 = $("#def_type_text").val();
+                        var text3 = itm.descp;
+                        var text4 = "<spring:message code='service.text.dtlDef' />";
+                        var text = text1 + ";" + text2 + ";" + text3;
+                        var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+                        $("#def_def").val("");
+                        $("#def_def_id").val("");
+                        $("#def_def_text").val("");
+
+                        Common.alert(msg);
+                        return false;
+                    }
+                }
+
+                if (itm.id == "6041" || itm.id == "6042" || itm.id == "6043"
+                        || itm.id == "6044" || itm.id == "6045"
+                        || itm.id == "6046" || itm.id == "6008"
+                        || itm.id == "6015" || itm.id == "6023"
+                        || itm.id == "6031") {
+                    if ($("#def_type_id").val() == "7072") {
+                        var text1 = "<spring:message code='service.text.defTyp' />";
+                        var text2 = $("#def_type_text").val();
+                        var text3 = itm.descp;
+                        var text4 = "<spring:message code='service.text.dtlDef' />";
+                        var text = text1 + ";" + text2 + ";" + text3;
+                        var msg = "<spring:message code='sys.msg.defAsSolCusReq' arguments='" + text4 + ";" + text3 + ";" + text1 + ";" + text2 + "' htmlEscape='false' argumentSeparator=';'/></br>";
+
+                        $("#def_def").val("");
+                        $("#def_def_id").val("");
+                        $("#def_def_text").val("");
+
+                        Common.alert(msg);
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+
+    /* function getASStockPrice(_PRC_ID) {
         var ret = 0;
         Common.ajaxSync("GET", "/services/as/getASStockPrice.do", {
             PRC_ID : _PRC_ID
@@ -440,16 +483,16 @@
         });
         return ret;
 
-    }
+    } */
 
     function fn_ddlStatus_SelectedIndexChanged(ind) {
 
         var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
-        $("#ddlCTCode").val(selectedItems[0].item.asMemId);
-        $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
-        $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
-        $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
+        $("#ddlCTCode").val(selectedItems[0].item.ctID);
+        $("#ddlDSCCode").val(selectedItems[0].item.dscID);
+        $("#ddlCTCodeText").val(selectedItems[0].item.ctCode);
+        $("#ddlDSCCodeText").val(selectedItems[0].item.dscCode);
 
         switch ($("#ddlStatus").val()) {
         case "4":
@@ -593,119 +636,69 @@
     };
 
     function fn_setSaveFormData() {
-        var addedRowItems = AUIGrid.getAddedRowItems(myFltGrd10); // FEE CHARGE ADD SET
+       /*  var addedRowItems = AUIGrid.getAddedRowItems(myFltGrd10); // FEE CHARGE ADD SET
         var editedRowItems = AUIGrid.getEditedRowItems(myFltGrd10); // FEE CHARGE EDIT SET
-        var removedRowItems = AUIGrid.getRemovedItems(myFltGrd10); // FEE CHARGE DELETE SET
+        var removedRowItems = AUIGrid.getRemovedItems(myFltGrd10); // FEE CHARGE DELETE SET */
 
-        var _AS_DEFECT_ID = 0;
-        var _AS_DEFECT_PART_ID = 0;
-        var _AS_DEFECT_DTL_RESN_ID = 0;
+        var _PEX_DEFECT_ID = 0;
+        var _PEX_DEFECT_PART_ID = 0;
+        var _PEX_DEFECT_DTL_RESN_ID = 0;
 
         // DEFECT ENTRY
         if ($('#ddlStatus').val() == '4' || $('#ddlStatus').val() == '1') {
-        	_AS_DEFECT_ID = $('#def_code_id').val();
-            _AS_DEFECT_PART_ID = $('#def_part_id').val();
-            _AS_DEFECT_DTL_RESN_ID = $('#def_def_id').val();
+        	 _PEX_DEFECT_PART_ID = $('#def_part_id').val();
+        	 _PEX_DEFECT_DTL_RESN_ID = $('#def_def_id').val();
+        	 _PEX_DEFECT_ID = $('#def_code_id').val();
         }
 
         // IN HOUSE
-        var inHInd = "";
+       /*  var inHInd = "";
         if ($('#ddlStatus').val() == '4') {
             inHInd = 'WEB';//inHInd = "";
-        }
+        } */
 
-        var asResultM = {
+        var PEXResultM = {
             // GENERAL DATA
-            AS_NO : "${AS_NO}",
-            AS_ENTRY_ID : "${AS_ID}",
-            AS_SO_ID : $("#ORD_ID").val(),
-            AS_ORD_NO : $("#ORD_NO").val(),
-            AS_CT_ID : $('#ddlCTCode').val(),
-            AS_SETL_DT : $('#dpSettleDate').val(),
-            AS_SETL_TM : $('#tpSettleTime').val(),
-            AS_RESULT_STUS_ID : $('#ddlStatus').val(),
-            AS_BRNCH_ID : $('#ddlDSCCode').val(),
-            AS_RESULT_REM : $('#txtTestResultRemark').val(),
+            TEST_RESULT_ID : $("#TEST_RESULT_ID").val(),
+            TEST_RESULT_NO : $("#TEST_RESULT_NO").val(),
+            //CT_ID : $('#ddlCTCode').val(),
+            TEST_SETTLE_DT : $('#dpSettleDate').val(),
+            TEST_SETTLE_TIME : $('#tpSettleTime').val(),
+            TEST_RESULT_STUS : $('#ddlStatus').val(),
+            AMP : $('#txtAMPReading').val(),
+            VOLTAGE : $('#txtVoltage').val(),
+            PROD_GENUINE : $('#ddlProdGenuine').val(),
+            //AS_BRNCH_ID : $('#ddlDSCCode').val(),
+            TEST_RESULT_REM : $('#txtTestResultRemark').val(),
 
-            // AS RECALL ENTRY
-            AS_APP_DT : $("#appDate").val(),
-            AS_APP_SESS : $("#CTSSessionCode").val(),
-            AS_RCL_ASG_CT : $("#CTCode").val(),
-            AS_RCL_ASG_CT_GRP : $("#CTGroup").val(),
-            AS_RCL_RMK : $("#callRem").val(),
-
-            // AS DEFECT ENTRY
-            AS_DEFECT_ID : _AS_DEFECT_ID,
-            AS_DEFECT_PART_ID : _AS_DEFECT_PART_ID,
-            AS_DEFECT_DTL_RESN_ID : _AS_DEFECT_DTL_RESN_ID,
-
-            IN_HUSE_REPAIR_REM : "",
-            IN_HUSE_REPAIR_REPLACE_YN : 0,
-            IN_HUSE_REPAIR_PROMIS_DT : "",
-            IN_HUSE_REPAIR_GRP_CODE : "",
-            IN_HUSE_REPAIR_PRODUCT_CODE : "",
-            IN_HUSE_REPAIR_SERIAL_NO : "",
-            CHANGBN : inHInd,
-            IN_HOUSE_CLOSE : "",
+            // PEX DEFECT ENTRY
+            PEX_DEFECT_PART_ID : _PEX_DEFECT_PART_ID,
+            PEX_DEFECT_DTL_RESN_ID : _PEX_DEFECT_DTL_RESN_ID,
+            PEX_DEFECT_ID : _PEX_DEFECT_ID,
 
             // OTHER
             RCD_TMS : $("#RCD_TMS").val(),
-            // KR-OHK Serial Check
-            SERIAL_NO : $("#stockSerialNo").val(),
-            SERIAL_REQUIRE_CHK_YN : $("#hidSerialRequireChkYn").val()
+
         }
 
         var saveForm = {
-            "asResultM" : asResultM,
-            "add" : addedRowItems,
-            "update" : editedRowItems,
-            "remove" : removedRowItems
+            "PEXResultM" : PEXResultM
         }
 
-        // SAVE RESULT
-        // KR-OHK Serial Check add
-        if ($("#hidSerialRequireChkYn").val() == 'Y') {
-            Common.ajax("POST", "/services/as/newASInHouseAddSerial.do", saveForm,
-            function(result) {
-                if (result.code == '99') {
-                Common.alert(result.message);
-                } else {
-                    if (result.data != "" && result.data != null && result.data != "null") {
-                        Common.alert("<b>AS result save successfully.</b></br> New AS Result Number : <b>" + result.data + " </b>");
-                                $("#txtResultNo").html("<font size='3' color='red'> <b> " + result.data + " </b></font>");
-                        fn_DisablePageControl();
-                        $("#_newASResultDiv1").remove();
-                        fn_searchASManagement();
-                    } else {
-                        Common .alert("<b>AS result save successfully.</b>");
-                         $("#txtResultNo").html("<font size='3' color='red'> <b> " + $("#txtResultNo").val() + " </b></font>");
-                         fn_DisablePageControl();
-                         $("#_newASResultDiv1").remove();
-                         fn_searchASManagement();
-                    }
-                }
-            });
-        } else {
-            Common.ajax("POST", "/services/as/newASInHouseAdd.do", saveForm,
+
+            Common.ajax("POST", "/ResearchDevelopment/newPEXTestResultAdd.do", saveForm,
                 function(result) {
                    if (result.data != "" && result.data != null && result.data != "null") {
-                      Common.alert("<b>AS result save successfully.</b></br> New AS Result Number : <b>" + result.data + " </b>");
+                	   Common.alert("<b>PEX test result save successfully.</b>");
                           $("#txtResultNo").html("<font size='3' color='red'> <b> " + result.data + " </b></font>");
                           fn_DisablePageControl();
-                          $("#_newASResultDiv1").remove();
-                          fn_searchASManagement();
-                    } else {
-                          Common.alert("<b>AS result save successfully.</b>");
-                          $("#txtResultNo").html( "<font size='3' color='red'> <b> " + $("#txtResultNo").val() + " </b></font>");
-                          fn_DisablePageControl();
-                          $("#_newASResultDiv1").remove();
-                          fn_searchASManagement();
+                          $("#_newPEXTestResultDiv1").remove();
+                          fn_searchPEXTestResult();
                     }
                  }, function() {
-                     $("#_newASResultDiv1").remove();
-                     fn_searchASManagement();
+                     $("#_newPEXTestResultDiv1").remove();
+                     fn_searchPEXTestResult();
                  });
-        }
     }
 
     function fn_DisablePageControl() {
@@ -754,15 +747,6 @@
             rtnValue = false;
         }
 
-        if ($("#ddlStatus").val() == 4) { // IN HOUSE REPAIR
-            if ($("input[name='replacement'][value='1']").prop("checked")) {
-                if (FormUtil.checkReqValue($("#serialNo"))) {
-                    rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Loan Product Serial Nuber' htmlEscape='false'/> </br>";
-                    rtnValue = false;
-                }
-            }
-        }
-
         if (rtnValue == false) {
             Common.alert(rtnMsg);
         }
@@ -785,27 +769,6 @@
                     text = "<spring:message code='service.grid.SettleDate'/>";
                     rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='" + text + "' htmlEscape='false'/> </br>";
                     rtnValue = false;
-                } else {
-
-                    if (asno.match("AS")) {
-                        var nowdate = $.datepicker.formatDate(
-                                $.datepicker.ATOM, new Date());
-                        var nowdateArry = nowdate.split("-");
-                        nowdateArry = nowdateArry[0] + "" + nowdateArry[1] + ""
-                                + nowdateArry[2];
-                        var rdateArray = $("#dpSettleDate").val().split("/");
-                        var requestDate = rdateArray[2] + "" + rdateArray[1]
-                                + "" + rdateArray[0];
-
-                        // TODO GET PERIOD FROM DB
-                        if ((parseInt(requestDate, 10) - parseInt(nowdateArry,
-                                10)) > 14
-                                || (parseInt(nowdateArry, 10) - parseInt(
-                                        requestDate, 10)) > 14) {
-                            rtnMsg += "* <spring:message code='service.msg.RqstDtNoMore' arguments='14' htmlEscape='false'/> </br>";
-                            rtnValue = false;
-                        }
-                    }
                 }
 
                 if (FormUtil.checkReqValue($("#tpSettleTime"))) { // SETTLE TIME
@@ -813,40 +776,8 @@
                     rtnValue = false;
                 }
 
-                if (FormUtil.checkReqValue($("#ddlDSCCode"))) { // DSC CODE
-                    rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='DSC Code' htmlEscape='false'/> </br>";
-                    rtnValue = false;
-                }
-
-                if (FormUtil.checkReqValue($("#ddlCTCode"))) { // CT CODE
-                    rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='CT Code' htmlEscape='false'/> </br>";
-                    rtnValue = false;
-                }
-
-                if (FormUtil.checkReqValue($("#txtTestResultRemark"))) {
+                if (FormUtil.checkReqValue($("#txtTestResultRemark"))) { //TEST RESULT REMARK
                     rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='[AS Result Detail] Remark' htmlEscape='false'/> </br>";
-                    rtnValue = false;
-                }
-
-                if ($('#PROD_CAT').val() == "54"
-                    || $('#PROD_CAT').val() == "400"
-                    || $('#PROD_CAT').val() == "57"
-                    || $('#PROD_CAT').val() == "56") {
-                if (FormUtil.checkReqValue($("#psiRcd"))) {
-                    rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Water Pressure (PSI)' htmlEscape='false'/> </br>";
-                    rtnValue = false;
-                }
-
-                if (FormUtil.checkReqValue($("#lpmRcd"))) {
-                    rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Liter Per Minute(LPM)' htmlEscape='false'/> </br>";
-                    rtnValue = false;
-                }
-            }
-
-                // KR-OHK Serial Check
-                if ($("#hidSerialRequireChkYn").val() == 'Y'
-                        && FormUtil.checkReqValue($("#stockSerialNo"))) {
-                    rtnMsg += "* <spring:message code='sys.msg.necessary' arguments='Serial No' htmlEscape='false'/> </br>";
                     rtnValue = false;
                 }
             }
@@ -1105,34 +1036,12 @@
     <!-- popup_wrap start -->
     <section id="content">
         <!-- content start -->
-        <form id="serialNoChangeForm" name="serialNoChangeForm" method="POST">
-            <input type="hidden" name="pSerialNo" id="pSerialNo" />
-            <input type="hidden" name="pSalesOrdId" id="pSalesOrdId" />
-            <input type="hidden" name="pSalesOrdNo" id="pSalesOrdNo" />
-            <input type="hidden" name="pRefDocNo" id="pRefDocNo" />
-            <input type="hidden" name="pItmCode" id="pItmCode" />
-            <input type="hidden" name="pCallGbn" id="pCallGbn" />
-            <input type="hidden" name="pMobileYn" id="pMobileYn" />
-        </form>
-        <form id="frmSearchSerial" name="frmSearchSerial" method="post">
-            <input id="pGubun" name="pGubun" type="hidden" value="RADIO" />
-            <input id="pFixdYn" name="pFixdYn" type="hidden" value="N" />
-            <input id="pLocationType" name="pLocationType" type="hidden" value="" />
-            <input id="pLocationCode" name="pLocationCode" type="hidden" value="" />
-            <input id="pItemCodeOrName" name="pItemCodeOrName" type="hidden" value="" />
-            <input id="pStatus" name="pStatus" type="hidden" value="" />
-            <input id="pSerialNo" name="pSerialNo" type="hidden" value="" />
-        </form>
-        <form id="resultASForm" method="post">
+        <form id="resultPEXTestResultForm" method="post">
             <div style="display: none">
-                <input type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" />
-                <input type="text" name="ORD_NO" id="ORD_NO" value="${ORD_NO}" />
-                <input type="text" name="AS_NO" id="AS_NO" value="${AS_NO}" />
-                <input type="text" name="AS_ID" id="AS_ID" value="${AS_ID}" />
-                <input type="text" name="REF_REQST" id="REF_REQST" value="${REF_REQST}" />
+                <input type="text" name="TEST_RESULT_ID" id="TEST_RESULT_ID" value="${TEST_RESULT_ID}" />
+                <input type="text" name="TEST_RESULT_NO" id="TEST_RESULT_NO" value="${TEST_RESULT_NO}" />
+                <input type="text" name="SO_EXCHG_ID" id="SO_EXCHG_ID" value="${SO_EXCHG_ID}" />
                 <input type="text" name="RCD_TMS" id="RCD_TMS" value="${RCD_TMS}" />
-                <input type="text" name="AS_RESULT_NO" id="RCD_TMS"  value="${AS_RESULT_NO}" />
-                <input type="text" name="IN_HOUSE_CLOSE" id="IN_HOUSE_CLOSE" />
                 <input type="text" name="PROD_CDE" id="PROD_CDE" />
                 <input type="text" name="PROD_CAT" id="PROD_CAT" />
             </div>
@@ -1306,7 +1215,7 @@
                 <article class="acodi_wrap">
                     <dl>
                         <dt class="click_add_on on">
-                            <a href="#"><spring:message code='service.title.asRstDtl' /></a>
+                            <a href="#">PEX Test Result Detail</a>
                         </dt>
                         <dd>
                             <table class="type1">
@@ -1320,7 +1229,7 @@
                                 </colgroup>
                                 <tbody>
                                     <tr>
-                                        <th scope="row"><spring:message code='service.grid.ResultNo' /></th>
+                                        <th scope="row">Test Result No</th>
                                         <td><span id='txtResultNo'></span></td>
                                         <th scope="row"><spring:message code='sys.title.status' /></th>
                                         <td><select class="w100p" id="ddlStatus" name="ddlStatus"
@@ -1363,6 +1272,9 @@
                                         <th scope="row"><spring:message code='service.title.DSCCode' />
                                         <span id='m5' name='m5' class="must" style="display: none">*</span></th>
                                         <td>
+                                        <input type="hidden" title=""
+                                            placeholder="<spring:message code='service.title.DSCCode' />"
+                                            class="" id='ddlDSCCode' name='ddlDSCCode' />
                                           <input type="text" title="" placeholder="" class="readonly"
                                             disabled="disabled" id='ddlDSCCodeText' name='ddlDSCCodeText' />
                                         </td>
@@ -1384,8 +1296,8 @@
                                             <span id='m5' name='m5' class="must" style="display: none">*</span></th>
                                         <td><select id='ddlProdGenuine' name='ddlProdGenuine' class="w100p">
                                             <option value="">Choose One</option>
-                                            <option value="">Genuine</option>
-                                            <option value="">Non-Genuine</option>
+                                            <option value="G">Genuine</option>
+                                            <option value="NG">Non-Genuine</option>
                                         </select></td>
                                         <th></th><td></td>
                                         </tr>
@@ -1400,7 +1312,7 @@
                         </dd>
 
                         <dt class="click_add_on" id='defEvt_dt' onclick="fn_secChk(this);">
-                            <a href="#"><spring:message code='service.title.asDefEnt' /></a>
+                            <a href="#">PEX Defect Entry</a>
                         </dt>
                         <dd id='defEvt_div' style="display: none">
                             <table class="type1">
@@ -1416,8 +1328,8 @@
                                         <span id='m11' name='m11' class="must" >*</span></th>
                                         <td>
                                         <input type="text" title="" placeholder="" disabled="disabled" id='def_part' name='def_part' class=""
-                                            onblur="fn_getASReasonCode2(this, 'def_part' ,'305')" onkeyup="this.value = this.value.toUpperCase();" /> <a
-                                            class="search_btn" id="DP" onclick="fn_dftTyp('DP')">
+                                            onblur="fn_getASReasonCode2(this, 'def_part' ,'305')" onkeyup="this.value = this.value.toUpperCase();" />
+                                            <a  class="search_btn" id="DP" onclick="fn_dftTyp('DP')">
                                         <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif"
                                             alt="search" /></a> <input type="hidden" title="" placeholder="" id='def_part_id' name='def_part_id' class="" />
                                         <input type="text" title="" placeholder="" id='def_part_text' name='def_part_text' class="" disabled style="width: 60%;" /></td>

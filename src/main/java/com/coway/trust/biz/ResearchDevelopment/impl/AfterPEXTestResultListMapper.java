@@ -28,6 +28,31 @@ public interface AfterPEXTestResultListMapper {
 
 	  List<EgovMap> getPEXTestResultInfo(Map<String, Object> params);
 
+	  List<EgovMap> getPEXReasonCode2(Map<String, Object> params);
+
+	  int isPEXAlreadyResult(Map<String, Object> params);
+
+	  EgovMap PEXResult_Update(Map<String, Object> params);
+
+	  void updatePEXTestResult(Map<String, Object> svc0125map);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -92,7 +117,7 @@ public interface AfterPEXTestResultListMapper {
 
 	  List<EgovMap> getASMember(Map<String, Object> params);
 
-	  List<EgovMap> getASReasonCode2(Map<String, Object> params);
+
 
 	  /*List<EgovMap> getCallLog(Map<String, Object> params);
 
@@ -100,7 +125,7 @@ public interface AfterPEXTestResultListMapper {
 
 
 
-	  EgovMap asResult_insert(Map<String, Object> params);
+
 
 	  /*int update_Filter_SAL0087D(Map<String, Object> params);*/
 
@@ -256,7 +281,7 @@ public interface AfterPEXTestResultListMapper {
 
 	  int updateState_SERIAL_NO_SVC0004D(Map<String, Object> params);
 
-	  int isAsAlreadyResult(Map<String, Object> params);
+
 
 	  int asResultSync(Map<String, Object> params);
 
@@ -338,13 +363,13 @@ public interface AfterPEXTestResultListMapper {
 
 	  List<EgovMap> getASEntryCommission(Map<String, Object> params);*/
 
-	  List<EgovMap> getDftTyp(Map<String, Object> params);
+	  //List<EgovMap> getDftTyp(Map<String, Object> params);
 
 	  List<EgovMap> getDefectTypSCList(String params);
 
-	  List<EgovMap> selectDefectEntry(Map<String, Object> params);
+	  //List<EgovMap> selectDefectEntry(Map<String, Object> params);
 
-	  String getSerialChk(Map<String, Object> params);
+	 // String getSerialChk(Map<String, Object> params);
 
 	  int insertLOG0103M(Map<String, Object> params);
 
@@ -353,6 +378,8 @@ public interface AfterPEXTestResultListMapper {
 	  // 테스트 임시용.
 	  int selectTestChk(Map<String, Object> params);
 
-	  EgovMap selectCustomerInstallationAddress(Map<String, Object> params) throws Exception;
+
+
+	  //EgovMap selectCustomerInstallationAddress(Map<String, Object> params) throws Exception;
 
 }

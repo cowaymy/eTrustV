@@ -24,6 +24,19 @@ public interface AfterPEXTestResultListService {
 
 	  List<EgovMap> getPEXTestResultInfo(Map<String, Object> params);
 
+	  List<EgovMap> getPEXReasonCode2(Map<String, Object> params);
+
+	  int isPEXAlreadyResult(Map<String, Object> params);
+
+	  EgovMap PEXResult_Update(Map<String, Object> params);
+
+
+
+
+
+
+
+
 
 
 
@@ -45,7 +58,7 @@ public interface AfterPEXTestResultListService {
 
 	  List<EgovMap> getBrnchId(Map<String, Object> params);
 
-	  List<EgovMap> selectDefectEntry(Map<String, Object> params);
+	 // List<EgovMap> selectDefectEntry(Map<String, Object> params);
 
 	  EgovMap getMemberBymemberID(Map<String, Object> params);
 
@@ -87,7 +100,7 @@ public interface AfterPEXTestResultListService {
 
 	  List<EgovMap> getASMember(Map<String, Object> params);
 
-	  List<EgovMap> getASReasonCode2(Map<String, Object> params);
+
 
 	  /*List<EgovMap> getCallLog(Map<String, Object> params);
 
@@ -95,7 +108,7 @@ public interface AfterPEXTestResultListService {
 
 	  boolean insertASNo(Map<String, Object> params, SessionVO sessionVO);
 
-	  EgovMap asResult_insert(Map<String, Object> params);
+
 
 	  EgovMap asResult_update(Map<String, Object> params);
 
@@ -113,7 +126,7 @@ public interface AfterPEXTestResultListService {
 
 	  List<EgovMap> selectCTByDSC(Map<String, Object> params);
 
-	  int isAsAlreadyResult(Map<String, Object> params);
+
 
 	  int asResultSync(Map<String, Object> params);
 
@@ -186,15 +199,15 @@ public interface AfterPEXTestResultListService {
 
 	  int saveASEntryInHouse(Map<String, Object> params);
 
-	  List<EgovMap> getDftTyp(Map<String, Object> params);
+	  //List<EgovMap> getDftTyp(Map<String, Object> params);
 
-	  ReturnMessage newASInHouseAddSerial(Map<String, Object> params);
+	  /*ReturnMessage newASInHouseAddSerial(Map<String, Object> params);
 
 	  String getSerialChk(Map<String, Object> params);
 
 	  int asResultBasic_updateSerial(Map<String, Object> params);
 
-	  EgovMap asResult_updateSerial(Map<String, Object> params);
+	  EgovMap asResult_updateSerial(Map<String, Object> params);*/
 
 	  public int setPay17dData(Map<String, Object> params);
 
@@ -204,7 +217,7 @@ public interface AfterPEXTestResultListService {
 
 	  public int convertTempAccountToSettlementAccount(int p);
 
-	  EgovMap selectCustomerInstallationAddress(Map<String, Object> params) throws Exception;
+	  //EgovMap selectCustomerInstallationAddress(Map<String, Object> params) throws Exception;
 
 	  // Added for INS AS by Hui Ding.
 	  public int insertSVC0005D(List<EgovMap> addItemList, String AS_RESULT_ID, String UPDATOR);

@@ -29,237 +29,204 @@
 
 	$(document).ready(
 		function() {
-			asManagementGrid();
+			PEXTestResultGrid();
 			doGetCombo('/services/holiday/selectBranchWithNM', 43, '','cmbbranchId', 'M', 'f_multiCombo'); // DSC BRANCH
 			CommonCombo.make('cmbCategory', '/common/selectCodeList.do', {groupCode : 11,codeIn : 'WP,AP,BT,BB,MAT,FRM,POE'}, '', {type : 'M'});
 
-			AUIGrid.bind(myGridID, "cellDoubleClick", function(event) { // AS ENTRY VIEW DOUBLE CLICK
-
-				var asid = AUIGrid.getCellValue(myGridID, event.rowIndex,"asId");
-				var asNo = AUIGrid.getCellValue(myGridID, event.rowIndex,"asNo");
-				var asStusId = AUIGrid.getCellValue(myGridID,event.rowIndex, "asStusId");
-				var salesOrdNo = AUIGrid.getCellValue(myGridID,event.rowIndex, "salesOrdNo");
-				var salesOrdId = AUIGrid.getCellValue(myGridID,event.rowIndex, "asSoId");
-
-				var param = "?salesOrderId=" + salesOrdId + "&ord_Id=" + salesOrdId + "&ord_No="
-						+ salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asid + "&IND= 1";
-
-				Common.popupDiv("TestResultViewPop.do" + param, null, null, true, '_newASResultDiv1');
-			});
 		});
 
-	function asManagementGrid() {
+	function PEXTestResultGrid() {
 		var columnLayout = [
 				{
-					dataField : "code",
-					headerText : "<spring:message code='service.grid.ASTyp'/>",
-					editable : false,
-					width : 100
+				    dataField : "soExchgId",
+				    headerText : "SO Exchange ID",
+				    width : 110,
+				    visible : false
 				},
 				{
-					dataField : "code2",
-					headerText : "<spring:message code='service.title.ApplicationType'/>",
-					width : 100
+				    dataField : "soId",
+				    headerText : "Sales Order ID",
+				    width : 110,
+				    visible : false
 				},
 				{
-					dataField : "stkDesc",
-					headerText : "<spring:message code='service.grid.Product'/>",
-					width : 200
+				    dataField : "testResultStus",
+				    headerText : "PEX Test Result Status ID",
+				    width : 110,
+				    visible : false
 				},
 				{
-					dataField : "asNo",
-					headerText : "<spring:message code='service.grid.ASNo'/>",
-					editable : false,
-					width : 100
+                    dataField : "testResultId",
+                    headerText : "PEX Test Result ID",
+                    width : 110,
+                    visible : false
+                },
+                {
+                    dataField : "rcdTms",
+                    headerText : "rcdTms",
+                    width : 100,
+                    visible : false
+                },
+				{
+					dataField : "productCategory",
+					headerText : "Product Category",
+					width : 110
 				},
 				{
-					dataField : "code1",
+                    dataField : "productCode",
+                    headerText : "Product Code",
+                    width : 100
+                },
+                {
+                    dataField : "productName",
+                    headerText : "Product Name",
+                    width : 180
+                },
+				{
+					dataField : "prodSerialNo",
+					headerText : "Product Serial Number",
+					width : 150
+				},
+				{
+					dataField : "pexTestResultStus",
 					headerText : "<spring:message code='service.grid.Status'/>",
-					editable : false,
-					width : 80
+					width : 100
 				},
 				{
-					dataField : "asCrtDt",
-					headerText : "<spring:message code='service.grid.registerDt'/>",
-					editable : false,
-					width : 150,
+					dataField : "pexDate",
+					headerText : "PEX Date",
+					width : 100,
 					dataType : "date",
 					formatString : "dd/mm/yyyy"
 				},
 				{
-					dataField : "salesOrdNo",
+                    dataField : "asAging",
+                    headerText : "AS Aging",
+                    width : 100
+                },
+				{
+					dataField : "orderNo",
 					headerText : "<spring:message code='service.title.SalesOrder'/>",
-					editable : false,
 					width : 100
 				},
 				{
-					dataField : "name",
-					headerText : "<spring:message code='service.title.CustomerName'/>",
-					width : 200
-				},
+                    dataField : "ctCode",
+                    headerText : "<spring:message code='service.grid.CTCode'/>",
+                    width : 100
+                },
+                {
+                    dataField : "dscCode",
+                    headerText : "CT Branch",
+                    width : 100
+                },
+                {
+                    dataField : "problemSymptomLarge",
+                    headerText : "Problem Symptom Large",
+                    width : 100
+                },
+                {
+                    dataField : "problemSymptomSmall",
+                    headerText : "Problem Symptom Small",
+                    width : 100
+                },
+                {
+                    dataField : "defectPartLarge",
+                    headerText : "Defect Part Large",
+                    width : 100
+                },
+                {
+                    dataField : "defectPartSmall",
+                    headerText : "Defect Part Small",
+                    width : 100
+                },
+                {
+                    dataField : "pexReason",
+                    headerText : "PEX Code",
+                    width : 100
+                },
+                {
+                    dataField : "pexRem",
+                    headerText : "PEX Desc",
+                    width : 400
+                },
+                {
+                    dataField : "retNo",
+                    headerText : "RET No",
+                    width : 100
+                },
+                {
+                    dataField : "pexInsNo",
+                    headerText : "PEX Installation No",
+                    width : 100
+                },
+                {
+                    dataField : "testResultNo",
+                    headerText : "Test Result No",
+                    width : 100
+                },
+                {
+                    dataField : "custName",
+                    headerText : "Customer Name",
+                    width : 200
+                },
+                {
+                    dataField : "testResultRem",
+                    headerText : "Test Result Remark",
+                    width : 400
+                },
 				{
-					dataField : "asReqstDt",
-					headerText : "<spring:message code='service.grid.ReqstDt'/>",
-					editable : false,
-					width : 110,
+					dataField : "testSettleDt",
+					headerText : "Test Settle Date",
+					width : 100,
 					dataType : "date",
 					formatString : "dd/mm/yyyy"
 				},
 				{
-					dataField : "asAppntDt",
-					headerText : "<spring:message code='service.grid.AppntDt'/>",
-					editable : false,
-					width : 110,
-					dataType : "date",
-					formatString : "dd/mm/yyyy"
-				},
-				{
-					dataField : "asSetlDt",
-					headerText : "<spring:message code='service.grid.SettleData'/>",
-					editable : false,
-					width : 110,
-					dataType : "date",
-					formatString : "dd/mm/yyyy"
-				},
-				{
-					dataField : "asResultCrtDt",
-					headerText : "<spring:message code='pay.head.lastUpdate'/>",
-					editable : false,
-					width : 110,
-					dataType : "date",
-					formatString : "dd/mm/yyyy"
-				},
-				{
-					dataField : "c3",
-					headerText : "<spring:message code='service.grid.ResultNo'/>",
-					editable : false,
-					style : "my-column",
-					width : 100
-				},
-				{
-					dataField : "asResultCrtUserId",
-					headerText : "<spring:message code='service.grid.asRsltEntCreator'/>",
-					editable : false,
-					width : 100
-				},
-				{
-					dataField : "memCode",
-					headerText : "<spring:message code='service.grid.CTCode'/>",
-					editable : false,
-					width : 100
-				},
-				{
-					dataField : "brnchCode",
-					headerText : "<spring:message code='service.title.ASBrch'/>",
-					width : 100
-				},
-				{
-					dataField : "cms",
-					headerText : "<spring:message code='service.title.AllowComm'/>",
-					width : 80
-				},
-				{
-					dataField : "c4",
-					headerText : "<spring:message code='service.grid.asEntCreator'/>",
-					editable : false,
-					width : 100
-				},
-				{
-					dataField : "totalAs",
-					headerText : "<spring:message code='service.grid.asTotalLdg'/>",
-					editable : false,
-					dataType : "numeric",
-					width : 100
-				},
-				{
-					dataField : "bsNo",
-					headerText : "<spring:message code='service.grid.HSNo'/>",
-					editable : false,
-					width : 100
-				},
-				{
-					dataField : "undefined",
-					headerText : "<spring:message code='sys.btn.edit'/>",
-					width : 100,
-					renderer : {
-						type : "ButtonRenderer",
-						labelText : "<spring:message code='sys.btn.edit'/>",
-						onclick : function(rowIndex, columnIndex, value, item) {
-
-							var AS_ID = AUIGrid.getCellValue(myGridID,rowIndex, "asId");
-							var AS_NO = AUIGrid.getCellValue(myGridID,rowIndex, "asNo");
-							var asStusId = AUIGrid.getCellValue(myGridID,rowIndex, "code1");
-							var ordno = AUIGrid.getCellValue(myGridID,rowIndex, "salesOrdNo");
-							var ordId = AUIGrid.getCellValue(myGridID,rowIndex, "asSoId");
-
-							if (asStusId != "ACT" && asStusId != "RCL") {
-							    Common.alert("<spring:message code='service.msg.asEdtChk' arguments='<b>"
-												+ AS_NO + "</b>' htmlEscape='false' argumentSeparator=';' />");
-								return;
-							}
-
-							Common.popupDiv(
-									"/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId=" + ordId + "&ordNo="
-											+ ordno	+ "&AS_NO=" + AS_NO + "&IND= 1", null, null, true, '_viewEntryPopDiv1');
-						}
-					}
-				},
-				{
-					dataField : "nric",
-					headerText : "<spring:message code='service.title.NRIC_CompanyNo'/>",
-					width : 100,
-					visible : false
-				},
-
-				{
-					dataField : "asIfFlag",
-					headerText : "<spring:message code='service.title.ASFlg'/>",
-					width : 80,
-					visible : false
-				},
-
-				{
-					dataField : "asBrnchId",
-					headerText : "<spring:message code='service.title.ASBrchId'/>",
-					width : 100,
-					visible : false
-				},
-				{
-					dataField : "c5",
-					headerText : "<spring:message code='service.title.ASAmt'/>",
-					width : 100,
-					visible : false
-				},
-				{
-					dataField : "asResultId",
-					headerText : "<spring:message code='service.title.ASRstId'/>",
-					width : 100,
-					visible : false
-				}, {
-					dataField : "refReqst",
-					headerText : "",
-					width : 100,
-					visible : false
-				}, {
-					dataField : "rcdTms",
-					headerText : "",
-					width : 100,
-					visible : false
-				} ];
+                    dataField : "amp",
+                    headerText : "AMP",
+                    width : 100
+                },
+                {
+                    dataField : "voltage",
+                    headerText : "Voltage",
+                    width : 100
+                },
+                {
+                    dataField : "instState",
+                    headerText : "State",
+                    width : 100
+                },
+                {
+                    dataField : "instCity",
+                    headerText : "City",
+                    width : 100
+                },
+                {
+                    dataField : "instArea",
+                    headerText : "Area",
+                    width : 100
+                },
+                {
+                    dataField : "prodGenuine",
+                    headerText : "G/NG",
+                    width : 100
+                }
+		];
 
 		var gridPros = {
 			showRowCheckColumn : true,
 			usePaging : true,
 			pageRowCount : 20,
 			showRowAllCheckBox : true,
-			editable : false,
-			selectionMode : "multipleCells"
+			//editable : false,
+			selectionMode : "multipleCells",
+			wordWrap : true
 		};
 
-		myGridID = AUIGrid.create("#grid_wrap_asList", columnLayout, gridPros);
+		myGridID = AUIGrid.create("#grid_wrap_PEXTestResult", columnLayout, gridPros);
 	}
 
-	function fn_searchASManagement() { // SEARCH AS
+	function fn_searchPEXTestResult() { // SEARCH PEX TEST RESULT
 
 		var valid = true;
 		var msg = "";
@@ -285,7 +252,7 @@
 		}
 
 		if (valid) {
-			Common.ajax("GET", "/ResearchDevelopment/searchASManagementList.do", $(
+			Common.ajax("GET", "/ResearchDevelopment/searchPEXTestResultList.do", $(
 					"#ASForm").serialize(), function(result) {
 				AUIGrid.setGridData(myGridID, result);
 			});
@@ -294,7 +261,7 @@
 		}
 	}
 
-	function fn_viewASResultPop() { // VIEW RESULT
+	/* function fn_viewASResultPop() { // VIEW RESULT
 		var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
 		if (selectedItems.length <= 0) {
@@ -307,11 +274,14 @@
 			return;
 		}
 
-		var AS_ID = selectedItems[0].item.asId;
-		var AS_NO = selectedItems[0].item.asNo;
-		var asStusId = selectedItems[0].item.code1;
-		var ordno = selectedItems[0].item.salesOrdNo;
-		var ordId = selectedItems[0].item.asSoId;
+		var testResultId = selectedItems[0].item.testResultId;
+        var testResultNo = selectedItems[0].item.testResultNo;
+        var testResultStus = selectedItems[0].item.testResultStus;
+        var orderNo = selectedItems[0].item.orderNo;
+        var soExchgId = selectedItems[0].item.soExchgId;
+        var rcdTms = selectedItems[0].item.rcdTms;
+        var updDt = selectedItems[0].item.updDt;
+        var crtDt = selectedItems[0].item.crtDt;
 
 		if (asStusId != "ACT") {
 			Common.alert("AS Info Edit Restrict</br>" + DEFAULT_DELIMITER + "<b>[" + AS_NO +
@@ -322,7 +292,7 @@
 		Common.popupDiv(
 				"/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId=" + ordId + "&ordNo=" + ordno + "&AS_NO=" + AS_NO
 				+ '&AS_ID=' + AS_ID, null, null, true, '_viewEntryPopDiv1');
-	}
+	} */
 
 	function fn_newASResultPop() {
 	    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
@@ -337,45 +307,37 @@
 	      return;
 	    }
 
-	    var asId = selectedItems[0].item.asId;
-	    var asNo = selectedItems[0].item.asNo;
-	    var asStusId = selectedItems[0].item.code1;
-	    var salesOrdNo = selectedItems[0].item.salesOrdNo;
-	    var salesOrdId = selectedItems[0].item.asSoId;
-	    //var refReqst = selectedItems[0].item.refReqst;
+	    var soExchgId = selectedItems[0].item.soExchgId;
+        var pexTestResultStus = selectedItems[0].item.pexTestResultStus;
+	    var testResultId = selectedItems[0].item.testResultId;
+	    var testResultNo = selectedItems[0].item.testResultNo;
 	    var rcdTms = selectedItems[0].item.rcdTms;
-	    //var asRst = selectedItems[0].item.c3;
 
-
-	    //if (asRst != '-') {
-	      //Common.alert("<spring:message code='service.msg.asAddHvRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
-	      //return;
-	    //}
-
-	     if (asStusId != "ACT") {
-	      Common.alert("<spring:message code='service.msg.asAddHvRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+	     if (pexTestResultStus != "ACT") {
+	      Common.alert("Fail to add due to selected PEX Test <b>" + testResultNo + "</b> have result.");
 	      return;
 	    }
 
-	    Common.ajax("POST", "/services/as/selRcdTms.do", {
-	        asNo : asNo,
-	        asId : asId,
-	        salesOrdNo : salesOrdNo,
-	        salesOrderId : salesOrdId,
+	    Common.ajax("POST", "/ResearchDevelopment/selRcdTms.do", {
+	    	testResultNo : testResultNo,
+	        testResultId : testResultId,
+	        soExchgId : soExchgId,
 	        rcdTms : rcdTms
 	    }, function(result) {
 	      if (result.code == "99") {
 	        Common.alert(result.message);
 	        return;
 	      } else {
-	        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + /* "&refReqst=" + refReqst +  "&as_Rst=" + asRst +*/ "&rcdTms=" + rcdTms;
-	        Common.popupDiv("/ResearchDevelopment/TestResultNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
+	        var param = "?testResultNo=" + testResultNo + "&testResultId=" + testResultId + "&soExchgId=" + soExchgId + "&rcdTms=" + rcdTms;
+	        Common.popupDiv("/ResearchDevelopment/TestResultNewResultPop.do" + param, null, null, true, '_newPEXTestResultDiv1');
 	      }
 	    });
 	  }
 
 	function fn_TestResultViewPop() {
 		var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+		console.log(selectedItems);
 
 		if (selectedItems.length <= 0) {
 			Common.alert("<spring:message code='service.msg.NoRcd'/>");
@@ -409,7 +371,7 @@
 		var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asid
 				+ "&mod=RESULTVIEW&as_Result_No=" + asResultNo;
 
-		Common.popupDiv("/ResearchDevelopment/TestResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
+		Common.popupDiv("/ResearchDevelopment/TestResultEditViewPop.do" + param, null, null, true, '_newPEXTestResultDiv1');
 	}
 
 	function fn_asResultEditPop(ind) {
@@ -425,16 +387,14 @@
 			return;
 		}
 
-		var asId = selectedItems[0].item.asId;
-		var asNo = selectedItems[0].item.asNo;
-		var asStusId = selectedItems[0].item.code1;
-		var salesOrdNo = selectedItems[0].item.salesOrdNo;
-		var salesOrdId = selectedItems[0].item.asSoId;
-		var asResultNo = selectedItems[0].item.c3;
-		var asResultId = selectedItems[0].item.asResultId;
-		var rcdTms = selectedItems[0].item.rcdTms;
-		var updDt = selectedItems[0].item.asSetlDt;
-		var lstUpdDt = selectedItems[0].item.asResultCrtDt;
+		var testResultId = selectedItems[0].item.testResultId;
+        var testResultNo = selectedItems[0].item.testResultNo;
+        var testResultStus = selectedItems[0].item.testResultStus;
+        var orderNo = selectedItems[0].item.orderNo;
+        var soExchgId = selectedItems[0].item.soExchgId;
+        var rcdTms = selectedItems[0].item.rcdTms;
+        var updDt = selectedItems[0].item.updDt;
+        var crtDt = selectedItems[0].item.crtDt;
 
 		if (asResultNo == "-") {
 			Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>"	+ asNo +
@@ -442,7 +402,7 @@
 			return;
 		}
 
-		if (ind == 0) {
+		/* if (ind == 0) {
 			if (asStusId != "RCL") {
 				if (updDt != "" && updDt != null) {
 					var stat = true;
@@ -508,34 +468,31 @@
 					}
 				}
 			}
-		}
+		} */
 
 		if (asResultNo == "") {
 			Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
 			return;
 		}
 
-		Common.ajax("POST", "/services/as/selRcdTms.do", {
-			asNo : asNo,
-			asId : asId,
-			salesOrdNo : salesOrdNo,
-			salesOrderId : salesOrdId,
-			rcdTms : rcdTms
+		Common.ajax("POST", "/ResearchDevelopment/selRcdTms.do", {
+			testResultNo : testResultNo,
+            testResultId : testResultId,
+            soExchgId : soExchgId,
+            rcdTms : rcdTms
 		}, function(result) {
 			if (result.code == "99") {
 				Common.alert(result.message);
 				return;
 			} else {
-				var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId
-					+ "&mod=RESULTEDIT&as_Result_No=" + asResultNo + "&as_Result_Id=" + asResultId;
-
-				Common.popupDiv("/ResearchDevelopment/TestResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
+				var param = "?testResultNo=" + testResultNo + "&testResultId=" + testResultId + "&soExchgId=" + soExchgId + "&rcdTms=" + rcdTms;
+			    Common.popupDiv("/ResearchDevelopment/TestResultEditViewPop.do" + param, null, null, true, '_newPEXTestResultDiv1');
 			}
 		});
 	}
 
 
-	function fn_asResultEditBasicPop(ind) {
+	function fn_PEXTestResultEditBasicPop(ind) {
 		var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
 		if (selectedItems.length <= 0) {
@@ -548,40 +505,38 @@
 			return;
 		}
 
-		var asId = selectedItems[0].item.asId;
-		var asNo = selectedItems[0].item.asNo;
-		var asStusId = selectedItems[0].item.code1;
-		var salesOrdNo = selectedItems[0].item.salesOrdNo;
-		var salesOrdId = selectedItems[0].item.asSoId;
-		var asResultNo = selectedItems[0].item.c3;
-		var asResultId = selectedItems[0].item.asResultId;
-		var refReqst = selectedItems[0].item.refReqst;
+		var testResultId = selectedItems[0].item.testResultId;
+		var testResultNo = selectedItems[0].item.testResultNo;
+		var testResultStusId = selectedItems[0].item.testResultStus;
+		var pexTestResultStusCode = selectedItems[0].item.pexTestResultStus
+		var orderNo = selectedItems[0].item.orderNo;
+		var soExchgId = selectedItems[0].item.soExchgId;
 		var rcdTms = selectedItems[0].item.rcdTms;
-		var updDt = selectedItems[0].item.asSetlDt;
-		var lstUpdDt = selectedItems[0].item.asResultCrtDt;
+		var updDt = selectedItems[0].item.updDt;
+		var crtDt = selectedItems[0].item.crtDt;
 
 		// ONLY APPLICABLE TO COMPLETE AND CANCEL AS
-		if (asStusId != "CAN" && asStusId != "COM") {
-			Common.alert("<spring:message code='service.msg.asEdtBscChk' arguments='<b>"
-							+ asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+		if (/* pexTestResultStusCode != "CAN" && */ pexTestResultStusCode != "COM") {
+			Common.alert("Fail to edit or view due to selected PEX <b>"
+							+ testResultNo + "</b> are not in Complete and Cancel status.");
 			return;
 		}
 
-		if (asStusId == "ACT") { // STILL ACTIVE
-			if (refReqst == "") {
-				Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>"
-								+ asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+		if (pexTestResultStusCode == "ACT") { // STILL ACTIVE
+			//if (refReqst == "") {
+				Common.alert("Fail to edit or view due to selected PEX <b>"
+								+ testResultNo + "</b> does not have any result.");
 				return;
-			}
+			//}
 		}
 
-		if (asResultNo == "") { // NO RESULT
-			Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>"
-							+ asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+		if (testResultNo == "") { // NO RESULT
+			Common.alert("Fail to edit or view due to selected PEX <b>"
+							+ testResultNo + "</b> does not have any result.");
 			return;
 		}
 
-		// CHECKING 7 DAYS ONLY MOD LEVEL CAN HELP EDIT
+		/* // CHECKING 7 DAYS ONLY MOD LEVEL CAN HELP EDIT
 		if (ind == 0) {
 			if (asStusId != "RCL") {
 				if (updDt != "" && updDt != null) {
@@ -648,22 +603,19 @@
 					}
 				}
 			}
-		}
+		} */
 
-		Common.ajax("POST", "/services/as/selRcdTms.do", { // CHECK TIMESTAMP
-			asNo : asNo,
-			asId : asId,
-			salesOrdNo : salesOrdNo,
-			salesOrderId : salesOrdId,
-			rcdTms : rcdTms
+		Common.ajax("POST", "/ResearchDevelopment/selRcdTms.do", { // CHECK TIMESTAMP
+			testResultNo : testResultNo,
+            testResultId : testResultId,
+            soExchgId : soExchgId,
+            rcdTms : rcdTms
 		}, function(result) {
 			if (result.code == "99") {
 				Common.alert(result.message);
 				return;
 			} else {
-				var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId
-						+ "&mod=edit&as_Result_No=" + asResultNo + "&as_Result_Id=" + asResultId;
-
+				var param = "?testResultNo=" + testResultNo + "&testResultId=" + testResultId + "&soExchgId=" + soExchgId + "&rcdTms=" + rcdTms;
 				Common.popupDiv("/ResearchDevelopment/TestResultEditBasicPop.do" + param, null, null, true, '_newASResultBasicDiv1');
 			}
 		});
@@ -671,7 +623,7 @@
 
 	function fn_excelDown() {
 		// type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-		GridCommon.exportTo("grid_wrap_asList", "xlsx", "AS Management");
+		GridCommon.exportTo("grid_wrap_PEXTestResult", "xlsx", "After PEX Test Result");
 	}
 
 	function f_multiCombo() {
@@ -706,22 +658,22 @@
 				</p></li>
 			</c:if>
 			<!-- FUNCTION WHICH ALLOW EDIT RECORD WHICH MORE THAN 7 DAYS -->
-			<c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
+			<%-- <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}"> --%>
 				<li><p class="btn_blue">
-				    <a href="#" onclick="fn_asResultEditBasicPop(0)">
+				    <a href="#" onclick="fn_PEXTestResultEditBasicPop(0)">
 				    <spring:message code='service.btn.edtBsAs' /></a>
 				</p></li>
-			</c:if>
-			<c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
+			<%-- </c:if> --%>
+			<%-- <c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}"> --%>
 				<li><p class="btn_blue">
 				    <a href="#" onclick="fn_asResultEditPop(0)">
 					<spring:message code='service.btn.edtAs' /></a>
 				</p></li>
-			</c:if>
+			<%-- </c:if> --%>
 			<!-- FUNCTION WHICH ALLOW EDIT RECORD WITHIN 7 DAYS -->
 			<%-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
 				<li><p class="btn_blue">
-						<a href="#" onclick="fn_asResultEditBasicPop(1)"><spring:message
+						<a href="#" onclick="fn_PEXTestResultEditBasicPop(1)"><spring:message
 								code='service.btn.edtBsAs' /></a>
 					</p></li>
 			</c:if>
@@ -739,7 +691,7 @@
 			</c:if>
 			<c:if test="${PAGE_AUTH.funcView == 'Y'}">
 				<li><p class="btn_blue">
-				    <a href="#" onClick="fn_searchASManagement()">
+				    <a href="#" onClick="fn_searchPEXTestResult()">
 					<span class="search"></span> <spring:message code='sys.btn.search' /></a>
 				</p></li>
 			</c:if>
@@ -771,14 +723,13 @@
 						<td><input type="text" title=""
 							placeholder="<spring:message code='service.title.OrderNumber'/>"
 							class="w100p" id="orderNum" name="orderNum" /></td>
-						<th scope="row"><spring:message code='service.title.ASBrch' /></th>
-						<td><select class="multy_select w100p" multiple="multiple"
-							id="cmbbranchId" name="cmbbranchId"></select></td>
+						<th scope="row">Branch</th>
+						<td><select class="multy_select w100p" multiple="multiple" id="cmbbranchId" name="cmbbranchId"></select></td>
 						<th scope="row"><spring:message code='service.title.Status' /></th>
-						<td><select class="multy_select w100p" multiple="multiple" id="asStatus" name="asStatus">
-								<c:forEach var="list" items="${asStat}" varStatus="status">
+						<td><select class="multy_select w100p" multiple="multiple" id="PEXTRStatus" name="PEXTRStatus">
+								<c:forEach var="list" items="${PEXTRStatus}" varStatus="status">
 									<c:choose>
-										<c:when test="${list.codeId=='4'}">
+										<c:when test="${list.codeId=='4'}"> <!-- 1 -->
 											<option value="${list.codeId}" selected>${list.codeName}</option>
 										</c:when>
 										<c:otherwise>
@@ -793,8 +744,8 @@
 						<td><select class="w100p" id="cmbCategory" name="cmbCategory" >
 							</select></td>
 						<th scope="row"><spring:message code='service.grid.Product' /></th>
-						<td><select class="multy_select w100p" multiple="multiple" id="asProduct" name="asProduct">
-						  <c:forEach var="list" items="${asProduct}" varStatus="status">
+						<td><select class="multy_select w100p" multiple="multiple" id="Product" name="Product">
+						  <c:forEach var="list" items="${Product}" varStatus="status">
 						      <option value="${list.stkId}">${list.stkDesc}</option>
 						  </c:forEach>
 						</select></td>
@@ -829,7 +780,7 @@
 			</ul>
 			<article class="grid_wrap">
 				<!-- grid_wrap start -->
-				<div id="grid_wrap_asList"
+				<div id="grid_wrap_PEXTestResult"
 					style="width: 100%; height: 500px; margin: 0 auto;"></div>
 			</article>
 			<!-- grid_wrap end -->
