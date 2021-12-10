@@ -437,12 +437,13 @@
                    s28q.SERIAL_REQUIRE_CHK_YN,
                    L47.rciv_CDC_RDC as FROM_LOC_ID,
                    L47.REQST_CDC_RDC as TO_LOC_ID
+                   ,rd.scan_qty SCAN_QTY
       from log0054m l54
          , log0047m l47
          , sys0028m s28q
          , sys0028m s28r
          , sys0047m s47
-         , (select distinct l48.reqst_no ,l55.delvry_no
+         , (select distinct l48.reqst_no ,l55.delvry_no,(select sum(reqst_qty) from log0048d where reqst_no = l48.reqst_no and reqst_del <![CDATA[<>]]> 'Y') SCAN_QTY
              from log0048d l48 , log0055d l55
              where L48.REQST_NO = l55.reqst_no
                and l48.itm_code= l55.itm_code
@@ -478,7 +479,7 @@
         <if test="searchToDate !=null and searchToDate !=''">
         AND L54.DELVRY_DT <![CDATA[ <= ]]>TO_CHAR (TO_DATE (#{searchToDate}, 'YYYYMMDD'),'yyyymmdd')
         </if>
-         GROUP BY L54.DELVRY_GI_DT, L54.DELVRY_GR_DT, L54.DELVRY_NO, S28R.WH_LOC_DESC, S28R.WH_LOC_CODE, L47.PRIDIC_FRQNCY, S47.USER_FULL_NAME, L54.CRT_USER_ID, L54.DELVRY_GI_CMPLT, L54.DELVRY_GR_CMPLT, S28R.RDC_CODE, S28Q.SERIAL_REQUIRE_CHK_YN, L47.RCIV_CDC_RDC, L47.REQST_CDC_RDC
+         GROUP BY L54.DELVRY_GI_DT, L54.DELVRY_GR_DT, L54.DELVRY_NO, S28R.WH_LOC_DESC, S28R.WH_LOC_CODE, L47.PRIDIC_FRQNCY, S47.USER_FULL_NAME, L54.CRT_USER_ID, L54.DELVRY_GI_CMPLT, L54.DELVRY_GR_CMPLT, S28R.RDC_CODE, S28Q.SERIAL_REQUIRE_CHK_YN, L47.RCIV_CDC_RDC, L47.REQST_CDC_RDC,rd.scan_qty
     </select>
 
 
@@ -1392,6 +1393,7 @@
              , S28.SERIAL_REQUIRE_CHK_YN
              , RCIV_CDC_RDC AS FROM_LOC_ID
              , REQST_CDC_RDC AS TO_LOC_ID
+             , (select sum(reqst_qty) from log0048d where reqst_no = L47.reqst_no and reqst_del <![CDATA[<>]]> 'Y') SCAN_QTY
         FROM LOG0047M L47 , SYS0028M S28
         WHERE 1 = 1
           <!-- AND L47.REQST_CRT_DT BETWEEN TO_DATE('20170928'||'000000' , 'YYYYMMDDHH24MISS') AND TO_DATE('20170928'||'235959' , 'YYYYMMDDHH24MISS')  -->
@@ -2044,4 +2046,88 @@ SELECT  /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.getStockTrans
    </if>
    AND L48.REQST_NO =#{smoNo}
 </select>
+
+<select id="selectSerialInfo" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.selectSerialInfo] - HLTANG */
+            SELECT X.*
+              FROM (
+                    SELECT ROW_NUMBER() OVER (PARTITION BY A.SERIAL_NO ORDER BY A.SCAN_NO DESC ) AS RN
+                         , A.SERIAL_NO
+                         , A.SCAN_NO
+                         , A.ITM_CODE
+                         , A.SCAN_STUS_CODE
+                         , A.REQST_NO                   -- GR NO
+                         , A.REQST_NO_ITM               -- GR SEQ
+                         , NVL(A.DELVRY_NO,'') DELVRY_NO
+                         , A.DELVRY_NO_ITM
+                         , A.FROM_LOC_ID
+                         , A.TO_LOC_ID                  -- TO CDC
+                         , A.TRNSC_TYPE                 -- (HP)
+                         , A.IO_TYPE
+                      FROM LOG0099D A
+                   ) X
+              WHERE X.RN = 1
+                AND (X.DELVRY_NO = #{reqstNo} or X.REQST_NO = #{reqstNo})
+                <if test="zIoType !=null and zIoType !=''">
+                and X.IO_TYPE = #{zIoType}
+               </if>
+
+    </select>
+
+    <update id="updateDeliveryGrDetail" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.updateDeliveryGrDetail] - Huiling */
+        update LOG0099D set scan_stus_code = 'C' where Scan_no in (
+        select SCAN_NO from (
+        SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY SCAN_NO DESC ) AS RN
+        ,SCAN_NO
+        FROM LOG0099D
+        WHERE
+        <if test="delvryNo !=null and delvryNo !=''">
+            DELVRY_NO = #{delvryNo}
+        </if>
+        <if test="reqstNo !=null and reqstNo !='' and delvryNo ==null ">
+            REQST_NO = #{reqstNo}
+        </if>
+        AND ITM_CODE = #{itmCode}
+        )x where x.rn =1
+        )
+    </update>
+
+    <update id="updateDeliveryGrMain" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.updateDeliveryGrMain] - Huiling */
+        update LOG0100m set stus_code = #{ioType}
+        WHERE
+        <if test="delvryNo !=null and delvryNo !=''">
+            last_DELVRY_NO = #{delvryNo}
+        </if>
+        <if test="reqstNo !=null and reqstNo !='' and delvryNo ==null">
+            LAST_REQST_NO = #{reqstNo}
+        </if>
+        AND ITM_CODE = #{itmCode}
+    </update>
+
+    <select id="selectDeliveryGrHist" parameterType="Map" resultType="egovMap">
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.selectDeliveryGrHist] - Huiling */
+        select * from (
+        SELECT ROW_NUMBER() OVER (PARTITION BY SERIAL_NO ORDER BY seq DESC ) AS RN
+        ,SERIAL_NO
+        ,SEQ
+        FROM LOG0101h
+        WHERE
+        <if test="delvryNo !=null and delvryNo !=''">
+            last_DELVRY_NO = #{delvryNo}
+        </if>
+        <if test="reqstNo !=null and reqstNo !='' and delvryNo ==null">
+            LAST_REQST_NO = #{reqstNo}
+        </if>
+        AND ITM_CODE = #{itmCode}
+        )x where RN =1
+    </select>
+
+    <update id="updateDeliveryGrHist" parameterType="Map">
+    /* [com.coway.trust.biz.logistics.mlog.impl.MlogApiMapperr.updateDeliveryGrHist] - Huiling */
+        update LOG0101H set stus_code = #{ioType}
+        WHERE serial_no = #{serialNo}
+        AND SEQ = #{seq}
+    </update>
 </mapper>
