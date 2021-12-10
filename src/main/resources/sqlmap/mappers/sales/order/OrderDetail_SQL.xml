@@ -923,7 +923,8 @@
                         WHEN T4.IND = 'INSFUNDS' THEN 'Insufficient Funds'
                         WHEN T4.IND = 'INVCARD' THEN 'Return pin/Invalid Card'
                         WHEN T4.IND = 'CHGCARD' THEN 'Change Card'
-                        WHEN T4.IND = 'TRXNOTALW' THEN 'Transaction Not Allowed' END CODE_NAME
+                        WHEN T4.IND = 'TRXNOTALW' THEN 'Transaction Not Allowed' 
+                        ELSE 'Change Card' END CODE_NAME
                FROM PAY0042D T1
                JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID
                                         AND 8 != T2.CTRL_STUS_ID
