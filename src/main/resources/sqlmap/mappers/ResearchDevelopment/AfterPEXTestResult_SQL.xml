@@ -111,7 +111,7 @@
             AND  L.TEST_RESULT_NO = #{TestResultNo}
        </if>
 
-       ORDER BY B.ORDER_NO
+       ORDER BY L.TEST_RESULT_NO
   </select>
 
   <select id="getPEXTestResultInfo" parameterType="Map" resultType="egovMap">
