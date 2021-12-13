@@ -48,7 +48,7 @@
 	   AND S62.PST_DEALER_ID    = S30.DEALER_ID
 	   AND S62.PST_STUS_ID      = S38.STUS_CODE_ID
 	   AND S62.PST_SALES_ORD_ID = S63.PST_SALES_ORD_ID
-
+       AND S32.STUS_CODE_ID = 9
 	   <if test="pstno != null and pstno != ''">
 	       AND S62.PST_REF_NO = #{pstno}
 	   </if>
@@ -425,7 +425,8 @@
 		        LEFT OUTER JOIN SYS0028M S28 ON S28.WH_LOC_ID = S62.PST_LOC_ID
 		        LEFT OUTER JOIN  (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 94) CUR ON CUR.CODE_ID = S62.PST_CUR_TYPE_ID
 		     WHERE S62.PST_REF_NO = #{psoNo}
-		        AND S63.PST_ITM_STK_ID IN
+		       AND S32.STUS_CODE_ID = 9
+		       AND S63.PST_ITM_STK_ID IN
 		        <foreach item="item" collection="stkId" index="index" open="(" separator="," close=")">
                      #{item}
                 </foreach>
