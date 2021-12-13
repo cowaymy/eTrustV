@@ -509,7 +509,7 @@ public class ClaimController {
           }
         }
     }
-    else if( claimMap.get("bankCode").equals("CIMB")){
+    /*else if( claimMap.get("bankCode").equals("CIMB")){
     	List<ClaimResultCimbUploadVO> vos = csvReadComponent.readCsvToList(multipartFile, false, ClaimResultCimbUploadVO::create);
 
     	// CVS 파일 객체 세팅
@@ -595,7 +595,8 @@ public class ClaimController {
               claimService.updateClaimResultItemBulk4(bulkMap);
           }
         }
-    }else{
+    }*/
+    else{
         List<ClaimResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile, false, ClaimResultUploadVO::create);
 
         // CVS 파일 객체 세팅
