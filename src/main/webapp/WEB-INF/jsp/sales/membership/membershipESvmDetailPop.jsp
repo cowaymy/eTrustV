@@ -476,11 +476,11 @@ console.log("esvmDetailPop");
                Common.ajax("POST", "/sales/membership/updateAction.do", data, function(result1) {
                    console.log("result1 :: " + result1);
                    if('${paymentInfo.payMode}' != "6506") {
-                       if(result1.messageCode == 00){
-                           if(result1.data.psmSrvMemNo == null)
+                       if(result1.code == 00){
+                           if(result1.data.docNo == null)
                                Common.alert('Membership successfully saved.' + "<b>");
                            else
-                               Common.alert('Membership successfully saved.' + "<b>" + result1.psmSrvMemNo);
+                               Common.alert('Membership successfully saved.' + "<b>" + result1.data.docNo);
                            fn_close();
 
                        } else {
