@@ -73,12 +73,12 @@ public class ResearchDevelopmentController {
 	    logger.debug("===========================/AfterPEXTestResult.do===============================");
 
 	    // GET SEARCH DATE RANGE
-	    String range = AfterPEXTestResultListService.getSearchDtRange();
+	    //String range = AfterPEXTestResultListService.getSearchDtRange();
 
 	    List<EgovMap> PEXTRStatus = AfterPEXTestResultListService.selectAsStat();
 	    List<EgovMap> Product = AfterPEXTestResultListService.asProd();
 
-	    model.put("DT_RANGE", CommonUtils.nvl(range));
+	    //model.put("DT_RANGE", CommonUtils.nvl(range));
 	    model.put("PEXTRStatus", PEXTRStatus);
 	    model.put("Product", Product);
 
