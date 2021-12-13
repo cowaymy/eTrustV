@@ -230,25 +230,22 @@
 
 		var valid = true;
 		var msg = "";
-/*
-		console.log($("#asNum").val()); */
 
-		if ($("#asNum").val() == '' && $("#resultNum").val() == ''
-				&& $("#orderNum").val() == '') {
-			if (startDate == '' && endDate == '') {
-				msg = "Request Date is required when AS No.,  Result No. and Order No. are empty.";
+		if ($("#TestResultNo").val() == '' && $("#orderNum").val() == '') {
+
+			if ($("#settleDtFrm").val() == '' && $("#settleDtTo").val() == '') {
+				msg = "Settle Date is required when Test Result No. and Order No. are empty.";
 				valid = false;
-			} else if (startDate != '' && endDate == '') {
-				msg = "Request End Date is required.";
+			} else if ($("#settleDtFrm").val() != '' && $("#settleDtTo").val() == '') {
+				msg = "Settle End Date is required.";
 				valid = false;
-			} else if (startDate == '' && endDate != '') {
-				msg = "Request Start Date is required.";
+			} else if ($("#settleDtFrm").val() == '' && $("#settleDtTo").val() != '') {
+				msg = "Settle Start Date is required.";
 				valid = false;
-			} else if (startDate != '' && endDate != '') {
-				console.log("here");
+			} /* else if (startDate != '' && endDate != '') {
 				if (!js.date.checkDateRange(startDate, endDate, "Request", "3"))
 					valid = false;
-			}
+			} */
 		}
 
 		if (valid) {
@@ -261,40 +258,7 @@
 		}
 	}
 
-	/* function fn_viewASResultPop() { // VIEW RESULT
-		var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-
-		if (selectedItems.length <= 0) {
-			Common.alert("<spring:message code='service.msg.NoRcd'/>");
-			return;
-		}
-
-		if (selectedItems.length > 1) {
-			Common.alert("<spring:message code='service.msg.onlyPlz'/>");
-			return;
-		}
-
-		var testResultId = selectedItems[0].item.testResultId;
-        var testResultNo = selectedItems[0].item.testResultNo;
-        var testResultStus = selectedItems[0].item.testResultStus;
-        var orderNo = selectedItems[0].item.orderNo;
-        var soExchgId = selectedItems[0].item.soExchgId;
-        var rcdTms = selectedItems[0].item.rcdTms;
-        var updDt = selectedItems[0].item.updDt;
-        var crtDt = selectedItems[0].item.crtDt;
-
-		if (asStusId != "ACT") {
-			Common.alert("AS Info Edit Restrict</br>" + DEFAULT_DELIMITER + "<b>[" + AS_NO +
-				    "]  is not in active status.</br> AS information edit is disallowed.</b>");
-			return;
-		}
-
-		Common.popupDiv(
-				"/services/as/resultASReceiveEntryPop.do?mod=VIEW&salesOrderId=" + ordId + "&ordNo=" + ordno + "&AS_NO=" + AS_NO
-				+ '&AS_ID=' + AS_ID, null, null, true, '_viewEntryPopDiv1');
-	} */
-
-	function fn_newASResultPop() {
+	function fn_newPEXTestResultPop() {
 	    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
 	    if (selectedItems.length <= 0) {
@@ -337,8 +301,6 @@
 	function fn_TestResultViewPop() {
 		var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
-		console.log(selectedItems);
-
 		if (selectedItems.length <= 0) {
 			Common.alert("<spring:message code='service.msg.NoRcd'/>");
 			return;
@@ -349,148 +311,27 @@
 			return;
 		}
 
-		var asid = selectedItems[0].item.asId;
-		var asNo = selectedItems[0].item.asNo;
-		var asStusId = selectedItems[0].item.code1;
-		var salesOrdNo = selectedItems[0].item.salesOrdNo;
-		var salesOrdId = selectedItems[0].item.asSoId;
-		var asResultNo = selectedItems[0].item.c3;
+		var soExchgId = selectedItems[0].item.soExchgId;
+	    var pexTestResultStus = selectedItems[0].item.pexTestResultStus;
+	    var testResultId = selectedItems[0].item.testResultId;
+	    var testResultNo = selectedItems[0].item.testResultNo;
+	    var rcdTms = selectedItems[0].item.rcdTms;
 
-		if (asStusId == "ACT") {
-			Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>"
-							+ asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
+		if (pexTestResultStus == "ACT") {
+			 Common.alert("Fail to view due to selected PEX Test <b>" + testResultNo + "</b> does not have any result.");
 			return;
 		}
 
-		if (asResultNo == "") {
-			Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>"
-							+ asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
-			return;
+		if (testResultNo == "") {
+			Common.alert("Fail to view due to selected PEX Test <b>" + testResultNo + "</b> does not have any result.");
+	        return;
 		}
 
-		var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asid
-				+ "&mod=RESULTVIEW&as_Result_No=" + asResultNo;
+		var param = "?testResultNo=" + testResultNo + "&testResultId=" + testResultId + "&soExchgId=" + soExchgId
+				+  "&mod=RESULTVIEW";
 
 		Common.popupDiv("/ResearchDevelopment/TestResultEditViewPop.do" + param, null, null, true, '_newPEXTestResultDiv1');
 	}
-
-	function fn_asResultEditPop(ind) {
-		var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-
-		if (selectedItems.length <= 0) {
-			Common.alert("<spring:message code='service.msg.NoRcd'/>");
-			return;
-		}
-
-		if (selectedItems.length > 1) {
-			Common.alert("<spring:message code='service.msg.onlyPlz'/>");
-			return;
-		}
-
-		var testResultId = selectedItems[0].item.testResultId;
-        var testResultNo = selectedItems[0].item.testResultNo;
-        var testResultStus = selectedItems[0].item.testResultStus;
-        var orderNo = selectedItems[0].item.orderNo;
-        var soExchgId = selectedItems[0].item.soExchgId;
-        var rcdTms = selectedItems[0].item.rcdTms;
-        var updDt = selectedItems[0].item.updDt;
-        var crtDt = selectedItems[0].item.crtDt;
-
-		if (asResultNo == "-") {
-			Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>"	+ asNo +
-					"</b>' htmlEscape='false' argumentSeparator=';' />");
-			return;
-		}
-
-		/* if (ind == 0) {
-			if (asStusId != "RCL") {
-				if (updDt != "" && updDt != null) {
-					var stat = true;
-					var sDate = new Date(updDt);
-					var tDate = new Date();
-					tDate.setDate(tDate.getDate() - 7);
-
-					var tMth = tDate.getMonth();
-					var tYear = tDate.getFullYear();
-					var tDay = tDate.getDate();
-					var sMth = sDate.getMonth();
-					var sYear = sDate.getFullYear();
-					var sDay = sDate.getDate();
-
-					if (sYear > tYear) {
-						stat = true;
-					} else {
-						if (sMth > tMth) {
-							stat = true;
-						} else {
-							if (sDay > tDay) {
-								stat = true;
-							} else {
-								stat = false;
-							}
-						}
-					}
-
-					if (!stat) {
-						Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
-						return;
-					}
-				} else if (lstUpdDt != "" && lstUpdDt != null) {
-					var stat = true;
-					var sDate = new Date(lstUpdDt);
-					var tDate = new Date();
-					tDate.setDate(tDate.getDate() - 7);
-
-					var tMth = tDate.getMonth();
-					var tYear = tDate.getFullYear();
-					var tDay = tDate.getDate();
-					var sMth = sDate.getMonth();
-					var sYear = sDate.getFullYear();
-					var sDay = sDate.getDate();
-
-					if (sYear > tYear) {
-						stat = true;
-					} else {
-						if (sMth > tMth) {
-							stat = true;
-						} else {
-							if (sDay > tDay) {
-								stat = true;
-							} else {
-								stat = false;
-							}
-						}
-					}
-
-					if (!stat) {
-						Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
-						return;
-					}
-				}
-			}
-		} */
-
-		if (asResultNo == "") {
-			Common.alert("<spring:message code='service.msg.asEdtNoRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
-			return;
-		}
-
-		Common.ajax("POST", "/ResearchDevelopment/selRcdTms.do", {
-			testResultNo : testResultNo,
-            testResultId : testResultId,
-            soExchgId : soExchgId,
-            rcdTms : rcdTms
-		}, function(result) {
-			if (result.code == "99") {
-				Common.alert(result.message);
-				return;
-			} else {
-				var param = "?testResultNo=" + testResultNo + "&testResultId=" + testResultId + "&soExchgId=" + soExchgId + "&rcdTms=" + rcdTms;
-			    Common.popupDiv("/ResearchDevelopment/TestResultEditViewPop.do" + param, null, null, true, '_newPEXTestResultDiv1');
-			}
-		});
-	}
-
 
 	function fn_PEXTestResultEditBasicPop(ind) {
 		var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
@@ -515,95 +356,22 @@
 		var updDt = selectedItems[0].item.updDt;
 		var crtDt = selectedItems[0].item.crtDt;
 
-		// ONLY APPLICABLE TO COMPLETE AND CANCEL AS
-		if (/* pexTestResultStusCode != "CAN" && */ pexTestResultStusCode != "COM") {
-			Common.alert("Fail to edit or view due to selected PEX <b>"
-							+ testResultNo + "</b> are not in Complete and Cancel status.");
+		// ONLY APPLICABLE TO COMPLETE
+		if (pexTestResultStusCode != "COM") {
+			Common.alert("Fail to edit due to selected PEX <b>" + testResultNo + "</b> are not in Complete status.");
 			return;
 		}
 
 		if (pexTestResultStusCode == "ACT") { // STILL ACTIVE
-			//if (refReqst == "") {
-				Common.alert("Fail to edit or view due to selected PEX <b>"
-								+ testResultNo + "</b> does not have any result.");
+			  Common.alert("Fail to edit due to selected PEX <b>" + testResultNo + "</b> does not have any result.");
 				return;
-			//}
 		}
 
 		if (testResultNo == "") { // NO RESULT
-			Common.alert("Fail to edit or view due to selected PEX <b>"
+			Common.alert("Fail to edit due to selected PEX <b>"
 							+ testResultNo + "</b> does not have any result.");
 			return;
 		}
-
-		/* // CHECKING 7 DAYS ONLY MOD LEVEL CAN HELP EDIT
-		if (ind == 0) {
-			if (asStusId != "RCL") {
-				if (updDt != "" && updDt != null) {
-					var stat = true;
-					var sDate = new Date(updDt);
-					var tDate = new Date();
-					tDate.setDate(tDate.getDate() - 7);
-
-					var tMth = tDate.getMonth();
-					var tYear = tDate.getFullYear();
-					var tDay = tDate.getDate();
-					var sMth = sDate.getMonth();
-					var sYear = sDate.getFullYear();
-					var sDay = sDate.getDate();
-
-					if (sYear > tYear) {
-						stat = true;
-					} else {
-						if (sMth > tMth) {
-							stat = true;
-						} else {
-							if (sDay > tDay) {
-								stat = true;
-							} else {
-								stat = false;
-							}
-						}
-					}
-
-					if (!stat) {
-						Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk'/></b>");
-						return;
-					}
-				} else if (lstUpdDt != "" && lstUpdDt != null) {
-					var stat = true;
-					var sDate = new Date(lstUpdDt);
-					var tDate = new Date();
-					tDate.setDate(tDate.getDate() - 7);
-
-					var tMth = tDate.getMonth();
-					var tYear = tDate.getFullYear();
-					var tDay = tDate.getDate();
-					var sMth = sDate.getMonth();
-					var sYear = sDate.getFullYear();
-					var sDay = sDate.getDate();
-
-					if (tYear > sYear) {
-						stat = false;
-					} else {
-						if (tMth > sMth) {
-							stat = false;
-						} else {
-							if (tDay > sDay) {
-								stat = false;
-							} else {
-								stat = true;
-							}
-						}
-					}
-
-					if (!stat) {
-						Common.alert("<b><spring:message code='service.alert.msg.AsEditPrdChk2'/></b>");
-						return;
-					}
-				}
-			}
-		} */
 
 		Common.ajax("POST", "/ResearchDevelopment/selRcdTms.do", { // CHECK TIMESTAMP
 			testResultNo : testResultNo,
@@ -616,7 +384,7 @@
 				return;
 			} else {
 				var param = "?testResultNo=" + testResultNo + "&testResultId=" + testResultId + "&soExchgId=" + soExchgId + "&rcdTms=" + rcdTms;
-				Common.popupDiv("/ResearchDevelopment/TestResultEditBasicPop.do" + param, null, null, true, '_newASResultBasicDiv1');
+				Common.popupDiv("/ResearchDevelopment/TestResultEditBasicPop.do" + param, null, null, true, '_newPEXResultBasicDiv1');
 			}
 		});
 	}
@@ -653,40 +421,19 @@
 		<ul class="right_btns">
 			<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
 				<li><p class="btn_blue">
-				    <a href="#" onclick="fn_newASResultPop()">
-				    <spring:message code='service.btn.addtAs' /></a>
+				    <a href="#" onclick="fn_newPEXTestResultPop()">
+				    Add PEX Test Result</a>
 				</p></li>
 			</c:if>
 			<!-- FUNCTION WHICH ALLOW EDIT RECORD WHICH MORE THAN 7 DAYS -->
-			<%-- <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}"> --%>
-				<li><p class="btn_blue">
-				    <a href="#" onclick="fn_PEXTestResultEditBasicPop(0)">
-				    <spring:message code='service.btn.edtBsAs' /></a>
-				</p></li>
-			<%-- </c:if> --%>
-			<%-- <c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}"> --%>
-				<li><p class="btn_blue">
-				    <a href="#" onclick="fn_asResultEditPop(0)">
-					<spring:message code='service.btn.edtAs' /></a>
-				</p></li>
-			<%-- </c:if> --%>
-			<!-- FUNCTION WHICH ALLOW EDIT RECORD WITHIN 7 DAYS -->
-			<%-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-				<li><p class="btn_blue">
-						<a href="#" onclick="fn_PEXTestResultEditBasicPop(1)"><spring:message
-								code='service.btn.edtBsAs' /></a>
-					</p></li>
-			</c:if>
-			<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-				<li><p class="btn_blue">
-						<a href="#" onclick="fn_asResultEditPop(1)"><spring:message
-								code='service.btn.edtAs' /></a>
-					</p></li>
-			</c:if> --%>
+			<li><p class="btn_blue">
+		      <a href="#" onclick="fn_PEXTestResultEditBasicPop(0)">
+				    Edit PEX Test Result</a>
+			</p></li>
 			<c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
 				<li><p class="btn_blue">
 				    <a href="#" onclick="fn_TestResultViewPop()">
-				    <spring:message code='service.btn.viewAS' /></a>
+				    View PEX Test Result</a>
 				</p></li>
 			</c:if>
 			<c:if test="${PAGE_AUTH.funcView == 'Y'}">
@@ -718,50 +465,65 @@
 				</colgroup>
 				<tbody>
 					<tr>
-						<th scope="row"><spring:message
-								code='service.title.OrderNumber' /></th>
-						<td><input type="text" title=""
-							placeholder="<spring:message code='service.title.OrderNumber'/>"
-							class="w100p" id="orderNum" name="orderNum" /></td>
+						<th scope="row">
+						<spring:message code='service.title.OrderNumber' />
+						</th>
+						<td>
+						<input type="text" title="" placeholder="<spring:message code='service.title.OrderNumber'/>"
+							class="w100p" id="orderNum" name="orderNum" />
+						</td>
 						<th scope="row">Branch</th>
-						<td><select class="multy_select w100p" multiple="multiple" id="cmbbranchId" name="cmbbranchId"></select></td>
-						<th scope="row"><spring:message code='service.title.Status' /></th>
-						<td><select class="multy_select w100p" multiple="multiple" id="PEXTRStatus" name="PEXTRStatus">
-								<c:forEach var="list" items="${PEXTRStatus}" varStatus="status">
-									<c:choose>
-										<c:when test="${list.codeId=='4'}"> <!-- 1 -->
-											<option value="${list.codeId}" selected>${list.codeName}</option>
-										</c:when>
-										<c:otherwise>
-											<option value="${list.codeId}">${list.codeName}</option>
-										</c:otherwise>
-									</c:choose>
-								</c:forEach>
-						</select></td>
+						<td>
+						<select class="multy_select w100p" multiple="multiple" id="cmbbranchId" name="cmbbranchId"></select>
+						</td>
+						<th scope="row">
+						<spring:message code='service.title.Status' />
+						</th>
+						<td>
+						  <select class="multy_select w100p" multiple="multiple" id="PEXTRStatus" name="PEXTRStatus">
+						      <c:forEach var="list" items="${PEXTRStatus}" varStatus="status">
+						          <option value="${list.codeId}">${list.codeName}</option>
+						      </c:forEach>
+						  </select>
+						</td>
 					</tr>
 					<tr>
 						<th scope="row">Product Category</th>
-						<td><select class="w100p" id="cmbCategory" name="cmbCategory" >
-							</select></td>
-						<th scope="row"><spring:message code='service.grid.Product' /></th>
-						<td><select class="multy_select w100p" multiple="multiple" id="Product" name="Product">
-						  <c:forEach var="list" items="${Product}" varStatus="status">
-						      <option value="${list.stkId}">${list.stkDesc}</option>
-						  </c:forEach>
-						</select></td>
+						<td>
+						  <select class="w100p" id="cmbCategory" name="cmbCategory" ></select>
+						</td>
+						<th scope="row">
+						  <spring:message code='service.grid.Product' />
+						</th>
+						<td>
+							<select class="multy_select w100p" multiple="multiple" id="Product" name="Product">
+							  <c:forEach var="list" items="${Product}" varStatus="status">
+							      <option value="${list.stkId}">${list.stkDesc}</option>
+							  </c:forEach>
+							</select>
+						</td>
 						<th scope="row">Test Result Number</th>
 						<td>
-						<input type="text" title="" placeholder="Test Result Number" class="w100p" id="TestResultNo" name="TestResultNo" /></td>
+						  <input type="text" title="" placeholder="Test Result Number" class="w100p" id="TestResultNo" name="TestResultNo" />
+						</td>
 					</tr>
 					<tr>
-						<th scope="row"><spring:message code='service.grid.SettleDate' /></th>
-						<td><div class="date_set w100p"><p>
-						  <input type="text" title="Create start Date"
-							 placeholder="DD/MM/YYYY" class="j_date" id="settleDtFrm" name="settleDtFrm" /></p>
-						  <span><spring:message code='pay.text.to' /></span>
-						  <p><input type="text" title="Create end Date"
-							 placeholder="DD/MM/YYYY" class="j_date" id="settleDtTo" name="settleDtTo" /></p>
-						</div></td>
+						<th scope="row">
+						  <spring:message code='service.grid.SettleDate' />
+						</th>
+						<td>
+							<div class="date_set w100p">
+							<p>
+							  <input type="text" title="Create start Date"
+								 placeholder="DD/MM/YYYY" class="j_date" id="settleDtFrm" name="settleDtFrm" />
+							</p>
+							  <span><spring:message code='pay.text.to' /></span>
+							  <p>
+							  <input type="text" title="Create end Date"
+								 placeholder="DD/MM/YYYY" class="j_date" id="settleDtTo" name="settleDtTo" />
+							  </p>
+							</div>
+						</td>
 						<th scope="row"></th>
 						<td></td>
 						<th scope="row"></th>
@@ -773,33 +535,16 @@
 			<ul class="right_btns">
 				<c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
 					<li><p class="btn_grid">
-							<a href="#" onClick="fn_excelDown()"><spring:message
-									code='service.btn.Generate' /></a>
-						</p></li>
+							<a href="#" onClick="fn_excelDown()">
+							<spring:message code='service.btn.Generate' /></a>
+					</p></li>
 				</c:if>
 			</ul>
 			<article class="grid_wrap">
 				<!-- grid_wrap start -->
-				<div id="grid_wrap_PEXTestResult"
-					style="width: 100%; height: 500px; margin: 0 auto;"></div>
+				<div id="grid_wrap_PEXTestResult" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 			</article>
 			<!-- grid_wrap end -->
-		</form>
-		<form action="#" id="reportForm" method="post">
-			<!--  <input type="hidden" id="V_RESULTID" name="V_RESULTID" /> -->
-			<input type="hidden" id="v_serviceNo" name="v_serviceNo" /> <input
-				type="hidden" id="v_invoiceType" name="v_invoiceType" /> <input
-				type="hidden" id="reportFileName" name="reportFileName" /> <input
-				type="hidden" id="viewType" name="viewType" /> <input type="hidden"
-				id="reportDownFileName" name="reportDownFileName"
-				value="DOWN_FILE_NAME" />
-		</form>
-		<form id='reportFormASLst' method="post" name='reportFormASLst'
-			action="#">
-			<input type='hidden' id='reportFileName' name='reportFileName' /> <input
-				type='hidden' id='viewType' name='viewType' /> <input type='hidden'
-				id='reportDownFileName' name='reportDownFileName' /> <input
-				type='hidden' id='V_TEMP' name='V_TEMP' />
 		</form>
 	</section>
 	<!-- search_table end -->
