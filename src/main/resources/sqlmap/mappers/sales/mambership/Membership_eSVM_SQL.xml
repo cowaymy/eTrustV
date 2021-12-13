@@ -469,9 +469,9 @@
 	                GROUP BY TRADE_SO_ID) I
 	        ON SAL.SALES_ORD_ID = I.ORD_ID
 	        LEFT JOIN /*AS OUTSTANDING*/
-	            (SELECT AS_SO_NO ORD_NO, AS_RESULT_NO, SUM(AS_LG_AMT) AS_OTSTND FROM PAY0006D
+	            (SELECT AS_SO_NO ORD_NO, SUM(AS_LG_AMT) AS_OTSTND FROM PAY0006D
 	                WHERE AS_RESULT_NO LIKE 'ASR%' AND AS_SO_NO = #{ordNo}
-	                GROUP BY AS_SO_NO, AS_RESULT_NO) J
+	                GROUP BY AS_SO_NO) J
 	        ON SAL.SALES_ORD_NO = J.ORD_NO
 	        WHERE SAL.SALES_ORD_NO = #{ordNo}
 	           AND ESVM.PSM_ID = #{psmId}
