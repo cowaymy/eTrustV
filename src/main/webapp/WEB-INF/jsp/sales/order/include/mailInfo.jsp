@@ -1,22 +1,22 @@
 <script type="text/javaScript" language="javascript">
 	//Masking pen (display last 4)
-	var oriNric = '${orderDetail.mailingInfo.mailCntNric}';
-	var oriMobileNo = '${orderDetail.mailingInfo.mailCntTelM}';
-	var oriEmail = '${orderDetail.mailingInfo.mailCntEmail}';
-	var oriFaxNo = '${orderDetail.mailingInfo.mailCntTelF}';
-	var oriOfficeNo = '${orderDetail.mailingInfo.mailCntTelO}';
-	var oriHouseNo = '${orderDetail.mailingInfo.mailCntTelR}';
-	var oriMainEmail = '${orderDetail.mailingInfo.mailCntEmail}';
-	var oriAddEmail = '${orderDetail.mailingInfo.mailCntEmailAdd}';
+	var oriMailNric = '${orderDetail.mailingInfo.mailCntNric}';
+	var oriMailMobileNo = '${orderDetail.mailingInfo.mailCntTelM}';
+	var oriMailEmail = '${orderDetail.mailingInfo.mailCntEmail}';
+	var oriMailFaxNo = '${orderDetail.mailingInfo.mailCntTelF}';
+	var oriMailOfficeNo = '${orderDetail.mailingInfo.mailCntTelO}';
+	var oriMailHouseNo = '${orderDetail.mailingInfo.mailCntTelR}';
+	var oriMailMainEmail = '${orderDetail.mailingInfo.mailCntEmail}';
+	var oriMailAddEmail = '${orderDetail.mailingInfo.mailCntEmailAdd}';
 
 	$(document).ready(function(){
 
-	    var maskedNric = oriNric.substr(-4).padStart(oriNric.length, '*');
-	    var maskedMobileNo = oriMobileNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
+	    var maskedNric = oriMailNric.substr(-4).padStart(oriMailNric.length, '*');
+	    var maskedMobileNo = oriMailMobileNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
 	    var maskedEmail = "";
 
-	    var prefix= oriEmail.substring(0, oriEmail .lastIndexOf("@"));
-	    var postfix= oriEmail.substring(oriEmail .lastIndexOf("@"));
+	    var prefix= oriMailEmail.substring(0, oriMailEmail .lastIndexOf("@"));
+	    var postfix= oriMailEmail.substring(oriMailEmail .lastIndexOf("@"));
 	    for(var i=0; i<prefix.length; i++){
 	        if(i == 0 || i == prefix.length - 1) {
 	            maskedEmail = maskedEmail + prefix[i].toString();
@@ -27,13 +27,13 @@
 	    }
 	    maskedEmail =maskedEmail +postfix;
 
-	    var maskedFaxNo = oriFaxNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
-	    var maskedOfficeNo= oriOfficeNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
-	    var maskedHouseNo= oriHouseNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
+	    var maskedFaxNo = oriMailFaxNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
+	    var maskedOfficeNo= oriMailOfficeNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
+	    var maskedHouseNo= oriMailHouseNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
 	    var maskedMainEmail = "";
 
-	    var prefix= oriMainEmail.substring(0, oriMainEmail .lastIndexOf("@"));
-        var postfix= oriMainEmail.substring(oriMainEmail .lastIndexOf("@"));
+	    var prefix= oriMailMainEmail.substring(0, oriMailMainEmail .lastIndexOf("@"));
+        var postfix= oriMailMainEmail.substring(oriMailMainEmail .lastIndexOf("@"));
         for(var i=0; i<prefix.length; i++){
             if(i == 0 || i == prefix.length - 1) {
             	maskedMainEmail = maskedMainEmail + prefix[i].toString();
@@ -46,8 +46,8 @@
 
         var maskedAddEmail = "";
 
-        var prefix= oriAddEmail.substring(0, oriAddEmail .lastIndexOf("@"));
-        var postfix= oriAddEmail.substring(oriAddEmail .lastIndexOf("@"));
+        var prefix= oriMailAddEmail.substring(0, oriMailAddEmail .lastIndexOf("@"));
+        var postfix= oriMailAddEmail.substring(oriMailAddEmail .lastIndexOf("@"));
         for(var i=0; i<prefix.length; i++){
             if(i == 0 || i == prefix.length - 1) {
             	maskedAddEmail = maskedAddEmail + prefix[i].toString();
@@ -58,12 +58,12 @@
         }
         maskedAddEmail =maskedAddEmail +postfix;
 
-        if(oriNric.replace(/\s/g,"") != "")
+        if(oriMailNric.replace(/\s/g,"") != "")
         {
         	$("#spanMailNric").html(maskedNric);
             // Appear NRIC on hover over field
             $("#spanMailNric").hover(function() {
-                $("#spanMailNric").html(oriNric);
+                $("#spanMailNric").html(oriMailNric);
             }).mouseout(function() {
                 $("#spanMailNric").html(maskedNric);
             });
@@ -71,36 +71,36 @@
         else{
         	$("#imgHoverNric").hide();
         }
-        if(oriMobileNo.replace(/\s/g,"") != "")
+        if(oriMailMobileNo.replace(/\s/g,"") != "")
         {
         	$("#spanMailMobileNo").html(maskedMobileNo);
             // Appear Mobile No on hover over field
             $("#spanMailMobileNo").hover(function() {
-                $("#spanMailMobileNo").html(oriMobileNo);
+                $("#spanMailMobileNo").html(oriMailMobileNo);
             }).mouseout(function() {
                 $("#spanMailMobileNo").html(maskedMobileNo);
             });
         }else{
             $("#imgHoverMobileNo").hide();
         }
-        if(oriEmail.replace(/\s/g,"") != "")
+        if(oriMailEmail.replace(/\s/g,"") != "")
         {
         	$("#spanMailEmail").html(maskedEmail);
             // Appear Email on hover over field
             $("#spanMailEmail").hover(function() {
-                $("#spanMailEmail").html(oriEmail);
+                $("#spanMailEmail").html(oriMailEmail);
             }).mouseout(function() {
                 $("#spanMailEmail").html(maskedEmail);
             });
         }else{
             $("#imgHoverEmail").hide();
         }
-        if(oriFaxNo.replace(/\s/g,"") != "")
+        if(oriMailFaxNo.replace(/\s/g,"") != "")
         {
         	$("#spanMailFaxNo").html(maskedFaxNo);
             // Appear Fax No on hover over field
             $("#spanMailFaxNo").hover(function() {
-                $("#spanMailFaxNo").html(oriFaxNo);
+                $("#spanMailFaxNo").html(oriMailFaxNo);
             }).mouseout(function() {
                 $("#spanMailFaxNo").html(maskedFaxNo);
             });
@@ -108,12 +108,12 @@
         else{
        	   $("#imgHoverFax").hide();
         }
-        if(oriOfficeNo.replace(/\s/g,"") != "")
+        if(oriMailOfficeNo.replace(/\s/g,"") != "")
         {
 		    $("#spanMailOfficeNo").html(maskedOfficeNo);
 		    // Appear Office No on hover over field
 		    $("#spanMailOfficeNo").hover(function() {
-		        $("#spanMailOfficeNo").html(oriOfficeNo);
+		        $("#spanMailOfficeNo").html(oriMailOfficeNo);
 		    }).mouseout(function() {
 		        $("#spanMailOfficeNo").html(maskedOfficeNo);
 		    });
@@ -121,12 +121,12 @@
         else{
         	$("#imgHoverOfficeNo").hide();
         }
-        if(oriHouseNo.replace(/\s/g,"") != "")
+        if(oriMailHouseNo.replace(/\s/g,"") != "")
         {
 		    $("#spanMailHouseNo").html(maskedHouseNo);
 		    // Appear House No on hover over field
 		    $("#spanMailHouseNo").hover(function() {
-		        $("#spanMailHouseNo").html(oriHouseNo);
+		        $("#spanMailHouseNo").html(oriMailHouseNo);
 		    }).mouseout(function() {
 		        $("#spanMailHouseNo").html(maskedHouseNo);
 		    });
@@ -134,12 +134,12 @@
         else{
                 $("#imgHoverHouseNo").hide();
         }
-        if(oriMainEmail.replace(/\s/g,"") != "")
+        if(oriMailMainEmail.replace(/\s/g,"") != "")
         {
 		    $("#spanMailMainEmail").html(maskedMainEmail);
 		    // Appear House No on hover over field
 		    $("#spanMailMainEmail").hover(function() {
-		        $("#spanMailMainEmail").html(oriMainEmail);
+		        $("#spanMailMainEmail").html(oriMailMainEmail);
 		    }).mouseout(function() {
 		        $("#spanMailMainEmail").html(maskedMainEmail);
 		    });
@@ -147,12 +147,12 @@
         else{
         	$("#imgHoverMainEmail").hide();
         }
-        if(oriAddEmail.replace(/\s/g,"") != "")
+        if(oriMailAddEmail.replace(/\s/g,"") != "")
         {
 		    $("#spanMailAddEmail").html(maskedAddEmail);
 		    // Appear House No on hover over field
 		    $("#spanMailAddEmail").hover(function() {
-		        $("#spanMailAddEmail").html(oriAddEmail);
+		        $("#spanMailAddEmail").html(oriMailAddEmail);
 		    }).mouseout(function() {
 		        $("#spanMailAddEmail").html(maskedAddEmail);
 		    });

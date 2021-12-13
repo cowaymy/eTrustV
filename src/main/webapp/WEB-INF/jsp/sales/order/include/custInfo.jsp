@@ -2,7 +2,7 @@
 
     //AUIGrid ���� �� ��ȯ ID
     var custInfoGridID;
-    var oriNric = '${orderDetail.basicInfo.custNric}';
+    var oriCustNric = '${orderDetail.basicInfo.custNric}';
 
     $(document).ready(function(){
         //AUIGrid �׸��带 �����մϴ�.
@@ -12,21 +12,16 @@
 
         // Masking pen (display last 4)
         if('${orderDetail.basicInfo.custType}' == "Individual") {
-            var maskedNric = oriNric.substr(-4).padStart(oriNric.length, '*');
-            $("#spanNric").html(maskedNric);
+            var maskedNric = oriCustNric.substr(-4).padStart(oriCustNric.length, '*');
+            $("#spanCustNric").html(maskedNric);
             // Appear NRIC on hover over field
-            $("#spanNric").hover(function() {
-                $("#spanNric").html(oriNric);
+            $("#spanCustNric").hover(function() {
+                $("#spanCustNric").html(oriCustNric);
             }).mouseout(function() {
-                $("#spanNric").html(maskedNric);
-            });
-            $("#imgHover").hover(function() {
-                $("#spanNric").html(oriNric);
-            }).mouseout(function() {
-                $("#spanNric").html(maskedNric);
+                $("#spanCustNric").html(maskedNric);
             });
         } else {
-            $("#spanNric").html(oriNric);
+            $("#spanCustNric").html(oriCustNric);
         }
 
     });
@@ -79,8 +74,8 @@
     <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td><span>${orderDetail.basicInfo.custType}</span></td>
     <th scope="row"><spring:message code="sal.text.nricCompanyNo" /></th>
-    <td><a href="#" class="search_btn" id="imgHover"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
-        <span id="spanNric"></span>
+    <td><a href="#" class="search_btn" id="imgHover"><img style="height:80%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id="spanCustNric">${orderDetail.basicInfo.custNric}</span>
     </td>
     <th scope="row"><spring:message code="sal.text.jomPayRef1" /></th>
     <td><span>${orderDetail.basicInfo.jomPayRef}</span></td>

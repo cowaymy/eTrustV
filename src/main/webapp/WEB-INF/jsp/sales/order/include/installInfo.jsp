@@ -1,20 +1,20 @@
 <script type="text/javaScript" language="javascript">
 	//Masking pen (display last 4)
-	var oriNric = '${orderDetail.installationInfo.instCntNric}';
-	var oriMobileNo = '${orderDetail.installationInfo.instCntTelM}';
-	var oriEmail = '${orderDetail.installationInfo.instCntEmail}';
-	var oriFaxNo = '${orderDetail.installationInfo.instCntTelF}';
-	var oriOfficeNo = '${orderDetail.installationInfo.instCntTelO}';
-	var oriHouseNo = '${orderDetail.installationInfo.instCntTelR}';
+	var oriInstNric = '${orderDetail.installationInfo.instCntNric}';
+	var oriInstMobileNo = '${orderDetail.installationInfo.instCntTelM}';
+	var oriInstEmail = '${orderDetail.installationInfo.instCntEmail}';
+	var oriInstFaxNo = '${orderDetail.installationInfo.instCntTelF}';
+	var oriInstOfficeNo = '${orderDetail.installationInfo.instCntTelO}';
+	var oriInstHouseNo = '${orderDetail.installationInfo.instCntTelR}';
 
 	$(document).ready(function(){
 
-	    var maskedNric = oriNric.substr(-4).padStart(oriNric.length, '*');
-	    var maskedMobileNo = oriMobileNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
+	    var maskedNric = oriInstNric.substr(-4).padStart(oriInstNric.length, '*');
+	    var maskedMobileNo = oriInstMobileNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
 	    var maskedEmail = "";
 
-	    var prefix= oriEmail.substring(0, oriEmail .lastIndexOf("@"));
-	    var postfix= oriEmail.substring(oriEmail .lastIndexOf("@"));
+	    var prefix= oriInstEmail.substring(0, oriInstEmail .lastIndexOf("@"));
+	    var postfix= oriInstEmail.substring(oriInstEmail .lastIndexOf("@"));
 	    for(var i=0; i<prefix.length; i++){
 	        if(i == 0 || i == prefix.length - 1) {
 	            maskedEmail = maskedEmail + prefix[i].toString();
@@ -25,16 +25,16 @@
 	    }
 	    maskedEmail =maskedEmail +postfix;
 
-	    var maskedFaxNo = oriFaxNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
-	    var maskedOfficeNo= oriOfficeNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
-	    var maskedHouseNo= oriHouseNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
+	    var maskedFaxNo = oriInstFaxNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
+	    var maskedOfficeNo= oriInstOfficeNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
+	    var maskedHouseNo= oriInstHouseNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
 
-	    if(oriNric.replace(/\s/g,"") != "")
+	    if(oriInstNric.replace(/\s/g,"") != "")
         {
 		    $("#spanInstNric").html(maskedNric);
 		    // Appear NRIC on hover over field
 		    $("#spanInstNric").hover(function() {
-		        $("#spanInstNric").html(oriNric);
+		        $("#spanInstNric").html(oriInstNric);
 		    }).mouseout(function() {
 		        $("#spanInstNric").html(maskedNric);
 		    });
@@ -42,12 +42,12 @@
 	    else{
 	    	$("#imgHoverInstNric").hide();
 	    }
-	    if(oriMobileNo.replace(/\s/g,"") != "")
+	    if(oriInstMobileNo.replace(/\s/g,"") != "")
         {
 		    $("#spanInstMobileNo").html(maskedMobileNo);
 		    // Appear Mobile No on hover over field
 		    $("#spanInstMobileNo").hover(function() {
-		        $("#spanInstMobileNo").html(oriMobileNo);
+		        $("#spanInstMobileNo").html(oriInstMobileNo);
 		    }).mouseout(function() {
 		        $("#spanInstMobileNo").html(maskedMobileNo);
 		    });
@@ -55,12 +55,12 @@
 	    else{
 	    	$("#imgHoverInstMobileNo").hide();
 	    }
-	    if(oriEmail.replace(/\s/g,"") != "")
+	    if(oriInstEmail.replace(/\s/g,"") != "")
         {
 		    $("#spanInstEmail").html(maskedEmail);
 		    // Appear Email on hover over field
 		    $("#spanInstEmail").hover(function() {
-		        $("#spanInstEmail").html(oriEmail);
+		        $("#spanInstEmail").html(oriInstEmail);
 		    }).mouseout(function() {
 		        $("#spanInstEmail").html(maskedEmail);
 		    });
@@ -68,12 +68,12 @@
 	    else{
 	    	$("#imgHoverInstEmail").hide();
 	    }
-	    if(oriFaxNo.replace(/\s/g,"") != "")
+	    if(oriInstFaxNo.replace(/\s/g,"") != "")
         {
 		    $("#spanInstFaxNo").html(maskedFaxNo);
 		    // Appear Fax No on hover over field
 		    $("#spanInstFaxNo").hover(function() {
-		        $("#spanInstFaxNo").html(oriFaxNo);
+		        $("#spanInstFaxNo").html(oriInstFaxNo);
 		    }).mouseout(function() {
 		        $("#spanInstFaxNo").html(maskedFaxNo);
 		    });
@@ -81,12 +81,12 @@
 	    else{
 	    	$("#imgHoverInstFaxNo").hide();
 	    }
-	    if(oriOfficeNo.replace(/\s/g,"") != "")
+	    if(oriInstOfficeNo.replace(/\s/g,"") != "")
         {
 		    $("#spanInstOfficeNo").html(maskedOfficeNo);
 		    // Appear Office No on hover over field
 		    $("#spanInstOfficeNo").hover(function() {
-		        $("#spanInstOfficeNo").html(oriOfficeNo);
+		        $("#spanInstOfficeNo").html(oriInstOfficeNo);
 		    }).mouseout(function() {
 		        $("#spanInstOfficeNo").html(maskedOfficeNo);
 		    });
@@ -94,12 +94,12 @@
 	    else{
 	    	$("#imgHoverInstOfficeNo").hide();
 	    }
-	    if(oriHouseNo.replace(/\s/g,"") != "")
+	    if(oriInstHouseNo.replace(/\s/g,"") != "")
         {
 		    $("#spanInstHouseNo").html(maskedHouseNo);
 		    // Appear House No on hover over field
 		    $("#spanInstHouseNo").hover(function() {
-		        $("#spanInstHouseNo").html(oriHouseNo);
+		        $("#spanInstHouseNo").html(oriInstHouseNo);
 		    }).mouseout(function() {
 		        $("#spanInstHouseNo").html(maskedHouseNo);
 		    });
