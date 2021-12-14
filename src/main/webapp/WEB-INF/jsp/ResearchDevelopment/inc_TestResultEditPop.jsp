@@ -414,16 +414,6 @@
           </colgroup>
           <tbody>
             <tr>
-              <th scope="row">
-                <!--<spring:message code='service.grid.ResultNo' /> -->
-              </th>
-              <td colspan="3">
-                <div id='newRno' style='display: none'>
-                  <span id='newResultNo'>
-                  <%-- </span><spring:message code='service.alert.msg.AsEditPrdChk' /></span> --%>
-              </td>
-            </tr>
-            <tr>
               <th scope="row"><spring:message code='service.grid.ResultNo' /></th>
               <td><input type="text" title="" placeholder="" class="w100p" id='txtResultNo' name='txtResultNo' disabled /></td>
               <th scope="row"><spring:message code='sys.title.status' /><span id='m1' name='m1' class="must">*</span></th>
