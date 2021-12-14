@@ -278,6 +278,7 @@
              , T1.GST_RGIST_NO
           FROM SAL0029D T1
          WHERE 1 = 1
+         AND T1.STUS_CODE_ID IN ('1', '9')
          <if test='custType != null and custType !=0 and custType !=""'>
            AND T1.TYPE_ID = #{custType}
          </if>
