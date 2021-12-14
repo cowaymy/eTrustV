@@ -710,4 +710,29 @@
 		</if>
 		ORDER BY DOC_NO
 	</select>
+
+
+	<select id="searchSummaryAccountList" parameterType="Map"
+        resultType="egovMap">
+        SELECT STATE_ID,
+        STATE_CUST_ID  AS CUST_ID,
+        STATE_CUST_NAME AS CUSTOMER_NAME,
+        CUST_GRP_CNT AS NO_OF_BILLING_GROUP,
+        CUST_ORD_CNT AS NO_OF_ORDER_NO
+        FROM PAY0313D A
+        WHERE 1=1
+        <if test="custID != null and custID != '' ">
+            AND A.STATE_CUST_ID = #{custID}
+        </if>
+        <if test="custName != null and custName != '' ">
+            AND A.STATE_CUST_NAME LIKE UPPER ( '%' || #{custName} || '%' )
+        </if>
+        <if test="invoiceRefDate != null and invoiceRefDate != '' ">
+            AND TO_CHAR(A.STATE_PRIOD_START,'MMYYYY') = TO_CHAR( TO_DATE(
+            #{invoiceRefDate},'MM/YYYY'),'MMYYYY')
+        </if>
+
+        ORDER BY A.STATE_CUST_ID
+    </select>
+
 </mapper>
