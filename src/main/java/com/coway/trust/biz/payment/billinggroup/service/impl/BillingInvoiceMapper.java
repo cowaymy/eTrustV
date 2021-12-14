@@ -86,4 +86,13 @@ public interface BillingInvoiceMapper {
 	 */
 	List<EgovMap> searchSummaryInvoiceList(Map<String, Object> params);
 
+	/**
+	 * Summary Account List 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> searchSummaryAccountList(Map<String, Object> params);
+
+
+
 }

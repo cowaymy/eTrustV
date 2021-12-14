@@ -70,4 +70,10 @@ public class BillingInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 		// TODO Auto-generated method stub
 		return invoiceMapper.searchSummaryInvoiceList(params);
 	}
+
+	@Override
+	public  List<EgovMap> searchSummaryAccountList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return invoiceMapper.searchSummaryAccountList(params);
+	}
 }
