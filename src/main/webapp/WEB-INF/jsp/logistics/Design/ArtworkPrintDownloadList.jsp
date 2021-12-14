@@ -111,7 +111,8 @@ $(function(){
                 </tr>
                 <tr>
 	                <td>
-	                    <a href="https://drive.google.com/open?id=1EMiS3xJhGthcAi2w2auPjJZXtPzubYbb" target="_blank"><font class="tblFontCongf">Branding Banner</font></a>
+	                    <!-- <a href="https://drive.google.com/open?id=1EMiS3xJhGthcAi2w2auPjJZXtPzubYbb" target="_blank"><font class="tblFontCongf">Branding Banner</font></a> changed at 2021-12-14. Hui Ding-->
+	                    <a href="https://drive.google.com/drive/folders/1ggAloUasPFGsSnp_cf0NwcBMecHO_BfE?usp=sharing" target="_blank"><font class="tblFontCongf">Branding Banner</font></a>
                         <br />
                         <br />
                         <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOdkFqN2ozR0dfWWc" target="_blank"><font class="tblFontCongf">Recruitment Banner</font></a>
