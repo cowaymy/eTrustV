@@ -133,6 +133,8 @@ public class HcOrderCancelServiceImpl extends EgovAbstractServiceImpl implements
 	public ReturnMessage hcAddProductReturnSerial(Map<String, Object> params, SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 		params.put("userId", sessionVO.getUserId());
+		params.put("brnchId", sessionVO.getUserBranchId());
+
 		params.put("srvOrdId", CommonUtils.nvl(params.get("hidSalesOrderId")));   // Matress OrderId
 
 		// return - Matress Product
