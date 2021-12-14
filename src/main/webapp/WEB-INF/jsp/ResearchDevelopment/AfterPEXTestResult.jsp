@@ -237,7 +237,7 @@
          } else if ($("#settleDtFrm").val() == '' && $("#settleDtTo").val() != '') {
              msg = "Settle Start Date is required.";
              valid = false;
-
+         }
 		/* if ($("#TestResultNo").val() == '' && $("#orderNum").val() == '') {
 
 			if ($("#settleDtFrm").val() == '' && $("#settleDtTo").val() == '') {
@@ -252,8 +252,7 @@
 			} /* else if (startDate != '' && endDate != '') {
 				if (!js.date.checkDateRange(startDate, endDate, "Request", "3"))
 					valid = false;
-			}
-		} */
+			} */
 
 		if (valid) {
 			Common.ajax("GET", "/ResearchDevelopment/searchPEXTestResultList.do", $(
