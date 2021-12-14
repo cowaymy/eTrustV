@@ -100,7 +100,19 @@ public class MembershipESvmApplicationImpl implements MembershipESvmApplication 
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		if (list.size() > 0) {
 			for(int i = 0; i < list.size(); i++) {
-				if(updateList != null && i < updateList.length) {
+				if(updateList != null && i < updateList.length && removeList != null && removeList.length > 0) {
+					String atchFileId = updateList[i];
+					String removeAtchFileId = removeList[i];
+					if(atchFileId.equals(removeAtchFileId))
+					{
+						fileService.changeFileUpdate(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), type, Integer.parseInt(String.valueOf(params.get("userId"))));
+					}
+					else {
+						int fileGroupId = (Integer.parseInt(params.get("atchFileGrpId").toString()));
+						this.insertFile(fileGroupId, list.get(i), type,params, seqs.get(i));
+					}
+				}
+				else if(updateList != null && i < updateList.length) {
 					String atchFileId = updateList[i];
 					fileService.changeFileUpdate(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), type, Integer.parseInt(String.valueOf(params.get("userId"))));
 				}
@@ -110,7 +122,7 @@ public class MembershipESvmApplicationImpl implements MembershipESvmApplication 
 				}
 			}
 		}
-		if(removeList != null && removeList.length > 0){
+		if(updateList == null && removeList != null && removeList.length > 0){
 			for(String id : removeList){
 				LOGGER.info(id);
 				String atchFileId = id;

@@ -12,7 +12,7 @@
     var poFileId = 0;
     var nricFrFileId = 0;
     var nricBcFileId = 0;
-    var slipFileId2 = 0;
+    var slipFileId = 0;
     var chqFileId = 0;
     var otherFileId = 0;
     var otherFileId2 = 0;
@@ -23,7 +23,7 @@
     var poFileName = "";
     var nricFrFileName = "";
     var nricBcFileName = "";
-    var slipFileName2 = "";
+    var slipFileName = "";
     var chqFileName = "";
     var otherFileName = "";
     var otherFileName2 = "";
@@ -36,7 +36,7 @@
     var POFlg = 0; //0: No need to check
 
     $(document).ready(function(){
-console.log("esvmDetailPop");
+        console.log("esvmDetailPop");
         if(MEM_TYPE == "1" || MEM_TYPE == "2" || MEM_TYPE == "7") {
             var elements = document.getElementsByClassName("attach_mod");
             for(var i = 0; i < elements.length; i++) {
@@ -103,7 +103,12 @@ console.log("esvmDetailPop");
                 $("#payment_merchantBank option[value='"+ merchantBankCode +"']").attr("selected", true);
                 $('#action').val(stus);
                 $("#action option[value='"+ stus +"']").attr("selected", true);
-
+                if(specialInst != null || specialInst != '')
+                {
+                	$("#specialInstruction option[value='"+ specialInst +"']").attr("selected", true);
+                }
+                $("#PONo").replaceWith('<input id=PONo name="PONo" value="${eSvmInfo.poNo}" type="text" title="" placeholder="" class="w100p" />');
+                $("#SARefNo").replaceWith('<input id=SARefNo name="SARefNo" value="${eSvmInfo.saRef}" type="text" title="" placeholder="" class="w100p" />');
                 var trxDt = $("#payment_transactionDt").val();
                 if(trxDt.length != 10) {
                     trxDt = trxDt.substr(0,2) + '/' + trxDt.substr(2,2) + '/' + trxDt.substr(4,4);
@@ -206,9 +211,6 @@ console.log("esvmDetailPop");
                 }
             }
            }
-
-        //if($("#action").val() == '5') //5:Approved
-          //  $("#specInst").hide();
     });
 
     $('.creditCardText').keyup(function() {
