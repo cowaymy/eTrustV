@@ -181,7 +181,7 @@ $(document).ready(function(){
 
 
         //update
-        fn_getCustomerBasicAjax();
+        //fn_getCustomerBasicAjax();
 
     });
 
@@ -290,13 +290,15 @@ $(document).ready(function(){
       }
 
     function nricToDob(nric){
+    	let currentYear = new Date().getFullYear();
         let dob = "";
 
+        let currentYearSubStr = currentYear.toString().substr(2,2);
         let year  = nric.substr(0, 2);
         let month = nric.substr(2, 2);
         let day   = nric.substr(4, 2);
 
-        if(year <= 99){
+        if(year >= currentYearSubStr && year <= 99){
             year = "19" + year;
         }else{
             year = "20" + year;
