@@ -224,12 +224,11 @@
             LEFT JOIN ( /* AS Outstanding */
                 SELECT
                     AS_SO_NO ORD_NO,
-                    AS_RESULT_NO,
                     SUM(AS_LG_AMT) AS_OTSTND
                 FROM PAY0006D
                 WHERE AS_RESULT_NO LIKE 'ASR%'
                 AND AS_SO_NO = #{ordNo}
-                GROUP BY AS_SO_NO, AS_RESULT_NO
+                GROUP BY AS_SO_NO
             ) J
                 ON A.SALES_ORD_NO = J.ORD_NO
             LEFT JOIN SVC0010D K
