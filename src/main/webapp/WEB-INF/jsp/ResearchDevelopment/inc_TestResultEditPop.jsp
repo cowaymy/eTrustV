@@ -2,11 +2,11 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
-  var myFltGrd10;
+/*   var myFltGrd10;
 
   var failRsn;
   var errCde;
-  var asMalfuncResnId;
+  var asMalfuncResnId; */
   var currentStatus;
   var PEXRslt;
   var ops;
@@ -82,7 +82,6 @@
     if ($("#ddlStatus").val() == 4) {
       $("#ddlStatus").attr("disabled", "disabled");
     }
-
     fn_ddlStatus_SelectedIndexChanged();
   }
 
@@ -210,8 +209,6 @@
       $('#DC').hide();
       $('#DP').hide();
       $('#DD').hide();
-
-
   }
 
   function fn_clearPageField() {
@@ -240,7 +237,6 @@
       $("#def_def").val("").attr("disabled", true);
       $("#def_def_text").val("");
       $("#def_def_text").val("").attr("disabled", true);
-
     }
   }
 
@@ -280,25 +276,18 @@
     $("#PEXData_SO_EXCHG_ID").val(ops.SO_EXCHG_ID);
     $("#requestMod").val(ops.MOD);
 
-    //fn_getASRulstEditFilterInfo(); //AS_RESULT_NO
-     fn_getPEXTestResultInfo(); //AS_RESULT_NO
-    // fn_setCTcodeValue();
+     fn_getPEXTestResultInfo(); //PEX_RESULT_NO
 
     // AS EDIT
     if (ops.MOD == "RESULTEDIT") {
-      //fn_getErrMstList('${ORD_NO}', 'fn_errCallbackFun');
       fn_errCallbackFun();
       fn_HasFilterUnclaim();
 
     } else if (ops.MOD == "RESULTVIEW") {
-      //fn_getErrMstList('${ORD_NO}', 'fn_errCallbackFun');
       fn_errCallbackFun();
 
       $("#PEXResultForm").find("input, textarea, button, select").attr("disabled", true);
       $("#btnSaveDiv").attr("style", "display:none");
-
-      // fn_HasFilterUnclaim();
-      // fn_asResult_viewPageContral();
 
       $("#btnSaveDiv").attr("style", "display:none");
       $("#addDiv").attr("style", "display:none");
