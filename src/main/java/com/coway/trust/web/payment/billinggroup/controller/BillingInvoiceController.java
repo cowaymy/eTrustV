@@ -395,6 +395,7 @@ public class BillingInvoiceController {
 		return "payment/billinggroup/summaryInvoicePop";
 	}
 
+
 	@RequestMapping(value = "/selectSummaryInvoiceList.do")
 	public ResponseEntity<List<EgovMap>> searchSummaryInvoiceList(@RequestParam Map<String, Object> params,
 			HttpServletRequest request, ModelMap model) {
@@ -406,5 +407,22 @@ public class BillingInvoiceController {
 
 	}
 
+
+	@RequestMapping(value = "/initSummaryOfAccountPop.do")
+	public String initSummaryAccount(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		return "payment/billinggroup/summaryAccountPop";
+	}
+
+	@RequestMapping(value = "/selectSummaryAccountList.do")
+	public ResponseEntity<List<EgovMap>> searchSummaryAccountList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) {
+
+
+		List<EgovMap> searchSummaryAccountList = invoiceService.searchSummaryAccountList(params);
+
+		return ResponseEntity.ok(searchSummaryAccountList);
+
+	}
 
 }
