@@ -133,6 +133,8 @@ public  class HsFilterDeliveryServiceImpl extends EgovAbstractServiceImpl implem
 					insMap = (Map<String, Object>) params.get(i);
 					insMap.put("userId", userid);
 					insMap.put("delno", seq);
+					insMap.put("ttype", "US");
+					insMap.put("mtype", "US03");
 					//insMap.put("userId", params.get(i).get("userId"));
 					hsFilterDeliveryMapper.deliveryStockTransferDetailIns(insMap);
 				}
