@@ -43,6 +43,8 @@ function fn_makeStatementList(type){
         	|| "${sessionRoleId}" == 87 || "${sessionRoleId}" == 85) {
 
 		$("#statementList").append("<option value='initSummaryOfInvoicePop.do'>Summary of Invoice</option>");
+		$("#statementList").append("<option value='initSummaryOfAccountPop.do'>Summary of Account</option>");
+
 		}
 	}
 }
