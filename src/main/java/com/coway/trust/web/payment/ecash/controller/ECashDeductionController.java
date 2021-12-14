@@ -932,7 +932,7 @@ public class ECashDeductionController {
 		eCashMap.put("fileBatchBankId",request.getParameter("fileBatchBankId"));
 
 		 }
-		 /*else  if( request.getParameter("bankCode").equals("CIMB")){
+		 else  if( request.getParameter("bankCode").equals("CIMB")){
 				List<ECashResultCimbUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,false ,ECashResultCimbUploadVO::create);
 
 				//CVS 파일 객체 세팅
@@ -1028,7 +1028,7 @@ public class ECashDeductionController {
 				eCashMap.put("fileBatchId",request.getParameter("fileBatchId"));
 				eCashMap.put("fileBatchBankId",request.getParameter("fileBatchBankId"));
 
-				 }*/
+				 }
 		 else{
     				List<ECashResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,ECashResultUploadVO::create);
 
