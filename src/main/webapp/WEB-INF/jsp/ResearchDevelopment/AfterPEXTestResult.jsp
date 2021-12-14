@@ -252,7 +252,7 @@
 			} /* else if (startDate != '' && endDate != '') {
 				if (!js.date.checkDateRange(startDate, endDate, "Request", "3"))
 					valid = false;
-			} */
+			}
 		} */
 
 		if (valid) {
