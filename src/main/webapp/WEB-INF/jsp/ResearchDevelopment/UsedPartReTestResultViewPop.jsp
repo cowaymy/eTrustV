@@ -126,10 +126,10 @@
  <!-- popup_wrap start -->
  <form id="resultASForm" method="post">
   <div style="display: none">
-   <input type="text" name="AS_ID" id="AS_ID" value="${AS_ID}" /> <input
-    type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" /> <input
-    type="text" name="ORD_NO" id="ORD_NO" value="${ORD_NO}" /> <input
-    type="text" name="AS_NO" id="AS_NO" value="${AS_NO}" />
+   <input type="text" name="AS_ID" id="AS_ID" value="${AS_ID}" />
+   <input type="text" name="ORD_ID" id="ORD_ID" value="${ORD_ID}" />
+   <input type="text" name="ORD_NO" id="ORD_NO" value="${ORD_NO}" />
+   <input type="text" name="AS_NO" id="AS_NO" value="${AS_NO}" />
   </div>
  </form>
  <header class="pop_header">

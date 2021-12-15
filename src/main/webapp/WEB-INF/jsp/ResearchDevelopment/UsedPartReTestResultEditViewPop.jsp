@@ -184,7 +184,7 @@
 
   function setPopData() {
 
-	  console.log ("123");
+	  console.log ("1234");
     var options = {
       AS_ID : '${AS_ID}',
       AS_SO_ID : '${ORD_ID}',
@@ -393,7 +393,7 @@
    </aside>
    <!-- title_line end -->
    <!-- asResultInfo info tab  start...-->
-   <jsp:include page='${pageContext.request.contextPath}/ResearchDevelopment/asResultInfoEdit.do' />
+   <jsp:include page='${pageContext.request.contextPath}/ResearchDevelopment/asResultInfoEdit2.do' />
    <!-- asResultInfo info tab  end...-->
    <script>
    </script>

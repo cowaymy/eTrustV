@@ -96,6 +96,12 @@
                     width : 100
                 },
                 {
+                    dataField : "testStus",
+                    headerText : "Status",
+                    editable : false,
+                    width : 100
+                },
+                {
                     dataField : "lastInstallSerialNo",
                     headerText : "<spring:message code='sales.SeriacNo'/>",
                     editable : false,
@@ -251,6 +257,11 @@
                     headerText : "Testable",
                     width : 100,
                     visible : true
+                }, {
+                    dataField : "rcdTms",
+                    headerText : "",
+                    width : 100,
+                    visible : false
                 } ];
 
         var gridPros = {
@@ -353,10 +364,24 @@
         var asNo = selectedItems[0].item.asNo;
         var asStusId = selectedItems[0].item.code1;
         var salesOrdNo = selectedItems[0].item.salesOrdNo;
-        var salesOrdId = selectedItems[0].item.asSoId;
+        var salesOrdId = selectedItems[0].item.salesOrdId;
         //var refReqst = selectedItems[0].item.refReqst;
         var rcdTms = selectedItems[0].item.rcdTms;
         //var asRst = selectedItems[0].item.c3;
+
+        var dscCode = selectedItems[0].item.dscCode;
+        var ctCode = selectedItems[0].item.lastInstallCtCode;
+
+        console.log ("asId :"+ asId );
+        console.log ("asNo :"+ asNo );
+        console.log ("asStusId :"+ asStusId );
+        console.log ("salesOrdNo :"+ salesOrdNo );
+        console.log ("salesOrdId :"+ salesOrdId );
+        console.log ("rcdTms :"+ rcdTms );
+        console.log ("dscCode :"+ dscCode );
+        console.log ("ctCode :"+ ctCode );
+
+
 
 
         //if (asRst != '-') {
@@ -364,26 +389,29 @@
           //return;
         //}
 
-         if (asStusId != "ACT") {
+        /*  if (asStusId != "ACT") {
           Common.alert("<spring:message code='service.msg.asAddHvRst' arguments='<b>" + asNo + "</b>' htmlEscape='false' argumentSeparator=';' />");
           return;
-        }
+        } */
 
-        Common.ajax("POST", "/services/as/selRcdTms.do", {
+      /*    Common.ajax("POST", "/services/as/selRcdTms.do", {
             asNo : asNo,
             asId : asId,
             salesOrdNo : salesOrdNo,
             salesOrderId : salesOrdId,
             rcdTms : rcdTms
         }, function(result) {
-          if (result.code == "99") {
+           if (result.code == "99") {
             Common.alert(result.message);
             return;
-          } else {
-            var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + /* "&refReqst=" + refReqst +  "&as_Rst=" + asRst +*/ "&rcdTms=" + rcdTms;
-            Common.popupDiv("/ResearchDevelopment/TestResultNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
-          }
-        });
+          } else { */
+     //       var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId + /* "&refReqst=" + refReqst +  "&as_Rst=" + asRst +*/ "&rcdTms=" + rcdTms;
+     //       Common.popupDiv("/ResearchDevelopment/UsedPartReTestResultNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
+     //     }
+     //   });
+
+        var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asId  + "&dsc_Code=" + dscCode /* "&refReqst=" + refReqst +  "&as_Rst=" + asRst + "&rcdTms=" + rcdTms */;
+        Common.popupDiv("/ResearchDevelopment/UsedPartReTestResultNewResultPop.do" + param, null, null, true, '_newASResultDiv1');
       }
 
     function fn_TestResultViewPop() {
@@ -399,22 +427,24 @@
             return;
         }
 
-        var asId = selectedItems[0].item.asId;
+        var asid = selectedItems[0].item.asId;
         var asNo = selectedItems[0].item.asNo;
         var asStusId = selectedItems[0].item.code1;
         var salesOrdNo = selectedItems[0].item.salesOrdNo;
-        var salesOrdId = selectedItems[0].item.asSoId;
-        var asResultNo = selectedItems[0].item.c3;
+        var salesOrdId = selectedItems[0].item.salesOrdId;
+        var asResultNo = selectedItems[0].item.asResultNo;
         var asResultNo2 = selectedItems[0].item.productCategory;
+        var dscCode = selectedItems[0].item.dscCode;
 
 
-        console.log ("asid : " + asId);
+        console.log ("asid : " + asid);
         console.log ("asNo : " + asNo);
         console.log ("asStusId : " + asStusId);
         console.log ("salesOrdNo : " + salesOrdNo);
         console.log ("salesOrdId : " + salesOrdId);
         console.log ("asResultNo : " + asResultNo);
         console.log ("productCategory : " + asResultNo2);
+        console.log ("dscCode : " + dscCode);
 
 
         if (asStusId == "ACT") {
@@ -430,7 +460,7 @@
         }
 
         var param = "?ord_Id=" + salesOrdId + "&ord_No=" + salesOrdNo + "&as_No=" + asNo + "&as_Id=" + asid
-                + "&mod=RESULTVIEW&as_Result_No=" + asResultNo;
+                + "&mod=RESULTVIEW&as_Result_No=" + asResultNo  + "&dsc_Code=" + dscCode      ;
 
         Common.popupDiv("/ResearchDevelopment/UsedPartReTestResultEditViewPop.do" + param, null, null, true, '_newASResultDiv1');
     }
@@ -722,12 +752,12 @@
         </p>
         <h2>Used Part Return Test Result</h2>
         <ul class="right_btns">
-            <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+            <%-- <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}"> --%>
                 <li><p class="btn_blue">
                         <a href="#" onclick="fn_newASResultPop()"><spring:message
                                 code='service.btn.addtAs' /></a>
                     </p></li>
-            </c:if>
+            <%-- </c:if> --%>
             <!-- FUNCTION WHICH ALLOW EDIT RECORD WHICH MORE THAN 7 DAYS -->
             <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
                 <li><p class="btn_blue">
@@ -742,18 +772,18 @@
                     </p></li>
             </c:if>
             <!-- FUNCTION WHICH ALLOW EDIT RECORD WITHIN 7 DAYS -->
-            <%-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+             <%-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}"> --%>
                 <li><p class="btn_blue">
                         <a href="#" onclick="fn_asResultEditBasicPop(1)"><spring:message
                                 code='service.btn.edtBsAs' /></a>
                     </p></li>
-            </c:if>
-            <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+           <%--  </c:if> --%>
+            <%-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}"> --%>
                 <li><p class="btn_blue">
                         <a href="#" onclick="fn_asResultEditPop(1)"><spring:message
                                 code='service.btn.edtAs' /></a>
                     </p></li>
-            </c:if> --%>
+            <%-- </c:if>  --%>
             <%-- <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}"> --%>
                 <li><p class="btn_blue">
                         <a href="#" onclick="fn_TestResultViewPop()"><spring:message
@@ -811,6 +841,7 @@
 
                         <th scope="row"><spring:message code='sal.text.productName' /></th>
                         <td><select class="w100p" id="asProduct" name="asProduct">
+                                <option value="">--SELECT--</option>
                                 <c:forEach var="list" items="${asProduct}" varStatus="status">
                                     <option value="${list.stkId}">${list.stkDesc}</option>
                                 </c:forEach>
@@ -834,11 +865,12 @@
                         </select></td>
 
                         <th scope="row"><spring:message code='sal.text.type' /></th>
-                        <td><select id="Genuinity" name="Genuinity"
+                        <td><select id="Type" name="Type"
                             class="w100p">
                                 <option value="">--SELECT--</option>
-                                <option value="Filter">Filter</option>
-                                <option value="Spare Part">Spare Parts</option>
+                                <option value="62">Filter</option>
+                                <option value="63">Spare Parts</option>
+                                <option value="64">Miscellaneous</option>
                         </select></td>
 
                         <th scope="row">Test Result Number</th>
