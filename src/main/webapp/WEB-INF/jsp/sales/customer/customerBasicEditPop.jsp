@@ -181,7 +181,7 @@ $(document).ready(function(){
 
 
         //update
-        //fn_getCustomerBasicAjax();
+        fn_getCustomerBasicAjax();
 
     });
 
@@ -303,6 +303,7 @@ $(document).ready(function(){
         }else{
             year = "20" + year;
         }
+
 
         dob = day + "-" + month + "-" + year;
 
