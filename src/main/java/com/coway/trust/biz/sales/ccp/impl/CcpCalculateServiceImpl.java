@@ -9,19 +9,28 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.annotation.Resource;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.coway.trust.biz.common.FileGroupVO;
+import com.coway.trust.biz.common.FileService;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.impl.FileMapper;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.ccp.CcpCalculateService;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.web.sales.SalesConstants;
@@ -40,6 +49,11 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 	@Value("${web.resource.upload.file}")
 	private String webPath;
 
+	@Autowired
+    private FileService fileService;
+
+	@Autowired
+    private FileMapper fileMapper;
 
 	@Override
 	public List<EgovMap> getRegionCodeList(Map<String, Object> params) throws Exception {
@@ -624,6 +638,11 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 
 		}
 
+		if(!("0").equals(params.get("eRstatusEdit"))){
+			LOGGER.info("_______________eRstatusEdit_______________");
+			ccpCalculateMapper.updateCcpEresubmitStus(params);
+		}
+
 		// Cancel Selected
 		/*####  Reject Status    Data.SalesOrderM  ####*/
 		if( ("10").equals(params.get("rejectStatusEdit")) || ("17").equals(params.get("rejectStatusEdit")) || ("18").equals(params.get("rejectStatusEdit"))){
@@ -935,4 +954,122 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
   public  EgovMap getAux(Map<String, Object> params) {
     return ccpCalculateMapper.getAux(params);
   }
+
+  	@Override
+	public EgovMap selectCcpInfoByOrderId(Map<String, Object> params) throws Exception {
+
+		return ccpCalculateMapper.selectCcpInfoByOrderId(params);
+	}
+
+  	@Override
+    public List<EgovMap> ccpEresubmitNewConfirm(Map<String, Object> params) {
+      return ccpCalculateMapper.ccpEresubmitNewConfirm(params);
+    }
+
+  	@Override
+    public List<EgovMap> ccpEresubmitList(Map<String, Object> params) throws Exception{
+        return ccpCalculateMapper.ccpEresubmitList(params);
+      }
+
+  	@Override
+	public void ccpEresubmitNewSave(Map<String, Object> params) throws Exception {
+  		ccpCalculateMapper.insertCcpEresubmitNewSave(params);
+  	}
+
+  	@Override
+	public void updateCcpEresubmitAttach(Map<String, Object> params) throws Exception {
+  		ccpCalculateMapper.updateCcpEresubmitAttach(params);
+  	}
+
+  	@Override
+	public void updatePreOrderAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params,List<String> seqs) {
+		// TODO Auto-generated method stub
+		LOGGER.debug("params =====================================>>  " + params.toString());
+		LOGGER.debug("list.size : {}", list.size());
+		String update = (String) params.get("update");
+		String remove = (String) params.get("remove");
+		String[] updateList = null;
+		String[] removeList = null;
+		if(!StringUtils.isEmpty(update)) {
+			updateList = params.get("update").toString().split(",");
+			LOGGER.debug("updateList.length : {}", updateList.length);
+		}
+		if(!StringUtils.isEmpty(remove)) {
+			removeList = params.get("remove").toString().split(",");
+			LOGGER.debug("removeList.length : {}", removeList.length);
+		}
+		// serivce 에서 파일정보를 가지고, DB 처리.
+		if (list.size() > 0) {
+			for(int i = 0; i < list.size(); i++) {
+				if(updateList != null && i < updateList.length) {
+					String atchFileId = updateList[i];
+					fileService.changeFileUpdate(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), type, Integer.parseInt(String.valueOf(params.get("userId"))));
+				}
+				else {
+					//int fileGroupId = (Integer.parseInt(params.get("atchFileGrpId").toString()));
+					int fileGroupId = params.get("atchFileGrpId") != null ? params.get("atchFileGrpId").toString().equals("") ? 0 : (Integer.parseInt(params.get("atchFileGrpId").toString())) : 0 ;
+
+					if(fileGroupId == 0){
+						fileGroupId = fileMapper.selectFileGroupKey();
+						params.put("atchFileGrpId", fileGroupId);
+					}
+					this.insertFile(fileGroupId, list.get(i), type,params, seqs.get(i));
+				}
+			}
+		}
+		if(removeList != null && removeList.length > 0){
+			for(String id : removeList){
+				LOGGER.info(id);
+				String atchFileId = id;
+				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
+			}
+		}
+	}
+
+  	@Override
+	public void insertPreOrderAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params, List<String> seqs) {
+		// TODO Auto-generated method stub
+		int fileGroupKey = fileMapper.selectFileGroupKey();
+		AtomicInteger i = new AtomicInteger(0); // get seq key.
+
+		list.forEach(r -> {this.insertFile(fileGroupKey, r, type, params, seqs.get(i.getAndIncrement()));});
+		params.put("fileGroupKey", fileGroupKey);
+	}
+
+	public void insertFile(int fileGroupKey, FileVO flVO, FileType flType, Map<String, Object> params,String seq) {
+        LOGGER.debug("insertFile :: Start");
+
+        int atchFlId = ccpCalculateMapper.selectNextFileId();
+
+        FileGroupVO fileGroupVO = new FileGroupVO();
+
+        Map<String, Object> flInfo = new HashMap<String, Object>();
+        flInfo.put("atchFileId", atchFlId);
+        flInfo.put("atchFileName", flVO.getAtchFileName());
+        flInfo.put("fileSubPath", flVO.getFileSubPath());
+        flInfo.put("physiclFileName", flVO.getPhysiclFileName());
+        flInfo.put("fileExtsn", flVO.getFileExtsn());
+        flInfo.put("fileSize", flVO.getFileSize());
+        flInfo.put("filePassword", flVO.getFilePassword());
+        flInfo.put("fileUnqKey", params.get("claimUn"));
+        flInfo.put("fileKeySeq", seq);
+
+        ccpCalculateMapper.insertFileDetail(flInfo);
+
+        fileGroupVO.setAtchFileGrpId(fileGroupKey);
+        fileGroupVO.setAtchFileId(atchFlId);
+        fileGroupVO.setChenalType(flType.getCode());
+        fileGroupVO.setCrtUserId(Integer.parseInt(params.get("userId").toString()));
+        fileGroupVO.setUpdUserId(Integer.parseInt(params.get("userId").toString()));
+
+        fileMapper.insertFileGroup(fileGroupVO);
+
+        LOGGER.debug("insertFile :: End");
+    }
+
+	@Override
+	public EgovMap selectCcpEresubmit(Map<String, Object> params) throws Exception {
+
+		return ccpCalculateMapper.selectCcpEresubmit(params);
+	}
 }

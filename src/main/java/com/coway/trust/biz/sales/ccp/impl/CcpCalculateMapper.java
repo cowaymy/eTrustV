@@ -98,4 +98,22 @@ public interface CcpCalculateMapper {
 	List<EgovMap> getCcpInstallationList(Map<String, Object> params);
 
 	EgovMap getAux(Map<String, Object> params);
+
+	EgovMap selectCcpInfoByOrderId(Map<String, Object> params) throws Exception;
+
+	List<EgovMap>ccpEresubmitNewConfirm(Map<String, Object> params);
+
+	List<EgovMap>ccpEresubmitList(Map<String, Object> params) throws Exception;
+
+	void insertCcpEresubmitNewSave(Map<String, Object> params) throws Exception;
+
+	int selectNextFileId();
+
+	void insertFileDetail(Map<String, Object> flInfo);
+
+	void updateCcpEresubmitAttach(Map<String, Object> params) throws Exception;
+
+	EgovMap selectCcpEresubmit(Map<String, Object> params) throws Exception;
+
+	void updateCcpEresubmitStus(Map<String, Object> params) throws Exception;
 }

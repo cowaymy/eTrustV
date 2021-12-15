@@ -1,33 +1,47 @@
 package com.coway.trust.web.sales.ccp;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.ccp.CcpCalculateService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -37,6 +51,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class CcpCalculateController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CcpCalculateController.class);
+
+	@Value("${web.resource.upload.file}")
+	private String uploadDir;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -173,6 +190,10 @@ public class CcpCalculateController {
     	EgovMap ccpInfoMap = null;
     	ccpInfoMap = ccpCalculateService.selectCcpInfoByCcpId(params);
 
+    	//eResubmit
+    	EgovMap ccpEresubmitMap = null;
+    	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmit(params);
+
     	//Model
     	model.addAttribute("ccpId", params.get("ccpId"));
     	model.addAttribute("orderDetail", orderDetail);
@@ -180,6 +201,7 @@ public class CcpCalculateController {
     	model.addAttribute("incomMap", incomMap);
     	model.addAttribute("ccpInfoMap", ccpInfoMap);
     	model.addAttribute("salesMan", salesMan);
+    	model.addAttribute("ccpEresubmitMap", ccpEresubmitMap);
 
 		//return
 		if(resultVal > 1){
@@ -386,6 +408,11 @@ public class CcpCalculateController {
 			params.put("ficoScore", "0");
 		}
 
+		/*####  eResubmit status ####*/
+		if( null == params.get("eRstatusEdit") || ("").equals(params.get("eRstatusEdit"))){
+			params.put("eRstatusEdit", "0");
+		}
+
 		params.put("hasGrnt", "0");
 
 		LOGGER.info("#####################################################");
@@ -532,6 +559,291 @@ public class CcpCalculateController {
 
 
 		return "sales/ccp/ccpCalOrderModifyPop";
+	}
+
+	@RequestMapping(value = "/ccpEresubmit.do")
+	  public String ccpEresubmit(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+
+	      return "sales/ccp/ccpEresubmit";
+	  }
+
+	@RequestMapping(value = "/selectCcpEresubmitListAjax")
+	public ResponseEntity<List<EgovMap>> selectCcpEresubmitListAjax(@RequestParam Map<String, Object> params, HttpServletRequest request) throws Exception{
+
+		LOGGER.info("#############################################");
+		LOGGER.info("#############selectCcpEresubmitListAjax Start");
+		LOGGER.info("############# params : " + params.toString());
+		LOGGER.info("#############################################");
+		//Params Setting
+
+		String arryCalCcpStatus[] = request.getParameterValues("calCcpStatus");
+		String arryCalBranch[] = request.getParameterValues("calBranch");
+		String arryCalReason[] = request.getParameterValues("calReason");
+
+		params.put("arryCalCcpStatus", arryCalCcpStatus);
+		params.put("arryCalBranch", arryCalBranch);
+		params.put("arryCalReason", arryCalReason);
+
+		//Call Service
+		List<EgovMap> calList = null;
+
+		calList = ccpCalculateService.selectCalCcpListAjax(params);
+
+		return ResponseEntity.ok(calList);
+
+	}
+
+	@RequestMapping(value = "/ccpEresubmitNew.do")
+	public String ccpEresubmitNew(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		return "sales/ccp/ccpEresubmitNew";
+	}
+
+	@RequestMapping(value = "/ccpEresubmitNewConfirm" ,method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>>  ccpEresubmitNewConfirm(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
+
+		List<EgovMap>  list = ccpCalculateService.ccpEresubmitNewConfirm(params);
+
+		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/ccpEresubmitViewPop.do")
+	public ResponseEntity<Map> ccpEresubmitViewPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+
+		LOGGER.info("############################################################");
+		LOGGER.info("############ ccpEresubmitViewPop Params : " + params.toString());
+		LOGGER.info("############################################################");
+
+		//Log Service
+		EgovMap prgMap = null;
+		BigDecimal prgDecimal = null;
+		int resultVal = 0;
+		prgMap = ccpCalculateService.getLatestOrderLogByOrderID(params);
+		prgDecimal = (BigDecimal)prgMap.get("prgrsId");
+		resultVal = prgDecimal.intValue();
+
+    	//params Set
+    	params.put("prgrsId", resultVal);
+    	params.put("salesOrderId", params.get("salesOrdId"));
+    	//service1
+    	EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+    	EgovMap salesMan = ccpCalculateService.selectSalesManViewByOrdId(params);
+
+
+    	EgovMap tempMap = null;
+    	tempMap = (EgovMap)orderDetail.get("basicInfo");
+
+    	BigDecimal tempIntval = (BigDecimal)tempMap.get("custTypeId");
+
+    	//Set Param
+    	if(tempIntval.intValue() == 965){
+    		model.addAttribute("ccpMasterId", "1"); //Company
+    		params.put("ccpMasterId", "1"); //order unit MasterId
+    	}else{
+    		model.addAttribute("ccpMasterId", "0"); //Individual
+    		params.put("ccpMasterId", "2"); //oder unit MasterId
+    	}
+
+//    	EgovMap fieldMap = null;
+    	//params Set
+    	params.put("custId", tempMap.get("custId"));
+
+//    	fieldMap = ccpCalculateService.getCalViewEditField(params);
+
+
+    	//loadIncomRange
+//    	Map<String, Object> incomMap = new HashMap<String, Object>();
+//    	incomMap = ccpCalculateService.selectLoadIncomeRange(params);
+
+
+    	//ccpId
+    	EgovMap ccpInfoMap = null;
+    	ccpInfoMap = ccpCalculateService.selectCcpInfoByOrderId(params);
+
+    	//Model
+//    	model.addAttribute("ccpId", ccpInfoMap.get("ccpId"));
+//    	model.addAttribute("orderDetail", orderDetail);
+//    	model.addAttribute("fieldMap", fieldMap);
+//    	model.addAttribute("incomMap", incomMap);
+//    	model.addAttribute("ccpInfoMap", ccpInfoMap);
+//    	model.addAttribute("salesMan", salesMan);
+
+		//return
+//    	return "sales/ccp/ccpEresubmitViewPop";
+
+    	Map<String, Object> map = new HashMap();
+		map.put("ccpId", ccpInfoMap.get("ccpId"));
+		map.put("orderDetail", orderDetail);
+		map.put("ccpInfoMap", ccpInfoMap);
+
+		//logger.debug("srvconfig====>"+srvconfig.toString());
+
+
+		return ResponseEntity.ok(map);
+
+	}
+
+
+	@RequestMapping(value = "/ccpEresubmitList")
+	public ResponseEntity<List<EgovMap>>  ccpEresubmitList(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
+		List<EgovMap> list = null;
+
+		list = ccpCalculateService.ccpEresubmitList(params);
+
+		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/ccpEresubmitSave", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> ccpEresubmitSave(@RequestBody Map<String, Object> params) throws Exception{
+		//Session
+		SessionVO session  = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", session.getUserId());
+
+		LOGGER.info("#####################################################");
+		LOGGER.info("######  params.ToString : " + params.toString());
+		LOGGER.info("#####################################################");
+
+		//Service
+		ccpCalculateService.ccpEresubmitNewSave(params);
+
+		//Return MSG
+		ReturnMessage message = new ReturnMessage();
+
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("");
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/ccpEresubmitViewEditPop.do")
+	public String ccpEresubmitViewEditPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+
+		LOGGER.info("############################################################");
+		LOGGER.info("############ ccpEresubmitViewPop Params : " + params.toString());
+		LOGGER.info("############################################################");
+
+		//Log Service
+		EgovMap prgMap = null;
+		BigDecimal prgDecimal = null;
+		int resultVal = 0;
+		prgMap = ccpCalculateService.getLatestOrderLogByOrderID(params);
+		prgDecimal = (BigDecimal)prgMap.get("prgrsId");
+		resultVal = prgDecimal.intValue();
+
+    	//params Set
+    	params.put("prgrsId", resultVal);
+    	params.put("salesOrderId", params.get("salesOrdId"));
+    	//service1
+    	EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+    	EgovMap salesMan = ccpCalculateService.selectSalesManViewByOrdId(params);
+
+
+    	EgovMap tempMap = null;
+    	tempMap = (EgovMap)orderDetail.get("basicInfo");
+
+    	BigDecimal tempIntval = (BigDecimal)tempMap.get("custTypeId");
+
+    	//Set Param
+    	if(tempIntval.intValue() == 965){
+    		model.addAttribute("ccpMasterId", "1"); //Company
+    		params.put("ccpMasterId", "1"); //order unit MasterId
+    	}else{
+    		model.addAttribute("ccpMasterId", "0"); //Individual
+    		params.put("ccpMasterId", "2"); //oder unit MasterId
+    	}
+
+//    	EgovMap fieldMap = null;
+    	//params Set
+    	params.put("custId", tempMap.get("custId"));
+
+//    	fieldMap = ccpCalculateService.getCalViewEditField(params);
+
+
+    	//loadIncomRange
+//    	Map<String, Object> incomMap = new HashMap<String, Object>();
+//    	incomMap = ccpCalculateService.selectLoadIncomeRange(params);
+
+
+    	//ccpId
+    	EgovMap ccpInfoMap = null;
+    	ccpInfoMap = ccpCalculateService.selectCcpInfoByOrderId(params);
+
+    	//eResubmit
+    	EgovMap ccpEresubmitMap = null;
+    	ccpEresubmitMap = ccpCalculateService.selectCcpEresubmit(params);
+
+    	//Model
+    	model.addAttribute("ccpId", ccpInfoMap.get("ccpId"));
+    	model.addAttribute("orderDetail", orderDetail);
+//    	model.addAttribute("fieldMap", fieldMap);
+//    	model.addAttribute("incomMap", incomMap);
+    	model.addAttribute("ccpInfoMap", ccpInfoMap);
+    	model.addAttribute("ccpEresubmitMap", ccpEresubmitMap);
+//    	model.addAttribute("salesMan", salesMan);
+
+		//return
+//    	return "sales/ccp/ccpEresubmitViewPop";
+
+//    	Map<String, Object> map = new HashMap();
+//		map.put("ccpId", ccpInfoMap.get("ccpId"));
+//		map.put("orderDetail", orderDetail);
+//		map.put("ccpInfoMap", ccpInfoMap);
+
+		//logger.debug("srvconfig====>"+srvconfig.toString());
+
+
+		return "sales/ccp/ccpEresubmitView";
+
+	}
+
+	@RequestMapping(value = "/attachESvmFileUpdate.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> attachESvmFileUpdate(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+
+		LOGGER.debug("params =====================================>>  " + params);
+		String err = "";
+		String code = "";
+		List<String> seqs = new ArrayList<>();
+
+		try{
+			 Set set = request.getFileMap().entrySet();
+			 Iterator i = set.iterator();
+
+			 while(i.hasNext()) {
+			     Map.Entry me = (Map.Entry)i.next();
+			     String key = (String)me.getKey();
+			     seqs.add(key);
+			 }
+
+			 int fileGroupId = params.get("atchFileGrpId") != null ? params.get("atchFileGrpId").toString().equals("") ? 0 : (Integer.parseInt(params.get("atchFileGrpId").toString())) : 0 ;
+
+			List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "sales" + File.separator + "membership", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+			LOGGER.debug("list.size : {}", list.size());
+			params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+			ccpCalculateService.updatePreOrderAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params, seqs);
+
+			params.put("attachFiles", list);
+
+			if(fileGroupId == 0){
+				int fileGroupIdNew = params.get("atchFileGrpId") != null ? params.get("atchFileGrpId").toString().equals("") ? 0 : (Integer.parseInt(params.get("atchFileGrpId").toString())) : 0 ;
+				if(fileGroupIdNew != 0){
+					params.put("atchFileGrpIdNew", fileGroupIdNew);
+					ccpCalculateService.updateCcpEresubmitAttach(params);
+				}
+			}
+
+			code = AppConstants.SUCCESS;
+		}catch(ApplicationException e){
+			err = e.getMessage();
+			code = AppConstants.FAIL;
+		}
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(code);
+		message.setData(params);
+		message.setMessage(err);
+
+		return ResponseEntity.ok(message);
 	}
 }
 

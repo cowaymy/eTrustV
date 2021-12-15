@@ -69,6 +69,24 @@ $(document).ready(function() {
         $('#chs_rsn').append("<span class='black_text'>"+chsRsn+"</span>");
     }
 
+     $('#eResubmitAtch').hide();
+     $('#eResubmitTh').hide();
+     $('#eResubmitTd').hide();
+     console.log('${ccpEresubmitMap.salesOrdId}');
+     if(!('${ccpEresubmitMap.salesOrdId}' == "" && '${ccpEresubmitMap.salesOrdId}' =="")){
+    	 var elements = document.getElementsByClassName("auto_file3");
+    	    for(var i = 0; i < elements.length; i++) {
+    	        elements[i].className = "auto_file3 auto_file2";
+    	    }
+
+    	 $('#eResubmitAtch').show();
+         $('#eResubmitTh').show();
+         $('#eResubmitTd').show();
+    	 if('${ccpEresubmitMap.atchFileGrpId}' != 0){
+             fn_loadAtchment('${ccpEresubmitMap.atchFileGrpId}');
+         }
+     }
+
 
     //Init
     var mst = getMstId();
@@ -103,6 +121,9 @@ $(document).ready(function() {
     //Ccp Status
     var ccpStus = $("#_ccpStusId").val();
     doGetCombo('/sales/ccp/getCcpStusCodeList', '', ccpStus,'_statusEdit', 'S');
+    //Ccp eResubmit Status
+    var ccpErStus = $("#_eRStusId").val();
+    doGetCombo('/sales/ccp/getCcpStusCodeList', '', ccpErStus,'_eRstatusEdit', 'S');
     //Reject
     doGetCombo('/sales/ccp/getCcpRejectCodeList', '', '','_rejectStatusEdit', 'S'); //Status
     //Feedback
@@ -255,6 +276,102 @@ $(document).ready(function() {
 
 });//Doc Ready Func End
 
+function fn_loadAtchment(atchFileGrpId) {
+    Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId :atchFileGrpId} , function(result) {
+        //console.log(result);
+       if(result) {
+            if(result.length > 0) {
+                $("#attachTd").html("");
+                for ( var i = 0 ; i < result.length ; i++ ) {
+                    switch (result[i].fileKeySeq){
+                    case '1':
+                        sofFrId = result[i].atchFileId;
+                        sofFrName = result[i].atchFileName;
+                        $(".input_text[id='sofFrFileTxt']").val(sofFrName);
+                        break;
+                    case '2':
+                        softcFileId = result[i].atchFileId;
+                        softcFileName = result[i].atchFileName;
+                        $(".input_text[id='softcFileTxt']").val(softcFileName);
+                        break;
+                    case '3':
+                        nricFrFileId = result[i].atchFileId;
+                        nricFrFileName = result[i].atchFileName;
+                        $(".input_text[id='nricFrFileTxt']").val(nricFrFileName);
+                        break;
+                    case '4':
+                        msofFrFileId = result[i].atchFileId;
+                        msofFrFileName = result[i].atchFileName;
+                        $(".input_text[id='msofFrFileTxt']").val(msofFrFileName);
+                        break;
+                    case '5':
+                        msoftcFrFileId = result[i].atchFileId;
+                        msoftcFrFileName = result[i].atchFileName;
+                        $(".input_text[id='msoftcFrFileTxt']").val(msoftcFrFileName);
+                        break;
+                    case '6':
+                        payFrFileId = result[i].atchFileId;
+                        payFrFrFileName = result[i].atchFileName;
+                        $(".input_text[id='payFrFileTxt']").val(payFrFileName);
+                        break;
+                    case '7':
+                        govFrFileId = result[i].atchFileId;
+                        govFrFileName = result[i].atchFileName;
+                        $(".input_text[id='govFrFileTxt']").val(govFrFileName);
+                        break;
+                    case '8':
+                        letFrFileId = result[i].atchFileId;
+                        letFrFileName = result[i].letFileName;
+                        $(".input_text[id='letFrFileTxt']").val(letFrFileName);
+                        break;
+                    case '9':
+                        docFrFileId = result[i].atchFileId;
+                        docFrFileName = result[i].atchFileName;
+                        $(".input_text[id='docFrFileTxt']").val(docFrFileName);
+                        break;
+                     default:
+                         Common.alert("no files");
+                    }
+                }
+
+                // 파일 다운
+                $(".input_text").dblclick(function() {
+                    var oriFileName = $(this).val();
+                    var fileGrpId;
+                    var fileId;
+                    for(var i = 0; i < result.length; i++) {
+                        if(result[i].atchFileName == oriFileName) {
+                            fileGrpId = result[i].atchFileGrpId;
+                            fileId = result[i].atchFileId;
+                        }
+                    }
+                    if(fileId != null) fn_atchViewDown(fileGrpId, fileId);
+                });
+            }
+        }
+   });
+}
+
+function fn_atchViewDown(fileGrpId, fileId) {
+    var data = {
+            atchFileGrpId : fileGrpId,
+            atchFileId : fileId
+    };
+    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+        //console.log(result)
+        var fileSubPath = result.fileSubPath;
+        fileSubPath = fileSubPath.replace('\', '/'');
+
+        if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
+            //console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+        } else {
+            //console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+            window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+        }
+    });
+}
+
 function calSave(){
 
     var ordUnit = $("#_ordUnit").val();
@@ -285,6 +402,7 @@ function calSave(){
         $("#_ordExistingCust").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
 
         $("#_statusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        $("#_eRstatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_incomeRangeEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_rejectStatusEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_reasonCodeEdit").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
@@ -329,6 +447,7 @@ function fn_ccpStatusChangeFunc(getVal){
             $("#_reasonCodeEdit").attr("disabled" , false);
             $("#_spcialRem").attr("disabled" , false);
             $("#_pncRem").attr("disabled" , false);
+            $("#_eRstatusEdit").attr("disabled" , false);
 
            if($("#_editCustTypeId").val() == '964' && $("#_editCustNation").val() == 'MALAYSIA'){
                $("#_ficoScore").attr("disabled" , false);
@@ -391,6 +510,8 @@ function fn_ccpStatusChangeFunc(getVal){
              $("#_reasonCodeEdit").attr("disabled" , false);
              $("#_spcialRem").attr("disabled" , false);
              $("#_pncRem").attr("disabled" , false);
+             $("#_eRstatusEdit option[value=5]").attr('selected', 'selected');
+             $("#_eRstatusEdit").attr("disabled" , true);
 
               //chkbox
              $("#_onHoldCcp").attr("checked" , false);
@@ -425,6 +546,8 @@ function fn_ccpStatusChangeFunc(getVal){
             $("#_reasonCodeEdit").attr("disabled" , false);
             $("#_spcialRem").attr("disabled" , false);
             $("#_pncRem").attr("disabled" , false);
+            $("#_eRstatusEdit option[value=6]").attr('selected', 'selected');
+            $("#_eRstatusEdit").attr("disabled" , true);
             //chkbox
             $("#_onHoldCcp").attr("checked" , false);
             $("#_onHoldCcp").attr("disabled" , "disabled");
@@ -895,6 +1018,9 @@ function chgTab(tabNm) {
 
     <!-- cust ID  -->
     <input type="hidden"  id="_editCustId" value="${orderDetail.basicInfo.custId}">
+
+    <!-- from ccpEresubmitMap  -->
+     <input type="hidden" id="_eRStusId" name="ccpErStusId" value="${ccpEresubmitMap.stusId}">
 </form>
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num5">
@@ -1028,6 +1154,124 @@ function chgTab(tabNm) {
 
 </section><!-- search_table end -->
 
+<div id="eResubmitAtch">
+<aside class="title_line"><!-- title_line start -->
+<h3>eResubmit Documents</h3>
+</aside><!-- title_line end -->
+<form  id="eResubmitForm">
+
+<table class="type1"><!-- table start -->
+        <caption>table</caption>
+        <colgroup>
+            <col style="width:350px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+        <tr>
+            <th scope="row">Sales Order Form (SOF)</th>
+            <td>
+                <div id='uploadfiletest' class='auto_file3'>
+                    <input type='file' title='file add'  id='sofFrFile' accept='image/*''/>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='sofFrFileTxt'  name='' disabled='disabled'/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Sales Order Form's T&C (SOF T&C)</th>
+            <td>
+                <div id='uploadfiletest1' class='auto_file3'>
+                    <input type='file' title='file add'  id='softcFrFile' accept='image/*''/>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='softcFrFileTxt'  name='' disabled='disabled'/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">NRIC / VISA /Bank Card</th>
+            <td>
+                <div id='uploadfiletest2' class='auto_file3'>
+                    <input type='file' title='file add'  id='nricFrFile' accept='image/*''/>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='nricFrFileTxt'  name='' disabled='disabled'/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Mattress Sales ORder Form (MSOF)</th>
+            <td>
+                <div id='uploadfiletest3' class='auto_file3'>
+                    <input type='file' title='file add'  id='msofFrFile' accept='image/*''/>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='msofFrFileTxt'  name='' disabled='disabled'/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Mattress Sales Order Form's T&C (MSOF T&C)</th>
+            <td>
+                <div id='uploadfiletest4' class='auto_file3'>
+                    <input type='file' title='file add'  id='msoftcFrFile' accept='image/*''/>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='msoftcFrFileTxt'  name='' disabled='disabled'/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Payment document / Payment Channel</th>
+            <td>
+                <div id='uploadfiletest5' class='auto_file3'>
+                    <input type='file' title='file add'  id='payFrFile' accept='image/*''/>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='payFrFileTxt'  name='' disabled='disabled'/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Government (Agreement / SST / LO)</th>
+            <td>
+                <div id='uploadfiletest6' class='auto_file3'>
+                    <input type='file' title='file add'  id='govFrFile' accept='image/*''/>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='govFrFileTxt'  name='' disabled='disabled'/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Declaration letter</th>
+            <td>
+                <div id='uploadfiletest7' class='auto_file3'>
+                    <input type='file' title='file add'  id='letFrFile' accept='image/*''/>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='letFrFileTxt'  name='' disabled='disabled'/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Supporting document (Utility bill / SSM / Others)</th>
+            <td>
+                <div id='uploadfiletest8' class='auto_file3'>
+                    <input type='file' title='file add'  id='docFrFile' accept='image/*''/>
+                    <label style="width: 400px;">
+                        <input type='text' class='input_text' readonly='readonly' id='docFrFileTxt'  name='' disabled='disabled'/>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+        </table>
+</form>
+</div>
+
+
 <aside class="title_line"><!-- title_line start -->
 <h3><spring:message code="sal.title.text.ccpResult" /></h3>
 </aside><!-- title_line end -->
@@ -1075,7 +1319,13 @@ function chgTab(tabNm) {
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.ccpStatus" /></th>
-    <td colspan="5"><span><select class="w100p" name="statusEdit" id="_statusEdit" onchange="javascript : fn_ccpStatusChangeFunc(this.value)"></select></span></td>
+    <td><span><select class="w100p" name="statusEdit" id="_statusEdit" onchange="javascript : fn_ccpStatusChangeFunc(this.value)"></select></span></td>
+
+    <!--eResubmit status -->
+
+    <th id="eResubmitTh" scope="row">eResubmit Status</th>
+    <td id="eResubmitTd"><span><select class="w100p" name="eRstatusEdit" id="_eRstatusEdit"></select></span></td>
+
     <!--
     <th scope="row"><spring:message code="sal.title.text.ccpIncomeRange" /></th>
     <td><span><select class="w100p" name="incomeRangeEdit" id="_incomeRangeEdit"></select></span></td>
