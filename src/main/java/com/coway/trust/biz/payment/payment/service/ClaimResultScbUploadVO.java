@@ -16,7 +16,7 @@ public class ClaimResultScbUploadVO {
 		vo.setRefNo(CSVRecord.get(0).substring(14,50).trim());
 		vo.setRefCode(CSVRecord.get(0).substring(71,73).trim());
 		vo.setItemId(Integer.parseInt(CSVRecord.get(0).substring(87,102).trim()));
-		vo.setApprCode(CSVRecord.get(0).substring(65,72).trim());
+		vo.setApprCode(CSVRecord.get(0).substring(65,71).trim());
 
 		return vo;
 	}

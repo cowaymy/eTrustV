@@ -14,7 +14,7 @@ public class ECashResultScbUploadVO {
 		ECashResultScbUploadVO vo = new ECashResultScbUploadVO();
 
 		vo.setItmId(Integer.parseInt(CSVRecord.get(0).substring(87,102).trim()));
-		vo.setAppvCode(CSVRecord.get(0).substring(65,72).trim());
+		vo.setAppvCode(CSVRecord.get(0).substring(65,71).trim());
 		vo.setRespnsCode(CSVRecord.get(0).substring(71,73).trim());
 		vo.setItmCnt((int)CSVRecord.getRecordNumber());
 
