@@ -129,19 +129,19 @@ public class UsedPartReTestResultController {
 	    // GET SEARCH DATE RANGE
 	    String range = ASManagementListService.getSearchDtRange();
 
-	    //List<EgovMap> asStat = ASManagementListService.selectAsStat();
+	    List<EgovMap> asStat = ASManagementListService.selectAsStat();
 	    List<EgovMap> asProduct = UsedPartReTestResultService.asProd();
 
-	    //model.put("DT_RANGE", CommonUtils.nvl(range));
-	   // model.put("asStat", asStat);
+	    model.put("DT_RANGE", CommonUtils.nvl(range));
+	    model.put("asStat", asStat);
 	    model.put("asProduct", asProduct);
 
-	  /*  String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3,
+	    String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3,
 	    SalesConstants.DEFAULT_DATE_FORMAT1);
 	    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
 	    model.put("bfDay", bfDay);
-	    model.put("toDay", toDay);*/
+	    model.put("toDay", toDay);
 	    return "ResearchDevelopment/UsedPartReTestResult";
 	  }
 
@@ -197,11 +197,90 @@ public class UsedPartReTestResultController {
 	    return "ResearchDevelopment/UsedPartReTestResultViewPop";
 	  }
 
+	  @RequestMapping(value = "/asResultInfoEdit2.do")
+	  public String asResultInfoEdit(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	    logger.debug("===========================/asResultInfoEdit.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/asResultInfoEdit.do===============================");
+
+	    model.put("USER_ID", sessionVO.getMemId());
+	    model.put("USER_NAME", sessionVO.getUserName());
+	    model.put("BRANCH_NAME", sessionVO.getBranchName());
+	    model.put("BRANCH_ID", sessionVO.getUserBranchId());
+	    model.put("ORD_NO", params.get("ord_No"));
+
+	    List<EgovMap> asCrtStat = ASManagementListService.selectAsCrtStat();
+	    model.addAttribute("asCrtStat", asCrtStat);
+
+	    List<EgovMap> timePick = ASManagementListService.selectTimePick();
+	    model.addAttribute("timePick", timePick);
+
+	    /*List<EgovMap> lbrFeeChr = ASManagementListService.selectLbrFeeChr();
+	    model.addAttribute("lbrFeeChr", lbrFeeChr);
+
+	    List<EgovMap> fltQty = ASManagementListService.selectFltQty();
+	    model.addAttribute("fltQty", fltQty);
+
+	    List<EgovMap> fltPmtTyp = ASManagementListService.selectFltPmtTyp();
+	    model.addAttribute("fltPmtTyp", fltPmtTyp);*/
+
+	    return "ResearchDevelopment/inc_UsedPartReTestResultEditPop";
+	  }
+
 	  @RequestMapping(value = "/getSpareFilterName.do", method = RequestMethod.GET)
 	  public ResponseEntity<List<EgovMap>> getSpareFilterName(@RequestParam Map<String, Object> params, HttpServletRequest request,
 	      ModelMap model) {
 	    List<EgovMap> spareFilterList = UsedPartReTestResultService.getSpareFilterList(params);
 	    return ResponseEntity.ok(spareFilterList);
+	  }
+
+	  @RequestMapping(value = "/getASRulstSVC0004DInfo1", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> getASRulstSVC0004DInfo(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+	    logger.debug("===========================/getASRulstSVC0004DInfo.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/getASRulstSVC0004DInfo.do===============================");
+
+	    //List<EgovMap> list = ASManagementListService.getASRulstSVC0004DInfo(params);
+	    List<EgovMap> list = UsedPartReTestResultService.getASRulstSVC0004DInfo(params);
+
+	    return ResponseEntity.ok(list);
+	  }
+
+
+	  @RequestMapping(value = "/UsedPartReTestResultNewResultPop.do")
+	  public String insertASResult(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	    logger.debug("===========================/UsedPartReTestResultNewResultPop.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/UsedPartReTestResultNewResultPop.do===============================");
+
+	    model.put("TEST_RESULT_ID", (String) params.get("testResultId"));
+	    model.put("TEST_RESULT_NO", (String) params.get("testResultNo"));
+	    model.put("SO_EXCHG_ID", (String) params.get("soExchgId"));
+	    model.put("RCD_TMS", (String) params.get("rcdTms"));
+	    params.put("DSC_CODE", (String) params.get("dscCode"));
+	    params.put("testResultId", params.get("testResultId"));
+
+
+	    List<EgovMap> asCrtStat = UsedPartReTestResultService.selectAsCrtStat();
+	    model.addAttribute("asCrtStat", asCrtStat);
+
+	    List<EgovMap> timePick = UsedPartReTestResultService.selectTimePick();
+	    model.addAttribute("timePick", timePick);
+
+	    return "ResearchDevelopment/UsedPartReTestResultNewResultPop";
+	  }
+
+	  @RequestMapping(value = "/getTestResultInfo", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> getTestResultInfo(@RequestParam Map<String, Object> params,
+	      HttpServletRequest request, ModelMap model) {
+	    logger.debug("===========================/getTestResultInfo.do===============================");
+	    logger.debug("== params " + params.toString());
+	    logger.debug("===========================/getTestResultInfo.do===============================");
+
+	    List<EgovMap> list = UsedPartReTestResultService.getTestResultInfo(params);
+
+	    return ResponseEntity.ok(list);
 	  }
 
 }
