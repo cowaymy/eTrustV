@@ -3764,7 +3764,7 @@ function isDupOutSrvcToFinal(){
             </td>
             <th scope="row">Pay Date<span class="must">*</span></th>
             <td>
-              <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly value="${currentDay}" />
+              <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="w100p readonly" readonly value="${currentDay}" />
             </td>
           </tr>
           <tr>
