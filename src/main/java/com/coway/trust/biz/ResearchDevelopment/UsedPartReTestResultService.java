@@ -16,6 +16,8 @@ public interface UsedPartReTestResultService {
 
 	List<EgovMap> selectASManagementList(Map<String, Object> params);
 
+	List<EgovMap> getTestResultInfo(Map<String, Object> params);
+
 	  List<EgovMap> getAsDefectEntry(Map<String, Object> params);
 
 	  List<EgovMap> getASHistoryList(Map<String, Object> params);

@@ -91,6 +91,8 @@ public interface UsedPartReTestResultMapper {
 
 	  List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params);
 
+	  List<EgovMap> getTestResultInfo(Map<String, Object> params);
+
 	  List<EgovMap> getASRulstEditFilterInfo(Map<String, Object> params);
 
 	  EgovMap asResult_insert(Map<String, Object> params);

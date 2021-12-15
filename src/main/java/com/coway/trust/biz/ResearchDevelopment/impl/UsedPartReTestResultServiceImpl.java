@@ -67,6 +67,16 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 	  }
 
 	  @Override
+	  public List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params) {
+	    return UsedPartReTestResultMapper.getASRulstSVC0004DInfo(params);
+	  }
+
+	  @Override
+	  public List<EgovMap> getTestResultInfo(Map<String, Object> params) {
+	    return UsedPartReTestResultMapper.getTestResultInfo(params);
+	  }
+
+	  @Override
 	  public List<EgovMap> selectASManagementList(Map<String, Object> params) {
 	    return ASManagementListMapper.selectASManagementList(params);
 	  }
@@ -141,10 +151,10 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 	    return ASManagementListMapper.selectStkPriceByStkID(params);
 	  }
 
-	  @Override
+/*	  @Override
 	  public List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params) {
 	    return ASManagementListMapper.getASRulstSVC0004DInfo(params);
-	  }
+	  }*/
 
 	  @Override
 	  public List<EgovMap> getErrMstList(Map<String, Object> params) {
@@ -3354,12 +3364,12 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 
 	  @Override
 	  public List<EgovMap> selectAsCrtStat() {
-	    return ASManagementListMapper.selectAsCrtStat();
+	    return UsedPartReTestResultMapper.selectAsCrtStat();
 	  }
 
 	  @Override
 	  public List<EgovMap> selectTimePick() {
-	    return ASManagementListMapper.selectTimePick();
+	    return UsedPartReTestResultMapper.selectTimePick();
 	  }
 
 	  @Override
@@ -3472,7 +3482,7 @@ public class UsedPartReTestResultServiceImpl extends EgovAbstractServiceImpl imp
 	      }
 	    } else {
 	      message.setMessage(
-	          "Fail to update due to record had been updated by other user. Please SEARCH the record again later.");
+	          "Fail to update due to record had been updated by other user. Please SEARCH the record again later.2");
 	      message.setCode("99");
 	    }
 
