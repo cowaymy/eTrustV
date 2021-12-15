@@ -30,6 +30,8 @@ import com.coway.trust.biz.payment.payment.service.CommDeductionVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.csv.CsvReadComponent;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -54,6 +56,9 @@ public class OtherPaymentController {
 	 */
 	@RequestMapping(value = "/initOtherPayment.do")
 	public String CommissionDeduction(@RequestParam Map<String, Object> params, ModelMap model) {
+		  String currentDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+		    model.put("currentDay", currentDay);
 		return "payment/otherpayment/otherPayment";
 	}
 
