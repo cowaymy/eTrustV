@@ -36,6 +36,7 @@
            S.REF_REQST,
            S.AS_MALFUNC_ID,
            S.AS_MALFUNC_RESN_ID,
+           S.AS_FAIL_RESN_ID,
            NVL(DECODE(S.AS_IF_FLAG, 'E' ,'logistics err' ,''), '-') AS_IF_FLAG,
            NVL(MEM_CODE, '-') MEM_CODE,
            S.RCD_TMS,
@@ -46,7 +47,10 @@
            S.CMS AS CMS,
            S.AS_RESULT_CRT_USER_ID,
            NVL(X.TOTAL_AS, 0) TOTAL_AS,
-           NVL(Z.NO, '-') AS BS_NO
+           NVL(Z.NO, '-') AS BS_NO,
+           S.INST_CITY,
+           S.DEFECT_DESC,
+           S.RESN_DESC
     FROM ( SELECT DISTINCT E.AS_ID AS_ID ,
                            E.AS_NO AS_NO ,
                            E.ASSOID1 AS_SO_ID ,
@@ -89,6 +93,7 @@
                            E.REF_REQST,
                            E.AS_MALFUNC_ID,
                            E.AS_MALFUNC_RESN_ID,
+                           E.AS_FAIL_RESN_ID,
                            E.AS_IF_FLAG,
                            E.MEM_CODE,
                            E.RCD_TMS,
@@ -98,7 +103,10 @@
                            E.AS_RESULT_CRT_DT,
                            E.CMS,
                            E.AS_RESULT_CRT_USER_ID,
-                           E.HSR_NO
+                           E.HSR_NO,
+                           E.INST_CITY,
+                           E.DEFECT_DESC,
+                           Extent17.RESN_DESC
            FROM ( SELECT Extent1.AS_ID AS_ID ,
                          Extent1.AS_NO AS_NO ,
                          Extent1.AS_SO_ID ASSOID1 ,
@@ -123,6 +131,7 @@
                          Extent1.REF_REQST ,
                          Extent1.AS_MALFUNC_ID,
                          Extent1.AS_MALFUNC_RESN_ID,
+                         Extent7.AS_FAIL_RESN_ID,
                          Extent1.AS_IF_FLAG ,
                          Extent8.MEM_CODE ,
                          Extent1.RCD_TMS ,
@@ -133,7 +142,9 @@
                          Extent7.USER_NAME AS AS_RESULT_CRT_USER_ID,
                          Extent1.NO AS HSR_NO,
                          Extent1.AS_CRT_DT,
-                         Extent11.STK_CODE || ' - ' || STK_DESC AS STK_DESC
+                         Extent11.STK_CODE || ' - ' || STK_DESC AS STK_DESC,
+                         Extent7.INST_CITY,
+                         Extent16.DEFECT_DESC
                   FROM SVC0001D Extent1
                   JOIN SYS0013M Extent2 ON Extent1.AS_TYPE_ID = Extent2.CODE_ID
                   JOIN SYS0038M Extent3 ON Extent1.AS_STUS_ID = Extent3.STUS_CODE_ID
@@ -146,6 +157,7 @@
                                      AS_RESULT_NO,
                                      AS_TOT_AMT,
                                      AS_SLUTN_RESN_ID,
+                                     AS_FAIL_RESN_ID,
                                      IN_HUSE_REPAIR_REPLACE_YN,
                                      AS_ENTRY_ID,
                                      AS_RESULT_TYPE_ID,
@@ -153,12 +165,14 @@
                                      AS_SETL_DT,
                                      AS_RESULT_CRT_DT,
                                      AS_CMMS,
-                                     NVL(USER_NAME, '-') as USER_NAME
+                                     NVL(USER_NAME, '-') as USER_NAME,
+                                     INST_CITY
                               FROM ( SELECT (ROW_NUMBER() OVER (PARTITION BY AS_ENTRY_ID ORDER BY AS_RESULT_ID DESC)) AS ranking,
                                              AS_RESULT_ID,
                                              AS_RESULT_NO,
                                              AS_TOT_AMT,
                                              AS_SLUTN_RESN_ID,
+                                             AS_FAIL_RESN_ID,
                                              IN_HUSE_REPAIR_REPLACE_YN,
                                              AS_ENTRY_ID,
                                              AS_RESULT_TYPE_ID,
@@ -166,15 +180,22 @@
                                              AS_SETL_DT,
                                              AS_RESULT_CRT_DT,
                                              AS_CMMS,
-                                             B.USER_NAME
+                                             B.USER_NAME,
+                                             NVL (ma1.CITY, '-') AS INST_CITY
                                      FROM SVC0004D A
                                      LEFT JOIN SYS0047M B on A.AS_RESULT_CRT_USER_ID = B.USER_ID
+                                     JOIN sal0001d som on som.SALES_ORD_ID = A.AS_SO_ID
+                                     JOIN sal0045d SAL ON SAL.sales_ord_id = som.sales_ord_id
+                                     LEFT JOIN sal0023d ca1 ON ca1.cust_add_id = SAL.add_id
+                                     LEFT JOIN SYS0064M ma1 ON ma1.AREA_ID = ca1.AREA_ID
                                      WHERE ( 1 = as_result_is_curr ) ) WHERE ranking = 1
                   ) Extent7 ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
                               AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
                               AND ( 1 = Extent7.AS_RESULT_IS_CURR )
                  JOIN SAL0002D Extent10 ON Extent4.SALES_ORD_ID = Extent10.SALES_ORD_ID
                  LEFT JOIN SYS0026M Extent11 ON Extent10.ITM_STK_ID = Extent11.STK_ID
+                 JOIN SYS0100M Extent15 ON Extent15.DEFECT_GRP = Extent1.AS_MALFUNC_ID
+                 JOIN SYS0100M Extent16 ON Extent16.DEFECT_ID = Extent1.AS_MALFUNC_RESN_ID and Extent15.DEFECT_GRP = Extent16.DEFECT_GRP
                  WHERE ( 8 <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
                    AND Extent4.BNDL_ID IS NULL       -- homecare Remove(except)
                  <if test="asStatusList != null and asStatusList != '' ">
@@ -211,7 +232,7 @@
 
 
           ) E LEFT JOIN SYS0047M Extent8 ON E.AS_CRT_USER_ID = Extent8.USER_ID
-
+              LEFT JOIN SYS0032M Extent17 ON Extent17.RESN_ID = E.AS_FAIL_RESN_ID
           WHERE 1=1
 
           <if test=" createStrDate  != null  and createStrDate !=''  ">

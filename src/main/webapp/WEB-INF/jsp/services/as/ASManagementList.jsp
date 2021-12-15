@@ -113,6 +113,18 @@
           width : 100
         },
         {
+            dataField : "defectDesc",
+            headerText : "AS Error Detail",
+            editable : false,
+            width : 100
+        },
+        {
+              dataField : "resnDesc",
+              headerText : "AS Fail Description",
+              editable : false,
+              width : 100
+        },
+        {
           dataField : "code1",
           headerText : "<spring:message code='service.grid.Status'/>",
           editable : false,
@@ -193,6 +205,11 @@
           headerText : "<spring:message code='service.title.ASBrch'/>",
           width : 100
         },
+        {
+            dataField : "instCity",
+            headerText : "City",
+            width : 100
+          },
         {
           dataField : "cms",
           headerText : "<spring:message code='service.title.AllowComm'/>",
@@ -311,7 +328,6 @@
     var endDate = $('#createEndDate').val();
     var dt_range = $('#dt_range').val();
 
-    console.log("here1");
     var valid = true;
     var msg = "";
 
@@ -328,7 +344,6 @@
             msg = "Request Start Date is required.";
             valid = false;
         } else if (startDate != '' && endDate != ''){
-        	console.log("here");
              if (!js.date.checkDateRange(startDate,endDate,"Request", "3"))
                 valid = false;
 
