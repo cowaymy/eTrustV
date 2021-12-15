@@ -267,7 +267,7 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
         // Celeste: when product category is 5706/5707, insert into HMC0110D and setBundleID in SAL0001D with HMC0110D ord_seq_no
         String prdCat = reqPrm.get("prodCat").toString();
         String stkCat = hcOrderRegisterMapper.getProductCategory(reqPrm.get("product").toString());
-        if(prdCat != null && (prdCat.equals("Matteress")))
+        if(prdCat != null && (prdCat.equals("Mattress")))
 		{
             HcOrderVO hcOrderVO = orderVO.getHcOrderVO();
             //salesOrderMVO.setBndlId(Integer.valueOf(hcOrderVO.getBndlNo().toString()));
@@ -275,13 +275,17 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
             SalesOrderMVO salesOrderMVO2 = new SalesOrderMVO();
             SalesOrderDVO salesOrderDVO1 = new SalesOrderDVO(); //MATTRESS
             SalesOrderDVO salesOrderDVO2 = new SalesOrderDVO(); //FRAME
+            AccClaimAdtVO accClaimAdtVO1 = new AccClaimAdtVO(); //MATTRESS
+            AccClaimAdtVO accClaimAdtVO2 = new AccClaimAdtVO(); //FRAME
             if(stkCat.equals("5706"))
             {
             	salesOrderDVO1 = orderVO.getSalesOrderDVO();
+            	accClaimAdtVO1 = orderVO.getAccClaimAdtVO();
             }
             if(stkCat.equals("5707"))
             {
             	salesOrderDVO2 = orderVO.getSalesOrderDVO();
+            	accClaimAdtVO2 = orderVO.getAccClaimAdtVO();
             }
             salesOrderMVO.seteCommBndlId(reqPrm.get("bndlId").toString());
             orderVO.setSalesOrderMVO(salesOrderMVO);
@@ -291,6 +295,8 @@ public class EcommApiServiceImpl extends EgovAbstractServiceImpl implements Ecom
             salesOrderMVO2 = orderVO.getSalesOrderMVO();
             orderVO.setSalesOrderMVO1(salesOrderMVO1);
             orderVO.setSalesOrderMVO2(salesOrderMVO2);
+            orderVO.setAccClaimAdtVO1(accClaimAdtVO1);
+            orderVO.setAccClaimAdtVO2(accClaimAdtVO2);
 
             hcOrderRegisterService.hcRegisterOrder(orderVO, sessionVO);
 		}else{
