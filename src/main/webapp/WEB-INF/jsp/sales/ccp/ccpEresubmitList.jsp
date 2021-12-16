@@ -21,6 +21,12 @@
             Common.popupDiv("/sales/ccp/ccpEresubmitViewEditPop.do", {salesOrdId : ordId,ccpId : ccpId}, null, true, 'detailPop');
         });
 
+     // 셀 더블클릭 이벤트 바인딩
+        /* AUIGrid.bind(myGridResID, "cellDoubleClick", function(event){
+            $("#chsBatchId").val('30');
+            Common.popupDiv("/sales/ccp/ccpCHSDetailViewPop.do", {chsBatchId: '30'}, null, true, 'detailPop');
+        }); */
+
         $("#_newBtn").click(function() {
             //Validation
             Common.popupDiv("/sales/ccp/ccpEresubmitNew.do", $("#eResubmitSearchForm").serializeJSON(), null, true, '_newPop');

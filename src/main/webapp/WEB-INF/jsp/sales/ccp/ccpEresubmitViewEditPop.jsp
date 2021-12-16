@@ -59,7 +59,6 @@ $(document).ready(function(){
     //$("#cPromo").prop("disabled", true);
     //$("#cPromo").attr("class", "disabled");
 
-    debugger;
     console.log('${ccpEresubmitMap.salesOrdId}');
     console.log('${ccpEresubmitMap.ccpId}');
     if('${ccpEresubmitMap.atchFileGrpId}' != 0){
@@ -82,23 +81,11 @@ $(document).ready(function(){
             elements[i].style.display="none";
         }
     }
-    /* var elements = document.getElementsByClassName("attach_mod");
-    for(var i = 0; i < elements.length; i++) {
-        elements[i].style.display="none";
-    } */
 
-    //special for attachment area
-//debugger;
-    /* var elements = document.getElementsByClassName("auto_file3");
-    for(var i = 0; i < elements.length; i++) {
-        elements[i].className = "auto_file3 auto_file2";
-    } */
-
-    var elements = document.getElementsByName("uploadfiletest");
+    /* var elements = document.getElementsByName("uploadfiletest");
     for(var i = 0; i < elements.length; i++) {
         elements[i].className = "auto_file2";
-    }
-    //document.getElementById("uploadfiletest").className = "auto_file2";
+    } */
 
 });
 
@@ -255,7 +242,7 @@ function fn_save(){
                             break;
                         case '6':
                             payFrFileId = result[i].atchFileId;
-                            payFrFrFileName = result[i].atchFileName;
+                            payFrFileName = result[i].atchFileName;
                             $(".input_text[id='payFrFileTxt']").val(payFrFileName);
                             break;
                         case '7':
@@ -265,7 +252,7 @@ function fn_save(){
                             break;
                         case '8':
                             letFrFileId = result[i].atchFileId;
-                            letFrFileName = result[i].letFileName;
+                            letFrFileName = result[i].atchFileName;
                             $(".input_text[id='letFrFileTxt']").val(letFrFileName);
                             break;
                         case '9':
@@ -301,16 +288,18 @@ function fn_save(){
                 atchFileGrpId : fileGrpId,
                 atchFileId : fileId
         };
+
+        console.log(data);
         Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-            //console.log(result)
+            console.log(result)
             var fileSubPath = result.fileSubPath;
             fileSubPath = fileSubPath.replace('\', '/'');
 
             if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
-                //console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
                 window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
             } else {
-                //console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
                 window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
             }
         });
@@ -328,7 +317,7 @@ function fn_save(){
                  }
              }
         });
-        /* $('#softcFrFile').change( function(evt) {
+        $('#softcFrFile').change( function(evt) {
             var file = evt.target.files[0];
             if(file == null){
                 remove.push(softcFrFileId);
@@ -338,7 +327,7 @@ function fn_save(){
                     update.push(softcFrFileId);
                 }
             }
-        }); */
+        });
         $('#nricFrFile').change(function(evt) {
             var file = evt.target.files[0];
             if(file == null){
@@ -712,7 +701,7 @@ function fn_save(){
         <tr>
             <th scope="row">Sales Order Form (SOF)</th>
             <td>
-                <div name='uploadfiletest' class='auto_file3'>
+                <div name='uploadfiletest' class='auto_file2'>
                     <input type='file' title='file add'  id='sofFrFile' accept='image/*''/>
                     <label style="width: 400px;">
                         <input type='text' class='input_text' readonly='readonly' id='sofFrFileTxt'/>
@@ -725,7 +714,7 @@ function fn_save(){
         <tr>
             <th scope="row">Sales Order Form's T&C (SOF T&C)</th>
             <td>
-                <div name='uploadfiletest' class='auto_file3'>
+                <div name='uploadfiletest' class='auto_file2'>
                     <input type='file' title='file add'  id='softcFrFile' accept='image/*''/>
                     <label style="width: 400px;">
                         <input type='text' class='input_text' readonly='readonly' id='softcFrFileTxt'/>
@@ -738,7 +727,7 @@ function fn_save(){
         <tr>
             <th scope="row">NRIC / VISA /Bank Card</th>
             <td>
-                <div name='uploadfiletest' class='auto_file3'>
+                <div name='uploadfiletest' class='auto_file2'>
                     <input type='file' title='file add'  id='nricFrFile' accept='image/*''/>
                     <label style="width: 400px;">
                         <input type='text' class='input_text' readonly='readonly' id='nricFrFileTxt'>
@@ -751,7 +740,7 @@ function fn_save(){
         <tr>
             <th scope="row">Mattress Sales ORder Form (MSOF)</th>
             <td>
-                <div name='uploadfiletest' class='auto_file3'>
+                <div name='uploadfiletest' class='auto_file2'>
                     <input type='file' title='file add'  id='msofFrFile' accept='image/*''/>
                     <label style="width: 400px;">
                         <input type='text' class='input_text' readonly='readonly' id='msofFrFileTxt'/>
@@ -764,7 +753,7 @@ function fn_save(){
         <tr>
             <th scope="row">Mattress Sales Order Form's T&C (MSOF T&C)</th>
             <td>
-                <div name='uploadfiletest' class='auto_file3'>
+                <div name='uploadfiletest' class='auto_file2'>
                     <input type='file' title='file add'  id='msoftcFrFile' accept='image/*''/>
                     <label style="width: 400px;">
                         <input type='text' class='input_text' readonly='readonly' id='msoftcFrFileTxt'/>
@@ -777,7 +766,7 @@ function fn_save(){
         <tr>
             <th scope="row">Payment document / Payment Channel</th>
             <td>
-                <div name='uploadfiletest' class='auto_file3'>
+                <div name='uploadfiletest' class='auto_file2'>
                     <input type='file' title='file add'  id='payFrFile' accept='image/*''/>
                     <label style="width: 400px;">
                         <input type='text' class='input_text' readonly='readonly' id='payFrFileTxt'/>
@@ -790,7 +779,7 @@ function fn_save(){
         <tr>
             <th scope="row">Government (Agreement / SST / LO)</th>
             <td>
-                <div name='uploadfiletest' class='auto_file3'>
+                <div name='uploadfiletest' class='auto_file2'>
                     <input type='file' title='file add'  id='govFrFile' accept='image/*''/>
                     <label style="width: 400px;">
                         <input type='text' class='input_text' readonly='readonly' id='govFrFileTxt'/>
@@ -803,7 +792,7 @@ function fn_save(){
         <tr>
             <th scope="row">Declaration letter</th>
             <td>
-                <div name='uploadfiletest' class='auto_file3'>
+                <div name='uploadfiletest' class='auto_file2'>
                     <input type='file' title='file add'  id='letFrFile' accept='image/*''/>
                     <label style="width: 400px;">
                         <input type='text' class='input_text' readonly='readonly' id='letFrFileTxt'/>
@@ -816,7 +805,7 @@ function fn_save(){
         <tr>
             <th scope="row">Supporting document (Utility bill / SSM / Others)</th>
             <td>
-                <div name='uploadfiletest' class='auto_file3'>
+                <div name='uploadfiletest' class='auto_file2'>
                     <input type='file' title='file add'  id='docFrFile' accept='image/*''/>
                     <label style="width: 400px;">
                         <input type='text' class='input_text' readonly='readonly' id='docFrFileTxt'/>

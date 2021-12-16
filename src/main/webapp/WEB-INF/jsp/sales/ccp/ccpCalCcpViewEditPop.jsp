@@ -290,9 +290,9 @@ function fn_loadAtchment(atchFileGrpId) {
                         $(".input_text[id='sofFrFileTxt']").val(sofFrName);
                         break;
                     case '2':
-                        softcFileId = result[i].atchFileId;
-                        softcFileName = result[i].atchFileName;
-                        $(".input_text[id='softcFileTxt']").val(softcFileName);
+                        softcFrFileId = result[i].atchFileId;
+                        softcFrFileName = result[i].atchFileName;
+                        $(".input_text[id='softcFrFileTxt']").val(softcFrFileName);
                         break;
                     case '3':
                         nricFrFileId = result[i].atchFileId;
@@ -311,7 +311,7 @@ function fn_loadAtchment(atchFileGrpId) {
                         break;
                     case '6':
                         payFrFileId = result[i].atchFileId;
-                        payFrFrFileName = result[i].atchFileName;
+                        payFrFileName = result[i].atchFileName;
                         $(".input_text[id='payFrFileTxt']").val(payFrFileName);
                         break;
                     case '7':
@@ -321,7 +321,7 @@ function fn_loadAtchment(atchFileGrpId) {
                         break;
                     case '8':
                         letFrFileId = result[i].atchFileId;
-                        letFrFileName = result[i].letFileName;
+                        letFrFileName = result[i].atchFileName;
                         $(".input_text[id='letFrFileTxt']").val(letFrFileName);
                         break;
                     case '9':

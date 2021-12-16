@@ -564,7 +564,7 @@ public class CcpCalculateController {
 	@RequestMapping(value = "/ccpEresubmit.do")
 	  public String ccpEresubmit(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 
-	      return "sales/ccp/ccpEresubmit";
+	      return "sales/ccp/ccpEresubmitList";
 	  }
 
 	@RequestMapping(value = "/selectCcpEresubmitListAjax")
@@ -596,7 +596,7 @@ public class CcpCalculateController {
 	@RequestMapping(value = "/ccpEresubmitNew.do")
 	public String ccpEresubmitNew(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		return "sales/ccp/ccpEresubmitNew";
+		return "sales/ccp/ccpEresubmitNewPop";
 	}
 
 	@RequestMapping(value = "/ccpEresubmitNewConfirm" ,method = RequestMethod.GET)
@@ -792,7 +792,7 @@ public class CcpCalculateController {
 		//logger.debug("srvconfig====>"+srvconfig.toString());
 
 
-		return "sales/ccp/ccpEresubmitView";
+		return "sales/ccp/ccpEresubmitViewEditPop";
 
 	}
 
