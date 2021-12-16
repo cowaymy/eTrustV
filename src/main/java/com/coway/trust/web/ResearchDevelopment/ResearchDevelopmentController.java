@@ -67,7 +67,7 @@ public class ResearchDevelopmentController {
 	  private MessageSourceAccessor messageAccessor;
 
 	  @RequestMapping(value = "/AfterPEXTestResult.do")
-	  public String initASManagementList(@RequestParam Map<String, Object> params, ModelMap model) {
+	  public String AfterPEXTestResultList(@RequestParam Map<String, Object> params, ModelMap model) {
 	    logger.debug("===========================/AfterPEXTestResult.do===============================");
 	    logger.debug("== params1111 " + params.toString());
 	    logger.debug("===========================/AfterPEXTestResult.do===============================");
@@ -346,4 +346,12 @@ public class ResearchDevelopmentController {
 
 	    return ResponseEntity.ok(message);
 	  }
+
+	  @RequestMapping(value = "/PEXTestRawDataPop.do")
+		public String PEXTestRawDataPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		  	List<EgovMap> PEXTRStatus = AfterPEXTestResultListService.selectAsStat();
+		    model.put("PEXTRStatus", PEXTRStatus);
+
+			return "ResearchDevelopment/PEXTestRawDataPop";
+		}
 }
