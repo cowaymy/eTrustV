@@ -1331,7 +1331,7 @@
 
                 console.log("fn_setBillGrp 1 typeId : "+$('#typeId').val());
 
-                $('#sctBillPrefer').removeClass("blind");
+                //$('#sctBillPrefer').removeClass("blind");
 
                 fn_loadBillingPreference($('#srvCntcId').val());
 
