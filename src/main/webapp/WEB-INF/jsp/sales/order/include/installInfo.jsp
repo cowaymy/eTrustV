@@ -13,8 +13,8 @@
         var maskedMobileNo = oriInstMobileNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
         var maskedEmail = "";
 
-        var prefix= oriInstEmail.substring(0, oriInstEmail.lastIndexOf("@"));
-        var postfix= oriInstEmail.substring(oriInstEmail.lastIndexOf("@"));
+        var prefix= oriInstEmail.substr(0, oriInstEmail.lastIndexOf("@"));
+        var postfix= oriInstEmail.substr(oriInstEmail.lastIndexOf("@"));
         for(var i=0; i<prefix.length; i++){
             if(i == 0 || i == prefix.length - 1) {
                 maskedEmail = maskedEmail + prefix[i].toString();
@@ -55,7 +55,7 @@
         else{
             $("#imgHoverInstMobileNo").hide();
         }
-        if(oriInstEmail.replace(/\s/g,"") != "")
+        /* if(oriInstEmail.replace(/\s/g,"") != "")
         {
             $("#spanInstEmail").html(maskedEmail);
             // Appear Email on hover over field
@@ -67,7 +67,7 @@
         }
         else{
             $("#imgHoverInstEmail").hide();
-        }
+        } */
         if(oriInstFaxNo.replace(/\s/g,"") != "")
         {
             $("#spanInstFaxNo").html(maskedFaxNo);
