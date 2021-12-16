@@ -115,6 +115,10 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
     public void updateAction(Map<String, Object> params) {
         membershipESvmMapper.updateAction(params);
         membershipESvmMapper.updateTR(params);
+
+        if("6".equals(params.get("action").toString())) {
+            membershipESvmMapper.updSal93(params);
+        }
     }
 
     @Override

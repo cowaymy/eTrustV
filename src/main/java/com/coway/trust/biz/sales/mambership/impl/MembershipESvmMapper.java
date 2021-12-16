@@ -80,4 +80,6 @@ public interface MembershipESvmMapper {
 	int  PAY0032DFilter_insert(Map<String, Object> params);
 
 	String getPOSm(Map<String, Object> params);
+
+	void updSal93(Map<String, Object> params);
 }

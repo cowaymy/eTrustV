@@ -650,60 +650,72 @@
        <if test='payment_merchantBank != null and payment_merchantBank != ""'>
                    ESVMPAY.MERCHANT_BANK = #{payment_merchantBank},
        </if>
+       <if test='action == "5" or action == "6"'>
+            ESVMPAY.PAY_STUS_ID = #{action},
+       </if>
             ESVMPAY.UPD_USER_ID = #{userId},
             ESVMPAY.UPD_DT = SYSDATE
        WHERE ESVMPAY.PSM_ID = #{psmId}
     </update>
 
-    <insert id="SAL0095D_insert" parameterType="Map"  >
-           INSERT INTO SAL0095D (
-                                           SRV_MEM_ID, SRV_MEM_QUOT_ID, SRV_SALES_ORD_ID,
-                                           SRV_MEM_NO, SRV_MEM_BILL_NO, SRV_MEM_PAC_ID,
-                                           SRV_MEM_PAC_AMT, SRV_MEM_BS_AMT, SRV_MEM_PV,
-                                           SRV_FREQ, SRV_START_DT, SRV_EXPR_DT,
-                                           SRV_DUR, SRV_STUS_CODE_ID, SRV_REM,
-                                           SRV_CRT_DT, SRV_CRT_USER_ID, SRV_UPD_DT,
-                                           SRV_UPD_USER_ID, SRV_MEM_BS12_AMT, SRV_MEM_IS_SYNCH,
-                                           SRV_MEM_SALES_MEM_ID, SRV_MEM_CUST_CNT_ID, SRV_MEM_QTY,
-                                           SRV_BS_QTY, SRV_MEM_PROMO_ID, SRV_MEM_PV_MONTH,
-                                           SRV_MEM_PV_YEAR, SRV_MEM_IS_MNL, SRV_MEM_BRNCH_ID,
-                                           SRV_MEM_PAC_PROMO_ID, SRV_MEM_FORM_NO, REF_NO)
-                                        VALUES (
-                                                      #{srvMemId},
-                                                       #{srvMemQuotId},
-                                                       #{srvSalesOrdId},
-                                                       #{srvMemNo},
-                                                       #{srvMemBillNo},
-                                                       #{srvMemPacId},
-                                                       #{srvMemPacAmt},
-                                                       #{srvMemBsAmt},
-                                                       #{srvMemPv},
-                                                       #{srvFreq},
-                                                       to_date(#{srvStartDt},'dd/mm/yyyy'),
-                                                       to_date(#{srvExprDt},'dd/mm/yyyy'),
-                                                       #{srvDur},
-                                                       #{srvStusCodeId},
-                                                       #{srvRem},
-                                                       sysdate,
-                                                       #{userId},
-                                                       sysdate,
-                                                       #{userId},
-                                                       #{srvMemBs12Amt},
-                                                       #{srvMemIsSynch},
-                                                       #{srvMemSalesMemId},
-                                                       #{srvMemCustCntId},
-                                                       #{srvMemQty},
-                                                       #{srvBsQty},
-                                                       #{srvMemPromoId},
-                                                       #{srvMemPvMonth},
-                                                       #{srvMemPvYear},
-                                                       #{srvMemIsMnl},
-                                                       #{srvMemBrnchId},
-                                                       #{srvMemPacPromoId},
-                                                       #{srvMemFormNo},
-                                                       #{refNo}
-                                           )
+    <insert id="SAL0095D_insert" parameterType="Map">
+        INSERT INTO SAL0095D (
+            SRV_MEM_ID, SRV_MEM_QUOT_ID, SRV_SALES_ORD_ID,
+            SRV_MEM_NO, SRV_MEM_BILL_NO, SRV_MEM_PAC_ID,
+            SRV_MEM_PAC_AMT, SRV_MEM_BS_AMT, SRV_MEM_PV,
+            SRV_FREQ, SRV_START_DT, SRV_EXPR_DT,
+            SRV_DUR, SRV_STUS_CODE_ID, SRV_REM,
+            SRV_CRT_DT, SRV_CRT_USER_ID, SRV_UPD_DT,
+            SRV_UPD_USER_ID, SRV_MEM_BS12_AMT, SRV_MEM_IS_SYNCH,
+            SRV_MEM_SALES_MEM_ID, SRV_MEM_CUST_CNT_ID, SRV_MEM_QTY,
+            SRV_BS_QTY, SRV_MEM_PROMO_ID, SRV_MEM_PV_MONTH,
+            SRV_MEM_PV_YEAR, SRV_MEM_IS_MNL, SRV_MEM_BRNCH_ID,
+            SRV_MEM_PAC_PROMO_ID, SRV_MEM_FORM_NO, REF_NO, SRC
+        ) VALUES (
+            #{srvMemId},
+            #{srvMemQuotId},
+            #{srvSalesOrdId},
+            #{srvMemNo},
+            #{srvMemBillNo},
+            #{srvMemPacId},
+            #{srvMemPacAmt},
+            #{srvMemBsAmt},
+            #{srvMemPv},
+            #{srvFreq},
+            to_date(#{srvStartDt},'dd/mm/yyyy'),
+            to_date(#{srvExprDt},'dd/mm/yyyy'),
+            #{srvDur},
+            #{srvStusCodeId},
+            #{srvRem},
+            sysdate,
+            #{userId},
+            sysdate,
+            #{userId},
+            #{srvMemBs12Amt},
+            #{srvMemIsSynch},
+            #{srvMemSalesMemId},
+            #{srvMemCustCntId},
+            #{srvMemQty},
+            #{srvBsQty},
+            #{srvMemPromoId},
+            #{srvMemPvMonth},
+            #{srvMemPvYear},
+            #{srvMemIsMnl},
+            #{srvMemBrnchId},
+            #{srvMemPacPromoId},
+            #{srvMemFormNo},
+            #{refNo},
+            'eSVM'
+        )
      </insert>
+
+     <update id="updSal93" parameterType="Map">
+        UPDATE SAL0093D
+        SET SRV_QUOT_STUS_ID = #{action},
+            SRV_UPD_USER_ID = #{userId},
+            SRV_UPD_DT = SYSDATE
+        WHERE SRV_MEM_QUOT_ID = #{srvMemQuotId}
+     </update>
 
      <select id="getHasBill" parameterType="Map" resultType="egovMap">
              SELECT
