@@ -10,7 +10,8 @@
     $(document).ready(function(){
 
         var maskedNric = oriInstNric.substr(-4).padStart(oriInstNric.length, "*");
-        var maskedMobileNo = oriInstMobileNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
+        //var maskedMobileNo = oriInstMobileNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
+        var maskedMobileNo = oriInstMobileNo.substr(0,3) + oriInstMobileNo.substr(3,3).replace(/[0-9]/g, "*") + oriInstMobileNo.substr(6,9);
         /* var maskedEmail = "";
 
         var prefix= oriInstEmail.substr(0, oriInstEmail.lastIndexOf("@"));
