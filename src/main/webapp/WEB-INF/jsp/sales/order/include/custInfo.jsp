@@ -1,34 +1,18 @@
 <script type="text/javaScript" language="javascript">
 
-    //AUIGrid ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È¯ ID
+    //AUIGrid »ý¼º ÈÄ ¹ÝÈ¯ ID
     var custInfoGridID;
-    var oriCustNric = '${orderDetail.basicInfo.custNric}';
-
+    
     $(document).ready(function(){
-        //AUIGrid ï¿½×¸ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+        //AUIGrid ±×¸®µå¸¦ »ý¼ºÇÕ´Ï´Ù.
         createAUIGrid();
-
+        
         fn_selectOrderSameRentalGroupOrderList();
-
-        // Masking pen (display last 4)
-        /* if('${orderDetail.basicInfo.custType}' == "Individual") {
-            var maskedNric = oriCustNric.substr(-4).padStart(oriCustNric.length, '*');
-            $("#spanCustNric").html(maskedNric);
-            // Appear NRIC on hover over field
-            $("#spanCustNric").hover(function() {
-                $("#spanCustNric").html(oriCustNric);
-            }).mouseout(function() {
-                $("#spanCustNric").html(maskedNric);
-            });
-        } else {
-            $("#spanCustNric").html(oriCustNric);
-        } */
-
     });
-
+    
     function createAUIGrid() {
-
-        //AUIGrid Ä®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        
+        //AUIGrid Ä®·³ ¼³Á¤
         var columnLayout = [
             { headerText : '<spring:message code="sal.text.ordNo" />',         dataField : "salesOrdNo", width   : 100   }
           , { headerText : '<spring:message code="sal.text.status" />',        dataField : "code",       width   : 100   }
@@ -38,17 +22,17 @@
           , { headerText : '<spring:message code="sal.text.nricCompanyNo" />', dataField : "nric",       width   : 150   }
           , { headerText : "salesOrdId",                                       dataField : "salesOrdId", visible : false }
           ];
-
+        
         custInfoGridID = GridCommon.createAUIGrid("grid_custInfo_wrap", columnLayout, "", gridPros);
     }
-
-    // ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È¸.
-    function fn_selectOrderSameRentalGroupOrderList() {
+    
+    // ¸®½ºÆ® Á¶È¸.
+    function fn_selectOrderSameRentalGroupOrderList() {        
         Common.ajax("GET", "/sales/order/selectSameRentalGrpOrderJsonList.do", {salesOrderId : '${orderDetail.basicInfo.ordId}'}, function(result) {
             AUIGrid.setGridData(custInfoGridID, result);
         });
     }
-
+    
 </script>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -74,9 +58,7 @@
     <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td><span>${orderDetail.basicInfo.custType}</span></td>
     <th scope="row"><spring:message code="sal.text.nricCompanyNo" /></th>
-    <td><a href="#" class="search_btn" id="imgHover"><img style="height:80%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
-        <span id="spanCustNric">${orderDetail.basicInfo.custNric}</span>
-    </td>
+    <td><span>${orderDetail.basicInfo.custNric}</span></td>
     <th scope="row"><spring:message code="sal.text.jomPayRef1" /></th>
     <td><span>${orderDetail.basicInfo.jomPayRef}</span></td>
 </tr>

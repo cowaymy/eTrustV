@@ -1,116 +1,3 @@
-<script type="text/javaScript" language="javascript">
-	//Masking pen (display last 4)
-	var oriInstNric = '${orderDetail.installationInfo.instCntNric}';
-	var oriInstMobileNo = '${orderDetail.installationInfo.instCntTelM}';
-	var oriInstEmail = '${orderDetail.installationInfo.instCntEmail}';
-	var oriInstFaxNo = '${orderDetail.installationInfo.instCntTelF}';
-	var oriInstOfficeNo = '${orderDetail.installationInfo.instCntTelO}';
-	var oriInstHouseNo = '${orderDetail.installationInfo.instCntTelR}';
-
-	$(document).ready(function(){
-
-	    var maskedNric = oriInstNric.substr(-4).padStart(oriInstNric.length, '*');
-	    var maskedMobileNo = oriInstMobileNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
-	    var maskedEmail = "";
-
-	    var prefix= oriInstEmail.substring(0, oriInstEmail.lastIndexOf("@"));
-	    var postfix= oriInstEmail.substring(oriInstEmail.lastIndexOf("@"));
-	    for(var i=0; i<prefix.length; i++){
-	        if(i == 0 || i == prefix.length - 1) {
-	            maskedEmail = maskedEmail + prefix[i].toString();
-	        }
-	        else {
-	            maskedEmail = maskedEmail + "*";
-	        }
-	    }
-	    maskedEmail =maskedEmail +postfix;
-
-	    var maskedFaxNo = oriInstFaxNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
-	    var maskedOfficeNo= oriInstOfficeNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
-	    var maskedHouseNo= oriInstHouseNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
-
-	    /* if(oriInstNric.replace(/\s/g,"") != "")
-        {
-		    $("#spanInstNric").html(maskedNric);
-		    // Appear NRIC on hover over field
-		    $("#spanInstNric").hover(function() {
-		        $("#spanInstNric").html(oriInstNric);
-		    }).mouseout(function() {
-		        $("#spanInstNric").html(maskedNric);
-		    });
-        }
-	    else{
-	    	$("#imgHoverInstNric").hide();
-	    }
-	    if(oriInstMobileNo.replace(/\s/g,"") != "")
-        {
-		    $("#spanInstMobileNo").html(maskedMobileNo);
-		    // Appear Mobile No on hover over field
-		    $("#spanInstMobileNo").hover(function() {
-		        $("#spanInstMobileNo").html(oriInstMobileNo);
-		    }).mouseout(function() {
-		        $("#spanInstMobileNo").html(maskedMobileNo);
-		    });
-        }
-	    else{
-	    	$("#imgHoverInstMobileNo").hide();
-	    }
-	    if(oriInstEmail.replace(/\s/g,"") != "")
-        {
-		    $("#spanInstEmail").html(maskedEmail);
-		    // Appear Email on hover over field
-		    $("#spanInstEmail").hover(function() {
-		        $("#spanInstEmail").html(oriInstEmail);
-		    }).mouseout(function() {
-		        $("#spanInstEmail").html(maskedEmail);
-		    });
-        }
-	    else{
-	    	$("#imgHoverInstEmail").hide();
-	    }
-	    if(oriInstFaxNo.replace(/\s/g,"") != "")
-        {
-		    $("#spanInstFaxNo").html(maskedFaxNo);
-		    // Appear Fax No on hover over field
-		    $("#spanInstFaxNo").hover(function() {
-		        $("#spanInstFaxNo").html(oriInstFaxNo);
-		    }).mouseout(function() {
-		        $("#spanInstFaxNo").html(maskedFaxNo);
-		    });
-        }
-	    else{
-	    	$("#imgHoverInstFaxNo").hide();
-	    }
-	    if(oriInstOfficeNo.replace(/\s/g,"") != "")
-        {
-		    $("#spanInstOfficeNo").html(maskedOfficeNo);
-		    // Appear Office No on hover over field
-		    $("#spanInstOfficeNo").hover(function() {
-		        $("#spanInstOfficeNo").html(oriInstOfficeNo);
-		    }).mouseout(function() {
-		        $("#spanInstOfficeNo").html(maskedOfficeNo);
-		    });
-        }
-	    else{
-	    	$("#imgHoverInstOfficeNo").hide();
-	    }
-	    if(oriInstHouseNo.replace(/\s/g,"") != "")
-        {
-		    $("#spanInstHouseNo").html(maskedHouseNo);
-		    // Appear House No on hover over field
-		    $("#spanInstHouseNo").hover(function() {
-		        $("#spanInstHouseNo").html(oriInstHouseNo);
-		    }).mouseout(function() {
-		        $("#spanInstHouseNo").html(maskedHouseNo);
-		    });
-        }
-	    else{
-	    	$("#imgHoverInstHouseNo").hide();
-	    } */
-
-	});
-</script>
-
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -232,25 +119,19 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.contactNRIC" /></th>
-    <td><a href="#" class="search_btn" id="imgHoverInstNric"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
-        <span id="spanInstNric">${orderDetail.installationInfo.instCntNric}</span></td>
+    <td><span>${orderDetail.installationInfo.instCntNric}</span></td>
     <th scope="row"><spring:message code="sal.text.email" /></th>
-    <td><a href="#" class="search_btn" id="imgHoverInstEmail"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
-        <span id="spanInstEmail">${orderDetail.installationInfo.instCntEmail}</span></td>
+    <td><span>${orderDetail.installationInfo.instCntEmail}</span></td>
     <th scope="row"><spring:message code="sal.text.faxNo" /></th>
-    <td><a href="#" class="search_btn" id="imgHoverInstFaxNo"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
-        <span id="spanInstFaxNo">${orderDetail.installationInfo.instCntTelF}</span></td>
+    <td><span>${orderDetail.installationInfo.instCntTelF}</span></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.mobileNo" /></th>
-    <td><a href="#" class="search_btn" id="imgHoverInstMobileNo"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
-        <span id=spanInstMobileNo>${orderDetail.installationInfo.instCntTelM}</span></td>
+    <td><span>${orderDetail.installationInfo.instCntTelM}</span></td>
     <th scope="row"><spring:message code="sal.text.officeNo" /></th>
-    <td><a href="#" class="search_btn" id="imgHoverInstOfficeNo"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
-        <span id="spanInstOfficeNo">${orderDetail.installationInfo.instCntTelO}</span></td>
+    <td><span>${orderDetail.installationInfo.instCntTelO}</span></td>
     <th scope="row"><spring:message code="sal.title.text.houseNo" /></th>
-    <td><a href="#" class="search_btn" id="imgHoverInstHouseNo"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
-        <span id="spanInstHouseNo">${orderDetail.installationInfo.instCntTelR}</span></td>
+    <td><span>${orderDetail.installationInfo.instCntTelR}</span></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.post" /></th>
