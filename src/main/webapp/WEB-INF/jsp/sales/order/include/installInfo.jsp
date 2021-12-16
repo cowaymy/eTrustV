@@ -11,7 +11,7 @@
 
         var maskedNric = oriInstNric.substr(-4).padStart(oriInstNric.length, "*");
         var maskedMobileNo = oriInstMobileNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
-        var maskedEmail = "";
+        /* var maskedEmail = "";
 
         var prefix= oriInstEmail.substr(0, oriInstEmail.lastIndexOf("@"));
         var postfix= oriInstEmail.substr(oriInstEmail.lastIndexOf("@"));
@@ -27,7 +27,7 @@
 
         var maskedFaxNo = oriInstFaxNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
         var maskedOfficeNo= oriInstOfficeNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
-        var maskedHouseNo= oriInstHouseNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
+        var maskedHouseNo= oriInstHouseNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*"); */
 
         if(oriInstNric.replace(/\s/g,"") != "")
         {
@@ -68,7 +68,7 @@
         else{
             $("#imgHoverInstEmail").hide();
         } */
-        if(oriInstFaxNo.replace(/\s/g,"") != "")
+        /* if(oriInstFaxNo.replace(/\s/g,"") != "")
         {
             $("#spanInstFaxNo").html(maskedFaxNo);
             // Appear Fax No on hover over field
@@ -106,7 +106,7 @@
         }
         else{
             $("#imgHoverInstHouseNo").hide();
-        }
+        } */
 
     });
 </script>
