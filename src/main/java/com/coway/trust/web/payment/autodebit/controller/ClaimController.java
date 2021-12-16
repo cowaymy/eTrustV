@@ -465,7 +465,7 @@ public class ClaimController {
     // CVS 파일 세팅
     Map<String, MultipartFile> fileMap = request.getFileMap();
     MultipartFile multipartFile = fileMap.get("csvFile");
-    if( claimMap.get("bankCode").equals("SCB")){
+    if( claimMap.get("bankCode").equals("SCB") && claimMap.get("ctrlIsCrc").equals("1") ){
     	List<ClaimResultScbUploadVO> vos = csvReadComponent.readCsvToList(multipartFile, false, ClaimResultScbUploadVO::create);
 
     	// CVS 파일 객체 세팅
@@ -509,7 +509,7 @@ public class ClaimController {
           }
         }
     }
-    else if( claimMap.get("bankCode").equals("CIMB")){
+    else if( claimMap.get("bankCode").equals("CIMB") && claimMap.get("ctrlIsCrc").equals("1")){
     	List<ClaimResultCimbUploadVO> vos = csvReadComponent.readCsvToList(multipartFile, false, ClaimResultCimbUploadVO::create);
 
     	// CVS 파일 객체 세팅
@@ -552,7 +552,7 @@ public class ClaimController {
               claimService.updateClaimResultItemBulk4(bulkMap);
           }
         }
-    }else if( claimMap.get("bankCode").equals("HSBC")){
+    }else if( claimMap.get("bankCode").equals("HSBC") && claimMap.get("ctrlIsCrc").equals("1")){
     	List<ClaimResultHsbcUploadVO> vos = csvReadComponent.readCsvToList(multipartFile, false, ClaimResultHsbcUploadVO::create);
 
     	// CVS 파일 객체 세팅

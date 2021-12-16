@@ -728,6 +728,8 @@
         "ctrlIsCrc");
     var bankId = AUIGrid
         .getCellValue(myGridID, selectedGridValue, "bankId");
+    var bankCode = AUIGrid
+        .getCellValue(myGridID, selectedGridValue, "bankCode");
 
     var formData = new FormData();
 
@@ -736,6 +738,7 @@
     formData.append("ctrlIsCrc", ctrlIsCrc);
     formData.append("bankId", bankId);
     formData.append("ddtChnl", ddtChnl);
+    formData.append("bankCode", bankCode);
 
     Common
         .ajaxFile(
@@ -950,6 +953,8 @@
         .getCellValue(myGridID, selectedGridValue, "bankId");
     var ddtChnl = AUIGrid
     .getCellValue(myGridID, selectedGridValue, "ctrlDdtChl");
+    var bankCode = AUIGrid
+    .getCellValue(myGridID, selectedGridValue, "bankCode");
 
     var formData = new FormData();
 
@@ -958,6 +963,7 @@
     formData.append("ctrlIsCrc", ctrlIsCrc);
     formData.append("bankId", bankId);
     formData.append("ddtChnl", ddtChnl);
+    formData.append("bankCode", bankCode);
 
     Common
         .ajaxFile(
@@ -1350,6 +1356,8 @@
           "ctrlStusId");
       var stusName = AUIGrid.getCellValue(myGridID, selectedGridValue,
           "stusName");
+      var bankCode = AUIGrid.getCellValue(myGridID, selectedGridValue,
+    	  "bankCode");
 
       if (ctrlStusId != 1) {
         Common
