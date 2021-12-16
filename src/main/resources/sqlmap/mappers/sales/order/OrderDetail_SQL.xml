@@ -897,7 +897,7 @@
   </select>
 
   <select id="selectAutoDebitList" parameterType="Map" resultType="egovMap">
-    SELECT T.BANK_DTL_ID
+SELECT T.BANK_DTL_ID
              , T.BANK_DTL_AMT
              , T.CTRL_ID
              , T.CRT_DT_MM
@@ -906,6 +906,7 @@
              , T.CODE
              , CASE WHEN t.ctrl_stus_id = 1 THEN '-'
                        ELSE T.CODE_NAME END AS is_approve_str
+                       ,T.BANK_DTL_APPR_CODE
     FROM ( SELECT T1.BANK_DTL_ID
                         , T1.BANK_DTL_AMT
                         , T2.CTRL_ID
@@ -919,12 +920,12 @@
                         , NVL(T1.BANK_APPV, 0) BANK_APPV
                         , NVL(t1.BANK_DTL_APPR_CODE,0) BANK_DTL_APPR_CODE
                         , T2.CTRL_IS_CRC CTRL_IS_CRC
-                        , CASE WHEN T4.IND = 'SUCCESS' THEN 'Success'
+                        , CASE WHEN T4.IND = 'SUCCESS' OR BANK_DTL_APPR_CODE IS NULL THEN 'Success'
                         WHEN T4.IND = 'INSFUNDS' THEN 'Insufficient Funds'
                         WHEN T4.IND = 'INVCARD' THEN 'Return pin/Invalid Card'
                         WHEN T4.IND = 'CHGCARD' THEN 'Change Card'
-                        WHEN T4.IND = 'TRXNOTALW' THEN 'Transaction Not Allowed' 
-                        ELSE 'Change Card' END CODE_NAME
+                        WHEN T4.IND = 'TRXNOTALW' AND T2.CTRL_IS_CRC = 1 THEN 'Transaction Not Allowed'
+                        ELSE (CASE WHEN T2.CTRL_IS_CRC = 1 THEN 'Change Card' ELSE 'Change Account' END) END CODE_NAME
                FROM PAY0042D T1
                JOIN PAY0041D T2 ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID
                                         AND 8 != T2.CTRL_STUS_ID
