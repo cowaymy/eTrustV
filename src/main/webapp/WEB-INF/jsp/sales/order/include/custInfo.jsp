@@ -1,18 +1,38 @@
 <script type="text/javaScript" language="javascript">
 
-    //AUIGrid »ý¼º ÈÄ ¹ÝÈ¯ ID
+    //AUIGrid ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È¯ ID
     var custInfoGridID;
-    
+    var oriNric = "${orderDetail.basicInfo.custNric}";
+
     $(document).ready(function(){
-        //AUIGrid ±×¸®µå¸¦ »ý¼ºÇÕ´Ï´Ù.
+        //AUIGrid ï¿½×¸ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
         createAUIGrid();
-        
+
         fn_selectOrderSameRentalGroupOrderList();
+
+     // Masking pen (display last 4)
+        if('${orderDetail.basicInfo.custType}' == "Individual") {
+            var maskedNric = oriNric.substr(-4).padStart(oriNric.length, '*');
+            $("#spanNric").html(maskedNric);
+            // Appear NRIC on hover over field
+            $("#spanNric").hover(function() {
+                $("#spanNric").html(oriNric);
+            }).mouseout(function() {
+                $("#spanNric").html(maskedNric);
+            });
+            $("#imgHover").hover(function() {
+                $("#spanNric").html(oriNric);
+            }).mouseout(function() {
+                $("#spanNric").html(maskedNric);
+            });
+        } else {
+            $("#spanNric").html(oriNric);
+        }
     });
-    
+
     function createAUIGrid() {
-        
-        //AUIGrid Ä®·³ ¼³Á¤
+
+        //AUIGrid Ä®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         var columnLayout = [
             { headerText : '<spring:message code="sal.text.ordNo" />',         dataField : "salesOrdNo", width   : 100   }
           , { headerText : '<spring:message code="sal.text.status" />',        dataField : "code",       width   : 100   }
@@ -22,17 +42,17 @@
           , { headerText : '<spring:message code="sal.text.nricCompanyNo" />', dataField : "nric",       width   : 150   }
           , { headerText : "salesOrdId",                                       dataField : "salesOrdId", visible : false }
           ];
-        
+
         custInfoGridID = GridCommon.createAUIGrid("grid_custInfo_wrap", columnLayout, "", gridPros);
     }
-    
-    // ¸®½ºÆ® Á¶È¸.
-    function fn_selectOrderSameRentalGroupOrderList() {        
+
+    // ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È¸.
+    function fn_selectOrderSameRentalGroupOrderList() {
         Common.ajax("GET", "/sales/order/selectSameRentalGrpOrderJsonList.do", {salesOrderId : '${orderDetail.basicInfo.ordId}'}, function(result) {
             AUIGrid.setGridData(custInfoGridID, result);
         });
     }
-    
+
 </script>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -58,7 +78,9 @@
     <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td><span>${orderDetail.basicInfo.custType}</span></td>
     <th scope="row"><spring:message code="sal.text.nricCompanyNo" /></th>
-    <td><span>${orderDetail.basicInfo.custNric}</span></td>
+    <td><a href="#" class="search_btn" id="imgHover"><img style="height:70%" src="${pageContext.request.contextPath}/resources/images/common/nricEye2.png" /></a>
+        <span id="spanNric"></span>
+    </td>
     <th scope="row"><spring:message code="sal.text.jomPayRef1" /></th>
     <td><span>${orderDetail.basicInfo.jomPayRef}</span></td>
 </tr>
