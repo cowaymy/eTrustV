@@ -11,7 +11,7 @@
         fn_selectOrderSameRentalGroupOrderList();
 
         // Masking pen (display last 4)
-        if('${orderDetail.basicInfo.custType}' == "Individual") {
+        /* if('${orderDetail.basicInfo.custType}' == "Individual") {
             var maskedNric = oriCustNric.substr(-4).padStart(oriCustNric.length, '*');
             $("#spanCustNric").html(maskedNric);
             // Appear NRIC on hover over field
@@ -22,7 +22,7 @@
             });
         } else {
             $("#spanCustNric").html(oriCustNric);
-        }
+        } */
 
     });
 

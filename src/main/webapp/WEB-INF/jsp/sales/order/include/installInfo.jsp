@@ -13,8 +13,8 @@
 	    var maskedMobileNo = oriInstMobileNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
 	    var maskedEmail = "";
 
-	    var prefix= oriInstEmail.substring(0, oriInstEmail .lastIndexOf("@"));
-	    var postfix= oriInstEmail.substring(oriInstEmail .lastIndexOf("@"));
+	    var prefix= oriInstEmail.substring(0, oriInstEmail.lastIndexOf("@"));
+	    var postfix= oriInstEmail.substring(oriInstEmail.lastIndexOf("@"));
 	    for(var i=0; i<prefix.length; i++){
 	        if(i == 0 || i == prefix.length - 1) {
 	            maskedEmail = maskedEmail + prefix[i].toString();
@@ -29,7 +29,7 @@
 	    var maskedOfficeNo= oriInstOfficeNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
 	    var maskedHouseNo= oriInstHouseNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
 
-	    if(oriInstNric.replace(/\s/g,"") != "")
+	    /* if(oriInstNric.replace(/\s/g,"") != "")
         {
 		    $("#spanInstNric").html(maskedNric);
 		    // Appear NRIC on hover over field
@@ -106,7 +106,7 @@
         }
 	    else{
 	    	$("#imgHoverInstHouseNo").hide();
-	    }
+	    } */
 
 	});
 </script>

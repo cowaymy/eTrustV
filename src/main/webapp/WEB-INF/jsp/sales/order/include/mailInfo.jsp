@@ -15,8 +15,8 @@
 	    var maskedMobileNo = oriMailMobileNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
 	    var maskedEmail = "";
 
-	    var prefix= oriMailEmail.substring(0, oriMailEmail .lastIndexOf("@"));
-	    var postfix= oriMailEmail.substring(oriMailEmail .lastIndexOf("@"));
+	    var prefix= oriMailEmail.substring(0, oriMailEmail.lastIndexOf("@"));
+	    var postfix= oriMailEmail.substring(oriMailEmail.lastIndexOf("@"));
 	    for(var i=0; i<prefix.length; i++){
 	        if(i == 0 || i == prefix.length - 1) {
 	            maskedEmail = maskedEmail + prefix[i].toString();
@@ -32,8 +32,8 @@
 	    var maskedHouseNo= oriMailHouseNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
 	    var maskedMainEmail = "";
 
-	    var prefix= oriMailMainEmail.substring(0, oriMailMainEmail .lastIndexOf("@"));
-        var postfix= oriMailMainEmail.substring(oriMailMainEmail .lastIndexOf("@"));
+	    var prefix= oriMailMainEmail.substring(0, oriMailMainEmail.lastIndexOf("@"));
+        var postfix= oriMailMainEmail.substring(oriMailMainEmail.lastIndexOf("@"));
         for(var i=0; i<prefix.length; i++){
             if(i == 0 || i == prefix.length - 1) {
             	maskedMainEmail = maskedMainEmail + prefix[i].toString();
@@ -46,8 +46,8 @@
 
         var maskedAddEmail = "";
 
-        var prefix= oriMailAddEmail.substring(0, oriMailAddEmail .lastIndexOf("@"));
-        var postfix= oriMailAddEmail.substring(oriMailAddEmail .lastIndexOf("@"));
+        var prefix= oriMailAddEmail.substring(0, oriMailAddEmail.lastIndexOf("@"));
+        var postfix= oriMailAddEmail.substring(oriMailAddEmail.lastIndexOf("@"));
         for(var i=0; i<prefix.length; i++){
             if(i == 0 || i == prefix.length - 1) {
             	maskedAddEmail = maskedAddEmail + prefix[i].toString();
@@ -58,7 +58,7 @@
         }
         maskedAddEmail =maskedAddEmail +postfix;
 
-        if(oriMailNric.replace(/\s/g,"") != "")
+        /* if(oriMailNric.replace(/\s/g,"") != "")
         {
         	$("#spanMailNric").html(maskedNric);
             // Appear NRIC on hover over field
@@ -159,7 +159,7 @@
         }
         else{
         	$("#imgHoverAddEmail").hide();
-        }
+        } */
 	});
 </script>
 
