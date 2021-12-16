@@ -107,6 +107,18 @@ var branchDs = [];
           width : 100
         },
         {
+            dataField : "defectDesc",
+            headerText : "AS Error Detail",
+            editable : false,
+            width : 100
+        },
+        {
+            dataField : "resnDesc",
+            headerText : "AS Fail Description",
+            editable : false,
+            width : 100
+        },
+        {
           dataField : "code1",
           headerText : "<spring:message code='service.grid.Status'/>",
           editable : false,
@@ -178,6 +190,11 @@ var branchDs = [];
         {
           dataField : "brnchCode",
           headerText : "<spring:message code='service.title.ASBrch'/>",
+          width : 100
+        },
+        {
+          dataField : "instCity",
+          headerText : "City",
           width : 100
         },
         {

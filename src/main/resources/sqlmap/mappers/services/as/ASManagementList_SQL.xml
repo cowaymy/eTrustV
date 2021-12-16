@@ -181,7 +181,7 @@
                                              AS_RESULT_CRT_DT,
                                              AS_CMMS,
                                              B.USER_NAME,
-                                             NVL (ma1.CITY, '-') AS INST_CITY
+                                             NVL(ma1.CITY, '-') AS INST_CITY
                                      FROM SVC0004D A
                                      LEFT JOIN SYS0047M B on A.AS_RESULT_CRT_USER_ID = B.USER_ID
                                      JOIN sal0001d som on som.SALES_ORD_ID = A.AS_SO_ID
