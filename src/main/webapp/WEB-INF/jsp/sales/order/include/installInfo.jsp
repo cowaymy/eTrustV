@@ -11,8 +11,8 @@
 
         var maskedNric = oriInstNric.substr(-4).padStart(oriInstNric.length, "*");
         //var maskedMobileNo = oriInstMobileNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
-        var maskedMobileNo = oriInstMobileNo.substr(0,3) + oriInstMobileNo.substr(3,3).replace(/[0-9]/g, "*") + oriInstMobileNo.substr(6,9);
-        /* var maskedEmail = "";
+        var maskedMobileNo = oriInstMobileNo.substr(0,3) + oriInstMobileNo.substr(3,oriInstMobileNo.length-7).replace(/[0-9]/g, "*") + oriInstMobileNo.substr(-4);
+        var maskedEmail = "";
 
         var prefix= oriInstEmail.substr(0, oriInstEmail.lastIndexOf("@"));
         var postfix= oriInstEmail.substr(oriInstEmail.lastIndexOf("@"));
@@ -26,9 +26,13 @@
         }
         maskedEmail =maskedEmail +postfix;
 
-        var maskedFaxNo = oriInstFaxNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
+        /* var maskedFaxNo = oriInstFaxNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
         var maskedOfficeNo= oriInstOfficeNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*");
         var maskedHouseNo= oriInstHouseNo.replace(/(?<=\d\d)\d(?=\d{4})/g, "*"); */
+
+        var maskedFaxNo = oriInstFaxNo.substr(0,3) + oriInstFaxNo.substr(3,oriInstFaxNo.length-7).replace(/[0-9]/g, "*") + oriInstFaxNo.substr(-4);
+        var maskedOfficeNo = oriInstOfficeNo.substr(0,2) + oriInstOfficeNo.substr(3,oriInstOfficeNo.length-7).replace(/[0-9]/g, "*") + oriInstOfficeNo.substr(-4);
+        var maskedHouseNo = oriInstHouseNo.substr(0,2) + oriInstHouseNo.substr(3,oriInstHouseNo.length-7).replace(/[0-9]/g, "*") + oriInstHouseNo.substr(-4);
 
         if(oriInstNric.replace(/\s/g,"") != "")
         {
@@ -56,7 +60,7 @@
         else{
             $("#imgHoverInstMobileNo").hide();
         }
-        /* if(oriInstEmail.replace(/\s/g,"") != "")
+        if(oriInstEmail.replace(/\s/g,"") != "")
         {
             $("#spanInstEmail").html(maskedEmail);
             // Appear Email on hover over field
@@ -68,8 +72,8 @@
         }
         else{
             $("#imgHoverInstEmail").hide();
-        } */
-        /* if(oriInstFaxNo.replace(/\s/g,"") != "")
+        }
+        if(oriInstFaxNo.replace(/\s/g,"") != "")
         {
             $("#spanInstFaxNo").html(maskedFaxNo);
             // Appear Fax No on hover over field
@@ -107,7 +111,7 @@
         }
         else{
             $("#imgHoverInstHouseNo").hide();
-        } */
+        }
 
     });
 </script>
