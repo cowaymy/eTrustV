@@ -9,12 +9,12 @@
 
     $(document).ready(function(){
 
-        var maskedNric = oriInstNric.substr(-4).padStart(oriInstNric.length, '*');
+        var maskedNric = oriInstNric.substr(-4).padStart(oriInstNric.length, "*");
         var maskedMobileNo = oriInstMobileNo.replace(/(?<=\d\d\d)\d(?=\d{4})/g, "*");
         var maskedEmail = "";
 
-        var prefix= oriInstEmail.substring(0, oriInstEmail .lastIndexOf("@"));
-        var postfix= oriInstEmail.substring(oriInstEmail .lastIndexOf("@"));
+        var prefix= oriInstEmail.substring(0, oriInstEmail.lastIndexOf("@"));
+        var postfix= oriInstEmail.substring(oriInstEmail.lastIndexOf("@"));
         for(var i=0; i<prefix.length; i++){
             if(i == 0 || i == prefix.length - 1) {
                 maskedEmail = maskedEmail + prefix[i].toString();
