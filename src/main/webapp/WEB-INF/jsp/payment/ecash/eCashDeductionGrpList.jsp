@@ -341,7 +341,7 @@ function fn_resultFileUp(){
             var settleDate = result.data.settleDate;
             var fileName = $('input[type=file]').val().replace(/C:\\fakepath\\/i, '');
             var data = {};
-            data.form = [{"fileBatchId":fileBatchId,"fileBatchBankId":fileBatchBankId,"20211216":settleDate,"fileName":fileName}];
+            data.form = [{"fileBatchId":fileBatchId,"fileBatchBankId":fileBatchBankId,"settleDate":settleDate,"fileName":fileName}];
 console.log(data.form);
             Common.ajax("POST", "/payment/updateECashGrpDeductionResult.do", data,
             	function(result) {
