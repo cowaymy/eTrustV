@@ -256,7 +256,7 @@
 
 		if (valid) {
 			Common.ajax("GET", "/ResearchDevelopment/searchPEXTestResultList.do", $(
-					"#ASForm").serialize(), function(result) {
+					"#PEXTestForm").serialize(), function(result) {
 				AUIGrid.setGridData(myGridID, result);
 			});
 		} else {
@@ -410,6 +410,10 @@
 			});
 		});
 	}
+
+	 function fn_PEXTestRawData() {
+		    Common.popupDiv("/ResearchDevelopment/PEXTestRawDataPop.do", null, null, true, '');
+		  }
 </script>
 <section id="content">
 	<!-- content start -->
@@ -457,7 +461,7 @@
 	<!-- title_line end -->
 	<section class="search_table">
 		<!-- search_table start -->
-		<form action="#" method="post" id="ASForm">
+		<form action="#" method="post" id="PEXTestForm">
 			<table class="type1">
 				<!-- table start -->
 				<caption>table</caption>
@@ -538,6 +542,33 @@
 				</tbody>
 			</table>
 			<!-- table end -->
+
+			<aside class="link_btns_wrap">
+    <!-- link_btns_wrap start -->
+    <p class="show_btn">
+     <a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a>
+    </p>
+    <dl class="link_list">
+     <dt><spring:message code='sales.Link'/></dt>
+     <dd>
+      <ul class="btns">
+      </ul>
+      <ul class="btns">
+         <li>
+          <p class="link_btn type2">
+           <a href="#" onclick="fn_PEXTestRawData()">PEX Test Result Raw Data</a>
+          </p>
+         </li>
+      </ul>
+      <p class="hide_btn">
+       <a href="#"><img
+        src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif"
+        alt="hide" /></a>
+      </p>
+     </dd>
+    </dl>
+   </aside>
+
 			<ul class="right_btns">
 				<c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
 					<li><p class="btn_grid">
