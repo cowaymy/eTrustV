@@ -117,6 +117,7 @@ public class MembershipESvmServiceImpl extends EgovAbstractServiceImpl implement
         membershipESvmMapper.updateTR(params);
 
         if("6".equals(params.get("action").toString())) {
+            params.put("reject", "8");
             membershipESvmMapper.updSal93(params);
         }
     }
