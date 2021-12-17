@@ -100,8 +100,8 @@ function fn_doConfirm(){
                });
 
              $("#ORD_NO_RESULT").val( result[0].salesOrdNo);
-             //$("#ORD_ID").val( result[0].salesOrdId);
-             //$("#CCP_ID").val( result[0].ccpId);
+             $("#ORD_ID").val( result[0].salesOrdId);
+             $("#CCP_ID").val( result[0].ccpId);
          }
    });
 }
@@ -113,9 +113,6 @@ function setText(result){
 
     var time1 = result.orderDetail.basicInfo.ordDt;
     var myDate = new Date(time1);
-    console.log(result.orderDetail.basicInfo.ordDt);
-    console.log("datedate " + myDate);
-    console.log("datedate1 " + myDate.toLocaleString('en-GB', { hour12:false }));
 
     resultBasicObject = result.basic;
     resultSrvconfigObject = result.srvconfig;
@@ -194,17 +191,49 @@ function setText(result){
     }
 }
 
+function fn_save(){
 
+	Common.ajax("GET", "/sales/ccp/ccpEresubmitNewConfirm", {ORD_NO : $("#ORD_NO_P").val()}, function(result) {
+        console.log( result);
+        if(result.length == 0)  {
+            Common.alert("No order found or this order had resubmitted.");
+            return ;
+
+        }else{
+        	var ordId = $("#ORD_ID").val();
+            var ccpId = $("#CCP_ID").val();
+            Common.ajax("POST", "/sales/ccp/ccpEresubmitSave", {ordId : ordId,ccpId : ccpId}, function(result) {
+                 console.log( result);
+
+                 if(result == null){
+                     Common.alert("No order found or this order had resubmitted.");
+                 }else{
+                     Common.alert("Order resubmitted");
+                     $('#ccpResubmitClose').click();
+                 }
+            });
+        }
+  });
+
+}
 </script>
 
 
+<form id="getDataForm" method="post">
+<div style="display:inline">
+    <input type="text" name="ORD_ID"     id="ORD_ID"/>
+    <input type="text" name="CCP_ID"     id="CCP_ID"/>
+    <input type="text" name="CUST_ID"    id="CUST_ID"/>
+
+</div>
+</form>
 
 <div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>eResubmit (CCP) - New</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="chsFileUploadClose" href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="ccpResubmitClose" href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
