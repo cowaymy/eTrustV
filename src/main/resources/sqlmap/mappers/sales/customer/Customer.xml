@@ -1953,6 +1953,7 @@
     CODE || ' - ' || NAME AS CODE_NAME
     FROM
     SYS0004M
+    WHERE STUS_CODE_ID = 1
     ORDER BY CODE ASC
   </select>
 
