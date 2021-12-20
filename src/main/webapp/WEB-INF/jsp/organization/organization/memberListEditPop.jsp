@@ -1224,8 +1224,11 @@ function fn_saveValidation(){
     }
 
     //@AMEER add INCOME TAX
-    //valid = checkIncomeTax();
-    //console.log("@@validInc: "+valid)
+    var regIncTax = /^[a-zA-Z0-9]*$/;
+    if (!regIncTax.test($("#incomeTaxNo").val())){
+        valid = false;
+        message += "* Invalid Income Tax Format.<br/>";
+    }
 
     //Display Message
     if (!valid)
@@ -1490,39 +1493,6 @@ function checkBankAccNo() {
     }
 }
 
-//@AMEER INCOME_TAX
-function checkIncomeTax() {
-    // 1. Check length
-    if($("#incomeTaxNo").val().length >= 0 && $("#incomeTaxNo").val().length < 13) {
-        Common.alert("Invalid Income Tax Length!");
-        $("#incomeTaxNo").val("");
-        return false;
-    }else if($("#incomeTaxNo").val().length == 13){
-        // 2. Check Special Char
-        var regIncTax = /^[a-zA-Z0-9]*$/;
-        if (!regIncTax.test($("#incomeTaxNo").val())){
-            Common.alert("Invalid Income Tax Format");
-            return false;
-        }else{
-        	 // 3. Check Exist in DB
-        	  var jsonObj = {
-                        "incomeTaxNo" : $("#incomeTaxNo").val()
-                    };
-            Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
-                if(result.cnt1 == "0" && result.cnt2 == "0") {
-                    return true;
-                } else {
-                    Common.alert("Income Tax No has been registered.");
-                    $("#incomeTaxNo").val("");
-                    return false;
-                }
-            });
-            return true;
-        }
-    }else if($("#incomeTaxNo").val().length == 0){
-        return true; //do nothing
-    }
-}
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->

@@ -623,8 +623,11 @@ function fn_saveValidation(){
     //endregion
 
     //@AMEER add INCOME TAX
-    //valid = checkIncomeTax();
-    //console.log("@@validInc: "+valid)
+    var regIncTax = /^[a-zA-Z0-9]*$/;
+    if(!regIncTax.test($("#eHPincomeTaxNo").val())){
+        valid = false;
+        message += "* Invalid Income Tax Format.<br/>";
+    }
 
         if(!fn_validFile()) {
         return false;
@@ -871,40 +874,6 @@ function checkBankAccNo() {
         });
     }
 }
-
-//@AMEER INCOME_TAX
-function checkIncomeTax() {
-    // 1. Check length
-    if($("#eHPincomeTaxNo").val().length >= 0 && $("#eHPincomeTaxNo").val().length < 13) {
-        Common.alert("Invalid Income Tax Length!");
-        $("#eHPincomeTaxNo").val("");
-        return false;
-    }else if($("#eHPincomeTaxNo").val().length == 13){
-        // 2. Check Special Char
-        var regIncTax = /^[a-zA-Z0-9]*$/;
-        if (!regIncTax.test($("#eHPincomeTaxNo").val())){
-            Common.alert("Invalid Income Tax Format");
-            return false;
-        }else{
-        	// 3. Check Exist in DB
-            var jsonObj = {
-                "incomeTaxNo" : $("#eHPincomeTaxNo").val()
-            };
-            Common.ajax("GET", "/organization/checkIncomeTax", jsonObj, function(result) {
-                if(result.cnt1 == "0" && result.cnt2 == "0") {
-                    return true;
-                } else {
-                    Common.alert("Income Tax No has been registered.");
-                    $("#eHPincomeTaxNo").val("");
-                    return false;
-                }
-            });
-        }
-    }else if($("#eHPincomeTaxNo").val().length == 0){
-        return true; //do nothing
-    }
-}
-
 
 function fn_atchViewDown(fileGrpId, fileId) {
     var data = {
