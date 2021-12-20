@@ -611,12 +611,12 @@
                 ,BANK = #{bankList}
                 ,BANK_ACC_HOLDER = #{bankAccHolder}
                 ,BANK_ACC_NO = #{bankAccNo}
-                ,BANK_BRANCH = #{branch}
+                ,BANK_BRANCH = #{bankBranch}
                 ,SWIFT_CODE = #{swiftCode}
                 ,CONTACT_DESIGNATION = #{designation}
                 ,CONTACT_NAME = #{vendorName}
-                ,CONTACT_PHONE_NO = #{phoneNo}
-                ,CONTACT_EMAIL = #{email}
+                ,CONTACT_PHONE_NO = #{vendorPhoneNo}
+                ,CONTACT_EMAIL = #{vendorEmail}
                 ,PAY_TERM = #{paymentTerms}
                 ,PAY_TYPE = #{paymentMethod}
                 ,PAY_OTH = NVL(#{others},NULL)
