@@ -102,9 +102,10 @@
 
                 //set parameters
                 $($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');
-                $($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
                 $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
                 $($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
+                $($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
+
 
                 $("#reportForm #Memcode").val(salesPersonCd);
                 $("#reportForm #Month").val(month);
@@ -112,16 +113,20 @@
                 $("#reportForm #TaskID").val(taskID);
             } else if (type == "2") {
 
-                reportFileName = "/commission/HTCommissionRawData_Excel.rpt"; //reportFileName
-                reportDownFileName = "HTCommissionRawData_Excel_" + today; //report name
+                reportFileName = "/commission/HTCommissionRawData_M_Excel.rpt"; //reportFileName
+                reportDownFileName = "HTCommissionRawData_Mark_Excel_" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
                 //set parameters
                 $($reportForm).append('<input type="hidden" id="HT" name="HT" value="" /> ');
                 $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+               // $($reportForm).append('<input type="hidden" id="Month" name="Month"  value ="" />');
+             //   $($reportForm).append('<input type="hidden" id="Year" name="Year"  value ="" />');
 
                 $("#reportForm #HT").val("7");
                 $("#reportForm #TaskID").val(taskID);
+                //$("#reportForm #Month").val(month);
+                //$("#reportForm #Year").val(year);
 
 
             } else if (type == "3") {
@@ -179,6 +184,25 @@
                $("#reportForm #Month").val(month);
                $("#reportForm #Year").val(year);
                $("#reportForm #TaskID").val(taskID);
+           }
+           else if (type == "7") {
+
+               reportFileName = "/commission/HTCommissionRawData_R_Excel.rpt"; //reportFileName
+               reportDownFileName = "HTCommissionRawData_Rate_Excel_" + today; //report name
+               reportViewType = "EXCEL"; //viewType
+
+               //set parameters
+               $($reportForm).append('<input type="hidden" id="HT" name="HT" value="" /> ');
+               $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+              // $($reportForm).append('<input type="hidden" id="Month" name="Month"  value ="" />');
+            //   $($reportForm).append('<input type="hidden" id="Year" name="Year"  value ="" />');
+
+               $("#reportForm #HT").val("7");
+               $("#reportForm #TaskID").val(taskID);
+               //$("#reportForm #Month").val(month);
+               //$("#reportForm #Year").val(year);
+
+
            }
 
             //report info
@@ -255,7 +279,8 @@
                                     <option value="1">Homecare Technician Commission</option>
                                 </c:if>
                                 <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-                                    <option value="2">Homecare Technician Commission Raw (All)</option>
+                                    <option value="2">Homecare Technician Commission Raw (Mark)</option>
+                                    <option value="7">Homecare Technician Commission Raw (Rate)</option>
                                     <option value="3">Homecare Technician Manager Commission</option>
                                     <option value="4">Homecare Technician Comm Calculation</option>
                                     <option value="5">Homecare Technician Manager Comm Calculation</option>
