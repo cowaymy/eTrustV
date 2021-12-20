@@ -3802,7 +3802,7 @@ $.fn.clearForm = function() {
                  </td>
                  <th>Pay Date</th>
                  <td>
-                    <input id="keyInPayDateOnline" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                    <input id="keyInPayDateOnline" name="keyInPayDate" type="text" title="" placeholder="" class="readonly w100p" readonly value="${currentDay}" />
                  </td>
              </tr>
 			  <tr>
@@ -3994,7 +3994,7 @@ $.fn.clearForm = function() {
                   </td>
                   <th>Pay Date</th>
                   <td>
-                        <input id="keyInPayDateCheque" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                        <input id="keyInPayDateCheque" name="keyInPayDate" type="text" title="" placeholder="" class="readonly w100p" readonly value="${currentDay}" />
                   </td>
               </tr>
 			  <tr>
