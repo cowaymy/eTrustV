@@ -77,6 +77,27 @@ ORDER BY CITY ASC
 </select>
 
 
+<select id="selectPostcodeList" parameterType="Map" resultType="egovMap">
+<![CDATA[
+
+SELECT  POSTCODE                                                                    AS CODE
+                ,   CITY                                                                    AS CODE_DESC
+FROM    SYS0064M
+WHERE   STATUS_ID = 1
+AND     COUNTRY = 'Malaysia'
+AND     AREA_ID NOT LIKE 'DM%'
+AND     STATE = #{state}
+AND     CITY = #{city}
+
+]]>
+<if test="postcode != null and postcode != '' ">
+AND     POSTCODE = #{postcode}
+</if>
+<![CDATA[
+ORDER BY POSTCODE ASC
+]]>
+</select>
+
 
 <select id="selectAddressList" parameterType="Map" resultType="egovMap">
 
