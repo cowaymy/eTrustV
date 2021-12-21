@@ -140,14 +140,14 @@
                     width : 100
                 },
                 {
-                    dataField : "pexReason",
+                    dataField : "pexReasonCode",
                     headerText : "PEX Code",
                     width : 100
                 },
                 {
-                    dataField : "pexRem",
+                    dataField : "pexReasonDesc",
                     headerText : "PEX Desc",
-                    width : 400
+                    width : 150
                 },
                 {
                     dataField : "retNo",
