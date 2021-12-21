@@ -104,13 +104,13 @@ ORDER BY POSTCODE ASC
 <![CDATA[
 
 select
-        POSTCODE            AS POSTCODE,
+        POSTCODE            AS  CODE,
 
         NVL(AREA, '')     ||' '||
         NVL(POSTCODE, '') ||' '||
         NVL(CITY,'')      ||' '||
         NVL(STATE,'')     ||' '||
-        NVL(COUNTRY,'')   AS FULL_ADDR
+        NVL(COUNTRY,'')   AS CODE_DESC
 
 from SYS0064M
 where AREA_ID = #{areaId}
