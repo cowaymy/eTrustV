@@ -1499,8 +1499,9 @@ public class LMSApiServiceImpl extends EgovAbstractServiceImpl implements LMSApi
 		}catch(Exception e){
 			LOGGER.error("Timeout:");
 			LOGGER.error("[lmsMemberListInsertUpdate] - Caught Exception: " + e);
+			p.setCode(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
 			p.setStatus(String.valueOf(AppConstants.RESPONSE_CODE_INVALID));
-			p.setMessage("Timeout" + e.toString());
+			p.setMessage("Timeout " + e.toString());
 		}finally{
 			stopWatch.stop();
 		    respTm = stopWatch.toString();
