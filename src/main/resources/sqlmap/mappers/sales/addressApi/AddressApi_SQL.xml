@@ -103,17 +103,15 @@ ORDER BY POSTCODE ASC
 <select id="selectAreaList" parameterType="Map" resultType="egovMap">
 <![CDATA[
 
-select
-        POSTCODE            AS  CODE,
+SELECT  AREA_ID                         AS CODE  ,
+            POSTCODE ||' - '|| AREA    AS CODE_DESC
 
-        NVL(AREA, '')     ||' '||
-        NVL(POSTCODE, '') ||' '||
-        NVL(CITY,'')      ||' '||
-        NVL(STATE,'')     ||' '||
-        NVL(COUNTRY,'')   AS CODE_DESC
-
-from SYS0064M
-where AREA_ID = #{areaId}
+FROM    SYS0064M
+WHERE   STATUS_ID = 1
+AND     COUNTRY = 'Malaysia'
+AND     AREA_ID NOT LIKE 'DM%'
+AND     STATE = #{state}
+AND     CITY = #{city}
 
 ]]>
 <if test="postcode != null and postcode != '' ">
