@@ -57,11 +57,23 @@
             dataField : "memCode",
             headerText : "Salesman Code",
             width : "10%"
-        }, {
+        },
+        {
+            dataField : "productName",
+            headerText : "Product",
+            width : "15%"
+        },{
             dataField : "memName",
             headerText : "Salesman Name",
             width : "30%"
-        }, {
+        },
+        {
+            dataField : "target",
+            headerText : "Target",
+            dataType : "numeric",
+            formatString : "#,##0.00",
+            width : "10%"
+        },{
             dataField : "os",
             headerText : "Outstanding",
             width : "12%",

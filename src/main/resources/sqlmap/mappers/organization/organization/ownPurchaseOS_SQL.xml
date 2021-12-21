@@ -26,15 +26,16 @@
             ROUND(NVL(F.OS, 0), 2) OS,
             D.LAST_ORG_CODE ORG_CODE,
             D.LAST_GRP_CODE GRP_CODE,
-            D.LAST_DEPT_CODE DEPT_CODE
+            D.LAST_DEPT_CODE DEPT_CODE,
+            H.STK_DESC AS PRODUCT_NAME,
+            I.ACC_DEBT_SUB_OPNG_COLCT_TRGET AS TARGET
         FROM SAL0001D A
-        JOIN SAL0029D B
-            ON A.CUST_ID = B.CUST_ID
-        JOIN ORG0001D C
-            ON B.NRIC = C.NRIC
-            AND C.STUS = 1
-        JOIN ORG0005D D
-            ON C.MEM_ID = D.MEM_ID
+        JOIN SAL0029D B ON A.CUST_ID = B.CUST_ID
+        JOIN ORG0001D C  ON B.NRIC = C.NRIC AND C.STUS = 1
+        JOIN ORG0005D D ON C.MEM_ID = D.MEM_ID
+        JOIN SAL0002D E ON A.SALES_ORD_ID = E.SALES_ORD_ID
+        LEFT JOIN SYS0026M H ON H.STK_ID = E.ITM_STK_ID
+        JOIN PAY0053S I ON I.ACC_DEBT_ORD_ID = A.SALES_ORD_ID
         LEFT JOIN (
             SELECT
                 RENT_SO_ID,
@@ -43,9 +44,7 @@
             GROUP BY RENT_SO_ID
         ) F
             ON A.SALES_ORD_ID = F.RENT_SO_ID
-        JOIN SAL0071D G
-            ON A.SALES_ORD_ID = G.SALES_ORD_ID
-            AND g.STUS_CODE_ID NOT IN ('WOF', 'WOF_1')
+        JOIN SAL0071D G ON A.SALES_ORD_ID = G.SALES_ORD_ID AND g.STUS_CODE_ID NOT IN ('WOF', 'WOF_1')
         WHERE 1=1
         AND A.APP_TYPE_ID = 66
         <if test="staffOwnPurch == 'false'">
