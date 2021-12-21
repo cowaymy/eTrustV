@@ -25,6 +25,7 @@ public class AddressApiForm {
         params.put("city", vo.getCity());
         params.put("postcode", vo.getPostcode());
         params.put("area", vo.getArea());
+        params.put("areaId", vo.getAreaId());
         params.put("pageSize", vo.getPageSize());
         params.put("pageNo", vo.getPageNo());
 		return params;
@@ -34,6 +35,8 @@ public class AddressApiForm {
     private String city;
 	private String postcode;
     private String area;
+    private String areaId;
+
     private int pageSize;
     private int pageNo;
 
@@ -73,4 +76,11 @@ public class AddressApiForm {
     public void setPageNo(int pageNo) {
         this.pageNo = pageNo;
     }
+	public String getAreaId() {
+		return areaId;
+	}
+	public void setAreaId(String areaId) {
+		this.areaId = areaId;
+	}
+
 }
