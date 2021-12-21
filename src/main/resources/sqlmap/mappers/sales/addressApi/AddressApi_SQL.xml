@@ -116,7 +116,7 @@ select  AREA_ID            AS AREA_ID,
 
 from SYS0064M
 where AREA_ID = #{areaId}
-and rownum = 1;
+and rownum = 1
 
 ]]>
 <if test="postcode != null and postcode != '' ">
