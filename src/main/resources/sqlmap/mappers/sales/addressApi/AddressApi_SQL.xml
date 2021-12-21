@@ -112,6 +112,7 @@ AND     COUNTRY = 'Malaysia'
 AND     AREA_ID NOT LIKE 'DM%'
 AND     STATE = #{state}
 AND     CITY = #{city}
+AND     AREA_ID = #{areaId}
 
 ]]>
 <if test="postcode != null and postcode != '' ">
