@@ -34,4 +34,5 @@ public interface AddressApiMapper {
 
 
     List<EgovMap> selectPostcodeList(Map<String, Object> params);
+    List<EgovMap> selectAreaList(Map<String, Object> params);
 }

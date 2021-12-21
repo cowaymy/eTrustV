@@ -28,4 +28,5 @@ public interface AddressApiService {
     List<EgovMap> selectAddressList(AddressApiForm param) throws Exception;
 
     List<EgovMap> selectPostcodeList(AddressApiForm param) throws Exception;
+    List<EgovMap> selectAreaList(AddressApiForm param) throws Exception;
 }
