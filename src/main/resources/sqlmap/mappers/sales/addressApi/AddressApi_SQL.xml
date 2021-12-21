@@ -103,10 +103,8 @@ ORDER BY POSTCODE ASC
 <select id="selectAreaList" parameterType="Map" resultType="egovMap">
 <![CDATA[
 
-select  AREA_ID            AS AREA_ID,
-        POSTCODE ||' - '|| AREA  AS CODE_DESC,
+select
         POSTCODE            AS POSTCODE,
-        AREA                AS AREA,
 
         NVL(AREA, '')     ||' '||
         NVL(POSTCODE, '') ||' '||
@@ -116,7 +114,6 @@ select  AREA_ID            AS AREA_ID,
 
 from SYS0064M
 where AREA_ID = #{areaId}
-and rownum = 1
 
 ]]>
 <if test="postcode != null and postcode != '' ">
