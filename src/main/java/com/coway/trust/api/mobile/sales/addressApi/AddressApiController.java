@@ -82,10 +82,23 @@ public class AddressApiController {
         List<EgovMap> selectPostcodeList = addressApiService.selectPostcodeList(param);
         if(LOGGER.isDebugEnabled()){
             for (int i = 0; i < selectPostcodeList.size(); i++) {
-                LOGGER.debug("selectAddressList    값 : {}", selectPostcodeList.get(i));
+                LOGGER.debug("selectPostcodeList    값 : {}", selectPostcodeList.get(i));
             }
         }
         return ResponseEntity.ok(selectPostcodeList.stream().map(r -> AddressApiDto.create(r)).collect(Collectors.toList()));
+    }
+
+
+    @ApiOperation(value = "selectAreaList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/selectAreaList", method = RequestMethod.GET)
+    public ResponseEntity<List<AddressApiDto>> selectAreaList(@ModelAttribute AddressApiForm param) throws Exception {
+        List<EgovMap> selectAreaList = addressApiService.selectAreaList(param);
+        if(LOGGER.isDebugEnabled()){
+            for (int i = 0; i < selectAreaList.size(); i++) {
+                LOGGER.debug("selectAreaList    값 : {}", selectAreaList.get(i));
+            }
+        }
+        return ResponseEntity.ok(selectAreaList.stream().map(r -> AddressApiDto.create(r)).collect(Collectors.toList()));
     }
 
 
