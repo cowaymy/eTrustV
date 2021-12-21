@@ -54,6 +54,13 @@ public class AddressApiServiceImpl extends EgovAbstractServiceImpl implements Ad
         return addressApiMapper.selectCityCodeList(AddressApiForm.createMap(param));
     }
 
+    @Override
+    public List<EgovMap> selectPostcodeList(AddressApiForm param) throws Exception {
+        if(null == param){
+            throw new ApplicationException(AppConstants.FAIL, "Parameter value does not exist.");
+        }
+        return addressApiMapper.selectPostcodeList(AddressApiForm.createMap(param));
+    }
 
 
     @Override
