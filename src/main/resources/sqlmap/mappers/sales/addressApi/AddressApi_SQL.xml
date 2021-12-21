@@ -80,8 +80,8 @@ ORDER BY CITY ASC
 <select id="selectPostcodeList" parameterType="Map" resultType="egovMap">
 <![CDATA[
 
-SELECT  POSTCODE                                                                    AS CODE
-                ,   CITY                                                                    AS CODE_DESC
+SELECT  AREA_ID            AS CODE  ,
+            POSTCODE ||' - '|| AREA  AS CODE_DESC
 FROM    SYS0064M
 WHERE   STATUS_ID = 1
 AND     COUNTRY = 'Malaysia'
