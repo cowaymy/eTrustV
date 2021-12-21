@@ -103,8 +103,18 @@ ORDER BY POSTCODE ASC
 <select id="selectAreaList" parameterType="Map" resultType="egovMap">
 <![CDATA[
 
-SELECT  AREA_ID                         AS CODE  ,
-            POSTCODE ||' - '|| AREA    AS CODE_DESC
+SELECT  AREA_ID                         AS AREA_ID  ,
+            POSTCODE ||' - '|| AREA    AS CODE_DESC ,
+            POSTCODE            AS POSTCODE ,
+            AREA                AS AREA ,
+
+            NVL(AREA, '')     ||' '||
+            NVL(POSTCODE, '') ||' '||
+            NVL(CITY,'')      ||' '||
+            NVL(STATE,'')     ||' '||
+            NVL(COUNTRY,'')   AS FULL_ADDR
+
+
 
 FROM    SYS0064M
 WHERE   STATUS_ID = 1
