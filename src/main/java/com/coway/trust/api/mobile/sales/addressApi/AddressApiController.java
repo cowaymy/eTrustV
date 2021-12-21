@@ -76,6 +76,18 @@ public class AddressApiController {
     }
 
 
+    @ApiOperation(value = "selectPostcodeList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/selectPostcodeList", method = RequestMethod.GET)
+    public ResponseEntity<List<AddressApiDto>> selectPostcodeList(@ModelAttribute AddressApiForm param) throws Exception {
+        List<EgovMap> selectPostcodeList = addressApiService.selectPostcodeList(param);
+        if(LOGGER.isDebugEnabled()){
+            for (int i = 0; i < selectPostcodeList.size(); i++) {
+                LOGGER.debug("selectAddressList    값 : {}", selectPostcodeList.get(i));
+            }
+        }
+        return ResponseEntity.ok(selectPostcodeList.stream().map(r -> AddressApiDto.create(r)).collect(Collectors.toList()));
+    }
+
 
     @ApiOperation(value = "selectAddressList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @RequestMapping(value = "/selectAddressList", method = RequestMethod.GET)
