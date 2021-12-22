@@ -623,6 +623,10 @@ function fn_saveValidation(){
     //endregion
 
     //@AMEER add INCOME TAX
+    if($("#eHPincomeTaxNo").val().length > 0 &&  $("#eHPincomeTaxNo").val().length < 13){
+        valid = false;
+        message += "* Invalid Income Tax Length.<br/>";
+   }
     var regIncTax = /^[a-zA-Z0-9]*$/;
     if(!regIncTax.test($("#eHPincomeTaxNo").val())){
         valid = false;

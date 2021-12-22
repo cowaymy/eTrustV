@@ -1001,6 +1001,10 @@ var regEmail = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)
     }
 
     //@AMEER add INCOME TAX
+    if($("#incomeTaxNo").val().length > 0 &&  $("#incomeTaxNo").val().length < 13){
+    	 Common.alert("Invalid Income Tax Length");
+         return false;
+   }
     var regIncTax = /^[a-zA-Z0-9]*$/;
     if(!regIncTax.test($("#incomeTaxNo").val())){
         Common.alert("Invalid Income Tax Format");

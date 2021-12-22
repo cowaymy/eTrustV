@@ -1224,6 +1224,10 @@ function fn_saveValidation(){
     }
 
     //@AMEER add INCOME TAX
+    if($("#incomeTaxNo").val().length > 0 &&  $("#incomeTaxNo").val().length < 13){
+        valid = false;
+        message += "* Invalid Income Tax Length.<br/>";
+   }
     var regIncTax = /^[a-zA-Z0-9]*$/;
     if (!regIncTax.test($("#incomeTaxNo").val())){
         valid = false;
