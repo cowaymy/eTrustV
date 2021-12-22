@@ -3541,4 +3541,12 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
   public List<EgovMap> instChkLst() {
 	  return hsManualMapper.instChkLst();
   }
+
+   @Override
+   public void editHSEditSettleDate(Map<String, Object> params) {
+     // TODO Auto-generated method stub
+
+     hsManualMapper.editHSEditSettleDate(params);
+   }
+
 }

@@ -185,4 +185,6 @@ public interface HsManualService {
 
   List<EgovMap> instChkLst();
 
+  void editHSEditSettleDate(Map<String, Object> params);
+
 }

@@ -1458,6 +1458,52 @@
 		Common.popupDiv("/services/bs/report/hsReportCustSignPop.do", null,
 				null, true, '');
 	}
+
+	function fn_editHSSettleDatePop(){
+		var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+
+        if (checkedItems.length <= 0) {
+            Common.alert('No data selected.');
+            return;
+        } else if (checkedItems.length >= 2) {
+            Common.alert('Only availbale to entry a result with single HS order');
+            return;
+        } else if (checkedItems[0]["code"] != "COM") {
+            Common.alert('Only available to edit settle date<br/>for the HS order status in Complete');
+            return;
+        } else {
+            var str = "";
+            var custStr = "";
+            var rowItem;
+            var brnchId = "";
+            var saleOrdList = "";
+            var list = "";
+            var brnchCnt = "";
+
+            var saleOrd = {
+                salesOrdNo : ""
+            };
+
+            for (var i = 0, len = checkedItems.length; i < len; i++) {
+                rowItem = checkedItems[i];
+                hsStuscd = rowItem.stusCodeId;
+                schdulId = rowItem.schdulId;
+                salesOrdId = rowItem.salesOrdId;
+
+               /*  if (hsStuscd == 4) {
+                    Common
+                            .alert("already has result. Result entry is disallowed.");
+                    return;
+                } */
+            }
+        }
+
+        Common.popupDiv(
+                "/services/bs/selectHSEditSettleDatePop.do?isPop=true&schdulId="
+                        + schdulId + "&salesOrdId=" + salesOrdId, null, null,
+                true, '_hsDetailPopDiv');
+
+	}
 </script>
 <form id="popEditForm" method="post">
 	<input type="hidden" name="schdulId" id="_schdulId" />
@@ -1499,7 +1545,7 @@
 	<section id="content">
 		<!-- content start -->
 		<ul class="path">
-			<li><img
+			<li><imgx
 				src="${pageContext.request.contextPath}/resources/images/common/path_home.gif"
 				alt="Home" /></li>
 			<li>Sales</li>
@@ -1551,7 +1597,11 @@
 								Order</a>
 						</p></li>
 				</c:if>
-
+                <c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
+                    <li><p class="btn_blue">
+                            <a href="#" onclick="javascript:fn_editHSSettleDatePop();">Edit HS Settle Date</a>
+                        </p></li>
+                 </c:if>
 				<c:if test="${PAGE_AUTH.funcView == 'Y'}">
 					<li><p class="btn_blue">
 							<a href="#" onclick="javascript:fn_getBSListAjax();"><span

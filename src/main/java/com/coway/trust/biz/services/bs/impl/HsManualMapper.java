@@ -342,4 +342,6 @@ public interface HsManualMapper {
 
   EgovMap getHsResultDocNo(Map<String, Object> params);
 
+  void editHSEditSettleDate(Map<String, Object> params);
+
 }

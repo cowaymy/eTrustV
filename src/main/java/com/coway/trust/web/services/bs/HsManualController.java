@@ -1367,4 +1367,62 @@ public class HsManualController {
     return ResponseEntity.ok(instChkLst);
   }
 
+//ADDED BY KEYI - EDIT HS SETTLE DATE POP
+  @RequestMapping(value = "/selectHSEditSettleDatePop.do")
+  public String selectHSEditSettleDatePop(@RequestParam Map<String, Object> params, HttpServletRequest request,
+      ModelMap model, SessionVO sessionVO) throws Exception {
+
+	    params.put("schdulId", params.get("schdulId"));
+	    params.put("salesOrderId", params.get("salesOrdId"));
+
+	    EgovMap basicinfo = hsManualService.selectHsViewBasicInfo(params);
+	    EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+
+	    List<EgovMap> failReasonList = hsManualService.failReasonList(params);
+	    List<EgovMap> cmbCollectTypeComboList = hsManualService.cmbCollectTypeComboList(params);
+
+	    EgovMap hsDefaultInfo = hsManualService.selectHsInitDetailPop(params);
+
+	    String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+	    model.put("toDay", toDay);
+
+	    model.addAttribute("basicinfo", basicinfo);
+	    model.addAttribute("hsDefaultInfo", hsDefaultInfo);
+	    model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
+	    model.addAttribute("orderDetail", orderDetail);
+	    model.addAttribute("failReasonList", failReasonList);
+
+    return "services/bs/hsEditSettleDatePop";
+
+  }
+
+  @RequestMapping(value = "/editSettleDate.do", method = RequestMethod.POST)
+  public ResponseEntity<ReturnMessage> editSettleDate(@RequestBody Map<String, Object> params,
+      HttpServletRequest request, SessionVO sessionVO) throws ParseException {
+    ReturnMessage message = new ReturnMessage();
+
+    Map<String, Object> resultValue = new HashMap<String, Object>();
+
+    Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+   // List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+    List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+    //List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+
+    logger.debug("editSettleDate=============> in ");
+    logger.debug("[" + params.toString() + "]");
+    logger.debug("editSettleDate=============> in");
+
+    formMap.put("updator", String.valueOf(sessionVO.getUserId()));
+    //resultValue = hsManualService.UpdateHsResult2(formMap, updList, sessionVO);
+    hsManualService.editHSEditSettleDate(formMap);
+
+    /*if (updList != null) {
+      hsManualService.UpdateIsReturn(formMap, updList, sessionVO);
+    }*/
+
+    message.setMessage("Complete to Update HS Settle Date for " +  formMap.get("hsNo"));
+
+    return ResponseEntity.ok(message);
+  }
+
 }
