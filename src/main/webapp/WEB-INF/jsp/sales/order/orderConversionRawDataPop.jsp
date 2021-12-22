@@ -12,7 +12,7 @@ $('.multy_select').change(function() {
 });
 
 $(document).ready(function(){
-	 CommonCombo.make("customerType", "/common/selectCodeList.do", {groupCode : '8'}, '964', {isShowChoose: false});
+	// CommonCombo.make("customerType", "/common/selectCodeList.do", {groupCode : '8'}, '964', {isShowChoose: false});
 	 $(".IndividualMode").show();
      $(".CompanyMode").hide();
 });
@@ -21,12 +21,12 @@ $(document).ready(function(){
 
 function fn_customerChng(){
     $("#cmbAgingMonth").multipleSelect("uncheckAll");
-    if($("#customerType").val() == "964"){
-        $(".IndividualMode").show();
-        $(".CompanyMode").hide();
+    if($("#customerType").val() == "965"){
+        $(".IndividualMode").hide();
+        $(".CompanyMode").show();
     }else{
-    	  $(".IndividualMode").hide();
-          $(".CompanyMode").show();
+          $(".IndividualMode").show();
+          $(".CompanyMode").hide();
     }
 }
 
@@ -93,47 +93,52 @@ function fn_report(){
 		}
 
 		if(!(text1 == null || text1.length == 0)){
-            rentalAgingMonth += text1;
-        }
 
-		rentalAgingMonth += ")";
+			   rentalAgingMonth += text1;
+			}
 
+			rentalAgingMonth += ")";
 
-	    rentalCustomerType += " AND (AA.TYPE_ID = " +$("#customerType").val();
-	    rentalCustomerType += ")";
+			if ($("#customerType").val() == "0") {
+				rentalCustomerType = null;
+				rentalCompanyType = null;
+			} else {
+				rentalCustomerType += " AND (AA.TYPE_ID = "
+						+ $("#customerType").val();
+				rentalCustomerType += ")";
 
-	    if($("#customerType").val()=="965"){
-	    	rentalCompanyType += " AND (AA.CORP_TYPE_ID IN (1152,1154,1174,1333)";
-	    	rentalCompanyType += ")";
-	    }
-	    else{
-	    	rentalCompanyType =null;
-	    }
+				if ($("#customerType").val() == "965") {
+					rentalCompanyType += " AND (AA.CORP_TYPE_ID IN (1152,1154,1174,1333)";
+					rentalCompanyType += ")";
+				} else {
+					rentalCompanyType = null;
+				}
+			}
 
-		$("#V_RENTALSTATUS").val(rentalStatus);
-		$("#V_RENTALAGINGMONTH").val(rentalAgingMonth);
-		$("#V_RENTALCUSTOMERTYPE").val(rentalCustomerType);
-		$("#V_RENTALCOMPANYTYPE").val(rentalCompanyType);
+			$("#V_RENTALSTATUS").val(rentalStatus);
+			$("#V_RENTALAGINGMONTH").val(rentalAgingMonth);
+			$("#V_RENTALCUSTOMERTYPE").val(rentalCustomerType);
+			$("#V_RENTALCOMPANYTYPE").val(rentalCompanyType);
 
+			var date = new Date().getDate();
+			if (date.toString().length == 1) {
+				date = "0" + date;
+			}
+			$("#reportDownFileName").val(
+					"ConversionRawData_" + date + (new Date().getMonth() + 1)
+							+ new Date().getFullYear());
+			$("#reportFileName").val("/sales/ConversionRawData.rpt");
+			$("#viewType").val("EXCEL");
 
-		var date = new Date().getDate();
-		if(date.toString().length == 1){
-		    date = "0" + date;
+			// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
+			var option = {
+				isProcedure : true
+			// procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+			};
+
+			Common.report("form", option);
 		}
-	    $("#reportDownFileName").val("ConversionRawData_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-	    $("#reportFileName").val("/sales/ConversionRawData.rpt");
-	    $("#viewType").val("EXCEL");
-
-	    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
-	    var option = {
-	            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
-	    };
-
-	    Common.report("form", option);
 	}
-}
-
-
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -193,7 +198,11 @@ function fn_report(){
     <tr>
         <th scope="row"><spring:message code="sal.text.custType" /></th>
         <td>
-         <select  id="customerType" name="customerType" class="w100p" onchange="javascript:fn_customerChng();" ></select>
+         <select  id="customerType" name="customerType" class="w100p" onchange="javascript:fn_customerChng();" >
+         <option value="0">All</option>
+         <option value="965">Company</option>
+         <option value="964">Individual</option>
+         </select>
         </td>
         <th></th>
         <td></td>
