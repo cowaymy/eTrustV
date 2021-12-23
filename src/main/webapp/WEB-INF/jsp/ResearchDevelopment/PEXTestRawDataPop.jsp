@@ -24,16 +24,16 @@ today = "${today}";
 
   function fn_validation() {
 
-    if (($("#settleDtFrm").val() == '' || $("#settleDtTo").val() == '') /* && $("#reportType").val() == '3' */) {
+    if (($("#settleDateFrom").val() == '' || $("#settleDateTo").val() == '') /* && $("#reportType").val() == '3' */) {
         Common.alert("<spring:message code='sys.common.alert.validation' arguments='Settle date (From & To)' htmlEscape='false'/>");
         return false;
     }
 
-    if ($("#settleDtFrm").val() != '' && $("#settleDtTo").val() == '') {
+    if ($("#settleDateFrom").val() != '' && $("#settleDateTo").val() == '') {
         Common.alert("<spring:message code='sys.common.alert.validation' arguments='Settle date (To)' htmlEscape='false'/>");
         return false;
     }
-    if ($("#settleDtFrm").val() == '' && $("#settleDtTo").val() != '') {
+    if ($("#settleDateFrom").val() == '' && $("#settleDateTo").val() != '') {
         Common.alert("<spring:message code='sys.common.alert.validation' arguments='Settle date (From)' htmlEscape='false'/>");
         return false;
     }
@@ -57,18 +57,18 @@ today = "${today}";
          V_WHERE += V_PRODCAT;
       }
 
-      if ($("#settleDtFrm").val() != '' && $("#settleDtFrm").val() != null && $("#settleDtTo").val() != '' && $("#settleDtTo").val() != null ) {
-    	  var settleDtFrm = $("#settleDtFrm").val().substring(6, 10) + "-"
-          + $("#settleDtFrm").val().substring(3, 5) + "-"
-          + $("#settleDtFrm").val().substring(0, 2);
+      if ($("#settleDateFrom").val() != '' && $("#settleDateFrom").val() != null && $("#settleDateTo").val() != '' && $("#settleDateTo").val() != null ) {
+    	  var settleDateFrom = $("#settleDateFrom").val().substring(6, 10) + "-"
+          + $("#settleDateFrom").val().substring(3, 5) + "-"
+          + $("#settleDateFrom").val().substring(0, 2);
 
-    	  V_WHERE += " AND ( TO_CHAR(TEST_SETTLE_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE(" + $("#settleDtFrm").val() + ",'dd/mm/yyyy'), 'YYYYMMDD'))";
+    	  V_WHERE += " AND ( TO_CHAR(TEST_SETTLE_DT, 'YYYYMMDD')  >= TO_CHAR(TO_DATE(" + $("#settleDateFrom").val() + ",'dd/mm/yyyy'), 'YYYYMMDD'))";
 
-    	  var settleDtTo = $("#settleDtTo").val().substring(6, 10) + "-"
-          + $("#settleDtTo").val().substring(3, 5) + "-"
-          + $("#settleDtTo").val().substring(0, 2);
+    	  var settleDateTo = $("#settleDateTo").val().substring(6, 10) + "-"
+          + $("#settleDateTo").val().substring(3, 5) + "-"
+          + $("#settleDateTo").val().substring(0, 2);
 
-    	  V_WHERE += " AND ( TO_CHAR(TEST_SETTLE_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE(" + $("#settleDtTo").val() + ",'dd/mm/yyyy'), 'YYYYMMDD'))";
+    	  V_WHERE += " AND ( TO_CHAR(TEST_SETTLE_DT, 'YYYYMMDD')  <= TO_CHAR(TO_DATE(" + $("#settleDateTo").val() + ",'dd/mm/yyyy'), 'YYYYMMDD'))";
       }
 
          /*  var date = new Date();
