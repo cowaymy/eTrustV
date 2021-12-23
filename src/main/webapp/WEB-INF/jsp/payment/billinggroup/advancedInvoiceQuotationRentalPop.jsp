@@ -14,7 +14,7 @@ var gridPros = {
 };
 
 var columnLayout=[
-    {dataField:"salesOrdId", headerText:"<spring:message code='pay.head.orderId'/>"},
+    {dataField:"salesOrdId", headerText:"<spring:message code='pay.head.orderId'/>",visible : false},
 //     {dataField:"email", headerText:"<spring:message code='pay.head.email'/>",visible : false},
     {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
     {dataField:"stusCodeNm", headerText:"<spring:message code='pay.head.status'/>"},
