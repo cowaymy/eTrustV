@@ -39,6 +39,7 @@ function fn_makeStatementList(type){
 		$("#statementList").append("<option value='initStatementCompanyRentalPop.do'>Statement Company(Rental)</option>");
 		$("#statementList").append("<option value='initProformaInvoicePop.do'>ProformaInvoice</option>");
 
+
         if ("${sessionRoleId}" == 130  || "${sessionRoleId}" == 193  || "${sessionRoleId}" == 192 || "${sessionRoleId}" == 191 || "${sessionRoleId}" == 89
         	|| "${sessionRoleId}" == 87 || "${sessionRoleId}" == 85) {
 
@@ -46,6 +47,9 @@ function fn_makeStatementList(type){
 		$("#statementList").append("<option value='initSummaryOfAccountPop.do'>Summary of Account</option>");
 
 		}
+
+        $("#statementList").append("<option value='initAdvancedInvoiceQuotationRentalPop.do'>Advanced Invoice Quotation(Rental)</option>");
+
 	}
 }
 
