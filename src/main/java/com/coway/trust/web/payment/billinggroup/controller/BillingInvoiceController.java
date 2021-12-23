@@ -237,6 +237,12 @@ public class BillingInvoiceController {
 		return "payment/billinggroup/proformaInvoicePop";
 	}
 
+	@RequestMapping(value = "/initAdvancedInvoiceQuotationRentalPop.do")
+	public String initAdvancedInvoiceQuotationRentalPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		return "payment/billinggroup/advancedInvoiceQuotationRentalPop";
+	}
+
 	@RequestMapping(value = "/selectProformaInvoiceList.do")
 	public ResponseEntity<List<EgovMap>> searchOutrightInvoiceList(@ModelAttribute("searchForm")ProformaSearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
 		List<EgovMap> list = null;
@@ -276,6 +282,58 @@ public class BillingInvoiceController {
 
 		return ResponseEntity.ok(list);
 	}
+
+	/******************************************************
+	 *   Advanced Invoice Quotation(Rental)
+	 *****************************************************/
+	/**
+	 * Company Statement초기화 화면
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+
+
+	@RequestMapping(value = "/selectAdvancedRentalInvoiceList.do")
+	public ResponseEntity<List<EgovMap>> searchAdvancedRentalInvoiceList(@ModelAttribute("searchForm")ProformaSearchVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> list = null;
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("orderNo", searchVO.getOrderNo().trim());
+//		map.put("appTypeList", searchVO.getAppType());
+//		map.put("orderStatusList", searchVO.getOrderStatus());
+		map.put("keyInBranchList", searchVO.getKeyBranch());
+//		map.put("dscBranchList", searchVO.getDscBranch());
+		map.put("custId", searchVO.getCustId().trim());
+		map.put("custName", searchVO.getCustName().trim());
+		map.put("custIC", searchVO.getCustIc().trim());
+		map.put("productId", searchVO.getProduct());
+		map.put("memberCode", searchVO.getMemberCode().trim());
+		map.put("rentStatus", searchVO.getRentalStatus());
+//		map.put("refNo", searchVO.getRefNo().trim());
+//		map.put("poNo", searchVO.getPoNo().trim());
+//		map.put("contactNo", searchVO.getContactNo());
+
+		String orderDtFr = "";
+		String orderDtTo = "";
+		if(searchVO.getOrderDt1() != null && !searchVO.getOrderDt1().equals("")){
+			String tempOrderDtFr[] = searchVO.getOrderDt1().split("/");
+			orderDtFr = tempOrderDtFr[2] + "-" + tempOrderDtFr[1] + "-" + tempOrderDtFr[0] + " 00:00:00";
+		}
+		if(searchVO.getOrderDt2() != null && !searchVO.getOrderDt2().equals("")){
+			String tempOrderDtTo[] = searchVO.getOrderDt2().split("/");
+			orderDtTo = tempOrderDtTo[2] + "-" + tempOrderDtTo[1] + "-" + tempOrderDtTo[0] + " 00:00:00";
+		}
+
+		map.put("orderDateFrom", orderDtFr);
+		map.put("orderDateTo", orderDtTo);
+
+		list = invoiceService.selectAdvancedRentalInvoiceList(map);
+
+		return ResponseEntity.ok(list);
+	}
+
 
 	/******************************************************
 	 *   Company Statement
