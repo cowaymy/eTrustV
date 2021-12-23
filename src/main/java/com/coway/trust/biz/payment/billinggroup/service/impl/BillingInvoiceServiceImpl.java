@@ -54,6 +54,12 @@ public class BillingInvoiceServiceImpl extends EgovAbstractServiceImpl implement
 	}
 
 	@Override
+	public List<EgovMap> selectAdvancedRentalInvoiceList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return invoiceMapper.selectAdvancedRentalInvoiceList(params);
+	}
+
+	@Override
 	public List<EgovMap> selectPenaltyBillDate(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return invoiceMapper.selectPenaltyBillDate(params);
