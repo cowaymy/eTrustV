@@ -1,5 +1,6 @@
 package com.coway.trust.web.sales.analysis;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -15,49 +16,67 @@ import com.coway.trust.biz.sales.analysis.AnalysisService;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
-@RequestMapping(value = "/sales/analysis") 
+@RequestMapping(value = "/sales/analysis")
 public class AnalysisController {
 
-	
+
 	@Resource(name = "analysisService")
 	private AnalysisService analysisService;
-	
+
 	@RequestMapping(value = "/moveAccSlaesKeyIn.do")
 	public String moveAccSlaesKeyIn (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
-		
+
 		return "sales/analysis/accSalesKeyIn";
 	}
-	
+
 	@RequestMapping(value = "/moveAutoDebitAndAging.do")
 	public String moveAutoDebitAndAging(@RequestParam Map<String, Object> params) throws Exception{
 		return "sales/analysis/autoDebitAndAging";
 	}
-	
+
 	@RequestMapping(value = "/moveAccmulated.do")
 	public String moveAccmulated (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
-		
+
 		return "sales/analysis/accumulated";
 	}
-	
+
 	@RequestMapping(value = "/salesDropOut.do")
 	public String salesDropOut() throws Exception{
-		
+
 		return "sales/analysis/salesDropOut";
 	}
-	
+
 	@RequestMapping(value = "/salesAnalysis.do")
 	public String salesAnalysis() throws Exception{
-		
+
 		return "sales/analysis/salesAnalysis";
 	}
-	
+
 	@RequestMapping(value = "/maintanceSession")
 	public ResponseEntity<EgovMap> maintanceSession()throws Exception{
-		
+
 		EgovMap rtnMap = null;
-		
+
 		rtnMap = analysisService.maintanceSession();
-		
+
 		return ResponseEntity.ok(rtnMap);
+	}
+
+	@RequestMapping(value = "/pltv.do")
+	public String pltv(ModelMap model) throws Exception {
+
+		String maxAccYm = analysisService.selectMaxAccYm();
+		model.put("maxAccYm", maxAccYm);
+
+		return "sales/analysis/pltv";
+	}
+
+	@RequestMapping(value = "/selectPltvProductCodeList")
+	public ResponseEntity<List<EgovMap>> selectPltvProductCodeList() throws Exception {
+
+		List<EgovMap> productList = null;
+		productList = analysisService.selectPltvProductCodeList();
+
+		return ResponseEntity.ok(productList);
 	}
 }

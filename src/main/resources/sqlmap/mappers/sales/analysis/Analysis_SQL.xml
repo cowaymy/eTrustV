@@ -1,8 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.sales.analysis.impl.AnalysisMapper">
-    
+
     <select id="maintanceSession" resultType="egovMap">
         SELECT TO_CHAR(SYSDATE, 'DD/MM/YYYY HH24:MI:SS') CURR_TIME FROM DUAL
     </select>
+
+    <select id="selectPltvProductCodeList" resultType="egovMap">
+        SELECT STK_ID
+                 , C1
+                 , CODE_NAME
+                 , PROD_GROUP
+         FROM
+        (
+            SELECT DISTINCT T1.STK_ID
+                     , T1.STK_CODE ||' - '||T1.STK_DESC C1
+                     , T3.CODE_NAME
+                     , NVL(T4.IND, '') PROD_GROUP
+            FROM SYS0026M T1
+                JOIN SYS0013M T3 ON T3.CODE_ID = T1.STK_CTGRY_ID
+                LEFT JOIN SYS0094M T4 ON T4.CODE = T3.CODE
+            WHERE
+               T1.STK_TYPE_ID = 61
+               AND T1.STUS_CODE_ID = 1
+               AND T1.STK_CTGRY_ID in (
+                    54,     -- WATER PURIFIER
+                    55,     -- AIR PURIFIER
+                    56,     -- BIDET
+                    57,     -- SOFTENER
+                    400,    -- POINT OF ENTRY
+                    5706,  -- MATTRESS
+                    5707   -- FRAME
+               )
+        )
+        ORDER BY PROD_GROUP DESC, CODE_NAME ASC, STK_ID ASC
+    </select>
+
+    <select id="selectMaxAccYm" resultType="String">
+        SELECT TO_CHAR( TO_DATE( MAX(ACC_YM), 'YYYYMM'), 'MON-YYYY') AS
+            MAX_ACC_YM FROM PAY0319T
+    </select>
+
+
+
 </mapper>
